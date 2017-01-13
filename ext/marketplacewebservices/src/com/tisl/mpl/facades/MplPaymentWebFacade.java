@@ -161,13 +161,11 @@ public interface MplPaymentWebFacade
 	/**
 	 *
 	 * @param status
-	 * @param mWRefCode
 	 * @param channelWeb
 	 * @param guid
 	 * @param walletOrderId
 	 */
-	void entryInTPWaltAuditMobile(final String status, final String mWRefCode, String channelWeb, String guid,
-			String walletOrderId);
+	void entryInTPWaltAuditMobile(final String status, String channelWeb, String guid, String walletOrderId);
 
 
 	/**

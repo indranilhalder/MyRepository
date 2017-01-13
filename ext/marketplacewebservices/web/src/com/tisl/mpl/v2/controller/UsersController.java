@@ -73,7 +73,6 @@ import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
-import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -148,7 +147,6 @@ import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.YcommercewebservicesConstants;
 import com.tisl.mpl.core.enums.FeedbackArea;
 import com.tisl.mpl.core.enums.Frequency;
-import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.EMIBankModel;
@@ -6832,94 +6830,176 @@ public class UsersController extends BaseCommerceController
 		return profileUpdateUrl;
 	}
 
-
+	/**
+	 *
+	 * @param cartId
+	 * @param walletName
+	 * @param cartGuid
+	 * @return ThirdPartyWalletWsDTO
+	 * @throws EtailNonBusinessExceptions
+	 */
 	@Secured(
 	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 	@RequestMapping(value = MarketplacewebservicesConstants.THIRDPARTYWALLETORDER, method = RequestMethod.GET, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public ThirdPartyWalletWsDTO createThirdPartyWalletOrder(final String cartId, final String walletName)
-			throws EtailNonBusinessExceptions
+	public ThirdPartyWalletWsDTO createThirdPartyWalletOrder(@RequestParam final String cartId,
+			@RequestParam final String walletName, @RequestParam final String cartGuid) throws EtailNonBusinessExceptions
 	{
 
 		List<String> orderId = new ArrayList<String>();
-		CartModel cartModel = null;
+		CartModel cart = null;
 		boolean failFlag = false;
 		String failErrorCode = "";
+		String refNumber = null;
+		String checksum = null;
 		ThirdPartyWalletWsDTO thirdPartyWalletWsDTO = null;
 		try
 		{
-			final StringBuilder returnUrlBuilder = new StringBuilder();
-			returnUrlBuilder.append(request.getRequestURL().substring(0, request.getRequestURL().indexOf("/", 8)))
-					.append(request.getContextPath())
-					.append(getConfigurationService().getConfiguration().getString(MarketplacewebservicesConstants.WALLETPAYMENT));
-
-			if (null != cartId)
+			OrderModel orderModel = null;
+			if (StringUtils.isNotEmpty(cartGuid))
 			{
-				cartModel = mplPaymentWebFacade.findCartValues(cartId);
+				orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+			}
+			if (orderModel == null)
+			{
+				cart = mplPaymentWebFacade.findCartValues(cartId);
+				final Double cartTotal = cart.getTotalPrice();
+				final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
 
-				if (null != cartModel)
+				if (!failFlag && !mplCheckoutFacade.isPromotionValid(cart))
 				{
-					if (!failFlag && !mplCheckoutFacade.isPromotionValid(cartModel))
+					failFlag = true;
+					failErrorCode = MarketplacecommerceservicesConstants.B9075;
+				}
+				if (!failFlag && mplCartFacade.isCartEntryDelistedMobile(cart))
+				{
+					failFlag = true;
+					failErrorCode = MarketplacecommerceservicesConstants.B9325;
+				}
+				//TODO Soft reservation calls already made
+				if (!failFlag && !mplCartFacade.isInventoryReservedMobile(
+						MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart, cart.getPincodeNumber()))
+				{
+					failFlag = true;
+					failErrorCode = MarketplacecommerceservicesConstants.B9047;
+				}
+				if (!failFlag && !getMplCheckoutFacade().isCouponValid(cart))
+				{
+					failErrorCode = "couponinvalid";
+					failFlag = true;
+					LOG.info("::setting redirect flag--4::");
+				}
+
+				if (!failFlag)
+				{
+					if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
 					{
+						failErrorCode = "Cart Amount Invalid";
+						failFlag = true;
+						LOG.info("::setting redirect flag--5::");
+					}
+				}
+				if (!failFlag && !mplPaymentFacade.isValidCart(cart))
+				{
+					failFlag = true;
+					failErrorCode = MarketplacecommerceservicesConstants.B9064;
+				}
+				if (failFlag)
+				{
+					throw new EtailBusinessExceptions(failErrorCode);
+				}
+				else
+				{
+					//Create mRupee order
+					LOG.info("::Going to Create Wallet OrderId::");
+					orderId = getMplPaymentFacade().createWalletorder(cart, walletName,
+							MarketplacewebservicesConstants.CHANNEL_MOBILE);
+					//	LOG.info("::Created Wallet OrderId::" + orderId);
+					final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
+					if (isValidCart)
+					{
+						final OrderData orderData = mplCheckoutFacade.placeOrderByCartId(cartGuid);
+						if (orderData == null)
+						{
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9321);
+						}
+					}
+					else
+					{
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
+					}
+					if (CollectionUtils.isNotEmpty(orderId))
+					{
+						refNumber = orderId.get(0);
+						checksum = orderId.get(1);
+					}
+
+					mplPaymentWebFacade.entryInTPWaltAuditMobile(null, MarketplacewebservicesConstants.CHANNEL_MOBILE, cartGuid,
+							refNumber);
+
+					LOG.info("::Created Wallet OrderId::" + orderId);
+
+					thirdPartyWalletWsDTO = new ThirdPartyWalletWsDTO();
+
+					if (CollectionUtils.isNotEmpty(orderId))
+					{
+						thirdPartyWalletWsDTO.setOrderId(orderId.get(0));
+						thirdPartyWalletWsDTO.setAmount(cartTotal.toString());
+						thirdPartyWalletWsDTO.setTxnType("P");
+						thirdPartyWalletWsDTO.setMCode("TULA");
+						thirdPartyWalletWsDTO.setNarration("uat");
+						thirdPartyWalletWsDTO.setChecksum(orderId.get(1));
+						thirdPartyWalletWsDTO.setStatus("Success");
+					}
+					else
+					{
+						thirdPartyWalletWsDTO.setStatus("Failure");
+						thirdPartyWalletWsDTO.setErrorCode("E0005");
+						thirdPartyWalletWsDTO.setError("Error");
+					}
+				}
+			}
+			else
+			{
+				if (null == orderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus()))
+				{
+
+					if (!getMplCheckoutFacade().isPromotionValid(orderModel))
+					{
+						mplCartFacade.recalculateOrder(orderModel);
 						failFlag = true;
 						failErrorCode = MarketplacecommerceservicesConstants.B9075;
 					}
-					if (!failFlag && mplCartFacade.isCartEntryDelistedMobile(cartModel))
-					{
-						failFlag = true;
-						failErrorCode = MarketplacecommerceservicesConstants.B9325;
-					}
-					//TODO Soft reservation calls already made
+					//Soft reservation calls already made
+
 					if (!failFlag && !mplCartFacade.isInventoryReservedMobile(
-							MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cartModel,
-							cartModel.getPincodeNumber()))
+							MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel,
+							orderModel.getPincodeNumber()))
 					{
+						getMplCartFacade().recalculateOrder(orderModel);
 						failFlag = true;
 						failErrorCode = MarketplacecommerceservicesConstants.B9047;
-					}
-					if (!failFlag && !getMplCheckoutFacade().isCouponValid(cartModel))
-					{
-						failErrorCode = "couponinvalid";
-						failFlag = true;
-						LOG.info("::setting redirect flag--4::");
+						//notify EMAil SMS TPR-815
+						mplCartFacade.notifyEmailAndSmsOnInventoryFail(orderModel);
 					}
 
-					if (!failFlag)
-					{
-						final Double cartTotal = cartModel.getTotalPrice();
-						final Double cartTotalWithConvCharge = cartModel.getTotalPriceWithConv();
-						if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
-						{
-							failErrorCode = "Cart Amount Invalid";
-							failFlag = true;
-							LOG.info("::setting redirect flag--5::");
-						}
-					}
-					if (!failFlag && !mplPaymentFacade.isValidCart(cartModel))
-					{
-						failFlag = true;
-						failErrorCode = MarketplacecommerceservicesConstants.B9064;
-					}
 					if (failFlag)
 					{
 						throw new EtailBusinessExceptions(failErrorCode);
 					}
 					else
 					{
-						//Create mRupee order
-						LOG.info("::Going to Create Wallet OrderId::");
-						orderId = getMplPaymentFacade().createWalletorder(cartModel, walletName,
+						orderId = getMplPaymentFacade().createWalletorder(orderModel, walletName,
 								MarketplacewebservicesConstants.CHANNEL_MOBILE);
-						LOG.info("::Created Wallet OrderId::" + orderId);
+
 						thirdPartyWalletWsDTO = new ThirdPartyWalletWsDTO();
 
 						if (CollectionUtils.isNotEmpty(orderId))
 						{
 							thirdPartyWalletWsDTO.setOrderId(orderId.get(0));
-							thirdPartyWalletWsDTO.setAmount(cartModel.getTotalPrice().toString());
+							thirdPartyWalletWsDTO.setAmount(orderModel.getTotalPrice().toString());
 							thirdPartyWalletWsDTO.setTxnType("P");
 							thirdPartyWalletWsDTO.setMCode("TULA");
-							thirdPartyWalletWsDTO.setRetUrl(returnUrlBuilder.toString());
 							thirdPartyWalletWsDTO.setNarration("uat");
 							thirdPartyWalletWsDTO.setChecksum(orderId.get(1));
 							thirdPartyWalletWsDTO.setStatus("Success");
@@ -6932,18 +7012,20 @@ public class UsersController extends BaseCommerceController
 						}
 					}
 				}
+				else if (null != orderModel.getPaymentInfo())
+				{
+					LOG.error("Order already has payment info >>>" + orderModel.getPaymentInfo().getCode());
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
+				}
 				else
 				{
-					LOG.debug("CartModel is not Valid");
+					LOG.error("Order status is Payment_Pending for orderCode>>>" + orderModel.getCode());
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
 				}
 			}
-			else
-			{
-				LOG.debug("CartID is not Valid");
-			}
 		}
-		catch (final AdapterException e)
 
+		catch (final AdapterException e)
 		{
 			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9327);
 		}
@@ -6959,7 +7041,6 @@ public class UsersController extends BaseCommerceController
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
-
 		{
 			thirdPartyWalletWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			// Error message for All Exceptions
@@ -6974,7 +7055,7 @@ public class UsersController extends BaseCommerceController
 		catch (final Exception e)
 
 		{
-			LOG.error(MarketplacewebservicesConstants.CREATEJUSPAYORDER, e);
+			LOG.error(MarketplacewebservicesConstants.THIRDPARTYWALLETORDER, e);
 			// Error message for All Exceptions
 			if (null != e.getMessage())
 			{
@@ -6984,6 +7065,7 @@ public class UsersController extends BaseCommerceController
 			thirdPartyWalletWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return thirdPartyWalletWsDTO;
+
 	}
 
 
@@ -6991,113 +7073,85 @@ public class UsersController extends BaseCommerceController
 	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 	@RequestMapping(value = MarketplacewebservicesConstants.WALLETPAYMENT, method = RequestMethod.GET, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public WalletPaymentWsDTO createWalletPayment(@RequestParam final String cartId, @RequestParam final String mWRefCode,
-			@RequestParam final String paymentMode, @RequestParam final String status, @RequestParam final String refNo)
+	public WalletPaymentWsDTO createWalletPayment(@RequestParam final String amount, @RequestParam final String mWRefCode,
+			@RequestParam final String paymentMode, @RequestParam String status, @RequestParam final String refNo)
 					throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
 	{
 		final WalletPaymentWsDTO walletPaymentWsDTO = new WalletPaymentWsDTO();
-		if (null != cartId)
+		try
 		{
-			final CartModel cart = mplPaymentWebFacade.findCartValues(cartId);
-			if (null != status && "S".equalsIgnoreCase(status))
+			String guid = null;
+			OrderModel orderModel = null;
+			if (StringUtils.isNotEmpty(refNo))
 			{
-				final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
-				OrderModel orderModel = null;
-				try
+				guid = getMplPaymentFacade().getWalletAuditEntries(refNo);
+			}
+			if (StringUtils.isNotEmpty(guid))
+			{
+				orderModel = getMplPaymentFacade().getOrderByGuid(guid);
+			}
+			if (null != status && "S".equalsIgnoreCase(status) && null != orderModel && null != amount
+					&& amount.equalsIgnoreCase(orderModel.getTotalPrice().toString())
+					&& paymentMode.equalsIgnoreCase("ThirdPartyWallet"))
+			{
+
+				status = MarketplacewebservicesConstants.UPDATE_SUCCESS;
+
+				mplPaymentWebFacade.entryInTPWaltAuditMobile(status, MarketplacewebservicesConstants.CHANNEL_MOBILE, guid, refNo);
+				final double walletAmount = MarketplacewebservicesConstants.WALLETAMOUNT;
+				//setting the payment modes and the amount against it in session to be used later
+				final Map<String, Double> paymentInfo = new HashMap<String, Double>();
+				paymentInfo.put(paymentMode, Double.valueOf(orderModel.getTotalPriceWithConv().doubleValue() - walletAmount));
+				//saving TPWallet Payment related info
+				mplPaymentWebFacade.saveTPWalletPaymentInfoMobile(orderModel, refNo, paymentInfo);
+
+				if (mplPaymentWebFacade.updateOrder(orderModel))
 				{
-					if (isValidCart && null != paymentMode)
-					{
-						OrderData orderData = null;
-						//Wallet amount assigned. Will be changed after release1
-						final double walletAmount = MarketplacewebservicesConstants.WALLETAMOUNT;
-						//setting the payment modes and the amount against it in session to be used later
-						final Map<String, Double> paymentInfo = new HashMap<String, Double>();
-						paymentInfo.put(paymentMode, Double.valueOf(cart.getTotalPriceWithConv().doubleValue() - walletAmount));
-						//saving TPWallet Payment related info
-						mplPaymentWebFacade.saveTPWalletPaymentInfoMobile(cart, refNo, paymentInfo);
-
-						//getMplCheckoutFacade().placeOrder();
-
-						orderData = mplCheckoutFacade.placeOrderByCartId(cart.getGuid());
-
-						if (StringUtils.isNotEmpty(cart.getGuid()))
-						{
-							orderModel = getMplPaymentFacade().getOrderByGuid(cart.getGuid());
-
-							mplPaymentWebFacade.entryInTPWaltAuditMobile(status, mWRefCode,
-									MarketplacewebservicesConstants.CHANNEL_MOBILE, orderModel.getGuid(), refNo);
-
-							orderModel.setIsWallet(WalletEnum.MRUPEE);
-							orderModel.setStatus(OrderStatus.PAYMENT_SUCCESSFUL);
-						}
-						//		return updateOrder(orderModel, redirectAttributes);
-						if (mplPaymentWebFacade.updateOrder(orderModel))
-						{
-							walletPaymentWsDTO.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
-							walletPaymentWsDTO.setOrderId(orderModel.getCode());
-						}
-						else
-						{
-							walletPaymentWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-							walletPaymentWsDTO.setOrderId(orderModel.getCode());
-						}
-					}
-					else
-					{
-						throw new InvalidCartException(
-								"************PaymentMethodCheckoutStepController : walletPayment : Invalid Cart!!!"
-										+ (StringUtils.isNotEmpty(cart.getGuid()) ? cart.getGuid()
-												: MarketplacecommerceservicesConstants.EMPTY));
-					}
-				}
-				catch (final EtailBusinessExceptions e)
-				{
-					walletPaymentWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-					ExceptionUtil.getCustomizedExceptionTrace(e);
-					// Error message for All Exceptions
-					if (null != e.getErrorMessage())
-					{
-						walletPaymentWsDTO.setError(e.getErrorMessage());
-						walletPaymentWsDTO.setErrorCode(e.getErrorCode());
-					}
-				}
-				catch (final EtailNonBusinessExceptions e)
-
-				{
-					walletPaymentWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-					// Error message for All Exceptions
-					ExceptionUtil.etailNonBusinessExceptionHandler(e);
-					if (null != e.getErrorMessage())
-					{
-						walletPaymentWsDTO.setError(e.getErrorMessage());
-						walletPaymentWsDTO.setErrorCode(e.getErrorCode());
-					}
-
-				}
-				catch (final Exception e)
-
-				{
-					LOG.error("MRUPEE ORDER", e);
-					// Error message for All Exceptions
-					if (null != e.getMessage())
-					{
-						walletPaymentWsDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
-						walletPaymentWsDTO.setErrorCode(MarketplacecommerceservicesConstants.B9004);
-					}
-					walletPaymentWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					walletPaymentWsDTO.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
+					walletPaymentWsDTO.setOrderId(orderModel.getCode());
 				}
 			}
 			else
-
 			{
-				mplPaymentWebFacade.entryInTPWaltAuditMobile(status, mWRefCode, MarketplacewebservicesConstants.CHANNEL_MOBILE,
-						cart.getGuid(), refNo);
-
+				mplPaymentWebFacade.entryInTPWaltAuditMobile(status, MarketplacewebservicesConstants.CHANNEL_MOBILE, guid, refNo);
 				walletPaymentWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);// please enter valid values
 			}
 		}
+		catch (final EtailBusinessExceptions e)
+		{
+			walletPaymentWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			// Error message for All Exceptions
+			if (null != e.getErrorMessage())
+			{
+				walletPaymentWsDTO.setError(e.getErrorMessage());
+				walletPaymentWsDTO.setErrorCode(e.getErrorCode());
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			walletPaymentWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			// Error message for All Exceptions
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				walletPaymentWsDTO.setError(e.getErrorMessage());
+				walletPaymentWsDTO.setErrorCode(e.getErrorCode());
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("MRUPEE ORDER", e);
+			// Error message for All Exceptions
+			if (null != e.getMessage())
+			{
+				walletPaymentWsDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+				walletPaymentWsDTO.setErrorCode(MarketplacecommerceservicesConstants.B9004);
+			}
+			walletPaymentWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
 		return walletPaymentWsDTO;
-
 	}
 	// Getter Setter
 

@@ -959,6 +959,11 @@
 
 	<bean id="mplJusPayRefundService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplJusPayRefundService" />
+		
+		<!-- Mrupee implementation -->	
+	
+		<bean id="mplMWalletRefundService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplMWalletRefundService" />
 
 	<!-- For Bulk Upload of Promotions -->
 	<bean id="promotionCreationJob"

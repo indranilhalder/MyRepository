@@ -1040,11 +1040,11 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void entryInTPWaltAuditMobile(final String status, final String mWRefCode, final String channelWeb, final String guid,
+	public void entryInTPWaltAuditMobile(final String status, final String channelWeb, final String guid,
 			final String walletOrderId)
 	{
 		// YTODO Auto-generated method stub
-		mplPaymentService.entryInTPWaltAudit(status, mWRefCode, channelWeb, guid, walletOrderId);
+		mplPaymentService.entryInTPWaltAudit(status, channelWeb, guid, walletOrderId);
 	}
 
 	/*
