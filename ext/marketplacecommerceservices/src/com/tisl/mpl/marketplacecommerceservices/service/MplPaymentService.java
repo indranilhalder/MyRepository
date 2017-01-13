@@ -319,7 +319,7 @@ public interface MplPaymentService
 
 	//	void entryInTPWaltAudit(HttpServletRequest request, String channelWeb, String guid, String walletOrderId);
 
-	void entryInTPWaltAudit(String status, String mWRefCode, String channelWeb, String guid, String walletOrderId);
+	void entryInTPWaltAudit(String status, String channelWeb, String guid, String walletOrderId);
 
 	/**
 	 * @param custName

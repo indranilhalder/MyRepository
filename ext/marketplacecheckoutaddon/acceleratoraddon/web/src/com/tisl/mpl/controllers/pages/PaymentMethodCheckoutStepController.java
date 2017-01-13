@@ -4190,7 +4190,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
@@ -4338,8 +4338,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						refNumber = orderId.get(0);
 						checksum = orderId.get(1);
 					}
-					getMplPaymentFacade().entryInTPWaltAudit(request, MarketplacecheckoutaddonConstants.CHANNEL_WEB, cartGuid,
-							refNumber);
+					getMplPaymentFacade().entryInTPWaltAudit(null, MarketplacecheckoutaddonConstants.CHANNEL_WEB, cartGuid, refNumber);
 					LOG.info("::Created Wallet OrderId::" + orderId);
 
 				}
@@ -4380,6 +4379,19 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					{
 						orderId = getMplPaymentFacade().createWalletorder(orderModel, walletName,
 								MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+
+						if (CollectionUtils.isNotEmpty(orderId))
+						{
+							refNumber = orderId.get(0);
+							checksum = orderId.get(1);
+						}
+						getMplPaymentFacade().entryInTPWaltAudit(null, MarketplacecheckoutaddonConstants.CHANNEL_WEB, cartGuid,
+								refNumber);
+						LOG.info("::Created Wallet OrderId::" + orderId);
+
+						response = refNumber + "|" + checksum + "|" + cartGuid + "|" + orderModel.getTotalPrice() + "|"
+								+ returnUrlBuilder;
+
 					}
 				}
 				else if (null != orderModel.getPaymentInfo())
@@ -4428,6 +4440,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 			OrderModel orderModel = null;
 
+			String status = null;
+
+			final Double transactionAmount = Double.valueOf(request.getParameter("AMT"));
+
 			if (StringUtils.isNotEmpty(refNo))
 			{
 				guid = getMplPaymentFacade().getWalletAuditEntries(refNo);
@@ -4440,30 +4456,46 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 			}
 
-			if (null != request.getParameter("STATUS") && "S".equalsIgnoreCase(request.getParameter("STATUS")))
+			if (null != orderModel)
 			{
-				if (null != orderModel)
+				final Double orderAmount = orderModel.getTotalPrice();
+				if (null != request.getParameter("STATUS") && "S".equalsIgnoreCase(request.getParameter("STATUS")))
 				{
-					getMplPaymentFacade().entryInTPWaltAudit(request, MarketplacecheckoutaddonConstants.CHANNEL_WEB,
-							orderModel.getGuid(), refNo);
 
-					//saving TPWallet Payment related info
-					getMplPaymentFacade().saveTPWalletPaymentInfo(orderModel, request);
+					if (orderAmount.compareTo(transactionAmount) == 0)
+					{
+						status = MarketplacecheckoutaddonConstants.SUCCESS;
+						getMplPaymentFacade().entryInTPWaltAudit(status, MarketplacecheckoutaddonConstants.CHANNEL_WEB,
+								orderModel.getGuid(), refNo);
+
+						//saving TPWallet Payment related info
+						getMplPaymentFacade().saveTPWalletPaymentInfo(orderModel, request);
+
+						return updateOrder(orderModel, redirectAttributes);
+					}
+					else
+					{
+						status = MarketplacecheckoutaddonConstants.FAIL;
+						//setting the audit table to DECLINED if order amount is not equal
+						getMplPaymentFacade().entryInTPWaltAudit(status, MarketplacecheckoutaddonConstants.CHANNEL_WEB,
+								orderModel.getGuid(), refNo);
+						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+								MarketplacecheckoutaddonConstants.TRANERRORMSG);
+						return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+								+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+					}
 				}
 
-				return updateOrder(orderModel, redirectAttributes);
+				else
+				{
+					status = MarketplacecheckoutaddonConstants.FAIL;
+					getMplPaymentFacade().entryInTPWaltAudit(status, MarketplacecheckoutaddonConstants.CHANNEL_WEB, guid, refNo);
 
-
-			}
-
-			else
-			{
-				getMplPaymentFacade().entryInTPWaltAudit(request, MarketplacecheckoutaddonConstants.CHANNEL_WEB, guid, refNo);
-
-				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-						MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
-				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
-						+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+							MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+							+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+				}
 			}
 
 		}

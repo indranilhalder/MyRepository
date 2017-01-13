@@ -3808,8 +3808,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	//	public void entryInTPWaltAudit(final HttpServletRequest request, final String channelWeb, final String guid,
 	//			final String refNo)
 	@Override
-	public void entryInTPWaltAudit(final String status, final String mWRefCode, final String channelWeb, final String guid,
-			final String refNo)
+	public void entryInTPWaltAudit(final String status, final String channelWeb, final String guid, final String refNo)
 
 	{
 		try
@@ -3846,7 +3845,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				//					auditEntry.setMWRefNo(request.getParameter("MWREFNO"));
 				//				}
 
-				if (null != status && !("S".equalsIgnoreCase(status)))
+				if (null != status && !(MarketplacecommerceservicesConstants.SUCCESS.equalsIgnoreCase(status)))
 				{
 					auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
 				}
@@ -3932,7 +3931,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			//saving the tpWalletInfoModel
 			//try
 			//{
-			if (null == cart.getPaymentInfo())
+			if (null == cart.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(cart.getStatus()))
 			{
 				getModelService().save(tpWalletInfoModel);
 				//setting paymentinfo in cart
@@ -3947,6 +3946,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				LOG.error(ERROR_PAYMENT + cart.getCode());
 			}
+
+
 
 			//}
 			//catch (final ModelSavingException e)

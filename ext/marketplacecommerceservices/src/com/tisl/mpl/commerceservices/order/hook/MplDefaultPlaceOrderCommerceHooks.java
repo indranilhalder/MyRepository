@@ -277,6 +277,18 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 		final OrderModel orderModel = paramCommerceOrderResult.getOrder();
 
+		//Added for third party wallet in case 1st tym order is not placed and tried with a different mode of payment
+
+		if (MarketplacecommerceservicesConstants.THIRDPARTYWALLET.equalsIgnoreCase(orderModel.getModeOfOrderPayment()))
+		{
+			orderModel.setIsWallet(WalletEnum.MRUPEE);
+		}
+
+		else
+		{
+			orderModel.setIsWallet(WalletEnum.NONWALLET);
+		}
+
 		//orderModel.setType("Parent");
 		final List<OrderModel> orderList = getSubOrders(orderModel);
 

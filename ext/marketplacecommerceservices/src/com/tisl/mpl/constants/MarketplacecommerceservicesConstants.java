@@ -1837,4 +1837,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String STATUS1 = "status1".intern();
 	public static final String STATUS2 = "status2".intern();
 
+	public final static String THIRDPARTYWALLET = "ThirdPartyWallet";
+
 }

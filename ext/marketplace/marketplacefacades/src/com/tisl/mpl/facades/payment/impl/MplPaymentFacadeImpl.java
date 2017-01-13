@@ -1644,11 +1644,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1699,9 +1699,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
@@ -3086,7 +3086,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#createWalletorder(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -3113,20 +3113,19 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#entryInTPWaltAudit(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
 	@Override
-	public void entryInTPWaltAudit(final HttpServletRequest request, final String channelWeb, final String guid,
-			final String walletOrderId)
+	public void entryInTPWaltAudit(final String status, final String channelWeb, final String guid, final String walletOrderId)
 	{
 		//Commented for Mobile use
-		final String status = request.getParameter("STATUS");
-		final String mWRefCode = request.getParameter("MWREFNO");
+		//final String status = request.getParameter("STATUS");
+		//final String mWRefCode = request.getParameter("MWREFNO");
 		//	getMplPaymentService().entryInTPWaltAudit(request, channelWeb, guid, walletOrderId);
 
-		getMplPaymentService().entryInTPWaltAudit(status, mWRefCode, channelWeb, guid, walletOrderId);
+		getMplPaymentService().entryInTPWaltAudit(status, channelWeb, guid, walletOrderId);
 
 	}
 
@@ -3134,7 +3133,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#saveTPWalletPaymentInfo(de.hybris.platform.core.model.order.
 	 * CartModel , javax.servlet.http.HttpServletRequest)
 	 */
@@ -3193,7 +3192,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#getWalletAuditEntries(java.lang.String)
 	 */
 	@Override
