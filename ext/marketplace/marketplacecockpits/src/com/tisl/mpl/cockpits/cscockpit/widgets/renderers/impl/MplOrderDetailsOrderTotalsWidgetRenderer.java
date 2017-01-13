@@ -104,9 +104,12 @@ public class MplOrderDetailsOrderTotalsWidgetRenderer extends
 			
 			for (AbstractOrderEntryModel orderEntry : abstractOrderModel
 					.getEntries()) {
-				if(! mplFindDeliveryFulfillModeStrategy.isTShip(orderEntry.getSelectedUSSID())){
+				/********************************* TPR-4401 Delivery Charge Addition Starts Here ****************************************************/
+				/*if(! mplFindDeliveryFulfillModeStrategy.isTShip(orderEntry.getSelectedUSSID())){
 					totalDeliveryCostDisc += Double.valueOf(orderEntry.getPrevDelCharge().doubleValue() - orderEntry.getCurrDelCharge().doubleValue());
-				}
+				}*/
+				totalDeliveryCostDisc += Double.valueOf(orderEntry.getPrevDelCharge().doubleValue() - orderEntry.getCurrDelCharge().doubleValue());
+				/********************************* TPR-4401 Delivery Charge Addition Ends Here ****************************************************/
 			}
 
 			renderRow(totalDeliveryCostDisc >0 ? totalDeliveryCostDisc : 0d , LabelUtils.getLabel(widget,
