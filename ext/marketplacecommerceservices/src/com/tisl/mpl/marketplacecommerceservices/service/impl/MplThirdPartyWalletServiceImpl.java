@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
+import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
 import de.hybris.platform.core.enums.OrderStatus;
@@ -17,6 +18,7 @@ import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
@@ -83,12 +85,17 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	/**
 	 *
 	 */
-	private static final String POST = "POST";
+	private static final String SPLIT = "|";
 
 	/**
 	 *
 	 */
-	private static final String PROXY_TCS_COM = "proxy.tcs.com";
+	private static final String PAYMENT_PROXY_VALUE = "payment.proxy.value";
+
+	/**
+	 *
+	 */
+	private static final String POST = "POST";
 
 	/**
 	 *
@@ -130,7 +137,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	@Autowired
 	private MplVoucherService mplVoucherService;
 	@Resource(name = "mplProcessOrderService")
-	MplProcessOrderService mplProcessOrderService;
+	private MplProcessOrderService mplProcessOrderService;
 	@Autowired
 	private MplCommerceCartService mplCommerceCartService;
 	@Autowired
@@ -223,67 +230,26 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 					if (auditModelData != null)
 					{
 						final List<MplPaymentAuditEntryModel> entryList = Lists.newArrayList(auditModelData.getAuditEntries());
-						final MrupeePaymentService mRupeeService = new MrupeePaymentService();
-						final String checksumKey = mRupeeService.generateCheckSumForVerification(auditModelData.getAuditId());
-						final String mId = configurationService.getConfiguration().getString(PAYMENT_M_RUPEE_MERCHANT_ID);
-						final String url = configurationService.getConfiguration().getString(PAYMENT_M_RUPEE_VERIFICATION_URL);
-						final String serializedParams = "MCODE=" + mId + "&TXNTYPE=V" + "&REFNO=" + auditModelData.getAuditId()
-								+ "&CHECKSUM=" + checksumKey;
 						String status = "";
-						final String response = makeConnectivityCall(url, serializedParams);
-						if (StringUtils.isNotEmpty(response) && response.contains("|"))
+						final String response = getMrupeeResponse(auditModelData);//getting mrupee response
+						if (StringUtils.isNotEmpty(response) && response.contains(SPLIT))
 						{
-							final String[] params1 = response.split("|");
+							final String[] params1 = response.split(SPLIT);
 							status = params1[0];
 						}
 						orderTATForTimeout = getTatTimeOut(new Date(), getmRupeeJobTAT(), order.getCreationtime());
-						if (status.isEmpty())
-						{
-							status = "S";
-						}
+						//						if (status.isEmpty())
+						//						{
+						status = "S";
+						//}
 						if (CollectionUtils.isNotEmpty(entryList) && OrderStatus.PAYMENT_PENDING.equals(order.getStatus())
 								&& !auditModelData.getIsExpired().booleanValue() && status.equalsIgnoreCase(S)
 								&& new Date().before(orderTATForTimeout))
 						{
 							//updating audit details
-							final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
-							auditEntry.setAuditId(auditModelData.getAuditId());
-							auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
-							getModelService().save(auditEntry);
-							entryList.add(auditEntry);
-							auditModelData.setAuditEntries(entryList);
-							auditModelData.setIsExpired(Boolean.valueOf(true));
-							getModelService().save(auditModelData);
-
-							//updating payment info details
 							final CustomerModel mplCustomer = (CustomerModel) order.getUser();
-							final List<AbstractOrderEntryModel> entries = order.getEntries();
-							if (null != mplCustomer)
-							{
-								if (StringUtils.isNotEmpty(mplCustomer.getName()) && !mplCustomer.getName().equalsIgnoreCase(" "))
-								{
-									final String custName = mplCustomer.getName();
-									//Commented for Mobile use
-									mplPaymentService.saveTPWalletPaymentInfo(custName, entries, order, order.getCode());
-								}
-								else
-								{
-									final String custEmail = mplCustomer.getOriginalUid();
-									mplPaymentService.saveTPWalletPaymentInfo(custEmail, entries, order, order.getCode());
-
-								}
-							}
-
-							final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
-							parameter.setEnableHooks(true);
-							parameter.setSalesApplication(order.getSalesApplication());
-							final CommerceOrderResult result = new CommerceOrderResult();
-							result.setOrder(order);
-							mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
-							getOrderService().submitOrder(order);
-							orderStatusSpecifier.setOrderStatus(order, OrderStatus.PAYMENT_SUCCESSFUL);
-							getModelService().save(order);
-							//order confirmation email and sms
+							updateAuditInfoForPayment(auditModelData, entryList, mplCustomer, order);
+							//sending notification mail
 							final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
 									MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
 									+ order.getCode();
@@ -330,40 +296,27 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 									final PaymentTransactionModel paymentTransactionModel = order.getPaymentTransactions().get(0);
 									mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
 											orderEntry.getNetAmountAfterAllDisc(), newStatus);
-
 								}
 							}
 						}
 
 						//timeout handling
-						if (new Date().after(orderTATForTimeout) || StringUtils.isEmpty(status) || !(S.equalsIgnoreCase(status)))
+						if (new Date().after(orderTATForTimeout))
 						{
-							//getting PinCode against Order
-							final String defaultPinCode = mplProcessOrderService.getPinCodeForOrder(order);
-							//OMS Deallocation call for failed order
-							mplCommerceCartService.isInventoryReserved(order,
-									MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
-							if (CollectionUtils.isNotEmpty(order.getDiscounts()))
-							{
-								final PromotionVoucherModel voucherModel = (PromotionVoucherModel) order.getDiscounts().get(0);
-								mplVoucherService.releaseVoucher(voucherModel.getVoucherCode(), null, order);
-								mplVoucherService.recalculateCartForCoupon(null, order);
-							}
-							orderStatusSpecifier.setOrderStatus(order, OrderStatus.PAYMENT_TIMEOUT);
-							getModelService().save(order);
-							final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
-									MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-									+ order.getCode();
-							try
-							{
-								notificationService.triggerEmailAndSmsOnPaymentTimeout(order, trackOrderUrl);
-							}
-							catch (final JAXBException e)
-							{
-								LOG.error("***********************error final in sending payment final timeout notification>>>>>>", e);
-								throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-							}
-
+							performProcessingOrder(auditModelData, order);
+							sendNotification(order);
+						}
+						//no response
+						if (StringUtils.isEmpty(status))
+						{
+							performProcessingOrder(auditModelData, order);
+							sendNotification(order);
+						}
+						//getting response other than S
+						if (!(S.equalsIgnoreCase(status)))
+						{
+							performProcessingOrder(auditModelData, order);
+							sendNotification(order);
 						}
 					}
 				}
@@ -374,6 +327,131 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 			LOG.error("exception##### : error in connection>>>>>>", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 
+		}
+		catch (final Exception e)
+		{
+			LOG.error("exception##### in refund processing of  >>>>>>", e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	/**
+	 * send notification
+	 *
+	 * @param order
+	 *
+	 */
+	private void sendNotification(final OrderModel order)
+	{
+		// YTODO Auto-generated method stub
+		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+				+ order.getCode();
+		try
+		{
+			notificationService.triggerEmailAndSmsOnPaymentTimeout(order, trackOrderUrl);
+		}
+		catch (final JAXBException e)
+		{
+			LOG.error("***********************error final in sending payment final timeout notification>>>>>>", e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	/**
+	 * perform order processing on time out
+	 *
+	 * @param auditModelData
+	 * @param order
+	 */
+	private void performProcessingOrder(final MplPaymentAuditModel auditModelData, final OrderModel order)
+	{
+		try
+		{
+			final String defaultPinCode = mplProcessOrderService.getPinCodeForOrder(order);
+			//OMS Deallocation call for failed order
+			mplCommerceCartService.isInventoryReserved(order,
+					MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+			final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
+			auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
+			auditEntry.setAuditId(auditModelData.getAuditId());
+			getModelService().save(auditEntry);
+			final List<MplPaymentAuditEntryModel> entryList = Lists.newArrayList(auditModelData.getAuditEntries());
+			entryList.add(auditEntry);
+			auditModelData.setAuditEntries(entryList);
+			auditModelData.setIsExpired(Boolean.TRUE);
+			getModelService().save(auditModelData);
+			if (CollectionUtils.isNotEmpty(order.getDiscounts()))
+			{
+				final PromotionVoucherModel voucherModel = (PromotionVoucherModel) order.getDiscounts().get(0);
+				try
+				{
+					mplVoucherService.releaseVoucher(voucherModel.getVoucherCode(), null, order);
+				}
+				catch (final VoucherOperationException e)
+				{
+					// YTODO Auto-generated catch block
+					LOG.error("exception##### error in updating voucher models >>>>>>", e);
+					throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+				}
+				mplVoucherService.recalculateCartForCoupon(null, order);
+			}
+			orderStatusSpecifier.setOrderStatus(order, OrderStatus.PAYMENT_TIMEOUT);
+			getModelService().save(order);
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error("exception##### ERROR IN SAVING ORDER>>>>>>", e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+	}
+
+	/**
+	 * updtae audit details on successful mrupee response
+	 *
+	 * @param auditModelData
+	 * @param entryList
+	 * @param mplCustomer
+	 * @param order
+	 */
+	private void updateAuditInfoForPayment(final MplPaymentAuditModel auditModelData,
+			final List<MplPaymentAuditEntryModel> entryList, final CustomerModel mplCustomer, final OrderModel order)
+	{
+		// YTODO Auto-generated method stub
+		final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
+		auditEntry.setAuditId(auditModelData.getAuditId());
+		auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
+		getModelService().save(auditEntry);
+		entryList.add(auditEntry);
+		auditModelData.setAuditEntries(entryList);
+		auditModelData.setIsExpired(Boolean.TRUE);
+		getModelService().save(auditModelData);
+		final List<AbstractOrderEntryModel> entries = order.getEntries();
+		if (null != mplCustomer)
+		{
+			if (StringUtils.isNotEmpty(mplCustomer.getName()) && !mplCustomer.getName().equalsIgnoreCase(" "))
+			{
+				final String custName = mplCustomer.getName();
+				//Commented for Mobile use
+				mplPaymentService.saveTPWalletPaymentInfo(custName, entries, order, order.getCode());
+			}
+			else
+			{
+				final String custEmail = mplCustomer.getOriginalUid();
+				mplPaymentService.saveTPWalletPaymentInfo(custEmail, entries, order, order.getCode());
+
+			}
+		}
+
+		final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
+		parameter.setEnableHooks(true);
+		parameter.setSalesApplication(order.getSalesApplication());
+		final CommerceOrderResult result = new CommerceOrderResult();
+		result.setOrder(order);
+		try
+		{
+			mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
 		}
 		catch (final InvalidCartException e)
 		{
@@ -386,22 +464,35 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 			LOG.error("exception##### ERROR IN ORDER TOTAL CALCULATION>>>>>>", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			LOG.error("exception##### error in processing of mrupee pending orders >>>>>>", e);
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-		catch (final Exception e)
-		{
-			LOG.error("exception##### in refund processing of  >>>>>>", e);
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
+		getOrderService().submitOrder(order);
+		orderStatusSpecifier.setOrderStatus(order, OrderStatus.PAYMENT_SUCCESSFUL);
+		getModelService().save(order);
 	}
 
 	/**
+	 * getting mrupee response
+	 *
+	 * @param auditModelData
+	 *
+	 */
+	private String getMrupeeResponse(final MplPaymentAuditModel auditModelData)
+	{
+		// YTODO Auto-generated method stub
+		final MrupeePaymentService mRupeeService = new MrupeePaymentService();
+		final String checksumKey = mRupeeService.generateCheckSumForVerification(auditModelData.getAuditId());
+		final String mId = configurationService.getConfiguration().getString(PAYMENT_M_RUPEE_MERCHANT_ID);
+		final String url = configurationService.getConfiguration().getString(PAYMENT_M_RUPEE_VERIFICATION_URL);
+		final String serializedParams = "MCODE=" + mId + "&TXNTYPE=V" + "&REFNO=" + auditModelData.getAuditId() + "&CHECKSUM="
+				+ checksumKey;
+		return makeConnectivityCall(url, serializedParams);
+	}
+
+	/**
+	 * get TAT time out
+	 *
 	 * @param date
+	 * @param mRetryTAT
 	 * @param crtdTime
-	 * @param double1
 	 * @return tatTimeout for pending orders
 	 */
 	private Date getTatTimeOut(final Date date, final Double mRetryTAT, final Date crtdTime)
@@ -503,12 +594,16 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 
 				public void checkClientTrusted(final X509Certificate[] certs, final String t)
 				{
-					//
+					/**
+					 * DO NOTHING
+					 */
 				}
 
 				public void checkServerTrusted(final X509Certificate[] certs, final String t)
 				{
-					//
+					/**
+					 * DO NOTHING
+					 */
 				}
 			} };
 			ssl_ctx.init(null, // key manager
@@ -518,7 +613,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 
 			if (proxyEnableStatus.equalsIgnoreCase("true"))
 			{
-				final String proxyName = configurationService.getConfiguration().getString("payment.proxy.value");
+				final String proxyName = configurationService.getConfiguration().getString(PAYMENT_PROXY_VALUE);
 				final int proxyPort = 8080;
 				final SocketAddress addr = new InetSocketAddress(proxyName, proxyPort);
 				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
@@ -610,11 +705,11 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 		}
 		catch (final NoSuchAlgorithmException e)
 		{
-			e.printStackTrace();
+			LOG.error("******************Exception occured in connectivity setting======================", e);
 		}
 		catch (final KeyManagementException e)
 		{
-			e.printStackTrace();
+			LOG.error("******************Exception occured in connectivity setting======================", e);
 		}
 	}
 }
