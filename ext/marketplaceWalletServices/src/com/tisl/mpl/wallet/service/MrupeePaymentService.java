@@ -35,4 +35,16 @@ public class MrupeePaymentService
 		return stChesksum;
 
 	}
+
+	public String generateCheckSumForVerification(final String walletOrderId, final String amount)
+	{
+		final String[] parameters =
+		{ "TULA", "V", walletOrderId, "uat", amount };//Purchase
+		final String checksumKey = "U82Q3MW53S";
+		final String stChesksum = MerchantChecksum.generateChecksum(parameters, checksumKey);
+		LOG.debug("Checksum New:" + stChesksum);
+		return stChesksum;
+
+	}
+
 }

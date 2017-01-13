@@ -1829,5 +1829,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TPWALLETAUDITQUERY = "select {a:pk} from {MplPaymentAudit As a} where {a.auditId}=?auditId"
 			.intern();
 	public final static String MRUPEERETURNMETHOD = "payment.mRupee.returnMethod".intern();
+	public static final String THIRDPARTYWALLET_ENTRY_EXPIRED = "0".intern();
 
+	//mrupee
+	public static final String PAYMENTPENDING = "SELECT {o.pk}  FROM {order as o},{OrderStatus as os},{WalletEnum as w} WHERE {creationtime} > (to_date(sysdate,'YYYY/MM/DD HH24:MI:SS') - INTERVAL '10' MINUTE) and {o.status}={os.pk} and  {o.iswallet}={w.pk} and ({os.code}=?status1 or {os.code}=?status2) and {w.code}='mRupee' "
+			.intern();
+	public static final String STATUS1 = "status1".intern();
+	public static final String STATUS2 = "status2".intern();
 }

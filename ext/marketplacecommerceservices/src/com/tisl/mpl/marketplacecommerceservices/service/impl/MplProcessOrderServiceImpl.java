@@ -89,6 +89,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	private MplVoucherDao mplVoucherDao;
 	private static final String ERROR_NOTIF = "Error while sending notifications>>>>>>";
 
+
 	/**
 	 * This method processes pending orders
 	 */
@@ -126,8 +127,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 					if (null != auditModel
 							&& StringUtils.isNotEmpty(auditModel.getAuditId())
-							&& ((WalletEnum.NONWALLET.toString().equals(orderModel.getIsWallet().getCode())) || orderModel.getIsWallet()
-									.getCode() == null))
+							&& ((null != orderModel.getIsWallet() && WalletEnum.NONWALLET.toString().equals(
+									orderModel.getIsWallet().getCode())) || orderModel.getIsWallet() == null))
 					{
 						//to check webhook entry status at Juspay corresponding to Payment Pending orders
 						final List<JuspayWebhookModel> hooks = checkstatusAtJuspay(auditModel.getAuditId());
@@ -307,7 +308,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	 * @param orderModel
 	 * @return String
 	 */
-	private String getPinCodeForOrder(final OrderModel orderModel)
+	public String getPinCodeForOrder(final OrderModel orderModel)
 	{
 		String defaultPinCode = "".intern();
 		if (null != orderModel.getDeliveryAddress() && StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPostalcode()))

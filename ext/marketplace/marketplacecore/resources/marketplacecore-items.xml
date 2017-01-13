@@ -2341,6 +2341,13 @@
 						<modifiers read="true" write="true" initial="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- mrupee changes -->
+					<attribute type="java.lang.Double" qualifier="mRupeeJobTAT">
+						<defaultvalue>Double.valueOf(30.0D)</defaultvalue>
+						<description>Turn Around Time for mRupee Job</description>
+						<modifiers read="true" write="true" initial="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -9403,5 +9410,24 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
+		<!-- mrupee changes -->
+		<!-- <typegroup name="mRuppeCronJob">
+			<itemtype code="mRupeeCronJob" extends="CronJob"
+				autocreate="true" generate="true" jaloclass="com.tisl.mpl.jalo.MrupeeCronJob">
+				<deployment table="MrupeeCronJob" typecode="25899" />
+				<attributes>
+					<attribute type="java.util.Date" qualifier="startDate">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.util.Date" qualifier="endDate">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			</typegroup> -->
 	</itemtypes>
 </items>

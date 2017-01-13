@@ -20,4 +20,6 @@ public interface MplProcessOrderDao
 
 	List<JuspayWebhookModel> getEventsForPendingOrders(String redId);
 
+	//MRUPYEE CHANGES
+	List<OrderModel> getPendingOrRefundInitiatedOrders(final String statusCode1, final String statusCode2);
 }

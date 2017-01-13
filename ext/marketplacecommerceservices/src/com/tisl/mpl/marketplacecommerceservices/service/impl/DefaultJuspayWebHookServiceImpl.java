@@ -129,8 +129,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 				if (null != oModel.getOrderStatus() && oModel.getIsExpired().booleanValue())
 				{
 					final OrderModel ordrMdl = getMplPaymentService().fetchOrderOnGUID(oModel.getOrderStatus().getOrderId());
-					if ((WalletEnum.NONWALLET.toString().equals(ordrMdl.getIsWallet().getCode()))
-							|| ordrMdl.getIsWallet().getCode() == null)
+					if ((null != ordrMdl.getIsWallet() && WalletEnum.NONWALLET.toString().equals(ordrMdl.getIsWallet().getCode()))
+							|| ordrMdl.getIsWallet() == null)
 					{
 						//getting all the webhook data where isExpired is Y and adding into a list
 						uniqueList.add(oModel);
@@ -190,7 +190,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		if (null != hook.getOrderStatus())
 		{
 			final OrderModel order = getMplPaymentService().fetchOrderOnGUID(hook.getOrderStatus().getOrderId());
-			if ((WalletEnum.NONWALLET.toString().equals(order.getIsWallet().getCode())) || order.getIsWallet().getCode() == null)
+			if ((null != order.getIsWallet() && WalletEnum.NONWALLET.toString().equals(order.getIsWallet().getCode()))
+					|| order.getIsWallet() == null)
 			{
 				if (CollectionUtils.isEmpty(hook.getOrderStatus().getRefunds()))
 				{

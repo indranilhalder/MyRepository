@@ -18,7 +18,6 @@
       <!-- you should add all required extensions to this list, except platform extensions which are automatically required -->         
       <!-- <requires-extension name="cms"/> -->         
       <requires-extension name="payment"/>
-
       <coremodule generated="true" manager="com.tisl.mpl.wallet.jalo.MarketplaceWalletServicesManager" packageroot="com.tisl.mpl.wallet"/>
 
       <webmodule jspcompile="false" webroot="/marketplaceWalletServices"/>

@@ -1976,6 +1976,14 @@
             </bean>
         </property>
     </bean>
+   <!--  mrupee changes starts -->
+   <bean id="mRupeeWalletService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplThirdPartyWalletServiceImpl">
+      <property name="configurationService" ref="configurationService" />
+      <property name="orderService" ref="orderService" />
+   </bean>
+   <bean id="mplThirdPartyWalletDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplThirdPartyWalletDaoImpl">
+   </bean>
+  <!--  mrupee changes ends -->
 	<!-- Old Cron Job Deletion Logic ends: -->
 
 </beans>
