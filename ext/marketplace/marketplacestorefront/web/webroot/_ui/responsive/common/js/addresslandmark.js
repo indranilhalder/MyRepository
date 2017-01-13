@@ -2,11 +2,11 @@ var addressLandMark = "";
 
 $(document).ready(function(){
 	
-/*	if($('div').hasClass('address_postcode')) {
+	if($('div').hasClass('address_postcode')) {
 		if($(".address_postcode").val().length >= "3") {
 			loadPincodeData("edit");
 			 var value = $(".address_landmarkOtherDiv").attr("data-value");
-			  
+			 
 			  setTimeout(function(){
 			  if($(".address_landmarks option[value='"+value+"']").length > "0") {
 				  
@@ -16,7 +16,12 @@ $(document).ready(function(){
 					
 					} else {
 					//alert(value+ " 3 in else");
-					  $(".address_landmarks").val("Other"); 
+						if($(".address_landmarks option[value='Other']").length > "0") {
+							  $(".address_landmarks").val("Other"); 
+							 }else{
+								 $(".address_landmarks").val("");  
+							 }
+
 						changeFuncLandMark("Other"); 
 					$(".address_landmarkOther").val(value);
 					
@@ -27,7 +32,7 @@ $(document).ready(function(){
 			loadPincodeData("new");
 			 
 		}
-	}*/
+	}
 
 	
 	
@@ -488,6 +493,7 @@ $(document).ready(function() {
 	$(".addAddressToForm").click(function(){
 		var className = $(this).attr("data-item");
 		//alert(className);
+		$(".error_text").hide();
 		$("#firstName").val($("."+className+" .firstName").text());
 		$("#lastName").val($("."+className+" .lastName").text());
 		$("#addressLine1").val($("."+className+" .addressLine1").text());

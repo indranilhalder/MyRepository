@@ -415,7 +415,7 @@ $(document).ready(function(){
 		  });
 	}else{
 		//alert("in else");
-		loadPincodeData("new");
+		checkOutAdress(tmpValue,"edit");
 		
 	} 
 	

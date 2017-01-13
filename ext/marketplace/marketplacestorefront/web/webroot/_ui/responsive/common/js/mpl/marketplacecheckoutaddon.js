@@ -4931,6 +4931,8 @@ $(".edit_address").click(function(){
  		success : function(response) {
  		//	$(this).parents().find(".edit").next(".editnewAddresPage#"+address_id).html(response);
  			$('.editnewAddresPage, .formaddress').slideUp();
+ 			// TISRLEE-1676
+ 			$('.editnewAddresPage, .formaddress').empty();
  			$(".add-address").slideDown();
  			$("#"+address_id_new[1]).html(response);
  		//	$(this).parents().find(".edit").next(".editnewAddresPage").show();

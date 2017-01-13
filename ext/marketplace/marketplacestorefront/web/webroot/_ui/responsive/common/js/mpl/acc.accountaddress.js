@@ -156,7 +156,7 @@ function editAddress(addressId) {
    	   						 $(".address_landmarks").val("");  
    	   					 }
    	            			changeFuncLandMark("Other"); 
-							$(".address_landmarkOther").val(value);
+							$(".address_landmarkOther").val(data.landmark);
    		            	}
    	            	}, 200);
    	            }
