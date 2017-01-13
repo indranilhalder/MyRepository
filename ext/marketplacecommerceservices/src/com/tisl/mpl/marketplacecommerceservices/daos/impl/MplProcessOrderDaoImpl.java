@@ -124,9 +124,9 @@ public class MplProcessOrderDaoImpl implements MplProcessOrderDao
 	{
 		try
 		{
-			//	final String queryString = MarketplacecommerceservicesConstants.PAYMENTPENDING;
-			final String queryString = "SELECT {o.pk},{o.iswallet} FROM {order as o},{OrderStatus as os},{WalletEnum as w} WHERE  {o.status}={os.pk} and {o.iswallet}={w.pk} and ({os.code}='PAYMENT_PENDING' or {os.code}='REFUND_INITIATED') and {w.code}='mRupee'"
-					.intern();
+			final String queryString = MarketplacecommerceservicesConstants.PAYMENTPENDING;
+			//			/*final String queryString = "SELECT {o.pk},{o.iswallet} FROM {order as o},{OrderStatus as os},{WalletEnum as w} WHERE  {o.status}={os.pk} and {o.iswallet}={w.pk} and ({os.code}='PAYMENT_PENDING' or {os.code}='REFUND_INITIATED') and {w.code}='mRupee'"
+			//					.intern();*/
 			//forming the flexible search query
 			final FlexibleSearchQuery orderListQuery = new FlexibleSearchQuery(queryString);
 			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.STATUS1, statusCode1);

@@ -174,7 +174,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplThirdPartyWalletService#getCronDetails(java.lang.String)
 	 */
 	@Override
@@ -238,10 +238,6 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 							status = params1[0];
 						}
 						orderTATForTimeout = getTatTimeOut(new Date(), getmRupeeJobTAT(), order.getCreationtime());
-						//						if (status.isEmpty())
-						//						{
-						status = "S";
-						//}
 						if (CollectionUtils.isNotEmpty(entryList) && OrderStatus.PAYMENT_PENDING.equals(order.getStatus())
 								&& !auditModelData.getIsExpired().booleanValue() && status.equalsIgnoreCase(S)
 								&& new Date().before(orderTATForTimeout))
@@ -512,7 +508,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplThirdPartyWalletService#saveCronDetails(java.util.Date,
 	 * java.lang.String)
 	 */
