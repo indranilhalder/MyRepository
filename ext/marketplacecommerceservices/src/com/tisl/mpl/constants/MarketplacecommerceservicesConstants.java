@@ -1836,4 +1836,5 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			.intern();
 	public static final String STATUS1 = "status1".intern();
 	public static final String STATUS2 = "status2".intern();
+
 }

@@ -21,7 +21,7 @@ import com.tisl.mpl.util.ExceptionUtil;
 
 
 /**
- * @author 682160
+ * @author TCS
  *
  */
 public class MplThirdPartyWalletCronJob extends AbstractJobPerformable<CronJobModel>

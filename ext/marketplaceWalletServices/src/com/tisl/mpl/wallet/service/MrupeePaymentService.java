@@ -36,10 +36,10 @@ public class MrupeePaymentService
 
 	}
 
-	public String generateCheckSumForVerification(final String walletOrderId, final String amount)
+	public String generateCheckSumForVerification(final String walletOrderId)
 	{
 		final String[] parameters =
-		{ "TULA", "V", walletOrderId, "uat", amount };//Purchase
+		{ "TULA", "V", walletOrderId };//verification
 		final String checksumKey = "U82Q3MW53S";
 		final String stChesksum = MerchantChecksum.generateChecksum(parameters, checksumKey);
 		LOG.debug("Checksum New:" + stChesksum);

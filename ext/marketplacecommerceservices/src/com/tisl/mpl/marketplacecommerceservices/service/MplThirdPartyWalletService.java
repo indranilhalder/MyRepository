@@ -9,7 +9,7 @@ import com.tisl.mpl.model.MplConfigurationModel;
 
 
 /**
- * @author 682160
+ * @author TCS
  *
  */
 public interface MplThirdPartyWalletService

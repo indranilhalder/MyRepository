@@ -29,6 +29,8 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -37,8 +39,10 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.xml.bind.JAXBException;
@@ -71,7 +75,7 @@ import com.tisl.mpl.wallet.service.MrupeePaymentService;
 
 
 /**
- * @author 682160
+ * @author TCS
  *
  */
 public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletService
@@ -220,8 +224,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 					{
 						final List<MplPaymentAuditEntryModel> entryList = Lists.newArrayList(auditModelData.getAuditEntries());
 						final MrupeePaymentService mRupeeService = new MrupeePaymentService();
-						final String checksumKey = mRupeeService.generateCheckSumForVerification(auditModelData.getAuditId(), order
-								.getTotalPriceWithConv().toString());
+						final String checksumKey = mRupeeService.generateCheckSumForVerification(auditModelData.getAuditId());
 						final String mId = configurationService.getConfiguration().getString(PAYMENT_M_RUPEE_MERCHANT_ID);
 						final String url = configurationService.getConfiguration().getString(PAYMENT_M_RUPEE_VERIFICATION_URL);
 						final String serializedParams = "MCODE=" + mId + "&TXNTYPE=V" + "&REFNO=" + auditModelData.getAuditId()
@@ -338,33 +341,29 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 							//getting PinCode against Order
 							final String defaultPinCode = mplProcessOrderService.getPinCodeForOrder(order);
 							//OMS Deallocation call for failed order
-							final boolean test = true;
-							if (!test)
+							mplCommerceCartService.isInventoryReserved(order,
+									MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+							if (CollectionUtils.isNotEmpty(order.getDiscounts()))
 							{
-								mplCommerceCartService.isInventoryReserved(order,
-										MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
-								if (CollectionUtils.isNotEmpty(order.getDiscounts()))
-								{
-									final PromotionVoucherModel voucherModel = (PromotionVoucherModel) order.getDiscounts().get(0);
-									mplVoucherService.releaseVoucher(voucherModel.getVoucherCode(), null, order);
-									mplVoucherService.recalculateCartForCoupon(null, order);
-								}
-								orderStatusSpecifier.setOrderStatus(order, OrderStatus.PAYMENT_TIMEOUT);
-								getModelService().save(order);
-								final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
-										MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-										+ order.getCode();
-								try
-								{
-									notificationService.triggerEmailAndSmsOnPaymentTimeout(order, trackOrderUrl);
-								}
-								catch (final JAXBException e)
-								{
-									LOG.error("***********************error final in sending payment final timeout notification>>>>>>", e);
-									throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-								}
-
+								final PromotionVoucherModel voucherModel = (PromotionVoucherModel) order.getDiscounts().get(0);
+								mplVoucherService.releaseVoucher(voucherModel.getVoucherCode(), null, order);
+								mplVoucherService.recalculateCartForCoupon(null, order);
 							}
+							orderStatusSpecifier.setOrderStatus(order, OrderStatus.PAYMENT_TIMEOUT);
+							getModelService().save(order);
+							final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+									MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+									+ order.getCode();
+							try
+							{
+								notificationService.triggerEmailAndSmsOnPaymentTimeout(order, trackOrderUrl);
+							}
+							catch (final JAXBException e)
+							{
+								LOG.error("***********************error final in sending payment final timeout notification>>>>>>", e);
+								throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+							}
+
 						}
 					}
 				}
@@ -484,6 +483,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	private String makeConnectivityCall(final String endPoint, final String encodedParams)
 	{
 
+		disableSslVerification();
 		final String proxyEnableStatus = "true";
 		HttpsURLConnection connection = null;
 		final StringBuilder buffer = new StringBuilder();
@@ -518,7 +518,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 
 			if (proxyEnableStatus.equalsIgnoreCase("true"))
 			{
-				final String proxyName = PROXY_TCS_COM;
+				final String proxyName = configurationService.getConfiguration().getString("payment.proxy.value");
 				final int proxyPort = 8080;
 				final SocketAddress addr = new InetSocketAddress(proxyName, proxyPort);
 				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
@@ -557,5 +557,64 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 			LOG.error("******************Exception in connectivity in  mrupeee verification======================", e);
 		}
 		return buffer.toString();
+	}
+
+	private void disableSslVerification()
+	{
+		try
+		{
+			// Create a trust manager that does not validate certificate chains
+
+			final TrustManager[] trustAllCerts = new TrustManager[]
+			{ new X509TrustManager()
+			{
+				public java.security.cert.X509Certificate[] getAcceptedIssuers()
+				{
+					return null;
+				}
+
+				public void checkClientTrusted(final X509Certificate[] certs, final String authType)
+				{
+					//
+				}
+
+				public void checkServerTrusted(final X509Certificate[] certs, final String authType)
+				{
+					//
+				}
+			} };
+
+			// Install the all-trusting trust manager
+			final SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(null, trustAllCerts, new java.security.SecureRandom());
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+			// Create all-trusting host name verifier
+			final HostnameVerifier allHostsValid = new HostnameVerifier()
+			{
+				public boolean verify(final String hostname, final SSLSession session)
+				{
+					if (hostname.equals("14.140.248.13"))
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+			};
+
+			// Install the all-trusting host verifier
+			HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+		}
+		catch (final NoSuchAlgorithmException e)
+		{
+			e.printStackTrace();
+		}
+		catch (final KeyManagementException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
