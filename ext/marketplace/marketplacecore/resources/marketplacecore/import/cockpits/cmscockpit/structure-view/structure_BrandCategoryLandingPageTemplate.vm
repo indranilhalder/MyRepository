@@ -88,6 +88,14 @@
 					<cockpit code="StyleEditRightColSlot" />
 				</td>
 			</tr>
+			
+			<tr>
+				<td colspan="5" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="BestOfferSection" />
+					
+				</td>
+			</tr>
+			
 			<tr>
 				<td colspan="4" style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="Section2D" />

@@ -35,6 +35,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.model.cms.components.CMSMediaParagraphComponentModel;
 import com.tisl.mpl.model.cms.components.ImageCarouselComponentModel;
+import com.tisl.mpl.model.cms.components.MplOfferImageCarouselComponentModel;
 import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
@@ -182,6 +183,109 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 		}
 
 		return bestPicks;
+	}
+
+
+	//Tpr-1672
+	@Override
+	public JSONObject getBestOffersJSON(final ContentSlotModel contentSlot) throws EtailNonBusinessExceptions
+	{
+		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
+		final JSONObject bestOffers = new JSONObject();
+		if (CollectionUtils.isNotEmpty(contentSlot.getCmsComponents()))
+		{
+			components = contentSlot.getCmsComponents();
+		}
+
+		for (final AbstractCMSComponentModel component : components)
+		{
+			if (component instanceof MplOfferImageCarouselComponentModel)
+			{
+				final MplOfferImageCarouselComponentModel bestOfferCarouselComponent = (MplOfferImageCarouselComponentModel) component;
+				String title = "";
+				if (StringUtils.isNotEmpty(bestOfferCarouselComponent.getTitle()))
+				{
+					title = bestOfferCarouselComponent.getTitle();
+				}
+
+				//Added for making the button link cmsmanaged
+				if (StringUtils.isNotEmpty(bestOfferCarouselComponent.getButtonText()))
+				{
+					bestOffers.put("buttonText", bestOfferCarouselComponent.getButtonText());
+				}
+				if (StringUtils.isNotEmpty(bestOfferCarouselComponent.getButtonLink()))
+				{
+					bestOffers.put("buttonLink", bestOfferCarouselComponent.getButtonLink());
+				}
+
+				bestOffers.put("title", title);
+
+				final JSONArray subComponentJsonArray = new JSONArray();
+				if (CollectionUtils.isNotEmpty(bestOfferCarouselComponent.getCollectionItems()))
+				{
+					String imageURL = "";
+					String text = "";
+					String linkUrl = "#";
+
+					for (final CMSMediaParagraphComponentModel bestOfferItem : bestOfferCarouselComponent.getCollectionItems())
+					{
+						final JSONObject bestOfferItemJson = new JSONObject();
+
+						if (null != bestOfferItem)
+						{
+							if (null != bestOfferItem.getMedia())
+							{
+								if (null != bestOfferItem.getMedia().getURL()
+										&& StringUtils.isNotEmpty(bestOfferItem.getMedia().getURL()))
+								{
+									imageURL = bestOfferItem.getMedia().getURL();
+								}
+
+							}
+							else
+							{
+								LOG.info("No Media for this item");
+								//imageURL = MISSING_IMAGE_URL;
+								imageURL = GenericUtilityMethods.getMissingImageUrl();
+							}
+
+							bestOfferItemJson.put("imageUrl", imageURL);
+
+							if (null != bestOfferItem.getContent() && StringUtils.isNotEmpty(bestOfferItem.getContent()))
+							{
+								text = bestOfferItem.getContent();
+							}
+							else
+							{
+								LOG.info("No text for this item");
+							}
+							bestOfferItemJson.put("text", text);
+
+							if (null != bestOfferItem.getUrl() && StringUtils.isNotEmpty(bestOfferItem.getUrl()))
+							{
+								linkUrl = bestOfferItem.getUrl();
+							}
+							else
+							{
+								LOG.info("No URL for this item");
+							}
+							bestOfferItemJson.put("url", linkUrl);
+							bestOfferItemJson.put(ICID, bestOfferItem.getPk().getLongValueAsString());
+							subComponentJsonArray.add(bestOfferItemJson);
+
+						}
+						else
+						{
+							LOG.info("No instance of bestPickCarouselComponent found!!!");
+						}
+					}
+				}
+				bestOffers.put("subItems", subComponentJsonArray);
+
+			}
+		}
+
+		return bestOffers;
 	}
 
 

@@ -103,6 +103,12 @@
 			</cms:pageSlot>
 	</div> --%>
 	
+	<div class="best-offers_blp">
+				 <cms:pageSlot position="BestOfferSection" var="feature">
+					<cms:component component="${feature}" element="div" class="" />
+				</cms:pageSlot>
+				</div>
+	
 	<div class="top_deal_blp">
 			<cms:pageSlot position="TopDealsSlot" var="feature">
 				<cms:component component="${feature}"  class="top_deal_carousel_blp" />

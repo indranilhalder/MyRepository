@@ -34,6 +34,14 @@
 				</div>
 			</div>
 		</c:forEach>
+		
+		<c:if test="${not empty component.buttonText}">
+							${component.buttonText}  
+						</c:if>
+						<c:if test="${not empty component.buttonLink}">
+							${component.buttonLink}  
+						</c:if>
+						
 	</div>
 </div> 
 

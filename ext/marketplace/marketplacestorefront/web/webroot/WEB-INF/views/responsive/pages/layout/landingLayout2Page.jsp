@@ -30,6 +30,7 @@
 		<cms:component component="${feature}" />
 	</cms:pageSlot>
 	<div id="bestPicks" class="feature-collections"></div>
+	<div id="bestOffers" class="best-offers feature-collections"></div>
 	<div id="brandsYouLove" class="home-brands-you-love-wrapper feature-collections"></div>
 	<div id="promobannerhomepage" class="buy-banner"></div>
 	<!-- <div id="bestPicks" class="feature-collections"></div> -->
