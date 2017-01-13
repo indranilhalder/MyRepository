@@ -6,6 +6,7 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 import de.hybris.platform.core.model.NPSEmailerModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
@@ -216,62 +217,53 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		return orderlist;
 	}
 
-
+	/**
+	 *
+	 */
 	@Override
-	public Map<OrderModel, List<String>> fetchOrderDetailsforDeliveryMail()
+	public Map<OrderModel, AbstractOrderEntryModel> fetchOrderDetailsforDeliveryMail()
 	{
-		final Map<OrderModel, List<String>> orderMap = new HashMap<OrderModel, List<String>>();
-		//final OrderModel orderlist = new ArrayList<OrderModel>();
-		LOG.debug("********inside dao for fetchOrderDetailsforDeliveryMail**********");
+		final Map<OrderModel, AbstractOrderEntryModel> orderWithSingleEntry = new HashMap<OrderModel, AbstractOrderEntryModel>();
 
-		final String queryString = "select {po.pk},{oe.orderlineid} from {" + ConsignmentModel._TYPECODE + " as c JOIN "
-				+ ConsignmentEntryModel._TYPECODE + " as ce ON {ce.consignment} = {c.PK}" + " JOIN "
-				+ AbstractOrderEntryModel._TYPECODE + " as oe ON {ce.orderentry}= {oe.PK}" + " JOIN " + OrderModel._TYPECODE
-				+ " as co  ON {c.order}={co.PK}" + " JOIN " + OrderModel._TYPECODE + " as po  ON {co.parentreference} = {po.PK}} ";
+		final String queryString = "SELECT {po.pk},{oe.pk},{po.user} FROM  {" + ConsignmentModel._TYPECODE + " AS c JOIN "
+				+ ConsignmentEntryModel._TYPECODE + " " + "AS ce ON {ce.consignment} = {c.PK} JOIN"
+				+ " ConsignmentStatus as cs ON {c.status} = {cs.PK} JOIN " + AbstractOrderEntryModel._TYPECODE
+				+ " AS oe ON {ce.orderentry}= {oe.PK} JOIN " + OrderModel._TYPECODE + " AS co  ON {c.order}={co.PK} JOIN "
+				+ OrderModel._TYPECODE + " AS po  ON {co.parentreference} = {po.PK}} " + "WHERE "
+				//+ "{c.deliveryDate}  BETWEEN "+ "(sysdate-10) AND (sysdate-1) AND "
+				+ "{cs.code}='DELIVERED'";
+
+		//final String queryString = "select {po.pk},{oe.pk},{oe.orderlineid} from {" + ConsignmentModel._TYPECODE + " as c JOIN "
+		//	+ ConsignmentEntryModel._TYPECODE + " as ce ON {ce.consignment} = {c.PK}" + " JOIN "
+		//	+ AbstractOrderEntryModel._TYPECODE + " as oe ON {ce.orderentry}= {oe.PK}" + " JOIN " + OrderModel._TYPECODE
+		//	+ " as co  ON {c.order}={co.PK}" + " JOIN " + OrderModel._TYPECODE + " as po  ON {co.parentreference} = {po.PK}} ";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.setResultClassList(Arrays.asList(OrderModel.class, String.class));
+		query.setResultClassList(Arrays.asList(OrderModel.class, AbstractOrderEntryModel.class, CustomerModel.class));
 
 		final SearchResult<List<Object>> result = flexibleSearchService.search(query);
-		if (result.getResult().isEmpty())
-		{
-			//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3000);
-		}
-		else
-		{
 
+		if (!result.getResult().isEmpty())
+		{
 			for (final List<Object> obj : result.getResult())
 			{
 				final OrderModel orderModel = (OrderModel) obj.get(0);
-				final String transactionId = (String) obj.get(1);
+				final AbstractOrderEntryModel absOrderEntryModel = (AbstractOrderEntryModel) obj.get(1);
+				//final CustomerModel customerModel = (CustomerModel) obj.get(2);
 
-				if (orderMap.get(orderModel) == null)
+				if (!orderWithSingleEntry.containsKey(orderModel))
 				{
-					final List<String> transIds = new ArrayList<String>();
-					transIds.add(transactionId);
-					orderMap.put(orderModel, transIds);
+					orderWithSingleEntry.put(orderModel, absOrderEntryModel);
 				}
-				else
-				{
-					orderMap.get(orderModel).add(transactionId);
-				}
-
-
 			}
-
-			LOG.debug("********** specified data query" + queryString);
-
 		}
-
-		return orderMap;
-
-
+		return orderWithSingleEntry;
 	}
 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getTransactionIdCount(de.hybris.platform.core
 	 * .model.order.OrderModel)

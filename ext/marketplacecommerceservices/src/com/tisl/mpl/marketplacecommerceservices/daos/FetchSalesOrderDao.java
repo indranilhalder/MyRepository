@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.daos;
 
 import de.hybris.platform.core.model.NPSEmailerModel;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 
 import java.util.Date;
@@ -31,7 +32,7 @@ public interface FetchSalesOrderDao
 	public List<OrderModel> fetchSpecifiedCancelData(Date startTime, Date endTime);
 
 	//TPR-1984 Start
-	public Map<OrderModel, List<String>> fetchOrderDetailsforDeliveryMail();
+	public Map<OrderModel, AbstractOrderEntryModel> fetchOrderDetailsforDeliveryMail();
 
 	public Map<String, Integer> getTransactionIdCount();
 

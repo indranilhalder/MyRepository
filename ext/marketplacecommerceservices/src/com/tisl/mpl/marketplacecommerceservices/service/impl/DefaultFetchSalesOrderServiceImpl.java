@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.core.model.NPSEmailerModel;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.servicelayer.model.ModelService;
 
@@ -128,7 +129,7 @@ public class DefaultFetchSalesOrderServiceImpl implements FetchSalesOrderService
 	//TPR-1984 Start
 
 	@Override
-	public Map<OrderModel, List<String>> fetchOrderDetailsforDeliveryMail()
+	public Map<OrderModel, AbstractOrderEntryModel> fetchOrderDetailsforDeliveryMail()
 	{
 		return fetchSalesOrderDao.fetchOrderDetailsforDeliveryMail();
 	}
