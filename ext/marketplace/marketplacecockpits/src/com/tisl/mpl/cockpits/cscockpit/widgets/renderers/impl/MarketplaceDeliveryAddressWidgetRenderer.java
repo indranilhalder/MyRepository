@@ -481,8 +481,9 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 					.equalsIgnoreCase(MarketplaceCockpitsConstants.OTHERS)) {
 				landMarkField.setDisabled(false);
 				landMarkField.setVisible(true);
-			} else if (landMarkField.getValue().isEmpty()) {
+			} else if (StringUtils.isNotEmpty(selectedLandmark) && landMarkField.getValue().isEmpty()) {
 				landMarkField.setVisible(false);
+				landMarkField.setValue(selectedLandmark);
 			} else {
 				landMarkField.setDisabled(true);
 			}

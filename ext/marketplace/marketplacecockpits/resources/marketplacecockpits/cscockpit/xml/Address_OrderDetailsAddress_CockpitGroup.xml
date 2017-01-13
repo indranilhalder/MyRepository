@@ -15,9 +15,6 @@
 			<property qualifier="Address.addressLine3" visible="true"/>
 		</group>
 		<group name="line">
-			<property qualifier="Address.postalcode" visible="true"/>
-		</group>
-		<group name="line">
 			<property qualifier="Address.landmark" visible="true"/>
 		</group>
 		<group name="line">
@@ -25,6 +22,9 @@
 		</group>
 		<group name="line">
 			<property qualifier="Address.district" visible="true"/>
+		</group>
+		<group name="line">
+			<property qualifier="Address.postalcode" visible="true"/>
 		</group>
 		<group name="line">
 			<property qualifier="Address.country" visible="true"/>
