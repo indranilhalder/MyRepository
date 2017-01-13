@@ -32,6 +32,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.MplPaymentAuditStatusEnum;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.Refund;
 import com.tisl.mpl.marketplacecommerceservices.service.MplMWalletRefundService;
 import com.tisl.mpl.model.PaymentTypeModel;
@@ -65,6 +66,7 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 
 	private final List<PaymentTransactionType> validPaymentType = Arrays.asList(PaymentTransactionType.CAPTURE,
 			PaymentTransactionType.COD_PAYMENT, PaymentTransactionType.AUTHORIZATION);
+	private static final String PAYMENT_M_RUPEE_MERCHANT_ID = "payment.mRupee.merchantID";
 
 	/**
 	 * Method is called for doing refund at the time of cancel and return
@@ -72,7 +74,7 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 
 	@Override
 	public PaymentTransactionModel doRefund(final OrderModel order, final double refundAmount,
-			final PaymentTransactionType paymentTransactionType, final String uniqueRequestId) throws Exception
+			final PaymentTransactionType paymentTransactionType, final String uniqueRequestId)
 	{
 
 		try
@@ -126,7 +128,7 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 				}
 				refundRequest.setPurchaseRefNo(mplPaymentAuditModel.getAuditId());
 				refundRequest.setRefNo(uniqueRequestId);
-				refundRequest.setmCode("TUL");
+				refundRequest.setmCode(PAYMENT_M_RUPEE_MERCHANT_ID);
 				refundRequest.setNarration("uat");
 
 				mplPaymentAuditEntryModel.setRefundReqId(uniqueRequestId);
@@ -140,7 +142,7 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 				MRupeeRefundResponse refundResponse = null;
 				LOG.debug("before calling refund service *******************************");
 				refundResponse = mRupeeRefundService.refund(refundRequest);
-				System.out.println("MRUPEE REFUND RESPONSE" + refundResponse);
+				LOG.debug("MRUPEE REFUND RESPONSE" + refundResponse);
 				LOG.debug("after calling refund service *******************************");
 				mplPaymentAuditEntryModel = modelService.create(MplPaymentAuditEntryModel.class);
 				mplPaymentAuditEntryModel.setAuditId(mplPaymentAuditModel.getAuditId());
@@ -175,7 +177,8 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 		catch (final Exception e)
 		{
 			LOG.error(e.getMessage(), e);
-			throw e;
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+
 		}
 		return null;
 

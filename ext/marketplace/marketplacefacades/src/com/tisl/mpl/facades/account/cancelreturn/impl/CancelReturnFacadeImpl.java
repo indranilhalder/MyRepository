@@ -2193,6 +2193,13 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 							uniqueRequestId);
 				}
 			}
+
+			catch (final EtailNonBusinessExceptions e)
+			{
+				LOG.error(">>>> *****************initiateRefund*********** Exception occured " + e.getMessage(), e);
+				walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
+						uniqueRequestId);
+			}
 			catch (final Exception e)
 			{
 				LOG.error(">>>> *****************initiateRefund*********** Exception occured " + e.getMessage(), e);

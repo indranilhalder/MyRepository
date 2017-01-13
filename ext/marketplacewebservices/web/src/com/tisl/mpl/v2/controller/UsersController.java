@@ -436,6 +436,8 @@ public class UsersController extends BaseCommerceController
 	@Autowired
 	private HttpServletRequest request;
 
+	private static final String PAYMENT_M_RUPEE_MERCHANT_ID = "payment.mRupee.merchantID";
+
 	/**
 	 * TPR-1372
 	 *
@@ -6831,6 +6833,7 @@ public class UsersController extends BaseCommerceController
 	}
 
 	/**
+	 * This method creates mRupee order
 	 *
 	 * @param cartId
 	 * @param walletName
@@ -6855,6 +6858,11 @@ public class UsersController extends BaseCommerceController
 		ThirdPartyWalletWsDTO thirdPartyWalletWsDTO = null;
 		try
 		{
+			final StringBuilder returnUrlBuilder = new StringBuilder();
+			returnUrlBuilder.append(request.getRequestURL().substring(0, request.getRequestURL().indexOf("/", 8)))
+					.append(request.getContextPath())
+					.append(getConfigurationService().getConfiguration().getString(MarketplacewebservicesConstants.WALLETPAYMENT));
+
 			OrderModel orderModel = null;
 			if (StringUtils.isNotEmpty(cartGuid))
 			{
@@ -6946,16 +6954,17 @@ public class UsersController extends BaseCommerceController
 						thirdPartyWalletWsDTO.setOrderId(orderId.get(0));
 						thirdPartyWalletWsDTO.setAmount(cartTotal.toString());
 						thirdPartyWalletWsDTO.setTxnType("P");
-						thirdPartyWalletWsDTO.setMCode("TULA");
+						thirdPartyWalletWsDTO.setMCode(PAYMENT_M_RUPEE_MERCHANT_ID);
 						thirdPartyWalletWsDTO.setNarration("uat");
 						thirdPartyWalletWsDTO.setChecksum(orderId.get(1));
-						thirdPartyWalletWsDTO.setStatus("Success");
+						thirdPartyWalletWsDTO.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
+						thirdPartyWalletWsDTO.setRetUrl(returnUrlBuilder.toString());
 					}
 					else
 					{
-						thirdPartyWalletWsDTO.setStatus("Failure");
+						thirdPartyWalletWsDTO.setStatus(MarketplacewebservicesConstants.UPDATE_FAILURE);
 						thirdPartyWalletWsDTO.setErrorCode("E0005");
-						thirdPartyWalletWsDTO.setError("Error");
+						thirdPartyWalletWsDTO.setError("ERROR");
 					}
 				}
 			}
@@ -6999,10 +7008,11 @@ public class UsersController extends BaseCommerceController
 							thirdPartyWalletWsDTO.setOrderId(orderId.get(0));
 							thirdPartyWalletWsDTO.setAmount(orderModel.getTotalPrice().toString());
 							thirdPartyWalletWsDTO.setTxnType("P");
-							thirdPartyWalletWsDTO.setMCode("TULA");
+							thirdPartyWalletWsDTO.setMCode(PAYMENT_M_RUPEE_MERCHANT_ID);
 							thirdPartyWalletWsDTO.setNarration("uat");
 							thirdPartyWalletWsDTO.setChecksum(orderId.get(1));
-							thirdPartyWalletWsDTO.setStatus("Success");
+							thirdPartyWalletWsDTO.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
+							thirdPartyWalletWsDTO.setRetUrl(returnUrlBuilder.toString());
 						}
 						else
 						{
@@ -7068,7 +7078,19 @@ public class UsersController extends BaseCommerceController
 
 	}
 
-
+	/**
+	 * This method will receive response from mRupee and update the order a commerce end
+	 *
+	 * @param amount
+	 * @param mWRefCode
+	 * @param paymentMode
+	 * @param status
+	 * @param refNo
+	 * @return WalletPaymentWsDTO
+	 * @throws EtailNonBusinessExceptions
+	 * @throws EtailBusinessExceptions
+	 * @throws CalculationException
+	 */
 	@Secured(
 	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 	@RequestMapping(value = MarketplacewebservicesConstants.WALLETPAYMENT, method = RequestMethod.GET, produces = APPLICATION_TYPE)

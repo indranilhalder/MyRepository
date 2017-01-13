@@ -171,7 +171,7 @@ public class MRupeeRefundService
 	}
 
 
-	public MRupeeRefundResponse refund(final MRupeeRefundRequest refundRequest) throws Exception
+	public MRupeeRefundResponse refund(final MRupeeRefundRequest refundRequest)
 	{
 		MRupeeRefundResponse mRupeeRefundResponse = null;
 
@@ -188,7 +188,6 @@ public class MRupeeRefundService
 		/* final String serializedParams = serializeParams(params); */
 		final String serializedParams = "MCODE=TULA&NARRATION=uat&TXNTYPE=R&" + "AMT=" + refundRequest.getAmount().toString()
 				+ "&REFNO=" + refundRequest.getRefNo() + "&PREFNO=" + refundRequest.getPurchaseRefNo() + "&CHECKSUM=" + checksum;
-		System.out.println(serializedParams);
 
 		//LOG.debug("MRUPEE REFUND REQUEST--------------url-----" + url + "-------request----" + serializedParams);
 
@@ -212,12 +211,12 @@ public class MRupeeRefundService
 
 				if (status.equalsIgnoreCase("S"))
 				{
-					final String request_ID = params1[1];
+					final String requestId = params1[1];
 					final String refNo = params1[2];
 					final String mwrefNo = params1[3];
 					final String reason = params1[4];
 					mRupeeRefundResponse.setStatus("SUCCESS");
-					mRupeeRefundResponse.setRequest_ID(request_ID);
+					mRupeeRefundResponse.setRequestID(requestId);
 					mRupeeRefundResponse.setRefNo(refNo);
 					mRupeeRefundResponse.setMwrefNo(mwrefNo);
 					mRupeeRefundResponse.setReason(reason);
@@ -358,7 +357,7 @@ public class MRupeeRefundService
 		catch (final Exception e)
 		{
 			//throw new AdapterException("Error with connection", e);
-			e.printStackTrace();
+			LOG.error(e.getMessage(), e);
 		}
 		return buffer.toString();
 
@@ -420,14 +419,14 @@ public class MRupeeRefundService
 		final NoSuchAlgorithmException e)
 
 		{
-			e.printStackTrace();
+			LOG.error(e.getMessage(), e);
 		}
 		catch (
 
 		final KeyManagementException e)
 
 		{
-			e.printStackTrace();
+			LOG.error(e.getMessage(), e);
 		}
 
 	}

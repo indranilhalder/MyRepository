@@ -30,9 +30,28 @@ public class MRupeeRefundResponse
 	//Extra fields to identify Payment method
 	private String paymentMethodType;
 	private String paymentMethod;
-	private String request_ID;
+	private String requestID;
 	private String refNo;
 	private String reason;
+
+	/**
+	 * @return the requestID
+	 */
+	public String getRequestID()
+	{
+		return requestID;
+	}
+
+	/**
+	 * @param requestID
+	 *           the requestID to set
+	 */
+	public void setRequestID(final String requestID)
+	{
+		this.requestID = requestID;
+	}
+
+
 
 	/**
 	 * @return the mwrefNo
@@ -68,22 +87,6 @@ public class MRupeeRefundResponse
 		this.narration = narration;
 	}
 
-	/**
-	 * @return the request_ID
-	 */
-	public String getRequest_ID()
-	{
-		return request_ID;
-	}
-
-	/**
-	 * @param request_ID
-	 *           the request_ID to set
-	 */
-	public void setRequest_ID(final String request_ID)
-	{
-		this.request_ID = request_ID;
-	}
 
 	/**
 	 * @return the refNo

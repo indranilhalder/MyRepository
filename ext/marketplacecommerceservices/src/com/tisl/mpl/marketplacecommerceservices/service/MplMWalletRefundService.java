@@ -25,7 +25,7 @@ public interface MplMWalletRefundService
 	 * @return PaymentTransactionModel
 	 */
 	PaymentTransactionModel doRefund(final OrderModel order, final double refundAmount,
-			final PaymentTransactionType paymentTransactionType, final String uniqueRequestId) throws Exception;
+			final PaymentTransactionType paymentTransactionType, final String uniqueRequestId);
 
 	/**
 	 * @param order
