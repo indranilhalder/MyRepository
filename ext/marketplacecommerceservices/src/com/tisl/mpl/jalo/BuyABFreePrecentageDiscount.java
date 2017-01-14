@@ -1,6 +1,5 @@
 package com.tisl.mpl.jalo;
 
-import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
@@ -86,14 +85,16 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 					MarketplacecommerceservicesConstants.CHANNEL);
 			//checkChannelFlag = getMplPromotionHelper().checkChannel(listOfChannel);
 			//changes Start for omni cart fix @atmaram
-			final AbstractOrder cart = arg1.getOrder();
-			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
+			final AbstractOrder order = arg1.getOrder();
+			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, order);
 
 			//changes end for omni cart fix @atmaram
 
 			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag && sellerFlag)
 			{
-				promotionResults = promotionEvaluation(arg0, arg1, excludedProductList, excludeManufactureList, restrictionList);
+				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
+				promotionResults = promotionEvaluation(arg0, arg1, excludedProductList, excludeManufactureList, restrictionList,
+						allowedProductList, order);
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -123,22 +124,25 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 	 */
 	public List<PromotionResult> promotionEvaluation(final SessionContext arg0, final PromotionEvaluationContext arg1,
 			final List<Product> excludedProductList, final List<String> excludeManufactureList,
-			final List<AbstractPromotionRestriction> restrictionList)
+			final List<AbstractPromotionRestriction> restrictionList, final List<Product> allowedProductList,
+			final AbstractOrder order)
 	{
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		final List<String> sellerIDData = new ArrayList<String>();
 		final Map<AbstractOrderEntry, String> eligibleProductMap = new HashMap<AbstractOrderEntry, String>();
 		boolean flagForDeliveryModeRestrEval = false;
 		final double maxDiscount = getMaxDiscountVal().doubleValue();
-		final List<Product> promotionProductList = new ArrayList<>(getProducts());
-		final List<Category> promotionCategoryList = new ArrayList<>(getCategories());
+		//final List<Product> promotionProductList = new ArrayList<>(getProducts());
+		//final List<Category> promotionCategoryList = new ArrayList<>(getCategories());
 		final List<Product> promotionalProductData = new ArrayList<Product>();
-		final AbstractOrder order = arg1.getOrder();
-
 		//getting the valid products
-		final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager().getValidProdListForBuyXofAPromo(
-				order, arg0, promotionProductList, promotionCategoryList, restrictionList, excludedProductList,
-				excludeManufactureList, sellerIDData, eligibleProductMap);
+		//		final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager().getValidProdListForBuyXofAPromo(
+		//				order, arg0, promotionProductList, promotionCategoryList, restrictionList, excludedProductList,
+		//				excludeManufactureList, sellerIDData, eligibleProductMap);
+
+		final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager().getValidProdListForBuyXofA(
+				order, arg0, allowedProductList, restrictionList, excludedProductList, excludeManufactureList, sellerIDData,
+				eligibleProductMap);
 
 		if (GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, arg0, arg1, this, restrictionList)
 				&& !getDefaultPromotionsManager().promotionAlreadyFired(arg0, validProductUssidMap))
@@ -162,8 +166,11 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 
 				if (!isPercentageOrAmount().booleanValue())
 				{
+					//					flagForCouldFireMessage = getDefaultPromotionsManager().getValidProductListForAmtDiscount(arg0, order,
+					//							promotionProductList, promotionCategoryList, eligibleQuantity, discountPrice, validProductUssidMap);
 					flagForCouldFireMessage = getDefaultPromotionsManager().getValidProductListForAmtDiscount(arg0, order,
-							promotionProductList, promotionCategoryList, eligibleQuantity, discountPrice, validProductUssidMap);
+							allowedProductList, eligibleQuantity, discountPrice, validProductUssidMap);
+
 				}
 
 				//for delivery mode restriction check
@@ -217,9 +224,9 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 					}
 
 					arg0.setAttribute(MarketplacecommerceservicesConstants.PERCENTAGEDISCOUNT, Double.valueOf(percentageDiscount));
-					arg0.setAttribute(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE,
-							Double.valueOf(totalPricevalue));
-					arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
+					//					arg0.setAttribute(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE,
+					//							Double.valueOf(totalPricevalue));
+					//					arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
 					arg0.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductList);
 					arg0.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
 					arg0.setAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC, Boolean.valueOf(isPercentageDisc));
