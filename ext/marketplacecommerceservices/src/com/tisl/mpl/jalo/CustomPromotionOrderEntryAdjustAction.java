@@ -222,8 +222,14 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 			}
 
 			final double lineItemLevelPrice = orderEntry.getTotalPriceAsPrimitive();
-			final double validQualifyingProdPrice = orderEntry.getBasePriceAsPrimitive() * qualifyingCount;
-			final double amtTobeDeductedAtlineItemLevel = (percentageDiscount * validQualifyingProdPrice) / 100;
+			double amtTobeDeductedAtlineItemLevel = 0;
+
+			if (orderEntryAdjustment > 0)
+			{
+				final double validQualifyingProdPrice = orderEntry.getBasePriceAsPrimitive() * qualifyingCount;
+				amtTobeDeductedAtlineItemLevel = (percentageDiscount * validQualifyingProdPrice) / 100;
+			}
+
 			final double aportionedItemValue = lineItemLevelPrice - amtTobeDeductedAtlineItemLevel;
 			final double cartLevelDiscount = 0.00D;
 			final double netAmountAfterAllDisc = aportionedItemValue - cartLevelDiscount;
