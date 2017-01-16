@@ -746,6 +746,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 			if (cart != null)
 			{
+				// Changes for Duplicate Cart fix
 				final boolean deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cart);
 				LOG.debug("Cart Delisted Status " + deListedStatus);
 				///newCartModel = mplCartFacade.removeDeliveryMode(cart); already used in productDetails
@@ -840,7 +841,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 			if (cart != null)
 			{
-				final boolean deListedStatus = mplCartFacade.isCartEntryDelisted(cart);
+				final boolean deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cart);
 
 				LOG.debug("Cart Delisted Status " + deListedStatus);
 
@@ -1783,7 +1784,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + pincode);
 					}
 					final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(cartDataOrdered, cartModel, pincode);
-					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes);
+					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes, cartModel);
 				}
 			}
 			catch (final EtailBusinessExceptions | EtailNonBusinessExceptions e)
@@ -1914,7 +1915,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					}
 
 					final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(cartDataOrdered, cartModel, pincode);
-					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes);
+					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes, cartModel);
 				}
 			}
 			catch (final CMSItemNotFoundException e)
@@ -2043,11 +2044,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (!StringUtil.isEmpty(pincode))
 				{
 					responseData = mplCartFacade.getOMSPincodeResponseData(pincode, cartData);
-					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartData, responseData);
+					// Changes for Duplicate Cart fix
+					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartData, responseData, cartModel);
 				}
 				else
 				{
-					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartData, null);
+					// Changes for Duplicate Cart fix
+					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartData, null, cartModel);
 				}
 
 				String isServicable = MarketplacecommerceservicesConstants.Y;
@@ -2169,7 +2172,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (null != pincode && !pincode.isEmpty())
 				{
 					final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(cartDataOrdered, cartModel, pincode);
-					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes);
+					// Changes for Duplicate Cart fix
+					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes, cartModel);
 				}
 			}
 			catch (final Exception e)

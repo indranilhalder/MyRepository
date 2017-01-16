@@ -1,6 +1,5 @@
 package com.tisl.mpl.jalo;
 
-import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
@@ -88,43 +87,53 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 		boolean checkChannelFlag = false;
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 
-		final AbstractOrder order = promoContext.getOrder(); // Fetch Order Details
-		final List<Product> promotionProductList = new ArrayList<>(getProducts()); // Fetch Promotion set Primary Products
-		final List<Category> promotionCategoryList = new ArrayList<>(getCategories()); // Fetch Promotion set Primary Categories
+		final AbstractOrder cart = promoContext.getOrder(); // Fetch Order Details
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
-
 		final List<Product> excludedProductList = new ArrayList<Product>();
 		final List<String> excludeManufactureList = new ArrayList<String>();
-		//Populating Excluded Products and Excluded Manufacturer in separate Lists
+
+
 		GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, promoContext, excludedProductList,
 				excludeManufactureList, restrictionList, this);
-		//getDefaultPromotionsManager().promotionAlreadyFired(ctx, order, excludedProductList); // Check if Promotion already fired on promotion eligible products
+
 		final PromotionsManager.RestrictionSetResult restrictResult = findEligibleProductsInBasket(ctx, promoContext); // Validating Promotion set restrictions
+
+		//final List<Product> promotionProductList = new ArrayList<>(getProducts()); // Fetch Promotion set Primary Products
+		//final List<Category> promotionCategoryList = new ArrayList<>(getCategories()); // Fetch Promotion set Primary Categories
+		//Populating Excluded Products and Excluded Manufacturer in separate Lists
+		//getDefaultPromotionsManager().promotionAlreadyFired(ctx, order, excludedProductList); // Check if Promotion already fired on promotion eligible products
 
 		try
 		{
 			final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(ctx,
 					MarketplacecommerceservicesConstants.CHANNEL);
-			//checkChannelFlag = getMplPromotionHelper().checkChannel(listOfChannel); // Verifying the Channel : Web/Web Mobile/ CockPit
-			//changes Start for omni cart fix @atmaram
-			final AbstractOrder cart = promoContext.getOrder();
-
 			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
 			final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList,
-					order);
+					cart);
+
+
+			//checkChannelFlag = getMplPromotionHelper().checkChannel(listOfChannel); // Verifying the Channel : Web/Web Mobile/ CockPit
+			//changes Start for omni cart fix @atmaram
+
+
 			//changes end for omni cart fix @atmaram
 
 			if ((restrictResult.isAllowedToContinue()) && (!(restrictResult.getAllowedProducts().isEmpty())) && checkChannelFlag
 					&& flagForPincodeRestriction)
 			{
+				final List<Product> allowedProductList = new ArrayList<Product>(restrictResult.getAllowedProducts());
+
+				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager().getValidProductListBOGO(
+						cart, ctx, allowedProductList, excludedProductList, excludeManufactureList, restrictionList);
+
 				// Get the valid Products for Promotions
-				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager().getValidProdListForBOGO(
-						order, ctx, promotionProductList, promotionCategoryList, restrictionList, excludedProductList,
-						excludeManufactureList, null, null);
+				//				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager().getValidProdListForBOGO(
+				//						order, ctx, promotionProductList, promotionCategoryList, restrictionList, excludedProductList,
+				//						excludeManufactureList, null, null);
 
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(ctx, validProductUssidMap))
 				{
-					promotionResults = promotionEvaluation(ctx, promoContext, validProductUssidMap, restrictionList, order);
+					promotionResults = promotionEvaluation(ctx, promoContext, validProductUssidMap, restrictionList, cart);
 				}
 
 			}

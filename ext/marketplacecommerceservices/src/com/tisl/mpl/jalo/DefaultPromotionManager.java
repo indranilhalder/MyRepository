@@ -2112,9 +2112,6 @@ public class DefaultPromotionManager extends PromotionsManager
 	{
 		final Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
 
-		final List<AbstractOrderEntry> orderEntryList = cart.getEntriesByProduct(product) != null ? cart
-				.getEntriesByProduct(product) : new ArrayList<AbstractOrderEntry>();
-
 		if (isSellerRestrExists(restrictionList) || isExSellerRestrExists(restrictionList))
 		{
 			String selectedUSSID = null;
@@ -2130,6 +2127,9 @@ public class DefaultPromotionManager extends PromotionsManager
 		}
 		else
 		{
+			final List<AbstractOrderEntry> orderEntryList = cart.getEntriesByProduct(product) != null ? cart
+					.getEntriesByProduct(product) : new ArrayList<AbstractOrderEntry>();
+
 			for (final AbstractOrderEntry productEntry : orderEntryList)
 			{
 				if (null != productEntry.isGiveAway() && !productEntry.isGiveAway().booleanValue())
@@ -4302,4 +4302,62 @@ public class DefaultPromotionManager extends PromotionsManager
 		}
 		return ussidSet;
 	}
+
+	/**
+	 * @param cart
+	 * @param ctx
+	 * @param allowedProductList
+	 * @param excludedProductList
+	 * @param excludeManufactureList
+	 * @param restrictionList
+	 *
+	 *
+	 * @return Map<String, AbstractOrderEntry>
+	 */
+	public Map<String, AbstractOrderEntry> getValidProductListBOGO(final AbstractOrder cart, final SessionContext ctx,
+			final List<Product> allowedProductList, final List<Product> excludedProductList,
+			final List<String> excludeManufactureList, final List<AbstractPromotionRestriction> restrictionList)
+	{
+		final Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
+
+
+		boolean brandFlag = false;
+		boolean sellerFlag = false;
+		boolean isFreebie = false;
+
+		for (final AbstractOrderEntry entry : cart.getEntries())
+		{
+
+			isFreebie = getMplPromotionHelper().validateEntryForFreebie(entry);
+			if (!isFreebie)
+			{
+				final Product product = entry.getProduct();
+
+				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
+						|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
+						|| isProductExcludedForSeller(ctx, restrictionList, entry))
+				{
+					continue;
+				}
+
+				if (CollectionUtils.isNotEmpty(allowedProductList) && allowedProductList.contains(product))
+				{
+					brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+					sellerFlag = checkSellerBOGOData(ctx, restrictionList, entry);
+				}
+
+				if (sellerFlag && brandFlag)
+				{
+					validProductUssidMap.putAll(populateValidProductUssidMap(product, cart, restrictionList, ctx, entry));
+
+					sellerFlag = false;
+					brandFlag = false;
+				}
+			}
+
+		}
+
+		return validProductUssidMap;
+	}
 }
+
