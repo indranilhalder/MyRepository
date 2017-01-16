@@ -24,7 +24,7 @@ public class DefaultSizeFacetTopValuesProvider implements FacetSortProvider, Ser
 {
 
 
-	private SizeFacetComparator comparator;
+	private transient SizeFacetComparator comparator;
 
 	/**
 	 * @return the comparator
