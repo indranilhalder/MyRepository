@@ -161,8 +161,9 @@ public class MplCartFacadeImplTest
 	public void testGetDeliveryMode() throws Exception
 	{
 		final CartData cartDataMock = Mockito.mock(CartData.class);
+		final CartModel cartModel = Mockito.mock(CartModel.class);
 		final List<PinCodeResponseData> omsDeliveryResponseMock = new ArrayList<PinCodeResponseData>();
-		mplCartFacadeImpl.getDeliveryMode(cartDataMock, omsDeliveryResponseMock);
+		mplCartFacadeImpl.getDeliveryMode(cartDataMock, omsDeliveryResponseMock, cartModel);
 	}
 
 	@Test
