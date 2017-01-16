@@ -263,7 +263,7 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELDISC, Double.valueOf(cartLevelDiscount));
 			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC,
 					Double.valueOf(netAmountAfterAllDisc));
-			if (isPercentageDisc)
+			if (isPercentageDisc && orderEntryAdjustment > 0)
 			{
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ISPERCENTAGEDISC, Boolean.valueOf(isPercentageDisc));
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODLEVELPERCENTAGEDISC,
