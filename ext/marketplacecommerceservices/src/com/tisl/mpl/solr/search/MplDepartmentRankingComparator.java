@@ -18,7 +18,7 @@ public class MplDepartmentRankingComparator
 
 
 	/* Comparator for sorting the department hierarchy by ranking */
-	public static Comparator<MplDepartmentRankingComparator> departmentRankingByRank = new Comparator<MplDepartmentRankingComparator>()
+	public static final Comparator<MplDepartmentRankingComparator> departmentRankingByRank = new Comparator<MplDepartmentRankingComparator>()
 	{
 
 		@Override

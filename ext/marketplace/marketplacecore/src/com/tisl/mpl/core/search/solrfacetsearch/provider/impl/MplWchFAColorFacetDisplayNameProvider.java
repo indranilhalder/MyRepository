@@ -36,19 +36,21 @@ public class MplWchFAColorFacetDisplayNameProvider extends AbstractFacetValueDis
 
 		try
 		{
-			String[] colourWithCode = new String[2];
 			if (facetValue.contains("_"))
 			{
-				colourWithCode = facetValue.split("_");
-				if (colourWithCode[0] != null && colourWithCode[0].equalsIgnoreCase("multi"))
+				final String[] colourWithCode = facetValue.split("_");
+				if (colourWithCode != null && colourWithCode.length >= 2)
 				{
-					if (colourWithCode[1] != null)
+					if (colourWithCode[0] != null && colourWithCode[0].equalsIgnoreCase("multi"))
 					{
-						return "Multi" + colourWithCode[1];
+						if (colourWithCode[1] != null)
+						{
+							return "Multi" + colourWithCode[1];
+						}
 					}
-				}
 
-				return colourWithCode[0];
+					return colourWithCode[0];
+				}
 			}
 			return facetValue;
 
