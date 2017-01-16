@@ -432,5 +432,11 @@
     
 	<alias alias="cartLoaderStrategy" name="mplDefaultCartLoaderStrategy"/>
 	<bean id="mplDefaultCartLoaderStrategy" class="com.tisl.mpl.strategies.impl.MplDefaultCartLoaderStrategy">
-	</bean>
+        <property name="baseSiteService" ref="baseSiteService"/>
+        <property name="cartService" ref="cartService"/>
+        <property name="commerceCartService" ref="commerceCartService"/>
+        <property name="commerceCommonI18NService" ref="commerceCommonI18NService"/>
+        <property name="modelService" ref="modelService"/>
+        <property name="userService" ref="userService"/>
+    </bean>
 </beans>
