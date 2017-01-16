@@ -429,5 +429,8 @@
         <aop:pointcut id="allServiceMethods" expression="execution(* com.tisl.mpl.v2.controller.*.*(..))"/>
         <aop:advisor pointcut-ref="allServiceMethods" advice-ref="performanceMonitor" order="2"/>
     </aop:config> -->
-
+    
+	<alias alias="mplDefaultCartLoaderStrategy" name="cartLoaderStrategy"/>
+	<bean id="mplDefaultCartLoaderStrategy" class="com.tisl.mpl.strategies.impl.MplDefaultCartLoaderStrategy">
+	</bean>
 </beans>
