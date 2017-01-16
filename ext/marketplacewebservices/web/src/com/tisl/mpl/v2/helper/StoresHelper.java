@@ -24,6 +24,7 @@ import de.hybris.platform.commercewebservicescommons.dto.store.ListOfPointOfServ
 import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.store.StoreFinderSearchPageWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
+import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.storelocator.location.Location;
@@ -248,7 +249,8 @@ public class StoresHelper extends AbstractHelper
 	 * @return binds respone to ws dto and returns it.
 	 */
 	//@Cacheable(value = "storeCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(false,false,'storeDetails',#storeId,#fields)")
-	public StoreLocationResponseDataWsDTO storesAtCart(final String pincode, final String ussId, final String fields)
+	public StoreLocationResponseDataWsDTO storesAtCart(final String pincode, final String ussId, final String fields,
+			final CartModel cartModel)
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -258,7 +260,7 @@ public class StoresHelper extends AbstractHelper
 		StoreLocationResponseData storeLocationResData = new StoreLocationResponseData();
 		try
 		{
-			storesLocationResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pincode, ussId, null);
+			storesLocationResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pincode, ussId, null, cartModel);
 			if (null != storesLocationResponse && storesLocationResponse.size() > 0)
 			{
 				storeLocationResData = storesLocationResponse.get(0);

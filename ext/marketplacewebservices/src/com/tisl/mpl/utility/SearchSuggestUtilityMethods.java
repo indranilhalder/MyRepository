@@ -173,7 +173,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 *
+	 * 
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -650,6 +650,10 @@ public class SearchSuggestUtilityMethods
 		final List<SellingItemDetailWsDto> searchProductDTOList = new ArrayList<>();
 		final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 		List<GalleryImageData> galleryImages = null;
+
+
+		//ProductData productDataImage = null;
+
 		for (final ProductData productData : searchPageData.getResults())
 		{
 
@@ -662,13 +666,29 @@ public class SearchSuggestUtilityMethods
 				{
 					sellingItemDetail.setUssid(productData.getUssID());
 				}
+
 				//Revert of TPR-796
+
 				/*
 				 * try { productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
 				 * Arrays.asList(ProductOption.GALLERY)); galleryImages =
 				 * productDetailsHelper.getGalleryImagesMobile(productDataImage); } catch (final Exception e) {
 				 * LOG.error("SERPSEARCH Product Image Error:" + productData.getCode()); continue; }
 				 */
+
+				//TPR-796
+				/*try
+				{
+					galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("SERPSEARCH ProductError:" + productData.getCode());
+					ExceptionUtil.getCustomizedExceptionTrace(e);
+					continue;
+				}*/
+
+
 
 				//TPR-796
 				try
@@ -681,6 +701,7 @@ public class SearchSuggestUtilityMethods
 					ExceptionUtil.getCustomizedExceptionTrace(e);
 					continue;
 				}
+
 
 
 				if (CollectionUtils.isNotEmpty(galleryImages))

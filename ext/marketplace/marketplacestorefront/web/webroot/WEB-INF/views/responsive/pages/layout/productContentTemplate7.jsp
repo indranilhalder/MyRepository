@@ -45,6 +45,7 @@ $(document).ready(function(){
 
    <!-- <button id="showLess">show less</button> -->
    <div class="Padd">
+   <h2><span>${cmsPage.title}</span></h2>
       <cms:pageSlot position="Section1A" var="feature">
 			<cms:component component="${feature}" element="div" class="" />							
 		</cms:pageSlot>

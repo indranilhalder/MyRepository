@@ -207,7 +207,8 @@ public class MplPriceValueProvider extends AbstractPropertyFieldValueProvider im
 	{
 		String rangeKey = currency.getIsocode();
 		final String productCategoryType = product.getProductCategoryType();
-		if (product.getLuxIndicator().getCode().equalsIgnoreCase(LuxIndicatorEnum.LUXURY.getCode()))
+		if (null != product.getLuxIndicator()
+				&& product.getLuxIndicator().getCode().equalsIgnoreCase(LuxIndicatorEnum.LUXURY.getCode()))
 		{
 			rangeKey = rangeKey + "-LUXURY";
 		}

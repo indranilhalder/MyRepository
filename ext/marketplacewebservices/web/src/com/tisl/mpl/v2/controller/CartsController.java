@@ -784,12 +784,12 @@ public class CartsController extends BaseCommerceController
 			validate(pickupStore, PICK_UP_STORE, pointOfServiceValidator);
 		}
 
-		return updateCartEntryInternal(baseSiteId, cart, orderEntry, qty, pickupStore, fields, true);
+		return updateCartEntryInternal(baseSiteId, cart, orderEntry, qty, pickupStore, fields, true, null);
 	}
 
 	private CartModificationWsDTO updateCartEntryInternal(final String baseSiteId, final CartData cart,
-			final OrderEntryData orderEntry, final Long qty, final String pickupStore, final String fields, final boolean putMode)
-			throws CommerceCartModificationException
+			final OrderEntryData orderEntry, final Long qty, final String pickupStore, final String fields, final boolean putMode,
+			final CartModel cartModel) throws CommerceCartModificationException
 	{
 		final long entryNumber = orderEntry.getEntryNumber().longValue();
 		final String productCode = orderEntry.getProduct().getCode();
@@ -805,7 +805,8 @@ public class CartsController extends BaseCommerceController
 				//was 'shipping mode' or store is changed
 				validateForAmbiguousPositions(cart, orderEntry, pickupStore);
 				validateIfProductIsInStockInPOS(baseSiteId, productCode, pickupStore, Long.valueOf(entryNumber));
-				cartModificationData1 = cartFacade.updateCartEntry(entryNumber, pickupStore);
+				//				cartModificationData1 = cartFacade.updateCartEntry(entryNumber, pickupStore);
+				cartModificationData1 = mplCartFacade.updateCartEntryMobile(entryNumber, pickupStore, cartModel);
 			}
 		}
 		else if (putMode && currentPointOfService != null)
@@ -813,12 +814,12 @@ public class CartsController extends BaseCommerceController
 			//was 'pickup in store', now switch to 'shipping mode'
 			validateForAmbiguousPositions(cart, orderEntry, pickupStore);
 			validateIfProductIsInStockOnline(baseSiteId, productCode, Long.valueOf(entryNumber));
-			cartModificationData1 = cartFacade.updateCartEntry(entryNumber, pickupStore);
+			cartModificationData1 = mplCartFacade.updateCartEntryMobile(entryNumber, pickupStore, cartModel);
 		}
 
 		if (qty != null)
 		{
-			cartModificationData2 = cartFacade.updateCartEntry(entryNumber, qty.longValue());
+			cartModificationData2 = mplCartFacade.updateCartEntryMobile(entryNumber, qty.longValue(), cartModel);
 		}
 
 		return dataMapper.map(mergeCartModificationData(cartModificationData1, cartModificationData2), CartModificationWsDTO.class,
@@ -860,7 +861,7 @@ public class CartsController extends BaseCommerceController
 
 		validateCartEntryForReplace(orderEntry, entry);
 
-		return updateCartEntryInternal(baseSiteId, cart, orderEntry, entry.getQuantity(), pickupStore, fields, true);
+		return updateCartEntryInternal(baseSiteId, cart, orderEntry, entry.getQuantity(), pickupStore, fields, true, null);
 	}
 
 	private void validateCartEntryForReplace(final OrderEntryData oryginalEntry, final OrderEntryWsDTO entry)
@@ -926,7 +927,7 @@ public class CartsController extends BaseCommerceController
 			validate(pickupStore, PICK_UP_STORE, pointOfServiceValidator);
 		}
 
-		return updateCartEntryInternal(baseSiteId, cart, orderEntry, qty, pickupStore, fields, false);
+		return updateCartEntryInternal(baseSiteId, cart, orderEntry, qty, pickupStore, fields, false, null);
 	}
 
 	/**
@@ -976,7 +977,7 @@ public class CartsController extends BaseCommerceController
 		validate(entry, ENTRY, orderEntryUpdateValidator);
 
 		final String pickupStore = entry.getDeliveryPointOfService() == null ? null : entry.getDeliveryPointOfService().getName();
-		return updateCartEntryInternal(baseSiteId, cart, orderEntry, entry.getQuantity(), pickupStore, fields, false);
+		return updateCartEntryInternal(baseSiteId, cart, orderEntry, entry.getQuantity(), pickupStore, fields, false, null);
 	}
 
 	/**
@@ -2186,7 +2187,7 @@ public class CartsController extends BaseCommerceController
 					validate(pickupStore, PICK_UP_STORE, pointOfServiceValidator);
 				}
 
-				updateCartEntryInternal(baseSiteId, cartData, orderEntry, quantity, pickupStore, fields, false);
+				updateCartEntryInternal(baseSiteId, cartData, orderEntry, quantity, pickupStore, fields, false, cartModel);
 				//final CartModel newCartModel = mplCartFacade.removeDeliveryMode(cartModel);
 				final List<AbstractOrderEntryModel> abstractOrderEntryList = cartModel.getEntries();
 				final List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
@@ -2373,7 +2374,7 @@ public class CartsController extends BaseCommerceController
 						LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + postalCode);
 						final List<PinCodeResponseData> pinCodeRes = mplCartWebService.checkPinCodeAtCart(cartDataOrdered, cartModel,
 								postalCode);
-						deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes);
+						deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes, cartModel);
 						LOG.debug("************ Mobile webservice DeliveryModeData Map Mobile *******" + deliveryModeDataMap);
 					}
 				}
@@ -2609,6 +2610,7 @@ public class CartsController extends BaseCommerceController
 		String delistMessage = MarketplacecommerceservicesConstants.EMPTY;
 		try
 		{
+
 			if (StringUtils.isNotEmpty(cartGuid))
 			{
 				orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
@@ -2817,7 +2819,7 @@ public class CartsController extends BaseCommerceController
 				LOG.debug("CartsController : selectDeliveryMode  : Step 3 Freebie delivery mode set done");
 				//applyPromotions();
 				final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
-				getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap);
+				getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cart);
 				response.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 			else
@@ -2880,8 +2882,8 @@ public class CartsController extends BaseCommerceController
 		{
 			LOG.debug(String.format("Checking servicibility for the pincode %s", pincode));
 			cart = mplPaymentWebFacade.findCartValues(cartId);
-			pinCodeResponse = mplCartWebService.checkPinCodeAtCart(mplCartFacade.getSessionCartWithEntryOrdering(true), cart,
-					pincode);
+			pinCodeResponse = mplCartWebService.checkPinCodeAtCart(mplCartFacade.getSessionCartWithEntryOrderingMobile(cart, true),
+					cart, pincode);
 			if (null != pinCodeResponse)
 			{
 				response.setPinCodeResponseList(pinCodeResponse);

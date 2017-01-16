@@ -144,8 +144,10 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 		        
 		        Double convenienceCharges = abstractOrderModel.getConvenienceCharges();
 		        renderRow(convenienceCharges, LabelUtils.getLabel(widget, "convenienceCharges", new Object[0]), currencyInstance, container);
-		  
-    	        Double totalPrice = abstractOrderModel.getSubtotal()+convenienceCharges+deliveryCosts-couponDiscount-couponDiscount-totalDeliveryCostDisc-totalDeliveryCostDisc;
+		        /********************************* TPR-4401 Delivery Charge Addition Starts Here ****************************************************/
+    	        //Double totalPrice = abstractOrderModel.getSubtotal()+convenienceCharges+deliveryCosts-couponDiscount-couponDiscount-totalDeliveryCostDisc-totalDeliveryCostDisc;
+    	        Double totalPrice = abstractOrderModel.getSubtotal()+convenienceCharges+deliveryCosts-couponDiscount-promotion-totalDeliveryCostDisc;
+    	        /********************************* TPR-4401 Delivery Charge Addition Ends Here ****************************************************/
 //		        if(deliveryCosts==0.0){
 //		        	totalPrice=totalPrice-prevDeliveryCost;
 //		        }
