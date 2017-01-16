@@ -59457,6 +59457,12 @@ text-decoration:underline;
     padding-top: 50px;
     line-height: 25px;
 }
+.best-offers_blp a.view-best-offers,.best-offers a.view-best-offers,#bestOffers.best-offers.feature-collections a.view-best-offers{
+	padding: 0;
+	border: 0;
+	visibility:hidden;	
+}
+
 /* sprint8 */
 
 /* Start here for sprint8 BLP */
