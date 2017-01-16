@@ -10312,6 +10312,12 @@ body .account .right-account .order-history .pagination li{
   display: block;
   width: 100%;
   padding: 10px; }
+  
+  /* sprint8 */
+  .best-offers_blp .product-tile,.best-offers .product-tile{
+  	padding: 0;
+  } 
+  /* sprint8 */
   .product-tile .image {
     position: relative; }
     .product-tile .image a img {
@@ -29805,6 +29811,7 @@ padding:20px;
 	width: 250px;
   	letter-spacing: normal;
   	font-weight: normal;
+  	padding: 16px 0;
 }
 #bestOffers.best-offers.feature-collections a.view-best-offers,.best-offers a.view-best-offers,.best-offers_blp a.view-best-offers{
 	/* margin-top: 25px; */
