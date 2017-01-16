@@ -455,15 +455,26 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 				&& flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction)
 		{
 			boolean isPercentageDisc = false;
+			totalProductPrice = totalEligibleProductPrice.doubleValue();
+
 			if (isPercentageOrAmount().booleanValue() && null != getPercentageDiscount())
 			{
 				percentageDiscount = getPercentageDiscount().doubleValue();
+				final double totalSavings = (totalProductPrice * percentageDiscount) / 100;
+				final double maxDiscount = getMaxDiscount() == null ? 0.0D : getMaxDiscount().doubleValue(); //Adding the Promotion set Max  Discount Value to a variable
+				if (totalSavings > maxDiscount && maxDiscount != 0)
+				{
+					percentageDiscount = (maxDiscount * 100) / totalProductPrice;
+				}
+				else
+				{
+					isPercentageDisc = true;
+				}
 				LOG.debug("Percentage Discount" + percentageDiscount);
-				isPercentageDisc = true;
+				//isPercentageDisc = true;
 			}
 			else
 			{
-				totalProductPrice = totalEligibleProductPrice.doubleValue();
 				if (totalProductPrice > 0)
 				{
 					percentageDiscount = (discountPrice.doubleValue() * 100) / totalProductPrice;
