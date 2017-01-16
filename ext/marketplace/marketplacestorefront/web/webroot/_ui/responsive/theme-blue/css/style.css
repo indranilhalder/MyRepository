@@ -37452,7 +37452,10 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
 }
 .alert-dismissable.alert-info .close, .alert-dismissible.alert-info .close {
 	position: relative;
-	top: -6px !important;
+	
+	/* TISRLEE-1660 */
+	
+	top: 0px !important;
 	right: -21px;
 	color: transparent;
     background-image: url(../images/Clear.png);
@@ -37464,6 +37467,7 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
     margin-right: 10px;
     display: block;
 }
+
 @media (max-width:790px) {
 	.alert-dismissable .close, .alert-dismissible .close {
 	float:left;
@@ -59567,7 +59571,7 @@ body .account .track{
  		margin-top: 0px;
  		display: inline-block;
  		margin-right: 15px;
- 		background-color: #ccc !important;
+ 		
  	}
  	
  	.accordtionTataCliq .accContents .button_holder {

@@ -4,14 +4,14 @@
 <%@ taglib prefix="spring"  uri="http://www.springframework.org/tags"%>
 
 <c:if test="${(not empty accConfMsgs) || (not empty accInfoMsgs) || (not empty accErrorMsgs)}">
-	<div class="global-alerts">
+	<div class="global-alerts TISRLEE-1660">
 		
 		<%-- Information (confirmation) messages --%>
 		<c:if test="${not empty accConfMsgs}">
 			<c:forEach items="${accConfMsgs}" var="msg">
 				<div class="alert alert-info alert-dismissable">
 					<button class="close" aria-hidden="true" data-dismiss="alert" type="button">&times;</button>
-					<span><spring:theme code="${msg.code}" arguments="${msg.attributes}"/></span>
+					<span style="margin-left: 23px;"><spring:theme code="${msg.code}" arguments="${msg.attributes}"/></span>
 				</div>
 			</c:forEach>
 		</c:if>
