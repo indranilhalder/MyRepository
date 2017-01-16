@@ -180,7 +180,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 				orderModel.setModeOfOrderPayment(modeOfPayment);
 
-				if (MarketplacecommerceservicesConstants.THIRDPARTYWALLET.equalsIgnoreCase(modeOfPayment))
+				if (MarketplacecommerceservicesConstants.MRUPEE.equalsIgnoreCase(modeOfPayment))
 				{
 					orderModel.setIsWallet(WalletEnum.MRUPEE);
 				}
@@ -318,9 +318,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)

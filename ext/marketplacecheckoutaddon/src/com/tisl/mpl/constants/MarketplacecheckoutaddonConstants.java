@@ -315,7 +315,11 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 
 	public final static String THIRDPARTYWALLET = "ThirdPartyWallet";
 
+	public final static String MRUPEE_NARRATION = "narration";
+
 	public static final String MRUPEE_CODE = "mCode";
 
 	public static final String MRUPEE_MERCHANT_URL = "mRupeeUrl";
+
+	public final static String MRUPEE_NARRATION_VALUE = "payment.mRupee.narration".intern();
 }

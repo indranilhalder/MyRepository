@@ -8,13 +8,14 @@
  * ("Confidential Information"). You shall not disclose such Confidential
  * Information and shall use it only in accordance with the terms of the
  * license agreement you entered into with hybris.
- * 
- *  
+ *
+ *
  */
 package com.tisl.mpl.wallet.constants;
 
 /**
- * Global class for all MarketplaceWalletServices constants. You can add global constants for your extension into this class.
+ * Global class for all MarketplaceWalletServices constants. You can add global constants for your extension into this
+ * class.
  */
 public final class MarketplaceWalletServicesConstants extends GeneratedMarketplaceWalletServicesConstants
 {
@@ -25,5 +26,10 @@ public final class MarketplaceWalletServicesConstants extends GeneratedMarketpla
 		//empty to avoid instantiating this constant class
 	}
 
+	public final static String MRUPEE_MERCHANT_CODE = "payment.mRupee.merchantID".intern();
+
+	public final static String MRUPEE_CHECKSUM = "payment.mRupee.checkSum".intern();
+
+	public final static String MRUPEE_NARRATION = "payment.mRupee.narration".intern();
 	// implement here constants used by this extension
 }

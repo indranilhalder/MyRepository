@@ -7436,8 +7436,8 @@ function displayThrdPrtyWlt(){
 }
 $("#viewPaymentMRupee").click(function(){
 	refresh();
-	$("#paymentMode").val("ThirdPartyWallet");
-	$("#paymentModeValue").val("ThirdPartyWallet");
+	$("#paymentMode").val("MRUPEE");
+	$("#paymentModeValue").val("MRUPEE");
 	displayThrdPrtyWlt();
 })
 

@@ -1434,6 +1434,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_CODE,
 				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.MRUPEE_MERCHANT_CODE));
 
+		model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_NARRATION, getConfigurationService().getConfiguration()
+				.getString(MarketplacecheckoutaddonConstants.MRUPEE_NARRATION_VALUE));
+
 		//mRupee configuration ends
 
 		model.addAttribute(MarketplacecheckoutaddonConstants.JUSPAYJSNAME,
@@ -2750,7 +2753,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
 								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE)
 								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE) || paymentMode
-									.equalsIgnoreCase(MarketplacecheckoutaddonConstants.THIRDPARTYWALLET)))
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE)))
 				{
 					//setting in cartmodel
 					cart.setConvenienceCharges(Double.valueOf(0));
@@ -2892,9 +2895,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					//Added for third party wallet
 					else if (StringUtils.isNotEmpty(paymentMode)
-							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.THIRDPARTYWALLET))
+							&& paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE))
 					{
-						cart.setModeOfPayment(MarketplacecheckoutaddonConstants.THIRDPARTYWALLET);
+						cart.setModeOfPayment(MarketplacecommerceservicesConstants.MRUPEE);
 						getModelService().save(cart);
 					}
 
@@ -2928,7 +2931,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
 								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE)
 								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE) || paymentMode
-									.equalsIgnoreCase(MarketplacecheckoutaddonConstants.THIRDPARTYWALLET)))
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE)))
 				{
 					//setting in orderModel
 					orderModel.setConvenienceCharges(Double.valueOf(0));
@@ -3003,9 +3006,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				//Added for third party wallet
 				else if (StringUtils.isNotEmpty(paymentMode)
-						&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.THIRDPARTYWALLET))
+						&& paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE))
 				{
-					orderModel.setModeOfOrderPayment(MarketplacecheckoutaddonConstants.THIRDPARTYWALLET);
+					orderModel.setModeOfOrderPayment(MarketplacecommerceservicesConstants.MRUPEE);
 					getModelService().save(orderModel);
 				}
 
