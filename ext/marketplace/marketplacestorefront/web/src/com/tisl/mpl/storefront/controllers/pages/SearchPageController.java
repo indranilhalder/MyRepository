@@ -885,7 +885,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 			//model.addAttribute("hideDepartments", Boolean.TRUE);
 			//Code to hide the applied facet for promotedProduct
-			if (searchPageData.getBreadcrumbs() != null && searchPageData.getBreadcrumbs().size() == 1)
+			if (searchPageData != null && searchPageData.getBreadcrumbs() != null && searchPageData.getBreadcrumbs().size() == 1)
 			{
 				final String facetCode = searchPageData.getBreadcrumbs().get(0).getFacetCode();
 				if (StringUtils.isNotEmpty(facetCode) && facetCode.equalsIgnoreCase("promotedProduct"))
@@ -894,7 +894,7 @@ public class SearchPageController extends AbstractSearchPageController
 				}
 			}
 
-			if (!searchPageData.getResults().isEmpty())
+			if (searchPageData != null && CollectionUtils.isNotEmpty(searchPageData.getResults()))
 			{
 				model.addAttribute("normalProducts", searchPageData.getResults());
 
