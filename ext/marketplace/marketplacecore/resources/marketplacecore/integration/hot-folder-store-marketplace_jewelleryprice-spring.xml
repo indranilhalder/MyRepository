@@ -30,8 +30,9 @@
 			<map>
 				<!-- default priority is 0 -->
 				<entry key="mpljewelleryprice" value="1" />
-				<entry key="mplassociation" value="0" />
-					</map>
+				<entry key="mplassociation" value="2" />
+				<entry key="pcmmplassociation" value="3" />
+			</map>
 		</property>
 	</bean>
     <bean id="baseDirectoryMarketplaceJewelleryPrice" class="java.lang.String">
@@ -111,6 +112,11 @@
      <bean id="batchMplAssociationConverterMapping"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
 		p:mapping="mplassociation" p:converter-ref="batchMplAssociationConverter" />
+	
+	
+	 <bean id="batchMplLeadAssociationConverterMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="pcmmplassociation" p:converter-ref="batchLeadUssidMplAssociationConverter" />
  	 <!-- Converters -->
  	
  	<!-- Converter for Price Import --> 
@@ -267,6 +273,21 @@
          
          <bean id="batchMplAssociationConverter"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+			<property name="header">
+				<value>#{defaultImpexProductHeader}
+					$productCatalog=mplProductCatalog
+					$productCatalogName=Marketplace Product Catalog
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+					$approved=approvalstatus(code)[default='approved']
+					INSERT_UPDATE JewelleryInformation;ProductCode;PCMUSSID;USSID[unique=true];PIMAttributeId[unique=true];Weight
+				</value>
+			</property>
+			<property name="impexRow">
+				<value>;{0};{1};{2};{3};{4}</value>
+			</property>
+		</bean>
+        <bean id="batchLeadUssidMplAssociationConverter"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">
 			<value>#{defaultImpexProductHeader}
 				$productCatalog=mplProductCatalog
@@ -277,9 +298,22 @@
 			</value>
 		</property>
 		<property name="impexRow">
-			<value>;{0};{1};{2};{3};{4}</value>
+			<value>
+				;{0};{1};{1};grossweightfinejwlry;{2}
+				;{0};{1};{1};metalweightfinejwlry;{3}
+				;{0};{1};{1};coinbarweightfinejwlry;{4}
+				;{0};{1};{1};solitaireweightfinejwlry;{5}
+				;{0};{1};{1};diamondtotalweightfinejwlry;{6}
+				;{0};{1};{1};diamondweightfinejwlry1;{7}
+				;{0};{1};{1};diamondweightfinejwlry2;{8}
+				;{0};{1};{1};diamondweightfinejwlry3;{9}
+				;{0};{1};{1};diamondweightfinejwlry4;{10}
+				;{0};{1};{1};diamondweightfinejwlry5;{11}
+				;{0};{1};{1};diamondweightfinejwlry6;{12}
+				;{0};{1};{1};diamondweightfinejwlry7;{13}
+			</value>
+			
 		</property>
-	</bean>
-               
+	</bean>   
          
       </beans>
