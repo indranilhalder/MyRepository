@@ -276,7 +276,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 						}
 						else
 						{
-							LOG.info("No instance of bestPickCarouselComponent found!!!");
+							LOG.info("No instance of bestOffersCarouselComponent found!!!");
 						}
 					}
 				}
