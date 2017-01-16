@@ -255,9 +255,9 @@
 				<div class="optionsLandmark">
 					<formElement:formSelectBox  idKey="address.landmarks" selectCSSClass="address_landmarks"
 						labelKey="Landmarks" path="landmark" mandatory="true"
-						skipBlank="false" selectedValue="${addressForm.landmark}" skipBlankMessageKey="address.state.pleaseSelect"
+						skipBlank="false" skipBlankMessageKey="${addressForm.landmark}"
 						items="${abc}"
-						itemValue="name"  />
+						itemValue="name" />
 				</div>
 			</div>
 			<div class='half'>

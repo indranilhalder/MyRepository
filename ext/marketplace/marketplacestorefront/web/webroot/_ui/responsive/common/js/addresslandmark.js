@@ -500,6 +500,9 @@ $(document).ready(function() {
 		$("#addressLine2").val($("."+className+" .addressLine2").text());
 		$("#addressLine3").val($("."+className+" .addressLine3").text());
 		$(".address_townCity").val($("."+className+" .town").text());
+		$("#pincode").val($("."+className+" .postalCode").text());
+		$("#mobileNo").val($("."+className+" .phone").text());
+		loadPincodeData('edit');
 		var value = $("."+className+" .landmark").text();
 		  
 		  setTimeout(function(){
@@ -530,8 +533,7 @@ $(document).ready(function() {
 	        $("#statesReadOnly").val($("."+className+" .state").text());
 	       }
 		//$("#state").val($("."+className+" .state").text());
-		$("#pincode").val($("."+className+" .postalCode").text());
-		$("#mobileNo").val($("."+className+" .phone").text());
+		
 	});
 	
 });
