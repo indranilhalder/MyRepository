@@ -667,10 +667,12 @@
 											</div>
 											<div class="col-md-5">
 												<c:if test="${fn:containsIgnoreCase(entry.returnMethodType , 'SELF_COURIER')}">
-												<c:if test="${entry.isRefundable eq false and entry.consignment.status.code eq 'RETURN_INITIATED'}">
+												<c:if test="${entry.isRefundable eq false }">
+												<c:if test="${entry.consignment.status.code eq 'RETURN_INITIATED'}">
 													<div class="awsInnerClass">
 															Please provide AWB number, Logistics partner and upload POD <a href="#" id="awbNumberLink">here</a>
 													</div>
+												</c:if>
 												</c:if>	
 												</c:if>
 											</div>
@@ -1796,12 +1798,14 @@
 											</div>
 											<div class="col-md-6 col-sm-6 pull-right">
 											<c:if test="${fn:containsIgnoreCase(entry.returnMethodType , 'SELF_COURIER')}">
-												<c:if test="${entry.isRefundable eq false and entry.consignment.status.code eq 'RETURN_INITIATED' }">
+												<c:if test="${entry.isRefundable eq false }">
+												<c:if test="${entry.consignment.status.code eq 'RETURN_INITIATED'}">
 													<div class="awsInnerClass">
 															Please provide AWB number, 
 															<br/>Logistics partner and upload POD <a href="#" id="awbNumberLink">here</a>
 													</div>
 												</c:if>	
+												</c:if>
 												</c:if>
 											</div>
 											<!-- TISCR-410 ends -->
