@@ -224,7 +224,7 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 			final double lineItemLevelPrice = orderEntry.getTotalPriceAsPrimitive();
 			double amtTobeDeductedAtlineItemLevel = 0;
 
-			if (orderEntryAdjustment > 0)
+			if ((-1.0D * orderEntryAdjustment) > 0)
 			{
 				final double validQualifyingProdPrice = orderEntry.getBasePriceAsPrimitive() * qualifyingCount;
 				amtTobeDeductedAtlineItemLevel = (percentageDiscount * validQualifyingProdPrice) / 100;
@@ -263,7 +263,7 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELDISC, Double.valueOf(cartLevelDiscount));
 			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC,
 					Double.valueOf(netAmountAfterAllDisc));
-			if (isPercentageDisc && orderEntryAdjustment > 0)
+			if (isPercentageDisc && (-1.0D * orderEntryAdjustment) > 0)
 			{
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ISPERCENTAGEDISC, Boolean.valueOf(isPercentageDisc));
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODLEVELPERCENTAGEDISC,
