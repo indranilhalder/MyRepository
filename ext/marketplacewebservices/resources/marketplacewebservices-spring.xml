@@ -430,7 +430,6 @@
         <aop:advisor pointcut-ref="allServiceMethods" advice-ref="performanceMonitor" order="2"/>
     </aop:config> -->
     
-
 	<alias alias="cartLoaderStrategy" name="mplDefaultCartLoaderStrategy"/>
 	<bean id="mplDefaultCartLoaderStrategy" class="com.tisl.mpl.strategies.impl.MplDefaultCartLoaderStrategy">
         <property name="baseSiteService" ref="baseSiteService"/>
