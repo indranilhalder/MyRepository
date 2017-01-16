@@ -4,7 +4,6 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -52,11 +51,9 @@ import de.hybris.platform.core.model.c2l.CountryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.widgets.controllers.CallContextController;
 import de.hybris.platform.cscockpit.widgets.controllers.CustomerController;
-import de.hybris.platform.cscockpit.widgets.controllers.OrderController;
 import de.hybris.platform.cscockpit.widgets.models.impl.DefaultMasterDetailListWidgetModel;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.AddressCreateWidgetRenderer;
 import de.hybris.platform.cscockpit.widgets.renderers.utils.PopupWidgetHelper;
@@ -78,7 +75,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 	protected static final String FAILED_VALIDATION = "failedValidation";
 	private static final String USE_WEBSITE_FOR_COD = "useWebsiteForCOD";
 	private static final String PIN_REGEX = "^[1-9][0-9]{5}";
-			private static final String NAME_REGEX = "^[A-Za-z][ A-Za-z]{1,20}";
+			private static final String NAME_REGEX = "^[A-Za-z][ A-Za-z]{0,20}";
 	private boolean isChangeDeliveryAddress;
 	private boolean isAddressForReturn;
 
@@ -485,7 +482,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 				landMarkField.setVisible(false);
 				landMarkField.setValue(selectedLandmark);
 			} else {
-				landMarkField.setDisabled(true);
+				landMarkField.setVisible(false);
 			}
 		} catch (Exception e) {
 			LOG.error("Exception Occurred while getting landmark value"
@@ -837,7 +834,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						Messagebox.OK, Messagebox.ERROR);
 				// valid = Boolean.FALSE;
 				return;
-			}else if (!(firstNameField.getValue().trim().matches("^[A-Za-z][ A-Za-z]{1,20}")) ) {
+			}else if (!(firstNameField.getValue().trim().matches(NAME_REGEX)) ) {
 				Messagebox.show(
 						LabelUtils.getLabel(widget, "invalidFirstName"),
 						LabelUtils.getLabel(widget, FAILED_VALIDATION),
@@ -883,40 +880,36 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						LabelUtils.getLabel(widget, FAILED_VALIDATION),
 						Messagebox.OK, Messagebox.ERROR);
 				return;
-			} else if (StringUtils.isBlank(address2Field.getValue())
+				// commented for TISRLEE-1674
+			/*} else if (StringUtils.isBlank(address2Field.getValue())
 					|| StringUtils.isBlank(address2Field.getValue().trim())) {
 				Messagebox.show(
 						LabelUtils.getLabel(widget, "addressLine2ValueField"),
 						LabelUtils.getLabel(widget, FAILED_VALIDATION),
 						Messagebox.OK, Messagebox.ERROR);
 				// valid = Boolean.FALSE;
-				return;
-			} else if (address2Field.getValue().length() > 20) {
+				return;*/
+			} else if (StringUtils.isNotBlank(address2Field.getValue()) && StringUtils.isNotBlank(address2Field.getValue().trim()) && address2Field.getValue().trim().length() > 20) {
 				Messagebox.show(
 						LabelUtils.getLabel(widget, "invalidAddress2Length"),
 						LabelUtils.getLabel(widget, FAILED_VALIDATION),
 						Messagebox.OK, Messagebox.ERROR);
 				return;
-			} else if (StringUtils.isBlank(address3Field.getValue())
+				// commented for TISRLEE-1674
+			/*} else if (StringUtils.isBlank(address3Field.getValue())
 					|| StringUtils.isBlank(address3Field.getValue().trim())) {
 				Messagebox.show(
 						LabelUtils.getLabel(widget, "addressLine3ValueField"),
 						LabelUtils.getLabel(widget, FAILED_VALIDATION),
 						Messagebox.OK, Messagebox.ERROR);
 				// valid = Boolean.FALSE;
-				return;
-			} else if (address3Field.getValue().length() > 20) {
+				return;*/
+			} else if (StringUtils.isNotBlank(address3Field.getValue()) && StringUtils.isNotBlank(address3Field.getValue().trim()) && address3Field.getValue().length() > 20){
 				Messagebox.show(
 						LabelUtils.getLabel(widget, "invalidAddress3Length"),
 						LabelUtils.getLabel(widget, FAILED_VALIDATION),
 						Messagebox.OK, Messagebox.ERROR);
 				return;
-			}else if (address3Field.getValue().length() > 20) {
-				 Messagebox.show(
-						 LabelUtils.getLabel(widget, "invalidLandmarkLength"),
-						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						 Messagebox.OK, Messagebox.ERROR);
-				 return;
 			 } else if (StringUtils.isBlank(cityField.getValue())
 					 || StringUtils.isBlank(cityField.getValue().trim())) {
 				 Messagebox.show(LabelUtils.getLabel(widget, "cityValueField"),
