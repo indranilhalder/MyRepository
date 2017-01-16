@@ -492,13 +492,19 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 			//				eligibleProductList.add(orderEntry.getProduct());
 			//			}
 			final Map<String, Integer> qCount = new HashMap<String, Integer>();
-			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
+			//			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
+			//			{
+			//				qCount.put(mapEntry.getKey(), Integer.valueOf(mapEntry.getValue().getQuantity().intValue()));
+			//			}
+
+			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidAandB.entrySet())
 			{
 				qCount.put(mapEntry.getKey(), Integer.valueOf(mapEntry.getValue().getQuantity().intValue()));
 			}
 
+
 			final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
-					.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidMap, null);
+					.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidAandB, null);
 
 			// Apportioning Code Implementation
 			ctx.setAttribute(MarketplacecommerceservicesConstants.PERCENTAGEDISCOUNT, Double.valueOf(percentageDiscount));
@@ -509,21 +515,22 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 			ctx.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
 			ctx.setAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC, Boolean.valueOf(isPercentageDisc));
 
-			final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
 
+			//			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidAandB.entrySet())
+			//			{
+			//				final AbstractOrderEntry entry = mapEntry.getValue();
+			//				consumed.add(getDefaultPromotionsManager().consume(ctx, this, entry.getQuantity().longValue(),
+			//						entry.getQuantity().longValue(), entry));
+			//			}
+
+			//for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidAandB.entrySet())
-			{
-				final AbstractOrderEntry entry = mapEntry.getValue();
-				consumed.add(getDefaultPromotionsManager().consume(ctx, this, entry.getQuantity().longValue(),
-						entry.getQuantity().longValue(), entry));
-			}
-
-			//for (final Map.Entry<Product, Integer> mapEntry : validProductList.entrySet())
-			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 			{
 				//evaluationContext.startLoggingConsumed(this);
 				final AbstractOrderEntry entry = mapEntry.getValue();
-				//final PromotionOrderView view = evaluationContext.createView(ctx, this, eligibleProductList);
+				final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
+				consumed.add(getDefaultPromotionsManager().consume(ctx, this, entry.getQuantity().longValue(),
+						entry.getQuantity().longValue(), entry));
 				final PromotionOrderEntry viewEntry = view.peek(ctx);
 				final long quantityOfOrderEntry = viewEntry.getBaseOrderEntry().getQuantity(ctx).longValue();
 				LOG.debug("BaseOrderEntry" + quantityOfOrderEntry);
@@ -533,8 +540,11 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 				{
 					//					final double adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue * entry.getQuantity()
 					//							.doubleValue());
-
-					final double adjustment = -(entry.getTotalPriceAsPrimitive() * percentageDiscountvalue);
+					double adjustment = 0.00D;
+					if (validProductUssidMap.containsValue(entry))
+					{
+						adjustment = -(entry.getTotalPriceAsPrimitive() * percentageDiscountvalue);
+					}
 
 					//Added for TPR-3654
 					//final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
@@ -542,19 +552,20 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 					//							entry.getQuantity().longValue(), entry));
 					//					tcMapForValidEntries.put(entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString(),
 					//							Integer.valueOf(entry.getQuantity().intValue()));
+
 					for (final PromotionOrderEntryConsumed poec : consumed)
 					{
-						if (poec.getOrderEntry().equals(entry))
+						//						if (poec.getOrderEntry().equals(entry))
+						//						{
+						if (adjustment < 0)
 						{
-							if (adjustment < 0)
-							{
-								poec.setAdjustedUnitPrice(ctx, (entry.getBasePrice().doubleValue() + adjustment));
-							}
-							else
-							{
-								poec.setAdjustedUnitPrice(ctx, (entry.getBasePrice().doubleValue() - adjustment));
-							}
+							poec.setAdjustedUnitPrice(ctx, (entry.getBasePrice().doubleValue() + adjustment));
 						}
+						else
+						{
+							poec.setAdjustedUnitPrice(ctx, (entry.getBasePrice().doubleValue() - adjustment));
+						}
+						//}
 					}
 					//Added for TPR-3654
 
