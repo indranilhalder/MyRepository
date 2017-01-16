@@ -42,6 +42,7 @@ import com.tisl.mpl.core.enums.LuxIndicatorEnum;
 import com.tisl.mpl.facades.product.data.ProductTagDto;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.service.MplProductWebService;
+import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.MplCompetingProductsUtility;
 import com.tisl.mpl.wsdto.AutoCompleteResultWsData;
 import com.tisl.mpl.wsdto.CategorySNSWsData;
@@ -174,7 +175,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 *
+	 * 
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -651,7 +652,7 @@ public class SearchSuggestUtilityMethods
 		final List<SellingItemDetailWsDto> searchProductDTOList = new ArrayList<>();
 		final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 		List<GalleryImageData> galleryImages = null;
-		ProductData productDataImage = null;
+		//ProductData productDataImage = null;
 		for (final ProductData productData : searchPageData.getResults())
 		{
 
@@ -664,8 +665,9 @@ public class SearchSuggestUtilityMethods
 				{
 					sellingItemDetail.setUssid(productData.getUssID());
 				}
+
 				//Revert of TPR-796
-				try
+				/*try
 				{
 					productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
 							Arrays.asList(ProductOption.GALLERY));
@@ -675,14 +677,21 @@ public class SearchSuggestUtilityMethods
 				{
 					LOG.error("SERPSEARCH Product Image Error:" + productData.getCode());
 					continue;
-				}
+				}*/
+
 
 				//TPR-796
-				/*
-				 * try { galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData); } catch (final
-				 * Exception e) { LOG.error("SERPSEARCH ProductError:" + productData.getCode());
-				 * ExceptionUtil.getCustomizedExceptionTrace(e); continue; }
-				 */
+				try
+				{
+					galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("SERPSEARCH ProductError:" + productData.getCode());
+					ExceptionUtil.getCustomizedExceptionTrace(e);
+					continue;
+				}
+
 
 				if (CollectionUtils.isNotEmpty(galleryImages))
 				{
