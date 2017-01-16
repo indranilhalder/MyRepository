@@ -402,7 +402,7 @@
 
 									<!-- TISUAT-4696  /TPR-215-->
 									<div class="half">
-									<label><spring:theme code="text.addressBook.addressline2" text="Address Line 2 *" /></label>
+									<label><spring:theme code="text.addressBook.addressline2" text="Address Line 2 " /></label>
 										<form:input path="line2" id="line2" onkeyup="kpressaddressln2()"
 											maxlength="40" />
 											<div class="errorMessage"><div id="erraddressline2">   </div></div>
@@ -411,7 +411,7 @@
 
 									<!-- TISUAT-4696  /TPR-215-->
 									<div class="half">
-									<label><spring:theme code="text.addressBook.landmark" text="Landmark *" /></label>
+									<label><spring:theme code="text.addressBook.landmark" text="Landmark " /></label>
 										<form:input path="line3" id="line3" onkeyup="kpressaddressln3()"
 											maxlength="40" />
 											 <div class="errorMessage"><div id="erraddressline3">   </div></div> 
@@ -419,7 +419,7 @@
 								
 									<div class="half no-display">
 										<div class="optionsLandmark">
-											<label>Landmark*</label>
+											<label>Landmark</label>
 												<form:select path="landmark" id="landmark" value="${addressForm.landmark}" class="address_landmarks"
 													maxlength="30"></form:select>
 												<div class="errorMessage errland1">   </div>
