@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
-import de.hybris.platform.core.model.NPSEmailerModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -29,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.NPSMailerModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao;
 import com.tisl.mpl.model.MplConfigurationModel;
 
@@ -218,54 +218,61 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
+	 * TPR-198
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#fetchOrderDetailsforDeliveryMail()
 	 */
 	@Override
 	public Map<OrderModel, AbstractOrderEntryModel> fetchOrderDetailsforDeliveryMail()
 	{
 		final Map<OrderModel, AbstractOrderEntryModel> orderWithSingleEntry = new HashMap<OrderModel, AbstractOrderEntryModel>();
-		final String queryString = "SELECT {po.pk},{oe.pk},{po.user} FROM  {" + ConsignmentModel._TYPECODE + " AS c JOIN "
-				+ ConsignmentEntryModel._TYPECODE + " " + "AS ce ON {ce.consignment} = {c.PK} JOIN"
-				+ " ConsignmentStatus AS cs ON {c.status} = {cs.PK} JOIN " + AbstractOrderEntryModel._TYPECODE
-				+ " AS oe ON {ce.orderentry}= {oe.PK} JOIN " + OrderModel._TYPECODE + " AS co  ON {c.order}={co.PK} JOIN "
-				+ OrderModel._TYPECODE
-				+ " AS po  ON {co.parentreference} = {po.PK} JOIN NPSMailer AS nps ON {po.pk}!={nps.parentOrderNo}} " + "WHERE "
-				//+ "{c.deliveryDate}  BETWEEN "+ "(sysdate-10) AND (sysdate-1) AND "
-				+ "{cs.code}='DELIVERED'";
-
-		//final String queryString = "select {po.pk},{oe.pk},{oe.orderlineid} from {" + ConsignmentModel._TYPECODE + " as c JOIN "
-		//	+ ConsignmentEntryModel._TYPECODE + " as ce ON {ce.consignment} = {c.PK}" + " JOIN "
-		//	+ AbstractOrderEntryModel._TYPECODE + " as oe ON {ce.orderentry}= {oe.PK}" + " JOIN " + OrderModel._TYPECODE
-		//	+ " as co  ON {c.order}={co.PK}" + " JOIN " + OrderModel._TYPECODE + " as po  ON {co.parentreference} = {po.PK}} ";
-
-		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.setResultClassList(Arrays.asList(OrderModel.class, AbstractOrderEntryModel.class, CustomerModel.class));
-
-		final SearchResult<List<Object>> result = flexibleSearchService.search(query);
-
-		if (!result.getResult().isEmpty())
+		try
 		{
-			for (final List<Object> obj : result.getResult())
-			{
-				final OrderModel orderModel = (OrderModel) obj.get(0);
-				final AbstractOrderEntryModel absOrderEntryModel = (AbstractOrderEntryModel) obj.get(1);
-				//final CustomerModel customerModel = (CustomerModel) obj.get(2);
+			final String queryString = "SELECT {po.pk},{oe.pk},{po.user} FROM  {" + ConsignmentModel._TYPECODE + " AS c JOIN "
+					+ ConsignmentEntryModel._TYPECODE + " " + "AS ce ON {ce.consignment} = {c.PK} JOIN"
+					+ " ConsignmentStatus AS cs ON {c.status} = {cs.PK} JOIN " + AbstractOrderEntryModel._TYPECODE
+					+ " AS oe ON {ce.orderentry}= {oe.PK} JOIN " + OrderModel._TYPECODE + " AS co  ON {c.order}={co.PK} JOIN "
+					+ OrderModel._TYPECODE + " AS po  ON {co.parentreference} = {po.PK} JOIN " + NPSMailerModel._TYPECODE
+					+ " AS nps ON {po.pk}!={nps.parentOrderNo}} " + "WHERE "
+					//+ "{c.deliveryDate}  BETWEEN "+ "(sysdate-10) AND (sysdate-1) AND "
+					+ "{cs.code}='DELIVERED'";
 
-				if (!orderWithSingleEntry.containsKey(orderModel))
+			//old script
+			//final String queryString = "select {po.pk},{oe.pk},{oe.orderlineid} from {" + ConsignmentModel._TYPECODE + " as c JOIN "
+			//	+ ConsignmentEntryModel._TYPECODE + " as ce ON {ce.consignment} = {c.PK}" + " JOIN "
+			//	+ AbstractOrderEntryModel._TYPECODE + " as oe ON {ce.orderentry}= {oe.PK}" + " JOIN " + OrderModel._TYPECODE
+			//	+ " as co  ON {c.order}={co.PK}" + " JOIN " + OrderModel._TYPECODE + " as po  ON {co.parentreference} = {po.PK}} ";
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.setResultClassList(Arrays.asList(OrderModel.class, AbstractOrderEntryModel.class, CustomerModel.class));
+
+			final SearchResult<List<Object>> result = flexibleSearchService.search(query);
+
+			if (!result.getResult().isEmpty())
+			{
+				for (final List<Object> obj : result.getResult())
 				{
-					orderWithSingleEntry.put(orderModel, absOrderEntryModel);
+					final OrderModel orderModel = (OrderModel) obj.get(0);
+					final AbstractOrderEntryModel absOrderEntryModel = (AbstractOrderEntryModel) obj.get(1);
+					if (!orderWithSingleEntry.containsKey(orderModel))
+					{
+						orderWithSingleEntry.put(orderModel, absOrderEntryModel);
+					}
 				}
 			}
 		}
+		catch (final Exception e)
+		{
+			LOG.error(e.getMessage());
+		}
+
 		return orderWithSingleEntry;
 	}
 
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getTransactionIdCount(de.hybris.platform.core
 	 * .model.order.OrderModel)
@@ -276,7 +283,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		// YTODO Auto-generated method stub
 		LOG.debug("********inside dao for getTransactionIdCount**********");
 		final Map<String, Integer> npsTableMap = new HashMap<String, Integer>();
-		final String queryString = "select {nps.parentOrderNo},COUNT({nps.transactionId}) from {" + NPSEmailerModel._TYPECODE
+		final String queryString = "select {nps.parentOrderNo},COUNT({nps.transactionId}) from {" + NPSMailerModel._TYPECODE
 				+ " as nps }  WHERE {nps.AllEmailSent}=false group by {nps.parentOrderNo} ";
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.setResultClassList(Arrays.asList(OrderModel.class, Integer.class));
@@ -308,14 +315,14 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	}
 
 	@Override
-	public Map<String, NPSEmailerModel> getTransactionIdList()
+	public Map<String, NPSMailerModel> getTransactionIdList()
 	{
 		LOG.debug("********inside dao for getTransactionIdList**********");
-		final Map<String, NPSEmailerModel> npsEmailerTransactionIdList = new HashMap<String, NPSEmailerModel>();
-		final String queryString = "select {nps.transactionId},{nps.pk} from {" + NPSEmailerModel._TYPECODE
+		final Map<String, NPSMailerModel> npsEmailerTransactionIdList = new HashMap<String, NPSMailerModel>();
+		final String queryString = "select {nps.transactionId},{nps.pk} from {" + NPSMailerModel._TYPECODE
 				+ " as nps} WHERE {nps.AllEmailSent}=false";
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.setResultClassList(Arrays.asList(String.class, NPSEmailerModel.class));
+		query.setResultClassList(Arrays.asList(String.class, NPSMailerModel.class));
 		final SearchResult<List<Object>> result = flexibleSearchService.search(query);
 		if (result.getResult().isEmpty())
 		{
@@ -328,7 +335,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 
 				final String transactionIdList = (String) obj.get(0);
-				final NPSEmailerModel npsEmailerModel = (NPSEmailerModel) obj.get(1);
+				final NPSMailerModel npsEmailerModel = (NPSMailerModel) obj.get(1);
 
 
 

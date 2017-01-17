@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
-import de.hybris.platform.core.model.NPSEmailerModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 
@@ -12,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.tisl.mpl.core.model.NPSMailerModel;
 import com.tisl.mpl.model.MplConfigurationModel;
 
 
@@ -39,7 +39,7 @@ public interface FetchSalesOrderService
 
 	public Map<String, Integer> getTransactionIdCount();
 
-	public Map<String, NPSEmailerModel> getTransactionIdList();
+	public Map<String, NPSMailerModel> getTransactionIdList();
 
 	public Map<String, Integer> getorderModelTransactionCount(Set<String> parentOrderIds);
 

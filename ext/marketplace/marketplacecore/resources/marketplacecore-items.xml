@@ -9614,9 +9614,9 @@
 		
 		
 		<!-- -TPR-1984 start-->
-		<typegroup name="NPSEmail">
-		<itemtype code="NPSEmailer" autocreate="true" generate="true" jaloclass="com.tisl.mpl.core.jalo.NPSEmailer">
-		<deployment table="MplNPSEmailerTable" typecode="15900" />
+		<typegroup name="NPSMail">
+		<itemtype code="NPSMailer" autocreate="true" generate="true" jaloclass="com.tisl.mpl.core.jalo.NPSMailer">
+		<deployment table="MplNPSMailerTable" typecode="15900" />
 		<attributes>
 		<attribute qualifier="transactionId"  autocreate="true" type="java.lang.String"
 			generate="true">

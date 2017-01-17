@@ -4,7 +4,6 @@
 package com.tisl.mpl.core.cronjob.NPSMailer.jobs;
 
 import de.hybris.platform.core.Registry;
-import de.hybris.platform.core.model.NPSEmailerModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -27,6 +26,7 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.core.model.NPSMailerModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.FetchSalesOrderService;
@@ -54,7 +54,7 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 
 	/*
 	 * TPR-1984 This cron job is triggered as configured to run at 12 PM and 4 PM
-	 * 
+	 *
 	 * )
 	 */
 	@Override
@@ -69,13 +69,13 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 			 */
 			final Map<OrderModel, AbstractOrderEntryModel> parentOrderAbstractEntryModel = getFetchSalesOrderService()
 					.fetchOrderDetailsforDeliveryMail();
-			final List<NPSEmailerModel> npsEmailerModelList = new ArrayList<NPSEmailerModel>();
+			final List<NPSMailerModel> npsEmailerModelList = new ArrayList<NPSMailerModel>();
 			if (MapUtils.isNotEmpty(parentOrderAbstractEntryModel))
 			{
 				for (final Map.Entry<OrderModel, AbstractOrderEntryModel> entry : parentOrderAbstractEntryModel.entrySet())
 				{
 
-					final NPSEmailerModel npsEmailerModel = modelService.create(NPSEmailerModel.class);
+					final NPSMailerModel npsEmailerModel = modelService.create(NPSMailerModel.class);
 					npsEmailerModel.setAbstractOrderEntry(entry.getValue());
 					npsEmailerModel.setTransactionId(entry.getValue().getTransactionID());
 					npsEmailerModel.setParentOrderNo(entry.getKey());
