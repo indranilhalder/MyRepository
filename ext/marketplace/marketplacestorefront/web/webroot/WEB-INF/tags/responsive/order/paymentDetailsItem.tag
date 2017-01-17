@@ -48,8 +48,7 @@
     </c:if>
     
     <!-- Added for third party wallet -->
-    <c:if test="${not empty order.mplPaymentInfo.paymentOption && order.mplPaymentInfo.paymentOption eq 'MRUPEE'}">
-    
+    <c:if test="${not empty order.mplPaymentInfo.paymentOption && fn:toLowerCase(order.mplPaymentInfo.paymentOption) eq 'mrupee'}">
    ${order.mplPaymentInfo.cardAccountHolderName}<br>
    </c:if>
     

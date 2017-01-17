@@ -3001,11 +3001,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3017,9 +3017,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3785,7 +3785,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#createWalletPaymentId()
 	 */
 	@Override
@@ -3797,7 +3797,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#entryInTPWaltAudit(javax.servlet.http.
 	 * HttpServletRequest, java.lang.String, java.lang.String)
 	 */
@@ -3900,7 +3900,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#saveTPWalletPaymentInfo(java.lang.String,
 	 * java.util.List, de.hybris.platform.core.model.order.AbstractOrderModel)
 	 */
@@ -3919,12 +3919,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final ThirdPartyWalletInfoModel tpWalletInfoModel = getModelService().create(ThirdPartyWalletInfoModel.class);
 
 			//Commented for Mobile use
-
+			final String walletOwner = StringUtils.trim(cart.getUser().getName());
 			//	tpWalletInfoModel.setCode(MarketplacecommerceservicesConstants.MRUPEE + "-" + request.getParameter("REFNO"));
 			tpWalletInfoModel.setCode(MarketplacecommerceservicesConstants.MRUPEE + "-" + refernceCode);
 
-			tpWalletInfoModel.setWalletOwner(StringUtils.isNotEmpty(cart.getUser().getName()) ? cart.getUser().getName()
-					: ((CustomerModel) cart.getUser()).getOriginalUid());
+			tpWalletInfoModel.setWalletOwner(StringUtils.isNotEmpty(walletOwner) ? walletOwner : ((CustomerModel) cart.getUser())
+					.getOriginalUid());
 			tpWalletInfoModel.setProviderName(MarketplacecommerceservicesConstants.MRUPEE);
 			tpWalletInfoModel.setUser(getUserService().getCurrentUser());
 
@@ -3974,7 +3974,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#setTPWalletPaymentTransaction(java.util.Map,
 	 * de.hybris.platform.core.model.order.AbstractOrderModel)
@@ -4043,7 +4043,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				paymentTransactionModel.setInfo(abstractOrderModel.getPaymentInfo());
 			}
 
-			paymentTransactionModel.setCode(MarketplacecommerceservicesConstants.MRUPEE + refernceCode + "-"
+			paymentTransactionModel.setCode(MarketplacecommerceservicesConstants.MRUPEE + "-" + refernceCode + "-"
 					+ System.currentTimeMillis());
 
 			paymentTransactionModel.setRequestToken(refernceCode);
@@ -4103,7 +4103,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#getWalletAuditEntries()
 	 */
 	@Override
