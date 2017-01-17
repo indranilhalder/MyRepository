@@ -1674,8 +1674,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
   		class="com.tisl.mpl.facades.process.email.context.NPSEmailEmailContext"
   		parent="abstractEmailContext" scope="prototype" />
   		
-  	<bean id="npsFeedbackQuestionFacade" autowire="byName"
- 		class="com.tisl.mpl.facade.nps.NPSFeedbackQuestionFacadeImpl">
+  	<bean id="npsFeedbackQuestionFacade" class="com.tisl.mpl.facade.nps.NPSFeedbackQuestionFacadeImpl">
  	</bean>	
   	<!-- END TPR-1984  -->	
 </beans>

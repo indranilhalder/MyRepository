@@ -3,9 +3,8 @@
  */
 package com.tisl.mpl.facade.nps;
 
-import java.util.List;
+import com.tisl.mpl.facades.data.NPSFeedbackQRData;
 
-import com.tisl.mpl.core.model.NPSFeedbackQuestionModel;
 
 
 /**
@@ -14,5 +13,9 @@ import com.tisl.mpl.core.model.NPSFeedbackQuestionModel;
  */
 public interface NPSFeedbackQuestionFacade
 {
-	public List<NPSFeedbackQuestionModel> getFeedbackQuestionFacade();
+	public NPSFeedbackQRData getFeedbackQuestionFacade();
+
+	public boolean saveFeedbackQuestionAnswer(NPSFeedbackQRData feedbackForm);
+
+	public boolean saveFeedbackRating(String originalUid, String transactionId, String rating);
 }
