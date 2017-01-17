@@ -649,7 +649,7 @@ function getBestOffersAjaxCall() {
         },
         complete: function() {
             $(".home-best-offers-carousel").owlCarousel({
-            	items:4,
+            	items:5,
         		loop: true,
         		nav:true,
         		dots:false,
@@ -663,7 +663,7 @@ function getBestOffersAjaxCall() {
         			},
         			// breakpoint from 480 up
         			480 : {
-        				items:2,
+        				items:1,
         				stagePadding: 50,
         			},
         			// breakpoint from 768 up
@@ -671,8 +671,8 @@ function getBestOffersAjaxCall() {
         				items:3,
         			},
         			// breakpoint from 768 up
-        			1280 : {
-        				items:4,
+        			1024 : {
+        				items:5,
         			}			
         		}		
                 /*navigation: true,
