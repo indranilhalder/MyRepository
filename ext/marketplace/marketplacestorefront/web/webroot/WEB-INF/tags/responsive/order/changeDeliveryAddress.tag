@@ -110,7 +110,7 @@
 									<%-- <c:if test="${orderDetails.deliveryAddress.landmark==}"></c:if> --%>
 									<form:select path="landmark" 
 										class="form-control textInputChangeAddress address_landmarks slected_value" id="landmark"
-										value="${orderDetails.deliveryAddress.landmark}"  />
+										 />
 									<div class="error_text landMarkError"></div>
 								</div>
 							</div>
