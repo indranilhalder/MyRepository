@@ -221,10 +221,7 @@
 				<!-- Tship Delivery tat @prabhakar.s@techouts -->
 				<widget widgetDefinitionId="com.techouts.widgets.tshipdeliverytatwidget"
 					id="tshipdeliverytat" slotId="perspectives" template="true"></widget>
-				<!-- lp override -->
-				<widget id="lpoverride" widgetDefinitionId="com.techouts.widgets.lpoverride"
-					slotId="perspectives" template="true">
-				</widget>
+				
 
 				<!-- Add for Configurable Parameters -->
 
@@ -477,6 +474,10 @@
 					slotId="perspectives" template="true">
 				</widget>
 				
+				<!-- lp override -->
+				<widget id="lpeditMvvmWidget" widgetDefinitionId="com.hybris.cockpitng.lpeditMvvmWidget"
+					slotId="perspectives" template="true">
+				</widget>
 			</widget>
 
 			<setting key="eastClosed" type="Boolean">true</setting>

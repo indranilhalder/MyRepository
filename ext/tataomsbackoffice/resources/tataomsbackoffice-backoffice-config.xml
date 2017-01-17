@@ -189,7 +189,7 @@
      </explorer-tree:navigation-node>
        <explorer-tree:navigation-node  id="awbeditMvvm">
      </explorer-tree:navigation-node>
-     <explorer-tree:navigation-node  id="lpoverride">    </explorer-tree:navigation-node>
+     <explorer-tree:navigation-node  id="lpeditMvvmWidget">    </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="configarable_params">
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="tshipdeliverytat"></explorer-tree:navigation-node>
@@ -239,9 +239,7 @@
      </explorer-tree:navigation-node>
          <explorer-tree:navigation-node  id="awbeditMvvm">
      </explorer-tree:navigation-node>
-       <explorer-tree:navigation-node  id="sampleDemo">
-     </explorer-tree:navigation-node>
-     <explorer-tree:navigation-node  id="lpoverride">
+     <explorer-tree:navigation-node  id="lpeditMvvmWidget">
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="configarable_params">
      </explorer-tree:navigation-node>

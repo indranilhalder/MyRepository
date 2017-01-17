@@ -13,12 +13,23 @@
 
 <widget-definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/widget-definition.xsd"
-	id="com.techouts.widgets.lpoverride">
-	<name>Lp override widget</name>
-	<view src="LpoverrideWidget.zul" />	
-<keywords>
-       
-        <keyword>lp override widget </keyword>
-    </keywords>
-  
+	id="com.hybris.cockpitng.lpeditMvvmWidget">
+
+	
+
+	<sockets>
+		<input id="textInput" type="java.lang.String"/>
+		<output id="textOutput" type="java.lang.String"/>
+	</sockets>
+
+	<view src="lpoverrideWidget.zul"/>
+	<controller class="com.techouts.backoffice.widget.controller.LpoverrideWidgetController" id="lpVimo"/>
+	<keywords>
+		<keyword>Examples</keyword>
+	</keywords>
+
+	<settings>
+		<setting key="myTestSetting" default-value="test" />
+	</settings>
+
 </widget-definition>

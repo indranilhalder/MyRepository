@@ -12,15 +12,10 @@ import java.util.Set;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.ContextParam;
-import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Listbox;
@@ -31,7 +26,6 @@ import org.zkoss.zul.Messagebox;
 import com.hybris.cockpitng.core.user.AuthorityGroupService;
 import com.hybris.cockpitng.core.user.CockpitUserService;
 import com.hybris.cockpitng.core.user.impl.AuthorityGroup;
-import com.hybris.cockpitng.util.DefaultWidgetController;
 import com.hybris.oms.api.logistics.LogisticsFacade;
 import com.hybris.oms.api.orderlogistics.OrderLogisticsFacade;
 import com.hybris.oms.domain.logistics.dto.Logistics;
@@ -42,7 +36,6 @@ import com.hybris.oms.domain.lpawb.dto.OrderLineInfo;
 import com.hybris.oms.domain.lpawb.dto.OrderLineResponse;
 import com.hybris.oms.domain.lpawb.dto.TransactionInfo;
 import com.hybris.oms.tata.constants.TataomsbackofficeConstants;
-import com.hybris.oms.tata.services.FilePathProviderService;
 import com.hybris.oms.tata.services.LpAwbDataUploadService;
 
 
@@ -51,8 +44,9 @@ import com.hybris.oms.tata.services.LpAwbDataUploadService;
  *
  * @author prabhakar
  */
-public class LpoverrideWidgetController extends DefaultWidgetController
+public class LpoverrideWidgetController
 {
+
 	/**
 	 *
 	 */
@@ -91,8 +85,93 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 	private Listbox listBoxData;
 	@WireVariable("lpAwbDataUploadService")
 	private LpAwbDataUploadService lpAwbDataUploadService;
-	@WireVariable("filePathProviderService")
-	private FilePathProviderService filePathProviderService;
+
+
+	@Command
+	@NotifyChange(
+	{ "listOfTransactions", "displayPopup" })
+	public void lpSerachButton()
+	{
+		displayPopup = Boolean.FALSE;
+		LOG.info("inside lp search");
+		final LPAWBSearch lpAwbSearch = new LPAWBSearch();
+		int count = 0;
+		previousLpAndAwbNumberForTrack = new HashMap<String, TransactionInfo>();
+		if (txtOrderId != null && StringUtils.isNotEmpty(txtOrderId))//orderid
+		{
+			++count;
+			lpAwbSearch.setOrderId(txtOrderId);
+		}
+		if (txtTransactionId != null && StringUtils.isNotEmpty(txtTransactionId)) //transacion id
+		{
+			++count;
+			lpAwbSearch.setTransactionId(txtTransactionId);
+		}
+		if (txtsellerId != null && StringUtils.isNotEmpty(txtsellerId)) //seller id
+		{
+			++count;
+			lpAwbSearch.setSellerId(txtsellerId);
+		}
+		if (txtSlaveId != null && StringUtils.isNotEmpty(txtSlaveId)) //slave id
+		{
+			++count;
+			lpAwbSearch.setSlaveId(txtSlaveId);
+		}
+
+		if (selectionOrderStatus != null && StringUtils.isNotEmpty(selectionOrderStatus))
+		{
+			if (!selectionOrderStatus.equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_NONE))
+			{
+				++count;
+				lpAwbSearch.setOrderStatus(selectionOrderStatus);
+			}
+		}
+		if (selectionLpName != null && StringUtils.isNotEmpty(selectionLpName))
+		{
+			if (!selectionLpName.equalsIgnoreCase(TataomsbackofficeConstants.LPNAME_NONE))
+			{
+				++count;
+				lpAwbSearch.setLogisticName(selectionLpName);
+			}
+		}
+
+		if (count > 0)
+		{
+			lpAwbSearch.setTransactionType(transactionType);
+			lpAwbSearch.setIsReturn(isReturn);
+
+			final List<TransactionInfo> transactionsList = orderLogisticsUpdateFacade.getOrderLogisticsInfo(lpAwbSearch)
+					.getTransactionInfo(); //if response
+
+			for (final TransactionInfo transaction : transactionsList)
+			{
+				final String orderStatus = transaction.getOrderStatus();
+				if (orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_SCANNED)
+						|| orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI)
+						|| orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_REVERSEAWB))
+				{
+					transaction.setAwbReadOnly(Boolean.FALSE);
+					//create new Transaction Object  for track
+					final TransactionInfo newTransaction = new TransactionInfo();
+					newTransaction.setAwbNumber(transaction.getAwbNumber());
+					newTransaction.setOrderStatus(transaction.getOrderStatus());
+					newTransaction.setLogisticName(transaction.getLogisticName());
+					previousLpAndAwbNumberForTrack.put(transaction.getTransactionId(), newTransaction);
+				}
+				else
+				{
+					transaction.setAwbReadOnly(Boolean.TRUE); //this step is removed once awbEditable default value==true
+					previousLpAndAwbNumberForTrack.put(transaction.getTransactionId(), transaction);
+				}
+			}
+			this.listOfTransactions = transactionsList;
+
+		}
+		else
+		{
+			Messagebox.show("Atleast one field is mandatory");
+		}
+	}
 
 	@Init
 	@NotifyChange(
@@ -173,95 +252,6 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 		if (this.listOfTransactions != null && CollectionUtils.isNotEmpty(this.listOfTransactions))
 		{
 			this.listOfTransactions.clear();
-		}
-	}
-
-	/*
-	 * this method is used for search the list of orders based on the parameters
-	 */
-	@Command
-	@NotifyChange(
-	{ "listOfTransactions", "displayPopup" })
-	public void lpSearch()
-	{
-		displayPopup = Boolean.FALSE;
-		LOG.info("inside lp search");
-		final LPAWBSearch lpAwbSearch = new LPAWBSearch();
-		int count = 0;
-		previousLpAndAwbNumberForTrack = new HashMap<String, TransactionInfo>();
-		if (txtOrderId != null && StringUtils.isNotEmpty(txtOrderId))//orderid
-		{
-			++count;
-			lpAwbSearch.setOrderId(txtOrderId);
-		}
-		if (txtTransactionId != null && StringUtils.isNotEmpty(txtTransactionId)) //transacion id
-		{
-			++count;
-			lpAwbSearch.setTransactionId(txtTransactionId);
-		}
-		if (txtsellerId != null && StringUtils.isNotEmpty(txtsellerId)) //seller id
-		{
-			++count;
-			lpAwbSearch.setSellerId(txtsellerId);
-		}
-		if (txtSlaveId != null && StringUtils.isNotEmpty(txtSlaveId)) //slave id
-		{
-			++count;
-			lpAwbSearch.setSlaveId(txtSlaveId);
-		}
-
-		if (selectionOrderStatus != null && StringUtils.isNotEmpty(selectionOrderStatus))
-		{
-			if (!selectionOrderStatus.equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_NONE))
-			{
-				++count;
-				lpAwbSearch.setOrderStatus(selectionOrderStatus);
-			}
-		}
-		if (selectionLpName != null && StringUtils.isNotEmpty(selectionLpName))
-		{
-			if (!selectionLpName.equalsIgnoreCase(TataomsbackofficeConstants.LPNAME_NONE))
-			{
-				++count;
-				lpAwbSearch.setLogisticName(selectionLpName);
-			}
-		}
-
-		if (count > 0)
-		{
-			lpAwbSearch.setTransactionType(transactionType);
-			lpAwbSearch.setIsReturn(isReturn);
-
-			final List<TransactionInfo> transactionsList = orderLogisticsUpdateFacade.getOrderLogisticsInfo(lpAwbSearch)
-					.getTransactionInfo(); //if response
-
-			for (final TransactionInfo transaction : transactionsList)
-			{
-				final String orderStatus = transaction.getOrderStatus();
-				if (orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_SCANNED)
-						|| orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI)
-						|| orderStatus.equalsIgnoreCase(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_REVERSEAWB))
-				{
-					transaction.setAwbReadOnly(Boolean.FALSE);
-					//create new Transaction Object  for track
-					final TransactionInfo newTransaction = new TransactionInfo();
-					newTransaction.setAwbNumber(transaction.getAwbNumber());
-					newTransaction.setOrderStatus(transaction.getOrderStatus());
-					newTransaction.setLogisticName(transaction.getLogisticName());
-					previousLpAndAwbNumberForTrack.put(transaction.getTransactionId(), newTransaction);
-				}
-				else
-				{
-					transaction.setAwbReadOnly(Boolean.TRUE); //this step is removed once awbEditable default value==true
-					previousLpAndAwbNumberForTrack.put(transaction.getTransactionId(), transaction);
-				}
-			}
-			this.listOfTransactions = transactionsList;
-
-		}
-		else
-		{
-			Messagebox.show("Atleast one field is mandatory");
 		}
 	}
 
@@ -439,12 +429,6 @@ public class LpoverrideWidgetController extends DefaultWidgetController
 		{
 			displayPopup = Boolean.TRUE;
 		}
-	}
-
-	@AfterCompose
-	public void afterCompose(@ContextParam(ContextType.VIEW) final Component view)
-	{
-		Selectors.wireComponents(view, this, false);
 	}
 
 	/**
