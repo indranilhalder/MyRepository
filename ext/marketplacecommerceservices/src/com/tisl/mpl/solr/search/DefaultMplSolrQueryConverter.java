@@ -213,7 +213,7 @@ public class DefaultMplSolrQueryConverter extends DefaultSolrQueryConverter
 	{
 		final List joinedQueries = new ArrayList();
 
-		final Map couples = new HashMap();
+		final Map<String, List> couples = new HashMap<String, List>();
 		final Map operatorMapping = new HashMap(coupledQueryFields.size());
 
 		for (final CoupledQueryField qf : coupledQueryFields)
@@ -222,7 +222,7 @@ public class DefaultMplSolrQueryConverter extends DefaultSolrQueryConverter
 			couple.append('(').append(prepareQueryField(qf.getField1())).append(qf.getInnerCouplingOperator().getName())
 					.append(prepareQueryField(qf.getField2())).append(')');
 
-			List joinedCouples = (List) couples.get(qf.getCoupleId());
+			List joinedCouples = couples.get(qf.getCoupleId());
 			if (joinedCouples == null)
 			{
 				joinedCouples = new ArrayList();
@@ -232,19 +232,16 @@ public class DefaultMplSolrQueryConverter extends DefaultSolrQueryConverter
 
 			operatorMapping.put(qf.getCoupleId(), qf.getOuterCouplingOperator());
 		}
-		final Set<String> couplesKeySet = couples.keySet();
-		for (final String coupleId : couplesKeySet)
+		for (final Map.Entry<String, List> entry : couples.entrySet())
 		{
-			final List list = (List) couples.get(coupleId);
+			final List list = couples.get(entry.getKey());
 			joinedQueries.add("("
 					+ combine((String[]) list.toArray(new String[list.size()]),
-							((SearchQuery.Operator) operatorMapping.get(coupleId)).getName()) + ")");
+							((SearchQuery.Operator) operatorMapping.get(entry.getKey())).getName()) + ")");
 		}
 
 		return ((String[]) joinedQueries.toArray(new String[joinedQueries.size()]));
 	}
-
-
 
 	private String prepareQueryField(final QueryField field)
 	{
