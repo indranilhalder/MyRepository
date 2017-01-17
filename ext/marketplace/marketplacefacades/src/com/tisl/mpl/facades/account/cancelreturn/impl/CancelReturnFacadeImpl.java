@@ -235,6 +235,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 	private static final String SPACE=" ";
 	
+	private static final String SSB = "SSB";
+	
 	@Autowired
 	private AccountAddressFacade  accountAddressFacade;
 	
@@ -243,7 +245,16 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			final String reasonCode, final String ussid, final String ticketTypeCode, final CustomerData customerData,
 			String refundType, final boolean isReturn, final SalesApplication salesApplication)
 	{
-
+		//TISRLEE-1703 start
+		return implementCancelOrReturn(subOrderDetails, subOrderEntry, reasonCode, 
+				ussid, ticketTypeCode, customerData, refundType, isReturn, salesApplication, null);
+	}	
+	 
+	private boolean implementCancelOrReturn(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
+			final String reasonCode, final String ussid, final String ticketTypeCode, final CustomerData customerData,
+			String refundType, final boolean isReturn, final SalesApplication salesApplication, String ticketSubType)
+	{
+		//TISRLEE-1703 end
 		boolean cancelOrRetrnanable = true;
 		boolean omsCancellationStatus = false;
 		//fix for TISPRD-5958
@@ -383,9 +394,20 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				{
 					LOG.info(">> returnLogisticsCheck Fails>>  Setting Type of Return " + returnLogisticsCheck);
 				}
-				//TISPRD-1641
-				final boolean ticketCreationStatus = createTicketInCRM(subOrderDetails, subOrderEntry, ticketTypeCode, reasonCode,
-						refundType, ussid, customerData, subOrderModel, returnLogisticsCheck);
+				//TISRLEE-1703 starts
+				boolean ticketCreationStatus = false;
+				if(ticketSubType != null)
+				{
+					ticketCreationStatus = createTicketInCRM(subOrderDetails, subOrderEntry, ticketTypeCode, reasonCode,
+   						refundType, ussid, customerData, subOrderModel, returnLogisticsCheck, SSB);
+				}
+				else
+				{
+   				//TISPRD-1641
+   				ticketCreationStatus = createTicketInCRM(subOrderDetails, subOrderEntry, ticketTypeCode, reasonCode,
+   						refundType, ussid, customerData, subOrderModel, returnLogisticsCheck);
+				}
+				//TISRLEE-1703 end
 				LOG.debug("Step 4.1:***********************************Ticket creation status for sub order:" + ticketCreationStatus);
 				LOG.debug("Step 5 :*********************************** Refund and OMS call started");
 				cancelOrRetrnanable = initiateCancellation(ticketTypeCode, subOrderDetails, subOrderEntry, subOrderModel, reasonCode);
@@ -1027,6 +1049,16 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			final String ticketTypeCode, final String reasonCode, final String refundType, final String ussid,
 			final CustomerData customerData, final OrderModel subOrderModel, final boolean returnLogisticsCheck)
 	{
+		//TISRLEE-1703 start
+		return createTicketInCRM(subOrderDetails, subOrderEntry, ticketTypeCode, reasonCode,
+				refundType, ussid, customerData, subOrderModel, returnLogisticsCheck, null);
+	}
+		
+	private boolean createTicketInCRM(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
+				final String ticketTypeCode, final String reasonCode, final String refundType, final String ussid,
+				final CustomerData customerData, final OrderModel subOrderModel, final boolean returnLogisticsCheck,String ticketSubtype)
+		{
+		//TISRLEE-1703 end
 		boolean ticketCreationStatus = false;
 		try
 		{
@@ -1138,6 +1170,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			sendTicketRequestData.setOrderId(subOrderModel.getParentReference().getCode());
 			sendTicketRequestData.setSubOrderId(subOrderDetails.getCode());
 			sendTicketRequestData.setTicketType(ticketTypeCode);
+			//TISRLEE-1703 start
+			if(StringUtils.isNotBlank(ticketSubtype))
+			{
+				sendTicketRequestData.setTicketSubType(ticketSubtype);
+			}
+			//TISRLEE-1703 end
 
 			final String asyncEnabled = configurationService.getConfiguration()
 					.getString(MarketplacecommerceservicesConstants.ASYNC_ENABLE).trim();
@@ -3941,7 +3979,7 @@ private AbstractOrderEntryModel getOrderEntryModel(OrderModel ordermodel,String 
 				}
 			}
 			cancellationStatus = implementCancelOrReturn(subOrderDetails, subOrderEntry, "05", ussid,
-					"C", customerData, refundType, false, SalesApplication.WEB);
+					"C", customerData, refundType, false, SalesApplication.WEB, SSB);
 		}
 		catch (Exception e)
 		{
