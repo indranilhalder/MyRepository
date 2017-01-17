@@ -3922,7 +3922,8 @@ private AbstractOrderEntryModel getOrderEntryModel(OrderModel ordermodel,String 
 				}
 			}
 			
-			final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCockpitUser(subOrderModel.getCode(), customerModel);
+			//TISRLEE-1703
+			final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(subOrderModel);
 			
 			for (final OrderEntryData orderEntry : subOrderDetails.getEntries())
 			{
