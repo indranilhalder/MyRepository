@@ -1703,6 +1703,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 				<value>GIRLS</value>
 				<value>MEN</value>
 				<value>WOMEN</value>
+				<value>COUPLES</value>
 				<value>UNISEX</value>
 			</list>
 		</property>
