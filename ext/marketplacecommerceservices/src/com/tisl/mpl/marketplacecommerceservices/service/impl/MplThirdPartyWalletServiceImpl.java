@@ -87,6 +87,11 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	/**
 	 *
 	 */
+	private static final String T = "T";
+
+	/**
+	 *
+	 */
 	private static final String SSL = "SSL";
 
 	/**
@@ -306,19 +311,19 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 						//timeout handling
 						if (new Date().after(orderTATForTimeout))
 						{
-							performProcessingOrder(auditModelData, order);
+							performProcessingOrder(auditModelData, order, T);
 							sendNotification(order);
 						}
 						//no response
-						if (StringUtils.isEmpty(status))
+						if (StringUtils.isEmpty(status) && new Date().before(orderTATForTimeout))
 						{
-							performProcessingOrder(auditModelData, order);
+							performProcessingOrder(auditModelData, order, "");
 							sendNotification(order);
 						}
 						//getting response other than S
-						if (!(S.equalsIgnoreCase(status)))
+						if (!(S.equalsIgnoreCase(status)) && new Date().before(orderTATForTimeout))
 						{
-							performProcessingOrder(auditModelData, order);
+							performProcessingOrder(auditModelData, order, status);
 							sendNotification(order);
 						}
 					}
@@ -366,8 +371,9 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	 *
 	 * @param auditModelData
 	 * @param order
+	 * @param status
 	 */
-	private void performProcessingOrder(final MplPaymentAuditModel auditModelData, final OrderModel order)
+	private void performProcessingOrder(final MplPaymentAuditModel auditModelData, final OrderModel order, final String status)
 	{
 		try
 		{
@@ -399,7 +405,14 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 				}
 				mplVoucherService.recalculateCartForCoupon(null, order);
 			}
-			orderStatusSpecifier.setOrderStatus(order, OrderStatus.PAYMENT_TIMEOUT);
+			if (T.equalsIgnoreCase(status))
+			{
+				orderStatusSpecifier.setOrderStatus(order, OrderStatus.PAYMENT_TIMEOUT);
+			}
+			else
+			{
+				orderStatusSpecifier.setOrderStatus(order, OrderStatus.PAYMENT_FAILED);
+			}
 			getModelService().save(order);
 		}
 		catch (final ModelSavingException e)
