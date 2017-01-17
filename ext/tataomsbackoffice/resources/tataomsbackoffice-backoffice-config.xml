@@ -187,7 +187,7 @@
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="lpawb_bulkupload">
      </explorer-tree:navigation-node>
-       <explorer-tree:navigation-node  id="awbedit">
+       <explorer-tree:navigation-node  id="awbeditMvvm">
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="lpoverride">    </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="configarable_params">
@@ -237,7 +237,9 @@
      </explorer-tree:navigation-node>
       <explorer-tree:navigation-node  id="lpawb_bulkupload">
      </explorer-tree:navigation-node>
-      <explorer-tree:navigation-node  id="awbedit">
+         <explorer-tree:navigation-node  id="awbeditMvvm">
+     </explorer-tree:navigation-node>
+       <explorer-tree:navigation-node  id="sampleDemo">
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="lpoverride">
      </explorer-tree:navigation-node>

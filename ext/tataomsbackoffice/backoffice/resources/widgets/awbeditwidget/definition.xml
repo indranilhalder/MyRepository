@@ -13,13 +13,27 @@
 
 <widget-definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/widget-definition.xsd"
-	id="com.hybris.oms.widgets.awbwidget">
-	<name>Awbedit Widget</name>
-	
-	<view src="AwbeditWidget.zul" />
-	
-<keywords>
-       
-        <keyword>awb edit </keyword>
-    </keywords>
+	id="com.hybris.cockpitng.awbeditMvvmWidget">
+
+	<name>Example MVVM</name>
+	<description>MVVM Example</description>
+	<defaultTitle>MVVM Example</defaultTitle>
+	<author>hybris</author>
+	<version>0.1</version>
+
+	<sockets>
+		<input id="textInput" type="java.lang.String"/>
+		<output id="textOutput" type="java.lang.String"/>
+	</sockets>
+
+	<view src="awbeditWidget.zul"/>
+	<controller class="com.techouts.backoffice.widget.controller.AwbEditWidgetController" id="vimo"/>
+	<keywords>
+		<keyword>Examples</keyword>
+	</keywords>
+
+	<settings>
+		<setting key="myTestSetting" default-value="test" />
+	</settings>
+
 </widget-definition>

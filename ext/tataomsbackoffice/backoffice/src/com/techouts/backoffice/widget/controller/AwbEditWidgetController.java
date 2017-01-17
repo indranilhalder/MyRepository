@@ -11,15 +11,10 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.ContextParam;
-import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
@@ -28,7 +23,7 @@ import org.zkoss.zul.Messagebox;
 import com.hybris.cockpitng.core.user.AuthorityGroupService;
 import com.hybris.cockpitng.core.user.CockpitUserService;
 import com.hybris.cockpitng.core.user.impl.AuthorityGroup;
-import com.hybris.cockpitng.util.DefaultWidgetController;
+import com.hybris.cockpitng.engine.WidgetInstanceManager;
 import com.hybris.oms.api.logistics.LogisticsFacade;
 import com.hybris.oms.api.orderlogistics.OrderLogisticsFacade;
 import com.hybris.oms.domain.logistics.dto.Logistics;
@@ -47,9 +42,8 @@ import com.hybris.oms.tata.services.LpAwbDataUploadService;
  *
  * @author prabhakar
  */
-public class AwbEditWidgetController extends DefaultWidgetController
+public class AwbEditWidgetController
 {
-	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = Logger.getLogger(AwbEditWidgetController.class);
 	private String txtOrderId;
 	private String txtTransactionId;
@@ -75,112 +69,13 @@ public class AwbEditWidgetController extends DefaultWidgetController
 	@WireVariable
 	private transient AuthorityGroupService authorityGroupService;
 	private transient AuthorityGroup activeUserRole;
+	@WireVariable
+	private WidgetInstanceManager widgetInstanceManager;
 
-	@Init
-	@NotifyChange(
-	{ "ordersStatus" })
-	public void init()
-	{
-		LOG.info("inside init");
-		ordersStatus = getOrderStatuses(isReturn);
-		activelpList = getLpSet();
-		if (map == null)
-		{
-			map = new HashMap<String, TransactionInfo>();
-		}
-
-	}
-
-
-	private List<String> getLpSet()
-	{
-		final List<Logistics> list = (List<Logistics>) logisticsFacade.getAll();
-
-		final List<String> lpList = new ArrayList<>();
-		for (final Logistics logistics : list)
-		{
-			if (logistics.getActive())
-			{
-				LOG.info(" active lpnames " + logistics.getLogisticname());
-				lpList.add(logistics.getLogisticname());
-			}
-		}
-		lpList.add(TataomsbackofficeConstants.LPNAME_NONE);
-		return lpList;
-	}
-
-	@AfterCompose
-	public void afterCompose(@ContextParam(ContextType.VIEW) final Component view)
-	{
-		Selectors.wireComponents(view, this, false);
-	}
-
-	/*
-	 * this method is used for when order statuses changed to return order statuses when he checked is return checkbox
-	 */
-
-	/**
-	 * @return the ordersStatus
-	 */
-	public List<String> getOrdersStatus()
-	{
-		return ordersStatus;
-	}
-
-	@Command("isReturnCheck")
-	@NotifyChange(
-	{ "ordersStatus", "selectionOrderStatus", "listOfTransactions", "txtOrderId", "txtsellerId", "txtSlaveId", "selectionLpName",
-			"txtTransactionId" })
-	public void isReturnCheck(@BindingParam("checkedValue") final Boolean isReturnCheckdValue)
-	{
-		LOG.info("is Return Checked Value" + isReturnCheckdValue);
-		selectionOrderStatus = null;
-		txtOrderId = null;
-		txtsellerId = null;
-		txtSlaveId = null;
-		selectionLpName = null;
-		txtTransactionId = null;
-		this.isReturn = isReturnCheckdValue;
-		this.ordersStatus = getOrderStatuses(this.isReturn);
-		if (this.listOfTransactions != null && CollectionUtils.isNotEmpty(this.listOfTransactions))
-		{
-			this.listOfTransactions.clear();
-		}
-	}
-
-	/*
-	 * this method is used for active order statuses
-	 *
-	 * @return active order staueses
-	 */
-	private List<String> getOrderStatuses(final Boolean isReturn)
-	{
-		final List<String> ordersStatus = new ArrayList<String>();
-
-		if (isReturn)
-		{
-			ordersStatus.add(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_REVERSEAWB);
-			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_NONE);
-		}
-		else
-		{
-			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_SCANNED);
-			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI);
-			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_NONE);
-		}
-		return ordersStatus;
-	}
-
-
-
-
-	/*
-	 * this method is used for search the list of orders based on the parameters
-	 */
 	@Command
 	@NotifyChange(
 	{ "listOfTransactions" })
-	public void awbSearch()
+	public void awbSerachButton()
 	{
 		LOG.info("inside awb search");
 		final LPAWBSearch lpAwbSearch = new LPAWBSearch();
@@ -237,7 +132,90 @@ public class AwbEditWidgetController extends DefaultWidgetController
 		{
 			Messagebox.show("Atleast one field is mandatory");
 		}
+	}
 
+	@Init
+	@NotifyChange(
+	{ "ordersStatus", "activelpList" })
+	public void init()
+	{
+		LOG.info("inside init");
+		ordersStatus = getOrderStatuses(isReturn);
+		activelpList = getLpSet();
+		if (map == null)
+		{
+			map = new HashMap<String, TransactionInfo>();
+		}
+
+	}
+
+	private List<String> getLpSet()
+	{
+		final List<Logistics> list = (List<Logistics>) logisticsFacade.getAll();
+
+		final List<String> lpList = new ArrayList<>();
+		for (final Logistics logistics : list)
+		{
+			if (logistics.getActive())
+			{
+				LOG.info(" active lpnames " + logistics.getLogisticname());
+				lpList.add(logistics.getLogisticname());
+			}
+		}
+		lpList.add(TataomsbackofficeConstants.LPNAME_NONE);
+		return lpList;
+	}
+
+	/**
+	 * @return the ordersStatus
+	 */
+	public List<String> getOrdersStatus()
+	{
+		return ordersStatus;
+	}
+
+	@Command("isReturnCheck")
+	@NotifyChange(
+	{ "ordersStatus", "selectionOrderStatus", "listOfTransactions", "txtOrderId", "txtsellerId", "txtSlaveId", "selectionLpName",
+			"txtTransactionId" })
+	public void isReturnCheck(@BindingParam("checkedValue") final Boolean isReturnCheckdValue)
+	{
+		LOG.info("is Return Checked Value" + isReturnCheckdValue);
+		selectionOrderStatus = null;
+		txtOrderId = null;
+		txtsellerId = null;
+		txtSlaveId = null;
+		selectionLpName = null;
+		txtTransactionId = null;
+		this.isReturn = isReturnCheckdValue;
+		this.ordersStatus = getOrderStatuses(this.isReturn);
+		if (this.listOfTransactions != null && CollectionUtils.isNotEmpty(this.listOfTransactions))
+		{
+			this.listOfTransactions.clear();
+		}
+	}
+
+	/*
+	 * this method is used for active order statuses
+	 *
+	 * @return active order staueses
+	 */
+	private List<String> getOrderStatuses(final Boolean isReturn)
+	{
+		final List<String> ordersStatus = new ArrayList<String>();
+
+		if (isReturn)
+		{
+			ordersStatus.add(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_REVERSEAWB);
+			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_NONE);
+		}
+		else
+		{
+			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_SCANNED);
+			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI);
+			ordersStatus.add(TataomsbackofficeConstants.ORDERSTATUS_NONE);
+		}
+		return ordersStatus;
 	}
 
 	/*

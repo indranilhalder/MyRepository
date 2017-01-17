@@ -11,20 +11,20 @@
 
 
 
-	<!-- Added by sana //importing the omsbackoffice widgets and commerce search  -->
+	<!-- Added by sana //importing the omsbackoffice widgets and commerce search -->
 
 
-<import resource="/tata-omsbackoffice-oms-perspective-widgets.xml"/>
-<import resource="/tata-omsbackoffice-oms-return-perspective-widgets.xml"/>
-<import resource="/tata-omsbackoffice-oms-admin-perspective-widgets.xml"/>
+	<import resource="/tata-omsbackoffice-oms-perspective-widgets.xml" />
+	<import resource="/tata-omsbackoffice-oms-return-perspective-widgets.xml" />
+	<import resource="/tata-omsbackoffice-oms-admin-perspective-widgets.xml" />
 
-<import resource="/tata-commercesearchbackoffice-backoffice-widgets.xml"/>
+	<import resource="/tata-commercesearchbackoffice-backoffice-widgets.xml" />
 
 
-	<widget-extension widgetId="backofficeMainSlot" >
-	
-	<widget id="tataBUCperspective" widgetDefinitionId="com.hybris.cockpitng.borderlayout"
-			slotId="perspectives" title="Tata BUC" template="false" >
+	<widget-extension widgetId="backofficeMainSlot">
+
+		<widget id="tataBUCperspective" widgetDefinitionId="com.hybris.cockpitng.borderlayout"
+			slotId="perspectives" title="Tata BUC" template="false">
 
 			<widget id="tataomsexplorerTree" widgetDefinitionId="com.hybris.cockpitng.widgets.common.explorertree"
 				slotId="leftSlot" template="false">
@@ -68,7 +68,8 @@
 					<setting key="bottomCaption" type="String">Edit Area</setting>
 					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
 					<setting key="widgetStyleClass" type="String"></setting>
-					<setting key="topCaption" type="String">Delivery Mode Configuration</setting>
+					<setting key="topCaption" type="String">Delivery Mode Configuration
+					</setting>
 					<setting key="centerPanelInitiallyLocked" type="Boolean">false
 					</setting>
 					<setting key="topPanelCollapsed" type="Boolean">true</setting>
@@ -81,8 +82,8 @@
 					<virtual-sockets />
 				</widget>
 				<!-- Added for shipment data upload -->
-				<widget id="shipment_data_upload" widgetDefinitionId="com.hybris.oms.shipmentdatauploadwidget" slotId="perspectives"
-					template="true" title="shipment data upload widget">
+				<widget id="shipment_data_upload" widgetDefinitionId="com.hybris.oms.shipmentdatauploadwidget"
+					slotId="perspectives" template="true" title="shipment data upload widget">
 					<virtual-sockets />
 				</widget>
 				<!-- Added for logistics Calendar -->
@@ -201,7 +202,8 @@
 
 
 				<!-- Added for Inventory By ORDERID -->
-				<widget id="ordersbyorderid" widgetDefinitionId="com.hybris.oms.tata.orders.OrderLinesListController"
+				<widget id="ordersbyorderid"
+					widgetDefinitionId="com.hybris.oms.tata.orders.OrderLinesListController"
 					slotId="perspectives" template="true">
 				</widget>
 
@@ -211,20 +213,14 @@
 					slotId="perspectives" template="true">
 
 				</widget>
-				
+
 				<!-- Added for pincodesUpload -->
-                <widget id="pincodes_upload" widgetDefinitionId="com.hybris.oms.widgets.pincodesuploadwidget"
+				<widget id="pincodes_upload" widgetDefinitionId="com.hybris.oms.widgets.pincodesuploadwidget"
 					slotId="perspectives" template="true">
-				 </widget>
+				</widget>
 				<!-- Tship Delivery tat @prabhakar.s@techouts -->
 				<widget widgetDefinitionId="com.techouts.widgets.tshipdeliverytatwidget"
 					id="tshipdeliverytat" slotId="perspectives" template="true"></widget>
-
-				<!-- awb edit -->
-				<widget id="awbedit" widgetDefinitionId="com.hybris.oms.widgets.awbwidget"
-					slotId="perspectives" template="true">
-				</widget>
-
 				<!-- lp override -->
 				<widget id="lpoverride" widgetDefinitionId="com.techouts.widgets.lpoverride"
 					slotId="perspectives" template="true">
@@ -400,7 +396,8 @@
 					<setting key="bottomCaption" type="String"></setting>
 					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
 					<setting key="widgetStyleClass" type="String"></setting>
-					<setting key="topCaption" type="String">Seller And Logistics Performance Report
+					<setting key="topCaption" type="String">Seller And Logistics
+						Performance Report
 					</setting>
 					<setting key="centerPanelInitiallyLocked" type="Boolean">false
 					</setting>
@@ -410,8 +407,8 @@
 				</widget>
 
 
-		
-			<!-- Added for delivery date against promised date -->
+
+				<!-- Added for delivery date against promised date -->
 				<widget id="delivery_date_against_promisddate_collapseble"
 					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
 					title="Delivery date against promised date report" slotId="perspectives"
@@ -462,7 +459,7 @@
 					slotId="perspectives" title="reverse Logistics Failure report"
 					template="false">
 				</widget>
-					<!-- lp awb bulk upload -->
+				<!-- lp awb bulk upload -->
 				<widget id="lpawb_bulkupload" widgetDefinitionId="com.techouts.lpawbbulkupload"
 					slotId="perspectives" template="true" title="LP and awb bulk upload">
 				</widget>
@@ -470,10 +467,16 @@
 				<widget id="logistcs_delivery_report" widgetDefinitionId="com.techouts.widgets.logisticsdeliveryreport"
 					slotId="perspectives" template="true" title="Logistics Delivery Report">
 				</widget>
-					<!-- R2.3 Added for unmapped Pincode report -->
-				<widget id="unmapped_pincodes_report" widgetDefinitionId="com.hybris.oms.tata.unmappedpincodes.Pincodeswidget"
+				<!-- R2.3 Added for unmapped Pincode report -->
+				<widget id="unmapped_pincodes_report"
+					widgetDefinitionId="com.hybris.oms.tata.unmappedpincodes.Pincodeswidget"
 					slotId="perspectives" template="true"></widget>
-		
+
+				<!-- awb edit -->
+				<widget id="awbeditMvvm" widgetDefinitionId="com.hybris.cockpitng.awbeditMvvmWidget"
+					slotId="perspectives" template="true">
+				</widget>
+				
 			</widget>
 
 			<setting key="eastClosed" type="Boolean">true</setting>
@@ -483,10 +486,11 @@
 
 
 	</widget-extension>
-	 <widget-extension widgetId="tataBUCperspective">
-	<move widgetId="backofficeMainSlot" targetWidgetId="backofficeMainSlot" targetSlotId="perspectives" position="0"/>
+	<widget-extension widgetId="tataBUCperspective">
+		<move widgetId="backofficeMainSlot" targetWidgetId="backofficeMainSlot"
+			targetSlotId="perspectives" position="0" />
 	</widget-extension>
-	
+
 	<widget-connection inputId="input" outputId="nodeSelected"
 		sourceWidgetId="tataomsbackoffice-explorer-tree" targetWidgetId="tataomsbackoffice-tree-node-adapter" />
 	<widget-connection inputId="genericInput" outputId="true"
@@ -566,14 +570,20 @@
 	<!-- SocketConnection For InventorySearchByUSSID -->
 	<widget-connection sourceWidgetId="inventory-by-ussid-searchwidget"
 		outputId="searchedText" inputId="ussid" targetWidgetId="inventory-by-ussid-listview" />
-	<!-- socketConnections for Pincode Logistics Reports -->	
-	<widget-connection sourceWidgetId="pincode_logistics_report_datepic" outputId="startendDates" targetWidgetId="pincode_logistics_report_listview"  inputId="startendDates" />
-		
+	<!-- socketConnections for Pincode Logistics Reports -->
+	<widget-connection sourceWidgetId="pincode_logistics_report_datepic"
+		outputId="startendDates" targetWidgetId="pincode_logistics_report_listview"
+		inputId="startendDates" />
+
 	<widget-connection sourceWidgetId="pincode_logistics_report_datepic"
 		outputId="selectedShipmentType" targetWidgetId="pincode_logistics_report_listview"
 		inputId="selectedShipmentType" />
-    <widget-connection sourceWidgetId="tataBUCperspective" outputId="possiblePerspectives" targetWidgetId="backofficePerspectiveChooser" inputId="possiblePerspectives"/>
-    <widget-connection sourceWidgetId="backofficePerspectiveChooser" outputId="selectPerspective" targetWidgetId="tataBUCperspective" inputId="selectPerspective"/>
+	<widget-connection sourceWidgetId="tataBUCperspective"
+		outputId="possiblePerspectives" targetWidgetId="backofficePerspectiveChooser"
+		inputId="possiblePerspectives" />
+	<widget-connection sourceWidgetId="backofficePerspectiveChooser"
+		outputId="selectPerspective" targetWidgetId="tataBUCperspective"
+		inputId="selectPerspective" />
 
 	<widget-connection sourceWidgetId="tataBUCperspective"
 		outputId="possiblePerspectives" targetWidgetId="backofficePerspectiveChooser"
