@@ -27,6 +27,16 @@
 	</p>	
 	<br>
 
+	<!-- TPR-3780 STARTS HERE -->
+	<c:if test="${product.rootCategory=='FineJewellery' }">										
+	    <p class="disclaimer-txt more">
+	    	<spring:theme code="cart.price.disclaimer"/>
+	    </p>
+	</c:if>	
+	     
+		                					
+	<!-- TPR-3780 ENDS HERE -->	
+	
 	
 	<%--for price breakup(TPR-3752) --%>
 	
