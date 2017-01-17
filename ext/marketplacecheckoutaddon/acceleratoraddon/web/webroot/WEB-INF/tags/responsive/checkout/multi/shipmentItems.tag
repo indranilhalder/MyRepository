@@ -84,15 +84,15 @@
 													  <div class="item-price delivery-price delivery-price-mobile">
 											<ycommerce:testId code="cart_totalProductPrice_label">
 											<c:choose>
-											<c:when test="${not empty entry.totalSalePrice}">
-												<format:price priceData="${entry.totalSalePrice}"
-													displayFreeForZero="true" />
-													</c:when>
-													<c:otherwise>
+												<c:when test="${not empty entry.totalPrice}">
 													<format:price priceData="${entry.totalPrice}"
-													displayFreeForZero="true" />
+														displayFreeForZero="true" />
+												</c:when>
+												<c:otherwise>
+													<format:price priceData="${entry.totalSalePrice}"
+														displayFreeForZero="true" />
 													</c:otherwise>
-													</c:choose>
+											</c:choose>
 											</ycommerce:testId>
 											
 										</div>
