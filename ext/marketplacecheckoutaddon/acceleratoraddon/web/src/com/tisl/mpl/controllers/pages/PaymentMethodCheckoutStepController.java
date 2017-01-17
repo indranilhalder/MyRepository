@@ -1463,7 +1463,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
    		   	 if(cartEntryData.getScheduledDeliveryCharge().doubleValue()>0){
          		   	// final CartModel cartModel = getCartService().getSessionCart();
          		   	 final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
-         		   	 cartData.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel, Double.valueOf(configModel.getEdCharge())));
+         		   	 cartData.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel, Double.valueOf(configModel.getSdCharge())));
    		   	 }
 		    }
 		}

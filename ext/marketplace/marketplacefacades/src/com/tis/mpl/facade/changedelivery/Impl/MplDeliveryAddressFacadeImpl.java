@@ -364,7 +364,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 		sendTicketRequestData.setAddressInfo(addressinfo);
 
-		//sendTicketRequestData.setCustomerID(Order.getUser().getUid());
+		sendTicketRequestData.setCustomerID(Order.getUser().getUid());
 		sendTicketRequestData.setLineItemDataList(lineItemDataList);
 		sendTicketRequestData.setOrderId(Order.getCode());
 		//sendTicketRequestData.setSubOrderId(orderModel.getChildOrders().get(0).getCode());
