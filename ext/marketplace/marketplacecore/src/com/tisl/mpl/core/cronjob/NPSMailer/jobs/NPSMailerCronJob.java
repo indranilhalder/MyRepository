@@ -79,7 +79,7 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 				npsEmailerModel.setTransactionId(entry.getValue().getTransactionID());
 				npsEmailerModel.setParentOrderNo(entry.getKey());
 				npsEmailerModel.setCustomer((CustomerModel) entry.getKey().getUser());
-				final ProcessState processState = notificationService.triggerNpsEmail(npsEmailerModel);
+				final ProcessState processState = notificationService.triggerNpsEmail(entry.getValue());
 				if (processState.getCode().equals(ProcessState.SUCCEEDED.toString()))
 				{
 					npsEmailerModel.setIsEmailSent(Boolean.TRUE);
