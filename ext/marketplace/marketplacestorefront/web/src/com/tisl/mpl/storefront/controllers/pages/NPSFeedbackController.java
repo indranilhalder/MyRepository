@@ -3,8 +3,6 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
-import de.hybris.platform.core.model.NPSFeedbackModel;
-import de.hybris.platform.core.model.NPSFeedbackQuestionModel;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 
@@ -23,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.tisl.mpl.core.model.NPSFeedbackModel;
+import com.tisl.mpl.core.model.NPSFeedbackQuestionModel;
 import com.tisl.mpl.facade.nps.NPSFeedbackQuestionFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
@@ -110,34 +110,7 @@ public class NPSFeedbackController
 				final NPSFeedbackModel npsFeedback = modelService.create(NPSFeedbackModel.class);
 				npsFeedback.setFirstName(formList.getFirstName());
 				npsFeedback.setTransactionId(formList.getTransactionId());
-				npsFeedback.setQuestionCode(formList.getQuestionCode());
-
-				if (Integer.parseInt(formList.getRating()) == 1)
-				{
-					npsFeedback.setRating1(formList.getQuestionCode());
-				}
-				else if (Integer.parseInt(formList.getRating()) == 2)
-				{
-					npsFeedback.setRating2(formList.getQuestionCode());
-				}
-				else if (Integer.parseInt(formList.getRating()) == 3)
-				{
-					npsFeedback.setRating3(formList.getQuestionCode());
-				}
-				else if (Integer.parseInt(formList.getRating()) == 4)
-				{
-					npsFeedback.setRating4(formList.getQuestionCode());
-				}
-				else
-				{
-					npsFeedback.setRating5(formList.getQuestionCode());
-				}
-
 				npsFeedbackModelList.add(npsFeedback);
-				System.out.println(formList.getQuestionCode());
-				System.out.println(formList.getRating());
-				System.out.println(formList.getFirstName());
-				System.out.println(formList.getTransactionId());
 			}
 
 			modelService.saveAll(npsFeedbackModelList);

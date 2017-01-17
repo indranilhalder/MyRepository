@@ -3,13 +3,13 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos;
 
-import de.hybris.platform.core.model.NPSFeedbackQuestionModel;
-
 import java.util.List;
+
+import com.tisl.mpl.core.model.NPSFeedbackQuestionModel;
 
 
 /**
- * @author 1256972
+ * @author TCS
  *
  */
 public interface NPSFeedbackQuestionDao

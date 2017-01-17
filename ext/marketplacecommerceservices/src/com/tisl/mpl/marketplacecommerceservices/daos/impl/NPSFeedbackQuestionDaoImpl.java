@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
-import de.hybris.platform.core.model.NPSFeedbackQuestionModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
@@ -13,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.tisl.mpl.core.model.NPSFeedbackQuestionModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.NPSFeedbackQuestionDao;
 import com.tisl.mpl.promotion.dao.impl.MplBinErrorDaoImpl;
 

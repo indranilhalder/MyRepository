@@ -3,13 +3,12 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
-import de.hybris.platform.core.model.NPSFeedbackQuestionModel;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.core.model.NPSFeedbackQuestionModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.NPSFeedbackQuestionDao;
 import com.tisl.mpl.marketplacecommerceservices.service.NPSFeedbackQuestionService;
 
