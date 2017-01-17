@@ -28,8 +28,8 @@ import org.springframework.beans.factory.annotation.Required;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 
 
-public class MplMobilePromotionCodeValueProvider extends AbstractPropertyFieldValueProvider
-		implements FieldValueProvider, Serializable
+public class MplMobilePromotionCodeValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
+		Serializable
 {
 	private FieldNameProvider fieldNameProvider;
 	private PromotionsService promotionService;
@@ -101,8 +101,8 @@ public class MplMobilePromotionCodeValueProvider extends AbstractPropertyFieldVa
 		final BaseSiteModel baseSiteModel = indexConfig.getBaseSite();
 		if ((baseSiteModel != null) && (baseSiteModel.getDefaultPromotionGroup() != null))
 		{
-			final Iterator localIterator = getPromotionsService()
-					.getProductPromotions(Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product).iterator();
+			final Iterator localIterator = getPromotionsService().getProductPromotions(
+					Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product).iterator();
 			if (localIterator.hasNext())
 			{
 				final ProductPromotionModel promotion = (ProductPromotionModel) localIterator.next();
@@ -122,8 +122,8 @@ public class MplMobilePromotionCodeValueProvider extends AbstractPropertyFieldVa
 		final BaseSiteModel baseSiteModel = indexConfig.getBaseSite();
 		if ((baseSiteModel != null) && (baseSiteModel.getDefaultPromotionGroup() != null))
 		{
-			final Iterator localIterator = getPromotionsService()
-					.getProductPromotions(Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product).iterator();
+			final Iterator localIterator = getPromotionsService().getProductPromotions(
+					Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product).iterator();
 			if (localIterator.hasNext())
 			{
 				final ProductPromotionModel promotion = (ProductPromotionModel) localIterator.next();
@@ -144,8 +144,8 @@ public class MplMobilePromotionCodeValueProvider extends AbstractPropertyFieldVa
 		{
 			final List<ProductPromotionModel> promotions = new ArrayList<ProductPromotionModel>();
 
-			for (final ProductPromotionModel promotion : getPromotionsService()
-					.getProductPromotions(Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product))
+			for (final ProductPromotionModel promotion : getPromotionsService().getProductPromotions(
+					Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product))
 			{
 				if (promotion.getChannel().contains(SalesApplication.MOBILE) || promotion.getChannel().isEmpty())
 				{
@@ -165,11 +165,15 @@ public class MplMobilePromotionCodeValueProvider extends AbstractPropertyFieldVa
 					public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
 					{
 
-						if (o1.getPriority() == o2.getPriority())
+						final int lowPrority = o1.getPriority() == null ? 0 : o1.getPriority().intValue();
+						final int highPrority = o2.getPriority() == null ? 0 : o2.getPriority().intValue();
+
+						if (lowPrority == highPrority)
 						{
 							return 0;
 						}
-						else if (o1.getPriority() < o2.getPriority())
+						else if (lowPrority < highPrority)
+
 						{
 							return 1;
 						}
@@ -205,8 +209,8 @@ public class MplMobilePromotionCodeValueProvider extends AbstractPropertyFieldVa
 		{
 			final List<ProductPromotionModel> promotions = new ArrayList<ProductPromotionModel>();
 
-			for (final ProductPromotionModel promotion : getPromotionsService()
-					.getProductPromotions(Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product))
+			for (final ProductPromotionModel promotion : getPromotionsService().getProductPromotions(
+					Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product))
 			{
 				if (promotion.getChannel().contains(SalesApplication.MOBILE) || promotion.getChannel().isEmpty())
 				{
@@ -224,11 +228,15 @@ public class MplMobilePromotionCodeValueProvider extends AbstractPropertyFieldVa
 					public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
 					{
 
-						if (o1.getPriority() == o2.getPriority())
+						final int lowPrority = o1.getPriority() == null ? 0 : o1.getPriority().intValue();
+						final int highPrority = o2.getPriority() == null ? 0 : o2.getPriority().intValue();
+
+						if (lowPrority == highPrority)
 						{
 							return 0;
 						}
-						else if (o1.getPriority() < o2.getPriority())
+						else if (lowPrority < highPrority)
+
 						{
 							return 1;
 						}
@@ -267,15 +275,15 @@ public class MplMobilePromotionCodeValueProvider extends AbstractPropertyFieldVa
 
 	/*
 	 * public static class PromotionComparator implements Comparator {
-	 *
-	 *
+	 * 
+	 * 
 	 * public int compare(final Object arg0, final Object arg1) { // YTODO Auto-generated method stub final Integer
 	 * number1 = promo1.getPriority(); final Integer number2 = promo2.getPriority();
-	 *
+	 * 
 	 * if (number1 != null && number2 != null) { return Integer.compare(number1, number2);
-	 *
+	 * 
 	 * } }
-	 *
+	 * 
 	 * }
 	 */
 

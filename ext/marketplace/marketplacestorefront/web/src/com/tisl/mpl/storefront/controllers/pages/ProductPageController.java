@@ -2714,10 +2714,10 @@ public class ProductPageController extends MidPageController
 				storeCmsPageInModel(model, getContentPageForLabelOrId(contentPage.getUid()));
 				returnString = "/pages/" + contentPage.getMasterTemplate().getFrontendTemplateName();
 
-			} //final end of if
-			  //INC_11128
-			  //commented as returned inside the if block
-			  //storeCmsPageInModel(model, getContentPageForLabelOrId(contentPage.getUid()));
+			}//final end of if
+			 //INC_11128
+			 //commented as returned inside the if block
+			 //storeCmsPageInModel(model, getContentPageForLabelOrId(contentPage.getUid()));
 		}
 		catch (final CMSItemNotFoundException e)
 		{

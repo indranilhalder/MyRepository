@@ -201,7 +201,8 @@ public class OfferPageController extends AbstractSearchPageController
 
 
 			//Code to hide the applied facet for isOfferExisting
-			if (searchPageData.getBreadcrumbs() != null && searchPageData.getBreadcrumbs().size() == 1)
+			//Find Bug Fix
+			if (searchPageData != null && searchPageData.getBreadcrumbs() != null && searchPageData.getBreadcrumbs().size() == 1)
 			{
 				final String facetCode = searchPageData.getBreadcrumbs().get(0).getFacetCode();
 				if (StringUtils.isNotEmpty(facetCode) && facetCode.equalsIgnoreCase("isOffersExisting"))

@@ -171,9 +171,9 @@ public class MplSolrTextPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE_TYPE, I
 	{
 
 		final StringBuilder sp = new StringBuilder();
-		for (final String key : props.keySet())
+		for (final Map.Entry<String, IndexedProperty> entry : props.entrySet())
 		{
-			final IndexedProperty value = props.get(key);
+			final IndexedProperty value = props.get(entry.getKey());
 			sp.append(String.format(
 					"%s^%.2f ",
 					getSolrFieldNameProvider().getFieldName(value, value.isLocalized() ? lang : value.isCurrency() ? currency : null,
