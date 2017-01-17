@@ -29808,11 +29808,11 @@ padding:20px;
     margin: 10px auto 50px;
 }
 #bestOffers.best-offers.feature-collections a.view-best-offers,.best-offers a.view-best-offers,.best-offers_blp a.view-best-offers{
-	width: 250px;
+	/* width: 250px;
   	letter-spacing: normal;
   	font-weight: normal;
   	padding: 16px 0;
-}
+ */}
 #bestOffers.best-offers.feature-collections a.view-best-offers,.best-offers a.view-best-offers,.best-offers_blp a.view-best-offers{
 	/* margin-top: 25px; */
 }
@@ -33224,7 +33224,7 @@ header .banner > span {
 	#bestPicks .owl-item .short-info{ opacity:0;transition: all 0.3s ease-in-out 0s;}
 	#bestPicks .owl-item.active .short-info{ opacity:1;}
 	#bestPicks .home-best-pick-carousel.owl-carousel .owl-item{ width:100%;}
-	#bestPicks .view-cliq-offers{ margin: 0 auto 30px;font-size: 11px;    height: 35px;    letter-spacing: 1px;    line-height: 32px;    width: 170px; padding: 0;}
+	/* sprint8 */ #bestPicks .view-cliq-offers,#bestPicks .view-cliq-offers, #bestOffers.best-offers.feature-collections a.view-best-offers, .best-offers a.view-best-offers, .best-offers_blp a.view-best-offers{ margin: 0 auto 30px;font-size: 11px;    height: 35px;    letter-spacing: 1px;    line-height: 32px;    width: 170px; padding: 0;} /* sprint8 */
 	.feature-collections h1{ font-size:20px;padding: 30px 0;}
 	.home-best-pick-carousel .item {
     padding: 10px 0 1px;
@@ -44827,10 +44827,12 @@ body.page-homepage .showcase .desc-section h2{
 	body.page-homepage .home-brands-you-love-wrapper h2 {
     font-size: 18px;
 	}
-	body.page-homepage #bestPicks.feature-collections h2{
+	/* sprint8 */
+	body.page-homepage #bestPicks.feature-collections h2,body.page-homepage .feature-collections h2, .best-offers .feature-collections h2{
 	font-size: 20px;
     padding: 30px 0 10px;
 	}
+	/* sprint8 */
 	body.page-homepage #productYouCare h2{
 	padding: 30px 0 10px;
     font-size: 20px;
