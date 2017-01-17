@@ -106,11 +106,13 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.config.MplConfigFacade;
+import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
+import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLReturnService;
@@ -131,6 +133,7 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.PushNotificationData;
 import com.tisl.mpl.wsdto.ReturnLogistics;
+import com.tisl.mpl.wsdto.ReturnRequestDTO;
 import com.tisl.mpl.wsdto.TicketMasterXMLData;
 import com.tisl.mpl.wsdto.TicketUpdateRequestXML;
 import com.tisl.mpl.wsdto.TicketUpdateResponseXML;
@@ -143,7 +146,6 @@ import com.tisl.mpl.xml.pojo.OrderLineDataResponse;
 import com.tisl.mpl.xml.pojo.RTSAndRSSReturnInfoRequest;
 import com.tisl.mpl.xml.pojo.RTSAndRSSReturnInfoResponse;
 import com.tisl.mpl.xml.pojo.ReturnLogisticsResponse;
-import com.tisl.mpl.wsdto.ReturnRequestDTO;
 
 
 
@@ -232,6 +234,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	protected static final Logger LOG = Logger.getLogger(CancelReturnFacadeImpl.class);
 
 	private static final String SPACE=" ";
+	
+	@Autowired
+	private AccountAddressFacade  accountAddressFacade;
 	
 	@Override
 	public boolean implementCancelOrReturn(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
@@ -3793,7 +3798,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			}
 			if (StringUtils.isNotEmpty(address.getState()))
 			{
-				store.append(SPACE+ address.getState());
+				String stateName = getStateCode(address.getState()) != null ? getStateCode(address.getState()) : address.getState();
+				store.append(SPACE+ stateName);
 			}
 			if (StringUtils.isNotEmpty(address.getCountry().getName()))
 			{
@@ -3951,6 +3957,18 @@ private AbstractOrderEntryModel getOrderEntryModel(OrderModel ordermodel,String 
 		mplReturnService.returnRssCRMRequest(returnRequestDTO);
 	}
 
+	//Get State name
+		private String getStateCode(String statcode)
+		{
+			for (final StateData state : accountAddressFacade.getStates())
+			{
+				if (state.getName().equalsIgnoreCase(statcode))
+				{
+					return state.getName();
+				}
+			}
+			return null;
+		}
 	
 
 }
