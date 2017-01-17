@@ -204,4 +204,9 @@ public final class MarketplaceCockpitsConstants extends
 	public static final String BOTH = "BOTH";
 	public static final String TSHIP = "TSHIP";
 	public static final String SSHIP = "SSHIP";
+	public static final String ED = "ED";
+	public static final String HD = "ED";
+	public static final String TO = "TO";
+
+	
 }

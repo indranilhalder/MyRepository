@@ -142,6 +142,9 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 			 cart.setIsInventoryChanged(Boolean.FALSE);
 		}else {
 			 deliverySlotsResponseData= sessionService.getAttribute(MarketplacecommerceservicesConstants.SCHEDULE_DELIVRY_DATA);
+			 if(null == deliverySlotsResponseData) {
+				 deliverySlotsResponseData=((MarketplaceCheckoutController) widget.getWidgetController()).deliverySlotsRequestDataCallToOms(deliverySlotsRequestData); 
+			 }
 		}
 		boolean eligigleForScheduleSlots = Boolean.FALSE;
 	 	if(null != deliverySlotsResponseData && null != deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()) {
@@ -473,7 +476,7 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 			resetButton.setDisabled(false);
 			LOG.debug("Selected time = "+radioTimeGroup.getSelectedItem().getLabel());
 			String selectedTime = radioTimeGroup.getSelectedItem().getLabel();
-			String[] fromAndToTime =  selectedTime.split("TO");
+			String[] fromAndToTime =  selectedTime.split(MarketplaceCockpitsConstants.TO);
 			DateUtilHelper dateUtilhelper = new DateUtilHelper();
 			String fromTime=fromAndToTime[0];
 			String toTime=fromAndToTime[1];
@@ -519,7 +522,7 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 		}
 		radioTimeGroup.setSelectedIndex(0);
 		String selectedTime = radioTimeGroup.getSelectedItem().getLabel();
-		String[] fromAndToTime =  selectedTime.split("TO");
+		String[] fromAndToTime =  selectedTime.split(MarketplaceCockpitsConstants.TO);
 		DateUtilHelper dateUtilhelper = new DateUtilHelper();
 		//String fromTime=dateUtilhelper.convertTo24Hour(fromAndToTime[0]);
 		String fromTime=fromAndToTime[0];
