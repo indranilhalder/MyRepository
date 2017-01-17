@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.core.model.NPSEmailerModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -14,7 +15,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import com.tisl.mpl.core.model.NPSEmailerModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.FetchSalesOrderService;
 import com.tisl.mpl.model.MplConfigurationModel;

@@ -4,6 +4,7 @@
 package com.tisl.mpl.core.cronjob.NPSMailer.jobs;
 
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.core.model.NPSEmailerModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -13,6 +14,7 @@ import de.hybris.platform.cronjob.model.CronJobModel;
 import de.hybris.platform.processengine.enums.ProcessState;
 import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 
@@ -21,10 +23,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tisl.mpl.core.model.NPSEmailerModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.FetchSalesOrderService;
@@ -51,10 +53,8 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 	private NotificationService notificationService;
 
 	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable#perform(de.hybris.platform.cronjob.model.CronJobModel
+	 * TPR-1984 This cron job is triggered as configured to run at 12 PM and 4 PM
+	 * 
 	 * )
 	 */
 	@Override
@@ -70,29 +70,35 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 			final Map<OrderModel, AbstractOrderEntryModel> parentOrderAbstractEntryModel = getFetchSalesOrderService()
 					.fetchOrderDetailsforDeliveryMail();
 			final List<NPSEmailerModel> npsEmailerModelList = new ArrayList<NPSEmailerModel>();
-
-			for (final Map.Entry<OrderModel, AbstractOrderEntryModel> entry : parentOrderAbstractEntryModel.entrySet())
+			if (MapUtils.isNotEmpty(parentOrderAbstractEntryModel))
 			{
+				for (final Map.Entry<OrderModel, AbstractOrderEntryModel> entry : parentOrderAbstractEntryModel.entrySet())
+				{
 
-				final NPSEmailerModel npsEmailerModel = modelService.create(NPSEmailerModel.class);
-				npsEmailerModel.setAbstractOrderEntry(entry.getValue());
-				npsEmailerModel.setTransactionId(entry.getValue().getTransactionID());
-				npsEmailerModel.setParentOrderNo(entry.getKey());
-				npsEmailerModel.setCustomer((CustomerModel) entry.getKey().getUser());
-				final ProcessState processState = notificationService.triggerNpsEmail(entry.getValue());
-				if (processState.getCode().equals(ProcessState.SUCCEEDED.toString()))
-				{
-					npsEmailerModel.setIsEmailSent(Boolean.TRUE);
-					npsEmailerModel.setTimeSent(new Date());
+					final NPSEmailerModel npsEmailerModel = modelService.create(NPSEmailerModel.class);
+					npsEmailerModel.setAbstractOrderEntry(entry.getValue());
+					npsEmailerModel.setTransactionId(entry.getValue().getTransactionID());
+					npsEmailerModel.setParentOrderNo(entry.getKey());
+					npsEmailerModel.setCustomer((CustomerModel) entry.getKey().getUser());
+					final ProcessState processState = notificationService.triggerNpsEmail(entry.getValue());
+					if (processState.getCode().equals(ProcessState.SUCCEEDED.toString()))
+					{
+						npsEmailerModel.setIsEmailSent(Boolean.TRUE);
+						npsEmailerModel.setTimeSent(new Date());
+					}
+					else
+					{
+						npsEmailerModel.setIsEmailSent(Boolean.FALSE);
+					}
+					npsEmailerModelList.add(npsEmailerModel);
 				}
-				else
-				{
-					npsEmailerModel.setIsEmailSent(Boolean.FALSE);
-				}
-				npsEmailerModelList.add(npsEmailerModel);
+				modelService.saveAll(npsEmailerModelList);
 			}
-			modelService.saveAll(npsEmailerModelList);
-
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error(e.getMessage());
+			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
 		catch (final EtailBusinessExceptions e)
 		{

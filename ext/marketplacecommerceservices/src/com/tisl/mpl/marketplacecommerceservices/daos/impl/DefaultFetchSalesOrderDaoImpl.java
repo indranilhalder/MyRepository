@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
+import de.hybris.platform.core.model.NPSEmailerModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -28,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.model.NPSEmailerModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao;
 import com.tisl.mpl.model.MplConfigurationModel;
 
@@ -217,19 +217,21 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		return orderlist;
 	}
 
-	/**
-	 *
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#fetchOrderDetailsforDeliveryMail()
 	 */
 	@Override
 	public Map<OrderModel, AbstractOrderEntryModel> fetchOrderDetailsforDeliveryMail()
 	{
 		final Map<OrderModel, AbstractOrderEntryModel> orderWithSingleEntry = new HashMap<OrderModel, AbstractOrderEntryModel>();
-
 		final String queryString = "SELECT {po.pk},{oe.pk},{po.user} FROM  {" + ConsignmentModel._TYPECODE + " AS c JOIN "
 				+ ConsignmentEntryModel._TYPECODE + " " + "AS ce ON {ce.consignment} = {c.PK} JOIN"
-				+ " ConsignmentStatus as cs ON {c.status} = {cs.PK} JOIN " + AbstractOrderEntryModel._TYPECODE
+				+ " ConsignmentStatus AS cs ON {c.status} = {cs.PK} JOIN " + AbstractOrderEntryModel._TYPECODE
 				+ " AS oe ON {ce.orderentry}= {oe.PK} JOIN " + OrderModel._TYPECODE + " AS co  ON {c.order}={co.PK} JOIN "
-				+ OrderModel._TYPECODE + " AS po  ON {co.parentreference} = {po.PK}} " + "WHERE "
+				+ OrderModel._TYPECODE
+				+ " AS po  ON {co.parentreference} = {po.PK} JOIN NPSMailer AS nps ON {po.pk}!={nps.parentOrderNo}} " + "WHERE "
 				//+ "{c.deliveryDate}  BETWEEN "+ "(sysdate-10) AND (sysdate-1) AND "
 				+ "{cs.code}='DELIVERED'";
 
@@ -263,7 +265,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getTransactionIdCount(de.hybris.platform.core
 	 * .model.order.OrderModel)
