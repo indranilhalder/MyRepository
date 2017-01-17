@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -340,8 +341,28 @@ public class TShipExcelToCsvConverter
 										propertiesPopulated++;
 										break;
 									case 6:
-										logisticPartner.setNewzone(
-												getCellData(row.getCell(j)) + TshipExcelConstants.ADD_COMMA + TshipExcelConstants.ADD_COMMA);
+										logisticPartner.setNewzone(getCellData(row.getCell(j)));
+										//Get the configured default values for tatPrepaid,tatCOD and set it here.
+										//The default value should be a valid integer. Zero is an acceptable value.
+										final String tatPrepaidValue = TshipExcelConstants.TAT_PREPAID;
+										final String tatCodValue = TshipExcelConstants.TAT_COD;
+										if (StringUtils.isNotEmpty(tatPrepaidValue))
+										{
+											logisticPartner.setTatPrepaid(tatPrepaidValue + TshipExcelConstants.ADD_COMMA);
+										}
+										else
+										{
+											logisticPartner.setTatPrepaid("0" + TshipExcelConstants.ADD_COMMA);
+										}
+
+										if (StringUtils.isNotEmpty(tatCodValue))
+										{
+											logisticPartner.setTatCode(tatCodValue + TshipExcelConstants.ADD_COMMA);
+										}
+										else
+										{
+											logisticPartner.setTatCode("0" + TshipExcelConstants.ADD_COMMA);
+										}
 										propertiesPopulated++;
 										break;
 									case 7:

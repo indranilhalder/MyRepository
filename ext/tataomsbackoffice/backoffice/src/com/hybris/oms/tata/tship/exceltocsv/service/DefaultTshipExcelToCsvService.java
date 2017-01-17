@@ -210,8 +210,8 @@ public class DefaultTshipExcelToCsvService implements TshipExcelToCsvService
 		logisticdata.append(logisticPartner.getCscrcd());
 		logisticdata.append(logisticPartner.getCloctype());
 		logisticdata.append(logisticPartner.getNewzone());
-		//logisticdata.append(logisticPartner.getTransitTatPrepaid());
-		//logisticdata.append(logisticPartner.getTransitTatCod());
+		logisticdata.append(logisticPartner.getTatPrepaid());
+		logisticdata.append(logisticPartner.getTatCode());
 		logisticdata.append(logisticPartner.getFormRequired());
 		//logisticdata.append(logisticPartner.getIsReturnPincode());
 		logisticdata.append(logisticPartner.getPickUp());

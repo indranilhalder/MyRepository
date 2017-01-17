@@ -124,7 +124,7 @@ public class TshipExcelConstants
 	public static final String COD_COLUMN_INDEX = Config.getParameter("codColumnIndex");
 	public static final String LAST_COLUMN_INDEX = Config.getParameter("lastColumnIndex");
 	public static final String SURFACE_MODE_START_INDEX = Config.getParameter("surfaceModeStartingIndex");
-
-
+	public static final String TAT_PREPAID = Config.getParameter("tatPrepaidValue");
+	public static final String TAT_COD = Config.getParameter("tatCodValue");
 
 }

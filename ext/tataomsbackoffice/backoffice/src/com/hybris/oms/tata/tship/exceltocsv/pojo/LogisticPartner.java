@@ -23,6 +23,8 @@ public class LogisticPartner
 	private String prepaidPriority;
 	private String adjCodLimit;
 	private String adjPrepaidLimit;
+	private String tatPrepaid;
+	private String tatCode;
 
 	private int index;// in order for comparing air or surface
 
@@ -189,6 +191,40 @@ public class LogisticPartner
 				+ ", transitTatCod=" + ", formRequired=" + formRequired + ", name=" + name + ", isReturnPincode=" + ", pickUp="
 				+ pickUp + ", codPriority=" + codPriority + ", prepaidPriority=" + prepaidPriority + ", adjCodLimit=" + adjCodLimit
 				+ ", adjPrepaidLimit=" + adjPrepaidLimit + "]";
+	}
+
+	/**
+	 * @return the tatCodeValue
+	 */
+	public String getTatCode()
+	{
+		return tatCode;
+	}
+
+	/**
+	 * @param tatCodeValue
+	 *           the tatCodeValue to set
+	 */
+	public void setTatCode(final String tatCodeValue)
+	{
+		this.tatCode = tatCodeValue;
+	}
+
+	/**
+	 * @return the tatPrepaidValue
+	 */
+	public String getTatPrepaid()
+	{
+		return tatPrepaid;
+	}
+
+	/**
+	 * @param tatPrepaidValue
+	 *           the tatPrepaidValue to set
+	 */
+	public void setTatPrepaid(final String tatPrepaidValue)
+	{
+		this.tatPrepaid = tatPrepaidValue;
 	}
 
 
