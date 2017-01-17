@@ -3,9 +3,13 @@
  */
 package com.tisl.mpl.wallet.service;
 
+import de.hybris.platform.core.Registry;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+
 import org.apache.log4j.Logger;
 
 import com.tcs.mRupee.PG.Checksum.Jar.MerchantChecksum;
+import com.tisl.mpl.wallet.constants.MarketplaceWalletServicesConstants;
 import com.tisl.mpl.wallet.request.MRupeeRefundRequest;
 
 
@@ -29,9 +33,16 @@ public class MrupeePaymentService
 	 */
 	public String generateCheckSum(final String walletOrderId, final String amount)
 	{
+		final String merchantCode = getConfigurationService().getConfiguration().getString(
+				MarketplaceWalletServicesConstants.MRUPEE_MERCHANT_CODE);
+
+		final String narration = getConfigurationService().getConfiguration().getString(
+				MarketplaceWalletServicesConstants.MRUPEE_NARRATION);
+
 		final String[] parameters =
-		{ "TULA", "P", walletOrderId, "uat", amount };//Purchase
-		final String checksumKey = "U82Q3MW53S";
+		{ merchantCode, "P", walletOrderId, narration, amount };//Purchase
+		final String checksumKey = getConfigurationService().getConfiguration().getString(
+				MarketplaceWalletServicesConstants.MRUPEE_CHECKSUM);
 
 		final String stChesksum = MerchantChecksum.generateChecksum(parameters, checksumKey);
 		LOG.debug("Checksum New:" + stChesksum);
@@ -49,9 +60,12 @@ public class MrupeePaymentService
 
 	public String generateCheckSumForVerification(final String walletOrderId)
 	{
+		final String merchantCodeVerfication = getConfigurationService().getConfiguration().getString(
+				MarketplaceWalletServicesConstants.MRUPEE_MERCHANT_CODE);
 		final String[] parameters =
-		{ "TULA", "V", walletOrderId };//verification
-		final String checksumKey = "U82Q3MW53S";
+		{ merchantCodeVerfication, "V", walletOrderId };//verification
+		final String checksumKey = getConfigurationService().getConfiguration().getString(
+				MarketplaceWalletServicesConstants.MRUPEE_CHECKSUM);
 		final String stChesksum = MerchantChecksum.generateChecksum(parameters, checksumKey);
 		LOG.debug("Checksum New:" + stChesksum);
 		return stChesksum;
@@ -67,10 +81,17 @@ public class MrupeePaymentService
 
 	public String generateCheckSum(final MRupeeRefundRequest mRupeeRefundRequest)
 	{
+		final String merchantCodeRefund = getConfigurationService().getConfiguration().getString(
+				MarketplaceWalletServicesConstants.MRUPEE_MERCHANT_CODE);
+
+		final String narration = getConfigurationService().getConfiguration().getString(
+				MarketplaceWalletServicesConstants.MRUPEE_NARRATION);
+
 		final String[] parameters =
-		{ "TULA", "R", mRupeeRefundRequest.getRefNo(), "uat", mRupeeRefundRequest.getAmount().toString(),
+		{ merchantCodeRefund, "R", mRupeeRefundRequest.getRefNo(), narration, mRupeeRefundRequest.getAmount().toString(),
 				mRupeeRefundRequest.getPurchaseRefNo() };//Refund
-		final String checksumKey = "U82Q3MW53S";
+		final String checksumKey = getConfigurationService().getConfiguration().getString(
+				MarketplaceWalletServicesConstants.MRUPEE_CHECKSUM);
 
 		final String Chesksum = MerchantChecksum.generateChecksum(parameters, checksumKey);
 		LOG.debug("Checksum New:" + Chesksum);
@@ -78,4 +99,12 @@ public class MrupeePaymentService
 
 	}
 
+
+	/**
+	 * @return the configurationService
+	 */
+	protected ConfigurationService getConfigurationService()
+	{
+		return Registry.getApplicationContext().getBean("configurationService", ConfigurationService.class);
+	}
 }

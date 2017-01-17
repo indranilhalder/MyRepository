@@ -1169,7 +1169,7 @@
 								<c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
 										<c:choose>
-											<c:when test="${map.key eq 'TW'}">
+											<c:when test="${map.key eq 'MRupee'}">
 												<div class="accordion_in">
 												<div >
 													<span id="viewPaymentMRupee" >
@@ -1190,7 +1190,7 @@
 									<form id="tpWallt_payment_form" autocomplete="off" action="${mRupeeUrl}">
 										<ycommerce:testId code="paymentDetailsWalletForm">
 										<input type="hidden" name="MCODE" value="${mCode}">
-										<input type="hidden" name="NARRATION" value="uat">
+										<input type="hidden" name="NARRATION" value="${narration}">
 										<input type="hidden" name="TXNTYPE" value="P">
 										<input type="hidden" name="AMT" id = "AMT">
 										<input type="hidden" name="RETURL" id = "RETURL">

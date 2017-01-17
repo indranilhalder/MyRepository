@@ -371,7 +371,7 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 			else if (paymentInfoModel instanceof ThirdPartyWalletInfoModel)
 			{
 				//return MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(MarketplaceomsordersConstants.PAYMENTMETHOD_EMI.toUpperCase());
-				return MplCodeMasterUtility.getglobalCode(MarketplaceomsordersConstants.PAYMENTMETHOD_THIRDPARTYWALLET);
+				return MplCodeMasterUtility.getglobalCode(MarketplaceomsordersConstants.PAYMENTMETHOD_MRUPEE);
 			}
 
 			else
