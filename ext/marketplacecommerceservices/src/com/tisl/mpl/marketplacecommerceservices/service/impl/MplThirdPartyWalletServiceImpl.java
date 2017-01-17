@@ -20,6 +20,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.net.ssl.HostnameVerifier;
@@ -153,7 +155,8 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	@Autowired
 	private MplJusPayRefundService mplJusPayRefundService;
 
-
+	@Resource(name = "sessionService")
+	private SessionService sessionService;
 
 	public ConfigurationService getConfigurationService()
 	{
@@ -226,8 +229,9 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 				if (StringUtils.isNotEmpty(order.getGuid()))
 				{
 					final String cartGuid = order.getGuid();
+
 					final MplPaymentAuditModel auditModelData = mplOrderDao.getAuditList(cartGuid);
-					if (auditModelData != null)
+					if (auditModelData != null && !auditModelData.getIsExpired().booleanValue())
 					{
 						final List<MplPaymentAuditEntryModel> entryList = Lists.newArrayList(auditModelData.getAuditEntries());
 						String status = "";
@@ -243,6 +247,9 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 								&& new Date().before(orderTATForTimeout))
 						{
 							//updating audit details
+							final Map<String, Double> paymentMode = sessionService
+									.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
+							mplPaymentService.setTPWalletPaymentTransaction(paymentMode, order, auditModelData.getAuditId());
 							final CustomerModel mplCustomer = (CustomerModel) order.getUser();
 							updateAuditInfoForPayment(auditModelData, entryList, mplCustomer, order);
 							//sending notification mail
@@ -424,6 +431,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 		auditModelData.setIsExpired(Boolean.TRUE);
 		getModelService().save(auditModelData);
 		final List<AbstractOrderEntryModel> entries = order.getEntries();
+
 		if (null != mplCustomer)
 		{
 			if (StringUtils.isNotEmpty(mplCustomer.getName()) && !mplCustomer.getName().equalsIgnoreCase(" "))
