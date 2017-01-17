@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process xmlns="http://www.hybris.de/xsd/processdefinition" start="generateNPSEmail" name="npsEmailProcess"
-		processClass="de.hybris.platform.core.model.NPSEmailerModel" onError="error">
+		processClass="com.tisl.mpl.core.model.NpsEmailProcessModel" onError="error">
 
 	<action id="generateNPSEmail" bean="generateNPSEmail">
 		<transition name="OK" to="sendEmail"/>

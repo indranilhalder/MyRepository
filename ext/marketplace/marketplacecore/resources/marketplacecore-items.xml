@@ -5179,6 +5179,31 @@
 					</index>
 				</indexes>
 			</itemtype>
+			
+			
+			
+	<itemtype code="NpsEmailProcess" extends="OrderProcess" autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.NpsEmailProcess">
+				<description>Represents process that is used for Send  Nps Email</description>
+	 <attributes>
+					
+          <attribute qualifier="abstractOrderEntry" type="AbstractOrderEntry">
+				<description>Abstract Order Entry</description>
+				<modifiers/>
+				<persistence type="property" />
+           </attribute>
+             
+           <attribute qualifier="parentOrderNo"  autocreate="true" type="Order" generate="true">
+			  <description>Parent Order Number</description>
+			  <modifiers/>
+			  <persistence type="property" />
+		   </attribute>
+					
+					
+		</attributes>
+				
+		</itemtype>
+			
 			<itemtype code="OrderRefundProcess" extends="OrderProcess"
 				autocreate="true" generate="true"
 				jaloclass="com.tisl.mpl.core.jalo.OrderRefundProcess">
@@ -9580,7 +9605,7 @@
 		
 		<!-- -TPR-1984 start-->
 		<typegroup name="NPSEmail">
-		<itemtype code="NPSEmailer" extends="OrderProcess" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.NPSEmailer">
+		<itemtype code="NPSEmailer" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.NPSEmailer">
 		<deployment table="MplNPSEmailerTable" typecode="15900" />
 		<attributes>
 		<attribute qualifier="transactionId"  autocreate="true" type="java.lang.String"

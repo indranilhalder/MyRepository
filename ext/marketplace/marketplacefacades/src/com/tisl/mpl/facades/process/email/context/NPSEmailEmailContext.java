@@ -7,16 +7,17 @@ import de.hybris.platform.acceleratorservices.model.cms2.pages.EmailPageModel;
 import de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commercefacades.order.data.OrderData;
-import de.hybris.platform.core.model.NPSEmailerModel;
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.core.model.NpsEmailProcessModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 
 
@@ -24,7 +25,7 @@ import com.tisl.mpl.core.model.PcmProductVariantModel;
  * @author TCS
  *
  */
-public class NPSEmailEmailContext extends AbstractEmailContext<NPSEmailerModel>
+public class NPSEmailEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 {
 
 	private Converter<OrderModel, OrderData> orderConverter;
@@ -43,13 +44,10 @@ public class NPSEmailEmailContext extends AbstractEmailContext<NPSEmailerModel>
 
 
 	@Override
-	public void init(final NPSEmailerModel npsUpdateProcessModel, final EmailPageModel emailPageModel)
+	public void init(final NpsEmailProcessModel npsUpdateProcessModel, final EmailPageModel emailPageModel)
 	{
 		super.init(npsUpdateProcessModel, emailPageModel);
 		final AbstractOrderEntryModel orderEntry = npsUpdateProcessModel.getAbstractOrderEntry();
-		final String orderCode = (null != npsUpdateProcessModel.getParentOrderNo().getCode()) ? npsUpdateProcessModel
-				.getParentOrderNo().getCode() : "";
-
 
 		if (orderEntry != null)
 		{
@@ -96,14 +94,15 @@ public class NPSEmailEmailContext extends AbstractEmailContext<NPSEmailerModel>
 
 			put(TOTALPRICE, totalPrice);
 
-
+			final AddressModel deliveryAddress = orderEntry.getDeliveryAddress();
+			final String customerName = deliveryAddress.getFirstname();
+			put(CUSTOMER_NAME, customerName);
+			final String orderCode = orderEntry.getOrder().getCode();
+			put(ORDER_CODE, orderCode);
 		}
 
 
-		//final Double totalPrice = order.getTotalPrice();
-		final String customerName = npsUpdateProcessModel.getCustomer().getFirstName();
-		put(ORDER_CODE, orderCode);
-		put(CUSTOMER_NAME, customerName);
+
 
 	}
 
@@ -127,38 +126,38 @@ public class NPSEmailEmailContext extends AbstractEmailContext<NPSEmailerModel>
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getSite(de.hybris.platform.
 	 * processengine.model.BusinessProcessModel)
 	 */
 	@Override
-	protected BaseSiteModel getSite(final NPSEmailerModel npsbusinessProcessModel)
+	protected BaseSiteModel getSite(final NpsEmailProcessModel npsbusinessProcessModel)
 	{
 		return npsbusinessProcessModel.getOrder().getSite();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getCustomer(de.hybris.platform
 	 * .processengine.model.BusinessProcessModel)
 	 */
 	@Override
-	protected CustomerModel getCustomer(final NPSEmailerModel npsbusinessProcessModel)
+	protected CustomerModel getCustomer(final NpsEmailProcessModel npsbusinessProcessModel)
 	{
 		return (CustomerModel) npsbusinessProcessModel.getOrder().getUser();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getEmailLanguage(de.hybris.platform
 	 * .processengine.model.BusinessProcessModel)
 	 */
 	@Override
-	protected LanguageModel getEmailLanguage(final NPSEmailerModel npsbusinessProcessModel)
+	protected LanguageModel getEmailLanguage(final NpsEmailProcessModel npsbusinessProcessModel)
 	{
 		return npsbusinessProcessModel.getOrder().getLanguage();
 	}

@@ -4,7 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.core.enums.OrderStatus;
-import de.hybris.platform.core.model.NPSEmailerModel;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.security.PrincipalModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -37,6 +37,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.NpsEmailProcessModel;
 import com.tisl.mpl.core.model.OrderStatusNotificationModel;
 import com.tisl.mpl.core.model.VoucherStatusNotificationModel;
 import com.tisl.mpl.data.NotificationData;
@@ -711,20 +712,19 @@ public class NotificationServiceImpl implements NotificationService
 
 
 	@Override
-	public ProcessState triggerNpsEmail(final NPSEmailerModel npsMailDetails) throws JAXBException
+	public ProcessState triggerNpsEmail(final AbstractOrderEntryModel OrderEntry)
 	{
 
-		//final NpsEmailProcessModel npsProcessModel = new NpsEmailProcessModel();
-
-		final NpsEmailEvent npsEmailEvent = new NpsEmailEvent(npsMailDetails);
+		final NpsEmailProcessModel npsProcessModel = new NpsEmailProcessModel();
+		npsProcessModel.setAbstractOrderEntry(OrderEntry);
+		final NpsEmailEvent npsEmailEvent = new NpsEmailEvent(npsProcessModel);
 		try
 		{
 			eventService.publishEvent(npsEmailEvent);
 
 		}
 		catch (final Exception e1)
-		{ // YTODO
-		  // Auto-generated catch block
+		{ // YTODO // Auto-generated catch block
 			LOG.error("Exception during sending mail or SMS >> " + e1.getMessage());
 		}
 
@@ -732,6 +732,7 @@ public class NotificationServiceImpl implements NotificationService
 		return sucess;
 
 	}
+
 
 	/**
 	 * @return the voucherModelService
@@ -817,6 +818,8 @@ public class NotificationServiceImpl implements NotificationService
 	{
 		this.modelService = modelService;
 	}
+
+
 
 
 }

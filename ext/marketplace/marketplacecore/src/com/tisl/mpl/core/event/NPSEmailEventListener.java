@@ -6,7 +6,6 @@ package com.tisl.mpl.core.event;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commerceservices.enums.SiteChannel;
 import de.hybris.platform.commerceservices.event.AbstractSiteEventListener;
-import de.hybris.platform.core.model.NPSEmailerModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -14,6 +13,7 @@ import de.hybris.platform.servicelayer.util.ServicesUtil;
 
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.core.model.NpsEmailProcessModel;
 import com.tisl.mpl.marketplacecommerceservices.event.NpsEmailEvent;
 
 
@@ -28,7 +28,7 @@ public class NPSEmailEventListener extends AbstractSiteEventListener<NpsEmailEve
 	protected void onSiteEvent(final NpsEmailEvent npsEmailEvent)
 	{
 		final OrderModel orderModel = npsEmailEvent.getProcess().getOrder();
-		final NPSEmailerModel npsEmailProcessModel = (NPSEmailerModel) getBusinessProcessService().createProcess(
+		final NpsEmailProcessModel npsEmailProcessModel = (NpsEmailProcessModel) getBusinessProcessService().createProcess(
 				"npsEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(), "npsEmailProcess");
 
 		getModelService().save(npsEmailProcessModel);
