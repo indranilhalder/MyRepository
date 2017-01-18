@@ -1026,6 +1026,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	protected void returnFileDownload(@RequestParam(ModelAttributetConstants.ORDERCODE) final String orderCode,
 			@RequestParam(ModelAttributetConstants.TRANSACTION_ID) final String transactionId,HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		try{
 		String fileDownloadLocation =null;
 		String returnDownloadFileName=null;
 		 final OrderModel orderModel = orderModelService.getOrder(orderCode);
@@ -1090,6 +1091,11 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	      		responseOutputStream.close();	
 	      		}
 	    }	
+		}
+		catch (NullPointerException nullPointer)
+		{
+			LOG.error("Return page controller::::" + nullPointer.getMessage());
+		}
 	}
 	
 	private CODSelfShipData  sendBankInformationToFico(final CustomerData customerData,final MplReturnsForm returnForm, String orderCode,final OrderData subOrderDetails){
