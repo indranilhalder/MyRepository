@@ -208,7 +208,7 @@ public class ProductPageController extends MidPageController
 
 	private static final String FINEJEWELLERY = "finejewellery";
 	/**
-	 * Added for travel and luggage
+	 * Added for fine jewellery
 	 */
 	private static final String IMG_COUNT = "imgCount";
 
@@ -1840,9 +1840,8 @@ public class ProductPageController extends MidPageController
 							  //electronics
 
 							else if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory())
-									|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory())
 									|| ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory())
-									|| (ModelAttributetConstants.TRAVELANDLUGGAGE.equalsIgnoreCase(productData.getRootCategory())))
+									|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory()))
 							{
 								final String[] propertiesValues = properitsValue.split(",");
 								if (propertiesValues != null && propertiesValues.length > 0)
@@ -1906,9 +1905,7 @@ public class ProductPageController extends MidPageController
 			//model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
 			if (ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory())
 					|| ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())
-					|| ModelAttributetConstants.TRAVELANDLUGGAGE.equalsIgnoreCase(productData.getRootCategory())
 					|| ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
-
 			{
 				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
 
@@ -2663,12 +2660,15 @@ public class ProductPageController extends MidPageController
 		{
 			productCode = productCode.toUpperCase();
 		}
-		System.out.println("**************************************fetchPageContents*************" + productCode);
+		//System.out.println("**************************************fetchPageContents*************" + productCode);
 		final ProductModel productModel = productService.getProductForCode(productCode);
 		ContentPageModel contentPage = null;
 		List<String> contentList = null;
 		List<String> imageList = null;
 		List<String> videoList = null;
+		//Added for status 500 errors INC_11128
+		//Return this view when no Content Page is found for the Product
+		String returnString = "/pages/layout/productContentblank";
 		final Map<String, ProductContentData> productContentDataMap = new HashMap<String, ProductContentData>();
 		try
 		{
@@ -2730,31 +2730,38 @@ public class ProductPageController extends MidPageController
 
 				}
 
+				//INC_11128
 				model.addAttribute("productContentDataMap", productContentDataMap);
+				storeCmsPageInModel(model, getContentPageForLabelOrId(contentPage.getUid()));
+				returnString = "/pages/" + contentPage.getMasterTemplate().getFrontendTemplateName();
 
-			} //final end of if
-			storeCmsPageInModel(model, getContentPageForLabelOrId(contentPage.getUid()));
+			}//final end of if
+			 //INC_11128
+			 //commented as returned inside the if block
+			 //storeCmsPageInModel(model, getContentPageForLabelOrId(contentPage.getUid()));
 		}
 		catch (final CMSItemNotFoundException e)
 		{
-			e.printStackTrace();
+			LOG.error("CMS Item error while fetching A+ content", e);
 		}
 
-		return "/pages/" + contentPage.getMasterTemplate().getFrontendTemplateName();
+		//INC_11128
+		//commented as returned inside the if block
+		//return "/pages/" + contentPage.getMasterTemplate().getFrontendTemplateName();
+		return returnString;
 
 	}
 
 	private ContentPageModel getContentPageForProduct(final ProductModel product) throws CMSItemNotFoundException
 	{
+		//INC_11128
+		//Commented for status 500 errors
+		//		if (productContentPage == null)
+		//		{
+		//			throw new CMSItemNotFoundException("Could not find a product content for the product" + product.getName());
+		//		}
 
-		final ContentPageModel productContentPage = mplCmsPageService.getContentPageForProduct(product);
-
-		if (productContentPage == null)
-		{
-			throw new CMSItemNotFoundException("Could not find a product content for the product" + product.getName());
-		}
-
-		return productContentPage;
+		return mplCmsPageService.getContentPageForProduct(product);
 	}
 
 	/**

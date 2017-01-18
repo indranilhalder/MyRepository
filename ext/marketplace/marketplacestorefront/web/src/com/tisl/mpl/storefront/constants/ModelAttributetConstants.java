@@ -222,11 +222,9 @@ public final class ModelAttributetConstants
 	public static final String TRAVELANDLUGGAGE = "TravelAndLuggage";
 	//Added  for Travel and Luggage  :::  END
 
-	//Added  for Travel and Luggage  :::  START
-
+	//Added  for Fine Jewellery  :::  START
 	public static final String FINEJEWELLERY = "FineJewellery";
 	//Added  for Fine Jewellery  :::  END
-
 
 	public static final String INVITE_URL = "/store/mpl/en/login/?affiliateId=";
 	public static final String SELECT_DAY = "selectDay";

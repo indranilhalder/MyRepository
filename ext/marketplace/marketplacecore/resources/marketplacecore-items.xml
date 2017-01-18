@@ -6718,7 +6718,22 @@
 							optional="true" />
 						<persistence type="property" />
 					</attribute>
+					
+					<!-- changes for jewellery Cs-Cockpit -->
+					<attribute qualifier="forwardSealNum" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="reverseSealNum" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- changes for jewellery Cs-Cockpit end -->
+					
 				</attributes>
+				
 			</itemtype>
 			<itemtype code="OrderHistoryEntry" autocreate="false"
 				generate="false">
