@@ -2476,10 +2476,15 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				if(orderModel.getDeliveryAddress() != null){
 					if(orderModel.getDeliveryAddress().getCellphone() != null){
 						mobilenumber=orderModel.getDeliveryAddress().getCellphone();
-					}else{
+					}else if(orderModel.getDeliveryAddress().getPhone2()!=null){
 						mobilenumber=orderModel.getDeliveryAddress().getPhone2();
+					}else{
+						mobilenumber=orderModel.getPickupPersonMobile();
 					}
 					
+				}else{
+					//for CNC ore
+					mobilenumber=orderModel.getPickupPersonMobile();
 				}
 				
 				//Send notification sms
