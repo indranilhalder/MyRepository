@@ -2387,11 +2387,11 @@ public class CartsController extends BaseCommerceController
 				/* Product Details */
 				if (null != postalCode && !postalCode.isEmpty())
 				{
-					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, true, false);
+					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, true, false, true);
 				}
 				else
 				{
-					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, false, false);
+					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, false, false, true);
 				}
 
 				cartDetailsData.setProducts(gwlpList);
