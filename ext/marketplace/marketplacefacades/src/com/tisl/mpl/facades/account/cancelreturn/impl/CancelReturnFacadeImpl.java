@@ -292,7 +292,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				cancelOrRetrnanable = initiateCancellation(ticketTypeCode, subOrderDetails, subOrderEntry, subOrderModel, reasonCode);
 				LOG.debug("Step 5.1 :*********************************** Refund and OMS call status:" + cancelOrRetrnanable);
 
-				if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie) //TISEE-5524
+				//	if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie) //TISEE-5524
+
+				//Mrupee checking
+
+				if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie
+						&& !subOrderModel.getIsWallet().equals(WalletEnum.MRUPEE))
 				{
 					LOG.debug(
 							"Step 6:***********************************Create return request for Return:" + subOrderDetails.getCode());
@@ -460,7 +465,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				cancelOrRetrnanable = initiateCancellation(ticketTypeCode, subOrderDetails, subOrderEntry, subOrderModel, reasonCode);
 				LOG.debug("Step 5.1 :*********************************** Refund and OMS call status:" + cancelOrRetrnanable);
 
-				if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie) //TISEE-5524
+				//if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie) //TISEE-5524
+				//Mrupee checking
+
+				if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie
+						&& !subOrderModel.getIsWallet().equals(WalletEnum.MRUPEE))
 				{
 					LOG.debug(
 							"Step 6:***********************************Create return request for Return:" + subOrderDetails.getCode());
