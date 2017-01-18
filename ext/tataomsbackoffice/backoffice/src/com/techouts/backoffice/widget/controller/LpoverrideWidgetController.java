@@ -16,9 +16,7 @@ import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
-import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Messagebox;
@@ -81,8 +79,7 @@ public class LpoverrideWidgetController
 	@WireVariable
 	private transient AuthorityGroup activeUserRole;
 	private Boolean displayPopup = Boolean.FALSE;
-	@Wire("#listBoxData")
-	private Listbox listBoxData;
+
 	@WireVariable("lpAwbDataUploadService")
 	private LpAwbDataUploadService lpAwbDataUploadService;
 
@@ -423,7 +420,6 @@ public class LpoverrideWidgetController
 			}
 		}
 		this.listOfTransactions = refreshListTransactions;
-		listBoxData.clearSelection();
 		selectedEntities.clear();
 		if (CollectionUtils.isNotEmpty(orderlineRespone))
 		{
