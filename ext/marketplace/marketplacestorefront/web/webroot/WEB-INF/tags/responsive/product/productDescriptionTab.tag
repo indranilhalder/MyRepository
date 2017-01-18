@@ -54,4 +54,3 @@
 	</ycommerce:testId>
 </div>
 <!-- PDP changes end -->
-

@@ -941,6 +941,16 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
 	</bean>
 
+	<!-- TPR-1886 | JEWELLERY START-->
+     <bean id="mplPriceValueRangeProviderJewellery"
+ 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplPriceValueRangeProviderJewellery"
+ 		parent="abstractPropertyFieldValueProvider">
+ 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+ 		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
+ 		<property name="mplJewelleryUtility" ref="mplJewelleryUtility" />
+ 	</bean>
+ 	<!--  JEWELLERY  END-->
+
 	<bean id="mplMrpPriceValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplMrpPriceValueProvider"
 		parent="abstractPropertyFieldValueProvider">

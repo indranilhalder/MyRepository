@@ -44,18 +44,19 @@ public class MplColorFacetDisplayNameProvider extends AbstractFacetValueDisplayN
 
 		try
 		{
-			String[] colourWithCode = new String[2];
 			if (facetValue.contains("_"))
 			{
-				colourWithCode = facetValue.split("_");
-				if (colourWithCode[0] != null && colourWithCode[0].equalsIgnoreCase("multi"))
+				final String[] colourWithCode = facetValue.split("_");
+				if (colourWithCode != null && colourWithCode.length > 0)
 				{
-					return "Multicolor";
-				}
+					if (colourWithCode[0] != null && colourWithCode[0].equalsIgnoreCase("multi"))
+					{
+						return "Multicolor";
+					}
 
-				return colourWithCode[0];
+					return colourWithCode[0];
+				}
 			}
-			return facetValue;
 
 		}
 

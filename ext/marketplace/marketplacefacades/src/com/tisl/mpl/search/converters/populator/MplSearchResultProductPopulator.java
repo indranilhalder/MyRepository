@@ -10,7 +10,6 @@ import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commerceservices.search.resultdata.SearchResultValueData;
-import de.hybris.platform.commerceservices.search.solrfacetsearch.provider.impl.SolrFirstVariantCategoryManager;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 
@@ -21,7 +20,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 
 
 /**
@@ -33,8 +31,7 @@ import org.springframework.beans.factory.annotation.Required;
 public class MplSearchResultProductPopulator extends MplSearchResultVariantProductPopulator
 {
 
-	@SuppressWarnings("unused")
-	private SolrFirstVariantCategoryManager categoryManager;
+
 
 	@Autowired
 	private SizeAttributeComparator sizeAttributeComparator;
@@ -150,6 +147,15 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 				target.setDisplayPromotion(displayPromotion);
 			}
 
+			/* TPR-1886 | JEWELLERY START */
+			if (getValue(source, "priceRangeJewellery") != null)
+			{
+				final String priceRangeJewellery = (String) getValue(source, "priceRangeJewellery");
+				target.setPriceRangeJewellery(priceRangeJewellery);
+			}
+
+
+			/* JEWELLERY END */
 			if (getValue(source, "isOffersExisting") != null)
 			{
 
@@ -281,8 +287,15 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	{
 		final List<ImageData> result = new ArrayList<ImageData>();
 
-		addImageData(source, "searchPage", result);
 		//TPR-796
+		if (getValue(source, "isLuxuryProduct") != null && this.<Boolean> getValue(source, "isLuxuryProduct").booleanValue())
+		{
+			addImageData(source, "luxurySearchPage", result);
+		}
+		else
+		{
+			addImageData(source, "searchPage", result);
+		}
 		addImageData(source, "product", result);
 
 
@@ -310,12 +323,6 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	 * } }
 	 */
 
-	@Override
-	@Required
-	public void setCategoryManager(final SolrFirstVariantCategoryManager categoryManager)
-	{
-		this.categoryManager = categoryManager;
-	}
 
 
 

@@ -35,6 +35,8 @@
 <input type ="hidden"  id="mrpPriceValue" value='${product.displayMrp}'/>
 <input type ="hidden"  id="sizeStockLevel" value='${product.displayStock}'/>
 <input type ="hidden"  id="productPromotion" value='${product.displayPromotion}'/>
+<!--TPR-1886 | JEWELLERY  -->
+ <input type ="hidden"  id="priceRangeJewellery" value='${product.priceRangeJewellery}'/>
 <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
 <input type="hidden" id="loggedIn" value="false"/> 
 </sec:authorize>
@@ -182,7 +184,7 @@
 						<!-- TISSTRT - 985  TISPRO-277::Size of footwear products are not displayed in SERP page-->
 						<c:if
 							test="${not empty product.productCategoryType && product.isVariant &&  (product.productCategoryType eq 'Apparel' 
-							                          || product.productCategoryType eq 'Footwear') }">
+							                          || product.productCategoryType eq 'Footwear'|| product.productCategoryType eq 'FineJewellery'|| product.productCategoryType eq 'FashonJewellery') }">
 
 
 							<%-- <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li> --%>
@@ -285,9 +287,16 @@
 					</c:forEach>
 					</div>
 				</c:if>
-
 				<ycommerce:testId code="product_productPrice">
-					<c:if
+					<!-- TPR-1886 | jewellery   -->
+					<c:choose>
+						<c:when test="${not empty product.priceRangeJewellery}">
+							<div class="price">
+								${product.priceRangeJewellery}
+							</div>
+						</c:when>
+						<c:otherwise>
+							<c:if
 						test="${product.price.value > 0 && (product.productMRP.value > product.price.value)}">
 						<div class="price">
 							<p class="old">
@@ -334,6 +343,9 @@
 							
 						</div>
 					</c:if>
+						</c:otherwise>
+					</c:choose>
+					
 					<c:if
 						test="${product.price.value <= 0 || (product.productMRP.value == product.price.value)}">
 						<div class="price">

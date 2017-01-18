@@ -30,8 +30,9 @@
 			<map>
 				<!-- default priority is 0 -->
 				<entry key="mpljewelleryprice" value="1" />
-				<entry key="mplassociation" value="0" />
-					</map>
+				<entry key="mplassociation" value="2" />
+				<entry key="weight_variant_seller" value="3" />
+			</map>
 		</property>
 	</bean>
     <bean id="baseDirectoryMarketplaceJewelleryPrice" class="java.lang.String">
@@ -111,6 +112,11 @@
      <bean id="batchMplAssociationConverterMapping"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
 		p:mapping="mplassociation" p:converter-ref="batchMplAssociationConverter" />
+	
+	
+	 <bean id="batchMplLeadAssociationConverterMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="weight_variant_seller" p:converter-ref="batchLeadUssidMplAssociationConverter" />
  	 <!-- Converters -->
  	
  	<!-- Converter for Price Import --> 
@@ -257,16 +263,32 @@
 
 					# Set product approval status to Approved only for those products that have prices.
 					$approved=approvalstatus(code)[default='approved']
-                    INSERT_UPDATE JewelleryPriceRow;ProductCode;Ussid[unique=true];baseMetalPrice1;baseMetalPrice2;baseMetalPrice3;baseMetalPrice4;gemStonePrice1;gemStonePrice2;gemStonePrice3;gemStonePrice4;gemStonePrice5;gemStonePrice6;gemStonePrice7;gemStonePrice8;gemStonePrice9;gemStonePrice10;diamondPrice1;diamondPrice2;diamondPrice3;diamondPrice4;diamondPrice5;diamondPrice6;diamondPrice7;baseMetalRate1;baseMetalRate2;baseMetalRate3;baseMetalRate4;gemStoneRate1;gemStoneRate2;gemStoneRate3;gemStoneRate4;gemStoneRate5;gemStoneRate6;gemStoneRate7;gemStoneRate8;gemStoneRate9;gemStoneRate10;diamondRate1;diamondRate2;diamondRate3;diamondRate4;diamondRate5;diamondRate6;diamondRate7;makingCharge;wastageTax;
+                    INSERT_UPDATE JewelleryPriceRow;ProductCode;Ussid[unique=true];makingCharges;wastageCharges;goldRate;goldValue;silverRate;silverValue;platinumRate;platinumValue;solitaireRate;solitaireValue;totalDiamondValue;diamondRateType1;diamondValueType1;diamondRateType2;diamondValueType2;diamondRateType3;diamondValueType3;diamondRateType4;diamondValueType4;diamondRateType5;diamondValueType5;diamondRateType6;diamondValueType6;diamondRateType7;diamondValueType7;totalStoneValue;stoneRateType1;stoneValueType1;stoneRateType2;stoneValueType2;stoneRateType3;stoneValueType3;stoneRateType4;stoneValueType4;stoneRateType5;stoneValueType5;stoneRateType6;stoneValueType6;stoneRateType7;stoneValueType7;stoneRateType8;stoneValueType8;stoneRateType9;stoneValueType9;stoneRateType10;stoneValueType10;
             </value>
         </property>
         <property name="impexRow">
-            <value>;{+0};{+1};{7};{8};{9};{10};{11};{12};{13};{14};{15};{16};{17};{18};{19};{20};{21};{22};{23};{24};{25};{26};{27};{28};{29};{30};{31};{32};{33};{34};{35};{36};{37};{38};{39};{40};{41};{42};{43};{44};{45};{46};{47};{48};{49};{50};{51}</value>
+            <value>;{+0};{+1};{7};{8};{9};{10};{11};{12};{13};{14};{15};{16};{17};{18};{19};{20};{21};{22};{23};{24};{25};{26};{27};{28};{29};{30};{31};{32};{33};{34};{35};{36};{37};{38};{39};{40};{41};{42};{43};{44};{45};{46};{47};{48};{49};{50};{51};{52}</value>
         </property>
          </bean>
          
+         
          <bean id="batchMplAssociationConverter"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+			<property name="header">
+				<value>#{defaultImpexProductHeader}
+					$productCatalog=mplProductCatalog
+					$productCatalogName=Marketplace Product Catalog
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+					$approved=approvalstatus(code)[default='approved']
+					INSERT_UPDATE JewelleryInformation;ProductCode;PCMUSSID;USSID[unique=true];PIMAttributeId[unique=true];Weight
+				</value>
+			</property>
+			<property name="impexRow">
+				<value>;{0};{1};{2};{3};{4}</value>
+			</property>
+		</bean>
+        <bean id="batchLeadUssidMplAssociationConverter"
+		class="com.tisl.mpl.dataimport.batch.converter.impl.AssociationLeadUssidConverter">
 		<property name="header">
 			<value>#{defaultImpexProductHeader}
 				$productCatalog=mplProductCatalog
@@ -277,9 +299,22 @@
 			</value>
 		</property>
 		<property name="impexRow">
-			<value>;{0};{1};{2};{3};{4}</value>
+			<value>
+				;{0};{1};{1};grossweightfinejwlry;{2}
+				;{0};{1};{1};metalweightfinejwlry;{3}
+				;{0};{1};{1};coinbarweightfinejwlry;{4}
+				;{0};{1};{1};solitaireweightfinejwlry;{5}
+				;{0};{1};{1};diamondtotalweightfinejwlry;{6}
+				;{0};{1};{1};diamondweightfinejwlry1;{7}
+				;{0};{1};{1};diamondweightfinejwlry2;{8}
+				;{0};{1};{1};diamondweightfinejwlry3;{9}
+				;{0};{1};{1};diamondweightfinejwlry4;{10}
+				;{0};{1};{1};diamondweightfinejwlry5;{11}
+				;{0};{1};{1};diamondweightfinejwlry6;{12}
+				;{0};{1};{1};diamondweightfinejwlry7;{13}
+			</value>
+			
 		</property>
-	</bean>
-               
+	</bean>   
          
       </beans>

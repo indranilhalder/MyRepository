@@ -58,20 +58,7 @@ public class SizeFacetComparator implements Comparator<FacetValue>
 		{
 			value2 = arg1.getName().replaceAll("\\s+", "").toUpperCase();
 		}
-
-		if (value1 == null && value2 == null)
-		{
-			return 0;
-		}
-		else if (value1 == null)
-		{
-			return -1;
-		}
-		else if (value2 == null)
-		{
-			return 1;
-		}
-		else if (value1.equals(value2)||value1==value2)
+		if (value1.equals(value2) || value1 == value2)
 		{
 			return 0;
 		}
@@ -121,7 +108,7 @@ public class SizeFacetComparator implements Comparator<FacetValue>
 			{
 				final int index1 = sizeSystem.indexOf(value1);
 				final int index2 = sizeSystem.indexOf(value2);
-				if (value1 == value2)
+				if (value1.equals(value2))
 				{
 					if (StringUtils.isNotEmpty(valueFootwear1) && StringUtils.isNotEmpty(valueFootwear2))
 					{
@@ -147,7 +134,7 @@ public class SizeFacetComparator implements Comparator<FacetValue>
 			{
 				//indicates numeric values comes first
 				//and values out of size-systems are placed as last thus so big number.
-				return Integer.MIN_VALUE;
+				return -1;
 			}
 			else
 			{
@@ -175,7 +162,7 @@ public class SizeFacetComparator implements Comparator<FacetValue>
 			if (value2SizeSystemIndex == -1)
 			{
 				//values out of size-systems are placed as last thus so big number.
-				return Integer.MIN_VALUE;
+				return -1;
 			}
 			else
 			{
@@ -189,7 +176,7 @@ public class SizeFacetComparator implements Comparator<FacetValue>
 
 			if (value1SizeSystemIndex == -1)
 			{
-				return Integer.MIN_VALUE;
+				return -1;
 			}
 			else
 			{

@@ -27,15 +27,19 @@
 	</p>	
 	<br>
 
+	<!-- TPR-3780 STARTS HERE -->
+	<c:if test="${product.rootCategory=='FineJewellery' }">										
+	    <p class="disclaimer-txt more">
+	    	<spring:theme code="cart.price.disclaimer"/>
+	    </p>
+	</c:if>	
+	     
+		                					
+	<!-- TPR-3780 ENDS HERE -->	
+	
 	
 	<%--for price breakup(TPR-3752) --%>
 	
-	<c:if test="${product.rootCategory=='FineJewellery' }">
-	<!-- <input type="button" id = "show" name="answer" value="Price Breakup" /> -->
-	
-	<p id = "show" class="pricebreakup-link">Price Breakup</p>
-	
-
 	<script type="text/javascript">
 	$(document).ready(function() {
 		$("#show").click(function() {
@@ -43,14 +47,17 @@
 		});
 	});
 	</script>
-
-
 	
+	<div id = "showPrice">
+	<%-- <c:if test="${product.rootCategory=='FineJewellery' }"> --%>
 	
+	<p id = "show" class="pricebreakup-link">Price Breakup</p>
+	</div>
 	
 	<ul id="showPriceBreakup" class="price-breakuplist clearfix" style="display:none"></ul>
 
-	</c:if>
+	<%-- </c:if> --%>
+	
 	<%--for price breakup(TPR-3752) --%>
 	
 	

@@ -2630,6 +2630,14 @@
 						<modifiers read="true" write="true" search="false"
 							initial="false" optional="true" partof="true" />
 					</attribute>
+					<!-- Added for tpr-3782 -->
+					<attribute qualifier="orderJewelEntry" autocreate="true"
+						type="OrderJewelEntry">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="false"
+							initial="false" optional="true" partof="true" />
+					</attribute>
+					<!-- End of changes for tpr-3782 -->
 				</attributes>
 			</itemtype>
 			<!-- Payment Mode Apportionment ends -->
@@ -6710,7 +6718,22 @@
 							optional="true" />
 						<persistence type="property" />
 					</attribute>
+					
+					<!-- changes for jewellery Cs-Cockpit -->
+					<attribute qualifier="forwardSealNum" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="reverseSealNum" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- changes for jewellery Cs-Cockpit end -->
+					
 				</attributes>
+				
 			</itemtype>
 			<itemtype code="OrderHistoryEntry" autocreate="false"
 				generate="false">
@@ -9366,7 +9389,399 @@
 							optional="false" removable="false" initial="true" private="false"
 							partof="false" unique="true" />		  
 			</attribute>
-		  	<attribute type="java.lang.Double" qualifier="baseMetalPrice1"
+		  	<attribute type="java.lang.Double" qualifier="goldValue"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+		  	<attribute type="java.lang.Double" qualifier="silverValue"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="platinumValue"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="solitaireValue"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneValueType1"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneValueType2"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneValueType3"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneValueType4"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneValueType5"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneValueType6"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneValueType7"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneValueType8"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneValueType9"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneValueType10"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="diamondValueType1"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			
+			<attribute type="java.lang.Double" qualifier="diamondValueType2"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			
+			<attribute type="java.lang.Double" qualifier="diamondValueType3"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			
+			<attribute type="java.lang.Double" qualifier="diamondValueType4"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			
+			<attribute type="java.lang.Double" qualifier="diamondValueType5"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			
+			<attribute type="java.lang.Double" qualifier="diamondValueType6"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			
+			<attribute type="java.lang.Double" qualifier="diamondValueType7"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="goldRate"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+		  	<attribute type="java.lang.Double" qualifier="silverRate"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="platinumRate"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="solitaireRate"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneRateType1"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneRateType2"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneRateType3"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneRateType4"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneRateType5"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneRateType6"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneRateType7"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneRateType8"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneRateType9"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="stoneRateType10"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			<attribute type="java.lang.Double" qualifier="diamondRateType1"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			
+			<attribute type="java.lang.Double" qualifier="diamondRateType2"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			
+			<attribute type="java.lang.Double" qualifier="diamondRateType3"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			
+			<attribute type="java.lang.Double" qualifier="diamondRateType4"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			
+			<attribute type="java.lang.Double" qualifier="diamondRateType5"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			
+			<attribute type="java.lang.Double" qualifier="diamondRateType6"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			
+			<attribute type="java.lang.Double" qualifier="diamondRateType7"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			
+			<attribute type="java.lang.Double" qualifier="totalDiamondValue"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			
+			<attribute type="java.lang.Double" qualifier="totalStoneValue"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			
+			<attribute type="java.lang.Double" qualifier="makingCharges"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+			
+			<attribute type="java.lang.Double" qualifier="wastageCharges"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+			</attribute>
+		  </attributes>
+		  </itemtype>
+		  
+		  
+<!-- Added for trp-3782 -->
+         <itemtype code="OrderJewelEntry" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.OrderJewelEntry">
+		  <deployment table="MPLOrderJewelEntry" typecode="15811" />
+		  <attributes>
+		 	<attribute type="java.lang.Double" qualifier="baseMetalPrice1"
 						autocreate="true" generate="true">
 						<persistence type='property' />
 						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
@@ -9750,10 +10165,16 @@
 							optional="true" removable="false" initial="true" private="false"
 							partof="false" />
 			</attribute>
+			<!-- relation between OrderJewelEntry and AbstractOredrEntry -->
+					<attribute qualifier="abstractOrderEntryjewel" type="AbstractOrderEntry">
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
 		  </attributes>
-		  </itemtype>
+ 	  </itemtype>		
 		  
-		  
+<!-- End of changes for tpr-3782 -->		  
 		</typegroup>
 		
 															<!-- Jewellery Changes End -->

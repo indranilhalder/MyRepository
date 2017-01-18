@@ -142,13 +142,18 @@ tr.d0 td {
 								</c:if>
 							</c:forEach>
 		                </p>
-		                
+		                <!-- TPR-3780 STARTS HERE -->
 		                <c:if test="${not empty entry.product.size}">
-		                 <p class="size"><ycommerce:testId code="cart_product_size">
-											<spring:theme code="product.variant.size"/>:&nbsp;${entry.product.size}
+		                 <p class="size disclaimer-txt more"><ycommerce:testId code="cart_product_size">
+											<spring:theme code="product.variant.size"/>:&nbsp;${entry.product.size}&nbsp;
+											<c:if test="${entry.product.rootCategory=='FineJewellery' }">
+										    	<spring:theme code="cart.price.disclaimer"/>
+		                					</c:if>
+		                						
 										</ycommerce:testId>
 										</p>
 						</c:if>
+						<!-- TPR-3780 ENDS HERE -->
 		             </div>
 		              
 		                
@@ -441,6 +446,14 @@ tr.d0 td {
 							<c:when test="${price lt 0.1}">
 								<form:select path="quantity" id="quantity_${entry.selectedUssid}"	cssClass="update-entry-quantity-input" disabled="true" onchange="updateCart(this.id);">
 									<c:forEach items="${configuredQuantityList}"
+										var="quantity">
+										<form:option value="${quantity}"></form:option>
+									</c:forEach>
+								</form:select>
+							</c:when>
+							<c:when test="${'FineJewellery' eq entry.product.rootCategory}">
+							<form:select path="quantity" id="quantity_${entry.selectedUssid}"	cssClass="update-entry-quantity-input"  onchange="updateCart(this.id);">
+									<c:forEach items="${configuredQuantityForJewellery}"
 										var="quantity">
 										<form:option value="${quantity}"></form:option>
 									</c:forEach>

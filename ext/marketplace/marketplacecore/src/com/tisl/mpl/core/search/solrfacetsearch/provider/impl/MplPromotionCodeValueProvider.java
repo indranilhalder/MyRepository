@@ -228,13 +228,14 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 					public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
 					{
 
+						final int lowPrority = o1.getPriority() == null ? 0 : o1.getPriority().intValue();
+						final int highPrority = o2.getPriority() == null ? 0 : o2.getPriority().intValue();
 
-						if (o1.getPriority() == o2.getPriority())
-
+						if (lowPrority == highPrority)
 						{
 							return 0;
 						}
-						else if (o1.getPriority().intValue() < o2.getPriority().intValue())
+						else if (lowPrority < highPrority)
 
 						{
 							return 1;
@@ -301,12 +302,14 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 						public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
 						{
 
-							if (o1.getPriority() == o2.getPriority())
+							final int lowPrority = o1.getPriority() == null ? 0 : o1.getPriority().intValue();
+							final int highPrority = o2.getPriority() == null ? 0 : o2.getPriority().intValue();
 
+							if (lowPrority == highPrority)
 							{
 								return 0;
 							}
-							else if (o1.getPriority().intValue() < o2.getPriority().intValue())
+							else if (lowPrority < highPrority)
 
 							{
 								return 1;
