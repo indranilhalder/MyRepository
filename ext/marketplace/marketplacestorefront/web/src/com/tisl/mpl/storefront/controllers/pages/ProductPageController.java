@@ -103,6 +103,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import atg.taglib.json.util.JSONException;
+
 import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONObject;
@@ -136,8 +138,6 @@ import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.web.forms.SellerInformationDetailsForm;
 import com.tisl.mpl.util.ExceptionUtil;
-
-import atg.taglib.json.util.JSONException;
 
 
 
@@ -1596,10 +1596,9 @@ public class ProductPageController extends MidPageController
 		getRequestContextData(request).setProduct(productModel);
 		try
 		{
-			final ProductData productData = productFacade.getProductForOptions(productModel,
-					Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY,
-							ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION,
-							ProductOption.VARIANT_FULL));
+			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
+					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
+					ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
 			updatePageTitle(productData, model);
 			final StringBuilder allVariants = new StringBuilder();
 			//		sortVariantOptionData(productData);
@@ -1620,18 +1619,14 @@ public class ProductPageController extends MidPageController
 			//if (productModel.getProductCategoryType().equalsIgnoreCase(ELECTRONICS))
 			if (ELECTRONICS.equalsIgnoreCase(productModel.getProductCategoryType())
 					|| WATCHES.equalsIgnoreCase(productModel.getProductCategoryType())
-<<<<<<< HEAD
 					|| TRAVELANDLUGGAGE.equalsIgnoreCase(productModel.getProductCategoryType())
 					|| FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
 
-=======
-					|| TRAVELANDLUGGAGE.equalsIgnoreCase(productModel.getProductCategoryType()))
->>>>>>> refs/remotes/origin/TCS_TRAVEL_ANDLUGGAGED
 			{
 				productDetailsHelper.groupGlassificationData(productData);
 			}
-			final String validTabs = configurationService.getConfiguration()
-					.getString("mpl.categories." + productData.getRootCategory());
+			final String validTabs = configurationService.getConfiguration().getString(
+					"mpl.categories." + productData.getRootCategory());
 
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			//For Gigya
@@ -1679,8 +1674,8 @@ public class ProductPageController extends MidPageController
 			if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productModel.getProductCategoryType()))
 			{
 				final Collection<CategoryModel> superCategories = productModel.getSupercategories();
-				final String configurationFA = configurationService.getConfiguration()
-						.getString("accessories.sideguide.category.showlist");
+				final String configurationFA = configurationService.getConfiguration().getString(
+						"accessories.sideguide.category.showlist");
 				final String[] configurationFAs = configurationFA.split(",");
 				for (final CategoryModel supercategory : superCategories)
 				{
@@ -1809,14 +1804,14 @@ public class ProductPageController extends MidPageController
 					{
 						final Map<String, String> productFeatureMap = new HashMap<String, String>();
 						final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(featureData.getFeatureValues());
-						final ProductFeatureModel productFeature = mplProductFacade
-								.getProductFeatureModelByProductAndQualifier(productData, featureData.getCode());
+						final ProductFeatureModel productFeature = mplProductFacade.getProductFeatureModelByProductAndQualifier(
+								productData, featureData.getCode());
 						if (null != productData.getRootCategory())
 						{
-							final String properitsValue = configurationService.getConfiguration()
-									.getString(ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
-							final String descValues = configurationService.getConfiguration()
-									.getString(ModelAttributetConstants.DESC_PDP_PROPERTIES + productData.getRootCategory());
+							final String properitsValue = configurationService.getConfiguration().getString(
+									ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
+							final String descValues = configurationService.getConfiguration().getString(
+									ModelAttributetConstants.DESC_PDP_PROPERTIES + productData.getRootCategory());
 							//apparel
 							final FeatureValueData featureValueData = featureValueList.get(0);
 							if ((ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
@@ -1838,21 +1833,15 @@ public class ProductPageController extends MidPageController
 									productFeatureMap.put(featureValueData.getValue(),
 											productFeature != null && productFeature.getUnit() != null
 													&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit().getSymbol()
-															: "");
+													: "");
 									mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
 								}
 							} //end apparel
 							  //electronics
 
 							else if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory())
-<<<<<<< HEAD
-									|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory())
 									|| ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory())
-									|| (ModelAttributetConstants.TRAVELANDLUGGAGE.equalsIgnoreCase(productData.getRootCategory())))
-=======
 									|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory()))
-
->>>>>>> refs/remotes/origin/TCS_TRAVEL_ANDLUGGAGED
 							{
 								final String[] propertiesValues = properitsValue.split(",");
 								if (propertiesValues != null && propertiesValues.length > 0)
@@ -1867,8 +1856,8 @@ public class ProductPageController extends MidPageController
 											}
 											productFeatureMap.put(featureValueData.getValue(),
 													productFeature != null && productFeature.getUnit() != null
-															&& !productFeature.getUnit().getSymbol().isEmpty()
-																	? productFeature.getUnit().getSymbol() : "");
+															&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit()
+															.getSymbol() : "");
 											mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
 										}
 									}
@@ -1915,14 +1904,8 @@ public class ProductPageController extends MidPageController
 			}
 			//model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
 			if (ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory())
-<<<<<<< HEAD
 					|| ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())
-					|| ModelAttributetConstants.TRAVELANDLUGGAGE.equalsIgnoreCase(productData.getRootCategory())
 					|| ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
-=======
-					|| ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory()))
->>>>>>> refs/remotes/origin/TCS_TRAVEL_ANDLUGGAGED
-
 			{
 				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
 
