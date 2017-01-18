@@ -1489,13 +1489,24 @@ $( document ).ready(function() {
 			
 			/* PRICE BREAKUP STARTS HERE */
 			
+			/*$("#showPrice").show();*/
+			if(data['displayconfigattr'] == "Yes"){
+				$("#showPrice").show();
+			}else if(data['displayconfigattr'] == "No"){
+				$("#showPrice").hide();
+			}else{
+				$("#showPrice").hide();
+			}
+			
 			var priceBreakupForPDP = data['priceBreakup'];
-			$.each(priceBreakupForPDP,function(key,value) {	
+				$.each(priceBreakupForPDP,function(key,value) {	
 					var pricebreakuplist = "<li><span>"+ key +"</span><strong>"+ value.formattedValue +"</strong></li>";
-					$("#showPriceBreakup").append(pricebreakuplist);
+						$("#showPriceBreakup").append(pricebreakuplist);
+						
 					
-				
 			});
+			
+			
 			
 			/* PRICE BREAKUP ENDS HERE */
 			

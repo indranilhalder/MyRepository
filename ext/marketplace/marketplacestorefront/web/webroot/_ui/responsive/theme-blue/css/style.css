@@ -602,7 +602,22 @@ body.page-shopTheStyle .timeout-slider .owl-controls .owl-dots {
 }
 /* ADDED TISLUX-1407 ENDS HERE */ 
 
-
+/* ADDED TPR-3780 STARTS HERE */ 
+.disclaimer-txt{
+	font-size: 12px;
+    font-style: italic;
+    line-height: 24px;
+}
+a.morelink {
+	color: #a9143c;	
+    font-style: normal;
+	text-decoration:none;
+	outline: none;
+}
+.morecontent span {
+	display: none;	
+}
+/* ADDED TPR-3780 ENDS HERE */ 
 
 @media (min-width: 651px){
     input[type="checkbox"] + label, input[type="radio"] + label {
@@ -33829,6 +33844,9 @@ body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo .name{
 body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo p.size{
 	font-size:12px !important;
 	line-height:12px;
+}
+body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo p.more{
+	line-height:24px;
 }
 body.page-cartPage .cart.wrapper .product-block li.item ul .item-edit-details {
     line-height: 12px;

@@ -212,6 +212,11 @@ public class MplPriceValueProvider extends AbstractPropertyFieldValueProvider im
 			{
 				rangeKey = rangeKey + "-APPAREL";
 			}
+			// TPR-1886 | For jewellery price range
+			else if (productCategoryType.equalsIgnoreCase("FineJewellery"))
+			{
+				rangeKey = rangeKey + "-FINEJEWELLERY";
+			}
 
 			// JEWELLERY CHANGES START
 			else if (productCategoryType.equalsIgnoreCase("FashionJewellery"))
