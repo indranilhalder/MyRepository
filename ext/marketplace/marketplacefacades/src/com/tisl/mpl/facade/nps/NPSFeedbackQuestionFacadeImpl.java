@@ -14,6 +14,9 @@ import javax.annotation.Resource;
 
 import net.sourceforge.pmd.util.StringUtil;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+
 import com.tisl.mpl.core.model.NPSFeedbackDetailModel;
 import com.tisl.mpl.core.model.NPSFeedbackModel;
 import com.tisl.mpl.core.model.NPSFeedbackQuestionModel;
@@ -64,7 +67,7 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.nps.NPSFeedbackQuestionFacade#saveFeedbackQuestionAnswer()
 	 */
 	@Override
@@ -78,30 +81,39 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 			if (feedbackForm.getTransactionId() != null)
 			{
 				npsFeedbackModel = npsFeedbackQuestionService.getFeedback(feedbackForm.getTransactionId());
-				npsFeedbackModel.setAnyOtherFeedback(feedbackForm.getAnyOtherFeedback());
-			}
-			for (final NPSFeedbackQRDetailData formDetail : feedbackForm.getFeedbackQRList())
-			{
-				npsFeedback = modelService.create(NPSFeedbackDetailModel.class);
-				if (formDetail.getRating() != null)
-				{
-					npsFeedback.setRating(formDetail.getRating());
-				}
-				if (StringUtil.isNotEmpty(formDetail.getQuestionName()))
-				{
-					npsFeedback.setQuestionDesc(formDetail.getQuestionName());
-				}
-				if (StringUtil.isNotEmpty(formDetail.getQuestionCode()))
-				{
-					npsFeedback.setQuestionCode(formDetail.getQuestionCode());
-				}
 
-				npsFeedbackModelList.add(npsFeedback);
 			}
 			if (npsFeedbackModel != null)
 			{
-				npsFeedbackModel.setFeedbackDetails(npsFeedbackModelList);
-				modelService.saveAll(npsFeedbackModelList, npsFeedbackModel);
+				//saving anyother feedback
+				if (StringUtils.isNotEmpty(feedbackForm.getAnyOtherFeedback()))
+				{
+					npsFeedbackModel.setAnyOtherFeedback(feedbackForm.getAnyOtherFeedback());
+				}
+				//saving rating against questions
+				for (final NPSFeedbackQRDetailData formDetail : feedbackForm.getFeedbackQRList())
+				{
+					npsFeedback = modelService.create(NPSFeedbackDetailModel.class);
+					if (StringUtil.isNotEmpty(formDetail.getRating()))
+					{
+						npsFeedback.setRating(formDetail.getRating());
+					}
+					if (StringUtil.isNotEmpty(formDetail.getQuestionName()))
+					{
+						npsFeedback.setQuestionDesc(formDetail.getQuestionName());
+					}
+					if (StringUtil.isNotEmpty(formDetail.getQuestionCode()))
+					{
+						npsFeedback.setQuestionCode(formDetail.getQuestionCode());
+					}
+
+					npsFeedbackModelList.add(npsFeedback);
+				}
+				if (CollectionUtils.isNotEmpty(npsFeedbackModelList))
+				{
+					npsFeedbackModel.setFeedbackDetails(npsFeedbackModelList);
+					modelService.saveAll(npsFeedbackModelList, npsFeedbackModel);
+				}
 			}
 		}
 		catch (final Exception e)
@@ -113,7 +125,7 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.nps.NPSFeedbackQuestionFacade#saveFeedbackRating(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -121,10 +133,15 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 	public boolean saveFeedbackRating(final String originalUid, final String transactionId, final String rating)
 	{
 		NPSFeedbackModel npsFeedbackModel = null;
+		CustomerModel customer = null;
 		try
 		{
-			npsFeedbackModel = modelService.create(NPSFeedbackModel.class);
-			final CustomerModel customer = (CustomerModel) extendedUserService.getUserForEmailid(originalUid);
+			npsFeedbackModel = npsFeedbackQuestionService.getFeedback(transactionId);
+			if (npsFeedbackModel == null)
+			{
+				npsFeedbackModel = modelService.create(NPSFeedbackModel.class);
+			}
+			customer = (CustomerModel) extendedUserService.getUserForEmailid(originalUid);
 			if (customer != null)
 			{
 				npsFeedbackModel.setEmailId(customer.getOriginalUid());
@@ -137,6 +154,8 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 			npsFeedbackModel.setNpsRating(rating);
 			npsFeedbackModel.setTransactionId(transactionId);
 			npsFeedbackModel.setResponseTime(new Date());
+			//npsFeedbackModel.setOriginalSurveyDate();
+			modelService.save(npsFeedbackModel);
 		}
 		catch (final Exception e)
 		{
