@@ -321,25 +321,25 @@
 								<c:set var="subOrderLine3" value="${fn:trim(subOrder.deliveryAddress.line3)}"/>
 								<div class="col-md-8 col-sm-6">
 								<address>
-									${fn:escapeXml(subOrder.deliveryAddress.firstName)}&nbsp;
-									${fn:escapeXml(subOrder.deliveryAddress.lastName)}<br>
-									${fn:escapeXml(subOrder.deliveryAddress.line1)},&nbsp;
+									<span data-tribhuvan="firstName">${fn:escapeXml(subOrder.deliveryAddress.firstName)}</span>&nbsp;
+									<span data-tribhuvan="lastName">${fn:escapeXml(subOrder.deliveryAddress.lastName)}</span><br>
+									<span data-tribhuvan="addressLine1">${fn:escapeXml(subOrder.deliveryAddress.line1)}</span>,&nbsp;
 									<c:if test="${not empty subOrderLine2}">
-									${fn:escapeXml(subOrder.deliveryAddress.line2)},
+									<span data-tribhuvan="addressLine2">${fn:escapeXml(subOrder.deliveryAddress.line2)}</span>,
 									</c:if>
 									<c:if test="${not empty subOrderLine3}">
-												&nbsp;${fn:escapeXml(subOrder.deliveryAddress.line3)},
+												&nbsp;<span data-tribhuvan="addressLine3">${fn:escapeXml(subOrder.deliveryAddress.line3)}</span>,
 											</c:if>
 									 <c:if test="${not empty subOrder.deliveryAddress.landmark}">
-									    ${fn:escapeXml(subOrder.deliveryAddress.landmark)},
+									   <span data-tribhuvan="landmark"> ${fn:escapeXml(subOrder.deliveryAddress.landmark)}</span>,
 									</c:if>
-									<br> ${fn:escapeXml(subOrder.deliveryAddress.town)},&nbsp;
+									<br><span data-tribhuvan="city"> ${fn:escapeXml(subOrder.deliveryAddress.town)}</span>,&nbsp;
 									<c:if test="${not empty subOrder.deliveryAddress.state}">
-												${fn:escapeXml(subOrder.deliveryAddress.state)},&nbsp;
+												<span data-tribhuvan="state">${fn:escapeXml(subOrder.deliveryAddress.state)}</span>,&nbsp;
 											</c:if>
-									${fn:escapeXml(subOrder.deliveryAddress.postalCode)}&nbsp;${fn:escapeXml(subOrder.deliveryAddress.country.isocode)}
+									<span data-tribhuvan="pincode">${fn:escapeXml(subOrder.deliveryAddress.postalCode)}</span>&nbsp;<span data-tribhuvan="country">${fn:escapeXml(subOrder.deliveryAddress.country.isocode)}</span>
 									<br>
-									91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
+									<span data-tribhuvan="mobileNo">91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)}</span> <br>
 								</address>
 								</div>
 								</div>
@@ -2895,18 +2895,20 @@ $(function() {
 		<!-- R2.3: START -->
 		 $("#changeAddressLink").click(function(){
 			  $(".error_text").hide();
+			  $(".addressListPop input[type='radio']").prop('checked',false);
 			  $("#changeAddressPopup").show();
 			  $(".wrapBG").show();
 			  var height = $(window).height();
 			  $(".wrapBG").css("height",height);
 			  $("#changeAddressPopup").css("z-index","999999");
+			  $("#deliveryAddressForm #pincode").val($("address span[data-tribhuvan='pincode']").text());
 			  loadPincodeData('edit');
 			  setTimeout(function() {
 				  
 			      console.log($("#deliveryAddressForm #firstName").attr("value")); 
 			      $("#deliveryAddressForm #firstName").val($("#deliveryAddressForm #firstName").attr("value"));
 			      $("#deliveryAddressForm #lastName").val($("#deliveryAddressForm #lastName").attr("value"));
-			      $("#deliveryAddressForm #pincode").val($("#deliveryAddressForm #pincode").attr("value"));
+			      
 			      $("#deliveryAddressForm #addressLine1").val($("#deliveryAddressForm #addressLine1").attr("value"));
 			      $("#deliveryAddressForm #addressLine2").val($("#deliveryAddressForm #addressLine2").attr("value")); 
 			      $("#deliveryAddressForm #addressLine3").val($("#deliveryAddressForm #addressLine3").attr("value")); 
