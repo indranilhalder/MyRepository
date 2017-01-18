@@ -10312,6 +10312,12 @@ body .account .right-account .order-history .pagination li{
   display: block;
   width: 100%;
   padding: 10px; }
+  
+  /* sprint8(tpr-1672(home page,clp,blp)) */
+  .best-offers_blp .product-tile,.best-offers .product-tile{
+  	padding: 0;
+  } 
+  /* sprint8(tpr-1672(home page,clp,blp)) */
   .product-tile .image {
     position: relative; }
     .product-tile .image a img {
@@ -29529,7 +29535,7 @@ footer>div>ul>li>.toggle>img{
 }
 #newAndExclusive a.new_exclusive_viewAll:hover,
 #bestPicks .view-cliq-offers:hover,
-a.button.trending-button:hover{
+a.button.trending-button:hover,#bestOffers.best-offers.feature-collections a.view-best-offers:hover{
 	color: #a9143c;
     border-color:#a9143c;
 }
@@ -29739,15 +29745,24 @@ padding:20px;
     text-align: center;
     padding: 0 40px;
     }
-    .home-best-pick-carousel .item{
+    /* sprint8(home page,clp,blp) */
+    .home-best-pick-carousel .item,#bestOffers.best-offers.feature-collections a.item{
     display: block;
     margin: 0 10px;
     padding: 10px 0;
     }
+    /* sprint8(tpr-1672(home page,clp,blp)) */
 #bestPicks .home-best-pick-carousel-img img{
 	max-width: 100%;
 }
-#bestPicks .short-info span , #bestPicks .short-info p{
+/* sprint8(tpr-1672(home page,clp,blp)) */
+#bestOffers.best-offers.feature-collections .short-info-bestOffers{
+	position: relative;
+  	margin-top: 15px;
+  	width: 100%;
+  	text-align: center;
+}
+#bestPicks .short-info span , #bestPicks .short-info p, #bestOffers.best-offers.feature-collections .short-info-bestOffers span,.best-offers .details.short-info span{
     line-height: 1;
     display: inline-block;
     padding: 5px 4px 4px 4px;
@@ -29755,6 +29770,7 @@ padding:20px;
     word-break: break-word;
     font-size: 14px;
 }
+/* sprint8(tpr-1672(home page,clp,blp)) */
 
 #bestPicks .short-info a {
     line-height: 1;
@@ -29762,6 +29778,7 @@ padding:20px;
     padding: 4px;
     width: 100%;
 }
+/* sprint8(tpr-1672(home page,clp,blp)) */
 #bestPicks .short-info a span,#bestPicks .short-info a p {
     line-height: 1;
     display: inline-block;
@@ -29774,7 +29791,8 @@ padding:20px;
     width: 100%;
     padding: 0;
 }
-#bestPicks .view-cliq-offers {
+/* sprint8(tpr-1672(home page,clp,blp)) */
+#bestPicks .view-cliq-offers,#bestOffers.best-offers.feature-collections a.view-best-offers,.best-offers a.view-best-offers,.best-offers_blp a.view-best-offers {
 	padding: 13px;
     font-size: 12px;
     font-family: "Montserrat";
@@ -29789,9 +29807,19 @@ padding:20px;
     border: 1px solid #a9143c;
     margin: 10px auto 50px;
 }
-#bestPicks .view-cliq-offers:hover {
+#bestOffers.best-offers.feature-collections a.view-best-offers,.best-offers a.view-best-offers,.best-offers_blp a.view-best-offers{
+	/* width: 250px;
+  	letter-spacing: normal;
+  	font-weight: normal;
+  	padding: 16px 0;
+ */}
+#bestOffers.best-offers.feature-collections a.view-best-offers,.best-offers a.view-best-offers,.best-offers_blp a.view-best-offers{
+	/* margin-top: 25px; */
+}
+#bestPicks .view-cliq-offers:hover,#bestOffers.best-offers.feature-collections a.view-best-offers:hover {
     background: transparent;
 }
+/* sprint8(tpr-1672(home page,clp,blp)) */
 /*best picks end*/
 div#promobannerhomepage{
 margin: 0px;
@@ -30445,9 +30473,7 @@ header:not(.compact) .content .marketplace.compact{
 }
 #productYouCare .short-info > h3 span:hover,
 #productYouCare .short-info > h3 span:hover:after,
-
-
-#bestPicks .short-info:hover span {
+#bestPicks .short-info:hover span, {
 	color: #a9143c;
 }
 .app-download.social {
@@ -33198,7 +33224,7 @@ header .banner > span {
 	#bestPicks .owl-item .short-info{ opacity:0;transition: all 0.3s ease-in-out 0s;}
 	#bestPicks .owl-item.active .short-info{ opacity:1;}
 	#bestPicks .home-best-pick-carousel.owl-carousel .owl-item{ width:100%;}
-	#bestPicks .view-cliq-offers{ margin: 0 auto 30px;font-size: 11px;    height: 35px;    letter-spacing: 1px;    line-height: 32px;    width: 170px; padding: 0;}
+	/* sprint8 */ #bestPicks .view-cliq-offers,#bestPicks .view-cliq-offers, #bestOffers.best-offers.feature-collections a.view-best-offers, .best-offers a.view-best-offers, .best-offers_blp a.view-best-offers{ margin: 0 auto 30px;font-size: 11px;    height: 35px;    letter-spacing: 1px;    line-height: 32px;    width: 170px; padding: 0;} /* sprint8 */
 	.feature-collections h1{ font-size:20px;padding: 30px 0;}
 	.home-best-pick-carousel .item {
     padding: 10px 0 1px;
@@ -44698,7 +44724,8 @@ h3.customPriceRange:after{
 
 /* SERP facets Ends */ 
 /* Home Page Starts */
-body.page-homepage .feature-collections h2{
+/* sprint8(tpr-1672(home page,clp,blp)) */
+body.page-homepage .feature-collections h2,.best-offers .feature-collections h2{
 	padding: 50px 0 30px;
     font-weight: bold;
     font-size: 28px;
@@ -44709,6 +44736,7 @@ body.page-homepage .feature-collections h2{
     /* line-height: normal; */
     clear: both;
 }
+/* sprint8(tpr-1672(home page,clp,blp)) */
 
 #brandsYouLove h2 {
     padding-bottom: 50px;
@@ -44799,10 +44827,12 @@ body.page-homepage .showcase .desc-section h2{
 	body.page-homepage .home-brands-you-love-wrapper h2 {
     font-size: 18px;
 	}
-	body.page-homepage #bestPicks.feature-collections h2{
+	/* sprint8 */
+	body.page-homepage #bestPicks.feature-collections h2,body.page-homepage .feature-collections h2, .best-offers .feature-collections h2{
 	font-size: 20px;
     padding: 30px 0 10px;
 	}
+	/* sprint8 */
 	body.page-homepage #productYouCare h2{
 	padding: 30px 0 10px;
     font-size: 20px;
@@ -50241,7 +50271,8 @@ overflow: hidden;
 .top_deal_blp .feature-categories .item.slide a.shop_link{
 	display:none;
 }
-.top_deal_blp .feature-categories .item.slide span{
+/* sprint8(tpr-1672(home page,clp,blp)) */
+.top_deal_blp .feature-categories .item.slide span,.best-offers_blp .details.short-info span{
 	font-size: 14px;
 	color: #000;
     display: inline-block;
@@ -50251,6 +50282,7 @@ overflow: hidden;
     line-height: 20px;
     word-break: break-word;
 }
+/* sprint8(tpr-1672(home page,clp,blp)) */
  .top_deal_blp > a{
 	margin: -8px auto 0;
     text-transform: uppercase;
@@ -59412,3 +59444,35 @@ text-decoration:underline;
 .shop-promos .promos{
    	border-top:1px solid #ccc;
 }}
+
+/* sprint8(tpr-1672(home page,clp,blp)) */
+.best-offers_blp .feature-collections h2{
+	display: block;
+    text-align: center;
+    margin: 0 0 50px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: capitalize;
+    letter-spacing: normal;
+    padding: 0;
+    padding-top: 50px;
+    line-height: 25px;
+}
+.best-offers_blp a.view-best-offers,.best-offers a.view-best-offers,#bestOffers.best-offers.feature-collections a.view-best-offers{
+	padding: 0;
+	border: 0;
+	visibility:hidden;	
+}
+
+/* sprint8(tpr-1672(home page,clp,blp)) */
+
+/* Start here for sprint8(tpr-1672(home page,clp,blp)) BLP */
+
+.best-offers_blp .yCmsComponent:nth-of-type(2){
+	margin-top: 38px;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+/* End here for sprint8(tpr-1672(home page,clp,blp)) BLP */

@@ -385,10 +385,10 @@ ACC.carousel = {
             }
 		});
 	},
-
+	/*sprint8(TPR-1672 CLP)*/
 	offersCarousel: function(){
 		$(".offersCarousel").owlCarousel({
-					items:4,
+					items:5,
             		loop: true,
             		nav:true,
             		dots:false,
@@ -401,7 +401,7 @@ ACC.carousel = {
             			},
             			// breakpoint from 480 up
             			480 : {
-            				items:2,
+            				items:1,
             				stagePadding: 50,
             			},
             			// breakpoint from 768 up
@@ -410,9 +410,11 @@ ACC.carousel = {
             			},
             			// breakpoint from 768 up
             			1280 : {
-            				items:4,
+            				items:5,
             			}			
-            		}	
+            		}
+		/*sprint8(TPR-1672 CLP)*/
+		
 			/*navigation:true,
 			rewindNav: false,
 			navigationText :[],
@@ -428,7 +430,7 @@ ACC.carousel = {
 		itemsMobile : [480,2],*/
 			});
 	},
-
+	
 	shopTheLookCarousel: function(){
 		$(".shop_the_look .shopByLookCarousel").owlCarousel({
 			/*items:2,

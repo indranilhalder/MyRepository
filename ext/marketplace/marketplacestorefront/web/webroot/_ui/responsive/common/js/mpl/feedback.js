@@ -2953,4 +2953,14 @@ $(window).on("load",function(){
 	htVal=$(".trending .product-image").height();
 	$(".trending .owl-controls").css("top",(htVal/2)+"px");
 	$(".trending .owl-controls").css("display","block");
+	
+	/*sprint8*/
+	var arr=[".best-offers_blp .view-best-offers",".best-offers .view-best-offers","#bestOffers.best-offers.feature-collections a.view-best-offers"];
+	for(var i=0;i<arr.length;i++){
+	if($(arr[i]).text().trim() != ""){
+	$(arr[i]).css({"padding":"16px 0","border":"1px solid #a9143c","visibility":"visible"});
+	}
+	}
+	/*sprint8*/
+	
 });

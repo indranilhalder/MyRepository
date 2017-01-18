@@ -35,5 +35,15 @@
 			</div>
 		</c:forEach>
 	</div>
+	<!-- sprint8(tpr-1672(home page,clp,blp)) -->
+	<a href="<c:if test='${not empty component.buttonLink}'>
+							${component.buttonLink}  
+						</c:if>" class="view-best-offers">
+						<c:if test="${not empty component.buttonText}">
+							${component.buttonText}  
+						</c:if>
+						</a>
+	<!-- sprint8(tpr-1672(home page,clp,blp)) -->
+						
 </div> 
 
