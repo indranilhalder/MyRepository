@@ -548,6 +548,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		 
 	}
 	
+	@SuppressWarnings("boxing")
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_UPDATE_RETURNINFO, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public String updateReturnInfo(final MplReturnInfoForm mplReturnInfoForm, final Model model,
@@ -559,7 +560,8 @@ public class ReturnPageController extends AbstractMplSearchPageController
       LOG.debug("***************:"+filename.getOriginalFilename()); 
       String fileUploadLocation=null;
       String shipmentCharge=null;
-      Double configShippingCharge=null;
+      //TISRLUAT-50
+		Double configShippingCharge = 0.0d;
       if(null!=configurationService){
       	fileUploadLocation=configurationService.getConfiguration().getString(RequestMappingUrlConstants.FILE_UPLOAD_PATH);
       	shipmentCharge=configurationService.getConfiguration().getString(RequestMappingUrlConstants.SHIPMENT_CHARGE_AMOUNT);
