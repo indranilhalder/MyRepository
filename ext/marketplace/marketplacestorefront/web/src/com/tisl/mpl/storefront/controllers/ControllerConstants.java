@@ -359,6 +359,9 @@ public interface ControllerConstants
 				//for price breakup(TPR-3752)
 				public static final String PRICE_BREAKUP = "priceBreakup";
 
+				public static final String DISPLAYCONFIGATTR = "displayconfigattr";
+
+				//ends
 
 				//TISPRM-56
 				public static final String AVAILABILITY = "availibility";
