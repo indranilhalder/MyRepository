@@ -14,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Listitem;
@@ -24,6 +23,7 @@ import org.zkoss.zul.Messagebox;
 import com.hybris.cockpitng.core.user.AuthorityGroupService;
 import com.hybris.cockpitng.core.user.CockpitUserService;
 import com.hybris.cockpitng.core.user.impl.AuthorityGroup;
+import com.hybris.cockpitng.engine.WidgetInstanceManager;
 import com.hybris.oms.api.logistics.LogisticsFacade;
 import com.hybris.oms.api.orderlogistics.OrderLogisticsFacade;
 import com.hybris.oms.domain.logistics.dto.Logistics;
@@ -82,11 +82,13 @@ public class LpoverrideWidgetController
 
 	@WireVariable("lpAwbDataUploadService")
 	private LpAwbDataUploadService lpAwbDataUploadService;
-
+	private String errorMessageValue = "";
+	@WireVariable
+	private WidgetInstanceManager widgetInstanceManager;
 
 	@Command
 	@NotifyChange(
-	{ "listOfTransactions", "displayPopup" })
+	{ "listOfTransactions", "displayPopup", "errorMessage" })
 	public void lpSerachButton()
 	{
 		displayPopup = Boolean.FALSE;
@@ -162,33 +164,20 @@ public class LpoverrideWidgetController
 				}
 			}
 			this.listOfTransactions = transactionsList;
-
+			this.errorMessageValue = "";
 		}
 		else
 		{
-			Messagebox.show("Atleast one field is mandatory");
+			this.errorMessageValue = "At least one field is mandatory";
+			if (this.listOfTransactions != null && CollectionUtils.isNotEmpty(this.listOfTransactions))
+			{
+				this.listOfTransactions.clear();
+			}
 		}
 	}
 
-	@Init
-	@NotifyChange(
-	{ "ordersStatus" })
-	public void init()
-	{
-		LOG.info("inside init");
-		ordersStatus = getOrderStatuses(isReturn);
-		activelpList = getLpSet();
-		dropDownSearchLpList = new ArrayList<String>();
-		LOG.info("inside onchange");
-		if (modifiedTransactinTrack == null)
-		{
-			modifiedTransactinTrack = new HashMap<String, TransactionInfo>();
-		}
-		dropDownSearchLpList.addAll(activelpList);
-		dropDownSearchLpList.add(TataomsbackofficeConstants.LPNAME_NONE);
-	}
 
-	private List<String> getLpSet()
+	public List<String> getActivelpList()
 	{
 		final List<Logistics> list = (List<Logistics>) logisticsFacade.getAll();
 
@@ -201,6 +190,7 @@ public class LpoverrideWidgetController
 				lpList.add(logistics.getLogisticname());
 			}
 		}
+		lpList.add(TataomsbackofficeConstants.LPNAME_NONE);
 		return lpList;
 	}
 
@@ -450,13 +440,6 @@ public class LpoverrideWidgetController
 		return _rowRenderer;
 	}
 
-	/**
-	 * @return the activelpList
-	 */
-	public List<String> getActivelpList()
-	{
-		return activelpList;
-	}
 
 
 	/**
@@ -481,7 +464,7 @@ public class LpoverrideWidgetController
 	 */
 	public List<String> getOrdersStatus()
 	{
-		return ordersStatus;
+		return getOrderStatuses(this.isReturn);
 	}
 
 	@NotifyChange
@@ -640,5 +623,10 @@ public class LpoverrideWidgetController
 	public List<String> getDropDownSearchLpList()
 	{
 		return dropDownSearchLpList;
+	}
+
+	public String getErrorMessage()
+	{
+		return this.errorMessageValue;
 	}
 }

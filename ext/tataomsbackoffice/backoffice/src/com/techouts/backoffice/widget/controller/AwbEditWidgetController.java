@@ -4,7 +4,6 @@
 package com.techouts.backoffice.widget.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Listitem;
@@ -71,10 +69,11 @@ public class AwbEditWidgetController
 	private transient AuthorityGroup activeUserRole;
 	@WireVariable
 	private WidgetInstanceManager widgetInstanceManager;
+	private String errorMessageValue = "";
 
 	@Command
 	@NotifyChange(
-	{ "listOfTransactions" })
+	{ "listOfTransactions", "errorMessage" })
 	public void awbSerachButton()
 	{
 		LOG.info("inside awb search");
@@ -127,29 +126,19 @@ public class AwbEditWidgetController
 					.getTransactionInfo();
 
 			this.listOfTransactions = transactionsList;
+			this.errorMessageValue = "";
 		}
 		else
 		{
-			Messagebox.show("Atleast one field is mandatory");
+			this.errorMessageValue = "At least one field is mandatory";
+			if (this.listOfTransactions != null && CollectionUtils.isNotEmpty(this.listOfTransactions))
+			{
+				this.listOfTransactions.clear();
+			}
 		}
 	}
 
-	@Init
-	@NotifyChange(
-	{ "ordersStatus", "activelpList" })
-	public void init()
-	{
-		LOG.info("inside init");
-		ordersStatus = getOrderStatuses(isReturn);
-		activelpList = getLpSet();
-		if (map == null)
-		{
-			map = new HashMap<String, TransactionInfo>();
-		}
-
-	}
-
-	private List<String> getLpSet()
+	public List<String> getActivelpList()
 	{
 		final List<Logistics> list = (List<Logistics>) logisticsFacade.getAll();
 
@@ -171,7 +160,7 @@ public class AwbEditWidgetController
 	 */
 	public List<String> getOrdersStatus()
 	{
-		return ordersStatus;
+		return getOrderStatuses(this.isReturn);
 	}
 
 	@Command("isReturnCheck")
@@ -306,13 +295,6 @@ public class AwbEditWidgetController
 	}
 
 
-	/**
-	 * @return the activelpList
-	 */
-	public List<String> getActivelpList()
-	{
-		return activelpList;
-	}
 
 	/**
 	 * @return the listOfTransactions
@@ -334,6 +316,7 @@ public class AwbEditWidgetController
 	 * @param isReturn
 	 *           the isReturn to set
 	 */
+	@NotifyChange
 	public void setIsReturn(final Boolean isReturn)
 	{
 		this.isReturn = isReturn;
@@ -483,4 +466,8 @@ public class AwbEditWidgetController
 		return _rowRenderer;
 	}
 
+	public String getErrorMessage()
+	{
+		return this.errorMessageValue;
+	}
 }

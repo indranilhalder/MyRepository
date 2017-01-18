@@ -15,6 +15,7 @@
 		"Open Sans",Arial,Sans-serif; font-size: 12px; font-weight: 400;
 		font-style: normal; color: #555; padding: 3px 4px 4px;
 		line-height: -1px; overflow: none; cursor: pointer; }
+		.error_class{font-size:13px;color:red;}
 	</style>
 	<div>
 		<separator />
@@ -95,6 +96,10 @@
 						onClick="@command('awbSerachButton', event=event)" />
 				</vlayout>
 			</hlayout>
+			<separator />
+			<hbox pack="center" style="width:100%">
+			        <label value="@load(vimo.errorMessage)" sclass="error_class"/>
+			</hbox>
 			<separator />
 			<div style="overflow-x:auto">
 				<listbox model="@bind(vimo.listOfTransactions)"
