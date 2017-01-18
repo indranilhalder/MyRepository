@@ -42,6 +42,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
@@ -110,6 +111,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	private CheckoutCustomerStrategy checkoutCustomerStrategy;
 	@Autowired
 	private CustomerAccountService customerAccountService;
+	
+	@Autowired
+	private MplDeliveryAddressFacade mplDeliveryAddressFacade;
 
 	/**
 	 * @description method is called to fetch the details of a particular orders for the user
@@ -2110,6 +2114,19 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 									parentTransactionIds = Arrays.asList(entry.getParentTransactionID().split("\\s*,\\s*"));
 								}
 								orderproductdto.setParentTransactionId(parentTransactionIds);
+								
+								//ADDED R2.3 New attribute
+								if(entry.getSelectedDeliverySlotDate()!=null)
+								{
+									orderproductdto.setScheduleDeliveryDate(entry.getSelectedDeliverySlotDate());
+									if(StringUtils.isNotEmpty(entry.getTimeSlotFrom())){
+										if(StringUtils.isNotEmpty(entry.getTimeSlotTo()) && StringUtils.isNotEmpty(entry.getTimeSlotFrom())){
+											orderproductdto.setScheduleDeliveryTime(entry.getTimeSlotFrom().concat(" to ").concat(entry.getTimeSlotTo()));
+										}
+										
+									}
+								}
+								
 								//Check if invoice is available
 								if (entry.getConsignment() != null)
 								{
@@ -2180,6 +2197,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 					orderTrackingWsDTO.setIsPickupUpdatable(isPickUpButtonEditable(orderDetail));
 					orderTrackingWsDTO.setStatusDisplay(orderDetail.getStatusDisplay());
 					orderTrackingWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					//R2.3 FLO1 new attribute Added 
+					orderTrackingWsDTO.setIsCDA(mplDeliveryAddressFacade.isDeliveryAddressChangable(orderCode));
 				}
 				else
 				{
