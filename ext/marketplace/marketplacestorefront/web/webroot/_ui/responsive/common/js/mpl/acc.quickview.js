@@ -899,9 +899,8 @@ $(document).on("click",".quickview .Emi > #EMImodal-content",function(e){
 });
 
 $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
-
 	if($("#quickViewVariant li").length > 0){
-		 if(!$("#quickViewVariant li ").hasClass("selected")  && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='TravelAndLuggage') {
+		 if(!$("#quickViewVariant li ").hasClass("selected")  && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='Watches' && $("#categoryType").val()!='TravelAndLuggage') {
 			// alert("Please select")
 			 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			 				$("#addToCartFormQuickTitle").show();
@@ -917,9 +916,9 @@ $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
 		$("#addToCartFormQuickTitle").fadeOut(5000);
 	    return false;
 	 }
-	 
-	ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
-	
+	 else{			 
+		 ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
+	}
 });
 /*End of quickview Emi*/
 /*TPR-924*/

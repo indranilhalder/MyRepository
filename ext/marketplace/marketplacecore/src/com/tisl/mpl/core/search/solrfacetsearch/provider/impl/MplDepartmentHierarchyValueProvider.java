@@ -152,7 +152,7 @@ public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldVa
 	@SuppressWarnings("boxing")
 	protected void accumulateCategoryPaths(final List<CategoryModel> categoryPath, final Set<String> output)
 	{
-		List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
+		List<CategoryModel> categoryList = null;
 		final StringBuilder accumulator = new StringBuilder();
 		int level = 0;
 		if (CollectionUtils.isNotEmpty(getLuxuaryCategories(categoryPath)))
@@ -163,24 +163,27 @@ public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldVa
 		{
 			categoryList = categoryPath;
 		}
-		for (final CategoryModel category : categoryList)
+		if (CollectionUtils.isNotEmpty(categoryList))
 		{
-			if (category instanceof ClassificationClassModel)
+			for (final CategoryModel category : categoryList)
 			{
-				return;
-			}
-			boolean department = false;
-			if (level == 1)
-			{
-				department = true;
-			}
+				if (category instanceof ClassificationClassModel)
+				{
+					return;
+				}
+				boolean department = false;
+				if (level == 1)
+				{
+					department = true;
+				}
 
-			final int rankingValue = (category.getRanking() != null) ? category.getRanking() : 0;
-			accumulator.append(MplConstants.PIPE).append(category.getCode()).append(MplConstants.COLON).append(category.getName())
-					.append(":L").append(level).append(MplConstants.COLON).append(department).append(MplConstants.COLON)
-					.append(rankingValue);
-			output.add(accumulator.toString());
-			level = level + 1;
+				final int rankingValue = (category.getRanking() != null) ? category.getRanking() : 0;
+				accumulator.append(MplConstants.PIPE).append(category.getCode()).append(MplConstants.COLON)
+						.append(category.getName()).append(":L").append(level).append(MplConstants.COLON).append(department)
+						.append(MplConstants.COLON).append(rankingValue);
+				output.add(accumulator.toString());
+				level = level + 1;
+			}
 		}
 	}
 

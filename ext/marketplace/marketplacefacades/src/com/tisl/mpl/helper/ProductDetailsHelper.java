@@ -368,8 +368,7 @@ public class ProductDetailsHelper
 					}
 					else
 					{
-						if (!(classData.getName().equalsIgnoreCase(N_A))
-								&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
+						if (!(classData.getName().equalsIgnoreCase(N_A))&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
 										.contains(classData.getName())
 										|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME)
 												.contains(classData.getName())
