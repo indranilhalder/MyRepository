@@ -89,6 +89,8 @@ public class MplChangeDeliveryOTPWidgetRenderer
 	private static final String FAILED_AT_OMS = "failedAtOms";
 	private static final String AN_ERROR_OCCURRED = "erroroccurred";
 	private static final String INFO = "info";
+	private static final String ADDRESS_NOT_CHANGABLE = "addressNotChangable";
+	
 	@Autowired
 	private SendSMSFacade sendSMSFacade;
 	@Autowired
@@ -742,6 +744,9 @@ public class MplChangeDeliveryOTPWidgetRenderer
 			boolean validate = otpResponse.getOTPValid();
 			if (validate) {
 				try {
+					TypedObject orderObject = getOrder();
+					if(mplDeliveryAddressController
+					.isDeliveryAddressChangable(orderObject)) {
 					String omsStatus = null;
 					TypedObject customer = marketplaceCallContextController
 							.getCurrentCustomer();
@@ -832,6 +837,25 @@ public class MplChangeDeliveryOTPWidgetRenderer
 								AN_ERROR_OCCURRED, new Object[0]), INFO,
 								Messagebox.OK, Messagebox.ERROR);
 					}
+				}else {
+					mplDeliveryAddressController.saveChangeDeliveryRequests(orderModel.getParentReference());
+					
+					Messagebox.show(LabelUtils.getLabel(widget, ADDRESS_NOT_CHANGABLE,
+							new Object[0]), INFO, Messagebox.OK, Messagebox.ERROR);
+					try {
+						closePopUp();
+					}catch(Exception e) {
+						e.printStackTrace();
+					}
+					try {
+						controller.getContextController().dispatchEvent(null, null, null);
+					}catch(Exception e) {
+						e.printStackTrace();
+					}
+					Map data = Collections.singletonMap("refresh", Boolean.TRUE);
+					((OrderController) widget.getWidgetController()).dispatchEvent(null,
+							null, data);
+				}
 				}catch (Exception e) {
 					LOG.error("Exception in changeDeliveryAddressCallToOMS"
 							+ e.getMessage());

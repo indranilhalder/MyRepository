@@ -75,7 +75,8 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 	protected static final String FAILED_VALIDATION = "failedValidation";
 	private static final String USE_WEBSITE_FOR_COD = "useWebsiteForCOD";
 	private static final String PIN_REGEX = "^[1-9][0-9]{5}";
-			private static final String NAME_REGEX = "^[A-Za-z][ A-Za-z]{0,20}";
+	private static final String NAME_REGEX = "^[A-Za-z][ A-Za-z]{0,20}";
+	private static final String ADDRESS_NOT_CHANGABLE = "addressNotChangable";
 	private boolean isChangeDeliveryAddress;
 	private boolean isAddressForReturn;
 
@@ -1157,8 +1158,27 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 	private void proceedToChangeAddress(
 			InputWidget<DefaultMasterDetailListWidgetModel<TypedObject>, CustomerController> widget,
 		AddressModel deliveryAddress) {
-		createOTPPopupWindow(widget, popupWidgetHelper.getCurrentPopup()
-				.getParent(), deliveryAddress);
+			TypedObject orderObject = getOrder();
+			if(!mplDeliveryAddressController
+			.isDeliveryAddressChangable(orderObject)) {
+				OrderModel order = (OrderModel) orderObject.getObject();
+				mplDeliveryAddressController.saveChangeDeliveryRequests(order.getParentReference());
+				try {
+					Messagebox.show(LabelUtils.getLabel(widget, ADDRESS_NOT_CHANGABLE,
+							new Object[0]), INFO, Messagebox.OK, Messagebox.ERROR);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				popupWidgetHelper.dismissCurrentPopup();
+				// fire a dispatch event to refresh the page/widget
+				widget.getWidgetController().dispatchEvent(
+						widget.getControllerCtx(), this, null);
+			}else {
+				createOTPPopupWindow(widget, popupWidgetHelper.getCurrentPopup()
+						.getParent(), deliveryAddress);
+			}
+		
 	}
 
 	protected Widget createPopupWidget(WidgetContainer<Widget> widgetContainer,
