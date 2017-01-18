@@ -82,16 +82,10 @@ import de.hybris.platform.util.Config;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -111,7 +105,6 @@ import java.util.TreeMap;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -2499,8 +2492,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @return String
 	 * @throws CMSItemNotFoundException
 	 */
-	// Bug ID TISRLUAT-75 Start
-/*	@RequestMapping(value = RequestMappingUrlConstants.LINK_INVOICE, method = RequestMethod.GET)
+
+	@RequestMapping(value = RequestMappingUrlConstants.LINK_INVOICE, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String sendInvoiceAction(@RequestParam(ModelAttributetConstants.ORDERCODE) final String orderCode,
 			@RequestParam(ModelAttributetConstants.TRANSACTION_ID) final String transactionId, final Model model,
@@ -2618,95 +2611,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 
-	}*/
-	 
-	    //INVOICE_FILE_DOWNLOAD="/requestInvoice";
-			@ResponseBody
-			@RequestMapping(value = RequestMappingUrlConstants.LINK_INVOICE, method = RequestMethod.GET)
-			protected void  sendInvoiceAction(@RequestParam(ModelAttributetConstants.ORDERCODE) final String orderCode,
-					@RequestParam(ModelAttributetConstants.TRANSACTION_ID) final String transactionId, final Model model,
-					final RedirectAttributes redirectAttributes,
-					HttpServletResponse response) throws CMSItemNotFoundException
-		{
-			String fileDownloadLocation = null;
-			String invoiceFileName = null;
-			final OrderModel orderModel = orderModelService.getOrder(orderCode);
-       try{
-			if (orderModel != null && orderModel.getEntries() != null)
-			{
-				for (final AbstractOrderEntryModel entry : orderModel.getEntries())
-				{
-					
-					if (StringUtils.isNotEmpty(entry.getTransactionID()) && entry.getTransactionID().equalsIgnoreCase(transactionId))
-					{
-						LOG.info("AccountPageController::::::::Line-No2642");
-						for (final ConsignmentEntryModel c : entry.getConsignmentEntries())
-						{
-							if (null != c.getConsignment().getInvoice())
-							{
-								fileDownloadLocation = c.getConsignment().getInvoice().getInvoiceUrl();
-	                     LOG.info("AccountPageController::::::::Line-No2648"+fileDownloadLocation);
-							}
-
-						}
-					}
-				}
-			}
-			File invoiceFile = new File(fileDownloadLocation);
-			String preInvoiceFileName = invoiceFile.getName();
-			LOG.info("AccountPageController::::::preInvoiceFileName::Line-No2642"+preInvoiceFileName);
-			if (!preInvoiceFileName.isEmpty())
-			{
-				final int index = preInvoiceFileName.lastIndexOf('.');
-				if (index > 0)
-				{
-					invoiceFileName = preInvoiceFileName.substring(0, index) + "_" + transactionId + "_"
-							+ new Timestamp(System.currentTimeMillis()) + "." + preInvoiceFileName.substring(index + 1);
-					LOG.info("AccountPageController::::::preInvoiceFileName::Line-No2665"+invoiceFileName);
-				}
-			}
-			if (!fileDownloadLocation.isEmpty())
-			{
-				response.setContentType("application/pdf");
-				if (null != invoiceFileName && !invoiceFileName.isEmpty())
-				{
-					response.addHeader("Content-Disposition", "attachment; file" + "name=" + invoiceFileName);
-				}
-				LOG.info("AccountPageController::::::preInvoiceFileName::Line-No2675"+invoiceFileName);
-				response.setContentLength((int) invoiceFile.length());
-				FileInputStream fileInputStream;
-				try
-				{
-					LOG.info("AccountPageController::::::preInvoiceFileName::Line-No2680"+invoiceFileName);
-					fileInputStream = new FileInputStream(invoiceFile);
-					OutputStream responseOutputStream = response.getOutputStream();
-					int bytes;
-					while ((bytes = fileInputStream.read()) != -1) 
-					{
-						responseOutputStream.write(bytes);
-					}
-					fileInputStream.close();
-					responseOutputStream.flush();
-					responseOutputStream.close();
-				}
-				catch (FileNotFoundException fileNotFoundException)
-				{
-					LOG.error("AccountPageController::FileNotFoundException" + fileNotFoundException.getMessage());
-				}
-				catch (IOException iOException)
-				{
-					LOG.error("AccountPageController::iOException" + iOException.getMessage());
-				}
-
-			}
-		}
-		catch (NullPointerException nullPointer)
-		{
-			LOG.error("AccountPageController :: Null pointer Exception" + nullPointer.getMessage());
-		}
 	}
-			
-		// Bug ID TISRLUAT-75 END
 
 	/**
 	 * @description load my profile page with all saved data (if any)
