@@ -442,12 +442,22 @@
 										</p>
 										</c:if>
 								  <!--R2.3 TISRLEE-1615- Start   -->
-									<c:if test="${not empty entry.selectedDeliverySlotDate}">
-										<p>
-										    <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>
-											<span>${entry.selectedDeliverySlotDate} ${entry.selectedDeliverySlotTimeFrom}</span>
-										</p>
-									</c:if>
+									     <c:choose>
+												   <c:when test="${not empty entry.selectedDeliverySlotDate}">
+													   <p>
+										                 <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>
+											             <span>${entry.selectedDeliverySlotDate} &nbsp;, ${entry.selectedDeliverySlotTimeFrom}</span>
+										              </p>
+												  </c:when>
+													<c:otherwise>
+													<c:if test="${not empty entry.expectedDeliveryDate}">
+														    <c:set var="deliveryDate">
+                                                                <fmt:formatDate pattern="dd-MMM-yy hh:mm a"   value="${entry.expectedDeliveryDate}" />
+                                                            </c:set>
+                                                         <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>  ${deliveryDate}  
+                                                     </c:if>
+													</c:otherwise>
+										 </c:choose>
 									<!--R2.3 TISRLEE-1615- END   -->
 											<!--  Edit button and input box for  pickup Person details -->
 											
@@ -1619,12 +1629,23 @@
 											<span>${sellerOrder.code}</span>
 										</p>
 								   <!--R2.3 TISRLEE-1615- Start   -->
-									<c:if test="${not empty entry.selectedDeliverySlotDate}">
-									   <p>
-										    <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>
-											<span>${entry.selectedDeliverySlotDate} &nbsp;, ${entry.selectedDeliverySlotTimeFrom}</span>
-										</p>
-									</c:if> 
+								             <c:choose>
+												   <c:when test="${not empty entry.selectedDeliverySlotDate}">
+													   <p>
+										                 <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>
+											             <span>${entry.selectedDeliverySlotDate} &nbsp;, ${entry.selectedDeliverySlotTimeFrom}</span>
+										              </p>
+												  </c:when>
+													<c:otherwise>
+													<c:if test="${not empty entry.expectedDeliveryDate}">
+														    <c:set var="deliveryDate">
+                                                                <fmt:formatDate pattern="dd-MMMM-yyyy"   value="${entry.expectedDeliveryDate}" />
+                                                            </c:set>
+                                                         <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>  ${deliveryDate}  
+                                                     </c:if>
+													</c:otherwise>
+											  </c:choose>
+									 
 								 <!--R2.3 TISRLEE-1615- END   -->
 											<!--  Edit button and input box for  pickup Person details -->
 											
