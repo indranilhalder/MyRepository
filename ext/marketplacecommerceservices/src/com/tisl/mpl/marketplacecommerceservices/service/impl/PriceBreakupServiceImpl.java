@@ -38,7 +38,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.PriceBreakupService#getPricebreakup(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -46,10 +46,10 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 	private Map<String, String> jewelleryAttrMapping;
 
-	private static final String BASEMETAL1 = "baseMetal1";
-	private static final String BASEMETAL2 = "baseMetal2";
-	private static final String BASEMETAL3 = "baseMetal3";
-	private static final String BASEMETAL4 = "baseMetal4";
+	private static final String GOLDVALUE = "goldValue";
+	private static final String SILVERVALUE = "silverValue";
+	private static final String PLATINUMVALUE = "platinumValue";
+	private static final String SOLITAIREVALUE = "solitaireValue";
 	private static final String DIAMOND = "diamond";
 	private static final String GEMSTONE = "gemstone";
 	private static final String WASTAGETAX = "wastagetax";
@@ -85,58 +85,58 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 		for (final JewelleryPriceRowModel jewellery : jewelleryPriceRowList)
 		{
-			if (jewellery.getBaseMetalPrice1() != null)
+			if (jewellery.getGoldValue() != null)
 			{
-				if (getJewelleryAttrMapping() != null && getJewelleryAttrMapping().containsKey(BASEMETAL1))
+				if (getJewelleryAttrMapping() != null && getJewelleryAttrMapping().containsKey(GOLDVALUE))
 				{
-					key = getJewelleryAttrMapping().get(BASEMETAL1);
+					key = getJewelleryAttrMapping().get(GOLDVALUE);
 				}
 
-				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jewellery.getBaseMetalPrice1()
-						.doubleValue()), commonI18NService.getCurrency(INR));
+				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jewellery.getGoldValue().doubleValue()),
+						commonI18NService.getCurrency(INR));
 
 				PriceMap.put(key, price);
 			}
-			if (jewellery.getBaseMetalPrice2() != null)
+			if (jewellery.getSilverValue() != null)
 			{
-				if (getJewelleryAttrMapping() != null && getJewelleryAttrMapping().containsKey(BASEMETAL2))
+				if (getJewelleryAttrMapping() != null && getJewelleryAttrMapping().containsKey(SILVERVALUE))
 				{
-					key = getJewelleryAttrMapping().get(BASEMETAL2);
+					key = getJewelleryAttrMapping().get(SILVERVALUE);
 				}
 
-				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jewellery.getBaseMetalPrice2()
-						.doubleValue()), commonI18NService.getCurrency(INR));
+				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jewellery.getSilverValue().doubleValue()),
+						commonI18NService.getCurrency(INR));
 
 				PriceMap.put(key, price);
 			}
-			if (jewellery.getBaseMetalPrice3() != null)
+			if (jewellery.getPlatinumValue() != null)
 			{
-				if (getJewelleryAttrMapping() != null && getJewelleryAttrMapping().containsKey(BASEMETAL3))
+				if (getJewelleryAttrMapping() != null && getJewelleryAttrMapping().containsKey(PLATINUMVALUE))
 				{
-					key = getJewelleryAttrMapping().get(BASEMETAL3);
+					key = getJewelleryAttrMapping().get(PLATINUMVALUE);
 				}
 
 
-				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jewellery.getBaseMetalPrice3()
-						.doubleValue()), commonI18NService.getCurrency(INR));
+				final PriceData price = createPriceSign(PriceDataType.BUY,
+						new BigDecimal(jewellery.getPlatinumValue().doubleValue()), commonI18NService.getCurrency(INR));
 
 				PriceMap.put(key, price);
 			}
-			if (jewellery.getBaseMetalPrice4() != null)
+			if (jewellery.getSolitaireValue() != null)
 			{
-				if (getJewelleryAttrMapping() != null && getJewelleryAttrMapping().containsKey(BASEMETAL4))
+				if (getJewelleryAttrMapping() != null && getJewelleryAttrMapping().containsKey(SOLITAIREVALUE))
 				{
-					key = getJewelleryAttrMapping().get(BASEMETAL4);
+					key = getJewelleryAttrMapping().get(SOLITAIREVALUE);
 				}
 
 
-				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jewellery.getBaseMetalPrice4()
-						.doubleValue()), commonI18NService.getCurrency(INR));
+				final PriceData price = createPriceSign(PriceDataType.BUY,
+						new BigDecimal(jewellery.getSolitaireValue().doubleValue()), commonI18NService.getCurrency(INR));
 
 				PriceMap.put(key, price);
 			}
 
-			if (jewellery.getDiamondtotalprice() != null)
+			if (jewellery.getTotalDiamondValue() != null)
 			{
 				if (getJewelleryAttrMapping() != null && getJewelleryAttrMapping().containsKey(DIAMOND))
 				{
@@ -144,13 +144,13 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 				}
 
 
-				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jewellery.getDiamondtotalprice()
+				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jewellery.getTotalDiamondValue()
 						.doubleValue()), commonI18NService.getCurrency(INR));
 
 				PriceMap.put(key, price);
 			}
 
-			if (jewellery.getGemstonetotalprice() != null)
+			if (jewellery.getTotalStoneValue() != null)
 			{
 				if (getJewelleryAttrMapping() != null && getJewelleryAttrMapping().containsKey(GEMSTONE))
 				{
@@ -158,25 +158,25 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 				}
 
 
-				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jewellery.getGemstonetotalprice()
+				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jewellery.getTotalStoneValue()
 						.doubleValue()), commonI18NService.getCurrency(INR));
 
 				PriceMap.put(key, price);
 			}
 
-			if (jewellery.getMakingCharge() != null)
+			if (jewellery.getMakingCharges() != null)
 			{
 				if (getJewelleryAttrMapping() != null && getJewelleryAttrMapping().containsKey(MAKINGCHARGE))
 				{
 					key = getJewelleryAttrMapping().get(MAKINGCHARGE);
 				}
 
-				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jewellery.getMakingCharge().doubleValue()),
-						commonI18NService.getCurrency(INR));
+				final PriceData price = createPriceSign(PriceDataType.BUY,
+						new BigDecimal(jewellery.getMakingCharges().doubleValue()), commonI18NService.getCurrency(INR));
 
 				PriceMap.put(key, price);
 			}
-			if (jewellery.getWastageTax() != null)
+			if (jewellery.getWastageCharges() != null)
 			{
 				if (getJewelleryAttrMapping() != null && getJewelleryAttrMapping().containsKey(WASTAGETAX))
 				{
@@ -184,8 +184,8 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 				}
 
 
-				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jewellery.getWastageTax().doubleValue()),
-						commonI18NService.getCurrency(INR));
+				final PriceData price = createPriceSign(PriceDataType.BUY,
+						new BigDecimal(jewellery.getWastageCharges().doubleValue()), commonI18NService.getCurrency(INR));
 
 				PriceMap.put(key, price);
 			}
@@ -230,35 +230,37 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 			final List<JewelleryPriceRowModel> jewelleryPriceRow = priceBreakupDao.getPricebreakup(entry.getSelectedUSSID());
 			final JewelleryPriceRowModel jewelleryModel = jewelleryPriceRow.get(0);
 			final OrderJewelEntryModel orderJewelEntryModel = modelService.create(OrderJewelEntryModel.class);
-			orderJewelEntryModel.setBaseMetalPrice1(jewelleryModel.getBaseMetalPrice1());
-			orderJewelEntryModel.setBaseMetalPrice2(jewelleryModel.getBaseMetalPrice2());
-			orderJewelEntryModel.setBaseMetalPrice3(jewelleryModel.getBaseMetalPrice3());
-			orderJewelEntryModel.setBaseMetalPrice4(jewelleryModel.getBaseMetalPrice4());
-			orderJewelEntryModel.setBaseMetalRate1(jewelleryModel.getBaseMetalPrice1());
-			orderJewelEntryModel.setBaseMetalRate2(jewelleryModel.getBaseMetalRate2());
-			orderJewelEntryModel.setBaseMetalRate3(jewelleryModel.getBaseMetalRate3());
-			orderJewelEntryModel.setBaseMetalRate4(jewelleryModel.getBaseMetalRate4());
-			orderJewelEntryModel.setDiamondPrice1(jewelleryModel.getDiamondPrice1());
-			orderJewelEntryModel.setDiamondPrice2(jewelleryModel.getDiamondPrice2());
-			orderJewelEntryModel.setDiamondPrice3(jewelleryModel.getDiamondPrice3());
-			orderJewelEntryModel.setDiamondPrice4(jewelleryModel.getDiamondPrice4());
-			orderJewelEntryModel.setDiamondPrice5(jewelleryModel.getDiamondPrice5());
-			orderJewelEntryModel.setDiamondPrice6(jewelleryModel.getDiamondPrice6());
-			orderJewelEntryModel.setDiamondPrice7(jewelleryModel.getDiamondPrice7());
-			orderJewelEntryModel.setDiamondtotalprice(jewelleryModel.getDiamondtotalprice());
-			orderJewelEntryModel.setGemStonePrice1(jewelleryModel.getGemStonePrice1());
-			orderJewelEntryModel.setGemStonePrice2(jewelleryModel.getGemStonePrice2());
-			orderJewelEntryModel.setGemStonePrice3(jewelleryModel.getGemStonePrice3());
-			orderJewelEntryModel.setGemStonePrice4(jewelleryModel.getGemStonePrice4());
-			orderJewelEntryModel.setGemStonePrice5(jewelleryModel.getGemStonePrice5());
-			orderJewelEntryModel.setGemStonePrice6(jewelleryModel.getGemStonePrice6());
-			orderJewelEntryModel.setGemStonePrice7(jewelleryModel.getGemStonePrice7());
-			orderJewelEntryModel.setGemStonePrice8(jewelleryModel.getGemStonePrice8());
-			orderJewelEntryModel.setGemStonePrice9(jewelleryModel.getGemStonePrice9());
-			orderJewelEntryModel.setGemStonePrice10(jewelleryModel.getGemStonePrice10());
-			orderJewelEntryModel.setGemstonetotalprice(jewelleryModel.getGemstonetotalprice());
-			orderJewelEntryModel.setMakingCharge(jewelleryModel.getMakingCharge());
-			orderJewelEntryModel.setWastageTax(jewelleryModel.getWastageTax());
+
+			orderJewelEntryModel.setBaseMetalPrice1(jewelleryModel.getGoldValue());
+			orderJewelEntryModel.setBaseMetalPrice2(jewelleryModel.getSilverValue());
+			orderJewelEntryModel.setBaseMetalPrice3(jewelleryModel.getPlatinumValue());
+			orderJewelEntryModel.setBaseMetalPrice4(jewelleryModel.getSolitaireValue());
+			orderJewelEntryModel.setBaseMetalRate1(jewelleryModel.getGoldRate());
+			orderJewelEntryModel.setBaseMetalRate2(jewelleryModel.getSilverRate());
+			orderJewelEntryModel.setBaseMetalRate3(jewelleryModel.getPlatinumRate());
+			orderJewelEntryModel.setBaseMetalRate4(jewelleryModel.getSolitaireRate());
+			orderJewelEntryModel.setDiamondPrice1(jewelleryModel.getDiamondValueType1());
+			orderJewelEntryModel.setDiamondPrice2(jewelleryModel.getDiamondValueType2());
+			orderJewelEntryModel.setDiamondPrice3(jewelleryModel.getDiamondValueType3());
+			orderJewelEntryModel.setDiamondPrice4(jewelleryModel.getDiamondValueType4());
+			orderJewelEntryModel.setDiamondPrice5(jewelleryModel.getDiamondValueType5());
+			orderJewelEntryModel.setDiamondPrice6(jewelleryModel.getDiamondValueType6());
+			orderJewelEntryModel.setDiamondPrice7(jewelleryModel.getDiamondValueType7());
+			orderJewelEntryModel.setDiamondtotalprice(jewelleryModel.getTotalDiamondValue());
+			orderJewelEntryModel.setGemStonePrice1(jewelleryModel.getStoneValueType1());
+			orderJewelEntryModel.setGemStonePrice2(jewelleryModel.getStoneValueType2());
+			orderJewelEntryModel.setGemStonePrice3(jewelleryModel.getStoneValueType3());
+			orderJewelEntryModel.setGemStonePrice4(jewelleryModel.getStoneValueType4());
+			orderJewelEntryModel.setGemStonePrice5(jewelleryModel.getStoneValueType5());
+			orderJewelEntryModel.setGemStonePrice6(jewelleryModel.getStoneValueType6());
+			orderJewelEntryModel.setGemStonePrice7(jewelleryModel.getStoneValueType7());
+			orderJewelEntryModel.setGemStonePrice8(jewelleryModel.getStoneValueType8());
+			orderJewelEntryModel.setGemStonePrice9(jewelleryModel.getStoneValueType9());
+			orderJewelEntryModel.setGemStonePrice10(jewelleryModel.getStoneValueType10());
+			orderJewelEntryModel.setGemstonetotalprice(jewelleryModel.getTotalStoneValue());
+			orderJewelEntryModel.setMakingCharge(jewelleryModel.getMakingCharges());
+			orderJewelEntryModel.setWastageTax(jewelleryModel.getWastageCharges());
+
 			//abstractOrderEntryModel.getOrderJewelEntry();
 			orderJewelEntryModel.setAbstractOrderEntryjewel(entry);
 			entry.setOrderJewelEntry(orderJewelEntryModel);
