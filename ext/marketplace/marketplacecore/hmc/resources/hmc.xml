@@ -723,6 +723,9 @@
 							<attribute name="invoice" />
 							<attribute name="returnAWBNum" />
 							<attribute name="returnCarrier" />
+							<!-- TPR-3809-->							
+							<attribute name="forwardSealNum" />
+							<attribute name="reverseSealNum" />  
 						</listlayout>
 					</section>
 				</tab>
