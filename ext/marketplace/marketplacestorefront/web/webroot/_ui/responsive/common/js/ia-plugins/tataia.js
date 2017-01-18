@@ -276,17 +276,23 @@ function callForEachElement(params) {
 			}
 			if (productWidget[i].indexOf("hot") === 0
 					&& site_page_type === "viewAllTrending") {
-				params.count = '100';
+				//params.count = '100';
+				  params.count = '200';
+				
 			} else {
-				params.count = '15';
+				//params.count = '15';
+				params.count = '30';
 			}
 			if (productWidget[i].indexOf("search") === 0
 					&& site_page_type === 'viewAllTrending') {
-				params.count = '100';
+				//params.count = '100';
+				 params.count = '200';
+				
 			}
 			if (productWidget[i].indexOf("search") === 0
 					&& site_page_type === 'search') {
-				params.count = '15';
+				//params.count = '15';
+				  params.count = '30';
 			}
 			params.htmlElement = productWidgetElement[i];
 			callRecApi(params, rootEP + endpoint);
@@ -299,7 +305,8 @@ function callForEachElement(params) {
 			var endpoint = '/SocialGenomix/recommendations/';
 			endpoint += brandWidget[i];
 
-			params.count = '9';
+			//params.count = '9';
+			  params.count = '18';
 			params.htmlElement = brandWidgetElement[i];
 			callRecApi(params, rootEP + endpoint);
 		}
@@ -311,7 +318,8 @@ function callForEachElement(params) {
 			var endpoint = '/SocialGenomix/recommendations/';
 			endpoint += categoryWidget[i];
 
-			params.count = '8';
+			//params.count = '8';
+			  params.count = '16';
 			if (categoryWidgetElement[i].indexOf('ia_categories_recent') > -1) {
 				params.count = '2';
 			}
