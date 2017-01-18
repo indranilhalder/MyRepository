@@ -894,12 +894,13 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	// Added for TPR-1290
 	public static final String B9332 = "B9332";
 	public static final String B9328 = "B9328";
-
+// Added in R2.3 start
 	// Auto populating pincode details Error Codes   Start
 	public static final String B9351 = "B9351";
 	public static final String B9352 = "B9352";
+	public static final String B9353 = "B9353";
 	// Auto popuklating pincode details Error Codes End
-
+	// Added in R2.3 end
 	//Mobile web service error codes ends
 
 	//Payment Error Codes

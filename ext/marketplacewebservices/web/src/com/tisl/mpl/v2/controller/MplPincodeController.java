@@ -32,6 +32,7 @@ public class MplPincodeController extends BaseCommerceController
 	private final static Logger LOG = Logger.getLogger(MplPincodeController.class);
 	private static final String PINCODE_URL = "/getPincodeData";
 	protected static final String DEFAULT_FIELD_SET = FieldSetLevelHelper.DEFAULT_LEVEL;
+	private static final String PIN_REGEX = "^[1-9][0-9]{5}";
 
 	@Autowired
 	private DataMapper dataMapper;
@@ -61,7 +62,14 @@ public class MplPincodeController extends BaseCommerceController
 		final PincodeDataWsDTO pincodeDataWsDTO = new PincodeDataWsDTO();
 		try
 		{
-			pincodeData = pincodeServiceFacade.getAutoPopulatePincodeData(pincode);
+			if(pincode.matches(PIN_REGEX)) {
+				pincodeData = pincodeServiceFacade.getAutoPopulatePincodeData(pincode);
+			}else {
+				pincodeDataWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+				pincodeDataWsDTO.setErrorCode(MarketplacecommerceservicesConstants.B9352);
+				return pincodeDataWsDTO;
+			}
+			
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{

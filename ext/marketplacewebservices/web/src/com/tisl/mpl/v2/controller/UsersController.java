@@ -186,6 +186,7 @@ import com.tisl.mpl.facades.data.MplFavBrandCategoryWsDTO;
 import com.tisl.mpl.facades.data.MplPreferenceData;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
+import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
@@ -305,8 +306,12 @@ public class UsersController extends BaseCommerceController
 	private MplCheckoutFacade mplCheckoutFacade;
 	//	@Autowired Critical Sonar fixes Unused private Field
 	//	private RegisterCustomerFacade registerCustomerFacade;
-	@Resource
-	private Populator<AddressData, AddressModel> addressReversePopulator;
+	/*R2.3 start */
+//	@Resource
+//	private Populator<AddressData, AddressModel> addressReversePopulator;
+	@Autowired
+	private CustomAddressReversePopulator addressReversePopulator;
+	/*R2.3 end */
 	@Resource
 	private Wishlist2Service wishlistService;
 
@@ -7653,23 +7658,23 @@ public class UsersController extends BaseCommerceController
 	{
 		this.mplCheckoutFacade = mplCheckoutFacade;
 	}
-
-	/**
-	 * @return the addressReversePopulator
-	 */
-	public Populator<AddressData, AddressModel> getAddressReversePopulator()
-	{
-		return addressReversePopulator;
-	}
-
-	/**
-	 * @param addressReversePopulator
-	 *           the addressReversePopulator to set
-	 */
-	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
-	{
-		this.addressReversePopulator = addressReversePopulator;
-	}
+// Commented in r2.3
+//	/**
+//	 * @return the addressReversePopulator
+//	 */
+//	public Populator<AddressData, AddressModel> getAddressReversePopulator()
+//	{
+//		return addressReversePopulator;
+//	}
+//
+//	/**
+//	 * @param addressReversePopulator
+//	 *           the addressReversePopulator to set
+//	 */
+//	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
+//	{
+//		this.addressReversePopulator = addressReversePopulator;
+//	}
 
 	/**
 	 * @return the wishlistService
