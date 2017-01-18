@@ -56,11 +56,6 @@ public class MplleadVariantWeightServiceImpl implements MplleadVariantWeightServ
 
 	private static final Integer LISTINGID = Integer.valueOf("0");
 	private static final Integer USSID = Integer.valueOf("1");
-	private static final Integer PCMUSSID = Integer.valueOf("1");
-	private static final Integer METALWEIGHT = Integer.valueOf("2");
-
-
-
 
 
 	@Override

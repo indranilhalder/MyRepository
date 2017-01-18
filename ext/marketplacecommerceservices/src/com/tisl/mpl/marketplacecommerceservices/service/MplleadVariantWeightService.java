@@ -7,7 +7,7 @@ import java.util.Map;
 
 
 /**
- * @author 344196
+ * @author TCS
  *
  */
 public interface MplleadVariantWeightService
