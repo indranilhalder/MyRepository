@@ -27,8 +27,9 @@
 						</a>
 					</div>
 					<div class="details short-info">
-						<c:if test="${not empty item.content}">
-							${item.content}  
+					<c:set var="itemContent" value="${item.content}"></c:set>
+						<c:if test="${not empty itemContent}">
+							${itemContent}  
 						</c:if>
 					</div>
 				</div>
