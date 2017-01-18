@@ -144,7 +144,8 @@
 						<label value="To Time" />
 						<timebox cols="5" format="short" id="sdTimeBoxTo"/>
 					</vlayout>
-					<vlayout>		
+					<vlayout>	
+					<label value="" />	
 						<button label="Add" id="sdPopupSave"/>
 					</vlayout>
 				</hlayout>

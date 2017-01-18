@@ -13,7 +13,7 @@
 	<style>
 		.popuped{ position: absolute; top: 0%; left: 0%; width: 100%;
 		height: 100%; background-color: black; z-index:1001;
-		-moz-opacity: 0.8; opacity:0.9; filter: alpha(opacity=80);
+		-moz-opacity: 1; opacity:1; filter: alpha(opacity=80);
 		padding: 15%; } .popuped .content{ padding: 0%;
 		background-color: white; } .popuped .close{ float:right;
 		background-color: white; border:0px; } .heading
