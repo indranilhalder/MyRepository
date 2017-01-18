@@ -133,6 +133,19 @@
 			}
 		});
 
+// added for jewellery PDP size dropdown 		
+		$("#jewelleryvariant").change(function() {
+			var url = "";
+			var selectedIndex = 0;
+			$("#jewelleryvariant option:selected").each(function() {
+				url = $(this).attr('value');
+				selectedIndex = $(this).attr("index");
+			});
+			if (selectedIndex != 0) {
+				window.location.href = url;
+			}
+		});
+
 // added in merging.....
 	// Move to wish list msg
 		//alert(localStorage.getItem("movedToWishlist_msg"));
@@ -634,6 +647,7 @@ function addToWishlist(alreadyAddedWlName_pdp) {
     if( $("#variant,#sizevariant option:selected").val()=="#"){
     	sizeSelected=false;
     }
+       
 	var dataString = 'wish=' + wishName + '&product=' + productCodePost
 			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
 
@@ -1398,7 +1412,7 @@ $( document ).ready(function() {
 	//$("#outOfStockPinCodeMsg").hide();
 	var categoryType = $("#categoryType").val();
 	var selectedSize = "";
-	if ($("#variant,#sizevariant option:selected").val() != "#") {
+	if ($("#variant,#sizevariant option:selected").val() != "#")  {
 		selectedSize = true;
 	}
 	
@@ -1449,9 +1463,9 @@ $( document ).ready(function() {
 					$(this).parent().addClass('strike');
 				//$(this).parent().css("border-color","gray");
 				$("#outOfStockId").hide();
-				
 					}
 				});
+						
 				
 				
 				/*		$(".capacity-box a").each(function(){
@@ -1471,6 +1485,31 @@ $( document ).ready(function() {
 								}
 						});
 					});
+			
+			
+			/* PRICE BREAKUP STARTS HERE */
+			
+			/*$("#showPrice").show();*/
+			if(data['displayconfigattr'] == "Yes"){
+				$("#showPrice").show();
+			}else if(data['displayconfigattr'] == "No"){
+				$("#showPrice").hide();
+			}else{
+				$("#showPrice").hide();
+			}
+			
+			var priceBreakupForPDP = data['priceBreakup'];
+				$.each(priceBreakupForPDP,function(key,value) {	
+					var pricebreakuplist = "<li><span>"+ key +"</span><strong>"+ value.formattedValue +"</strong></li>";
+						$("#showPriceBreakup").append(pricebreakuplist);
+						
+					
+			});
+			
+			
+			
+			/* PRICE BREAKUP ENDS HERE */
+			
 			if (data['sellerArticleSKU'] != undefined) {
 				if (data['errMsg'] != "") {
 
@@ -1560,7 +1599,7 @@ $( document ).ready(function() {
 								$(this).parent().addClass('strike');
 								//$("#outOfStockId").hide();
 						});
-						
+												
 					}
 					else if (allStockZero == 'Y' && data['othersSellersCount']==0 && $("#variant option").length == 0){
 						//if($("#variant,#sizevariant option:selected").val()!="#"){	//TISPRD-1173 TPR-465
@@ -1574,6 +1613,7 @@ $( document ).ready(function() {
 							//$("#outOfStockId").hide();
 							});
 						//}
+							
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").hide();
 						//TPR-805
@@ -2769,11 +2809,24 @@ function loadDefaultWishListName_SizeGuide() {
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
 		var isShowSize= $("#showSize").val();
 		var productCode=$("#product_id").val();
-		 if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage' && isShowSize=='true'){
-			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+		
+		if($("#variant li").length > 0){
+		 if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage' && isShowSize=='true') {
+			 $("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			$("#addToCartFormTitle").show();
 	 	    return false;
 	 }
+		 }
+		 //Jewellery Buy Now Button Changes added
+		if( $("#jewelleryvariant option:selected").val() == "#"  && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage' &&  isShowSize=='true'      ){
+			// alert("please select size !"+isShowSize); 
+			 
+	 		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+			$("#addToCartFormTitle").show();
+		    return false;
+	 	 }
+		
+		 
 		 //TISQAEE-64
 		 utag.link({
 				link_obj: this,
@@ -2782,6 +2835,7 @@ function loadDefaultWishListName_SizeGuide() {
 				product_sku : productCode
 			});
 		ACC.product.sendAddToBag("addToCartForm",true);
+		 
 	});
 
 	
@@ -2795,10 +2849,10 @@ function loadDefaultWishListName_SizeGuide() {
 			$("#sizevariant option:contains("+productSizeVar+")").attr('selected', true); */
 			$("#variant option").each(function() {
 				  if($(this).text().trim() == productSizeVar) {
-				    $(this).attr('selected', 'selected');            
+				    $(this).attr('selected', 'selected');    
+				    
 				  }                        
-				});
-			
+				});		
 		
 		//Other Sellers
 		$("#sizevariant option").each(function() {

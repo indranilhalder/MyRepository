@@ -837,6 +837,13 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="mplExtendedCartConverter" ref="mplExtendedCartConverter"/>
 
 	</bean>
+	
+	<!-- Jewellery Changes Added -->
+	 
+	    <bean id="priceBreakupFacade"
+		class="com.tisl.mpl.facade.product.impl.MplPriceBreakupFacadeImpl">
+	</bean> 
+	   
 		<!-- for mobility change starts -->
 	
 	<alias name="defaultAddressConverter" alias="addressConverter"/>

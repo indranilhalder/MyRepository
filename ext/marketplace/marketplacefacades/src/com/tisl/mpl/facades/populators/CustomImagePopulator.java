@@ -34,8 +34,8 @@ import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
  */
 
 
-public class CustomImagePopulator<SOURCE extends VariantProductModel, TARGET extends VariantOptionData> extends
-		VariantOptionDataPopulator
+public class CustomImagePopulator<SOURCE extends VariantProductModel, TARGET extends VariantOptionData>
+		extends VariantOptionDataPopulator
 {
 
 	protected static final Logger LOG = Logger.getLogger(CustomImagePopulator.class);
@@ -109,6 +109,7 @@ public class CustomImagePopulator<SOURCE extends VariantProductModel, TARGET ext
 			//variantOptionData.setVariantOptionQualifiers(variantOptionQualifiers);
 			variantOptionData.setCode(variantProductModel.getCode());
 			variantOptionData.setUrl(getProductModelUrlResolver().resolve(variantProductModel));
+			variantOptionData.setProductType(variantProductModel.getProductCategoryType());
 			//Stock Level wont be set for Product, as stock will be set at USSID level.All calculations will be done from Buy Box.
 			//variantOptionData.setStock(getStockConverter().convert(variantProductModel));
 
@@ -237,7 +238,8 @@ public class CustomImagePopulator<SOURCE extends VariantProductModel, TARGET ext
 		//			return picture.getMediaContainer();
 		//		}
 		//		return null;
-		return (variantProductModel != null && variantProductModel.getPicture() != null && variantProductModel.getPicture()
-				.getMediaContainer() != null) ? variantProductModel.getPicture().getMediaContainer() : null;
+		return (variantProductModel != null && variantProductModel.getPicture() != null
+				&& variantProductModel.getPicture().getMediaContainer() != null)
+						? variantProductModel.getPicture().getMediaContainer() : null;
 	}
 }

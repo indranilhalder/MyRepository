@@ -607,6 +607,8 @@ function selectWishlist_quick(i) {
 			}
 
 			else if (data == "" || data == []) {
+			
+		
 				alert("Login 2");
 				loadDefaultWishListName_quick();
 
@@ -897,15 +899,27 @@ $(document).on("click",".quickview .Emi > #EMImodal-content",function(e){
 });
 
 $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
-	
-	 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='TravelAndLuggage') {
-		 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
-		 				$("#addToCartFormQuickTitle").show();
-		  				$("#addToCartFormQuickTitle").fadeOut(5000);
- 	    return false;
- }else{			 
+
+	if($("#quickViewVariant li").length > 0){
+		 if(!$("#quickViewVariant li ").hasClass("selected")  && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='TravelAndLuggage') {
+			// alert("Please select")
+			 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+			 				$("#addToCartFormQuickTitle").show();
+			  				$("#addToCartFormQuickTitle").fadeOut(5000);
+	 	    return false;
+	     }
+		}
+	/*buynow in quickview for Jewellery  added*/
+	else if($("#quickViewjewelleryvariant option:selected").val() == "#"  && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='TravelAndLuggage') {
+	//	alert("please select size !"); 	 
+		$("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+		$("#addToCartFormQuickTitle").show();
+		$("#addToCartFormQuickTitle").fadeOut(5000);
+	    return false;
+	 }
+	 
 	ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
-}
+	
 });
 /*End of quickview Emi*/
 /*TPR-924*/
@@ -983,3 +997,45 @@ function LoadWishLists(ussid, data, productCode) {
 	
 
 }
+/*quickview dropdown added for Jewellery*/
+$(document).on('change','#quickViewjewelleryvariant',function(event){
+	
+	//console.log('here');
+	 var target = $(this).val();
+	//	console.log(target);
+		var titleHeader = $('#quickViewTitle').html();
+		$.colorbox({
+            //iframe:true,
+            href:target,
+            close:'<span class="glyphicon glyphicon-remove"></span>',
+			title: titleHeader,
+			maxWidth:"100%",
+			height:"565px",
+			onComplete: function ()
+			{
+				//TPR-690
+				var productCode = productCodeQuickView;
+				utag.link({
+					link_obj: this, 
+					link_text: 'quick_view_click' ,
+					event_type : 'quick_view_click', 
+					product_sku_quick_view : productCode
+				});
+				
+				//TPR-690 ends
+				quickviewGallery();
+				ACC.quickview.refreshScreenReaderBuffer();
+				ACC.quickview.initQuickviewLightbox();
+				ACC.ratingstars.bindRatingStars($(".quick-view-stars"));
+			},
+
+			onClosed: function ()
+			{
+				ACC.quickview.refreshScreenReaderBuffer();
+				if((window.top==window) && $("body").hasClass("page-cartPage")) {
+				    // You're not in a frame, so you reload the site.
+				    window.setTimeout('location.reload()'); 
+			     }
+			}
+        });
+});

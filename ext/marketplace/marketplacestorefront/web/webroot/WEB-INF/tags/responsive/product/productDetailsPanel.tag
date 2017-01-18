@@ -319,12 +319,19 @@ tr.d0 td {
 				</li>
 			</ul>
 		</div>
-
-<div class="tabs-block">
-				<product:productPageTabs />
-			</div>
-	</div>
 	
+	<!-- CODE MOVED HERE FOR OTHER PRODUCTS APART FROM JEWELLERY TO DISPLAY DETAILS IN TAB STARTS HERE -->
+	<c:set var="finejewellery"><spring:theme code='product.finejewellery'/></c:set>
+	<c:choose>		
+	    <c:when test ="${product.rootCategory!=finejewellery}"> 
+				<div class="tabs-block">
+					<product:productPageTabs />
+				</div>
+		</c:when> 
+	</c:choose>
+	<!-- CODE MOVED HERE FOR OTHER PRODUCTS APART FROM JEWELLERY TO DISPLAY DETAILS IN TAB ENDS HERE -->
+	
+	</div>	
 	<c:set var="electronics"><spring:theme code='product.electronics'/></c:set>
 	<c:set var="clothing"><spring:theme code='product.clothing'/></c:set>
 	<!-- TISPRO-271 Changes -->
@@ -334,6 +341,9 @@ tr.d0 td {
 	<c:set var="watches"><spring:theme code='product.watches'/></c:set>
 	<c:set var="accessories"><spring:theme code='product.fashionAccessories'/></c:set>
 	<c:set var="travelandluggage"><spring:theme code='product.travelandluggage'/></c:set>
+	
+	<%-- <c:set var="finejewellery"><spring:theme code='product.finejewellery'/></c:set> --%>
+	
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" value="${productCategoryType}" id="categoryType"/>
 	<div id="productContentDivId"></div>
@@ -342,7 +352,7 @@ tr.d0 td {
 			<div class="trending"  id="ia_products_complements"></div>
 			<div class="trending"  id="ia_products"></div>
 		</c:when>
-		<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches || product.rootCategory==travelandluggage}">
+		<c:when test="${product.rootCategory==electronics  || product.rootCategory==travelandluggage || product.rootCategory==watches}">
 			<div class="trending"  id="ia_products_bought_together"></div>
 			<div class="trending"  id="ia_products_similar"></div>
 		</c:when>
@@ -353,14 +363,13 @@ tr.d0 td {
 <!--- START: INSERTED for MSD --->
 <br/><br/>
 <c:choose>
-<c:when test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories}">
+<c:when test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories || product.rootCategory==finejewellery}">
 <div class="view-similar-items" id="view-similar-items"></div>
 </c:when>
 <c:otherwise>
 </c:otherwise> 
 </c:choose>	
-<!--- END:MSD ---> 
-	
+<!--- END:MSD --->
 <c:choose>
 <c:when test="${product.rootCategory==electronics  || product.rootCategory==watches || product.rootCategory==travelandluggage}">
 <product:productDetailsClassifications product="${product}"/>

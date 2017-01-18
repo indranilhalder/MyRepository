@@ -58,5 +58,12 @@ public interface BuyBoxService
 
 	List<ClassAttributeAssignmentModel> getClassAttrAssignmentsForCode(String code);
 
+	/**
+	 * @param sellerArticleSKUList
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 */
+	List<BuyBoxModel> getBuyboxSellerPricesForSearch(List<String> sellerArticleSKUList) throws EtailNonBusinessExceptions;
+
 
 }

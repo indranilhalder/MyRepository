@@ -60,6 +60,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CART_DELISTED_STATUS = "Cart Delisted Status :";
 	public static final String IS_BOGO_APPLIED = "isBOGOapplied";
 	public static final String BOGO_ITEM_COUNT = "bogoFreeItmCount";
+	public static final String FINEJEWELLERY = "FineJewellery";
 
 	//SONAR FIX
 	public static final String CONSIGNMENT_STATUS = " Consignment status :";
@@ -685,6 +686,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String QUANTITY_INVALID_BINDING_MESSAGE_KEY = "basket.error.quantity.invalid.binding";
 	public static final String MINIMUM_CONFIGURED_QUANTIY = "mpl.cart.minimumConfiguredQuantity.lineItem";
 	public static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
+
+
+	//added for jewellery
+
+	public static final String MINIMUM_CONFIGURED_QUANTIY_JEWELLERY = "mpl.cart.minimumConfiguredQuantityForJewellery.lineItem";
+	public static final String MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY = "mpl.cart.maximumConfiguredQuantityForJewellery.lineItem";
+
+	//end
+
 	public static final String CROSSED_MAX_LIMIT = "crossedMaxLimit";
 	public static final String REACHED_MAX_LIMIT = "reachedMaxLimit";
 	public static final String WISHLIST_DISPLAY_QUANTITY = "mpl.cart.wishlist.display.quantity";

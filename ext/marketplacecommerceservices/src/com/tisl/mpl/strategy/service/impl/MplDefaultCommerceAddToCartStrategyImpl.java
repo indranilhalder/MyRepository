@@ -138,8 +138,6 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 						cartEntryModel.setMplZoneDeliveryModeValue(MplZoneDeliveryModeValueModel);
 					}
 				}
-
-
 				getModelService().save(cartEntryModel);
 				setSellerInformationinCartEntry(cartEntryModel, productModel);
 				getCommerceCartCalculationStrategy().calculateCart(cartModel);

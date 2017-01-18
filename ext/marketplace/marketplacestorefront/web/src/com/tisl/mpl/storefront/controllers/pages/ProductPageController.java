@@ -72,6 +72,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -117,6 +118,7 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
 import com.tisl.mpl.facade.product.MplProductFacade;
+import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.RichAttributeData;
@@ -149,6 +151,7 @@ import com.tisl.mpl.util.ExceptionUtil;
 //@RequestMapping(value = "/**/p")
 public class ProductPageController extends MidPageController
 {
+
 	private static final String PRODUCT_SIZE_TYPE = "productSizeType";
 	/**
 	 *
@@ -199,6 +202,11 @@ public class ProductPageController extends MidPageController
 	 * Added by I313024 for TATAUNISTORE-15 END ::::
 	 */
 	private static final String TRAVELANDLUGGAGE = "travelandluggage";
+	/**
+	 * Added for travel and luggage
+	 */
+
+	private static final String FINEJEWELLERY = "finejewellery";
 	/**
 	 * Added for travel and luggage
 	 */
@@ -283,6 +291,10 @@ public class ProductPageController extends MidPageController
 	//TPR-978
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
+
+	// Jewellery Changes
+	@Resource(name = "priceBreakupFacade")
+	private PriceBreakupFacade priceBreakupFacade;
 
 	/**
 	 * @param buyBoxFacade
@@ -1577,7 +1589,7 @@ public class ProductPageController extends MidPageController
 	 * @throws CMSItemNotFoundException
 	 */
 
-
+	// Jewellery changes Added
 	protected void populateProductDetailForDisplay(final ProductModel productModel, final Model model,
 			final HttpServletRequest request) throws CMSItemNotFoundException
 	{
@@ -1607,7 +1619,9 @@ public class ProductPageController extends MidPageController
 			//if (productModel.getProductCategoryType().equalsIgnoreCase(ELECTRONICS))
 			if (ELECTRONICS.equalsIgnoreCase(productModel.getProductCategoryType())
 					|| WATCHES.equalsIgnoreCase(productModel.getProductCategoryType())
-					|| TRAVELANDLUGGAGE.equalsIgnoreCase(productModel.getProductCategoryType()))
+					|| TRAVELANDLUGGAGE.equalsIgnoreCase(productModel.getProductCategoryType())
+					|| FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+
 			{
 				productDetailsHelper.groupGlassificationData(productData);
 			}
@@ -1768,6 +1782,8 @@ public class ProductPageController extends MidPageController
 	 * @param productData
 	 * @param model
 	 */
+	// Jewellery changes added
+
 	private void displayConfigurableAttribute(final ProductData productData, final Model model)
 	{
 		final Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
@@ -1800,6 +1816,7 @@ public class ProductPageController extends MidPageController
 							final FeatureValueData featureValueData = featureValueList.get(0);
 							if ((ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
 									|| (ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())))
+
 							{
 
 								//								mapConfigurableAttribute.put(featureValueData.getValue(),
@@ -1824,6 +1841,7 @@ public class ProductPageController extends MidPageController
 
 							else if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory())
 									|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory())
+									|| ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory())
 									|| (ModelAttributetConstants.TRAVELANDLUGGAGE.equalsIgnoreCase(productData.getRootCategory())))
 							{
 								final String[] propertiesValues = properitsValue.split(",");
@@ -1888,7 +1906,9 @@ public class ProductPageController extends MidPageController
 			//model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
 			if (ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory())
 					|| ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())
-					|| ModelAttributetConstants.TRAVELANDLUGGAGE.equalsIgnoreCase(productData.getRootCategory()))
+					|| ModelAttributetConstants.TRAVELANDLUGGAGE.equalsIgnoreCase(productData.getRootCategory())
+					|| ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
+
 			{
 				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
 
@@ -2088,6 +2108,7 @@ public class ProductPageController extends MidPageController
 
 			{
 				final List<BuyBoxData> buyboxdata = (List<BuyBoxData>) buydata.get("buyboxList");
+
 				buyboxJson = getPopulatedBuyBoxJson(buydata, buyboxJson);
 				buyboxJson.put("buyboxList", buyboxdata);
 			}
@@ -2565,6 +2586,22 @@ public class ProductPageController extends MidPageController
 	{
 		// YTODO Auto-generated method stub
 		final BuyBoxData buyboxdata = (BuyBoxData) buydata.get("pdp_buy_box");
+
+		//PRICE BREAKUP STARTS:TPR-3752
+
+		final String displayConfigurableAttributeForPriceBreakup = displayConfigurableAttributeForPriceBreakup(buyboxdata
+				.getSellerArticleSKU());
+		LOG.debug("display " + displayConfigurableAttributeForPriceBreakup);
+
+		final LinkedHashMap<String, PriceData> PriceMap = priceBreakupFacade.getPricebreakup(buyboxdata.getSellerArticleSKU());
+
+		buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE_BREAKUP, PriceMap);
+
+		buyboxJson.put(ControllerConstants.Views.Fragments.Product.DISPLAYCONFIGATTR, displayConfigurableAttributeForPriceBreakup);
+
+
+		//PRICE BREAKUP ENDS:TPR-3752
+
 		if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
 		{
 			buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice());
@@ -2613,6 +2650,8 @@ public class ProductPageController extends MidPageController
 		}
 		return buyboxJson;
 	}
+
+
 
 	//TPR-978
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-fetchPageContents", method = RequestMethod.GET)
@@ -2805,5 +2844,57 @@ public class ProductPageController extends MidPageController
 			model.addAttribute("showSizeGuideForFA", showSizeGuideForFA);
 
 		}
+	}
+
+	/**
+	 * @param productCode
+	 * @return
+	 */
+	private String displayConfigurableAttributeForPriceBreakup(final String ussid)
+	{
+		// YTODO Auto-generated method stub
+		String displayConfigurableAttributeForPriceBreakup = "";
+		String productCode = buyBoxFacade.getpriceForUssid(ussid).getProduct();
+		if (null != productCode)
+		{
+			productCode = productCode.toUpperCase();
+		}
+
+		final ProductModel productModel = productService.getProductForCode(productCode);
+		final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
+				ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
+				//ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
+				ProductOption.GALLERY, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+
+		if (null != productData.getClassifications())
+		{
+			final List<ClassificationData> ConfigurableAttributeList = new ArrayList<ClassificationData>(
+					productData.getClassifications());
+			for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
+			{
+				if (configurableAttributData.getCode().equals("19na"))
+				{
+					final List<FeatureData> featureDataList = new ArrayList<FeatureData>(configurableAttributData.getFeatures());
+
+					for (final FeatureData featureData : featureDataList)
+					{
+						if (featureData.getCode().equals("pcmClassification/1/19na.pricebreakuponpdpfinejwlry"))
+						{
+							final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(
+									featureData.getFeatureValues());
+
+							for (final FeatureValueData featureValueData : featureValueList)
+							{
+								displayConfigurableAttributeForPriceBreakup = featureValueData.getValue();
+							}
+							LOG.debug("display price breakup on pdp :" + displayConfigurableAttributeForPriceBreakup);
+						}
+
+					}
+				}
+
+			}
+		}
+		return displayConfigurableAttributeForPriceBreakup;
 	}
 }

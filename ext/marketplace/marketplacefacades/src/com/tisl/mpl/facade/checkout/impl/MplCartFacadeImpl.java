@@ -24,6 +24,7 @@ import de.hybris.platform.commerceservices.order.CommerceCartModificationExcepti
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.converters.Converters;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -89,6 +90,7 @@ import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -106,6 +108,8 @@ import com.tisl.mpl.wsdto.GetWishListWsDTO;
 public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacade
 {
 	private static final Logger LOG = Logger.getLogger(MplCartFacadeImpl.class);
+	private static final String FINEJEWELLERY = "FineJewellery";
+
 	private ProductService productService;
 	private CartService cartService;
 	private MplCommerceCartService mplCommerceCartService;
@@ -147,6 +151,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
+
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
 
 
 	@Autowired
@@ -246,8 +253,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			{
 				if (null != abstractOrderEntryModel.getSelectedUSSID() && !abstractOrderEntryModel.getSelectedUSSID().isEmpty())
 				{
-					final String ussid = abstractOrderEntryModel.getSelectedUSSID();
-					orderEntryToUssidMap.put(abstractOrderEntryModel.getEntryNumber().toString(), ussid);
+
+					orderEntryToUssidMap.put(abstractOrderEntryModel.getEntryNumber().toString(),
+							abstractOrderEntryModel.getSelectedUSSID());
 				}
 				else
 				{
@@ -288,6 +296,21 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 										+ "seller name " + sellerInformationData.getSellername());
 								orderEntryData.setSelectedSellerInformation(sellerInformationData);
 							}
+							else if (FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
+							{
+								final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+										.getJewelleryInfoByUssid(entryNumber.getValue());
+								if (CollectionUtils.isNotEmpty(jewelleryInfo))
+								{
+									final JewelleryInformationModel infoModel = jewelleryInfo.get(0);
+									if (infoModel.getPCMUSSID().equalsIgnoreCase(sellerInformationData.getUssid()))
+									{
+										LOG.debug("got seller information data for cart line Jewellery item :"
+												+ orderEntryData.getEntryNumber() + "seller name " + sellerInformationData.getSellername());
+										orderEntryData.setSelectedSellerInformation(sellerInformationData);
+									}
+								}
+							}
 						}
 					}
 				}
@@ -301,7 +324,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	/*
 	 * @Desc fetching cartdata using session cart
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -362,6 +385,22 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 								LOG.debug("got seller information data for cart line item number " + orderEntryData.getEntryNumber()
 										+ "seller name " + sellerInformationData.getSellername());
 								orderEntryData.setSelectedSellerInformation(sellerInformationData);
+							}
+							else if (FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
+							{
+								final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+										.getJewelleryInfoByUssid(entryNumber.getValue());
+								if (CollectionUtils.isNotEmpty(jewelleryInfo))
+								{
+									final JewelleryInformationModel infoModel = jewelleryInfo.get(0);
+									if (infoModel.getPCMUSSID().equalsIgnoreCase(sellerInformationData.getUssid()))
+									{
+
+										LOG.debug("got seller information data for cart line Jewellery item :"
+												+ orderEntryData.getEntryNumber() + "seller name " + sellerInformationData.getSellername());
+										orderEntryData.setSelectedSellerInformation(sellerInformationData);
+									}
+								}
 							}
 						}
 					}
@@ -934,9 +973,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						LOG.debug("getOMSPincodeResponseData : Seller id is null or empty for product selected");
 					}
 
-					if (StringUtils.isNotEmpty(sellerData.getUssid()))
+					if (StringUtils.isNotEmpty(entryData.getSelectedUssid()))
 					{
-						pincodeServiceData.setUssid(sellerData.getUssid());
+						pincodeServiceData.setUssid(entryData.getSelectedUssid());
 					}
 					else
 					{
@@ -2080,6 +2119,26 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		}
 
 		return quantityConfigurationList;
+	}
+
+	//added for jewellery
+
+	@Override
+	public ArrayList<Integer> getQuantityConfiguratioListforJewellery() throws EtailNonBusinessExceptions
+	{
+		final int minJwlQuantity = getSiteConfigService().getInt(
+				MarketplacecommerceservicesConstants.MINIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+		final int maxJwlQuantity = getSiteConfigService().getInt(
+				MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+
+		final ArrayList<Integer> quantityConfigurationJwlList = new ArrayList<Integer>();
+
+		for (int count = minJwlQuantity; count <= maxJwlQuantity; count++)
+		{
+			quantityConfigurationJwlList.add(Integer.valueOf(count));
+		}
+
+		return quantityConfigurationJwlList;
 	}
 
 

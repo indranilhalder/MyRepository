@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "invReserve", propOrder =
-{ "USSID", "quantity", "parentUSSID", "isAFreebie", "storeId", "fulfillmentType", "deliveryMode" })
+{ "USSID", "quantity", "parentUSSID", "isAFreebie", "storeId", "fulfillmentType", "deliveryMode", "isJewellery" })
 public class InventoryReservRequest
 {
 	@XmlElement(name = "ussId")
@@ -32,6 +32,10 @@ public class InventoryReservRequest
 	private String deliveryMode;
 	@XmlElement(name = "quantity")
 	private String quantity;
+	@XmlElement(name = "isJewellery")
+	private boolean isJewellery;
+
+
 
 	/**
 	 * @return the uSSID
@@ -157,6 +161,23 @@ public class InventoryReservRequest
 	public void setQuantity(final String quantity)
 	{
 		this.quantity = quantity;
+	}
+
+	/**
+	 * @return the isJewellery
+	 */
+	public boolean isJewellery()
+	{
+		return isJewellery;
+	}
+
+	/**
+	 * @param isJewellery
+	 *           the isJewellery to set
+	 */
+	public void setJewellery(final boolean isJewellery)
+	{
+		this.isJewellery = isJewellery;
 	}
 
 

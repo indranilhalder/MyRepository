@@ -134,7 +134,10 @@ public class MarketplacecclientservicesConstants
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL = "oms.inventory.reservation.realtimecall";
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLFIRSTPHASE = "oms.inventory.reservation.mock.urlfirstxmlphase";
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLSECONDPHASE = "oms.inventory.reservation.mock.urlsecondxmlphase";
+	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLJEWELPHASE = "oms.inventory.reservation.mock.urljewelxmlphase";
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLTHIRDPHASE = "oms.inventory.reservation.mock.urlthirdxmlphase";
+	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_JEWLUSSID = "oms.inventory.reservation.mock.urljewelxmlphaseUssid";
+
 	public static final String OMS_INVENTORY_RESV_SUCCESS = "SUCCESS";
 	public static final String Y = "Y";
 	public static final String N = "N";

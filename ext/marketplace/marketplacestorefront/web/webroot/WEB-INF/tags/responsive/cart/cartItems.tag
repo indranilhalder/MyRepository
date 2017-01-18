@@ -67,7 +67,7 @@ tr.d0 td {
    
   <c:forEach items="${cartData.entries}" var="entry">
    <c:url value="${entry.product.url}" var="productUrl" />
-   <input type="hidden" value="${entry.selectedSellerInformation.ussid}" id=ussid />
+   <input type="hidden" value="${entry.selectedUssid}" id=ussid />
    <input type="hidden" value="${entry.product.code}" id="product" />
    <input type="hidden" name="hidWishlist" id="hidWishlist">
   
@@ -142,33 +142,38 @@ tr.d0 td {
 								</c:if>
 							</c:forEach>
 		                </p>
-		                
+		                <!-- TPR-3780 STARTS HERE -->
 		                <c:if test="${not empty entry.product.size}">
-		                 <p class="size"><ycommerce:testId code="cart_product_size">
-											<spring:theme code="product.variant.size"/>:&nbsp;${entry.product.size}
+		                 <p class="size disclaimer-txt more"><ycommerce:testId code="cart_product_size">
+											<spring:theme code="product.variant.size"/>:&nbsp;${entry.product.size}&nbsp;
+											<c:if test="${entry.product.rootCategory=='FineJewellery' }">
+										    	<spring:theme code="cart.price.disclaimer"/>
+		                					</c:if>
+		                						
 										</ycommerce:testId>
 										</p>
 						</c:if>
+						<!-- TPR-3780 ENDS HERE -->
 		             </div>
 		              
 		                
 		              <ul class="item-edit-details">
 		              	<c:if test="${entry.updateable}">
 		              			<c:forEach items="${entry.product.seller}" var="seller">
-								<c:if test="${seller.ussid eq entry.selectedSellerInformation.ussid }">
+								<c:if test="${seller.ussid eq entry.selectedUssid }">
 								<c:set var="stock" value="${seller.availableStock }"/>
 								</c:if>
 								</c:forEach>
 							<ycommerce:testId code="cart_product_removeProduct">
 		                  		<li> 
-			              			<a class="remove-entry-button" id="removeEntry_${entry.entryNumber}_${entry.selectedSellerInformation.ussid}"><span><spring:theme code="cart.remove"/></span></a>
+			              			<a class="remove-entry-button" id="removeEntry_${entry.entryNumber}_${entry.selectedUssid}"><span><spring:theme code="cart.remove"/></span></a>
 			              		</li>
 			              		<li><form:form name="addToCartForm" method="post" action="#" class="mybag-undo-form">
 								<input type="hidden" name="qty" value="${entry.quantity}" />
 								<input type="hidden" name=pinCodeChecked value="true" />
 								<input type="hidden" name="productCodePost" value="${entry.product.code}" />
 								<input type="hidden" name="wishlistNamePost" value="N" />
-								<input type="hidden" name="ussid" value="${entry.selectedSellerInformation.ussid}" />
+								<input type="hidden" name="ussid" value="${entry.selectedUssid}" />
 								<input type="hidden" name="stock" value="${stock}" />
 								<div class="undo-text-wrapper">
 								<p><spring:theme code="mpl.myBag.product.remove.text"/></p>
@@ -182,7 +187,7 @@ tr.d0 td {
 			           	<c:if test="${!entry.giveAway}">
 			           		<li>
                     			 <span id="addedMessage" style="display:none"></span>
-                    	 	 	<a class="move-to-wishlist-button cart_move_wishlist" id="moveEntry_${entry.entryNumber}" onclick="openPopFromCart('${entry.entryNumber}','${entry.product.code}','${entry.selectedSellerInformation.ussid}');" data-toggle="popover" data-placement='bottom'><spring:theme code="basket.move.to.wishlist"/></a>
+                    	 	 	<a class="move-to-wishlist-button cart_move_wishlist" id="moveEntry_${entry.entryNumber}" onclick="openPopFromCart('${entry.entryNumber}','${entry.product.code}','${entry.selectedUssid}');" data-toggle="popover" data-placement='bottom'><spring:theme code="basket.move.to.wishlist"/></a>
                     		</li>
 			           	</c:if>
                       </ul>
@@ -400,10 +405,10 @@ tr.d0 td {
    <!-- TISUTO-124 -->
     <c:choose>
 		<c:when test="${entry.giveAway}">
-				<li id ="${entry.selectedSellerInformation.ussid}_qty_${entry.giveAway}" class="qty">
+				<li id ="${entry.selectedUssid}_qty_${entry.giveAway}" class="qty">
 		</c:when>
 		<c:otherwise>
-				<li id ="${entry.selectedSellerInformation.ussid}_qty" class="qty">
+				<li id ="${entry.selectedUssid}_qty" class="qty">
 		</c:otherwise>	
 	</c:choose>		
    <!-- TISUTO-124 -->
@@ -412,10 +417,10 @@ tr.d0 td {
         
    <c:choose>
 		<c:when test="${entry.giveAway}">
-			<c:set var="updateFormId" value="updateCartForm${entry.selectedSellerInformation.ussid}_${entry.giveAway}" />
+			<c:set var="updateFormId" value="updateCartForm${entry.selectedUssid}_${entry.giveAway}" />
 		</c:when>
 		<c:otherwise>
-			<c:set var="updateFormId" value="updateCartForm${entry.selectedSellerInformation.ussid}" />
+			<c:set var="updateFormId" value="updateCartForm${entry.selectedUssid}" />
 		</c:otherwise>	
   </c:choose>				
     
@@ -431,7 +436,7 @@ tr.d0 td {
 											
 					<c:choose>
 							<c:when test="${price lt 0.1 && entry.giveAway}">
-								<form:select path="quantity" id="quantity_${entry.selectedSellerInformation.ussid}_${entry.giveAway}"	cssClass="update-entry-quantity-input" disabled="true" onchange="updateCart(this.id);">
+								<form:select path="quantity" id="quantity_${entry.selectedUssid}_${entry.giveAway}"	cssClass="update-entry-quantity-input" disabled="true" onchange="updateCart(this.id);">
 									<c:forEach items="${configuredQuantityList}"
 										var="quantity">
 										<form:option value="${quantity}"></form:option>
@@ -439,15 +444,23 @@ tr.d0 td {
 								</form:select>
 							</c:when>
 							<c:when test="${price lt 0.1}">
-								<form:select path="quantity" id="quantity_${entry.selectedSellerInformation.ussid}"	cssClass="update-entry-quantity-input" disabled="true" onchange="updateCart(this.id);">
+								<form:select path="quantity" id="quantity_${entry.selectedUssid}"	cssClass="update-entry-quantity-input" disabled="true" onchange="updateCart(this.id);">
 									<c:forEach items="${configuredQuantityList}"
 										var="quantity">
 										<form:option value="${quantity}"></form:option>
 									</c:forEach>
 								</form:select>
 							</c:when>
+							<c:when test="${'FineJewellery' eq entry.product.rootCategory}">
+							<form:select path="quantity" id="quantity_${entry.selectedUssid}"	cssClass="update-entry-quantity-input"  onchange="updateCart(this.id);">
+									<c:forEach items="${configuredQuantityForJewellery}"
+										var="quantity">
+										<form:option value="${quantity}"></form:option>
+									</c:forEach>
+								</form:select>
+							</c:when>
 							<c:otherwise>
-								<form:select path="quantity" id="quantity_${entry.selectedSellerInformation.ussid}"	cssClass="update-entry-quantity-input" onchange="updateCart(this.id);">
+								<form:select path="quantity" id="quantity_${entry.selectedUssid}"	cssClass="update-entry-quantity-input" onchange="updateCart(this.id);">
 									<c:forEach items="${configuredQuantityList}"
 										var="quantity">
 										<form:option value="${quantity}"></form:option>
@@ -462,17 +475,17 @@ tr.d0 td {
 		            
 	            	<c:choose>
 	            		<c:when test="${entry.giveAway}"> <!-- For Freebie item delivery mode will no tbe displayed -->
-	            			<li id ="${entry.selectedSellerInformation.ussid}_li_${entry.giveAway}" class="delivery freebie-delivery">
-	            				<ul id="${entry.selectedSellerInformation.ussid}_${entry.giveAway}">	
+	            			<li id ="${entry.selectedUssid}_li_${entry.giveAway}" class="delivery freebie-delivery">
+	            				<ul id="${entry.selectedUssid}_${entry.giveAway}">	
 						</c:when>
 						<c:otherwise>
-							<li id ="${entry.selectedSellerInformation.ussid}_li" class="delivery">
+							<li id ="${entry.selectedUssid}_li" class="delivery">
 							<p class="mobile-delivery"><spring:theme code="basket.delivery.options"/></p>
 							<!-- TPR-1458-->
 							<!-- <span class='pincodeServiceError'></span> -->
 							<!-- 1341 -->
 							<p class="cartItemBlankPincode"><spring:theme code="cart.pincode.blank"/></p>	
-							<ul id="${entry.selectedSellerInformation.ussid}">
+							<ul id="${entry.selectedUssid}">
 						</c:otherwise>
 					</c:choose>	
 	             	 
