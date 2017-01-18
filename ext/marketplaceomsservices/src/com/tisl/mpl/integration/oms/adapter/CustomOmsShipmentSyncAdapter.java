@@ -49,7 +49,6 @@ import org.springframework.beans.factory.annotation.Required;
 import com.hybris.oms.domain.order.OrderLine;
 import com.hybris.oms.domain.shipping.Shipment;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.core.model.ImeiDetailModel;
 import com.tisl.mpl.core.model.InvoiceDetailModel;
@@ -57,7 +56,6 @@ import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
 //import com.tisl.mpl.fulfilmentprocess.events.OrderRefundEvent;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCheckInvoice;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderCollectedByPersonEvent;
-
 import com.tisl.mpl.marketplaceomsservices.event.SendNotificationEvent;
 import com.tisl.mpl.marketplaceomsservices.event.SendUnCollectedOrderToCRMEvent;
 import com.tisl.mpl.marketplaceomsservices.event.UnCollectedOrderToInitiateRefundEvent;
@@ -212,6 +210,13 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					existingConsignmentModel.setReturnCarrier(line.getReverseLogisticProviderName());
 					existingConsignmentModel.setReceivedBy(line.getReceivedBy());
 					existingConsignmentModel.setCarrier(line.getLogisticProviderName());
+					//TPR-3809 changes start
+					existingConsignmentModel.setForwardSealNum("toBePopulated"); //changes
+					existingConsignmentModel.setReverseSealNum("toBePopulated"); //changes
+					//TPR-3809 changes end
+
+
+
 					if (line.getInvoiceNo() != null || line.getInvoiceUrl() != null)
 					{
 						final boolean isInvoiceToBeCreated = validateAndUpdateInvoice(existingConsignmentModel, line.getInvoiceNo(),
@@ -486,52 +491,58 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					&& shipmentNewStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
 			{
 
-				         LOG.debug("Calling cancel Initiation process started");
-								final SendUnCollectedOrderToCRMEvent sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,consignmentModel,orderModel,shipmentNewStatus);
-								final UnCollectedOrderToInitiateRefundEvent unCollectedOrderToInitiateRefundEvent= new UnCollectedOrderToInitiateRefundEvent(shipment,consignmentModel,orderModel,shipmentNewStatus,eventService,configurationService);
-								try
-								{
-									LOG.debug("Create CRM Ticket for Un-Collected Orders");
-									eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
-								}
-								catch(final Exception e)
-								{
-									LOG.error("Exception during CRM Ticket for Un-Collected Order Id >> " + orderModel.getCode()+" ::" + e.getMessage());	
-								}
-								try
-								{
-									checkConsignmentStatus=true;
-									LOG.debug("Refund Initiation  for Un-Collected Orders");
-									eventService.publishEvent(unCollectedOrderToInitiateRefundEvent);
-								}
-								catch(final Exception e)
-								{
-									LOG.error("Exception during Refund Initiation  for Un-Collected Orders >> "+ orderModel.getCode()+" ::" + e.getMessage());	
-								}
-							
-			      }
+				LOG.debug("Calling cancel Initiation process started");
+				final SendUnCollectedOrderToCRMEvent sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,
+						consignmentModel, orderModel, shipmentNewStatus);
+				final UnCollectedOrderToInitiateRefundEvent unCollectedOrderToInitiateRefundEvent = new UnCollectedOrderToInitiateRefundEvent(
+						shipment, consignmentModel, orderModel, shipmentNewStatus, eventService, configurationService);
+				try
+				{
+					LOG.debug("Create CRM Ticket for Un-Collected Orders");
+					eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("Exception during CRM Ticket for Un-Collected Order Id >> " + orderModel.getCode() + " ::"
+							+ e.getMessage());
+				}
+				try
+				{
+					checkConsignmentStatus = true;
+					LOG.debug("Refund Initiation  for Un-Collected Orders");
+					eventService.publishEvent(unCollectedOrderToInitiateRefundEvent);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("Exception during Refund Initiation  for Un-Collected Orders >> " + orderModel.getCode() + " ::"
+							+ e.getMessage());
+				}
+
+			}
 
 			if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus)
 					&& shipmentNewStatus.equals(ConsignmentStatus.ORDER_COLLECTED))
 			{
 				final OrderProcessModel orderProcessModel = new OrderProcessModel();
 				orderProcessModel.setOrder(orderModel);
-				final  OrderCollectedByPersonEvent orderCollectedByPersonEvent = new OrderCollectedByPersonEvent(orderProcessModel);
+				final OrderCollectedByPersonEvent orderCollectedByPersonEvent = new OrderCollectedByPersonEvent(orderProcessModel);
 				try
 				{
 					eventService.publishEvent(orderCollectedByPersonEvent);
-					sendOrderNotification(shipment, consignmentModel,orderModel,shipmentNewStatus);
+					sendOrderNotification(shipment, consignmentModel, orderModel, shipmentNewStatus);
 				}
 				catch (final Exception e1)
 				{
-					LOG.error("Exception during sending mail or SMS for Order Id:  >> " + orderModel.getCode()+" ::" + e1.getMessage());
+					LOG.error("Exception during sending mail or SMS for Order Id:  >> " + orderModel.getCode() + " ::"
+							+ e1.getMessage());
 				}
-				
+
 			}
-				createRefundEntry(shipmentNewStatus, consignmentModel, orderModel);
-				if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus))
+			createRefundEntry(shipmentNewStatus, consignmentModel, orderModel);
+			if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus))
+			{
+				if (!checkConsignmentStatus)
 				{
-					if(!checkConsignmentStatus){
 					LOG.info("updateConsignment:: Inside ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus) >>> shipmentCurrentStatus >>"
 							+ shipmentCurrentStatus
 							+ "<<shipmentNewStatus>>"
@@ -549,9 +560,9 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					LOG.info("****************************************Order synced succesfully - Now sending notificatioon to customer *******************");
 					//call send notification method
 					sendOrderNotification(shipment, consignmentModel, orderModel, shipmentNewStatus);
-					}
-					return true;
 				}
+				return true;
+			}
 		}
 		catch (final Exception e)
 		{
@@ -879,15 +890,15 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	 * ConsignmentModel consignment : orderModel.getConsignments()) { for (final ConsignmentEntryModel s :
 	 * consignment.getConsignmentEntries()) { if (s.getOrderEntry().getEntryNumber().equals(line.getOrderLineId())) {
 	 * return consignment; } }
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * }
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * return null; }
 	 */
 

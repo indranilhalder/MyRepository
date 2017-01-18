@@ -1,5 +1,8 @@
 package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
 
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,7 @@ import org.zkoss.zul.Span;
 import org.zkoss.zul.Toolbarbutton;
 import org.zkoss.zul.Window;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.service.MplAwbStatusService;
 import com.tisl.mpl.xml.pojo.AWBStatusResponse;
 import com.tisl.mpl.xml.pojo.AWBStatusResponse.AWBResponseInfo;
@@ -25,10 +29,13 @@ import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.widgets.ListboxWidget;
 import de.hybris.platform.cockpit.widgets.Widget;
 import de.hybris.platform.cockpit.widgets.controllers.WidgetController;
+ 
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.widgets.models.impl.DefaultMasterDetailListWidgetModel;
 import de.hybris.platform.cscockpit.widgets.popup.PopupWindowCreator;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.ConfigurableCsMasterDetailListboxWidgetRenderer;
+import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 
 public class MarketPlaceConfigurableCsMasterDetailListboxWidgetRenderer extends
@@ -54,6 +61,13 @@ public class MarketPlaceConfigurableCsMasterDetailListboxWidgetRenderer extends
 		super.populateHeaderRow(widget, row);
 		Listheader headerLabel = new Listheader("Delivery Tracking");
 		row.appendChild(headerLabel);
+		
+		 //TPR-3809 changes start
+		Listheader headerLabelForSeal = new Listheader("Forward Seal No"); 
+		Listheader headerLabelRevSeal = new Listheader("Reverse Seal No");
+		row.appendChild(headerLabelForSeal);
+		row.appendChild(headerLabelRevSeal);
+		 //TPR-3809 changes end
 		return null;
 	}
 
@@ -67,6 +81,15 @@ public class MarketPlaceConfigurableCsMasterDetailListboxWidgetRenderer extends
 		rowLabel.appendChild(tempDiv);
 		createDeliveryTrackingLink(widget, tempDiv, item);
 		row.appendChild(rowLabel);
+		
+		//TPR-3809 changes start
+			ConsignmentModel consignment = (ConsignmentModel) item.getObject(); 
+			      row.appendChild(new Listcell(consignment.getForwardSealNum())); 
+			      row.appendChild(new Listcell(consignment.getReverseSealNum())); 
+		 
+		
+		
+		//TPR-3809 changes end
 	}
 
 	private void createDeliveryTrackingLink(final Widget widget,
