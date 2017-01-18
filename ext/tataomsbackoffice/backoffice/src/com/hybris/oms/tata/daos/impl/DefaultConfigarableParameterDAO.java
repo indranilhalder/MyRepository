@@ -33,6 +33,8 @@ public class DefaultConfigarableParameterDAO implements ConfigarableParameterDAO
 	private static final String LRP_CONFIG_GET_ALLMPLBUCCONFIGARATIONS = "SELECT {p:" + MplBUCConfigurationsModel.PK + "} "//
 			+ "FROM {" + MplBUCConfigurationsModel._TYPECODE + " AS p} ";
 
+
+
 	/**
 	 * We use hybris' FlexibleSearchService for running queries against the database
 	 *
@@ -116,5 +118,25 @@ public class DefaultConfigarableParameterDAO implements ConfigarableParameterDAO
 		final MplBUCConfigurationsModel newModel = modelService.create(MplBUCConfigurationsModel.class);
 		newModel.setSdCharge(mplBucConfigurations.getSdCharge());
 		modelService.save(newModel);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.hybris.oms.tata.daos.ConfigarableParameterDAO#getScheduledCharge()
+	 */
+	@Override
+	public double getScheduledCharge()
+	{
+		final double sdCharge = 0;
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(LRP_CONFIG_GET_ALLMPLBUCCONFIGARATIONS);
+		try
+		{
+			return flexibleSearchService.<MplBUCConfigurationsModel> search(query).getResult().get(0).getSdCharge();
+		}
+		catch (final IndexOutOfBoundsException e)
+		{
+			return sdCharge;
+		}
 	}
 }

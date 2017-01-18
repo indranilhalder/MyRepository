@@ -123,4 +123,16 @@ public class DefaultConfigarableParameterFacade implements ConfigarableParameter
 		configrableParameterService.saveMplBUCConfigurations(mplBucConfigModel);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.hybris.oms.tata.facade.ConfigarableParameterFacade#getScheduledCharge()
+	 */
+	@Override
+	public double getScheduledCharge()
+	{
+
+		return configrableParameterService.getScheduledCharge();
+	}
+
 }

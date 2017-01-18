@@ -131,6 +131,8 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 		sdListbox.setModel(new ListModelList<MplTimeSlotsData>(sdTimeSlots));
 		edListbox.setModel(new ListModelList<MplTimeSlotsData>(edTimeSlots));
 		rdListbox.setModel(new ListModelList<MplTimeSlotsData>(rdTimeSlots));
+		final double sdChargeValue = configarableParameterFacade.getScheduledCharge();
+		sdCharge.setValue(sdChargeValue);
 	}
 
 	/*
