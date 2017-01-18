@@ -1996,7 +1996,8 @@
 	<bean id="mplJewelleryUtility" class="com.tisl.mpl.util.MplJewelleryUtility">
 		<property name="mplJewelleryService" ref="mplJewelleryService" />
 	</bean>
-	
+	<bean id="MplleadVariantWeightService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplleadVariantWeightServiceImpl" />
 	<!-- Jewellery Changes End -->
 
 	<!-- added for jewellery attribute mapping starts -->

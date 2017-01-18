@@ -31,7 +31,7 @@
 				<!-- default priority is 0 -->
 				<entry key="mpljewelleryprice" value="1" />
 				<entry key="mplassociation" value="2" />
-				<entry key="pcmmplassociation" value="3" />
+				<entry key="weight_variant_seller" value="3" />
 			</map>
 		</property>
 	</bean>
@@ -116,7 +116,7 @@
 	
 	 <bean id="batchMplLeadAssociationConverterMapping"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-		p:mapping="pcmmplassociation" p:converter-ref="batchLeadUssidMplAssociationConverter" />
+		p:mapping="weight_variant_seller" p:converter-ref="batchLeadUssidMplAssociationConverter" />
  	 <!-- Converters -->
  	
  	<!-- Converter for Price Import --> 
@@ -287,7 +287,7 @@
 			</property>
 		</bean>
         <bean id="batchLeadUssidMplAssociationConverter"
-		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+		class="com.tisl.mpl.dataimport.batch.converter.impl.AssociationLeadUssidConverter">
 		<property name="header">
 			<value>#{defaultImpexProductHeader}
 				$productCatalog=mplProductCatalog
