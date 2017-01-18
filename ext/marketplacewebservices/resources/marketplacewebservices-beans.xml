@@ -1341,6 +1341,7 @@
 		<property name="pickupPersonName" type="String" />
 		<property name="pickupPersonMobile" type="String" />
 		<property name="isPickupUpdatable" type="boolean" />
+		<property name="isCDA" type="boolean"/>	
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.ListPinCodeServiceData">

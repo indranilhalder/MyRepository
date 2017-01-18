@@ -23,5 +23,6 @@ public interface ConfigarableParameterFacade
 
 	public void saveMplBUCConfigurations(MplBUCConfigurationsData mplBucConfigurations);
 
+	public double getScheduledCharge();
 
 }

@@ -76,6 +76,18 @@ public class DefaultConfigarableParameterService implements ConfigrableParameter
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.hybris.oms.tata.services.ConfigrableParameterService#getScheduledCharge()
+	 */
+	@Override
+	public double getScheduledCharge()
+	{
+
+		return configarableParameterDAO.getScheduledCharge();
+	}
+
 
 
 

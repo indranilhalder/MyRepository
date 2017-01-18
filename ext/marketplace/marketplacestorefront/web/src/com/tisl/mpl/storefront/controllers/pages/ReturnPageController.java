@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
@@ -18,6 +19,7 @@ import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
@@ -28,6 +30,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1020,25 +1023,61 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	//RETURN_FILE_DOWNLOAD="/returnFileDownload";
 	@ResponseBody
 	@RequestMapping(value = RequestMappingUrlConstants.RETURN_FILE_DOWNLOAD, method = RequestMethod.GET)
-	protected void returnFileDownload(HttpServletRequest request,
+	protected void returnFileDownload(@RequestParam(ModelAttributetConstants.ORDERCODE) final String orderCode,
+			@RequestParam(ModelAttributetConstants.TRANSACTION_ID) final String transactionId,HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		String fileDownloadLocation =null;
 		String returnDownloadFileName=null;
+		 final OrderModel orderModel = orderModelService.getOrder(orderCode);
+		 LOG.debug("Return And Refund Upload File Path:+1032");
+		 if (orderModel != null && orderModel.getEntries() != null)
+			{
+				for (final AbstractOrderEntryModel entry : orderModel.getEntries())
+				{
+					if (StringUtils.isNotEmpty(entry.getTransactionID()) && entry.getTransactionID().equalsIgnoreCase(transactionId))
+					{
+						//Fetching invoice from consignment entries
+						for (final ConsignmentEntryModel c : entry.getConsignmentEntries())
+						{
+							if (null != c.getConsignment().getInvoice())
+							{
+								fileDownloadLocation = c.getConsignment().getInvoice().getInvoiceUrl();
+								if(fileDownloadLocation==null){
+									fileDownloadLocation=configurationService.getConfiguration().getString(MessageConstants.DEFAULT_INVOICE_URL);
+								}
+						}
+						else
+						{
+							 LOG.debug("Return And Refund Upload File Path:1052");
+							fileDownloadLocation = configurationService.getConfiguration().getString(
+									MessageConstants.DEFAULT_INVOICE_URL);
+						}
+						}
+					}
+				}
+			}
 		
-			// fileDownloadLocation=configurationService.getConfiguration().getString(RequestMappingUrlConstants.FILE_DOWNLOAD_PATH);
-			 fileDownloadLocation=request.getServletContext().getRealPath("/")+ModelAttributetConstants.RETURN_FILE_UPLOAD_FILE_PATH_WEB_INF
-					 +File.separator+ModelAttributetConstants.RETURN_FILE_UPLOAD_FILE_PATH_DOC+File.separator;
-			 returnDownloadFileName=ModelAttributetConstants.RETURN_FILE_UPLOAD_FILE_NAME;
-
-			 LOG.debug("Return And Refund Upload File Path:"+fileDownloadLocation);
-			 LOG.debug("Return And Refund Upload File Name:"+returnDownloadFileName);
+		final File pdfFile = new File(fileDownloadLocation);
+			if (pdfFile.exists())
+			{
+				final String preInvoiceFileName = pdfFile.getName();
+				if (!preInvoiceFileName.isEmpty())
+				{
+					final int index = preInvoiceFileName.lastIndexOf('.');
+					if (index > 0)
+					{
+						returnDownloadFileName = preInvoiceFileName.substring(0, index) + "_" + transactionId + "_"
+								+ new Timestamp(System.currentTimeMillis()) + "." + preInvoiceFileName.substring(index + 1);
+					}
+				}
+			
+			    LOG.debug("Return And Refund Upload File Path:"+fileDownloadLocation);
+			    LOG.debug("Return And Refund Upload File Name:"+returnDownloadFileName);
 	      	if( !fileDownloadLocation.isEmpty()){
 	      		response.setContentType("application/pdf");
-	      	//	PrintWriter out = response.getWriter();
 	      		if(null !=returnDownloadFileName && !returnDownloadFileName.isEmpty()){
 	      			response.addHeader("Content-Disposition", "attachment; filename=" + returnDownloadFileName);
 	      		}
-	      		File pdfFile = new File(fileDownloadLocation + returnDownloadFileName);
 	      		response.setContentLength((int) pdfFile.length());
 	      		FileInputStream fileInputStream = new FileInputStream(pdfFile);
 	      		OutputStream responseOutputStream = response.getOutputStream();
@@ -1048,9 +1087,8 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	      		}
 	      		fileInputStream.close();
 	      		responseOutputStream.flush();
-	      		responseOutputStream.close();
-	      	//	out.close();
-	      	
+	      		responseOutputStream.close();	
+	      		}
 	    }	
 	}
 	

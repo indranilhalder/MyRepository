@@ -7610,11 +7610,18 @@ public class AccountPageController extends AbstractMplSearchPageController
 			OTPResponseData otpResponse = mplDeliveryAddressFacade.validateOTP(customerData.getUid(), enteredOTPNumber);
 			if (otpResponse.getOTPValid().booleanValue())
 			{
+				//Bug Id 784
+				if(mplDeliveryAddressFacade.isDeliveryAddressChangable(orderId)){
 				//OTP is valid then call save in commerce DB and Call to OMS and CRM
 				AddressData newDeliveryAddressData = sessionService
 						.getAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
 				List<TransactionSDDto> transactionSDDtoList=null;
 				validateOTPMesg = mplDeliveryAddressFacade.submitChangeDeliveryAddress(customerData.getUid(), orderId, newDeliveryAddressData,false,transactionSDDtoList);
+				}
+				else
+				{//Bug Id 784
+					validateOTPMesg = MarketplacecommerceservicesConstants.IS_NOT_CHANABLE;
+				}
 			}
 			else
 			{

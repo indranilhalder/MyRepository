@@ -442,41 +442,41 @@ public class MplCommerceCartServiceImplTest
 
 	@Test
 	public void getReservation()
-	{final ReservationItemWsDTO itemWsDto = Mockito.mock(ReservationItemWsDTO.class);
-	  final CartSoftReservationData cartSoftReservationDataMock = Mockito.mock(CartSoftReservationData.class);
-	  final CartData cartDataMock = Mockito.mock(CartData.class);
-	  final String cartId = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter cart id
-	  final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter pincode
-	  final ReservationListWsDTO wsDto = Mockito.mock(ReservationListWsDTO.class);
-	  final List<ReservationItemWsDTO> reservationData = new ArrayList<ReservationItemWsDTO>();
-	  final String reservationStatus = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter reservation status
-	  final String USSID = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter ussid
-	  final String availableQuantity = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter available quantity
-	  itemWsDto.setAvailableQuantity(availableQuantity);
-	  itemWsDto.setUSSID(USSID);
-	  itemWsDto.setReservationStatus(reservationStatus);
-	  reservationData.add(itemWsDto);
+	{
+		final ReservationItemWsDTO itemWsDto = Mockito.mock(ReservationItemWsDTO.class);
+		final CartSoftReservationData cartSoftReservationDataMock = Mockito.mock(CartSoftReservationData.class);
+		final CartData cartDataMock = Mockito.mock(CartData.class);
+		final CartModel cartModelMock = Mockito.mock(CartModel.class);//TODO :Please enter cart Model
+		final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter pincode
+		final ReservationListWsDTO wsDto = Mockito.mock(ReservationListWsDTO.class);
+		final List<ReservationItemWsDTO> reservationData = new ArrayList<ReservationItemWsDTO>();
+		final String reservationStatus = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter reservation status
+		final String USSID = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter ussid
+		final String availableQuantity = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter available quantity
+		itemWsDto.setAvailableQuantity(availableQuantity);
+		itemWsDto.setUSSID(USSID);
+		itemWsDto.setReservationStatus(reservationStatus);
+		reservationData.add(itemWsDto);
 
-	  final List<CartSoftReservationData> cartdatalistMock = new ArrayList<CartSoftReservationData>();
+		final List<CartSoftReservationData> cartdatalistMock = new ArrayList<CartSoftReservationData>();
 
-	  final String fulfillmentType = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter fulfillment type
-	  final String deliveryMode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter delivery mode
-	  final Integer quantity = Integer.valueOf(10);
-	  final String isAFreebie = "Y";
-	  final String type = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter type
+		final String fulfillmentType = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter fulfillment type
+		final String deliveryMode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter delivery mode
+		final Integer quantity = Integer.valueOf(10);
+		final String isAFreebie = "Y";
+		final String type = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter type
 
-	  cartSoftReservationDataMock.setFulfillmentType(fulfillmentType);
-	  cartSoftReservationDataMock.setDeliveryMode(deliveryMode);
-	  cartSoftReservationDataMock.setQuantity(quantity);
-	  cartSoftReservationDataMock.setIsAFreebie(isAFreebie);
-	  cartSoftReservationDataMock.setUSSID(USSID);
+		cartSoftReservationDataMock.setFulfillmentType(fulfillmentType);
+		cartSoftReservationDataMock.setDeliveryMode(deliveryMode);
+		cartSoftReservationDataMock.setQuantity(quantity);
+		cartSoftReservationDataMock.setIsAFreebie(isAFreebie);
+		cartSoftReservationDataMock.setUSSID(USSID);
 
-	  cartdatalistMock.add(cartSoftReservationDataMock);
-	  InventoryReservListRequestWsDTO inventoryRequest = null;
-	  SalesApplication salesApplication = null;
+		cartdatalistMock.add(cartSoftReservationDataMock);
 
-	  given(mplCommerceCartServiceImpl.populateDataForSoftReservation(cartDataMock)).willReturn(cartdatalistMock);
-	  given(mplCommerceCartServiceImpl.getReservation(cartId, cartDataMock, pincode, type,inventoryRequest,salesApplication)).willReturn(wsDto);}
+		given(mplCommerceCartServiceImpl.populateDataForSoftReservation(cartDataMock)).willReturn(cartdatalistMock);
+		given(mplCommerceCartServiceImpl.getReservation(cartModelMock, pincode, type,null,null)).willReturn(wsDto);
+	}
 
 	@Test
 	public void populateDataForSoftReservation()

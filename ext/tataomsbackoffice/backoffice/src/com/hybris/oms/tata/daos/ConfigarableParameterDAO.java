@@ -22,4 +22,7 @@ public interface ConfigarableParameterDAO
 	public void saveMplTimeSlots(List<MplTimeSlotsModel> mplTimeSlots, String timeSlotType);
 
 	public void saveMplBUCConfigurations(MplBUCConfigurationsModel mplBucConfigurations);
+
+	public double getScheduledCharge();
+
 }

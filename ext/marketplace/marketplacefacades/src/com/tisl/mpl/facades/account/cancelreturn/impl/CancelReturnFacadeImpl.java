@@ -2793,10 +2793,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		CODSelfShipData codSelfShipData=null;
 		try
 		{
-		
-      MplCustomerBankAccountDetailsModel customerBankDetailsModel=mplReturnService.getCustomerBakDetailsById(customerId);
-   		
-		codSelfShipData=mplCustomerBankDetailsConverter.convert(customerBankDetailsModel);
+	         MplCustomerBankAccountDetailsModel customerBankDetailsModel=mplReturnService.getCustomerBakDetailsById(customerId);
+	      	//TISRLUAT-50
+	        if(customerBankDetailsModel != null)
+	      	{
+	      		codSelfShipData=mplCustomerBankDetailsConverter.convert(customerBankDetailsModel);
+	      	}
 		}
 		catch(Exception e)
 		{

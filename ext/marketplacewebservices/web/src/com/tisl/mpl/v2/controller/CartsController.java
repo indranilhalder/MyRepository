@@ -67,8 +67,6 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.user.AddressModel;
-import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
@@ -124,6 +122,7 @@ import com.tisl.mpl.bin.service.BinService;
 import com.tisl.mpl.cart.impl.CommerceWebServicesCartFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -2594,22 +2593,22 @@ public class CartsController extends BaseCommerceController
 			@RequestParam final String type)
 	{
 		ReservationListWsDTO reservationList = new ReservationListWsDTO();
-		CartData cartData = null;
 		CartModel cart = null;
 		try
-		{	LOG.debug("******************* Soft reservation Mobile web service ******************" + cartId + pincode);
-		cart = mplPaymentWebFacade.findCartValues(cartId);
-		if (setFreebieDeliverMode(cart))
 		{
-			cartData = getMplExtendedCartConverter().convert(cart);
-			reservationList = mplCommerceCartService.getReservation(cartId, cartData, pincode, type,item,SalesApplication.MOBILE);
-			LOG.debug("******************* Soft reservation Mobile web service response received from OMS ******************"
-					+ cartId);
+			LOG.debug("******************* Soft reservation Mobile web service ******************" + cartId + pincode);
+			cart = mplPaymentWebFacade.findCartValues(cartId);
+			if (setFreebieDeliverMode(cart))
+			{
+				reservationList = mplCommerceCartService.getReservation(cart, pincode, type,item,SalesApplication.MOBILE);
+				LOG.debug("******************* Soft reservation Mobile web service response received from OMS ******************"
+						+ cartId);
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9201);
+			}
 		}
-		else
-		{
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9201);
-		}}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
@@ -2648,120 +2647,149 @@ public class CartsController extends BaseCommerceController
 	 */
 
 	@Secured(
-			{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-			@RequestMapping(value = "/{cartId}/softReservationForPayment", method = RequestMethod.POST)
-			@ResponseBody
-			public ReservationListWsDTO getCartReservationForPayment(@PathVariable final String cartId,
-					@RequestParam final String pincode, @RequestParam final String type,
-					@RequestParam(required = false) final String bankName, @RequestParam(required = false) final String binNo,
-					@RequestParam final String paymentMode,@RequestBody final InventoryReservListRequestWsDTO item)
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/softReservationForPayment", method = RequestMethod.POST)
+	@ResponseBody
+	public ReservationListWsDTO getCartReservationForPayment(@RequestParam final String cartGuid,
+			@RequestParam final String pincode,@RequestBody final InventoryReservListRequestWsDTO item)
+	{
+		ReservationListWsDTO reservationList = new ReservationListWsDTO();
+		CartModel cart = null;
+		OrderModel orderModel = null;
+		boolean deListedStatus = false;
+		boolean delvieryModeset = false;
+		String delistMessage = MarketplacecommerceservicesConstants.EMPTY;
+		//List<PinCodeResponseData> pinCodeResponse = null;
+		try
+		{
+			//getSessionService().setAttribute(MarketplacewebservicesConstants.PAYMENTMODEFORPROMOTION, paymentMode);
+			//LOG.debug("************ Logged-in cart mobile soft reservation paymentMode **************" + paymentMode);
+			/*
+			 * if (StringUtils.isNotEmpty(bankName)) {
+			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bankName); } else { BinModel
+			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
+			 * StringUtils.isNotEmpty(bin.getBankName())) {
+			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
+			 * 
+			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
+			 * bin.getBankName()); } }
+			 */
+
+			if (StringUtils.isNotEmpty(cartGuid))
 			{
-				ReservationListWsDTO reservationList = new ReservationListWsDTO();
-				CartModel cart = null;
-				boolean deListedStatus = false;
-				boolean delvieryModeset = false;
-				String delistMessage = MarketplacecommerceservicesConstants.EMPTY;
-				//List<PinCodeResponseData> pinCodeResponse = null;
+				orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
+			}
+			if (null == orderModel)
+			{
+				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				delvieryModeset = setFreebieDeliverMode(cart);
+				LOG.debug("************ Logged-in cart mobile checking validity of promotion **************" + cartGuid);
+				if (!mplCheckoutFacade.isPromotionValid(cart))
+				{
+					//Added For TPR-1035
+					//bin = getBinService().checkBin(binNo, paymentMode, null, false);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
+				}
+				LOG.debug("************ Logged-in cart mobile promotion is valid **************" + cartGuid);
 				try
 				{
-					cart = mplPaymentWebFacade.findCartValues(cartId);
-
-					sessionService.setAttribute(MarketplacewebservicesConstants.PAYMENTMODEFORPROMOTION, paymentMode);
-
-					LOG.debug("************ Logged-in cart mobile soft reservation paymentMode **************" + paymentMode);
-
-					if (StringUtils.isNotEmpty(bankName))
-					{
-						sessionService.setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bankName);
-					}
-//					else
-//					{
-//						BinModel bin = null;
-//						if (StringUtils.isNotEmpty(binNo))
-//						{
-//							//bin = getBinService().checkBin(binNo, delistMessage, delistMessage, delvieryModeset);
-//						}
-//						if (null != bin && StringUtils.isNotEmpty(bin.getBankName()))
-//						{
-//							sessionService.setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-//
-//							LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" + bin.getBankName());
-//						}
-//
-//					}
-
-					delvieryModeset = setFreebieDeliverMode(cart);
-					LOG.debug("************ Logged-in cart mobile checking validity of promotion **************" + cartId);
-					if (!mplCheckoutFacade.isPromotionValid(cart))
-					{
-						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
-					}
-					LOG.debug("************ Logged-in cart mobile promotion is valid **************" + cartId);
-
-					try
-					{
-						LOG.debug("************ Logged-in cart mobile delisting **************" + cartId);
-						//duplicate cart fix for mobile
-						deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cart);
-						LOG.debug(MarketplacecommerceservicesConstants.CART_DELISTED_STATUS + deListedStatus);
-
-					}
-					catch (final Exception ex)
-					{
-						throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.B2002);
-					}
-
-					if (deListedStatus)
-					{
-						cart = mplCartFacade.removeDeliveryMode(cart);
-						LOG.debug("************ Logged-in cart mobile delisting success **************" + cartId);
-						delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
-						reservationList.setDelistedMessage(delistMessage);
-						reservationList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-					}
-					else
-					{
-						if (delvieryModeset)
-						{
-							final CartData cartData = getMplExtendedCartConverter().convert(cart);
-
-							reservationList = mplCommerceCartService.getReservation(cartId, cartData, pincode, type,item, SalesApplication.MOBILE);
-						}
-						else
-						{
-							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9201);
-						}
-					}
+					LOG.debug("************ Logged-in cart mobile delisting **************" + cartGuid);
+					//duplicate cart fix for mobile
+					deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cart);
+					LOG.debug(MarketplacecommerceservicesConstants.CART_DELISTED_STATUS + deListedStatus);
 				}
-				catch (final EtailNonBusinessExceptions e)
+				catch (final Exception ex)
 				{
-					ExceptionUtil.etailNonBusinessExceptionHandler(e);
-					if (null != e.getErrorMessage())
-					{
-						reservationList.setError(e.getErrorMessage());
-					}
-					if (null != e.getErrorCode())
-					{
-						reservationList.setErrorCode(e.getErrorCode());
-					}
+					throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.B2002);
+				}
+				if (deListedStatus)
+				{
+					cart = mplCartFacade.removeDeliveryMode(cart);
+					LOG.debug("************ Logged-in cart mobile delisting success **************" + cartGuid);
+					delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
+					reservationList.setDelistedMessage(delistMessage);
 					reservationList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 				}
-				catch (final EtailBusinessExceptions e)
+				if (delvieryModeset)
 				{
-					ExceptionUtil.etailBusinessExceptionHandler(e, null);
-					if (null != e.getErrorMessage())
-					{
-						reservationList.setError(e.getErrorMessage());
-					}
-					if (null != e.getErrorCode())
-					{
-						reservationList.setErrorCode(e.getErrorCode());
-					}
-					reservationList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					reservationList = mplCommerceCartService.getReservation(cart, pincode,
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING,item,SalesApplication.MOBILE);
 				}
-
-				return reservationList;
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9201);
+				}
 			}
+			else
+			{
+				delvieryModeset = setFreebieDeliverMode(orderModel);
+				LOG.debug("************ Logged-in cart mobile checking validity of promotion **************" + cartGuid);
+				if (!mplCheckoutFacade.isPromotionValid(orderModel))
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
+				}
+				LOG.debug("************ Logged-in cart mobile promotion is valid **************" + cartGuid);
+				try
+				{
+					LOG.debug("************ Logged-in cart mobile delisting **************" + cartGuid);
+					//duplicate cart fix for mobile
+					//not happen if order is already placed
+					//deListedStatus = mplCartFacade.isCartEntryDelistedMobile(orderModel);
+					LOG.debug(MarketplacecommerceservicesConstants.CART_DELISTED_STATUS + deListedStatus);
+				}
+				catch (final Exception ex)
+				{
+					throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.B2002);
+				}
+				if (deListedStatus)
+				{
+					//cart = mplCartFacade.removeDeliveryMode2(orderModel);
+					LOG.debug("************ Logged-in cart mobile delisting success **************" + cartGuid);
+					delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
+					reservationList.setDelistedMessage(delistMessage);
+					reservationList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				}
+				if (delvieryModeset)
+				{
+					reservationList = mplCommerceCartService.getReservation(orderModel, pincode,
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING,item,SalesApplication.MOBILE);
+				}
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9201);
+				}
+			}
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				reservationList.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				reservationList.setErrorCode(e.getErrorCode());
+			}
+			reservationList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				reservationList.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				reservationList.setErrorCode(e.getErrorCode());
+			}
+			reservationList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return reservationList;
+	}
 
 	/**
 	 * set freebie delivery mode

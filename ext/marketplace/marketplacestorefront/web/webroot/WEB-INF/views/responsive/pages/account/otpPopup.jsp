@@ -17,6 +17,8 @@ ${stringMessage}
 						</h2>
 
 						<div class="row messageSpace">
+						
+								<div class="error_text"></div>
 							<spring:theme code="text.accountOrderDetails.otpPopup.message"
 								arguments="${phoneNumber}" />
 						</div>
@@ -79,7 +81,13 @@ function submitOTP(orderCode){
 					$(".otpError").show();
 				if(response=="INVALID"){	
 					$(".otpError").text("Invalid OTP, Please Re-enter.");		
-				}else if(response=="Internal Server Error, Please try again later"){
+				}
+				else if(response =='isNotChangable'){
+					 $(".messageSpace .error_text").show().text("Order is no more eligible for Address change. Please contact Customer Care for any assistance");
+					   $(".submitOrange").prop('disabled',true);
+	                   $(".otpMessage").hide();
+	                }
+				else if(response=="Internal Server Error, Please try again later"){
 					$(".otpError").show();
 					$(".otpError").text(response);
 					
