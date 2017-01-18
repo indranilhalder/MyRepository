@@ -9,6 +9,7 @@ import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -69,6 +70,7 @@ import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -103,8 +105,29 @@ public class DefaultPromotionManager extends PromotionsManager
 	private MplDeliveryCostService deliveryCostService;
 	@Autowired
 	private ModelService modelService;
+	@Autowired
+	private MplJewelleryService jewelleryService;
 
 
+	//Change for FineJewellery
+	/**
+	 * @return the jewelleryService
+	 */
+	public MplJewelleryService getMplJewelleryService()
+	{
+		return jewelleryService;
+	}
+
+	/**
+	 * @param jewelleryService
+	 *           the jewelleryService to set
+	 */
+	public void setMplJewelleryService(final MplJewelleryService jewelleryService)
+	{
+		this.jewelleryService = jewelleryService;
+	}
+
+	//end FineJewellery
 	/**
 	 * @return the categoryService
 	 */
@@ -888,8 +911,21 @@ public class DefaultPromotionManager extends PromotionsManager
 				final String ussid = entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID)
 						.toString();
 				final CatalogVersionModel oModel = catalogData();
-				final List<SellerInformationModel> productSellerData = getSellerBasedPromotionService().fetchSellerInformation(ussid,
+				List<SellerInformationModel> productSellerData = getSellerBasedPromotionService().fetchSellerInformation(ussid,
 						oModel);
+				//change for FineJewellery
+				if (CollectionUtils.isEmpty(productSellerData))
+				{
+					final List<JewelleryInformationModel> jewelleryInfo = getMplJewelleryService().getJewelleryInfoByUssid(
+							entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString());
+					if (CollectionUtils.isNotEmpty(jewelleryInfo))
+					{
+						productSellerData = getSellerBasedPromotionService().fetchSellerInformation(jewelleryInfo.get(0).getPCMUSSID(),
+								oModel);
+					}
+
+				}
+				//end FineJewellery
 				flag = GenericUtilityMethods.checkSellerData(restrictionList, productSellerData);
 			}
 		}
@@ -973,6 +1009,19 @@ public class DefaultPromotionManager extends PromotionsManager
 				ussid = entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString();
 				final CatalogVersionModel oModel = catalogData();
 				productSellerData = getSellerBasedPromotionService().fetchSellerInformation(ussid, oModel);
+				//change for FineJewellery
+				if (CollectionUtils.isEmpty(productSellerData))
+				{
+					final List<JewelleryInformationModel> jewelleryInfo = getMplJewelleryService().getJewelleryInfoByUssid(
+							entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString());
+					if (CollectionUtils.isNotEmpty(jewelleryInfo))
+					{
+						productSellerData = getSellerBasedPromotionService().fetchSellerInformation(jewelleryInfo.get(0).getPCMUSSID(),
+								oModel);
+					}
+
+				}
+				//end FineJewellery
 				for (final SellerInformationModel seller : productSellerData)
 				{
 					sellerID = seller.getSellerID();
@@ -1906,18 +1955,35 @@ public class DefaultPromotionManager extends PromotionsManager
 			final List<AbstractPromotionRestriction> restrictionList, final AbstractOrderEntry entry)
 	{
 		boolean flag = false;
-
 		try
 		{
 			if (null != entry && null != entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID)
 					&& isExSellerRestrExists(restrictionList))
 			{
+
+
 				final String ussid = entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID)
 						.toString();
 				final CatalogVersionModel oModel = catalogData();
-				final List<SellerInformationModel> productSellerData = getSellerBasedPromotionService().fetchSellerInformation(ussid,
+				List<SellerInformationModel> productSellerData = getSellerBasedPromotionService().fetchSellerInformation(ussid,
 						oModel);
+				//change for FineJewellery
+				if (CollectionUtils.isEmpty(productSellerData))
+				{
+					final List<JewelleryInformationModel> jewelleryInfo = getMplJewelleryService().getJewelleryInfoByUssid(
+							entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString());
+					if (CollectionUtils.isNotEmpty(jewelleryInfo))
+					{
+						productSellerData = getSellerBasedPromotionService().fetchSellerInformation(jewelleryInfo.get(0).getPCMUSSID(),
+								oModel);
+					}
+
+				}
+				//end FineJewellery
 				flag = GenericUtilityMethods.checkExcludeSellerData(restrictionList, productSellerData);
+
+
+
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -1934,6 +2000,7 @@ public class DefaultPromotionManager extends PromotionsManager
 		}
 		return flag;
 	}
+
 
 	/**
 	 * Check if Exclude Seller Restriction Exist
