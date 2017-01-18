@@ -551,6 +551,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		 
 	}
 	
+	@SuppressWarnings("boxing")
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_UPDATE_RETURNINFO, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public String updateReturnInfo(final MplReturnInfoForm mplReturnInfoForm, final Model model,
@@ -562,7 +563,8 @@ public class ReturnPageController extends AbstractMplSearchPageController
       LOG.debug("***************:"+filename.getOriginalFilename()); 
       String fileUploadLocation=null;
       String shipmentCharge=null;
-      Double configShippingCharge=null;
+      //TISRLUAT-50
+		Double configShippingCharge = 0.0d;
       if(null!=configurationService){
       	fileUploadLocation=configurationService.getConfiguration().getString(RequestMappingUrlConstants.FILE_UPLOAD_PATH);
       	shipmentCharge=configurationService.getConfiguration().getString(RequestMappingUrlConstants.SHIPMENT_CHARGE_AMOUNT);
@@ -1026,12 +1028,13 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	protected void returnFileDownload(@RequestParam(ModelAttributetConstants.ORDERCODE) final String orderCode,
 			@RequestParam(ModelAttributetConstants.TRANSACTION_ID) final String transactionId,HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		try{
-		String fileDownloadLocation =null;
-		String returnDownloadFileName=null;
-		 final OrderModel orderModel = orderModelService.getOrder(orderCode);
-		 LOG.debug("Return And Refund Upload File Path:+1032");
-		 if (orderModel != null && orderModel.getEntries() != null)
+		try
+		{
+			String fileDownloadLocation = null;
+			String returnDownloadFileName = null;
+			final OrderModel orderModel = orderModelService.getOrder(orderCode);
+			LOG.debug("Return And Refund Upload File Path:+1032");
+			if (orderModel != null && orderModel.getEntries() != null)
 			{
 				for (final AbstractOrderEntryModel entry : orderModel.getEntries())
 				{
@@ -1043,54 +1046,89 @@ public class ReturnPageController extends AbstractMplSearchPageController
 							if (null != c.getConsignment().getInvoice())
 							{
 								fileDownloadLocation = c.getConsignment().getInvoice().getInvoiceUrl();
-								if(fileDownloadLocation==null){
-									fileDownloadLocation=configurationService.getConfiguration().getString(MessageConstants.DEFAULT_INVOICE_URL);
+								LOG.info("ReturnPageController:::::::InvoiceURL    " + fileDownloadLocation);
+								if (fileDownloadLocation == null)
+								{
+									fileDownloadLocation = configurationService.getConfiguration().getString(
+											MessageConstants.DEFAULT_INVOICE_URL);
+									LOG.info("ReturnPageController::::::: Properties Url   " + fileDownloadLocation);
 								}
-						}
-						else
-						{
-							 LOG.debug("Return And Refund Upload File Path:1052");
-							fileDownloadLocation = configurationService.getConfiguration().getString(
-									MessageConstants.DEFAULT_INVOICE_URL);
-						}
+							}
+							else
+							{
+								LOG.debug("Return c.getConsignment().getInvoice():::Null");
+								fileDownloadLocation = configurationService.getConfiguration().getString(
+										MessageConstants.DEFAULT_INVOICE_URL);
+								LOG.info("ReturnPageController:::::::  Properties Url " + fileDownloadLocation);
+							}
 						}
 					}
 				}
 			}
-		
-		final File pdfFile = new File(fileDownloadLocation);
-			if (pdfFile.exists())
-			{
-				final String preInvoiceFileName = pdfFile.getName();
-				if (!preInvoiceFileName.isEmpty())
-				{
-					final int index = preInvoiceFileName.lastIndexOf('.');
-					if (index > 0)
-					{
-						returnDownloadFileName = preInvoiceFileName.substring(0, index) + "_" + transactionId + "_"
-								+ new Timestamp(System.currentTimeMillis()) + "." + preInvoiceFileName.substring(index + 1);
-					}
-				}
 			
-			    LOG.debug("Return And Refund Upload File Path:"+fileDownloadLocation);
-			    LOG.debug("Return And Refund Upload File Name:"+returnDownloadFileName);
-	      	if( !fileDownloadLocation.isEmpty()){
-	      		response.setContentType("application/pdf");
-	      		if(null !=returnDownloadFileName && !returnDownloadFileName.isEmpty()){
-	      			response.addHeader("Content-Disposition", "attachment; filename=" + returnDownloadFileName);
-	      		}
-	      		response.setContentLength((int) pdfFile.length());
-	      		FileInputStream fileInputStream = new FileInputStream(pdfFile);
-	      		OutputStream responseOutputStream = response.getOutputStream();
-	      		int bytes;
-	      		while ((bytes = fileInputStream.read()) != -1) {
-	      			responseOutputStream.write(bytes);
-	      		}
-	      		fileInputStream.close();
-	      		responseOutputStream.flush();
-	      		responseOutputStream.close();	
-	      		}
-	    }	
+			if (fileDownloadLocation == null)
+			{
+				fileDownloadLocation = request.getServletContext().getRealPath("/")
+						+ ModelAttributetConstants.RETURN_FILE_UPLOAD_FILE_PATH_WEB_INF + File.separator
+						+ ModelAttributetConstants.RETURN_FILE_UPLOAD_FILE_PATH_DOC + File.separator;
+				returnDownloadFileName = ModelAttributetConstants.RETURN_FILE_UPLOAD_FILE_NAME;
+				fileDownloadLocation = fileDownloadLocation.concat(returnDownloadFileName);
+			}
+			
+			if (fileDownloadLocation != null)
+			{
+				File pdfFile = new File(fileDownloadLocation);
+				if (pdfFile.exists())
+				{
+					LOG.debug("Return page controller: inside file available  " + fileDownloadLocation);
+					final String preInvoiceFileName = pdfFile.getName();
+					try
+					{
+						if (!preInvoiceFileName.isEmpty())
+						{
+							final int index = preInvoiceFileName.lastIndexOf('.');
+							if (index > 0)
+							{
+								returnDownloadFileName = preInvoiceFileName.substring(0, index) + "_" + transactionId + "_"
+										+ new Timestamp(System.currentTimeMillis()) + "." + preInvoiceFileName.substring(index + 1);
+							}
+						}
+					}
+					catch (Exception exception)
+					{
+						LOG.error("Exception oucre getting file name" + exception.getMessage());
+					}
+					LOG.debug("Return And Refund Upload File Name:" + returnDownloadFileName);
+					if (!fileDownloadLocation.isEmpty())
+					{
+						response.setContentType("application/pdf");
+						if (null != returnDownloadFileName && !returnDownloadFileName.isEmpty())
+						{
+							response.addHeader("Content-Disposition", "attachment; filename=" + returnDownloadFileName);
+						}
+						response.setContentLength((int) pdfFile.length());
+						FileInputStream fileInputStream = new FileInputStream(pdfFile);
+						OutputStream responseOutputStream = response.getOutputStream();
+						int bytes;
+						while ((bytes = fileInputStream.read()) != -1)
+						{
+							responseOutputStream.write(bytes);
+						}
+						fileInputStream.close();
+						responseOutputStream.flush();
+						responseOutputStream.close();
+					}
+
+				}
+				else
+				{
+					LOG.info("Return And Refund Upload File :::Not available LineNo 1108");
+				}
+			}
+			else
+			{
+				LOG.info("Return And Refund Upload File Path Not available LineNo 1113 ");
+			}
 		}
 		catch (NullPointerException nullPointer)
 		{
