@@ -237,7 +237,7 @@ public interface MplCommerceCartService
 	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
-	ReservationListWsDTO getReservation(final String cartId, final CartData cartData, final String pincode, final String type,final InventoryReservListRequestWsDTO cartItems,SalesApplication salesApplication)
+	ReservationListWsDTO getReservation(final AbstractOrderModel cartModel, final String pincode, final String type,InventoryReservListRequestWsDTO item, SalesApplication mobile)
 			throws EtailNonBusinessExceptions;
 
 	/*

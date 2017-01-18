@@ -2364,33 +2364,23 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public ReservationListWsDTO getReservation(final String cartId, final CartData cartData, final String pincode,
-			final String type,final InventoryReservListRequestWsDTO inventoryRequest, SalesApplication salesApplication) throws EtailNonBusinessExceptions
+	public ReservationListWsDTO getReservation(final AbstractOrderModel abstractOrderModel, final String pincode,
+			final String requestType, final InventoryReservListRequestWsDTO inventoryRequest, SalesApplication salesApplication) throws EtailNonBusinessExceptions
 	{
-
 		final ReservationListWsDTO wsDto = new ReservationListWsDTO();
 		InventoryReservListResponse inventoryReservListResponse = null;
-		List<CartSoftReservationData> cartdatalist = null;
+		List<ReservationItemWsDTO> reservationData = new ArrayList<ReservationItemWsDTO>();
+		final String cartGuid = "";
+		final List<CartSoftReservationData> cartSoftForCncReservationDatalist = new ArrayList<CartSoftReservationData>();
 		try
 		{
-			if (cartId != null && cartData != null && pincode != null)
+			final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel,inventoryRequest,salesApplication);
+			if (requestType != null && CollectionUtils.isNotEmpty(cartSoftReservationDatalist) && pincode != null)
 			{
-				List<ReservationItemWsDTO> reservationData = new ArrayList<ReservationItemWsDTO>();
-				final FlexibleSearchService flexibleSearchService = Registry.getApplicationContext().getBean(
-						FlexibleSearchService.class);
-
-				AbstractOrderModel cartModel = new AbstractOrderModel();
-				cartModel.setCode(cartId);
-
-				cartModel = flexibleSearchService.getModelByExample(cartModel);
-				final String cartGuid = cartModel.getGuid();
-
 				try
 				{
-					cartdatalist = populateDataForSoftReservation(cartModel,inventoryRequest,salesApplication);
-					inventoryReservListResponse = getInventoryReservationService().convertDatatoWsdto(cartdatalist, cartGuid, pincode,
-							type);
-					LOG.debug("inventoryReservListResponse Mobile###############################" + inventoryReservListResponse);
+					inventoryReservListResponse = getInventoryReservationService().convertDatatoWsdto(cartSoftReservationDatalist,
+							abstractOrderModel.getGuid(), pincode, requestType);
 				}
 				catch (final ClientEtailNonBusinessExceptions e)
 				{
@@ -2401,15 +2391,35 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 									|| MarketplacecclientservicesConstants.O0004_EXCEP.equalsIgnoreCase(e.getErrorCode()) || MarketplacecclientservicesConstants.O0007_EXCEP
 										.equalsIgnoreCase(e.getErrorCode())))
 					{
-						inventoryReservListResponse = callInventoryReservationCommerce(cartdatalist);
+						//prepare cartSoftReservationData object only for HD and Ed
+						//skip reservation call for cnc
+						int cncModeCount = 0;
+						for (final CartSoftReservationData cartSoftReservationData : cartSoftReservationDatalist)
+						{
+							if (null != cartSoftReservationData
+									&& !cartSoftReservationData.getDeliveryMode().equalsIgnoreCase(
+											MarketplacecommerceservicesConstants.CnC))
+							{
+								cartSoftForCncReservationDatalist.add(cartSoftReservationData);
+							}
+							else
+							{
+								cncModeCount++;
+							}
+						}
+						LOG.debug("inventoryReservListResponse cncModeCount: " + cncModeCount);
+						/*
+						 * if (CollectionUtils.isNotEmpty(cartSoftReservationDatalist) && (cartSoftReservationDatalist.size()
+						 * == cncModeCount)) { inventoryReservationStatus = true; }
+						 */
+						if (cartSoftForCncReservationDatalist.size() > 0)
+						{
+							inventoryReservListResponse = callInventoryReservationCommerce(cartSoftForCncReservationDatalist);
+						}
 					}
 				}
-				catch (final Exception e)
-				{
-					LOG.debug("inventoryReservListResponse Mobile OMS fail for cart###############################" + cartId);
-					throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9201);
-				}
 
+				LOG.debug("inventoryReservListResponse " + inventoryReservListResponse);
 				if (inventoryReservListResponse != null)
 				{
 					reservationData = converter(inventoryReservListResponse);
@@ -2427,22 +2437,26 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							}
 							else
 							{
-								LOG.debug("Inventory reservationData for Mobile from OMS is not success ###### =" + cartId);
+								LOG.debug("Inventory reservationData for Mobile from OMS is not success ###### =" + cartGuid);
 								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
 							}
 						}
 					}
 					else
 					{
-						LOG.debug("Inventory reservationData for Mobile from OMS is empty###### =" + cartId);
+						LOG.debug("Inventory reservationData for Mobile from OMS is empty###### =" + cartGuid);
 						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
 					}
 				}
 				else
 				{
-					LOG.debug("InventoryReservListResponse for mobile is null ##### =" + cartId);
+					LOG.debug("InventoryReservListResponse for mobile is null ##### =" + cartGuid);
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
 				}
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
 			}
 		}
 		catch (final Exception e)
@@ -3446,7 +3460,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	public boolean isInventoryReserved(final AbstractOrderModel abstractOrderModel, final String requestType,
 			final String defaultPinCodeId) throws EtailNonBusinessExceptions
 	{
-		final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel,null,SalesApplication.WEB);
+		final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel,null,
+				SalesApplication.WEB);
 		final List<CartSoftReservationData> cartSoftForCncReservationDatalist = new ArrayList<CartSoftReservationData>();
 
 
@@ -3634,15 +3649,17 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @throws EtailNonBusinessExceptions
 	 */
 
-	private List<CartSoftReservationData> populateDataForSoftReservation(final AbstractOrderModel abstractOrderModel, InventoryReservListRequestWsDTO inventoryRequest,SalesApplication salesApplication)
+	private List<CartSoftReservationData> populateDataForSoftReservation(final AbstractOrderModel abstractOrderModel,
+			final InventoryReservListRequestWsDTO inventoryRequest, final SalesApplication salesApplication)
 			throws EtailNonBusinessExceptions
 	{
-		 List<PinCodeResponseData> pincoderesponseDataList = null;
-		  if(null != salesApplication && salesApplication.equals(SalesApplication.WEB)){
-			   pincoderesponseDataList = getSessionService().getAttribute(
-						MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
-		  }
-		
+		List<PinCodeResponseData> pincoderesponseDataList = null;
+		if (null != salesApplication && salesApplication.equals(SalesApplication.WEB))
+		{
+			pincoderesponseDataList = getSessionService().getAttribute(
+					MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
+		}
+
 		LOG.debug("******responceData******** " + pincoderesponseDataList);
 		CartSoftReservationData cartSoftReservationData = null;
 		final List<CartSoftReservationData> cartSoftReservationDataList = new ArrayList<CartSoftReservationData>();
@@ -3825,8 +3842,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 										&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
 								{
 									String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
-									if(fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.BOTH)) {
-										if(null != richAttributeModel.get(0).getDeliveryFulfillModeByP1()) {
+									if(fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.BOTH)){
+										if(null != richAttributeModel.get(0).getDeliveryFulfillModeByP1()){
 											fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode();
 										}
 									}
