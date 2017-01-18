@@ -74,8 +74,8 @@ public interface MplCartWebService
 	 * @throws EtailBusinessExceptions
 	 * @throws EtailNonBusinessExceptions
 	 */
-	List<GetWishListProductWsDTO> freeItems(List<AbstractOrderEntryModel> aoem) throws EtailBusinessExceptions,
-			EtailNonBusinessExceptions;
+	List<GetWishListProductWsDTO> freeItems(List<AbstractOrderEntryModel> aoem)
+			throws EtailBusinessExceptions, EtailNonBusinessExceptions;
 
 	/**
 	 * Service to get product details
@@ -147,4 +147,6 @@ public interface MplCartWebService
 	 */
 	public CartDataDetailsWsDTO displayOrderSummary(final String pincode, final OrderModel cartModel,
 			final CartDataDetailsWsDTO cartDetailsData);
+	
+	public CartModel removeDeliveryMode(CartModel cart);
 }

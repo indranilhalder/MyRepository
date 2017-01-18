@@ -931,7 +931,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					if (resetReqd)
 					{
 						finalCart = mplCartFacade.removeDeliveryMode(finalCart);
-						
+
 					}
 					else
 					{
@@ -942,9 +942,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				{
 					if (resetReqd)
 					{
-						mplCartFacade.removeDeliveryMode2(finalCart);
+						removeDeliveryMode(finalCart);
 					}
-		
 				}
 				//for TPR-3823
 				mplCartFacade.totalMrpCal(finalCart);
@@ -2579,6 +2578,43 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 		}
 		return deliveryModeDataMap;
+	}
+
+	@Override
+	public CartModel removeDeliveryMode(final CartModel cart)
+	{
+		boolean reCalculationRequired = false;
+		boolean deliverypointOfService = false;
+		try
+		{
+			final List<AbstractOrderEntryModel> entryList = cart.getEntries();
+			if (CollectionUtils.isNotEmpty(entryList))
+			{
+				for (final AbstractOrderEntryModel entry : entryList)
+				{
+					if (entry.getMplDeliveryMode() != null)
+					{
+						entry.setMplDeliveryMode(null);
+						reCalculationRequired = true;
+					}
+					if (entry.getDeliveryPointOfService() != null)
+					{
+						entry.setDeliveryPointOfService(null);
+						deliverypointOfService = true;
+					}
+				}
+			}
+			if (reCalculationRequired || deliverypointOfService) //TISPT-104
+			{
+				modelService.saveAll(entryList);
+			}
+			modelService.save(cart);
+		}
+		catch (final Exception e)
+		{
+			LOG.info("Some issue may be happend while removing Dellivery mode from Cart to remove Delivery Specific promotion", e);
+		}
+		return cart;
 	}
 
 	/**
