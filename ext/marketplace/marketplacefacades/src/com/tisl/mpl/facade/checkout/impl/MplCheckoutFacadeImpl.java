@@ -9,6 +9,7 @@ import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.order.impl.DefaultCheckoutFacade;
+import de.hybris.platform.commercefacades.product.data.DeliveryDetailsData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
@@ -998,6 +999,12 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			throws EtailNonBusinessExceptions
 	{
 
+		 List<PinCodeResponseData> pincoderesponseDataList = null;
+			   pincoderesponseDataList = getSessionService().getAttribute(
+						MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
+		  
+		LOG.debug("******responceData******** " + pincoderesponseDataList);
+		
 		if (!deliveryModeDataMap.isEmpty() && cartData != null)
 		{
 			String tshipThresholdValue = getConfigurationServiceDetails().getConfiguration().getString(
@@ -1012,7 +1019,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 				for (final MarketplaceDeliveryModeData marketplaceDeliveryModeData : list)
 				{
-					final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+					/*final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 							marketplaceDeliveryModeData.getSellerArticleSKU());
 					if (sellerInfoModel != null
 							&& CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute())
@@ -1022,7 +1029,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 									.getCode())
 					{
 						final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-								.getDeliveryFulfillModes().getCode();
+								.getDeliveryFulfillModes().getCode();*/
 
 						//	if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE))
 						//	{
@@ -1031,14 +1038,32 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 						//	}
 
 						// For Release 1 , TShip delivery cost will always be zero . Hence , commneting the below code which check configuration from HAC
-						if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE)
+					if(null != pincoderesponseDataList && pincoderesponseDataList.size()>0){
+							for (final PinCodeResponseData responseData : pincoderesponseDataList)
+							{
+								if (marketplaceDeliveryModeData.getSellerArticleSKU().equals(responseData.getUssid()))
+								{
+									for (final DeliveryDetailsData detailsData : responseData.getValidDeliveryModes())
+									{
+											if (null != detailsData.getFulfilmentType() && detailsData.getFulfilmentType().equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE)
+													&& cartData.getTotalPrice().getValue().doubleValue() > Double.parseDouble(tshipThresholdValue))
+
+											{
+												marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
+														Double.valueOf(0.0)));
+											}
+									}
+								}
+							}
+					}
+						/*if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE)
 								&& cartData.getTotalPrice().getValue().doubleValue() > Double.parseDouble(tshipThresholdValue))
 
 						{
 							marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
 									Double.valueOf(0.0)));
-						}
-					}
+						}*/
+				//	}
 				}
 			}
 		}
