@@ -13,6 +13,7 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commerceservices.converter.Converters;
+import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
@@ -22,7 +23,6 @@ import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,7 +60,7 @@ import com.tisl.mpl.util.ExceptionUtil;
 
 /**
  * @author Techouts
- * 
+ *
  */
 public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 {
@@ -78,17 +78,17 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	private MplConfigService mplConfigService;
 
 	private Converters converters;
-	
-	@Resource(name="pointOfServiceConverter")
+
+	@Resource(name = "pointOfServiceConverter")
 	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
-	
+
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
 
 
 	/**
 	 * This method is used to check pincode is serviceable are not
-	 * 
+	 *
 	 * @param pincode
 	 * @param productCode
 	 * @return boolean value is serviceable
@@ -104,30 +104,31 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			List<PinCodeResponseData> response = null;
 			//call to commerce db to get the latitude and longitude
 			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
-			if( null != pinCodeModelObj){
-			
-			final LocationDTO dto = new LocationDTO();
-			dto.setLongitude(pinCodeModelObj.getLongitude().toString());
-			dto.setLatitude(pinCodeModelObj.getLatitude().toString());
-			final Location myLocation = new LocationDtoWrapper(dto);
-			LOG.debug("Selected Location for Latitude..:" + myLocation.getGPS().getDecimalLatitude());
-			LOG.debug("Selected Location for Longitude..:" + myLocation.getGPS().getDecimalLongitude());
-			response = pinCodeFacade.getResonseForPinCode(productCode, pincode,
-					populatePinCodeServiceData(productCode, myLocation.getGPS()));
-
-			for (final PinCodeResponseData pinCodeResData : response)
+			if (null != pinCodeModelObj)
 			{
-				for (final DeliveryDetailsData deliveryData : pinCodeResData.getValidDeliveryModes())
+
+				final LocationDTO dto = new LocationDTO();
+				dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+				dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+				final Location myLocation = new LocationDtoWrapper(dto);
+				LOG.debug("Selected Location for Latitude..:" + myLocation.getGPS().getDecimalLatitude());
+				LOG.debug("Selected Location for Longitude..:" + myLocation.getGPS().getDecimalLongitude());
+				response = pinCodeFacade.getResonseForPinCode(productCode, pincode,
+						populatePinCodeServiceData(productCode, myLocation.getGPS()));
+
+				for (final PinCodeResponseData pinCodeResData : response)
 				{
-					LOG.info("Type:" + deliveryData.getType() + "---Inventory" + deliveryData.getInventory());
-					if (deliveryData.getType().equalsIgnoreCase("CNC"))
+					for (final DeliveryDetailsData deliveryData : pinCodeResData.getValidDeliveryModes())
 					{
-						ckeckClicNcollect = true;
+						LOG.info("Type:" + deliveryData.getType() + "---Inventory" + deliveryData.getInventory());
+						if (deliveryData.getType().equalsIgnoreCase("CNC"))
+						{
+							ckeckClicNcollect = true;
+						}
 					}
 				}
+				return ckeckClicNcollect;
 			}
-			return ckeckClicNcollect;
-		 }
 		}
 		catch (final Exception e)
 		{
@@ -141,7 +142,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 
 	/**
 	 * This method is used to prepare Storelocator response data
-	 * 
+	 *
 	 * @param pincode
 	 * @param sellerUssId
 	 * @param productCode
@@ -149,37 +150,40 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	 */
 	@Override
 	public List<StoreLocationResponseData> getListofStoreLocationsforPincode(final String pincode, final String sellerUssId,
-			final String productCode)
+			final String productCode, final CartModel cartModel)
 	{
 		List<StoreLocationResponseData> storeLocationResponseDataList = null;
 		try
 		{
 			final List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
 			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
-			if (null != pinCodeModelObj){
-			
-			final LocationDTO dto = new LocationDTO();
-			dto.setLongitude(pinCodeModelObj.getLongitude().toString());
-			dto.setLatitude(pinCodeModelObj.getLatitude().toString());
-			final Location myLocation = new LocationDtoWrapper(dto);
-
-			final StoreLocationRequestData storeLocationRequestData = papulateClicknCollectRequestData(sellerUssId,
-					myLocation.getGPS());
-			if(null!= storeLocationRequestData)
+			if (null != pinCodeModelObj)
 			{
-   			storeLocationRequestDataList.add(storeLocationRequestData);
-   			//call to OMS get the storelocations for given pincode
-   			storeLocationResponseDataList = mplCartFacade.getStoreLocationsforCnC(storeLocationRequestDataList);
-   			return storeLocationResponseDataList;
+
+				final LocationDTO dto = new LocationDTO();
+				dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+				dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+				final Location myLocation = new LocationDtoWrapper(dto);
+
+				final StoreLocationRequestData storeLocationRequestData = papulateClicknCollectRequestData(sellerUssId,
+						myLocation.getGPS());
+				if (null != storeLocationRequestData)
+				{
+					storeLocationRequestDataList.add(storeLocationRequestData);
+					//call to OMS get the storelocations for given pincode
+					storeLocationResponseDataList = mplCartFacade.getStoreLocationsforCnC(storeLocationRequestDataList, cartModel);
+					return storeLocationResponseDataList;
+				}
+				else
+				{
+					return storeLocationResponseDataList;
+				}
 			}
 			else
 			{
-				return storeLocationResponseDataList;
+				LOG.error(" pincode model not found for given pincode " + pincode);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9516);
 			}
-		 }else{
-			 LOG.error(" pincode model not found for given pincode "+pincode);
-			 throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9516);
-		 }
 		}
 		catch (final Exception e)
 		{
@@ -189,7 +193,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 
 	/**
 	 * This methd prepares request data to send to oms for cnc.
-	 * 
+	 *
 	 * @param sellerUssId
 	 * @param gps
 	 * @param configurableRadius
@@ -200,82 +204,90 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 		StoreLocationRequestData storeLocationRequestData = null;
 		try
 		{
-		LOG.debug("sellerUssId:" + sellerUssId);
-		final String pincodeSellerId = sellerUssId.substring(0, 6);
+			LOG.debug("sellerUssId:" + sellerUssId);
+			final String pincodeSellerId = sellerUssId.substring(0, 6);
 			final String configRadius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
 			final double configurableRadius = Double.parseDouble(configRadius);
 			LOG.debug("**********configrableRadius:" + configurableRadius);
-		final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius, pincodeSellerId);
-		LOG.debug("StoreList size is :" + storeList.size());
-		if (CollectionUtils.isNotEmpty(storeList))
-		{
-			storeLocationRequestData = new StoreLocationRequestData();
-			final List<String> locationList = new ArrayList<String>();
-			for (final Location location : storeList)
+			final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius, pincodeSellerId);
+			LOG.debug("StoreList size is :" + storeList.size());
+			if (CollectionUtils.isNotEmpty(storeList))
 			{
-				locationList.add(location.getName());
-			}
-			storeLocationRequestData.setStoreId(locationList);
-		}else{
-			return storeLocationRequestData;
-		}
-		//populate newly added fields
-		//get SellerInfo based on sellerUssid
-		final SellerInformationModel sellerInfoModel = mplSellerInformationService
-						.getSellerDetail(sellerUssId);
-		ProductModel productModel = null;
-		ProductData productData = null;
-		if (null != sellerInfoModel)
-		{
-			productModel = sellerInfoModel.getProductSource();
-			productData = productFacade.getProductForOptions(productModel,
-					Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
-			storeLocationRequestData.setSellerId(sellerInfoModel.getSellerID());
-		}
-		List<RichAttributeModel> richAttributeModel = null;
-		if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
-		{
-			richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
-			if (richAttributeModel != null && richAttributeModel.get(0) != null
-					&& richAttributeModel.get(0).getDeliveryFulfillModes() != null
-					&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
-			{
-				final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
-				storeLocationRequestData.setFulfillmentType(fulfillmentType.toUpperCase());
+				storeLocationRequestData = new StoreLocationRequestData();
+				final List<String> locationList = new ArrayList<String>();
+				for (final Location location : storeList)
+				{
+					locationList.add(location.getName());
+				}
+				storeLocationRequestData.setStoreId(locationList);
 			}
 			else
 			{
-				LOG.debug("storeLocationRequestData :  Fulfillment type not received for the SellerId"+sellerInfoModel.getSellerArticleSKU());
+				return storeLocationRequestData;
 			}
-			if (richAttributeModel != null && richAttributeModel.get(0) != null
-					&& richAttributeModel.get(0).getShippingModes() != null
-					&& richAttributeModel.get(0).getShippingModes().getCode() != null)
+			//populate newly added fields
+			//get SellerInfo based on sellerUssid
+			final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(sellerUssId);
+			ProductModel productModel = null;
+			ProductData productData = null;
+			if (null != sellerInfoModel)
 			{
-				final String shippingMode = richAttributeModel.get(0).getShippingModes().getCode();
-				storeLocationRequestData.setTransportMode(shippingMode.toUpperCase());
+				productModel = sellerInfoModel.getProductSource();
+				productData = productFacade.getProductForOptions(productModel,
+						Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
+				storeLocationRequestData.setSellerId(sellerInfoModel.getSellerID());
 			}
-			else
+			List<RichAttributeModel> richAttributeModel = null;
+			if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
 			{
-				LOG.debug("storeLocationRequestData :  ShippingMode type not received for the "+sellerInfoModel.getSellerArticleSKU());
+				richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+				if (richAttributeModel != null && richAttributeModel.get(0) != null
+						&& richAttributeModel.get(0).getDeliveryFulfillModes() != null
+						&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
+				{
+					final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+					storeLocationRequestData.setFulfillmentType(fulfillmentType.toUpperCase());
+				}
+				else
+				{
+					LOG.debug("storeLocationRequestData :  Fulfillment type not received for the SellerId"
+							+ sellerInfoModel.getSellerArticleSKU());
+				}
+				if (richAttributeModel != null && richAttributeModel.get(0) != null
+						&& richAttributeModel.get(0).getShippingModes() != null
+						&& richAttributeModel.get(0).getShippingModes().getCode() != null)
+				{
+					final String shippingMode = richAttributeModel.get(0).getShippingModes().getCode();
+					storeLocationRequestData.setTransportMode(shippingMode.toUpperCase());
+				}
+				else
+				{
+					LOG.debug("storeLocationRequestData :  ShippingMode type not received for the "
+							+ sellerInfoModel.getSellerArticleSKU());
+				}
+				if ((null != productData.getSeller()) && (null != productData.getSeller().get(0))
+						&& (null != productData.getSeller().get(0).getSpPrice())
+						&& !(productData.getSeller().get(0).getSpPrice().equals("")))
+				{
+					storeLocationRequestData.setPrice(productData.getSeller().get(0).getSpPrice().getValue().doubleValue());
+				}
+				else if ((null != productData.getSeller()) && (null != productData.getSeller().get(0))
+						&& (null != productData.getSeller().get(0).getMopPrice())
+						&& !(productData.getSeller().get(0).getMopPrice().equals("")))
+				{
+					storeLocationRequestData.setPrice(productData.getSeller().get(0).getMopPrice().getValue().doubleValue());
+				}
+				else if (null != productData.getSeller().get(0).getMrpPrice()
+						&& !(productData.getSeller().get(0).getMrpPrice().equals("")))
+				{
+					storeLocationRequestData.setPrice(productData.getSeller().get(0).getMrpPrice().getValue().doubleValue());
+				}
+				else
+				{
+					LOG.debug("No price avaiable for seller :" + productData.getSeller().get(0).getSellerID());
+				}
 			}
-			if ((null != productData.getSeller()) && (null != productData.getSeller().get(0)) && (null != productData.getSeller().get(0).getSpPrice()) && !(productData.getSeller().get(0).getSpPrice().equals("")))
-			{
-				storeLocationRequestData.setPrice(productData.getSeller().get(0).getSpPrice().getValue().doubleValue());
-			}
-			else if ((null != productData.getSeller()) && (null != productData.getSeller().get(0)) && (null != productData.getSeller().get(0).getMopPrice()) && !(productData.getSeller().get(0).getMopPrice().equals("")))
-			{
-				storeLocationRequestData.setPrice(productData.getSeller().get(0).getMopPrice().getValue().doubleValue());
-			}
-			else if (null != productData.getSeller().get(0).getMrpPrice() && !(productData.getSeller().get(0).getMrpPrice().equals("")))
-			{
-				storeLocationRequestData.setPrice(productData.getSeller().get(0).getMrpPrice().getValue().doubleValue());
-			}
-			else
-			{
-				LOG.debug("No price avaiable for seller :" + productData.getSeller().get(0).getSellerID());
-			}
-		}
-		storeLocationRequestData.setUssId(sellerUssId);
+			storeLocationRequestData.setUssId(sellerUssId);
 		}
 		catch (final Exception e)
 		{
@@ -286,7 +298,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 
 	/**
 	 * This method gets pos based on pincode.
-	 * 
+	 *
 	 * @param productCode
 	 * @param gps
 	 * @param configurableRadius
@@ -380,19 +392,20 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 		}
 		return requestData;
 	}
-	
+
 	/**
 	 * Get all the stores for pincode and radius.
+	 *
 	 * @param gps
 	 * @param radius
 	 * @return List of Stores
 	 */
 	@Override
-	public List<PointOfServiceData> getStoresForPincode(GPS gps, String radius)
+	public List<PointOfServiceData> getStoresForPincode(final GPS gps, final String radius)
 	{
 		Collection<PointOfServiceModel> posModels = new ArrayList<PointOfServiceModel>();
 		List<PointOfServiceData> posData = new ArrayList<PointOfServiceData>();
-		double rad = Double.parseDouble(radius);
+		final double rad = Double.parseDouble(radius);
 		try
 		{
 			posModels = pincodeService.getStoresForPincode(gps, rad);
@@ -406,17 +419,17 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 				}
 			}
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			LOG.error("Exception while fetching Stores for pincode and radius");
 			posData.clear();
 		}
-		
+
 		return posData;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deliveryMode
 	 * @param ussid
 	 * @return
@@ -435,10 +448,10 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 		deliveryModeData.setDeliveryCost(priceData);
 		return deliveryModeData;
 	}
-	
+
 	/**
-	 * @author TECH
-	 * This methods gets stores from commerce based on pincode and sellerId and prepared StoreLocationReqeustData object.
+	 * @author TECH This methods gets stores from commerce based on pincode and sellerId and prepared
+	 *         StoreLocationReqeustData object.
 	 * @param pincode
 	 * @param sellerUssId
 	 * @return list of StoreLocationRequestData
@@ -601,6 +614,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 
 	/**
 	 * Get PincodeModel for given pincode
+	 *
 	 * @author TECH
 	 * @param pincode
 	 * @return pincode model
@@ -613,6 +627,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 
 	/**
 	 * Gets List of Location object for a given gps, distance and sellerId
+	 *
 	 * @author TECH
 	 * @param gps
 	 * @param distance

@@ -52,7 +52,7 @@ public class NewCustomSearchImageValueProvider extends AbstractPropertyFieldValu
 	@Resource
 	private FlexibleSearchService flexibleSearchService;
 	@Resource
-	private MediaHelper mediaHelper;
+	private transient MediaHelper mediaHelper;
 
 	protected String getMediaFormat()
 	{
