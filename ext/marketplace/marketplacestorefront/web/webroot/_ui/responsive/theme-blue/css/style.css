@@ -10314,7 +10314,7 @@ body .account .right-account .order-history .pagination li{
   padding: 10px; }
   
   /* sprint8(tpr-1672(home page,clp,blp)) */
-  .best-offers_blp .product-tile,.best-offers .product-tile,.best-offers_blp .product-tile{
+  .best-offers_blp .product-tile,.best-offers.bestoffersCLP .product-tile,.best-offers_blp .product-tile{
   	padding: 0;
   } 
   /* sprint8(tpr-1672(home page,clp,blp)) */
@@ -29792,7 +29792,7 @@ padding:20px;
     padding: 0;
 }
 
-#bestPicks .view-cliq-offers,#bestOffers.best-offers.feature-collections a.view-best-offers,.best-offers a.view-best-offers,.best-offers_blp a.view-best-offers {
+#bestPicks .view-cliq-offers,#bestOffers.best-offers.feature-collections a.view-best-offers,.best-offers.bestoffersCLP a.view-best-offers,.best-offers_blp a.view-best-offers {
 	padding: 13px;
     font-size: 12px;
     font-family: "Montserrat";
@@ -29807,18 +29807,18 @@ padding:20px;
     border: 1px solid #a9143c;
     margin: 10px auto 50px;
 }
-.best-offers_blp a.view-best-offers,.best-offers a.view-best-offers,#bestOffers.best-offers.feature-collections a.view-best-offers{
+.best-offers_blp a.view-best-offers,.best-offers.bestoffersCLP a.view-best-offers,#bestOffers.best-offers.feature-collections a.view-best-offers{
 	padding: 0;
 	border: 0;
 	visibility:hidden;	
 }
-.best-offers_blp a.view-best-offers.bestBtnTxtPresence,.best-offers a.view-best-offers.bestBtnTxtPresence,
+.best-offers_blp a.view-best-offers.bestBtnTxtPresence,.best-offers.bestoffersCLP a.view-best-offers.bestBtnTxtPresence,
 #bestOffers.best-offers.feature-collections a.view-best-offers.bestBtnTxtPresence{
 	padding: 13px;
 	border:1px solid;
 	visibility:visible;
 }
-.best-offers a.view-best-offers.bestBtnTxtPresence,.best-offers_blp a.view-best-offers.bestBtnTxtPresence{
+.best-offers.bestoffersCLP a.view-best-offers.bestBtnTxtPresence,.best-offers_blp a.view-best-offers.bestBtnTxtPresence{
 	padding: 16px;
 	width:250px;
 	font-weight: normal;
@@ -29826,13 +29826,13 @@ padding:20px;
 }
 /* sprint8(tpr-1672(home page,clp,blp)) */
 
-#bestOffers.best-offers.feature-collections a.view-best-offers,.best-offers a.view-best-offers,.best-offers_blp a.view-best-offers{
+#bestOffers.best-offers.feature-collections a.view-best-offers,.best-offers.bestoffersCLP a.view-best-offers,.best-offers_blp a.view-best-offers{
 	/* width: 250px;
   	letter-spacing: normal;
   	font-weight: normal;
   	padding: 16px 0;
  */}
-#bestOffers.best-offers.feature-collections a.view-best-offers,.best-offers a.view-best-offers,.best-offers_blp a.view-best-offers{
+#bestOffers.best-offers.feature-collections a.view-best-offers,.best-offers.bestoffersCLP a.view-best-offers,.best-offers_blp a.view-best-offers{
 	margin-top: 20px;
 }
 #bestPicks .view-cliq-offers:hover,#bestOffers.best-offers.feature-collections a.view-best-offers:hover {
@@ -33243,8 +33243,8 @@ header .banner > span {
 	#bestPicks .owl-item .short-info{ opacity:0;transition: all 0.3s ease-in-out 0s;}
 	#bestPicks .owl-item.active .short-info{ opacity:1;}
 	#bestPicks .home-best-pick-carousel.owl-carousel .owl-item{ width:100%;}
-	/* sprint8 */ #bestPicks .view-cliq-offers,#bestPicks .view-cliq-offers, #bestOffers.best-offers.feature-collections a.view-best-offers, .best-offers a.view-best-offers, .best-offers_blp a.view-best-offers{ margin: 0 auto 30px;font-size: 11px;    height: 35px;    letter-spacing: 1px;    line-height: 32px;    width: 170px; padding: 0;}
-	#bestOffers.best-offers.feature-collections a.view-best-offers.bestBtnTxtPresence, .best-offers a.view-best-offers.bestBtnTxtPresence, .best-offers_blp a.view-best-offers.bestBtnTxtPresence{
+	/* sprint8 */ #bestPicks .view-cliq-offers,#bestPicks .view-cliq-offers, #bestOffers.best-offers.feature-collections a.view-best-offers, .best-offers.bestoffersCLP a.view-best-offers, .best-offers_blp a.view-best-offers{ margin: 0 auto 30px;font-size: 11px;    height: 35px;    letter-spacing: 1px;    line-height: 32px;    width: 170px; padding: 0;}
+	#bestOffers.best-offers.feature-collections a.view-best-offers.bestBtnTxtPresence, .best-offers.bestoffersCLP a.view-best-offers.bestBtnTxtPresence, .best-offers_blp a.view-best-offers.bestBtnTxtPresence{
 		padding: 0;
 	}
 	 /* sprint8 */
@@ -44851,7 +44851,7 @@ body.page-homepage .showcase .desc-section h2{
     font-size: 18px;
 	}
 	/* sprint8 */
-	body.page-homepage #bestPicks.feature-collections h2,body.page-homepage .feature-collections h2, .best-offers .feature-collections h2{
+	body.page-homepage #bestPicks.feature-collections h2,body.page-homepage .feature-collections h2, .best-offers.bestoffersCLP .feature-collections h2{
 	font-size: 20px;
     padding: 30px 0 10px;
 	}
@@ -52171,10 +52171,10 @@ overflow: hidden;
 }
 
 /* sprint8 TPR-1672 */
-.top_deal .carousel-component #shopByLookCarousel,.best-offers .carousel,.best-offers_blp .carousel {
+.top_deal .carousel-component #shopByLookCarousel,.best-offers.bestoffersCLP .carousel,.best-offers_blp .carousel {
 	margin-top: 0;
 }
-.top_deal .carousel-component h2,.best-offers .feature-collections h2,.best-offers_blp .feature-collections h2 {
+.top_deal .carousel-component h2,.best-offers.bestoffersCLP .feature-collections h2,.best-offers_blp .feature-collections h2 {
 	padding: 0px 40px;
 	text-align: center;
 	font-size: 28px;
@@ -52188,16 +52188,16 @@ overflow: hidden;
 	padding: 0;
 }
 
-.top_deal .owl-prev:after,.best-offers .owl-prev:after,.best-offers_blp .owl-prev:after {
+.top_deal .owl-prev:after,.best-offers.bestoffersCLP .owl-prev:after,.best-offers_blp .owl-prev:after {
 	top: -12px;
 	left: 20px;
 }
 
-.top_deal .owl-next:after,.best-offers .owl-prev:after,.best-offers_blp .owl-prev:after {
+.top_deal .owl-next:after,.best-offers.bestoffersCLP .owl-prev:after,.best-offers_blp .owl-prev:after {
 	top: -12px;
 	right: 20px;
 }
-.top_deal .short-info,.best-offers .details.short-info,.best-offers_blp .details.short-info{
+.top_deal .short-info,.best-offers.bestoffersCLP .details.short-info,.best-offers_blp .details.short-info{
 	margin-top: 10px;
 	word-break: break-word;
 }
@@ -52209,7 +52209,7 @@ overflow: hidden;
 }
 
 /* sprint8 TPR-1672 */
-.top_deal .details.short-info span,.best-offers .details.short-info span,.best-offers_blp .details.short-info span{
+.top_deal .details.short-info span,.best-offers.bestoffersCLP .details.short-info span,.best-offers_blp .details.short-info span{
 	color: #a7183e;
 	display: inline-block;
 	width: 100%;
@@ -52219,12 +52219,12 @@ overflow: hidden;
 }
 
 /*start changes for TPR-3587*/
-.top_deal .details.short-info span:nth-child(2),.best-offers .details.short-info span:nth-child(2),.best-offers_blp .details.short-info span:nth-child(2){
+.top_deal .details.short-info span:nth-child(2),.best-offers.bestoffersCLP .details.short-info span:nth-child(2),.best-offers_blp .details.short-info span:nth-child(2){
 	color: #000;
 }
 /*end changes for TPR-3587*/
 
-.top_deal .details.short-info span:last-child,.best-offers .details.short-info span:last-child,.best-offers_blp .details.short-info span:last-child {
+.top_deal .details.short-info span:last-child,.best-offers.bestoffersCLP .details.short-info span:last-child,.best-offers_blp .details.short-info span:last-child {
 	color: #000;
 	margin-top: 5px;
 }
@@ -52637,7 +52637,7 @@ word-break: break-word;
 		width: 100%;
 	}
 	/* sprint8 TPR-1672 */
-	.top_deal .carousel-component,.best-offers .carousel-component,.best-offers_blp .carousel-component{
+	.top_deal .carousel-component,.best-offers.bestoffersCLP .carousel-component,.best-offers_blp .carousel-component{
 		padding: 0 24px;
 	}
 	/* sprint8 TPR-1672 */
@@ -52669,7 +52669,7 @@ word-break: break-word;
 	.best-offers{
 		margin-top: 50px;
 	}
-	.top_deal .carousel-component h2,.best-offers .feature-collections h2,.best-offers_blp .feature-collections h2 {
+	.top_deal .carousel-component h2,.best-offers.bestoffersCLP .feature-collections h2,.best-offers_blp .feature-collections h2 {
 		border-top: 1px solid #ccc;
 		padding: 40px 0 0;
 	}
@@ -52830,7 +52830,7 @@ word-break: break-word;
 		min-width: 125px;
 		font-size: 10px;
 	}
-	.best-offers a.view-best-offers.bestBtnTxtPresence,.best-offers_blp a.view-best-offers.bestBtnTxtPresence{
+	.best-offers.bestoffersCLP a.view-best-offers.bestBtnTxtPresence,.best-offers_blp a.view-best-offers.bestBtnTxtPresence{
 		width: 125px;
     	margin-bottom: 62px;
     	height: 40px;
@@ -52890,15 +52890,12 @@ word-break: break-word;
 		margin: 0 5px;
 	}
 	/* sprint8 TPR-1672 */
-	.top_deal .carousel-component h2,.best-offers .feature-collections h2,.best-offers_blp .feature-collections h2 {
+	.top_deal .carousel-component h2,.best-offers.bestoffersCLP .feature-collections h2,.best-offers_blp .feature-collections h2 {
 		margin: 0 12px 30px;
 		padding: 30px 0 0;
 		font-size: 20px;
 	}
-	/* sprint8 TPR-1672 */
-	
-	/* sprint8 TPR-1672 */
-	.top_deal .details.short-info span,.best-offers .details.short-info span,.best-offers_blp .details.short-info span {
+	.top_deal .details.short-info span,.best-offers.bestoffersCLP .details.short-info span,.best-offers_blp .details.short-info span {
 		font-size: 12px;
 		line-height: 16px;
 	}
@@ -53060,7 +53057,7 @@ word-break: break-word;
 
 /*sprint8 TPR-1672*/
 .best_seller_section .owl-controls, .top_deal .carousel-component #shopByLookCarousel .owl-controls,
-.best-offers .carousel-component #shopByLookCarousel .owl-controls,.best-offers_blp .carousel-component #shopByLookCarousel .owl-controls{
+.best-offers.bestoffersCLP .carousel-component #shopByLookCarousel .owl-controls,.best-offers_blp .carousel-component #shopByLookCarousel .owl-controls{
 	display: block !important;
 }
 /*sprint8 TPR-1672*/

@@ -663,7 +663,7 @@ function getBestOffersAjaxCall() {
         			},
         			// breakpoint from 480 up
         			480 : {
-        				items:1,
+        				items:2,
         				stagePadding: 50,
         			},
         			// breakpoint from 768 up
@@ -671,7 +671,7 @@ function getBestOffersAjaxCall() {
         				items:3,
         			},
         			// breakpoint from 768 up
-        			1024 : {
+        			1280 : {
         				items:5,
         			}			
         		}		
@@ -892,7 +892,7 @@ function getBestPicksAjaxCall() {
 	            		dots:false,
 	            		navText:[],
 	            		lazyLoad: false,
-	            		autoplay: autoPlay,
+	            		autoplay:autoPlay,
 			            autoHeight : false,
 	            		autoplayTimeout: autoplayTimeout,
 	  	               slideBy: slideBy,

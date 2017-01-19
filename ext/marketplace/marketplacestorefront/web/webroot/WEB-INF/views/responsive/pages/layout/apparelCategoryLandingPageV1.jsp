@@ -102,7 +102,7 @@
 					</div>
 				</div>	
 				
-				<div class="best-offers">
+				<div class="best-offers bestoffersCLP">
 				 <cms:pageSlot position="BestOfferSection" var="feature">
 					<cms:component component="${feature}" element="div" class="" />
 				</cms:pageSlot>
