@@ -24,9 +24,8 @@
 		font-weight:bold;} z-panel-body {padding:0px;}
 
 	</style>
-	<columnlayout apply="org.zkoss.bind.BindComposer" width="100%"
-		height="100%"
-		viewModel="@id('vm') @init('com.hybris.oms.tata.orders.OrderLinesListController')">
+	<columnlayout  width="100%"
+		height="100%" >
 		<columnchildren width="100%">
 			<panel
 				style="height:15%;font-size:14px;border-bottom:3px solid #27394f"
@@ -34,12 +33,12 @@
 				<panelchildren style="border:none">
 					<hlayout>
 						<label sclass="search-label" value="ORDERID"></label>
-						<textbox width="300px"
-							onOK="@command('searchEnter')" value="@bind(vm.searchText)"
+						<textbox width="300px" 
+							 id="orderSearchTbox" onOK="vm.searchEnter()"
 							sclass="search-area" />
-						<button onClick="@command('searchClick')"
+						<button id="orderSearchBtn"
 							style="background-color: #1169F6; border: medium none;"
-							sclass="search-button" label="Search" />
+							sclass="search-button" label="Search" onClick="vm.searchClick()" />
 
 					</hlayout>
 				</panelchildren>
@@ -49,12 +48,11 @@
 				title=" " border="normal" maximizable="true" collapsible="true">
 				<panelchildren>
 					<div style="max-height:100%;overflow:auto">
-						<listbox id="orderListbox"
-							model="@bind(vm.busList)" rows="6" sclass="mylist"
+						<listbox id="orderListbox" rows="6" sclass="mylist"
 							itemRenderer="com.hybris.oms.tata.orders.OrderListRenderer"
 							emptyMessage="No result found in the result" mold="paging"
 							pagingPosition="top" pageSize="6"
-							onSelect="@command('onListItemSelectOfOrder')">
+							onSelect="vm.onListItemSelectOfOrder()">
 							<listhead>
 								<listheader style="text-align:center"
 									label="Order RefNo">
@@ -80,19 +78,16 @@
 					</div>
 				</panelchildren>
 			</panel>
-			<panel id="olpanel" style="height:47%;padding:0px"
+			<panel id="orderLinePanel" style="height:47%;padding:0px"
 				framable="true" title=" " maximizable="true" collapsible="true">
 				<panelchildren
-					style="border:none;padding:0px;max-height:100%;overflow-y:auto"
-					visible="@bind(vm.editorVisible)">
+					style="border:none;padding:0px;max-height:100%;overflow-y:auto">
 					<hlayout width="100%" style="overflow-x:auto">
 						<listbox id="orderLinesListbox" height="200px"
 							sclass="orderlines_list" rows="3"
 							emptyMessage="No result found in the result" mold="paging"
 							pagingPosition="top" pageSize="6"
-							model="@bind(vm.orderlinebusList)"
-							onSelect="@command('onOrderLineItemSelectOrderLines')"
-							selectedItem="@bind(vm.selectedOLBuc)"
+							onSelect="vm.onOrderLineItemSelectOrderLines()"
 							itemRenderer="com.hybris.oms.tata.orders.OrderLinesListRenderer">
 							<listhead sizable="true">
 								<listheader style="text-align:center"
@@ -159,367 +154,89 @@
 						</label>
 
 					</hlayout>
-					<vlayout width="500px">
-						<hlayout
-							visible="@bind(vm.p1slavesVisibleStatus)">
+			    <vlayout id="slavesVlayout" width="500px">
+						<hlayout id="p1slavesHlayout">
 							<label value="P1SlaveID" hflex="1" />
 							<label value=":" hflex="1"></label>
 
-							<listbox id="p1SlaveIDListbox"
-								disabled="@bind(vm.p1slavesDropDownsStatus)"
-								model="@bind(vm.p1SlaveIDList)" mold="select" hflex="1"
-								onSelect="@command('onSelectp1SlaveIDList')">
-
-								<template name="model">
-
-									<listitem>
-
-										<listcell
-											label="@bind(each.slaveid)">
-										</listcell>
-									</listitem>
-								</template>
+							<listbox id="p1SlaveIDListbox" rows="3" hflex="1"
+								onSelect="vm.onSelectp1SlaveIDList()" itemRenderer="com.hybris.oms.tata.orders.SlaveInfoListRenderer">
 							</listbox>
 						</hlayout>
 
-						<hlayout
-							visible="@bind(vm.p1slavesVisibleStatus)">
+						<hlayout>
 							<label value="P1SlaveName" hflex="1" />
 							<label value=":" hflex="1"></label>
-							<label value="@bind(vm.p1SlaveName)"
+							<label id="p1SlaveNameLable"
 								hflex="1">
 							</label>
 						</hlayout>
 
 						<!-- to enable p2slave uncomment the code -->
-						<hlayout
-							visible="@bind(vm.p2slavesVisibleStatus)">
+						<hlayout id="p2slavesHlayout">
 							<label value="P2SlaveID" hflex="1" />
 							<label value=":" hflex="1"></label>
-							<listbox id="p2SlaveIDListbox"
-								disabled="@bind(vm.p2slavesDropDownsStatus)"
-								model="@bind(vm.p2SlaveIDList)" hflex="1" mold="select"
-								onSelect="@command('onSelectp2SlaveIDList')">
-								<template name="model">
-
-									<listitem>
-
-										<listcell
-											label="@bind(each.slaveid)">
-										</listcell>
-									</listitem>
-								</template>
+							<listbox id="p2SlaveIDListbox" hflex="1" rows="3"
+								onSelect="vm.onSelectp2SlaveIDList()" itemRenderer="com.hybris.oms.tata.orders.SlaveInfoListRenderer">
 							</listbox>
 
 						</hlayout>
 
-						<hlayout
-							visible="@bind(vm.p2slavesVisibleStatus)">
+						<hlayout id="p2slavesNameHlayout" >
 							<label value="P2SlaveName" hflex="1" />
 							<label value=":" hflex="1"></label>
-							<label value="@bind(vm.p2SlaveName)"
+							<label id="p2SlaveNameLable"
 								hflex="1">
 							</label>
-						</hlayout>
-						<hlayout visible="@bind(vm.sShipStatus)">
+					   </hlayout>
+			    </vlayout>
+				<vlayout id="logisticsVlayout" width="500px">
+						<hlayout>
 							<label value="P1LogisticsID" hflex="1" />
 							<label value=":" hflex="1"></label>
 
-							<listbox id="p1LogisticsIDListbox"
-								disabled="@bind(vm.logisticsDropDownsStatus)"
-								model="@bind(vm.p1LogisticsIDList)" hflex="1" mold="select"
-								onSelect="@command('onSelectp1LogisticsIDList')">
-								<template name="model">
-									<listitem>
-										<listcell
-											label="@bind(each.logisticsid)">
-										</listcell>
-									</listitem>
-								</template>
-
+							<listbox id="p1LogisticsIDListbox" hflex="1" rows="3"
+								onSelect="vm.onSelectp1LogisticsIDList()" itemRenderer="com.hybris.oms.tata.orders.LogisticListRenderer">
 							</listbox>
 
 						</hlayout>
 
-						<hlayout visible="@bind(vm.sShipStatus)">
+						<hlayout>
 							<label value="P1LogisticsName" hflex="1" />
 							<label value=":" hflex="1"></label>
-							<label value="@bind(vm.p1LogisticsName)"
+							<label id="p1LogisticsNameLabel"
 								hflex="1">
 							</label>
 						</hlayout>
-
-						<hlayout visible="@bind(vm.sShipStatus)">
-							<label value="P2LogisticsID" hflex="1" />
-							<label value=":" hflex="1"></label>
-
-							<listbox id="p2LogisticsIDListbox"
-								disabled="@bind(vm.logisticsDropDownsStatus)"
-								model="@bind(vm.p2LogisticsIDList)" hflex="1" mold="select"
-								onSelect="@command('onSelectp2LogisticsIDList')">
-								<template name="model">
-									<listitem>
-										<listcell
-											label="@bind(each.logisticsid)">
-										</listcell>
-									</listitem>
-								</template>
-
-							</listbox>
-						</hlayout>
-						<hlayout visible="@bind(vm.sShipStatus)">
-							<label value="P2LogisticsName" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label value="@bind(vm.p2LogisticsName)"
-								hflex="1">
-							</label>
-						</hlayout>
-
+                    </vlayout>
 						<hlayout width="450px">
 							<label value="" hflex="1" />
 							<label value="" hflex="1"></label>
-							<button visible="@bind(vm.slaveinfoBtn)"
-								onClick="@command('slaveinfoBtnAction')" label="Save"
+							<button id="orderSubmitBtn" onClick="vm.slaveinfoBtnAction()" label="Save"
 								style="font-size:12px;width:80px" hflex=".4">
 							</button>
 						</hlayout>
-					</vlayout>
 
 
+						<hlayout sclass="headings">
+							<label sclass="headings"
+								value="Transaction And Tracking Nos And Return Info">
+							</label>
+						</hlayout>
+						<vlayout>
+							<grid id="transactionInfoGrid"></grid>
+						</vlayout>
 
-
-					<hlayout sclass="headings">
+						<hlayout sclass="headings">
 						<label sclass="headings"
-							value="Transaction And Tracking Nos">
+							value="Shiping Address And Payment Info">
 						</label>
 					</hlayout>
-					<vlayout width="500px">
-						<hlayout>
-							<label value="SellerOrderNo" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label
-								value="@bind(vm.transTrackOLBus.sellerOrderNo)" hflex="1">
-							</label>
-						</hlayout>
-
-						<hlayout>
-							<label value="TransactionId" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label
-								value="@bind(vm.transTrackOLBus.transactionId)" hflex="1">
-							</label>
-						</hlayout>
-
-						<hlayout>
-							<label value="Original Transaction ID"
-								hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label
-								value="@bind(vm.transTrackOLBus.originalTransactionId)"
-								hflex="1">
-							</label>
-						</hlayout>
-						<hlayout>
-							<label value="AWB Number" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label
-								value="@bind(vm.transTrackOLBus.awbNum)" hflex="1">
-							</label>
-						</hlayout>
-						<hlayout>
-							<label value="AWB Sencondary Status"
-								hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label
-								value="@bind(vm.transTrackOLBus.awbSecondaryStatus)"
-								hflex="1">
-							</label>
-						</hlayout>
-						<hlayout>
-							<label value="Return AWB Number" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label
-								value="@bind(vm.transTrackOLBus.returnAWBNum)" hflex="1">
-							</label>
-						</hlayout>
-						<hlayout>
-							<label value="Seller ID" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label
-								value="@bind(vm.transTrackOLBus.sellerID)" hflex="1">
-							</label>
-						</hlayout>
-
-						<hlayout>
-							<label value="Serial Num" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label
-								value="@bind(vm.transTrackOLBus.serialNum)" hflex="1">
-							</label>
-						</hlayout>
-
-						<hlayout>
-							<label value="IMEINo1" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label
-								value="@bind(vm.transTrackOLBus.imeino1)" hflex="1">
-							</label>
-						</hlayout>
-
-						<hlayout>
-							<label value="IMEINo2" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label
-								value="@bind(vm.transTrackOLBus.imeino2)" hflex="1">
-							</label>
-						</hlayout>
-
-						<hlayout>
-							<label value="ISBNNo" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label
-								value="@bind(vm.transTrackOLBus.isbno1)" hflex="1">
-							</label>
-						</hlayout>
-
+					<vlayout >
+					   <grid id="shippingAddGrid">
+					   </grid>
 					</vlayout>
 
-
-
-					<hlayout sclass="headings">
-						<label sclass="headings"
-							value="Shiping Address">
-						</label>
-					</hlayout>
-					<vlayout width="500px">
-						<hlayout>
-							<label value="First Name" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label id="shipment_fname"
-								value="@load(vm.orderBUC.shipment_firstName)" hflex="1">
-							</label>
-						</hlayout>
-
-						<hlayout>
-							<label value="Last Name" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label id="shipment_lname"
-								value="@load(vm.orderBUC.shipment_lastName)" hflex="1">
-							</label>
-
-
-						</hlayout>
-
-						<hlayout>
-							<label value="Phone No" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label id="shipment_phone"
-								value="@load(vm.orderBUC.shipment_phoneNo)" hflex="1">
-							</label>
-						</hlayout>
-
-						<hlayout>
-							<label value="AddressLine 1" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label id="shipment_addr1"
-								value="@load(vm.orderBUC.shipment_addressLine1)" hflex="1">
-							</label>
-						</hlayout>
-
-						<hlayout>
-							<label value="AddressLine 2" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label id="shipment_addr2"
-								value="@load(vm.orderBUC.shipment_addressLine2)" hflex="1">
-							</label>
-						</hlayout>
-
-						<hlayout>
-							<label value="AddressLine 3" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label id="shipment_addr3"
-								value="@load(vm.orderBUC.shipment_addressLine3)" hflex="1">
-							</label>
-						</hlayout>
-						<hlayout>
-							<label value="Landmark" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label id="landmark_id"
-								value="@load(vm.orderBUC.shipmentLandMark)" hflex="1">
-							</label>
-						</hlayout>
-						<hlayout>
-							<label value="City" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label id="shipment_city"
-								value="@load(vm.orderBUC.shipment_city)" hflex="1">
-							</label>
-						</hlayout>
-
-						<hlayout>
-							<label value="State" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label id="shipment_state"
-								value="@load(vm.orderBUC.shipment_state)" hflex="1">
-							</label>
-						</hlayout>
-
-						<hlayout>
-							<label value="Country" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label id="shipment_country"
-								value="@load(vm.orderBUC.shipment_country)" hflex="1">
-							</label>
-						</hlayout>
-
-						<hlayout>
-							<label value="Pincode" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label id="shipment_pincode"
-								value="@load(vm.orderBUC.shipment_pincode)" hflex="1">
-							</label>
-						</hlayout>
-					</vlayout>
-
-
-
-					<hlayout sclass="headings">
-						<label sclass="headings" value="Payment Info">
-						</label>
-					</hlayout>
-					<vlayout width="500px">
-						<hlayout>
-							<label value="Payment Cost" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label id="paymentCost"
-								value="@load(vm.orderBUC.paymentCost)" hflex="1">
-							</label>
-						</hlayout>
-
-						<hlayout>
-							<label value="Mode" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label id="paymentMode"
-								value="@load(vm.orderBUC.paymentMode)" hflex="1">
-							</label>
-						</hlayout>
-
-						<hlayout>
-							<label value="Info" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label id="paymentInfo"
-								value="@load(vm.orderBUC.paymentInfo)" hflex="1">
-							</label>
-						</hlayout>
-
-						<hlayout>
-							<label value="Date" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label id="paymentDate"
-								value="@load(vm.orderBUC.paymentDate)" hflex="1">
-							</label>
-						</hlayout>
-					</vlayout>
 					<hlayout sclass="headings">
 						<label sclass="headings"
 							value="Customer Info">
@@ -530,7 +247,7 @@
 							<label value="Customer ID" hflex="1" />
 							<label value=":" hflex="1"></label>
 							<label
-								value="@bind(vm.transTrackOLBus.customerID)" hflex="1">
+								value="" hflex="1" id="customerIDLable">
 							</label>
 						</hlayout>
 
@@ -538,82 +255,10 @@
 							<label value="Email ID" hflex="1" />
 							<label value=":" hflex="1"></label>
 							<label
-								value="@bind(vm.transTrackOLBus.emailId)" hflex="1">
+								value="" id="emailIDLable" hflex="1">
 							</label>
 						</hlayout>
 					</vlayout>
-
-
-
-
-					<hlayout sclass="headings">
-						<label sclass="headings"
-							value="Cancel And Return Info">
-						</label>
-					</hlayout>
-					<vlayout width="700px">
-						<hlayout>
-							<label value="Return Request ID" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label
-								value="@bind(vm.transTrackOLBus.returnRequestID)" hflex="1">
-							</label>
-						</hlayout>
-
-						<hlayout>
-							<label value="Return Reason Code" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label
-								value="@bind(vm.transTrackOLBus.returnReasonCode)" hflex="1">
-							</label>
-						</hlayout>
-
-						<hlayout>
-							<label value="Cancel request ID" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label
-								value="@bind(vm.transTrackOLBus.cancelRequestID)" hflex="1">
-							</label>
-						</hlayout>
-
-						<hlayout>
-							<label value="Return/Cancel Remarks"
-								hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label
-								value="@bind(vm.transTrackOLBus.returnCancelRemarks)"
-								hflex="1">
-							</label>
-						</hlayout>
-
-
-						<!-- <hlayout>
-							<label value="Refund Type" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label
-							value="@bind(vm.transTrackOLBus.refundType)" hflex="1">
-							</label>
-							</hlayout> -->
-
-						<hlayout>
-							<label value="Return Logistic Provider Name"
-								hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label
-								value="@bind(vm.transTrackOLBus.returnLogisticProviderName)"
-								hflex="1">
-							</label>
-						</hlayout>
-
-						<!-- <hlayout>
-							<label value="Refunded Amount" hflex="1" />
-							<label value=":" hflex="1"></label>
-							<label
-							value="@bind(vm.transTrackOLBus.refundedAmt)" hflex="1">
-							</label>
-							</hlayout> -->
-					</vlayout>
-
 					<hlayout sclass="headings">
 						<label sclass="headings" value="Refund Type">
 						</label>
@@ -621,9 +266,8 @@
 					</hlayout>
 
 					<hlayout>
-						<listbox style="font-size:10px"
+						<listbox id="refundedInfoListbox" style="font-size:10px"
 							itemRenderer="com.hybris.oms.tata.orders.RefundedInfoBUCListRenderer"
-							model="@bind(vm.refundedInfoBUCList)"
 							emptyMessage="list empty">
 							<listhead sizable="true">
 								<listheader
@@ -657,8 +301,6 @@
 					</hlayout>
 
 
-
-
 					<hlayout sclass="headings">
 						<label sclass="headings"
 							value="Shipment Status Report">
@@ -667,9 +309,9 @@
 					</hlayout>
 
 					<hlayout>
-						<listbox style="font-size:10px"
+						<listbox id="shipmentStatusListbox" style="font-size:10px"
 							itemRenderer="com.hybris.oms.tata.orders.BusStatusRecordsListRenderer"
-							emptyMessage="list empty" model="@bind(vm.shipStatusRepBusSR)">
+							emptyMessage="list empty">
 							<listhead sizable="true">
 								<listheader
 									style="font-size:10px;text-align:center" label="Date">
