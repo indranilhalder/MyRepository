@@ -1,5 +1,6 @@
 package com.tisl.mpl.interceptor;
 
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
@@ -443,9 +444,9 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	 * } } else if (promotion instanceof BuyABFreePrecentageDiscountModel) { final BuyABFreePrecentageDiscountModel
 	 * oModel = (BuyABFreePrecentageDiscountModel) promotion; if (CollectionUtils.isNotEmpty(oModel.getGiftProducts())) {
 	 * isValid = checkCatalogVersion(oModel.getGiftProducts()); } }
-	 *
+	 * 
 	 * return isValid;
-	 *
+	 * 
 	 * }
 	 */
 
