@@ -176,11 +176,10 @@ public class MplDiscountUtil
 			potentialPromo.setPromoMessage(oModel.getDescription());
 			potentialPromo.setPromoStartDate(oModel.getStartDate());
 			potentialPromo.setPromoEndDate(oModel.getEndDate());
-			final Collection<ProductModel> products = oModel.getProducts();
-			if (null != products)
-			{
-				productList.addAll(products);
-			}
+			//Performance Fix 
+			//			final Collection<ProductModel> products = oModel.getProducts(); if (null != products) {
+			//			 productList.addAll(products); }
+			//
 			potentialPromo.setPromoPotProducts(productList);
 			final Collection<CategoryModel> categories = oModel.getCategories();
 			if (null != categories)
@@ -205,11 +204,10 @@ public class MplDiscountUtil
 			potentialPromo.setPromoMessage(oModel.getDescription());
 			potentialPromo.setPromoStartDate(oModel.getStartDate());
 			potentialPromo.setPromoEndDate(oModel.getEndDate());
-			final Collection<ProductModel> products = oModel.getProducts();
-			if (null != products)
-			{
-				productList.addAll(products);
-			}
+			// Performance Fix 
+			//			final Collection<ProductModel> products = oModel.getProducts(); if (null != products) {
+			//			 productList.addAll(products); }
+			//
 			potentialPromo.setPromoPotProducts(productList);
 			final Collection<CategoryModel> categories = oModel.getCategories();
 			if (null != categories)
@@ -235,11 +233,10 @@ public class MplDiscountUtil
 			potentialPromo.setPromoMessage(oModel.getDescription());
 			potentialPromo.setPromoStartDate(oModel.getStartDate());
 			potentialPromo.setPromoEndDate(oModel.getEndDate());
-			final Collection<ProductModel> products = oModel.getProducts();
-			if (null != products)
-			{
-				productList.addAll(products);
-			}
+			//Performance Fix 
+			//			final Collection<ProductModel> products = oModel.getProducts(); if (null != products) {
+			//			  productList.addAll(products); }
+			//
 			potentialPromo.setPromoPotProducts(productList);
 			final Collection<CategoryModel> categories = oModel.getCategories();
 			if (null != categories)
@@ -264,11 +261,12 @@ public class MplDiscountUtil
 			potentialPromo.setPromoMessage(cashBackModel.getDescription());
 			potentialPromo.setPromoStartDate(cashBackModel.getStartDate());
 			potentialPromo.setPromoEndDate(cashBackModel.getEndDate());
-			final Collection<ProductModel> products = cashBackModel.getProducts();
-			if (null != products)
-			{
-				productList.addAll(products);
-			}
+			//Performance Fix
+			//			final Collection<ProductModel> products = cashBackModel.getProducts();
+			//			if (null != products)
+			//			{
+			//				productList.addAll(products);
+			//			}
 			potentialPromo.setPromoPotProducts(productList);
 			final Collection<CategoryModel> categories = cashBackModel.getCategories();
 			if (null != categories)
@@ -293,11 +291,12 @@ public class MplDiscountUtil
 			potentialPromo.setPromoMessage(oModel.getDescription());
 			potentialPromo.setPromoStartDate(oModel.getStartDate());
 			potentialPromo.setPromoEndDate(oModel.getEndDate());
-			final Collection<ProductModel> products = oModel.getProducts();
-			if (null != products)
-			{
-				productList.addAll(products);
-			}
+			//Performance Fix
+			//			final Collection<ProductModel> products = oModel.getProducts();
+			//			if (null != products)
+			//			{
+			//				productList.addAll(products);
+			//			}
 			potentialPromo.setPromoPotProducts(productList);
 			final Collection<CategoryModel> categories = oModel.getCategories();
 			if (null != categories)
@@ -323,11 +322,12 @@ public class MplDiscountUtil
 			potentialPromo.setPromoPotMessage(cashBackModel.getTitle());
 			potentialPromo.setPromoStartDate(cashBackModel.getStartDate());
 			potentialPromo.setPromoEndDate(cashBackModel.getEndDate());
-			final Collection<ProductModel> products = cashBackModel.getProducts();
-			if (null != products)
-			{
-				productList.addAll(products);
-			}
+			//Performance Fix
+			//			final Collection<ProductModel> products = cashBackModel.getProducts();
+			//			if (null != products)
+			//			{
+			//				productList.addAll(products);
+			//			}
 			potentialPromo.setPromoPotProducts(productList);
 			final Collection<CategoryModel> categories = cashBackModel.getCategories();
 			if (null != categories)
@@ -354,11 +354,12 @@ public class MplDiscountUtil
 			potentialPromo.setPromoPotMessage(freebieModel.getTitle());
 			potentialPromo.setPromoStartDate(freebieModel.getStartDate());
 			potentialPromo.setPromoEndDate(freebieModel.getEndDate());
-			final Collection<ProductModel> products = freebieModel.getProducts();
-			if (null != products)
-			{
-				productList.addAll(products);
-			}
+			//Performance Fix
+			//			final Collection<ProductModel> products = freebieModel.getProducts();
+			//			if (null != products)
+			//			{
+			//				productList.addAll(products);
+			//			}
 			potentialPromo.setPromoPotProducts(productList);
 			final Collection<CategoryModel> categories = freebieModel.getCategories();
 			if (null != categories)
@@ -384,11 +385,12 @@ public class MplDiscountUtil
 			potentialPromo.setPromoPotMessage(freebieModel.getTitle());
 			potentialPromo.setPromoStartDate(freebieModel.getStartDate());
 			potentialPromo.setPromoEndDate(freebieModel.getEndDate());
-			final Collection<ProductModel> products = freebieModel.getProducts();
-			if (null != products)
-			{
-				productList.addAll(products);
-			}
+			//Performance Fix
+			//			final Collection<ProductModel> products = freebieModel.getProducts();
+			//			if (null != products)
+			//			{
+			//				productList.addAll(products);
+			//			}
 			potentialPromo.setPromoPotProducts(productList);
 			final Collection<CategoryModel> categories = freebieModel.getCategories();
 			if (null != categories)
@@ -415,11 +417,12 @@ public class MplDiscountUtil
 			potentialPromo.setPromoPotMessage(oModel.getTitle());
 			potentialPromo.setPromoStartDate(oModel.getStartDate());
 			potentialPromo.setPromoEndDate(oModel.getEndDate());
-			final Collection<ProductModel> products = oModel.getProducts();
-			if (null != products)
-			{
-				productList.addAll(products);
-			}
+			//Performance Fix
+			//			final Collection<ProductModel> products = oModel.getProducts();
+			//			if (null != products)
+			//			{
+			//				productList.addAll(products);
+			//			}
 			potentialPromo.setPromoPotProducts(productList);
 			final Collection<CategoryModel> categories = oModel.getCategories();
 			if (null != categories)
@@ -447,11 +450,12 @@ public class MplDiscountUtil
 			potentialPromo.setPromoPotMessage(oModel.getTitle());
 			potentialPromo.setPromoStartDate(oModel.getStartDate());
 			potentialPromo.setPromoEndDate(oModel.getEndDate());
-			final Collection<ProductModel> products = oModel.getProducts();
-			if (null != products)
-			{
-				productList.addAll(products);
-			}
+			//Performance Fix
+			//			final Collection<ProductModel> products = oModel.getProducts();
+			//			if (null != products)
+			//			{
+			//				productList.addAll(products);
+			//			}
 			potentialPromo.setPromoPotProducts(productList);
 			final Collection<CategoryModel> categories = oModel.getCategories();
 			if (null != categories)
