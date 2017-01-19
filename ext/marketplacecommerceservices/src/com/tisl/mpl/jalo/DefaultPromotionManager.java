@@ -4114,7 +4114,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param sellerFlag
 	 * @return
 	 */
-	private Map<String, String> splitCategoryDetails(final Map<String, AbstractOrderEntry> multiSellerValidUSSIDMap,
+	public Map<String, String> splitCategoryDetails(final Map<String, AbstractOrderEntry> multiSellerValidUSSIDMap,
 			final String code, final boolean sellerFlag)
 	{
 		final Map<String, String> dataMap = new HashMap<String, String>();
@@ -4162,7 +4162,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param supercategories
 	 * @return categoryList
 	 */
-	private List<CategoryModel> getSuperCategoryData(final Collection<CategoryModel> supercategories)
+	public List<CategoryModel> getSuperCategoryData(final Collection<CategoryModel> supercategories)
 	{
 		final List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
 		List<CategoryModel> subList = null;
@@ -4182,7 +4182,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param code
 	 * @return flag
 	 */
-	private boolean checkForCategoryPromotion(final String code)
+	public boolean checkForCategoryPromotion(final String code)
 	{
 		boolean flag = false;
 		try
@@ -4360,4 +4360,3 @@ public class DefaultPromotionManager extends PromotionsManager
 		return validProductUssidMap;
 	}
 }
-
