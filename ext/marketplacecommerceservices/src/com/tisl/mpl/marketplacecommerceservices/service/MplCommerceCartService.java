@@ -11,7 +11,6 @@ import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
-import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartModification;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
@@ -189,11 +188,13 @@ public interface MplCommerceCartService
 	 * @description: It is responsible to find possible delivery mode
 	 * @param cartData
 	 * @param omsDeliveryResponse
+	 * @param cartModel
 	 * @return Map<String, List<String>>
 	 * @throws CMSItemNotFoundException
 	 */
+	// Changes for Duplicate Cart fix
 	public Map<String, List<MarketplaceDeliveryModeData>> getDeliveryMode(final CartData cartData,
-			final List<PinCodeResponseData> omsDeliveryResponse) throws CMSItemNotFoundException;
+			final List<PinCodeResponseData> omsDeliveryResponse, CartModel cartModel) throws CMSItemNotFoundException;
 
 	/**
 	 * @Desc fetching oms pincode response data
@@ -226,19 +227,6 @@ public interface MplCommerceCartService
 	List<PinCodeResponseData> getAllResponsesForPinCode(final String pin, final List<PincodeServiceData> reqData)
 			throws EtailNonBusinessExceptions, ClientEtailNonBusinessExceptions;
 
-	/*
-	 * @Desc fetching reservation details
-	 * 
-	 * @param cartId
-	 * 
-	 * @param cartData
-	 * 
-	 * @param pincode
-	 * 
-	 * @throws EtailNonBusinessExceptions
-	 */
-	ReservationListWsDTO getReservation(final AbstractOrderModel cartModel, final String pincode, final String type,InventoryReservListRequestWsDTO item, SalesApplication mobile)
-			throws EtailNonBusinessExceptions;
 
 	/*
 	 * @DESC MobileWS105 : get top two wish list for mobile web service
@@ -266,11 +254,12 @@ public interface MplCommerceCartService
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
-			final List<PinCodeResponseData> pincodeResponseData) throws EtailNonBusinessExceptions;
+			final List<PinCodeResponseData> pincodeResponseData, CartModel cartModel) throws EtailNonBusinessExceptions;
+
 
 	public PriceData addConvCharge(final CartModel source, final CartData prototype);
 
-	//public PriceData setTotalWithConvCharge(final CartModel source, final OrderData orderData);
+	public PriceData setTotalWithConvCharge(final CartModel source, final CartData prototype);
 
 	/**
 	 * @Desc Update cart Entry
@@ -367,7 +356,7 @@ public interface MplCommerceCartService
 	 * @throws CMSItemNotFoundException
 	 */
 	Map<String, List<MarketplaceDeliveryModeData>> getDeliveryMode(final CartData cartData, final OrderEntryData entry,
-			final List<PinCodeResponseData> omsDeliveryResponse) throws CMSItemNotFoundException;
+			final List<PinCodeResponseData> omsDeliveryResponse, final CartModel cartModel) throws CMSItemNotFoundException;
 
 	/*
 	 * @Desc : used to fetch delivery mode description details TISEE-950
@@ -415,13 +404,14 @@ public interface MplCommerceCartService
 	public abstract SellerInformationModel getSellerDetailsData(String ussid);
 
 	/**
-	 * @param cartModel
+	 * @param abstractOrderModel
 	 * @param freebieModelMap
 	 * @param freebieParentQtyMap
 	 * @throws EtailNonBusinessExceptions
 	 */
-	void saveDeliveryMethForFreebie(CartModel cartModel, Map<String, MplZoneDeliveryModeValueModel> freebieModelMap,
-			Map<String, Long> freebieParentQtyMap) throws EtailNonBusinessExceptions;
+	void saveDeliveryMethForFreebie(AbstractOrderModel abstractOrderModel,
+			Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, Map<String, Long> freebieParentQtyMap)
+			throws EtailNonBusinessExceptions;
 
 	/**
 	 * @Desc Used as part of oms fallback
@@ -437,19 +427,8 @@ public interface MplCommerceCartService
 	 * 
 	 * @return
 	 */
-	List<StoreLocationResponseData> getStoreLocationsforCnC(List<StoreLocationRequestData> storeLocationRequestDataList);
-	/**
-	  * @param orderModel
-	  */
-	 void recalculateOrder(OrderModel orderModel);
-	 /**
-	  * @param deliveryModeMap
-	  * @param pincodeResponseData
-	  * @param cartModel
-	  * @return
-	  */
-	 boolean addCartCodEligible(Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
-	   List<PinCodeResponseData> pincodeResponseData, CartModel cartModel);
+	List<StoreLocationResponseData> getStoreLocationsforCnC(List<StoreLocationRequestData> storeLocationRequestDataList,
+			CartModel cartModel);
 
 	/**
 	 * @Desc Used as part of oms fallback for inventory soft reservation
@@ -478,18 +457,28 @@ public interface MplCommerceCartService
 	/**
 	 * @param source
 	 * @param prototype
-	 * @return
+	 * @return PriceData
 	 */
-	PriceData setTotalWithConvCharge(CartModel source, CartData prototype);
+	PriceData setTotalWithConvCharge(OrderModel source, OrderData prototype);
+
+	/**
+	 * @param orderModel
+	 */
+	void recalculateOrder(OrderModel orderModel);
 
 	/**
 	 * @param abstractOrderModel
-	 * @param freebieModelMap
-	 * @param freebieParentQtyMap
+	 * @param pincode
+	 * @param requestType
+	 * @param inventoryRequest
+	 * @param salesApplication
+	 * @return
 	 * @throws EtailNonBusinessExceptions
 	 */
-	void saveDeliveryMethForFreebie(AbstractOrderModel abstractOrderModel,
-			Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, Map<String, Long> freebieParentQtyMap)
-			throws EtailNonBusinessExceptions;
+	ReservationListWsDTO getReservation(AbstractOrderModel abstractOrderModel, String pincode, String requestType,
+			InventoryReservListRequestWsDTO inventoryRequest,
+			de.hybris.platform.commerceservices.enums.SalesApplication salesApplication) throws EtailNonBusinessExceptions;
+
+
 
 }

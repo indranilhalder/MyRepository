@@ -5,6 +5,7 @@ package com.tisl.mpl.pincode.facade;
 
 import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
+import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.storelocator.GPS;
 import de.hybris.platform.storelocator.location.Location;
@@ -26,7 +27,7 @@ public interface PincodeServiceFacade
 	 * @param pincodeValue
 	 */
 	public List<StoreLocationResponseData> getListofStoreLocationsforPincode(final String pincode, final String sellerUssId,
-			final String productCode);
+			final String productCode, final CartModel cartModel);
 
 	/**
 	 *

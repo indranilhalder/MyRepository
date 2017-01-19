@@ -533,5 +533,4 @@ public class MarketplacewebservicesConstants
 	public static final String PDP_DESC_TAB = "pdp.desc.tab.".intern();
 	public static final String TO = "TO";
 
-
 }

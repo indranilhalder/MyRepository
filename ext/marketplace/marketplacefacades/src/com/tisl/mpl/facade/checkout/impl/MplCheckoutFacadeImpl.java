@@ -81,7 +81,6 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.AddressType;
 import com.tisl.mpl.core.model.MplLPHolidaysModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
-import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.AddressTypeData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -93,6 +92,7 @@ import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+//import com.tisl.mpl.fulfilmentprocess.events.OrderPlacedEvent;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderPlacedEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
@@ -100,13 +100,13 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCheckoutService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
-import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
 import com.tisl.mpl.shorturl.service.ShortUrlService;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 import com.tisl.mpl.wsdto.PushNotificationData;
+
 
 /**
  * @author TCS
@@ -591,11 +591,21 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 */
 	@Override
 	public boolean populateDeliveryCost(final Double finalDeliveryCost,
-			final Map<String, Map<String, Double>> deliveryCostPromotionMap) throws EtailNonBusinessExceptions
+			final Map<String, Map<String, Double>> deliveryCostPromotionMap, final CartModel cart) throws EtailNonBusinessExceptions
 	{
 		ServicesUtil.validateParameterNotNull(finalDeliveryCost, "finalDeliveryCost cannot be null");
 		//TISEE-581
-		final CartModel cartModel = getCart();
+		// INC_12242
+		CartModel cartModel = null;
+		if (null == cart)
+		{
+			cartModel = getCart();
+		}
+		else
+		{
+			cartModel = cart;
+		}
+
 		Double totalPriceAfterDeliveryCost = Double.valueOf(0.0);
 		Double discountValue = Double.valueOf(0.0);
 		//final CartData cartData = getMplExtendedCartConverter().convert(cartModel);
@@ -708,7 +718,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				{
 					totalPriceWithConvenienceCharge = createPrice(orderModel, orderModel.getTotalPriceWithConv());
 				}
-
 
 
 				//skip the order if product is missing in the order entries
@@ -831,7 +840,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 		return orderData;
 	}
-
 	/**
 	 * @description: It is creating price data for a price value
 	 * @param source
@@ -2044,9 +2052,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 		return dateTimeslotMapList;
 	}
-
-
-
 	/* (non-Javadoc)
 	 * @see com.tisl.mpl.facade.checkout.MplCheckoutFacade#constructDeliverySlotsForEDAndHD(com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData, de.hybris.platform.commercefacades.order.data.OrderEntryData, com.tisl.mpl.core.model.MplLPHolidaysModel)
 	 */
@@ -2134,6 +2139,9 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		}
 		
 	}
+
+
+
 
 
 

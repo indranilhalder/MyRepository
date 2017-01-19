@@ -119,9 +119,12 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 
 	public static Client initClient()
 	{
-		if(client == null){
+		if (client == null)
+		{
 			return Client.create();
-		}else{
+		}
+		else
+		{
 			return client;
 		}
 	}
@@ -458,13 +461,13 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	/*
 	 * @desc used for validate connect timeout and read time out exceptions from oms rest call for pincode serviceabilty
 	 * and inventory reservation
-	 * 
+	 *
 	 * @param ex
-	 * 
+	 *
 	 * @param exceptionType
-	 * 
+	 *
 	 * @return void
-	 * 
+	 *
 	 * @throws ClientEtailNonBusinessExceptions
 	 */
 	@Override
@@ -524,7 +527,8 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	 *
 	 */
 	@Override
-	public StoreLocatorAtsResponseObject prepStoreLocationsToOMS(final List<StoreLocationRequestData> storeLocationRequestDataList)
+	public StoreLocatorAtsResponseObject prepStoreLocationsToOMS(
+			final List<StoreLocationRequestData> storeLocationRequestDataList, CartModel cartModel)
 	{
 		LOG.debug("from prepStoreLocationsToOMS method in serive");
 		StoreLocatorAtsResponseObject storeLocatorResfromOMS = null;
@@ -572,7 +576,10 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 						storeLocatorList.add(storelocreqObj);
 					}
 				}
-				final CartModel cartModel = cartService.getSessionCart();
+				if (cartModel == null)
+				{
+					cartModel = cartService.getSessionCart();
+				}
 				if (null != cartModel && null != cartModel.getGuid())
 				{
 					storeLocatorRequest.setCartId(cartModel.getGuid());
