@@ -557,7 +557,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	public String updateReturnInfo(final MplReturnInfoForm mplReturnInfoForm, final Model model,
 			final HttpServletRequest request,final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException, Exception
 	{
-	
+	try{
 		//to DO Implementeation 
       MultipartFile filename=mplReturnInfoForm.getDispatchProof();  
       LOG.debug("***************:"+filename.getOriginalFilename()); 
@@ -608,7 +608,6 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		
 
 	    cancelReturnFacade.retrunInfoCallToOMS(returnInfoRequestData);
-		 cancelReturnFacade.saveRTSAndRSSFInfoflag(mplReturnInfoForm.getTransactionId());
 		
 		
 		
@@ -692,7 +691,14 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + mplReturnInfoForm.getOrderId()
 						+ " Exception cause :" + e);
 			}
-  
+	}
+		 catch (Exception exp)
+			{
+				LOG.error("Exception Oucer While sending value "+exp.getMessage());
+			}
+			  // isRefundalbe disable 
+			LOG.info("REtrun page controller TransactionId::::::::    "+mplReturnInfoForm.getTransactionId());
+			cancelReturnFacade.saveRTSAndRSSFInfoflag(mplReturnInfoForm.getTransactionId());
 		return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + mplReturnInfoForm.getOrderId();
 	}
 	

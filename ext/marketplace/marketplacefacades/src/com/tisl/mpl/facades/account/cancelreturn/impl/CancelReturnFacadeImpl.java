@@ -3728,7 +3728,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		{
 			AbstractOrderEntryModel abstractOrderEntryModel = mplOrderService.getEntryModel(transactionId);
 			abstractOrderEntryModel.setIsRefundable(true);
+			LOG.info("Cancel Return facade transactionId::::::::::::"+abstractOrderEntryModel);
 			modelService.save(abstractOrderEntryModel);
+			LOG.info("AWB Details Saved For Self Shipment as true");
 			if (LOG.isDebugEnabled())
 			{
 				LOG.debug("***************  number:" + transactionId);
