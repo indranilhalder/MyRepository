@@ -219,7 +219,7 @@ function registerUserGigya(eventObject)
     						}
     				$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
     				$('#ratingvalue').html(avgreview);
-    				$('#reviewcount').html(countcomment);
+    				$('#reviewcount').html(data.streamInfo.ratingCount);
     				
     				
     		  });
