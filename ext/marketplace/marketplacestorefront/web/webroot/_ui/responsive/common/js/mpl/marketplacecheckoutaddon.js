@@ -7436,9 +7436,12 @@ function displayThrdPrtyWlt(){
 }
 $("#viewPaymentMRupee").click(function(){
 	refresh();
-	$("#paymentMode").val("MRUPEE");
-	$("#paymentModeValue").val("MRUPEE");
-	displayThrdPrtyWlt();
+	if($('#radioButton_MRupee').is(':checked')) 
+	{
+		$("#paymentMode").val("MRUPEE");
+		$("#paymentModeValue").val("MRUPEE");
+		displayThrdPrtyWlt();
+	}
 })
 
 /*$("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
