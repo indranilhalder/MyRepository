@@ -1996,17 +1996,18 @@
 	<bean id="mplJewelleryUtility" class="com.tisl.mpl.util.MplJewelleryUtility">
 		<property name="mplJewelleryService" ref="mplJewelleryService" />
 	</bean>
-	
+	<bean id="MplleadVariantWeightService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplleadVariantWeightServiceImpl" />
 	<!-- Jewellery Changes End -->
 
 	<!-- added for jewellery attribute mapping starts -->
 	
 	<alias name="defaultJewelleryAttrMapping" alias="jewelleryAttrMapping" />
 	<util:map id="defaultJewelleryAttrMapping" map-class="java.util.HashMap">
-		<entry key = "baseMetal1" 	value = "Gold" ></entry>
-		<entry key = "baseMetal2" 	value = "Silver" ></entry>
-		<entry key = "baseMetal3" 	value = "Platinum" ></entry>
-		<entry key = "baseMetal4" 	value = "Others" ></entry>
+		<entry key = "goldValue" 	value = "Gold" ></entry>
+		<entry key = "silverValue" 	value = "Silver" ></entry>
+		<entry key = "platinumValue" 	value = "Platinum" ></entry>
+		<entry key = "solitaireValue" 	value = "Solitaire" ></entry>
 		<entry key = "diamond"    	value = "Diamond" ></entry>
 		<entry key = "gemstone"   	value = "Gems Stone" ></entry>
 		<entry key = "makingcharge" value = "Making Charge" ></entry>

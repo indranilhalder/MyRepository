@@ -10,6 +10,7 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.exceptions.CalculationException;
@@ -62,15 +63,15 @@ public interface MplCheckoutFacade extends CheckoutFacade
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param currencyIsoCode
-	 *
+	 * 
 	 * @param sellerArticleSKU
-	 *
+	 * 
 	 * @return MplZoneDeliveryModeValueModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
@@ -85,22 +86,22 @@ public interface MplCheckoutFacade extends CheckoutFacade
 
 	/*
 	 * @ Selected Address set for express checkout : TIS 391
-	 *
+	 * 
 	 * @param addressId
-	 *
+	 * 
 	 * @return ExpressCheckoutResult
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions,Exception
 	 */
 	ExpressCheckoutResult performExpressCheckout(String addressId) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @description Re calculating cart delivery cost: TIS 400
-	 *
+	 * 
 	 * @param addressId
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean reCalculateCart(final CartData cartData) throws EtailNonBusinessExceptions;
@@ -108,17 +109,17 @@ public interface MplCheckoutFacade extends CheckoutFacade
 
 	/*
 	 * @description Storing delivery cost while navigating from Delivery mode to address selection : TIS 400
-	 *
+	 * 
 	 * @param finalDeliveryCost
-	 *
+	 * 
 	 * @param deliveryCostPromotionMap
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
-	boolean populateDeliveryCost(final Double finalDeliveryCost, Map<String, Map<String, Double>> deliveryCostPromotionMap)
-			throws EtailNonBusinessExceptions;
+	boolean populateDeliveryCost(final Double finalDeliveryCost, Map<String, Map<String, Double>> deliveryCostPromotionMap,
+			CartModel cartModel) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @description: It is used for fetching order details for code
@@ -131,11 +132,11 @@ public interface MplCheckoutFacade extends CheckoutFacade
 
 	/*
 	 * @ to check pincode inventory for Pay now TIS 414
-	 *
+	 * 
 	 * @param cartData
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -143,26 +144,26 @@ public interface MplCheckoutFacade extends CheckoutFacade
 
 	/*
 	 * @ to check promotion expired or not for Pay now : TIS 414
-	 *
+	 * 
 	 * @param abstractOrderModel
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean isPromotionValid(final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @ Override TSHIP : TIS 397
-	 *
+	 * 
 	 * @param fullfillmentDataMap
-	 *
+	 * 
 	 * @param deliveryModeDataMap
-	 *
+	 * 
 	 * @param cartData
-	 *
+	 * 
 	 * @return Map<String, List<MarketplaceDeliveryModeData>>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	Map<String, List<MarketplaceDeliveryModeData>> repopulateTshipDeliveryCost(
@@ -197,15 +198,15 @@ public interface MplCheckoutFacade extends CheckoutFacade
 
 	/*
 	 * @desc use to save freebie delivery mode
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @param freebieModelMap
-	 *
+	 * 
 	 * @param freebieParentQtyMap
-	 *
+	 * 
 	 * @return void
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	void saveDeliveryMethForFreebie(AbstractOrderModel abstractOrderModel,
@@ -216,11 +217,11 @@ public interface MplCheckoutFacade extends CheckoutFacade
 
 	/*
 	 * @ to check coupon expired or not for Pay now
-	 *
+	 * 
 	 * @param cartData
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean isCouponValid(final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;

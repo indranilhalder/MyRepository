@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.model.SellerInformationModel;
 
 
 /**
@@ -30,14 +31,14 @@ import com.tisl.mpl.core.model.RichAttributeModel;
  *
  */
 //Index size for a PcmProductVariantModel
-public class MplFulfillmentModeValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
-		Serializable
+public class MplFulfillmentModeValueProvider extends AbstractPropertyFieldValueProvider
+		implements FieldValueProvider, Serializable
 {
 	private FieldNameProvider fieldNameProvider;
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -59,8 +60,17 @@ public class MplFulfillmentModeValueProvider extends AbstractPropertyFieldValueP
 			return Collections.emptyList();
 		}
 
+		// Changes for richAttribute from Seller Information for TISTNL-4
+		final Collection<SellerInformationModel> sellerInfo = productModel.getSellerInformationRelator();
 
-		final List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
+		Collection<RichAttributeModel> richAttributeCollection = new ArrayList<>();
+
+		for (final SellerInformationModel seller : sellerInfo)
+		{
+			richAttributeCollection = seller.getRichAttribute();
+		}
+
+		final List<RichAttributeModel> richAttributeModel = new ArrayList(richAttributeCollection);
 
 		//if (richAttributeModel != null && richAttributeModel.size() > 0)
 		if (CollectionUtils.isNotEmpty(richAttributeModel))

@@ -3,19 +3,29 @@
  */
 package com.tisl.mpl.integration.oms.order.populators;
 
+import de.hybris.platform.commercefacades.converter.ConfigurablePopulator;
+import de.hybris.platform.commercefacades.product.ProductOption;
+import de.hybris.platform.commercefacades.product.data.ClassificationData;
+import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commerceservices.externaltax.TaxCodeStrategy;
 import de.hybris.platform.converters.Populator;
+import de.hybris.platform.core.model.OrderJewelEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.integration.commons.services.OndemandTaxCalculationService;
 import de.hybris.platform.integration.oms.order.service.ProductAttributeStrategy;
 import de.hybris.platform.integration.oms.order.strategies.OrderEntryNoteStrategy;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -37,12 +47,19 @@ import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.marketplacecommerceservices.service.PriceBreakupService;
 import com.tisl.mpl.model.SellerInformationModel;
 
 
 /**
  * @author TCS
  *
+ */
+
+//Added for 3782
+/*
+ * @Resource(name = "productFeatureJewelleryOrderService") private ProductFeatureJewelleryOrderService
+ * productFeatureJewelleryOrderService;
  */
 
 
@@ -55,7 +72,13 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	private ProductAttributeStrategy productAttributeStrategy;
 	private OrderEntryNoteStrategy orderEntryNoteStrategy;
 	private OndemandTaxCalculationService ondemandTaxCalculationService;
+	@Resource(name = "productConverter")
+	private Converter<ProductModel, ProductData> productConverter;
+	@Resource(name = "productConfiguredPopulator")
+	private ConfigurablePopulator<ProductModel, ProductData, ProductOption> productConfiguredPopulator;
 
+	//Added for 3782
+	private PriceBreakupService priceBreakupService;
 
 	@Override
 	public void populate(final OrderEntryModel source, final OrderLine target) throws ConversionException
@@ -98,6 +121,45 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			{
 				target.setProductName(source.getProduct().getName());
 			}
+
+			/* Added For Jewellery */
+			if (null != source.getProduct()
+					&& source.getProduct().getProductCategoryType()
+							.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+			{
+				populateJewelleryInfo(source, target);
+			}
+			/*
+			 * source.getOrderJewelEntry().getDiamondRate1(); source.getOrderJewelEntry().getDiamondRate2();
+			 * source.getOrderJewelEntry().getDiamondRate3(); source.getOrderJewelEntry().getDiamondRate4();
+			 * source.getOrderJewelEntry().getDiamondRate5(); source.getOrderJewelEntry().getDiamondRate6();
+			 * source.getOrderJewelEntry().getDiamondRate7(); source.getOrderJewelEntry().getDiamondtotalprice();
+			 * source.getOrderJewelEntry().getGemStoneRate1(); source.getOrderJewelEntry().getGemStoneRate2();
+			 * source.getOrderJewelEntry().getGemStoneRate3(); source.getOrderJewelEntry().getGemStoneRate4();
+			 * source.getOrderJewelEntry().getGemStoneRate5(); source.getOrderJewelEntry().getGemStoneRate6();
+			 * source.getOrderJewelEntry().getGemStoneRate7(); source.getOrderJewelEntry().getGemStoneRate8();
+			 * source.getOrderJewelEntry().getGemStoneRate9(); source.getOrderJewelEntry().getGemStoneRate10();
+			 * source.getOrderJewelEntry().getGemstonetotalprice(); source.getOrderJewelEntry().getMakingCharge();
+			 * source.getOrderJewelEntry().getWastageTax();
+			 *
+			 * }
+			 */
+
+
+			/*
+			 * if (null != source.getProduct()) { final ProductModel product = source.getProduct(); for (final
+			 * CategoryModel category : product.getClassificationClasses().) { category.getName();
+			 *
+			 *
+			 * if (category.getCode().contains("MSH")) { category.getName(); //category.gets }
+			 *
+			 * }
+			 *
+			 *
+			 * }
+			 */
+			/* Added For Jewellery */
+
 
 			if (source.getOrder() != null && source.getOrder().getStatus() != null
 					&& source.getOrder().getStatus().getCode() != null)
@@ -192,37 +254,36 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 
 			}
 
-
-			if (richAttributeModel.get(0).getDeliveryFulfillModes() != null
+			if (null != richAttributeModel.get(0) && richAttributeModel.get(0).getDeliveryFulfillModes() != null
 					&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
 
 			{
 				final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
 
 				target.setFulfillmentMode(MplCodeMasterUtility.getglobalCode(fulfilmentType));
-				// Setting parentFullfillment type to freebie in the case of SSHIP  
-				if(source.getGiveAway().booleanValue()) 
+				// Setting parentFullfillment type to freebie in the case of SSHIP
+				if (source.getGiveAway().booleanValue())
 				{
 					try
 					{
-						String parentFullfillmentType = getMplSellerInformationService().getFullfillmentTypeOfParent(source);
-						if (null != parentFullfillmentType &&  null != source.getFulfillmentType() )
+						final String parentFullfillmentType = getMplSellerInformationService().getFullfillmentTypeOfParent(source);
+						if (null != parentFullfillmentType && null != source.getFulfillmentType())
 						{
-							LOG.debug("Parent entry fullFillment type :"+parentFullfillmentType);
-							if(source.getFulfillmentType().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIPCODE)
+							LOG.debug("Parent entry fullFillment type :" + parentFullfillmentType);
+							if (source.getFulfillmentType().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIPCODE)
 									&& parentFullfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIPCODE))
 							{
 								target.setFulfillmentMode(parentFullfillmentType.toUpperCase());
 								LOG.info(" Parent is SSHIP  and FreeBie is TSHIP : Setting FreeBie Fulfillemt Type as SSHIP");
 							}
 						}
-								
+
 					}
-					catch(EtailBusinessExceptions e) 
+					catch (final EtailBusinessExceptions e)
 					{
-						LOG.error("Exception occured while setting fullFillMent Type for freebie "+e.getErrorCode());
+						LOG.error("Exception occured while setting fullFillMent Type for freebie " + e.getErrorCode());
 					}
-					catch (Exception e)
+					catch (final Exception e)
 					{
 						LOG.error("Exception occured while setting fullFillMent Type for freebie " + e.getMessage());
 					}
@@ -286,11 +347,148 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			target.setUnitTax(new Amount(source.getOrder().getCurrency().getIsocode(), Double.valueOf(0.0)));
 			target.setTaxCategory(MarketplaceomsservicesConstants.TAX_CATEGORY);
 
+
+
 		}
 		else
 		{
 			LOG.debug("CustomOmsOrderLinePopulator : orderentry  is null ");
 		}
+	}
+
+
+	//Added for jewellery
+	/**
+	 * @param category
+	 */
+	/*
+	 * private void getCategoryName(final CategoryModel category) { // YTODO Auto-generated method stub try { if
+	 * (!category.getSupercategories().isEmpty()) { for (final CategoryModel superCategory :
+	 * category.getSupercategories()) { getCategoryName(superCategory); } } } catch (final Exception e) { throw new
+	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); }
+	 *
+	 * }
+	 */
+
+	//Added for 3782
+
+	/**
+	 * @param source
+	 * @param target
+	 */
+
+	private void populateJewelleryInfo(final OrderEntryModel source, final OrderLine target)
+	{
+
+		final ProductData productData = productConverter.convert(source.getProduct());
+		productConfiguredPopulator.populate(source.getProduct(), productData,
+				Arrays.asList(ProductOption.CATEGORIES, ProductOption.CLASSIFICATION));
+		if (null != productData.getClassifications())
+		{
+			final List<ClassificationData> ConfigurableAttributeList = new ArrayList<ClassificationData>(
+					productData.getClassifications());
+			for (final ClassificationData classification : ConfigurableAttributeList)
+			{
+				classification.getName();
+			}
+
+		}
+		final OrderJewelEntryModel jewelleryEntry = source.getOrderJewelEntry();
+		if (null != jewelleryEntry.getDiamondRate1())
+		{
+			jewelleryEntry.getDiamondRate1();
+		}
+		if (null != jewelleryEntry.getDiamondRate2())
+		{
+			jewelleryEntry.getDiamondRate2();
+		}
+		if (null != jewelleryEntry.getDiamondRate3())
+		{
+			jewelleryEntry.getDiamondRate3();
+		}
+		if (null != jewelleryEntry.getDiamondRate4())
+		{
+			jewelleryEntry.getDiamondRate4();
+		}
+		if (null != jewelleryEntry.getDiamondRate5())
+		{
+			jewelleryEntry.getDiamondRate5();
+		}
+		if (null != jewelleryEntry.getDiamondRate6())
+		{
+			jewelleryEntry.getDiamondRate6();
+		}
+		if (null != jewelleryEntry.getDiamondRate7())
+		{
+			jewelleryEntry.getDiamondRate7();
+		}
+		if (null != jewelleryEntry.getDiamondtotalprice())
+		{
+			jewelleryEntry.getDiamondtotalprice();
+		}
+		if (null != jewelleryEntry.getGemStoneRate1())
+		{
+			jewelleryEntry.getGemStoneRate1();
+		}
+		if (null != jewelleryEntry.getGemStoneRate1())
+		{
+			jewelleryEntry.getGemStoneRate1();
+		}
+		if (null != jewelleryEntry.getGemStoneRate2())
+		{
+			jewelleryEntry.getGemStoneRate2();
+		}
+		if (null != jewelleryEntry.getGemStoneRate3())
+		{
+			jewelleryEntry.getGemStoneRate3();
+		}
+		if (null != jewelleryEntry.getGemStoneRate4())
+		{
+			jewelleryEntry.getGemStoneRate4();
+		}
+		if (null != jewelleryEntry.getGemStoneRate5())
+		{
+			jewelleryEntry.getGemStoneRate5();
+		}
+		if (null != jewelleryEntry.getGemStoneRate6())
+		{
+			jewelleryEntry.getGemStoneRate6();
+		}
+		if (null != jewelleryEntry.getGemStoneRate7())
+		{
+			jewelleryEntry.getGemStoneRate7();
+		}
+		if (null != jewelleryEntry.getGemStoneRate8())
+		{
+			jewelleryEntry.getGemStoneRate8();
+		}
+		if (null != jewelleryEntry.getGemStoneRate9())
+		{
+			jewelleryEntry.getGemStoneRate9();
+		}
+		if (null != jewelleryEntry.getGemStoneRate10())
+		{
+			jewelleryEntry.getGemStoneRate10();
+		}
+		if (null != jewelleryEntry.getGemstonetotalprice())
+		{
+			jewelleryEntry.getGemstonetotalprice();
+		}
+		if (null != jewelleryEntry.getMakingCharge())
+		{
+			jewelleryEntry.getMakingCharge();
+		}
+		if (null != jewelleryEntry.getWastageTax())
+		{
+			jewelleryEntry.getWastageTax();
+		}
+
+
+		//final ProductFeatureModel jewelleryProductFeature = productFeatureJewelleryOrderService.ProductFeatureJewelleryOrderService(source.getSelectedUSSID());
+
+
+		//source.getProduct().getProductFeatureComponents();
+		//jewelleryEntry.getAbstractOrderEntryjewel().getProduct().getSupercategories();
 	}
 
 	/**
@@ -426,5 +624,23 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	public void setMplSellerInformationService(final MplSellerInformationService mplSellerInformationService)
 	{
 		this.mplSellerInformationService = mplSellerInformationService;
+	}
+
+	//Added for 3782
+	/**
+	 * @return the priceBreakupService
+	 */
+	public PriceBreakupService getPriceBreakupService()
+	{
+		return priceBreakupService;
+	}
+
+	/**
+	 * @param priceBreakupService
+	 *           the priceBreakupService to set
+	 */
+	public void setPriceBreakupService(final PriceBreakupService priceBreakupService)
+	{
+		this.priceBreakupService = priceBreakupService;
 	}
 }

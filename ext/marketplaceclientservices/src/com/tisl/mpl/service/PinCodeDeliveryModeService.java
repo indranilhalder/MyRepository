@@ -4,6 +4,7 @@
 package com.tisl.mpl.service;
 
 import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
+import de.hybris.platform.core.model.order.CartModel;
 
 import java.util.List;
 
@@ -25,19 +26,20 @@ public interface PinCodeDeliveryModeService
 	 * @param storeLocationRequestDataList
 	 * @return
 	 */
-	StoreLocatorAtsResponseObject prepStoreLocationsToOMS(List<StoreLocationRequestData> storeLocationRequestDataList);
+	StoreLocatorAtsResponseObject prepStoreLocationsToOMS(List<StoreLocationRequestData> storeLocationRequestDataList,
+			CartModel cartModel);
 
 
 	/*
 	 * @desc used for validate connect timeout and read time out exceptions from oms rest call for pincode serviceabilty
 	 * and inventory reservation
-	 * 
+	 *
 	 * @param ex
-	 * 
+	 *
 	 * @param exceptionType
-	 * 
+	 *
 	 * @return void
-	 * 
+	 *
 	 * @throws ClientEtailNonBusinessExceptions
 	 */
 	void validateOMSException(final Exception ex, final String exceptionType) throws ClientEtailNonBusinessExceptions;
