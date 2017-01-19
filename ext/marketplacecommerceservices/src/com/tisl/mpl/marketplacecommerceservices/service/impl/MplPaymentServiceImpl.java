@@ -3001,11 +3001,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3017,9 +3017,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3783,10 +3783,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	}
 
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#createWalletPaymentId()
+	/**
+	 *
+	 * @return String
 	 */
 	@Override
 	public String createWalletPaymentId()
@@ -3795,18 +3794,15 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	}
 
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#entryInTPWaltAudit(javax.servlet.http.
-	 * HttpServletRequest, java.lang.String, java.lang.String)
+	/**
+	 * This method makes entry for mRupee orders in AUdit table
+	 *
+	 * @param status
+	 * @param channelWeb
+	 * @param guid
+	 * @param refNo
+	 *
 	 */
-
-	//Commented for Mobile use
-
-	//	@Override
-	//	public void entryInTPWaltAudit(final HttpServletRequest request, final String channelWeb, final String guid,
-	//			final String refNo)
 	@Override
 	public void entryInTPWaltAudit(final String status, final String channelWeb, final String guid, final String refNo)
 
@@ -3898,17 +3894,16 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	}
 
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#saveTPWalletPaymentInfo(java.lang.String,
-	 * java.util.List, de.hybris.platform.core.model.order.AbstractOrderModel)
+	/**
+	 * This method saves payment info model for mRupee orders and the returning the order
+	 *
+	 * @param custName
+	 * @param entries
+	 * @param cart
+	 * @param refernceCode
+	 * @return AbstractOrderModel
+	 *
 	 */
-
-	//Commented for Mobile use
-	//	@Override
-	//	public void saveTPWalletPaymentInfo(final String custName, final List<AbstractOrderEntryModel> entries,
-	//			final AbstractOrderModel cart, final HttpServletRequest request)
 	@Override
 	public AbstractOrderModel saveTPWalletPaymentInfo(final String custName, final List<AbstractOrderEntryModel> entries,
 			final AbstractOrderModel cart, final String refernceCode)
@@ -3947,16 +3942,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				LOG.error(ERROR_PAYMENT + cart.getCode());
 			}
 
-
-
-			//}
-			//catch (final ModelSavingException e)
-			//{
-			//	LOG.error("Exception while saving debit card payment info with " + e);
-			//}
-
-
-
 		}
 		catch (final ModelSavingException e)
 		{
@@ -3972,19 +3957,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	}
 
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#setTPWalletPaymentTransaction(java.util.Map,
-	 * de.hybris.platform.core.model.order.AbstractOrderModel)
+	/**
+	 * This method set payment transaction for mRupee orders
+	 *
+	 * @param paymentMode
+	 * @param abstractOrderModel
+	 * @param refernceCode
+	 *
 	 */
-
-	//Commented for Mobile use
-
-	//	@Override
-	//	public void setTPWalletPaymentTransaction(final Map<String, Double> paymentMode, final AbstractOrderModel abstractOrderModel,
-	//			final HttpServletRequest request)
 	@Override
 	public void setTPWalletPaymentTransaction(final Map<String, Double> paymentMode, final AbstractOrderModel abstractOrderModel,
 			final String refernceCode)
@@ -4101,10 +4081,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	}
 
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#getWalletAuditEntries()
+	/**
+	 * This method fetches audit model corresponding to a reference number
+	 *
+	 * @param refNo
+	 * @return MplPaymentAuditModel
+	 *
 	 */
 	@Override
 	public MplPaymentAuditModel getWalletAuditEntries(final String refNo)
