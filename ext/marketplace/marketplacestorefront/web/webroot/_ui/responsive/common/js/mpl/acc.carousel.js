@@ -516,19 +516,27 @@ ACC.carousel = {
             			0 : {
             				items:1,
             				stagePadding: 50,
+            				loop: ($(".top_deal_blp #mplAdvancedCategoryCarousel .image").length == 1)?false:true,
+                    		nav: ($(".top_deal_blp #mplAdvancedCategoryCarousel .image").length == 1)?false:true,
             			},
             			// breakpoint from 480 up
             			480 : {
             				items:2,
             				stagePadding: 75,
+            				loop: ($(".top_deal_blp #mplAdvancedCategoryCarousel .image").length <= 2)?false:true,
+                    		nav: ($(".top_deal_blp #mplAdvancedCategoryCarousel .image").length <= 2)?false:true,
             			},
             			// breakpoint from 700 up
             			700 : {
             				items:3,
+            				loop: ($(".top_deal_blp #mplAdvancedCategoryCarousel .image").length <= 3)?false:true,
+                    		nav: ($(".top_deal_blp #mplAdvancedCategoryCarousel .image").length <= 3)?false:true,
             			},
             			// breakpoint from 768 up
             			1000 : {
             				items:5,
+            				loop: ($(".top_deal_blp #mplAdvancedCategoryCarousel .image").length <= 5)?false:true,
+                    		nav: ($(".top_deal_blp #mplAdvancedCategoryCarousel .image").length <= 5)?false:true,
             			}			
             		}	
 			/*navigation:true,

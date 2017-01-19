@@ -50668,7 +50668,7 @@ width: auto;
 
   
 .shop_the_look .shop_the_look_left .shop_the_look_section.shop_view_more_link a{
- margin: 40px auto 0;
+ margin: 20px auto 0;
     text-transform: uppercase;
     color: #fff;
     padding: 17px 0;
@@ -51572,7 +51572,7 @@ padding: 0 24px;
     font-size: 20px;
 }
 .shop_the_look .shop_the_look_section.shop_view_more_link{
-	    margin: 0 40px 20px;
+	    margin: 0 0px 20px;
     order: -1;
     width: 100%;
 }
