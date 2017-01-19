@@ -1557,6 +1557,14 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				{
 					gwlp.setPrice(new Double(abstractOrderEntry.getBasePrice().doubleValue()));
 				}
+				/*Added in R2.3  TISRLUAT-812 start */
+				if(null != abstractOrderEntry.getEdScheduledDate()) {
+					gwlp.setScheduleDeliveryDate(abstractOrderEntry.getEdScheduledDate());
+				}
+				if(null != abstractOrderEntry.getTimeSlotTo() && null != abstractOrderEntry.getTimeSlotFrom()){
+					gwlp.setScheduleDeliveryTime(abstractOrderEntry.getTimeSlotFrom().concat(" "+MarketplacewebservicesConstants.TO+" ").concat(abstractOrderEntry.getTimeSlotTo()));
+				}
+				/*Added in R2.3  TISRLUAT-812 end */
 				gwlpList.add(gwlp);
 				//	}
 			}
