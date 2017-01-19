@@ -90,7 +90,6 @@ public class OrderLinesListController extends DefaultWidgetController
 	private Grid transactionInfoGrid;
 
 
-
 	@Wire("#orderSearchTbox")
 	private Textbox orderSearchTbox;
 
@@ -101,7 +100,6 @@ public class OrderLinesListController extends DefaultWidgetController
 	private Label p1LogisticsNameLabel;
 	@Wire("#p1LogisticsIDListbox")
 	private Listbox p1LogisticsIDListbox;
-
 
 
 	@Wire("#slavesVlayout")
