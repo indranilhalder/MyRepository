@@ -388,50 +388,59 @@ $(document).ready(function(){
 	var tmpValue= -1;
 	 if($(".address_postcode").val().length >= "3") {
 		
-		
+		console.log("line 391");
 			//loadPincodeData("edit");
 			checkOutAdress(tmpValue,"edit");
+			console.log("line 394");
 		 var value = $(".address_landmarkOtherDiv").attr("data-value");
-		  
+		 console.log("line 396 "+value);
 		  setTimeout(function(){
 		  if($(".address_landmarks option[value='"+value+"']").length > "0") {
-			  
+			  console.log("line 399");
 			  //alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
 				  $(".address_landmarks").val("");
+				  console.log("line 402 "+$(".address_landmarks").val());
 				$(".address_landmarks option[value='"+value+"']").prop("selected",true);
-				
+				console.log("line 404 "+$(".address_landmarks option:selected").text());
 				} else {
 				//alert(value+ " 3 in else");
+				console.log("line 407 ")
 				  if($(".address_landmarks option[value='Other']").length > "0") {
 					  $(".address_landmarks").val("Other"); 
+					  console.log("line 407 "+$(".address_landmarks").val());
 					 }else{
 						 $(".address_landmarks").val("");  
+						 console.log("line 413 "+$(".address_landmarks").val());
 					 }
 					changeFuncLandMark("Other"); 
 				$(".address_landmarkOther").val(value);
+				console.log("line 417 "+$(".address_landmarkOther").val());
 				
 			}
 		  
-		  });
+		  },300);
 	}else{
 		//alert("in else");
+		console.log("line 424");
 		checkOutAdress(tmpValue,"edit");
+		console.log("line 426 "+tmpValue);
 		
 	} 
 	
 	$(".address_postcode").blur(function() {
 		
-		
+		console.log("line 432");
 			//alert("form element");
 		if($(".address_postcode").val().length >= "3") {
 			tmpValue++;
+			console.log("line 436 "+tmpValue);
 			//loadPincodeData("edit");
 			checkOutAdress(tmpValue,"edit");
 			 var value = $(".address_landmarkOtherDiv").attr("data-value");
-			  
+			 console.log("line 440 "+value);
 			  setTimeout(function(){
 			  if($(".address_landmarks option[value='"+value+"']").length > "0") {
-				  
+				  console.log("line 443 "+$(".address_landmarks").val());
 				  //alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
 					  $(".address_landmarks").val("");
 					$(".address_landmarks option[value='"+value+"']").prop("selected",true);
@@ -441,16 +450,18 @@ $(document).ready(function(){
 					 if($(".address_landmarks option[value='Other']").length > "0") {
 					  $(".address_landmarks").val("Other"); 
 					 }else{
+						 console.log("line 453 "+$(".address_landmarks").val());
 						 $(".address_landmarks").val("");  
 					 }
 						changeFuncLandMark("Other"); 
 					$(".address_landmarkOther").val(value);
-					
+					 console.log("line 458 "+$(".address_landmarkOther").val());
 				}
 			  
-			  });
+			  },300);
 		}else{
 			//alert("in else");
+			 console.log("line 464 ");
 			checkOutAdress(tmpValue,"new");
 			
 		}

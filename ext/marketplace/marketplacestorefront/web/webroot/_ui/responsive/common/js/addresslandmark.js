@@ -27,7 +27,7 @@ $(document).ready(function(){
 					
 				}
 			  
-			  });
+			  },300);
 		}else{
 			loadPincodeData("new");
 			 
@@ -71,11 +71,12 @@ $(".dupDisplay").hide();
 
 var tmpValue= -1;
 $(".address_postcode").blur(function() {
+	 console.log("addresslandmark line 74 "+tmpValue);
 	tmpValue++;
 	if($(".address_postcode").val().length >= "3") {
 		loadPincodeData("edit");
 		 var value = $(".address_landmarkOtherDiv").attr("data-value");
-		  
+		 console.log("addresslandmark line 79 "+value);
 		  setTimeout(function(){
 		  if($(".address_landmarks option[value='"+value+"']").length > "0") {
 			  
@@ -95,11 +96,12 @@ $(".address_postcode").blur(function() {
 				
 			}
 		  
-		  });
+		  },300);
 	}else{
+		console.log("addresslandmark line 101 ");
 		loadPincodeData("new");
 		 var value = $(".address_landmarkOtherDiv").attr("data-value");
-		  
+		 console.log("addresslandmark line 104 "+value);
 		  setTimeout(function(){
 		  if($(".address_landmarks option[value='"+value+"']").length > "0") {
 			  
@@ -116,10 +118,11 @@ $(".address_postcode").blur(function() {
 						 }
 					changeFuncLandMark("Other"); 
 				$(".address_landmarkOther").val(value);
+				console.log("addresslandmark line 121 "+$(".address_landmarkOther").val());
 				
 			}
 		  
-		  });
+		  },300);
 	}
 
 
@@ -139,6 +142,7 @@ function loadPincodeData(parm) {
 	}
 	/*end of sneha R2.3*/
 	//alert(parm);
+	console.log("addresslandmark line 145 "+ parm);
 	var Pincode=$(".address_postcode").val();
     $.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/landmarks",
@@ -147,6 +151,7 @@ function loadPincodeData(parm) {
 		success : function(response) {
 			if(response == "" || response == " " || response == "NULL") {
 				//alert("in if");
+				console.log("addresslandmark line 154 ");
 				$(".address_landmarks").attr("disabled","disabled").css("padding-left","5px");
 				$(".half .address_landmarkOtherDiv").css("margin-left","10px");
 				$(".row .address_landmarkOtherDiv label").css("margin-top","15px");
@@ -178,7 +183,7 @@ function loadPincodeData(parm) {
 				$(".address_states").removeAttr("readonly").removeData("stateValue");
 				
 			} else {
-				//alert("in else");
+				console.log("addresslandmark line 186 ");
 				$('.address_landmarks .unableto').remove();
 				$(".address_landmarks").removeAttr("disabled").css("padding-left","5px");
 				$(".half .address_landmarkOtherDiv").css("margin-left","10px");
@@ -203,6 +208,7 @@ function loadPincodeData(parm) {
         		//then fill it with data from json post
         		if(response.landMarks != null) {
         			//alert("in landmark if");
+        			console.log("addresslandmark line 211 ");
         		  $.each(response.landMarks, function(key, value) {
         		       $('.address_landmarks').append($("<option></option>").attr("value",value.landmark)
         		         .text(value.landmark));
@@ -213,6 +219,7 @@ function loadPincodeData(parm) {
         		}
         		else {
         			//alert("in landmark else");
+        			console.log("addresslandmark line 222 ");
         			$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show();
  					$(".address_landmarks").attr("disabled","disabled").css("padding-left","5px");
  					$('.address_landmarks').append($("<option class=unableto></option>").text("Unable to find landmark").attr("selected","selected").attr("value",""));
