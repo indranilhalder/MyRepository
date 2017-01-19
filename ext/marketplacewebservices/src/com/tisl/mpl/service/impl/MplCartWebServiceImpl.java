@@ -38,6 +38,7 @@ import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsD
 import de.hybris.platform.commercewebservicescommons.dto.user.AddressListWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.CartException;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
+import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -745,6 +746,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 			if (cart != null)
 			{
+				// Changes for Duplicate Cart fix
 				final boolean deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cart);
 				LOG.debug("Cart Delisted Status " + deListedStatus);
 				///newCartModel = mplCartFacade.removeDeliveryMode(cart); already used in productDetails
@@ -839,7 +841,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 			if (cart != null)
 			{
-				final boolean deListedStatus = mplCartFacade.isCartEntryDelisted(cart);
+				final boolean deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cart);
 
 				LOG.debug("Cart Delisted Status " + deListedStatus);
 
@@ -1557,6 +1559,14 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				{
 					gwlp.setPrice(new Double(abstractOrderEntry.getBasePrice().doubleValue()));
 				}
+				/*Added in R2.3  TISRLUAT-812 start */
+				if(null != abstractOrderEntry.getEdScheduledDate()) {
+					gwlp.setScheduleDeliveryDate(abstractOrderEntry.getEdScheduledDate());
+				}
+				if(null != abstractOrderEntry.getTimeSlotTo() && null != abstractOrderEntry.getTimeSlotFrom()){
+					gwlp.setScheduleDeliveryTime(abstractOrderEntry.getTimeSlotFrom().concat(" "+MarketplacewebservicesConstants.TO+" ").concat(abstractOrderEntry.getTimeSlotTo()));
+				}
+				/*Added in R2.3  TISRLUAT-812 end */
 				gwlpList.add(gwlp);
 				//	}
 			}
@@ -1828,7 +1838,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + pincode);
 					}
 					final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(cartDataOrdered, cartModel, pincode);
-					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes);
+					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes, cartModel);
 				}
 			}
 			catch (final EtailBusinessExceptions | EtailNonBusinessExceptions e)
@@ -1959,7 +1969,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					}
 
 					final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(cartDataOrdered, cartModel, pincode);
-					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes);
+					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes, cartModel);
 				}
 			}
 			catch (final CMSItemNotFoundException e)
@@ -2088,11 +2098,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (!StringUtil.isEmpty(pincode))
 				{
 					responseData = mplCartFacade.getOMSPincodeResponseData(pincode, cartData);
-					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartData, responseData);
+					// Changes for Duplicate Cart fix
+					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartData, responseData, cartModel);
 				}
 				else
 				{
-					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartData, null);
+					// Changes for Duplicate Cart fix
+					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartData, null, cartModel);
 				}
 
 				String isServicable = MarketplacecommerceservicesConstants.Y;
@@ -2166,7 +2178,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		final AddressModel addressModel = getModelService().create(AddressModel.class);
 		try
 		{
-			addressReversePopulator.populate(addressData, addressModel);
+			getAddressReversePopulator().populate(addressData, addressModel);
 			if (null != addressData.getState())
 			{
 				addressModel.setDistrict(addressData.getState());
@@ -2214,7 +2226,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (null != pincode && !pincode.isEmpty())
 				{
 					final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(cartDataOrdered, cartModel, pincode);
-					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes);
+					// Changes for Duplicate Cart fix
+					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes, cartModel);
 				}
 			}
 			catch (final Exception e)

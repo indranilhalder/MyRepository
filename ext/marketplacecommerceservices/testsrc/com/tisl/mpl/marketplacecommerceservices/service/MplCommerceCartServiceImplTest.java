@@ -221,9 +221,11 @@ public class MplCommerceCartServiceImplTest
 		deliveryModeData.setDeliveryCost(priceData);
 
 		final List<MarketplaceDeliveryModeData> deliveryModeDataList = new ArrayList<MarketplaceDeliveryModeData>();
+		final CartModel cartModel = Mockito.mock(CartModel.class);
 		deliveryModeDataList.add(deliveryModeData);
 		deliveryModeDataMap.put("entryNumber", deliveryModeDataList);
-		given(mplCommerceCartServiceImpl.getDeliveryMode(cartDataMock, omsDeliveryResponse)).willReturn(deliveryModeDataMap);
+		given(mplCommerceCartServiceImpl.getDeliveryMode(cartDataMock, omsDeliveryResponse, cartModel)).willReturn(
+				deliveryModeDataMap);
 	}
 
 
@@ -602,7 +604,7 @@ public class MplCommerceCartServiceImplTest
 		codEligible = Boolean.FALSE;
 
 
-		Mockito.when(Boolean.valueOf(mplCommerceCartServiceImpl.addCartCodEligible(deliveryModeMap, pinCodeEntry)))
+		Mockito.when(Boolean.valueOf(mplCommerceCartServiceImpl.addCartCodEligible(deliveryModeMap, pinCodeEntry, cartModelMock)))
 				.thenReturn(Boolean.valueOf((codEligible.booleanValue())));
 	}
 }

@@ -304,7 +304,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					}
 				}
 				//  TISPRD-1951  END //
-				deliveryModeDataMap = getMplCartFacade().getDeliveryMode(cartData, responseData);
+				deliveryModeDataMap = getMplCartFacade().getDeliveryMode(cartData, responseData, cartModel);
 				fullfillmentDataMap = getMplCartFacade().getFullfillmentMode(cartData);
 
 				//TIS-397
@@ -377,7 +377,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
 			returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 		}
-		model.addAttribute("checkoutPageName", checkoutPageName);
 		return returnPage;
 	}
 
@@ -418,10 +417,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			}
 			//TISPT-400 ends
 
-			//Double finalDeliveryCost = Double.valueOf(0.0);
+			Double finalDeliveryCost = Double.valueOf(0.0);
 
 			//int count = 0;
-			//	Boolean selectPickupDetails = Boolean.FALSE;
+			Boolean selectPickupDetails = Boolean.FALSE;
 
 			if (deliveryMethodForm.getDeliveryMethodEntry() == null)
 			{
@@ -453,7 +452,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
 				final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
 				//final boolean calculationStatus =
-				getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap); //TIS 400
+				getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel); //TIS 400
 
 			}
 			//TISPT-400
@@ -505,7 +504,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					&& (cartUssidData != null && cartUssidData.getEntries() != null && !cartUssidData.getEntries().isEmpty()))
 			{
 				responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartUssidData);
-				deliveryModeDataMap = getMplCartFacade().getDeliveryMode(cartUssidData, responseData);
+				deliveryModeDataMap = getMplCartFacade().getDeliveryMode(cartUssidData, responseData, cartModel);
 
 				getMplCartFacade().setDeliveryDate(cartUssidData, responseData);
 				//TISUTO-72 TISST-6994,TISST-6990 set cart COD eligible
@@ -865,7 +864,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
 					final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
 					//final boolean calculationStatus = getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost,deliveryChargePromotionMap); //TIS 400
-					getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap);
+					getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel);
 				}
 				catch (final EtailBusinessExceptions e)
 				{
@@ -928,7 +927,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				try
 				{
 
-					response = mplCartFacade.getStoreLocationsforCnC(storeLocationRequestDataList);
+					response = mplCartFacade.getStoreLocationsforCnC(storeLocationRequestDataList, cartModel);
 					if (null != response && response.size() > 0)
 					{
 						//populates oms response to data object
@@ -2088,8 +2087,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYNEWADDRESSURL, method = RequestMethod.POST)
 	@RequireHardLogIn
-	public @ResponseBody JSONObject add(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model, final HttpServletRequest request)
-			throws CMSItemNotFoundException
+	public @ResponseBody JSONObject add(final AccountAddressForm addressForm, final BindingResult bindingResult,
+			final Model model, final HttpServletRequest request) throws CMSItemNotFoundException
 	{
 		//TPR-1214
 		// Save call has been changed to Ajax for saving a new address instead of HTTP request submission.
@@ -2099,10 +2098,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			final String errorMsg = mplAddressValidator.validate(addressForm);
 			final List<StateData> stateDataList = accountAddressFacade.getStates();
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
-
 			if ((!StringUtils.isEmpty(errorMsg) && !errorMsg.equalsIgnoreCase(ModelAttributetConstants.SUCCESS))
 					|| bindingResult.hasErrors())
 			{
+
 				this.prepareDataForPage(model);
 				model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSFORM, addressForm);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
@@ -2471,8 +2470,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		return (defaultAddress != null && defaultAddress.getId() != null && defaultAddress.getId().equals(addressId));
 	}
 
-	@RequestMapping(value = "/back", method = RequestMethod.GET)
-	@RequireHardLogIn
+	//@RequestMapping(value = "/back", method = RequestMethod.GET)
+	//@RequireHardLogIn
 	@Override
 	public String back(final RedirectAttributes redirectAttributes)
 	{
@@ -2686,7 +2685,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 		try
 		{
-			omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pin, ussId, productCode);
+			omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pin, ussId, productCode, null);
 			if (omsResponse.size() > 0)
 			{
 				productWithPOS = getProductWdPos(omsResponse, model, null);

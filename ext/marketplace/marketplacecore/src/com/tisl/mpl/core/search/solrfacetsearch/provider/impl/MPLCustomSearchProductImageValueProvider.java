@@ -45,7 +45,7 @@ public class MPLCustomSearchProductImageValueProvider extends AbstractPropertyFi
 	private MediaContainerService mediaContainerService;
 	private FieldNameProvider fieldNameProvider;
 	@Resource
-	private MediaHelper mediaHelper;
+	private transient MediaHelper mediaHelper;
 
 	protected String getMediaFormat()
 	{

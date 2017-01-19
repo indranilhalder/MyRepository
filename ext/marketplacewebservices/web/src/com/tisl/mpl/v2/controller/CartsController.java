@@ -32,7 +32,6 @@ import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
-import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartMergingException;
@@ -76,7 +75,6 @@ import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
@@ -118,7 +116,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.granule.json.JSON;
-import com.tisl.mpl.bin.service.BinService;
 import com.tisl.mpl.cart.impl.CommerceWebServicesCartFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
@@ -232,8 +229,6 @@ public class CartsController extends BaseCommerceController
 	private AccountAddressFacade accountAddressFacade;
 	@Resource
 	private UserService userService;
-	@Autowired
-	private CustomerAccountService customerAccountService;
 	@Resource(name = "mplCheckoutFacade")
 	private MplCheckoutFacade mplCheckoutFacade;
 	@Resource
@@ -248,12 +243,6 @@ public class CartsController extends BaseCommerceController
 	private WishlistFacade wishlistFacade;
 	@Resource
 	private SiteConfigService siteConfigService;
-	@Resource(name = "sessionService")
-	private SessionService sessionService;
-
-	@Resource(name = "binService")
-	private BinService binService;
-
 	@Resource(name = "mplStoreLocatorFacade")
 	private MplStoreLocatorFacade mplStoreLocatorFacade;
 	@Resource
@@ -264,31 +253,12 @@ public class CartsController extends BaseCommerceController
 	private MplSlaveMasterFacade mplSlaveMasterFacade;
 	@Resource(name = "discountUtility")
 	private DiscountUtility discountUtility;
-	
 	//	@Autowired
 	//	private CartService cartService;
 	//@Autowired
 	//private CommerceCartService commerceCartService;
 	@Autowired
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
-	
-	/**
-	 * @return the mplExtendedCartConverter
-	 */
-	public Converter<CartModel, CartData> getMplExtendedCartConverter()
-	{
-		return mplExtendedCartConverter;
-	}
-
-	/**
-	 * @param mplExtendedCartConverter
-	 *           the mplExtendedCartConverter to set
-	 */
-	public void setMplExtendedCartConverter(final Converter<CartModel, CartData> mplExtendedCartConverter)
-	{
-		this.mplExtendedCartConverter = mplExtendedCartConverter;
-	}
-
 
 	//private static final String DEPRECATION = "deprecation";
 	private static final String APPLICATION_TYPE = "application/json";
@@ -822,12 +792,12 @@ public class CartsController extends BaseCommerceController
 			validate(pickupStore, PICK_UP_STORE, pointOfServiceValidator);
 		}
 
-		return updateCartEntryInternal(baseSiteId, cart, orderEntry, qty, pickupStore, fields, true);
+		return updateCartEntryInternal(baseSiteId, cart, orderEntry, qty, pickupStore, fields, true, null);
 	}
 
 	private CartModificationWsDTO updateCartEntryInternal(final String baseSiteId, final CartData cart,
-			final OrderEntryData orderEntry, final Long qty, final String pickupStore, final String fields, final boolean putMode)
-			throws CommerceCartModificationException
+			final OrderEntryData orderEntry, final Long qty, final String pickupStore, final String fields, final boolean putMode,
+			final CartModel cartModel) throws CommerceCartModificationException
 	{
 		final long entryNumber = orderEntry.getEntryNumber().longValue();
 		final String productCode = orderEntry.getProduct().getCode();
@@ -843,7 +813,8 @@ public class CartsController extends BaseCommerceController
 				//was 'shipping mode' or store is changed
 				validateForAmbiguousPositions(cart, orderEntry, pickupStore);
 				validateIfProductIsInStockInPOS(baseSiteId, productCode, pickupStore, Long.valueOf(entryNumber));
-				cartModificationData1 = cartFacade.updateCartEntry(entryNumber, pickupStore);
+				//				cartModificationData1 = cartFacade.updateCartEntry(entryNumber, pickupStore);
+				cartModificationData1 = mplCartFacade.updateCartEntryMobile(entryNumber, pickupStore, cartModel);
 			}
 		}
 		else if (putMode && currentPointOfService != null)
@@ -851,12 +822,12 @@ public class CartsController extends BaseCommerceController
 			//was 'pickup in store', now switch to 'shipping mode'
 			validateForAmbiguousPositions(cart, orderEntry, pickupStore);
 			validateIfProductIsInStockOnline(baseSiteId, productCode, Long.valueOf(entryNumber));
-			cartModificationData1 = cartFacade.updateCartEntry(entryNumber, pickupStore);
+			cartModificationData1 = mplCartFacade.updateCartEntryMobile(entryNumber, pickupStore, cartModel);
 		}
 
 		if (qty != null)
 		{
-			cartModificationData2 = cartFacade.updateCartEntry(entryNumber, qty.longValue());
+			cartModificationData2 = mplCartFacade.updateCartEntryMobile(entryNumber, qty.longValue(), cartModel);
 		}
 
 		return dataMapper.map(mergeCartModificationData(cartModificationData1, cartModificationData2), CartModificationWsDTO.class,
@@ -898,7 +869,7 @@ public class CartsController extends BaseCommerceController
 
 		validateCartEntryForReplace(orderEntry, entry);
 
-		return updateCartEntryInternal(baseSiteId, cart, orderEntry, entry.getQuantity(), pickupStore, fields, true);
+		return updateCartEntryInternal(baseSiteId, cart, orderEntry, entry.getQuantity(), pickupStore, fields, true, null);
 	}
 
 	private void validateCartEntryForReplace(final OrderEntryData oryginalEntry, final OrderEntryWsDTO entry)
@@ -964,7 +935,7 @@ public class CartsController extends BaseCommerceController
 			validate(pickupStore, PICK_UP_STORE, pointOfServiceValidator);
 		}
 
-		return updateCartEntryInternal(baseSiteId, cart, orderEntry, qty, pickupStore, fields, false);
+		return updateCartEntryInternal(baseSiteId, cart, orderEntry, qty, pickupStore, fields, false, null);
 	}
 
 	/**
@@ -1014,7 +985,7 @@ public class CartsController extends BaseCommerceController
 		validate(entry, ENTRY, orderEntryUpdateValidator);
 
 		final String pickupStore = entry.getDeliveryPointOfService() == null ? null : entry.getDeliveryPointOfService().getName();
-		return updateCartEntryInternal(baseSiteId, cart, orderEntry, entry.getQuantity(), pickupStore, fields, false);
+		return updateCartEntryInternal(baseSiteId, cart, orderEntry, entry.getQuantity(), pickupStore, fields, false, null);
 	}
 
 	/**
@@ -2224,7 +2195,7 @@ public class CartsController extends BaseCommerceController
 					validate(pickupStore, PICK_UP_STORE, pointOfServiceValidator);
 				}
 
-				updateCartEntryInternal(baseSiteId, cartData, orderEntry, quantity, pickupStore, fields, false);
+				updateCartEntryInternal(baseSiteId, cartData, orderEntry, quantity, pickupStore, fields, false, cartModel);
 				//final CartModel newCartModel = mplCartFacade.removeDeliveryMode(cartModel);
 				final List<AbstractOrderEntryModel> abstractOrderEntryList = cartModel.getEntries();
 				final List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
@@ -2411,7 +2382,7 @@ public class CartsController extends BaseCommerceController
 						LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + postalCode);
 						final List<PinCodeResponseData> pinCodeRes = mplCartWebService.checkPinCodeAtCart(cartDataOrdered, cartModel,
 								postalCode);
-						deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes);
+						deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes, cartModel);
 						LOG.debug("************ Mobile webservice DeliveryModeData Map Mobile *******" + deliveryModeDataMap);
 					}
 				}
@@ -2558,26 +2529,6 @@ public class CartsController extends BaseCommerceController
 		return cartDetailsData;
 	}
 
-	
-
-	/**
-	 * check default address
-	 *
-	 * @param address
-	 * @return boolean
-	 */
-/*	private boolean checkDefaultAddress(final AddressModel address)
-	{
-		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-		final AddressModel defaultAddress = customerAccountService.getDefaultAddress(currentCustomer);
-		if (null != defaultAddress && null != defaultAddress.getPk() && null != address.getPk()
-				&& address.getPk().equals(defaultAddress.getPk()))
-		{
-			return true;
-		}
-		return false;
-	}*/ //sonar issue
-
 	/**
 	 * Cart Reservation.
 	 *
@@ -2670,7 +2621,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 * 
+			 *
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -2885,7 +2836,7 @@ public class CartsController extends BaseCommerceController
 				LOG.debug("CartsController : selectDeliveryMode  : Step 3 Freebie delivery mode set done");
 				//applyPromotions();
 				final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
-				getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap);
+				getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cart);
 				response.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 			else
@@ -2948,8 +2899,8 @@ public class CartsController extends BaseCommerceController
 		{
 			LOG.debug(String.format("Checking servicibility for the pincode %s", pincode));
 			cart = mplPaymentWebFacade.findCartValues(cartId);
-			pinCodeResponse = mplCartWebService.checkPinCodeAtCart(mplCartFacade.getSessionCartWithEntryOrdering(true), cart,
-					pincode);
+			pinCodeResponse = mplCartWebService.checkPinCodeAtCart(mplCartFacade.getSessionCartWithEntryOrderingMobile(cart, true),
+					cart, pincode);
 			if (null != pinCodeResponse)
 			{
 				response.setPinCodeResponseList(pinCodeResponse);
@@ -3966,22 +3917,7 @@ public class CartsController extends BaseCommerceController
 	{
 		this.baseSiteService = baseSiteService;
 	}
-	/**
-	 * @return the binService
-	 */
-	public BinService getBinService()
-	{
-		return binService;
-	}
 
-	/**
-	 * @param binService
-	 *           the binService to set
-	 */
-	public void setBinService(final BinService binService)
-	{
-		this.binService = binService;
-	}
 
 
 }
