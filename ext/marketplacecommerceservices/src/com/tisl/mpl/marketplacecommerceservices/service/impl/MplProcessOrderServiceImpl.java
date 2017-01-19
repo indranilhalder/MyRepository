@@ -12,6 +12,7 @@ import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
@@ -351,9 +352,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			{
 				if (null == orderModel.getPaymentInfo())
 				{
-
-
 					updateOrder(orderModel, juspayWebhookModel);
+
 
 					//Re-trigger submit order process from Payment_Pending to Payment_Successful
 					final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
@@ -380,6 +380,12 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					{
 						LOG.error(ERROR_NOTIF, ex);
 					}
+				}
+				//SprintPaymentFixes:- if any case Order Status Updation fails and Order is ready to mode to other Environment then change status to Payment_Successful
+				else if (null != orderModel.getPaymentInfo() && CollectionUtils.isNotEmpty(orderModel.getChildOrders())
+						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
+				{
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 				}
 
 				if (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD")
@@ -431,6 +437,26 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 						LOG.error(ERROR_NOTIF, ex);
 					}
 				}
+				//SprintPaymentFixes:- if any case Order Status Updation fails and Order is ready to mode to other Environment then change status to Payment_Successful or Payment Timeout
+				else if (null != orderModel.getPaymentInfo() && CollectionUtils.isNotEmpty(orderModel.getChildOrders())
+						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
+				{
+					boolean successFlag = false;
+					for (final PaymentTransactionModel paymentTransaction : orderModel.getPaymentTransactions())
+					{
+						if (paymentTransaction.getStatus().equalsIgnoreCase("SUCCESS"))
+						{
+							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+							successFlag = true;
+						}
+					}
+					if (successFlag == false)
+					{
+						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
+					}
+				}
+
+
 
 				if (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD")
 						&& CollectionUtils.isEmpty(orderModel.getChildOrders()))
