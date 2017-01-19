@@ -48,7 +48,14 @@ ${brandCollection.masterBrandName}
 				
 				<li>
 
-				<a data-id="${brandCode}"  id="${fn:toLowerCase(brandCode)}"  class="brandCategory">${subCategoryList.name}</a>
+				<a data-id="${brandCode}" 
+				
+				
+			 id="${brandCode}"   
+			 <%-- id="${fn:toLowerCase(brandCode)}" --%>
+				
+				
+				class="brandCategory">${subCategoryList.name}</a>
 			
 				</li>
                
@@ -56,7 +63,13 @@ ${brandCollection.masterBrandName}
 			
 			<c:forEach items="${brandComponentCollection}" var="brandCollection">
 			<c:set var="uid" value="${ brandCollection.uid}" />
-						<li><a  data-id="${uid}" id="${fn:toLowerCase(uid)}"   class="cmsManagedBrands">${brandCollection.masterBrandName}</a></li>
+						<li><a  data-id="${uid}"   id="${(uid)}"  
+						
+						 <%--  id="${fn:toLowerCase(uid)}"  --%> 
+						
+						
+						
+						 class="cmsManagedBrands">${brandCollection.masterBrandName}</a></li>
 			</c:forEach>
 			</ul>
 			</div>
@@ -66,7 +79,7 @@ ${brandCollection.masterBrandName}
 			<c:forEach items="${brandComponentCollection}" var="brandCollection">
 			<c:set var="uid" value="${ brandCollection.uid}" />
 						<li id="ToBeHidden"><a id="${uid}"  class="cmsManagedBrands">${brandCollection.masterBrandName}</a></li>
-						  <li data-id="${uid}" id = "cmsManaged-${uid}" class="subBrands cmsBrands  left-list" >
+						  <li data-id="${uid}" id = "cmsManaged-${uid}" class="subBrands cmsBrands  left-list"  >
 						
 						 <h1>${brandCollection.masterBrandName}</h1>
 						 <p><spring:theme code="brand.A-Z.description"/></p> 
@@ -237,26 +250,47 @@ ${brandCollection.masterBrandName}
 </form>
 <script>
 
-$(document).ready(function(){
+
+/* $(document).ready(function(){
 	//var cat = '${param.cat}';
-	
-	//TPR-1287 Start
 	var cat = (window.location.pathname).split("-");
 	cat = cat[cat.length-1];
-	cat = cat.toLowerCase();
-	
-	//TPR-1287 end
+	//cat = cat.toLowerCase();
 	
 	//alert(cat);
 	if(null!= cat ){
 		 window.setTimeout(function(){
 			//alert("Fire");
 			$("#"+cat).click();
+			
+			$("a[data-id="+cat+"]").parent().addClass("active");
+		},1000); 
+		
+	}
+}); */
+
+//TPR-1287 Start
+
+$(document).ready(function(){
+	//var cat = '${param.cat}';
+	var cat = (window.location.pathname).split("/");
+	cat = cat[cat.length-1];
+	//cat = cat.toLowerCase();
+	cat = cat.substr(2);
+	//alert(cat);
+	
+	// TPR-1287 end
+	if(null!= cat ){
+		 window.setTimeout(function(){
+			//alert("Fire");
+			$("#"+cat).click();
+			
 			$("a[data-id="+cat+"]").parent().addClass("active");
 		},1000); 
 		
 	}
 });
+
 </script>
 
 

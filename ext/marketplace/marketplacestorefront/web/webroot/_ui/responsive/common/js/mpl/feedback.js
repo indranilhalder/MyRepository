@@ -867,8 +867,7 @@ $(document).ready(function(){
 	    $(".brandCategory").click(function(){
 	    	
 	    	var elementId =$(this).attr('id') ;
-	    	
-	    	var brandCatName = $(this).text().toLowerCase() + "-brands";
+	    	var brandCatName = $(this).text().toLowerCase().trim() + "-brands";
 	    		    	
 	    	//window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
 	    	window.history.pushState('obj', 'newtitle', '/brands/' + brandCatName +'/b-'+elementId.toLowerCase());
@@ -880,12 +879,11 @@ $(document).ready(function(){
 	    $(".cmsManagedBrands").click(function(){
 	    	
 	    	var elementId =$(this).attr('id') ;
-	    	var brandCatName = $(this).text().toLowerCase().replace( /\s/g, "-") + "-brands";
 	    	
-	    	
+	    	var brandCatName = $(this).text().toLowerCase().trim().replace(/\s/g, "-") + "-brands";
 	    	
 	    	//window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
-	    	window.history.pushState('obj', 'newtitle', '/brands/' + brandCatName +'/b-'+elementId.toLowerCase());
+	    	window.history.pushState('obj', 'newtitle', '/brands/' + brandCatName +'/b-'+elementId);
 	    	
 	    });
 	  // TPR-1287 end
