@@ -1,6 +1,5 @@
 package com.tisl.mpl.jalo;
 
-import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
@@ -26,13 +25,11 @@ import de.hybris.platform.util.localization.Localization;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -86,96 +83,104 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 	public List<PromotionResult> evaluate(final SessionContext paramSessionContext,
 			final PromotionEvaluationContext paramPromotionEvaluationContext)
 	{
+		//boolean isMultipleSeller = false;
+		//final List<Product> promotionProductList = new ArrayList<>(getProducts()); //Adding of Promotion Added Products to List
+		//final List<Category> promotionCategoryList = new ArrayList<>(getCategories());//Adding of Promotion Added Categories to List
+		//Blocked for TISPT-154
+		//		final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(paramSessionContext, // Promotion added Restriction evaluation
+		//				paramPromotionEvaluationContext);
+
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
 		List<String> excludeManufactureList = null;
 		List<Product> excludedProductList = null;
 		boolean checkChannelFlag = false;
-		boolean isMultipleSeller = false;
-		final List<Product> promotionProductList = new ArrayList<>(getProducts()); //Adding of Promotion Added Products to List
-		final List<Category> promotionCategoryList = new ArrayList<>(getCategories());//Adding of Promotion Added Categories to List
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
-		final AbstractOrder order = paramPromotionEvaluationContext.getOrder();
-
 		excludedProductList = new ArrayList<Product>();
 		excludeManufactureList = new ArrayList<String>();
 
+		final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(paramSessionContext,
+				paramPromotionEvaluationContext);
+		final AbstractOrder order = paramPromotionEvaluationContext.getOrder();
 		GenericUtilityMethods.populateExcludedProductManufacturerList(paramSessionContext, paramPromotionEvaluationContext,
 				excludedProductList, excludeManufactureList, restrictionList, this);
-		//Blocked for TISPT-154
-		//		final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(paramSessionContext, // Promotion added Restriction evaluation
-		//				paramPromotionEvaluationContext);
 
 		try
 		{
 			final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(paramSessionContext,
 					MarketplacecommerceservicesConstants.CHANNEL);
 			//changes Start for omni cart fix
-			final AbstractOrder cart = paramPromotionEvaluationContext.getOrder();
 
-			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
+			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, order);
 
 			//changes end for omni cart fix
 
 			//Blocked for TISPT-154
-			//if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag) // if Restrictions return valid && Channel is valid
-			if (checkChannelFlag)
+			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag) // if Restrictions return valid && Channel is valid
+			//if (checkChannelFlag)
 			{
 				final Map<String, List<String>> productAssociatedItemsFinalMap = new ConcurrentHashMap<String, List<String>>();
-
 				final Map<String, Integer> validProductFinalList = new ConcurrentHashMap<String, Integer>();
+				//final Map<String, AbstractOrderEntry> validProductUssidFinalMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
 
-				final Map<String, AbstractOrderEntry> validProductUssidFinalMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
+				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 
 				//getting the valid products
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
-						.getValidProdListForBuyXofAPromo(order, paramSessionContext, promotionProductList, promotionCategoryList,
-								restrictionList, excludedProductList, excludeManufactureList, null, null); // Adding Eligible Products to List
+						.getValidProdListForBuyXofA(order, paramSessionContext, allowedProductList, restrictionList,
+								excludedProductList, excludeManufactureList, null, null); // Adding Eligible Products to List
+
+				//				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
+				//						.getValidProdListForBuyXofAPromo(order, paramSessionContext, promotionProductList, promotionCategoryList,
+				//								restrictionList, excludedProductList, excludeManufactureList, null, null); // Adding Eligible Products to List
 
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(paramSessionContext, validProductUssidMap))
 				{
-					isMultipleSeller = getMplPromotionHelper().checkMultipleSeller(restrictionList);
+					//isMultipleSeller = getMplPromotionHelper().checkMultipleSeller(restrictionList);
 
-					if (isMultipleSeller)
-					{
-						Map<AbstractOrderEntry, String> productSellerDetails = new HashMap<AbstractOrderEntry, String>();
-						Map<String, Map<String, AbstractOrderEntry>> multiSellerValidUSSIDMap = new HashMap<String, Map<String, AbstractOrderEntry>>();
-						productSellerDetails = getMplPromotionHelper().populateSellerSpecificData(paramSessionContext, restrictionList,
-								validProductUssidMap);
-						if (MapUtils.isNotEmpty(productSellerDetails))
-						{
-							multiSellerValidUSSIDMap = getMplPromotionHelper().populateMultiSellerData(validProductUssidMap,
-									productSellerDetails, paramSessionContext);
-							if (null != multiSellerValidUSSIDMap && !multiSellerValidUSSIDMap.isEmpty())
-							{
-								for (final Map.Entry<String, Map<String, AbstractOrderEntry>> multiSellerData : multiSellerValidUSSIDMap
-										.entrySet())
-								{
-									final Map<String, AbstractOrderEntry> validMultiUssidMap = multiSellerData.getValue();
-									if (null != validProductUssidMap && !validProductUssidMap.isEmpty())
-									{
-										List<PromotionResult> promotionResultList = new ArrayList<PromotionResult>();
-										promotionResultList = promotionEvaluation(paramSessionContext, paramPromotionEvaluationContext,
-												validMultiUssidMap, restrictionList, promotionProductList, promotionCategoryList, order,
-												productAssociatedItemsFinalMap, validProductFinalList, validProductUssidFinalMap);
-										if (null != promotionResultList && !promotionResultList.isEmpty())
-										{
-											promotionResults.addAll(promotionResultList);
-										}
-									}
-								}
-							}
-						}
-					}
-					else
-					{
-						promotionResults = promotionEvaluation(paramSessionContext, paramPromotionEvaluationContext,
-								validProductUssidMap, restrictionList, promotionProductList, promotionCategoryList, order,
-								productAssociatedItemsFinalMap, validProductFinalList, validProductUssidFinalMap);
-					}
+					//					if (isMultipleSeller)
+					//					{
+					//						Map<AbstractOrderEntry, String> productSellerDetails = new HashMap<AbstractOrderEntry, String>();
+					//						Map<String, Map<String, AbstractOrderEntry>> multiSellerValidUSSIDMap = new HashMap<String, Map<String, AbstractOrderEntry>>();
+					//						productSellerDetails = getMplPromotionHelper().populateSellerSpecificData(paramSessionContext, restrictionList,
+					//								validProductUssidMap);
+					//						if (MapUtils.isNotEmpty(productSellerDetails))
+					//						{
+					//							multiSellerValidUSSIDMap = getMplPromotionHelper().populateMultiSellerData(validProductUssidMap,
+					//									productSellerDetails, paramSessionContext);
+					//							if (null != multiSellerValidUSSIDMap && !multiSellerValidUSSIDMap.isEmpty())
+					//							{
+					//								for (final Map.Entry<String, Map<String, AbstractOrderEntry>> multiSellerData : multiSellerValidUSSIDMap
+					//										.entrySet())
+					//								{
+					//									final Map<String, AbstractOrderEntry> validMultiUssidMap = multiSellerData.getValue();
+					//									if (null != validProductUssidMap && !validProductUssidMap.isEmpty())
+					//									{
+					//										List<PromotionResult> promotionResultList = new ArrayList<PromotionResult>();
+					//										promotionResultList = promotionEvaluation(paramSessionContext, paramPromotionEvaluationContext,
+					//												validMultiUssidMap, restrictionList, promotionProductList, promotionCategoryList, order,
+					//												productAssociatedItemsFinalMap, validProductFinalList, validProductUssidFinalMap);
+					//										if (null != promotionResultList && !promotionResultList.isEmpty())
+					//										{
+					//											promotionResults.addAll(promotionResultList);
+					//										}
+					//									}
+					//								}
+					//							}
+					//						}
+					//					}
+					//					else
+					//					{
+					//					promotionResults = promotionEvaluation(paramSessionContext, paramPromotionEvaluationContext, validProductUssidMap,
+					//							restrictionList, promotionProductList, promotionCategoryList, order, productAssociatedItemsFinalMap,
+					//							validProductFinalList, validProductUssidFinalMap);
+					//}
+
+					promotionResults = promotionEvaluation(paramSessionContext, paramPromotionEvaluationContext, validProductUssidMap,
+							restrictionList, allowedProductList, order, productAssociatedItemsFinalMap, validProductFinalList);
 				}
 
 				//Setting values
-				paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidFinalMap);
+				//paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidFinalMap);
 				paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductFinalList);
 				paramSessionContext
 						.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsFinalMap);
@@ -213,9 +218,9 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 	private List<PromotionResult> promotionEvaluation(final SessionContext paramSessionContext,
 			final PromotionEvaluationContext paramPromotionEvaluationContext,
 			final Map<String, AbstractOrderEntry> validProductUssidMap, final List<AbstractPromotionRestriction> restrictionList,
-			final List<Product> promotionProductList, final List<Category> promotionCategoryList, final AbstractOrder order,
-			final Map<String, List<String>> productAssociatedItemsFinalMap, final Map<String, Integer> validProductFinalList,
-			final Map<String, AbstractOrderEntry> validProductUssidFinalMap)
+			final List<Product> allowedProductList, final AbstractOrder order,
+			final Map<String, List<String>> productAssociatedItemsFinalMap, final Map<String, Integer> validProductFinalList)
+	//			,final Map<String, AbstractOrderEntry> validProductUssidFinalMap)
 	{
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		final PromotionsManager promotionsManager = PromotionsManager.getInstance();
@@ -223,7 +228,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 		int totalCount = 0;
 		try
 		{
-			noOfProducts = populateTotalProductCount(validProductUssidMap);
+			//noOfProducts = populateTotalProductCount(validProductUssidMap);
 			if (GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, paramSessionContext,
 					paramPromotionEvaluationContext, this, restrictionList)) // If exceeds set Category Amount and Restriction set Brand Value
 			{
@@ -237,15 +242,15 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 						: new Double(0.0);
 
 				//getting eligible Product List
-				final List<Product> eligibleProductList = new ArrayList<Product>();
+				//final List<Product> eligibleProductList = new ArrayList<Product>();
 				for (final AbstractOrderEntry entry : validProductUssidMap.values())
 				{
 					totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
-					eligibleProductList.add(entry.getProduct());
+					//eligibleProductList.add(entry.getProduct());
 				}
 				noOfProducts = totalCount;
-
 				List<PromotionOrderEntryConsumed> remainingItemsFromTail = null;
+				final Map<String, Integer> tcMapForValidEntries = new ConcurrentHashMap<String, Integer>();
 
 				// Blocked for TISPT-154
 				//for (final AbstractOrderEntry orderEntry : validProductUssidMap.values())
@@ -253,10 +258,12 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 				//					eligibleProductList.add(orderEntry.getProduct());
 				//				}
 
-				final PromotionOrderView view = paramPromotionEvaluationContext.createView(paramSessionContext, this,
-						eligibleProductList);
+				//				final PromotionOrderView view = paramPromotionEvaluationContext.createView(paramSessionContext, this,
+				//						eligibleProductList);
 
-				final Map<String, Integer> tcMapForValidEntries = new ConcurrentHashMap<String, Integer>();
+				final PromotionOrderView view = paramPromotionEvaluationContext.createView(paramSessionContext, this,
+						allowedProductList);
+
 				for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 				{
 					tcMapForValidEntries.put(mapEntry.getKey(), Integer.valueOf(mapEntry.getValue().getQuantity().intValue()));
@@ -273,13 +280,15 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 							validProductUssidMap, totalCount, eligibleQuantity.longValue(), paramSessionContext, restrictionList);
 
 					validProductFinalList.putAll(validProductList);
-					validProductUssidFinalMap.putAll(validProductUssidMap);
+					//validProductUssidFinalMap.putAll(validProductUssidMap);
 
 					if (!isPercentageOrAmount().booleanValue())
 					{
-						flagForCouldFireMessage = getDefaultPromotionsManager()
-								.getValidProductListForAmtDiscount(paramSessionContext, order, promotionProductList,
-										promotionCategoryList, eligibleQuantity, discountPrice, validProductUssidMap);
+						flagForCouldFireMessage = getDefaultPromotionsManager().getValidProductListForAmtDiscount(paramSessionContext,
+								order, allowedProductList, eligibleQuantity, discountPrice, validProductUssidMap);
+						//						flagForCouldFireMessage = getDefaultPromotionsManager()
+						//								.getValidProductListForAmtDiscount(paramSessionContext, order, promotionProductList,
+						//										promotionCategoryList, eligibleQuantity, discountPrice, validProductUssidMap);
 					}
 
 					//for delivery mode restriction check
@@ -328,9 +337,8 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 						// Apportioning Code Implementation
 						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.PERCENTAGEDISCOUNT,
 								Double.valueOf(percentageDiscount));
-						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE,
-								Double.valueOf(totalPricevalue));
-
+						//						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE,
+						//								Double.valueOf(totalPricevalue));
 						paramSessionContext
 								.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
 						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC,
@@ -443,19 +451,19 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 	 * @param validProductUssidMap
 	 * @return totalCount
 	 */
-	private int populateTotalProductCount(final Map<String, AbstractOrderEntry> validProductUssidMap)
-	{
-		int totalCount = 0;
-		if (MapUtils.isNotEmpty(validProductUssidMap))
-		{
-			for (final AbstractOrderEntry entry : validProductUssidMap.values())
-			{
-				totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
-			}
-		}
-
-		return totalCount;
-	}
+	//	private int populateTotalProductCount(final Map<String, AbstractOrderEntry> validProductUssidMap)
+	//	{
+	//		int totalCount = 0;
+	//		if (MapUtils.isNotEmpty(validProductUssidMap))
+	//		{
+	//			for (final AbstractOrderEntry entry : validProductUssidMap.values())
+	//			{
+	//				totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
+	//			}
+	//		}
+	//
+	//		return totalCount;
+	//	}
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
