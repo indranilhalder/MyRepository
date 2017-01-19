@@ -32,7 +32,19 @@
 	.address_landmarkOtherDiv {
 		margin: 0px !important;
 	}
-	
+	.formaddress .checkout-indent #new-address-option-1+label,
+.formaddress .checkout-indent #new-address-option-2+label {
+    width:100%;
+    
+}
+@media(min-width:791px) {
+   
+    #new-address-option-1+label,
+    #new-address-option-2+label {
+        width:100%
+    }
+    
+}
 	
 </style>
 <!-- R2.3 END: 2016-12-19: Code Merged -->
@@ -179,11 +191,15 @@
 		<%-- <c:forEach items="${addressType}" var="type"> --%>
 		<%-- <label  class="asd" for="${type}"></label><form:radiobutton path="addressType" value="${type}" /> --%>
 		
-		
+		<div class="row">
+		<div class="col-md-6 col-sm-6 col-xs-6 padd">
 		<input type="radio" name="addressType" id="new-address-option-1" value="Home"  checked="checked"/>
 		<label class="residential" for="new-address-option-1"><spring:theme code="text.addressBook.Residentialaddress" text="Residential Address" /></label>
+		</div>
+		<div class="col-md-6 col-sm-6 col-xs-6 padd">
 		<input type="radio" id="new-address-option-2" value="Work" name="addressType" />
 		<label class="commercial" for="new-address-option-2"><spring:theme code="text.addressBook.commercialaddress" text="Commercial Address" /></label>
+		</div></div>
 		<fieldset> 
 		<div class='half'>
 		

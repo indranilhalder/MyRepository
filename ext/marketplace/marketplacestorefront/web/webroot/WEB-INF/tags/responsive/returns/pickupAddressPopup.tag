@@ -253,6 +253,15 @@
 <div class="wrapBG"
 	style="background-color: rgba(0, 0, 0, 0.5); width: 100%; height: 600px; position: fixed; top: 0px; left: 0px; display: none;"></div>
 <style>
+
+@media(min-width:791px) {
+   
+    #new-address-option-1+label,
+    #new-address-option-2+label {
+        width:100%
+    }
+    
+}
 .modal-body {
 	position: relative;
 	padding: 15px;
