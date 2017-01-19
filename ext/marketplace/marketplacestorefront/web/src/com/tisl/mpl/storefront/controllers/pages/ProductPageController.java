@@ -53,6 +53,7 @@ import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
 import de.hybris.platform.commerceservices.url.UrlResolver;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
@@ -117,6 +118,7 @@ import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
+import com.tisl.mpl.facade.product.MplJewelleryFacade;
 import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
@@ -296,6 +298,13 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "priceBreakupFacade")
 	private PriceBreakupFacade priceBreakupFacade;
 
+
+	@Resource(name = "mplJewelleryFacade")
+	private MplJewelleryFacade mplJewelleryFacade;
+
+	@Resource(name = "jewelleryDescMapping")
+	private Map<String, String> jewelleryDescMapping;
+
 	/**
 	 * @param buyBoxFacade
 	 *           the buyBoxFacade to set
@@ -334,6 +343,8 @@ public class ProductPageController extends MidPageController
 	 * @throws CMSItemNotFoundException
 	 * @throws UnsupportedEncodingException
 	 */
+
+
 
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN, method = RequestMethod.GET)
 	public String productDetail(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
@@ -1838,17 +1849,20 @@ public class ProductPageController extends MidPageController
 								}
 							} //end apparel
 							  //electronics
-
-							else if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory())
+							/*
+							 * <!-- //TPR-3752 Jewel Heading Added -->
+							 */else if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory())
 									|| ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory())
 									|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory()))
+
 							{
 								final String[] propertiesValues = properitsValue.split(",");
 								if (propertiesValues != null && propertiesValues.length > 0)
 								{
 									for (final String value : propertiesValues)
 									{
-										if (value.equalsIgnoreCase(featureData.getName()))
+										if (value.equalsIgnoreCase(featureData.getName())
+												&& !ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
 										{
 											if (productFeatureMap.size() > 0)
 											{
@@ -1858,6 +1872,18 @@ public class ProductPageController extends MidPageController
 													productFeature != null && productFeature.getUnit() != null
 															&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit()
 															.getSymbol() : "");
+											mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
+										}
+										else if (value.equalsIgnoreCase(featureData.getCode().substring(
+												featureData.getCode().lastIndexOf(".") + 1)))
+										{
+
+											if (productFeatureMap.size() > 0)
+											{
+												productFeatureMap.clear();
+											}
+
+											productFeatureMap.put(featureValueData.getValue(), jewelleryDescMapping.get(value));
 											mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
 										}
 									}
@@ -1883,6 +1909,7 @@ public class ProductPageController extends MidPageController
 									warrentyList.add(featureValueData.getValue());
 								}
 							}
+
 							else
 							{
 								if (properitsValue.toLowerCase().contains(configurableAttributData.getCode().toLowerCase()))
@@ -2108,6 +2135,7 @@ public class ProductPageController extends MidPageController
 
 				buyboxJson = getPopulatedBuyBoxJson(buydata, buyboxJson);
 				buyboxJson.put("buyboxList", buyboxdata);
+
 			}
 			else
 			{
@@ -2578,6 +2606,7 @@ public class ProductPageController extends MidPageController
 	 * @param buyboxJson
 	 * @throws com.granule.json.JSONException
 	 */
+	@SuppressWarnings("boxing")
 	private JSONObject getPopulatedBuyBoxJson(final Map<String, Object> buydata, final JSONObject buyboxJson)
 			throws com.granule.json.JSONException
 	{
@@ -2596,6 +2625,7 @@ public class ProductPageController extends MidPageController
 
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.DISPLAYCONFIGATTR, displayConfigurableAttributeForPriceBreakup);
 
+		//buyboxJson.put(ControllerConstants.Views.Fragments.Product.JEWEL_DESCRIPTION, JewelInfo);
 
 		//PRICE BREAKUP ENDS:TPR-3752
 
@@ -2613,6 +2643,20 @@ public class ProductPageController extends MidPageController
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.MIN_PRICE, buyboxdata.getMinPrice());
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.ALL_OF_STOCK, buyboxdata.getAllOOStock());
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
+		//JewelleryInfo Deatils for jewelHeading added starts here
+		if (null != buyboxdata.getPlpMaxPrice() && buyboxdata.getPlpMaxPrice().getDoubleValue() > 0
+				&& null != buyboxdata.getPlpMinPrice() && buyboxdata.getPlpMinPrice().getDoubleValue() > 0)
+		{
+			final List<JewelleryInformationModel> JewelInfo = mplJewelleryFacade.getJewelleryInfoByUssid(buyboxdata
+					.getSellerArticleSKU());
+			final Map<String, String> jewelDetails = new HashMap<String, String>();
+			for (final JewelleryInformationModel jewelInfo : JewelInfo)
+			{
+				jewelDetails.put(jewelInfo.getPIMAttributeId(), jewelInfo.getWeight());
+			}
+			buyboxJson.put(ControllerConstants.Views.Fragments.Product.JEWEL_DESCRIPTION, jewelDetails);
+		}
+		//JewelleryInfo Deatils for jewelHeading added ends here
 		final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
 		final List<String> noStockPCodes = (List<String>) buydata.get("no_stock_p_codes");
 		for (final String pCode : noStockPCodes)

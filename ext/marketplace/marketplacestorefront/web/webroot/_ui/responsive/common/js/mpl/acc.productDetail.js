@@ -1499,6 +1499,7 @@ $( document ).ready(function() {
 					});
 			
 			
+			
 			/* PRICE BREAKUP STARTS HERE */
 			
 			/*$("#showPrice").show();*/
@@ -1521,6 +1522,41 @@ $( document ).ready(function() {
 			
 			
 			/* PRICE BREAKUP ENDS HERE */
+				
+				
+				/* JewelleryDetail STARTS HERE */
+				var jwelPDP = $("#jwelPDP").val();
+				if (jwelPDP == "FineJewellery"){
+				var jewelInfoKey = [], jewelInfoValue = [], jewelHeadingValue = [], jewelHeadingKey = [];
+				var j=0;
+				var jewelDetailslistForPDP = data['jewelDescription'];
+				$.each(jewelDetailslistForPDP,function(key,value) {	
+						jewelInfoKey[j] = key	;
+						jewelInfoValue[j] = value;
+						j++;
+				});
+				var property = prop.split(',');
+				var keyLOV = '' , valueLOV= '';
+				for (var i=0; i<property.length; i++){
+					var lovSplit = property[i].split("=");
+					valueLOV = lovSplit[lovSplit.length-1].replace(/[{}]/g, '');
+					keyLOV = lovSplit[lovSplit.length-2].replace(/[{}]/g, '');
+					jewelHeadingKey[i] = keyLOV;
+					jewelHeadingValue[i] = valueLOV;
+				}
+				for (var i=0; i<property.length; i++){
+				if (jewelHeadingValue[i] == "null"){
+					$(".key-label").append('<span>'+ jewelHeadingKey[i] +'</span>')
+				}
+				else if (jQuery.inArray(jewelHeadingValue[i], jewelInfoKey ) >= 0){
+					var index = jQuery.inArray(jewelHeadingValue[i], jewelInfoKey );
+					$(".key-label").append('<span>'+ jewelHeadingKey[i]+'(' + jewelInfoValue[index]+ ') </span>')
+				}
+						
+				}
+				}
+				
+				/* JewelleryDetail ENDS HERE */
 			
 			if (data['sellerArticleSKU'] != undefined) {
 				if (data['errMsg'] != "") {
@@ -1738,6 +1774,8 @@ $( document ).ready(function() {
 			},3000);
 		}
 	});
+	
+	
 }); 
 
 
