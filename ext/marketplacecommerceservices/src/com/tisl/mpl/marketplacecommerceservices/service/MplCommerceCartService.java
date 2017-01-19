@@ -11,7 +11,6 @@ import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
-import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartModification;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
@@ -228,19 +227,6 @@ public interface MplCommerceCartService
 	List<PinCodeResponseData> getAllResponsesForPinCode(final String pin, final List<PincodeServiceData> reqData)
 			throws EtailNonBusinessExceptions, ClientEtailNonBusinessExceptions;
 
-	/*
-	 * @Desc fetching reservation details
-	 * 
-	 * @param cartId
-	 * 
-	 * @param cartData
-	 * 
-	 * @param pincode
-	 * 
-	 * @throws EtailNonBusinessExceptions
-	 */
-	ReservationListWsDTO getReservation(final AbstractOrderModel cartModel, final String pincode, final String type,InventoryReservListRequestWsDTO item, SalesApplication mobile)
-			throws EtailNonBusinessExceptions;
 
 	/*
 	 * @DESC MobileWS105 : get top two wish list for mobile web service
@@ -479,6 +465,19 @@ public interface MplCommerceCartService
 	 * @param orderModel
 	 */
 	void recalculateOrder(OrderModel orderModel);
+
+	/**
+	 * @param abstractOrderModel
+	 * @param pincode
+	 * @param requestType
+	 * @param inventoryRequest
+	 * @param salesApplication
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 */
+	ReservationListWsDTO getReservation(AbstractOrderModel abstractOrderModel, String pincode, String requestType,
+			InventoryReservListRequestWsDTO inventoryRequest,
+			de.hybris.platform.commerceservices.enums.SalesApplication salesApplication) throws EtailNonBusinessExceptions;
 
 
 

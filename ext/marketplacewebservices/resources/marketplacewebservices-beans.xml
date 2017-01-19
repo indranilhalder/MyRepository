@@ -668,6 +668,10 @@
 			<property name="cartIsPercentage" type="String" />
 			<property name="cartPercentagePromotion" type="String" />
 			<property name="trackingAWB" type="String" />
+			<!-- added in R2.3 TISRLUAT-812 start -->
+			<property name="scheduleDeliveryDate" type="String" />
+			<property name="scheduleDeliveryTime" type="String" />
+			<!-- added in R2.3 TISRLUAT-812 end -->
 		<property name="returnAWB" type="String" />
 		<property name="storeDetails"
 			type="de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO" />

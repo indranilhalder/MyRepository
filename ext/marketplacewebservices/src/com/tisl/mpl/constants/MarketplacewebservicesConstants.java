@@ -531,6 +531,6 @@ public class MarketplacewebservicesConstants
 	//Added by SAP for Watches & FashionAccessories  :::  END
 	public static final String WARRANTY = "Warranty";
 	public static final String PDP_DESC_TAB = "pdp.desc.tab.".intern();
-
+	public static final String TO = "TO";
 
 }

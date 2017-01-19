@@ -86,6 +86,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.gigya.json.JSONObject;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.tisl.mpl.checkout.form.DeliveryMethodEntry;
 import com.tisl.mpl.checkout.form.DeliveryMethodForm;
@@ -134,7 +135,6 @@ import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
-import com.granule.json.JSONObject;
 
 @Controller
 @RequestMapping(value = "/checkout/multi/delivery-method")
@@ -416,11 +416,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 			}
 			//TISPT-400 ends
-
-			Double finalDeliveryCost = Double.valueOf(0.0);
-
-			//int count = 0;
-			Boolean selectPickupDetails = Boolean.FALSE;
 
 			if (deliveryMethodForm.getDeliveryMethodEntry() == null)
 			{

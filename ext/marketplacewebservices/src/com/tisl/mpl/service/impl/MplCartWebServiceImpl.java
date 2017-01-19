@@ -38,7 +38,6 @@ import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsD
 import de.hybris.platform.commercewebservicescommons.dto.user.AddressListWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.CartException;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
-import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -2178,7 +2177,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		final AddressModel addressModel = getModelService().create(AddressModel.class);
 		try
 		{
-			getAddressReversePopulator().populate(addressData, addressModel);
+			addressReversePopulator.populate(addressData, addressModel);
 			if (null != addressData.getState())
 			{
 				addressModel.setDistrict(addressData.getState());
