@@ -12,6 +12,7 @@ ACC.carousel = {
 	     "shopTheLookCarousel",
 
 	     "ClpTopDealsCarousel",
+	     "ClpBestOffersCarousel",
 	     "ClpBestSellerCarousel",
 
 	     "shopByLookCarousel",
@@ -489,6 +490,9 @@ ACC.carousel = {
 			itemsMobile : false*/
 		});
 	},
+	
+	
+	
 	blpTopDealsCarousel: function(){
 		
 		//changes for tpr-599(BLP and CLP changes)
@@ -604,6 +608,67 @@ ACC.carousel = {
 		itemsMobile : [480,2],*/
 			});
 	},
+	/*sprint8 TPR-1672*/
+	ClpBestOffersCarousel: function(){
+		
+		//changes for tpr-599(BLP and CLP changes)
+		var slideBy= $('#slideByOffer').val()?$('#slideByOffer').val():1;
+		var autoPlay= $('#autoPlayOffer').val()?$.parseJSON($('#autoPlayOffer').val()):true;
+		var autoplayTimeout= $('#autoplayTimeoutOffer').val()?$('#autoplayTimeoutOffer').val():5000;
+		
+		$(".best-offers .offersCarousel").owlCarousel({
+					items:5,
+            		loop: true,
+            		nav:false,
+            		dots:false,
+            		navText:[],
+            		autoplay: autoPlay,
+                    autoHeight : false,
+                    autoplayTimeout: autoplayTimeout,
+                    slideBy: slideBy,
+            		responsive : {
+            			// breakpoint from 0 up
+            			0 : {
+            				items:1,
+            				stagePadding: 50,
+            				loop: ($(".top_deal .offersCarousel .image").length == 1)?false:true,
+            				nav: ($(".top_deal .offersCarousel .image").length == 1)?false:true,
+            			},
+            			// breakpoint from 480 up
+            			480 : {
+            				items:2,
+            				stagePadding: 75,
+            				loop: ($(".top_deal .offersCarousel .image").length <= 2)?false:true,
+            				nav: ($(".top_deal .offersCarousel .image").length <= 2)?false:true,
+            			},
+            			// breakpoint from 700 up
+            			700 : {
+            				items:3,
+            				loop: ($(".top_deal .offersCarousel .image").length <= 3)?false:true,
+            				nav: ($(".top_deal .offersCarousel .image").length <= 3)?false:true,
+            			},
+            			// breakpoint from 1000 up
+            			1000 : {
+            				items:5,
+            				loop: ($(".top_deal .offersCarousel .image").length <= 5)?false:true,
+            				nav: ($(".top_deal .offersCarousel .image").length <= 5)?false:true,
+            			}			
+            		}
+			/*navigation:true,
+			rewindNav: false,
+			navigationText :[],
+			pagination:false,
+			items:4,
+			itemsDesktop : false, 
+			itemsDesktopSmall : false, 
+			itemsTablet: false, 
+			itemsMobile : true
+		itemsDesktop : [5000,4], 
+		itemsDesktopSmall : [1400,4], 
+		itemsTablet: [650,2], 
+		itemsMobile : [480,2],*/
+			});
+	}, /*sprint8 TPR-1672*/
 
 	myStyleCarousel: function(){
 		$(".mystyle-carousel").owlCarousel({
