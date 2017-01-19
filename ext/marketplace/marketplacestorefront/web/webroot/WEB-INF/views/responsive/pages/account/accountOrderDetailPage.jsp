@@ -680,7 +680,7 @@
 												<c:if test="${entry.isRefundable eq false }">
 												<c:if test="${entry.consignment.status.code eq 'RETURN_INITIATED'}">
 													<div class="awsInnerClass">
-															Please provide AWB number, Logistics partner and upload POD <a href="#" id="awbNumberLink">here</a>
+															Please provide AWB number, Logistics partner and upload POD <a id="awbNumberLink">here</a>
 													</div>
 												</c:if>
 												</c:if>	
@@ -1781,7 +1781,11 @@
 
 										</div>
 										
-											
+											<a
+													href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
+													<spring:theme code="text.account.returnReplace"
+														text="Return Item" />
+												</a>
 										<div class="actions">
 										<div class="col-md-6 col-sm-6">
 											<c:if
@@ -1823,7 +1827,7 @@
 												<c:if test="${entry.consignment.status.code eq 'RETURN_INITIATED'}">
 													<div class="awsInnerClass">
 															Please provide AWB number, 
-															<br/>Logistics partner and upload POD <a href="#" id="awbNumberLink">here</a>
+															<br/>Logistics partner and upload POD <a id="awbNumberLink">here</a>
 													</div>
 												</c:if>	
 												</c:if>
