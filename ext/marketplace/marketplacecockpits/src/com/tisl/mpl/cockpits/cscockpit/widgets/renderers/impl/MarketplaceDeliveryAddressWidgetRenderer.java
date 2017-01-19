@@ -815,17 +815,16 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 				final Listbox addressTypeListbox, final Listbox countryListbox)
 						throws InterruptedException {
 
-			List<Listitem> items = landMarkListbox.getItems();
-			String LandMark = StringUtils.EMPTY;
-			if (!landmarkfield.isDisabled()) {
-				LandMark = landmarkfield.getValue();
-			} else {
-				for (Listitem item : items) {
-
-					if (item.isSelected()) {
-						LandMark = (String) item.getValue();
-					}
-				}
+			//List<Listitem> items = landMarkListbox.getItems();
+			String landMark = StringUtils.EMPTY;
+			String selectedLandmark = StringUtils.EMPTY;
+			if(null != landMarkListbox && null != landMarkListbox.getSelectedItem() && null != landMarkListbox.getSelectedItem().getValue()) {
+				selectedLandmark = (String)landMarkListbox.getSelectedItem().getValue();
+			}
+			if(null != selectedLandmark && !selectedLandmark.equalsIgnoreCase(MarketplaceCockpitsConstants.OTHERS) && !selectedLandmark.equalsIgnoreCase(MarketplaceCockpitsConstants.SELECT_LANDMARK)) {
+				landMark = selectedLandmark;
+			}else if(null != landmarkfield && null != landmarkfield.getValue()){
+				landMark=landmarkfield.getValue();
 			}
 			if (StringUtils.isBlank(firstNameField.getValue())
 					|| StringUtils.isBlank(firstNameField.getValue().trim())) {
@@ -1009,7 +1008,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 				saveShippingAddress(widget, firstNameField.getValue(),
 						lastNameField.getValue(), address1Field.getValue(),
 						address2Field.getValue(), address3Field.getValue(),
-						LandMark, cityField.getValue(),
+						landMark, cityField.getValue(),
 						postalCodeField.getValue(), stateFieldListBox
 						.getSelectedItem().getLabel().toString(),
 						mobileNumberField.getValue(), addressTypeListbox
