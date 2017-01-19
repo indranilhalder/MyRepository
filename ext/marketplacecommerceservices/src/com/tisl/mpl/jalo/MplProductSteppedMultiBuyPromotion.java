@@ -386,16 +386,16 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 							paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.PERCENTAGEDISCOUNT,
 									Double.valueOf(percentageDiscount));
 
-							paramSessionContext.setAttribute(
-									MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE,
-									Double.valueOf(getMplBundlePromotionHelper().getTotalEligiblePrice(validProductUssidMap,
-											validProductList)));
+							//							paramSessionContext.setAttribute(
+							//									MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE,
+							//									Double.valueOf(getMplBundlePromotionHelper().getTotalEligiblePrice(validProductUssidMap,
+							//											validProductList)));
 
 							paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE,
 									String.valueOf(this.getCode()));
 							paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC, Boolean.FALSE);
-							paramSessionContext
-									.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
+							//							paramSessionContext
+							//									.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
 
 							if (MapUtils.isNotEmpty(validProductList))
 							{
