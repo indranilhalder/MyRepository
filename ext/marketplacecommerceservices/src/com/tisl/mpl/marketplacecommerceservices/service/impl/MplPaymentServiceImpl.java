@@ -22,6 +22,7 @@ import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.EMIPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -59,6 +60,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -84,6 +86,8 @@ import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.EMITermRowModel;
 import com.tisl.mpl.core.model.JuspayEBSResponseModel;
+import com.tisl.mpl.core.model.JuspayOrderStatusModel;
+import com.tisl.mpl.core.model.JuspayWebhookModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.PaymentModeApportionModel;
@@ -96,7 +100,9 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.request.GetOrderStatusRequest;
 import com.tisl.mpl.juspay.response.CardResponse;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
+import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplPaymentDao;
+import com.tisl.mpl.marketplacecommerceservices.daos.MplProcessOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplFraudModelService;
@@ -165,6 +171,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	private MplFraudModelService mplFraudModelService;
 	@Autowired
 	private Converter<OrderModel, OrderData> orderConverter;
+	@Resource(name = "mplOrderDao")
+	private MplOrderDao mplOrderDao;
+	@Resource(name = "mplProcessOrderDao")
+	private MplProcessOrderDao mplProcessOrderDao;
+	private Converter<JuspayOrderStatusModel, GetOrderStatusResponse> juspayOrderResponseConverter;
 
 	//@Autowired
 	//private ExtendedUserService extendedUserService;
@@ -580,8 +591,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 			final PaymentTransactionEntryModel paymentTransactionEntry = getModelService()
 					.create(PaymentTransactionEntryModel.class);
+
+			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
 			paymentTransactionEntry.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
-			paymentTransactionEntry.setAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPriceWithConv().doubleValue()));
+			if (abstractOrderModel.getTotalPriceWithConv() != null || abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+			{
+				paymentTransactionEntry.setAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPriceWithConv().doubleValue()));
+			}
+
 			paymentTransactionEntry.setTime(date);
 			paymentTransactionEntry.setCurrency(abstractOrderModel.getCurrency());
 			paymentTransactionEntry.setType(PaymentTransactionType.COD_PAYMENT);
@@ -614,8 +631,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			paymentTransactionModel.setEntries(paymentTransactionEntryList);
 			paymentTransactionModel.setPaymentProvider(getConfigurationService().getConfiguration().getString("payment.cod"));
 			paymentTransactionModel.setOrder(abstractOrderModel);
-			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPriceWithConv().doubleValue()));
-			//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
+
+			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
+			if (abstractOrderModel.getTotalPriceWithConv() != null || abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+			{
+				paymentTransactionModel
+						.setPlannedAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPriceWithConv().doubleValue()));
+				//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
+			}
 
 			if (StringUtils.isNotEmpty(paymentTransactionEntryList.get(0).getTransactionStatus())
 					&& paymentTransactionEntryList.get(0).getTransactionStatus()
@@ -1440,6 +1463,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 			}
 		}
+
 		//creating CODPaymentInfoModel
 		final CODPaymentInfoModel cODPaymentInfoModel = getModelService().create(CODPaymentInfoModel.class);
 
@@ -3379,6 +3403,183 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
+	 * against the cart for non-COD from OMS Submit Order Job de.hybris.platform.core.model.order.OrderModel)
+	 */
+	@Override
+	public boolean createPaymentTransactionFromSubmitOrderJob(final OrderModel orderModel)
+	{
+		try
+		{
+			final String cartGuid = orderModel.getGuid();
+			MplPaymentAuditModel auditModel = null;
+			if (StringUtils.isNotEmpty(cartGuid)) //IQA for TPR-629
+			{
+				auditModel = getMplOrderDao().getAuditList(cartGuid);
+			}
+
+			if (null != auditModel && StringUtils.isNotEmpty(auditModel.getAuditId()))
+			{
+				//to check webhook entry status at Juspay corresponding to Payment Pending orders
+				//getMplProcessOrderDao().getEventsForPendingOrders(auditModel.getAuditId());
+				final List<JuspayWebhookModel> hooks = getMplProcessOrderDao().getEventsForPendingOrders(auditModel.getAuditId());
+				//}
+				PaymentInfoModel payInfo = null;
+				if (null != orderModel.getPaymentInfo())
+				{
+					payInfo = orderModel.getPaymentInfo();
+				}
+
+				final String paymentModeFromInfo = getPaymentModeFrompayInfo(payInfo);
+				final Map<String, Double> paymentMode = new HashMap<String, Double>();
+				paymentMode.put(paymentModeFromInfo, orderModel.getTotalPriceWithConv());
+
+				final JuspayOrderStatusModel juspayOrderStatusModel = ((JuspayWebhookModel) hooks).getOrderStatus();
+
+				final GetOrderStatusResponse orderStatusResponse = getJuspayOrderResponseConverter().convert(juspayOrderStatusModel);
+
+				//			final List<OrderModel> o = orderModel;
+				//			o.addAll(orderModel.getChildOrders());(orderModel.getChildOrders());
+
+				final List<OrderModel> subOrders = orderModel.getChildOrders();
+				subOrders.add(orderModel);
+
+				for (final OrderModel so : subOrders)
+				{
+					setPaymentTransactionFromJob(orderStatusResponse, paymentMode, so);
+					so.setModeOfOrderPayment(paymentModeFromInfo);
+				}
+
+				modelService.saveAll(subOrders);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+
+
+
+		}
+		catch (final ModelSavingException e)
+		{
+			//throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+			return false;
+		}
+		catch (final Exception e)
+		{
+			//throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			return false;
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
+	 */
+	@Override
+	public String getPaymentModeFrompayInfo(final PaymentInfoModel payInfo)
+	{
+		if (null != payInfo)
+		{
+			if (payInfo instanceof CODPaymentInfoModel)
+			{
+				return "COD";
+			}
+			else if (payInfo instanceof CreditCardPaymentInfoModel)
+			{
+				return "Credit Card";
+			}
+			else if (payInfo instanceof DebitCardPaymentInfoModel)
+			{
+				return "Debit Card";
+			}
+			else if (payInfo instanceof NetbankingPaymentInfoModel)
+			{
+				return "Netbanking";
+			}
+			else if (payInfo instanceof EMIPaymentInfoModel)
+			{
+				return "EMI";
+			}
+			else
+			{
+				return "CC";
+			}
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
+	 * against the cart for non-COD from OMS Submit Order Job
+	 */
+	@Override
+	public void setPaymentTransactionFromJob(final GetOrderStatusResponse orderStatusResponse,
+			final Map<String, Double> paymentMode, final OrderModel order)
+	{
+		try
+		{
+			final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
+			PaymentTransactionModel payTranModel = null;
+
+			String checkValues = "".intern();
+			String[] parts = null;
+			String saveCard = "".intern();
+			String sameAsShipping = "".intern();
+			if (null != orderStatusResponse)
+			{
+				List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
+				LOG.info(MarketplacecommerceservicesConstants.JUSPAY_ORDER_STAT_RESP + orderStatusResponse);
+				if (StringUtils.isNotEmpty(orderStatusResponse.getUdf10()))
+				{
+					checkValues = orderStatusResponse.getUdf10();
+				}
+				if (checkValues.contains(MarketplacecommerceservicesConstants.CONCTASTRING))
+				{
+					parts = checkValues.split(MarketplacecommerceservicesConstants.SPLITSTRING);
+					saveCard = parts[0];
+					sameAsShipping = parts[1];
+				}
+				for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
+				{
+					paymentTransactionEntryList = getMplPaymentTransactionService().createPaymentTranEntryFromSubmitOrderJob(
+							orderStatusResponse, order, entry, paymentTransactionEntryList);
+				}
+				payTranModel = getMplPaymentTransactionService().createPaymentTranFromSubmitOrderJob(order, orderStatusResponse,
+						paymentTransactionEntryList);
+				paymentTransactionList.add(payTranModel);
+			}
+
+			if (saveCard.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE)
+					&& null != orderStatusResponse.getCardResponse()
+					&& StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardReference()))
+			{
+				//setting as saved card
+				saveCards(orderStatusResponse, paymentMode, order, sameAsShipping);
+			}
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+
 	//Getters and Setters
 
 	/**
@@ -3757,6 +3958,64 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	public void setMplFraudModelService(final MplFraudModelService mplFraudModelService)
 	{
 		this.mplFraudModelService = mplFraudModelService;
+	}
+
+
+	/**
+	 * @return the mplOrderDao
+	 */
+	public MplOrderDao getMplOrderDao()
+	{
+		return mplOrderDao;
+	}
+
+
+	/**
+	 * @param mplOrderDao
+	 *           the mplOrderDao to set
+	 */
+	public void setMplOrderDao(final MplOrderDao mplOrderDao)
+	{
+		this.mplOrderDao = mplOrderDao;
+	}
+
+
+	/**
+	 * @return the mplProcessOrderDao
+	 */
+	public MplProcessOrderDao getMplProcessOrderDao()
+	{
+		return mplProcessOrderDao;
+	}
+
+
+	/**
+	 * @param mplProcessOrderDao
+	 *           the mplProcessOrderDao to set
+	 */
+	public void setMplProcessOrderDao(final MplProcessOrderDao mplProcessOrderDao)
+	{
+		this.mplProcessOrderDao = mplProcessOrderDao;
+	}
+
+
+	/**
+	 * @return the juspayOrderResponseConverter
+	 */
+	public Converter<JuspayOrderStatusModel, GetOrderStatusResponse> getJuspayOrderResponseConverter()
+	{
+		return juspayOrderResponseConverter;
+	}
+
+
+	/**
+	 * @param juspayOrderResponseConverter
+	 *           the juspayOrderResponseConverter to set
+	 */
+	public void setJuspayOrderResponseConverter(
+			final Converter<JuspayOrderStatusModel, GetOrderStatusResponse> juspayOrderResponseConverter)
+	{
+		this.juspayOrderResponseConverter = juspayOrderResponseConverter;
 	}
 
 

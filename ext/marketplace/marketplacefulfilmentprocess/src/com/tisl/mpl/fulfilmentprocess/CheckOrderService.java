@@ -22,4 +22,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 public interface CheckOrderService
 {
 	boolean check(OrderModel order);
+
+	// To handle missing paymentTransaction set the Order status to Payment_Pending
+	boolean checkMissintPaymentTrancsaction(OrderModel order);
 }

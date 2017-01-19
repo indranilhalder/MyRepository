@@ -8,11 +8,13 @@ import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParamete
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
@@ -338,83 +340,118 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			final boolean positive) throws InvalidCartException, CalculationException, EtailNonBusinessExceptions,
 			VoucherOperationException
 	{
-		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-				+ orderModel.getCode();
-		if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_SUCCEEDED")
-				&& !juspayWebhookModel.getIsExpired().booleanValue() && positive)
+		//SprintPaymentFixes:- Try catch added to handle Exception and set the Order Status to Payment_Timeout
+		try
 		{
-			if (null == orderModel.getPaymentInfo())
+			final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+					+ orderModel.getCode();
+			if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_SUCCEEDED")
+					&& !juspayWebhookModel.getIsExpired().booleanValue() && positive)
 			{
-				updateOrder(orderModel, juspayWebhookModel);
-
-				//Re-trigger submit order process from Payment_Pending to Payment_Successful
-				final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
-				parameter.setEnableHooks(true);
-				parameter.setSalesApplication(orderModel.getSalesApplication());
-
-				final CommerceOrderResult result = new CommerceOrderResult();
-				result.setOrder(orderModel);
-
-				mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
-				getOrderService().submitOrder(orderModel);
-
-				//Email and sms for Payment_Successful
-				try
+				if (null == orderModel.getPaymentInfo())
 				{
-					getNotificationService().triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
+
+
+					updateOrder(orderModel, juspayWebhookModel);
+
+					//Re-trigger submit order process from Payment_Pending to Payment_Successful
+					final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
+					parameter.setEnableHooks(true);
+					parameter.setSalesApplication(orderModel.getSalesApplication());
+
+					final CommerceOrderResult result = new CommerceOrderResult();
+					result.setOrder(orderModel);
+
+					mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
+					getOrderService().submitOrder(orderModel);
+
+
+					//Email and sms for Payment_Successful
+					try
+					{
+						getNotificationService().triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
+					}
+					catch (final JAXBException e)
+					{
+						LOG.error("Error while sending notifications from job>>>>>>", e);
+					}
+					catch (final Exception ex)
+					{
+						LOG.error(ERROR_NOTIF, ex);
+					}
 				}
-				catch (final JAXBException e)
+
+				if (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD")
+						&& CollectionUtils.isEmpty(orderModel.getChildOrders()))
 				{
-					LOG.error("Error while sending notifications from job>>>>>>", e);
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
 				}
-				catch (final Exception ex)
-				{
-					LOG.error(ERROR_NOTIF, ex);
-				}
+				juspayWebhookModel.setIsExpired(Boolean.TRUE);
+				//SprintPaymentFixes:- juspayModel save added
+				modelService.save(juspayWebhookModel);
+
 			}
+			else if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_FAILED")
+					&& !juspayWebhookModel.getIsExpired().booleanValue() && !positive)
+			{
+				//Added for failure transactions
+				if (null == orderModel.getPaymentInfo())
+				{
+					updateOrder(orderModel, juspayWebhookModel);
 
-			juspayWebhookModel.setIsExpired(Boolean.TRUE);
+					//getting PinCode against Order
+					final String defaultPinCode = getPinCodeForOrder(orderModel);
+
+					//OMS Deallocation call for failed order
+					getMplCommerceCartService().isInventoryReserved(orderModel,
+							MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
+
+
+					if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
+					{
+						final PromotionVoucherModel voucherModel = (PromotionVoucherModel) orderModel.getDiscounts().get(0);
+						getMplVoucherService().releaseVoucher(voucherModel.getVoucherCode(), null, orderModel);
+						getMplVoucherService().recalculateCartForCoupon(null, orderModel);
+					}
+
+					//Email and sms for Payment_Failed
+					try
+					{
+						getNotificationService().triggerEmailAndSmsOnPaymentFailed(orderModel, trackOrderUrl);
+					}
+					catch (final JAXBException e)
+					{
+						LOG.error("Error while sending notifications from job>>>>>>", e);
+					}
+					catch (final Exception ex)
+					{
+						LOG.error(ERROR_NOTIF, ex);
+					}
+				}
+
+				if (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD")
+						&& CollectionUtils.isEmpty(orderModel.getChildOrders()))
+				{
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
+				}
+				juspayWebhookModel.setIsExpired(Boolean.TRUE);
+				//SprintPaymentFixes:- juspayModel save added
+				modelService.save(juspayWebhookModel);
+			}
 		}
-		else if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_FAILED")
-				&& !juspayWebhookModel.getIsExpired().booleanValue() && !positive)
+		catch (final ModelSavingException e)
 		{
-			//Added for failure transactions
-			if (null == orderModel.getPaymentInfo())
-			{
-				updateOrder(orderModel, juspayWebhookModel);
-
-				//getting PinCode against Order
-				final String defaultPinCode = getPinCodeForOrder(orderModel);
-
-				//OMS Deallocation call for failed order
-				getMplCommerceCartService().isInventoryReserved(orderModel,
-						MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
-
-				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
-
-				if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
-				{
-					final PromotionVoucherModel voucherModel = (PromotionVoucherModel) orderModel.getDiscounts().get(0);
-					getMplVoucherService().releaseVoucher(voucherModel.getVoucherCode(), null, orderModel);
-					getMplVoucherService().recalculateCartForCoupon(null, orderModel);
-				}
-				//Email and sms for Payment_Failed
-				try
-				{
-					getNotificationService().triggerEmailAndSmsOnPaymentFailed(orderModel, trackOrderUrl);
-				}
-				catch (final JAXBException e)
-				{
-					LOG.error("Error while sending notifications from job>>>>>>", e);
-				}
-				catch (final Exception ex)
-				{
-					LOG.error(ERROR_NOTIF, ex);
-				}
-			}
-
-			juspayWebhookModel.setIsExpired(Boolean.TRUE);
+			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
+			LOG.error("Error while saving into DB from job>>>>>>", e);
+		}
+		catch (final Exception e)
+		{
+			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
+			LOG.error("Error while updating updateOrder from job>>>>>>", e);
+			//getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
 		}
 	}
 
@@ -449,42 +486,64 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	 * @param juspayWebhookModel
 	 */
 	private void updateOrder(final OrderModel orderModel, final JuspayWebhookModel juspayWebhookModel)
-			throws EtailNonBusinessExceptions
 	{
-		if (null != juspayWebhookModel)
+		try
 		{
-			final JuspayOrderStatusModel juspayOrderStatusModel = juspayWebhookModel.getOrderStatus();
-
-			final GetOrderStatusResponse orderStatusResponse = getJuspayOrderResponseConverter().convert(juspayOrderStatusModel);
-
-			final Map<String, Double> paymentMode = new HashMap<String, Double>();
-			paymentMode.put(orderModel.getModeOfOrderPayment(), orderModel.getTotalPriceWithConv());
-
-			//Payment Changes - Order before Payment
-			getMplPaymentService().updateAuditEntry(orderStatusResponse, null, orderModel, paymentMode);
-			LOG.warn("Order model total price " + orderModel.getTotalPrice() + "order status response amount"
-					+ orderStatusResponse.getAmount());
-			if (orderModel.getTotalPrice().equals(orderStatusResponse.getAmount()))
+			if (null != juspayWebhookModel)
 			{
-				getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel);
-			}
+				final JuspayOrderStatusModel juspayOrderStatusModel = juspayWebhookModel.getOrderStatus();
 
-			//Logic when transaction is successful i.e. CHARGED
-			if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(juspayOrderStatusModel.getStatus()))
-			{
-				LOG.error("Payment successful with transaction ID::::" + juspayWebhookModel.getOrderStatus().getOrderId());
-				//saving card details
-				getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, orderModel);
+				final GetOrderStatusResponse orderStatusResponse = getJuspayOrderResponseConverter().convert(juspayOrderStatusModel);
+
+				final Map<String, Double> paymentMode = new HashMap<String, Double>();
+				paymentMode.put(orderModel.getModeOfOrderPayment(), orderModel.getTotalPriceWithConv());
+
+				//Payment Changes - Order before Payment
+				getMplPaymentService().updateAuditEntry(orderStatusResponse, null, orderModel, paymentMode);
+				LOG.warn("Order model total price " + orderModel.getTotalPrice() + "order status response amount"
+						+ orderStatusResponse.getAmount());
+				//SprintPaymentFixes:- Added:- CollectionUtils.isEmpty(orderModel.getPaymentTransactions()
+				if (orderModel.getTotalPrice().equals(orderStatusResponse.getAmount())
+						&& orderStatusResponse.getAmount().doubleValue() > 0
+						&& CollectionUtils.isEmpty(orderModel.getPaymentTransactions()))
+				{
+					getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel);
+				}
+
+				//Logic when transaction is successful i.e. CHARGED
+				if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(juspayOrderStatusModel.getStatus()))
+				{
+					LOG.error("Payment successful with transaction ID::::" + juspayWebhookModel.getOrderStatus().getOrderId());
+					//saving card details
+					getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, orderModel);
+
+					//SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
+
+					if (null != orderModel.getPaymentInfo())
+					{
+						final PaymentInfoModel payInfo = orderModel.getPaymentInfo();
+						final String paymentModeFromInfo = getMplPaymentService().getPaymentModeFrompayInfo(payInfo);
+						orderModel.setModeOfOrderPayment(paymentModeFromInfo);
+						modelService.save(orderModel);
+					}
+				}
+				else
+				{
+					LOG.error("Payment failure with transaction ID::::" + juspayWebhookModel.getOrderStatus().getOrderId());
+				}
+				getMplPaymentService().paymentModeApportion(orderModel);
 			}
-			else
-			{
-				LOG.error("Payment failure with transaction ID::::" + juspayWebhookModel.getOrderStatus().getOrderId());
-			}
-			getMplPaymentService().paymentModeApportion(orderModel);
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 
 	}
-
 
 	//Not used
 	//	/**

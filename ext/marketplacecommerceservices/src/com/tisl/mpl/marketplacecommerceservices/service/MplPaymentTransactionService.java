@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 
@@ -48,5 +49,27 @@ public interface MplPaymentTransactionService
 	 */
 	PaymentTransactionModel createPaymentTransaction(AbstractOrderModel cart, GetOrderStatusResponse orderStatusResponse,
 			List<PaymentTransactionEntryModel> paymentTransactionEntryList);
+
+	/**
+	 * @param order
+	 * @param orderStatusResponse
+	 * @param paymentTransactionEntryList
+	 * @return PaymentTransactionModel
+	 * @desc SprintPaymentFixes:-:- To handle missing paymentTransaction for specific order
+	 */
+	PaymentTransactionModel createPaymentTranFromSubmitOrderJob(OrderModel order, GetOrderStatusResponse orderStatusResponse,
+			List<PaymentTransactionEntryModel> paymentTransactionEntryList);
+
+
+	/**
+	 * @param getOrderStatusResponse
+	 * @param order
+	 * @param entry
+	 * @param paymentTransactionEntryList
+	 * @return List<PaymentTransactionEntryModel>
+	 * @desc SprintPaymentFixes:-:- To handle missing paymentTransaction for specific order
+	 */
+	List<PaymentTransactionEntryModel> createPaymentTranEntryFromSubmitOrderJob(GetOrderStatusResponse getOrderStatusResponse,
+			OrderModel cart, Entry<String, Double> entry, List<PaymentTransactionEntryModel> paymentTransactionEntryList);
 
 }
