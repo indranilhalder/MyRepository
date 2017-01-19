@@ -153,6 +153,21 @@ tr.d0 td {
 				code="productDetails_productNamePrice_label_${product.code}">
 				<h3 class="company">${product.brand.brandname}</h3>
 				<h1 class="product-name">${product.productTitle}</h1>
+				
+				
+				
+				<!-- <span id="showJewellerydeatils"></span> -->
+			<!-- //TPR-3752 Jewel Heading Added -->
+				<p class="key-label">
+				<c:choose>
+  				<c:when test="${product.rootCategory=='FineJewellery'}">
+  				
+  					<c:forEach var="classification" items="${mapConfigurableAttributes}">
+					</c:forEach>
+  				</c:when>
+  				
+  			</c:choose>
+  			</p>
 			</ycommerce:testId>
 
 			<ycommerce:testId
@@ -466,5 +481,7 @@ tr.d0 td {
 </div>
 </div>
 </div>
-
+<script type="text/javascript">
+	var prop = '${mapConfigurableAttributes}';
+</script>
 
