@@ -126,6 +126,14 @@
 		</c:if>
 	</c:forEach>
 	
+	<!--TPR-4389 STARTS  -->
+ 			<c:choose>
+ 	<c:when test="${isProductPage}">
+ 		 <meta name="fragment" content="!">
+ 	</c:when>
+ 	</c:choose> 
+ 			<!--TPR-4389 END  -->
+	
 	<%-- <c:choose>
 	    <c:when test="${not empty seoMediaURL}">
 	        <c:set var="seoImageURL" value="${protocolString[0]}://${seoMediaURL}"/>
