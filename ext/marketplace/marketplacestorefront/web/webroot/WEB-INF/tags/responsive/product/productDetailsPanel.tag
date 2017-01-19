@@ -158,16 +158,19 @@ tr.d0 td {
 				
 				<!-- <span id="showJewellerydeatils"></span> -->
 			<!-- //TPR-3752 Jewel Heading Added -->
-				<p class="key-label">
 				<c:choose>
   				<c:when test="${product.rootCategory=='FineJewellery'}">
+  				<input id="jwelPDP" type="hidden" value="${product.rootCategory}"/>
+				<p class="key-label">
+			
   				
   					<c:forEach var="classification" items="${mapConfigurableAttributes}">
 					</c:forEach>
+  			
+  			</p>
   				</c:when>
   				
   			</c:choose>
-  			</p>
 			</ycommerce:testId>
 
 			<ycommerce:testId
