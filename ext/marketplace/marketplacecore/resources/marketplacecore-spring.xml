@@ -1689,6 +1689,27 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 			</property>
 	</bean>
 	
+	<!-- TPR-3548 | Gender Facet Compare Start-->
+	<bean id="genderAttributeSortProvider"
+	      class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.GenderFacetTopValuesProvider">
+		<property name="comparator" ref="genderFacetAttributeComparator"/>
+	</bean>
+     <bean id="genderFacetAttributeComparator"
+	      class="com.tisl.mpl.core.comparator.GenderFacetComparator">
+		<property name="pattern" value="^[0-9]+(\.?([0-9])+)?$"/>
+		<property name="genderSystems">
+			<list>
+				<value>MEN</value>
+				<value>WOMEN</value>
+				<value>COUPLES</value>
+				<value>KIDS</value>
+				<value>BOYS</value>
+				<value>GIRLS</value>
+				<value>UNISEX</value>
+			</list>
+		</property>
+	</bean>
+	<!-- TPR-3548 | Gender Facet Compare End-->
 	 
   <!-- ============== configure beans for CRM Ticket and Refund Initiation Events ============== -->
   <bean id="sendUnCollectedOrderToCRMEventListener"
