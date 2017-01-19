@@ -82,6 +82,7 @@ tr.d0 td {
 <input type="hidden" id="pdpSellerIDs" value='${pdpSellerIDs}'/>
 <input type="hidden" id="pdpBuyboxWinnerSellerID" value=''/>
 <input type="hidden" id="pdpOtherSellerIDs" value=''/>
+<input type="hidden" id="browser_type" value='${browser_type}'/>
 <!-- TPR-429 END-->
 <!-- End Tealium -->
 
@@ -92,7 +93,7 @@ tr.d0 td {
 
 
 
-<div class="pdp">
+<div itemscope itemtype="http://schema.org/Product" class="pdp">
 	<div class="product-info wrapper">
 		<div class="product-image-container">
 			<cms:pageSlot position="ConfigureImagesCount" var="component">

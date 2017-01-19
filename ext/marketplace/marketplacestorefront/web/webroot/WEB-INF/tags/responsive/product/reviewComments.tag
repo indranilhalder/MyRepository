@@ -8,7 +8,9 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
-
+<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" style="display: none;">
+	<span id="ratingvalue" itemprop="ratingValue"></span> based on <span id="reviewcount" itemprop="reviewCount"></span> reviews 
+</div>
 <div id="ReviewSecion" class="reviews">
 <div class="header">
       <h3>Your Rating</h3>

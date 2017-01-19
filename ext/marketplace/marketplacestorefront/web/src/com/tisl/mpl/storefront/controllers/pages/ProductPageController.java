@@ -280,6 +280,9 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
 
+	//TPR-4389
+	private BrowserType bType;
+
 	/**
 	 * @param buyBoxFacade
 	 *           the buyBoxFacade to set
@@ -334,6 +337,39 @@ public class ProductPageController extends MidPageController
 			{
 				productCode = productCode.toUpperCase();
 			}
+			final String browserDetails = request.getHeader("User-Agent");
+			LOG.debug("**************************************opening user agent*************" + browserDetails);
+			final BrowserType bType = ProductPageController.getBrowserType(browserDetails);
+			model.addAttribute("browser_type", bType);
+			if (bType.equals(BrowserType.INTERNET_EXPLORER))
+			{
+				LOG.debug("*****************IE*****************");
+			}
+			else if (bType.equals(BrowserType.GOOGLE_CHROME))
+			{
+				LOG.debug("*****************GC*****************");
+			}
+			else if (bType.equals(BrowserType.NETSCAPE))
+			{
+				LOG.debug("*****************NETSCAPE*****************");
+			}
+			else if (bType.equals(BrowserType.FLOCK))
+			{
+				LOG.debug("*****************FLOCK*****************");
+			}
+			else if (bType.equals(BrowserType.SAFARI))
+			{
+				LOG.debug("*****************SAFARI*****************");
+			}
+			else if (bType.equals(BrowserType.MOZILA_FIREFOX))
+			{
+				LOG.debug("*****************FIREFOX*****************");
+			}
+			else if (bType.equals(BrowserType.UNKNOWN))
+			{
+				LOG.debug("*****************UNKNOWN*****************");
+			}
+
 			LOG.debug("**************************************opening pdp for*************" + productCode);
 			final ProductModel productModel = productService.getProductForCode(productCode);
 
@@ -2808,5 +2844,44 @@ public class ProductPageController extends MidPageController
 			model.addAttribute("showSizeGuideForFA", showSizeGuideForFA);
 
 		}
+	}
+
+	public static BrowserType getBrowserType(final String userAgent)
+	{
+
+		if (userAgent != null)
+		{
+			if (userAgent.indexOf("MSIE") != -1)
+			{
+				return BrowserType.INTERNET_EXPLORER;
+			}
+			else if (userAgent.indexOf("Netscape") != -1)
+			{
+				return BrowserType.NETSCAPE;
+			}
+			else if (userAgent.indexOf("Chrome") != -1)
+			{
+				return BrowserType.GOOGLE_CHROME;
+			}
+			else if (userAgent.indexOf("Flock") != -1)
+			{
+				return BrowserType.FLOCK;
+			}
+			else if (userAgent.indexOf("Safari") != -1)
+			{
+				return BrowserType.SAFARI;
+			}
+			else if (userAgent.indexOf("Firefox") != -1)
+			{
+				return BrowserType.MOZILA_FIREFOX;
+			}
+
+		}
+		return BrowserType.UNKNOWN;
+	}
+
+	public static enum BrowserType
+	{
+		INTERNET_EXPLORER, MOZILA_FIREFOX, SAFARI, NETSCAPE, GOOGLE_CHROME, FLOCK, UNKNOWN
 	}
 }
