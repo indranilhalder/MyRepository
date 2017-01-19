@@ -137,9 +137,10 @@ public class ExtSearchSolrQueryPopulator<INDEXED_PROPERTY_TYPE, INDEXED_TYPE_SOR
 		{ "true" });
 		target.getSearchQuery().addSolrParams("group.limit", new String[]
 		{ "1" });
+		//reverting Changes for TPR-1247
 		//changes done for TPR-1247
-		target.getSearchQuery().addSolrParams("group.facet", new String[]
-		{ "true" });
+		//target.getSearchQuery().addSolrParams("group.facet", new String[]
+		//{ "true" });
 		/*
 		 * target.getSearchQuery().addSolrParams("group.sort", new String[] { "priceValue_inr_double asc" });
 		 */
