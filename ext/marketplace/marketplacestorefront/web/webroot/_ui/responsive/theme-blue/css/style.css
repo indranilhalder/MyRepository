@@ -44748,7 +44748,7 @@ h3.customPriceRange:after{
 /* SERP facets Ends */ 
 /* Home Page Starts */
 /* sprint8(tpr-1672(home page,clp,blp)) */
-body.page-homepage .feature-collections h2,.best-offers .feature-collections h2{
+body.page-homepage .feature-collections h2{
 	padding: 50px 0 30px;
     font-weight: bold;
     font-size: 28px;
@@ -50267,6 +50267,9 @@ overflow: hidden;
 .top_deal_blp .carousel-component .product-tile{
 	padding:0;
 }
+.top_deal_blp .feature-categories #mplAdvancedCategoryCarousel .owl-controls {
+    display: block !important;
+}
 .top_deal_blp .owl-prev:after {
     top: -22px;
     left: 20px;
@@ -50283,14 +50286,19 @@ overflow: hidden;
 	/* margin: 20px 0 50px; */
 }
 
-.top_deal_blp .feature-categories h2{
+/* sprint8 TPR-1672 */
+.top_deal_blp .feature-categories h2,.best-offers_blp .feature-collections h2{
 	text-align: center;
     font-size: 28px;
     font-weight: bold;
     margin-bottom: 40px;
     padding:0;
     word-break: break-word;
+    letter-spacing: normal;
+    text-transform: capitalize;
 }
+/* sprint8 TPR-1672 */
+
 .top_deal_blp .feature-categories .item.slide a.shop_link{
 	display:none;
 }
@@ -50985,9 +50993,9 @@ padding: 0 24px;
   padding: 0;
   }
   
-  .top_deal_blp .feature-categories .owl-carousel{
+  /* .top_deal_blp .feature-categories .owl-carousel{
 	padding: 0;
-}
+} */
 }
 /* @media (max-width: 1024px) and (min-width: 790px){
 	.featured_collection .blp_featured_collection_wrapper .featured_collection_section .top-promos li{
@@ -51806,6 +51814,11 @@ margin-top:30px;
     margin-top: 20px;
 } */
 }
+@media (min-width: 701px){
+.top_deal_blp .feature-categories #mplAdvancedCategoryCarousel {
+    padding: 0 40px;
+}
+}
 @media (max-width: 600px){
 	.shop_the_look div.shop_the_look_section.shop_the_look_right{
 	margin: 0 40px 20px 50px;
@@ -52161,9 +52174,7 @@ overflow: hidden;
 .top_deal .carousel-component #shopByLookCarousel,.best-offers .carousel {
 	margin-top: 0;
 }
-/* sprint8 TPR-1672 */
-
-.top_deal .carousel-component h2 {
+.top_deal .carousel-component h2,.best-offers .feature-collections h2 {
 	padding: 0px 40px;
 	text-align: center;
 	font-size: 28px;
@@ -52173,6 +52184,7 @@ overflow: hidden;
     letter-spacing: 0px;
     line-height: 1;
 }
+/* sprint8 TPR-1672 */
 
 .top_deal .carousel-component .product-tile {
 	padding: 0;
@@ -59497,7 +59509,7 @@ text-decoration:underline;
 
 /* sprint8(tpr-1672(home page,clp,blp)) */
 .best-offers_blp .feature-collections h2{
-	display: block;
+	/* display: block;
     text-align: center;
     margin: 0 0 50px;
     text-align: center;
@@ -59507,7 +59519,7 @@ text-decoration:underline;
     letter-spacing: normal;
     padding: 0;
     padding-top: 50px;
-    line-height: 25px;
+    line-height: 25px; */
 }
 
 /* sprint8(tpr-1672(home page,clp,blp)) */
