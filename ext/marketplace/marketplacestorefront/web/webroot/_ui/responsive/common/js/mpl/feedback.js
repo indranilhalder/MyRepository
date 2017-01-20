@@ -1965,7 +1965,8 @@ $(document).ready(function() {
 		}
 		});
 		$(".best_seller .Menu ul li:nth-child(3)").addClass("active");
-		$(".best_seller .best_seller_section:nth-of-type(4)").addClass("show_clplist");
+		/*$(".best_seller .best_seller_section:nth-of-type(4)").addClass("show_clplist");*/
+		$(".best_seller .best_seller_section:nth-of-type(5)").addClass("show_clplist");
 		$(".best_seller .Menu .mobile.selectmenu").text($(".best_seller .Menu ul li.active").text());
 		$(".best_seller .Menu ul li").off("click").on("click", function(){
 			$(".best_seller .Menu ul li").removeClass("active");
