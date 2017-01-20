@@ -1644,11 +1644,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1699,9 +1699,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -3084,21 +3084,26 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		this.mplCommerceCartService = mplCommerceCartService;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * This method makes mRupee reference num and generates checksum
 	 *
-	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#createWalletorder(java.lang.String, java.lang.String)
+	 * @param cart
+	 * @param walletName
+	 * @param channelWeb
+	 * @return List<String>
 	 */
 	@Override
 	public List<String> createWalletorder(final AbstractOrderModel cart, final String walletName, final String channelWeb)
 	{
 		String walletOrderId = null;
 		final List<String> arryList = new ArrayList<String>();
+		//Generates mRupee reference num
 		walletOrderId = getMplPaymentService().createWalletPaymentId();
 		arryList.add(walletOrderId);
 		final Double cartTotal = cart.getTotalPrice();
 
 		final MrupeePaymentService mRupeeService = new MrupeePaymentService();
+		//Generates mRupee checksum
 		final String checksumKey = mRupeeService.generateCheckSum(walletOrderId, cartTotal.toString());
 
 		LOG.debug("Order Id created for Wallet by key generator is " + walletOrderId);
@@ -3111,11 +3116,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * This method makes entry for mRupee orders in Audit table.
 	 *
-	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#entryInTPWaltAudit(java.lang.String, java.lang.String,
-	 * java.lang.String)
+	 * @param status
+	 * @param channelWeb
+	 * @param guid
+	 * @param walletOrderId
 	 */
 	@Override
 	public void entryInTPWaltAudit(final String status, final String channelWeb, final String guid, final String walletOrderId)
@@ -3131,11 +3138,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * This methods saves the payment transaction and info for mRupee orders.
 	 *
-	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#saveTPWalletPaymentInfo(de.hybris.platform.core.model.order.
-	 * CartModel , javax.servlet.http.HttpServletRequest)
+	 * @param order
+	 * @param request
 	 */
 	@Override
 	public void saveTPWalletPaymentInfo(final AbstractOrderModel order, final HttpServletRequest request)
@@ -3150,7 +3157,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			mplCustomer = (CustomerModel) order.getUser();
 			final List<AbstractOrderEntryModel> entries = order.getEntries();
 
-			//setting payment transaction for
+			//setting payment transaction for mRupee orders
 			//Commented for Mobile use
 			//	getMplPaymentService().setTPWalletPaymentTransaction(paymentMode, cart, request);
 			final String refernceCode = request.getParameter("REFNO");
@@ -3162,6 +3169,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				if (StringUtils.isNotEmpty(mplCustomer.getName()) && !mplCustomer.getName().equalsIgnoreCase(" "))
 				{
 					final String custName = mplCustomer.getName();
+					//setting payment info for mRupee orders
 					//Commented for Mobile use
 					//					getMplPaymentService().saveTPWalletPaymentInfo(custName, entries, cart, request);
 					modelService.save(getMplPaymentService().saveTPWalletPaymentInfo(custName, entries, order, refernceCode));
@@ -3190,10 +3198,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#getWalletAuditEntries(java.lang.String)
+	/**
+	 * This methods gets guid from audit table based on the reference no.
+	 *
+	 * @param refNo
+	 * @return String
 	 */
 	@Override
 	public String getWalletAuditEntries(final String refNo)

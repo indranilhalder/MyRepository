@@ -4193,7 +4193,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
@@ -4224,6 +4224,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return cartLevelSellerID;
 	}
 
+
+	/**
+	 * This method creates mRupee related order.
+	 *
+	 * @param walletName
+	 * @param cartGuid
+	 * @return String
+	 * @throws EtailNonBusinessExceptions
+	 */
 	@RequestMapping(value = "createWalletorder", method = RequestMethod.GET)
 	@RequireHardLogIn
 	public @ResponseBody String createWalletorder(final String walletName, final String cartGuid)
@@ -4235,6 +4244,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		String checksum = null;
 		try
 		{
+			//Getting redirect url to send to mRupee
 			final StringBuilder returnUrlBuilder = new StringBuilder();
 			returnUrlBuilder
 					.append(request.getRequestURL().substring(0, request.getRequestURL().indexOf("/", 8)))
@@ -4433,6 +4443,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	}
 
+	/**
+	 * This method processes mRupee related order after getting response from mRupee.
+	 *
+	 * @param redirectAttributes
+	 * @param request
+	 * @return String
+	 * @throws EtailNonBusinessExceptions
+	 */
+
 	@RequestMapping(value = "walletPayment", method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String walletPayment(final RedirectAttributes redirectAttributes, final HttpServletRequest request)
@@ -4448,7 +4467,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			final String refNo = request.getParameter("REFNO");
 
 			final Double transactionAmount = Double.valueOf(request.getParameter("AMT"));
-
+			/* Getting guid from audit table based on the reference no. received from mRupee */
 			if (StringUtils.isNotEmpty(refNo))
 			{
 				guid = getMplPaymentFacade().getWalletAuditEntries(refNo);
@@ -4464,9 +4483,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			if (null != orderModel)
 			{
 				final Double orderAmount = orderModel.getTotalPrice();
+
+				/* Checking transaction status from mRupee */
 				if (null != request.getParameter("STATUS") && "S".equalsIgnoreCase(request.getParameter("STATUS")))
 				{
-
+					/* Checking transaction amount received from mRupee and order amount */
 					if (orderAmount.compareTo(transactionAmount) == 0)
 					{
 						status = MarketplacecheckoutaddonConstants.SUCCESS;
@@ -4493,6 +4514,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				else
 				{
+					//setting the audit table to DECLINED if transaction status is not successful
 					status = MarketplacecheckoutaddonConstants.FAIL;
 					getMplPaymentFacade().entryInTPWaltAudit(status, MarketplacecheckoutaddonConstants.CHANNEL_WEB, guid, refNo);
 

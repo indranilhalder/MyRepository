@@ -1169,19 +1169,24 @@
 								<c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
 										<c:choose>
-											<c:when test="${map.key eq 'MRupee'}">
+											<c:when test="${map.key eq 'TW'}">
 												<div class="accordion_in">
-												<div >
+												<div>
 													<span id="viewPaymentMRupee" >
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
 													</span>
 												</div>
 							
+							<!-- -->
+							<c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
+											<c:when test="${map.key eq 'MRupee'}">
 							<div id="MRUPEE">
 							<ul class="product-block blocks">
 								<li id="tpWallet">
 												<div class="radio">
-													 <input type="radio" name="priority_wallet" id="radioButton_MRupee" value="mRupee"/>
+													 <input type="radio" name="priority_wallet" id="radioButton_MRupee" value="mRupee" checked/>
 													 <label for="radioButton_MRupee" class="numbers creditLabel"><span><img src="${commonResourcePath}/images/mRupeeLogo.PNG" alt=""></span></label>
 									   			<span id="mRupeeInfo" >
 														<spring:theme code="checkout.multi.paymentMethod.eWallet.Info" />
@@ -1212,6 +1217,11 @@
 							</div>
 										
 					</div>
+					</c:when>
+										</c:choose>
+									</c:if>	
+								</c:forEach>
+					<!-- -->
 				</div>
 		 									</c:when>
 										</c:choose>
