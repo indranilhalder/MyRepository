@@ -260,20 +260,20 @@ public interface MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions;
@@ -318,7 +318,7 @@ public interface MplPaymentService
 
 	/**
 	 * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel against
-	 * the cart for COD from OMS Submit Order Job
+	 * the cart for non -COD from OMS Submit Order Job
 	 *
 	 * @param orderStatusResponse
 	 * @param paymentMode
@@ -337,8 +337,8 @@ public interface MplPaymentService
 
 
 	/**
-	 * This method is setting paymentTransactionModel and the paymentTransactionEntryModel against the cart for COD and
-	 * wallet
+	 * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel against
+	 * the cart for COD from OMS Submit Order Job
 	 *
 	 * @param paymentMode
 	 * @param abstractOrderModel

@@ -3576,9 +3576,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#setPaymentTransactionForCODFromSubmitProcess
-	 * (java.util.Map, de.hybris.platform.core.model.order.OrderModel)
+	 * @desc SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
+	 * against the cart for COD from OMS Submit Order Job
 	 */
 	@Override
 	public void setPaymentTransactionForCODFromSubmitProcess(final Map<String, Double> paymentMode, final OrderModel orderModel)
