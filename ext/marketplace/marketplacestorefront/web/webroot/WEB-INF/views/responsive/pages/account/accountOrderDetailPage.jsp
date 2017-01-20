@@ -680,8 +680,10 @@
 												<c:if test="${entry.isRefundable eq false }">
 												<c:if test="${entry.consignment.status.code eq 'RETURN_INITIATED'}">
 													<div class="awsInnerClass">
-															Please provide AWB number, Logistics partner and upload POD <a id="awbNumberLink">here</a>
+															Please provide AWB number, Logistics partner and upload POD <a class="awbNumberLink" id="awbNumberLink">here</a>
 													</div>
+													<!-- TISRLUAT-50 -->
+														<return:lpDetailsUploadPopup entry="${entry}" />
 												</c:if>
 												</c:if>	
 												</c:if>
@@ -1781,11 +1783,7 @@
 
 										</div>
 										
-											<a
-													href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
-													<spring:theme code="text.account.returnReplace"
-														text="Return Item" />
-												</a>
+											
 										<div class="actions">
 										<div class="col-md-6 col-sm-6">
 											<c:if
@@ -1827,11 +1825,14 @@
 												<c:if test="${entry.consignment.status.code eq 'RETURN_INITIATED'}">
 													<div class="awsInnerClass">
 															Please provide AWB number, 
-															<br/>Logistics partner and upload POD <a id="awbNumberLink">here</a>
+															<br/>Logistics partner and upload POD <a id="awbNumberLink" class="awbNumberLink">here</a>
 													</div>
+													<!-- TISRLUAT-50 -->
+														<return:lpDetailsUploadPopup entry="${entry}" />
 												</c:if>	
 												</c:if>
 												</c:if>
+												
 											</div>
 											<!-- TISCR-410 ends -->
 										</div>
@@ -2568,7 +2569,7 @@
 
 
                                    </c:if>
-                                   	<return:lpDetailsUploadPopup entry="${entry}" /> <!-- R2.3: One line -->
+                                    <!-- R2.3: One line -->
 								</c:forEach>
 								 </c:forEach> 
 							
@@ -2611,11 +2612,14 @@
 <!-- R2.3: START --> 
  <!--   AWB Jquery codes PopUp  -->
 	$(document).ready(function(){
-		$("#uploadFile").change(function(){
+		$(".uploadFile").change(function(){
+			// TISRLUAT-50 changes 
+			var tribhuvanUploadFile = $(this);
 			var url = $(this).val();
 			var res = url.split('\\');
 			var filename = res[res.length - 1];
-			$('.textFile').text(filename);
+			// TISRLUAT-50 changes 
+			tribhuvanUploadFile.parent().find('.textFile').text(filename);
 		});
 		});
 	
@@ -3009,94 +3013,107 @@ $(function() {
 		 
 		 
 		 <!--   AWB Jquery codes PopUp  -->
-		   
-		   $("#awbNumberLink").click(function(){
-			//   alert("awbNumberLink");
-			   $(".awsNumError").hide();
-			    $(".logisticPartnerError").hide();
-			    $(".uploadError").hide(); 
-			    $(".amountError").hide();
-		     $("#awbNumberPopup").show();
-		     $(".wrapBG").show();
-		     var height = $(window).height();
-		     $(".wrapBG").css("height",height);
-		     $("#awbNumberPopup").css("z-index","999999");
-		  });
-		  $(".submitButton").click(function(event){
-		   if(awbValidations()){
-		  $("#awbNumberPopup").hide(); 
-		  $(".wrapBG").hide();
-		  $('#awbNumberPopup form').unbind('submit').submit();
+		 $(".awbNumberLink").click(function(){
+				//   alert("awbNumberLink");
+				// TISRLUAT-50 changes 
+				var tribhuvanAwbLink = $(this);
+				
+				//alert(tribhuvanAwbLink.parent().next().attr('class'));
+				
+				
+				   $(".awsNumError").hide();
+				    $(".logisticPartnerError").hide();
+				    $(".uploadError").hide(); 
+				    $(".amountError").hide();
+				 // TISRLUAT-50 changes 
+				    tribhuvanAwbLink.parent().next().show();
+			     $(".wrapBG").show();
+			     var height = $(window).height();
+			     $(".wrapBG").css("height",height);
+			  // TISRLUAT-50 changes 
+			     tribhuvanAwbLink.parent().next().css("z-index","999999");
+			  });
+			  $(".submitButton").click(function(event){
+				// TISRLUAT-50 changes 
+				  var tribhuvaAwbSubmit = $(this);
+				  var tribhuvanLocalPopUp =  arg1.closest(".awsNumberModal");
+			   if(awbValidations(tribhuvaAwbSubmit)){
+			  $(".awsNumberModal").hide(); 
+			  $(".wrapBG").hide();
+			// TISRLUAT-50 changes 
+			  tribhuvanLocalPopUp.find("form").unbind('submit').submit();
 
-		   }else{
-		    //alert('elsepanchayati');
-		    event.preventDefault();
-		    $("#awbNumberPopup").show();
-		    $(".wrapBG").show();
-		   }
-		  });
+			   }else{
+			    //alert('elsepanchayati');
+			    event.preventDefault();
+			 // TISRLUAT-50 changes 
+			    tribhuvanLocalPopUp.show();
+			    $(".wrapBG").show();
+			   }
+			  });
 
-		  $(".closeAWSNum").click(function(){
-		   $("#awbNumberPopup").hide();
-		   $(".wrapBG").hide();
-		  });
-		  
-		function awbValidations(){
-		 var validate = true;
-		 $(".awsNumError").hide();
-		 $(".logisticPartnerError").hide();
-		 $(".uploadError").hide(); 
-		 $(".amountError").hide();
-		 
-		 var awsNumber=$("#awsNum").val();
-		 var logPart=$("#logisticPartner").val();
-		 var fileName=$("#uploadFile").val();
-		 var amount = $('#amount').val();
-		 
-		 if(awsNumber != null && awsNumber == '' && awsNumber < 2 && awsNumber.trim() == ''){
-		       $(".awsNumError").show();
-		     $(".awsNumError").text("AWB Number cannot be Blank");
-		     validate = false;
-		     } if(/[^[a-zA-Z0-9]]*$/.test(awsNumber)){
-		      $(".awsNumError").show();
-		       $(".awsNumError").text("AWB Number cannot allow special characters");
-		      validate = false;
-		     }
+			  $(".closeAWSNum").click(function(){
+			   $(".awsNumberModal").hide();
+			   $(".wrapBG").hide();
+			  });
+			  
+			function awbValidations(arg1){
+			 var validate = true;
+			 $(".awsNumError").hide();
+			 $(".logisticPartnerError").hide();
+			 $(".uploadError").hide(); 
+			 $(".amountError").hide();
+			// TISRLUAT-50 changes 
+			 var tribhuvanLocalPopUp =  arg1.closest(".awsNumberModal");
+			 var awsNumber=tribhuvanLocalPopUp.find("#awsNum").val();
+			 var logPart=tribhuvanLocalPopUp.find("#logisticPartner").val();
+			 var fileName=tribhuvanLocalPopUp.find("#uploadFile").val();
+			 var amount = tribhuvanLocalPopUp.find('#amount').val();
+			 
+			 if(awsNumber != null && awsNumber == '' && awsNumber < 2 && awsNumber.trim() == ''){
+			       $(".awsNumError").show();
+			     $(".awsNumError").text("AWB Number cannot be Blank");
+			     validate = false;
+			     } if(/[^[a-zA-Z0-9]]*$/.test(awsNumber)){
+			      $(".awsNumError").show();
+			       $(".awsNumError").text("AWB Number cannot allow special characters");
+			      validate = false;
+			     }
 
-		     if(logPart != null && logPart == '' && logPart < 2 && logPart.trim() == ''){
-		        $(".logisticPartnerError").show();
-		      $(".logisticPartnerError").text("Logistic partner cannot be Blank");
-		      validate = false;
-		      } if(/[^[a-zA-Z]]*$/.test(logPart)){
-		       $(".logisticPartnerError").show();
-		        $(".logisticPartnerError").text("Logistic partner cannot allow special characters and numbers");
-		       validate = false;
-		 }
-		 if(amount != null && amount == '' && amount < 2 && amount.trim() == ''){
-		    
-		        $(".amountError").show();
-		      $(".amountError").text("Amount cannot be Blank");
-		      validate = false;
-		      }if(isNaN(amount)){
-		       
-		       $(".amountError").show();
-		        $(".amountError").text("Amount cannot allow special characters or letters");
-		       validate = false;
-		      }
-		     
-		 
-		  if(fileName == null || fileName.trim() == '' ){
-		    var ext = fileName.substring(fileName.lastIndexOf('.') + 1);
-		   if(ext != "gif" || ext != "GIF" || ext != "JPEG" || ext != "jpeg" || ext != "jpg" || ext != "JPG" || ext != "pdf" || ext != "PDF" || ext != 'png' || ext != "PNG")
-		    {
-		     $(".uploadError").show();
-		       $(".uploadError").text("Upload images and pdf file only");
-		       validate = false;
-		    } 
-		  }
-		 return validate;
-		 
-		}
+			     if(logPart != null && logPart == '' && logPart < 2 && logPart.trim() == ''){
+			        $(".logisticPartnerError").show();
+			      $(".logisticPartnerError").text("Logistic partner cannot be Blank");
+			      validate = false;
+			      } if(/[^[a-zA-Z]]*$/.test(logPart)){
+			       $(".logisticPartnerError").show();
+			        $(".logisticPartnerError").text("Logistic partner cannot allow special characters and numbers");
+			       validate = false;
+			 }
+			 if(amount != null && amount == '' && amount < 2 && amount.trim() == ''){
+			    
+			        $(".amountError").show();
+			      $(".amountError").text("Amount cannot be Blank");
+			      validate = false;
+			      }if(isNaN(amount)){
+			       
+			       $(".amountError").show();
+			        $(".amountError").text("Amount cannot allow special characters or letters");
+			       validate = false;
+			      }
+			     
+			 
+			  if(fileName == null || fileName.trim() == '' ){
+			    var ext = fileName.substring(fileName.lastIndexOf('.') + 1);
+			   if(ext != "gif" || ext != "GIF" || ext != "JPEG" || ext != "jpeg" || ext != "jpg" || ext != "JPG" || ext != "pdf" || ext != "PDF" || ext != 'png' || ext != "PNG")
+			    {
+			     $(".uploadError").show();
+			       $(".uploadError").text("Upload images and pdf file only");
+			       validate = false;
+			    } 
+			  }
+			 return validate;
+			 
+			}
 		   
 		  <!-- End of  AWB Jquery codes PopUp  -->
 		  });  
