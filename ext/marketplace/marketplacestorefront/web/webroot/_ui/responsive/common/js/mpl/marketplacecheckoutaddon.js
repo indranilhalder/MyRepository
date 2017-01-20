@@ -1270,9 +1270,21 @@ function displayFormForCC(){
   
 
 function mobileBlacklist(){
-
+	var number=$("#otpMobileNUMField").val();
+	var mobileNumber=number;
+	$("#otpNUMField").val("");
+	$("#wrongOtpValidationMessage, #expiredOtpValidationMessage").css("display","none");
+	if(number.length!=10){
+		$("#mobileNoError").css("display","block");
+		$("#resendOTPMessage, #enterOTP, #otpSentMessage, #paymentFormButton").css("display","none");
+	}
+	else if(number.charAt(0)=='0'){
+		$("#mobileNoError").css("display","block");
+		//	$("#sendOTPButton .spinner").remove();
+	}
 // Check if the session is active before generating OTP
-	if(isSessionActive()){
+	else if(isSessionActive()){
+	$("#mobileNoError").css("display","none");	
 	// store url change
 	var staticHost=$('#staticHost').val();
 	
@@ -1329,7 +1341,7 @@ function generateOTP(){
 	$("#wrongOtpValidationMessage, #expiredOtpValidationMessage").css("display","none");
 	if(number.length!=10){
 		$("#mobileNoError").css("display","block");
-		$("#resendOTPMessage, #enterOTP, #paymentFormButton").css("display","none");
+		$("#resendOTPMessage, #enterOTP, #otpSentMessage, #paymentFormButton").css("display","none");
 	}
 	else if(number.charAt(0)=='0'){
 		$("#mobileNoError").css("display","block");
@@ -7388,4 +7400,8 @@ function teliumTrack(){
 	utag.link(
 	{"link_text": "pay_terms_conditions_click" , "event_type" : "terms_conditions_click"}
 	);
+}
+function updateMobileNo(){
+	$("#otpMobileNUMField").val('');
+	$("#otpMobileNUMField").focus();    
 }

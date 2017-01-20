@@ -1870,11 +1870,6 @@
 						<description>Stores the Promotion Code</description>
 						<persistence type="property" />
 					</attribute>
-					<!-- Price Update -->
-					<attribute qualifier="productCodeString" type="java.lang.String">
-						<description>Product code as String</description>
-						<persistence type="property" />
-					</attribute>
 					
 				</attributes>
 			</itemtype>
