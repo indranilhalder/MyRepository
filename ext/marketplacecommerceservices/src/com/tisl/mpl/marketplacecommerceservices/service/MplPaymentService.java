@@ -336,4 +336,18 @@ public interface MplPaymentService
 	public String getPaymentModeFrompayInfo(final PaymentInfoModel payInfo);
 
 
+	/**
+	 * This method is setting paymentTransactionModel and the paymentTransactionEntryModel against the cart for COD and
+	 * wallet
+	 *
+	 * @param paymentMode
+	 * @param abstractOrderModel
+	 * @throws EtailNonBusinessExceptions
+	 *            ,Exception
+	 *
+	 */
+	//TISPRD-361 method signature changes
+	void setPaymentTransactionForCODFromSubmitProcess(Map<String, Double> paymentMode, OrderModel orderModel)
+			throws EtailNonBusinessExceptions;
+
 }

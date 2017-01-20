@@ -1703,7 +1703,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//		.intern();
 
 	// SprintPaymentFixes:- New query added
-	public static final String PAYMENTPENDINGQUERY = "select {o.code},createdts from {Order as o} where  SYSDATE - 10/1440 > createdts and {o.status}={os.pk} and {os.code}=?status"
+	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  SYSDATE - 10/1440 > {o.creationtime} and {o.status}={os.pk} and {os.code}=?status"
 			.intern();
 
 	public static final String PAYMENTPENDINGSTATUS = "status".intern();

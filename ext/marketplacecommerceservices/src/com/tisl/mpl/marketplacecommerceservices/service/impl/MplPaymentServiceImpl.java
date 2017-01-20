@@ -428,130 +428,118 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	public void setPaymentTransaction(final GetOrderStatusResponse orderStatusResponse, final Map<String, Double> paymentMode,
 			final AbstractOrderModel order) throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
-		try
+		Collection<PaymentTransactionModel> collection = order.getPaymentTransactions();
+		final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
+		//Soln Changes
+		PaymentTransactionModel payTranModel = null;
+		if (null == collection || collection.isEmpty())
 		{
-			Collection<PaymentTransactionModel> collection = order.getPaymentTransactions();
-			final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
+			collection = new ArrayList<PaymentTransactionModel>();
+		}
+
+		paymentTransactionList.addAll(collection);
+		//List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
+
+		//final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
+		final Date date = new Date();
+
+		String checkValues = "".intern();
+		String[] parts = null;
+		String saveCard = "".intern();
+		String sameAsShipping = "".intern();
+		if (null != orderStatusResponse)
+		{
+			List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
+			LOG.info(MarketplacecommerceservicesConstants.JUSPAY_ORDER_STAT_RESP + orderStatusResponse);
+			if (StringUtils.isNotEmpty(orderStatusResponse.getUdf10()))
+			{
+				checkValues = orderStatusResponse.getUdf10();
+			}
+			if (checkValues.contains(MarketplacecommerceservicesConstants.CONCTASTRING))
+			{
+				parts = checkValues.split(MarketplacecommerceservicesConstants.SPLITSTRING);
+				saveCard = parts[0];
+				sameAsShipping = parts[1];
+			}
+			for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
+			{
+				//Setting fields of paymentTransactionEntry with Payment Gateway Responses for Wallet
+				if (MarketplacecommerceservicesConstants.WALLET.equalsIgnoreCase(entry.getKey()))
+				{
+					final PaymentTransactionEntryModel paymentTransactionEntry = getModelService().create(
+							PaymentTransactionEntryModel.class);
+					//TODO:Change required when Order Ref No. is ready
+					if (StringUtils.isNotEmpty(orderStatusResponse.getOrderId()))
+					{
+						paymentTransactionEntry.setCode(orderStatusResponse.getOrderId() + "-" + System.currentTimeMillis());
+					}
+					paymentTransactionEntry.setAmount(BigDecimal.valueOf(entry.getValue().doubleValue()));
+					paymentTransactionEntry.setTime(date);
+					paymentTransactionEntry.setCurrency(order.getCurrency());
+					//	paymentTransactionEntry.setPaymentMode(MarketplacecommerceservicesConstants.WALLET);//TODO::Wallet not in scope of Release 1
+					paymentTransactionEntry.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
+
+					try
+					{
+						//Check handled to remove concurrent scenario - TPR-629
+						if (null == order.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(order.getStatus()))
+						{
+							getModelService().save(paymentTransactionEntry);
+							paymentTransactionEntryList.add(paymentTransactionEntry);
+						}
+						else if (null != order.getPaymentInfo())
+						{
+							LOG.error("Order already has payment info -- not saving paymentTransactionEntry>>>"
+									+ order.getPaymentInfo().getCode());
+						}
+						else
+						{
+							LOG.error(ERROR_PAYMENT + order.getCode());
+						}
+
+					}
+					catch (final ModelSavingException e)
+					{
+						LOG.error(MarketplacecommerceservicesConstants.PAYMENT_TRAN_EXC_LOG + e);
+						throw new ModelSavingException(e + ": Exception while saving payment transaction entry with");
+					}
+				}
+
+				//Setting fields of paymentTransactionEntry with Payment Gateway Responses for other payment modes
+				else
+				{
+					paymentTransactionEntryList = getMplPaymentTransactionService().createPaymentTranEntry(orderStatusResponse, order,
+							entry, paymentTransactionEntryList);
+				}
+			}
+
 			//Soln Changes
-			PaymentTransactionModel payTranModel = null;
-			if (null == collection || collection.isEmpty())
-			{
-				collection = new ArrayList<PaymentTransactionModel>();
-			}
-
-			paymentTransactionList.addAll(collection);
-			//List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
-
-			//final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
-			final Date date = new Date();
-
-			String checkValues = "".intern();
-			String[] parts = null;
-			String saveCard = "".intern();
-			String sameAsShipping = "".intern();
-			if (null != orderStatusResponse)
-			{
-				List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
-				LOG.info(MarketplacecommerceservicesConstants.JUSPAY_ORDER_STAT_RESP + orderStatusResponse);
-				if (StringUtils.isNotEmpty(orderStatusResponse.getUdf10()))
-				{
-					checkValues = orderStatusResponse.getUdf10();
-				}
-				if (checkValues.contains(MarketplacecommerceservicesConstants.CONCTASTRING))
-				{
-					parts = checkValues.split(MarketplacecommerceservicesConstants.SPLITSTRING);
-					saveCard = parts[0];
-					sameAsShipping = parts[1];
-				}
-				for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
-				{
-					//Setting fields of paymentTransactionEntry with Payment Gateway Responses for Wallet
-					if (MarketplacecommerceservicesConstants.WALLET.equalsIgnoreCase(entry.getKey()))
-					{
-						final PaymentTransactionEntryModel paymentTransactionEntry = getModelService().create(
-								PaymentTransactionEntryModel.class);
-						//TODO:Change required when Order Ref No. is ready
-						if (StringUtils.isNotEmpty(orderStatusResponse.getOrderId()))
-						{
-							paymentTransactionEntry.setCode(orderStatusResponse.getOrderId() + "-" + System.currentTimeMillis());
-						}
-						paymentTransactionEntry.setAmount(BigDecimal.valueOf(entry.getValue().doubleValue()));
-						paymentTransactionEntry.setTime(date);
-						paymentTransactionEntry.setCurrency(order.getCurrency());
-						//	paymentTransactionEntry.setPaymentMode(MarketplacecommerceservicesConstants.WALLET);//TODO::Wallet not in scope of Release 1
-						paymentTransactionEntry.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
-
-						try
-						{
-							//Check handled to remove concurrent scenario - TPR-629
-							if (null == order.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(order.getStatus()))
-							{
-								getModelService().save(paymentTransactionEntry);
-								paymentTransactionEntryList.add(paymentTransactionEntry);
-							}
-							else if (null != order.getPaymentInfo())
-							{
-								LOG.error("Order already has payment info -- not saving paymentTransactionEntry>>>"
-										+ order.getPaymentInfo().getCode());
-							}
-							else
-							{
-								LOG.error(ERROR_PAYMENT + order.getCode());
-							}
-
-						}
-						catch (final ModelSavingException e)
-						{
-							LOG.error(MarketplacecommerceservicesConstants.PAYMENT_TRAN_EXC_LOG + e);
-							throw new ModelSavingException(e + ": Exception while saving payment transaction entry with");
-						}
-					}
-
-					//Setting fields of paymentTransactionEntry with Payment Gateway Responses for other payment modes
-					else
-					{
-						paymentTransactionEntryList = getMplPaymentTransactionService().createPaymentTranEntry(orderStatusResponse,
-								order, entry, paymentTransactionEntryList);
-					}
-				}
-
-				//Soln Changes
-				payTranModel = getMplPaymentTransactionService().createPaymentTransaction(order, orderStatusResponse,
-						paymentTransactionEntryList);
-				paymentTransactionList.add(payTranModel);
-			}
-
-			if (null == order.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(order.getStatus()))
-			{
-				order.setPaymentTransactions(paymentTransactionList);
-
-				//Check handled to remove concurrent scenario - TPR-629
-				getModelService().save(order);
-				if (saveCard.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE)
-						&& null != orderStatusResponse.getCardResponse()
-						&& StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardReference()))
-				{
-					//setting as saved card
-					saveCards(orderStatusResponse, paymentMode, order, sameAsShipping);
-				}
-			}
-			else if (null != order.getPaymentInfo())
-			{
-				LOG.error("Order already has payment info -- not saving order or card models>>>" + order.getPaymentInfo().getCode());
-			}
-			else
-			{
-				LOG.error(ERROR_PAYMENT + order.getCode());
-			}
-
+			payTranModel = getMplPaymentTransactionService().createPaymentTransaction(order, orderStatusResponse,
+					paymentTransactionEntryList);
+			paymentTransactionList.add(payTranModel);
 		}
-		catch (final ModelSavingException e)
+
+		if (null == order.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(order.getStatus()))
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+			order.setPaymentTransactions(paymentTransactionList);
+
+			//Check handled to remove concurrent scenario - TPR-629
+			getModelService().save(order);
+			if (saveCard.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE)
+					&& null != orderStatusResponse.getCardResponse()
+					&& StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardReference()))
+			{
+				//setting as saved card
+				saveCards(orderStatusResponse, paymentMode, order, sameAsShipping);
+			}
 		}
-		catch (final Exception e)
+		else if (null != order.getPaymentInfo())
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			LOG.error("Order already has payment info -- not saving order or card models>>>" + order.getPaymentInfo().getCode());
+		}
+		else
+		{
+			LOG.error(ERROR_PAYMENT + order.getCode());
 		}
 	}
 
@@ -3020,11 +3008,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3036,9 +3024,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3405,7 +3393,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for non-COD from OMS Submit Order Job de.hybris.platform.core.model.order.OrderModel)
 	 */
@@ -3414,26 +3402,31 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		try
 		{
+			PaymentInfoModel payInfo = null;
+			String paymentModeFromInfo = null;
+			if (null != orderModel.getPaymentInfo())
+			{
+				payInfo = orderModel.getPaymentInfo();
+				paymentModeFromInfo = getPaymentModeFrompayInfo(payInfo);
+			}
+			else
+			{
+				paymentModeFromInfo = orderModel.getModeOfOrderPayment();
+			}
+
+
 			final String cartGuid = orderModel.getGuid();
 			MplPaymentAuditModel auditModel = null;
-			if (StringUtils.isNotEmpty(cartGuid)) //IQA for TPR-629
+			if (StringUtils.isNotEmpty(cartGuid))
 			{
 				auditModel = getMplOrderDao().getAuditList(cartGuid);
 			}
 
 			if (null != auditModel && StringUtils.isNotEmpty(auditModel.getAuditId()))
 			{
-				//to check webhook entry status at Juspay corresponding to Payment Pending orders
-				//getMplProcessOrderDao().getEventsForPendingOrders(auditModel.getAuditId());
 				final List<JuspayWebhookModel> hooks = getMplProcessOrderDao().getEventsForPendingOrders(auditModel.getAuditId());
 				//}
-				PaymentInfoModel payInfo = null;
-				if (null != orderModel.getPaymentInfo())
-				{
-					payInfo = orderModel.getPaymentInfo();
-				}
 
-				final String paymentModeFromInfo = getPaymentModeFrompayInfo(payInfo);
 				final Map<String, Double> paymentMode = new HashMap<String, Double>();
 				paymentMode.put(paymentModeFromInfo, orderModel.getTotalPriceWithConv());
 
@@ -3479,7 +3472,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 	 */
 	@Override
@@ -3520,7 +3513,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for non-COD from OMS Submit Order Job
 	 */
@@ -3576,6 +3569,99 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService#setPaymentTransactionForCODFromSubmitProcess
+	 * (java.util.Map, de.hybris.platform.core.model.order.OrderModel)
+	 */
+	@Override
+	public void setPaymentTransactionForCODFromSubmitProcess(final Map<String, Double> paymentMode, final OrderModel orderModel)
+			throws EtailNonBusinessExceptions
+	{
+		try
+		{
+			//final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
+
+			final List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
+
+			final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
+			final Date date = new Date();
+			final String codCode = getCodCodeGenerator().generate().toString();
+
+			final PaymentTransactionEntryModel paymentTransactionEntry = getModelService()
+					.create(PaymentTransactionEntryModel.class);
+
+			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
+			paymentTransactionEntry.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
+			if (orderModel.getTotalPriceWithConv() != null || orderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+			{
+				paymentTransactionEntry.setAmount(BigDecimal.valueOf(orderModel.getTotalPriceWithConv().doubleValue()));
+			}
+
+			paymentTransactionEntry.setTime(date);
+			paymentTransactionEntry.setCurrency(orderModel.getCurrency());
+			paymentTransactionEntry.setType(PaymentTransactionType.COD_PAYMENT);
+			paymentTransactionEntry.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
+
+			PaymentTypeModel paymentTypeModelCOD = modelService.create(PaymentTypeModel.class);
+			paymentTypeModelCOD.setMode(MarketplacecommerceservicesConstants.COD);
+			paymentTypeModelCOD = flexibleSearchService.getModelByExample(paymentTypeModelCOD);
+			paymentTransactionEntry.setPaymentMode(paymentTypeModelCOD);
+
+			getModelService().save(paymentTransactionEntry);
+			paymentTransactionEntryList.add(paymentTransactionEntry);
+
+			if (null != orderModel.getPaymentInfo())
+			{
+				paymentTransactionModel.setInfo(orderModel.getPaymentInfo());
+			}
+
+			paymentTransactionModel.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
+
+			paymentTransactionModel.setCreationtime(date);
+			paymentTransactionModel.setCurrency(orderModel.getCurrency());
+			paymentTransactionModel.setEntries(paymentTransactionEntryList);
+			paymentTransactionModel.setPaymentProvider(getConfigurationService().getConfiguration().getString("payment.cod"));
+			paymentTransactionModel.setOrder(orderModel);
+
+			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
+			if (orderModel.getTotalPriceWithConv() != null || orderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+			{
+				paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(orderModel.getTotalPriceWithConv().doubleValue()));
+			}
+
+			if (StringUtils.isNotEmpty(paymentTransactionEntryList.get(0).getTransactionStatus())
+					&& paymentTransactionEntryList.get(0).getTransactionStatus()
+							.equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+			{
+				paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			}
+			else
+			{
+				paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.FAILURE);
+			}
+
+
+			getModelService().save(paymentTransactionModel);
+			//paymentTransactionList.add(paymentTransactionModel);
+			//orderModel.setPaymentTransactions(paymentTransactionList);
+			//getModelService().save(orderModel);
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error("Exception while saving cart with ", e);
+			throw new EtailNonBusinessExceptions(e, ": Exception while setPaymentTransactionForCOD");
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Exception while setPaymentTransactionForCOD ", ex);
+			throw new EtailNonBusinessExceptions(ex);
 		}
 	}
 
@@ -4017,8 +4103,4 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		this.juspayOrderResponseConverter = juspayOrderResponseConverter;
 	}
-
-
-
-
 }

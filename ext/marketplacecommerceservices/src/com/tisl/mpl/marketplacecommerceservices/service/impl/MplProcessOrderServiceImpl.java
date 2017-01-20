@@ -354,7 +354,6 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 				{
 					updateOrder(orderModel, juspayWebhookModel);
 
-
 					//Re-trigger submit order process from Payment_Pending to Payment_Successful
 					final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
 					parameter.setEnableHooks(true);
@@ -363,9 +362,14 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					final CommerceOrderResult result = new CommerceOrderResult();
 					result.setOrder(orderModel);
 
+					//SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
+					if (setModeOfPayment(orderModel))
+					{
+						modelService.save(orderModel);
+					}
+
 					mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
 					getOrderService().submitOrder(orderModel);
-
 
 					//Email and sms for Payment_Successful
 					try
@@ -380,22 +384,34 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					{
 						LOG.error(ERROR_NOTIF, ex);
 					}
+
+					juspayWebhookModel.setIsExpired(Boolean.TRUE);
+					//SprintPaymentFixes:- juspayModel save added
+					modelService.save(juspayWebhookModel);
 				}
 				//SprintPaymentFixes:- if any case Order Status Updation fails and Order is ready to mode to other Environment then change status to Payment_Successful
 				else if (null != orderModel.getPaymentInfo() && CollectionUtils.isNotEmpty(orderModel.getChildOrders())
 						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
 				{
+					//SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
+					orderModel.setIsSentToOMS(Boolean.FALSE);
+					orderModel.setOmsSubmitStatus("");
+
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+
+					juspayWebhookModel.setIsExpired(Boolean.TRUE);
+					//SprintPaymentFixes:- juspayModel save added
+					modelService.save(juspayWebhookModel);
+				}
+
+				//SprintPaymentFixes:- for modeOfPayment as COD, if there is no child orders the Order will be failed
+				if (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD") && null != orderModel.getPaymentInfo()
+						&& CollectionUtils.isNotEmpty(orderModel.getChildOrders())
+						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
+				{
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 				}
 
-				if (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD")
-						&& CollectionUtils.isEmpty(orderModel.getChildOrders()))
-				{
-					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
-				}
-				juspayWebhookModel.setIsExpired(Boolean.TRUE);
-				//SprintPaymentFixes:- juspayModel save added
-				modelService.save(juspayWebhookModel);
 
 			}
 			else if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_FAILED")
@@ -405,6 +421,12 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 				if (null == orderModel.getPaymentInfo())
 				{
 					updateOrder(orderModel, juspayWebhookModel);
+
+					//SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
+					if (setModeOfPayment(orderModel))
+					{
+						modelService.save(orderModel);
+					}
 
 					//getting PinCode against Order
 					final String defaultPinCode = getPinCodeForOrder(orderModel);
@@ -436,7 +458,12 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					{
 						LOG.error(ERROR_NOTIF, ex);
 					}
+
+					juspayWebhookModel.setIsExpired(Boolean.TRUE);
+					//SprintPaymentFixes:- juspayModel save added
+					modelService.save(juspayWebhookModel);
 				}
+
 				//SprintPaymentFixes:- if any case Order Status Updation fails and Order is ready to mode to other Environment then change status to Payment_Successful or Payment Timeout
 				else if (null != orderModel.getPaymentInfo() && CollectionUtils.isNotEmpty(orderModel.getChildOrders())
 						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
@@ -446,26 +473,30 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					{
 						if (paymentTransaction.getStatus().equalsIgnoreCase("SUCCESS"))
 						{
+							orderModel.setIsSentToOMS(Boolean.FALSE);
+							orderModel.setOmsSubmitStatus("");
 							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 							successFlag = true;
+							break;
 						}
 					}
 					if (successFlag == false)
 					{
-						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
+						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
 					}
+
+					juspayWebhookModel.setIsExpired(Boolean.TRUE);
+					//SprintPaymentFixes:- juspayModel save added
+					modelService.save(juspayWebhookModel);
 				}
 
-
-
+				//SprintPaymentFixes:- for modeOfPayment as COD, if there is no child orders the Order will be failed
 				if (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD")
 						&& CollectionUtils.isEmpty(orderModel.getChildOrders()))
 				{
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
 				}
-				juspayWebhookModel.setIsExpired(Boolean.TRUE);
-				//SprintPaymentFixes:- juspayModel save added
-				modelService.save(juspayWebhookModel);
+
 			}
 		}
 		catch (final ModelSavingException e)
@@ -477,7 +508,6 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 		{
 			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
 			LOG.error("Error while updating updateOrder from job>>>>>>", e);
-			//getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
 		}
 	}
 
@@ -513,62 +543,40 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	 */
 	private void updateOrder(final OrderModel orderModel, final JuspayWebhookModel juspayWebhookModel)
 	{
-		try
+		if (null != juspayWebhookModel)
 		{
-			if (null != juspayWebhookModel)
+			final JuspayOrderStatusModel juspayOrderStatusModel = juspayWebhookModel.getOrderStatus();
+
+			final GetOrderStatusResponse orderStatusResponse = getJuspayOrderResponseConverter().convert(juspayOrderStatusModel);
+
+			final Map<String, Double> paymentMode = new HashMap<String, Double>();
+			paymentMode.put(orderModel.getModeOfOrderPayment(), orderModel.getTotalPriceWithConv());
+
+			//Payment Changes - Order before Payment
+			getMplPaymentService().updateAuditEntry(orderStatusResponse, null, orderModel, paymentMode);
+			LOG.warn("Order model total price " + orderModel.getTotalPrice() + "order status response amount"
+					+ orderStatusResponse.getAmount());
+			//SprintPaymentFixes:- Added:- CollectionUtils.isEmpty(orderModel.getPaymentTransactions()
+			if (orderModel.getTotalPrice().equals(orderStatusResponse.getAmount())
+					&& orderStatusResponse.getAmount().doubleValue() > 0
+					&& CollectionUtils.isEmpty(orderModel.getPaymentTransactions()))
 			{
-				final JuspayOrderStatusModel juspayOrderStatusModel = juspayWebhookModel.getOrderStatus();
-
-				final GetOrderStatusResponse orderStatusResponse = getJuspayOrderResponseConverter().convert(juspayOrderStatusModel);
-
-				final Map<String, Double> paymentMode = new HashMap<String, Double>();
-				paymentMode.put(orderModel.getModeOfOrderPayment(), orderModel.getTotalPriceWithConv());
-
-				//Payment Changes - Order before Payment
-				getMplPaymentService().updateAuditEntry(orderStatusResponse, null, orderModel, paymentMode);
-				LOG.warn("Order model total price " + orderModel.getTotalPrice() + "order status response amount"
-						+ orderStatusResponse.getAmount());
-				//SprintPaymentFixes:- Added:- CollectionUtils.isEmpty(orderModel.getPaymentTransactions()
-				if (orderModel.getTotalPrice().equals(orderStatusResponse.getAmount())
-						&& orderStatusResponse.getAmount().doubleValue() > 0
-						&& CollectionUtils.isEmpty(orderModel.getPaymentTransactions()))
-				{
-					getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel);
-				}
-
-				//Logic when transaction is successful i.e. CHARGED
-				if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(juspayOrderStatusModel.getStatus()))
-				{
-					LOG.error("Payment successful with transaction ID::::" + juspayWebhookModel.getOrderStatus().getOrderId());
-					//saving card details
-					getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, orderModel);
-
-					//SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
-
-					if (null != orderModel.getPaymentInfo())
-					{
-						final PaymentInfoModel payInfo = orderModel.getPaymentInfo();
-						final String paymentModeFromInfo = getMplPaymentService().getPaymentModeFrompayInfo(payInfo);
-						orderModel.setModeOfOrderPayment(paymentModeFromInfo);
-						modelService.save(orderModel);
-					}
-				}
-				else
-				{
-					LOG.error("Payment failure with transaction ID::::" + juspayWebhookModel.getOrderStatus().getOrderId());
-				}
-				getMplPaymentService().paymentModeApportion(orderModel);
+				getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel);
 			}
-		}
-		catch (final ModelSavingException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
 
+			//Logic when transaction is successful i.e. CHARGED
+			if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(juspayOrderStatusModel.getStatus()))
+			{
+				LOG.error("Payment successful with transaction ID::::" + juspayWebhookModel.getOrderStatus().getOrderId());
+				//saving card details
+				getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, orderModel);
+			}
+			else
+			{
+				LOG.error("Payment failure with transaction ID::::" + juspayWebhookModel.getOrderStatus().getOrderId());
+			}
+			getMplPaymentService().paymentModeApportion(orderModel);
+		}
 	}
 
 	//Not used
@@ -608,6 +616,35 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 
 
+	private boolean setModeOfPayment(final OrderModel orderModel)
+	{
+		//SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
+		boolean returnFlag = false;
+		try
+		{
+			if (null != orderModel.getPaymentInfo())
+			{
+				final PaymentInfoModel payInfo = orderModel.getPaymentInfo();
+				final String paymentModeFromInfo = getMplPaymentService().getPaymentModeFrompayInfo(payInfo);
+				orderModel.setModeOfOrderPayment(paymentModeFromInfo);
+
+				//modelService.save(orderModel);
+				returnFlag = true;
+			}
+		}
+		catch (final ModelSavingException me)
+		{
+			returnFlag = false;
+		}
+		catch (final Exception e)
+		{
+			returnFlag = false;
+		}
+		return returnFlag;
+	}
+
+
+	//GETTERS AND SETTERS
 
 	/**
 	 * @return the mplProcessOrderDao
