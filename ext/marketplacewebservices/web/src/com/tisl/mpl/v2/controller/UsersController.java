@@ -7166,10 +7166,11 @@ public class UsersController extends BaseCommerceController
 		if(returnData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_SELF))
 		{
 			LOG.debug(" returnForm>>>>>>>>>>>>>>>>>>>>>>>>>>>>: " +returnData.toString());
+			String fileDownloadLocation=null;
 			try{
          //TISRLUAT-818	start
 			AbstractOrderEntryModel entry= mplOrderService.getEntryModel(transactionId);
-			String fileDownloadLocation=null;
+		
 					if (entry != null)
 					{
 						//Fetching invoice from consignment entries
