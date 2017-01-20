@@ -6644,12 +6644,17 @@ $("#couponSubmitButton").click(function(){
 		var couponCode=$("#couponFieldId").val();
 		var paymentMode=$("#paymentMode").val();
 		var guid=$("#guid").val();
+		/*start changes for INC_11738*/
+		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+		/*end changes for INC_11738*/
 		$.ajax({
 	 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/redeem",
 	 		type: "GET",
 	 		cache: false,
 	 		data: { 'couponCode' : couponCode , 'paymentMode' : paymentMode , 'bankNameSelected' : bankNameSelected , 'guid' : guid},
 	 		success : function(response) {
+	 			$("#no-click,.spinner").remove(); //add for INC_11738
 	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
 	 			$("#codAmount").text(response.totalPrice.formattedValue);
 	 			if(response.redeemErrorMsg!=null){
@@ -6725,6 +6730,7 @@ $("#couponSubmitButton").click(function(){
 	 		error : function(resp) {
 	 			$("#couponSubmitButton").prop('disabled', false);
 	 			$("#couponSubmitButton").css("opacity","1");
+	 			$("#no-click,.spinner").remove(); //changes for INC_11738
 	 		}
 	 	});	 
 	}
