@@ -405,12 +405,13 @@ function focusOnElement() {
 		   	 }
         //TISQAEE-64
         var productCode= $('#productCode').val();
-	        
+        var productCodeArray=[];
+        productCodeArray.push(productCode);    
 	        utag.link({
 				link_obj: this,
 				link_text: 'addtobag' ,
 				event_type : 'addtobag_other_seller' ,
-				product_sku : productCode
+				product_sku : productCodeArray                     // Product code passed as an array for Web Analytics   -- INC_11511  fix
 			});
         
 			ACC.product.sendAddToBag("addToCartFormId"+index);

@@ -684,12 +684,13 @@ sendAddToBagQuick:function(formId){
 				}	
 			}
 			//TISQAEE-64
-			utag.link({
+			//Code is not being called, utag is being fired from inline js
+			/*utag.link({
 				link_obj: this,
 				link_text: 'addtobag' ,
 				event_type : 'addtobag_winner_seller' ,
 				product_sku : productCode
-			});
+			});*/
 			
 			
 			//End MSD
@@ -733,7 +734,9 @@ sendAddToBagQuick:function(formId){
 			success : function(data) {
 				//TISQAEE-64
 				var productCode = $('#productCode').val();
-				
+				// Product code passed as an array for Web Analytics   INC_11511 
+				var productCodeArray=[];
+				productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
 				var isSuccess=true;
 				if(data.indexOf("cnt:") >= 0){
 				//$("#"+formId+"TitleSuccess").html("");
@@ -813,7 +816,7 @@ sendAddToBagQuick:function(formId){
 							link_obj: this,
 							link_text: 'buynow' ,
 							event_type : 'buynow_winner_seller',
-							product_sku : productCode
+							product_sku : productCodeArray
 						});
 					
 					location.href=ACC.config.encodedContextPath + '/cart';
@@ -1409,9 +1412,9 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
 						
 						filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
-						//TPR-645 start
+						//TPR-645 start  -- INC_11511  fix--h3 tag done
 						var filterValue = (minPriceSearchTxt+"-"+maxPriceSearchTxt).replace(/,/g,"");
-						var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h4').text().trim();
+						var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
 						onFilterClickAnalytics(filterName,filterValue);
 						//TPR-645 end
 						

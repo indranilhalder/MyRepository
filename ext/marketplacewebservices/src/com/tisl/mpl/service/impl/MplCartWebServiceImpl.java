@@ -931,6 +931,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					if (resetReqd)
 					{
 						finalCart = mplCartFacade.removeDeliveryMode(finalCart);
+						
 					}
 					else
 					{
@@ -943,8 +944,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					{
 						mplCartFacade.removeDeliveryMode2(finalCart);
 					}
+		
 				}
+				//for TPR-3823
+				mplCartFacade.totalMrpCal(finalCart);
+				
 				abstractOrderModel = finalCart;
+				
 			}
 			else if (abstractOrderModel instanceof OrderModel)
 			{
@@ -1434,9 +1440,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 				//Set the price
 				double entryPrice = 0;
-				if (null != abstractOrderEntry.getBasePrice() && null != abstractOrderEntry.getQuantity())
+				if (null != abstractOrderEntry.getTotalMrp() && null != abstractOrderEntry.getQuantity())
 				{
-					entryPrice = abstractOrderEntry.getBasePrice().doubleValue() * abstractOrderEntry.getQuantity().doubleValue();
+					//entryPrice = abstractOrderEntry.getBasePrice().doubleValue() * abstractOrderEntry.getQuantity().doubleValue();
+					//setting mrp here--tpr-3823
+					entryPrice = abstractOrderEntry.getTotalMrp().doubleValue();
+
 				}
 				final Double price = new Double(entryPrice);
 				gwlp.setPrice(price);
@@ -1464,12 +1473,19 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (null != abstractOrderEntry.getTotalPrice() && null != abstractOrderEntry.getTotalProductLevelDisc()
 						&& abstractOrderEntry.getTotalProductLevelDisc().doubleValue() > 0.0D)
 				{
-
 					gwlp.setProductLevelDisc(new Double(df2.format(abstractOrderEntry.getTotalPrice())));//ProductLevel Price after Discount
 
 					//product level Disc Value
+					//gwlp.setProductLevelDiscount(new Double(df2.format(abstractOrderEntry.getTotalProductLevelDisc())));
+					//Re-using this field for product discount number rather than difference  of two prices
+				}
 
-					gwlp.setProductLevelDiscount(new Double(df2.format(abstractOrderEntry.getTotalProductLevelDisc())));
+
+				//setting separately here productPerDiscDisplay for  all cases
+				if (null != abstractOrderEntry.getProductPerDiscDisplay())
+				{
+					//setting productPerDiscDisplay here--tpr-3823
+					gwlp.setProductLevelDiscount(new Double(df2.format(abstractOrderEntry.getProductPerDiscDisplay())));
 				}
 
 				MplPromotionData appliedResponseData = new MplPromotionData();
