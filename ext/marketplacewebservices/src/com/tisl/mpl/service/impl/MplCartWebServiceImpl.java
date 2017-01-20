@@ -1886,11 +1886,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			/* Product Details */
 			if (StringUtils.isNotEmpty(pincode))
 			{
-				gwlpList = productDetails(cartModel, deliveryModeDataMap, true, false, isrecalculate);
+				gwlpList = productDetails(cartModel, deliveryModeDataMap, true, true, isrecalculate);
 			}
 			else
 			{
-				gwlpList = productDetails(cartModel, deliveryModeDataMap, false, false, isrecalculate);
+				gwlpList = productDetails(cartModel, deliveryModeDataMap, false, true, isrecalculate);
 			}
 
 			if (null != gwlpList && !gwlpList.isEmpty())
@@ -2016,7 +2016,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 
 			/* Product Details */
-			if (null != pincode && !pincode.isEmpty())
+			if (StringUtils.isNotEmpty(pincode))
 			{
 				gwlpList = productDetails(cartModel, deliveryModeDataMap, true, false, isrecalculate);
 			}
@@ -2099,7 +2099,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
-		} /*** End Of Offer Details ***/
+		}
+		/*** End Of Offer Details ***/
 		return cartDataDetails;
 	}
 
@@ -2270,7 +2271,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 
 			/* Product Details */
-			if (null != pincode && !pincode.isEmpty())
+			if (StringUtils.isNotEmpty(pincode))
 			{
 				gwlpList = productDetails(cartModel, deliveryModeDataMap, true, false, isrecalculate);
 			}
@@ -2452,7 +2453,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 
 			/* Product Details */
-			if (null != pincode && !pincode.isEmpty())
+			if (StringUtils.isNotEmpty(pincode))
 			{
 				gwlpList = productDetails(orderModel, deliveryModeDataMap, true, false, isrecalculate);
 			}

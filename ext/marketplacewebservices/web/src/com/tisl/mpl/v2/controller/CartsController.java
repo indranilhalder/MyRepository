@@ -2385,7 +2385,7 @@ public class CartsController extends BaseCommerceController
 				}
 
 				/* Product Details */
-				if (null != postalCode && !postalCode.isEmpty())
+				if (StringUtils.isNotEmpty(postalCode))
 				{
 					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, true, false, true);
 				}
@@ -2614,7 +2614,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 * 
+			 *
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -2910,7 +2910,11 @@ public class CartsController extends BaseCommerceController
 				}
 			}
 			//	cart = mplPaymentWebFacade.findCartValues(cartId);
-			LOG.debug(cart.getCode());
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("checkPinCodeAtCart-------" + cart.getCode());
+			}
+
 			pinCodeResponse = mplCartWebService.checkPinCodeAtCart(mplCartFacade.getSessionCartWithEntryOrderingMobile(cart, true),
 					cart, pincode);
 			if (null != pinCodeResponse)
