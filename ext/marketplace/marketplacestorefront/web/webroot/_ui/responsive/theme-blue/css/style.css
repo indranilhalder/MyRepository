@@ -33249,12 +33249,12 @@ header .banner > span {
 	/*Top Deals*/
 	#bestPicks{margin: 0; padding:0;}
 	#bestPicks > h1 {font-size: 18px;    padding: 30px 0;}
-	#bestPicks .owl-item .short-info{ opacity:0;transition: all 0.3s ease-in-out 0s;}
-	#bestPicks .owl-item.active .short-info{ opacity:1;}
+/* sprint8 TPR-1672 */	#bestPicks .owl-item .short-info,#bestOffers .owl-item .short-info-bestOffers{ opacity:0;transition: all 0.3s ease-in-out 0s;}
+	#bestPicks .owl-item.active .short-info,#bestOffers .owl-item.active .short-info-bestOffers{ opacity:1;}
 	#bestPicks .home-best-pick-carousel.owl-carousel .owl-item,
 	#bestOffers .home-best-offers-carousel .owl-item
 	{ width:100%;}
-	/* sprint8 */ #bestPicks .view-cliq-offers,#bestPicks .view-cliq-offers, #bestOffers.best-offers.feature-collections a.view-best-offers, .best-offers.bestoffersCLP a.view-best-offers, .best-offers_blp a.view-best-offers{ margin: 0 auto 30px;font-size: 11px;    height: 35px;    letter-spacing: 1px;    line-height: 32px;    width: 170px; padding: 0;}
+	#bestPicks .view-cliq-offers,#bestPicks .view-cliq-offers, #bestOffers.best-offers.feature-collections a.view-best-offers, .best-offers.bestoffersCLP a.view-best-offers, .best-offers_blp a.view-best-offers{ margin: 0 auto 30px;font-size: 11px;    height: 35px;    letter-spacing: 1px;    line-height: 32px;    width: 170px; padding: 0;}
 	#bestOffers.best-offers.feature-collections a.view-best-offers.bestBtnTxtPresence, .best-offers.bestoffersCLP a.view-best-offers.bestBtnTxtPresence, .best-offers_blp a.view-best-offers.bestBtnTxtPresence{
 		padding: 0;
 	}
@@ -33262,13 +33262,14 @@ header .banner > span {
 	.home-best-pick-carousel .item,#bestOffers.best-offers.feature-collections .home-best-offers-carousel a.item {
     padding: 10px 0 1px;
 }
-/* sprint8 */
 .short-info, .latest-offer-info {
     margin-top: 10px;
 }
-	#bestPicks .short-info span{
+	#bestPicks .short-info span,#bestOffers.best-offers.feature-collections .short-info-bestOffers span{
 	padding:5px;
 	}
+	/* sprint8 TPR-1672*/
+	
 	#bestPicks .short-info p{
 	padding:0;
 	}
