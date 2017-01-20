@@ -594,12 +594,21 @@ function getBestOffersAjaxCall() {
     } else {
         var dataString = 'version=Online';
     }
+    var autoplayTimeout = 5000;
+    var slideBy = 1;
+    var autoPlay=true;
     $.ajax({
         type: "GET",
         dataType: "json",
         url: ACC.config.encodedContextPath + "/getBestOffers",
         data: dataString,
         success: function(response) {
+        	
+        	//changes for TPR-1121
+        	autoplayTimeout = response.autoplayTimeout?response.autoplayTimeout:autoplayTimeout;
+        	slideBy = response.slideBy?response.slideBy:slideBy; 
+            autoPlay= response.autoPlay != null ?response.autoPlay:autoPlay;
+            
             renderHtml = "<h2>" + response.title + "</h2>" +
                 "<div class='home-best-offers-carousel'>";
             $.each(response.subItems, function(k, v) {
@@ -655,6 +664,10 @@ function getBestOffersAjaxCall() {
         		dots:false,
         		navText:[],
         		lazyLoad: false,
+        		autoplay:autoPlay,
+        		autoHeight : false,
+        		autoplayTimeout: autoplayTimeout,
+	            slideBy: slideBy,
         		responsive : {
         			// breakpoint from 0 up
         			0 : {
@@ -829,7 +842,7 @@ function getBestPicksAjaxCall() {
             	autoplayTimeout = response.autoplayTimeout?response.autoplayTimeout:autoplayTimeout;
             	slideBy = response.slideBy?response.slideBy:slideBy; 
                 autoPlay= response.autoPlay != null ?response.autoPlay:autoPlay;
-            	
+                
             	//TPR-559 Show/Hide Components and Sub-components
             	if (response.hasOwnProperty("title") && response.hasOwnProperty("subItems")) {
 	                renderHtml = "<h2>" + response.title + "</h2>" +

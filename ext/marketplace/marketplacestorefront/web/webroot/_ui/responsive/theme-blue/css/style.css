@@ -10417,10 +10417,14 @@ body .account .right-account .order-history .pagination li{
       clear: both;
       content: "";
       display: table; }
-      .short-info::after {
+      
+      /* sprint8 TPR-1672 */
+      .short-info::after,#bestOffers.best-offers.feature-collections .short-info-bestOffers::after {
       clear: both;
       content: "";
       display: table; }
+      /* sprint8 TPR-1672 */
+      
       .short-info > h3 span {
      text-transform: uppercase;
     font-size: 12px;
@@ -29740,25 +29744,24 @@ padding:20px;
 	padding: 0;
     clear: both;
 }
-.home-best-pick-carousel{
+
+ /* sprint8(home page,clp,blp) */
+.home-best-pick-carousel,.home-best-offers-carousel{
 	margin: 10px 0px;
     text-align: center;
     padding: 0 40px;
     }
-    /* sprint8(home page,clp,blp) */
     .home-best-pick-carousel .item,#bestOffers.best-offers.feature-collections a.item{
     display: block;
     margin: 0 10px;
     padding: 10px 0;
     }
-    /* sprint8(tpr-1672(home page,clp,blp)) */
-#bestPicks .home-best-pick-carousel-img img{
+#bestPicks .home-best-pick-carousel-img img,#bestOffers .home-best-offers-carousel img{
 	max-width: 100%;
 }
-/* sprint8(tpr-1672(home page,clp,blp)) */
 #bestOffers.best-offers.feature-collections .short-info-bestOffers{
 	position: relative;
-  	margin-top: 15px;
+  	margin-top: 20px;
   	width: 100%;
   	text-align: center;
 }
@@ -29832,7 +29835,7 @@ padding:20px;
   	font-weight: normal;
   	padding: 16px 0;
  */}
-#bestOffers.best-offers.feature-collections a.view-best-offers,.best-offers.bestoffersCLP a.view-best-offers,.best-offers_blp a.view-best-offers{
+.best-offers.bestoffersCLP a.view-best-offers,.best-offers_blp a.view-best-offers{
 	margin-top: 20px;
 }
 #bestPicks .view-cliq-offers:hover,#bestOffers.best-offers.feature-collections a.view-best-offers:hover {
@@ -32819,9 +32822,11 @@ header > .content .bottom .mobile-bag.bag a{
     margin: 0;
     padding: 0;
 }
-.home-best-pick-carousel,.home-brands-you-love-carousel,.home-product-you-care-carousel,#newAndExclusive #new_exclusive {
+/* sprint8 TPR-1672 */
+.home-best-pick-carousel,.home-brands-you-love-carousel,.home-product-you-care-carousel,#newAndExclusive #new_exclusive,.home-best-offers-carousel {
     padding: 0;
 }
+/* sprint8 TPR-1672 */
 body.page-homepage .home-brands-you-love-wrapper h1 {
     font-size: 18px;
 }
@@ -32987,7 +32992,8 @@ header > .content .bottom .search form input {
 	.home-brands-you-love-carousel{
 		margin-bottom:34px !important;
 	}
-	.home-best-pick-carousel .item{
+	/* sprint8 TPR-1672 */
+	.home-best-pick-carousel .item,#bestOffers.best-offers.feature-collections .home-best-offers-carousel a.item{
 		padding: 10px 0 6px;
 	}
 	.showcase-center .price p {
@@ -32995,12 +33001,15 @@ header > .content .bottom .search form input {
 	    padding-top: 6px;
 	}
 	.home-brands-you-love-wrapper p.home-brands-you-love-main-image-desc,.home-brands-you-love-wrapper .home-brands-you-love-desc p.product-name,
-	#bestPicks .short-info span, #bestPicks .short-info p,.home-brands-you-love-desc .left p, .home-brands-you-love-desc .right p{
+	#bestPicks .short-info span, #bestPicks .short-info p,.home-brands-you-love-desc .left p, .home-brands-you-love-desc .right p,
+	 #bestOffers.best-offers.feature-collections .short-info-bestOffers span{
 		font-size:12px;
 	}
-	#bestPicks .view-cliq-offers{
+	#bestPicks .view-cliq-offers,#bestOffers.best-offers.feature-collections .view-best-offers.bestBtnTxtPresence{
 		margin-bottom:40px;
 	}
+	/* sprint8 TPR-1672 */
+	
 	.qued-content p{
 		    font-size: 12px;
 	}
@@ -33242,16 +33251,18 @@ header .banner > span {
 	#bestPicks > h1 {font-size: 18px;    padding: 30px 0;}
 	#bestPicks .owl-item .short-info{ opacity:0;transition: all 0.3s ease-in-out 0s;}
 	#bestPicks .owl-item.active .short-info{ opacity:1;}
-	#bestPicks .home-best-pick-carousel.owl-carousel .owl-item{ width:100%;}
+	#bestPicks .home-best-pick-carousel.owl-carousel .owl-item,
+	#bestOffers .home-best-offers-carousel .owl-item
+	{ width:100%;}
 	/* sprint8 */ #bestPicks .view-cliq-offers,#bestPicks .view-cliq-offers, #bestOffers.best-offers.feature-collections a.view-best-offers, .best-offers.bestoffersCLP a.view-best-offers, .best-offers_blp a.view-best-offers{ margin: 0 auto 30px;font-size: 11px;    height: 35px;    letter-spacing: 1px;    line-height: 32px;    width: 170px; padding: 0;}
 	#bestOffers.best-offers.feature-collections a.view-best-offers.bestBtnTxtPresence, .best-offers.bestoffersCLP a.view-best-offers.bestBtnTxtPresence, .best-offers_blp a.view-best-offers.bestBtnTxtPresence{
 		padding: 0;
 	}
-	 /* sprint8 */
 	.feature-collections h1{ font-size:20px;padding: 30px 0;}
-	.home-best-pick-carousel .item {
+	.home-best-pick-carousel .item,#bestOffers.best-offers.feature-collections .home-best-offers-carousel a.item {
     padding: 10px 0 1px;
 }
+/* sprint8 */
 .short-info, .latest-offer-info {
     margin-top: 10px;
 }
