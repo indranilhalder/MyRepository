@@ -81,6 +81,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.AddressType;
 import com.tisl.mpl.core.model.MplLPHolidaysModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.AddressTypeData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -100,13 +101,13 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCheckoutService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
 import com.tisl.mpl.shorturl.service.ShortUrlService;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 import com.tisl.mpl.wsdto.PushNotificationData;
-
 
 /**
  * @author TCS
@@ -472,7 +473,19 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		if (cartModel != null)
 		{
 			final Double subTotal = getCartService().getSessionCart().getSubtotal();
-			final Double finalDeliveryCost = Double.valueOf(cartData.getDeliveryCost().getValue().doubleValue());
+			Double finalDeliveryCost = null;
+			 //Double finalDeliveryCost = Double.valueOf(cartData.getDeliveryCost().getValue().doubleValue());
+			final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+			for(AbstractOrderEntryModel cartEntryModel: cartEntryList){
+			     if(null !=cartEntryModel && cartEntryModel.getFulfillmentMode().equalsIgnoreCase("TSHIP")){
+			   	  finalDeliveryCost=Double.valueOf(0.0);
+			   	  cartEntryModel.setCurrDelCharge(finalDeliveryCost);
+			     }else{
+			   	  finalDeliveryCost= Double.valueOf(cartData.getDeliveryCost().getValue().doubleValue());
+			   	  cartEntryModel.setCurrDelCharge(finalDeliveryCost);
+			     }
+			}
+			modelService.saveAll(cartEntryList);
 			final Double totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + finalDeliveryCost.doubleValue());
 			cartModel.setTotalPrice(totalPriceAfterDeliveryCost);
 			cartModel.setDeliveryCost(finalDeliveryCost);

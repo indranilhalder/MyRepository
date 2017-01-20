@@ -5224,6 +5224,34 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
 							}
 
+							for (final PinCodeResponseData pinCodeEntry : pincodeResponseData)
+							{
+								if(pinCodeEntry.getUssid().equalsIgnoreCase(marketplaceDeliveryModeData.getSellerArticleSKU())){
+									
+									if(null!=pinCodeEntry.getValidDeliveryModes() &&  pinCodeEntry.getValidDeliveryModes().size()>0){
+										for(DeliveryDetailsData deliveryModeValue:pinCodeEntry.getValidDeliveryModes()){
+										final String fulfillmentType = deliveryModeValue.getFulfilmentType();
+										if (StringUtils.isNotEmpty(fulfillmentType)
+												&& fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP))
+										{
+											//Changes to TRUE & FALSE
+											final String isSshipCodEligble = (richAttributeModel.get(0).getIsSshipCodEligible() != null ? richAttributeModel
+													.get(0).getIsSshipCodEligible().getCode()
+													: MarketplacecommerceservicesConstants.FALSE);
+											if (StringUtils.isNotEmpty(isSshipCodEligble)
+													&& isSshipCodEligble.equalsIgnoreCase(MarketplacecommerceservicesConstants.FALSE))
+											{
+												codEligible = false;
+												break;
+											}
+										}
+										}
+									}
+								}
+								
+							}
+							
+						/*	
 							if (richAttributeModel != null && richAttributeModel.get(0).getDeliveryFulfillModes() != null)
 							{
 								final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
@@ -5241,7 +5269,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 										break;
 									}
 								}
-							}
+							}*/
 						}
 					}
 				}
