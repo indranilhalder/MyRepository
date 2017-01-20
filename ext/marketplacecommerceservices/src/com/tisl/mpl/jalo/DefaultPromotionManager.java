@@ -1143,9 +1143,64 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param promotionCategoryList
 	 * @return
 	 */
+	//	public boolean getValidProductListForAmtDiscount(final SessionContext paramSessionContext, final AbstractOrder cart,
+	//			final List<Product> promotionProductList, final List<Category> promotionCategoryList, final Long eligibleQuantity,
+	//			final Double discountPrice, final Map<String, AbstractOrderEntry> validProductUssidMap)
+	//	{
+	//		boolean _flagCouldFireMessage = true;
+	//		double priceForDiscount = 0.00D;
+	//		double totalValidProductPrice = 0.00D;
+	//
+	//
+	//		for (final AbstractOrderEntry entry : validProductUssidMap.values())
+	//		{
+	//			totalValidProductPrice += entry.getTotalPriceAsPrimitive(paramSessionContext);
+	//		}
+	//
+	//		final Iterator iter = validProductUssidMap.entrySet().iterator();
+	//		while (iter.hasNext())
+	//		{
+	//			final Map.Entry mapEntry = (Map.Entry) iter.next();
+	//			final AbstractOrderEntry entry = (AbstractOrderEntry) mapEntry.getValue();
+	//
+	//			if (!promotionProductList.isEmpty())
+	//			{
+	//				priceForDiscount = entry.getBasePrice(paramSessionContext).doubleValue();
+	//			}
+	//			else if (promotionProductList.isEmpty() && !promotionCategoryList.isEmpty())
+	//			{
+	//				if (eligibleQuantity.intValue() > 1)
+	//				{
+	//					priceForDiscount = totalValidProductPrice;
+	//				}
+	//				else
+	//				{
+	//					priceForDiscount = entry.getBasePrice(paramSessionContext).doubleValue();
+	//				}
+	//
+	//			}
+	//
+	//			if (discountPrice.doubleValue() != 0.00
+	//					&& (priceForDiscount * eligibleQuantity.intValue()) < discountPrice.doubleValue())
+	//			{
+	//				iter.remove();
+	//				_flagCouldFireMessage = false;
+	//			}
+	//
+	//		}
+	//		return _flagCouldFireMessage;
+	//	}
+
+	/**
+	 * @Description: check discount amount value with product price for discount promotion
+	 * @param cart
+	 * @param promotionProductList
+	 * @param promotionCategoryList
+	 * @return
+	 */
 	public boolean getValidProductListForAmtDiscount(final SessionContext paramSessionContext, final AbstractOrder cart,
-			final List<Product> promotionProductList, final List<Category> promotionCategoryList, final Long eligibleQuantity,
-			final Double discountPrice, final Map<String, AbstractOrderEntry> validProductUssidMap)
+			final List<Product> allowedProductList, final Long eligibleQuantity, final Double discountPrice,
+			final Map<String, AbstractOrderEntry> validProductUssidMap)
 	{
 		boolean _flagCouldFireMessage = true;
 		double priceForDiscount = 0.00D;
@@ -1163,11 +1218,7 @@ public class DefaultPromotionManager extends PromotionsManager
 			final Map.Entry mapEntry = (Map.Entry) iter.next();
 			final AbstractOrderEntry entry = (AbstractOrderEntry) mapEntry.getValue();
 
-			if (!promotionProductList.isEmpty())
-			{
-				priceForDiscount = entry.getBasePrice(paramSessionContext).doubleValue();
-			}
-			else if (promotionProductList.isEmpty() && !promotionCategoryList.isEmpty())
+			if (CollectionUtils.isNotEmpty(allowedProductList))
 			{
 				if (eligibleQuantity.intValue() > 1)
 				{
@@ -1190,6 +1241,8 @@ public class DefaultPromotionManager extends PromotionsManager
 		}
 		return _flagCouldFireMessage;
 	}
+
+
 
 	/**
 	 * @Description: This method is for getting qualifying count for AB promotions
@@ -2457,6 +2510,65 @@ public class DefaultPromotionManager extends PromotionsManager
 				}
 
 				if (applyPromotion && brandFlag && sellerFlag)
+				{
+					sellerID = getSellerID(paramSessionContext, restrictionList, entry);//Gets the Seller ID of the Primary Promotion Product
+					validProductUssidMap.putAll(populateValidProductUssidMap(product, cart, restrictionList, paramSessionContext,
+							entry));
+					if (sellerIDData != null && eligibleProductMap != null)
+					{
+						sellerIDData.add(sellerID);
+						eligibleProductMap.put(entry, sellerID);
+					}
+				}
+			}
+		}
+
+		return validProductUssidMap;
+	}
+
+	/**
+	 * @Description : Returns Valid Product List
+	 * @param cart
+	 * @param paramSessionContext
+	 * @return Map<Product, Integer>
+	 */
+	protected Map<String, AbstractOrderEntry> getValidProdListForBuyXofA(final AbstractOrder cart,
+			final SessionContext paramSessionContext, final List<Product> allowedProductList,
+			final List<AbstractPromotionRestriction> restrictionList, final List<Product> excludedProductList,
+			final List<String> excludeManufactureList, final List<String> sellerIDData,
+			final Map<AbstractOrderEntry, String> eligibleProductMap)
+	{
+		final Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
+		String sellerID = MarketplacecommerceservicesConstants.EMPTY;
+		boolean isFreebie = false;
+
+		//final int productQty = 0;
+		for (final AbstractOrderEntry entry : cart.getEntries())
+		{
+			boolean brandFlag = false;
+			boolean sellerFlag = false;
+			isFreebie = getMplPromotionHelper().validateEntryForFreebie(entry);
+
+			if (!isFreebie)
+			{
+				final Product product = entry.getProduct();
+
+				//excluded product check
+				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
+						|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
+						|| isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
+				{
+					continue;
+				}
+
+				//checking product is a valid product for promotion
+				if (CollectionUtils.isNotEmpty(allowedProductList) && allowedProductList.contains(product))
+				{
+					brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+					sellerFlag = checkSellerData(paramSessionContext, restrictionList, entry);
+				}
+
+				if (brandFlag && sellerFlag)
 				{
 					sellerID = getSellerID(paramSessionContext, restrictionList, entry);//Gets the Seller ID of the Primary Promotion Product
 					validProductUssidMap.putAll(populateValidProductUssidMap(product, cart, restrictionList, paramSessionContext,

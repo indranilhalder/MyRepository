@@ -848,6 +848,17 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		buyboxData.setSellerId(buyBoxMod.getSellerId());
 		buyboxData.setSellerArticleSKU(buyBoxMod.getSellerArticleSKU());
 		buyboxData.setAvailable(buyBoxMod.getAvailable());
+		/*
+		 * //TPR-3752 Jewel Heading Added
+		 */if (null != buyBoxMod.getPLPMaxPrice())
+		{
+			buyboxData.setPlpMaxPrice(productDetailsHelper.formPriceData(buyBoxMod.getPLPMaxPrice()));
+		}
+		if (null != buyBoxMod.getPLPMinPrice())
+		{
+			buyboxData.setPlpMinPrice(productDetailsHelper.formPriceData(buyBoxMod.getPLPMinPrice()));
+		}
+
 		if (null != buyBoxMod.getMrp())
 		{
 			buyboxData.setMrp(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
