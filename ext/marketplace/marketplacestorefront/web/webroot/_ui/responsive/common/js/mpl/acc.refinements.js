@@ -444,6 +444,9 @@ ACC.refinements = {
 				//TISTNL-894 | Colourfamily mobile view
 				filterCount+=$(".facet_mobile .filter-colorfamilytrlg.selected-colour").length;
 				filterCount+=$(".facet_mobile .filter-colorfamilytrlg.selected-multi-colour").length;
+				//Dial Colour Watches mobile view
+				filterCount+=$(".facet_mobile .filter-dialColourWatches.selected-colour").length;
+				filterCount+=$(".facet_mobile .filter-dialColourWatches.selected-multi-colour").length;
 				
 				//TISQAUATS-12 starts 
 				filterCount+=$(".facet_mobile .filter-colour.selected-multi-colour").length;
