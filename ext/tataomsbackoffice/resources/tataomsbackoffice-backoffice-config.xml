@@ -193,7 +193,8 @@
      <explorer-tree:navigation-node  id="configarable_params">
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="tshipdeliverytat"></explorer-tree:navigation-node>
-     <explorer-tree:navigation-node id="sship_delivery_breach_collapseble"></explorer-tree:navigation-node>
+    <!-- This release not required this screen(Don't remove controller and widget settings)
+     <explorer-tree:navigation-node id="sship_delivery_breach_collapseble"></explorer-tree:navigation-node> -->
      
      <explorer-tree:navigation-node id="report_cerparation_line">
          
@@ -244,7 +245,8 @@
      <explorer-tree:navigation-node  id="configarable_params">
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="tshipdeliverytat"></explorer-tree:navigation-node>
-     <explorer-tree:navigation-node id="sship_delivery_breach_collapseble"></explorer-tree:navigation-node>
+    <!-- This release not required this screen(Don't remove controller and widget settings)
+      <explorer-tree:navigation-node id="sship_delivery_breach_collapseble"></explorer-tree:navigation-node> -->
      
      <explorer-tree:navigation-node id="report_cerparation_line">
          
