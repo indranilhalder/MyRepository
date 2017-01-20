@@ -8,7 +8,7 @@
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
 	height="100%">
 	<style>
-		.headings{ background-color:#436C81; font-size:14px;color:white;
+		.headings{ background-color:#436C81; font-size:14px;color:white;margin-top:10px;}
 		.label_css {font-size:12px; Padding: 10px 20px 0px
 		20px;color:#ffffff; } .search-area{ width:300px; height:31px; }
 		.search-button{ background-image: none; border-radius: 0px;
@@ -223,7 +223,7 @@
 								value="Transaction And Tracking Nos And Return Info">
 							</label>
 						</hlayout>
-						<vlayout>
+						<vlayout id="transInfoVlayout">
 							<grid id="transactionInfoGrid"></grid>
 						</vlayout>
 

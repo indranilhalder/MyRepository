@@ -65,7 +65,7 @@ public class LpoverrideWidgetController
 	private List<OrderLineResponse> orderlineRespone;
 	private List<String> activelpList; //active logistcs Partners
 	private List<String> dropDownSearchLpList; //active logistcs Partners drop down
-	private Map<String, TransactionInfo> modifiedTransactinTrack;//modifed transaction
+	private final Map<String, TransactionInfo> modifiedTransactinTrack = new HashMap<>();//modifed transaction
 	private List<String> ordersStatus;// orders statuses
 	private Map<String, TransactionInfo> previousLpAndAwbNumberForTrack; //track  awb numbers for scanned/HOTC
 	@WireVariable("orderLogisticsRestClient")
