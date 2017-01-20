@@ -276,23 +276,23 @@ function callForEachElement(params) {
 			}
 			if (productWidget[i].indexOf("hot") === 0
 					&& site_page_type === "viewAllTrending") {
-				//params.count = '100';
-				  params.count = '200';
+				params.count = '100';
+				
 				
 			} else {
-				//params.count = '15';
-				params.count = '30';
+				params.count = '15';
+				
 			}
 			if (productWidget[i].indexOf("search") === 0
 					&& site_page_type === 'viewAllTrending') {
-				//params.count = '100';
-				 params.count = '200';
+				params.count = '100';
+				
 				
 			}
 			if (productWidget[i].indexOf("search") === 0
 					&& site_page_type === 'search') {
-				//params.count = '15';
-				  params.count = '30';
+				params.count = '15';
+				 
 			}
 			params.htmlElement = productWidgetElement[i];
 			callRecApi(params, rootEP + endpoint);
@@ -305,8 +305,8 @@ function callForEachElement(params) {
 			var endpoint = '/SocialGenomix/recommendations/';
 			endpoint += brandWidget[i];
 
-			//params.count = '9';
-			  params.count = '18';
+			params.count = '9';
+			  
 			params.htmlElement = brandWidgetElement[i];
 			callRecApi(params, rootEP + endpoint);
 		}
@@ -318,8 +318,8 @@ function callForEachElement(params) {
 			var endpoint = '/SocialGenomix/recommendations/';
 			endpoint += categoryWidget[i];
 
-			//params.count = '8';
-			  params.count = '16';
+			params.count = '8';
+			 
 			if (categoryWidgetElement[i].indexOf('ia_categories_recent') > -1) {
 				params.count = '2';
 			}
@@ -1119,7 +1119,7 @@ function updatePage(response, widgetMode) {
 	
 //	response={"request_id":"9f5b15d6-eda5-47d3-84de-a2cba9fb77ec","status":200,"status_txt":"OK","data":{"location":null,"recommendations":[{"sizes":"","ia:weightage":-0.00010499,"site_uss_id":"100090CKJShirtGreyCMH393Z5W1BR07L","colors":["Gold"],"original_price":11499,"discounted_price":10499,"subbrand":"","site_product_id":"MP000000000107552","ia:seller_list":[[-0.00010499,{"availability_status":1,"available_quantity":1103,"price":11499,"msrp":11499,"weightage":-0.00010499,"seller_id":"100136","sku":"100136MEIZUM3NOTE01","discount":10499}]],"type":"Electronics","online_exclusive":false,"url":"","category":"MSH1210100","price":11499,"is_new_product":false,"image_url":"xxx","average_user_rating":2.05341359009462,"ia:seller":{"availability_status":1,"available_quantity":1103,"price":11499,"msrp":11499,"weightage":-0.00010499,"seller_id":"100136","sku":"100136MEIZUM3NOTE01","discount":10499},"name":"Meizu M3 Note 4G Dual Sim 32 GB (Gold)","brand":"Meizu","gender":"electronics"}],"filter_key":null,"filter_value":null},"server":"analytics-general-15"};
 	
-	//response={"request_id":"9f5b15d6-eda5-47d3-84de-a2cba9fb77ec","status":200,"status_txt":"OK","data":{"location":null,"recommendations":[{"sizes":"","ia:weightage":-0.00010499,"site_uss_id":"123654098765485130011712","colors":["Gold"],"original_price":11499,"discounted_price":10499,"subbrand":"","site_product_id":"987654321","ia:seller_list":[[-0.00010499,{"availability_status":1,"available_quantity":1103,"price":11499,"msrp":11499,"weightage":-0.00010499,"seller_id":"100136","sku":"100136MEIZUM3NOTE01","discount":10499}]],"type":"Electronics","online_exclusive":false,"url":"","category":"MSH1210100","price":11499,"is_new_product":false,"image_url":"xxx","average_user_rating":2.05341359009462,"ia:seller":{"availability_status":1,"available_quantity":1103,"price":11499,"msrp":11499,"weightage":-0.00010499,"seller_id":"100136","sku":"100136MEIZUM3NOTE01","discount":10499},"name":"Meizu M3 Note 4G Dual Sim 32 GB (Gold)","brand":"Meizu","gender":"electronics"},{"sizes":"","ia:weightage":-0.0001599,"site_uss_id":"123654098765485130011713","colors":["black"],"original_price":20528,"discounted_price":15990,"subbrand":"","site_product_id":"987654322","ia:seller_list":[[-0.0001599,{"availability_status":1,"available_quantity":16,"price":17850,"msrp":20528,"weightage":-0.0001599,"seller_id":"123846","sku":"123846NXG2KSL024","discount":15990}]],"type":"Electronics","online_exclusive":false,"url":"","category":"MSH1223100","price":17850,"is_new_product":false,"image_url":"https://img.tatacliq.com/images/252Wx374H/MP000000000757620_252Wx374H_20161128063952.jpeg","average_user_rating":2.148081518779059,"ia:seller":{"availability_status":1,"available_quantity":16,"price":17850,"msrp":20528,"weightage":-0.0001599,"seller_id":"123846","sku":"100090CKJShirtGreyCMH393Z5W1BR07XL","discount":15990},"name":"Acer Aspire ES1521 15.6\" Laptop (AMD, 1TB HDD) Black","brand":"Acer","gender":"electronics"}],"filter_key":null,"filter_value":null},"server":"analytics-general-15"};
+	response={"request_id":"9f5b15d6-eda5-47d3-84de-a2cba9fb77ec","status":200,"status_txt":"OK","data":{"location":null,"recommendations":[{"sizes":"","ia:weightage":-0.00010499,"site_uss_id":"123654098765485130011712","colors":["Gold"],"original_price":11499,"discounted_price":10499,"subbrand":"","site_product_id":"987654321","ia:seller_list":[[-0.00010499,{"availability_status":1,"available_quantity":1103,"price":11499,"msrp":11499,"weightage":-0.00010499,"seller_id":"100136","sku":"100136MEIZUM3NOTE01","discount":10499}]],"type":"Electronics","online_exclusive":false,"url":"","category":"MSH1210100","price":11499,"is_new_product":false,"image_url":"xxx","average_user_rating":2.05341359009462,"ia:seller":{"availability_status":1,"available_quantity":1103,"price":11499,"msrp":11499,"weightage":-0.00010499,"seller_id":"100136","sku":"100136MEIZUM3NOTE01","discount":10499},"name":"Meizu M3 Note 4G Dual Sim 32 GB (Gold)","brand":"Meizu","gender":"electronics"},{"sizes":"","ia:weightage":-0.0001599,"site_uss_id":"123654098765485130011713","colors":["black"],"original_price":20528,"discounted_price":15990,"subbrand":"","site_product_id":"987654322","ia:seller_list":[[-0.0001599,{"availability_status":1,"available_quantity":16,"price":17850,"msrp":20528,"weightage":-0.0001599,"seller_id":"123846","sku":"123846NXG2KSL024","discount":15990}]],"type":"Electronics","online_exclusive":false,"url":"","category":"MSH1223100","price":17850,"is_new_product":false,"image_url":"https://img.tatacliq.com/images/252Wx374H/MP000000000757620_252Wx374H_20161128063952.jpeg","average_user_rating":2.148081518779059,"ia:seller":{"availability_status":1,"available_quantity":16,"price":17850,"msrp":20528,"weightage":-0.0001599,"seller_id":"123846","sku":"100090CKJShirtGreyCMH393Z5W1BR07XL","discount":15990},"name":"Acer Aspire ES1521 15.6\" Laptop (AMD, 1TB HDD) Black","brand":"Acer","gender":"electronics"}],"filter_key":null,"filter_value":null},"server":"analytics-general-15"};
 	console.log(response);
 	var widgetElement = "";
 	if (typeof response.data === "undefined") {
