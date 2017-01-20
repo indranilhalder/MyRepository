@@ -117,7 +117,7 @@ public class CustomPromotionsPopulator implements Populator<AbstractPromotionMod
 		target.setTitle(source.getTitle());
 		if (source instanceof MplProductSteppedMultiBuyPromotionModel)
 		{
-			final MplProductSteppedMultiBuyPromotionModel promo = (MplProductSteppedMultiBuyPromotionModel) source;
+			//final MplProductSteppedMultiBuyPromotionModel promo = (MplProductSteppedMultiBuyPromotionModel) source;
 			/*
 			 * if(promo!=null) { getPromourl() }
 			 */
@@ -147,7 +147,7 @@ public class CustomPromotionsPopulator implements Populator<AbstractPromotionMod
 			 * sellerRestriction.getSellerMasterList(); for (final SellerMasterModel seller : sellerList) {
 			 * allowedSellerList.add(seller.getId()); } //setting allowed seller list
 			 * target.setAllowedSellers(allowedSellerList); }
-			 *
+			 * 
 			 * } }
 			 */
 			//}

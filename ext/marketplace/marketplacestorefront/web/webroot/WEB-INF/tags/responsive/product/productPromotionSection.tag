@@ -144,7 +144,7 @@
 												value="${product.potentialPromotions[0].endDate}" /></span>
 												</div>
 										</div>
-										<p><a href="${request.contextPath}${product.potentialPromotions[0].promourl}">Bundle offer promo page</a></p>
+										<p><a href="${request.contextPath}${product.potentialPromotions[0].promourl}">Bundle offer promotion page</a></p>
 										</div>
 									</div>
 									</div>
