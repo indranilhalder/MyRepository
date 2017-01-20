@@ -1575,11 +1575,24 @@ $(document).ready(function(){
 				selectOpen = false;
 			}
 		});
-		
-		if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
+		/*start change for INC_11789*/
+		/*if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
 			var footer_height=$('footer').height() + 20 + 'px';
 			$(".body-Content").css('padding-bottom',footer_height);
-		}
+		}*/
+		if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
+			var footer_height=$('footer').height() + 20 + 'px';
+			var ua_check = window.navigator.userAgent;
+			var msie_check = ua_check.indexOf("MSIE ");
+			$(".body-Content").css('padding-bottom',footer_height);
+			if(msie_check > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){
+				setTimeout(function () {
+					var footer_height=$('footer').height() + 20 + 'px';
+					$(".body-Content").css('padding-bottom',footer_height);
+				},500);
+				}
+		} 
+		/*end change for INC_11789*/
 		else{
 			$(".body-Content").css('padding-bottom','0px');
 		}
