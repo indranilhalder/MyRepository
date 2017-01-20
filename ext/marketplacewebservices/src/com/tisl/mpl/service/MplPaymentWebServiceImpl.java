@@ -960,7 +960,8 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 		try
 		{ // Get Bank Model for Saved , New Card and EMI
 			if (StringUtils.isNotEmpty(binNo) && StringUtils.isEmpty(bankName)
-					&& !paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
+					&& !paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD)
+					&& !paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE))
 			{
 				//calling facade method to perform BIN check
 				//Added For TPR-1035
@@ -1043,6 +1044,13 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 			// Set Bank in Session as null for COD
 			else if (StringUtils.isEmpty(binNo) && StringUtils.isEmpty(bankName)
 					&& paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
+			{
+				getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, null);
+				promoPriceData.setBinCheck(Boolean.TRUE);
+			}
+			// Set Bank in Session as null for MRUPEE
+			else if (StringUtils.isEmpty(binNo) && StringUtils.isEmpty(bankName)
+					&& paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE))
 			{
 				getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, null);
 				promoPriceData.setBinCheck(Boolean.TRUE);
