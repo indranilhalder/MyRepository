@@ -780,6 +780,8 @@
 		<property name="ussid" type="String"/>
 		<property name="returnMethod" type="String"/>
 		<property name="returnFulfillmentMode" type="String"/>
+		<!--Bug Id TISRLUAT-818  -->
+		<property name="selfCourierDocumentLink" type="String"/>
 	</bean>
 	
 	
