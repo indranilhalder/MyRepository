@@ -5,7 +5,9 @@ package com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl;
  * 
  */
 
+import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -189,6 +191,24 @@ public class MplDeliveryAddressControllerImpl extends
 	public void saveChangeDeliveryRequests(OrderModel orderModel) {
 		mplDeliveryAddressFacade.saveChangeDeliveryRequests(orderModel);
 		
+	}
+
+	/**
+	 * service used to get the 3 dates for HD and 2 dates for ED Considering MPL Holidays
+	 * @param timeSlotType
+	 * @param edd
+	 * @return
+	 */
+	@Override
+	public Map<String, List<String>> getDateAndTimeMap(String timeSlotType,
+			String edd) {
+		Map<String, List<String>>  DateAndTimeMap = null;
+		 try {
+			 DateAndTimeMap =mplDeliveryAddressFacade.getDateAndTimeMap(timeSlotType,edd);
+		} catch (ParseException e) {
+			LOG.error("Excepiton occurred while getting the date And time map "+e.getMessage());
+		}
+		return DateAndTimeMap;
 	}
 
 }

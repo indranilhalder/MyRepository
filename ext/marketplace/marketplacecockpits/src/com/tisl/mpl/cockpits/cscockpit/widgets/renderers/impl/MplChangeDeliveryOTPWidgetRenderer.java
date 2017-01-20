@@ -6,15 +6,11 @@ package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
@@ -42,7 +38,6 @@ import bsh.ParseException;
 
 import com.hybris.oms.domain.changedeliveryaddress.TransactionEddDto;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
-import com.hybris.oms.tata.model.MplTimeSlotsModel;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceOrderController;
@@ -50,7 +45,6 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCallContex
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MplDeliveryAddressController;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.OTPModel;
-import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.facade.config.MplConfigFacade;
@@ -305,7 +299,6 @@ public class MplChangeDeliveryOTPWidgetRenderer
         	 renderScheduledDeliveryHeaders(widget, listHead);
 
 	           listHead.setParent(listBox);
-	           OrderModel order = (OrderModel) getOrder().getObject();	           
 	           //  Displaying Schedule delivery Timings 
 	           for (TransactionEddDto transactionEdDto : transactionEddDto) {
 	        	   Listitem row = new Listitem();
@@ -516,67 +509,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 	
 	private Map<String, List<String>> getDateAndTimeMap(String timeSlotType,
 			String edd) throws java.text.ParseException {
-
-		DateUtilHelper dateUtilHelper = new DateUtilHelper();
-		String estDeliveryDateAndTime= edd;
-		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-		String  deteWithOutTIme=dateUtilHelper.getDateFromat(estDeliveryDateAndTime,format);
-		String timeWithOutDate=dateUtilHelper.getTimeFromat(estDeliveryDateAndTime);
-		List<String>   calculatedDateList=new ArrayList<String>();
-		List<MplTimeSlotsModel> modelList=null;
-		if(timeSlotType.equalsIgnoreCase(MarketplaceCockpitsConstants.SD)){
-			modelList=mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
-			LOG.debug("********* Delivery Mode :" + MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
-			calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,3);
-		}else if (timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED)){
-			modelList=mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.ED);
-			LOG.debug("********* Delivery Mode :" + MarketplacecommerceservicesConstants.ED);
-			calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,2);
-		}
-		if(null!= modelList){
-			Date startTime =null;
-			Date endTIme = null;
-			Date searchTime=null;
-			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-			List<MplTimeSlotsModel> timeList=new ArrayList<MplTimeSlotsModel>();
-			for(MplTimeSlotsModel mplTimeSlotsModel:modelList){
-				for(String selectedDate: calculatedDateList){
-					if(selectedDate.equalsIgnoreCase(deteWithOutTIme) ){
-						try {
-							startTime = sdf.parse(mplTimeSlotsModel.getToTime());
-							endTIme=sdf.parse(mplTimeSlotsModel.getFromTime());
-							searchTime = sdf.parse(timeWithOutDate);
-						} catch (java.text.ParseException e) {
-							e.printStackTrace();
-						}
-						if (startTime.compareTo(searchTime) > 0  && endTIme.compareTo(searchTime) > 0  && startTime.compareTo(searchTime) != 0 && endTIme.compareTo(searchTime) != 0) {
-							LOG.debug("startDate:"+  DateFormatUtils.format(startTime, "HH:mm") + "endDate:"+  DateFormatUtils.format(sdf.parse(mplTimeSlotsModel.getFromTime()), "HH:mm"));
-							timeList.add(mplTimeSlotsModel);
-						} 
-					}
-				}
-			}
-			LOG.debug("timeList.size()**************"+timeList.size());
-			if(timeList.size()==0){
-				String nextDate= dateUtilHelper.getNextDete(deteWithOutTIme,format);
-				calculatedDateList=dateUtilHelper.getDeteList(nextDate,format,2);
-				timeList.addAll(modelList);
-			}
-			List<String> finalTimeSlotList=null;
-			Map<String, List<String>> dateTimeslotMapList=new LinkedHashMap<String, List<String>>();
-			for(String selectedDate: calculatedDateList){
-
-				if(selectedDate.equalsIgnoreCase(deteWithOutTIme)){
-					finalTimeSlotList= dateUtilHelper.convertFromAndToTimeSlots(timeList);
-				}else{
-					finalTimeSlotList= dateUtilHelper.convertFromAndToTimeSlots(modelList);
-				}
-				dateTimeslotMapList.put(selectedDate, finalTimeSlotList);  
-			}
-			return dateTimeslotMapList;
-		}
-
-		return null;
+		return mplDeliveryAddressController.getDateAndTimeMap(timeSlotType,edd);
 	}
 
 	private void renderScheduledDeliveryHeaders(
