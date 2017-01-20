@@ -344,4 +344,13 @@ INSERT_UPDATE frequency;code[unique=true];name[lang=en];
  ;yes;Yes;
  ;no;No;
  # added by i324321 end # 
+ 
+ 
+INSERT_UPDATE MediaFormat;qualifier[unique=true];name
+;1316Wx1468H;1316Wx1468H 
+;320Wx357H;320Wx357H
+;432Wx482H;432Wx482H
+;58Wx65H;58Wx65H
+;658Wx734H;658Wx734H
+;97Wx108H;97Wx108H
 
