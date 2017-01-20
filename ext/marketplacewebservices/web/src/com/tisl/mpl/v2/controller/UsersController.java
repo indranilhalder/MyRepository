@@ -243,6 +243,8 @@ import com.tisl.mpl.wsdto.UpdateCustomerDetailDto;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.ValidateOtpWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
+import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 
 
 /**
@@ -7164,11 +7166,44 @@ public class UsersController extends BaseCommerceController
 		if(returnData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_SELF))
 		{
 			LOG.debug(" returnForm>>>>>>>>>>>>>>>>>>>>>>>>>>>>: " +returnData.toString());
+			try{
+         //TISRLUAT-818	start
+			AbstractOrderEntryModel entry= mplOrderService.getEntryModel(transactionId);
+			String fileDownloadLocation=null;
+					if (entry != null)
+					{
+						//Fetching invoice from consignment entries
+						for (final ConsignmentEntryModel c : entry.getConsignmentEntries())
+						{
+							if (null != c.getConsignment().getInvoice())
+							{
+								fileDownloadLocation = c.getConsignment().getInvoice().getInvoiceUrl();
+								LOG.info(":::::::InvoiceURL    " + fileDownloadLocation);
+								if (fileDownloadLocation == null)
+								{
+									fileDownloadLocation = configurationService.getConfiguration().getString("default.invoice.url");
+								}
+							}
+							else
+							{
+
+								fileDownloadLocation = configurationService.getConfiguration().getString("default.invoice.url");
+
+							}
+						}
+			  }
+				}
+				catch (Exception exp)
+				{
+					LOG.error("Exception Oucer Get Consignment "+exp.getMessage());
+				}
+			 //TISRLUAT-818 end
 			ReturnInfoData returnInfoDataObj = new ReturnInfoData(); 
 			returnInfoDataObj.setTicketTypeCode(MarketplacecommerceservicesConstants.RETURN_TYPE);
 			returnInfoDataObj.setReasonCode(returnData.getReturnReasonCode());
 			returnInfoDataObj.setUssid(returnData.getUssid());
 			returnInfoDataObj.setReturnMethod(returnData.getReturnMethod());
+			returnInfoDataObj.setSelfCourierDocumentLink(fileDownloadLocation);
 			boolean cancellationStatusForSelfShip = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry,returnInfoDataObj, customerData, SalesApplication.MOBILE, returnAddrData);
 			if (!cancellationStatusForSelfShip)
 			{
