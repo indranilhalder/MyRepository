@@ -269,6 +269,8 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 						if (sellerFlag)
 						{
 							productACount += entry.getQuantity().intValue();
+							validProductUssidAandB.put(entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID)
+									.toString(), entry);
 						}
 					}
 				}
@@ -283,6 +285,8 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 					{
 						categoryFlag = true;
 						productACount += entry.getQuantity().intValue();
+						validProductUssidAandB.put(entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID)
+								.toString(), entry);
 					}
 				}
 
@@ -298,10 +302,14 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 						if (sellerFlag)
 						{
 							productBCount += entry.getQuantity().intValue();
+							validProductUssidMap.put(entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID)
+									.toString(), entry);
+							validProductUssidAandB.put(entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID)
+									.toString(), entry);
 						}
 					}
 				}
-				else if (promotionSecCategoryList.isEmpty() && !promotionSecCategoryList.isEmpty())
+				else if (promotionSecProductList.isEmpty() && !promotionSecCategoryList.isEmpty())
 				//checking product category is permitted by promotion category or not
 				{
 					final List<String> productCategoryList = getDefaultPromotionsManager().getcategoryList(product, ctx);
@@ -312,35 +320,29 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 					{
 						categoryFlag = true;
 						productBCount += entry.getQuantity().intValue();
+						validProductUssidMap.put(
+								entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString(), entry);
+						validProductUssidAandB.put(entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID)
+								.toString(), entry);
 					}
 				}
-
-
-
-
-
-
-
 
 				//Code snippet for TPR-961
 
-				if (applyPromotion && sellerFlag && brandFlag)
-				{
-
-
-
-					if (isExistInPromotion(entry))
-					{
-						validProductUssidMap.put(
-								entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString(), entry);
-					}
-					validProductUssidAandB.put(entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString(),
-							entry);
-				}
-				else
-				{
-					LOG.debug("No Valid Products are there in the Cart Or Promotion does not contain any vaild products ");
-				}
+				//				if (applyPromotion && sellerFlag && brandFlag)
+				//				{
+				//					if (isExistInPromotion(entry))
+				//					{
+				//						validProductUssidMap.put(
+				//								entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString(), entry);
+				//					}
+				//					validProductUssidAandB.put(entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString(),
+				//							entry);
+				//				}
+				//				else
+				//				{
+				//					LOG.debug("No Valid Products are there in the Cart Or Promotion does not contain any vaild products ");
+				//				}
 
 
 
@@ -373,22 +375,22 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 	 *
 	 * @return exist
 	 */
-	private boolean isExistInPromotion(final AbstractOrderEntry orderEntry)
-	{
-		boolean exist = false;
-		final List<Product> promotionProductListB = new ArrayList<Product>(getSecondProducts());
-		for (final Product productIn : promotionProductListB)
-		{
-			if (productIn.getCode() != null && orderEntry.getProduct() != null
-					&& (productIn.getCode().equals(orderEntry.getProduct().getCode())))
-			{
-				exist = true;
-				break;
-			}
-		}
-
-		return exist;
-	}
+	//	private boolean isExistInPromotion(final AbstractOrderEntry orderEntry)
+	//	{
+	//		boolean exist = false;
+	//		final List<Product> promotionProductListB = new ArrayList<Product>(getSecondProducts());
+	//		for (final Product productIn : promotionProductListB)
+	//		{
+	//			if (productIn.getCode() != null && orderEntry.getProduct() != null
+	//					&& (productIn.getCode().equals(orderEntry.getProduct().getCode())))
+	//			{
+	//				exist = true;
+	//				break;
+	//			}
+	//		}
+	//
+	//		return exist;
+	//	}
 
 	/**
 	 * @Description : For Promotion Evaluation
@@ -455,15 +457,26 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 				&& flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction)
 		{
 			boolean isPercentageDisc = false;
+			totalProductPrice = totalEligibleProductPrice.doubleValue();
+
 			if (isPercentageOrAmount().booleanValue() && null != getPercentageDiscount())
 			{
 				percentageDiscount = getPercentageDiscount().doubleValue();
+				final double totalSavings = (totalProductPrice * percentageDiscount) / 100;
+				final double maxDiscount = getMaxDiscount() == null ? 0.0D : getMaxDiscount().doubleValue(); //Adding the Promotion set Max  Discount Value to a variable
+				if (totalSavings > maxDiscount && maxDiscount != 0)
+				{
+					percentageDiscount = (maxDiscount * 100) / totalProductPrice;
+				}
+				else
+				{
+					isPercentageDisc = true;
+				}
 				LOG.debug("Percentage Discount" + percentageDiscount);
-				isPercentageDisc = true;
+				//isPercentageDisc = true;
 			}
 			else
 			{
-				totalProductPrice = totalEligibleProductPrice.doubleValue();
 				if (totalProductPrice > 0)
 				{
 					percentageDiscount = (discountPrice.doubleValue() * 100) / totalProductPrice;
@@ -479,36 +492,45 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 			//				eligibleProductList.add(orderEntry.getProduct());
 			//			}
 			final Map<String, Integer> qCount = new HashMap<String, Integer>();
-			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
+			//			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
+			//			{
+			//				qCount.put(mapEntry.getKey(), Integer.valueOf(mapEntry.getValue().getQuantity().intValue()));
+			//			}
+
+			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidAandB.entrySet())
 			{
 				qCount.put(mapEntry.getKey(), Integer.valueOf(mapEntry.getValue().getQuantity().intValue()));
 			}
 
+
 			final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
-					.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidMap, null);
+					.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidAandB, null);
 
 			// Apportioning Code Implementation
 			ctx.setAttribute(MarketplacecommerceservicesConstants.PERCENTAGEDISCOUNT, Double.valueOf(percentageDiscount));
-			ctx.setAttribute(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE, totalEligibleProductPrice);
-			ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
+			//			ctx.setAttribute(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE, totalEligibleProductPrice);
+			//			ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
 			ctx.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, qCount);
 			ctx.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
 			ctx.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
 			ctx.setAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC, Boolean.valueOf(isPercentageDisc));
+
+
+			//			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidAandB.entrySet())
+			//			{
+			//				final AbstractOrderEntry entry = mapEntry.getValue();
+			//				consumed.add(getDefaultPromotionsManager().consume(ctx, this, entry.getQuantity().longValue(),
+			//						entry.getQuantity().longValue(), entry));
+			//			}
+
+			//for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidAandB.entrySet())
 			{
+				//evaluationContext.startLoggingConsumed(this);
 				final AbstractOrderEntry entry = mapEntry.getValue();
 				final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
 				consumed.add(getDefaultPromotionsManager().consume(ctx, this, entry.getQuantity().longValue(),
 						entry.getQuantity().longValue(), entry));
-			}
-
-			//for (final Map.Entry<Product, Integer> mapEntry : validProductList.entrySet())
-			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
-			{
-				//evaluationContext.startLoggingConsumed(this);
-				final AbstractOrderEntry entry = mapEntry.getValue();
-				//final PromotionOrderView view = evaluationContext.createView(ctx, this, eligibleProductList);
 				final PromotionOrderEntry viewEntry = view.peek(ctx);
 				final long quantityOfOrderEntry = viewEntry.getBaseOrderEntry().getQuantity(ctx).longValue();
 				LOG.debug("BaseOrderEntry" + quantityOfOrderEntry);
@@ -518,17 +540,23 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 				{
 					//					final double adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue * entry.getQuantity()
 					//							.doubleValue());
-
-					final double adjustment = -(entry.getTotalPriceAsPrimitive() * percentageDiscountvalue);
+					double adjustment = 0.00D;
+					if (validProductUssidMap.containsValue(entry))
+					{
+						adjustment = -(entry.getTotalPriceAsPrimitive() * percentageDiscountvalue);
+					}
 
 					//Added for TPR-3654
-					final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
-					consumed.add(getDefaultPromotionsManager().consume(ctx, this, entry.getQuantity().longValue(),
-							entry.getQuantity().longValue(), entry));
+					//final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
+					//					consumed.add(getDefaultPromotionsManager().consume(ctx, this, entry.getQuantity().longValue(),
+					//							entry.getQuantity().longValue(), entry));
 					//					tcMapForValidEntries.put(entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString(),
 					//							Integer.valueOf(entry.getQuantity().intValue()));
+
 					for (final PromotionOrderEntryConsumed poec : consumed)
 					{
+						//						if (poec.getOrderEntry().equals(entry))
+						//						{
 						if (adjustment < 0)
 						{
 							poec.setAdjustedUnitPrice(ctx, (entry.getBasePrice().doubleValue() + adjustment));
@@ -537,7 +565,7 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 						{
 							poec.setAdjustedUnitPrice(ctx, (entry.getBasePrice().doubleValue() - adjustment));
 						}
-
+						//}
 					}
 					//Added for TPR-3654
 
