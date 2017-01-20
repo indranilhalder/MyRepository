@@ -46,9 +46,10 @@ public class NPSEmailEmailContext extends AbstractEmailContext<NpsEmailProcessMo
 	@Override
 	public void init(final NpsEmailProcessModel npsUpdateProcessModel, final EmailPageModel emailPageModel)
 	{
+		System.out.println("Inside NPS Email context");
 		super.init(npsUpdateProcessModel, emailPageModel);
 		final AbstractOrderEntryModel orderEntry = npsUpdateProcessModel.getAbstractOrderEntry();
-
+		System.out.println("Inside NPS Email context" + orderEntry);
 		if (orderEntry != null)
 		{
 
@@ -126,7 +127,7 @@ public class NPSEmailEmailContext extends AbstractEmailContext<NpsEmailProcessMo
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getSite(de.hybris.platform.
 	 * processengine.model.BusinessProcessModel)
 	 */
@@ -138,20 +139,16 @@ public class NPSEmailEmailContext extends AbstractEmailContext<NpsEmailProcessMo
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getCustomer(de.hybris.platform
 	 * .processengine.model.BusinessProcessModel)
 	 */
-	@Override
-	protected CustomerModel getCustomer(final NpsEmailProcessModel npsbusinessProcessModel)
-	{
-		return (CustomerModel) npsbusinessProcessModel.getOrder().getUser();
-	}
+
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getEmailLanguage(de.hybris.platform
 	 * .processengine.model.BusinessProcessModel)
@@ -160,5 +157,18 @@ public class NPSEmailEmailContext extends AbstractEmailContext<NpsEmailProcessMo
 	protected LanguageModel getEmailLanguage(final NpsEmailProcessModel npsbusinessProcessModel)
 	{
 		return npsbusinessProcessModel.getOrder().getLanguage();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getCustomer(de.hybris.platform
+	 * .processengine.model.BusinessProcessModel)
+	 */
+	@Override
+	protected CustomerModel getCustomer(final NpsEmailProcessModel businessProcessModel)
+	{
+		return (CustomerModel) businessProcessModel.getOrder().getUser();
 	}
 }

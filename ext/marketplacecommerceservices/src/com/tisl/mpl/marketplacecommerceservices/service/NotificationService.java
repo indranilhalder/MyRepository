@@ -5,7 +5,6 @@ package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.processengine.enums.ProcessState;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
@@ -71,5 +70,5 @@ public interface NotificationService
 	 * @param value
 	 * @return
 	 */
-	ProcessState triggerNpsEmail(AbstractOrderEntryModel value);
+	void triggerNpsEmail(AbstractOrderEntryModel value, OrderModel order);
 }

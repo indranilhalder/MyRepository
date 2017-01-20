@@ -232,7 +232,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 					+ ConsignmentEntryModel._TYPECODE + " " + "AS ce ON {ce.consignment} = {c.PK} JOIN"
 					+ " ConsignmentStatus AS cs ON {c.status} = {cs.PK} JOIN " + AbstractOrderEntryModel._TYPECODE
 					+ " AS oe ON {ce.orderentry}= {oe.PK} JOIN " + OrderModel._TYPECODE + " AS co  ON {c.order}={co.PK} JOIN "
-					+ OrderModel._TYPECODE + " AS po  ON {co.parentreference} = {po.PK} JOIN " + NPSMailerModel._TYPECODE
+					+ OrderModel._TYPECODE + " AS po  ON {co.parentreference} = {po.PK} LEFT JOIN " + NPSMailerModel._TYPECODE
 					+ " AS nps ON {po.pk}!={nps.parentOrderNo}} " + "WHERE "
 					//+ "{c.deliveryDate}  BETWEEN "+ "(sysdate-10) AND (sysdate-1) AND "
 					+ "{cs.code}='DELIVERED'";

@@ -66,7 +66,8 @@ public class NPSFeedbackController
 		final NPSFeedbackQRForm npsFeedbackQRForm = new NPSFeedbackQRForm();
 		try
 		{
-			npsFeedbackQuestionFacade.saveFeedbackRating(originalUid, transactionId, rating);
+			//dropped for multi transaction to database.
+			//npsFeedbackQuestionFacade.saveFeedbackRating(originalUid, transactionId, rating);
 			npsFeedbackQRData = npsFeedbackQuestionFacade.getFeedbackQuestionFacade();
 			for (final NPSFeedbackQRDetailData npsQuestionDetail : npsFeedbackQRData.getFeedbackQRList())
 			{
@@ -106,6 +107,15 @@ public class NPSFeedbackController
 		//return "feedbackQuestion";
 	}
 
+	/**
+	 * TO-DO: Need to check the NPSFeedbackQRForm for null values from client end
+	 *
+	 * @param feedbackForm
+	 * @param result
+	 * @param model
+	 * @return String
+	 * @throws CMSItemNotFoundException
+	 */
 	@RequestMapping(value = "/NPSFeedbackForm", method = RequestMethod.POST)
 	public String getFeedbackCapturedData(@ModelAttribute("npsFeedbackForm") final NPSFeedbackQRForm feedbackForm,
 			final BindingResult result, final Model model) throws CMSItemNotFoundException
@@ -121,6 +131,8 @@ public class NPSFeedbackController
 			}
 			else
 			{
+				feedbackData.setOverAllRating(feedbackForm.getRating());
+				feedbackData.setOriginalUid(feedbackForm.getOriginalUid());
 				feedbackData.setTransactionId(feedbackForm.getTransactionId());
 				feedbackData.setAnyOtherFeedback(feedbackForm.getOtherFeedback());
 				for (final NPSFeedbackQuestionForm formDetail : feedbackForm.getNpsQuestionlist())

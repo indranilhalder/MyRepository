@@ -76,45 +76,68 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 		final List<NPSFeedbackDetailModel> npsFeedbackModelList = new ArrayList<NPSFeedbackDetailModel>();
 		NPSFeedbackModel npsFeedbackModel = null;
 		NPSFeedbackDetailModel npsFeedback = null;
+		CustomerModel customer = null;
 		try
 		{
+			npsFeedbackModel = modelService.create(NPSFeedbackModel.class);
 			if (feedbackForm.getTransactionId() != null)
 			{
-				npsFeedbackModel = npsFeedbackQuestionService.getFeedback(feedbackForm.getTransactionId());
+				//npsFeedbackModel = npsFeedbackQuestionService.getFeedback(feedbackForm.getTransactionId());
 
 			}
-			if (npsFeedbackModel != null)
+			//if (npsFeedbackModel != null)
+			//{
+
+			//saving anyother feedback
+			if (StringUtils.isNotEmpty(feedbackForm.getTransactionId()))
 			{
-				//saving anyother feedback
-				if (StringUtils.isNotEmpty(feedbackForm.getAnyOtherFeedback()))
+				npsFeedbackModel.setTransactionId(feedbackForm.getTransactionId());
+			}
+			if (StringUtils.isNotEmpty(feedbackForm.getOverAllRating()))
+			{
+				npsFeedbackModel.setNpsRating(feedbackForm.getOverAllRating());
+			}
+			if (StringUtils.isNotEmpty(feedbackForm.getOriginalUid()))
+			{
+				customer = (CustomerModel) extendedUserService.getUserForEmailid(feedbackForm.getOriginalUid());
+				if (customer != null)
 				{
-					npsFeedbackModel.setAnyOtherFeedback(feedbackForm.getAnyOtherFeedback());
-				}
-				//saving rating against questions
-				for (final NPSFeedbackQRDetailData formDetail : feedbackForm.getFeedbackQRList())
-				{
-					npsFeedback = modelService.create(NPSFeedbackDetailModel.class);
-					if (StringUtil.isNotEmpty(formDetail.getRating()))
-					{
-						npsFeedback.setRating(formDetail.getRating());
-					}
-					if (StringUtil.isNotEmpty(formDetail.getQuestionName()))
-					{
-						npsFeedback.setQuestionDesc(formDetail.getQuestionName());
-					}
-					if (StringUtil.isNotEmpty(formDetail.getQuestionCode()))
-					{
-						npsFeedback.setQuestionCode(formDetail.getQuestionCode());
-					}
-
-					npsFeedbackModelList.add(npsFeedback);
-				}
-				if (CollectionUtils.isNotEmpty(npsFeedbackModelList))
-				{
-					npsFeedbackModel.setFeedbackDetails(npsFeedbackModelList);
-					modelService.saveAll(npsFeedbackModelList, npsFeedbackModel);
+					npsFeedbackModel.setEmailId(customer.getOriginalUid());
+					npsFeedbackModel.setFirstName(customer.getFirstName());
+					npsFeedbackModel.setLastName(customer.getLastName());
 				}
 			}
+			//npsFeedbackModel.setNpsId(npsFeedbackQuestionService.getNPSId()); // need to check the error
+			npsFeedbackModel.setNpsId(String.valueOf(Math.random()));
+			if (StringUtils.isNotEmpty(feedbackForm.getAnyOtherFeedback()))
+			{
+				npsFeedbackModel.setAnyOtherFeedback(feedbackForm.getAnyOtherFeedback());
+			}
+			//saving rating against questions
+			for (final NPSFeedbackQRDetailData formDetail : feedbackForm.getFeedbackQRList())
+			{
+				npsFeedback = modelService.create(NPSFeedbackDetailModel.class);
+				if (StringUtil.isNotEmpty(formDetail.getRating()))
+				{
+					npsFeedback.setRating(formDetail.getRating());
+				}
+				if (StringUtil.isNotEmpty(formDetail.getQuestionName()))
+				{
+					npsFeedback.setQuestionDesc(formDetail.getQuestionName());
+				}
+				if (StringUtil.isNotEmpty(formDetail.getQuestionCode()))
+				{
+					npsFeedback.setQuestionCode(formDetail.getQuestionCode());
+				}
+
+				npsFeedbackModelList.add(npsFeedback);
+			}
+			if (CollectionUtils.isNotEmpty(npsFeedbackModelList))
+			{
+				npsFeedbackModel.setFeedbackDetails(npsFeedbackModelList);
+				modelService.saveAll(npsFeedbackModel);
+			}
+			//}
 		}
 		catch (final Exception e)
 		{

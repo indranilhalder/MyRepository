@@ -28,8 +28,21 @@
 					commandName="npsFeedbackForm" method="POST">
 					<c:set var="count" value="0" scope="page" />
 					<div class="feedback-form-question-set">
-						
-						<form:hidden path="transactionId" value="${npsFeedbackForm.transactionId}" />
+					
+						<c:if test="${param.originalUid ne null }">
+						<input type="hidden" name="originalUid" value="${param.originalUid}"/>
+						</c:if>
+						<c:choose>
+							<c:when test="${param.transactionId ne null }">
+							<input type="hidden" name="transactionId" value="${param.transactionId}"/>
+							</c:when>
+							<c:otherwise>
+							<form:hidden path="transactionId"/>
+							</c:otherwise>
+						</c:choose>
+						<c:if test="${param.rating ne null }">
+						<input type="hidden" name="rating" value="${param.rating}"/>
+						</c:if>
 						
 						<c:forEach items="${npsFeedbackForm.npsQuestionlist}" var="item" varStatus="myIndex">
 

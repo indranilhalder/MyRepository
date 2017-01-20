@@ -10,7 +10,6 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.cronjob.enums.CronJobResult;
 import de.hybris.platform.cronjob.enums.CronJobStatus;
 import de.hybris.platform.cronjob.model.CronJobModel;
-import de.hybris.platform.processengine.enums.ProcessState;
 import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
@@ -54,7 +53,7 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 
 	/*
 	 * TPR-1984 This cron job is triggered as configured to run at 12 PM and 4 PM
-	 *
+	 * 
 	 * )
 	 */
 	@Override
@@ -80,16 +79,15 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 					npsEmailerModel.setTransactionId(entry.getValue().getTransactionID());
 					npsEmailerModel.setParentOrderNo(entry.getKey());
 					npsEmailerModel.setCustomer((CustomerModel) entry.getKey().getUser());
-					final ProcessState processState = notificationService.triggerNpsEmail(entry.getValue());
-					if (processState.getCode().equals(ProcessState.SUCCEEDED.toString()))
-					{
-						npsEmailerModel.setIsEmailSent(Boolean.TRUE);
-						npsEmailerModel.setTimeSent(new Date());
-					}
-					else
-					{
-						npsEmailerModel.setIsEmailSent(Boolean.FALSE);
-					}
+					notificationService.triggerNpsEmail(entry.getValue(), entry.getKey());
+					npsEmailerModel.setIsEmailSent(Boolean.TRUE);
+					npsEmailerModel.setTimeSent(new Date());
+					/*
+					 * final ProcessState processState = notificationService.triggerNpsEmail(entry.getValue()); if
+					 * (processState.getCode().equals(ProcessState.SUCCEEDED.toString())) {
+					 * npsEmailerModel.setIsEmailSent(Boolean.TRUE); npsEmailerModel.setTimeSent(new Date()); } else {
+					 * npsEmailerModel.setIsEmailSent(Boolean.FALSE); }
+					 */
 					npsEmailerModelList.add(npsEmailerModel);
 				}
 				modelService.saveAll(npsEmailerModelList);

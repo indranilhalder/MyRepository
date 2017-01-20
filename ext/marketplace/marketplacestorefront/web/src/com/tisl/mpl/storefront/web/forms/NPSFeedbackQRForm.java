@@ -20,6 +20,8 @@ public class NPSFeedbackQRForm
 	private String firstName;
 	private String lastName;
 	private String otherFeedback;
+	private String originalUid;
+	private String rating;
 
 	/**
 	 * @return the npsQuestionlist
@@ -123,5 +125,37 @@ public class NPSFeedbackQRForm
 		this.otherFeedback = otherFeedback;
 	}
 
+	/**
+	 * @return the originalUid
+	 */
+	public String getOriginalUid()
+	{
+		return originalUid;
+	}
 
+	/**
+	 * @param originalUid
+	 *           the originalUid to set
+	 */
+	public void setOriginalUid(final String originalUid)
+	{
+		this.originalUid = originalUid;
+	}
+
+	/**
+	 * @return the rating
+	 */
+	public String getRating()
+	{
+		return rating;
+	}
+
+	/**
+	 * @param rating
+	 *           the rating to set
+	 */
+	public void setRating(final String rating)
+	{
+		this.rating = rating;
+	}
 }

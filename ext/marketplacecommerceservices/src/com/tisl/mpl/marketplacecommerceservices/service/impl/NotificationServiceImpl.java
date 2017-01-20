@@ -9,14 +9,17 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.security.PrincipalModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
-import de.hybris.platform.processengine.enums.ProcessState;
+import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.ModelCreationException;
 import de.hybris.platform.servicelayer.exceptions.ModelRemovalException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.site.BaseSiteService;
+import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
@@ -77,6 +80,17 @@ public class NotificationServiceImpl implements NotificationService
 	private ConfigurationService configurationService;
 	@Resource(name = "couponRestrictionService")
 	private CouponRestrictionService couponRestrictionService;
+
+	@Autowired
+	private BusinessProcessService businessProcessService;
+	@Autowired
+	private BaseSiteService baseSiteService;
+
+	@Autowired
+	private BaseStoreService baseStoreService;
+
+	@Autowired
+	private CommonI18NService commonI18NService;
 
 
 	private static final Logger LOG = Logger.getLogger(NotificationServiceImpl.class);
@@ -712,24 +726,24 @@ public class NotificationServiceImpl implements NotificationService
 
 
 	@Override
-	public ProcessState triggerNpsEmail(final AbstractOrderEntryModel OrderEntry)
+	public void triggerNpsEmail(final AbstractOrderEntryModel OrderEntry, final OrderModel orderModel)
 	{
 
-		final NpsEmailProcessModel npsProcessModel = new NpsEmailProcessModel();
-		npsProcessModel.setAbstractOrderEntry(OrderEntry);
-		final NpsEmailEvent npsEmailEvent = new NpsEmailEvent(npsProcessModel);
+		final NpsEmailProcessModel npsEmailProcessModel = new NpsEmailProcessModel();
+		npsEmailProcessModel.setOrder(orderModel);
+		npsEmailProcessModel.setAbstractOrderEntry(OrderEntry);
+
+		final NpsEmailEvent npsEmailEvent = new NpsEmailEvent(npsEmailProcessModel);
+
 		try
 		{
 			eventService.publishEvent(npsEmailEvent);
-
 		}
 		catch (final Exception e1)
-		{ // YTODO // Auto-generated catch block
+		{ // YTODO
+		  // Auto-generated catch block
 			LOG.error("Exception during sending mail or SMS >> " + e1.getMessage());
 		}
-
-		final ProcessState sucess = npsEmailEvent.getProcess().getState();
-		return sucess;
 
 	}
 

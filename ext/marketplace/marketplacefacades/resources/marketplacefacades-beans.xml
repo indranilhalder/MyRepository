@@ -964,7 +964,9 @@
 		<property name="rating" type="String"></property>
 	</bean>
 	<bean class="com.tisl.mpl.facades.data.NPSFeedbackQRData">
+		<property name="originalUid" type="String"></property>
 		<property name="transactionId" type="String"></property>
+		<property name="overAllRating" type="String"></property>
 		<property name="userId" type="String"></property>
 		<property name="npsId" type="String"></property>
 		<property name="npsRating" type="String"></property>

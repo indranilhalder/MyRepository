@@ -27,9 +27,14 @@ public class NPSEmailEventListener extends AbstractSiteEventListener<NpsEmailEve
 	@Override
 	protected void onSiteEvent(final NpsEmailEvent npsEmailEvent)
 	{
+		System.out.println("Inside NPSEmailEventListener");
 		final OrderModel orderModel = npsEmailEvent.getProcess().getOrder();
+
+		System.out.println("Inside1 NPSEmailEventListener" + orderModel);
 		final NpsEmailProcessModel npsEmailProcessModel = (NpsEmailProcessModel) getBusinessProcessService().createProcess(
 				"npsEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(), "npsEmailProcess");
+
+		npsEmailProcessModel.setOrder(orderModel);
 
 		getModelService().save(npsEmailProcessModel);
 		getBusinessProcessService().startProcess(npsEmailProcessModel);
@@ -83,8 +88,9 @@ public class NPSEmailEventListener extends AbstractSiteEventListener<NpsEmailEve
 	protected boolean shouldHandleEvent(final NpsEmailEvent npsEmailEvent)
 	{
 		final OrderModel order = npsEmailEvent.getProcess().getOrder();
-		ServicesUtil.validateParameterNotNullStandardMessage("event.order", order);
+		//ServicesUtil.validateParameterNotNullStandardMessage("event.order", order);
 		final BaseSiteModel site = order.getSite();
+
 		ServicesUtil.validateParameterNotNullStandardMessage("event.order.site", site);
 		return SiteChannel.B2C.equals(site.getChannel());
 	}
