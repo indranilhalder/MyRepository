@@ -37454,7 +37454,7 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
 	position: relative;
 	
 	/* TISRLEE-1660 */
-	
+	border:0px !important;
 	top: 0px !important;
 	right: -21px;
 	color: transparent;
