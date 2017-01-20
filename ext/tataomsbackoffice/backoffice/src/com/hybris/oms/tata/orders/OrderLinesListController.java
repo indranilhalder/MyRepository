@@ -6,7 +6,6 @@ package com.hybris.oms.tata.orders;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -88,6 +87,8 @@ public class OrderLinesListController extends DefaultWidgetController
 	private Listbox orderLinesListbox;
 	@Wire("#transactionInfoGrid")
 	private Grid transactionInfoGrid;
+	@Wire("#transInfoVlayout")
+	private Vlayout transInfoVlayout;
 
 
 	@Wire("#orderSearchTbox")
@@ -221,6 +222,7 @@ public class OrderLinesListController extends DefaultWidgetController
 
 			logisticsVlayout.setVisible(false);
 
+			transInfoVlayout.setVisible(false);
 			slavesVlayout.setVisible(false);
 			transTrackOLBus = new OrderLineBUC();
 
@@ -294,7 +296,7 @@ public class OrderLinesListController extends DefaultWidgetController
 			customerIDLable.setValue(transTrackOLBus.getCustomerID());
 			emailIDLable.setValue(transTrackOLBus.getEmailId());
 			papulateTransactionInfo(transTrackOLBus);
-			Object[] slaveInfoArray = new Object[2];
+
 
 			logisticsVlayout.setVisible(false);
 
@@ -312,6 +314,7 @@ public class OrderLinesListController extends DefaultWidgetController
 			p1LogisticsIDListbox.setDisabled(true);
 			p1LogisticsIDListbox.setRows(1);
 
+			transInfoVlayout.setVisible(true);
 			slavesVlayout.setVisible(true);
 			List<BUCStatusRecords> shipStatusRepBusSR = null;
 
@@ -329,13 +332,14 @@ public class OrderLinesListController extends DefaultWidgetController
 			if (logisticsFacade != null && transTrackOLBus.getFulfillmentType().equals("TSHIP"))
 			{
 				logisticsVlayout.setVisible(true);
+				final List<Logistics> allLogistic = (List<Logistics>) logisticsFacade.getAll();
 				//TSHIP order not allocated
 				if ("ORDPNASG".equals(transTrackOLBus.getTransactionLineStatus())
 						|| "ORDREJEC".equals(transTrackOLBus.getTransactionLineStatus())
 						|| "PYMTSCSS".equals(transTrackOLBus.getTransactionLineStatus()))
 				{
 					LOG.info("Order Status" + transTrackOLBus.getTransactionLineStatus());
-					p1LogisticsIDListbox.setModel(new ListModelList<Logistics>(logisticsFacade.getAll()));
+					p1LogisticsIDListbox.setModel(new ListModelList<Logistics>(allLogistic));
 					p1LogisticsNameLabel.setValue("");
 
 					p1SlaveIDListbox.setDisabled(false);
@@ -375,10 +379,9 @@ public class OrderLinesListController extends DefaultWidgetController
 				else
 				{
 					//TSHIP order allocated
-					slaveInfoArray = createLogisticsListForDropdown((List<Logistics>) logisticsFacade.getAll(),
-							transTrackOLBus.getPrimaryLogisticID());
-					p1LogisticsIDListbox.setModel((ListModelList<Logistics>) slaveInfoArray[0]);
-					p1LogisticsNameLabel.setValue((String) slaveInfoArray[1]);
+					final Logistics p1Logistic = getLogisticByID(allLogistic, transTrackOLBus.getPrimaryLogisticID());
+					p1LogisticsIDListbox.setModel(new ListModelList<Logistics>(Arrays.asList(p1Logistic)));
+					p1LogisticsNameLabel.setValue(p1Logistic.getLogisticname());
 
 					final SlaveInfo allocatedp1SlaveInfo = stockRoomLocationsFacade.getStockRoomLocationByLocationId(transTrackOLBus
 							.getPrimarySlaveID());
@@ -393,7 +396,7 @@ public class OrderLinesListController extends DefaultWidgetController
 								.getStockRoomLocationByLocationId(transTrackOLBus.getSecondarySlaveID());
 						p2SlaveIDListbox.setModel(new ListModelList<SlaveInfo>(Arrays.asList(allocatedp2SlaveInfo)));
 						p2SlaveNameLable.setValue(allocatedp2SlaveInfo.getName());
-						p2slavesNameHlayout.setVisible(false);
+						p2slavesNameHlayout.setVisible(true);
 					}
 				}
 
@@ -592,63 +595,36 @@ public class OrderLinesListController extends DefaultWidgetController
 		}
 	}
 
-	private Object[] createLogisticsListForDropdown(final List<Logistics> source, final String orderLBLogisticsId)
+	private Logistics getLogisticByID(final List<Logistics> source, final String orderLBLogisticsId)
 	{
-		final Object[] slaveInfoArray = new Object[2];
-		LOG.debug("In createLogisticsListForDropdown() ,logisticsID :{}", orderLBLogisticsId);
-		final ListModelList<Logistics> listModelList = new ListModelList<Logistics>();
-		if (source != null)
+		Logistics result = null;
+		if (CollectionUtils.isNotEmpty(source))
 		{
-			if (!source.isEmpty())
+			for (final Logistics info : source)
 			{
-				LOG.debug("logitics dropdown list size" + source.size());
-				final Iterator<Logistics> slaveIdItr = source.iterator();
-				int index = 0;
-				int temp = -1;
-				String str = "";
-				while (slaveIdItr.hasNext())
+				if (info.getActive())
 				{
-					final Logistics info = slaveIdItr.next();
-					if (info.getActive())
+					if (info.getLogisticname().equals(orderLBLogisticsId) || info.getLogisticsid().equals(orderLBLogisticsId))
 					{
-						if (info.getLogisticname().equals(orderLBLogisticsId) || info.getLogisticsid().equals(orderLBLogisticsId))
-						{
-							temp = index;
-							str = info.getLogisticname();
-							LOG.info("intially equal logisticsids######################" + info.getLogisticname() + "=="
-									+ orderLBLogisticsId);
-						}
-						listModelList.add(info);
-						index++;
+						result = info;
+						break;
 					}
-					else
-					{
-						LOG.info("Not active records for logistics dropdown ::::" + info);
-					}
+				}
 
-				}
-				if (temp >= 0)
-				{
-					listModelList.addToSelection(listModelList.get(temp));
-				}
-				{
-					LOG.info("Not equal OLBUC's logisticsID with any logisticsID of Logistics");
-				}
-				slaveInfoArray[0] = listModelList;
-				slaveInfoArray[1] = str;
-			}
-			else
-			{
-				LOG.error("NO slaves avaliable for logistcs,list size " + source.size());
 			}
 		}
 		else
 		{
-			LOG.error("***********************Logistics list is null");
+			LOG.error("NO slaves avaliable for logistcs,list size " + source.size());
+		}
+		if (result == null)
+		{
+			result = new Logistics();
+			result.setLogisticsid(orderLBLogisticsId);
+			result.setLogisticname(orderLBLogisticsId);
 		}
 
-
-		return slaveInfoArray;
+		return result;
 
 	}
 
