@@ -441,8 +441,14 @@ ACC.refinements = {
 			$(".facet_mobile .facet.js-facet").each(function(){
 				filterCount+=$(this).find(".facet-list.js-facet-list li").find("input[type=checkbox]:checked").length;
 				filterCount+=$(".facet_mobile .filter-colour.selected-colour").length;
+				//TISTNL-894 | Colourfamily mobile view
+				filterCount+=$(".facet_mobile .filter-colorfamilytrlg.selected-colour").length;
+				filterCount+=$(".facet_mobile .filter-colorfamilytrlg.selected-multi-colour").length;
+				
 				//TISQAUATS-12 starts 
 				filterCount+=$(".facet_mobile .filter-colour.selected-multi-colour").length;
+				
+				
 				//TISQAUATS-12 ends
 				filterCount+=$(".facet_mobile .filter-size.selected-size").length;
 			});
