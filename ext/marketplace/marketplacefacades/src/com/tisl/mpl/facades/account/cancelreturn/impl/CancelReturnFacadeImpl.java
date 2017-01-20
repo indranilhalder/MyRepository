@@ -3842,11 +3842,13 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			if (StringUtils.isNotEmpty(address.getDistrict()))
 			{
 				String stateName = getStateCode(address.getDistrict()) != null ? getStateCode(address.getDistrict()) : address.getDistrict();
+				LOG.info("District::::::"+address.getDistrict()+"District agter change name:::::::"+stateName);
 				store.append(SPACE + stateName);
 			}
 			if (StringUtils.isNotEmpty(address.getState()))
 			{
 				String stateName = getStateCode(address.getState()) != null ? getStateCode(address.getState()) : address.getState();
+				LOG.info("stateName::::::"+address.getState()+"State after change name:::::::"+stateName);
 				store.append(SPACE+ stateName);
 			}
 			if (StringUtils.isNotEmpty(address.getCountry().getName()))
@@ -4010,6 +4012,7 @@ private AbstractOrderEntryModel getOrderEntryModel(OrderModel ordermodel,String 
 		{
 			for (final StateData state : accountAddressFacade.getStates())
 			{
+				LOG.info("Sate code:::::::: "+state.getCode()+"POS code"+statcode);
 				if (state.getName().equalsIgnoreCase(statcode))
 				{
 					return state.getName();
