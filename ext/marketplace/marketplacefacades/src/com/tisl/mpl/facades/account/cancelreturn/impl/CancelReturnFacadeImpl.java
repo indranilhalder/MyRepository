@@ -3841,13 +3841,29 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			}
 			if (StringUtils.isNotEmpty(address.getDistrict()))
 			{
-				String stateName = getStateCode(address.getDistrict()) != null ? getStateCode(address.getDistrict()) : address.getDistrict();
-				LOG.info("District::::::"+address.getDistrict()+"District agter change name:::::::"+stateName);
+				String stateName = null;
+				if (StringUtils.isNotEmpty(address.getDistrict()))
+				{
+					stateName = getStateCode(address.getDistrict());
+				}
+				else
+				{
+					stateName = address.getDistrict();
+				}
+				LOG.info("District::::::"+address.getDistrict()+"District after change name:::::::"+stateName);
 				store.append(SPACE + stateName);
 			}
 			if (StringUtils.isNotEmpty(address.getState()))
 			{
-				String stateName = getStateCode(address.getState()) != null ? getStateCode(address.getState()) : address.getState();
+				String stateName = null;
+				if (StringUtils.isNotEmpty(address.getState()))
+				{
+					stateName = getStateCode(address.getState());
+				}
+				else
+				{
+					stateName = address.getState();
+				}
 				LOG.info("stateName::::::"+address.getState()+"State after change name:::::::"+stateName);
 				store.append(SPACE+ stateName);
 			}
