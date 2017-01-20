@@ -159,19 +159,24 @@ public interface MplPaymentWebFacade
 
 
 	/**
+	 * This method makes entry for mobile mRupee orders in Audit table
 	 *
 	 * @param status
-	 * @param channelWeb
+	 * @param channelmobile
 	 * @param guid
 	 * @param walletOrderId
 	 */
-	void entryInTPWaltAuditMobile(final String status, String channelWeb, String guid, String walletOrderId);
+
+	public void entryInTPWaltAuditMobile(final String status, String channelmobile, String guid, String walletOrderId);
 
 
 	/**
+	 * This method saves payment info model for mobile mRupee orders and the returning the order
 	 *
 	 * @param cart
 	 * @param refernceCode
+	 * @param paymentMode
+	 *
 	 */
-	void saveTPWalletPaymentInfoMobile(AbstractOrderModel cart, final String refernceCode, Map<String, Double> paymentMode);
+	public void saveTPWalletPaymentInfoMobile(AbstractOrderModel cart, final String refernceCode, Map<String, Double> paymentMode);
 }

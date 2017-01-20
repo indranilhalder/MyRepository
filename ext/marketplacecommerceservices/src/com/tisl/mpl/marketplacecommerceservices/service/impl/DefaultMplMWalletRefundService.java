@@ -16,7 +16,6 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -59,6 +58,8 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 	@Autowired
 	private ConfigurationService configurationService;
 
+
+
 	@Autowired
 	private DefaultMplJusPayRefundService mplMrueeRefundService;
 
@@ -66,10 +67,14 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 
 	private final List<PaymentTransactionType> validPaymentType = Arrays.asList(PaymentTransactionType.CAPTURE,
 			PaymentTransactionType.COD_PAYMENT, PaymentTransactionType.AUTHORIZATION);
-	private static final String PAYMENT_M_RUPEE_MERCHANT_ID = "payment.mRupee.merchantID";
 
 	/**
 	 * Method is called for doing refund at the time of cancel and return
+	 *
+	 * @param order
+	 * @param refundAmount
+	 * @param paymentTransactionType
+	 * @param uniqueRequestId
 	 */
 
 	@Override
@@ -123,13 +128,16 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 				}
 				else
 				{
-					adjustedRefundAmt = validateRefundAmount(refundAmount, order);
+					adjustedRefundAmt = mplMrueeRefundService.validateRefundAmount(refundAmount, order);
 					refundRequest.setAmount(Double.valueOf(adjustedRefundAmt));
 				}
 				refundRequest.setPurchaseRefNo(mplPaymentAuditModel.getAuditId());
 				refundRequest.setRefNo(uniqueRequestId);
-				refundRequest.setmCode(PAYMENT_M_RUPEE_MERCHANT_ID);
-				refundRequest.setNarration("uat");
+				refundRequest.setmCode(getConfigurationService().getConfiguration()
+						.getString(MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE));
+
+				refundRequest.setNarration(getConfigurationService().getConfiguration()
+						.getString(MarketplacecommerceservicesConstants.MRUPEE_NARRATION_VALUE));
 
 				mplPaymentAuditEntryModel.setRefundReqId(uniqueRequestId);
 				modelService.save(mplPaymentAuditEntryModel);
@@ -141,7 +149,9 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 				LOG.debug("Refund status for unique ID genrated :" + uniqueRequestId);
 				MRupeeRefundResponse refundResponse = null;
 				LOG.debug("before calling refund service *******************************");
+
 				refundResponse = mRupeeRefundService.refund(refundRequest);
+
 				LOG.debug("MRUPEE REFUND RESPONSE" + refundResponse);
 				LOG.debug("after calling refund service *******************************");
 				mplPaymentAuditEntryModel = modelService.create(MplPaymentAuditEntryModel.class);
@@ -215,10 +225,8 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 	}
 
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplMWalletRefundService#getRefundUniqueRequestId()
+	/**
+	 * get the unique refund request id
 	 */
 	@Override
 	public String getRefundUniqueRequestId()
@@ -228,12 +236,11 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 		return uniqueRequestId;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * The Method is used to fetch the Payment Mode Details available in PG
 	 *
-	 * @see
-	 * com.tisl.mpl.marketplacecommerceservices.service.MplMWalletRefundService#isCODOrder(de.hybris.platform.core.model
-	 * .order.AbstractOrderModel)
+	 *
+	 * @param order
 	 */
 	@Override
 	public boolean isCODOrder(final AbstractOrderModel order)
@@ -241,11 +248,11 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 		return "cod".equalsIgnoreCase(getValidPaymentModeType(order).getMode());
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * The Method is used to fetch the Payment Mode Details available in PG
 	 *
-	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplMWalletRefundService#getValidPaymentModeType(de.hybris.
-	 * platform .core.model.order.AbstractOrderModel)
+	 *
+	 * @param order
 	 */
 	@Override
 	public PaymentTypeModel getValidPaymentModeType(final AbstractOrderModel order)
@@ -266,76 +273,6 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 		}
 
 		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplMWalletRefundService#validateRefundAmount(double,
-	 * de.hybris.platform.core.model.order.OrderModel)
-	 */
-	@Override
-	public double validateRefundAmount(double refundAmount, final OrderModel subOrderModel)
-	{
-
-
-		// YTODO Auto-generated method stub
-		LOG.info("validateRefundAmount ():" + this.toString());
-		final List<PaymentTransactionEntryModel> cancelTanactionsEntry = new ArrayList<PaymentTransactionEntryModel>();
-		final DecimalFormat df = new DecimalFormat("#.##");
-		double totalAmountPaied = 0;
-		double alreadyRefundDone = 0;
-		for (final OrderModel suborder : subOrderModel.getParentReference().getChildOrders())
-		{
-			for (final PaymentTransactionModel transaction : suborder.getPaymentTransactions())
-			{
-				if (MarketplacecommerceservicesConstants.SUCCESS.equalsIgnoreCase(transaction.getStatus()))
-				{
-					for (final PaymentTransactionEntryModel transactionEntry : transaction.getEntries())
-					{
-						if (MarketplacecommerceservicesConstants.SUCCESS.equalsIgnoreCase(transactionEntry.getTransactionStatus())
-								&& (PaymentTransactionType.CANCEL.equals(transactionEntry.getType())
-										|| PaymentTransactionType.RETURN.equals(transactionEntry.getType())))
-						{
-							cancelTanactionsEntry.add(transactionEntry);
-						}
-						if (MarketplacecommerceservicesConstants.SUCCESS.equalsIgnoreCase(transactionEntry.getTransactionStatus())
-								&& PaymentTransactionType.CAPTURE.equals(transactionEntry.getType())
-								&& transactionEntry.getAmount() != null)
-						{
-							totalAmountPaied = transactionEntry.getAmount().doubleValue();
-						}
-					}
-
-				}
-			}
-
-		}
-		for (final PaymentTransactionEntryModel alreadyRefunded : cancelTanactionsEntry)
-		{
-			alreadyRefundDone += alreadyRefunded.getAmount().doubleValue();
-
-		}
-
-		LOG.info("totalAmountPaid :  : validateRefundAmount ():" + totalAmountPaied);
-		LOG.info("alreadyRefundDone :  : validateRefundAmount ():" + alreadyRefundDone);
-		final double amountRemaining = Double.parseDouble(df.format(totalAmountPaied - alreadyRefundDone));
-		final double adjustableAmount = Math.abs(amountRemaining - refundAmount);
-		LOG.info("adjustableAmount :  : validateRefundAmount ():" + adjustableAmount);
-		final double threshold = Double.parseDouble(
-				configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.REFUNDTHRESHOLD).trim());
-		LOG.info("threshold :  : validateRefundAmount ():" + threshold);
-
-		if (amountRemaining < refundAmount && threshold > adjustableAmount)
-		{
-			refundAmount = amountRemaining;
-		}
-
-		LOG.info("refundAmount :  : validateRefundAmount ():" + refundAmount);
-
-		return refundAmount;
-
-
 	}
 
 	/*
@@ -426,5 +363,23 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 		mplMrueeRefundService.attachPaymentTransactionModel(orderRequestRecord.getOriginalVersion().getOrder(),
 				paymentTransactionModel);
 
+	}
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
 	}
 }

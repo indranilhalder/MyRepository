@@ -172,6 +172,12 @@ public class MRupeeRefundService
 		return readTimeout;
 	}
 
+	/**
+	 * Method is called for doing refund at the time of cancel and return
+	 *
+	 * @param refundRequest
+	 * @return MRupeeRefundResponse
+	 */
 
 	public MRupeeRefundResponse refund(final MRupeeRefundRequest refundRequest)
 	{
@@ -188,10 +194,14 @@ public class MRupeeRefundService
 		params.put("PREFNO", refundRequest.getPurchaseRefNo());
 		params.put("CHECKSUM", checksum);
 		/* final String serializedParams = serializeParams(params); */
-		final String serializedParams = "MCODE=TULA&NARRATION=uat&TXNTYPE=R&" + "AMT=" + refundRequest.getAmount().toString()
-				+ "&REFNO=" + refundRequest.getRefNo() + "&PREFNO=" + refundRequest.getPurchaseRefNo() + "&CHECKSUM=" + checksum;
+		//		final String serializedParams = "MCODE=TULA&NARRATION=uat&TXNTYPE=R&" + "AMT=" + refundRequest.getAmount().toString()
+		//				+ "&REFNO=" + refundRequest.getRefNo() + "&PREFNO=" + refundRequest.getPurchaseRefNo() + "&CHECKSUM=" + checksum;
 
-		//LOG.debug("MRUPEE REFUND REQUEST--------------url-----" + url + "-------request----" + serializedParams);
+		final String serializedParams = "MCODE=" + refundRequest.getmCode().toString() + "NARRATION="
+				+ refundRequest.getNarration().toString() + "TXNTYPE=R" + "AMT=" + refundRequest.getAmount().toString() + "&REFNO="
+				+ refundRequest.getRefNo() + "&PREFNO=" + refundRequest.getPurchaseRefNo() + "&CHECKSUM=" + checksum;
+
+		LOG.debug("MRUPEE REFUND REQUEST--------------url-----------request----" + serializedParams);
 
 		//	String url = configurationService.getConfiguration().getString(MarketplaceWalletServicesConstants.MRUPEERETURNURL);
 
@@ -375,7 +385,9 @@ public class MRupeeRefundService
 
 	}
 
-
+	/**
+	 * it checks for the certification of the connection
+	 */
 
 	private void disableSslVerification()
 	{

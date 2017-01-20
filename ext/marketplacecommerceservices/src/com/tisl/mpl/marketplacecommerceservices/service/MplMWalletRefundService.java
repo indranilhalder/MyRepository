@@ -39,12 +39,7 @@ public interface MplMWalletRefundService
 	 */
 	PaymentTypeModel getValidPaymentModeType(AbstractOrderModel order);
 
-	/**
-	 * @param refundAmount
-	 * @param subOrderModel
-	 * @return validateRefundAmount
-	 */
-	double validateRefundAmount(double refundAmount, OrderModel subOrderModel);
+
 
 	String getRefundUniqueRequestId();
 
