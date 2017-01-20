@@ -631,8 +631,6 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 							}
 						}
 					}
-					mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel, orderModel);
-					valditionMsg = MarketplaceFacadesConstants.SUCCESS;
 
 					if (LOG.isDebugEnabled())
 					{
@@ -640,12 +638,22 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					}
 					try
 					{
-						//OMS call
-						changeDeliveryRequestCallToOMS(orderCode, newDeliveryAddressModel, MarketplaceFacadesConstants.CA,
+						//OMS realTime Call
+						valditionMsg=changeDeliveryRequestCallToOMS(orderCode, newDeliveryAddressModel, MarketplaceFacadesConstants.CA,
 								transactionSDDtoList);
-						//CRM call
-						createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE,
-								MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_CDA);
+						if (MarketplaceFacadesConstants.SUCCESS.equalsIgnoreCase(valditionMsg))
+						{
+							  mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel, orderModel);   
+						  
+							//CRM call
+							createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE,
+									MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_CDA);
+						}
+						else
+						{
+							return MarketplacecommerceservicesConstants.IS_NOT_CHANABLE;
+						}
+						
 					}
 					catch (final Exception e)
 					{
@@ -654,8 +662,6 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 				}
 				else
 				{
-					mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel, orderModel);
-					valditionMsg = MarketplaceFacadesConstants.SUCCESS;
 					//customer changed only first name Last name and mobile number then OMS Call CU interface Type
 					if (LOG.isDebugEnabled())
 					{
@@ -663,11 +669,20 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					}
 					try
 					{
-						//OMS call
-						changeDeliveryRequestCallToOMS(orderCode, newDeliveryAddressModel, MarketplaceFacadesConstants.CU, null);
-						//CRM Call
-						createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE,
-								MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DMC);
+						//OMS realTime Call
+						valditionMsg=changeDeliveryRequestCallToOMS(orderCode, newDeliveryAddressModel, MarketplaceFacadesConstants.CU, null);
+						
+						if (MarketplaceFacadesConstants.SUCCESS.equalsIgnoreCase(valditionMsg))
+						{
+							mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel, orderModel);
+							//CRM Call
+							createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE,
+									MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DMC);
+						}
+						else
+						{
+							return MarketplacecommerceservicesConstants.IS_NOT_CHANABLE;
+						}
 					}
 					catch (final Exception e)
 					{
