@@ -669,7 +669,7 @@ function focusOnElement() {
 								 }
 								 else
 								 {
-									 if($(".pdp-promo-title").length != 0) {
+									 if($(".pdp-promo-title").length == 0) {
 										 $(".pdp-promo-title-link").css("display","none");		
 									 }
 									 x.append("<p>"+message+"</p>");								 
