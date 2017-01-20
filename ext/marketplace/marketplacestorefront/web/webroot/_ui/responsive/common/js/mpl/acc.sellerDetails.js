@@ -597,15 +597,7 @@ function focusOnElement() {
 								$("#promolist").val(offerMessageMap);
 								$(".pdp-promo-title-link").css("display", "block");		
 							} 
-							if(!$.isEmptyObject(offerMessageMap)){			
-								if($(".pdp-promo-title").length > 0){
-									$(pagelevelOffer).insertAfter(".pdp-promo-title");
-									$(modallevelOffer).insertAfter(".show-date");
-								}else{				
-									$(".pdp-promo-block").append(pagelevelOffer);
-									$(".offer-block").append(modallevelOffer);					
-								}			
-							}			
+									
 												
 							$.each( offerMessageMap, function(key,value){		
 								
@@ -624,7 +616,16 @@ function focusOnElement() {
 								 });
 								 
 								 if(sellerId == key)
-								 {						
+								 {	
+									if(!$.isEmptyObject(offerMessageMap)){			
+											if($(".pdp-promo-title").length > 0){
+												$(pagelevelOffer).insertAfter(".pdp-promo-title");
+												$(modallevelOffer).insertAfter(".show-date");
+											}else{				
+												$(".pdp-promo-block").append(pagelevelOffer);
+												$(".offer-block").append(modallevelOffer);					
+											}			
+									}	
 									if(divId != null)
 									{
 										//var offerMessageDiv="<div class='offerMessage-block' id='offerMessageId'>"+message+"</div>";
@@ -667,6 +668,9 @@ function focusOnElement() {
 								 }
 								 else
 								 {
+									 if($(".pdp-promo-title").length != 0) {
+										 $(".pdp-promo-title-link").css("display","none");		
+									 }
 									 x.append("<p>"+message+"</p>");								 
 								 }				
 								})	
