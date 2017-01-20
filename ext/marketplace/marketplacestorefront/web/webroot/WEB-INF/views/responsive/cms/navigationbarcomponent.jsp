@@ -9,14 +9,11 @@
 <%-- **${component.link.url}
 +++${component.navigationNode.links[0].linkName} --%>
 
+
 <div class="toggle departmenthover L1" id="depts${component.link.category.code}">
 <a href="${component.link.url}">${component.navigationNode.title}</a>
 </div>  <!-- TPR-561 -->
-	<%-- <cms:component component="${component.link}" evaluateRestriction="true"/> --%>
-	<%-- <c:set var="deptName" value="${fn:split(component.navigationNode.title, '||')}" />
-					<c:url
-						value="/${deptName[1]}/c-${fn:toLowerCase(component.link.category.code)}" var="departmentUrl" />
-	 --%>
+	
 	
 	<c:set var="main" value="${component.navigationNode.title}"/>
 	<c:set var="withoutspecial" value="${fn:replace(main, '\\'','')}"/>
