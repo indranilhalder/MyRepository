@@ -3560,8 +3560,9 @@ public class CartsController extends BaseCommerceController
 		CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
 		try
 		{
-			//call service to retrieve POSModel for given posName
-			final PointOfServiceModel posModel = mplSlaveMasterFacade.findPOSByName(slaveId);
+			//call service to retrieve POSModel for given slaveId 
+			 // changed name to slaveId in R2.3 TISRLUAT-803
+			final PointOfServiceModel posModel = mplSlaveMasterFacade.checkPOSForSlave(slaveId);
 			if (null != posModel)
 			{
 				final String response = mplStoreLocatorFacade.saveStoreForSelectedProduct(posModel, USSID);

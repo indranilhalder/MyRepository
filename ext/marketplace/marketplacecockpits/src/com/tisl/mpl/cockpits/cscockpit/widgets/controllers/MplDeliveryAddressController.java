@@ -5,6 +5,7 @@ package com.tisl.mpl.cockpits.cscockpit.widgets.controllers;
  * 
  */
 import java.util.List;
+import java.util.Map;
 
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tisl.mpl.facades.data.PincodeData;
@@ -80,5 +81,15 @@ public interface MplDeliveryAddressController {
 
 	
 	public  void saveChangeDeliveryRequests(OrderModel orderModel);
+	
+	/**
+	 * service used to get the 3 dates for HD and 2 dates for ED Considering MPL Holidays
+	 * @param timeSlotType
+	 * @param edd
+	 * @return
+	 */
+
+	public abstract Map<String, List<String>> getDateAndTimeMap(
+			String timeSlotType, String edd);
 
 }
