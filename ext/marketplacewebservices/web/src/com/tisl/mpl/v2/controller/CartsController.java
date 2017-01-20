@@ -2614,7 +2614,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 * 
+			 *
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -2918,7 +2918,7 @@ public class CartsController extends BaseCommerceController
 			}
 
 			pinCodeResponse = mplCartWebService.checkPinCodeAtCart(
-					mplCartFacade.getSessionCartWithEntryOrderingMobile(cart, true, true, true), cart, pincode);
+					mplCartFacade.getSessionCartWithEntryOrderingMobile(cart, true, false, false), cart, pincode);
 			if (null != pinCodeResponse)
 			{
 				response.setPinCodeResponseList(pinCodeResponse);
