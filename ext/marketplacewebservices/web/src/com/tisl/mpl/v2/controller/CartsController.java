@@ -2365,7 +2365,7 @@ public class CartsController extends BaseCommerceController
 				final boolean deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cartModel);
 				LOG.debug(MarketplacecommerceservicesConstants.CART_DELISTED_STATUS + deListedStatus + "productCheckout:" + cartId);
 				//cartData = getMplExtendedCartConverter().convert(cartModel);
-				cartDataOrdered = mplCartFacade.getSessionCartWithEntryOrderingMobile(cartModel, true);
+				cartDataOrdered = mplCartFacade.getSessionCartWithEntryOrderingMobile(cartModel, true, true, false);
 				/**** Pincode check Details ***/
 				try
 				{
@@ -2387,11 +2387,11 @@ public class CartsController extends BaseCommerceController
 				/* Product Details */
 				if (StringUtils.isNotEmpty(postalCode))
 				{
-					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, true, false, true);
+					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, true);
 				}
 				else
 				{
-					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, false, false, true);
+					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, false);
 				}
 
 				cartDetailsData.setProducts(gwlpList);
@@ -2614,7 +2614,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 *
+			 * 
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -2807,14 +2807,16 @@ public class CartsController extends BaseCommerceController
 		CartModel cart = null;
 		try
 		{
+			cart = mplPaymentWebFacade.findCartValues(cartId);
+
 			final Map<String, String> delModeUssId = (Map<String, String>) JSON.parse(deliverymodeussId);
 			Double finalDeliveryCost = Double.valueOf(0.0);
 			for (final Map.Entry<String, String> element : delModeUssId.entrySet())
 			{
 				if (null != element && null != element.getValue() && null != element.getKey())
 				{
-					final Double deliveryCost = mplCustomAddressFacade
-							.populateDeliveryMethodData(element.getValue(), element.getKey());
+					final Double deliveryCost = mplCustomAddressFacade.populateDeliveryMethodData(element.getValue(),
+							element.getKey(), cart);
 					finalDeliveryCost = Double.valueOf(finalDeliveryCost.doubleValue() + deliveryCost.doubleValue());
 
 					LOG.debug("CartsController : selectDeliveryMode  : Step 1 finalDeliveryCost after Delivery Mode Set "
@@ -2822,8 +2824,8 @@ public class CartsController extends BaseCommerceController
 				}
 			}
 			//if cart doesn't contain cnc products clean up pickup person details
-			cleanupPickUpDetails(cartId);
-			cart = mplPaymentWebFacade.findCartValues(cartId);
+			cleanupPickUpDetails(cart);
+
 			if (setFreebieDeliverMode(cart))
 			{
 				LOG.debug("CartsController : selectDeliveryMode  : Step 3 Freebie delivery mode set done");
@@ -2915,8 +2917,8 @@ public class CartsController extends BaseCommerceController
 				LOG.debug("checkPinCodeAtCart-------" + cart.getCode());
 			}
 
-			pinCodeResponse = mplCartWebService.checkPinCodeAtCart(mplCartFacade.getSessionCartWithEntryOrderingMobile(cart, true),
-					cart, pincode);
+			pinCodeResponse = mplCartWebService.checkPinCodeAtCart(
+					mplCartFacade.getSessionCartWithEntryOrderingMobile(cart, true, true, true), cart, pincode);
 			if (null != pinCodeResponse)
 			{
 				response.setPinCodeResponseList(pinCodeResponse);
@@ -3731,9 +3733,9 @@ public class CartsController extends BaseCommerceController
 	 * @param cartId
 	 * @return void
 	 */
-	protected void cleanupPickUpDetails(final String cartId)
+	protected void cleanupPickUpDetails(final CartModel cartModel)
 	{
-		final CartModel cartModel = mplPaymentWebFacade.findCartValues(cartId);
+		//final CartModel cartModel = mplPaymentWebFacade.findCartValues(cartId);
 		int cncDelModeCount = 0;
 		int otherDelModeCount = 0;
 		for (final AbstractOrderEntryModel orderEntryModel : cartModel.getEntries())

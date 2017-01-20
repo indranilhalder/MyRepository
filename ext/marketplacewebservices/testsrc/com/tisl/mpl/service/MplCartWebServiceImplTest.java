@@ -53,11 +53,9 @@ public class MplCartWebServiceImplTest
 		final AbstractOrderModel abstractOrderModel = Mockito.mock(CartModel.class);
 		final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 		final boolean isPinCodeCheckRequired = true;
-		final boolean resetReqd = false;
-		final boolean isrecalculate = true;
 		final List<GetWishListProductWsDTO> listProducts = new ArrayList<GetWishListProductWsDTO>();
 
-		Mockito.when(mplCartWebService.productDetails(abstractOrderModel, deliveryModeDataMap, isPinCodeCheckRequired, resetReqd,
-				isrecalculate)).thenReturn(listProducts);
+		Mockito.when(mplCartWebService.productDetails(abstractOrderModel, deliveryModeDataMap, isPinCodeCheckRequired)).thenReturn(
+				listProducts);
 	}
 }
