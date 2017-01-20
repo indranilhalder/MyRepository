@@ -3342,19 +3342,22 @@ function validateCardNo(formSubmit) {
 				{
 					var selectedBank=$("select[id='bankNameForEMI']").find('option:selected').text();
 					// TISPRO-572 bank selection drop down
-					var selectedBankVal=selectedBank.split(" ", 1);
+					//var selectedBankVal=selectedBank.split(" ", 1);	//comment for INC_11876
+					var selectedBankVal = $("#bankNameForEMI").val();  //add for INC_11876
 					var responseBankVal=response.bankName;
 					if($("#paymentMode").val()=='EMI')
 					{
 						if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
 						{
-							if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)){
+							//if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)){	//comment for INC_11876
+							if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)!=-1){    //add for INC_11876
 								binStatus=true;
 								//applyPromotion(selectedBankVal,binStatus,formSubmit);
 								errorHandle.innerHTML = "";
 								return true;			
 							}
-							else if(selectedBank!="select" && !responseBankVal.indexOf(selectedBankVal)){
+							//else if(selectedBank!="select" && !responseBankVal.indexOf(selectedBankVal)){		//comment for INC_11876
+							else if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)==-1){	//add for INC_11876
 								binStatus=false;
 								errorHandle.innerHTML = "Please enter a card same as the selected bank";
 								return false;	
@@ -3799,13 +3802,15 @@ function validateEmiCardNo(formSubmit) {
 					{
 						var selectedBank=$("select[id='bankNameForEMI']").find('option:selected').text();
 						//TISPRO-572 bank selection drop down
-						var selectedBankVal=selectedBank.split(" ", 1);
+						//var selectedBankVal=selectedBank.split(" ", 1);	//comment for INC_11876
+						var selectedBankVal = $("#bankNameForEMI").val();  //add for INC_11876
 						var responseBankVal=response.bankName;
 						if($("#paymentMode").val()=='EMI')
 						{
 							if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
 							{
-								if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)){
+								//if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)){		//comment for INC_11876
+								if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)!=-1){    //add for INC_11876
 									binStatus=true;
 									//TPR-629
 									if(formSubmit=="formSubmit")
@@ -3816,7 +3821,8 @@ function validateEmiCardNo(formSubmit) {
 									errorHandle.innerHTML = "";
 									return true;			
 								}
-								else if(selectedBank!="select" && !responseBankVal.indexOf(selectedBankVal)){
+								//else if(selectedBank!="select" && !responseBankVal.indexOf(selectedBankVal)){		//comment for INC_11876
+								else if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)==-1){	//add for INC_11876
 									binStatus=false;
 									//TPR-629
 									if(formSubmit=="formSubmit")
@@ -4608,7 +4614,8 @@ function applyPromotion(bankName,binValue,formSubmit)
 								$("#selectedTerm").val("select");
 								var emiTable=document.getElementById("EMITermTable");
 								var rowCount = emiTable.rows.length;
-								for(var i=rowCount-1; i>0; i--){
+								//for(var i=rowCount-1; i>0; i--){		//comment for INC_11876
+								for(var i=rowCount-1; i>=0; i--){		//add for INC_11876
 									emiTable.deleteRow(i);
 									rowCount--;
 								}
