@@ -263,8 +263,9 @@ public class PaymentServicesController extends BaseController
 					if (StringUtils.isNotEmpty(paymentMode)
 							&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
 									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
-									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING) || paymentMode
-										.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)))
+									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
+									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI) || paymentMode
+										.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE)))
 					{
 						//setting in cartmodel
 						cart.setConvenienceCharges(Double.valueOf(0));
@@ -300,8 +301,9 @@ public class PaymentServicesController extends BaseController
 				if (StringUtils.isNotEmpty(paymentMode)
 						&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
 								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
-								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING) || paymentMode
-									.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)))
+								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
+								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI) || paymentMode
+									.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE)))
 				{
 					//setting in cartmodel
 					orderModel.setConvenienceCharges(Double.valueOf(0));
