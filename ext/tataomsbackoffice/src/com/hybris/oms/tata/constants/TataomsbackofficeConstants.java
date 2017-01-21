@@ -46,10 +46,14 @@ public final class TataomsbackofficeConstants extends GeneratedTataomsbackoffice
 	public static final String UPLOAD_LPANDAWB_FIELDS = "ordered,orderlineid,lpname,awbnumber,flowtype";
 	public static final String SPLIT_BY_COMMA = ",";
 	public static final String SPLIT_BY_NEWLINE = "\n";
-	public static final String LPAWB_FORWARD_FiLE_PREFIX = "LPAwbForwardLogistics_";
-	public static final String LPAWB_FORWARD_FILE_PATH = Config.getParameter("tata.oms.forward.lpawbupload.path");
-	public static final String LPAWB_RETURN_FiLE_PREFIX = "LPAwbReturnLogistics_";
-	public static final String LPAWB_RETURN_FILE_PATH = Config.getParameter("tata.oms.return.lpawbupload.path");
+	public static final String LPAWB_FORWARD_FiLE_PREFIX = "LPAWB_FORWARD_";
+	public static final String LPAWB_REVERSE_FILE_PREFIX = "LPAWB_REVERSE_";
+	public static final String AWB_FORWARD__FILE_PREFIX = "AWB_FORWARD_";
+	public static final String AWB_REVERSE__FILE_PREFIX = "AWB_REVERSE_";
+	public static final String LPAWB_FORWARD_FILE_PATH = Config.getParameter("tata.oms.lpawb.forward.path");
+	public static final String LPAWB_REVERSE_FILE_PATH = Config.getParameter("tata.oms.lpawb.reverse.path");
+	public static final String AWB_FORWARD_FILE_PATH = Config.getParameter("tata.oms.awb.forward.path");
+	public static final String AWB_REVERSE_FILE_PATH = Config.getParameter("tata.oms.awb.reverse.path");
 
 	private TataomsbackofficeConstants()
 	{

@@ -4,6 +4,7 @@
 package com.techouts.backoffice.widget.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +55,7 @@ public class AwbEditWidgetController
 	private List<TransactionInfo> listOfTransactions; //incoming transactions
 	private List<String> activelpList;//active logistcs Partners
 	private List<OrderLineInfo> listOfOrderLineInfo;
-	private Map<String, TransactionInfo> map;
+	private final Map<String, TransactionInfo> map = new HashMap<>();
 	private List<String> ordersStatus;// orders statuses
 	@WireVariable("orderLogisticsRestClient")
 	private OrderLogisticsFacade orderLogisticsUpdateFacade;

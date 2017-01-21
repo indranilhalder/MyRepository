@@ -17,6 +17,7 @@
 		line-height: -1px; overflow: none; cursor: pointer; }
 		.error_class{font-size:13px;color:red;}
 	</style>
+	<separator />
 	<div>
 		<separator />
 		<vlayout>
