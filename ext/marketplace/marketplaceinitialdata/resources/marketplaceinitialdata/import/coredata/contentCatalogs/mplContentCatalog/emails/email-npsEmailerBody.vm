@@ -35,7 +35,7 @@
                 <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif;color:#313131; background: #FBFBFB;">
                     <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
                       <tr valign="top">
-                        <td width="288"><img src="images/img.png" alt="" style="display: block; border:1px solid #aaaaaa;">
+                        <td width="288"><img src="http:${ctx.productImg}" alt="" style="display: block; border:1px solid #aaaaaa;">
                         <td style="width: 20px;" width="20px">&nbsp;</td>
                       	<td>
                       	 <p style="font-size:15px; color: #a5164c;"><strong>${ctx.productName}</strong></p>

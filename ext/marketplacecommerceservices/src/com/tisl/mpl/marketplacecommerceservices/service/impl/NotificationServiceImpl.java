@@ -48,7 +48,6 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao;
 import com.tisl.mpl.marketplacecommerceservices.event.InventoryReservationFailedEvent;
-import com.tisl.mpl.marketplacecommerceservices.event.NpsEmailEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderPlacedEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.PaymentPendingEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.PaymentTimeoutEvent;
@@ -81,8 +80,7 @@ public class NotificationServiceImpl implements NotificationService
 	@Resource(name = "couponRestrictionService")
 	private CouponRestrictionService couponRestrictionService;
 
-	@Autowired
-	private BusinessProcessService businessProcessService;
+
 	@Autowired
 	private BaseSiteService baseSiteService;
 
@@ -91,6 +89,14 @@ public class NotificationServiceImpl implements NotificationService
 
 	@Autowired
 	private CommonI18NService commonI18NService;
+
+	@Autowired
+	private BusinessProcessService businessProcessService;
+
+	public BusinessProcessService getBusinessProcessService()
+	{
+		return businessProcessService;
+	}
 
 
 	private static final Logger LOG = Logger.getLogger(NotificationServiceImpl.class);
@@ -728,25 +734,28 @@ public class NotificationServiceImpl implements NotificationService
 	@Override
 	public void triggerNpsEmail(final AbstractOrderEntryModel OrderEntry, final OrderModel orderModel)
 	{
-
-		final NpsEmailProcessModel npsEmailProcessModel = new NpsEmailProcessModel();
-		npsEmailProcessModel.setOrder(orderModel);
-		npsEmailProcessModel.setAbstractOrderEntry(OrderEntry);
-
-		final NpsEmailEvent npsEmailEvent = new NpsEmailEvent(npsEmailProcessModel);
-
+		LOG.info("Starting Nps Feedback Mail");
+		//final NpsEmailProcessModel npsEmailProcessModel = new NpsEmailProcessModel();
 		try
 		{
-			eventService.publishEvent(npsEmailEvent);
+			final NpsEmailProcessModel npsEmailProcessModel = (NpsEmailProcessModel) getBusinessProcessService().createProcess(
+					"npsEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(), "npsEmailProcess");
+
+			npsEmailProcessModel.setOrder(orderModel);
+			npsEmailProcessModel.setAbstractOrderEntry(OrderEntry);
+			modelService.save(npsEmailProcessModel);
+			businessProcessService.startProcess(npsEmailProcessModel);
 		}
-		catch (final Exception e1)
-		{ // YTODO
-		  // Auto-generated catch block
-			LOG.error("Exception during sending mail or SMS >> " + e1.getMessage());
+
+
+		catch (final Exception e)
+		{
+			LOG.error("Exception during Nps feedback mail >> " + e.getMessage());
 		}
+
+
 
 	}
-
 
 	/**
 	 * @return the voucherModelService

@@ -1774,7 +1774,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
   	</bean>
   	
   	<bean id="generateNPSEmail" parent="abstractGenerateEmailAction">
-  		<property name="frontendTemplateName" value="NPSEmailTemplate" />
+  		<property name="frontendTemplateName" value="NpsEmailTemplate" />
   	</bean>
   	
   	<bean id="NPSEmailEventProcessDefinitionResource"
