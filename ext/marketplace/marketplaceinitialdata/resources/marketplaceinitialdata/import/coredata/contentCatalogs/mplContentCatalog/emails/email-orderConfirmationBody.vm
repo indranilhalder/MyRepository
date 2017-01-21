@@ -358,10 +358,10 @@
 				<table style="float: right;">
 			
 				<tr>
-					<td style="text-align: right;"><a href="https://www.facebook.com/TataCLiQ/" target="_blank">${ctx.cmsSlotContents.fb}</a></td>
-					<td><a href="https://twitter.com/tatacliq" target="_blank">${ctx.cmsSlotContents.tweet}</a></td>
-					<td><a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank">${ctx.cmsSlotContents.youtube}</a></td>
-					<td><a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.insta}</a></td>
+					#if($ctx.cmsSlotContents.fb)<td style="text-align: right;"><a href="https://www.facebook.com/TataCLiQ/" target="_blank"> ${ctx.cmsSlotContents.fb}</a></td> #end
+					#if($ctx.cmsSlotContents.tweet)<td><a href="https://twitter.com/tatacliq" target="_blank">${ctx.cmsSlotContents.tweet}</a></td>#end
+					#if($ctx.cmsSlotContents.youtube)<td><a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank">${ctx.cmsSlotContents.youtube}</a></td>#end
+					#if($ctx.cmsSlotContents.insta)<td><a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.insta}</a></td>#end
 			
 				</tr>
 				</table>
