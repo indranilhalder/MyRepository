@@ -162,6 +162,10 @@ public class MplOrderEntryPopulator implements Populator<AbstractOrderEntryModel
 			target.setTimeSlotTo(source.getTimeSlotTo());
 		}
 		
+		if (StringUtils.isNotEmpty(source.getSddDateBetween()))
+		{
+			target.setEddDateBetWeen(source.getSddDateBetween());
+		}
 	}
 
 	/**

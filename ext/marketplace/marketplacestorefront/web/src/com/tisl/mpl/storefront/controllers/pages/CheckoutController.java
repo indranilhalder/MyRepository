@@ -540,6 +540,8 @@ public class CheckoutController extends AbstractCheckoutController
 				      	 }	
 				      }
 				}
+				  //save deliveryDate DateBetwee
+				saveDeliveryDateBetween(orderModel,selectedDateMap);
 				
 				//saving IP of the Customer
 				try
@@ -699,6 +701,32 @@ public class CheckoutController extends AbstractCheckoutController
 		return deliveryTimeMap;
 	}
 
+	private void saveDeliveryDateBetween(OrderModel orderModel, Map<String, String> selectedDateMap)
+	{
+		for (OrderModel subOrder : orderModel.getChildOrders())
+		{
+			if (subOrder != null && subOrder.getEntries() != null)
+			{
+				for (AbstractOrderEntryModel entry : subOrder.getEntries())
+				{
+					if (null != selectedDateMap)
+					{
+						for (Entry<String, String> entryForDate : selectedDateMap.entrySet())
+						{
+							if (entryForDate.getKey().equalsIgnoreCase(entry.getSelectedUSSID()))
+							{
+								entry.setSddDateBetween(entryForDate.getValue());
+								modelService.save(entry);
+							}
+						}
+					}
+				}
+			}
+
+		}
+		modelService.saveAll(orderModel);
+	}
+		
 	protected GuestRegisterValidator getGuestRegisterValidator()
 	{
 		return guestRegisterValidator;
