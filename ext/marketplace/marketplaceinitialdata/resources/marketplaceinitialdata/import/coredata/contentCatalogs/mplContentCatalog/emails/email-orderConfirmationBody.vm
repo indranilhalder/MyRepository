@@ -122,6 +122,13 @@
                   </strong> </font>
                </p>
             </td>-->
+            
+            <td align="center" bgcolor="#fbfbfb" style="width: 20%; padding-right: 1%;">
+               <p align="center"><font size="2" color="#000000" ><strong>
+                  Dlivery Date
+                  </strong> </font>
+               </p>
+            </td>
          </tr>
 		 		 
 		 #set ($shippingCharge=0)
@@ -177,6 +184,18 @@
                   $entry.mplDeliveryMode.deliveryMode.name </font>
                </p>
             </td>-->
+            <td align="left" bgcolor="#fbfbfb">
+               <p align="center"><font size="2" color="#000000" >
+                   #if($entry.edScheduledDate)
+                       $entry.edScheduledDate
+			           $entry.timeSlotFrom  To  $entry.timeSlotTo
+                   #elseif ($entry.eddDateBetWeen)
+                      $entry.eddDateBetWeen
+                   #else
+                  NA
+                  #end</font>
+               </p>
+            </td>
          </tr>	 
 		 
 		 
