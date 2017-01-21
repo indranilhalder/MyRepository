@@ -7,10 +7,14 @@ package com.tisl.mpl.v2.controller;
 
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.WebserviceValidationException;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -57,10 +61,12 @@ public class ReturnInitiationController extends BaseController
 	public ReturnInitiateResponse initiationRequest(@RequestBody final ReturnInitiateRequestDTO returnRequest) 
 				throws WebserviceValidationException
 	{
-	final List<OrderLineData> listdata = new ArrayList<OrderLineData>();
-	final ReturnInitiateResponse responseDTO = new ReturnInitiateResponse();
+		Marshaller marshaller = null;
+		final StringWriter stringWriter = new StringWriter();
+   	final List<OrderLineData> listdata = new ArrayList<OrderLineData>();
+   	final ReturnInitiateResponse responseDTO = new ReturnInitiateResponse();
 	
-		final Errors errors = new BeanPropertyBindingResult(returnRequest, "returnRequest");
+   	final Errors errors = new BeanPropertyBindingResult(returnRequest, "returnRequest");
 		returnRTSValidator.validate(returnRequest, errors);
 		if (errors.hasErrors())
 		{
@@ -82,6 +88,7 @@ public class ReturnInitiationController extends BaseController
 			}
 			if (CollectionUtils.isNotEmpty(listdata))
 			{
+				LOG.info("Return initiation from SP with the Seller order Id : >>>>>> " + listdata.get(0).getOrderId());
 				final List<OrderLineData> responseList = cancelReturnFacade.returnInitiationForRTS(listdata);
 				if (CollectionUtils.isNotEmpty(responseList))
 				{
@@ -96,6 +103,28 @@ public class ReturnInitiationController extends BaseController
 						orderLines.add(dto);
 					}	
 					responseDTO.setOrderLines(orderLines);
+				}
+				try
+				{
+					final JAXBContext context = JAXBContext.newInstance(ReturnInitiateResponse.class);
+					if (null != context)
+					{
+						marshaller = context.createMarshaller();
+					}
+					if (null != marshaller)
+					{
+						marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+					}
+					if (null != marshaller)
+					{
+						marshaller.marshal(responseDTO, stringWriter);
+					}
+					LOG.info(" Return initiation From SP Response " + stringWriter.toString());
+				}
+				catch (JAXBException e)
+				{
+					LOG.error("Error in order Cancellation from SP Response");
+					e.printStackTrace();
 				}
 				return responseDTO;
 			}
