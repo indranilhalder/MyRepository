@@ -3845,16 +3845,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			}
 			if (StringUtils.isNotEmpty(address.getState()))
 			{
-				String stateName = null;
-				if (StringUtils.isNotEmpty(address.getState()))
+				String stateName =  getStateCode(address.getState());
+				if (stateName==null)
 				{
-					stateName = getStateCode(address.getState());
+					stateName=address.getState();	
 				}
-				else
-				{
-					stateName = address.getState();
-				}
-				
 				store.append(SPACE+ stateName);
 			}
 			if (StringUtils.isNotEmpty(address.getCountry().getName()))
