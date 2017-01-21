@@ -3841,30 +3841,15 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			}
 			if (StringUtils.isNotEmpty(address.getDistrict()))
 			{
-				String stateName = null;
-				if (StringUtils.isNotEmpty(address.getDistrict()))
-				{
-					stateName = getStateCode(address.getDistrict());
-				}
-				else
-				{
-					stateName = address.getDistrict();
-				}
-				LOG.info("District::::::"+address.getDistrict()+"District after change name:::::::"+stateName);
-				store.append(SPACE + stateName);
+				store.append(SPACE + address.getDistrict());
 			}
 			if (StringUtils.isNotEmpty(address.getState()))
 			{
-				String stateName = null;
-				if (StringUtils.isNotEmpty(address.getState()))
+				String stateName =  getStateCode(address.getState());
+				if (stateName==null)
 				{
-					stateName = getStateCode(address.getState());
+					stateName=address.getState();	
 				}
-				else
-				{
-					stateName = address.getState();
-				}
-				LOG.info("stateName::::::"+address.getState()+"State after change name:::::::"+stateName);
 				store.append(SPACE+ stateName);
 			}
 			if (StringUtils.isNotEmpty(address.getCountry().getName()))
@@ -4028,8 +4013,7 @@ private AbstractOrderEntryModel getOrderEntryModel(OrderModel ordermodel,String 
 		{
 			for (final StateData state : accountAddressFacade.getStates())
 			{
-				LOG.info("Sate code:::::::: "+state.getCode()+"POS code"+statcode);
-				if (state.getName().equalsIgnoreCase(statcode))
+				if (state.getCode().equalsIgnoreCase(statcode))
 				{
 					return state.getName();
 				}
