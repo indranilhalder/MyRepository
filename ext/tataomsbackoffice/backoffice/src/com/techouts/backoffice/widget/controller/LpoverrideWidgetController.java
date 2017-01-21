@@ -293,6 +293,23 @@ public class LpoverrideWidgetController
 				{
 					Messagebox.show(
 							"Changes could not processed. AWB number should be changed along with LP name when order status is SCANNED/HOTC/REVRSAWB");
+					displayPopup = Boolean.FALSE;
+					if (modifiedTransactinTrack != null)
+					{
+						modifiedTransactinTrack.clear();
+					}
+					return;
+				}
+				if (!previousTransaction.getAwbNumber().equals(currentTransaction.getAwbNumber())
+						&& previousTransaction.getLogisticName().equals(currentTransaction.getLogisticName()))
+				{
+					Messagebox.show(
+							"Changes could not processed. AWB number should be changed along with LP name when order status is SCANNED/HOTC/REVRSAWB");
+					displayPopup = Boolean.FALSE;
+					if (modifiedTransactinTrack != null)
+					{
+						modifiedTransactinTrack.clear();
+					}
 					return;
 				}
 			}
@@ -332,7 +349,7 @@ public class LpoverrideWidgetController
 		{
 			final TransactionInfo modifiedTransaction = modifiedTransactinTrack.get(currentResponse.getTransactionId());
 			final TransactionInfo previousTransaction = previousLpAndAwbNumberForTrack.get(currentResponse.getTransactionId());
-			if (currentResponse.getLogisticId() != null)
+			if (currentResponse.getLogisticId() != null && previousTransaction != null && modifiedTransaction != null)
 			{
 				previousTransaction.setLogisticName(currentResponse.getLogisticId());
 				previousTransaction.setAwbNumber(modifiedTransaction.getAwbNumber());
