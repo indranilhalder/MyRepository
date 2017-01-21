@@ -450,11 +450,8 @@
 										              </p>
 												  </c:when>
 													<c:otherwise>
-													<c:if test="${not empty entry.expectedDeliveryDate}">
-														    <c:set var="deliveryDate">
-                                                                <fmt:formatDate pattern="dd-MMM-yy hh:mm a"   value="${entry.expectedDeliveryDate}" />
-                                                            </c:set>
-                                                         <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>  ${deliveryDate}  
+													<c:if test="${not empty entry.eddDateBetWeen}">
+                                                         <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>  ${eddDateBetWeen}  
                                                      </c:if>
 													</c:otherwise>
 										 </c:choose>
@@ -1639,11 +1636,8 @@
 										              </p>
 												  </c:when>
 													<c:otherwise>
-													<c:if test="${not empty entry.expectedDeliveryDate}">
-														    <c:set var="deliveryDate">
-                                                                <fmt:formatDate pattern="dd-MMMM-yyyy"   value="${entry.expectedDeliveryDate}" />
-                                                            </c:set>
-                                                         <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>  ${deliveryDate}  
+													<c:if test="${not empty entry.eddDateBetWeen}">
+                                                         <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>  ${eddDateBetWeen}  
                                                      </c:if>
 													</c:otherwise>
 											  </c:choose>
