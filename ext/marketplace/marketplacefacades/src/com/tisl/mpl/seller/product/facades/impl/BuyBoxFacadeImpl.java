@@ -707,7 +707,12 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 						}
 						if (ExpressDeliveryEnum.YES.equals(rich.getExpressDelivery()))
 						{
-							deliveryModes.append(ED).append(','); // SONAR Fixes
+							if(StringUtils.isNotEmpty(rich.getSellerHandlingTime().toString())){
+								Integer sellerHandlingTime = rich.getSellerHandlingTime();
+								if(sellerHandlingTime.intValue()>=0 && sellerHandlingTime.intValue()<=24){
+									deliveryModes.append(ED).append(','); // SONAR Fixes
+								}
+							}
 						}
 						if (ClickAndCollectEnum.YES.equals(rich.getClickAndCollect()))
 						{
