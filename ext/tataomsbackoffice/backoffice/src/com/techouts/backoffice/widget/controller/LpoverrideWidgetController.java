@@ -224,7 +224,7 @@ public class LpoverrideWidgetController
 	@Command("isReturnCheck")
 	@NotifyChange(
 	{ "ordersStatus", "selectionOrderStatus", "listOfTransactions", "txtOrderId", "txtsellerId", "txtSlaveId", "selectionLpName",
-			"txtTransactionId" })
+			"txtTransactionId", "selectedEntities" })
 	public void isReturnCheck(@BindingParam("checkedValue") final Boolean isReturnCheckdValue)
 	{
 		LOG.info("is Return Checked Value" + isReturnCheckdValue);
@@ -240,6 +240,11 @@ public class LpoverrideWidgetController
 		{
 			this.listOfTransactions.clear();
 		}
+		if (this.selectedEntities != null && CollectionUtils.isNotEmpty(this.selectedEntities))
+		{
+			this.selectedEntities.clear();
+		}
+
 	}
 
 	/*
