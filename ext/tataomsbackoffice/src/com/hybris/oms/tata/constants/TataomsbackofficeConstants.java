@@ -54,6 +54,8 @@ public final class TataomsbackofficeConstants extends GeneratedTataomsbackoffice
 	public static final String LPAWB_REVERSE_FILE_PATH = Config.getParameter("tata.oms.lpawb.reverse.path");
 	public static final String AWB_FORWARD_FILE_PATH = Config.getParameter("tata.oms.awb.forward.path");
 	public static final String AWB_REVERSE_FILE_PATH = Config.getParameter("tata.oms.awb.reverse.path");
+	public static final String LPAWB_RETURN_FILE_PATH = "";
+	public static final String LPAWB_RETURN_FiLE_PREFIX = "";
 
 	private TataomsbackofficeConstants()
 	{
