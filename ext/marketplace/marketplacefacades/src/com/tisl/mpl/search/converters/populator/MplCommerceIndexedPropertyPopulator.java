@@ -5,9 +5,12 @@ package com.tisl.mpl.search.converters.populator;
 
 import de.hybris.platform.commerceservices.search.solrfacetsearch.populators.CommerceIndexedPropertyPopulator;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
 import de.hybris.platform.solrfacetsearch.enums.SolrIndexedPropertyFacetType;
 import de.hybris.platform.solrfacetsearch.model.config.SolrIndexedPropertyModel;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -20,6 +23,9 @@ public class MplCommerceIndexedPropertyPopulator extends CommerceIndexedProperty
 {
 
 
+	@Resource
+	private SessionService sessionService;
+
 	@Override
 	public void populate(final SolrIndexedPropertyModel property, final IndexedProperty indexedProperty) throws ConversionException
 	{
@@ -28,11 +34,12 @@ public class MplCommerceIndexedPropertyPopulator extends CommerceIndexedProperty
 		indexedProperty.setVisible(property.isVisible());
 		indexedProperty.setDisplayName(property.getDisplayName());
 
-		if (property.getQueryType() == null || StringUtils.isEmpty(property.getQueryType()))
+		final String queryType = sessionService.getAttribute("queryType");
+
+		LOG.debug("Changed property.getQueryType() to indexedProperty.getQueryType()");
+		if (queryType == null || StringUtils.isEmpty(queryType))
 		{
-
 			indexedProperty.setClassAttributeAssignment(property.getClassAttributeAssignment());
-
 		}
 
 		indexedProperty.setTopValuesProvider(property.getTopValuesProvider());

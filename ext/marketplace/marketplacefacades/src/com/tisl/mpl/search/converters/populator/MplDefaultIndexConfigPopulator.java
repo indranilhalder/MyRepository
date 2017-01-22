@@ -117,7 +117,7 @@ public class MplDefaultIndexConfigPopulator extends DefaultIndexConfigPopulator
 			}
 			itemType.setQueryType(queryType);
 			final IndexedType indexedType = this.indexedTypeConverter.convert(itemType);
-
+			LOG.debug(" Commenting as a pert of SEARCH PT.... //itemType.setQueryType(queryType)");
 			result.add(indexedType);
 		}
 		return result;

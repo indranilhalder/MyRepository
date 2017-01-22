@@ -176,7 +176,6 @@ import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 import com.tisl.mpl.wsdto.WthhldTAXWsDTO;
 
 
-
 /**
  * @author TCS
  */
@@ -977,6 +976,12 @@ public class MiscsController extends BaseController
 			ExceptionUtil.getCustomizedExceptionTrace(eb);
 			resultData = setErrorStatus();
 		}
+
+		if (StringUtils.isNotEmpty(sessionService.getAttribute("queryType")))
+		{
+			LOG.debug("REmoving from Session Attribute query type");
+			sessionService.removeAttribute("queryType");
+		}
 		return resultData;
 	}
 
@@ -1694,8 +1699,8 @@ public class MiscsController extends BaseController
 					for (final MplNewsLetterSubscriptionModel mplNewsLetterSubscriptionModel : newsLetterSubscriptionList)
 					{
 						if ((mplNewsLetterSubscriptionModel.getEmailId().equalsIgnoreCase(emailId))
-								&& (!(mplNewsLetterSubscriptionModel.getIsLuxury().booleanValue()) || mplNewsLetterSubscriptionModel
-										.getIsLuxury() == null))
+								&& (!(mplNewsLetterSubscriptionModel.getIsLuxury().booleanValue())
+										|| mplNewsLetterSubscriptionModel.getIsLuxury() == null))
 						{
 							mplNewsLetterSubscriptionModel.setIsLuxury(Boolean.TRUE);
 							modelService.save(mplNewsLetterSubscriptionModel);
