@@ -9,7 +9,7 @@ $(document).ready(function(){
 				console.log("line 394");
 			 var value = $(".address_landmarkOtherDiv").attr("data-value");
 			 console.log("line 396 "+value);
-			 otherLandMarkTri(value);
+			 otherLandMarkTri(value,"defult");
 			});
 
 			
@@ -35,7 +35,7 @@ $(document).ready(function(){
 	    $("#deliveryAddressForm #addressLine1").prop('value','');
 	    $("#deliveryAddressForm #addressLine2").prop('value','');
 	    $("#deliveryAddressForm #addressLine3").prop('value','');
-	    $("#deliveryAddressForm #landmark").prop("disabled",false).val('Select');
+	    $("#deliveryAddressForm #landmark").prop("disabled",false).empty();
 	    $("#deliveryAddressForm #otherLandmark").prop('value','');
 	    $(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").hide();
 	    $("#deliveryAddressForm #state").prop('value','Select');
@@ -59,10 +59,10 @@ $(".address_postcode").blur(function() {
 	 if($(".address_postcode").val().length >= "3") {
 		
 		loadPincodeData("edit").done(function() {
-			console.log("line 394");
+			console.log("blur line 394");
 		 var value = $(".address_landmarkOtherDiv").attr("data-value");
-		 console.log("line 396 "+value);
-		 otherLandMarkTri(value);
+		 console.log("blur line 396 "+value);
+		 otherLandMarkTri(value,"blur");
 		});
 
 	}
@@ -98,20 +98,32 @@ function loadPincodeData(parm) {
 			//var arg1 = false;
 			if(response == "" || response == " " || response == "NULL") {
 				//alert("in if");
+				
 				console.log("addresslandmark line 154"+ response+ "##");
-				if(Pincode.length == 6){
+				if(Pincode.length > 0){
 				if($("#pincodeError").length>0){
 					$("#pincodeError").css('color','#ff1c47').show().text("Pincode None serviceble, please enter another pincode");
+					
 				}else if($(".pincodeNoError").length>0){
 				$(".pincodeNoError").show().text("Pincode None serviceble, please enter another pincode");
+				
+				}else if($("#addAddressForm #pincode + .errorText").length>0){
+					$("#addAddressForm #pincode + .errorText").show().text("Pincode None serviceble, please enter another pincode");	
 				}
 				}
 				$('.address_landmarks').val("").empty();
 				if(window.location.href.indexOf("my-account/address-book") >= 0){
+					$("#erraddressPost").css('color','#CCC').show().text("*Note: Pincode None serviceble, yet you can save address for future reference.");
 					$('.address_landmarks').html($("<option></option>").text("Unable to find landmark").attr("selected","selected").attr("value",""));
 					changeFuncLandMark("Other"); 
+					$(".address_townCity").prop("readonly", false).val('');
+					$(".address_states").prop("value","");
+					$(".dupDisplay").hide();
+					$(".mainDrop").show();
+					$(".mainDrop select").prop("disabled",false);
 				}
 				
+				$(".saveBlockData,#newAddressButton,#saveAddress").css({'opacity':'0.5'}).prop("disabled","disabled");
 				//arg1 = false;
 				
 				/*$(".address_landmarks").attr("disabled","disabled").css("padding-left","5px");
@@ -148,7 +160,8 @@ function loadPincodeData(parm) {
 				
 				if(response.landMarks != null) {
 				console.log("addresslandmark line 186 "+ response);
-				$(".pincodeNoError,#pincodeError").hide();
+				$(".saveBlockData,#newAddressButton,#saveAddress").css({'opacity':'1'}).prop("disabled",false);
+				$(".pincodeNoError,#pincodeError,#erraddressPost,#addAddressForm #pincode + .errorText").hide();
 				$('.address_landmarks .unableto').remove();
 				$(".address_landmarks").removeAttr("disabled").css("padding-left","5px");
 				$(".half .address_landmarkOtherDiv").css("margin-left","10px");
@@ -156,13 +169,13 @@ function loadPincodeData(parm) {
     			$(".optionsLandmark, .optionsLandmark label, .optionsLandmark input,  .optionsLandmark select").show();
     			$(".address_landmarkOtherDiv").hide();
     			$("#stateListBox").prop("disabled","disabled");
-    			$("#stateListBoxReadOnly").prop("disabled",false);
+    			//$("#stateListBoxReadOnly").prop("disabled",false);
     			$(".addressRead").prop("disabled","disabled");
     			$(".addressDup").prop("disabled",false);
     			$(".mainDrop").hide();
 				$(".dupDisplay").show();
 				$(".mainDrop select").val(response.state.name).prop('disabled','disabled');
-				$(".stateInput").html("<input id='statesReadOnly' name='state'/>");
+				$(".stateInput").html("<input id='statesReadOnly' name='state' type='text'/>");
 				$(".stateInput input").prop("disabled",false).val(response.state.name).attr("readonly", "true");
     			$(".address_landmarkOther").attr("value", "");
     			$(".address_landmarkOther").val("");
@@ -174,13 +187,13 @@ function loadPincodeData(parm) {
         		
         			//alert("in landmark if");
         			console.log("addresslandmark line 211 ");
-        		  $.each(response.landMarks, function(key, value) {
+        			  $.each(response.landMarks, function(key, value) {
         		       $('.address_landmarks').append($("<option></option>").attr("value",value.landmark)
         		         .text(value.landmark));
         		    });
-        		  $('.address_landmarks').append($("<option class='otherOption'></option>").attr("value","Other").text("Other"));
-        		  /*added by sneha R2.3*/
-        		  //$('.address_landmarks').attr("onchange","changeFuncLandMark(this.value)");
+        			  $('.address_landmarks').append($("<option class='otherOption'></option>").attr("value","Other").text("Other"));
+              		/*added by sneha R2.3*/
+        			  $('.address_landmarks').attr("onchange","changeFuncLandMark(this.value)");
         		  /*end of sneha R2.3*/
         		}
         		else {
@@ -483,7 +496,7 @@ $(document).ready(function() {
 	
 		$("#pincode").val($("."+className+" .postalCode").text());
 	
-		if(loadPincodeData('edit')){
+		loadPincodeData("edit").done(function() {
 			$("#firstName").val($("."+className+" .firstName").text());
 			$("#lastName").val($("."+className+" .lastName").text());
 			$("#addressLine1").val($("."+className+" .addressLine1").text());
@@ -492,8 +505,8 @@ $(document).ready(function() {
 			$(".address_townCity").val($("."+className+" .town").text());
 			$("#mobileNo").val($("."+className+" .phone").text());
 			var value = $("."+className+" .landmark").text();
-			  
-			 otherLandMarkTri(value);
+			  $(".address_landmarkOtherDiv").attr('data-value',value)
+			 otherLandMarkTri(value,"defult");
 			  if(!$("#state").prop("disabled")){
 		       // var state=$("#state").val();
 		        $("#state").val($("."+className+" .state").text());
@@ -502,7 +515,7 @@ $(document).ready(function() {
 		        $("#statesReadOnly").val($("."+className+" .state").text());
 		       }
 			//$("#state").val($("."+className+" .state").text());
-		}
+		});
 		
 		
 	});
@@ -538,7 +551,7 @@ function closeOTP(){
 	$("#changeAddressPopup, #otpPopup").hide();
 	$(".wrapBG").hide();
 }
-function otherLandMarkTri(value){
+function otherLandMarkTri(value,event){
 	  setTimeout(function(){
 		  console.log("line no 19 "+ value);
 		  if($(".address_landmarks option[value='"+value+"']").length > "0") {
@@ -550,7 +563,7 @@ function otherLandMarkTri(value){
 				} else {
 					console.log("line no 27");
 				//alert(value+ " 3 in else");
-					if($(".address_landmarks option[value='Other']").length > "0" && value != "") {
+					if($(".address_landmarks option[value='Other']").length > "0" && value != "" && event=="defult") {
 						console.log("line no 30");
 						  $(".address_landmarks").val("Other"); 
 						  console.log("line no 35");

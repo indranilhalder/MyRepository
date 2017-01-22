@@ -756,27 +756,27 @@
 					  data : $("#addAddressForm").serialize(),
 					  success: function(data) {
 						console.log("New Address Saved Successfully");
-					  
+						  $(".scheduledPickupArea").html("<div class='address"
+								  + count+ " col-md-12 col-sm-12 col-xs-12 greyColor selectScheduledPickup blackColor'><div class='col-md-2 col-sm-2 col-xs-2 selectRadio'><input class=radioButton name=selectScheduledPickup onclick='showPickupTimeDate(\"address"
+								  + count+ "\")' type='radio' value='schedule'></div><div class='col-md-6 col-sm-6 col-xs-6 updateaddress"
+								  +count+ "'><ul><li><span class=firstName>"
+								  +$('#addAddressForm  #firstName').val()+"</span>&nbsp;<span class=lastName>"+$('#addAddressForm #lastName').val()+"</span><li><span class=addressline1>"
+								  +$('#addAddressForm  #addressline1').val()+"</span><li><span class=addressline2>"+$('#addAddressForm  #addressline2').val()+"</span><li><span class=addressline3>"+$('#addAddressForm  #addressline3').val()+"</span><li><span class=addressTown>"
+								  +$('#addAddressForm  #addressTown').val()+"</span><li><span class=state>"+$('#addAddressForm  #state').val()+"</span><li><span class=postalCode>"
+								  +$('#addAddressForm  #pincode').val()+"</span><li><span class=country>"
+								  +$('#addAddressForm  #country').val()+"</span><li><span class=phoneNumber>"
+								  +$('#addAddressForm  #mobileNo').val()+"</span><li id=addressUniqueId style=display:none></ul></div><div class='col-md-4 col-sm-4 col-xs-4 editAddress'><a class=changeAddressLink onclick='showAddressPopup(\"address"
+								  + count+ "\")' data-class=address"
+								  + count+ " href=#>Edit Address</a></div></div>");
+			  showPickupTimeDate("address"+count);
+			  $(".address"+count+" input").prop("checked", true);
+			  $("#changeAddressPopup, .wrapBG").fadeOut(300);
 					  },
 					  error:function(data){
 						  console.log("Error in NewAddress");
 					  }
 				  });
-							  $(".scheduledPickupArea").html("<div class='address"
-									  + count+ " col-md-12 col-sm-12 col-xs-12 greyColor selectScheduledPickup blackColor'><div class='col-md-2 col-sm-2 col-xs-2 selectRadio'><input class=radioButton name=selectScheduledPickup onclick='showPickupTimeDate(\"address"
-									  + count+ "\")' type='radio' value='schedule'></div><div class='col-md-6 col-sm-6 col-xs-6 updateaddress"
-									  +count+ "'><ul><li><span class=firstName>"
-									  +$('#addAddressForm  #firstName').val()+"</span>&nbsp;<span class=lastName>"+$('#addAddressForm #lastName').val()+"</span><li><span class=addressline1>"
-									  +$('#addAddressForm  #addressline1').val()+"</span><li><span class=addressline2>"+$('#addAddressForm  #addressline2').val()+"</span><li><span class=addressline3>"+$('#addAddressForm  #addressline3').val()+"</span><li><span class=addressTown>"
-									  +$('#addAddressForm  #addressTown').val()+"</span><li><span class=state>"+$('#addAddressForm  #state').val()+"</span><li><span class=postalCode>"
-									  +$('#addAddressForm  #pincode').val()+"</span><li><span class=country>"
-									  +$('#addAddressForm  #country').val()+"</span><li><span class=phoneNumber>"
-									  +$('#addAddressForm  #mobileNo').val()+"</span><li id=addressUniqueId style=display:none></ul></div><div class='col-md-4 col-sm-4 col-xs-4 editAddress'><a class=changeAddressLink onclick='showAddressPopup(\"address"
-									  + count+ "\")' data-class=address"
-									  + count+ " href=#>Edit Address</a></div></div>");
-				  showPickupTimeDate("address"+count);
-				  $(".address"+count+" input").prop("checked", true);
-				  $("#changeAddressPopup, .wrapBG").fadeOut(300);
+							
 			  }
 		  }else {
 			  console.log(ACC.config.encodedContextPath+"/my-account/returns/editReturnAddress");

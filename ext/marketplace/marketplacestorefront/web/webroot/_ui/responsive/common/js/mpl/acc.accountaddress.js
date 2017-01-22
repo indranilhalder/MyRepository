@@ -123,10 +123,9 @@ function editAddress(addressId) {
    				$('#postcode').val(data.postcode);
    				$('.address_landmarks').val(data.landmark);
    				$('.address_landmarkOther').val(data.landmark);
-   				if(loadPincodeData("edit")){
-   					otherLandMarkTri(b.landmark);
-   				}
-   				
+   				loadPincodeData("edit").done(function() {
+   					otherLandMarkTri(data.landmark,"defult");
+   				});
    				$('#townCity').val(data.townCity);
    				$('#mobileNo').val(data.mobileNo);
    				$('#stateListBox').val(data.state);

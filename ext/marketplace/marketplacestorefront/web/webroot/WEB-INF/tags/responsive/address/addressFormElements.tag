@@ -278,7 +278,7 @@
 			</div>
 			<div class='half'>
 			
-				<div class='half address_landmarkOtherDiv' data-value="${addressForm.landmark}">
+				<div class='half address_landmarkOtherDiv' data-value="${addressForm.landmark}" style="display: none;">
 						<formElement:formInputBox inputCSS="address_landmarkOther" idKey="otherLandmark"
 							labelKey="Enter Nearest Landmark" path="otherLandmark"
 							maxLength="30" />
@@ -351,6 +351,7 @@
 				</c:forEach>
 				<input type="text" id="country" value='${countyName}'  readonly /> 
 			   	<input type="hidden" id="country"  name="countryIso" value="${countryIsoCode}"/>
+			   	<input type="text" id="tmpFunctionValue" />
 			</div>
 		</div>
 				
@@ -407,20 +408,20 @@ $(document).ready(function(){
 		console.log("line 391 "+ $(".address_postcode").val());
 			
 		loadPincodeData("edit").done(function() {
-			console.log("line 394");
+			console.log("addressform line 394");
 		 var value = $(".address_landmarkOtherDiv").attr("data-value");
-		 console.log("line 396 "+value);
-		 otherLandMarkTri(value);
+		 console.log("addressform line 396 "+value);
+		 otherLandMarkTri(value,"defult");
 		});
 	
 	
 	$(".address_postcode").blur(function() {
 		
 		loadPincodeData("edit").done(function() {
-			console.log("line 394");
+			console.log("addressform blur line 394");
 		 var value = $(".address_landmarkOtherDiv").attr("data-value");
-		 console.log("line 396 "+value);
-		 otherLandMarkTri(value);
+		 console.log("addressform blur line 396 "+value);
+		 otherLandMarkTri(value,"blur");
 		});
 
 
