@@ -68,9 +68,10 @@
 									<form:input path="postcode" class="address_postcode" onkeypress="return isNumber(event)"
 										id="pincode" maxlength="6"
 										value="${orderDetails.deliveryAddress.postalCode}"  placeholder="Pincode" />
-									<div  class="error_text pincodeNoError"></div>
+									
 								</div>
 							</div>
+							<div  class="col-md-12 error_text pincodeNoError"></div>
 						</div>
 						<div class="row">
 							<div class="col-md-12 form-group">

@@ -802,7 +802,7 @@
 							    $("#hiddenFields #addressLine1").val($("#addAddressForm #addressLine1").val());
 								$("#hiddenFields #addressLine2").val($("#addAddressForm #addressLine2").val());
 								$("#hiddenFields #addressLine3").val($("#addAddressForm #addressLine3").val());
-								if(!$("#addAddressForm #landmark").prop('disabled') || !$("#addAddressForm #landmark").val()=="Other"){
+								if($("#addAddressForm #landmark").val() != "Other"){
 									$("#hiddenFields #landmark").val($("#addAddressForm #landmark").val());
 								}else{
 									$("#hiddenFields #landmark").val($("#addAddressForm #otherLandmark").val());
@@ -822,7 +822,7 @@
 								$(".update"+temp+" li span.addressLine2").text($("#addAddressForm #addressLine2").val());
 								$(".update"+temp+" li span.addressLine3").text($("#addAddressForm #addressLine3").val());
 								$(".update"+temp+" li span.postalCode").text($("#addAddressForm #pincode").val());
-								if(!$("#addAddressForm #landmark").prop('disabled')|| !$("#addAddressForm #landmark").val()=="Other"){
+								if($("#addAddressForm #landmark").val()!="Other"){
 									$(".update"+temp+" li span.landmark").text($("#addAddressForm #landmark").val());
 								}else{
 									$(".update"+temp+" li span.landmark").text($("#addAddressForm #otherLandmark").val());
@@ -861,7 +861,7 @@
 					$("#hiddenFields #addressLine2").val($("#addAddressForm #addressLine2").val());
 					$("#hiddenFields #addressLine3").val($("#addAddressForm #addressLine3").val());
 					
-					if(!$("#addAddressForm #landmark").prop('disabled') || !$("#addAddressForm #landmark").val()=="Other"){
+					if($("#addAddressForm #landmark").val()!="Other"){
 						$("#hiddenFields #landmark").val($("#addAddressForm #landmark").val());
 					}else{
 						$("#hiddenFields #landmark").val($("#addAddressForm #otherLandmark").val());
@@ -883,7 +883,7 @@
 					$(".update"+temp+" li span.addressLine2").text($("#addAddressForm #addressLine2").val());
 					$(".update"+temp+" li span.addressLine3").text($("#addAddressForm #addressLine3").val());
 					$(".update"+temp+" li span.otherLandmark").text($("#addAddressForm #otherLandmark").val());
-					if(!$("#addAddressForm #landmark").prop('disabled') || !$("#addAddressForm #landmark").val()=="Other"){
+					if($("#addAddressForm #landmark").val()!="Other"){
 						$(".update"+temp+" li span.landmark").text($("#addAddressForm #landmark").val());
 					}else{
 						$(".update"+temp+" li span.landmark").text($("#addAddressForm #otherLandmark").val());

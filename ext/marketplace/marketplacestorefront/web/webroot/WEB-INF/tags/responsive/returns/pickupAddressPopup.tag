@@ -139,7 +139,7 @@
 											class="address_landmarks" maxlength="30"></form:select>
 											<div class="errorText"></div>
 									</div>
-									<div class="col-md-12 address_landmarkOtherDiv">
+									<div class="col-md-12 address_landmarkOtherDiv" data-value="${addressForm.landmark}">
 										<label for="landmark"> <spring:theme
 												code="text.order.returns.landmarkother" /></label>
 										
@@ -268,5 +268,5 @@
 	max-height: calc(100vh - 210px);
 	overflow-y: auto;
 }
-.errorText {line-height: 20px;height: 20px;}
+.errorText {height: 20px;}
 </style>

@@ -426,7 +426,7 @@
 										</div>
 									</div>
 									<div class="half no-display">
-										<div class ="address_landmarkOtherDiv">
+										<div class ="address_landmarkOtherDiv" data-value="${addressForm.landmark}">
 										<label>Enter Nearest Landmark</label>
 											<form:input path="otherLandmark" id="otherLandmark" onkeyup="optionsLandmark1()" class="address_landmarkOther"
 												maxlength="30" />
