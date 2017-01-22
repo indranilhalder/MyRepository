@@ -451,7 +451,7 @@
 												  </c:when>
 													<c:otherwise>
 													<c:if test="${not empty entry.eddDateBetWeen}">
-                                                         <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>  ${eddDateBetWeen}  
+                                                         <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>  ${entry.eddDateBetWeen}  
                                                      </c:if>
 													</c:otherwise>
 										 </c:choose>
@@ -1637,7 +1637,7 @@
 												  </c:when>
 													<c:otherwise>
 													<c:if test="${not empty entry.eddDateBetWeen}">
-                                                         <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>  ${eddDateBetWeen}  
+                                                         <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>  ${entry.eddDateBetWeen}  
                                                      </c:if>
 													</c:otherwise>
 											  </c:choose>
