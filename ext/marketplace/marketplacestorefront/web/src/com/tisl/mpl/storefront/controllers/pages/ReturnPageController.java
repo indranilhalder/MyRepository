@@ -590,9 +590,10 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		returnInfoRequestData.setAWBNum(mplReturnInfoForm.getAwbNumber());
 		returnInfoRequestData.setLPNameOther(mplReturnInfoForm.getLpname());
 		final OrderModel orderModel = orderModelService.getParentOrder(mplReturnInfoForm.getOrderId());
-		if(null!=orderModel.getParentReference() && null!=orderModel.getParentReference().getCode()){
+		/*if(null!=orderModel.getParentReference() && null!=orderModel.getParentReference().getCode()){
 			returnInfoRequestData.setOrderId(orderModel.getParentReference().getCode());
-		}
+		}*/
+		returnInfoRequestData.setOrderId(mplReturnInfoForm.getOrderId());
 		returnInfoRequestData.setTransactionId(mplReturnInfoForm.getTransactionId());
 		if(mplReturnInfoForm.getAmount() != null && !mplReturnInfoForm.getAmount().isEmpty()){
 			Double enterdShppingCharge=Double.parseDouble(mplReturnInfoForm.getAmount());

@@ -189,8 +189,8 @@
                    #if($entry.edScheduledDate)
                        $entry.edScheduledDate
 			           $entry.timeSlotFrom  To  $entry.timeSlotTo
-                   #elseif ($entry.eddDateBetWeen)
-                      $entry.eddDateBetWeen
+                   #elseif ($entry.sddDateBetween)
+                      $entry.sddDateBetween
                    #else
                   NA
                   #end</font>
