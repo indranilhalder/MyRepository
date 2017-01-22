@@ -444,7 +444,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			}
 		}
 		postalCodeField.addEventListener(
-				Events.ON_BLUR,
+				Events.ON_CHANGE,
 				createAddPinCodeListener(widget, postalCodeField, cityField,
 						stateFieldListBox, landMarkListbox, landMarkField));
 		final Button createButton = new Button(LabelUtils.getLabel(widget,
