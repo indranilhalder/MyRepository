@@ -351,7 +351,6 @@
 				</c:forEach>
 				<input type="text" id="country" value='${countyName}'  readonly /> 
 			   	<input type="hidden" id="country"  name="countryIso" value="${countryIsoCode}"/>
-			   	<input type="text" id="tmpFunctionValue" />
 			</div>
 		</div>
 				

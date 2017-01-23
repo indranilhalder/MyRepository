@@ -55,7 +55,7 @@ $(".dupDisplay").hide();
 var tmpValue= -1;
 $(".address_postcode").blur(function() {
 	 console.log("addresslandmark line 74 "+tmpValue);
-	
+	 tmpValue++;
 	 if($(".address_postcode").val().length >= "3") {
 		
 		loadPincodeData("edit").done(function() {
@@ -96,9 +96,10 @@ function loadPincodeData(parm) {
 		type: "GET",	
 		success : function(response) {
 			//var arg1 = false;
-			if(response == "" || response == " " || response == "NULL") {
+			console.log(response.countryCode+ " response.countryCode");
+			if(response == "" || response == " " || response == "NULL" || response == null) {
 				//alert("in if");
-				
+			/*	if(response.countryCode == undefined){
 				console.log("addresslandmark line 154"+ response+ "##");
 				if(Pincode.length > 0){
 				if($("#pincodeError").length>0){
@@ -124,9 +125,10 @@ function loadPincodeData(parm) {
 				}
 				
 				$(".saveBlockData,#newAddressButton,#saveAddress").css({'opacity':'0.5'}).prop("disabled","disabled");
+				}else{*/
 				//arg1 = false;
 				
-				/*$(".address_landmarks").attr("disabled","disabled").css("padding-left","5px");
+				$(".address_landmarks").attr("disabled","disabled").css("padding-left","5px");
 				$(".half .address_landmarkOtherDiv").css("margin-left","10px");
 				$(".row .address_landmarkOtherDiv label").css("margin-top","15px");
 				$("#stateListBox").prop("disabled",false);
@@ -141,27 +143,26 @@ function loadPincodeData(parm) {
 				$('.otherOption').val("");
 				$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show();
 				$(".addState").show();
-				$('.address_landmarks').html($("<option class=unableto></option>").text("Unable to find landmark").attr("selected","selected").attr("value",""));
-				$(".address_landmarkOther").val("");
-
-				$(".address_townCity").prop("readonly", false);
+				 $('.address_landmarks').append($("<option class='otherOption'></option>").attr("value","Other").text("Other"));
+				 $(".address_landmarkOther").val("");
+				 $(".address_townCity").prop("readonly", false);
 				//alert("tmpValue is "+ tmpValue);
 				if(parm != "edit" || tmpValue >= 0) {
 					
 					$(".address_townCity").val('');
-					added by sneha R2.3
+				//	added by sneha R2.3
 					$(".address_states").prop("value","");
-					end of sneha R2.3
+				//	end of sneha R2.3
 					tmpValue = -1;
 			    }
-				$(".address_states").removeAttr("readonly").removeData("stateValue");*/
-				
+				$(".address_states").removeAttr("readonly").removeData("stateValue");
+				//}	
 			} else {
 				
-				if(response.landMarks != null) {
+				if(response.landMarks != null || response.landMarks != "") {
 				console.log("addresslandmark line 186 "+ response);
-				$(".saveBlockData,#newAddressButton,#saveAddress").css({'opacity':'1'}).prop("disabled",false);
-				$(".pincodeNoError,#pincodeError,#erraddressPost,#addAddressForm #pincode + .errorText").hide();
+				//$(".saveBlockData,#newAddressButton,#saveAddress").css({'opacity':'1'}).prop("disabled",false);
+			//	$(".pincodeNoError,#pincodeError,#erraddressPost,#addAddressForm #pincode + .errorText").hide();
 				$('.address_landmarks .unableto').remove();
 				$(".address_landmarks").removeAttr("disabled").css("padding-left","5px");
 				$(".half .address_landmarkOtherDiv").css("margin-left","10px");
@@ -197,11 +198,8 @@ function loadPincodeData(parm) {
         		  /*end of sneha R2.3*/
         		}
         		else {
-        			if($("#pincodeError").length>0){
-    					$("#pincodeError").css('color','#ff1c47').show().text("Pincode None serviceble, please enter another pincode");
-    				}else if($(".pincodeNoError").length>0){
-    				$(".pincodeNoError").show().text("Pincode None serviceble, please enter another pincode");
-    				}
+        			 $('.address_landmarks').html("<option class='otherOption' value='Other'>Other</option>");
+        			 changeFuncLandMark("Other"); 
         			//alert("in landmark else");
         			/*console.log("addresslandmark line 222 ");
         			$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show();
