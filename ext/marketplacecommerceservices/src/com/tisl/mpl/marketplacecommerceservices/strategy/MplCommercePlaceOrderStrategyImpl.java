@@ -207,6 +207,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				getExternalTaxesService().clearSessionTaxDocument();
 
 				afterPlaceOrder(parameter, result);
+				
+				Map<String ,String> selectedDateMap=sessionService.getAttribute("deliverySlotstoSession");
+				saveDeliveryDateBetween(orderModel,selectedDateMap);
 
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
 						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
@@ -217,8 +220,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 							+ orderModel.getCode();
 					try
 					{
-						Map<String ,String> selectedDateMap=sessionService.getAttribute("deliverySlotstoSession");
-						saveDeliveryDateBetween(orderModel,selectedDateMap);
+						
 						notificationService.triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
 						//notificationService.sendMobileNotifications(orderModel);
 					}

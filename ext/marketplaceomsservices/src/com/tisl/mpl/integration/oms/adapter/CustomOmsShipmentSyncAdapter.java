@@ -57,6 +57,7 @@ import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.core.model.ImeiDetailModel;
 import com.tisl.mpl.core.model.InvoiceDetailModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.data.SendSMSRequestData;
 import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
 //import com.tisl.mpl.fulfilmentprocess.events.OrderRefundEvent;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCheckInvoice;
@@ -194,7 +195,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					}
 					
 					if(StringUtils.isNotEmpty(line.getAwbSecondaryStatus())){
-						sendNotification(line.getAwbSecondaryStatus(),existingConsignmentModel.getAwbSecondaryStatus(),line.getOrderLineId(),orderModel);
+						sendNotification(line,existingConsignmentModel.getAwbSecondaryStatus(),orderModel);
 					}
 				
 					existingConsignmentModel.setAwbSecondaryStatus(line.getAwbSecondaryStatus());
@@ -1043,18 +1044,66 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	}
 
 	// R2.3 SendNotification for SecondaryStatus 
-	private void sendNotification(String newAwbSecondaryStatus, String oldAwbSecondaryStatus, String ordeLine,
-			OrderModel orderModel)
+	private void sendNotification(OrderLine line, String oldAwbSecondaryStatus, OrderModel orderModel)
 	{
-		if (!newAwbSecondaryStatus.equalsIgnoreCase(oldAwbSecondaryStatus) && MarketplacecommerceservicesConstants.ADDRESS_ISSUE.equalsIgnoreCase(newAwbSecondaryStatus) ||
-				MarketplacecommerceservicesConstants.OFD.equalsIgnoreCase(newAwbSecondaryStatus))
+		if (!line.getAwbSecondaryStatus().equalsIgnoreCase(oldAwbSecondaryStatus)
+				&& MarketplacecommerceservicesConstants.ADDRESS_ISSUE.equalsIgnoreCase(line.getAwbSecondaryStatus())
+				|| MarketplacecommerceservicesConstants.OFD.equalsIgnoreCase(line.getAwbSecondaryStatus()))
 		{
 			SendNotificationSecondaryStatusEvent sendNotificationSecondaryStatusEvent = new SendNotificationSecondaryStatusEvent(
-					newAwbSecondaryStatus, ordeLine, orderModel);
+					line.getAwbSecondaryStatus(), line.getOrderLineId(), orderModel);
 			eventService.publishEvent(sendNotificationSecondaryStatusEvent);
 		}
+		else if (!line.getAwbSecondaryStatus().equalsIgnoreCase(oldAwbSecondaryStatus)
+				&& MarketplacecommerceservicesConstants.MIS_ROUTE.equalsIgnoreCase(line.getAwbSecondaryStatus())
+				|| MarketplacecommerceservicesConstants.RTO_INITIATED.equalsIgnoreCase(line.getAwbSecondaryStatus()))
+		{
+			 sendSecondarySms(line, orderModel);
+		}
+		LOG.info("AwbSecondaryStatus:::" + line.getAwbSecondaryStatus());
 	}
 	
+	
+	//send sms data For Secondary data R2.3 Change BUG ID E2E 1563
+	private void sendSecondarySms(OrderLine entry, OrderModel orderModel)
+	{
+		try
+		{
+			String mobileNumber = null;
+			String content = null;
+			if (orderModel.getDeliveryAddress() != null)
+			{
+
+				mobileNumber = StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()) ? orderModel.getDeliveryAddress()
+						.getPhone1() : (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone2()) ? orderModel
+						.getDeliveryAddress().getPhone2() : orderModel.getDeliveryAddress().getCellphone());
+			}
+
+			if (entry.getAwbSecondaryStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.RTO_INITIATED))
+			{
+				content = MarketplacecommerceservicesConstants.SMS_MESSAGE_RTO_INITIATED;
+			}
+			else if (entry.getAwbSecondaryStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.MIS_ROUTE))
+			{
+				content = MarketplacecommerceservicesConstants.SMS_MESSAGE_MIS_ROUTE.replace(
+						MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, entry.getProductName()).replace(
+						MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderModel.getCode());
+			}
+			if (StringUtils.isNotEmpty(mobileNumber))
+			{
+				final SendSMSRequestData smsRequestData = new SendSMSRequestData();
+				smsRequestData.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
+				smsRequestData.setContent(content);
+				smsRequestData.setRecipientPhoneNumber(mobileNumber);
+				sendSMSService.sendSMS(smsRequestData);
+			}
+		}
+		catch (Exception exption)
+		{
+			LOG.error("CustomOmsShipmentSyncAdapter::::::::::::::Sending Secondary SMS "+exption.getMessage());
+		}
+	}
+	//send sms data For Secondary data R2.3 Change BUG ID E2E 1563 END
 	/**
 	 * @return the sendSMSService
 	 */
