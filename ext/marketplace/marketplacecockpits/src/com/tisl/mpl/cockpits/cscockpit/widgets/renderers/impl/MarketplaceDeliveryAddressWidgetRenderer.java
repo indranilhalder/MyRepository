@@ -403,21 +403,53 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 					address1Field.setValue(deliveryAddress.getLine1());
 					address2Field.setValue(deliveryAddress.getLine2());
 					address3Field.setValue(deliveryAddress.getAddressLine3());
-					if (StringUtils.isNotBlank(deliveryAddress.getLandmark())) {
-						landMarkField.setValue(deliveryAddress.getLandmark());
-						landMarkField.setVisible(true);
-					}
+					String addresslandMark = deliveryAddress.getLandmark();
 					if (pincodeData != null
 							&& null != pincodeData.getLandMarks()) {
-						createlandMarkDropDown(widget,
-								pincodeData.getLandMarks(), landMarkListbox);
-					} else {
+						
+						Listitem listItem = new Listitem();
+						listItem = new Listitem(
+								MarketplaceCockpitsConstants.SELECT_LANDMARK);
+						listItem.setValue(MarketplaceCockpitsConstants.SELECT_LANDMARK);
+						listItem.setParent(landMarkListbox);
+						for (final LandMarksData landMark : pincodeData.getLandMarks()) {
+							Listitem	item = new Listitem(landMark.getLandmark());
+							item.setValue(landMark.getLandmark());
+							item.setParent(landMarkListbox);
+							if(null != addresslandMark && addresslandMark.equalsIgnoreCase(landMark.getLandmark())) {
+								item.setSelected(true);
+								landMarkListbox.setSelectedItem(item);
+							}
+						}
+						Listitem listItemOthers = new Listitem();
+						listItemOthers = new Listitem(MarketplaceCockpitsConstants.OTHERS);
+						listItemOthers.setValue(MarketplaceCockpitsConstants.OTHERS);
+						listItemOthers.setParent(landMarkListbox);
+						String selectedlandmark = landMarkListbox.getSelectedItem().getValue().toString();
+						
+						if(null != addresslandMark && selectedlandmark.equalsIgnoreCase(MarketplaceCockpitsConstants.OTHERS)) {
+							listItemOthers.setSelected(true);
+							landMarkListbox.setSelectedItem(listItemOthers);
+							landMarkField.setValue(deliveryAddress.getLandmark());
+							landMarkField.setVisible(true);
+						}
+					} else if((null == pincodeData || null == pincodeData.getLandMarks())&& null != deliveryAddress.getLandmark()) {
 						Listitem listItem = new Listitem(
-								MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
+								MarketplaceCockpitsConstants.OTHERS);
+						listItem.setValue(MarketplaceCockpitsConstants.OTHERS);
+						listItem.setParent(landMarkListbox);
+						landMarkListbox.setSelectedIndex(0);
+						landMarkField.setValue(deliveryAddress.getLandmark());
+						landMarkField.setVisible(true);
+					}else if (null == addresslandMark &&( null == pincodeData || null == pincodeData.getLandMarks())) {
+						Listitem listItem = new Listitem();
+						listItem = new Listitem(MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
 						listItem.setValue(MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
 						listItem.setParent(landMarkListbox);
-						landMarkListbox.addItemToSelection(listItem);
-						landMarkField.setVisible(true);
+						listItem = new Listitem(MarketplaceCockpitsConstants.OTHERS);
+						listItem.setValue(MarketplaceCockpitsConstants.OTHERS);
+						listItem.setParent(landMarkListbox);
+						landMarkListbox.setSelectedIndex(0);
 					}
 					if (null != deliveryAddress.getCity()) {
 						cityField.setValue(deliveryAddress.getCity());
@@ -477,13 +509,13 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			if (null != selectedLandmark
 					&& selectedLandmark
 					.equalsIgnoreCase(MarketplaceCockpitsConstants.OTHERS)) {
-				landMarkField.setDisabled(false);
 				landMarkField.setValue(null);
 				landMarkField.setVisible(true);
 			} else if (StringUtils.isNotEmpty(selectedLandmark) && landMarkField.getValue().isEmpty()) {
+				landMarkField.setValue(null);
 				landMarkField.setVisible(false);
-				landMarkField.setValue(selectedLandmark);
 			} else {
+				landMarkField.setValue(null);
 				landMarkField.setVisible(false);
 			}
 		} catch (Exception e) {
@@ -493,7 +525,6 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 	}
 
 	private void createlandMarkDropDown(
-			InputWidget<DefaultMasterDetailListWidgetModel<TypedObject>, CustomerController> widget,
 			List<LandMarksData> landMarks, Listbox landMarkListbox) {
 		if (null != landMarkListbox && null != landMarkListbox.getItems()) {
 			landMarkListbox.getItems().clear();
@@ -504,25 +535,26 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 					MarketplaceCockpitsConstants.SELECT_LANDMARK);
 			listItem.setValue(MarketplaceCockpitsConstants.SELECT_LANDMARK);
 			listItem.setParent(landMarkListbox);
-			landMarkListbox.addItemToSelection(listItem);
 			for (final LandMarksData landMark : landMarks) {
 				listItem = new Listitem(landMark.getLandmark());
 				listItem.setValue(landMark.getLandmark());
 				listItem.setParent(landMarkListbox);
-				landMarkListbox.addItemToSelection(listItem);
 			}
 			listItem = new Listitem(MarketplaceCockpitsConstants.OTHERS);
 			listItem.setValue(MarketplaceCockpitsConstants.OTHERS);
 			listItem.setParent(landMarkListbox);
 			landMarkListbox.addItemToSelection(listItem);
-		} else {
+		} else if(null == landMarks) {
 			listItem = new Listitem(
 					MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
 			listItem.setValue(MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
 			listItem.setParent(landMarkListbox);
 			landMarkListbox.addItemToSelection(listItem);
+			listItem = new Listitem(
+					MarketplaceCockpitsConstants.OTHERS);
+			listItem.setValue(MarketplaceCockpitsConstants.OTHERS);
+			listItem.setParent(landMarkListbox);
 		}
-
 		landMarkListbox.setSelectedIndex(0);
 	}
 
@@ -611,12 +643,13 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						}
 						if (null != pincodeData.getLandMarks()) {
 							landMarkField.setVisible(false);
-							createlandMarkDropDown(widget,
+							landMarkField.setValue(null);
+							createlandMarkDropDown(
 									pincodeData.getLandMarks(), landMarkListbox);
 						} else {
 							landMarkListbox.getItems().clear();
-							landMarkField.setDisabled(false);
-							landMarkField.setVisible(true);
+							createlandMarkDropDown(
+									null, landMarkListbox);
 						}
 					} else {
 						cityField
@@ -628,7 +661,10 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 								MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
 						listItem.setValue(MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
 						listItem.setParent(landMarkListbox);
-						landMarkListbox.addItemToSelection(listItem);
+						listItem = new Listitem(
+								MarketplaceCockpitsConstants.OTHERS);
+						listItem.setValue(MarketplaceCockpitsConstants.OTHERS);
+						listItem.setParent(landMarkListbox);
 						stateFieldListBox.setSelectedIndex(0);
 						stateFieldListBox.setDisabled(false);
 						landMarkField.setVisible(true);
@@ -822,11 +858,14 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			if(null != landMarkListbox && null != landMarkListbox.getSelectedItem() && null != landMarkListbox.getSelectedItem().getValue()) {
 				selectedLandmark = (String)landMarkListbox.getSelectedItem().getValue();
 			}
-			if(null != selectedLandmark && !selectedLandmark.equalsIgnoreCase(MarketplaceCockpitsConstants.OTHERS) && !selectedLandmark.equalsIgnoreCase(MarketplaceCockpitsConstants.SELECT_LANDMARK)) {
-				landMark = selectedLandmark;
-			}else if(null != landmarkfield && null != landmarkfield.getValue()){
-				landMark=landmarkfield.getValue();
+			if(null != selectedLandmark && selectedLandmark.equalsIgnoreCase(MarketplaceCockpitsConstants.OTHERS) && !selectedLandmark.equalsIgnoreCase(MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND) && !selectedLandmark.equalsIgnoreCase(MarketplaceCockpitsConstants.SELECT_LANDMARK)) {
+				if(null != landmarkfield && null != landmarkfield.getValue()) {
+					landMark=landmarkfield.getValue();
+				}
+			}else {
+				landMark=selectedLandmark;
 			}
+			LOG.debug("landMark = "+landMark);
 			if (StringUtils.isBlank(firstNameField.getValue())
 					|| StringUtils.isBlank(firstNameField.getValue().trim())) {
 				Messagebox.show(

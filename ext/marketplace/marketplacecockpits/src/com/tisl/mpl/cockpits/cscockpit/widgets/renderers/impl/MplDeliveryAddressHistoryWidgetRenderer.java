@@ -14,6 +14,7 @@ import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listhead;
 import org.zkoss.zul.Listitem;
 
+import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.services.AddressHistoryService;
 import com.tisl.mpl.cockpits.cscockpit.widgets.models.impl.AddressHistoryListWidgetModel;
 import com.tisl.mpl.core.model.MplDeliveryAddressInfoModel;
@@ -139,6 +140,9 @@ public class MplDeliveryAddressHistoryWidgetRenderer
 			for (ColumnConfiguration col : columns) {
 				String value = ObjectGetValueUtils.getValue(
 						col.getValueHandler(), item);
+				if(null == value) {
+					value = MarketplaceCockpitsConstants.EMPTY;
+				}
 				Listcell cell = new Listcell(value);
 				cell.setParent(row);
 			}

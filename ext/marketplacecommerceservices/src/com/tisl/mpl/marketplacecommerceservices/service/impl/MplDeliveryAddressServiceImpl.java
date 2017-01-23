@@ -176,7 +176,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 	 */
 
 	@Override
-	public boolean saveDeliveryAddress(final AddressModel newAddressModel, final OrderModel orderModel)
+	public boolean saveDeliveryAddress(final AddressModel newAddressModel, final OrderModel orderModel,boolean isNewAddress)
 	{
 		LOG.info("Inside saveDeliveryAddress Method");
 		boolean isDeliveryAddressChanged = false;
@@ -193,21 +193,15 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 						convertEDToHDDeliveryMode(orderModel);
 					}
 					  
-					UserModel user = orderModel.getUser();
 					List<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
-					Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
 					Collection<AddressModel> deliveryAddresses = orderModel.getDeliveryAddresses();
 					newAddressModel.setOwner(orderModel.getDeliveryAddress().getOwner());
 					if (null != deliveryAddresses && !deliveryAddresses.isEmpty())
 					{
 						deliveryAddressesList.addAll(deliveryAddresses);
 					}
-					if (null != user.getAddresses())
-					{
-						customerAddressesList.addAll(user.getAddresses());
-					}
+
 					deliveryAddressesList.add(newAddressModel);
-					customerAddressesList.add(newAddressModel);
 					orderModel.setDeliveryAddress(newAddressModel);
 					orderModel.setDeliveryAddresses(deliveryAddressesList);
 					modelService.save(orderModel);
@@ -217,7 +211,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 						childOrder.setDeliveryAddresses(deliveryAddressesList);
 						modelService.save(childOrder);
 					}
-
+					isDeliveryAddressChanged = true;
 					
 					 //Mpl Delivery Address Report
 					MplDeliveryAddressInfoModel mplDeliveryAddressInfoModel = mplDeliveryAddressDao
@@ -235,10 +229,22 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 						newDeliveryAddressInfoModel.setOrderId(orderModel.getCode());
 						modelService.save(newDeliveryAddressInfoModel);
 					}
+					
+					if(isNewAddress) {
+						UserModel user = orderModel.getUser();
+						Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
+						if (null != user && null != user.getAddresses())
+						{
+							customerAddressesList.addAll(user.getAddresses());
+						}
 
-					user.setAddresses(customerAddressesList);
-					modelService.save(user);
-					isDeliveryAddressChanged = true;
+						user.setAddresses(customerAddressesList);
+						modelService.save(user);
+						if(null != customerAddressesList) {
+							customerAddressesList.add(newAddressModel);
+						}
+						modelService.save(user);
+					}
 					sessionService.removeAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
 
 				}

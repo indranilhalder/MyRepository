@@ -207,6 +207,8 @@ public final class MarketplaceCockpitsConstants extends
 	public static final String ED = "ED";
 	public static final String HD = "ED";
 	public static final String TO = "TO";
+	public static final String EMPTY = "      ";
+	
 
 	
 }

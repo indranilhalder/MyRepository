@@ -147,10 +147,10 @@ public class MplDeliveryAddressControllerImpl extends
 	 * 
 	 */
 	@Override
-	public void saveDeliveryAddress(OrderModel orderModel,AddressModel address)
+	public void saveDeliveryAddress(OrderModel orderModel,AddressModel address,boolean isNewAddress)
 			throws ModelSavingException {
 		try {
-			mplDeliveryAddressService.saveDeliveryAddress(address,orderModel);
+			mplDeliveryAddressService.saveDeliveryAddress(address,orderModel,isNewAddress);
 		} catch (ModelSavingException e) {
 			LOG.error("ModelSavingException  while saving the Changed delivery Address " + e.getMessage());
 			throw new ModelSavingException(e.getMessage());

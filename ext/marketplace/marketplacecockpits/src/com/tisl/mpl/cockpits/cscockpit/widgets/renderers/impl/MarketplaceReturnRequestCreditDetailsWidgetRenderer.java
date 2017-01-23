@@ -3,6 +3,7 @@ package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,10 @@ import com.tisl.mpl.core.enums.RefundMode;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
+import com.tisl.mpl.facade.checkout.impl.MplCheckoutFacadeImpl;
+import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.data.RescheduleData;
+import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
 import com.tisl.mpl.wsdto.ReturnLogistics;
 import com.tisl.mpl.xml.pojo.OrderLineDataResponse;
 
@@ -61,14 +65,15 @@ import de.hybris.platform.cockpit.widgets.impl.DefaultWidgetFactory;
 import de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel;
 import de.hybris.platform.commercefacades.storelocator.converters.populator.PointOfServicePopulator;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
-import de.hybris.platform.commercefacades.user.converters.populator.AddressReversePopulator;
 import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
 import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.utils.TypeUtils;
 import de.hybris.platform.cscockpit.widgets.controllers.ReturnsController;
@@ -93,8 +98,15 @@ ReturnRequestCreateWidgetRenderer {
 	@Autowired
 	private PointOfServicePopulator pointOfServicePopulator;
 	@Autowired
-	private AddressReversePopulator addressReversePopulator;
-
+	private CustomAddressReversePopulator addressReversePopulator; 
+    @Autowired
+    private AccountAddressFacade accountAddressFacade;
+    
+    @Autowired 
+    private CustomerAccountService customerAccountService;
+    @Autowired
+	private MplCheckoutFacadeImpl mplCheckoutFacadeImpl;
+    
 	private static final String TEXTBOX = "returntext";
 	private static final String CONTINUE = "continue";
 	private static final String BUTTON = "creditButton";
@@ -1088,15 +1100,17 @@ ReturnRequestCreateWidgetRenderer {
 		final TypedObject order = (TypedObject) ((ReturnsController) widget
 				.getWidgetController()).getRefundOrderPreview();
 		OrderModel orderModel = (OrderModel) order.getObject();
-		
-		List<AddressModel> addrssModel = (List<AddressModel>) orderModel.getUser().getAddresses();
+		final Collection<AddressModel> addresses = customerAccountService
+				.getAddressBookDeliveryEntries((CustomerModel)orderModel.getUser());
+		List<AddressModel> addrssesList= new ArrayList<AddressModel>(addresses);
+		LOG.info("AddressData size :"+addrssesList.size());
 		
 		Listitem item = new Listitem(" ");
 		item.setParent(deliveryAddressList);
-		
 		 AddressModel deliveryAddress = subOrder.getDeliveryAddress();
 	       TypedObject currentAddressObject = getCockpitTypeService().wrapItem(deliveryAddress);
-		for (AddressModel add : addrssModel) {
+
+		for (AddressModel add : addrssesList) {
 			try {
 				TypedObject address = cockpitTypeService.wrapItem(add);
 				String text = TypeTools.getValueAsString(getLabelService(),

@@ -60,7 +60,7 @@ public interface MplDeliveryAddressController {
 	 * @param address
 	 * @return void
 	 */
-	public void saveDeliveryAddress(OrderModel orderModel,AddressModel address);
+	public void saveDeliveryAddress(OrderModel orderModel,AddressModel address,boolean newAddresss);
 
 	/**
 	 * This method is used to get The PincodeData for a particular pincode

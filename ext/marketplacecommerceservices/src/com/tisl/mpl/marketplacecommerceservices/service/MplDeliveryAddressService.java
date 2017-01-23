@@ -30,7 +30,7 @@ public interface MplDeliveryAddressService
 	 * @param orderCode
 	 * @return flag
 	 */
-	public boolean saveDeliveryAddress(AddressModel newAddressModel,OrderModel orderModel);
+	public boolean saveDeliveryAddress(AddressModel newAddressModel,OrderModel orderModel,boolean isNewAddress);
 
 	/***
 	 * set status for change delivery address Request 

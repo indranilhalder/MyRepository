@@ -16,7 +16,7 @@
 	</div>
 	<div class="csMainContent">
 		<div id="orderDetailOrderItemsWidget" class="orderDetailOrderItemsWidget" />
-		<div id="orderScheduleDeliverySlotWidget" class="orderDetailOrderItemsWidget" />
+		<div id="orderScheduleDeliverySlotWidget" class="orderScheduleDeliverySlotWidget" />
 		<div id="orderDetailAppliedPromotionsWidget" class="appliedPromotionsWidget"/>
 		<div id="orderCouponAppliedWidget" class="appliedPromotionsWidget"/>
 		<div id="orderConsignmentsWidget" class="orderConsignmentsWidget"/>
@@ -25,7 +25,7 @@
 		<!--<div id="orderTicketListWidget" class="orderTicketListWidget"/>-->
 		<div id="orderReturnRequestsWidget" class="orderReturnRequestsWidget"/>
 		<div id="orderReverseConsignmentsWidget" class="orderReverseConsignmentsWidget"/>
-		<div id="addressHistoryWidget" class="orderHistoryWidget"/>
+		<div id="addressHistoryWidget" class="addressHistoryWidget"/>
 		<div id="orderHistoryWidget" class="orderHistoryWidget"/>
 		<div id="orderModificationsHistoryWidget" class="orderModificationsHistoryWidget"/>
 		<div id="orderActionsWidget" class="csOrderActionsWidget" />
