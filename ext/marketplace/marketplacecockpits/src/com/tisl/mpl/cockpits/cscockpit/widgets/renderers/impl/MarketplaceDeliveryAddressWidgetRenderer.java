@@ -433,6 +433,9 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 							landMarkField.setVisible(true);
 						}
 					} else if((null == pincodeData || null == pincodeData.getLandMarks())&& null != deliveryAddress.getLandmark()) {
+						Listitem listItemNoLandMark = new Listitem(MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
+						listItemNoLandMark.setValue(MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND);
+						listItemNoLandMark.setParent(landMarkListbox);
 						Listitem listItem = new Listitem(
 								MarketplaceCockpitsConstants.OTHERS);
 						listItem.setValue(MarketplaceCockpitsConstants.OTHERS);
@@ -647,6 +650,8 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 									pincodeData.getLandMarks(), landMarkListbox);
 						} else {
 							landMarkListbox.getItems().clear();
+							landMarkField.setVisible(false);
+							landMarkField.setValue(null);
 							createlandMarkDropDown(
 									null, landMarkListbox);
 						}
@@ -666,7 +671,8 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						listItem.setParent(landMarkListbox);
 						stateFieldListBox.setSelectedIndex(0);
 						stateFieldListBox.setDisabled(false);
-						landMarkField.setVisible(true);
+						landMarkField.setVisible(false);
+						landMarkField.setValue(null);
 					}
 				} else {
 					postalCodeField.setFocus(true);
