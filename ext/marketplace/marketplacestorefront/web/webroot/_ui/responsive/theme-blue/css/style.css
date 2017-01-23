@@ -37450,7 +37450,7 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
     height: 24px;
     width: 24px;
 }
-.alert-dismissable.alert-info .close, .alert-dismissible.alert-info .close {
+.alert-dismissable.alert-info .close, .alert-dismissible.alert-warning .close, .alert-dismissable.alert-danger .close {
 	position: relative;
 	
 	/* TISRLEE-1660 */
@@ -37469,7 +37469,7 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
 }
 
 @media (max-width:790px) {
-	.alert-dismissable .close, .alert-dismissible .close {
+	.alert-dismissable .close {
 	float:left;
 	top: -20px;
 	right: 4px;

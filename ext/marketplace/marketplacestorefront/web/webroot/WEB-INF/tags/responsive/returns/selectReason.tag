@@ -41,6 +41,7 @@
 												<span>Seller ID: ${sellerId} </span><br/>
 												<span class="otherAttributes"><spring:message code="seller.order.code"> </spring:message>&nbsp;${subOrder.code} </span>
 								</div>
+								<p style="clear:both"></p>
 								</c:forEach>
 							</div>
 						</div>
