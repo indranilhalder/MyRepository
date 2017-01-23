@@ -368,7 +368,7 @@
 		
 		
 	
-		function validateForm() {
+		function validateFormReturn() {
 		  
 		   if($("#reasonSelectBox").val()!=null)
 			  {
