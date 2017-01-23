@@ -108,6 +108,7 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 			}
 			requestedCartID = cart.getCode();
 			//commerceCartService.restoreCart(cart);
+			cartService.setSessionCart(cart);
 			applyCurrencyToCartAndRecalculateIfNeeded();
 		}
 		else
@@ -118,6 +119,7 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 				throw new CartException("Cart not found.", CartException.NOT_FOUND, requestedCartID);
 			}
 			//commerceCartService.restoreCart(cart);
+			cartService.setSessionCart(cart);
 			applyCurrencyToCartAndRecalculateIfNeeded();
 		}
 		// code might be different because of cart expiration
@@ -151,6 +153,7 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 							throw new CartException("Cart not found.", CartException.NOT_FOUND, cartID);
 						}
 						commerceCartService.restoreCart(cart);
+						//cartService.setSessionCart(cart);
 						applyCurrencyToCartAndRecalculateIfNeeded();
 					}
 					else

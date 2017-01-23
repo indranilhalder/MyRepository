@@ -2387,11 +2387,11 @@ public class CartsController extends BaseCommerceController
 				/* Product Details */
 				if (StringUtils.isNotEmpty(postalCode))
 				{
-					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, true);
+					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, true, false);
 				}
 				else
 				{
-					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, false);
+					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, false, false);
 				}
 
 				cartDetailsData.setProducts(gwlpList);
@@ -2614,7 +2614,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 *
+			 * 
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
