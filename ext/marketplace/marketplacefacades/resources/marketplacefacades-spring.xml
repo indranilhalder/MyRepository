@@ -1573,11 +1573,12 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="indexedTypeConverter" ref="solrIndexedTypeConverter"></property>
 		<property name="solrServerConfigConverter" ref="solrServerConfigConverter"></property>
 	</bean>
-	
+	<!-- 
 	<alias name="mplDefaultIndexedTypePopulator" alias="solrIndexedTypePopulator" />
 	<bean id="mplDefaultIndexedTypePopulator" class="com.tisl.mpl.facades.populators.MplDefaultIndexedTypePopulator">
 		<property name="indexedPropertyConverter" ref="indexedPropertyConverter"></property>
 	</bean>
+	 -->
 	 <alias name="mplPromotionOrderEntryConsumedPopulator" alias="promotionOrderEntryConsumedPopulator" />
 	<bean id="mplPromotionOrderEntryConsumedPopulator" class="com.tisl.mpl.facades.populators.MplPromotionOrderEntryConsumedPopulator"
 	parent="defaultPromotionOrderEntryConsumedPopulator">
