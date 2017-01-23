@@ -39,7 +39,7 @@
 											<label class="control-label" for="pod">Upload Proof of Delivery</label>
 											
 											<div  style="position: relative;">
-											<input name="dispatchProof" type="file" id="uploadFile" class="file awsTextinput awsUpload" style="opacity: 0;z-index:999999; position: absolute;top: 0px;left: 0px;cursor: pointer;" data-show-preview="false">
+											<input name="dispatchProof" type="file" id="uploadFile" class="file awsTextinput awsUpload uploadFile" style="opacity: 0;z-index:999999; position: absolute;top: 0px;left: 0px;cursor: pointer;" data-show-preview="false">
 											<%-- <form:input name="dispatchProof" path="dispatchProof" data-show-preview="false"/> --%>
 											
 											<%-- <form:input name="dispatchProof" path="dispatchProof" id="uploadFile" type="file" class="file awsTextinput awsUpload" style="opacity: 0;z-index:999999; position: absolute;top: 0px;left: 0px;cursor: pointer;" data-show-preview="false"/> --%>
@@ -47,8 +47,9 @@
 											<div class="col-md-7 textFile">No file Chosen</div>
 											<div class="col-md-5 uploadButton">CHOOSE FILE</div>
 											</div>
+											
 													</div>
-											<div class="errorText uploadError" style="margin-top: 40px"></div>
+											<div class="errorText uploadError" style="margin-top: 40px;display:block">*Upload Formats PDF, JPG, PNG, JPEG</div>
 											
 										</div>
 		

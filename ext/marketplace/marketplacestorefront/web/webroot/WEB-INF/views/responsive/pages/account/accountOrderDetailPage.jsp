@@ -2613,7 +2613,8 @@
 			var res = url.split('\\');
 			var filename = res[res.length - 1];
 			// TISRLUAT-50 changes 
-			tribhuvanUploadFile.parent().find('.textFile').text(filename);
+			//console.log("tribhuvanUploadFile "+tribhuvanUploadFile.parent().attr('style'));
+			tribhuvanUploadFile.parent().find('.uploadDiv .textFile').text(filename);
 		});
 		});
 	
@@ -3027,10 +3028,11 @@ $(function() {
 			  // TISRLUAT-50 changes 
 			     tribhuvanAwbLink.parent().next().css("z-index","999999");
 			  });
+		 
 			  $(".submitButton").click(function(event){
 				// TISRLUAT-50 changes 
 				  var tribhuvaAwbSubmit = $(this);
-				  var tribhuvanLocalPopUp =  arg1.closest(".awsNumberModal");
+				  var tribhuvanLocalPopUp =  tribhuvaAwbSubmit.closest(".awsNumberModal");
 			   if(awbValidations(tribhuvaAwbSubmit)){
 			  $(".awsNumberModal").hide(); 
 			  $(".wrapBG").hide();
@@ -3063,12 +3065,13 @@ $(function() {
 			 var logPart=tribhuvanLocalPopUp.find("#logisticPartner").val();
 			 var fileName=tribhuvanLocalPopUp.find("#uploadFile").val();
 			 var amount = tribhuvanLocalPopUp.find('#amount').val();
+			 var ext = fileName.substring(fileName.lastIndexOf('.') + 1);
 			 
 			 if(awsNumber != null && awsNumber == '' && awsNumber < 2 && awsNumber.trim() == ''){
 			       $(".awsNumError").show();
 			     $(".awsNumError").text("AWB Number cannot be Blank");
 			     validate = false;
-			     } if(/[^[a-zA-Z0-9]]*$/.test(awsNumber)){
+			     }else if(/[^[a-zA-Z0-9]]*$/.test(awsNumber)){
 			      $(".awsNumError").show();
 			       $(".awsNumError").text("AWB Number cannot allow special characters");
 			      validate = false;
@@ -3078,7 +3081,7 @@ $(function() {
 			        $(".logisticPartnerError").show();
 			      $(".logisticPartnerError").text("Logistic partner cannot be Blank");
 			      validate = false;
-			      } if(/[^[a-zA-Z]]*$/.test(logPart)){
+			      }else if(/[^[a-zA-Z]]*$/.test(logPart)){
 			       $(".logisticPartnerError").show();
 			        $(".logisticPartnerError").text("Logistic partner cannot allow special characters and numbers");
 			       validate = false;
@@ -3088,23 +3091,25 @@ $(function() {
 			        $(".amountError").show();
 			      $(".amountError").text("Amount cannot be Blank");
 			      validate = false;
-			      }if(isNaN(amount)){
+			      }else if(isNaN(amount)){
 			       
 			       $(".amountError").show();
 			        $(".amountError").text("Amount cannot allow special characters or letters");
 			       validate = false;
 			      }
 			     
-			 
-			  if(fileName == null || fileName.trim() == '' ){
-			    var ext = fileName.substring(fileName.lastIndexOf('.') + 1);
-			   if(ext != "gif" || ext != "GIF" || ext != "JPEG" || ext != "jpeg" || ext != "jpg" || ext != "JPG" || ext != "pdf" || ext != "PDF" || ext != 'png' || ext != "PNG")
+			   if(ext == " "){
+				   $(".uploadError").show();
+			       $(".uploadError").text("Proof of Delivery is mandatory");
+			   }
+			   else if(ext != "gif" && ext != "GIF" && ext != "JPEG" && ext != "jpeg" && ext != "jpg" && ext != "JPG" && ext != "pdf" && ext != "PDF" && ext != 'png' && ext != "PNG")
 			    {
+				 //  alert(ext);
 			     $(".uploadError").show();
 			       $(".uploadError").text("Upload images and pdf file only");
 			       validate = false;
-			    } 
-			  }
+			    }
+			  
 			 return validate;
 			 
 			}
