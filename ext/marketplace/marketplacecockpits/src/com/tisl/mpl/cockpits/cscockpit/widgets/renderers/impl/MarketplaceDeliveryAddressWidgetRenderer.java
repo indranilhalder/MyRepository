@@ -425,9 +425,8 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						listItemOthers = new Listitem(MarketplaceCockpitsConstants.OTHERS);
 						listItemOthers.setValue(MarketplaceCockpitsConstants.OTHERS);
 						listItemOthers.setParent(landMarkListbox);
-						String selectedlandmark = landMarkListbox.getSelectedItem().getValue().toString();
 						
-						if(null != addresslandMark && selectedlandmark.equalsIgnoreCase(MarketplaceCockpitsConstants.OTHERS)) {
+						if(null != addresslandMark && null == landMarkListbox.getSelectedItem()) {
 							listItemOthers.setSelected(true);
 							landMarkListbox.setSelectedItem(listItemOthers);
 							landMarkField.setValue(deliveryAddress.getLandmark());
@@ -438,7 +437,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 								MarketplaceCockpitsConstants.OTHERS);
 						listItem.setValue(MarketplaceCockpitsConstants.OTHERS);
 						listItem.setParent(landMarkListbox);
-						landMarkListbox.setSelectedIndex(0);
+						landMarkListbox.setSelectedItem(listItem);
 						landMarkField.setValue(deliveryAddress.getLandmark());
 						landMarkField.setVisible(true);
 					}else if (null == addresslandMark &&( null == pincodeData || null == pincodeData.getLandMarks())) {
