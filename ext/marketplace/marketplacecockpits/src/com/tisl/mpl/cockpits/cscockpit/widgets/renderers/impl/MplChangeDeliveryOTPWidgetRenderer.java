@@ -45,6 +45,7 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCallContex
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MplDeliveryAddressController;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.OTPModel;
+import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.facade.config.MplConfigFacade;
@@ -500,8 +501,13 @@ public class MplChangeDeliveryOTPWidgetRenderer
 			String toTime   = fromAndToTime[1];
 			for (TransactionSDDto sdDto : sdDtoList) {
 				if(sdDto.getTransactionID().equalsIgnoreCase(transactionId)) {
-					sdDto.setTimeSlotFrom(fromTime);
-					sdDto.setTimeSlotTo(toTime);
+					DateUtilHelper dateutilHelper = new DateUtilHelper();
+					if(null !=fromTime ) {
+						sdDto.setTimeSlotFrom(dateutilHelper.convertTo24Hour(fromTime));
+					}
+					if(null !=toTime ) {
+						sdDto.setTimeSlotTo(dateutilHelper.convertTo24Hour(toTime));
+					}
 				}
 			}
 		}
@@ -842,15 +848,24 @@ public class MplChangeDeliveryOTPWidgetRenderer
 				for (AbstractOrderEntryModel entry :orderModel.getEntries() ) {
 					if (entry.getTransactionID().equalsIgnoreCase(dto.getTransactionID())) {
 						entry.setEdScheduledDate(dto.getPickupDate());
-						entry.setTimeSlotFrom(dto.getTimeSlotFrom());
-						entry.setTimeSlotTo(dto.getTimeSlotTo());
+						DateUtilHelper dateUtilHelper = new DateUtilHelper();
+						if(null !=dto.getTimeSlotFrom() ) {
+							entry.setTimeSlotFrom(dateUtilHelper.convertTo12Hour(dto.getTimeSlotFrom()));
+						}
+						if(null !=dto.getTimeSlotTo() ) {
+							entry.setTimeSlotTo(dateUtilHelper.convertTo12Hour(dto.getTimeSlotTo()));
+						}
 						modelService.save(entry);
 						if(null != orderModel.getParentReference() && null != orderModel.getParentReference().getEntries()) {
 							for(AbstractOrderEntryModel parentOrderEntry : orderModel.getParentReference().getEntries()) {
 								if(null != parentOrderEntry.getProduct() && null !=entry.getProduct() && parentOrderEntry.getProduct().getCode().equalsIgnoreCase(entry.getProduct().getCode())) {
 									parentOrderEntry.setEdScheduledDate(dto.getPickupDate());
-									parentOrderEntry.setTimeSlotFrom(dto.getTimeSlotFrom());
-									parentOrderEntry.setTimeSlotTo(dto.getTimeSlotTo());
+									if(null !=dto.getTimeSlotFrom() ) {
+										parentOrderEntry.setTimeSlotFrom(dateUtilHelper.convertTo12Hour(dto.getTimeSlotFrom()));
+									}
+									if(null !=dto.getTimeSlotFrom() ) {
+										parentOrderEntry.setTimeSlotTo(dateUtilHelper.convertTo12Hour(dto.getTimeSlotTo()));
+									}
 									modelService.save(parentOrderEntry);
 								}
 							}

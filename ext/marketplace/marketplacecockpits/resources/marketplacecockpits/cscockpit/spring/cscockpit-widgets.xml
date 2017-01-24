@@ -752,7 +752,7 @@
 		<property name="widgetTitle"
 			value="cscockpit.widget.order.changeDeliveryAddress.create" />
 		<property name="widgetRenderer" ref="csChangeDeliveryOtpCreateWidgetRenderer" />
-		<property name="widgetController" ref="csCustomerController" />
+		<property name="widgetController" ref="csOrderController" />
 		<property name="widgetClass"
 			value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget" />
 		<property name="widgetSclass" value="defaultWidgetFrame csCustomerEditWidgetFrame" />
@@ -817,23 +817,17 @@
 	</bean>
  
 		<!--Schedule Delivery  Timings START -->
-
 	<alias alias="csOrderScheduleDeliverySlotWidgetConfig" name="defaultCsOrderScheduleDeliverySlotWidgetConfig"/>
 	<bean id="defaultCsOrderScheduleDeliverySlotWidgetConfig" parent="csBaseWidgetConfig">
 		<property name="widgetTitle" value="cscockpit.widget.order.ScheduleDeliverySlots"/>
 		<property name="widgetRenderer" ref="csOrderScheduleDeliverySlotWidgetRenderer"/>
 		<property name="widgetController" ref="csOrderController"/>
-		<property name="widgetClass" value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget"/>
-		<property name="widgetModel">
-			<bean class="de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel"/>
-		</property>
+		<property name="widgetModel" ref="csOrderItemWidgetModel"/>
 		<property name="widgetAdapter" ref="csOrderDetailsWidgetAdapter"/>
 	</bean>
 
 	<alias alias="csOrderScheduleDeliverySlotWidgetRenderer" name="defaultCsOrderScheduleDeliverySlotWidgetRenderer"/>
 	<bean id="defaultCsOrderScheduleDeliverySlotWidgetRenderer" parent="abstractWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MplScheduleDeliverySlotsWidgetRenderer">
-		<property name="callContextController" ref="csCallContextController"/>
-		<property name="cockpitTypeService" ref="cockpitTypeService"/>
 	</bean>
 	
 		<!--Schedule Delivery  Timings END  -->
