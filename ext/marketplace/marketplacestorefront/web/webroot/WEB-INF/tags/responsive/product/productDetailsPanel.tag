@@ -153,6 +153,18 @@ tr.d0 td {
 				code="productDetails_productNamePrice_label_${product.code}">
 				<h3 class="company">${product.brand.brandname}</h3>
 				<h1 class="product-name">${product.productTitle}</h1>
+				
+			<!-- //TPR-3752 Jewel Heading Added -->
+			<c:choose>
+  				<c:when test="${product.rootCategory=='FineJewellery'}">
+	  				<input id="jwelPDP" type="hidden" value="${product.rootCategory}"/>
+						<p class="key-label">
+		  					<c:forEach var="classification" items="${mapConfigurableAttributes}"> 
+							</c:forEach>
+		  				</p>
+  				</c:when>
+  			</c:choose>
+  			
 			</ycommerce:testId>
 
 			<ycommerce:testId
@@ -352,7 +364,7 @@ tr.d0 td {
 			<div class="trending"  id="ia_products_complements"></div>
 			<div class="trending"  id="ia_products"></div>
 		</c:when>
-		<c:when test="${product.rootCategory==electronics  || product.rootCategory==travelandluggage || product.rootCategory==watches}">
+		<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches || product.rootCategory==travelandluggage}">
 			<div class="trending"  id="ia_products_bought_together"></div>
 			<div class="trending"  id="ia_products_similar"></div>
 		</c:when>
@@ -466,5 +478,8 @@ tr.d0 td {
 </div>
 </div>
 </div>
-
+<script type="text/javascript">
+	var prop = '${mapConfigurableAttributes}';
+	prop =prop.replace(/[{}]/g, '');	
+</script>
 

@@ -163,7 +163,7 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.storefront.controllers.cms.AbstractCMSComponentController#fillModel(javax.servlet.http.HttpServletRequest
 	 * , org.springframework.ui.Model, de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel)
@@ -189,7 +189,8 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 		}
 		//this.lookId = component.getLabelOrId(); // Blocked for SONAR
 		this.customSku(searchQuery, sortCode, ShowMode.Page, page, component, model);
-
+		//changes shopbylook
+		model.addAttribute("lookId", component.getLabelOrId());
 	}
 
 	/**
@@ -389,12 +390,12 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 			}
 
 		}
-		model.addAttribute("shopbylook", "shopbylook");
 		model.addAttribute("lookId", lookId);
 		populateModel(model, searchPageData, showMode);
 		model.addAttribute(MarketplaceCoreConstants.USER_LOCATION, customerLocationService.getUserLocation());
 
-		if (searchPageData.getPagination().getTotalNumberOfResults() != 0)
+		if (searchPageData != null && searchPageData.getPagination() != null
+				&& searchPageData.getPagination().getTotalNumberOfResults() != 0)
 		{
 			storeContinueUrl(request); // Sonar Fix
 			//updatePageTitle(searchPageData.getFreeTextSearch(), model);
@@ -426,7 +427,7 @@ public class CustomSkuComponentController extends AbstractCMSComponentController
 		 * getI18nService().getCurrentLocale()) + " " + searchText + " " +
 		 * getMessageSource().getMessage(ModelAttributetConstants.SEARCH_META_DESC_ON, null,
 		 * ModelAttributetConstants.SEARCH_META_DESC_ON, getI18nService().getCurrentLocale()) + " " + getSiteName());
-		 *
+		 * 
 		 * final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(searchText);
 		 */
 

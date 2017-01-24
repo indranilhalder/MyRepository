@@ -161,7 +161,7 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 									 * MDD Requirement Here: Features ==> This facet will mainly use the attribute
 									 * specialfeatureswatches (PIM_WATCH_028) from the MDD and use all LOVs from this attribute
 									 * on the UI. In addition, if the attribute waterresistancewatches (PIM_WATCH_011) is present
-									 * and set to a value more than 50m then an additional LOV called “Water Resistant” must be
+									 * and set to a value more than 50m then an additional LOV called â€œWater Resistantâ€� must be
 									 * added to the LOV for this facet automatically.
 									 */
 									if ("features".equalsIgnoreCase(indexedProperty.getName()))

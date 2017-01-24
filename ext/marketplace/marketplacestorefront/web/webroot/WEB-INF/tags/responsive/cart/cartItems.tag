@@ -142,13 +142,18 @@ tr.d0 td {
 								</c:if>
 							</c:forEach>
 		                </p>
-		                
+		                <!-- TPR-3780 STARTS HERE -->
 		                <c:if test="${not empty entry.product.size}">
-		                 <p class="size"><ycommerce:testId code="cart_product_size">
-											<spring:theme code="product.variant.size"/>:&nbsp;${entry.product.size}
+		                 <p class="size disclaimer-txt more"><ycommerce:testId code="cart_product_size">
+											<spring:theme code="product.variant.size"/>:&nbsp;${entry.product.size}&nbsp;
+											<c:if test="${entry.product.rootCategory=='FineJewellery' }">
+										    	<spring:theme code="cart.price.disclaimer"/>
+		                					</c:if>
+		                						
 										</ycommerce:testId>
 										</p>
 						</c:if>
+						<!-- TPR-3780 ENDS HERE -->
 		             </div>
 		              
 		                

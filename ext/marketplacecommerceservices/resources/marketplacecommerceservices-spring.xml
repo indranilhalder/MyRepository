@@ -1996,24 +1996,43 @@
 	<bean id="mplJewelleryUtility" class="com.tisl.mpl.util.MplJewelleryUtility">
 		<property name="mplJewelleryService" ref="mplJewelleryService" />
 	</bean>
-	
+	<bean id="MplleadVariantWeightService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplleadVariantWeightServiceImpl" />
 	<!-- Jewellery Changes End -->
 
 	<!-- added for jewellery attribute mapping starts -->
 	
 	<alias name="defaultJewelleryAttrMapping" alias="jewelleryAttrMapping" />
 	<util:map id="defaultJewelleryAttrMapping" map-class="java.util.HashMap">
-		<entry key = "baseMetal1" 	value = "Gold" ></entry>
-		<entry key = "baseMetal2" 	value = "Silver" ></entry>
-		<entry key = "baseMetal3" 	value = "Platinum" ></entry>
-		<entry key = "baseMetal4" 	value = "Others" ></entry>
+		<entry key = "goldValue" 	value = "Gold" ></entry>
+		<entry key = "silverValue" 	value = "Silver" ></entry>
+		<entry key = "platinumValue" 	value = "Platinum" ></entry>
+		<entry key = "solitaireValue" 	value = "Solitaire" ></entry>
 		<entry key = "diamond"    	value = "Diamond" ></entry>
 		<entry key = "gemstone"   	value = "Gems Stone" ></entry>
 		<entry key = "makingcharge" value = "Making Charge" ></entry>
 		<entry key = "wastagetax" 	value = "Taxes And Duties" ></entry>				
-	</util:map>
-	
-	<!-- added for jewellery attribute mapping ends -->
 
+	</util:map>
+	<!-- //TPR-3752 Jewel Heading Added -->
+	<!-- added for jewellery attribute mapping ends -->
+	
+	<alias name="defaultJewelleryDescMapping" alias="jewelleryDescMapping" />
+	<util:map id="defaultJewelleryDescMapping" map-class="java.util.HashMap">
+	    <entry key ="stonefinejwlry1" 	value = "stonesizefinejwlry1" ></entry>
+		<entry key = "stonefinejwlry2" 	value = "stonesizefinejwlry2" ></entry>
+		<entry key = "stonefinejwlry3" 	value = "stonesizefinejwlry3" ></entry>
+		<entry key = "stonefinejwlry4" 	value = "stonesizefinejwlry4" ></entry>	
+		<entry key = "stonefinejwlry5" 	value = "stonesizefinejwlry5" ></entry>
+		<entry key = "stonefinejwlry6" 	value = "stonesizefinejwlry6" ></entry>	
+		<entry key = "stonefinejwlry7" 	value = "stonesizefinejwlry7" ></entry>		
+		<entry key = "stonefinejwlry8" 	value = "stonesizefinejwlry8" ></entry>	
+		<entry key = "stonefinejwlry9"	value = "stonesizefinejwlry9" ></entry>
+		<entry key = "stonefinejwlry10" value = "stonesizefinejwlry10"></entry>	
+		<entry key = "metalfinejwlry" value = "metalweightfinejwlry"  ></entry>	
+		<entry key= "diamond" value= "diamondweightfinejwlry1,diamondweightfinejwlry2,diamondweightfinejwlry3,diamondweightfinejwlry4,diamondweightfinejwlry5,diamondweightfinejwlry6,diamondweightfinejwlry7"></entry>
+				
+					
+	</util:map>
 </beans>
 

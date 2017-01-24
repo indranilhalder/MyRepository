@@ -1392,12 +1392,24 @@ $(function() {
 });
 
 function isOOS(){
-	var totalOptions = $("#variant option").length;
-	totalOptions = totalOptions -1;
-	var disabledOption = $("#variant option:disabled").length;
-	if(totalOptions == disabledOption){
+	var skuOOS = false;
+	var totalOptions = $("#variant li").length;
+	//totalOptions = totalOptions -1; // UI got changed from select option to li strike off 
+	var disabledOption = $("#variant li.strike").length;
+	
+	if(availibility!=undefined && availibility.length > 0){
+		$.each(availibility,function(k,v){
+			if(window.location.pathname.endsWith(k.toLowerCase()) && v == 0){
+				skuOOS = true;
+			}
+		});
+	}
+	
+	if(totalOptions == disabledOption && totalOptions!=0){
 		return true;
-	}else{
+	}else if(skuOOS){
+		return true;
+	} else{
 		return false;
 	}
 }
@@ -1487,17 +1499,67 @@ $( document ).ready(function() {
 					});
 			
 			
+			
 			/* PRICE BREAKUP STARTS HERE */
 			
+			/*$("#showPrice").show();*/
+			if(data['displayconfigattr'] == "Yes"){
+				$("#showPrice").show();
+			}else if(data['displayconfigattr'] == "No"){
+				$("#showPrice").hide();
+			}else{
+				$("#showPrice").hide();
+			}
+			
 			var priceBreakupForPDP = data['priceBreakup'];
-			$.each(priceBreakupForPDP,function(key,value) {	
+				$.each(priceBreakupForPDP,function(key,value) {	
 					var pricebreakuplist = "<li><span>"+ key +"</span><strong>"+ value.formattedValue +"</strong></li>";
-					$("#showPriceBreakup").append(pricebreakuplist);
+						$("#showPriceBreakup").append(pricebreakuplist);
+						
 					
-				
 			});
 			
 			/* PRICE BREAKUP ENDS HERE */
+				
+				/* JewelleryDetail STARTS HERE */
+				try{
+				var jwelPDP = $("#jwelPDP").val();
+				if (jwelPDP == "FineJewellery"){
+					var jewelInfoKey = [], jewelInfoValue = [], jewelHeadingValue = [], jewelHeadingKey = [];
+					var j=0;
+					var jewelDetailslistForPDP = data['jewelDescription'];
+					$.each(jewelDetailslistForPDP,function(key,value) {	
+							jewelInfoKey[j] = key	;
+							jewelInfoValue[j] = value;
+							j++;
+				});
+				if (prop){
+					var property = prop.split(',');
+					var keyLOV = '' , valueLOV= '';
+					for (var i=0; i<property.length; i++){
+						var lovSplit = property[i].split("=");
+						valueLOV = lovSplit[lovSplit.length-1];
+						keyLOV = lovSplit[lovSplit.length-2];
+						jewelHeadingKey[i] = keyLOV;
+						jewelHeadingValue[i] = valueLOV;
+				}
+					for (var i=0; i<property.length; i++){
+						if (jewelHeadingValue[i] == "null"){
+							$(".key-label").append('<span>'+ jewelHeadingKey[i] +'</span>')
+							}
+						else if (jQuery.inArray(jewelHeadingValue[i], jewelInfoKey ) >= 0){
+							var index = jQuery.inArray(jewelHeadingValue[i], jewelInfoKey );
+							$(".key-label").append('<span>'+ jewelHeadingKey[i]+'(' + jewelInfoValue[index]+ ') </span>')
+							}
+						}
+					}
+				}
+			}
+			  catch(err) {
+				  
+				}
+			  
+			/* JewelleryDetail ENDS HERE */
 			
 			if (data['sellerArticleSKU'] != undefined) {
 				if (data['errMsg'] != "") {
@@ -1544,7 +1606,7 @@ $( document ).ready(function() {
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
 						 $("#buyNowButton").attr("disabled",true);
-						
+						 $("#allVariantOutOfStock").show();
 						
 					}
 					else if (isOOS() && data['othersSellersCount']==0){
@@ -1563,9 +1625,10 @@ $( document ).ready(function() {
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
 						 $("#buyNowButton").attr("disabled",true);
+						 $("#allVariantOutOfStock").show();
+						 
 						
-						
-					}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && $("#variant option").length == 0) {
+					}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && ($("#variant li").length == $("#variant li.strike").length)) {
 						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
 						
 						$("#addToCartButton").hide();
@@ -1590,7 +1653,7 @@ $( document ).ready(function() {
 						});
 												
 					}
-					else if (allStockZero == 'Y' && data['othersSellersCount']==0 && $("#variant option").length == 0){
+					else if (allStockZero == 'Y' && data['othersSellersCount']==0 && ($("#variant li").length == $("#variant li.strike").length)){
 						//if($("#variant,#sizevariant option:selected").val()!="#"){	//TISPRD-1173 TPR-465
 							$("#addToCartButton").hide();
 							$("#buyNowButton").hide();
@@ -1704,8 +1767,18 @@ $( document ).ready(function() {
 				});
 			});	
 			},2000);
+			
+			setTimeout(function(){
+				if(isOOS()){
+					$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
+					$("#addToCartSizeGuideTitleoutOfStockId").show();
+					$("#addToCartSizeGuide #addToCartButton").hide();
+				}
+			},3000);
 		}
 	});
+	
+	
 }); 
 
 
@@ -1825,21 +1898,42 @@ function displayDeliveryDetails(sellerName) {
 
 function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 	//alert("mrp "+ mrp.formattedValue +"mop "+mop.formattedValue +"spPrice "+spPrice.formattedValue +"savingsOnProduct "+ savingsOnProduct.formattedValue);
+	
+/*Change for INC_11127*/
+	
+	$("#mrpPriceId").html("");
+	$("#mopPriceId").html("");
+	$("#spPriceId").html("");
+	$("#savingsOnProductId").html("");
+	if(typeof savingsOnProduct === 'undefined'){
+	
+		if(null!=mrp && null!=spPrice){
+			savingPriceCal=(mrp.doubleValue-spPrice.doubleValue);
+			savingPriceCalPer=(savingPriceCal/mrp.doubleValue)*100;
+			savingsOnProduct=Math.round((savingPriceCalPer*100)/100);
+		}
+		else if(null!=mrp && null!=mop){
+			savingPriceCal=(mrp.doubleValue-mop.doubleValue);
+			savingPriceCalPer=(savingPriceCal/mrp.doubleValue)*100;
+			savingsOnProduct=Math.round((savingPriceCalPer*100)/100);
+		}
+	}
+	
 	if(null!= mrp){
-		$("#mrpPriceId").html("");
+		//$("#mrpPriceId").html("");
 		$("#mrpPriceId").append(mrp.formattedValue);
 	}
 	if(null!= mop){
-		$("#mopPriceId").html("");
+		//$("#mopPriceId").html("");
 		$("#mopPriceId").append(mop.formattedValue);
 	}
 	if(null!= spPrice){
-		$("#spPriceId").html("");
+		//$("#spPriceId").html("");
 		$("#spPriceId").append(spPrice.formattedValue);
 	} 
 	////TISPRM-33 , TPR-140
 	if(null!= savingsOnProduct){
-		$("#savingsOnProductId").html("");
+		//$("#savingsOnProductId").html("");
 		$("#savingsOnProductId").append("(-"+savingsOnProduct+" %)");
 	} 
 
@@ -2460,15 +2554,32 @@ function dispPriceForSizeGuide(mrp, mop, spPrice, savingsOnProduct) {
 
 }
 function isOOSSizeGuide(){
-	var totalOptions = $(".variant-select-sizeGuidePopUp option").length;
-	totalOptions = totalOptions -1;
-	var disabledOption = $(".variant-select-sizeGuidePopUp option:disabled").length;
-	if(totalOptions == disabledOption){
+		
+	var skuOOS = false;
+	var totalOptions = $(".variant-select-sizeGuidePopUp li").length;
+	//totalOptions = totalOptions -1; // UI got changed from select option to li strike off 
+	var disabledOption = $(".variant-select-sizeGuidePopUp li.strike").length;
+	
+	if(availibility!=undefined && availibility.length > 0){
+		$.each(availibility,function(k,v){
+			if(window.location.pathname.endsWith(k.toLowerCase()) && v == 0){
+				skuOOS = true;
+			}
+		});
+	}
+	
+	if(totalOptions == disabledOption && totalOptions!=0){
 		return true;
-	}else{
+	}else if(skuOOS){
+		return true;
+	} else{
 		return false;
 	}
+	
 }
+
+
+
 function isOOSQuicks(){
 	var totalOptions = $("ul[label=sizes] li").length;
 	totalOptions = totalOptions -1;
@@ -2559,7 +2670,8 @@ function buyboxDetailsForSizeGuide(productCode){
 				if(isOOSSizeGuide()){	//changes for TPR-465	
 				$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
 					$("#addToCartSizeGuideTitleoutOfStockId").show();
-					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
+					//$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
+					$(".btn-block.js-add-to-cart").hide();
 				}
 				else{
 					$("#addToCartSizeGuide #addToCartButton").removeAttr('style');
@@ -2804,12 +2916,11 @@ function loadDefaultWishListName_SizeGuide() {
 			 $("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			$("#addToCartFormTitle").show();
 	 	    return false;
-	 }
 		 }
+		}
 		 //Jewellery Buy Now Button Changes added
-		if( $("#jewelleryvariant option:selected").val() == "#"  && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage' &&  isShowSize=='true'      ){
-			// alert("please select size !"+isShowSize); 
-			 
+		if( $("#jewelleryvariant option:selected").val() == "#"  && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage' &&  isShowSize=='true' ){
+			// alert("please select size !"+isShowSize);  
 	 		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			$("#addToCartFormTitle").show();
 		    return false;

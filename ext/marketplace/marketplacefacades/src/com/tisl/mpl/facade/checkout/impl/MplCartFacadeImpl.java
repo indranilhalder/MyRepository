@@ -623,9 +623,10 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 */
 	@Override
 	public Map<String, List<MarketplaceDeliveryModeData>> getDeliveryMode(final CartData cartData,
-			final List<PinCodeResponseData> omsDeliveryResponse) throws CMSItemNotFoundException
+			final List<PinCodeResponseData> omsDeliveryResponse, final CartModel cartModel) throws CMSItemNotFoundException
 	{
-		return mplCommerceCartService.getDeliveryMode(cartData, omsDeliveryResponse);
+		// Changes for Duplicate Cart fix
+		return mplCommerceCartService.getDeliveryMode(cartData, omsDeliveryResponse, cartModel);
 	}
 
 	/*
@@ -1507,6 +1508,44 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		}
 	}
 
+	/**
+	 * Update cart quantity for entry id and store
+	 *
+	 * @return CartModificationData
+	 * @param entryNumber
+	 * @param storeId
+	 * @param cartModel
+	 *
+	 * @throws CommerceCartModificationException
+	 */
+	@Override
+	public CartModificationData updateCartEntryMobile(final long entryNumber, final String storeId, final CartModel cartModel)
+			throws CommerceCartModificationException
+	{
+		// Changes for Duplicate Cart fix
+		final PointOfServiceModel pointOfServiceModel = StringUtil.isEmpty(storeId) ? null : getPointOfServiceService()
+				.getPointOfServiceForName(storeId);
+		if (pointOfServiceModel == null)
+		{
+			final CommerceCartParameter parameter = new CommerceCartParameter();
+			parameter.setEnableHooks(true);
+			parameter.setCart(cartModel);
+			parameter.setEntryNumber(entryNumber);
+			return getCartModificationConverter().convert(getMplCommerceCartService().updateToShippingModeForCartEntry(parameter));
+		}
+		else
+		{
+			final CommerceCartParameter parameter = new CommerceCartParameter();
+			parameter.setEnableHooks(true);
+			parameter.setCart(cartModel);
+			parameter.setEntryNumber(entryNumber);
+			parameter.setPointOfService(pointOfServiceModel);
+
+			return getCartModificationConverter().convert(getCommerceCartService().updatePointOfServiceForCartEntry(parameter));
+		}
+	}
+
+
 	/*
 	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment
 	 *
@@ -1851,7 +1890,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				if (null != responseDataList)
 				{
 					Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
-					deliveryModeDataMap = getDeliveryMode(cartData, responseDataList);
+					deliveryModeDataMap = getDeliveryMode(cartData, responseDataList, cartModel);
 					final boolean isCOdEligible = addCartCodEligible(deliveryModeDataMap, responseDataList, cartModel);
 					LOG.info("isCOdEligible " + isCOdEligible);
 				}
@@ -1911,7 +1950,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
 				{
 
-					if (cartEntryModel != null && cartEntryModel.getProduct() == null)
+					if (cartEntryModel != null && !cartEntryModel.getGiveAway().booleanValue() && cartEntryModel.getProduct() == null)
 					{
 						final CartModificationData cartModification = updateCartEntry(cartEntryModel.getEntryNumber().longValue(), 0);
 
@@ -1997,7 +2036,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 				if (cartEntryModel != null && cartEntryModel.getProduct() == null)
 				{
-					final CartModificationData cartModification = updateCartEntry(cartEntryModel.getEntryNumber().longValue(), 0);
+					final CartModificationData cartModification = updateCartEntryMobile(cartEntryModel.getEntryNumber().longValue(),
+							0, cartModel);
 
 					if (cartModification.getQuantity() == 0)
 					{
@@ -2094,7 +2134,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	public Map<String, List<MarketplaceDeliveryModeData>> getDeliveryMode(final CartData cartData,
 			final OrderEntryData cartEntryData, final List<PinCodeResponseData> omsDeliveryResponse) throws CMSItemNotFoundException
 	{
-		return mplCommerceCartService.getDeliveryMode(cartData, cartEntryData, omsDeliveryResponse);
+		final CartModel cartModel = getCartService().getSessionCart();
+		return mplCommerceCartService.getDeliveryMode(cartData, cartEntryData, omsDeliveryResponse, cartModel);
 	}
 
 	/*
@@ -2546,11 +2587,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 */
 	@Override
 	public List<StoreLocationResponseData> getStoreLocationsforCnC(
-			final List<StoreLocationRequestData> storeLocationRequestDataList)
+			final List<StoreLocationRequestData> storeLocationRequestDataList, final CartModel cartModel)
 	{
 
 		LOG.debug("from getStoreLocationforCnC");
-		return mplCommerceCartService.getStoreLocationsforCnC(storeLocationRequestDataList);
+		return mplCommerceCartService.getStoreLocationsforCnC(storeLocationRequestDataList, cartModel);
 	}
 
 	@Override
