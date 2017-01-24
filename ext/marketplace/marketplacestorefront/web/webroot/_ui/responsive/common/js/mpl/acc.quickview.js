@@ -17,6 +17,9 @@ ACC.quickview = {
 		// changes a value in a hidden form field in order
 		// to trigger a buffer update in a screen reader
 		$('#accesibility_refreshScreenReaderBufferField').attr('value', new Date().getTime());
+		$("#showquick").click(function() {
+			$("#showPriceBreakupquick").slideToggle("fast");
+		})
 	},
 	
 
@@ -1092,8 +1095,7 @@ $(document).on('change','#quickViewjewelleryvariant',function(event){
 				ACC.ratingstars.bindRatingStars($(".quick-view-stars"));
 			},
 
-			onClosed: function ()
-			{
+			onClosed: function ()			{
 				ACC.quickview.refreshScreenReaderBuffer();
 				if((window.top==window) && $("body").hasClass("page-cartPage")) {
 				    // You're not in a frame, so you reload the site.
@@ -1101,4 +1103,9 @@ $(document).on('change','#quickViewjewelleryvariant',function(event){
 			     }
 			}
         });
+});
+$(document).ready(function() {
+	$("#showquick").click(function() {
+		$("#showPriceBreakupquick").slideToggle("fast");
+	});
 });
