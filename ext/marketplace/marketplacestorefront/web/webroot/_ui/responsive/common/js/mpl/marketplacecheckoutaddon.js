@@ -7406,10 +7406,15 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 						$(location).attr('href',ACC.config.encodedContextPath+"/cart");
 						
 					}
+					
+					else if(response=="" || response==null){
+						console.log("Response for mRupee is null");
+					}
 					else{	
 						window.sessionStorage.removeItem("header");
 						setTimeout(function(){ 			 
 							 var values=response.split("|"); 
+							 console.log("Response for mRupee is " + response);
 							 	// To do later
 								  $("#REFNO").val(values[0]);
 								  $("#CHECKSUM").val(values[1]);

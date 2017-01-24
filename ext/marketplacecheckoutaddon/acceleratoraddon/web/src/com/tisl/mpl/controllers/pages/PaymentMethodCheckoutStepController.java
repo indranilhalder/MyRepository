@@ -4360,6 +4360,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				}
 
 				response = refNumber + "|" + checksum + "|" + cartGuid + "|" + cartTotal + "|" + returnUrlBuilder;
+				LOG.info("Reference number from createWalletOrder when order is null -- " + refNumber);
+				LOG.info("Response from createWalletOrder when order is null -- " + response);
+				return response;
 
 			}
 
@@ -4407,6 +4410,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 						response = refNumber + "|" + checksum + "|" + cartGuid + "|" + orderModel.getTotalPrice() + "|"
 								+ returnUrlBuilder;
+						LOG.info("Reference number from createWalletOrder when order is not null -- " + refNumber);
+						LOG.info("Response from createWalletOrder when order is not null -- " + response);
+						return response;
 
 					}
 				}
@@ -4514,6 +4520,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				else
 				{
+
+					final String reason = request.getParameter("REASON");
+
+					LOG.info("The reason is for mRupee payment failure for reference number -- " + refNo + " is --- " + reason);
+
 					//setting the audit table to DECLINED if transaction status is not successful
 					status = MarketplacecheckoutaddonConstants.FAIL;
 					getMplPaymentFacade().entryInTPWaltAudit(status, MarketplacecheckoutaddonConstants.CHANNEL_WEB, guid, refNo);
