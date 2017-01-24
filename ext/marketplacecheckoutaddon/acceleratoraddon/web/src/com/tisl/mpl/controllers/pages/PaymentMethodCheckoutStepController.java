@@ -4494,7 +4494,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 			if (null != orderModel)
 			{
-				final Double orderAmount = orderModel.getTotalPrice();
+				final Double orderAmount = orderModel.getTotalPriceWithConv();
+
+				LOG.info("Total Convenience Price in walletPayment::" + orderAmount);
+
+				LOG.info("Total Price in walletPayment::" + orderModel.getTotalPrice());
 
 				/* Checking transaction status from mRupee */
 				if (null != request.getParameter("STATUS") && "S".equalsIgnoreCase(request.getParameter("STATUS")))

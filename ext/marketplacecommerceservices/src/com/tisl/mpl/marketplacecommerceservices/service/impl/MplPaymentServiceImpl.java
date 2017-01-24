@@ -3001,11 +3001,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3017,9 +3017,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3997,7 +3997,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					.create(PaymentTransactionEntryModel.class);
 			paymentTransactionEntry.setCode(MarketplacecommerceservicesConstants.MRUPEE + "-" + refernceCode + "-"
 					+ System.currentTimeMillis());
-			paymentTransactionEntry.setAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPrice().doubleValue()));
+			paymentTransactionEntry.setAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPriceWithConv().doubleValue()));
 			paymentTransactionEntry.setTime(date);
 			paymentTransactionEntry.setCurrency(abstractOrderModel.getCurrency());
 			//To Change this
@@ -4036,7 +4036,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			paymentTransactionModel.setEntries(paymentTransactionEntryList);
 			paymentTransactionModel.setPaymentProvider(MarketplacecommerceservicesConstants.MRUPEE);
 			paymentTransactionModel.setOrder(abstractOrderModel);
-			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPrice().doubleValue()));
+			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPriceWithConv().doubleValue()));
 			//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
 
 			if (StringUtils.isNotEmpty(paymentTransactionEntryList.get(0).getTransactionStatus())
