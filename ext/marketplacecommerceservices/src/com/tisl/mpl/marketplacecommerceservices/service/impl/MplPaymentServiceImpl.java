@@ -3815,7 +3815,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 			if (null != auditModel)
 			{
-				//	List<ThirdPartyAuditEntryModel> collection = auditModel.getAuditEntries();
+				LOG.info("Audit Model with ref no>>>" + refNo);
 				List<MplPaymentAuditEntryModel> collection = auditModel.getAuditEntries();
 				final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
 				if (null == collection || collection.isEmpty())
@@ -3854,6 +3854,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				auditModel.setAuditEntries(auditEntryList);
 				auditModel.setIsExpired(Boolean.valueOf(true));
 				getModelService().save(auditModel);
+				LOG.info("Saved existing Audit Model with ref no>>>" + refNo);
 			}
 			else
 			{
@@ -3878,6 +3879,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				}
 
 				getModelService().save(newAuditModel);
+
+				LOG.info("Creating new Audit Model with ref no>>>" + refNo);
 			}
 
 		}
@@ -3910,7 +3913,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		try
 		{
-			//creating tpWalletInfoModel
+			LOG.info("Inside saveTPWalletPaymentInfo with ref no>>>" + refernceCode);
 			final ThirdPartyWalletInfoModel tpWalletInfoModel = getModelService().create(ThirdPartyWalletInfoModel.class);
 
 			//Commented for Mobile use
@@ -3939,7 +3942,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			else
 			{
-				LOG.error(ERROR_PAYMENT + cart.getCode());
+				LOG.error("Order does not have payment info tpWalletInfoModel -- " + ERROR_PAYMENT + cart.getCode());
 			}
 
 		}
@@ -3969,7 +3972,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	public void setTPWalletPaymentTransaction(final Map<String, Double> paymentMode, final AbstractOrderModel abstractOrderModel,
 			final String refernceCode)
 	{
-
+		LOG.info("Inside setTPWalletPaymentTransaction with ref no>>>" + refernceCode);
 		try
 		{
 			Collection<PaymentTransactionModel> collection = abstractOrderModel.getPaymentTransactions();

@@ -53,6 +53,7 @@ import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -4193,7 +4194,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
@@ -4468,6 +4469,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		OrderModel orderModel = null;
 
 		String status = null;
+
+		final DecimalFormat format = new DecimalFormat("0.##");
+
 		try
 		{
 			final String refNo = request.getParameter("REFNO");
@@ -4493,8 +4497,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				/* Checking transaction status from mRupee */
 				if (null != request.getParameter("STATUS") && "S".equalsIgnoreCase(request.getParameter("STATUS")))
 				{
+					LOG.info("Order Amount -- " + format.format(orderAmount) + "Transaction Amount is --- "
+							+ format.format(transactionAmount));
+
 					/* Checking transaction amount received from mRupee and order amount */
-					if (orderAmount.compareTo(transactionAmount) == 0)
+					if (format.format(orderAmount).compareTo(format.format(transactionAmount)) == 0)
 					{
 						status = MarketplacecheckoutaddonConstants.SUCCESS;
 						getMplPaymentFacade().entryInTPWaltAudit(status, MarketplacecheckoutaddonConstants.CHANNEL_WEB,
@@ -4507,6 +4514,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 					else
 					{
+						LOG.info("OrderAmount--TransactionAmount Mismatch");
 						status = MarketplacecheckoutaddonConstants.FAIL;
 						//setting the audit table to DECLINED if order amount is not equal
 						getMplPaymentFacade().entryInTPWaltAudit(status, MarketplacecheckoutaddonConstants.CHANNEL_WEB,
@@ -4540,7 +4548,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			LOG.error("Exception in walletPayment", e);
+			LOG.error("EtailBusinessExceptions in walletPayment", e);
 			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
 			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
@@ -4549,7 +4557,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		catch (final EtailNonBusinessExceptions e)
 		{
 			//ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			LOG.error("Exception in walletPayment", e);
+			LOG.error("EtailNonBusinessExceptions in walletPayment", e);
 			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
 			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
