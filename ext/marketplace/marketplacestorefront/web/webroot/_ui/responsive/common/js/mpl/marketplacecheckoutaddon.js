@@ -7394,6 +7394,7 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 			var guid=$("#guid").val();
 			var walletName = $("#radioButton_MRupee").val();
 			var dataString = 'walletName=' + walletName +'&cartGuid=' + guid ;
+			console.log("Calling createWalletOrder");
 			$.ajax({
 				url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createWalletorder",
 				type: "GET",
