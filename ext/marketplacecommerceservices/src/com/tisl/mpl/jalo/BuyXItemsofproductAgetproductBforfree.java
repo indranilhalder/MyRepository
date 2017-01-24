@@ -1,6 +1,5 @@
 package com.tisl.mpl.jalo;
 
-import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
@@ -75,8 +74,8 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 		final List<PromotionResult> results = new ArrayList<PromotionResult>();
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions()); // Fetching Promotion set Restrictions
 		final AbstractOrder order = promoContext.getOrder();
-		final List<Product> promotionProductList = new ArrayList<>(getProducts()); // Fetching Promotion set Primary Products
-		final List<Category> promotionCategoryList = new ArrayList<>(getCategories()); // Fetching Promotion set Primary Categories
+		//final List<Product> promotionProductList = new ArrayList<>(getProducts()); // Fetching Promotion set Primary Products
+		//final List<Category> promotionCategoryList = new ArrayList<>(getCategories()); // Fetching Promotion set Primary Categories
 		// Validating Exclude Manufacturer and Adding excluded Products to their respective lists
 		final List<Product> excludedProductList = new ArrayList<Product>();
 		final List<String> excludeManufactureList = new ArrayList<String>();
@@ -103,30 +102,35 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 			final AbstractOrder cart = promoContext.getOrder();
 
 			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
-
 			//changes end for omni cart fix @atmaram
+			final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(ctx, promoContext);
 
-
-			//if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag && sellerFlag) //***Blocked for TISPT-154**
-			if (checkChannelFlag && sellerFlag && flagForPincodeRestriction)
+			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag && sellerFlag
+					&& flagForPincodeRestriction) //***Blocked for TISPT-154**
+			//if (checkChannelFlag && sellerFlag && flagForPincodeRestriction)
 			{
 				final List<String> sellerIDData = new ArrayList<String>();
 				final Map<AbstractOrderEntry, String> eligibleProductMap = new HashMap<AbstractOrderEntry, String>();
+				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
+
 				//getting the valid products
+				//				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
+				//						.getValidProdListForBuyXofAPromo(order, ctx, promotionProductList, promotionCategoryList, restrictionList,
+				//								excludedProductList, excludeManufactureList, sellerIDData, eligibleProductMap);
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
-						.getValidProdListForBuyXofAPromo(order, ctx, promotionProductList, promotionCategoryList, restrictionList,
-								excludedProductList, excludeManufactureList, sellerIDData, eligibleProductMap);
+						.getValidProdListForBuyXofA(order, ctx, allowedProductList, restrictionList, excludedProductList,
+								excludeManufactureList, sellerIDData, eligibleProductMap);
 
 				if (GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, ctx, promoContext, this,
 						restrictionList) && !getDefaultPromotionsManager().promotionAlreadyFired(ctx, validProductUssidMap))
 				{
 					final int qualifyingCount = getQualifyingCount(ctx).intValue();
-					final List<Product> eligibleProductList = new ArrayList<Product>();
+					//final List<Product> eligibleProductList = new ArrayList<Product>();
 					int realQuantity = 0;
 					for (final AbstractOrderEntry entry : validProductUssidMap.values())
 					{
 						realQuantity += entry.getQuantity().intValue(); // Fetches total count of Valid Products
-						eligibleProductList.add(entry.getProduct());
+						//eligibleProductList.add(entry.getProduct());
 					}
 					noOfProducts = realQuantity;
 
@@ -143,7 +147,7 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 					//						eligibleProductList.add(orderEntry.getProduct());
 					//					}
 
-					final PromotionOrderView view = promoContext.createView(ctx, this, eligibleProductList);
+					final PromotionOrderView view = promoContext.createView(ctx, this, allowedProductList);
 					//final PromotionOrderEntry viewEntry = view.peek(ctx);
 
 					final Map<String, Integer> tcMapForValidEntries = new HashMap<String, Integer>();
@@ -178,7 +182,7 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 									productList, sellerIDData); // Validating for Scenario: Eligible Products and Free Gift must be from the same DC
 							if (MapUtils.isNotEmpty(giftProductDetails))
 							{
-								getPromotionUtilityPOJO().setPromoProductList(eligibleProductList); // Adding Eligible Products for Scenario : One Product Promotion per eligible Product
+								getPromotionUtilityPOJO().setPromoProductList(allowedProductList); // Adding Eligible Products for Scenario : One Product Promotion per eligible Product
 								skuFreebieList = populateFreebieSKUIDs(giftProductDetails);
 								freegiftInfoMap = populateFreebieDetails(giftProductDetails);
 								int giftCount = 0;
