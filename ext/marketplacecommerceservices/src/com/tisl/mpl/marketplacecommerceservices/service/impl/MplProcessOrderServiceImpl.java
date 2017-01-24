@@ -390,6 +390,29 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					modelService.save(juspayWebhookModel);
 				}
 				//SprintPaymentFixes:- if any case Order Status Updation fails and Order is ready to mode to other Environment then change status to Payment_Successful
+				else if (null != orderModel.getPaymentInfo() && CollectionUtils.isEmpty(orderModel.getChildOrders())
+						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
+				{
+					//Re-trigger submit order process from Payment_Pending to Payment_Successful
+					final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
+					parameter.setEnableHooks(true);
+					parameter.setSalesApplication(orderModel.getSalesApplication());
+
+					final CommerceOrderResult result = new CommerceOrderResult();
+					result.setOrder(orderModel);
+
+					//SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
+					if (setModeOfPayment(orderModel))
+					{
+						modelService.save(orderModel);
+					}
+
+					orderModel.setIsSentToOMS(Boolean.FALSE);
+					orderModel.setOmsSubmitStatus("");
+
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+				}
+				//SprintPaymentFixes:- if any case Order Status Updation fails and Order is ready to mode to other Environment then change status to Payment_Successful
 				else if (null != orderModel.getPaymentInfo() && CollectionUtils.isNotEmpty(orderModel.getChildOrders())
 						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
 				{
