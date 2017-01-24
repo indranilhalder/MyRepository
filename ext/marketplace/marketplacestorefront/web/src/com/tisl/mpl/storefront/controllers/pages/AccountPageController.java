@@ -1814,13 +1814,22 @@ public class AccountPageController extends AbstractMplSearchPageController
 			try
 			{
 				boolean scheduleDatesEmpty = false;
+				boolean isFulFilmentType = false;
 				List<String> timeSlots = new ArrayList<String>();
 				List<String> returnableDates = cancelReturnFacade.getReturnableDates(orderEntry);
+				final OrderModel orderModel = orderModelService.getOrder(orderCode);
+            for(AbstractOrderEntryModel orderModelENtry:orderModel.getEntries()){
+            	if(orderModelENtry.getOrder().getCode().equalsIgnoreCase(orderCode)){
+            		if(orderModelENtry.getFulfillmentMode().equalsIgnoreCase(ModelAttributetConstants.TSHIP)){
+            			isFulFilmentType=true;
+            		}
+            	}
+            }
 				if(null !=returnableDates && returnableDates.size()>0){
 					timeSlots = mplConfigFacade.getDeliveryTimeSlots("RD");
 				}
 				if(null !=returnableDates && returnableDates.size()>0){
-					  if(returnableDates.size()==1){
+					  if(returnableDates.size()==1 && isFulFilmentType){
 						  scheduleDatesEmpty=true;
 					  }
 				}
