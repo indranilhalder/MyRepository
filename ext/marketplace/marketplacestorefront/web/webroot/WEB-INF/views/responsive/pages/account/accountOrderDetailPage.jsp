@@ -446,7 +446,7 @@
 												   <c:when test="${not empty entry.selectedDeliverySlotDate}">
 													   <p>
 										                 <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>
-											             <span>${entry.selectedDeliverySlotDate} &nbsp;, ${entry.selectedDeliverySlotTimeFrom}</span>
+											             <span>${entry.selectedDeliverySlotDate} &nbsp;, ${entry.timeSlotFrom}-${entry.timeSlotTo}</span>
 										              </p>
 												  </c:when>
 													<c:otherwise>
@@ -1632,7 +1632,7 @@
 												   <c:when test="${not empty entry.selectedDeliverySlotDate}">
 													   <p>
 										                 <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>
-											             <span>${entry.selectedDeliverySlotDate} &nbsp;, ${entry.selectedDeliverySlotTimeFrom}</span>
+											             <span>${entry.selectedDeliverySlotDate} &nbsp;, ${entry.timeSlotFrom}-${entry.timeSlotTo}</span>
 										              </p>
 												  </c:when>
 													<c:otherwise>

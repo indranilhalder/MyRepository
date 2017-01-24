@@ -1349,15 +1349,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 		//TISRLEE-1615- Start 
 		if (StringUtils.isNotEmpty(orderEntry.getSelectedDeliverySlotDate()))
 		{
-
-			if (StringUtils.isNotEmpty(orderEntry.getTimeSlotFrom()))
-			{
-				String[] time = orderEntry.getTimeSlotFrom().split(":");
-				String changeTime = time[0];
-				changeTime=changeTime.concat("-");
-				changeTime=changeTime.concat(orderEntry.getTimeSlotTo());
-				orderEntry.setSelectedDeliverySlotTimeFrom(changeTime);
-			}
 			orderEntry.setSelectedDeliverySlotDate(getSelectedDate(orderEntry.getSelectedDeliverySlotDate()));
 		}
 	}
