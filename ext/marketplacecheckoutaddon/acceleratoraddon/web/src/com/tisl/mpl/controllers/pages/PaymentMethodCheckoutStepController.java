@@ -4476,6 +4476,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			final String refNo = request.getParameter("REFNO");
 
+			LOG.info("walletPayment-method***REF NO:" + refNo);
+
 			final Double transactionAmount = Double.valueOf(request.getParameter("AMT"));
 			/* Getting guid from audit table based on the reference no. received from mRupee */
 			if (StringUtils.isNotEmpty(refNo))
