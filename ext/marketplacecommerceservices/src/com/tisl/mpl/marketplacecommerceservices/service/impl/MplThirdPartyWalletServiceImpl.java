@@ -11,15 +11,18 @@ import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.jalo.Item;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
@@ -40,6 +43,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -159,7 +163,8 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	private MplCommerceCartService mplCommerceCartService;
 	@Autowired
 	private MplJusPayRefundService mplJusPayRefundService;
-
+	@Resource(name = "flexibleSearchService")
+	private FlexibleSearchService flexibleSearchService;
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
 
@@ -258,9 +263,8 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 							final CustomerModel mplCustomer = (CustomerModel) order.getUser();
 							updateAuditInfoForPayment(auditModelData, entryList, mplCustomer, order);
 							//sending notification mail
-							final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
-									MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-									+ order.getCode();
+							final String trackOrderUrl = getConfigurationService().getConfiguration()
+									.getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + order.getCode();
 							try
 							{
 								notificationService.triggerEmailAndSmsOnOrderConfirmation(order, trackOrderUrl);
@@ -277,10 +281,11 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 						if (CollectionUtils.isNotEmpty(entryList) && OrderStatus.REFUND_INITIATED.equals(order.getStatus())
 								&& !auditModelData.getIsExpired().booleanValue() && new Date().before(orderTATForTimeout))
 						{
+							final boolean isReturn = ifRefundInitiated(order.getEntries());
 							for (final AbstractOrderEntryModel orderEntry : order.getEntries())
 							{
 								ConsignmentStatus newStatus = null;
-								if (orderEntry != null && CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
+								if (orderEntry != null && CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()) && isReturn)
 								{
 									MplPaymentAuditEntryModel refundAuditEntry = null;
 									if (status.equalsIgnoreCase(S))
@@ -343,6 +348,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 		}
 	}
 
+
 	/**
 	 * send notification on payment timeout
 	 *
@@ -352,9 +358,8 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	private void sendNotification(final OrderModel order)
 	{
 		// YTODO Auto-generated method stub
-		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-				+ order.getCode();
+		final String trackOrderUrl = getConfigurationService().getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + order.getCode();
 		try
 		{
 			notificationService.triggerEmailAndSmsOnPaymentTimeout(order, trackOrderUrl);
@@ -724,4 +729,33 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 			LOG.error("******************Exception occured in connectivity setting======================", e);
 		}
 	}
+
+	/**
+	 * @param entries
+	 * @return
+	 */
+	private boolean ifRefundInitiated(final List<AbstractOrderEntryModel> entries)
+	{
+		boolean isRefund = false;
+		for (final AbstractOrderEntryModel entry : entries)
+		{
+			final List<ReturnEntryModel> data = getReturnEntry(entry);
+			if (CollectionUtils.isNotEmpty(data))
+			{
+				isRefund = true;
+				break;
+			}
+		}
+		return isRefund;
+	}
+
+	protected List<ReturnEntryModel> getReturnEntry(final AbstractOrderEntryModel entry)
+	{
+		final Map params = new HashMap();
+		params.put("entry", entry);
+		final String query = "SELECT {ret." + Item.PK + "} FROM { " + "ReturnEntry" + " AS ret} WHERE {" + "orderEntry"
+				+ "} = ?entry ORDER BY {ret." + Item.PK + "} ASC";
+		return this.flexibleSearchService.search(query, params).getResult();
+	}
+
 }
