@@ -601,7 +601,11 @@ body.page-shopTheStyle .timeout-slider .owl-controls .owl-dots {
 	border-radius: 0;
 }
 /* ADDED TISLUX-1407 ENDS HERE */ 
-
+#removeFromCart_Cart{
+    display: block;
+	margin-bottom: 20px;
+    margin-left: 15px;
+}
 
 
 @media (min-width: 651px){
@@ -15387,6 +15391,11 @@ body .account .right-account ul.saved-cards>li p {
     line-height: 1.5;
     padding-left:80px;
 }
+body .account .right-account ul.saved-cards>li .actions a{
+    line-height: 1.5;
+    margin-right: 5px;
+}
+
 body .account .right-account ul.saved-cards .details p {
       padding-left:0px;
 }
@@ -31818,6 +31827,10 @@ img.r2-app-brand-img {
     padding-top: 0px;
 }}
 @media (min-width:1025px){
+	#removeFromCart_Cart{
+		margin: 0;
+	}
+	
 .r2-app-brand-img.r2-app-brand-img-left{
 width:130%;}
 .r2-mob-carousel p {
