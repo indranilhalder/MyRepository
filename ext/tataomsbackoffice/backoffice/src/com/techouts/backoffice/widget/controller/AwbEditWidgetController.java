@@ -146,11 +146,9 @@ public class AwbEditWidgetController
 		final List<String> lpList = new ArrayList<>();
 		for (final Logistics logistics : list)
 		{
-			if (logistics.getActive())
-			{
-				LOG.info(" active lpnames " + logistics.getLogisticname());
-				lpList.add(logistics.getLogisticname());
-			}
+			LOG.info(" active lpnames " + logistics.getLogisticname());
+			lpList.add(logistics.getLogisticname());
+
 		}
 		lpList.add(TataomsbackofficeConstants.LPNAME_NONE);
 		return lpList;
