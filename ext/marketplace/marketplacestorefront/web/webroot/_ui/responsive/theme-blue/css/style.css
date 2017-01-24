@@ -37450,7 +37450,7 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
     height: 24px;
     width: 24px;
 }
-.alert-dismissable.alert-info .close, .alert-dismissible.alert-warning .close, .alert-dismissable.alert-danger .close {
+.alert-dismissable.alert-info .close, .alert-dismissible.alert-warning .close {
 	position: relative;
 	
 	/* TISRLEE-1660 */
