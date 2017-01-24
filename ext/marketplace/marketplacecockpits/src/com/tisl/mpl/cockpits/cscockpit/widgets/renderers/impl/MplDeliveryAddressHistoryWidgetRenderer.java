@@ -1,20 +1,18 @@
 package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
-import org.zkoss.util.logging.Log;
 import org.zkoss.zk.ui.api.HtmlBasedComponent;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listhead;
+import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Listitem;
 
-import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.services.AddressHistoryService;
 import com.tisl.mpl.cockpits.cscockpit.widgets.models.impl.AddressHistoryListWidgetModel;
 import com.tisl.mpl.core.model.MplDeliveryAddressInfoModel;
@@ -131,6 +129,18 @@ public class MplDeliveryAddressHistoryWidgetRenderer
         
 		populateDataRow(widget, row, columns, orderHistory);
 	}
+	protected void populateHeaderRow(DefaultListboxWidget<AddressHistoryListWidgetModel, OrderManagementActionsWidgetController> widget, Listhead row,
+			List<ColumnConfiguration> columns) {
+		if (!(CollectionUtils.isNotEmpty(columns)))
+			return;
+		for (ColumnConfiguration col : columns) {
+			Listheader header = new Listheader(getPropertyRendererHelper()
+					.getPropertyDescriptorName(col));
+			header.setWidth("100px");
+			header.setTooltiptext(col.getName());
+			row.appendChild(header);
+		}
+	}
 
 	protected void populateDataRow(DefaultListboxWidget<AddressHistoryListWidgetModel, OrderManagementActionsWidgetController> widget, Listitem row,
 			List<ColumnConfiguration> columns, TypedObject item) {
@@ -140,9 +150,6 @@ public class MplDeliveryAddressHistoryWidgetRenderer
 			for (ColumnConfiguration col : columns) {
 				String value = ObjectGetValueUtils.getValue(
 						col.getValueHandler(), item);
-				if(null == value) {
-					value = MarketplaceCockpitsConstants.EMPTY;
-				}
 				Listcell cell = new Listcell(value);
 				cell.setParent(row);
 			}
