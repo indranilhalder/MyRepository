@@ -70,5 +70,5 @@ public interface NotificationService
 	 * @param value
 	 * @return
 	 */
-	void triggerNpsEmail(AbstractOrderEntryModel value, OrderModel order);
+	String triggerNpsEmail(AbstractOrderEntryModel value, OrderModel order);
 }

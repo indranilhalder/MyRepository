@@ -18,6 +18,7 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.NpsEmailProcessModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 
@@ -44,6 +45,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 	private static final String TOTAL_NET_AMOUNT = "totalNetAmount";
 	private static final String ORIGINAL_UID = "originalUid";
 	private static final String TRANSACTIONID = "transactionId";
+	private static final String WEBSITE_URL = "websiteUrl";
 
 	private static final Logger LOG = Logger.getLogger(NPSEmailContext.class);
 
@@ -138,6 +140,14 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 			put(ORIGINAL_UID, customerModel.getOriginalUid());
 		}
 
+		String websiteUrl = null;
+		websiteUrl = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_SERVICE_WEBSITE_URL);
+		if (null != websiteUrl)
+		{
+			put(WEBSITE_URL, websiteUrl);
+		}
+
 
 
 	}
@@ -162,7 +172,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getSite(de.hybris.platform.
 	 * processengine.model.BusinessProcessModel)
 	 */
@@ -174,7 +184,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getCustomer(de.hybris.platform
 	 * .processengine.model.BusinessProcessModel)
@@ -183,7 +193,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getEmailLanguage(de.hybris.platform
 	 * .processengine.model.BusinessProcessModel)
@@ -196,7 +206,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getCustomer(de.hybris.platform
 	 * .processengine.model.BusinessProcessModel)

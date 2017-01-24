@@ -79,15 +79,25 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 					npsEmailerModel.setTransactionId(entry.getValue().getTransactionID());
 					npsEmailerModel.setParentOrderNo(entry.getKey());
 					npsEmailerModel.setCustomer((CustomerModel) entry.getKey().getUser());
-					notificationService.triggerNpsEmail(entry.getValue(), entry.getKey());
-					npsEmailerModel.setIsEmailSent(Boolean.TRUE);
-					npsEmailerModel.setTimeSent(new Date());
-					/*
-					 * final ProcessState processState = notificationService.triggerNpsEmail(entry.getValue()); if
-					 * (processState.getCode().equals(ProcessState.SUCCEEDED.toString())) {
-					 * npsEmailerModel.setIsEmailSent(Boolean.TRUE); npsEmailerModel.setTimeSent(new Date()); } else {
-					 * npsEmailerModel.setIsEmailSent(Boolean.FALSE); }
-					 */
+					//notificationService.triggerNpsEmail(entry.getValue(), entry.getKey());
+					//npsEmailerModel.setIsEmailSent(Boolean.TRUE);
+					//npsEmailerModel.setTimeSent(new Date());
+
+					final String processState = notificationService.triggerNpsEmail(entry.getValue(), entry.getKey());
+					if (processState.equalsIgnoreCase("SUCCEEDED"))
+					{
+
+						npsEmailerModel.setIsEmailSent(Boolean.TRUE);
+						npsEmailerModel.setTimeSent(new Date());
+					}
+
+					else
+					{
+
+						npsEmailerModel.setIsEmailSent(Boolean.FALSE);
+
+					}
+
 					npsEmailerModelList.add(npsEmailerModel);
 				}
 				modelService.saveAll(npsEmailerModelList);

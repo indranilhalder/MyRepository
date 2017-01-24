@@ -10,6 +10,7 @@ import de.hybris.platform.core.model.security.PrincipalModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.processengine.BusinessProcessService;
+import de.hybris.platform.processengine.constants.GeneratedProcessengineConstants.Enumerations.ProcessState;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.event.EventService;
@@ -732,7 +733,7 @@ public class NotificationServiceImpl implements NotificationService
 
 
 	@Override
-	public void triggerNpsEmail(final AbstractOrderEntryModel OrderEntry, final OrderModel orderModel)
+	public String triggerNpsEmail(final AbstractOrderEntryModel OrderEntry, final OrderModel orderModel)
 	{
 		LOG.info("Starting Nps Feedback Mail");
 
@@ -745,13 +746,18 @@ public class NotificationServiceImpl implements NotificationService
 			npsEmailProcessModel.setAbstractOrderEntry(OrderEntry);
 			modelService.save(npsEmailProcessModel);
 			businessProcessService.startProcess(npsEmailProcessModel);
+
 		}
+
 
 
 		catch (final Exception e)
 		{
 			LOG.error("Exception during Nps feedback mail >> " + e.getMessage());
+			return ProcessState.FAILED;
 		}
+
+		return ProcessState.SUCCEEDED;
 
 
 
