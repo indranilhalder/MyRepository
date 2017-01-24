@@ -65,21 +65,25 @@
 											<tr class="feedback-form-question-rating-set">
 												<th class="rating-label rating-left-label">&nbsp;</th>
 												<th class="rating-label rating-label-data"><label
-													for="npsFeedbackQuestionlist${myIndex.count-1}.rating1">1</label></th>
-												<th class="rating-label rating-label-data"><label
-													for="npsFeedbackQuestionlist${myIndex.count-1}.rating2">2</label></th>
-												<th class="rating-label rating-label-data"><label
-													for="npsFeedbackQuestionlist${myIndex.count-1}.rating3">3</label></th>
+													for="npsFeedbackQuestionlist${myIndex.count-1}.rating5">5</label></th>
 												<th class="rating-label rating-label-data"><label
 													for="npsFeedbackQuestionlist${myIndex.count-1}.rating4">4</label></th>
 												<th class="rating-label rating-label-data"><label
-													for="npsFeedbackQuestionlist${myIndex.count-1}.rating5">5</label></th>
+													for="npsFeedbackQuestionlist${myIndex.count-1}.rating3">3</label></th>
+												<th class="rating-label rating-label-data"><label
+													for="npsFeedbackQuestionlist${myIndex.count-1}.rating2">2</label></th>
+												<th class="rating-label rating-label-data"><label
+													for="npsFeedbackQuestionlist${myIndex.count-1}.rating1">1</label></th>
+												
+												
+												
+												
 												<th class="rating-label rating-right-label">&nbsp;</th>
 											</tr>
 										</tfoot>
 										<tbody>
 											<tr class="feedback-form-question-rating-set">
-												<td class="rating-label rating-left-label">Very Bad</td>
+												<td class="rating-label rating-left-label">Very Good</td>
 												<td class="rating-label rating-label-data">
 												<form:radiobutton
 														path="npsQuestionlist[${myIndex.count-1}].rating"
@@ -110,7 +114,7 @@
 														value="5" label=""
 														class="feedback-form-input feedback-form-input-radio" /> <%-- <label for="npsFeedbackQuestionlist[${myIndex.count-1}].rating"></label> --%>
 												</td>
-												<td class="rating-label rating-right-label">Very Good</td>
+												<td class="rating-label rating-right-label">Very Bad</td>
 											</tr>
 										</tbody>
 									</table>
