@@ -1840,4 +1840,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public final static String THIRDPARTYWALLET = "ThirdPartyWallet";
 	public final static String MRUPEERETURNURL = "payment.mRupee.returnUrl".intern();
+
+	public final static String MRUPEE_NARRATION_VALUE = "payment.mRupee.narration".intern();
+	public final static String MRUPEE_MERCHANT_CODE = "payment.mRupee.merchantID".intern();
 }

@@ -2133,6 +2133,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 	//Mrupee implementation
 
+	/**
+	 * @Description This method will initiate refund for cancel/return orders of type isWallet
+	 * @param subOrderModel
+	 * @param orderRequestRecord
+	 */
 	private void initiateRefundMrupee(final OrderModel subOrderModel, final OrderCancelRecordEntryModel orderRequestRecord)
 	{
 
