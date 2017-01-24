@@ -2,7 +2,6 @@ package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.zkoss.zk.ui.UiException;
 import org.zkoss.zk.ui.api.HtmlBasedComponent;
 import org.zkoss.zul.Div;
@@ -13,46 +12,31 @@ import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Listitem;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
-import de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget;
-import de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel;
+import de.hybris.platform.cockpit.widgets.Widget;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
-import de.hybris.platform.cscockpit.widgets.controllers.CallContextController;
 import de.hybris.platform.cscockpit.widgets.controllers.OrderController;
+import de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.AbstractCsWidgetRenderer;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 public class MplScheduleDeliverySlotsWidgetRenderer
- extends AbstractCsWidgetRenderer<DefaultListboxWidget<DefaultListWidgetModel, OrderController>> {
+extends AbstractCsWidgetRenderer<Widget<OrderItemWidgetModel, OrderController>>  {
 	
 	
-	private CallContextController callContextController;
-
-	protected CallContextController getCallContextController() {
-		return callContextController;
-	}
-
-	@Required
-	public void setCallContextController(
-			CallContextController callContextController) {
-		this.callContextController = callContextController;
-	}
-
-	public TypedObject getOrder() {
-		return getCallContextController().getCurrentOrder();
-	}
 
 	@Autowired
 	private ModelService modelService;
 
 	protected static final String CSS_ORDER_HISTORY = "csOrderHistory";
 	private final static Logger LOG = Logger.getLogger(MplScheduleDeliverySlotsWidgetRenderer.class);
-	protected HtmlBasedComponent createContentInternal(DefaultListboxWidget<DefaultListWidgetModel, OrderController> widget,
+	protected HtmlBasedComponent createContentInternal(
+			Widget<OrderItemWidgetModel, OrderController> widget,
 			HtmlBasedComponent rootContainer) {
 		Div content = new Div();
 		LOG.info("Inside MplScheduleDeliverySlotsWidgetRenderer  createContentInternal Method");
-		TypedObject typedObject = getOrder();
+		TypedObject typedObject = widget.getWidgetModel().getOrder();
 		OrderModel order = (OrderModel) typedObject.getObject();
 		try {
 			OrderModel parentorder = modelService.create(OrderModel.class);
@@ -98,9 +82,9 @@ public class MplScheduleDeliverySlotsWidgetRenderer
 
 	protected void renderListbox(
 			Listbox listBox,
-			DefaultListboxWidget<DefaultListWidgetModel, OrderController> widget,
+			Widget<OrderItemWidgetModel, OrderController> widget,
 			HtmlBasedComponent rootContainer) {
-		TypedObject order = getOrder();
+		TypedObject order = widget.getWidgetModel().getOrder();
 		OrderModel orderModel = (OrderModel) order.getObject();
 		OrderModel parentOrder = modelService.create(OrderModel.class);
 		if(null !=orderModel.getParentReference()) {
@@ -127,7 +111,7 @@ public class MplScheduleDeliverySlotsWidgetRenderer
 		}
 	}
 
-	protected void populateDataRow(DefaultListboxWidget<DefaultListWidgetModel, OrderController> widget, AbstractOrderEntryModel entry,
+	protected void populateDataRow(Widget<OrderItemWidgetModel, OrderController> widget, AbstractOrderEntryModel entry,
 			Listitem row) {
 
 		// Product Name 
@@ -155,7 +139,7 @@ public class MplScheduleDeliverySlotsWidgetRenderer
 		}
 	}
 
-	protected void populateHeaderRow(DefaultListboxWidget<DefaultListWidgetModel, OrderController> widget, Listhead listHeader) {
+	protected void populateHeaderRow(Widget<OrderItemWidgetModel, OrderController> widget, Listhead listHeader) {
 
 		
 		Listheader listHeaderProduct = new Listheader("Product");
@@ -175,6 +159,8 @@ public class MplScheduleDeliverySlotsWidgetRenderer
 		listHeader.appendChild(listHeaderTime);
 
 	}
+
+	
 
 
 }
