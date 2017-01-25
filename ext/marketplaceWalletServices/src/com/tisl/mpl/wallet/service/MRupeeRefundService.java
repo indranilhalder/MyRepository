@@ -60,6 +60,9 @@ public class MRupeeRefundService
 	//	@Autowired
 	//	private MrupeePaymentService mRupeePaymentService;
 
+
+
+
 	/**
 	 * @return the baseUrl
 	 */
@@ -193,17 +196,13 @@ public class MRupeeRefundService
 		params.put("REFNO", refundRequest.getRefNo());
 		params.put("PREFNO", refundRequest.getPurchaseRefNo());
 		params.put("CHECKSUM", checksum);
-		/* final String serializedParams = serializeParams(params); */
 		//		final String serializedParams = "MCODE=TULA&NARRATION=uat&TXNTYPE=R&" + "AMT=" + refundRequest.getAmount().toString()
 		//				+ "&REFNO=" + refundRequest.getRefNo() + "&PREFNO=" + refundRequest.getPurchaseRefNo() + "&CHECKSUM=" + checksum;
-
-		final String serializedParams = "MCODE=" + refundRequest.getmCode().toString() + "NARRATION="
-				+ refundRequest.getNarration().toString() + "TXNTYPE=R" + "AMT=" + refundRequest.getAmount().toString() + "&REFNO="
-				+ refundRequest.getRefNo() + "&PREFNO=" + refundRequest.getPurchaseRefNo() + "&CHECKSUM=" + checksum;
+		final String serializedParams = serializeParams(params);
 
 		LOG.debug("MRUPEE REFUND REQUEST--------------url-----------request----" + serializedParams);
 
-		//	String url = configurationService.getConfiguration().getString(MarketplaceWalletServicesConstants.MRUPEERETURNURL);
+		//	final String url = configurationService.getConfiguration().getString(MarketplaceWalletServicesConstants.MRUPEERETURNURL);
 
 		final String url = "https://14.140.248.13/Mwallet/startpaymentgatewayS2S.do?";
 
@@ -246,13 +245,14 @@ public class MRupeeRefundService
 			}
 		}
 		return mRupeeRefundResponse;
-
 	}
 
-
-
-
-
+	/**
+	 * For appending the request parameter of the url is serialized manner
+	 *
+	 * @param parameters
+	 * @return String
+	 */
 	private String serializeParams(final Map<String, String> parameters)
 	{
 
@@ -460,4 +460,21 @@ public class MRupeeRefundService
 		disableSslVerification();
 	}
 
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
 }

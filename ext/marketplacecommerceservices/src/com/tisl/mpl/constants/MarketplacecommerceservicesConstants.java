@@ -885,6 +885,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	// Added for TPR-1290
 	public static final String B9332 = "B9332";
 	public static final String B9328 = "B9328";
+	public static final String B9700 = "B9700";
 	//Mobile web service error codes ends
 
 	//Payment Error Codes

@@ -32,7 +32,6 @@ import com.tisl.mpl.core.enums.MplPaymentAuditStatusEnum;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.juspay.Refund;
 import com.tisl.mpl.marketplacecommerceservices.service.MplMWalletRefundService;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.wallet.refund.MRupeeRefundResponse;
@@ -139,6 +138,8 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 				refundRequest.setNarration(getConfigurationService().getConfiguration()
 						.getString(MarketplacecommerceservicesConstants.MRUPEE_NARRATION_VALUE));
 
+				refundRequest.setTxnType("R");
+
 				mplPaymentAuditEntryModel.setRefundReqId(uniqueRequestId);
 				modelService.save(mplPaymentAuditEntryModel);
 				final List<MplPaymentAuditEntryModel> auditEnteries = new ArrayList<MplPaymentAuditEntryModel>(
@@ -173,14 +174,14 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 							refundResponse.getStatus().toUpperCase(), Double.valueOf(adjustedRefundAmt), paymentTransactionType,
 							refundResponse.getStatus(), uniqueRequestId);
 				}
-				else
-				{
-					final Refund refund = new Refund();
-					refund.setUniqueRequestId(refundRequest.getUniqueRequestId());
-					createAuditEntryForRefund(MplPaymentAuditStatusEnum.REFUND_UNSUCCESSFUL, mplPaymentAuditModel);
-					paymentTransactionModel = mplMrueeRefundService.createPaymentTransactionModel(order, "FAILURE",
-							Double.valueOf(refundAmount), paymentTransactionType, "NO REFUND FROM PG", uniqueRequestId);
-				}
+				//				else
+				//				{
+				//					final Refund refund = new Refund();
+				//					refund.setUniqueRequestId(refundRequest.getUniqueRequestId());
+				//					createAuditEntryForRefund(MplPaymentAuditStatusEnum.REFUND_UNSUCCESSFUL, mplPaymentAuditModel);
+				//					paymentTransactionModel = mplMrueeRefundService.createPaymentTransactionModel(order, "FAILURE",
+				//							Double.valueOf(refundAmount), paymentTransactionType, "NO REFUND FROM PG", uniqueRequestId);
+				//				}
 				return paymentTransactionModel;
 			}
 		}

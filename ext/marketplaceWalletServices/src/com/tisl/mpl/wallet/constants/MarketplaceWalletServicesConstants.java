@@ -31,5 +31,7 @@ public final class MarketplaceWalletServicesConstants extends GeneratedMarketpla
 	public final static String MRUPEE_CHECKSUM = "payment.mRupee.checkSum".intern();
 
 	public final static String MRUPEE_NARRATION = "payment.mRupee.narration".intern();
+
+	public final static String MRUPEERETURNURL = "payment.mRupee.returnUrl".intern();
 	// implement here constants used by this extension
 }

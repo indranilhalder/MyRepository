@@ -16,6 +16,7 @@ import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
+import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -251,6 +252,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 							final String[] params1 = response.split(SPLIT);
 							status = params1[0];
 						}
+						LOG.debug("Status from CronJob Mrupee#####################" + status);
 						orderTATForTimeout = getTatTimeOut(new Date(), getmRupeeJobTAT(), order.getCreationtime());
 						if (CollectionUtils.isNotEmpty(entryList) && OrderStatus.PAYMENT_PENDING.equals(order.getStatus())
 								&& !auditModelData.getIsExpired().booleanValue() && status.equalsIgnoreCase(S)
@@ -265,6 +267,10 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 							//sending notification mail
 							final String trackOrderUrl = getConfigurationService().getConfiguration()
 									.getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + order.getCode();
+
+							LOG.debug("#######################payment processiong in mrupee cronjob" + order.getCode());
+
+
 							try
 							{
 								notificationService.triggerEmailAndSmsOnOrderConfirmation(order, trackOrderUrl);
@@ -281,34 +287,51 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 						if (CollectionUtils.isNotEmpty(entryList) && OrderStatus.REFUND_INITIATED.equals(order.getStatus())
 								&& !auditModelData.getIsExpired().booleanValue() && new Date().before(orderTATForTimeout))
 						{
-							final boolean isReturn = ifRefundInitiated(order.getEntries());
-							for (final AbstractOrderEntryModel orderEntry : order.getEntries())
+							//boolean isReturn = ifRefundInitiated(order.getEntries());
+							boolean isReturn = false;
+							if (CollectionUtils.isNotEmpty(order.getPaymentTransactions()))
 							{
-								ConsignmentStatus newStatus = null;
-								if (orderEntry != null && CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()) && isReturn)
+								final PaymentTransactionModel paymentTransactionModel = order.getPaymentTransactions().get(0);
+								for (final PaymentTransactionEntryModel trans : paymentTransactionModel.getEntries())
 								{
-									MplPaymentAuditEntryModel refundAuditEntry = null;
-									if (status.equalsIgnoreCase(S))
+									if (null != trans.getType() && "RETURN".equalsIgnoreCase(trans.getType().toString()))
 									{
-										newStatus = ConsignmentStatus.RETURN_COMPLETED;
-										refundAuditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
-										refundAuditEntry.setStatus(MplPaymentAuditStatusEnum.REFUND_SUCCESSFUL);
+										isReturn = true;
+										break;
 									}
-									else if (!(status.equalsIgnoreCase(S)))
+								}
+
+								//	if(paymentTransactionModel.getT)
+								for (final AbstractOrderEntryModel orderEntry : order.getEntries())
+								{
+									ConsignmentStatus newStatus = null;
+									if (orderEntry != null && CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()) && isReturn)
 									{
-										refundAuditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
-										newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
-										refundAuditEntry.setStatus(MplPaymentAuditStatusEnum.REFUND_UNSUCCESSFUL);
+										MplPaymentAuditEntryModel refundAuditEntry = null;
+										if (status.equalsIgnoreCase(S))
+										{
+											newStatus = ConsignmentStatus.RETURN_COMPLETED;
+											refundAuditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
+											refundAuditEntry.setStatus(MplPaymentAuditStatusEnum.REFUND_SUCCESSFUL);
+										}
+										else if (!(status.equalsIgnoreCase(S)))
+										{
+											refundAuditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
+											newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
+											refundAuditEntry.setStatus(MplPaymentAuditStatusEnum.REFUND_UNSUCCESSFUL);
+										}
+										refundAuditEntry.setAuditId(auditModelData.getAuditId());
+										getModelService().save(refundAuditEntry);
+										entryList.add(refundAuditEntry);
+										auditModelData.setAuditEntries(entryList);
+										auditModelData.setIsExpired(Boolean.TRUE);
+										getModelService().save(auditModelData);
+										//	final PaymentTransactionModel paymentTransactionModel = order.getPaymentTransactions().get(0);
+										mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
+												orderEntry.getNetAmountAfterAllDisc(), newStatus);
 									}
-									refundAuditEntry.setAuditId(auditModelData.getAuditId());
-									getModelService().save(refundAuditEntry);
-									entryList.add(refundAuditEntry);
-									auditModelData.setAuditEntries(entryList);
-									auditModelData.setIsExpired(Boolean.TRUE);
-									getModelService().save(auditModelData);
-									final PaymentTransactionModel paymentTransactionModel = order.getPaymentTransactions().get(0);
-									mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-											orderEntry.getNetAmountAfterAllDisc(), newStatus);
+									LOG.debug("#######################refund processiong in mrupee cronjob" + order.getCode());
+
 								}
 							}
 						}
@@ -412,11 +435,13 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 			}
 			if (T.equalsIgnoreCase(status))
 			{
+				LOG.debug("#######################timeout  in mrupee cronjob" + order.getCode());
 				orderStatusSpecifier.setOrderStatus(order, OrderStatus.PAYMENT_TIMEOUT);
 			}
 			else
 			{
 				orderStatusSpecifier.setOrderStatus(order, OrderStatus.PAYMENT_FAILED);
+				LOG.debug("#######################payment failed in mrupee cronjob" + order.getCode());
 			}
 			getModelService().save(order);
 		}
