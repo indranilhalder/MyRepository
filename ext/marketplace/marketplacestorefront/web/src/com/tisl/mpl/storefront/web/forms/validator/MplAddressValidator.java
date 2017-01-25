@@ -33,8 +33,8 @@ public class MplAddressValidator
 	private static final int MAX_FIELD_LENGTH_10 = 10;
 	private static final int MAX_FIELD_LENGTH_6 = 6;
 	//private static final int MAX_FIELD_LENGTH_UPDATED = 30; //TISUAT-4696
-	private static final int MAX_FIELD_LENGTH_UPDATED = 40; //TPR-215
-
+	//private static final int MAX_FIELD_LENGTH_UPDATED = 40; //TPR-215
+	private static final int MAX_FIELD_LENGTH_UPDATED = 120; //TPR-3402
 	public static final String MOBILE_REGEX = "^[0-9]*$";
 	public static final String NAME_REGEX = "[a-zA-Z]+\\.?";
 	private static final String UTF = "UTF-8";
