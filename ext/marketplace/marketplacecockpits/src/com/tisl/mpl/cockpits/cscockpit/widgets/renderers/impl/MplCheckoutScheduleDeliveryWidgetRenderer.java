@@ -266,7 +266,7 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 			 endingDate   = dates.get(2);
 		}
 		if(null != startingDate && null != endingDate) {
-			eddDateBetween = startingDate.concat(MarketplaceCockpitsConstants.Between).concat(MarketplaceCockpitsConstants.SPACE).concat(MarketplaceCockpitsConstants.AND).concat(MarketplaceCockpitsConstants.SPACE).concat(endingDate);
+			eddDateBetween = MarketplaceCockpitsConstants.Between.concat(MarketplaceCockpitsConstants.SPACE).concat(startingDate).concat(MarketplaceCockpitsConstants.SPACE).concat(MarketplaceCockpitsConstants.AND).concat(MarketplaceCockpitsConstants.SPACE).concat(endingDate);
 		}
 		return eddDateBetween;
 
