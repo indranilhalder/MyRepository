@@ -39,7 +39,7 @@
 							<spring:theme code='${skipBlankMessageKey}'/>
 						</option>
 					</c:if> --%>
-					<option value="">Select State</option>
+					
 					<form:options items="${items}" itemValue="${not empty itemValue ? itemValue :'code'}" itemLabel="${not empty itemLabel ? itemLabel :'name'}"/>
 				</form:select>
 			</div>
