@@ -2271,22 +2271,46 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				else
 				{
 					LOG.debug("****** initiateRefund >>Payment transaction mode is null");
-					walletRefundService.createCancelRefundPgErrorEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
-							uniqueRequestId);
+					if (PaymentTransactionType.CANCEL.toString().equalsIgnoreCase("CANCEL"))
+					{
+						walletRefundService.createCancelRefundPgErrorEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
+								uniqueRequestId);
+					}
+					else if (PaymentTransactionType.RETURN.toString().equalsIgnoreCase("RETURN"))
+					{
+						walletRefundService.createCancelRefundPgErrorEntry(orderRequestRecord, PaymentTransactionType.RETURN,
+								uniqueRequestId);
+					}
 				}
 			}
 
 			catch (final EtailNonBusinessExceptions e)
 			{
 				LOG.error(">>>> *****************initiateRefund*********** Exception occured " + e.getMessage(), e);
-				walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
-						uniqueRequestId);
+				if (PaymentTransactionType.CANCEL.toString().equalsIgnoreCase("CANCEL"))
+				{
+					walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
+							uniqueRequestId);
+				}
+				else if (PaymentTransactionType.RETURN.toString().equalsIgnoreCase("RETURN"))
+				{
+					walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.RETURN,
+							uniqueRequestId);
+				}
 			}
 			catch (final Exception e)
 			{
 				LOG.error(">>>> *****************initiateRefund*********** Exception occured " + e.getMessage(), e);
-				walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
-						uniqueRequestId);
+				if (PaymentTransactionType.CANCEL.toString().equalsIgnoreCase("CANCEL"))
+				{
+					walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
+							uniqueRequestId);
+				}
+				else if (PaymentTransactionType.RETURN.toString().equalsIgnoreCase("RETURN"))
+				{
+					walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.RETURN,
+							uniqueRequestId);
+				}
 			}
 		}
 		else

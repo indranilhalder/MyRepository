@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.wallet.service;
 
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.io.BufferedReader;
@@ -31,9 +32,9 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
+import com.tisl.mpl.wallet.constants.MarketplaceWalletServicesConstants;
 import com.tisl.mpl.wallet.refund.MRupeeRefundResponse;
 import com.tisl.mpl.wallet.request.MRupeeRefundRequest;
 
@@ -54,126 +55,11 @@ public class MRupeeRefundService
 	private String merchantId;
 	private Environment environment;
 	private String environmentSet;
-	@Autowired
-	private ConfigurationService configurationService;
+	//	@Resource(name = "configurationService")
+	//	private ConfigurationService configurationService;
 
 	//	@Autowired
 	//	private MrupeePaymentService mRupeePaymentService;
-
-
-
-
-	/**
-	 * @return the baseUrl
-	 */
-	public String getBaseUrl()
-	{
-		return baseUrl;
-	}
-
-
-	/**
-	 * @param baseUrl
-	 *           the baseUrl to set
-	 */
-	public void setBaseUrl(final String baseUrl)
-	{
-		this.baseUrl = baseUrl;
-	}
-
-
-	/**
-	 * @return the key
-	 */
-	public String getKey()
-	{
-		return key;
-	}
-
-
-	/**
-	 * @param key
-	 *           the key to set
-	 */
-	public void setKey(final String key)
-	{
-		this.key = key;
-	}
-
-
-	/**
-	 * @return the merchantId
-	 */
-	public String getMerchantId()
-	{
-		return merchantId;
-	}
-
-
-	/**
-	 * @param merchantId
-	 *           the merchantId to set
-	 */
-	public void setMerchantId(final String merchantId)
-	{
-		this.merchantId = merchantId;
-	}
-
-
-	/**
-	 * @return the environment
-	 */
-	public Environment getEnvironment()
-	{
-		return environment;
-	}
-
-
-	/**
-	 * @param environment
-	 *           the environment to set
-	 */
-	public void setEnvironment(final Environment environment)
-	{
-		this.environment = environment;
-	}
-
-
-	/**
-	 * @return the environmentSet
-	 */
-	public String getEnvironmentSet()
-	{
-		return environmentSet;
-	}
-
-
-	/**
-	 * @param environmentSet
-	 *           the environmentSet to set
-	 */
-	public void setEnvironmentSet(final String environmentSet)
-	{
-		this.environmentSet = environmentSet;
-	}
-
-
-	/**
-	 * @return the connectionTimeout
-	 */
-	public int getConnectionTimeout()
-	{
-		return connectionTimeout;
-	}
-
-
-	/**
-	 * @return the readTimeout
-	 */
-	public int getReadTimeout()
-	{
-		return readTimeout;
-	}
 
 	/**
 	 * Method is called for doing refund at the time of cancel and return
@@ -202,9 +88,10 @@ public class MRupeeRefundService
 
 		LOG.debug("MRUPEE REFUND REQUEST--------------url-----------request----" + serializedParams);
 
-		//	final String url = configurationService.getConfiguration().getString(MarketplaceWalletServicesConstants.MRUPEERETURNURL);
+		final String url = getConfigurationService().getConfiguration()
+				.getString(MarketplaceWalletServicesConstants.MRUPEERETURNURL);
 
-		final String url = "https://14.140.248.13/Mwallet/startpaymentgatewayS2S.do?";
+		//	final String url = "https://14.140.248.13/Mwallet/startpaymentgatewayS2S.do?";
 
 		final String response = makeServiceCall(url, serializedParams);
 
@@ -461,20 +348,120 @@ public class MRupeeRefundService
 	}
 
 	/**
-	 * @return the configurationService
+	 * @return the baseUrl
 	 */
-	public ConfigurationService getConfigurationService()
+	public String getBaseUrl()
 	{
-		return configurationService;
+		return baseUrl;
 	}
 
 
 	/**
-	 * @param configurationService
-	 *           the configurationService to set
+	 * @param baseUrl
+	 *           the baseUrl to set
 	 */
-	public void setConfigurationService(final ConfigurationService configurationService)
+	public void setBaseUrl(final String baseUrl)
 	{
-		this.configurationService = configurationService;
+		this.baseUrl = baseUrl;
 	}
+
+
+	/**
+	 * @return the key
+	 */
+	public String getKey()
+	{
+		return key;
+	}
+
+
+	/**
+	 * @param key
+	 *           the key to set
+	 */
+	public void setKey(final String key)
+	{
+		this.key = key;
+	}
+
+
+	/**
+	 * @return the merchantId
+	 */
+	public String getMerchantId()
+	{
+		return merchantId;
+	}
+
+
+	/**
+	 * @param merchantId
+	 *           the merchantId to set
+	 */
+	public void setMerchantId(final String merchantId)
+	{
+		this.merchantId = merchantId;
+	}
+
+
+	/**
+	 * @return the environment
+	 */
+	public Environment getEnvironment()
+	{
+		return environment;
+	}
+
+
+	/**
+	 * @param environment
+	 *           the environment to set
+	 */
+	public void setEnvironment(final Environment environment)
+	{
+		this.environment = environment;
+	}
+
+
+	/**
+	 * @return the environmentSet
+	 */
+	public String getEnvironmentSet()
+	{
+		return environmentSet;
+	}
+
+
+	/**
+	 * @param environmentSet
+	 *           the environmentSet to set
+	 */
+	public void setEnvironmentSet(final String environmentSet)
+	{
+		this.environmentSet = environmentSet;
+	}
+
+
+	/**
+	 * @return the connectionTimeout
+	 */
+	public int getConnectionTimeout()
+	{
+		return connectionTimeout;
+	}
+
+
+	/**
+	 * @return the readTimeout
+	 */
+	public int getReadTimeout()
+	{
+		return readTimeout;
+	}
+
+	protected ConfigurationService getConfigurationService()
+	{
+		return Registry.getApplicationContext().getBean("configurationService", ConfigurationService.class);
+	}
+
 }
