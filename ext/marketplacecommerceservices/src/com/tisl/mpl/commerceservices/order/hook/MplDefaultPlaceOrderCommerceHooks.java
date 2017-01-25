@@ -1516,7 +1516,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			{
 				orderEntryModel.setExpectedDeliveryDate(abstractOrderEntryModel.getExpectedDeliveryDate());
 			}
-			
+			/*Added in R2.3 for TISRLEE-2073 start */
+			if (abstractOrderEntryModel.getSddDateBetween() != null)
+			{
+				orderEntryModel.setSddDateBetween(abstractOrderEntryModel.getSddDateBetween());
+			}
+			/*Added in R2.3 for TISRLEE-2073 end */
 		  // End Order line  Code for OrderLine 
 			orderEntryModel = setAdditionalDetails(orderEntryModel);
 

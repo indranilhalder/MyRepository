@@ -207,8 +207,9 @@ public final class MarketplaceCockpitsConstants extends
 	public static final String ED = "ED";
 	public static final String HD = "ED";
 	public static final String TO = "TO";
-	public static final String EMPTY = "      ";
-	
+	public static final String SPACE = " ";
+	public static final String AND = "and";
+	public static final String Between = "BETWEEN";
 
 	
 }
