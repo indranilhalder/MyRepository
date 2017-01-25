@@ -271,7 +271,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				final CartModel cartModel = getCartService().getSessionCart();
 
 				// TPR-429 START
-				
+
 				final String checkoutSellerID = populateCheckoutSellers(cartData);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 				// TPR-429 END
@@ -4160,7 +4160,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
@@ -4172,24 +4172,24 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	}
 
 	//TPR-429 change
-		public static String populateCheckoutSellers(final CartData cartData)
+	public static String populateCheckoutSellers(final CartData cartData)
+	{
+		String cartLevelSellerID = null;
+		final List<OrderEntryData> sellerList = cartData.getEntries();
+		for (final OrderEntryData seller : sellerList)
 		{
-			String cartLevelSellerID = null;
-			final List<OrderEntryData> sellerList = cartData.getEntries();
-			for (final OrderEntryData seller : sellerList)
+			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+			if (cartLevelSellerID != null)
 			{
-				final String sellerID = seller.getSelectedSellerInformation().getSellerID();
-				if (cartLevelSellerID != null)
-				{
-					cartLevelSellerID += "_" + sellerID;
-				}
-				else
-				{
-					cartLevelSellerID = sellerID;
-				}
+				cartLevelSellerID += "_" + sellerID;
 			}
-			return cartLevelSellerID;
+			else
+			{
+				cartLevelSellerID = sellerID;
+			}
 		}
+		return cartLevelSellerID;
+	}
 
 
 
