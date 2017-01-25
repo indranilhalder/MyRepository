@@ -17,11 +17,31 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="address" tagdir="/WEB-INF/tags/responsive/address"%>
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/responsive/cart" %>
-			
+
 					<script>
 					//TISST-13010
 					$(document).ready(function() {
 						showPromotionTag();
+						if($(".choose-address .acc_content").children(".address-list").length == 0){
+							$(".add-address").css({
+							  //margin : "0px auto",
+							  float: "none"
+						});
+							$(".checkout-shipping.addNewAddress .formaddress").css({
+								//margin : "0px auto",
+								float: "none",
+								width: "80%",
+								overflow: "hidden"
+							});
+						//$(".choose-address .acc_head").css("text-align","center");
+						}
+						  $(".cancelBtn").click(function() {
+							  //alert('here');
+							  	
+						        $(".editnewAddresPage, .formaddress").slideUp();
+						        $(".add-address").slideDown();
+						    });
+						  $('.checkout.wrapper .formaddress select[name="state"]').on("change",function(){$(this).css("color","#000");});
 					});
 					var timeoutID;
 					function setup() {
@@ -54,7 +74,6 @@
 					function goActive() {
 					      startTimer();
 					}
-					
 					//TPR-1214
 					$("#newAddressButton,#newAddressButtonUp").click(function() {
 						var validate=true;
@@ -190,27 +209,40 @@
 						}
 						else
 						{
-							if(address1.value.indexOf('#')!=-1)
-					    	{
-							address1.value=encodeURIComponent(address1.value);
-					    	}
 							
-							if(address2.value.indexOf('#')!=-1)
-					    	{
-							address2.value=encodeURIComponent(address2.value);
-					    	}
-							if(address3.value.indexOf('#')!=-1)
-					    	{
-							address3.value=encodeURIComponent(address3.value);
-					    	}
-							$('#addressForm').submit();
+							
+							//address1.value=encodeURIComponent(address1.value);
+					    	//address2.value=encodeURIComponent(address2.value);
+					   		//address3.value=encodeURIComponent(address3.value);
+					    	
+							$.ajax({
+						 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/new-address",
+						 		type: "POST",
+						 		data:$("#addressForm").serialize().replace(/\+/g,'%20'),
+						 		cache: false,
+						 		dataType: "json",
+						 		success : function(response) {
+						 		if(response.hasOwnProperty("error")){
+						 			
+						 		}else if(response.hasOwnProperty("redirect_url")){
+						 		var redirectUrl = response.redirect_url;
+						 		var url = redirectUrl.substr(redirectUrl.indexOf(':')+1,redirectUrl.length);
+						 		
+						 		window.location.href = ACC.config.encodedContextPath + url;
+						 		}	
+						 		},
+						 		error : function(resp) {
+						 			
+						 		}
+						 		
+						 		});
 						}
 						return false;
 					});
 					</script>
 					<ycommerce:testId code="checkoutStepTwo">
-						<div class="checkout-shipping formaddress">
-						<c:choose>
+						<div class="checkout-shipping addNewAddress">
+					<c:choose>
 					<c:when test="${edit eq true}">
 						<ycommerce:testId code="multicheckout_saveAddress_button">
 							<button  id="editAddressButtonUp"  class="btn btn-primary btn-block" type="submit">
@@ -237,31 +269,28 @@
 						</c:choose>						
 					</c:otherwise>
 				</c:choose> 
-							<div class="checkout-indent left-block address-form ">
-								<h1>
-									<spring:theme code="checkout.summary.shippingAddress" text="Shipping Address"></spring:theme>
-								</h1>
-								<div class="checkout-shipping-items-header"><spring:theme code="checkout.multi.shipment.items" arguments="${cartData.deliveryItemsQuantity}" text="Shipment - ${cartData.deliveryItemsQuantity} Item(s)"></spring:theme></div>
-								<ul class="product-block addresses new-form account-section">
-									  	<li class="header">
-									  		<ul class="account-section-header">
-									        <li><spring:theme code="text.account.addressBook.addressDetails"/></li>
-									        <li class="pincode-button"><a href="${request.contextPath}/checkout/multi/delivery-method/selectaddress">
-									       
-									       
-									        <c:if test="${addressFlag eq 'T'}"> 
-										<spring:theme code="checkout.multi.deliveryAddress.useSavedAddress" text="Use a Saved Address"></spring:theme>	
-										</c:if>																
-									</a></li>
-									      </ul>
-									  	</li>
-									  	<li class="item account-section-content	 account-section-content-small ">
-									  	<address:addressFormSelector supportedCountries="${countries}"
-												regions="${regions}" cancelUrl="${currentStepUrl}"
-												country="${country}" />
+						 <div class="formaddress" style="display: block;">
+		<div class="heading-form">
+														<h3>Add New Address</h3>
+														<input type="button" value="cancel" class="cancelBtn">
+													</div>
+	  
+	  
+	   <div class="checkout-indent left-block address-form">
+								
+									<ul class="product-block addresses new-form account-section">
+									  	
+									  	<li
+																class="item account-section-content	 account-section-content-small ">
+									  	<address:addressFormSelector
+																	supportedCountries="${countries}" regions="${regions}"
+																	cancelUrl="${currentStepUrl}" />
 									  	</li>
 									  	</ul>
+									  	
+									</div>
+	  
+	  </div> 
 							</div>
-						</div>
+						
 					</ycommerce:testId>
-				
