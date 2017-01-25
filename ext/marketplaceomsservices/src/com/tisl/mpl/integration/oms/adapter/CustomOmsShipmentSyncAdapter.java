@@ -529,9 +529,9 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus))
 				{
 					if(!checkConsignmentStatus){
-						if(shipmentCurrentStatus.equals(ConsignmentStatus.RETURN_INITIATED) && shipmentNewStatus.equals(ConsignmentStatus.DELIVERED) ){
-							return false;
-						}else{
+						//if(shipmentCurrentStatus.equals(ConsignmentStatus.RETURN_INITIATED) && shipmentNewStatus.equals(ConsignmentStatus.DELIVERED) ){
+						//	return false;
+						//}else{
 					LOG.info("updateConsignment:: Inside ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus) >>> shipmentCurrentStatus >>"
 							+ shipmentCurrentStatus
 							+ "<<shipmentNewStatus>>"
@@ -549,7 +549,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					LOG.info("****************************************Order synced succesfully - Now sending notificatioon to customer *******************");
 					//call send notification method
 					sendOrderNotification(shipment, consignmentModel, orderModel, shipmentNewStatus);
-					}
+					//}
 					}
 					return true;
 				}
