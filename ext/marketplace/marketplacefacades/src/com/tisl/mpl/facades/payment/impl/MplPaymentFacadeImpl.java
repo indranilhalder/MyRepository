@@ -1644,11 +1644,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1699,9 +1699,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
@@ -3184,6 +3184,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				}
 			}
 			getMplPaymentService().paymentModeApportion(order);
+
+			LOG.info("Total Convenience Price in walletPayment::saveTPWalletPaymentInfo" + order.getTotalPriceWithConv());
+
+			LOG.info("Total Price in walletPayment::saveTPWalletPaymentInfo" + order.getTotalPrice());
 
 		}
 		else
