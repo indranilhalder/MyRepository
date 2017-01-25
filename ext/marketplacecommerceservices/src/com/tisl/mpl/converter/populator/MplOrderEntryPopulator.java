@@ -1,5 +1,6 @@
 package com.tisl.mpl.converter.populator;
 
+import de.hybris.platform.commercefacades.order.converters.populator.OrderEntryPopulator;
 import de.hybris.platform.commercefacades.order.data.ConsignmentData;
 import de.hybris.platform.commercefacades.order.data.ConsignmentEntryData;
 import de.hybris.platform.commercefacades.order.data.ImeiDetailData;
@@ -8,9 +9,9 @@ import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commerceservices.strategies.ModifiableChecker;
-import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
@@ -34,65 +35,61 @@ import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 /**
  * Converter for converting order / cart entries
  */
-public class MplOrderEntryPopulator implements Populator<AbstractOrderEntryModel, OrderEntryData>
+public class MplOrderEntryPopulator extends OrderEntryPopulator
 {
 	private Converter<ProductModel, ProductData> productConverter;
-	private Converter<MplZoneDeliveryModeValueModel, MarketplaceDeliveryModeData> deliveryModeConverter;
+	private Converter<MplZoneDeliveryModeValueModel, MarketplaceDeliveryModeData> mplDeliveryModeConverter;
 	private PriceDataFactory priceDataFactory;
 	private ModifiableChecker<AbstractOrderEntryModel> entryOrderChecker;
 	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
 	private Converter<ConsignmentEntryModel, ConsignmentEntryData> consignmentConverter;
 
+	@Override
 	protected PriceDataFactory getPriceDataFactory()
 	{
 		return priceDataFactory;
 	}
 
+	@Override
 	@Required
 	public void setPriceDataFactory(final PriceDataFactory priceDataFactory)
 	{
 		this.priceDataFactory = priceDataFactory;
 	}
 
-	protected Converter<MplZoneDeliveryModeValueModel, MarketplaceDeliveryModeData> getDeliveryModeConverter()
-	{
-		return deliveryModeConverter;
-	}
-
-	@Required
-	public void setDeliveryModeConverter(
-			final Converter<MplZoneDeliveryModeValueModel, MarketplaceDeliveryModeData> deliveryModeConverter)
-	{
-		this.deliveryModeConverter = deliveryModeConverter;
-	}
-
+	@Override
 	protected Converter<ProductModel, ProductData> getProductConverter()
 	{
 		return productConverter;
 	}
 
+	@Override
 	@Required
 	public void setProductConverter(final Converter<ProductModel, ProductData> productConverter)
 	{
 		this.productConverter = productConverter;
 	}
 
+	@Override
 	protected ModifiableChecker<AbstractOrderEntryModel> getEntryOrderChecker()
 	{
 		return entryOrderChecker;
 	}
 
+	@Override
 	@Required
 	public void setEntryOrderChecker(final ModifiableChecker<AbstractOrderEntryModel> entryOrderChecker)
 	{
 		this.entryOrderChecker = entryOrderChecker;
 	}
 
+	@Override
 	protected Converter<PointOfServiceModel, PointOfServiceData> getPointOfServiceConverter()
 	{
 		return pointOfServiceConverter;
 	}
 
+	@Override
 	@Required
 	public void setPointOfServiceConverter(final Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter)
 	{
@@ -135,9 +132,33 @@ public class MplOrderEntryPopulator implements Populator<AbstractOrderEntryModel
 			addConsignmentValue(source, target);
 			addPromotionValue(source, target);
 			addImeiDetails(source, target);
+			addSellerInformation(source, target);
 		}
 	}
 
+
+	/**
+	 * @param source
+	 * @param target
+	 */
+	private void addSellerInformation(final AbstractOrderEntryModel source, final OrderEntryData target)
+	{
+		// YTODO Auto-generated method stub
+		if (null != target.getProduct() && null != target.getProduct().getSeller())
+		{
+			for (final SellerInformationData seller : target.getProduct().getSeller())
+			{
+				if (source.getSelectedUSSID().equalsIgnoreCase(seller.getUssid()))
+				{
+					target.setSelectedSellerInformation(seller);
+					break;
+				}
+			}
+
+		}
+
+
+	}
 
 	/**
 	 * @param source
@@ -290,6 +311,7 @@ public class MplOrderEntryPopulator implements Populator<AbstractOrderEntryModel
 	 * @param orderEntry
 	 * @param target
 	 */
+
 	private void addDeliveryModes(final AbstractOrderEntryModel orderEntry, final OrderEntryData target)
 	{
 		if (orderEntry.getMplZoneDeliveryModeValue() != null)
@@ -297,7 +319,7 @@ public class MplOrderEntryPopulator implements Populator<AbstractOrderEntryModel
 			final List<MarketplaceDeliveryModeData> deliveryModesData = new ArrayList<MarketplaceDeliveryModeData>();
 			for (final MplZoneDeliveryModeValueModel deliveryMode : orderEntry.getMplZoneDeliveryModeValue())
 			{
-				final MarketplaceDeliveryModeData deliveryModeData = getDeliveryModeConverter().convert(deliveryMode);
+				final MarketplaceDeliveryModeData deliveryModeData = getMplDeliveryModeConverter().convert(deliveryMode);
 				deliveryModesData.add(deliveryModeData);
 			}
 			target.setDeliveryModes(deliveryModesData);
@@ -316,11 +338,12 @@ public class MplOrderEntryPopulator implements Populator<AbstractOrderEntryModel
 		}
 	}
 
+	@Override
 	protected void addDeliveryMode(final AbstractOrderEntryModel orderEntry, final OrderEntryData entry)
 	{
 		if (orderEntry.getMplDeliveryMode() != null)
 		{
-			entry.setMplDeliveryMode(getDeliveryModeConverter().convert(orderEntry.getMplDeliveryMode()));
+			entry.setMplDeliveryMode(getMplDeliveryModeConverter().convert(orderEntry.getMplDeliveryMode()));
 
 		}
 
@@ -334,6 +357,7 @@ public class MplOrderEntryPopulator implements Populator<AbstractOrderEntryModel
 		}
 	}
 
+	@Override
 	protected void addCommon(final AbstractOrderEntryModel orderEntry, final OrderEntryData entry)
 	{
 		entry.setEntryNumber(orderEntry.getEntryNumber());
@@ -345,16 +369,19 @@ public class MplOrderEntryPopulator implements Populator<AbstractOrderEntryModel
 	}
 
 
+	@Override
 	protected void adjustUpdateable(final OrderEntryData entry, final AbstractOrderEntryModel entryToUpdate)
 	{
 		entry.setUpdateable(getEntryOrderChecker().canModify(entryToUpdate));
 	}
 
+	@Override
 	protected void addProduct(final AbstractOrderEntryModel orderEntry, final OrderEntryData entry)
 	{
 		entry.setProduct(getProductConverter().convert(orderEntry.getProduct()));
 	}
 
+	@Override
 	protected void addTotals(final AbstractOrderEntryModel orderEntry, final OrderEntryData entry)
 	{
 		if (orderEntry.getBasePrice() != null)
@@ -382,9 +409,29 @@ public class MplOrderEntryPopulator implements Populator<AbstractOrderEntryModel
 		}
 	}
 
+	@Override
 	protected PriceData createPrice(final AbstractOrderEntryModel orderEntry, final Double val)
 	{
 		return getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf(val.doubleValue()),
 				orderEntry.getOrder().getCurrency());
+	}
+
+	/**
+	 * @return the mplDeliveryModeConverter
+	 */
+	public Converter<MplZoneDeliveryModeValueModel, MarketplaceDeliveryModeData> getMplDeliveryModeConverter()
+	{
+		return mplDeliveryModeConverter;
+	}
+
+	/**
+	 * @param mplDeliveryModeConverter
+	 *           the mplDeliveryModeConverter to set
+	 */
+	@Required
+	public void setMplDeliveryModeConverter(
+			final Converter<MplZoneDeliveryModeValueModel, MarketplaceDeliveryModeData> mplDeliveryModeConverter)
+	{
+		this.mplDeliveryModeConverter = mplDeliveryModeConverter;
 	}
 }

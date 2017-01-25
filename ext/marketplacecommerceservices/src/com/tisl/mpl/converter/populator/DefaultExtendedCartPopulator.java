@@ -58,12 +58,12 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 	@Override
 	public void populate(final CartModel source, final CartData target)
 	{
+		super.populate(source, target);
 		try
 		{
 			if (source != null)
 			{
 				final Double deliveryCost = source.getDeliveryCost();
-				super.populate(source, target);
 				addOveriddenPromoDetails(source, target);
 				addDeliveryAddress(source, target);
 				addPaymentInformation(source, target);

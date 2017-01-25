@@ -921,13 +921,13 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<bean id="defaultZoneDeliveryModePopulator"
 			class="com.tisl.mpl.converter.populator.MplDeliveryModePopulator"/>
 	
-	<alias name="defaultOrderEntryPopulator" alias="orderEntryPopulator"/>
-	<bean id="defaultOrderEntryPopulator"
-			class="com.tisl.mpl.converter.populator.MplOrderEntryPopulator">
+	<alias name="mplOrderEntryPopulator" alias="orderEntryPopulator"/>
+	<bean id="mplOrderEntryPopulator"
+			class="com.tisl.mpl.converter.populator.MplOrderEntryPopulator" parent="defaultOrderEntryPopulator">
 		<property name="productConverter" ref="orderEntryProductConverter"/>
 		<property name="priceDataFactory" ref="priceDataFactory"/>
 		<property name="entryOrderChecker" ref="commerceOrderEntryModifiableChecker"/>
-		<property name="deliveryModeConverter" ref="mplDeliveryModeConverter"/>
+		<property name="mplDeliveryModeConverter" ref="mplDeliveryModeConverter"/>
 		<property name="pointOfServiceConverter" ref="pointOfServiceConverter"/>
 		<property name="consignmentConverter" ref="consignmentConverter"/>
 		<!-- <property name="mplOrderService" ref="mplOrderService"/> -->
@@ -958,6 +958,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		
 	</bean>
 	
+	<alias name="mplExtendedCartPopulator" alias="cartPopulator"/>
 	<bean id="mplExtendedCartPopulator"
 			class="com.tisl.mpl.converter.populator.DefaultExtendedCartPopulator"
 			parent="defaultCartPopulator">

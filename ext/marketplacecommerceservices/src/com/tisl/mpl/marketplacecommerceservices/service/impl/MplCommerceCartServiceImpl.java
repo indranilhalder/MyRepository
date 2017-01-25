@@ -275,15 +275,10 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @param parameter
 	 * @return CommerceCartModification
 	 * @throws CommerceCartModificationException
+	 * @Override public CommerceCartModification addToCartWithUSSID(final CommerceCartParameter parameter) throws
+	 *           CommerceCartModificationException { return
+	 *           getMplDefaultCommerceAddToCartStrategyImpl().addToCart(parameter); }
 	 */
-
-	@Override
-	public CommerceCartModification addToCartWithUSSID(final CommerceCartParameter parameter)
-			throws CommerceCartModificationException
-	{
-		return getMplDefaultCommerceAddToCartStrategyImpl().addToCart(parameter);
-	}
-
 
 	/**
 	 * @description: It is responsible for fetching seller information
@@ -1633,7 +1628,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				parameter.setCreateNewEntry(false);
 				parameter.setUssid(sellerUssId);
 
-				final CommerceCartModification modification = addToCartWithUSSID(parameter);
+				//final CommerceCartModification modification = addToCartWithUSSID(parameter);
+				final CommerceCartModification modification = getMplDefaultCommerceAddToCartStrategyImpl().addToCart(parameter);
 				cartModificationData = getCartModificationConverter().convert(modification);
 
 				success = (cartModificationData != null) ? true : false;

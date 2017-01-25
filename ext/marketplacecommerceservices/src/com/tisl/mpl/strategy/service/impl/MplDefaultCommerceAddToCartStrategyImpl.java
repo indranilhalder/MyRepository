@@ -5,7 +5,7 @@ package com.tisl.mpl.strategy.service.impl;
 
 import de.hybris.platform.commerceservices.order.CommerceCartModification;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
-import de.hybris.platform.commerceservices.order.impl.AbstractCommerceAddToCartStrategy;
+import de.hybris.platform.commerceservices.order.impl.DefaultCommerceAddToCartStrategy;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartEntryModel;
@@ -40,11 +40,11 @@ import com.tisl.mpl.strategy.service.MplCheckCartLevelStrategy;
  * @author TCS
  *
  */
-public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAddToCartStrategy implements
+public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddToCartStrategy implements
 		MplCommerceAddToCartStrategy
 {
 
-	private final int maxOrderQuantityConstant = 10;//
+	private final String maxOrderQuantityConstant = "mpl.cart.maximumConfiguredQuantity.lineItem";
 	protected static final Logger LOG = Logger.getLogger(MplDefaultCommerceAddToCartStrategyImpl.class);
 	@Resource(name = "mplDeliveryCostService")
 	private MplDeliveryCostService mplDeliveryCostService;
@@ -76,13 +76,13 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 			final CartModel cartModel = parameter.getCart();
 			final ProductModel productModel = parameter.getProduct();
 			final long quantityToAdd = parameter.getQuantity();
-			final UnitModel unit = parameter.getUnit();
+			//final UnitModel unit = parameter.getUnit();
 			final String ussid = parameter.getUssid();
-			cartModel.setCheckUssid(ussid);
+			//cartModel.setCheckUssid(ussid);
 			final boolean forceNewEntry = parameter.isCreateNewEntry();
 			final PointOfServiceModel deliveryPointOfService = parameter.getPointOfService();
 			CommerceCartModification localCommerceCartModification1;
-			UnitModel orderableUnit = unit;
+			UnitModel orderableUnit = parameter.getUnit();
 			if (orderableUnit == null)
 			{
 				try
@@ -140,7 +140,7 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 				}
 
 
-				getModelService().save(cartEntryModel);
+				//getModelService().save(cartEntryModel);
 				setSellerInformationinCartEntry(cartEntryModel, productModel);
 				getCommerceCartCalculationStrategy().calculateCart(cartModel);
 				getModelService().save(cartEntryModel);
@@ -258,7 +258,9 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 		if (!isMaxOrderQuantitySet(maxOrderQuantity))
 		{
 			// maxOrderQuantity = new Integer(maxOrderQuantityConstant); Critical Sonar fixes
-			maxOrderQuantity = Integer.valueOf(maxOrderQuantityConstant);
+			//maxOrderQuantity = Integer.valueOf(maxOrderQuantityConstant);
+
+			maxOrderQuantity = Integer.valueOf(getConfigurationService().getConfiguration().getString(maxOrderQuantityConstant));
 		}
 		final long newTotalQuantityAfterProductMaxOrder = Math.min(newTotalQuantityAfterStockLimit, maxOrderQuantity.longValue());
 
@@ -280,11 +282,11 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 		Long availableStockLevel = Long.valueOf(0);
 		if (ussid != null)
 		{
-			final List<StockLevelModel> stockLevelList = mplStockDao.getStockDetail(ussid);
+			final StockLevelModel stockLevelList = mplStockDao.getStockDetail(ussid);
 			//if (stockLevelList != null && stockLevelList.size() > 0)
-			if (CollectionUtils.isNotEmpty(stockLevelList))
+			if (null != stockLevelList)
 			{
-				availableStockLevel = Long.valueOf(stockLevelList.get(0).getAvailable());
+				availableStockLevel = Long.valueOf(stockLevelList.getAvailable());
 			}
 		}
 		else
@@ -328,11 +330,5 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 		this.mplStockDao = mplStockDao;
 	}
 
-	/**
-	 * @return the maxOrderQuantityConstant
-	 */
-	public int getMaxOrderQuantityConstant()
-	{
-		return maxOrderQuantityConstant;
-	}
+
 }
