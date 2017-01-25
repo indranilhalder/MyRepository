@@ -279,7 +279,7 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 		boolean errorCheck = false;
 		try
 		{
-			if (item instanceof BuyAPercentageDiscount || item instanceof BuyABFreePrecentageDiscount)
+			if (item instanceof BuyAPercentageDiscount)// || item instanceof BuyABFreePrecentageDiscount)
 			{
 				LOG.debug("******** Special price check for BuyAPercentageDiscount:" + item.getAttribute("title"));
 				errorCheck = poulatePromoPriceData(item);
