@@ -1642,11 +1642,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1697,9 +1697,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -2523,63 +2523,69 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			if (null != abstractOrderModel)
 			{
-				for (final AbstractOrderEntryModel abstractOrderEntryModel : abstractOrderModel.getEntries())
+				final List<AbstractOrderEntryModel> entryList = abstractOrderModel.getEntries();
+
+				if (CollectionUtils.isNotEmpty(entryList))
 				{
-					if (abstractOrderEntryModel != null && abstractOrderEntryModel.getGiveAway().booleanValue()
-							&& CollectionUtils.isNotEmpty(abstractOrderEntryModel.getAssociatedItems()))
+					for (final AbstractOrderEntryModel abstractOrderEntryModel : entryList)
 					{
-						//start populate deliveryPointOfService for freebie
-						if (LOG.isDebugEnabled())
+						if (abstractOrderEntryModel != null && abstractOrderEntryModel.getGiveAway().booleanValue()
+								&& CollectionUtils.isNotEmpty(abstractOrderEntryModel.getAssociatedItems()))
 						{
-							LOG.debug("***Before Populating deliveryPointOfService for freebie product has ussID "
-									+ abstractOrderEntryModel.getSelectedUSSID());
-						}
-						PointOfServiceModel posModel = null;
-						for (final AbstractOrderEntryModel cEntry : abstractOrderModel.getEntries())
-						{
-							if (abstractOrderEntryModel.getAssociatedItems().size() == 1)
+							//start populate deliveryPointOfService for freebie
+							if (LOG.isDebugEnabled())
 							{
-								if (cEntry.getSelectedUSSID().equalsIgnoreCase(abstractOrderEntryModel.getAssociatedItems().get(0)))
+								LOG.debug("***Before Populating deliveryPointOfService for freebie product has ussID "
+										+ abstractOrderEntryModel.getSelectedUSSID());
+							}
+							PointOfServiceModel posModel = null;
+							for (final AbstractOrderEntryModel cEntry : entryList)
+							{
+								if (abstractOrderEntryModel.getAssociatedItems().size() == 1)
 								{
-									if (null != cEntry.getDeliveryPointOfService())
+									if (cEntry.getSelectedUSSID().equalsIgnoreCase(abstractOrderEntryModel.getAssociatedItems().get(0)))
 									{
-										if (LOG.isDebugEnabled())
+										if (null != cEntry.getDeliveryPointOfService())
 										{
-											LOG.debug(ERROR_FRREBIE + abstractOrderEntryModel.getAssociatedItems().get(0));
+											if (LOG.isDebugEnabled())
+											{
+												LOG.debug(ERROR_FRREBIE + abstractOrderEntryModel.getAssociatedItems().get(0));
+											}
+											posModel = cEntry.getDeliveryPointOfService();
 										}
-										posModel = cEntry.getDeliveryPointOfService();
+									}
+								}
+								else
+								{
+									final String parentUssId = findParentUssId(abstractOrderEntryModel, abstractOrderModel);
+									if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
+									{
+										if (null != cEntry.getDeliveryPointOfService())
+										{
+											if (LOG.isDebugEnabled())
+											{
+												LOG.debug(ERROR_FRREBIE + parentUssId);
+											}
+											posModel = cEntry.getDeliveryPointOfService();
+										}
 									}
 								}
 							}
-							else
+							if (null != posModel)
 							{
-								final String parentUssId = findParentUssId(abstractOrderEntryModel, abstractOrderModel);
-								if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
-								{
-									if (null != cEntry.getDeliveryPointOfService())
-									{
-										if (LOG.isDebugEnabled())
-										{
-											LOG.debug(ERROR_FRREBIE + parentUssId);
-										}
-										posModel = cEntry.getDeliveryPointOfService();
-									}
-								}
+								abstractOrderEntryModel.setDeliveryPointOfService(posModel);
+								getModelService().save(abstractOrderEntryModel);
 							}
+							if (LOG.isDebugEnabled())
+							{
+								LOG.debug("After Populating deliveryPointOfService for freebie product has ussID "
+										+ abstractOrderEntryModel.getSelectedUSSID());
+							}
+							//end populate deliveryPointOfService for freebie
 						}
-						if (null != posModel)
-						{
-							abstractOrderEntryModel.setDeliveryPointOfService(posModel);
-							getModelService().save(abstractOrderEntryModel);
-						}
-						if (LOG.isDebugEnabled())
-						{
-							LOG.debug("After Populating deliveryPointOfService for freebie product has ussID "
-									+ abstractOrderEntryModel.getSelectedUSSID());
-						}
-						//end populate deliveryPointOfService for freebie
 					}
 				}
+
 			}
 		}
 		catch (final ModelSavingException e)
