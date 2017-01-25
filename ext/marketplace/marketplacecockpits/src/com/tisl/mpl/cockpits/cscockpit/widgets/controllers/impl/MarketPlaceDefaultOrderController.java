@@ -298,7 +298,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 							if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
 									MarketplacecommerceservicesConstants.SUCCESS))
 							{
-								newStatus = ConsignmentStatus.ORDER_CANCELLED;
+								newStatus = ConsignmentStatus.RETURN_COMPLETED;
 							}
 							else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
 									MarketplacecommerceservicesConstants.FAILURE))
@@ -315,7 +315,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 									orderEntry.getNetAmountAfterAllDisc(),
 									newStatus);
 							if(newStatus.equals(ConsignmentStatus.RETURN_COMPLETED)){
-								orderEntry.setJuspayRequestId(uniqueRequestId);
+								//orderEntry.setJuspayRequestId(uniqueRequestId);
 								getModelService().save(orderEntry);
 							}
 						}
