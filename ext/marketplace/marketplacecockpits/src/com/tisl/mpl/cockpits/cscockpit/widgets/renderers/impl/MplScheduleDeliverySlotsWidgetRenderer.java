@@ -48,7 +48,7 @@ extends AbstractCsWidgetRenderer<Widget<OrderItemWidgetModel, OrderController>> 
 			boolean orderHasDeliverySlots = false;
 			if (null != parentorder.getEntries()) {
 				for (AbstractOrderEntryModel entry : parentorder.getEntries()) {
-					if (null != entry.getEdScheduledDate()) {
+					if (null != entry.getEdScheduledDate() || null != entry.getSddDateBetween()) {
 						orderHasDeliverySlots = true;
 						break;
 					}
@@ -99,7 +99,7 @@ extends AbstractCsWidgetRenderer<Widget<OrderItemWidgetModel, OrderController>> 
 			for (AbstractOrderEntryModel entry : parentOrder.getEntries()) {
 				for(AbstractOrderEntryModel suborderEntry: orderModel.getEntries() ) {
 					if(suborderEntry.getSelectedUSSID().equalsIgnoreCase(entry.getSelectedUSSID())) {
-						if(null != entry.getEdScheduledDate()) {
+						if(null != entry.getEdScheduledDate() || null != entry.getSddDateBetween()) {
 							Listitem row = new Listitem();
 							row.setParent(listBox);
 							populateDataRow(widget, entry, row);
@@ -125,7 +125,13 @@ extends AbstractCsWidgetRenderer<Widget<OrderItemWidgetModel, OrderController>> 
 		ussidCell.setParent(row);
 
 		// Date 
-		String edScheduledDate = entry.getEdScheduledDate();
+		String edScheduledDate = null;
+		if(null != entry.getEdScheduledDate() ) {
+			edScheduledDate = entry.getEdScheduledDate();
+		}else if (null != entry.getSddDateBetween()) {
+			edScheduledDate = entry.getSddDateBetween();
+		}
+		
 		Listcell edScheduledDatecell = new Listcell(edScheduledDate);
 		edScheduledDatecell.setParent(row);
 
