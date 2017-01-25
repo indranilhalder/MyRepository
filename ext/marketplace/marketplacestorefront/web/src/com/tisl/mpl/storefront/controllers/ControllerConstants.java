@@ -376,6 +376,7 @@ public interface ControllerConstants
 			{
 				String NPSFeedback = "fragments/NPS_Emailer/npsFeedbackPage";
 				String SubmitSuccess = "fragments/NPS_Emailer/submitSuccess";
+				String NpsFeedbackExists = "fragments/NPS_Emailer/npsFeedbackExists";
 			}
 		}
 	}

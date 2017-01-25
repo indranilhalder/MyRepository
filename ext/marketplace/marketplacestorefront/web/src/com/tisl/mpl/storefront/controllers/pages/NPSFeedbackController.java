@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,10 +55,17 @@ public class NPSFeedbackController
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
 
+	/**
+	 *
+	 * @param model
+	 * @param transactionId
+	 * @return String
+	 * @throws CMSItemNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
 	@RequestMapping(value = "/NPSFeedbackForm", method = RequestMethod.GET)
-	public String getFeedbackQuestionDetails(final Model model, @RequestParam final String originalUid,
-			@RequestParam final String transactionId, @RequestParam final String rating) throws CMSItemNotFoundException,
-			UnsupportedEncodingException
+	public String getFeedbackQuestionDetails(final Model model, @RequestParam(required = false) final String transactionId)
+			throws CMSItemNotFoundException, UnsupportedEncodingException
 
 	{
 		String returnStatement = null;
@@ -66,6 +74,13 @@ public class NPSFeedbackController
 		final NPSFeedbackQRForm npsFeedbackQRForm = new NPSFeedbackQRForm();
 		try
 		{
+			//1. Stop the form submission if any of these values are missing
+			if (StringUtils.isEmpty(transactionId))
+			{
+				GlobalMessages.addErrorMessage(model, "Invalid Transaction , User or Rating. ");
+				model.addAttribute("npsFeedbackForm", npsFeedbackQRForm);
+				return ControllerConstants.Views.Fragments.NPS_Emailer.NPSFeedback;
+			}
 			//dropped for multi transaction to database.
 			//npsFeedbackQuestionFacade.saveFeedbackRating(originalUid, transactionId, rating);
 			npsFeedbackQRData = npsFeedbackQuestionFacade.getFeedbackQuestionFacade();
@@ -108,7 +123,8 @@ public class NPSFeedbackController
 	}
 
 	/**
-	 * TO-DO: Need to check the NPSFeedbackQRForm for null values from client end
+	 * This method accepts both GET and POST in case of POST the method accets data and on GET it redirects to the base
+	 * website
 	 *
 	 * @param feedbackForm
 	 * @param result
@@ -121,13 +137,38 @@ public class NPSFeedbackController
 			final BindingResult result, final Model model) throws CMSItemNotFoundException
 	{
 		String returnStatement = null;
+		int npsFeedBackModelCount = 0;
 		final NPSFeedbackQRData feedbackData = new NPSFeedbackQRData();
 		final List<NPSFeedbackQRDetailData> feedbackDataDetail = new ArrayList<>();
 		try
 		{
+			//1. Stop the form submission if any of these values are missing
+			if (StringUtils.isEmpty(feedbackForm.getTransactionId()) || StringUtils.isEmpty(feedbackForm.getOriginalUid())
+					|| StringUtils.isEmpty(feedbackForm.getRating()))
+			{
+				GlobalMessages.addErrorMessage(model, "Invalid transactions , user or rating. ");
+				return ControllerConstants.Views.Fragments.NPS_Emailer.NPSFeedback;
+			}//2. Check if a feedback already exist for this transaction ID
+			else
+			{
+				npsFeedBackModelCount = npsFeedbackQuestionFacade.getFeedback(feedbackForm.getTransactionId());
+			}
+
 			if (result.hasErrors())
 			{
+				GlobalMessages.addErrorMessage(model, "Your form has errors . Please rectify and submit the form again. ");
 				return ControllerConstants.Views.Fragments.NPS_Emailer.NPSFeedback;
+
+			}
+			else if (npsFeedBackModelCount > 0)
+			{
+				return ControllerConstants.Views.Fragments.NPS_Emailer.NpsFeedbackExists;
+			}
+			else if (!npsFeedbackQuestionFacade.validateCustomerForTransaction(feedbackForm.getTransactionId()).getOriginalUid()
+					.equals(feedbackForm.getOriginalUid()))
+			{
+				returnStatement = ControllerConstants.Views.Fragments.NPS_Emailer.NPSFeedback;
+				GlobalMessages.addErrorMessage(model, "Transaction and associated customer not found.");
 			}
 			else
 			{
@@ -139,7 +180,6 @@ public class NPSFeedbackController
 				{
 					final NPSFeedbackQRDetailData feedbackDetailData = new NPSFeedbackQRDetailData();
 					feedbackDetailData.setQuestionCode(formDetail.getQuestionCode());
-
 					feedbackDataDetail.add(feedbackDetailData);
 				}
 				feedbackData.setFeedbackQRList(feedbackDataDetail);
@@ -175,9 +215,5 @@ public class NPSFeedbackController
 
 		}
 		return returnStatement;
-
-
-
-
 	}
 }

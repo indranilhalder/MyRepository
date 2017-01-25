@@ -4,6 +4,7 @@
 package com.tisl.mpl.facade.nps;
 
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.order.OrderService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import net.sourceforge.pmd.util.StringUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.core.model.NPSFeedbackDetailModel;
 import com.tisl.mpl.core.model.NPSFeedbackModel;
@@ -39,6 +41,8 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 	private ExtendedUserService extendedUserService;
 	@Resource
 	private ModelService modelService;
+	@Autowired
+	private OrderService orderService;
 
 	@Override
 	public NPSFeedbackQRData getFeedbackQuestionFacade()
@@ -80,15 +84,6 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 		try
 		{
 			npsFeedbackModel = modelService.create(NPSFeedbackModel.class);
-			if (feedbackForm.getTransactionId() != null)
-			{
-				//npsFeedbackModel = npsFeedbackQuestionService.getFeedback(feedbackForm.getTransactionId());
-
-			}
-			//if (npsFeedbackModel != null)
-			//{
-
-			//saving anyother feedback
 			if (StringUtils.isNotEmpty(feedbackForm.getTransactionId()))
 			{
 				npsFeedbackModel.setTransactionId(feedbackForm.getTransactionId());
@@ -107,7 +102,7 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 					npsFeedbackModel.setLastName(customer.getLastName());
 				}
 			}
-			//npsFeedbackModel.setNpsId(npsFeedbackQuestionService.getNPSId()); // need to check the error
+			npsFeedbackModel.setNpsId(npsFeedbackQuestionService.getNPSId()); // need to check the error
 			npsFeedbackModel.setNpsId(String.valueOf(Math.random()));
 			if (StringUtils.isNotEmpty(feedbackForm.getAnyOtherFeedback()))
 			{
@@ -137,7 +132,6 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 				npsFeedbackModel.setFeedbackDetails(npsFeedbackModelList);
 				modelService.saveAll(npsFeedbackModel);
 			}
-			//}
 		}
 		catch (final Exception e)
 		{
@@ -153,27 +147,22 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 	 * java.lang.String)
 	 */
 	@Override
+	@Deprecated
 	public boolean saveFeedbackRating(final String originalUid, final String transactionId, final String rating)
 	{
 		NPSFeedbackModel npsFeedbackModel = null;
 		CustomerModel customer = null;
 		try
 		{
-			npsFeedbackModel = npsFeedbackQuestionService.getFeedback(transactionId);
-			if (npsFeedbackModel == null)
-			{
-				npsFeedbackModel = modelService.create(NPSFeedbackModel.class);
-			}
+			npsFeedbackModel = modelService.create(NPSFeedbackModel.class);
 			customer = (CustomerModel) extendedUserService.getUserForEmailid(originalUid);
-			if (customer != null)
+			if (null != customer)
 			{
 				npsFeedbackModel.setEmailId(customer.getOriginalUid());
 				npsFeedbackModel.setFirstName(customer.getFirstName());
 				npsFeedbackModel.setLastName(customer.getLastName());
 			}
-
 			npsFeedbackModel.setNpsId(npsFeedbackQuestionService.getNPSId());
-
 			npsFeedbackModel.setNpsRating(rating);
 			npsFeedbackModel.setTransactionId(transactionId);
 			npsFeedbackModel.setResponseTime(new Date());
@@ -185,5 +174,22 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 			ExceptionUtil.getCustomizedExceptionTrace(e);
 		}
 		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facade.nps.NPSFeedbackQuestionFacade#getFeedback(java.lang.String)
+	 */
+	@Override
+	public int getFeedback(final String transactionId)
+	{
+		return npsFeedbackQuestionService.getFeedback(transactionId);
+	}
+
+	@Override
+	public CustomerModel validateCustomerForTransaction(final String transactionId)
+	{
+		return npsFeedbackQuestionService.validateCustomerForTransaction(transactionId);
 	}
 }

@@ -3,13 +3,13 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator;
 
 import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.tisl.mpl.core.model.NPSFeedbackModel;
 import com.tisl.mpl.core.model.NPSFeedbackQuestionModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.NPSFeedbackQuestionDao;
 import com.tisl.mpl.marketplacecommerceservices.service.NPSFeedbackQuestionService;
@@ -39,9 +39,8 @@ public class NPSFeedbackQuestionServiceImpl implements NPSFeedbackQuestionServic
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NPSFeedbackQuestionService#getFeedback(java.lang.String)
 	 */
 	@Override
-	public NPSFeedbackModel getFeedback(final String transactionId)
+	public int getFeedback(final String transactionId)
 	{
-		// YTODO Auto-generated method stub
 		return npsFeedbackQuestionDao.getFeedback(transactionId);
 	}
 
@@ -54,5 +53,18 @@ public class NPSFeedbackQuestionServiceImpl implements NPSFeedbackQuestionServic
 	public String getNPSId()
 	{
 		return npsIdGenerator.generate().toString();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.NPSFeedbackQuestionService#validateCustomerForTransaction(java
+	 * .lang.String)
+	 */
+	@Override
+	public CustomerModel validateCustomerForTransaction(final String transactionId)
+	{
+		return npsFeedbackQuestionDao.validateCustomerForTransaction(transactionId);
 	}
 }

@@ -3,9 +3,13 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -47,18 +51,43 @@ public class NPSFeedbackQuestionDaoImpl implements NPSFeedbackQuestionDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.NPSFeedbackQuestionDao#getFeedback(java.lang.String)
 	 */
 	@Override
-	public NPSFeedbackModel getFeedback(final String transactionId)
+	public int getFeedback(final String transactionId)
 	{
-		final String queryString = "SELECT {err: " + NPSFeedbackModel.PK + " } " + " FROM { " + NPSFeedbackModel._TYPECODE
-				+ " AS err} " + "where " + " { err. " + NPSFeedbackModel.TRANSACTIONID + " }  = ?transactionId";
+		final String queryString = "SELECT COUNT(*) FROM { " + NPSFeedbackModel._TYPECODE + "} " + "WHERE " + " { "
+				+ NPSFeedbackModel.TRANSACTIONID + " }  = ?transactionId";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("transactionId", transactionId);
-		LOG.debug("Fetching NPSFeedbackModel " + query);
-		return (NPSFeedbackModel) flexibleSearchService.search(query).getResult();
+		final List<Class> resultClassList = new ArrayList<Class>();
+		resultClassList.add(Integer.class);
+		query.setResultClassList(resultClassList);
+		LOG.debug("Fetching getFeedback " + query);
+		final Integer count = (Integer) flexibleSearchService.search(query).getResult().iterator().next();
+		return count.intValue();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.daos.NPSFeedbackQuestionDao#validateCustomerForTransaction(java.lang.
+	 * String)
+	 */
+	@Override
+	public CustomerModel validateCustomerForTransaction(final String transactionId)
+	{
+		final String queryString = "SELECT {o.user} FROM  {" + AbstractOrderEntryModel.PK + " AS aoe JOIN " + OrderModel.PK
+				+ " AS o ON {aoe.order} = {o.pk}} WHERE {aoe.transactionid} = ?transactionId";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("transactionId", transactionId);
+		LOG.debug("Fetching validateCustomerForTransaction " + query);
+
+		return (CustomerModel) flexibleSearchService.search(query).getResult();
+	}
+
+
 }
