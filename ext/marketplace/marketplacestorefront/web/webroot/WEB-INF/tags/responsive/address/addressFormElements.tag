@@ -405,7 +405,7 @@ $(document).ready(function(){
 	
 		
 		console.log("line 391 "+ $(".address_postcode").val());
-			
+			if($(".heading-form h3").text() == "Edit Address"){
 		loadPincodeData("edit").done(function() {
 			console.log("addressform line 394");
 		 var value = $(".address_landmarkOtherDiv").attr("data-value");
@@ -423,10 +423,28 @@ $(document).ready(function(){
 		 otherLandMarkTri(value,"blur");
 		});
 
-
-
 });
-  
+			}else{
+				loadPincodeData("new").done(function() {
+					console.log("addressform line 394");
+				 var value = $(".address_landmarkOtherDiv").attr("data-value");
+				 console.log("addressform line 396 "+value);
+				 otherLandMarkTri(value,"defult");
+				});
+			
+			
+			$(".address_postcode").blur(function() {
+				
+				loadPincodeData("new").done(function() {
+					console.log("addressform blur line 394");
+				 var value = $(".address_landmarkOtherDiv").attr("data-value");
+				 console.log("addressform blur line 396 "+value);
+				 otherLandMarkTri(value,"blur");
+				});
+
+		});
+
+			} 
 	});
 </script>
 <!-- R2.3: END -->
