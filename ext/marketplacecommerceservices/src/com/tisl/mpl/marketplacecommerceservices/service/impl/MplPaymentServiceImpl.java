@@ -3001,11 +3001,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3017,9 +3017,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3815,7 +3815,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 			if (null != auditModel)
 			{
-				//	List<ThirdPartyAuditEntryModel> collection = auditModel.getAuditEntries();
+				LOG.info("Audit Model with ref no>>>" + refNo);
 				List<MplPaymentAuditEntryModel> collection = auditModel.getAuditEntries();
 				final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
 				if (null == collection || collection.isEmpty())
@@ -3854,6 +3854,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				auditModel.setAuditEntries(auditEntryList);
 				auditModel.setIsExpired(Boolean.valueOf(true));
 				getModelService().save(auditModel);
+				LOG.info("Saved existing Audit Model with ref no>>>" + refNo);
 			}
 			else
 			{
@@ -3878,6 +3879,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				}
 
 				getModelService().save(newAuditModel);
+
+				LOG.info("Creating new Audit Model with ref no>>>" + refNo);
 			}
 
 		}
@@ -3910,7 +3913,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		try
 		{
-			//creating tpWalletInfoModel
+			LOG.info("Inside saveTPWalletPaymentInfo with ref no>>>" + refernceCode);
 			final ThirdPartyWalletInfoModel tpWalletInfoModel = getModelService().create(ThirdPartyWalletInfoModel.class);
 
 			//Commented for Mobile use
@@ -3939,7 +3942,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			else
 			{
-				LOG.error(ERROR_PAYMENT + cart.getCode());
+				LOG.error("Order does not have payment info tpWalletInfoModel -- " + ERROR_PAYMENT + cart.getCode());
 			}
 
 		}
@@ -3969,7 +3972,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	public void setTPWalletPaymentTransaction(final Map<String, Double> paymentMode, final AbstractOrderModel abstractOrderModel,
 			final String refernceCode)
 	{
-
+		LOG.info("Inside setTPWalletPaymentTransaction with ref no>>>" + refernceCode);
 		try
 		{
 			Collection<PaymentTransactionModel> collection = abstractOrderModel.getPaymentTransactions();
@@ -3994,7 +3997,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					.create(PaymentTransactionEntryModel.class);
 			paymentTransactionEntry.setCode(MarketplacecommerceservicesConstants.MRUPEE + "-" + refernceCode + "-"
 					+ System.currentTimeMillis());
-			paymentTransactionEntry.setAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPrice().doubleValue()));
+			paymentTransactionEntry.setAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPriceWithConv().doubleValue()));
 			paymentTransactionEntry.setTime(date);
 			paymentTransactionEntry.setCurrency(abstractOrderModel.getCurrency());
 			//To Change this
@@ -4033,7 +4036,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			paymentTransactionModel.setEntries(paymentTransactionEntryList);
 			paymentTransactionModel.setPaymentProvider(MarketplacecommerceservicesConstants.MRUPEE);
 			paymentTransactionModel.setOrder(abstractOrderModel);
-			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPrice().doubleValue()));
+			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPriceWithConv().doubleValue()));
 			//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
 
 			if (StringUtils.isNotEmpty(paymentTransactionEntryList.get(0).getTransactionStatus())
