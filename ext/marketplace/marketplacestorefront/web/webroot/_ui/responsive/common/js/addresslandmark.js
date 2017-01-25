@@ -56,7 +56,7 @@ var tmpValue= -1;
 $(".address_postcode").blur(function() {
 	 console.log("addresslandmark line 74 "+tmpValue);
 	 tmpValue++;
-	 if($(".address_postcode").val().length >= "3") {
+	 if($(".address_postcode").val().length >= "0") {
 		
 		loadPincodeData("edit").done(function() {
 			console.log("blur line 394");
