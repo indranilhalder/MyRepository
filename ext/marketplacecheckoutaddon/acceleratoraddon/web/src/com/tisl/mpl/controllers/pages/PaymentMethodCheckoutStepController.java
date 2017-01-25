@@ -4194,7 +4194,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
@@ -4507,29 +4507,26 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							+ format.format(transactionAmount));
 
 					/* Checking transaction amount received from mRupee and order amount */
-					if (format.format(orderAmount).compareTo(format.format(transactionAmount)) == 0)
-					{
-						status = MarketplacecheckoutaddonConstants.SUCCESS;
-						getMplPaymentFacade().entryInTPWaltAudit(status, MarketplacecheckoutaddonConstants.CHANNEL_WEB,
-								orderModel.getGuid(), refNo);
+					/*
+					 * if (format.format(orderAmount).compareTo(format.format(transactionAmount)) == 0) {
+					 */
+					status = MarketplacecheckoutaddonConstants.SUCCESS;
+					getMplPaymentFacade().entryInTPWaltAudit(status, MarketplacecheckoutaddonConstants.CHANNEL_WEB,
+							orderModel.getGuid(), refNo);
 
-						//saving TPWallet Payment related info
-						getMplPaymentFacade().saveTPWalletPaymentInfo(orderModel, request);
+					//saving TPWallet Payment related info
+					getMplPaymentFacade().saveTPWalletPaymentInfo(orderModel, request);
 
-						return updateOrder(orderModel, redirectAttributes);
-					}
-					else
-					{
-						LOG.info("OrderAmount--TransactionAmount Mismatch");
-						status = MarketplacecheckoutaddonConstants.FAIL;
-						//setting the audit table to DECLINED if order amount is not equal
-						getMplPaymentFacade().entryInTPWaltAudit(status, MarketplacecheckoutaddonConstants.CHANNEL_WEB,
-								orderModel.getGuid(), refNo);
-						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-								MarketplacecheckoutaddonConstants.TRANERRORMSG);
-						return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
-								+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
-					}
+					return updateOrder(orderModel, redirectAttributes);
+					/*
+					 * } else { LOG.info("OrderAmount--TransactionAmount Mismatch"); status =
+					 * MarketplacecheckoutaddonConstants.FAIL; //setting the audit table to DECLINED if order amount is not
+					 * equal getMplPaymentFacade().entryInTPWaltAudit(status, MarketplacecheckoutaddonConstants.CHANNEL_WEB,
+					 * orderModel.getGuid(), refNo); GlobalMessages.addFlashMessage(redirectAttributes,
+					 * GlobalMessages.ERROR_MESSAGES_HOLDER, MarketplacecheckoutaddonConstants.TRANERRORMSG); return
+					 * MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL +
+					 * MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid; }
+					 */
 				}
 
 				else
