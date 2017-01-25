@@ -143,7 +143,7 @@ function loadPincodeData(parm) {
 				$('.otherOption').val("");
 				$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show();
 				$(".addState").show();
-				 $('.address_landmarks').append($("<option class='otherOption'></option>").attr("value","Other").text("Other"));
+				 $('.address_landmarks').html("<option class='otherOption' value='Other'>Other</option>");
 				 $(".address_landmarkOther").val("");
 				 $(".address_townCity").prop("readonly", false);
 				//alert("tmpValue is "+ tmpValue);
