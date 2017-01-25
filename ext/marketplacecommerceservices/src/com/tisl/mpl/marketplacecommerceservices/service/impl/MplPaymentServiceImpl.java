@@ -3008,11 +3008,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3024,9 +3024,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3393,13 +3393,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for non-COD from OMS Submit Order Job de.hybris.platform.core.model.order.OrderModel)
 	 */
 	@Override
 	public boolean createPaymentTransactionFromSubmitOrderJob(final OrderModel orderModel)
 	{
+		boolean returnFlag = false;
 		try
 		{
 			PaymentInfoModel payInfo = null;
@@ -3414,75 +3415,75 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				paymentModeFromInfo = orderModel.getModeOfOrderPayment();
 			}
 
+			LOG.debug("Creating Payment transaction from Submit Order Job:- paymentModeFromInfo :- " + paymentModeFromInfo);
 
-			final String cartGuid = orderModel.getGuid();
-			MplPaymentAuditModel auditModel = null;
-			if (StringUtils.isNotEmpty(cartGuid))
+			final List<OrderModel> subOrders = orderModel.getChildOrders();
+			subOrders.add(orderModel);
+
+			final Map<String, Double> paymentMode = new HashMap<String, Double>();
+			paymentMode.put(paymentModeFromInfo, orderModel.getTotalPriceWithConv());
+
+			LOG.debug("Creating Payment transaction from Submit Order Job:- ModeOfPayment :- " + paymentMode);
+			if (!paymentModeFromInfo.equalsIgnoreCase("COD"))
 			{
-				auditModel = getMplOrderDao().getAuditList(cartGuid);
-			}
-
-			if (null != auditModel && StringUtils.isNotEmpty(auditModel.getAuditId()))
-			{
-				final List<JuspayWebhookModel> hooks = getMplProcessOrderDao().getEventsForPendingOrders(auditModel.getAuditId());
-				//}
-
-				final Map<String, Double> paymentMode = new HashMap<String, Double>();
-				paymentMode.put(paymentModeFromInfo, orderModel.getTotalPriceWithConv());
-
-				final JuspayOrderStatusModel juspayOrderStatusModel = ((JuspayWebhookModel) hooks).getOrderStatus();
-
-				final GetOrderStatusResponse orderStatusResponse = getJuspayOrderResponseConverter().convert(juspayOrderStatusModel);
-
-				//			final List<OrderModel> o = orderModel;
-				//			o.addAll(orderModel.getChildOrders());(orderModel.getChildOrders());
-
-				final List<OrderModel> subOrders = orderModel.getChildOrders();
-				subOrders.add(orderModel);
-
-				if (!paymentModeFromInfo.equalsIgnoreCase("COD"))
+				LOG.debug("Creating Payment transaction from Submit Order Job:- ModeOfPayment Prepaid");
+				final String cartGuid = orderModel.getGuid();
+				MplPaymentAuditModel auditModel = null;
+				if (StringUtils.isNotEmpty(cartGuid))
 				{
+					auditModel = getMplOrderDao().getAuditList(cartGuid);
+				}
+
+				if (null != auditModel && StringUtils.isNotEmpty(auditModel.getAuditId()))
+				{
+					final List<JuspayWebhookModel> hooks = getMplProcessOrderDao().getEventsForPendingOrders(auditModel.getAuditId());
+					//}
+
+					final JuspayOrderStatusModel juspayOrderStatusModel = ((JuspayWebhookModel) hooks).getOrderStatus();
+
+					final GetOrderStatusResponse orderStatusResponse = getJuspayOrderResponseConverter().convert(
+							juspayOrderStatusModel);
+
 					for (final OrderModel so : subOrders)
 					{
 						setPaymentTransactionFromJob(orderStatusResponse, paymentMode, so);
 						so.setModeOfOrderPayment(paymentModeFromInfo);
 					}
+					modelService.saveAll(subOrders);
+					returnFlag = true;
 				}
 				else
 				{
-					for (final OrderModel so : subOrders)
-					{
-						setPaymentTransactionForCODFromSubmitProcess(paymentMode, so);
-						so.setModeOfOrderPayment(paymentModeFromInfo);
-					}
+					returnFlag = false;
 				}
-
-				modelService.saveAll(subOrders);
-				return true;
 			}
 			else
 			{
-				return false;
+				LOG.debug("Creating Payment transaction from Submit Order Job:- ModeOfPayment COD");
+				for (final OrderModel so : subOrders)
+				{
+					setPaymentTransactionForCODFromSubmitProcess(paymentMode, so);
+					so.setModeOfOrderPayment(paymentModeFromInfo);
+				}
+				modelService.saveAll(subOrders);
+				returnFlag = true;
 			}
-
-
-
 		}
 		catch (final ModelSavingException e)
 		{
-			//throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
-			return false;
+			LOG.error("Creating Payment transaction from Submit Order Job:- " + e);
+			returnFlag = false;
 		}
 		catch (final Exception e)
 		{
-			//throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-			return false;
+			LOG.error("Creating Payment transaction from Submit Order Job:- " + e);
+			returnFlag = false;
 		}
-
+		return returnFlag;
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * @desc getPaymentModeFrompayInfo
 	 *
 	 * @see SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 	 */
@@ -3524,7 +3525,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for non-COD from OMS Submit Order Job
 	 */
@@ -3586,7 +3587,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @desc SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for COD from OMS Submit Order Job
 	 */
