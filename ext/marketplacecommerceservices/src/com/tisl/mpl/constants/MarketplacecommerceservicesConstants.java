@@ -1844,4 +1844,5 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public final static String MRUPEE_NARRATION_VALUE = "payment.mRupee.narration".intern();
 	public final static String MRUPEE_MERCHANT_CODE = "payment.mRupee.merchantID".intern();
+	public static final String MRUPEE_OPTION = "mRupee";
 }

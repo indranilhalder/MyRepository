@@ -3001,11 +3001,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3017,9 +3017,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3923,7 +3923,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 			tpWalletInfoModel.setWalletOwner(StringUtils.isNotEmpty(walletOwner) ? walletOwner : ((CustomerModel) cart.getUser())
 					.getOriginalUid());
-			tpWalletInfoModel.setProviderName(MarketplacecommerceservicesConstants.MRUPEE);
+			tpWalletInfoModel.setProviderName(MarketplacecommerceservicesConstants.MRUPEE_OPTION);
 			tpWalletInfoModel.setUser(getUserService().getCurrentUser());
 
 			//saving the tpWalletInfoModel
