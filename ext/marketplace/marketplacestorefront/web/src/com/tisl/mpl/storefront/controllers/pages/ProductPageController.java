@@ -1327,10 +1327,20 @@ public class ProductPageController extends MidPageController
 		}
 		final StringBuilder allVariants = new StringBuilder();
 		final ProductModel productModel = productService.getProductForCode(productCode);
-		final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-				ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
-				//ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
-				ProductOption.GALLERY, ProductOption.VARIANT_FULL));//Fix for TISPT-150
+		ProductData productData = null;
+		if (!ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase("FineJewellery"))
+		{
+			productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
+					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
+					//ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
+					ProductOption.GALLERY, ProductOption.VARIANT_FULL));//Fix for TISPT-150
+		}
+		else
+		{
+			productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
+					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.CLASSIFICATION,
+					ProductOption.GALLERY, ProductOption.VARIANT_FULL));//Fix for TISPT-150
+		}
 		//final String returnStatement = null;
 		try
 		{

@@ -19,6 +19,7 @@
 	src="${commonResourcePath}/bootstrap/js/popover.js"></script>
 	
 <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+
  <style type="text/css">
 tr.d0 td {
   background-color:#E0E0E0 ;
@@ -432,6 +433,19 @@ display:none;
               <span class="logo"></span>${product.brand.brandname}<%-- &nbsp;<spring:theme code="product.by"/>&nbsp;<span id="sellerNameIdQuick"></span>${sellerName} --%></h2><!-- Convert into AJAX call -->
               
     <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>
+    
+    <!-- //TPR-3752 Jewel Heading Added -->
+			<c:choose>
+  				<c:when test="${product.rootCategory=='FineJewellery'}">
+  				<input id="jwelQuick" type="hidden" value="${product.rootCategory}"/>
+					<p class="key-labelquick">
+	  					<c:forEach var="classification" items="${mapConfigurableAttributes}">
+						</c:forEach>
+	  			    </p>
+  				</c:when>
+  			</c:choose>
+    
+    
     <div class="price">
     
     
@@ -481,6 +495,23 @@ display:none;
 	  <span></span>
 	</p>
     
+    
+    <%--for price breakup(TPR-3752) --%>
+
+	
+	
+	<div id = "showPricequick">
+	
+	<p id = "showquick" class="pricebreakup-link">Price Breakup</p>
+	
+	</div>
+	<ul id="showPriceBreakupquick" class="price-breakuplist clearfix" style="display:none"></ul>
+
+	<%-- </c:if> --%>
+	
+	<%--for price breakup(TPR-3752) --%>
+  
+  
   </div>  
 	<%-- <div id="emiStickerId" class="Emi Emi_wrapper" style="display:none;">		
 				<spring:theme code="marketplace.emiavailable" />&nbsp;		
@@ -1026,5 +1057,8 @@ $(window).resize(function(){
 });
 
 /*add to wishlist st*/
-
+   
+    <!-- //TPR-3752 Jewel Heading Added -->
+var propQuick = '${mapConfigurableAttributes}';
+	propQuick =propQuick.replace(/[{}]/g, '');
 </script>

@@ -17,6 +17,9 @@ ACC.quickview = {
 		// changes a value in a hidden form field in order
 		// to trigger a buffer update in a screen reader
 		$('#accesibility_refreshScreenReaderBufferField').attr('value', new Date().getTime());
+		$("#showquick").click(function() {
+			$("#showPriceBreakupquick").slideToggle("fast");
+		})
 	},
 	
 
@@ -261,8 +264,72 @@ function setBuyBoxDetails()
 				$("#sellerNameIdQuick").html(sellerName);
 				getRichAttributeQuickView(sellerName);
 				
-			}
+				
+				
 
+				/* PRICE BREAKUP STARTS HERE */
+				
+				/*$("#showPrice").show();*/
+				if(data['displayconfigattr'] == "Yes"){
+					$("#showPricequick").show();
+				}else if(data['displayconfigattr'] == "No"){
+					$("#showPricequick").hide();
+				}else{
+					$("#showPricequick").hide();
+				}
+				
+				var priceBreakupForPDP = data['priceBreakup'];
+					$.each(priceBreakupForPDP,function(key,value) {	
+						var pricebreakuplist = "<li><span>"+ key +"</span><strong>"+ value.formattedValue +"</strong></li>";
+							$("#showPriceBreakupquick").append(pricebreakuplist);
+							
+						
+				});
+				
+				
+				
+				/* PRICE BREAKUP ENDS HERE */
+					
+					
+					/* JewelleryDetail STARTS HERE */
+					try{
+					var jwelQuick = $("#jwelQuick").val();
+					if (jwelQuick == "FineJewellery"){
+						var jewelInfoKey = [], jewelInfoValue = [], jewelHeadingValue = [], jewelHeadingKey = [];
+						var j=0;
+						var jewelDetailslistForQuick = data['jewelDescription'];
+						$.each(jewelDetailslistForQuick,function(key,value) {	
+									jewelInfoKey[j] = key	;
+									jewelInfoValue[j] = value;
+									j++;
+							});
+					if (propQuick){
+						var property = propQuick.split(',');
+						var keyLOV = '' , valueLOV= '';
+						for (var i=0; i<property.length; i++){
+							var lovSplit = property[i].split("=");
+							valueLOV = lovSplit[lovSplit.length-1];
+							keyLOV = lovSplit[lovSplit.length-2];
+							jewelHeadingKey[i] = keyLOV;
+							jewelHeadingValue[i] = valueLOV;
+						}
+						for (var i=0; i<property.length; i++){
+							if (jewelHeadingValue[i] == "null"){
+								$(".key-labelquick").append('<span>'+ jewelHeadingKey[i] +'</span>')
+							}
+							else if (jQuery.inArray(jewelHeadingValue[i], jewelInfoKey ) >= 0){
+								var index = jQuery.inArray(jewelHeadingValue[i], jewelInfoKey );
+								$(".key-labelquick").append('<span>'+ jewelHeadingKey[i]+'(' + jewelInfoValue[index]+ ') </span>')
+								}
+							}
+						}
+					}
+				}
+				catch(err)
+					{				
+				     	}
+				/* JewelleryDetail ENDS HERE */
+			}
 		});	
 		
 		$(".size-guide").on("click",function(){
@@ -909,16 +976,16 @@ $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
 	     }
 		}
 	/*buynow in quickview for Jewellery  added*/
-	else if($("#quickViewjewelleryvariant option:selected").val() == "#"  && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='TravelAndLuggage') {
+	 if($("#quickViewjewelleryvariant option:selected").val() == "#"  && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='TravelAndLuggage') {
 	//	alert("please select size !"); 	 
 		$("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 		$("#addToCartFormQuickTitle").show();
 		$("#addToCartFormQuickTitle").fadeOut(5000);
 	    return false;
 	 }
-	 else{			 
+	 	
 		 ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
-	}
+
 });
 /*End of quickview Emi*/
 /*TPR-924*/
@@ -1028,8 +1095,7 @@ $(document).on('change','#quickViewjewelleryvariant',function(event){
 				ACC.ratingstars.bindRatingStars($(".quick-view-stars"));
 			},
 
-			onClosed: function ()
-			{
+			onClosed: function ()			{
 				ACC.quickview.refreshScreenReaderBuffer();
 				if((window.top==window) && $("body").hasClass("page-cartPage")) {
 				    // You're not in a frame, so you reload the site.
@@ -1037,4 +1103,9 @@ $(document).on('change','#quickViewjewelleryvariant',function(event){
 			     }
 			}
         });
+});
+$(document).ready(function() {
+	$("#showquick").click(function() {
+		$("#showPriceBreakupquick").slideToggle("fast");
+	});
 });

@@ -1519,44 +1519,47 @@ $( document ).ready(function() {
 					
 			});
 			
-			
-			
 			/* PRICE BREAKUP ENDS HERE */
 				
-				
 				/* JewelleryDetail STARTS HERE */
+				try{
 				var jwelPDP = $("#jwelPDP").val();
 				if (jwelPDP == "FineJewellery"){
-				var jewelInfoKey = [], jewelInfoValue = [], jewelHeadingValue = [], jewelHeadingKey = [];
-				var j=0;
-				var jewelDetailslistForPDP = data['jewelDescription'];
-				$.each(jewelDetailslistForPDP,function(key,value) {	
-						jewelInfoKey[j] = key	;
-						jewelInfoValue[j] = value;
-						j++;
+					var jewelInfoKey = [], jewelInfoValue = [], jewelHeadingValue = [], jewelHeadingKey = [];
+					var j=0;
+					var jewelDetailslistForPDP = data['jewelDescription'];
+					$.each(jewelDetailslistForPDP,function(key,value) {	
+							jewelInfoKey[j] = key	;
+							jewelInfoValue[j] = value;
+							j++;
 				});
-				var property = prop.split(',');
-				var keyLOV = '' , valueLOV= '';
-				for (var i=0; i<property.length; i++){
-					var lovSplit = property[i].split("=");
-					valueLOV = lovSplit[lovSplit.length-1].replace(/[{}]/g, '');
-					keyLOV = lovSplit[lovSplit.length-2].replace(/[{}]/g, '');
-					jewelHeadingKey[i] = keyLOV;
-					jewelHeadingValue[i] = valueLOV;
+				if (prop){
+					var property = prop.split(',');
+					var keyLOV = '' , valueLOV= '';
+					for (var i=0; i<property.length; i++){
+						var lovSplit = property[i].split("=");
+						valueLOV = lovSplit[lovSplit.length-1];
+						keyLOV = lovSplit[lovSplit.length-2];
+						jewelHeadingKey[i] = keyLOV;
+						jewelHeadingValue[i] = valueLOV;
 				}
-				for (var i=0; i<property.length; i++){
-				if (jewelHeadingValue[i] == "null"){
-					$(".key-label").append('<span>'+ jewelHeadingKey[i] +'</span>')
+					for (var i=0; i<property.length; i++){
+						if (jewelHeadingValue[i] == "null"){
+							$(".key-label").append('<span>'+ jewelHeadingKey[i] +'</span>')
+							}
+						else if (jQuery.inArray(jewelHeadingValue[i], jewelInfoKey ) >= 0){
+							var index = jQuery.inArray(jewelHeadingValue[i], jewelInfoKey );
+							$(".key-label").append('<span>'+ jewelHeadingKey[i]+'(' + jewelInfoValue[index]+ ') </span>')
+							}
+						}
+					}
 				}
-				else if (jQuery.inArray(jewelHeadingValue[i], jewelInfoKey ) >= 0){
-					var index = jQuery.inArray(jewelHeadingValue[i], jewelInfoKey );
-					$(".key-label").append('<span>'+ jewelHeadingKey[i]+'(' + jewelInfoValue[index]+ ') </span>')
+			}
+			  catch(err) {
+				  
 				}
-						
-				}
-				}
-				
-				/* JewelleryDetail ENDS HERE */
+			  
+			/* JewelleryDetail ENDS HERE */
 			
 			if (data['sellerArticleSKU'] != undefined) {
 				if (data['errMsg'] != "") {
@@ -2913,12 +2916,11 @@ function loadDefaultWishListName_SizeGuide() {
 			 $("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			$("#addToCartFormTitle").show();
 	 	    return false;
-	 }
 		 }
+		}
 		 //Jewellery Buy Now Button Changes added
-		if( $("#jewelleryvariant option:selected").val() == "#"  && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage' &&  isShowSize=='true'      ){
-			// alert("please select size !"+isShowSize); 
-			 
+		if( $("#jewelleryvariant option:selected").val() == "#"  && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage' &&  isShowSize=='true' ){
+			// alert("please select size !"+isShowSize);  
 	 		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			$("#addToCartFormTitle").show();
 		    return false;
