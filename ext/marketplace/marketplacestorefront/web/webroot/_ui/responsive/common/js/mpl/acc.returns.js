@@ -102,7 +102,7 @@
 					if(reAccNum.length < 4 || reAccNum.length > 24 || reAccNum.trim() == '') {
 						//Please Enter 16 Digit Account Number
 						$('.slectionRefund .reenteraccountnumber .errorText').remove();
-						$(".secondTataCliq .reenteraccountnumber").append("<div class='errorText'>Please Enter Valid Account Number.</div>");
+						$(".secondTataCliq .reenteraccountnumber").append("<div class='errorText'>Inalid Account Number.</div>");
 						validate = false;
 					}else{
 						$('.slectionRefund .reenteraccountnumber .errorText').remove();
@@ -123,7 +123,7 @@
 					 if($(".slectionRefund #iFSCCode").val().length < 11 || !ifscregEx.test($(".slectionRefund #iFSCCode").val()) == true) {
 							//Please Enter Valid IFSC Code.
 						 $('.errorTextifsc').remove();
-						 $(".secondTataCliq .ifsccode").append("<div class='errorTextifsc' style='color:red;'>Please Enter Valid 11 character IFSC Code. </div>");
+						 $(".secondTataCliq .ifsccode").append("<div class='errorText errorTextifsc' style='color:red;'>Please Enter Valid 11 character IFSC Code. </div>");
 							validate = false;
 							console.log('validate:'+ validate);
 						} else{
@@ -142,12 +142,12 @@
 						$(".secondTataCliq .accContents .errorText").remove();
 						if($(".slectionRefund #accountNumber").val().length < 4 || $(".slectionRefund #accountNumber").val().length > 24) {
 							//Please Enter 16 Digit Account Number
-							$(".secondTataCliq .accountnumber").append("<div class='errorText'>Please Enter Valid Account Number.</div>");
+							$(".secondTataCliq .accountnumber").append("<div class='errorText'>Invalid Account Number.</div>");
 							validate = false;
 						}
 						if($(".slectionRefund #reEnterAccountNumber").val().length < 4 || $(".slectionRefund #reEnterAccountNumber").val().length > 24) {
 							//Please Enter 16 Digit Account Number
-							$(".secondTataCliq .reenteraccountnumber").append("<div class='errorText'>Please Enter Valid Account Number.</div>");
+							$(".secondTataCliq .reenteraccountnumber").append("<div class='errorText'>Invalid Account Number.</div>");
 							validate = false;
 						}
 						if($(".slectionRefund #iFSCCode").val().length < 11) {
@@ -159,11 +159,11 @@
 						}
 						if($(".slectionRefund #accountHolderName").val().length < 4 || $(".slectionRefund #accountHolderName").val().trim() == '') {
 							//Please Enter Valid Account Holder Name.
-							$(".secondTataCliq .accountholdername").append("<div class='errorText'>Please Enter Valid Account Holder Name. Mininum  4 charactor required</div>");
+							$(".secondTataCliq .accountholdername").append("<div class='errorText'>Mininum  4 charactor required</div>");
 							validate = false;
 						}  if($(".slectionRefund #bankName").val().length < 3 || $(".slectionRefund #bankName").val().trim() == '') {
 							//Please Enter Valid Bank Name.
-							$(".secondTataCliq .bankname").append("<div class='errorText'>Please Enter Valid Bank Name. Mininum  3 character required</div>");
+							$(".secondTataCliq .bankname").append("<div class='errorText'>Mininum  3 character required</div>");
 							validate = false;
 						}  if(validate == true && checkACCValidat()== true && checkREACCValidat()==true && checkIFSCValidat()==true){
 							return true;

@@ -268,5 +268,5 @@
 	max-height: calc(100vh - 210px);
 	overflow-y: auto;
 }
-.errorText {height: 20px;}
+
 </style>

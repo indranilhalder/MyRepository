@@ -97,7 +97,7 @@
 									<b><spring:theme code="text.order.returns.accountholdername"/></b> <br/>
 									<form:input type="text" onkeyup="this.value=this.value.replace(/[^A-z\s]/g,''); this.value=this.value.trim().replace(/\s\s+/g,'');"  maxlength="40"  path="accountHolderName" name="accountHolderName" placeholder="Account Holder Name" value="${customerBankDetails.name}" />
 								</div>
-								<div class="col-md-2 col-sm-2">
+								<div class="col-md-3 col-sm-4">
 									<b><spring:theme code="text.order.returns.refundmode"/></b> <br/>
 									<form:select name="size" class="refundMode" path="refundMode" value="${customerBankDetails.transactionType}">
 										    <form:option value="N">NEFT</form:option>
