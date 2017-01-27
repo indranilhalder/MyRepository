@@ -2906,5 +2906,10 @@
 		<property name="storeCreditNo" type="java.lang.String"/>
 		<!--  R2.3 CRM to Commerce end-->
 	</bean>
+	<!-- For Return Web Services Change Pincode QuickDrop Stores -->
+	<bean class="com.tisl.mpl.wsdto.QuickDropStoresList" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="returnStoreDetailsList"
+			type="java.util.List&lt;de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData>" />
+	</bean>
 
 </beans>

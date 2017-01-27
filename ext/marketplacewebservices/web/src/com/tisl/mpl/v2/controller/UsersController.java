@@ -235,6 +235,7 @@ import com.tisl.mpl.wsdto.MplUserResultWsDto;
 import com.tisl.mpl.wsdto.NetBankingListWsDTO;
 import com.tisl.mpl.wsdto.NetBankingWsDTO;
 import com.tisl.mpl.wsdto.OrderCreateInJusPayWsDto;
+import com.tisl.mpl.wsdto.QuickDropStoresList;
 import com.tisl.mpl.wsdto.ReturnDetailsWsDTO;
 import com.tisl.mpl.wsdto.ReturnLogisticsResponseDetailsWsDTO;
 import com.tisl.mpl.wsdto.ReturnReasonDetailsWsDTO;
@@ -466,6 +467,7 @@ public class UsersController extends BaseCommerceController
 	private static final String AUTHENTICATION_MESSAGE = "Authentication error occured. Please contact administrator";
 	private static final String ERROR_MESSAGE = "some error occured. Please contact administrator";
 	private static final String UTF = "UTF-8";
+	private static final String STORE_NA="Store Not available";
 
 	/**
 	 * TPR-1372
@@ -7274,6 +7276,36 @@ public class UsersController extends BaseCommerceController
 		return profileUpdateUrl;
 	}
 
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{emailId}/quickDropStores", method = RequestMethod.GET, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public QuickDropStoresList quickDropStores(@RequestParam final String pincode, final String ussid) throws Exception
+	{
+		QuickDropStoresList quickDropStores = new QuickDropStoresList();
+		try
+		{
+
+			List<PointOfServiceData> returnableStores = pincodeServiceFacade.getAllReturnableStores(pincode,
+					StringUtils.substring(ussid, 0, 6));
+			if (CollectionUtils.isNotEmpty(returnableStores))
+			{
+				quickDropStores.setReturnStoreDetailsList(returnableStores);
+			}
+			else
+			{
+				quickDropStores.setStatus(STORE_NA);
+			}
+
+		}
+		catch (Exception exception)
+		{
+			quickDropStores.setError(exception.getMessage());
+			LOG.error("exception::::::" + exception.getMessage());
+
+		}
+		return quickDropStores;
+	}
 
 	// Getter Setter
 
