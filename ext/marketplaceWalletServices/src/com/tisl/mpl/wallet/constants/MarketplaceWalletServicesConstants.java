@@ -34,4 +34,8 @@ public final class MarketplaceWalletServicesConstants extends GeneratedMarketpla
 
 	public final static String MRUPEERETURNURL = "payment.mRupee.returnUrl".intern();
 	// implement here constants used by this extension
+
+	public final static String PROXYENABLED = "proxy.enabled";
+	public final static String GENPROXY = "proxy.address";
+	public final static String GENPROXYPORT = "proxy.port";
 }

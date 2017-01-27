@@ -55,8 +55,6 @@ public class MRupeeRefundService
 	private String merchantId;
 	private Environment environment;
 	private String environmentSet;
-	//	@Resource(name = "configurationService")
-	//	private ConfigurationService configurationService;
 
 	//	@Autowired
 	//	private MrupeePaymentService mRupeePaymentService;
@@ -90,17 +88,12 @@ public class MRupeeRefundService
 
 		final String url = getConfigurationService().getConfiguration()
 				.getString(MarketplaceWalletServicesConstants.MRUPEERETURNURL);
-
 		//	final String url = "https://14.140.248.13/Mwallet/startpaymentgatewayS2S.do?";
-
 		final String response = makeServiceCall(url, serializedParams);
-
 		if (null != response)
 		{
 			LOG.error("Refund Response:::" + response);
-
 			final String[] params1 = response.split("|");
-
 			if (null != params1)
 			{
 				mRupeeRefundResponse = new MRupeeRefundResponse();
@@ -171,13 +164,13 @@ public class MRupeeRefundService
 	private String makeServiceCall(final String endPoint, final String encodedParams)
 	{
 
-		final String proxyEnableStatus = "true";
+		final String proxyEnableStatus = getConfigurationService().getConfiguration()
+				.getString(MarketplaceWalletServicesConstants.PROXYENABLED);
 		HttpsURLConnection connection = null;
 		final StringBuilder buffer = new StringBuilder();
 		DataOutputStream wr = null;
 		try
 		{
-
 			final SSLContext ssl_ctx = SSLContext.getInstance("TLS");
 			final TrustManager[] trust_mgr = new TrustManager[]
 			{ new X509TrustManager()
@@ -207,8 +200,10 @@ public class MRupeeRefundService
 
 			if (proxyEnableStatus.equalsIgnoreCase("true"))
 			{
-				final String proxyName = "proxy.tcs.com";
-				final int proxyPort = 8080;
+				final String proxyName = getConfigurationService().getConfiguration()
+						.getString(MarketplaceWalletServicesConstants.GENPROXY);
+				final int proxyPort = Integer.parseInt(
+						getConfigurationService().getConfiguration().getString(MarketplaceWalletServicesConstants.GENPROXYPORT));
 				final SocketAddress addr = new InetSocketAddress(proxyName, proxyPort);
 				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
 				final URL url = new URL(endPoint);
@@ -219,11 +214,9 @@ public class MRupeeRefundService
 				final URL url = new URL(endPoint);
 				connection = (HttpsURLConnection) url.openConnection();
 			}
-
 			//			String encodedKey = new String(Base64.encodeBase64(this.key.getBytes()));
 			//			encodedKey = encodedKey.replaceAll("\n", "");
 			//			connection.setRequestProperty("Authorization", "Basic " + encodedKey);
-
 			connection.setConnectTimeout(connectionTimeout);
 			connection.setReadTimeout(readTimeout);
 			connection.setRequestMethod("POST");
@@ -238,7 +231,6 @@ public class MRupeeRefundService
 			wr.writeBytes(encodedParams);
 			wr.flush();
 			//wr.close();
-
 			// Read the response
 			final InputStream inputStream = connection.getInputStream();
 			final BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
@@ -275,7 +267,6 @@ public class MRupeeRefundService
 	/**
 	 * it checks for the certification of the connection
 	 */
-
 	private void disableSslVerification()
 	{
 		try
@@ -284,16 +275,19 @@ public class MRupeeRefundService
 			final TrustManager[] trustAllCerts = new TrustManager[]
 			{ new X509TrustManager()
 			{
+				@Override
 				public java.security.cert.X509Certificate[] getAcceptedIssuers()
 				{
 					return null;
 				}
 
+				@Override
 				public void checkClientTrusted(final X509Certificate[] certs, final String authType)
 				{
 					//
 				}
 
+				@Override
 				public void checkServerTrusted(final X509Certificate[] certs, final String authType)
 				{
 					//
@@ -309,6 +303,7 @@ public class MRupeeRefundService
 			final HostnameVerifier allHostsValid = new HostnameVerifier()
 			{
 
+				@Override
 				public boolean verify(final String hostname, final SSLSession session)
 				{
 					if (hostname.equals("14.140.248.13"))
@@ -321,7 +316,6 @@ public class MRupeeRefundService
 					}
 				}
 			};
-
 			// Install the all-trusting host verifier
 			HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
 		}
