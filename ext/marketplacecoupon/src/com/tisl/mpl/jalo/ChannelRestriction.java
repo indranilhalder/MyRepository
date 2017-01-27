@@ -36,7 +36,7 @@ public class ChannelRestriction extends GeneratedChannelRestriction
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.voucher.jalo.Restriction#isFulfilledInternal(de.hybris.platform.jalo.order.AbstractOrder)
 	 */
 	@Override
@@ -51,12 +51,14 @@ public class ChannelRestriction extends GeneratedChannelRestriction
 			if (paramAbstractOrder instanceof Cart)
 			{
 				cartChannel = paramAbstractOrder.getAttribute(CartModel.CHANNEL);
+				LOG.debug("CartChannel for Cart" + cartChannel);
 
 			}
 			if (paramAbstractOrder instanceof Order)
 			{
 				cartChannel = paramAbstractOrder.getAttribute(OrderModel.SALESAPPLICATION);
-				System.out.println("CartChannel for Order" + cartChannel);
+
+				LOG.debug("CartChannel for Order" + cartChannel);
 			}
 		}
 		catch (final Exception ex)
@@ -94,7 +96,7 @@ public class ChannelRestriction extends GeneratedChannelRestriction
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.voucher.jalo.Restriction#isFulfilledInternal(de.hybris.platform.jalo.product.Product)
 	 */
 	@Override
