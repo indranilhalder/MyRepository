@@ -1188,7 +1188,7 @@
 												<div class="radio">
 													 <input type="radio" name="priority_wallet" id="radioButton_MRupee" value="mRupee" checked/>
 													 <label for="radioButton_MRupee" class="numbers creditLabel"><span><img src="${commonResourcePath}/images/mRupeeLogo.PNG" alt=""></span></label>
-									   			<span id="mRupeeInfo" >
+									   			<span id="mRupeeInfo" style="display:none">
 														<spring:theme code="checkout.multi.paymentMethod.eWallet.Info" />
 													</span>
 									   			</div>
