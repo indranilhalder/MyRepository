@@ -397,6 +397,8 @@
 	<!-- MplPaymentInfoData in AbstractOrderData-->
 	<bean class="de.hybris.platform.commercefacades.order.data.AbstractOrderData" >
 		<property name="mplPaymentInfo" type="com.tisl.mpl.data.MplPaymentInfoData"/>
+		<property name="currencySymbol" type="String"/>
+		
 	</bean>
 	<!-- MplPaymentInfoData in AbstractOrderData Ends-->
 	

@@ -322,7 +322,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//Cart guid added to propagate to further methods via jsp
 				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, cartModel.getGuid());
 
-				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartModel);
+				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 
 			}
 			//TPR-629 --- based on orderModel
@@ -338,7 +338,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, orderModel.getGuid());
 
-				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, orderModel);
+				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 			}
 
 			//creating new Payment Form
@@ -4160,7 +4160,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

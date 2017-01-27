@@ -1340,6 +1340,7 @@ public class DefaultPromotionManager extends PromotionsManager
 								final String sellerArticleSKU = entry.getKey();
 								final StockLevelModel stockData = mplStockService.getStockLevelDetail(sellerArticleSKU);
 								if (stockData.getAvailable() > 0)
+
 								{
 									giftProductDetails.put(sellerArticleSKU, product);
 									minmumValObtained = true;

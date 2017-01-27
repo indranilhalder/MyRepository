@@ -316,7 +316,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				model.addAttribute("metaRobots", "noindex,nofollow");
 				setCheckoutStepLinksForModel(model, getCheckoutStep());
 				//GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
-				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, serviceCart);
+
+				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 				model.addAttribute("checkoutPageName", checkoutPageName);
 				model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE); //TPR-629
 				model.addAttribute("progressBarClass", "choosePage");
@@ -559,7 +560,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 							MarketplacecheckoutaddonConstants.CHECKOUT_MULTI_DELIVERYMETHOD_BREADCRUMB));
 			model.addAttribute("metaRobots", "noindex,nofollow");
 			//GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
-			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartModel);
+			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 			model.addAttribute("checkoutPageName", selectAddress);
 			setCheckoutStepLinksForModel(model, getCheckoutStep());
 			model.addAttribute("progressBarClass", "selectPage");
@@ -1491,7 +1492,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			model.addAttribute("metaRobots", "noindex,nofollow");
 			setCheckoutStepLinksForModel(model, getCheckoutStep());
 			//GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
-			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartModel);
+			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 
 		}
 		catch (final EtailBusinessExceptions e)

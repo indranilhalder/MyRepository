@@ -5,14 +5,14 @@ package com.tisl.mpl.util;
 
 import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.Registry;
-import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
@@ -42,7 +42,6 @@ import org.apache.log4j.Logger;
 import org.springframework.ui.Model;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.data.MplPaymentInfoData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -720,11 +719,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1014,7 +1013,7 @@ public class GenericUtilityMethods
 
 	}
 
-	public static void populateTealiumDataForCartCheckout(final Model model, final AbstractOrderModel cartModel)
+	public static void populateTealiumDataForCartCheckout(final Model model, final AbstractOrderData cartData)
 	{
 		String sku = null;
 		String adobeSku = null;
@@ -1050,18 +1049,18 @@ public class GenericUtilityMethods
 		try
 		{
 
-			if (null != cartModel)
+			if (null != cartData)
 			{
-				final CurrencyModel currency = cartModel.getCurrency();
-				final String currencySymbol = currency.getSymbol();
-				if (null != cartModel.getTotalPrice())
+
+				final String currencySymbol = cartData.getCurrencySymbol();
+				if (null != cartData.getTotalPriceWithTax() && null != cartData.getTotalPriceWithTax().getValue())
 				{
-					cartTotal = cartModel.getTotalPrice().toString();
+					cartTotal = cartData.getTotalPriceWithTax().getValue().toString();
 				}
 
-				if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+				if (CollectionUtils.isNotEmpty(cartData.getEntries()))
 				{
-					for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+					for (final OrderEntryData entry : cartData.getEntries())
 					{
 						if (null != entry)
 						{
@@ -1100,25 +1099,26 @@ public class GenericUtilityMethods
 							}
 						}
 
-						if (entry.getProduct() != null && CollectionUtils.isNotEmpty(entry.getProduct().getBrands()))
+						if (null != entry.getBrandName())
 						{
-							final List<BrandModel> brandList = new ArrayList<BrandModel>(entry.getProduct().getBrands());
-							brand = appendQuote(brandList.get(0).getName());
+
+							brand = appendQuote(entry.getBrandName());
 
 						}
 
 
 						//TPR-430 starts
 						final StringBuffer categoryName = new StringBuffer();
-						for (final CategoryModel categoryModel : entry.getProduct().getSupercategories())
-						{
-							if (categoryModel.getCode().contains(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
-							{
-								categoryName.append(categoryModel.getName()).append(':');
-								getCategoryLevel(categoryModel, 1, categoryName);
-							}
 
-						}
+						/*
+						 * for (final CategoryModel categoryModel : entry.getProduct().getSupercategories()) { if
+						 * (categoryModel.getCode().contains(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX)) {
+						 * categoryName.append(categoryModel.getName()).append(':'); getCategoryLevel(categoryModel, 1,
+						 * categoryName); }
+						 * 
+						 * }
+						 */
+
 
 						if (StringUtils.isNotEmpty(categoryName.toString()))
 						{

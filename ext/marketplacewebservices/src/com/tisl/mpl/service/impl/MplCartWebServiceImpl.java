@@ -406,8 +406,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				}
 
 				//final CommerceCartModification modification = mplCommerceCartService.addToCartWithUSSID(newCartParameter);
-				final CommerceCartModification modification = mplDefaultCommerceAddToCartStrategyImpl.addToCart(newCartParameter);
-
+				final CommerceCartModification modification = mplCommerceCartService.addToCart(newCartParameter);
 				resultCartModificationData = getCartModificationConverter().convert(modification);
 				LOG.debug("resultCartModificationData is not null");
 			}

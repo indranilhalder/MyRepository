@@ -8,6 +8,7 @@ import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
+import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -83,9 +84,16 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 					target.setDiscountPercentage(formate);
 
 				}
+				final CurrencyModel currency = source.getCurrency();
+				if (null != currency)
+				{
+					target.setCurrencySymbol(currency.getSymbol());
+				}
+
+
 				/*
 				 * else if (target != null) {
-				 * 
+				 *
 				 * final String formate = formatter.format(100 * (target.getTotalDiscounts().getDoubleValue().doubleValue()
 				 * / (target .getSubTotal().getDoubleValue().doubleValue()))); target.setDiscountPercentage(formate); }
 				 */

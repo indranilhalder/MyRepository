@@ -23,11 +23,13 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.Assert;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 
@@ -367,8 +369,14 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 		//TISPT-385
 		entry.setParentTransactionID(orderEntry.getParentTransactionID());
 		adjustUpdateable(entry, orderEntry);
-	}
+		if (CollectionUtils.isNotEmpty(orderEntry.getProduct().getBrands()))
+		{
+			final List<BrandModel> brandList = new ArrayList<BrandModel>(orderEntry.getProduct().getBrands());
+			entry.setBrandName(brandList.get(0).getName());
 
+		}
+
+	}
 
 	@Override
 	protected void adjustUpdateable(final OrderEntryData entry, final AbstractOrderEntryModel entryToUpdate)
