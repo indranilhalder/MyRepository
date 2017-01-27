@@ -193,11 +193,12 @@ public class CartPageController extends AbstractPageController
 		String returnPage = ControllerConstants.Views.Pages.Cart.CartPage;
 		try
 		{
-			final CartModel cartModel = getCartService().getSessionCart();
+			CartModel cartModel = null;
 			//TISST-13012
 			//if (StringUtils.isNotEmpty(cartDataOnLoad.getGuid())) //TISPT-104
 			if (getCartService().hasSessionCart())
 			{
+				cartModel = getCartService().getSessionCart();
 				CartData cartDataOnLoad = mplCartFacade.getSessionCartWithEntryOrdering(true);
 
 				//setExpressCheckout(serviceCart); //TISPT-104
@@ -208,19 +209,19 @@ public class CartPageController extends AbstractPageController
 				//TISEE-3676 & TISEE-4013
 				//final boolean deListedStatus = getMplCartFacade().isCartEntryDelisted(serviceCart); Moved to facade layer //TISPT-104
 				//LOG.debug("Cart Delisted Status " + deListedStatus);
-				if (null != getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE))
+				final Object sessionPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+				if (null != sessionPincode)
 				{
 					//TPR-970 changes
-					mplCartFacade.populatePinCodeData(getCartService().getSessionCart(),
-							getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE).toString());
+					mplCartFacade.populatePinCodeData(cartModel, sessionPincode.toString());
 					//	getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
 				}
-				getMplCouponFacade().releaseVoucherInCheckout(getCartService().getSessionCart()); //TISPT-104
-				getMplCartFacade().getCalculatedCart(); /// Cart recalculation method invoked inside this method
+				getMplCouponFacade().releaseVoucherInCheckout(cartModel); //TISPT-104
+				cartModel = getMplCartFacade().getCalculatedCart(cartModel); /// Cart recalculation method invoked inside this method
 				//final CartModel cart = mplCartFacade.removeDeliveryMode(serviceCart); // Contains recalculate cart TISPT-104
 				//TISST-13010
 
-				getMplCartFacade().setCartSubTotal();
+				getMplCartFacade().setCartSubTotal(cartModel);
 				//final CartModel cartModel = getCartService().getSessionCart();
 
 				//To calculate discount percentage amount for display purpose
@@ -1299,6 +1300,7 @@ public class CartPageController extends AbstractPageController
 		final JSONObject jsonObject = new JSONObject();
 		//TISSEC-11
 		final String regex = "\\d{6}";
+		final CartModel cart = getCartService().getSessionCart();
 		try
 		{
 			String isServicable = MarketplacecommerceservicesConstants.Y;
@@ -1313,7 +1315,7 @@ public class CartPageController extends AbstractPageController
 				if (StringUtil.isNotEmpty(selectedPincode))
 				{
 					//TPR-970 changes
-					mplCartFacade.populatePinCodeData(getCartService().getSessionCart(), selectedPincode);
+					mplCartFacade.populatePinCodeData(cart, selectedPincode);
 					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
 				}
 				try
@@ -1368,7 +1370,7 @@ public class CartPageController extends AbstractPageController
 							}
 							if (isServicable.equals(MarketplacecommerceservicesConstants.Y))
 							{
-								getMplCartFacade().getCalculatedCart();
+								getMplCartFacade().getCalculatedCart(cart);
 								cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 								jsonObject.put("cartData", cartData);
 								jsonObject.put("cartEntries", cartData.getEntries());
@@ -1705,7 +1707,8 @@ public class CartPageController extends AbstractPageController
 
 				if (isServicable.equals(MarketplacecommerceservicesConstants.Y))
 				{
-					getMplCartFacade().getCalculatedCart();
+
+					getMplCartFacade().getCalculatedCart(getCartService().getSessionCart());
 					cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 					jsonObject.put("cartData", cartData);
 					jsonObject.put("cartEntries", cartData.getEntries());

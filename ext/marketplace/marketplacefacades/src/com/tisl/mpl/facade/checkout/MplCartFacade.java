@@ -199,7 +199,7 @@ public interface MplCartFacade extends CartFacade
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
-	void setCartSubTotal() throws EtailNonBusinessExceptions;
+	void setCartSubTotal(CartModel cartModel) throws EtailNonBusinessExceptions;
 
 	boolean setCartSubTotal2(CartModel model) throws EtailNonBusinessExceptions;
 
@@ -309,7 +309,7 @@ public interface MplCartFacade extends CartFacade
 	 * @return
 	 */
 
-	CartModel removeDeliveryMode(CartModel cart);
+	//CartModel removeDeliveryMode(CartModel cart);
 
 	boolean removeDeliveryMode2(final AbstractOrderModel cart);
 
@@ -405,7 +405,7 @@ public interface MplCartFacade extends CartFacade
 			EtailNonBusinessExceptions;
 
 
-	CartModel getCalculatedCart() throws CommerceCartModificationException, EtailNonBusinessExceptions;
+	CartModel getCalculatedCart(CartModel cart) throws CommerceCartModificationException, EtailNonBusinessExceptions;
 
 	OrderEntryData getCartEntryByUssid(final String ussid, CartData cart);
 

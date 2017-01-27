@@ -148,7 +148,8 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 		{
 			for (final SellerInformationData seller : target.getProduct().getSeller())
 			{
-				if (source.getSelectedUSSID().equalsIgnoreCase(seller.getUssid()))
+				if (null != source.getSelectedUSSID() && null != seller.getUssid()
+						&& seller.getUssid().equalsIgnoreCase(source.getSelectedUSSID()))
 				{
 					target.setSelectedSellerInformation(seller);
 					break;
