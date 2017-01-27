@@ -235,6 +235,8 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 			pendingOrders = mplProcessOrderDao.getPendingOrRefundInitiatedOrders(OrderStatus.PAYMENT_PENDING.toString(),
 					OrderStatus.REFUND_INITIATED.toString());
 			Date orderTATForTimeout = new Date();
+			boolean isPayment = false;
+			boolean isReturn = false;
 			for (final OrderModel order : pendingOrders)
 			{
 				if (StringUtils.isNotEmpty(order.getGuid()))
@@ -270,7 +272,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 
 							LOG.debug("#######################payment processiong in mrupee cronjob" + order.getCode());
 
-
+							isPayment = true;
 							try
 							{
 								notificationService.triggerEmailAndSmsOnOrderConfirmation(order, trackOrderUrl);
@@ -288,7 +290,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 								&& !auditModelData.getIsExpired().booleanValue() && new Date().before(orderTATForTimeout))
 						{
 							//boolean isReturn = ifRefundInitiated(order.getEntries());
-							boolean isReturn = false;
+
 							if (CollectionUtils.isNotEmpty(order.getPaymentTransactions()))
 							{
 								final PaymentTransactionModel paymentTransactionModel = order.getPaymentTransactions().get(0);
@@ -339,19 +341,19 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 						//timeout handling
 						if (new Date().after(orderTATForTimeout))
 						{
-							performProcessingOrder(auditModelData, order, T);
+							performProcessingOrder(auditModelData, order, T, isPayment, isReturn);
 							sendNotification(order);
 						}
 						//no response
 						if (StringUtils.isEmpty(status) && new Date().before(orderTATForTimeout))
 						{
-							performProcessingOrder(auditModelData, order, "");
+							performProcessingOrder(auditModelData, order, "", isPayment, isReturn);
 							sendNotification(order);
 						}
 						//getting response other than S
 						if (!(S.equalsIgnoreCase(status)) && new Date().before(orderTATForTimeout))
 						{
-							performProcessingOrder(auditModelData, order, status);
+							performProcessingOrder(auditModelData, order, status, isPayment, isReturn);
 							sendNotification(order);
 						}
 					}
@@ -400,50 +402,56 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	 * @param auditModelData
 	 * @param order
 	 * @param status
+	 * @param isReturn
+	 * @param isPayment
 	 */
-	private void performProcessingOrder(final MplPaymentAuditModel auditModelData, final OrderModel order, final String status)
+	private void performProcessingOrder(final MplPaymentAuditModel auditModelData, final OrderModel order, final String status,
+			final boolean isPayment, final boolean isReturn)
 	{
 		try
 		{
-			final String defaultPinCode = mplProcessOrderService.getPinCodeForOrder(order);
-			//OMS Deallocation call for failed order
-			mplCommerceCartService.isInventoryReserved(order,
-					MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
-			final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
-			auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
-			auditEntry.setAuditId(auditModelData.getAuditId());
-			getModelService().save(auditEntry);
-			final List<MplPaymentAuditEntryModel> entryList = Lists.newArrayList(auditModelData.getAuditEntries());
-			entryList.add(auditEntry);
-			auditModelData.setAuditEntries(entryList);
-			auditModelData.setIsExpired(Boolean.TRUE);
-			getModelService().save(auditModelData);
-			if (CollectionUtils.isNotEmpty(order.getDiscounts()))
+			if (isPayment)
 			{
-				final PromotionVoucherModel voucherModel = (PromotionVoucherModel) order.getDiscounts().get(0);
-				try
+				final String defaultPinCode = mplProcessOrderService.getPinCodeForOrder(order);
+				//OMS Deallocation call for failed order
+				mplCommerceCartService.isInventoryReserved(order,
+						MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+				final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
+				auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
+				auditEntry.setAuditId(auditModelData.getAuditId());
+				getModelService().save(auditEntry);
+				final List<MplPaymentAuditEntryModel> entryList = Lists.newArrayList(auditModelData.getAuditEntries());
+				entryList.add(auditEntry);
+				auditModelData.setAuditEntries(entryList);
+				auditModelData.setIsExpired(Boolean.TRUE);
+				getModelService().save(auditModelData);
+				if (CollectionUtils.isNotEmpty(order.getDiscounts()))
 				{
-					mplVoucherService.releaseVoucher(voucherModel.getVoucherCode(), null, order);
+					final PromotionVoucherModel voucherModel = (PromotionVoucherModel) order.getDiscounts().get(0);
+					try
+					{
+						mplVoucherService.releaseVoucher(voucherModel.getVoucherCode(), null, order);
+					}
+					catch (final VoucherOperationException e)
+					{
+						// YTODO Auto-generated catch block
+						LOG.error("exception##### error in updating voucher models >>>>>>", e);
+						throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+					}
+					mplVoucherService.recalculateCartForCoupon(null, order);
 				}
-				catch (final VoucherOperationException e)
+				if (T.equalsIgnoreCase(status))
 				{
-					// YTODO Auto-generated catch block
-					LOG.error("exception##### error in updating voucher models >>>>>>", e);
-					throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+					LOG.debug("#######################timeout  in mrupee cronjob" + order.getCode());
+					orderStatusSpecifier.setOrderStatus(order, OrderStatus.PAYMENT_TIMEOUT);
 				}
-				mplVoucherService.recalculateCartForCoupon(null, order);
+				else
+				{
+					orderStatusSpecifier.setOrderStatus(order, OrderStatus.PAYMENT_FAILED);
+					LOG.debug("#######################payment failed in mrupee cronjob" + order.getCode());
+				}
+				getModelService().save(order);
 			}
-			if (T.equalsIgnoreCase(status))
-			{
-				LOG.debug("#######################timeout  in mrupee cronjob" + order.getCode());
-				orderStatusSpecifier.setOrderStatus(order, OrderStatus.PAYMENT_TIMEOUT);
-			}
-			else
-			{
-				orderStatusSpecifier.setOrderStatus(order, OrderStatus.PAYMENT_FAILED);
-				LOG.debug("#######################payment failed in mrupee cronjob" + order.getCode());
-			}
-			getModelService().save(order);
 		}
 		catch (final ModelSavingException e)
 		{
