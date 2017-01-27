@@ -86,8 +86,9 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 			//needsCalc = true;
 
 			//Apportioning calculation
-			final OrderEntryAndDiscountValue orderEntryAndDiscountValue = findOrderEntryDiscountValue(ctx, order, getGuid(ctx));
-			if (orderEntryAndDiscountValue != null)
+			//final OrderEntryAndDiscountValue orderEntryAndDiscountValue = findOrderEntryDiscountValue(ctx, order, getGuid(ctx));
+			final DiscountValue discountValue = findOrderEntryDiscountValue(ctx, orderEntry, getGuid(ctx));
+			if (discountValue != null)
 			{
 				calculateApportionedDiscount(orderEntry, ctx, isFreebiePromo, orderEntryAdjustment);
 			}

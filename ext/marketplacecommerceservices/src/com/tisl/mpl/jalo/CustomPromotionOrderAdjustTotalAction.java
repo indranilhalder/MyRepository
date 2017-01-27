@@ -58,120 +58,6 @@ public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromot
 	public boolean apply(final SessionContext ctx)
 	{
 		final AbstractOrder order = getPromotionResult(ctx).getOrder(ctx);
-		double percentageDiscount = 0.00D;
-		double totalvalidproductsPricevalue = 0.00D;
-		String cartPromoCode = null;
-		boolean isPercentageDisc = false;
-
-
-		//CR Changes : TPR-715
-		Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
-		boolean isSellerPresent = false;
-		boolean validateSellerData = false;
-		String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
-		//CR Changes : TPR-715 : Variable declaration ends
-
-		if (ctx.getAttributes() != null)
-		{
-			percentageDiscount = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PERCENTAGEDISCOUNT) != null ? ((Double) ctx
-					.getAttributes().get(MarketplacecommerceservicesConstants.PERCENTAGEDISCOUNT)).doubleValue() : 0.00D;
-			totalvalidproductsPricevalue = ctx.getAttributes()
-					.get(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE) != null ? ((Double) ctx.getAttributes()
-					.get(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE)).doubleValue() : 0.00D;
-			cartPromoCode = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PROMOCODE) != null ? (String) ctx
-					.getAttributes().get(MarketplacecommerceservicesConstants.PROMOCODE) : null;
-			isPercentageDisc = ctx.getAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC) != null ? ((Boolean) ctx
-					.getAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC)).booleanValue() : false;
-
-
-			//CR Changes : TPR-715
-			validProductUssidMap = (ctx.getAttribute(MarketplacecommerceservicesConstants.CART_SELLER_PRODUCTS) != null ? (Map<String, AbstractOrderEntry>) ctx
-					.getAttribute(MarketplacecommerceservicesConstants.CART_SELLER_PRODUCTS)
-					: new ConcurrentHashMap<String, AbstractOrderEntry>());
-			isSellerPresent = ctx.getAttribute(MarketplacecommerceservicesConstants.VALIDATE_SELLER) != null ? ((Boolean) ctx
-					.getAttribute(MarketplacecommerceservicesConstants.VALIDATE_SELLER)).booleanValue() : false;
-
-			//CR Changes : TPR-715 ends
-		}
-
-		//CR Changes : TPR-715
-		if (MapUtils.isNotEmpty(validProductUssidMap))
-		{
-			validateSellerData = true;
-		}//CR Changes : TPR-715 ends
-
-		final List<AbstractOrderEntry> listOfEntries = order.getEntries();
-		double totalAmtDeductedOnItemLevel = 0.00D;
-
-		for (final AbstractOrderEntry entry : order.getEntries())
-		{
-			//CR Changes : TPR-715
-			try
-			{
-				selectedUSSID = (String) entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID);
-			}
-			catch (JaloInvalidParameterException | JaloSecurityException e)
-			{
-				log.error(e);
-			}
-
-			if ((!validateSellerData && !isSellerPresent)
-					|| (validateSellerData && isSellerPresent && validProductUssidMap.containsKey(selectedUSSID) && !entry
-							.isGiveAway().booleanValue()))
-			{
-				double amtTobeDeductedAtlineItemLevel = 0.00D;
-				final AbstractOrderEntry cartEntry = entry;
-				final double lineItemLevelPrice = cartEntry.getBasePriceAsPrimitive() * cartEntry.getQuantityAsPrimitive();
-				double productLevelDiscount = 0.00D;
-				if (null != cartEntry.getProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE)
-						&& !((String) cartEntry.getProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE)).isEmpty())
-				{
-					productLevelDiscount += ((Double) cartEntry.getProperty(ctx,
-							MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC)).doubleValue();
-
-				}
-				final double netSellingPrice = lineItemLevelPrice - productLevelDiscount;
-
-				if (listOfEntries.indexOf(entry) == (listOfEntries.size() - 1))
-				{
-					final double discountPriceValue = (percentageDiscount * totalvalidproductsPricevalue) / 100;
-					amtTobeDeductedAtlineItemLevel = discountPriceValue - totalAmtDeductedOnItemLevel;
-				}
-				else
-				{
-
-					final double freeItemPrice = getfreeItemPrice(ctx, entry); //Added for TISPRO-318
-					amtTobeDeductedAtlineItemLevel = (percentageDiscount * (netSellingPrice - freeItemPrice)) / 100;
-					totalAmtDeductedOnItemLevel += amtTobeDeductedAtlineItemLevel;
-				}
-
-				double aportionedItemValue = lineItemLevelPrice - amtTobeDeductedAtlineItemLevel;
-
-				if (null != cartEntry.getProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE)
-						&& !((String) cartEntry.getProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE)).isEmpty())
-				{
-					aportionedItemValue = netSellingPrice - amtTobeDeductedAtlineItemLevel;
-				}
-				cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, entry.getProduct().getDescription());
-				cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCODE, cartPromoCode);
-				cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE, Double.valueOf(lineItemLevelPrice));
-				cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC,
-						Double.valueOf(productLevelDiscount));
-				cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETSELLINGPRICE, Double.valueOf(netSellingPrice));
-				cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELDISC,
-						Double.valueOf(amtTobeDeductedAtlineItemLevel));
-				cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC,
-						Double.valueOf(aportionedItemValue));
-				if (isPercentageDisc)
-				{
-					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ISPERCENTAGEDISC,
-							Boolean.valueOf(isPercentageDisc));
-					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELPERCENTAGEDISC,
-							Double.valueOf(percentageDiscount));
-				}
-			} //CR Changes : TPR-715 ends
-		}
-
 		final String code = getGuid(ctx);
 
 		if (log.isDebugEnabled())
@@ -181,11 +67,19 @@ public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromot
 
 		final DiscountValue dv = new DiscountValue(code, getAmount(ctx).doubleValue() * -1.0D, true, order.getCurrency(ctx)
 				.getIsoCode(ctx));
+
 		insertFirstGlobalDiscountValue(ctx, order, dv);
 
 		if (log.isDebugEnabled())
 		{
 			log.debug("(" + getPK() + ") apply: Generated discount with name '" + code + "' for " + getAmount(ctx));
+		}
+
+		//Apportioning calculation
+		final DiscountValue discountValue = Helper.findGlobalDiscountValue(ctx, order, getGuid(ctx));
+		if (discountValue != null)
+		{
+			calculateApportionedDiscount(order, ctx);
 		}
 
 		setMarkedApplied(ctx, true);
@@ -277,6 +171,121 @@ public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromot
 		return (-1.0D * getAmount(ctx).doubleValue());
 	}
 
+	private void calculateApportionedDiscount(final AbstractOrder order, final SessionContext ctx)
+	{
+		double percentageDiscount = 0.00D;
+		double totalvalidproductsPricevalue = 0.00D;
+		String cartPromoCode = null;
+		boolean isPercentageDisc = false;
+
+
+		//CR Changes : TPR-715
+		Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
+		boolean isSellerPresent = false;
+		boolean validateSellerData = false;
+		String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
+		//CR Changes : TPR-715 : Variable declaration ends
+
+		if (ctx.getAttributes() != null)
+		{
+			percentageDiscount = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PERCENTAGEDISCOUNT) != null ? ((Double) ctx
+					.getAttributes().get(MarketplacecommerceservicesConstants.PERCENTAGEDISCOUNT)).doubleValue() : 0.00D;
+			totalvalidproductsPricevalue = ctx.getAttributes()
+					.get(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE) != null ? ((Double) ctx.getAttributes()
+					.get(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE)).doubleValue() : 0.00D;
+			cartPromoCode = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PROMOCODE) != null ? (String) ctx
+					.getAttributes().get(MarketplacecommerceservicesConstants.PROMOCODE) : null;
+			isPercentageDisc = ctx.getAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC) != null ? ((Boolean) ctx
+					.getAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC)).booleanValue() : false;
+
+			//CR Changes : TPR-715 starts
+			validProductUssidMap = (ctx.getAttribute(MarketplacecommerceservicesConstants.CART_SELLER_PRODUCTS) != null ? (Map<String, AbstractOrderEntry>) ctx
+					.getAttribute(MarketplacecommerceservicesConstants.CART_SELLER_PRODUCTS)
+					: new ConcurrentHashMap<String, AbstractOrderEntry>());
+			isSellerPresent = ctx.getAttribute(MarketplacecommerceservicesConstants.VALIDATE_SELLER) != null ? ((Boolean) ctx
+					.getAttribute(MarketplacecommerceservicesConstants.VALIDATE_SELLER)).booleanValue() : false;
+			//CR Changes : TPR-715 ends
+		}
+
+		//CR Changes : TPR-715
+		if (MapUtils.isNotEmpty(validProductUssidMap))
+		{
+			validateSellerData = true;
+		}//CR Changes : TPR-715 ends
+
+		final List<AbstractOrderEntry> listOfEntries = order.getEntries();
+		double totalAmtDeductedOnItemLevel = 0.00D;
+
+		for (final AbstractOrderEntry entry : order.getEntries())
+		{
+			//CR Changes : TPR-715
+			try
+			{
+				selectedUSSID = (String) entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID);
+			}
+			catch (JaloInvalidParameterException | JaloSecurityException e)
+			{
+				log.error(e);
+			}
+
+			if ((!validateSellerData && !isSellerPresent)
+					|| (validateSellerData && isSellerPresent && validProductUssidMap.containsKey(selectedUSSID) && !entry
+							.isGiveAway().booleanValue()))
+			{
+				double amtTobeDeductedAtlineItemLevel = 0.00D;
+				final AbstractOrderEntry cartEntry = entry;
+				final double lineItemLevelPrice = cartEntry.getBasePriceAsPrimitive() * cartEntry.getQuantityAsPrimitive();
+				double productLevelDiscount = 0.00D;
+				if (null != cartEntry.getProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE)
+						&& !((String) cartEntry.getProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE)).isEmpty())
+				{
+					productLevelDiscount += ((Double) cartEntry.getProperty(ctx,
+							MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC)).doubleValue();
+
+				}
+				final double netSellingPrice = lineItemLevelPrice - productLevelDiscount;
+
+				if (listOfEntries.indexOf(entry) == (listOfEntries.size() - 1))
+				{
+					final double discountPriceValue = (percentageDiscount * totalvalidproductsPricevalue) / 100;
+					amtTobeDeductedAtlineItemLevel = discountPriceValue - totalAmtDeductedOnItemLevel;
+				}
+				else
+				{
+
+					final double freeItemPrice = getfreeItemPrice(ctx, entry); //Added for TISPRO-318
+					amtTobeDeductedAtlineItemLevel = (percentageDiscount * (netSellingPrice - freeItemPrice)) / 100;
+					totalAmtDeductedOnItemLevel += amtTobeDeductedAtlineItemLevel;
+				}
+
+				double aportionedItemValue = lineItemLevelPrice - amtTobeDeductedAtlineItemLevel;
+
+				if (null != cartEntry.getProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE)
+						&& !((String) cartEntry.getProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE)).isEmpty())
+				{
+					aportionedItemValue = netSellingPrice - amtTobeDeductedAtlineItemLevel;
+				}
+				cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, entry.getProduct().getDescription());
+				cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCODE, cartPromoCode);
+				cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE, Double.valueOf(lineItemLevelPrice));
+				cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC,
+						Double.valueOf(productLevelDiscount));
+				cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETSELLINGPRICE, Double.valueOf(netSellingPrice));
+				cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELDISC,
+						Double.valueOf(amtTobeDeductedAtlineItemLevel));
+				cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC,
+						Double.valueOf(aportionedItemValue));
+				if (isPercentageDisc)
+				{
+					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ISPERCENTAGEDISC,
+							Boolean.valueOf(isPercentageDisc));
+					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELPERCENTAGEDISC,
+							Double.valueOf(percentageDiscount));
+				}
+			} //CR Changes : TPR-715 ends
+		}
+	}
+
 	/**
 	 * @Description : OOB method
 	 * @param: ctx
@@ -288,10 +297,10 @@ public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromot
 		super.deepCloneAttributes(ctx, values);
 	}
 
-	protected DefaultPromotionManager getDefaultPromotionsManager()
-	{
-		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
-	}
+	//	protected DefaultPromotionManager getDefaultPromotionsManager()
+	//	{
+	//		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
+	//	}
 
 	//For Referring to Promotion Helper Class
 	protected MplPromotionHelper getMplPromotionHelper()
