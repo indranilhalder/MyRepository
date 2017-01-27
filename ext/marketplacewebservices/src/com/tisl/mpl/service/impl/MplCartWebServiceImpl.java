@@ -106,6 +106,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.service.MplCartWebService;
+import com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.utility.MplDiscountUtil;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
@@ -179,6 +180,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
 
 	private final static Logger LOG = Logger.getLogger(MplCartWebServiceImpl.class);
+
+	@Autowired
+	private MplDefaultCommerceAddToCartStrategyImpl mplDefaultCommerceAddToCartStrategyImpl;
 
 	/**
 	 * Service to create cart
@@ -401,7 +405,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					break;
 				}
 
-				final CommerceCartModification modification = mplCommerceCartService.addToCartWithUSSID(newCartParameter);
+				//final CommerceCartModification modification = mplCommerceCartService.addToCartWithUSSID(newCartParameter);
+				final CommerceCartModification modification = mplDefaultCommerceAddToCartStrategyImpl.addToCart(newCartParameter);
 
 				resultCartModificationData = getCartModificationConverter().convert(modification);
 				LOG.debug("resultCartModificationData is not null");
