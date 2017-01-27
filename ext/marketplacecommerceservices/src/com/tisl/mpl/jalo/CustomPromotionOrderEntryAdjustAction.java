@@ -72,7 +72,8 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 		{
 			final double orderEntryAdjustment = getAmount(ctx).doubleValue();
 
-			final double unitAdjustment = orderEntryAdjustment / orderEntry.getQuantity(ctx).longValue();
+			//final double unitAdjustment = orderEntryAdjustment / orderEntry.getQuantity(ctx).longValue();
+			final double unitAdjustment = orderEntryAdjustment / getOrderEntryQuantity(ctx).longValue();
 
 			final String code = getGuid(ctx);
 			final DiscountValue dv = new DiscountValue(code, -1.0D * unitAdjustment, true, order.getCurrency(ctx).getIsoCode(ctx));
@@ -261,6 +262,13 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 		}
 	}
 
+	/**
+	 * @Description : This is for apportioning calculation
+	 * @param : ctx
+	 * @param : orderEntry
+	 * @param : isFreebiePromo
+	 * @return : orderEntryAdjustment
+	 */
 	private void calculateApportionedDiscount(final AbstractOrderEntry orderEntry, final SessionContext ctx,
 			final boolean isFreebiePromo, final double orderEntryAdjustment)
 	{

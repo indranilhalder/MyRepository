@@ -6164,11 +6164,11 @@
 					</attribute>
 					<!-- End TISPRO-249 -->
 					<!-- TISPRO-318 -->
-					<attribute qualifier="bogoFreeItmCount" type="java.lang.String">
+					<!-- <attribute qualifier="bogoFreeItmCount" type="java.lang.String">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 						<persistence type="property" />
-					</attribute>
+					</attribute> -->
 					<!-- End TISPRO-318 -->
 					<!-- TISPRD- 2511 -->
 					<attribute qualifier="isSentToFico" autocreate="true"

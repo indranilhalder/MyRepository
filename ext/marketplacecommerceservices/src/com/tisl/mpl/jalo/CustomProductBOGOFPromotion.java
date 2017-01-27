@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -483,7 +482,7 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 		boolean flagForDeliveryModeRestrEval = false;
 		boolean flagForPaymentModeRestrEval = false;
 		final int qualifyingCount = getQualifyingCount(paramSessionContext).intValue(); // Get the Promotion set Qualifying count
-		final Map<AbstractOrderEntry, Double> customBogoPromoDataMap = new HashMap<>();
+		//final Map<AbstractOrderEntry, Double> customBogoPromoDataMap = new HashMap<>();
 
 		LOG.debug("Qualifying Count for Promotion" + qualifyingCount);
 		try
@@ -557,7 +556,7 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 								comparator, validNonFreeCount, orderView.getAllEntries(paramSessionContext), qCMapForCatLevelBOGO,
 								tcMapForValidEntries);//validNonFreeCount was totalFactorCount which was wrong
 
-						final List actions = new ArrayList();
+						//final List actions = new ArrayList();
 						Map<String, List<String>> productAssociatedItemsMap = null;
 
 						if (qCMapForCatLevelBOGO.size() == 1)
@@ -604,32 +603,59 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, qCount);
 						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.FREEITEMFORCATBOGO, QCMapForFreeItems);
 
-						for (final PromotionOrderEntryConsumed poec : freeItems)
-						{
-							poec.setAdjustedUnitPrice(paramSessionContext, 0.01D);
-							double adjustment = poec.getEntryPrice(paramSessionContext) * -1.0D; // Calculating the adjustment
-							adjustment += (0.01D * poec.getQuantity().intValue());
-							customBogoPromoDataMap.put(poec.getOrderEntry(paramSessionContext), Double.valueOf(adjustment));
-						}
+						//						for (final PromotionOrderEntryConsumed poec : freeItems)
+						//						{
+						//							poec.setAdjustedUnitPrice(paramSessionContext, 0.01D);
+						//							double adjustment = poec.getEntryPrice(paramSessionContext) * -1.0D; // Calculating the adjustment
+						//							adjustment += (0.01D * poec.getQuantity().intValue());
+						//							customBogoPromoDataMap.put(poec.getOrderEntry(paramSessionContext), Double.valueOf(adjustment));
+						//						}
+						//
+						//						if (MapUtils.isNotEmpty(customBogoPromoDataMap))
+						//						{
+						//							LOG.debug("Populating the BOGO Promotion Details ");
+						//							LOG.debug("Creating Action for BOGO Promotion");
+						//							actions.add(getDefaultPromotionsManager().createCustomBOGOPromoOrderEntryAdjustAction(paramSessionContext,
+						//									customBogoPromoDataMap, true));
+						//						}
 
-						//if (customBogoPromoDataMap.size() > 0)
-						if (MapUtils.isNotEmpty(customBogoPromoDataMap))
-						{
-							LOG.debug("Populating the BOGO Promotion Details ");
-							LOG.debug("Creating Action for BOGO Promotion");
-							actions.add(getDefaultPromotionsManager().createCustomBOGOPromoOrderEntryAdjustAction(paramSessionContext,
-									customBogoPromoDataMap, true));
-						}
-
-						final PromotionResult result = getDefaultPromotionsManager().createPromotionResult(paramSessionContext, this,
-								paramPromotionEvaluationContext.getOrder(), 1.0F);
+						//						final PromotionResult result = getDefaultPromotionsManager().createPromotionResult(paramSessionContext, this,
+						//								paramPromotionEvaluationContext.getOrder(), 1.0F);
 						final List<PromotionOrderEntryConsumed> totalConsumedItems = new ArrayList<PromotionOrderEntryConsumed>(
 								consumedItemsFromTail);
-						//totalConsumedItems = paramPromotionEvaluationContext.finishLoggingAndGetConsumed(this, true);
 						totalConsumedItems.addAll(freeItems);
-						result.setConsumedEntries(paramSessionContext, totalConsumedItems);
-						result.setActions(paramSessionContext, actions);
-						results.add(result);
+
+						for (final PromotionOrderEntryConsumed poec : totalConsumedItems)
+						{
+							final AbstractOrderEntry entry = poec.getOrderEntry(paramSessionContext);
+							final Long consumedQty = poec.getQuantity();
+							poec.setAdjustedUnitPrice(paramSessionContext, 0.01D);
+							double adjustment = 0.00D;
+
+							if (freeItems.contains(poec))
+							{
+								adjustment = poec.getEntryPrice(paramSessionContext) * -1.0D; // Calculating the adjustment
+								adjustment += (0.01D * consumedQty.intValue());
+							}
+
+							final CustomBOGOPromoOrderEntryAdjustAction poeac = getDefaultPromotionsManager()
+									.createCustomBOGOPromoOrderEntryAdjustAction(paramSessionContext, entry, consumedQty.longValue(),
+											adjustment);
+							final PromotionResult result = getDefaultPromotionsManager().createPromotionResult(paramSessionContext,
+									this, paramPromotionEvaluationContext.getOrder(), 1.0F);
+
+							result.addAction(paramSessionContext, poeac);
+							result.setConsumedEntries(paramSessionContext, totalConsumedItems);
+							results.add(result);
+						}
+
+						//						final List<PromotionOrderEntryConsumed> totalConsumedItems = new ArrayList<PromotionOrderEntryConsumed>(
+						//								consumedItemsFromTail);
+						//						totalConsumedItems.addAll(freeItems);
+						//totalConsumedItems = paramPromotionEvaluationContext.finishLoggingAndGetConsumed(this, true);
+						//result.setConsumedEntries(paramSessionContext, totalConsumedItems);
+						//result.setActions(paramSessionContext, actions);
+						//results.add(result);
 					}
 				}
 

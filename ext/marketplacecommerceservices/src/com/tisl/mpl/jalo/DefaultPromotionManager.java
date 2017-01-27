@@ -1386,17 +1386,17 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @return CustomPromotionOrderEntryAdjustAction
 	 */
 	//TPR-961
-	public CustomBuyAgetPercentageDiscountOnBAdjustAction createCustomBuyAgetPercentageDiscountOnBAdjustAction(
-			final SessionContext ctx, final AbstractOrderEntry entry, final long quantity, final double adjustment)
-	{
-		final Map parameters = new HashMap();
-		parameters.put(MarketplacecommerceservicesConstants.GUID, makeActionGUID());
-		parameters.put(MarketplacecommerceservicesConstants.AMOUNT, Double.valueOf(adjustment));
-		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_PRODUCT, entry.getProduct(ctx));
-		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_NUMBER, entry.getEntryNumber());
-		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_QUANTITY, Long.valueOf(quantity));
-		return createCustomBuyAgetPercentageDiscountOnBAdjustAction(ctx, parameters);
-	}
+	//	public CustomBuyAgetPercentageDiscountOnBAdjustAction createCustomBuyAgetPercentageDiscountOnBAdjustAction(
+	//			final SessionContext ctx, final AbstractOrderEntry entry, final long quantity, final double adjustment)
+	//	{
+	//		final Map parameters = new HashMap();
+	//		parameters.put(MarketplacecommerceservicesConstants.GUID, makeActionGUID());
+	//		parameters.put(MarketplacecommerceservicesConstants.AMOUNT, Double.valueOf(adjustment));
+	//		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_PRODUCT, entry.getProduct(ctx));
+	//		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_NUMBER, entry.getEntryNumber());
+	//		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_QUANTITY, Long.valueOf(quantity));
+	//		return createCustomBuyAgetPercentageDiscountOnBAdjustAction(ctx, parameters);
+	//	}
 
 
 	/**
@@ -1404,28 +1404,28 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param parameters
 	 * @return
 	 */
-	private CustomBuyAgetPercentageDiscountOnBAdjustAction createCustomBuyAgetPercentageDiscountOnBAdjustAction(
-			final SessionContext ctx, final Map attributeValues)
-
-	{
-		try
-		{
-			@SuppressWarnings("deprecation")
-			final ComposedType type = getTenant().getJaloConnection().getTypeManager()
-					.getComposedType("CustomBuyAgetPercentageDiscountOnBAdjustAction");
-			return ((CustomBuyAgetPercentageDiscountOnBAdjustAction) type.newInstance(ctx, attributeValues));
-		}
-		catch (final JaloGenericCreationException e)
-		{
-			final Throwable cause = e.getCause();
-			throw new JaloSystemException(cause, cause.getMessage(), e.getErrorCode());
-		}
-		catch (final JaloBusinessException e)
-		{
-			throw new JaloSystemException(e, "error creating CustomPromotionOrderEntryAdjustAction : " + e.getMessage(), 0);
-		}
-
-	}
+	//	private CustomBuyAgetPercentageDiscountOnBAdjustAction createCustomBuyAgetPercentageDiscountOnBAdjustAction(
+	//			final SessionContext ctx, final Map attributeValues)
+	//
+	//	{
+	//		try
+	//		{
+	//			@SuppressWarnings("deprecation")
+	//			final ComposedType type = getTenant().getJaloConnection().getTypeManager()
+	//					.getComposedType("CustomBuyAgetPercentageDiscountOnBAdjustAction");
+	//			return ((CustomBuyAgetPercentageDiscountOnBAdjustAction) type.newInstance(ctx, attributeValues));
+	//		}
+	//		catch (final JaloGenericCreationException e)
+	//		{
+	//			final Throwable cause = e.getCause();
+	//			throw new JaloSystemException(cause, cause.getMessage(), e.getErrorCode());
+	//		}
+	//		catch (final JaloBusinessException e)
+	//		{
+	//			throw new JaloSystemException(e, "error creating CustomPromotionOrderEntryAdjustAction : " + e.getMessage(), 0);
+	//		}
+	//
+	//	}
 
 	/**
 	 * @Description: For Promotion apportioned Promotion Price BOGO

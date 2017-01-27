@@ -388,7 +388,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 								final PromotionResult result = promotionsManager.createPromotionResult(paramSessionContext, this,
 										paramPromotionEvaluationContext.getOrder(), 1.0F);
 								final CustomPromotionOrderEntryAdjustAction poeac = getDefaultPromotionsManager()
-										.createCustomPromotionOrderEntryAdjustAction(paramSessionContext, entry, quantityOfOrderEntry,
+										.createCustomPromotionOrderEntryAdjustAction(paramSessionContext, entry, eligibleCount,
 												adjustment.doubleValue());
 								//final List consumed = paramPromotionEvaluationContext.finishLoggingAndGetConsumed(this, true);
 								result.setConsumedEntries(paramSessionContext, consumed);
