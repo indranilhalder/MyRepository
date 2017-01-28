@@ -1075,6 +1075,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		{
 			String mobileNumber = null;
 			String content = null;
+			String productName=	getProductName(entry.getOrderLineId(), orderModel);
 			if (orderModel.getDeliveryAddress() != null)
 			{
 
@@ -1090,7 +1091,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 			else if (entry.getAwbSecondaryStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.MIS_ROUTE))
 			{
 				content = MarketplacecommerceservicesConstants.SMS_MESSAGE_MIS_ROUTE.replace(
-						MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, entry.getProductName()).replace(
+						MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, productName).replace(
 						MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderModel.getCode());
 			}
 			if (StringUtils.isNotEmpty(mobileNumber))
@@ -1107,6 +1108,27 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 			LOG.error("CustomOmsShipmentSyncAdapter::::::::::::::Sending Secondary SMS "+exption.getMessage());
 		}
 	}
+	
+	private String getProductName(final String orderLine, final OrderModel orderModel)
+	{
+		try
+		{
+			for (final AbstractOrderEntryModel entry : orderModel.getEntries())
+			{
+				if (orderLine.equalsIgnoreCase(entry.getTransactionID()))
+				{
+					return entry.getProduct().getName();
+				}
+			}
+		}
+		catch (NullPointerException nullPointer)
+		{
+			LOG.error("CustomOmsShipmentSyncAdapte::::"+nullPointer.getMessage());
+		}
+
+		return null;
+	}
+	
 	//send sms data For Secondary data R2.3 Change BUG ID E2E 1563 END
 	/**
 	 * @return the sendSMSService
