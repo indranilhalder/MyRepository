@@ -81,7 +81,6 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.AddressType;
 import com.tisl.mpl.core.model.MplLPHolidaysModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
-import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.AddressTypeData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -101,7 +100,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCheckoutService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
-import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
 import com.tisl.mpl.shorturl.service.ShortUrlService;
@@ -2143,19 +2141,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			if (dateList.size() > 0)
 			{
 				final CartModel cartModel = getCartService().getSessionCart();
-				final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
-				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
-				{
-					if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
-					{
-						if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(cartEntryData.getSelectedUssid()))
-						{
-							cartEntryModel.setSddDateBetween(dateList.get(0) + MarketplacecommerceservicesConstants.AND
-									+ dateList.get(dateList.size() - 1));
-						}
-					}
-				}
-				modelService.saveAll(cartEntryList);
 				modelService.save(cartModel);
 				modelService.refresh(cartModel);
 				LOG.debug("Sdd Date Saved Successfully...");

@@ -156,11 +156,11 @@ extends AbstractCsWidgetRenderer<Widget<OrderItemWidgetModel, OrderController>> 
 		listHeaderUssid.setWidth("120px");
 		listHeader.appendChild(listHeaderUssid);
 
-		Listheader listHeaderDate = new Listheader("Schedule Delivery Date");
+		Listheader listHeaderDate = new Listheader("Schedule/Expected Delivery Date");
 		listHeaderDate.setWidth("100px");
 		listHeader.appendChild(listHeaderDate);
 
-		Listheader listHeaderTime = new Listheader("Schedule Delivery Time");
+		Listheader listHeaderTime = new Listheader("Schedule/Expected Delivery Time");
 		listHeaderTime.setWidth("120px");
 		listHeader.appendChild(listHeaderTime);
 

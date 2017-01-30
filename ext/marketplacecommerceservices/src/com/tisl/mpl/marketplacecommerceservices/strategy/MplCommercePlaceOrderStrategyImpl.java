@@ -24,17 +24,15 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.services.BaseStoreService;
-import de.hybris.platform.servicelayer.session.SessionService;
-import java.util.Map;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBException;
 
@@ -208,8 +206,6 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 				afterPlaceOrder(parameter, result);
 				
-				Map<String ,String> selectedDateMap=sessionService.getAttribute("deliverySlotstoSession");
-				saveDeliveryDateBetween(orderModel,selectedDateMap);
 
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
 						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
@@ -470,31 +466,6 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	}
 
 	
-	private void saveDeliveryDateBetween(OrderModel orderModel, Map<String, String> selectedDateMap)
-	{
-		for (OrderModel subOrder : orderModel.getChildOrders())
-		{
-			if (subOrder != null && subOrder.getEntries() != null)
-			{
-				for (AbstractOrderEntryModel entry : subOrder.getEntries())
-				{
-					if (null != selectedDateMap)
-					{
-						for (Entry<String, String> entryForDate : selectedDateMap.entrySet())
-						{
-							if (entryForDate.getKey().equalsIgnoreCase(entry.getSelectedUSSID()))
-							{
-								entry.setSddDateBetween(entryForDate.getValue());
-								modelService.save(entry);
-							}
-						}
-					}
-				}
-			}
-
-		}
-		modelService.saveAll(orderModel);
-	}
 	
 	protected ModelService getModelService()
 	{

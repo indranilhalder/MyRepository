@@ -39,7 +39,6 @@ import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRes
 
 import de.hybris.platform.cockpit.widgets.ListboxWidget;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.cscockpit.utils.CssUtils;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
@@ -145,16 +144,6 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 				 deliverySlotsResponseData=((MarketplaceCheckoutController) widget.getWidgetController()).deliverySlotsRequestDataCallToOms(deliverySlotsRequestData); 
 			 }
 		}
-		try {
-			if(LOG.isDebugEnabled()) {
-				LOG.debug("Setting SddDateBetween for cart Entries ");
-			}
-			if(null != deliverySlotsResponseData && null != deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData() && !deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData().isEmpty()) {
-				setEddDatebetween(cart,widget,deliverySlotsResponseData);
-			}
-		}catch(Exception e) {
-			LOG.error("Error occurred while saving the SddDatebetween" );
-		}
 		
        
 		boolean eligigleForScheduleSlots = Boolean.FALSE;
@@ -179,7 +168,7 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 	 		if(eligigleForScheduleSlots) {
 	 			populateScheduledDeliveryHeaders(widget, listHead);
 	 			for(AbstractOrderEntryModel orderEntry: cart.getEntries()) {
-	 				if(!orderEntry.getGiveAway() && !orderEntry.getFulfillmentType().equalsIgnoreCase(MarketplaceCockpitsConstants.SSHIP) ) {
+	 				if(!orderEntry.getGiveAway() &&  !orderEntry.getFulfillmentType().equalsIgnoreCase(MarketplaceCockpitsConstants.SSHIP) ) {
 	 					Listitem row = new Listitem();
 	 					row.setSclass("listbox-row-item");
 	 					row.setParent(listBox);
@@ -211,66 +200,6 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 		}
 	}
 	
-	private void setEddDatebetween(CartModel cart,ListboxWidget<CheckoutCartWidgetModel, CheckoutController> widget,
-			InvReserForDeliverySlotsResponseData deliverySlotsResponseData) {
-		AbstractOrderModel order= (AbstractOrderModel)widget.getWidgetController().getBasketController().getCart().getObject();
-		if(null != order && null != deliverySlotsResponseData && null != deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()) {
-			for (AbstractOrderEntryModel cartEntry : cart.getEntries()) {
-				String edd = null;
-				for (InvReserForDeliverySlotsItemEDDInfoData data : deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()) {
-					if(null != cartEntry.getSelectedUSSID() && null !=  data.getUssId()) {
-						if(cartEntry.getSelectedUSSID().equalsIgnoreCase(data.getUssId())){
-							if(null != data.getEDD()) {
-								edd = data.getEDD();
-							}else if(null != data.getNextEDD()) {
-								edd= data.getNextEDD();
-							}
-							if(null != edd) {
-							 String eddDateBetween = getEddDateBetween(cartEntry,edd);
-							 if(null != eddDateBetween) {
-								 cartEntry.setSddDateBetween(eddDateBetween);
-								 modelService.save(cartEntry);
-							 }
-							}
-						}
-					}
-					
-				}
-			}
-		}
-		
-	}
-	private String getEddDateBetween(AbstractOrderEntryModel orderEntry,String edd) {
-		String eddDateBetween = null;
-		String timeSlotType = null;
-		String startingDate = null;
-		String endingDate = null;
-		Map<String, List<String>> dateTimeMap = null;
-		if(orderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceCockpitsConstants.HOME_DELIVERY)){
-			timeSlotType = MarketplacecommerceservicesConstants.DELIVERY_MODE_SD;
-		}else if (orderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceCockpitsConstants.EXPRESS_DELIVERY)) {
-			timeSlotType = MarketplacecommerceservicesConstants.DELIVERY_MODE_ED;
-		}
-		try {
-			dateTimeMap = 	getDateAndTimeMap(timeSlotType,edd);
-		} catch (java.text.ParseException e) {
-			LOG.error("Exception occurred while getting the Edd Dates "+e);
-		}
-		if(null != dateTimeMap && dateTimeMap.size() == 2) {
-			List<String> dates =new ArrayList<String>(dateTimeMap.keySet());
-			 startingDate = dates.get(0);
-			 endingDate   = dates.get(1);
-		}else if(null != dateTimeMap && dateTimeMap.size() == 3){
-			List<String> dates =new ArrayList<String>(dateTimeMap.keySet());
-			 startingDate = dates.get(0);
-			 endingDate   = dates.get(2);
-		}
-		if(null != startingDate && null != endingDate) {
-			eddDateBetween = MarketplaceCockpitsConstants.Between.concat(MarketplaceCockpitsConstants.SPACE).concat(startingDate).concat(MarketplaceCockpitsConstants.SPACE).concat(MarketplaceCockpitsConstants.AND).concat(MarketplaceCockpitsConstants.SPACE).concat(endingDate);
-		}
-		return eddDateBetween;
-
-	}
 	private void renderDeliverySlots(ListboxWidget<CheckoutCartWidgetModel, CheckoutController> widget,AbstractOrderEntryModel orderEntry, InvReserForDeliverySlotsItemEDDInfoData deliverySlotsItemEDDInfo,Listitem parent) {
 
 		LOG.info("rendering deliverySlots ");
