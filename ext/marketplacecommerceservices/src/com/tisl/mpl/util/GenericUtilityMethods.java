@@ -8,6 +8,7 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
@@ -1110,14 +1111,15 @@ public class GenericUtilityMethods
 						//TPR-430 starts
 						final StringBuffer categoryName = new StringBuffer();
 
-						/*
-						 * for (final CategoryModel categoryModel : entry.getProduct().getSupercategories()) { if
-						 * (categoryModel.getCode().contains(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX)) {
-						 * categoryName.append(categoryModel.getName()).append(':'); getCategoryLevel(categoryModel, 1,
-						 * categoryName); }
-						 * 
-						 * }
-						 */
+
+						for (final CategoryData catData : entry.getProduct().getCategories())
+						{
+							if (catData.getCode().contains(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
+							{
+								categoryName.append(catData.getName()).append(':');
+								//getCategoryLevel(category, 1, categoryName);
+							}
+						}
 
 
 						if (StringUtils.isNotEmpty(categoryName.toString()))
