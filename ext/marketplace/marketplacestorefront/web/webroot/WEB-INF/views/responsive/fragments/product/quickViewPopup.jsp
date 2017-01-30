@@ -20,17 +20,6 @@
 	
 <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
 
-
-
-
-<script type="text/javascript">
-	$(document).ready(function() {
-		$("#showquick").click(function() {
-			$("#showPriceBreakupquick").slideToggle("fast");
-		});
-	});
-</script>
-
  <style type="text/css">
 tr.d0 td {
   background-color:#E0E0E0 ;
@@ -510,12 +499,12 @@ display:none;
     <%--for price breakup(TPR-3752) --%>
 
 	
+	
 	<div id = "showPricequick">
-	<%-- <c:if test="${product.rootCategory=='FineJewellery' }"> --%>
 	
 	<p id = "showquick" class="pricebreakup-link">Price Breakup</p>
-	</div>
 	
+	</div>
 	<ul id="showPriceBreakupquick" class="price-breakuplist clearfix" style="display:none"></ul>
 
 	<%-- </c:if> --%>
