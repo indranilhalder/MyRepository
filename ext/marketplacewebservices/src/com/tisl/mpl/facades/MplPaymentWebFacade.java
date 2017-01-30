@@ -176,7 +176,9 @@ public interface MplPaymentWebFacade
 	 * @param cart
 	 * @param refernceCode
 	 * @param paymentMode
+	 * @param amount
 	 *
 	 */
-	public void saveTPWalletPaymentInfoMobile(AbstractOrderModel cart, final String refernceCode, Map<String, Double> paymentMode);
+	public void saveTPWalletPaymentInfoMobile(AbstractOrderModel cart, final String refernceCode, Map<String, Double> paymentMode,
+			String amount);
 }

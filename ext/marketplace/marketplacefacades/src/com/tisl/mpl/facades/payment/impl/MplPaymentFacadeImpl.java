@@ -1644,11 +1644,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1699,9 +1699,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -3161,7 +3161,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//Commented for Mobile use
 			//	getMplPaymentService().setTPWalletPaymentTransaction(paymentMode, cart, request);
 			final String refernceCode = request.getParameter("REFNO");
-			getMplPaymentService().setTPWalletPaymentTransaction(paymentMode, order, refernceCode);
+			final Double transactionAmount = Double.valueOf(request.getParameter("AMT"));
+			getMplPaymentService().setTPWalletPaymentTransaction(paymentMode, order, refernceCode, transactionAmount);
 
 
 			if (null != mplCustomer)
