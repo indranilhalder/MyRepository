@@ -21,7 +21,6 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.SimpleCMSComponentModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
-import de.hybris.platform.enumeration.EnumerationService;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -72,8 +71,8 @@ public class BrandPageController extends AbstractSearchPageController
 	//	@Resource(name = "productSearchFacade")
 	//	private ProductSearchFacade<ProductData> productSearchFacade;
 
-	@Resource(name = "enumerationService")
-	private EnumerationService enumerationService;
+	//@Resource(name = "enumerationService")
+	//private EnumerationService enumerationService;
 
 
 
@@ -95,7 +94,7 @@ public class BrandPageController extends AbstractSearchPageController
 
 
 
-	private static final String ERROR_CMS_PAGE = "notFound";
+	//private static final String ERROR_CMS_PAGE = "notFound";
 
 	/**
 	 * This method find the appropriate page for a brand and redirects accordingly
