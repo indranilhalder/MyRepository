@@ -6723,12 +6723,23 @@
 					<attribute qualifier="forwardSealNum" type="java.lang.String">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type="property" />
+						  <persistence type='property'>
+							 <columntype database='oracle'>
+								<value>VARCHAR2(20)</value>
+							 </columntype>
+						  </persistence>
 					</attribute>
+					
+					
+					
 					<attribute qualifier="reverseSealNum" type="java.lang.String">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type="property" />
+						  <persistence type='property'>
+							 <columntype database='oracle'>
+								<value>VARCHAR2(20)</value>
+							 </columntype>
+						  </persistence>
 					</attribute>
 					<!-- changes for jewellery Cs-Cockpit end -->
 					
