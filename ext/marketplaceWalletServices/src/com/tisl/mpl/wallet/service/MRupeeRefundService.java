@@ -31,6 +31,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
@@ -56,6 +57,13 @@ public class MRupeeRefundService
 	private Environment environment;
 	private String environmentSet;
 
+	private static final String SPLIT = "|";
+
+	private static final String S = "S";
+	private static final String E = "E";
+	private static final String POST = "POST";
+	private static final String SSL = "SSL";
+	private static final String TLS = "TLS";
 	//	@Autowired
 	//	private MrupeePaymentService mRupeePaymentService;
 
@@ -80,8 +88,6 @@ public class MRupeeRefundService
 		params.put("REFNO", refundRequest.getRefNo());
 		params.put("PREFNO", refundRequest.getPurchaseRefNo());
 		params.put("CHECKSUM", checksum);
-		//		final String serializedParams = "MCODE=TULA&NARRATION=uat&TXNTYPE=R&" + "AMT=" + refundRequest.getAmount().toString()
-		//				+ "&REFNO=" + refundRequest.getRefNo() + "&PREFNO=" + refundRequest.getPurchaseRefNo() + "&CHECKSUM=" + checksum;
 		final String serializedParams = serializeParams(params);
 
 		LOG.debug("MRUPEE REFUND REQUEST--------------url-----------request----" + serializedParams);
@@ -90,32 +96,33 @@ public class MRupeeRefundService
 				.getString(MarketplaceWalletServicesConstants.MRUPEERETURNURL);
 		//	final String url = "https://14.140.248.13/Mwallet/startpaymentgatewayS2S.do?";
 		final String response = makeServiceCall(url, serializedParams);
-		if (null != response)
+
+		if (StringUtils.isNotEmpty(response) && response.contains(SPLIT))
 		{
 			LOG.error("Refund Response:::" + response);
-			final String[] params1 = response.split("|");
+			final String[] params1 = response.split(SPLIT);
 			if (null != params1)
 			{
 				mRupeeRefundResponse = new MRupeeRefundResponse();
 
 				final String status = params1[0];
 
-				if (status.equalsIgnoreCase("S"))
+				if (status.equalsIgnoreCase(S))
 				{
 					final String requestId = params1[1];
 					final String refNo = params1[2];
 					final String mwrefNo = params1[3];
 					final String reason = params1[4];
-					mRupeeRefundResponse.setStatus("SUCCESS");
+					mRupeeRefundResponse.setStatus(MarketplaceWalletServicesConstants.SUCCESS);
 					mRupeeRefundResponse.setRequestID(requestId);
 					mRupeeRefundResponse.setRefNo(refNo);
 					mRupeeRefundResponse.setMwrefNo(mwrefNo);
 					mRupeeRefundResponse.setReason(reason);
 					mRupeeRefundResponse.setSuccess(true);
 				}
-				else if (status.equalsIgnoreCase("E"))
+				else if (status.equalsIgnoreCase(E))
 				{
-					mRupeeRefundResponse.setStatus("FAILURE");
+					mRupeeRefundResponse.setStatus(MarketplaceWalletServicesConstants.FAILURE);
 					mRupeeRefundResponse.setSuccess(false);
 				}
 				else
@@ -171,7 +178,7 @@ public class MRupeeRefundService
 		DataOutputStream wr = null;
 		try
 		{
-			final SSLContext ssl_ctx = SSLContext.getInstance("TLS");
+			final SSLContext ssl_ctx = SSLContext.getInstance(TLS);
 			final TrustManager[] trust_mgr = new TrustManager[]
 			{ new X509TrustManager()
 			{
@@ -219,7 +226,7 @@ public class MRupeeRefundService
 			//			connection.setRequestProperty("Authorization", "Basic " + encodedKey);
 			connection.setConnectTimeout(connectionTimeout);
 			connection.setReadTimeout(readTimeout);
-			connection.setRequestMethod("POST");
+			connection.setRequestMethod(POST);
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 			connection.setRequestProperty("Content-Length", Integer.toString(encodedParams.getBytes().length));
 			connection.setRequestProperty("Content-Language", "en-US");
@@ -243,8 +250,7 @@ public class MRupeeRefundService
 		}
 		catch (final Exception e)
 		{
-			//throw new AdapterException("Error with connection", e);
-			LOG.error(e.getMessage(), e);
+			LOG.error("******************Exception in connectivity in  mrupeee Refund Url======================", e);
 		}
 		finally
 		{
@@ -295,7 +301,7 @@ public class MRupeeRefundService
 			} };
 
 			// Install the all-trusting trust manager
-			final SSLContext sc = SSLContext.getInstance("SSL");
+			final SSLContext sc = SSLContext.getInstance(SSL);
 			sc.init(null, trustAllCerts, new java.security.SecureRandom());
 			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 
@@ -306,7 +312,10 @@ public class MRupeeRefundService
 				@Override
 				public boolean verify(final String hostname, final SSLSession session)
 				{
-					if (hostname.equals("14.140.248.13"))
+					final String mRupeehostname = getConfigurationService().getConfiguration()
+							.getString(MarketplaceWalletServicesConstants.MRUPEEHOSTNAME);
+					//					if (hostname.equals("14.140.248.13"))
+					if (hostname.equals(mRupeehostname))
 					{
 						return true;
 					}
@@ -324,14 +333,14 @@ public class MRupeeRefundService
 		final NoSuchAlgorithmException e)
 
 		{
-			LOG.error(e.getMessage(), e);
+			LOG.error("******************Exception occured in connectivity setting at the time of Refund======================", e);
 		}
 		catch (
 
 		final KeyManagementException e)
 
 		{
-			LOG.error(e.getMessage(), e);
+			LOG.error("******************Exception occured in connectivity setting at the time of Refund======================", e);
 		}
 
 	}
