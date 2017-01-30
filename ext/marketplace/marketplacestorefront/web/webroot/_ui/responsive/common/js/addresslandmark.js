@@ -483,6 +483,8 @@ $(document).ready(function() {
 	
 	
 	$(".close").click(function() {
+		//alert();
+		$(".address_landmarkOtherDiv").attr('data-value',$("#otherLandmarkInitial").val());
 		$("#showOTP,#otpPopup").hide();
 		$(".wrapBG1").hide();	
 	});

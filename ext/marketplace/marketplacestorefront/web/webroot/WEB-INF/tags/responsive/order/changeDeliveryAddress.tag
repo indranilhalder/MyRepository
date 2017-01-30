@@ -118,6 +118,7 @@
 						</div>
 						<div class="row">
 							<div class="address_landmarkOtherDiv" data-value="${orderDetails.deliveryAddress.landmark}">
+							<input type="hidden" id="otherLandmarkInitial" value="${orderDetails.deliveryAddress.landmark}"/>
 								<div class="col-md-12">
 									<label><spring:theme code="text.order.returns.landmarkother"/></label>
 										<form:input class="otherLandMark address_landmarkOther" placeholder="Other Landmark" path="otherLandmark"/>	
