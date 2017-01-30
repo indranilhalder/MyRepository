@@ -153,13 +153,13 @@
 						if($(".slectionRefund #iFSCCode").val().length < 11) {
 							//Please Enter Valid IFSC Code.
 						 $('.errorTextifsc').remove();
-						 $(".secondTataCliq .ifsccode").append("<div class='errorTextifsc' style='color:red;'>Please Enter Valid 11 character IFSC Code. </div>");
+						 $(".secondTataCliq .ifsccode").append("<div class='errorText errorTextifsc' style='color:red;'>Please Enter Valid 11 character IFSC Code. </div>");
 							validate = false;
 							console.log('validate:'+ validate);
 						}
 						if($(".slectionRefund #accountHolderName").val().length < 4 || $(".slectionRefund #accountHolderName").val().trim() == '') {
 							//Please Enter Valid Account Holder Name.
-							$(".secondTataCliq .accountholdername").append("<div class='errorText'>Mininum  4 charactor required</div>");
+							$(".secondTataCliq .accountholdername").append("<div class='errorText'>Mininum  4 character required</div>");
 							validate = false;
 						}  if($(".slectionRefund #bankName").val().length < 3 || $(".slectionRefund #bankName").val().trim() == '') {
 							//Please Enter Valid Bank Name.

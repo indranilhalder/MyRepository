@@ -1995,6 +1995,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						if (null != deliverySlotCost && !deliverySlotCost.isEmpty() && !deliverySlotCost.matches("0"))
 						{
 							cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(deliverySlotCost));
+							cartEntryModel.setCurrDelCharge(Double.valueOf(deliverySlotCost));
 						}
 					}
 				}
@@ -2044,6 +2045,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					cartEntryModel.setTimeSlotFrom("");
 					cartEntryModel.setTimeSlotTo("");
 					cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
+					cartEntryModel.setCurrDelCharge(Double.valueOf(0));
 				}
 			}
 		}
