@@ -281,6 +281,7 @@ public class ProductPageController extends MidPageController
 	private MplCmsPageService mplCmsPageService;
 
 	//TPR-4389
+	@SuppressWarnings("unused")
 	private BrowserType bType;
 
 	/**
@@ -365,6 +366,47 @@ public class ProductPageController extends MidPageController
 			else if (bType.equals(BrowserType.MOZILA_FIREFOX))
 			{
 				LOG.debug("*****************FIREFOX*****************");
+			}
+			else if (bType.equals(BrowserType.ANDROID))
+			{
+				LOG.debug("*****************ANDROID*****************");
+			}
+			else if (bType.equals(BrowserType.OPERA))
+			{
+				LOG.debug("*****************OPERA*****************");
+			}
+			else if (bType.equals(BrowserType.TRIDENT))
+			{
+				LOG.debug("*****************INTERNET EXPLORER *****************");
+			}
+
+			else if (bType.equals(BrowserType.KHTML))
+			{
+				LOG.debug("*****************KHTML *****************");
+			}
+			else if (bType.equals(BrowserType.BLINK))
+			{
+				LOG.debug("*****************BLINK *****************");
+			}
+			else if (bType.equals(BrowserType.WEBKIT))
+			{
+				LOG.debug("*****************WEBKIT *****************");
+			}
+			else if (bType.equals(BrowserType.NETFRONT))
+			{
+				LOG.debug("*****************NETFRONT *****************");
+			}
+			else if (bType.equals(BrowserType.WINDOWS))
+			{
+				LOG.debug("*****************WINDOWS *****************");
+			}
+			else if (bType.equals(BrowserType.GECKO))
+			{
+				LOG.debug("*****************GECKO *****************");
+			}
+			else if (bType.equals(BrowserType.PROPRIETARY))
+			{
+				LOG.debug("*****************PROPRIETARY *****************");
 			}
 			else if (bType.equals(BrowserType.UNKNOWN))
 			{
@@ -2293,11 +2335,11 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 * 
+	 *
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -2317,76 +2359,76 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 * 
+	 *
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 * 
-	 * 
+	 *
+	 *
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 * 
+	 *
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 * 
-	 * 
+	 *
+	 *
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 * 
+	 *
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 * 
+	 *
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 * 
+	 *
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 * 
+	 *
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 * 
-	 * 
+	 *
+	 *
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 * 
+	 *
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 * 
+	 *
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 * 
+	 *
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 * 
+	 *
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 * 
+	 *
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 * 
+	 *
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 * 
+	 *
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 * 
-	 * 
+	 *
+	 *
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 * 
+	 *
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
+	 *
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * catch (final Exception e) {
-	 * 
+	 *
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 
@@ -2877,13 +2919,56 @@ public class ProductPageController extends MidPageController
 			{
 				return BrowserType.MOZILA_FIREFOX;
 			}
+			else if (userAgent.indexOf("webkit") != -1)
+			{
+				return BrowserType.WEBKIT;
+			}
 
+			else if (userAgent.indexOf("android") != -1)
+			{
+				return BrowserType.ANDROID;
+			}
+
+			else if (userAgent.indexOf("presto") != -1)
+			{
+				return BrowserType.OPERA;
+			}
+			else if (userAgent.indexOf("windows") != -1)
+			{
+				return BrowserType.WINDOWS;
+			}
+			else if (userAgent.indexOf("Trident") != -1)
+			{
+				return BrowserType.TRIDENT;
+			}
+
+			else if (userAgent.indexOf("KHTML") != -1)
+			{
+				return BrowserType.KHTML;
+			}
+			else if (userAgent.indexOf("Blink") != -1)
+			{
+				return BrowserType.BLINK;
+			}
+			else if (userAgent.indexOf("NetFront") != -1)
+			{
+				return BrowserType.NETFRONT;
+			}
+			else if (userAgent.indexOf("Gecko") != -1)
+			{
+				return BrowserType.GECKO;
+			}
+			else if (userAgent.indexOf("Proprietary") != -1)
+			{
+				return BrowserType.PROPRIETARY;
+			}
 		}
+
 		return BrowserType.UNKNOWN;
 	}
 
 	public static enum BrowserType
 	{
-		INTERNET_EXPLORER, MOZILA_FIREFOX, SAFARI, NETSCAPE, GOOGLE_CHROME, FLOCK, UNKNOWN
+		INTERNET_EXPLORER, MOZILA_FIREFOX, SAFARI, NETSCAPE, GOOGLE_CHROME, FLOCK, WEBKIT, ANDROID, OPERA, WINDOWS, TRIDENT, GECKO, KHTML, BLINK, NETFRONT, PROPRIETARY, UNKNOWN
 	}
 }

@@ -173,8 +173,21 @@ function registerUserGigya(eventObject)
     	
     	function getRating(key,productCode,category)
     	{
+    		
+    		   /* isGecko = navigator.product == 'Gecko'
+        		isPresto = navigator.product == 'Presto'
+        		isBlink = navigator.product == 'Blink'	
+        		isWebKit = navigator.product == 'WebKit'
+        		isTrident= navigator.product == 'Trident'
+        		isTasman = navigator.product == 'Tasman'
+        		isKHTML = navigator.product == 'KHTML'
+        		isNetFront = navigator.product == 'NetFront'
+        		isMobile = (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Windows Phone/i.test(navigator.userAgent)) */
+    		
+    		
     		var browser_type=$("#browser_type").val();
-    		if((browser_type==="INTERNET_EXPLORER")||(browser_type==="GOOGLE_CHROME")||(browser_type==="NETSCAPE")||(browser_type==="FLOCK")||(browser_type==="SAFARI")||(browser_type==="MOZILA_FIREFOX")){
+ if((browser_type==="INTERNET_EXPLORER")||(browser_type==="GOOGLE_CHROME")||(browser_type==="NETSCAPE")||(browser_type==="FLOCK")||(browser_type==="SAFARI")||(browser_type==="MOZILA_FIREFOX")||(browser_type==="ANDROID")||(browser_type==="OPERA")||(browser_type==="TRIDENT")||(browser_type==="BLINK")||(browser_type==="KHTML")||(browser_type==="WEBKIT")||(browser_type==="NETFRONT"||(browser_type==="WINDOWS")||(browser_type==="GECKO")||(browser_type==="PROPRIETARY"))){
+        	//if(isPresto||isTrident||isGecko||isWebKit||isTasman||isKHTML||isNetFront||isMobile) {
     		var url = "https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=?";
     		
     		$.getJSON(url, function(data){
@@ -224,10 +237,11 @@ function registerUserGigya(eventObject)
     				
     		  });
     		
-    		
-    		}else{
+        	} 		
+   else{
+	            alert("coming2");	   
     			var url1 = "https://comments.us1.gigya.com/comments.getComments?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeStreamInfo=true&dataFormat=html&format=jsonp&callback=?";
-    		
+    		   alert("coming3");
     			//tpr-1284
         		
         		$.getJSON(url1, function(data){
