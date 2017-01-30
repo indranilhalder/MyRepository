@@ -124,7 +124,8 @@ public class DefaultCheckOrderService implements CheckOrderService
 	@Override
 	public boolean checkMissintPaymentTrancsaction(final OrderModel order)
 	{
-		boolean status = false;
+		boolean status = true;
+
 
 		if (CollectionUtils.isEmpty(order.getPaymentTransactions()))
 		{
