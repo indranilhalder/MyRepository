@@ -1,7 +1,7 @@
 /*
  * ----------------------------------------------------------------
  * --- WARNING: THIS FILE IS GENERATED AND WILL BE OVERWRITTEN! ---
- * --- Generated at 17 Jan, 2017 11:56:18 AM                    ---
+ * --- Generated at Jan 24, 2017 4:55:19 PM                     ---
  * ----------------------------------------------------------------
  */
 package com.tisl.mpl.wallet.constants;
