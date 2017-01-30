@@ -133,11 +133,14 @@ ACC.product = {
 				
 					/*TPR-681*/
 					var productCodePost = $("#productCodePost").val();
+					// Product code passed as an array for Web Analytics   INC_11511 
+					var productCodeArray=[];
+					productCodeArray.push(productCodePost);	// Product code passed as an array for Web Analytics
 					utag.link({
 						link_obj: this, 
 						link_text: 'quick_view_addto_bag' , 
 						event_type : 'quick_view_addto_bag', 
-						product_sku_quick_view : productCodePost
+						product_sku_quick_view : productCodeArray
 					});
 					/*TPR-681 Ends*/
 				
@@ -264,11 +267,14 @@ ACC.product = {
 			
 			/*TPR-646*/
 			var productCode = $(this).closest(".add_to_cart_wl_form").find("input[name='productCodePost']").val();
+			// Product code passed as an array for Web Analytics   INC_11511 
+			var productCodeArray=[];
+			productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
 			utag.link({
 				"link_obj" : this,
 			    "link_text": 'add_tobag_wishlist',
 			    "event_type": 'add_tobag_wishlist',
-			    "product_sku_wishlist" : "" + productCode
+			    "product_sku_wishlist" : "" + productCodeArray
 			});
 			
 			/*TPR-646 ends*/

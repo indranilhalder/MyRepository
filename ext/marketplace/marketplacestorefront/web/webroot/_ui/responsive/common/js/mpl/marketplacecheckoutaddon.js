@@ -642,17 +642,16 @@ function submitForm(){
 	else if($("#paymentMode").val()=="COD"){
 		var otpNUMField= $('#otpNUMField').val();
 		//TPR-665
-		
-		utag.link({
-			"link_text": "pay_cod_validate_otp" , "event_type" : "payment_mode_cod"
-		});
+		if(typeof utag !="undefined"){
+		utag.link({"link_text": "pay_cod_validate_otp" , "event_type" : "payment_mode_cod"});
+		}
 		
 		if(otpNUMField=="")
 		{
 			//TPR-665
-			utag.link(
-			{"link_text": "pay_cod_otp_error" , "event_type" : "payment_mode_cod"}
-			);
+			if(typeof utag !="undefined"){
+			utag.link({"link_text": "pay_cod_otp_error" , "event_type" : "payment_mode_cod"});
+			}
 			
 			$("#otpNUM, #sendOTPNumber, #emptyOTPMessage, #otpSentMessage").css("display","block");
 		}
@@ -695,9 +694,9 @@ function submitForm(){
 						else if(response=="EXPIRED")
 						{
 							//TPR-665
-							utag.link(
-							{"link_text": "pay_cod_otp_timeout" , "event_type" : "payment_mode_cod"}
-							);
+							if(typeof utag !="undefined"){
+							utag.link({"link_text": "pay_cod_otp_timeout" , "event_type" : "payment_mode_cod"});
+							}
 							
 							$("#otpNUM, #sendOTPNumber, #enterOTP, #expiredOtpValidationMessage").css("display","block");
 							$("#wrongOtpValidationMessage").css("display","none");	
@@ -706,9 +705,9 @@ function submitForm(){
 						}
 						else{
 							//TPR-665
-							utag.link(
-							{"link_text": "pay_cod_otp_success" , "event_type" : "payment_mode_cod"}
-							);
+							if(typeof utag !="undefined"){
+							utag.link({"link_text": "pay_cod_otp_success" , "event_type" : "payment_mode_cod"});
+							}
 							
 							var staticHost=$('#staticHost').val();
 							// TISPRO-153
@@ -732,9 +731,9 @@ function submitForm(){
 					else
 					{
 						//TPR-665
-						utag.link(
-						{"link_text": "pay_cod_otp_error" , "event_type" : "payment_mode_cod"}
-						);
+						if(typeof utag !="undefined"){
+						utag.link({"link_text": "pay_cod_otp_error" , "event_type" : "payment_mode_cod"});
+						}
 						
 						alert("Error validating OTP. Please select another payment mode and proceed");
 						$(".pay button,.cod_payment_button_top").prop("disabled",false);
@@ -747,9 +746,9 @@ function submitForm(){
 			},
 			error : function(resp) {
 				//TPR-665
-				utag.link(
-				{link_text: 'pay_cod_otp_error' , event_type : 'payment_mode_cod'}
-				);
+				if(typeof utag !="undefined"){
+				utag.link({link_text: 'pay_cod_otp_error' , event_type : 'payment_mode_cod'});
+				}
 				
 				alert("Error validating OTP. Please select another payment mode and proceed");
 				$(".pay button,.cod_payment_button_top").prop("disabled",false);
@@ -916,9 +915,9 @@ function deselectRadio(){
 			  selection[i].checked = false;
 		  }
 	//TPR-665
-	utag.link(
-			{"link_text": "net_banking_dropdown_"+bankName.replace(/ /g,'_').toLowerCase() , "event_type" : "payment_mode_dropdown"}
-			);
+	if(typeof utag !="undefined"){
+	utag.link({"link_text": "net_banking_dropdown_"+bankName.replace(/ /g,'_').toLowerCase() , "event_type" : "payment_mode_dropdown"});
+	}
 		setBankForSavedCard($("#bankCodeSelection option:selected").html());
 		
 	}
@@ -942,9 +941,9 @@ function deselectSelection(){
 			  setBankForSavedCard(bankName);
 			  
 		//TPR-665
-			utag.link({
-				"link_text": "net_banking_popular_"+bankName.replace(/ /g,'_').toLowerCase() , "event_type" : "payment_mode_popular"
-			});
+			  if(typeof utag !="undefined"){
+			utag.link({"link_text": "net_banking_popular_"+bankName.replace(/ /g,'_').toLowerCase() , "event_type" : "payment_mode_popular"});
+			  }
 	}
 	// setBankForSavedCard(bankName);
 }
@@ -1350,9 +1349,9 @@ function generateOTP(){
 	else{
 		var guid=$("#guid").val();
 		//TPR-665
-		utag.link({
-			link_text: 'pay_cod_verify_number' , event_type : 'payment_mode_cod'
-		});
+		if(typeof utag !="undefined"){
+		utag.link({'link_text': 'pay_cod_verify_number', 'event_type': 'payment_mode_cod'});
+		}
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/generateOTP",
 		// data: { 'mobileNumber' : mobileNumber, 'prefix' : prefix },

@@ -112,7 +112,7 @@ $(document).ready(
 								+ $("#product_id").val() + '"],';
 						//TPR-430 Start
 						if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
-						tealiumData += '"product_category":"'
+						tealiumData += '"product_category":'
 							+ getListValue("product_category") + ',';            /*value passed as array instead of single string  INC_11511*/
 							/*+ $("#product_category").val().replace(/_+/g, '_') + '",';*/
 						}
@@ -229,7 +229,7 @@ $(document).ready(
 									+ $("#categoryId").val() + '",';
 								/*TPR-430 Start*/
 								if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
-								tealiumData += '"product_category":"'
+								tealiumData += '"product_category":'
 									+ getListValue("product_category") + ',';                /*value passed as array instead of single string  INC_11511*/
 									/*+ $("#product_category").val().replace(/_+/g, '_') + '",';*/
 								}
@@ -332,7 +332,7 @@ $(document).ready(
 							+ $("#checkoutSellerIDs").val() + '",';
 						//TPR-430 Start
 						if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
-						tealiumData += '"product_category":"'
+						tealiumData += '"product_category":'
 							+ getListValue("product_category") + ',';	/*value passed as array instead of single string  INC_11511*/
 							/*+ $("#product_category").val().replace(/_+/g, '_') + '",';*/
 						}
@@ -384,7 +384,7 @@ $(document).ready(
 							+ $("#product_brand").val() + ',';
 						//TPR-430 Start
 						if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
-						tealiumData += '"product_category":"'
+						tealiumData += '"product_category":'
 							+ getListValue("product_category") + ',';                /*value passed as array instead of single string  INC_11511*/
 						/*	+ $("#product_category").val().replace(/_+/g, '_') + '",';*/
 						}
@@ -463,7 +463,7 @@ $(document).ready(
 						 
 						//TPR-430 Start
 						 if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
-						tealiumData += '"product_category":"'
+						tealiumData += '"product_category":'
 							+ getListValue("product_category") + ',';                             /*value passed as array instead of single string  INC_11511*/
 							/*+ $("#product_category").val().replace(/_+/g, '_') + '",';*/
 						}

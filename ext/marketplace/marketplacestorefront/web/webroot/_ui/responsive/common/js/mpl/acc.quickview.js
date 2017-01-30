@@ -32,11 +32,14 @@ ACC.quickview = {
 			{
 				/*TPR-690*/
 				var productCode = productCodeQuickView;
+				// Product code passed as an array for Web Analytics   INC_11511 
+				var productCodeArray=[];
+				productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
 				utag.link({
 					link_obj: this, 
 					link_text: 'quick_view_click' ,
 					event_type : 'quick_view_click', 
-					product_sku_quick_view : productCode
+					product_sku_quick_view : productCodeArray
 				});
 				
 				/*TPR-690 ends*/
@@ -397,6 +400,10 @@ function dispQuickViewPrice(mrp, mop, spPrice, savingsOnProduct) {
 
 function addToWishlist_quick(alreadyAddedWlName_quick) {
 	var productCodePost = $("#product_quick").val();
+	
+	// Product code passed as an array for Web Analytics   INC_11511 
+	var productCodeArray=[];
+	productCodeArray.push(productCodePost);	// Product code passed as an array for Web Analytics
 //	var productCodePost = $("#productCodePostQuick").val();
 	var wishName = "";
 	
@@ -458,7 +465,7 @@ function addToWishlist_quick(alreadyAddedWlName_quick) {
 						link_obj: this, 
 						link_text: 'add_to_wishlist' , 
 						event_type : 'add_to_wishlist', 
-						product_sku_wishlist : productCodePost
+						product_sku_wishlist : productCodeArray
 					});
 				/*TPR-656 Ends*/
 				
