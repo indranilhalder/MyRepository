@@ -118,7 +118,7 @@ public class DefaultCheckOrderService implements CheckOrderService
 	}
 
 	/*
-	 *
+	 * 
 	 * //SprintPaymentFixes:- To handle missing paymentTransaction ,Create the Transaction
 	 */
 	@Override
@@ -126,10 +126,8 @@ public class DefaultCheckOrderService implements CheckOrderService
 	{
 		boolean status = true;
 
-
 		if (CollectionUtils.isEmpty(order.getPaymentTransactions()))
 		{
-
 			status = mplPaymentService.createPaymentTransactionFromSubmitOrderJob(order);
 		}
 		return status;
