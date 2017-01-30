@@ -248,113 +248,123 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 					{
 						final List<MplPaymentAuditEntryModel> entryList = Lists.newArrayList(auditModelData.getAuditEntries());
 						String status = "";
-						final String response = getMrupeeResponse(auditModelData);//getting mrupee response
-						if (StringUtils.isNotEmpty(response) && response.contains(SPLIT))
-						{
-							final String[] params1 = response.split(SPLIT);
-							status = params1[0];
-						}
-						LOG.debug("Status from CronJob Mrupee#####################" + status);
-						orderTATForTimeout = getTatTimeOut(new Date(), getmRupeeJobTAT(), order.getCreationtime());
 						if (CollectionUtils.isNotEmpty(entryList) && OrderStatus.PAYMENT_PENDING.equals(order.getStatus())
-								&& !auditModelData.getIsExpired().booleanValue() && status.equalsIgnoreCase(S)
-								&& new Date().before(orderTATForTimeout))
+								&& !auditModelData.getIsExpired().booleanValue() && new Date().after(orderTATForTimeout))
 						{
-							//updating audit details
-							final Map<String, Double> paymentMode = sessionService
-									.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
-							mplPaymentService.setTPWalletPaymentTransaction(paymentMode, order, auditModelData.getAuditId());
-							final CustomerModel mplCustomer = (CustomerModel) order.getUser();
-							updateAuditInfoForPayment(auditModelData, entryList, mplCustomer, order);
-							//sending notification mail
-							final String trackOrderUrl = getConfigurationService().getConfiguration()
-									.getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + order.getCode();
-
-							LOG.debug("#######################payment processiong in mrupee cronjob" + order.getCode());
-
 							isPayment = true;
-							try
-							{
-								notificationService.triggerEmailAndSmsOnOrderConfirmation(order, trackOrderUrl);
-							}
-							catch (final JAXBException e)
-							{
-								LOG.error("**************************error final in sending order confirmation notification>>>>>>", e);
-								throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-							}
-
-						}
-
-						//refund flow handling
-						if (CollectionUtils.isNotEmpty(entryList) && OrderStatus.REFUND_INITIATED.equals(order.getStatus())
-								&& !auditModelData.getIsExpired().booleanValue() && new Date().before(orderTATForTimeout))
-						{
-							//boolean isReturn = ifRefundInitiated(order.getEntries());
-
-							if (CollectionUtils.isNotEmpty(order.getPaymentTransactions()))
-							{
-								final PaymentTransactionModel paymentTransactionModel = order.getPaymentTransactions().get(0);
-								for (final PaymentTransactionEntryModel trans : paymentTransactionModel.getEntries())
-								{
-									if (null != trans.getType() && "RETURN".equalsIgnoreCase(trans.getType().toString()))
-									{
-										isReturn = true;
-										break;
-									}
-								}
-
-								//	if(paymentTransactionModel.getT)
-								for (final AbstractOrderEntryModel orderEntry : order.getEntries())
-								{
-									ConsignmentStatus newStatus = null;
-									if (orderEntry != null && CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()) && isReturn)
-									{
-										MplPaymentAuditEntryModel refundAuditEntry = null;
-										if (status.equalsIgnoreCase(S))
-										{
-											newStatus = ConsignmentStatus.RETURN_COMPLETED;
-											refundAuditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
-											refundAuditEntry.setStatus(MplPaymentAuditStatusEnum.REFUND_SUCCESSFUL);
-										}
-										else if (!(status.equalsIgnoreCase(S)))
-										{
-											refundAuditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
-											newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
-											refundAuditEntry.setStatus(MplPaymentAuditStatusEnum.REFUND_UNSUCCESSFUL);
-										}
-										refundAuditEntry.setAuditId(auditModelData.getAuditId());
-										getModelService().save(refundAuditEntry);
-										entryList.add(refundAuditEntry);
-										auditModelData.setAuditEntries(entryList);
-										auditModelData.setIsExpired(Boolean.TRUE);
-										getModelService().save(auditModelData);
-										//	final PaymentTransactionModel paymentTransactionModel = order.getPaymentTransactions().get(0);
-										mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-												orderEntry.getNetAmountAfterAllDisc(), newStatus);
-									}
-									LOG.debug("#######################refund processiong in mrupee cronjob" + order.getCode());
-
-								}
-							}
-						}
-
-						//timeout handling
-						if (new Date().after(orderTATForTimeout))
-						{
+							LOG.debug("###################timeout");
 							performProcessingOrder(auditModelData, order, T, isPayment, isReturn);
 							sendNotification(order);
 						}
-						//no response
-						if (StringUtils.isEmpty(status) && new Date().before(orderTATForTimeout))
+						else
 						{
-							performProcessingOrder(auditModelData, order, "", isPayment, isReturn);
-							sendNotification(order);
-						}
-						//getting response other than S
-						if (!(S.equalsIgnoreCase(status)) && new Date().before(orderTATForTimeout))
-						{
-							performProcessingOrder(auditModelData, order, status, isPayment, isReturn);
-							sendNotification(order);
+							final String response = getMrupeeResponse(auditModelData);//getting mrupee response
+							if (StringUtils.isNotEmpty(response) && response.contains(SPLIT))
+							{
+								final String[] params1 = response.split(SPLIT);
+								status = params1[0];
+							}
+							LOG.debug("Status from CronJob Mrupee#####################" + status);
+							orderTATForTimeout = getTatTimeOut(new Date(), getmRupeeJobTAT(), order.getCreationtime());
+							if (CollectionUtils.isNotEmpty(entryList) && OrderStatus.PAYMENT_PENDING.equals(order.getStatus())
+									&& !auditModelData.getIsExpired().booleanValue() && status.equalsIgnoreCase(S)
+									&& new Date().before(orderTATForTimeout))
+							{
+								//updating audit details
+								final Map<String, Double> paymentMode = sessionService
+										.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
+								mplPaymentService.setTPWalletPaymentTransaction(paymentMode, order, auditModelData.getAuditId());
+								final CustomerModel mplCustomer = (CustomerModel) order.getUser();
+								updateAuditInfoForPayment(auditModelData, entryList, mplCustomer, order);
+								//sending notification mail
+								final String trackOrderUrl = getConfigurationService().getConfiguration()
+										.getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + order.getCode();
+
+								LOG.debug("#######################payment processiong in mrupee cronjob" + order.getCode());
+
+								isPayment = true;
+								try
+								{
+									notificationService.triggerEmailAndSmsOnOrderConfirmation(order, trackOrderUrl);
+								}
+								catch (final JAXBException e)
+								{
+									LOG.error("**************************error final in sending order confirmation notification>>>>>>", e);
+									throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+								}
+
+							}
+							//refund flow handling
+							if (CollectionUtils.isNotEmpty(entryList) && OrderStatus.REFUND_INITIATED.equals(order.getStatus())
+									&& !auditModelData.getIsExpired().booleanValue() && new Date().before(orderTATForTimeout))
+							{
+
+								if (CollectionUtils.isNotEmpty(order.getPaymentTransactions()))
+								{
+									final PaymentTransactionModel paymentTransactionModel = order.getPaymentTransactions().get(0);
+									for (final PaymentTransactionEntryModel trans : paymentTransactionModel.getEntries())
+									{
+										if (null != trans.getType() && "RETURN".equalsIgnoreCase(trans.getType().toString()))
+										{
+											isReturn = true;
+											break;
+										}
+									}
+
+
+									for (final AbstractOrderEntryModel orderEntry : order.getEntries())
+									{
+										ConsignmentStatus newStatus = null;
+										if (orderEntry != null && CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries())
+												&& isReturn)
+										{
+											MplPaymentAuditEntryModel refundAuditEntry = null;
+											if (status.equalsIgnoreCase(S))
+											{
+												newStatus = ConsignmentStatus.RETURN_COMPLETED;
+												refundAuditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
+												refundAuditEntry.setStatus(MplPaymentAuditStatusEnum.REFUND_SUCCESSFUL);
+											}
+											else if (!(status.equalsIgnoreCase(S)))
+											{
+												refundAuditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
+												newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
+												refundAuditEntry.setStatus(MplPaymentAuditStatusEnum.REFUND_UNSUCCESSFUL);
+											}
+											refundAuditEntry.setAuditId(auditModelData.getAuditId());
+											getModelService().save(refundAuditEntry);
+											entryList.add(refundAuditEntry);
+											auditModelData.setAuditEntries(entryList);
+											auditModelData.setIsExpired(Boolean.TRUE);
+											getModelService().save(auditModelData);
+											//	final PaymentTransactionModel paymentTransactionModel = order.getPaymentTransactions().get(0);
+											mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
+													orderEntry.getNetAmountAfterAllDisc(), newStatus);
+										}
+										LOG.debug("#######################refund processiong in mrupee cronjob" + order.getCode());
+
+									}
+								}
+							}
+
+							//timeout handling
+							//							if (new Date().after(orderTATForTimeout))
+							//							{
+							//								performProcessingOrder(auditModelData, order, T, isPayment, isReturn);
+							//								sendNotification(order);
+							//							}
+							//no response
+							if (StringUtils.isEmpty(status) && new Date().before(orderTATForTimeout))
+							{
+								performProcessingOrder(auditModelData, order, "", isPayment, isReturn);
+								sendNotification(order);
+							}
+							//getting response other than S
+							if (!(S.equalsIgnoreCase(status)) && new Date().before(orderTATForTimeout))
+							{
+								performProcessingOrder(auditModelData, order, status, isPayment, isReturn);
+								sendNotification(order);
+							}
 						}
 					}
 				}
