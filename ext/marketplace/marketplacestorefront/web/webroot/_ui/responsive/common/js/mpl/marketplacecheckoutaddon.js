@@ -1350,9 +1350,9 @@ function generateOTP(){
 	else{
 		var guid=$("#guid").val();
 		//TPR-665
-		utag.link({
-			link_text: 'pay_cod_verify_number' , event_type : 'payment_mode_cod'
-		});
+		if(typeof utag !="undefined"){
+		utag.link({link_text: 'pay_cod_verify_number', event_type: 'payment_mode_cod'});
+		}
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/generateOTP",
 		// data: { 'mobileNumber' : mobileNumber, 'prefix' : prefix },
