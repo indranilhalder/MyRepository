@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.coupon.dao.MplCouponListingDao;
@@ -28,9 +29,9 @@ import com.tisl.mpl.core.coupon.dao.MplCouponListingDao;
 public class MplCouponValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider, Serializable
 {
 	private FieldNameProvider fieldNameProvider;
-	private MplCouponListingDao mplCouponListingDao;
+	private transient MplCouponListingDao mplCouponListingDao;
 	private VoucherModelService voucherModelService;
-	private VoucherRestrictionService voucherRestrictionService;
+	private transient VoucherRestrictionService voucherRestrictionService;
 
 	/**
 	 * @return the voucherRestrictionService
@@ -135,8 +136,6 @@ public class MplCouponValueProvider extends AbstractPropertyFieldValueProvider i
 			final IndexedProperty indexedProperty)
 	{
 		final List fieldValues = new ArrayList();
-
-		List<VoucherModel> restrictedVouchers = new ArrayList<VoucherModel>();
 		//voucher api call commented
 		//final Collection<VoucherModel> productVouchers = getMplCouponListingDao().findVoucher();
 
@@ -147,18 +146,19 @@ public class MplCouponValueProvider extends AbstractPropertyFieldValueProvider i
 		//}
 
 		// New code to bypass coupon api call and get coupon info using query
-		restrictedVouchers = getMplCouponListingDao().findVoucherWithRestrictions(product);
-
-		final Iterator localIterator = restrictedVouchers.iterator();
-
-
-		while (localIterator.hasNext())
+		final List<VoucherModel> restrictedVouchers = getMplCouponListingDao().findVoucherWithRestrictions(product);
+		if (CollectionUtils.isNotEmpty(restrictedVouchers))
 		{
-			final VoucherModel voucher = (VoucherModel) localIterator.next();
+			final Iterator localIterator = restrictedVouchers.iterator();
 
-			addFieldValues(fieldValues, indexedProperty, null, voucher.getCode());
+
+			while (localIterator.hasNext())
+			{
+				final VoucherModel voucher = (VoucherModel) localIterator.next();
+
+				addFieldValues(fieldValues, indexedProperty, null, voucher.getCode());
+			}
 		}
-
 
 		return fieldValues;
 	}

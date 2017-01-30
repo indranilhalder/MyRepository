@@ -2112,9 +2112,6 @@ public class DefaultPromotionManager extends PromotionsManager
 	{
 		final Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
 
-		final List<AbstractOrderEntry> orderEntryList = cart.getEntriesByProduct(product) != null ? cart
-				.getEntriesByProduct(product) : new ArrayList<AbstractOrderEntry>();
-
 		if (isSellerRestrExists(restrictionList) || isExSellerRestrExists(restrictionList))
 		{
 			String selectedUSSID = null;
@@ -2130,6 +2127,9 @@ public class DefaultPromotionManager extends PromotionsManager
 		}
 		else
 		{
+			final List<AbstractOrderEntry> orderEntryList = cart.getEntriesByProduct(product) != null ? cart
+					.getEntriesByProduct(product) : new ArrayList<AbstractOrderEntry>();
+
 			for (final AbstractOrderEntry productEntry : orderEntryList)
 			{
 				if (null != productEntry.isGiveAway() && !productEntry.isGiveAway().booleanValue())
@@ -4114,7 +4114,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param sellerFlag
 	 * @return
 	 */
-	private Map<String, String> splitCategoryDetails(final Map<String, AbstractOrderEntry> multiSellerValidUSSIDMap,
+	public Map<String, String> splitCategoryDetails(final Map<String, AbstractOrderEntry> multiSellerValidUSSIDMap,
 			final String code, final boolean sellerFlag)
 	{
 		final Map<String, String> dataMap = new HashMap<String, String>();
@@ -4162,7 +4162,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param supercategories
 	 * @return categoryList
 	 */
-	private List<CategoryModel> getSuperCategoryData(final Collection<CategoryModel> supercategories)
+	public List<CategoryModel> getSuperCategoryData(final Collection<CategoryModel> supercategories)
 	{
 		final List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
 		List<CategoryModel> subList = null;
@@ -4182,7 +4182,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param code
 	 * @return flag
 	 */
-	private boolean checkForCategoryPromotion(final String code)
+	public boolean checkForCategoryPromotion(final String code)
 	{
 		boolean flag = false;
 		try
@@ -4301,5 +4301,62 @@ public class DefaultPromotionManager extends PromotionsManager
 
 		}
 		return ussidSet;
+	}
+
+	/**
+	 * @param cart
+	 * @param ctx
+	 * @param allowedProductList
+	 * @param excludedProductList
+	 * @param excludeManufactureList
+	 * @param restrictionList
+	 *
+	 *
+	 * @return Map<String, AbstractOrderEntry>
+	 */
+	public Map<String, AbstractOrderEntry> getValidProductListBOGO(final AbstractOrder cart, final SessionContext ctx,
+			final List<Product> allowedProductList, final List<Product> excludedProductList,
+			final List<String> excludeManufactureList, final List<AbstractPromotionRestriction> restrictionList)
+	{
+		final Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
+
+
+		boolean brandFlag = false;
+		boolean sellerFlag = false;
+		boolean isFreebie = false;
+
+		for (final AbstractOrderEntry entry : cart.getEntries())
+		{
+
+			isFreebie = getMplPromotionHelper().validateEntryForFreebie(entry);
+			if (!isFreebie)
+			{
+				final Product product = entry.getProduct();
+
+				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
+						|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
+						|| isProductExcludedForSeller(ctx, restrictionList, entry))
+				{
+					continue;
+				}
+
+				if (CollectionUtils.isNotEmpty(allowedProductList) && allowedProductList.contains(product))
+				{
+					brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+					sellerFlag = checkSellerBOGOData(ctx, restrictionList, entry);
+				}
+
+				if (sellerFlag && brandFlag)
+				{
+					validProductUssidMap.putAll(populateValidProductUssidMap(product, cart, restrictionList, ctx, entry));
+
+					sellerFlag = false;
+					brandFlag = false;
+				}
+			}
+
+		}
+
+		return validProductUssidMap;
 	}
 }

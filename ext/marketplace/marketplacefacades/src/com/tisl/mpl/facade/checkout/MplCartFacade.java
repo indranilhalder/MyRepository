@@ -185,11 +185,13 @@ public interface MplCartFacade extends CartFacade
 	/**
 	 * @param cartData
 	 * @param omsDeliveryResponse
+	 * @param cartModel
 	 * @return Map<String, List<MarketplaceDeliveryModeData>>
 	 * @throws CMSItemNotFoundException
 	 */
+	// Changes for Duplicate Cart fix
 	Map<String, List<MarketplaceDeliveryModeData>> getDeliveryMode(final CartData cartData,
-			final List<PinCodeResponseData> omsDeliveryResponse) throws CMSItemNotFoundException;
+			final List<PinCodeResponseData> omsDeliveryResponse, CartModel cartModel) throws CMSItemNotFoundException;
 
 	/*
 	 * @Desc setting cart sub total
@@ -412,7 +414,8 @@ public interface MplCartFacade extends CartFacade
 	 * @param storeLocationRequestDataList
 	 * @return
 	 */
-	List<StoreLocationResponseData> getStoreLocationsforCnC(List<StoreLocationRequestData> storeLocationRequestDataList);
+	List<StoreLocationResponseData> getStoreLocationsforCnC(List<StoreLocationRequestData> storeLocationRequestDataList,
+			final CartModel cartModel);
 
 	/**
 	 * This Method is used to get Valid Delivery Modes by Inventory
@@ -444,6 +447,7 @@ public interface MplCartFacade extends CartFacade
 	 * @param cartModel
 	 */
 	public void totalMrpCal(final CartModel cartModel) throws EtailNonBusinessExceptions;
+
 	/**
 	 * @param orderModel
 	 */
@@ -456,4 +460,14 @@ public interface MplCartFacade extends CartFacade
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean notifyEmailAndSmsOnInventoryFail(final OrderModel orderModel) throws EtailNonBusinessExceptions;
+
+	/**
+	 * @param entryNumber
+	 * @param storeId
+	 * @param cartModel
+	 * @return
+	 * @throws CommerceCartModificationException
+	 */
+	CartModificationData updateCartEntryMobile(long entryNumber, String storeId, CartModel cartModel)
+			throws CommerceCartModificationException;
 }

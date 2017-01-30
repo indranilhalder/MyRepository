@@ -42,7 +42,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
+import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
@@ -66,7 +68,8 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	private ConfigurationService configurationService;
 	@Autowired
 	private Converter<OrderModel, OrderData> orderConverter;
-
+	@Autowired
+	private MplDeliveryCostService deliveryCostService;
 	@Autowired
 	private NotificationService notificationService;
 
@@ -75,6 +78,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	public CommerceOrderResult placeOrder(final CommerceCheckoutParameter parameter) throws InvalidCartException
 	{
+
 		final CartModel cartModel = parameter.getCart();
 		ServicesUtil.validateParameterNotNull(cartModel, "Cart model cannot be null");
 		final CommerceOrderResult result = new CommerceOrderResult();
@@ -166,6 +170,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					LOG.error("Failed to calculate order [" + orderModel + "]", ex);
 				}
 
+
+
+
 				getModelService().refresh(orderModel);
 				getModelService().refresh(customer);
 
@@ -174,7 +181,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				//				{
 				//					orderModel.setTotalPrice(totalPrice);
 				//				}
-
+				orderModel.setDeliveryCost(Double.valueOf(getDeliveryCost(orderModel)));
 				orderModel.setTotalPrice(totalPrice);
 
 				orderModel.setModeOfOrderPayment(modeOfPayment);
@@ -237,6 +244,44 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		{
 			getExternalTaxesService().clearSessionTaxDocument();
 		}
+	}
+
+	/**
+	 * @param orderModel
+	 * @return delCost
+	 */
+	private double getDeliveryCost(final OrderModel orderModel)
+	{
+		// YTODO Auto-generated method stub
+		Double delCost = Double.valueOf(orderModel.getDeliveryCost().doubleValue());
+		for (final AbstractOrderEntryModel entry : orderModel.getEntries())
+		{
+			final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(entry.getMplDeliveryMode()
+					.getDeliveryMode().getCode(), orderModel.getCurrency().getIsocode(), entry.getSelectedUSSID());
+
+			if (delCost.doubleValue() <= 0)
+			{
+				if (entry.getGiveAway() != null && !entry.getGiveAway().booleanValue() && !entry.getIsBOGOapplied().booleanValue())
+				{
+					delCost = Double.valueOf((valueModel.getValue().doubleValue() * entry.getQuantity().intValue()));
+					entry.setCurrDelCharge(delCost);
+				}
+				if (entry.getGiveAway() != null && !entry.getGiveAway().booleanValue() && entry.getIsBOGOapplied().booleanValue())
+				{
+					delCost = Double.valueOf((valueModel.getValue().doubleValue() * (entry.getQuantity().intValue() - entry
+							.getQualifyingCount().intValue())));
+					entry.setCurrDelCharge(delCost);
+				}
+				if (entry.getGiveAway() != null && entry.getGiveAway().booleanValue())
+				{
+					final Double deliveryCost = Double.valueOf(0.0D);
+					entry.setCurrDelCharge(deliveryCost);
+					LOG.warn("skipping deliveryCost for freebee [" + entry.getSelectedUSSID() + "] due toeb freebee ");
+				}
+			}
+
+		}
+		return delCost.doubleValue();
 	}
 
 	private boolean checkOrder(final OrderModel order)
@@ -325,8 +370,11 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		Double totalPrice = Double.valueOf(0);
 		//final OrderData orderData = getOrderConverter().convert(orderModel);
 		final Double subtotal = orderModel.getSubtotal();
-		final Double deliveryCost = orderModel.getDeliveryCost();
-
+		Double deliveryCost = orderModel.getDeliveryCost();
+		if (deliveryCost.doubleValue() <= 0.0)
+		{
+			deliveryCost = Double.valueOf(getDeliveryCost(orderModel));
+		}
 		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 
@@ -341,11 +389,13 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		Double totalPrice = Double.valueOf(0);
 		//final OrderData orderData = getOrderConverter().convert(orderModel);
 		final Double subtotal = orderModel.getSubtotal();
-
+		Double deliveryCost = orderModel.getDeliveryCost();
 		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
-		final Double deliveryCost = orderModel.getDeliveryCost();
-
+		if (deliveryCost.doubleValue() <= 0.0)
+		{
+			deliveryCost = Double.valueOf(getDeliveryCost(orderModel));
+		}
 		final Double discount = getTotalDiscountForTotalPrice(orderModel.getEntries());
 
 		totalPrice = Double.valueOf(subtotal.doubleValue() - discount.doubleValue() + deliveryCost.doubleValue());

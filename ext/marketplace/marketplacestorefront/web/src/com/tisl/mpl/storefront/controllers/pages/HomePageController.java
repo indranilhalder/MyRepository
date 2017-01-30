@@ -948,6 +948,39 @@ public class HomePageController extends AbstractPageController
 		return showCaseItemJson;
 	}
 
+	//TPR-1672
+	@ResponseBody
+	@RequestMapping(value = "/getBestOffers", method = RequestMethod.GET)
+	public JSONObject getBestOffers(@RequestParam(VERSION) final String version)
+	{
+		JSONObject getBestOffersJson = new JSONObject();
+		try
+		{
+			final ContentSlotModel homepageSectionBestOfferSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
+					"BestOffersSectionSlot-Homepage", version);
+			//return homepageComponentService.getBestPicksJSON(homepageSection4CSlot);
+			getBestOffersJson = homepageComponentService.getBestOffersJSON(homepageSectionBestOfferSlot);
+		}
+
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
+		return getBestOffersJson;
+	}
+
+
 
 	/**
 	 * @param productData

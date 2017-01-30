@@ -1841,15 +1841,15 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 	
 	if(null!= mrp){
 		//$("#mrpPriceId").html("");
-		$("#mrpPriceId").append(mrp.formattedValue);
+		$("#mrpPriceId").append(mrp.formattedValueNoDecimal);
 	}
 	if(null!= mop){
 		//$("#mopPriceId").html("");
-		$("#mopPriceId").append(mop.formattedValue);
+		$("#mopPriceId").append(mop.formattedValueNoDecimal);
 	}
 	if(null!= spPrice){
 		//$("#spPriceId").html("");
-		$("#spPriceId").append(spPrice.formattedValue);
+		$("#spPriceId").append(spPrice.formattedValueNoDecimal);
 	} 
 	////TISPRM-33 , TPR-140
 	if(null!= savingsOnProduct){

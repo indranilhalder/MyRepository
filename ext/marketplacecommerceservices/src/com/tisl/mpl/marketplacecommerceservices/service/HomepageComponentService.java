@@ -30,4 +30,7 @@ public interface HomepageComponentService
 
 	//TPR-558 Scheduling of banners
 	boolean showOnTimeRestriction(final AbstractCMSComponentModel component);
+
+	//TPR-1672
+	JSONObject getBestOffersJSON(ContentSlotModel contentSlot) throws EtailNonBusinessExceptions;
 }

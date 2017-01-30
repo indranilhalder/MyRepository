@@ -2563,12 +2563,14 @@
 		<organizer>
 			<search mode="append">
 				<condition attribute="csvFile" />
+				<condition attribute="creationtime" />
 			</search>
 			<result defaultview="list">
 				<listview>
 					<itemlayout mode="replace">
 						<attribute name="csvFile" width="300"></attribute>
 						<attribute name="csvFileError" width="600"></attribute>
+						<attribute name="creationtime" width="100"></attribute>
 					</itemlayout>
 				</listview>
 				<treeview mode="replace">

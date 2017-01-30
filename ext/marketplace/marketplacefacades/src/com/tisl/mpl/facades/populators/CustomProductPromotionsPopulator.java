@@ -9,6 +9,7 @@ import de.hybris.platform.commercefacades.product.converters.populator.AbstractP
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.PromotionData;
 import de.hybris.platform.converters.Converters;
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.promotions.PromotionsService;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
@@ -26,13 +27,18 @@ import de.hybris.platform.site.BaseSiteService;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +48,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.helper.ProductDetailsHelper;
+import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
 import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
 import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
@@ -272,19 +279,58 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 								if (restriction instanceof EtailLimitedStockRestrictionModel)
 								{
 									final EtailLimitedStockRestrictionModel stockRestrictrion = (EtailLimitedStockRestrictionModel) restriction;
-									final String productCode = MarketplacecommerceservicesConstants.INVERTED_COMMA
-											+ productModel.getCode() + MarketplacecommerceservicesConstants.INVERTED_COMMA;
-									final Map<String, Integer> stockMap = stockPromoCheckService.getCumulativeStockMap(productCode,
-											productPromotion.getCode(), false);
-									if (!stockMap.isEmpty())
+
+									if (!getDefaultPromotionsManager().checkForCategoryPromotion(productPromotion.getCode()))
 									{
-										final Integer stockQuantity = stockMap.get(productModel.getCode());
-										final int stockValue = stockQuantity == null ? 0 : stockQuantity.intValue();
-										if ((stockRestrictrion.getMaxStock().intValue() - stockValue) == 0)
+										final String productCode = MarketplacecommerceservicesConstants.INVERTED_COMMA
+												+ productModel.getCode() + MarketplacecommerceservicesConstants.INVERTED_COMMA;
+										final Map<String, Integer> stockMap = stockPromoCheckService.getCumulativeStockMap(productCode,
+												productPromotion.getCode(), false);
+										if (!stockMap.isEmpty())
 										{
-											toRemovePromotionList.add(productPromotion);
+											final Integer stockQuantity = stockMap.get(productModel.getCode());
+											final int stockValue = stockQuantity == null ? 0 : stockQuantity.intValue();
+											if ((stockRestrictrion.getMaxStock().intValue() - stockValue) == 0)
+											{
+												toRemovePromotionList.add(productPromotion);
+											}
 										}
 									}
+									else
+									{
+										if (null != productModel && CollectionUtils.isNotEmpty(productModel.getSupercategories()))
+										{
+											final StringBuilder categoryCodes = new StringBuilder();
+											final Map<String, Integer> stockMap = new HashMap<>();
+											final List<CategoryModel> categoryList = getDefaultPromotionsManager().getSuperCategoryData(
+													productModel.getSupercategories());
+											final Map<String, String> dataMap = populateDataMap(categoryList,
+													productPromotion.getCategories(), productModel.getCode());
+											if (MapUtils.isNotEmpty(dataMap))
+											{
+												for (final Map.Entry<String, String> entry : dataMap.entrySet())
+												{
+													categoryCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA
+															+ entry.getValue() + MarketplacecommerceservicesConstants.INVERTED_COMMA);
+													categoryCodes.append(",");
+												}
+
+												stockMap.putAll(stockPromoCheckService.getCumulativeCatLevelStockMap(categoryCodes.toString()
+														.substring(0, categoryCodes.lastIndexOf(",")), productPromotion.getCode(), dataMap));
+												if (MapUtils.isNotEmpty(stockMap))
+												{
+													final Integer stockQuantity = stockMap.get(productModel.getCode());
+													final int stockValue = stockQuantity == null ? 0 : stockQuantity.intValue();
+													if ((stockRestrictrion.getMaxStock().intValue() - stockValue) == 0)
+													{
+														toRemovePromotionList.add(productPromotion);
+													}
+												}
+											}
+
+										}
+									}
+
 								}
 							}
 
@@ -311,7 +357,6 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 		}
 	}
 
-
 	/**
 	 * @param restrictions
 	 * @return
@@ -329,6 +374,34 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 	//		}
 	//		return isExists;
 	//	}
+
+	/**
+	 * @param categoryList
+	 * @param promoCategoryList
+	 * @param productCode
+	 * @return dataMap
+	 */
+	private Map<String, String> populateDataMap(final List<CategoryModel> categoryList,
+			final Collection<CategoryModel> promoCategoryList, final String productCode)
+	{
+		final Map<String, String> dataMap = new HashMap<String, String>();
+
+		if (CollectionUtils.isNotEmpty(categoryList))
+		{
+			for (final CategoryModel category : categoryList)
+			{
+				for (final CategoryModel promocategory : promoCategoryList)
+				{
+					if (StringUtils.equalsIgnoreCase(category.getCode(), promocategory.getCode()))
+					{
+						dataMap.put(productCode, promocategory.getCode());
+					}
+				}
+			}
+		}
+
+		return dataMap;
+	}
 
 	/**
 	 * checks for a BOGO promotion present in the product
@@ -374,5 +447,10 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 		}
 	}
 
+
+	protected DefaultPromotionManager getDefaultPromotionsManager()
+	{
+		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
+	}
 
 }

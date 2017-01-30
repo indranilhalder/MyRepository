@@ -585,6 +585,126 @@ function getBrandsYouLoveContentAjaxCall(id) {
     }
     // ENd AJAX CALL
 
+
+//TPR-1672
+function getBestOffersAjaxCall() {
+    var env = $("#previewVersion").val();
+    if (env == "true") {
+        var dataString = 'version=Staged';
+    } else {
+        var dataString = 'version=Online';
+    }
+    var autoplayTimeout = 5000;
+    var slideBy = 1;
+    var autoPlay=true;
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: ACC.config.encodedContextPath + "/getBestOffers",
+        data: dataString,
+        success: function(response) {
+        	
+        	//changes for TPR-1121
+        	autoplayTimeout = response.autoplayTimeout?response.autoplayTimeout:autoplayTimeout;
+        	slideBy = response.slideBy?response.slideBy:slideBy; 
+            autoPlay= response.autoPlay != null ?response.autoPlay:autoPlay;
+            
+            renderHtml = "<h2>" + response.title + "</h2>" +
+                "<div class='home-best-offers-carousel'>";
+            $.each(response.subItems, function(k, v) {
+                if (v.url) {
+                    renderHtml += "<a href='" +
+                        appendIcid(v.url, v.icid) +
+                        "' class='item'>";
+                }
+                if (v.imageUrl) {
+                    renderHtml +=
+                        "<div class='home-best-Offers-carousel-img'> <img class='' src='" +
+                        v.imageUrl + "'></img></div>";
+                }
+                if (v.text) {
+                    renderHtml +=
+                        "<div class='short-info-bestOffers'>" + v.text +
+                        "</div>";
+                }
+                renderHtml += "</a>";
+            });
+            
+            renderHtml +=
+                // "</div> <a href='/store/view-all-offers' class='view-cliq-offers'> View Cliq Offers </a>";
+             	"</div> <a href='";
+            if(typeof response.buttonLink!=="undefined"){
+            	 renderHtml +=response.buttonLink+"'";
+            }
+//            else{
+//            	renderHtml +=ACC.config.encodedContextPath+"/offersPage'";
+//            }
+            
+            renderHtml +="class='view-best-offers'>";
+            if(typeof response.buttonText!=="undefined"){
+            	 renderHtml +=response.buttonText;
+            }
+//            else{
+//            	 renderHtml +=" View Best Offers ";
+//            }
+            renderHtml +="</a>";
+               // "</div> <a href='/store/view-all-offers' class='view-cliq-offers'> View Cliq Offers </a>";
+            	//"</div> <a href='"+ACC.config.encodedContextPath+"/offersPage' class='view-cliq-offers'> View Cliq Offers </a>";
+            $("#bestOffers").html(renderHtml);
+            // console.log()
+        },
+        error: function() {
+            console.log("Error while getting best picks");
+        },
+        complete: function() {
+            $(".home-best-offers-carousel").owlCarousel({
+            	items:5,
+        		loop: true,
+        		nav:true,
+        		dots:false,
+        		navText:[],
+        		lazyLoad: false,
+        		autoplay:autoPlay,
+        		autoHeight : false,
+        		autoplayTimeout: autoplayTimeout,
+	            slideBy: slideBy,
+        		responsive : {
+        			// breakpoint from 0 up
+        			0 : {
+        				items:1,
+        				stagePadding: 50,
+        			},
+        			// breakpoint from 480 up
+        			480 : {
+        				items:2,
+        				stagePadding: 50,
+        			},
+        			// breakpoint from 768 up
+        			768 : {
+        				items:3,
+        			},
+        			// breakpoint from 768 up
+        			1280 : {
+        				items:5,
+        			}			
+        		}		
+                /*navigation: true,
+                navigationText: [],
+                pagination: false,
+                itemsDesktop: [5000, 5],
+                itemsDesktopSmall: [1400, 5],
+                itemsTablet: [650, 1],
+                itemsMobile: [480, 1],
+                rewindNav: false,
+                lazyLoad: true,
+                scrollPerPage: true*/
+            });
+        }
+    });
+   
+}
+
+
 var bulCount = $(".home-brands-you-love-carousel-brands.active").index() - 1;
 $(document).on("click", ".home-brands-you-love-carousel-brands",
 		function() {
@@ -722,7 +842,7 @@ function getBestPicksAjaxCall() {
             	autoplayTimeout = response.autoplayTimeout?response.autoplayTimeout:autoplayTimeout;
             	slideBy = response.slideBy?response.slideBy:slideBy; 
                 autoPlay= response.autoPlay != null ?response.autoPlay:autoPlay;
-            	
+                
             	//TPR-559 Show/Hide Components and Sub-components
             	if (response.hasOwnProperty("title") && response.hasOwnProperty("subItems")) {
 	                renderHtml = "<h2>" + response.title + "</h2>" +
@@ -785,7 +905,7 @@ function getBestPicksAjaxCall() {
 	            		dots:false,
 	            		navText:[],
 	            		lazyLoad: false,
-	            		autoplay: autoPlay,
+	            		autoplay:autoPlay,
 			            autoHeight : false,
 	            		autoplayTimeout: autoplayTimeout,
 	  	               slideBy: slideBy,
@@ -1733,6 +1853,22 @@ function populateEnhancedSearch(enhancedSearchData)
 	        }
 	        }
 	}
+		
+		//TPR-1672
+		if ($(window).scrollTop() + $(window).height() >= $('#bestOffers').offset().top) {
+	        if(!$('#bestOffers').attr('loaded')) {
+	            //not in ajax.success due to multiple sroll events
+	            $('#bestOffers').attr('loaded', true);
+
+	            //ajax goes here
+	            //by theory, this code still may be called several times
+	            if ($('#bestOffers').children().length == 0 && $('#pageTemplateId').val() ==
+	            'LandingPage2Template') {
+	            	getBestOffersAjaxCall();
+	        }
+	        }
+	}
+		
 		if ($(window).scrollTop() + $(window).height() >= $('#promobannerhomepage').offset().top) {
 	        if(!$('#promobannerhomepage').attr('loaded')) {
 	            //not in ajax.success due to multiple sroll events

@@ -574,11 +574,21 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 */
 	@Override
 	public boolean populateDeliveryCost(final Double finalDeliveryCost,
-			final Map<String, Map<String, Double>> deliveryCostPromotionMap) throws EtailNonBusinessExceptions
+			final Map<String, Map<String, Double>> deliveryCostPromotionMap, final CartModel cart) throws EtailNonBusinessExceptions
 	{
 		ServicesUtil.validateParameterNotNull(finalDeliveryCost, "finalDeliveryCost cannot be null");
 		//TISEE-581
-		final CartModel cartModel = getCart();
+		// INC_12242
+		CartModel cartModel = null;
+		if (null == cart)
+		{
+			cartModel = getCart();
+		}
+		else
+		{
+			cartModel = cart;
+		}
+
 		Double totalPriceAfterDeliveryCost = Double.valueOf(0.0);
 		Double discountValue = Double.valueOf(0.0);
 		//final CartData cartData = getMplExtendedCartConverter().convert(cartModel);

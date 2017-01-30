@@ -45,11 +45,14 @@
 					 		<nav:facetNavRefinementFacetMobile facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
 						</c:if> 
 						<c:choose>
-						<c:when test="${not empty shopbylook}">
+						<c:when test="${not empty lookId}">
 							<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
 						</c:when>
 						<c:otherwise>
-							<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
+						<!-- Changes Performance Start -->
+ 							<c:if test="${facet.genericFilter}">
+  							<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
+ 						</c:if>
 						</c:otherwise>
 					 </c:choose>
 			   		</c:otherwise>
