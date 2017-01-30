@@ -772,20 +772,20 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	 * @param entries
 	 * @return
 	 */
-	//	private boolean ifRefundInitiated(final List<AbstractOrderEntryModel> entries)
-	//	{
-	//		boolean isRefund = false;
-	//		for (final AbstractOrderEntryModel entry : entries)
-	//		{
-	//			final List<ReturnEntryModel> data = getReturnEntry(entry);
-	//			if (CollectionUtils.isNotEmpty(data))
-	//			{
-	//				isRefund = true;
-	//				break;
-	//			}
-	//		}
-	//		return isRefund;
-	//	}
+	private boolean ifRefundInitiated(final List<AbstractOrderEntryModel> entries)
+	{
+		boolean isRefund = false;
+		for (final AbstractOrderEntryModel entry : entries)
+		{
+			final List<ReturnEntryModel> data = getReturnEntry(entry);
+			if (CollectionUtils.isNotEmpty(data))
+			{
+				isRefund = true;
+				break;
+			}
+		}
+		return isRefund;
+	}
 
 	protected List<ReturnEntryModel> getReturnEntry(final AbstractOrderEntryModel entry)
 	{
