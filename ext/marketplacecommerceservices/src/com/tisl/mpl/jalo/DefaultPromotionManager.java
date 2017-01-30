@@ -803,9 +803,9 @@ public class DefaultPromotionManager extends PromotionsManager
 				{
 					if (null != category && null != category.getCode())
 					{
-						final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel, category.getCode());
-						productCategoryData.add(oModel);
-						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(oModel));
+						//final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel, category.getCode());
+						productCategoryData.add(category);
+						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(category));
 						if (!superCategoryData.isEmpty())
 						{
 							for (final CategoryModel categoryModel : superCategoryData)

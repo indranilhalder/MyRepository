@@ -842,7 +842,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	public List<PinCodeResponseData> getOMSPincodeResponseData(final String pincode, final CartData cartData)
 			throws EtailNonBusinessExceptions
 	{
-		List<PinCodeResponseData> pinCodeResponseData = null;
+		//List<PinCodeResponseData> pinCodeResponseData = null;
 
 		final List<PincodeServiceData> pincodeServiceReqDataList = new ArrayList<PincodeServiceData>();
 
@@ -872,7 +872,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		}
 		else
 		{
-			return pinCodeResponseData;
+			return null;
 		}
 
 
@@ -1040,9 +1040,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				pincodeServiceReqDataList.add(pincodeServiceData);
 			}
 		}
-		pinCodeResponseData = pinCodeFacade.getServiceablePinCodeCart(pincode, pincodeServiceReqDataList);
+		//pinCodeResponseData = pinCodeFacade.getServiceablePinCodeCart(pincode, pincodeServiceReqDataList);
 
-		return pinCodeResponseData;
+		return pinCodeFacade.getServiceablePinCodeCart(pincode, pincodeServiceReqDataList);
 
 	}
 
