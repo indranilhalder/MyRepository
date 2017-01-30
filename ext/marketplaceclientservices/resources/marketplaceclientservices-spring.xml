@@ -142,5 +142,11 @@
 		<bean id="mplClickToCallService" class="com.tisl.mpl.service.MplClickToCallWebServiceImpl" />		
 		<bean id="gigyaCommentService" class="com.tisl.mpl.service.MplGigyaReviewCommentServiceImpl"/>
 		<bean id="mplGigyaReviewCommentDao" class="com.tisl.mpl.review.daos.impl.MplGigyaReviewCommentDaoImpl"/>
+		
+		<!-- for pancard changes -->
+		
+		<bean id="mplPancardTicketCRMserviceImpl" class="com.tisl.mpl.service.impl.MplPancardTicketCRMserviceImpl"/>
+		
+		
 </beans>
 
