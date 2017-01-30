@@ -97,6 +97,9 @@ UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript
 ;mpl_Email_Payment_Pending_Subject;"Payment Pending Email Subject";$emailResource/email-paymentPendingSubject.vm
 ;mpl_Email_Payment_Timeout_Body;"Payment Timeout Email Body";$emailResource/email-paymentTimeoutBody.vm
 ;mpl_Email_Payment_Timeout_Subject;"Payment Timeout Email Subject";$emailResource/email-paymentTimeoutSubject.vm
+###Nps Email 
+;mpl_Email_Nps_Emailer_Body;"Nps Email Body";$emailResource/email-npsEmailerBody.vm
+;mpl_Email_Nps_Emailer_Subject;"Nps Email Subject";$emailResource/email-npsEmailerSubject.vm
 # Email Pages
 UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];fromName[lang=$lang]
  ;;CustomerRegistrationEmail;"customercare@tatacliq.com";"TataCLiQ Care"
@@ -140,6 +143,7 @@ UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];
  ;;TakeActionOnHeldOrderEmail;"customercare@tatacliq.com";"MYCLIQ"
  
  ;;PromotionCreationMail;"customerservices@tataunistore.in";"Customer Services Team" 
+ ;;NpsEmail;"customercare@tatacliq.com";"TataCLiQ Care"
 
  UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
  ;mpl_Promotion_Creation_Mail_Body;"Promotion Creation Mail Body";$emailResource/email-PromotinCreationMailBody.vm
