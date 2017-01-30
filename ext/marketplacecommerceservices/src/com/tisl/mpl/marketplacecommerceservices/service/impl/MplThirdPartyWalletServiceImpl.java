@@ -273,7 +273,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 								//updating audit details
 								final Map<String, Double> paymentMode = sessionService
 										.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
-								mplPaymentService.setTPWalletPaymentTransaction(paymentMode, order, auditModelData.getAuditId());
+								mplPaymentService.setTPWalletPaymentTransaction(paymentMode, order, auditModelData.getAuditId(), null);
 								final CustomerModel mplCustomer = (CustomerModel) order.getUser();
 								updateAuditInfoForPayment(auditModelData, entryList, mplCustomer, order);
 								//sending notification mail
