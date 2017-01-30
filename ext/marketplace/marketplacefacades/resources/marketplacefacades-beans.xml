@@ -956,4 +956,22 @@
 		<property name="consignmentStatus" type="String"></property>
 		<property name="returnStatus" type="java.lang.Boolean"></property>
 	</bean>
+	
+	<!-- TPR-1984 -->
+	<bean class="com.tisl.mpl.facades.data.NPSFeedbackQRDetailData">
+		<property name="questionCode" type="String"></property>
+		<property name="questionName" type="String"></property>
+		<property name="rating" type="String"></property>
+	</bean>
+	<bean class="com.tisl.mpl.facades.data.NPSFeedbackQRData">
+		<property name="originalUid" type="String"></property>
+		<property name="transactionId" type="String"></property>
+		<property name="overAllRating" type="String"></property>
+		<property name="userId" type="String"></property>
+		<property name="npsId" type="String"></property>
+		<property name="npsRating" type="String"></property>
+		<property name="anyOtherFeedback" type="String"></property>
+		<property name="feedbackQRList" type="java.util.List&lt;com.tisl.mpl.facades.data.NPSFeedbackQRDetailData>"></property>
+	</bean>
+	<!--End TPR-1984 -->
 </beans>

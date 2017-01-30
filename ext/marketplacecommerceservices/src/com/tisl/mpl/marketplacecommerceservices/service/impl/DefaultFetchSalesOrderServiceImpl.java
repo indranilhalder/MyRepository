@@ -3,14 +3,18 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import com.tisl.mpl.core.model.NPSMailerModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.FetchSalesOrderService;
 import com.tisl.mpl.model.MplConfigurationModel;
@@ -122,5 +126,45 @@ public class DefaultFetchSalesOrderServiceImpl implements FetchSalesOrderService
 		return fetchSalesOrderDao.fetchSpecifiedCancelData(startTime, endTime);
 	}
 
+	//TPR-1984 Start
+
+	@Override
+	public Map<OrderModel, AbstractOrderEntryModel> fetchOrderDetailsforDeliveryMail()
+	{
+		return fetchSalesOrderDao.fetchOrderDetailsforDeliveryMail();
+	}
+
+	@Override
+	public Map<String, Integer> getTransactionIdCount()
+	{
+
+		return fetchSalesOrderDao.getTransactionIdCount();
+	}
+
+	@Override
+	public Map<String, NPSMailerModel> getTransactionIdList()
+	{
+		return fetchSalesOrderDao.getTransactionIdList();
+	}
+
+	@Override
+	public Map<String, Integer> getorderModelTransactionCount(final Set<String> parentOrderIds)
+	{
+		return fetchSalesOrderDao.getorderModelTransactionCount(parentOrderIds);
+	}
+
+	@Override
+	public List<Map> getOrderModelTransactionId(final Set<String> parentOrderIds)
+
+	{
+		return fetchSalesOrderDao.getOrderModelTransactionId(parentOrderIds);
+	}
+
+	@Override
+	public Map<String, String> fetchOrderIdsToday()
+
+	{
+		return fetchSalesOrderDao.fetchOrderIdsToday();
+	}
 
 }

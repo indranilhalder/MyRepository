@@ -1764,6 +1764,31 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
  		class="com.tisl.mpl.core.promotion.job.PromotionPriceUpdaterJob"
  		autowire="byName" >
  	</bean>
+ 	
+ 	<!-- TPR-1984 -->
+ 	
+ 	<bean id="NPSEmailEventListener" class="com.tisl.mpl.core.event.NPSEmailEventListener"
+  		parent="abstractSiteEventListener">
+  		<property name="modelService" ref="modelService" />
+  		<property name="businessProcessService" ref="businessProcessService" />
+  	</bean>
+  	
+  	<bean id="generateNPSEmail" parent="abstractGenerateEmailAction">
+  		<property name="frontendTemplateName" value="NpsEmailTemplate" />
+  	</bean>
+  	
+  	<bean id="NPSEmailEventProcessDefinitionResource"
+  		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+  		<property name="resource"
+  			value="classpath:/marketplacecore/processes/npsEmailProcess.xml" />
+  	</bean>
+  	
+	<bean id="npsMailerCronJob"
+ 		class="com.tisl.mpl.core.cronjob.NPSMailer.jobs.NPSMailerCronJob"
+ 		autowire="byName" >
+ 	</bean>
+	
+  	<!-- TPR-1984 End-->
 
 			
 </beans>

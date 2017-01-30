@@ -2031,6 +2031,20 @@
 <property name="interceptor" ref="aPlusContentValidateInterceptor"></property>
 <property name="typeCode" value="APlusContent"></property>
 </bean>
-
+<!-- TPR-1984 START -->
+<bean id="npsFeedbackQuestionService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.NPSFeedbackQuestionServiceImpl">
+ 	</bean>
+ 	
+ <bean id="npsFeedbackQuestionDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.NPSFeedbackQuestionDaoImpl" />
+<!-- Key generator for NPS -->
+	<bean id="npsIdGenerator"
+		class="de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator"
+		init-method="init" scope="tenant">
+		<property name="key" value="npsId" />
+		<property name="digits" value="6" />
+		<property name="start" value="#{configurationService.configuration.getProperty('npsmailer.npsId.startId')}" />
+		<property name="numeric" value="true" />
+	</bean>
+<!-- TPR-1984 END -->
 </beans>
 
