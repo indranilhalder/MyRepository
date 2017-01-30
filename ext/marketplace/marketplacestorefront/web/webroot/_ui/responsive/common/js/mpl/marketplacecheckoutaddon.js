@@ -4530,7 +4530,7 @@ function applyPromotion(bankName,binValue,formSubmit)
 				var cartTotal=response.totalPrice.value;
 				
 				/*Added for mRupee wallet*/
-				if(cartTotal > 20000){
+				if(cartTotal >= 20000){
 					$("#mRupeeInfo").css("display","block");			
 				}
 				//Ends here

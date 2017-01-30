@@ -533,7 +533,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_MESSAGE = "Test from TatauniStore";
 	public static final String SMS_MESSAGE_COD_OTP = "Peek-a-boo {0}! One-time password for your COD order is {1}. Please feel free to call us at {2} in case of any queries.";
 	public static final String SMS_MESSAGE_C2C_OTP = "Hi, one time password for your request is {0}. Please enter this to submit the request. Thanks!";
-	public static final String SMS_MESSAGE_PAYMENT_PENDING = "Hmmm… There seems to be a spot of bother. Please hold on.";
+	public static final String SMS_MESSAGE_PAYMENT_PENDING = "HmmmÂ… There seems to be a spot of bother. Please hold on.";
 	public static final String SMS_MESSAGE_PAYMENT_FAILED = "Uh oh. Looks like your order was declined for some reason. Please try again.";
 	public static final String SMS_MESSAGE_PAYMENT_TIMEOUT = "Oh no! Your order couldn't go through due to techincal issues. Please try again.";
 	public static final String SMS_MESSAGE_INVENTORY_RESERVATION_FAILED = "Uh oh! Looks like what you wanted isn't available right now, but it could come back soon. Please try again later";
@@ -1834,7 +1834,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String THIRDPARTYWALLET_ENTRY_EXPIRED = "0".intern();
 
 	//mrupee
-	public static final String PAYMENTPENDING = "SELECT {o.pk}  FROM {order as o},{OrderStatus as os},{WalletEnum as w} WHERE {creationtime} > (to_date(sysdate,'YYYY/MM/DD HH24:MI:SS') - INTERVAL '10' MINUTE) and {o.status}={os.pk} and  {o.iswallet}={w.pk} and ({os.code}=?status1 or {os.code}=?status2) and {w.code}='mRupee' "
+	//mrupee
+	public static final String PAYMENTPENDING = "SELECT {o.pk}  FROM {order as o},{OrderStatus as os},{WalletEnum as w} WHERE SYSDATE - 10/1440 >  {creationtime} and {o.status}={os.pk} and  {o.iswallet}={w.pk} and ({os.code}=?status1 or {os.code}=?status2) and {w.code}='mRupee' "
 			.intern();
 	public static final String STATUS1 = "status1".intern();
 	public static final String STATUS2 = "status2".intern();

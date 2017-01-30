@@ -260,20 +260,20 @@ public interface MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions;
@@ -337,11 +337,13 @@ public interface MplPaymentService
 	/**
 	 * @param paymentMode
 	 * @param cart
+	 * @param transactionAmount
 	 * @param request
 	 */
 	//Commented for Mobile use
 	//	void setTPWalletPaymentTransaction(Map<String, Double> paymentMode, AbstractOrderModel cart, HttpServletRequest request);
-	void setTPWalletPaymentTransaction(Map<String, Double> paymentMode, AbstractOrderModel cart, final String refernceCode);
+	void setTPWalletPaymentTransaction(Map<String, Double> paymentMode, AbstractOrderModel cart, final String refernceCode,
+			Double transactionAmount);
 
 	/**
 	 * @param refNo
