@@ -259,12 +259,12 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 						else
 						{
 							final String response = getMrupeeResponse(auditModelData);//getting mrupee response
+							LOG.debug("response from CronJob Mrupee#####################" + response);
 							if (StringUtils.isNotEmpty(response) && response.contains(SPLIT))
 							{
 								final String[] params1 = response.split(SPLIT);
 								status = params1[0];
 							}
-							LOG.debug("Status from CronJob Mrupee#####################" + status);
 							orderTATForTimeout = getTatTimeOut(new Date(), getmRupeeJobTAT(), order.getCreationtime());
 							if (CollectionUtils.isNotEmpty(entryList) && OrderStatus.PAYMENT_PENDING.equals(order.getStatus())
 									&& !auditModelData.getIsExpired().booleanValue() && status.equalsIgnoreCase(S)
