@@ -541,6 +541,8 @@
 	<bean class="de.hybris.platform.commercefacades.product.data.CategoryData">
 		<property name="subCategories"
 			type="java.util.Collection&lt;de.hybris.platform.commercefacades.product.data.CategoryData>" />
+		<property name="superCategories"
+			type="java.util.Collection&lt;de.hybris.platform.commercefacades.product.data.CategoryData>" />
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.ReturnReasonData">

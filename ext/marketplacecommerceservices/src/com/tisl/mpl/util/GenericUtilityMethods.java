@@ -1118,6 +1118,7 @@ public class GenericUtilityMethods
 							{
 								categoryName.append(catData.getName()).append(':');
 								//getCategoryLevel(category, 1, categoryName);
+								getCategoryLevel(catData, categoryName);
 							}
 						}
 
@@ -1229,6 +1230,22 @@ public class GenericUtilityMethods
 		{
 			LOG.error("Error while populating tealium data in cart page:::::" + te.getMessage());
 		}
+	}
+
+	/**
+	 * @param catData
+	 * @param categoryName
+	 */
+	private static void getCategoryLevel(final CategoryData catData, final StringBuffer categoryName)
+	{
+		if (CollectionUtils.isNotEmpty(catData.getSuperCategories()))
+		{
+			for (final CategoryData data : catData.getSuperCategories())
+			{
+				categoryName.append(data.getName()).append(':');
+			}
+		}
+
 	}
 
 	/* Checking payment type and then setting payment info */
