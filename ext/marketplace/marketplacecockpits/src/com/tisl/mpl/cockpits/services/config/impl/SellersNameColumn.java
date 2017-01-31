@@ -21,7 +21,9 @@ import de.hybris.platform.cscockpit.services.config.impl.AbstractSimpleCustomCol
 public class SellersNameColumn  extends AbstractSimpleCustomColumnConfiguration<String, ItemModel> {
 
 	private MplSellerInformationService mplSellerInformationService;
+	//fine Jewellery changes starts
 	private MplJewelleryService mplJewelleryService;
+	//fine Jewellery changes ends
 	
 	@Override
 	protected String getItemValue(ItemModel itemModel, Locale locale)
@@ -31,6 +33,7 @@ public class SellersNameColumn  extends AbstractSimpleCustomColumnConfiguration<
 			AbstractOrderModel order =   (AbstractOrderModel) itemModel;
 			SellerInformationModel sellerInfo =null;
 			for(AbstractOrderEntryModel entry  : order.getEntries()){
+				//fine Jewellery changes starts
 				if(entry.getProduct().getProductCategoryType().equalsIgnoreCase("FineJewellery"))
 				{
 					final List<JewelleryInformationModel> jewelleryInfo = getMplJewelleryService().getJewelleryInfoByUssid(entry.getSelectedUSSID());
@@ -38,6 +41,7 @@ public class SellersNameColumn  extends AbstractSimpleCustomColumnConfiguration<
 					sellerInfo = getMplSellerInformationService().getSellerDetail(ussid);
 					sellers.add(sellerInfo.getSellerName());
 				}
+				//fine Jewellery changes ends
 				else{
 				sellerInfo = getMplSellerInformationService().getSellerDetail(entry.getSelectedUSSID());
 				sellers.add(sellerInfo.getSellerName());
@@ -58,7 +62,7 @@ public class SellersNameColumn  extends AbstractSimpleCustomColumnConfiguration<
 		return mplSellerInformationService;
 				
 	}
-	
+	//fine Jewellery changes starts
 	protected MplJewelleryService getMplJewelleryService() {
 		
 		if(mplJewelleryService ==null){
@@ -68,7 +72,7 @@ public class SellersNameColumn  extends AbstractSimpleCustomColumnConfiguration<
 		return mplJewelleryService;
 				
 	}
-
+	//fine Jewellery changes ends
 }
 
 
