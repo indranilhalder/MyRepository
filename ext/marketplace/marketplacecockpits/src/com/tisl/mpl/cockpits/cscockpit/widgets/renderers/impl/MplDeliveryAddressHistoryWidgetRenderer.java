@@ -13,6 +13,7 @@ import org.zkoss.zul.Listhead;
 import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Listitem;
 
+import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.services.AddressHistoryService;
 import com.tisl.mpl.cockpits.cscockpit.widgets.models.impl.AddressHistoryListWidgetModel;
 import com.tisl.mpl.core.model.MplDeliveryAddressInfoModel;
@@ -82,12 +83,6 @@ public class MplDeliveryAddressHistoryWidgetRenderer
 			List<ColumnConfiguration> columns = getColumnConfigurations();
 			populateHeaderRow(widget, header, columns);
 			if(null != orderModel && null != orderModel.getDeliveryAddresses()) {
-				for (AddressModel addressModel : orderModel.getDeliveryAddresses()) {
-					TypedObject addressHistory = UISessionUtils.getCurrentSession().getTypeService().wrapItem(addressModel);
-					if(null != addressHistory) {
-						renderOrderHistory(widget, addressHistory, listBox, columns);
-					}
-				}
 				AddressModel bollingAddress = orderModel.getPaymentAddress();
 				try {
 					MplDeliveryAddressInfoModel  mplDeliveryAddressInfoModel = null;
@@ -111,6 +106,13 @@ public class MplDeliveryAddressHistoryWidgetRenderer
 				}catch(Exception e) {
 					e.printStackTrace();
 				}
+				for (AddressModel addressModel : orderModel.getDeliveryAddresses()) {
+					TypedObject addressHistory = UISessionUtils.getCurrentSession().getTypeService().wrapItem(addressModel);
+					if(null != addressHistory) {
+						renderOrderHistory(widget, addressHistory, listBox, columns);
+					}
+				}
+
 			}else {
 					Listitem row = new Listitem();
 					row.setParent(listBox);
@@ -150,6 +152,9 @@ public class MplDeliveryAddressHistoryWidgetRenderer
 			for (ColumnConfiguration col : columns) {
 				String value = ObjectGetValueUtils.getValue(
 						col.getValueHandler(), item);
+				if(null == value || value.isEmpty() ) {
+					value = MarketplaceCockpitsConstants.NA;
+				}
 				Listcell cell = new Listcell(value);
 				cell.setParent(row);
 			}

@@ -210,6 +210,7 @@ public final class MarketplaceCockpitsConstants extends
 	public static final String SPACE = " ";
 	public static final String AND = "and";
 	public static final String Between = "BETWEEN";
+	public static final String NA = "NA";
 
 	
 }
