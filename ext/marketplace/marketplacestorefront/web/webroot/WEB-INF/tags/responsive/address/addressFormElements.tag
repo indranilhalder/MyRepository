@@ -425,12 +425,12 @@ $(document).ready(function(){
 
 });
 			}else{
-				loadPincodeData("new").done(function() {
+				/* loadPincodeData("new").done(function() {
 					console.log("addressform line 394");
 				 var value = $(".address_landmarkOtherDiv").attr("data-value");
 				 console.log("addressform line 396 "+value);
 				 otherLandMarkTri(value,"defult");
-				});
+				}); */
 			
 			
 			$(".address_postcode").blur(function() {
