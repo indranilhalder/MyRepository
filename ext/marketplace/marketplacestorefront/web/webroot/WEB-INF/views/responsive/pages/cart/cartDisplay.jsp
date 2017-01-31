@@ -34,7 +34,7 @@
 			<!-- TISBOX-879 -->
 			<li id="checkout-id" class="checkout-button">
 				<!-- TISEE-6257 -->
-				<a  id="checkout-enabled" class="checkoutButton checkout button red"  onclick="return checkPincodeServiceability('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
+				<a  id="checkout-enabled" class="checkoutButton checkout button red"  onclick="return checkServiceabilityRequired('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
 				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
 			</li>
 
@@ -124,6 +124,7 @@
 		    	<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
 		   		</c:otherwise>
 				 </c:choose>
+				 <input type="hidden" id="pinId" value=""/>
 				<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
 			</div>
 		

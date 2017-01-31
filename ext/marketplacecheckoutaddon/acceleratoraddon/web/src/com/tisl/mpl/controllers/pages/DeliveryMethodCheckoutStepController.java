@@ -255,7 +255,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 			timeOutSet(model);
 			if (StringUtils.isNotEmpty(defaultPinCodeId)
-					&& (cartData != null && cartData.getEntries() != null && !cartData.getEntries().isEmpty()))
+					&& (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries()) ))
 			{
 				responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartData);
 				// TPR-429 START
