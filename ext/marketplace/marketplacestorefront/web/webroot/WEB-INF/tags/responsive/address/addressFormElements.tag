@@ -280,7 +280,7 @@
 			
 				<div class='half address_landmarkOtherDiv' data-value="${addressForm.landmark}" style="display: none;">
 						<formElement:formInputBox inputCSS="address_landmarkOther" idKey="otherLandmark"
-							labelKey="Enter Nearest Landmark" path="otherLandmark"
+							labelKey="Nearest Landmark" path="otherLandmark"
 							maxLength="30" />
 							<div class="error_text otherLandMarkError"></div>
 				</div>
