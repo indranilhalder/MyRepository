@@ -2903,29 +2903,39 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Override
 	public boolean addSelectedEDD(CartModel cartModel, List<MplSelectedEDDForUssID> mplSelectedEDDInfo)
 	{
-		if (cartModel == null || CollectionUtils.isEmpty(mplSelectedEDDInfo))
+		try
 		{
-			return false;
-		}
-
-		for (MplSelectedEDDForUssID mplEdd : mplSelectedEDDInfo)
-		{
-			for (AbstractOrderEntryModel entry : cartModel.getEntries())
+			for (MplSelectedEDDForUssID mplEdd : mplSelectedEDDInfo)
 			{
-				if (StringUtils.isNotEmpty(mplEdd.getUssId()) && mplEdd.getUssId().equalsIgnoreCase(entry.getSelectedUSSID()))
+				for (AbstractOrderEntryModel entry : cartModel.getEntries())
 				{
-
-					if (StringUtils.isNotEmpty(mplEdd.getDeliveryDate()))
+					if (StringUtils.isNotEmpty(mplEdd.getUssId()) && mplEdd.getUssId().equalsIgnoreCase(entry.getSelectedUSSID()))
 					{
-						String timeFromTo = mplEdd.getTimeSlot();
-						entry.setTimeSlotFrom(timeFromTo.substring(0, timeFromTo.indexOf("TO") - 1));
-						entry.setTimeSlotTo(timeFromTo.substring(timeFromTo.indexOf("TO") + 3, timeFromTo.length()));
-						entry.setEdScheduledDate(mplEdd.getDeliveryDate());
-						modelService.save(entry);
-					}
 
+						if (StringUtils.isNotBlank(mplEdd.getDeliveryDate()))
+						{
+							String timeFromTo = mplEdd.getTimeSlot();
+							entry.setTimeSlotFrom(timeFromTo.substring(0, timeFromTo.indexOf("TO") - 1));
+							entry.setTimeSlotTo(timeFromTo.substring(timeFromTo.indexOf("TO") + 3, timeFromTo.length()));
+							entry.setEdScheduledDate(mplEdd.getDeliveryDate());
+							modelService.save(entry);
+						}
+						else
+						{
+							entry.setTimeSlotFrom(null);
+							entry.setTimeSlotTo(null);
+							entry.setEdScheduledDate(null);
+							modelService.save(entry);
+						}
+
+					}
 				}
 			}
+		}
+		catch (Exception nullPointerException)
+		{
+			LOG.error("Nullpointer Exception ::::::::MplCartFacadeImpl::::" + nullPointerException.getMessage());
+			return false;
 		}
 		return true;
 	}
