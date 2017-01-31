@@ -395,6 +395,12 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 				AddressModel deliveryAddress = order.getDeliveryAddress();
 
 				if (null != deliveryAddress) {
+					String state = StringUtils.EMPTY;
+					if(null != deliveryAddress.getState()) {
+						state = deliveryAddress.getState();
+					}else if(null != deliveryAddress.getDistrict()){
+						state = deliveryAddress.getDistrict();
+					}
 					PincodeData pincodeData = mplDeliveryAddressController
 							.getPincodeData(deliveryAddress.getPostalcode());
 					firstNameField.setValue(deliveryAddress.getFirstname());
@@ -466,7 +472,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 					List<Listitem> items = stateFieldListBox.getItems();
 					for (Listitem item : items) {
 						String stateName = (String) item.getLabel();
-						if (stateName.equalsIgnoreCase(deliveryAddress.getState())) {
+						if (stateName.equalsIgnoreCase(state)) {
 							stateFieldListBox.setSelectedItem(item);
 							stateFieldListBox.setDisabled(true);
 						}
@@ -863,12 +869,14 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			if(null != landMarkListbox && null != landMarkListbox.getSelectedItem() && null != landMarkListbox.getSelectedItem().getValue()) {
 				selectedLandmark = (String)landMarkListbox.getSelectedItem().getValue();
 			}
-			if(null != selectedLandmark && selectedLandmark.equalsIgnoreCase(MarketplaceCockpitsConstants.OTHERS) && !selectedLandmark.equalsIgnoreCase(MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND) && !selectedLandmark.equalsIgnoreCase(MarketplaceCockpitsConstants.SELECT_LANDMARK)) {
+			if(null != selectedLandmark && selectedLandmark.equalsIgnoreCase(MarketplaceCockpitsConstants.OTHERS)) {
 				if(null != landmarkfield && null != landmarkfield.getValue()) {
 					landMark=landmarkfield.getValue();
 				}
+			}else if(selectedLandmark.equalsIgnoreCase(MarketplaceCockpitsConstants.NO_LANDMARKS_FOUND) || selectedLandmark.equalsIgnoreCase(MarketplaceCockpitsConstants.SELECT_LANDMARK)){
+				landMark=null;
 			}else {
-				landMark=selectedLandmark;
+				landMark =selectedLandmark;
 			}
 			LOG.debug("landMark = "+landMark);
 			if (StringUtils.isBlank(firstNameField.getValue())

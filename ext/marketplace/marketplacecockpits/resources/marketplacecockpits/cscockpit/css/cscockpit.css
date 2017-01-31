@@ -2307,7 +2307,7 @@ table.z-button.btn {
 }
 
 .addressForFN {
-	    margin-left: 68px;
+	    margin-left: 67px;
     padding-right: 2px;
 }
 
@@ -2317,17 +2317,17 @@ table.z-button.btn {
 }
 
 .addressForLN {
-	    margin-left: 68px;
+	    margin-left: 67px;
     padding-right: 2px;
 }
 
 .address1ForAddressField {
 	    margin-left: 46px;
-    padding-right: 2.5px;
+    padding-right: 2px;
 }
 
 .address2ForAddressField {
-margin-left: 50px;
+margin-left: 51px;
     padding-right: 2px;
 }
 
@@ -2335,16 +2335,16 @@ margin-left: 50px;
 	margin-left: 51px;
 }
 .landMarkDropDownField {
-	    margin-left: 76px;
-    width: 178px;
+	    margin-left: 75px;
+    width: 179px;
 	
 }
 .landMarkAddressField {
 	    margin-left: 13px;
 }
 .addressForCityField {
-	    margin-left: 103px;
-    padding-left: 2px;
+	    margin-left: 101px;
+    padding-left: 3px;
 } 
 
 .addressForLocalityField {
@@ -2361,28 +2361,28 @@ margin-left: 50px;
 
 .addressForPostalCodeField {
 	margin-left: 60px;
-    padding-right: 2.5px;
+    padding-right: 2px;
 }
 
 .addressForMobileNumberField {
 	margin-left: 0px;
-	padding-left: 3px;
+	padding-left: 1px;
 }
 
 .addressForMobileNumberPrefixField {
-margin-left: 45.8px;
+margin-left: 45px;
 }
 
 .addressForAddressType select {
-	           margin-left: 53.2px;
+	           margin-left: 53px;
     width: 179px;
     padding-left: 0px;
 }
 
 .stateForAddressType select {
 	
-	    margin-left: 96px;
-    width: 178px;
+	    margin-left: 95px;
+    width: 179px;
 }
 
 .addressForCountry select {
