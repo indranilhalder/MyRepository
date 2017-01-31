@@ -107,7 +107,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	/**
 	 *
 	 */
-	private static final String SPLIT = "|";
+	private static final String SPLIT = "\\|";
 
 	/**
 	 *
@@ -273,7 +273,15 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 								//updating audit details
 								final Map<String, Double> paymentMode = sessionService
 										.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
-								mplPaymentService.setTPWalletPaymentTransaction(paymentMode, order, auditModelData.getAuditId(), null);
+								final String[] params1 = status.split(SPLIT);
+								Double transAmt = Double.valueOf(0.0);
+								if (params1.length == 6)
+								{
+									transAmt = Double.valueOf(params1[5]);
+								}
+
+								mplPaymentService.setTPWalletPaymentTransaction(paymentMode, order, auditModelData.getAuditId(),
+										transAmt);
 								final CustomerModel mplCustomer = (CustomerModel) order.getUser();
 								updateAuditInfoForPayment(auditModelData, entryList, mplCustomer, order);
 								//sending notification mail
