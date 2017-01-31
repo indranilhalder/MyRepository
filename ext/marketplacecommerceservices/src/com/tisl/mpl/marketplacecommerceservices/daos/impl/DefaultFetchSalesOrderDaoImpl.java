@@ -234,8 +234,11 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 					+ " ConsignmentStatus AS cs ON {c.status} = {cs.PK} JOIN " + AbstractOrderEntryModel._TYPECODE
 					+ " AS oe ON {ce.orderentry}= {oe.PK} JOIN " + OrderModel._TYPECODE + " AS co  ON {c.order}={co.PK} JOIN "
 					+ OrderModel._TYPECODE + " AS po  ON {co.parentreference} = {po.PK} LEFT JOIN " + NPSMailerModel._TYPECODE
-					+ " AS nps ON {po.pk}={nps.parentOrderNo}} " + "WHERE " + "{c.deliveryDate}  BETWEEN "
-					+ "(sysdate-1) AND (sysdate) AND " + "{cs.code}='DELIVERED' AND {nps.parentOrderNo} IS NULL";
+					+ " AS nps ON {po.pk}={nps.parentOrderNo}} " + "WHERE " /*
+																							   * + "{c.deliveryDate}  BETWEEN " +
+																							   * "(sysdate-1) AND (sysdate) AND "
+																							   */
+					+ "{cs.code}='DELIVERED' AND {nps.parentOrderNo} IS NULL";
 
 			//old script
 			//final String queryString = "select {po.pk},{oe.pk},{oe.orderlineid} from {" + ConsignmentModel._TYPECODE + " as c JOIN "
@@ -272,7 +275,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getTransactionIdCount(de.hybris.platform.core
 	 * .model.order.OrderModel)
