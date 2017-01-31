@@ -1,16 +1,19 @@
 package com.tisl.mpl.cockpits.services.config.impl;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 import org.zkoss.spring.SpringUtil;
 
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 
 import de.hybris.platform.cockpit.services.values.ValueHandlerException;
 import de.hybris.platform.core.model.ItemModel;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.cscockpit.services.config.impl.AbstractSimpleCustomColumnConfiguration;
@@ -18,6 +21,7 @@ import de.hybris.platform.cscockpit.services.config.impl.AbstractSimpleCustomCol
 public class SellersNameColumn  extends AbstractSimpleCustomColumnConfiguration<String, ItemModel> {
 
 	private MplSellerInformationService mplSellerInformationService;
+	private MplJewelleryService mplJewelleryService;
 	
 	@Override
 	protected String getItemValue(ItemModel itemModel, Locale locale)
@@ -27,8 +31,17 @@ public class SellersNameColumn  extends AbstractSimpleCustomColumnConfiguration<
 			AbstractOrderModel order =   (AbstractOrderModel) itemModel;
 			SellerInformationModel sellerInfo =null;
 			for(AbstractOrderEntryModel entry  : order.getEntries()){
+				if(entry.getProduct().getProductCategoryType().equalsIgnoreCase("FineJewellery"))
+				{
+					final List<JewelleryInformationModel> jewelleryInfo = getMplJewelleryService().getJewelleryInfoByUssid(entry.getSelectedUSSID());
+					final String ussid = jewelleryInfo.get(0).getPCMUSSID();
+					sellerInfo = getMplSellerInformationService().getSellerDetail(ussid);
+					sellers.add(sellerInfo.getSellerName());
+				}
+				else{
 				sellerInfo = getMplSellerInformationService().getSellerDetail(entry.getSelectedUSSID());
 				sellers.add(sellerInfo.getSellerName());
+				}
 			}
 			
 		}
@@ -43,6 +56,16 @@ public class SellersNameColumn  extends AbstractSimpleCustomColumnConfiguration<
 					.getBean("mplSellerInformationService"));
 		}
 		return mplSellerInformationService;
+				
+	}
+	
+	protected MplJewelleryService getMplJewelleryService() {
+		
+		if(mplJewelleryService ==null){
+			mplJewelleryService = ((MplJewelleryService) SpringUtil
+					.getBean("mplJewelleryService"));
+		}
+		return mplJewelleryService;
 				
 	}
 
