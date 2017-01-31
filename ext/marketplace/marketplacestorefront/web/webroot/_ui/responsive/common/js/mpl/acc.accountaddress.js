@@ -1001,8 +1001,8 @@ function editAddress(addressId) {
         var flagState = true;
         var flagMob = true;
         var addLine1=encodeURIComponent(addressForm.line1.value);
-        var addLine2=encodeURIComponent(addressForm.line2.value);
-        var addLine3=encodeURIComponent(addressForm.line3.value);        
+     //   var addLine2=encodeURIComponent(addressForm.line2.value);
+     //    var addLine3=encodeURIComponent(addressForm.line3.value);        
         if ((addressForm.addressRadioType[0].checked == false) && (addressForm.addressRadioType[1].checked == false )){
         	document.getElementById("errtype").innerHTML = "<font color='#ff1c47' size='2'>Please select an address type</font>";
         	flagFn = false;

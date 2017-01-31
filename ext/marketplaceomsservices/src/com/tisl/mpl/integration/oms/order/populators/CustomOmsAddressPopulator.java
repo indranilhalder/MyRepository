@@ -43,6 +43,7 @@ public class CustomOmsAddressPopulator implements Populator<AddressModel, Addres
 		Assert.notNull(source, "source Address can't be null");
 		Assert.notNull(target, "target Address can't be null");
 
+
 		if (StringUtils.isNotBlank(source.getFirstname()))
 		{
 			target.setFirstName(source.getFirstname());
@@ -52,24 +53,26 @@ public class CustomOmsAddressPopulator implements Populator<AddressModel, Addres
 			target.setLastName(source.getLastname());
 		}
 
+
 		//TPR-3402 starts
 
-		String addressLine = (source.getLine1() != null ? source.getLine1() : source.getStreetname());
-		if (StringUtils.isEmpty(addressLine))
+		StringBuilder addressLine = new StringBuilder((source.getLine1() != null ? source.getLine1() : source.getStreetname()));
+		if (StringUtils.isEmpty(addressLine.toString()))
 		{
-			LOG.info("AddressLine is null " + addressLine);
-			addressLine = StringUtils.EMPTY;
+			LOG.debug("AddressLine is null " + addressLine);
+			addressLine = null;
 		}
-		final String addressLine2 = (source.getLine2() != null ? source.getLine2() : source.getStreetnumber());
+		final StringBuilder addressLine2 = new StringBuilder((source.getLine2() != null ? source.getLine2()
+				: source.getStreetnumber()));
 
-		if (StringUtils.isNotEmpty(addressLine2))
+		if (StringUtils.isNotEmpty(addressLine2.toString()))
 		{
-			addressLine = addressLine.concat(" ").concat(addressLine2).trim();
+			addressLine = addressLine.append(MarketplaceomsordersConstants.SINGLE_SPACE).append(addressLine2);
 		}
-
-		if (StringUtils.isNotEmpty(source.getAddressLine3()))
+		final StringBuilder addressLine3 = new StringBuilder(source.getAddressLine3());
+		if (StringUtils.isNotEmpty(addressLine3.toString()))
 		{
-			addressLine = addressLine.concat(" ").concat(source.getAddressLine3()).trim();
+			addressLine = addressLine.append(MarketplaceomsordersConstants.SINGLE_SPACE).append(addressLine3);
 		}
 
 		String addrLine1 = StringUtils.EMPTY;
@@ -77,50 +80,53 @@ public class CustomOmsAddressPopulator implements Populator<AddressModel, Addres
 		String addrLine3 = StringUtils.EMPTY;
 
 		int pointer = MarketplaceomsordersConstants.ZERO_INT;
-		addressLine = addressLine.trim();
+		addressLine = new StringBuilder(addressLine.toString().trim());
 
 		if (addressLine.length() <= MarketplaceomsordersConstants.MAX_LEN_PER_ADDR_LINE)
 		{
-			addrLine1 = addressLine.trim();
+			addrLine1 = addressLine.toString().trim();
 			//addrLine2 = StringUtils.EMPTY;
 			//addrLine3 = StringUtils.EMPTY;
 		}
 		else if (addressLine.length() <= MarketplaceomsordersConstants.MAX_LEN_OF_ADDR_LINE)
 		{
-			pointer = addressLine.substring(MarketplaceomsordersConstants.ZERO_INT,
-					MarketplaceomsordersConstants.MAX_LEN_PER_ADDR_LINE + 1).lastIndexOf(MarketplaceomsordersConstants.SPACE);
-			addrLine1 = addressLine.substring(MarketplaceomsordersConstants.ZERO_INT, pointer);
+			pointer = addressLine.toString()
+					.substring(MarketplaceomsordersConstants.ZERO_INT, MarketplaceomsordersConstants.MAX_LEN_PER_ADDR_LINE + 1)
+					.lastIndexOf(MarketplaceomsordersConstants.SINGLE_SPACE);
+			addrLine1 = addressLine.toString().substring(MarketplaceomsordersConstants.ZERO_INT, pointer);
 
-			addrLine1 = addrLine1.trim();
-			addressLine = addressLine.substring(pointer + 1, addressLine.length());
+			//addrLine1 = addrLine1.trim();
+			addressLine = new StringBuilder(addressLine.toString().substring(pointer + 1, addressLine.length()));
 
-			addrLine2 = addressLine;
-			addrLine2 = addrLine2.trim();
+			addrLine2 = addressLine.toString();
+
 
 			if (addrLine2.length() > MarketplaceomsordersConstants.MAX_LEN_PER_ADDR_LINE)
 			{
-				pointer = addressLine.substring(MarketplaceomsordersConstants.ZERO_INT,
-						MarketplaceomsordersConstants.MAX_LEN_PER_ADDR_LINE + 1).lastIndexOf(MarketplaceomsordersConstants.SPACE);
+				pointer = addressLine.toString()
+						.substring(MarketplaceomsordersConstants.ZERO_INT, MarketplaceomsordersConstants.MAX_LEN_PER_ADDR_LINE + 1)
+						.lastIndexOf(MarketplaceomsordersConstants.SINGLE_SPACE);
 
-				addrLine2 = addressLine.substring(MarketplaceomsordersConstants.ZERO_INT, pointer).trim();
+				addrLine2 = addressLine.toString().substring(MarketplaceomsordersConstants.ZERO_INT, pointer).trim();
 
-				addressLine = addressLine.substring(pointer + 1, addressLine.length()).trim();
+				addressLine = new StringBuilder(addressLine.toString().substring(pointer + 1, addressLine.length()));
 
 				if (addressLine.length() > MarketplaceomsordersConstants.MAX_LEN_PER_ADDR_LINE)
 				{
-					addrLine3 = addressLine.substring(MarketplaceomsordersConstants.ZERO_INT,
-							MarketplaceomsordersConstants.MAX_LEN_PER_ADDR_LINE).trim();
+					addrLine3 = addressLine.toString()
+							.substring(MarketplaceomsordersConstants.ZERO_INT, MarketplaceomsordersConstants.MAX_LEN_PER_ADDR_LINE)
+							.trim();
 				}
 				else
 				{
-					addrLine3 = addressLine.trim();
+					addrLine3 = addressLine.toString();
 				}
 			}
 		}
 
-		target.setAddressLine1(addrLine1);
-		target.setAddressLine2(addrLine2);
-		target.setAddressLine3(addrLine3);
+		target.setAddressLine1(addrLine1.trim());
+		target.setAddressLine2(addrLine2.trim());
+		target.setAddressLine3(addrLine3.trim());
 
 		//TPR-3402 ends
 

@@ -94,7 +94,7 @@ public final class MarketplaceomsordersConstants extends GeneratedMarketplaceoms
 	public static final int MAX_LEN_PER_ADDR_LINE = 40;
 	public static final int MAX_LEN_OF_ADDR_LINE = 120;
 
-	public static final String SPACE = " ";
+	public static final String SINGLE_SPACE = " ".intern();
 
 
 	private MarketplaceomsordersConstants()
