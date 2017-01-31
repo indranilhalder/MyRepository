@@ -195,6 +195,8 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					}
 					
 					if(StringUtils.isNotEmpty(line.getAwbSecondaryStatus())){
+						LOG.debug(" AwbSecondaryStatus for transaction id :"+line.getAwbSecondaryStatus());
+						LOG.debug("sending AwbSecondaryStatus message for transaction id :"+line.getOrderLineId());
 						sendNotification(line,existingConsignmentModel.getAwbSecondaryStatus(),orderModel);
 					}
 				
@@ -1050,10 +1052,12 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	// R2.3 SendNotification for SecondaryStatus 
 	private void sendNotification(OrderLine line, String oldAwbSecondaryStatus, OrderModel orderModel)
 	{
+      LOG.info(" old awbSecondary status "+oldAwbSecondaryStatus+" and new awbSecondary status"+line.getAwbSecondaryStatus()+" for order line id"+line.getOrderLineId()); 
 		if (!line.getAwbSecondaryStatus().equalsIgnoreCase(oldAwbSecondaryStatus)
 				&& MarketplacecommerceservicesConstants.ADDRESS_ISSUE.equalsIgnoreCase(line.getAwbSecondaryStatus())
 				|| MarketplacecommerceservicesConstants.OFD.equalsIgnoreCase(line.getAwbSecondaryStatus()))
 		{
+			LOG.info(" For "+ line.getAwbSecondaryStatus()+" old awbSecondary status  and new awbSecondary status are different for order line id"+line.getOrderLineId()); 
 			SendNotificationSecondaryStatusEvent sendNotificationSecondaryStatusEvent = new SendNotificationSecondaryStatusEvent(
 					line.getAwbSecondaryStatus(), line.getOrderLineId(), orderModel);
 			eventService.publishEvent(sendNotificationSecondaryStatusEvent);
@@ -1062,6 +1066,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				&& MarketplacecommerceservicesConstants.MIS_ROUTE.equalsIgnoreCase(line.getAwbSecondaryStatus())
 				|| MarketplacecommerceservicesConstants.RTO_INITIATED.equalsIgnoreCase(line.getAwbSecondaryStatus()))
 		{
+			LOG.info(" For "+ line.getAwbSecondaryStatus()+" old awbSecondary status  and new awbSecondary status are different for order line id"+line.getOrderLineId()); 
 			 sendSecondarySms(line, orderModel);
 		}
 		LOG.info("AwbSecondaryStatus:::" + line.getAwbSecondaryStatus());
