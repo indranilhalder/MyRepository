@@ -107,7 +107,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	/**
 	 *
 	 */
-	private static final String SPLIT = "|";
+	private static final String SPLIT = "\\|";
 
 	/**
 	 *
@@ -259,12 +259,12 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 						else
 						{
 							final String response = getMrupeeResponse(auditModelData);//getting mrupee response
+							LOG.debug("response from CronJob Mrupee#####################" + response);
 							if (StringUtils.isNotEmpty(response) && response.contains(SPLIT))
 							{
 								final String[] params1 = response.split(SPLIT);
 								status = params1[0];
 							}
-							LOG.debug("Status from CronJob Mrupee#####################" + status);
 							orderTATForTimeout = getTatTimeOut(new Date(), getmRupeeJobTAT(), order.getCreationtime());
 							if (CollectionUtils.isNotEmpty(entryList) && OrderStatus.PAYMENT_PENDING.equals(order.getStatus())
 									&& !auditModelData.getIsExpired().booleanValue() && status.equalsIgnoreCase(S)
@@ -273,7 +273,15 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 								//updating audit details
 								final Map<String, Double> paymentMode = sessionService
 										.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
-								mplPaymentService.setTPWalletPaymentTransaction(paymentMode, order, auditModelData.getAuditId(), null);
+								final String[] params1 = status.split(SPLIT);
+								Double transAmt = Double.valueOf(0.0);
+								if (params1.length == 6)
+								{
+									transAmt = Double.valueOf(params1[5]);
+								}
+
+								mplPaymentService.setTPWalletPaymentTransaction(paymentMode, order, auditModelData.getAuditId(),
+										transAmt);
 								final CustomerModel mplCustomer = (CustomerModel) order.getUser();
 								updateAuditInfoForPayment(auditModelData, entryList, mplCustomer, order);
 								//sending notification mail
