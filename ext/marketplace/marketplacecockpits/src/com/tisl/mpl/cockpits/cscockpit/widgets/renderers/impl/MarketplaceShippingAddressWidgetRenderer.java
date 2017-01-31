@@ -111,9 +111,6 @@ public class MarketplaceShippingAddressWidgetRenderer extends ShippingAddressWid
 							LOG.info("MarketplaceShippingAddressWidgetRenderer->createAddressSelect->isCartReserved:"+isCartReserved);
 								Map data = Collections.singletonMap("refresh", Boolean.TRUE);
 								widget.getWidgetController().dispatchEvent(null, this, data);
-								
-								marketplaceSearchCommandController.dispatchEvent(null, widget, data);
-								
 				} catch(Exception e) {
 					 try {
 						Messagebox.show(e.getMessage() + ((e.getCause() == null) ? "" : new StringBuilder(" - ").append(e.getCause().getMessage()).toString()), 
