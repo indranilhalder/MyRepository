@@ -794,6 +794,12 @@ public class GenericUtilityMethods
 					billingAddress.setAddressType(address.getAddressType());
 				}
 			}
+			/* Added in R2.3 for TISRLUAT-904 start */
+			if (StringUtils.isNotEmpty(address.getLandmark()))
+			{
+				billingAddress.setLandmark(address.getLandmark());
+			}
+			/* Added in R2.3 for TISRLUAT-904 end */
 		}
 		return billingAddress;
 
