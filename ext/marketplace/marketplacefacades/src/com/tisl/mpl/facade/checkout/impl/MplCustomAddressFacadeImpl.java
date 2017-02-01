@@ -566,7 +566,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 		final CartModel cartModel = cartService.getSessionCart();
 
 		boolean flag = false;
-		if (null != cartModel)
+		if (null != cartModel && cartModel.getDeliveryAddress() == null)
 		{
 			final List<AbstractOrderEntryModel> entryList = cartModel.getEntries();
 			if (CollectionUtils.isNotEmpty(entryList))
