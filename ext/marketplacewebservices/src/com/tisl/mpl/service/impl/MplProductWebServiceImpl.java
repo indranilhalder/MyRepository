@@ -275,7 +275,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -850,13 +850,26 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		}
 
 		//Start Code change for INC_11931
-		if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX)))
+		//		if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX)))
+		//		{
+		//			knowMoreSecLux = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX);
+		//
+		//			if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX)))
+		//			{
+		//				knowMoreThLux = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX);
+		//			}
+		//		}
+		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
+				MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX)))
 		{
-			knowMoreSecLux = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX);
+			knowMoreSecLux = configurationService.getConfiguration().getString(
+					MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX);
 
-			if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX)))
+			if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
+					MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX)))
 			{
-				knowMoreThLux = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX);
+				knowMoreThLux = configurationService.getConfiguration().getString(
+						MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX);
 			}
 		}
 		//End Code change for INC_11931
@@ -887,15 +900,30 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		{
 
 			//Start Code change for INC_11931
-			if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX)))
-			{
-				knowMoreSecLux = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX);
+			//			if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX)))
+			//			{
+			//				knowMoreSecLux = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX);
+			//
+			//				if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX)))
+			//				{
+			//					knowMoreThLux = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX);
+			//				}
+			//			}
 
-				if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX)))
+			if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
+					MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX)))
+			{
+				knowMoreSecLux = configurationService.getConfiguration().getString(
+						MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX);
+
+				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
+						MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX)))
 				{
-					knowMoreThLux = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX);
+					knowMoreThLux = configurationService.getConfiguration().getString(
+							MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX);
 				}
 			}
+
 			//End Code change for INC_11931
 
 			if (productModel.getLuxIndicator() != null
