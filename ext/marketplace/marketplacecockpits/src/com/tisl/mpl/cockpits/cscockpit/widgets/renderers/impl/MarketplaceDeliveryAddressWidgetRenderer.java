@@ -75,7 +75,6 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 	protected static final String FAILED_VALIDATION = "failedValidation";
 	private static final String USE_WEBSITE_FOR_COD = "useWebsiteForCOD";
 	private static final String PIN_REGEX = "^[1-9][0-9]{5}";
-	private static final String NAME_REGEX = "^[A-Za-z][ A-Za-z]{0,20}";
 	private static final String ADDRESS_NOT_CHANGABLE = "addressNotChangable";
 	private boolean isChangeDeliveryAddress;
 	private boolean isAddressForReturn;
@@ -879,183 +878,183 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 				landMark =selectedLandmark;
 			}
 			LOG.debug("landMark = "+landMark);
-			if (StringUtils.isBlank(firstNameField.getValue())
-					|| StringUtils.isBlank(firstNameField.getValue().trim())) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "firstNameValueField"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
+			if (StringUtils.isBlank(firstNameField.getValue()) || StringUtils.isBlank(firstNameField.getValue().trim()))
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "firstNameValueField"), LabelUtils.getLabel(widget, FAILED_VALIDATION),
 						Messagebox.OK, Messagebox.ERROR);
-				// valid = Boolean.FALSE;
+				//valid = Boolean.FALSE;
 				return;
-			}else if (!(firstNameField.getValue().trim().matches(NAME_REGEX)) ) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "invalidFirstName"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
+			}
+			else if (firstNameField.getValue().length() > 255)
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "invalidFirstNameLength"),LabelUtils.getLabel(widget, FAILED_VALIDATION),
 						Messagebox.OK, Messagebox.ERROR);
 				return;
-			} else if (firstNameField.getValue().length() > 20) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "invalidFirstNameLength"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
+			}
+			else if (!MarketplaceCockpitCommonAsciiValidator.validateAlphaWithoutSpaceNoSpCh(firstNameField.getValue()))
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "invalidFirstNameChar"),LabelUtils.getLabel(widget, FAILED_VALIDATION),
 						Messagebox.OK, Messagebox.ERROR);
 				return;
-			} else if (StringUtils.isBlank(lastNameField.getValue())
-					|| StringUtils.isBlank(lastNameField.getValue().trim())) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "lastNameValueField"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
+			}
+			
+			else if (StringUtils.isBlank(lastNameField.getValue()) || StringUtils.isBlank(lastNameField.getValue().trim()))
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "lastNameValueField"), LabelUtils.getLabel(widget, FAILED_VALIDATION),
 						Messagebox.OK, Messagebox.ERROR);
-				// valid = Boolean.FALSE;
+				//valid = Boolean.FALSE;
 				return;
-			} else if (!(lastNameField.getValue().trim().matches(NAME_REGEX)) ) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "invalidLastName"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
+			}
+			else if (lastNameField.getValue().length() > 255)
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "invalidLastNameLength"), LabelUtils.getLabel(widget, FAILED_VALIDATION), 
 						Messagebox.OK, Messagebox.ERROR);
-				return;
-			} else if (lastNameField.getValue().length() > 20) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "invalidLastNameLength"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						Messagebox.OK, Messagebox.ERROR);
-				return;
-			} else if (StringUtils.isBlank(address1Field.getValue())
-					|| StringUtils.isBlank(address1Field.getValue().trim())) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "addressLine1ValueField"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						Messagebox.OK, Messagebox.ERROR);
-				// valid = Boolean.FALSE;
-				return;
-			} else if (address1Field.getValue().length() > 20) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "invalidAddress1Length"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						Messagebox.OK, Messagebox.ERROR);
-				return;
-				// commented for TISRLEE-1674
-			/*} else if (StringUtils.isBlank(address2Field.getValue())
-					|| StringUtils.isBlank(address2Field.getValue().trim())) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "addressLine2ValueField"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						Messagebox.OK, Messagebox.ERROR);
-				// valid = Boolean.FALSE;
-				return;*/
-			} else if (StringUtils.isNotBlank(address2Field.getValue()) && StringUtils.isNotBlank(address2Field.getValue().trim()) && address2Field.getValue().trim().length() > 20) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "invalidAddress2Length"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						Messagebox.OK, Messagebox.ERROR);
-				return;
-				// commented for TISRLEE-1674
-			/*} else if (StringUtils.isBlank(address3Field.getValue())
-					|| StringUtils.isBlank(address3Field.getValue().trim())) {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "addressLine3ValueField"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						Messagebox.OK, Messagebox.ERROR);
-				// valid = Boolean.FALSE;
-				return;*/
-			} else if (StringUtils.isNotBlank(address3Field.getValue()) && StringUtils.isNotBlank(address3Field.getValue().trim()) && address3Field.getValue().length() > 20){
-				Messagebox.show(
-						LabelUtils.getLabel(widget, "invalidAddress3Length"),
-						LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						Messagebox.OK, Messagebox.ERROR);
-				return;
-			 } else if (StringUtils.isBlank(cityField.getValue())
-					 || StringUtils.isBlank(cityField.getValue().trim())) {
-				 Messagebox.show(LabelUtils.getLabel(widget, "cityValueField"),
-						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						 Messagebox.OK, Messagebox.ERROR);
-				 // valid = Boolean.FALSE;
-				 return;
-			 } else if (cityField.getValue().length() > 20) {
-				 Messagebox.show(
-						 LabelUtils.getLabel(widget, "invalidCityLength"),
-						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						 Messagebox.OK, Messagebox.ERROR);
-				 return;
-			 }else if (!(cityField.getValue().trim().matches(NAME_REGEX)) ) {
-					Messagebox.show(
-							LabelUtils.getLabel(widget, "invalidCityName"),
-							LabelUtils.getLabel(widget, FAILED_VALIDATION),
-							Messagebox.OK, Messagebox.ERROR);
 					return;
-				}  else if (stateFieldListBox.getSelectedItem() == null
-					 || stateFieldListBox.getSelectedItem().getLabel()
-					 .equalsIgnoreCase("Select")) {
-				 Messagebox.show(
-						 LabelUtils.getLabel(widget, "stateTypeValueField"),
-						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						 Messagebox.OK, Messagebox.ERROR);
-				 // valid = Boolean.FALSE;
-				 return;
-			 } else if (StringUtils.isBlank(postalCodeField.getValue())
-					 || StringUtils.isBlank(postalCodeField.getValue().trim())) {
-				 Messagebox.show(
-						 LabelUtils.getLabel(widget, "postalCodeValueField"),
-						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						 Messagebox.OK, Messagebox.ERROR);
-				 // valid = Boolean.FALSE;
-				 return;
-			 } else if (postalCodeField.getValue().length() > 6) {
-				 Messagebox.show(
-						 LabelUtils.getLabel(widget, "invalidPinCodeLength"),
-						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						 Messagebox.OK, Messagebox.ERROR);
-				 return;
-			 } else if (!(postalCodeField.getValue().matches(PIN_REGEX))) {
-				 // valid = true;
-				 Messagebox
-				 .show(LabelUtils.getLabel(widget,
-						 "postalCodeValueIncorrect"), LabelUtils
-						 .getLabel(widget, FAILED_VALIDATION),
-						 Messagebox.OK, Messagebox.ERROR);
-				 return;
-			 } else if (StringUtils.isBlank(mobileNumberField.getValue())
-					 || StringUtils.isBlank(mobileNumberField.getValue().trim())) {
-				 Messagebox.show(
-						 LabelUtils.getLabel(widget, "mobileNoValueField"),
-						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						 Messagebox.OK, Messagebox.ERROR);
-				 // valid = Boolean.FALSE;
-				 return;
-			 } else if (mobileNumberField.getValue().length() > 10) {
-				 Messagebox.show(
-						 LabelUtils.getLabel(widget, "invalidMobileLength"),
-						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						 Messagebox.OK, Messagebox.ERROR);
-				 return;
-			 } else if (!(mobileNumberField.getValue()
-					 .matches(MOBILENUMBER_REGEX))) {
-				 // valid = true;
-				 Messagebox.show(LabelUtils.getLabel(widget,
-						 "mobileNumberValueIncorrect"), LabelUtils.getLabel(
-								 widget, FAILED_VALIDATION), Messagebox.OK,
-								 Messagebox.ERROR);
-				 return;
-			 } else if (addressTypeListbox.getSelectedItem() == null
-					 || addressTypeListbox.getSelectedItem().getLabel()
-					 .equalsIgnoreCase("Select")) {
-				 Messagebox.show(
-						 LabelUtils.getLabel(widget, "addressTypeValueField"),
-						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						 Messagebox.OK, Messagebox.ERROR);
-				 // valid = Boolean.FALSE;
-				 return;
-			 } else if (countryListbox.getSelectedItem() == null
-					 || countryListbox.getSelectedItem().getLabel()
-					 .equalsIgnoreCase("Select")) {
-				 Messagebox.show(
-						 LabelUtils.getLabel(widget, "countryValueField"),
-						 LabelUtils.getLabel(widget, FAILED_VALIDATION),
-						 Messagebox.OK, Messagebox.ERROR);
-				 // valid = Boolean.FALSE;
-				 return;
-			 } else {
-				 valid = true;
-			 }
+			}
+			else if (!MarketplaceCockpitCommonAsciiValidator.validateAlphaWithoutSpaceNoSpCh(lastNameField.getValue()))
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "invalidLastNameChar"), LabelUtils.getLabel(widget, FAILED_VALIDATION), 
+						Messagebox.OK, Messagebox.ERROR);
+					return;
+			}
+			
+			else if (StringUtils.isBlank(address1Field.getValue()) || StringUtils.isBlank(address1Field.getValue().trim()))
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "addressLine1ValueField"), LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						Messagebox.OK, Messagebox.ERROR);
+				//valid = Boolean.FALSE;
+				return;
+			}
+			else if (address1Field.getValue().length() > 255)
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "invalidAddress1Length"),LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						Messagebox.OK, Messagebox.ERROR);
+					return;
+			}
+            // commented this code for TISRLEE-1655 start 
+			/*else if (StringUtils.isBlank(address2Field.getValue()) || StringUtils.isBlank(address2Field.getValue().trim()))
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "addressLine2ValueField"), LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						Messagebox.OK, Messagebox.ERROR);
+				//valid = Boolean.FALSE;
+				return;
+			}*/
+			 // commented this code for TISRLEE-1655 end 
+			else if (null != address2Field && null != address2Field.getValue() && address2Field.getValue().length() > 255)
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "invalidAddress2Length"),LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						Messagebox.OK, Messagebox.ERROR);
+				return;
+			}
+			// commented this code for TISRLEE-1655 start
+			/*else if (StringUtils.isBlank(address3Field.getValue()) || StringUtils.isBlank(address3Field.getValue().trim()))
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "landmarkValueField"), LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						Messagebox.OK, Messagebox.ERROR);
+				//valid = Boolean.FALSE;
+				return;
+			}*/
+			// commented this code for TISRLEE-1655 end
+			else if (null != address3Field && null != address3Field.getValue() && address3Field.getValue().length() > 255)
+			{
+					Messagebox.show(LabelUtils.getLabel(widget, "invalidLandMarkLength"),LabelUtils.getLabel(widget, FAILED_VALIDATION), 
+						Messagebox.OK, Messagebox.ERROR);
+					return;
+			}
+			else if (StringUtils.isBlank(cityField.getValue()) || StringUtils.isBlank(cityField.getValue().trim()))
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "cityValueField"), LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						Messagebox.OK, Messagebox.ERROR);
+				//valid = Boolean.FALSE;
+				return;
+			}
+			else if (cityField.getValue().length() > 255)
+			{
+					Messagebox.show(LabelUtils.getLabel(widget, "invalidCityLength"),LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						Messagebox.OK, Messagebox.ERROR);
+					return;
+			}
+			else if (!MarketplaceCockpitCommonAsciiValidator.validateAlphaWithoutSpaceNoSpCh(cityField.getValue()))
+			{
+					Messagebox.show(LabelUtils.getLabel(widget, "invalidCityChar"),LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						Messagebox.OK, Messagebox.ERROR);
+					return;
+			}
+			
+			else if (stateFieldListBox.getSelectedItem() == null || stateFieldListBox.getSelectedItem().getLabel().equalsIgnoreCase("Select"))
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "stateTypeValueField"), LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						Messagebox.OK, Messagebox.ERROR);
+				//valid = Boolean.FALSE;
+				return;
+			}
+			else if (StringUtils.isBlank(postalCodeField.getValue()) || StringUtils.isBlank(postalCodeField.getValue().trim()))
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "postalCodeValueField"), LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						Messagebox.OK, Messagebox.ERROR);
+				//valid = Boolean.FALSE;
+				return;
+			}
+			else if (postalCodeField.getValue().length() > 6)
+			{
+					Messagebox.show(LabelUtils.getLabel(widget, "invalidPinCodeLength"),LabelUtils.getLabel(widget, FAILED_VALIDATION), 
+						Messagebox.OK, Messagebox.ERROR);
+					return;
+			}
+			else if (!(postalCodeField.getValue().matches(PIN_REGEX)))
+			{
+				//valid = true;
+				Messagebox.show(LabelUtils.getLabel(widget, "postalCodeValueIncorrect"),LabelUtils.getLabel(widget, FAILED_VALIDATION), 
+					   Messagebox.OK, Messagebox.ERROR);
+				return;
+			}
+			else if (StringUtils.isBlank(mobileNumberField.getValue()) || StringUtils.isBlank(mobileNumberField.getValue().trim()))
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "mobileNoValueField"), LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						Messagebox.OK, Messagebox.ERROR);
+				//valid = Boolean.FALSE;
+				return;
+			}
+			else if (mobileNumberField.getValue().length() > 10)
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "invalidMobileLength"),LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						Messagebox.OK, Messagebox.ERROR);
+				return;
+			}
+			else if (!(mobileNumberField.getValue().matches(MOBILENUMBER_REGEX)))
+			{
+				//valid = true;
+				Messagebox.show(LabelUtils.getLabel(widget, "mobileNumberValueIncorrect"),
+						LabelUtils.getLabel(widget, FAILED_VALIDATION), Messagebox.OK, Messagebox.ERROR);
+				return;
+			}
+			else if (addressTypeListbox.getSelectedItem() == null || addressTypeListbox.getSelectedItem().getLabel().equalsIgnoreCase("Select"))
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "addressTypeValueField"), LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						Messagebox.OK, Messagebox.ERROR);
+				//valid = Boolean.FALSE;
+				return;
+			}
+			else if (countryListbox.getSelectedItem() == null || countryListbox.getSelectedItem().getLabel().equalsIgnoreCase("Select"))
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, "countryValueField"), LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						Messagebox.OK, Messagebox.ERROR);
+				//valid = Boolean.FALSE;
+				return;
+			}
+			
+			/*Added in R2.3  for landMark validation start */
+			else if (null != landMark && landMark.length() > 255)
+			{
+					Messagebox.show(LabelUtils.getLabel(widget, "invalidLandMarkLength"),LabelUtils.getLabel(widget, FAILED_VALIDATION),
+						Messagebox.OK, Messagebox.ERROR);
+					return;
+			}
+			/*Added in R2.3  for landMark validation end */
+			else
+			{
+				valid = true;
+			}
 			if (valid) {
 				// Saving the address
 				saveShippingAddress(widget, firstNameField.getValue(),
