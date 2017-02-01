@@ -434,14 +434,19 @@ $(document).ready(function(){
 			
 			
 			$(".address_postcode").blur(function() {
-				
+				if($(".address_postcode").val().length == "6") {	
 				loadPincodeData("new").done(function() {
 					console.log("addressform blur line 394");
 				 var value = $(".address_landmarkOtherDiv").attr("data-value");
 				 console.log("addressform blur line 396 "+value);
 				 otherLandMarkTri(value,"blur");
 				});
-
+				}else{
+					$(".address_landmarks").empty();
+					changeFuncLandMark("");
+					$(".address_townCity").val('');
+					$(".address_states,#statesReadOnly").attr('readonly',false).prop("value","");
+				}
 		});
 
 			} 
