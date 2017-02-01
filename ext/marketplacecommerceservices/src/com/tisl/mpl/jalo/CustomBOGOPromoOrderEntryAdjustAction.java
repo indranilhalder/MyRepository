@@ -9,6 +9,7 @@ import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.jalo.type.ComposedType;
+import de.hybris.platform.promotions.jalo.PromotionOrderEntryConsumed;
 import de.hybris.platform.promotions.util.Pair;
 import de.hybris.platform.util.DiscountValue;
 
@@ -81,11 +82,10 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 			final DiscountValue discountValue = findOrderEntryDiscountValue(ctx, orderEntry, getGuid(ctx));
 			if (discountValue != null)
 			{
-				calculateApportionedDiscount(orderEntry, ctx, orderEntryAdjustment);
+				needsCalc = calculateApportionedDiscount(orderEntry, ctx, orderEntryAdjustment);
 			}
 
-
-			needsCalc = true;
+			//needsCalc = true;
 		}
 		else
 		{
@@ -93,7 +93,7 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 					+ "' and quantity '" + getOrderEntryQuantity(ctx) + "'");
 		}
 
-		setMarkedApplied(ctx, true);
+		//setMarkedApplied(ctx, true);
 
 		return needsCalc;
 	}
@@ -104,64 +104,143 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 	 * @param : orderEntry
 	 * @return : orderEntryAdjustment
 	 */
-	private void calculateApportionedDiscount(final AbstractOrderEntry orderEntry, final SessionContext ctx,
+	private boolean calculateApportionedDiscount(final AbstractOrderEntry orderEntry, final SessionContext ctx,
 			final double orderEntryAdjustment)
 	{
-		Map<String, Integer> qualifyingCountMap = null;
+		boolean needsCalc = false;
+		//Map<String, Integer> qualifyingCountMap = null;
 		String productPromoCode = null;
 		Map<String, List<String>> productAssociatedItemsMap = null;
 		Map<String, Integer> freeItemsForCatBogo = null;
+		List<PromotionOrderEntryConsumed> nonFreeConsumedEntries = null;
 
 		if (ctx.getAttributes() != null)
 		{
-			qualifyingCountMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) != null ? (Map<String, Integer>) ctx
-					.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) : null;
+			//			qualifyingCountMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) != null ? (Map<String, Integer>) ctx
+			//					.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) : null;
 			productPromoCode = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PROMOCODE) != null ? (String) ctx
 					.getAttributes().get(MarketplacecommerceservicesConstants.PROMOCODE) : null;
 			productAssociatedItemsMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null ? (Map<String, List<String>>) ctx
 					.getAttributes().get(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;
 			freeItemsForCatBogo = ctx.getAttributes().get(MarketplacecommerceservicesConstants.FREEITEMFORCATBOGO) != null ? (Map<String, Integer>) ctx
 					.getAttributes().get(MarketplacecommerceservicesConstants.FREEITEMFORCATBOGO) : null;
+
+			nonFreeConsumedEntries = ctx.getAttributes().get(MarketplacecommerceservicesConstants.NONFREE_CONSUMED_ENTRIES) != null ? (List<PromotionOrderEntryConsumed>) ctx
+					.getAttributes().get(MarketplacecommerceservicesConstants.NONFREE_CONSUMED_ENTRIES) : null;
 		}
 
-		String validProductUSSID = null;
 		try
 		{
-			validProductUSSID = (String) orderEntry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID);
+			boolean isEntryFreeNonFreeBoth = false;
+			int nonFreeCount = 0;
+			final String freeEntryUSSID = (String) orderEntry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID);
+			double amtTobeDeductedAtlineItemLevel = 0.00D;
+
+			for (final PromotionOrderEntryConsumed consumedNonFree : nonFreeConsumedEntries)
+			{
+				final AbstractOrderEntry nonFreeEntry = consumedNonFree.getOrderEntry();
+				nonFreeCount = consumedNonFree.getQuantity().intValue();
+				final String nonFreeEntryUSSID = (String) nonFreeEntry.getAttribute(ctx,
+						MarketplacecommerceservicesConstants.SELECTEDUSSID);
+
+				if (nonFreeEntry.equals(orderEntry))
+				{
+					isEntryFreeNonFreeBoth = true;
+					break;
+				}
+				else if (!freeItemsForCatBogo.containsKey(nonFreeEntryUSSID))
+				{
+					nonFreeEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, nonFreeEntry.getProduct()
+							.getDescription());
+					nonFreeEntry.setProperty(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, Integer.valueOf(nonFreeCount));
+					nonFreeEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS,
+							getAssociatedItem(nonFreeEntryUSSID, productAssociatedItemsMap, nonFreeEntry));
+					nonFreeEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
+				}
+			}
+
+			if (isEntryFreeNonFreeBoth)
+			{
+				final double lineItemLevelPrice = orderEntry.getTotalPriceAsPrimitive();
+				amtTobeDeductedAtlineItemLevel = -1.0D * orderEntryAdjustment;
+				final double aportionedItemValue = lineItemLevelPrice - amtTobeDeductedAtlineItemLevel;
+				final double cartLevelDiscount = 0.00D;
+				final double netAmountAfterAllDisc = aportionedItemValue - cartLevelDiscount;
+
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE, Double.valueOf(lineItemLevelPrice));
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC,
+						Double.valueOf(amtTobeDeductedAtlineItemLevel));
+				orderEntry
+						.setProperty(ctx, MarketplacecommerceservicesConstants.NETSELLINGPRICE, Double.valueOf(aportionedItemValue));
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELDISC, Double.valueOf(cartLevelDiscount));
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC,
+						Double.valueOf(netAmountAfterAllDisc));
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ISBOGOAPPLIED, Boolean.TRUE);
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.FREECOUNT,
+						Integer.valueOf(getOrderEntryQuantity(ctx).intValue()));
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, orderEntry.getProduct()
+						.getDescription());
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT,
+						Integer.valueOf(getOrderEntryQuantity(ctx).intValue() + nonFreeCount));
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS,
+						getAssociatedItem(freeEntryUSSID, productAssociatedItemsMap, orderEntry));
+			}
+			else
+			{
+				final double lineItemLevelPrice = orderEntry.getTotalPriceAsPrimitive();
+				amtTobeDeductedAtlineItemLevel = -1.0D * orderEntryAdjustment;
+				final double aportionedItemValue = lineItemLevelPrice - amtTobeDeductedAtlineItemLevel;
+				final double cartLevelDiscount = 0.00D;
+				final double netAmountAfterAllDisc = aportionedItemValue - cartLevelDiscount;
+
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE, Double.valueOf(lineItemLevelPrice));
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC,
+						Double.valueOf(amtTobeDeductedAtlineItemLevel));
+				orderEntry
+						.setProperty(ctx, MarketplacecommerceservicesConstants.NETSELLINGPRICE, Double.valueOf(aportionedItemValue));
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELDISC, Double.valueOf(cartLevelDiscount));
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC,
+						Double.valueOf(netAmountAfterAllDisc));
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ISBOGOAPPLIED, Boolean.TRUE);
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.FREECOUNT,
+						Integer.valueOf(getOrderEntryQuantity(ctx).intValue()));
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, orderEntry.getProduct()
+						.getDescription());
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT,
+						Integer.valueOf(getOrderEntryQuantity(ctx).intValue()));
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS,
+						getAssociatedItem(freeEntryUSSID, productAssociatedItemsMap, orderEntry));
+			}
+
+			needsCalc = true;
+			setMarkedApplied(ctx, true);
 		}
 		catch (final JaloInvalidParameterException | JaloSecurityException e)
 		{
+			undo(ctx);
+			log.error(e);
+		}
+		catch (final Exception e)
+		{
+			undo(ctx);
 			log.error(e);
 		}
 
-		int qualifyingCount = 0;
-		if (null != qualifyingCountMap && !qualifyingCountMap.isEmpty())
-		{
-			qualifyingCount = qualifyingCountMap.get(validProductUSSID).intValue();
-		}
+		return needsCalc;
+	}
+
+	private List<String> getAssociatedItem(final String ussid, final Map<String, List<String>> productAssociatedItemsMap,
+			final AbstractOrderEntry entry)
+	{
 		List<String> associatedItemsList = new ArrayList<String>();
 		if (null != productAssociatedItemsMap && !productAssociatedItemsMap.isEmpty())
 		{
-			associatedItemsList = productAssociatedItemsMap.get(validProductUSSID);
-		}
-		final double lineItemLevelPrice = orderEntry.getTotalPriceAsPrimitive();
-		double amtTobeDeductedAtlineItemLevel = 0.00D;
-
-		if (freeItemsForCatBogo.containsKey(validProductUSSID))
-		{
-			amtTobeDeductedAtlineItemLevel = -1.0D * orderEntryAdjustment;
-			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ISBOGOAPPLIED, Boolean.TRUE);
-			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.FREECOUNT,
-					Long.valueOf(getOrderEntryQuantity(ctx).longValue()));
-			//Added for TISPRO-318
-			//orderEntry.setProperty(ctx, "bogoFreeItmCount", getOrderEntryQuantity(ctx));
+			associatedItemsList = productAssociatedItemsMap.get(ussid);
 		}
 
-		final double aportionedItemValue = lineItemLevelPrice - amtTobeDeductedAtlineItemLevel;
-		final double cartLevelDiscount = 0.00D;
-		final double netAmountAfterAllDisc = aportionedItemValue - cartLevelDiscount;
-
-		final List<String> prevAssociatedItemList = orderEntry.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null ? (List<String>) orderEntry
+		final List<String> prevAssociatedItemList = entry.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null ? (List<String>) entry
 				.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;
 		if (prevAssociatedItemList != null && !prevAssociatedItemList.isEmpty())
 		{
@@ -172,17 +251,7 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 			associatedItemsList.addAll(associatedItemsSet);
 		}
 
-		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, orderEntry.getProduct().getDescription());
-		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, Integer.valueOf(qualifyingCount));
-		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, associatedItemsList);
-		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
-		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE, Double.valueOf(lineItemLevelPrice));
-		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC,
-				Double.valueOf(amtTobeDeductedAtlineItemLevel));
-		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETSELLINGPRICE, Double.valueOf(aportionedItemValue));
-		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELDISC, Double.valueOf(cartLevelDiscount));
-		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC,
-				Double.valueOf(netAmountAfterAllDisc));
+		return associatedItemsList;
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////

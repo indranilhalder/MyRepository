@@ -1827,4 +1827,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String RETURN_ENABLE = "order.return.enabled".intern();
 	public final static String CANCEL_ENABLE = "order.cancel.enabled".intern();
 
+	//For Promotion Apportioning
+	public final static String NONFREE_CONSUMED_ENTRIES = "nonFreeConsumedEntries".intern();
+
 }

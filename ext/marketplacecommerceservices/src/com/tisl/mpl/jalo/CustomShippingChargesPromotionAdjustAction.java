@@ -1,17 +1,17 @@
 package com.tisl.mpl.jalo;
 
-import de.hybris.platform.core.Registry;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
+import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.jalo.type.ComposedType;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,7 +40,7 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotionAction#apply(de.hybris.platform.jalo.SessionContext)
 	 */
 	@Override
@@ -63,12 +63,12 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 			String cartPromoCode = null;
 			Map<String, List<String>> productAssociatedItemsMap = null;
 			Map<String, Map<String, Double>> prodPrevCurrDelChargeMap = null;
-			Map<String, AbstractOrderEntry> validProductList = null;
+			//Map<String, AbstractOrderEntry> validProductList = null;
 
 			if (ctx.getAttributes() != null)
 			{
-				validProductList = ctx.getAttributes().get(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST) != null ? (Map<String, AbstractOrderEntry>) ctx
-						.getAttributes().get(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST) : null;
+				//				validProductList = ctx.getAttributes().get(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST) != null ? (Map<String, AbstractOrderEntry>) ctx
+				//						.getAttributes().get(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST) : null;
 				cartPromoCode = ctx.getAttributes().get(MarketplacecommerceservicesConstants.CARTPROMOCODE) != null ? (String) ctx
 						.getAttributes().get(MarketplacecommerceservicesConstants.CARTPROMOCODE) : null;
 				productPromoCode = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE) != null ? (String) ctx
@@ -81,89 +81,87 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 						.getAttributes().get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP) : null;
 			}
 
-
-
-			if (validProductList != null)
+			try
 			{
-				final Iterator iter = validProductList.entrySet().iterator();
-				while (iter.hasNext())
+				final String validProdUSSID = (String) orderEntry.getAttribute(ctx,
+						MarketplacecommerceservicesConstants.SELECTEDUSSID);
+
+				List<String> associatedItemsList = new ArrayList<String>();
+				if (null != productAssociatedItemsMap && !productAssociatedItemsMap.isEmpty())
 				{
-					final Map.Entry mapEntry = (Map.Entry) iter.next();
-					final AbstractOrderEntry cartEntry = (AbstractOrderEntry) mapEntry.getValue(); //Changed to abstractOrderEntry for TPR-629
-					final String validProdUSSID = (String) mapEntry.getKey();
-
-					List<String> associatedItemsList = new ArrayList<String>();
-					if (null != productAssociatedItemsMap && !productAssociatedItemsMap.isEmpty())
-					{
-						associatedItemsList = productAssociatedItemsMap.get(validProdUSSID);
-					}
-					//					int qualifyingCount = 0;
-					//					if (null != qualifyingCountMap && !qualifyingCountMap.isEmpty())
-					//					{
-					//						qualifyingCount = qualifyingCountMap.get(validProdUSSID).intValue();
-					//					}
-
-					final int qualifyingCount = (null != qualifyingCountMap && !qualifyingCountMap.isEmpty()) ? (qualifyingCountMap
-							.get(validProdUSSID) != null ? qualifyingCountMap.get(validProdUSSID).intValue() : 0) : 0;
-
-					double prevDelCharge = 0.00D;
-					double currDelCharge = 0.00D;
-
-					if (null != prodPrevCurrDelChargeMap && !prodPrevCurrDelChargeMap.isEmpty())
-					{
-						final Map<String, Double> prevCurrDeliveryChargeMap = prodPrevCurrDelChargeMap.get(validProdUSSID);
-						prevDelCharge = prevCurrDeliveryChargeMap.get(MarketplacecommerceservicesConstants.PREVDELIVERYCHARGE)
-								.doubleValue();
-						currDelCharge = prevCurrDeliveryChargeMap.get(MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE)
-								.doubleValue();
-					}
-
-					final double lineItemLevelPrice = cartEntry.getTotalPriceAsPrimitive();//TODO
-					final double totalProdLevelDisc = 0.00D;
-					final double netSellingPrice = lineItemLevelPrice - totalProdLevelDisc;
-					final double totalCartLevelDisc = 0.00D;
-					final double netAmountAfterAllDisc = netSellingPrice - totalCartLevelDisc;
-
-					final List<String> prevAssociatedItemList = cartEntry
-							.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null ? (List<String>) cartEntry
-							.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;
-					if (prevAssociatedItemList != null && !prevAssociatedItemList.isEmpty())
-					{
-						final Set associatedItemsSet = new HashSet(prevAssociatedItemList);
-						associatedItemsSet.addAll(associatedItemsList);
-
-						associatedItemsList.clear();
-						associatedItemsList.addAll(associatedItemsSet);
-					}
-
-					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, cartEntry.getProduct()
-							.getDescription());
-					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, Integer.valueOf(qualifyingCount));
-					//**********Blocked for TISPRO-670**************
-					//cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, associatedItemsList);
-					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
-					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCODE, cartPromoCode);
-					cartEntry
-							.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE, Double.valueOf(lineItemLevelPrice));
-					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC,
-							Double.valueOf(totalProdLevelDisc));
-					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETSELLINGPRICE, Double.valueOf(netSellingPrice));
-					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELDISC, Double.valueOf(totalCartLevelDisc));
-					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC,
-							Double.valueOf(netAmountAfterAllDisc));
-					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PREVDELIVERYCHARGE, Double.valueOf(prevDelCharge));
-					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE,
-							Double.valueOf(currDelCharge));
-
-					if (LOG.isDebugEnabled())
-					{
-						LOG.debug("(" + getPK() + ") apply: After apply Shipping charge promotion=[" + "Previous Delivery Charge: "
-								+ prevDelCharge + ", Current Delivery Charge: " + currDelCharge + "]");
-					}
+					associatedItemsList = productAssociatedItemsMap.get(validProdUSSID);
 				}
+
+				final int qualifyingCount = (null != qualifyingCountMap && !qualifyingCountMap.isEmpty()) ? (qualifyingCountMap
+						.get(validProdUSSID) != null ? qualifyingCountMap.get(validProdUSSID).intValue() : 0) : 0;
+
+				double prevDelCharge = 0.00D;
+				double currDelCharge = 0.00D;
+
+				if (null != prodPrevCurrDelChargeMap && !prodPrevCurrDelChargeMap.isEmpty())
+				{
+					final Map<String, Double> prevCurrDeliveryChargeMap = prodPrevCurrDelChargeMap.get(validProdUSSID);
+					prevDelCharge = prevCurrDeliveryChargeMap.get(MarketplacecommerceservicesConstants.PREVDELIVERYCHARGE)
+							.doubleValue();
+					currDelCharge = prevCurrDeliveryChargeMap.get(MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE)
+							.doubleValue();
+				}
+
+				final double lineItemLevelPrice = orderEntry.getTotalPriceAsPrimitive();//TODO
+				final double totalProdLevelDisc = 0.00D;
+				final double netSellingPrice = lineItemLevelPrice - totalProdLevelDisc;
+				final double totalCartLevelDisc = 0.00D;
+				final double netAmountAfterAllDisc = netSellingPrice - totalCartLevelDisc;
+
+				final List<String> prevAssociatedItemList = orderEntry
+						.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null ? (List<String>) orderEntry
+						.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;
+				if (prevAssociatedItemList != null && !prevAssociatedItemList.isEmpty())
+				{
+					final Set associatedItemsSet = new HashSet(prevAssociatedItemList);
+					associatedItemsSet.addAll(associatedItemsList);
+
+					associatedItemsList.clear();
+					associatedItemsList.addAll(associatedItemsSet);
+				}
+
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, orderEntry.getProduct()
+						.getDescription());
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, Integer.valueOf(qualifyingCount));
+				//**********Blocked for TISPRO-670**************
+				//cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, associatedItemsList);
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCODE, cartPromoCode);
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE, Double.valueOf(lineItemLevelPrice));
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC,
+						Double.valueOf(totalProdLevelDisc));
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETSELLINGPRICE, Double.valueOf(netSellingPrice));
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELDISC, Double.valueOf(totalCartLevelDisc));
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC,
+						Double.valueOf(netAmountAfterAllDisc));
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PREVDELIVERYCHARGE, Double.valueOf(prevDelCharge));
+				orderEntry
+						.setProperty(ctx, MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE, Double.valueOf(currDelCharge));
+
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug("(" + getPK() + ") apply: After apply Shipping charge promotion=[" + "Previous Delivery Charge: "
+							+ prevDelCharge + ", Current Delivery Charge: " + currDelCharge + "]");
+				}
+
+				needsCalc = true;
+				setMarkedApplied(ctx, true);
 			}
-			needsCalc = true;
-			setMarkedApplied(ctx, true);
+			catch (final JaloInvalidParameterException | JaloSecurityException e)
+			{
+				undo(ctx);
+				LOG.error(e);
+			}
+			catch (final Exception e)
+			{
+				undo(ctx);
+				LOG.error(e);
+			}
 		}
 
 		return needsCalc;
@@ -180,42 +178,29 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 		boolean calculate = false;
 
 		final AbstractOrder order = getPromotionResult(ctx).getOrder(ctx);
+		final Integer orderEntryNumber = getOrderEntryNumber(ctx);
+		final AbstractOrderEntry orderEntry = findOrderEntry(order, ctx, orderEntryNumber);
+
 		if (order != null)
 		{
-			Map<String, Map<String, Double>> prodPrevCurrDelChargeMap = null;
+			//final Map<String, Map<String, Double>> prodPrevCurrDelChargeMap = null;
 			if (ctx.getAttributes() != null)
 			{
-				prodPrevCurrDelChargeMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP) != null ? (Map<String, Map<String, Double>>) ctx
-						.getAttributes().get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP) : null;
-				if (null != prodPrevCurrDelChargeMap && !prodPrevCurrDelChargeMap.isEmpty())
-				{
-					getDefaultPromotionsManager().undoDeliveryCharges(order, prodPrevCurrDelChargeMap, ctx);
-					calculate = true;
-				}
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PREVDELIVERYCHARGE, Double.valueOf(0.00D));
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE, Double.valueOf(0.00D));
+
+				calculate = true;
+
+				//				prodPrevCurrDelChargeMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP) != null ? (Map<String, Map<String, Double>>) ctx
+				//						.getAttributes().get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP) : null;
+				//				if (null != prodPrevCurrDelChargeMap && !prodPrevCurrDelChargeMap.isEmpty())
+				//				{
+				//					getDefaultPromotionsManager().undoDeliveryCharges(order, prodPrevCurrDelChargeMap, ctx);
+				//					calculate = true;
+				//				}
 
 			}
-
-			//			final Map<String, AbstractOrderEntry> validProductList = ctx.getAttributes().get(
-			//					MarketplacecommerceservicesConstants.VALIDPRODUCTLIST) != null ? (Map<String, AbstractOrderEntry>) ctx
-			//					.getAttributes().get(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST) : null;
-			//
-			//			final List<AbstractOrderEntry> entryList = new ArrayList<AbstractOrderEntry>();
-			//
-			//			if (validProductList != null && !validProductList.isEmpty())
-			//			{
-			//				entryList.addAll(validProductList.values());
-			//
-			//			}
-			//			else
-			//			{
-			//				entryList.addAll(order.getEntries());
-			//			}
-			//
-			//			getDefaultPromotionsManager().undoPromotionalAttributes(ctx, entryList);
 		}
-
-
-
 		setMarkedApplied(ctx, false);
 
 		return calculate;
@@ -288,9 +273,9 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 		return true;
 	}
 
-	protected DefaultPromotionManager getDefaultPromotionsManager()
-	{
-		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
-	}
+	//	protected DefaultPromotionManager getDefaultPromotionsManager()
+	//	{
+	//		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
+	//	}
 
 }

@@ -181,7 +181,8 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 
 				//Setting values
 				//paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidFinalMap);
-				paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductFinalList);
+
+				//paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductFinalList);
 				paramSessionContext
 						.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsFinalMap);
 
@@ -372,7 +373,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 
 								final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
 								consumed.add(getDefaultPromotionsManager().consume(paramSessionContext, this, eligibleCount,
-										eligibleCount, entry));
+										quantityOfOrderEntry, entry));
 
 								tcMapForValidEntries.put(validUssid, Integer.valueOf((int) quantityOfOrderEntry - eligibleCount));
 

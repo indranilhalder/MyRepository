@@ -91,10 +91,10 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 			final DiscountValue discountValue = findOrderEntryDiscountValue(ctx, orderEntry, getGuid(ctx));
 			if (discountValue != null)
 			{
-				calculateApportionedDiscount(orderEntry, ctx, isFreebiePromo, orderEntryAdjustment);
+				needsCalc = calculateApportionedDiscount(orderEntry, ctx, isFreebiePromo, orderEntryAdjustment);
 			}
 
-			needsCalc = true;
+			//needsCalc = true;
 		}
 		else
 		{
@@ -102,7 +102,7 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 					+ "' and quantity '" + getOrderEntryQuantity(ctx) + "'");
 		}
 
-		setMarkedApplied(ctx, true);
+		//setMarkedApplied(ctx, true);
 
 		return needsCalc;
 	}
@@ -269,11 +269,12 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 	 * @param : isFreebiePromo
 	 * @return : orderEntryAdjustment
 	 */
-	private void calculateApportionedDiscount(final AbstractOrderEntry orderEntry, final SessionContext ctx,
+	private boolean calculateApportionedDiscount(final AbstractOrderEntry orderEntry, final SessionContext ctx,
 			final boolean isFreebiePromo, final double orderEntryAdjustment)
 	{
+		boolean needsCalc = false;
 		double percentageDiscount = 0.00D;
-		Map<String, Integer> qualifyingCountMap = null;
+		//Map<String, Integer> qualifyingCountMap = null;
 		String productPromoCode = null;
 		Map<String, List<String>> productAssociatedItemsMap = null;
 		boolean isPercentageDisc = false;
@@ -282,8 +283,8 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 		{
 			percentageDiscount = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PERCENTAGEDISCOUNT) != null ? ((Double) ctx
 					.getAttributes().get(MarketplacecommerceservicesConstants.PERCENTAGEDISCOUNT)).doubleValue() : 0.00D;
-			qualifyingCountMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) != null ? (Map<String, Integer>) ctx
-					.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) : null;
+			//			qualifyingCountMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) != null ? (Map<String, Integer>) ctx
+			//					.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) : null;
 			productPromoCode = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PROMOCODE) != null ? (String) ctx
 					.getAttributes().get(MarketplacecommerceservicesConstants.PROMOCODE) : null;
 			productAssociatedItemsMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null ? (Map<String, List<String>>) ctx
@@ -292,81 +293,91 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 					.getAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC)).booleanValue() : false;
 		}
 
-		String validProductUSSID = null;
+		//String validProductUSSID = null;
 		try
 		{
-			validProductUSSID = (String) orderEntry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID);
+			final String validProductUSSID = (String) orderEntry.getAttribute(ctx,
+					MarketplacecommerceservicesConstants.SELECTEDUSSID);
+			//			int qualifyingCount = 0;
+			//			if (null != qualifyingCountMap && !qualifyingCountMap.isEmpty())
+			//			{
+			//				qualifyingCount = qualifyingCountMap.get(validProductUSSID).intValue();
+			//			}
+			final int qualifyingCount = getOrderEntryQuantity(ctx).intValue();
+			List<String> associatedItemsList = new ArrayList<String>();
+			if (null != productAssociatedItemsMap && !productAssociatedItemsMap.isEmpty())
+			{
+				associatedItemsList = productAssociatedItemsMap.get(validProductUSSID);
+			}
+
+			final double lineItemLevelPrice = orderEntry.getTotalPriceAsPrimitive();
+			//		double amtTobeDeductedAtlineItemLevel = 0;
+			//
+			//		if ((-1.0D * orderEntryAdjustment) > 0)
+			//		{
+			//			final double validQualifyingProdPrice = orderEntry.getBasePriceAsPrimitive() * qualifyingCount;
+			//			amtTobeDeductedAtlineItemLevel = (percentageDiscount * validQualifyingProdPrice) / 100;
+			//		}
+
+			final double amtTobeDeductedAtlineItemLevel = -1.0D * orderEntryAdjustment;
+
+			final double aportionedItemValue = lineItemLevelPrice - amtTobeDeductedAtlineItemLevel;
+			final double cartLevelDiscount = 0.00D;
+			final double netAmountAfterAllDisc = aportionedItemValue - cartLevelDiscount;
+
+			final List<String> prevAssociatedItemList = orderEntry.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null ? (List<String>) orderEntry
+					.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;
+			if (prevAssociatedItemList != null && !prevAssociatedItemList.isEmpty())
+			{
+				final Set associatedItemsSet = new HashSet(prevAssociatedItemList);
+				associatedItemsSet.addAll(associatedItemsList);
+
+				associatedItemsList.clear();
+				associatedItemsList.addAll(associatedItemsSet);
+			}
+
+			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, orderEntry.getProduct().getDescription());
+			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, Integer.valueOf(qualifyingCount));
+
+			//****New Code Added for TISPRO-670*******
+			if (isFreebiePromo)
+			{
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, associatedItemsList);
+			}
+			//****New Code Added for TISPRO-670 ends*******
+
+			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
+			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE, Double.valueOf(lineItemLevelPrice));
+			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC,
+					Double.valueOf(amtTobeDeductedAtlineItemLevel));
+			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETSELLINGPRICE, Double.valueOf(aportionedItemValue));
+			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELDISC, Double.valueOf(cartLevelDiscount));
+			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC,
+					Double.valueOf(netAmountAfterAllDisc));
+			//if (isPercentageDisc && (-1.0D * orderEntryAdjustment) > 0)
+			if (isPercentageDisc && (amtTobeDeductedAtlineItemLevel > 0))
+			{
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ISPERCENTAGEDISC, Boolean.valueOf(isPercentageDisc));
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODLEVELPERCENTAGEDISC,
+						Double.valueOf(percentageDiscount));
+			}
+
+			needsCalc = true;
+			setMarkedApplied(ctx, true);
 		}
 		catch (final JaloInvalidParameterException | JaloSecurityException e)
 		{
+			undo(ctx);
+			log.error(e);
+		}
+		catch (final Exception e)
+		{
+			undo(ctx);
 			log.error(e);
 		}
 
-		int qualifyingCount = 0;
-		if (null != qualifyingCountMap && !qualifyingCountMap.isEmpty())
-		{
-			qualifyingCount = qualifyingCountMap.get(validProductUSSID).intValue();
-		}
-		List<String> associatedItemsList = new ArrayList<String>();
-		if (null != productAssociatedItemsMap && !productAssociatedItemsMap.isEmpty())
-		{
-			associatedItemsList = productAssociatedItemsMap.get(validProductUSSID);
-		}
-
-		final double lineItemLevelPrice = orderEntry.getTotalPriceAsPrimitive();
-		//		double amtTobeDeductedAtlineItemLevel = 0;
-		//
-		//		if ((-1.0D * orderEntryAdjustment) > 0)
-		//		{
-		//			final double validQualifyingProdPrice = orderEntry.getBasePriceAsPrimitive() * qualifyingCount;
-		//			amtTobeDeductedAtlineItemLevel = (percentageDiscount * validQualifyingProdPrice) / 100;
-		//		}
-
-		final double amtTobeDeductedAtlineItemLevel = -1.0D * orderEntryAdjustment;
-
-		final double aportionedItemValue = lineItemLevelPrice - amtTobeDeductedAtlineItemLevel;
-		final double cartLevelDiscount = 0.00D;
-		final double netAmountAfterAllDisc = aportionedItemValue - cartLevelDiscount;
-
-		final List<String> prevAssociatedItemList = orderEntry.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null ? (List<String>) orderEntry
-				.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;
-		if (prevAssociatedItemList != null && !prevAssociatedItemList.isEmpty())
-		{
-			final Set associatedItemsSet = new HashSet(prevAssociatedItemList);
-			associatedItemsSet.addAll(associatedItemsList);
-
-			associatedItemsList.clear();
-			associatedItemsList.addAll(associatedItemsSet);
-		}
-
-		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, orderEntry.getProduct().getDescription());
-		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, Integer.valueOf(qualifyingCount));
-
-		//****New Code Added for TISPRO-670*******
-		if (isFreebiePromo)
-		{
-			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, associatedItemsList);
-		}
-		//****New Code Added for TISPRO-670 ends*******
-
-		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
-		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE, Double.valueOf(lineItemLevelPrice));
-		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC,
-				Double.valueOf(amtTobeDeductedAtlineItemLevel));
-		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETSELLINGPRICE, Double.valueOf(aportionedItemValue));
-		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELDISC, Double.valueOf(cartLevelDiscount));
-		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC,
-				Double.valueOf(netAmountAfterAllDisc));
-		//if (isPercentageDisc && (-1.0D * orderEntryAdjustment) > 0)
-		if (isPercentageDisc && (amtTobeDeductedAtlineItemLevel > 0))
-		{
-			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ISPERCENTAGEDISC, Boolean.valueOf(isPercentageDisc));
-			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODLEVELPERCENTAGEDISC,
-					Double.valueOf(percentageDiscount));
-		}
-
+		return needsCalc;
 	}
-
 	//	protected DefaultPromotionManager getDefaultPromotionsManager()
 	//	{
 	//		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
