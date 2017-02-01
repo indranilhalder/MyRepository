@@ -93,7 +93,7 @@ import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
 import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.CodCheckMessage;
 import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.DeliveryFulfillModesEnum;
-import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.PaymentModesEnum;
+import com.tisl.mpl.core.enums.PaymentModesEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
@@ -4166,7 +4166,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
