@@ -2368,6 +2368,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		{
 			shippingAddress.setId(address.getPk().toString());
 		}
+		/* Added in R2.3 for TISRLUAT-904 start */
+		if (null != address.getLandmark())
+		{
+			shippingAddress.setLandmark(address.getLandmark());
+		}
+		/* Added in R2.3 for TISRLUAT-904 end */
+		
 		//shippingAddress.setDefaultAddress(new Boolean(checkDefaultAddress(address))); Avoid instantiating Boolean objects; reference Boolean.TRUE or Boolean.FALSE or call Boolean.valueOf() instead.
 		shippingAddress.setDefaultAddress(Boolean.valueOf(checkDefaultAddress(address)));
 		return shippingAddress;

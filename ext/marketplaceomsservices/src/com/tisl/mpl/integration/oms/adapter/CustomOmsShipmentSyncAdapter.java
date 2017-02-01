@@ -944,14 +944,17 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
             			  }catch(Exception e) {
             				  LOG.error("Exception occurred while  refund info call to oms "+e.getMessage());
             			  }
-            			  if(entry.getTransactionID().equalsIgnoreCase(shipment.getShipmentId())){
-            				  Boolean sdb = Boolean.TRUE;
-            				  entry.setIsSdb(sdb);
-     							  modelService.save(entry);
-     							  
-     							//  modelService.refresh(entry.getIsSdb());
-            			  }
-            			  /*  R2.3 REFUND INFO CALL TO OMS  END*/
+         			  /*  R2.3 REFUND INFO CALL TO OMS  END*/
+         			  if(entry.getTransactionID().equalsIgnoreCase(shipment.getShipmentId())){
+         				  Boolean sdb = Boolean.TRUE;
+         				  LOG.debug("Before setting IsSdb "+entry.getIsSdb());
+         				  LOG.debug("Before setting Sdb "+entry.getSdb());
+         				  entry.setIsSdb(sdb);
+         				  entry.setSdb(sdb);
+         				  modelService.save(entry);
+         				  LOG.debug("Before setting IsSdb "+entry.getIsSdb());
+         				  LOG.debug("Before setting Sdb "+entry.getSdb());
+         			  }
          			  try
 							{
          				  sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,consignmentModel,orderModel,newStatus,MarketplaceomsordersConstants.TICKET_TYPE_CODE_EDTOHD_SDB);

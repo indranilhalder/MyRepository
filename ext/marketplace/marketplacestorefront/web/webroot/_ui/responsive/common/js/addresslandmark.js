@@ -56,7 +56,7 @@ var tmpValue= -1;
 $(".address_postcode").blur(function() {
 	 console.log("addresslandmark line 74 "+tmpValue);
 	 tmpValue++;
-
+	 if($(".address_postcode").val().length == "6") {
 		
 		loadPincodeData("edit").done(function() {
 			console.log("blur line 394");
@@ -64,7 +64,12 @@ $(".address_postcode").blur(function() {
 		 console.log("blur line 396 "+value);
 		 otherLandMarkTri(value,"blur");
 		});
-
+	 }else{
+			$(".address_landmarks").empty();
+			changeFuncLandMark("");
+			$(".address_townCity").val('');
+			$(".address_states,#statesReadOnly").attr('readonly',false).prop("value","");
+		}
 
 });
 
