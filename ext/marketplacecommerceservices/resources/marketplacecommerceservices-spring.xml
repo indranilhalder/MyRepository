@@ -2034,5 +2034,15 @@
 				
 					
 	</util:map>
+	
+	
+	<!-- For pancard details -->
+	
+	<bean id="mplPancardServiceImpl" class="com.tisl.mpl.marketplacecommerceservices.services.pancard.impl.MplPancardServiceImpl">
+	</bean>
+	
+	
+	<bean id="mplPancardDao" class="com.tisl.mpl.marketplacecommerceservices.daos.pancard.impl.MplPancardDaoImpl">
+	</bean>
 </beans>
 

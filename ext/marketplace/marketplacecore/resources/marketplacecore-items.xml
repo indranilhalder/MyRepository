@@ -10190,5 +10190,54 @@
 		
 															<!-- Jewellery Changes End -->
 		
+		
+		<!-- pancard changes for fine jewellery -->
+		
+		
+		 <typegroup name="PancardModel">
+		   <itemtype code="PancardInformation" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.PancardInfo">
+				<deployment table="PancardInfo" typecode="15986" />
+			    <attributes>
+			    <attribute qualifier="TransactionId" autocreate="true" type="java.lang.String" generate="true">
+			        <description>TransactionId of the item</description>
+			        <modifiers optional="false" read="true" write="true"/>
+			        <persistence type="property"/>
+			    </attribute>
+			    <attribute qualifier="OrderId" autocreate="true" type="java.lang.String" generate="true">
+			        <description>OrderId of the order placed</description>
+			        <modifiers optional="false" read="true" write="true"/>
+			        <persistence type="property"/>
+			    </attribute>
+			    <attribute qualifier="Path" autocreate="true" type="java.lang.String" generate="true">
+			        <description>Pancard details save path</description>
+			        <modifiers optional="false" read="true" write="true"/>
+			        <persistence type="property"/>
+			    </attribute>
+			    
+			    <attribute qualifier="Ticket" autocreate="true" type="java.lang.String" generate="true">
+			        <description>ticket</description>
+			        <modifiers optional="false" read="true" write="true"/>
+			        <persistence type="property"/>
+			    </attribute>
+			    <attribute qualifier="Status" autocreate="true" type="java.lang.String" generate="true">
+			        <description>status</description>
+			        <modifiers optional="false" read="true" write="true"/>
+			        <persistence type="property"/>
+			    </attribute>
+			    <attribute qualifier="Name" autocreate="true" type="java.lang.String" generate="true">
+			        <description>Customer Name</description>
+			        <modifiers optional="false" read="true" write="true"/>
+			        <persistence type="property"/>
+			    </attribute>
+			     <attribute qualifier="PancardNumber" autocreate="true" type="java.lang.String" generate="true">
+			        <description>Pancard Number</description>
+			        <modifiers optional="false" read="true" write="true"/>
+			        <persistence type="property"/>
+			    </attribute>
+			    
+		 </attributes>
+		</itemtype>
+		</typegroup>
+		
 	</itemtypes>
 </items>
