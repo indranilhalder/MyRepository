@@ -3438,19 +3438,26 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				{
 					final List<JuspayWebhookModel> hooks = getMplProcessOrderDao().getEventsForPendingOrders(auditModel.getAuditId());
 					//}
-
-					final JuspayOrderStatusModel juspayOrderStatusModel = ((JuspayWebhookModel) hooks).getOrderStatus();
-
-					final GetOrderStatusResponse orderStatusResponse = getJuspayOrderResponseConverter().convert(
-							juspayOrderStatusModel);
-
-					for (final OrderModel so : subOrders)
+					for (final JuspayWebhookModel juspayWebhook : hooks)
 					{
-						setPaymentTransactionFromJob(orderStatusResponse, paymentMode, so);
-						so.setModeOfOrderPayment(paymentModeFromInfo);
+						if (null != juspayWebhook.getOrderStatus())
+						{
+							final JuspayOrderStatusModel juspayOrderStatusModel = juspayWebhook.getOrderStatus();
+
+
+							final GetOrderStatusResponse orderStatusResponse = getJuspayOrderResponseConverter().convert(
+									juspayOrderStatusModel);
+
+							for (final OrderModel so : subOrders)
+							{
+								setPaymentTransactionFromJob(orderStatusResponse, paymentMode, so);
+								so.setModeOfOrderPayment(paymentModeFromInfo);
+							}
+							modelService.saveAll(subOrders);
+							returnFlag = true;
+							break;
+						}
 					}
-					modelService.saveAll(subOrders);
-					returnFlag = true;
 				}
 				else
 				{
