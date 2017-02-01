@@ -44,7 +44,7 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotionAction#apply(de.hybris.platform.jalo.SessionContext)
 	 */
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -150,6 +150,9 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 				}
 				else if (!freeItemsForCatBogo.containsKey(nonFreeEntryUSSID))
 				{
+					final double lineItemLevelPrice = nonFreeEntry.getTotalPriceAsPrimitive();
+					nonFreeEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE,
+							Double.valueOf(lineItemLevelPrice));
 					nonFreeEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, nonFreeEntry.getProduct()
 							.getDescription());
 					nonFreeEntry.setProperty(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, Integer.valueOf(nonFreeCount));
