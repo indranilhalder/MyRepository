@@ -213,6 +213,15 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					{
 						requestData.setAddress2(newDeliveryAddress.getLine2());
 					}
+					
+					if (null != newDeliveryAddress.getStreetname())
+					{
+						requestData.setAddress1(newDeliveryAddress.getStreetname());
+					}
+					if (null != newDeliveryAddress.getStreetnumber())
+					{
+						requestData.setAddress2(newDeliveryAddress.getStreetnumber());
+					}
 					if (null != newDeliveryAddress.getAddressLine3())
 					{
 						requestData.setAddress3(newDeliveryAddress.getAddressLine3());
