@@ -91,9 +91,9 @@ import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
-import com.tisl.mpl.core.enums.CodCheckMessage;
-import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
-import com.tisl.mpl.core.enums.PaymentModesEnum;
+import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.CodCheckMessage;
+import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.DeliveryFulfillModesEnum;
+import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.PaymentModesEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
@@ -240,7 +240,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			validationResult = paymentValidator.validateOnEnter(redirectAttributes);
 		}
-		if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
+		if (null == redirectAttributes)
+		{
+			return MarketplacecheckoutaddonConstants.REDIRECTTOPAYMENT + "?value=" + guid;
+		}
+		else if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
 		{
 			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 		}
@@ -271,7 +275,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				final CartModel cartModel = getCartService().getSessionCart();
 
 				// TPR-429 START
-				
+
 				final String checkoutSellerID = populateCheckoutSellers(cartData);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 				// TPR-429 END
@@ -2442,7 +2446,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * @param paymentForm
 	 * @param model
 	 * @return String
-	 * @throws CMSItemNotFoundException
+	 * @throws CMSItemNotFoundExceptionr
 	 * @throws InvalidCartException
 	 *
 	 */
@@ -3423,6 +3427,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
 			orderId = "JUSPAY_CONN_ERROR";
+			//to be check
+			return MarketplacecheckoutaddonConstants.REDIRECTTOPAYMENT;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -4172,24 +4178,24 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	}
 
 	//TPR-429 change
-		public static String populateCheckoutSellers(final CartData cartData)
+	public static String populateCheckoutSellers(final CartData cartData)
+	{
+		String cartLevelSellerID = null;
+		final List<OrderEntryData> sellerList = cartData.getEntries();
+		for (final OrderEntryData seller : sellerList)
 		{
-			String cartLevelSellerID = null;
-			final List<OrderEntryData> sellerList = cartData.getEntries();
-			for (final OrderEntryData seller : sellerList)
+			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+			if (cartLevelSellerID != null)
 			{
-				final String sellerID = seller.getSelectedSellerInformation().getSellerID();
-				if (cartLevelSellerID != null)
-				{
-					cartLevelSellerID += "_" + sellerID;
-				}
-				else
-				{
-					cartLevelSellerID = sellerID;
-				}
+				cartLevelSellerID += "_" + sellerID;
 			}
-			return cartLevelSellerID;
+			else
+			{
+				cartLevelSellerID = sellerID;
+			}
 		}
+		return cartLevelSellerID;
+	}
 
 
 
