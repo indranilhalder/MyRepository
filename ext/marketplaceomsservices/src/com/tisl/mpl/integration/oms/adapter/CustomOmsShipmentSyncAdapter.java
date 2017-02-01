@@ -1057,8 +1057,8 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	{
       LOG.info(" old awbSecondary status "+oldAwbSecondaryStatus+" and new awbSecondary status"+line.getAwbSecondaryStatus()+" for order line id"+line.getOrderLineId()); 
 		if (!line.getAwbSecondaryStatus().equalsIgnoreCase(oldAwbSecondaryStatus)
-				&& MarketplacecommerceservicesConstants.ADDRESS_ISSUE.equalsIgnoreCase(line.getAwbSecondaryStatus())
-				|| MarketplacecommerceservicesConstants.OFD.equalsIgnoreCase(line.getAwbSecondaryStatus()))
+				&& (MarketplacecommerceservicesConstants.ADDRESS_ISSUE.equalsIgnoreCase(line.getAwbSecondaryStatus())
+				|| MarketplacecommerceservicesConstants.OFD.equalsIgnoreCase(line.getAwbSecondaryStatus())))
 		{
 			LOG.info(" For "+ line.getAwbSecondaryStatus()+" old awbSecondary status  and new awbSecondary status are different for order line id"+line.getOrderLineId()); 
 			SendNotificationSecondaryStatusEvent sendNotificationSecondaryStatusEvent = new SendNotificationSecondaryStatusEvent(
@@ -1066,13 +1066,13 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 			eventService.publishEvent(sendNotificationSecondaryStatusEvent);
 		}
 		else if (!line.getAwbSecondaryStatus().equalsIgnoreCase(oldAwbSecondaryStatus)
-				&& MarketplacecommerceservicesConstants.MIS_ROUTE.equalsIgnoreCase(line.getAwbSecondaryStatus())
-				|| MarketplacecommerceservicesConstants.RTO_INITIATED.equalsIgnoreCase(line.getAwbSecondaryStatus()))
+				&& (MarketplacecommerceservicesConstants.MIS_ROUTE.equalsIgnoreCase(line.getAwbSecondaryStatus())
+				|| MarketplacecommerceservicesConstants.RTO_INITIATED.equalsIgnoreCase(line.getAwbSecondaryStatus())))
 		{
 			LOG.info(" For "+ line.getAwbSecondaryStatus()+" old awbSecondary status  and new awbSecondary status are different for order line id"+line.getOrderLineId()); 
 			 sendSecondarySms(line, orderModel);
 		}
-		LOG.info("AwbSecondaryStatus:::" + line.getAwbSecondaryStatus());
+		LOG.info("AwbSecondaryStatus:::" + line.getAwbSecondaryStatus()+"Order Line ID "+line.getOrderLineId());
 	}
 	
 	

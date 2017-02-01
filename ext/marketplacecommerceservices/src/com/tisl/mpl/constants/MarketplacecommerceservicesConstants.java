@@ -568,7 +568,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_MESSAGE_DISPATCH = "Your order of {0},  items in order no.{1} has been dispatched throught Blue Dart with AWB Number: {2} . We will try have it delivered to you within the next 2-4 days.";
 	public static final String SMS_MESSAGE_DELIVERED = "Good news, everyone!  Your {0} {1}, was successfully delivered. We had tons of fun serving you. Hope you're happy with your CAMEL as well";
 	public static final String SMS_MESSAGE_RTO_INITIATED ="We are  initiated RTO for your shipment. If you want delivery then let us know within 24 hr";
-	public static final String SMS_MESSAGE_MIS_ROUTE="Hi! Your order of item name{0} etc% items in order no. {1} has been delay due to mis route. We deeply regret the inconvenience. ";
+	public static final String SMS_MESSAGE_MIS_ROUTE="Hi! Your order of item name{0} etc items in order no. {1} has been delay due to mis route. We deeply regret the inconvenience. ";
 	public static final int MAX_PAGE_LIMIT = 100;
 
 	public static final String SNS_CATEGORY = "snsCategory";
