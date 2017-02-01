@@ -275,7 +275,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -898,7 +898,20 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			}
 			//End Code change for INC_11931
 
-			if (StringUtils.isNotEmpty(knowMoreSec) && StringUtils.isNotEmpty(returnWindow) && StringUtils.isNotEmpty(knowMoreTh))
+			if (productModel.getLuxIndicator() != null
+					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(MarketplaceCoreConstants.LUXURY))
+			{
+				if (StringUtils.isNotEmpty(knowMoreSecLux) && StringUtils.isNotEmpty(returnWindow)
+						&& StringUtils.isNotEmpty(knowMoreThLux))
+				{
+					knowMoreItem = new KnowMoreDTO();
+					knowMoreItem.setKnowMoreItem(knowMoreSecLux + MarketplacecommerceservicesConstants.SPACE + returnWindow
+							+ MarketplacecommerceservicesConstants.SPACE + knowMoreThLux);
+					knowMoreList.add(knowMoreItem);
+				}
+			}
+			else if (StringUtils.isNotEmpty(knowMoreSec) && StringUtils.isNotEmpty(returnWindow)
+					&& StringUtils.isNotEmpty(knowMoreTh))
 			{
 				knowMoreItem = new KnowMoreDTO();
 				knowMoreItem.setKnowMoreItem(knowMoreSec + MarketplacecommerceservicesConstants.SPACE + returnWindow
