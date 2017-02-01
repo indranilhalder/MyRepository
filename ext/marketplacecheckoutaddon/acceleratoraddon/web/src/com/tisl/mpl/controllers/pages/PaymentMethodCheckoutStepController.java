@@ -240,7 +240,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			validationResult = paymentValidator.validateOnEnter(redirectAttributes);
 		}
-		if (null == redirectAttributes)
+
+		if (null == redirectAttributes.toString() || StringUtils.isEmpty(redirectAttributes.toString())
+				|| redirectAttributes.toString().equals("{}"))
 		{
 			return MarketplacecheckoutaddonConstants.REDIRECTTOPAYMENT + "?value=" + guid;
 		}
