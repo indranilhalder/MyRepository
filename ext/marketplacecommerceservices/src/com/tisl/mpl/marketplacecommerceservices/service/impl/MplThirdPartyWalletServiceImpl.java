@@ -236,7 +236,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 			pendingOrders = mplProcessOrderDao.getPendingOrRefundInitiatedOrders(OrderStatus.PAYMENT_PENDING.toString(),
 					OrderStatus.REFUND_INITIATED.toString());
 			Date orderTATForTimeout = new Date();
-			boolean isPayment = false;
+			boolean isPayment = true;
 			boolean isReturn = false;
 			for (final OrderModel order : pendingOrders)
 			{
@@ -306,9 +306,10 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 							//refund flow handling
 							if (CollectionUtils.isNotEmpty(entryList) && OrderStatus.REFUND_INITIATED.equals(order.getStatus())
 									&& !auditModelData.getIsExpired().booleanValue() && new Date().before(orderTATForTimeout))
-							{
-
-								if (CollectionUtils.isNotEmpty(order.getPaymentTransactions()))
+							{ 								
+                              			
+         
+			                                                            if (CollectionUtils.isNotEmpty(order.getPaymentTransactions()))
 								{
 									final PaymentTransactionModel paymentTransactionModel = order.getPaymentTransactions().get(0);
 									for (final PaymentTransactionEntryModel trans : paymentTransactionModel.getEntries())
