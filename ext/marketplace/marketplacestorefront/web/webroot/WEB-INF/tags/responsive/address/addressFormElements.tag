@@ -444,8 +444,11 @@ $(document).ready(function(){
 				}else{
 					$(".address_landmarks").empty();
 					changeFuncLandMark("");
-					$(".address_townCity").val('');
-					$(".address_states,#statesReadOnly").attr('readonly',false).prop("value","");
+					$(".address_states,#statesReadOnly,.address_townCity").attr('readonly',false).prop("value","");
+					$(".mainDrop").show();
+					$(".mainDrop select").prop("disabled",false);
+					$(".stateInput input").prop("disabled","disabled");
+					$(".dupDisplay").hide();
 				}
 		});
 
