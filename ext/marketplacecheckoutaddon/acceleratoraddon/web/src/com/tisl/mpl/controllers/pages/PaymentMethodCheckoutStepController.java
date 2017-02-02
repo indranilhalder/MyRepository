@@ -241,14 +241,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			validationResult = paymentValidator.validateOnEnter(redirectAttributes);
 		}
 
-		//		if (StringUtils.isNotEmpty(guid)
-		//				&& (null == redirectAttributes.toString() || StringUtils.isEmpty(redirectAttributes.toString()) || redirectAttributes
-		//						.toString().equals("{}")))
-		//		{
-		//return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.RETURNTOPAYMENTPAGE + "?value="
-		//		+ guid;
-		//		}
-		//else
 		if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
 		{
 			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
@@ -4171,7 +4163,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
