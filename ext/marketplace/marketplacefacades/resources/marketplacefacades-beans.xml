@@ -956,6 +956,7 @@
 		<property name="returnStatus" type="java.lang.Boolean"></property>
 	</bean>
 	<!-- Thread Dump CMS changes  -->
+	
 	<bean class="de.hybris.platform.commercefacades.component.data.CMSSubbrandData">
 		<property name="subBrandName" type="String"/>
 		<property name="subBrandUrl" type="String"/>

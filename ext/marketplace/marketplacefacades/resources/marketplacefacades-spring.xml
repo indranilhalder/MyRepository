@@ -1742,6 +1742,6 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="imageConverter" ref="imageConverter"/>
 		<property name="categoryModelUrlResolver" ref="categoryModelUrlResolver"/>
 	</bean>
-	
+	 
 
 </beans>
