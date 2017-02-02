@@ -6,6 +6,8 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.cronjob.model.CronJobModel;
+import de.hybris.platform.cronjob.model.TriggerModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
@@ -13,6 +15,8 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.SearchResult;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -30,6 +34,7 @@ import org.springframework.stereotype.Component;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.NPSMailerModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao;
+import com.tisl.mpl.marketplacecommerceservices.service.FetchSalesOrderService;
 import com.tisl.mpl.model.MplConfigurationModel;
 
 
@@ -65,6 +70,8 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
+	@Autowired
+	private FetchSalesOrderService fetchSalesOrderService;
 
 
 
@@ -227,18 +234,80 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	public Map<OrderModel, AbstractOrderEntryModel> fetchOrderDetailsforDeliveryMail()
 	{
 		final Map<OrderModel, AbstractOrderEntryModel> orderWithSingleEntry = new HashMap<OrderModel, AbstractOrderEntryModel>();
+		String queryString = null;
+		FlexibleSearchQuery query = null;
+		final String SPACE = " ";
 		try
 		{
-			final String queryString = "SELECT {po.pk},{oe.pk},{po.user} FROM  {" + ConsignmentModel._TYPECODE + " AS c JOIN "
-					+ ConsignmentEntryModel._TYPECODE + " " + "AS ce ON {ce.consignment} = {c.PK} JOIN"
-					+ " ConsignmentStatus AS cs ON {c.status} = {cs.PK} JOIN " + AbstractOrderEntryModel._TYPECODE
-					+ " AS oe ON {ce.orderentry}= {oe.PK} JOIN " + OrderModel._TYPECODE + " AS co  ON {c.order}={co.PK} JOIN "
-					+ OrderModel._TYPECODE + " AS po  ON {co.parentreference} = {po.PK} LEFT JOIN " + NPSMailerModel._TYPECODE
-					+ " AS nps ON {po.pk}={nps.parentOrderNo}} " + "WHERE " /*
-																							   * + "{c.deliveryDate}  BETWEEN " +
-																							   * "(sysdate-1) AND (sysdate) AND "
-																							   */
-					+ "{cs.code}='DELIVERED' AND {nps.parentOrderNo} IS NULL";
+			final TriggerModel tModel = fetchSalesOrderService.getCronDetailsCode("NpsMailerJob");
+
+
+			final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			final String currentDate = dateFormat.format(new Date());
+			final LocalDate date = LocalDate.now().minusDays(1);
+			final String beforeDate = date.toString();
+			final StringBuilder sb = new StringBuilder(currentDate);
+			final String strDateFormatTweleve = "12:00:00.0";
+			sb.append(SPACE).append(strDateFormatTweleve);
+			//final SimpleDateFormat dateFormatOne = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			//final Date currentDateTweleve = dateFormatOne.parse(sb.toString());
+			final StringBuilder sbOne = new StringBuilder(currentDate);
+			final String strDateFormatFour = "16:00:00.0";
+			sbOne.append(SPACE).append(strDateFormatFour);
+			//final Date currentDateSixteen = dateFormatOne.parse(sbOne.toString());
+
+			final Integer tweleve = Integer.valueOf("12");
+			final Integer sixteen = Integer.valueOf("16");
+
+			final StringBuilder sbTwo = new StringBuilder(beforeDate);
+			sbTwo.append(SPACE).append(strDateFormatTweleve);
+			//	final Date beforeDateTweleve = dateFormatOne.parse(sbTwo.toString());
+
+			final String strDateFormatFive = "11:59:59.0";
+			final StringBuilder sbThree = new StringBuilder(currentDate);
+			sbThree.append(SPACE).append(strDateFormatFive);
+			//final Date currentDateTweleveFive = dateFormatOne.parse(sbThree.toString());
+
+
+
+			if (tModel.getHour().equals(tweleve))
+			{
+				queryString = "SELECT {po.pk},{oe.pk},{po.user} FROM  {" + ConsignmentModel._TYPECODE + " AS c JOIN "
+						+ ConsignmentEntryModel._TYPECODE + " " + "AS ce ON {ce.consignment} = {c.PK} JOIN"
+						+ " ConsignmentStatus AS cs ON {c.status} = {cs.PK} JOIN " + AbstractOrderEntryModel._TYPECODE
+						+ " AS oe ON {ce.orderentry}= {oe.PK} JOIN " + OrderModel._TYPECODE + " AS co  ON {c.order}={co.PK} JOIN "
+						+ OrderModel._TYPECODE + " AS po  ON {co.parentreference} = {po.PK} LEFT JOIN " + NPSMailerModel._TYPECODE
+						+ " AS nps ON {po.pk}={nps.parentOrderNo}} " + "WHERE " /*
+																								   * + "{c.deliveryDate}  BETWEEN " +
+																								   * "?beforeTime AND ?aftertime AND "
+																								   */
+
+						+ "{cs.code}='DELIVERED'";
+
+				query = new FlexibleSearchQuery(queryString);
+				//query.addQueryParameter("beforeTime", beforeDateTweleve);
+				//query.addQueryParameter("aftertime", currentDateTweleveFive);
+
+			}
+			else if (tModel.getHour().equals(sixteen))
+			{
+				queryString = "SELECT {po.pk},{oe.pk},{po.user} FROM  {" + ConsignmentModel._TYPECODE + " AS c JOIN "
+						+ ConsignmentEntryModel._TYPECODE + " " + "AS ce ON {ce.consignment} = {c.PK} JOIN"
+						+ " ConsignmentStatus AS cs ON {c.status} = {cs.PK} JOIN " + AbstractOrderEntryModel._TYPECODE
+						+ " AS oe ON {ce.orderentry}= {oe.PK} JOIN " + OrderModel._TYPECODE + " AS co  ON {c.order}={co.PK} JOIN "
+						+ OrderModel._TYPECODE + " AS po  ON {co.parentreference} = {po.PK} LEFT JOIN " + NPSMailerModel._TYPECODE
+						+ " AS nps ON {po.pk}={nps.parentOrderNo}} " + "WHERE " /*
+																								   * + "{c.deliveryDate}  BETWEEN " +
+																								   * "?jobTime AND ?currenttime AND "
+																								   */
+
+						+ "{cs.code}='DELIVERED'";
+
+				query = new FlexibleSearchQuery(queryString);
+				//query.addQueryParameter("jobTime", currentDateTweleve);
+				//query.addQueryParameter("currenttime", currentDateSixteen);
+			}
+
 
 			//old script
 			//final String queryString = "select {po.pk},{oe.pk},{oe.orderlineid} from {" + ConsignmentModel._TYPECODE + " as c JOIN "
@@ -246,7 +315,8 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 			//	+ AbstractOrderEntryModel._TYPECODE + " as oe ON {ce.orderentry}= {oe.PK}" + " JOIN " + OrderModel._TYPECODE
 			//	+ " as co  ON {c.order}={co.PK}" + " JOIN " + OrderModel._TYPECODE + " as po  ON {co.parentreference} = {po.PK}} ";
 
-			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+
+			//final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.setResultClassList(Arrays.asList(OrderModel.class, AbstractOrderEntryModel.class, CustomerModel.class));
 
 			final SearchResult<List<Object>> result = flexibleSearchService.search(query);
@@ -271,7 +341,6 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 		return orderWithSingleEntry;
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -491,6 +560,18 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 			}
 		}
 		return ordersEmailSntTodayMap;
+
+	}
+
+	@Override
+	public TriggerModel getCronDetailsCode(final String code)
+	{
+
+		final String queryString = "SELECT {p.pk} FROM {" + TriggerModel._TYPECODE + " AS p JOIN " + CronJobModel._TYPECODE + " "
+				+ "AS c ON {p.cronJob} = {c.pk}}" + "WHERE" + "{c.code} =?code";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("code", code);
+		return flexibleSearchService.<TriggerModel> searchUnique(query);
 
 	}
 

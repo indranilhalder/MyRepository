@@ -5,6 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.cronjob.model.TriggerModel;
 
 import java.util.Date;
 import java.util.List;
@@ -46,4 +47,6 @@ public interface FetchSalesOrderService
 	public List<Map> getOrderModelTransactionId(Set<String> parentOrderIds);
 
 	public Map<String, String> fetchOrderIdsToday();
+
+	public TriggerModel getCronDetailsCode(String code);
 }
