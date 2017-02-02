@@ -580,9 +580,18 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			LOG.warn("Order model total price " + orderModel.getTotalPrice() + "order status response amount"
 					+ orderStatusResponse.getAmount());
 			//SprintPaymentFixes:- Added:- CollectionUtils.isEmpty(orderModel.getPaymentTransactions()
-			if (orderModel.getTotalPrice().equals(orderStatusResponse.getAmount())
-					&& orderStatusResponse.getAmount().doubleValue() > 0
-					&& CollectionUtils.isEmpty(orderModel.getPaymentTransactions()))
+			boolean faliurFlag = false;
+			final List<PaymentTransactionModel> payTranModelList = orderModel.getPaymentTransactions();
+			for (final PaymentTransactionModel payTranModel : payTranModelList)
+			{
+				if (payTranModel.getStatus().equalsIgnoreCase("success"))
+				{
+					faliurFlag = true;
+					break;
+				}
+			}
+			if (!faliurFlag && orderModel.getTotalPrice().equals(orderStatusResponse.getAmount())
+					&& orderStatusResponse.getAmount().doubleValue() > 0)
 			{
 				getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel);
 			}
