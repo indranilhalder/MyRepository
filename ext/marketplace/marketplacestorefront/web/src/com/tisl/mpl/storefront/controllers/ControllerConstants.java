@@ -263,6 +263,19 @@ public interface ControllerConstants
 
 			}
 
+			interface Pancard
+			{
+
+				String PanCardDetail = "pages/pancard/pancardupload";
+				String panCardUploadSuccess = "pages/pancard/pancarduploadsuccess";
+				String panCardUploadUpdate = "pages/pancard/pancarduploadupdate";
+				String panCardApproved = "pages/pancard/pancardapproved";
+				String panCardUploadDetailsError = "pages/pancard/pancarduploaddetailserror";
+
+
+
+			}
+
 		}
 
 		interface Fragments
