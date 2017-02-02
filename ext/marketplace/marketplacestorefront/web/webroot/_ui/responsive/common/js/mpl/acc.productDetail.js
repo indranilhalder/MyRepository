@@ -1502,11 +1502,13 @@ $( document ).ready(function() {
 			
 			/* PRICE BREAKUP STARTS HERE */
 			
-			/*$("#showPrice").show();*/
+						
 			if(data['displayconfigattr'] == "Yes"){
 				$("#showPrice").show();
+				var priceBreakUp= '<p>Price Breakup</p>'
+				$("#show").append( priceBreakUp);
 			}else if(data['displayconfigattr'] == "No"){
-				$("#showPrice").hide();
+				$("#showPrice").hide();				
 			}else{
 				$("#showPrice").hide();
 			}
@@ -3055,6 +3057,11 @@ function loadDefaultWishListName_SizeGuide() {
 			}
 
 		});*/
+/*		price breakup in PDP of fashion jewellery
+*/		
+		$("#show").click(function() {
+			$("#showPriceBreakup").slideToggle("fast");
+		});
 	});
 	/*Wishlist In PDP changes*/
 	function getLastModifiedWishlist(ussidValue) {
