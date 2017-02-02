@@ -241,14 +241,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			validationResult = paymentValidator.validateOnEnter(redirectAttributes);
 		}
 
-		if (StringUtils.isNotEmpty(guid)
-				&& (null == redirectAttributes.toString() || StringUtils.isEmpty(redirectAttributes.toString()) || redirectAttributes
-						.toString().equals("{}")))
-		{
-			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.RETURNTOPAYMENTPAGE + "?value="
-					+ guid;
-		}
-		else if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
+		//		if (StringUtils.isNotEmpty(guid)
+		//				&& (null == redirectAttributes.toString() || StringUtils.isEmpty(redirectAttributes.toString()) || redirectAttributes
+		//						.toString().equals("{}")))
+		//		{
+		//return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.RETURNTOPAYMENTPAGE + "?value="
+		//		+ guid;
+		//		}
+		//else
+		if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
 		{
 			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 		}
@@ -338,7 +339,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
 				// TPR-429 START
-				final String checkoutSellerID = populateCheckoutSellers(cartData);
+				final String checkoutSellerID = populateCheckoutSellersForOrder(orderData);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 				// TPR-429 END
 				//Getting Payment modes
@@ -3432,7 +3433,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
 			orderId = "JUSPAY_CONN_ERROR";
 			//to be check
-			return MarketplacecheckoutaddonConstants.REDIRECTTOPAYMENT;
+			//return MarketplacecheckoutaddonConstants.REDIRECTTOPAYMENT;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -4201,6 +4202,26 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return cartLevelSellerID;
 	}
 
+
+	//TPR-429 change:- PaymentPage redirect fix
+	public static String populateCheckoutSellersForOrder(final OrderData orderData)
+	{
+		String cartLevelSellerID = null;
+		final List<OrderEntryData> sellerList = orderData.getEntries();
+		for (final OrderEntryData seller : sellerList)
+		{
+			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+			if (cartLevelSellerID != null)
+			{
+				cartLevelSellerID += "_" + sellerID;
+			}
+			else
+			{
+				cartLevelSellerID = sellerID;
+			}
+		}
+		return cartLevelSellerID;
+	}
 
 
 }
