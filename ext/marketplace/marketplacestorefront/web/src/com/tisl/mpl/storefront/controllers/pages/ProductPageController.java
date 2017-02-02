@@ -212,6 +212,7 @@ public class ProductPageController extends MidPageController
 	/**
 	 * Added for fine jewellery
 	 */
+	private static final String FASHIONJEWELLERY = "fashionjewellery";
 	private static final String IMG_COUNT = "imgCount";
 
 	private static final String SKU_ID_FOR_COD = "skuIdForCod";
@@ -1328,7 +1329,8 @@ public class ProductPageController extends MidPageController
 		final StringBuilder allVariants = new StringBuilder();
 		final ProductModel productModel = productService.getProductForCode(productCode);
 		ProductData productData = null;
-		if (!ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase("FineJewellery"))
+		if (!ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase("FineJewellery")
+				|| !ModelAttributetConstants.FASHIONJEWELLERY.equalsIgnoreCase("FashionJewellery"))
 		{
 			productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
@@ -1641,7 +1643,8 @@ public class ProductPageController extends MidPageController
 			if (ELECTRONICS.equalsIgnoreCase(productModel.getProductCategoryType())
 					|| WATCHES.equalsIgnoreCase(productModel.getProductCategoryType())
 					|| TRAVELANDLUGGAGE.equalsIgnoreCase(productModel.getProductCategoryType())
-					|| FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+					|| FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType())
+					|| FASHIONJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
 
 			{
 				productDetailsHelper.groupGlassificationData(productData);
@@ -1836,7 +1839,8 @@ public class ProductPageController extends MidPageController
 							//apparel
 							final FeatureValueData featureValueData = featureValueList.get(0);
 							if ((ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
-									|| (ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())))
+									|| (ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory()))
+									|| (ModelAttributetConstants.FASHIONJEWELLERY.equalsIgnoreCase(productData.getRootCategory())))
 
 							{
 
@@ -1942,7 +1946,8 @@ public class ProductPageController extends MidPageController
 			//model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
 			if (ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory())
 					|| ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())
-					|| ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
+					|| ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory())
+					|| ModelAttributetConstants.FASHIONJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
 			{
 				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
 

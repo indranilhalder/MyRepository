@@ -260,11 +260,12 @@ share mobile -->
 <c:if test="${showSizeGuideForFA eq true}">
 <div class="size" style="font-size: 12px;">
 
-
+			
 		<span>
 			<spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 		</span>
 		<!-- Size guide Pop-up -->
+		
 		<a class="size-guide" href="${sizeGuideUrl}" role="button"
 			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
 				code="product.variants.size.guide" />
@@ -273,7 +274,7 @@ share mobile -->
 		<!-- Added for PDP Size ChartChange -->
 		
 		<c:choose>                                              
-			    <c:when test="${product.rootCategory!='FineJewellery'}">
+			    <c:when test="${ product.rootCategory!='FineJewellery'}">
 		<ul id="variant" class="variant-select">
 			<%-- <c:choose>
 		<select id="variant" class="variant-select">
