@@ -86,6 +86,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
+
 import com.granule.json.JSONObject;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.tisl.mpl.checkout.form.DeliveryMethodEntry;
@@ -1994,8 +1996,13 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						cartEntryModel.setTimeSlotTo(timeSlots[1].trim());
 						if (null != deliverySlotCost && !deliverySlotCost.isEmpty() && !deliverySlotCost.matches("0"))
 						{
-							cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(deliverySlotCost));
-							cartEntryModel.setCurrDelCharge(Double.valueOf(deliverySlotCost));
+							cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(deliverySlotCost));						
+							if (cartModel.getTotalPriceWithConv() != null && StringUtils.isNotEmpty(deliverySlotCost))
+							{
+								cartModel.setTotalPriceWithConv(new Double(cartModel.getTotalPriceWithConv().doubleValue()
+										+ Double.valueOf(deliverySlotCost).doubleValue()));
+							}
+							
 						}
 					}
 				}
@@ -2045,7 +2052,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					cartEntryModel.setTimeSlotFrom("");
 					cartEntryModel.setTimeSlotTo("");
 					cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
-					cartEntryModel.setCurrDelCharge(Double.valueOf(0));
+					
 				}
 			}
 		}
@@ -2061,6 +2068,18 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			cartModel.setDeliveryCost(finalDeliveryCost);
 			totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() - deliverySlotCharge.doubleValue());
 			cartModel.setTotalPrice(totalPriceAfterDeliveryCost);
+			try
+			{
+				if (cartModel.getTotalPriceWithConv() != null && StringUtils.isNotEmpty(deliverySlotCost))
+				{
+					cartModel.setTotalPriceWithConv(new Double(cartModel.getTotalPriceWithConv().doubleValue()
+							- Double.valueOf(deliverySlotCost).doubleValue()));
+				}
+			}
+			catch (Exception exception)
+			{
+				LOG.error("Exception rasing while Convert prise amount  "+exception.getMessage());
+			}
 			modelService.save(cartModel);
 			modelService.refresh(cartModel);
 			LOG.debug("Cart Moel Saved Successfully.....");

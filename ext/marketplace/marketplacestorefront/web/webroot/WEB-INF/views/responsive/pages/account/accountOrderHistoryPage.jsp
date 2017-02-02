@@ -253,11 +253,19 @@
 															<c:choose>
 																<c:when test="${entry.currDelCharge.value=='0.0'}">
 																	<%-- <spring:theme code="order.free"  /> --%>
+																	
+															      <c:choose>
+																	<c:when test="${not empty entry.scheduledDeliveryCharge}">
+																	    ${entry.scheduledDeliveryCharge}
+																	</c:when>
+																	<c:otherwise>
 																	<ycommerce:testId
 																		code="orderDetails_productTotalPrice_label">
 																		<format:price priceData="${entry.currDelCharge}"
 																			displayFreeForZero="true" />
 																	</ycommerce:testId>
+																    </c:otherwise>
+																</c:choose>
 																</c:when>
 																<c:otherwise>
 																	<format:price priceData="${entry.currDelCharge}" />

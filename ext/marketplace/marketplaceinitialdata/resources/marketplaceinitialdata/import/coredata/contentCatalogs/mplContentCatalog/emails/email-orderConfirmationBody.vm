@@ -170,7 +170,12 @@
             
             <td align="left" bgcolor="#fbfbfb">
                <p align="center"><font size="2" color="#000000" >
-                  $entry.currDelCharge </font>
+                 #if($entry.currDelCharge &&  $entry.currDelCharge > 0.0)
+                     $entry.currDelCharge </font>
+                 #elseif ($entry.scheduledDeliveryCharge)
+                 $entry.scheduledDeliveryCharge
+                 </font>
+                  #end
                </p>
             </td>
 			

@@ -194,10 +194,14 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 
 					}
 					
-					if(StringUtils.isNotEmpty(line.getAwbSecondaryStatus())){
-						LOG.debug(" AwbSecondaryStatus for transaction id :"+line.getAwbSecondaryStatus());
-						LOG.debug("sending AwbSecondaryStatus message for transaction id :"+line.getOrderLineId());
-						sendNotification(line,existingConsignmentModel.getAwbSecondaryStatus(),orderModel);
+					if (StringUtils.isNotEmpty(line.getAwbSecondaryStatus()) && StringUtils.isNotEmpty(line.getCommunication()))
+					{
+						LOG.debug(" AwbSecondaryStatus for transaction id :" + line.getAwbSecondaryStatus());
+						if (line.getCommunication().equalsIgnoreCase("Y"))
+						{
+							sendNotification(line, existingConsignmentModel.getAwbSecondaryStatus(), orderModel);
+						}
+					
 					}
 				
 					existingConsignmentModel.setAwbSecondaryStatus(line.getAwbSecondaryStatus());

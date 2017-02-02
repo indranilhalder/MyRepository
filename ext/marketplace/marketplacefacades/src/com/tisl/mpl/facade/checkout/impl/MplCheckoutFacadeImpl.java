@@ -485,7 +485,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			   	      }else{
 			   	         finalDeliveryCost=Double.valueOf(0.0);
 			   	      }
-			   	  cartEntryModel.setCurrDelCharge(finalDeliveryCost);
 			     }else{
 			   	  if(cartData.getDeliveryCost().getValue().doubleValue()==0.0){
 			   	  for(OrderEntryData cardEntryData:cartData.getEntries()){
