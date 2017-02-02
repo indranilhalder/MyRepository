@@ -249,24 +249,24 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 			final StringBuilder sb = new StringBuilder(currentDate);
 			final String strDateFormatTweleve = "12:00:00.0";
 			sb.append(SPACE).append(strDateFormatTweleve);
-			//final SimpleDateFormat dateFormatOne = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-			//final Date currentDateTweleve = dateFormatOne.parse(sb.toString());
+			final SimpleDateFormat dateFormatOne = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			final Date currentDateTweleve = dateFormatOne.parse(sb.toString());
 			final StringBuilder sbOne = new StringBuilder(currentDate);
 			final String strDateFormatFour = "16:00:00.0";
 			sbOne.append(SPACE).append(strDateFormatFour);
-			//final Date currentDateSixteen = dateFormatOne.parse(sbOne.toString());
+			final Date currentDateSixteen = dateFormatOne.parse(sbOne.toString());
 
 			final Integer tweleve = Integer.valueOf("12");
 			final Integer sixteen = Integer.valueOf("16");
 
 			final StringBuilder sbTwo = new StringBuilder(beforeDate);
 			sbTwo.append(SPACE).append(strDateFormatTweleve);
-			//	final Date beforeDateTweleve = dateFormatOne.parse(sbTwo.toString());
+			final Date beforeDateTweleve = dateFormatOne.parse(sbTwo.toString());
 
 			final String strDateFormatFive = "11:59:59.0";
 			final StringBuilder sbThree = new StringBuilder(currentDate);
 			sbThree.append(SPACE).append(strDateFormatFive);
-			//final Date currentDateTweleveFive = dateFormatOne.parse(sbThree.toString());
+			final Date currentDateTweleveFive = dateFormatOne.parse(sbThree.toString());
 
 
 
@@ -277,16 +277,15 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 						+ " ConsignmentStatus AS cs ON {c.status} = {cs.PK} JOIN " + AbstractOrderEntryModel._TYPECODE
 						+ " AS oe ON {ce.orderentry}= {oe.PK} JOIN " + OrderModel._TYPECODE + " AS co  ON {c.order}={co.PK} JOIN "
 						+ OrderModel._TYPECODE + " AS po  ON {co.parentreference} = {po.PK} LEFT JOIN " + NPSMailerModel._TYPECODE
-						+ " AS nps ON {po.pk}={nps.parentOrderNo}} " + "WHERE " /*
-																								   * + "{c.deliveryDate}  BETWEEN " +
-																								   * "?beforeTime AND ?aftertime AND "
-																								   */
+						+ " AS nps ON {po.pk}={nps.parentOrderNo}} " + "WHERE " + "{c.deliveryDate}  BETWEEN "
+						+ "?beforeTime AND ?aftertime AND "
+
 
 						+ "{cs.code}='DELIVERED'";
 
 				query = new FlexibleSearchQuery(queryString);
-				//query.addQueryParameter("beforeTime", beforeDateTweleve);
-				//query.addQueryParameter("aftertime", currentDateTweleveFive);
+				query.addQueryParameter("beforeTime", beforeDateTweleve);
+				query.addQueryParameter("aftertime", currentDateTweleveFive);
 
 			}
 			else if (tModel.getHour().equals(sixteen))
@@ -296,16 +295,15 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 						+ " ConsignmentStatus AS cs ON {c.status} = {cs.PK} JOIN " + AbstractOrderEntryModel._TYPECODE
 						+ " AS oe ON {ce.orderentry}= {oe.PK} JOIN " + OrderModel._TYPECODE + " AS co  ON {c.order}={co.PK} JOIN "
 						+ OrderModel._TYPECODE + " AS po  ON {co.parentreference} = {po.PK} LEFT JOIN " + NPSMailerModel._TYPECODE
-						+ " AS nps ON {po.pk}={nps.parentOrderNo}} " + "WHERE " /*
-																								   * + "{c.deliveryDate}  BETWEEN " +
-																								   * "?jobTime AND ?currenttime AND "
-																								   */
+						+ " AS nps ON {po.pk}={nps.parentOrderNo}} " + "WHERE " + "{c.deliveryDate}  BETWEEN "
+						+ "?jobTime AND ?currenttime AND "
+
 
 						+ "{cs.code}='DELIVERED'";
 
 				query = new FlexibleSearchQuery(queryString);
-				//query.addQueryParameter("jobTime", currentDateTweleve);
-				//query.addQueryParameter("currenttime", currentDateSixteen);
+				query.addQueryParameter("jobTime", currentDateTweleve);
+				query.addQueryParameter("currenttime", currentDateSixteen);
 			}
 
 
@@ -344,7 +342,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getTransactionIdCount(de.hybris.platform.core
 	 * .model.order.OrderModel)
