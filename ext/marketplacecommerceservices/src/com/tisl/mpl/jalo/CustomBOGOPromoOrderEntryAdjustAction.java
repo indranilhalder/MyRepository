@@ -44,7 +44,7 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotionAction#apply(de.hybris.platform.jalo.SessionContext)
 	 */
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,8 +66,8 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 		{
 			final double orderEntryAdjustment = getAmount(ctx).doubleValue();
 
-			//final double unitAdjustment = orderEntryAdjustment / orderEntry.getQuantity(ctx).longValue();
-			final double unitAdjustment = orderEntryAdjustment / getOrderEntryQuantity(ctx).longValue();
+			final double unitAdjustment = orderEntryAdjustment / orderEntry.getQuantity(ctx).longValue();
+			//final double unitAdjustment = orderEntryAdjustment / getOrderEntryQuantity(ctx).longValue();
 			final String code = getGuid(ctx);
 			final DiscountValue dv = new DiscountValue(code, -1.0D * unitAdjustment, true, order.getCurrency(ctx).getIsoCode(ctx));
 			insertFirstOrderEntryDiscountValue(ctx, orderEntry, dv);
@@ -135,6 +135,7 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 			int nonFreeCount = 0;
 			final String freeEntryUSSID = (String) orderEntry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID);
 			double amtTobeDeductedAtlineItemLevel = 0.00D;
+			int qCount = 0;
 
 			for (final PromotionOrderEntryConsumed consumedNonFree : nonFreeConsumedEntries)
 			{
@@ -150,71 +151,36 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 				}
 				else if (!freeItemsForCatBogo.containsKey(nonFreeEntryUSSID))
 				{
-					final double lineItemLevelPrice = nonFreeEntry.getTotalPriceAsPrimitive();
-					nonFreeEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE,
-							Double.valueOf(lineItemLevelPrice));
-					nonFreeEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, nonFreeEntry.getProduct()
-							.getDescription());
-					nonFreeEntry.setProperty(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, Integer.valueOf(nonFreeCount));
-					nonFreeEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS,
-							getAssociatedItem(nonFreeEntryUSSID, productAssociatedItemsMap, nonFreeEntry));
-					nonFreeEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
+					qCount = nonFreeCount;
+					setPrices(nonFreeEntry, amtTobeDeductedAtlineItemLevel, ctx);
+					setAssociatedItem(nonFreeEntryUSSID, productAssociatedItemsMap, nonFreeEntry, ctx);
+					setQcAndOthers(nonFreeEntry, ctx, qCount, productPromoCode);
 				}
 			}
 
 			if (isEntryFreeNonFreeBoth)
 			{
-				final double lineItemLevelPrice = orderEntry.getTotalPriceAsPrimitive();
 				amtTobeDeductedAtlineItemLevel = -1.0D * orderEntryAdjustment;
-				final double aportionedItemValue = lineItemLevelPrice - amtTobeDeductedAtlineItemLevel;
-				final double cartLevelDiscount = 0.00D;
-				final double netAmountAfterAllDisc = aportionedItemValue - cartLevelDiscount;
+				qCount = getOrderEntryQuantity(ctx).intValue() + nonFreeCount;
 
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE, Double.valueOf(lineItemLevelPrice));
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC,
-						Double.valueOf(amtTobeDeductedAtlineItemLevel));
-				orderEntry
-						.setProperty(ctx, MarketplacecommerceservicesConstants.NETSELLINGPRICE, Double.valueOf(aportionedItemValue));
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELDISC, Double.valueOf(cartLevelDiscount));
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC,
-						Double.valueOf(netAmountAfterAllDisc));
+				setPrices(orderEntry, amtTobeDeductedAtlineItemLevel, ctx);
+				setAssociatedItem(freeEntryUSSID, productAssociatedItemsMap, orderEntry, ctx);
+				setQcAndOthers(orderEntry, ctx, qCount, productPromoCode);
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ISBOGOAPPLIED, Boolean.TRUE);
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.FREECOUNT,
 						Integer.valueOf(getOrderEntryQuantity(ctx).intValue()));
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, orderEntry.getProduct()
-						.getDescription());
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT,
-						Integer.valueOf(getOrderEntryQuantity(ctx).intValue() + nonFreeCount));
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS,
-						getAssociatedItem(freeEntryUSSID, productAssociatedItemsMap, orderEntry));
 			}
 			else
 			{
-				final double lineItemLevelPrice = orderEntry.getTotalPriceAsPrimitive();
 				amtTobeDeductedAtlineItemLevel = -1.0D * orderEntryAdjustment;
-				final double aportionedItemValue = lineItemLevelPrice - amtTobeDeductedAtlineItemLevel;
-				final double cartLevelDiscount = 0.00D;
-				final double netAmountAfterAllDisc = aportionedItemValue - cartLevelDiscount;
+				qCount = getOrderEntryQuantity(ctx).intValue();
 
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE, Double.valueOf(lineItemLevelPrice));
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC,
-						Double.valueOf(amtTobeDeductedAtlineItemLevel));
-				orderEntry
-						.setProperty(ctx, MarketplacecommerceservicesConstants.NETSELLINGPRICE, Double.valueOf(aportionedItemValue));
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELDISC, Double.valueOf(cartLevelDiscount));
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC,
-						Double.valueOf(netAmountAfterAllDisc));
+				setPrices(orderEntry, amtTobeDeductedAtlineItemLevel, ctx);
+				setAssociatedItem(freeEntryUSSID, productAssociatedItemsMap, orderEntry, ctx);
+				setQcAndOthers(orderEntry, ctx, qCount, productPromoCode);
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ISBOGOAPPLIED, Boolean.TRUE);
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.FREECOUNT,
 						Integer.valueOf(getOrderEntryQuantity(ctx).intValue()));
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, orderEntry.getProduct()
-						.getDescription());
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT,
-						Integer.valueOf(getOrderEntryQuantity(ctx).intValue()));
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS,
-						getAssociatedItem(freeEntryUSSID, productAssociatedItemsMap, orderEntry));
 			}
 
 			needsCalc = true;
@@ -234,8 +200,8 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 		return needsCalc;
 	}
 
-	private List<String> getAssociatedItem(final String ussid, final Map<String, List<String>> productAssociatedItemsMap,
-			final AbstractOrderEntry entry)
+	private void setAssociatedItem(final String ussid, final Map<String, List<String>> productAssociatedItemsMap,
+			final AbstractOrderEntry entry, final SessionContext ctx)
 	{
 		List<String> associatedItemsList = new ArrayList<String>();
 		if (null != productAssociatedItemsMap && !productAssociatedItemsMap.isEmpty())
@@ -254,7 +220,30 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 			associatedItemsList.addAll(associatedItemsSet);
 		}
 
-		return associatedItemsList;
+		entry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, associatedItemsList);
+	}
+
+	private void setPrices(final AbstractOrderEntry entry, final double amtTobeDeductedAtlineItemLevel, final SessionContext ctx)
+	{
+		final double lineItemLevelPrice = entry.getTotalPriceAsPrimitive();
+		final double aportionedItemValue = lineItemLevelPrice - amtTobeDeductedAtlineItemLevel;
+		final double cartLevelDiscount = 0.00D;
+		final double netAmountAfterAllDisc = aportionedItemValue - cartLevelDiscount;
+
+		entry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE, Double.valueOf(lineItemLevelPrice));
+		entry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC,
+				Double.valueOf(amtTobeDeductedAtlineItemLevel));
+		entry.setProperty(ctx, MarketplacecommerceservicesConstants.NETSELLINGPRICE, Double.valueOf(aportionedItemValue));
+		entry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELDISC, Double.valueOf(cartLevelDiscount));
+		entry.setProperty(ctx, MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC, Double.valueOf(netAmountAfterAllDisc));
+	}
+
+	private void setQcAndOthers(final AbstractOrderEntry orderEntry, final SessionContext ctx, final int qCount,
+			final String productPromoCode)
+	{
+		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, orderEntry.getProduct().getDescription());
+		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
+		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, Integer.valueOf(qCount));
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////

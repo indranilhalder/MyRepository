@@ -1,6 +1,5 @@
 package com.tisl.mpl.jalo;
 
-import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -27,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -115,7 +115,8 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag) // if Restrictions return valid && Channel is valid
 			{
 				LOG.debug("Promotion Restriction and Channel Satisfied");
-				final Map<String, AbstractOrderEntry> validProductUssidMap = getValidProductList(cart, ctx);
+				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
+				final Map<String, AbstractOrderEntry> validProductUssidMap = getValidProductList(cart, ctx, allowedProductList);
 
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(ctx, validProductUssidMap))
 				{
@@ -135,7 +136,8 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 					 * totalEligibleProductPrice); promotionResults.addAll(promotionResultList); } } } else {
 					 */
 					final Double totalEligibleProductPrice = getTotalofEligibleProducts(validProductUssidMap);
-					promotionResults = promotionEvaluation(ctx, evaluationContext, validProductUssidMap, totalEligibleProductPrice);
+					promotionResults = promotionEvaluation(ctx, evaluationContext, validProductUssidMap, totalEligibleProductPrice,
+							allowedProductList);
 					//}
 				}
 
@@ -165,7 +167,7 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 	 */
 	private List<PromotionResult> promotionEvaluation(final SessionContext ctx,
 			final PromotionEvaluationContext evaluationContext, final Map<String, AbstractOrderEntry> validProductUssidMap,
-			final Double totalEligibleProductPrice)
+			final Double totalEligibleProductPrice, final List<Product> allowedProductList)
 	{
 
 		boolean flagForDeliveryModeRestrEval = false;
@@ -220,11 +222,11 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 			}
 
 			//getting eligible Product List from ussid map
-			final List<Product> eligibleProductList = new ArrayList<Product>();
-			for (final AbstractOrderEntry orderEntry : validProductUssidMap.values())
-			{
-				eligibleProductList.add(orderEntry.getProduct());
-			}
+			//			final List<Product> eligibleProductList = new ArrayList<Product>();
+			//			for (final AbstractOrderEntry orderEntry : validProductUssidMap.values())
+			//			{
+			//				eligibleProductList.add(orderEntry.getProduct());
+			//			}
 			final Map<String, Integer> qCount = new HashMap<String, Integer>();
 			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 			{
@@ -248,7 +250,7 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 			{
 				evaluationContext.startLoggingConsumed(this);
 				final AbstractOrderEntry entry = mapEntry.getValue();
-				final PromotionOrderView view = evaluationContext.createView(ctx, this, eligibleProductList);
+				final PromotionOrderView view = evaluationContext.createView(ctx, this, allowedProductList);
 				final PromotionOrderEntry viewEntry = view.peek(ctx);
 				final long quantityOfOrderEntry = viewEntry.getBaseOrderEntry().getQuantity(ctx).longValue();
 				LOG.debug("BaseOrderEntry" + quantityOfOrderEntry);
@@ -314,7 +316,8 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 	 * @param ctx
 	 * @return validProductList
 	 */
-	private Map<String, AbstractOrderEntry> getValidProductList(final AbstractOrder cart, final SessionContext ctx)
+	private Map<String, AbstractOrderEntry> getValidProductList(final AbstractOrder cart, final SessionContext ctx,
+			final List<Product> allowedProductList)
 	{
 		//final Map<String, Integer> validUssidList = new HashMap<String, Integer>();
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());
@@ -324,48 +327,71 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 			boolean sellerFlag = false;
 			boolean brandFlag = false;
 			String sellerID = MarketplacecommerceservicesConstants.EMPTY;
-			final List<Product> promotionProductList = new ArrayList<>(getProducts());
-			final List<Category> promotionCategoryList = new ArrayList<>(getCategories());
+			//final List<Product> promotionProductList = new ArrayList<>(getProducts());
+			//final List<Category> promotionCategoryList = new ArrayList<>(getCategories());
 			//int productQty = 0;
 			for (final AbstractOrderEntry entry : cart.getEntries())
 			{
-				boolean applyPromotion = false;
+				//final boolean applyPromotion = false;
 				final Product product = entry.getProduct();
+
+				//excluded product check
 				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList))
 				{
 					continue;
 				}
+
 				//checking product is a valid product for promotion
-				if (!promotionProductList.isEmpty())
+				if (CollectionUtils.isNotEmpty(allowedProductList) && allowedProductList.contains(product))
 				{
-					if (promotionProductList.contains(product))
-					{
-						applyPromotion = true;
-						productFlag = true;
-						brandFlag = true;
-						sellerFlag = getDefaultPromotionsManager().checkSellerData(ctx, restrictionList, entry);
-					}
-				}
-				else if (promotionProductList.isEmpty() && !promotionCategoryList.isEmpty())
-				//checking product category is permitted by promotion category or not
-				{
-					final List<String> productCategoryList = getDefaultPromotionsManager().getcategoryList(product, ctx);
-					applyPromotion = GenericUtilityMethods.productExistsIncat(promotionCategoryList, productCategoryList);
 					brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
 					sellerFlag = getDefaultPromotionsManager().checkSellerData(ctx, restrictionList, entry);
-					if (applyPromotion && sellerFlag && brandFlag)
-					{
-						categoryFlag = true;
-					}
 				}
 
-				if (applyPromotion && sellerFlag && brandFlag)
+				if (brandFlag && sellerFlag)
 				{
 					validProductUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
 							restrictionList, ctx, entry));
 					sellerID = getDefaultPromotionsManager().getSellerID(ctx, restrictionList, entry);
 					productSellerDetails.put(entry, sellerID);
+
 				}
+
+				//				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList))
+				//				{
+				//					continue;
+				//				}
+				//				//checking product is a valid product for promotion
+				//				if (!promotionProductList.isEmpty())
+				//				{
+				//					if (promotionProductList.contains(product))
+				//					{
+				//						applyPromotion = true;
+				//						productFlag = true;
+				//						brandFlag = true;
+				//						sellerFlag = getDefaultPromotionsManager().checkSellerData(ctx, restrictionList, entry);
+				//					}
+				//				}
+				//				else if (promotionProductList.isEmpty() && !promotionCategoryList.isEmpty())
+				//				//checking product category is permitted by promotion category or not
+				//				{
+				//					final List<String> productCategoryList = getDefaultPromotionsManager().getcategoryList(product, ctx);
+				//					applyPromotion = GenericUtilityMethods.productExistsIncat(promotionCategoryList, productCategoryList);
+				//					brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+				//					sellerFlag = getDefaultPromotionsManager().checkSellerData(ctx, restrictionList, entry);
+				//					if (applyPromotion && sellerFlag && brandFlag)
+				//					{
+				//						categoryFlag = true;
+				//					}
+				//				}
+				//
+				//				if (applyPromotion && sellerFlag && brandFlag)
+				//				{
+				//					validProductUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
+				//							restrictionList, ctx, entry));
+				//					sellerID = getDefaultPromotionsManager().getSellerID(ctx, restrictionList, entry);
+				//					productSellerDetails.put(entry, sellerID);
+				//				}
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -396,8 +422,8 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 	{
 		resetFlags();
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());
-		String data = MarketplacecommerceservicesConstants.EMPTYSPACE;
-		String firedData = MarketplacecommerceservicesConstants.EMPTYSPACE;
+		final String data = MarketplacecommerceservicesConstants.EMPTYSPACE;
+		final String firedData = MarketplacecommerceservicesConstants.EMPTYSPACE;
 		String currency = MarketplacecommerceservicesConstants.EMPTYSPACE;
 		Double thresholdVal = Double.valueOf(0.00D);
 		String sellerData = MarketplacecommerceservicesConstants.EMPTYSPACE;
@@ -405,7 +431,7 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 		if (result.getFired(ctx))
 		{
 			LOG.debug("The Total Discount" + result.getTotalDiscount(ctx));
-			firedData = messageData();
+			//firedData = messageData();
 			currency = getCurrency(ctx);
 			final Object[] args =
 			{ firedData, currency, Double.valueOf(result.getTotalDiscount(ctx)) };
@@ -413,8 +439,8 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 		}
 		else if (result.getCouldFire(ctx))
 		{
-			getValidProductList(result.getOrder(), ctx);
-			data = messageData();
+			//getValidProductList(result.getOrder(), ctx);
+			//data = messageData();
 			currency = getCurrency(ctx);
 			thresholdVal = getThresholdValForMsg(ctx, result);
 			sellerData = getMplPromotionHelper().sellerDataForMsg(ctx, restrictionList);
@@ -460,32 +486,32 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 	 * @Description: Message Localization
 	 * @return: String
 	 */
-	private String messageData()
-	{
-		String data = MarketplacecommerceservicesConstants.EMPTYSPACE;
-		final StringBuffer messageData = new StringBuffer();
-		messageData.append(MarketplacecommerceservicesConstants.EMPTYSPACE);
-
-		if (productFlag && null != getProducts() && !getProducts().isEmpty() && getProducts().size() > 0)
-		{
-			for (final Product product : getProducts())
-			{
-				messageData.append(product.getName());
-				messageData.append(',');
-			}
-		}
-		else if (categoryFlag && null != getCategories() && !getCategories().isEmpty() && getCategories().size() > 0)
-		{
-			for (final Category category : getCategories())
-			{
-				messageData.append(category.getName());
-				messageData.append(',');
-			}
-		}
-
-		data = messageData.toString();
-		return data;
-	}
+	//	private String messageData()
+	//	{
+	//		String data = MarketplacecommerceservicesConstants.EMPTYSPACE;
+	//		final StringBuffer messageData = new StringBuffer();
+	//		messageData.append(MarketplacecommerceservicesConstants.EMPTYSPACE);
+	//
+	//		if (productFlag && null != getProducts() && !getProducts().isEmpty() && getProducts().size() > 0)
+	//		{
+	//			for (final Product product : getProducts())
+	//			{
+	//				messageData.append(product.getName());
+	//				messageData.append(',');
+	//			}
+	//		}
+	//		else if (categoryFlag && null != getCategories() && !getCategories().isEmpty() && getCategories().size() > 0)
+	//		{
+	//			for (final Category category : getCategories())
+	//			{
+	//				messageData.append(category.getName());
+	//				messageData.append(',');
+	//			}
+	//		}
+	//
+	//		data = messageData.toString();
+	//		return data;
+	//	}
 
 	/**
 	 * @Description: Reset the boolean flags
