@@ -230,6 +230,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 
 		try
 		{
+		       LOG.debug("#######################inside cron job for payment pending#######");  
 			List<OrderModel> pendingOrders = new ArrayList<OrderModel>();
 			//DAO call to fetch PAYMENT PENDING or REFUND-INITIATED orders
 			pendingOrders = mplProcessOrderDao.getPendingOrRefundInitiatedOrders(OrderStatus.PAYMENT_PENDING.toString(),
@@ -377,6 +378,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 					}
 				}
 			}
+			LOG.debug("#######################cron job finished#######");  
 		}
 		catch (final AdapterException e)
 		{
