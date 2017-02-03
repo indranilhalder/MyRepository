@@ -24,6 +24,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.security.AutoLoginStrateg
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.commercefacades.order.CheckoutFacade;
+import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.ProductFacade;
@@ -70,6 +71,7 @@ import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
@@ -124,6 +126,9 @@ public class CheckoutController extends AbstractCheckoutController
 
 	@Autowired
 	private WishlistFacade wishlistFacade;
+
+	@Autowired
+	private MplCartFacade mplCartFacade;
 
 	@Autowired
 	private MplCustomAddressFacade mplCustomAddressFacade;
@@ -254,7 +259,8 @@ public class CheckoutController extends AbstractCheckoutController
 	@RequestMapping(method = RequestMethod.GET)
 	public String checkout(final RedirectAttributes redirectModel)
 	{
-		if (getMplCustomAddressFacade().hasValidCart())
+		final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
+		if (getMplCustomAddressFacade().hasValidCart(cartData))
 		{
 			if (validateCart(redirectModel))
 			{
@@ -433,11 +439,11 @@ public class CheckoutController extends AbstractCheckoutController
 	 * private void callNonBusinessError(final Model model, final String messageKey) throws CMSItemNotFoundException {
 	 * storeCmsPageInModel(model, getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE)); setUpMetaDataForContentPage(model,
 	 * getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE));
-	 *
+	 * 
 	 * model.addAttribute(WebConstants.MODEL_KEY_ADDITIONAL_BREADCRUMB,
 	 * resourceBreadcrumbBuilder.getBreadcrumbs(MessageConstants.BREADCRUMB_NOT_FOUND));
 	 * GlobalMessages.addErrorMessage(model, messageKey);
-	 *
+	 * 
 	 * storeContentPageTitleInModel(model, MessageConstants.NON_BUSINESS_ERROR); }
 	 */
 
