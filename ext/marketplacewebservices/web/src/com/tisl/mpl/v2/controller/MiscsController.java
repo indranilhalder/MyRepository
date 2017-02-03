@@ -174,7 +174,7 @@ import com.tisl.mpl.wsdto.VersionListResponseData;
 import com.tisl.mpl.wsdto.VersionListResponseWsDTO;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 import com.tisl.mpl.wsdto.WthhldTAXWsDTO;
-
+import de.hybris.platform.servicelayer.session.SessionService;
 
 /**
  * @author TCS
@@ -291,7 +291,8 @@ public class MiscsController extends BaseController
 	private ModelService modelService;
 	private static final String APPLICATION_TYPE = "application/json";
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-
+	@Autowired
+	private SessionService sessionService;
 	/*
 	 * private static final String DROPDOWN_BRAND = "MBH"; private static final String DROPDOWN_CATEGORY = "MSH";
 	 */

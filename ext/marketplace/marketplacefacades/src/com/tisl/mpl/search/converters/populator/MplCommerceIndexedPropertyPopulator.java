@@ -13,6 +13,7 @@ import de.hybris.platform.solrfacetsearch.model.config.SolrIndexedPropertyModel;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -22,7 +23,7 @@ import org.apache.commons.lang.StringUtils;
 public class MplCommerceIndexedPropertyPopulator extends CommerceIndexedPropertyPopulator
 {
 
-
+	private final static Logger LOG = Logger.getLogger(MplCommerceIndexedPropertyPopulator.class.getName());
 	@Resource
 	private SessionService sessionService;
 

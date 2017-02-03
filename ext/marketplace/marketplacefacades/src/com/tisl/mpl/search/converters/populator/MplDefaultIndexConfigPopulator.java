@@ -28,7 +28,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+
 import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 
 
@@ -41,7 +43,7 @@ public class MplDefaultIndexConfigPopulator extends DefaultIndexConfigPopulator
 {
 	private Converter<SolrServerConfigModel, SolrConfig> solrServerConfigConverter;
 	private Converter<SolrIndexedTypeModel, IndexedType> indexedTypeConverter;
-
+	private static final Logger LOG = Logger.getLogger(MplDefaultIndexConfigPopulator.class);
 	@Resource
 	private SessionService sessionService;
 
