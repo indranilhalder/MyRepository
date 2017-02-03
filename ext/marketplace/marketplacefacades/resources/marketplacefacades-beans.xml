@@ -953,4 +953,20 @@
 		<property name="consignmentStatus" type="String"></property>
 		<property name="returnStatus" type="java.lang.Boolean"></property>
 	</bean>
+	<!-- Thread Dump CMS changes  -->
+	<bean class="de.hybris.platform.commercefacades.component.data.CMSSubbrandData">
+		<property name="subBrandName" type="String"/>
+		<property name="subBrandUrl" type="String"/>
+		<property name="subBrandImage" type="de.hybris.platform.commercefacades.product.data.ImageData"/>
+		<property name="subBrandLogo" type="de.hybris.platform.commercefacades.product.data.ImageData"/>
+	</bean>
+	
+     <bean class="de.hybris.platform.commercefacades.component.data.BrandComponentData">
+     	<property name="uid" type="String"/>
+		<property name="masterBrandName" type="String"/>
+		<property name="masterBrandURL" type="String"/>
+		<property name="layout" type="String"/>
+		<property name="subBrandList" type="java.util.List&lt;de.hybris.platform.commercefacades.component.data.CMSSubbrandData>"/>
+		<property name="subBrands" type="java.util.Collection&lt;de.hybris.platform.commercefacades.product.data.CategoryData>"/>
+	</bean>
 </beans>

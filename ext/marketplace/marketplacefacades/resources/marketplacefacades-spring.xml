@@ -1668,4 +1668,33 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		class="com.tisl.mpl.facade.job.InitiateCancelForOrderJob"
 		autowire="byName" >
 	</bean>
+	
+	<!-- Thread Dump CMS changes -->
+  	
+	<bean id="mplBrandCollectionPopulator" class="com.tisl.mpl.facades.populators.MplBrandCollectionPopulator">
+	<property name="cmsSubBrandConvertor" ref="mplCmsSubBrandConvertor"></property>
+	<property name="categoryConverter" ref="categoryConverter"></property>
+	</bean>
+	
+  	<bean id="mplBrandCollectionConvertor" parent="abstractPopulatingConverter">
+			<property name="populators">
+			<list>
+				<ref bean="mplBrandCollectionPopulator" />
+			</list>
+		</property>
+		<property name="targetClass" value="de.hybris.platform.commercefacades.component.data.BrandComponentData"/>
+	</bean>
+	
+	<bean id="mplCmsSubBrandPopulator" class="com.tisl.mpl.facades.populators.MplCmsSubBrandPopulator">
+		<property name="imageConverter" ref="imageConverter"></property>
+	</bean>
+	
+  	<bean id="mplCmsSubBrandConvertor" parent="abstractPopulatingConverter">
+			<property name="populators">
+			<list>
+				<ref bean="mplCmsSubBrandPopulator" />
+			</list>
+		</property>
+		<property name="targetClass" value="de.hybris.platform.commercefacades.component.data.CMSSubbrandData"/>
+	</bean>
 </beans>
