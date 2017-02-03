@@ -188,7 +188,7 @@
 								<textbox
 									readonly="@bind(each.awbReadOnly)"
 									onChange="@command('onChangeTransactionInfo',transaction=each)"
-									value="@bind(each.awbNumber)">
+									value="@bind(each.awbNumber)" constraint="no empty:Awb number is manditory">
 								</textbox>
 							</listcell>
 						</listitem>

@@ -262,7 +262,7 @@ public class LpoverrideWidgetController
 	 */
 	@Command("lpOverrideSave")
 	@NotifyChange(
-	{ "orderlineRespone", "displayPopup" })
+	{ "orderlineRespone", "displayPopup", "listOfTransactions" })
 
 	public void saveAllTransactions(@BindingParam("lpOverride") final Boolean lpOverride)
 	{
@@ -300,6 +300,14 @@ public class LpoverrideWidgetController
 					{
 						modifiedTransactinTrack.clear();
 					}
+					if (this.listOfTransactions != null)
+					{
+						this.listOfTransactions.clear();
+					}
+					if (this.previousLpAndAwbNumberForTrack != null)
+					{
+						this.previousLpAndAwbNumberForTrack.clear();
+					}
 					return;
 				}
 				if (!previousTransaction.getAwbNumber().equals(currentTransaction.getAwbNumber())
@@ -311,6 +319,14 @@ public class LpoverrideWidgetController
 					if (modifiedTransactinTrack != null)
 					{
 						modifiedTransactinTrack.clear();
+					}
+					if (this.listOfTransactions != null)
+					{
+						this.listOfTransactions.clear();
+					}
+					if (this.previousLpAndAwbNumberForTrack != null)
+					{
+						this.previousLpAndAwbNumberForTrack.clear();
 					}
 					return;
 				}
