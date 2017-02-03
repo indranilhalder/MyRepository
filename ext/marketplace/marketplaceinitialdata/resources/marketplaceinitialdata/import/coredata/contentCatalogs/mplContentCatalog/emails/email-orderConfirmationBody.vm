@@ -115,15 +115,15 @@
                   </strong> </font>
                </p>
             </td>
-			<!--<td align="center" bgcolor="#fbfbfb" style="width: 3%;">
+			<td align="center" bgcolor="#fbfbfb" style="width: 3%;">
                <p align="center"><font size="2" color="#000000" ><strong>
-                  Delivery<br/>
-				  Mode<br/>
+                  JewelleryType<br/>
+				<br/>
                   </strong> </font>
                </p>
-            </td>-->
+            </td>
          </tr>
-		 		 
+		 #set ($totalFineJewelleryPrice=0)		 
 		 #set ($shippingCharge=0)
 		 #foreach( $childorder in ${ctx.childOrders} )
 				 
@@ -172,14 +172,21 @@
                   $entry.convenienceChargeApportion</font>
                </p>
             </td>
-			<!--<td align="left" bgcolor="#fbfbfb">
+			<td align="left" bgcolor="#fbfbfb">
                <p align="center"><font size="2" color="#000000" >
-                  $entry.mplDeliveryMode.deliveryMode.name </font>
+                  $entry.product.productCategoryType </font>
                </p>
-            </td>-->
+            </td>
          </tr>	 
 		 
+		 <!--Fine Jewellery changes-->
 		 
+		  #if($entry.product.productCategoryType == "FineJewellery")
+		 	#set ($totalFineJewelleryPrice=$totalFineJewelleryPrice+$entry.netAmountAfterAllDisc)
+			
+		 #end
+		
+		<!--end of Fine Jewellery changes--> 
 		 
 		 #set ($srNo=$srNo+1)
          #set($shippingCharge=$shippingCharge+$entry.currDelCharge)
@@ -301,6 +308,20 @@
             </td>
 			 #end
          </tr>
+         
+         <!--Fine Jewellery changes-->
+         
+          <tr bgcolor="#fbfbfb">
+          #if($totalFineJewelleryPrice>200000)
+              <td colspan="5" style="padding-left:16px;" align="left" bgcolor="#fbfbfb">
+           		 <p style="margin-bottom: 10px;"><font size="3" color="#000000">
+           		<strong> Hi ${ctx.customerName} !!! you have to update your pancard details for Fine jewellery shopping at site:</strong> <a href="https://www.tatacliq.com/pancard/pancarddetailsupload/${ctx.orderReferenceNumber}/$(ctx.nameofperson)">Click here</a>
+           		 </p>
+              </td>
+           #end 
+          </tr>
+         
+          <!--End of Fine Jewellery changes-->
          <tr>
             <td colspan="5" style="padding-left:16px;" align="left" bgcolor="#fbfbfb">
                <p style="margin-bottom: 10px;"><font size="2" color="#000000">

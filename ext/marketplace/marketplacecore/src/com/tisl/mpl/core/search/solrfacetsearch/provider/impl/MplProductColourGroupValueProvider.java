@@ -28,14 +28,16 @@ import com.tisl.mpl.core.model.PcmProductVariantModel;
  * @author TCS
  *
  */
-public class MplProductColourGroupValueProvider extends AbstractPropertyFieldValueProvider
-		implements FieldValueProvider, Serializable
+public class MplProductColourGroupValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
+		Serializable
 {
 	private FieldNameProvider fieldNameProvider;
 
+	final String FINE_JEWELLERY = "FineJewellery";
+
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -56,21 +58,27 @@ public class MplProductColourGroupValueProvider extends AbstractPropertyFieldVal
 			final PcmProductVariantModel pcmColorModel = (PcmProductVariantModel) model;
 			//Retrieving base product PK
 			final String baseProductPK = pcmColorModel.getBaseProduct().getPk().getLongValueAsString();
-			final String colors = pcmColorModel.getColour();
+			final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
 
-			if (colors != null && !colors.isEmpty())
+			if (pcmColorModel.getProductCategoryType().equalsIgnoreCase(FINE_JEWELLERY))
 			{
-				final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
-
-				{
-					//indexing base product and color
-					fieldValues.addAll(createFieldValue(StringUtils.capitalize(colors), indexedProperty, baseProductPK));
-				}
+				//indexing base product for Fine Jewellery
+				fieldValues.addAll(createFieldValue(indexedProperty, baseProductPK));
 				return fieldValues;
 			}
 			else
 			{
-				return Collections.emptyList();
+				final String colors = pcmColorModel.getColour();
+				if (colors != null && !colors.isEmpty())
+				{
+					//indexing base product and color
+					fieldValues.addAll(createFieldValue(StringUtils.capitalize(colors), indexedProperty, baseProductPK));
+					return fieldValues;
+				}
+				else
+				{
+					return Collections.emptyList();
+				}
 			}
 		}
 		else
@@ -105,6 +113,18 @@ public class MplProductColourGroupValueProvider extends AbstractPropertyFieldVal
 		for (final String fieldName : fieldNames)
 		{
 			fieldValues.add(new FieldValue(fieldName, color.toLowerCase() + baseProductPK));
+		}
+		return fieldValues;
+	}
+
+	//Create field value For fine jewellery products
+	protected List<FieldValue> createFieldValue(final IndexedProperty indexedProperty, final String baseProductPK)
+	{
+		final List<FieldValue> fieldValues = new ArrayList<FieldValue>();
+		final Collection<String> fieldNames = fieldNameProvider.getFieldNames(indexedProperty, null);
+		for (final String fieldName : fieldNames)
+		{
+			fieldValues.add(new FieldValue(fieldName, baseProductPK));
 		}
 		return fieldValues;
 	}

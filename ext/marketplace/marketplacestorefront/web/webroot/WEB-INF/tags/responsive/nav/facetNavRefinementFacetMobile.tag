@@ -86,7 +86,7 @@ function navigateToPage(queryString,textString)
 						<c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
 						<c:choose>
 						
-						<c:when test="${facetData.code eq 'colour' && not empty facetValue.name}">
+						<c:when test="${(facetData.code eq 'colour' || facetData.code  eq 'dialColourWatches'|| facetData.code  eq 'colorfamilytrlg') && not empty facetValue.name}">	<!-- TISTNL-894 | Colorfamily for mobile view --> 
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
@@ -189,7 +189,7 @@ function navigateToPage(queryString,textString)
 					<li class="filter-${facetData.code}">
 
 					<c:choose>
-						<c:when test="${facetData.code eq 'colour' && not empty facetValue.name}">						
+						<c:when test="${(facetData.code eq 'colour' || facetData.code  eq 'dialColourWatches'|| facetData.code  eq 'colorfamilytrlg') && not empty facetValue.name}">	<!-- TISTNL-894 | Colorfamily for mobile view -->					
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
