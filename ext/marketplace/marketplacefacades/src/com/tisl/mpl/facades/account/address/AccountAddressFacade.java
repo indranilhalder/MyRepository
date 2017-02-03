@@ -505,4 +505,53 @@ public class AccountAddressFacade implements MplAccountAddressFacade
 	{
 		this.accountAddressService = accountAddressService;
 	}
+
+
+	@Override
+	public void addaddress(final AddressData newAddress, final CustomerModel customer)
+	{
+		try
+		{
+			validateParameterNotNullStandardMessage(MarketplacecommerceservicesConstants.ADDRESS_DATA, newAddress);
+			LOG.debug(MarketplacecommerceservicesConstants.ADDRESTYPE_EQUALS_ADDADDRESS + newAddress.getAddressType());
+			final CustomerModel currentCustomer = customer;
+
+			if (null != customer)
+			{
+				final boolean makeThisAddressTheDefault = newAddress.isDefaultAddress()
+						|| (currentCustomer.getDefaultShipmentAddress() == null && newAddress.isVisibleInAddressBook());
+				final AddressModel existingAddress = isDuplicateAddress(newAddress, currentCustomer);
+				AddressModel addressmodel = null;
+				if (null != existingAddress)
+				{
+					addressmodel = existingAddress;
+				}
+				else
+				{
+					addressmodel = modelService.create(AddressModel.class);
+					addressReversePopulator.populate(newAddress, addressmodel);
+					addressmodel.setCellphone(newAddress.getPhone());
+					addressmodel.setDistrict(newAddress.getState());
+					addressmodel.setAddressType(newAddress.getAddressType());
+					addressmodel.setLocality(newAddress.getLocality());
+					addressmodel.setAddressLine3(newAddress.getLine3());
+				}
+
+				customerAccountService.saveAddressEntry(currentCustomer, addressmodel);
+				newAddress.setId(addressmodel.getPk().toString());
+
+				if (makeThisAddressTheDefault)
+				{
+					customerAccountService.setDefaultAddressEntry(currentCustomer, addressmodel);
+				}
+			}
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+
+
+
+	}
 }

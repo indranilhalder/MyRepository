@@ -4,6 +4,7 @@
 package com.tisl.mpl.facades.account.address;
 
 import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.core.model.user.CustomerModel;
 
 import java.util.List;
 
@@ -46,5 +47,12 @@ public interface MplAccountAddressFacade
 	 * @return List<StateData>
 	 */
 	List<StateData> getStates();
+
+	/**
+	 *
+	 * @param newAddress
+	 * @param customer
+	 */
+	void addaddress(AddressData newAddress, CustomerModel customer);
 
 }
