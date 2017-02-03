@@ -4,6 +4,7 @@
 package com.tisl.mpl.facade.cms;
 
 
+import de.hybris.platform.acceleratorcms.model.components.FooterComponentModel;
 import de.hybris.platform.acceleratorcms.model.components.NavigationBarCollectionComponentModel;
 import de.hybris.platform.acceleratorcms.model.components.NavigationBarComponentModel;
 import de.hybris.platform.acceleratorcms.model.components.SimpleBannerComponentModel;
@@ -18,6 +19,7 @@ import de.hybris.platform.cms2.model.navigation.CMSNavigationNodeModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
+import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSContentSlotService;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.cms2lib.model.components.ProductCarouselComponentModel;
 import de.hybris.platform.cms2lib.model.components.RotatingImagesComponentModel;
@@ -53,6 +55,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -89,6 +92,8 @@ import com.tisl.mpl.facades.cms.data.ProductListComponentData;
 import com.tisl.mpl.facades.cms.data.PromotionComponentData;
 import com.tisl.mpl.facades.cms.data.SectionData;
 import com.tisl.mpl.facades.cms.data.TextComponentData;
+import com.tisl.mpl.facades.data.FooterComponentData;
+import com.tisl.mpl.facades.data.SimpleBannerComponentData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservice.url.ExtDefaultCategoryModelUrlResolver;
 import com.tisl.mpl.marketplacecommerceservice.url.ExtDefaultProductModelUrlResolver;
@@ -103,6 +108,7 @@ import com.tisl.mpl.model.cms.components.MobileAppHeroComponentModel;
 import com.tisl.mpl.model.cms.components.MobileBannerComponentModel;
 import com.tisl.mpl.model.cms.components.MobileCollectionBannerComponentModel;
 import com.tisl.mpl.model.cms.components.MobileCollectionLinkComponentModel;
+import com.tisl.mpl.model.cms.components.NeedHelpComponentModel;
 import com.tisl.mpl.model.cms.components.PromotionalProductsComponentModel;
 import com.tisl.mpl.model.cms.components.SmallBrandMobileAppComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
@@ -137,7 +143,7 @@ import com.tisl.mpl.wsdto.TextComponentWsDTO;
 
 
 /**
- * @author 584443
+ * @author TCS
  *
  */
 public class MplCmsFacadeImpl implements MplCmsFacade
@@ -182,6 +188,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	private Converter<ProductModel, CollectionProductData> mobileCollectionProductConverter;
 
+	@Resource(name = "mplBannerConverter")
+	private Converter<SimpleBannerComponentModel, SimpleBannerComponentData> mplBannerConverter;
+
 	private HeroProductDefinitionService heroProductDefinitionService;
 
 	private MplSellerMasterService sellerMasterService;
@@ -197,6 +206,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	@Resource(name = "productService")
 	private ProductService productService;
+
+	@Autowired
+	private DefaultCMSContentSlotService contentSlotService;
 
 
 	@Resource(name = "defaultCategoryModelUrlResolver")
@@ -3182,6 +3194,63 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	public void setBrandLandingPageSlotMapping(final Map<String, String> brandLandingPageSlotMapping)
 	{
 		this.brandLandingPageSlotMapping = brandLandingPageSlotMapping;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getContentSlotData(java.lang.String)
+	 */
+	@Override
+	public FooterComponentData getContentSlotData(final String slotId)
+	{
+		final FooterComponentData fData = new FooterComponentData();
+		FooterComponentModel footer = null;
+		final FooterComponentData footerData = null;
+		final ContentSlotModel footerSlot = contentSlotService.getContentSlotForId(slotId);
+		final NeedHelpComponentModel needHelpFooter = null;
+
+		if (null != footerSlot && CollectionUtils.isNotEmpty(footerSlot.getCmsComponents()))
+		{
+			for (final AbstractCMSComponentModel cmsComponentModel : footerSlot.getCmsComponents())
+			{
+				if (cmsComponentModel instanceof FooterComponentModel)
+				{
+					footer = (FooterComponentModel) cmsComponentModel;
+				}
+
+			}
+			//footerData = footerDataConverter.convert(footer);
+			final List<SimpleBannerComponentModel> footerAppImageModelList = (List<SimpleBannerComponentModel>) footer
+					.getFooterAppImageList();
+			final List<SimpleBannerComponentData> footerAppImageDataList = new ArrayList<SimpleBannerComponentData>();
+
+			for (final SimpleBannerComponentModel source : footerAppImageModelList)
+			{
+				final SimpleBannerComponentData target = new SimpleBannerComponentData();
+				mplBannerConverter.convert(source, target);
+				footerAppImageDataList.add(target);
+			}
+
+			fData.setFooterAppImageList(footerAppImageDataList);
+		}
+
+		fData.setContactNumber((needHelpFooter == null) ? "" : needHelpFooter.getContactNumber());
+		//fData.setFooterAppImageList(footerData.getFooterAppImageList());
+		//fData.setFooterSocialIconList(footerData.getFooterSocialIconList());
+		fData.setFooterText(footer.getFooterText());
+		fData.setNavigationNodes(footer.getNavigationNodes());
+		fData.setNotice(footer.getNotice());
+		if (null != footer.getWrapAfter())
+		{
+			fData.setWrapAfter(footer.getWrapAfter().toString());
+		}
+		else
+		{
+			fData.setWrapAfter("");
+		}
+
+		return fData;
 	}
 
 }

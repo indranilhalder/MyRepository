@@ -969,4 +969,24 @@
 		<property name="subBrandList" type="java.util.List&lt;de.hybris.platform.commercefacades.component.data.CMSSubbrandData>"/>
 		<property name="subBrands" type="java.util.Collection&lt;de.hybris.platform.commercefacades.product.data.CategoryData>"/>
 	</bean>
+	
+		<bean class="com.tisl.mpl.facades.data.FooterComponentData">
+		<property name="footerSocialIconList" type="java.util.List&lt;com.tisl.mpl.facades.data.SimpleBannerComponentData>"></property>
+		<property name="footerText" type="String"></property>
+		<property name="notice" type="String"></property>
+		<property name="footerAppImageList" type="java.util.List&lt;com.tisl.mpl.facades.data.SimpleBannerComponentData>"></property>
+		<property name="contactNumber" type="String"></property>
+		<property name="navigationNodes" type="java.util.List&lt;de.hybris.platform.cms2.model.navigation.CMSNavigationNodeModel>"></property>
+		<property name="wrapAfter" type="String"></property>
+	</bean>
+	
+		<bean class="com.tisl.mpl.facades.data.SimpleBannerComponentData" extends="com.tisl.mpl.facades.data.AbstractBannerComponentData">
+		<property name="title" type="String"></property>
+		<property name="description" type="String"></property>	
+	</bean>
+	
+		<bean class="com.tisl.mpl.facades.data.AbstractBannerComponentData">
+		<property name="media" type="de.hybris.platform.commercefacades.product.data.ImageData"></property>
+		<property name="urlLink" type="String"></property>	
+	</bean>
 </beans>
