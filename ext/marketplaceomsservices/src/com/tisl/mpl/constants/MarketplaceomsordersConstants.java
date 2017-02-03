@@ -93,6 +93,12 @@ public final class MarketplaceomsordersConstants extends GeneratedMarketplaceoms
 	public static final String SMS_VARIABLE_TWO_ORD_COLLECTED_CUSTOMER = "{2}";
 	public static final String SMS_VARIABLE_THREE_ORD_COLLECTED_CUSTOMER = "{3}";
 	public static final String SMS_VARIABLE_FOUR_ORD_COLLECTED_CUSTOMER = "{4}";
+	//TPR-3402
+	public static final int ZERO_INT = 0;
+	public static final int MAX_LEN_PER_ADDR_LINE = 40;
+	public static final int MAX_LEN_OF_ADDR_LINE = 120;
+
+	public static final String SINGLE_SPACE = " ".intern();
 
 	private MarketplaceomsordersConstants()
 	{
