@@ -13,10 +13,10 @@
 	<style>
 		.popuped{ position: absolute; top: 0%; left: 0%; width: 100%;
 		height: 100%; background-color: black; z-index:1001;
-		-moz-opacity: 1; opacity:1; filter: alpha(opacity=80);
-		padding: 15%; } .popuped .content{ padding: 0%;
-		background-color: white; } .popuped .close{ float:right;
-		background-color: white; border:0px; } .heading
+		-moz-opacity: 1; opacity:1; filter: alpha(opacity=80); padding:
+		15%; } .popuped .content{ padding: 0%; background-color: white;
+		} .popuped .close{ float:right; background-color: white;
+		border:0px; } .heading
 		{font-weight:bold;display:block;font-size:16px;margin-bottom:15px;text-align:left;}
 		.error_class{font-size:13px;color:red;}
 		.success_class{font-size:13px;color:green;width:40}
@@ -33,7 +33,8 @@
 		action="show: slideDown;hide: slideUp">
 		<div class="content">
 			<div style="border:#555 1px solid;padding:10px">
-				<grid hflex="1" model="@load(lpVimo.orderlineRespone)">
+				<grid hflex="1"
+					model="@load(lpVimo.orderlineRespone)">
 					<columns>
 						<column hflex="1" label="TransactionId" />
 						<column hflex="1" label="Status" />
@@ -95,6 +96,10 @@
 						style="width:200px;height:10px">
 					</textbox>
 				</vlayout>
+				<hbox pack="center" style="width:100%">
+					<label value="@load(lpVimo.errorMessage)"
+						sclass="error_class" />
+				</hbox>
 			</hlayout>
 			<hlayout>
 				<vlayout width="100px">
@@ -116,7 +121,8 @@
 				<vlayout width="200px">
 					<listbox model="@load(lpVimo.activelpList)"
 						mold="select" itemRenderer="@load(lpVimo.listItemRenderer)"
-						selectedItem="@bind(lpVimo.selectionLpName)" style="width:200px">
+						selectedItem="@bind(lpVimo.selectionLpName)"
+						style="width:200px">
 					</listbox>
 				</vlayout>
 				<vlayout width="20px">
@@ -132,11 +138,6 @@
 						onClick="@command('lpSerachButton', event=event)" />
 				</vlayout>
 			</hlayout>
-			<separator />
-			<hbox pack="center" style="width:100%">
-			        <label value="@load(lpVimo.errorMessage)" sclass="error_class"/>
-			</hbox>
-			<separator />
 			<div style="overflow-x:auto">
 				<listbox model="@bind(lpVimo.listOfTransactions)"
 					selectedItems="@bind(lpVimo.selectedEntities)" id="listBoxData"

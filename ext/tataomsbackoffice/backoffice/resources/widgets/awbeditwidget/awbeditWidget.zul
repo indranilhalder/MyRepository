@@ -60,6 +60,9 @@
 					<textbox hflex="1" value="@bind(vimo.txtsellerId)">
 					</textbox>
 				</vlayout>
+				<hbox pack="center" style="width:100%">
+			        <label value="@load(vimo.errorMessage)" sclass="error_class"/>
+			</hbox>
 			</hlayout>
 			<hlayout>
 				<vlayout width="100px">
@@ -96,12 +99,7 @@
 					<button style="float:right" label="SEARCH"
 						onClick="@command('awbSerachButton', event=event)" />
 				</vlayout>
-			</hlayout>
-			<separator />
-			<hbox pack="center" style="width:100%">
-			        <label value="@load(vimo.errorMessage)" sclass="error_class"/>
-			</hbox>
-			<separator />
+			</hlayout>	
 			<div style="overflow-x:auto">
 				<listbox model="@bind(vimo.listOfTransactions)"
 					id="listBoxData" mold="paging" pageSize="10"
