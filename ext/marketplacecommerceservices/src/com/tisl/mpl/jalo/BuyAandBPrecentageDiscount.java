@@ -87,7 +87,7 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 				restrictionList, this);
 
 		final PromotionsManager.RestrictionSetResult rsr = findAllProducts(arg0, arg1);//findEligibleProductsInBasket(arg0, arg1); // Validates Promotion Restrictions
-		final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
+		//final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 		boolean checkChannelFlag = false;
 		final AbstractOrder cart = arg1.getOrder();
 		try
