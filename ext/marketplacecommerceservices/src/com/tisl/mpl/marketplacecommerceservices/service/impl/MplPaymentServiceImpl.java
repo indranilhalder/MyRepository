@@ -3917,12 +3917,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final ThirdPartyWalletInfoModel tpWalletInfoModel = getModelService().create(ThirdPartyWalletInfoModel.class);
 
 			//Commented for Mobile use
-			final String walletOwner = StringUtils.trim(cart.getUser().getName());
+			//final String walletOwner = StringUtils.trim(cart.getUser().getName());
 			//	tpWalletInfoModel.setCode(MarketplacecommerceservicesConstants.MRUPEE + "-" + request.getParameter("REFNO"));
 			tpWalletInfoModel.setCode(MarketplacecommerceservicesConstants.MRUPEE + "-" + refernceCode);
 
-			tpWalletInfoModel.setWalletOwner(StringUtils.isNotEmpty(walletOwner) ? walletOwner : ((CustomerModel) cart.getUser())
-					.getOriginalUid());
+			tpWalletInfoModel.setWalletOwner(custName);
 			tpWalletInfoModel.setProviderName(MarketplacecommerceservicesConstants.MRUPEE_OPTION);
 			tpWalletInfoModel.setUser(getUserService().getCurrentUser());
 

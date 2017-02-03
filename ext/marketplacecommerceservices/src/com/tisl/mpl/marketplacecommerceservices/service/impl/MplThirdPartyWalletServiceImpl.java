@@ -230,12 +230,13 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 
 		try
 		{
+		       LOG.debug("#######################inside cron job for payment pending#######");  
 			List<OrderModel> pendingOrders = new ArrayList<OrderModel>();
 			//DAO call to fetch PAYMENT PENDING or REFUND-INITIATED orders
 			pendingOrders = mplProcessOrderDao.getPendingOrRefundInitiatedOrders(OrderStatus.PAYMENT_PENDING.toString(),
 					OrderStatus.REFUND_INITIATED.toString());
 			Date orderTATForTimeout = new Date();
-			boolean isPayment = false;
+			boolean isPayment = true;
 			boolean isReturn = false;
 			for (final OrderModel order : pendingOrders)
 			{
@@ -305,9 +306,10 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 							//refund flow handling
 							if (CollectionUtils.isNotEmpty(entryList) && OrderStatus.REFUND_INITIATED.equals(order.getStatus())
 									&& !auditModelData.getIsExpired().booleanValue() && new Date().before(orderTATForTimeout))
-							{
-
-								if (CollectionUtils.isNotEmpty(order.getPaymentTransactions()))
+							{ 								
+                              			
+                                                               isPayment = false;
+			                                       if (CollectionUtils.isNotEmpty(order.getPaymentTransactions()))
 								{
 									final PaymentTransactionModel paymentTransactionModel = order.getPaymentTransactions().get(0);
 									for (final PaymentTransactionEntryModel trans : paymentTransactionModel.getEntries())
@@ -377,6 +379,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 					}
 				}
 			}
+			LOG.debug("#######################cron job finished#######");  
 		}
 		catch (final AdapterException e)
 		{

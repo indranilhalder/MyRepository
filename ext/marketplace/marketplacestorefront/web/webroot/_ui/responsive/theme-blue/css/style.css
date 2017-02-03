@@ -15088,10 +15088,19 @@ body .account .right-account form input {
     width:70%;
 	font-size: 14px;
 }
-body .account .right-account form input:hover {
+body .account .right-account form textarea {
+    border-color: #DFD1D5;
+    height: 100px;
+    line-height: 26px;
+    width:100%;
+	font-size: 14px;
+	padding-left: 10px;
+	margin-bottom: 10px;
+}
+body .account .right-account form input:hover, body .account .right-account form textarea:hover {
     border-color: #AB8791;
 }
-body .account .right-account form input:focus {
+body .account .right-account form input:focus, body .account .right-account form textarea:focus {
     border-color: #AB8791;
 }
 body .account .right-account form .half {
@@ -38807,7 +38816,7 @@ main {
 }
 
 .carousel-component {
-	margin: -30px 0;
+	margin: 25px 0;
 }
 
 .carousel-component:before, .carousel-component:after {
@@ -54492,6 +54501,39 @@ body .lookbook_wrapper .listing.wrapper .left-block{
     padding-left: 17px;
     color: #a5a5a5 !important;
   }
+  .checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea{
+  margin-bottom: 20px;
+    font-size: 14px;
+    border: 1px solid #dbdbdb;
+    height: 100px;
+    width:100%;
+    padding-left: 17px;
+  }
+  
+  .checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea::-webkit-input-placeholder {
+	text-transform: uppercase;
+	letter-spacing: 0.8px;
+	color: #a5a5a5;
+}
+
+  .checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea::-moz-placeholder {
+	text-transform: uppercase;
+	letter-spacing: 0.8px;
+	color: #a5a5a5;
+}
+
+  .checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea:-moz-placeholder {
+	text-transform: uppercase;
+	letter-spacing: 0.8px;
+	color: #a5a5a5;
+}
+
+  .checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea:-ms-input-placeholder {
+	text-transform: uppercase;
+	letter-spacing: 0.8px;
+	color: #a5a5a5;
+}
+  
   .checkout.wrapper .formaddress .product-block.addresses.new-form li.item .half, .checkout.wrapper .formaddress .product-block.addresses.new-form li.item .full{
   margin:0;
   }
@@ -54665,6 +54707,10 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
     font-size: 12px;
     margin-bottom: 9px;
     height: 40px;
+}
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea{
+	margin-bottom:9px;
+	font-size:12px;
 }
 .checkout.wrapper .formaddress select[name="myselect"] ,.checkout.wrapper .formaddress  select[name="state"]{
     height: 40px;
@@ -57212,6 +57258,9 @@ div.radio.creditDebitLabelRadio{
 	}
 }
 @media (max-width: 767px){
+	 .checkout.wrapper .product-block.addresses.new-form li.item fieldset .help-block {
+    margin-top: 0px;
+}
 .checkTab .add-address {
     width: 93%;
 }

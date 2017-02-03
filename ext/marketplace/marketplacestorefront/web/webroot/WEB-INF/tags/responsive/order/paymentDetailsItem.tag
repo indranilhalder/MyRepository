@@ -49,7 +49,7 @@
     
     <!-- Added for third party wallet -->
     <c:if test="${not empty order.mplPaymentInfo.paymentOption && fn:toLowerCase(order.mplPaymentInfo.paymentOption) eq 'mrupee'}">
-   ${order.mplPaymentInfo.paymentOption}<br>
+   ${order.mplPaymentInfo.cardAccountHolderName}<br>
    </c:if>
     
    </address>   
