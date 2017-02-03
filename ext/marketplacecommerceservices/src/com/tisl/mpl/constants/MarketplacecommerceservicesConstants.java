@@ -562,13 +562,13 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "High five! Our Risk Management team came to the rescue. Your order ref # {0} is confirmed. Go ahead and track your order at {1} . Thanks!";
 	public static final String SMS_MESSAGE_ORDER_RISK_REJECTED = "Oh gosh! We were unable to accept your order ref # {0}. Should you wish to place another order, visit our website {1} or download our app at {2}. To know more about this order call {3}.";
 	//R2.3 Added ShipmentSecondaryStatus NEW SMS
-	public static final String SMS_MESSAGE_ADDRESS_ISSUE = "Your order of {0}, etc% items in order no. {1} has been delayed due to issues involving your address. We deeply regret the inconvenience. We will call you within 48 hrs to confirm your address.";
-	public static final String SMS_MESSAGE_UNDELIVERED = "Your order of {0}, etc% items in order no. {1} is undelivered. We deeply regret the inconvenience. We will attempt to ship it to you within 48 hrs.";
+	public static final String SMS_MESSAGE_ADDRESS_ISSUE = "Your order of {0}, in order no. {1} has been delayed due to issues involving your address. We deeply regret the inconvenience. We will call you within 48 hrs to confirm your address.";
+	public static final String SMS_MESSAGE_UNDELIVERED = "Your order of {0},  in order no. {1} is undelivered. We deeply regret the inconvenience. We will attempt to ship it to you within 48 hrs.";
 	public static final String SMS_MESSAGE_OUT_FOR_DELIVERY = "Your order of {0}, items in order no. {1} is out for delivery. Are you excited? We are for sure! :D";
 	public static final String SMS_MESSAGE_DISPATCH = "Your order of {0},  items in order no.{1} has been dispatched throught Blue Dart with AWB Number: {2} . We will try have it delivered to you within the next 2-4 days.";
 	public static final String SMS_MESSAGE_DELIVERED = "Good news, everyone!  Your {0} {1}, was successfully delivered. We had tons of fun serving you. Hope you're happy with your CAMEL as well";
 	public static final String SMS_MESSAGE_RTO_INITIATED ="We are  initiated RTO for your shipment. If you want delivery then let us know within 24 hr";
-	public static final String SMS_MESSAGE_MIS_ROUTE="Hi! Your order of item name{0} etc items in order no. {1} has been delay due to mis route. We deeply regret the inconvenience. ";
+	public static final String SMS_MESSAGE_MIS_ROUTE="Hi! Your order of {0}  in order no. {1} has been delay due to mis route. We deeply regret the inconvenience. ";
 	public static final int MAX_PAGE_LIMIT = 100;
 
 	public static final String SNS_CATEGORY = "snsCategory";

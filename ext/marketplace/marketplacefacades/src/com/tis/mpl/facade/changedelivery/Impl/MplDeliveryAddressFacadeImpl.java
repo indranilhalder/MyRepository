@@ -535,11 +535,19 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					newDeliveryAddress.setEmail(customer.getOriginalUid());
 					// set the Address in a session
 					sessionService.setAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS, addressData);
-					if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()))
+					String mobileNumber=null;
+		         if (orderModel.getDeliveryAddress() != null)
+					{
+
+						mobileNumber = StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()) ? orderModel.getDeliveryAddress()
+								.getPhone1() : (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone2()) ? orderModel
+								.getDeliveryAddress().getPhone2() : orderModel.getDeliveryAddress().getCellphone());
+					}
+					if (StringUtils.isNotEmpty(mobileNumber))
 					{
 						try
 						{
-							generateOTP(customer, orderModel.getDeliveryAddress().getPhone1());
+							generateOTP(customer, mobileNumber);
 						}
 						catch (final InvalidKeyException excption)
 						{
@@ -720,15 +728,20 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		if (orderModel != null)
 		{
 			final CustomerModel customer = (CustomerModel) orderModel.getUser();
+         
+			String mobileNumber=null;
+         if (orderModel.getDeliveryAddress() != null)
+			{
+
+				mobileNumber = StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()) ? orderModel.getDeliveryAddress()
+						.getPhone1() : (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone2()) ? orderModel
+						.getDeliveryAddress().getPhone2() : orderModel.getDeliveryAddress().getCellphone());
+			}
 			try
 			{
-				if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()))
+				if (StringUtils.isNotEmpty(mobileNumber))
 				{
-					generateOTP(customer, orderModel.getDeliveryAddress().getPhone1());
-				}
-				else if (StringUtils.isNotEmpty(customer.getMobileNumber()))
-				{
-					generateOTP(customer, customer.getMobileNumber());
+					generateOTP(customer, mobileNumber);
 				}
 				isGenerated = true;
 			}
