@@ -7687,7 +7687,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			String finalString=null;
 			try
 			{
-				DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
+				DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 				Date convertDate = formatter.parse(date);
 				SimpleDateFormat newFormat = new SimpleDateFormat("dd-MMMM");
 				finalString = newFormat.format(convertDate);
