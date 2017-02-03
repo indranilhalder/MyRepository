@@ -199,7 +199,7 @@ public interface MplCartFacade extends CartFacade
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
-	void setCartSubTotal() throws EtailNonBusinessExceptions;
+	void setCartSubTotal(CartModel cartModel) throws EtailNonBusinessExceptions;
 
 	boolean setCartSubTotal2(CartModel model) throws EtailNonBusinessExceptions;
 
@@ -249,15 +249,15 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @DESC TISST-6994,TISST-6990 adding to cart COD eligible or not with Pincode serviceabilty and sship product
-	 * 
+	 *
 	 * @param pincodeResponseData
-	 * 
+	 *
 	 * @param deliveryModeMap
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
@@ -405,7 +405,7 @@ public interface MplCartFacade extends CartFacade
 			EtailNonBusinessExceptions;
 
 
-	CartModel getCalculatedCart() throws CommerceCartModificationException, EtailNonBusinessExceptions;
+	CartModel getCalculatedCart(CartModel cart) throws CommerceCartModificationException, EtailNonBusinessExceptions;
 
 	OrderEntryData getCartEntryByUssid(final String ussid, CartData cart);
 
@@ -470,4 +470,15 @@ public interface MplCartFacade extends CartFacade
 	 */
 	CartModificationData updateCartEntryMobile(long entryNumber, String storeId, CartModel cartModel)
 			throws CommerceCartModificationException;
+
+	/**
+	 * @param cart
+	 * @throws CommerceCartModificationException
+	 */
+	public CartModel getCalculatedCartMobile(CartModel cart) throws CommerceCartModificationException, EtailNonBusinessExceptions;
+
+	/**
+	 * @return
+	 */
+	CartData getLuxCart();
 }

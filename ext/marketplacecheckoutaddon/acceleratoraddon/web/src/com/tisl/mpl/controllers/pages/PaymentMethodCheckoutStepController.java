@@ -271,7 +271,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				final CartModel cartModel = getCartService().getSessionCart();
 
 				// TPR-429 START
-				
+
 				final String checkoutSellerID = populateCheckoutSellers(cartData);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 				// TPR-429 END
@@ -322,7 +322,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//Cart guid added to propagate to further methods via jsp
 				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, cartModel.getGuid());
 
-				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartModel);
+				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 
 			}
 			//TPR-629 --- based on orderModel
@@ -338,7 +338,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, orderModel.getGuid());
 
-				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, orderModel);
+				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 			}
 
 			//creating new Payment Form
@@ -4172,24 +4172,24 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	}
 
 	//TPR-429 change
-		public static String populateCheckoutSellers(final CartData cartData)
+	public static String populateCheckoutSellers(final CartData cartData)
+	{
+		String cartLevelSellerID = null;
+		final List<OrderEntryData> sellerList = cartData.getEntries();
+		for (final OrderEntryData seller : sellerList)
 		{
-			String cartLevelSellerID = null;
-			final List<OrderEntryData> sellerList = cartData.getEntries();
-			for (final OrderEntryData seller : sellerList)
+			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+			if (cartLevelSellerID != null)
 			{
-				final String sellerID = seller.getSelectedSellerInformation().getSellerID();
-				if (cartLevelSellerID != null)
-				{
-					cartLevelSellerID += "_" + sellerID;
-				}
-				else
-				{
-					cartLevelSellerID = sellerID;
-				}
+				cartLevelSellerID += "_" + sellerID;
 			}
-			return cartLevelSellerID;
+			else
+			{
+				cartLevelSellerID = sellerID;
+			}
 		}
+		return cartLevelSellerID;
+	}
 
 
 

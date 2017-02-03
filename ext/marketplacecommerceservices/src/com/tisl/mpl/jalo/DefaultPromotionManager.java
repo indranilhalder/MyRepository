@@ -803,9 +803,9 @@ public class DefaultPromotionManager extends PromotionsManager
 				{
 					if (null != category && null != category.getCode())
 					{
-						final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel, category.getCode());
-						productCategoryData.add(oModel);
-						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(oModel));
+						//final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel, category.getCode());
+						productCategoryData.add(category);
+						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(category));
 						if (!superCategoryData.isEmpty())
 						{
 							for (final CategoryModel categoryModel : superCategoryData)
@@ -1338,15 +1338,14 @@ public class DefaultPromotionManager extends PromotionsManager
 							if (entry.getValue().getPrice().doubleValue() == minPrice.doubleValue() && !minmumValObtained)
 							{
 								final String sellerArticleSKU = entry.getKey();
-								final List<StockLevelModel> stockData = mplStockService.getStockLevelDetail(sellerArticleSKU);
-								for (final StockLevelModel stockModel : stockData)
+								final StockLevelModel stockData = mplStockService.getStockLevelDetail(sellerArticleSKU);
+								if (stockData.getAvailable() > 0)
+
 								{
-									if (stockModel.getAvailable() > 0)
-									{
-										giftProductDetails.put(sellerArticleSKU, product);
-										minmumValObtained = true;
-									}
+									giftProductDetails.put(sellerArticleSKU, product);
+									minmumValObtained = true;
 								}
+
 							}
 						}
 					}

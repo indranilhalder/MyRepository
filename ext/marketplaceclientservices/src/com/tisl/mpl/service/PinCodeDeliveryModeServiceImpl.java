@@ -154,97 +154,98 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	 * OMS Pin code serviceablity converting the data object to the request format
 	 */
 	@Override
-	public PinCodeDeliveryModeListResponse prepPinCodeDeliveryModetoOMS(final String pin, final List<PincodeServiceData> reqData)
+	public PinCodeDeliveryModeListResponse prepPinCodeDeliveryModetoOMS(final String pin, final List<PincodeServiceData> reqestData)
 	{
 		PinCodeDeliveryModeListResponse pincodeResfromOMS = null;
 
 		try
 		{
 
-			if (reqData != null)
+			if (reqestData != null)
 			{
 
 				final PinCodeDeliveryModeListRequest pincodeRequest = new PinCodeDeliveryModeListRequest();
 
 				final List<PinCodeDeliveryModeRequest> pincodeList = new ArrayList<PinCodeDeliveryModeRequest>();
 
-				for (int i = 0; i < reqData.size(); i++)
+				//for (int i = 0; i < reqData.size(); i++)
+				for (final PincodeServiceData reqData : reqestData)
 				{
 					final PinCodeDeliveryModeRequest pincodereqObj = new PinCodeDeliveryModeRequest();
-					if (null != reqData.get(i))
+					//if (null != reqData.get(i))
+					//{
+					if (null != reqData.getFullFillmentType())
 					{
-						if (null != reqData.get(i).getFullFillmentType())
-						{
-							pincodereqObj.setFulfilmentType(reqData.get(i).getFullFillmentType().toUpperCase());
-						}
-						if (null != reqData.get(i).getIsCOD())
-						{
-							pincodereqObj.setIsCOD(reqData.get(i).getIsCOD());
-						}
-						if (null != reqData.get(i).getPrice())
-						{
-							pincodereqObj.setPrice(reqData.get(i).getPrice().doubleValue());
-						}
-						if (null != reqData.get(i).getSellerId())
-						{
-							pincodereqObj.setSellerID(reqData.get(i).getSellerId());
-						}
-						if (null != reqData.get(i).getUssid())
-						{
-							pincodereqObj.setUSSID(reqData.get(i).getUssid());
-						}
-						if (null != reqData.get(i).getTransportMode())
-						{
-							pincodereqObj.setTransportMode(reqData.get(i).getTransportMode().toUpperCase());
-						}
+						pincodereqObj.setFulfilmentType(reqData.getFullFillmentType().toUpperCase());
+					}
+					if (null != reqData.getIsCOD())
+					{
+						pincodereqObj.setIsCOD(reqData.getIsCOD());
+					}
+					if (null != reqData.getPrice())
+					{
+						pincodereqObj.setPrice(reqData.getPrice().doubleValue());
+					}
+					if (null != reqData.getSellerId())
+					{
+						pincodereqObj.setSellerID(reqData.getSellerId());
+					}
+					if (null != reqData.getUssid())
+					{
+						pincodereqObj.setUSSID(reqData.getUssid());
+					}
+					if (null != reqData.getTransportMode())
+					{
+						pincodereqObj.setTransportMode(reqData.getTransportMode().toUpperCase());
+					}
 
-						if (null != reqData.get(i).getDeliveryModes())
+					if (null != reqData.getDeliveryModes())
+					{
+						final List<MarketplaceDeliveryModeData> marketplaceDeliveryModes = reqData.getDeliveryModes();
+						final List<String> deliveryModes = new ArrayList<String>();
+						String deliveryMode = null;
+						for (final MarketplaceDeliveryModeData marketplaceDeliveryModeData : marketplaceDeliveryModes)
 						{
-							final List<MarketplaceDeliveryModeData> marketplaceDeliveryModes = reqData.get(i).getDeliveryModes();
-							final List<String> deliveryModes = new ArrayList<String>();
-							String deliveryMode = null;
-							for (final MarketplaceDeliveryModeData marketplaceDeliveryModeData : marketplaceDeliveryModes)
+							deliveryMode = marketplaceDeliveryModeData.getName();
+							if (deliveryMode.equalsIgnoreCase(HOME_DELIVERY))
 							{
-								deliveryMode = marketplaceDeliveryModeData.getName();
-								if (deliveryMode.equalsIgnoreCase(HOME_DELIVERY))
-								{
-									deliveryModes.add(HD);
-								}
-								if (deliveryMode.equalsIgnoreCase(EXPRESS_DELIVERY))
-								{
-									deliveryModes.add(ED);
-								}
-								if (deliveryMode.equalsIgnoreCase(CLICK_AND_COLLECT))
-								{
-									deliveryModes.add(CNC);
+								deliveryModes.add(HD);
+							}
+							if (deliveryMode.equalsIgnoreCase(EXPRESS_DELIVERY))
+							{
+								deliveryModes.add(ED);
+							}
+							if (deliveryMode.equalsIgnoreCase(CLICK_AND_COLLECT))
+							{
+								deliveryModes.add(CNC);
 
-									if (null != reqData.get(i).getStore())
+								if (null != reqData.getStore())
+								{
+									final List<String> reqStreNames = new ArrayList<String>();
+									for (final String storeName : reqData.getStore())
 									{
-										final List<String> reqStreNames = new ArrayList<String>();
-										for (final String storeName : reqData.get(i).getStore())
-										{
-											reqStreNames.add(storeName);
-										}
-										pincodereqObj.setStore(reqStreNames);
+										reqStreNames.add(storeName);
 									}
+									pincodereqObj.setStore(reqStreNames);
 								}
 							}
-							pincodereqObj.setDeliveryMode(deliveryModes);
 						}
-						if (null != reqData.get(i).getIsDeliveryDateRequired())
-						{
-							pincodereqObj.setIsDeliveryDateRequired(reqData.get(i).getIsDeliveryDateRequired());
-						}
-						pincodeList.add(pincodereqObj);
+						pincodereqObj.setDeliveryMode(deliveryModes);
 					}
+					if (null != reqData.getIsDeliveryDateRequired())
+					{
+						pincodereqObj.setIsDeliveryDateRequired(reqData.getIsDeliveryDateRequired());
+					}
+					pincodeList.add(pincodereqObj);
+					//}
 				}
 				if (null != pin)
 				{
 					pincodeRequest.setPincode(pin);
 				}
-				if (null != reqData.get(0) && StringUtils.isNotEmpty(reqData.get(0).getCartId()))
+				if (null != reqestData.get(0) && StringUtils.isNotEmpty(reqestData.get(0).getCartId()))
 				{
-					pincodeRequest.setCartId(reqData.get(0).getCartId());
+					pincodeRequest.setCartId(reqestData.get(0).getCartId());
 				}
 				if (CollectionUtils.isNotEmpty(pincodeList))
 				{

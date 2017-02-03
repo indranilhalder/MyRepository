@@ -286,7 +286,7 @@ public class CheckoutController extends AbstractCheckoutController
 			//wishlistFacade.removeProductFromWL(orderCode);
 			wishlistFacade.remProdFromWLForConf(orderDetails, orderModel.getUser()); //TISPT-175 --- removing products from wishlist : passing order data as it was fetching order data based on code again inside the method
 			SessionOverrideCheckoutFlowFacade.resetSessionOverrides();
-			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, orderModel);
+			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, orderDetails);
 			GenericUtilityMethods.populateCheckoutSellersOrderConfirmation(model, orderModel, orderDetails);
 			// for MSD
 			final String msdjsURL = configurationService.getConfiguration().getString("msd.js.url");
@@ -433,11 +433,11 @@ public class CheckoutController extends AbstractCheckoutController
 	 * private void callNonBusinessError(final Model model, final String messageKey) throws CMSItemNotFoundException {
 	 * storeCmsPageInModel(model, getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE)); setUpMetaDataForContentPage(model,
 	 * getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE));
-	 * 
+	 *
 	 * model.addAttribute(WebConstants.MODEL_KEY_ADDITIONAL_BREADCRUMB,
 	 * resourceBreadcrumbBuilder.getBreadcrumbs(MessageConstants.BREADCRUMB_NOT_FOUND));
 	 * GlobalMessages.addErrorMessage(model, messageKey);
-	 * 
+	 *
 	 * storeContentPageTitleInModel(model, MessageConstants.NON_BUSINESS_ERROR); }
 	 */
 
