@@ -308,8 +308,8 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 									&& !auditModelData.getIsExpired().booleanValue() && new Date().before(orderTATForTimeout))
 							{ 								
                               			
-         
-			                                                            if (CollectionUtils.isNotEmpty(order.getPaymentTransactions()))
+                                                               isPayment = false;
+			                                       if (CollectionUtils.isNotEmpty(order.getPaymentTransactions()))
 								{
 									final PaymentTransactionModel paymentTransactionModel = order.getPaymentTransactions().get(0);
 									for (final PaymentTransactionEntryModel trans : paymentTransactionModel.getEntries())
