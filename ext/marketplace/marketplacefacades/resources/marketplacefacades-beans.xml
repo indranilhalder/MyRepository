@@ -376,7 +376,7 @@
 		<property name="sellerOrderList"
 			type="java.util.List&lt;de.hybris.platform.commercefacades.order.data.OrderData>" />
 			<property name="pickupName" type="String"/>
-			<property name="pickupPhoneNumber" type="String"/>		
+			<property name="pickupPhoneNumber" type="String"/>	
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.data.OrderDataTransactionForXML">
@@ -540,6 +540,8 @@
 	</bean>
 	<bean class="de.hybris.platform.commercefacades.product.data.CategoryData">
 		<property name="subCategories"
+			type="java.util.Collection&lt;de.hybris.platform.commercefacades.product.data.CategoryData>" />
+		<property name="superCategories"
 			type="java.util.Collection&lt;de.hybris.platform.commercefacades.product.data.CategoryData>" />
 	</bean>
 
@@ -954,6 +956,7 @@
 		<property name="returnStatus" type="java.lang.Boolean"></property>
 	</bean>
 	<!-- Thread Dump CMS changes  -->
+	
 	<bean class="de.hybris.platform.commercefacades.component.data.CMSSubbrandData">
 		<property name="subBrandName" type="String"/>
 		<property name="subBrandUrl" type="String"/>
