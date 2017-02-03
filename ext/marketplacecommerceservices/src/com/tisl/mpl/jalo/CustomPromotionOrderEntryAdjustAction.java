@@ -72,8 +72,8 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 		{
 			final double orderEntryAdjustment = getAmount(ctx).doubleValue();
 
-			//final double unitAdjustment = orderEntryAdjustment / orderEntry.getQuantity(ctx).longValue();
-			final double unitAdjustment = orderEntryAdjustment / getOrderEntryQuantity(ctx).longValue();
+			final double unitAdjustment = orderEntryAdjustment / orderEntry.getQuantity(ctx).longValue();
+			//final double unitAdjustment = orderEntryAdjustment / getOrderEntryQuantity(ctx).longValue();
 
 			final String code = getGuid(ctx);
 			final DiscountValue dv = new DiscountValue(code, -1.0D * unitAdjustment, true, order.getCurrency(ctx).getIsoCode(ctx));
