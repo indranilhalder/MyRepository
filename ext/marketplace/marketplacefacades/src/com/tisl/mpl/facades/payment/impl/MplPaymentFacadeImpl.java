@@ -1644,11 +1644,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1699,9 +1699,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
@@ -3167,22 +3167,19 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			if (null != mplCustomer)
 			{
-				if (StringUtils.isNotEmpty(mplCustomer.getName()) && !mplCustomer.getName().equalsIgnoreCase(" "))
-				{
-					final String custName = mplCustomer.getName();
-					//setting payment info for mRupee orders
-					//Commented for Mobile use
-					//					getMplPaymentService().saveTPWalletPaymentInfo(custName, entries, cart, request);
-					modelService.save(getMplPaymentService().saveTPWalletPaymentInfo(custName, entries, order, refernceCode));
-				}
-				else
-				{
-					final String custEmail = mplCustomer.getOriginalUid();
-					//Commented for Mobile use
-					//					getMplPaymentService().saveTPWalletPaymentInfo(custEmail, entries, cart, request);
-					modelService.save(getMplPaymentService().saveTPWalletPaymentInfo(custEmail, entries, order, refernceCode));
+				/*
+				 * if (StringUtils.isNotEmpty(mplCustomer.getName()) && !mplCustomer.getName().equalsIgnoreCase(" ")) {
+				 * final String custName = mplCustomer.getName(); //setting payment info for mRupee orders //Commented for
+				 * Mobile use // getMplPaymentService().saveTPWalletPaymentInfo(custName, entries, cart, request);
+				 * modelService.save(getMplPaymentService().saveTPWalletPaymentInfo(custName, entries, order,
+				 * refernceCode)); } else {
+				 */
+				final String custEmail = mplCustomer.getOriginalUid();
+				//Commented for Mobile use
+				//					getMplPaymentService().saveTPWalletPaymentInfo(custEmail, entries, cart, request);
+				modelService.save(getMplPaymentService().saveTPWalletPaymentInfo(custEmail, entries, order, refernceCode));
 
-				}
+				//}
 			}
 			getMplPaymentService().paymentModeApportion(order);
 
