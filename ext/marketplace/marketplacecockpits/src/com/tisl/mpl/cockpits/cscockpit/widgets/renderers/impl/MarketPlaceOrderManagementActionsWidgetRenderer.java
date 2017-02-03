@@ -80,16 +80,20 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 							.getWidgetController().getOrder()));
 		}
 
-		if (isUserInRole(configurationService
-				.getConfiguration()
-				.getString(
-						MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_ALTERNATECONTACTCSAGENTGROUP))) {
+		try {
+			if (isUserInRole(configurationService
+					.getConfiguration()
+					.getString(
+							MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_ALTERNATECONTACTCSAGENTGROUP))) {
 
-			createButton(widget, (Div) component, "alternateContactDetails",
-					"csAlternateContactDetailsCreateWidgetConfig",
-					"alternateContactDetails-popup", "alternateContactDetails",
-					"alternateContactDetails.request", !isCnCAvailable(widget
-							.getWidgetController().getOrder()));
+				createButton(widget, (Div) component, "alternateContactDetails",
+						"csAlternateContactDetailsCreateWidgetConfig",
+						"alternateContactDetails-popup", "alternateContactDetails",
+						"alternateContactDetails.request", !isCnCAvailable(widget
+								.getWidgetController().getOrder()));
+			}
+		}catch(Exception e) {
+			Log.error("Exception occurred while creating changePickUp Person button for order ");
 		}
 
 		if (isUserInRole(configurationService
@@ -179,8 +183,11 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 		for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
 			if (entry.getMplDeliveryMode() != null
 					&& entry.getMplDeliveryMode().getDeliveryMode() != null) {
-
-				String orderStatus = entry.getOrder().getStatus().getCode();
+				String orderStatus = null;
+				if(null != entry && null != entry.getOrder() && null != entry.getOrder().getStatus() && null != entry.getOrder().getStatus().getCode()) {
+					orderStatus = entry.getOrder().getStatus().getCode();
+				}
+				
 				if (entry
 						.getMplDeliveryMode()
 						.getDeliveryMode()
@@ -190,8 +197,9 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 										.get("CnC"))) {
 
 					isCnCAvailable = true;
-
-					orderStatus = orderModel.getStatus().getCode();
+                    if(null != orderModel && null != orderModel.getStatus() && null != orderModel.getStatus().getCode()) {
+                    	orderStatus = orderModel.getStatus().getCode();
+                    }
 					if (CollectionUtils.isNotEmpty(entry
 							.getConsignmentEntries())) {
 						try {
@@ -233,15 +241,16 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 							ConsignmentStatus.RETURN_COMPLETED.getCode(),
 							ConsignmentStatus.RETURNINITIATED_BY_RTO.getCode());
 
-					if (entry.getQuantity() <= 0
-							|| nonChangableOrdeStatus.contains(orderStatus
-									.toUpperCase())
-							|| nonChangableOrdeStatusList.contains(orderStatus
-									.toUpperCase())) {
-						isCnCAvailable = false;
+					if(null != orderStatus && null != entry && null != entry.getQuantity()) {
+						if (entry.getQuantity() <= 0
+								|| nonChangableOrdeStatus.contains(orderStatus
+										.toUpperCase())
+								|| nonChangableOrdeStatusList.contains(orderStatus
+										.toUpperCase())) {
+							isCnCAvailable = false;
 
+						}
 					}
-
 					else {
 						return isCnCAvailable;
 					}
