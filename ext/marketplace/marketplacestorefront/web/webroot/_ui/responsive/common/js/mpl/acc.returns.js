@@ -771,6 +771,8 @@
 			  showPickupTimeDate("address"+count);
 			  $(".address"+count+" input").prop("checked", true);
 			  $("#changeAddressPopup, .wrapBG").fadeOut(300);
+			  $(".scheduledPickupArea").prepand("<p style='color:#a9143c;'>Address Saved Successfully</p>");
+			  
 					  },
 					  error:function(data){
 						  console.log("Error in NewAddress");
@@ -834,6 +836,7 @@
 								
 								$(".update"+temp).prev().find("input").prop("checked", "checked");
 								showPickupTimeDate(temp);
+								$(".scheduledPickupArea").prepand("<p style='color:#a9143c;'>Address Saved Successfully</p>");
 							}
 						  else
 							{
