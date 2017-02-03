@@ -471,7 +471,6 @@ public interface MplCartFacade extends CartFacade
 	CartModificationData updateCartEntryMobile(long entryNumber, String storeId, CartModel cartModel)
 			throws CommerceCartModificationException;
 
-
 	/**
 	 * @return
 	 */
