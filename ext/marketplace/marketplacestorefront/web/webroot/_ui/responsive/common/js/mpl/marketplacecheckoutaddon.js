@@ -4941,6 +4941,13 @@ $(".edit_address").click(function(){
  			
  			$("#"+address_id_new[1] + " .checkout-shipping.formaddress").prepend("<div class='heading-form'><h3>Edit Address</h3><input type='button' value='cancel' class='cancelBtnEdit' id='cancel-"+address_id_new[1]+"'></div>");
  			$("#"+address_id_new[1]).slideDown();
+ 			//TISRLEE-2328 Author Tribhuvan
+ 			 loadPincodeData("edit").done(function() {
+     			console.log("addressform line 394");
+     		 var value = $(".address_landmarkOtherDiv").attr("data-value");
+     		 console.log("addressform line 396 "+value);
+     		 otherLandMarkTri(value,"defult");
+     		});
  		},
  		error : function(resp) {
  		}

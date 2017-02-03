@@ -309,7 +309,7 @@
 			<!-- R2.3: START -->
 			<div class="full address-select">
 				<div class="mainDrop">
-				<formElement:formSelectBox idKey="address.states"
+				<formElement:formSelectBox idKey="address.states" 
 					selectCSSClass="address_states addressRead" labelKey="address.states"
 					path="state" mandatory="true" skipBlank="false"
 					skipBlankMessageKey="${addressForm.state}"
@@ -403,56 +403,26 @@
 $(document).ready(function(){
 	var tmpValue= -1;
 	
-		
-		console.log("line 391 "+ $(".address_postcode").val());
-			if($(".heading-form h3").text() == "Edit Address"){
-		loadPincodeData("edit").done(function() {
-			console.log("addressform line 394");
-		 var value = $(".address_landmarkOtherDiv").attr("data-value");
-		 console.log("addressform line 396 "+value);
-		 otherLandMarkTri(value,"defult");
-		});
-	
 	
 	$(".address_postcode").blur(function() {
-		
-		loadPincodeData("edit").done(function() {
+		if($(".address_postcode").val().length == "6") {	
+		loadPincodeData("new").done(function() {
 			console.log("addressform blur line 394");
 		 var value = $(".address_landmarkOtherDiv").attr("data-value");
 		 console.log("addressform blur line 396 "+value);
 		 otherLandMarkTri(value,"blur");
 		});
-
+		}else{
+			$(".address_landmarks").empty();
+			changeFuncLandMark("");
+			$(".address_states,#statesReadOnly,.address_townCity").attr('readonly',false).prop("value","");
+			$(".mainDrop").show();
+			$(".mainDrop select").prop("disabled",false);
+			$(".stateInput input").prop("disabled","disabled");
+			$(".dupDisplay").hide();
+		}
 });
-			}else{
-				/* loadPincodeData("new").done(function() {
-					console.log("addressform line 394");
-				 var value = $(".address_landmarkOtherDiv").attr("data-value");
-				 console.log("addressform line 396 "+value);
-				 otherLandMarkTri(value,"defult");
-				}); */
-			
-			
-			$(".address_postcode").blur(function() {
-				if($(".address_postcode").val().length == "6") {	
-				loadPincodeData("new").done(function() {
-					console.log("addressform blur line 394");
-				 var value = $(".address_landmarkOtherDiv").attr("data-value");
-				 console.log("addressform blur line 396 "+value);
-				 otherLandMarkTri(value,"blur");
-				});
-				}else{
-					$(".address_landmarks").empty();
-					changeFuncLandMark("");
-					$(".address_states,#statesReadOnly,.address_townCity").attr('readonly',false).prop("value","");
-					$(".mainDrop").show();
-					$(".mainDrop select").prop("disabled",false);
-					$(".stateInput input").prop("disabled","disabled");
-					$(".dupDisplay").hide();
-				}
-		});
-
-			} 
+	
 	});
 </script>
 <!-- R2.3: END -->

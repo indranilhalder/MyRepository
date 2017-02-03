@@ -34,11 +34,11 @@
 			</label>
 			<div class="controls">
 				<form:select id="${idKey}" path="${path}" value="${skipBlankMessageKey}" cssClass="${selectCSSClass}" tabindex="${tabindex}">
-				<%--    <c:if test="${skipBlank == null || skipBlank == false}">
+				   <c:if test="${skipBlank == false}">
 						<option value="" disabled="disabled" ${empty selectedValue ? 'selected="selected"' : ''}>
-							<spring:theme code='${skipBlankMessageKey}'/>
+							Select
 						</option>
-					</c:if> --%>
+					</c:if>
 					
 					<form:options items="${items}" itemValue="${not empty itemValue ? itemValue :'code'}" itemLabel="${not empty itemLabel ? itemLabel :'name'}"/>
 				</form:select>
