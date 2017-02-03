@@ -3987,5 +3987,28 @@
 				</result>
 		</organizer>
 	</type>
- 
+ <!-- TPR-4460 :Adding Sales channel restriction for coupons -->
+ 	<type name="ChannelRestriction" mode="append">
+		 <organizer>
+		 		<editor mode="append">
+		 			<tab name="properties">
+		 				<section name="section.restrictions" mode="replace" position="0">
+		 					<listlayout>
+		 						 <attribute name="salesChannel" labelwidth="100">
+		 						 	<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="identifier" width="274" />
+										<attribute name="name" width="274" />
+										<attribute name="icon" width="274" />
+									</itemlayout>
+									</referencecollectioneditor>
+		 						 </attribute>
+		 					</listlayout>
+		 				</section>
+		 			</tab>
+		 		</editor>
+		 </organizer>
+	</type>
 </configuration>
