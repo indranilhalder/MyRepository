@@ -89,6 +89,8 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 				{
 					target.setCurrencySymbol(currency.getSymbol());
 				}
+				target.setPickupPersonName(source.getPickupPersonName());
+				target.setPickupPersonMobile(source.getPickupPersonMobile());
 
 
 				/*

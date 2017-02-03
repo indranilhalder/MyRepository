@@ -196,6 +196,9 @@
 	<bean class="de.hybris.platform.commercefacades.order.data.CartData">
 		<property name="convenienceChargeForCOD" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 		<property name="totalPriceWithConvCharge" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="pickupPersonName" type="java.lang.String"/>
+		<property name="pickupPersonMobile" type="java.lang.String"/>
+		
 		<!-- TPR-928 -->
 		<property name="discountPercentage" type="java.lang.String"/>
 		<!-- TPR-174 - Welcome back status message -->
