@@ -863,20 +863,30 @@ $(document).ready(function(){
 	$(".brands-page .list_custom li").hide();
 		$(".brands-page .list_custom li span.letter.a-g-set").parent().show();
 				
-		
+		 // TPR-1287 Start
 	    $(".brandCategory").click(function(){
 	    	
 	    	var elementId =$(this).attr('id') ;
-	    	window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
+	    	var brandCatName = $(this).text().toLowerCase().trim() + "-brands";
+	    		    	
+	    	//window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
+	    	window.history.pushState('obj', 'newtitle', '/brands/' + brandCatName +'/b-'+elementId.toLowerCase());
+	    	
+	    	
 	    });
 	    
 	    
 	    $(".cmsManagedBrands").click(function(){
 	    	
 	    	var elementId =$(this).attr('id') ;
-	    	window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
+	    	
+	    	var brandCatName = $(this).text().toLowerCase().trim().replace(/\s/g, "-") + "-brands";
+	    	
+	    	//window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
+	    	window.history.pushState('obj', 'newtitle', '/brands/' + brandCatName +'/b-'+elementId);
+	    	
 	    });
-	    
+	  // TPR-1287 end
 	
 	    
 	    $(".brands-page .desktop ul.nav > li").click(function() {
@@ -944,6 +954,10 @@ $(document).ready(function(){
 		}
 		
 	/*---END of Mobile view left nav --*/	
+		
+		
+		
+		
 		
 	/*----Start of Wishlist Codes---------*/
 		

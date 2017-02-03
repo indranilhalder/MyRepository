@@ -149,6 +149,10 @@ import com.tisl.mpl.util.ExceptionUtil;
 //@RequestMapping(value = "/**/p")
 public class ProductPageController extends MidPageController
 {
+	/**
+	 * 
+	 */
+	private static final String IA_USS_IDS = "iaUssIds";
 	private static final String PRODUCT_SIZE_TYPE = "productSizeType";
 	/**
 	 *
@@ -2808,5 +2812,25 @@ public class ProductPageController extends MidPageController
 			model.addAttribute("showSizeGuideForFA", showSizeGuideForFA);
 
 		}
+	}
+
+	//TPR-3736
+	@SuppressWarnings(BOXING)
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-getIAResponse", method = RequestMethod.GET)
+	public @ResponseBody JSONObject getIAResponse(@RequestParam(IA_USS_IDS) final String ussids) throws JSONException,
+			com.granule.json.JSONException
+	{
+		final String ussidList[] = ussids.split(",");
+		final StringBuilder ussidIds = new StringBuilder();
+		for (int i = 0; i < ussidList.length; i++)
+		{
+			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + ussidList[i]
+					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
+			ussidIds.append(",");
+		}
+		final JSONObject buyboxJson = new JSONObject();
+		final Map<String, List<Double>> dataMap = buyBoxFacade.getBuyBoxDataForUssids(ussidIds.toString().substring(0,
+				ussidIds.lastIndexOf(",")));
+		return buyboxJson.put("iaResponse", dataMap);
 	}
 }
