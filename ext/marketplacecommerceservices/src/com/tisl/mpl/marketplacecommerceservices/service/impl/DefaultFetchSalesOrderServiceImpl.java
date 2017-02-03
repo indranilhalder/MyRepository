@@ -5,7 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.cronjob.model.TriggerModel;
+import de.hybris.platform.cronjob.model.CronJobModel;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.Date;
@@ -170,7 +170,7 @@ public class DefaultFetchSalesOrderServiceImpl implements FetchSalesOrderService
 
 
 	@Override
-	public TriggerModel getCronDetailsCode(final String code)
+	public CronJobModel getCronDetailsCode(final String code)
 
 	{
 		return fetchSalesOrderDao.getCronDetailsCode(code);

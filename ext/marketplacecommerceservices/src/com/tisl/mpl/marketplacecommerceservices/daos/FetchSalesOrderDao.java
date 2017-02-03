@@ -5,7 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.daos;
 
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.cronjob.model.TriggerModel;
+import de.hybris.platform.cronjob.model.CronJobModel;
 
 import java.util.Date;
 import java.util.List;
@@ -45,5 +45,5 @@ public interface FetchSalesOrderDao
 
 	public Map<String, String> fetchOrderIdsToday();
 
-	public TriggerModel getCronDetailsCode(String code);
+	public CronJobModel getCronDetailsCode(String code);
 }

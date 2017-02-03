@@ -16,7 +16,6 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.SearchResult;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -234,77 +233,27 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	public Map<OrderModel, AbstractOrderEntryModel> fetchOrderDetailsforDeliveryMail()
 	{
 		final Map<OrderModel, AbstractOrderEntryModel> orderWithSingleEntry = new HashMap<OrderModel, AbstractOrderEntryModel>();
-		String queryString = null;
-		FlexibleSearchQuery query = null;
-		final String SPACE = " ";
+
 		try
 		{
-			final TriggerModel tModel = fetchSalesOrderService.getCronDetailsCode("NpsMailerJob");
+			final CronJobModel cModel = fetchSalesOrderService.getCronDetailsCode("NpsMailerJob");
+			final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			final Date cronJobModifiedTime = cModel.getStartTime();
+			final String cronJobModifiedTimeFormattedDate = dateFormat.format(cronJobModifiedTime);
+			final Date currentSystemDate = new Date();
+			final String currentSystemDateFormattedDate = dateFormat.format(currentSystemDate);
 
-
-			final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			final String currentDate = dateFormat.format(new Date());
-			final LocalDate date = LocalDate.now().minusDays(1);
-			final String beforeDate = date.toString();
-			final StringBuilder sb = new StringBuilder(currentDate);
-			final String strDateFormatTweleve = "12:00:00.0";
-			sb.append(SPACE).append(strDateFormatTweleve);
-			final SimpleDateFormat dateFormatOne = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-			final Date currentDateTweleve = dateFormatOne.parse(sb.toString());
-			final StringBuilder sbOne = new StringBuilder(currentDate);
-			final String strDateFormatFour = "16:00:00.0";
-			sbOne.append(SPACE).append(strDateFormatFour);
-			final Date currentDateSixteen = dateFormatOne.parse(sbOne.toString());
-
-			final Integer tweleve = Integer.valueOf("12");
-			final Integer sixteen = Integer.valueOf("16");
-
-			final StringBuilder sbTwo = new StringBuilder(beforeDate);
-			sbTwo.append(SPACE).append(strDateFormatTweleve);
-			final Date beforeDateTweleve = dateFormatOne.parse(sbTwo.toString());
-
-			final String strDateFormatFive = "11:59:59.0";
-			final StringBuilder sbThree = new StringBuilder(currentDate);
-			sbThree.append(SPACE).append(strDateFormatFive);
-			final Date currentDateTweleveFive = dateFormatOne.parse(sbThree.toString());
+			final String queryString = "SELECT DISTINCT {po.pk},{oe.pk},{po.user} FROM  {" + ConsignmentModel._TYPECODE
+					+ " AS c JOIN " + ConsignmentEntryModel._TYPECODE + " " + "AS ce ON {ce.consignment} = {c.PK} JOIN"
+					+ " ConsignmentStatus AS cs ON {c.status} = {cs.PK} JOIN " + AbstractOrderEntryModel._TYPECODE
+					+ " AS oe ON {ce.orderentry}= {oe.PK} JOIN " + OrderModel._TYPECODE + " AS co  ON {c.order}={co.PK} JOIN "
+					+ OrderModel._TYPECODE + " AS po  ON {co.parentreference} = {po.PK} LEFT JOIN " + NPSMailerModel._TYPECODE
+					+ " AS nps ON {oe.pk}={nps.transactionId }} " + "WHERE " + "{c.deliveryDate}  BETWEEN "
+					+ "?beforeTime AND ?aftertime AND "
 
 
 
-			if (tModel.getHour().equals(tweleve))
-			{
-				queryString = "SELECT {po.pk},{oe.pk},{po.user} FROM  {" + ConsignmentModel._TYPECODE + " AS c JOIN "
-						+ ConsignmentEntryModel._TYPECODE + " " + "AS ce ON {ce.consignment} = {c.PK} JOIN"
-						+ " ConsignmentStatus AS cs ON {c.status} = {cs.PK} JOIN " + AbstractOrderEntryModel._TYPECODE
-						+ " AS oe ON {ce.orderentry}= {oe.PK} JOIN " + OrderModel._TYPECODE + " AS co  ON {c.order}={co.PK} JOIN "
-						+ OrderModel._TYPECODE + " AS po  ON {co.parentreference} = {po.PK} LEFT JOIN " + NPSMailerModel._TYPECODE
-						+ " AS nps ON {po.pk}={nps.parentOrderNo}} " + "WHERE " + "{c.deliveryDate}  BETWEEN "
-						+ "?beforeTime AND ?aftertime AND "
-
-
-						+ "{cs.code}='DELIVERED'";
-
-				query = new FlexibleSearchQuery(queryString);
-				query.addQueryParameter("beforeTime", beforeDateTweleve);
-				query.addQueryParameter("aftertime", currentDateTweleveFive);
-
-			}
-			else if (tModel.getHour().equals(sixteen))
-			{
-				queryString = "SELECT {po.pk},{oe.pk},{po.user} FROM  {" + ConsignmentModel._TYPECODE + " AS c JOIN "
-						+ ConsignmentEntryModel._TYPECODE + " " + "AS ce ON {ce.consignment} = {c.PK} JOIN"
-						+ " ConsignmentStatus AS cs ON {c.status} = {cs.PK} JOIN " + AbstractOrderEntryModel._TYPECODE
-						+ " AS oe ON {ce.orderentry}= {oe.PK} JOIN " + OrderModel._TYPECODE + " AS co  ON {c.order}={co.PK} JOIN "
-						+ OrderModel._TYPECODE + " AS po  ON {co.parentreference} = {po.PK} LEFT JOIN " + NPSMailerModel._TYPECODE
-						+ " AS nps ON {po.pk}={nps.parentOrderNo}} " + "WHERE " + "{c.deliveryDate}  BETWEEN "
-						+ "?jobTime AND ?currenttime AND "
-
-
-						+ "{cs.code}='DELIVERED'";
-
-				query = new FlexibleSearchQuery(queryString);
-				query.addQueryParameter("jobTime", currentDateTweleve);
-				query.addQueryParameter("currenttime", currentDateSixteen);
-			}
+					+ "{cs.code}='DELIVERED' AND {nps.transactionId} IS NULL";
 
 
 			//old script
@@ -314,7 +263,9 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 			//	+ " as co  ON {c.order}={co.PK}" + " JOIN " + OrderModel._TYPECODE + " as po  ON {co.parentreference} = {po.PK}} ";
 
 
-			//final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("beforeTime", dateFormat.parse(cronJobModifiedTimeFormattedDate));
+			query.addQueryParameter("aftertime", dateFormat.parse(currentSystemDateFormattedDate));
 			query.setResultClassList(Arrays.asList(OrderModel.class, AbstractOrderEntryModel.class, CustomerModel.class));
 
 			final SearchResult<List<Object>> result = flexibleSearchService.search(query);
@@ -562,14 +513,14 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	}
 
 	@Override
-	public TriggerModel getCronDetailsCode(final String code)
+	public CronJobModel getCronDetailsCode(final String code)
 	{
 
-		final String queryString = "SELECT {p.pk} FROM {" + TriggerModel._TYPECODE + " AS p JOIN " + CronJobModel._TYPECODE + " "
+		final String queryString = "SELECT {c.pk} FROM {" + TriggerModel._TYPECODE + " AS p JOIN " + CronJobModel._TYPECODE + " "
 				+ "AS c ON {p.cronJob} = {c.pk}}" + "WHERE" + "{c.code} =?code";
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("code", code);
-		return flexibleSearchService.<TriggerModel> searchUnique(query);
+		return flexibleSearchService.<CronJobModel> searchUnique(query);
 
 	}
 
