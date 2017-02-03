@@ -562,8 +562,10 @@ public class SalesOrderReverseXMLUtility
 
 						if (null != entry.getSelectedUSSID() && xmlToFico)
 						{
+							LOG.info("entry.getSelectedUSSID()   " + entry.getSelectedUSSID());
 							List<SellerInformationModel> productSellerData = null;
 							xmlData.setUSSID(entry.getSelectedUSSID());
+							LOG.info("getDefaultPromotionsManager().catalogData()  " + getDefaultPromotionsManager().catalogData());
 							productSellerData = getSellerBasedPromotionService().fetchSellerInformation(entry.getSelectedUSSID(),
 									getDefaultPromotionsManager().catalogData());
 							if (null != productSellerData && !productSellerData.isEmpty())
@@ -574,7 +576,7 @@ public class SalesOrderReverseXMLUtility
 									if (null != seller.getSellerID())
 									{
 										xmlData.setSellerCode(seller.getSellerID());
-										LOG.debug("seller id set ");
+										LOG.info("seller id set ");
 									}
 									else
 									{
@@ -589,7 +591,7 @@ public class SalesOrderReverseXMLUtility
 							xmlToFico = false;
 						}
 
-						LOG.debug("total price call" + entry.getTotalPrice());
+						LOG.info("total price call" + entry.getTotalPrice());
 						
 						final String orderLineId = entry.getOrderLineId() != null ? entry.getOrderLineId() : entry.getTransactionID();
 						
@@ -598,15 +600,15 @@ public class SalesOrderReverseXMLUtility
 							{
 								if (entry.getNetAmountAfterAllDisc().doubleValue() > 0)
 								{
-									LOG.debug("*****total price with discount*****" + entry.getNetAmountAfterAllDisc());
+									LOG.info("*****total price with discount*****" + entry.getNetAmountAfterAllDisc());
 									xmlData.setAmount(entry.getNetAmountAfterAllDisc().doubleValue());
 								}
 								else
 								{
-									LOG.debug("total price call" + entry.getTotalPrice());
+									LOG.info("total price call" + entry.getTotalPrice());
 									xmlData.setAmount(entry.getTotalPrice().doubleValue());
 								}
-								LOG.debug("after price set");
+								LOG.info("after price set");
 							}
 						}
 
@@ -628,7 +630,7 @@ public class SalesOrderReverseXMLUtility
 						if (StringUtils.isNotEmpty(entry.getFulfillmentType()) && xmlToFico)
 						{
 							xmlData.setFulfillmentType(entry.getFulfillmentType().toUpperCase());
-							LOG.debug("set fulfilment mode");
+							LOG.info("set fulfilment mode");
 						}
 
 
@@ -653,7 +655,7 @@ public class SalesOrderReverseXMLUtility
 						//								}
 						//							}
 						//						}
-						LOG.debug(">>>>>>> before prodcatlist");
+						LOG.info(">>>>>>> before prodcatlist");
 						final List<CategoryModel> productCategoryList = getDefaultPromotionsManager().getPrimarycategoryData(product);
 
 						//if (null != productCategoryList && productCategoryList.size() > 0)
@@ -666,7 +668,7 @@ public class SalesOrderReverseXMLUtility
 
 								if (!(category instanceof ClassificationClassModel))
 								{
-									LOG.debug("Category Data:>>>>>>>>" + category.getName() + "Code>>>" + category.getCode());
+									LOG.info("Category Data:>>>>>>>>" + category.getName() + "Code>>>" + category.getCode());
 									categoryList.add(category.getCode());
 								}
 
@@ -699,9 +701,9 @@ public class SalesOrderReverseXMLUtility
 								if (categoryList.size() > 3)
 								{
 									xmlData.setPrimaryCategory(categoryList.get(categoryList.size() - 2));
-									LOG.debug("primary cat" + categoryList.get(categoryList.size() - 2));
+									LOG.info("primary cat" + categoryList.get(categoryList.size() - 2));
 									xmlData.setSecondaryCategory(categoryList.get(categoryList.size() - 3));
-									LOG.debug("secondary cat" + categoryList.get(categoryList.size() - 3));
+									LOG.info("secondary cat" + categoryList.get(categoryList.size() - 3));
 								}
 
 							}
@@ -729,7 +731,7 @@ public class SalesOrderReverseXMLUtility
 								xmlData.setOrderTag(RET);
 								xmlData.setReturnDate(tagMap.get(RET).toString());
 								returnFlag = true;
-								LOG.debug(tagMap.get(RET).toString());
+								LOG.info(tagMap.get(RET).toString());
 
 							}
 							else if (tagMap.containsKey(CAN))
@@ -737,7 +739,7 @@ public class SalesOrderReverseXMLUtility
 								xmlData.setOrderTag(CAN);
 								xmlData.setCancelDate(tagMap.get(CAN).toString());
 								cancelFlag = true;
-								LOG.debug(tagMap.get(CAN).toString());
+								LOG.info(tagMap.get(CAN).toString());
 							}
 
 							canOrRetflag = true;
@@ -756,11 +758,12 @@ public class SalesOrderReverseXMLUtility
 							xmlData.setExpressdeliveryCharge(0.0);
 						}
 						if(cancelFlag) {
-							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
+							LOG.info("Adding schedule delivery charges for orderLineId "+entry.getOrderLineId());
+							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0.0D)
 							{
 								xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
 							}
-							else
+							else if(null != entry.getRefundedScheduleDeliveryChargeAmt() && entry.getRefundedScheduleDeliveryChargeAmt().doubleValue() > 0.0D)
 							{
 								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
 							}
@@ -768,7 +771,7 @@ public class SalesOrderReverseXMLUtility
 						
 						if (null != entry.getMplDeliveryMode() && xmlToFico && cancelFlag)
 						{
-							LOG.debug("inside del mode" + entry.getMplDeliveryMode());
+							LOG.info("inside del mode" + entry.getMplDeliveryMode());
 							final MplZoneDeliveryModeValueModel zoneDelivery = entry.getMplDeliveryMode();
 							if (null != zoneDelivery
 									&& null != zoneDelivery.getDeliveryMode()
@@ -782,11 +785,11 @@ public class SalesOrderReverseXMLUtility
 								{
 									xmlData.setExpressdeliveryCharge(entry.getCurrDelCharge().doubleValue());
 								}
-								else
+								else if(null != entry.getRefundedDeliveryChargeAmt() && entry.getRefundedDeliveryChargeAmt().doubleValue() > 0.0D)
 								{
 									xmlData.setExpressdeliveryCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 								}
-								LOG.debug("set express del charge from curr del charge" + entry.getCurrDelCharge().doubleValue());// zoneDelivery.getValue().doubleValue()
+								LOG.info("set express del charge from curr del charge" + entry.getCurrDelCharge().doubleValue());// zoneDelivery.getValue().doubleValue()
 							}
 							else if (null != zoneDelivery
 									&& null != zoneDelivery.getDeliveryMode()
@@ -800,11 +803,11 @@ public class SalesOrderReverseXMLUtility
 								{
 									xmlData.setShipmentCharge(entry.getCurrDelCharge().doubleValue());
 								}
-								else
+								else if(null != entry.getRefundedDeliveryChargeAmt() && entry.getRefundedDeliveryChargeAmt().doubleValue() > 0.0D)
 								{
 									xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 								}
-								LOG.debug("set del charge");
+								LOG.info("set del charge");
 							}
 						}
 
@@ -836,7 +839,7 @@ public class SalesOrderReverseXMLUtility
 								if(null != entry.getScheduleChargesJuspayRequestId()) {
 									sdbXmlData.setReversePaymentRefId(entry.getScheduleChargesJuspayRequestId());
 								}
-								LOG.debug("Adding SDB data for transaction Id "+entry.getTransactionID());
+								LOG.info("Adding SDB data for transaction Id "+entry.getTransactionID());
 								childOrderDataList.add(sdbXmlData);
 								entry.setIsSdbSendToFico(Boolean.TRUE);
 								modelService.save(entry);
@@ -867,7 +870,7 @@ public class SalesOrderReverseXMLUtility
 								if(null != entry.getDelChargesJuspayRequestId()) {
 									edToHdXmlData.setReversePaymentRefId(entry.getDelChargesJuspayRequestId());
 								}
-								LOG.debug("Adding EdToHd data for transaction Id "+entry.getTransactionID());
+								LOG.info("Adding EdToHd data for transaction Id "+entry.getTransactionID());
 								childOrderDataList.add(edToHdXmlData);
 								entry.setIsEdToHdSendToFico(Boolean.TRUE);
 								modelService.save(entry);
@@ -878,7 +881,7 @@ public class SalesOrderReverseXMLUtility
 						/*Added in R2.3 for sending EDTOHD / SDB charges to FICO END  */
 						if (canOrRetflag)
 						{
-							LOG.debug("Adding canOrRet data for transaction Id "+entry.getTransactionID());
+							LOG.info("Adding canOrRet data for transaction Id "+entry.getTransactionID());
 							childOrderDataList.add(xmlData);
 							entry.setIsSentToFico(Boolean.TRUE);
 							modelService.save(entry);
