@@ -235,7 +235,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 			//DAO call to fetch PAYMENT PENDING or REFUND-INITIATED orders
 			pendingOrders = mplProcessOrderDao.getPendingOrRefundInitiatedOrders(OrderStatus.PAYMENT_PENDING.toString(),
 					OrderStatus.REFUND_INITIATED.toString());
-			Date orderTATForTimeout = new Date();
+			
 			boolean isPayment = true;
 			boolean isReturn = false;
 			for (final OrderModel order : pendingOrders)
@@ -243,7 +243,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 				if (StringUtils.isNotEmpty(order.getGuid()))
 				{
 					final String cartGuid = order.getGuid();
-
+                                        Date orderTATForTimeout = getTatTimeOut(new Date(), getmRupeeJobTAT(), order.getCreationtime());
 					final MplPaymentAuditModel auditModelData = mplOrderDao.getAuditList(cartGuid);
 					if (auditModelData != null && !auditModelData.getIsExpired().booleanValue())
 					{
@@ -261,12 +261,12 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 						{
 							final String response = getMrupeeResponse(auditModelData);//getting mrupee response
 							LOG.debug("response from CronJob Mrupee#####################" + response);
-							if (StringUtils.isNotEmpty(response) && response.contains(SPLIT))
+							if (StringUtils.isNotEmpty(response) && response.contains("|"))
 							{
 								final String[] params1 = response.split(SPLIT);
 								status = params1[0];
 							}
-							orderTATForTimeout = getTatTimeOut(new Date(), getmRupeeJobTAT(), order.getCreationtime());
+							//orderTATForTimeout = getTatTimeOut(new Date(), getmRupeeJobTAT(), order.getCreationtime());
 							if (CollectionUtils.isNotEmpty(entryList) && OrderStatus.PAYMENT_PENDING.equals(order.getStatus())
 									&& !auditModelData.getIsExpired().booleanValue() && status.equalsIgnoreCase(S)
 									&& new Date().before(orderTATForTimeout))
@@ -274,7 +274,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 								//updating audit details
 								final Map<String, Double> paymentMode = sessionService
 										.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
-								final String[] params1 = status.split(SPLIT);
+								final String[] params1 = response.split(SPLIT);
 								Double transAmt = Double.valueOf(0.0);
 								if (params1.length == 6)
 								{
