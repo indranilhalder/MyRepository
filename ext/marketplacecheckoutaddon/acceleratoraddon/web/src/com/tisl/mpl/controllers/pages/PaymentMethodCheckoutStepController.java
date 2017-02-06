@@ -318,7 +318,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				}
 
 				//Getting Payment modes
-				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, false, null);
+				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, false, cartData);
 
 				//Cart guid added to propagate to further methods via jsp
 				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, cartData.getGuid());
@@ -354,7 +354,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				timeOutSet(model);
 
 				//setting silent orders
-				setupSilentOrderPostPage(paymentForm, model, orderData);
+				setupSilentOrderPostPage(paymentForm, model, orderData, cartData);
 			}
 
 			final String payNowPromotionCheck = getSessionService().getAttribute(
@@ -1299,7 +1299,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * @param paymentForm
 	 * @param model
 	 */
-	private void setupSilentOrderPostPage(final PaymentForm paymentForm, final Model model, final OrderData orderData)
+	private void setupSilentOrderPostPage(final PaymentForm paymentForm, final Model model, final OrderData orderData,
+			final CartData cartData)
 	{
 		try
 		{
@@ -1312,7 +1313,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			model.addAttribute(MarketplacecheckoutaddonConstants.NEWPAYMENTFORMMPLURL,
 					MarketplacecheckoutaddonConstants.NEWPAYMENTVIEWURL);
 
-			setupMplPaymentPage(model, orderData);
+			setupMplPaymentPage(model, orderData, cartData);
 			model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTFORM, paymentForm);
 
 		}
@@ -1339,13 +1340,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 *
 	 * @param model
 	 */
-	private void setupMplPaymentPage(final Model model, final OrderData orderData) throws Exception
+	private void setupMplPaymentPage(final Model model, final OrderData orderData, final CartData cartData) throws Exception
 	{
 		if (null == orderData)
 		{
 			//Existing code for cart
 			//getting cartdata
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+			//final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 
 			if (null != cartData && cartData.getAppliedOrderPromotions() != null)
 			{
@@ -1784,7 +1785,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	//			LOG.error(MarketplacecheckoutaddonConstants.B6004, e);
 	//		}
 	//	}
-
 
 
 
@@ -4162,7 +4162,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
