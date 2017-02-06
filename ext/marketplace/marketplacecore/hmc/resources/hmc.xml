@@ -3915,6 +3915,7 @@
 							</attribute>
 							<text name="text.promotion.excludedproductcodeslist" />
 							<attribute name="excludedProductCodeList" />
+							<attribute name="promourl" />
 							</listlayout>
 							<listlayout>
 							<text name="text.productpromotion.discountPrices" />
@@ -4193,6 +4194,7 @@
 				</result>
 		</organizer>
 	</type>
+
 	
 	<!-- Tata Etail change - DeliveryModeRestriction For Promotions -->
 	<type name="EtailLimitedStockRestriction" mode="append">
@@ -4210,5 +4212,30 @@
 			</editor>
 		</organizer>
 	</type>
- 
+
+ <!-- TPR-4460 :Adding Sales channel restriction for coupons -->
+ 	<type name="ChannelRestriction" mode="append">
+		 <organizer>
+		 		<editor mode="append">
+		 			<tab name="properties">
+		 				<section name="section.restrictions" mode="replace" position="0">
+		 					<listlayout>
+		 						 <attribute name="salesChannel" labelwidth="100">
+		 						 	<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="identifier" width="274" />
+										<attribute name="name" width="274" />
+										<attribute name="icon" width="274" />
+									</itemlayout>
+									</referencecollectioneditor>
+		 						 </attribute>
+		 					</listlayout>
+		 				</section>
+		 			</tab>
+		 		</editor>
+		 </organizer>
+	</type>
+
 </configuration>

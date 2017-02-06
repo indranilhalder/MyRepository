@@ -1,6 +1,5 @@
 package com.tisl.mpl.jalo;
 
-import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
@@ -43,7 +42,6 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(BuyXItemsofproductAgetproductBforfree.class.getName());
 	private int noOfProducts = 0;
-	private int stockCount = 0;
 
 	/**
 	 * @Description: Method for Item Creation
@@ -76,8 +74,8 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 		final List<PromotionResult> results = new ArrayList<PromotionResult>();
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions()); // Fetching Promotion set Restrictions
 		final AbstractOrder order = promoContext.getOrder();
-		final List<Product> promotionProductList = new ArrayList<>(getProducts()); // Fetching Promotion set Primary Products
-		final List<Category> promotionCategoryList = new ArrayList<>(getCategories()); // Fetching Promotion set Primary Categories
+		//final List<Product> promotionProductList = new ArrayList<>(getProducts()); // Fetching Promotion set Primary Products
+		//final List<Category> promotionCategoryList = new ArrayList<>(getCategories()); // Fetching Promotion set Primary Categories
 		// Validating Exclude Manufacturer and Adding excluded Products to their respective lists
 		final List<Product> excludedProductList = new ArrayList<Product>();
 		final List<String> excludeManufactureList = new ArrayList<String>();
@@ -104,43 +102,36 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 			final AbstractOrder cart = promoContext.getOrder();
 
 			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
-
 			//changes end for omni cart fix @atmaram
-			final List<String> sellerIDData = new ArrayList<String>();
-			final Map<AbstractOrderEntry, String> eligibleProductMap = new HashMap<AbstractOrderEntry, String>();
-			final List<Product> eligibleProductList = new ArrayList<Product>();
-			//getting the valid products
-			final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
-					.getValidProdListForBuyXofAPromo(order, ctx, promotionProductList, promotionCategoryList, restrictionList,
-							excludedProductList, excludeManufactureList, sellerIDData, eligibleProductMap);
+			final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(ctx, promoContext);
 
-			int realQuantity = 0;
-
-			//For TPR-4282
-			for (final AbstractOrderEntry entry : validProductUssidMap.values())
+			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag && sellerFlag
+					&& flagForPincodeRestriction) //***Blocked for TISPT-154**
+			//if (checkChannelFlag && sellerFlag && flagForPincodeRestriction)
 			{
-				realQuantity += entry.getQuantity().intValue(); // Fetches total count of Valid Products
-				eligibleProductList.add(entry.getProduct());
-			}
+				final List<String> sellerIDData = new ArrayList<String>();
+				final Map<AbstractOrderEntry, String> eligibleProductMap = new HashMap<AbstractOrderEntry, String>();
+				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 
-			if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
-			{
-				final int stockQuantity = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList);
-				setStockCount(stockQuantity);
-				if (realQuantity >= stockQuantity)
-				{
-					realQuantity = stockQuantity;
-				}
-			}
+				//getting the valid products
+				//				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
+				//						.getValidProdListForBuyXofAPromo(order, ctx, promotionProductList, promotionCategoryList, restrictionList,
+				//								excludedProductList, excludeManufactureList, sellerIDData, eligibleProductMap);
+				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
+						.getValidProdListForBuyXofA(order, ctx, allowedProductList, restrictionList, excludedProductList,
+								excludeManufactureList, sellerIDData, eligibleProductMap);
 
-			//if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag && sellerFlag) //***Blocked for TISPT-154**
-			if (checkChannelFlag && sellerFlag && flagForPincodeRestriction
-					&& getMplPromotionHelper().checkOrderCount(restrictionList, getCode(), cart))
-			{
 				if (GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, ctx, promoContext, this,
 						restrictionList) && !getDefaultPromotionsManager().promotionAlreadyFired(ctx, validProductUssidMap))
 				{
 					final int qualifyingCount = getQualifyingCount(ctx).intValue();
+					//final List<Product> eligibleProductList = new ArrayList<Product>();
+					int realQuantity = 0;
+					for (final AbstractOrderEntry entry : validProductUssidMap.values())
+					{
+						realQuantity += entry.getQuantity().intValue(); // Fetches total count of Valid Products
+						//eligibleProductList.add(entry.getProduct());
+					}
 					noOfProducts = realQuantity;
 
 					flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
@@ -156,7 +147,7 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 					//						eligibleProductList.add(orderEntry.getProduct());
 					//					}
 
-					final PromotionOrderView view = promoContext.createView(ctx, this, eligibleProductList);
+					final PromotionOrderView view = promoContext.createView(ctx, this, allowedProductList);
 					//final PromotionOrderEntry viewEntry = view.peek(ctx);
 
 					final Map<String, Integer> tcMapForValidEntries = new HashMap<String, Integer>();
@@ -170,68 +161,55 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 						final Map<String, Integer> validProductList = getDefaultPromotionsManager().getSortedValidProdUssidMap(
 								validProductUssidMap, realQuantity, qualifyingCount, ctx, restrictionList, getCode());
 
-						if (MapUtils.isNotEmpty(validProductUssidMap)
-								&& getMplPromotionHelper().validateCount(validProductList, qualifyingCount, restrictionList))
+						//Gift Products Could be multiple
+						final List<Product> productList = (List<Product>) this.getGiftProducts(ctx);
+						final int giftProductCount = realQuantity / qualifyingCount;
+						ctx.setAttribute(MarketplacecommerceservicesConstants.FREEGIFT_QUANTITY, String.valueOf(giftProductCount)); // Setting Free gift details in Session Context
+						ctx.setAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, String.valueOf(this.getCode()));
+						//promoContext.startLoggingConsumed(this);
+
+						final List<PromotionOrderEntryConsumed> consumed = getDefaultPromotionsManager().getConsumedEntriesForFreebie(
+								ctx, this, validProductUssidMap, validProductList, null, tcMapForValidEntries);
+
+						final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
+								promoContext.getOrder(), 1.0F);
+						//final List consumed = promoContext.finishLoggingAndGetConsumed(this, true);
+						result.setConsumedEntries(ctx, consumed);
+
+						if (CollectionUtils.isNotEmpty(productList))
 						{
-							//Gift Products Could be multiple
-							final List<Product> productList = (List<Product>) this.getGiftProducts(ctx);
-							//final int giftProductCount = realQuantity / qualifyingCount;
-							//ctx.setAttribute(MarketplacecommerceservicesConstants.FREEGIFT_QUANTITY, String.valueOf(giftProductCount)); // Setting Free gift details in Session Context
-							ctx.setAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, String.valueOf(this.getCode()));
-							//promoContext.startLoggingConsumed(this);
-
-							final List<PromotionOrderEntryConsumed> consumed = getDefaultPromotionsManager()
-									.getConsumedEntriesForFreebie(ctx, this, validProductUssidMap, validProductList, null,
-											tcMapForValidEntries);
-
-							final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
-									promoContext.getOrder(), 1.0F);
-							//final List consumed = promoContext.finishLoggingAndGetConsumed(this, true);
-							result.setConsumedEntries(ctx, consumed);
-
-							if (CollectionUtils.isNotEmpty(productList))
+							final Map<String, Product> giftProductDetails = getDefaultPromotionsManager().getGiftProductsUSSID(
+									productList, sellerIDData); // Validating for Scenario: Eligible Products and Free Gift must be from the same DC
+							if (MapUtils.isNotEmpty(giftProductDetails))
 							{
-								final Map<String, Product> giftProductDetails = getDefaultPromotionsManager().getGiftProductsUSSID(
-										productList, sellerIDData); // Validating for Scenario: Eligible Products and Free Gift must be from the same DC
-								if (MapUtils.isNotEmpty(giftProductDetails))
+								getPromotionUtilityPOJO().setPromoProductList(allowedProductList); // Adding Eligible Products for Scenario : One Product Promotion per eligible Product
+								skuFreebieList = populateFreebieSKUIDs(giftProductDetails);
+								freegiftInfoMap = populateFreebieDetails(giftProductDetails);
+								int giftCount = 0;
+								for (final Map.Entry<String, Product> entry : giftProductDetails.entrySet())
 								{
-									getPromotionUtilityPOJO().setPromoProductList(eligibleProductList); // Adding Eligible Products for Scenario : One Product Promotion per eligible Product
-									skuFreebieList = populateFreebieSKUIDs(giftProductDetails);
-									freegiftInfoMap = populateFreebieDetails(giftProductDetails);
-									int giftCount = 0;
-									for (final Map.Entry<String, Product> entry : giftProductDetails.entrySet())
-									{
-										if (!getMplPromotionHelper().validateForStockRestriction(restrictionList))
-										{
-											//TPR-4282
-											giftCount = getDefaultPromotionsManager().getFreeGiftCount(entry.getKey(), eligibleProductMap,
-													qualifyingCount, validProductList);
-										}
-										else
-										{
-											giftCount = getMplPromotionHelper().getFreeGiftCount(entry.getKey(), qualifyingCount,
-													validProductList);
-										}
-									}
-									if (giftCount > 0)
-									{
-										ctx.setAttribute(MarketplacecommerceservicesConstants.FREEGIFT_QUANTITY, String.valueOf(giftCount));
-									}
-
-									final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
-											.getAssociatedItemsForAFreebiePromotions(validProductUssidMap, skuFreebieList);
-									ctx.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
-									ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
-									ctx.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductList);
-									result.addAction(
-											ctx,
-											getDefaultPromotionsManager().createCustomPromotionOrderAddFreeGiftAction(ctx, freegiftInfoMap,
-													result, Double.valueOf(giftCount)));
-
+									giftCount = getDefaultPromotionsManager().getFreeGiftCount(entry.getKey(), eligibleProductMap,
+											qualifyingCount);
 								}
+								if (giftCount > 0)
+								{
+									ctx.setAttribute(MarketplacecommerceservicesConstants.FREEGIFT_QUANTITY, String.valueOf(giftCount));
+								}
+
+								final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
+										.getAssociatedItemsForAFreebiePromotions(validProductUssidMap, skuFreebieList);
+								ctx.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
+								ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
+								ctx.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductList);
+								result.addAction(
+										ctx,
+										getDefaultPromotionsManager().createCustomPromotionOrderAddFreeGiftAction(ctx, freegiftInfoMap,
+												result, Double.valueOf(giftCount)));
+
 							}
-							results.add(result);
 						}
+						results.add(result);
+
 					}
 
 					//Setting remaining items
@@ -239,39 +217,17 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 							tcMapForValidEntries);
 
 					if (noOfProducts > 0 && remainingItemsFromTail != null && remainingItemsFromTail.size() > 0L
-							&& GenericUtilityMethods.checkRestrictionData(restrictionList)
-							&& !getMplPromotionHelper().validateForStockRestriction(restrictionList))
-					{
+							&& GenericUtilityMethods.checkRestrictionData(restrictionList))
+					{// For Localization
+					 //						final float certainty = remainingItemsFromTail != null ? (remainingItemsFromTail.isEmpty() ? 1.00F
+					 //								: (float) remainingItemsFromTail.size() / qualifyingCount) : 0.00F;
+
 						final float certainty = (float) remainingItemsFromTail.size() / qualifyingCount;
+
 						final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
 								promoContext.getOrder(), certainty);
 						result.setConsumedEntries(remainingItemsFromTail);
 						results.add(result);
-					}
-					else if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
-					{
-						if (noOfProducts >= getStockCount())
-						{
-							final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
-									promoContext.getOrder(), 1.00F);
-							results.add(result);
-						}
-						else if (noOfProducts < getStockCount() && (noOfProducts % qualifyingCount == 0))
-						{
-							//TPR-4282
-							final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
-									promoContext.getOrder(), 1.00F);
-							results.add(result);
-						}
-						else if (noOfProducts < getStockCount() && !(noOfProducts % qualifyingCount == 0))
-						{
-							//TPR-4282
-							final float certainty = (float) remainingItemsFromTail.size() / qualifyingCount;
-							final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
-									promoContext.getOrder(), certainty);
-							result.setConsumedEntries(remainingItemsFromTail);
-							results.add(result);
-						}
 					}
 				}
 				else
@@ -305,7 +261,6 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 		}
 		return results;
 	}
-
 
 
 	/**
@@ -529,22 +484,5 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 	public void setNoOfProducts(final int noOfProducts)
 	{
 		this.noOfProducts = noOfProducts;
-	}
-
-	/**
-	 * @return the stockCount
-	 */
-	public int getStockCount()
-	{
-		return stockCount;
-	}
-
-	/**
-	 * @param stockCount
-	 *           the stockCount to set
-	 */
-	public void setStockCount(final int stockCount)
-	{
-		this.stockCount = stockCount;
 	}
 }

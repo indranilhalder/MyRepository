@@ -229,10 +229,24 @@
 				<ul>
 					<c:if test="${empty showOnlySiteLogo }">
 
+<!-- changes for performance fixof TPR-561 -->
+							<li class="ShopByDepartmentone">
+					
+						<div class="toggle shop_dept"><span><spring:theme code="navigation.department.shopBy"/></span>
+							<span><spring:theme code="navigation.department.shopByDepartment"/></span></div> <!-- TPR-561 -->
+								<span id="mobile-menu-toggle" class="mainli"></span>
+									<ul class="shopByDepartment_ajax">
+																		
+									</ul>
+									 </li>
+
 						<cms:pageSlot position="NavigationBar" var="component">
+							<c:if test ="${component.uid eq 'ShopByBrandComponent' }">
 							<c:set var="componentName" value="${component.name}"/>
-							<li class="${fn:replace(componentName,' ', '')}"><cms:component component="${component}" /></li>
+							<li class="ShopByBrand ${fn:replace(componentName,' ', '')}"><cms:component component="${component}" /></li>
+							</c:if>
 						</cms:pageSlot>
+						<!-- changes for performance fixof TPR-561 -->
 
 					</c:if>
 

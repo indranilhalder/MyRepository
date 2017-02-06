@@ -10,8 +10,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.util.StringUtils;
+
+import com.tisl.mpl.fulfilmentprocess.utility.GenericUtility;
 
 
 /**
@@ -24,6 +27,7 @@ public class VariantSizeComparator implements Comparator<VariantOptionData>
 	private String pattern;
 	private Pattern regexPattern;
 	private List<List<String>> sizeSystems;
+	private static final Logger LOG = Logger.getLogger(SizeGuideHeaderComparator.class);
 
 	//this is used to compare the sizes of different variants
 
@@ -32,12 +36,19 @@ public class VariantSizeComparator implements Comparator<VariantOptionData>
 	{
 
 		//TISPRO-50 - null check added
-
-		final String value0 = arg0.getSizeLink() == null || arg0.getSizeLink().get(arg0.getUrl()) == null ? null : arg0
-				.getSizeLink().get(arg0.getUrl()).replaceAll("\\s+", "").toUpperCase();
-		final String value1 = arg1.getSizeLink() == null || arg1.getSizeLink().get(arg1.getUrl()) == null ? null : arg1
-				.getSizeLink().get(arg1.getUrl()).replaceAll("\\s+", "").toUpperCase();
-		if (value0 == null || value1 == null || StringUtils.isEmpty(value0) || StringUtils.isEmpty(value1))
+		String value0 = "";
+		String value1 = "";
+		if (null != arg0.getSizeLink() && null != arg0.getSizeLink().get(arg0.getUrl()))
+		{
+			value0 = arg0.getSizeLink().get(arg0.getUrl()).replaceAll("\\s+", "").toUpperCase();
+		}
+		if (null != arg1.getSizeLink() && null != arg1.getSizeLink().get(arg1.getUrl()))
+		{
+			value1 = arg1.getSizeLink().get(arg1.getUrl()).replaceAll("\\s+", "").toUpperCase();
+		}
+		//		if (StringUtils.isNotEmpty(value0) || StringUtils.isNotEmpty(value1))
+		//		INC_11681
+		if (StringUtils.isEmpty(value0) || StringUtils.isEmpty(value1))
 		{
 			return 0;
 		}
@@ -106,11 +117,35 @@ public class VariantSizeComparator implements Comparator<VariantOptionData>
 		}
 		else if (value2SizeSystemIndex != -1)
 		{
-			final double modifiedValue1 = Double.parseDouble(value0.replaceAll("\\D+", ""));
-			final double modifiedValue2 = Double.parseDouble(value1.replaceAll("\\D+", ""));
+			//			final double modifiedValue1 = Double.parseDouble(value0.replaceAll("\\D+", ""));
+			//			final double modifiedValue2 = Double.parseDouble(value1.replaceAll("\\D+", ""));
+
 			//values out of size-systems are placed as last thus so big number.
-			return Double.compare(modifiedValue1, modifiedValue2);
+			//			return Double.compare(modifiedValue1, modifiedValue2);
+			//			INC_11681 Start
+			String mod_value0 = "";
+			String mod_value1 = "";
+			mod_value0 = value0.replaceAll("\\D+", "");
+			mod_value1 = value1.replaceAll("\\D+", "");
+			if (StringUtils.isNotEmpty(mod_value0) && StringUtils.isNotEmpty(mod_value1))
+			{
+				final double modifiedValue1 = Double.parseDouble(mod_value0);
+				final double modifiedValue2 = Double.parseDouble(mod_value1);
+				//values out of size-systems are placed as last thus so big number.
+				return Double.compare(modifiedValue1, modifiedValue2);
+			}
+			else
+			{
+				return Integer.MAX_VALUE;
+			}
+
 		}
+		else if (value1SizeSystemIndex == -1 && value2SizeSystemIndex == -1)
+		{
+			LOG.debug("calling alpha Numeric Compare");
+			return GenericUtility.alphaNumericCompare(value0, value1);
+		}
+		//		INC_11681 End
 		//no luck - assume values are equal
 		return 0;
 	}

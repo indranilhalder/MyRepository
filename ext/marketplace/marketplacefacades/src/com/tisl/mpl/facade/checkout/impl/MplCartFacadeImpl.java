@@ -94,6 +94,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
+import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
 
 
@@ -217,91 +218,112 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * @throws EtailNonBusinessExceptions
 	 */
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public CartData getSessionCartWithEntryOrderingMobile(final CartModel cart, final boolean recentlyAddedFirst)
-			throws EtailNonBusinessExceptions
+	public CartData getSessionCartWithEntryOrderingMobile(final CartModel cart, final boolean recentlyAddedFirst,
+			final boolean isrecalculate, final boolean resetReqd) throws EtailNonBusinessExceptions
 	{
 		final Map<String, String> orderEntryToUssidMap = new HashMap<String, String>();
 		final List<OrderEntryData> recentlyAddedListEntries = new ArrayList<OrderEntryData>();
 		CartData cartData = null;
-
-		if (cart != null)
+		try
 		{
-			final List<AbstractOrderEntryModel> cartEntryModels = cart.getEntries();
-			cartData = getMplExtendedPromoCartConverter().convert(cart); //TISPT-104
-			//	cartData = getMplExtendedCartConverter().convert(cart);
-			final List<OrderEntryData> orderEntryDatas = cartData.getEntries();
-
-			if (recentlyAddedFirst)
+			if (cart != null)
 			{
-				for (int index = orderEntryDatas.size(); index > 0; index--)
+				if (resetReqd)
 				{
-					recentlyAddedListEntries.add(orderEntryDatas.get(index - 1));
+					getCalculatedCartMobile(cart); /// Cart recalculation method invoked inside this method
+					//final CartModel cart = mplCartFacade.removeDeliveryMode(serviceCart); // Contains recalculate cart TISPT-104
+					//TISST-13010
+					setCartSubTotal2(cart);
 				}
-				cartData.setEntries(Collections.unmodifiableList(recentlyAddedListEntries));
-			}
+				if (isrecalculate)
+				{
+					commerceCartService.recalculateCart(cart);
+				}
+
+				totalMrpCal(cart);
+
+				final List<AbstractOrderEntryModel> cartEntryModels = cart.getEntries();
+				cartData = getMplExtendedPromoCartConverter().convert(cart); //TISPT-104
+				//	cartData = getMplExtendedCartConverter().convert(cart);
+				final List<OrderEntryData> orderEntryDatas = cartData.getEntries();
+
+				if (recentlyAddedFirst)
+				{
+					for (int index = orderEntryDatas.size(); index > 0; index--)
+					{
+						recentlyAddedListEntries.add(orderEntryDatas.get(index - 1));
+					}
+					cartData.setEntries(Collections.unmodifiableList(recentlyAddedListEntries));
+				}
 
 
-			for (final AbstractOrderEntryModel abstractOrderEntryModel : cartEntryModels)
-			{
-				if (null != abstractOrderEntryModel.getSelectedUSSID() && !abstractOrderEntryModel.getSelectedUSSID().isEmpty())
+				for (final AbstractOrderEntryModel abstractOrderEntryModel : cartEntryModels)
 				{
-					final String ussid = abstractOrderEntryModel.getSelectedUSSID();
-					orderEntryToUssidMap.put(abstractOrderEntryModel.getEntryNumber().toString(), ussid);
+					if (null != abstractOrderEntryModel.getSelectedUSSID() && !abstractOrderEntryModel.getSelectedUSSID().isEmpty())
+					{
+						final String ussid = abstractOrderEntryModel.getSelectedUSSID();
+						orderEntryToUssidMap.put(abstractOrderEntryModel.getEntryNumber().toString(), ussid);
+					}
+					else
+					{
+						for (final OrderEntryData orderEntryData : orderEntryDatas)
+						{
+							if (orderEntryData.getEntryNumber() == abstractOrderEntryModel.getEntryNumber())
+							{
+								final List<SellerInformationModel> sellerInformationModels = (List<SellerInformationModel>) abstractOrderEntryModel
+										.getProduct().getSellerInformationRelator();
+								if (sellerInformationModels != null && !sellerInformationModels.isEmpty())
+								{
+									final SellerInformationModel sellerInformationModel = sellerInformationModels.get(0);
+									final SellerInformationData sellerInformationData = new SellerInformationData();
+									sellerInformationData.setSellerID(sellerInformationModel.getSellerID());
+									sellerInformationData.setUssid(sellerInformationModel.getSellerArticleSKU());
+									sellerInformationData.setSellername(sellerInformationModel.getSellerName());
+									orderEntryData.setSelectedSellerInformation(sellerInformationData);
+								}
+							}
+						}
+					}
 				}
-				else
+				for (final Entry<String, String> entryNumber : orderEntryToUssidMap.entrySet())
 				{
 					for (final OrderEntryData orderEntryData : orderEntryDatas)
 					{
-						if (orderEntryData.getEntryNumber() == abstractOrderEntryModel.getEntryNumber())
+						if (orderEntryData.getEntryNumber() != null
+								&& orderEntryData.getEntryNumber().toString().equals(entryNumber.getKey()))
 						{
-							final List<SellerInformationModel> sellerInformationModels = (List<SellerInformationModel>) abstractOrderEntryModel
-									.getProduct().getSellerInformationRelator();
-							if (sellerInformationModels != null && !sellerInformationModels.isEmpty())
+							LOG.debug("Matched Entry number from Mapped entry number and ussid >>>>>>" + entryNumber.getKey());
+							final ProductData productData = orderEntryData.getProduct();
+							final List<SellerInformationData> sellerInformationDatas = productData.getSeller();
+							for (final SellerInformationData sellerInformationData : sellerInformationDatas)
 							{
-								final SellerInformationModel sellerInformationModel = sellerInformationModels.get(0);
-								final SellerInformationData sellerInformationData = new SellerInformationData();
-								sellerInformationData.setSellerID(sellerInformationModel.getSellerID());
-								sellerInformationData.setUssid(sellerInformationModel.getSellerArticleSKU());
-								sellerInformationData.setSellername(sellerInformationModel.getSellerName());
-								orderEntryData.setSelectedSellerInformation(sellerInformationData);
+								if (entryNumber.getValue().equals(sellerInformationData.getUssid()))
+								{
+									LOG.debug("got seller information data for cart line item number " + orderEntryData.getEntryNumber()
+											+ "seller name " + sellerInformationData.getSellername());
+									orderEntryData.setSelectedSellerInformation(sellerInformationData);
+								}
 							}
 						}
 					}
 				}
-			}
-			for (final Entry<String, String> entryNumber : orderEntryToUssidMap.entrySet())
-			{
-				for (final OrderEntryData orderEntryData : orderEntryDatas)
-				{
-					if (orderEntryData.getEntryNumber() != null
-							&& orderEntryData.getEntryNumber().toString().equals(entryNumber.getKey()))
-					{
-						LOG.debug("Matched Entry number from Mapped entry number and ussid >>>>>>" + entryNumber.getKey());
-						final ProductData productData = orderEntryData.getProduct();
-						final List<SellerInformationData> sellerInformationDatas = productData.getSeller();
-						for (final SellerInformationData sellerInformationData : sellerInformationDatas)
-						{
-							if (entryNumber.getValue().equals(sellerInformationData.getUssid()))
-							{
-								LOG.debug("got seller information data for cart line item number " + orderEntryData.getEntryNumber()
-										+ "seller name " + sellerInformationData.getSellername());
-								orderEntryData.setSelectedSellerInformation(sellerInformationData);
-							}
-						}
-					}
-				}
-			}
 
-			return cartData;
+				return cartData;
+			}
 		}
-
+		catch (final Exception e)
+		{
+			LOG.error("getSessionCartWithEntryOrderingMobile---Fails" + e);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+		}
 		return createEmptyCart();
 	}
 
 	/*
 	 * @Desc fetching cartdata using session cart
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1911,7 +1933,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
 				{
 
-					if (cartEntryModel != null && cartEntryModel.getProduct() == null)
+					if (cartEntryModel != null && !cartEntryModel.getGiveAway().booleanValue() && cartEntryModel.getProduct() == null)
 					{
 						final CartModificationData cartModification = updateCartEntry(cartEntryModel.getEntryNumber().longValue(), 0);
 
@@ -2429,6 +2451,31 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	}
 
+	@Override
+	public CartModel getCalculatedCartMobile(CartModel cart) throws CommerceCartModificationException, EtailNonBusinessExceptions
+	{
+		//setChannelForCart(cart);
+		cart = setChannelAndExpressCheckoutMobile(cart);
+		//isCartEntryDelistedMobile(cart);
+		removeDeliveryMode2(cart); // Cart recalculation method invoked inside this method
+		//final boolean hasSubtotalChanged = setCartSubTotal(cart);
+		//TODO Add release voucher code
+		//Do calculate the cart, if any of the following conditions met. Else return the cart as it is.
+		//		if (isDelisted || isDeliveryModeRemoved)
+		//		{
+		//			cart.setCalculated(Boolean.FALSE);
+		//			setCartEntriesCalculation(cart);
+		//			final CommerceCartParameter parameter = new CommerceCartParameter();
+		//			parameter.setCart(cart);
+		//			getMplDefaultCommerceCartCalculationStrategy().calculateCart(parameter);
+		//			getCartService().setSessionCart(cart);
+		//		}
+		//		return cart;
+
+		return cart; //TISPT-104
+
+	}
+
 	/*
 	 * private void setCartEntriesCalculation(final CartModel oldCart) { for (final AbstractOrderEntryModel entry :
 	 * oldCart.getEntries()) { entry.setCalculated(Boolean.FALSE); } }
@@ -2449,6 +2496,20 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			cartModel.setChannel(SalesApplication.WEB);
 		}
 
+		modelService.save(cartModel);
+
+		return cartModel;
+	}
+
+	//TISPT-104
+	private CartModel setChannelAndExpressCheckoutMobile(final CartModel cartModel)
+	{
+		cartModel.setIsExpressCheckoutSelected(Boolean.FALSE);
+		if (cartModel.getDeliveryAddress() != null)
+		{
+			cartModel.setDeliveryAddress(null);
+		}
+		cartModel.setChannel(SalesApplication.MOBILE);
 		modelService.save(cartModel);
 
 		return cartModel;
