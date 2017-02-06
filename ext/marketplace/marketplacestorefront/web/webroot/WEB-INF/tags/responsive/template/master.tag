@@ -127,11 +127,11 @@
 	</c:forEach>
 	
 	<!--TPR-4389 STARTS  -->
- 			<c:choose>
+ 		<%-- 	<c:choose>
  	<c:when test="${isProductPage}">
  		 <meta name="fragment" content="!">
  	</c:when>
- 	</c:choose> 
+ 	</c:choose>  --%>
  			<!--TPR-4389 END  -->
 	
 	<%-- <c:choose>

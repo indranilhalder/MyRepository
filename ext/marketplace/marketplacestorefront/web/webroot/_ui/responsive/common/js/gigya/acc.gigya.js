@@ -173,21 +173,6 @@ function registerUserGigya(eventObject)
     	
     	function getRating(key,productCode,category)
     	{
-    		
-    		   /* isGecko = navigator.product == 'Gecko'
-        		isPresto = navigator.product == 'Presto'
-        		isBlink = navigator.product == 'Blink'	
-        		isWebKit = navigator.product == 'WebKit'
-        		isTrident= navigator.product == 'Trident'
-        		isTasman = navigator.product == 'Tasman'
-        		isKHTML = navigator.product == 'KHTML'
-        		isNetFront = navigator.product == 'NetFront'
-        		isMobile = (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Windows Phone/i.test(navigator.userAgent)) */
-    		
-    		
-    		var browser_type=$("#browser_type").val();
- if((browser_type==="INTERNET_EXPLORER")||(browser_type==="GOOGLE_CHROME")||(browser_type==="NETSCAPE")||(browser_type==="FLOCK")||(browser_type==="SAFARI")||(browser_type==="MOZILA_FIREFOX")||(browser_type==="ANDROID")||(browser_type==="OPERA")||(browser_type==="TRIDENT")||(browser_type==="BLINK")||(browser_type==="KHTML")||(browser_type==="WEBKIT")||(browser_type==="NETFRONT"||(browser_type==="WINDOWS")||(browser_type==="GECKO")||(browser_type==="PROPRIETARY"))){
-        	//if(isPresto||isTrident||isGecko||isWebKit||isTasman||isKHTML||isNetFront||isMobile) {
     		var url = "https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=?";
     		
     		$.getJSON(url, function(data){
@@ -218,7 +203,6 @@ function registerUserGigya(eventObject)
     		 			{
     		 			$("#pdp_rating"+" li").eq(rating).removeClass("empty").addClass("half");
     		 			} 
-    		 		
     		 		//TISUATPII-471 fix
     		 		
     		 		if(raingcount == 1){
@@ -231,72 +215,13 @@ function registerUserGigya(eventObject)
     						$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEWS");
     						}
     				$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
-    				$('#ratingvalue').html(avgreview);
-    				$('#reviewcount').html(data.streamInfo.ratingCount);
+    				
     				
     				
     		  });
     		
         	} 		
-   else{
-	            alert("coming2");	   
-    			var url1 = "https://comments.us1.gigya.com/comments.getComments?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeStreamInfo=true&dataFormat=html&format=jsonp&callback=?";
-    		   alert("coming3");
-    			//tpr-1284
-        		
-        		$.getJSON(url1, function(data){
-        		  	var totalCount=data.streamInfo.ratingCount;
-        			//Reverse the source array
-        			//var ratingArray = data.streamInfo.ratingDetails._overall.ratings;
-        			var countcomment= data.streamInfo.commentCount;
-        			console.log("comment total "+countcomment);
-        			//ratingArray  = ratingArray.reverse();
-        			
-        			  /*$("div.rate-details div.after").each(function(count){			  
-        					var countIndiv=ratingArray[count];								
-        					$("div.rate-bar div.rating").eq(count).css({width:countIndiv/totalCount*100+"%"});
-        					$("div.rate-details div.after").eq(count).text(ratingArray[count]);
-        					
-        				})*/
-        				
-        				var avgreview=data.streamInfo.avgRatings._overall;
-        				var raingcount=data.streamInfo.ratingCount;
-        				$(".product-detail ul.star-review a").empty();
-        				$(".product-detail ul.star-review li").attr("class","empty");
-        				
-        	 			var rating = Math.floor(avgreview);
-        		 		var ratingDec = avgreview - rating;
-        		 		for(var i = 0; i < rating; i++) {
-        		 			$("#pdp_rating"+" li").eq(i).removeClass("empty").addClass("full");
-        		 			}
-        		 		if(ratingDec!=0)
-        		 			{
-        		 			$("#pdp_rating"+" li").eq(rating).removeClass("empty").addClass("half");
-        		 			} 
-        		 		
-        		 		//TISUATPII-471 fix
-        		 		
-        		 		if(raingcount == 1){
-        					$(".gig-rating-readReviewsLink_pdp").text(raingcount+" REVIEW");
-        					$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEW");
-        					}
-        					else if(raingcount > 0)
-        						{
-        						$(".gig-rating-readReviewsLink_pdp").text(raingcount+" REVIEWS");
-        						$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEWS");
-        						}
-        				$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
-        				
-        				$('#ratingvalue').html(avgreview);
-        				$('#reviewcount').html(countcomment);
-        				
-        				
-        				
-        				
-        		  });
  
-    		}
-    		
     		
     		  
     		//TISUATPII-471 fix
@@ -335,7 +260,7 @@ function registerUserGigya(eventObject)
 //    		          });
     		
 
-    	}
+    	//}
     	
     	function CheckUserLogedIn() {
     		

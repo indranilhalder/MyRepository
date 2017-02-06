@@ -129,6 +129,7 @@ import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.seller.product.facades.ProductOfferDetailFacade;
+import com.tisl.mpl.service.MplGigyaReviewCommentServiceImpl;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -210,6 +211,9 @@ public class ProductPageController extends MidPageController
 	private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
 	private static final String BOXING = "boxing";
 	private static final String USSID = "ussid";
+	public static final String TRUE_STATUS = "true";
+	public static final String PROXY_HOST_STATEMNT = "******************** PROXY HOST ";
+	public static final String PROXY_PORT_STATEMNT = "******************** PROXY PORT ";
 
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(ProductPageController.class);
@@ -280,9 +284,18 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
 
+	@Autowired
+	private MplGigyaReviewCommentServiceImpl mplGigyaReviewService;
+
+
 	//TPR-4389
-	@SuppressWarnings("unused")
-	private BrowserType bType;
+	/*
+	 * @SuppressWarnings("unused") private BrowserType bType;
+	 */
+
+
+	@Autowired
+	private ConfigurationService configService;
 
 	/**
 	 * @param buyBoxFacade
@@ -330,91 +343,34 @@ public class ProductPageController extends MidPageController
 			final Model model, final HttpServletRequest request, final HttpServletResponse response)
 			throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
-
+		//final was written here
 		String returnStatement = null;
-		final Boolean isProductPage = true;
+		//	final Boolean isProductPage = true;
 		try
 		{
 			if (null != productCode)
 			{
 				productCode = productCode.toUpperCase();
 			}
-			final String browserDetails = request.getHeader("User-Agent");
-			LOG.debug("**************************************opening user agent*************" + browserDetails);
-			final BrowserType bType = ProductPageController.getBrowserType(browserDetails);
-			model.addAttribute("browser_type", bType);
-			if (bType.equals(BrowserType.INTERNET_EXPLORER))
-			{
-				LOG.debug("*****************IE*****************");
-			}
-			else if (bType.equals(BrowserType.GOOGLE_CHROME))
-			{
-				LOG.debug("*****************GC*****************");
-			}
-			else if (bType.equals(BrowserType.NETSCAPE))
-			{
-				LOG.debug("*****************NETSCAPE*****************");
-			}
-			else if (bType.equals(BrowserType.FLOCK))
-			{
-				LOG.debug("*****************FLOCK*****************");
-			}
-			else if (bType.equals(BrowserType.SAFARI))
-			{
-				LOG.debug("*****************SAFARI*****************");
-			}
-			else if (bType.equals(BrowserType.MOZILA_FIREFOX))
-			{
-				LOG.debug("*****************FIREFOX*****************");
-			}
-			else if (bType.equals(BrowserType.ANDROID))
-			{
-				LOG.debug("*****************ANDROID*****************");
-			}
-			else if (bType.equals(BrowserType.OPERA))
-			{
-				LOG.debug("*****************OPERA*****************");
-			}
-			else if (bType.equals(BrowserType.TRIDENT))
-			{
-				LOG.debug("*****************INTERNET EXPLORER *****************");
-			}
-
-			else if (bType.equals(BrowserType.KHTML))
-			{
-				LOG.debug("*****************KHTML *****************");
-			}
-			else if (bType.equals(BrowserType.BLINK))
-			{
-				LOG.debug("*****************BLINK *****************");
-			}
-			else if (bType.equals(BrowserType.WEBKIT))
-			{
-				LOG.debug("*****************WEBKIT *****************");
-			}
-			else if (bType.equals(BrowserType.NETFRONT))
-			{
-				LOG.debug("*****************NETFRONT *****************");
-			}
-			else if (bType.equals(BrowserType.WINDOWS))
-			{
-				LOG.debug("*****************WINDOWS *****************");
-			}
-			else if (bType.equals(BrowserType.GECKO))
-			{
-				LOG.debug("*****************GECKO *****************");
-			}
-			else if (bType.equals(BrowserType.PROPRIETARY))
-			{
-				LOG.debug("*****************PROPRIETARY *****************");
-			}
-			else if (bType.equals(BrowserType.UNKNOWN))
-			{
-				LOG.debug("*****************UNKNOWN*****************");
-			}
 
 			LOG.debug("**************************************opening pdp for*************" + productCode);
+
+			// TPR- 4389 STARTS FROM HERE
 			final ProductModel productModel = productService.getProductForCode(productCode);
+			final Map<String, String> reviewAndRating = mplGigyaReviewService.getReviewsAndRatingByCategoryId(
+					productModel.getProductCategoryType(), productCode);
+			/*
+			 * reviewAndRating =
+			 * mplGigyaReviewService.getReviewsAndRatingByCategoryId(productModel.getProductCategoryType(), productCode);
+			 */for (final Map.Entry<String, String> entry : reviewAndRating.entrySet())
+			{
+				final String commentCount = entry.getKey();
+				final String ratingCount = entry.getValue();
+				model.addAttribute("commentCount", commentCount);
+				model.addAttribute("averageRating", ratingCount);
+
+			}
+			//   TPR-4389 ENDS HERE
 
 			if (productModel.getLuxIndicator() != null
 					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
@@ -465,7 +421,7 @@ public class ProductPageController extends MidPageController
 						ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
 						//					ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION,
 						ProductOption.VARIANT_FULL));
-				model.addAttribute(ModelAttributetConstants.IS_PRODUCTPAGE, isProductPage);
+				//	model.addAttribute(ModelAttributetConstants.IS_PRODUCTPAGE, isProductPage);
 				/*
 				 * final String brandName = productData.getBrand().getBrandname(); final String metaDescription =
 				 * ModelAttributetConstants.Product_Page_Meta_Description
@@ -2890,85 +2846,4 @@ public class ProductPageController extends MidPageController
 		}
 	}
 
-	public static BrowserType getBrowserType(final String userAgent)
-	{
-
-		if (userAgent != null)
-		{
-			if (userAgent.indexOf("MSIE") != -1)
-			{
-				return BrowserType.INTERNET_EXPLORER;
-			}
-			else if (userAgent.indexOf("Netscape") != -1)
-			{
-				return BrowserType.NETSCAPE;
-			}
-			else if (userAgent.indexOf("Chrome") != -1)
-			{
-				return BrowserType.GOOGLE_CHROME;
-			}
-			else if (userAgent.indexOf("Flock") != -1)
-			{
-				return BrowserType.FLOCK;
-			}
-			else if (userAgent.indexOf("Safari") != -1)
-			{
-				return BrowserType.SAFARI;
-			}
-			else if (userAgent.indexOf("Firefox") != -1)
-			{
-				return BrowserType.MOZILA_FIREFOX;
-			}
-			else if (userAgent.indexOf("webkit") != -1)
-			{
-				return BrowserType.WEBKIT;
-			}
-
-			else if (userAgent.indexOf("android") != -1)
-			{
-				return BrowserType.ANDROID;
-			}
-
-			else if (userAgent.indexOf("presto") != -1)
-			{
-				return BrowserType.OPERA;
-			}
-			else if (userAgent.indexOf("windows") != -1)
-			{
-				return BrowserType.WINDOWS;
-			}
-			else if (userAgent.indexOf("Trident") != -1)
-			{
-				return BrowserType.TRIDENT;
-			}
-
-			else if (userAgent.indexOf("KHTML") != -1)
-			{
-				return BrowserType.KHTML;
-			}
-			else if (userAgent.indexOf("Blink") != -1)
-			{
-				return BrowserType.BLINK;
-			}
-			else if (userAgent.indexOf("NetFront") != -1)
-			{
-				return BrowserType.NETFRONT;
-			}
-			else if (userAgent.indexOf("Gecko") != -1)
-			{
-				return BrowserType.GECKO;
-			}
-			else if (userAgent.indexOf("Proprietary") != -1)
-			{
-				return BrowserType.PROPRIETARY;
-			}
-		}
-
-		return BrowserType.UNKNOWN;
-	}
-
-	public static enum BrowserType
-	{
-		INTERNET_EXPLORER, MOZILA_FIREFOX, SAFARI, NETSCAPE, GOOGLE_CHROME, FLOCK, WEBKIT, ANDROID, OPERA, WINDOWS, TRIDENT, GECKO, KHTML, BLINK, NETFRONT, PROPRIETARY, UNKNOWN
-	}
 }
