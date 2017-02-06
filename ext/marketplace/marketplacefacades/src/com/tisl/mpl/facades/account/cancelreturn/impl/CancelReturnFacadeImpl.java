@@ -2786,7 +2786,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		catch (Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e);
+			LOG.error("Exception ocurred while saving customerBankDetails");
 		}
 		
 	}
