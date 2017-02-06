@@ -249,15 +249,15 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @DESC TISST-6994,TISST-6990 adding to cart COD eligible or not with Pincode serviceabilty and sship product
-	 *
+	 * 
 	 * @param pincodeResponseData
-	 *
+	 * 
 	 * @param deliveryModeMap
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
@@ -468,17 +468,18 @@ public interface MplCartFacade extends CartFacade
 	 * @return
 	 * @throws CommerceCartModificationException
 	 */
-	CartModificationData updateCartEntryMobile(long entryNumber, String storeId, CartModel cartModel) throws CommerceCartModificationException;
+	CartModificationData updateCartEntryMobile(long entryNumber, String storeId, CartModel cartModel)
+			throws CommerceCartModificationException;
 
 	/**
 	 * @return
 	 */
-	CartData getLuxCart(); 	throws CommerceCartModificationException;
+	CartData getLuxCart() throws CommerceCartModificationException;
 
 	/**
 	 * @param cart
 	 * @throws CommerceCartModificationException
 	 */
-	//public CartModel getCalculatedCartMobile(CartModel cart) throws CommerceCartModificationException, EtailNonBusinessExceptions;
+	public CartModel getCalculatedCartMobile(CartModel cart) throws CommerceCartModificationException, EtailNonBusinessExceptions;
 
 }
