@@ -36,7 +36,8 @@ public final class MarketplaceWalletServicesConstants extends GeneratedMarketpla
 	// implement here constants used by this extension
 
 	public final static String PROXYENABLED = "proxy.enabled";
-	public final static String GENPROXY = "proxy.address";
+	//public final static String GENPROXY = "proxy.address";
+	public final static String GENPROXY = "payment.proxy.value";
 	public final static String GENPROXYPORT = "proxy.port";
 
 	public final static String SUCCESS = "SUCCESS";

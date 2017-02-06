@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
@@ -36,7 +38,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplMWalletRefundService;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.wallet.refund.MRupeeRefundResponse;
 import com.tisl.mpl.wallet.request.MRupeeRefundRequest;
-import com.tisl.mpl.wallet.service.MRupeeRefundService;
+import com.tisl.mpl.wallet.service.impl.DefaultMplMRupeeRefundServiceImpl;
 
 
 
@@ -66,6 +68,9 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 
 	private final List<PaymentTransactionType> validPaymentType = Arrays.asList(PaymentTransactionType.CAPTURE,
 			PaymentTransactionType.COD_PAYMENT, PaymentTransactionType.AUTHORIZATION);
+
+	@Resource(name = "mRupeeRefundService")
+	private DefaultMplMRupeeRefundServiceImpl mRupeeRefundService;
 
 	/**
 	 * Method is called for doing refund at the time of cancel and return
@@ -114,7 +119,7 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 				mplPaymentAuditEntryModel.setStatus(MplPaymentAuditStatusEnum.REFUND_INITIATED);
 
 				//pick up base url from local properties
-				final MRupeeRefundService mRupeeRefundService = new MRupeeRefundService();
+				//final MRupeeRefundService mRupeeRefundService = new MRupeeRefundService();
 				//mRupeeRefundService.setBaseUrl("https://14.140.248.13/Mwallet/startpaymentgatewayS2S.do");
 				mRupeeRefundService.setBaseUrl(
 						configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.MRUPEERETURNURL));

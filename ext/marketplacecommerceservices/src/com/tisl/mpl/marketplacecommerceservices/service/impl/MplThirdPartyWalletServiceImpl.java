@@ -80,7 +80,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplThirdPartyWalletServi
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.util.OrderStatusSpecifier;
-import com.tisl.mpl.wallet.service.MrupeePaymentService;
+import com.tisl.mpl.wallet.service.DefaultMplMrupeePaymentService;
 
 
 /**
@@ -168,6 +168,9 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	private FlexibleSearchService flexibleSearchService;
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
+
+	@Resource(name = "mRupeeService")
+	private DefaultMplMrupeePaymentService mRupeeService;
 
 	public ConfigurationService getConfigurationService()
 	{
@@ -561,7 +564,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	 */
 	private String getMrupeeResponse(final MplPaymentAuditModel auditModelData)
 	{
-		final MrupeePaymentService mRupeeService = new MrupeePaymentService();
+		//	final MrupeePaymentService mRupeeService = new MrupeePaymentService();
 		final String checksumKey = mRupeeService.generateCheckSumForVerification(auditModelData.getAuditId());
 		final String mId = configurationService.getConfiguration().getString(PAYMENT_M_RUPEE_MERCHANT_ID);
 		final String url = configurationService.getConfiguration().getString(PAYMENT_M_RUPEE_VERIFICATION_URL);
@@ -770,7 +773,10 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 			{
 				public boolean verify(final String hostname, final SSLSession session)
 				{
-					if (hostname.equals(_14_140_248_13))
+					final String mRupeehostname = getConfigurationService().getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.MRUPEEHOSTNAME);
+					//	if (hostname.equals(_14_140_248_13))
+					if (hostname.equals(mRupeehostname))
 					{
 						return true;
 					}
