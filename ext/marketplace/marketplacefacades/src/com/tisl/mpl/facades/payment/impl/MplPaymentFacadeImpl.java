@@ -144,7 +144,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 *
 	 */
 	@Override
-	public Map<String, Boolean> getPaymentModes(final String store, final boolean isMobile, final CartData cartDataMobile)
+	public Map<String, Boolean> getPaymentModes(final String store, final boolean isMobile, final CartData cartData)
 			throws EtailNonBusinessExceptions
 	{
 		//Declare variable
@@ -154,16 +154,17 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//Get payment modes
 			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
 			boolean flag = false;
-			CartData cartData = null;
-			if (isMobile)
-			{
-				LOG.debug("Mobile payment modes cart Id................" + cartDataMobile.getCode());
-				cartData = cartDataMobile;
-			}
-			else
-			{
-				cartData = getMplCustomAddressFacade().getCheckoutCart();
-			}
+			// Data Sent from Controller as part of Drop2.1
+			//final CartData cartData = null;
+			//if (isMobile)
+			//			{
+			//				LOG.debug("Mobile payment modes cart Id................" + cartDataMobile.getCode());
+			//				cartData = cartDataMobile;
+			//			}
+			//			else
+			//			{
+			//				cartData = getMplCustomAddressFacade().getCheckoutCart();
+			//			}
 			//IQA changes TPR-629
 			if (cartData != null)
 			{
