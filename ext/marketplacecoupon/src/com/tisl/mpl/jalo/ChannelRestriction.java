@@ -36,7 +36,7 @@ public class ChannelRestriction extends GeneratedChannelRestriction
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.voucher.jalo.Restriction#isFulfilledInternal(de.hybris.platform.jalo.order.AbstractOrder)
 	 */
 	@Override
@@ -57,7 +57,6 @@ public class ChannelRestriction extends GeneratedChannelRestriction
 			if (paramAbstractOrder instanceof Order)
 			{
 				cartChannel = paramAbstractOrder.getAttribute(OrderModel.SALESAPPLICATION);
-
 				LOG.debug("CartChannel for Order" + cartChannel);
 			}
 		}
@@ -78,16 +77,20 @@ public class ChannelRestriction extends GeneratedChannelRestriction
 	{
 		// YTODO Auto-generated method stub
 		boolean checkFlag = false;
-		for (final EnumerationValue enumChannel : channel)
+
+
+		if (cartChannel != null && channel.contains(cartChannel))
 		{
-			/*
-			 * enumChannel.getCode(); cartChannel.toString();
-			 */
-			if ((cartChannel != null) && (enumChannel.equals(cartChannel)))
-			{
-				checkFlag = true;
-			}
+			checkFlag = true;
 		}
+
+		/*
+		 * for (final EnumerationValue enumChannel : channel) {
+		 * 
+		 * enumChannel.getCode(); cartChannel.toString();
+		 * 
+		 * if ((cartChannel != null) && (enumChannel.equals(cartChannel))) { checkFlag = true; break; } }
+		 */
 
 		return checkFlag;
 
@@ -96,7 +99,7 @@ public class ChannelRestriction extends GeneratedChannelRestriction
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.voucher.jalo.Restriction#isFulfilledInternal(de.hybris.platform.jalo.product.Product)
 	 */
 	@Override
