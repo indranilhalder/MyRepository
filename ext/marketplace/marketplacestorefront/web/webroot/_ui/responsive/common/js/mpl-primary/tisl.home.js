@@ -2111,3 +2111,19 @@ $(document).ready(function()
 			}
 		});
 
+	
+		 //changes for performance fixof TPR-561 
+		$(document).ready(function() {
+			//$(".shop_dept").on("mouseover touchend", function(e) {
+				//e.stopPropagation();
+				if (!$('.shopByDepartment_ajax').children().length){  
+					$.ajax({
+						url: ACC.config.encodedContextPath +  "/shopbydepartment",
+						type: 'GET',
+						cache:false,
+						success: function(html) {
+							$(".shopByDepartment_ajax").html(html);
+						}
+					});
+				}	
+			});

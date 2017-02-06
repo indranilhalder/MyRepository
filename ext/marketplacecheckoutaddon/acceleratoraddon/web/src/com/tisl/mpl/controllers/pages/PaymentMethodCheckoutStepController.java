@@ -91,8 +91,8 @@ import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
-import com.tisl.mpl.core.enums.CodCheckMessage;
-import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
+import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.CodCheckMessage;
+import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.enums.PaymentModesEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
@@ -230,18 +230,22 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public String enterStep(final Model model, final RedirectAttributes redirectAttributes,
 			@RequestParam(value = "value", required = false, defaultValue = "") final String guid) throws CMSItemNotFoundException
 	{
-		//		final CartModel serviceCart = getCartService().getSessionCart();			//Commented for TPR-629
-		//		serviceCart.setIsExpressCheckoutSelected(Boolean.valueOf(true));
-		//		modelService.save(serviceCart);
-
 		//redirecting to previous page for anonymous user
-		if (getUserFacade().isAnonymousUser())
-		{
-			return getCheckoutStep().previousStep();
-		}
-		//TPR-1080
-		final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-		ValidationResults validationResult = null;
+				if (getUserFacade().isAnonymousUser())
+				{
+					return getCheckoutStep().previousStep();
+				}
+				final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+				ValidationResults validationResult = null;
+				//Validator called explicitly TPR-629
+				if (StringUtils.isEmpty(guid))
+				{
+					validationResult = paymentValidator.validateOnEnterOptimized(cartData, redirectAttributes);
+				}
+				if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
+				{
+					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+				}
 		//Validator called explicitly TPR-629
 		if (StringUtils.isEmpty(guid))
 		{
@@ -331,7 +335,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
 				// TPR-429 START
-				final String checkoutSellerID = populateCheckoutSellers(cartData);
+				final String checkoutSellerID = populateCheckoutSellersForOrder(orderData);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 				// TPR-429 END
 				//Getting Payment modes
@@ -2444,7 +2448,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * @param paymentForm
 	 * @param model
 	 * @return String
-	 * @throws CMSItemNotFoundException
+	 * @throws CMSItemNotFoundExceptionr
 	 * @throws InvalidCartException
 	 *
 	 */
@@ -3425,6 +3429,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
 			orderId = "JUSPAY_CONN_ERROR";
+			//to be check
+			//return MarketplacecheckoutaddonConstants.REDIRECTTOPAYMENT;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -4193,6 +4199,26 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return cartLevelSellerID;
 	}
 
+
+	//TPR-429 change:- PaymentPage redirect fix
+	public static String populateCheckoutSellersForOrder(final OrderData orderData)
+	{
+		String cartLevelSellerID = null;
+		final List<OrderEntryData> sellerList = orderData.getEntries();
+		for (final OrderEntryData seller : sellerList)
+		{
+			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+			if (cartLevelSellerID != null)
+			{
+				cartLevelSellerID += "_" + sellerID;
+			}
+			else
+			{
+				cartLevelSellerID = sellerID;
+			}
+		}
+		return cartLevelSellerID;
+	}
 
 
 }

@@ -472,7 +472,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	 */
 	@Override
 	public StoreLocatorAtsResponseObject prepStoreLocationsToOMS(
-			final List<StoreLocationRequestData> storeLocationRequestDataList, CartModel cartModel)
+			final List<StoreLocationRequestData> storeLocationRequestDataList, final CartModel cartModel)
 	{
 		LOG.debug("from prepStoreLocationsToOMS method in serive");
 		StoreLocatorAtsResponseObject storeLocatorResfromOMS = null;
@@ -520,10 +520,10 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 						storeLocatorList.add(storelocreqObj);
 					}
 				}
-				if (cartModel == null)
-				{
-					cartModel = cartService.getSessionCart();
-				}
+				//Fix for anonymous cart from mobile
+				/*
+				 * if (cartModel == null) { cartModel = cartService.getSessionCart(); }
+				 */
 				if (null != cartModel && null != cartModel.getGuid())
 				{
 					storeLocatorRequest.setCartId(cartModel.getGuid());
