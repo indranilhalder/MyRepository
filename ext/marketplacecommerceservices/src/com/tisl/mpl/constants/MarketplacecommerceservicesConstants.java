@@ -824,7 +824,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9073 = "B9073";
 	public static final String B9074 = "B9074";
 	public static final String B9075 = "B9075";
-
+	public static final String B9076 = "B9076";
 
 	public static final String E9040 = "E9040";
 	public static final String E9041 = "E9041";
