@@ -57,7 +57,6 @@ public class ChannelRestriction extends GeneratedChannelRestriction
 			if (paramAbstractOrder instanceof Order)
 			{
 				cartChannel = paramAbstractOrder.getAttribute(OrderModel.SALESAPPLICATION);
-
 				LOG.debug("CartChannel for Order" + cartChannel);
 			}
 		}
@@ -86,6 +85,7 @@ public class ChannelRestriction extends GeneratedChannelRestriction
 			if ((cartChannel != null) && (enumChannel.equals(cartChannel)))
 			{
 				checkFlag = true;
+				break;
 			}
 		}
 
