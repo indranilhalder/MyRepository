@@ -249,11 +249,8 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 					+ " AS oe ON {ce.orderentry}= {oe.PK} JOIN " + OrderModel._TYPECODE + " AS co  ON {c.order}={co.PK} JOIN "
 					+ OrderModel._TYPECODE + " AS po  ON {co.parentreference} = {po.PK} LEFT JOIN " + NPSMailerModel._TYPECODE
 					+ " AS nps ON {oe.pk}={nps.transactionId }} " + "WHERE " + "{c.deliveryDate}  BETWEEN "
-					+ "?beforeTime AND ?aftertime AND "
-
-
-
-					+ "{cs.code}='DELIVERED' AND {nps.transactionId} IS NULL";
+					+ " to_date('?beforeTime','yyyy-MM-DD HH24:MI:ss') AND to_date('?aftertime','yyyy-MM-DD HH24:MI:ss') AND "
+					+ " {cs.code}='DELIVERED' AND {nps.transactionId} IS NULL";
 
 
 			//old script
@@ -264,8 +261,8 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			query.addQueryParameter("beforeTime", dateFormat.parse(cronJobModifiedTimeFormattedDate));
-			query.addQueryParameter("aftertime", dateFormat.parse(currentSystemDateFormattedDate));
+			query.addQueryParameter("beforeTime", cronJobModifiedTimeFormattedDate);
+			query.addQueryParameter("aftertime", currentSystemDateFormattedDate);
 			query.setResultClassList(Arrays.asList(OrderModel.class, AbstractOrderEntryModel.class, CustomerModel.class));
 
 			final SearchResult<List<Object>> result = flexibleSearchService.search(query);
