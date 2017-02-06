@@ -39,15 +39,15 @@ public class CheckOrderAction extends AbstractSimpleDecisionAction<OrderProcessM
 
 	/*
 	 * @Resource(name = "configurationService") private ConfigurationService configurationService;
-	 *
+	 * 
 	 * @Autowired private MplPaymentAuditDao mplPaymentAuditDao;
-	 *
+	 * 
 	 * /*@Autowired private GenericUtility mplUtility;
-	 *
+	 * 
 	 * @Autowired private EventService eventService;
-	 *
+	 * 
 	 * @Autowired private OrderFacade orderFacade;
-	 *
+	 * 
 	 * @Autowired private MplSendSMSService mplSendSMSService;
 	 */
 
@@ -68,15 +68,15 @@ public class CheckOrderAction extends AbstractSimpleDecisionAction<OrderProcessM
 			if (getCheckOrderService().check(order))
 			{
 				// SprintPaymentFixes:-:- To handle missing paymentTransaction set the Order status to Payment_Pending
-				//if (getCheckOrderService().checkMissintPaymentTrancsaction(order))
-				//{
-				return Transition.OK;
-				//}
-				//else
-				//{
-				//setOrderStatus(order, OrderStatus.PAYMENT_TIMEOUT);
-				//return Transition.NOK;
-				//}
+				if (getCheckOrderService().checkMissintPaymentTrancsaction(order))
+				{
+					return Transition.OK;
+				}
+				else
+				{
+					setOrderStatus(order, OrderStatus.PAYMENT_TIMEOUT);
+					return Transition.NOK;
+				}
 			}
 			else
 			{

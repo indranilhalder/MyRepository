@@ -157,6 +157,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 						{
 							final List<JuspayWebhookModel> postedBeforeTime = new ArrayList<JuspayWebhookModel>();
 							final List<JuspayWebhookModel> postedAfterTime = new ArrayList<JuspayWebhookModel>();
+							JuspayWebhookModel latestSuccess = null;
+							JuspayWebhookModel latestFailed = null;
 							for (final JuspayWebhookModel juspayWebhookModel : hooks)
 							{
 								final Date eventCreationDate = juspayWebhookModel.getCreationtime();
@@ -171,38 +173,32 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 							}
 							if (CollectionUtils.isNotEmpty(postedBeforeTime))
 							{
-								boolean isSuccess = false;
-								for (final JuspayWebhookModel jspayPostBefore : postedBeforeTime)
+								latestSuccess = postedBeforeTime.get(0);
+								if (StringUtils.equalsIgnoreCase(latestSuccess.getEventName(), "ORDER_SUCCEEDED"))
 								{
-									if (StringUtils.equalsIgnoreCase(jspayPostBefore.getEventName(), "ORDER_SUCCEEDED") && !isSuccess)
-									{
-										takeActionAgainstOrder(jspayPostBefore, orderModel, true);
-										isSuccess = true;
-									}
-									else if (isSuccess)
+									takeActionAgainstOrder(latestSuccess, orderModel, true);
+
+									for (final JuspayWebhookModel jspayPostBefore : postedBeforeTime)
 									{
 										jspayPostBefore.setIsExpired(Boolean.TRUE);
 									}
+									getModelService().saveAll(postedBeforeTime);
 								}
-								getModelService().saveAll(postedBeforeTime);
 							}
 
 							if (CollectionUtils.isNotEmpty(postedAfterTime))
 							{
-								boolean isFaliure = false;
-								for (final JuspayWebhookModel jspayPostAfter : postedAfterTime)
+								latestFailed = postedAfterTime.get(0);
+								if (StringUtils.equalsIgnoreCase(latestFailed.getEventName(), "ORDER_FAILED"))
 								{
-									if (StringUtils.equalsIgnoreCase(jspayPostAfter.getEventName(), "ORDER_FAILED") && !isFaliure)
-									{
-										takeActionAgainstOrder(jspayPostAfter, orderModel, false);
-										isFaliure = true;
-									}
-									else
+									takeActionAgainstOrder(latestSuccess, orderModel, false);
+
+									for (final JuspayWebhookModel jspayPostAfter : postedAfterTime)
 									{
 										jspayPostAfter.setIsExpired(Boolean.TRUE);
 									}
+									getModelService().saveAll(postedBeforeTime);
 								}
-								getModelService().saveAll(postedAfterTime);
 							}
 						}
 						else if ((new Date()).after(orderTATForTimeout))
