@@ -55,7 +55,7 @@
 								<a href="${productUrl}" class="product-tile">
 								<h3 class="product-name">${product.name}</h3>
 								<div class="price">
-									<span><format:fromPrice priceData="${product.productMRP}" /></span>
+									<span><c:out value="${Productprice[product.code]}"/><%-- <format:fromPrice priceData="${product.productMRP}" /> --%></span>
 								</div>
 								</a>
 							</div>

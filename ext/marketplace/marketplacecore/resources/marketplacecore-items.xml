@@ -1885,6 +1885,7 @@
 						<description>Stores the Promotion Code</description>
 						<persistence type="property" />
 					</attribute>
+					
 				</attributes>
 			</itemtype>
 			<!-- Product SizeGuide -->

@@ -174,8 +174,7 @@ import com.tisl.mpl.wsdto.VersionListResponseData;
 import com.tisl.mpl.wsdto.VersionListResponseWsDTO;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 import com.tisl.mpl.wsdto.WthhldTAXWsDTO;
-
-
+import de.hybris.platform.servicelayer.session.SessionService;
 
 /**
  * @author TCS
@@ -292,7 +291,8 @@ public class MiscsController extends BaseController
 	private ModelService modelService;
 	private static final String APPLICATION_TYPE = "application/json";
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-
+	@Autowired
+	private SessionService sessionService;
 	/*
 	 * private static final String DROPDOWN_BRAND = "MBH"; private static final String DROPDOWN_CATEGORY = "MSH";
 	 */
@@ -976,6 +976,12 @@ public class MiscsController extends BaseController
 			LOG.debug("Error occured in getAutocompleteSuggestions :" + eb.getMessage());
 			ExceptionUtil.getCustomizedExceptionTrace(eb);
 			resultData = setErrorStatus();
+		}
+
+		if (StringUtils.isNotEmpty(sessionService.getAttribute("queryType")))
+		{
+			LOG.debug("REmoving from Session Attribute query type");
+			sessionService.removeAttribute("queryType");
 		}
 		return resultData;
 	}
@@ -1694,8 +1700,8 @@ public class MiscsController extends BaseController
 					for (final MplNewsLetterSubscriptionModel mplNewsLetterSubscriptionModel : newsLetterSubscriptionList)
 					{
 						if ((mplNewsLetterSubscriptionModel.getEmailId().equalsIgnoreCase(emailId))
-								&& (!(mplNewsLetterSubscriptionModel.getIsLuxury().booleanValue()) || mplNewsLetterSubscriptionModel
-										.getIsLuxury() == null))
+								&& (!(mplNewsLetterSubscriptionModel.getIsLuxury().booleanValue())
+										|| mplNewsLetterSubscriptionModel.getIsLuxury() == null))
 						{
 							mplNewsLetterSubscriptionModel.setIsLuxury(Boolean.TRUE);
 							modelService.save(mplNewsLetterSubscriptionModel);
