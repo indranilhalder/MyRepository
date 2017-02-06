@@ -99,7 +99,7 @@ import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facade.checkout.storelocator.MplStoreLocatorFacade;
 import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.MplSlaveMasterFacade;
-import com.tisl.mpl.facades.account.address.AccountAddressFacade;
+import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.data.ATSResponseData;
 import com.tisl.mpl.facades.data.FreebieProduct;
 import com.tisl.mpl.facades.data.ProudctWithPointOfServicesData;
@@ -118,7 +118,6 @@ import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.granule.json.JSONObject;
-
 
 @Controller
 @RequestMapping(value = "/checkout/multi/delivery-method")
@@ -146,7 +145,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	private CheckoutFacade checkoutFacade;
 
 	@Autowired
-	private AccountAddressFacade accountAddressFacade;
+	private MplAccountAddressFacade accountAddressFacade;
 
 	@Autowired
 	private MplAddressValidator mplAddressValidator;
@@ -254,8 +253,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			final String defaultPinCodeId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 
 			timeOutSet(model);
-			if (StringUtils.isNotEmpty(defaultPinCodeId)
-					&& (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries()) ))
+			if (StringUtils.isNotEmpty(defaultPinCodeId) && (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries())))
 			{
 				responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartData);
 				// TPR-429 START
@@ -1604,6 +1602,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		//TPR-1214
 		// Save call has been changed to Ajax for saving a new address instead of HTTP request submission.
 		final JSONObject jsonObj = new JSONObject();
+		final CartModel oModel = getCartService().getSessionCart();
 		try
 		{
 			final String errorMsg = mplAddressValidator.validate(addressForm);
@@ -1684,7 +1683,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					newAddress.setDefaultAddress(true);
 					newAddress.setVisibleInAddressBook(true);
 				}
-				accountAddressFacade.addaddress(newAddress);
+
+				if (null != oModel && null != oModel.getUser())
+				{
+					accountAddressFacade.addaddress(newAddress, (CustomerModel) oModel.getUser());
+				}
+
 				getMplCustomAddressFacade().setDeliveryAddress(newAddress);
 				//TISUTO-12 , TISUTO-11
 				final String redirectURL = getMplCartFacade().checkPincodeAndInventory(addressForm.getPostcode());

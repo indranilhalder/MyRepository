@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.tisl.mpl.facades.account.address.AccountAddressFacade;
+import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.storefront.businessvalidator.CommonAsciiValidator;
 import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
@@ -41,7 +41,7 @@ public class MplAddressValidator
 
 	private static final Logger LOG = Logger.getLogger(MplAddressValidator.class);
 	@Autowired
-	private AccountAddressFacade accountAddressFacade;
+	private MplAccountAddressFacade accountAddressFacade;
 
 	public String validate(final AccountAddressForm addressForm) throws UnsupportedEncodingException
 	{

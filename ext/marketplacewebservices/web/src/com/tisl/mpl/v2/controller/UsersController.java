@@ -164,7 +164,7 @@ import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.MplCouponWebFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
-import com.tisl.mpl.facades.account.address.AccountAddressFacade;
+import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.preference.MplPreferenceFacade;
 import com.tisl.mpl.facades.account.register.FriendsInviteFacade;
@@ -330,7 +330,7 @@ public class UsersController extends BaseCommerceController
 	@Resource(name = "mplPaymentService")
 	private MplPaymentService mplPaymentService;
 	@Resource
-	private AccountAddressFacade accountAddressFacade;
+	private MplAccountAddressFacade accountAddressFacade;
 	@Resource
 	private UpdateFeedbackFacade updateFeedbackFacade;
 	//	@Autowired Critical Sonar fixes Unused private Field
@@ -7444,7 +7444,7 @@ public class UsersController extends BaseCommerceController
 	/**
 	 * @return the accountAddressFacade
 	 */
-	public AccountAddressFacade getAccountAddressFacade()
+	public MplAccountAddressFacade getAccountAddressFacade()
 	{
 		return accountAddressFacade;
 	}
@@ -7453,7 +7453,7 @@ public class UsersController extends BaseCommerceController
 	 * @param accountAddressFacade
 	 *           the accountAddressFacade to set
 	 */
-	public void setAccountAddressFacade(final AccountAddressFacade accountAddressFacade)
+	public void setAccountAddressFacade(final MplAccountAddressFacade accountAddressFacade)
 	{
 		this.accountAddressFacade = accountAddressFacade;
 	}
