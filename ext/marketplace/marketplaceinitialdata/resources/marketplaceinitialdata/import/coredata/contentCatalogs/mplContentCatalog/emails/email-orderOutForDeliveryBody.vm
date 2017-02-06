@@ -44,7 +44,7 @@
         	   <tr>
         	     <td>
         	       <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">Your Order Of</span>
-        	       items <span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">1 Transaction Id #if($ctx.transactionID)
+        	        <span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">1 Transaction Id #if($ctx.transactionID)
         	          ${ctx.transactionID}
         	          ${ctx.productName}
         	          #end  in order no: ${ctx.orderReferenceNumber}</span>
