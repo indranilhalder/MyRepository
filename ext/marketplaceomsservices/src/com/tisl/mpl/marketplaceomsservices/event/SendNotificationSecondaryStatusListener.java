@@ -37,19 +37,15 @@ public class SendNotificationSecondaryStatusListener extends AbstractSiteEventLi
 	{
 		private ModelService modelService;
 
-		/*@Autowired sonar Issue
-		private MplSendSMSService sendSMSService;*/
+
 
 		private ConfigurationService configurationService;
-		/*@Autowired
-		private MplSNSMobilePushServiceImpl mplSNSMobilePushService;*/
+
 
 		@Resource(name = "emailAndSmsNotification")
 		private EmailAndSmsNotification emailAndSmsNotification;
 
-	/*	@Resource(name = "googleShortUrlService")
-		private ShortUrlService googleShortUrlService;
-*/
+	
 		/**
 		 * @return the configurationService
 		 */
@@ -197,7 +193,7 @@ public class SendNotificationSecondaryStatusListener extends AbstractSiteEventLi
 				LOG.info("******************* SMS sent");
 				//sending Email
 				LOG.info("********* Sending Email for Address Issue ");
-				sendEmailAddressIssue(orderModel, childOrders);
+				sendEmailAddressIssue(orderModel, childOrders,orderLineID);
 
 			
 		}
@@ -216,26 +212,22 @@ public class SendNotificationSecondaryStatusListener extends AbstractSiteEventLi
 	 * @param orderModel
 	 * @param childOrders
 	 */
-	private void sendEmailAddressIssue(final OrderModel orderModel, final List<AbstractOrderEntryModel> childOrders)
+	private void sendEmailAddressIssue(final OrderModel orderModel, final List<AbstractOrderEntryModel> childOrders,String orderLineID)
 	{
 		LOG.info("*******Before checking isToSendNotification for OUT FOR DELIVERY Email********");
-		LOG.info("*******After checking isToSendNotification for OUT FOR DELIVERY Email********");
-		
-			LOG.info("Starting email process:::::");
-			final OrderUpdateProcessModel orderUpdateProcessModel = (OrderUpdateProcessModel) getBusinessProcessService()
-					.createProcess("orderDeliveryAddressIssueEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(),
-							"orderDeliveryAddressIssueEmailProcess");
-			orderUpdateProcessModel.setOrder(orderModel);
-			final List<String> entryNumber = new ArrayList<String>();
-			for (final AbstractOrderEntryModel child : childOrders)
-			{
-				entryNumber.add(child.getEntryNumber().toString());
 
-			}
-			orderUpdateProcessModel.setEntryNumber(entryNumber);
-			modelService.save(orderUpdateProcessModel);
-			businessProcessService.startProcess(orderUpdateProcessModel);
+		LOG.info("Starting email process:::::");
+		final OrderUpdateProcessModel orderUpdateProcessModel = (OrderUpdateProcessModel) getBusinessProcessService()
+				.createProcess("orderDeliveryAddressIssueEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(),
+						"orderDeliveryAddressIssueEmailProcess");
 		
+		List<String> entryNumber = new ArrayList<String>();
+		orderUpdateProcessModel.setOrder(orderModel);
+		entryNumber.add(orderLineID);
+		orderUpdateProcessModel.setEntryNumber(entryNumber);
+		modelService.saveAll(orderUpdateProcessModel);
+		businessProcessService.startProcess(orderUpdateProcessModel);
+
 	}
 
 
@@ -312,7 +304,7 @@ public class SendNotificationSecondaryStatusListener extends AbstractSiteEventLi
 					LOG.info("******************* SMS sent");
 					 //sending Email
 					LOG.info("********* Sending Email for Out for delivery ");
-					sendEmailOFD(orderModel, childOrders);
+					sendEmailOFD(orderModel, childOrders,orderLineID);
 
 				
 			}
@@ -380,27 +372,23 @@ public class SendNotificationSecondaryStatusListener extends AbstractSiteEventLi
 		 * @param orderModel
 		 * @param childOrders
 		 */
-		private void sendEmailOFD(final OrderModel orderModel, final List<AbstractOrderEntryModel> childOrders)
-		{
-			LOG.info("*******Before checking isToSendNotification for OUT FOR DELIVERY Email********");
-		
-				LOG.info("Starting email process:::::");
-				final OrderUpdateProcessModel orderUpdateProcessModel = (OrderUpdateProcessModel) getBusinessProcessService()
-						.createProcess("orderOutForDeliveryEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(),
-								"orderOutForDeliveryEmailProcess");
-				orderUpdateProcessModel.setOrder(orderModel);
-				orderUpdateProcessModel.setShipmentStatus(ConsignmentStatus.OUT_FOR_DELIVERY);
-				final List<String> entryNumber = new ArrayList<String>();
-				for (final AbstractOrderEntryModel child : childOrders)
-				{
-					entryNumber.add(child.getEntryNumber().toString());
+	private void sendEmailOFD(final OrderModel orderModel, final List<AbstractOrderEntryModel> childOrders, String orderLineID)
+	{
+		LOG.info("*******Before checking isToSendNotification for OUT FOR DELIVERY Email********");
 
-				}
-				orderUpdateProcessModel.setEntryNumber(entryNumber);
-				modelService.save(orderUpdateProcessModel);
-				businessProcessService.startProcess(orderUpdateProcessModel);
-			
-		}
+		LOG.info("Starting email process:::::");
+		final OrderUpdateProcessModel orderUpdateProcessModel = (OrderUpdateProcessModel) getBusinessProcessService()
+				.createProcess("orderOutForDeliveryEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(),
+						"orderOutForDeliveryEmailProcess");
+		orderUpdateProcessModel.setOrder(orderModel);
+		orderUpdateProcessModel.setShipmentStatus(ConsignmentStatus.OUT_FOR_DELIVERY);
+		List<String> entryNumber = new ArrayList<String>();
+		entryNumber.add(orderLineID);
+		orderUpdateProcessModel.setEntryNumber(entryNumber);
+		modelService.saveAll(orderUpdateProcessModel);
+		businessProcessService.startProcess(orderUpdateProcessModel);
+
+	}
 
 
 		

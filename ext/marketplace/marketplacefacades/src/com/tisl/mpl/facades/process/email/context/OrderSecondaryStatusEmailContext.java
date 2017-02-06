@@ -7,15 +7,15 @@ import de.hybris.platform.acceleratorservices.model.cms2.pages.EmailPageModel;
 import de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.core.model.c2l.LanguageModel;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
-import org.apache.velocity.tools.generic.MathTool;
-import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -30,7 +30,6 @@ public class OrderSecondaryStatusEmailContext extends AbstractEmailContext<Order
 {
 	
 	private static final String ORDER_CODE = "orderReferenceNumber";
-	private static final String CHILDORDERS = "childOrders";
 	private static final String CUSTOMER_NAME = "customerName";
 
 
@@ -39,7 +38,6 @@ public class OrderSecondaryStatusEmailContext extends AbstractEmailContext<Order
 	public static final String TRACK_ORDER_URL = "trackOrderUrl";
 	private static final String CUSTOMER = "Customer";
 	private static final String SPACE = " ";
-	private static final String NUMBERTOOL = "numberTool";
 	@Autowired
 	private AccountAddressFacade accountAddressFacade;
 	private static final Logger LOG = Logger.getLogger(OrderNotificationEmailContext.class);
@@ -50,7 +48,6 @@ public class OrderSecondaryStatusEmailContext extends AbstractEmailContext<Order
 	{
 		super.init(orderUpdateProcessModel, emailPageModel);
 		final String orderCode = orderUpdateProcessModel.getOrder().getCode();
-		final List<OrderModel> childOrders = orderUpdateProcessModel.getOrder().getChildOrders();
 
 		
      if(LOG.isDebugEnabled()){
@@ -62,7 +59,6 @@ public class OrderSecondaryStatusEmailContext extends AbstractEmailContext<Order
 				+ orderUpdateProcessModel.getOrder().getCode();
 		put(TRACK_ORDER_URL, trackOrderUrl);
 		put(ORDER_CODE, orderCode);
-		put(CHILDORDERS, childOrders);
 	
 		//Setting first name and last name 
 		final StringBuilder name = new StringBuilder(150);	
@@ -87,12 +83,33 @@ public class OrderSecondaryStatusEmailContext extends AbstractEmailContext<Order
 
 		}
 
+		if (CollectionUtils.isNotEmpty(orderUpdateProcessModel.getEntryNumber()))
+		{
+			AbstractOrderEntryModel entry = getEntry(orderUpdateProcessModel.getOrder(), orderUpdateProcessModel.getEntryNumber());
+			if (entry != null)
+			{
+				put("transactionID", entry.getTransactionID());
+				put("productName",entry.getProduct().getName());
+
+			}
+		}
+			
 
 		final CustomerModel customer = (CustomerModel) orderUpdateProcessModel.getOrder().getUser();
 		put(EMAIL, customer.getOriginalUid());
-		put("math", new MathTool());
-		put(NUMBERTOOL, new NumberTool());
 
+	}
+	
+	private AbstractOrderEntryModel getEntry(OrderModel ordermodel,List<String> listOfEntry){
+		for(AbstractOrderEntryModel entry:ordermodel.getEntries()){
+			
+			if(listOfEntry.contains(entry.getTransactionID())){
+				return entry;
+			}
+		}
+		return null;
+		
+		
 	}
 
 	@Override
