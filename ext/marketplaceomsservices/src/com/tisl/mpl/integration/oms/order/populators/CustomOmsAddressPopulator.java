@@ -11,7 +11,6 @@ import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import net.sourceforge.pmd.util.StringUtil;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.Assert;
@@ -30,12 +29,10 @@ import com.tisl.mpl.model.StateModel;
  */
 public class CustomOmsAddressPopulator implements Populator<AddressModel, Address>
 {
-	private static final Logger LOG = Logger.getLogger(CustomOmsAddressPopulator.class);
 	private CustomerNameStrategy customerNameStrategy;
 
 	@Autowired
 	private MplCommerceCartService mplCommerceCartService;
-
 
 
 	public void populate(final AddressModel source, final Address target) throws ConversionException
