@@ -235,7 +235,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 			//DAO call to fetch PAYMENT PENDING or REFUND-INITIATED orders
 			pendingOrders = mplProcessOrderDao.getPendingOrRefundInitiatedOrders(OrderStatus.PAYMENT_PENDING.toString(),
 					OrderStatus.REFUND_INITIATED.toString());
-
+                        LOG.debug("#####################pendingOrders**" + pendingOrders);
 			boolean isPayment = true;
 			boolean isReturn = false;
 			for (final OrderModel order : pendingOrders)
