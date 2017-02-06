@@ -3348,13 +3348,13 @@ function validateCardNo(formSubmit) {
 					{
 						if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
 						{
-							if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)){
+							if(selectedBank!="select" && responseBankVal.includes(selectedBankVal)){
 								binStatus=true;
 								//applyPromotion(selectedBankVal,binStatus,formSubmit);
 								errorHandle.innerHTML = "";
 								return true;			
 							}
-							else if(selectedBank!="select" && !responseBankVal.indexOf(selectedBankVal)){
+							else if(selectedBank!="select" && !responseBankVal.includes(selectedBankVal)){
 								binStatus=false;
 								errorHandle.innerHTML = "Please enter a card same as the selected bank";
 								return false;	
@@ -3805,7 +3805,7 @@ function validateEmiCardNo(formSubmit) {
 						{
 							if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
 							{
-								if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)){
+								if(selectedBank!="select" && responseBankVal.includes(selectedBankVal)){
 									binStatus=true;
 									//TPR-629
 									if(formSubmit=="formSubmit")
@@ -3816,7 +3816,7 @@ function validateEmiCardNo(formSubmit) {
 									errorHandle.innerHTML = "";
 									return true;			
 								}
-								else if(selectedBank!="select" && !responseBankVal.indexOf(selectedBankVal)){
+								else if(selectedBank!="select" && !responseBankVal.includes(selectedBankVal)){
 									binStatus=false;
 									//TPR-629
 									if(formSubmit=="formSubmit")
@@ -5209,20 +5209,6 @@ $(document).ready(function(){
 
 
 //TPR-1786
-
-
-function checkServiceabilityRequired(buttonType,el){
-	var sessionPin = $("#pinId").val();
-	var selectedPin=$('#defaultPinCodeIds').val();
-	var checkoutLinkURlId = $('#checkoutLinkURlId').val();
-	if(sessionPin != selectedPin){
-		checkPincodeServiceability(buttonType,el);
-	}
-	else{
-		
-		redirectToCheckout(checkoutLinkURlId);
-	}
-}
 function checkPincodeServiceability(buttonType,el)
 {
 // alert($(el).attr("id")+" :::button id")
@@ -5251,7 +5237,6 @@ function checkPincodeServiceability(buttonType,el)
 	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 	/*TPR-3446 new ends*/
 	var selectedPincode=$('#defaultPinCodeIds').val();
-	var sessionPincode=$('#pinId').val();
 	var regPostcode = /^([1-9])([0-9]){5}$/;
 	$(".deliveryUlClass").remove();//TPR-1341
 	
@@ -5565,8 +5550,6 @@ function populatePincodeDeliveryMode(response,buttonType){
 	var values=response['pincodeData'].split("|");
 	var isServicable=values[0];
 	var selectedPincode=values[1];
-	$("#pinId").val(selectedPincode);
-	//console.log("asddddddddd"+pinId);
 	var deliveryModeJsonMap=values[2];
 	
 	$(".pincodeServiceError").hide();
@@ -6423,7 +6406,8 @@ $("#pincode").focus(function(){
 function validateCity() {
 	var name=$("#city").val();
 	var errorHandle=document.getElementById("cityError");
-	var regex = new RegExp(/^[a-zA-Z ]+$/);
+	//var regex = new RegExp(/^[a-zA-Z ]+$/);
+	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a City.";
         return false;
@@ -6439,7 +6423,8 @@ function validateCity() {
 function validateCityEmi() {
 	var name=$("#cityEmi").val();
 	var errorHandle=document.getElementById("cityErrorEmi");
-	var regex = new RegExp(/^[a-zA-Z ]+$/);
+	//var regex = new RegExp(/^[a-zA-Z ]+$/);
+	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a City.";
         return false;
