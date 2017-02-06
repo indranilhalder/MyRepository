@@ -807,7 +807,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 *
+	 * 
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
@@ -913,16 +913,5 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getBuyBoxDataForUssids(java.util.List, java.lang.String)
-	 */
-	//TPR-3736
-	@Override
-	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions
-	{
-		// YTODO Auto-generated method stub
-		return buyBoxService.getBuyBoxDataForUssids(ussidList);
-	}
+
 }
