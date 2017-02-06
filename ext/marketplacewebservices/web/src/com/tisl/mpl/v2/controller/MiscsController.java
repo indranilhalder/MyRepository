@@ -120,7 +120,7 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
-import com.tisl.mpl.facades.account.address.AccountAddressFacade;
+import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.StateData;
@@ -202,13 +202,13 @@ public class MiscsController extends BaseController
 	private CustomerFacade customerFacade;
 	/*
 	 * @Resource private ModelService modelService;
-	 *
+	 * 
 	 * @Autowired private ForgetPasswordFacade forgetPasswordFacade;
-	 *
+	 * 
 	 * @Autowired private ExtendedUserServiceImpl userexService;
-	 *
+	 * 
 	 * @Autowired private WishlistFacade wishlistFacade;
-	 *
+	 * 
 	 * @Autowired private MplSellerMasterService mplSellerInformationService;
 	 */
 	@Autowired
@@ -228,14 +228,14 @@ public class MiscsController extends BaseController
 	@Autowired
 	private CustomerAccountService customerAccountService;
 	@Autowired
-	private AccountAddressFacade accountAddressFacade;
+	private MplAccountAddressFacade accountAddressFacade;
 	@Resource(name = "homescreenservice")
 	private HomescreenService homescreenservice;
 	@Resource(name = "fieldSetBuilder")
 	private FieldSetBuilder fieldSetBuilder;
 	/*
 	 * @Resource(name = "i18NFacade") private I18NFacade i18NFacade;
-	 *
+	 * 
 	 * @Autowired private MplCommerceCartServiceImpl mplCommerceCartService;
 	 */
 	@Autowired
@@ -675,9 +675,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 *
+	 * 
 	 * @param restrictionXML
-	 *
+	 * 
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1379,7 +1379,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1392,11 +1392,11 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 * 
+	 *
 	 * } return deliveryModeData; } =======
-	 * 
+	 *
 	 * @param code
-	 * 
+	 *
 	 * @return >>>>>>> origin/GOLDEN_PROD_SUPPORT_07122016
 	 */
 	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)

@@ -35,130 +35,10 @@ import com.tisl.mpl.marketplacecommerceservices.service.AccountAddressService;
  * @author TCS
  *
  */
-public class AccountAddressFacade
+public class AccountAddressFacade implements MplAccountAddressFacade
 {
 	@Resource
 	private UserService userService;
-
-	/**
-	 * @return the userService
-	 */
-	public UserService getUserService()
-	{
-		return userService;
-	}
-
-	/**
-	 * @param userService
-	 *           the userService to set
-	 */
-	public void setUserService(final UserService userService)
-	{
-		this.userService = userService;
-	}
-
-	/**
-	 * @return the modelService
-	 */
-	public ModelService getModelService()
-	{
-		return modelService;
-	}
-
-	/**
-	 * @param modelService
-	 *           the modelService to set
-	 */
-	public void setModelService(final ModelService modelService)
-	{
-		this.modelService = modelService;
-	}
-
-	/**
-	 * @return the addressReversePopulator
-	 */
-	public Populator<AddressData, AddressModel> getAddressReversePopulator()
-	{
-		return addressReversePopulator;
-	}
-
-	/**
-	 * @param addressReversePopulator
-	 *           the addressReversePopulator to set
-	 */
-	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
-	{
-		this.addressReversePopulator = addressReversePopulator;
-	}
-
-	/**
-	 * @return the customerAccountService
-	 */
-	public CustomerAccountService getCustomerAccountService()
-	{
-		return customerAccountService;
-	}
-
-	/**
-	 * @param customerAccountService
-	 *           the customerAccountService to set
-	 */
-	public void setCustomerAccountService(final CustomerAccountService customerAccountService)
-	{
-		this.customerAccountService = customerAccountService;
-	}
-
-	/**
-	 * @return the commerceCommonI18NService
-	 */
-	public CommerceCommonI18NService getCommerceCommonI18NService()
-	{
-		return commerceCommonI18NService;
-	}
-
-	/**
-	 * @param commerceCommonI18NService
-	 *           the commerceCommonI18NService to set
-	 */
-	public void setCommerceCommonI18NService(final CommerceCommonI18NService commerceCommonI18NService)
-	{
-		this.commerceCommonI18NService = commerceCommonI18NService;
-	}
-
-	/**
-	 * @return the addressConverter
-	 */
-	public Converter<AddressModel, AddressData> getAddressConverter()
-	{
-		return addressConverter;
-	}
-
-	/**
-	 * @param addressConverter
-	 *           the addressConverter to set
-	 */
-	public void setAddressConverter(final Converter<AddressModel, AddressData> addressConverter)
-	{
-		this.addressConverter = addressConverter;
-	}
-
-	/**
-	 * @return the accountAddressService
-	 */
-	public AccountAddressService getAccountAddressService()
-	{
-		return accountAddressService;
-	}
-
-	/**
-	 * @param accountAddressService
-	 *           the accountAddressService to set
-	 */
-	public void setAccountAddressService(final AccountAddressService accountAddressService)
-	{
-		this.accountAddressService = accountAddressService;
-	}
-
 	@Autowired
 	private ModelService modelService;
 	@Autowired
@@ -177,9 +57,9 @@ public class AccountAddressFacade
 	 * @description method is called to add an Address to the Customer's AddressBook
 	 * @param newAddress
 	 */
+	@Override
 	public void addaddress(final AddressData newAddress)
 	{
-
 		try
 		{
 			validateParameterNotNullStandardMessage(MarketplacecommerceservicesConstants.ADDRESS_DATA, newAddress);
@@ -325,6 +205,7 @@ public class AccountAddressFacade
 	 * @description method is called to edit Address of the Customer
 	 * @param addressData
 	 */
+	@Override
 	public void editAddress(final AddressData addressData)
 	{
 		try
@@ -364,6 +245,7 @@ public class AccountAddressFacade
 	 * @description method is called to get the AddressBook of the customer
 	 * @return List
 	 */
+	@Override
 	public List<AddressData> getAddressBook()
 	{
 		try
@@ -420,6 +302,7 @@ public class AccountAddressFacade
 	 * @description method is called to get the Default Address of the Customer
 	 * @return AddressData
 	 */
+	@Override
 	public AddressData getDefaultAddress()
 	{
 		try
@@ -458,37 +341,38 @@ public class AccountAddressFacade
 		}
 	}
 
-	/**
-	 * @description method is called to get the AddressCode
-	 * @param code
-	 * @return AddressData
-	 */
-	public AddressData getAddressForCode(final String code)
-	{
-		try
-		{
-			final AddressModel defaultAddress = customerAccountService.getAddressForCode(
-					(CustomerModel) userService.getCurrentUser(), code);
-			if (defaultAddress != null)
-			{
-				final AddressData addressData = addressConverter.convert(defaultAddress);
-				addressData.setState(defaultAddress.getDistrict());
-				addressData.setAddressType(defaultAddress.getAddressType());
-				addressData.setLocality(defaultAddress.getLocality());
-				addressData.setLine3(defaultAddress.getAddressLine3());
-				return addressData;
-			}
-			return null;
-		}
-		catch (final Exception ex)
-		{
-			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
-		}
-	}
+	//	/**
+	//	 * @description method is called to get the AddressCode
+	//	 * @param code
+	//	 * @return AddressData
+	//	 */
+	//	public AddressData getAddressForCode(final String code)
+	//	{
+	//		try
+	//		{
+	//			final AddressModel defaultAddress = customerAccountService.getAddressForCode(
+	//					(CustomerModel) userService.getCurrentUser(), code);
+	//			if (defaultAddress != null)
+	//			{
+	//				final AddressData addressData = addressConverter.convert(defaultAddress);
+	//				addressData.setState(defaultAddress.getDistrict());
+	//				addressData.setAddressType(defaultAddress.getAddressType());
+	//				addressData.setLocality(defaultAddress.getLocality());
+	//				addressData.setLine3(defaultAddress.getAddressLine3());
+	//				return addressData;
+	//			}
+	//			return null;
+	//		}
+	//		catch (final Exception ex)
+	//		{
+	//			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+	//		}
+	//	}
 
 	/**
 	 * @return List<StateData>
 	 */
+	@Override
 	public List<StateData> getStates()
 	{
 		try
@@ -501,5 +385,173 @@ public class AccountAddressFacade
 		{
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
+	}
+
+	/**
+	 * @return the userService
+	 */
+	public UserService getUserService()
+	{
+		return userService;
+	}
+
+	/**
+	 * @param userService
+	 *           the userService to set
+	 */
+	public void setUserService(final UserService userService)
+	{
+		this.userService = userService;
+	}
+
+	/**
+	 * @return the modelService
+	 */
+	public ModelService getModelService()
+	{
+		return modelService;
+	}
+
+	/**
+	 * @param modelService
+	 *           the modelService to set
+	 */
+	public void setModelService(final ModelService modelService)
+	{
+		this.modelService = modelService;
+	}
+
+	/**
+	 * @return the addressReversePopulator
+	 */
+	public Populator<AddressData, AddressModel> getAddressReversePopulator()
+	{
+		return addressReversePopulator;
+	}
+
+	/**
+	 * @param addressReversePopulator
+	 *           the addressReversePopulator to set
+	 */
+	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
+	{
+		this.addressReversePopulator = addressReversePopulator;
+	}
+
+	/**
+	 * @return the customerAccountService
+	 */
+	public CustomerAccountService getCustomerAccountService()
+	{
+		return customerAccountService;
+	}
+
+	/**
+	 * @param customerAccountService
+	 *           the customerAccountService to set
+	 */
+	public void setCustomerAccountService(final CustomerAccountService customerAccountService)
+	{
+		this.customerAccountService = customerAccountService;
+	}
+
+	/**
+	 * @return the commerceCommonI18NService
+	 */
+	public CommerceCommonI18NService getCommerceCommonI18NService()
+	{
+		return commerceCommonI18NService;
+	}
+
+	/**
+	 * @param commerceCommonI18NService
+	 *           the commerceCommonI18NService to set
+	 */
+	public void setCommerceCommonI18NService(final CommerceCommonI18NService commerceCommonI18NService)
+	{
+		this.commerceCommonI18NService = commerceCommonI18NService;
+	}
+
+	/**
+	 * @return the addressConverter
+	 */
+	public Converter<AddressModel, AddressData> getAddressConverter()
+	{
+		return addressConverter;
+	}
+
+	/**
+	 * @param addressConverter
+	 *           the addressConverter to set
+	 */
+	public void setAddressConverter(final Converter<AddressModel, AddressData> addressConverter)
+	{
+		this.addressConverter = addressConverter;
+	}
+
+	/**
+	 * @return the accountAddressService
+	 */
+	public AccountAddressService getAccountAddressService()
+	{
+		return accountAddressService;
+	}
+
+	/**
+	 * @param accountAddressService
+	 *           the accountAddressService to set
+	 */
+	public void setAccountAddressService(final AccountAddressService accountAddressService)
+	{
+		this.accountAddressService = accountAddressService;
+	}
+
+
+	@Override
+	public void addaddress(final AddressData newAddress, final CustomerModel customer)
+	{
+		try
+		{
+			validateParameterNotNullStandardMessage(MarketplacecommerceservicesConstants.ADDRESS_DATA, newAddress);
+			LOG.debug(MarketplacecommerceservicesConstants.ADDRESTYPE_EQUALS_ADDADDRESS + newAddress.getAddressType());
+			final CustomerModel currentCustomer = customer;
+
+			if (null != customer)
+			{
+				final boolean makeThisAddressTheDefault = newAddress.isDefaultAddress()
+						|| (currentCustomer.getDefaultShipmentAddress() == null && newAddress.isVisibleInAddressBook());
+				final AddressModel existingAddress = isDuplicateAddress(newAddress, currentCustomer);
+				AddressModel addressmodel = null;
+				if (null != existingAddress)
+				{
+					addressmodel = existingAddress;
+				}
+				else
+				{
+					addressmodel = modelService.create(AddressModel.class);
+					addressReversePopulator.populate(newAddress, addressmodel);
+					addressmodel.setCellphone(newAddress.getPhone());
+					addressmodel.setDistrict(newAddress.getState());
+					addressmodel.setAddressType(newAddress.getAddressType());
+					addressmodel.setLocality(newAddress.getLocality());
+					addressmodel.setAddressLine3(newAddress.getLine3());
+				}
+
+				customerAccountService.saveAddressEntry(currentCustomer, addressmodel);
+				newAddress.setId(addressmodel.getPk().toString());
+
+				if (makeThisAddressTheDefault)
+				{
+					customerAccountService.setDefaultAddressEntry(currentCustomer, addressmodel);
+				}
+			}
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+
+
+
 	}
 }
