@@ -125,9 +125,12 @@ public class AwbEditWidgetController
 			lpAwbSearch.setIsReturn(isReturn);
 			final List<TransactionInfo> transactionsList = orderLogisticsUpdateFacade.getOrderLogisticsInfo(lpAwbSearch)
 					.getTransactionInfo();
-
 			this.listOfTransactions = transactionsList;
-			this.errorMessageValue = "";
+			if (transactionsList.isEmpty())
+			{
+				this.errorMessageValue = "No Result Found";
+			}
+
 		}
 		else
 		{

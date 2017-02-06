@@ -59,10 +59,7 @@
 				<vlayout width="200px">
 					<textbox hflex="1" value="@bind(vimo.txtsellerId)">
 					</textbox>
-				</vlayout>
-				<hbox pack="center" style="width:100%">
-			        <label value="@load(vimo.errorMessage)" sclass="error_class"/>
-			</hbox>
+				</vlayout>			
 			</hlayout>
 			<hlayout>
 				<vlayout width="100px">
@@ -100,10 +97,12 @@
 						onClick="@command('awbSerachButton', event=event)" />
 				</vlayout>
 			</hlayout>	
+			<hbox pack="center" style="width:100%">
+			        <label value="@load(vimo.errorMessage)" sclass="error_class"/>
+			</hbox>
 			<div style="overflow-x:auto">
 				<listbox model="@bind(vimo.listOfTransactions)"
-					id="listBoxData" mold="paging" pageSize="10"
-					emptyMessage="No result found in the result">
+					id="listBoxData" mold="paging" pageSize="10">
 					<listhead sizable="true">
 						<listheader style="text-align:left"
 							label="Order Id ">
