@@ -80,7 +80,7 @@ public class AwbEditWidgetController
 		LOG.info("inside awb search");
 		final LPAWBSearch lpAwbSearch = new LPAWBSearch();
 		int count = 0;
-
+		this.errorMessageValue = "";
 		if (txtOrderId != null && StringUtils.isNotEmpty(txtOrderId))//orderid
 		{
 			++count;

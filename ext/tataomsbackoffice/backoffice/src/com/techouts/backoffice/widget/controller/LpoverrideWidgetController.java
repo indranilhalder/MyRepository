@@ -95,6 +95,7 @@ public class LpoverrideWidgetController
 		LOG.info("inside lp search");
 		final LPAWBSearch lpAwbSearch = new LPAWBSearch();
 		int count = 0;
+		this.errorMessageValue = "";
 		previousLpAndAwbNumberForTrack = new HashMap<String, TransactionInfo>();
 		if (txtOrderId != null && StringUtils.isNotEmpty(txtOrderId))//orderid
 		{
