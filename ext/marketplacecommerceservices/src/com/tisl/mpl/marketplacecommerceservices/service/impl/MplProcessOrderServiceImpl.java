@@ -101,7 +101,17 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 		try
 		{
 			//DAO call to fetch PAYMENT PENDING orders
-			orders = getMplProcessOrderDao().getPaymentPedingOrders(OrderStatus.PAYMENT_PENDING.toString());
+			//PaymentFix2017:- System time minus configured time from property file
+			final String skipPendingOrdersTATSt = getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.PAYMENTPENDING_SKIPTIME);
+			final Double skipPendingOrdersTAT = Double.valueOf(skipPendingOrdersTATSt);
+			final Calendar cal = Calendar.getInstance();
+			cal.setTime(new Date());
+			cal.add(Calendar.MINUTE, -skipPendingOrdersTAT.intValue());
+			final Date queryTAT = cal.getTime();
+
+			//PaymentFix2017:- queryTAT added
+			orders = getMplProcessOrderDao().getPaymentPedingOrders(OrderStatus.PAYMENT_PENDING.toString(), queryTAT);
 		}
 		catch (final EtailNonBusinessExceptions e) //IQA for TPR-629
 		{
@@ -142,62 +152,60 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 							cal.add(Calendar.MINUTE, +juspayWebhookRetryTAT.intValue());
 							orderTATForTimeout = cal.getTime();
 						}
-
-						if ((new Date()).before(orderTATForTimeout) && CollectionUtils.isNotEmpty(hooks))
+						//PaymentFix2017:- Logic to execute the webhook posted events
+						if (CollectionUtils.isNotEmpty(hooks))
 						{
-							final List<JuspayWebhookModel> uniqueList = new ArrayList<JuspayWebhookModel>();
-							for (final JuspayWebhookModel oModel : hooks)
-							{
-								if (null != oModel.getOrderStatus() && oModel.getIsExpired().booleanValue())
-								{
-									//getting all the webhook data where isExpired is Y and adding into a list
-									uniqueList.add(oModel);
-								}
-							}
-
+							final List<JuspayWebhookModel> postedBeforeTime = new ArrayList<JuspayWebhookModel>();
+							final List<JuspayWebhookModel> postedAfterTime = new ArrayList<JuspayWebhookModel>();
 							for (final JuspayWebhookModel juspayWebhookModel : hooks)
 							{
-								if (CollectionUtils.isNotEmpty(uniqueList) && !juspayWebhookModel.getIsExpired().booleanValue())
+								final Date eventCreationDate = juspayWebhookModel.getCreationtime();
+								if ((eventCreationDate).before(orderTATForTimeout))
 								{
-									//iterating through the new list against the whole webhook data list
-									boolean duplicateFound = false;
-									for (final JuspayWebhookModel unique : uniqueList)
-									{
-										//if there is duplicate order id which is not expired(N) then setting it to Y
-										if (unique != null
-												&& unique.getOrderStatus() != null
-												&& juspayWebhookModel.getOrderStatus() != null
-												&& StringUtils.equalsIgnoreCase(unique.getOrderStatus().getOrderId(), juspayWebhookModel
-														.getOrderStatus().getOrderId())
-												&& ((StringUtils.equalsIgnoreCase(juspayWebhookModel.getEventName(), "ORDER_SUCCEEDED") || (StringUtils
-														.equalsIgnoreCase(juspayWebhookModel.getEventName(), "ORDER_FAILED")))))
-
-										{
-											duplicateFound = true;
-											break;
-										}
-									}
-									if (duplicateFound)
-									{
-										juspayWebhookModel.setIsExpired(Boolean.TRUE);
-										getModelService().save(juspayWebhookModel);
-									}
-									else
-									{
-										//Change order status & process order based on Webhook status
-										takeActionAgainstOrder(juspayWebhookModel, orderModel, true);
-										uniqueList.add(juspayWebhookModel);
-									}
+									postedBeforeTime.add(juspayWebhookModel);
 								}
 								else
 								{
-									//Change order status & process order based on Webhook status
-									takeActionAgainstOrder(juspayWebhookModel, orderModel, true);
-									uniqueList.add(juspayWebhookModel);
+									postedAfterTime.add(juspayWebhookModel);
 								}
 							}
+							if (CollectionUtils.isNotEmpty(postedBeforeTime))
+							{
+								boolean isSuccess = false;
+								for (final JuspayWebhookModel jspayPostBefore : postedBeforeTime)
+								{
+									if (StringUtils.equalsIgnoreCase(jspayPostBefore.getEventName(), "ORDER_SUCCEEDED") && !isSuccess)
+									{
+										takeActionAgainstOrder(jspayPostBefore, orderModel, true);
+										isSuccess = true;
+									}
+									else if (isSuccess)
+									{
+										jspayPostBefore.setIsExpired(Boolean.TRUE);
+									}
+								}
+								getModelService().saveAll(postedBeforeTime);
+							}
+
+							if (CollectionUtils.isNotEmpty(postedAfterTime))
+							{
+								boolean isFaliure = false;
+								for (final JuspayWebhookModel jspayPostAfter : postedAfterTime)
+								{
+									if (StringUtils.equalsIgnoreCase(jspayPostAfter.getEventName(), "ORDER_FAILED") && !isFaliure)
+									{
+										takeActionAgainstOrder(jspayPostAfter, orderModel, false);
+										isFaliure = true;
+									}
+									else
+									{
+										jspayPostAfter.setIsExpired(Boolean.TRUE);
+									}
+								}
+								getModelService().saveAll(postedAfterTime);
+							}
 						}
-						else if ((new Date()).after(orderTATForTimeout) && CollectionUtils.isEmpty(hooks))
+						else if ((new Date()).after(orderTATForTimeout))
 						{
 							//getting PinCode against Order
 							final String defaultPinCode = getPinCodeForOrder(orderModel);
@@ -233,17 +241,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 							}
 
 						}
-						else if ((new Date()).after(orderTATForTimeout) && CollectionUtils.isNotEmpty(hooks))
-						{
-							for (final JuspayWebhookModel juspayWebhookModel : hooks)
-							{
-								if (!juspayWebhookModel.getIsExpired().booleanValue())
-								{
-									takeActionAgainstOrder(juspayWebhookModel, orderModel, false);
-								}
-							}
-						}
-						else if ((new Date()).before(orderTATForTimeout) && CollectionUtils.isEmpty(hooks))
+
+						else if ((new Date()).before(orderTATForTimeout))
 						{
 							if (null != orderModel.getIsPendingNotSent() && !orderModel.getIsPendingNotSent().booleanValue())
 							{
@@ -271,6 +270,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 							}
 
 						}
+
 					}
 
 				}
@@ -347,8 +347,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
 					MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
 					+ orderModel.getCode();
-			if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_SUCCEEDED")
-					&& !juspayWebhookModel.getIsExpired().booleanValue() && positive)
+			if (positive)
 			{
 				if (null == orderModel.getPaymentInfo())
 				{
@@ -390,8 +389,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					modelService.save(juspayWebhookModel);
 				}
 				//SprintPaymentFixes:- if any case Order Status Updation fails and Order is ready to mode to other Environment then change status to Payment_Successful
-				else if (null != orderModel.getPaymentInfo() && CollectionUtils.isEmpty(orderModel.getChildOrders())
-						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
+				else if (null != orderModel.getPaymentInfo() && CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions())
+						&& CollectionUtils.isEmpty(orderModel.getChildOrders()))
 				{
 					//Re-trigger submit order process from Payment_Pending to Payment_Successful
 					final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
@@ -437,8 +436,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 
 			}
-			else if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_FAILED")
-					&& !juspayWebhookModel.getIsExpired().booleanValue() && !positive)
+			else if (!positive)
 			{
 				//Added for failure transactions
 				if (null == orderModel.getPaymentInfo())
