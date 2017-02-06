@@ -771,7 +771,7 @@
 			  showPickupTimeDate("address"+count);
 			  $(".address"+count+" input").prop("checked", true);
 			  $("#changeAddressPopup, .wrapBG").fadeOut(300);
-			  $(".scheduledPickupArea").remove('#spaAddress');
+			  $(".scheduledPickupArea #spaAddress").remove();
 			  $(".scheduledPickupArea").prepend("<p style='color:#a9143c;'>Address Saved Successfully</p>");
 			  
 					  },
@@ -837,7 +837,7 @@
 								
 								$(".update"+temp).prev().find("input").prop("checked", "checked");
 								showPickupTimeDate(temp);
-								$(".scheduledPickupArea").remove('#spaAddress');
+								$(".scheduledPickupArea #spaAddress").remove();
 								$(".scheduledPickupArea").prepend("<p id='spaAddress' style='color:#a9143c;'>Address Updated Successfully</p>");
 							}
 						  else
