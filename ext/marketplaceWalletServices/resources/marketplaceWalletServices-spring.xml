@@ -79,7 +79,13 @@
 	      	            !execution(* getPK(..))" />  	            
 	       <aop:pointcut id="profiledMethods" expression="execution(* *(..))" />	
 	  -->
+<bean id="mRupeeService"
+		class="com.tisl.mpl.wallet.service.impl.DefaultMplMrupeePaymentServiceImpl">
+	</bean>	
 	
+	<bean id="mRupeeRefundService"
+		class="com.tisl.mpl.wallet.service.impl.DefaultMplMRupeeRefundServiceImpl">
+	</bean>	 		
 			
 			
 </beans>
