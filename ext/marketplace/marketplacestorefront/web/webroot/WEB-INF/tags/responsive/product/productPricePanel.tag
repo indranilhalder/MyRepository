@@ -12,7 +12,7 @@
 
 <h3 class="company author">
           </h3>
-<div class="price">
+<div itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" class="price">
 	<p class="old" id="mrpPriceId" style="display:none">
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 	</p>
@@ -20,6 +20,18 @@
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 	</p>
 	<p class="sale" id="spPriceId" style="display:none">
+		<!-- For TPR-4358 Start -->
+		<span itemprop="price">${product_list_price}</span>
+		<span itemprop="priceCurrency">${currentCurrency.isocode}</span>
+		<c:choose>
+ 		<c:when test="${product_availability == 'Available online'}">
+ 			<meta itemprop="availability" content="http://schema.org/InStock"/>${product_availability}</meta>
+ 		</c:when>
+ 		<c:otherwise>
+ 			<meta itemprop="availability" content="http://schema.org/OutOfStock"/>${product_availability}</meta>
+ 		</c:otherwise>
+ 		</c:choose>
+ 	<!-- For TPR-4358 End -->
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 	</p>
 	<p class="savings pdp-savings" id="savingsOnProductId" style="display:none">															

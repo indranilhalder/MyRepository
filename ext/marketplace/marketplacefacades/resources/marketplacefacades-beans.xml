@@ -534,7 +534,7 @@
 		<property name="unitType" type="java.lang.String" />
 		<!-- Search POC End -->
 	</bean>
-
+ 
 	<bean class="com.tisl.mpl.facades.product.data.AddressRadioTypeData">
 		<property name="code" type="String" />
 		<property name="name" type="String" />
