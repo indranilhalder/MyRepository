@@ -43,7 +43,6 @@ public class CustomOmsAddressPopulator implements Populator<AddressModel, Addres
 		Assert.notNull(source, "source Address can't be null");
 		Assert.notNull(target, "target Address can't be null");
 
-
 		if (StringUtils.isNotBlank(source.getFirstname()))
 		{
 			target.setFirstName(source.getFirstname());
@@ -53,28 +52,24 @@ public class CustomOmsAddressPopulator implements Populator<AddressModel, Addres
 			target.setLastName(source.getLastname());
 		}
 
-
 		//TPR-3402 starts
 
-		StringBuilder addressLine = new StringBuilder((source.getLine1() != null ? source.getLine1() : source.getStreetname()));
-		if (StringUtils.isEmpty(addressLine.toString()))
+		StringBuilder addressLine = new StringBuilder();
+		if (StringUtils.isNotEmpty(source.getLine1() != null ? source.getLine1() : source.getStreetname()))
 		{
-			LOG.debug("AddressLine is null " + addressLine);
-			addressLine = null;
+			addressLine = new StringBuilder(source.getLine1() != null ? source.getLine1() : source.getStreetname());
 		}
-		final StringBuilder addressLine2 = new StringBuilder((source.getLine2() != null ? source.getLine2()
-				: source.getStreetnumber()));
-
-		if (StringUtils.isNotEmpty(addressLine2.toString()))
+		if (StringUtils.isNotEmpty(source.getLine2() != null ? source.getLine2() : source.getStreetnumber()))
 		{
+			final StringBuilder addressLine2 = new StringBuilder((source.getLine2() != null ? source.getLine2()
+					: source.getStreetnumber()));
 			addressLine = addressLine.append(MarketplaceomsordersConstants.SINGLE_SPACE).append(addressLine2);
 		}
-		final StringBuilder addressLine3 = new StringBuilder(source.getAddressLine3());
-		if (StringUtils.isNotEmpty(addressLine3.toString()))
+		if (StringUtils.isNotEmpty(source.getAddressLine3()))
 		{
-			addressLine = addressLine.append(MarketplaceomsordersConstants.SINGLE_SPACE).append(addressLine3);
+			final StringBuilder addressLine3 = new StringBuilder(source.getAddressLine3());
+			addressLine = addressLine.append(MarketplaceomsordersConstants.SINGLE_SPACE).append(addressLine3.toString());
 		}
-
 		String addrLine1 = StringUtils.EMPTY;
 		String addrLine2 = StringUtils.EMPTY;
 		String addrLine3 = StringUtils.EMPTY;
@@ -99,7 +94,6 @@ public class CustomOmsAddressPopulator implements Populator<AddressModel, Addres
 			addressLine = new StringBuilder(addressLine.toString().substring(pointer + 1, addressLine.length()));
 
 			addrLine2 = addressLine.toString();
-
 
 			if (addrLine2.length() > MarketplaceomsordersConstants.MAX_LEN_PER_ADDR_LINE)
 			{
