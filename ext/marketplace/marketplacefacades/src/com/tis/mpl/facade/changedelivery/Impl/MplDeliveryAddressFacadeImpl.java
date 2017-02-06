@@ -248,7 +248,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					}
 					if (CollectionUtils.isNotEmpty(transactionSDDtos))
 					{
-						requestData.setTransactionSDDtos(transactionSDDtos);
+						requestData.setTransactionSDDtos(getConvertedTimeSlot(transactionSDDtos));
 					}
 
 				}
@@ -280,6 +280,34 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		return requestData;
 	}
 
+	// Added in R2.3 TISRLUAT-926
+	 private List<TransactionSDDto> getConvertedTimeSlot(List<TransactionSDDto> transactionSDDtos)
+	 {
+
+	  SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+	  SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+	  String timeFromWithDate = null;
+	  String timeToWithDate = null;
+
+
+	  for (TransactionSDDto sdDto : transactionSDDtos)
+	  {
+	   timeFromWithDate = sdDto.getPickupDate().concat(" " + sdDto.getTimeSlotFrom());
+	   timeToWithDate = sdDto.getPickupDate().concat(" " + sdDto.getTimeSlotTo());
+	   try
+	   {
+	    sdDto.setTimeSlotFrom(String.valueOf(format2.format(format1.parse(timeFromWithDate))));
+	    sdDto.setTimeSlotTo(String.valueOf(format2.format(format1.parse(timeToWithDate))));
+	   }
+	   catch (ParseException parseException)
+	   {
+	    LOG.error("Parse Exception MplDeliveryAddressFacadeImpl::::::" + parseException.getMessage());
+	   }
+
+	  }
+
+	  return transactionSDDtos;
+	 }
 
 
 	/**
