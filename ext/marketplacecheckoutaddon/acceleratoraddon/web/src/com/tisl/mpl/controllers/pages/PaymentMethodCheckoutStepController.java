@@ -112,6 +112,7 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
+import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -233,22 +234,24 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//		serviceCart.setIsExpressCheckoutSelected(Boolean.valueOf(true));
 		//		modelService.save(serviceCart);
 
-		//TPR-1080
-		ValidationResults validationResult = null;
-		//Validator called explicitly TPR-629
-		if (StringUtils.isEmpty(guid))
-		{
-			validationResult = paymentValidator.validateOnEnter(redirectAttributes);
-		}
-		if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
-		{
-			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
-		}
 		//redirecting to previous page for anonymous user
 		if (getUserFacade().isAnonymousUser())
 		{
 			return getCheckoutStep().previousStep();
 		}
+		//TPR-1080
+		final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+		ValidationResults validationResult = null;
+		//Validator called explicitly TPR-629
+		if (StringUtils.isEmpty(guid))
+		{
+			validationResult = paymentValidator.validateOnEnterOptimized(cartData, redirectAttributes);
+		}
+		if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
+		{
+			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+		}
+
 		try
 		{
 			boolean selectPickupDetails = false;
@@ -260,33 +263,33 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			//code to restrict user to continue the checkout if he has not selected pickup person name and mobile number.
 			//this is only when cart entry contains cnc delivery mode.
-			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+			final Map<String, MarketplaceDeliveryModeData> freebieModelMap = new HashMap<String, MarketplaceDeliveryModeData>();
 			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 			Map<String, Boolean> paymentModeMap = null;
 			OrderData orderData = null;
-			final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+			//final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 			if (null == orderModel)
 			{
 				//Existing code
 				final CartModel cartModel = getCartService().getSessionCart();
 
 				// TPR-429 START
-				
+
 				final String checkoutSellerID = populateCheckoutSellers(cartData);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 				// TPR-429 END
 
-				if (cartModel != null)
+				if (cartData != null)
 				{
-					cartModel.setIsExpressCheckoutSelected(Boolean.valueOf(true));
-					getModelService().save(cartModel);
+					//cartModel.setIsExpressCheckoutSelected(Boolean.valueOf(true));
+					//getModelService().save(cartModel);
 
-					for (final AbstractOrderEntryModel abstractOrderEntryModel : cartModel.getEntries())
+					for (final OrderEntryData orderEntry : cartData.getEntries())
 					{
-						if (null != abstractOrderEntryModel.getDeliveryPointOfService())
+						if (null != orderEntry.getDeliveryPointOfService())
 						{
-							final String pickupPersonName = cartModel.getPickupPersonName();
-							final String pickupPersonMobile = cartModel.getPickupPersonMobile();
+							final String pickupPersonName = cartData.getPickupPersonName();
+							final String pickupPersonMobile = cartData.getPickupPersonMobile();
 							if ((pickupPersonName == null) || (pickupPersonMobile == null))
 							{
 								selectPickupDetails = true;
@@ -294,12 +297,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
 							}
 						}
-						if (abstractOrderEntryModel.getGiveAway() != null & !abstractOrderEntryModel.getGiveAway().booleanValue()
-								&& abstractOrderEntryModel.getSelectedUSSID() != null)
+						if (!orderEntry.isGiveAway() && orderEntry.getSelectedUssid() != null)
 						{
-							freebieModelMap
-									.put(abstractOrderEntryModel.getSelectedUSSID(), abstractOrderEntryModel.getMplDeliveryMode());
-							freebieParentQtyMap.put(abstractOrderEntryModel.getSelectedUSSID(), abstractOrderEntryModel.getQuantity());
+							freebieModelMap.put(orderEntry.getSelectedUssid(), orderEntry.getMplDeliveryMode());
+							freebieParentQtyMap.put(orderEntry.getSelectedUssid(), orderEntry.getQuantity());
 						}
 					}
 				}
@@ -317,12 +318,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				}
 
 				//Getting Payment modes
-				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, false, null);
+				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, false, cartData);
 
 				//Cart guid added to propagate to further methods via jsp
-				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, cartModel.getGuid());
+				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, cartData.getGuid());
 
-				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartModel);
+				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 
 			}
 			//TPR-629 --- based on orderModel
@@ -336,9 +337,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//Getting Payment modes
 				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, orderData);
 
-				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, orderModel.getGuid());
+				//model.addAttribute(MarketplacecheckoutaddonConstants.GUID, orderModel.getGuid());
 
-				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, orderModel);
+				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 			}
 
 			//creating new Payment Form
@@ -353,7 +354,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				timeOutSet(model);
 
 				//setting silent orders
-				setupSilentOrderPostPage(paymentForm, model, orderData);
+				setupSilentOrderPostPage(paymentForm, model, orderData, cartData);
 			}
 
 			final String payNowPromotionCheck = getSessionService().getAttribute(
@@ -364,6 +365,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				getSessionService().removeAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED);
 				GlobalMessages.addErrorMessage(model, MarketplacecheckoutaddonConstants.PROMOTIONEXPIRED);
 			}
+
 
 		}
 		//Nullpointer exception commented TPR-629
@@ -1297,7 +1299,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * @param paymentForm
 	 * @param model
 	 */
-	private void setupSilentOrderPostPage(final PaymentForm paymentForm, final Model model, final OrderData orderData)
+	private void setupSilentOrderPostPage(final PaymentForm paymentForm, final Model model, final OrderData orderData,
+			final CartData cartData)
 	{
 		try
 		{
@@ -1310,7 +1313,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			model.addAttribute(MarketplacecheckoutaddonConstants.NEWPAYMENTFORMMPLURL,
 					MarketplacecheckoutaddonConstants.NEWPAYMENTVIEWURL);
 
-			setupMplPaymentPage(model, orderData);
+			setupMplPaymentPage(model, orderData, cartData);
 			model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTFORM, paymentForm);
 
 		}
@@ -1337,13 +1340,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 *
 	 * @param model
 	 */
-	private void setupMplPaymentPage(final Model model, final OrderData orderData) throws Exception
+	private void setupMplPaymentPage(final Model model, final OrderData orderData, final CartData cartData) throws Exception
 	{
 		if (null == orderData)
 		{
 			//Existing code for cart
 			//getting cartdata
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+			//final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 
 			if (null != cartData && cartData.getAppliedOrderPromotions() != null)
 			{
@@ -1782,7 +1785,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	//			LOG.error(MarketplacecheckoutaddonConstants.B6004, e);
 	//		}
 	//	}
-
 
 
 
@@ -4172,24 +4174,24 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	}
 
 	//TPR-429 change
-		public static String populateCheckoutSellers(final CartData cartData)
+	public static String populateCheckoutSellers(final CartData cartData)
+	{
+		String cartLevelSellerID = null;
+		final List<OrderEntryData> sellerList = cartData.getEntries();
+		for (final OrderEntryData seller : sellerList)
 		{
-			String cartLevelSellerID = null;
-			final List<OrderEntryData> sellerList = cartData.getEntries();
-			for (final OrderEntryData seller : sellerList)
+			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+			if (cartLevelSellerID != null)
 			{
-				final String sellerID = seller.getSelectedSellerInformation().getSellerID();
-				if (cartLevelSellerID != null)
-				{
-					cartLevelSellerID += "_" + sellerID;
-				}
-				else
-				{
-					cartLevelSellerID = sellerID;
-				}
+				cartLevelSellerID += "_" + sellerID;
 			}
-			return cartLevelSellerID;
+			else
+			{
+				cartLevelSellerID = sellerID;
+			}
 		}
+		return cartLevelSellerID;
+	}
 
 
 

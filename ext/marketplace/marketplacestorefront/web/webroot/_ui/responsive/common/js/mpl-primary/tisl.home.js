@@ -1508,8 +1508,10 @@ function populateEnhancedSearch(enhancedSearchData)
 	
 	function openNeedHelpSec()
 	{
-		$(this).removeClass("minimize");
-		$("#h").toggle();
+		if(!$('.gwc-chat-embedded-window').hasClass('minimized')){
+			$(this).removeClass("minimize");
+			$("#h").toggle();
+		}
 	}
 	function getFooterOnLoad()
 	{

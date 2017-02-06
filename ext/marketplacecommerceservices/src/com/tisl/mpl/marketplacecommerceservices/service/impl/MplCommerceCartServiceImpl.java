@@ -275,15 +275,10 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @param parameter
 	 * @return CommerceCartModification
 	 * @throws CommerceCartModificationException
+	 * @Override public CommerceCartModification addToCartWithUSSID(final CommerceCartParameter parameter) throws
+	 *           CommerceCartModificationException { return
+	 *           getMplDefaultCommerceAddToCartStrategyImpl().addToCart(parameter); }
 	 */
-
-	@Override
-	public CommerceCartModification addToCartWithUSSID(final CommerceCartParameter parameter)
-			throws CommerceCartModificationException
-	{
-		return getMplDefaultCommerceAddToCartStrategyImpl().addToCart(parameter);
-	}
-
 
 	/**
 	 * @description: It is responsible for fetching seller information
@@ -417,13 +412,12 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		{
 			for (final OrderEntryData entry : cartData.getEntries())
 			{
-				if (entry != null && entry.getSelectedUssid() != null)
+				if (entry.getSelectedUssid() != null)
 				{
 					final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entry
 							.getSelectedUssid());
 					if (sellerInfoModel != null
 							&& CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute())
-							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
 							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
 							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
 									.getCode())
@@ -1633,7 +1627,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				parameter.setCreateNewEntry(false);
 				parameter.setUssid(sellerUssId);
 
-				final CommerceCartModification modification = addToCartWithUSSID(parameter);
+				//final CommerceCartModification modification = addToCartWithUSSID(parameter);
+				final CommerceCartModification modification = getMplDefaultCommerceAddToCartStrategyImpl().addToCart(parameter);
 				cartModificationData = getCartModificationConverter().convert(modification);
 
 				success = (cartModificationData != null) ? true : false;

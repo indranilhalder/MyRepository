@@ -521,7 +521,7 @@
 	<alias name="mplDefaultCommerceAddToCartStrategyImpl" alias="commerceAddToCartStrategy" />
 	<bean id="mplDefaultCommerceAddToCartStrategyImpl"
 		class="com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl"
-		parent="abstractCommerceAddToCartStrategy">
+		parent="defaultCommerceAddToCartStrategy">
 		<property name="commerceAddToCartMethodHooks" ref="commerceAddToCartMethodHooks" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>

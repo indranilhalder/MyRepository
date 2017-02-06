@@ -55,11 +55,11 @@ public interface MplCommerceCartService
 	 * @param paramCommerceCartParameter
 	 * @return CommerceCartModification
 	 * @throws CommerceCartModificationException
-	 */
+	 
 
 	CommerceCartModification addToCartWithUSSID(CommerceCartParameter paramCommerceCartParameter)
 			throws CommerceCartModificationException;
-
+	*/
 	/**
 	 * @description: It is responsible for fetching seller information
 	 * @param cartData
