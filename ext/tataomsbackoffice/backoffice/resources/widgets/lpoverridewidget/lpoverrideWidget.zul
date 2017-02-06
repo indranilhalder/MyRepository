@@ -96,10 +96,6 @@
 						style="width:200px;height:10px">
 					</textbox>
 				</vlayout>
-				<hbox pack="center" style="width:100%">
-					<label value="@load(lpVimo.errorMessage)"
-						sclass="error_class" />
-				</hbox>
 			</hlayout>
 			<hlayout>
 				<vlayout width="100px">
@@ -138,11 +134,14 @@
 						onClick="@command('lpSerachButton', event=event)" />
 				</vlayout>
 			</hlayout>
+			<hbox pack="center" style="width:100%">
+					<label value="@load(lpVimo.errorMessage)"
+						sclass="error_class" />
+				</hbox>
 			<div style="overflow-x:auto">
 				<listbox model="@bind(lpVimo.listOfTransactions)"
 					selectedItems="@bind(lpVimo.selectedEntities)" id="listBoxData"
-					mold="paging" pageSize="10" checkmark="true" multiple="true"
-					emptyMessage="No result found in the result">
+					mold="paging" pageSize="10" checkmark="true" multiple="true">
 					<listhead sizable="true">
 						<listheader style="text-align:left"
 							label="Order Id">

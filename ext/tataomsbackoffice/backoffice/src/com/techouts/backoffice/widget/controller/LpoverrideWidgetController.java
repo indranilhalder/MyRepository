@@ -164,7 +164,10 @@ public class LpoverrideWidgetController
 				}
 			}
 			this.listOfTransactions = transactionsList;
-			this.errorMessageValue = "";
+			if (transactionsList.isEmpty())
+			{
+				this.errorMessageValue = "No Result Found";
+			}
 		}
 		else
 		{
