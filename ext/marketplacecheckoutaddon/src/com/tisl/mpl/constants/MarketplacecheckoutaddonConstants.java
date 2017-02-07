@@ -305,4 +305,5 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	/* Gigya Social Login */
 	public final static String SOCIALLOGIN = "/socialLogin";
 	public static final String CHECKSESSIONACTIVE = "/checkSessionActive";
+	public static final String RETURNTOPAYMENTPAGE = "/checkout/multi/payment-method/pay";
 }

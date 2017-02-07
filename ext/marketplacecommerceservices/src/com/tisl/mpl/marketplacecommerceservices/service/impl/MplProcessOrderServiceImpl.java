@@ -6,16 +6,19 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.store.BaseStoreModel;
-import de.hybris.platform.voucher.model.PromotionVoucherModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -338,83 +341,198 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			final boolean positive) throws InvalidCartException, CalculationException, EtailNonBusinessExceptions,
 			VoucherOperationException
 	{
-		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-				+ orderModel.getCode();
-		if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_SUCCEEDED")
-				&& !juspayWebhookModel.getIsExpired().booleanValue() && positive)
+		//SprintPaymentFixes:- Try catch added to handle Exception and set the Order Status to Payment_Timeout
+		try
 		{
-			if (null == orderModel.getPaymentInfo())
+			final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+					+ orderModel.getCode();
+			if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_SUCCEEDED")
+					&& !juspayWebhookModel.getIsExpired().booleanValue() && positive)
 			{
-				updateOrder(orderModel, juspayWebhookModel);
-
-				//Re-trigger submit order process from Payment_Pending to Payment_Successful
-				final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
-				parameter.setEnableHooks(true);
-				parameter.setSalesApplication(orderModel.getSalesApplication());
-
-				final CommerceOrderResult result = new CommerceOrderResult();
-				result.setOrder(orderModel);
-
-				mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
-				getOrderService().submitOrder(orderModel);
-
-				//Email and sms for Payment_Successful
-				try
+				if (null == orderModel.getPaymentInfo())
 				{
-					getNotificationService().triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
+					updateOrder(orderModel, juspayWebhookModel);
+
+					//Re-trigger submit order process from Payment_Pending to Payment_Successful
+					final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
+					parameter.setEnableHooks(true);
+					parameter.setSalesApplication(orderModel.getSalesApplication());
+
+					final CommerceOrderResult result = new CommerceOrderResult();
+					result.setOrder(orderModel);
+
+					//SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
+					if (setModeOfPayment(orderModel))
+					{
+						modelService.save(orderModel);
+					}
+
+					mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
+					getOrderService().submitOrder(orderModel);
+
+					//Email and sms for Payment_Successful
+					try
+					{
+						getNotificationService().triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
+					}
+					catch (final JAXBException e)
+					{
+						LOG.error("Error while sending notifications from job>>>>>>", e);
+					}
+					catch (final Exception ex)
+					{
+						LOG.error(ERROR_NOTIF, ex);
+					}
+
+					juspayWebhookModel.setIsExpired(Boolean.TRUE);
+					//SprintPaymentFixes:- juspayModel save added
+					modelService.save(juspayWebhookModel);
 				}
-				catch (final JAXBException e)
+				//SprintPaymentFixes:- if any case Order Status Updation fails and Order is ready to mode to other Environment then change status to Payment_Successful
+				else if (null != orderModel.getPaymentInfo() && CollectionUtils.isEmpty(orderModel.getChildOrders())
+						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
 				{
-					LOG.error("Error while sending notifications from job>>>>>>", e);
+					//Re-trigger submit order process from Payment_Pending to Payment_Successful
+					final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
+					parameter.setEnableHooks(true);
+					parameter.setSalesApplication(orderModel.getSalesApplication());
+
+					final CommerceOrderResult result = new CommerceOrderResult();
+					result.setOrder(orderModel);
+
+					//SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
+					if (setModeOfPayment(orderModel))
+					{
+						modelService.save(orderModel);
+					}
+					//PaymentFix2017
+					//orderModel.setIsSentToOMS(Boolean.FALSE);
+					orderModel.setOmsSubmitStatus("");
+
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 				}
-				catch (final Exception ex)
+				//SprintPaymentFixes:- if any case Order Status Updation fails and Order is ready to mode to other Environment then change status to Payment_Successful
+				else if (null != orderModel.getPaymentInfo() && CollectionUtils.isNotEmpty(orderModel.getChildOrders())
+						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
 				{
-					LOG.error(ERROR_NOTIF, ex);
+					//SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
+					//PaymentFix2017
+					//orderModel.setIsSentToOMS(Boolean.FALSE);
+					orderModel.setOmsSubmitStatus("");
+
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+
+					juspayWebhookModel.setIsExpired(Boolean.TRUE);
+					//SprintPaymentFixes:- juspayModel save added
+					modelService.save(juspayWebhookModel);
 				}
+
+				//SprintPaymentFixes:- for modeOfPayment as COD, if there is no child orders the Order will be failed
+				if (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD") && null != orderModel.getPaymentInfo()
+						&& CollectionUtils.isNotEmpty(orderModel.getChildOrders())
+						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
+				{
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+				}
+
+
 			}
+			else if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_FAILED")
+					&& !juspayWebhookModel.getIsExpired().booleanValue() && !positive)
+			{
+				//Added for failure transactions
+				if (null == orderModel.getPaymentInfo())
+				{
+					updateOrder(orderModel, juspayWebhookModel);
 
-			juspayWebhookModel.setIsExpired(Boolean.TRUE);
+					//SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
+					if (setModeOfPayment(orderModel))
+					{
+						modelService.save(orderModel);
+					}
+
+					//getting PinCode against Order
+					final String defaultPinCode = getPinCodeForOrder(orderModel);
+
+					//OMS Deallocation call for failed order
+					getMplCommerceCartService().isInventoryReserved(orderModel,
+							MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
+
+
+					if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
+					{
+						final PromotionVoucherModel voucherModel = (PromotionVoucherModel) orderModel.getDiscounts().get(0);
+						getMplVoucherService().releaseVoucher(voucherModel.getVoucherCode(), null, orderModel);
+						getMplVoucherService().recalculateCartForCoupon(null, orderModel);
+					}
+
+					//Email and sms for Payment_Failed
+					try
+					{
+						getNotificationService().triggerEmailAndSmsOnPaymentFailed(orderModel, trackOrderUrl);
+					}
+					catch (final JAXBException e)
+					{
+						LOG.error("Error while sending notifications from job>>>>>>", e);
+					}
+					catch (final Exception ex)
+					{
+						LOG.error(ERROR_NOTIF, ex);
+					}
+
+					juspayWebhookModel.setIsExpired(Boolean.TRUE);
+					//SprintPaymentFixes:- juspayModel save added
+					modelService.save(juspayWebhookModel);
+				}
+
+				//SprintPaymentFixes:- if any case Order Status Updation fails and Order is ready to mode to other Environment then change status to Payment_Successful or Payment Timeout
+				else if (null != orderModel.getPaymentInfo() && CollectionUtils.isNotEmpty(orderModel.getChildOrders())
+						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
+				{
+					boolean successFlag = false;
+					for (final PaymentTransactionModel paymentTransaction : orderModel.getPaymentTransactions())
+					{
+						if (paymentTransaction.getStatus().equalsIgnoreCase("SUCCESS"))
+						{
+							//PaymentFix2017
+							//orderModel.setIsSentToOMS(Boolean.FALSE);
+							orderModel.setOmsSubmitStatus("");
+							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+							successFlag = true;
+							break;
+						}
+					}
+					if (successFlag == false)
+					{
+						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
+					}
+
+					juspayWebhookModel.setIsExpired(Boolean.TRUE);
+					//SprintPaymentFixes:- juspayModel save added
+					modelService.save(juspayWebhookModel);
+				}
+
+				//SprintPaymentFixes:- for modeOfPayment as COD, if there is no child orders the Order will be failed
+				if (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD")
+						&& CollectionUtils.isEmpty(orderModel.getChildOrders()))
+				{
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
+				}
+
+			}
 		}
-		else if (juspayWebhookModel.getEventName().equalsIgnoreCase("ORDER_FAILED")
-				&& !juspayWebhookModel.getIsExpired().booleanValue() && !positive)
+		catch (final ModelSavingException e)
 		{
-			//Added for failure transactions
-			if (null == orderModel.getPaymentInfo())
-			{
-				updateOrder(orderModel, juspayWebhookModel);
-
-				//getting PinCode against Order
-				final String defaultPinCode = getPinCodeForOrder(orderModel);
-
-				//OMS Deallocation call for failed order
-				getMplCommerceCartService().isInventoryReserved(orderModel,
-						MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
-
-				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
-
-				if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
-				{
-					final PromotionVoucherModel voucherModel = (PromotionVoucherModel) orderModel.getDiscounts().get(0);
-					getMplVoucherService().releaseVoucher(voucherModel.getVoucherCode(), null, orderModel);
-					getMplVoucherService().recalculateCartForCoupon(null, orderModel);
-				}
-				//Email and sms for Payment_Failed
-				try
-				{
-					getNotificationService().triggerEmailAndSmsOnPaymentFailed(orderModel, trackOrderUrl);
-				}
-				catch (final JAXBException e)
-				{
-					LOG.error("Error while sending notifications from job>>>>>>", e);
-				}
-				catch (final Exception ex)
-				{
-					LOG.error(ERROR_NOTIF, ex);
-				}
-			}
-
-			juspayWebhookModel.setIsExpired(Boolean.TRUE);
+			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
+			LOG.error("Error while saving into DB from job>>>>>>", e);
+		}
+		catch (final Exception e)
+		{
+			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
+			LOG.error("Error while updating updateOrder from job>>>>>>", e);
 		}
 	}
 
@@ -449,7 +567,6 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	 * @param juspayWebhookModel
 	 */
 	private void updateOrder(final OrderModel orderModel, final JuspayWebhookModel juspayWebhookModel)
-			throws EtailNonBusinessExceptions
 	{
 		if (null != juspayWebhookModel)
 		{
@@ -464,7 +581,19 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			getMplPaymentService().updateAuditEntry(orderStatusResponse, null, orderModel, paymentMode);
 			LOG.warn("Order model total price " + orderModel.getTotalPrice() + "order status response amount"
 					+ orderStatusResponse.getAmount());
-			if (orderModel.getTotalPrice().equals(orderStatusResponse.getAmount()))
+			//SprintPaymentFixes:- Added:- CollectionUtils.isEmpty(orderModel.getPaymentTransactions()
+			boolean faliurFlag = false;
+			final List<PaymentTransactionModel> payTranModelList = orderModel.getPaymentTransactions();
+			for (final PaymentTransactionModel payTranModel : payTranModelList)
+			{
+				if (payTranModel.getStatus().equalsIgnoreCase("success"))
+				{
+					faliurFlag = true;
+					break;
+				}
+			}
+			if (!faliurFlag && orderModel.getTotalPrice().equals(orderStatusResponse.getAmount())
+					&& orderStatusResponse.getAmount().doubleValue() > 0)
 			{
 				getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel);
 			}
@@ -482,9 +611,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			}
 			getMplPaymentService().paymentModeApportion(orderModel);
 		}
-
 	}
-
 
 	//Not used
 	//	/**
@@ -523,6 +650,35 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 
 
+	private boolean setModeOfPayment(final OrderModel orderModel)
+	{
+		//SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
+		boolean returnFlag = false;
+		try
+		{
+			if (null != orderModel.getPaymentInfo())
+			{
+				final PaymentInfoModel payInfo = orderModel.getPaymentInfo();
+				final String paymentModeFromInfo = getMplPaymentService().getPaymentModeFrompayInfo(payInfo);
+				orderModel.setModeOfOrderPayment(paymentModeFromInfo);
+
+				//modelService.save(orderModel);
+				returnFlag = true;
+			}
+		}
+		catch (final ModelSavingException me)
+		{
+			returnFlag = false;
+		}
+		catch (final Exception e)
+		{
+			returnFlag = false;
+		}
+		return returnFlag;
+	}
+
+
+	//GETTERS AND SETTERS
 
 	/**
 	 * @return the mplProcessOrderDao

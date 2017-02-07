@@ -32,6 +32,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.model.SellerInformationModel;
 
 
 /**
@@ -135,6 +136,8 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 			addPromotionValue(source, target);
 			addImeiDetails(source, target);
 			addSellerInformation(source, target);
+
+
 		}
 	}
 
@@ -341,7 +344,31 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 		}
 	}
 
-	@Override
+
+//	@Override
+//	private void populateSellerInfo(final AbstractOrderEntryModel source, final OrderEntryData target)
+//	{
+//		final ProductModel productModel = source.getProduct();
+//		final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel.getSellerInformationRelator();
+//
+//		// TO-DO
+//		for (final SellerInformationModel sellerInformationModel : sellerInfo)
+//		{
+//			if (sellerInformationModel.getSellerArticleSKU().equals(source.getSelectedUSSID()))
+//			{
+//				final SellerInformationData sellerInfoData = new SellerInformationData();
+//				sellerInfoData.setSellername(sellerInformationModel.getSellerName());
+//				sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
+//				sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
+//				target.setSelectedSellerInformation(sellerInfoData);
+//				break;
+//			}
+//		}
+//	}
+
+
+
+
 	protected void addDeliveryMode(final AbstractOrderEntryModel orderEntry, final OrderEntryData entry)
 	{
 		if (orderEntry.getMplDeliveryMode() != null)

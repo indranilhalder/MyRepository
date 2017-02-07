@@ -434,8 +434,8 @@ public interface MplCartFacade extends CartFacade
 	 * @return CartData
 	 * @throws EtailNonBusinessExceptions
 	 */
-	CartData getSessionCartWithEntryOrderingMobile(final CartModel cart, final boolean recentlyAddedFirst)
-			throws EtailNonBusinessExceptions;
+	CartData getSessionCartWithEntryOrderingMobile(final CartModel cart, final boolean recentlyAddedFirst,
+			final boolean isrecalculate, final boolean resetReqd) throws EtailNonBusinessExceptions;
 
 	/* TPR-970 changes ,populate city and stae details in cart */
 	public void populatePinCodeData(final CartModel cartmodel, final String pincode);
@@ -474,5 +474,12 @@ public interface MplCartFacade extends CartFacade
 	/**
 	 * @return
 	 */
-	CartData getLuxCart();
+	CartData getLuxCart() throws CommerceCartModificationException;
+
+	/**
+	 * @param cart
+	 * @throws CommerceCartModificationException
+	 */
+	public CartModel getCalculatedCartMobile(CartModel cart) throws CommerceCartModificationException, EtailNonBusinessExceptions;
+
 }

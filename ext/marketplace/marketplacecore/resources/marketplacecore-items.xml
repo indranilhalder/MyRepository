@@ -1870,6 +1870,7 @@
 						<description>Stores the Promotion Code</description>
 						<persistence type="property" />
 					</attribute>
+					
 				</attributes>
 			</itemtype>
 			<!-- Product SizeGuide -->
@@ -2493,13 +2494,14 @@
 						</attribute> -->
 					<!-- End : New Attribute for identifying Fall Back Orders Plan B -->
 					<!-- Start : New Attribute for identifying Fall Back Orders Plan C -->
+					<!-- PaymentFix2017 -->
 					<attribute autocreate="true" qualifier="isSentToOMS"
 						type="java.lang.Boolean">
 						<persistence type="property" qualifier="isSentToOMS">
 						</persistence>
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<defaultvalue>true</defaultvalue>
+						<defaultvalue>false</defaultvalue>
 					</attribute>
 					<!-- End : New Attribute for identifying Fall Back Orders Plan C -->
 					<attribute qualifier="serialNum" autocreate="true"
