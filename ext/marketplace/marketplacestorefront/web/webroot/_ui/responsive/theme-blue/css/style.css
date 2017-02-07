@@ -59194,6 +59194,7 @@ body.page-cartPage{
 } 
 /*end changes for INC_11120*/
 
+<<<<<<< HEAD
 /*live chat start*/
 /* Previous different code
 .gwc-chat-head .gwc-chat-title div{
@@ -59572,3 +59573,8 @@ font-weight:500 !important;
  margin-top: -15px
 } */
 /*live chat end*/
+
+/* UF-25 */
+.gig-rating-readReviewsLink_quick a{
+	color: #a9143c;
+}
