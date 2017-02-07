@@ -53,6 +53,7 @@ import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -1424,6 +1425,21 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			model.addAttribute(MarketplacecheckoutaddonConstants.ORDERDATA, orderData);
 			model.addAttribute("isCart", Boolean.FALSE);
 		}
+
+		//Added for mRupee
+
+		//getting merchant for mRupee
+		model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_MERCHANT_URL, getConfigurationService().getConfiguration()
+				.getString(MarketplacecheckoutaddonConstants.MRUPEEURL));
+
+		//getting redirect url mRupee
+		model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_CODE,
+				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.MRUPEE_MERCHANT_CODE));
+
+		model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_NARRATION, getConfigurationService().getConfiguration()
+				.getString(MarketplacecheckoutaddonConstants.MRUPEE_NARRATION_VALUE));
+
+		//mRupee configuration ends
 
 		model.addAttribute(MarketplacecheckoutaddonConstants.JUSPAYJSNAME,
 				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYJSNAMEVALUE));
@@ -4233,7 +4249,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return cartLevelSellerID;
 	}
 
-	
+
 	/**
 	 * This method creates mRupee related order.
 	 *

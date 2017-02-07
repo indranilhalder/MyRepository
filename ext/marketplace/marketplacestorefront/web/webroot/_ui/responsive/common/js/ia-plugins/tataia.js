@@ -1,20 +1,3 @@
-Skip to content
-This repository
-Search
-Pull requests
-Issues
-Gist
- @debalinadas
- Watch 59
-  Star 0
- Fork 5 tcs-chennai/TCS_COMMERCE_REPO Private
- Code  Issues 0  Pull requests 38  Projects 0  Wiki  Pulse  Graphs
-Tree: ae8f8d501b Find file Copy pathTCS_COMMERCE_REPO/ext/marketplace/marketplacestorefront/web/webroot/_ui/responsive/common/js/ia-plugins/tataia.js
-ae8f8d5  on Nov 17, 2016
- 756699 UI:756699:SEO tataia.js
-10 contributors @SumanMohanta @AbhijitPaul @SomdipSanyal @SasiTcs @teg-github @Masani93 @ManasSaha @jagadeeswarv @ArghaGhosh @AmareshSaha
-RawBlameHistory     
-1522 lines (1350 sloc)  66.1 KB
 /*Facebook Variables to be Provided by TCS*/
 var fbID = '';
 var fbAccessToken = '';
@@ -1506,5 +1489,3 @@ if (searchCategory_id){
   }
 }
 			$(document).on('click',".IAQuickView,.iaAddToCartButton",function(e){e.preventDefault();})
-Contact GitHub API Training Shop Blog About
-© 2017 GitHub, Inc. Terms Privacy Security Status Help
