@@ -30,6 +30,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -50,6 +51,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 	//	private double totalPricevalue;
 	private int noOfProducts = 0;
 	private boolean flagForCouldFireMessage = true;
+	private int stockCount = 0;
 
 
 
@@ -226,6 +228,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 		final PromotionsManager promotionsManager = PromotionsManager.getInstance();
 		final Long eligibleQuantity = getQuantity();
 		int totalCount = 0;
+
 		try
 		{
 			//noOfProducts = populateTotalProductCount(validProductUssidMap);
@@ -248,6 +251,23 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 					totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
 					//eligibleProductList.add(entry.getProduct());
 				}
+
+
+
+				//Added for TPR-4354
+				if (getMplPromotionHelper().validateForStockRestriction(restrictionList) && null != eligibleQuantity
+						&& eligibleQuantity.intValue() > 0)
+				{
+					final int offerQuantity = (totalCount / eligibleQuantity.intValue());
+					final int customerOfferCount = getMplPromotionHelper().getStockCustomerRedeemCount(restrictionList);
+					setStockCount(eligibleQuantity.intValue() * customerOfferCount);
+					if (customerOfferCount > 0 && offerQuantity > customerOfferCount)
+					{
+						totalCount = (eligibleQuantity.intValue() * customerOfferCount);
+					}
+				}
+
+
 				noOfProducts = totalCount;
 				List<PromotionOrderEntryConsumed> remainingItemsFromTail = null;
 				final Map<String, Integer> tcMapForValidEntries = new ConcurrentHashMap<String, Integer>();
@@ -411,7 +431,8 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 							+ ">" + eligibleQuantity.intValue() + Localization.getLocalizedString("promotion.freeGiftAction"));
 				}
 
-				if (noOfProducts > 0 && remainingItemsFromTail != null && remainingItemsFromTail.size() > 0L) // For Localization: To check for Excluded Products
+				if (noOfProducts > 0 && remainingItemsFromTail != null && remainingItemsFromTail.size() > 0L
+						&& !getMplPromotionHelper().validateForStockRestriction(restrictionList)) // For Localization: To check for Excluded Products
 				{
 					final float certainty = (float) remainingItemsFromTail.size() / eligibleQuantity.intValue();
 
@@ -424,14 +445,35 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 					}
 
 				}
+				else if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
+				{
+					if (noOfProducts >= getStockCount())
+					{
+						final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
+								paramPromotionEvaluationContext.getOrder(), 1.00F);
+						promotionResults.add(result);
+					}
+					else if (noOfProducts < getStockCount() && (noOfProducts % eligibleQuantity.intValue() == 0))
+					{
+						final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
+								paramPromotionEvaluationContext.getOrder(), 1.00F);
+						promotionResults.add(result);
+					}
+					else if (noOfProducts < getStockCount() && !(noOfProducts % eligibleQuantity.intValue() == 0))
+					{
+						final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
+								paramPromotionEvaluationContext.getOrder(), 0.00F);
+						promotionResults.add(result);
+					}
+				}
 			}
-			else if (noOfProducts > 0)
-			{
-				//certainty check
-				final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
-						paramPromotionEvaluationContext.getOrder(), 0.00F);
-				promotionResults.add(result);
-			}
+			//			else if (noOfProducts > 0)
+			//			{
+			//				//certainty check
+			//				final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
+			//						paramPromotionEvaluationContext.getOrder(), 0.00F);
+			//				promotionResults.add(result);
+			//			}
 
 		}
 		catch (final JaloInvalidParameterException exception)
@@ -452,19 +494,19 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 	 * @param validProductUssidMap
 	 * @return totalCount
 	 */
-	//	private int populateTotalProductCount(final Map<String, AbstractOrderEntry> validProductUssidMap)
-	//	{
-	//		int totalCount = 0;
-	//		if (MapUtils.isNotEmpty(validProductUssidMap))
-	//		{
-	//			for (final AbstractOrderEntry entry : validProductUssidMap.values())
-	//			{
-	//				totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
-	//			}
-	//		}
-	//
-	//		return totalCount;
-	//	}
+	private int populateTotalProductCount(final Map<String, AbstractOrderEntry> validProductUssidMap)
+	{
+		int totalCount = 0;
+		if (MapUtils.isNotEmpty(validProductUssidMap))
+		{
+			for (final AbstractOrderEntry entry : validProductUssidMap.values())
+			{
+				totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
+			}
+		}
+
+		return totalCount;
+	}
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
@@ -712,6 +754,25 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 	public void setFlagForCouldFireMessage(final boolean flagForCouldFireMessage)
 	{
 		this.flagForCouldFireMessage = flagForCouldFireMessage;
+	}
+
+
+	/**
+	 * @return the stockCount
+	 */
+	public int getStockCount()
+	{
+		return stockCount;
+	}
+
+
+	/**
+	 * @param stockCount
+	 *           the stockCount to set
+	 */
+	public void setStockCount(final int stockCount)
+	{
+		this.stockCount = stockCount;
 	}
 
 

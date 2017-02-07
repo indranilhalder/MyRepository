@@ -1076,4 +1076,6 @@ public class MplPromotionHelper
 		return true;
 	}
 
+
+
 }

@@ -80,8 +80,11 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
+import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
+import com.tisl.mpl.model.BuyAPercentageDiscountModel;
 import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
+import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
@@ -2217,13 +2220,16 @@ public class DefaultPromotionManager extends PromotionsManager
 	{
 		Set<String> validProdUssidSet = new HashSet<String>();
 		Map<String, Integer> stockCountMap = null;
+		//int totalstockCount = 0;
 
 		//Check whether Stock level restriction exists
-		final int stockCount = getStockRestrictionVal(restrictionList);
+		int stockCount = getStockRestrictionVal(restrictionList);
 		boolean sellerFlag = false;
 
 		if (stockCount > 0 && null != validProductUssidTempMap)
 		{
+			//totalstockCount = stockCount * getStockCount(promoCode);
+			stockCount *= getStockCount(promoCode);
 			stockCountMap = new HashMap<String, Integer>();
 			sellerFlag = getSellerRestrictionVal(restrictionList);
 			final Set<String> validSetAfterStockCheck = getValidMapAfterStockLevelRestriction(validProductUssidTempMap, promoCode,
@@ -2254,9 +2260,44 @@ public class DefaultPromotionManager extends PromotionsManager
 
 			validProdUssidSet = doConsumeEntries(validEntries, totalEligibleCount, ctx, qCountMap, stockCount, promoCode,
 					stockCountMap, sellerFlag);
+			//			validProdUssidSet = doConsumeEntries(validEntries, totalEligibleCount, ctx, qCountMap, stockCount, promoCode,
+			//					stockCountMap, sellerFlag);
 		}
 
 		return validProdUssidSet;
+	}
+
+	/**
+	 * @param promoCode
+	 * @return count
+	 */
+	private int getStockCount(final String promoCode)
+	{
+		int count = 1;
+
+		try
+		{
+			final ProductPromotionModel oModel = getPromoDetails(promoCode);
+			if (oModel instanceof BuyAPercentageDiscountModel)
+			{
+				count = ((BuyAPercentageDiscountModel) oModel).getQuantity().intValue();
+			}
+			else if (oModel instanceof BuyXItemsofproductAgetproductBforfreeModel)
+			{
+				count = ((BuyXItemsofproductAgetproductBforfreeModel) oModel).getQualifyingCount().intValue();
+			}
+			else if (oModel instanceof BuyABFreePrecentageDiscountModel)
+			{
+				count = ((BuyABFreePrecentageDiscountModel) oModel).getQuantity().intValue();
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.debug("Error in Fetching of Qualifying Count. Setting it as 1");
+			count = 1;
+		}
+
+		return count;
 	}
 
 	/**

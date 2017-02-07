@@ -4,6 +4,8 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.core.model.LimitedStockPromoInvalidationModel;
+import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
 import com.tisl.mpl.promotion.dao.ExtStockLevelPromotionCheckDao;
@@ -24,29 +28,82 @@ import com.tisl.mpl.promotion.dao.ExtStockLevelPromotionCheckDao;
 public class ExtStockLevelPromotionCheckServiceImpl implements ExtStockLevelPromotionCheckService
 {
 
+	private static final Logger LOG = Logger.getLogger(ExtStockLevelPromotionCheckServiceImpl.class);
 	/*
 	 * (non-Javadoc)
 	 */
 	@Resource(name = "stockPromoCheckDao")
 	private ExtStockLevelPromotionCheckDao stockPromoCheckDao;
 
+	@Autowired
+	private ModelService modelService;
+
+	@Autowired
+	private FlexibleSearchService flexibleSearchService;
+
+
 
 	@Override
 	public Map<String, Integer> getCumulativeStockMap(final String codes, final String promoCode, final boolean sellerFlag)
 	{
 		// YTODO Auto-generated method stub
+		//final Map<String, Integer> cummulativeMap = new HashMap<String, Integer>();
 		final Map<String, Integer> cumualatibveStockMap = stockPromoCheckDao.getPromoInvalidationModelMap(codes, promoCode,
 				sellerFlag);
+		//		final int qualifyingCount = getQualifyingCount(promoCode);
+		//		if (MapUtils.isNotEmpty(cumualatibveStockMap))
+		//		{
+		//			for (final Map.Entry<String, Integer> data : cumualatibveStockMap.entrySet())
+		//			{
+		//				if (data.getValue().intValue() >= qualifyingCount && qualifyingCount > 0)
+		//				{
+		//					cummulativeMap.put(data.getKey(), Integer.valueOf((data.getValue().intValue() / qualifyingCount)));
+		//				}
+		//				else
+		//				{
+		//					cummulativeMap.put(data.getKey(), data.getValue());
+		//				}
+		//			}
+		//		}
 		return cumualatibveStockMap;
+		//return cummulativeMap;
 	}
 
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService#getPromoInvalidationList(java
-	 * .lang.String)
+	/**
+	 * @param promoCode
+	 * @return count
+	 */
+	//	private int getQualifyingCount(final String promoCode)
+	//	{
+	//		final int count = 0;
+	//				try
+	//				{
+	//					final ProductPromotionModel oModel = getPromoDetails(promoCode);
+	//					if (oModel instanceof BuyAPercentageDiscountModel)
+	//					{
+	//						count = ((BuyAPercentageDiscountModel) oModel).getQuantity().intValue();
+	//					}
+	//					else if (oModel instanceof BuyXItemsofproductAgetproductBforfreeModel)
+	//					{
+	//						count = ((BuyXItemsofproductAgetproductBforfreeModel) oModel).getQualifyingCount().intValue();
+	//					}
+	//					else if (oModel instanceof BuyABFreePrecentageDiscountModel)
+	//					{
+	//						count = ((BuyABFreePrecentageDiscountModel) oModel).getQuantity().intValue();
+	//					}
+	//				}
+	//				catch (final Exception exception)
+	//				{
+	//					LOG.debug("Error in Fetching of Qualifying Count. Setting it as 0");
+	//					count = 0;
+	//				}
+	//		return count;
+	//	}
+
+	/**
+	 * @param guid
+	 * @return List<LimitedStockPromoInvalidationModel>
 	 */
 	@Override
 	public List<LimitedStockPromoInvalidationModel> getPromoInvalidationList(final String guid)
@@ -55,6 +112,10 @@ public class ExtStockLevelPromotionCheckServiceImpl implements ExtStockLevelProm
 		return stockPromoCheckDao.getPromoInvalidationList(guid);
 	}
 
+	/**
+	 * @param promoCode
+	 * @param maxStockCount
+	 */
 	@Override
 	public List<String> getStockForPromotion(final String promoCode, final int maxStockCount)
 	{
@@ -77,22 +138,92 @@ public class ExtStockLevelPromotionCheckServiceImpl implements ExtStockLevelProm
 
 
 
+	/**
+	 * @param substring
+	 * @param code
+	 * @param dataMap
+	 * @return stockMap
+	 */
 	@Override
 	public Map<String, Integer> getCumulativeCatLevelStockMap(final String substring, final String code,
 			final Map<String, String> dataMap)
 	{
 		final Map<String, Integer> stockMap = new HashMap<String, Integer>();
 		final Map<String, Integer> detailsMap = stockPromoCheckDao.getCumulativeCatLevelStockMap(substring, code);
+
+		//final int qualifyingCount = getQualifyingCount(code);
+
 		for (final Map.Entry<String, String> stockkData : dataMap.entrySet())
 		{
 			for (final Map.Entry<String, Integer> data : detailsMap.entrySet())
 			{
 				if (StringUtils.equalsIgnoreCase(data.getKey(), stockkData.getValue()))
 				{
+					//					if (data.getValue().intValue() >= qualifyingCount && qualifyingCount > 0)
+					//					{
+					//						stockMap.put(stockkData.getKey(), Integer.valueOf((data.getValue().intValue() / qualifyingCount)));
+					//					}
+					//					else
+					//					{
+					//						stockMap.put(stockkData.getKey(), data.getValue());
+					//					}
 					stockMap.put(stockkData.getKey(), data.getValue());
 				}
 			}
 		}
 		return stockMap;
+	}
+
+
+	/**
+	 *
+	 * @param code
+	 * @return oModel
+	 */
+	//	private ProductPromotionModel getPromoDetails(final String code)
+	//	{
+	//		final ProductPromotionModel oModel = modelService.create(ProductPromotionModel.class);
+	//		oModel.setCode(code);
+	//		oModel.setEnabled(Boolean.TRUE);
+	//
+	//		return flexibleSearchService.getModelByExample(oModel);
+	//	}
+
+
+	/**
+	 * @return the modelService
+	 */
+	public ModelService getModelService()
+	{
+		return modelService;
+	}
+
+
+	/**
+	 * @param modelService
+	 *           the modelService to set
+	 */
+	public void setModelService(final ModelService modelService)
+	{
+		this.modelService = modelService;
+	}
+
+
+	/**
+	 * @return the flexibleSearchService
+	 */
+	public FlexibleSearchService getFlexibleSearchService()
+	{
+		return flexibleSearchService;
+	}
+
+
+	/**
+	 * @param flexibleSearchService
+	 *           the flexibleSearchService to set
+	 */
+	public void setFlexibleSearchService(final FlexibleSearchService flexibleSearchService)
+	{
+		this.flexibleSearchService = flexibleSearchService;
 	}
 }
