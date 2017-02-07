@@ -242,6 +242,7 @@
 		<property name="channels" type="java.util.List&lt;java.lang.String>"></property>
 		<property name="allowedSellers" type="java.util.List&lt;java.lang.String>"></property>
 		<property name="promourl" type="java.lang.String"></property>
+		<property name="bundlepromolinktext" type="java.lang.String"></property>
 	</bean>
 
 	<!-- PDP changes for Promotion end -->
