@@ -260,10 +260,26 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 				{
 					final int offerQuantity = (totalCount / eligibleQuantity.intValue());
 					final int customerOfferCount = getMplPromotionHelper().getStockCustomerRedeemCount(restrictionList);
-					setStockCount(eligibleQuantity.intValue() * customerOfferCount);
+					final int eligibleStockCount = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList)
+							* eligibleQuantity.intValue();
+
+					if (customerOfferCount > 0)
+					{
+						setStockCount(eligibleQuantity.intValue() * customerOfferCount);
+					}
+					else
+					{
+						setStockCount(eligibleStockCount);
+					}
+
+
 					if (customerOfferCount > 0 && offerQuantity > customerOfferCount)
 					{
 						totalCount = (eligibleQuantity.intValue() * customerOfferCount);
+					}
+					else if (totalCount >= eligibleStockCount)
+					{
+						totalCount = eligibleStockCount;
 					}
 				}
 

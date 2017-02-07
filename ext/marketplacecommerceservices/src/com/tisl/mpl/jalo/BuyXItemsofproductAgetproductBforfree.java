@@ -42,6 +42,7 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(BuyXItemsofproductAgetproductBforfree.class.getName());
 	private int noOfProducts = 0;
+	private int stockCount = 0;
 
 	/**
 	 * @Description: Method for Item Creation
@@ -132,6 +133,34 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 						realQuantity += entry.getQuantity().intValue(); // Fetches total count of Valid Products
 						//eligibleProductList.add(entry.getProduct());
 					}
+
+					//Added for TPR-4354
+					if (getMplPromotionHelper().validateForStockRestriction(restrictionList) && qualifyingCount > 0)
+					{
+						final int offerQuantity = (realQuantity / qualifyingCount);
+						final int customerOfferCount = getMplPromotionHelper().getStockCustomerRedeemCount(restrictionList);
+						final int eligibleStockCount = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList)
+								* qualifyingCount;
+
+						if (customerOfferCount > 0)
+						{
+							setStockCount(qualifyingCount * customerOfferCount);
+						}
+						else
+						{
+							setStockCount(eligibleStockCount);
+						}
+
+						if (customerOfferCount > 0 && offerQuantity > customerOfferCount)
+						{
+							realQuantity = (qualifyingCount * customerOfferCount);
+						}
+						else if (realQuantity >= eligibleStockCount)
+						{
+							realQuantity = eligibleStockCount;
+						}
+					}
+
 					noOfProducts = realQuantity;
 
 					flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
@@ -176,7 +205,7 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 						//final List consumed = promoContext.finishLoggingAndGetConsumed(this, true);
 						result.setConsumedEntries(ctx, consumed);
 
-						if (CollectionUtils.isNotEmpty(productList))
+						if (CollectionUtils.isNotEmpty(productList) && MapUtils.isNotEmpty(validProductList))
 						{
 							final Map<String, Product> giftProductDetails = getDefaultPromotionsManager().getGiftProductsUSSID(
 									productList, sellerIDData); // Validating for Scenario: Eligible Products and Free Gift must be from the same DC
@@ -188,8 +217,17 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 								int giftCount = 0;
 								for (final Map.Entry<String, Product> entry : giftProductDetails.entrySet())
 								{
-									giftCount = getDefaultPromotionsManager().getFreeGiftCount(entry.getKey(), eligibleProductMap,
-											qualifyingCount);
+									if (!getMplPromotionHelper().validateForStockRestriction(restrictionList))
+									{
+										giftCount = getDefaultPromotionsManager().getFreeGiftCount(entry.getKey(), eligibleProductMap,
+												qualifyingCount);
+									}
+									else
+									{
+										giftCount = getMplPromotionHelper().getFreeGiftCount(entry.getKey(), qualifyingCount,
+												validProductList);
+									}
+
 								}
 								if (giftCount > 0)
 								{
@@ -217,7 +255,8 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 							tcMapForValidEntries);
 
 					if (noOfProducts > 0 && remainingItemsFromTail != null && remainingItemsFromTail.size() > 0L
-							&& GenericUtilityMethods.checkRestrictionData(restrictionList))
+							&& GenericUtilityMethods.checkRestrictionData(restrictionList)
+							&& !getMplPromotionHelper().validateForStockRestriction(restrictionList))
 					{// For Localization
 					 //						final float certainty = remainingItemsFromTail != null ? (remainingItemsFromTail.isEmpty() ? 1.00F
 					 //								: (float) remainingItemsFromTail.size() / qualifyingCount) : 0.00F;
@@ -228,6 +267,31 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 								promoContext.getOrder(), certainty);
 						result.setConsumedEntries(remainingItemsFromTail);
 						results.add(result);
+					}
+					else if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
+					{
+						if (noOfProducts >= getStockCount())
+						{
+							final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
+									promoContext.getOrder(), 1.00F);
+							results.add(result);
+						}
+						else if (noOfProducts < getStockCount() && (noOfProducts % qualifyingCount == 0))
+						{
+							//TPR-4282
+							final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
+									promoContext.getOrder(), 1.00F);
+							results.add(result);
+						}
+						else if (noOfProducts < getStockCount() && !(noOfProducts % qualifyingCount == 0))
+						{
+							//TPR-4282
+							final float certainty = (float) remainingItemsFromTail.size() / qualifyingCount;
+							final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
+									promoContext.getOrder(), certainty);
+							result.setConsumedEntries(remainingItemsFromTail);
+							results.add(result);
+						}
 					}
 				}
 				else
@@ -484,5 +548,22 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 	public void setNoOfProducts(final int noOfProducts)
 	{
 		this.noOfProducts = noOfProducts;
+	}
+
+	/**
+	 * @return the stockCount
+	 */
+	public int getStockCount()
+	{
+		return stockCount;
+	}
+
+	/**
+	 * @param stockCount
+	 *           the stockCount to set
+	 */
+	public void setStockCount(final int stockCount)
+	{
+		this.stockCount = stockCount;
 	}
 }
