@@ -421,7 +421,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 						modelService.save(orderModel);
 					}
 					//PaymentFix2017: setIsSentToOMS not required
-					//orderModel.setIsSentToOMS(Boolean.FALSE);
+					orderModel.setIsSentToOMS(Boolean.FALSE);
 					orderModel.setOmsSubmitStatus("");
 
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
@@ -432,7 +432,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 				{
 					//SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 					//PaymentFix2017: setIsSentToOMS not required
-					//orderModel.setIsSentToOMS(Boolean.FALSE);
+					orderModel.setIsSentToOMS(Boolean.FALSE);
 					orderModel.setOmsSubmitStatus("");
 
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
@@ -511,7 +511,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 						if (paymentTransaction.getStatus().equalsIgnoreCase("SUCCESS"))
 						{
 							//PaymentFix2017: setIsSentToOMS not required
-							//orderModel.setIsSentToOMS(Boolean.FALSE);
+							orderModel.setIsSentToOMS(Boolean.FALSE);
 							orderModel.setOmsSubmitStatus("");
 							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 							successFlag = true;

@@ -98,8 +98,9 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 			CustomCreateOmsOrderAction.LOG.warn(String.format(
 					"Failed to send order %s to OMS. Service unavailable. Call will be retried. Error:  %s", new Object[]
 					{ order.getCode(), omsResult.getCause().getMessage() }));
-			//order.setIsSentToOMS(Boolean.FALSE);
-			//getModelService().save(order);
+			order.setIsSentToOMS(Boolean.FALSE);
+			getModelService().save(order);
+
 			return AbstractSimpleDecisionAction.Transition.OK;
 		}
 		if ((crmResult.getResult().equals(OrderPlacementResult.Status.FAILED))
@@ -120,8 +121,8 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 
 		if (result.getResult().equals(OrderPlacementResult.Status.SUCCESS))
 		{
-			order.setIsSentToOMS(Boolean.TRUE);
-			getModelService().save(order);
+			//order.setIsSentToOMS(Boolean.TRUE);
+			//getModelService().save(order);
 			return Transition.OK;
 		}
 
