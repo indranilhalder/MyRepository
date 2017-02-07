@@ -36,7 +36,6 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -1020,8 +1019,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 */
 	@Override
 	public Map<String, List<String>> getDateAndTimeMap(final String timeSlotType, final String edd)
-			throws java.text.ParseException
-	{
+			throws java.text.ParseException {
 
 		DateUtilHelper dateUtilHelper = new DateUtilHelper();
 		String estDeliveryDateAndTime= edd;
@@ -1032,62 +1030,65 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		List<MplTimeSlotsModel> modelList=null;
 		
 		if(timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD)){
+			LOG.debug("Getting HD delivery time slots ");
 			modelList=mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
 		}else if (timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED)){
+			LOG.debug("Getting ED delivery time slots ");
 			modelList=mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED);
 		}
-		if(null!= modelList){
-			Date startTime =null;
-			Date endTIme = null;
-			Date searchTime=null;
-			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-			List<MplTimeSlotsModel> timeList=new ArrayList<MplTimeSlotsModel>();
-			for(MplTimeSlotsModel mplTimeSlotsModel:modelList){
-				for(String selectedDate: calculatedDateList){
-					if(selectedDate.equalsIgnoreCase(deteWithOutTIme)){
-						try{
-							startTime = sdf.parse(mplTimeSlotsModel.getToTime());
-							endTIme=sdf.parse(mplTimeSlotsModel.getFromTime());
-							searchTime = sdf.parse(timeWithOutDate);
-						}catch (java.text.ParseException e) {
-							e.printStackTrace();
-						}
-						if (startTime.compareTo(searchTime) > 0  && endTIme.compareTo(searchTime) > 0  && startTime.compareTo(searchTime) != 0 && endTIme.compareTo(searchTime) != 0) {
-							LOG.debug("startDate:"+  DateFormatUtils.format(startTime, "HH:mm") + "endDate:"+  DateFormatUtils.format(sdf.parse(mplTimeSlotsModel.getFromTime()), "HH:mm"));
-							timeList.add(mplTimeSlotsModel);
-						} 
-					}
+
+		boolean slotsAvailableOnGivenDate = false;
+		if(null != modelList) {
+			for (MplTimeSlotsModel model : modelList) {
+				Date endTime = null;
+				SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+				endTime=sdf.parse(model.getFromTime());
+				Date givenTime = sdf.parse(timeWithOutDate);
+				if(endTime.compareTo(givenTime) > 0) {
+					slotsAvailableOnGivenDate = true;
+					break;
 				}
 			}
-			LOG.debug("timeList.size()**************"+timeList.size());
-			if(timeList.size()==0){
-				//calculatedDateList=dateUtilHelper.getDeteList(nextDate,format,2);
-				final MplLPHolidaysModel mplLPHolidaysModel = mplConfigFacade
-						.getMplLPHolidays(MarketplacecommerceservicesConstants.CAMPAIGN_URL_ALL);
-				if(timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD)) {
-					if (mplLPHolidaysModel.getWorkingDays().contains("0"))
-					{
-						calculatedDateList = dateUtilHelper.calculatedLpHolidays(deteWithOutTIme, 3);
-					}else {
-						calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,3);
-					}
-					
-				}else if(timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED)) {
-					if (mplLPHolidaysModel.getWorkingDays().contains("0"))
-					{
-						calculatedDateList = dateUtilHelper.calculatedLpHolidays(deteWithOutTIme,2);
-					}else {
-						calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,2);
-					}
+		}
+		if(!slotsAvailableOnGivenDate) {
+			LOG.debug("Delivery slots not available for given Date"+edd);
+			deteWithOutTIme = dateUtilHelper.getNextDete(deteWithOutTIme, format);
+		}
+		List<MplTimeSlotsModel> timeList=new ArrayList<MplTimeSlotsModel>();
+		if(slotsAvailableOnGivenDate) {
+			for (MplTimeSlotsModel model : modelList) {
+				Date endTime = null;
+				SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+				endTime=sdf.parse(model.getFromTime());
+				Date givenTime = sdf.parse(timeWithOutDate);
+				if(endTime.compareTo(givenTime) > 0) {
+					timeList.add(model);
 				}
-				
-				timeList.addAll(modelList);
+			}
+		}
+		if(null!= modelList){
+			final MplLPHolidaysModel mplLPHolidaysModel = mplConfigFacade
+					.getMplLPHolidays(MarketplacecommerceservicesConstants.CAMPAIGN_URL_ALL);
+			if(timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD)) {
+				if (mplLPHolidaysModel.getWorkingDays().contains("0"))
+				{
+					calculatedDateList = dateUtilHelper.calculatedLpHolidays(deteWithOutTIme, 3);
+				}else {
+					calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,3);
+				}
+
+			}else if(timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED)) {
+				if (mplLPHolidaysModel.getWorkingDays().contains("0"))
+				{
+					calculatedDateList = dateUtilHelper.calculatedLpHolidays(deteWithOutTIme,2);
+				}else {
+					calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,2);
+				}
 			}
 			List<String> finalTimeSlotList=null;
 			Map<String, List<String>> dateTimeslotMapList=new LinkedHashMap<String, List<String>>();
 			for(String selectedDate: calculatedDateList){
-
-				if(selectedDate.equalsIgnoreCase(deteWithOutTIme)){
+				if(selectedDate.equalsIgnoreCase(deteWithOutTIme) && slotsAvailableOnGivenDate){
 					finalTimeSlotList= dateUtilHelper.convertFromAndToTimeSlots(timeList);
 				}else{
 					finalTimeSlotList= dateUtilHelper.convertFromAndToTimeSlots(modelList);
@@ -1095,7 +1096,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 				dateTimeslotMapList.put(selectedDate, finalTimeSlotList);
 			}
 			return dateTimeslotMapList;
-	}
+		}
 		return null;
 	}
 
