@@ -174,9 +174,9 @@ function registerUserGigya(eventObject)
     	function getRating(key,productCode,category)
     	{
     		var url = "https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=?";
-    		 
+    		
     		$.getJSON(url, function(data){
-    		//	console.log(data);
+
     		  	var totalCount=data.streamInfo.ratingCount;
     			//Reverse the source array
     			var ratingArray = data.streamInfo.ratingDetails._overall.ratings;
@@ -203,7 +203,6 @@ function registerUserGigya(eventObject)
     		 			{
     		 			$("#pdp_rating"+" li").eq(rating).removeClass("empty").addClass("half");
     		 			} 
-    		 		
     		 		//TISUATPII-471 fix
     		 		
     		 		if(raingcount == 1){
@@ -219,9 +218,11 @@ function registerUserGigya(eventObject)
     				
     				
     				
-    				
-    				
     		  });
+    		
+        	} 		
+ 
+    		
     		  
     		//TISUATPII-471 fix
     		  var ratingsParams = {
@@ -259,7 +260,7 @@ function registerUserGigya(eventObject)
 //    		          });
     		
 
-    	}
+    	//}
     	
     	function CheckUserLogedIn() {
     		
