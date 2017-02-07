@@ -28,6 +28,8 @@
 						name="skuIdForCNC" value="" />
 						<input type="hidden" maxlength="10" size="1" id="skuIdForCod"
 						name="skuIdForCod" value="" />	
+				<!-- Other Seller for fine Jewellery removed -->
+					<c:if test="${product.rootCategory !='FineJewellery' }">
 					<button type="submit" name="submit" id="submit"
 						class="otherSellersFont">
 						<p id="otherSellerInfoId" class="other-sellers" style="display: none">
@@ -43,6 +45,7 @@
 									code="product.othersellersForNoStock"></spring:theme></span>&nbsp;
 						</div>
 					</button>
+					</c:if>
 				</form:form>
 				<div id="othersSellerDivId" style="display: none">
 					<table border="1">

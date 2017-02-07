@@ -39,24 +39,14 @@
 	
 	
 	<%--for price breakup(TPR-3752) --%>
-	
-	<script type="text/javascript">
-	$(document).ready(function() {
-		$("#show").click(function() {
-			$("#showPriceBreakup").slideToggle("fast");
-		});
-	});
-	</script>
-	
-	<div id = "showPrice">
-	<%-- <c:if test="${product.rootCategory=='FineJewellery' }"> --%>
-	
-	<p id = "show" class="pricebreakup-link">Price Breakup</p>
-	</div>
-	
+
+	 <%-- <c:if test="${product.rootCategory=='FineJewellery' }"> --%>
+		<div id = "showPrice">
+		 <p id = "show" class="pricebreakup-link"> </p>
+		</div>
 	<ul id="showPriceBreakup" class="price-breakuplist clearfix" style="display:none"></ul>
 
-	<%-- </c:if> --%>
+	 <%-- </c:if>  --%>
 	
 	<%--for price breakup(TPR-3752) --%>
 	
@@ -121,3 +111,5 @@
 			</c:choose> 
 			</ul>
 </c:if> --%>
+	
+	
