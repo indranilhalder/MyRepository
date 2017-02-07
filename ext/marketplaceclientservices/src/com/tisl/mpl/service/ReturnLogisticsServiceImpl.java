@@ -129,10 +129,9 @@ public class ReturnLogisticsServiceImpl implements ReturnLogisticsService
 					{
 						reqlist.add(reqObj);
 					}
-				
+				}
 				reqdata.setOrderlines(reqlist);
 				response = reverseLogistics(reqdata);
-			}
 			}
 			}
 		catch (final Exception e)

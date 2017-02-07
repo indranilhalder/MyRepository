@@ -639,7 +639,7 @@ public class MarketPlaceDefaultReturnsController extends
 									returnFulfillmentType = getReturnFulfillModeByP1(returnEntry.getOrderEntry().getProduct());
 								}
 							}
-							if(returnFulfillmentType != null) {
+							if(returnFulfillmentType != null && null != returnType && !returnType.equalsIgnoreCase(TypeofReturn.SELF_COURIER.getCode())) {
 								orderLine.setReturnFulfillmentMode(returnFulfillmentType);
 							}
 							reason = CodeMasterUtility
@@ -723,7 +723,9 @@ public class MarketPlaceDefaultReturnsController extends
 							notes = refundDetail.getValue().getNotes();
 							orderLine.setReasonCode(reason);
 							orderLine.setReturnCancelRemarks(notes);
-							orderLine.setReturnFulfillmentMode(returnFulfillmentType);
+							if(returnFulfillmentType != null && null != returnType && !returnType.equalsIgnoreCase(TypeofReturn.SELF_COURIER.getCode())) {
+								orderLine.setReturnFulfillmentMode(returnFulfillmentType);
+							}
 							request.getOrderLine().add(orderLine);
 
 							if (null != pincode && !pincode.isEmpty()) {
@@ -862,20 +864,17 @@ public class MarketPlaceDefaultReturnsController extends
 		String paymentMode = getpaymentmode(subOrder);
 		if(null != paymentMode && paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.COD)) {
 			codSelfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_POSTPAID);
-		}
-		else {
-			codSelfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_POSTPAID);
-		}
-		codSelfShipData.setCustomerNumber(subOrder.getUser().getUid());
-		for (AbstractOrderEntryModel entry : returnEntry) {
-			codSelfShipData.setTransactionID(entry.getTransactionID());
-			if(null != entry.getTotalPrice()) {
-				codSelfShipData.setAmount(entry.getTotalPrice().toString());
+			codSelfShipData.setCustomerNumber(subOrder.getUser().getUid());
+			for (AbstractOrderEntryModel entry : returnEntry) {
+				codSelfShipData.setTransactionID(entry.getTransactionID());
+				if(null != entry.getTotalPrice()) {
+					codSelfShipData.setAmount(entry.getTotalPrice().toString());
+				}
+				if(null != entry.getNetAmountAfterAllDisc()) {
+					codSelfShipData.setAmount(entry.getNetAmountAfterAllDisc().toString());
+				}
+				cancelReturnFacade.codPaymentInfoToFICO(codSelfShipData);
 			}
-			if(null != entry.getNetAmountAfterAllDisc()) {
-				codSelfShipData.setAmount(entry.getNetAmountAfterAllDisc().toString());
-			}
-			cancelReturnFacade.codPaymentInfoToFICO(codSelfShipData);
 		}
 		return null;
 	}

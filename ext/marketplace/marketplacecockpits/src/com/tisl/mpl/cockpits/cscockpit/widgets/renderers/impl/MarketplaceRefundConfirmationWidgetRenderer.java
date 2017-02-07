@@ -8,7 +8,10 @@ import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
+import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.Session;
 import org.zkoss.zk.ui.api.HtmlBasedComponent;
+import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Label;
@@ -17,8 +20,10 @@ import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listhead;
 import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Listitem;
+import org.zkoss.zul.Messagebox;
 
-import de.hybris.platform.basecommerce.enums.OrderEntryStatus;
+import com.tisl.mpl.core.enums.TypeofReturn;
+
 import de.hybris.platform.cockpit.model.meta.PropertyDescriptor;
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.services.config.ColumnConfiguration;
@@ -35,6 +40,7 @@ import de.hybris.platform.cscockpit.utils.ObjectGetValueUtils;
 import de.hybris.platform.cscockpit.utils.SafeUnbox;
 import de.hybris.platform.cscockpit.widgets.controllers.ReturnsController;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.RefundConfirmationWidgetRenderer;
+import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.session.SessionExecutionBody;
 
 public class MarketplaceRefundConfirmationWidgetRenderer extends
@@ -123,6 +129,46 @@ public class MarketplaceRefundConfirmationWidgetRenderer extends
 		confirmButton.addEventListener("onClick",
 				createRefundConfirmedEventListener(widget));
 		return container;
+	}
+	
+	protected void handleRefundConfirmedEvent(
+			ListboxWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			Event event) throws Exception {
+		
+		Session session = Executions.getCurrent().getDesktop().getSession();
+		String returnType = (String) session.getAttribute("typeofReturn");
+		TypedObject returnRequest  = null;
+		
+		if (null != returnType && !returnType.equalsIgnoreCase(TypeofReturn.QUICK_DROP.getCode())) {
+			 returnRequest = ((ReturnsController) widget
+					.getWidgetController()).createRefundRequest();
+				if (returnRequest != null) {
+					if (getPopupWidgetHelper().getCurrentPopup() != null) {
+						getPopupWidgetHelper().getCurrentPopup()
+								.getParent().detach();
+					}
+
+					ReturnRequestModel returnRequestModel = (ReturnRequestModel) returnRequest
+							.getObject();
+					Messagebox.show(LabelUtils.getLabel(widget, "rmaNumber",
+							new Object[] { returnRequestModel.getRMA() }), LabelUtils
+							.getLabel(widget, "rmaNumberTitle", new Object[0]), 1,
+							"z-msgbox z-msgbox-information");
+
+					((ReturnsController) widget.getWidgetController()).dispatchEvent(
+							null, widget, null);
+				} else {
+					Messagebox.show(
+							LabelUtils.getLabel(widget, "error", new Object[0]),
+							LabelUtils.getLabel(widget, "failed", new Object[0]), 1,
+							"z-msgbox z-msgbox-error");
+				}
+		}else {
+			Messagebox.show("Return Initiated Successfully");
+			getPopupWidgetHelper().getCurrentPopup().getParent().getChildren().clear();
+			getPopupWidgetHelper().dismissCurrentPopup();
+		}
+
 	}
 
 	protected HtmlBasedComponent createContentInternalNew(ListboxWidget widget,

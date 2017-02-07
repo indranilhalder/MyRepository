@@ -1182,17 +1182,19 @@ ReturnRequestCreateWidgetRenderer {
 					.getWidgetController()).getRefundOrderPreview();
 			OrderModel orderModel = (OrderModel) order.getObject();
 			for (AbstractOrderEntryModel orderEntry : orderModel.getEntries()) {
-				ReturnLogistics returnLogistics = new ReturnLogistics();
-				returnLogistics.setOrderId(orderModel.getParentReference().getCode());
-				returnLogistics.setTransactionId(orderEntry.getTransactionID());
-				returnLogistics.setPinCode(pinCode);
-				String fullfillmentType=((MarketPlaceReturnsController) widget
-						.getWidgetController()).getReturnFulFillmenttype(orderEntry.getProduct());
-				String returnFulfillModeByP1=((MarketPlaceReturnsController) widget
-						.getWidgetController()).getReturnFulfillModeByP1(orderEntry.getProduct());
-				returnLogistics.setReturnFulfillmentType(fullfillmentType);
-				returnLogistics.setReturnFulfillmentByP1(returnFulfillModeByP1);
-				returnLogisticsList.add(returnLogistics);
+				if(orderEntry.getQuantity() == 0) {
+					ReturnLogistics returnLogistics = new ReturnLogistics();
+					returnLogistics.setOrderId(orderModel.getParentReference().getCode());
+					returnLogistics.setTransactionId(orderEntry.getTransactionID());
+					returnLogistics.setPinCode(pinCode);
+					String fullfillmentType=((MarketPlaceReturnsController) widget
+							.getWidgetController()).getReturnFulFillmenttype(orderEntry.getProduct());
+					String returnFulfillModeByP1=((MarketPlaceReturnsController) widget
+							.getWidgetController()).getReturnFulfillModeByP1(orderEntry.getProduct());
+					returnLogistics.setReturnFulfillmentType(fullfillmentType);
+					returnLogistics.setReturnFulfillmentByP1(returnFulfillModeByP1);
+					returnLogisticsList.add(returnLogistics);
+				}
 			}
 			Map<Boolean, List<OrderLineDataResponse>> responseMap =((MarketPlaceReturnsController) widget.getWidgetController())
 					.validateReverseLogistics(returnLogisticsList);
@@ -1462,8 +1464,6 @@ ReturnRequestCreateWidgetRenderer {
 			codData.setPaymentMode((String) refundModeListbox.getSelectedItem()
 					.getLabel());
 			codData.setOrderNo(returnEntry.get(0).getOrder().getCode());
-		  	((MarketPlaceReturnsController) widget.getWidgetController())
-					.getCodPaymentInfoToFICO(codData, returnEntry);
 		  	((MarketPlaceReturnsController) widget.getWidgetController())
 			.saveCODReturnsBankDetails(codData);
 	
