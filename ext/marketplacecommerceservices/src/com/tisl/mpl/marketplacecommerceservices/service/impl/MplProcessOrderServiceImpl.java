@@ -6,6 +6,7 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
@@ -18,7 +19,6 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.store.BaseStoreModel;
-import de.hybris.platform.voucher.model.PromotionVoucherModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -406,8 +406,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					{
 						modelService.save(orderModel);
 					}
-
-					orderModel.setIsSentToOMS(Boolean.FALSE);
+					//PaymentFix2017
+					//orderModel.setIsSentToOMS(Boolean.FALSE);
 					orderModel.setOmsSubmitStatus("");
 
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
@@ -417,7 +417,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
 				{
 					//SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
-					orderModel.setIsSentToOMS(Boolean.FALSE);
+					//PaymentFix2017
+					//orderModel.setIsSentToOMS(Boolean.FALSE);
 					orderModel.setOmsSubmitStatus("");
 
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
@@ -496,7 +497,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					{
 						if (paymentTransaction.getStatus().equalsIgnoreCase("SUCCESS"))
 						{
-							orderModel.setIsSentToOMS(Boolean.FALSE);
+							//PaymentFix2017
+							//orderModel.setIsSentToOMS(Boolean.FALSE);
 							orderModel.setOmsSubmitStatus("");
 							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 							successFlag = true;
