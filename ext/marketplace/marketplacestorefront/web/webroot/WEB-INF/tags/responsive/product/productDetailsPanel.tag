@@ -82,6 +82,7 @@ tr.d0 td {
 <input type="hidden" id="pdpSellerIDs" value='${pdpSellerIDs}'/>
 <input type="hidden" id="pdpBuyboxWinnerSellerID" value=''/>
 <input type="hidden" id="pdpOtherSellerIDs" value=''/>
+<input type="hidden" id="browser_type" value='${browser_type}'/>
 <!-- TPR-429 END-->
 <!-- End Tealium -->
 
@@ -169,6 +170,7 @@ tr.d0 td {
 				<h1 itemprop="name" class="product-name"><strong>${product.productTitle}</strong></h1>
 				<meta itemprop="sku" content="${product_sku}"/>
 				</a>
+
 			</ycommerce:testId>
 
 			<ycommerce:testId

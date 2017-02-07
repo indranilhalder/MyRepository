@@ -12,6 +12,7 @@ import de.hybris.platform.store.BaseStoreModel;
 import java.net.Proxy;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.gigya.socialize.GSObject;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
@@ -42,4 +43,6 @@ public interface MplGigyaReviewCommentService
 
 	public SearchPageData<OrderModel> getPagedFilteredSubOrderHistory(CustomerModel paramCustomerModel,
 			BaseStoreModel paramBaseStoreModel, PageableData paramPageableData);
+
+	public Map<String, String> getReviewsAndRatingByCategoryId(final String categoryId, final String productCode);
 }

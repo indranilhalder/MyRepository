@@ -129,6 +129,7 @@ import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.seller.product.facades.ProductOfferDetailFacade;
+import com.tisl.mpl.service.MplGigyaReviewCommentServiceImpl;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -215,6 +216,7 @@ public class ProductPageController extends MidPageController
 	private static final String BOXING = "boxing";
 	private static final String USSID = "ussid";
 
+
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(ProductPageController.class);
 
@@ -284,6 +286,19 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
 
+	@Autowired
+	private MplGigyaReviewCommentServiceImpl mplGigyaReviewService;
+
+
+	//TPR-4389
+	/*
+	 * @SuppressWarnings("unused") private BrowserType bType;
+	 */
+
+
+	@Autowired
+	private ConfigurationService configService;
+
 	/**
 	 * @param buyBoxFacade
 	 *           the buyBoxFacade to set
@@ -330,16 +345,34 @@ public class ProductPageController extends MidPageController
 			final Model model, final HttpServletRequest request, final HttpServletResponse response)
 			throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
-
+		//final was written here
 		String returnStatement = null;
+		//	final Boolean isProductPage = true;
 		try
 		{
 			if (null != productCode)
 			{
 				productCode = productCode.toUpperCase();
 			}
+
 			LOG.debug("**************************************opening pdp for*************" + productCode);
+
+			// TPR- 4389 STARTS FROM HERE
 			final ProductModel productModel = productService.getProductForCode(productCode);
+			final Map<String, String> reviewAndRating = mplGigyaReviewService.getReviewsAndRatingByCategoryId(
+					productModel.getProductCategoryType(), productCode);
+			/*
+			 * reviewAndRating =
+			 * mplGigyaReviewService.getReviewsAndRatingByCategoryId(productModel.getProductCategoryType(), productCode);
+			 */for (final Map.Entry<String, String> entry : reviewAndRating.entrySet())
+			{
+				final String commentCount = entry.getKey();
+				final String ratingCount = entry.getValue();
+				model.addAttribute("commentCount", commentCount);
+				model.addAttribute("averageRating", ratingCount);
+
+			}
+			//   TPR-4389 ENDS HERE
 
 			if (productModel.getLuxIndicator() != null
 					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
@@ -390,6 +423,7 @@ public class ProductPageController extends MidPageController
 						ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
 						//					ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION,
 						ProductOption.VARIANT_FULL));
+				//	model.addAttribute(ModelAttributetConstants.IS_PRODUCTPAGE, isProductPage);
 				/*
 				 * final String brandName = productData.getBrand().getBrandname(); final String metaDescription =
 				 * ModelAttributetConstants.Product_Page_Meta_Description
