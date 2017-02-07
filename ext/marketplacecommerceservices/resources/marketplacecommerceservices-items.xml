@@ -1341,7 +1341,7 @@
 				<attribute qualifier="maxDiscount" autocreate="true"
 					type="java.lang.Double">
 					<description>maxDiscount discount in specific currencies.</description>
-					<defaultvalue>Double.valueOf(1)</defaultvalue>
+					<defaultvalue>Double.valueOf(0)</defaultvalue>
 					<persistence type="property" />
 				</attribute>				
 			</attributes>
@@ -1426,7 +1426,7 @@
 				<attribute qualifier="maxDiscount" autocreate="true"
 					type="java.lang.Double">
 					<description>maxDiscount discount in specific currencies.</description>
-					<defaultvalue>Double.valueOf(1)</defaultvalue>
+					<defaultvalue>Double.valueOf(0)</defaultvalue>
 					<persistence type="property" />
 				</attribute>				
 			</attributes>
