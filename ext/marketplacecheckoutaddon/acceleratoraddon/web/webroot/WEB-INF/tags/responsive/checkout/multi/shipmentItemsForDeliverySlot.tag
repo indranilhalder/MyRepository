@@ -180,13 +180,8 @@ li.deliverySlotRadio .reset{margin: 3px 0px !important;    height: 30px !importa
 			//alert(radioPardhuLen);
 			if(($(this).attr("data-name") == "date")) {
 				//alert(mplconfigModel);
-				if(radioTribhuvanLen == 0){
-					mplconfigModel = $('#mplconfigModel').val();
-					
-				}else{
-					mplconfigModel = "0";
-					
-				}
+				mplconfigModel = $('#mplconfigModel').val();
+				
 				date = $(this).val();
 				time = $(this).next().next().find("input.timeSlots:first").val();
 				selectedUssId = $(this).attr('data-ussid');
