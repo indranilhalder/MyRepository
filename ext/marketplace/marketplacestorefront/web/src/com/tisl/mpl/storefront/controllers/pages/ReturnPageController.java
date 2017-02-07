@@ -511,10 +511,13 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		
 				try
 				{
-					//inser or update Customer Bank Details
-					CODSelfShipData	selfShipData =sendBankInformationToFico(customerData,returnForm,orderCode,subOrderDetails);
-					cancelReturnFacade.insertUpdateCustomerBankDetails(selfShipData);
-					cancelReturnFacade.codPaymentInfoToFICO(selfShipData);	
+					//insert or update Customer Bank Details
+					if(null != returnForm.getIsCODorder() &&  returnForm.getIsCODorder().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y) ) {
+						CODSelfShipData	selfShipData =sendBankInformationToFico(customerData,returnForm,orderCode,subOrderDetails);
+						cancelReturnFacade.insertUpdateCustomerBankDetails(selfShipData);
+						cancelReturnFacade.codPaymentInfoToFICO(selfShipData);
+					}
+					
 				}
 				catch (EtailNonBusinessExceptions e)
 				{
@@ -1175,16 +1178,6 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			selfShipData.setBankKey(returnForm.getiFSCCode());
 		   selfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_POSTPAID);
 		}
-		else 
-		{
-			selfShipData.setTitle(MarketplacecommerceservicesConstants.NA);
-			selfShipData.setName(MarketplacecommerceservicesConstants.NA);
-			selfShipData.setBankAccount(MarketplacecommerceservicesConstants.ZERO);
-			selfShipData.setBankName(MarketplacecommerceservicesConstants.NA);
-			selfShipData.setBankKey(MarketplacecommerceservicesConstants.NA);
-			selfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_PREPAID);
-		}
-		
 		return selfShipData;
 	}
 
