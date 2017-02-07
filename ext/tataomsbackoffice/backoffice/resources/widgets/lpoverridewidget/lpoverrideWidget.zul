@@ -138,7 +138,7 @@
 					<label value="@load(lpVimo.errorMessage)"
 						sclass="error_class" />
 				</hbox>
-			<div style="overflow-x:auto">
+			<div style="overflow-x:auto;max-height:300px;overflow-y:auto" >
 				<listbox model="@bind(lpVimo.listOfTransactions)"
 					selectedItems="@bind(lpVimo.selectedEntities)" id="listBoxData"
 					mold="paging" pageSize="10" checkmark="true" multiple="true">
@@ -193,6 +193,7 @@
 						</listitem>
 					</template>
 				</listbox>
+				</div>
 				<separator />
 				<hbox pack="center" style="width:100%">
 					<button onClick="@command('nextLpSave')"
@@ -204,7 +205,6 @@
 						onClick="@command('lpOverrideSave',lpOverride=true)"
 						label="Forcefit LP" />
 				</hbox>
-			</div>
 		</vlayout>
 	</div>
 </widget>

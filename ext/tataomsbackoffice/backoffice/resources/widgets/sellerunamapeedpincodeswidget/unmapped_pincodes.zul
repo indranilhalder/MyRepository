@@ -19,7 +19,7 @@
 		<textbox id="sellerId"></textbox>
 		<button id="search" label="${labels.seller.searchbtn}"/>
 	</div>
-	
+	<div style="border:none;padding:0px;max-height:400px;overflow-y:auto">
 	<grid id="rendergrid" sclass="narrow">
 		<columns>
 			<column hflex="4">Seller Id</column>
@@ -28,4 +28,5 @@
 			<column width="130px">Generate New</column>
 		</columns>
 	</grid>
+	</div>
 </widget>
