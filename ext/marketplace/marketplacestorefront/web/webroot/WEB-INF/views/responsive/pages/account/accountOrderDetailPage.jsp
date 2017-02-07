@@ -2926,8 +2926,9 @@ $(function() {
 			  $(".wrapBG").css("height",height);
 			  $("#changeAddressPopup").css("z-index","999999");
 			  $("#deliveryAddressForm #pincode").val($("address span[data-tribhuvan='pincode']").text());
-			  loadPincodeData('edit');
-			  setTimeout(function() {
+			  loadPincodeData('edit').done(function() {
+					
+					
 				  
 			      console.log($("#deliveryAddressForm #firstName").attr("value")); 
 			      $("#deliveryAddressForm #firstName").val($("#deliveryAddressForm #firstName").attr("value"));
@@ -2937,32 +2938,14 @@ $(function() {
 			      $("#deliveryAddressForm #addressLine2").val($("#deliveryAddressForm #addressLine2").attr("value")); 
 			      $("#deliveryAddressForm #addressLine3").val($("#deliveryAddressForm #addressLine3").attr("value")); 
 			 	
-			      var value = $(".address_landmarkOtherDiv").attr("data-value");
-				  
-				  setTimeout(function(){
-	    		  if($(".address_landmarks option[value='"+value+"']").length > "0") {
-	    			  
-	    			// alert(value+ " 2 in if x"+$(".address_landmarks option[value='"+value+"']").val());
-	  				  $(".address_landmarks").val("");
-	  				$(".address_landmarks option[value='"+value+"']").prop("selected",true);
-	  				
-	  				} else {
-	  				//alert(value+ " 3 in else");
-	  					 if($(".address_landmarks option[value='Other']").length > "0") {
-	  						  $(".address_landmarks").val("Other"); 
-	  						 }else{
-	  							 $(".address_landmarks").val("");  
-	  						 }
-	  					changeFuncLandMark("Other"); 
-	  				$(".address_landmarkOther").val(value);
-	  				
-	  			}
-				  
-				  });
+			      console.log("blur line 394");
+					 var value = $(".address_landmarkOtherDiv").attr("data-value");
+					 console.log("blur line 396 "+value);
+					 otherLandMarkTri(value,"blur");
 			      $("#deliveryAddressForm #city").val($("#deliveryAddressForm #city").attr("value")); 
 			      $("#deliveryAddressForm #state").val($("#deliveryAddressForm #state").attr("value")); 
 			      $("#deliveryAddressForm #mobileNo").val($("#deliveryAddressForm #mobileNo").attr("value")); 
-			     }, 100);
+			     });
 			  	
 			  	//changeFuncLandMark("Other"); 
 			 
