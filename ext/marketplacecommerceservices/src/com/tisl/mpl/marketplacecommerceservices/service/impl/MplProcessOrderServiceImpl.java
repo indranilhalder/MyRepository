@@ -134,6 +134,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					if (StringUtils.isNotEmpty(cartGuid)) //IQA for TPR-629
 					{
 						auditModel = getMplOrderDao().getAuditList(cartGuid);
+						LOG.debug("Latest Audit ID:- " + auditModel + "for respective GUID:- " + cartGuid);
 					}
 
 					if (null != auditModel && StringUtils.isNotEmpty(auditModel.getAuditId()))
@@ -158,24 +159,32 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 							final List<JuspayWebhookModel> postedBeforeTime = new ArrayList<JuspayWebhookModel>();
 							final List<JuspayWebhookModel> postedAfterTime = new ArrayList<JuspayWebhookModel>();
 							JuspayWebhookModel latestSuccess = null;
-							JuspayWebhookModel latestFailed = null;
+							//final JuspayWebhookModel latestFailed = null;
 							for (final JuspayWebhookModel juspayWebhookModel : hooks)
 							{
+								LOG.debug("Juspay Event Creation Time:- " + juspayWebhookModel.getCreationtime());
 								final Date eventCreationDate = juspayWebhookModel.getCreationtime();
 								if ((eventCreationDate).before(orderTATForTimeout))
 								{
+									LOG.debug("Juspay Event Creation Time postedBeforeTime");
 									postedBeforeTime.add(juspayWebhookModel);
 								}
 								else
 								{
+									LOG.debug("Juspay Event Creation Time postedAfterTime");
 									postedAfterTime.add(juspayWebhookModel);
 								}
 							}
 							if (CollectionUtils.isNotEmpty(postedBeforeTime))
 							{
+								LOG.debug("Change the Order status for less then juspayWebhookRetryTAT time ");
+								//If ORDER_SUCCEEDED event posted with in juspayWebhookRetryTAT minute
 								latestSuccess = postedBeforeTime.get(0);
+								LOG.debug("latest Juspay Event ID:- " + latestSuccess.getEventId() + " Event Neme:- "
+										+ latestSuccess.getEventName());
 								if (StringUtils.equalsIgnoreCase(latestSuccess.getEventName(), "ORDER_SUCCEEDED"))
 								{
+									LOG.debug("latest Juspay Event Success");
 									takeActionAgainstOrder(latestSuccess, orderModel, true);
 
 									for (final JuspayWebhookModel jspayPostBefore : postedBeforeTime)
@@ -184,25 +193,36 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 									}
 									getModelService().saveAll(postedBeforeTime);
 								}
-							}
-
-							if (CollectionUtils.isNotEmpty(postedAfterTime))
-							{
-								latestFailed = postedAfterTime.get(0);
-								if (StringUtils.equalsIgnoreCase(latestFailed.getEventName(), "ORDER_FAILED"))
+								//If ORDER_FAILED event posted with in juspayWebhookRetryTAT time with no ORDER_SUCCEEDED event
+								else if ((new Date()).after(orderTATForTimeout)
+										&& StringUtils.equalsIgnoreCase(latestSuccess.getEventName(), "ORDER_FAILED"))
 								{
+									LOG.debug("latest Juspay Event Failed");
 									takeActionAgainstOrder(latestSuccess, orderModel, false);
-
-									for (final JuspayWebhookModel jspayPostAfter : postedAfterTime)
+									for (final JuspayWebhookModel jspayPostBefore : postedBeforeTime)
 									{
-										jspayPostAfter.setIsExpired(Boolean.TRUE);
+										jspayPostBefore.setIsExpired(Boolean.TRUE);
 									}
 									getModelService().saveAll(postedBeforeTime);
 								}
 							}
+
+							//If ORDER_FAILED event posted after juspayWebhookRetryTAT
+							if (CollectionUtils.isNotEmpty(postedAfterTime))
+							{
+								LOG.debug("Change the Order to Order Failed for greater then juspayWebhookRetryTAT time ");
+								takeActionAgainstOrder(latestSuccess, orderModel, false);
+
+								for (final JuspayWebhookModel jspayPostAfter : postedAfterTime)
+								{
+									jspayPostAfter.setIsExpired(Boolean.TRUE);
+								}
+								getModelService().saveAll(postedBeforeTime);
+							}
 						}
 						else if ((new Date()).after(orderTATForTimeout))
 						{
+							LOG.debug("No Event after juspayWebhookRetryTAT time ");
 							//getting PinCode against Order
 							final String defaultPinCode = getPinCodeForOrder(orderModel);
 
@@ -240,6 +260,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 						else if ((new Date()).before(orderTATForTimeout))
 						{
+							LOG.debug("No Event before juspayWebhookRetryTAT time ");
 							if (null != orderModel.getIsPendingNotSent() && !orderModel.getIsPendingNotSent().booleanValue())
 							{
 								//Email and sms for Payment_Pending
@@ -266,9 +287,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 							}
 
 						}
-
 					}
-
 				}
 				catch (final InvalidCartException | CalculationException | EtailNonBusinessExceptions | VoucherOperationException e)
 				{
@@ -401,8 +420,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					{
 						modelService.save(orderModel);
 					}
-
-					orderModel.setIsSentToOMS(Boolean.FALSE);
+					//PaymentFix2017: setIsSentToOMS not required
+					//orderModel.setIsSentToOMS(Boolean.FALSE);
 					orderModel.setOmsSubmitStatus("");
 
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
@@ -412,7 +431,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
 				{
 					//SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
-					orderModel.setIsSentToOMS(Boolean.FALSE);
+					//PaymentFix2017: setIsSentToOMS not required
+					//orderModel.setIsSentToOMS(Boolean.FALSE);
 					orderModel.setOmsSubmitStatus("");
 
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
@@ -490,7 +510,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					{
 						if (paymentTransaction.getStatus().equalsIgnoreCase("SUCCESS"))
 						{
-							orderModel.setIsSentToOMS(Boolean.FALSE);
+							//PaymentFix2017: setIsSentToOMS not required
+							//orderModel.setIsSentToOMS(Boolean.FALSE);
 							orderModel.setOmsSubmitStatus("");
 							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 							successFlag = true;
