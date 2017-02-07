@@ -36,7 +36,7 @@ public interface FetchSalesOrderService
 	public List<OrderModel> fetchSpecifiedCancelData(Date startTime, Date endTime);
 
 	//TPR-1984 Start
-	public Map<OrderModel, AbstractOrderEntryModel> fetchOrderDetailsforDeliveryMail();
+	public Map<OrderModel, AbstractOrderEntryModel> fetchOrderDetailsforDeliveryMail(Date mplConfigDate);
 
 	public Map<String, Integer> getTransactionIdCount();
 

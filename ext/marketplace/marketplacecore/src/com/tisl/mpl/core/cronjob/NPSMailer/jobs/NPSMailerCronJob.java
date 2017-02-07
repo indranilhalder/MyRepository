@@ -30,6 +30,7 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.FetchSalesOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
+import com.tisl.mpl.model.MplConfigurationModel;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
@@ -53,7 +54,7 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 
 	/*
 	 * TPR-1984 This cron job is triggered as configured to run at 12 PM and 4 PM
-	 * 
+	 *
 	 * )
 	 */
 	@Override
@@ -66,13 +67,22 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 			 * Query for fetching all the orderModels along with the transaction ids from commerce end whose delivery date
 			 * is 24 hours ago
 			 */
-			final Map<OrderModel, AbstractOrderEntryModel> parentOrderAbstractEntryModel = getFetchSalesOrderService()
-					.fetchOrderDetailsforDeliveryMail();
+			Map<OrderModel, AbstractOrderEntryModel> parentOrderAbstractEntryModel = null;
+			final MplConfigurationModel configModel = getFetchSalesOrderService().getCronDetails(oModel.getCode());
+			if (null != configModel && null != configModel.getMplConfigDate())
+			{
+				parentOrderAbstractEntryModel = getFetchSalesOrderService().fetchOrderDetailsforDeliveryMail(
+						configModel.getMplConfigDate());
+			}
+			saveCronData(oModel);
+
 			final List<NPSMailerModel> npsEmailerModelList = new ArrayList<NPSMailerModel>();
 			if (MapUtils.isNotEmpty(parentOrderAbstractEntryModel))
 			{
+				LOG.info("parentOrderAbstractEntryModel is not empty");
 				for (final Map.Entry<OrderModel, AbstractOrderEntryModel> entry : parentOrderAbstractEntryModel.entrySet())
 				{
+					LOG.info("Cronjob perform" + parentOrderAbstractEntryModel.entrySet());
 
 					final NPSMailerModel npsEmailerModel = modelService.create(NPSMailerModel.class);
 					npsEmailerModel.setAbstractOrderEntry(entry.getValue());
@@ -130,6 +140,19 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 	protected FetchSalesOrderService getFetchSalesOrderService()
 	{
 		return Registry.getApplicationContext().getBean("fetchSalesOrderServiceImpl", FetchSalesOrderService.class);
+	}
+
+	/**
+	 * @Description : Save Cron Job Details
+	 * @param oModel
+	 */
+	private void saveCronData(final CronJobModel oModel)
+	{
+		if (null != oModel && null != oModel.getStartTime() && null != oModel.getCode())
+		{
+			getFetchSalesOrderService().saveCronDetails(oModel.getStartTime(), oModel.getCode());
+		}
+
 	}
 
 }

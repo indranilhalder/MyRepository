@@ -230,18 +230,19 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	 * @return Map<OrderModel, AbstractOrderEntryModel>
 	 */
 	@Override
-	public Map<OrderModel, AbstractOrderEntryModel> fetchOrderDetailsforDeliveryMail()
+	public Map<OrderModel, AbstractOrderEntryModel> fetchOrderDetailsforDeliveryMail(final Date mplConfigDate)
 	{
 		final Map<OrderModel, AbstractOrderEntryModel> orderWithSingleEntry = new HashMap<OrderModel, AbstractOrderEntryModel>();
 
 		try
 		{
-			final CronJobModel cModel = fetchSalesOrderService.getCronDetailsCode("NpsMailerJob");
+
 			final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-			final Date cronJobModifiedTime = cModel.getStartTime();
-			final String cronJobModifiedTimeFormattedDate = dateFormat.format(cronJobModifiedTime);
+			final String cronJobModifiedTimeFormattedDate = dateFormat.format(mplConfigDate);
+			LOG.debug("cronJobModifiedTimeFormattedDate is >>>>>>>>>>>>>>>>" + cronJobModifiedTimeFormattedDate);
 			final Date currentSystemDate = new Date();
 			final String currentSystemDateFormattedDate = dateFormat.format(currentSystemDate);
+			LOG.debug("currentSystemDateFormattedDate is >>>>>>>>>>>>>>>>" + currentSystemDateFormattedDate);
 
 			final String queryString = "SELECT DISTINCT {po.pk},{oe.pk},{po.user} FROM  {" + ConsignmentModel._TYPECODE
 					+ " AS c JOIN " + ConsignmentEntryModel._TYPECODE + " " + "AS ce ON {ce.consignment} = {c.PK} JOIN"
@@ -264,11 +265,12 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 			query.addQueryParameter("beforeTime", cronJobModifiedTimeFormattedDate);
 			query.addQueryParameter("aftertime", currentSystemDateFormattedDate);
 			query.setResultClassList(Arrays.asList(OrderModel.class, AbstractOrderEntryModel.class, CustomerModel.class));
-
+			LOG.debug("query>>>>>>>>>>>>>>>>>>>>>>>generated nps job" + query);
 			final SearchResult<List<Object>> result = flexibleSearchService.search(query);
-
+			LOG.debug("result>>>>>>>>>>>>>>>>>>>>>>>nps mailer job" + result);
 			if (!result.getResult().isEmpty())
 			{
+				LOG.debug("result>>>>>>>>>>>>>>>>>>>>>>>nps mailer job in if");
 				for (final List<Object> obj : result.getResult())
 				{
 					final OrderModel orderModel = (OrderModel) obj.get(0);
@@ -276,9 +278,11 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 					if (!orderWithSingleEntry.containsKey(orderModel))
 					{
 						orderWithSingleEntry.put(orderModel, absOrderEntryModel);
+						LOG.debug("result>>>>>>>>>>>>>>>>>>>>>>>nps mailer job order entry" + orderWithSingleEntry);
 					}
 				}
 			}
+			LOG.debug("result>>>>>>>>>>>>>>>>>>>>>>>nps mailer job after if");
 		}
 		catch (final Exception e)
 		{
@@ -290,7 +294,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getTransactionIdCount(de.hybris.platform.core
 	 * .model.order.OrderModel)

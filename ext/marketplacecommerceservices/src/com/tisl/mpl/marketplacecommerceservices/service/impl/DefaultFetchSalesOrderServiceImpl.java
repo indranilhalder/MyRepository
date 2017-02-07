@@ -130,9 +130,9 @@ public class DefaultFetchSalesOrderServiceImpl implements FetchSalesOrderService
 	//TPR-1984 Start
 
 	@Override
-	public Map<OrderModel, AbstractOrderEntryModel> fetchOrderDetailsforDeliveryMail()
+	public Map<OrderModel, AbstractOrderEntryModel> fetchOrderDetailsforDeliveryMail(final Date mplConfigDate)
 	{
-		return fetchSalesOrderDao.fetchOrderDetailsforDeliveryMail();
+		return fetchSalesOrderDao.fetchOrderDetailsforDeliveryMail(mplConfigDate);
 	}
 
 	@Override
