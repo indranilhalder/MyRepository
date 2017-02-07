@@ -137,8 +137,10 @@ $(document).ready(
 						//TPR-672 END
 					
 						//TPR-429 START
-						tealiumData += '"buybox_seller_id":"'
+						tealiumData += '"seller_id":"'				//variable name changed | Data Layer Schema Changes 
 							+ $("#pdpBuyboxWinnerSellerID").val() + '",';
+						tealiumData += '"seller_name":"'
+							+ $("#sellerNameId").html() + '",';
 						tealiumData += '"other_seller_ids":"'
 							+ $("#pdpOtherSellerIDs").val() + '"}';
 						//TPR-429 END
