@@ -119,7 +119,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 			//if (checkChannelFlag)
 			{
 				final Map<String, List<String>> productAssociatedItemsFinalMap = new ConcurrentHashMap<String, List<String>>();
-				final Map<String, Integer> validProductFinalList = new ConcurrentHashMap<String, Integer>();
+				//final Map<String, Integer> validProductFinalList = new ConcurrentHashMap<String, Integer>();
 				//final Map<String, AbstractOrderEntry> validProductUssidFinalMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
 
 				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
@@ -176,7 +176,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 					//}
 
 					promotionResults = promotionEvaluation(paramSessionContext, paramPromotionEvaluationContext, validProductUssidMap,
-							restrictionList, allowedProductList, order, productAssociatedItemsFinalMap, validProductFinalList);
+							restrictionList, allowedProductList, order, productAssociatedItemsFinalMap);//, validProductFinalList);
 				}
 
 				//Setting values
@@ -220,7 +220,8 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 			final PromotionEvaluationContext paramPromotionEvaluationContext,
 			final Map<String, AbstractOrderEntry> validProductUssidMap, final List<AbstractPromotionRestriction> restrictionList,
 			final List<Product> allowedProductList, final AbstractOrder order,
-			final Map<String, List<String>> productAssociatedItemsFinalMap, final Map<String, Integer> validProductFinalList)
+			final Map<String, List<String>> productAssociatedItemsFinalMap)
+	//, final Map<String, Integer> validProductFinalList)
 	//			,final Map<String, AbstractOrderEntry> validProductUssidFinalMap)
 	{
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
@@ -280,7 +281,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 					final Map<String, Integer> validProductList = getDefaultPromotionsManager().getSortedValidProdUssidMap(
 							validProductUssidMap, totalCount, eligibleQuantity.longValue(), paramSessionContext, restrictionList);
 
-					validProductFinalList.putAll(validProductList);
+					//validProductFinalList.putAll(validProductList);
 					//validProductUssidFinalMap.putAll(validProductUssidMap);
 
 					if (!isPercentageOrAmount().booleanValue())
