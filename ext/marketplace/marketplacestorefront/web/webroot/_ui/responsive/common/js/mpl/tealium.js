@@ -1011,3 +1011,12 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 				 
 				 utag.link({"link_text":parentItem+"_"+lastItem,"event_type" : navigationClick});
 			 }); 
+
+			 
+/* Data Layer Schema Changes Starts*/
+			 
+/*Product Specification*/
+$(document).on("click",".nav-wrapper .nav.pdp",function(){
+	utag.link({"link_text":"product_specification", "event_type":"view_prod_specification"});
+})
+/* Data Layer Schema Changes Ends*/
