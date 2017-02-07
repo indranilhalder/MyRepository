@@ -4,9 +4,12 @@
 
 package com.tisl.mpl.search.converters.populator;
 
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
 import de.hybris.platform.solrfacetsearch.converters.populator.DefaultIndexedPropertyPopulator;
 import de.hybris.platform.solrfacetsearch.model.config.SolrIndexedPropertyModel;
+
+import javax.annotation.Resource;
 
 import org.springframework.util.StringUtils;
 
@@ -18,10 +21,13 @@ import org.springframework.util.StringUtils;
 public class MplDefaultIndexedPropertyPopulator extends DefaultIndexedPropertyPopulator
 
 {
+	@Resource
+	private SessionService sessionService;
 
 	@Override
 	public void populate(final SolrIndexedPropertyModel source, final IndexedProperty target)
 	{
+		final String queryType = sessionService.getAttribute("queryType");
 		super.populate(source, target);
 
 		if (source.getBoostDouble() != null)
@@ -45,7 +51,7 @@ public class MplDefaultIndexedPropertyPopulator extends DefaultIndexedPropertyPo
 			target.setClassificationProductType(source.getClassificationProductType());
 
 		}
-		if (source.getQueryType() == null || StringUtils.isEmpty(source.getQueryType()))
+		if (queryType == null || StringUtils.isEmpty(queryType))
 		{
 			if (source.getClassificationAttributeAssignments() != null)
 			{

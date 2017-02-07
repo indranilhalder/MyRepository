@@ -14,6 +14,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
@@ -1372,8 +1373,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			final List<AbstractOrderEntryModel> entries = abstractOrderModel.getEntries();
 
-			//setting payment transaction for COD
-			getMplPaymentService().setPaymentTransactionForCOD(paymentMode, abstractOrderModel);
+			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
+			if (abstractOrderModel.getTotalPriceWithConv() != null || abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+			{
+				getMplPaymentService().setPaymentTransactionForCOD(paymentMode, abstractOrderModel);
+			}
 
 			if (null != mplCustomer)
 			{
@@ -2250,6 +2254,17 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 						LOG.error("Payment successful with transaction ID::::" + juspayOrderId);
 						//saving card details
 						getMplPaymentService().saveCardDetailsFromJuspay(orderStatusResponse, paymentMode, orderModel);
+
+						//SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
+						if (null != orderModel.getPaymentInfo())
+						{
+							final PaymentInfoModel payInfo = orderModel.getPaymentInfo();
+							final String paymentModeFromInfo = getMplPaymentService().getPaymentModeFrompayInfo(payInfo);
+							orderModel.setModeOfOrderPayment(paymentModeFromInfo);
+							modelService.save(orderModel);
+						}
+
+
 					}
 					//TIS-3168
 					else

@@ -7,6 +7,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
@@ -350,5 +351,49 @@ public interface MplPaymentService
 	 * @return
 	 */
 	MplPaymentAuditModel getWalletAuditEntries(String refNo);
+	/** 
+	* SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel against
+	 * the cart for non-COD from OMS Submit Order Job
+	 *
+	 * @param orderStatusResponse
+	 * @param paymentMode
+	 * @param cart
+	 *
+	 */
+	boolean createPaymentTransactionFromSubmitOrderJob(OrderModel order);
+
+
+	/**
+	 * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel against
+	 * the cart for non -COD from OMS Submit Order Job
+	 *
+	 * @param orderStatusResponse
+	 * @param paymentMode
+	 * @param order
+	 *
+	 */
+	void setPaymentTransactionFromJob(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode, OrderModel order);
+
+	/**
+	 * SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
+	 *
+	 * @param payInfo
+	 * @return
+	 */
+	public String getPaymentModeFrompayInfo(final PaymentInfoModel payInfo);
+
+
+	/**
+	 * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel against
+	 * the cart for COD from OMS Submit Order Job
+	 *
+	 * @param paymentMode
+	 * @param abstractOrderModel
+	 * @throws EtailNonBusinessExceptions
+	 *            ,Exception
+	 *
+	 */
+	void setPaymentTransactionForCODFromSubmitProcess(Map<String, Double> paymentMode, OrderModel orderModel)
+			throws EtailNonBusinessExceptions;
 
 }

@@ -322,4 +322,5 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String MRUPEE_MERCHANT_URL = "mRupeeUrl";
 
 	public final static String MRUPEE_NARRATION_VALUE = "payment.mRupee.narration".intern();
+	public static final String RETURNTOPAYMENTPAGE = "/checkout/multi/payment-method/pay";
 }
