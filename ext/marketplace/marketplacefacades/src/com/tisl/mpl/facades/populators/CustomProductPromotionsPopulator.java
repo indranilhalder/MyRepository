@@ -50,6 +50,9 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
+import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
+import com.tisl.mpl.model.BuyAGetPrecentageDiscountCashbackModel;
+import com.tisl.mpl.model.BuyAPercentageDiscountModel;
 import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
 import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
@@ -278,6 +281,7 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 							{
 								if (restriction instanceof EtailLimitedStockRestrictionModel)
 								{
+									final int qualifyingCount = getQualifyingCount(productPromotion);
 									final EtailLimitedStockRestrictionModel stockRestrictrion = (EtailLimitedStockRestrictionModel) restriction;
 
 									if (!getDefaultPromotionsManager().checkForCategoryPromotion(productPromotion.getCode()))
@@ -290,7 +294,7 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 										{
 											final Integer stockQuantity = stockMap.get(productModel.getCode());
 											final int stockValue = stockQuantity == null ? 0 : stockQuantity.intValue();
-											if ((stockRestrictrion.getMaxStock().intValue() - stockValue) == 0)
+											if (((stockRestrictrion.getMaxStock().intValue() * qualifyingCount) - stockValue) == 0)
 											{
 												toRemovePromotionList.add(productPromotion);
 											}
@@ -321,7 +325,7 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 												{
 													final Integer stockQuantity = stockMap.get(productModel.getCode());
 													final int stockValue = stockQuantity == null ? 0 : stockQuantity.intValue();
-													if ((stockRestrictrion.getMaxStock().intValue() - stockValue) == 0)
+													if (((stockRestrictrion.getMaxStock().intValue() * qualifyingCount) - stockValue) == 0)
 													{
 														toRemovePromotionList.add(productPromotion);
 													}
@@ -374,6 +378,33 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 	//		}
 	//		return isExists;
 	//	}
+
+	/**
+	 * @param oModel
+	 * @return count
+	 */
+	private int getQualifyingCount(final ProductPromotionModel oModel)
+	{
+		int count = 1;
+		if (oModel instanceof BuyAPercentageDiscountModel)
+		{
+			count = ((BuyAPercentageDiscountModel) oModel).getQuantity().intValue();
+		}
+		else if (oModel instanceof BuyXItemsofproductAgetproductBforfreeModel)
+		{
+			count = ((BuyXItemsofproductAgetproductBforfreeModel) oModel).getQualifyingCount().intValue();
+		}
+		else if (oModel instanceof BuyABFreePrecentageDiscountModel)
+		{
+			count = ((BuyABFreePrecentageDiscountModel) oModel).getQuantity().intValue();
+		}
+		else if (oModel instanceof BuyAGetPrecentageDiscountCashbackModel)
+		{
+			count = ((BuyABFreePrecentageDiscountModel) oModel).getQuantity().intValue();
+		}
+
+		return count;
+	}
 
 	/**
 	 * @param categoryList
