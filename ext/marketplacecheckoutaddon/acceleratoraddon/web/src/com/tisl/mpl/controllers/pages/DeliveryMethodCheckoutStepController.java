@@ -80,7 +80,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.granule.json.JSONObject;
 import com.tisl.mpl.checkout.form.DeliveryMethodEntry;
 import com.tisl.mpl.checkout.form.DeliveryMethodForm;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
@@ -118,7 +117,7 @@ import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
-
+import com.granule.json.JSONObject;
 
 
 @Controller
@@ -374,7 +373,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYSELECTURL)
 	@RequireHardLogIn
 	public String doSelectDeliveryMode(@ModelAttribute("deliveryMethodForm") DeliveryMethodForm deliveryMethodForm,
-			final BindingResult bindingResult, final Model model, final HttpServletRequest request) throws CMSItemNotFoundException
+			final BindingResult bindingResult, final Model model, final HttpServletRequest request,
+			final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException
 	{
 		//TISPT-400
 		if (getUserFacade().isAnonymousUser())
@@ -460,9 +460,37 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			timeOutSet(model);
 
 			/*** Inventory Soft Reservation Start ***/
+			//TPR3780 STARTS HERE
+			final CartModel cartModelBeforeinventoryCheck = getCartService().getSessionCart();
+			final double prevTotalCartPrice = cartModelBeforeinventoryCheck.getTotalPrice().doubleValue();
+			//TPR3780 ENDS HERE
 
 			final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
 					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART, null);
+
+			//TPR3780 STARTS HERE
+			final CartModel cartModelAfterinventoryCheck = getCartService().getSessionCart();
+			final double newTotalCartPrice = cartModelAfterinventoryCheck.getTotalPrice().doubleValue();
+
+			if (prevTotalCartPrice == newTotalCartPrice)
+			{
+				final String updateStatus = null;
+			}
+			else
+			{
+				//final String updateStatus = "updated";
+				final String updateStatus = MarketplacecheckoutaddonConstants.UPDATED;
+				final String totalCartPriceAsString = String.valueOf(newTotalCartPrice);
+				redirectAttributes.addFlashAttribute("flashupdateStatus", updateStatus);
+				redirectAttributes.addFlashAttribute("flashtotalCartPriceAsString", totalCartPriceAsString);
+				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+			}
+
+			//TPR3780 ENDS HERE
+
+
+
+
 			if (!inventoryReservationStatus)
 			{
 				getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");

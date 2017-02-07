@@ -188,9 +188,18 @@ public class CartPageController extends AbstractPageController
 	{
 		LOG.debug("Entering into showCart" + "Class Nameshowcart :" + className + "pinCode " + pinCode);
 		String returnPage = ControllerConstants.Views.Pages.Cart.CartPage;
+
 		try
 		{
 			final CartModel cartModel = getCartService().getSessionCart();
+
+			//TPR-3780
+			final String flashupdateStatus = (String) model.asMap().get("flashupdateStatus");
+			final String flashtotalCartPriceAsString = (String) model.asMap().get("flashtotalCartPriceAsString");
+			model.addAttribute("priceNotificationUpdateStatus", flashupdateStatus);
+			model.addAttribute("totalCartPriceAsStringStatus", flashtotalCartPriceAsString);
+			//TPR-3780
+
 			//TISST-13012
 			//if (StringUtils.isNotEmpty(cartDataOnLoad.getGuid())) //TISPT-104
 			if (getCartService().hasSessionCart())

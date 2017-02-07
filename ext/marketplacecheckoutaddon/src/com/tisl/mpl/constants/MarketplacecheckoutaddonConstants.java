@@ -295,6 +295,11 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String REDIRECTTOPAYMENT = "redirect_to_payment";
 	public final static String PAYMENTIMEOUTRRORMSG = "checkout.multi.paymentMethod.addPaymentDetails.PaymentTimeoutError";
 
+	//TPR-3780
+	public final static String UPDATED = "updated";
+
+
+
 	private MarketplacecheckoutaddonConstants()
 	{
 		//empty to avoid instantiating this constant class
