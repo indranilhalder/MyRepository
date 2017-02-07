@@ -2500,7 +2500,7 @@
 						</persistence>
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<defaultvalue>false</defaultvalue>
+						<defaultvalue>true</defaultvalue>
 					</attribute>
 					<!-- End : New Attribute for identifying Fall Back Orders Plan C -->
 					<attribute qualifier="serialNum" autocreate="true"
