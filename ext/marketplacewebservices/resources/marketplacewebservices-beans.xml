@@ -2710,4 +2710,18 @@
 		<property name="productContent" type="java.util.HashMap&lt;String, com.tisl.mpl.wsdto.ProductContentWsData>" />
 	</bean>
 
+ <bean class="com.tisl.mpl.wsdto.ThirdPartyWalletWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+    	<property name="orderId" type="String"/>
+    	<property name="mCode" type="String"/>
+    	<property name="txnType" type="String"/>
+    	<property name="amount" type="String"/>
+    	<property name="narration" type="String"/>
+    	<property name="retUrl" type="String"/>
+    	<property name="checksum " type="String"/>
+    </bean>
+
+<bean class="com.tisl.mpl.wsdto.WalletPaymentWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+    	<property name="orderId" type="String"/>
+    </bean>
+
 </beans>

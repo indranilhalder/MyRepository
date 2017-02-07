@@ -96,44 +96,31 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 		String requestedCartID = cartID;
 		if (requestedCartID.equals(CURRENT_CART))
 		{
-			// current means last modified cart
-			try
+			cart = commerceCartService.getCartForGuidAndSiteAndUser(null, baseSiteService.getCurrentBaseSite(),
+					userService.getCurrentUser());
+			if (cart == null)
 			{
-				cart = commerceCartService.getCartForGuidAndSiteAndUser(null, baseSiteService.getCurrentBaseSite(),
-						userService.getCurrentUser());
-				if (cart == null)
-				{
-					throw new CartException("No cart created yet.", CartException.NOT_FOUND);
-				}
-				else if (!isBaseSiteValid(cart))
-				{
-					throw new CartException("Cart not found.", CartException.NOT_FOUND, requestedCartID);
-				}
-				requestedCartID = cart.getCode();
-				commerceCartService.restoreCart(cart);
-				applyCurrencyToCartAndRecalculateIfNeeded();
+				throw new CartException("No cart created yet.", CartException.NOT_FOUND);
 			}
-			catch (final CommerceCartRestorationException e)
+			else if (!isBaseSiteValid(cart))
 			{
-				throw new CartException("Couldn't restore cart: " + e.getMessage(), CartException.INVALID, requestedCartID, e);
+				throw new CartException("Cart not found.", CartException.NOT_FOUND, requestedCartID);
 			}
+			requestedCartID = cart.getCode();
+			//commerceCartService.restoreCart(cart);
+			cartService.setSessionCart(cart);
+			applyCurrencyToCartAndRecalculateIfNeeded();
 		}
 		else
 		{
-			try
+			cart = commerceCartService.getCartForCodeAndUser(requestedCartID, userService.getCurrentUser());
+			if (cart == null || !isBaseSiteValid(cart))
 			{
-				cart = commerceCartService.getCartForCodeAndUser(requestedCartID, userService.getCurrentUser());
-				if (cart == null || !isBaseSiteValid(cart))
-				{
-					throw new CartException("Cart not found.", CartException.NOT_FOUND, requestedCartID);
-				}
-				commerceCartService.restoreCart(cart);
-				applyCurrencyToCartAndRecalculateIfNeeded();
+				throw new CartException("Cart not found.", CartException.NOT_FOUND, requestedCartID);
 			}
-			catch (final CommerceCartRestorationException e)
-			{
-				throw new CartException("Couldn't restore cart: " + e.getMessage(), CartException.INVALID, requestedCartID, e);
-			}
+			//commerceCartService.restoreCart(cart);
+			cartService.setSessionCart(cart);
+			applyCurrencyToCartAndRecalculateIfNeeded();
 		}
 		// code might be different because of cart expiration
 		checkCartExpiration(requestedCartID, cart.getCode());
@@ -166,6 +153,7 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 							throw new CartException("Cart not found.", CartException.NOT_FOUND, cartID);
 						}
 						commerceCartService.restoreCart(cart);
+						//cartService.setSessionCart(cart);
 						applyCurrencyToCartAndRecalculateIfNeeded();
 					}
 					else

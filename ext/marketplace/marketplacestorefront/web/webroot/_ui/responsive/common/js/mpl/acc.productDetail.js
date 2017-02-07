@@ -2829,6 +2829,9 @@ function loadDefaultWishListName_SizeGuide() {
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
 		var isShowSize= $("#showSize").val();
 		var productCode=$("#product_id").val();
+		//INC_11511 fix
+		var productCodeArray=[];
+		productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
 		 if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
 			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			$("#addToCartFormTitle").show();
@@ -2839,7 +2842,7 @@ function loadDefaultWishListName_SizeGuide() {
 				link_obj: this,
 				link_text: 'buynow' ,
 				event_type : 'buynow_winner_seller',
-				product_sku : productCode
+				product_sku : productCodeArray
 			});
 		ACC.product.sendAddToBag("addToCartForm",true);
 	});

@@ -1152,23 +1152,14 @@ if (searchCategory_id){
 			                    }
 
 						    	    	  /*items : 4,
-
 						    	          scrollPerPage: true,
-
 						    	          itemsDesktop : [1199,3],
-
 						    	          itemsDesktopSmall : [980,2],
-
 						    	          itemsTablet: [768,2],
-
 						    	          itemsMobile : [479,1],
-
 						    	          navigation: true,
-
 						    	          navigationText : [],
-
 						    	          pagination:false,
-
 						    	          rewindNav : false
 											*/
 
@@ -1204,23 +1195,14 @@ if (searchCategory_id){
 	                    }
 
 			        /*items : 5,
-
 			        scrollPerPage: true,
-
 			        itemsDesktop : [1199,4],
-
 			        itemsDesktopSmall : [980,3],
-
 			        itemsTablet: [768,2],
-
 			        itemsMobile : [479,1],
-
 			        navigation: true,
-
 			        navigationText : [],
-
 			        pagination:false,
-
 			        rewindNav : false*/
 			      });
 
@@ -1442,29 +1424,17 @@ if (searchCategory_id){
 	                        }
 	                    }
 					    	/*items : 4,
-
 							navigation:true,
-
 							navigationText : [],
-
 							pagination:false,
-
 							itemsDesktop : [1199,3],
-
 				            itemsDesktopSmall : [980,2],
-
 				            itemsTablet: [768,2],
-
 				            itemsMobile : [479,1], 
-
 				rewindNav: false,
-
 				lazyLoad:true,
-
 				navigation : true,	        
-
 		        rewindNav : false,
-
 		        scrollPerPage : true*/
 	    });
 

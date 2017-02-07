@@ -300,11 +300,11 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -312,9 +312,9 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return Map<String, List<MplNetbankingData>>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;
@@ -435,5 +435,36 @@ public interface MplPaymentFacade
 	 */
 	void populateDelvPOSForFreebie(AbstractOrderModel abstractOrderModel,
 			Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, Map<String, Long> freebieParentQtyMap);
+
+
+	/**
+	 * @param cart
+	 * @param walletName
+	 * @param channelWeb
+	 * @return
+	 */
+	List<String> createWalletorder(AbstractOrderModel cart, String walletName, String channelWeb);
+
+
+	/**
+	 * @param request
+	 * @param channelWeb
+	 * @param walletOrderId
+	 * @param orderModel
+	 */
+	void entryInTPWaltAudit(String status, String channelWeb, String guid, String walletOrderId);
+
+
+	/**
+	 * @param cart
+	 * @param request
+	 */
+	void saveTPWalletPaymentInfo(AbstractOrderModel order, HttpServletRequest request);
+
+
+	/**
+	 * @param refNo
+	 */
+	String getWalletAuditEntries(String refNo);
 
 }

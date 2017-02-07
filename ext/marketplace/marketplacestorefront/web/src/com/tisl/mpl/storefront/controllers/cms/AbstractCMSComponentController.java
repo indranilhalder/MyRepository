@@ -13,6 +13,7 @@
  */
 package com.tisl.mpl.storefront.controllers.cms;
 
+import de.hybris.platform.acceleratorcms.model.components.NavigationBarCollectionComponentModel;
 import de.hybris.platform.acceleratorcms.services.CMSPageContextService;
 import de.hybris.platform.acceleratorservices.data.RequestContextData;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.AbstractController;
@@ -20,7 +21,6 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.Abstrac
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
-import com.tisl.mpl.storefront.controllers.ControllerConstants;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +30,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.tisl.mpl.storefront.controllers.ControllerConstants;
 
 
 /**
@@ -63,12 +65,17 @@ public abstract class AbstractCMSComponentController<T extends AbstractCMSCompon
 		T component = (T) request.getAttribute(COMPONENT);
 		if (component != null)
 		{
-			// Add the component to the model
-			model.addAttribute("component", component);
+			if (!(component instanceof NavigationBarCollectionComponentModel))
+			//if (!component.getUid().equalsIgnoreCase("ShopByDepartmentComponent1"))
+			{
+				// Add the component to the model
+				model.addAttribute("component", component);
 
-			// Allow subclasses to handle the component
-			return handleComponent(request, response, model, component);
+				// Allow subclasses to handle the component
+				return handleComponent(request, response, model, component);
+			}
 		}
+
 
 		String componentUid = (String) request.getAttribute(COMPONENT_UID);
 		if (StringUtils.isEmpty(componentUid))

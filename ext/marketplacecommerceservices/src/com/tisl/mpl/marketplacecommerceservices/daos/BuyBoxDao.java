@@ -54,4 +54,5 @@ public interface BuyBoxDao
 
 	List<ClassAttributeAssignmentModel> getClassAttrAssignmentsForCode(String code) throws EtailNonBusinessExceptions;
 
+
 }

@@ -41,4 +41,5 @@ public interface BuyBoxFacade
 	public boolean isCatLingerie(final List<CategoryModel> categoryList, final String configLingerieCategoris)
 			throws EtailNonBusinessExceptions;
 
+
 }

@@ -36,6 +36,10 @@ public final class MarketplaceomsordersConstants extends GeneratedMarketplaceoms
 	public static final String PAYMENTMETHOD_COD = "COD";
 	public static final String PAYMENTMETHOD_WALLET = "Wallet";
 
+	//Added for third party Wallet
+
+	public static final String PAYMENTMETHOD_MRUPEE = "MRUPEE";
+
 	public static final String REFUND_TYPE_CODE = "S";
 	public static final String TICKET_TYPE_CODE = "C";
 	public static final String REASON_CODE = "01";
@@ -95,7 +99,6 @@ public final class MarketplaceomsordersConstants extends GeneratedMarketplaceoms
 	public static final int MAX_LEN_OF_ADDR_LINE = 120;
 
 	public static final String SINGLE_SPACE = " ".intern();
-
 
 	private MarketplaceomsordersConstants()
 	{

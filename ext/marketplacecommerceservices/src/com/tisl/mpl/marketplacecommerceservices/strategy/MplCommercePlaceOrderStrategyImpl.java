@@ -42,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
@@ -144,6 +145,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 				getPromotionsService().transferPromotionsToOrder(cartModel, orderModel, false);
 				final Double subTotal = orderModel.getSubtotal();
+				LOG.info("order subTotal is -- " + subTotal);
 				final boolean deliveryCostPromotionApplied = isDeliveryCostPromotionApplied(orderModel);
 				Double totalPrice = Double.valueOf(0.0);
 
@@ -179,9 +181,23 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 				orderModel.setModeOfOrderPayment(modeOfPayment);
 
+				LOG.info("Mode of Payment in placeOrder is -- " + modeOfPayment);
+
+				if (MarketplacecommerceservicesConstants.MRUPEE.equalsIgnoreCase(modeOfPayment))
+				{
+					orderModel.setIsWallet(WalletEnum.MRUPEE);
+				}
+
+				else
+				{
+					orderModel.setIsWallet(WalletEnum.NONWALLET);
+				}
+
 				getModelService().save(orderModel);
 
 				result.setOrder(orderModel);
+
+				LOG.info("Mode of Order Payment in placeOrder is -- " + orderModel.getModeOfOrderPayment());
 
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
 						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
@@ -307,9 +323,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -348,6 +364,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		final Double discount = getTotalDiscount(orderModel.getEntries());
 
 		totalPrice = Double.valueOf(subtotal.doubleValue() - discount.doubleValue());
+
+		LOG.info("totalPrice for order entry in fetchTotalPrice is = " + totalPrice);
+
 		return totalPrice;
 	}
 
@@ -374,7 +393,15 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				}
 			}
 
+			LOG.info("deliveryCost for order entry in getTotalDiscount is = " + deliveryCost);
+
+			LOG.info("promoDiscount for order entry in getTotalDiscount is = " + promoDiscount);
+
+			LOG.info("couponDiscount for order entry in getTotalDiscount is = " + couponDiscount);
+
 			discount = Double.valueOf(deliveryCost + couponDiscount + promoDiscount);
+
+			LOG.info("discount for order entry in getTotalDiscount is = " + discount);
 		}
 		return discount;
 	}

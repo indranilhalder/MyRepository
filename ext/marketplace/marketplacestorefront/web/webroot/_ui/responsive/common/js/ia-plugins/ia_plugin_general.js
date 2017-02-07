@@ -3,7 +3,7 @@ David Phipps
 June 2014
 This code contains methods 
 */
-
+var start ='';	
 var rootEP = ''; //server/port combination of 
 var recEndPoint = ''; //make api calls to here
 var ecompany = ''; //ecompany
@@ -339,7 +339,9 @@ function callFBApi(facebook_id, access_token, session_id) {
 }
 
 /*Calls API which returns product recommendations*/
-function callRecApi(params, requestURL) {  
+function callRecApi(params, requestURL) { 
+	start = new Date(); 
+	console.log("START TIME "+ start.getHours() + ":" + start.getMinutes() + ":" + start.getSeconds()); 
   jQuery.extend(params, emailCheck());
   
   return jQuery.ajax({ 
