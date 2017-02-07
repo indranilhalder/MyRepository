@@ -59193,3 +59193,9 @@ body.page-cartPage{
 	margin-top:-80px;
 } 
 /*end changes for INC_11120*/
+
+
+/* UF-25 */
+.gig-rating-readReviewsLink_quick a{
+	color: #a9143c;
+}
