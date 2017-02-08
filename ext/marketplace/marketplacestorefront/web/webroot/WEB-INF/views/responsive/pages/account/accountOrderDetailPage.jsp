@@ -1628,6 +1628,7 @@
 											<span>${sellerOrder.code}</span>
 										</p>
 								   <!--R2.3 TISRLEE-1615- Start   -->
+								   <c:if test="${entry.mplDeliveryMode.code ne 'click-and-collect'}">
 								             <c:choose>
 												   <c:when test="${not empty entry.selectedDeliverySlotDate}">
 													   <p>
@@ -1641,11 +1642,12 @@
                                                      </c:if>
 													</c:otherwise>
 											  </c:choose>
+								   </c:if>
 									 
 								 <!--R2.3 TISRLEE-1615- END   -->
 											<!--  Edit button and input box for  pickup Person details -->
 											
-														<div id="pickNo" style="font-size: 12px;padding-top: 5px;"> ${sellerOrder.pickupPhoneNumber}<br> </div> 
+											  <div id="pickNo" style="font-size: 12px;padding-top: 5px; display:none;"> ${sellerOrder.pickupPhoneNumber}<br> </div> 
 														&nbsp; &nbsp;
 														<c:if test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
 														<c:set var="editButton" value="enable" />  
