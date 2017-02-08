@@ -174,9 +174,9 @@ public class OrdersController extends BaseCommerceController
 	private MplPaymentWebFacade mplPaymentWebFacade;
 	/*
 	 * @Autowired private BaseStoreService baseStoreService;
-	 * 
+	 *
 	 * @Autowired private CheckoutCustomerStrategy checkoutCustomerStrategy;
-	 * 
+	 *
 	 * @Autowired private CustomerAccountService customerAccountService;
 	 */
 	@Resource(name = "orderModelService")
@@ -221,7 +221,8 @@ public class OrdersController extends BaseCommerceController
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 120)
 	@Cacheable(value = "orderCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(false,true,'getOrder',#code,#fields)")
 	@ResponseBody
-	public OrderWsDTO getOrder(@PathVariable final String code, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+	public OrderWsDTO getOrder(@PathVariable final String code,
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		OrderData orderData;
 		if (orderCodeIdentificationStrategy.isID(code))
@@ -331,8 +332,8 @@ public class OrdersController extends BaseCommerceController
 	@ResponseBody
 	public OrderWsDTO placeOrder(@RequestParam(required = true) final String cartId,
 			@RequestParam(required = false) final String securityCode,
-			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields) throws PaymentAuthorizationException,
-			InvalidCartException, WebserviceValidationException, NoCheckoutCartException
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+					throws PaymentAuthorizationException, InvalidCartException, WebserviceValidationException, NoCheckoutCartException
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -385,9 +386,9 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Send invoice for mobile service
-	 * 
+	 *
 	 * @param orderNumber
-	 * 
+	 *
 	 * @param lineID
 	 */
 
@@ -396,8 +397,8 @@ public class OrdersController extends BaseCommerceController
 	@RequestMapping(value = "/users/{emailID}/sendInvoice", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 120)
 	@ResponseBody
-	public UserResultWsDto sendInvoice(@PathVariable final String emailID,
-			@RequestParam(required = true) final String orderNumber, @RequestParam(required = true) final String lineID)
+	public UserResultWsDto sendInvoice(@PathVariable final String emailID, @RequestParam(required = true) final String orderNumber,
+			@RequestParam(required = true) final String lineID)
 	{
 		final UserResultWsDto response = new UserResultWsDto();
 		try
@@ -435,7 +436,7 @@ public class OrdersController extends BaseCommerceController
 
 									/*
 									 * final File invoiceFile = new File(invoicePathURL); FileInputStream input = null;
-									 * 
+									 *
 									 * if (invoiceFile.exists()) { String invoiceFileName = null; final String preInvoiceFileName
 									 * = invoiceFile.getName(); if (!preInvoiceFileName.isEmpty()) { final int index =
 									 * preInvoiceFileName.lastIndexOf('.'); if (index > 0) { invoiceFileName =
@@ -813,9 +814,9 @@ public class OrdersController extends BaseCommerceController
 							{
 								sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
 							}
-							if (sellerInfoModel != null
-									&& CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute())
-									&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+							if (sellerInfoModel != null && CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute())
+									&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
+											.getDeliveryFulfillModes() != null)
 							{
 								/* Fulfillment type */
 								fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
@@ -857,8 +858,8 @@ public class OrdersController extends BaseCommerceController
 							//add store details
 							if (null != entry.getDeliveryPointOfService())
 							{
-								orderProductDTO.setStoreDetails(mplDataMapper.map(entry.getDeliveryPointOfService(),
-										PointOfServiceWsDTO.class, "DEFAULT"));
+								orderProductDTO.setStoreDetails(
+										mplDataMapper.map(entry.getDeliveryPointOfService(), PointOfServiceWsDTO.class, "DEFAULT"));
 							}
 							setSellerInfo(entry, orderProductDTO);
 							orderProductDTOList.add(orderProductDTO);
@@ -873,13 +874,13 @@ public class OrdersController extends BaseCommerceController
 				{
 					if (orderDetail.getStatus().equals(OrderStatus.RMS_VERIFICATION_PENDING))
 					{
-						orderWsDTO.setOrderStatusMessage(configurationService.getConfiguration().getString(
-								MarketplacecommerceservicesConstants.ORDER_CONF_HELD));
+						orderWsDTO.setOrderStatusMessage(
+								configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.ORDER_CONF_HELD));
 					}
 					else if (orderDetail.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
 					{
-						orderWsDTO.setOrderStatusMessage(configurationService.getConfiguration().getString(
-								MarketplacecommerceservicesConstants.ORDER_CONF_SUCCESS));
+						orderWsDTO.setOrderStatusMessage(configurationService.getConfiguration()
+								.getString(MarketplacecommerceservicesConstants.ORDER_CONF_SUCCESS));
 					}
 				}
 
@@ -1019,9 +1020,10 @@ public class OrdersController extends BaseCommerceController
 	@RequestMapping(value = "/users/{userId}/orderhistorylist", method = RequestMethod.GET)
 	@ResponseBody
 	public GetOrderHistoryListWsDTO getOrders(@RequestParam(required = false) final String statuses,
-			@RequestParam final int currentPage, @RequestParam final int pageSize,
-			@RequestParam(required = false) final String sort, @PathVariable final String userId,
-			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+			@RequestParam final int currentPage, @RequestParam(required = false) final int pageSize,
+			@RequestParam(value = MarketplacewebservicesConstants.SORT, required = false) final String sort,
+			@PathVariable final String userId, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
+			@RequestParam(required = false) final ShowMode showMode)
 	{
 
 		final GetOrderHistoryListWsDTO getOrderHistoryListWsDTO = new GetOrderHistoryListWsDTO();
@@ -1033,7 +1035,16 @@ public class OrdersController extends BaseCommerceController
 			//			final SearchPageData<OrderData> searchPageDataParentOrder = ordersHelper.getParentOrders(currentPage, pageSize, sort,
 			//					userId);
 			//TISEE-6323
-			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = ordersHelper.getParentOrders(0, pageSize, sort);
+			//	final SearchPageData<OrderHistoryData> searchPageDataParentOrder1 = ordersHelper.getParentOrders(0, pageSize, sort);
+
+			//CAR Project performance issue fixed ---Pagination implemented for getOrders of Mobile webservices
+
+			final int pageSizeConFig = Integer.parseInt(configurationService.getConfiguration()
+					.getString(MarketplacewebservicesConstants.ORDER_HISTORY_PAGESIZE_WEBSERVICE, "10").trim());
+
+			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = ordersHelper.getParentOrders(0, pageSizeConFig, sort,
+					showMode);
+
 
 			if (null == searchPageDataParentOrder.getResults())
 			{
@@ -1067,8 +1078,14 @@ public class OrdersController extends BaseCommerceController
 					 */
 					getOrderHistoryListWsDTO.setTotalNoOfOrders(Integer.valueOf(orderCount));
 					//setting start end
-					start = currentPage * pageSize;
-					end = start + pageSize;
+					//					start = currentPage * pageSize;
+					//					end = start + pageSize;
+
+					//CAR Project performance issue fixed ---Pagination implemented for getOrders of Mobile webservices
+
+					start = currentPage * pageSizeConFig;
+					end = start + pageSizeConFig;
+
 					if (end > orderTrackingListWsDTO.size())
 					{
 						end = orderTrackingListWsDTO.size();

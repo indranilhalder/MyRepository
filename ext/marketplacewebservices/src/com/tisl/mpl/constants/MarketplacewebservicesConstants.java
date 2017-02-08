@@ -532,5 +532,7 @@ public class MarketplacewebservicesConstants
 	public static final String WARRANTY = "Warranty";
 	public static final String PDP_DESC_TAB = "pdp.desc.tab.".intern();
 
+	public static final String ORDER_HISTORY_PAGESIZE_WEBSERVICE = "orderHistory.pagesize.defaultValue";
+
 
 }
