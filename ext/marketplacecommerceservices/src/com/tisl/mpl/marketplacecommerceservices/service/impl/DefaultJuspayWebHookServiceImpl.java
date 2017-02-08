@@ -841,7 +841,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 								LOG.error(e.getMessage(), e);
 							}
 							LOG.debug(MarketplacecommerceservicesConstants.WEBHOOKUPDATEMSG);
-							//updateWebHookExpired(oModel);		//Commented for TPR-629 --- forward flow handled in processOrderJob
+							updateWebHookExpired(oModel);		//Commented for TPR-629 --- forward flow handled in processOrderJob
 						}
 
 						//Logic when juspay webhook data does not come before payment_timeout TAT ---- TPR-629
