@@ -111,9 +111,5 @@ public class AtsConsumer implements Runnable {
             }
 
         }
-
-            /*System.out.println("Thread " + m_threadNumber + ": " + new String(it.next().message()));
-        System.out.println("Shutting down Thread: " + m_threadNumber);*/
-
     }
 }
