@@ -3,6 +3,8 @@
  */
 package com.hybris.oms.tata.configarableparameters;
 
+import de.hybris.platform.util.localization.Localization;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -76,15 +78,16 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	private Div edpopup;
 	@Wire
 	private Div rdpopup;
+	private Label sdTimeSloteDeleteMessage;
+	private Label edTimeSloteDeleteMessage;
+	private Label rdTimeSloteDeleteMessage;
 
 	Set<MplTimeSlotsData> sdTimeSlots;
 	Set<MplTimeSlotsData> edTimeSlots;
 	Set<MplTimeSlotsData> rdTimeSlots;
 
-
 	@Resource(name = "configarableParameterFacade")
 	private ConfigarableParameterFacade configarableParameterFacade;
-
 
 	/**
 	 * @param configarableParameterFacade
@@ -133,6 +136,9 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 		rdListbox.setModel(new ListModelList<MplTimeSlotsData>(rdTimeSlots));
 		final double sdChargeValue = configarableParameterFacade.getScheduledCharge();
 		sdCharge.setValue(sdChargeValue);
+		sdTimeSloteDeleteMessage.setVisible(false);
+		edTimeSloteDeleteMessage.setVisible(false);
+		rdTimeSloteDeleteMessage.setVisible(false);
 	}
 
 	/*
@@ -152,7 +158,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 			final MplBUCConfigurationsData mplBucConfigData = new MplBUCConfigurationsData();
 			mplBucConfigData.setSdCharge(sd);
 			configarableParameterFacade.saveMplBUCConfigurations(mplBucConfigData);
-			Messagebox.show("Sd Charge Saved SucessFully..");
+			Messagebox.show(Localization.getLocalizedString("configurableParamWidget.sdcharge.savemessage"));
 		}
 	}
 
@@ -168,12 +174,14 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	{
 		if (sdListbox.getSelectedItem() == null || sdListbox.getSelectedItem().equals(""))
 		{
-			Messagebox.show("Please Select One List Item", "Sd TimeSlots Delete Dialog", Messagebox.OK, Messagebox.INFORMATION);
+			Messagebox.show(Localization.getLocalizedString("configurableParamWidget.mesbox.empty.item"), "", Messagebox.OK,
+					Messagebox.INFORMATION);
 		}
 		else
 		{
-			Messagebox.show("Are you sure to remove?", "Sd TimeSlots Delete Dialog", Messagebox.OK | Messagebox.CANCEL,
-					Messagebox.QUESTION, new org.zkoss.zk.ui.event.EventListener()
+			Messagebox.show(Localization.getLocalizedString("configurableParamWidget.item.remove.confirm.msg"),
+					Localization.getLocalizedString("configurableParamWidget.msgbox.removeheader"), Messagebox.OK | Messagebox.CANCEL,
+					Messagebox.INFORMATION, new org.zkoss.zk.ui.event.EventListener()
 					{
 						public void onEvent(final Event evt) throws InterruptedException
 						{
@@ -182,12 +190,12 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 								final MplTimeSlotsData sdTimeSlotsData = sdListbox.getSelectedItem().getValue();
 								sdTimeSlots.remove(sdTimeSlotsData);
 								sdListbox.setModel(new ListModelList<MplTimeSlotsData>(sdTimeSlots));
-								Messagebox.show(" Item tempararly deleted  Click save button To Persist",
-										"Sd TimeSlots Item Remove Dialog", Messagebox.OK, Messagebox.INFORMATION);
+								sdTimeSloteDeleteMessage.setVisible(true);
 							}
 							else
 							{
-								Messagebox.show("Removing Canceled", "Sd TimeSlots Item Remove Dialog", Messagebox.OK,
+								Messagebox.show(Localization.getLocalizedString("configurableParamWidget.item.cancel.confirm.msg"),
+										Localization.getLocalizedString("configurableParamWidget.msgbox.removeheader"), Messagebox.OK,
 										Messagebox.INFORMATION);
 							}
 						}
@@ -207,12 +215,14 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	{
 		if (edListbox.getSelectedItem() == null || edListbox.getSelectedItem().equals(""))
 		{
-			Messagebox.show("Please Select One List Item", "Sd TimeSlots Delete Dialog", Messagebox.OK, Messagebox.INFORMATION);
+			Messagebox.show(Localization.getLocalizedString("configurableParamWidget.mesbox.empty.item"), "", Messagebox.OK,
+					Messagebox.INFORMATION);
 		}
 		else
 		{
-			Messagebox.show("Are you sure to remove?", "Ed TimeSlots Delete Dialog", Messagebox.OK | Messagebox.CANCEL,
-					Messagebox.QUESTION, new org.zkoss.zk.ui.event.EventListener()
+			Messagebox.show(Localization.getLocalizedString("configurableParamWidget.item.remove.confirm.msg"),
+					Localization.getLocalizedString("configurableParamWidget.msgbox.removeheader"), Messagebox.OK | Messagebox.CANCEL,
+					Messagebox.INFORMATION, new org.zkoss.zk.ui.event.EventListener()
 					{
 						public void onEvent(final Event evt) throws InterruptedException
 						{
@@ -221,12 +231,12 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 								final MplTimeSlotsData edTimeSlotsData = edListbox.getSelectedItem().getValue();
 								edTimeSlots.remove(edTimeSlotsData);
 								edListbox.setModel(new ListModelList<MplTimeSlotsData>(edTimeSlots));
-								Messagebox.show(" Item tempararly deleted  Click save button To Persist",
-										"Ed TimeSlots Item Remove Dialog", Messagebox.OK, Messagebox.INFORMATION);
+								edTimeSloteDeleteMessage.setVisible(true);
 							}
 							else
 							{
-								Messagebox.show("Removing Canceled", "Sd TimeSlots Item Remove Dialog", Messagebox.OK,
+								Messagebox.show(Localization.getLocalizedString("configurableParamWidget.item.cancel.confirm.msg"),
+										Localization.getLocalizedString("configurableParamWidget.msgbox.removeheader"), Messagebox.OK,
 										Messagebox.INFORMATION);
 							}
 						}
@@ -247,12 +257,14 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	{
 		if (rdListbox.getSelectedItem() == null || rdListbox.getSelectedItem().equals(""))
 		{
-			Messagebox.show("Please Select One List Item", "Sd TimeSlots Delete Dialog", Messagebox.OK, Messagebox.INFORMATION);
+			Messagebox.show(Localization.getLocalizedString("configurableParamWidget.mesbox.empty.item"), "", Messagebox.OK,
+					Messagebox.INFORMATION);
 		}
 		else
 		{
-			Messagebox.show("Are you sure to remove?", "Rd TimeSlots Delete Dialog", Messagebox.OK | Messagebox.CANCEL,
-					Messagebox.QUESTION, new org.zkoss.zk.ui.event.EventListener()
+			Messagebox.show(Localization.getLocalizedString("configurableParamWidget.item.remove.confirm.msg"),
+					Localization.getLocalizedString("configurableParamWidget.msgbox.removeheader"), Messagebox.OK | Messagebox.CANCEL,
+					Messagebox.INFORMATION, new org.zkoss.zk.ui.event.EventListener()
 					{
 						public void onEvent(final Event evt) throws InterruptedException
 						{
@@ -261,12 +273,12 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 								final MplTimeSlotsData rdTimeSlotsData = rdListbox.getSelectedItem().getValue();
 								rdTimeSlots.remove(rdTimeSlotsData);
 								rdListbox.setModel(new ListModelList<MplTimeSlotsData>(rdTimeSlots));
-								Messagebox.show(" Item tempararly deleted  Click save button To Persist",
-										"Rd TimeSlots Item Remove Dialog", Messagebox.OK, Messagebox.INFORMATION);
+								rdTimeSloteDeleteMessage.setVisible(true);
 							}
 							else
 							{
-								Messagebox.show("Removing Canceled", "Sd TimeSlots Item Remove Dialog", Messagebox.OK,
+								Messagebox.show(Localization.getLocalizedString("configurableParamWidget.item.cancel.confirm.msg"),
+										Localization.getLocalizedString("configurableParamWidget.msgbox.removeheader"), Messagebox.OK,
 										Messagebox.INFORMATION);
 							}
 						}
@@ -279,6 +291,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	 *
 	 * @throws InterruptedException
 	 */
+	@SuppressWarnings("deprecation")
 	@ViewEvent(componentID = TataomsbackofficeConstants.SCHEDULEDDELIVERY_POPUP_ITEMADD, eventName = Events.ON_CLICK)
 	public void sdTimeSlotsAdd() throws InterruptedException
 	{
@@ -287,12 +300,26 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 		}
 		else
 		{
-			final String fromTime = sdTimeBoxFrom.getValue().getHours() + ":" + sdTimeBoxFrom.getValue().getMinutes();
-			final String toTime = sdTimeBoxTo.getValue().getHours() + ":" + sdTimeBoxTo.getValue().getMinutes();
+
+			final String fromMinitues = (sdTimeBoxFrom.getValue().getMinutes() <= 9) ? "0" + sdTimeBoxFrom.getValue().getMinutes()
+					: "" + sdTimeBoxFrom.getValue().getMinutes();
+
+			final String toTimeMinitues = (sdTimeBoxTo.getValue().getMinutes() <= 9) ? "0" + sdTimeBoxTo.getValue().getMinutes()
+					: "" + sdTimeBoxTo.getValue().getMinutes();
+			final StringBuilder fromTime = new StringBuilder();
+			fromTime.append(sdTimeBoxFrom.getValue().getHours());
+			fromTime.append(":");
+			fromTime.append(fromMinitues);
+
+			final StringBuilder toTime = new StringBuilder();
+			toTime.append(sdTimeBoxTo.getValue().getHours());
+			toTime.append(":");
+			toTime.append(toTimeMinitues);
+
 			final MplTimeSlotsData mplTimeSlots = new MplTimeSlotsData();
 			mplTimeSlots.setTimeslotType(TataomsbackofficeConstants.SCHEDULEDDELIVERY);
-			mplTimeSlots.setFromTime(fromTime);
-			mplTimeSlots.setToTime(toTime);
+			mplTimeSlots.setFromTime(fromTime.toString());
+			mplTimeSlots.setToTime(toTime.toString());
 			sdTimeSlots.add(mplTimeSlots);
 			sdListbox.setModel(new ListModelList<MplTimeSlotsData>(sdTimeSlots));
 			if (sdpopup != null)
@@ -307,6 +334,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	 *
 	 * @throws InterruptedException
 	 */
+	@SuppressWarnings("deprecation")
 	@ViewEvent(componentID = TataomsbackofficeConstants.EXPRESSDELIVERY_POPUP_ITEMADD, eventName = Events.ON_CLICK)
 	public void edTimeSlotsAdd() throws InterruptedException
 	{
@@ -315,12 +343,27 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 		}
 		else
 		{
-			final String fromTime = edTimeBoxFrom.getValue().getHours() + ":" + edTimeBoxFrom.getValue().getMinutes();
-			final String toTime = edTimeBoxTo.getValue().getHours() + ":" + edTimeBoxTo.getValue().getMinutes();
+
+			final String fromMinitues = (edTimeBoxFrom.getValue().getMinutes() <= 9) ? "0" + edTimeBoxFrom.getValue().getMinutes()
+					: "" + edTimeBoxFrom.getValue().getMinutes();
+
+			final String toTimeMinitues = (edTimeBoxTo.getValue().getMinutes() <= 9) ? "0" + edTimeBoxTo.getValue().getMinutes()
+					: "" + edTimeBoxTo.getValue().getMinutes();
+
+			final StringBuilder fromTime = new StringBuilder();
+			fromTime.append(edTimeBoxFrom.getValue().getHours());
+			fromTime.append(":");
+			fromTime.append(fromMinitues);
+
+			final StringBuilder toTime = new StringBuilder();
+			toTime.append(edTimeBoxTo.getValue().getHours());
+			toTime.append(":");
+			toTime.append(toTimeMinitues);
+
 			final MplTimeSlotsData mplTimeSlots = new MplTimeSlotsData();
 			mplTimeSlots.setTimeslotType(TataomsbackofficeConstants.EXPRESSDELIVERY);
-			mplTimeSlots.setFromTime(fromTime);
-			mplTimeSlots.setToTime(toTime);
+			mplTimeSlots.setFromTime(fromTime.toString());
+			mplTimeSlots.setToTime(toTime.toString());
 			edTimeSlots.add(mplTimeSlots);
 			edListbox.setModel(new ListModelList<MplTimeSlotsData>(edTimeSlots));
 
@@ -336,6 +379,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	 *
 	 * @throws InterruptedException
 	 */
+	@SuppressWarnings("deprecation")
 	@ViewEvent(componentID = TataomsbackofficeConstants.RETURNDELIVERY_POPUP_ITEMADD, eventName = Events.ON_CLICK)
 	public void rdTimeSlotsAdd() throws InterruptedException
 	{
@@ -344,12 +388,25 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 		}
 		else
 		{
-			final String fromTime = rdTimeBoxFrom.getValue().getHours() + ":" + rdTimeBoxFrom.getValue().getMinutes();
-			final String toTime = rdTimeBoxTo.getValue().getHours() + ":" + rdTimeBoxTo.getValue().getMinutes();
+
+			final String fromMinitues = (rdTimeBoxFrom.getValue().getMinutes() <= 9) ? "0" + rdTimeBoxFrom.getValue().getMinutes()
+					: "" + rdTimeBoxFrom.getValue().getMinutes();
+			final String toTimeMinitues = (rdTimeBoxTo.getValue().getMinutes() <= 9) ? "0" + rdTimeBoxTo.getValue().getMinutes()
+					: "" + rdTimeBoxTo.getValue().getMinutes();
+			final StringBuilder fromTime = new StringBuilder();
+			fromTime.append(rdTimeBoxFrom.getValue().getHours());
+			fromTime.append(":");
+			fromTime.append(fromMinitues);
+
+			final StringBuilder toTime = new StringBuilder();
+			toTime.append(rdTimeBoxTo.getValue().getHours());
+			toTime.append(":");
+			toTime.append(toTimeMinitues);
+
 			final MplTimeSlotsData mplTimeSlots = new MplTimeSlotsData();
 			mplTimeSlots.setTimeslotType(TataomsbackofficeConstants.RETURNDELIVERY);
-			mplTimeSlots.setFromTime(fromTime);
-			mplTimeSlots.setToTime(toTime);
+			mplTimeSlots.setFromTime(fromTime.toString());
+			mplTimeSlots.setToTime(toTime.toString());
 			rdTimeSlots.add(mplTimeSlots);
 			rdListbox.setModel(new ListModelList<MplTimeSlotsData>(rdTimeSlots));
 			if (rdpopup != null)
@@ -365,9 +422,10 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = TataomsbackofficeConstants.SCHEDULEDDELIVERY_ITEMSAVE, eventName = Events.ON_CLICK)
 	public void sdTimeSlotsSave()
 	{
-		LOG.info("sd time slots save " + sdTimeSlots.toString());
+		LOG.info("Home delivery time slots save " + sdTimeSlots.toString());
 		configarableParameterFacade.saveMplTimeSlots(sdTimeSlots, TataomsbackofficeConstants.SCHEDULEDDELIVERY);
-		Messagebox.show("Scheduled Delivery Time Slots Saved Success");
+		sdTimeSloteDeleteMessage.setVisible(false);
+		Messagebox.show(Localization.getLocalizedString("configurableParamWidget.item.hd.save"));
 	}
 
 	/**
@@ -378,7 +436,8 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	{
 		LOG.info("ed timeslots save" + edTimeSlots.toString());
 		configarableParameterFacade.saveMplTimeSlots(edTimeSlots, TataomsbackofficeConstants.EXPRESSDELIVERY);
-		Messagebox.show("Express Delivery Time Slots Saved Success");
+		edTimeSloteDeleteMessage.setVisible(false);
+		Messagebox.show(Localization.getLocalizedString("configurableParamWidget.item.ed.save"));
 	}
 
 	/**
@@ -389,6 +448,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	{
 		LOG.info("rd timeslots save" + rdTimeSlots.toString());
 		configarableParameterFacade.saveMplTimeSlots(rdTimeSlots, TataomsbackofficeConstants.RETURNDELIVERY);
-		Messagebox.show("Return Delivery Time Slots Saved Success");
+		rdTimeSloteDeleteMessage.setVisible(false);
+		Messagebox.show(Localization.getLocalizedString("configurableParamWidget.item.rd.save"));
 	}
 }
