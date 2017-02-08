@@ -169,7 +169,7 @@ li.deliverySlotRadio .reset{margin: 3px 0px !important;    height: 30px !importa
 			
 			
 		});
-		
+		var tmp = false;
 		$(".radioPardhu").mouseup(function(){
 			/* Set Values For Ajax Call */
 			var mplconfigModel = $('#mplconfigModel').val();
@@ -177,11 +177,11 @@ li.deliverySlotRadio .reset{margin: 3px 0px !important;    height: 30px !importa
 			var date;
 			var time;
 			var radioTribhuvanLen = $(".radioPardhu:checked").length;
-			//alert(radioPardhuLen);
-			if(($(this).attr("data-name") == "date")) {
+			if(($(this).attr("data-name") == "date") && $(this).closest(".deliverySlotRadio .tribhuvanClosest").attr('data-ajax') == '3bu1') {
 				//alert(mplconfigModel);
+				//alert($(this).closest(".deliverySlotRadio .tribhuvanClosest").attr('id'));
+				$(this).closest(".deliverySlotRadio .tribhuvanClosest").attr('data-ajax','shiva');
 				mplconfigModel = $('#mplconfigModel').val();
-				
 				date = $(this).val();
 				time = $(this).next().next().find("input.timeSlots:first").val();
 				selectedUssId = $(this).attr('data-ussid');
@@ -420,8 +420,7 @@ li.deliverySlotRadio .reset{margin: 3px 0px !important;    height: 30px !importa
 									   <input type="hidden" id="mplconfigModel" name="mplconfigModel" value="${mplconfigModel}"/>
 									    <input type="hidden" id="selectedUssId" name="selectedUssId" value="${entry.selectedUssid}"/>
 										
-										
-										<div class="row" id="content">
+										<div class="row tribhuvanClosest" id="content"  data-ajax="3bu1">
 										<c:choose>
 										<c:when test="${not empty entry.deliverySlotsTime}">
 										<label class="heading" for="date">Preferred Date of Delivery</label>
