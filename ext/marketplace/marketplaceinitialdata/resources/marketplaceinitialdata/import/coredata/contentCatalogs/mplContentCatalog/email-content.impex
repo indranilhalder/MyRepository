@@ -53,6 +53,22 @@ INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocit
 ###Email to notify market place user to take action when an order is put on HOLD
 ;;TakeActionOnHeldOrderEmailTemplate;$jarResourceCms/structure-view/structure_takeActionOnHeldOrderEmailTemplate.vm
 
+#Shipment out for delivery
+#;;OutForDeliveryEmailTemplate;$jarResourceCms/structure-view/structure_outForDeliveryEmailTemplate.vm
+
+### Order Refund
+;;OrderRefundCreditedEmailTemplate;$jarResourceCms/structure-view/structure_orderRefundCreditedEmailTemplate.vm
+## Order Collected By PickUp Person
+;;OrderCollectedByPersonEmailTemplate;$jarResourceCms/structure-view/structure_OrderCollectedByPersonEmailTemplate.vm
+
+###########PDP Email
+#;;PDPEmailTemplate;$jarResourceCms/structure-view/structure_PDPEmailTemplate.vm
+
+###Email to notify market place when an order with high risk RMS score is registered
+#;;HighRiskNotificationEmailTemplate;$jarResourceCms/structure-view/structure_highRiskNotificationEmailTemplate.vm
+###Email to notify market place user to take action when an order is put on HOLD
+#;;TakeActionOnHeldOrderEmailTemplate;$jarResourceCms/structure-view/structure_takeActionOnHeldOrderEmailTemplate.vm
+
 ###########PDP Email
   
 # Email page Template
@@ -107,22 +123,7 @@ INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;ac
 
 
 
-#Shipment out for delivery
-#;;OutForDeliveryEmailTemplate;$jarResourceCms/structure-view/structure_outForDeliveryEmailTemplate.vm
 
-;;OrderDeliveryEmailTemplate;$jarResourceCms/structure-view/structure_orderDeliveryEmailTemplate.vm
-### Order Refund
-;;OrderRefundCreditedEmailTemplate;$jarResourceCms/structure-view/structure_orderRefundCreditedEmailTemplate.vm
-## Order Collected By PickUp Person
-;;OrderCollectedByPersonEmailTemplate;$jarResourceCms/structure-view/structure_OrderCollectedByPersonEmailTemplate.vm
-
-###########PDP Email
-#;;PDPEmailTemplate;$jarResourceCms/structure-view/structure_PDPEmailTemplate.vm
-
-###Email to notify market place when an order with high risk RMS score is registered
-;;HighRiskNotificationEmailTemplate;$jarResourceCms/structure-view/structure_highRiskNotificationEmailTemplate.vm
-###Email to notify market place user to take action when an order is put on HOLD
-;;TakeActionOnHeldOrderEmailTemplate;$jarResourceCms/structure-view/structure_takeActionOnHeldOrderEmailTemplate.vm
 
 ###########PDP Email
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='PDPEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
