@@ -59328,7 +59328,42 @@ body.page-productDetails .callouts .Padd ul li p {
     padding: 0 0 0 40px;
     font-weight: 600;
 }
-
+/*UF-47*/
+body.page-productDetails .mini-transient-bag-mobile {
+    position: fixed;
+    z-index: 10000;
+    background: #ccc;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    display: inline-block;
+    width: 110px;
+    text-align: center;
+    border-radius: 4px;
+}
+/* UF-29 */
+body.page-productDetails .gig-rating-readReviewsLink_pdp{
+	cursor: pointer;
+}
+/* UF-32 */
+body.page-productDetails .otherSellersFont:hover #otherSellerInfoId{
+	color: #000;
+}
+body.page-productDetails .otherSellersFont:hover #otherSellerLinkId{
+	color: #000;
+}
+body.page-productDetails .otherSellersFont:hover .other-sellers-link{
+	color: #a9143c;
+}
+/* UF-30 */
+body.page-productDetails .product-info .size ul#variant li.strike a {
+   cursor: pointer;
+}
 @media(min-width:1025px){
 /* 	UF-38	 */
 body.page-productGrid .plp-wishlist:hover:before{
@@ -59364,5 +59399,10 @@ body.page-productDetails .product-info .product-content {
 body.page-productDetails .product-detail .Emi p:after{
 	display:none;
 }
+}
+@media(min-width:791px){
+	body.page-productDetails .mini-transient-bag-mobile{
+	display:none;
+	}
 }
 /* UI-UX Fixes for PDP end */

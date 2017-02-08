@@ -247,8 +247,9 @@ tr.d0 td {
 					<li class="empty"></li>
 					<li class="empty"></li>
 					<li class="empty"></li>
-					<span class="gig-rating-readReviewsLink_pdp"> <spring:theme
-							code="rating.noreviews" /></span>
+					<%-- <span class="gig-rating-readReviewsLink_pdp"> <spring:theme
+							code="rating.noreviews" /></span> --%>
+					<span class="gig-rating-readReviewsLink_pdp"></span>			<!-- UF-29 -->
 					<!-- OOTB Code Commented to facilitate Rest Call -->
 					<%-- <c:choose>
 				<c:when test="${not empty product.ratingCount}">
