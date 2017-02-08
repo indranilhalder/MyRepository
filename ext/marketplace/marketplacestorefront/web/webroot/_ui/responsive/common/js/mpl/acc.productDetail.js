@@ -1137,6 +1137,7 @@ $(function() {
 													pdp_pin_sku : productCode, 
 													pdp_pin_status : 'not_servicable', 
 													pdp_pin_value : pin, 
+													pdp_pincode_non_serviceable : pin,
 													pdp_pin_delivery : 'error'
 												});
 											/*TPR-642 & 640 ends*/
@@ -1162,6 +1163,7 @@ $(function() {
 													pdp_pin_sku : productCode, 
 													pdp_pin_status : 'not_servicable', 
 													pdp_pin_value : pin, 
+													pdp_pincode_non_serviceable : pin,
 													pdp_pin_delivery : 'error'
 												});
 											/*TPR-642 & 640 ends*/
@@ -1278,6 +1280,7 @@ $(function() {
 																	pdp_pin_sku : productCode, 
 																	pdp_pin_status : 'servicable', 
 																	pdp_pin_value : pin, 
+																	pdp_pincode_serviceable :pin,
 																	pdp_pin_delivery : deliverModeTealium.join("_")
 																});
 															/*TPR-642 & 640 ends*/
@@ -1312,6 +1315,7 @@ $(function() {
 																pdp_pin_sku : productCode, 
 																pdp_pin_status : 'not_servicable', 
 																pdp_pin_value : pin, 
+																pdp_pincode_non_serviceable : pin,
 																pdp_pin_delivery : 'error'
 															});
 														/*TPR-642 & 640 ends*/
