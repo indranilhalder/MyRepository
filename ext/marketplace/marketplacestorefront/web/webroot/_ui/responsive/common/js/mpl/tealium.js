@@ -1059,4 +1059,25 @@ function errorOutofStockUtag(){
 	utag.link({"error_type":"out_of_stock"});
 }
 
+/*On Size selection | PDP*/
+$(document).on('click',".variant-select > li", function(){
+	var product_size = $(this).find('a').html();
+	utag.link({
+		"link_text":"pdp_size_"+product_size,
+		"event_type":"pdp_size_selected",
+		"product_size":product_size
+	});
+})
+
+
+/*On Colour selection | PDP*/
+$(document).on('click',".color-swatch > li", function(){
+	var product_color = $(this).find('img').attr('title').toLowerCase();
+	utag.link({
+		"link_text":"pdp_color_"+product_color,
+		"event_type":"pdp_color_selected",
+		"product_color":product_color
+	});
+})
+
 /* Data Layer Schema Changes Ends*/
