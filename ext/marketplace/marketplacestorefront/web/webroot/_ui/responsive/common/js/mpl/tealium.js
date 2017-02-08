@@ -97,11 +97,11 @@ $(document).ready(
 						var tealiumData = "";
 						tealiumData += ',"user_login_type":"'	//TPR-668
 							+ user_login_type + '",';
-						tealiumData += '"product_unit_price":["'
+						tealiumData += '"product_mrp":["'
 								+ $("#product_unit_price").val() + '"],';
 						tealiumData += '"site_section":"'
 								+ $("#site_section").val() + '",';
-						tealiumData += '"product_list_price":["'
+						tealiumData += '"product_mop":["'
 								+ $("#product_list_price").val() + '"],';
 						tealiumData += '"product_name":["'
 								+ $("#product_name").val() + '"],';
