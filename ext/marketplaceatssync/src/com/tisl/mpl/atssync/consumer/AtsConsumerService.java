@@ -78,11 +78,11 @@ public class AtsConsumerService {
 
         Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumer.createMessageStreams(topicCountMap);
 
-        System.out.println(consumerMap);
+        //System.out.println(consumerMap);
 
         List<KafkaStream<byte[], byte[]>> streams = consumerMap.get(topic);
 
-        System.out.println(streams);
+        //System.out.println(streams);
 
         // now launch all the threads
         //
@@ -108,7 +108,7 @@ public class AtsConsumerService {
         props.put("zookeeper.connect", a_zookeeper);
         //props.put(BOOTSTRAP_SERVERS, a_zookeeper);
         props.put(GROUP_ID, a_groupId);
-        props.put("num.stream.threads", THREAD_COUNT /* four threads */);
+        //props.put("num.stream.threads", THREAD_COUNT /* four threads */);
         props.put(ENABLE_AUTO_COMMIT, autocommit);
         props.put(SESSION_TIMEOUT_MS, "400");
         props.put("zookeeper.sync.time.ms", "200");
