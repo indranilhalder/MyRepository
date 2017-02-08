@@ -6,6 +6,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
 import de.hybris.platform.jalo.SessionContext;
+import de.hybris.platform.jalo.c2l.Currency;
 import de.hybris.platform.jalo.enumeration.EnumerationValue;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
@@ -14,17 +15,20 @@ import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.type.ComposedType;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
+import de.hybris.platform.promotions.jalo.PromotionOrderEntryConsumed;
 import de.hybris.platform.promotions.jalo.PromotionResult;
 import de.hybris.platform.promotions.jalo.PromotionsManager;
 import de.hybris.platform.promotions.result.PromotionEvaluationContext;
-import de.hybris.platform.promotions.result.PromotionOrderEntry;
-import de.hybris.platform.promotions.result.PromotionOrderView;
+import de.hybris.platform.promotions.util.Helper;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -228,9 +232,11 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 			//				eligibleProductList.add(orderEntry.getProduct());
 			//			}
 			final Map<String, Integer> qCount = new HashMap<String, Integer>();
+			final Map<String, Integer> tcMapForValidEntries = new ConcurrentHashMap<String, Integer>();
 			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 			{
 				qCount.put(mapEntry.getKey(), Integer.valueOf(mapEntry.getValue().getQuantity().intValue()));
+				tcMapForValidEntries.put(mapEntry.getKey(), Integer.valueOf(mapEntry.getValue().getQuantity().intValue()));
 			}
 
 			final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
@@ -245,21 +251,47 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 			ctx.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
 			ctx.setAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC, Boolean.valueOf(isPercentageDisc));
 
+			final Currency currency = evaluationContext.getOrder().getCurrency(ctx);
+
 			//for (final Map.Entry<Product, Integer> mapEntry : validProductList.entrySet())
 			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 			{
-				evaluationContext.startLoggingConsumed(this);
+				//evaluationContext.startLoggingConsumed(this);
 				final AbstractOrderEntry entry = mapEntry.getValue();
 				final String validUssid = mapEntry.getKey();
-				final PromotionOrderView view = evaluationContext.createView(ctx, this, allowedProductList);
-				final PromotionOrderEntry viewEntry = view.peek(ctx);
-				final long quantityOfOrderEntry = viewEntry.getBaseOrderEntry().getQuantity(ctx).longValue();
+				//final PromotionOrderView view = evaluationContext.createView(ctx, this, allowedProductList);
+				//final PromotionOrderEntry viewEntry = view.peek(ctx);
+				//final long quantityOfOrderEntry = viewEntry.getBaseOrderEntry().getQuantity(ctx).longValue();
+				final long quantityOfOrderEntry = entry.getQuantity(ctx).longValue();
 				LOG.debug("BaseOrderEntry" + quantityOfOrderEntry);
 				final double percentageDiscountvalue = percentageDiscount / 100.0D;
 
 				if (percentageDiscount < 100)
 				{
 					final int eligibleCount = qCount.get(validUssid).intValue();
+					//////
+					final double originalUnitPrice = entry.getBasePrice(ctx).doubleValue();
+					final double originalEntryPrice = eligibleCount * originalUnitPrice;
+
+					final BigDecimal adjustedEntryPrice = Helper.roundCurrencyValue(ctx, currency, originalEntryPrice
+							- (originalEntryPrice * percentageDiscountvalue));
+
+					final BigDecimal adjustedUnitPrice = Helper.roundCurrencyValue(
+							ctx,
+							currency,
+							(adjustedEntryPrice.equals(BigDecimal.ZERO)) ? BigDecimal.ZERO : adjustedEntryPrice.divide(
+									BigDecimal.valueOf(eligibleCount), RoundingMode.HALF_EVEN));
+
+					final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
+					consumed.add(getDefaultPromotionsManager().consume(ctx, this, eligibleCount, quantityOfOrderEntry, entry));
+
+					tcMapForValidEntries.put(validUssid, Integer.valueOf((int) quantityOfOrderEntry - eligibleCount));
+
+					for (final PromotionOrderEntryConsumed poec : consumed)
+					{
+						poec.setAdjustedUnitPrice(ctx, adjustedUnitPrice.doubleValue());
+					}
+					/////
 					final double adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue * entry.getQuantity()
 							.doubleValue());
 					LOG.debug("Adjustment" + adjustment);
@@ -267,7 +299,7 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 							1.0F);
 					final CustomPromotionOrderEntryAdjustAction poeac = getDefaultPromotionsManager()
 							.createCustomPromotionOrderEntryAdjustAction(ctx, entry, eligibleCount, adjustment);
-					final List consumed = evaluationContext.finishLoggingAndGetConsumed(this, true);
+					//final List consumed = evaluationContext.finishLoggingAndGetConsumed(this, true);
 					result.setConsumedEntries(ctx, consumed);
 					result.addAction(ctx, poeac);
 					promotionResults.add(result);
