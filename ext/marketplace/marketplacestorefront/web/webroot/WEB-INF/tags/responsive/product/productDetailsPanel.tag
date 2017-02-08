@@ -83,13 +83,13 @@ tr.d0 td {
 <input type="hidden" id="pdpBuyboxWinnerSellerID" value=''/>
 <input type="hidden" id="pdpOtherSellerIDs" value=''/>
 <!-- TPR-429 END-->
+<!-- For Data Layer Schema changes -->
+<input type="hidden" id="product_stock_count" value="${product_stock_count}" />
+<input type="hidden" id="out_of_stock" value="${out_of_stock}" />
 <!-- End Tealium -->
 
 <!-- TISPRM-56 -->
 <input type="hidden" id="product_allVariantsListingId" value="${allVariantsString}"/>
-
-
-
 
 
 <div itemscope itemtype="http://schema.org/Product" class="pdp">

@@ -34,6 +34,11 @@ $(document).ready(
 			}
 			//TPR-672 END
 			
+			//Web Thumbnail Images
+			var thumbnailImageCount=0;
+			$(".product-info > .product-image-container > .productImageGallery .imageListCarousel").find("li").each(function(){
+				thumbnailImageCount++;
+			})
 
 			
 			// Added for tealium
@@ -135,7 +140,15 @@ $(document).ready(
 						tealiumData += '"promo_id":["'
 							+promo_id+ '"],';
 						//TPR-672 END
-					
+						
+						//Data Layer Schema changes
+						tealiumData += '"product_stock_count":["'
+							+ $("#product_stock_count").val() + '"],';
+						tealiumData += '"out_of_stock":["'
+							+ $("#out_of_stock").val() + '"],';
+						tealiumData += '"product_image_count":"'
+							+ thumbnailImageCount + '",';
+						
 						//TPR-429 START
 						tealiumData += '"seller_id":"'				//variable name changed | Data Layer Schema Changes 
 							+ $("#pdpBuyboxWinnerSellerID").val() + '",';
@@ -1016,9 +1029,9 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 
 			 
 /* Data Layer Schema Changes Starts*/
-			 
 /*Product Specification*/
 $(document).on("click",".nav-wrapper .nav.pdp",function(){
 	utag.link({"link_text":"product_specification", "event_type":"view_prod_specification"});
 })
+
 /* Data Layer Schema Changes Ends*/
