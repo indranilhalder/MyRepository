@@ -75,6 +75,9 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 		if (crmResult.getResult().equals(OrderPlacementResult.Status.SUCCESS)
 				&& omsResult.getResult().equals(OrderPlacementResult.Status.SUCCESS))
 		{
+			//PaymentFix2017
+			order.setIsSentToOMS(Boolean.TRUE);
+			getModelService().save(order);
 			return AbstractSimpleDecisionAction.Transition.OK;
 		}
 		//		if (null != omsResult && null != omsResult.getResult()
@@ -101,7 +104,7 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 
 			//PaymentFix2017
 			//order.setIsSentToOMS(Boolean.FALSE);
-			getModelService().save(order);
+			//getModelService().save(order);
 
 			return AbstractSimpleDecisionAction.Transition.OK;
 		}
@@ -123,11 +126,6 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 
 		if (result.getResult().equals(OrderPlacementResult.Status.SUCCESS))
 		{
-
-			//PaymentFix2017
-
-			order.setIsSentToOMS(Boolean.TRUE);
-			getModelService().save(order);
 			return Transition.OK;
 		}
 
