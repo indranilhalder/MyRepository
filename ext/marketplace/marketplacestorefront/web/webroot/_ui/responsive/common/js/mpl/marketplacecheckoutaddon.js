@@ -3354,8 +3354,8 @@ function validateCardNo(formSubmit) {
 					var selectedBank=$("select[id='bankNameForEMI']").find('option:selected').text();
 					// TISPRO-572 bank selection drop down
 					//var selectedBankVal=selectedBank.split(" ", 1);	//comment for INC_11876
-					var selectedBankVal = $("#bankNameForEMI").val();  //add for INC_11876
-					var responseBankVal=response.bankName;
+					var selectedBankVal = selectedBank.toLowerCase(); //$("#bankNameForEMI").val();  //add for INC_11876
+					var responseBankVal = response.bankName.toLowerCase();  //response.bankName;
 					if($("#paymentMode").val()=='EMI')
 					{
 						if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
@@ -3818,8 +3818,8 @@ function validateEmiCardNo(formSubmit) {
 						var selectedBank=$("select[id='bankNameForEMI']").find('option:selected').text();
 						//TISPRO-572 bank selection drop down
 						//var selectedBankVal=selectedBank.split(" ", 1);	//comment for INC_11876
-						var selectedBankVal = $("#bankNameForEMI").val();  //add for INC_11876
-						var responseBankVal=response.bankName;
+						var selectedBankVal = selectedBank.toLowerCase(); //$("#bankNameForEMI").val();  //add for INC_11876
+						var responseBankVal = response.bankName.toLowerCase();  //response.bankName;
 						if($("#paymentMode").val()=='EMI')
 						{
 							if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
