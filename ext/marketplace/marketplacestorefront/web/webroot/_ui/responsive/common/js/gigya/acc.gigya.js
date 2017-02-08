@@ -224,17 +224,7 @@ function registerUserGigya(eventObject)
     				$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
     				
     				//added for tealium to get average product rating
-    				if(avgreview > 0 ){
-    				 utag.link(
-   					{"link_text": "product_Average_Rating"  ,"product_rating":avgreview});
-   				      }
-   				    else
-   				     {
-   				     utag.link(
-   					{"link_text": "product_Average_Rating_Zero" ,"product_rating":avgreview});
-   				    }
-    				
-    				
+   				     utag.link({"product_rating":avgreview});
     				
     		  });
     		  
@@ -343,10 +333,5 @@ function registerUserGigya(eventObject)
     		}
     /*	});*/
     
-    if ($(".gig-composebox-error") )
-    		{
-    		
-    		utag.link(
-   					{"error_type": "review_submit_error"});
-    		}
+    
     		
