@@ -124,9 +124,11 @@ function registerUserGigya(eventObject)
     		$(".gig-composebox-error").text(responseObj.errorDetails);
     		$(".gig-composebox-error").show();
     		//added for tealium to capture review submit error
+    		if(pageType == 'product'){
     		utag.link(
    					{"error_type": "review_submit_error", "error_message": responseObj.errorMessage});
 
+    		}
     		}
     		
 
