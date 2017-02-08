@@ -326,14 +326,14 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 		final Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
 		try
 		{
-			boolean sellerFlag = false;
-			boolean brandFlag = false;
 			String sellerID = MarketplacecommerceservicesConstants.EMPTY;
 			//final List<Product> promotionProductList = new ArrayList<>(getProducts());
 			//final List<Category> promotionCategoryList = new ArrayList<>(getCategories());
 			//int productQty = 0;
 			for (final AbstractOrderEntry entry : cart.getEntries())
 			{
+				boolean sellerFlag = false;
+				boolean brandFlag = false;
 				//final boolean applyPromotion = false;
 				final Product product = entry.getProduct();
 
