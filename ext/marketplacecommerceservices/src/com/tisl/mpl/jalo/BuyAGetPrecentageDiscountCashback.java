@@ -1,6 +1,5 @@
 package com.tisl.mpl.jalo;
 
-import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
@@ -51,6 +50,8 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 	//private double totalPricevalue;
 	private int noOfProducts = 0;
 
+	private int stockCount = 0;
+
 	/**
 	 * @Description: Method for Item Creation
 	 * @param:SessionContext ctx
@@ -72,8 +73,8 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 
 	/**
 	 * @Description : Buy Product A get Percentage or Amount Discount cashback
-	 * @param : SessionContext paramSessionContext
-	 * @param : PromotionEvaluationContext paramPromotionEvaluationContext
+	 * @param paramSessionContext
+	 * @param evaluationContext
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
@@ -82,8 +83,10 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 	{
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		final AbstractOrder order = evaluationContext.getOrder();
-		final List<Product> promotionProductList = new ArrayList<>(getProducts());
-		final List<Category> promotionCategoryList = new ArrayList<>(getCategories());
+
+		//final List<Product> promotionProductList = new ArrayList<>(getProducts());
+		//final List<Category> promotionCategoryList = new ArrayList<>(getCategories());
+
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions()); // Fetching Promotion set Restrictions
 		final List<Product> excludedProductList = new ArrayList<Product>();
 		final List<String> excludeManufactureList = new ArrayList<String>();
@@ -108,10 +111,12 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 				final Map<String, Integer> validProductFinalList = new ConcurrentHashMap<String, Integer>();
 				final Map<String, AbstractOrderEntry> validProductUssidFinalMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
 
+				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
+
 				//getting the valid products
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
-						.getValidProdListForBuyXofAPromo(order, paramSessionContext, promotionProductList, promotionCategoryList,
-								restrictionList, excludedProductList, excludeManufactureList, null, null); // Adding Eligible Products to List
+						.getValidProdListForBuyXofA(order, paramSessionContext, allowedProductList, restrictionList,
+								excludedProductList, excludeManufactureList, null, null); // Adding Eligible Products to List
 
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(paramSessionContext, validProductUssidMap)
 						&& getMplPromotionHelper().checkOrderCount(restrictionList, getCode(), order))
@@ -144,7 +149,7 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 	/**
 	 * @Description : Promotion Evaluation Method
 	 * @param paramSessionContext
-	 * @param paramPromotionEvaluationContext
+	 * @param evaluationContext
 	 * @param validProductUssidMap
 	 * @return promotionResults
 	 */
@@ -169,6 +174,38 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 			{
 				totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
 			}
+
+
+			//Added for TPR-4354
+			if (getMplPromotionHelper().validateForStockRestriction(restrictionList) && null != eligibleQuantity
+					&& eligibleQuantity.intValue() > 0)
+			{
+				final int offerQuantity = (totalCount / eligibleQuantity.intValue());
+				final int customerOfferCount = getMplPromotionHelper().getStockCustomerRedeemCount(restrictionList);
+				final int eligibleStockCount = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList)
+						* eligibleQuantity.intValue();
+
+				if (customerOfferCount > 0)
+				{
+					setStockCount(eligibleQuantity.intValue() * customerOfferCount);
+				}
+				else
+				{
+					setStockCount(eligibleStockCount);
+				}
+
+				if (customerOfferCount > 0 && offerQuantity > customerOfferCount)
+				{
+					totalCount = (eligibleQuantity.intValue() * customerOfferCount);
+				}
+				else if (totalCount >= eligibleStockCount)
+				{
+					totalCount = eligibleStockCount;
+				}
+			}
+
+
+
 			noOfProducts = totalCount;
 
 			List<PromotionOrderEntryConsumed> remainingItemsFromTail = null;
@@ -313,6 +350,27 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 				result.setConsumedEntries(remainingItemsFromTail);
 				promotionResults.add(result);
 			}
+			else if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
+			{
+				if (noOfProducts >= getStockCount())
+				{
+					final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
+							evaluationContext.getOrder(), 1.00F);
+					promotionResults.add(result);
+				}
+				else if (noOfProducts < getStockCount() && (noOfProducts % eligibleQuantity.intValue() == 0))
+				{
+					final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
+							evaluationContext.getOrder(), 1.00F);
+					promotionResults.add(result);
+				}
+				else if (noOfProducts < getStockCount() && !(noOfProducts % eligibleQuantity.intValue() == 0))
+				{
+					final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
+							evaluationContext.getOrder(), 0.00F);
+					promotionResults.add(result);
+				}
+			}
 
 		}
 		else
@@ -329,9 +387,9 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
-	 * @param : SessionContext paramSessionContext
-	 * @param : PromotionResult paramPromotionResult
-	 * @param : Locale paramLocale
+	 * @param paramSessionContext
+	 * @param paramPromotionResult
+	 * @param paramLocale
 	 * @return : String
 	 */
 	@Override
@@ -463,5 +521,22 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 	protected MplPromotionHelper getMplPromotionHelper()
 	{
 		return Registry.getApplicationContext().getBean("mplPromotionHelper", MplPromotionHelper.class);
+	}
+
+	/**
+	 * @return the stockCount
+	 */
+	public int getStockCount()
+	{
+		return stockCount;
+	}
+
+	/**
+	 * @param stockCount
+	 *           the stockCount to set
+	 */
+	public void setStockCount(final int stockCount)
+	{
+		this.stockCount = stockCount;
 	}
 }
