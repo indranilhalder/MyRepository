@@ -59194,10 +59194,6 @@ body.page-checkout-login,
 body.page-cartPage{
 	margin-top:-80px;
 }  */
-body.page-multiStepCheckoutSummaryPage,
-body.page-checkout-login{
-	margin-top:-80px;
-} 
 /* end change for header in cart */
 /*end changes for INC_11120*/
 
@@ -59679,11 +59675,6 @@ body.page-checkout-login,
 body.page-cartPage{
 	margin-top:-80px;
 }  */
-
-body.page-multiStepCheckoutSummaryPage,
-body.page-checkout-login{
-	margin-top:-80px;
-} 
 /* end change for header in cart */
 /*end changes for INC_11120*/
  
