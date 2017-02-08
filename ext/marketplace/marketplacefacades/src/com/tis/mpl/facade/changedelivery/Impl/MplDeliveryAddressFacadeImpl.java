@@ -651,36 +651,13 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		{
 			final AddressModel newDeliveryAddressModel = tempAddressReverseConverter.convert(newDeliveryAddressData);
 			boolean isDiffrentAddress = false;
-			//Address Related filed is changed  then send to OMS  Request CA Type
-			isDiffrentAddress = mplDeliveryAddressComparator.compareAddressModel(orderModel.getDeliveryAddress(),
-					newDeliveryAddressModel);
 			if (newDeliveryAddressModel != null)
 			{
+				//Address Related filed is changed  then send to OMS  Request CA Type
+				isDiffrentAddress = mplDeliveryAddressComparator.compareAddressModel(orderModel.getDeliveryAddress(),
+						newDeliveryAddressModel);
 				if (isDiffrentAddress)
 				{
-					final boolean isEligibleScheduledDelivery = mplDeliveryAddressService.checkScheduledDeliveryForOrder(orderModel);
-					//checking  order Eligible for ReScheduledDelivery
-					if (isEligibleScheduledDelivery)
-					{
-						if (!isMobile)
-						{
-							final RescheduleDataList rescheduleDataList = sessionService
-									.getAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
-							//Bug ID 686
-							if (rescheduleDataList != null && CollectionUtils.isNotEmpty(rescheduleDataList.getRescheduleDataList()))
-							{
-								transactionSDDtoList = reScheduleddeliveryDate(orderModel, rescheduleDataList);
-								sessionService.removeAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
-								//save selected Date and time
-								mplDeliveryAddressService.saveSelectedDateAndTime(orderModel, transactionSDDtoList);
-							}
-						}
-					}
-
-					if (LOG.isDebugEnabled())
-					{
-						LOG.debug("Change Delivery Address updated into commerce  then Call to OMS And CRM");
-					}
 					try
 					{
 						//OMS realTime Call
@@ -688,7 +665,26 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 								transactionSDDtoList);
 						if (MarketplaceFacadesConstants.SUCCESS.equalsIgnoreCase(valditionMsg))
 						{
-							  mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel, orderModel,false);   
+						  final boolean isEligibleScheduledDelivery = mplDeliveryAddressService.checkScheduledDeliveryForOrder(orderModel);
+							//checking  order Eligible for ReScheduledDelivery
+							if (isEligibleScheduledDelivery)
+							{
+								if (!isMobile)
+								{
+									final RescheduleDataList rescheduleDataList = sessionService
+											.getAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
+									//Bug ID 686
+									if (rescheduleDataList != null && CollectionUtils.isNotEmpty(rescheduleDataList.getRescheduleDataList()))
+									{
+										transactionSDDtoList = reScheduleddeliveryDate(orderModel, rescheduleDataList);
+										sessionService.removeAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
+										//save selected Date and time
+										mplDeliveryAddressService.saveSelectedDateAndTime(orderModel, transactionSDDtoList);
+									}
+								}
+							}
+							 //save changed address  
+							mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel, orderModel,false);   
 						  
 							//CRM call
 							createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE,
