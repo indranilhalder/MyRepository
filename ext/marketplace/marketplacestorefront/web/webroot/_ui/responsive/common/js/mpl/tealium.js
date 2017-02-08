@@ -1054,4 +1054,9 @@ $(document).on("click",".nav-wrapper .nav.pdp",function(){
 	utag.link({"link_text":"product_specification", "event_type":"view_prod_specification"});
 })
 
+/*Out Of Stock During adding to bag*/
+function errorOutofStockUtag(){
+	utag.link({"error_type":"out_of_stock"});
+}
+
 /* Data Layer Schema Changes Ends*/

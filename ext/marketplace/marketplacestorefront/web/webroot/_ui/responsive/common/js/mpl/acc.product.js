@@ -502,6 +502,7 @@ sendAddToBag : function(formId, isBuyNow) {
 													+ "</font>");
 							$("#" + formId + "noInventory").show().fadeOut(
 									6000);
+							errorOutofStockUtag();
 							return false;
 						} else if (data == "willexceedeinventory") {
 							$("#" + formId + "excedeInventory")
