@@ -1856,6 +1856,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 		//$("#savingsOnProductId").html("");
 		$("#savingsOnProductId").append("(-"+savingsOnProduct+" %)");
 	} 
+	
 
 	if(null!= savingsOnProduct && savingsOnProduct != 0){
 		$("#savingsOnProductId").show();
@@ -2074,10 +2075,12 @@ function populateEMIDetailsForPDP(){
 					
 					/*TPR-641 starts*/
 					emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, '').toLowerCase();
+					emiBankSelected = selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, '').toLowerCase();
 					utag.link({
 						link_obj: this, 
 						link_text: emiBankSelectedTealium , 
-						event_type : 'emi_option_selected'
+						event_type : 'emi_option_selected',
+						emi_selected_bank : emiBankSelected
 					});
 					/*TPR-641 ends*/
 				},
@@ -2944,9 +2947,11 @@ function loadDefaultWishListName_SizeGuide() {
 		
 		$(document).on("click",".product-detail .promo-block .pdp-promo-title, .pdp-promo-title-link",function(e){
 			e.preventDefault();
+			var promoTitle=$("#product_applied_promotion_title").val();
+			
 			/*TPR-694*/
-			utag.link({"link_obj": this, "link_text": 'product_offer_view_details', "event_type": 'product_offer_details'
-			}); 
+			utag.link({"link_obj": this, "link_text": 'product_offer_view_details', "event_type": 'product_offer_details',"offer_title":promoTitle}); 
+			
 			/*TPR-694 ends */
 			offerPopup($("#promotionDetailsId").html());
 		});
