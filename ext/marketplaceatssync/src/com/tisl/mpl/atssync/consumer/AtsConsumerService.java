@@ -29,7 +29,7 @@ public class AtsConsumerService {
     private ExecutorService executor;
 
     @Value("${marketplaceatssync.ats.consumer.threadcount}")
-    private static int THREAD_COUNT;
+    private int THREAD_COUNT;
 
     @Resource(name = "deserializer")
     private AvailabilityToSellDTODeserializer availabilityToSellDTODeserializer;
@@ -81,7 +81,7 @@ public class AtsConsumerService {
         //System.out.println(consumerMap);
 
         List<KafkaStream<byte[], byte[]>> streams = consumerMap.get(topic);
-
+        System.out.println("Stream List Size is : "+streams.size());
         //System.out.println(streams);
 
         // now launch all the threads
