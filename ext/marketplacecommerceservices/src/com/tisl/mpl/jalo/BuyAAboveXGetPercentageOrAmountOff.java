@@ -240,7 +240,7 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 			ctx.setAttribute(MarketplacecommerceservicesConstants.PERCENTAGEDISCOUNT, Double.valueOf(percentageDiscount));
 			//ctx.setAttribute(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE, totalEligibleProductPrice);
 			//ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
-			ctx.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, qCount);
+			//ctx.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, qCount);
 			ctx.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
 			ctx.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
 			ctx.setAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC, Boolean.valueOf(isPercentageDisc));
@@ -250,6 +250,7 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 			{
 				evaluationContext.startLoggingConsumed(this);
 				final AbstractOrderEntry entry = mapEntry.getValue();
+				final String validUssid = mapEntry.getKey();
 				final PromotionOrderView view = evaluationContext.createView(ctx, this, allowedProductList);
 				final PromotionOrderEntry viewEntry = view.peek(ctx);
 				final long quantityOfOrderEntry = viewEntry.getBaseOrderEntry().getQuantity(ctx).longValue();
@@ -258,13 +259,14 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 
 				if (percentageDiscount < 100)
 				{
+					final int eligibleCount = qCount.get(validUssid).intValue();
 					final double adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue * entry.getQuantity()
 							.doubleValue());
 					LOG.debug("Adjustment" + adjustment);
 					final PromotionResult result = promotionsManager.createPromotionResult(ctx, this, evaluationContext.getOrder(),
 							1.0F);
 					final CustomPromotionOrderEntryAdjustAction poeac = getDefaultPromotionsManager()
-							.createCustomPromotionOrderEntryAdjustAction(ctx, entry, quantityOfOrderEntry, adjustment);
+							.createCustomPromotionOrderEntryAdjustAction(ctx, entry, eligibleCount, adjustment);
 					final List consumed = evaluationContext.finishLoggingAndGetConsumed(this, true);
 					result.setConsumedEntries(ctx, consumed);
 					result.addAction(ctx, poeac);

@@ -407,10 +407,10 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 							//							paramSessionContext
 							//									.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
 
-							if (MapUtils.isNotEmpty(validProductList))
-							{
-								paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductList);
-							}
+							//							if (MapUtils.isNotEmpty(validProductList))
+							//							{
+							//								paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductList);
+							//							}
 
 							// Apportioning Code Implementation ends
 
@@ -459,7 +459,7 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 									final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(
 											paramSessionContext, this, paramPromotionEvaluationContext.getOrder(), 1.0F);
 									final CustomPromotionOrderEntryAdjustAction poeac = getDefaultPromotionsManager()
-											.createCustomPromotionOrderEntryAdjustAction(paramSessionContext, entry, quantityOfOrderEntry,
+											.createCustomPromotionOrderEntryAdjustAction(paramSessionContext, entry, eligibleCount,
 													adjustment.doubleValue());
 									result.setConsumedEntries(paramSessionContext, consumed);
 									result.addAction(paramSessionContext, poeac);

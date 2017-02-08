@@ -142,38 +142,47 @@ $( document ).ready(function() {
 									</ul>
 								</c:when>
 								<c:otherwise>
-								
-								
-								<c:if test="${(not empty product.size && product.rootCategory eq 'Clothing')||(not empty product.size && product.rootCategory eq 'Footwear')}">
-														<ul class="">
+
+
+									<c:if
+										test="${(not empty product.size && product.rootCategory eq 'Clothing')||(not empty product.size && product.rootCategory eq 'Footwear')}">
+										<ul class="">
 											<li><button id="addToCartButton" type="button"
-													class="addToBagButton treat-urself-button" style="display: block !important; width: 120px;">
+													class="addToBagButton treat-urself-button"
+													style="display: block !important; width: 120px;">
 													<spring:theme code="basket.add.to.basket" />
-													
+
 												</button></li>
-												</ul>
-													</c:if>
-                                                    
-													<c:if test="${empty product.size && product.rootCategory eq 'Electronics'}">
-														
-															<ul class="">
+										</ul>
+									</c:if>
+
+									<!-- Changes for INC144313256 -->
+									<c:if
+										test="${(empty product.size && product.rootCategory eq 'Electronics') 
+													|| (empty product.size && product.rootCategory eq 'Watches') 
+													|| (empty product.size && product.rootCategory eq 'Accessories')}">
+									<!-- Changes for INC144313256 -->
+										<ul class="">
 											<li><button id="addToCartButton" type="button"
-													class="addToBagButton treat-urself-button" style="display: block !important; width: 120px;">
+													class="addToBagButton treat-urself-button"
+													style="display: block !important; width: 120px;">
 													<spring:theme code="basket.add.to.basket" />
-													
+
 												</button></li>
-												</ul>
-										
-														</c:if>
-														<c:if test="${(empty product.size && product.rootCategory eq 'Clothing')||(empty product.size && product.rootCategory eq 'Footwear')}">
-														<span id="addToCartButtonId treat-urself-button" style="display: none; width: 120px;">
-															<button type="button" id="addToCartButton" 
-																class="blue button sizeNotSpecified_wl" data-toggle="modal"
-															data-target="#redirectsToPDP">
-																<spring:theme code="basket.add.to.basket" />
-															</button>
-														</span>
-														</c:if>
+										</ul>
+
+									</c:if>
+									<c:if
+										test="${(empty product.size && product.rootCategory eq 'Clothing')||(empty product.size && product.rootCategory eq 'Footwear')}">
+										<span id="addToCartButtonId treat-urself-button"
+											style="display: none; width: 120px;">
+											<button type="button" id="addToCartButton"
+												class="blue button sizeNotSpecified_wl" data-toggle="modal"
+												data-target="#redirectsToPDP">
+												<spring:theme code="basket.add.to.basket" />
+											</button>
+										</span>
+									</c:if>
 									<ycommerce:testId code="addToCartButton">
 
 										<%-- <ul class="item-edit-details">
