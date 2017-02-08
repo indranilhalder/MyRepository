@@ -10,8 +10,15 @@
 		    
    <bean id="deserializer" class="com.tisl.mpl.atssync.consumer.AvailabilityToSellDTODeserializer"/>
    
-  <bean class="com.tisl.mpl.atssync.consumer.CustomAtsSyncConsumer" id="customAtsSyncConsumer" init-method="consumer" >
+  <!--<bean class="com.tisl.mpl.atssync.consumer.CustomAtsSyncConsumer" id="customAtsSyncConsumer" init-method="consumer" >
   	<property name="atsExportFacade" ref="atsExportClient" />
 	<property name="ondemandGlobalPreferenceService" ref="ondemandGlobalPreferenceService" />
-  </bean>
+  </bean>-->
+
+    <bean class="com.tisl.mpl.atssync.consumer.AtsConsumerService" init-method="call" destroy-method="shutdown">
+        <constructor-arg name="a_groupId" value="${ats.kafka.group.id}"/>
+        <constructor-arg name="a_topic" value="${ats.kafka.topic}"/>
+        <constructor-arg name="a_zookeeper" value="${ats.zookeeper.url}"/>
+        <constructor-arg name="autoCommit" value="${ats.kafka.enable.auto.commit}"/>
+    </bean>
 </beans>
