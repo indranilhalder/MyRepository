@@ -398,7 +398,8 @@ $(document).on("click","#colorbox .productImageGallery .imageList img", function
 
 $(".product-image-container .productImageGallery.pdp-gallery .imageList img").click(
 		function(e) {
-		   
+		   var thumbnail_type=$(this).attr("data-type");
+		   var thumbnail_value = $(this).parents('li').attr('id');
 		    if($(this).attr("data-type")=='image'){
 		    	$("#player").hide();
 		    	$(".productImagePrimary .picZoomer-pic-wp img").show();
@@ -424,8 +425,8 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 				/*TPR-643 starts*/
 				utag.link({
 					link_obj: this, 
-					link_text: 'pdp_image_click' , 
-					event_type : 'pdp_image_click' 
+					link_text: "pdp_"+thumbnail_value+"_zoomed" , 	//Modification for
+					event_type : "pdp_"+thumbnail_type+"_zoomed" 	//Analytics Data Layer Schema changes
 				});
 				/*TPR-643 ends*/
 			}

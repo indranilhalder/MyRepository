@@ -36,8 +36,12 @@ $(document).ready(
 			
 			//Web Thumbnail Images
 			var thumbnailImageCount=0;
+			var pdp_video_product_id;
 			$(".product-info > .product-image-container > .productImageGallery .imageListCarousel").find("li").each(function(){
 				thumbnailImageCount++;
+				if($(this).find('img').attr('data-type') == 'video'){
+					pdp_video_product_id=$('#product_id').val();
+				}
 			})
 
 			
@@ -148,6 +152,10 @@ $(document).ready(
 							+ $("#out_of_stock").val() + '"],';
 						tealiumData += '"product_image_count":"'
 							+ thumbnailImageCount + '",';
+						if (typeof(pdp_video_product_id) != 'undefined' || pdp_video_product_id != null){
+							tealiumData += '"pdp_video_product_id":["'
+								+ pdp_video_product_id + '"],';
+						}
 						
 						//TPR-429 START
 						tealiumData += '"seller_id":"'				//variable name changed | Data Layer Schema Changes 
@@ -1029,6 +1037,18 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 
 			 
 /* Data Layer Schema Changes Starts*/
+/*Thumbnail tracking*/
+//$(document).on("click",".product-image-container .imageListCarousel .thumb",function(){
+$(document).on("click",".product-info > .product-image-container > .productImageGallery .imageListCarousel .thumb",function(){
+	var thumbnail_value = $(this).parent().attr('id');
+	var thumbnail_type = $(this).find('img').attr('data-type');
+	utag.link({
+		"link_text":"pdp_"+thumbnail_value+"_clicked",
+		"event_type":"pdp_"+thumbnail_type+"_clicked",
+		"thumbnail_value":thumbnail_value
+	});
+})
+
 /*Product Specification*/
 $(document).on("click",".nav-wrapper .nav.pdp",function(){
 	utag.link({"link_text":"product_specification", "event_type":"view_prod_specification"});
