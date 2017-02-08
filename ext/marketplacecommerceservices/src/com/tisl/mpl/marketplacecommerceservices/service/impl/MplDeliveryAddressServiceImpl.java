@@ -366,6 +366,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 	{
 		try
 		{
+			String ussID=null;
 			for (OrderModel subOrder : orderModel.getChildOrders())
 			{
 				for (AbstractOrderEntryModel entryModel : subOrder.getEntries())
@@ -385,10 +386,44 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 							entryModel.setTimeSlotFrom(transactionSDDto.getTimeSlotFrom());
 							entryModel.setTimeSlotTo(transactionSDDto.getTimeSlotTo());
 							modelService.save(entryModel);
+							if (!entryModel.getSelectedUSSID().equalsIgnoreCase(ussID))
+							{
+								saveMainOrderEntry(orderModel, transactionSDDto, entryModel.getSelectedUSSID());
+								ussID=entryModel.getSelectedUSSID();
+							}
 						}
-
-
+ 
 					}
+				}
+			}
+			
+			
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error("ModelSavingException while setting status " + e.getMessage());
+		}
+		catch (final NullPointerException nullPointerException)
+		{
+			LOG.error("Exception occure while setting " + nullPointerException.getMessage());
+		}
+
+	}
+
+	//Save SelectedDateAndTime
+	private void saveMainOrderEntry(OrderModel orderModel, TransactionSDDto transactionSDDto, String ussID)
+	{
+		try
+		{
+			for (AbstractOrderEntryModel entryModel : orderModel.getEntries())
+			{
+				if (StringUtils.isNotEmpty(entryModel.getSelectedUSSID()) && ussID.equalsIgnoreCase(entryModel.getSelectedUSSID()))
+				{
+					//Save Transaction level  Entry model 
+					entryModel.setEdScheduledDate(transactionSDDto.getPickupDate());
+					entryModel.setTimeSlotFrom(transactionSDDto.getTimeSlotFrom());
+					entryModel.setTimeSlotTo(transactionSDDto.getTimeSlotTo());
+					modelService.save(entryModel);
 				}
 			}
 		}
@@ -402,7 +437,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		}
 
 	}
-
+	
 
 	/**
 	 * This method used for check Entry(OrderLine) Related information

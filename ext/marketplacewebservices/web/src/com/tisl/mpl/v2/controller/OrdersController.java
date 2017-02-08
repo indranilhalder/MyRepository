@@ -1598,7 +1598,7 @@ public class OrdersController extends BaseCommerceController
 
 	}
 	
-	//R2.3 FLO1 Added new Controller Method Change Deliverry Request
+	//R2.3 FLO1 Added new Controller Method Change Delivery Request
 	@Secured(
 	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	@RequestMapping(value = "/users/{userId}/changeDeliveryAddress/{orderCode}", method = RequestMethod.POST,consumes =
@@ -1704,7 +1704,7 @@ public class OrdersController extends BaseCommerceController
 		{
 			String validateOTPMesg = null;
 
-			if (newAddressData !=null && StringUtils.isNotEmpty(newAddressData.getOtpNumber()) && StringUtils.isNotEmpty(orderCode))
+			if (newAddressData != null && StringUtils.isNotEmpty(newAddressData.getOtpNumber()) && StringUtils.isNotEmpty(orderCode))
 			{
 				final OrderModel orderModel = orderModelService.getParentOrder(orderCode);
 				CustomerModel customerModel = (CustomerModel) orderModel.getUser();
@@ -1716,15 +1716,19 @@ public class OrdersController extends BaseCommerceController
 				{
 					AddressData newAddress = newAddressData.getChangedAddress();
 					List<TransactionSDDto> transactionSDDtoList = null;
-					if (CollectionUtils.isNotEmpty(newAddressData.getRescheduleData()))
+
+					validateOTPMesg = mplDeliveryAddressFacade.submitChangeDeliveryAddress(customerModel.getUid(), orderCode,
+							newAddress, true, transactionSDDtoList);
+					
+					if (CollectionUtils.isNotEmpty(newAddressData.getRescheduleData())
+							&& MarketplaceFacadesConstants.SUCCESS.equalsIgnoreCase(validateOTPMesg))
 					{
 						RescheduleDataList reScheduleDataList = new RescheduleDataList();
 						reScheduleDataList.setRescheduleDataList(newAddressData.getRescheduleData());
 						transactionSDDtoList = mplDeliveryAddressFacade.reScheduleddeliveryDate(orderModel, reScheduleDataList);
 						mplDeliveryAddressFacade.saveSelectedDateAndTime(orderModel, transactionSDDtoList);
 					}
-					validateOTPMesg = mplDeliveryAddressFacade.submitChangeDeliveryAddress(customerModel.getUid(), orderCode,
-							newAddress, true, transactionSDDtoList);
+				
 				}
 				else
 				{
