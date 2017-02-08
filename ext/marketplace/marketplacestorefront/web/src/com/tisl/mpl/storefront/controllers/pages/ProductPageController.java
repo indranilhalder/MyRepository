@@ -481,6 +481,7 @@ public class ProductPageController extends MidPageController
 		String categoryId = null;
 		String productUnitPrice = null;
 		String productSubCategoryName = null;
+
 		//For Analytics Data Layer schema changes
 		int productStock = 0;
 
@@ -545,6 +546,9 @@ public class ProductPageController extends MidPageController
 							model.addAttribute("product_stock_count", productStock);
 
 						}
+
+						populateOtherPriceDataForTealium(model, productUnitPrice, productPrice);
+
 
 						//TPR-4358 | product availibity online
 						if (productStock > 0)
@@ -642,6 +646,23 @@ public class ProductPageController extends MidPageController
 			LOG.error("Exception while populating tealium Data for product" + productData.getCode() + ":::" + ex.getMessage());
 			//throw ex;
 		}
+	}
+
+	/**
+	 * @param model
+	 * @param productUnitPrice
+	 * @param productPrice
+	 */
+	//For Analytics Data layer schema changes
+	private void populateOtherPriceDataForTealium(final Model model, final String productUnitPrice, final String productPrice)
+	{
+		final double mrp = Integer.parseInt(productUnitPrice);
+		final double mop = Integer.parseInt(productPrice);
+		final double discount = mrp - mop;
+		final double percentageDiscount = (discount / mrp) * 100;
+		final BigDecimal roundedOffValue = new BigDecimal((int) percentageDiscount);
+		model.addAttribute("product_discount", new BigDecimal((int) discount));
+		model.addAttribute("product_discount_percentage", roundedOffValue);
 	}
 
 	/**

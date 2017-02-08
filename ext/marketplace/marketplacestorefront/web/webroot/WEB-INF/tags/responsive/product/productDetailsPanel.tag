@@ -86,6 +86,9 @@ tr.d0 td {
 <!-- For Data Layer Schema changes -->
 <input type="hidden" id="product_stock_count" value="${product_stock_count}" />
 <input type="hidden" id="out_of_stock" value="${out_of_stock}" />
+<input type="hidden" id="product_discount" value="${product_discount}" />
+<input type="hidden" id="product_discount_percentage" value="${product_discount_percentage}" />
+
 <!-- End Tealium -->
 
 <!-- TISPRM-56 -->

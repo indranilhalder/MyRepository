@@ -107,6 +107,10 @@ $(document).ready(
 								+ $("#site_section").val() + '",';
 						tealiumData += '"product_mop":["'
 								+ $("#product_list_price").val() + '"],';
+						tealiumData += '"product_discount":["'
+							+ $("#product_discount").val() + '"],';
+						tealiumData += '"product_discount_percentage":"'
+							+ $("#product_discount_percentage").val() + '%",';
 						tealiumData += '"product_name":["'
 								+ $("#product_name").val() + '"],';
 						tealiumData += '"product_sku":["'
