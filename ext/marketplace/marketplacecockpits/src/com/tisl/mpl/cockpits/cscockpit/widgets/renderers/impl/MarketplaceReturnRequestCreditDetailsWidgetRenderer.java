@@ -1482,14 +1482,13 @@ ReturnRequestCreateWidgetRenderer {
 				"csReturnAddAddressWidgetConfig",
 				"csReturnAddAddressWidgetConfig-Popup");
 		Window popup = new Window();
-		popup.setSclass("csRefundConfirmationWidget");
 		popup.appendChild(popupWidget);	
 		popup.setTitle(LabelUtils.getLabel(popupWidget,
 				"popup.returnCreditTitle", new Object[0]));
 		popup.setParent(parentWindow);
 		popup.doHighlighted();
 		popup.setClosable(true);
-		popup.setWidth("900");	
+		popup.setWidth("600px");	
 		return popup;
 	}
 }

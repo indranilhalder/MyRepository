@@ -892,27 +892,16 @@
 	
 	
 	<!--  Add Address in return START  -->
-
 	<alias alias="csReturnAddAddressWidgetConfig" name="defaultCsReturnAddAddressWidgetConfig" />
-	<bean id="defaultCsReturnAddAddressWidgetConfig" parent="csBaseWidgetConfig">
-		<property name="widgetTitle" value="cscockpit.widget.order.returnAddress.create" />
+	<bean id="defaultCsReturnAddAddressWidgetConfig" parent="defaultCsAddressCreateWidgetConfig">
 		<property name="widgetRenderer" ref="csReturnAddressCreateWidgetRenderer" />
-		<property name="widgetController" ref="csCustomerController" />
-		<property name="widgetClass"
-			value="de.hybris.platform.cockpit.widgets.impl.DefaultInputWidget" />
-		<property name="widgetSclass"
-			value="defaultWidgetFrame csReturnsCreateWidgetFrame" />
-		<property name="widgetModel">
-			<bean
-				class="de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel" />
-		</property>
 	</bean>
-	
+
 	<alias alias="csReturnAddressCreateWidgetRenderer" name="marketplaceCsReturnAddressCreateWidgetRenderer" />
 	<bean id="marketplaceCsReturnAddressCreateWidgetRenderer"
 		parent="defaultCsAddressCreateWidgetRenderer"
 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceDeliveryAddressWidgetRenderer">
-		<property name="callContextController" ref="csCallContextController" />
+        <property name="callContextController" ref="csCallContextController" />
 		<property name="isChangeDeliveryAddress">
 			<value type="java.lang.Boolean">false</value>
 		</property>
@@ -920,6 +909,7 @@
 			<value type="java.lang.Boolean">true</value>
 		</property>
 	</bean>
+
  <!--  Add Address in return START END -->
 	<!-- R2.3 Return Cs-Cockpit Changes Close -->
 	
