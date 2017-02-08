@@ -15,6 +15,13 @@
     <c:set var="showTax" value="false"/>
     <c:set var="userName" value="${user.firstName}"/>
     <div class="MyBag-top-section">
+    <!-- TPR3780 STARTS HERE -->
+												<c:if test="${priceNotificationUpdateStatus!= null}">
+												<p class="disclaimer-txt">
+												<spring:theme code="cart.price.change.notification"></spring:theme>&nbsp;₹ ${totalCartPriceAsStringStatus}
+												</p>
+												</c:if>
+    <!-- TPR3780 ENDS HERE -->
     <div class="MyBag-buttons">
 	<h1 class="MyBagHeadingDesktop" ><spring:theme code="mpl.myBag" /><span id="mybagcnt"></span></h1>
 	<p class="desk-view">${welcome_message}</p>
