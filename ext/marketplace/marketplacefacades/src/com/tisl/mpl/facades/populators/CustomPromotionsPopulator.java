@@ -115,12 +115,8 @@ public class CustomPromotionsPopulator implements Populator<AbstractPromotionMod
 		target.setStartDate(source.getStartDate());
 		target.setEnabled(source.getEnabled());
 		target.setTitle(source.getTitle());
-		if (source instanceof MplProductSteppedMultiBuyPromotionModel)//TPR-1325 changes
+		if (source instanceof MplProductSteppedMultiBuyPromotionModel)//TPR-1325 Populating data from source to target changes
 		{
-			//final MplProductSteppedMultiBuyPromotionModel promo = (MplProductSteppedMultiBuyPromotionModel) source;
-			/*
-			 * if(promo!=null) { getPromourl() }
-			 */
 			target.setPromourl(((MplProductSteppedMultiBuyPromotionModel) source).getPromourl());
 			target.setBundlepromolinktext(((MplProductSteppedMultiBuyPromotionModel) source).getBundlepromolinktext());
 		}
