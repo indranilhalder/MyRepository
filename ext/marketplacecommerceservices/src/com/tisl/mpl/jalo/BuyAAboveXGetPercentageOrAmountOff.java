@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -231,13 +230,11 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 			//			{
 			//				eligibleProductList.add(orderEntry.getProduct());
 			//			}
-			final Map<String, Integer> qCount = new HashMap<String, Integer>();
-			final Map<String, Integer> tcMapForValidEntries = new ConcurrentHashMap<String, Integer>();
-			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
-			{
-				qCount.put(mapEntry.getKey(), Integer.valueOf(mapEntry.getValue().getQuantity().intValue()));
-				tcMapForValidEntries.put(mapEntry.getKey(), Integer.valueOf(mapEntry.getValue().getQuantity().intValue()));
-			}
+			//			final Map<String, Integer> qCount = new HashMap<String, Integer>();
+			//			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
+			//			{
+			//				qCount.put(mapEntry.getKey(), Integer.valueOf(mapEntry.getValue().getQuantity().intValue()));
+			//			}
 
 			final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
 					.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidMap, null);
@@ -258,7 +255,7 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 			{
 				//evaluationContext.startLoggingConsumed(this);
 				final AbstractOrderEntry entry = mapEntry.getValue();
-				final String validUssid = mapEntry.getKey();
+				//final String validUssid = mapEntry.getKey();
 				//final PromotionOrderView view = evaluationContext.createView(ctx, this, allowedProductList);
 				//final PromotionOrderEntry viewEntry = view.peek(ctx);
 				//final long quantityOfOrderEntry = viewEntry.getBaseOrderEntry().getQuantity(ctx).longValue();
@@ -268,10 +265,10 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 
 				if (percentageDiscount < 100)
 				{
-					final int eligibleCount = qCount.get(validUssid).intValue();
+					//final int eligibleCount = qCount.get(validUssid).intValue();
 					//////
 					final double originalUnitPrice = entry.getBasePrice(ctx).doubleValue();
-					final double originalEntryPrice = eligibleCount * originalUnitPrice;
+					final double originalEntryPrice = quantityOfOrderEntry * originalUnitPrice;
 
 					final BigDecimal adjustedEntryPrice = Helper.roundCurrencyValue(ctx, currency, originalEntryPrice
 							- (originalEntryPrice * percentageDiscountvalue));
@@ -280,12 +277,10 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 							ctx,
 							currency,
 							(adjustedEntryPrice.equals(BigDecimal.ZERO)) ? BigDecimal.ZERO : adjustedEntryPrice.divide(
-									BigDecimal.valueOf(eligibleCount), RoundingMode.HALF_EVEN));
+									BigDecimal.valueOf(quantityOfOrderEntry), RoundingMode.HALF_EVEN));
 
 					final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
-					consumed.add(getDefaultPromotionsManager().consume(ctx, this, eligibleCount, quantityOfOrderEntry, entry));
-
-					tcMapForValidEntries.put(validUssid, Integer.valueOf((int) quantityOfOrderEntry - eligibleCount));
+					consumed.add(getDefaultPromotionsManager().consume(ctx, this, quantityOfOrderEntry, quantityOfOrderEntry, entry));
 
 					for (final PromotionOrderEntryConsumed poec : consumed)
 					{
@@ -298,7 +293,7 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 					final PromotionResult result = promotionsManager.createPromotionResult(ctx, this, evaluationContext.getOrder(),
 							1.0F);
 					final CustomPromotionOrderEntryAdjustAction poeac = getDefaultPromotionsManager()
-							.createCustomPromotionOrderEntryAdjustAction(ctx, entry, eligibleCount, adjustment);
+							.createCustomPromotionOrderEntryAdjustAction(ctx, entry, quantityOfOrderEntry, adjustment);
 					//final List consumed = evaluationContext.finishLoggingAndGetConsumed(this, true);
 					result.setConsumedEntries(ctx, consumed);
 					result.addAction(ctx, poeac);
