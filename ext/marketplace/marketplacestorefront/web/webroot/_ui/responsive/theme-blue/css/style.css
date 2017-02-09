@@ -59126,3 +59126,16 @@ display: none;
 .page-productDetails .trending{
 	clear:both;
 }
+
+changes for pincode servicebility */
+    .product-info .product-content .delivery-block li.do.selected:after{
+	    font-family: FontAwesome;
+    font-weight: lighter;
+    color: #a9143c;
+    content: "\f05d";
+    font-size: 18px;
+    line-height: 18px;
+    margin-right: 5px;
+    top: 2px;
+    position: relative;
+    }
