@@ -59332,19 +59332,24 @@ body.page-productDetails .callouts .Padd ul li p {
 body.page-productDetails .mini-transient-bag-mobile {
     position: fixed;
     z-index: 10000;
-    background: #ccc;
-    height: 30px;
-    line-height: 30px;
+    line-height: 36px;
     padding: 0 10px;
-    top: 0;
-    bottom: 0;
+    bottom: 60px;
     left: 0;
     right: 0;
     margin: auto;
     display: inline-block;
-    width: 110px;
     text-align: center;
-    border-radius: 4px;
+    width: 200px;
+    height: 36px;
+    opacity: 0.9;
+    border-radius: 18px;
+    background-color: #a5173c;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+}
+body.page-productDetails .mini-transient-bag-mobile span{
+	font-size: 12px;
+    color: #fff;
 }
 /* UF-29 */
 body.page-productDetails .gig-rating-readReviewsLink_pdp{

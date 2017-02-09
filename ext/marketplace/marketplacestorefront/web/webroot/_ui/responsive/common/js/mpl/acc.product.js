@@ -1217,7 +1217,7 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 				$('.mini-transient-bag').remove();
 				$('.mini-transient-bag-mobile').remove();		/*UF-47*/
 				var transientCartHtml="<div class='mini-transient-bag' ><span class='mini-cart-close'>+</span><ul class='my-bag-ul'><li class='item'><ul><li><div class='product-img'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'><img class='picZoomer-pic' src='"+response.productImageUrl+"'></a></div><div class='product'><p class='company'></p><h3 class='product-name'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'>"+response.productTitle+"</a></h3><span class='addedText'>has been added to your cart</span>";
-				var transientCartHtmlMobile="<div class='mini-transient-bag-mobile'><span class='addedTextMobile'>Added to cart</span></div>";		/*UF-47*/
+				var transientCartHtmlMobile="<div class='mini-transient-bag-mobile'><span class='addedTextMobile'>Item added to Cart</span></div>";		/*UF-47*/
 				if(typeof response.offer!=='undefined'){
 					transientCartHtml+="<div class='transient-offer'>"+response.offer+"</div>";
 				}
