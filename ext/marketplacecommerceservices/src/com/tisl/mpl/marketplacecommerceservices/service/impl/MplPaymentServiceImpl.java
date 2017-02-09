@@ -3422,8 +3422,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 			LOG.debug("Creating Payment transaction from Submit Order Job:- paymentModeFromInfo :- " + paymentModeFromInfo);
 
-			final List<OrderModel> subOrders = orderModel.getChildOrders();
-			subOrders.add(orderModel);
+			final List<OrderModel> orderList = new ArrayList<OrderModel>();
+			orderList.add(orderModel);
+			orderList.addAll(orderModel.getChildOrders());
+
+			//orderModel.getChildOrders();
+			//subOrders.add(orderModel);
 
 			final Map<String, Double> paymentMode = new HashMap<String, Double>();
 			paymentMode.put(paymentModeFromInfo, orderModel.getTotalPriceWithConv());
@@ -3454,12 +3458,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							final GetOrderStatusResponse orderStatusResponse = getJuspayOrderResponseConverter().convert(
 									juspayOrderStatusModel);
 
-							for (final OrderModel so : subOrders)
+							for (final OrderModel so : orderList)
 							{
 								setPaymentTransactionFromJob(orderStatusResponse, paymentMode, so);
 								so.setModeOfOrderPayment(paymentModeFromInfo);
 							}
-							modelService.saveAll(subOrders);
+							modelService.saveAll(orderList);
 							returnFlag = true;
 							break;
 						}
@@ -3473,12 +3477,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			else
 			{
 				LOG.debug("Creating Payment transaction from Submit Order Job:- ModeOfPayment COD");
-				for (final OrderModel so : subOrders)
+				for (final OrderModel so : orderList)
 				{
 					setPaymentTransactionForCODFromSubmitProcess(paymentMode, so);
 					so.setModeOfOrderPayment(paymentModeFromInfo);
 				}
-				modelService.saveAll(subOrders);
+				modelService.saveAll(orderList);
 				returnFlag = true;
 			}
 		}

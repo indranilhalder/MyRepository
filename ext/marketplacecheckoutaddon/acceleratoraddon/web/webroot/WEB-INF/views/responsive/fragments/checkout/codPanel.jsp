@@ -45,7 +45,7 @@
 	<p class="process">
 		<spring:theme
 			code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoMessage" />
-		 <a href="javascript:void(0)" class="cod-link" onclick="updateMobileNo()"><spring:theme
+		 <a class="cod-link" onclick="updateMobileNo()"><spring:theme
 				code="checkout.multi.paymentMethod.cod.updateItHereLink" /></a>
 	</p> 
 

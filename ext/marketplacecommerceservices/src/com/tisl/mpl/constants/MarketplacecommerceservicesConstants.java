@@ -1705,12 +1705,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//public static final String PAYMENTPENDINGQUERY = "SELECT {o.pk} FROM {order as o},{OrderStatus as os} WHERE {creationtime} > (to_date(sysdate,'YYYY/MM/DD HH24:MI:SS') - INTERVAL '10' MINUTE) and {o.status}={os.pk} and {os.code}=?status"
 	//		.intern();
 
-	// SprintPaymentFixes:- New query added
-	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  SYSDATE - 10/1440 > {o.creationtime} and {o.status}={os.pk} and {os.code}=?status"
+	// SprintPaymentFixes:- New query added 			//PaymentFix2017:- queryTAT added
+	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status"
 			.intern();
 
 	public static final String PAYMENTPENDINGSTATUS = "status".intern();
-	public static final String PAYMENTPENDINGWEBHOOKUERY = "select {jw.pk} from {JuspayWebhook as jw}, {JuspayOrderStatus as js} where {jw.orderstatus}={js.pk} and {js.orderId}=?reqId"
+	//PaymentFix2017:- queryTAT added
+	public static final String PAYMENTPENDINGSKIPTIME = "queryTAT".intern();
+	//PaymentFix2017:-  order by {jw.creationtime} desc added
+	public static final String PAYMENTPENDINGWEBHOOKUERY = "select {jw.pk} from {JuspayWebhook as jw}, {JuspayOrderStatus as js} where {jw.orderstatus}={js.pk} and {js.orderId}=?reqId order by {jw.creationtime} desc"
 			.intern();
 	public static final String WEBHOOKREQSTATUS = "reqId".intern();
 	public static final String OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE = "orderDeallocate";
@@ -1856,4 +1859,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String MRUPEE_MERCHANT_CODE = "payment.mRupee.merchantID".intern();
 	public static final String MRUPEE_OPTION = "mRupee";
 	public final static String MRUPEEHOSTNAME = "mRupee.hostname.disableSslVerification";
+
+	//PaymentFix2017:-
+	public static final String PAYMENTPENDING_SKIPTIME = "marketplace.PaymentPending.skipTime";
+
 }

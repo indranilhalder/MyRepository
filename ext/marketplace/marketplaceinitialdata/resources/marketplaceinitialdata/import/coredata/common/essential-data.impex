@@ -535,6 +535,8 @@ INSERT_UPDATE PaymentType;mode[unique=true];isAvailable;baseStore(uid)
 ;EMI;true;mpl
 ;COD;true;mpl
 ;Cheque;false;mpl
+;MRupee;true;mpl
+;TW;true;mpl
 
 INSERT_UPDATE Bank;bankName;bankCode[unique=true];baseStore(uid)
 ;HDFC Bank;HDFB;mpl
