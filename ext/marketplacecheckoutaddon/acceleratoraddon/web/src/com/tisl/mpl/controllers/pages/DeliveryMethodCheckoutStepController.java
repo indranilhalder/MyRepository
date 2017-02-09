@@ -119,6 +119,7 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.granule.json.JSONObject;
 
+
 @Controller
 @RequestMapping(value = "/checkout/multi/delivery-method")
 public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepController
@@ -228,12 +229,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		String returnPage = MarketplacecommerceservicesConstants.EMPTY;
 		try
 		{
-			final CartModel serviceCart = getCartService().getSessionCart();
-			setExpressCheckout(serviceCart);
 			if (getUserFacade().isAnonymousUser())
 			{
 				return getCheckoutStep().previousStep();
 			}
+			final CartModel serviceCart = getCartService().getSessionCart();
+			setExpressCheckout(serviceCart);
 
 			//TISST-13012
 			final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(serviceCart); //TISPT-104
@@ -460,7 +461,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			/*** Inventory Soft Reservation Start ***/
 
 			final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART, null);
+					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART, cartModel);
 			if (!inventoryReservationStatus)
 			{
 				getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
@@ -1886,6 +1887,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 		//LOG.info("deliveryCost " + deliveryCost);
 		//TISST-13010
+		CartData cartData = null;
 		String totalPriceFormatted = MarketplacecommerceservicesConstants.EMPTY;
 		String formatDeliveryCost = MarketplacecommerceservicesConstants.EMPTY;
 
@@ -1899,11 +1901,11 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			//applyPromotions(); //TISPT-104
 
 
-			final CartModel cart = getCartService().getSessionCart();
-			final Double subTotal = cart.getSubtotal();
+			//final CartModel cart = getCartService().getSessionCart();
+			final Double subTotal = cartModel.getSubtotal();
 			//final CartData cartData = mplExtendedCartConverter.convert(cartModel); //TISPT-104
 
-			final CartData cartData = mplExtendedPromoCartConverter.convert(cart);
+			cartData = mplExtendedPromoCartConverter.convert(cartModel);
 
 			if (null != cartData && cartData.getTotalDiscounts() != null && cartData.getTotalDiscounts().getValue() != null)
 			{
@@ -1931,8 +1933,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			LOG.error("Exception in calculateDeliveryCost ", ex);
 		}
 
-		return getCartService().getSessionCart().getCurrency().getSymbol() + MarketplacecheckoutaddonConstants.STRINGSEPARATOR
-				+ formatDeliveryCost + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + totalPriceFormatted;
+		return cartData.getCurrencySymbol() + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + formatDeliveryCost
+				+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + totalPriceFormatted;
 	}
 
 	/**

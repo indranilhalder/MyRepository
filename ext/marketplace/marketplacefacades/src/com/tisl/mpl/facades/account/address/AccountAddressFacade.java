@@ -377,9 +377,9 @@ public class AccountAddressFacade implements MplAccountAddressFacade
 	{
 		try
 		{
-			List<StateData> stateList = new ArrayList<StateData>();
-			stateList = accountAddressService.getStates();
-			return stateList;
+			//List<StateData> stateList = new ArrayList<StateData>();
+			//stateList = accountAddressService.getStates();
+			return accountAddressService.getStates();
 		}
 		catch (final Exception ex)
 		{
