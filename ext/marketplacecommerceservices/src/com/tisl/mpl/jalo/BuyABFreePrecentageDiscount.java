@@ -36,6 +36,7 @@ import org.apache.log4j.Logger;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.pojo.MplLimitedOfferData;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
@@ -176,54 +177,59 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 		boolean flagForDeliveryModeRestrEval = false;
 		final double maxDiscount = getMaxDiscountVal().doubleValue();
 		final Long eligibleQuantity = getQuantity();
+		boolean isExhausted = false;
 
-		if (GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, arg0, arg1, this, restrictionList)) // If exceeds set Category Amount and Restriction set Brand Value
+		int totalCount = 0;
+		for (final AbstractOrderEntry entry : validProductUssidMap.values())
+		{
+			totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
+			//eligibleProductList.add(entry.getProduct());
+		}
+
+
+		//Added for TPR-4354
+		if (getMplPromotionHelper().validateForStockRestriction(restrictionList) && null != eligibleQuantity
+				&& eligibleQuantity.intValue() > 0)
+		{
+			final int offerQuantity = (totalCount / eligibleQuantity.intValue());
+			final MplLimitedOfferData data = getMplPromotionHelper().checkCustomerRedeemCount(restrictionList, this.getCode(),
+					order, eligibleQuantity.intValue());
+
+			isExhausted = data.isExhausted();
+			final int customerOfferCount = data.getActualCustomerCount();
+			final int eligibleStockCount = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList)
+					* eligibleQuantity.intValue();
+
+			if (customerOfferCount > 0)
+			{
+				setStockCount(eligibleQuantity.intValue() * customerOfferCount);
+			}
+			else
+			{
+				setStockCount(eligibleStockCount);
+			}
+			if (customerOfferCount > 0 && offerQuantity > customerOfferCount)
+			{
+				totalCount = (eligibleQuantity.intValue() * customerOfferCount);
+			}
+			else if (totalCount >= eligibleStockCount)
+			{
+				totalCount = eligibleStockCount;
+			}
+		}
+
+
+
+
+		if (GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, arg0, arg1, this, restrictionList)
+				&& !isExhausted) // If exceeds set Category Amount and Restriction set Brand Value
 		{
 			final Double discountPrice = getPriceForOrder(arg0, getDiscountPrices(arg0), order,
 					MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null ? (Double) getPriceForOrder(arg0,
 					getDiscountPrices(arg0), order, MarketplacecommerceservicesConstants.DISCOUNT_PRICES) : new Double(0.0);
 
 			boolean isPercentageDisc = false;
-
-			int totalCount = 0;
 			//final List<Product> eligibleProductList = new ArrayList<Product>();
-
-			for (final AbstractOrderEntry entry : validProductUssidMap.values())
-			{
-				totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
-				//eligibleProductList.add(entry.getProduct());
-			}
-
-
-			//Added for TPR-4354
-			if (getMplPromotionHelper().validateForStockRestriction(restrictionList) && null != eligibleQuantity
-					&& eligibleQuantity.intValue() > 0)
-			{
-				final int offerQuantity = (totalCount / eligibleQuantity.intValue());
-				final int customerOfferCount = getMplPromotionHelper().getStockCustomerRedeemCount(restrictionList);
-				final int eligibleStockCount = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList)
-						* eligibleQuantity.intValue();
-
-				if (customerOfferCount > 0)
-				{
-					setStockCount(eligibleQuantity.intValue() * customerOfferCount);
-				}
-				else
-				{
-					setStockCount(eligibleStockCount);
-				}
-
-				if (customerOfferCount > 0 && offerQuantity > customerOfferCount)
-				{
-					totalCount = (eligibleQuantity.intValue() * customerOfferCount);
-				}
-				else if (totalCount >= eligibleStockCount)
-				{
-					totalCount = eligibleStockCount;
-				}
-			}
-
-
 
 			noOfProducts = totalCount;
 
@@ -460,7 +466,8 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 		}
 		else
 		{
-			if (GenericUtilityMethods.checkRestrictionData(restrictionList))
+			if (GenericUtilityMethods.checkRestrictionData(restrictionList)
+					&& !getMplPromotionHelper().validateForStockRestriction(restrictionList))
 			{
 				final PromotionResult result = getDefaultPromotionsManager()
 						.createPromotionResult(arg0, this, arg1.getOrder(), 0.00F);
