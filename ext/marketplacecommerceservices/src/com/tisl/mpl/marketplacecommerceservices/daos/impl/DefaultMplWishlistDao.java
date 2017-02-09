@@ -92,6 +92,31 @@ public class DefaultMplWishlistDao implements MplWishlistDao
 		return null;
 	}
 
+	//CAR Project performance issue fixed
+	/**
+	 * Description -- Method will access single WishlistModel for user with respect to Wishlistname
+	 *
+	 * @return Wishlist2Model
+	 */
+
+	@Override
+	public int findMobileWishlistswithNameCount(final UserModel user, final String name)
+	{
+		final String queryString = //
+		"SELECT {pk} FROM {Wishlist2 as wish} WHERE {wish.user} = ?user AND {wish.name} like '%?name%' ";
+		final Map<String, Object> params = new HashMap<String, Object>(2);
+		params.put("user", user);
+		params.put("name", name);
+
+		final SearchResult<Wishlist2Model> searchRes = flexibleSearchService.search(queryString, params);
+		if (searchRes != null && searchRes.getCount() > 0)
+		{
+			return searchRes.getCount();
+		}
+
+		return 0;
+	}
+
 	/**
 	 * Description -- Method will access single Entry of a Wishlist
 	 *
