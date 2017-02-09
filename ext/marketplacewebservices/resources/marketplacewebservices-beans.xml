@@ -2843,7 +2843,8 @@
 		<property name="deliveryAddressesList" type="java.util.List&lt;de.hybris.platform.commercefacades.user.data.AddressData>"/>
 		<property name="orderDetails" type="com.tisl.mpl.wsdto.OrderDataWsDTO"/>
 		<property name="deliveryAddress" type="de.hybris.platform.commercefacades.user.data.AddressData"/>
-		<property name="returnEntry" type="de.hybris.platform.commercewebservicescommons.dto.order.OrderEntryListWsDTO"/>	
+		<property name="returnEntry" type="de.hybris.platform.commercewebservicescommons.dto.order.OrderEntryListWsDTO"/>
+        <property name="selfCourierDocumentLink" type="String" />
 	</bean>
 	
 	<!-- Added for mobile inventory Reservation START   -->
