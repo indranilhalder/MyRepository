@@ -414,7 +414,7 @@ function focusOnElement() {
 			 
 			 
 			
-        if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches'&& $("#showSize").val()=='true'){
+        if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='Accessories' && $("#showSize").val()=='true'){
 		  		
 		   		$("#addToCartFormIdOthersel"+index).html($('#selectSizeId').text());
 				$("#addToCartFormIdOthersel"+index).show();
@@ -434,9 +434,9 @@ function focusOnElement() {
 			ACC.product.sendAddToBag("addToCartFormId"+index);
 		});
 		 
-		//TPR-887
+		//TPR-887 //INC144313255
 		 $(document).on('click','#addToCartFormId'+index+' #buyNowButton'+index,function(){
-	        if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){
+	        if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Accessories' && $("#ia_product_rootCategory_type").val()!='Watches'){
 			  		
 			   		$("#buyNowFormIdOthersel"+index).html($('#selectSizeId').text());
 					$("#buyNowFormIdOthersel"+index).show();
