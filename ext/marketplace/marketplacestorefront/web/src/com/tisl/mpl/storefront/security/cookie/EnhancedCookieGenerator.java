@@ -40,6 +40,9 @@ public class EnhancedCookieGenerator extends CookieGenerator
 	public static final String HEADER_COOKIE = "Set-Cookie";
 	public static final boolean DEFAULT_HTTP_ONLY = false;
 	public static final boolean DEFAULT_COOKIE_PATH = true;
+	public static final String LOCALHOST = "localhost";
+	public static final String DOMAIN = "shared.cookies.domain";
+
 
 	private boolean useDefaultPath = DEFAULT_COOKIE_PATH;
 	private boolean httpOnly = DEFAULT_HTTP_ONLY;
@@ -129,7 +132,14 @@ public class EnhancedCookieGenerator extends CookieGenerator
 				setEnhancedCookie(cookie);
 				cookie.setPath("/"); //TISPT-307
 				//SISA FIX
-				cookie.setSecure(true);
+				//cookie.setSecure(true);
+
+				final String domain = getConfigurationService().getConfiguration().getString(DOMAIN);
+
+				if (null != domain && !domain.equalsIgnoreCase(LOCALHOST))
+				{
+					cookie.setSecure(true);
+				}
 
 				if (isHttpOnly())
 				{
