@@ -197,12 +197,12 @@ function focusOnElement() {
 		skuPriceArray[++indx]=skuPriceMap;
 		if(originalPriceValue > 0 && originalPriceValue!=sellerPriceValue){
 		tbodycontent+='<span class="sale strike" id="mrpPriceId">';	
-		tbodycontent+=originalPrice.formattedValue;
+		tbodycontent+=originalPrice.formattedValueNoDecimal;
 		tbodycontent+="</span>";
 		tbodycontent+=" ";
 		}
 		tbodycontent+='<span class="sale" id="mopPriceId">'
-		tbodycontent+=sellerPrice.formattedValue;
+		tbodycontent+=sellerPrice.formattedValueNoDecimal;
 		tbodycontent+="</span>"
 		if(promorestrictedSellers!=undefined){
 			   if(promorestrictedSellers.indexOf(sellersArray[i]['sellerID'])!=-1){
@@ -853,7 +853,7 @@ function focusOnElement() {
 					}
 					else {
 						$("#otherSellersId").html(sellerCount);
-						$("#minPriceId").html(data['minPrice'].formattedValue);
+						$("#minPriceId").html(data['minPrice'].formattedValueNoDecimal);
 					}
 
 					$("#ussid").val(data['sellerArticleSKU']);
@@ -875,7 +875,7 @@ function focusOnElement() {
 					//Ended here//
 					if (isproductPage == 'false') {
 						//fetchAllSellers();
-						$("#minPrice").html(data['minPrice'].formattedValue);
+						$("#minPrice").html(data['minPrice'].formattedValueNoDecimal);
 					}
 				}
 			} 
