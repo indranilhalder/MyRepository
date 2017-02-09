@@ -284,8 +284,16 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 			// Notifications: UNDELIVERED : SMS
 			if (shipmentNewStatus.toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_STATUS_UNDELIVERED))
 			{
+				boolean flag = true;
+				if (MarketplacecommerceservicesConstants.ADDRESS_ISSUE.equalsIgnoreCase(shipment.getAwbSecondaryStatus()))
+				{
+					flag = false;
+				}
 				LOG.info("******************** Sending notification for UNDELIVERED");
-				sendNotificationForUndelivered(orderModel, orderNumber, mobileNumber, contactNumber, firstName);
+				if (flag)
+				{
+					sendNotificationForUndelivered(orderModel, orderNumber, mobileNumber, contactNumber, firstName);
+				}
 			}
 
 			// Notifications: ORDERCOLLETED : SMS
