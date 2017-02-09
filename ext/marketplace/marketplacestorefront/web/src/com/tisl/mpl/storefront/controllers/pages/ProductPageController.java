@@ -790,17 +790,17 @@ public class ProductPageController extends MidPageController
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK,
 						null != buyboxdata.getAvailable() ? buyboxdata.getAvailable() : ModelAttributetConstants.NOVALUE);
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, null != buyboxdata.getSpecialPrice()
-						&& null != buyboxdata.getSpecialPrice().getFormattedValue()
-						&& !buyboxdata.getSpecialPrice().getFormattedValue().isEmpty() ? buyboxdata.getSpecialPrice()
-						.getFormattedValue() : ModelAttributetConstants.NOVALUE);
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE,
-						null != buyboxdata.getPrice() && null != buyboxdata.getPrice().getFormattedValue()
-								&& !buyboxdata.getPrice().getFormattedValue().isEmpty() ? buyboxdata.getPrice().getFormattedValue()
-								: ModelAttributetConstants.NOVALUE);
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP,
-						null != buyboxdata.getMrp() && null != buyboxdata.getMrp().getFormattedValue()
-								&& !buyboxdata.getMrp().getFormattedValue().isEmpty() ? buyboxdata.getMrp().getFormattedValue()
-								: ModelAttributetConstants.NOVALUE);
+						&& null != buyboxdata.getSpecialPrice().getFormattedValueNoDecimal()
+						&& !buyboxdata.getSpecialPrice().getFormattedValueNoDecimal().isEmpty() ? buyboxdata.getSpecialPrice()
+						.getFormattedValueNoDecimal() : ModelAttributetConstants.NOVALUE);
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, null != buyboxdata.getPrice()
+						&& null != buyboxdata.getPrice().getFormattedValueNoDecimal()
+						&& !buyboxdata.getPrice().getFormattedValueNoDecimal().isEmpty() ? buyboxdata.getPrice()
+						.getFormattedValueNoDecimal() : ModelAttributetConstants.NOVALUE);
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, null != buyboxdata.getMrp()
+						&& null != buyboxdata.getMrp().getFormattedValueNoDecimal()
+						&& !buyboxdata.getMrp().getFormattedValueNoDecimal().isEmpty() ? buyboxdata.getMrp()
+						.getFormattedValueNoDecimal() : ModelAttributetConstants.NOVALUE);
 
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
 
