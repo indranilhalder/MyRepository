@@ -49,6 +49,12 @@ public class AtsConsumer implements Runnable {
     @Override
     public void run() {
 
+        if (!Registry.hasCurrentTenant())
+        {
+            //set the tenant if no active tenants
+            Registry.activateMasterTenant();
+        }
+
         final WarehouseModel warehouse = defaultWarehouseService.getWarehouseForCode(WAREHOUSE_CODE);
 
         ConsumerIterator<byte[], byte[]> it = m_stream.iterator();
@@ -69,11 +75,6 @@ public class AtsConsumer implements Runnable {
                             {
                                 LOG.debug("ATS Received : " + quantityDTO.getSkuId()+ " Available Qty:" + quantityDTO.
                                         getQuantity() + " ON Thread : "+m_threadNumber);
-                            }
-                            if (!Registry.hasCurrentTenant())
-                            {
-                                //set the tenant if no active tenants
-                                Registry.activateMasterTenant();
                             }
 
                             StockLevelModel stockLevelModel = stockService.getStockLevel(quantityDTO.getSkuId(), warehouse);
