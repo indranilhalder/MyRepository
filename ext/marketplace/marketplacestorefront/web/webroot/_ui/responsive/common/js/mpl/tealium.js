@@ -1109,4 +1109,12 @@ $(document).on("click",".owl-stage .owl-item",function(){
 			
 		});
 })
+
+/*PDP image hover*/
+$(document).on("mouseover",".zoomContainer",function(e) {
+	utag.link({
+		link_text: "pdp_image_hover",
+		event_type : "pdp_image_hover"
+	});
+});
 /* Data Layer Schema Changes Ends*/
