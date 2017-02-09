@@ -103,7 +103,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.promotion.dao.ExtStockLevelPromotionCheckDao#getPromoInvalidationList(java.lang.String)
 	 */
 	@Override
@@ -199,20 +199,33 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 	{
 		// YTODO Auto-generated method stub
 		int count = 0;
+		Integer totalCount = null;
 		String queryString = "";
 		try
 		{
-			queryString = "select {pK} from {LimitedStockPromoInvalidation} where {promoCode}=?promoCodeData and {customerID}=?orginalUid";
+			queryString = "select SUM({usedUpCount}) from {LimitedStockPromoInvalidation} where {promoCode}=?promoCodeData and {customerID}=?orginalUid";
 
-			final Map<String, Object> params = new HashMap<String, Object>(1);
-			params.put("promoCodeData", promoCode);
-			params.put("orginalUid", orginalUid);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("promoCodeData", promoCode);
+			query.addQueryParameter("orginalUid", orginalUid);
+			query.setResultClassList(Arrays.asList(Integer.class));
 
-			final SearchResult<LimitedStockPromoInvalidationModel> searchList = flexibleSearchService.search(queryString, params);
-			if (null != searchList && searchList.getCount() > 0)
+			final SearchResult<Integer> result = search(query);
+			if (CollectionUtils.isNotEmpty(result.getResult()))
 			{
-				count = searchList.getCount();
+
+				for (final Integer row : result.getResult())
+				{
+					totalCount = row;
+				}
 			}
+
+			if (null != totalCount && totalCount.intValue() > 0)
+			{
+				count = totalCount.intValue();
+			}
+
+
 		}
 
 		catch (final FlexibleSearchException e)
@@ -236,7 +249,6 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 		}
 		return count;
 	}
-
 
 
 	@Override

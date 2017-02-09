@@ -48,6 +48,7 @@ import com.tisl.mpl.jalo.SellerMaster;
 import com.tisl.mpl.marketplacecommerceservices.daos.BulkPromotionCreationDao;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtStockLevelPromotionCheckServiceImpl;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.pojo.MplLimitedOfferData;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
@@ -985,11 +986,13 @@ public class MplPromotionHelper
 	 * @param order
 	 * @return boolean
 	 */
-	public boolean checkOrderCount(final List<AbstractPromotionRestriction> restrictionList, final String promoCode,
-			final AbstractOrder order)
+	public MplLimitedOfferData checkCustomerRedeemCount(final List<AbstractPromotionRestriction> restrictionList,
+			final String promoCode, final AbstractOrder order, final int promoQualifyingCount)
 	{
+		final MplLimitedOfferData data = new MplLimitedOfferData();
 		int count = 0;
-		int orderCount = 0;
+		int usedUpCount = 0;
+		int offerCount = 0;
 		String orginalUid = MarketplacecommerceservicesConstants.EMPTY;
 
 		final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) modelService.get(order);
@@ -1007,18 +1010,40 @@ public class MplPromotionHelper
 			count = getStockCustomerRedeemCount(restrictionList);
 			if (count == 0)
 			{
-				return true;
+				data.setActualCustomerCount(0);
+				data.setExhausted(false);
 			}
 			else if (StringUtils.isNotEmpty(orginalUid) && count > 0)
 			{
-				orderCount = getStockService().getCummulativeOrderCount(promoCode, orginalUid);
-				if (orderCount >= count)
+				usedUpCount = getStockService().getCummulativeOrderCount(promoCode, orginalUid);
+				if (usedUpCount > 0)
 				{
-					return false;
+					offerCount = usedUpCount / promoQualifyingCount;
+					if (offerCount >= count)
+					{
+						data.setActualCustomerCount(0);
+						data.setExhausted(true);
+					}
+					else
+					{
+						data.setActualCustomerCount(offerCount - count);
+						data.setExhausted(false);
+					}
 				}
+				else
+				{
+					data.setActualCustomerCount(count);
+					data.setExhausted(false);
+				}
+
+			}
+			else if (StringUtils.isEmpty(orginalUid) && count > 0)
+			{
+				data.setActualCustomerCount(count);
+				data.setExhausted(false);
 			}
 		}
-		return true;
+		return data;
 	}
 
 	public int getStockCustomerRedeemCount(final List<AbstractPromotionRestriction> restrictionList)
