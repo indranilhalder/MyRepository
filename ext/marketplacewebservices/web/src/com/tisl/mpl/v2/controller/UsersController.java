@@ -2050,10 +2050,13 @@ public class UsersController extends BaseCommerceController
 		final UserResultWsDto result = new UserResultWsDto();
 		try
 		{
-			MplCustomerProfileData mplCustData = new MplCustomerProfileData();
-			mplCustData = mplCustomerProfileService.getCustomerProfileDetail(emailId);
-			LOG.debug(CUSTOMER_MESSAGE + mplCustData.getUid());
-			final UserModel user = userService.getUserForUID(mplCustData.getUid());
+			//CAR-74
+			//MplCustomerProfileData mplCustData = new MplCustomerProfileData();
+			//mplCustData = mplCustomerProfileService.getCustomerProfileDetail(emailId);
+			//LOG.debug(CUSTOMER_MESSAGE + mplCustData.getUid());
+			//final UserModel user = userService.getUserForUID(mplCustData.getUid());
+			final UserModel user = userService.getCurrentUser();
+			LOG.debug(CUSTOMER_MESSAGE + user.getUid());
 
 			final AddressData addressData = new AddressData();
 
@@ -2097,8 +2100,8 @@ public class UsersController extends BaseCommerceController
 				addressData.setPhone(phone);
 
 				LOG.debug("addrestype=addaddress" + addressData.getAddressType());
-
-				final CustomerModel currentCustomer = (CustomerModel) user;
+				//CAR-74
+				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 
 				if (null != currentCustomer)
 				{
@@ -2452,10 +2455,15 @@ public class UsersController extends BaseCommerceController
 		boolean successFlag = false;
 		try
 		{
-			MplCustomerProfileData mplCustData = new MplCustomerProfileData();
-			mplCustData = mplCustomerProfileService.getCustomerProfileDetail(emailId);
-			LOG.debug(CUSTOMER_MESSAGE + mplCustData.getUid());
-			final UserModel user = userService.getUserForUID(mplCustData.getUid());
+			//CAR-76
+			//final MplCustomerProfileData mplCustData = new MplCustomerProfileData();
+			//mplCustData = mplCustomerProfileService.getCustomerProfileDetail(emailId);
+			//LOG.debug(CUSTOMER_MESSAGE + mplCustData.getUid());
+			//final UserModel user = userService.getUserForUID(mplCustData.getUid());
+			final UserModel user = userService.getCurrentUser();
+			LOG.debug(CUSTOMER_MESSAGE + user.getUid());
+
+
 			final AddressData newAddress = new AddressData();
 
 			errorMsg = validateStringField(countryIso, AddressField.COUNTRY, MAX_FIELD_LENGTH_COUNTRY);
@@ -2510,7 +2518,8 @@ public class UsersController extends BaseCommerceController
 				}
 
 				LOG.debug("addrestype=addaddress" + newAddress.getAddressType());
-				final CustomerModel currentCustomer = (CustomerModel) user;
+				//CAR-76
+				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 
 				if (null != currentCustomer)
 				{
@@ -2606,18 +2615,23 @@ public class UsersController extends BaseCommerceController
 	public UserResultWsDto removeAddress(@RequestParam final String emailId, @RequestParam final String addressId)
 			throws RequestParameterException
 	{
-		MplCustomerProfileData mplCustData = new MplCustomerProfileData();
-		mplCustData = mplCustomerProfileService.getCustomerProfileDetail(emailId);
-		LOG.debug(CUSTOMER_MESSAGE + mplCustData.getUid());
-		final UserModel user = userService.getUserForUID(mplCustData.getUid());
+		//CAR-76
+		//MplCustomerProfileData mplCustData = new MplCustomerProfileData();
+		//mplCustData = mplCustomerProfileService.getCustomerProfileDetail(emailId);
+		//LOG.debug(CUSTOMER_MESSAGE + mplCustData.getUid());
+		//final UserModel user = userService.getUserForUID(mplCustData.getUid());
+		final UserModel user = userService.getCurrentUser();
+		LOG.debug(CUSTOMER_MESSAGE + user.getUid());
 		final UserResultWsDto result = new UserResultWsDto();
+
 
 		boolean successFlag = false;
 		try
 		{
 			final AddressData addressData = new AddressData();
 			addressData.setId(addressId);
-			final CustomerModel currentCustomer = (CustomerModel) user;
+			//CAR-76
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 
 			if (null != currentCustomer)
 			{
@@ -2701,10 +2715,13 @@ public class UsersController extends BaseCommerceController
 		boolean successFlag = false;
 		try
 		{
-			MplCustomerProfileData mplCustData = new MplCustomerProfileData();
-			mplCustData = mplCustomerProfileService.getCustomerProfileDetail(emailId);
-			LOG.debug(CUSTOMER_MESSAGE + mplCustData.getUid());
-			final UserModel user = userService.getUserForUID(mplCustData.getUid());
+			//CAR-76
+			//MplCustomerProfileData mplCustData = new MplCustomerProfileData();
+			//mplCustData = mplCustomerProfileService.getCustomerProfileDetail(emailId);
+			//LOG.debug(CUSTOMER_MESSAGE + mplCustData.getUid());
+			//final UserModel user = userService.getUserForUID(mplCustData.getUid());
+			final UserModel user = userService.getCurrentUser();
+			LOG.debug(CUSTOMER_MESSAGE + user.getUid());
 
 			errorMsg = validateStringField(countryIso, AddressField.COUNTRY, MAX_FIELD_LENGTH_COUNTRY);
 			validation(errorMsg);
@@ -2749,8 +2766,8 @@ public class UsersController extends BaseCommerceController
 				newAddress.setPhone(phone);
 				newAddress.setState(state);
 				newAddress.setDefaultAddress(defaultFlag);
-
-				final CustomerModel currentCustomer = (CustomerModel) user;
+				//CAR-76
+				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 
 				if (null != currentCustomer)
 				{
