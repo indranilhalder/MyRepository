@@ -15,7 +15,7 @@ recEndPoint = rootEP + '/SocialGenomix/recommendations/products';
 
 //******************************************************************************* Populating Dynamic Parameter Values For IA
 var allsizes = ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
-var hotDropdownselected = 'All Department';
+var hotDropdownselected = 'All Departments';
 var sortDropdownselected = "";
 var currentPageURL = window.location.href;  
 ecompany		= $('#ecompanyForIA').val(); 
@@ -964,7 +964,7 @@ if (searchCategory_id){
 			 
 			    var catHtml = '<div class="select-view ">'; 
 			    //for release 2 changes in home-page headers-All Departments
-			    catHtml += '<div class="select-list"><span class="selected hotSelected">All Departments</span><ul id="ia_category_select" style="width: auto;">';
+			    catHtml += '<div class="select-list"><span class="selected hotSelected">'+hotDropdownselected+'</span><ul id="ia_category_select" style="width: auto;">';
 			    for (var i=0; i<categoryFilters.length; i++) {
 			    	if(i==0){
 			    		 catHtml += '<li class="category_li" id="allCat">All Departments</li>';

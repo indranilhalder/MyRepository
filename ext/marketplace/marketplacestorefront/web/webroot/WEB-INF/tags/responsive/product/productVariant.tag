@@ -65,10 +65,11 @@ function loadVariant(x){
 						</c:forEach>
 					</c:when>
 				</c:choose>
+				<!-- change for INC144313430,INC144313428 -->
 				<c:if test="${colorPresent==true}">
-					<p>
+					<%-- <p>
 						<spring:theme code="text.colour" />
-					</p>
+					</p> --%>
 				</c:if>
 				<c:choose>
 		   <c:when test="${not empty product.variantOptions}">
@@ -331,11 +332,11 @@ function loadVariant(x){
 
 															<c:url value="${variantOption.defaultUrl}"
 																var="variantUrl" />
-															<li><a value="${variantUrl}">
+															<li class="selected"><a value="${variantUrl}?selectedSize=true">
 																${entry.value}</a></li>
 														</c:when>
 														<c:otherwise>
-															<li><a href="${variantUrl}">${entry.value}</a></li>
+															<li><a href="${variantUrl}?selectedSize=true">${entry.value}</a></li>
 
 														</c:otherwise>
 													</c:choose>
