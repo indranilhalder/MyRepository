@@ -6948,9 +6948,43 @@ public class UsersController extends BaseCommerceController
 			dataList.setOrderEntries(returnOrderEntry);
 			OrderEntryListWsDTO returndto = dataMapper.map(dataList, OrderEntryListWsDTO.class, fields);
 			//OrderDataWsDTO orderDto = getOrderDetailsFacade.getOrderdetails(subOrderModel.getParentReference().getCode());
+			String fileDownloadLocation=null;
+			try{
+         //TISRLUAT-818	start
+			  AbstractOrderEntryModel entry= mplOrderService.getEntryModel(transactionId);
+		
+					if (entry != null)
+					{
+						//Fetching invoice from consignment entries
+						for (final ConsignmentEntryModel c : entry.getConsignmentEntries())
+						{
+							if (null != c.getConsignment().getInvoice())
+							{
+								fileDownloadLocation = c.getConsignment().getInvoice().getInvoiceUrl();
+								LOG.info(":::::::InvoiceURL    " + fileDownloadLocation);
+								if (fileDownloadLocation == null)
+								{
+									fileDownloadLocation = configurationService.getConfiguration().getString("default.invoice.url");
+								}
+							}
+							else
+							{
+
+								fileDownloadLocation = configurationService.getConfiguration().getString("default.invoice.url");
+
+							}
+						}
+			  }
+			}
+				catch (Exception exp)
+				{
+					LOG.error("Exception Oucer Get Consignment "+exp.getMessage());
+				}
+			 //TISRLUAT-818 end
 			try
 			{
 				codSelfShipData = cancelReturnFacade.getCustomerBankDetailsByCustomerId(userId);
+
 			}
 			catch(EtailNonBusinessExceptions e)
 			{
@@ -6966,6 +7000,7 @@ public class UsersController extends BaseCommerceController
 			}
 			returnDeatails.setDeliveryAddressesList(addressList);
 			//returnDeatails.setOrderDetails(orderDto);
+			returnDeatails.setSelfCourierDocumentLink(fileDownloadLocation);
 			returnDeatails.setDeliveryAddress(subOrderDetails.getDeliveryAddress());
 			returnDeatails.setReturnEntry(returndto);
 			returnDeatails.setProductRichAttrOfQuickDrop(productRichAttrOfQuickDrop);
@@ -7168,45 +7203,12 @@ public class UsersController extends BaseCommerceController
 		if(returnData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_SELF))
 		{
 			LOG.debug(" returnForm>>>>>>>>>>>>>>>>>>>>>>>>>>>>: " +returnData.toString());
-			String fileDownloadLocation=null;
-			try{
-         //TISRLUAT-818	start
-			AbstractOrderEntryModel entry= mplOrderService.getEntryModel(transactionId);
-		
-					if (entry != null)
-					{
-						//Fetching invoice from consignment entries
-						for (final ConsignmentEntryModel c : entry.getConsignmentEntries())
-						{
-							if (null != c.getConsignment().getInvoice())
-							{
-								fileDownloadLocation = c.getConsignment().getInvoice().getInvoiceUrl();
-								LOG.info(":::::::InvoiceURL    " + fileDownloadLocation);
-								if (fileDownloadLocation == null)
-								{
-									fileDownloadLocation = configurationService.getConfiguration().getString("default.invoice.url");
-								}
-							}
-							else
-							{
-
-								fileDownloadLocation = configurationService.getConfiguration().getString("default.invoice.url");
-
-							}
-						}
-			  }
-				}
-				catch (Exception exp)
-				{
-					LOG.error("Exception Oucer Get Consignment "+exp.getMessage());
-				}
-			 //TISRLUAT-818 end
+			
 			ReturnInfoData returnInfoDataObj = new ReturnInfoData(); 
 			returnInfoDataObj.setTicketTypeCode(MarketplacecommerceservicesConstants.RETURN_TYPE);
 			returnInfoDataObj.setReasonCode(returnData.getReturnReasonCode());
 			returnInfoDataObj.setUssid(returnData.getUssid());
 			returnInfoDataObj.setReturnMethod(returnData.getReturnMethod());
-			returnInfoDataObj.setSelfCourierDocumentLink(fileDownloadLocation);
 			boolean cancellationStatusForSelfShip = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry,returnInfoDataObj, customerData, SalesApplication.MOBILE, returnAddrData);
 			if (!cancellationStatusForSelfShip)
 			{
