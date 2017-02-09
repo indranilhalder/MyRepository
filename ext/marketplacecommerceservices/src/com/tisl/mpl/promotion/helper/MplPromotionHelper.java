@@ -1101,6 +1101,75 @@ public class MplPromotionHelper
 		return true;
 	}
 
+	/**
+	 *
+	 * Get Offer Total Order Count for Buy A Above Promotion
+	 *
+	 * @param restrictionList
+	 * @param promoCode
+	 * @param order
+	 * @return data
+	 */
+	public MplLimitedOfferData checkCustomerOfferCount(final List<AbstractPromotionRestriction> restrictionList,
+			final String promoCode, final AbstractOrder order)
+	{
+		final MplLimitedOfferData data = new MplLimitedOfferData();
+		String orginalUid = MarketplacecommerceservicesConstants.EMPTY;
+
+		final int totalOrderPlaced = getStockService().getTotalOfferOrderCount(promoCode,
+				MarketplacecommerceservicesConstants.EMPTY);
+		final int totalOfferCount = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList);
+		final int maxCustomerOfferCount = getStockCustomerRedeemCount(restrictionList);
+
+		if (totalOrderPlaced < totalOfferCount)
+		{
+			orginalUid = getOriginalUID(order);
+			if (StringUtils.isNotEmpty(orginalUid))
+			{
+				final int offerReceiveCount = getStockService().getTotalOfferOrderCount(promoCode, orginalUid);
+				if (offerReceiveCount == 0)
+				{
+					data.setExhausted(false);
+				}
+				else if (maxCustomerOfferCount > 0 && offerReceiveCount >= maxCustomerOfferCount)
+				{
+					data.setExhausted(true);
+				}
+			}
+			else
+			{
+				data.setExhausted(false);
+			}
+		}
+		else
+		{
+			data.setExhausted(true);
+		}
+		return data;
+	}
+
+	/**
+	 * Get Original UID Details
+	 *
+	 * @param order
+	 * @return orginalUid
+	 */
+	private String getOriginalUID(final AbstractOrder order)
+	{
+		String orginalUid = MarketplacecommerceservicesConstants.EMPTY;
+
+		final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) modelService.get(order);
+		if (null != abstractOrderModel && null != abstractOrderModel.getUser())
+		{
+			final CustomerModel customer = (CustomerModel) abstractOrderModel.getUser();
+			if (null != customer && null != customer.getOriginalUid())
+			{
+				orginalUid = customer.getOriginalUid();
+			}
+		}
+
+		return orginalUid;
+	}
 
 
 }

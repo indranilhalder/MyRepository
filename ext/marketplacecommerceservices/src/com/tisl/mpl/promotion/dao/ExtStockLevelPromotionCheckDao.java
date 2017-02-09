@@ -42,4 +42,11 @@ public interface ExtStockLevelPromotionCheckDao
 	 * @return Map<String, Integer>
 	 */
 	public Map<String, Integer> getCumulativeCatLevelStockMap(String substring, String code);
+
+	/**
+	 * @param promoCode
+	 * @param orginalUid
+	 * @return int
+	 */
+	public int getTotalOfferOrderCount(String promoCode, String orginalUid);
 }

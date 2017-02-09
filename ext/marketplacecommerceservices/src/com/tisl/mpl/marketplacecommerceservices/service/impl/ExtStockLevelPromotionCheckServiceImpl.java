@@ -226,4 +226,17 @@ public class ExtStockLevelPromotionCheckServiceImpl implements ExtStockLevelProm
 	{
 		this.flexibleSearchService = flexibleSearchService;
 	}
+
+
+	/**
+	 * Get Total Buy A Above Promo Offer for Customer
+	 *
+	 * @param promoCode
+	 * @param orginalUid
+	 */
+	@Override
+	public int getTotalOfferOrderCount(final String promoCode, final String orginalUid)
+	{
+		return stockPromoCheckDao.getTotalOfferOrderCount(promoCode, orginalUid);
+	}
 }

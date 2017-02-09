@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,9 +34,6 @@ import com.tisl.mpl.promotion.dao.ExtStockLevelPromotionCheckDao;
 public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implements ExtStockLevelPromotionCheckDao
 {
 
-	/*
-	 * @see
-	 */
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
 	private static final Logger LOG = Logger.getLogger(ExtStockLevelPromotionCheckDaoImpl.class);
@@ -302,6 +300,65 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		return catCodeMap;
+
+	}
+
+
+	/**
+	 * Get Total Buy A Above Promo Offer for Customer
+	 *
+	 * @param promoCode
+	 * @param orginalUid
+	 */
+	@Override
+	public int getTotalOfferOrderCount(final String promoCode, final String orginalUid)
+	{
+		int count = 0;
+		String queryString = MarketplacecommerceservicesConstants.EMPTYSPACE;
+		final Map<String, Object> params = new HashMap<String, Object>(1);
+		try
+		{
+			if (StringUtils.isNotEmpty(orginalUid))
+			{
+				queryString = "select {pK} from {LimitedStockPromoInvalidation} where {promoCode}=?promoCodeData and {customerID}=?orginalUid";
+				params.put("promoCodeData", promoCode);
+				params.put("orginalUid", orginalUid);
+			}
+			else
+			{
+				queryString = "select {pK} from {LimitedStockPromoInvalidation} where {promoCode}=?promoCodeData";
+				params.put("promoCodeData", promoCode);
+			}
+
+
+			final SearchResult<LimitedStockPromoInvalidationModel> searchList = flexibleSearchService.search(queryString, params);
+			if (null != searchList && searchList.getCount() > 0)
+			{
+				count = searchList.getCount();
+			}
+
+		}
+
+		catch (final FlexibleSearchException e)
+		{
+			LOG.error("error in search query" + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			LOG.error(e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error("exception getching the quantity count details aginst product/ussid" + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		return count;
 
 	}
 }

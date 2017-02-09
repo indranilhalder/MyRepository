@@ -17,17 +17,35 @@ import java.util.Map;
  */
 public interface ExtStockLevelPromotionCheckService
 {
+	/**
+	 *
+	 * @param codes
+	 * @param promoCode
+	 * @param sellerFlag
+	 * @return
+	 */
 	public Map<String, Integer> getCumulativeStockMap(final String codes, String promoCode, boolean sellerFlag);
 
+	/**
+	 *
+	 * @param guid
+	 * @return int
+	 */
 	public List<LimitedStockPromoInvalidationModel> getPromoInvalidationList(final String guid);
 
 	/**
-	 * @param codes
 	 * @param promoCode
+	 * @param maxStockCount
 	 * @return List<String> getStockForPromotion
 	 */
 	public List<String> getStockForPromotion(final String promoCode, final int maxStockCount);
 
+	/**
+	 *
+	 * @param promoCode
+	 * @param orginalUid
+	 * @return int
+	 */
 	public int getCummulativeOrderCount(String promoCode, String orginalUid);
 
 	/**
@@ -37,5 +55,16 @@ public interface ExtStockLevelPromotionCheckService
 	 * @return Map<String, Integer>
 	 */
 	public Map<String, Integer> getCumulativeCatLevelStockMap(String substring, String code, Map<String, String> dataMap);
+
+	/**
+	 *
+	 * @param promoCode
+	 * @param orginalUid
+	 * @return int
+	 */
+	public int getTotalOfferOrderCount(String promoCode, String orginalUid);
+
+
+
 
 }
