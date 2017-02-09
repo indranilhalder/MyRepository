@@ -263,25 +263,32 @@ public class PaymentServicesController extends BaseController
 					if (StringUtils.isNotEmpty(paymentMode)
 							&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
 									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
-									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING) || paymentMode
-										.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)))
+									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
+									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI) || paymentMode
+										.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
 					{
-						//setting in cartmodel
-						cart.setConvenienceCharges(Double.valueOf(0));
-						//saving cartmodel
-						modelService.save(cart);
-					}
+						if (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
+						{
+							//setting in cartmodel
+							cart.setConvenienceCharges(Double.valueOf(0));
+							//saving cartmodel
+							modelService.save(cart);
+						}
 
-					if (getMplCheckoutFacade().isPromotionValid(cart))
-					{
-						//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
-						promoPriceData = getMplPaymentWebFacade().binValidation(binNo, paymentMode, cart, userId, bankName);
+						if (getMplCheckoutFacade().isPromotionValid(cart))
+						{
+							//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
+							promoPriceData = getMplPaymentWebFacade().binValidation(binNo, paymentMode, cart, userId, bankName);
+						}
+						else
+						{
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
+						}
 					}
 					else
 					{
-						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9053);
 					}
-
 				}
 				else
 				{
@@ -296,40 +303,47 @@ public class PaymentServicesController extends BaseController
 					getMplPaymentFacade().setBankForSavedCard(bankName);
 				}
 
-				//TISPT-29
 				if (StringUtils.isNotEmpty(paymentMode)
 						&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
 								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
-								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING) || paymentMode
-									.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)))
+								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
+								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI) || paymentMode
+									.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
 				{
-					//setting in cartmodel
-					orderModel.setConvenienceCharges(Double.valueOf(0));
-					//saving cartmodel
-					modelService.save(orderModel);
-				}
+					if (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
+					{
+						//setting in cartmodel
+						orderModel.setConvenienceCharges(Double.valueOf(0));
+						//saving cartmodel
+						modelService.save(orderModel);
+					}
 
-				if (getMplCheckoutFacade().isPromotionValid(orderModel))
-				{
-					//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
-					promoPriceData = getMplPaymentWebFacade().binValidation(binNo, paymentMode, orderModel, userId, bankName);
+					if (getMplCheckoutFacade().isPromotionValid(orderModel))
+					{
+						//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
+						promoPriceData = getMplPaymentWebFacade().binValidation(binNo, paymentMode, orderModel, userId, bankName);
+					}
+					else
+					{
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
+					}
 				}
 				else
 				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9053);
 				}
 			}
+
 		}
 		catch (final ModelSavingException ex)
 		{
 			// Error message for EtailNonBusinessExceptions Exceptions
-			LOG.error(MarketplacewebservicesConstants.BINVALIDATIONURL, ex);
 			ExceptionUtil.getCustomizedExceptionTrace(ex);
 			// Error message for All Exceptions
 			if (null != ex.getMessage())
 			{
-				promoPriceData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0007));
-				promoPriceData.setErrorCode(MarketplacecommerceservicesConstants.E0007);
+				promoPriceData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+				promoPriceData.setErrorCode(MarketplacecommerceservicesConstants.B9004);
 			}
 		}
 		catch (final EtailNonBusinessExceptions ex)
@@ -354,7 +368,6 @@ public class PaymentServicesController extends BaseController
 		}
 		catch (final Exception e)
 		{
-			LOG.error(MarketplacewebservicesConstants.BINVALIDATIONURL, e);
 			ExceptionUtil.getCustomizedExceptionTrace(e);
 			// Error message for All Exceptions
 			if (null != e.getMessage())
