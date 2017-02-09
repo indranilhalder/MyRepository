@@ -203,7 +203,7 @@
 										<b>Residential Address ${addressCount} - Default</b> <br /> 
 										<span class="firstName addressFont">${orderDeliveryAddressList.firstName}</span>
 										<span class="lastName addressFont">${orderDeliveryAddressList.lastName}</span><br>
-										<c:if test="${not empty orderDeliveryAddressList.line2}">
+										<c:if test="${not empty orderDeliveryAddressList.line1}">
 											<span class="addressLine1 addressFont">${orderDeliveryAddressList.line1}</span>,&nbsp;
 									    </c:if>
 										<c:if test="${not empty orderDeliveryAddressList.line2}">
