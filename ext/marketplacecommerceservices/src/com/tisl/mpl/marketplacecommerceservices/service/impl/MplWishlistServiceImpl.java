@@ -125,7 +125,7 @@ public class MplWishlistServiceImpl implements MplWishlistService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWishlistService#getWishlists()
 	 */
 	@Override
@@ -138,7 +138,7 @@ public class MplWishlistServiceImpl implements MplWishlistService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWishlistService#getWishlists()
 	 */
 	@Override
@@ -201,7 +201,7 @@ public class MplWishlistServiceImpl implements MplWishlistService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWishlistService#getWishlists()
 	 */
 	@Override
@@ -222,6 +222,18 @@ public class MplWishlistServiceImpl implements MplWishlistService
 	{
 
 		return getMplWishlistDao().findMobileWishlistswithName(user, name);
+	}
+
+	/**
+	 * Description -- Method will access single WishlistModel for user with respect to Wishlistname
+	 *
+	 * @return Wishlist2Model
+	 */
+	@Override
+	public int findMobileWishlistswithNameCount(final UserModel user, final String name)
+	{
+
+		return getMplWishlistDao().findMobileWishlistswithNameCount(user, name);
 	}
 
 	/**

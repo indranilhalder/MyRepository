@@ -369,8 +369,8 @@ public class DefaultWishlistFacade implements WishlistFacade
 
 	protected PriceData createPrice(final AbstractOrderEntryModel orderEntry, final Double val)
 	{
-		return priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(val.doubleValue()),
-				orderEntry.getOrder().getCurrency());
+		return priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(val.doubleValue()), orderEntry.getOrder()
+				.getCurrency());
 	}
 
 	/*
@@ -516,6 +516,17 @@ public class DefaultWishlistFacade implements WishlistFacade
 	public Wishlist2Model findMobileWishlistswithName(final UserModel user, final String name)
 	{
 		return mplWishlistService.findMobileWishlistswithName(user, name);
+	}
+
+	/**
+	 * Description -- Method will access single WishlistModel for user with respect to Wishlistname
+	 *
+	 * @return Wishlist2Model
+	 */
+	@Override
+	public int findMobileWishlistswithNameCount(final UserModel user, final String name)
+	{
+		return mplWishlistService.findMobileWishlistswithNameCount(user, name);
 	}
 
 }
