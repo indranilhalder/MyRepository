@@ -45659,7 +45659,7 @@ body.page-homepage .trending h2>span{
 .listing.wrapper .left-block.bottom {
 position: absolute;
 bottom: 100px;
-left: 5px;
+left: 0px;		/* UF-14 */
 } 
 .listing.wrapper .left-block.fix {
 position: fixed;
@@ -59217,6 +59217,11 @@ body.page-productGrid .plp-wishlist:before {
 
 body.page-productGrid .plp-wishlist.added:before{
 	content: "\e603";
+}
+/* UF-21 */
+body.page-productGrid .facet_mobile .facet-values.js-facet-values.js-facet-form p.filter-name,body.page-productGrid p.filter-name.facet_mobile,
+body.page-productGrid #categoryPageDeptHierTreeForm p.filter-name,body.page-productGrid #searchPageDeptHierTreeForm p.filter-name {
+    display: none !important;
 }
 /* UI-UX Fixes for PLP end */
 
