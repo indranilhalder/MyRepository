@@ -131,6 +131,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 				rdTimeSlots.add(mplTimeSlots);
 			}
 		}
+
 		sdListbox.setModel(new ListModelList<MplTimeSlotsData>(sdTimeSlots));
 		edListbox.setModel(new ListModelList<MplTimeSlotsData>(edTimeSlots));
 		rdListbox.setModel(new ListModelList<MplTimeSlotsData>(rdTimeSlots));
@@ -295,6 +296,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = TataomsbackofficeConstants.SCHEDULEDDELIVERY_POPUP_ITEMADD, eventName = Events.ON_CLICK)
 	public void sdTimeSlotsAdd() throws InterruptedException
 	{
+
 		if (sdTimeBoxFrom == null || sdTimeBoxTo == null)
 		{
 		}
@@ -315,12 +317,19 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 			toTime.append(sdTimeBoxTo.getValue().getHours());
 			toTime.append(":");
 			toTime.append(toTimeMinitues);
+			if (validateTimeSlotsUniqueCheck(sdTimeSlots, fromTime.toString(), toTime.toString()))
+			{
+				Messagebox.show(Localization.getLocalizedString("configurableParamWidget.item.unique.validate"));
+			}
+			else
+			{
+				final MplTimeSlotsData mplTimeSlots = new MplTimeSlotsData();
+				mplTimeSlots.setTimeslotType(TataomsbackofficeConstants.SCHEDULEDDELIVERY);
+				mplTimeSlots.setFromTime(fromTime.toString());
+				mplTimeSlots.setToTime(toTime.toString());
+				sdTimeSlots.add(mplTimeSlots);
+			}
 
-			final MplTimeSlotsData mplTimeSlots = new MplTimeSlotsData();
-			mplTimeSlots.setTimeslotType(TataomsbackofficeConstants.SCHEDULEDDELIVERY);
-			mplTimeSlots.setFromTime(fromTime.toString());
-			mplTimeSlots.setToTime(toTime.toString());
-			sdTimeSlots.add(mplTimeSlots);
 			sdListbox.setModel(new ListModelList<MplTimeSlotsData>(sdTimeSlots));
 			if (sdpopup != null)
 			{
@@ -360,12 +369,20 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 			toTime.append(":");
 			toTime.append(toTimeMinitues);
 
-			final MplTimeSlotsData mplTimeSlots = new MplTimeSlotsData();
-			mplTimeSlots.setTimeslotType(TataomsbackofficeConstants.EXPRESSDELIVERY);
-			mplTimeSlots.setFromTime(fromTime.toString());
-			mplTimeSlots.setToTime(toTime.toString());
-			edTimeSlots.add(mplTimeSlots);
+			if (validateTimeSlotsUniqueCheck(edTimeSlots, fromTime.toString(), toTime.toString()))
+			{
+				Messagebox.show(Localization.getLocalizedString("configurableParamWidget.item.unique.validate"));
+			}
+			else
+			{
+				final MplTimeSlotsData mplTimeSlots = new MplTimeSlotsData();
+				mplTimeSlots.setTimeslotType(TataomsbackofficeConstants.EXPRESSDELIVERY);
+				mplTimeSlots.setFromTime(fromTime.toString());
+				mplTimeSlots.setToTime(toTime.toString());
+				edTimeSlots.add(mplTimeSlots);
+			}
 			edListbox.setModel(new ListModelList<MplTimeSlotsData>(edTimeSlots));
+
 
 			if (edpopup != null)
 			{
@@ -403,11 +420,18 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 			toTime.append(":");
 			toTime.append(toTimeMinitues);
 
-			final MplTimeSlotsData mplTimeSlots = new MplTimeSlotsData();
-			mplTimeSlots.setTimeslotType(TataomsbackofficeConstants.RETURNDELIVERY);
-			mplTimeSlots.setFromTime(fromTime.toString());
-			mplTimeSlots.setToTime(toTime.toString());
-			rdTimeSlots.add(mplTimeSlots);
+			if (validateTimeSlotsUniqueCheck(edTimeSlots, fromTime.toString(), toTime.toString()))
+			{
+				Messagebox.show(Localization.getLocalizedString("configurableParamWidget.item.unique.validate"));
+			}
+			else
+			{
+				final MplTimeSlotsData mplTimeSlots = new MplTimeSlotsData();
+				mplTimeSlots.setTimeslotType(TataomsbackofficeConstants.RETURNDELIVERY);
+				mplTimeSlots.setFromTime(fromTime.toString());
+				mplTimeSlots.setToTime(toTime.toString());
+				rdTimeSlots.add(mplTimeSlots);
+			}
 			rdListbox.setModel(new ListModelList<MplTimeSlotsData>(rdTimeSlots));
 			if (rdpopup != null)
 			{
@@ -426,6 +450,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 		configarableParameterFacade.saveMplTimeSlots(sdTimeSlots, TataomsbackofficeConstants.SCHEDULEDDELIVERY);
 		sdTimeSloteDeleteMessage.setVisible(false);
 		Messagebox.show(Localization.getLocalizedString("configurableParamWidget.item.hd.save"));
+
 	}
 
 	/**
@@ -450,5 +475,21 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 		configarableParameterFacade.saveMplTimeSlots(rdTimeSlots, TataomsbackofficeConstants.RETURNDELIVERY);
 		rdTimeSloteDeleteMessage.setVisible(false);
 		Messagebox.show(Localization.getLocalizedString("configurableParamWidget.item.rd.save"));
+	}
+
+	private boolean validateTimeSlotsUniqueCheck(final Set<MplTimeSlotsData> setOfTimeSLots, final String fromTime,
+			final String toTime)
+	{
+
+		for (final MplTimeSlotsData mplTimeSlotsData : setOfTimeSLots)
+		{
+			if (mplTimeSlotsData.getFromTime().equals(fromTime) && mplTimeSlotsData.getToTime().equals(toTime))
+			{
+				return true;
+			}
+		}
+
+		return false;
+
 	}
 }
