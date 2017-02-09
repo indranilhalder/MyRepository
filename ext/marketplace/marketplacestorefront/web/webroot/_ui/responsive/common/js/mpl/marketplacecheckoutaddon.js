@@ -5238,7 +5238,6 @@ function checkServiceabilityRequired(buttonType,el){
 	var sessionPin = $("#pinId").val();
 	var selectedPin=$('#defaultPinCodeIds').val();
 	var checkoutLinkURlId = $('#checkoutLinkURlId').val();
-	alert("checkoutLinkURlId = "+checkoutLinkURlId);
 	if(sessionPin != selectedPin){
 		checkPincodeServiceability(buttonType,el);
 	}
