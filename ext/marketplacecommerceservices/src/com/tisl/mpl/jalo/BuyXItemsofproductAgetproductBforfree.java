@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.pojo.MplLimitedOfferData;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
@@ -84,6 +85,8 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 				excludeManufactureList, restrictionList, this);
 		final List<String> skuFreebieList;
 		final Map<String, Product> freegiftInfoMap;
+		boolean isExhausted = false;
+
 
 		try
 		{
@@ -122,45 +125,53 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 						.getValidProdListForBuyXofA(order, ctx, allowedProductList, restrictionList, excludedProductList,
 								excludeManufactureList, sellerIDData, eligibleProductMap);
 
-				if (GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, ctx, promoContext, this,
-						restrictionList) && !getDefaultPromotionsManager().promotionAlreadyFired(ctx, validProductUssidMap))
+				int realQuantity = 0;
+				final int qualifyingCount = getQualifyingCount(ctx).intValue();
+				for (final AbstractOrderEntry entry : validProductUssidMap.values())
 				{
-					final int qualifyingCount = getQualifyingCount(ctx).intValue();
+					realQuantity += entry.getQuantity().intValue(); // Fetches total count of Valid Products
+					//eligibleProductList.add(entry.getProduct());
+				}
+
+				//Added for TPR-4354
+				if (getMplPromotionHelper().validateForStockRestriction(restrictionList) && qualifyingCount > 0)
+				{
+					final int offerQuantity = (realQuantity / qualifyingCount);
+					final MplLimitedOfferData data = getMplPromotionHelper().checkCustomerRedeemCount(restrictionList, this.getCode(),
+							order, qualifyingCount);
+
+					isExhausted = data.isExhausted();
+					final int customerOfferCount = data.getActualCustomerCount();
+					final int eligibleStockCount = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList)
+							* qualifyingCount;
+
+					if (customerOfferCount > 0)
+					{
+						setStockCount(qualifyingCount * customerOfferCount);
+					}
+					else
+					{
+						setStockCount(eligibleStockCount);
+					}
+					if (customerOfferCount > 0 && offerQuantity > customerOfferCount)
+					{
+						realQuantity = (qualifyingCount * customerOfferCount);
+					}
+					else if (realQuantity >= eligibleStockCount)
+					{
+						realQuantity = eligibleStockCount;
+					}
+				}
+
+
+
+				if (GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, ctx, promoContext, this,
+						restrictionList)
+						&& !getDefaultPromotionsManager().promotionAlreadyFired(ctx, validProductUssidMap)
+						&& !isExhausted)
+				{
+
 					//final List<Product> eligibleProductList = new ArrayList<Product>();
-					int realQuantity = 0;
-					for (final AbstractOrderEntry entry : validProductUssidMap.values())
-					{
-						realQuantity += entry.getQuantity().intValue(); // Fetches total count of Valid Products
-						//eligibleProductList.add(entry.getProduct());
-					}
-
-					//Added for TPR-4354
-					if (getMplPromotionHelper().validateForStockRestriction(restrictionList) && qualifyingCount > 0)
-					{
-						final int offerQuantity = (realQuantity / qualifyingCount);
-						final int customerOfferCount = getMplPromotionHelper().getStockCustomerRedeemCount(restrictionList);
-						final int eligibleStockCount = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList)
-								* qualifyingCount;
-
-						if (customerOfferCount > 0)
-						{
-							setStockCount(qualifyingCount * customerOfferCount);
-						}
-						else
-						{
-							setStockCount(eligibleStockCount);
-						}
-
-						if (customerOfferCount > 0 && offerQuantity > customerOfferCount)
-						{
-							realQuantity = (qualifyingCount * customerOfferCount);
-						}
-						else if (realQuantity >= eligibleStockCount)
-						{
-							realQuantity = eligibleStockCount;
-						}
-					}
-
 					noOfProducts = realQuantity;
 
 					flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
