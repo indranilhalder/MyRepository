@@ -687,12 +687,7 @@ $(document).on('click','.jqtree-title.jqtree_common',function(){
 $(document).on('mousedown','.owl-prev,.owl-next',function(e){
 	var direction='';
 	var title='';
-	if($(this).parents('.owl-carousel').parents('.trending').length > 0){
-		title=$(this).parents('.owl-carousel').parents('.trending').find('h2>span').text().trim();
-	}
-	else{
-		title=$(this).parents('.owl-carousel').parent('div').find('h2').text().trim();
-	}
+	var msg='';
 	
 	if($(e.currentTarget).hasClass('owl-next')){
 		direction="Next";
@@ -700,8 +695,25 @@ $(document).on('mousedown','.owl-prev,.owl-next',function(e){
 	else{
 		direction="Previous";
 	}
-	title = title.toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	direction = direction.toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	
+	var pageType=$('#pageType').val();
+	//Changes for Analytics Data layer schema changes | PDP
+	if(pageType=='product'){
+		title="similar_products";
+		msg = title;
+	}
+	else{
+		if($(this).parents('.owl-carousel').parents('.trending').length > 0){
+			title=$(this).parents('.owl-carousel').parents('.trending').find('h2>span').text().trim();
+		}
+		else{
+			title=$(this).parents('.owl-carousel').parent('div').find('h2').text().trim();
+		}
+		title = title.toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+		msg = (title+"_"+direction);
+	}
+	
 	var msg = (title+"_"+direction);
 	if(title){
 		utag.link({
@@ -1084,4 +1096,17 @@ $(document).on('click',".color-swatch > li", function(){
 	});
 })
 
+/*PDP similar product recommendations*/
+$(document).on("click",".owl-stage .owl-item",function(){
+	var url = $(this).find('a').attr('href').split('/p/');
+	var productID = url[1].split('/');
+	var productArray=[];
+	productArray.push(productID[0]);
+	utag.link({
+			link_text: "similar_products_clicked",
+			event_type : "similar_products_clicked",
+			similar_product_id : productArray
+			
+		});
+})
 /* Data Layer Schema Changes Ends*/
