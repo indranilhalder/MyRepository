@@ -34,7 +34,7 @@
 			<!-- TISBOX-879 -->
 			<li id="checkout-id" class="checkout-button">
 				<!-- TISEE-6257 -->
-				<a  id="checkout-enabled" class="checkoutButton checkout button red"  onclick="return checkPincodeServiceability('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
+				<a  id="checkout-enabled" class="checkoutButton checkout button red"  onclick="return checkServiceabilityRequired('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
 				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
 			</li>
 

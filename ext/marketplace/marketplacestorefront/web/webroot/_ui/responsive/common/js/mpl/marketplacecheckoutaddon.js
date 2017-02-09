@@ -5233,6 +5233,18 @@ $(document).ready(function(){
 	
 });
 
+function checkServiceabilityRequired(buttonType,el){
+	var sessionPin = $("#pinId").val();
+	var selectedPin=$('#defaultPinCodeIds').val();
+	var checkoutLinkURlId = $('#checkoutLinkURlId').val();
+	if(sessionPin != selectedPin){
+		checkPincodeServiceability(buttonType,el);
+	}
+	else{
+		
+		redirectToCheckout(checkoutLinkURlId);
+	}
+}
 
 //TPR-1786
 function checkPincodeServiceability(buttonType,el)
