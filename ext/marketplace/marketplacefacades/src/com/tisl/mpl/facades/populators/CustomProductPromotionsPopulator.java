@@ -50,6 +50,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
+import com.tisl.mpl.model.BuyAAboveXGetPercentageOrAmountOffModel;
 import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
 import com.tisl.mpl.model.BuyAGetPrecentageDiscountCashbackModel;
 import com.tisl.mpl.model.BuyAPercentageDiscountModel;
@@ -283,8 +284,16 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 								{
 									final int qualifyingCount = getQualifyingCount(productPromotion);
 									final EtailLimitedStockRestrictionModel stockRestrictrion = (EtailLimitedStockRestrictionModel) restriction;
-
-									if (!getDefaultPromotionsManager().checkForCategoryPromotion(productPromotion.getCode()))
+									if (productPromotion instanceof BuyAAboveXGetPercentageOrAmountOffModel)
+									{
+										final int totalOfferCount = stockPromoCheckService.getTotalOfferOrderCount(
+												productPromotion.getCode(), MarketplacecommerceservicesConstants.EMPTY);
+										if (totalOfferCount >= stockRestrictrion.getMaxStock().intValue())
+										{
+											toRemovePromotionList.add(productPromotion);
+										}
+									}
+									else if (!getDefaultPromotionsManager().checkForCategoryPromotion(productPromotion.getCode()))
 									{
 										final String productCode = MarketplacecommerceservicesConstants.INVERTED_COMMA
 												+ productModel.getCode() + MarketplacecommerceservicesConstants.INVERTED_COMMA;
