@@ -564,48 +564,6 @@ $(document).ready(
 		});
 
 /*TPR-429 Start*/
-/*TPR-689 (Part of TPR-429) Start*/
-/*$(document).on('click','#buyNowButton',function(){
-	var productSKU = $('.add_to_cart_form').find('input[type="hidden"]#productCodePost').val();
-	utag.link({
-		link_obj: this,
-		link_text: 'buynow' ,
-		event_type : 'buynow_winner_seller',
-		product_sku : productSKU
-	});
-})
-TPR-689 End
-
-
-$(document).on('mousedown','.btn-block.js-add-to-cart',function(){
-	
-	var eventType;
-	var parentWrap = $(this).parents('div.pdp').attr('class');
-	if (typeof parentWrap != 'undefined'){
-		eventType = 'addtobag_winner_seller';
-	}
-	else{
-		if($(this).attr('id').indexOf("Quick") != -1){
-			eventType = 'addtobag_winner_seller';
-		}
-		else{
-			eventType = 'addtobag_other_seller';
-		}
-	}
-	
-	var productSKU = $(this).parents('form').find('input[type="hidden"]#ussid').val();
-	var productSKU = $('#productCodePost').val();
-
-	if($(this).attr('id').toLowerCase().indexOf("buynow") == -1){
-		utag.link({
-			link_obj: this,
-			link_text: 'addtobag' ,
-			event_type : eventType ,
-			product_sku : productSKU
-		});
-	}
-})*/
-
 
 function differentiateSeller(){
 	var sellerList = $('#pdpSellerIDs').val();
