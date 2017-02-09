@@ -121,6 +121,8 @@ $(document).ready(
 								+ $("#page_section_name").val() + '",';
 						tealiumData += '"page_name":"' + $("#page_name").val()
 								+ '",';
+						tealiumData += '"offer_title":"'       //added for analytics schema
+								+ $("#product_applied_promotion_title").val() + '",';	
 						tealiumData += '"product_id":["'
 								+ $("#product_id").val() + '"],';
 						//TPR-430 Start
