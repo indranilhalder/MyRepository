@@ -267,7 +267,7 @@ public class PaymentServicesController extends BaseController
 									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI) || paymentMode
 										.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
 					{
-						if (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
+						if (!paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
 						{
 							//setting in cartmodel
 							cart.setConvenienceCharges(Double.valueOf(0));
@@ -310,7 +310,7 @@ public class PaymentServicesController extends BaseController
 								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI) || paymentMode
 									.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
 				{
-					if (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
+					if (!paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
 					{
 						//setting in cartmodel
 						orderModel.setConvenienceCharges(Double.valueOf(0));
