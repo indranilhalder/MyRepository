@@ -406,8 +406,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 					LOG.debug("Method  registerSocial SITE UID " + registerData.getUid());
 					LOG.debug("Method  registerSocial FIRST_NAME " + registerData.getFirstName());
 					LOG.debug("Method  registerSocial LAST_NAME " + registerData.getLastName());
-					final String gigyaMethod = configurationService.getConfiguration().getString(
-							MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
+					final String gigyaMethod = configurationService.getConfiguration()
+							.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
 					LOG.debug("GIGYA METHOD" + gigyaMethod);
 					//gigya code change for removing duplicate UID Start
 					final int errorcode = gigyaservice.checkGigyaUID(newCustomer.getUid());
@@ -422,10 +422,11 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 						LOG.debug("UID already existing in Gigya for this  New Customer :new customer uid " + newCustomer.getUid());
 						LOG.debug("UID already existing in Gigya for this  New Customer :new customer email "
 								+ newCustomer.getOriginalUid());
-						LOG.debug("UID already existing in Gigya for this  New Customer :existing uid in Gigya" + registerData.getUid());
+						LOG.debug(
+								"UID already existing in Gigya for this  New Customer :existing uid in Gigya" + registerData.getUid());
 
-						LOG.debug("UID already existing in Gigya for this  New Customer :existing uid in Gigya"
-								+ registerData.getLogin());
+						LOG.debug(
+								"UID already existing in Gigya for this  New Customer :existing uid in Gigya" + registerData.getLogin());
 					}
 					//gigya code change for removing duplicate UID end
 
@@ -480,8 +481,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				registerData.setPassword(password);
 				registerData.setSocialLogin(true);
 				LOG.debug(MplConstants.USER_ALREADY_REGISTERED + " via site login");
-				final String gigyaMethod = configurationService.getConfiguration().getString(
-						MarketplacecclientservicesConstants.GIGYA_METHOD_LINK_ACCOUNTS);
+				final String gigyaMethod = configurationService.getConfiguration()
+						.getString(MarketplacecclientservicesConstants.GIGYA_METHOD_LINK_ACCOUNTS);
 				LOG.debug("GIGYA METHOD" + gigyaMethod);
 
 
@@ -510,8 +511,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 					final int errorcode3 = gigyaservice.checkGigyaUID(customerModel.getUid());
 					if (errorcode3 == 403005)
 					{
-						final String gigyaMethodNotify = configurationService.getConfiguration().getString(
-								MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
+						final String gigyaMethodNotify = configurationService.getConfiguration()
+								.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
 						LOG.debug("GIGYA METHOD" + gigyaMethodNotify);
 						gigyaservice.notifyGigya(customerModel.getUid(), registerData.getUid(), registerData.getFirstName(),
 								registerData.getLastName(), registerData.getLogin(), gigyaMethodNotify);
@@ -551,8 +552,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	}
 
 	@Override
-	public void changeUid(final String newUid, final String currentPassword) throws DuplicateUidException,
-			PasswordMismatchException
+	public void changeUid(final String newUid, final String currentPassword)
+			throws DuplicateUidException, PasswordMismatchException
 	{
 		try
 		{
@@ -617,11 +618,64 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 			//Added
 			if (!StringUtils.isEmpty(sendInvoiceData.getInvoiceUrl()) && !StringUtils.isEmpty(sendInvoiceData.getTransactionId()))
 			{
-				if (!StringUtils.isEmpty(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(),
-						sendInvoiceData.getTransactionId())))
+				if (!StringUtils
+						.isEmpty(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(), sendInvoiceData.getTransactionId())))
 				{
-					sendInvoiceProcessModel.setInvoiceUrl(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(),
-							sendInvoiceData.getTransactionId()));
+					sendInvoiceProcessModel.setInvoiceUrl(
+							createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(), sendInvoiceData.getTransactionId()));
+				}
+			}
+			//End
+			sendInvoiceProcessModel.setOrderCode(sendInvoiceData.getOrdercode());
+			sendInvoiceProcessModel.setTransactionId(sendInvoiceData.getTransactionId());
+
+			sendInvoiceProcessModel.setStore(orderModel.getStore());
+
+			sendInvoiceProcessModel.setCurrency(orderModel.getCurrency());
+			sendInvoiceProcessModel.setLanguage(orderModel.getLanguage());
+			modelService.save(sendInvoiceProcessModel);
+			businessProcessService.startProcess(sendInvoiceProcessModel);
+		}
+		catch (final ModelSavingException ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+
+	@Override
+	public void sendInvoice(final SendInvoiceData sendInvoiceData, final CustomerModel customer)
+	{
+		try
+		{
+			final SendInvoiceProcessModel sendInvoiceProcessModel = (SendInvoiceProcessModel) businessProcessService.createProcess(
+					"sendInvoice-" + sendInvoiceData.getCustomerEmail() + "-" + System.currentTimeMillis(), "sendInvoiceEmailProcess");
+			final OrderModel orderModel = getOrderModelService().getOrder(sendInvoiceData.getOrdercode());
+			if (null != customer)
+			{
+				sendInvoiceProcessModel.setCustomer(customer);
+				final CatalogVersionModel catalogVersion = catalogVersionService.getCatalogVersion("mplContentCatalog", "Online");
+				catalogVersionService.setSessionCatalogVersions(Collections.singleton(catalogVersion));
+			}
+			else
+			{
+				sendInvoiceProcessModel.setCustomer(getCurrentSessionCustomer());
+			}
+			sendInvoiceProcessModel.setSite(orderModel.getSite());
+			sendInvoiceProcessModel.setCustomerEmail(sendInvoiceData.getCustomerEmail());
+
+			//Added
+			if (!StringUtils.isEmpty(sendInvoiceData.getInvoiceUrl()) && !StringUtils.isEmpty(sendInvoiceData.getTransactionId()))
+			{
+				if (!StringUtils
+						.isEmpty(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(), sendInvoiceData.getTransactionId())))
+				{
+					sendInvoiceProcessModel.setInvoiceUrl(
+							createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(), sendInvoiceData.getTransactionId()));
 				}
 			}
 			//End
