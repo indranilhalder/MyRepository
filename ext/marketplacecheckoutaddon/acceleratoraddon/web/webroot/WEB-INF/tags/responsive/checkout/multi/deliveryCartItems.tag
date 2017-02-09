@@ -190,7 +190,7 @@
                        </c:when>
                        <c:otherwise>
                        <p class="delivery-method-description delivery-method-description-time">
-                         Your Order Will Be Delivered  Between ${entry.eddDateBetWeen} 
+                         Your Order Will Be Delivered   ${entry.eddDateBetWeen} 
                         </p>
                        
                        </c:otherwise>
