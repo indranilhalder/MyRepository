@@ -7,15 +7,12 @@ import de.hybris.platform.core.Registry;
 import de.hybris.platform.ordersplitting.impl.DefaultWarehouseService;
 import de.hybris.platform.ordersplitting.model.StockLevelModel;
 import de.hybris.platform.ordersplitting.model.WarehouseModel;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.Resource;
 import java.util.Iterator;
 
 /**
@@ -52,6 +49,8 @@ public class AtsConsumer implements Runnable {
     @Override
     public void run() {
 
+        final WarehouseModel warehouse = defaultWarehouseService.getWarehouseForCode(WAREHOUSE_CODE);
+
         ConsumerIterator<byte[], byte[]> it = m_stream.iterator();
         while (it.hasNext()) {
             final AvailabilityToSellDTO availableTosellDto =
@@ -76,7 +75,6 @@ public class AtsConsumer implements Runnable {
                                 //set the tenant if no active tenants
                                 Registry.activateMasterTenant();
                             }
-                            final WarehouseModel warehouse = defaultWarehouseService.getWarehouseForCode(WAREHOUSE_CODE);
 
                             StockLevelModel stockLevelModel = stockService.getStockLevel(quantityDTO.getSkuId(), warehouse);
                             if (stockLevelModel == null)
@@ -90,7 +88,7 @@ public class AtsConsumer implements Runnable {
                                 stockLevelModel.setSource(SOURCE);
                                 if (LOG.isDebugEnabled())
                                 {
-                                    LOG.info("Inside : Stock model  : Creating StocklevelModel for ID :" + quantityDTO.getSkuId()
+                                    LOG.debug("Inside : Stock model  : Creating StocklevelModel for ID :" + quantityDTO.getSkuId()
                                             + " Available Qty:" + quantityDTO.getQuantity());
                                 }
 
