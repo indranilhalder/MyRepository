@@ -1,9 +1,7 @@
 package com.tisl.mpl.atssync.consumer;
 
-import com.tisl.mpl.constants.MarketplaceatssyncConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtStockService;
 import de.hybris.platform.ordersplitting.impl.DefaultWarehouseService;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.KafkaStream;
