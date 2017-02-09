@@ -46,6 +46,8 @@ $(document).ready(function(){
   		/* alert("please select size !"+isShowSize); */
    		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 		$("#addToCartFormTitle").show();
+		//For pdp analytics changes
+		utag.link({"error_type":"size_not_selected"});
  	    return false;
    	 }
    		utag.link({

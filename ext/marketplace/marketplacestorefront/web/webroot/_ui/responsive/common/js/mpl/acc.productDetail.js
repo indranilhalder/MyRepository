@@ -2844,6 +2844,8 @@ function loadDefaultWishListName_SizeGuide() {
 		 if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
 			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			$("#addToCartFormTitle").show();
+			//For pdp analytics changes
+			utag.link({"error_type":"size_not_selected"});
 	 	    return false;
 	 }
 		 //TISQAEE-64
