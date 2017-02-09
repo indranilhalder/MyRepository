@@ -59357,9 +59357,9 @@ body.page-productDetails .mini-transient-bag-mobile span{
     color: #fff;
 }
 /* UF-29 */
-body.page-productDetails .gig-rating-readReviewsLink_pdp{
+/* body.page-productDetails .gig-rating-readReviewsLink_pdp{
 	cursor: pointer;
-}
+} */
 /* UF-32 */
 body.page-productDetails .otherSellersFont:hover #otherSellerInfoId{
 	color: #000;

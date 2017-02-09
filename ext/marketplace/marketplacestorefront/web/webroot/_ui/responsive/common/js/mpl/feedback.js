@@ -2836,8 +2836,3 @@ $(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
 $(this).toggleClass("active");
 });*/
 
-/*UF-29*/
-$(".gig-rating-readReviewsLink_pdp").on("click",function() {
-	  $("body,html").animate({ scrollTop: $('#ReviewSecion').offset().top - 50 }, "slow");
-
-});
