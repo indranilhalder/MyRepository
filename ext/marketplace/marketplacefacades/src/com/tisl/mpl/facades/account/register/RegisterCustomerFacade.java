@@ -24,8 +24,8 @@ public interface RegisterCustomerFacade
 	 * @param data
 	 * @return
 	 */
-	ExtRegisterData registerSocial(ExtRegisterData registerData, final boolean isMobile) throws UnknownIdentifierException,
-			IllegalArgumentException;
+	ExtRegisterData registerSocial(ExtRegisterData registerData, final boolean isMobile)
+			throws UnknownIdentifierException, IllegalArgumentException;
 
 	void forgottenPassword(final String uid);
 
@@ -34,6 +34,10 @@ public interface RegisterCustomerFacade
 	 */
 	public void sendInvoice(final SendInvoiceData sendInvoiceData, CustomerModel customerModel, OrderModel orderModel);
 
+	/**
+	 * @param invoiceData
+	 */
+	public void sendInvoice(final SendInvoiceData sendInvoiceData, final CustomerModel customer);
 
 	/**
 	 * @param data
