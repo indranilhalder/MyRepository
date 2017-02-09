@@ -156,12 +156,11 @@
 	</grid>
 	<div class="popuped" id="sdpopup" visible="false"
 		action="show: slideDown;hide: slideUp">
-		<label class="headingpopup"
-			value="Scheduled Delivery Time Slot" />
+		<label class="headingpopup" value="Scheduled Delivery Time Slot" />
 		<button class="close" image="${wr}/images/close-button.gif"
 			onClick="sdpopup.setVisible(false)" />
 		<div class="content">
-			<div style="border:#555 1px solid;padding:10px">
+			<div style="border:#555 1px solid;padding:20px">
 				<hlayout style="width:80%">
 					<vlayout style="margin-right:20px">
 						<label value="From Time" />
@@ -178,7 +177,6 @@
 						<button label="Add" id="sdPopupSave" />
 					</vlayout>
 				</hlayout>
-
 			</div>
 			<label>
 				Note:These time slots are temporary add to list box
@@ -186,6 +184,7 @@
 			</label>
 		</div>
 	</div>
+	
 	<div class="popuped" id="edpopup" visible="false"
 		action="show: slideDown;hide: slideUp">
 		<label class="headingpopup" value="Express Delivery Time Slots" />
