@@ -29,8 +29,7 @@ public interface WishlistFacade
 
 	Wishlist2Model createNewWishlist(final UserModel user, final String name, final String description);
 
-	boolean addProductToWishlist(final Wishlist2Model wishlist, final String productCode, final String ussid,
-			boolean sizeSelected);
+	boolean addProductToWishlist(final Wishlist2Model wishlist, final String productCode, final String ussid, boolean sizeSelected);
 
 	Wishlist2Model getWishlistForName(final String wishlistName);
 
@@ -81,6 +80,16 @@ public interface WishlistFacade
 	 */
 
 	Wishlist2Model findMobileWishlistswithName(UserModel user, String name);
+
+	//CAR Project performance issue fixed
+
+	/**
+	 * Description -- Method will count for user with respect to Wishlistname
+	 *
+	 * @return Wishlist2Model
+	 */
+
+	int findMobileWishlistswithNameCount(UserModel user, String name);
 
 	/**
 	 * Description -- To add product in Wishlistname

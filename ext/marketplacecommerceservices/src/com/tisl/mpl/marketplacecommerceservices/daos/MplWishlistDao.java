@@ -34,6 +34,14 @@ public interface MplWishlistDao
 	 */
 	public Wishlist2Model findMobileWishlistswithName(final UserModel user, final String name);
 
+	//CAR Project performance issue fixed
+	/**
+	 * Description -- Method will provide count for user with respect to Wishlistname
+	 *
+	 * @return int
+	 */
+	public int findMobileWishlistswithNameCount(final UserModel user, final String name);
+
 	/**
 	 * Description -- Method will access single Entry of a Wishlist
 	 *
