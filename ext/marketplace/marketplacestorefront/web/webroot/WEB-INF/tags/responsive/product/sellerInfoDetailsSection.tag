@@ -28,7 +28,23 @@
 						name="skuIdForCNC" value="" />
 						<input type="hidden" maxlength="10" size="1" id="skuIdForCod"
 						name="skuIdForCod" value="" />	
-					<button type="submit" name="submit" id="submit"
+					<%-- <button type="submit" name="submit" id="submit"
+						class="otherSellersFont">
+						<p id="otherSellerInfoId" class="other-sellers" style="display: none"><a>
+							<span class="other-sellers-link">
+							<span id="otherSellersId"></span>&nbsp;
+							<span><spring:theme code="product.othersellers"></spring:theme></span></span>&nbsp;
+							<spring:theme code="product.available"></spring:theme>
+							&nbsp;<span id="minPriceId"></span>
+						</a></p>
+						<div id="otherSellerLinkId" style="display: none">
+							<span id="otherSellersId"></span>&nbsp;<span
+								class="other-sellers-info" style="color: #a9143c;"><spring:theme
+									code="product.othersellersForNoStock"></spring:theme></span>&nbsp;
+						</div>
+					</button> --%>
+					<!-- UF-32 -->
+					<a href="${request.contextPath}/p/${product.code}/viewSellers" id="submit"
 						class="otherSellersFont">
 						<p id="otherSellerInfoId" class="other-sellers">
 							&nbsp;&&nbsp;<span class="other-sellers-link"><span id="otherSellersId"></span>&nbsp;<span><spring:theme code="product.othersellers"></spring:theme></span></span><%-- &nbsp;
@@ -39,8 +55,13 @@
 							<span id="otherSellersId"></span>&nbsp;<span
 								class="other-sellers-info" style="color: #a9143c;"><spring:theme
 									code="product.othersellersForNoStock"></spring:theme></span>&nbsp;
+
 						</div> --%>
-					</button>
+					
+
+						
+					</a>
+
 				</form:form>
 				<div id="othersSellerDivId" style="display: none">
 					<table border="1">
