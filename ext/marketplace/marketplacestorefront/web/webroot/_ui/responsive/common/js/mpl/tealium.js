@@ -1077,4 +1077,23 @@ $(document).on("mouseover",".zoomContainer",function(e) {
 		event_type : "pdp_image_hover"
 	});
 });
+
+/*PDP Add to bag*/
+function utagAddToBag(){
+	var productCode=$('#productCode').val();
+	var productCodeArray=[];
+   	productCodeArray.push(productCode);
+	var pageName='';
+	var pageType = $('#pageName').val();
+	if( pageType == "Product Details" || pageType == "View Seller Page"){
+		pageName="pdp";
+	}
+	utag.link({
+		link_obj: this,
+		link_text: 'addtobag' ,
+		event_type : 'addtobag_'+ pageName,
+		product_sku : productCodeArray              // Product code passed as an array for Web Analytics - INC_11511  fix
+	});
+}
+
 /* Data Layer Schema Changes Ends*/
