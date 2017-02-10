@@ -59360,9 +59360,9 @@ body.page-productDetails .callouts .Padd ul li p, body.page-viewSellers .callout
     color: #fff;
 }
 /* UF-29 */
-/* body.page-productDetails .gig-rating-readReviewsLink_pdp{
+body.page-productDetails .gig-rating-readReviewsLink_pdp{
 	cursor: pointer;
-} */
+}
 /* UF-32 */
 .otherSellersFont:hover #otherSellerInfoId{
 	color: #000;
