@@ -571,7 +571,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 			else
 			{
-				cartModel = mplPaymentWebFacade.findCartValues(cartId);
+				//changes for CarProject
+				cartModel = cartService.getSessionCart();
+				//cartModel = mplPaymentWebFacade.findCartValues(cartId);
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug("************ Logged-in cart mobile (addProductToCart)**************" + cartId);
@@ -731,26 +733,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		String delistMessage = MarketplacewebservicesConstants.EMPTY;
 		try
 		{
-			if (userFacade.isAnonymousUser())
+			//CAR changes
+			cart = cartService.getSessionCart();
+			if (LOG.isDebugEnabled())
 			{
-				//CAR Project performance issue fixed
-
-				//	cart = mplPaymentWebFacade.findCartAnonymousValues(cartId);
-
-				cart = cartService.getSessionCart();
-				if (LOG.isDebugEnabled())
-				{
-					LOG.debug("************ Anonymous cart mobile **************" + cartId);
-				}
-			}
-			else
-			{
-
-				cart = mplPaymentWebFacade.findCartValues(cartId);
-				if (LOG.isDebugEnabled())
-				{
-					LOG.debug("************ Logged-in cart mobile **************" + cartId);
-				}
+				LOG.debug("************ Cart mobile **************" + cartId);
 			}
 			if (cart != null)
 			{
