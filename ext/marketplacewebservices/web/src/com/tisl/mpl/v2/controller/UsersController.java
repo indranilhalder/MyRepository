@@ -74,6 +74,7 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.payment.AdapterException;
+import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
@@ -385,7 +386,8 @@ public class UsersController extends BaseCommerceController
 	@Autowired
 	private ExtendedUserService extendedUserService;
 
-
+	@Resource(name = "productService")
+	private ProductService productService;
 	//@Autowired
 	//private MplPaymentFacadeImpl mplPaymentFacadeImpl;
 	//	@Autowired Critical Sonar fixes Unused private Field
@@ -2918,13 +2920,16 @@ public class UsersController extends BaseCommerceController
 			throws RequestParameterException
 	{
 		final WebSerResponseWsDTO userResult = new WebSerResponseWsDTO();
+		int getWishlistforNameCount = 0;
 		try
 		{
-			List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
+			//			List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
+			List<Wishlist2Model> allWishlists = null;
+
 			final UserModel user = userService.getCurrentUser();
 			String name = null;
-			String nameSet = null;
-			int wSize = 0;
+			//			final String nameSet = null;
+			//			final int wSize = 0;
 			if (null == user)
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
@@ -2935,18 +2940,14 @@ public class UsersController extends BaseCommerceController
 			}
 			else
 			{
-				nameSet = MarketplacecommerceservicesConstants.WISHLIST_NO;
-				for (final Wishlist2Model wishlist2Model : allWishlists)
-				{
-					if (wishlist2Model.getName().contains(nameSet))
-					{
-						wSize++;
-					}
-				}
+				getWishlistforNameCount = wishlistFacade.findMobileWishlistswithNameCount(user,
+						MarketplacecommerceservicesConstants.WISHLIST_NO);
+
 				name = MarketplacecommerceservicesConstants.WISHLIST_NO + MarketplacecommerceservicesConstants.UNDER_SCORE
-						+ (wSize + 1);
+						+ (++getWishlistforNameCount);
 			}
 			allWishlists = wishlistService.getWishlists(user);
+
 			Wishlist2Model requiredWl = null;
 			for (final Wishlist2Model wl : allWishlists)
 			{
@@ -2964,8 +2965,6 @@ public class UsersController extends BaseCommerceController
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9209);
 			}
-
-
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -3222,7 +3221,10 @@ public class UsersController extends BaseCommerceController
 								}
 							}
 
-							final ProductModel productModel = getMplOrderFacade().getProductForCode(entryModel.getProduct().getCode());
+							//	final ProductModel productModel = getMplOrderFacade().getProductForCode(entryModel.getProduct().getCode());
+
+							final ProductModel productModel = productService.getProductForCode(entryModel.getProduct().getCode());
+
 							if (null != productModel.getSellerInformationRelator())
 							{
 								final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
@@ -3309,11 +3311,13 @@ public class UsersController extends BaseCommerceController
 		boolean wishlistflag = false;
 
 		final UserResultWsDto result = new UserResultWsDto();
-		final MplCustomerProfileData mplCustData = new MplCustomerProfileData();
-		mplCustData.setDisplayUid(userId);
+		//		final MplCustomerProfileData mplCustData = new MplCustomerProfileData();
+		//		mplCustData.setDisplayUid(userId);
 		try
 		{
-			final UserModel user = userexService.getUserForUID(mplCustData.getDisplayUid());
+			//final UserModel user = userexService.getUserForUID(mplCustData.getDisplayUid());
+			final UserModel user = userService.getCurrentUser();
+
 			if (null == user)
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
@@ -4677,16 +4681,25 @@ public class UsersController extends BaseCommerceController
 		final UserResultWsDto userResultWsDto = new UserResultWsDto();
 		try
 		{
-			final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
-			if (null != allWishlists && !allWishlists.isEmpty())
+			//			final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
+			//CAR Project performance issue fixed
+			final UserModel user = userService.getCurrentUser();
+			if (StringUtils.isNotEmpty(wishlistName))
 			{
-				for (final Wishlist2Model wishlist2Model : allWishlists)
+				final Wishlist2Model wishList = wishlistFacade.findMobileWishlistswithName(user, wishlistName);
+
+				//if (null != allWishlists && !allWishlists.isEmpty())
+				if (null != wishList)
 				{
-					if (wishlist2Model.getName().equals(wishlistName))
-					{
-						modelService.remove(wishlist2Model);
-						userResultWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
-					}
+					//					for (final Wishlist2Model wishlist2Model : allWishlists)
+					//					{
+					//						if (wishlist2Model.getName().equals(wishlistName))
+					//						{
+					//					modelService.remove(wishlist2Model);
+					modelService.remove(wishList);
+					userResultWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+					//						}
+					//					}
 				}
 			}
 		}
