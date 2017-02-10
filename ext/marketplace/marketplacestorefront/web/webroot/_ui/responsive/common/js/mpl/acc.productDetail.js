@@ -1139,6 +1139,7 @@ $(function() {
 													pdp_pin_value : pin, 
 													pdp_pincode_non_serviceable : pin,
 													pdp_pin_delivery : 'error'
+													
 												});
 											/*TPR-642 & 640 ends*/
 												return false;
@@ -1356,9 +1357,13 @@ $(function() {
 											$('#wrongPin,#unsevisablePin,#emptyPin')
 													.hide();
 											$('#unableprocessPin').show();
+											
 											//TPR-794
 											$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
-
+											var error =$('#unableprocessPin').val();
+											if(typeof utag !="undefined"){
+											utag.link({error_type: error  });
+                                            }
 										}
 									});
 
