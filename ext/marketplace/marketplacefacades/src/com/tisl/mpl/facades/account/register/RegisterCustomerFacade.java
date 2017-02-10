@@ -35,6 +35,7 @@ public interface RegisterCustomerFacade
 	public void sendInvoice(final SendInvoiceData sendInvoiceData, CustomerModel customerModel, OrderModel orderModel);
 
 
+
 	/**
 	 * @param data
 	 * @return
