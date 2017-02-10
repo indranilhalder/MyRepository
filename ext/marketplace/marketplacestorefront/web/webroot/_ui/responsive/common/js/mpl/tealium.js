@@ -1078,8 +1078,8 @@ $(document).on("mouseover",".zoomContainer",function(e) {
 	});
 });
 
-/*PDP Add to bag*/
-function utagAddToBag(){
+/*PDP Add to bag & Buy Now*/
+function utagAddProductToBag(triggerPoint){
 	var productCode=$('#productCode').val();
 	var productCodeArray=[];
    	productCodeArray.push(productCode);
@@ -1090,29 +1090,10 @@ function utagAddToBag(){
 	}
 	utag.link({
 		link_obj: this,
-		link_text: 'addtobag' ,
-		event_type : 'addtobag_'+ pageName,
+		link_text: triggerPoint ,
+		event_type : triggerPoint+"_"+ pageName,
 		product_sku : productCodeArray              // Product code passed as an array for Web Analytics - INC_11511  fix
 	});
 }
-
-/*PDP Buy Now*/
-function utagBuyNow(){
-	var productCode=$('#productCode').val();
-	var productCodeArray=[];
-   	productCodeArray.push(productCode);
-	var pageName='';
-	var pageType = $('#pageName').val();
-	if( pageType == "Product Details" || pageType == "View Seller Page"){
-		pageName="pdp";
-	}
-	utag.link({
-		link_obj: this,
-		link_text: 'buynow' ,
-		event_type : 'buynow_'+ pageName,
-		product_sku : productCodeArray              // Product code passed as an array for Web Analytics - INC_11511  fix
-	});
-}
-
 
 /* Data Layer Schema Changes Ends*/

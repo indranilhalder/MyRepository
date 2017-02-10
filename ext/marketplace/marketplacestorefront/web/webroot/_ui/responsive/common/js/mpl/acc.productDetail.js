@@ -2849,8 +2849,6 @@ function loadDefaultWishListName_SizeGuide() {
 			utag.link({"error_type":"size_not_selected"});
 	 	    return false;
 	 }
-		 //TISQAEE-64
-		utagBuyNow();
 		ACC.product.sendAddToBag("addToCartForm",true);
 	});
 
