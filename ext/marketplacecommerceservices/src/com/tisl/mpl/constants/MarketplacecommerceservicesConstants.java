@@ -1902,6 +1902,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String IS_NOT_CHANABLE="isNotChangable";
 
 	public static final String Between = "Between";
+	public final static String TICKET_SUB_TYPE_DNC = "DNC";
 
 
 }

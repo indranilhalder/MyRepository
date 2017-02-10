@@ -17,5 +17,6 @@ public interface MplDeliveryAddressComparator
 	public boolean compareContactDetails(AddressData oldAddress, AddressData newAddress);
 	
 	public boolean compareAddressModel(AddressModel oldAddress, AddressModel newAddress);
-	
+	public boolean compareMobileNumber(AddressModel oldAddress,AddressModel newDeliveryAddress);
+	public boolean compareNameDetails(AddressModel oldAddress,AddressModel newDeliveryAddress);
 }

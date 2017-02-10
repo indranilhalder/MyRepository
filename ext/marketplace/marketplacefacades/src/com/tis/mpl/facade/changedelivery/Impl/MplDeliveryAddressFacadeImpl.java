@@ -660,12 +660,8 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 				{
 					try
 					{
-						//OMS realTime Call
-						valditionMsg=changeDeliveryRequestCallToOMS(orderCode, newDeliveryAddressModel, MarketplaceFacadesConstants.CA,
-								transactionSDDtoList);
-						if (MarketplaceFacadesConstants.SUCCESS.equalsIgnoreCase(valditionMsg))
-						{
-						  final boolean isEligibleScheduledDelivery = mplDeliveryAddressService.checkScheduledDeliveryForOrder(orderModel);
+						
+						 final boolean isEligibleScheduledDelivery = mplDeliveryAddressService.checkScheduledDeliveryForOrder(orderModel);
 							//checking  order Eligible for ReScheduledDelivery
 							if (isEligibleScheduledDelivery)
 							{
@@ -678,13 +674,24 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 									{
 										transactionSDDtoList = reScheduleddeliveryDate(orderModel, rescheduleDataList);
 										sessionService.removeAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
-										//save selected Date and time
-										mplDeliveryAddressService.saveSelectedDateAndTime(orderModel, transactionSDDtoList);
+										
 									}
 								}
 							}
+							
+						//OMS realTime Call
+						valditionMsg=changeDeliveryRequestCallToOMS(orderCode, newDeliveryAddressModel, MarketplaceFacadesConstants.CA,
+								transactionSDDtoList);
+						if (MarketplaceFacadesConstants.SUCCESS.equalsIgnoreCase(valditionMsg))
+						{
 							 //save changed address  
-							mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel, orderModel,false);   
+							mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel, orderModel,false);
+							
+							if (isEligibleScheduledDelivery && transactionSDDtoList!=null)
+							{
+								//save selected Date and time
+								mplDeliveryAddressService.saveSelectedDateAndTime(orderModel, transactionSDDtoList);
+							}
 						  
 							//CRM call
 							createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE,
@@ -715,10 +722,38 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						
 						if (MarketplaceFacadesConstants.SUCCESS.equalsIgnoreCase(valditionMsg))
 						{
-							mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel, orderModel,false);
-							//CRM Call
-							createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE,
-									MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DMC);
+							try
+							{
+								boolean isDNC = mplDeliveryAddressComparator.compareNameDetails(orderModel.getDeliveryAddress(),
+										newDeliveryAddressModel);
+							   boolean isDMC = mplDeliveryAddressComparator.compareMobileNumber(orderModel.getDeliveryAddress(),
+											newDeliveryAddressModel);
+							    //save address 
+							 	 mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel, orderModel, false);
+								//changed Name Details 
+								if (isDNC)
+								{
+									createcrmTicketForChangeDeliveryAddress(orderModel, customerID,
+											MarketplacecommerceservicesConstants.SOURCE,
+											MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DNC);
+								}
+							//changed Mobile Details 
+								if (isDMC)
+								{
+									//CRM Call
+									createcrmTicketForChangeDeliveryAddress(orderModel, customerID,
+											MarketplacecommerceservicesConstants.SOURCE,
+											MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DMC);
+								}
+							}
+							catch (final Exception e)
+							{
+								LOG.debug("MplDeliveryAddressFacadesImpl:::Excepton raising while OMS  and CRM Call  >>>>>"
+										+ e.getMessage());
+							}
+
+							
+							
 						}
 						else
 						{

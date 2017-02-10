@@ -7,6 +7,9 @@ import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.user.AddressModel;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.sun.jndi.url.rmi.rmiURLContext;
 
 
 
@@ -22,7 +25,9 @@ public class MplDeliveryAddressComparatorImpl implements MplDeliveryAddressCompa
 	 * @param oldAddress
 	 * @param newAddress
 	 * @return boolean
+	 * 
 	 */
+	private static final Logger LOG = Logger.getLogger(MplDeliveryAddressComparatorImpl.class);
 	@Override
 	public boolean compareAddress(AddressData oldAddress, AddressData newAddress)
 	{
@@ -269,5 +274,63 @@ public class MplDeliveryAddressComparatorImpl implements MplDeliveryAddressCompa
 		}
 		return isChanged;
 	}
+	
+	
+	@Override
+	public boolean compareMobileNumber(AddressModel oldAddress, AddressModel newDeliveryAddress)
+	{
+		try
+		{
+			String mobileNumber=null;
+			String newMobileNumber=null;
+			
+			if (oldAddress != null)
+			{
+				mobileNumber = StringUtils.isNotEmpty(oldAddress.getPhone1()) ? oldAddress.getPhone1() : (StringUtils
+						.isNotEmpty(oldAddress.getPhone2()) ? oldAddress.getPhone2() : oldAddress.getCellphone());
+			}
+			if (newDeliveryAddress != null)
+			{
+
+				newMobileNumber = StringUtils.isNotEmpty(newDeliveryAddress.getPhone1()) ? newDeliveryAddress.getPhone1()
+						: (StringUtils.isNotEmpty(newDeliveryAddress.getPhone2()) ? newDeliveryAddress.getPhone2() : newDeliveryAddress
+								.getCellphone());
+			}
+			if (mobileNumber.equalsIgnoreCase(newMobileNumber))
+			{
+				return false;
+			}
+		}
+		catch (Exception exception)
+		{
+			LOG.error("Ecxeption MplDeliveryAddressComparatorImpl:::"+exception.getMessage());
+		}
+		return true;
+	}
+
+
+	
+	@Override
+	public boolean compareNameDetails(AddressModel oldAddress, AddressModel newDeliveryAddress)
+	{
+		
+		try
+		{
+			if (!oldAddress.getFirstname().equalsIgnoreCase(newDeliveryAddress.getFirstname()))
+			{
+				return true;
+			}
+			if (!oldAddress.getLastname().equalsIgnoreCase(newDeliveryAddress.getLastname()))
+			{
+				return true;
+			}
+		}
+		catch (Exception exception)
+		{
+			LOG.error("Ecxeption MplDeliveryAddressComparatorImpl:::" + exception.getMessage());
+		}
+		return false;
+	}
+	
 
 }
