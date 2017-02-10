@@ -571,7 +571,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 			else
 			{
-				cartModel = mplPaymentWebFacade.findCartValues(cartId);
+				//changes for CarProject
+				cartModel = cartService.getSessionCart();
+				//cartModel = mplPaymentWebFacade.findCartValues(cartId);
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug("************ Logged-in cart mobile (addProductToCart)**************" + cartId);
