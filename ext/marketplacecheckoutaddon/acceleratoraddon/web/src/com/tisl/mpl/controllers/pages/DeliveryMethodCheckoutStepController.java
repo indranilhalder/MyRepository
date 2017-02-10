@@ -1785,11 +1785,11 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				}
 				modelService.saveAll(cartEntryList);
 				
-				cartModel.setDeliveryCost(Double.valueOf(0));
+			/*	cartModel.setDeliveryCost(Double.valueOf(0));
 				final Double subTotal = cartModel.getTotalPrice();
 				cartModel.setTotalPrice(Double.valueOf(subTotal.doubleValue()));
 				modelService.save(cartModel);
-				modelService.refresh(cartModel);
+				modelService.refresh(cartModel);*/
 				
 				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 				{
