@@ -19,6 +19,7 @@ import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -60,6 +61,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplReturnPickUpAddressInfoModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.CODSelfShipResponseData;
@@ -78,6 +80,7 @@ import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
@@ -170,6 +173,10 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		boolean quickdrop=false;
 		ReturnInfoData returnData=new ReturnInfoData();
 		final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
+		
+		String productRichAttrOfQuickDrop = null;
+		String sellerRichAttrOfQuickDrop = null;
+		
 		try{
 		OrderEntryData subOrderEntry = new OrderEntryData();
 	//	final HttpSession session = request.getSession();
@@ -195,6 +202,35 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				subOrderEntry = entry;
 				returnOrderEntry = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(orderCode), transactionId);
 				returnProductMap.put(subOrderEntry.getTransactionId(), returnOrderEntry);
+				
+				final ProductModel productModel = mplOrderFacade.getProductForCode(entry.getProduct().getCode());
+				List<RichAttributeModel> productRichAttributeModel = null;
+				if ( null!= productModel && productModel.getRichAttribute() != null){
+					productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
+					if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+					{
+						productRichAttrOfQuickDrop = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+					}
+				}
+				final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+						.getSellerInformationRelator();
+
+				for (final SellerInformationModel sellerInformationModel : sellerInfo)
+				{
+					if (sellerInformationModel.getSellerArticleSKU().equals(entry.getSelectedUssid()))
+					{
+						List<RichAttributeModel> sellerRichAttributeModel = null;
+						if (sellerInformationModel.getRichAttribute() != null){
+							sellerRichAttributeModel = (List<RichAttributeModel>) sellerInformationModel.getRichAttribute();
+							if (sellerRichAttributeModel != null && sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+							{
+								sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+							}
+						}
+					}
+				}
+				model.addAttribute(ModelAttributetConstants.QUCK_DROP_PROD_LEVEL, productRichAttrOfQuickDrop);
+				model.addAttribute(ModelAttributetConstants.QUCK_DROP_SELLER_LEVEL, sellerRichAttrOfQuickDrop);
 				break;
 			}
 			boolean returnLogisticsAvailability = false;
