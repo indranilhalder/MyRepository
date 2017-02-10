@@ -56,6 +56,8 @@ ACC.quickview = {
 				    // You're not in a frame, so you reload the site.
 				    window.setTimeout('location.reload()'); 
 			     }
+				$('.zoomContainer').remove();			/*UF-50*/
+				//console.log($('.zoomContainer').length);
 			}
 		});
 	}
