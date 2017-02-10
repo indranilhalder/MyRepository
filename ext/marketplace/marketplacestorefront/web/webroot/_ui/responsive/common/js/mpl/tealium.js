@@ -1031,8 +1031,8 @@ $(document).on("click",".nav-wrapper .nav.pdp",function(){
 })
 
 /*Out Of Stock During adding to bag*/
-function errorOutofStockUtag(){
-	utag.link({"error_type":"out_of_stock"});
+function errorAddToBag(errorMessage){
+	utag.link({"error_type":errorMessage});
 }
 
 /*On Size selection | PDP*/
@@ -1095,5 +1095,24 @@ function utagAddToBag(){
 		product_sku : productCodeArray              // Product code passed as an array for Web Analytics - INC_11511  fix
 	});
 }
+
+/*PDP Buy Now*/
+function utagBuyNow(){
+	var productCode=$('#productCode').val();
+	var productCodeArray=[];
+   	productCodeArray.push(productCode);
+	var pageName='';
+	var pageType = $('#pageName').val();
+	if( pageType == "Product Details" || pageType == "View Seller Page"){
+		pageName="pdp";
+	}
+	utag.link({
+		link_obj: this,
+		link_text: 'buynow' ,
+		event_type : 'buynow_'+ pageName,
+		product_sku : productCodeArray              // Product code passed as an array for Web Analytics - INC_11511  fix
+	});
+}
+
 
 /* Data Layer Schema Changes Ends*/

@@ -1609,7 +1609,6 @@ $( document ).ready(function() {
 						 $("#pdpPincodeCheckDList").show();
 						 $("#buyNowButton").attr("disabled",true);
 						
-						
 					}
 					else if (data['othersSellersCount'] == 0) {
 						$("#otherSellerInfoId").hide();
@@ -1653,6 +1652,7 @@ $( document ).ready(function() {
 					//Added for displaying offer messages other than promotion, TPR-589	
 				//	ACC.productDetail.
 					populateOfferMsgWrapper(productCode, sellerID, null);
+					
 				}	
 
 			} 
@@ -2842,11 +2842,7 @@ function loadDefaultWishListName_SizeGuide() {
 	$(document).on('click','#buyNow .js-add-to-cart',function(event){
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
 		var isShowSize= $("#showSize").val();
-		var productCode=$("#product_id").val();
-		//INC_11511 fix
-		var productCodeArray=[];
-		productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
-		 if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
+		if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
 			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			$("#addToCartFormTitle").show();
 			//For pdp analytics changes
@@ -2854,12 +2850,7 @@ function loadDefaultWishListName_SizeGuide() {
 	 	    return false;
 	 }
 		 //TISQAEE-64
-		 utag.link({
-				link_obj: this,
-				link_text: 'buynow' ,
-				event_type : 'buynow_winner_seller',
-				product_sku : productCodeArray
-			});
+		utagBuyNow();
 		ACC.product.sendAddToBag("addToCartForm",true);
 	});
 

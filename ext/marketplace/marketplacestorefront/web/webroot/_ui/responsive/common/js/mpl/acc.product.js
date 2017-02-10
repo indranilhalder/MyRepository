@@ -492,6 +492,7 @@ sendAddToBag : function(formId, isBuyNow) {
 											+ $('#bagfull').text()
 											+ "</font>");
 							$("#" + formId + "Title").show().fadeOut(5000);
+							errorAddToBag("bag_is_full");
 						} else if (data == "outofinventory") {
 							$("#" + formId + "noInventory")
 									.html(
@@ -502,7 +503,7 @@ sendAddToBag : function(formId, isBuyNow) {
 													+ "</font>");
 							$("#" + formId + "noInventory").show().fadeOut(
 									6000);
-							errorOutofStockUtag();
+							errorAddToBag("out_of_stock");
 							return false;
 						} else if (data == "willexceedeinventory") {
 							$("#" + formId + "excedeInventory")
@@ -583,7 +584,6 @@ sendAddToBag : function(formId, isBuyNow) {
 					error : function(resp) {
 						$("#bag-clickSpin,.bagspinner").remove();
 						$('.js-add-to-cart').removeAttr("disabled");//For TISPRD-4631
-						// alert("Add to Bag unsuccessful");
 					}
 				});
 	}
