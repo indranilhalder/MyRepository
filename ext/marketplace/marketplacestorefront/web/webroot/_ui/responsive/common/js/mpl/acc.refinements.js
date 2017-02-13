@@ -2,6 +2,7 @@
 var updatedsearchQuery = "";
 var dummyForm ;
 var lessBrands = [];
+var productItemArray = [];
 ACC.refinements = {
 
 	_autoload: [

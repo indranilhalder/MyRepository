@@ -1,6 +1,5 @@
 var pageNoPagination = 0;
 var totalNoOfPages = 0;
-var productItemArray = [];
 var innerRecordSize = 7;
 var loadMoreCount = 71;
 var initPageLoad = true;
