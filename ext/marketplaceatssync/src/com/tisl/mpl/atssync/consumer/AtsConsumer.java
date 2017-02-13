@@ -10,8 +10,8 @@ import de.hybris.platform.ordersplitting.model.WarehouseModel;
 import de.hybris.platform.servicelayer.model.ModelService;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
+
 
 import java.util.Iterator;
 
@@ -20,9 +20,9 @@ import java.util.Iterator;
  */
 public class AtsConsumer implements Runnable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AtsConsumer.class);
+    private static final Logger LOG = Logger.getLogger(AtsConsumer.class);
 
-    private KafkaStream m_stream;
+    private KafkaStream<byte[], byte[]> m_stream;
     private int m_threadNumber;
 
     private AvailabilityToSellDTODeserializer availabilityToSellDTODeserializer;
@@ -36,7 +36,7 @@ public class AtsConsumer implements Runnable {
     private static final String WAREHOUSE_CODE = "mpl_warehouse";
     private static final String SOURCE = "OMS";
 
-    public AtsConsumer(KafkaStream a_stream, int a_threadNumber, AvailabilityToSellDTODeserializer atsDto,ModelService modelService,
+    public AtsConsumer(KafkaStream<byte[], byte[]> a_stream, int a_threadNumber, AvailabilityToSellDTODeserializer atsDto,ModelService modelService,
     ExtStockService stockService,DefaultWarehouseService defaultWarehouseService) {
         m_threadNumber = a_threadNumber;
         m_stream = a_stream;
@@ -56,7 +56,6 @@ public class AtsConsumer implements Runnable {
         }
 
         final WarehouseModel warehouse = defaultWarehouseService.getWarehouseForCode(WAREHOUSE_CODE);
-
         ConsumerIterator<byte[], byte[]> it = m_stream.iterator();
         while (it.hasNext()) {
             final AvailabilityToSellDTO availableTosellDto =
@@ -94,6 +93,11 @@ public class AtsConsumer implements Runnable {
                                 }
 
                             }
+                            else if(null != stockLevelModel.getSequenceTS() && stockLevelModel.getSequenceTS() > availableTosellDto.getLatestChange())
+                            {
+                                continue;
+                            }
+                            stockLevelModel.setSequenceTS(availableTosellDto.getLatestChange());
                             stockLevelModel.setAvailable(quantityDTO.getQuantity());
                             modelService.save(stockLevelModel);
                         }
@@ -102,13 +106,15 @@ public class AtsConsumer implements Runnable {
                     catch (Exception e)
                     {
                         LOG.error("Error occured during Processing AvailabilityToSellQuantityDTO :" + quantityDTO.getLocationId()
-                                + "===" + quantityDTO.getQuantity() + "====" + quantityDTO.getSkuId() + "Error Message"
-                                + e.getMessage());
+                                + "===" + quantityDTO.getQuantity() + "====" + quantityDTO.getSkuId() + "Timestamp" +availableTosellDto.getLatestChange()
+                                + "Error Message" + e);
 
                     }
                 }
             }
 
         }
+
+        this.run();
     }
 }

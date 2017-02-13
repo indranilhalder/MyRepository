@@ -6,8 +6,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.Resource;
@@ -24,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class AtsConsumerService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AtsConsumerService.class);
+    private static final Logger LOG = Logger.getLogger(AtsConsumerService.class);
     private final ConsumerConnector consumer;
     private final String topic;
     private ExecutorService executor;

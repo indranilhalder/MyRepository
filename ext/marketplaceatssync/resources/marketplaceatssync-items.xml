@@ -46,5 +46,21 @@
 			</attributes>
 		</itemtype>
 -->
+
+		<itemtype code="StockLevel" autocreate="false" generate="true">
+
+			<attributes>
+				<attribute type="java.lang.Long" qualifier="sequenceTS"
+						   autocreate="true" generate="true">
+					<modifiers read="true" write="true"/>
+					<persistence type='property'>
+						<columntype database='oracle'>
+							<value>VARCHAR2(40)</value>
+						</columntype>
+					</persistence>
+				</attribute>
+			</attributes>
+		</itemtype>
+
 	</itemtypes>
 </items>
