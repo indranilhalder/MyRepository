@@ -4,12 +4,14 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <div class="right-block">
+<c:if test="${not isCategoryPage}">
 	<nav:pagination top="true" supportShowPaged="${isShowPageAllowed}"
 		supportShowAll="${isShowAllAllowed}"
 		searchPageData="${searchPageData}"
 		searchUrl="${searchPageData.currentQuery.url}"
 		numberPagesShown="${numberPagesShown}" />
-
+</c:if>
+<input type="hidden" name="noOfPages" value="${searchPageData.pagination.numberOfPages}"/>
 	<!-- Hero product pane -->
 	<c:if test="${not empty heroProducts}">
 	 <!-- <h2>Shop Our Top Picks</h2> -->
@@ -32,7 +34,7 @@
 	</ul>
 	
 	<c:if test="${not empty otherProducts}">
-	<ul class="product-listing product-grid">
+	<ul class="product-listing product-grid lazy-grid">
 		<c:forEach items="${searchPageData.results}" var="product" varStatus="status">
 			<product:productListerGridItem product="${product}"/>
 		</c:forEach>
@@ -48,6 +50,7 @@
 		</div>
 	</div>
 </div>
+<c:if test="${not isCategoryPage}">
 <div class="bottom-pagination">
 	<nav:pagination top="false" supportShowPaged="${isShowPageAllowed}"
 		supportShowAll="${isShowAllAllowed}"
@@ -55,6 +58,7 @@
 		searchUrl="${searchPageData.currentQuery.url}"
 		numberPagesShown="${numberPagesShown}" />
 </div>
+</c:if>
 <script>
 	$(document).ready(function(){
 		$.each($(".facet-name js-facet-name").find("h3"),function(){
