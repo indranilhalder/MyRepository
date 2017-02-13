@@ -628,6 +628,31 @@ if (searchCategory_id){
 				}
 			/*Creates HTML of individual products*/
 			function makeProductHtml(widgetElement, obj, rid) { 
+				
+				// Start tpr-3736
+				var iaUssid=obj.site_uss_id;
+				var mop="";
+				var mrp=""
+				var spPrice="";
+				var isProductPresent=false;
+				for(var i in iaResponseData) {
+					if(iaUssid==i){
+				    if (iaResponseData.hasOwnProperty(i)) {
+				    	var priceData = iaResponseData[i];
+				    	for(var j = 0; j < priceData.length; j++)
+				    	{
+				    	   mrp=priceData[0];
+				    	   mop=priceData[1];
+				    	   spPrice=priceData[2];
+				    	}
+				    }
+				    isProductPresent=true;
+				    break;
+				    
+				}
+				 }
+				//End tpr-3736
+				
 			  /*This is a bad image*/
 			  if (typeof obj.image_url === "undefined") {
 				  return;
@@ -748,36 +773,54 @@ if (searchCategory_id){
 					 
 				  
 				  // MOP == price,MRP== original price and deiscount price --Below rule is based on MRP > price > discount_price, MRP should be striked out always
-				  if(parseInt(obj.discounted_price) > 0){
-				  if(obj.discounted_price != null || obj.discounted_price != '' || obj.discounted_price != "undefined" ){
-					  
-					  if(obj.original_price != null && parseInt(obj.original_price) > parseInt(obj.discounted_price) ){
-						  html += '<p class="old mrprice">₹'+parseInt(obj.original_price)+'</p>';
-					  }
-					  else if(obj.price != null && parseInt(obj.price) > parseInt(obj.discounted_price) && parseInt(obj.price) > 0){
-						  html += '<p class="old moprice">₹'+parseInt(obj.price)+'</p>';
-					  }
-					  //TISPRO-317 changes
-					  html += '<p class="sale discprice">₹'+parseInt(obj.discounted_price)+'</p>';
-				  }
-				  }
-				  else if(Math.round(obj.original_price) == (obj.price)){
-					  html += '<p class="normal moprice">₹'+parseInt(obj.price)+'</p>';
-				  }
+				//Start tpr-3736
+					if (parseInt(spPrice) > 0) {
+						if (spPrice != null || spPrice != ''
+								|| spPrice != "undefined") {
 
-				  else if(obj.price != null || obj.price != '' || obj.price != "undefined"){
-					  if(parseInt(obj.price) > 0){
-					  if(obj.original_price != null && parseInt(obj.original_price) > parseInt(obj.price) ){
-						  html += '<p class="old mrprice">₹'+parseInt(obj.original_price)+'</p>';
-					  }
-					  html += '<p class="sale moprice">₹'+parseInt(obj.price)+'</p>';
-					  }
-				  }
-				  if(!obj.sizes){
-					  html += '</div></div></a>';
-					  html += '<p style="font-size: 12px;margin-top: 33px;color: rgb(255, 28, 71);" id="status'+obj.site_product_id+'"></p>';
-					  html += '</li>';
-					  return html;
+							if (mrp != null
+									&& parseInt(mrp) > parseInt(spPrice)) {
+								html += '<p class="old mrprice">₹'
+										+ parseInt(mrp) + '</p>';
+							} else if (mop != null
+									&& parseInt(mop) > parseInt(spPrice)
+									&& parseInt(mop) > 0) {
+								html += '<p class="old moprice">₹' + parseInt(mop)
+										+ '</p>';
+							}
+							// TISPRO-317 changes
+							html += '<p class="sale discprice" id="spPrice">₹'
+									+ parseInt(spPrice) + '</p>';
+						}
+					} 
+					else if (Math.round(mrp) == (mop)) {
+						html += '<p class="normal moprice">₹' + parseInt(mop) + '</p>';
+					}
+
+					else if (mop != null || mop != '' || mop != "undefined") {
+						if (parseInt(mop) > 0) {
+							if (mrp != null
+									&& parseInt(mrp) > parseInt(mop)) {
+								html += '<p class="old mrprice">₹'
+										+ parseInt(mrp) + '</p>';
+							}
+							html += '<p class="sale moprice">₹' + parseInt(mop) + '</p>';
+						}
+					}
+					if (!obj.sizes) {
+						
+						html += '</div></div></a>';
+						html += '<p style="font-size: 12px;margin-top: 33px;color: rgb(255, 28, 71);" id="status'
+								+ obj.site_product_id + '"></p>';
+						html += '</li>';
+						
+						/* Calculating execution time */
+						var end = new Date(); 
+						console.log("END TIME "+ end.getHours() + ":" + end.getMinutes() + ":" + end.getSeconds()); 
+						
+						
+						return html;
+						//End tpr-3736
 				  }
 				  else if(obj.sizes != '' || obj.sizes != null || obj.sizes != "undefined"){
 					  if(obj.sizes.length > 0){
@@ -897,7 +940,11 @@ if (searchCategory_id){
 				}
 
 			/*Given a response and widget kind, create the HTML we use to update page*/
+			var iaResponseData=null;	
 			function updatePage(response, widgetMode) {
+				
+			//response={"request_id":"9f5b15d6-eda5-47d3-84de-a2cba9fb77ec","status":200,"status_txt":"OK","data":{"location":null,"recommendations":[{"sizes":"","ia:weightage":-0.00010499,"site_uss_id":"123654098765485130011712","colors":["Gold"],"original_price":11499,"discounted_price":10499,"subbrand":"","site_product_id":"987654321","ia:seller_list":[[-0.00010499,{"availability_status":1,"available_quantity":1103,"price":11499,"msrp":11499,"weightage":-0.00010499,"seller_id":"100136","sku":"100136MEIZUM3NOTE01","discount":10499}]],"type":"Electronics","online_exclusive":false,"url":"","category":"MSH1210100","price":11499,"is_new_product":false,"image_url":"xxx","average_user_rating":2.05341359009462,"ia:seller":{"availability_status":1,"available_quantity":1103,"price":11499,"msrp":11499,"weightage":-0.00010499,"seller_id":"100136","sku":"100136MEIZUM3NOTE01","discount":10499},"name":"Meizu M3 Note 4G Dual Sim 32 GB (Gold)","brand":"Meizu","gender":"electronics"},{"sizes":"","ia:weightage":-0.0001599,"site_uss_id":"123654098765485130011713","colors":["black"],"original_price":20528,"discounted_price":15990,"subbrand":"","site_product_id":"987654322","ia:seller_list":[[-0.0001599,{"availability_status":1,"available_quantity":16,"price":17850,"msrp":20528,"weightage":-0.0001599,"seller_id":"123846","sku":"123846NXG2KSL024","discount":15990}]],"type":"Electronics","online_exclusive":false,"url":"","category":"MSH1223100","price":17850,"is_new_product":false,"image_url":"https://img.tatacliq.com/images/252Wx374H/MP000000000757620_252Wx374H_20161128063952.jpeg","average_user_rating":2.148081518779059,"ia:seller":{"availability_status":1,"available_quantity":16,"price":17850,"msrp":20528,"weightage":-0.0001599,"seller_id":"123846","sku":"100090CKJShirtGreyCMH393Z5W1BR07XL","discount":15990},"name":"Acer Aspire ES1521 15.6\" Laptop (AMD, 1TB HDD) Black","brand":"Acer","gender":"electronics"}],"filter_key":null,"filter_value":null},"server":"analytics-general-15"};
+			//console.log(response);	
 			  var widgetElement = "";
 			  if(typeof response.data === "undefined") {
 			    /*Either analytics is down or we passed a bad parameter*/
@@ -920,6 +967,34 @@ if (searchCategory_id){
 			    var slider = true;
 			    /*But for cases where we have an array of recommendations the size of 100, we will be using grid view*/
 			 
+			    
+			  //Start tpr-3736
+				var arrayList = response['data']['recommendations'];
+				var usidList = [];
+				var arrIndx = -1;
+				for ( var i in arrayList) {
+					var ussid = arrayList[i]['site_uss_id'];
+					usidList[++arrIndx] = ussid;
+				}
+				var ussisLists=usidList.join(",");
+				var requiredUrl = ACC.config.encodedContextPath + "/p-getIAResponse";
+				var dataString = 'iaUssIds=' + ussisLists;
+				$.ajax({
+					contentType : "application/json; charset=utf-8",
+					url : requiredUrl,
+					async : false,
+					data : dataString,
+					cache : false,
+					dataType : "json",
+					success : function(data) {
+						
+						iaResponseData=data['iaResponse'];
+					}
+				});
+				// End tpr-3736
+			    
+			    
+			    
 
 			    if(!respData){
 			    	//console.log('No response data found for *'+widgetMode+'* wigdet');

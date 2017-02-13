@@ -62,11 +62,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the price for a buybox wining seller against a product code.
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -198,11 +198,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the price for a buybox wining seller against a product code.
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -250,11 +250,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the inventory for a buybox wining seller against a product code.
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -318,11 +318,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for invalidating pk of the buybox sellers in the cache.
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -373,9 +373,9 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the buybox price for given product code if all the seller has stock zero
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return List<BuyBoxModel>
 	 */
 	@Override
@@ -419,7 +419,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#getRichAttributeData(java.lang.String)
 	 */
 	@Override
@@ -532,9 +532,9 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the buybox price for given ussid if all the seller has stock zero
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return List<BuyBoxModel>
 	 */
 	@Override
@@ -560,7 +560,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#priceForUssid(java.lang.String)
 	 */
 	@Override
@@ -594,11 +594,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the price for a buybox wining seller against a product code.
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -710,6 +710,39 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
+	}
+
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#getBuyBoxDataForUssids(java.util.List)
+	 */
+	//TPR-3736
+	@Override
+	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions
+	{
+		final Map<String, List<Double>> buyBoxData = new HashMap<String, List<Double>>();
+		final String queryString = //
+		"select {b.pk} from {" + BuyBoxModel._TYPECODE + " as b } " + " where {b.available}>0 and {b.mrp}>0"
+				+ "  AND {b.sellerArticleSKU} in (" + ussidList + ")";
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+
+		final List<BuyBoxModel> buyBoxList = flexibleSearchService.<BuyBoxModel> search(query).getResult();
+		if (CollectionUtils.isNotEmpty(buyBoxList))
+		{
+			for (final BuyBoxModel buyBox : buyBoxList)
+			{
+				final List<Double> priceList = new ArrayList<Double>();
+				priceList.add(buyBox.getMrp());
+				priceList.add(buyBox.getPrice() == null ? Double.valueOf(0.0D) : buyBox.getPrice());
+				priceList.add(buyBox.getPrice() == null ? Double.valueOf(0.0D) : buyBox.getSpecialPrice());
+				buyBoxData.put(buyBox.getSellerArticleSKU(), priceList);
+			}
+		}
+		return buyBoxData;
 	}
 
 
