@@ -1233,7 +1233,7 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 			
 				transientCartHtml+="</div></li></ul><li class='view-bag-li'><a href='"+ACC.config.encodedContextPath+"/cart' class='go-to-bag mini-cart-checkout-button'>View Bag</a></li></ul></div>";
 				$('.transient-mini-bag').append(transientCartHtml);
-				$('body.page-productDetails').append(transientCartHtmlMobile);
+				$('body').append(transientCartHtmlMobile);
 				/*LW-216*/
 				if(typeof response.productType!=='undefined' && response.productType.toLowerCase() === "luxury"){
 					$('.mini-transient-bag .product-img').append("<img class='luxury_ribbon' src='/_ui/responsive/common/images/Ribbon.png'>");

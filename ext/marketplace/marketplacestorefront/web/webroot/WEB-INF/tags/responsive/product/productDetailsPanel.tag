@@ -166,7 +166,7 @@ tr.d0 td {
 				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name">${product.brand.brandname}</span></h3>
 				<a itemprop="url" href="${mainurl}">
 				<!-- For TPR-4358 -->
-				<h1 itemprop="name" class="product-name"><strong>${product.productTitle}</strong></h1>
+				<h1 itemprop="name" class="product-name">${product.productTitle}</h1>
 				<meta itemprop="sku" content="${product_sku}"/>
 				</a>
 			</ycommerce:testId>
@@ -253,8 +253,9 @@ tr.d0 td {
 					<li class="empty"></li>
 					<li class="empty"></li>
 					<li class="empty"></li>
-					<span class="gig-rating-readReviewsLink_pdp"> <spring:theme
-							code="rating.noreviews" /></span>
+				<%-- 	<span class="gig-rating-readReviewsLink_pdp"> <spring:theme
+							code="rating.noreviews" /></span> --%>
+							<span class="gig-rating-readReviewsLink_pdp"></span>			<!-- UF-29 -->
 					<!-- OOTB Code Commented to facilitate Rest Call -->
 					<%-- <c:choose>
 				<c:when test="${not empty product.ratingCount}">
