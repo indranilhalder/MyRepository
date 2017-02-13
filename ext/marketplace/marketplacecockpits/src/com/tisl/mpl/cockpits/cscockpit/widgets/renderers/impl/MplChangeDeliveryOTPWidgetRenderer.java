@@ -230,12 +230,12 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		
 	}
 
-	private void createOtpArea(final Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,AddressModel deliveryAddress, Div content,final List<TransactionSDDto>  ScheduledeliveryDtoList) {
+	private void createOtpArea(final Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,final AddressModel deliveryAddress, Div content,final List<TransactionSDDto>  ScheduledeliveryDtoList) {
 		final Div otpAreaDiv = new Div();
 		content.appendChild(otpAreaDiv);
 		final OrderModel  orderModel = (OrderModel) getOrder().getObject();
 		try {
-			sendSmsToCustomer(orderModel);
+			sendSmsToCustomer(orderModel,deliveryAddress);
 		} catch (InvalidKeyException | NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
@@ -262,7 +262,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		resendOtp.addEventListener(Events.ON_CLICK, new EventListener() {
 			@Override
 			public void onEvent(Event arg0) throws Exception {
-				handleResendOtpButtonClickEvent(orderModel, resendOtp);
+				handleResendOtpButtonClickEvent(orderModel, deliveryAddress,resendOtp);
 				if(null != otpLimitsDiv && null != otpLimitsDiv.getChildren()){
 					otpLimitsDiv.getChildren().clear();
 				}
@@ -576,10 +576,10 @@ public class MplChangeDeliveryOTPWidgetRenderer
 	}
 
 	private void handleResendOtpButtonClickEvent(OrderModel ordermodel,
-			Toolbarbutton resendOtp) throws InvalidKeyException,
+			AddressModel deliveryAddress, Toolbarbutton resendOtp) throws InvalidKeyException,
 			NoSuchAlgorithmException {
 		try {
-			sendSmsToCustomer(ordermodel);
+			sendSmsToCustomer(ordermodel,deliveryAddress);
 			otpResendCount++;
 		}catch(Exception e) {
 			LOG.error("Exception while sending sms to customer for change delivery :"+e.getMessage());
@@ -588,7 +588,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 	}
 
 	// To send SMS
-	private void sendSmsToCustomer(OrderModel ordermodel)
+	private void sendSmsToCustomer(OrderModel ordermodel, AddressModel deliveryAddress)
 			throws InvalidKeyException, NoSuchAlgorithmException {
 		String oTPMobileNumber = ordermodel.getDeliveryAddress().getPhone1();
 		OTPModel OTP = oTPGenericService.getLatestOTPModel(ordermodel.getUser()
@@ -617,6 +617,24 @@ public class MplChangeDeliveryOTPWidgetRenderer
 								.replace(
 										MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO,
 										contactNumber), oTPMobileNumber);
+		if(null !=oTPMobileNumber && null != deliveryAddress && null != deliveryAddress.getPhone1()) {
+			if(!oTPMobileNumber.equalsIgnoreCase(deliveryAddress.getPhone1())) {
+				sendSMSFacade
+				.sendSms(
+						MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+						MarketplacecommerceservicesConstants.SMS_MESSAGE_CD_OTP
+								.replace(
+										MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO,
+										mplCustomerName != null ? mplCustomerName
+												: "There")
+								.replace(
+										MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE,
+										smsContent)
+								.replace(
+										MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO,
+										contactNumber), deliveryAddress.getPhone1());
+			}
+		}
 
 	}
 
