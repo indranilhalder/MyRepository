@@ -1011,3 +1011,16 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 				 
 				 utag.link({"link_text":parentItem+"_"+lastItem,"event_type" : navigationClick});
 			 }); 
+
+			 
+/* Data Layer Schema Changes Starts*/
+
+/*TPR-4740*/
+$(document).on("click",".continue-shopping.desk-view-shopping",function() {
+	utag.link({
+		link_text: "continue_shopping_clicked",
+		event_type : "continue_shopping_clicked"
+	});
+})
+
+/* Data Layer Schema Changes Ends*/

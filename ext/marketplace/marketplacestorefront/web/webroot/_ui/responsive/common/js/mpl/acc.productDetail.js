@@ -590,7 +590,8 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 	var loggedIn=$("#loggedIn").val();
 
 	var productCodePost = $("#productCodePost").val();
-
+	var productcodearray =[];
+	productcodearray.push(productCodePost);
 	var wishName = "";
 	
 	var ussidValue=$("#ussid").val();
@@ -690,7 +691,7 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 						link_obj: this, 
 						link_text: 'add_to_wishlist' , 
 						event_type : 'add_to_wishlist', 
-						product_sku_wishlist : productCodePost
+						product_sku_wishlist : productcodearray
 					});
 				/*TPR-656 Ends*/
 				

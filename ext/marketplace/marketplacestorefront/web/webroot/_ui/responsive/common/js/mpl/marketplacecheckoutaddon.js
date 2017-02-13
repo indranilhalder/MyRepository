@@ -7051,7 +7051,9 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				    +'&sizeSelected='+ sizeSelected;
 
 	var entryNo = $("#entryNo").val();
-	
+
+	var productcodearray =[];
+		productcodearray.push(productCode);
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
@@ -7062,13 +7064,13 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				
 				$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
 				
-				/*TPR-656*/
-					utag.link({
-						link_obj: this, 
-						link_text: 'add_to_wishlist' , 
-						event_type : 'add_to_wishlist', 
-						product_sku_wishlist : productCode
-					});
+				/*TPR-656*/ /*TPR-4738*/
+				utag.link({
+					link_obj: this, 
+					link_text: 'mybag_to_wishlist' , 
+					event_type : 'mybag_to_wishlist', 
+					product_sku_wishlist : productcodearray
+				});
 				/*TPR-656 Ends*/
 				
 				localStorage.setItem("movedToWishlist_msgFromCart", "Y");
