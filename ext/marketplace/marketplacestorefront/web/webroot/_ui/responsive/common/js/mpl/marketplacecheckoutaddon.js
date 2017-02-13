@@ -6709,6 +6709,10 @@ $("#couponSubmitButton").click(function(){
 	 				onSubmitAnalytics("invalid_coupon");
 	 				// $("#couponError").css("display","block");
 	 				// document.getElementById("couponError").innerHTML=response.redeemErrorMsg;
+	 				/*TPR-4746*/
+	 				if(typeof utag !="undefined"){
+		 				   utag.link({error_type : 'offer_error'});
+		 				}
 	 			}
 	 			else{
 		 			if(response.couponRedeemed==true){
@@ -6741,6 +6745,10 @@ $("#couponSubmitButton").click(function(){
 	 			$("#couponSubmitButton").prop('disabled', false);
 	 			$("#couponSubmitButton").css("opacity","1");
 	 			$("#no-click,.spinner").remove(); //changes for INC_11738
+	 			/*TPR-4746*/
+	 			if(typeof utag !="undefined"){
+	 				   utag.link({error_type : 'offer_error'});
+	 				}
 	 		}
 	 	});	 
 	}

@@ -1011,3 +1011,15 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 				 
 				 utag.link({"link_text":parentItem+"_"+lastItem,"event_type" : navigationClick});
 			 }); 
+
+			 /*TPR-4745*/
+			 $(document).on('click','.pincode-button',function(){
+				 
+				 utag.link({ link_text : 'add_new_address_clicked' ,event_type : 'add_new_address_clicked'});
+			 })
+			 
+			 /*$(document).on('click','#newAddressButton',function(){
+				 utag.link({ link_text : 'add_new_address_saved' ,event_type : 'add_new_address_saved'});
+			 })*/
+			
+			 
