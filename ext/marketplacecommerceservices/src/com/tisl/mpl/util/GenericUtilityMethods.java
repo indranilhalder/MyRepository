@@ -1082,21 +1082,22 @@ public class GenericUtilityMethods
 
 							}
 
-							if (null != entry.getBasePrice())
+							if (null != entry.getBasePrice() && null != entry.getBasePrice().getValue())
 							{
-								basePrice = appendQuote(entry.getBasePrice().toString());//base price for a cart entry
+								basePrice = appendQuote(entry.getBasePrice().getValue().toString());//base price for a cart entry
 
 							}
 
-							if (null != entry.getTotalPrice())
+							if (null != entry.getTotalPrice() && null != entry.getTotalPrice().getValue())
 							{
-								totalEntryPrice = appendQuote(entry.getTotalPrice().toString());//total price for a cart entry
+								totalEntryPrice = appendQuote(entry.getTotalPrice().getValue().toString());//total price for a cart entry
 
 							}
-							if (entry.getCurrDelCharge() != null)
+							if (entry.getCurrDelCharge() != null && null != entry.getCurrDelCharge().getValue()
+									&& null != currencySymbol)
 							{
 
-								order_shipping_charge = appendQuote(currencySymbol.concat(entry.getCurrDelCharge().toString()));
+								order_shipping_charge = appendQuote(currencySymbol.concat(entry.getCurrDelCharge().getValue().toString()));
 							}
 						}
 
