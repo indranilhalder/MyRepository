@@ -352,6 +352,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section2B;;CMSMediaParagraphComponent;
 ;Section2C;;;wide
 ;Section3;;MplShowcaseComponent;
+;BestOffersSection;;MplOfferImageCarouselComponent;
 ;Section4A;;MplSequentialBannerComponent;
 ;Section4B;;ProductCarouselComponent;
 ;Section4C;;ImageCarouselComponent;
@@ -1819,6 +1820,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 #;Section2C;;RotatingImagesComponent,CMSParagraphComponent,VideoComponent;
 ;StyleEditLeftColSlot;;RotatingImagesComponent,CMSParagraphComponent;
 ;StyleEditRightColSlot;;VideoComponent;
+;BestOfferSection;;MplOfferImageCarouselComponent;
 
 ;Section2D;;SimpleBannerComponent,MplAdvancedCategoryCarouselComponent,SimpleResponsiveBannerComponent,CMSParagraphComponent;
 
@@ -1900,6 +1902,8 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
 ;;ShopForLookLeftColSlot;Shop For Look Left Col Slot;true
 ;;ShopForLookRightColSlot;Shop For Look Right Col Slot;true
 
+;;BestOfferSection;Best Offers Section Slot;true
+
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='NewBrandLandingPageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;SiteLogo;;;logo
 ;HeaderLinks;;;headerlinks
@@ -1941,7 +1945,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;ShopForRightCol;;CMSLinkComponent;
 ;ShopForViewMore;;CMSLinkComponent;
 
-
+;BestOfferSection;;MplOfferImageCarouselComponent;
 
 ;Section4A;;ProductRefinementComponent,CustomSkuComponent;
 ;Section4B;;ProductGridComponent;

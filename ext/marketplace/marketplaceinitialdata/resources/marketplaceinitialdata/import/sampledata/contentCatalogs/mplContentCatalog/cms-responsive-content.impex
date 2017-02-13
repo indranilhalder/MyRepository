@@ -261,6 +261,11 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section3Slot-Homepage;Section3;;Section3Slot-Homepage;;;
 
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef);
+;;BestOffersSectionSlot-Homepage;true;Best Offers Section Slot;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;BestOffersSectionSlot-Homepage;BestOffersSection;;BestOffersSectionSlot-Homepage;;;
 
 ## Home Section 4A
 ####### Promotional Banner ###################
