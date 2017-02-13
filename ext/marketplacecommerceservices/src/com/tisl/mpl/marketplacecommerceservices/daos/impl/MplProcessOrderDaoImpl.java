@@ -9,6 +9,7 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +30,13 @@ public class MplProcessOrderDaoImpl implements MplProcessOrderDao
 	private FlexibleSearchService flexibleSearchService;
 
 	/*
-	 * (non-Javadoc)
+
+	 * (non-Javadoc) //PaymentFix2017:- queryTAT added
 	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplProcessOrderDao#getPaymentPedingOrders()
 	 */
 	@Override
-	public List<OrderModel> getPaymentPedingOrders(final String statusCode)
+	public List<OrderModel> getPaymentPedingOrders(final String statusCode, final Date queryTAT)
 	{
 		try
 		{
@@ -44,6 +46,7 @@ public class MplProcessOrderDaoImpl implements MplProcessOrderDao
 			//forming the flexible search query
 			final FlexibleSearchQuery orderListQuery = new FlexibleSearchQuery(queryString);
 			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.PAYMENTPENDINGSTATUS, statusCode);
+			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.PAYMENTPENDINGSKIPTIME, queryTAT);
 
 			//fetching PAYMENT PENDING order list from DB using flexible search query
 			final List<OrderModel> orderList = getFlexibleSearchService().<OrderModel> search(orderListQuery).getResult();
@@ -148,9 +151,6 @@ public class MplProcessOrderDaoImpl implements MplProcessOrderDao
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
-
-
-
 
 
 }

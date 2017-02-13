@@ -136,6 +136,8 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 					userId = currentUser.getUid();
 					cookie.setValue(userId);
 					cookie.setMaxAge(60 * 60 * 24);// setting 1 day life time for cookies
+					//SISA FIX
+					cookie.setSecure(true);
 					getUserCookieGenerator().addCookie(response, userId);
 					userCookieSet = true;
 				}
@@ -170,6 +172,8 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 					}
 					cookie.setValue(userType);
 					cookie.setMaxAge(60 * 60 * 24);// setting 1 day life time for cookies
+					//SISA FIX
+					cookie.setSecure(true);
 					getUserTypeCookieGenerator().addCookie(response, userType);
 					userTypeCookieSet = true;
 				}

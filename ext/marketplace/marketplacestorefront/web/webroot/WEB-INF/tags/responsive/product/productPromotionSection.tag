@@ -146,7 +146,7 @@
 										</div>										
 										</div>
 									</div>
-									<p><a style="text-decoration:none" href="${request.contextPath}${product.potentialPromotions[0].promourl}">Bundle offer promotion page</a></p>
+									<p><a style="text-decoration:none" href="${request.contextPath}${product.potentialPromotions[0].promourl}">${product.potentialPromotions[0].bundlepromolinktext}</a></p>
 									</div>
 									</li>
 								</c:if>

@@ -13,7 +13,7 @@
 </div>
 <div id="ReviewSecion" class="reviews">
 <div class="header">
-      <h3>Your Rating</h3>
+      <h3>Ratings and Reviews</h3>		<!-- UF-57 -->
 </div>
 <div class="overview">
 <div class="tabs-block">

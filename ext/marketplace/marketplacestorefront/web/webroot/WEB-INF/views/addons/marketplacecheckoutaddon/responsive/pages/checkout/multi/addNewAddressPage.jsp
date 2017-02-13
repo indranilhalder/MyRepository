@@ -85,8 +85,8 @@
 						var lastName = document.getElementById("address.surname");
 						var address1 = document.getElementById("address.line1");
 						var regAddress = /^[0-9a-zA-Z\-\/\,\s]+$/;
-					//	var address2 = document.getElementById("address.line2");
-					//	var address3 = document.getElementById("address.line3");
+						var address2 = document.getElementById("address.line2");
+						var address3 = document.getElementById("address.line3");
 						var city= document.getElementById("address.townCity");
 						var stateValue = document.getElementById("address.states");
 						var zipcode = document.getElementsByName("postcode")[0].value;
