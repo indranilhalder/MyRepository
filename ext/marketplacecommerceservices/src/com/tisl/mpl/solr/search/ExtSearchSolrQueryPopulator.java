@@ -25,12 +25,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 
 
-public class ExtSearchSolrQueryPopulator<INDEXED_PROPERTY_TYPE, INDEXED_TYPE_SORT_TYPE>
-		implements
+public class ExtSearchSolrQueryPopulator<INDEXED_PROPERTY_TYPE, INDEXED_TYPE_SORT_TYPE> implements
 		Populator<SearchQueryPageableData<SolrSearchQueryData>, SolrSearchRequest<FacetSearchConfig, IndexedType, INDEXED_PROPERTY_TYPE, SearchQuery, INDEXED_TYPE_SORT_TYPE>>
 {
 	private Converter<SolrFacetSearchConfigModel, FacetSearchConfig> facetSearchConfigConverter;
@@ -39,6 +39,7 @@ public class ExtSearchSolrQueryPopulator<INDEXED_PROPERTY_TYPE, INDEXED_TYPE_SOR
 	private BaseStoreService baseStoreService;
 	private CatalogVersionService catalogVersionService;
 	private SolrFacetSearchConfigSelectionStrategy solrFacetSearchConfigSelectionStrategy;
+	private static final Logger LOG = Logger.getLogger(ExtSearchSolrQueryPopulator.class);
 
 	protected Converter<SolrFacetSearchConfigModel, FacetSearchConfig> getFacetSearchConfigConverter()
 	{
@@ -85,8 +86,7 @@ public class ExtSearchSolrQueryPopulator<INDEXED_PROPERTY_TYPE, INDEXED_TYPE_SOR
 		this.catalogVersionService = catalogVersionService;
 	}
 
-	public void populate(
-			final SearchQueryPageableData<SolrSearchQueryData> source,
+	public void populate(final SearchQueryPageableData<SolrSearchQueryData> source,
 			final SolrSearchRequest<FacetSearchConfig, IndexedType, INDEXED_PROPERTY_TYPE, SearchQuery, INDEXED_TYPE_SORT_TYPE> target)
 	{
 		target.setSearchQueryData(source.getSearchQueryData());
@@ -188,7 +188,9 @@ public class ExtSearchSolrQueryPopulator<INDEXED_PROPERTY_TYPE, INDEXED_TYPE_SOR
 		final SolrFacetSearchConfigModel solrFacetSearchConfigModel = getSolrFacetSearchConfigSelectionStrategy()
 				.getCurrentSolrFacetSearchConfig();
 
-		solrFacetSearchConfigModel.setQueryType("SEARCH");
+		//Commenting as search PT FIX
+		//solrFacetSearchConfigModel.setQueryType("SEARCH");
+		LOG.debug("Commenting as search PT FIX.. ");
 
 		return (getFacetSearchConfigConverter().convert(solrFacetSearchConfigModel));
 	}

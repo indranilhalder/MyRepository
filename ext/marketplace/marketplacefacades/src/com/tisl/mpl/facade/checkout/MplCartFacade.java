@@ -249,15 +249,15 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @DESC TISST-6994,TISST-6990 adding to cart COD eligible or not with Pincode serviceabilty and sship product
-	 * 
+	 *
 	 * @param pincodeResponseData
-	 * 
+	 *
 	 * @param deliveryModeMap
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
@@ -434,8 +434,8 @@ public interface MplCartFacade extends CartFacade
 	 * @return CartData
 	 * @throws EtailNonBusinessExceptions
 	 */
-	CartData getSessionCartWithEntryOrderingMobile(final CartModel cart, final boolean recentlyAddedFirst)
-			throws EtailNonBusinessExceptions;
+	CartData getSessionCartWithEntryOrderingMobile(final CartModel cart, final boolean recentlyAddedFirst,
+			final boolean isrecalculate, final boolean resetReqd) throws EtailNonBusinessExceptions;
 
 	/* TPR-970 changes ,populate city and stae details in cart */
 	public void populatePinCodeData(final CartModel cartmodel, final String pincode);
@@ -470,4 +470,10 @@ public interface MplCartFacade extends CartFacade
 	 */
 	CartModificationData updateCartEntryMobile(long entryNumber, String storeId, CartModel cartModel)
 			throws CommerceCartModificationException;
+
+	/**
+	 * @param cart
+	 * @throws CommerceCartModificationException
+	 */
+	public CartModel getCalculatedCartMobile(CartModel cart) throws CommerceCartModificationException, EtailNonBusinessExceptions;
 }

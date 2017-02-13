@@ -3,7 +3,7 @@
  [y] hybris Platform
  
  Copyright (c) 2000-2014 hybris AG
- All rights reserved.
+ All rights reserved. 
  
  This software is the confidential and proprietary information of hybris
  ("Confidential Information"). You shall not disclose such Confidential
@@ -98,7 +98,7 @@
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default='$productCatalog:Staged']
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']
 					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
 					# Set product approval status to Approved only for those products that have prices.
 					$approved=approvalstatus(code)[default='approved']
@@ -120,7 +120,7 @@
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default='$productCatalog:Staged']
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']
 					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
 
 					# Set product approval status to Approved only for those products that have prices.
@@ -145,7 +145,7 @@
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default='$productCatalog:Staged']
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']
 					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
 
 					# Set product approval status to Approved only for those products that have prices.
@@ -176,7 +176,7 @@
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default='$productCatalog:Staged']
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']
 					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
 
 					# Set product approval status to Approved only for those products that have prices.
@@ -207,7 +207,7 @@
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default='$productCatalog:Staged']
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']
 					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
 
 					# Set product approval status to Approved only for those products that have prices.

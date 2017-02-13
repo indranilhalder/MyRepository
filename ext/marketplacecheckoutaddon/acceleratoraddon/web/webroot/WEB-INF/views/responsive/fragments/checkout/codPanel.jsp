@@ -33,14 +33,21 @@
 		<spring:theme
 			code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoErrorMessage" />
 	</div>
-	<p class="process">
+	<%-- <p class="process">
 		<spring:theme
 			code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoMessage" />
 		&nbsp;<a
 			href="${request.contextPath}/checkout/multi/payment-method/add?Id=updateItHereLink"
 			class="cod-link"><spring:theme
 				code="checkout.multi.paymentMethod.cod.updateItHereLink" /></a>
-	</p>
+	</p> --%>
+	<!-- INC_11794 -->
+	<p class="process">
+		<spring:theme
+			code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoMessage" />
+		 <a class="cod-link" onclick="updateMobileNo()"><spring:theme
+				code="checkout.multi.paymentMethod.cod.updateItHereLink" /></a>
+	</p> 
 
 	<div id="sendOTPButton">
 

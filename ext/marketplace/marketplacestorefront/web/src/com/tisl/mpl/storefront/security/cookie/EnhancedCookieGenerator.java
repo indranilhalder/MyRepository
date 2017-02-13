@@ -128,6 +128,8 @@ public class EnhancedCookieGenerator extends CookieGenerator
 				setCustomDomain(cookie);
 				setEnhancedCookie(cookie);
 				cookie.setPath("/"); //TISPT-307
+				//SISA FIX
+				cookie.setSecure(true);
 
 				if (isHttpOnly())
 				{

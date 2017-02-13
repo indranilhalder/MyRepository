@@ -1,14 +1,15 @@
 var pageNo = 0;
 var totalNoOfPages = 0;
 var productItemArray = [];
-
+var innerRecordSize = 7;
+var loadMoreCount = 71;
 
 function innerLazyLoad(options) {
     //get the 8 items from the array and render // TODO: identify place holder
 	var gridHTML = '';
     $.each(productItemArray, function(index, element) {
-        if (index <= 7) {
-            if (index == 7) {
+        if (index <= innerRecordSize) {
+            if (index == innerRecordSize) {
                 //productsLoaded+= index;
                 gridHTML+= '<li class="product-item lazy-reached">' + $(element).html() + '</li>';
 				//$('ul.product-listing.product-grid').eq(1).append('<li class="product-item lazy-reached">' + $(element).html() + '</li>');
@@ -24,7 +25,7 @@ function innerLazyLoad(options) {
 
 function deleteArraySet(productItemArray) {
     if (productItemArray.length != 0) {
-        for (i = 0; i <= 7; i++) {
+        for (i = 0; i <= innerRecordSize; i++) {
             productItemArray.shift();
         }
     }
@@ -36,16 +37,18 @@ function getProductSetData() {
 	var urlBrowser = '';
 	var query = window.location.search;
 	var protocol = window.location.protocol;
+	var hostname = window.location.hostname;
+	
 	//TODO: need to implement URL page matching 
 	if(/page/.test(window.location.pathname)){
-		urlBrowser = window.location.pathname+'/page-'+pageNo;
+		urlBrowser = window.location.pathname+'page-'+pageNo;
 	}else{
-		urlBrowser = window.location.pathname;
+		urlBrowser = window.location.pathname+'page-'+pageNo;
 	}
 	if(query){
-		urlBrowser+'?'+urlBrowser;
+		urlBrowser+'?'+query;
 	}
-	urlBrowser = protocol+urlBrowser;
+	//urlBrowser = protocol+hostname+urlBrowser;
 	
     $.ajax({
         url: urlBrowser,

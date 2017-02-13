@@ -16,11 +16,21 @@ package com.tisl.mpl.fulfilmentprocess.impl;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.tisl.mpl.fulfilmentprocess.CheckOrderService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 
 
 public class DefaultCheckOrderService implements CheckOrderService
 {
+	private static final Logger LOG = Logger.getLogger(DefaultCheckOrderService.class);
+
+	@Autowired
+	private MplPaymentService mplPaymentService;
+
 
 	@Override
 	public boolean check(final OrderModel order)
@@ -108,4 +118,24 @@ public class DefaultCheckOrderService implements CheckOrderService
 		//return true;
 		return deliveryOptionCheck;
 	}
+
+	/*
+	 * 
+	 * //SprintPaymentFixes:- To handle missing paymentTransaction ,Create the Transaction
+	 */
+	@Override
+	public boolean checkMissintPaymentTrancsaction(final OrderModel order)
+	{
+		boolean status = true;
+
+		if (CollectionUtils.isEmpty(order.getPaymentTransactions()))
+		{
+			status = mplPaymentService.createPaymentTransactionFromSubmitOrderJob(order);
+		}
+		return status;
+	}
+
+
+
+
 }

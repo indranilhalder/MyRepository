@@ -1028,9 +1028,9 @@
 								<input type="hidden" name="orderPage_receiptResponseURL" value="${silentOrderPageData.parameters['orderPage_receiptResponseURL']}"/>
 								<input type="hidden" name="orderPage_declineResponseURL" value="${silentOrderPageData.parameters['orderPage_declineResponseURL']}"/>
 								<input type="hidden" name="orderPage_cancelResponseURL" value="${silentOrderPageData.parameters['orderPage_cancelResponseURL']}"/>
-								<%-- <input type="hidden" id="guid" value="${guid}"> --%>
+							 	 
 								<!--TISQAUAT-411 Fix Removed  guid -->
-								<%-- 		<form:hidden path="guid" id="guid" value="${guid}"/> --%>
+								<form:hidden path="guid" id="guid" value="${guid}"/>
 								<input type="hidden" id="promoAvailable" value="${promoAvailable}"/>
 								<input type="hidden" id="bankAvailable" value="${bankAvailable}"/>
 								<c:forEach items="${sopPaymentDetailsForm.signatureParams}" var="entry" varStatus="status">
@@ -1039,6 +1039,7 @@
 								<c:forEach items="${sopPaymentDetailsForm.subscriptionSignatureParams}" var="entry" varStatus="status">
 									<input type="hidden" id="${entry.key}" name="${entry.key}" value="${entry.value}"/>
 								</c:forEach>
+								
 			    								<div class="accordion_in">
 				    							<div>
 				       								<span id="viewPaymentCOD" >
@@ -1147,7 +1148,7 @@
 								</div>						
 				<!-- End of COD -->					
 										
-						
+							
 							</form:form>
 						</ycommerce:testId>
 						
