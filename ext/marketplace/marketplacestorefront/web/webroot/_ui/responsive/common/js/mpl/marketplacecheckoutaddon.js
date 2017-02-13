@@ -6556,9 +6556,11 @@ function expressbutton()
 	//TPR-683
 	if(typeof utag !="undefined")
 	{
-		utag.link(
-		{"link_text": "mybag_express_checkout" , "event_type" : "mybag_express_checkout"}
-		);
+		//TPR-4739 | Expresscheckout | cart
+		utag.link({
+			"link_text": "mybag_express_checkout_button_submit" ,
+			"event_type" : "mybag_express_checkout_button_submit"
+		});
 	}
 	
 	//alert(selectedAddress);

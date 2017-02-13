@@ -1023,4 +1023,11 @@ $(document).on("click",".continue-shopping.desk-view-shopping",function() {
 	});
 })
 
+//TPR-4739 | Expresscheckout | cart
+$(document).on("click","#expressCheckoutButtonId",function(){
+	utag.link({
+		link_text: "mybag_express_checkout_button_start",
+		event_type : "mybag_express_checkout_button_start"
+	});
+})
 /* Data Layer Schema Changes Ends*/
