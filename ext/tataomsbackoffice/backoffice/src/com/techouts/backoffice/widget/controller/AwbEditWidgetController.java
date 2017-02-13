@@ -3,6 +3,8 @@
  */
 package com.techouts.backoffice.widget.controller;
 
+import de.hybris.platform.util.localization.Localization;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -126,9 +128,20 @@ public class AwbEditWidgetController
 			final List<TransactionInfo> transactionsList = orderLogisticsUpdateFacade.getOrderLogisticsInfo(lpAwbSearch)
 					.getTransactionInfo();
 			this.listOfTransactions = transactionsList;
-			if (transactionsList.isEmpty())
+			if (selectionOrderStatus != null && transactionsList.isEmpty() && StringUtils.isNotEmpty(selectionOrderStatus)
+					&& !selectionOrderStatus.equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_NONE))
 			{
-				this.errorMessageValue = "No Result Found";
+				this.errorMessageValue = Localization.getLocalizedString("lpawb.orderstatus.emptyresult")
+						.concat("\t" + selectionOrderStatus);
+			}
+			else if (selectionLpName != null && StringUtils.isNotEmpty(selectionLpName) && transactionsList.isEmpty()
+					&& !selectionLpName.equalsIgnoreCase(TataomsbackofficeConstants.LPNAME_NONE))
+			{
+				this.errorMessageValue = Localization.getLocalizedString("lpawb.lpname.emptyresult").concat("\t" + selectionLpName);
+			}
+			else if (transactionsList.isEmpty())
+			{
+				this.errorMessageValue = Localization.getLocalizedString("lpawb.emptysearch.message");
 			}
 
 		}
