@@ -1,4 +1,4 @@
-var pageNo = 0;
+var pageNoPagination = 0;
 var totalNoOfPages = 0;
 var productItemArray = [];
 var innerRecordSize = 7;
@@ -40,8 +40,8 @@ function deleteArraySet(productItemArray) {
 }
 
 function getProductSetData() {
-    pageNo++;
-    if (pageNo <= totalNoOfPages) {
+	pageNoPagination++;
+    if (pageNoPagination <= totalNoOfPages) {
         var urlBrowser = '';
         var query = window.location.search;
         var protocol = window.location.protocol;
@@ -49,9 +49,9 @@ function getProductSetData() {
 
         //TODO: need to implement URL page matching 
         if (/page/.test(window.location.pathname)) {
-            urlBrowser = window.location.pathname + '/page-' + pageNo;
+            urlBrowser = window.location.pathname + '/page-' + pageNoPagination;
         } else {
-            urlBrowser = window.location.pathname + '/page-' + pageNo;
+            urlBrowser = window.location.pathname + '/page-' + pageNoPagination;
         }
         if (query) {
             urlBrowser + '?' + query;
