@@ -612,8 +612,19 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			NoSuchAlgorithmException
 	{
 		final String otp = otpGenericService.generateOTP(customerModel.getUid(), OTPTypeEnum.CDA.getCode(), mobileNumber);
-		sendPushNotificationForCDA(customerModel, otp, mobileNumber);
-		return otp;
+		AddressData newDeliveryAddressData = sessionService
+			    .getAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
+			  
+			  if (mobileNumber.equalsIgnoreCase(newDeliveryAddressData.getPhone()))
+			  {
+			   sendPushNotificationForCDA(customerModel, otp, mobileNumber);
+			  }
+			  else
+			  {
+			   sendPushNotificationForCDA(customerModel, otp, mobileNumber);
+			   sendPushNotificationForCDA(customerModel, otp, newDeliveryAddressData.getPhone());
+			  }
+			  return otp;
 	}
 
 

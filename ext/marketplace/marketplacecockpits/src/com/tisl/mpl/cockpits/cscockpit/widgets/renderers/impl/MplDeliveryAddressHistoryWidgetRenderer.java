@@ -84,6 +84,19 @@ public class MplDeliveryAddressHistoryWidgetRenderer
 			populateHeaderRow(widget, header, columns);
 			if(null != orderModel && null != orderModel.getDeliveryAddresses()) {
 				AddressModel bollingAddress = orderModel.getPaymentAddress();
+
+				int size = 0;
+				if(null != orderModel.getDeliveryAddresses() ) {
+					size = orderModel.getDeliveryAddresses().size();
+				}
+				
+				for ( ; size>0;size--) {
+					AddressModel addressModel = orderModel.getDeliveryAddresses().get(size-1);
+					TypedObject addressHistory = UISessionUtils.getCurrentSession().getTypeService().wrapItem(addressModel);
+					if(null != addressHistory) {
+						renderOrderHistory(widget, addressHistory, listBox, columns);
+					}
+				}
 				try {
 					MplDeliveryAddressInfoModel  mplDeliveryAddressInfoModel = null;
 					if(null != orderModel.getType() && orderModel.getType().equalsIgnoreCase("PARENT")) {
@@ -105,12 +118,6 @@ public class MplDeliveryAddressHistoryWidgetRenderer
 					}
 				}catch(Exception e) {
 					e.printStackTrace();
-				}
-				for (AddressModel addressModel : orderModel.getDeliveryAddresses()) {
-					TypedObject addressHistory = UISessionUtils.getCurrentSession().getTypeService().wrapItem(addressModel);
-					if(null != addressHistory) {
-						renderOrderHistory(widget, addressHistory, listBox, columns);
-					}
 				}
 
 			}else {

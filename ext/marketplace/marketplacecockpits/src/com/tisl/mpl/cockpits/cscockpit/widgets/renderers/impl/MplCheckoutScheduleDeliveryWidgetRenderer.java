@@ -26,6 +26,7 @@ import org.zkoss.zul.Row;
 
 import bsh.ParseException;
 
+import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MplDeliveryAddressController;
@@ -68,6 +69,8 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 	private SessionService sessionService;
 	@Autowired
 	private MplDeliveryAddressController mplDeliveryAddressController;
+	@Autowired
+	MplDeliveryAddressFacade mplDeliveryAddressFacade;
 	/**
 	 * Creates the content internal.
 	 *
@@ -136,12 +139,16 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 			 deliverySlotsResponseData=((MarketplaceCheckoutController) widget.getWidgetController()).deliverySlotsRequestDataCallToOms(deliverySlotsRequestData);
 			 if(null !=deliverySlotsResponseData ) {
 				 sessionService.setAttribute(MarketplacecommerceservicesConstants.SCHEDULE_DELIVRY_DATA, deliverySlotsResponseData);
+				 setEddDatebetween(cart, deliverySlotsResponseData);
 			 }
 			 cart.setIsInventoryChanged(Boolean.FALSE);
 		}else {
 			 deliverySlotsResponseData= sessionService.getAttribute(MarketplacecommerceservicesConstants.SCHEDULE_DELIVRY_DATA);
 			 if(null == deliverySlotsResponseData) {
 				 deliverySlotsResponseData=((MarketplaceCheckoutController) widget.getWidgetController()).deliverySlotsRequestDataCallToOms(deliverySlotsRequestData); 
+				 if(null != deliverySlotsResponseData) {
+					 setEddDatebetween(cart, deliverySlotsResponseData);
+				 }
 			 }
 		}
 		
@@ -200,6 +207,65 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 		}
 	}
 	
+
+	private void setEddDatebetween(CartModel cart,InvReserForDeliverySlotsResponseData deliverySlotsResponseData) {
+		if(null != cart && null != deliverySlotsResponseData && null != deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()) {
+			for (AbstractOrderEntryModel cartEntry : cart.getEntries()) {
+				String edd = null;
+				for (InvReserForDeliverySlotsItemEDDInfoData data : deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()) {
+					if(null != cartEntry.getSelectedUSSID() && null !=  data.getUssId()) {
+						if(cartEntry.getSelectedUSSID().equalsIgnoreCase(data.getUssId())){
+							if(null != data.getEDD()) {
+								edd = data.getEDD();
+							}else if(null != data.getNextEDD()) {
+								edd= data.getNextEDD();
+							}
+							if(null != edd) {
+								String eddDateBetween = getEddDateBetween(cartEntry,edd);
+								if(null != eddDateBetween) {
+									cartEntry.setSddDateBetween(eddDateBetween);
+									modelService.save(cartEntry);
+								}
+							}
+						}
+					}
+
+				}
+			}
+		}
+
+	}
+	private String getEddDateBetween(AbstractOrderEntryModel orderEntry,String edd) {
+		String eddDateBetween = null;
+		String timeSlotType = null;
+		String startingDate = null;
+		String endingDate = null;
+		Map<String, List<String>> dateTimeMap = null;
+		if(orderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)){
+			timeSlotType = MarketplacecommerceservicesConstants.DELIVERY_MODE_SD;
+		}else if (orderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)) {
+			timeSlotType = MarketplacecommerceservicesConstants.DELIVERY_MODE_ED;
+		}
+		try {
+			dateTimeMap = 	mplDeliveryAddressFacade.getDateAndTimeMap(timeSlotType, edd);
+		} catch (java.text.ParseException e) {
+			LOG.error("Exception occurred while getting the Edd Dates "+e);
+		}
+		if(null != dateTimeMap && dateTimeMap.size() == 2) {
+			List<String> dates =new ArrayList<String>(dateTimeMap.keySet());
+			 startingDate = dates.get(0);
+			 endingDate   = dates.get(1);
+		}else if(null != dateTimeMap && dateTimeMap.size() == 3){
+			List<String> dates =new ArrayList<String>(dateTimeMap.keySet());
+			 startingDate = dates.get(0);
+			 endingDate   = dates.get(2);
+		}
+		if(null != startingDate && null != endingDate) {
+			eddDateBetween = MarketplacecommerceservicesConstants.Between.concat(MarketplacecommerceservicesConstants.SPACE).concat(startingDate).concat(MarketplacecommerceservicesConstants.SPACE).concat(MarketplacecommerceservicesConstants.AND).concat(MarketplacecommerceservicesConstants.SPACE).concat(endingDate);
+		}
+		return eddDateBetween;
+
+	}
 	private void renderDeliverySlots(ListboxWidget<CheckoutCartWidgetModel, CheckoutController> widget,AbstractOrderEntryModel orderEntry, InvReserForDeliverySlotsItemEDDInfoData deliverySlotsItemEDDInfo,Listitem parent) {
 
 		LOG.info("rendering deliverySlots ");
