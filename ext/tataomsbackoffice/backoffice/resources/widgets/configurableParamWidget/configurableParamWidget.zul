@@ -17,7 +17,7 @@
 		.headingpopup{ padding:10px; float:left; color:black; font-size:
 		13px; } .error_class{font-size:13px;color:red;}
 		.success_class{font-size:13px;color:green;width:40}
-		 .lheadingSucess{ float:left; font-size: 13px; }
+		.lheadingSucess{ float:left; font-size: 13px; }
 	</style>
 	<zscript><![CDATA[
 	import java.util.Comparator;
@@ -34,116 +34,148 @@
 			</row>
 			<row style="border-bottom:none">
 				<label value="${labels.lbl.header.one}" />
-				<listbox id="sdListbox" rows="3"
-					emptyMessage="No result found in the result"
-					style="font-size:10px">
-					<listhead sizable="true">
-						<listheader style="width:40px;">
-							<button id="sdItemDelete"
-								tooltiptext="delete sd time slot"
-								image="${wr}/images/delete.png">
-							</button>
-						</listheader>
-						<listheader style="width:40px;">
-							<button tooltiptext="Add new time slot"
-								onClick="sdpopup.setVisible(true)" image="${wr}/images/add.png" />
-						</listheader>
-						<listheader
-							style="text-align:center;font-size:10px" label="From"
-							sortAscending="${fromTimeAsc}" sortDescending="${fromTimeDsc}">
-						</listheader>
-						<listheader
-							style="text-align:center;font-size:10px" label="To"
-							sortAscending="${toTimeAsc}" sortDescending="${toTimeDsc}">
-						</listheader>
-					</listhead>
-					<template name="model">
-						<listitem>
-							<listcell></listcell>
-							<listcell label="${each.timeslotType}"></listcell>
-							<listcell label="${each.fromTime}"></listcell>
-							<listcell label="${each.toTime}"></listcell>
-						</listitem>
-					</template>
-				</listbox>
-				<button id="saveSdTimeSlots" label="Save" />
-				<label class="lheading" value="Item deleted.Click Save button to Confirm"  id="sdTimeSloteDeleteMessage"/>
-			</row>
-			<row style="border-bottom:none">
+				<vbox>
+					<hbox>
+						<button tooltiptext="Add new time slot"
+							onClick="sdpopup.setVisible(true)"
+							image="${wr}/images/add-tool-plus.png" />
+						<button id="sdItemEdit"
+							tooltiptext="edit sd time slot"
+							image="${wr}/images/update-tool-pencil.png" width="40px">
+						</button>
+						<button id="sdItemDelete"
+							tooltiptext="delete sd time slot"
+							image="${wr}/images/delete-icon.png" width="40px">
+						</button>
+					</hbox>
+					<listbox id="sdListbox" rows="3"
+						emptyMessage="No result found in the result">
+						<listhead>
+							<listheader label="TYPE"
+								style="text-align:center;font-size:10px">
+							</listheader>
+							<listheader label="From"
+								style="text-align:center;font-size:10px"
+								sortAscending="${fromTimeAsc}"
+								sortDescending="${fromTimeDsc}">
+							</listheader>
+							<listheader label="To"
+								style="text-align:center;font-size:10px"
+								sortAscending="${toTimeAsc}" sortDescending="${toTimeDsc}">
+							</listheader>
+						</listhead>
+						<template name="model">
+							<listitem>
+								<listcell label="${each.timeslotType}"
+									style="text-align:center;font-size:10px">
+								</listcell>
+								<listcell label="${each.fromTime}"
+									style="text-align:center;font-size:10px">
+								</listcell>
+								<listcell label="${each.toTime}"
+									style="text-align:center;font-size:10px">
+								</listcell>
+							</listitem>
+						</template>
+					</listbox>
+				</vbox>
+			</row>	
+				<row style="border-bottom:none">
 				<label value="${labels.lbl.header.two}" />
-
-				<listbox id="edListbox" rows="3"
-					emptyMessage="No result found in the result"
-					style="font-size:10px">
-					<listhead sizable="true">
-						<listheader
-							style="width:40px;text-align:left">
-							<button tooltiptext="delete ed time slot"
-								id="edItemDelete" image="${wr}/images/delete.png">
-							</button>
-						</listheader>
-						<listheader style="width:40px;">
-							<button tooltiptext="Add new time slot"
-								onClick="edpopup.setVisible(true)" image="${wr}/images/add.png" />
-						</listheader>
-						<listheader
-							style="text-align:center;font-size:10px" label="From"
-							sortAscending="${fromTimeAsc}" sortDescending="${fromTimeDsc}">
-						</listheader>
-						<listheader
-							style="text-align:center;font-size:10px" label="To"
-							sortAscending="${toTimeAsc}" sortDescending="${toTimeDsc}">
-						</listheader>
-					</listhead>
-					<template name="model">
-						<listitem>
-							<listcell></listcell>
-							<listcell label="${each.timeslotType}"></listcell>
-							<listcell label="${each.fromTime}"></listcell>
-							<listcell label="${each.toTime}"></listcell>
-						</listitem>
-					</template>
-				</listbox>
-				<button id="saveEdTimeSlots" label="Save" />
-					<label class="lheading" value="Item deleted.Click Save button to Confirm"   id="edTimeSloteDeleteMessage"/>
-			</row>
+				<vbox>
+					<hbox>
+						<button tooltiptext="Add new time slot"
+							onClick="edpopup.setVisible(true)"
+							image="${wr}/images/add-tool-plus.png" />
+						<button id="edItemEdit"
+							tooltiptext="edit ed time slot"
+							image="${wr}/images/update-tool-pencil.png" width="40px">
+						</button>
+						<button id="edItemDelete"
+							tooltiptext="delete ed time slot"
+							image="${wr}/images/delete-icon.png" width="40px">
+						</button>
+					</hbox>
+					<listbox id="edListbox" rows="3"
+						emptyMessage="No result found in the result">
+						<listhead>
+							<listheader label="TYPE"
+								style="text-align:center;font-size:10px">
+							</listheader>
+							<listheader label="From"
+								style="text-align:center;font-size:10px"
+								sortAscending="${fromTimeAsc}"
+								sortDescending="${fromTimeDsc}">
+							</listheader>
+							<listheader label="To"
+								style="text-align:center;font-size:10px"
+								sortAscending="${toTimeAsc}" sortDescending="${toTimeDsc}">
+							</listheader>
+						</listhead>
+						<template name="model">
+							<listitem>
+								<listcell label="${each.timeslotType}"
+									style="text-align:center;font-size:10px">
+								</listcell>
+								<listcell label="${each.fromTime}"
+									style="text-align:center;font-size:10px">
+								</listcell>
+								<listcell label="${each.toTime}"
+									style="text-align:center;font-size:10px">
+								</listcell>
+							</listitem>
+						</template>
+					</listbox>
+				</vbox>
+			</row>	
 			<row style="border-bottom:none">
 				<label value="${labels.lbl.header.three}" />
-				<listbox id="rdListbox" rows="3" hflex="1"
-					emptyMessage="No result found in the result"
-					style="font-size:10px">
-					<listhead sizable="true">
-						<listheader style="width:40px;">
-							<button id="rdItemDelete"
-								tooltiptext="delete rd time slot"
-								image="${wr}/images/delete.png">
-							</button>
-						</listheader>
-						<listheader style="width:40px;">
-							<button tooltiptext="Add new time slot"
-								onClick="rdpopup.setVisible(true)" image="${wr}/images/add.png" />
-						</listheader>
-						<listheader
-							style="text-align:center;font-size:10px" label="From"
-							sortAscending="${fromTimeAsc}" sortDescending="${fromTimeDsc}">
-						</listheader>
-						<listheader
-							style="text-align:center;font-size:10px" label="To"
-							sortAscending="${toTimeAsc}" sortDescending="${toTimeDsc}">
-						</listheader>
-					</listhead>
-					<template name="model">
-						<listitem>
-							<listcell></listcell>
-							<listcell label="${each.timeslotType}"></listcell>
-							<listcell label="${each.fromTime}"></listcell>
-							<listcell label="${each.toTime}"></listcell>
-						</listitem>
-					</template>
-				</listbox>
-				<button id="saveRdTimeSlots" label="Save" />
-				<label class="lheading" value="Item deleted.Click Save button to Confirm"  id="rdTimeSloteDeleteMessage"/>
-			</row>
+				<vbox>
+					<hbox>
+						<button tooltiptext="Add new time slot"
+							onClick="rdpopup.setVisible(true)"
+							image="${wr}/images/add-tool-plus.png" />
+						<button id="rdItemEdit"
+							tooltiptext="edit rd time slot"
+							image="${wr}/images/update-tool-pencil.png" width="40px">
+						</button>
+						<button id="rdItemDelete"
+							tooltiptext="delete rd time slot"
+							image="${wr}/images/delete-icon.png" width="40px">
+						</button>
+					</hbox>
+					<listbox id="rdListbox" rows="3"
+						emptyMessage="No result found in the result">
+						<listhead>
+							<listheader label="TYPE"
+								style="text-align:center;font-size:10px">
+							</listheader>
+							<listheader label="From"
+								style="text-align:center;font-size:10px"
+								sortAscending="${fromTimeAsc}"
+								sortDescending="${fromTimeDsc}">
+							</listheader>
+							<listheader label="To"
+								style="text-align:center;font-size:10px"
+								sortAscending="${toTimeAsc}" sortDescending="${toTimeDsc}">
+							</listheader>
+						</listhead>
+						<template name="model">
+							<listitem>
+								<listcell label="${each.timeslotType}"
+									style="text-align:center;font-size:10px">
+								</listcell>
+								<listcell label="${each.fromTime}"
+									style="text-align:center;font-size:10px">
+								</listcell>
+								<listcell label="${each.toTime}"
+									style="text-align:center;font-size:10px">
+								</listcell>
+							</listitem>
+						</template>
+					</listbox>
+				</vbox>
+			</row>	
 			<row style="border-bottom:none">
 				<label value="Scheduled Delivery Charge" hflex="1" />
 				<doublebox id="sdCharge" width="120px" maxlength="4"
@@ -156,7 +188,8 @@
 	</grid>
 	<div class="popuped" id="sdpopup" visible="false"
 		action="show: slideDown;hide: slideUp">
-		<label class="headingpopup" value="Scheduled Delivery Time Slot" />
+		<label class="headingpopup"
+			value="Scheduled Delivery Time Slot" />
 		<button class="close" image="${wr}/images/close-button.gif"
 			onClick="sdpopup.setVisible(false)" />
 		<div class="content">
@@ -174,17 +207,13 @@
 					</vlayout>
 					<vlayout>
 						<label value="" />
-						<button label="Add" id="sdPopupSave" />
+						<button label="ADD and SAVE" id="sdPopupSave" />
 					</vlayout>
 				</hlayout>
 			</div>
-			<label>
-				Note:These time slots are temporary add to list box
-				click save to permanent store
-			</label>
 		</div>
 	</div>
-	
+
 	<div class="popuped" id="edpopup" visible="false"
 		action="show: slideDown;hide: slideUp">
 		<label class="headingpopup" value="Express Delivery Time Slots" />
@@ -205,14 +234,10 @@
 					</vlayout>
 					<vlayout>
 						<label value="" />
-						<button label="Add" id="edPopupSave" />
+						<button label="ADD and SAVE" id="edPopupSave" />
 					</vlayout>
 				</hlayout>
 			</div>
-			<label>
-				Note:These time slots are temporary add to list box
-				click save to permanent store
-			</label>
 		</div>
 	</div>
 	<div class="popuped" id="rdpopup" visible="false"
@@ -235,14 +260,91 @@
 					</vlayout>
 					<vlayout>
 						<label value="" />
-						<button label="Add" id="rdPopupSave" />
+						<button label="ADD and SAVE" id="rdPopupSave" />
 					</vlayout>
 				</hlayout>
 			</div>
-			<label>
-				Note:These time slots are temporary add to list box
-				click save to permanent store
-			</label>
+		</div>
+	</div>
+	<div class="popuped" id="sdEditpopup" visible="false"
+		action="show: slideDown;hide: slideUp">
+		<label class="headingpopup"
+			value="Scheduled Delivery Time Slot" />
+		<button class="close" image="${wr}/images/close-button.gif"
+			onClick="sdEditpopup.setVisible(false)" />
+		<div class="content">
+			<div style="border:#555 1px solid;padding:20px">
+				<hlayout style="width:80%">
+					<vlayout style="margin-right:20px">
+						<label value="From Time" />
+						<timebox cols="5" format="short"
+							id="sdEditTimeBoxFrom" />
+					</vlayout>
+					<vlayout style="margin-right:30px">
+						<label value="To Time" />
+						<timebox cols="5" format="short"
+							id="sdEditTimeBoxTo" />
+					</vlayout>
+					<vlayout>
+						<label value="" />
+						<button label="Update and SAVE" id="sdPopupEditSave" />
+					</vlayout>
+				</hlayout>
+			</div>
+		</div>
+	</div>
+	<div class="popuped" id="edEditpopup" visible="false"
+		action="show: slideDown;hide: slideUp">
+		<label class="headingpopup"
+			value="Scheduled Delivery Time Slot" />
+		<button class="close" image="${wr}/images/close-button.gif"
+			onClick="edEditpopup.setVisible(false)" />
+		<div class="content">
+			<div style="border:#555 1px solid;padding:20px">
+				<hlayout style="width:80%">
+					<vlayout style="margin-right:20px">
+						<label value="From Time" />
+						<timebox cols="5" format="short"
+							id="edEditTimeBoxFrom" />
+					</vlayout>
+					<vlayout style="margin-right:30px">
+						<label value="To Time" />
+						<timebox cols="5" format="short"
+							id="edEditTimeBoxTo" />
+					</vlayout>
+					<vlayout>
+						<label value="" />
+						<button label="Update and SAVE" id="edPopupEditSave" />
+					</vlayout>
+				</hlayout>
+			</div>
+		</div>
+	</div>
+	<div class="popuped" id="rdEditpopup" visible="false"
+		action="show: slideDown;hide: slideUp">
+		<label class="headingpopup"
+			value="Scheduled Delivery Time Slot" />
+		<button class="close" image="${wr}/images/close-button.gif"
+			onClick="rdEditpopup.setVisible(false)" />
+		<div class="content">
+			<div style="border:#555 1px solid;padding:20px">
+				<hlayout style="width:80%">
+					<vlayout style="margin-right:20px">
+						<label value="From Time" />
+						<timebox cols="5" format="short"
+							id="rdEditTimeBoxFrom" />
+					</vlayout>
+					<vlayout style="margin-right:30px">
+						<label value="To Time" />
+						<timebox cols="5" format="short"
+							id="rdEditTimeBoxTo" />
+					</vlayout>
+					<vlayout>
+						<label value="" />
+						<button label="Update and SAVE" id="rdPopupEditSave" />
+					</vlayout>
+				</hlayout>
+			</div>
 		</div>
 	</div>
 </widget>

@@ -57,6 +57,14 @@ public final class TataomsbackofficeConstants extends GeneratedTataomsbackoffice
 	public static final String LPAWB_RETURN_FILE_PATH = "";
 	public static final String LPAWB_RETURN_FiLE_PREFIX = "";
 
+	public static final String SCHEDULEDDELIVERY_POPUP_ITEMEDIT = "sdPopupEdit";
+	public static final String EXPRESSDELIVERY_POPUP_ITEMEDIT = "edPopupEdit";
+	public static final String RETURNDELIVERY_POPUP_ITEMEDIT = "rdPopupEdit";
+
+	public static final String SCHEDULEDDELIVERY_EDIT = "sdItemEdit";
+	public static final String EXPRESSDELIVERY_EDIT = "edItemEdit";
+	public static final String RETURNDELIVERY_EDIT = "rdItemEdit";
+
 	private TataomsbackofficeConstants()
 	{
 		//empty to avoid instantiating this constant class
