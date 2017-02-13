@@ -6543,6 +6543,11 @@ function updateCart(formId){
 	var entryNumber = formId.split("_");
 	var form = $('#updateCartForm' + entryNumber[1]);
 	form.submit();
+	//TPR-4737 | Quantity update | cart
+	utag.link({
+		"link_text": "quantity_updated" ,
+		"event_type": "quantity_updated"
+	});
 }
 
 
