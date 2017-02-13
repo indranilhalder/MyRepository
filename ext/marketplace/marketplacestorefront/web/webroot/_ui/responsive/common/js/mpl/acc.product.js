@@ -133,11 +133,14 @@ ACC.product = {
 				
 					/*TPR-681*/
 					var productCodePost = $("#productCodePost").val();
+					// Product code passed as an array for Web Analytics   INC_11511 
+					var productCodeArray=[];
+					productCodeArray.push(productCodePost);	// Product code passed as an array for Web Analytics
 					utag.link({
 						link_obj: this, 
 						link_text: 'quick_view_addto_bag' , 
 						event_type : 'quick_view_addto_bag', 
-						product_sku_quick_view : productCodePost
+						product_sku_quick_view : productCodeArray
 					});
 					/*TPR-681 Ends*/
 				
@@ -264,11 +267,14 @@ ACC.product = {
 			
 			/*TPR-646*/
 			var productCode = $(this).closest(".add_to_cart_wl_form").find("input[name='productCodePost']").val();
+			// Product code passed as an array for Web Analytics   INC_11511 
+			var productCodeArray=[];
+			productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
 			utag.link({
 				"link_obj" : this,
 			    "link_text": 'add_tobag_wishlist',
 			    "event_type": 'add_tobag_wishlist',
-			    "product_sku_wishlist" : "" + productCode
+			    "product_sku_wishlist" : "" + productCodeArray
 			});
 			
 			/*TPR-646 ends*/
@@ -684,12 +690,13 @@ sendAddToBagQuick:function(formId){
 				}	
 			}
 			//TISQAEE-64
-			utag.link({
+			//Code is not being called, utag is being fired from inline js
+			/*utag.link({
 				link_obj: this,
 				link_text: 'addtobag' ,
 				event_type : 'addtobag_winner_seller' ,
 				product_sku : productCode
-			});
+			});*/
 			
 			
 			//End MSD
@@ -733,7 +740,9 @@ sendAddToBagQuick:function(formId){
 			success : function(data) {
 				//TISQAEE-64
 				var productCode = $('#productCode').val();
-				
+				// Product code passed as an array for Web Analytics   INC_11511 
+				var productCodeArray=[];
+				productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
 				var isSuccess=true;
 				if(data.indexOf("cnt:") >= 0){
 				//$("#"+formId+"TitleSuccess").html("");
@@ -813,7 +822,7 @@ sendAddToBagQuick:function(formId){
 							link_obj: this,
 							link_text: 'buynow' ,
 							event_type : 'buynow_winner_seller',
-							product_sku : productCode
+							product_sku : productCodeArray
 						});
 					
 					location.href=ACC.config.encodedContextPath + '/cart';
@@ -1206,8 +1215,9 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 				
 				
 				$('.mini-transient-bag').remove();
+				$('.mini-transient-bag-mobile').remove();		/*UF-47*/
 				var transientCartHtml="<div class='mini-transient-bag' ><span class='mini-cart-close'>+</span><ul class='my-bag-ul'><li class='item'><ul><li><div class='product-img'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'><img class='picZoomer-pic' src='"+response.productImageUrl+"'></a></div><div class='product'><p class='company'></p><h3 class='product-name'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'>"+response.productTitle+"</a></h3><span class='addedText'>has been added to your cart</span>";
-				
+				var transientCartHtmlMobile="<div class='mini-transient-bag-mobile'><span class='addedTextMobile'>Item added to Cart</span></div>";		/*UF-47*/
 				if(typeof response.offer!=='undefined'){
 					transientCartHtml+="<div class='transient-offer'>"+response.offer+"</div>";
 				}
@@ -1215,6 +1225,7 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 			
 				transientCartHtml+="</div></li></ul><li class='view-bag-li'><a href='"+ACC.config.encodedContextPath+"/cart' class='go-to-bag mini-cart-checkout-button'>View Bag</a></li></ul></div>";
 				$('.transient-mini-bag').append(transientCartHtml);
+				$('body').append(transientCartHtmlMobile);
 				/*LW-216*/
 				if(typeof response.productType!=='undefined' && response.productType.toLowerCase() === "luxury"){
 					$('.mini-transient-bag .product-img').append("<img class='luxury_ribbon' src='/_ui/responsive/common/images/Ribbon.png'>");
@@ -1230,9 +1241,11 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 				
 				setTimeout(function(){
 					$('.mini-transient-bag').fadeOut(2000);
+					$('.mini-transient-bag-mobile').fadeOut(2000);		/*UF-47*/
 				},2000);
 				setTimeout(function(){
 					$('.mini-transient-bag').remove();
+					$('.mini-transient-bag-mobile').remove();		/*UF-47*/
 				},4000);
 				
 			},
@@ -1409,9 +1422,9 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
 						
 						filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
-						//TPR-645 start
+						//TPR-645 start  -- INC_11511  fix--h3 tag done
 						var filterValue = (minPriceSearchTxt+"-"+maxPriceSearchTxt).replace(/,/g,"");
-						var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h4').text().trim();
+						var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
 						onFilterClickAnalytics(filterName,filterValue);
 						//TPR-645 end
 						

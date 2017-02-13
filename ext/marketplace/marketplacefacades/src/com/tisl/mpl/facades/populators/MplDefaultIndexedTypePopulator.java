@@ -12,7 +12,7 @@ import de.hybris.platform.solrfacetsearch.model.config.SolrIndexedTypeModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
+import org.apache.log4j.Logger;
 
 /**
  * @author 360641
@@ -21,6 +21,8 @@ import java.util.Collection;
 public class MplDefaultIndexedTypePopulator extends DefaultIndexedTypePopulator
 {
 	private Converter<SolrIndexedPropertyModel, IndexedProperty> indexedPropertyConverter;
+	private final static Logger LOG = Logger.getLogger(MplDefaultIndexedTypePopulator.class.getName());
+
 
 	@Override
 	protected Collection<IndexedProperty> getIndexedPropertiesFromItems(final SolrIndexedTypeModel itemTypeModel)
@@ -29,7 +31,6 @@ public class MplDefaultIndexedTypePopulator extends DefaultIndexedTypePopulator
 		final Collection result = new ArrayList();
 		for (final SolrIndexedPropertyModel property : itemTypeModel.getSolrIndexedProperties())
 		{
-			property.setQueryType(itemTypeModel.getQueryType());
 			final IndexedProperty indexedProperty = getIndexedPropertyFromItem(property);
 			result.add(indexedProperty);
 		}

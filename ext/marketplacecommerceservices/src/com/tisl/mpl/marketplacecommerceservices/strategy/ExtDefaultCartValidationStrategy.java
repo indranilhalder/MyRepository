@@ -180,14 +180,14 @@ public class ExtDefaultCartValidationStrategy extends DefaultCartValidationStrat
 
 		if (null != cartEntryModel.getDeliveryPointOfService())
 		{
-			//LOG.debug("getStockLevel............Before Delete:-  Delivery Point Of Service"
-			//	+ cartEntryModel.getDeliveryPointOfService());
+			LOG.debug("getStockLevel............Before Delete:-  Delivery Point Of Service"
+					+ cartEntryModel.getDeliveryPointOfService());
 			modelService.remove(cartEntryModel.getDeliveryPointOfService().getDisplayName());
 
-			//LOG.debug("getStockLevel............After Delete:-  Delivery Point Of Service");
+			LOG.debug("getStockLevel............After Delete:-  Delivery Point Of Service");
 			modelService.save(cartEntryModel);
 
-			//LOG.debug("getStockLevel............After Save:-  PointOfServiceModel");
+			LOG.debug("getStockLevel............After Save:-  PointOfServiceModel");
 
 		}
 
