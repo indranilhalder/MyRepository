@@ -134,7 +134,7 @@
 							<listcell>
 								<textbox
 									onChange="@command('onChangeTransactionInfo',transaction=item)"
-									value="@bind(item.awbNumber)">
+									value="@bind(item.awbNumber)" constraint="no empty:awb number can't be blank">
 								</textbox>
 							</listcell>
 						</listitem>
