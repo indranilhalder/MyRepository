@@ -5132,24 +5132,23 @@ $('#selectDeliveryMethodForm #deliveryradioul .delivery_options .delivery ul li 
 		
 			  var mode=radioSplit[2]
 			  
-			 
+			//TPR-4755,TPR-4756,TPR-4757
+				var shippingType = '';
 				if(mode=="home-delivery"){
-					utag.link(
-							{link_text: 'deliver_mode_home' , event_type : 'delivery_mode_select'}
-							);
+					shippingType = "home";
 				}
 					
 				else if(mode=="express-delivery"){
-					utag.link(
-							{link_text: 'deliver_mode_express' , event_type : 'delivery_mode_select'}
-							);
+					shippingType = "express";
 				}
 					
 				else{
-					utag.link(
-							{link_text: 'deliver_mode_clickcollect' , event_type : 'delivery_mode_select'}
-							);
+					shippingType = "click_collect";
 				}
+			  utag.link({
+			  	link_text: "deliver_mode_"+shippingType,
+			  	event_type : shippingType+"_delivery_selected"
+			  });
 					
 	/*TPR-685 ends*/		  
     changeCTAButtonName("DefaultName");
