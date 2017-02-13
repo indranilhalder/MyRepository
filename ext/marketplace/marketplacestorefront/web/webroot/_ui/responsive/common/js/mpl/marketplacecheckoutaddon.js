@@ -5344,9 +5344,13 @@ function checkPincodeServiceability(buttonType,el)
  			{
  				if(typeof utag !="undefined")
  				{
-	 				utag.link(
-	 				{"link_obj": this,"link_text": "mybag_pincode:"+selectedPincode+":not serviceable", "event_type" : "mybag_pincode"}
-	 		 	 	);
+	 				//TPR-4736 | DataLAyerSchema changes | cart
+ 					utag.link({
+		 				"link_obj": this,
+		 				"link_text": "mybag_pincode_check_failure", 
+		 				"event_type" : "mybag_pincode_check_failure",
+		 				"mybag_pin_non_servicable" : selectedPincode
+		 			});
  				}
  				// TISTI-255
 				// Please try later or contact our helpdesk");
@@ -5364,9 +5368,13 @@ function checkPincodeServiceability(buttonType,el)
  				{
  				if(typeof utag !="undefined")
  				{
- 				utag.link(
- 		 	 	{"link_obj": this,"link_text": "mybag_pincode:"+selectedPincode+":success", "event_type" : "mybag_pincode"}
- 		 	 	);
+ 					//TPR-4736 | DataLAyerSchema changes | cart
+ 					utag.link({
+		 				"link_obj": this,
+		 				"link_text": "mybag_pincode_check_success", 
+		 				"event_type" : "mybag_pincode_check_success",
+		 				"mybag_pin_servicable" : selectedPincode
+		 			});
  				}
  				$(".pincodeServiceError").hide();
  				$("#unserviceablepincode").hide();
@@ -5404,9 +5412,13 @@ function checkPincodeServiceability(buttonType,el)
  		},
  		error : function(resp) {
  			if(typeof utag !="undefined"){
- 			utag.link(
- 			{"link_obj": this,"link_text": "mybag_pincode:"+selectedPincode+":not serviceable", "event_type" : "mybag_pincode"}
- 			);
+ 				//TPR-4736 | DataLAyerSchema changes | cart
+	 			utag.link({
+	 				"link_obj": this,
+	 				"link_text": "mybag_pincode_check_failure", 
+	 				"event_type" : "mybag_pincode_check_failure",
+	 				"mybag_pin_non_servicable" : selectedPincode
+	 			});
  			}
  			//TISTI-255
  			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
