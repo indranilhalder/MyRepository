@@ -146,7 +146,7 @@
                         
                        </c:when>
                        <c:otherwise>
-                       <li class="deliver deliver-desc"> Your Order Will Be Delivered Between ${entry.eddDateBetWeen}</li>
+                       <li class="deliver deliver-desc"> Your Order Will Be Delivered ${entry.eddDateBetWeen}</li>
                        
                        </c:otherwise>
                   

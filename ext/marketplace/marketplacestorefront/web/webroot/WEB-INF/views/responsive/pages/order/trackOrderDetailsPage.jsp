@@ -34,11 +34,11 @@
 
 			<div class="right-account track">
 			<!--  commented in R2.3  -->
-				<%-- <p class="nav-orderHistory">
+				<p class="nav-orderHistory">
 					<a href="<c:url value="/my-account/orders"/>" class="order-history"><spring:theme
 							code="text.account.orderHistorylink" text="Back to Order History" />
 					</a>
-				</p> --%>
+				</p>
 				<div class="order-history order-details">
 					<!-- Heading for saved Cards -->
 					<div class="navigation">
@@ -48,145 +48,144 @@
 					</div>
 					<ul class="product-block order-details">
 						<!--  commented in R2.3 START -->
-<!-- 						<li class="header"> -->
-<!-- 							<ul> -->
-<%-- 								<li><span><spring:theme	code="text.orderHistory.order.placed" /></span>  --%>
-<%-- 									<c:if test="${not empty orderDate}">${orderDate}</c:if> </li> --%>
-<!-- 								<li><span>Total: </span> 														 -->
-<%-- 									<c:choose> --%>
-<%-- 										<c:when test="${subOrder.net}"> --%>
-<%-- 											<span class="amt"><format:price	priceData="${subOrder.totalPriceWithTax}" /></span> --%>
-<%-- 										</c:when> --%>
-<%-- 										<c:otherwise> --%>
-<%-- 											<span class="amt"><format:price	priceData="${subOrder.totalPriceWithConvCharge}" /></span> --%>
-<%-- 										</c:otherwise> --%>
-<%-- 									</c:choose>					 --%>
+						<li class="header">
+							<ul>
+								<li><span><spring:theme	code="text.orderHistory.order.placed" /></span> 
+									<c:if test="${not empty orderDate}">${orderDate}</c:if> </li>
+								<li><span>Total: </span> 														
+									<c:choose>
+										<c:when test="${subOrder.net}">
+											<span class="amt"><format:price	priceData="${subOrder.totalPriceWithTax}" /></span>
+										</c:when>
+										<c:otherwise>
+											<span class="amt"><format:price	priceData="${subOrder.totalPriceWithConvCharge}" /></span>
+										</c:otherwise>
+									</c:choose>					
 								
-<!-- 								</li> -->
-<%-- 								<li class="recipient"><span><spring:theme --%>
-<%-- 											code="text.orderHistory.recipient" /></span> <c:choose> --%>
-<%-- 										<c:when test="${subOrder.deliveryAddress != null}"> --%>
-<%-- 												${subOrder.deliveryAddress.firstName}&nbsp;${subOrder.deliveryAddress.lastName} --%>
-<%-- 										</c:when> --%>
-<%-- 										<c:otherwise> --%>
-<%-- 												${subOrder.mplPaymentInfo.cardAccountHolderName} --%>
-<%-- 												</c:otherwise> --%>
-<%-- 									</c:choose> --%>
-<!-- 								</li> -->
-<%-- 								<li><span>Order Reference Number: </span> ${subOrder.code}</li> --%>
-<!-- 							</ul> -->
+								</li>
+								<li class="recipient"><span><spring:theme
+											code="text.orderHistory.recipient" /></span> <c:choose>
+										<c:when test="${subOrder.deliveryAddress != null}">
+												${subOrder.deliveryAddress.firstName}&nbsp;${subOrder.deliveryAddress.lastName}
+										</c:when>
+										<c:otherwise>
+												${subOrder.mplPaymentInfo.cardAccountHolderName}
+												</c:otherwise>
+									</c:choose>
+								</li>
+								<li><span>Order Reference Number: </span> ${subOrder.code}</li>
+ 							</ul> 
 
 
-<!-- 							<div class="totals" id="anchor"> -->
-<!-- 								<h3>Total:</h3> -->
-<!-- 								<ul> -->
-<%-- 									<li><spring:theme code="text.account.order.subtotal"/>   --%>
-<%-- 										<format:price priceData="${subOrder.subTotal}" /> --%>
-<!-- 									</li> -->
-<%-- 									<li><spring:theme code="text.account.order.delivery" text="Delivery" /><span class="amt"> --%>
-<%-- 											 <format:price	priceData="${subOrder.deliveryCost}" displayFreeForZero="true" /> --%>
-<!-- 									</span></li> -->
+							<div class="totals" id="anchor">
+								<h3>Total:</h3>
+								<ul>
+									<li><spring:theme code="text.account.order.subtotal"/>  
+										<format:price priceData="${subOrder.subTotal}" />
+									</li>
+									<li><spring:theme code="text.account.order.delivery" text="Delivery" /><span class="amt">
+											 <format:price	priceData="${subOrder.deliveryCost}" displayFreeForZero="true" />
+									</span></li>
 <!-- 									TISEE-2672 -->
-<%-- 									<c:if test="${subOrder.totalDiscounts.value > 0}"> --%>
-<%-- 										<li><spring:theme code="text.account.order.savings" --%>
-<%-- 												text="Discount" /> <span class="amt"> -<format:price --%>
-<%-- 													priceData="${subOrder.totalDiscounts}" /> --%>
-<!-- 										</span></li> -->
-<%-- 									</c:if> --%>
+									<c:if test="${subOrder.totalDiscounts.value > 0}">
+										<li><spring:theme code="text.account.order.savings"
+												text="Discount" /> <span class="amt"> -<format:price
+													priceData="${subOrder.totalDiscounts}" />
+										</span></li>
+									</c:if>
 <!-- 									TISEE-2672 -->
 									
 <!-- 									TISSTRT-136 -->
-<%-- 									<c:if test="${subOrder.couponDiscount.value > 0}"> --%>
-<%-- 										<li><spring:theme code="text.account.order.coupon" --%>
-<%-- 												text="Coupon" /> <span class="amt"> -<format:price --%>
-<%-- 													priceData="${subOrder.couponDiscount}" /> --%>
+									<c:if test="${subOrder.couponDiscount.value > 0}">
+										<li><spring:theme code="text.account.order.coupon"
+												text="Coupon" /> <span class="amt"> -<format:price
+													priceData="${subOrder.couponDiscount}" />
 <!-- 										</span></li> -->
-<%-- 									</c:if> --%>
+									</c:if>
 <!-- 									TISSTRT-136 -->
 
-<%-- 									<c:if test="${subOrder.mplPaymentInfo.paymentOption eq 'COD'}"> --%>
-<%-- 										<li><spring:theme --%>
-<%-- 												code="text.account.order.convinienceCharges" --%>
-<%-- 												text="Convenience Charges" /> <format:price --%>
-<%-- 													priceData="${subOrder.convenienceChargeForCOD}" /> --%>
+									<c:if test="${subOrder.mplPaymentInfo.paymentOption eq 'COD'}">
+										<li><spring:theme
+												code="text.account.order.convinienceCharges"
+												text="Convenience Charges" /> <format:price
+													priceData="${subOrder.convenienceChargeForCOD}" />
 <!-- 										</li> -->
-<%-- 									</c:if> --%>
-<%-- 									<li><spring:theme text="Gift Wrap:" /><span><format:price
-<%-- 												priceData="${subOrder.deliveryCost}" --%>
-<%-- 												displayFreeForZero="true" /></span></li> --%> 
-<!-- 									<li class="grand-total"> -->
-<%-- 										<spring:theme code="text.account.order.total.new" text="Total" /> --%>
-<%-- 										<c:choose> --%>
-<%-- 											<c:when test="${subOrder.net}"> --%>
-<%-- 													<span class="amt"><format:price --%>
-<%-- 															priceData="${subOrder.totalPriceWithTax}" /></span> --%>
-<%-- 												</c:when> --%>
-<%-- 												<c:otherwise> --%>
-<%-- 													<span class="amt"><format:price --%>
-<%-- 															priceData="${subOrder.totalPriceWithConvCharge}" /></span> --%>
-<%-- 												</c:otherwise> --%>
-<%-- 											</c:choose></li> --%>
-<!-- 								</ul> -->
+									</c:if>
+									<li><spring:theme text="Gift Wrap:" /><span><format:price
+												priceData="${subOrder.deliveryCost}"
+												displayFreeForZero="true" /></span></li> 									<li class="grand-total">
+										<spring:theme code="text.account.order.total.new" text="Total" />
+										<c:choose>
+											<c:when test="${subOrder.net}">
+													<span class="amt"><format:price
+															priceData="${subOrder.totalPriceWithTax}" /></span>
+												</c:when>
+												<c:otherwise>
+													<span class="amt"><format:price
+															priceData="${subOrder.totalPriceWithConvCharge}" /></span>
+												</c:otherwise>
+											</c:choose></li>
+ 								</ul> 
 
-<!-- 							</div> -->
-<!-- 							<div class="payment-method"> -->
-<!-- 								<h3>Payment Method: -->
-<%-- 									${subOrder.mplPaymentInfo.paymentOption}</h3> --%>
-<%-- 								<c:set var="cardNumberMasked" --%>
-<%-- 									value="${subOrder.mplPaymentInfo.cardIssueNumber}" /> --%>
-<%-- 								<c:set var="cardNumberLength" --%>
-<%-- 									value="${fn:length(cardNumberMasked)}" /> --%>
-<%-- 								<c:set var="cardNumEnd" --%>
-<%-- 									value="${fn:substring(cardNumberMasked, cardNumberLength-4, cardNumberLength)}" /> --%>
+							</div>
+							<div class="payment-method">
+								<h3>Payment Method:
+									${subOrder.mplPaymentInfo.paymentOption}</h3>
+								<c:set var="cardNumberMasked"
+									value="${subOrder.mplPaymentInfo.cardIssueNumber}" />
+								<c:set var="cardNumberLength"
+									value="${fn:length(cardNumberMasked)}" />
+								<c:set var="cardNumEnd"
+									value="${fn:substring(cardNumberMasked, cardNumberLength-4, cardNumberLength)}" />
 
-<%-- 								<c:if --%>
-<%-- 									test="${subOrder.mplPaymentInfo.paymentOption eq 'Credit Card'}"> --%>
-<%-- 									<c:set var="creditCardBillingAddress" --%>
-<%-- 										value="${subOrder.mplPaymentInfo.billingAddress}" /> --%>
-<%-- 								</c:if> --%>
+								<c:if
+									test="${subOrder.mplPaymentInfo.paymentOption eq 'Credit Card'}">
+									<c:set var="creditCardBillingAddress"
+										value="${subOrder.mplPaymentInfo.billingAddress}" />
+								</c:if>
 <!-- 								 TISBOX-1182 -->
-<%-- 								<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p> --%>
-<%-- 								<c:if --%>
-<%-- 									test="${subOrder.mplPaymentInfo.paymentOption eq 'Credit Card' or 'EMI' or 'Debit Card'}"> --%>
-<%-- 									<p>${subOrder.mplPaymentInfo.cardCardType} ending in --%>
-<%-- 										${cardNumEnd}</p> --%>
-<!-- 									<p>Expires on: -->
-<%-- 										${subOrder.mplPaymentInfo.cardExpirationMonth}/${subOrder.mplPaymentInfo.cardExpirationYear}</p> --%>
-<%-- 								</c:if> --%>
-<%-- 								<c:if --%>
-<%-- 									test="${subOrder.mplPaymentInfo.paymentOption eq 'Netbanking'}"> --%>
-<%-- 									<p>${subOrder.mplPaymentInfo.bank}</p> --%>
-<%-- 								</c:if> --%>
+								<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
+								<c:if
+									test="${subOrder.mplPaymentInfo.paymentOption eq 'Credit Card' or 'EMI' or 'Debit Card'}">
+									<p>${subOrder.mplPaymentInfo.cardCardType} ending in
+										${cardNumEnd}</p>
+									<p>Expires on:
+										${subOrder.mplPaymentInfo.cardExpirationMonth}/${subOrder.mplPaymentInfo.cardExpirationYear}</p>
+								</c:if>
+								<c:if
+									test="${subOrder.mplPaymentInfo.paymentOption eq 'Netbanking'}">
+									<p>${subOrder.mplPaymentInfo.bank}</p>
+								</c:if>
 
-<!-- 							</div> -->
-<!-- 							<div class="delivery-address"> -->
-<%-- 								<c:if test="${not empty creditCardBillingAddress.firstName}"> --%>
-<!-- 									<h3>Billing Address:</h3> -->
-<!-- 									<address> -->
-<%-- 										${fn:escapeXml(creditCardBillingAddress.firstName)}&nbsp; --%>
-<%-- 										${fn:escapeXml(creditCardBillingAddress.lastName)}<br> --%>
-<%-- 										${fn:escapeXml(creditCardBillingAddress.line1)},&nbsp; --%>
-<%-- 										${fn:escapeXml(creditCardBillingAddress.line2)},&nbsp; --%>
-<%-- 										<c:if test="${not empty creditCardBillingAddress.line3}"> --%>
-<%-- 														${fn:escapeXml(creditCardBillingAddress.line3)}, --%>
-<%-- 													</c:if> --%>
-<!-- 										<br> -->
-<%-- 										<c:if test="${not empty creditCardBillingAddress.landmark}"> --%>
-<%-- 														${fn:escapeXml(creditCardBillingAddress.landmark)}, --%>
-<%-- 										</c:if> --%>
-<%-- 										<br>${fn:escapeXml(creditCardBillingAddress.landmark)} --%>
-<%-- 										${fn:escapeXml(creditCardBillingAddress.town)},&nbsp; --%>
-<%-- 										<c:if test="${not empty creditCardBillingAddress.state}"> --%>
-<%-- 														${fn:escapeXml(creditCardBillingAddress.state)},&nbsp; --%>
-<%-- 													</c:if> --%>
-<%-- 										${fn:escapeXml(creditCardBillingAddress.postalCode)}&nbsp;${fn:escapeXml(creditCardBillingAddress.country.isocode)} --%>
-<!-- 										<br> -->
+							</div>
+							<div class="delivery-address">
+								<c:if test="${not empty creditCardBillingAddress.firstName}">
+									<h3>Billing Address:</h3>
+									<address>
+										${fn:escapeXml(creditCardBillingAddress.firstName)}&nbsp;
+										${fn:escapeXml(creditCardBillingAddress.lastName)}<br>
+										${fn:escapeXml(creditCardBillingAddress.line1)},&nbsp;
+										${fn:escapeXml(creditCardBillingAddress.line2)},&nbsp;
+										<c:if test="${not empty creditCardBillingAddress.line3}">
+														${fn:escapeXml(creditCardBillingAddress.line3)},
+													</c:if>
+										<br>
+										<c:if test="${not empty creditCardBillingAddress.landmark}">
+														${fn:escapeXml(creditCardBillingAddress.landmark)},
+										</c:if>
+										<br>${fn:escapeXml(creditCardBillingAddress.landmark)}
+										${fn:escapeXml(creditCardBillingAddress.town)},&nbsp;
+										<c:if test="${not empty creditCardBillingAddress.state}">
+														${fn:escapeXml(creditCardBillingAddress.state)},&nbsp;
+													</c:if>
+										${fn:escapeXml(creditCardBillingAddress.postalCode)}&nbsp;${fn:escapeXml(creditCardBillingAddress.country.isocode)}
+										<br>
 										
-<!-- 									</address> -->
-<%-- 								</c:if> --%>
+									</address>
+								</c:if>
 							
-<!-- 							</div> -->
-<!-- 						</li> -->
+							</div>
+						</li>
 	<!--  commented in R2.3 END -->
 
 
@@ -208,7 +207,7 @@
 								<c:if test="${flag}">
 								<li class="item delivered first" id="shipping-track-order">
 						<!--  commented in R2.3 START -->
-						    	<%-- <div class="item-header">
+						    	 <div class="item-header">
 								<c:if test="${entryCount > 1}">
 
 								<h3>${HD_ED_Count} Product(s)-ShippingAddress:</h3> 
@@ -249,7 +248,7 @@
 										</div>
 									</div>
 								</div>
-							</div> --%>
+							</div> 
 	<!--  commented in R2.3 END -->
 							<p style="clear:both"></p>
 							<div class="itemBorder">&nbsp;</div>
@@ -327,7 +326,24 @@
 											<spring:message code="text.orderHistory.seller.order.number"></spring:message>
 											<span>${sellerOrder.code}</span>
 										</p>
-										
+									 <!--R2.3 TISRLEE-1615- Start   -->
+								   <c:if test="${entry.mplDeliveryMode.code ne 'click-and-collect'}">
+								             <c:choose>
+												   <c:when test="${not empty entry.selectedDeliverySlotDate}">
+													   <p>
+										                 <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>
+											             <span>${entry.selectedDeliverySlotDate} &nbsp;, ${entry.timeSlotFrom}-${entry.timeSlotTo}</span>
+										              </p>
+												  </c:when>
+													<c:otherwise>
+													<c:if test="${not empty entry.eddDateBetWeen}">
+                                                         <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>  ${entry.eddDateBetWeen}  
+                                                     </c:if>
+													</c:otherwise>
+											  </c:choose>
+								   </c:if>
+									 
+								 <!--R2.3 TISRLEE-1615- END   -->	
 								
 													
 									</div>
