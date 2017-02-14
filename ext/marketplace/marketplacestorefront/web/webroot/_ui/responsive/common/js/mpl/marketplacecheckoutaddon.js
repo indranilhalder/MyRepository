@@ -5346,8 +5346,8 @@ function checkPincodeServiceability(buttonType,el)
 	 				//TPR-4736 | DataLAyerSchema changes | cart
  					utag.link({
 		 				"link_obj": this,
-		 				"link_text": "mybag_pincode_check_failure", 
-		 				"event_type" : "mybag_pincode_check_failure",
+		 				"link_text": "cart_pincode_check_failure", 
+		 				"event_type" : "cart_pincode_check_failure",
 		 				"mybag_pin_non_servicable" : selectedPincode
 		 			});
  				}
@@ -5370,8 +5370,8 @@ function checkPincodeServiceability(buttonType,el)
  					//TPR-4736 | DataLAyerSchema changes | cart
  					utag.link({
 		 				"link_obj": this,
-		 				"link_text": "mybag_pincode_check_success", 
-		 				"event_type" : "mybag_pincode_check_success",
+		 				"link_text": "cart_pincode_check_success", 
+		 				"event_type" : "cart_pincode_check_success",
 		 				"mybag_pin_servicable" : selectedPincode
 		 			});
  				}
@@ -5414,8 +5414,8 @@ function checkPincodeServiceability(buttonType,el)
  				//TPR-4736 | DataLAyerSchema changes | cart
 	 			utag.link({
 	 				"link_obj": this,
-	 				"link_text": "mybag_pincode_check_failure", 
-	 				"event_type" : "mybag_pincode_check_failure",
+	 				"link_text": "cart_pincode_check_failure", 
+	 				"event_type" : "cart_pincode_check_failure",
 	 				"mybag_pin_non_servicable" : selectedPincode
 	 			});
  			}
@@ -7115,6 +7115,7 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 
 function removefromCart(entryNo,wishName)
 {
+	alert("remove");
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
 		url :  ACC.config.encodedContextPath+"/cart/removeFromMinicart?entryNumber="+entryNo,
@@ -7131,6 +7132,10 @@ function removefromCart(entryNo,wishName)
 			// $('.moveToWishlistMsg').html("Item successfully moved to
 			// "+wishName);
 			// $('.moveToWishlistMsg').show();
+			if(typeof utag !="undefined"){
+				utag.link(	{ remove_cart_product_id : productName });
+				}
+			
 			setTimeout(function() {
 				$(".product-block > li.header > span").fadeOut(6000).remove();
 				// $(".moveToWishlistMsg").fadeOut().empty();
