@@ -14,6 +14,7 @@
 <c:choose>
 <c:when test ="${product.rootCategory!=finejewellery}">
 <div id="ReviewSecion" class="reviews">
+
 	<div class="header">
 	      <h3>Your Rating</h3>
 	</div>
@@ -23,6 +24,40 @@
 	<div class="wrapper" id="go">
 		<li class="commenttab active">
 			<label id="customer" for="tab-1">Customer Reviews(${product.ratingCount})</label>
+
+<div class="header">
+      <h3>Ratings and Reviews</h3>		<!-- UF-57 -->
+</div>
+<div class="overview">
+<div class="tabs-block">
+<ul class="nav">
+<div class="wrapper" id="go">
+	<li class="commenttab active">
+		<label id="customer" for="tab-1">Customer Reviews(${product.ratingCount})</label>
+	</li>
+</div>
+</ul>
+<ul class="tabs">
+<li class="active">
+<div class="wrapper">
+<div class="half">
+
+
+	<ul class="rating-list">
+		<li class="header">Rating Snapshot</li> 
+		<li>
+			<div class="rate-details three-block">
+				<div class="before">
+					<span>5</span>
+					<ul class="star-review">
+						<li class="full"></li>
+					</ul>
+				</div>
+				<div class="rate-bar white">
+					<div class="rating" style="width: ${product.mplFiveStarFill}%"></div>
+				</div>
+				<div class="after">${product.mplFiveStar}</div>
+			</div>
 		</li>
 	</div>
 	</ul>

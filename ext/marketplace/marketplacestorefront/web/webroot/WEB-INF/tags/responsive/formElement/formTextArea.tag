@@ -13,14 +13,14 @@
 
 <template:errorSpanField path="${path}">
 
-	<label class="${labelCSS}" for="${idKey}"> <spring:theme
-			code="${labelKey}" /> <c:if
+	<label class="${labelCSS}" for="${idKey}"><%--  <spring:theme
+			code="${labelKey}" /> --%> <c:if
 			test="${mandatory != null && mandatory == false}">
 			<spring:theme code="login.optional" />
 		</c:if> <span class="skip"><form:errors path="${path}" /></span>
 	</label>
 	
-	<form:textarea cssClass="${areaCSS}" id="${idKey}" path="${path}" />
+	<form:textarea cssClass="${areaCSS} form-control" id="${idKey}" path="${path}" maxlength="120"  rows="2" cols="60" placeholder="Full Address*"/>
 
 
 </template:errorSpanField>

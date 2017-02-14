@@ -561,6 +561,16 @@ public class ProductPageController extends MidPageController
 						{
 							LOG.error("Error in fetching price for tealium for product code : " + productData.getCode());
 						}
+
+						//TPR-4358 | product availibity online
+						if (buyboxdata.getAvailable() != null && buyboxdata.getAvailable().intValue() > 0)
+						{
+							model.addAttribute("product_availability", "Available online");
+						}
+						else
+						{
+							model.addAttribute("product_availability", "Not Available online");
+						}
 					}
 					//}
 
