@@ -85,17 +85,18 @@
 			event.preventDefault();
 			var hrefurl = $(this).attr('href');
 			// Added For TISPRD-8621
-			var searchCategory = $("#paginationForm input[name='searchCategory']").val();	
-			var q = $("#paginationForm input[name='q']").val();
-			var pageSize = $("#paginationForm input[name='pageSize']").val();
-			
-			if (!searchCategory && q === ":relevance") {	
-			$("#paginationForm").find(':input[name="searchCategory"]').attr('disabled', true);	
-			$("#paginationForm").find(':input[name="q"]').attr('disabled', true);
-			$("#paginationForm").find(':input[name="pageSize"]').attr('disabled', true);
-			}
+//			var searchCategory = $("#paginationForm input[name='searchCategory']").val();	
+//			var q = $("#paginationForm input[name='q']").val();
+//			var pageSize = $("#paginationForm input[name='pageSize']").val();
+//			
+//			if (!searchCategory && q === ":relevance") {	
+//			$("#paginationForm").find(':input[name="searchCategory"]').attr('disabled', true);	
+//			$("#paginationForm").find(':input[name="q"]').attr('disabled', true);
+//			$("#paginationForm").find(':input[name="pageSize"]').attr('disabled', true);
+//			}
 			// Added For TISPRD-8621
 			$("#paginationForm").attr("action", hrefurl);
+			$("#paginationFormBottom").attr("action", hrefurl);
 			$(this).closest('form').submit();
 		 });  
          //TPR-565	
