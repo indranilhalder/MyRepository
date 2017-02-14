@@ -1013,6 +1013,7 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 
 			 
 /* Data Layer Schema Changes Starts*/
+<<<<<<< HEAD
 /*Thumbnail tracking*/
 //$(document).on("click",".product-image-container .imageListCarousel .thumb",function(){
 $(document).on("click",".product-info > .product-image-container > .productImageGallery .imageListCarousel .thumb",function(){
@@ -1097,3 +1098,22 @@ function utagAddProductToBag(triggerPoint){
 }
 
 /* Data Layer Schema Changes Ends*/
+
+
+/*TPR-4740*/
+$(document).on("click",".continue-shopping.desk-view-shopping",function() {
+	utag.link({
+		link_text: "continue_shopping_clicked",
+		event_type : "continue_shopping_clicked"
+	});
+})
+
+//TPR-4739 | Expresscheckout | cart
+$(document).on("click","#expressCheckoutButtonId",function(){
+	utag.link({
+		link_text: "mybag_express_checkout_button_start",
+		event_type : "mybag_express_checkout_button_start"
+	});
+})
+/* Data Layer Schema Changes Ends*/
+

@@ -5344,9 +5344,13 @@ function checkPincodeServiceability(buttonType,el)
  			{
  				if(typeof utag !="undefined")
  				{
-	 				utag.link(
-	 				{"link_obj": this,"link_text": "mybag_pincode:"+selectedPincode+":not serviceable", "event_type" : "mybag_pincode"}
-	 		 	 	);
+	 				//TPR-4736 | DataLAyerSchema changes | cart
+ 					utag.link({
+		 				"link_obj": this,
+		 				"link_text": "mybag_pincode_check_failure", 
+		 				"event_type" : "mybag_pincode_check_failure",
+		 				"mybag_pin_non_servicable" : selectedPincode
+		 			});
  				}
  				// TISTI-255
 				// Please try later or contact our helpdesk");
@@ -5364,9 +5368,13 @@ function checkPincodeServiceability(buttonType,el)
  				{
  				if(typeof utag !="undefined")
  				{
- 				utag.link(
- 		 	 	{"link_obj": this,"link_text": "mybag_pincode:"+selectedPincode+":success", "event_type" : "mybag_pincode"}
- 		 	 	);
+ 					//TPR-4736 | DataLAyerSchema changes | cart
+ 					utag.link({
+		 				"link_obj": this,
+		 				"link_text": "mybag_pincode_check_success", 
+		 				"event_type" : "mybag_pincode_check_success",
+		 				"mybag_pin_servicable" : selectedPincode
+		 			});
  				}
  				$(".pincodeServiceError").hide();
  				$("#unserviceablepincode").hide();
@@ -5404,9 +5412,13 @@ function checkPincodeServiceability(buttonType,el)
  		},
  		error : function(resp) {
  			if(typeof utag !="undefined"){
- 			utag.link(
- 			{"link_obj": this,"link_text": "mybag_pincode:"+selectedPincode+":not serviceable", "event_type" : "mybag_pincode"}
- 			);
+ 				//TPR-4736 | DataLAyerSchema changes | cart
+	 			utag.link({
+	 				"link_obj": this,
+	 				"link_text": "mybag_pincode_check_failure", 
+	 				"event_type" : "mybag_pincode_check_failure",
+	 				"mybag_pin_non_servicable" : selectedPincode
+	 			});
  			}
  			//TISTI-255
  			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
@@ -6531,6 +6543,11 @@ function updateCart(formId){
 	var entryNumber = formId.split("_");
 	var form = $('#updateCartForm' + entryNumber[1]);
 	form.submit();
+	//TPR-4737 | Quantity update | cart
+	utag.link({
+		"link_text": "quantity_updated" ,
+		"event_type": "quantity_updated"
+	});
 }
 
 
@@ -6539,9 +6556,11 @@ function expressbutton()
 	//TPR-683
 	if(typeof utag !="undefined")
 	{
-		utag.link(
-		{"link_text": "mybag_express_checkout" , "event_type" : "mybag_express_checkout"}
-		);
+		//TPR-4739 | Expresscheckout | cart
+		utag.link({
+			"link_text": "mybag_express_checkout_button_submit" ,
+			"event_type" : "mybag_express_checkout_button_submit"
+		});
 	}
 	
 	//alert(selectedAddress);
@@ -7039,7 +7058,9 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				    +'&sizeSelected='+ sizeSelected;
 
 	var entryNo = $("#entryNo").val();
-	
+
+	var productcodearray =[];
+		productcodearray.push(productCode);
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
@@ -7050,13 +7071,13 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				
 				$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
 				
-				/*TPR-656*/
-					utag.link({
-						link_obj: this, 
-						link_text: 'add_to_wishlist' , 
-						event_type : 'add_to_wishlist', 
-						product_sku_wishlist : productCode
-					});
+				/*TPR-656*/ /*TPR-4738*/
+				utag.link({
+					link_obj: this, 
+					link_text: 'mybag_to_wishlist' , 
+					event_type : 'mybag_to_wishlist', 
+					product_sku_wishlist : productcodearray
+				});
 				/*TPR-656 Ends*/
 				
 				localStorage.setItem("movedToWishlist_msgFromCart", "Y");
