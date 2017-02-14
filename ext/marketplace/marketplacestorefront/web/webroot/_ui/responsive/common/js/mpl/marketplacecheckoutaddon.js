@@ -5132,24 +5132,23 @@ $('#selectDeliveryMethodForm #deliveryradioul .delivery_options .delivery ul li 
 		
 			  var mode=radioSplit[2]
 			  
-			 
+			//TPR-4755,TPR-4756,TPR-4757
+				var shippingType = '';
 				if(mode=="home-delivery"){
-					utag.link(
-							{link_text: 'deliver_mode_home' , event_type : 'delivery_mode_select'}
-							);
+					shippingType = "home";
 				}
 					
 				else if(mode=="express-delivery"){
-					utag.link(
-							{link_text: 'deliver_mode_express' , event_type : 'delivery_mode_select'}
-							);
+					shippingType = "express";
 				}
 					
 				else{
-					utag.link(
-							{link_text: 'deliver_mode_clickcollect' , event_type : 'delivery_mode_select'}
-							);
+					shippingType = "click_collect";
 				}
+			  utag.link({
+			  	link_text: "deliver_mode_"+shippingType,
+			  	event_type : shippingType+"_delivery_selected"
+			  });
 					
 	/*TPR-685 ends*/		  
     changeCTAButtonName("DefaultName");
@@ -6729,6 +6728,10 @@ $("#couponSubmitButton").click(function(){
 	 				onSubmitAnalytics("invalid_coupon");
 	 				// $("#couponError").css("display","block");
 	 				// document.getElementById("couponError").innerHTML=response.redeemErrorMsg;
+	 				/*TPR-4746*/
+	 				if(typeof utag !="undefined"){
+		 				   utag.link({error_type : 'offer_error'});
+		 				}
 	 			}
 	 			else{
 		 			if(response.couponRedeemed==true){
@@ -6761,6 +6764,10 @@ $("#couponSubmitButton").click(function(){
 	 			$("#couponSubmitButton").prop('disabled', false);
 	 			$("#couponSubmitButton").css("opacity","1");
 	 			$("#no-click,.spinner").remove(); //changes for INC_11738
+	 			/*TPR-4746*/
+	 			if(typeof utag !="undefined"){
+	 				   utag.link({error_type : 'offer_error'});
+	 				}
 	 		}
 	 	});	 
 	}
