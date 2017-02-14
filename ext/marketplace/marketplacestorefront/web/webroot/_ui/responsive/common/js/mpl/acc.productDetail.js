@@ -2927,7 +2927,7 @@ function loadDefaultWishListName_SizeGuide() {
 			$("#addToCartFormTitle").show();
 	 	    return false;
 		 }
-		}
+		}}
 		 //Jewellery Buy Now Button Changes added
 		if( $("#jewelleryvariant option:selected").val() == "#"  && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage' &&  isShowSize=='true' ){
 			// alert("please select size !"+isShowSize);  
@@ -2947,7 +2947,6 @@ function loadDefaultWishListName_SizeGuide() {
 		ACC.product.sendAddToBag("addToCartForm",true);
 		 
 	});
-
 	
 	//AKAMAI Fix	
 	$(document).ready(function(){		
