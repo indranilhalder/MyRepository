@@ -57,9 +57,11 @@
 				<c:set var="finejewellery"><spring:theme code='product.finejewellery'/></c:set>
 				<c:choose>		
 				    <c:when test ="${product.rootCategory==finejewellery}"> 
+				    	<div class="container">
 							<div class="tabs-block">
 								 <product:productPageTabs /> 
 							</div>
+						</div>
 					</c:when> 
 				</c:choose>
 			<!-- CODE ADDED FOR JEWELLERY TO DISPLAY DETAILS IN TAB ENDS HERE -->
@@ -72,7 +74,7 @@
 			</c:when>
 			<c:otherwise>
 			<c:if test="${empty hideAllFooter}">
-			<footer>
+			<footer class="mobile-footer">
 			<div class="banner">
 			<cms:pageSlot position="Footer" var="feature" limit="1">
 			${feature.notice}

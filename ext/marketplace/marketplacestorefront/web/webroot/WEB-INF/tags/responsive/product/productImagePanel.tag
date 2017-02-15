@@ -101,6 +101,19 @@
 	</div>	
 <!-- 	<iframe name="videoFrame" id="videoFrame" width="400" height="560" frameborder="0"  style="display:none"  allowfullscreen ></iframe>
  -->
+ 
+ 	<c:if test="${product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">
+         	<ul class="wish-share desktop">
+
+			<%-- <li><!-- <span id="addedMessage" style="display:none"></span> -->
+			<!-- Commented as per PDP CR Change -->
+			<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li> --%>
+			<li>
+			<product:socialSharing product="${product}" />
+				
+			</li>
+		</ul>
+	</c:if>
  </div>
 
 <!-- Change for Showing ZOOM Box -->

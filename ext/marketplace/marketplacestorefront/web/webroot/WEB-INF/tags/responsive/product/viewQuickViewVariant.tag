@@ -199,11 +199,150 @@
     <p class="sizetext"><spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if></p>
 		
 		<a class="size-guide" href="${sizeGuideUrl}" role="button" data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}">
-		<spring:theme code="product.variants.quickview.size.guide"/>
+			<spring:theme code="product.variants.quickview.size.guide"/>
 		</a>
 		  <!-- FineJewellery restriction added -->                                            
        <c:choose>  
-	    <c:when test="${product.rootCategory!='FineJewellery'}">
+          <c:when test="${product.rootCategory=='FineJewellery'}">
+	    <!-- dropdown in quickview for jewellery added --> 
+	    <span class="finejewellery-size">
+			    <select id="quickViewjewelleryvariant" class="jewellery-select">   
+			    	<c:choose>
+					<c:when test="${selectedSize eq null}">
+						<option value="#" selected="selected">
+						<spring:theme code="text.select.size" />
+						</option>
+					</c:when>
+					<c:otherwise>
+						<option value="#"><spring:theme code="text.select.size" /></option>
+					</c:otherwise>
+				</c:choose>          		     
+		     <c:forEach items="${product.variantOptions}" var="variantOption">
+		     
+					<c:forEach var="entry" items="${variantOption.sizeLink}">
+									<c:url value="${entry.key}/quickView" var="link" />							
+									<c:choose>
+										<c:when test="${(variantOption.code eq product.code)}">
+											<c:choose>
+												<c:when test="${selectedSize eq null}">
+													<option value="${link}?selectedSize=true">${entry.value}</option>
+												</c:when>
+												<c:otherwise>
+													<option value="${link}?selectedSize=true" selected >${entry.value}</option>													
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+										<c:otherwise>
+											<option value="${link}?selectedSize=true">${entry.value}</option>
+										</c:otherwise>
+									</c:choose>
+					</c:forEach>
+				</c:forEach>
+			   </select>    
+	    </span>
+	    
+	    </c:when>
+	    
+	    
+	 
+	     <c:when test="${product.rootCategory=='FashionJewellery'}">
+	     
+	     <span class="finejewellery-size">
+	     
+			    <select id="quickViewjewelleryvariant" class="jewellery-select">   
+			    	<c:choose>
+					<c:when test="${selectedSize eq null}">
+						<option value="#" selected="selected">
+						<spring:theme code="text.select.size" />
+						</option>
+					</c:when>
+					<c:otherwise>
+						<option value="#"><spring:theme code="text.select.size" /></option>
+					</c:otherwise>
+				</c:choose>          		     
+		    <c:forEach items="${product.variantOptions}" var="variantOption">
+					
+					<c:url value="${variantOption.url}/quickView" var="variantUrl" />
+					<c:forEach items="${variantOption.colourCode}" var="color">
+						<c:choose>
+							<c:when test="${not empty currentColor}">
+								<c:if test="${currentColor eq color}">
+									<c:set var="currentColor" value="${color}" />
+									<c:forEach var="entry" items="${variantOption.sizeLink}">
+										<c:url value="${entry.key}" var="link" />
+							            	
+										<c:choose>
+										<c:when test="${(variantOption.code eq product.code)}">
+											<c:choose>
+												<c:when test="${selectedSize eq null}">
+													<option value="${link}?selectedSize=true">${entry.value}</option>
+												</c:when>
+												<c:otherwise>
+													<option value="${link}?selectedSize=true" selected >${entry.value}</option>													
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+										<c:otherwise>
+											<option value="${link}?selectedSize=true">${entry.value}</option>
+										</c:otherwise>
+									</c:choose>
+									</c:forEach>
+								</c:if>
+							</c:when>
+							<c:otherwise>
+								<c:forEach var="entry" items="${variantOption.sizeLink}">
+									<c:url value="${entry.key}" var="link" />
+									<c:if test="${entry.key eq product.url}">
+										<c:set var="currentColor" value="${color}" />
+										
+									</c:if>
+									<c:url
+										value="${variantOption.url}/quickView"
+										var="variantUrl" />
+									<c:forEach items="${product.variantOptions}"
+										var="variantOption">
+										<c:forEach items="${variantOption.colourCode}" var="color">
+											<c:if test="${currentColor eq color}">
+												<c:url
+													value="${variantOption.url}/quickView"
+													var="variantUrl" />
+												<c:forEach var="entry" items="${variantOption.sizeLink}">
+													<c:url value="${entry.key}" var="link" />                                                
+													<c:choose>
+														<c:when test="${(variantOption.code eq product.code)}">
+															<c:choose>
+																<c:when test="${selectedSize eq null}">
+																	<option value="${link}?selectedSize=true">${entry.value}</option>
+																</c:when>
+																<c:otherwise>
+																	<option value="${link}?selectedSize=true" selected >${entry.value}</option>													
+																</c:otherwise>
+															</c:choose>
+														</c:when>
+														<c:otherwise>
+															<option value="${link}?selectedSize=true">${entry.value}</option>
+														</c:otherwise>
+													</c:choose>
+												</c:forEach>
+											</c:if>
+										</c:forEach>
+									</c:forEach>
+								</c:forEach>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+				</c:forEach>
+			</ul>	
+					<!-- </select> -->		
+		</div>
+		
+			   </select>    
+	    </span>
+	     </c:when>
+	    
+	    
+<%--  <c:when test="${product.rootCategory!='FineJewellery'}">
+ --%><c:otherwise>
 		<div class="select-size">
 		 <c:choose>
 		    <c:when test="${selectedSize!=null}"> 
@@ -285,42 +424,8 @@
 			</ul>	
 					<!-- </select> -->		
 		</div>
-		</c:when>
-			<c:otherwise>
-				<!-- dropdown in quickview for jewellery added --> 
-			    <select id="quickViewjewelleryvariant" class="jewellery-select">   
-			    	<c:choose>
-					<c:when test="${selectedSize eq null}">
-						<option value="#" selected="selected">
-						<spring:theme code="text.select.size" />
-						</option>
-					</c:when>
-					<c:otherwise>
-						<option value="#"><spring:theme code="text.select.size" /></option>
-					</c:otherwise>
-				</c:choose>          		     
-		     <c:forEach items="${product.variantOptions}" var="variantOption">
-		     
-					<c:forEach var="entry" items="${variantOption.sizeLink}">
-									<c:url value="${entry.key}/quickView" var="link" />							
-									<c:choose>
-										<c:when test="${(variantOption.code eq product.code)}">
-											<c:choose>
-												<c:when test="${selectedSize eq null}">
-													<option value="${link}?selectedSize=true">${entry.value}</option>
-												</c:when>
-												<c:otherwise>
-													<option value="${link}?selectedSize=true" selected >${entry.value}</option>													
-												</c:otherwise>
-											</c:choose>
-										</c:when>
-										<c:otherwise>
-											<option value="${link}?selectedSize=true">${entry.value}</option>
-										</c:otherwise>
-									</c:choose>
-					</c:forEach>
-				</c:forEach>
-			   </select>
+		
+				
 			</c:otherwise>	
 	</c:choose>
 	</form:form>

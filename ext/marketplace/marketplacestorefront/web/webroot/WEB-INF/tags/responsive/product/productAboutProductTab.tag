@@ -9,7 +9,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!-- Details of About Product tab -->
 <c:set var="finejewellery"><spring:theme code='product.finejewellery'/></c:set>
-<div class="tab-details">
-    <p> ${product.articleDescription}</p>
+<!-- <div class="tab-details"> -->
+    <%-- <p> ${product.articleDescription}</p> --%>
 	<product:productDetailsClassifications product="${product}"/>
-</div>
+<!-- </div> -->

@@ -1515,7 +1515,7 @@ $( document ).ready(function() {
 			
 			var priceBreakupForPDP = data['priceBreakup'];
 				$.each(priceBreakupForPDP,function(key,value) {	
-					var pricebreakuplist = "<li><span>"+ key +"</span><strong>"+ value.formattedValue +"</strong></li>";
+					var pricebreakuplist = "<li><div class='price-d'>"+ key +"<span>"+ value.formattedValue +"</span></div></li>";
 						$("#showPriceBreakup").append(pricebreakuplist);
 						
 					
@@ -1779,6 +1779,8 @@ $( document ).ready(function() {
 			},3000);
 		}
 	});
+	
+	
 	
 	
 }); 
@@ -3061,6 +3063,7 @@ function loadDefaultWishListName_SizeGuide() {
 */		
 		$("#show").click(function() {
 			$("#showPriceBreakup").slideToggle("fast");
+			$(".pricebreakup-link").toggleClass("expand-breakup");
 		});
 	});
 	/*Wishlist In PDP changes*/
