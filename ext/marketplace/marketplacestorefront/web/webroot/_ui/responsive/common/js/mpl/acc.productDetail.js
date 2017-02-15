@@ -690,8 +690,8 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					/*TPR-656*/
 					utag.link({
 						link_obj: this, 
-						link_text: 'add_to_wishlist' , 
-						event_type : 'add_to_wishlist', 
+						link_text: 'add_to_wishlist_pdp' , 
+						event_type : 'add_to_wishlist_pdp', 
 						product_sku_wishlist : productcodearray
 					});
 				/*TPR-656 Ends*/
