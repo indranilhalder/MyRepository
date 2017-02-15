@@ -525,8 +525,8 @@ public class CheckoutController extends AbstractCheckoutController
 						}
 					}
 				}
-				
-				Map<String ,String> selectedDateMap=getSessionService().getAttribute(MarketplacecheckoutaddonConstants.DELIVERY_SLOTS_TO_SESSION);
+				//bug TISRLUAT-954 Start
+			/*	Map<String ,String> selectedDateMap=getSessionService().getAttribute(MarketplacecheckoutaddonConstants.DELIVERY_SLOTS_TO_SESSION);
 				for(OrderData data:orderDetails.getSellerOrderList()){
 				      for( DeliveryOrderEntryGroupData orderEntry:data.getDeliveryOrderGroups()){
 				      	 for(OrderEntryData orderEntryData:orderEntry.getEntries()){
@@ -540,7 +540,8 @@ public class CheckoutController extends AbstractCheckoutController
 				      	 }	
 				      }
 				}
-				
+				*/
+				//bug TISRLUAT-954 End 
 				//saving IP of the Customer
 				try
 				{

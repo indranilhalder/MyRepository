@@ -671,21 +671,19 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 				{
 					try
 					{
-						
+						 RescheduleDataList rescheduleDataList=null;
 						 final boolean isEligibleScheduledDelivery = mplDeliveryAddressService.checkScheduledDeliveryForOrder(orderModel);
 							//checking  order Eligible for ReScheduledDelivery
 							if (isEligibleScheduledDelivery)
 							{
 								if (!isMobile)
 								{
-									final RescheduleDataList rescheduleDataList = sessionService
+									 rescheduleDataList = sessionService
 											.getAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
 									//Bug ID 686
 									if (rescheduleDataList != null && CollectionUtils.isNotEmpty(rescheduleDataList.getRescheduleDataList()))
 									{
 										transactionSDDtoList = reScheduleddeliveryDate(orderModel, rescheduleDataList);
-										sessionService.removeAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
-										
 									}
 								}
 							}
@@ -698,9 +696,11 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 							 //save changed address  
 							mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel, orderModel,false);
 							
-							if (isEligibleScheduledDelivery && transactionSDDtoList!=null)
+							if (isEligibleScheduledDelivery && transactionSDDtoList!=null && !isMobile)
 							{
 								//save selected Date and time
+								transactionSDDtoList = changeScheduleddeliveryTimeFormate(orderModel, rescheduleDataList);
+								sessionService.removeAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
 								mplDeliveryAddressService.saveSelectedDateAndTime(orderModel, transactionSDDtoList);
 							}
 						  
@@ -1444,4 +1444,52 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		}
 		return isEDEntry;
 	}
+	
+	
+	private List<TransactionSDDto> changeScheduleddeliveryTimeFormate(final OrderModel orderModel,
+			final RescheduleDataList rescheduleDataListDto)
+	{
+		String timeSlotFrom = null;
+		String timeSlotTo = null;
+		final List<TransactionSDDto> transactionSDDtoList = new ArrayList<TransactionSDDto>();
+		final List<RescheduleData> rescheduleDataList = rescheduleDataListDto.getRescheduleDataList();
+		for (final OrderModel subModel : orderModel.getChildOrders())
+		{
+			for (final AbstractOrderEntryModel abstractOrderEntryModel : subModel.getEntries())
+			{
+				for (final RescheduleData rescheduleData : rescheduleDataList)
+				{
+					if (StringUtils.isNotEmpty(rescheduleData.getProductCode()))
+					{
+						if (abstractOrderEntryModel.getProduct().getCode().equalsIgnoreCase(rescheduleData.getProductCode()))
+						{
+							final TransactionSDDto transactionSDDto = new TransactionSDDto();
+							transactionSDDto.setTransactionID(abstractOrderEntryModel.getTransactionID());
+							transactionSDDto.setPickupDate(rescheduleData.getDate());
+							final String timeFromTo = rescheduleData.getTime();
+							if (StringUtils.isNotEmpty(timeFromTo))
+							{
+								timeSlotFrom = timeFromTo.substring(0, timeFromTo.indexOf("TO") - 1);
+								timeSlotTo = timeFromTo.substring(timeFromTo.indexOf("TO") + 3, timeFromTo.length());
+								try
+								{
+								transactionSDDto.setTimeSlotFrom(timeSlotFrom);
+								transactionSDDto.setTimeSlotTo(timeSlotTo);
+								abstractOrderEntryModel.setEdScheduledDate(rescheduleData.getDate());
+								}
+								catch (Exception e)
+								{
+									LOG.error("unable to parse timeslots "+ e.getMessage());
+								}
+							}
+							transactionSDDtoList.add(transactionSDDto);
+							break;
+						}
+					}
+				}
+			}
+		}
+		return transactionSDDtoList;
+	}
+
 }
