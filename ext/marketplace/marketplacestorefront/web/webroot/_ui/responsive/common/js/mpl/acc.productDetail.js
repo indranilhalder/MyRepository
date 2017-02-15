@@ -3183,11 +3183,20 @@ function getProductContents() {
 			url : requiredUrl,
 			data : dataString,
 			success : function(data) {
-				 $('#productContentDivId').html(data);
-				 
+				if(data){
+					$('#productContentDivId').html(data);
+					//TPR-4701 | utag event for A+ products
+					utag.link({
+						"link_text": "a_plus_product",
+						"event_type": "a_plus_product",
+						"a_plus_product_id":$('#product_id').val()
+					});
+				}
 			},
 			error : function(xhr, status, error) {
-				
+				{
+					
+				}
 			}
 		});
 	
