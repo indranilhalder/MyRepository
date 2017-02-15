@@ -1,4 +1,3 @@
-
 var updatedsearchQuery = "";
 var dummyForm ;
 var lessBrands = [];
@@ -418,9 +417,17 @@ ACC.refinements = {
 		
 		$(document).on("click",".js-product-facet .js-more-facet-values-link",function(e){
 			e.preventDefault();
-			$(this).parents(".js-facet").find(".js-facet-top-values").hide();
-			$(this).parents(".js-facet").find(".js-facet-list-hidden").show();
-
+			if($('.brandSearchTxt').val()=="")
+			{
+				$(this).parents(".js-facet").find(".js-facet-top-values").hide();
+				$(this).parents(".js-facet").find(".js-facet-list-hidden").show();
+				
+				$(this).parents(".js-facet").find(".js-facet-list-hidden span.facet-label").show();
+			}
+			else
+			{
+				$('.marked').css("display","block");				
+			}
 			$(this).parents(".js-facet").find(".js-more-facet-values").hide();
 			$(this).parents(".js-facet").find(".js-less-facet-values").show();
 		});
@@ -428,10 +435,15 @@ ACC.refinements = {
 			$(document).on("click",".js-less-facet-values-link",function(e){
 			e.preventDefault();
 			//var brandFacet = [];
-			
-			$(this).parents(".js-facet").find(".js-facet-top-values").show();
-			$(this).parents(".js-facet").find(".js-facet-list-hidden").hide();
-
+			if($('.brandSearchTxt').val()=="")
+			{
+				$(this).parents(".js-facet").find(".js-facet-top-values").show();
+				$(this).parents(".js-facet").find(".js-facet-list-hidden").hide();
+			}
+			else
+			{
+				$('.marked').css("display","none");				
+			}
 			$(this).parents(".js-facet").find(".js-more-facet-values").show();
 			$(this).parents(".js-facet").find(".js-less-facet-values").hide();
 		});
@@ -469,7 +481,7 @@ ACC.refinements = {
 				if ($('#customMinPriceMob').val() && $('#customMaxPriceMob').val()) {
 					var minPriceSearchTxt = $('#customMinPriceMob').val();
 					var maxPriceSearchTxt = $('#customMaxPriceMob').val();
-					var price = "?" + minPriceSearchTxt + "-" + "?" + maxPriceSearchTxt;
+					var price = "₹" + minPriceSearchTxt + "-" + "₹" + maxPriceSearchTxt;
 					//$('#facetValue').val(facetValue);
 					if (/:price:(.*)/.test(updatedsearchQuery)) {
 						if (/:price:(.*):/.test(updatedsearchQuery)) {
@@ -773,7 +785,6 @@ ACC.refinements = {
 function filterDataAjax(requiredUrl,dataString,pageURL){
 	console.log(requiredUrl);
 	console.log(pageURL);
-	serpURL = pageURL;
 	if ($("input[name=customSku]").val()) {
 		dataString = dataString + "&sort=" + $("select[name=sort]").val() + "&pageSize=" + $("select[name=pageSize]").val(); 
 	}
@@ -790,8 +801,8 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 				//$("#productGrid").html(response);
 			}		
 			else{
+				
 				if(requiredUrl.indexOf("offer") > -1 || requiredUrl.indexOf("viewOnlineProducts") > -1 || requiredUrl.indexOf("/s/") > -1){
-					//UF-15
 					lazyPaginationFacet(response);
 					//$("#productGrid").html(response);
 				}
@@ -949,6 +960,7 @@ function removeMobilePriceRange(){
 	//TISQAUATS-27 ends
 	
 }
+
 //UF-15
 function lazyPaginationFacet(response){
 	res = response;
@@ -968,5 +980,3 @@ function lazyPaginationFacet(response){
         ).html();
     };
 })(jQuery);
-
-
