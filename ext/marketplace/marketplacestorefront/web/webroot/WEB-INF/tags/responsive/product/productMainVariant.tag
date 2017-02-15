@@ -259,22 +259,153 @@ share mobile -->
 <c:if test="${noVariant!=true&&notApparel!=true}">
 <c:if test="${showSizeGuideForFA eq true}">
 <div class="size" style="font-size: 12px;">
+               <span>
+					<spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+			  </span>
+   		
+	 <%-- Jewellery Changes Added for size dropdown in PDP --%>		
+		<c:choose>                                              
+			    <c:when test="${ product.rootCategory =='FineJewellery'}">
+			    <span class="finejewellery-size">
+						<%-- <spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if> --%>
 
-			
-		<span>
-			<spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
-		</span>
-		<!-- Size guide Pop-up -->
-		
-		<a class="size-guide" href="${sizeGuideUrl}" role="button"
+			<select id="jewelleryvariant" class="jewellery-select">             		     
+				<c:choose>
+					<c:when test="${selectedSize eq null}">
+						<option value="#" selected="selected">
+						<spring:theme code="text.select.size" />
+						</option>
+					</c:when>
+					<c:otherwise>
+						<option value="#"><spring:theme code="text.select.size" /></option>
+					</c:otherwise>
+				</c:choose>
+		     <c:forEach items="${product.variantOptions}" var="variantOption">
+					<c:forEach var="entry" items="${variantOption.sizeLink}">
+									<c:url value="${entry.key}" var="link" />							
+									<c:choose>
+										<c:when test="${(variantOption.code eq product.code)}">
+											<c:choose>
+												<c:when test="${selectedSize eq null}">
+													<option value="${link}?selectedSize=true">${entry.value}</option>
+												</c:when>
+												<c:otherwise>
+													<option value="${link}?selectedSize=true" selected >${entry.value}</option>													
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+										<c:otherwise>
+											<option value="${link}?selectedSize=true">${entry.value}</option>
+										</c:otherwise>
+									</c:choose>
+					</c:forEach>
+			</c:forEach>
+			      </select>
+			</span>
+			    <a class="size-guide" href="${sizeGuideUrl}" role="button"
 			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
 				code="product.variants.size.guide" />
-		</a>
+			</a>
+			</c:when>
+			  <c:when test="${ product.rootCategory =='FashionJewellery'}">
+			   <span class="finejewellery-size">
+						<%-- <spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if> --%>
+						<select id="jewelleryvariant" class="jewellery-select">             		     
+				<c:choose>
+					<c:when test="${selectedSize eq null}">
+						<option value="#" selected="selected">
+						<spring:theme code="text.select.size" />
+						</option>
+					</c:when>
+					<c:otherwise>
+						<option value="#"><spring:theme code="text.select.size" /></option>
+					</c:otherwise>
+			  </c:choose>
+		      <c:forEach items="${product.variantOptions}" var="variantOption">
+		          <c:forEach items="${variantOption.colourCode}" var="color">
+					 <c:choose>
+						<c:when test="${not empty currentColor}">
+							<c:if test="${currentColor eq color}">
+								<c:set var="currentColor" value="${color}" />
+								
+								<c:forEach var="entry" items="${variantOption.sizeLink}">
+									<c:url value="${entry.key}" var="link" />
+									<%--  <a href="${link}?selectedSize=true">${entry.value}</a> --%>
+									<c:choose>
+										<c:when test="${(variantOption.code eq product.code)}">
+											<c:choose>
+												<c:when test="${selectedSize eq null}">
+													<option value="${link}?selectedSize=true">${entry.value}</option>
+												</c:when>
+												<c:otherwise>
+															<option value="${link}?selectedSize=true" selected >${entry.value}</option>
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+										<c:otherwise>
+											<option value="${link}?selectedSize=true">${entry.value}</option>
+										</c:otherwise>
+									</c:choose>
+								</c:forEach>
+							</c:if>
+						</c:when>	
+						
+						
+						<c:otherwise>									
+							<c:forEach var="entry" items="${variantOption.sizeLink}">
+								<c:url value="${entry.key}" var="link" />
+								<c:if test="${entry.key eq product.url}">
+									<c:set var="currentColor" value="${color}" />
+									<c:set var="currentColor" value="${variantOption.colour}" />
+								</c:if>
+								<c:forEach items="${product.variantOptions}" var="variantOption">
+									<c:forEach items="${variantOption.colour}" var="color">
+										<c:if test="${currentColor eq color}">
+											<c:forEach var="entry" items="${variantOption.sizeLink}">
+												<c:url value="${entry.key}" var="link" />
+												<c:choose>
+											<c:when test="${(variantOption.code eq product.code)}">
+												<c:choose>
+												
+												
+													<c:when test="${selectedSize eq null}">
+														<option value="${link}?selectedSize=true">${entry.value}</option>
+													</c:when>
+													
+													<c:otherwise>
+																<option value="${link}?selectedSize=true" selected >${entry.value}</option>
+													</c:otherwise>
+											    </c:choose>
+											</c:when>	
+											<c:otherwise>
+												    <option value="${link}?selectedSize=true">${entry.value}</option>
+											</c:otherwise>												
+												</c:choose>
+											</c:forEach>
+										</c:if>
+									</c:forEach>
+								</c:forEach>
+							</c:forEach>
+						</c:otherwise>
+					</c:choose>
+				 </c:forEach>
+			 </c:forEach>
+       </select>
+          </span>
+           <a class="size-guide" href="${sizeGuideUrl}" role="button"
+			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
+				code="product.variants.size.guide" />
+			</a>
+			  </c:when>
+				<c:otherwise>
+				 	
+				 <a class="size-guide" href="${sizeGuideUrl}" role="button"
+			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
+				code="product.variants.size.guide" />
+			</a>
+		<!-- Size guide Pop-up -->
 		
 		<!-- Added for PDP Size ChartChange -->
-		
-		<c:choose>                                              
-			    <c:when test="${ product.rootCategory!='FineJewellery'}">
 		<ul id="variant" class="variant-select">
 			<%-- <c:choose>
 		<select id="variant" class="variant-select">
@@ -356,48 +487,87 @@ share mobile -->
 					</c:choose>
 				 </c:forEach>
 				 </c:forEach>
-				 </ul>
-				</c:when>			                     
-                    <%-- Jewellery Changes Added for size dropdown in PDP --%>
-		<c:otherwise>
-		     <select id="jewelleryvariant" class="jewellery-select">             		     
-				<c:choose>
-					<c:when test="${selectedSize eq null}">
-						<option value="#" selected="selected">
-						<spring:theme code="text.select.size" />
-						</option>
-					</c:when>
-					<c:otherwise>
-						<option value="#"><spring:theme code="text.select.size" /></option>
-					</c:otherwise>
-				</c:choose>
-		     <c:forEach items="${product.variantOptions}" var="variantOption">
-					<c:forEach var="entry" items="${variantOption.sizeLink}">
-									<c:url value="${entry.key}" var="link" />							
-									<c:choose>
-										<c:when test="${(variantOption.code eq product.code)}">
-											<c:choose>
-												<c:when test="${selectedSize eq null}">
-													<option value="${link}?selectedSize=true">${entry.value}</option>
-												</c:when>
-												<c:otherwise>
-													<option value="${link}?selectedSize=true" selected >${entry.value}</option>													
-												</c:otherwise>
-											</c:choose>
-										</c:when>
-										<c:otherwise>
-											<option value="${link}?selectedSize=true">${entry.value}</option>
-										</c:otherwise>
-									</c:choose>
-					</c:forEach>
-				</c:forEach>
-			   </select>
-	    </c:otherwise>
-	</c:choose>
+				 </ul>		                     
+                 </c:otherwise>
+		</c:choose>  
+                    
+        <!-- <div class="SoldWrap">
+        <div class="seller">Sold by
+        	<span id="sellerNameId">Tata CLiQ</span>
+        </div>
+        <div class="fullfilled-by">Fulfilled by&nbsp;
+        	<span style="" id="fulFilledByTship">Tata CliQ</span>
+        <span style="display:none;" id="fulFilledBySship"></span>
+        </div>
+   		</div> -->
+         
+         
+		
 		<!-- Size guide Pop-up -->
 		<!-- <span id="selectSizeId" style="display: none;color: red">Please select a size!</span> -->
 		<!-- End Size guide Pop-up -->
-	</div></c:if> 
+	</div>
+	
+	
+	
+	
+<%-- 	
+	<div class="review-box">
+		<c:if test="${product.rootCategory != 'FineJewellery' || product.rootCategory != 'FashionJewellery'}">	
+				
+			<div class="SoldWrap">
+				<ycommerce:testId
+					code="productDetails_productNamePrice_label_${product.code}">
+					<div class="seller">Sold by <span id="sellerNameId"></span></div>
+				</ycommerce:testId>
+				<div class="fullfilled-by">
+				<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
+				<span id="fulFilledBySship"  style="display:none;"></span>
+				</div>
+			</div>
+			
+			
+			
+			
+			<c:if test="${isGigyaEnabled=='Y'}">
+				<ul class="star-review" id="pdp_rating">
+					<li class="empty"></li>
+					<li class="empty"></li>
+					<li class="empty"></li>
+					<li class="empty"></li>
+					<li class="empty"></li>
+					<span class="gig-rating-readReviewsLink_pdp"> <spring:theme
+							code="rating.noreviews" /></span>
+					<!-- OOTB Code Commented to facilitate Rest Call -->
+					<c:choose>
+				<c:when test="${not empty product.ratingCount}">
+					<a href="">${product.ratingCount} <spring:theme code="text.account.reviews"/></a> 
+				</c:when>
+				<c:otherwise>
+					<span><spring:theme code="text.no.reviews"/></span>
+					 
+				</c:otherwise>
+			</c:choose> 
+				</ul>
+			</c:if>
+			
+			
+			</c:if>
+	
+	</div> --%>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	</c:if> 
 	</c:if>
 <%-- //<c:if test="${noVariant!=true&&notApparel!=true}"> --%>
 

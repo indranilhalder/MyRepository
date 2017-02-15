@@ -608,7 +608,7 @@ body.page-shopTheStyle .timeout-slider .owl-controls .owl-dots {
     font-style: italic;
     line-height: 24px;
 }
-a.morelink {
+a.morelink, .more-link {
 	color: #a9143c;	
     font-style: normal;
 	text-decoration:none;
@@ -623,7 +623,100 @@ a.morelink {
 	margin-bottom: 20px;
     margin-left: 15px;
 }
-
+.dist{
+	float: left;
+    text-align: right;
+    font-size: 14px;
+    text-transform: Capitalize;
+    letter-spacing: 1px;
+}
+.dist span {
+    display: block;
+}
+.dist-calc {
+    padding-bottom: 13px;
+}
+.get-directions {
+    color: #a7183e;
+    text-decoration: underline;
+    text-transform: Capitalize;
+}
+.product-desc {
+    display: block;
+    font-size: 12px;
+    line-height: 17px;
+    margin: 7px 0 5px 0;
+}
+.certified-by {
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    display: block;
+    float: left;
+    width: 100%;
+}
+.certified-by h2 {
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: 20px;
+}
+.certified-by li {
+    line-height: 56px;
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+    float: left;
+    padding: 0 0 20px 0;
+    width: 33.33%;
+}
+.price-toggle {
+    display: block;
+    clip: both;
+    margin-bottom: 30px;
+    width: 100%;
+    float: left;
+}
+.price-breakuplist{
+	margin-bottom: 30px;
+}
+.price-breakuplist li {
+    background: #fbfbfb;
+    border: 1px #e9e9e9 solid;
+    line-height: 13px;
+    font-size: 12px;
+    display: table;
+    float: left;
+    margin-right: 33px;
+    padding: 9px;
+    position: relative;
+    height: 81px;
+    width: 74px;
+}
+.price-breakuplist li:after {
+    content: "+";
+    color: #000;
+    font-size: 25px;
+    font-weight: 300;
+    line-height: 80px;
+    right: -23px;
+    top: 0;
+    position: absolute;
+}
+.price-breakuplist li:last-child:after {
+    content: "";
+}
+.price-breakuplist li .price-d {
+    height: 100%;
+    width: 100%;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+.price-breakuplist li .price-d span {
+    font-weight: 300;
+    line-height: 18px;
+    display: block;
+}
 
 @media (min-width: 651px){
     input[type="checkbox"] + label, input[type="radio"] + label {
@@ -11262,13 +11355,22 @@ button.otherSellersFont {
 .quickview .product-info .product-content .wish-share>li{
 	 padding: 0;
 }
-.product-info .product-content .wish-share>li a {
+.product-info .product-content .wish-share>li a,
+.FineJewellery .wish-share>li a,
+.FashionJewellery .wish-share>li a {
     text-transform: uppercase;
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.5px
 }
-.product-info .product-content .wish-share>li a:before {
+.FineJewellery .wish-share>li .share ul li button,
+.FashionJewellery .wish-share>li .share ul li button{
+	height: auto;
+	padding:0;
+}
+.product-info .product-content .wish-share>li a:before,
+.FineJewellery .wish-share>li a:before,
+.FashionJewellery .wish-share>li a:before {
     margin-right: 10px;
     color: #A9143C
 }
@@ -11291,7 +11393,9 @@ button.otherSellersFont {
     width: 100%;
     margin-right: 0
 }
-.product-info .product-content .wish-share>li .share {
+.product-info .product-content .wish-share>li .share, 
+.FineJewellery .wish-share>li .share, 
+.FashionJewellery .wish-share>li .share{
     cursor: pointer
 }
 .quickview .product-info .product-content .wish-share>li .share span {
@@ -11334,10 +11438,14 @@ button.otherSellersFont {
 	padding:0;
 	height:20px;
 }
-.product-info .product-content .wish-share>li .share>ul li a:hover:before {
+.product-info .product-content .wish-share>li .share>ul li a:hover:before,
+.FineJewellery .wish-share>li .share>ul li a:hover:before,
+.FashionJewellery .wish-share>li .share>ul li a:hover:before {
     color: #88102c;
 }
-.product-info .product-content .wish-share>li .share>ul li a:before {
+.product-info .product-content .wish-share>li .share>ul li a:before,
+.FineJewellery .wish-share>li .share>ul li a:before,
+.FashionJewellery .wish-share>li .share>ul li a:before {
     color: #A9143C;
     font-family: 'FontAwesome';
     -webkit-font-smoothing: antialiased;
@@ -11347,22 +11455,34 @@ button.otherSellersFont {
 }
 .quickview .product-info .product-content .wish-share>li .share>ul li a:before {
     color: #b2b2b2;}
-.product-info .product-content .wish-share>li .share>ul li a.in:before {
+.product-info .product-content .wish-share>li .share>ul li a.in:before,
+.FineJewellery .wish-share>li .share>ul li a.in:before,
+.FashionJewellery .wish-share>li .share>ul li a.in:before {
     content: "\f16d"
 }
-.product-info .product-content .wish-share>li .share>ul li a.fb:before {
+.product-info .product-content .wish-share>li .share>ul li a.fb:before,
+.FineJewellery .wish-share>li .share>ul li a.fb:before,
+.FashionJewellery .wish-share>li .share>ul li a.fb:before {
     content: "\f09a"
 }
-.product-info .product-content .wish-share>li .share>ul li a.tw:before {
+.product-info .product-content .wish-share>li .share>ul li a.tw:before,
+.FineJewellery .wish-share>li .share>ul li a.tw:before,
+.FashionJewellery .wish-share>li .share>ul li a.tw:before {
     content: "\f099"
 }
-.product-info .product-content .wish-share>li .share>ul li a.mail:before {
+.product-info .product-content .wish-share>li .share>ul li a.mail:before,
+.FineJewellery .wish-share>li .share>ul li a.mail:before,
+.FashionJewellery .wish-share>li .share>ul li a.mail:before {
     content: "\f0e0"
 }
-.product-info .product-content .wish-share>li .share>ul li a.pn:before {
+.product-info .product-content .wish-share>li .share>ul li a.pn:before,
+.FineJewellery .wish-share>li .share>ul li a.pn:before,
+.FashionJewellery .wish-share>li .share>ul li a.pn:before {
     content: "\f0d2"
 }
-.product-info .product-content .wish-share>li .share>ul li a.gp:before {
+.product-info .product-content .wish-share>li .share>ul li a.gp:before,
+.FineJewellery .wish-share>li .share>ul li a.gp:before,
+.FashionJewellery .wish-share>li .share>ul li a.gp:before {
     content: "\f0d5"
 }
 .product-info .product-content .delivery-block {
@@ -11390,6 +11510,10 @@ button.otherSellersFont {
     clear: both;
     display: inline-block;
     width: 100%
+}
+.product-info .product-content.FineJewellery .delivery-block li .inline-form,
+.product-info .product-content.FashionJewellery .delivery-block li .inline-form {
+	width: 50%;
 }
 .product-info .product-content .delivery-block li .inline-form::after {
     clear: both;
@@ -24274,6 +24398,11 @@ h5.questions a:hover {
 		margin-top:20px;
 		margin-bottom:20px;
 	}
+	
+	.FineJewellery ul.wish-share,
+	.FashionJewellery ul.wish-share{
+		margin-top: 30px;
+	}
 	.quickview .product-info .product-content ul.wish-share{
 		margin-top:20px;
 		margin-bottom:20px;
@@ -31857,25 +31986,93 @@ img.r2-app-brand-img {
 		margin: 0;
 	}
 	
-.r2-app-brand-img.r2-app-brand-img-left{
-width:130%;}
-.r2-mob-carousel p {
-	margin: 0 65px 140px;
-	padding-bottom:35px;
-}
+	.r2-app-brand-img.r2-app-brand-img-left{
+		width:130%;
+	}
+	.r2-mob-carousel p {
+		margin: 0 65px 140px;
+		padding-bottom:35px;
+	}
 	.r2-app-brand-img:first-child {
 		margin-left: 0px;
 		margin-top: -225px;
 	}
 	.r2-landing-brands .r2-marginAuto.r2-center.r2-padding p {
-	        padding: 0px 183px;
-}
+	    padding: 0px 183px;
+	}
 	.r2-app-landing article p {
 		padding-top: 200px;
 	}
 	img.r2-app-mob-down {
-	margin-left: 0;
-    margin-top: -125px;
+		margin-left: 0;
+	    margin-top: -125px;
+	}
+	.tabs-block .tabs li .about-pro {
+	    float: left;
+	    width: 65%;
+	}
+	.accordin {
+	    float: right;
+	    width: 30%;
+	}
+	.accordin .item {
+	    border-bottom: solid 1px #ccc;
+	    color: #4a4a4a;
+	    font-size: 12px;
+	    line-height: 18px;
+	    position: relative;
+	    padding: 10px 0 0;
+	    margin-bottom: 10px;
+	}
+	.accordin .item .title {
+	    font-size: 14px;
+	    font-weight: bold;
+	    padding: 0 0 10px;
+	    position: relative;
+	}
+	.accordin .item .title a {
+	    display: block;
+	    text-transform: uppercase;
+	    color: #a9143c;
+	    font-weight: bold;
+	    font-size: 14px !important;
+	    text-decoration: none;
+	}
+	.accordin .item .detail {
+	    display: none;
+	}
+	.accordin .item .detail ul {
+	    border-top: 1px #ccc solid;
+	    padding: 15px 0 0;
+	}
+	.accordin .item .detail ul li {
+	    list-style: none;
+	    padding-bottom: 7px;
+	    font-size: 12px !important;
+	    font-weight: normal;
+	}
+	.accordin .item .detail ul li span {
+	    float: right;
+	}
+	.accordin .item:after {
+	    content: "";
+	    position: absolute;
+	    width: 20px;
+	    height: 20px;
+	    top: 0;
+	    right: 17px;
+	    margin-top: 14px;
+	    z-index: -1;
+	    background: url(../images/sprite.svg) -387px -150px;
+	    -webkit-transform: rotate(90deg);
+	    -moz-transform: rotate(90deg);
+	    -ms-transform: rotate(90deg);
+	    -o-transform: rotate(90deg);
+	    transform: rotate(90deg);
+	}
+	.tabs-block .tabs li p {
+	    margin-bottom: 22px;
+	    line-height: 18px;
 	}
 }
 /*App landing page css ends*/
@@ -34651,6 +34848,10 @@ body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo p.size 
 	width:100%;
 /* 	text-align:center; */
 }
+.FineJewellery .pdp-promo-block.promo-block>div,
+.FashionJewellery .pdp-promo-block.promo-block>div{
+	width: auto;
+}
 
 .showAZBrandsImportant{
 	display: block !important;
@@ -35936,10 +36137,9 @@ code, kbd, pre, samp {
 	}
 	
 	/* PRICE BREAKUP LIST */
-	.price-breakuplist{
+	/* .price-breakuplist{
 		margin-top: 10px;
-	}
-	
+	} 
 	.price-breakuplist li{
 		margin-bottom: 10px;
 	    margin-right: 14px;
@@ -35972,7 +36172,8 @@ code, kbd, pre, samp {
 		color: #000;
 	    margin-top: 4px;
 	    display: block;
-	}
+	}*/
+	
 }
 
 @media ( min-width : 1400px) {
@@ -40514,7 +40715,7 @@ fieldset#cardDate .form-group .control-label, fieldset#startDate .form-group .co
 }
 
 .container {
-	padding: 0px !important;
+	padding: 0px 20px !important; /* Jewellery HTML Changes */
 }
 
 
@@ -45838,9 +46039,22 @@ float: right;
 	margin: 0 0 0 40px;
 	width: 35%;
 }
+.product-info.wrapper .product-image-container.FineJewellery,
+.product-info.wrapper .product-image-container.FashionJewellery {
+	margin-left: 0;
+	width: 47%;
+}
+.FineJewellery .buy-btn-holder, .FashionJewellery .buy-btn-holder{
+	width: 50%;
+}
 
 .product-info .product-detail {
 	width: 27%;
+}
+
+.product-info .product-detail.FineJewellery,
+.product-info .product-detail.FashionJewellery {
+	width: 52%;
 }
 
 .product-info .product-image-container .image-list li img {
@@ -45922,14 +46136,35 @@ float: right;
 	font-weight: bold;
 	height: 14px;
 	margin: 0 10px 10px 0;
-	padding: 0 10px 0 0;
+	padding: 0 10px 0;
 	text-transform: uppercase;
 }
-
+.product-info .size #sellerNameId{
+	margin: 0 0 10px;
+	padding: 0;
+}
 .product-info .size span {
 	border-right: 2px solid #9b9b9b;
 }
+.product-info .FineJewellery .size span,
+.product-info .FashionJewellery .size span{
+	border-right: none;
+}
 
+/* .product-info .FineJewellery .size .size-guide,
+.product-info .FashionJewellery .size .size-guide{
+	border-left: 2px solid #9b9b9b;
+	
+} */
+.product-info .size .finejewellery-size, .product-info .size .SoldWrap span{
+	border-right: none;
+}
+.product-info .size .SoldWrap span, .product-info .size .SoldWrap span+a{
+	display: inline;
+	font-weight: normal;
+	text-transform: initial;
+	font-size: 100%;
+}
 .product-info .size span+a {
 	position: relative;
 	color: #a9143c; /* TISPRD-7672 & TISPRD-7593 */
@@ -46009,7 +46244,6 @@ float: right;
 	max-width: 50%;
     word-wrap: break-word;
 }
-
 .product-info .SoldWrap>div.seller {
 	padding-left: 0;
 }
@@ -46068,14 +46302,27 @@ float: right;
 	clear: both;
 }
 
+
 /*Products Right*/
 .product-info .product-content {
 	padding: 0 30px 0 50px;
 }
-
+.product-info .product-content.FineJewellery,
+.product-info .product-content.FashionJewellery {
+	padding: 0 30px 0 25px;
+	width: 52%;
+}
 .product-info .product-content .Wrap {
 	background: #fbfbfb none repeat scroll 0 0;
 	padding: 20px;
+}
+
+.product-info .FineJewellery .Wrap,
+.product-info .FashionJewellery .Wrap{
+	background: transparent;
+	border-top: 1px solid #ccc;
+	margin-top: 30px;
+	padding: 20px 0 0;
 }
 
 .product-info .product-content .delivery-block {
@@ -46109,6 +46356,15 @@ float: right;
 	cursor: pointer;
 }
 
+.product-info .product-content.FineJewellery .delivery-block li.do,
+.product-info .product-content.FashionJewellery .delivery-block li.do{
+	border-bottom: none;
+}
+
+/* .product-info .product-content.FineJewellery .delivery-block li:last-child,
+.product-info .product-content.FashionJewellery .delivery-block li:last-child{
+	border-bottom: 1px solid #ccc;
+} */
 .product-info .product-content .delivery-block li:nth-of-type(4){
 	border: none;
 }
@@ -46120,8 +46376,8 @@ float: right;
 	content: "";
 	position: absolute;
 	left: 0;
-	top: 22px;
-	background: url(../images/sprite.svg) no-repeat -371px -40px;
+	/* top: 22px; */
+	background: url(../images/sprite.svg) no-repeat -371px -43px;
 }
 
 /* .product-info .product-content .delivery-block li.do:after {
@@ -46162,7 +46418,7 @@ float: right;
 
 .product-info .product-content .delivery-block li.do#collectli:before {
 	background-position: -256px -40px;
-	top: 30px;
+	/* top: 30px; */
 }
 
 .product-info .product-content .delivery-block li.do#collectli.active:before
@@ -46208,7 +46464,9 @@ float: right;
 	width: inherit;
 }
 
-.product-info .product-content .wish-share>li .share span {
+.product-info .product-content .wish-share>li .share span,
+.FineJewellery .wish-share>li .share span,
+.FashionJewellery .wish-share>li .share span {
 	font-size: 14px;
 	padding: 0 25px 0 0;
 	float: left;
@@ -46222,7 +46480,9 @@ float: right;
 	display: none;
 }
 
-.product-info .product-content .wish-share>li .share ul {
+.product-info .product-content .wish-share>li .share ul,
+.FineJewellery .wish-share>li .share ul,
+.FashionJewellery .wish-share>li .share ul {
 	display: block !important;
 	max-height: 200px;
 	margin: 0;
@@ -46233,7 +46493,9 @@ float: right;
     transition: max-height .3s;
 }
 
-.product-info .product-content .wish-share>li .share>ul li {
+.product-info .product-content .wish-share>li .share>ul li,
+.FineJewellery .wish-share>li .share>ul li,
+.FashionJewellery .wish-share>li .share>ul li {
 	padding: 0;
 	width: 30px;
 	float: left;
@@ -46244,14 +46506,17 @@ float: right;
 	width: 15px;
 }
 
-.product-info .product-content .wish-share>li .share>ul li a:before {
+.product-info .product-content .wish-share>li .share>ul li a:before,
+.FineJewellery .wish-share>li .share>ul li a:before,
+.FashionJewellery .wish-share>li .share>ul li a:before {
 	line-height: 20px;
 	color: #b2b2b2;
 }
 
 /*Products tabs*/
 .product-info>div.tabs-block {
-	width: 58%;
+	/* width: 58%; */
+	width: 98%;
 	float: right;
 }
 
@@ -47413,7 +47678,13 @@ body.page-productDetails .breadcrumbs.wrapper {
 	cursor: pointer;
 	padding: 12px 25px 12px 12px;
 }
-
+.pricebreakup-link{
+	text-transform: uppercase;
+	text-decoration: none;
+}
+.pricebreakup-link p{
+	float: left;
+}
 .product-detail .Emi p:before, .pricebreakup-link:before {
 	background: #fff;
 	bottom: 0;
@@ -47440,6 +47711,21 @@ body.page-productDetails .breadcrumbs.wrapper {
 	right: 8px;
 	top: 10px;
 	font-family: "FontAwesome";
+}
+.pricebreakup-link:after{
+	content: "+";
+	color: #fff;
+	background-color: #a9143c;
+	height: 20px;
+	font-weight: bold;
+	width: 20px;
+	margin-left: 20px;
+	position: initial;
+	text-align: center;
+	line-height: 20px;
+}
+.expand-breakup:after{
+	content: "-";
 }
 
 .product-detail .Emi p+.modal-content {
@@ -49949,15 +50235,15 @@ width:25px; height:25px;
 
 }
 @media(min-width:981px){
-body:not(.page-checkout-login) .step-body .checkout-shipping{
+	body:not(.page-checkout-login) .step-body .checkout-shipping{
 	    padding-top: 120px;
-}
-body:not(.page-checkout-login) .step-body .checkout-shipping.left-block{
+	}
+	body:not(.page-checkout-login) .step-body .checkout-shipping.left-block{
 	    padding-top: 90px;
-}
-body:not(.page-checkout-login) .step-body .checkout-shipping.addNewAddress{
-	    padding-top: 0px;
-}
+	}
+	body:not(.page-checkout-login) .step-body .checkout-shipping.addNewAddress{
+	    padding-top: 0;
+	}
 }
 @media (max-width: 980px) and (min-width: 791px){
 .wrapper .container-address {
@@ -52695,6 +52981,9 @@ word-break: break-word;
 }
 
 @media(max-width:767px) {
+	.mobile-footer {
+	    display: none;
+	}
 	.top_categories .top_categories_wrapper>.top_categories_section {
 		padding: 0;
 	}
@@ -53543,11 +53832,7 @@ body .lookbook_wrapper .listing.wrapper .left-block{
         padding: 0;
     }
 
-    .choose-retailer h2, .choose-address h2 {
-        font-size: 18px;
-    }
-
-    .choose-retailer .cart-items, .address-list .address, .choose-address .cart-items {
+    .address-list .address{
         font-size: 12px;
     }
 
@@ -53555,7 +53840,7 @@ body .lookbook_wrapper .listing.wrapper .left-block{
         margin-right: 45px;
         padding: 20px;
     }
-
+    
     .checkTab .add-address, .checkTab .formaddress {
         min-height: 133px;
         padding: 37px 0;
@@ -53958,23 +54243,6 @@ body .lookbook_wrapper .listing.wrapper .left-block{
         background-color: #545454;
     }
 
-    /*choose retailer */
-    .choose-retailer {
-        padding: 27px 0 27px 23px;
-        border-top: 1px solid #e4e4e4;
-        border-bottom: 1px solid #e4e4e4;
-    }
-
-    .choose-retailer h2 {
-        color: #202020;
-        font-size: 24px;
-        text-transform: uppercase;
-    }
-
-    .choose-retailer p {
-        color: #999999;
-        font-size: 12px;
-    }
 
     .outstand-amt {
         text-align: right;
@@ -54199,8 +54467,12 @@ body .lookbook_wrapper .listing.wrapper .left-block{
 }
 
 .checkTab .choose-address.choose-retailer .address-list {
+	margin-bottom: 20px;
     padding: 30px 29px 25px 34px;
     width: 47%;
+}
+.checkTab .addressList_wrapper:nth-of-type(2n) .address-list {
+    margin-right: 0;
 }
 
 .checkTab .dist {
@@ -54234,11 +54506,11 @@ body .lookbook_wrapper .listing.wrapper .left-block{
     .editnewAddresPage .formaddress{width:100%;}
 
     .checkTab .choose-retailer .address-list .address {
-        width: 67%;
+        width: 66%;
     }
 
     .checkTab .dist {
-        width: 25%;
+        width: 26%;
     }
 
     .checkTab .smk_accordion .accordion_in {
@@ -54410,7 +54682,7 @@ body .lookbook_wrapper .listing.wrapper .left-block{
 
     .checkTab .dist {
         float: right;
-        width: 30%;
+        width: 23%;
     }
 
     .checkTab .map-view {
@@ -54419,10 +54691,6 @@ body .lookbook_wrapper .listing.wrapper .left-block{
         padding: 20px 0 0;
         min-height: 30px;
         line-height: 15px;
-    }
-
-    .checkTab .dist {
-        width: 23%;
     }
 
     .checkTab .choose-address.choose-retailer {
@@ -54473,7 +54741,8 @@ body .lookbook_wrapper .listing.wrapper .left-block{
         padding-top:10px;
     }
     .checkTab .addNew_wrapper .add-address{
-    margin-top:10px;}
+    	margin-top:10px;
+    }
 
     .checkTab .choose-address .address-list, .checkTab .choose-address.choose-retailer .address-list {
         padding: 10px 12px 15px;

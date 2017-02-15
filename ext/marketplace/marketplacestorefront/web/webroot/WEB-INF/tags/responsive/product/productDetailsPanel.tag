@@ -94,12 +94,13 @@ tr.d0 td {
 
 <div itemscope itemtype="http://schema.org/Product" class="pdp">
 	<div class="product-info wrapper">
-		<div class="product-image-container">
+		<div class="product-image-container ${product.rootCategory}">
 			<cms:pageSlot position="ConfigureImagesCount" var="component">
 				<cms:component component="${component}" />
 			</cms:pageSlot>
 			<product:productImagePanel galleryImages="${galleryImages}"
 				product="${product}" />
+				
 
 				<%-- <input id="emiCuttOffAmount" type="hidden" value="${emiCuttOffAmount}"/>
 				<!-- EMI section -->
@@ -107,7 +108,13 @@ tr.d0 td {
 			
 			<!-- promotion  section -->
 			<product:productPromotionSection product="${product}" />
-
+			
+			
+			
+			
+			
+			
+			
 		</div>
 		<!-- Added for carousel in mobile view -->
 		<div class="product-image-container device">
@@ -161,6 +168,7 @@ tr.d0 td {
   					<c:set var="mainurl" value="${baseURL}${requestPath}"></c:set>
   				</c:otherwise>
   			</c:choose>
+		<div class="product-detail ${product.rootCategory}">
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
 				<h3 class="company">${product.brand.brandname}</h3>
@@ -170,10 +178,16 @@ tr.d0 td {
 			<c:choose>
   				<c:when test="${product.rootCategory=='FineJewellery'}">
 	  				<input id="jwelPDP" type="hidden" value="${product.rootCategory}"/>
-						<p class="key-label">
-		  					<c:forEach var="classification" items="${mapConfigurableAttributes}"> 
-							</c:forEach>
-		  				</p>
+	  				<div class="product-desc">
+						<span class="key-label">
+								
+			  					<c:forEach var="classification" items="${mapConfigurableAttributes}"> 
+								</c:forEach>
+							
+							
+		  				</span>
+		  				<a href="" id="jewelleryProdDetail" class="more-link">View More</a>
+		  			</div>
   				</c:when>
   			</c:choose>
   			
@@ -245,6 +259,11 @@ tr.d0 td {
 			<cms:pageSlot position="AddToCart" var="component">
 					<cms:component component="${component}" />
 				</cms:pageSlot>
+				
+				
+				
+		<c:if test="${product.rootCategory != 'FineJewellery' || product.rootCategory != 'FashionJewellery'}">	
+				
 			<div class="SoldWrap">
 				<ycommerce:testId
 					code="productDetails_productNamePrice_label_${product.code}">
@@ -255,6 +274,9 @@ tr.d0 td {
 				<span id="fulFilledBySship"  style="display:none;"></span>
 				</div>
 			</div>
+			
+			
+			
 			
 			<c:if test="${isGigyaEnabled=='Y'}">
 				<ul class="star-review" id="pdp_rating">
@@ -278,6 +300,13 @@ tr.d0 td {
 			</c:choose>  --%>
 				</ul>
 			</c:if>
+			
+			
+			</c:if>
+				
+		
+		
+			
 			<%-- <cms:pageSlot position="AddToCart" var="component">
 					<cms:component component="${component}" />
 				</cms:pageSlot> --%>
@@ -287,14 +316,13 @@ tr.d0 td {
 			
 			<!-- seller information section  -->
 			<div class="seller-details">
-			<product:sellerInfoDetailsSection/>
 			</div>
 
 			
 
 		</div>
 
-		<div class="product-content">
+		<div class="product-content ${product.rootCategory}">
 			<div class="swatch">
 				<%-- <cms:pageSlot position="VariantSelector" var="component">
 					<cms:component component="${component}" />
@@ -337,27 +365,68 @@ tr.d0 td {
 
 			<div id="fb-root"></div>
 			<div class="Wrap">
-			<cms:pageSlot position="PinCodeService" var="component">
-				<cms:component component="${component}" />
-			</cms:pageSlot>
-          </div>
-          <ul class="wish-share desktop">
+				<cms:pageSlot position="PinCodeService" var="component">
+					<cms:component component="${component}" />
+				</cms:pageSlot>
+            </div>
+            <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION STARTS HERE-->
+            <c:if test="${product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">
+            <div class="certified-by"> 
+               <h2>certified by</h2>
+               <ul>
+                  <li><img src="images/certified-by.jpg" alt="certified by"></li>
+                  <li>30 day returns</li>
+                  <li>tata guarantee</li>
+               </ul>
+            </div>
+            </c:if>
+            <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION ENDS HERE-->
+            <!-- BLOCK MODIFIED FOR JEWELLERY CERTIFICATION STARTS HERE-->
+            <c:if test="${product.rootCategory !='FineJewellery' && product.rootCategory !='FashionJewellery'}">
+	          	<ul class="wish-share desktop">
+	
+					<%-- <li><!-- <span id="addedMessage" style="display:none"></span> -->
+					<!-- Commented as per PDP CR Change -->
+					<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li> --%>
+					<li>
+					<product:socialSharing product="${product}" />
+						
+					</li>
+				</ul>
+			</c:if>
+			<%-- <c:if test="${product.rootCategory !='FashionJewellery'  }">
+	          	<ul class="wish-share desktop">
+	
+					<li><!-- <span id="addedMessage" style="display:none"></span> -->
+					<!-- Commented as per PDP CR Change -->
+					<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li>
+					<li>
+					<product:socialSharing product="${product}" />
+						
+					</li>
+				</ul>
+			</c:if> --%>
+			
 
-				<%-- <li><!-- <span id="addedMessage" style="display:none"></span> -->
-				<!-- Commented as per PDP CR Change -->
-				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li> --%>
-				<li>
-				<product:socialSharing product="${product}" />
-					
-				</li>
-			</ul>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			<!-- BLOCK MODIFIED FOR JEWELLERY CERTIFICATION ENDS HERE-->
 		</div>
 	
 	<!-- CODE MOVED HERE FOR OTHER PRODUCTS APART FROM JEWELLERY TO DISPLAY DETAILS IN TAB STARTS HERE -->
 	<c:set var="finejewellery"><spring:theme code='product.finejewellery'/></c:set>
 	<c:choose>		
-	    <c:when test ="${product.rootCategory!=finejewellery}"> 
-				<div class="tabs-block">
+	    <c:when test ="${product.rootCategory!=finejewellery}">
+				<div class="tabs-block" id="tabsBlock">
 					<product:productPageTabs />
 				</div>
 		</c:when> 
