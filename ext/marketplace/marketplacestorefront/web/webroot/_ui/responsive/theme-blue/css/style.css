@@ -601,7 +601,13 @@ body.page-shopTheStyle .timeout-slider .owl-controls .owl-dots {
 	border-radius: 0;
 }
 /* ADDED TISLUX-1407 ENDS HERE */ 
-
+.full-address{
+	font-size: 12px;
+	padding-left: 18px;
+	border: 1px solid #dbdbdb;
+    height: 100px;
+    width: 100%;
+}
 
 
 @media (min-width: 651px){
