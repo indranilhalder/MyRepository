@@ -1110,6 +1110,27 @@ tr.d0 td {
  
  
 <div class="cart-bottom-block">
+
+				<div class="cartBottomCheck">
+           		<div id="changePinDiv">
+				<%-- <p><spring:theme code="product.pincode.input" /></p>
+				<p id="cartPinCodeAvailable"><spring:theme code="product.pincode" /></p> --%>
+				<!-- TPR_1055 EQA -->
+				<p id="AvailableMessage" style="display:none"></p>
+				<p id="unserviceablepincode" style="display:none"><spring:theme code="cart.unserviceable.pincode" /></p>
+				<p id="error-Id" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
+				<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p>
+				<c:choose>
+		 		<c:when test="${not empty defaultPinCode}">
+				<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="${defaultPinCode}" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
+				</c:when>
+		   		 <c:otherwise>
+		    	<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
+		   		</c:otherwise>
+				 </c:choose>
+				<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
+			</div>
+			</div>
  <%-- <div class="coupon block" style="width: 40%;display: inline-block;">
 <h2>Have a promo code?</h2>
 		<input type="text" id="couponFieldId" placeholder="Enter coupon code" style="width:calc(100% - 65px);display:inline-block;"/>
@@ -1167,9 +1188,9 @@ tr.d0 td {
           </ul>
          <!--  UF-68 and UF-69 -->
            <table>
-           	<tr><td>
+           	<tr><%-- <td>
            		<div id="changePinDiv">
-				<%-- <p><spring:theme code="product.pincode.input" /></p> --%>
+				<p><spring:theme code="product.pincode.input" /></p>
 				<p id="cartPinCodeAvailable"><spring:theme code="product.pincode" /></p>
 				<!-- TPR_1055 EQA -->
 				<p id="AvailableMessage" style="display:none"></p>
@@ -1186,7 +1207,7 @@ tr.d0 td {
 				 </c:choose>
 				<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
 			</div>
-			</td>
+			</td> --%>
 			<td>
 				<li id="checkout-id" class="checkout-button">
 				<!-- TISEE-6257 -->
