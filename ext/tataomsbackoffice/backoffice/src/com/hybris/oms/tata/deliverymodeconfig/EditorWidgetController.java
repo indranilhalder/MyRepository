@@ -14,6 +14,7 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Grid;
+import org.zkoss.zul.Intbox;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Spinner;
@@ -59,6 +60,20 @@ public class EditorWidgetController extends DefaultWidgetController
 
 	private Spinner dfmtathr;
 	private Spinner dfmtatmin;
+
+	//R2.3  SAP-248 cr code
+	private Intbox orderAcceptanceEdAir;
+	private Intbox orderAcceptanceHdAir;
+	private Intbox orderAcceptanceEdSurface;
+	private Intbox orderAcceptanceHdSurface;
+	private Intbox orderProcessingEdAir;
+	private Intbox orderProcessingHdAir;
+	private Intbox orderProcessingEdSurface;
+	private Intbox orderProcessingHdSurface;
+	private Timebox lpHandOverTimeEdAir;
+	private Timebox lpHandOverTimeHdAir;
+	private Timebox lpHandOverTimeEdSurface;
+	private Timebox lpHandOverTimeHdSurface;
 
 	final DateFormat formatter = new SimpleDateFormat("hh:mm a");
 
@@ -141,8 +156,72 @@ public class EditorWidgetController extends DefaultWidgetController
 		sellerResTatHM = getHourMinutes(deliveryModeConfig.getDfmtat());
 		dfmtathr.setValue(sellerResTatHM[0]);
 		dfmtatmin.setValue(sellerResTatHM[1]);
+		//R2.3  SAP-248 cr code
+		orderAcceptanceEdAir.setValue(deliveryModeConfig.getOrderAcceptanceTATEDAir());
+		orderAcceptanceHdAir.setValue(deliveryModeConfig.getOrderAcceptanceTATHDAir());
+		orderAcceptanceEdSurface.setValue(deliveryModeConfig.getOrderAcceptanceTATEDSur());
+		orderAcceptanceHdSurface.setValue(deliveryModeConfig.getOrderAcceptanceTATHDSur());
+		orderProcessingEdAir.setValue(deliveryModeConfig.getOrderProcessingTATEDAir());
+		orderProcessingHdAir.setValue(deliveryModeConfig.getOrderProcessingTATHDAir());
+		orderProcessingEdSurface.setValue(deliveryModeConfig.getOrderProcessingTATEDSurface());
+		orderProcessingHdSurface.setValue(deliveryModeConfig.getOrderProcessingTATHDSurface());
 
+		try
+		{
 
+			final String date = deliveryModeConfig.getLphandoverTimeEDAir(); //ed air
+			final Date date1 = formatter.parse(date);
+			final String formatedDate = formatter.format(date1);
+			final Date date2 = formatter.parse(formatedDate);
+			lpHandOverTimeEdAir.setValue(date2);
+
+		}
+		catch (final ParseException e)
+		{
+			LOG.info("Error: " + e.getMessage());
+		}
+		try
+		{
+
+			final String date = deliveryModeConfig.getLphandovertimeHDAir(); //hdAir
+			final Date date1 = formatter.parse(date);
+			final String formatedDate = formatter.format(date1);
+			final Date date2 = formatter.parse(formatedDate);
+			lpHandOverTimeHdAir.setValue(date2);
+
+		}
+		catch (final ParseException e)
+		{
+			LOG.info("Error: " + e.getMessage());
+		}
+		try
+		{
+
+			final String date = deliveryModeConfig.getLphandoverTimeEDSurface(); //ed surface
+			final Date date1 = formatter.parse(date);
+			final String formatedDate = formatter.format(date1);
+			final Date date2 = formatter.parse(formatedDate);
+			lpHandOverTimeEdSurface.setValue(date2);
+
+		}
+		catch (final ParseException e)
+		{
+			LOG.info("Error: " + e.getMessage());
+		}
+		try
+		{
+
+			final String date = deliveryModeConfig.getLphandoverTimeHDSurface(); //hd surface
+			final Date date1 = formatter.parse(date);
+			final String formatedDate = formatter.format(date1);
+			final Date date2 = formatter.parse(formatedDate);
+			lpHandOverTimeHdSurface.setValue(date2);
+
+		}
+		catch (final ParseException e)
+		{
+			LOG.info("Error: " + e.getMessage());
+		}
 
 	}
 
@@ -167,7 +246,20 @@ public class EditorWidgetController extends DefaultWidgetController
 				|| shipmenttatmin.getValue().equals("") || orderProcessingTatHr.getValue().equals("")
 				|| orderProcessingTatHr.getValue() == null || orderProcessingTatMin.getValue().equals("")
 				|| orderProcessingTatMin.getValue() == null || lpHandOverTime.getValue() == null
-				|| lpHandOverTime.getValue().equals(""))
+				|| lpHandOverTime.getValue().equals("") || orderAcceptanceEdAir.getValue() == null
+				|| orderAcceptanceEdAir.getValue() < 0 || orderAcceptanceHdAir.getValue() == null
+				|| orderAcceptanceHdAir.getValue() < 0 || orderAcceptanceEdSurface.getValue() == null
+				|| orderAcceptanceEdSurface.getValue() < 0 || orderAcceptanceHdSurface.getValue() == null
+				|| orderAcceptanceEdSurface.getValue() < 0 || orderProcessingEdAir.getValue() == null
+				|| orderProcessingEdAir.getValue() < 0 || orderProcessingHdAir.getValue() == null
+				|| orderProcessingHdAir.getValue() < 0 || orderProcessingEdSurface.getValue() == null
+				|| orderProcessingEdSurface.getValue() < 0 || orderProcessingHdSurface.getValue() == null
+				|| orderProcessingHdSurface.getValue() < 0 || lpHandOverTime.getValue() == null
+				|| lpHandOverTime.getValue().equals("") || lpHandOverTimeEdAir.getValue() == null
+				|| lpHandOverTimeEdAir.getValue().equals("") || lpHandOverTimeEdSurface.getValue() == null
+				|| lpHandOverTimeEdSurface.getValue().equals("") || lpHandOverTimeHdAir.getValue() == null
+				|| lpHandOverTimeHdAir.getValue().equals("") || lpHandOverTimeHdSurface.getValue() == null
+				|| lpHandOverTimeHdSurface.getValue().equals(""))
 		{
 
 			Messagebox.show("Please filled, all the fields.");
@@ -192,6 +284,23 @@ public class EditorWidgetController extends DefaultWidgetController
 			config.setDfmtat(getTimeInMinutes(dfmtathr.getValue(), dfmtatmin.getValue()));
 			config.setShiptat(getTimeInMinutes(shipmenttathr.getValue(), shipmenttatmin.getValue()));
 
+			//R2.3  SAP-248 cr code
+			config.setOrderAcceptanceTATEDAir(orderAcceptanceEdAir.getValue());
+			config.setOrderAcceptanceTATHDAir(orderAcceptanceHdAir.getValue());
+			config.setOrderAcceptanceTATEDSur(orderAcceptanceEdSurface.getValue());
+			config.setOrderAcceptanceTATHDSur(orderAcceptanceHdSurface.getValue());
+			config.setOrderProcessingTATEDAir(orderProcessingEdAir.getValue());
+			config.setOrderProcessingTATHDAir(orderProcessingHdAir.getValue());
+			config.setOrderProcessingTATEDSurface(orderProcessingEdSurface.getValue());
+			config.setOrderProcessingTATHDSurface(orderProcessingHdSurface.getValue());
+			final String lpHandOverTimeEdAirValue = formatter.format(lpHandOverTimeEdAir.getValue());
+			final String lpHandOverTimeHdAirValue = formatter.format(lpHandOverTimeHdAir.getValue());
+			final String lpHandOverTimeEdSurfaceValue = formatter.format(lpHandOverTimeEdSurface.getValue());
+			final String lpHandOverTimeHdSurfaceValue = formatter.format(lpHandOverTimeHdSurface.getValue());
+			config.setLphandoverTimeEDAir(lpHandOverTimeEdAirValue);
+			config.setLphandovertimeHDAir(lpHandOverTimeHdAirValue);
+			config.setLphandoverTimeEDSurface(lpHandOverTimeEdSurfaceValue);
+			config.setLphandoverTimeHDSurface(lpHandOverTimeHdSurfaceValue);
 			try
 			{
 
@@ -245,7 +354,5 @@ public class EditorWidgetController extends DefaultWidgetController
 
 		return String.valueOf(hours * 60 + minutes);
 	}
-
-
 
 }

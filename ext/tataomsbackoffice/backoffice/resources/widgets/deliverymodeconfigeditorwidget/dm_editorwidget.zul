@@ -18,13 +18,11 @@
 
 			<row>
 				Cut Off Time
+				<hbox pack="left">
+				    <label style="margin-left:-60px;position:absolute">(hh:mm)</label>
 				<timebox id="cutofftime" cols="5" format="short"
 					constraint="no empty">
-				</timebox>
-				<label
-					style="margin-left:-120px; position:absolute;margin-top:-10px"
-					value="(hh:mm)">
-				</label>
+				</timebox></hbox>
 			</row>
 
 			<row>
@@ -42,12 +40,14 @@
 			<row>
 				Seller Response TAT
 				<hlayout>
-					<label id="sellerresponsetathr" />		<label value="Hr" />	
-					<label id="sellerresponsetatmin" /><label value="Min" />
-				
+					<label id="sellerresponsetathr" />
+					<label value="Hr" />
+					<label id="sellerresponsetatmin" />
+					<label value="Min" />
+
 				</hlayout>
 			</row>
-			
+
 			<row>
 				Order Processing TAT
 				<hlayout>
@@ -59,25 +59,24 @@
 					Min
 				</hlayout>
 			</row>
-				<row>
+			<row>
 				LP HandoverTime
+				<hbox pack="left">
+				    <label style="margin-left:-60px;position:absolute">(hh:mm)</label>
 				<timebox id="lpHandOverTime" cols="5" format="short"
 					constraint="no empty">
-				</timebox>
-				<label
-					style="margin-left:-120px; position:absolute;margin-top:-10px"
-					value="(hh:mm)">
-				</label>
-			</row>
+				</timebox></hbox>
 			
+			</row>
+
 			<row>
 				HOTC TAT
 				<hlayout>
-					<spinner id="hotctathr" cols="02" maxlength="3" readonly="true"
-						constraint="no negative,min 0 max 130" />
+					<spinner id="hotctathr" cols="02" maxlength="3"
+						readonly="true" constraint="no negative,min 0 max 130" />
 					Hr
-					<spinner id="hotctatmin" cols="02" maxlength="2" readonly="true"
-						constraint="no negative,min 0 max 59" />
+					<spinner id="hotctatmin" cols="02" maxlength="2"
+						readonly="true" constraint="no negative,min 0 max 59" />
 					Min
 				</hlayout>
 			</row>
@@ -93,17 +92,107 @@
 					Min
 				</hlayout>
 			</row>
+			<row>
+				Order Acceptance TAT ED Air
+				<hbox pack="left">
+				    <label style="margin-left:-60px;position:absolute">Minutes</label>
+					<intbox id="orderAcceptanceEdAir"
+						constraint="no negative:it shall not be negative" /></hbox>
+			</row>
+			<row>
+				Order Acceptance TAT HD Air
+				<hbox pack="left">
+				    <label style="margin-left:-60px;position:absolute">Minutes</label>
+					<intbox id="orderAcceptanceHdAir"
+						constraint="no negative:it shall not be negative" />
+				</hbox>
+			</row>
+			<row>
+				Order Acceptance TAT ED Surface
+				<hbox pack="left">
+				    <label style="margin-left:-60px;position:absolute">Minutes</label>
+				<intbox id="orderAcceptanceEdSurface"
+					constraint="no negative:it shall not be negative" /></hbox>
+			</row>
+			<row>
+				Order Acceptance TAT HD Surface
+				<hbox pack="left">
+				    <label style="margin-left:-60px;position:absolute">Minutes</label>
+				<intbox id="orderAcceptanceHdSurface"
+					constraint="no negative:it shall not be negative" /></hbox>
+			</row>
+			<row>
+				Order Processing TAT ED Air
+				<hbox pack="left">
+				    <label style="margin-left:-60px;position:absolute">Minutes</label>
+				<intbox id="orderProcessingEdAir"
+					constraint="no negative:it shall not be negative" /></hbox>
+			</row>
+			<row>
+				Order Processing TAT HD Air
+				<hbox pack="left">
+				    <label style="margin-left:-60px;position:absolute">Minutes</label>
+				<intbox id="orderProcessingHdAir"
+					constraint="no negative:it shall not be negative" /></hbox>
+			
+			</row>
+			<row>
+				Order Processing TAT ED Surface
+				<hbox pack="left">
+				    <label style="margin-left:-60px;position:absolute">Minutes</label>
+				<intbox id="orderProcessingEdSurface"
+					constraint="no negative:it shall not be negative" /></hbox>
+			</row>
+			<row>
+				Order Processing TAT HD Surface
+				<hbox pack="left">
+				    <label style="margin-left:-60px;position:absolute">Minutes</label>
+				<intbox id="orderProcessingHdSurface"
+					constraint="no negative:it shall not be negative" /></hbox>
 
+			</row>
+			<row>
+				LP Handover time ED Air
+				<hbox pack="left">
+				    <label style="margin-left:-60px;position:absolute">(hh:mm)</label>
+				<timebox id="lpHandOverTimeEdAir" cols="5"
+					format="short" constraint="no empty">
+				</timebox>
+				</hbox>
+			</row>
+			<row>
+				LP handover Time HD Air
+				<hbox pack="left">
+				    <label style="margin-left:-60px;position:absolute">(hh:mm)</label>
+				<timebox id="lpHandOverTimeHdAir" cols="5"
+					format="short" constraint="no empty">
+				</timebox></hbox>
+				
+			</row>
+			<row>
+				LP handover Time ED Surface
+				<hbox pack="left">
+				    <label style="margin-left:-60px;position:absolute">(hh:mm)</label>
+				<timebox id="lpHandOverTimeEdSurface" cols="5"
+					format="short" constraint="no empty">
+				</timebox></hbox>
+			</row>
+			<row>
+				LP handover Time HD Surface
+				<hbox pack="left">
+				    <label style="margin-left:-60px;position:absolute">(hh:mm)</label>
+				<timebox id="lpHandOverTimeHdSurface" cols="5"
+					format="short" constraint="no empty">
+				</timebox></hbox>
+			</row>
 			<row>
 				<cell></cell>
 				<cell>
 					<button label="SAVE" id="update"></button>
 				</cell>
 				<cell></cell>
-
 			</row>
 		</rows>
 	</grid>
-
 
 </widget>

@@ -1,23 +1,56 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 
 <widget xmlns="http://www.zkoss.org/2005/zul"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xmlns:h="http://www.w3.org/1999/xhtml"
-		xmlns:w="http://www.zkoss.org/2005/zk/client"
-		xmlns:zk="http://www.zkoss.org/2005/zk"
-		xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
- 		height="100%">
-	<listbox id="listview" rows="6" emptyMessage="No result found in the result"
-		mold="paging" pagingPosition="top" pageSize="6">
-		<listhead>
-			<listheader label="DELIVERY MODE"></listheader>
-			<listheader label="CUT OFF TIME"></listheader>
-			<listheader label="DFM TAT"></listheader>
-			<listheader label="Seller Response TAT"></listheader>
-			<listheader label="Order Processing TAT"></listheader>
-			<listheader label="LP Handover Time"></listheader>
-			<listheader label="HOTC TAT"></listheader>
-			<listheader label="SHIPMENT TAT"></listheader>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:w="http://www.zkoss.org/2005/zk/client"
+	xmlns:zk="http://www.zkoss.org/2005/zk"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+	height="100%">
+	<listbox id="listview" rows="5"
+		emptyMessage="No result found in the result" mold="paging"
+		pagingPosition="top" pageSize="4">
+		<listhead sizable="true">
+			<listheader label="DELIVERY MODE" width="200px"></listheader>
+			<listheader label="CUT OFF TIME" width="200px"></listheader>
+			<listheader label="DFM TAT" width="200px"></listheader>
+			<listheader label="Seller Response TAT" width="200px"></listheader>
+			<listheader label="Order Processing TAT" width="200px"></listheader>
+			<listheader label="LP Handover Time" width="200px"></listheader>
+			<listheader label="HOTC TAT" width="200px"></listheader>
+			<listheader label="SHIPMENT TAT" width="200px"></listheader>
+			<listheader label="order Acceptance TAT ED Air"
+				width="250px">
+			</listheader>
+			<listheader label="order Acceptance TAT HD Air"
+				width="250px">
+			</listheader>
+			<listheader label="order Acceptance TAT ED Sur"
+				width="250px">
+			</listheader>
+			<listheader label="order Acceptance TAT HD Sur"
+				width="250px">
+			</listheader>
+			<listheader label="order Processing TAT ED Air"
+				width="250px">
+			</listheader>
+			<listheader label="order Processing TAT HD Air"
+				width="250px">
+			</listheader>
+			<listheader label="order Processing TAT ED Surface"
+				width="250px">
+			</listheader>
+			<listheader label="order Processing TAT HD Surface"
+				width="250px">
+			</listheader>
+			<listheader label="lP Handover time ED Air" width="250px"></listheader>
+			<listheader label="LP handover Time HD Air" width="250px"></listheader>
+			<listheader label="lp handover Time ED Surface"
+				width="250px">
+			</listheader>
+			<listheader label="lp handover Time HD Surface"
+				width="200px">
+			</listheader>
 		</listhead>
 	</listbox>
 	<label id="errorLabel"></label>
