@@ -1098,10 +1098,8 @@ function utagAddProductToBag(triggerPoint){
 	});
 }
 
-/* Data Layer Schema Changes Ends*/
 
-
-/*TPR-4740*/
+/*TPR-4740  Continue Shopping | Cart  */
 $(document).on("click",".continue-shopping.desk-view-shopping",function() {
 	utag.link({
 		link_text: "continue_shopping_clicked",
@@ -1116,15 +1114,21 @@ $(document).on("click","#expressCheckoutButtonId",function(){
 		event_type : "mybag_express_checkout_button_start"
 	});
 })
+
+ /*TPR-4745  | Add New Address | Checkout */
+$(document).on('click','.pincode-button',function(){
+				 
+utag.link({ link_text : 'add_new_address_clicked' ,event_type : 'add_new_address_clicked'});
+})
+
+/*TPR-4777 | Checkout | Cart  */
+$(document).on('click',"#checkout-enabled",function(){
+	utag.link({
+		link_text: "cart_checkout_clicked",
+		event_type : "cart_checkout_clicked"
+	});	
+})	
+
 /* Data Layer Schema Changes Ends*/
 
-
-			 /*TPR-4745*/
-			 $(document).on('click','.pincode-button',function(){
-				 
-				 utag.link({ link_text : 'add_new_address_clicked' ,event_type : 'add_new_address_clicked'});
-			 })
-			 
-			
-			 
-
+	
