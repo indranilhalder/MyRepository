@@ -1165,7 +1165,37 @@ tr.d0 td {
                 </c:choose>
             </ycommerce:testId></span></li>
           </ul>
-          
+         <!--  UF-68 and UF-69 -->
+           <table>
+           	<tr><td>
+           		<div id="changePinDiv">
+				<%-- <p><spring:theme code="product.pincode.input" /></p> --%>
+				<p id="cartPinCodeAvailable"><spring:theme code="product.pincode" /></p>
+				<!-- TPR_1055 EQA -->
+				<p id="AvailableMessage" style="display:none"></p>
+				<p id="unserviceablepincode" style="display:none"><spring:theme code="cart.unserviceable.pincode" /></p>
+				<p id="error-Id" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
+				<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p>
+				<c:choose>
+		 		<c:when test="${not empty defaultPinCode}">
+				<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="${defaultPinCode}" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
+				</c:when>
+		   		 <c:otherwise>
+		    	<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
+		   		</c:otherwise>
+				 </c:choose>
+				<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
+			</div>
+			</td>
+			<td>
+				<li id="checkout-id" class="checkout-button">
+				<!-- TISEE-6257 -->
+				<a  id="checkout-enabled" class="checkoutButton checkout button red"  onclick="return checkPincodeServiceability('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
+				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
+				</li>
+			</td>
+           	</tr>           		
+           </table> 
 
           </div>
 </div>
