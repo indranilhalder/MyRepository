@@ -33621,9 +33621,10 @@ body.page-cartPage .cart-bottom-block .cart-total-block ul.totals li span.amt{
 	float:right;
 	color:#000;
 	font-weight: normal;
+	font-size: 14px;
 }
 body.page-cartPage .cart-bottom-block .cart-total-block ul.totals li#total{
-	font-size: 15px;
+	font-size: 17px;
 	margin-top: 0; /*--- TPR-3606 ---*/
     padding: 20px 0px;
     border-top: 0px solid #e8e8e8;
@@ -33635,7 +33636,7 @@ body.page-cartPage .cart-bottom-block .cart-total-block ul.totals li#total{
     letter-spacing: 0.5px;
 }
 body.page-cartPage .cart-bottom-block .cart-total-block ul.totals li#total span.amt{
-	font-size: 16px;
+	font-size: 18px;
 	/* padding-top: 6px; */ /*--- TPR-3609 ---*/
 	letter-spacing: normal;
 }
@@ -59645,7 +59646,7 @@ body.page-productGrid .listing-leftmenu .checkbox-menu>a,body.page-productGrid .
 	letter-spacing: normal;
 }
 .cart-bottom-block .cartBottomCheck{
-	margin-top: 128px;
+	margin-top: 132px;
 }
 .cart-bottom-block .cartBottomCheck + .cart-total-block li.checkout-button{
 	list-style-type: none;
