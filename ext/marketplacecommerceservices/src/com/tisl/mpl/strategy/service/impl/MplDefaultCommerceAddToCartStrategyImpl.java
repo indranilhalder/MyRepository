@@ -16,6 +16,7 @@ import de.hybris.platform.ordersplitting.model.StockLevelModel;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -140,8 +141,9 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 				}
 
 
-				getModelService().save(cartEntryModel);
-				setSellerInformationinCartEntry(cartEntryModel, productModel);
+				//getModelService().save(cartEntryModel);
+				//setSellerInformationinCartEntry(cartEntryModel, productModel);
+				setSellerInformationinCartEntry(cartEntryModel, productModel.getSellerInformationRelator());
 				getCommerceCartCalculationStrategy().calculateCart(cartModel);
 				getModelService().save(cartEntryModel);
 
@@ -197,28 +199,28 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 	}
 
 	/**
+	 * Adding Seller ID Details to Cart Entry
+	 *
 	 * @param cartEntryModel
-	 * @param productModel
+	 * @param sellerCollection
+	 * @return cartEntryModel
 	 */
 	private AbstractOrderEntryModel setSellerInformationinCartEntry(final CartEntryModel cartEntryModel,
-			final ProductModel productModel)
+			final Collection<SellerInformationModel> sellerCollection)
 	{
-		if (CollectionUtils.isNotEmpty(productModel.getSellerInformationRelator()))
+		//if (CollectionUtils.isNotEmpty(collection.getSellerInformationRelator()))
+		if (CollectionUtils.isNotEmpty(sellerCollection))
 		{
-			for (final SellerInformationModel sellerModel : productModel.getSellerInformationRelator())
+			for (final SellerInformationModel sellerModel : sellerCollection)
 			{
 				if (StringUtils.isNotEmpty(cartEntryModel.getSelectedUSSID())
 						&& StringUtils.isNotEmpty(sellerModel.getSellerArticleSKU())
-						&& cartEntryModel.getSelectedUSSID().equals(sellerModel.getSellerArticleSKU())
+						&& StringUtils.equalsIgnoreCase(cartEntryModel.getSelectedUSSID(), sellerModel.getSellerArticleSKU())
 						&& StringUtils.isNotEmpty(sellerModel.getSellerName()))
 				{
-
 					cartEntryModel.setSellerInfo(sellerModel.getSellerName());
-
 					getModelService().save(cartEntryModel);
 					break;
-
-
 				}
 			}
 		}
