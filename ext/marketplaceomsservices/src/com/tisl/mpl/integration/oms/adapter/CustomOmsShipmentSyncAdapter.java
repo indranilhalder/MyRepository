@@ -1010,13 +1010,38 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
       				|| (ConsignmentStatus.RETURN_CANCELLED.equals(newStatus))
       				&& CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
       		{
-      			 LOG.debug("************************In "+newStatus +" Check .......");
-      			 isRetrunInitiatedCheck=Boolean.TRUE;
-      			 createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
-      			 consignmentModel.setReturnInitiateCheck(Boolean.TRUE);
-      			  modelService.save(consignmentModel);
-      			  isRetrunInitiatedCheck=Boolean.FALSE; 
-      		}
+   				LOG.debug("************************In "+newStatus +" Check .......");
+   				isRetrunInitiatedCheck=Boolean.TRUE;
+
+   				
+   				boolean refundEntryModelExists = false;  
+   				try {
+      				if(null != orderModel.getReturnRequests()) {
+         				if(null != orderModel.getReturnRequests()) {
+         					for (ReturnRequestModel returnRequest : orderModel.getReturnRequests()) {
+         						if(null != returnRequest.getReturnEntries()) {
+         							for (ReturnEntryModel returnEntry : returnRequest.getReturnEntries()) {
+         								if(null != returnEntry.getOrderEntry()) {
+         									if(returnEntry.getOrderEntry().getTransactionID().equalsIgnoreCase(shipment.getShipmentId())) {
+         										refundEntryModelExists  = true;
+         										break;
+         									}
+         								}
+         							}
+         						}
+         					}
+         				}
+      				}
+   				}catch(Exception e) {
+   					LOG.error("Exception occurred while checking return requests for order entry"+shipment.getShipmentId());
+   				}
+   				if(!refundEntryModelExists) {
+   					createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
+   				}
+   				consignmentModel.setReturnInitiateCheck(Boolean.TRUE);
+					modelService.save(consignmentModel);
+					isRetrunInitiatedCheck=Boolean.FALSE; 
+   			}
 		}
 		catch (final Exception e)
 		{

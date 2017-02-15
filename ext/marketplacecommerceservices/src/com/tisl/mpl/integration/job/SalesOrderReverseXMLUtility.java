@@ -12,6 +12,9 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.returns.model.RefundEntryModel;
+import de.hybris.platform.returns.model.ReturnEntryModel;
+import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.io.StringReader;
@@ -196,7 +199,29 @@ public class SalesOrderReverseXMLUtility
 
 				}
 				if ((orderHistoryEntryModel.getDescription().equals(retRef)))
-				{
+				{  
+					boolean refundedAtstore = true;        // for RTS returns , if refund already given at store then no need to send that order line to fico  TISRLEE-2020
+					if(null != orderModel.getReturnRequests()) {
+						for (ReturnRequestModel returnRequest : orderModel.getReturnRequests()) {
+							if(null != returnRequest.getReturnEntries()) {
+								for (ReturnEntryModel returnEntry : returnRequest.getReturnEntries()) {
+									if(null != returnEntry.getOrderEntry()) {
+										if(returnEntry.getOrderEntry().getTransactionID().equalsIgnoreCase(orderHistoryEntryModel.getLineId())) {
+												if(null != ((RefundEntryModel)returnEntry).getRefundMode() && ((RefundEntryModel)returnEntry).getRefundMode().equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_MODE_C)){
+													refundedAtstore  = true;
+									      		break;
+									      	}else {
+									      		refundedAtstore = false;
+									      		break;
+									      	}
+										}
+									}
+								}
+							}
+
+						}
+					}
+					if(!refundedAtstore) {
 					lineID = orderHistoryEntryModel.getLineId();
 					orderCancelReturn = RET;
 					cancelReturnDate = sdformat.format(orderHistoryEntryModel.getModifiedtime());
@@ -205,6 +230,7 @@ public class SalesOrderReverseXMLUtility
 					LOG.debug("return map size>>>>>" + orderTagDateMap.size());
 					returnCancelMap.put(lineID, orderTagDateMap);
 				}
+}
 
 			}
 		}

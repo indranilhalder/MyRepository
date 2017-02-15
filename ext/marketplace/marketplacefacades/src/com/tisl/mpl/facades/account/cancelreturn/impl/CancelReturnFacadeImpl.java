@@ -3589,7 +3589,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						{
 							updateConsignmentStatus(entry, ConsignmentStatus.RETURN_INITIATED);
 							createHistoryEntry(entry, subOrder, ConsignmentStatus.RETURN_INITIATED);
-							createRefundForRTS(subOrder, entry, data.getReasonCode(), SalesApplication.WEB);
+							createRefundForRTS(subOrder, entry, data, SalesApplication.WEB);
 							return getRTSResponseData(orderId, entry.getTransactionID(), true);
 						}
 						else
@@ -3653,7 +3653,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	}
 	
 	private boolean createRefundForRTS(final OrderModel subOrderModel, final AbstractOrderEntryModel abstractOrderEntryModel,
-			final String reasonCode, final SalesApplication salesApplication)
+			final OrderLineData orderLineData, final SalesApplication salesApplication)
 	{
 		boolean returnReqCreated = false;
 		final boolean returnLogisticsCheck = true;
@@ -3672,13 +3672,14 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				final RefundEntryModel refundEntryModel = modelService.create(RefundEntryModel.class);
 				refundEntryModel.setOrderEntry(abstractOrderEntryModel);
 				refundEntryModel.setReturnRequest(returnRequestModel);
-				refundEntryModel.setReason(RefundReason.valueOf(getReasonDesc(reasonCode)));
+				refundEntryModel.setReason(RefundReason.valueOf(getReasonDesc(orderLineData.getReasonCode())));
 				refundEntryModel.setStatus(ReturnStatus.RETURN_INITIATED);
 				refundEntryModel.setAction(ReturnAction.IMMEDIATE);
-				refundEntryModel.setNotes(getReasonDesc(reasonCode));
+				refundEntryModel.setNotes(getReasonDesc(orderLineData.getReasonCode()));
 				refundEntryModel.setExpectedQuantity(abstractOrderEntryModel.getQuantity());//Single line quantity
 				refundEntryModel.setReceivedQuantity(abstractOrderEntryModel.getQuantity());//Single line quantity
 				refundEntryModel.setRefundedDate(new Date());
+				refundEntryModel.setRefundMode(orderLineData.getRefundMode());
 				final List<PaymentTransactionModel> tranactions = subOrderModel.getPaymentTransactions();
 				if (CollectionUtils.isNotEmpty(tranactions))
 				{

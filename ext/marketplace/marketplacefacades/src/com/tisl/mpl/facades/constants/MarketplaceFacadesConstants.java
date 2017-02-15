@@ -156,7 +156,7 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String SERVER_EXCEPTION = "Internal Server Error, Please try again later";
 	public static final String PINCODE_NOT_SERVICEABLE="Pincode not Serviceable";
 	public static final String TATA_CLIQ="TATA-CLIQ";
-
+	public static final String REFUND_MODE_C="C";
 	private MarketplaceFacadesConstants()
 	{
 		//empty

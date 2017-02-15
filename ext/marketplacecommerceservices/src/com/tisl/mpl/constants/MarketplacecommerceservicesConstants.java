@@ -1903,6 +1903,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String Between = "Between";
 	public final static String TICKET_SUB_TYPE_DNC = "DNC";
-
+	public static final String REFUND_MODE_C = "C";
 
 }

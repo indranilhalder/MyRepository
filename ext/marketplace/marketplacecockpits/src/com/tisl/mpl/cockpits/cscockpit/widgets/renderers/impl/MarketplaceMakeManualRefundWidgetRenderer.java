@@ -112,7 +112,11 @@ public class MarketplaceMakeManualRefundWidgetRenderer extends
 									.getReturnEntries())) {
 								for (ReturnEntryModel returnEntry : returnRequest
 										.getReturnEntries()) {
-									if (returnEntry instanceof RefundEntryModel && !((RefundEntryModel) returnEntry).getReason().equals(RefundReason.SITEERROR)) {
+									boolean  refundedAtRts = false;
+									if(null != ((RefundEntryModel) returnEntry).getRefundMode() && ((RefundEntryModel) returnEntry).getRefundMode().equalsIgnoreCase(MarketplaceCockpitsConstants.REFUND_MODE_C)) {
+										refundedAtRts = true;
+									}
+									if (returnEntry instanceof RefundEntryModel && !((RefundEntryModel) returnEntry).getReason().equals(RefundReason.SITEERROR) && !refundedAtRts)   {
 										if (returnEntry.getOrderEntry() != null
 												&& CollectionUtils
 														.isNotEmpty(returnEntry

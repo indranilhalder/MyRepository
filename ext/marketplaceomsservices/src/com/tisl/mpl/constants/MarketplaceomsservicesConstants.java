@@ -20,8 +20,8 @@ package com.tisl.mpl.constants;
 public final class MarketplaceomsservicesConstants extends GeneratedMarketplaceomsservicesConstants
 {
 	public static final String EXTENSIONNAME = "marketplaceomsservices";
-	public static final String YES = "true";
-	public static final String NO = "false";
+	public static final String TRUE = "true";
+	public static final String FALSE = "false";
 	public static final String UnitCode_Pieces = "pieces";
 	public static final String UnitCode_Pieces_Value = "1";
 
@@ -47,6 +47,8 @@ public final class MarketplaceomsservicesConstants extends GeneratedMarketplaceo
 	public static final String SSHIP = "SSHIP".intern();
 	
 	public static final String N = "N".intern();
+	public static final String YES = "yes";
+	public static final String NO = "no";
 
 	private MarketplaceomsservicesConstants()
 	{

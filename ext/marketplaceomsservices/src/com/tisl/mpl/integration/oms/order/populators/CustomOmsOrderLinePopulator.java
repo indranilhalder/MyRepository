@@ -90,6 +90,30 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				}
 			}
 			populateData(source, target);
+			String isReturnToStoreEligible = MarketplaceomsservicesConstants.NO;
+			String productReturnToStoreEligibility = null;
+			String sellerReturnToStoreEligibility = null;
+			if (null != source.getProduct() && null != source.getProduct().getRichAttribute()
+					&& null != source.getProduct().getRichAttribute())
+			{
+				final List<RichAttributeModel> productRichAttribute =  (List<RichAttributeModel>)source.getProduct().getRichAttribute();
+				if (null != productRichAttribute && null != productRichAttribute.get(0)&& null !=productRichAttribute.get(0).getReturnAtStoreEligible())
+				{
+					productReturnToStoreEligibility = productRichAttribute.get(0).getReturnAtStoreEligible().getCode();
+				}
+			}
+			if (null != richAttributeModel && null != richAttributeModel.get(0)&& null !=richAttributeModel.get(0).getReturnAtStoreEligible())
+			{
+				sellerReturnToStoreEligibility = richAttributeModel.get(0).getReturnAtStoreEligible().getCode();
+			}
+			if(null != sellerReturnToStoreEligibility && sellerReturnToStoreEligibility.equalsIgnoreCase(MarketplaceomsservicesConstants.YES) && null != productReturnToStoreEligibility && productReturnToStoreEligibility.equalsIgnoreCase(MarketplaceomsservicesConstants.YES))
+			{
+				isReturnToStoreEligible = MarketplaceomsservicesConstants.YES;
+			}
+			if(null != productReturnToStoreEligibility) {
+				
+				target.setIsReturnToStoreEligible(isReturnToStoreEligible);
+			}
 			if (richAttributeModel != null)
 			{
 				populateRichAttribute(richAttributeModel, target);

@@ -211,6 +211,7 @@ public final class MarketplaceCockpitsConstants extends
 	public static final String AND = "and";
 	public static final String Between = "BETWEEN";
 	public static final String NA = "NA";
+	public static final String REFUND_MODE_C = "C";
 
 	
 }

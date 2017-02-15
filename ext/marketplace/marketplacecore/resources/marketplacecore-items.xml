@@ -6830,6 +6830,16 @@
 					</attribute>
 			</attributes>
 		</itemtype>
+		<itemtype code="RefundEntry" autocreate="false" generate="true">
+			<attributes>
+				<attribute qualifier="refundMode" autocreate="true" type="java.lang.String">
+					<description>Return To Store use only</description>
+					<modifiers read="true" write="true" removable="true"
+						optional="true" initial="true" unique="false" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
 	</typegroup>
 		<typegroup name="Consignment">
 			<itemtype code="Consignment" autocreate="false" generate="false">
