@@ -21,8 +21,14 @@ function innerLazyLoad(options) {
             }
         }
     });
-    initPageLoad = false;
-    $('ul.product-listing.product-grid.lazy-grid').html(gridHTML).hide().fadeIn(500);
+    if(initPageLoad){//TODO: duplicate loading prevention
+    	$('ul.product-listing.product-grid.lazy-grid').html(gridHTML).hide().fadeIn(500);
+    	initPageLoad = false;
+    }else{
+    	$('ul.product-listing.product-grid.lazy-grid').append(gridHTML).hide().fadeIn(500);
+    }
+    
+    
     deleteArraySet(productItemArray);
 }
 
@@ -66,7 +72,7 @@ function getProductSetData() {
     	}
     		   $.ajax({
     	            url: ajaxUrl,
-    	            data:{pageSize:24},
+    	            data:{pageSize:24,q:''},
     	            success: function(x) {
     	                var filtered = $.parseHTML(x);
     	                var ulProduct = $(filtered).find('ul.product-listing.product-grid');
