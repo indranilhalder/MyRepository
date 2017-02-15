@@ -30,6 +30,12 @@ ACC.quickview = {
 			maxWidth:"100%",
 			onComplete: function ()
 			{
+				quickviewGallery();
+				ACC.quickview.refreshScreenReaderBuffer();
+				ACC.quickview.initQuickviewLightbox();
+				ACC.ratingstars.bindRatingStars($(".quick-view-stars"));
+				//UF-24 thumbnail image load
+				//Moved after quickviewGallery in case utag is undefined
 				/*TPR-690*/
 				var productCode = productCodeQuickView;
 				// Product code passed as an array for Web Analytics   INC_11511 
@@ -43,10 +49,6 @@ ACC.quickview = {
 				});
 				
 				/*TPR-690 ends*/
-				quickviewGallery();
-				ACC.quickview.refreshScreenReaderBuffer();
-				ACC.quickview.initQuickviewLightbox();
-				ACC.ratingstars.bindRatingStars($(".quick-view-stars"));
 			},
 
 			onClosed: function ()
@@ -68,34 +70,40 @@ ACC.quickview = {
 
 function quickviewGallery() {
 	$(document).ready(function(){
-		var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
-		var thumbnailImageHeight = (mainImageHeight / 5);
-		$(".imageList ul li img").css("height", thumbnailImageHeight);
-	 	$("#previousImage").css("opacity","0.5");
-	 	$("#nextImage").css("opacity","1");
-	 	var listHeight = $(".imageList li").height();
-	 	if($("#previousImage").length){
-	 		$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
-	 		$(".productImageGallery").css("height",(listHeight*imagePageLimit+100)+"px");
-	 	}
-	 	$(".imageListCarousel").show();
-	 	
-	 	if ('ontouchstart' in window) {
-	 		$(".quick-view-popup #variantForm .select-size span.selected").next("ul").hide();
-			  $(".quick-view-popup #variantForm .select-size span.selected").click(function(){
-				  $(this).next("ul").toggleClass("select_height_toggle");
-			  });
-			}
-	 	
-	 	$(".productImageGallery img").click(function(e) {
-			/*TPR-643 starts*/
-				utag.link({
-					link_obj: this, 
-					link_text: 'pdp_image_click' , 
-					event_type : 'pdp_image_click' 
-				});
-				/*TPR-643 ends*/
-		});
+		//UF-24 thumbnail image load
+		$('.main-image a img.picZoomer-pic').on('load', function(){
+			var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
+			console.log("mainImageHeight is " + mainImageHeight);
+			var thumbnailImageHeight = (mainImageHeight / 5);
+			$(".imageList ul li img").css("height", thumbnailImageHeight);
+		 	$("#previousImage").css("opacity","0.5");
+		 	$("#nextImage").css("opacity","1");
+		 	var listHeight = $(".imageList li").height();
+		 	if($("#previousImage").length){
+		 		$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
+		 		$(".productImageGallery").css("height",(listHeight*imagePageLimit+100)+"px");
+		 	}
+		 	$(".imageListCarousel").show();
+		 	
+		 	if ('ontouchstart' in window) {
+		 		$(".quick-view-popup #variantForm .select-size span.selected").next("ul").hide();
+				  $(".quick-view-popup #variantForm .select-size span.selected").click(function(){
+					  $(this).next("ul").toggleClass("select_height_toggle");
+				  });
+				}
+		 	
+		 	$(".productImageGallery img").click(function(e) {
+				/*TPR-643 starts*/
+					utag.link({
+						link_obj: this, 
+						link_text: 'pdp_image_click' , 
+						event_type : 'pdp_image_click' 
+					});
+					/*TPR-643 ends*/
+			});
+		}).each(function() {
+	    	  if(this.complete) $(this).load();
+	    });
 	 	
 	 });
 	if($("#cboxContent #cboxLoadedContent .quickview.active")[0].offsetHeight < $("#cboxContent #cboxLoadedContent .quickview.active")[0].scrollHeight){
