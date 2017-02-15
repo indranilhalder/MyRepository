@@ -22,7 +22,7 @@ function innerLazyLoad(options) {
         }
     });
     initPageLoad = false;
-    $('ul.product-listing.product-grid.lazy-grid').html(gridHTML).hide().fadeIn(500);
+    $('ul.product-listing.product-grid.lazy-grid').append(gridHTML).hide().fadeIn(500);
     deleteArraySet(productItemArray);
 }
 
@@ -130,7 +130,7 @@ function getProductSetData() {
 }
 $(document).ready(function() {
     //set the total no of pages 
-    totalNoOfPages = $('input[name=noOfPages]').val();
+    totalNoOfPages = 6;//$('input[name=noOfPages]').val();
     totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
     getProductSetData();
     $(window).on('scroll', function() {
