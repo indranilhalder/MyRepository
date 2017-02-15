@@ -2726,14 +2726,16 @@ $(document).ready(function(){
 		$(".step-1,.step-2").addClass("step-done");
 		$(".progress-barg span.step").addClass("step3");
 	}
-	 setTimeout(function () {
+	/*start changes for INC_11120*/
+	 /*setTimeout(function () {
 		 if ($('body').find(".smartbanner.smartbanner-android").length > 0){
 				$("body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header").css("margin-top","82px");
 			}
 			else{
 				$("body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header").css("margin-top","0px");
 			}
-     }, 100);
+     }, 100);*/
+	/*end changes for INC_11120*/
 	 $(document).on("click",".smartbanner-close",function(){
 		$("body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header").css("margin-top","0px");
 	 });

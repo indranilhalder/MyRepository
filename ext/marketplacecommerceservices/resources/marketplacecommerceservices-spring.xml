@@ -521,7 +521,7 @@
 	<alias name="mplDefaultCommerceAddToCartStrategyImpl" alias="commerceAddToCartStrategy" />
 	<bean id="mplDefaultCommerceAddToCartStrategyImpl"
 		class="com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl"
-		parent="abstractCommerceAddToCartStrategy">
+		parent="defaultCommerceAddToCartStrategy">
 		<property name="commerceAddToCartMethodHooks" ref="commerceAddToCartMethodHooks" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>
@@ -1965,6 +1965,26 @@
             </bean>
         </property>
     </bean>
+	<!-- Old Cron Job Deletion Logic ends: -->
+
+    <!-- <bean id="nodeWarmupService" class="com.hybris.yps.nodewarmer.service.NodeWarmupService">
+		<property name="warmerStrategies">
+			<list>
+				<bean class="com.hybris.yps.nodewarmer.warmer.impl.ComposedTypeWarmer" />
+				<bean class="com.hybris.yps.nodewarmer.warmer.impl.EnumerationTypesWarmer" />
+				<bean class="com.hybris.yps.nodewarmer.warmer.impl.PageWarmer">
+					<property name="hostname"
+						value="#{configurationService.configuration.getProperty('nodewarmer.test.http.host')}" />
+					<property name="throwExceptionOnFailure" value="true" />
+					<property name="urls">
+						<list>
+							<value>/</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean> -->
 	<!-- Old Cron Job Deletion Logic ends: -->
 
 </beans>

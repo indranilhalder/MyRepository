@@ -56,8 +56,10 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 	private final static Logger LOG = Logger.getLogger(InitiateReturnForOrderJob.class.getName());
 	@Autowired
 	private CancelReturnFacade cancelReturnFacade;
+
 	@Autowired
 	private OrderModelService orderModelService;
+
 
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
