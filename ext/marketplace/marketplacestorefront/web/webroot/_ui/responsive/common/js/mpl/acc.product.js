@@ -434,6 +434,7 @@ sendAddToBag : function(formId, isBuyNow) {
 	var stock = $("#" + formId + " :input[name='" + stock_id + "']").val();
 	var isSuccess = false;
 	var ussid = $("#" + formId + " :input[name='" + ussid + "']").val();
+	var utagError=false;
 	/*
 	 * if(parseInt(stock)<parseInt(quantity)){
 	 * $("#"+formId+"noInventory").html("<font color='#ff1c47'>" +
@@ -492,6 +493,8 @@ sendAddToBag : function(formId, isBuyNow) {
 											+ $('#bagfull').text()
 											+ "</font>");
 							$("#" + formId + "Title").show().fadeOut(5000);
+							errorAddToBag("bag_is_full");
+							utagError=true;
 						} else if (data == "outofinventory") {
 							$("#" + formId + "noInventory")
 									.html(
@@ -502,6 +505,8 @@ sendAddToBag : function(formId, isBuyNow) {
 													+ "</font>");
 							$("#" + formId + "noInventory").show().fadeOut(
 									6000);
+							errorAddToBag("out_of_stock");
+							utagError=true;
 							return false;
 						} else if (data == "willexceedeinventory") {
 							$("#" + formId + "excedeInventory")
@@ -561,15 +566,23 @@ sendAddToBag : function(formId, isBuyNow) {
 										salesHierarchyCategoryMSD,
 										priceformad, "INR");
 							}
+						
 						}
 						// End MSD
 						if (isSuccess == true) {
-							
 							var cartUrl = ACC.config.encodedContextPath
 									+ "/cart";
 							location.href = cartUrl;
 						}
-				
+						
+						if(!utagError){
+							if(isBuyNow){
+								utagAddProductToBag("buynow");
+							}
+							else{
+								utagAddProductToBag("addtobag");
+							}
+						}
 						
 						$("#bag-clickSpin,.bagspinner").remove();			
 					},
@@ -582,7 +595,6 @@ sendAddToBag : function(formId, isBuyNow) {
 					error : function(resp) {
 						$("#bag-clickSpin,.bagspinner").remove();
 						$('.js-add-to-cart').removeAttr("disabled");//For TISPRD-4631
-						// alert("Add to Bag unsuccessful");
 					}
 				});
 	}
