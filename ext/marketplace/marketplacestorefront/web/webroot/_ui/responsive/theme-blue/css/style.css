@@ -60101,10 +60101,10 @@ body.template-pages-layout-apparelCategoryLandingPageV1 .listing-leftmenu .check
 
 /* PRICE FONT CHANGE */
 
-.priceFormat , .price p, .price, .product-facet .facet .facet-list .filter-price span.facet-text,
+/* .priceFormat , .price p, .price, .product-facet .facet .facet-list .filter-price span.facet-text,
 .total-payable-amount, .cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info p.delivery-price, .Price span, span#minPrice, span.amt{
 	font-family:"MontserratGoogleReg";
-} 
+}  */
 
 /* UF-61 Cart Page start */
 
