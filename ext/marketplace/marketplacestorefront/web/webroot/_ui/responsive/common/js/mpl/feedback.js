@@ -2855,3 +2855,13 @@ $('.cartItemBlankPincode a').click(function() {
 	e.preventDefault();
 
 	}); 
+
+/*UF-85*/
+$("body.page-cartPage .cart.wrapper .checkout-types li#checkout-id").on("mouseover",function(){
+	if($(this).find("a#checkout-enabled.checkout-disabled").length > 0){
+		$(this).css("cursor","not-allowed");
+	}
+	else{
+		$(this).css("cursor","default");
+	}
+});
