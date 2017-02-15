@@ -36,8 +36,7 @@
 				<label value="${labels.lbl.header.one}" />
 				<vbox>
 					<hbox>
-						<button tooltiptext="Add new time slot"
-							onClick="sdpopup.setVisible(true)"
+						<button tooltiptext="Add new time slot" id="sdItemAdd"
 							image="${wr}/images/add-tool-plus.png" />
 						<button id="sdItemEdit"
 							tooltiptext="edit sd time slot"
@@ -84,8 +83,7 @@
 				<label value="${labels.lbl.header.two}" />
 				<vbox>
 					<hbox>
-						<button tooltiptext="Add new time slot"
-							onClick="edpopup.setVisible(true)"
+						<button tooltiptext="Add new time slot" id="edItemAdd"
 							image="${wr}/images/add-tool-plus.png" />
 						<button id="edItemEdit"
 							tooltiptext="edit ed time slot"
@@ -132,8 +130,7 @@
 				<label value="${labels.lbl.header.three}" />
 				<vbox>
 					<hbox>
-						<button tooltiptext="Add new time slot"
-							onClick="rdpopup.setVisible(true)"
+						<button tooltiptext="Add new time slot" id="rdItemAdd"
 							image="${wr}/images/add-tool-plus.png" />
 						<button id="rdItemEdit"
 							tooltiptext="edit rd time slot"
@@ -207,7 +204,7 @@
 					</vlayout>
 					<vlayout>
 						<label value="" />
-						<button label="ADD and SAVE" id="sdPopupSave" />
+						<button label="ADD and SAVE" id="sdPopupAddSave" />
 					</vlayout>
 				</hlayout>
 			</div>
@@ -234,7 +231,7 @@
 					</vlayout>
 					<vlayout>
 						<label value="" />
-						<button label="ADD and SAVE" id="edPopupSave" />
+						<button label="ADD and SAVE" id="edPopupAddSave" />
 					</vlayout>
 				</hlayout>
 			</div>
@@ -256,11 +253,11 @@
 					<vlayout style="margin-right:30px">
 						<label value="To Time" />
 						<timebox cols="5" format="short"
-							id="rdTimeBoxTo" constraint="no empty" />
+							id="rdTimeBoxTo"/>
 					</vlayout>
 					<vlayout>
 						<label value="" />
-						<button label="ADD and SAVE" id="rdPopupSave" />
+						<button label="ADD and SAVE" id="rdPopupAddSave" />
 					</vlayout>
 				</hlayout>
 			</div>

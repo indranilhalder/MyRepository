@@ -310,62 +310,6 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 		}
 	}
 
-	/**
-	 * add new TimeSlot to sdlistbox when popup add button clicked
-	 *
-	 * @throws InterruptedException
-	 */
-	@SuppressWarnings("deprecation")
-	@ViewEvent(componentID = TataomsbackofficeConstants.SCHEDULEDDELIVERY_POPUP_ITEMADD, eventName = Events.ON_CLICK)
-	public void sdTimeSlotsAdd() throws InterruptedException
-	{
-
-		if (sdTimeBoxFrom == null || sdTimeBoxTo == null)
-		{
-		}
-		else
-		{
-
-			sdTimeSlotsAddAndEdit(sdTimeBoxFrom, sdTimeBoxTo, sdpopup, "configurableParamWidget.item.hd.save", false);
-		}
-	}
-
-	/**
-	 * add new TimeSlot to edlistbox when popup add button clicked
-	 *
-	 * @throws InterruptedException
-	 */
-	@SuppressWarnings("deprecation")
-	@ViewEvent(componentID = TataomsbackofficeConstants.EXPRESSDELIVERY_POPUP_ITEMADD, eventName = Events.ON_CLICK)
-	public void edTimeSlotsAdd() throws InterruptedException
-	{
-		if (edTimeBoxFrom == null || edTimeBoxTo == null)
-		{
-		}
-		else
-		{
-			edTimeSlotsAddAndEdit(edTimeBoxFrom, edTimeBoxTo, edpopup, "configurableParamWidget.item.ed.save", false);
-		}
-	}
-
-	/**
-	 * add new TimeSlot to rdlistbox when popup add button clicked
-	 *
-	 * @throws InterruptedException
-	 */
-	@SuppressWarnings("deprecation")
-	@ViewEvent(componentID = TataomsbackofficeConstants.RETURNDELIVERY_POPUP_ITEMADD, eventName = Events.ON_CLICK)
-	public void rdTimeSlotsAdd() throws InterruptedException
-	{
-		if (rdTimeBoxFrom == null || rdTimeBoxTo == null)
-		{
-		}
-		else
-		{
-			rdTimeSlotsAddAndEdit(rdTimeBoxFrom, rdTimeBoxTo, rdpopup, "configurableParamWidget.item.rd.save", false);
-		}
-	}
-
 	private boolean validateTimeSlotsUniqueCheck(final Set<MplTimeSlotsData> setOfTimeSLots, final String fromTime,
 			final String toTime)
 	{
@@ -538,7 +482,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 
 
 	/**
-	 * Sd Time Slots update
+	 * Sd Time Slots update operation button clicked
 	 *
 	 * @throws InterruptedException
 	 */
@@ -578,7 +522,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	}
 
 	/**
-	 * ed time slots update
+	 * ed time slots update operation button clicked
 	 *
 	 * @throws InterruptedException
 	 */
@@ -618,7 +562,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	}
 
 	/**
-	 * rd time slots update
+	 * rd time slots update operation button clicked
 	 *
 	 * @event ON_Click
 	 *
@@ -660,6 +604,53 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 		}
 	}
 
+
+	/**
+	 * Sd Time Slots Add button clicked
+	 *
+	 * @throws InterruptedException
+	 */
+	@ViewEvent(componentID = "sdItemAdd", eventName = Events.ON_CLICK)
+	public void sdTimeSlotsAdd() throws InterruptedException
+	{
+		sdTimeBoxFrom.setFormat("short");
+		sdTimeBoxFrom.setValue(new Date());
+		sdTimeBoxTo.setFormat("short");
+		sdTimeBoxTo.setValue(new Date());
+		sdpopup.setVisible(true);
+	}
+
+	/**
+	 * ed Time Slots Add button clicked
+	 *
+	 * @throws InterruptedException
+	 */
+	@ViewEvent(componentID = "edItemAdd", eventName = Events.ON_CLICK)
+	public void edTimeSlotsAdd() throws InterruptedException
+	{
+		edTimeBoxFrom.setFormat("short");
+		edTimeBoxFrom.setValue(new Date());
+		edTimeBoxTo.setFormat("short");
+		edTimeBoxTo.setValue(new Date());
+		edpopup.setVisible(true);
+	}
+
+	/**
+	 * rd Time Slots Add button clicked
+	 *
+	 * @throws InterruptedException
+	 */
+	@ViewEvent(componentID = "rdItemAdd", eventName = Events.ON_CLICK)
+	public void rdTimeSlotsAdd() throws InterruptedException
+	{
+		rdTimeBoxFrom.setFormat("short");
+		rdTimeBoxFrom.setValue(new Date());
+		rdTimeBoxTo.setFormat("short");
+		rdTimeBoxTo.setValue(new Date());
+		rdpopup.setVisible(true);
+	}
+
+
 	/**
 	 * update TimeSlot to sdlistbox when popup add button clicked
 	 *
@@ -670,12 +661,9 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	public void sdTimeSlotsEditAndSave() throws InterruptedException
 	{
 
-		if (sdEditTimeBoxFrom == null || sdEditTimeBoxTo == null)
+		if (sdEditTimeBoxFrom.isValid() && sdEditTimeBoxTo.isValid() && sdEditTimeBoxFrom.getValue() != null
+				&& sdEditTimeBoxTo.getValue() != null)
 		{
-		}
-		else
-		{
-
 			sdTimeSlotsAddAndEdit(sdEditTimeBoxFrom, sdEditTimeBoxTo, sdEditpopup, "configurableParamWidget.item.hd.update", true);
 		}
 	}
@@ -689,10 +677,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = "edPopupEditSave", eventName = Events.ON_CLICK)
 	public void edTimeSlotsEditAndSave() throws InterruptedException
 	{
-		if (edEditTimeBoxFrom == null || edEditTimeBoxTo == null)
-		{
-		}
-		else
+		if (edEditTimeBoxFrom.isValid() && edEditTimeBoxTo.isValid() && edTimeBoxFrom.getValue() != null && edEditTimeBoxTo != null)
 		{
 			edTimeSlotsAddAndEdit(edEditTimeBoxFrom, edEditTimeBoxTo, edEditpopup, "configurableParamWidget.item.ed.update", true);
 		}
@@ -707,13 +692,38 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = "rdPopupEditSave", eventName = Events.ON_CLICK)
 	public void rdTimeSlotsEditAndSave() throws InterruptedException
 	{
-		if (rdEditTimeBoxFrom == null || rdEditTimeBoxTo == null)
-		{
-		}
-		else
+		if (rdEditTimeBoxFrom.isValid() && rdEditTimeBoxTo.isValid() && rdEditTimeBoxFrom.getValue() != null
+				&& rdEditTimeBoxTo.getValue() != null)
 		{
 			rdTimeSlotsAddAndEdit(rdEditTimeBoxFrom, rdEditTimeBoxTo, rdEditpopup, "configurableParamWidget.item.rd.update", true);
 		}
 	}
 
+	@ViewEvent(componentID = "sdPopupAddSave", eventName = Events.ON_CLICK)
+	public void sdTimeSlotsAddAndSave() throws InterruptedException
+	{
+
+		if (sdTimeBoxFrom.isValid() && sdTimeBoxTo.isValid() && sdTimeBoxFrom.getValue() != null && sdTimeBoxTo.getValue() != null)
+		{
+			sdTimeSlotsAddAndEdit(sdTimeBoxFrom, sdTimeBoxTo, sdpopup, "configurableParamWidget.item.hd.save", false);
+		}
+	}
+
+	@ViewEvent(componentID = "edPopupAddSave", eventName = Events.ON_CLICK)
+	public void edTimeSlotsAddAndSave() throws InterruptedException
+	{
+		if (edTimeBoxFrom.isValid() && edTimeBoxTo.isValid() && edTimeBoxFrom.getValue() != null && edTimeBoxTo.getValue() != null)
+		{
+			edTimeSlotsAddAndEdit(edTimeBoxFrom, edTimeBoxTo, edpopup, "configurableParamWidget.item.ed.save", false);
+		}
+	}
+
+	@ViewEvent(componentID = "rdPopupAddSave", eventName = Events.ON_CLICK)
+	public void rdTimeSlotsAddAndSave() throws InterruptedException
+	{
+		if (rdTimeBoxFrom.isValid() && rdTimeBoxTo.isValid() && rdTimeBoxFrom.getValue() != null && rdTimeBoxTo.getValue() != null)
+		{
+			rdTimeSlotsAddAndEdit(rdTimeBoxFrom, rdTimeBoxTo, rdpopup, "configurableParamWidget.item.rd.save", false);
+		}
+	}
 }
