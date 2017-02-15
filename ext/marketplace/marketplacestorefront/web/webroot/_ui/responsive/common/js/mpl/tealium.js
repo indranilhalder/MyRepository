@@ -171,6 +171,14 @@ $(document).ready(
 						tealiumData += '"other_seller_ids":"'
 							+ $("#pdpOtherSellerIDs").val() + '",';
 						//TPR-429 END
+						
+						//TPR-4688
+						var sizeVariantList=$('#variant').find('li');
+						if(sizeVariantList.length > 0){
+							tealiumData += '"size_variant_count":"'
+								+ sizeVariantList.length + '",';
+						}
+						
 						//TPR-4692 | Breadcrumb 
 						var breadcrum=[];
 						$('.breadcrumbs.wrapper').find('li:not(.active)').each(function(){
