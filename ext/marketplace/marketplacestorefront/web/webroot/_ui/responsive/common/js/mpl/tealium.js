@@ -97,7 +97,7 @@ $(document).ready(
 					type : 'GET',
 					cache : false,
 					success : function(data) {
-
+						
 						var tealiumData = "";
 						tealiumData += ',"user_login_type":"'	//TPR-668
 							+ user_login_type + '",';
@@ -169,8 +169,24 @@ $(document).ready(
 						tealiumData += '"seller_name":"'
 							+ $("#sellerNameId").html() + '",';
 						tealiumData += '"other_seller_ids":"'
-							+ $("#pdpOtherSellerIDs").val() + '"}';
+							+ $("#pdpOtherSellerIDs").val() + '",';
 						//TPR-429 END
+						//TPR-4692 | Breadcrumb 
+						var breadcrum=[];
+						$('.breadcrumbs.wrapper').find('li:not(.active)').each(function(){
+							breadcrum.push($(this).find('a').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,""));
+						})
+						if(typeof(breadcrum) != 'undefined' || breadcrum != null){
+							for(var i=0;i<breadcrum.length;i++){
+								if(i!=0){
+									var fieldName = "page_subcategory_L"+i;
+									tealiumData += '"'+fieldName+'":"'
+										+ breadcrum[i] + '",';
+								}
+							}
+							tealiumData += '"product_display_hierarchy":"'
+								+ breadcrum + '"}';
+						}
 						data = data.replace("}<TealiumScript>", tealiumData);
 						// console.log(data);
 						
