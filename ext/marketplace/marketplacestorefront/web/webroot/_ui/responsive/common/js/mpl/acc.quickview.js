@@ -32,11 +32,14 @@ ACC.quickview = {
 			{
 				/*TPR-690*/
 				var productCode = productCodeQuickView;
+				// Product code passed as an array for Web Analytics   INC_11511 
+				var productCodeArray=[];
+				productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
 				utag.link({
 					link_obj: this, 
 					link_text: 'quick_view_click' ,
 					event_type : 'quick_view_click', 
-					product_sku_quick_view : productCode
+					product_sku_quick_view : productCodeArray
 				});
 				
 				/*TPR-690 ends*/
@@ -53,6 +56,8 @@ ACC.quickview = {
 				    // You're not in a frame, so you reload the site.
 				    window.setTimeout('location.reload()'); 
 			     }
+				$('.zoomContainer').remove();			/*UF-50*/
+				//console.log($('.zoomContainer').length);
 			}
 		});
 	}
@@ -397,6 +402,10 @@ function dispQuickViewPrice(mrp, mop, spPrice, savingsOnProduct) {
 
 function addToWishlist_quick(alreadyAddedWlName_quick) {
 	var productCodePost = $("#product_quick").val();
+	
+	// Product code passed as an array for Web Analytics   INC_11511 
+	var productCodeArray=[];
+	productCodeArray.push(productCodePost);	// Product code passed as an array for Web Analytics
 //	var productCodePost = $("#productCodePostQuick").val();
 	var wishName = "";
 	
@@ -458,7 +467,7 @@ function addToWishlist_quick(alreadyAddedWlName_quick) {
 						link_obj: this, 
 						link_text: 'add_to_wishlist' , 
 						event_type : 'add_to_wishlist', 
-						product_sku_wishlist : productCodePost
+						product_sku_wishlist : productCodeArray
 					});
 				/*TPR-656 Ends*/
 				
@@ -898,7 +907,7 @@ $(document).on("click",".quickview .Emi > #EMImodal-content",function(e){
 
 $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
 	
-	 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='Watches' ){
+	 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='Watches' && $("#categoryType").val()!='Accessories' ){
 		 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 		 				$("#addToCartFormQuickTitle").show();
 		  				$("#addToCartFormQuickTitle").fadeOut(5000);

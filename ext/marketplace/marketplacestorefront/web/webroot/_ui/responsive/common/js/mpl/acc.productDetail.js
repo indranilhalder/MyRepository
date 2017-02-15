@@ -1049,15 +1049,21 @@ $(function() {
 
 					function() {
 						//TPR900
-						if($("#pdpPincodeCheck").text() == 'Check Availability')
+						if($("#pdpPincodeCheck").text() == 'Check')
 						{
 							pinCodeChecked = true;
-							$("#home").hide();
-							$("#homeli").hide();
-							$("#express").hide();
-							$("#expressli").hide();
-							$("#collect").hide();
-							$("#collectli").hide();
+							//$("#home").hide();
+							//$("#homeli").hide();
+							$("#homeli").css("opacity","0.5");
+							$("#homeli").removeClass("selected");
+							//$("#express").hide();
+							//$("#expressli").hide();
+							$("#expressli").css("opacity","0.5");
+							$("#expressli").removeClass("selected");
+							//$("#collect").hide();
+							//$("#collectli").hide();
+							$("#collectli").css("opacity","0.5");
+							$("#collectli").removeClass("selected");
 							$("#codId").hide();
 							$(
 								'#wrongPin,#unableprocessPin,#unsevisablePin,#emptyPin').hide();
@@ -1110,12 +1116,18 @@ $(function() {
 											if (data == "" || data == []
 													|| data == null) {
 												refreshSellers(data, buyboxSeller);
-												$("#home").hide();
-												$("#homeli").hide();
-												$("#express").hide();
-												$("#expressli").hide();
-												$("#collect").hide();
-												$("#collectli").hide();
+												//$("#home").hide();
+												//$("#homeli").hide();
+												$("#homeli").css("opacity","0.5");
+												$("#homeli").removeClass("selected");
+												//$("#express").hide();
+												//$("#expressli").hide();
+												$("#expressli").css("opacity","0.5");
+												$("#expressli").removeClass("selected");
+												//$("#collect").hide();
+												//$("#collectli").hide();
+												$("#collectli").css("opacity","0.5");
+												$("#collectli").removeClass("selected");
 
 												$('#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin').hide();
 												$('#addToCartFormTitle').hide();
@@ -1145,10 +1157,17 @@ $(function() {
 											else if (data[0]['isServicable'] == 'NA') {
 												$("#home").show();
 												$("#homeli").show();
+												$("#homeli").css("opacity","1");
+												$("#homeli").addClass("selected");
 												$("#express").show();
 												$("#expressli").show();
+												$("#expressli").css("opacity","1");
+												$("#expressli").addClass("selected");
 												$("#collect").show();
 												$("#collectli").show();
+												$("#collectli").css("opacity","1");
+												$("#collectli").addClass("selected");
+												
 												$("#codId").show();
 												//TPR-794
 												$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
@@ -1243,29 +1262,39 @@ $(function() {
 															if (home == true) {
 																$("#home").show();
 																$("#homeli").show();
+																$("#homeli").css("opacity","1");
+																$("#homeli").addClass("selected");
 																deliverModeTealium.push("home");
 															} else {
-																$("#home").hide();
-																$("#homeli").hide();
+																//$("#home").hide();
+																//$("#homeli").hide();
 															}
 
 															if (exp == true) {
 																$("#express").show();
 
 																$("#expressli").show();
+																$("#expressli").css("opacity","1");
+																$("#expressli").addClass("selected");
 																deliverModeTealium.push("express");
 															} else {
-																$("#express").hide();
-																$("#expressli").hide();
+																//$("#express").hide();
+																//$("#expressli").hide();
+																$("#expressli").css("opacity","0.5");
+																$("#expressli").removeClass("selected");
 
 															}if (click == true) {
 																$("#collect").show();
 																$("#collectli").show();
+																$("#collectli").css("opacity","1");
+																$("#collectli").addClass("selected");
 																deliverModeTealium.push("clickandcollect");
 															} else {
 
-																$("#collect").hide();
-																$("#collectli").hide();
+																//$("#collect").hide();
+																//$("#collectli").hide();
+																$("#collectli").css("opacity","0.5");
+																$("#collectli").removeClass("selected");
 															}
 															// }
 															
@@ -1282,12 +1311,19 @@ $(function() {
 															/*TPR-642 & 640 ends*/
 
 														} else {
-															$("#home").hide();
-															$("#homeli").hide();
+															//$("#home").hide();
+															//$("#homeli").hide();
+															$("#homeli").css("opacity","0.5");
+															$("#homeli").removeClass("selected");
 															$("#click").hide();
-															$("#expressli").hide();
-															$("#express").hide();
-															$("#collectli").hide();
+															//$("#expressli").hide();
+															$("#expressli").css("opacity","0.5");
+															$("#expressli").removeClass("selected");
+															//$("#express").hide();
+															//$("#collectli").hide();
+															$("#collectli").css("opacity","0.5");
+															$("#collectli").removeClass("selected");
+															
 															$(
 																	'#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin')
 																	.hide();
@@ -1318,11 +1354,15 @@ $(function() {
 													}
 												}
 												if (!checkBuyBoxIdPresent) {
-													$("#home").hide();
-													$("#homeli").hide();
+													//$("#home").hide();
+													//$("#homeli").hide();
+													$("#homeli").css("opacity","0.5");
+													$("#homeli").removeClass("selected");
 													$("#click").hide();
-													$("#express").hide();
-													$("#expressli").hide();
+													//$("#express").hide();
+													//$("#expressli").hide();
+													$("#expressli").css("opacity","0.5");
+													$("#expressli").removeClass("selected");
 													$(
 															'#wrongPin,#unableprocessPin,#emptyPin')
 															.hide();
@@ -1361,7 +1401,7 @@ $(function() {
 							$('#pin').blur();
 							
 							if ( $('#pin').val() == "") {
-								$("#pdpPincodeCheck").text("Check Availability")
+								$("#pdpPincodeCheck").text("Check")				/*UF-42*/
 							} else {
 							
 								$("#pdpPincodeCheck").text("Change Pincode")
@@ -1458,6 +1498,7 @@ $( document ).ready(function() {
 					if(typeof($(this).attr("href"))!= 'undefined' && $(this).attr("href").toUpperCase().indexOf(key)!= -1 && value == 0){ 
 
 					$(this).removeAttr("href");
+					$(this).attr("title","out of stock");		/*UF-30*/
 					$(this).parent().addClass('strike');
 				//$(this).parent().css("border-color","gray");
 				$("#outOfStockId").hide();
@@ -1744,39 +1785,51 @@ function displayDeliveryDetails(sellerName) {
 					$('#fulFilledBySship').html(sellerName);
 				}
 				if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
-					$("#home").hide();
-					$("#homeli").hide();
+					//$("#home").hide();
+					//$("#homeli").hide();
+					$("#homeli").css("opacity","0.5");
+					$("#homeli").removeClass("selected");
 				} else {
 					var start=parseInt($("#homeStartId").val())+leadTime;
 					var end=parseInt($("#homeEndId").val())+leadTime;
 					$("#homeDate").html(pretext+start+"-"+end+posttext);
 					$("#home").show();
 					$("#homeli").show();
+					$("#homeli").addClass("selected");
+					$("#homeli").css("opacity","1");
 				}
 				
 				if (null != deliveryModes && deliveryModes.indexOf("ED") == -1) {
-					$("#express").hide();
-					$("#expressli").hide();
+					//$("#express").hide();
+					//$("#expressli").hide();
+					$("#expressli").css("opacity","0.5");
+					$("#expressli").removeClass("selected");
 				} else {
 					var start=$("#expressStartId").val();
 					var end=$("#expressEndId").val();
 					$("#expressDate").html(pretext+start+"-"+end+posttext);
 					$("#express").show();
 					$("#expressli").show();
+					$("#expressli").addClass("selected");
+					$("#expressli").css("opacity","1");
 				}
 				if (null != deliveryModes){
 		//		console.log(deliveryModes.indexOf("CNC") );
 				}
 				if (null != deliveryModes && deliveryModes.indexOf("CNC") == -1) {
 					
-					$("#collect").hide();
-					$("#collectli").hide();
+					//$("#collect").hide();
+					//$("#collectli").hide();
+					$("#collectli").css("opacity","0.5");
+					$("#collectli").removeClass("selected");
 				} else {
 					var start=$("#clickStartId").val();
 					var end=$("#clickEndId").val();
 					$("#clickDate").html(pretext+start+"-"+end+posttext);
 					$("#collect").show();
 					$("#collectli").show();
+					$("#collectli").css("opacity","1");
+					$("#collectli").addClass("selected");
 				}
 
 				// enable COD flag if COD enabled
@@ -2829,6 +2882,9 @@ function loadDefaultWishListName_SizeGuide() {
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
 		var isShowSize= $("#showSize").val();
 		var productCode=$("#product_id").val();
+		//INC_11511 fix
+		var productCodeArray=[];
+		productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
 		 if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
 			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			$("#addToCartFormTitle").show();
@@ -2839,7 +2895,7 @@ function loadDefaultWishListName_SizeGuide() {
 				link_obj: this,
 				link_text: 'buynow' ,
 				event_type : 'buynow_winner_seller',
-				product_sku : productCode
+				product_sku : productCodeArray
 			});
 		ACC.product.sendAddToBag("addToCartForm",true);
 	});
@@ -2951,7 +3007,7 @@ function loadDefaultWishListName_SizeGuide() {
 		}); 
 		
 		$("#pin").focus(function(){
-			$("#pdpPincodeCheck").text("Check Availability")
+			$("#pdpPincodeCheck").text("Check")
 		});
 /*		$("#pin").blur(function() {
 			if ($(this).val() == "") {
@@ -2961,6 +3017,13 @@ function loadDefaultWishListName_SizeGuide() {
 			}
 
 		});*/
+		
+			/*UF-32*/
+		 $("a.otherSellersFont").click(function(){
+		 
+		 $("#sellerForm").submit();
+						 
+			});
 	});
 	/*Wishlist In PDP changes*/
 	function getLastModifiedWishlist(ussidValue) {

@@ -2,6 +2,7 @@
 var updatedsearchQuery = "";
 var dummyForm ;
 var lessBrands = [];
+var productItemArray = [];
 ACC.refinements = {
 
 	_autoload: [
@@ -172,9 +173,9 @@ ACC.refinements = {
 			
 			// AJAX call
 			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
-			// TPR-645 Start
+			// TPR-645 Start  INC_11511  fix--h3 tag done
 			var filterValue = $(this).parent().find('span.facet-text').text().trim();
-			var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h4').text().trim();
+			var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
 			onFilterClickAnalytics(filterName,filterValue);
 			// TPR-645 End
 		})
@@ -307,9 +308,9 @@ ACC.refinements = {
 			}
 			// AJAX call
 			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
-			// TPR-645 Start
+			// TPR-645 Start INC_11511  fix--h3 tag done
 			var filterValue = '';
-			var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h4').text().trim();
+			var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
 			if($(this).attr('class').indexOf('size') > -1){
 				filterValue = $(this).attr('value');
 			}

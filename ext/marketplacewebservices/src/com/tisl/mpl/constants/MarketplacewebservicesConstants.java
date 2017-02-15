@@ -370,6 +370,9 @@ public class MarketplacewebservicesConstants
 	public static final String KNOW_MORE_THIRD = "know.more.third";
 	public static final String KNOW_MORE_FOURTH = "know.more.fourth";
 	public static final String KNOW_MORE_FIFTH = "know.more.fifth";
+	//INC_11931
+	public static final String KNOW_MORE_SECOND_FOR_LUX = "know.more.second.lux";
+	public static final String KNOW_MORE_THIRD_FOR_LUX = "know.more.third.lux";
 
 	//Consignment Status
 	public static final String ALLOCATED = "ALLOCATED";

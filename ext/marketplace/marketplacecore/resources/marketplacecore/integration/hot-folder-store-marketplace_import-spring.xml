@@ -1166,12 +1166,12 @@ $language=language(isocode)[default='en'][unique=true];
     			$lang=en
     		      
 				
-				INSERT_UPDATE Product;code[unique=true];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];reviews;mrp;$supercategories[cellDecorator=com.tisl.mpl.core.celldecorator.LuxuryProductCategoryDecorator];deliveryModes(code);variantType(code);luxIndicator(code)[default='marketplace'];sequenceId[translator=de.hybris.platform.acceleratorservices.dataimport.batch.converter.SequenceIdTranslator];$catalogversion;$approved;$unit
+				INSERT_UPDATE Product;code[unique=true];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];reviews;mrp;$supercategories[cellDecorator=com.tisl.mpl.core.celldecorator.LuxuryProductCategoryDecorator];deliveryModes(code);variantType(code);luxIndicator(code)[default='marketplace'];$catalogversion;$approved;$unit
             </value>
         </property>
         <property name="impexRow">
         <!-- TISPRD-9023 Changing deliveryModes to Optional from Mandatory -->
-            <value>;{+0};{+1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11};{S}</value>
+            <value>;{+0};{+1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11}</value>
         </property>
         </bean>
      
@@ -1194,7 +1194,7 @@ $language=language(isocode)[default='en'][unique=true];
         </property>
         <property name="impexRow">
           <!-- TISPRD-9023 Changing deliveryModes to Optional from Mandatory -->
-            <value>;{+0};{+1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11};{+12};{13};{14}</value>
+            <value>;{+0};{+1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11};{12};{13};{14}</value>
         </property>
         </bean>
         
