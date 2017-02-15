@@ -416,9 +416,17 @@ ACC.refinements = {
 		
 		$(document).on("click",".js-product-facet .js-more-facet-values-link",function(e){
 			e.preventDefault();
-			$(this).parents(".js-facet").find(".js-facet-top-values").hide();
-			$(this).parents(".js-facet").find(".js-facet-list-hidden").show();
-
+			if($('.brandSearchTxt').val()=="")
+			{
+				$(this).parents(".js-facet").find(".js-facet-top-values").hide();
+				$(this).parents(".js-facet").find(".js-facet-list-hidden").show();
+				
+				$(this).parents(".js-facet").find(".js-facet-list-hidden span.facet-label").show();
+			}
+			else
+			{
+				$('.marked').css("display","block");				
+			}
 			$(this).parents(".js-facet").find(".js-more-facet-values").hide();
 			$(this).parents(".js-facet").find(".js-less-facet-values").show();
 		});
@@ -426,10 +434,15 @@ ACC.refinements = {
 			$(document).on("click",".js-less-facet-values-link",function(e){
 			e.preventDefault();
 			//var brandFacet = [];
-			
-			$(this).parents(".js-facet").find(".js-facet-top-values").show();
-			$(this).parents(".js-facet").find(".js-facet-list-hidden").hide();
-
+			if($('.brandSearchTxt').val()=="")
+			{
+				$(this).parents(".js-facet").find(".js-facet-top-values").show();
+				$(this).parents(".js-facet").find(".js-facet-list-hidden").hide();
+			}
+			else
+			{
+				$('.marked').css("display","none");				
+			}
 			$(this).parents(".js-facet").find(".js-more-facet-values").show();
 			$(this).parents(".js-facet").find(".js-less-facet-values").hide();
 		});
