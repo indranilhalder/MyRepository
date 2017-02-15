@@ -1049,7 +1049,7 @@ $(function() {
 
 					function() {
 						//TPR900
-						if($("#pdpPincodeCheck").text() == 'Check Availability')
+						if($("#pdpPincodeCheck").text() == 'Check')
 						{
 							pinCodeChecked = true;
 							$("#home").hide();
@@ -1361,7 +1361,7 @@ $(function() {
 							$('#pin').blur();
 							
 							if ( $('#pin').val() == "") {
-								$("#pdpPincodeCheck").text("Check Availability")
+								$("#pdpPincodeCheck").text("Check")				/*UF-42*/
 							} else {
 							
 								$("#pdpPincodeCheck").text("Change Pincode")
@@ -1458,6 +1458,7 @@ $( document ).ready(function() {
 					if(typeof($(this).attr("href"))!= 'undefined' && $(this).attr("href").toUpperCase().indexOf(key)!= -1 && value == 0){ 
 
 					$(this).removeAttr("href");
+					$(this).attr("title","out of stock");		/*UF-30*/
 					$(this).parent().addClass('strike');
 				//$(this).parent().css("border-color","gray");
 				$("#outOfStockId").hide();
@@ -2829,6 +2830,9 @@ function loadDefaultWishListName_SizeGuide() {
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
 		var isShowSize= $("#showSize").val();
 		var productCode=$("#product_id").val();
+		//INC_11511 fix
+		var productCodeArray=[];
+		productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
 		 if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
 			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			$("#addToCartFormTitle").show();
@@ -2839,7 +2843,7 @@ function loadDefaultWishListName_SizeGuide() {
 				link_obj: this,
 				link_text: 'buynow' ,
 				event_type : 'buynow_winner_seller',
-				product_sku : productCode
+				product_sku : productCodeArray
 			});
 		ACC.product.sendAddToBag("addToCartForm",true);
 	});
@@ -2951,7 +2955,7 @@ function loadDefaultWishListName_SizeGuide() {
 		}); 
 		
 		$("#pin").focus(function(){
-			$("#pdpPincodeCheck").text("Check Availability")
+			$("#pdpPincodeCheck").text("Check")
 		});
 /*		$("#pin").blur(function() {
 			if ($(this).val() == "") {
@@ -2961,6 +2965,13 @@ function loadDefaultWishListName_SizeGuide() {
 			}
 
 		});*/
+		
+			/*UF-32*/
+		 $("a.otherSellersFont").click(function(){
+		 
+		 $("#sellerForm").submit();
+						 
+			});
 	});
 	/*Wishlist In PDP changes*/
 	function getLastModifiedWishlist(ussidValue) {

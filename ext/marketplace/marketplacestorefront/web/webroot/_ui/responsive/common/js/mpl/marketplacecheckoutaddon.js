@@ -158,8 +158,8 @@ $('#pincode').on('paste', function () {
 
 
 function refresh(){
-	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top").prop("disabled",false);
-	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top").css("opacity","1");
+	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top , .make_mrupee_payment_up").prop("disabled",false);
+	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top , .make_mrupee_payment_up").css("opacity","1");
 	$(".pay .spinner").remove();
 	$("#no-click,.spinner").remove();
 	// $(".checkout-content.checkout-payment
@@ -642,17 +642,16 @@ function submitForm(){
 	else if($("#paymentMode").val()=="COD"){
 		var otpNUMField= $('#otpNUMField').val();
 		//TPR-665
-		
-		utag.link({
-			"link_text": "pay_cod_validate_otp" , "event_type" : "payment_mode_cod"
-		});
+		if(typeof utag !="undefined"){
+		utag.link({"link_text": "pay_cod_validate_otp" , "event_type" : "payment_mode_cod"});
+		}
 		
 		if(otpNUMField=="")
 		{
 			//TPR-665
-			utag.link(
-			{"link_text": "pay_cod_otp_error" , "event_type" : "payment_mode_cod"}
-			);
+			if(typeof utag !="undefined"){
+			utag.link({"link_text": "pay_cod_otp_error" , "event_type" : "payment_mode_cod"});
+			}
 			
 			$("#otpNUM, #sendOTPNumber, #emptyOTPMessage, #otpSentMessage").css("display","block");
 		}
@@ -695,9 +694,9 @@ function submitForm(){
 						else if(response=="EXPIRED")
 						{
 							//TPR-665
-							utag.link(
-							{"link_text": "pay_cod_otp_timeout" , "event_type" : "payment_mode_cod"}
-							);
+							if(typeof utag !="undefined"){
+							utag.link({"link_text": "pay_cod_otp_timeout" , "event_type" : "payment_mode_cod"});
+							}
 							
 							$("#otpNUM, #sendOTPNumber, #enterOTP, #expiredOtpValidationMessage").css("display","block");
 							$("#wrongOtpValidationMessage").css("display","none");	
@@ -706,9 +705,9 @@ function submitForm(){
 						}
 						else{
 							//TPR-665
-							utag.link(
-							{"link_text": "pay_cod_otp_success" , "event_type" : "payment_mode_cod"}
-							);
+							if(typeof utag !="undefined"){
+							utag.link({"link_text": "pay_cod_otp_success" , "event_type" : "payment_mode_cod"});
+							}
 							
 							var staticHost=$('#staticHost').val();
 							// TISPRO-153
@@ -732,9 +731,9 @@ function submitForm(){
 					else
 					{
 						//TPR-665
-						utag.link(
-						{"link_text": "pay_cod_otp_error" , "event_type" : "payment_mode_cod"}
-						);
+						if(typeof utag !="undefined"){
+						utag.link({"link_text": "pay_cod_otp_error" , "event_type" : "payment_mode_cod"});
+						}
 						
 						alert("Error validating OTP. Please select another payment mode and proceed");
 						$(".pay button,.cod_payment_button_top").prop("disabled",false);
@@ -747,9 +746,9 @@ function submitForm(){
 			},
 			error : function(resp) {
 				//TPR-665
-				utag.link(
-				{link_text: 'pay_cod_otp_error' , event_type : 'payment_mode_cod'}
-				);
+				if(typeof utag !="undefined"){
+				utag.link({link_text: 'pay_cod_otp_error' , event_type : 'payment_mode_cod'});
+				}
 				
 				alert("Error validating OTP. Please select another payment mode and proceed");
 				$(".pay button,.cod_payment_button_top").prop("disabled",false);
@@ -916,9 +915,9 @@ function deselectRadio(){
 			  selection[i].checked = false;
 		  }
 	//TPR-665
-	utag.link(
-			{"link_text": "net_banking_dropdown_"+bankName.replace(/ /g,'_').toLowerCase() , "event_type" : "payment_mode_dropdown"}
-			);
+	if(typeof utag !="undefined"){
+	utag.link({"link_text": "net_banking_dropdown_"+bankName.replace(/ /g,'_').toLowerCase() , "event_type" : "payment_mode_dropdown"});
+	}
 		setBankForSavedCard($("#bankCodeSelection option:selected").html());
 		
 	}
@@ -942,9 +941,9 @@ function deselectSelection(){
 			  setBankForSavedCard(bankName);
 			  
 		//TPR-665
-			utag.link({
-				"link_text": "net_banking_popular_"+bankName.replace(/ /g,'_').toLowerCase() , "event_type" : "payment_mode_popular"
-			});
+			  if(typeof utag !="undefined"){
+			utag.link({"link_text": "net_banking_popular_"+bankName.replace(/ /g,'_').toLowerCase() , "event_type" : "payment_mode_popular"});
+			  }
 	}
 	// setBankForSavedCard(bankName);
 }
@@ -1270,9 +1269,21 @@ function displayFormForCC(){
   
 
 function mobileBlacklist(){
-
+	var number=$("#otpMobileNUMField").val();
+	var mobileNumber=number;
+	$("#otpNUMField").val("");
+	$("#wrongOtpValidationMessage, #expiredOtpValidationMessage").css("display","none");
+	if(number.length!=10){
+		$("#mobileNoError").css("display","block");
+		$("#resendOTPMessage, #enterOTP, #otpSentMessage, #paymentFormButton").css("display","none");
+	}
+	else if(number.charAt(0)=='0'){
+		$("#mobileNoError").css("display","block");
+		//	$("#sendOTPButton .spinner").remove();
+	}
 // Check if the session is active before generating OTP
-	if(isSessionActive()){
+	else if(isSessionActive()){
+	$("#mobileNoError").css("display","none");	
 	// store url change
 	var staticHost=$('#staticHost').val();
 	
@@ -1329,7 +1340,7 @@ function generateOTP(){
 	$("#wrongOtpValidationMessage, #expiredOtpValidationMessage").css("display","none");
 	if(number.length!=10){
 		$("#mobileNoError").css("display","block");
-		$("#resendOTPMessage, #enterOTP, #paymentFormButton").css("display","none");
+		$("#resendOTPMessage, #enterOTP, #otpSentMessage, #paymentFormButton").css("display","none");
 	}
 	else if(number.charAt(0)=='0'){
 		$("#mobileNoError").css("display","block");
@@ -1338,9 +1349,9 @@ function generateOTP(){
 	else{
 		var guid=$("#guid").val();
 		//TPR-665
-		utag.link({
-			link_text: 'pay_cod_verify_number' , event_type : 'payment_mode_cod'
-		});
+		if(typeof utag !="undefined"){
+		utag.link({'link_text': 'pay_cod_verify_number', 'event_type': 'payment_mode_cod'});
+		}
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/generateOTP",
 		// data: { 'mobileNumber' : mobileNumber, 'prefix' : prefix },
@@ -3342,19 +3353,22 @@ function validateCardNo(formSubmit) {
 				{
 					var selectedBank=$("select[id='bankNameForEMI']").find('option:selected').text();
 					// TISPRO-572 bank selection drop down
-					var selectedBankVal=selectedBank.split(" ", 1);
-					var responseBankVal=response.bankName;
+					//var selectedBankVal=selectedBank.split(" ", 1);	//comment for INC_11876
+					var selectedBankVal = selectedBank.toLowerCase(); //$("#bankNameForEMI").val();  //add for INC_11876
+					var responseBankVal = response.bankName.toLowerCase();  //response.bankName;
 					if($("#paymentMode").val()=='EMI')
 					{
 						if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
 						{
-							if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)){
+							//if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)){	//comment for INC_11876
+							if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)!=-1){    //add for INC_11876
 								binStatus=true;
 								//applyPromotion(selectedBankVal,binStatus,formSubmit);
 								errorHandle.innerHTML = "";
 								return true;			
 							}
-							else if(selectedBank!="select" && !responseBankVal.indexOf(selectedBankVal)){
+							//else if(selectedBank!="select" && !responseBankVal.indexOf(selectedBankVal)){		//comment for INC_11876
+							else if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)==-1){	//add for INC_11876
 								binStatus=false;
 								errorHandle.innerHTML = "Please enter a card same as the selected bank";
 								return false;	
@@ -3799,13 +3813,15 @@ function validateEmiCardNo(formSubmit) {
 					{
 						var selectedBank=$("select[id='bankNameForEMI']").find('option:selected').text();
 						//TISPRO-572 bank selection drop down
-						var selectedBankVal=selectedBank.split(" ", 1);
-						var responseBankVal=response.bankName;
+						//var selectedBankVal=selectedBank.split(" ", 1);	//comment for INC_11876
+						var selectedBankVal = selectedBank.toLowerCase(); //$("#bankNameForEMI").val();  //add for INC_11876
+						var responseBankVal = response.bankName.toLowerCase();  //response.bankName;
 						if($("#paymentMode").val()=='EMI')
 						{
 							if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
 							{
-								if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)){
+								//if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)){		//comment for INC_11876
+								if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)!=-1){    //add for INC_11876
 									binStatus=true;
 									//TPR-629
 									if(formSubmit=="formSubmit")
@@ -3816,7 +3832,8 @@ function validateEmiCardNo(formSubmit) {
 									errorHandle.innerHTML = "";
 									return true;			
 								}
-								else if(selectedBank!="select" && !responseBankVal.indexOf(selectedBankVal)){
+								//else if(selectedBank!="select" && !responseBankVal.indexOf(selectedBankVal)){		//comment for INC_11876
+								else if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)==-1){	//add for INC_11876
 									binStatus=false;
 									//TPR-629
 									if(formSubmit=="formSubmit")
@@ -4529,6 +4546,12 @@ function applyPromotion(bankName,binValue,formSubmit)
 				}
 				var cartTotal=response.totalPrice.value;
 				
+				/*Added for mRupee wallet*/
+				if(cartTotal >= 20000){
+					$("#mRupeeInfo").css("display","block");			
+				}
+				//Ends here
+				
 				if(null!=response.promoExpiryMsg && response.promoExpiryMsg=="redirect_to_payment")
 				{
 					document.getElementById("juspayErrorMsg").innerHTML="Existing Promotion has expired";
@@ -4608,7 +4631,8 @@ function applyPromotion(bankName,binValue,formSubmit)
 								$("#selectedTerm").val("select");
 								var emiTable=document.getElementById("EMITermTable");
 								var rowCount = emiTable.rows.length;
-								for(var i=rowCount-1; i>0; i--){
+								//for(var i=rowCount-1; i>0; i--){		//comment for INC_11876
+								for(var i=rowCount-1; i>=0; i--){		//add for INC_11876
 									emiTable.deleteRow(i);
 									rowCount--;
 								}
@@ -6637,12 +6661,17 @@ $("#couponSubmitButton").click(function(){
 		var couponCode=$("#couponFieldId").val();
 		var paymentMode=$("#paymentMode").val();
 		var guid=$("#guid").val();
+		/*start changes for INC_11738*/
+		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+		/*end changes for INC_11738*/
 		$.ajax({
 	 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/redeem",
 	 		type: "GET",
 	 		cache: false,
 	 		data: { 'couponCode' : couponCode , 'paymentMode' : paymentMode , 'bankNameSelected' : bankNameSelected , 'guid' : guid},
 	 		success : function(response) {
+	 			$("#no-click,.spinner").remove(); //add for INC_11738
 	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
 	 			$("#codAmount").text(response.totalPrice.formattedValue);
 	 			if(response.redeemErrorMsg!=null){
@@ -6718,6 +6747,7 @@ $("#couponSubmitButton").click(function(){
 	 		error : function(resp) {
 	 			$("#couponSubmitButton").prop('disabled', false);
 	 			$("#couponSubmitButton").css("opacity","1");
+	 			$("#no-click,.spinner").remove(); //changes for INC_11738
 	 		}
 	 	});	 
 	}
@@ -7375,4 +7405,116 @@ function teliumTrack(){
 	utag.link(
 	{"link_text": "pay_terms_conditions_click" , "event_type" : "terms_conditions_click"}
 	);
+}
+//Third Party Wallet mRupee
+$("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
+	 if(isSessionActive()==false){
+		 redirectToCheckoutLogin();
+		}
+		else{
+			var staticHost=$('#staticHost').val();
+			$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+			$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+			
+			$(".pay button, #make_mrupee_payment").prop("disabled",true);
+			$(".pay button, #make_mrupee_payment").css("opacity","0.5");
+			
+			var paymentMode=$("#paymentMode").val();
+			var guid=$("#guid").val();
+			var walletName = $("#radioButton_MRupee").val();
+			var dataString = 'walletName=' + walletName +'&cartGuid=' + guid ;
+			console.log("Calling createWalletOrder");
+			$.ajax({
+				url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createWalletorder",
+				type: "GET",
+				cache: false,
+				async:false,
+				data : dataString,
+				success: function(response){
+					if(response=='redirect'){
+						
+						$(location).attr('href',ACC.config.encodedContextPath+"/cart");
+						
+					}
+					
+					else if(response=="" || response==null){
+						console.log("Response for mRupee is null");
+					}
+					else{	
+						window.sessionStorage.removeItem("header");
+						setTimeout(function(){ 			 
+							 var values=response.split("|"); 
+							 console.log("Response for mRupee is " + response);
+							 	// To do later
+								  $("#REFNO").val(values[0]);
+								  $("#CHECKSUM").val(values[1]);
+								  $("#AMT").val(values[3]);
+								  $("#RETURL").val(values[4]);
+								  submitWalletForm(values);	
+						 }, 1000);
+				
+					}
+					$(".pay button, #make_mrupee_payment_up").prop("disabled",false);
+					$(".pay button, #make_mrupee_payment_up").css("opacity","1");
+					$(".pay .spinner").remove();
+					$("#no-click,.spinner").remove();
+				},
+				error:function(response){
+					console.log("Error occured");
+					}
+				});
+		}
+})
+function displayThrdPrtyWlt(){
+	$("#make_mrupee_payment_up").show();
+	applyPromotion(null,"none","none");
+}
+$("#viewPaymentMRupee").click(function(){
+	refresh();
+	if($('#radioButton_MRupee').is(':checked')) 
+	{
+		$("#paymentMode").val("MRUPEE");
+		$("#paymentModeValue").val("MRUPEE");
+		displayThrdPrtyWlt();
+	}
+})
+
+/*$("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
+	
+	var staticHost=$('#staticHost').val();
+	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+	
+	$(".pay button, #make_mrupee_payment").prop("disabled",true);
+	$(".pay button, #make_mrupee_payment").css("opacity","0.5");
+	
+	$("#tpWallt_payment_form").submit() ;
+});*/
+
+function submitWalletForm(values) {
+	var checkNull = true;
+	if(values!=undefined){
+		for (i=0; i<values.length; i++){
+			if(null == values[i] || values[i] == undefined || values[i] == ""){
+				checkNull = false;
+				break;
+			}
+		}
+	}
+	if(checkNull){
+		var staticHost=$('#staticHost').val();
+		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+		
+		$(".pay button, #make_mrupee_payment").prop("disabled",true);
+		$(".pay button, #make_mrupee_payment").css("opacity","0.5");
+		$("#tpWallt_payment_form").submit() ;
+	}
+	else {
+		window.location.reload();
+	}
+}
+function updateMobileNo(){
+	$("#otpMobileNUMField").val('');
+	$("#otpMobileNUMField").focus();    
 }

@@ -32,6 +32,7 @@ import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
 import com.tisl.mpl.model.BuyAandBgetCModel;
 import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
+import com.tisl.mpl.model.MplProductSteppedMultiBuyPromotionModel;
 import com.tisl.mpl.model.SellerMasterModel;
 
 
@@ -114,6 +115,11 @@ public class CustomPromotionsPopulator implements Populator<AbstractPromotionMod
 		target.setStartDate(source.getStartDate());
 		target.setEnabled(source.getEnabled());
 		target.setTitle(source.getTitle());
+		if (source instanceof MplProductSteppedMultiBuyPromotionModel)//TPR-1325 Populating data from source to target changes
+		{
+			target.setPromourl(((MplProductSteppedMultiBuyPromotionModel) source).getPromourl());
+			target.setBundlepromolinktext(((MplProductSteppedMultiBuyPromotionModel) source).getBundlepromolinktext());
+		}
 		final List<String> channelList = new ArrayList<String>();
 		for (final SalesApplication channel : source.getChannel())
 		{
@@ -137,7 +143,7 @@ public class CustomPromotionsPopulator implements Populator<AbstractPromotionMod
 			 * sellerRestriction.getSellerMasterList(); for (final SellerMasterModel seller : sellerList) {
 			 * allowedSellerList.add(seller.getId()); } //setting allowed seller list
 			 * target.setAllowedSellers(allowedSellerList); }
-			 *
+			 * 
 			 * } }
 			 */
 			//}
@@ -216,18 +222,18 @@ public class CustomPromotionsPopulator implements Populator<AbstractPromotionMod
 		if (getCartService().hasSessionCart())
 		{
 			final CartModel cartModel = getCartService().getSessionCart();
-			
-				final AbstractPromotion promotion = getModelService().getSource(source);
 
-				final PromotionOrderResults promoOrderResults = getPromotionService().getPromotionResults(cartModel);
-				if (promoOrderResults != null)
-				{
-					prototype.setCouldFireMessages(getCouldFirePromotionsMessages(promoOrderResults, promotion));
-					prototype.setFiredMessages(getFiredPromotionsMessages(promoOrderResults, promotion));
-				}
+			final AbstractPromotion promotion = getModelService().getSource(source);
+
+			final PromotionOrderResults promoOrderResults = getPromotionService().getPromotionResults(cartModel);
+			if (promoOrderResults != null)
+			{
+				prototype.setCouldFireMessages(getCouldFirePromotionsMessages(promoOrderResults, promotion));
+				prototype.setFiredMessages(getFiredPromotionsMessages(promoOrderResults, promotion));
 			}
 		}
-	
+	}
+
 
 	protected List<String> getCouldFirePromotionsMessages(final PromotionOrderResults promoOrderResults,
 			final AbstractPromotion promotion)

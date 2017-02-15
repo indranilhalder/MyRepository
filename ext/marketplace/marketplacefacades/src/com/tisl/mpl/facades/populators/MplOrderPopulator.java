@@ -17,6 +17,7 @@ import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.EMIPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.ThirdPartyWalletInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
@@ -66,7 +67,7 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 		addPrincipalInformation(source, target);
 		addConvinienceCharges(source, target);
 		addVoucherDiscount(source, target);
-		addPickupPersonDetails(source,target);
+		addPickupPersonDetails(source, target);
 
 		if (CollectionUtils.isNotEmpty(source.getAllPromotionResults()))
 		{
@@ -81,7 +82,8 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 
 					if (promotionResultModel.getCertainty().floatValue() == 1.0F
 							&& (promotion instanceof BuyAGetPromotionOnShippingChargesModel
-									|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel || promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
+									|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel
+									|| promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
 					{
 						isShippingPromoApplied = true;
 						break;
@@ -220,6 +222,21 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 			mplPaymentInfo.setPaymentOption("COD");
 			target.setMplPaymentInfo(mplPaymentInfo);
 		}
+
+		//Added for third Party Wallet
+
+		if (source.getPaymentInfo() instanceof ThirdPartyWalletInfoModel)
+		{
+			final ThirdPartyWalletInfoModel tpWalletPaymentInfoModel = (ThirdPartyWalletInfoModel) source.getPaymentInfo();
+			mplPaymentInfo.setCardAccountHolderName(tpWalletPaymentInfoModel.getWalletOwner());
+
+			//To change the name of payment option later
+			mplPaymentInfo.setPaymentOption(tpWalletPaymentInfoModel.getProviderName());
+			//mplPaymentInfo.setBillingAddress(getAddressConverter().convert(tpWalletPaymentInfoModel.getBillingAddress()));
+			target.setMplPaymentInfo(mplPaymentInfo);
+		}
+		//Ended here for third party wallet
+
 		//}
 	}
 
@@ -273,7 +290,7 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 				//if (CollectionUtils.isNotEmpty(voucherList) && !discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
 				//Changed for TISSTRT-194
 				if (CollectionUtils.isEmpty(voucherList) || CollectionUtils.isNotEmpty(voucherList)
-						&& !discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))//if no voucher is applied
+						&& !discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode())) //if no voucher is applied
 				{
 					final double value = discount.getAppliedValue();
 					if (value > 0.0d)
@@ -313,7 +330,7 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 
 		target.setCouponDiscount(createPrice(source, Double.valueOf(discounts)));
 	}
-	
+
 	private void addPickupPersonDetails(final OrderModel source, final OrderData target)
 	{
 		target.setPickupName(source.getPickupPersonName());

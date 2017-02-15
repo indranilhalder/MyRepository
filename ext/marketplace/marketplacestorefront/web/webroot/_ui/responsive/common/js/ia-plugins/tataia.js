@@ -169,7 +169,9 @@ if (searchCategory_id){
 				                    'ecompany': ecompany },
 				            contentType: 'application/javascript',
 				            success: function(response) {
-				              document.cookie = 'IASESSIONID='+response.session_id+'; path=/';
+				              //document.cookie = 'IASESSIONID='+response.session_id+'; path=/';
+				              //SISA FIX
+				              document.cookie = 'IASESSIONID='+response.session_id+'; path=/; secure';
 				              ssid = response.session_id;
 				              callEventApi('login', null);
 				            }
@@ -220,7 +222,9 @@ if (searchCategory_id){
 				                    'ecompany': ecompany },
 				            contentType: 'application/javascript',
 				            success: function(response) {
-				              document.cookie = 'IASESSIONID='+response.session_id+'; path=/';
+				            //SISA FIX
+				              //document.cookie = 'IASESSIONID='+response.session_id+'; path=/';
+				              document.cookie = 'IASESSIONID='+response.session_id+'; path=/; secure';
 				              ssid = response.session_id;
 				              callEventApi('login', null);
 				            }
@@ -228,12 +232,19 @@ if (searchCategory_id){
 				        } else {
 				          callEventApi('login', null);
 				        }
-				        document.cookie = 'IAEMAILID='+uid+'; path=/';
+				      //SISA FIX
+				        //document.cookie = 'IAEMAILID='+uid+'; path=/';
+				        document.cookie = 'IAEMAILID='+uid+'; path=/; secure';
 				      }
 				    }
 				  }
-				  document.cookie='IAUSERID='+uid+'; path=/';
-				  document.cookie='IAUSERTYPE='+user_type+'; path=/';
+				  
+				//SISA FIX
+				  //document.cookie='IAUSERID='+uid+'; path=/';
+				 // document.cookie='IAUSERTYPE='+user_type+'; path=/';
+				  
+				  document.cookie='IAUSERID='+uid+'; path=/; secure';
+				  document.cookie='IAUSERTYPE='+user_type+'; path=/; secure';
 				}
 
 			/*
@@ -818,7 +829,9 @@ if (searchCategory_id){
 					      	success: function(response) {}
 
 					      });
-			      document.cookie='prev_start_time=' + start_time.getTime() + '; path=/';      
+			      //SISA FIX
+			      //document.cookie='prev_start_time=' + start_time.getTime() + '; path=/';  
+			      document.cookie='prev_start_time=' + start_time.getTime() + '; path=/ ;secure';
 			      /*Check previous pages, add extra parameters if applicable*/
 			      refCheck();
 			      if (referring_request_id) {
@@ -855,7 +868,9 @@ if (searchCategory_id){
 			      data: { 'referring_url': document.referrer },
 			      contentType: 'application/javascript',
 			      success: function(response) {
-			        document.cookie = "IASESSIONID="+response.session_id+'; path=/';
+			    	//SISA FIX  
+			        //document.cookie = "IASESSIONID="+response.session_id+'; path=/';
+			        document.cookie = "IASESSIONID="+response.session_id+'; path=/; secure';
 			        ssid = response.session_id;
 			        callTataRec();
 			      }
@@ -1152,23 +1167,14 @@ if (searchCategory_id){
 			                    }
 
 						    	    	  /*items : 4,
-
 						    	          scrollPerPage: true,
-
 						    	          itemsDesktop : [1199,3],
-
 						    	          itemsDesktopSmall : [980,2],
-
 						    	          itemsTablet: [768,2],
-
 						    	          itemsMobile : [479,1],
-
 						    	          navigation: true,
-
 						    	          navigationText : [],
-
 						    	          pagination:false,
-
 						    	          rewindNav : false
 											*/
 
@@ -1204,23 +1210,14 @@ if (searchCategory_id){
 	                    }
 
 			        /*items : 5,
-
 			        scrollPerPage: true,
-
 			        itemsDesktop : [1199,4],
-
 			        itemsDesktopSmall : [980,3],
-
 			        itemsTablet: [768,2],
-
 			        itemsMobile : [479,1],
-
 			        navigation: true,
-
 			        navigationText : [],
-
 			        pagination:false,
-
 			        rewindNav : false*/
 			      });
 
@@ -1442,29 +1439,17 @@ if (searchCategory_id){
 	                        }
 	                    }
 					    	/*items : 4,
-
 							navigation:true,
-
 							navigationText : [],
-
 							pagination:false,
-
 							itemsDesktop : [1199,3],
-
 				            itemsDesktopSmall : [980,2],
-
 				            itemsTablet: [768,2],
-
 				            itemsMobile : [479,1], 
-
 				rewindNav: false,
-
 				lazyLoad:true,
-
 				navigation : true,	        
-
 		        rewindNav : false,
-
 		        scrollPerPage : true*/
 	    });
 

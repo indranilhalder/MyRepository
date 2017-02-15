@@ -114,6 +114,7 @@ public final class ModelAttributetConstants
 	public static final String PRODUCT_DATAS = "ProductDatas";
 	public static final String WISHLIST_PRODUCT_DATA_LIST = "WishlistProductDataList";
 	public static final String PRODUCT_DATA = "Productdata";
+	public static final String PRODUCT_PRICE_LIST = "Productprice";
 	public static final String PRODUCT = "product";
 	public static final String SELLER_DATA = "sellerData";
 	public static final String PRODUCT_CODE_POST = "productCodePost";
@@ -596,6 +597,7 @@ public final class ModelAttributetConstants
 	//FOR MSD
 	public static final String MSD_JS_URL = "msdjsURL";
 	public static final String IS_MSD_ENABLED = "isMSDEnabled";
+	public static final String IS_PRODUCTPAGE = "isProductPage";
 	public static final String MSD_REST_URL = "msdRESTURL";
 	// Friends Invite **************
 

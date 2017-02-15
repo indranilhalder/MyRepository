@@ -370,6 +370,9 @@ public class MarketplacewebservicesConstants
 	public static final String KNOW_MORE_THIRD = "know.more.third";
 	public static final String KNOW_MORE_FOURTH = "know.more.fourth";
 	public static final String KNOW_MORE_FIFTH = "know.more.fifth";
+	//INC_11931
+	public static final String KNOW_MORE_SECOND_FOR_LUX = "know.more.second.lux";
+	public static final String KNOW_MORE_THIRD_FOR_LUX = "know.more.third.lux";
 
 	//Consignment Status
 	public static final String ALLOCATED = "ALLOCATED";
@@ -532,5 +535,14 @@ public class MarketplacewebservicesConstants
 	public static final String WARRANTY = "Warranty";
 	public static final String PDP_DESC_TAB = "pdp.desc.tab.".intern();
 
+	//Third party wallet
+
+	public static final String THIRDPARTYWALLETORDER = "/{userId}/createThirdPartyWalletOrder";
+	public static final String WALLETPAYMENT = "/{userId}/walletPayment";
+	public static final String MRUPEE = "MRUPEE".intern();
+
+	public final static String MRUPEE_NARRATION_VALUE = "payment.mRupee.narration".intern();
+	public final static String MRUPEE_MERCHANT_CODE = "payment.mRupee.merchantID".intern();
+	public final static String FAIL = "fail";
 
 }

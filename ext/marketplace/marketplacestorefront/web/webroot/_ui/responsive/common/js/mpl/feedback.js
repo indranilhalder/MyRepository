@@ -863,20 +863,30 @@ $(document).ready(function(){
 	$(".brands-page .list_custom li").hide();
 		$(".brands-page .list_custom li span.letter.a-g-set").parent().show();
 				
-		
+		 // TPR-1287 Start
 	    $(".brandCategory").click(function(){
 	    	
 	    	var elementId =$(this).attr('id') ;
-	    	window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
+	    	var brandCatName = $(this).text().toLowerCase().trim() + "-brands";
+	    		    	
+	    	//window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
+	    	window.history.pushState('obj', 'newtitle', '/brands/' + brandCatName +'/b-'+elementId.toLowerCase());
+	    	
+	    	
 	    });
 	    
 	    
 	    $(".cmsManagedBrands").click(function(){
 	    	
 	    	var elementId =$(this).attr('id') ;
-	    	window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
+	    	
+	    	var brandCatName = $(this).text().toLowerCase().trim().replace(/\s/g, "-") + "-brands";
+	    	
+	    	//window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
+	    	window.history.pushState('obj', 'newtitle', '/brands/' + brandCatName +'/b-'+elementId);
+	    	
 	    });
-	    
+	  // TPR-1287 end
 	
 	    
 	    $(".brands-page .desktop ul.nav > li").click(function() {
@@ -944,6 +954,10 @@ $(document).ready(function(){
 		}
 		
 	/*---END of Mobile view left nav --*/	
+		
+		
+		
+		
 		
 	/*----Start of Wishlist Codes---------*/
 		
@@ -1575,11 +1589,24 @@ $(document).ready(function(){
 				selectOpen = false;
 			}
 		});
-		
-		if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
+		/*start change for INC_11789*/
+		/*if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
 			var footer_height=$('footer').height() + 20 + 'px';
 			$(".body-Content").css('padding-bottom',footer_height);
-		}
+		}*/
+		if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
+			var footer_height=$('footer').height() + 20 + 'px';
+			var ua_check = window.navigator.userAgent;
+			var msie_check = ua_check.indexOf("MSIE ");
+			$(".body-Content").css('padding-bottom',footer_height);
+			if(msie_check > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){
+				setTimeout(function () {
+					var footer_height=$('footer').height() + 20 + 'px';
+					$(".body-Content").css('padding-bottom',footer_height);
+				},500);
+				}
+		} 
+		/*end change for INC_11789*/
 		else{
 			$(".body-Content").css('padding-bottom','0px');
 		}
@@ -1965,7 +1992,8 @@ $(document).ready(function() {
 		}
 		});
 		$(".best_seller .Menu ul li:nth-child(3)").addClass("active");
-		$(".best_seller .best_seller_section:nth-of-type(4)").addClass("show_clplist");
+		/*$(".best_seller .best_seller_section:nth-of-type(4)").addClass("show_clplist");*/
+		$(".best_seller .best_seller_section:nth-of-type(5)").addClass("show_clplist");
 		$(".best_seller .Menu .mobile.selectmenu").text($(".best_seller .Menu ul li.active").text());
 		$(".best_seller .Menu ul li").off("click").on("click", function(){
 			$(".best_seller .Menu ul li").removeClass("active");
@@ -2822,3 +2850,8 @@ $(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
 $(this).toggleClass("active");
 });*/
 
+/*UF-29*/
+$(".gig-rating-readReviewsLink_pdp").on("click",function() {
+	  $("body,html").animate({ scrollTop: $('#ReviewSecion').offset().top - 50 }, "slow");
+
+});

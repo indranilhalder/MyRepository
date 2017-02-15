@@ -59,4 +59,5 @@ public interface BuyBoxService
 	List<ClassAttributeAssignmentModel> getClassAttrAssignmentsForCode(String code);
 
 
+
 }

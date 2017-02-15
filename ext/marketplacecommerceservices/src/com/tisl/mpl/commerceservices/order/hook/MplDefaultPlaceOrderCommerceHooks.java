@@ -59,6 +59,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
@@ -135,7 +136,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -198,6 +199,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000)));
 				}
 				orderModel.setType("Parent");
+				//if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel || WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
 				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
 				{
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
@@ -248,7 +250,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -262,7 +264,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -272,15 +274,32 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	public void beforeSubmitOrder(final CommerceCheckoutParameter paramCommerceCheckoutParameter,
 			final CommerceOrderResult paramCommerceOrderResult) throws InvalidCartException
 	{
+
 		final OrderModel orderModel = paramCommerceOrderResult.getOrder();
+
+		//Added for third party wallet in case 1st tym order is not placed and tried with a different mode of payment
+
+		if (MarketplacecommerceservicesConstants.MRUPEE.equalsIgnoreCase(orderModel.getModeOfOrderPayment()))
+		{
+			orderModel.setIsWallet(WalletEnum.MRUPEE);
+		}
+
+		else
+		{
+			orderModel.setIsWallet(WalletEnum.NONWALLET);
+		}
+
 		//orderModel.setType("Parent");
 		final List<OrderModel> orderList = getSubOrders(orderModel);
 
 		//TISPRO-249
 		setParentTransBuyABGetC(orderList);
+
 		//TISUTO-128
 		setFreebieParentTransactionId(orderList);
+
 		setBOGOParentTransactionId(orderList);
+
 
 		//Commented as ordercode creation is handled earlier for TPR-629
 		//		final String sequenceGeneratorApplicable = getConfigurationService().getConfiguration()
@@ -304,7 +323,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 		orderModel.setChildOrders(orderList);
 		getModelService().save(orderModel);
-		if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+		if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel || WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
 		{
 			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 		}
@@ -340,9 +359,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
-	 *
+	 * 
 	 * @param subOrderList
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	private void setParentTransBuyABGetC(final List<OrderModel> subOrderList) throws InvalidCartException
@@ -399,9 +418,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
-	 *
+	 * 
 	 * @param subOrderList
-	 *
+	 * 
 	 * @throws Exception
 	 */
 
@@ -529,12 +548,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//					.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
 			//					.subtract(BigDecimal.valueOf(totalCouponDiscount));
 
-			totalPrice = BigDecimal.valueOf(totalPriceForSubTotal)/*.add(BigDecimal.valueOf(totalConvChargeForCOD)) */
-					.add(BigDecimal.valueOf(totalDeliveryPrice))/* .subtract(BigDecimal.valueOf(totalDeliveryDiscount)) */
-					.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
+			totalPrice = BigDecimal.valueOf(totalPriceForSubTotal)/* .add(BigDecimal.valueOf(totalConvChargeForCOD)) */
+			.add(BigDecimal.valueOf(totalDeliveryPrice))/* .subtract(BigDecimal.valueOf(totalDeliveryDiscount)) */
+			.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
 					.subtract(BigDecimal.valueOf(totalCouponDiscount));
 			totalPriceWithConv = totalPrice.add(BigDecimal.valueOf(totalConvChargeForCOD));
-			
+
 			final DecimalFormat decimalFormat = new DecimalFormat("#.00");
 			totalPrice = totalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 			totalPriceWithConv = totalPriceWithConv.setScale(2, BigDecimal.ROUND_HALF_EVEN);
@@ -779,9 +798,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 *
+	 * 
 	 * @param orderList
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private void setFreebieParentTransactionId(final List<OrderModel> subOrderList) throws EtailNonBusinessExceptions

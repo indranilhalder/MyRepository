@@ -53,12 +53,14 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.enums.TypeofReturn;
+import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.CancellationReasonModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.data.ReturnAddressInfo;
@@ -74,6 +76,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MPLRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
+import com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplMWalletRefundService;
 import com.tisl.mpl.model.CRMTicketDetailModel;
 import com.tisl.mpl.ordercancel.MplOrderCancelEntry;
 import com.tisl.mpl.ordercancel.MplOrderCancelRequest;
@@ -130,6 +133,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private MPLRefundService mplRefundService;
 	private Converter<AbstractOrderEntryModel, OrderEntryData> orderEntryConverter;
 	private OrderCancelRecordsHandler orderCancelRecordsHandler;
+
+	@Autowired
+	private DefaultMplMWalletRefundService walletRefundService;
 
 	protected static final Logger LOG = Logger.getLogger(CancelReturnFacadeImpl.class);
 
@@ -237,18 +243,17 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 			if (omsCancellationStatus)
 			{
-				LOG.debug("Step 4:***********************************Ticket is to be created for sub order:"
-						+ subOrderDetails.getCode());
+				LOG.debug(
+						"Step 4:***********************************Ticket is to be created for sub order:" + subOrderDetails.getCode());
 				//TISPRD-1641
 				final List<PaymentTransactionModel> tranactions = subOrderModel.getPaymentTransactions();
 				if (CollectionUtils.isNotEmpty(tranactions))
 				{
 					final PaymentTransactionEntryModel paymentTransEntry = tranactions.iterator().next().getEntries().iterator()
 							.next();
-					if (paymentTransEntry.getPaymentMode() != null
-							&& paymentTransEntry.getPaymentMode().getMode() != null
-							&& MarketplacecommerceservicesConstants.CASH_ON_DELIVERY.equalsIgnoreCase(paymentTransEntry.getPaymentMode()
-									.getMode()))
+					if (paymentTransEntry.getPaymentMode() != null && paymentTransEntry.getPaymentMode().getMode() != null
+							&& MarketplacecommerceservicesConstants.CASH_ON_DELIVERY
+									.equalsIgnoreCase(paymentTransEntry.getPaymentMode().getMode()))
 					{
 						refundType = "N";
 					}
@@ -287,10 +292,15 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				cancelOrRetrnanable = initiateCancellation(ticketTypeCode, subOrderDetails, subOrderEntry, subOrderModel, reasonCode);
 				LOG.debug("Step 5.1 :*********************************** Refund and OMS call status:" + cancelOrRetrnanable);
 
-				if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie) //TISEE-5524
+				//	if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie) //TISEE-5524
+
+				//Mrupee checking
+
+				if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie
+						&& !subOrderModel.getIsWallet().equals(WalletEnum.MRUPEE))
 				{
-					LOG.debug("Step 6:***********************************Create return request for Return:"
-							+ subOrderDetails.getCode());
+					LOG.debug(
+							"Step 6:***********************************Create return request for Return:" + subOrderDetails.getCode());
 
 					final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(subOrderModel,
 							subOrderEntry.getTransactionId());
@@ -444,8 +454,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 			if (omsCancellationStatus)
 			{
-				LOG.debug("Step 4:***********************************Ticket is to be created for sub order:"
-						+ subOrderDetails.getCode());
+				LOG.debug(
+						"Step 4:***********************************Ticket is to be created for sub order:" + subOrderDetails.getCode());
 
 				final boolean ticketCreationStatus = createTicketInCRM(subOrderDetails, subOrderEntry, ticketTypeCode, reasonCode,
 						refundType, ussid, customerData, subOrderModel, returnAddress);
@@ -455,10 +465,14 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				cancelOrRetrnanable = initiateCancellation(ticketTypeCode, subOrderDetails, subOrderEntry, subOrderModel, reasonCode);
 				LOG.debug("Step 5.1 :*********************************** Refund and OMS call status:" + cancelOrRetrnanable);
 
-				if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie) //TISEE-5524
+				//if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie) //TISEE-5524
+				//Mrupee checking
+
+				if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie
+						&& !subOrderModel.getIsWallet().equals(WalletEnum.MRUPEE))
 				{
-					LOG.debug("Step 6:***********************************Create return request for Return:"
-							+ subOrderDetails.getCode());
+					LOG.debug(
+							"Step 6:***********************************Create return request for Return:" + subOrderDetails.getCode());
 
 					final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(subOrderModel,
 							subOrderEntry.getTransactionId());
@@ -543,7 +557,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			}
 			else
 			{
-				LOG.debug("Step8:**** Updating consignment status and order histoery insertion Consinment is not present ************** ");
+				LOG.debug(
+						"Step8:**** Updating consignment status and order histoery insertion Consinment is not present ************** ");
 			}
 
 			//createHistoryEntry(orderEntryModel, orderModel, consignmentStatus);
@@ -706,10 +721,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					}
 					else
 					{
-						final double amount = (abstractOrderEntryModel.getNetAmountAfterAllDisc() != null ? abstractOrderEntryModel
-								.getNetAmountAfterAllDisc().doubleValue() : 0D)
-								+ (abstractOrderEntryModel.getCurrDelCharge() != null ? abstractOrderEntryModel.getCurrDelCharge()
-										.doubleValue() : 0D);
+						final double amount = (abstractOrderEntryModel.getNetAmountAfterAllDisc() != null
+								? abstractOrderEntryModel.getNetAmountAfterAllDisc().doubleValue() : 0D)
+								+ (abstractOrderEntryModel.getCurrDelCharge() != null
+										? abstractOrderEntryModel.getCurrDelCharge().doubleValue() : 0D);
 
 						refundEntryModel.setAmount(NumberUtils.createBigDecimal(Double.toString(amount)));
 					}
@@ -818,10 +833,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					}
 					else
 					{
-						final double amount = (abstractOrderEntryModel.getNetAmountAfterAllDisc() != null ? abstractOrderEntryModel
-								.getNetAmountAfterAllDisc().doubleValue() : 0D)
-								+ (abstractOrderEntryModel.getCurrDelCharge() != null ? abstractOrderEntryModel.getCurrDelCharge()
-										.doubleValue() : 0D);
+						final double amount = (abstractOrderEntryModel.getNetAmountAfterAllDisc() != null
+								? abstractOrderEntryModel.getNetAmountAfterAllDisc().doubleValue() : 0D)
+								+ (abstractOrderEntryModel.getCurrDelCharge() != null
+										? abstractOrderEntryModel.getCurrDelCharge().doubleValue() : 0D);
 
 						refundEntryModel.setAmount(NumberUtils.createBigDecimal(Double.toString(amount)));
 					}
@@ -1294,6 +1309,37 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						subOrderEntry.getTransactionId());
 				requestOrderCancel(subOrderDetails, subOrderModel, orderCancelRequest);
 			}
+			//Mrupee  Return implementation
+			else if ("R".equalsIgnoreCase(ticketTypeCode) && subOrderModel.getIsWallet().equals(WalletEnum.MRUPEE))
+			{
+				LOG.debug(" MRupee Return started***********************************cancelOrRetrnanable : " + ticketTypeCode);
+
+				final MplOrderCancelRequest orderCancelRequest = buildCancelRequest(reasonCode, subOrderModel,
+						subOrderEntry.getTransactionId());
+				final OrderCancelRecordEntryModel orderRequestRecord = orderCancelService.requestOrderCancel(orderCancelRequest,
+						userService.getCurrentUser());
+				if (OrderCancelEntryStatus.DENIED.equals(orderRequestRecord.getCancelResult()))
+				{
+					final String orderCode = subOrderDetails.getCode();
+
+					String message = MarketplacecommerceservicesConstants.EMPTY;
+					if (orderRequestRecord.getRefusedMessage() != null)
+					{
+						message = message + orderRequestRecord.getRefusedMessage();
+					}
+					if (orderRequestRecord.getFailedMessage() != null)
+					{
+						message = message + orderRequestRecord.getFailedMessage();
+					}
+
+					throw new OrderCancelException(orderCode, message);
+				}
+				else
+				{
+					LOG.debug(" Entered in MRupee initiateRefundMrupee Method *********************************** ");
+					initiateRefundMrupee(subOrderModel, orderRequestRecord, "R");
+				}
+			}
 			cancellationInitiated = true;
 		}
 		catch (final ModelSavingException e)
@@ -1378,8 +1424,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			final MplCancelOrderRequest.OrderLine orderLineData = new MplCancelOrderRequest.OrderLine();
 			orderLineData.setOrderId(subOrderModel.getParentReference().getCode());
 			orderLineData.setReasonCode(reasonCode);
-			orderLineData.setRequestID(subEntry.getSelectedUSSID() + MarketplacecommerceservicesConstants.EMPTY
-					+ System.currentTimeMillis());//TODO: Change with a valid request ID
+			orderLineData.setRequestID(
+					subEntry.getSelectedUSSID() + MarketplacecommerceservicesConstants.EMPTY + System.currentTimeMillis());//TODO: Change with a valid request ID
 			orderLineData.setReturnCancelFlag(ticketTypeCode);
 			if (ticketTypeCode.equalsIgnoreCase("C"))
 			{
@@ -1419,8 +1465,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			final MplCancelOrderRequest.OrderLine orderLineData = new MplCancelOrderRequest.OrderLine();
 			orderLineData.setOrderId(subOrderModel.getParentReference().getCode());
 			orderLineData.setReasonCode(reasonCode);
-			orderLineData.setRequestID(subEntry.getSelectedUSSID() + MarketplacecommerceservicesConstants.EMPTY
-					+ System.currentTimeMillis());//TODO: Change with a valid request ID
+			orderLineData.setRequestID(
+					subEntry.getSelectedUSSID() + MarketplacecommerceservicesConstants.EMPTY + System.currentTimeMillis());//TODO: Change with a valid request ID
 			orderLineData.setReturnCancelFlag(ticketTypeCode);
 			if (ticketTypeCode.equalsIgnoreCase("C"))
 			{
@@ -1477,8 +1523,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		final List<AbstractOrderEntryModel> orderEntries = associatedEntries(subOrderModel, transactionId);
 		for (final AbstractOrderEntryModel orderEntryData : orderEntries)
 		{
-			final MplOrderCancelEntry orderCancelEntryData = new MplOrderCancelEntry(orderEntryData, orderEntryData.getQuantity()
-					.longValue(), reasonDescription, reasonDescription);
+			final MplOrderCancelEntry orderCancelEntryData = new MplOrderCancelEntry(orderEntryData,
+					orderEntryData.getQuantity().longValue(), reasonDescription, reasonDescription);
 			orderCancelEntries.add(orderCancelEntryData);
 		}
 
@@ -1535,9 +1581,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	/*
 	 * private MplOrderCancelRequest buildCancelRequest(final AbstractOrderEntryModel orderEntryData, final String
 	 * reasonCode, final OrderData subOrderDetails, final OrderModel subOrderModel) throws OrderCancelException {
-	 * 
+	 *
 	 * final List orderCancelEntries = new ArrayList();
-	 * 
+	 *
 	 * //Get the reason from Global Code master String reasonDescription = null; final List<CancellationReasonModel>
 	 * cancellationReasonList = mplOrderService.getCancellationReason(); for (final CancellationReasonModel
 	 * cancellationReason : cancellationReasonList) { if
@@ -1553,16 +1599,16 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * orderCancelEntry : orderCancelRequest.getEntriesToCancel()) { final AbstractOrderEntryModel orderEntry =
 	 * orderCancelEntry.getOrderEntry(); final List<PaymentTransactionModel> tranactions = new
 	 * ArrayList<PaymentTransactionModel>( subOrderModel.getPaymentTransactions());
-	 * 
+	 *
 	 * if (CollectionUtils.isNotEmpty(tranactions)) { for (final PaymentTransactionModel transaction : tranactions) { if
 	 * (CollectionUtils.isNotEmpty(transaction.getEntries())) { for (final PaymentTransactionEntryModel entry :
 	 * transaction.getEntries()) { if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null &&
 	 * entry.getPaymentMode().getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD)) {
 	 * orderCancelRequest.setAmountToRefund(NumberUtils.DOUBLE_ZERO); return orderCancelRequest; } } } } }
-	 * 
+	 *
 	 * double deliveryCost = 0D; if (orderEntry.getCurrDelCharge() != null) { deliveryCost =
 	 * orderEntry.getCurrDelCharge().doubleValue(); }
-	 * 
+	 *
 	 * refundAmount = orderEntryData.getNetAmountAfterAllDisc().doubleValue() + deliveryCost; } //Setting Refund Amount
 	 * orderCancelRequest.setAmountToRefund(new Double(refundAmount)); return orderCancelRequest; }
 	 */
@@ -1570,20 +1616,20 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 
 	/*	*//**
-	 * @param subOrderModel
-	 * @param subOrderDetails
-	 * @param orderCancelRequest
-	 * @param sendTicketRequestData
-	 * @throws OrderCancelRecordsHandlerException
-	 *
-	 */
+		   * @param subOrderModel
+		   * @param subOrderDetails
+		   * @param orderCancelRequest
+		   * @param sendTicketRequestData
+		   * @throws OrderCancelRecordsHandlerException
+		   *
+		   */
 	/*
 	 * private void createCancelEntriesAndRefund(final MplOrderCancelRequest orderCancelRequest, final OrderData
 	 * subOrderDetails, final OrderModel subOrderModel, final SendTicketRequestData sendTicketRequestData) throws
 	 * OrderCancelRecordsHandlerException { final OrderCancelRecordEntryModel result =
 	 * this.getOrderCancelRecordsHandler().createRecordEntry(orderCancelRequest, userService.getCurrentUser());
 	 * //Initiate Refund initiateRefund(subOrderDetails, subOrderModel, result);
-	 * 
+	 *
 	 * }
 	 */
 
@@ -1620,7 +1666,19 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		else
 		{
-			initiateRefund(subOrderModel, orderRequestRecord);
+			//initiateRefund(subOrderModel, orderRequestRecord);
+
+			if (null != subOrderModel && subOrderModel.getIsWallet().equals(WalletEnum.MRUPEE))
+			{
+				//Mrupee implementation
+
+				initiateRefundMrupee(subOrderModel, orderRequestRecord, "C");
+
+			}
+			else
+			{
+				initiateRefund(subOrderModel, orderRequestRecord);
+			}
 		}
 	}
 
@@ -1640,8 +1698,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			try
 			{
 				LOG.debug("****** initiateRefund Step 1 >> Begin >> Calling for prepaid for " + orderRequestRecord.getCode());
-				paymentTransactionModel = mplJusPayRefundService.doRefund(subOrderModel, orderRequestRecord.getRefundableAmount()
-						.doubleValue(), PaymentTransactionType.CANCEL, uniqueRequestId);
+				paymentTransactionModel = mplJusPayRefundService.doRefund(subOrderModel,
+						orderRequestRecord.getRefundableAmount().doubleValue(), PaymentTransactionType.CANCEL, uniqueRequestId);
 
 				if (null != paymentTransactionModel)
 				{
@@ -1699,8 +1757,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 								//End TISPRD-871
 
 								modelService.save(orderEntry);
-								LOG.debug("****** initiateRefund : Step 3  >>Payment transaction mode is not null >> Calling OMS with status as received from JUSPAY "
-										+ newStatus.getCode());
+								LOG.debug(
+										"****** initiateRefund : Step 3  >>Payment transaction mode is not null >> Calling OMS with status as received from JUSPAY "
+												+ newStatus.getCode());
 
 								//mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,orderRequestRecord.getRefundableAmount(), newStatus);
 
@@ -1732,15 +1791,16 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 			LOG.debug("****** initiateRefund >> Begin >> OMS will not be called for COD  ");
 			final double refundedAmount = 0D;
-			paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderRequestRecord.getOriginalVersion()
-					.getOrder(), MarketplacecommerceservicesConstants.FAILURE_FLAG, new Double(refundedAmount),
-					PaymentTransactionType.CANCEL, MarketplacecommerceservicesConstants.FAILURE_FLAG, UUID.randomUUID().toString());
+			paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(
+					orderRequestRecord.getOriginalVersion().getOrder(), MarketplacecommerceservicesConstants.FAILURE_FLAG,
+					new Double(refundedAmount), PaymentTransactionType.CANCEL, MarketplacecommerceservicesConstants.FAILURE_FLAG,
+					UUID.randomUUID().toString());
 			mplJusPayRefundService.attachPaymentTransactionModel(orderRequestRecord.getOriginalVersion().getOrder(),
 					paymentTransactionModel);
 		}
 		orderRequestRecord.setStatus(OrderModificationEntryStatus.SUCCESSFULL);
-		orderRequestRecord.setTransactionCode(paymentTransactionModel != null ? paymentTransactionModel.getCode()
-				: MarketplacecommerceservicesConstants.EMPTY);
+		orderRequestRecord.setTransactionCode(
+				paymentTransactionModel != null ? paymentTransactionModel.getCode() : MarketplacecommerceservicesConstants.EMPTY);
 		modelService.save(orderRequestRecord);
 	}
 
@@ -1796,17 +1856,17 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 							returnLogRespData.setIsReturnLogisticsAvailable(orderLine.getIsReturnLogisticsAvailable());
 							if (orderLine.getIsReturnLogisticsAvailable().equalsIgnoreCase("Y"))
 							{
-								returnLogRespData
-										.setResponseMessage(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_MESSAGE);
-								returnLogRespData
-										.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_DESC);
+								returnLogRespData.setResponseMessage(
+										MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_MESSAGE);
+								returnLogRespData.setResponseDescription(
+										MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_DESC);
 							}
 							else
 							{
-								returnLogRespData
-										.setResponseMessage(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_MESSAGE);
-								returnLogRespData
-										.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
+								returnLogRespData.setResponseMessage(
+										MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_MESSAGE);
+								returnLogRespData.setResponseDescription(
+										MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
 							}
 
 						}
@@ -1825,8 +1885,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						returnLogRespData.setOrderId(orderDetails.getCode());
 						returnLogRespData
 								.setResponseMessage(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_MESSAGE);
-						returnLogRespData
-								.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
+						returnLogRespData.setResponseDescription(
+								MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
 					}
 					returnLogRespData.setTransactionId(transactionId);
 					returnLogRespDataList.add(returnLogRespData);
@@ -1911,17 +1971,17 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 								if (orderLine.getIsReturnLogisticsAvailable().equalsIgnoreCase("Y"))
 								{
-									returnLogRespData
-											.setResponseMessage(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_MESSAGE);
-									returnLogRespData
-											.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_DESC);
+									returnLogRespData.setResponseMessage(
+											MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_MESSAGE);
+									returnLogRespData.setResponseDescription(
+											MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_DESC);
 								}
 								else
 								{
-									returnLogRespData
-											.setResponseMessage(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_MESSAGE);
-									returnLogRespData
-											.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
+									returnLogRespData.setResponseMessage(
+											MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_MESSAGE);
+									returnLogRespData.setResponseDescription(
+											MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
 								}
 
 								returnLogRespDataList.add(returnLogRespData);
@@ -1941,8 +2001,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					if (null != orderDetails.getCode())
 					{
 						returnLogRespData.setOrderId(orderDetails.getCode());
-						returnLogRespData
-								.setResponseMessage(MarketplacecommerceservicesConstants.REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE);
+						returnLogRespData.setResponseMessage(
+								MarketplacecommerceservicesConstants.REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE);
 					}
 					returnLogRespData.setTransactionId(transactionId);
 					returnLogRespDataList.add(returnLogRespData);
@@ -1964,9 +2024,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 	/*
 	 * @desc Saving order history for cancellation as OMS is not sending
-	 * 
+	 *
 	 * @param subOrderData
-	 * 
+	 *
 	 * @param subOrderModel
 	 */
 	private void createHistoryEntry(final AbstractOrderEntryModel orderEntryModel, final OrderModel orderModel,
@@ -1998,9 +2058,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		for (final AbstractOrderEntryModel subEntry : subOrderDetails.getEntries())
 		{
 			//Start TISPRO-249
-			final String parentTransactionId = ((subEntry.getIsBOGOapplied().booleanValue() || subEntry.getGiveAway().booleanValue()) && mplOrderService
-					.checkIfBuyABGetCApplied(subEntry)) ? subEntry.getBuyABGetcParentTransactionId() : subEntry
-					.getParentTransactionID();
+			final String parentTransactionId = ((subEntry.getIsBOGOapplied().booleanValue() || subEntry.getGiveAway().booleanValue())
+					&& mplOrderService.checkIfBuyABGetCApplied(subEntry)) ? subEntry.getBuyABGetcParentTransactionId()
+							: subEntry.getParentTransactionID();
 			//End TISPRO-249
 
 
@@ -2029,9 +2089,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 		for (final AbstractOrderEntryModel subEntry : subOrderDetails.getEntries())
 		{
-			if (transactionId.equalsIgnoreCase(subEntry.getTransactionID())
-					|| (CollectionUtils.isNotEmpty(parentTransactionIdList) && parentTransactionIdList.contains(subEntry
-							.getTransactionID())))
+			if (transactionId.equalsIgnoreCase(subEntry.getTransactionID()) || (CollectionUtils.isNotEmpty(parentTransactionIdList)
+					&& parentTransactionIdList.contains(subEntry.getTransactionID())))
 			{
 				orderEntries.add(subEntry);
 			}
@@ -2101,6 +2160,177 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			stage = getMplRefundService().getOrderStatusStage(orderEntryStatus);
 		}
 		return stage;
+	}
+
+
+	//Mrupee implementation
+
+	/**
+	 * @Description This method will initiate refund for cancel/return orders of type isWallet
+	 * @param subOrderModel
+	 * @param orderRequestRecord
+	 */
+	private void initiateRefundMrupee(final OrderModel subOrderModel, final OrderCancelRecordEntryModel orderRequestRecord,
+			final String ticketTypeCode)
+	{
+
+		PaymentTransactionModel paymentTransactionModel = null;
+		if (orderRequestRecord.getRefundableAmount() != null
+				&& orderRequestRecord.getRefundableAmount().doubleValue() > NumberUtils.DOUBLE_ZERO.doubleValue())
+		{
+			//TISSIT-1801
+			final String uniqueRequestId = walletRefundService.getRefundUniqueRequestId();
+			try
+			{
+				LOG.debug("****** initiateRefund Step 1 >> Begin >> Calling for prepaid for " + orderRequestRecord.getCode());
+
+				if ("C".equalsIgnoreCase(ticketTypeCode))
+				{
+					LOG.debug(" ############### MRupee doRefund  Method for Cancel order *********************************** "
+							+ ticketTypeCode);
+					paymentTransactionModel = walletRefundService.doRefund(subOrderModel,
+							orderRequestRecord.getRefundableAmount().doubleValue(), PaymentTransactionType.CANCEL, uniqueRequestId);
+				}
+				else if ("R".equalsIgnoreCase(ticketTypeCode))
+				{
+					LOG.debug(" ############### MRupee doRefund  Method for Returned order *********************************** "
+							+ ticketTypeCode);
+					paymentTransactionModel = walletRefundService.doRefund(subOrderModel,
+							orderRequestRecord.getRefundableAmount().doubleValue(), PaymentTransactionType.RETURN, uniqueRequestId);
+				}
+
+				if (null != paymentTransactionModel)
+				{
+					mplJusPayRefundService.attachPaymentTransactionModel(subOrderModel, paymentTransactionModel);
+
+					if (CollectionUtils.isNotEmpty(orderRequestRecord.getOrderEntriesModificationEntries()))
+					{
+						for (final OrderEntryModificationRecordEntryModel modificationEntry : orderRequestRecord
+								.getOrderEntriesModificationEntries())
+						{
+							final OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
+							ConsignmentStatus newStatus = null;
+							if (orderEntry != null)
+							{
+								double refundAmount = 0D;
+								final Double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge()
+										: NumberUtils.DOUBLE_ZERO;
+
+								refundAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost.doubleValue();
+								refundAmount = mplJusPayRefundService.validateRefundAmount(refundAmount, subOrderModel);
+
+								//								if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
+								//										MarketplacecommerceservicesConstants.SUCCESS))
+								//								{
+								//									newStatus = ConsignmentStatus.ORDER_CANCELLED;
+								//
+								List<PaymentTransactionEntryModel> entryList = new ArrayList<PaymentTransactionEntryModel>();
+								PaymentTransactionEntryModel entryValue = null;
+								entryList = paymentTransactionModel.getEntries();
+								if (CollectionUtils.isNotEmpty(entryList))
+								{
+									entryValue = entryList.get(entryList.size() - 1);
+
+									if (null != entryValue)
+									{
+										if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
+												MarketplacecommerceservicesConstants.SUCCESS)
+												|| entryValue.getType().toString().equalsIgnoreCase("CANCEL"))
+										{
+											newStatus = ConsignmentStatus.ORDER_CANCELLED;
+										}
+										else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
+												MarketplacecommerceservicesConstants.SUCCESS)
+												|| entryValue.getType().toString().equalsIgnoreCase("RETURN"))
+										{
+											newStatus = ConsignmentStatus.RETURN_COMPLETED;
+										}
+									}
+								}
+								else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
+										MarketplacecommerceservicesConstants.FAILURE))
+								{
+									newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
+								}
+								else
+								{
+									newStatus = ConsignmentStatus.REFUND_INITIATED;
+								}
+								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
+								orderEntry.setCurrDelCharge(new Double(0D));
+								modelService.save(orderEntry);
+								LOG.debug(
+										"****** initiateRefund : Step 3  >>Payment transaction mode is not null >> Calling OMS with status as received from JUSPAY "
+												+ newStatus.getCode());
+								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
+										Double.valueOf(refundAmount), newStatus);
+							}
+						}
+					}
+				}
+				else
+				{
+					LOG.debug("****** initiateRefund >>Payment transaction mode is null");
+					if (PaymentTransactionType.CANCEL.toString().equalsIgnoreCase("CANCEL"))
+					{
+						walletRefundService.createCancelRefundPgErrorEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
+								uniqueRequestId);
+					}
+					else if (PaymentTransactionType.RETURN.toString().equalsIgnoreCase("RETURN"))
+					{
+						walletRefundService.createCancelRefundPgErrorEntry(orderRequestRecord, PaymentTransactionType.RETURN,
+								uniqueRequestId);
+					}
+				}
+			}
+
+			catch (final EtailNonBusinessExceptions e)
+			{
+				LOG.error(">>>> *****************initiateRefund*********** Exception occured " + e.getMessage(), e);
+				if (PaymentTransactionType.CANCEL.toString().equalsIgnoreCase("CANCEL"))
+				{
+					walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
+							uniqueRequestId);
+				}
+				else if (PaymentTransactionType.RETURN.toString().equalsIgnoreCase("RETURN"))
+				{
+					walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.RETURN,
+							uniqueRequestId);
+				}
+			}
+			catch (final Exception e)
+			{
+				LOG.error(">>>> *****************initiateRefund*********** Exception occured " + e.getMessage(), e);
+				if (PaymentTransactionType.CANCEL.toString().equalsIgnoreCase("CANCEL"))
+				{
+					walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
+							uniqueRequestId);
+				}
+				else if (PaymentTransactionType.RETURN.toString().equalsIgnoreCase("RETURN"))
+				{
+					walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.RETURN,
+							uniqueRequestId);
+				}
+			}
+		}
+		else
+
+		{// Case of COD.
+
+			LOG.debug("****** initiateRefund >> Begin >> OMS will not be called for COD  ");
+			final double refundedAmount = 0D;
+			paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(
+					orderRequestRecord.getOriginalVersion().getOrder(), MarketplacecommerceservicesConstants.FAILURE_FLAG,
+					new Double(refundedAmount), PaymentTransactionType.CANCEL, MarketplacecommerceservicesConstants.FAILURE_FLAG,
+					UUID.randomUUID().toString());
+			mplJusPayRefundService.attachPaymentTransactionModel(orderRequestRecord.getOriginalVersion().getOrder(),
+					paymentTransactionModel);
+		}
+		orderRequestRecord.setStatus(OrderModificationEntryStatus.SUCCESSFULL);
+		orderRequestRecord.setTransactionCode(
+				paymentTransactionModel != null ? paymentTransactionModel.getCode() : MarketplacecommerceservicesConstants.EMPTY);
+		modelService.save(orderRequestRecord);
+
 	}
 
 
