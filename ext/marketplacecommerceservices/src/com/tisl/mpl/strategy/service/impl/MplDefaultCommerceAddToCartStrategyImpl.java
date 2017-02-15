@@ -32,7 +32,6 @@ import com.tisl.mpl.marketplacecommerceservices.daos.MplStockDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.strategy.MplCommerceAddToCartStrategy;
 import com.tisl.mpl.model.SellerInformationModel;
-import com.tisl.mpl.strategy.service.MplCheckCartLevelStrategy;
 
 
 
@@ -49,8 +48,8 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 	protected static final Logger LOG = Logger.getLogger(MplDefaultCommerceAddToCartStrategyImpl.class);
 	@Resource(name = "mplDeliveryCostService")
 	private MplDeliveryCostService mplDeliveryCostService;
-	@Resource(name = "mplCheckCartLevelStrategy")
-	private MplCheckCartLevelStrategy mplCheckCartLevelStrategy;
+	//@Resource(name = "mplCheckCartLevelStrategy")
+	//private MplCheckCartLevelStrategy mplCheckCartLevelStrategy;
 	@Autowired
 	private MplStockDao mplStockDao;
 
@@ -58,11 +57,11 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 
 	/*
 	 * @Desc Adding product to cart
-	 * 
+	 *
 	 * @param parameter
-	 * 
+	 *
 	 * @return CommerceCartModification
-	 * 
+	 *
 	 * @throws CommerceCartModificationException
 	 */
 	@Override
@@ -99,8 +98,7 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 			final long actualAllowedQuantityChange = getAllowedCartAdjustmentForProduct(cartModel, productModel, quantityToAdd,
 					deliveryPointOfService, ussid);
 			final Integer maxOrderQuantity = productModel.getMaxOrderQuantity();
-			final long cartLevel = mplCheckCartLevelStrategy.checkCartLevelValue(ussid, productModel, cartModel,
-					deliveryPointOfService);
+			final long cartLevel = checkCartLevel(productModel, cartModel, deliveryPointOfService);
 			final long cartLevelAfterQuantityChange = actualAllowedQuantityChange + cartLevel;
 
 			if (actualAllowedQuantityChange > 0L)
@@ -229,26 +227,26 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 
 	/*
 	 * @Desc Fetching eligible quantity for a ussid which can be added in cart
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @param productModel
-	 * 
+	 *
 	 * @param quantityToAdd
-	 * 
+	 *
 	 * @param pointOfServiceModel
-	 * 
+	 *
 	 * @param ussid
-	 * 
+	 *
 	 * @return long
-	 * 
+	 *
 	 * @throws CommerceCartModificationException
 	 */
 	private long getAllowedCartAdjustmentForProduct(final CartModel cartModel, final ProductModel productModel,
 			final long quantityToAdd, final PointOfServiceModel pointOfServiceModel, final String ussid)
 			throws CommerceCartModificationException
 	{
-		final long cartLevel = mplCheckCartLevelStrategy.checkCartLevelValue(ussid, productModel, cartModel, pointOfServiceModel);
+		final long cartLevel = checkCartLevel(productModel, cartModel, pointOfServiceModel);
 		final long stockLevel = getAvailableStockLevel(ussid);
 
 		final long newTotalQuantity = cartLevel + quantityToAdd;
@@ -270,11 +268,11 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 
 	/*
 	 * @Desc Fetching available stock information for a ussid from Stock Level
-	 * 
+	 *
 	 * @param ussid
-	 * 
+	 *
 	 * @return long
-	 * 
+	 *
 	 * @throws CommerceCartModificationException
 	 */
 	private long getAvailableStockLevel(final String ussid) throws CommerceCartModificationException
@@ -336,5 +334,47 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 	public int getMaxOrderQuantityConstant()
 	{
 		return maxOrderQuantityConstant;
+	}
+
+	/**
+	 * @param productModel
+	 * @param cartModel
+	 * @param pointOfServiceModel
+	 */
+	@Override
+	protected long checkCartLevel(final ProductModel productModel, final CartModel cartModel,
+			final PointOfServiceModel pointOfServiceModel)
+	{
+		long cartLevel = 0L;
+		final String ussid = cartModel.getCheckUssid();
+		if (pointOfServiceModel == null)
+		{
+			for (final CartEntryModel entryModel : getCartService().getEntriesForProduct(cartModel, productModel))
+			{
+				if (entryModel.getDeliveryPointOfService() != null)
+				{
+					continue;
+				}
+				if (StringUtils.equalsIgnoreCase(entryModel.getSelectedUSSID(), ussid))
+				{
+					cartLevel = ((entryModel.getQuantity() != null) ? entryModel.getQuantity().longValue() : 0L);
+					break;
+				}
+			}
+
+		}
+		else
+		{
+			for (final CartEntryModel entryModel : getCartEntryDao().findEntriesByProductAndPointOfService(cartModel, productModel,
+					pointOfServiceModel))
+			{
+				if (StringUtils.equalsIgnoreCase(entryModel.getSelectedUSSID(), ussid))
+				{
+					cartLevel = ((entryModel.getQuantity() != null) ? entryModel.getQuantity().longValue() : 0L);
+					break;
+				}
+			}
+		}
+		return cartLevel;
 	}
 }
