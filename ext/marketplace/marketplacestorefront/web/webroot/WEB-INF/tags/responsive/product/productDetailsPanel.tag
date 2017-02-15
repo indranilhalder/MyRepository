@@ -118,8 +118,8 @@ tr.d0 td {
 		</div>
 		<!-- Added for carousel in mobile view -->
 		<div class="product-image-container device">
-		<a class="wishlist-icon" onclick="addToWishlist()"></a>
-		<c:set var="thumbNailImageLengthDevice" value="${fn:length(galleryImages)}" />
+			<a class="wishlist-icon" onclick="addToWishlist()"></a>
+			<c:set var="thumbNailImageLengthDevice" value="${fn:length(galleryImages)}" />
 			<div class="jcarousel-skin imageListCarousel" id="pdpProductCarousel"> 
 				<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLengthDevice}">	
 	
@@ -155,8 +155,8 @@ tr.d0 td {
 			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
 		</div>
 		
-		<div class="product-detail">
-			<c:set var="req" value="${pageContext.request}" />
+		<!-- <div class="product-detail"> 
+		<c:set var="req" value="${pageContext.request}" />
   			<c:set var="baseURL" value="${fn:replace(req.requestURL, req.requestURI, '')}" />
   			<c:set var="params" value="${requestScope['javax.servlet.forward.query_string']}"/>
   			<c:set var="requestPath" value="${requestScope['javax.servlet.forward.request_uri']}"/>
@@ -168,29 +168,28 @@ tr.d0 td {
   					<c:set var="mainurl" value="${baseURL}${requestPath}"></c:set>
   				</c:otherwise>
   			</c:choose>
+		-->
+			
 		<div class="product-detail ${product.rootCategory}">
+		
+		<c:set var="req" value="${pageContext.request}" />
+  			<c:set var="baseURL" value="${fn:replace(req.requestURL, req.requestURI, '')}" />
+  			<c:set var="params" value="${requestScope['javax.servlet.forward.query_string']}"/>
+  			<c:set var="requestPath" value="${requestScope['javax.servlet.forward.request_uri']}"/>
+  			<c:choose>
+  				<c:when test="${not empty params}">	
+  					<c:set var="mainurl" value="${baseURL}${requestPath}?${params}"></c:set>
+  				</c:when>
+  				<c:otherwise>
+  					<c:set var="mainurl" value="${baseURL}${requestPath}"></c:set>
+  				</c:otherwise>
+  			</c:choose>
+		
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
-				<h3 class="company">${product.brand.brandname}</h3>
-				<h1 class="product-name">${product.productTitle}</h1>
+				<%-- <h3 class="company">${product.brand.brandname}</h3>
+				<h1 class="product-name">${product.productTitle}</h1> --%>
 				
-			<!-- //TPR-3752 Jewel Heading Added -->
-			<c:choose>
-  				<c:when test="${product.rootCategory=='FineJewellery'}">
-	  				<input id="jwelPDP" type="hidden" value="${product.rootCategory}"/>
-	  				<div class="product-desc">
-						<span class="key-label">
-								
-			  					<c:forEach var="classification" items="${mapConfigurableAttributes}"> 
-								</c:forEach>
-							
-							
-		  				</span>
-		  				<a href="" id="jewelleryProdDetail" class="more-link">View More</a>
-		  			</div>
-  				</c:when>
-  			</c:choose>
-  			
 
 				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name">${product.brand.brandname}</span></h3>
 				<a itemprop="url" href="${mainurl}">
@@ -198,6 +197,19 @@ tr.d0 td {
 				<h1 itemprop="name" class="product-name">${product.productTitle}</h1>
 				<meta itemprop="sku" content="${product_sku}"/>
 				</a>
+				<!-- //TPR-3752 Jewel Heading Added -->
+				<c:choose>
+  				<c:when test="${product.rootCategory=='FineJewellery'}">
+	  				<input id="jwelPDP" type="hidden" value="${product.rootCategory}"/>
+	  				<div class="product-desc">
+						<span class="key-label">
+			  					<c:forEach var="classification" items="${mapConfigurableAttributes}"> 
+								</c:forEach>
+		  				</span>
+		  				<a href="" id="jewelleryProdDetail" class="more-link">View More</a>
+		  			</div>
+  				</c:when>
+  			</c:choose>
 
 			</ycommerce:testId>
 
@@ -220,7 +232,7 @@ tr.d0 td {
 			<c:choose>
 				<c:when test="${not empty product.potentialPromotions[0].channels}">
 				
-				<c:forEach var="channel"
+					<c:forEach var="channel"
 							items="${product.potentialPromotions[0].channels}">
 				<c:if test="${channel eq 'Web'||channel eq ''||channel==null}">	
 			<div class="pdp-promo-title pdp-title">
@@ -229,7 +241,7 @@ tr.d0 td {
 			</div>
 			</c:if> <!-- end if check for channel web -->
 			</c:forEach>
-			</c:when>
+				</c:when>
 			
 			<c:otherwise>
 			<div class="pdp-promo-title pdp-title">
@@ -261,9 +273,6 @@ tr.d0 td {
 				</cms:pageSlot>
 				
 				
-				
-		<c:if test="${product.rootCategory != 'FineJewellery' || product.rootCategory != 'FashionJewellery'}">	
-				
 			<div class="SoldWrap">
 				<ycommerce:testId
 					code="productDetails_productNamePrice_label_${product.code}">
@@ -274,8 +283,6 @@ tr.d0 td {
 				<span id="fulFilledBySship"  style="display:none;"></span>
 				</div>
 			</div>
-			
-			
 			
 			
 			<c:if test="${isGigyaEnabled=='Y'}">
@@ -302,7 +309,6 @@ tr.d0 td {
 			</c:if>
 			
 			
-			</c:if>
 				
 		
 		
@@ -572,4 +578,3 @@ tr.d0 td {
 	var prop = '${mapConfigurableAttributes}';
 	prop =prop.replace(/[{}]/g, '');	
 </script>
-
