@@ -16,6 +16,7 @@ import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.user.UserService;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -108,6 +109,8 @@ public class TrackOrderPageController extends AbstractPageController
 	private MessageSource messageSource;
 	@Resource(name = "localeResolver")
 	private LocaleResolver localeResolver;
+	@Autowired
+	UserService userService;
 
 	/**
 	 * @Description This method is used to update the TULShortUrlreportModel 
@@ -128,7 +131,20 @@ public class TrackOrderPageController extends AbstractPageController
 		}
 		//Retrieve the short URL report model
 		final OrderShortUrlInfoModel shortUrlReport = googleShortUrlService.getShortUrlReportModelByOrderId(orderCode);
-		final boolean isAnonymous = userFacade.isAnonymousUser();
+		 boolean isAnonymous = false;
+		final OrderModel orderModel = mplOrderFacade.getOrderForAnonymousUser(orderCode);
+		if(null != orderModel && null != orderModel.getUser()) {
+			isAnonymous=userFacade.isAnonymousUser();
+		}
+		if(!isAnonymous) {
+			if(orderModel.getUser().equals(userService.getCurrentUser())) 
+			{
+				isAnonymous = false;
+			}else {
+				isAnonymous = true;
+			}
+		}
+		//final boolean isAnonymous = userFacade.isAnonymousUser();
 		if (null != shortUrlReport)
 		{
 			LOG.debug("Short url report model is not NUll .So update it");
@@ -143,12 +159,13 @@ public class TrackOrderPageController extends AbstractPageController
 			//else redirect to new non login short order details page
 			if (!isAnonymous)
 			{
-				int noOfLoginClicks = shortUrlReport.getLogin().intValue();
-				noOfLoginClicks += 1;
-				LOG.debug("No of login clicks===" + noOfLoginClicks);
-				shortUrlReport.setLogin(noOfLoginClicks);
-				modelService.save(shortUrlReport);
-				return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + orderCode;
+					int noOfLoginClicks = shortUrlReport.getLogin().intValue();
+					noOfLoginClicks += 1;
+					LOG.debug("No of login clicks===" + noOfLoginClicks);
+					shortUrlReport.setLogin(noOfLoginClicks);
+					modelService.save(shortUrlReport);
+					return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + orderCode;
+				
 			}
 			modelService.save(shortUrlReport);
 		}
@@ -175,10 +192,25 @@ public class TrackOrderPageController extends AbstractPageController
 				LOG.debug("In track order - orderCode ***"+orderCode);
 			}
 			//if the user is logged in redirect to exsiting account order detail page
-			if (!userFacade.isAnonymousUser())
-			{
-				return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + orderCode;
+			boolean isAnonymous = false;
+			final OrderModel orderModel = mplOrderFacade.getOrderForAnonymousUser(orderCode);
+			if(null != orderModel && null != orderModel.getUser()) {
+				isAnonymous=userFacade.isAnonymousUser();
 			}
+			if(orderModel.getUser().equals(userService.getCurrentUser())) {
+				isAnonymous = false;
+			}else {
+				isAnonymous = true;
+			}
+			if (!isAnonymous)
+				{
+				   	return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + orderCode;
+				}
+			
+//			if (!userFacade.isAnonymousUser())
+//			{
+//				return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + orderCode;
+//			}
 			final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForAnonymousUser(orderCode);
 
 			final Map<String, Map<String, List<AWBResponseData>>> trackStatusMap = new HashMap<>();

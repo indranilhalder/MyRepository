@@ -349,14 +349,17 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		}
 		final ReturnAddressInfo addressinfo = new ReturnAddressInfo();
 		final AddressModel changeDeliveryAddress = Order.getDeliveryAddress();
-		if (null != changeDeliveryAddress.getFirstname())
-		{
-			addressinfo.setShippingFirstName(changeDeliveryAddress.getFirstname());
+		if((MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DNC.equalsIgnoreCase(ticketType)) ){
+			if (null != changeDeliveryAddress.getFirstname())
+			{
+				addressinfo.setShippingFirstName(changeDeliveryAddress.getFirstname());
+			}
+			if (null != changeDeliveryAddress.getLastname())
+			{
+				addressinfo.setShippingLastName(changeDeliveryAddress.getLastname());
+			}
 		}
-		if (null != changeDeliveryAddress.getLastname())
-		{
-			addressinfo.setShippingLastName(changeDeliveryAddress.getLastname());
-		}
+	
 		if(MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_CDA.equalsIgnoreCase(ticketType)){
 		if (null != changeDeliveryAddress.getLine1())
 		{
@@ -393,10 +396,13 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			addressinfo.setPincode(changeDeliveryAddress.getPostalcode());
 		}
 		}
-		if (null != changeDeliveryAddress.getPhone1())
-		{
-			addressinfo.setPhoneNo(changeDeliveryAddress.getPhone1());
+		if((MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DMC.equalsIgnoreCase(ticketType))) {
+			if (null != changeDeliveryAddress.getPhone1())
+			{
+				addressinfo.setPhoneNo(changeDeliveryAddress.getPhone1());
+			}
 		}
+		
 
 
 		sendTicketRequestData.setAddressInfo(addressinfo);
