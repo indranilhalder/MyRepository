@@ -508,19 +508,27 @@ $(document).ready(
 			/*TPR-648 end*/
 			
 			
-			/*TPR-657 starts*/
-			$('.feedBack-block .search-feedback ul li').click(function(){				
-				var msg="search_feedback_start";
-				utag.link({"link_obj": this, "link_text": msg, "event_type" : msg
+			/*TPR-657 starts*/ /* TPR-4730 SERP*/
+			$('.feedbackYes.blue').click(function(){				
+				var msg="search_feedback_yes";
+				utag.link({"link_text": msg, "event_type" : msg
 						});
 					
 			});
-			$('.feedBack-block #feedBackFormNo .feed-back #submit_button').click(function(){				
-				var msg="search_feedback_submit";
+			
+			$('.feedbackNo.orange').click(function(){				
+				var msg="search_feedback_no";
+				utag.link({"link_text": msg, "event_type" : msg
+						});
+					
+			});	
+			
+			/*$('.feedBack-block #feedBackFormNo .feed-back #submit_button').click(function(){				
+				var msg="search_feedback_no_submit";
 				utag.link({"link_obj": this, "link_text": msg, "event_type" : msg
 						});
 					
-			});
+			});*/
 			/*TPR-657 ends*/
 			
 			/*TPR- 659 starts*/
