@@ -9,6 +9,7 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
+import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -66,7 +67,7 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 		addPrincipalInformation(source, target);
 		addConvinienceCharges(source, target);
 		addVoucherDiscount(source, target);
-		addPickupPersonDetails(source,target);
+		addPickupPersonDetails(source, target);
 
 		if (CollectionUtils.isNotEmpty(source.getAllPromotionResults()))
 		{
@@ -121,6 +122,11 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 		target.setStatus(source.getStatus());
 		target.setStatusDisplay(source.getStatusDisplay());
 		target.setType(source.getType());
+		final CurrencyModel currency = source.getCurrency();
+		if (null != currency)
+		{
+			target.setCurrencySymbol(currency.getSymbol());
+		}
 	}
 
 
@@ -313,7 +319,7 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 
 		target.setCouponDiscount(createPrice(source, Double.valueOf(discounts)));
 	}
-	
+
 	private void addPickupPersonDetails(final OrderModel source, final OrderData target)
 	{
 		target.setPickupName(source.getPickupPersonName());

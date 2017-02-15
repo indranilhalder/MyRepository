@@ -64,8 +64,14 @@ tr.d0 td {
    <c:if test="${not empty cartLevelDiscountModified}">
    	<li class="promo-msg"># ${cartLevelDiscountModified}</li>
    </c:if>
-   
-  <c:forEach items="${cartData.entries}" var="entry">
+  
+  <%---start changes for TISPRD-9417 --%> 
+  <%--<c:forEach items="${cartData.entries}" var="entry"> --%>
+  <c:forEach items="${cartData.entries}" var="entry" varStatus="status">
+   <c:if test="${status.last}">
+	<input type="hidden" value="${status.index}" id="ProductCount">			
+   </c:if>
+   <%---end changes for TISPRD-9417 --%>  
    <c:url value="${entry.product.url}" var="productUrl" />
    <input type="hidden" value="${entry.selectedSellerInformation.ussid}" id=ussid />
    <input type="hidden" value="${entry.product.code}" id="product" />

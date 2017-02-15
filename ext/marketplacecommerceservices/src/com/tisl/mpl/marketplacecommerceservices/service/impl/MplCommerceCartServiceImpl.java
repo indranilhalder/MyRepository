@@ -275,15 +275,10 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @param parameter
 	 * @return CommerceCartModification
 	 * @throws CommerceCartModificationException
+	 * @Override public CommerceCartModification addToCartWithUSSID(final CommerceCartParameter parameter) throws
+	 *           CommerceCartModificationException { return
+	 *           getMplDefaultCommerceAddToCartStrategyImpl().addToCart(parameter); }
 	 */
-
-	@Override
-	public CommerceCartModification addToCartWithUSSID(final CommerceCartParameter parameter)
-			throws CommerceCartModificationException
-	{
-		return getMplDefaultCommerceAddToCartStrategyImpl().addToCart(parameter);
-	}
-
 
 	/**
 	 * @description: It is responsible for fetching seller information
@@ -417,13 +412,12 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		{
 			for (final OrderEntryData entry : cartData.getEntries())
 			{
-				if (entry != null && entry.getSelectedUssid() != null)
+				if (entry.getSelectedUssid() != null)
 				{
 					final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entry
 							.getSelectedUssid());
 					if (sellerInfoModel != null
 							&& CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute())
-							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
 							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
 							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
 									.getCode())
@@ -504,6 +498,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	public Map<String, List<MarketplaceDeliveryModeData>> getDeliveryMode(final CartData cartData,
 			final List<PinCodeResponseData> omsDeliveryResponse, final CartModel cartModel) throws CMSItemNotFoundException
 	{
+
 		final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 		List<MarketplaceDeliveryModeData> deliveryModeDataList = null;
 		if (cartData != null && omsDeliveryResponse != null && !omsDeliveryResponse.isEmpty())
@@ -825,9 +820,6 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			final String endTime)
 	{
 		String description = "";
-		Integer leadTime = Integer.valueOf(0);
-		String startDay = "";
-		String endDay = "";
 		try
 		{
 
@@ -836,6 +828,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 			if (ussId != null && startTime != null && endTime != null)
 			{
+				Integer leadTime = Integer.valueOf(0);
+				String startDay = "";
+				String endDay = "";
 				startDay = StringUtils.isNotEmpty(startTime) ? startTime : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
 				endDay = StringUtils.isNotEmpty(endTime) ? endTime : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 
@@ -1633,7 +1628,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				parameter.setCreateNewEntry(false);
 				parameter.setUssid(sellerUssId);
 
-				final CommerceCartModification modification = addToCartWithUSSID(parameter);
+				//final CommerceCartModification modification = addToCartWithUSSID(parameter);
+				final CommerceCartModification modification = getMplDefaultCommerceAddToCartStrategyImpl().addToCart(parameter);
 				cartModificationData = getCartModificationConverter().convert(modification);
 
 				success = (cartModificationData != null) ? true : false;
@@ -1798,26 +1794,26 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	private PriceData formPriceData(final Double price, final CartModel cartModel) throws EtailNonBusinessExceptions
 	{
-		AbstractOrderModel cart = null;
-		final PriceData priceData = new PriceData();
+		//final AbstractOrderModel cart = null;
+		//final PriceData priceData = new PriceData();
 		PriceData formattedPriceData = new PriceData();
-		if (null == cartModel)
-		{
-			cart = getCartService().getSessionCart();
-		}
-		else
-		{
-			cart = cartModel;
-		}
+		//		if (null == cartModel)
+		//		{
+		//			cart = getCartService().getSessionCart();
+		//		}
+		//		else
+		//		{
+		//			cart = cartModel;
+		//		}
 		if (price != null)
 		{
-			priceData.setPriceType(PriceDataType.BUY);
-			priceData.setValue(new BigDecimal(price.doubleValue()));
-			priceData.setCurrencyIso(MarketplacecommerceservicesConstants.INR);
+			//priceData.setPriceType(PriceDataType.BUY);
+			//priceData.setValue(new BigDecimal(price.doubleValue()));
+			//priceData.setCurrencyIso(MarketplacecommerceservicesConstants.INR);
 			final CurrencyModel currency = new CurrencyModel();
-			currency.setIsocode(priceData.getCurrencyIso());
-			currency.setSymbol(cart.getCurrency().getSymbol());
-			formattedPriceData = getPriceDataFactory().create(PriceDataType.BUY, priceData.getValue(), currency);
+			currency.setIsocode(MarketplacecommerceservicesConstants.INR);
+			currency.setSymbol(cartModel.getCurrency().getSymbol());
+			formattedPriceData = getPriceDataFactory().create(PriceDataType.BUY, new BigDecimal(price.doubleValue()), currency);
 
 		}
 		return formattedPriceData;

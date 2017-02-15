@@ -133,7 +133,7 @@ import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.MplCouponWebFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.MplSlaveMasterFacade;
-import com.tisl.mpl.facades.account.address.AccountAddressFacade;
+import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
@@ -219,7 +219,7 @@ public class CartsController extends BaseCommerceController
 	@Resource
 	private MplCartWebService mplCartWebService;
 	@Resource
-	private AccountAddressFacade accountAddressFacade;
+	private MplAccountAddressFacade accountAddressFacade;
 	@Resource
 	private UserService userService;
 	@Resource(name = "mplCheckoutFacade")

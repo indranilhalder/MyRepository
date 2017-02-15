@@ -10099,7 +10099,9 @@ body .account .right-account .order-history .pagination li{
   max-height: 255px;
   overflow-y: auto;
 }
-.facet.js-facet.Colour .facet-values.js-facet-values.js-facet-form,.facet.js-facet.Size .facet-values.js-facet-values.js-facet-form {
+.facet.js-facet.Colour .facet-values.js-facet-values.js-facet-form,
+.facet.js-facet.size .facet-values.js-facet-values.js-facet-form,
+.facet.js-facet.Size .facet-values.js-facet-values.js-facet-form {
 	max-height: none;
 }
 @media ( max-width :650px) {
@@ -10260,7 +10262,8 @@ body .account .right-account .order-history .pagination li{
       -webkit-transition: border-color 0.3s;
       -moz-transition: border-color 0.3s;
       transition: border-color 0.3s; }
-  .listing-leftmenu .size::after {
+  .listing-leftmenu .size::after,
+  .listing-leftmenu .Size::after {
     clear: both;
     content: "";
     display: table; }
@@ -10270,7 +10273,8 @@ body .account .right-account .order-history .pagination li{
     width: 25%;
     padding: 4px;
     margin: 0; } */
-    .listing-leftmenu .size li a {
+    .listing-leftmenu .size li a,
+    .listing-leftmenu .Size li a  {
       border: 1px solid #b9b9b9;
       color: #b9b9b9;
       display: block;
@@ -10280,7 +10284,8 @@ body .account .right-account .order-history .pagination li{
       -webkit-transition: border-color 0.15s, color 0.15s;
       -moz-transition: border-color 0.15s, color 0.15s;
       transition: border-color 0.15s, color 0.15s; }
-    .listing-leftmenu .size li:hover a, .listing-leftmenu .size li.active a {
+    .listing-leftmenu .size li:hover a, .listing-leftmenu .size li.active a,
+    .listing-leftmenu .Size li:hover a, .listing-leftmenu .Size li.active a {
       border-color: #000;
       color: #000;
       -webkit-transition: border-color 0.3s, color 0.3s;
@@ -11145,6 +11150,7 @@ button.otherSellersFont {
     transition: border-color 0.3s;
 }
 .product-info .product-content .swatch .size,
+.product-info .product-content .swatch .Size,
 .product-info .product-content .swatch .qty {
     width: 49%;
     display: inline-block;
@@ -11152,15 +11158,18 @@ button.otherSellersFont {
     vertical-align: top;
 }
 .product-info .product-content .swatch .size p,
+.product-info .product-content .swatch .Size p,
 .product-info .product-content .swatch .qty p {
     margin-bottom: 10px
 }
 .product-info .product-content .swatch .size select,
+.product-info .product-content .swatch .Size select,
 .product-info .product-content .swatch .qty select {
     width: 80%
 }
 @media (max-width: 650px) {
     .product-info .product-content .swatch .size select,
+    .product-info .product-content .swatch .Size select,
     .product-info .product-content .swatch .qty select {
         width: 60%
     }
@@ -11170,6 +11179,7 @@ button.otherSellersFont {
     } */
 }
 .product-info .product-content .swatch .size a,
+.product-info .product-content .swatch .Size a,
 .product-info .product-content .swatch .qty a {
     width: 100%;
     display: block;
@@ -11181,6 +11191,7 @@ button.otherSellersFont {
         clear: both;
 }
 .product-info .product-content .swatch .size a:before,
+.product-info .product-content .swatch .Size a:before,
 .product-info .product-content .swatch .qty a:before {
     font-family: 'icomoon';
     -webkit-font-smoothing: antialiased;
@@ -12683,7 +12694,9 @@ div.pdp .reviews .toolbar select.white {
           .modal .content .product-info .product-content .color-swatch li:first-child {		
 			    margin-left: -1px;		
 			}
-			.modal .content .product-info .product-content .size,.modal .content .product-info .product-content .qty {		
+			.modal .content .product-info .product-content .size,
+			.modal .content .product-info .product-content .Size,
+			.modal .content .product-info .product-content .qty {		
    			 text-align: left; }
     .modal .content .product-info + .quickview-nav {
       display: inline-block;
@@ -18584,6 +18597,7 @@ font-weight: 600;
 	float:left;
 	margin:0px;
 } */
+.product-facet .facet.size .facet-list li a,
 .product-facet .facet.size .facet-list li a{
 	height:100%;
 	width:100%;
@@ -18593,6 +18607,7 @@ font-weight: 600;
 	color:#000;
 	border:1px solid #000;
 }
+ .product-facet .facet.size .facet-list li:hover a,
  .product-facet .facet.size .facet-list li:hover a {
  color:#A9143C;
  border-color:#A9143C;
@@ -24621,13 +24636,27 @@ div#cartItems.products p{
     color: #A9143C;
     font-weight: 500;
 }
+/*start changes TISPRD-8549*/
+/*@media(min-width:651px){
+	.totalResults h2{
+   width:125%;
+}
+}*/
+/* @media(min-width:651px){
+
+	.totalResults h2{
+   width:145%;
+   margin-left:-45%;
+}
+} */
 @media(min-width:791px){
 
 	.totalResults h2{
-   width:128%;
-   margin-left:-28%;
+   width:125%;
+   margin-left:-25%;
 }
 }
+/*end changes TISPRD-8549*/
 .checkout-order-summary address {
 	line-height:19px !important;
 }
@@ -26940,7 +26969,9 @@ clear:both;
 .errorMessage font{
 margin-bottom:10px;
 }
-.product-info .product-content .swatch .size, .product-info .product-content .swatch .qty {
+.product-info .product-content .swatch .size, 
+.product-info .product-content .swatch .Size,
+.product-info .product-content .swatch .qty {
 	position: relative;
 	z-index: 1;
 }
@@ -27094,10 +27125,16 @@ top: 14px;
     transition: border-color 0.3s; */
 }
 
-.listing-leftmenu .Size .facet-list .filter-size .facet-mark {
+.listing-leftmenu .size .facet-list .filter-Size .facet-mark,
+.listing-leftmenu .Size .facet-list .filter-size .facet-mark,
+.listing-leftmenu .size .facet-list .filter-size .facet-mark,
+.listing-leftmenu .Size .facet-list .filter-Size .facet-mark {
 	display:none !important;
 }
-.listing-leftmenu .Size .facet-list .filter-size .facet-text {
+.listing-leftmenu .size .facet-list .filter-Size .facet-text,
+.listing-leftmenu .Size .facet-list .filter-size .facet-text,
+.listing-leftmenu .size .facet-list .filter-size .facet-text,
+.listing-leftmenu .Size .facet-list .filter-Size .facet-text {
 	display: table-cell;
     float: none;
     vertical-align: middle;
@@ -27109,7 +27146,11 @@ top: 14px;
     color: #b9b9b9;
     font-size: 12px;
 }
-.listing-leftmenu .Size .facet-list .filter-size form input[type="button"] {
+/*start changes for INC_10172*/
+.listing-leftmenu .size .facet-list .filter-Size form input[type="button"], 
+.listing-leftmenu .Size .facet-list .filter-size form input[type="button"],
+.listing-leftmenu .size .facet-list .filter-size form input[type="button"],
+.listing-leftmenu .Size .facet-list .filter-Size form input[type="button"]  {
     display: table-cell;
     vertical-align: middle;
     width: 60px;
@@ -27123,14 +27164,20 @@ top: 14px;
     padding: 0;
     white-space: normal;
 }
-.listing-leftmenu .Size .facet-list .filter-size form input[type="button"]:hover{
+.listing-leftmenu .size .facet-list .filter-Size form input[type="button"]:hover, 
+.listing-leftmenu .Size .facet-list .filter-size form input[type="button"]:hover,
+.listing-leftmenu .size .facet-list .filter-size form input[type="button"]:hover,
+.listing-leftmenu .Size .facet-list .filter-Size form input[type="button"]:hover{
 	border-color: #000;
     -webkit-transition: border-color .5s;
     -moz-transition: border-color .5s;
     transition: border-color .5s;
     color: #000 !important;
 }
-.product-facet .facet.Size .facet-list li.filter-size {
+.product-facet .facet.size .facet-list li.filter-Size, 
+.product-facet .facet.Size .facet-list li.filter-size,
+.product-facet .facet.size .facet-list li.filter-size, 
+.product-facet .facet.Size .facet-list li.filter-Size {
     padding: 0 8px 0 0;
     width: auto;
     height: 42px;
@@ -27139,10 +27186,17 @@ top: 14px;
     margin-left: -4px;
     display: inline-block;
 } 
-.listing-leftmenu .Size .facet-list .filter-size form {
+/*end changes for INC_10172*/
+.listing-leftmenu .size .facet-list .filter-Size form,
+.listing-leftmenu .Size .facet-list .filter-size form,
+.listing-leftmenu .size .facet-list .filter-size form,
+.listing-leftmenu .Size .facet-list .filter-Size form {
     display: table;
 }
-.listing-leftmenu .Size .facet-list .filter-size .facet-text:hover { 
+.listing-leftmenu .size .facet-list .filter-Size .facet-text:hover,
+.listing-leftmenu .Size .facet-list .filter-size .facet-text:hover,
+.listing-leftmenu .size .facet-list .filter-size .facet-text:hover,
+.listing-leftmenu .Size .facet-list .filter-Size .facet-text:hover { 
 	 border-color: #000;
     -webkit-transition: border-color 0.5s;
     -moz-transition: border-color 0.5s;
@@ -59125,7 +59179,410 @@ display: none;
 /*Checkout delivery page price column hide ends*/
 .page-productDetails .trending{
 	clear:both;
+
 }
+
+/*start changes for INC_11120*/
+body.page-multiStepCheckoutSummaryPage .smartbanner,
+body.page-checkout-login .smartbanner,
+body.page-cartPage .smartbanner{
+	display:none;
+}
+/* start change for header in cart */
+/* body.page-multiStepCheckoutSummaryPage,
+body.page-checkout-login,
+body.page-cartPage{
+	margin-top:-80px;
+}  */
+/* end change for header in cart */
+/*end changes for INC_11120*/
+
+
+
+/*live chat start*/
+/* Previous different code
+.gwc-chat-head .gwc-chat-title div{
+	color:#5A5757;
+	font-size:2em;
+}
+.gwc-chat-body{
+	height:310px;
+	width:352px;
+	background-color:#F5F5F5;
+}
+
+
+.gwc-chat-embedded-window{
+	border:1px solid #D4D2D2;
+	border-radius: 4px;
+	width:355px;
+	height:418px;
+}
+Previous different code end*/
+.gwc-chat-agent-cmsg{
+	text-align:right;
+	/* font-weight:700; */
+	font-weight:500;
+}
+
+.box-shadow-100{
+  height: 34px;
+  width: 100%;
+  border-radius: 3px;
+  border: 1px solid transparent;
+  border-top: none;
+  border-bottom: 1px solid #DDD;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.39), 0 -1px 1px #FFF, 0 1px 0 #FFF;
+}
+
+.box-shadow {
+  height: 34px;
+  width: auto;
+  border-radius: 3px;
+  border: 1px solid transparent;
+  border-top: none;
+  border-bottom: 1px solid #DDD;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.39), 0 -1px 1px #FFF, 0 1px 0 #FFF;
+}
+
+.gwc-chat-message-form{
+	bottom:30px !important;
+}
+.gwc-chat-message-input{
+	height:40px !important;
+	width:248px !important;
+	/*box-shadow: none;  */
+    border-color: #dfd1d5 !important;
+    /* border-radius: 0px; */
+}
+.gwc-chat-message-container{
+	height:244px !important;
+	bottom:88px !important;
+	top:auto !important;
+	border-radius:4px !important;
+}
+.gwc-chat-embedded-window *{
+	font-family:Montserrat !important;
+}
+.gwc-chat-head .gwc-chat-title{
+	/* color:#5A5757;
+	font-size:2em; */
+	background: url(../images/cc_forum.png) no-repeat 0 20px;
+    padding: 10px 0 0 30px;
+    font-weight: 600;
+    font-size: 28px;
+    color: #4a4a4a !important;
+    display: inline-block !important;
+}
+.gwc-chat-head .gwc-chat-title #dCustEmail {
+	position: relative;
+    top: -14px;
+}
+.gwc-chat-head .gwc-chat-title div{
+    font: inherit;
+}
+.gwc-chat-body{
+	height:349px !important;
+	width:352px !important;
+	overflow:auto !important;
+    overflow-x: hidden !important;
+}
+.gwc-chat-control:hover{
+    border-color: transparent;
+}
+.gwc-chat-controls,
+.gwc-chat-label {
+	display:inline !important;
+}
+.gwc-chat-label{
+	color:#857d7b !important;
+	padding-left: 7px;
+	position: relative;
+	top: 29px;
+	left: 8px;
+	transition: all 0.3s ease;
+}
+ .gwc-chat-label.focused {
+	top: 0;
+	left: 0;
+} 
+
+
+.gwc-chat-controls {
+	width: 100%;
+}
+.gwc-chat-controls input{
+	font-size: 14px !important;
+    border: 1px solid #dfd1d5;
+    padding: 8px !important;
+    height: auto !important ;
+    width: 100%;
+    display: block;
+    margin-bottom: 0;
+     color: #555 !important;
+   /*   box-shadow:none;
+    border-radius:0px !important;*/
+}
+.gwc-chat-head {
+    background: none !important;
+	padding-top:10px !important;
+}
+.gwc-chat-embedded-window{
+	border:none !important;
+	border-radius: 5px !important;
+	width:355px !important;
+	height: 418px !important;
+	background: #eee !important;
+	right:1px !important;
+	bottom:-3px !important;
+}
+.gwc-chat-button{
+	border:1px solid #7323dc;
+	background:#7323dc;
+	color:#fff;
+}
+.gwc-chat-button:hover{
+	
+}
+.gwc-chat input.gwc-chat-registration-input{
+	margin-top:3px !important;
+	margin-bottom:10px !important;
+	padding-left:4px !important;
+	box-shadow: inset 0 1px 2px rgba(0,0,0,.39),0 -1px 1px #FFF,0 1px 0 #FFF !important;
+	line-height: 18px;
+}
+.gwc-chat-registration-ta {
+    width: 100%;
+	min-height:80px;
+	margin-top:6px;
+}
+.gwc-chat-branding {
+	display:none;
+}
+.gwc-chat-logo {
+	display:none;
+}
+
+.gwc-chat-button {
+        padding: 4px 8px;
+		width:100%;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+        background-clip: padding-box;
+        border: 1px solid #cacaca;
+        color: #fff;
+        font-weight: 700!important;
+        cursor: pointer;
+        background-color: #5da1bc;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#66b1cf), to(#5da1bc));
+        background-image: -webkit-linear-gradient(top, #66b1cf, #5da1bc);
+        background-image: -moz-linear-gradient(top, #66b1cf, #5da1bc);
+        background-image: -o-linear-gradient(top, #66b1cf, #5da1bc);
+        background-image: linear-gradient(to bottom, #66b1cf, #5da1bc)
+    }
+    .gwc-chat-button:hover {
+        background: #66b1cf
+    }
+    .gwc-chat-button:active {
+        background-color: #5da1bc;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#5da1bc), to(#66b1cf));
+        background-image: -webkit-linear-gradient(top, #5da1bc, #66b1cf);
+        background-image: -moz-linear-gradient(top, #5da1bc, #66b1cf);
+        background-image: -o-linear-gradient(top, #5da1bc, #66b1cf);
+        background-image: linear-gradient(to bottom, #5da1bc, #66b1cf);
+        background-clip: padding-box
+    }
+    .gwc-chat-button-light {
+        color: #4A5965;
+        font-weight: 400!important;
+        background-color: #f4f4f4;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#f4f4f4), to(#edefef));
+        background-image: -webkit-linear-gradient(top, #f4f4f4, #edefef);
+        background-image: -moz-linear-gradient(top, #f4f4f4, #edefef);
+        background-image: -o-linear-gradient(top, #f4f4f4, #edefef);
+        background-image: linear-gradient(to bottom, #f4f4f4, #edefef)
+    }
+    .gwc-chat-button-light:hover {
+        background-color: #fff;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f7f7f7));
+        background-image: -webkit-linear-gradient(top, #fff, #f7f7f7);
+        background-image: -moz-linear-gradient(top, #fff, #f7f7f7);
+        background-image: -o-linear-gradient(top, #fff, #f7f7f7);
+        background-image: linear-gradient(to bottom, #fff, #f7f7f7)
+    }
+    .gwc-chat-button-light:active {
+        background-color: #eaeaea;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#eaeaea), to(#fff));
+        background-image: -webkit-linear-gradient(top, #eaeaea, #fff);
+        background-image: -moz-linear-gradient(top, #eaeaea, #fff);
+        background-image: -o-linear-gradient(top, #eaeaea, #fff);
+        background-image: linear-gradient(to bottom, #eaeaea, #fff)
+    }
+    	.gcb-startChat,.gcb-startChat:hover {		
+	background-image:none !important;		
+	cursor: none !important;		
+}
+#chatReason.form-control{
+	font-size: 14px;
+    border: 1px solid #dfd1d5;
+    padding: 2px 8px;
+    /*  height: auto;*/
+    width: 100% !important;
+    display: block;
+    margin-bottom: 0;
+    /*  color:#000;*/
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.39),0 -1px 1px #FFF,0 1px 0 #FFF !important;
+    border-radius:3px !important;
+	       /*  width: 100%;
+	        border: 1px solid #dfd1d5;
+	        line-height: 1;
+	        height: 40px;
+	        outline: 0;
+	        padding-left: 10px;
+	        margin-top: 3px;
+           margin-bottom: 10px; */
+          
+}
+.gwc-chat-control
+{
+    width: 20px !important;
+    height: 20px !important;
+}
+.gwc-chat-control.gwc-chat-control-close{
+    background-size:100%;
+	background-image: url("../images/close.png");
+	background-repeat: no-repeat;
+}
+.gwc-chat-control.gwc-chat-control-close img{
+	opacity: 0;
+}
+.gwc-chat-control{
+    background-size:100%;
+	background-image: url("../images/minimize.png");
+	background-repeat: no-repeat;
+}
+.gwc-chat-control img{
+	opacity: 0;
+}
+.gwc-chat-message>div>div:first-child{
+    background-size:100%;
+    width: 20px !important;
+    height: 20px !important;
+	background-image: url("../images/profile.png") !important;
+	background-repeat: no-repeat;
+	margin-top:-2px;
+}
+.gwc-chat-message>div>div:first-child + .gwc-chat-message-text{
+   color:#A9143C !important;
+    width: 283px !important;
+}
+.gwc-chat-message.gwc-chat-systemMessage>div.gwc-chat-message-text
+{
+	color:#a8a8a8 !important;
+}
+.gwc-chat-message-text{
+	float: none !important;
+	font-weight: 500 !important;
+}
+/* .gwc-chat-control.gwc-chat-control-close,.gwc-chat-control,.gwc-chat-message>div>div:first-child:hover{
+	cursor:none !important;
+} */
+#gcbChatSkipRegistration{
+	border: 2px solid #A9144C;
+	line-height:10px;
+}
+#gcbChatRegister,#gcbChatSkipRegistration{
+	width:120px !important;
+	margin: 5px 5px 0 3px;
+	font-weight:500 !important;
+}
+#gcbChatRegister{
+	line-height: 1;
+	background: #a91e3e !important;
+}
+.gwc-chat-registration-buttons{
+	    margin-top: 18px;
+	    display: inline-block;
+	    margin-left: 35px;
+}
+.gwc-chat-window-controls{
+width: 45px;
+text-align: right !important;
+}
+.gwc-chat-content-area{
+margin-top: 10px !important;
+}
+#btnSend{
+border-radius: 3px !important;
+background-color: #a91e3e !important;
+font-weight:500 !important;
+}
+
+
+.gwc-chat-embedded-window.minimized{
+	width: 169px !important;
+    height: 40px !important;
+    bottom: 35px !important;
+    border-radius: 0 !important;
+    border: 1px solid #4a4a4a !important;
+    border-bottom: none;
+    overflow: hidden;
+    background: #fff !important;
+}
+.gwc-chat-embedded-window.minimized .gwc-chat,.gwc-chat-embedded-window.minimized .gwc-chat .gwc-chat-control-minimize {
+	height: 100%;
+}
+.gwc-chat-embedded-window.minimized .gwc-chat-control-minimize div {
+	display: none;
+}
+.gwc-chat-embedded-window.minimized .gwc-chat-control-minimize div.gwc-chat-title {
+	display: none !important;
+}
+.gwc-chat-embedded-window.minimized .gwc-chat-control-minimize div.chat {
+	display: block;
+    position: relative;
+/*     top: -14px; */
+    font-size: 14px;
+}
+.gwc-chat-embedded-window.minimized .gwc-chat-control-minimize div.chat span.cicon {
+	    margin-right: 15px;
+    width: 18px;
+}
+.gwc-chat-embedded-window.minimized .gwc-chat-control-minimize .gwc-chat-control.gwc-chat-control-close {
+	width: 17px !important;
+    height: 17px !important;
+    display: block;
+    position: absolute;
+    top: 3px;
+    right: 3px;
+}
+.gwc-chat-embedded-window.minimized span.unread {
+	display: inline-block;
+    color: #fff;
+    background: #a9143c;
+    border-radius: 100%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    padding-top: 4px;
+    position: absolute;
+    top: -2px;
+    right: 10px;
+    font-size: 10px;
+}
+ /* .gwc-chat-controls-container{
+    margin-top: -15px;
+}  */ 
+/* .gwc-chat-validation-error,gwc-chat-label gwc-chat-label-invalid.focused{
+ margin-top: -15px
+} */
+/*live chat end*/
+
+/* UF-25 */
+.gig-rating-readReviewsLink_quick a{
+	color: #a9143c;
+}
+
 
 
 /* UI-UX Fixes for PLP start */
@@ -59189,6 +59646,7 @@ body.page-productGrid .product-tile .image .quick-bag-both.quickview span:before
 	body.page-productGrid .product-tile .image .new,body.page-productGrid .newExclusiveElement .new{
 	    left: 0px !important;			/* UF-12 */
 }
+
 }
 
 

@@ -36,6 +36,7 @@ import com.tisl.mpl.model.UnregisteredUserRestrictionModel;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.InventoryReservationService;
+import com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.InventoryReservListResponse;
 import com.tisl.mpl.wsdto.InventoryReservResponse;
@@ -135,6 +136,9 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;	
+	
+	@Autowired
+	private MplDefaultCommerceAddToCartStrategyImpl mplDefaultCommerceAddToCartStrategyImpl;
 
 	/**
 	 * Adds the to market place cart.
@@ -169,8 +173,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 									cartParameter.setQuantity(quantity);
 									cartParameter.setProduct(productModel);
 									
-									((MplCommerceCartService) getCommerceCartService())
-											.addToCartWithUSSID(cartParameter);
+									mplDefaultCommerceAddToCartStrategyImpl.addToCart(cartParameter);;
 									cart.setCartReservationDate(null);
 								} catch (CommerceCartModificationException e) {
 									LOG.error("Exception calculating cart ["
@@ -1142,6 +1145,21 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	public void setVoucherService(final VoucherService voucherService)
 	{
 		this.voucherService = voucherService;
+	}
+
+	/**
+	 * @return the mplDefaultCommerceAddToCartStrategyImpl
+	 */
+	public MplDefaultCommerceAddToCartStrategyImpl getMplDefaultCommerceAddToCartStrategyImpl() {
+		return mplDefaultCommerceAddToCartStrategyImpl;
+	}
+
+	/**
+	 * @param mplDefaultCommerceAddToCartStrategyImpl the mplDefaultCommerceAddToCartStrategyImpl to set
+	 */
+	public void setMplDefaultCommerceAddToCartStrategyImpl(
+			MplDefaultCommerceAddToCartStrategyImpl mplDefaultCommerceAddToCartStrategyImpl) {
+		this.mplDefaultCommerceAddToCartStrategyImpl = mplDefaultCommerceAddToCartStrategyImpl;
 	}
 		
 	
