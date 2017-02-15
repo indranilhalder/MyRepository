@@ -105,14 +105,14 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends AddressCreateWidge
 		addressDiv.setParent(customerAddressContent);
 		addressDiv.setSclass("createNewAddress");
 		final Label addresslabel = new Label(LabelUtils.getLabel(widget,
-				"Full Address"));
+				"address"));
 		addresslabel.setParent(addressDiv);
 		final Textbox addressField = createTextbox(addressDiv);
 		addressField.setSclass("address1ForAddressField");
 		addressField.setMaxlength(120);
 
 		// Creates Address Line2 field
-		/*final Br br4 = new Br();
+		final Br br4 = new Br();
 		br4.setParent(customerAddressContent);
 		final Div address2Div = new Div();
 		address2Div.setParent(customerAddressContent);
@@ -135,7 +135,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends AddressCreateWidge
 		address3label.setParent(address3Div);
 		final Textbox address3Field = createTextbox(address3Div);
 		address3Field.setSclass("address3ForAddressField");
-		address3Field.setMaxlength(30);*/
+		address3Field.setMaxlength(30);
 
 		// Creates City/District field
 		final Br br6 = new Br();
@@ -259,7 +259,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends AddressCreateWidge
 
 		createButton.addEventListener(
 				"onClick",
-				createCreateClickEventListener(widget, firstNameField, lastNameField, addressField,
+				createCreateClickEventListener(widget, firstNameField, lastNameField, addressField, address2Field, address3Field,
 						cityField, postalCodeField, stateFieldListBox, mobileNumberPrefixField, mobileNumberField, listbox, countryListbox));
 
 		return content;
@@ -340,14 +340,14 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends AddressCreateWidge
 	 */
 	private EventListener createCreateClickEventListener(
 			final InputWidget<DefaultMasterDetailListWidgetModel<TypedObject>, CustomerController> widget,
-			final Textbox firstNameField, final Textbox lastNameField, final Textbox addressField,
-			 final Textbox cityField, final Textbox postalCodeField, final Listbox stateFieldListBox,
+			final Textbox firstNameField, final Textbox lastNameField, final Textbox addressField, final Textbox address2Field,
+			final Textbox address3Field, final Textbox cityField, final Textbox postalCodeField, final Listbox stateFieldListBox,
 			final Textbox mobileNumberPrefixField, final Textbox mobileNumberField, final Listbox listbox,
 			final Listbox countryListbox)
 	{
 		// TODO Auto-generated method stub
-		return new MarketplaceCreateClickEventListener(widget, firstNameField, lastNameField, addressField,
-				 cityField, postalCodeField, stateFieldListBox, mobileNumberPrefixField, mobileNumberField, listbox,
+		return new MarketplaceCreateClickEventListener(widget, firstNameField, lastNameField, addressField, address2Field,
+				address3Field, cityField, postalCodeField, stateFieldListBox, mobileNumberPrefixField, mobileNumberField, listbox,
 				countryListbox);
 	}
 
@@ -363,8 +363,8 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends AddressCreateWidge
 		private final Textbox firstNameField;
 		private final Textbox lastNameField;
 		private final Textbox addressField;
-		/*private final Textbox address2Field;
-		private final Textbox address3Field;*/
+		private final Textbox address2Field;
+		private final Textbox address3Field;
 		private final Textbox cityField;
 		private final Textbox postalCodeField;
 		private final Textbox mobileNumberField;
@@ -373,8 +373,8 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends AddressCreateWidge
 
 		public MarketplaceCreateClickEventListener(
 				final InputWidget<DefaultMasterDetailListWidgetModel<TypedObject>, CustomerController> widget,
-				final Textbox firstNameField, final Textbox lastNameField, final Textbox addressField,
-				final Textbox cityField, final Textbox postalCodeField, final Listbox stateFieldListBox,
+				final Textbox firstNameField, final Textbox lastNameField, final Textbox addressField, final Textbox address2Field,
+				final Textbox address3Field, final Textbox cityField, final Textbox postalCodeField, final Listbox stateFieldListBox,
 				final Textbox mobileNumberPrefixField, final Textbox mobileNumberField, final Listbox listbox,
 				final Listbox countryListbox)
 		{
@@ -385,8 +385,8 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends AddressCreateWidge
 			this.firstNameField = firstNameField;
 			this.lastNameField = lastNameField;
 			this.addressField = addressField;
-			/*this.address2Field = address2Field;
-			this.address3Field = address3Field;*/
+			this.address2Field = address2Field;
+			this.address3Field = address3Field;
 			this.cityField = cityField;
 			this.postalCodeField = postalCodeField;
 			this.mobileNumberField = mobileNumberField;
@@ -396,14 +396,14 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends AddressCreateWidge
 		@Override
 		public void onEvent(final Event event) throws InterruptedException {
 			// TODO Auto-generated method stub
-			handleCreateClickEvent(widget, firstNameField, lastNameField, addressField, cityField,
+			handleCreateClickEvent(widget, firstNameField, lastNameField, addressField, address2Field, address3Field, cityField,
 					postalCodeField, stateFieldListBox, mobileNumberPrefixField, mobileNumberField, listbox, countryListbox);
 		}
 
 		private void handleCreateClickEvent(
 				final InputWidget<DefaultMasterDetailListWidgetModel<TypedObject>, CustomerController> widget,
-				final Textbox firstNameField, final Textbox lastNameField, final Textbox addressField,
-				final Textbox cityField, final Textbox postalCodeField, final Listbox stateFieldListBox,
+				final Textbox firstNameField, final Textbox lastNameField, final Textbox addressField, final Textbox address2Field,
+				final Textbox address3Field, final Textbox cityField, final Textbox postalCodeField, final Listbox stateFieldListBox,
 				final Textbox mobileNumberPrefixField, final Textbox mobileNumberField, final Listbox listbox,
 				final Listbox countryListbox) throws InterruptedException
 		{
