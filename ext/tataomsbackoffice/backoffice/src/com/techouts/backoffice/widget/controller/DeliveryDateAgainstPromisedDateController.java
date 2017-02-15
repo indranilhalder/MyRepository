@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -17,8 +18,11 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
+import org.zkoss.zul.Filedownload;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Listhead;
+import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
 
@@ -59,6 +63,7 @@ public class DeliveryDateAgainstPromisedDateController extends DefaultWidgetCont
 	private Listbox listBoxData;
 	private Date fromDate;
 	private Date toDate;
+	private List<DeliveredVsPromised> listOfSshipResponse;
 
 	@Override
 	public void initialize(final Component comp)
@@ -161,9 +166,66 @@ public class DeliveryDateAgainstPromisedDateController extends DefaultWidgetCont
 	private void displayDeliveredVsPromisedData(final SShipTxnInfo shipTxnInfo)
 	{
 		final DeliveredVsPromisedReport deliveredVsPromisedReport = reportsGenarateFacade.getDeliveredVsPromisedTxns(shipTxnInfo);
-		final List<DeliveredVsPromised> listOfSshipResponse = deliveredVsPromisedReport.getDeliveredVsPromised();
-		final ListModelList<DeliveredVsPromised> sshipResponce = new ListModelList<DeliveredVsPromised>(listOfSshipResponse);
-		listBoxData.setModel(sshipResponce);
+		listOfSshipResponse = deliveredVsPromisedReport.getDeliveredVsPromised();
+		listBoxData.setModel(new ListModelList<DeliveredVsPromised>(listOfSshipResponse));
 		listBoxData.setItemRenderer(new DeliveredVsPromisedRenderer());
 	}
+
+	/**
+	 * export csv file from listview
+	 *
+	 * @throws InterruptedException
+	 */
+	@ViewEvent(componentID = "savecsv", eventName = Events.ON_CLICK)
+	public void getCsv() throws InterruptedException
+	{
+
+		exportToCsv(listBoxData, listOfSshipResponse,
+				"DeliveryDateAgainstPromisedReport_" + startDate.replace("-", "") + "_" + endDate.replace("-", ""));
+
+	}
+
+	public static void exportToCsv(final Listbox listbox, final List<DeliveredVsPromised> listOfTrackingReport,
+			final String fileName) throws InterruptedException
+	{
+		final String saperator = ",";
+		final StringBuffer stringBuff = new StringBuffer("");
+
+		if (listOfTrackingReport == null || listbox.getItems() == null || listOfTrackingReport.isEmpty())
+		{
+			LOG.info(
+					"****************************Delivery Date against promised date Report List Is Empty***************************");
+			Messagebox.show("List is empty", "Empty Data", Messagebox.OK, Messagebox.ERROR);
+			return;
+		}
+		for (final Object head : listbox.getHeads())
+		{
+			for (final Object header : ((Listhead) head).getChildren())
+			{
+				stringBuff.append(((Listheader) header).getLabel().concat(saperator));
+			}
+			stringBuff.append("\n");
+		}
+		listOfTrackingReport.forEach(new Consumer<DeliveredVsPromised>()
+		{
+			@Override
+			public void accept(final DeliveredVsPromised deliveredVsPromised)
+			{
+
+				stringBuff.append(deliveredVsPromised.getOrderId().concat(saperator));
+				stringBuff.append(deliveredVsPromised.getOrderLineId().concat(saperator));
+				stringBuff.append((deliveredVsPromised.getPromisedDate() == null) ? "".concat(saperator)
+						: deliveredVsPromised.getPromisedDate().toString().concat(saperator));
+				stringBuff.append((deliveredVsPromised.getDeliveryAttempt() == null) ? "".concat(saperator)
+						: deliveredVsPromised.getDeliveryAttempt().toString().concat(saperator));
+				stringBuff.append((deliveredVsPromised.getDeliveredDate() == null) ? "".concat(saperator)
+						: deliveredVsPromised.getDeliveredDate().toString().concat(saperator));
+				stringBuff.append(deliveredVsPromised.getSlaveId().concat(saperator));
+				stringBuff.append(deliveredVsPromised.getSellerId().concat(saperator));
+				stringBuff.append("\n");
+			}
+		});
+		Filedownload.save(stringBuff.toString().getBytes(), "text/plain", fileName.concat(".csv"));
+	}
 }
+

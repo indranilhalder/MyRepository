@@ -55,6 +55,11 @@
 							</vlayout>
 						</hlayout>
 					<separator />
+					<hbox pack="center">
+						<button id="savecsv" sclass="cng-action-icon"
+							style="margin-left:2px;padding:0px 3px 0px 0px;font-size:12px"
+							image="${wr}/images/csv_text.png" label="Download" />
+					</hbox>
 					<listbox id="listBoxData"  emptyMessage="No result found in the result" mold="paging" pageSize="10">
 						<listhead sizable="true">
 							<listheader style="text-align:left"
