@@ -32022,7 +32022,10 @@ img.r2-app-brand-img {
 	    line-height: 18px;
 	    position: relative;
 	    padding: 10px 0 0;
-	    margin-bottom: 10px;
+	    margin-bottom: 5px;
+	}
+	.accordin .item:last-child{
+		border-bottom: none;
 	}
 	.accordin .item .title {
 	    font-size: 14px;
@@ -32037,6 +32040,20 @@ img.r2-app-brand-img {
 	    font-weight: bold;
 	    font-size: 14px !important;
 	    text-decoration: none;
+	}
+	.accordin .item .title a:after{
+		color: #d02454;
+	    content: "\f107";
+	    display: inline-block;
+	    font-size: 28px;
+	    position: absolute;
+	    right: 8px;
+	    top: 0;
+	    font-family: "FontAwesome";
+	    font-weight: normal;
+	}
+	.accordin .item.active .title a:after{
+		content: "\f106";
 	}
 	.accordin .item .detail {
 	    display: none;
