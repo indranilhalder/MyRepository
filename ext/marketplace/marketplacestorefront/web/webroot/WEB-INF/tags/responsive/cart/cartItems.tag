@@ -1187,7 +1187,7 @@ tr.d0 td {
             </ycommerce:testId></span></li>
           </ul>
          <!--  UF-68 and UF-69 -->
-           <table>
+           <table class="checkOutBtnBtm">
            	<tr><%-- <td>
            		<div id="changePinDiv">
 				<p><spring:theme code="product.pincode.input" /></p>
