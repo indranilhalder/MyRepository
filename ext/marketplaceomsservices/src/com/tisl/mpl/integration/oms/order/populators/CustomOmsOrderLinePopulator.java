@@ -457,13 +457,13 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 		}
 		if (source.getGiveAway() != null && source.getGiveAway().booleanValue())
 		{
-			target.setIsaGift(MarketplaceomsservicesConstants.YES);
-			target.setIsAFreebie(MarketplaceomsservicesConstants.YES);
+			target.setIsaGift(MarketplaceomsservicesConstants.TRUE);
+			target.setIsAFreebie(MarketplaceomsservicesConstants.TRUE);
 		}
 		else
 		{
-			target.setIsaGift(MarketplaceomsservicesConstants.NO);
-			target.setIsAFreebie(MarketplaceomsservicesConstants.NO);
+			target.setIsaGift(MarketplaceomsservicesConstants.FALSE);
+			target.setIsAFreebie(MarketplaceomsservicesConstants.FALSE);
 		}
 
 		target.setOrderLineId((source.getOrderLineId() != null) ? source.getOrderLineId() : source.getTransactionID());
