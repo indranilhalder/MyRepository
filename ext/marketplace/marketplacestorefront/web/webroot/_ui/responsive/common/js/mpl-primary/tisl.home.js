@@ -374,6 +374,7 @@ function getBrandsYouLoveAjaxCall() {
                 renderHtml += "</div>";
                 $('#brandsYouLove').html(renderHtml);
                 getBrandsYouLoveContentAjaxCall(defaultComponentId);
+	            }
             },
             error: function() {
                 // globalErrorPopup('Failure!!!');
@@ -463,7 +464,8 @@ function getBrandsYouLoveAjaxCall() {
 
             }
         });
-    }
+ 
+}
     // Get Brands You Love Content AJAX
 
 function getBrandsYouLoveContentAjaxCall(id) {
