@@ -38,22 +38,18 @@ $(document).ready(function(){
    	 var stock=$("#stock").val();
    	 var quantity= $("#qty").val();
   	 var isShowSize= $("#showSize").val();
-  	 var productCodeArray=[];
-   	 productCodeArray.push(productCode);
+  	 
   	 
    	 //Changes for pdp CR
    	if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
   		/* alert("please select size !"+isShowSize); */
    		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 		$("#addToCartFormTitle").show();
+		//For pdp analytics changes
+		utag.link({"error_type":"size_not_selected"});
  	    return false;
    	 }
-   		utag.link({
-			link_obj: this,
-			link_text: 'addtobag' ,
-			event_type : 'addtobag_winner_seller' ,
-			product_sku : productCodeArray              // Product code passed as an array for Web Analytics - INC_11511  fix
-		});
+   	 
    	/* if( $("#variant,#sizevariant option:selected").val()=="#")
  	  {
  		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
