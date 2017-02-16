@@ -200,10 +200,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	public List<PaymentTypeModel> getPaymentModes(final String store) throws EtailNonBusinessExceptions
 	{
 		//getting the Payment types
-		final List<PaymentTypeModel> paymentTypes = getMplPaymentDao().getPaymentTypes(store);
+		//final List<PaymentTypeModel> paymentTypes = getMplPaymentDao().getPaymentTypes(store);
 
 		//returning the payment types
-		return paymentTypes;
+		return getMplPaymentDao().getPaymentTypes(store);
 	}
 
 

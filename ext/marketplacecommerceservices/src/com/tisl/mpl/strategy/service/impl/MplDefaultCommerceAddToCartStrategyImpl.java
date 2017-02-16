@@ -5,7 +5,7 @@ package com.tisl.mpl.strategy.service.impl;
 
 import de.hybris.platform.commerceservices.order.CommerceCartModification;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
-import de.hybris.platform.commerceservices.order.impl.AbstractCommerceAddToCartStrategy;
+import de.hybris.platform.commerceservices.order.impl.DefaultCommerceAddToCartStrategy;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartEntryModel;
@@ -16,6 +16,7 @@ import de.hybris.platform.ordersplitting.model.StockLevelModel;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -40,11 +41,11 @@ import com.tisl.mpl.strategy.service.MplCheckCartLevelStrategy;
  * @author TCS
  *
  */
-public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAddToCartStrategy implements
+public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddToCartStrategy implements
 		MplCommerceAddToCartStrategy
 {
 
-	private final int maxOrderQuantityConstant = 10;//
+	private final String maxOrderQuantityConstant = "mpl.cart.maximumConfiguredQuantity.lineItem";
 	protected static final Logger LOG = Logger.getLogger(MplDefaultCommerceAddToCartStrategyImpl.class);
 	@Resource(name = "mplDeliveryCostService")
 	private MplDeliveryCostService mplDeliveryCostService;
@@ -57,11 +58,11 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 
 	/*
 	 * @Desc Adding product to cart
-	 * 
+	 *
 	 * @param parameter
-	 * 
+	 *
 	 * @return CommerceCartModification
-	 * 
+	 *
 	 * @throws CommerceCartModificationException
 	 */
 	@Override
@@ -76,13 +77,13 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 			final CartModel cartModel = parameter.getCart();
 			final ProductModel productModel = parameter.getProduct();
 			final long quantityToAdd = parameter.getQuantity();
-			final UnitModel unit = parameter.getUnit();
+			//final UnitModel unit = parameter.getUnit();
 			final String ussid = parameter.getUssid();
 			cartModel.setCheckUssid(ussid);
 			final boolean forceNewEntry = parameter.isCreateNewEntry();
 			final PointOfServiceModel deliveryPointOfService = parameter.getPointOfService();
 			CommerceCartModification localCommerceCartModification1;
-			UnitModel orderableUnit = unit;
+			UnitModel orderableUnit = parameter.getUnit();
 			if (orderableUnit == null)
 			{
 				try
@@ -140,8 +141,9 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 				}
 
 
-				getModelService().save(cartEntryModel);
-				setSellerInformationinCartEntry(cartEntryModel, productModel);
+				//getModelService().save(cartEntryModel);
+				//setSellerInformationinCartEntry(cartEntryModel, productModel);
+				setSellerInformationinCartEntry(cartEntryModel, productModel.getSellerInformationRelator());
 				getCommerceCartCalculationStrategy().calculateCart(cartModel);
 				getModelService().save(cartEntryModel);
 
@@ -198,27 +200,24 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 
 	/**
 	 * @param cartEntryModel
-	 * @param productModel
+	 * @param sellerCollection
 	 */
 	private AbstractOrderEntryModel setSellerInformationinCartEntry(final CartEntryModel cartEntryModel,
-			final ProductModel productModel)
+			final Collection<SellerInformationModel> sellerCollection)
 	{
-		if (CollectionUtils.isNotEmpty(productModel.getSellerInformationRelator()))
+		//if (CollectionUtils.isNotEmpty(collection.getSellerInformationRelator()))
+		if (CollectionUtils.isNotEmpty(sellerCollection))
 		{
-			for (final SellerInformationModel sellerModel : productModel.getSellerInformationRelator())
+			for (final SellerInformationModel sellerModel : sellerCollection)
 			{
 				if (StringUtils.isNotEmpty(cartEntryModel.getSelectedUSSID())
 						&& StringUtils.isNotEmpty(sellerModel.getSellerArticleSKU())
-						&& cartEntryModel.getSelectedUSSID().equals(sellerModel.getSellerArticleSKU())
+						&& StringUtils.equalsIgnoreCase(cartEntryModel.getSelectedUSSID(), sellerModel.getSellerArticleSKU())
 						&& StringUtils.isNotEmpty(sellerModel.getSellerName()))
 				{
-
 					cartEntryModel.setSellerInfo(sellerModel.getSellerName());
-
 					getModelService().save(cartEntryModel);
 					break;
-
-
 				}
 			}
 		}
@@ -227,19 +226,19 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 
 	/*
 	 * @Desc Fetching eligible quantity for a ussid which can be added in cart
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @param productModel
-	 * 
+	 *
 	 * @param quantityToAdd
-	 * 
+	 *
 	 * @param pointOfServiceModel
-	 * 
+	 *
 	 * @param ussid
-	 * 
+	 *
 	 * @return long
-	 * 
+	 *
 	 * @throws CommerceCartModificationException
 	 */
 	private long getAllowedCartAdjustmentForProduct(final CartModel cartModel, final ProductModel productModel,
@@ -258,7 +257,9 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 		if (!isMaxOrderQuantitySet(maxOrderQuantity))
 		{
 			// maxOrderQuantity = new Integer(maxOrderQuantityConstant); Critical Sonar fixes
-			maxOrderQuantity = Integer.valueOf(maxOrderQuantityConstant);
+			//maxOrderQuantity = Integer.valueOf(maxOrderQuantityConstant);
+
+			maxOrderQuantity = Integer.valueOf(getConfigurationService().getConfiguration().getString(maxOrderQuantityConstant));
 		}
 		final long newTotalQuantityAfterProductMaxOrder = Math.min(newTotalQuantityAfterStockLimit, maxOrderQuantity.longValue());
 
@@ -268,11 +269,11 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 
 	/*
 	 * @Desc Fetching available stock information for a ussid from Stock Level
-	 * 
+	 *
 	 * @param ussid
-	 * 
+	 *
 	 * @return long
-	 * 
+	 *
 	 * @throws CommerceCartModificationException
 	 */
 	private long getAvailableStockLevel(final String ussid) throws CommerceCartModificationException
@@ -280,11 +281,11 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 		Long availableStockLevel = Long.valueOf(0);
 		if (ussid != null)
 		{
-			final List<StockLevelModel> stockLevelList = mplStockDao.getStockDetail(ussid);
+			final StockLevelModel stockLevelList = mplStockDao.getStockDetail(ussid);
 			//if (stockLevelList != null && stockLevelList.size() > 0)
-			if (CollectionUtils.isNotEmpty(stockLevelList))
+			if (null != stockLevelList)
 			{
-				availableStockLevel = Long.valueOf(stockLevelList.get(0).getAvailable());
+				availableStockLevel = Long.valueOf(stockLevelList.getAvailable());
 			}
 		}
 		else
@@ -328,11 +329,5 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 		this.mplStockDao = mplStockDao;
 	}
 
-	/**
-	 * @return the maxOrderQuantityConstant
-	 */
-	public int getMaxOrderQuantityConstant()
-	{
-		return maxOrderQuantityConstant;
-	}
+
 }

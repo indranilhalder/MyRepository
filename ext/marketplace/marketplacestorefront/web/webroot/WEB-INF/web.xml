@@ -17,6 +17,14 @@
 
 
 	<!-- filters -->
+	<!-- <filter>
+	<filter-name>nodeWarmerServletFilter</filter-name><filter-class>com.hybris.yps.nodewarmer.filter.NodeWarmerServletFilter</filter-class>
+		<init-param>
+		<param-name>bypassableHosts</param-name>
+		<param-value>localhost,10.145.34.70,127.0.0.1, 0:0:0:0:0:0:0:1, ::1</param-value>
+		</init-param>
+	</filter> -->
+	
 	<filter>
 		<filter-name>XSSFilter</filter-name>
 		<filter-class>de.hybris.platform.servicelayer.web.XSSFilter</filter-class>
@@ -63,6 +71,14 @@
 	</filter>
 
 	<!-- filter mappings -->
+	<!-- Newly Added for ypsnodewarmer -->
+	<!-- <filter-mapping>
+ 		<filter-name>nodeWarmerServletFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping> -->
+	<!-- ******Newly Added for ypsnodewarmer ends***************-->
+	
+	
 	<filter-mapping>
 		<filter-name>XSSFilter</filter-name>
 		<url-pattern>/*</url-pattern>
@@ -216,7 +232,6 @@
 	<!-- Session timeout of 30 minutes -->
 		<!-- <cookie-config>
 			<name>SID</name>
-
 		</cookie-config>  -->
 	   	
 	  	 <cookie-config>

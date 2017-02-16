@@ -21,6 +21,13 @@ tr.d0 td {
      po.src = 'https://apis.google.com/js/client:plusone.js';
      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
  });
+ <!-- Change for INC_10528 -->
+ $(document).ready(function(){
+	 $('.gig-rating-readReviewsLink_pdp').css( 'cursor', 'pointer' );
+	 $(".gig-rating-readReviewsLink_pdp").click(function() {
+		    $('html,body').animate({scrollTop: $("#ReviewSecion").offset().top},'slow');
+		});
+ });
  
       $("#sellersSkuListId").val("");
       $("#skuIdForED").val("");
@@ -362,7 +369,8 @@ tr.d0 td {
 		</c:when>
 		<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
 			<div class="trending"  id="ia_products_bought_together"></div>
-			<div class="trending"  id="ia_products_similar"></div>
+			<!-- Change for INC_10849 -->
+			<!-- <div class="trending"  id="ia_products_similar"></div> -->
 		</c:when>
 </c:choose>
 <!-- For Infinite Analytics End -->
@@ -386,6 +394,12 @@ tr.d0 td {
 <c:otherwise>
 </c:otherwise> 
 </c:choose>	
+ <!-- Change for INC_10849 -->
+<c:choose>
+		<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
+			<div class="trending"  id="ia_products_similar"></div>
+		</c:when>
+</c:choose>
 	
 	
 	<!-- Made For Living Section Starts -->

@@ -987,11 +987,15 @@ function editAddress(addressId) {
     
  // Validation of Account address page
     function validateAccountAddress() {
-    	   
+    	 //Trimming all the fields before validation
+    	$("form#addressForm :input[type=text]").each(function(){
+   		 var input = $(this);    
+   		 $(this).val($(this).val().trim());    		     		
+   	});  
         var selectedValueState = document.getElementById('stateListBox').selectedIndex;
 //        var regexCharSpace = /^[a-zA-Z ]*$/;
         var regexCharSpace = /^[a-zA-Z]+$/;
-//        var regexCharSpace = /^[a-zA-Z]+(\s[a-zA-Z]+)?$/;
+       var regexCharWithSpace = /^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/;
         var regexSpace = /\s/;
         var equalNoCheck = /^\D*(\d)(?:\D*|\1)*$/;
         var flagFn = true; 
@@ -1071,7 +1075,7 @@ function editAddress(addressId) {
         	document.getElementById("erraddressCity").innerHTML = "<font color='#ff1c47' size='2'>Please enter city</font>";
         	flagCity = false;
         }
-        else if (!regexCharSpace.test(document.getElementById("townCity").value)) { 
+        else if (!regexCharWithSpace.test(document.getElementById("townCity").value)) { 
         	$("#errddressCity").css({"display":"block"});
         	document.getElementById("erraddressCity").innerHTML = "<font color='#ff1c47' size='2'>City should contain alphabets only</font>";
         	flagCity = false;
