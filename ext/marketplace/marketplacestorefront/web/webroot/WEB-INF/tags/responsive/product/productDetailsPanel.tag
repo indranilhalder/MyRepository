@@ -219,8 +219,9 @@ tr.d0 td {
 			</div>
 			
 			<!--  Added for displaying offer messages other than promotion, TPR-589 -->
+			<!--INC144313502-->
 				 <div>
-					<a class="pdp-promo-title-link">View more</a>
+					<a class="pdp-promo-title-link" style="display:none">View more</a>
 				</div>	
 				
 			<!-- TISPRM-97 ends -->

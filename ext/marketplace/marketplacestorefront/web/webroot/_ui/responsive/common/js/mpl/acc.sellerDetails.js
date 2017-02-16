@@ -606,18 +606,20 @@ function focusOnElement() {
 				dataType : "json",
 				success : function(data) {		
 						var pagelevelOffer = "<div class='pdp-offer-title pdp-title'><b>OFFER: </b><span id='offerDetailId'></span></div>" ;	
-						var modallevelOffer = "<div class='pdp-offerDesc pdp-promo right'><h3 class='product-name highlight desk-offer'><span id='message'></span></h3><h3 class='offer-price'></h3><div class='show-offerdate'><p><span id='messageDet'></span></p><div class='offer-date'><div class='from-date'><span class='from'>From:</span><span class='date-time' id='offerstartyearTime'></span><span class='date-time' id='offerstarthourTime'></span></div><div class='to-date'><span class='to'>To:</span><span class='date-time' id='offerendyearTime'></span><span class='date-time' id='offerendhourTime'></span></div></div></div></div>";
-					   	if (data['offerMessageMap'] != null) {			
+
+						var modallevelOffer = "<div class='pdp-offerDesc pdp-promo offercalloutdesc'><h3 class='product-name highlight desk-offer'><span id='message'></span></h3><h3 class='offer-price'></h3><div class='show-offerdate'><p><span id='messageDet'></span></p><div class='offer-date'><div class='from-date'><span class='from'>From:</span><span class='date-time' id='offerstartyearTime'></span><span class='date-time' id='offerstarthourTime'></span></div><div class='to-date'><span class='to'>To:</span><span class='date-time' id='offerendyearTime'></span><span class='date-time' id='offerendhourTime'></span></div></div></div></div>";
+						if (data['offerMessageMap'] != null) {			
+
 						    var offerMessageMap = data['offerMessageMap'];	
 							var x=$('<div/>');	
 							var message = null;
 							var messageDet = null;
 							var messageStartDate = null;
 							var messageEndDate = null;		
-							$(".pdp-promo-title-link").css("display","none");			
+							//$(".pdp-promo-title-link").css("display","none");			
 							if($("#promolist").val()!=""||!$.isEmptyObject(offerMessageMap)){
 								$("#promolist").val(offerMessageMap);
-								$(".pdp-promo-title-link").css("display", "block");		
+								//$(".pdp-promo-title-link").css("display", "block");		
 							} 
 									
 												
@@ -639,12 +641,14 @@ function focusOnElement() {
 								 
 								 if(sellerId == key)
 								 {	
-									if(!$.isEmptyObject(offerMessageMap)){			
+									if(!$.isEmptyObject(offerMessageMap)){	
+										    $(".pdp-promo-title-link").show();
 											if($(".pdp-promo-title").length > 0){
-												$(pagelevelOffer).insertAfter(".pdp-promo-title");
-												$(modallevelOffer).insertAfter(".show-date");
+												$(pagelevelOffer).insertAfter(".pdp-promo-block");
+												$(modallevelOffer).insertAfter(".pdp-promoDesc");
 											}else{				
-												$(".pdp-promo-block").append(pagelevelOffer);
+												//$(".pdp-promo-block").append(pagelevelOffer);
+												$(pagelevelOffer).insertAfter(".pdp-promo-block");
 												$(".offer-block").append(modallevelOffer);					
 											}			
 									}	
@@ -690,9 +694,9 @@ function focusOnElement() {
 								 }
 								 else
 								 {
-									 if($(".pdp-promo-title").length == 0) {
-										 $(".pdp-promo-title-link").css("display","none");		
-									 }
+									// if($(".pdp-promo-title").length == 0) {
+										// $(".pdp-promo-title-link").css("display","none");		
+									// }
 									 x.append("<p>"+message+"</p>");								 
 								 }				
 								})	
