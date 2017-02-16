@@ -13,6 +13,7 @@
 <c:set var="finejewellery"><spring:theme code='product.finejewellery'/></c:set>
 <c:choose>
 <c:when test ="${product.rootCategory!=finejewellery && product.rootCategory!='FashionJewellery'}">
+<div id="ReviewSecion" class="reviews">
 
 	<div class="header">
 	      <h3>Your Rating</h3>

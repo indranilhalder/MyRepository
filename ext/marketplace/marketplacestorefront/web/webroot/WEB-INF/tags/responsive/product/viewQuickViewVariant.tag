@@ -194,7 +194,7 @@
 	</a> --%>
 
 	<!-- End Size guide Pop-up -->
-	<form:form action="/" method="get" id="variantForm"  class="sizeVariantForm ${product.rootCategory}" >
+	<form:form action="/" method="get" id="variantForm"  class="sizeVariantForm quickview-popup ${product.rootCategory}" >
 
     <p class="sizetext"><spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if></p>
 		

@@ -46148,11 +46148,9 @@ float: right;
 }
 
 .product-info .size span, 
-.product-info .FineJewellery span, 
-.product-info .FashionJewellery span, 
 .product-info .size span+a,
-.product-info .FineJewellery span+a,
-.product-info .FashionJewellery span+a {
+.quickview-popup.FineJewellery .finejewellery-size+a,
+.quickview-popup.FashionJewellery .finejewellery-size+a {
 	display: inline-block;
 	font-size: 14px;
 	font-weight: bold;
@@ -46168,15 +46166,10 @@ float: right;
 .product-info .size span {
 	border-right: 2px solid #9b9b9b;
 }
-.product-info .FineJewellery span, 
-.product-info .FashionJewellery span{
-	margin: 0 0 10px;
-	padding: 0 10px 0 0;
-}
 .product-info .FineJewellery .size span,
 .product-info .FashionJewellery .size span,
-.product-info .FineJewellery .sizetext,
-.product-info .FashionJewellery .sizetext{
+.quickview .FineJewellery .sizetext,
+.quickview .FashionJewellery .sizetext{
 	border-right: none;
 }
 
@@ -46194,16 +46187,14 @@ float: right;
 	text-transform: initial;
 	font-size: 100%;
 }
-.product-info .size span+a,
-.product-info .FineJewellery span+a,
-.product-info .FashionJewellery span+a {
+.product-info .size span+a, 
+.quickview-popup.FineJewellery .finejewellery-size+a,
+.quickview-popup.FashionJewellery .finejewellery-size+a{
 	position: relative;
 	color: #a9143c; /* TISPRD-7672 & TISPRD-7593 */
 }
 
-.product-info .size span+a:after, 
-.product-info .FineJewellery span+a:after,
-.product-info .FashionJewellery span+a:after {
+.product-info .size span+a:after, .quickview-popup .finejewellery-size+a:after {
 	background: #a8103d none repeat scroll 0 0;
 	border-radius: 10px;
 	color: #fff;
@@ -47695,7 +47686,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 .Star .overall .Bottom > ul > li.active:after{font-family: "FontAwesome";}
  
 .product-detail .Emi {
-	float: left;
+	/* float: left;    ///// Issue for quick view EMI Box //// */
 	position: relative;
 	margin: -15px 0 0;
 }
