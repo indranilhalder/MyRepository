@@ -1020,9 +1020,12 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 				 utag.link({"link_text":parentItem+"_"+lastItem,"event_type" : navigationClick});
 			 }); 
 			 
-			/* TPR-4729 | SERP  starts*/
+			/* TPR-4729 | SERP |Need help starts*/
 			 
 			 $(document).on('click',"#up",function(){
 				 utag.link({link_text: 'need_help_clicked', event_type : 'need_help_clicked'});
 			 });
 			 /* TPR-4729 | SERP  ends*/ 
+
+			 
+			 

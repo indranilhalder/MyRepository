@@ -702,13 +702,18 @@ function donotShowAll()
 		}
 
 $(document).on("click",".plp-wishlist",function(e){
-	
+	/*TPR-4723*/
+	if(typeof utag !="undefined"){
+		utag.link({link_text: "add_to_wishlist_serp" , event_type : "add_to_wishlist_serp"});
+		}
 	addToWishlistForPLP($(this).data("product"),this);
 	return false;
 })
 		function addToWishlistForPLP(productURL,el) {
 			var loggedIn=$("#loggedIn").val();
 			var productCode=urlToProductCode(productURL);
+			var productarray=[];
+			productarray.push(productCode);
 			var wishName = "";
 			var requiredUrl = ACC.config.encodedContextPath + "/search/"
 					+ "addToWishListInPLP";	
@@ -750,6 +755,10 @@ $(document).on("click",".plp-wishlist",function(e){
 								$(".wishAlreadyAddedPlp").removeClass("active")
 							},3000)
 						}
+						/*TPR-4723*/
+						if(typeof utag !="undefined"){
+							utag.link({product_sku_wishlist : productarray });
+							}	
 						
 					},
 					error : function(xhr, status, error){
