@@ -59609,6 +59609,14 @@ body.page-productGrid .listing-leftmenu .checkbox-menu>a,body.page-productGrid .
 	margin-top:	83px !important;
 }
 
+/* UF-68 UF-69 */
+
+body.page-cartPage .cart-total-block ul.totals{
+	margin-right: 50px;
+}
+
+/* UF-68 UF-69 */
+
 }
 
 /* UF-58 for PLP ends */
@@ -59661,9 +59669,6 @@ body.page-cartPage .cartBottomCheck input#pinCodeButtonIdsBtm{
 	width:148px;
 	height:40px;
 	font-size: 10px;
-}
-body.page-cartPage .cart-total-block ul.totals{
-	margin-right: 50px;
 }
 
 /* UF-68 UF-69 */
