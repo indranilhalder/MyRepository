@@ -30,16 +30,25 @@ var buyboxskuId='';
 <c:set var="validTabs" value="${VALID_TABS}" />
 <div class="nav-wrapper">
 <ul class="nav pdp">
-	<c:if test="${fn:contains(validTabs, 'stylenote')}">
+<!-- 	TISPRD-7604 fix start -->
+<%-- 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
 		<li id="tabs_styleNotes" class="active">
 			 <spring:theme code="product.product.styleNotes" />
 		</li>
-	</c:if>
+	</c:if> --%>
+<!-- 	TISPRD-7604 fix end -->
 	<c:if test="${fn:contains(validTabs, 'details')}">
-		<li id="tabs_details" >
+		<li id="tabs_details" class="active">
 			 <spring:theme code="product.product.details" />
 		</li>
 	</c:if>
+<!-- 	TISPRD-7604 fix start -->
+	<c:if test="${fn:contains(validTabs, 'stylenote')}">
+		<li id="tabs_styleNotes">
+			 <spring:theme code="product.product.styleNotes" />
+		</li>
+	</c:if>
+<!-- 	TISPRD-7604 fix end -->
 	<c:if test="${fn:contains(validTabs, 'description')}">
 		<li id="tabs_description" class="active">
 			<spring:theme code="product.product.description" />

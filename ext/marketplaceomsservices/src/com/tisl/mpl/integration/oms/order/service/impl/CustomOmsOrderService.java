@@ -81,16 +81,26 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 		{
 			order = getOrderConverter().convert(orderModel);
 			LOG.debug("Before CRM order call for : " + order.getOrderId());
-			getOrdercreation().orderCreationDataToCRM(order);
-			LOG.debug("After CRM order call for : " + order.getOrderId());
-			if (orderModel.getUser() != null && null != orderModel.getUser().getUid())
+			// SprintPaymentFixes:- To avoid 26 digit Malformed Ordert ID processing
+			if (!order.getOrderId().contains("-"))
 			{
-				LOG.debug("Customer update after order place for Order : " + order.getOrderId() + " and Customer"
-						+ orderModel.getUser().getUid());
-				getMplCustomerWebService().customerModeltoWsData((CustomerModel) orderModel.getUser(), "U", false);
-				LOG.debug("Customer update success");
+				getOrdercreation().orderCreationDataToCRM(order);
+				LOG.debug("After CRM order call for : " + order.getOrderId());
+				if (orderModel.getUser() != null && null != orderModel.getUser().getUid())
+				{
+					LOG.debug("Customer update after order place for Order : " + order.getOrderId() + " and Customer"
+							+ orderModel.getUser().getUid());
+					getMplCustomerWebService().customerModeltoWsData((CustomerModel) orderModel.getUser(), "U", false);
+					LOG.debug("Customer update success");
+				}
+				result = new OrderPlacementResult(OrderPlacementResult.Status.SUCCESS);
 			}
-			result = new OrderPlacementResult(OrderPlacementResult.Status.SUCCESS);
+			else
+			{
+				LOG.error("CreateOmsOrder -- Wrong Order Processed to CRM Order ID:- " + order.getOrderId());
+				result = new OrderPlacementResult(OrderPlacementResult.Status.FAILED, new Exception("Malformed OrderId to CRM:: "
+						+ order.getOrderId()));
+			}
 		}
 		catch (final Exception ex)
 		{
@@ -120,31 +130,42 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 			httpErrorCode = getConfigurationService().getConfiguration()
 					.getString(MarketplacecclientservicesConstants.OMS_HTTP_ERROR_CODE, "404,503").trim();
 			order = getOrderConverter().convert(orderModel);
-			//Order request xml and response xml changes made for Audit purpose
-			final String requestXml = getOrderAuditXml(order);
-			if (StringUtils.isNotEmpty(requestXml))
+			// SprintPaymentFixes:- To avoid 26 digit Malformed Ordert ID processing
+			if (!order.getOrderId().contains("-"))
 			{
-				orderModel.setRequestXML(requestXml);
+				//Order request xml and response xml changes made for Audit purpose
+				final String requestXml = getOrderAuditXml(order);
+				if (StringUtils.isNotEmpty(requestXml))
+				{
+					orderModel.setRequestXML(requestXml);
+				}
+				else
+				{
+					LOG.debug("createOmsOrder requestXml is null or empty ");
+				}
+				getModelService().save(orderModel);
+
+				final Order orderResponse = getOrderRestClient().createOrder(order);
+				final String responseXml = getOrderAuditXml(orderResponse);
+
+				if (StringUtils.isNotEmpty(responseXml))
+				{
+					orderModel.setResponseXML(responseXml);
+				}
+				else
+				{
+					LOG.debug("createOmsOrder responseXml is null or empty ");
+				}
+				getModelService().save(orderModel);
+				result = new OrderPlacementResult(OrderPlacementResult.Status.SUCCESS);
 			}
 			else
 			{
-				LOG.debug("createOmsOrder requestXml is null or empty ");
-			}
-			getModelService().save(orderModel);
+				LOG.error("CreateOmsOrder -- Wrong Order Processed to OMS Order ID:- " + order.getOrderId());
+				result = new OrderPlacementResult(OrderPlacementResult.Status.ERROR, new Exception("Malformed OrderId to OMS:: "
+						+ order.getOrderId()));
 
-			final Order orderResponse = getOrderRestClient().createOrder(order);
-			final String responseXml = getOrderAuditXml(orderResponse);
-
-			if (StringUtils.isNotEmpty(responseXml))
-			{
-				orderModel.setResponseXML(responseXml);
 			}
-			else
-			{
-				LOG.debug("createOmsOrder responseXml is null or empty ");
-			}
-			getModelService().save(orderModel);
-			result = new OrderPlacementResult(OrderPlacementResult.Status.SUCCESS);
 		}
 		catch (final RestClientException rce)
 		{
@@ -319,9 +340,9 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 
 	/*
 	 * @Desc Used for generating xml
-	 *
+	 * 
 	 * @param order
-	 *
+	 * 
 	 * @return String
 	 */
 	protected String getOrderAuditXml(final Order order)
@@ -572,18 +593,4 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 	{
 		this.configurationService = configurationService;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.tisl.mpl.integration.oms.order.service.impl.MplOmsOrderService#createCrmOrder(de.hybris.platform.core.model
-	 * .order.OrderModel)
-	 */
-	//	@Override
-	//	public OrderPlacementResult createCrmOrder(OrderModel paramOrderModel)
-	//	{
-	//		// YTODO Auto-generated method stub
-	//		return null;
-	//	}
 }

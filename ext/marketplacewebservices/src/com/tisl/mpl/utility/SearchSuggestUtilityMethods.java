@@ -813,6 +813,7 @@ public class SearchSuggestUtilityMethods
 				{
 					sellingItemDetail.setInStockFlag(productData.getInStockFlag());
 				}
+
 				//CumulativeStock
 				sellingItemDetail.setCumulativeStockLevel(Boolean.valueOf(productData.isStockValue()));
 				if (null == productData.getIsOfferExisting())

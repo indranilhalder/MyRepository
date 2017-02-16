@@ -67,7 +67,16 @@ public class CheckOrderAction extends AbstractSimpleDecisionAction<OrderProcessM
 		{
 			if (getCheckOrderService().check(order))
 			{
-				return Transition.OK;
+				// SprintPaymentFixes:-:- To handle missing paymentTransaction set the Order status to Payment_Pending
+				if (getCheckOrderService().checkMissintPaymentTrancsaction(order))
+				{
+					return Transition.OK;
+				}
+				else
+				{
+					setOrderStatus(order, OrderStatus.PAYMENT_TIMEOUT);
+					return Transition.NOK;
+				}
 			}
 			else
 			{
@@ -76,7 +85,6 @@ public class CheckOrderAction extends AbstractSimpleDecisionAction<OrderProcessM
 			}
 		}
 	}
-
 
 	protected CheckOrderService getCheckOrderService()
 	{

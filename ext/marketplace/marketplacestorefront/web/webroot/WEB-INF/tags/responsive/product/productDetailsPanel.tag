@@ -21,6 +21,13 @@ tr.d0 td {
      po.src = 'https://apis.google.com/js/client:plusone.js';
      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
  });
+ <!-- Change for INC_10528 -->
+ $(document).ready(function(){
+	 $('.gig-rating-readReviewsLink_pdp').css( 'cursor', 'pointer' );
+	 $(".gig-rating-readReviewsLink_pdp").click(function() {
+		    $('html,body').animate({scrollTop: $("#ReviewSecion").offset().top},'slow');
+		});
+ });
  
       $("#sellersSkuListId").val("");
       $("#skuIdForED").val("");
@@ -92,7 +99,7 @@ tr.d0 td {
 
 
 
-<div class="pdp">
+<div itemscope itemtype="http://schema.org/Product" class="pdp">
 	<div class="product-info wrapper">
 		<div class="product-image-container">
 			<cms:pageSlot position="ConfigureImagesCount" var="component">
@@ -149,10 +156,26 @@ tr.d0 td {
 		</div>
 		
 		<div class="product-detail">
+			<c:set var="req" value="${pageContext.request}" />
+  			<c:set var="baseURL" value="${fn:replace(req.requestURL, req.requestURI, '')}" />
+  			<c:set var="params" value="${requestScope['javax.servlet.forward.query_string']}"/>
+  			<c:set var="requestPath" value="${requestScope['javax.servlet.forward.request_uri']}"/>
+  			<c:choose>
+  				<c:when test="${not empty params}">	
+  					<c:set var="mainurl" value="${baseURL}${requestPath}?${params}"></c:set>
+  				</c:when>
+  				<c:otherwise>
+  					<c:set var="mainurl" value="${baseURL}${requestPath}"></c:set>
+  				</c:otherwise>
+  			</c:choose>
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
-				<h3 class="company">${product.brand.brandname}</h3>
-				<h1 class="product-name">${product.productTitle}</h1>
+				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name">${product.brand.brandname}</span></h3>
+				<a itemprop="url" href="${mainurl}">
+				<!-- For TPR-4358 -->
+				<h1 itemprop="name" class="product-name">${product.productTitle}</h1>
+				<meta itemprop="sku" content="${product_sku}"/>
+				</a>
 			</ycommerce:testId>
 
 			<ycommerce:testId
@@ -231,8 +254,9 @@ tr.d0 td {
 					<li class="empty"></li>
 					<li class="empty"></li>
 					<li class="empty"></li>
-					<span class="gig-rating-readReviewsLink_pdp"> <spring:theme
-							code="rating.noreviews" /></span>
+				<%-- 	<span class="gig-rating-readReviewsLink_pdp"> <spring:theme
+							code="rating.noreviews" /></span> --%>
+							<span class="gig-rating-readReviewsLink_pdp"></span>			<!-- UF-29 -->
 					<!-- OOTB Code Commented to facilitate Rest Call -->
 					<%-- <c:choose>
 				<c:when test="${not empty product.ratingCount}">
@@ -343,7 +367,8 @@ tr.d0 td {
 		</c:when>
 		<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
 			<div class="trending"  id="ia_products_bought_together"></div>
-			<div class="trending"  id="ia_products_similar"></div>
+			<!-- Change for INC_10849 -->
+			<!-- <div class="trending"  id="ia_products_similar"></div> -->
 		</c:when>
 </c:choose>
 <!-- For Infinite Analytics End -->
@@ -367,6 +392,12 @@ tr.d0 td {
 <c:otherwise>
 </c:otherwise> 
 </c:choose>	
+ <!-- Change for INC_10849 -->
+<c:choose>
+		<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
+			<div class="trending"  id="ia_products_similar"></div>
+		</c:when>
+</c:choose>
 	
 	
 	<!-- Made For Living Section Starts -->
@@ -456,4 +487,5 @@ tr.d0 td {
 </div>
 </div>
 </div>
+
 

@@ -203,7 +203,8 @@
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="container_pincode_logistics_report">
      </explorer-tree:navigation-node>
-         <explorer-tree:navigation-node id="tship_sship_assignment_collapseble"></explorer-tree:navigation-node>
+     <explorer-tree:navigation-node  id="pincodes_upload">
+     <explorer-tree:navigation-node id="tship_sship_assignment_collapseble"></explorer-tree:navigation-node>
       <explorer-tree:navigation-node id="delivery_address_request_widget_report"></explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="lp_and_awbedit_collapseble"></explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="short_url_tracking_collapseble"></explorer-tree:navigation-node>
@@ -213,9 +214,10 @@
       <explorer-tree:navigation-node id="logistcs_delivery_report"></explorer-tree:navigation-node>
         <explorer-tree:navigation-node  id="unmapped_pincodes_report">
      </explorer-tree:navigation-node>
-  </explorer-tree:explorer-tree>
+     <explorer-tree:navigation-node  id="shipment_data_upload">
+     </explorer-tree:navigation-node>
+	</explorer-tree:explorer-tree>
 </context>
-
 
 
 	 <!--  To change OMS explorer tree -->
@@ -255,7 +257,10 @@
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="container_pincode_logistics_report">
      </explorer-tree:navigation-node>
-         <explorer-tree:navigation-node id="tship_sship_assignment_collapseble"></explorer-tree:navigation-node>
+     <explorer-tree:navigation-node  id="pincodes_upload">
+     </explorer-tree:navigation-node>
+       <explorer-tree:navigation-node  id="shipment_data_upload">
+      <explorer-tree:navigation-node id="tship_sship_assignment_collapseble"></explorer-tree:navigation-node>
       <explorer-tree:navigation-node id="delivery_address_request_widget_report"></explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="lp_and_awbedit_collapseble"></explorer-tree:navigation-node>
   <explorer-tree:navigation-node id="short_url_tracking_collapseble"></explorer-tree:navigation-node>

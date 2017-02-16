@@ -120,7 +120,7 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
-import com.tisl.mpl.facades.account.address.AccountAddressFacade;
+import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.StateData;
@@ -174,8 +174,7 @@ import com.tisl.mpl.wsdto.VersionListResponseData;
 import com.tisl.mpl.wsdto.VersionListResponseWsDTO;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 import com.tisl.mpl.wsdto.WthhldTAXWsDTO;
-
-
+import de.hybris.platform.servicelayer.session.SessionService;
 
 /**
  * @author TCS
@@ -184,6 +183,10 @@ import com.tisl.mpl.wsdto.WthhldTAXWsDTO;
 @CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 1800)
 public class MiscsController extends BaseController
 {
+
+	private static final String APPLICATION_JSON = "application/json"; //Sonar fix
+
+
 	@Resource(name = "brandFacade")
 	private BrandFacade brandFacade;
 	@Resource(name = "userFacade")
@@ -224,7 +227,7 @@ public class MiscsController extends BaseController
 	@Autowired
 	private CustomerAccountService customerAccountService;
 	@Autowired
-	private AccountAddressFacade accountAddressFacade;
+	private MplAccountAddressFacade accountAddressFacade;
 	@Resource(name = "homescreenservice")
 	private HomescreenService homescreenservice;
 	@Resource(name = "fieldSetBuilder")
@@ -252,13 +255,22 @@ public class MiscsController extends BaseController
 	private PincodeServiceFacade pincodeServiceFacade;
 	@Resource(name = "categoryService")
 	private CategoryService categoryService;
-	/*
+
+
+
+
+
+	/**
+	 * =======
+	 *
+	 * @Resource(name = "categoryService") private CategoryService categoryService; /*
 	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
-	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
-	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
+	 *                APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
+	 *                "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 	 *
-	 * /**
+	 *                /**
 	 *
+	 *                >>>>>>> origin/GOLDEN_PROD_SUPPORT_07122016
 	 * @return the configurationService
 	 */
 	@Autowired
@@ -292,6 +304,8 @@ public class MiscsController extends BaseController
 	private ModelService modelService;
 	private static final String APPLICATION_TYPE = "application/json";
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
+	@Autowired
+	private SessionService sessionService;
 
 	/*
 	 * private static final String DROPDOWN_BRAND = "MBH"; private static final String DROPDOWN_CATEGORY = "MSH";
@@ -661,9 +675,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 *
+	 * 
 	 * @param restrictionXML
-	 *
+	 * 
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -977,6 +991,12 @@ public class MiscsController extends BaseController
 			ExceptionUtil.getCustomizedExceptionTrace(eb);
 			resultData = setErrorStatus();
 		}
+
+		if (StringUtils.isNotEmpty(sessionService.getAttribute("queryType")))
+		{
+			LOG.debug("REmoving from Session Attribute query type");
+			sessionService.removeAttribute("queryType");
+		}
 		return resultData;
 	}
 
@@ -1234,6 +1254,8 @@ public class MiscsController extends BaseController
 				final ListPinCodeServiceData dataList = new ListPinCodeServiceData();
 				if (null != productCodeStr && StringUtils.isNotEmpty(productCodeStr))
 				{
+
+
 					List<PinCodeResponseData> response = null;
 					final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pin);
 					if (null != pinCodeModelObj)
@@ -1352,8 +1374,36 @@ public class MiscsController extends BaseController
 
 	// check brand or category TPR-816
 	/**
+	 * <<<<<<< HEAD
+	 *
+	 * @param deliveryMode
+	 * @param ussid
+	 * @return MarketplaceDeliveryModeData
+	 */
+	/*
+	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
+	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
+	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
+	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
+	 *
+	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
+	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
+	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
+	 * null != MplZoneDeliveryModeValueModel.getDeliveryMode().getCode()) {
+	 * deliveryModeData.setCode(MplZoneDeliveryModeValueModel.getDeliveryMode().getCode()); } if (null !=
+	 * MplZoneDeliveryModeValueModel.getDeliveryMode() && null !=
+	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getDescription()) {
+	 * deliveryModeData.setDescription(MplZoneDeliveryModeValueModel.getDeliveryMode().getDescription()); } if (null !=
+	 * MplZoneDeliveryModeValueModel.getDeliveryMode() && null !=
+	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
+	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
+	 * deliveryModeData.setSellerArticleSKU(ussid); }
+	 *
+	 * } return deliveryModeData; } =======
+	 *
 	 * @param code
-	 * @return
+	 *
+	 * @return >>>>>>> origin/GOLDEN_PROD_SUPPORT_07122016
 	 */
 	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)
 	@ResponseBody
@@ -1558,7 +1608,8 @@ public class MiscsController extends BaseController
 	/*
 	 * @Secured( { "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	 */
-	@RequestMapping(value = "/{baseSiteId}/feedbackno", method = RequestMethod.GET, produces = APPLICATION_TYPE)
+
+	@RequestMapping(value = "/{baseSiteId}/feedbackno", method = RequestMethod.GET, produces = APPLICATION_JSON)
 	@ResponseBody
 	public UserResultWsDto captureFeedbackNo(@RequestParam final String emailId, @RequestParam final String searchCategory,
 			@RequestParam final String searchText, @RequestParam final String comment, @RequestParam final String category)
@@ -1595,7 +1646,8 @@ public class MiscsController extends BaseController
 	/*
 	 * @Secured( { "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	 */
-	@RequestMapping(value = "/{baseSiteId}/getFeedbackCategory", method = RequestMethod.GET, produces = APPLICATION_TYPE)
+
+	@RequestMapping(value = "/{baseSiteId}/getFeedbackCategory", method = RequestMethod.GET, produces = APPLICATION_JSON)
 	@ResponseBody
 	public UserResultWsDto getFeedbackCategory()
 	{
@@ -1630,7 +1682,7 @@ public class MiscsController extends BaseController
 		return userResultWsDto;
 	}
 
-	@RequestMapping(value = "/{baseSiteId}/askAQuestion", method = RequestMethod.GET, produces = APPLICATION_TYPE)
+	@RequestMapping(value = "/{baseSiteId}/askAQuestion", method = RequestMethod.GET, produces = APPLICATION_JSON)
 	@ResponseBody
 	public UserResultWsDto askquestion(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
 			@RequestParam final String emailId, @RequestParam final String question, @RequestParam final String productCode)
@@ -1694,8 +1746,8 @@ public class MiscsController extends BaseController
 					for (final MplNewsLetterSubscriptionModel mplNewsLetterSubscriptionModel : newsLetterSubscriptionList)
 					{
 						if ((mplNewsLetterSubscriptionModel.getEmailId().equalsIgnoreCase(emailId))
-								&& (!(mplNewsLetterSubscriptionModel.getIsLuxury().booleanValue()) || mplNewsLetterSubscriptionModel
-										.getIsLuxury() == null))
+								&& (!(mplNewsLetterSubscriptionModel.getIsLuxury().booleanValue())
+										|| mplNewsLetterSubscriptionModel.getIsLuxury() == null))
 						{
 							mplNewsLetterSubscriptionModel.setIsLuxury(Boolean.TRUE);
 							modelService.save(mplNewsLetterSubscriptionModel);

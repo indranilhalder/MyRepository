@@ -1575,11 +1575,24 @@ $(document).ready(function(){
 				selectOpen = false;
 			}
 		});
-		
-		if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
+		/*start change for INC_11789*/
+		/*if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
 			var footer_height=$('footer').height() + 20 + 'px';
 			$(".body-Content").css('padding-bottom',footer_height);
-		}
+		}*/
+		if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
+			var footer_height=$('footer').height() + 20 + 'px';
+			var ua_check = window.navigator.userAgent;
+			var msie_check = ua_check.indexOf("MSIE ");
+			$(".body-Content").css('padding-bottom',footer_height);
+			if(msie_check > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){
+				setTimeout(function () {
+					var footer_height=$('footer').height() + 20 + 'px';
+					$(".body-Content").css('padding-bottom',footer_height);
+				},500);
+				}
+		} 
+		/*end change for INC_11789*/
 		else{
 			$(".body-Content").css('padding-bottom','0px');
 		}
@@ -1965,7 +1978,8 @@ $(document).ready(function() {
 		}
 		});
 		$(".best_seller .Menu ul li:nth-child(3)").addClass("active");
-		$(".best_seller .best_seller_section:nth-of-type(4)").addClass("show_clplist");
+		/*$(".best_seller .best_seller_section:nth-of-type(4)").addClass("show_clplist");*/
+		$(".best_seller .best_seller_section:nth-of-type(5)").addClass("show_clplist");
 		$(".best_seller .Menu .mobile.selectmenu").text($(".best_seller .Menu ul li.active").text());
 		$(".best_seller .Menu ul li").off("click").on("click", function(){
 			$(".best_seller .Menu ul li").removeClass("active");
@@ -2715,14 +2729,16 @@ $(document).ready(function(){
 		$(".step-1,.step-2").addClass("step-done");
 		$(".progress-barg span.step").addClass("step3");
 	}
-	 setTimeout(function () {
+	/*start changes for INC_11120*/
+	 /*setTimeout(function () {
 		 if ($('body').find(".smartbanner.smartbanner-android").length > 0){
 				$("body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header").css("margin-top","82px");
 			}
 			else{
 				$("body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header").css("margin-top","0px");
 			}
-     }, 100);
+     }, 100);*/
+	/*end changes for INC_11120*/
 	 $(document).on("click",".smartbanner-close",function(){
 		$("body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header").css("margin-top","0px");
 	 });
@@ -2824,3 +2840,9 @@ $(document).on("click",".toggle-filterSerp",function(){
 $(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
 $(this).toggleClass("active");
 });*/
+
+/*UF-29*/
+$(".gig-rating-readReviewsLink_pdp").on("click",function() {
+	  $("body,html").animate({ scrollTop: $('#ReviewSecion').offset().top - 50 }, "slow");
+
+});

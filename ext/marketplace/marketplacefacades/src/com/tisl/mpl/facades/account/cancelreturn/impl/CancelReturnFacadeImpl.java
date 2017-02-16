@@ -104,9 +104,6 @@ import com.tisl.mpl.data.SendTicketLineItemData;
 import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
-import com.tisl.mpl.facade.config.MplConfigFacade;
-import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
@@ -1860,9 +1857,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	/*
 	 * private MplOrderCancelRequest buildCancelRequest(final AbstractOrderEntryModel orderEntryData, final String
 	 * reasonCode, final OrderData subOrderDetails, final OrderModel subOrderModel) throws OrderCancelException {
-	 *
+	 * 
 	 * final List orderCancelEntries = new ArrayList();
-	 *
+	 * 
 	 * //Get the reason from Global Code master String reasonDescription = null; final List<CancellationReasonModel>
 	 * cancellationReasonList = mplOrderService.getCancellationReason(); for (final CancellationReasonModel
 	 * cancellationReason : cancellationReasonList) { if
@@ -1878,16 +1875,16 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * orderCancelEntry : orderCancelRequest.getEntriesToCancel()) { final AbstractOrderEntryModel orderEntry =
 	 * orderCancelEntry.getOrderEntry(); final List<PaymentTransactionModel> tranactions = new
 	 * ArrayList<PaymentTransactionModel>( subOrderModel.getPaymentTransactions());
-	 *
+	 * 
 	 * if (CollectionUtils.isNotEmpty(tranactions)) { for (final PaymentTransactionModel transaction : tranactions) { if
 	 * (CollectionUtils.isNotEmpty(transaction.getEntries())) { for (final PaymentTransactionEntryModel entry :
 	 * transaction.getEntries()) { if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null &&
 	 * entry.getPaymentMode().getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD)) {
 	 * orderCancelRequest.setAmountToRefund(NumberUtils.DOUBLE_ZERO); return orderCancelRequest; } } } } }
-	 *
+	 * 
 	 * double deliveryCost = 0D; if (orderEntry.getCurrDelCharge() != null) { deliveryCost =
 	 * orderEntry.getCurrDelCharge().doubleValue(); }
-	 *
+	 * 
 	 * refundAmount = orderEntryData.getNetAmountAfterAllDisc().doubleValue() + deliveryCost; } //Setting Refund Amount
 	 * orderCancelRequest.setAmountToRefund(new Double(refundAmount)); return orderCancelRequest; }
 	 */
@@ -1908,7 +1905,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * OrderCancelRecordsHandlerException { final OrderCancelRecordEntryModel result =
 	 * this.getOrderCancelRecordsHandler().createRecordEntry(orderCancelRequest, userService.getCurrentUser());
 	 * //Initiate Refund initiateRefund(subOrderDetails, subOrderModel, result);
-	 *
+	 * 
 	 * }
 	 */
 
@@ -1923,9 +1920,25 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private void requestOrderCancel(final OrderData subOrderDetails, final OrderModel subOrderModel,
 			final MplOrderCancelRequest orderCancelRequest) throws OrderCancelException
 	{
+		/*
+		 * //cancel Order final OrderCancelRecordEntryModel orderRequestRecord =
+		 * orderCancelService.requestOrderCancel(orderCancelRequest, userService.getCurrentUser());
+		 */
+
+
+		OrderCancelRecordEntryModel orderRequestRecord = null;
+
 		//cancel Order
-		final OrderCancelRecordEntryModel orderRequestRecord = orderCancelService.requestOrderCancel(orderCancelRequest,
-				userService.getCurrentUser());
+		if ((userService.getCurrentUser()) instanceof EmployeeModel)
+		{
+			orderRequestRecord = orderCancelService.requestOrderCancel(orderCancelRequest, subOrderModel.getUser());
+		}
+
+		else
+		{
+
+			orderRequestRecord = orderCancelService.requestOrderCancel(orderCancelRequest, userService.getCurrentUser());
+		}
 
 		if (OrderCancelEntryStatus.DENIED.equals(orderRequestRecord.getCancelResult()))
 		{
@@ -2171,7 +2184,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * @return List
 	 */
 	@Override
-	public List<ReturnLogisticsResponseData> checkReturnLogistics(final OrderData orderDetails, final String pincode)
+	public List<ReturnLogisticsResponseData> checkReturnLogistics(final OrderData orderDetails, final String pincode,
+			final String transId)
 	{
 		try
 		{
@@ -2179,7 +2193,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			final OrderModel orderModel = orderModelService.getOrder(orderDetails.getCode());
 			final List<ReturnLogistics> returnLogisticsList = new ArrayList<ReturnLogistics>();
 			String returningTransactionId;
-			returningTransactionId = sessionService.getAttribute("transactionId");
+			//returningTransactionId = sessionService.getAttribute("transactionId"); // Commented for Bulk Return Initiation
+			returningTransactionId = transId;
 			String transactionId = "";
 			for (final OrderEntryData eachEntry : entries)
 			{
@@ -2331,9 +2346,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 	/*
 	 * @desc Saving order history for cancellation as OMS is not sending
-	 *
+	 * 
 	 * @param subOrderData
-	 *
+	 * 
 	 * @param subOrderModel
 	 */
 	private void createHistoryEntry(final AbstractOrderEntryModel orderEntryModel, final OrderModel orderModel,
@@ -2646,8 +2661,139 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		return stage;
 	}
-	
-	/**
+
+
+	@Override
+	public ReturnPincodeDTO checkReturnLogisticsForApp(final OrderData orderDetails, final String pincode,
+			final String returntransactionId)
+	{
+
+		try
+		{
+			final ReturnPincodeDTO returnPincodeDTO = new ReturnPincodeDTO();
+			final List<OrderEntryData> entries = orderDetails.getEntries();
+			final OrderModel orderModel = orderModelService.getOrder(orderDetails.getCode());
+			final List<ReturnLogistics> returnLogisticsList = new ArrayList<ReturnLogistics>();
+			final String returningTransactionId = returntransactionId;
+			//	returningTransactionId = sessionService.getAttribute("transactionId");
+			String transactionId = "";
+			for (final OrderEntryData eachEntry : entries)
+			{
+				final ReturnLogistics returnLogistics = new ReturnLogistics();
+				//TISEE-5557
+				if (!(eachEntry.isGiveAway() || eachEntry.isIsBOGOapplied()))
+				//	|| (null != eachEntry.getAssociatedItems() && !eachEntry.getAssociatedItems().isEmpty())))
+				{
+					returnLogistics.setOrderId(orderModel.getParentReference().getCode());
+					if (null != pincode)
+					{
+						returnLogistics.setPinCode(pincode);
+					}
+					if (StringUtils.isNotEmpty(eachEntry.getOrderLineId()))
+					{
+						transactionId = eachEntry.getOrderLineId();
+						returnLogistics.setTransactionId(eachEntry.getOrderLineId());
+					}
+					else if (StringUtils.isNotEmpty(eachEntry.getTransactionId()))
+					{
+						transactionId = eachEntry.getTransactionId();
+						returnLogistics.setTransactionId(eachEntry.getTransactionId());
+					}
+				}
+				returnLogisticsList.add(returnLogistics);
+			}
+			final List<OrderLineDataResponse> responseList = new ArrayList<OrderLineDataResponse>();
+			//final List<ReturnLogisticsResponseData> returnLogRespDataList = new ArrayList<ReturnLogisticsResponseData>();
+			final List<ReturnLogisticsResponseDTO> returnLogRespDTOList = new ArrayList<ReturnLogisticsResponseDTO>();
+			if (!returnLogisticsList.isEmpty())
+			{
+				final ReturnLogisticsResponse response = returnLogistics.returnLogisticsCheck(returnLogisticsList);
+				if (null != response.getOrderlines())
+				{
+					for (final OrderLineDataResponse orderLine : response.getOrderlines())
+					{
+						//final ReturnLogisticsResponseData returnLogRespData = new ReturnLogisticsResponseData();
+						final ReturnLogisticsResponseDTO returnLogisticsResponseDTO = new ReturnLogisticsResponseDTO();
+						if (null != orderLine.getOrderId())
+						{
+							returnLogisticsResponseDTO.setOrderId(orderLine.getOrderId());
+						}
+						if (null != orderLine.getTransactionId())
+						{
+							returnLogisticsResponseDTO.setTransactionId(orderLine.getTransactionId());
+						}
+						if (null != orderLine.getIsReturnLogisticsAvailable())
+						{
+
+							if (orderLine.getTransactionId().trim().equalsIgnoreCase(returningTransactionId.trim()))
+							{
+
+								returnLogisticsResponseDTO.setIsReturnLogisticsAvailable(orderLine.getIsReturnLogisticsAvailable());
+
+								if (orderLine.getIsReturnLogisticsAvailable().equalsIgnoreCase("Y"))
+								{
+									returnLogisticsResponseDTO
+											.setResponseMessage(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_MESSAGE);
+									returnLogisticsResponseDTO
+											.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_DESC);
+									//returnLogRespData
+									//	.setResponseMessage(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_MESSAGE);
+									//returnLogRespData
+									//.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_DESC);
+								}
+								else
+								{
+									returnLogisticsResponseDTO
+											.setResponseMessage((MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_MESSAGE));
+									//returnLogRespData.setResponseMessage(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_MESSAGE);
+									returnLogisticsResponseDTO
+											.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
+									//returnLogRespData.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
+								}
+
+								//	returnLogRespDataList.add(returnLogRespData);
+								returnLogRespDTOList.add(returnLogisticsResponseDTO);
+								returnPincodeDTO.setReturnLogisticsResponseDTO(returnLogRespDTOList);
+								responseList.add(orderLine);
+
+							}
+
+						}
+					}
+				}
+				else
+				{
+					//TISEE-5357
+					LOG.debug("*****Reverse logistics availabilty  Response orderline is null*********");
+					//final ReturnLogisticsResponseData returnLogRespData = new ReturnLogisticsResponseData();
+					final ReturnLogisticsResponseDTO returnLogRespDTO = new ReturnLogisticsResponseDTO();
+					//returnLogRespData.setIsReturnLogisticsAvailable("N");
+					returnLogRespDTO.setIsReturnLogisticsAvailable("N");
+					if (null != orderDetails.getCode())
+					{
+						//returnLogRespData.setOrderId(orderDetails.getCode());
+						returnLogRespDTO.setOrderId(orderDetails.getCode());
+						//returnLogRespData
+						//	.setResponseMessage(MarketplacecommerceservicesConstants.REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE);
+						returnLogRespDTO
+								.setResponseMessage(MarketplacecommerceservicesConstants.REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE);
+					}
+					returnLogRespDTO.setTransactionId(transactionId);
+					//returnLogRespData.setTransactionId(transactionId);
+					returnLogRespDTOList.add(returnLogRespDTO);
+					returnPincodeDTO.setReturnLogisticsResponseDTO(returnLogRespDTOList);
+					//	returnLogRespDataList.add(returnLogRespData);
+				}
+			}
+			return returnPincodeDTO;
+			//	return returnLogRespDataList;
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+/**
 	 * @author TECHOUTS
 	 * 
 	 * @param orderEntryData

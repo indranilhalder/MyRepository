@@ -24,6 +24,7 @@ import de.hybris.platform.commercefacades.i18n.I18NFacade;
 import de.hybris.platform.commercefacades.order.OrderFacade;
 import de.hybris.platform.commercefacades.order.data.CCPaymentInfoData;
 import de.hybris.platform.commercefacades.order.data.CCPaymentInfoDatas;
+import de.hybris.platform.commercefacades.order.data.ConsignmentData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.order.data.OrderHistoriesData;
@@ -173,7 +174,7 @@ import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.MplCouponWebFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
-import com.tisl.mpl.facades.account.address.AccountAddressFacade;
+import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.preference.MplPreferenceFacade;
 import com.tisl.mpl.facades.account.register.FriendsInviteFacade;
@@ -185,6 +186,7 @@ import com.tisl.mpl.facades.data.MplFavBrandCategoryData;
 import com.tisl.mpl.facades.data.MplFavBrandCategoryWsDTO;
 import com.tisl.mpl.facades.data.MplPreferenceData;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
+import com.tisl.mpl.facades.order.impl.DefaultGetOrderDetailsFacadeImpl;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
@@ -235,15 +237,19 @@ import com.tisl.mpl.wsdto.MplUserResultWsDto;
 import com.tisl.mpl.wsdto.NetBankingListWsDTO;
 import com.tisl.mpl.wsdto.NetBankingWsDTO;
 import com.tisl.mpl.wsdto.OrderCreateInJusPayWsDto;
-import com.tisl.mpl.wsdto.QuickDropStoresList;
-import com.tisl.mpl.wsdto.ReturnDetailsWsDTO;
+import com.tisl.mpl.wsdto.OrderProductWsDTO;
+import com.tisl.mpl.wsdto.ReturnLogisticsResponseDTO;
 import com.tisl.mpl.wsdto.ReturnLogisticsResponseDetailsWsDTO;
+import com.tisl.mpl.wsdto.ReturnPincodeDTO;
+import com.tisl.mpl.wsdto.ReturnReasonDTO;
 import com.tisl.mpl.wsdto.ReturnReasonDetailsWsDTO;
 import com.tisl.mpl.wsdto.ReturnRequestDTO;
 import com.tisl.mpl.wsdto.UpdateCustomerDetailDto;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.ValidateOtpWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
+import com.tisl.mpl.wsdto.QuickDropStoresList;
+import com.tisl.mpl.wsdto.ReturnDetailsWsDTO;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 
@@ -307,8 +313,6 @@ public class UsersController extends BaseCommerceController
 
 	@Resource
 	private MplCheckoutFacade mplCheckoutFacade;
-	//	@Autowired Critical Sonar fixes Unused private Field
-	//	private RegisterCustomerFacade registerCustomerFacade;
 	/*R2.3 start */
 //	@Resource
 //	private Populator<AddressData, AddressModel> addressReversePopulator;
@@ -355,7 +359,7 @@ public class UsersController extends BaseCommerceController
 	@Resource(name = "mplPaymentService")
 	private MplPaymentService mplPaymentService;
 	@Resource
-	private AccountAddressFacade accountAddressFacade;
+	private MplAccountAddressFacade accountAddressFacade;
 	@Resource
 	private UpdateFeedbackFacade updateFeedbackFacade;
 	//	@Autowired Critical Sonar fixes Unused private Field
@@ -409,16 +413,15 @@ public class UsersController extends BaseCommerceController
 	private GigyaFacade gigyaFacade;
 	@Autowired
 	private ExtendedUserService extendedUserService;
+	@Autowired
+	private DefaultGetOrderDetailsFacadeImpl getOrderDetailsFacade;
 
+    @Autowired
+   private MplConfigFacade mplConfigFacade;	
 	@Autowired
-   private MplConfigFacade mplConfigFacade;
-	
+	private PincodeServiceFacade pincodeServiceFacade;	
 	@Autowired
-	private PincodeServiceFacade pincodeServiceFacade;
-	
-	@Autowired
-	private MplCheckoutFacadeImpl mplCheckoutFacadeImpl;
-	
+	private MplCheckoutFacadeImpl mplCheckoutFacadeImpl;	
 	@Autowired
 	private MplOrderService mplOrderService;
 	
@@ -5741,15 +5744,30 @@ public class UsersController extends BaseCommerceController
 	@RequestMapping(value = "/{emailId}/initiateRefund", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	public @ResponseBody MplUserResultWsDto initiateRefund(@PathVariable final String emailId,
 			@RequestParam final String orderCode, @RequestParam final String reasonCode, @RequestParam final String ticketTypeCode,
-			@RequestParam final String ussid, @RequestParam final String refundType, @RequestParam final String transactionId)
+			@RequestParam final String ussid, @RequestParam final String refundType, @RequestParam final String transactionId,
+			@RequestParam(required = false) final String firstName, @RequestParam(required = false) final String lastName,
+			@RequestParam(required = false) final String MobileNo, @RequestParam(required = false) final String addressLane1,
+			@RequestParam(required = false) final String addressLane2, @RequestParam(required = false) final String countryIso,
+			@RequestParam(required = false) final String city, @RequestParam(required = false) final String state,
+			@RequestParam(required = false) final String landmark, @RequestParam(required = false) final String pincode)
 	{
 		final MplUserResultWsDto output = new MplUserResultWsDto();
 		boolean resultFlag = false;
 		String result = null;
+		final ReturnItemAddressData returnItemAddressData = new ReturnItemAddressData();
 		OrderEntryData orderEntry = new OrderEntryData();
-
 		try
 		{
+			returnItemAddressData.setFirstName(firstName);
+			returnItemAddressData.setLastName(lastName);
+			returnItemAddressData.setMobileNo(MobileNo);
+			returnItemAddressData.setAddressLane1(addressLane1);
+			returnItemAddressData.setAddressLane2(addressLane2);
+			returnItemAddressData.setCity(city);
+			returnItemAddressData.setCountry(countryIso);
+			returnItemAddressData.setState(state);
+			returnItemAddressData.setLandmark(landmark);
+			returnItemAddressData.setPincode(pincode);
 			LOG.debug(MarketplacewebservicesConstants.USER_DETAILS + emailId);
 			final CustomerData customerData = customerFacade.getCurrentCustomer();
 			final OrderData orderDetails = orderFacade.getOrderDetailsForCode(orderCode);
@@ -5774,8 +5792,8 @@ public class UsersController extends BaseCommerceController
 			}
 			else if (ticketTypeCode.equalsIgnoreCase("R") && returnFlag)
 			{
-				resultFlag = cancelReturnFacade.implementCancelOrReturn(orderDetails, orderEntry, reasonCode, ussid, ticketTypeCode,
-						customerData, refundType, true, SalesApplication.MOBILE);
+				resultFlag = cancelReturnFacade.implementReturnItem(orderDetails, orderEntry, reasonCode, ussid, ticketTypeCode,
+						customerData, refundType, true, SalesApplication.MOBILE, returnItemAddressData);
 			}
 
 			if (resultFlag)
@@ -5786,6 +5804,7 @@ public class UsersController extends BaseCommerceController
 			{
 				result = MarketplacecommerceservicesConstants.FAILURE_FLAG;
 			}
+
 			output.setStatus(result);
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -5830,6 +5849,7 @@ public class UsersController extends BaseCommerceController
 		return output;
 
 	}
+
 
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
@@ -6860,6 +6880,197 @@ public class UsersController extends BaseCommerceController
 		}
 		return couponDto;
 	}
+
+
+	/**
+	 * @description method is called to generate update profileURL mobile service
+	 * @param request
+	 * @param specificUrl
+	 */
+	public String urlForMobileEmailContext(final HttpServletRequest request, final String specificUrl)
+	{
+		URL requestUrl;
+		String profileUpdateUrl = MarketplacecommerceservicesConstants.EMPTY;
+		try
+		{
+			requestUrl = new URL(request.getRequestURL().toString());
+			final String portString = requestUrl.getPort() == -1 ? "" : ":" + requestUrl.getPort();
+			//final String baseUrl = requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString + ""; Do not add empty strings
+			final String baseUrl = requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString;
+
+			profileUpdateUrl = baseUrl + specificUrl;
+		}
+		catch (final MalformedURLException e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0016));
+			return MarketplacecommerceservicesConstants.FAILURE;
+		}
+		return profileUpdateUrl;
+	}
+
+
+	@Secured(
+	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+	@RequestMapping(value = "/{userId}/returnPincode", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public ReturnPincodeDTO returnPincodeServiceability(@RequestParam final String pincode, @RequestParam final String orderCode,
+			@RequestParam final String transactionId) throws EtailNonBusinessExceptions
+	{
+
+		final ReturnPincodeDTO returnPincodeDTO = new ReturnPincodeDTO();
+
+		ReturnPincodeDTO returnPincodeAvailDTO = null;
+
+		try
+		{
+
+			final OrderData orderDetails = orderFacade.getOrderDetailsForCode(orderCode);
+
+			boolean returnLogisticsCheck = true;
+			for (final ConsignmentData consignmentData : orderDetails.getConsignments())
+			{
+				if (consignmentData.getStatus() != null && consignmentData.getStatus().getCode() == "DELIVERED")
+				{
+
+					returnPincodeAvailDTO = cancelReturnFacade.checkReturnLogisticsForApp(orderDetails, pincode, transactionId);
+				}
+				else
+				{
+					returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				}
+			}
+
+
+			for (final ReturnLogisticsResponseDTO response : returnPincodeAvailDTO.getReturnLogisticsResponseDTO())
+			{
+				if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase("N"))
+				{
+					returnLogisticsCheck = false;
+
+				}
+
+				if (!returnLogisticsCheck)
+				{
+					returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+					returnPincodeDTO.setIsPincodeServiceable(false);
+					returnPincodeDTO.setReturnLogisticsResponseDTO(returnPincodeAvailDTO.getReturnLogisticsResponseDTO());
+				}
+				else
+				{
+					returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					returnPincodeDTO.setIsPincodeServiceable(true);
+					returnPincodeDTO.setReturnLogisticsResponseDTO(returnPincodeAvailDTO.getReturnLogisticsResponseDTO());
+
+				}
+			}
+
+		}
+
+
+
+
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				returnPincodeDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				returnPincodeDTO.setErrorCode(e.getErrorCode());
+			}
+			returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				returnPincodeDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				returnPincodeDTO.setErrorCode(e.getErrorCode());
+			}
+			returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			returnPincodeDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+			returnPincodeDTO.setErrorCode(MarketplacecommerceservicesConstants.B9004);
+			returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return returnPincodeDTO;
+	}
+
+
+	/**
+	 * TPR-1630 Display product details at time of return
+	 */
+	@Secured(
+	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+	@RequestMapping(value = "/{userId}/returnProductDetails", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public ReturnRequestDTO returnProductDetails(@RequestParam final String orderCode, @RequestParam final String transactionId,
+			@RequestParam final String returnCancelFlag) throws EtailNonBusinessExceptions
+	{
+		final ReturnRequestDTO returnRequestDTO = new ReturnRequestDTO();
+		ReturnReasonDetails returnReasonData = null;
+		ReturnReasonDTO reasonDto = new ReturnReasonDTO();
+		final List<ReturnReasonDTO> returnReasondtolist = new ArrayList<ReturnReasonDTO>();
+		try
+		{
+			final List<OrderProductWsDTO> orderproductWsDto = getOrderDetailsFacade.getOrderdetailsForApp(orderCode, transactionId,
+					returnCancelFlag);
+			if (orderproductWsDto.size() > 0)
+			{
+
+				returnRequestDTO.setOrderProductWsDTO(orderproductWsDto);
+				returnReasonData = mplOrderFacade.getReturnReasonForOrderItem(returnCancelFlag);
+			}
+			if (null != returnReasonData && CollectionUtils.isNotEmpty(returnReasonData.getReturnReasonDetailsList()))
+			{
+				for (final ReturnReasonData entry : returnReasonData.getReturnReasonDetailsList())
+				{
+					reasonDto = dataMapper.map(entry, ReturnReasonDTO.class);
+					returnReasondtolist.add(reasonDto);
+
+				}
+				returnRequestDTO.setReturnReasonDetailsWsDTO(returnReasondtolist);
+			}
+
+			else
+			{
+				returnRequestDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+				returnRequestDTO.setErrorCode(MarketplacecommerceservicesConstants.B9004);
+				returnRequestDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				returnRequestDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9076));
+			}
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			returnRequestDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+			returnRequestDTO.setErrorCode(MarketplacecommerceservicesConstants.B9004);
+			returnRequestDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return returnRequestDTO;
+	}
+
 	
 	
 	@Secured(
@@ -7728,23 +7939,23 @@ public class UsersController extends BaseCommerceController
 	{
 		this.mplCheckoutFacade = mplCheckoutFacade;
 	}
-// Commented in r2.3
-//	/**
-//	 * @return the addressReversePopulator
-//	 */
-//	public Populator<AddressData, AddressModel> getAddressReversePopulator()
-//	{
-//		return addressReversePopulator;
-//	}
-//
-//	/**
-//	 * @param addressReversePopulator
-//	 *           the addressReversePopulator to set
-//	 */
-//	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
-//	{
-//		this.addressReversePopulator = addressReversePopulator;
-//	}
+
+	/**
+	 * @return the addressReversePopulator
+	 */
+	public Populator<AddressData, AddressModel> getAddressReversePopulator()
+	{
+		return addressReversePopulator;
+	}
+
+	/**
+	 * @param addressReversePopulator
+	 *           the addressReversePopulator to set
+	 */
+	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
+	{
+		this.addressReversePopulator = addressReversePopulator;
+	}
 
 	/**
 	 * @return the wishlistService
@@ -7919,7 +8130,7 @@ public class UsersController extends BaseCommerceController
 	/**
 	 * @return the accountAddressFacade
 	 */
-	public AccountAddressFacade getAccountAddressFacade()
+	public MplAccountAddressFacade getAccountAddressFacade()
 	{
 		return accountAddressFacade;
 	}
@@ -7928,7 +8139,7 @@ public class UsersController extends BaseCommerceController
 	 * @param accountAddressFacade
 	 *           the accountAddressFacade to set
 	 */
-	public void setAccountAddressFacade(final AccountAddressFacade accountAddressFacade)
+	public void setAccountAddressFacade(final MplAccountAddressFacade accountAddressFacade)
 	{
 		this.accountAddressFacade = accountAddressFacade;
 	}

@@ -204,7 +204,10 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 					cartEntry
 							.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE, Double.valueOf(lineItemLevelPrice));
 
-					final double productLevelDisc = 0.00D;
+					final double productLevelDisc = cartEntry.getProperty(MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC) != null ? ((Double) cartEntry
+							.getProperty(MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC)).doubleValue() : 0.00D;
+
+					//final double productLevelDisc = 0.00D;
 					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC,
 							Double.valueOf(productLevelDisc));
 
@@ -300,7 +303,9 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 								associatedItemsList = productAssociatedItemsMap.get(selectedUSSID);
 							}
 							double lineItemLevelPrice = cartEntry.getTotalPriceAsPrimitive();
-							double productLevelDisc = 0.00D;
+							double productLevelDisc = cartEntry.getProperty(MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC) != null ? ((Double) cartEntry
+									.getProperty(MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC)).doubleValue() : 0.00D;
+
 							if (selectedUSSID.equalsIgnoreCase(freebieUSSID) || freeProductUSSIDList.contains(selectedUSSID)) // for free product
 							{
 								lineItemLevelPrice = cartEntry.getBasePriceAsPrimitive() * qualifyingCount;

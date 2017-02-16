@@ -1,6 +1,5 @@
 package com.tisl.mpl.jalo;
 
-import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
@@ -81,8 +80,8 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 	{
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		final AbstractOrder order = evaluationContext.getOrder();
-		final List<Product> promotionProductList = new ArrayList<>(getProducts());
-		final List<Category> promotionCategoryList = new ArrayList<>(getCategories());
+		//final List<Product> promotionProductList = new ArrayList<>(getProducts());
+		//final List<Category> promotionCategoryList = new ArrayList<>(getCategories());
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions()); // Fetching Promotion set Restrictions
 		final List<Product> excludedProductList = new ArrayList<Product>();
 		final List<String> excludeManufactureList = new ArrayList<String>();
@@ -105,14 +104,20 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag) // if Restrictions return valid && Channel is valid
 			{
 				//getting the valid products
+				//				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
+				//						.getValidProdListForBuyXofAPromo(order, paramSessionContext, promotionProductList, promotionCategoryList,
+				//								restrictionList, excludedProductList, excludeManufactureList, null, null); // Adding Eligible Products to List
+
+				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
+				//getting the valid products
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
-						.getValidProdListForBuyXofAPromo(order, paramSessionContext, promotionProductList, promotionCategoryList,
-								restrictionList, excludedProductList, excludeManufactureList, null, null); // Adding Eligible Products to List
+						.getValidProdListForBuyXofA(order, paramSessionContext, allowedProductList, restrictionList,
+								excludedProductList, excludeManufactureList, null, null); // Adding Eligible Products to List
 
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(paramSessionContext, validProductUssidMap))
 				{
 					promotionResults = promotionEvaluation(paramSessionContext, evaluationContext, validProductUssidMap,
-							restrictionList);
+							restrictionList, allowedProductList);
 				}
 			}
 		}
@@ -140,7 +145,7 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 	 */
 	private List<PromotionResult> promotionEvaluation(final SessionContext paramSessionContext,
 			final PromotionEvaluationContext evaluationContext, final Map<String, AbstractOrderEntry> validProductUssidMap,
-			final List<AbstractPromotionRestriction> restrictionList)
+			final List<AbstractPromotionRestriction> restrictionList, final List<Product> allowedProductList)
 	{
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		final List<Product> promoProductList = new ArrayList<Product>();
@@ -163,13 +168,13 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 			List<PromotionOrderEntryConsumed> remainingItemsFromTail = null;
 
 			//getting eligible Product List
-			final List<Product> eligibleProductList = new ArrayList<Product>();
-			for (final AbstractOrderEntry orderEntry : validProductUssidMap.values())
-			{
-				eligibleProductList.add(orderEntry.getProduct());
-			}
+			//			final List<Product> eligibleProductList = new ArrayList<Product>();
+			//			for (final AbstractOrderEntry orderEntry : validProductUssidMap.values())
+			//			{
+			//				eligibleProductList.add(orderEntry.getProduct());
+			//			}
 
-			final PromotionOrderView view = evaluationContext.createView(paramSessionContext, this, eligibleProductList);
+			final PromotionOrderView view = evaluationContext.createView(paramSessionContext, this, allowedProductList);
 			//final PromotionOrderEntry viewEntry = view.peek(paramSessionContext);
 
 			final Map<String, Integer> tcMapForValidEntries = new HashMap<String, Integer>();

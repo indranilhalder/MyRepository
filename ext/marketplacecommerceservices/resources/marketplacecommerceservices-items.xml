@@ -137,7 +137,7 @@
 			<!-- pincode ,latitude and longitude Model -->
 		
        <!-- TPR-970 starts -->
-		 <itemtype code="State" autocreate="true"
+		<itemtype code="State" autocreate="true"
 					 generate="true">
 					  <deployment table="MplState" typecode="25084" /> 
 			<attributes>
@@ -160,7 +160,7 @@
 							optional="false" />
 					</attribute>					
 			</attributes>
-	</itemtype> 
+	</itemtype>
 	<itemtype code="City" autocreate="true"
 					 generate="true">
 			<attributes>
@@ -347,7 +347,7 @@
 		
 			<!-- CustomBuyAgetPercentageDiscountOnBAdjustAction class for apportioned value 
 			for Product level promotions -->
-		<itemtype code="CustomBuyAgetPercentageDiscountOnBAdjustAction"
+		<!-- <itemtype code="CustomBuyAgetPercentageDiscountOnBAdjustAction"
 			extends="AbstractPromotionAction" jaloclass="com.tisl.mpl.jalo.CustomBuyAgetPercentageDiscountOnBAdjustAction"
 			autocreate="true" generate="true">
 			<attributes>
@@ -373,7 +373,7 @@
 					<persistence type="property" />
 				</attribute>
 
-				<!-- since 4.4, see PRO-75 -->
+				since 4.4, see PRO-75
 				<attribute qualifier="orderEntryNumber" autocreate="true"
 					type="java.lang.Integer">
 					<description>The entry number in the order</description>
@@ -382,7 +382,7 @@
 				</attribute>
 
 			</attributes>
-		</itemtype>
+		</itemtype> -->
 		
 		
 
@@ -2786,7 +2786,7 @@
 		</itemtype>
 			<!-- TPR-1294 : Item Declaration ends -->
 		<!-- TPR-970 : changes starts -->
-			 <typegroup name="Pincode">
+			<typegroup name="Pincode">
 			<itemtype code="Pincode" extends="GenericItem"
 				jaloclass="de.hybris.platform.jalo.product.Pincode" autocreate="true"
 				generate="true">
@@ -2827,7 +2827,7 @@
 					</attribute>
 				</attributes>
 			</itemtype>
-		</typegroup> 
+		</typegroup>
 		<!-- TPR-970 changes end -->
 	</itemtypes>
 	

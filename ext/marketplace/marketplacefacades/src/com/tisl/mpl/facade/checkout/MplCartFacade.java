@@ -62,45 +62,45 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @Desc fetching seller info
-	 *
-	 *
+	 * 
+	 * 
 	 * @param cartData
-	 *
-	 *
+	 * 
+	 * 
 	 * @param ussid
-	 *
-	 *
+	 * 
+	 * 
 	 * @return Map<String, String>
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws CMSItemNotFoundException
 	 */
 	Map<String, String> getSellerInfo(CartData cartData, final String ussid) throws CMSItemNotFoundException;
 
 	/*
 	 * @Desc fetching address
-	 *
-	 *
+	 * 
+	 * 
 	 * @param addressData
-	 *
-	 *
+	 * 
+	 * 
 	 * @return Map<String, String>
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws CMSItemNotFoundException
 	 */
 	Map<String, String> getAddress(List<AddressData> addressData) throws CMSItemNotFoundException;
 
 	/*
 	 * @Desc fetching fulfilmentmode
-	 *
-	 *
+	 * 
+	 * 
 	 * @param cartData
-	 *
-	 *
+	 * 
+	 * 
 	 * @return Map<String, String>
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws CMSItemNotFoundException
 	 */
 	Map<String, String> getFullfillmentMode(CartData cartData) throws CMSItemNotFoundException;
@@ -108,14 +108,14 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @Desc fetching fulfilmentmode TISEE-6290
-	 *
-	 *
+	 * 
+	 * 
 	 * @param orderData
-	 *
-	 *
+	 * 
+	 * 
 	 * @return Map<String, String>
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws CMSItemNotFoundException
 	 */
 	Map<String, String> getOrderEntryFullfillmentMode(OrderData orderData) throws CMSItemNotFoundException;
@@ -200,27 +200,27 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @Desc setting cart sub total
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
-	void setCartSubTotal() throws EtailNonBusinessExceptions;
+	void setCartSubTotal(CartModel cartModel) throws EtailNonBusinessExceptions;
 
 	boolean setCartSubTotal2(CartModel model) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Desc fetching pincode response
-	 *
-	 *
+	 * 
+	 * 
 	 * @param pincode
-	 *
-	 *
+	 * 
+	 * 
 	 * @param cartData
-	 *
-	 *
+	 * 
+	 * 
 	 * @return List<PinCodeResponseData>
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	List<PinCodeResponseData> getOMSPincodeResponseData(String pincode, CartData cartData) throws EtailNonBusinessExceptions;
@@ -235,17 +235,17 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @DESC MobileWS105 : get top two wish list for mobile web service
-	 *
-	 *
+	 * 
+	 * 
 	 * @param userModel
-	 *
-	 *
+	 * 
+	 * 
 	 * @param pincode
-	 *
-	 *
+	 * 
+	 * 
 	 * @return GetWishListWsDTO
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -270,17 +270,17 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @Desc checking max added quantity with store configuration
-	 *
-	 *
+	 * 
+	 * 
 	 * @param productCode
-	 *
-	 *
+	 * 
+	 * 
 	 * @param qty
-	 *
-	 *
+	 * 
+	 * 
 	 * @return String
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws CommerceCartModificationException
 	 */
 	String isMaxQuantityAlreadyAdded(final String productCode, final long qty, final long stock, final String ussid)
@@ -288,22 +288,22 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment
-	 *
+	 * 
 	 * @param requestType
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean isInventoryReserved(String requestType, AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment For Mobile
-	 *
+	 * 
 	 * @param requestType
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	public boolean isInventoryReservedMobile(final String requestType, final AbstractOrderModel abstractOrderModel,
@@ -324,22 +324,22 @@ public interface MplCartFacade extends CartFacade
 	/*
 	 * @Desc used for In case pincode is changed in delivery address selection page then this method will be called to
 	 * check pincode serviceabilty
-	 *
-	 *
+	 * 
+	 * 
 	 * @param selectedPincode
-	 *
-	 *
+	 * 
+	 * 
 	 * @return String
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	String checkPincodeAndInventory(final String selectedPincode) throws EtailNonBusinessExceptions, CMSItemNotFoundException;
 
 	/*
 	 * @Desc used to display quantity in cart page
-	 *
-	 *
+	 * 
+	 * 
 	 * @return ArrayList<Integer>
 	 */
 	ArrayList<Integer> getQuantityConfiguratioList() throws EtailNonBusinessExceptions;
@@ -375,14 +375,14 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @Desc checking wishlist entry is valid or not , delisted , end date , online from TISEE-5185
-	 *
-	 *
+	 * 
+	 * 
 	 * @param wishlistEntryModel
-	 *
-	 *
+	 * 
+	 * 
 	 * @return boolean
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean isWishlistEntryValid(final Wishlist2EntryModel wishlistEntryModel) throws EtailNonBusinessExceptions;
@@ -410,7 +410,7 @@ public interface MplCartFacade extends CartFacade
 			EtailNonBusinessExceptions;
 
 
-	CartModel getCalculatedCart() throws CommerceCartModificationException, EtailNonBusinessExceptions;
+	CartModel getCalculatedCart(CartModel cart) throws CommerceCartModificationException, EtailNonBusinessExceptions;
 
 	OrderEntryData getCartEntryByUssid(final String ussid, CartData cart);
 
@@ -439,8 +439,8 @@ public interface MplCartFacade extends CartFacade
 	 * @return CartData
 	 * @throws EtailNonBusinessExceptions
 	 */
-	CartData getSessionCartWithEntryOrderingMobile(final CartModel cart, final boolean recentlyAddedFirst)
-			throws EtailNonBusinessExceptions;
+	CartData getSessionCartWithEntryOrderingMobile(final CartModel cart, final boolean recentlyAddedFirst,
+			final boolean isrecalculate, final boolean resetReqd) throws EtailNonBusinessExceptions;
 
 	/* TPR-970 changes ,populate city and stae details in cart */
 	public void populatePinCodeData(final CartModel cartmodel, final String pincode);
@@ -466,7 +466,28 @@ public interface MplCartFacade extends CartFacade
 	 */
 	boolean notifyEmailAndSmsOnInventoryFail(final OrderModel orderModel) throws EtailNonBusinessExceptions;
 
-/**
+	/**
+	 * @param entryNumber
+	 * @param storeId
+	 * @param cartModel
+	 * @return
+	 * @throws CommerceCartModificationException
+	 */
+	CartModificationData updateCartEntryMobile(long entryNumber, String storeId, CartModel cartModel)
+			throws CommerceCartModificationException;
+
+	/**
+	 * @return
+	 */
+	CartData getLuxCart() throws CommerceCartModificationException;
+
+	/**
+	 * @param cart
+	 * @throws CommerceCartModificationException
+	 */
+	public CartModel getCalculatedCartMobile(CartModel cart) throws CommerceCartModificationException, EtailNonBusinessExceptions;
+    
+    /**
 	 * get EDD INFormation for Ussid
 	 * @param cartModel
 	 * @param invReserForDeliverySlotsItemEDDInfoData
@@ -489,7 +510,4 @@ public interface MplCartFacade extends CartFacade
 	 * @return
 	 */
 	InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(InvReserForDeliverySlotsRequestData cartdata);
-
-	CartModificationData updateCartEntryMobile(long entryNumber, String storeId, CartModel cartModel)
-			throws CommerceCartModificationException;
 }

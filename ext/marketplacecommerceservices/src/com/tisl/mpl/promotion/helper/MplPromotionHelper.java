@@ -757,10 +757,14 @@ public class MplPromotionHelper
 	{
 		double deliveryChargeForEntry = 0;
 
-		if (null != entry && (entry.getQuantity().longValue() > 0 && StringUtils.isNotEmpty(entry.getBogoFreeItmCount())))
+		//		if (null != entry && (entry.getQuantity().longValue() > 0 && StringUtils.isNotEmpty(entry.getBogoFreeItmCount())))
+		//		{
+		//			deliveryChargeForEntry = deliveryVal
+		//					* (entry.getQuantity().longValue() - Long.valueOf(entry.getBogoFreeItmCount()).longValue());
+		//		}
+		if (null != entry && (entry.getQuantity().longValue() > 0 && entry.getFreeCount().longValue() > 0))
 		{
-			deliveryChargeForEntry = deliveryVal
-					* (entry.getQuantity().longValue() - Long.valueOf(entry.getBogoFreeItmCount()).longValue());
+			deliveryChargeForEntry = deliveryVal * (entry.getQuantity().longValue() - entry.getFreeCount().longValue());
 		}
 		else
 		{

@@ -42,6 +42,7 @@ public class MplCleanupCronJobStrategy implements MaintenanceCleanupStrategy<Cro
 	private Set<String> excludedCronJobCodes;
 	private String expiryDays;
 
+
 	//dynamic job properties
 	private int daysOld = 14;
 	private String cronJobType = CronJobModel._TYPECODE;

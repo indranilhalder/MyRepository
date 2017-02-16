@@ -28,13 +28,13 @@ public class MplStockDaoImpl implements MplStockDao
 
 	/*
 	 * @Javadoc Method to retrieve list of StockLevelModel based on articleSKUID
-	 *
+	 * 
 	 * @param articleSKUID
-	 *
+	 * 
 	 * @return listOfStock
 	 */
 	@Override
-	public List<StockLevelModel> getStockDetail(final String articleSKUID)
+	public StockLevelModel getStockDetail(final String articleSKUID)
 	{
 		try
 		{
@@ -46,8 +46,8 @@ public class MplStockDaoImpl implements MplStockDao
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("articleSKUID", articleSKUID);
 
-			final List<StockLevelModel> listOfStock = flexibleSearchService.<StockLevelModel> search(query).getResult();
-			return listOfStock;
+			//final List<StockLevelModel> listOfStock = flexibleSearchService.<StockLevelModel> search(query).getResult();
+			return flexibleSearchService.<StockLevelModel> search(query).getResult().get(0);
 		}
 		catch (final Exception e)
 		{
@@ -57,9 +57,9 @@ public class MplStockDaoImpl implements MplStockDao
 
 	/*
 	 * @Javadoc Method to retrieve list of StockLevelModel based on articleSKUID
-	 *
+	 * 
 	 * @param articleSKUID
-	 *
+	 * 
 	 * @return listOfStock
 	 */
 

@@ -6,6 +6,7 @@ package com.tisl.mpl.search.converters.populator;
 
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.solrfacetsearch.config.CommitMode;
 import de.hybris.platform.solrfacetsearch.config.IndexConfig;
 import de.hybris.platform.solrfacetsearch.config.IndexedType;
@@ -28,6 +29,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 
+import javax.annotation.Resource;
+
+import org.apache.log4j.Logger;
+
 
 /**
  * @author 360641
@@ -38,15 +43,20 @@ public class MplDefaultIndexConfigPopulator extends DefaultIndexConfigPopulator
 {
 	private Converter<SolrServerConfigModel, SolrConfig> solrServerConfigConverter;
 	private Converter<SolrIndexedTypeModel, IndexedType> indexedTypeConverter;
+	private static final Logger LOG = Logger.getLogger(MplDefaultIndexConfigPopulator.class);
+	@Resource
+	private SessionService sessionService;
 
 	@Override
 	public void populate(final SolrFacetSearchConfigModel source, final IndexConfig target) throws ConversionException
 	{
+
 		Collection<IndexedType> indexTypesFromItems;
 		try
 		{
+			final String queryType = sessionService.getAttribute("queryType");
 			indexTypesFromItems = getIndexTypesFromItems(source.getSolrIndexedTypes(),
-					getSolrConfigFromItems(source.getSolrServerConfig()), source.getQueryType());
+					getSolrConfigFromItems(source.getSolrServerConfig()), queryType);
 		}
 		catch (final FacetConfigServiceException e)
 		{
@@ -117,7 +127,7 @@ public class MplDefaultIndexConfigPopulator extends DefaultIndexConfigPopulator
 			}
 			itemType.setQueryType(queryType);
 			final IndexedType indexedType = this.indexedTypeConverter.convert(itemType);
-
+			LOG.debug(" Commenting as a pert of SEARCH PT.... //itemType.setQueryType(queryType)");
 			result.add(indexedType);
 		}
 		return result;

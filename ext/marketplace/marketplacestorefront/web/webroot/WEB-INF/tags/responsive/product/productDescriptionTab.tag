@@ -13,11 +13,13 @@
 <div class="tab-details">
 	<ycommerce:testId code="productStyleNotes_content_label">
 	   <c:if test="${not empty product.articleDescription}">
+	   <span itemprop="description">
 		<%-- <ul style="list-style-type:square">
   			<li>${product.articleDescription}</li>
   		</ul>
   		<li><spring:theme code="product.listing.id"></spring:theme>${product.code}</li> --%>
   		${product.articleDescription}
+  		</span>
   		</c:if>
   		 <%-- <c:choose>
 		 <c:when test="${not empty mapConfigurableAttribute}">

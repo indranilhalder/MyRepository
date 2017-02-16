@@ -22,7 +22,7 @@ $(document).ready(function(){
        		$("#lnOverView a").addClass("active"); 		
        	}
        	else if(pageName=="mplPref"){
-       		$("#lnMplPref a").addClass("active");
+       		$("#lnMplPref a").addClass("active"); 		
        	}
        	else if(pageName=="addressBook"){
        		$("#lnAddress a").addClass("active"); 		
@@ -113,7 +113,6 @@ function editAddress(addressId) {
     	   cache: false,
     	   contentType : "application/json; charset=utf-8",
     	   success : function(data) {
-    		   $(".errorMessage > div").hide();
    				$('#addressId').val(addressId);
    				$('#firstName').val(data.firstName);
    				$('#lastName').val(data.lastName);
@@ -143,7 +142,6 @@ function editAddress(addressId) {
    				
    				$("#addNewAddress").css("display","none");
    				$("#edit").css("display","block");
-   			
     	   },
     	   error : function(data) {
     		   	console.log(data.responseText) 
@@ -852,7 +850,7 @@ function editAddress(addressId) {
 //  Update Password *********************************************
 	function validatePassword() {
 		var flag=true;
-		var regexPasswordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#^$%*&!^~]).{8,16}$/; //TISPRM-11
+		//var regexPasswordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#^$%*&!^~]).{8,16}$/; //TISPRM-11
 		if (document.getElementById("currentPassword").value == null
 				|| document.getElementById("currentPassword").value == "") {
 			$("#errCurpwd").css({
@@ -991,7 +989,11 @@ function editAddress(addressId) {
     
  // Validation of Account address page
     function validateAccountAddress() {
-    	   
+    	 //Trimming all the fields before validation
+    	$("form#addressForm :input[type=text]").each(function(){
+   		 var input = $(this);    
+   		 $(this).val($(this).val().trim());    		     		
+   	});  
         var selectedValueState = document.getElementById('stateListBox').selectedIndex;
 //        var regexCharSpace = /^[a-zA-Z ]*$/;
         var regexCharSpace = /^[a-zA-Z]+$/;
@@ -1025,7 +1027,7 @@ function editAddress(addressId) {
         else if (!regexCharSpace.test(document.getElementById("firstName").value)) { 
         	$("#errddressfn").css({"display":"block"});
 
-            document.getElementById("erraddressfn").innerHTML = "<font color='red' size='2'>First name should not contain any special characters, numbers and spaces</font>";
+            document.getElementById("erraddressfn").innerHTML = "<font color='red' size='2'>First name should not contain any special characters or space</font>";
             flagFn = false;
         }
         if (addressForm.lastName.value == null || addressForm.lastName.value == "") {
@@ -1036,15 +1038,14 @@ function editAddress(addressId) {
         else if (!regexCharSpace.test(document.getElementById("lastName").value)) { 
         	$("#errddressln").css({"display":"block"});
 
-            document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'>Last name should not contain any special characters, numbers and space</font>";
+            document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'>Last name should not contain any special characters or space</font>";
             flagLn = false;
         }
-        if (addressForm.line1.value == null || addressForm.line1.value.trim() == "") {
+        if (addressForm.line1.value == null || addressForm.line1.value == "") {
         	$("#errddressline1").css({"display":"block"});
         	document.getElementById("erraddressline1").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 1</font>";
         	flagAd1 = false;
         }
-        /*TISRLEE-1655*/
        /* if (addressForm.line2.value == null || addressForm.line2.value == "") {
         	$("#errddressline2").css({"display":"block"});
         	document.getElementById("erraddressline2").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 2</font>";
@@ -1055,7 +1056,6 @@ function editAddress(addressId) {
         	document.getElementById("erraddressline3").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 3</font>";
         	flagAd3 = false;
         }*/
-        /*TISRLEE-1655*/
         if (addressForm.postcode.value == null || addressForm.postcode.value == "") {
         	$("#errddressPost").css({"display":"block"});
         	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Please enter post code</font>";
@@ -1099,17 +1099,17 @@ function editAddress(addressId) {
         }
         else if (addressForm.mobileNo.value.length > 10 || addressForm.mobileNo.value.length < 10 || isNaN(addressForm.mobileNo.value)) {
         	$("#errddressMob").css({"display":"block"});
-        	document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Please Enter Valid Mobile Number</font>";
+        	document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>";
         	flagMob = false;
         }
         else if (regexSpace.test(addressForm.mobileNo.value)) {
         	$("#errddressMob").css({"display":"block"});
-        	document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Please Enter Valid Mobile Number</font>";
+        	document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>";
         	flagMob = false;
         }
         else if(equalNoCheck.test(addressForm.mobileNo.value)){
         	$("#errddressMob").css({"display":"block"});
-        	document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Please Enter Valid Mobile Number</font>";
+        	document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>";
         	flagMob = false;
         }
         

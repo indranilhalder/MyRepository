@@ -260,6 +260,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 										}
 										pincodereqObj.setStore(reqStreNames);
 									}
+									pincodereqObj.setStore(reqStreNames);
 								}
 							}
 							pincodereqObj.setDeliveryMode(deliveryModes);
@@ -294,6 +295,8 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 
 						pincodeList.add(pincodereqObj);
 					}
+					pincodeList.add(pincodereqObj);
+					//}
 				}
 				if (null != pin)
 				{
@@ -576,10 +579,10 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 						storeLocatorList.add(storelocreqObj);
 					}
 				}
-				if (cartModel == null)
-				{
-					cartModel = cartService.getSessionCart();
-				}
+				//Fix for anonymous cart from mobile
+				/*
+				 * if (cartModel == null) { cartModel = cartService.getSessionCart(); }
+				 */
 				if (null != cartModel && null != cartModel.getGuid())
 				{
 					storeLocatorRequest.setCartId(cartModel.getGuid());

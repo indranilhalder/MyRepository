@@ -10,6 +10,7 @@ import de.hybris.platform.core.model.c2l.CountryModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 
@@ -26,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facades.populators.CustomAddressPopulator;
 import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.marketplacecommerceservices.service.AccountAddressService;
 
@@ -35,114 +35,10 @@ import com.tisl.mpl.marketplacecommerceservices.service.AccountAddressService;
  * @author TCS
  *
  */
-public class AccountAddressFacade
+public class AccountAddressFacade implements MplAccountAddressFacade
 {
 	@Resource
 	private UserService userService;
-
-	/**
-	 * @return the userService
-	 */
-	public UserService getUserService()
-	{
-		return userService;
-	}
-
-	/**
-	 * @param userService
-	 *           the userService to set
-	 */
-	public void setUserService(final UserService userService)
-	{
-		this.userService = userService;
-	}
-
-	/**
-	 * @return the modelService
-	 */
-	public ModelService getModelService()
-	{
-		return modelService;
-	}
-
-	/**
-	 * @param modelService
-	 *           the modelService to set
-	 */
-	public void setModelService(final ModelService modelService)
-	{
-		this.modelService = modelService;
-	}
-
-	/**
-	 * @return the addressReversePopulator
-	 */
-	public Populator<AddressData, AddressModel> getAddressReversePopulator()
-	{
-		return addressReversePopulator;
-	}
-
-	/**
-	 * @param addressReversePopulator
-	 *           the addressReversePopulator to set
-	 */
-	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
-	{
-		this.addressReversePopulator = addressReversePopulator;
-	}
-
-	/**
-	 * @return the customerAccountService
-	 */
-	public CustomerAccountService getCustomerAccountService()
-	{
-		return customerAccountService;
-	}
-
-	/**
-	 * @param customerAccountService
-	 *           the customerAccountService to set
-	 */
-	public void setCustomerAccountService(final CustomerAccountService customerAccountService)
-	{
-		this.customerAccountService = customerAccountService;
-	}
-
-	/**
-	 * @return the commerceCommonI18NService
-	 */
-	public CommerceCommonI18NService getCommerceCommonI18NService()
-	{
-		return commerceCommonI18NService;
-	}
-
-	/**
-	 * @param commerceCommonI18NService
-	 *           the commerceCommonI18NService to set
-	 */
-	public void setCommerceCommonI18NService(final CommerceCommonI18NService commerceCommonI18NService)
-	{
-		this.commerceCommonI18NService = commerceCommonI18NService;
-	}
-
-
-	/**
-	 * @return the accountAddressService
-	 */
-	public AccountAddressService getAccountAddressService()
-	{
-		return accountAddressService;
-	}
-
-	/**
-	 * @param accountAddressService
-	 *           the accountAddressService to set
-	 */
-	public void setAccountAddressService(final AccountAddressService accountAddressService)
-	{
-		this.accountAddressService = accountAddressService;
-	}
-
 	@Autowired
 	private ModelService modelService;
 	@Autowired
@@ -152,7 +48,7 @@ public class AccountAddressFacade
 	@Autowired
 	private CommerceCommonI18NService commerceCommonI18NService;
 	@Autowired
-	private CustomAddressPopulator addressPopulator;
+	private Converter<AddressModel, AddressData> addressConverter;
 	@Autowired
 	private AccountAddressService accountAddressService;
 	protected static final Logger LOG = Logger.getLogger(AccountAddressFacade.class);
@@ -161,9 +57,9 @@ public class AccountAddressFacade
 	 * @description method is called to add an Address to the Customer's AddressBook
 	 * @param newAddress
 	 */
+	@Override
 	public void addaddress(final AddressData newAddress)
 	{
-
 		try
 		{
 			validateParameterNotNullStandardMessage(MarketplacecommerceservicesConstants.ADDRESS_DATA, newAddress);
@@ -310,6 +206,7 @@ public class AccountAddressFacade
 	 * @description method is called to edit Address of the Customer
 	 * @param addressData
 	 */
+	@Override
 	public void editAddress(final AddressData addressData)
 	{
 		try
@@ -350,6 +247,7 @@ public class AccountAddressFacade
 	 * @description method is called to get the AddressBook of the customer
 	 * @return List
 	 */
+	@Override
 	public List<AddressData> getAddressBook()
 	{
 		try
@@ -371,8 +269,12 @@ public class AccountAddressFacade
 						final boolean validForSite = deliveryCountries != null && deliveryCountries.contains(address.getCountry());
 						if (validForSite)
 						{
-							 AddressData addressData = new AddressData();
-							 addressPopulator.populate(address, addressData);
+							final AddressData addressData = addressConverter.convert(address);
+							addressData.setPhone(address.getCellphone());
+							addressData.setState(address.getDistrict());
+							addressData.setAddressType(address.getAddressType());
+							addressData.setLocality(address.getLocality());
+							addressData.setLine3(address.getAddressLine3());
 
 							if (defaultAddress != null && defaultAddress.getId() != null
 									&& defaultAddress.getId().equals(addressData.getId()))
@@ -402,25 +304,35 @@ public class AccountAddressFacade
 	 * @description method is called to get the Default Address of the Customer
 	 * @return AddressData
 	 */
+	@Override
 	public AddressData getDefaultAddress()
 	{
 		try
 		{
 			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-			 AddressData defaultAddressData = new AddressData();
+			AddressData defaultAddressData = null;
 
 			final AddressModel defaultAddress = customerAccountService.getDefaultAddress(currentCustomer);
 			if (defaultAddress != null)
 			{
-				addressPopulator.populate(defaultAddress,defaultAddressData);
+				defaultAddressData = addressConverter.convert(defaultAddress);
+				defaultAddressData.setPhone(defaultAddress.getCellphone());
+				defaultAddressData.setState(defaultAddress.getDistrict());
+				defaultAddressData.setAddressType(defaultAddress.getAddressType());
+				defaultAddressData.setLocality(defaultAddress.getLocality());
+				defaultAddressData.setLine3(defaultAddress.getAddressLine3());
 			}
 			else
 			{
 				final List<AddressModel> addresses = customerAccountService.getAddressBookEntries(currentCustomer);
 				if (CollectionUtils.isNotEmpty(addresses))
 				{
-					addressPopulator.populate(addresses.get(0), defaultAddressData);
-
+					defaultAddressData = addressConverter.convert(addresses.get(0));
+					defaultAddressData.setPhone(addresses.get(0).getCellphone());
+					defaultAddressData.setState(addresses.get(0).getDistrict());
+					defaultAddressData.setAddressType(addresses.get(0).getAddressType());
+					defaultAddressData.setLocality(addresses.get(0).getLocality());
+					defaultAddressData.setLine3(addresses.get(0).getAddressLine3());
 				}
 			}
 			return defaultAddressData;
@@ -431,24 +343,45 @@ public class AccountAddressFacade
 		}
 	}
 
+	//	/**
+	//	 * @description method is called to get the AddressCode
+	//	 * @param code
+	//	 * @return AddressData
+	//	 */
+	//	public AddressData getAddressForCode(final String code)
+	//	{
+	//		try
+	//		{
+	//			final AddressModel defaultAddress = customerAccountService.getAddressForCode(
+	//					(CustomerModel) userService.getCurrentUser(), code);
+	//			if (defaultAddress != null)
+	//			{
+	//				final AddressData addressData = addressConverter.convert(defaultAddress);
+	//				addressData.setState(defaultAddress.getDistrict());
+	//				addressData.setAddressType(defaultAddress.getAddressType());
+	//				addressData.setLocality(defaultAddress.getLocality());
+	//				addressData.setLine3(defaultAddress.getAddressLine3());
+	//				return addressData;
+	//			}
+	//			return null;
+	//		}
+	//		catch (final Exception ex)
+	//		{
+	//			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+	//		}
+	//	}
+
 	/**
-	 * @description method is called to get the AddressCode
-	 * @param code
-	 * @return AddressData
+	 * @return List<StateData>
 	 */
-	public AddressData getAddressForCode(final String code)
+	@Override
+	public List<StateData> getStates()
 	{
 		try
 		{
-			final AddressModel defaultAddress = customerAccountService.getAddressForCode(
-					(CustomerModel) userService.getCurrentUser(), code);
-			if (defaultAddress != null)
-			{
-			    AddressData addressData = new AddressData();
-				addressPopulator.populate(defaultAddress, addressData);
-				return addressData;
-			}
-			return null;
+			//List<StateData> stateList = new ArrayList<StateData>();
+			//stateList = accountAddressService.getStates();
+			return accountAddressService.getStates();
 		}
 		catch (final Exception ex)
 		{
@@ -457,19 +390,170 @@ public class AccountAddressFacade
 	}
 
 	/**
-	 * @return List<StateData>
+	 * @return the userService
 	 */
-	public List<StateData> getStates()
+	public UserService getUserService()
+	{
+		return userService;
+	}
+
+	/**
+	 * @param userService
+	 *           the userService to set
+	 */
+	public void setUserService(final UserService userService)
+	{
+		this.userService = userService;
+	}
+
+	/**
+	 * @return the modelService
+	 */
+	public ModelService getModelService()
+	{
+		return modelService;
+	}
+
+	/**
+	 * @param modelService
+	 *           the modelService to set
+	 */
+	public void setModelService(final ModelService modelService)
+	{
+		this.modelService = modelService;
+	}
+
+	/**
+	 * @return the addressReversePopulator
+	 */
+	public Populator<AddressData, AddressModel> getAddressReversePopulator()
+	{
+		return addressReversePopulator;
+	}
+
+	/**
+	 * @param addressReversePopulator
+	 *           the addressReversePopulator to set
+	 */
+	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
+	{
+		this.addressReversePopulator = addressReversePopulator;
+	}
+
+	/**
+	 * @return the customerAccountService
+	 */
+	public CustomerAccountService getCustomerAccountService()
+	{
+		return customerAccountService;
+	}
+
+	/**
+	 * @param customerAccountService
+	 *           the customerAccountService to set
+	 */
+	public void setCustomerAccountService(final CustomerAccountService customerAccountService)
+	{
+		this.customerAccountService = customerAccountService;
+	}
+
+	/**
+	 * @return the commerceCommonI18NService
+	 */
+	public CommerceCommonI18NService getCommerceCommonI18NService()
+	{
+		return commerceCommonI18NService;
+	}
+
+	/**
+	 * @param commerceCommonI18NService
+	 *           the commerceCommonI18NService to set
+	 */
+	public void setCommerceCommonI18NService(final CommerceCommonI18NService commerceCommonI18NService)
+	{
+		this.commerceCommonI18NService = commerceCommonI18NService;
+	}
+
+	/**
+	 * @return the addressConverter
+	 */
+	public Converter<AddressModel, AddressData> getAddressConverter()
+	{
+		return addressConverter;
+	}
+
+	/**
+	 * @param addressConverter
+	 *           the addressConverter to set
+	 */
+	public void setAddressConverter(final Converter<AddressModel, AddressData> addressConverter)
+	{
+		this.addressConverter = addressConverter;
+	}
+
+	/**
+	 * @return the accountAddressService
+	 */
+	public AccountAddressService getAccountAddressService()
+	{
+		return accountAddressService;
+	}
+
+	/**
+	 * @param accountAddressService
+	 *           the accountAddressService to set
+	 */
+	public void setAccountAddressService(final AccountAddressService accountAddressService)
+	{
+		this.accountAddressService = accountAddressService;
+	}
+
+
+	@Override
+	public void addaddress(final AddressData newAddress, final CustomerModel customer)
 	{
 		try
 		{
-			List<StateData> stateList = new ArrayList<StateData>();
-			stateList = accountAddressService.getStates();
-			return stateList;
+			validateParameterNotNullStandardMessage(MarketplacecommerceservicesConstants.ADDRESS_DATA, newAddress);
+			LOG.debug(MarketplacecommerceservicesConstants.ADDRESTYPE_EQUALS_ADDADDRESS + newAddress.getAddressType());
+			final CustomerModel currentCustomer = customer;
+
+			if (null != customer)
+			{
+				final boolean makeThisAddressTheDefault = newAddress.isDefaultAddress()
+						|| (currentCustomer.getDefaultShipmentAddress() == null && newAddress.isVisibleInAddressBook());
+				final AddressModel existingAddress = isDuplicateAddress(newAddress, currentCustomer);
+				AddressModel addressmodel = null;
+				if (null != existingAddress)
+				{
+					addressmodel = existingAddress;
+				}
+				else
+				{
+					addressmodel = modelService.create(AddressModel.class);
+					addressReversePopulator.populate(newAddress, addressmodel);
+					addressmodel.setCellphone(newAddress.getPhone());
+					addressmodel.setDistrict(newAddress.getState());
+					addressmodel.setAddressType(newAddress.getAddressType());
+					addressmodel.setLocality(newAddress.getLocality());
+					addressmodel.setAddressLine3(newAddress.getLine3());
+				}
+
+				customerAccountService.saveAddressEntry(currentCustomer, addressmodel);
+				newAddress.setId(addressmodel.getPk().toString());
+
+				if (makeThisAddressTheDefault)
+				{
+					customerAccountService.setDefaultAddressEntry(currentCustomer, addressmodel);
+				}
+			}
 		}
 		catch (final Exception ex)
 		{
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
+
+
+
 	}
 }

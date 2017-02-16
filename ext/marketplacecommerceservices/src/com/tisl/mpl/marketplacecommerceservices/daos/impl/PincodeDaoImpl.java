@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
@@ -58,7 +59,7 @@ public class PincodeDaoImpl implements PincodeDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.PincodeDao#getAllGeocodedPOS(de.hybris.platform.storelocator.GPS,
 	 * double)
@@ -76,7 +77,7 @@ public class PincodeDaoImpl implements PincodeDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.PincodeDao#getAllGeocodedPOS(de.hybris.platform.storelocator.GPS,
 	 * double)
@@ -106,12 +107,11 @@ public class PincodeDaoImpl implements PincodeDao
 			fQuery.addQueryParameter("pincode", pincode);
 			final SearchResult result = this.flexibleSearchService.search(fQuery);
 			LOG.debug("Result for Pincode  Service:" + result.getResult());
-			if (null != result.getResult() && result.getResult().size() > 0)
+			if (CollectionUtils.isNotEmpty(result.getResult()))
 			{
-				pincodeModel = (PincodeModel) result.getResult().get(0);
-				return pincodeModel;
+				return (PincodeModel) result.getResult().get(0);
 			}
-			return pincodeModel;
+			return null;
 		}
 		catch (final FlexibleSearchException e)
 		{
@@ -140,11 +140,11 @@ public class PincodeDaoImpl implements PincodeDao
 			final Double lonMin = Double.valueOf(((GPS) corners.get(0)).getDecimalLongitude());
 			final StringBuilder query = new StringBuilder(280);
 			query.append("SELECT {PK} FROM {").append(GeneratedBasecommerceConstants.TC.POINTOFSERVICE).append("} WHERE {")
-					.append(LATITUDE).append(IS_NOT_NULL).append(LONGITUDE).append(IS_NOT_NULL)
-					.append(LATITUDE).append("} >= ?latMin AND {").append(LATITUDE).append("} <= ?latMax AND {")
-					.append(LONGITUDE).append("} >= ?lonMin AND {").append(LONGITUDE).append("} <= ?lonMax ")
-					.append(" AND {sellerid").append("} = ?sellerId AND {").append("clicknCollect")
-					.append("} = ?clicknCollect AND  { active ").append("} = ?active");
+					.append(LATITUDE).append(IS_NOT_NULL).append(LONGITUDE).append(IS_NOT_NULL).append(LATITUDE)
+					.append("} >= ?latMin AND {").append(LATITUDE).append("} <= ?latMax AND {").append(LONGITUDE)
+					.append("} >= ?lonMin AND {").append(LONGITUDE).append("} <= ?lonMax ").append(" AND {sellerid")
+					.append("} = ?sellerId AND {").append("clicknCollect").append("} = ?clicknCollect AND  { active ")
+					.append("} = ?active");
 			//
 			LOG.debug("Query for get SlaveIds from PointofService :" + query.toString());
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query.toString());
@@ -168,8 +168,7 @@ public class PincodeDaoImpl implements PincodeDao
 	 * @param radius
 	 * @return fetch PointOfService for GPS and radius
 	 */
-	protected FlexibleSearchQuery buildQuery(final GPS center, final double radius)
-			throws PointOfServiceDaoException
+	protected FlexibleSearchQuery buildQuery(final GPS center, final double radius) throws PointOfServiceDaoException
 	{
 		try
 		{

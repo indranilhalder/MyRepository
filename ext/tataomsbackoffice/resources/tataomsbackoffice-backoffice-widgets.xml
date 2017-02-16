@@ -11,20 +11,20 @@
 
 
 
-	<!-- Added by sana //importing the omsbackoffice widgets and commerce search -->
+	<!-- Added by sana //importing the omsbackoffice widgets and commerce search  -->
 
 
-	<import resource="/tata-omsbackoffice-oms-perspective-widgets.xml" />
-	<import resource="/tata-omsbackoffice-oms-return-perspective-widgets.xml" />
-	<import resource="/tata-omsbackoffice-oms-admin-perspective-widgets.xml" />
+<import resource="/tata-omsbackoffice-oms-perspective-widgets.xml"/>
+<import resource="/tata-omsbackoffice-oms-return-perspective-widgets.xml"/>
+<import resource="/tata-omsbackoffice-oms-admin-perspective-widgets.xml"/>
 
-	<import resource="/tata-commercesearchbackoffice-backoffice-widgets.xml" />
+<import resource="/tata-commercesearchbackoffice-backoffice-widgets.xml"/>
 
 
-	<widget-extension widgetId="backofficeMainSlot">
-
-		<widget id="tataBUCperspective" widgetDefinitionId="com.hybris.cockpitng.borderlayout"
-			slotId="perspectives" title="Tata BUC" template="false">
+	<widget-extension widgetId="backofficeMainSlot" >
+	
+	<widget id="tataBUCperspective" widgetDefinitionId="com.hybris.cockpitng.borderlayout"
+			slotId="perspectives" title="Tata BUC" template="false" >
 
 			<widget id="tataomsexplorerTree" widgetDefinitionId="com.hybris.cockpitng.widgets.common.explorertree"
 				slotId="leftSlot" template="false">
@@ -68,8 +68,7 @@
 					<setting key="bottomCaption" type="String">Edit Area</setting>
 					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
 					<setting key="widgetStyleClass" type="String"></setting>
-					<setting key="topCaption" type="String">Delivery Mode Configuration
-					</setting>
+					<setting key="topCaption" type="String">Delivery Mode Configuration</setting>
 					<setting key="centerPanelInitiallyLocked" type="Boolean">false
 					</setting>
 					<setting key="topPanelCollapsed" type="Boolean">true</setting>
@@ -82,8 +81,8 @@
 					<virtual-sockets />
 				</widget>
 				<!-- Added for shipment data upload -->
-				<widget id="shipment_data_upload" widgetDefinitionId="com.hybris.oms.shipmentdatauploadwidget"
-					slotId="perspectives" template="true" title="shipment data upload widget">
+				<widget id="shipment_data_upload" widgetDefinitionId="com.hybris.oms.shipmentdatauploadwidget" slotId="perspectives"
+					template="true" title="shipment data upload widget">
 					<virtual-sockets />
 				</widget>
 				<!-- Added for logistics Calendar -->
@@ -202,8 +201,7 @@
 
 
 				<!-- Added for Inventory By ORDERID -->
-				<widget id="ordersbyorderid"
-					widgetDefinitionId="com.hybris.oms.tata.orders.OrderLinesListController"
+				<widget id="ordersbyorderid" widgetDefinitionId="com.hybris.oms.tata.orders.OrderLinesListController"
 					slotId="perspectives" template="true">
 				</widget>
 
@@ -393,8 +391,7 @@
 					<setting key="bottomCaption" type="String"></setting>
 					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
 					<setting key="widgetStyleClass" type="String"></setting>
-					<setting key="topCaption" type="String">Seller And Logistics
-						Performance Report
+					<setting key="topCaption" type="String">Seller And Logistics Performance Report
 					</setting>
 					<setting key="centerPanelInitiallyLocked" type="Boolean">false
 					</setting>
@@ -480,6 +477,7 @@
 				</widget>
 			</widget>
 
+
 			<setting key="eastClosed" type="Boolean">true</setting>
 			<setting key="perspectiveImageUrl" value="cng/images/TUL_OMS_icon.png"
 				type="String" />
@@ -487,11 +485,10 @@
 
 
 	</widget-extension>
-	<widget-extension widgetId="tataBUCperspective">
-		<move widgetId="backofficeMainSlot" targetWidgetId="backofficeMainSlot"
-			targetSlotId="perspectives" position="0" />
+	 <widget-extension widgetId="tataBUCperspective">
+	<move widgetId="backofficeMainSlot" targetWidgetId="backofficeMainSlot" targetSlotId="perspectives" position="0"/>
 	</widget-extension>
-
+	
 	<widget-connection inputId="input" outputId="nodeSelected"
 		sourceWidgetId="tataomsbackoffice-explorer-tree" targetWidgetId="tataomsbackoffice-tree-node-adapter" />
 	<widget-connection inputId="genericInput" outputId="true"
