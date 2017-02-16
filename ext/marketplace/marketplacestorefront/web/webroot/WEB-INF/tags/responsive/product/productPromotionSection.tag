@@ -145,8 +145,8 @@
 												</div>
 										</div>										
 										</div>
+										<p style="padding-top:20px"><a style="text-decoration:none;font-size: 13px" href="${request.contextPath}${product.potentialPromotions[0].promourl}">${product.potentialPromotions[0].bundlepromolinktext}</a></p>
 									</div>
-									<p><a style="text-decoration:none" href="${request.contextPath}${product.potentialPromotions[0].promourl}">${product.potentialPromotions[0].bundlepromolinktext}</a></p>
 									</div>
 									</li>
 								</c:if>

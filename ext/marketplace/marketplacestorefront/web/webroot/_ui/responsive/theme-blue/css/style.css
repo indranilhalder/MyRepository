@@ -15339,7 +15339,8 @@ body .account .right-account ul.saved-cards>li:last-child {
 }
 body .account .right-account ul.saved-cards>li address {
     line-height: 1.5;
-    font-size: 14px
+    font-size: 14px;
+    word-wrap: break-word;
 }
 body .account .right-account ul.saved-cards>li a {
     text-decoration: underline;
@@ -16349,7 +16350,8 @@ body .account .right-account .order-history.order-details li.item .item-header p
 body .account .right-account .order-history.order-details li.item .item-header address {
     font-size: 12px;
     padding: 20px;
-    line-height: 1.5
+    line-height: 1.5;
+    word-wrap: break-word;
 }
 body .account .right-account .order-history.order-details li.item .item-fulfillment {
     margin-left: 20px;
