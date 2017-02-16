@@ -3834,6 +3834,11 @@ function validateEmiCardNo(formSubmit) {
 					if(response.cardType==null)
 					{
 						binStatus=true;
+						//INC144313385
+						if(formSubmit=="formSubmit")
+						{
+							dopayment(binStatus);
+						}
 						errorHandle.innerHTML = "";
 						return true;
 					}
