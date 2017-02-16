@@ -55,7 +55,7 @@ public class AtsConsumerService {
 
 
     public AtsConsumerService(String a_zookeeper, String a_groupId, String a_topic, boolean autoCommit,
-                              int sessionTimeout,int commitInterval,int zookeeperTimeout) {
+                              String sessionTimeout,String commitInterval,String zookeeperTimeout) {
         consumer = kafka.consumer.Consumer.createJavaConsumerConnector(
                 createConsumerConfig(a_zookeeper, a_groupId, autoCommit, sessionTimeout, commitInterval, zookeeperTimeout));
         this.topic = a_topic;
@@ -93,7 +93,7 @@ public class AtsConsumerService {
     }
 
     private static ConsumerConfig createConsumerConfig(String a_zookeeper, String a_groupId, boolean autocommit,
-                                                       int sessionTimeout,int commitInterval,int zookeeperTimeout) {
+                                                       String sessionTimeout,String commitInterval,String zookeeperTimeout) {
         final Properties props = new Properties();
         props.put(ZOOKEEPER_CONNECT, a_zookeeper);
         props.put(GROUP_ID, a_groupId);
