@@ -1862,6 +1862,13 @@ function displayDeliveryDetails(sellerName) {
 					$("#lingerieKnowMoreLi2").show();
 					$("#defaultKnowMoreLi").hide();
 					}
+				//Added for UF-98_start
+				else if(rWindowValue=="0")
+				{        
+					$("#defaultKnowMoreLi4").show();
+					$("#defaultKnowMoreLi").hide();
+				}
+				
 				else
 					{
 					$("#returnWindow").text(data['returnWindow']);
@@ -1871,6 +1878,8 @@ function displayDeliveryDetails(sellerName) {
 				else
 					{
 					$("#returnWindow").text("0");
+					$("#defaultKnowMoreLi4").show();
+					$("#defaultKnowMoreLi").hide();
 					}
 			}
 		}
