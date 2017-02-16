@@ -1836,4 +1836,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//PaymentFix2017:-
 	public static final String PAYMENTPENDING_SKIPTIME = "marketplace.PaymentPending.skipTime";
 
+	public static final String BUYAANDBGETPROMOTIONONSHIPPINGCHARGES = "BuyAandBGetPromotionOnShippingCharges".intern();
+	public static final String BUYAGETPERCENTAGEDISCOUNTONB = "BuyAGetPercentageDiscountOnB".intern();
+
 }
