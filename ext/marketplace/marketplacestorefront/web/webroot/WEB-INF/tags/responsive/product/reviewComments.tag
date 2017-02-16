@@ -12,8 +12,7 @@
 <!-- CODE CHANGES DONE FOR DISPLAYING REVIEW & RATING EXCEPT FROM JEWELLERY STARTS HERE -->
 <c:set var="finejewellery"><spring:theme code='product.finejewellery'/></c:set>
 <c:choose>
-<c:when test ="${product.rootCategory!=finejewellery}">
-<div id="ReviewSecion" class="reviews">
+<c:when test ="${product.rootCategory!=finejewellery && product.rootCategory!='FashionJewellery'}">
 
 	<div class="header">
 	      <h3>Your Rating</h3>
