@@ -519,7 +519,13 @@ sendAddToBag : function(formId, isBuyNow) {
 							$("#" + formId + "excedeInventory").show()
 									.fadeOut(6000);
 							return false;
-						} else {
+						} 
+						else if(data == "freebieErrorMsg") { //freebie unable to add
+							$("#" + formId + "Title").html("Freebie: This product is not on sale");						
+							$("#" + formId + "Title").show().fadeOut(5000);
+							return false;
+						}
+						else {
 							$("#" + formId + "Title").html("");
 							$("#" + formId + "Title").html(
 									"<br/><font color='#ff1c47'>"

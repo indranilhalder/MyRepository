@@ -685,6 +685,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NOSTOCK = "noStock";
 	public static final String TYPE_MISMATCH_ERROR_CODE = "typeMismatch";
 	public static final String ERROR_MSG_TYPE = "errorMsg";
+	public static final String ERROR_MSG_TYPE_FREEBIE = "freebieErrorMsg";
 	public static final String QUANTITY_INVALID_BINDING_MESSAGE_KEY = "basket.error.quantity.invalid.binding";
 	public static final String MINIMUM_CONFIGURED_QUANTIY = "mpl.cart.minimumConfiguredQuantity.lineItem";
 	public static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
@@ -1850,5 +1851,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String BUYAGETPERCENTAGEDISCOUNTONB = "BuyAGetPercentageDiscountOnB".intern();
 	public static final String DATEFORMATMMDDYYYY = "MM/dd/yy".intern();
 
+	//FREEBIE FIX
+	public static final String FREEBIEPRICETHRESHOLD = "freebiePriceThreshold";
 
 }

@@ -137,6 +137,7 @@ import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
+import com.tisl.mpl.helper.AddToCartHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
@@ -246,6 +247,10 @@ public class CartsController extends BaseCommerceController
 	private MplSlaveMasterFacade mplSlaveMasterFacade;
 	@Resource(name = "discountUtility")
 	private DiscountUtility discountUtility;
+
+	@Resource(name = "addToCartHelper")
+	private AddToCartHelper addToCartHelper;
+
 	//	@Autowired
 	//	private CartService cartService;
 	//@Autowired
@@ -1837,7 +1842,18 @@ public class CartsController extends BaseCommerceController
 		}
 		try
 		{
-			result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl, channel);
+			//INC144313608
+			final boolean isProductFreebie = getAddToCartHelper().isProductFreebie(productCode);
+			if (isProductFreebie) //freebie product or not
+			{
+				result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+			}
+			else
+			{
+				result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl, channel);
+			}
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -2811,8 +2827,10 @@ public class CartsController extends BaseCommerceController
 		CartModel cart = null;
 		try
 		{
-			cart = mplPaymentWebFacade.findCartValues(cartId);
+			//cart = mplPaymentWebFacade.findCartValues(cartId);
 
+			//CAR Project performance issue fixed
+			cart = cartService.getSessionCart();
 			final Map<String, String> delModeUssId = (Map<String, String>) JSON.parse(deliverymodeussId);
 			Double finalDeliveryCost = Double.valueOf(0.0);
 			for (final Map.Entry<String, String> element : delModeUssId.entrySet())
@@ -3797,6 +3815,24 @@ public class CartsController extends BaseCommerceController
 	public void setBaseSiteService(final BaseSiteService baseSiteService)
 	{
 		this.baseSiteService = baseSiteService;
+	}
+
+	/**
+	 * @return the addToCartHelper
+	 */
+	public AddToCartHelper getAddToCartHelper()
+	{
+		return addToCartHelper;
+	}
+
+
+	/**
+	 * @param addToCartHelper
+	 *           the addToCartHelper to set
+	 */
+	public void setAddToCartHelper(final AddToCartHelper addToCartHelper)
+	{
+		this.addToCartHelper = addToCartHelper;
 	}
 
 
