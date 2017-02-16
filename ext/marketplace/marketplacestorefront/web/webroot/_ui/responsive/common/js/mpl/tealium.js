@@ -1027,5 +1027,15 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 			 });
 			 /* TPR-4729 | SERP  ends*/ 
 
+			 /* TPR-4724 |Add to Bag |serp*/ 
+			 $(document).on('click','.serp_add_to_cart_form .js-add-to-cart',function(event){
+				 var productId="productCodePost";
+				 var product = $("#"+$(this).closest('form').attr("id")+" :input[name='" + productId +"']").val(); 
+				 var productarray=[];
+				     productarray.push(product);
+				 if(typeof utag !="undefined"){
+					utag.link({ link_text : "add_to_bag_serp" , event_type : "add_to_bag_serp" , product_sku : productarray });
+				} 
+			 });
 			 
 			 
