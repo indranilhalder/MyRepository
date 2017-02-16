@@ -59590,3 +59590,15 @@ body.page-productGrid .listing-leftmenu .checkbox-menu>a,body.page-productGrid .
 .total-payable-amount, .cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info p.delivery-price, .Price span, span#minPrice{
 	font-family:"MontserratGoogleReg";
 } 
+
+/*changes for pincode servicebility */
+    .product-info .product-content .delivery-block li.do.selected:after{
+	    content: "";
+    background: url(../images/sprite.svg) no-repeat scroll -274px -174px;
+    display: inline-block;
+    height: 32px;
+    width: 23px;
+    position: absolute;
+    right: 0;
+    top: 18px;
+    }
