@@ -59594,7 +59594,8 @@ body.template-pages-layout-apparelCategoryLandingPage .product-facet .facet .fac
 body.template-pages-layout-apparelCategoryLandingPageV1 .product-facet .facet .facet-list .facet-count,
 body.template-pages-layout-electronicsCategoryLandingPage .product-facet .facet .facet-list .facet-count,
 body.template-pages-layout-BrandLayoutPage .product-facet .facet .facet-list .facet-count,
-body.template-pages-layout-ShoeBrandLandingLayoutPage .product-facet .facet .facet-list .facet-count{
+body.template-pages-layout-ShoeBrandLandingLayoutPage .product-facet .facet .facet-list .facet-count,
+body.template-pages-layout-footwearCategoryLandingPage .product-facet .facet .facet-list .facet-count{
 	color:#ccc;	/* UF-5 */
 }
 body.page-productGrid span.jqtree-facetCount.jqtree_common ,
@@ -59602,7 +59603,8 @@ body.template-pages-layout-apparelCategoryLandingPage span.jqtree-facetCount.jqt
 body.template-pages-layout-apparelCategoryLandingPageV1 span.jqtree-facetCount.jqtree_common ,
 body.template-pages-layout-electronicsCategoryLandingPage span.jqtree-facetCount.jqtree_common ,
 body.template-pages-layout-BrandLayoutPage span.jqtree-facetCount.jqtree_common ,
-body.template-pages-layout-ShoeBrandLandingLayoutPage span.jqtree-facetCount.jqtree_common {
+body.template-pages-layout-ShoeBrandLandingLayoutPage span.jqtree-facetCount.jqtree_common ,
+body.template-pages-layout-footwearCategoryLandingPage span.jqtree-facetCount.jqtree_common {
     color: #ccc;
     position: relative;
     top:2px;					/* UF-5 */
@@ -59612,7 +59614,8 @@ body.template-pages-layout-apparelCategoryLandingPage .product-tile .details.sho
 body.template-pages-layout-apparelCategoryLandingPageV1 .product-tile .details.short-info,
 body.template-pages-layout-electronicsCategoryLandingPage .product-tile .details.short-info,
 body.template-pages-layout-BrandLayoutPage .product-tile .details.short-info,
-body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .details.short-info{
+body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .details.short-info,
+body.template-pages-layout-footwearCategoryLandingPage .product-tile .details.short-info{
 	margin-top: 10px; /* UF-7 */
 }
 body.page-productGrid .product-tile .details.short-info .brand,
@@ -59620,7 +59623,8 @@ body.template-pages-layout-apparelCategoryLandingPage .product-tile .details.sho
 body.template-pages-layout-apparelCategoryLandingPageV1 .product-tile .details.short-info .brand,
 body.template-pages-layout-electronicsCategoryLandingPage .product-tile .details.short-info .brand,
 body.template-pages-layout-BrandLayoutPage .product-tile .details.short-info .brand,
-body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .details.short-info .brand{
+body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .details.short-info .brand,
+body.template-pages-layout-footwearCategoryLandingPage .product-tile .details.short-info .brand{
 	margin: 4px 0;	/* UF-6 */
 }
 /* body.page-productGrid .facet-list.filter-opt .remove_filter:before{
@@ -59636,7 +59640,8 @@ body.template-pages-layout-apparelCategoryLandingPage .list_title h1,
 body.template-pages-layout-apparelCategoryLandingPageV1 .list_title h1,
 body.template-pages-layout-electronicsCategoryLandingPage .list_title h1,
 body.template-pages-layout-BrandLayoutPage .list_title h1,
-body.template-pages-layout-ShoeBrandLandingLayoutPage .list_title h1{
+body.template-pages-layout-ShoeBrandLandingLayoutPage .list_title h1,
+body.template-pages-layout-footwearCategoryLandingPage .list_title h1{
 	color:#000;			/* UF-11 */
 }
 
@@ -59645,7 +59650,8 @@ body.template-pages-layout-apparelCategoryLandingPage .product-tile .short-info 
 body.template-pages-layout-apparelCategoryLandingPageV1 .product-tile .short-info .product-name,
 body.template-pages-layout-electronicsCategoryLandingPage .product-tile .short-info .product-name,
 body.template-pages-layout-BrandLayoutPage .product-tile .short-info .product-name,
-body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .short-info .product-name{
+body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .short-info .product-name,
+body.template-pages-layout-footwearCategoryLandingPage .product-tile .short-info .product-name{
  overflow: hidden;
    text-overflow: ellipsis;
    display: -webkit-box;
@@ -59660,7 +59666,8 @@ body.template-pages-layout-apparelCategoryLandingPage .image .quickview div.addt
 body.template-pages-layout-apparelCategoryLandingPageV1 .image .quickview div.addtocart-component,
 body.template-pages-layout-electronicsCategoryLandingPage .image .quickview div.addtocart-component,
 body.template-pages-layout-BrandLayoutPage .image .quickview div.addtocart-component,
-body.template-pages-layout-ShoeBrandLandingLayoutPage .image .quickview div.addtocart-component{
+body.template-pages-layout-ShoeBrandLandingLayoutPage .image .quickview div.addtocart-component,
+body.template-pages-layout-footwearCategoryLandingPage .image .quickview div.addtocart-component{
 	display:none;		/* UF-17 */
 }
 body.page-productGrid .product-tile .image .quickview span:before,
@@ -59668,7 +59675,8 @@ body.template-pages-layout-apparelCategoryLandingPage .product-tile .image .quic
 body.template-pages-layout-apparelCategoryLandingPageV1 .product-tile .image .quickview span:before,
 body.template-pages-layout-electronicsCategoryLandingPage .product-tile .image .quickview span:before,
 body.template-pages-layout-BrandLayoutPage .product-tile .image .quickview span:before,
-body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .image .quickview span:before{
+body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .image .quickview span:before,
+body.template-pages-layout-footwearCategoryLandingPage .product-tile .image .quickview span:before{
 margin-top:2px;	/* UF-17 */
 }
 body.page-productGrid .product-tile .image .quick-bag-both.quickview .js-reference-item,
@@ -59676,7 +59684,8 @@ body.template-pages-layout-apparelCategoryLandingPage .product-tile .image .quic
 body.template-pages-layout-apparelCategoryLandingPageV1 .product-tile .image .quick-bag-both.quickview .js-reference-item,
 body.template-pages-layout-electronicsCategoryLandingPage .product-tile .image .quick-bag-both.quickview .js-reference-item,
 body.template-pages-layout-BrandLayoutPage .product-tile .image .quick-bag-both.quickview .js-reference-item,
-body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .image .quick-bag-both.quickview .js-reference-item{
+body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .image .quick-bag-both.quickview .js-reference-item,
+body.template-pages-layout-footwearCategoryLandingPage .product-tile .image .quick-bag-both.quickview .js-reference-item{
 	width: 100%;	/* UF-17 */
 }
 body.page-productGrid .product-tile .image .quick-bag-both.quickview span,
@@ -59684,7 +59693,8 @@ body.template-pages-layout-apparelCategoryLandingPage .product-tile .image .quic
 body.template-pages-layout-apparelCategoryLandingPageV1 .product-tile .image .quick-bag-both.quickview span,
 body.template-pages-layout-electronicsCategoryLandingPage .product-tile .image .quick-bag-both.quickview span,
 body.template-pages-layout-BrandLayoutPage .product-tile .image .quick-bag-both.quickview span,
-body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .image .quick-bag-both.quickview span{
+body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .image .quick-bag-both.quickview span,
+body.template-pages-layout-footwearCategoryLandingPage .product-tile .image .quick-bag-both.quickview span{
 	padding-right: 0;	/* UF-17 */
 }
 body.page-productGrid .product-tile .image .quick-bag-both.quickview span:before,
@@ -59692,7 +59702,8 @@ body.template-pages-layout-apparelCategoryLandingPage .product-tile .image .quic
 body.template-pages-layout-apparelCategoryLandingPageV1 .product-tile .image .quick-bag-both.quickview span:before,
 body.template-pages-layout-electronicsCategoryLandingPage .product-tile .image .quick-bag-both.quickview span:before,
 body.template-pages-layout-BrandLayoutPage .product-tile .image .quick-bag-both.quickview span:before,
-body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .image .quick-bag-both.quickview span:before{
+body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .image .quick-bag-both.quickview span:before,
+body.template-pages-layout-footwearCategoryLandingPage .product-tile .image .quick-bag-both.quickview span:before{
 	margin-left: 10px;
     left: 70%;
     top: -2px;
@@ -59710,7 +59721,9 @@ body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .image .quic
 	body.template-pages-layout-BrandLayoutPage .product-tile .image .online-exclusive,body.template-pages-layout-BrandLayoutPage .product-tile .image .on-sale,
 	body.template-pages-layout-BrandLayoutPage .product-tile .image .new,body.template-pages-layout-BrandLayoutPage .newExclusiveElement .new,
 	body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .image .online-exclusive,body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .image .on-sale,
-	body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .image .new,body.template-pages-layout-ShoeBrandLandingLayoutPage .newExclusiveElement .new{
+	body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .image .new,body.template-pages-layout-ShoeBrandLandingLayoutPage .newExclusiveElement .new,
+	body.template-pages-layout-footwearCategoryLandingPage .product-tile .image .online-exclusive,body.template-pages-layout-footwearCategoryLandingPage .product-tile .image .on-sale,
+	body.template-pages-layout-footwearCategoryLandingPage .product-tile .image .new,body.template-pages-layout-footwearCategoryLandingPage .newExclusiveElement .new{
 	    left: 0px !important;			/* UF-12 */
 }
 
@@ -59723,7 +59736,8 @@ body.template-pages-layout-apparelCategoryLandingPage ul.jqtree-tree .jqtree-tog
 body.template-pages-layout-apparelCategoryLandingPageV1 ul.jqtree-tree .jqtree-toggler.jqtree-closed,
 body.template-pages-layout-electronicsCategoryLandingPage ul.jqtree-tree .jqtree-toggler.jqtree-closed,
 body.template-pages-layout-BrandLayoutPage ul.jqtree-tree .jqtree-toggler.jqtree-closed,
-body.template-pages-layout-ShoeBrandLandingLayoutPage ul.jqtree-tree .jqtree-toggler.jqtree-closed{
+body.template-pages-layout-ShoeBrandLandingLayoutPage ul.jqtree-tree .jqtree-toggler.jqtree-closed,
+body.template-pages-layout-footwearCategoryLandingPage ul.jqtree-tree .jqtree-toggler.jqtree-closed{
 	color: transparent;
 	transition: none;
     -webkit-transition: none;
@@ -59734,7 +59748,8 @@ body.template-pages-layout-apparelCategoryLandingPage .plp-wishlist,
 body.template-pages-layout-apparelCategoryLandingPageV1 .plp-wishlist,
 body.template-pages-layout-electronicsCategoryLandingPage .plp-wishlist,
 body.template-pages-layout-BrandLayoutPage .plp-wishlist,
-body.template-pages-layout-ShoeBrandLandingLayoutPage .plp-wishlist{
+body.template-pages-layout-ShoeBrandLandingLayoutPage .plp-wishlist,
+body.template-pages-layout-footwearCategoryLandingPage .plp-wishlist{
 background-image: none;
 }
 body.page-productGrid .plp-wishlist:before ,
@@ -59742,7 +59757,8 @@ body.template-pages-layout-apparelCategoryLandingPage .plp-wishlist:before ,
 body.template-pages-layout-apparelCategoryLandingPageV1 .plp-wishlist:before ,
 body.template-pages-layout-electronicsCategoryLandingPage .plp-wishlist:before ,
 body.template-pages-layout-BrandLayoutPage .plp-wishlist:before ,
-body.template-pages-layout-ShoeBrandLandingLayoutPage .plp-wishlist:before {
+body.template-pages-layout-ShoeBrandLandingLayoutPage .plp-wishlist:before ,
+body.template-pages-layout-footwearCategoryLandingPage .plp-wishlist:before {
     font-family: 'icomoon';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -59760,7 +59776,8 @@ body.template-pages-layout-apparelCategoryLandingPage .plp-wishlist.added:before
 body.template-pages-layout-apparelCategoryLandingPageV1 .plp-wishlist.added:before,
 body.template-pages-layout-electronicsCategoryLandingPage .plp-wishlist.added:before,
 body.template-pages-layout-BrandLayoutPage .plp-wishlist.added:before,
-body.template-pages-layout-ShoeBrandLandingLayoutPage .plp-wishlist.added:before{
+body.template-pages-layout-ShoeBrandLandingLayoutPage .plp-wishlist.added:before,
+body.template-pages-layout-footwearCategoryLandingPage .plp-wishlist.added:before{
 	content: "\e603";
 }
 /* UF-21 */
@@ -59775,7 +59792,9 @@ body.template-pages-layout-electronicsCategoryLandingPage #categoryPageDeptHierT
 body.template-pages-layout-BrandLayoutPage .facet_mobile .facet-values.js-facet-values.js-facet-form p.filter-name,body.template-pages-layout-BrandLayoutPage p.filter-name.facet_mobile,
 body.template-pages-layout-BrandLayoutPage #categoryPageDeptHierTreeForm p.filter-name,body.template-pages-layout-BrandLayoutPage #searchPageDeptHierTreeForm p.filter-name ,
 body.template-pages-layout-ShoeBrandLandingLayoutPage .facet_mobile .facet-values.js-facet-values.js-facet-form p.filter-name,body.template-pages-layout-ShoeBrandLandingLayoutPage p.filter-name.facet_mobile,
-body.template-pages-layout-ShoeBrandLandingLayoutPage #categoryPageDeptHierTreeForm p.filter-name,body.template-pages-layout-ShoeBrandLandingLayoutPage #searchPageDeptHierTreeForm p.filter-name {
+body.template-pages-layout-ShoeBrandLandingLayoutPage #categoryPageDeptHierTreeForm p.filter-name,body.template-pages-layout-ShoeBrandLandingLayoutPage #searchPageDeptHierTreeForm p.filter-name .
+body.template-pages-layout-footwearCategoryLandingPage .facet_mobile .facet-values.js-facet-values.js-facet-form p.filter-name,body.template-pages-layout-footwearCategoryLandingPage p.filter-name.facet_mobile,
+body.template-pages-layout-footwearCategoryLandingPage #categoryPageDeptHierTreeForm p.filter-name,body.template-pages-layout-footwearCategoryLandingPage #searchPageDeptHierTreeForm p.filter-name {
     display: none !important;
 }
 /* UI-UX Fixes for PLP end */
@@ -59939,7 +59958,8 @@ body.template-pages-layout-apparelCategoryLandingPage .plp-wishlist:hover:before
 body.template-pages-layout-apparelCategoryLandingPageV1 .plp-wishlist:hover:before,
 body.template-pages-layout-electronicsCategoryLandingPage .plp-wishlist:hover:before,
 body.template-pages-layout-BrandLayoutPage .plp-wishlist:hover:before,
-body.template-pages-layout-ShoeBrandLandingLayoutPage .plp-wishlist:hover:before{
+body.template-pages-layout-ShoeBrandLandingLayoutPage .plp-wishlist:hover:before,
+body.template-pages-layout-footwearCategoryLandingPage .plp-wishlist:hover:before{
 	content: "\e603";
     opacity: 0.7;
 }
@@ -59948,7 +59968,8 @@ body.template-pages-layout-apparelCategoryLandingPage .plp-wishlist.added:hover:
 body.template-pages-layout-apparelCategoryLandingPageV1 .plp-wishlist.added:hover:before,
 body.template-pages-layout-electronicsCategoryLandingPage .plp-wishlist.added:hover:before,
 body.template-pages-layout-BrandLayoutPage .plp-wishlist.added:hover:before,
-body.template-pages-layout-ShoeBrandLandingLayoutPage .plp-wishlist.added:hover:before{
+body.template-pages-layout-ShoeBrandLandingLayoutPage .plp-wishlist.added:hover:before,
+body.template-pages-layout-footwearCategoryLandingPage .plp-wishlist.added:hover:before{
 	content: "\e603";
     opacity: 1;
 }
@@ -60125,7 +60146,8 @@ body.template-pages-layout-apparelCategoryLandingPage .short-info .price .sale,
 body.template-pages-layout-apparelCategoryLandingPageV1 .short-info .price .sale,
 body.template-pages-layout-electronicsCategoryLandingPage .short-info .price .sale,
 body.template-pages-layout-BrandLayoutPage .short-info .price .sale,
-body.template-pages-layout-ShoeBrandLandingLayoutPage .short-info .price .sale{
+body.template-pages-layout-ShoeBrandLandingLayoutPage .short-info .price .sale,
+body.template-pages-layout-footwearCategoryLandingPage .short-info .price .sale{
     color: #000; 
 }
 body.page-productGrid .product-tile .details.short-info .brand,body.page-productGrid .short-info .price .old,
@@ -60133,7 +60155,8 @@ body.template-pages-layout-apparelCategoryLandingPage .product-tile .details.sho
 body.template-pages-layout-apparelCategoryLandingPageV1 .product-tile .details.short-info .brand,body.template-pages-layout-apparelCategoryLandingPageV1 .short-info .price .old,
 body.template-pages-layout-electronicsCategoryLandingPage .product-tile .details.short-info .brand,body.template-pages-layout-electronicsCategoryLandingPage .short-info .price .old,
 body.template-pages-layout-BrandLayoutPage .product-tile .details.short-info .brand,body.template-pages-layout-BrandLayoutPage .short-info .price .old,
-body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .details.short-info .brand,body.template-pages-layout-ShoeBrandLandingLayoutPage .short-info .price .old{
+body.template-pages-layout-ShoeBrandLandingLayoutPage .product-tile .details.short-info .brand,body.template-pages-layout-ShoeBrandLandingLayoutPage .short-info .price .old,
+body.template-pages-layout-footwearCategoryLandingPage .product-tile .details.short-info .brand,body.template-pages-layout-footwearCategoryLandingPage .short-info .price .old{
 	color:#999999;
 }
 body.page-productGrid .product-item .product-tile p.savings span,
@@ -60141,7 +60164,8 @@ body.template-pages-layout-apparelCategoryLandingPage .product-item .product-til
 body.template-pages-layout-apparelCategoryLandingPageV1 .product-item .product-tile p.savings span,
 body.template-pages-layout-electronicsCategoryLandingPage .product-item .product-tile p.savings span,
 body.template-pages-layout-BrandLayoutPage .product-item .product-tile p.savings span,
-body.template-pages-layout-ShoeBrandLandingLayoutPage .product-item .product-tile p.savings span{
+body.template-pages-layout-ShoeBrandLandingLayoutPage .product-item .product-tile p.savings span,
+body.template-pages-layout-footwearCategoryLandingPage .product-item .product-tile p.savings span{
 	font-size: 14px;
     /* font-weight:300; */
     margin-top:0px;
@@ -60153,7 +60177,8 @@ body.template-pages-layout-apparelCategoryLandingPage .facet-list.filter-opt li,
 body.template-pages-layout-apparelCategoryLandingPageV1 .facet-list.filter-opt li,
 body.template-pages-layout-electronicsCategoryLandingPage .facet-list.filter-opt li,
 body.template-pages-layout-BrandLayoutPage .facet-list.filter-opt li,
-body.template-pages-layout-ShoeBrandLandingLayoutPage .facet-list.filter-opt li{
+body.template-pages-layout-ShoeBrandLandingLayoutPage .facet-list.filter-opt li,
+body.template-pages-layout-footwearCategoryLandingPage .facet-list.filter-opt li{
     font-size: 12px;
      /*font-weight: 300; */
     letter-spacing: 0.3px;
@@ -60163,7 +60188,8 @@ body.template-pages-layout-apparelCategoryLandingPage .listing-leftmenu .checkbo
 body.template-pages-layout-apparelCategoryLandingPageV1 .listing-leftmenu .checkbox-menu>a,body.template-pages-layout-apparelCategoryLandingPageV1 .listing-leftmenu .checkbox-menu input[type='submit'],
 body.template-pages-layout-electronicsCategoryLandingPage .listing-leftmenu .checkbox-menu>a,body.template-pages-layout-electronicsCategoryLandingPage .listing-leftmenu .checkbox-menu input[type='submit'],
 body.template-pages-layout-BrandLayoutPage .listing-leftmenu .checkbox-menu>a,body.template-pages-layout-BrandLayoutPage .listing-leftmenu .checkbox-menu input[type='submit'],
-body.template-pages-layout-ShoeBrandLandingLayoutPage .listing-leftmenu .checkbox-menu>a,body.template-pages-layout-ShoeBrandLandingLayoutPage .listing-leftmenu .checkbox-menu input[type='submit']{
+body.template-pages-layout-ShoeBrandLandingLayoutPage .listing-leftmenu .checkbox-menu>a,body.template-pages-layout-ShoeBrandLandingLayoutPage .listing-leftmenu .checkbox-menu input[type='submit'],
+body.template-pages-layout-footwearCategoryLandingPage .listing-leftmenu .checkbox-menu>a,body.template-pages-layout-footwearCategoryLandingPage .listing-leftmenu .checkbox-menu input[type='submit']{
 	color: #a5173c; 
 	letter-spacing: 0.4px;
 }
@@ -60173,7 +60199,8 @@ body.template-pages-layout-ShoeBrandLandingLayoutPage .listing-leftmenu .checkbo
 	body.template-pages-layout-apparelCategoryLandingPageV1  .listing.wrapper .left-block,
 	body.template-pages-layout-electronicsCategoryLandingPage  .listing.wrapper .left-block,
 	body.template-pages-layout-BrandLayoutPage  .listing.wrapper .left-block,
-	body.template-pages-layout-ShoeBrandLandingLayoutPage  .listing.wrapper .left-block{
+	body.template-pages-layout-ShoeBrandLandingLayoutPage  .listing.wrapper .left-block,
+	body.template-pages-layout-footwearCategoryLandingPage  .listing.wrapper .left-block{
 	margin-top:	83px !important;
 }
 }
