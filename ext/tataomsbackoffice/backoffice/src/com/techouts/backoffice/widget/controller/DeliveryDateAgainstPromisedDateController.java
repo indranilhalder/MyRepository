@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Consumer;
 
 import org.apache.commons.lang.StringUtils;
@@ -180,8 +181,7 @@ public class DeliveryDateAgainstPromisedDateController extends DefaultWidgetCont
 	public void getCsv() throws InterruptedException
 	{
 
-		exportToCsv(listBoxData, listOfSshipResponse,
-				"DeliveryDateAgainstPromisedReport_" + startDate.replace("-", "") + "_" + endDate.replace("-", ""));
+		exportToCsv(listBoxData, listOfSshipResponse, "DeliveryDateAgainstPromisedReport_" + new Random(123456));
 
 	}
 
