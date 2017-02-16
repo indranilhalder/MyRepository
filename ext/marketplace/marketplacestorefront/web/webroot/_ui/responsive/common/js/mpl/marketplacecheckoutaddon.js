@@ -5577,6 +5577,10 @@ function populatePincodeDeliveryMode(response,buttonType){
 		$("#checkout-enabled").css("pointer-events","none");
 		$("#checkout-enabled").css("cursor","default");
 		$("#checkout-enabled").css("opacity","0.5");
+		/*UF-69*/
+		$("#checkout-down-enabled").css("pointer-events","none");
+		$("#checkout-down-enabled").css("cursor","default");
+		$("#checkout-down-enabled").css("opacity","0.5");
 		$("#expressCheckoutButtonId").css("pointer-events","none");
 		$("#expressCheckoutButtonId").css("cursor","default");
 		$("#expressCheckoutButtonId").css("opacity","0.5");
@@ -5600,6 +5604,10 @@ function populatePincodeDeliveryMode(response,buttonType){
 		$("#checkout-enabled").css("pointer-events","all");
 		$("#checkout-enabled").css("cursor","cursor");
 		$("#checkout-enabled").css("opacity","1");
+		/*UF-69*/
+		$("#checkout-down-enabled").css("pointer-events","all");
+		$("#checkout-down-enabled").css("cursor","cursor");
+		$("#checkout-down-enabled").css("opacity","1");
 		$("#expressCheckoutButtonId").css("pointer-events","all");
 		$("#expressCheckoutButtonId").css("cursor","cursor");
 		$("#expressCheckoutButtonId").css("opacity","1");
@@ -5728,6 +5736,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 		// TISBOX-879
 		$("#isPincodeServicableId").val('Y');
 		$('#checkout-id #checkout-enabled').removeClass('checkout-disabled'); // TISEE-6257
+		$('#checkout-id-down #checkout-down-enabled').removeClass('checkout-disabled'); //UF-69
 		$('#expresscheckoutid #expressCheckoutButtonId').removeClass('express-checkout-disabled'); // TISEE-6257
 		// Code Start TISPRD-437
 		var str1 = document.referrer; 
@@ -5757,6 +5766,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 	{
 		$("#isPincodeServicableId").val('N');
 		$('#checkout-id #checkout-enabled').addClass('checkout-disabled'); // TISEE-6257
+		$('#checkout-id-down #checkout-down-enabled').addClass('checkout-disabled'); //UF-69
 		$('#expresscheckoutid #expressCheckoutButtonId').addClass('express-checkout-disabled'); // TISEE-6257
 	}
 }

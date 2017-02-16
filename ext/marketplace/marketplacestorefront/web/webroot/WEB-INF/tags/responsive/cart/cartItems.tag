@@ -1209,11 +1209,17 @@ tr.d0 td {
 			</div>
 			</td> --%>
 			<td>
-				<li id="checkout-id" class="checkout-button">
+				<%-- <li id="checkout-id" class="checkout-button">
 				<!-- TISEE-6257 -->
 				<a  id="checkout-enabled" class="checkoutButton checkout button red"  onclick="return checkPincodeServiceability('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
 				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
+				</li> --%>
+				<ul class="checkout-types onlyCheckoutButton">
+				<li id="checkout-id-down" class="checkout-button">
+				<a  id="checkout-down-enabled" class="checkoutButton checkout button red"  onclick="return checkPincodeServiceability('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
+				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
 				</li>
+				 </ul>
 			</td>
            	</tr>           		
            </table> 
