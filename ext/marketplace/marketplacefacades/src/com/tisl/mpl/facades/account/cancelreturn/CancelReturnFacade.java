@@ -24,7 +24,9 @@ import com.tisl.mpl.data.RTSAndRSSReturnInfoResponseData;
 import com.tisl.mpl.data.ReturnInfoData;
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
+import com.tisl.mpl.wsdto.ReturnPincodeDTO;
 import com.tisl.mpl.wsdto.ReturnRequestDTO;
+
 
 
 /**
@@ -79,19 +81,17 @@ public interface CancelReturnFacade
 	 * @param ussid
 	 * @param customerData
 	 * @param subOrderModel
-
-	 * @param returnAddress
-	 * @param returnInfoData
 	 * @return CRMTicketStatus
 	 */
 	public boolean createTicketInCRM(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
 			final String ticketTypeCode, final String reasonCode, final String refundType, final String ussid,
-			final CustomerData customerData, final OrderModel subOrderModel, ReturnItemAddressData returnAddress,ReturnInfoData returnInfoData);
+			final CustomerData customerData, final OrderModel subOrderModel, ReturnItemAddressData returnAddress);
 
 
 	/**
 	 * @param order
 	 * @param orderLineId
+	 * @return
 	 * @throws Exception
 	 */
 	public List<OrderEntryData> associatedEntriesData(OrderModel order, String orderLineId) throws Exception;
@@ -225,9 +225,10 @@ public interface CancelReturnFacade
 	
 	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByDates(Date fromDate, Date toDate);
 
+	public ReturnPincodeDTO checkReturnLogisticsForApp(final OrderData orderDetails, final String pincode,
+			final String returntransactionId);
+
 	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByParams(String orderID, String customerId, String pincode);
-
-
 	/**
 	 * @param orderCode
 	 * @param transactionId

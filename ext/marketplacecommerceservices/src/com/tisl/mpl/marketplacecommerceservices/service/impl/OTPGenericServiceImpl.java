@@ -57,6 +57,7 @@ public class OTPGenericServiceImpl implements OTPGenericService
 	private final String EMAILPATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
+
 	/**
 	 * Calculates the checksum using the credit card algorithm. This algorithm has the advantage that it detects any
 	 * single mistyped digit and any single transposition of adjacent digits.
@@ -842,7 +843,6 @@ public class OTPGenericServiceImpl implements OTPGenericService
 	{
 		this.configurationService = configurationService;
 	}
-
 
 
 }

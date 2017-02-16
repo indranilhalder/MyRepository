@@ -17,6 +17,7 @@ package com.tisl.mpl.storefront.security.cookie;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
+import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,10 +41,17 @@ public class EnhancedCookieGenerator extends CookieGenerator
 	public static final String HEADER_COOKIE = "Set-Cookie";
 	public static final boolean DEFAULT_HTTP_ONLY = false;
 	public static final boolean DEFAULT_COOKIE_PATH = true;
+	public static final String LOCALHOST = "localhost";
+	public static final String DOMAIN = "shared.cookies.domain";
+
+
 
 	private boolean useDefaultPath = DEFAULT_COOKIE_PATH;
 	private boolean httpOnly = DEFAULT_HTTP_ONLY;
 	private boolean useDefaultDomain = true;
+
+	@Resource(name = "configurationService")
+	private ConfigurationService configurationService;
 	private static final Logger LOG = Logger.getLogger(EnhancedCookieGenerator.class.getName());
 
 	/**
@@ -128,6 +136,14 @@ public class EnhancedCookieGenerator extends CookieGenerator
 				setCustomDomain(cookie);
 				setEnhancedCookie(cookie);
 				cookie.setPath("/"); //TISPT-307
+				//SISA FIX
+				final String domain = configurationService.getConfiguration().getString(DOMAIN);
+
+				if (null != domain && !domain.equalsIgnoreCase(LOCALHOST))
+				{
+					cookie.setSecure(true);
+				}
+
 
 				if (isHttpOnly())
 				{

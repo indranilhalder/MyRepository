@@ -9,6 +9,7 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
+import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -24,7 +25,6 @@ import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.util.DiscountValue;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -126,6 +126,11 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 		target.setStatus(source.getStatus());
 		target.setStatusDisplay(source.getStatusDisplay());
 		target.setType(source.getType());
+		final CurrencyModel currency = source.getCurrency();
+		if (null != currency)
+		{
+			target.setCurrencySymbol(currency.getSymbol());
+		}
 	}
 
 

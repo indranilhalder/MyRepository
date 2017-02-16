@@ -81,12 +81,14 @@
 
 	<div class="content">
 	<!-- Luxury tab	 starts-->
+	<c:if test="${!hideSecureTransaction}">
 						<div id="flip-tabs" >				
 							<ul id="flip-navigation" >  
 					            <li class="selected"><a href="/" id="tab-1" >MARKETPLACE</a></li>
 					            <li><a href="${luxuryHost}" id="tab-2" target="_blank">LUXURY</a></li>  
 					        </ul> 
 					    </div>
+					    </c:if>
 	 <!-- Luxury tab	 ends-->
 		<div class="top">
 			<c:if test="${empty showOnlySiteLogo }">
@@ -124,7 +126,10 @@
 				</div>
 				<c:set var="userLoggedIn" value="${true}"  />
 				<div class="right">
+
 					<ul>
+
+
 						<!--Using this tag for 'My Bag' Link in header navigation pane and it will navigate to cart Page  -->
 
 						<c:if test="${empty showOnlySiteLogo }">
@@ -226,10 +231,24 @@
 				<ul>
 					<c:if test="${empty showOnlySiteLogo }">
 
+<!-- changes for performance fixof TPR-561 -->
+							<li class="ShopByDepartmentone">
+					
+						<div class="toggle shop_dept"><span><spring:theme code="navigation.department.shopBy"/></span>
+							<span><spring:theme code="navigation.department.shopByDepartment"/></span></div> <!-- TPR-561 -->
+								<span id="mobile-menu-toggle" class="mainli"></span>
+									<ul class="shopByDepartment_ajax">
+																		
+									</ul>
+									 </li>
+
 						<cms:pageSlot position="NavigationBar" var="component">
+							<c:if test ="${component.uid eq 'ShopByBrandComponent' }">
 							<c:set var="componentName" value="${component.name}"/>
-							<li class="${fn:replace(componentName,' ', '')}"><cms:component component="${component}" /></li>
+							<li class="ShopByBrand ${fn:replace(componentName,' ', '')}"><cms:component component="${component}" /></li>
+							</c:if>
 						</cms:pageSlot>
+						<!-- changes for performance fixof TPR-561 -->
 
 					</c:if>
 

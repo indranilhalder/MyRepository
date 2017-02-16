@@ -32,7 +32,9 @@ public class LuxuryProductCategoryDecorator implements CSVCellDecorator
 	public String decorate(final int position, final Map<Integer, String> srcLine)
 	{
 
-		final Integer position2 = Integer.valueOf(12);
+		//final Integer position2 = new Integer(12);
+		final Integer position2 = Integer.valueOf(12); //Sonar fix
+
 		final String categories = srcLine.get(position);
 		final String luxIndicator = srcLine.get(position2);
 

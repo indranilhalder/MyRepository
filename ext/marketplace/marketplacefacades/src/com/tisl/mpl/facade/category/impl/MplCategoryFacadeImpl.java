@@ -149,7 +149,8 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 	{
 		final SellerSalesCategoryModel sellerStructureModel = mplSellerInformationService
 				.getActiveSellerRootCategoryBySellerId(sellerId.toUpperCase());
-		final String SellerRootCategoryId = sellerStructureModel.getSellerRootCategoryId();
+		final String SellerRootCategoryId = (null != sellerStructureModel && sellerStructureModel.getSellerRootCategoryId() != null ? sellerStructureModel
+				.getSellerRootCategoryId() : null);
 		return SellerRootCategoryId;
 	}
 

@@ -370,7 +370,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@Autowired
 	private WishlistFacade wishlistFacade;
 	@Autowired
-	private AccountAddressFacade accountAddressFacade;
+	private MplAccountAddressFacade accountAddressFacade;
 	@Autowired
 	private FriendsInviteFacade friendsInviteFacade;
 	@Autowired
@@ -996,7 +996,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 				else
 				{
-					
 					for (final OrderData subOrder : subOrderList)
 					{
 						//TISPT-385
@@ -1004,7 +1003,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 						for (final OrderEntryData orderEntry : subOrder.getEntries())
 						{
 							getEDDeliveryDate(orderEntry);
-						//TISRLEE-1615- END 
+						    //TISRLEE-1615- END 
 							
 							//getting the product code
 							final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
@@ -1752,7 +1751,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<StateData> stateDataList = getAccountAddressFacade().getStates();
 			final List<StateData> stateDataListNew = getFinalStateList(stateDataList);
 			model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataListNew);
-			
+			final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
 			final AddressData address = orderDetails.getDeliveryAddress();
 			storeCmsPageInModel(model, getContentPageForLabelOrId(RETURN_SUBMIT));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(RETURN_SUBMIT));
@@ -1785,8 +1784,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				returnPincodeCheckForm.setCity(address.getTown());
 				returnPincodeCheckForm.setState(address.getState());
 				returnPincodeCheckForm.setCountry(address.getCountry().getName());
-				returnPincodeCheckForm.setLandmark(address.getLandmark());
-				returnPincodeCheckForm.setAddressLane3(address.getLine3());
+				returnPincodeCheckForm.setLandmark(address.getLine3());
 			}
 			model.addAttribute(ModelAttributetConstants.RETURN_PINCODE_FORM, returnPincodeCheckForm);
 
@@ -1841,7 +1839,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 		catch (final Exception e)
 		{
-			LOG.info("<<<<<<<<<<<<<<< Order Return Pincode Serviceability Check >>>>>>>>>>" + e);
+			LOG.info("<<<<<<<<<<<<<<< Order Return Pincode Serviceability Check >>>>>>>>>>" + e.getStackTrace());
 		}
 		return ControllerConstants.Views.Pages.Account.AccountOrderReturnPincodeServiceCheck;
 	}
@@ -1934,7 +1932,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 		boolean returnLogisticsCheck = true;
 		final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(subOrderDetails,
-				pinCode);
+				pinCode, transactionId);
 		for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 		{
 			model.addAttribute(ModelAttributetConstants.PINCODE_NOT_SERVICEABLE, response.getResponseMessage());
@@ -2211,7 +2209,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException
 	{
 
-		 boolean cancellationStatus=false;
+		final boolean cancellationStatus;
 		try
 		{
 			OrderEntryData subOrderEntry = new OrderEntryData();
@@ -2268,7 +2266,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				cancellationStatus = cancelReturnFacade.implementCancelOrReturn(subOrderDetails, subOrderEntry, reasonCode, ussid,
 						ticketTypeCode, customerData, refundType, true, SalesApplication.WEB);
 			}
-*/
+
 
 			if (!cancellationStatus)
 			{
@@ -2293,7 +2291,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 
 			final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(
-					subOrderDetails, pinCode);
+					subOrderDetails, pinCode, transactionId);
 			for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 			{
 				model.addAttribute(ModelAttributetConstants.RETURNLOGMSG, response.getResponseMessage());
@@ -7091,22 +7089,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	}
 
 
-	/**
-	 * @return the accountAddressFacade
-	 */
-	public AccountAddressFacade getAccountAddressFacade()
-	{
-		return accountAddressFacade;
-	}
 
-	/**
-	 * @param accountAddressFacade
-	 *           the accountAddressFacade to set
-	 */
-	public void setAccountAddressFacade(final AccountAddressFacade accountAddressFacade)
-	{
-		this.accountAddressFacade = accountAddressFacade;
-	}
 
 	/**
 	 * @return the mplOrderFacade
@@ -7475,7 +7458,23 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 	}
 
-	@RequestMapping(value = RequestMappingUrlConstants.CHANGE_DELIVERY_ADDRES_URL, method =
+	/**
+	 * @return the accountAddressFacade
+	 */
+	public MplAccountAddressFacade getAccountAddressFacade()
+	{
+		return accountAddressFacade;
+	}
+
+	/**
+	 * @param accountAddressFacade
+	 *           the accountAddressFacade to set
+	 */
+	public void setAccountAddressFacade(final MplAccountAddressFacade accountAddressFacade)
+	{
+		this.accountAddressFacade = accountAddressFacade;
+	}
+@RequestMapping(value = RequestMappingUrlConstants.CHANGE_DELIVERY_ADDRES_URL, method =
 	{ RequestMethod.POST, RequestMethod.GET })
 	public String changeDeliveryAddress(@PathVariable final String orderCode,
 			@ModelAttribute("addressForm") final AccountAddressForm addressForm, Model model) throws CMSItemNotFoundException ,UnsupportedEncodingException

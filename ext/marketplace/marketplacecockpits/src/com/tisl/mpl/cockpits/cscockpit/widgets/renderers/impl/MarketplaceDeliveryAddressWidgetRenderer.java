@@ -63,10 +63,10 @@ import de.hybris.platform.servicelayer.i18n.impl.DefaultCommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 
-public class MarketplaceDeliveryAddressWidgetRenderer extends
-				AddressCreateWidgetRenderer {
-	private static final Logger LOG = Logger
-			.getLogger(MarketplaceDeliveryAddressWidgetRenderer.class);
+
+public class MarketplaceDeliveryAddressWidgetRenderer extends AddressCreateWidgetRenderer
+{
+
 	protected static final String CSS_CREATE_ADDRESS_ACTIONS = "csCreateAddressActions";
 	private static final String NO_RESPONCE_FROM_SERVER = "noresponce";
 	private static final String PINCODE_NOT_SERVICIBLE = "pincodeNotServicible";
@@ -101,13 +101,22 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 	private MplDeliveryAddressController mplDeliveryAddressController;
 	@Autowired
 	private PopupWidgetHelper popupWidgetHelper;
+
 	@Autowired
 	private ModelService modelService;
+
+	@Autowired
+	private AccountAddressDao accountAddressDao;
+
 	@Autowired
 	private DefaultCommonI18NService commonI18NService;
+
 	@Autowired
-	private AccountAddressFacade accountAddressFacade;
+	private EnumerationService enumService;
+	
 	@Autowired
+	private MplAccountAddressFacade accountAddressFacade;
+    @Autowired
 	private Populator<AddressModel, AddressData> addressPopulator ;
 	@Autowired
 	private CustomAddressPopulator customAddressPopulator;
@@ -129,14 +138,6 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 	public TypedObject getOrder() {
 		return getCallContextController().getCurrentOrder();
 	}
-
-	@Override
-	protected HtmlBasedComponent createContentInternal(
-			final InputWidget<DefaultMasterDetailListWidgetModel<TypedObject>, CustomerController> widget,
-			final HtmlBasedComponent rootContainer) {
-
-		final Div content = new Div();
-		final Div customerAddressContent = new Div();
 		content.appendChild(customerAddressContent);
 		if (isChangeDeliveryAddress) {
 			try {
@@ -299,6 +300,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 		cityField.setSclass("addressForCityField");
 		cityField.setMaxlength(30);
 
+
 		// Creates State List Box
 		final Br br8 = new Br();
 		br8.setParent(customerAddressContent);
@@ -322,6 +324,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			final Listitem stateListItem = new Listitem(value.getName());
 			stateListItem.setParent(stateFieldListBox);
 		}
+		
 
 		// Create Country List box
 		final Br br9 = new Br();
@@ -793,7 +796,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 	}
 
 	protected class MarketplaceCreateClickEventListener implements
-	EventListener {
+			EventListener {
 
 		private final InputWidget<DefaultMasterDetailListWidgetModel<TypedObject>, CustomerController> widget;
 		private static final String PIN_REGEX = "^([0-9]{6})$";
@@ -918,14 +921,14 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 					return;
 			}
 			
-			else if (StringUtils.isBlank(address1Field.getValue()) || StringUtils.isBlank(address1Field.getValue().trim()))
+			else if (StringUtils.isBlank(addressField.getValue()) || StringUtils.isBlank(addressField.getValue().trim()))
 			{
 				Messagebox.show(LabelUtils.getLabel(widget, "addressLine1ValueField"), LabelUtils.getLabel(widget, FAILED_VALIDATION),
 						Messagebox.OK, Messagebox.ERROR);
 				//valid = Boolean.FALSE;
 				return;
 			}
-			else if (address1Field.getValue().length() > 255)
+			else if (addressField.getValue().length() > 255)
 			{
 				Messagebox.show(LabelUtils.getLabel(widget, "invalidAddress1Length"),LabelUtils.getLabel(widget, FAILED_VALIDATION),
 						Messagebox.OK, Messagebox.ERROR);
@@ -1028,7 +1031,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						LabelUtils.getLabel(widget, FAILED_VALIDATION), Messagebox.OK, Messagebox.ERROR);
 				return;
 			}
-			else if (addressTypeListbox.getSelectedItem() == null || addressTypeListbox.getSelectedItem().getLabel().equalsIgnoreCase("Select"))
+			else if (listbox.getSelectedItem() == null || listbox.getSelectedItem().getLabel().equalsIgnoreCase("Select"))
 			{
 				Messagebox.show(LabelUtils.getLabel(widget, "addressTypeValueField"), LabelUtils.getLabel(widget, FAILED_VALIDATION),
 						Messagebox.OK, Messagebox.ERROR);
@@ -1055,7 +1058,10 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			{
 				valid = true;
 			}
-			if (valid) {
+			
+			if (valid)
+			{
+				
 				// Saving the address
 				saveShippingAddress(widget, firstNameField.getValue(),
 						lastNameField.getValue(), address1Field.getValue(),
@@ -1066,6 +1072,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						mobileNumberField.getValue(), addressTypeListbox
 						.getSelectedItem().getLabel().toString(),
 						countryListbox.getSelectedItem().getLabel().toString());
+
 				// kill the popup
 				try {
 					if(isAddressForReturn){
@@ -1082,6 +1089,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 				}
 
 			}
+
 		}
 
 		/**
@@ -1109,8 +1117,11 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 				final String city, final String postalCode, final String state,
 				final String mobileNumber, final String addressType,
 				final String country) {
+
 			final CustomerModel customerModel = (CustomerModel) widget
 					.getWidgetController().getCurrentCustomer().getObject();
+
+			// set the address to the model
 			final AddressModel deliveryAddress = modelService
 					.create(AddressModel.class);
 			LOG.debug(" Address : "+firstName+" "+lastName+" "+addressLine1+" "+addressLine2+" "+

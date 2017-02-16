@@ -39,7 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.facades.account.address.AccountAddressFacade;
+import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.StateData;
 
@@ -73,7 +73,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String NUMBERTOOL = "numberTool";
 	private static final String WEBSITE_URL = "websiteUrl";
 	@Autowired
-	private AccountAddressFacade accountAddressFacade;
+	private MplAccountAddressFacade accountAddressFacade;
 	private static final Logger LOG = Logger.getLogger(OrderNotificationEmailContext.class);
 
 
@@ -239,7 +239,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	/**
 	 * @return the accountAddressFacade
 	 */
-	public AccountAddressFacade getAccountAddressFacade()
+	public MplAccountAddressFacade getAccountAddressFacade()
 	{
 		return accountAddressFacade;
 	}
@@ -248,7 +248,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	 * @param accountAddressFacade
 	 *           the accountAddressFacade to set
 	 */
-	public void setAccountAddressFacade(final AccountAddressFacade accountAddressFacade)
+	public void setAccountAddressFacade(final MplAccountAddressFacade accountAddressFacade)
 	{
 		this.accountAddressFacade = accountAddressFacade;
 	}

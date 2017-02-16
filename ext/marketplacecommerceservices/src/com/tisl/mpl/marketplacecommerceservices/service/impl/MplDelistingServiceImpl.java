@@ -89,7 +89,7 @@ public class MplDelistingServiceImpl implements MplDelistingService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService#getAllUSSIDforSeller(java.util.List)
 	 */
 	@Override
@@ -113,18 +113,18 @@ public class MplDelistingServiceImpl implements MplDelistingService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService#delistSeller(java.util.List,
 	 * java.lang.String, java.lang.String)
-	 * 
+	 *
 	 * @Javadoc
-	 * 
+	 *
 	 * @ Description : Delist Based on Seller Id
-	 * 
+	 *
 	 * @param : sellerModelList(List<SellerInformationModel>)
-	 * 
+	 *
 	 * @param : delisting(String)
-	 * 
+	 *
 	 * @param : blockOMS(String)
 	 */
 	@Override
@@ -171,16 +171,16 @@ public class MplDelistingServiceImpl implements MplDelistingService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService#delistUSSID(java.util.List,
 	 * java.lang.String, java.lang.String)
-	 * 
+	 *
 	 * @Javadoc
-	 * 
+	 *
 	 * @ Description : Delist Based on USSID
-	 * 
+	 *
 	 * @param : sellerModelList(List<SellerInformationModel>)
-	 * 
+	 *
 	 * @param : delisting(String)
 	 */
 
@@ -238,7 +238,7 @@ public class MplDelistingServiceImpl implements MplDelistingService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService#getModelforUSSID(java.lang.String)
 	 */
 	@Override
@@ -264,27 +264,27 @@ public class MplDelistingServiceImpl implements MplDelistingService
 	@Override
 	public List<SellerInformationModel> getModelforUSSID(final String ussid, final CatalogVersionModel catalogVersion)
 	{
-		List<SellerInformationModel> sellerinfoList = new ArrayList<>();
-
-
-		if (StringUtils.isNotEmpty(ussid))
-
-		{
-			sellerinfoList = mplDelistingDao.getModelforUSSID(ussid, catalogVersion);
-		}
-		else
-		{
-			LOG.error("Seller ID is Not Present");
-		}
-		return sellerinfoList;
-
+		//		List<SellerInformationModel> sellerinfoList = new ArrayList<>();
+		//
+		//
+		//		if (StringUtils.isNotEmpty(ussid))
+		//
+		//		{
+		//			sellerinfoList = mplDelistingDao.getModelforUSSID(ussid, catalogVersion);
+		//		}
+		//		else
+		//		{
+		//			LOG.error("Seller ID is Not Present");
+		//		}
+		//		return sellerinfoList;
+		return mplDelistingDao.getModelforUSSID(ussid, catalogVersion);
 	}
 
 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService#FindUnprocessedRecord()
 	 */
 	@Override
@@ -309,7 +309,7 @@ public class MplDelistingServiceImpl implements MplDelistingService
 	/*
 	 * @Javadoc This method would return a date deffered by minutes defined in the local.properties by variable
 	 * etail.delist.date.deffered or else by default it would deffer by 15minutes if the variable is not defined
-	 * 
+	 *
 	 * @return defferedTime
 	 */
 	private Date defferedDate()

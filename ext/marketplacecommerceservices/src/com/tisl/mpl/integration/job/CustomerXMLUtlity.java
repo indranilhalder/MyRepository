@@ -485,9 +485,10 @@ public class CustomerXMLUtlity
 						//continue;
 					}
 				}
+				//fix for TISPRD-7945
 				if (StringUtils.isNotEmpty(addressModel.getTown()))
 				{
-					customerAddress.setCity(addressModel.getTown());
+					customerAddress.setCity(addressModel.getTown().replaceAll(",", ""));
 				}
 
 				//fix for TISPRD-4752

@@ -283,14 +283,11 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	//TISPRO-578
 	public static final String CART_DELIVERYMODE_ADDRESS_INVALID = "cartDelModeAddrInvalid";
 	public static final String CART_DELIVERYMODE_ADDRESS_INVALID_MSG = "Either delivery mode or delivery address is not present";
-	
-	
 	public static final String CART_EXPRESS_CHECKOUT_SELECTED = "isExpressCheckoutSelected";
 	public static final String YES = "yes";
 	public static final String NO = "no";
 	public static final String TRUE = "true";
 	public static final String FALSE = "false";
-	
 
 	//TPR-1215
 	public static final String LINK_SET_DEFAUT_ADDRESS = "/set-default-address/";
@@ -311,9 +308,8 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	/* Gigya Social Login */
 	public final static String SOCIALLOGIN = "/socialLogin";
 	public static final String CHECKSESSIONACTIVE = "/checkSessionActive";
-	
-	
-	public static final String DELIVERY_SLOTCOST_FOR_ED = "deliverySlotCostForEd";
+	public static final String RETURNTOPAYMENTPAGE = "/checkout/multi/payment-method/pay";
+    public static final String DELIVERY_SLOTCOST_FOR_ED = "deliverySlotCostForEd";
 	
 	public static final String UPDATE_DELIVERY_SLOTCOST_FOR_ED = "updateDeliverySlotCostForEd";
 	public static final String MPLDELIVERYSLOTSURL = "/deliverySlotsUrl";

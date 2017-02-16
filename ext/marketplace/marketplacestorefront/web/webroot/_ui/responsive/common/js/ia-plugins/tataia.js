@@ -15,7 +15,7 @@ recEndPoint = rootEP + '/SocialGenomix/recommendations/products';
 
 //******************************************************************************* Populating Dynamic Parameter Values For IA
 var allsizes = ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
-var hotDropdownselected = 'All Department';
+var hotDropdownselected = 'All Departments';
 var sortDropdownselected = "";
 var currentPageURL = window.location.href;  
 ecompany		= $('#ecompanyForIA').val(); 
@@ -169,7 +169,9 @@ if (searchCategory_id){
 				                    'ecompany': ecompany },
 				            contentType: 'application/javascript',
 				            success: function(response) {
-				              document.cookie = 'IASESSIONID='+response.session_id+'; path=/';
+				              //document.cookie = 'IASESSIONID='+response.session_id+'; path=/';
+				              //SISA FIX
+				              document.cookie = 'IASESSIONID='+response.session_id+'; path=/; secure';
 				              ssid = response.session_id;
 				              callEventApi('login', null);
 				            }
@@ -220,7 +222,9 @@ if (searchCategory_id){
 				                    'ecompany': ecompany },
 				            contentType: 'application/javascript',
 				            success: function(response) {
-				              document.cookie = 'IASESSIONID='+response.session_id+'; path=/';
+				            //SISA FIX
+				              //document.cookie = 'IASESSIONID='+response.session_id+'; path=/';
+				              document.cookie = 'IASESSIONID='+response.session_id+'; path=/; secure';
 				              ssid = response.session_id;
 				              callEventApi('login', null);
 				            }
@@ -228,12 +232,19 @@ if (searchCategory_id){
 				        } else {
 				          callEventApi('login', null);
 				        }
-				        document.cookie = 'IAEMAILID='+uid+'; path=/';
+				      //SISA FIX
+				        //document.cookie = 'IAEMAILID='+uid+'; path=/';
+				        document.cookie = 'IAEMAILID='+uid+'; path=/; secure';
 				      }
 				    }
 				  }
-				  document.cookie='IAUSERID='+uid+'; path=/';
-				  document.cookie='IAUSERTYPE='+user_type+'; path=/';
+				  
+				//SISA FIX
+				  //document.cookie='IAUSERID='+uid+'; path=/';
+				 // document.cookie='IAUSERTYPE='+user_type+'; path=/';
+				  
+				  document.cookie='IAUSERID='+uid+'; path=/; secure';
+				  document.cookie='IAUSERTYPE='+user_type+'; path=/; secure';
 				}
 
 			/*
@@ -818,7 +829,9 @@ if (searchCategory_id){
 					      	success: function(response) {}
 
 					      });
-			      document.cookie='prev_start_time=' + start_time.getTime() + '; path=/';      
+			      //SISA FIX
+			      //document.cookie='prev_start_time=' + start_time.getTime() + '; path=/';  
+			      document.cookie='prev_start_time=' + start_time.getTime() + '; path=/ ;secure';
 			      /*Check previous pages, add extra parameters if applicable*/
 			      refCheck();
 			      if (referring_request_id) {
@@ -855,7 +868,9 @@ if (searchCategory_id){
 			      data: { 'referring_url': document.referrer },
 			      contentType: 'application/javascript',
 			      success: function(response) {
-			        document.cookie = "IASESSIONID="+response.session_id+'; path=/';
+			    	//SISA FIX  
+			        //document.cookie = "IASESSIONID="+response.session_id+'; path=/';
+			        document.cookie = "IASESSIONID="+response.session_id+'; path=/; secure';
 			        ssid = response.session_id;
 			        callTataRec();
 			      }
@@ -949,7 +964,7 @@ if (searchCategory_id){
 			 
 			    var catHtml = '<div class="select-view ">'; 
 			    //for release 2 changes in home-page headers-All Departments
-			    catHtml += '<div class="select-list"><span class="selected hotSelected">All Departments</span><ul id="ia_category_select" style="width: auto;">';
+			    catHtml += '<div class="select-list"><span class="selected hotSelected">'+hotDropdownselected+'</span><ul id="ia_category_select" style="width: auto;">';
 			    for (var i=0; i<categoryFilters.length; i++) {
 			    	if(i==0){
 			    		 catHtml += '<li class="category_li" id="allCat">All Departments</li>';
@@ -1067,20 +1082,23 @@ if (searchCategory_id){
 			          params.count = '100';
 			        }
 			        
-			        params.category_id = category_id;
-			        hotDropdownselected = category_name;
 			        
-			        if(category_id === "All Department") {
-			        	category_id = "";
-			        	hotDropdownselected = 'All Department';
+			        
+			        if(category_id === "allCat") {
+			        	hotDropdownselected = category_name;
 			        } 
+			        else {
+			        	params.category_id = category_id;
+				        hotDropdownselected = category_name;
+			        }
+			        
 			        
 			        //params.category = category_id;
 			        var endpoint = '/SocialGenomix/recommendations/products/hot';
 			        //$( ".owl-item" ).css( "display", "none" );
-			        callRecApi(buildParams(params), rootEP + endpoint);
+			        callRecApi(buildParamsHotNow(params), rootEP + endpoint);
 			      });
-			    }
+			    }	
 
 			    /*SortBY dropdown*/
 			    if(widgetMode === "search"){

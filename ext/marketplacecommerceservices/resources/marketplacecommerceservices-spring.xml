@@ -521,7 +521,7 @@
 	<alias name="mplDefaultCommerceAddToCartStrategyImpl" alias="commerceAddToCartStrategy" />
 	<bean id="mplDefaultCommerceAddToCartStrategyImpl"
 		class="com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl"
-		parent="abstractCommerceAddToCartStrategy">
+		parent="defaultCommerceAddToCartStrategy">
 		<property name="commerceAddToCartMethodHooks" ref="commerceAddToCartMethodHooks" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>
@@ -812,12 +812,6 @@
 		<property name="fetchMerchantMasterDao" ref="fetchMerchantMasterDao" />
 	</bean>
 	<bean id="merchantMasterXMLUtility" class="com.tisl.mpl.integration.job.MerchantMasterXMLUtility" />
-
-	<alias name="defaultCommerceSearchTextPopulator" alias="commerceSearchTextPopulator" />
-	<bean id="defaultCommerceSearchTextPopulator"
-		class="com.tisl.mpl.search.converters.populator.MplSolrTextPopulator">
-		<property name="solrFieldNameProvider" ref="solrFieldNameProvider" />
-	</bean>
 
 	<alias alias="cmsPageService" name="mplCMSPageService" />
 	<bean id="mplCMSPageService"
@@ -1972,15 +1966,31 @@
         </property>
     </bean>
 	<!-- Old Cron Job Deletion Logic ends: -->
-
-	
-		<alias name="defaultmplReturnDao" alias="mplReturnDao"/>
+    <alias name="defaultmplReturnDao" alias="mplReturnDao"/>
 <bean class="com.tisl.mpl.returns.dao.impl.MplReturnDaoImpl" id="defaultmplReturnDao"></bean>
-
-
+    <!-- <bean id="nodeWarmupService" class="com.hybris.yps.nodewarmer.service.NodeWarmupService">
+		<property name="warmerStrategies">
+			<list>
+				<bean class="com.hybris.yps.nodewarmer.warmer.impl.ComposedTypeWarmer" />
+				<bean class="com.hybris.yps.nodewarmer.warmer.impl.EnumerationTypesWarmer" />
+				<bean class="com.hybris.yps.nodewarmer.warmer.impl.PageWarmer">
+					<property name="hostname"
+						value="#{configurationService.configuration.getProperty('nodewarmer.test.http.host')}" />
+					<property name="throwExceptionOnFailure" value="true" />
+					<property name="urls">
+						<list>
+							<value>/</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean> -->
+	<!-- Old Cron Job Deletion Logic ends: -->
 <bean id="mplDeliveryAddressServiceImpl"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDeliveryAddressServiceImpl"/>
 <bean id="mplDeliveryAddressDaoImpl"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.impl.MplDeliveryAddressDaoImpl">
 </bean>
 </beans>
+

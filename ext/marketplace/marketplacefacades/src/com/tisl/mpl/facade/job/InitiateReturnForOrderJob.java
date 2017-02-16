@@ -58,12 +58,10 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 	private final static Logger LOG = Logger.getLogger(InitiateReturnForOrderJob.class.getName());
 	@Autowired
 	private CancelReturnFacade cancelReturnFacade;
-/*	@Autowired
-	private MplCheckoutFacade mplCheckoutFacade;*/
+
 	@Autowired
 	private OrderModelService orderModelService;
-	/*@Autowired
-	private MplOrderFacade mplOrderFacade;*/
+
 
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
@@ -81,7 +79,7 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable#perform(de.hybris.platform.cronjob.model.CronJobModel
 	 * )
@@ -93,13 +91,6 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 		{
 			String orderCode = null; // TODO to fetch from given CSV66
 			String transactionId = null; // TODO to fetch from given CSV66
-			//sonar Issue
-			/*String ussid = null;
-			final String ticketTypeCode = MarketplacecommerceservicesConstants.TICKETTYPECODE;
-			final String refundType = MarketplacecommerceservicesConstants.REFUNDTYPE;
-			final String reasonCode = MarketplacecommerceservicesConstants.REASONCODE;
-			String orderStatus = null;
-			CustomerData customerData = null;*/
 			OrderData subOrderDetails = null;
 			ReturnItemAddressData returnAddrData = null;
 			Map<String, BulkReturnStatusData> returnResonseMap = null;
@@ -329,7 +320,7 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 
 	/*
 	 * This method is used to convert the Order Model into Order Data
-	 * 
+	 *
 	 * @param orderModel
 	 */
 	protected OrderData convertToData(final OrderModel orderModel)

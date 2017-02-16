@@ -112,6 +112,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//For Bulk Orders Return Initiation
 	public static final String COMMA_DELIMITER = ",";
+	public static final String TICKETTYPECODE = "R";
+	public static final String REFUNDTYPE = "S";
+	public static final String REASONCODE = "03"; // Hard coded value -- I'm not happy with the product quality
+
+	//Bulk Cancellation
+	public static final String initiate_cancel_job_cancellation_count = "initiate.cancel.job.cancellation.count";
 
 
 	//For SuperCategoryDecorator
@@ -531,7 +537,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_MESSAGE = "Test from TatauniStore";
 	public static final String SMS_MESSAGE_COD_OTP = "Peek-a-boo {0}! One-time password for your COD order is {1}. Please feel free to call us at {2} in case of any queries.";
 	public static final String SMS_MESSAGE_C2C_OTP = "Hi, one time password for your request is {0}. Please enter this to submit the request. Thanks!";
-	public static final String SMS_MESSAGE_PAYMENT_PENDING = "Hmmmï¿½ There seems to be a spot of bother. Please hold on.";
+	public static final String SMS_MESSAGE_PAYMENT_PENDING = "Hmmm… There seems to be a spot of bother. Please hold on.";
 	public static final String SMS_MESSAGE_PAYMENT_FAILED = "Uh oh. Looks like your order was declined for some reason. Please try again.";
 	public static final String SMS_MESSAGE_PAYMENT_TIMEOUT = "Oh no! Your order couldn't go through due to techincal issues. Please try again.";
 	public static final String SMS_MESSAGE_INVENTORY_RESERVATION_FAILED = "Uh oh! Looks like what you wanted isn't available right now, but it could come back soon. Please try again later";
@@ -728,8 +734,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String E0021 = "E0021";
 	public static final String E0022 = "E0022";
 
-	//TPR-629
-	public static final String E0023 = "E0023";
 
 
 	//System/Non Business constants
@@ -833,7 +837,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9073 = "B9073";
 	public static final String B9074 = "B9074";
 	public static final String B9075 = "B9075";
-
+	public static final String B9076 = "B9076";
 
 	public static final String E9040 = "E9040";
 	public static final String E9041 = "E9041";
@@ -968,6 +972,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9300 = "B9300";
 	public static final String B9301 = "B9301";
 
+	//TISPRD-5986  MSH category 404 error handling
+	public static final String E0023 = "E0023";
+
 
 	//Search error codes ends
 
@@ -1005,7 +1012,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String LOADSTATUS = "loadstatus";
 
 
-
+	public static final String BULK_RETURN_DATA_QUERY_START = "SELECT {" + BulkReturnProcessModel.PK + "} FROM {"
+			+ BulkReturnProcessModel._TYPECODE + "} WHERE {" + BulkReturnProcessModel.LOADSTATUS + "}=?loadstatus";
 
 
 	public static final String NOEMIBANKLIST = "EMI Bank list is not available , Please Enter the correct data";
@@ -1018,9 +1026,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			+ "} WHERE {" + ReturnOrderModel.CREATIONTIME + "} >= ?startDate AND {" + ReturnOrderModel.CREATIONTIME
 			+ "} <=?endDate ";
 
-	//Bulk Return Initiation
-	public static final String BULK_RETURN_DATA_QUERY_START = "SELECT {" + BulkReturnProcessModel.PK + "} FROM {"
-			+ BulkReturnProcessModel._TYPECODE + "}";
 
 	public static final String CART_NULL = "Cart model cannot be null";
 
@@ -1744,10 +1749,20 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String PAYMENTPENDINGORDERQUERY = "select {pk} from {Order as o},{OrderStatus as os} where {o.status}={os.pk} and {os.code}=?status"
 			.intern();
-	public static final String PAYMENTPENDINGQUERY = "SELECT {o.pk} FROM {order as o},{OrderStatus as os} WHERE {creationtime} > (to_date(sysdate,'YYYY/MM/DD HH24:MI:SS') - INTERVAL '10' MINUTE) and {o.status}={os.pk} and {os.code}=?status"
+
+	//PAYMENTPENDINGQUERY Query change, 10 minute minus system time not working
+	//public static final String PAYMENTPENDINGQUERY = "SELECT {o.pk} FROM {order as o},{OrderStatus as os} WHERE {creationtime} > (to_date(sysdate,'YYYY/MM/DD HH24:MI:SS') - INTERVAL '10' MINUTE) and {o.status}={os.pk} and {os.code}=?status"
+	//		.intern();
+
+	// SprintPaymentFixes:- New query added 			//PaymentFix2017:- queryTAT added
+	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status"
 			.intern();
+
 	public static final String PAYMENTPENDINGSTATUS = "status".intern();
-	public static final String PAYMENTPENDINGWEBHOOKUERY = "select {jw.pk} from {JuspayWebhook as jw}, {JuspayOrderStatus as js} where {jw.orderstatus}={js.pk} and {js.orderId}=?reqId"
+	//PaymentFix2017:- queryTAT added
+	public static final String PAYMENTPENDINGSKIPTIME = "queryTAT".intern();
+	//PaymentFix2017:-  order by {jw.creationtime} desc added
+	public static final String PAYMENTPENDINGWEBHOOKUERY = "select {jw.pk} from {JuspayWebhook as jw}, {JuspayOrderStatus as js} where {jw.orderstatus}={js.pk} and {js.orderId}=?reqId order by {jw.creationtime} desc"
 			.intern();
 	public static final String WEBHOOKREQSTATUS = "reqId".intern();
 	public static final String OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE = "orderDeallocate";
@@ -1890,7 +1905,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String REFUNDTYPE = "S";
 	public static final String REASONCODE = "03"; // Hard coded value -- I'm not happy with the product quality
 
-	public static final String OTHER = "Other";
+	//For Promotion Apportioning
+	public final static String NONFREE_CONSUMED_ENTRIES = "nonFreeConsumedEntries".intern();
+
+	//PaymentFix2017:-
+	public static final String PAYMENTPENDING_SKIPTIME = "marketplace.PaymentPending.skipTime";
+    public static final String OTHER = "Other";
 
 	public static final String OFD = "OUT FOR DELIVERY";
 	public static final String ADDRESS_ISSUE = "Address Issue";

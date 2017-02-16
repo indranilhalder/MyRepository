@@ -590,13 +590,15 @@
 		<property name="unitType" type="java.lang.String" />
 		<!-- Search POC End -->
 	</bean>
-
+ 
 	<bean class="com.tisl.mpl.facades.product.data.AddressRadioTypeData">
 		<property name="code" type="String" />
 		<property name="name" type="String" />
 	</bean>
 	<bean class="de.hybris.platform.commercefacades.product.data.CategoryData">
 		<property name="subCategories"
+			type="java.util.Collection&lt;de.hybris.platform.commercefacades.product.data.CategoryData>" />
+		<property name="superCategories"
 			type="java.util.Collection&lt;de.hybris.platform.commercefacades.product.data.CategoryData>" />
 	</bean>
 
@@ -1010,7 +1012,46 @@
 		<property name="consignmentStatus" type="String"></property>
 		<property name="returnStatus" type="java.lang.Boolean"></property>
 	</bean>
-	<!-- R2.3 FL04 Changes -->
+	<!-- Thread Dump CMS changes  -->
+	
+	<bean class="de.hybris.platform.commercefacades.component.data.CMSSubbrandData">
+		<property name="subBrandName" type="String"/>
+		<property name="subBrandUrl" type="String"/>
+		<property name="subBrandImage" type="de.hybris.platform.commercefacades.product.data.ImageData"/>
+		<property name="subBrandLogo" type="de.hybris.platform.commercefacades.product.data.ImageData"/>
+	</bean>
+	
+     <bean class="de.hybris.platform.commercefacades.component.data.BrandComponentData">
+     	<property name="uid" type="String"/>
+		<property name="masterBrandName" type="String"/>
+		<property name="masterBrandURL" type="String"/>
+		<property name="layout" type="String"/>
+		<property name="subBrandList" type="java.util.List&lt;de.hybris.platform.commercefacades.component.data.CMSSubbrandData>"/>
+		<property name="subBrands" type="java.util.Collection&lt;de.hybris.platform.commercefacades.product.data.CategoryData>"/>
+	</bean>
+	
+		<bean class="com.tisl.mpl.facades.data.FooterComponentData">
+		<property name="footerSocialIconList" type="java.util.List&lt;com.tisl.mpl.facades.data.SimpleBannerComponentData>"></property>
+		<property name="footerText" type="String"></property>
+		<property name="notice" type="String"></property>
+		<property name="footerAppImageList" type="java.util.List&lt;com.tisl.mpl.facades.data.SimpleBannerComponentData>"></property>
+		<property name="contactNumber" type="String"></property>
+		<property name="navigationNodes" type="java.util.List&lt;de.hybris.platform.cms2.model.navigation.CMSNavigationNodeModel>"></property>
+		<property name="wrapAfter" type="String"></property>
+	</bean>
+	
+		<bean class="com.tisl.mpl.facades.data.SimpleBannerComponentData" extends="com.tisl.mpl.facades.data.AbstractBannerComponentData">
+		<property name="title" type="String"></property>
+		<property name="description" type="String"></property>	
+	</bean>
+	
+		<bean class="com.tisl.mpl.facades.data.AbstractBannerComponentData">
+		<property name="media" type="de.hybris.platform.commercefacades.product.data.ImageData"></property>
+		<property name="urlLink" type="String"></property>	
+          
+	</bean>
+
+    <!-- R2.3 FL04 Changes -->
 	
 	<bean class="com.tisl.mpl.facade.data.LandMarksData">
 		<property name="landmarksCode" type="String"></property>

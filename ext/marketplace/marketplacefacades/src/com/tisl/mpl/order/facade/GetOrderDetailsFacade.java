@@ -13,6 +13,7 @@ import java.util.Map;
 
 import com.tisl.mpl.facades.data.AWBResponseData;
 import com.tisl.mpl.wsdto.OrderDataWsDTO;
+import com.tisl.mpl.wsdto.OrderProductWsDTO;
 import com.tisl.mpl.wsdto.OrderTrackingWsDTO;
 
 
@@ -34,10 +35,14 @@ public interface GetOrderDetailsFacade
 	 */
 	public OrderTrackingWsDTO getOrderDetailsWithTracking(String orderCode);
 
+	/**
+	 * @param orderEntryDetail
+	 * @param subOrder
+	 * @param subOrderModel
+	 * @return
+	 */
 	public Map<String, List<AWBResponseData>> getOrderStatusTrack(OrderEntryData orderEntryDetail, OrderData subOrder,
 			OrderModel subOrderModel);
-	Map<String, List<AWBResponseData>> getOrderStatusTrack(final OrderEntryData orderEntryDetail, final OrderData subOrder,
-			final OrderData parentOrder);
 
 	/**
 	 * @param parentOrder
@@ -49,5 +54,8 @@ public interface GetOrderDetailsFacade
 	 * @return
 	 */
 	public List<ConsignmentStatus> getPickUpButtonDisableOptions();
+
+	public List<OrderProductWsDTO> getOrderdetailsForApp(final String orderCode, final String returnCancelFlag,
+			final String transactionId);
 
 }

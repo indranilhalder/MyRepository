@@ -148,6 +148,13 @@
 	     
 	     <!-- Extension for individual cache clear - TISPT-358 -->
 		 <extension name="cacheclear" />
+		 
+		 <!-- Extension for Node Warmer-->
+	    
+<!-- 	    <extension name="psdtocache" /> 
+	  	<extension name="ypsnodewarmer" /> --> 
+	
+	    <!-- Extension for Node Warmer-->
 
 	</extensions>
 </hybrisconfig>

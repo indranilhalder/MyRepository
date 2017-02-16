@@ -5,7 +5,10 @@ package com.tisl.mpl.util;
 
 import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
@@ -46,7 +49,6 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.data.MplPaymentInfoData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -724,11 +726,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -981,11 +983,6 @@ public class GenericUtilityMethods
 		return cleanedText;
 	}
 
-	public static Object jsonToObject(final Class<?> classType, final String stringJson) throws JsonParseException, JsonMappingException, IOException
- 	{
- 		ObjectMapper mapper = new ObjectMapper();
-		return  mapper.readValue(stringJson, classType);
- 	}
 	/**
 	 * @param request
 	 * @return boolean This method checks if the current session is active
@@ -1029,7 +1026,7 @@ public class GenericUtilityMethods
 
 	}
 
-	public static void populateTealiumDataForCartCheckout(final Model model, final AbstractOrderModel cartModel)
+	public static void populateTealiumDataForCartCheckout(final Model model, final AbstractOrderData cartData)
 	{
 		String sku = null;
 		String adobeSku = null;
@@ -1065,18 +1062,18 @@ public class GenericUtilityMethods
 		try
 		{
 
-			if (null != cartModel)
+			if (null != cartData)
 			{
-				final CurrencyModel currency = cartModel.getCurrency();
-				final String currencySymbol = currency.getSymbol();
-				if (null != cartModel.getTotalPrice())
+
+				final String currencySymbol = cartData.getCurrencySymbol();
+				if (null != cartData.getTotalPriceWithTax() && null != cartData.getTotalPriceWithTax().getValue())
 				{
-					cartTotal = cartModel.getTotalPrice().toString();
+					cartTotal = cartData.getTotalPriceWithTax().getValue().toString();
 				}
 
-				if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+				if (CollectionUtils.isNotEmpty(cartData.getEntries()))
 				{
-					for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+					for (final OrderEntryData entry : cartData.getEntries())
 					{
 						if (null != entry)
 						{
@@ -1097,43 +1094,47 @@ public class GenericUtilityMethods
 
 							}
 
-							if (null != entry.getBasePrice())
+							if (null != entry.getBasePrice() && null != entry.getBasePrice().getValue())
 							{
-								basePrice = appendQuote(entry.getBasePrice().toString());//base price for a cart entry
+								basePrice = appendQuote(entry.getBasePrice().getValue().toString());//base price for a cart entry
 
 							}
 
-							if (null != entry.getTotalPrice())
+							if (null != entry.getTotalPrice() && null != entry.getTotalPrice().getValue())
 							{
-								totalEntryPrice = appendQuote(entry.getTotalPrice().toString());//total price for a cart entry
+								totalEntryPrice = appendQuote(entry.getTotalPrice().getValue().toString());//total price for a cart entry
 
 							}
-							if (entry.getCurrDelCharge() != null)
+							if (entry.getCurrDelCharge() != null && null != entry.getCurrDelCharge().getValue()
+									&& null != currencySymbol)
 							{
 
-								order_shipping_charge = appendQuote(currencySymbol.concat(entry.getCurrDelCharge().toString()));
+								order_shipping_charge = appendQuote(currencySymbol.concat(entry.getCurrDelCharge().getValue().toString()));
 							}
 						}
 
-						if (entry.getProduct() != null && CollectionUtils.isNotEmpty(entry.getProduct().getBrands()))
+						if (null != entry.getBrandName())
 						{
-							final List<BrandModel> brandList = new ArrayList<BrandModel>(entry.getProduct().getBrands());
-							brand = appendQuote(brandList.get(0).getName());
+
+							brand = appendQuote(entry.getBrandName());
 
 						}
 
 
 						//TPR-430 starts
 						final StringBuffer categoryName = new StringBuffer();
-						for (final CategoryModel categoryModel : entry.getProduct().getSupercategories())
-						{
-							if (categoryModel.getCode().contains(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
-							{
-								categoryName.append(categoryModel.getName()).append(':');
-								getCategoryLevel(categoryModel, 1, categoryName);
-							}
 
+
+						for (final CategoryData catData : entry.getProduct().getCategories())
+						{
+							if (catData.getCode().contains(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
+							{
+								categoryName.append(catData.getName()).append(':');
+								//getCategoryLevel(category, 1, categoryName);
+								getCategoryLevel(catData, categoryName);
+							}
 						}
+
 
 						if (StringUtils.isNotEmpty(categoryName.toString()))
 						{
@@ -1242,6 +1243,22 @@ public class GenericUtilityMethods
 		{
 			LOG.error("Error while populating tealium data in cart page:::::" + te.getMessage());
 		}
+	}
+
+	/**
+	 * @param catData
+	 * @param categoryName
+	 */
+	private static void getCategoryLevel(final CategoryData catData, final StringBuffer categoryName)
+	{
+		if (CollectionUtils.isNotEmpty(catData.getSuperCategories()))
+		{
+			for (final CategoryData data : catData.getSuperCategories())
+			{
+				categoryName.append(data.getName()).append(':');
+			}
+		}
+
 	}
 
 	/* Checking payment type and then setting payment info */

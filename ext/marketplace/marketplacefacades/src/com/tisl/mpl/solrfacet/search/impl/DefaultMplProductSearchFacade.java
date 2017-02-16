@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
@@ -288,7 +289,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#mplProductSearch(de.hybris.platform.commercefacades.search.
 	 * data.SearchStateData, de.hybris.platform.commerceservices.search.pagedata.PageableData, java.lang.String)
@@ -1122,7 +1123,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#populateSearchState(de.hybris.platform.commercefacades.search
 	 * .data.SearchStateData)
@@ -1148,15 +1149,31 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			return;
 		}
 
-		if (null == searchQueryData.getFilterTerms())
+		if (null == searchQueryData.getFilterTerms() || CollectionUtils.isEmpty(searchQueryData.getFilterTerms()))
 		{
 			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
 		}
 		else
 		{
 			final List<SolrSearchQueryTermData> solrSearchQueryTermDataList = new ArrayList(searchQueryData.getFilterTerms());
-			solrSearchQueryTermDataList.add(solrSearchQueryTermData);
-			searchQueryData.setFilterTerms(solrSearchQueryTermDataList);
+			boolean luxuryAlreadyAdded = false;
+
+			for (final SolrSearchQueryTermData termData : solrSearchQueryTermDataList)
+			{
+				if (termData.getKey().equalsIgnoreCase("isLuxuryProduct"))
+				{
+					luxuryAlreadyAdded = true;
+					break;
+				}
+
+			}
+			if (!luxuryAlreadyAdded)
+			{
+				solrSearchQueryTermDataList.add(solrSearchQueryTermData);
+				searchQueryData.setFilterTerms(solrSearchQueryTermDataList);
+			}
+
 		}
+
 	}
 }

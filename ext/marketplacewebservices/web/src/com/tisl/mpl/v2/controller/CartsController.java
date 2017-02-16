@@ -226,7 +226,7 @@ public class CartsController extends BaseCommerceController
 	@Resource
 	private MplCartWebService mplCartWebService;
 	@Resource
-	private AccountAddressFacade accountAddressFacade;
+	private MplAccountAddressFacade accountAddressFacade;
 	@Resource
 	private UserService userService;
 	@Resource(name = "mplCheckoutFacade")
@@ -2372,7 +2372,7 @@ public class CartsController extends BaseCommerceController
 				final boolean deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cartModel);
 				LOG.debug(MarketplacecommerceservicesConstants.CART_DELISTED_STATUS + deListedStatus + "productCheckout:" + cartId);
 				//cartData = getMplExtendedCartConverter().convert(cartModel);
-				cartDataOrdered = mplCartFacade.getSessionCartWithEntryOrderingMobile(cartModel, true);
+				cartDataOrdered = mplCartFacade.getSessionCartWithEntryOrderingMobile(cartModel, true, true, false);
 				/**** Pincode check Details ***/
 				try
 				{
@@ -2392,7 +2392,7 @@ public class CartsController extends BaseCommerceController
 				}
 
 				/* Product Details */
-				if (null != postalCode && !postalCode.isEmpty())
+				if (StringUtils.isNotEmpty(postalCode))
 				{
 					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, true, false);
 				}
@@ -2621,7 +2621,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 *
+			 * 
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -2814,14 +2814,16 @@ public class CartsController extends BaseCommerceController
 		CartModel cart = null;
 		try
 		{
+			cart = mplPaymentWebFacade.findCartValues(cartId);
+
 			final Map<String, String> delModeUssId = (Map<String, String>) JSON.parse(deliverymodeussId);
 			Double finalDeliveryCost = Double.valueOf(0.0);
 			for (final Map.Entry<String, String> element : delModeUssId.entrySet())
 			{
 				if (null != element && null != element.getValue() && null != element.getKey())
 				{
-					final Double deliveryCost = mplCustomAddressFacade
-							.populateDeliveryMethodData(element.getValue(), element.getKey());
+					final Double deliveryCost = mplCustomAddressFacade.populateDeliveryMethodData(element.getValue(),
+							element.getKey(), cart);
 					finalDeliveryCost = Double.valueOf(finalDeliveryCost.doubleValue() + deliveryCost.doubleValue());
 
 					LOG.debug("CartsController : selectDeliveryMode  : Step 1 finalDeliveryCost after Delivery Mode Set "
@@ -2829,8 +2831,8 @@ public class CartsController extends BaseCommerceController
 				}
 			}
 			//if cart doesn't contain cnc products clean up pickup person details
-			cleanupPickUpDetails(cartId);
-			cart = mplPaymentWebFacade.findCartValues(cartId);
+			cleanupPickUpDetails(cart);
+
 			if (setFreebieDeliverMode(cart))
 			{
 				LOG.debug("CartsController : selectDeliveryMode  : Step 3 Freebie delivery mode set done");
@@ -2898,9 +2900,32 @@ public class CartsController extends BaseCommerceController
 		try
 		{
 			LOG.debug(String.format("Checking servicibility for the pincode %s", pincode));
-			cart = mplPaymentWebFacade.findCartValues(cartId);
-			pinCodeResponse = mplCartWebService.checkPinCodeAtCart(mplCartFacade.getSessionCartWithEntryOrderingMobile(cart, true),
-					cart, pincode);
+
+			//anonymous user cart issue fixed
+			if (userFacade.isAnonymousUser())
+			{
+				cart = mplPaymentWebFacade.findCartAnonymousValues(cartId);
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug("************ Anonymous cart mobile cartCheckout**************" + cartId);
+				}
+			}
+			else
+			{
+				cart = mplPaymentWebFacade.findCartValues(cartId);
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug("************ Logged-in cart mobile cartCheckout**************" + cartId);
+				}
+			}
+			//	cart = mplPaymentWebFacade.findCartValues(cartId);
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("checkPinCodeAtCart-------" + cart.getCode());
+			}
+
+			pinCodeResponse = mplCartWebService.checkPinCodeAtCart(
+					mplCartFacade.getSessionCartWithEntryOrderingMobile(cart, true, false, false), cart, pincode);
 			if (null != pinCodeResponse)
 			{
 				response.setPinCodeResponseList(pinCodeResponse);
@@ -3716,9 +3741,9 @@ public class CartsController extends BaseCommerceController
 	 * @param cartId
 	 * @return void
 	 */
-	protected void cleanupPickUpDetails(final String cartId)
+	protected void cleanupPickUpDetails(final CartModel cartModel)
 	{
-		final CartModel cartModel = mplPaymentWebFacade.findCartValues(cartId);
+		//final CartModel cartModel = mplPaymentWebFacade.findCartValues(cartId);
 		int cncDelModeCount = 0;
 		int otherDelModeCount = 0;
 		for (final AbstractOrderEntryModel orderEntryModel : cartModel.getEntries())

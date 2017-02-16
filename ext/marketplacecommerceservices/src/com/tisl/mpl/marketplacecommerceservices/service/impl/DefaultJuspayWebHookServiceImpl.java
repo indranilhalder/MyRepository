@@ -121,14 +121,14 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		if (CollectionUtils.isNotEmpty(webHookDetailList))
 		{
 			final List<JuspayWebhookModel> uniqueList = new ArrayList<JuspayWebhookModel>();
-			for (final JuspayWebhookModel oModel : webHookDetailList)
-			{
-				if (null != oModel.getOrderStatus() && oModel.getIsExpired().booleanValue())
-				{
-					//getting all the webhook data where isExpired is Y and adding into a list
-					uniqueList.add(oModel);
-				}
-			}
+			//			for (final JuspayWebhookModel oModel : webHookDetailList)
+			//			{
+			//				if (null != oModel.getOrderStatus() && oModel.getIsExpired().booleanValue())
+			//				{
+			//					//getting all the webhook data where isExpired is Y and adding into a list
+			//					uniqueList.add(oModel);
+			//				}
+			//			}
 			for (final JuspayWebhookModel hook : webHookDetailList)
 			{
 				if (CollectionUtils.isNotEmpty(uniqueList))
@@ -855,9 +855,6 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		}
 	}
 
-	
-	
-	
 	/**
 	 * To set the request id
 	 *
@@ -1019,11 +1016,13 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 								LOG.error(e.getMessage(), e);
 							}
 							LOG.debug(MarketplacecommerceservicesConstants.WEBHOOKUPDATEMSG);
-							//updateWebHookExpired(oModel);		//Commented for TPR-629 --- forward flow handled in processOrderJob
+							updateWebHookExpired(oModel);		//Commented for TPR-629 --- forward flow handled in processOrderJob
 						}
 
 						//Logic when juspay webhook data does not come before payment_timeout TAT ---- TPR-629
-						else if (OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus()))
+						//PaymentFix2017 :- PAYMENT_FAILED Status added to handle Event posting First with ORDER_FAILED then ORDER_SUCCEEDED
+						else if (OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus())
+								|| OrderStatus.PAYMENT_FAILED.equals(orderModel.getStatus()))
 						{
 							final PaymentService juspayService = new PaymentService();
 

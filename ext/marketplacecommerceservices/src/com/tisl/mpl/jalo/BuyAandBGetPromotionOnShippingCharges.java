@@ -101,6 +101,13 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 					&& GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, arg0, arg1, this, restrictionList)
 					&& !getDefaultPromotionsManager().promotionAlreadyFired(arg0, validProductUssidMap)) // Validates the Restriction :Allows only if Valid and Valid Channel
 			{
+				final Map<String, Map<String, Double>> finalDelChrgMap = new HashMap<String, Map<String, Double>>();
+
+				final Map<String, Integer> qCount = getDefaultPromotionsManager().getQualifyingCountForABPromotion(
+						eligibleProductList, totalFactorCount);
+				final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
+						.getAssociatedItemsForABorFreebiePromotions(validProductListA, validProductListB, null);
+
 				//for delivery mode restriction check
 				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForABPromo(restrictionList,
 						validProductUssidMap, order);
@@ -109,14 +116,38 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 				{
 					if (flagForDeliveryModeRestrEval && flagForPincodeRestriction)
 					{
-						final Map<String, Integer> qCount = getDefaultPromotionsManager().getQualifyingCountForABPromotion(
-								eligibleProductList, totalFactorCount);
-						final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
-								.getAssociatedItemsForABorFreebiePromotions(validProductListA, validProductListB, null);
+						//						final Map<String, Integer> qCount = getDefaultPromotionsManager().getQualifyingCountForABPromotion(
+						//								eligibleProductList, totalFactorCount);
+						//						final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
+						//								.getAssociatedItemsForABorFreebiePromotions(validProductListA, validProductListB, null);
 						final Map<String, String> fetchProductRichAttribute = getDefaultPromotionsManager().fetchProductRichAttribute(
 								qCount, order);
 
-						//for (final Map.Entry<Product, Integer> mapEntry : qCount.entrySet())
+						final EnumerationValue discountType = getDiscTypesOnShippingCharges();
+						double adjustedDeliveryCharge = 0.00D;
+						//boolean isPercentageFlag = false;
+						boolean isDeliveryFreeFlag = false;
+						if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.PERCENTAGE_MESSAGE)
+								&& (getPercentageDiscount() != null))
+						{
+							//isPercentageFlag = true;
+							adjustedDeliveryCharge = getPercentageDiscount().doubleValue();
+						}
+						else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.AMOUNT)
+								&& (getPriceForOrder(arg0, getDiscountPrices(arg0), order,
+										MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null))
+						{
+							final double amount = getPriceForOrder(arg0, getDiscountPrices(arg0), order,
+									MarketplacecommerceservicesConstants.DISCOUNT_PRICES).doubleValue();
+							final double totalDelCostForValidProds = getDefaultPromotionsManager().getTotalDelCostForValidProds(
+									validProductUssidMap, qCount);
+							adjustedDeliveryCharge = (amount / totalDelCostForValidProds) * 100;
+						}
+						else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.FREE))
+						{
+							isDeliveryFreeFlag = true;
+						}
+
 						for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 						{
 							//arg1.startLoggingConsumed(this);
@@ -127,39 +158,8 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 									|| ((fullfillmentTypeForProduct.equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP) && isTShipAsPrimitive()) || (fullfillmentTypeForProduct
 											.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP) && isSShipAsPrimitive())))
 							{
-								//*******Calculating delivery charges & setting it at entry level starts*******
-								final EnumerationValue discountType = getDiscTypesOnShippingCharges();
-								double adjustedDeliveryCharge = 0.00D;
-								boolean isPercentageFlag = false;
-								boolean isDeliveryFreeFlag = false;
-								if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.PERCENTAGE_MESSAGE)
-										&& (getPercentageDiscount() != null))
-								{
-									isPercentageFlag = true;
-									adjustedDeliveryCharge = getPercentageDiscount().doubleValue();
-								}
-								else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.AMOUNT)
-										&& (getPriceForOrder(arg0, getDiscountPrices(arg0), order,
-												MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null))
-								{
-									adjustedDeliveryCharge = getPriceForOrder(arg0, getDiscountPrices(arg0), order,
-											MarketplacecommerceservicesConstants.DISCOUNT_PRICES).doubleValue();
-								}
-								else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.FREE))
-								{
-									isDeliveryFreeFlag = true;
-								}
-
-								final Map<String, Map<String, Double>> apportionedProdDelChargeMap = getDefaultPromotionsManager()
-										.updateDeliveryCharges(isDeliveryFreeFlag, isPercentageFlag, adjustedDeliveryCharge, qCount,
-												fetchProductRichAttribute, order);
-								//********Calculating delivery charges & setting it at entry level ends*********
-								arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
-								arg0.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, qCount);
-								arg0.setAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, String.valueOf(this.getCode()));
-								arg0.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
-								arg0.setAttribute(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP,
-										apportionedProdDelChargeMap);
+								finalDelChrgMap.putAll(getDefaultPromotionsManager().calcDeliveryCharges(isDeliveryFreeFlag,
+										adjustedDeliveryCharge, validProductUSSID, order, null));
 
 								final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
 								consumed
@@ -205,7 +205,15 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 						}
 					}
 				}
+
+				//Setting values
+				//arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
+				arg0.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, qCount);
+				arg0.setAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, String.valueOf(this.getCode()));
+				arg0.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
+				arg0.setAttribute(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP, finalDelChrgMap);
 			}
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{

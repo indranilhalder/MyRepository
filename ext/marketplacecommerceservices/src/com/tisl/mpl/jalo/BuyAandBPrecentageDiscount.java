@@ -87,7 +87,7 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 				restrictionList, this);
 
 		final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(arg0, arg1); // Validates Promotion Restrictions
-
+		//final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 		boolean checkChannelFlag = false;
 		final AbstractOrder cart = arg1.getOrder();
 		try
@@ -104,6 +104,7 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag) // Validates the Restriction :Allows only if Valid and Valid Channel
 			{
 				final List<String> eligibleProductList = eligibleForPromotion(cart, arg0); // Gets the Eligible Product List
+
 
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(arg0, validProductUssidMap))
 				{
@@ -209,9 +210,9 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 							validProductUssidMap, null);
 
 					arg0.setAttribute(MarketplacecommerceservicesConstants.PERCENTAGEDISCOUNT, Double.valueOf(percentageDiscount));
-					arg0.setAttribute(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE,
-							Double.valueOf(totalvalidproductsPricevalue));
-					arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
+					//					arg0.setAttribute(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE,
+					//							Double.valueOf(totalvalidproductsPricevalue));
+					//					arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
 					arg0.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, qCount);
 					arg0.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
 					arg0.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
