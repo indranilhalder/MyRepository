@@ -556,10 +556,12 @@ function focusOnElement() {
 		      for (var sel =0; sel <sellerDetailsArray.length; sel++) { 
 					 if(sellerDetailsArray[sel].availableStock < 1) {
 						 oosSellers.push(sellerDetailsArray[sel]);
-						 sellerDetailsArray.splice($.inArray(sellerDetailsArray[sel],sellerDetailsArray),1);
-						 //sellerDetailsArray.pop(sellerDetailsArray[sel]);
 					 }
 				 }
+		      
+		      sellerDetailsArray = sellerDetailsArray.filter(function(val) {
+		    	  return oosSellers.indexOf(val) == -1;
+		      });
 		      
 		      sellerDetailsArray = sellerDetailsArray.concat(oosSellers);
 		      
@@ -743,10 +745,12 @@ function focusOnElement() {
 	      for (var sel =0; sel <sellerDetailsArray.length; sel++) { 
 				 if(sellerDetailsArray[sel].availableStock < 1) {
 					 oosSellers.push(sellerDetailsArray[sel]);
-					 sellerDetailsArray.splice($.inArray(sellerDetailsArray[sel],sellerDetailsArray),1);
-					 //sellerDetailsArray.pop(sellerDetailsArray[sel]);
 				 }
 			 }
+	      
+	      sellerDetailsArray = sellerDetailsArray.filter(function(val) {
+	    	  return oosSellers.indexOf(val) == -1;
+	    	});
 	      
 	      sellerDetailsArray = sellerDetailsArray.concat(oosSellers);
 	      
