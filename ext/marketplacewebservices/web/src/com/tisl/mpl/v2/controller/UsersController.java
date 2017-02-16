@@ -2262,66 +2262,52 @@ public class UsersController extends BaseCommerceController
 			@RequestParam final String ussid, @RequestParam(required = false) final boolean isSelectedSize)
 			throws RequestParameterException
 	{
-		MplCustomerProfileData mplCustData = new MplCustomerProfileData();
-		final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
 		final UserResultWsDto result = new UserResultWsDto();
-		if (null == allWishlists)
-		{
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9206);
-		}
 		boolean add = false;
-
-		mplCustData = mplCustomerProfileService.getCustomerProfileDetail(emailId);
-		LOG.debug(CUSTOMER_MESSAGE + mplCustData.getUid());
 		String name = null;
-		final UserModel user = userService.getUserForUID(mplCustData.getUid());
-
+		Wishlist2Model getWishlistforName = null;
+		int getWishlistforNameCount = 0;
 		final List<WishlistData> wishListData = new ArrayList<WishlistData>();
-		String nameSet = null;
-		int wSize = 0;
-		if (null == user)
-		{
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
-		}
-
+		Wishlist2Model requiredWl = null;
+		List<Wishlist2Model> allWishlists = null;
 		try
 		{
+			//CAR Project performance issue fixed
+			final UserModel user = userService.getCurrentUser();
+			if (null == user)
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
+			}
+
 			if (StringUtils.isNotEmpty(wishlistName))
 			{
 				name = wishlistName;
+				getWishlistforName = wishlistFacade.findMobileWishlistswithName(user, name);
+				if (null != getWishlistforName)
+				{
+					requiredWl = getWishlistforName;
+				}
 			}
+			//CAR Project performance issue fixed
 			else
 			{
-				nameSet = MarketplacecommerceservicesConstants.WISHLIST_NO;
-				for (final Wishlist2Model wishlist2Model : allWishlists)
-				{
-					if (wishlist2Model.getName().contains(nameSet))
-					{
-						wSize++;
-					}
-				}
+				getWishlistforNameCount = wishlistFacade.findMobileWishlistswithNameCount(user,
+						MarketplacecommerceservicesConstants.WISHLIST_NO);
+
 				name = MarketplacecommerceservicesConstants.WISHLIST_NO + MarketplacecommerceservicesConstants.UNDER_SCORE
-						+ (wSize + 1);
+						+ (++getWishlistforNameCount);
 			}
 
-			Wishlist2Model requiredWl = null;
-
-			for (final Wishlist2Model wl : allWishlists)
+			//CAR Project performance issue fixed
+			if (StringUtils.isNotEmpty(ussid) && StringUtils.isNotEmpty(productCode))
 			{
-				if (null != wl && name.equals(wl.getName()))
-				{
-					requiredWl = wl;
-					break;
-				}
-			}
-			if (null != ussid && !ussid.isEmpty() && null != productCode && !productCode.isEmpty())
-			{
-
 				if (null != requiredWl)
 				{
-					//add to existing wishlists
+					//CAR Project performance issue fixed
 
-					add = wishlistFacade.addProductToWishlist(requiredWl, productCode, ussid, isSelectedSize);
+					//add to existing wishlists
+					//add = wishlistFacade.addProductToWishlist(requiredWl, productCode, ussid, isSelectedSize);
+					add = wishlistFacade.addProductToWishlistMobile(requiredWl, productCode, ussid, isSelectedSize);
 					if (add)
 					{
 						result.setStatus(MarketplacecommerceservicesConstants.PRODUCT_ADDED);
@@ -2334,17 +2320,13 @@ public class UsersController extends BaseCommerceController
 				}
 				else
 				{
-
+					allWishlists = wishlistFacade.getAllWishlists();
 					//if (!allWishlists.isEmpty() && allWishlists.size() > 0)
 					if (CollectionUtils.isNotEmpty(allWishlists))
 					{
 						final List<String> wishlistnames = new ArrayList<String>();
 						for (final Wishlist2Model wishlist2Model : allWishlists)
 						{
-							//							String wishList = new String(); Avoid instantiating String objects; this is usually unnecessary
-							//							wishList = wish.getName();
-							//							wishlistnames.add(wishList);
-
 							wishlistnames.add(wishlist2Model.getName());
 						}
 
@@ -2353,13 +2335,13 @@ public class UsersController extends BaseCommerceController
 						result.setWishlistNames(wishlistnames);
 						return result;
 					}
-
 					else
 					{
 						//add product to new wishlist if there is no wishlist present
-
+						//CAR Project performance issue fixed
 						final Wishlist2Model createdWishlist = wishlistFacade.createNewWishlist(user, name, productCode);
-						add = wishlistFacade.addProductToWishlist(createdWishlist, productCode, ussid, isSelectedSize);
+						//add = wishlistFacade.addProductToWishlist(createdWishlist, productCode, ussid, isSelectedSize);
+						add = wishlistFacade.addProductToWishlistMobile(createdWishlist, productCode, ussid, isSelectedSize);
 						final WishlistData wishData = new WishlistData();
 						wishData.setParticularWishlistName(createdWishlist.getName());
 						wishData.setProductCode(productCode);
@@ -2379,13 +2361,7 @@ public class UsersController extends BaseCommerceController
 			}
 			else
 			{
-
-				if (!(null != requiredWl) || !(null != ussid) || StringUtils.isEmpty(ussid) || !(null != productCode)
-						|| StringUtils.isEmpty(productCode))
-				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9208);
-				}
-
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9208);
 			}
 
 		}
@@ -2432,7 +2408,6 @@ public class UsersController extends BaseCommerceController
 			}
 			return result;
 		}
-		return result;
 	}
 
 	@SuppressWarnings(MarketplacewebservicesConstants.DEPRECATION)
