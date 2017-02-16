@@ -101,6 +101,8 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 	@Autowired
 	private CustomOmsOrderSyncAdapter customOmsOrderSyncAdapter;
 	
+	
+	//car-80 
 	@Autowired
 	private OrderModelService orderModelService;
 	
@@ -519,6 +521,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 	public boolean sendInvoice(List<TypedObject> orderLineId, String orderId) {
 		String customerEmail = null;
 
+		//car-80
 		OrderModel orderModel = orderModelService.getOrder(orderId);
 		CustomerModel customerModel = (CustomerModel) getCallContextController()
 				.getCurrentCustomer().getObject();
@@ -546,6 +549,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 						.setTransactionId(orderEntry.getTransactionID());
 						invoiceData.setOrdercode(orderId);
 						try {
+							//car-80:orderModel added as parameter.
 							registerCustomerFacade.sendInvoice(invoiceData,
 									customerModel, orderModel);
 							LOG.info("Invoice Sending Succesfull");

@@ -22,7 +22,15 @@ ACC.cartitem = {
 					 * cartQuantity.val(0); initialCartQuantity.val(0);
 					 * form.submit();
 					 */
-					
+			 /*TPR-4776 starts*/
+			  var productRemoved = $(this).closest("li.item").prev().find("input[name='productCodeMSD']").val(); 
+			  var productArray = [];
+			  productArray.push(productRemoved);
+				
+			  if(typeof utag !="undefined"){
+				utag.link({ remove_cart_product_id : productArray });
+			  }
+			  /*TPR-4776 ends*/
 					// for MSD	
 					var x = $(this).closest("li.item").prev();
 		//	        console.log(x);
@@ -63,6 +71,7 @@ ACC.cartitem = {
 			        	//var z = $(this).attr("value");
 			        	//console.log( index + ": " + $( this ).text() );			        	
 			        	//console.log(z1);
+			        	
 			        });
 			       /* console.log(salesHierarchyCategoryMSD);
 			        console.log(rootCategoryMSD);
