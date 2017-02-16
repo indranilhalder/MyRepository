@@ -1044,15 +1044,14 @@ public class HomePageController extends AbstractPageController
 
 				if (null != notificationMessagelist && !notificationMessagelist.isEmpty())
 				{
-					int notificationCount = 0;
-					for (final NotificationData single : notificationMessagelist)
-					{
-						if (single.getNotificationRead() != null && !single.getNotificationRead().booleanValue())
-						{
-							notificationCount++;
-						}
-
-					}
+					final int notificationCount = notificationMessagelist.size();
+					//int notificationCount = 0;
+					/*
+					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
+					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
+					 * 
+					 * }
+					 */
 
 					header.put("notificationCount", notificationCount);
 				}

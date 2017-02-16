@@ -3857,6 +3857,16 @@ public class DefaultPromotionManager extends PromotionsManager
 	}
 
 	//Added for A and B promotion getProducts fix: starts
+	/**
+	 * @param promoContext
+	 * @param ctx
+	 * @param promotion
+	 * @param categories
+	 * @param secondCategories
+	 * @param primaryProductList
+	 * @param secondaryProductList
+	 * @return RestrictionSetResult
+	 */
 	protected PromotionsManager.RestrictionSetResult findEligibleProductsInBasketForBuyAandBPromo(final SessionContext ctx,
 			final PromotionEvaluationContext promoContext, final AbstractPromotion promotion, final Collection<Category> categories,
 			final Collection<Category> secondCategories, final List<Product> primaryProductList,
@@ -3955,6 +3965,15 @@ public class DefaultPromotionManager extends PromotionsManager
 		return new PromotionsManager.RestrictionSetResult(new ArrayList(0));
 	}
 
+	/**
+	 * @param params
+	 * @param ctx
+	 * @param promotion
+	 * @param secondCategories
+	 * @param order
+	 * @param secondaryProductList
+	 * @return Collection<Product>
+	 */
 	private Collection<Product> getBaseProductsForOrderForBuyAandBPromo(final SessionContext ctx, final AbstractOrder order,
 			final List<Product> secondaryProductList, final AbstractPromotion promotion, final Flat3Map params,
 			final Collection<Category> secondCategories)
@@ -4021,6 +4040,12 @@ public class DefaultPromotionManager extends PromotionsManager
 		return products;
 	}
 
+	/**
+	 * @param products
+	 * @param secondProductsAsString
+	 * @return RestrictionSetResult
+	 * @return Collection<Product>
+	 */
 	private List<Product> getSecondProducts(final SortedSet products, final String secondProductsAsString)
 	{
 		final List<Product> secondProductList = new ArrayList<Product>();
@@ -4037,6 +4062,12 @@ public class DefaultPromotionManager extends PromotionsManager
 		return secondProductList;
 	}
 
+	/**
+	 * @param params
+	 * @param ctx
+	 * @param promotionType
+	 * @return String
+	 */
 	private String fetchSecondProductsForPromotion(final Flat3Map params, final SessionContext ctx, final String promotionType)
 	{
 		final StringBuilder promQuery = new StringBuilder("SELECT distinct {promo.secondProducts} as secondProducts  ");
@@ -4050,6 +4081,13 @@ public class DefaultPromotionManager extends PromotionsManager
 		return CollectionUtils.isNotEmpty(secondProductStr) ? secondProductStr.get(0) : "";
 	}
 
+	/**
+	 * @param secondCategories
+	 * @param ctx
+	 * @param secondaryProductList
+	 * @param params
+	 * @return String
+	 */
 	private void populateSecondaryListForCategory(final Collection<Category> secondCategories,
 			final List<Product> secondaryProductList, final Flat3Map params, final SessionContext ctx)
 	{
@@ -4103,5 +4141,4 @@ public class DefaultPromotionManager extends PromotionsManager
 		secondaryProductList.addAll(cartSecondProducts);
 	}
 	//ends
-
 }
