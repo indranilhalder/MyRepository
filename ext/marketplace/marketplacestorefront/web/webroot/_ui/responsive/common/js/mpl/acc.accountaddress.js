@@ -102,6 +102,7 @@ $(document).ready(function(){
  /*-----------End of Left Nav script -----------------*/
  
 function editAddress(addressId) {
+	
        var requiredUrl = ACC.config.encodedContextPath+"/my-account/populateAddressDetail";
        var dataString = "&addressId="+addressId;
  
@@ -113,12 +114,14 @@ function editAddress(addressId) {
     	   cache: false,
     	   contentType : "application/json; charset=utf-8",
     	   success : function(data) {
-   				$('#addressId').val(addressId);
+    		   //TPR-4795 changes
+    		  var fullAddress=data.line1 +" "+ data.line2 +" "+ data.line3;
+    		   $('#addressId').val(addressId);
    				$('#firstName').val(data.firstName);
    				$('#lastName').val(data.lastName);
-   				$('#line1').val(data.line1);
-   				$('#line2').val(data.line2);
-   				$('#line3').val(data.line3);
+   				$('#line1').val(fullAddress);
+   				$('#line2').val("");
+   				$('#line3').val("");
    				$('#postcode').val(data.postcode);
    				$('#townCity').val(data.townCity);
    				$('#mobileNo').val(data.mobileNo);
