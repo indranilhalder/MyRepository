@@ -120,5 +120,4 @@ public interface CancelReturnFacade
 	public ReturnPincodeDTO checkReturnLogisticsForApp(final OrderData orderDetails, final String pincode,
 			final String returntransactionId);
 
-
 }

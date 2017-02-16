@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+            http://www.springframework.org/schema/task
+           http://www.springframework.org/schema/task/spring-task-3.1.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.1.xsd" default-autowire="byName">
+
+	<context:annotation-config />
+	
+	<bean id="nodeWarmupService" class="com.hybris.yps.nodewarmer.service.NodeWarmupService">
+		<property name="warmerStrategies">
+		<list>
+			<bean class="com.hybris.yps.nodewarmer.warmer.impl.ComposedTypeWarmer"/>
+			<bean class="com.hybris.yps.nodewarmer.warmer.impl.EnumerationTypesWarmer"/>
+			<bean class="com.hybris.yps.nodewarmer.warmer.impl.PageWarmer">
+				<property name="hostname" value="#{configurationService.configuration.getProperty('nodewarmer.http.host')}"/>
+				<property name="throwExceptionOnFailure" value="true"/>
+				<property name="urls">
+				<list>
+					<value>/?site=apparel-uk</value>
+					<value>/en/Brands/c/brands?site=apparel-uk</value>
+				</list>
+				</property>
+			</bean>
+			<bean class="com.hybris.yps.nodewarmer.warmer.impl.ProductDtoCacheWarmer">
+				<property name="dtoCacheManager" ref="cacheManager"/>
+				<property name="loadAllSites" value="true"/>
+				<property name="calculateSizeOfCaches" value="true"/>
+			</bean>
+		</list>
+		</property>
+	</bean>
+	
+	<task:executor id="loadExecutor" pool-size="4" queue-capacity="100" rejection-policy="CALLER_RUNS" />
+	
+	<bean id="tenantRestartListener" class="com.hybris.yps.nodewarmer.listener.TenantRestartListener"/>
+			
+</beans>

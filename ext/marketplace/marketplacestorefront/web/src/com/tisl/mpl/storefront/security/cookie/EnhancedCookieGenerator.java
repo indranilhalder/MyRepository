@@ -17,6 +17,7 @@ package com.tisl.mpl.storefront.security.cookie;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
+import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +48,9 @@ public class EnhancedCookieGenerator extends CookieGenerator
 	private boolean useDefaultPath = DEFAULT_COOKIE_PATH;
 	private boolean httpOnly = DEFAULT_HTTP_ONLY;
 	private boolean useDefaultDomain = true;
+
+	@Resource(name = "configurationService")
+	private ConfigurationService configurationService;
 	private static final Logger LOG = Logger.getLogger(EnhancedCookieGenerator.class.getName());
 
 	/**

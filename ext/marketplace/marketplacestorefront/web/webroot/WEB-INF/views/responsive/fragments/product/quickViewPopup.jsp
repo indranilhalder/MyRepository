@@ -240,11 +240,11 @@ tr.d0 td {
  			var count=data.streamInfo.ratingCount;
  			if(count!= 0 && count == 1){
  				//$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEW");
- 				$('.gig-rating-readReviewsLink_quick').text(count+" REVIEW")
+ 				$('.gig-rating-readReviewsLink_quick a').text(count+" REVIEW")			//UF-25
  			}
  			else if(count!= 0){
  				//$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEWS");
- 				$('.gig-rating-readReviewsLink_quick').text(count+" REVIEWS")
+ 				$('.gig-rating-readReviewsLink_quick a').text(count+" REVIEWS")			 //UF-25 
  			}
  			
  			
@@ -661,7 +661,8 @@ display:none;
 					<span id="gig-rating-readReviewsLink_quick" >  <spring:theme code="rating.reviews"/></span>
 				</c:when>
 				<c:otherwise> --%>
-					<span class="gig-rating-readReviewsLink_quick"> <spring:theme code="rating.noreviews"/></span>
+					<%-- <span class="gig-rating-readReviewsLink_quick"> <spring:theme code="rating.noreviews"/></span> --%>
+					<span class="gig-rating-readReviewsLink_quick"><a href="${productUrl}#ReviewSecion"></a></span>	<!-- UF-25 -->
 				<%-- </c:otherwise>
 			</c:choose> --%>
 			</ul>    

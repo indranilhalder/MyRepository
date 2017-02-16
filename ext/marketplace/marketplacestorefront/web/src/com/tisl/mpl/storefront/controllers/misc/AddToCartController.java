@@ -76,7 +76,7 @@ public class AddToCartController extends AbstractController
 			 * "storing new wishlist data after login in session"); final List<WishlistData> wishlistDatas = new
 			 * ArrayList<>(); sessionService.setAttribute(ModelAttributetConstants.WISHLISTDATA, wishlistDatas); }
 			 * LOG.info("wishlsit name : " + wishlistName); LOG.info("product code:" + code);
-			 * 
+			 *
 			 * final WishlistData wishlistData = new WishlistData(); wishlistData.setParticularWishlistName(wishlistName);
 			 * wishlistData.setProductCode(code); final Collection<WishlistData> wishlistDatas =
 			 * sessionService.getAttribute(ModelAttributetConstants.WISHLISTDATA); final Iterator<WishlistData> iterator =
@@ -114,6 +114,7 @@ public class AddToCartController extends AbstractController
 					 */
 				}
 				return "cnt:" + cartFacade.getSessionCart().getTotalItems();
+
 			}
 			else
 			{
@@ -140,7 +141,7 @@ public class AddToCartController extends AbstractController
 	 * MarketplacecommerceservicesConstants.QUANTITY_INVALID_BINDING_MESSAGE_KEY); } else {
 	 * model.addAttribute(MarketplacecommerceservicesConstants.ERROR_MSG_TYPE, error.getDefaultMessage()); } } return
 	 * ControllerConstants.Views.Fragments.Cart.AddToCartPopup; }
-	 * 
+	 *
 	 * protected boolean isTypeMismatchError(final ObjectError error) { return
 	 * error.getCode().equals(MarketplacecommerceservicesConstants.TYPE_MISMATCH_ERROR_CODE); }
 	 */

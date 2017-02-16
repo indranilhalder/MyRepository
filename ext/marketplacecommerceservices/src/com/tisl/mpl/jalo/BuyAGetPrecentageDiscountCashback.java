@@ -85,6 +85,10 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		final AbstractOrder order = evaluationContext.getOrder();
 
+
+		//final List<Product> promotionProductList = new ArrayList<>(getProducts());
+		//final List<Category> promotionCategoryList = new ArrayList<>(getCategories());
+
 		//final List<Product> promotionProductList = new ArrayList<>(getProducts());
 		//final List<Category> promotionCategoryList = new ArrayList<>(getCategories());
 
@@ -115,6 +119,12 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 
 				//getting the valid products
+				//				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
+				//						.getValidProdListForBuyXofAPromo(order, paramSessionContext, promotionProductList, promotionCategoryList,
+				//								restrictionList, excludedProductList, excludeManufactureList, null, null); // Adding Eligible Products to List
+
+				//final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
+				//getting the valid products
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
 						.getValidProdListForBuyXofA(order, paramSessionContext, allowedProductList, restrictionList,
 								excludedProductList, excludeManufactureList, null, null); // Adding Eligible Products to List
@@ -122,12 +132,11 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(paramSessionContext, validProductUssidMap))
 				{
 					promotionResults = promotionEvaluation(paramSessionContext, evaluationContext, validProductUssidMap,
-							restrictionList, validProductFinalList, validProductUssidFinalMap);
+							restrictionList, validProductFinalList, validProductUssidFinalMap, allowedProductList);
 
 					//Setting values
 					paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidFinalMap);
 					paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductFinalList);
-
 				}
 			}
 		}
@@ -156,7 +165,7 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 	private List<PromotionResult> promotionEvaluation(final SessionContext paramSessionContext,
 			final PromotionEvaluationContext evaluationContext, final Map<String, AbstractOrderEntry> validProductUssidMap,
 			final List<AbstractPromotionRestriction> restrictionList, final Map<String, Integer> validProductFinalList,
-			final Map<String, AbstractOrderEntry> validProductUssidFinalMap)
+			final Map<String, AbstractOrderEntry> validProductUssidFinalMap, final List<Product> allowedProductList)
 	{
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		final List<Product> promoProductList = new ArrayList<Product>();
@@ -213,13 +222,13 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 			List<PromotionOrderEntryConsumed> remainingItemsFromTail = null;
 
 			//getting eligible Product List
-			final List<Product> eligibleProductList = new ArrayList<Product>();
-			for (final AbstractOrderEntry orderEntry : validProductUssidMap.values())
-			{
-				eligibleProductList.add(orderEntry.getProduct());
-			}
+			//			final List<Product> eligibleProductList = new ArrayList<Product>();
+			//			for (final AbstractOrderEntry orderEntry : validProductUssidMap.values())
+			//			{
+			//				eligibleProductList.add(orderEntry.getProduct());
+			//			}
 
-			final PromotionOrderView view = evaluationContext.createView(paramSessionContext, this, eligibleProductList);
+			final PromotionOrderView view = evaluationContext.createView(paramSessionContext, this, allowedProductList);
 			//final PromotionOrderEntry viewEntry = view.peek(paramSessionContext);
 
 			final Map<String, Integer> tcMapForValidEntries = new HashMap<String, Integer>();

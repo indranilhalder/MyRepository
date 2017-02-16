@@ -870,7 +870,7 @@ function focusOnElement() {
 					}
 					else {
 						$("#otherSellersId").html(sellerCount);
-						$("#minPriceId").html(data['minPrice'].formattedValue);
+						$("#minPriceId").html(data['minPrice'].formattedValueNoDecimal);
 					}
 
 					$("#ussid").val(data['sellerArticleSKU']);
@@ -892,7 +892,7 @@ function focusOnElement() {
 					//Ended here//
 					if (isproductPage == 'false') {
 						//fetchAllSellers();
-						$("#minPrice").html(data['minPrice'].formattedValue);
+						$("#minPrice").html(data['minPrice'].formattedValueNoDecimal);
 					}
 				}
 			} 

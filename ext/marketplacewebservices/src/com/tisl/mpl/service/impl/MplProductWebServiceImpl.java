@@ -135,7 +135,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	private static final String Y = "Y";
 	private static final String N = "N";
-	//private static final String WARRANTY = "Warranty";
+
 	private static final String HTTP = "http";
 	private static final String HTTPS = "https";
 
@@ -314,8 +314,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 						ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL,
-						ProductOption.DELIVERY_MODE_AVAILABILITY, ProductOption.SELLER));
+						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL, ProductOption.SELLER));
+
 				//TISPT-396
 				/*
 				 * productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
@@ -734,7 +734,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @param productData
 	 * @return List<String>
 	 */
-	//	private List<String> getWarrantyOfProduct(final Map<String, String> mapConfigurableAttribute, final ProductData productData)
 	//	{
 	//		final List<String> warrantyList = new ArrayList<String>();
 	//		try
@@ -1689,7 +1688,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @param productData
 	 * @return Map<String, String>
 	 */
-	//	private Map<String, String> getSpecificationsOfProduct(final ProductData productData)
+
 	//	{
 	//		final Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
 	//		try

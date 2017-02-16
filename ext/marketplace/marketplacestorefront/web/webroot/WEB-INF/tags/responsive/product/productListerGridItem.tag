@@ -48,7 +48,7 @@
 		<div class="product-tile">
 			<div class="image">
 
-				<c:if test="${product.isProductNew eq true}">
+				<c:if test="${product.isProductNew eq true && !product.isOfferExisting}">
 					<div style="z-index: 1;" class="new">
 						<img class="brush-strokes-sprite sprite-New"
 
@@ -64,7 +64,7 @@
 
 				</a>
 				
-				<c:if test="${!product.isOnlineExclusive && product.isOfferExisting}">
+				<c:if test="${product.isOfferExisting}">
 					<%-- <div style="z-index: 2;display: none;" class="on-sale" id="on-sale_${product.code}"> --%>
 						<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}">
 				<%-- 	<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}"> --%>
@@ -73,7 +73,7 @@
 						<span>On<br>Offer</span>
 					</div>
 		         </c:if>
-				<c:if test="${product.isOnlineExclusive}">
+				<c:if test="${!product.isOfferExisting && !product.isProductNew && product.isOnlineExclusive}">
 					<div style="z-index: 1;" class="online-exclusive">
 						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
 							src="//${staticHost}/_ui/responsive/common/images/transparent.png">

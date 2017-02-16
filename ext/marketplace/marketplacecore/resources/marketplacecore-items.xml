@@ -1913,6 +1913,11 @@
 						<description>Stores the Promotion Code</description>
 						<persistence type="property" />
 					</attribute>
+					<!-- Price Update -->
+					<attribute qualifier="productCodeString" type="java.lang.String">
+						<description>Product code as String</description>
+						<persistence type="property" />
+					</attribute>
 					
 				</attributes>
 			</itemtype>
@@ -2547,6 +2552,7 @@
 						</attribute> -->
 					<!-- End : New Attribute for identifying Fall Back Orders Plan B -->
 					<!-- Start : New Attribute for identifying Fall Back Orders Plan C -->
+					<!-- PaymentFix2017 -->
 					<attribute autocreate="true" qualifier="isSentToOMS"
 						type="java.lang.Boolean">
 						<persistence type="property" qualifier="isSentToOMS">
@@ -6397,11 +6403,11 @@
 					</attribute>
 					<!-- End TISPRO-249 -->
 					<!-- TISPRO-318 -->
-					<attribute qualifier="bogoFreeItmCount" type="java.lang.String">
+					<!-- <attribute qualifier="bogoFreeItmCount" type="java.lang.String">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 						<persistence type="property" />
-					</attribute>
+					</attribute> -->
 					<!-- End TISPRO-318 -->
 					<!-- TISPRD- 2511 -->
 					<attribute qualifier="isSentToFico" autocreate="true"

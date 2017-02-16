@@ -37,8 +37,8 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 
 	@Autowired
 	private SizeAttributeComparator sizeAttributeComparator;
-	private static final String DELIMETER = ":";
-	private static final String STOCK = "STOCK";
+	//private static final String DELIMETER = ":";
+	//private static final String STOCK = "STOCK";
 
 	@Override
 	public void populate(final SearchResultValueData source, final ProductData target)
@@ -248,9 +248,11 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	{
 		if (getValue(source, "stockLevelStatus") != null)
 		{
+			//final boolean stockLevelStatus = Boolean.parseBoolean(getValue(source, "stockLevelStatus").toString());
 
-			final boolean stockLevelStatus = Boolean.parseBoolean(getValue(source, "stockLevelStatus").toString());
-
+			//final boolean stockLevelStatus = Boolean.valueOf(getValue(source, "stockLevelStatus").toString()).booleanValue();
+			//final boolean stockLevelStatus = Boolean.getBoolean(getValue(source, "stockLevelStatus").toString()); //Sonar fix
+			final boolean stockLevelStatus = Boolean.parseBoolean(getValue(source, "stockLevelStatus").toString()); //modified Boolean.getBoolean() as it always return false
 			try
 			{
 				// In case of low stock then make a call to the stock service to determine if in or out of stock.

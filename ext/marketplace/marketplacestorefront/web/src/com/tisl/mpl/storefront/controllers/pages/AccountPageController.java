@@ -162,7 +162,7 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.impl.MplCheckoutFacadeImpl;
 import com.tisl.mpl.facade.mystyleprofile.MyStyleProfileFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
-import com.tisl.mpl.facades.account.address.AccountAddressFacade;
+import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.preference.MplPreferenceFacade;
 import com.tisl.mpl.facades.account.register.FriendsInviteFacade;
@@ -353,7 +353,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@Autowired
 	private WishlistFacade wishlistFacade;
 	@Autowired
-	private AccountAddressFacade accountAddressFacade;
+	private MplAccountAddressFacade accountAddressFacade;
 	@Autowired
 	private FriendsInviteFacade friendsInviteFacade;
 	@Autowired
@@ -6819,22 +6819,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	}
 
 
-	/**
-	 * @return the accountAddressFacade
-	 */
-	public AccountAddressFacade getAccountAddressFacade()
-	{
-		return accountAddressFacade;
-	}
 
-	/**
-	 * @param accountAddressFacade
-	 *           the accountAddressFacade to set
-	 */
-	public void setAccountAddressFacade(final AccountAddressFacade accountAddressFacade)
-	{
-		this.accountAddressFacade = accountAddressFacade;
-	}
 
 	/**
 	 * @return the mplOrderFacade
@@ -7201,6 +7186,24 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 			}
 		}
+	}
+
+
+	/**
+	 * @return the accountAddressFacade
+	 */
+	public MplAccountAddressFacade getAccountAddressFacade()
+	{
+		return accountAddressFacade;
+	}
+
+	/**
+	 * @param accountAddressFacade
+	 *           the accountAddressFacade to set
+	 */
+	public void setAccountAddressFacade(final MplAccountAddressFacade accountAddressFacade)
+	{
+		this.accountAddressFacade = accountAddressFacade;
 	}
 
 }

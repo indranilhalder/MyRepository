@@ -95,12 +95,14 @@
 	</c:choose>
 	<div class="content">
 	<!-- Luxury tab	 starts-->
+	<c:if test="${!hideSecureTransaction}">
 						<div id="flip-tabs" >				
 							<ul id="flip-navigation" >  
 					            <li class="selected"><a href="/" id="tab-1" >MARKETPLACE</a></li>
 					            <li><a href="${luxuryHost}" id="tab-2" target="_blank">LUXURY</a></li>  
 					        </ul> 
 					    </div>
+					    </c:if>
 	 <!-- Luxury tab	 ends-->
 		<div class="top">
 			<c:if test="${empty showOnlySiteLogo }">

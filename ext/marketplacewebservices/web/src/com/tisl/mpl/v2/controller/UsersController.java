@@ -164,7 +164,7 @@ import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.MplCouponWebFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
-import com.tisl.mpl.facades.account.address.AccountAddressFacade;
+import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.cancelreturn.impl.CancelReturnFacadeImpl;
 import com.tisl.mpl.facades.account.preference.MplPreferenceFacade;
@@ -339,7 +339,7 @@ public class UsersController extends BaseCommerceController
 	@Resource(name = "mplPaymentService")
 	private MplPaymentService mplPaymentService;
 	@Resource
-	private AccountAddressFacade accountAddressFacade;
+	private MplAccountAddressFacade accountAddressFacade;
 	@Resource
 	private UpdateFeedbackFacade updateFeedbackFacade;
 	//	@Autowired Critical Sonar fixes Unused private Field
@@ -5704,10 +5704,11 @@ public class UsersController extends BaseCommerceController
 	public @ResponseBody MplUserResultWsDto initiateRefund(@PathVariable final String emailId,
 			@RequestParam final String orderCode, @RequestParam final String reasonCode, @RequestParam final String ticketTypeCode,
 			@RequestParam final String ussid, @RequestParam final String refundType, @RequestParam final String transactionId,
-			@RequestParam(required = false) final String addressLane1, @RequestParam(required = false) final String addressLane2,
-			@RequestParam(required = false) final String countryIso, @RequestParam(required = false) final String city,
-			@RequestParam(required = false) final String state, @RequestParam(required = false) final String landmark,
-			@RequestParam(required = false) final String pincode)
+			@RequestParam(required = false) final String firstName, @RequestParam(required = false) final String lastName,
+			@RequestParam(required = false) final String MobileNo, @RequestParam(required = false) final String addressLane1,
+			@RequestParam(required = false) final String addressLane2, @RequestParam(required = false) final String countryIso,
+			@RequestParam(required = false) final String city, @RequestParam(required = false) final String state,
+			@RequestParam(required = false) final String landmark, @RequestParam(required = false) final String pincode)
 	{
 		final MplUserResultWsDto output = new MplUserResultWsDto();
 		boolean resultFlag = false;
@@ -5716,6 +5717,9 @@ public class UsersController extends BaseCommerceController
 		OrderEntryData orderEntry = new OrderEntryData();
 		try
 		{
+			returnItemAddressData.setFirstName(firstName);
+			returnItemAddressData.setLastName(lastName);
+			returnItemAddressData.setMobileNo(MobileNo);
 			returnItemAddressData.setAddressLane1(addressLane1);
 			returnItemAddressData.setAddressLane2(addressLane2);
 			returnItemAddressData.setCity(city);
@@ -5759,7 +5763,6 @@ public class UsersController extends BaseCommerceController
 			{
 				result = MarketplacecommerceservicesConstants.FAILURE_FLAG;
 			}
-			
 			output.setStatus(result);
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -5804,6 +5807,7 @@ public class UsersController extends BaseCommerceController
 		return output;
 
 	}
+
 
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
@@ -7015,6 +7019,169 @@ public class UsersController extends BaseCommerceController
 	}
 
 
+	@Secured(
+	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+	@RequestMapping(value = "/{userId}/returnPincode", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public ReturnPincodeDTO returnPincodeServiceability(@RequestParam final String pincode, @RequestParam final String orderCode,
+			@RequestParam final String transactionId) throws EtailNonBusinessExceptions
+	{
+
+		final ReturnPincodeDTO returnPincodeDTO = new ReturnPincodeDTO();
+
+		ReturnPincodeDTO returnPincodeAvailDTO = null;
+
+		try
+		{
+
+			final OrderData orderDetails = orderFacade.getOrderDetailsForCode(orderCode);
+
+			boolean returnLogisticsCheck = true;
+			for (final ConsignmentData consignmentData : orderDetails.getConsignments())
+			{
+				if (consignmentData.getStatus() != null && consignmentData.getStatus().getCode() == "DELIVERED")
+				{
+
+					returnPincodeAvailDTO = cancelReturnFacade.checkReturnLogisticsForApp(orderDetails, pincode, transactionId);
+				}
+				else
+				{
+					returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				}
+			}
+
+
+			for (final ReturnLogisticsResponseDTO response : returnPincodeAvailDTO.getReturnLogisticsResponseDTO())
+			{
+				if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase("N"))
+				{
+					returnLogisticsCheck = false;
+
+				}
+
+				if (!returnLogisticsCheck)
+				{
+					returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+					returnPincodeDTO.setIsPincodeServiceable(false);
+					returnPincodeDTO.setReturnLogisticsResponseDTO(returnPincodeAvailDTO.getReturnLogisticsResponseDTO());
+				}
+				else
+				{
+					returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					returnPincodeDTO.setIsPincodeServiceable(true);
+					returnPincodeDTO.setReturnLogisticsResponseDTO(returnPincodeAvailDTO.getReturnLogisticsResponseDTO());
+
+				}
+			}
+
+		}
+
+
+
+
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				returnPincodeDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				returnPincodeDTO.setErrorCode(e.getErrorCode());
+			}
+			returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				returnPincodeDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				returnPincodeDTO.setErrorCode(e.getErrorCode());
+			}
+			returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			returnPincodeDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+			returnPincodeDTO.setErrorCode(MarketplacecommerceservicesConstants.B9004);
+			returnPincodeDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return returnPincodeDTO;
+	}
+
+
+	/**
+	 * TPR-1630 Display product details at time of return
+	 */
+	@Secured(
+	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+	@RequestMapping(value = "/{userId}/returnProductDetails", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public ReturnRequestDTO returnProductDetails(@RequestParam final String orderCode, @RequestParam final String transactionId,
+			@RequestParam final String returnCancelFlag) throws EtailNonBusinessExceptions
+	{
+		final ReturnRequestDTO returnRequestDTO = new ReturnRequestDTO();
+		ReturnReasonDetails returnReasonData = null;
+		ReturnReasonDTO reasonDto = new ReturnReasonDTO();
+		final List<ReturnReasonDTO> returnReasondtolist = new ArrayList<ReturnReasonDTO>();
+		try
+		{
+			final List<OrderProductWsDTO> orderproductWsDto = getOrderDetailsFacade.getOrderdetailsForApp(orderCode, transactionId,
+					returnCancelFlag);
+			if (orderproductWsDto.size() > 0)
+			{
+
+				returnRequestDTO.setOrderProductWsDTO(orderproductWsDto);
+				returnReasonData = mplOrderFacade.getReturnReasonForOrderItem(returnCancelFlag);
+			}
+			if (null != returnReasonData && CollectionUtils.isNotEmpty(returnReasonData.getReturnReasonDetailsList()))
+			{
+				for (final ReturnReasonData entry : returnReasonData.getReturnReasonDetailsList())
+				{
+					reasonDto = dataMapper.map(entry, ReturnReasonDTO.class);
+					returnReasondtolist.add(reasonDto);
+
+				}
+				returnRequestDTO.setReturnReasonDetailsWsDTO(returnReasondtolist);
+			}
+
+			else
+			{
+				returnRequestDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+				returnRequestDTO.setErrorCode(MarketplacecommerceservicesConstants.B9004);
+				returnRequestDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				returnRequestDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9076));
+			}
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			returnRequestDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+			returnRequestDTO.setErrorCode(MarketplacecommerceservicesConstants.B9004);
+			returnRequestDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return returnRequestDTO;
+	}
+
+
+
 	// Getter Setter
 
 	/**
@@ -7625,7 +7792,7 @@ public class UsersController extends BaseCommerceController
 	/**
 	 * @return the accountAddressFacade
 	 */
-	public AccountAddressFacade getAccountAddressFacade()
+	public MplAccountAddressFacade getAccountAddressFacade()
 	{
 		return accountAddressFacade;
 	}
@@ -7634,7 +7801,7 @@ public class UsersController extends BaseCommerceController
 	 * @param accountAddressFacade
 	 *           the accountAddressFacade to set
 	 */
-	public void setAccountAddressFacade(final AccountAddressFacade accountAddressFacade)
+	public void setAccountAddressFacade(final MplAccountAddressFacade accountAddressFacade)
 	{
 		this.accountAddressFacade = accountAddressFacade;
 	}

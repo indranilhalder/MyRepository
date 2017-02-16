@@ -83,7 +83,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	private CatalogVersionService catalogVersionService;
 	@Autowired
 	private ConfigurationService configurationService;
-	//SONAR-FIX -UNUSED VARIABLE
+
 	//private UpdateSplPriceHelperService updateSplPriceHelperService;
 	@Autowired
 	private CategoryService categoryService;
@@ -91,9 +91,9 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	//SONAR FIX-STRING LITERAL USED MULTIPLE TIMES
 	private final String CATLIST = " *** categoryList:";
 
-
 	@Resource(name = "stockPromoCheckService")
 	private ExtStockLevelPromotionCheckService stockPromoCheckService;
+
 
 	/**
 	 * @description getRequiredPromotion
@@ -301,6 +301,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
 						&& quantity.intValue() > 1) // If Qauntity is increased from 1 to Multiple //Fix for TISPRD-383
 				{
+
 					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList + CATLIST
 							+ categoryList);
 					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
@@ -317,7 +318,6 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-
 			LOG.error("******** Special price check disabling promotion, productlist error:" + productList + CATLIST + categoryList
 					+ "PROMOTION CODE:" + promoCode);
 			errorFlag = true;

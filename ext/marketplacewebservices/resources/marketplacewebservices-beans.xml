@@ -2708,9 +2708,7 @@
 		<property name="returnLogisticsResponseDTO"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ReturnLogisticsResponseDTO>" />
 	</bean>
-
-	<!-- TPR-1630 -->
-	<bean class="com.tisl.mpl.wsdto.ReturnLogisticsResponseDTO">
+<bean class="com.tisl.mpl.wsdto.ReturnLogisticsResponseDTO">
 		<property name="isReturnLogisticsAvailable" type="String" />
 		<property name="orderId" type="String" />
 		<property name="responseDescription" type="String" />
@@ -2730,7 +2728,6 @@
 		<property name="code" type="String" />
 		<property name="returnKey" type="String" />
 	</bean>
-
 
 	<!-- TPR-1727 -->
 	<bean class="com.tisl.mpl.wsdto.ProductInfoWSDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">

@@ -122,7 +122,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 			//if (checkChannelFlag)
 			{
 				final Map<String, List<String>> productAssociatedItemsFinalMap = new ConcurrentHashMap<String, List<String>>();
-				final Map<String, Integer> validProductFinalList = new ConcurrentHashMap<String, Integer>();
+				//final Map<String, Integer> validProductFinalList = new ConcurrentHashMap<String, Integer>();
 				//final Map<String, AbstractOrderEntry> validProductUssidFinalMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
 
 				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
@@ -179,12 +179,13 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 					//}
 
 					promotionResults = promotionEvaluation(paramSessionContext, paramPromotionEvaluationContext, validProductUssidMap,
-							restrictionList, allowedProductList, order, productAssociatedItemsFinalMap, validProductFinalList);
+							restrictionList, allowedProductList, order, productAssociatedItemsFinalMap);//, validProductFinalList);
 				}
 
 				//Setting values
 				//paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidFinalMap);
-				paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductFinalList);
+
+				//paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductFinalList);
 				paramSessionContext
 						.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsFinalMap);
 
@@ -222,7 +223,8 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 			final PromotionEvaluationContext paramPromotionEvaluationContext,
 			final Map<String, AbstractOrderEntry> validProductUssidMap, final List<AbstractPromotionRestriction> restrictionList,
 			final List<Product> allowedProductList, final AbstractOrder order,
-			final Map<String, List<String>> productAssociatedItemsFinalMap, final Map<String, Integer> validProductFinalList)
+			final Map<String, List<String>> productAssociatedItemsFinalMap)
+	//, final Map<String, Integer> validProductFinalList)
 	//			,final Map<String, AbstractOrderEntry> validProductUssidFinalMap)
 	{
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
@@ -318,7 +320,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 							validProductUssidMap, totalCount, eligibleQuantity.longValue(), paramSessionContext, restrictionList,
 							getCode());
 
-					validProductFinalList.putAll(validProductList);
+					//validProductFinalList.putAll(validProductList);
 					//validProductUssidFinalMap.putAll(validProductUssidMap);
 
 					if (!isPercentageOrAmount().booleanValue())
@@ -411,7 +413,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 
 								final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
 								consumed.add(getDefaultPromotionsManager().consume(paramSessionContext, this, eligibleCount,
-										eligibleCount, entry));
+										quantityOfOrderEntry, entry));
 
 								tcMapForValidEntries.put(validUssid, Integer.valueOf((int) quantityOfOrderEntry - eligibleCount));
 
@@ -427,7 +429,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 								final PromotionResult result = promotionsManager.createPromotionResult(paramSessionContext, this,
 										paramPromotionEvaluationContext.getOrder(), 1.0F);
 								final CustomPromotionOrderEntryAdjustAction poeac = getDefaultPromotionsManager()
-										.createCustomPromotionOrderEntryAdjustAction(paramSessionContext, entry, quantityOfOrderEntry,
+										.createCustomPromotionOrderEntryAdjustAction(paramSessionContext, entry, eligibleCount,
 												adjustment.doubleValue());
 								//final List consumed = paramPromotionEvaluationContext.finishLoggingAndGetConsumed(this, true);
 								result.setConsumedEntries(paramSessionContext, consumed);
@@ -792,6 +794,5 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 	{
 		this.stockCount = stockCount;
 	}
-
 
 }

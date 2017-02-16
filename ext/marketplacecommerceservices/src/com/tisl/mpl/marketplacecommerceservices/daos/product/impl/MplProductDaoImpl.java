@@ -29,6 +29,7 @@ import com.tisl.mpl.model.SellerInformationModel;
  */
 public class MplProductDaoImpl extends DefaultProductDao implements MplProductDao
 {
+	
 	@Autowired
 	private CatalogVersionService catalogVersionService;
 
@@ -55,17 +56,21 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 		LOG.debug("findProductsByCode: code********** " + code);
 		final CatalogVersionModel catalogVersion = getCatalogVersion();
 		final StringBuilder stringBuilder = new StringBuilder(70);
+
 		stringBuilder.append(SELECT_STRING).append(ProductModel.PK).append("} ");
 		stringBuilder.append(FROM_STRING).append(ProductModel._TYPECODE).append(" AS p ");
 		stringBuilder.append("JOIN ").append(SellerInformationModel._TYPECODE).append(" AS s ");
 		stringBuilder.append("ON {s:").append(SellerInformationModel.PRODUCTSOURCE).append("}={p:").append(ProductModel.PK)
 				.append("} } ");
 		final String inPart = "{p:" + ProductModel.CODE + CODE_STRING + ProductModel.CATALOGVERSION
+
 				+ "} = ?catalogVersion and  sysdate between {s.startdate} and {s.enddate} ";
 		stringBuilder.append("WHERE ").append(inPart);
 		LOG.debug("findProductsByCode: stringBuilder******* " + stringBuilder);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(stringBuilder.toString());
+
 		query.addQueryParameter(CODE, code);
+
 		query.addQueryParameter("catalogVersion", catalogVersion);
 		query.setResultClassList(Collections.singletonList(ProductModel.class));
 		final SearchResult<ProductModel> searchResult = getFlexibleSearchService().search(query);
@@ -79,6 +84,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 		List<ProductModel> productList = null;
 		final CatalogVersionModel catalogVersion = getCatalogVersion();
 		final StringBuilder stringBuilder = new StringBuilder(70);
+
 		stringBuilder.append(SELECT_STRING).append(ProductModel.PK).append("} ");
 		stringBuilder.append(FROM_STRING).append(ProductModel._TYPECODE).append(" AS p ");
 		stringBuilder.append("JOIN ").append(SellerInformationModel._TYPECODE).append(" AS s ");
