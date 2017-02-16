@@ -98,6 +98,11 @@ public class GenericUtilityMethods
 		}
 		return status;
 	}
+	public static Object jsonToObject(final Class<?> classType, final String stringJson) throws JsonParseException, JsonMappingException, IOException
+	  {
+	   ObjectMapper mapper = new ObjectMapper();
+	  return  mapper.readValue(stringJson, classType);
+	  }
 
 	/**
 	 * @Description: Sends the year from Date

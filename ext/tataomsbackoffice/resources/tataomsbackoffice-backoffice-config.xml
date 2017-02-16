@@ -189,7 +189,7 @@
      </explorer-tree:navigation-node>
        <explorer-tree:navigation-node  id="awbeditMvvm">
      </explorer-tree:navigation-node>
-     <explorer-tree:navigation-node  id="lpeditMvvmWidget">    </explorer-tree:navigation-node>
+     <explorer-tree:navigation-node  id="lpeditMvvmWidget"></explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="configarable_params">
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="tshipdeliverytat"></explorer-tree:navigation-node>
@@ -203,8 +203,7 @@
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="container_pincode_logistics_report">
      </explorer-tree:navigation-node>
-     <explorer-tree:navigation-node  id="pincodes_upload">
-     <explorer-tree:navigation-node id="tship_sship_assignment_collapseble"></explorer-tree:navigation-node>
+         <explorer-tree:navigation-node id="tship_sship_assignment_collapseble"></explorer-tree:navigation-node>
       <explorer-tree:navigation-node id="delivery_address_request_widget_report"></explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="lp_and_awbedit_collapseble"></explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="short_url_tracking_collapseble"></explorer-tree:navigation-node>
@@ -213,8 +212,6 @@
      <explorer-tree:navigation-node id="reverse_logistics_failure_info"></explorer-tree:navigation-node>
       <explorer-tree:navigation-node id="logistcs_delivery_report"></explorer-tree:navigation-node>
         <explorer-tree:navigation-node  id="unmapped_pincodes_report">
-     </explorer-tree:navigation-node>
-     <explorer-tree:navigation-node  id="shipment_data_upload">
      </explorer-tree:navigation-node>
 	</explorer-tree:explorer-tree>
 </context>
@@ -238,6 +235,7 @@
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="pincodes_upload">
      </explorer-tree:navigation-node>
+       <explorer-tree:navigation-node  id="shipment_data_upload"/>
       <explorer-tree:navigation-node  id="lpawb_bulkupload">
      </explorer-tree:navigation-node>
          <explorer-tree:navigation-node  id="awbeditMvvm">
@@ -246,20 +244,16 @@
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="configarable_params">
      </explorer-tree:navigation-node>
-     <explorer-tree:navigation-node id="tshipdeliverytat"></explorer-tree:navigation-node>
+     <explorer-tree:navigation-node id="tshipdeliverytat"></explorer-tree:navigation-node>   
     <!-- This release not required this screen(Don't remove controller and widget settings)
       <explorer-tree:navigation-node id="sship_delivery_breach_collapseble"></explorer-tree:navigation-node> -->
      
-     <explorer-tree:navigation-node id="report_cerparation_line">
-         
+     <explorer-tree:navigation-node id="report_cerparation_line">     
      </explorer-tree:navigation-node>
          <explorer-tree:navigation-node  id="container_pincode_report">
      </explorer-tree:navigation-node>
      <explorer-tree:navigation-node  id="container_pincode_logistics_report">
      </explorer-tree:navigation-node>
-     <explorer-tree:navigation-node  id="pincodes_upload">
-     </explorer-tree:navigation-node>
-       <explorer-tree:navigation-node  id="shipment_data_upload">
       <explorer-tree:navigation-node id="tship_sship_assignment_collapseble"></explorer-tree:navigation-node>
       <explorer-tree:navigation-node id="delivery_address_request_widget_report"></explorer-tree:navigation-node>
      <explorer-tree:navigation-node id="lp_and_awbedit_collapseble"></explorer-tree:navigation-node>

@@ -316,7 +316,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 //					break;
 //				} 
 //			}
-			}
+			
 	      
 			for(AbstractOrderEntryModel entry : cart.getEntries()){
 					if(entry.getMplDeliveryMode()==null){						

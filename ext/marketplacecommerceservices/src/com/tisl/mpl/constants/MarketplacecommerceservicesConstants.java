@@ -111,10 +111,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 
 	//For Bulk Orders Return Initiation
-	public static final String COMMA_DELIMITER = ",";
-	public static final String TICKETTYPECODE = "R";
-	public static final String REFUNDTYPE = "S";
-	public static final String REASONCODE = "03"; // Hard coded value -- I'm not happy with the product quality
 
 	//Bulk Cancellation
 	public static final String initiate_cancel_job_cancellation_count = "initiate.cancel.job.cancellation.count";

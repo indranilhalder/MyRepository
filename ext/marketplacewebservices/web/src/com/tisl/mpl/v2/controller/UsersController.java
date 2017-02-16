@@ -7460,34 +7460,7 @@ public class UsersController extends BaseCommerceController
 	return output;
 }
 	
-	
 
-	/**
-	 * @description method is called to generate update profileURL mobile service
-	 * @param request
-	 * @param specificUrl
-	 */
-	public String urlForMobileEmailContext(final HttpServletRequest request, final String specificUrl)
-	{
-		URL requestUrl;
-		String profileUpdateUrl = MarketplacecommerceservicesConstants.EMPTY;
-		try
-		{
-			requestUrl = new URL(request.getRequestURL().toString());
-			final String portString = requestUrl.getPort() == -1 ? "" : ":" + requestUrl.getPort();
-			//final String baseUrl = requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString + ""; Do not add empty strings
-			final String baseUrl = requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString;
-
-			profileUpdateUrl = baseUrl + specificUrl;
-		}
-		catch (final MalformedURLException e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0016));
-			return MarketplacecommerceservicesConstants.FAILURE;
-		}
-		return profileUpdateUrl;
-	}
 
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
@@ -7940,22 +7913,6 @@ public class UsersController extends BaseCommerceController
 		this.mplCheckoutFacade = mplCheckoutFacade;
 	}
 
-	/**
-	 * @return the addressReversePopulator
-	 */
-	public Populator<AddressData, AddressModel> getAddressReversePopulator()
-	{
-		return addressReversePopulator;
-	}
-
-	/**
-	 * @param addressReversePopulator
-	 *           the addressReversePopulator to set
-	 */
-	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
-	{
-		this.addressReversePopulator = addressReversePopulator;
-	}
 
 	/**
 	 * @return the wishlistService

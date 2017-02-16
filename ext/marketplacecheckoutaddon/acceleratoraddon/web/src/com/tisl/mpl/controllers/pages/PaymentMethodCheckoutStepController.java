@@ -13,8 +13,6 @@
  */
 package com.tisl.mpl.controllers.pages;
 
-import de.hybris.platform.acceleratorservices.payment.data.PaymentData;
-import de.hybris.platform.acceleratorstorefrontcommons.annotations.PreValidateCheckoutStep;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.CheckoutStep;
 import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.validation.ValidationResults;
@@ -23,16 +21,11 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMe
 import de.hybris.platform.acceleratorstorefrontcommons.forms.PaymentDetailsForm;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
-import de.hybris.platform.commercefacades.customer.CustomerFacade;
-import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
-import de.hybris.platform.commercefacades.product.data.PromotionResultData;
-import de.hybris.platform.commercefacades.voucher.VoucherFacade;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
-import de.hybris.platform.commerceservices.order.CommerceCartCalculationStrategy;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.core.enums.OrderStatus;
@@ -48,15 +41,12 @@ import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
-import de.hybris.platform.promotions.PromotionsService;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
-import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -109,7 +99,6 @@ import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.model.SavedCardModel;
-import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.BinData;
 import com.tisl.mpl.data.CODData;
 import com.tisl.mpl.data.EMIBankList;
@@ -122,23 +111,18 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
-import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facade.config.MplConfigFacade;
-import com.tisl.mpl.facades.account.register.MplCustomerProfileFacade;
+import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
-import com.tisl.mpl.marketplacecommerceservices.service.BlacklistService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
-import com.tisl.mpl.service.MplCustomerWebService;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.web.forms.PaymentForm;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
-import com.tisl.mpl.core.enums.CodCheckMessage;
-import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 
 
 /**
@@ -3920,7 +3904,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							  //R2.3 BUG-ID TATA-684
 							final String deliveryFulfillModeByP1=entry.getFulfillmentTypeP1()!=null?entry.getFulfillmentTypeP1():richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode();
 							if (DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(fulfillmentType) ||DeliveryFulfillModesEnum.BOTH.toString().equalsIgnoreCase(fulfillmentType) &&
-									DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(deliveryFulfillModeByP1))
+									DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(deliveryFulfillModeByP1)) {
 								final boolean returnFlag = paymentModecheckForCOD(richAttributeModel, abstractOrder, model);
 								if (!returnFlag)
 								{
@@ -3961,7 +3945,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 	}
 
-
+	}
 
 
 	//Getters and Setters

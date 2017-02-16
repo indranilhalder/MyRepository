@@ -58,4 +58,13 @@ public interface GetOrderDetailsFacade
 	public List<OrderProductWsDTO> getOrderdetailsForApp(final String orderCode, final String returnCancelFlag,
 			final String transactionId);
 
+	/**
+	 * @param orderEntryDetail
+	 * @param subOrder
+	 * @param parentOrder
+	 * @return
+	 */
+	Map<String, List<AWBResponseData>> getOrderStatusTrack(OrderEntryData orderEntryDetail, OrderData subOrder,
+			OrderData parentOrder);
+
 }

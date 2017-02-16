@@ -726,7 +726,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 		tshipThresholdValue = (tshipThresholdValue != null && !tshipThresholdValue.isEmpty()) ? tshipThresholdValue : Integer
 				.toString(0);
 		 List<PinCodeResponseData> pincoderesponseDataList = null;
-		   pincoderesponseDataList = getSessionService().getAttribute(
+		   pincoderesponseDataList = sessionService.getAttribute(
 					MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
 	  
 	LOG.debug("******responceData******** " + pincoderesponseDataList);

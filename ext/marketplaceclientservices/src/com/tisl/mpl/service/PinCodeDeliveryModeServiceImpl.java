@@ -79,14 +79,14 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	 *
 	 */
 	private static final String CNC = "CNC";
-	
-	
+
+
 	private static final String TSHIP = "TSHIP".intern();
 	private static final String SSHIP = "SSHIP".intern();
 	private static final String BOTH = "BOTH".intern();
 
-	
-	
+
+
 	private static final Logger LOG = Logger.getLogger(PinCodeDeliveryModeServiceImpl.class);
 	//TISPT-401 Start
 	static final JAXBContext context = initContext();
@@ -181,29 +181,36 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 					final PinCodeDeliveryModeRequest pincodereqObj = new PinCodeDeliveryModeRequest();
 					if (null != reqData.get(i))
 					{
-						List<String> fulfilmentTypeList=new ArrayList<String>();
-						/*if (null != reqData.get(i).getDeliveryFulfillModeByP1())
-						{
-							fulfilmentTypeList.add(reqData.get(i).getDeliveryFulfillModeByP1().toUpperCase());
-							//pincodereqObj.setFulfilmentType(reqData.get(i).getFullFillmentType().toUpperCase());
-						}*/
+						final List<String> fulfilmentTypeList = new ArrayList<String>();
+						/*
+						 * if (null != reqData.get(i).getDeliveryFulfillModeByP1()) {
+						 * fulfilmentTypeList.add(reqData.get(i).getDeliveryFulfillModeByP1().toUpperCase());
+						 * //pincodereqObj.setFulfilmentType(reqData.get(i).getFullFillmentType().toUpperCase()); }
+						 */
 						if (null != reqData.get(i).getFullFillmentType())
 						{
-							if(reqData.get(i).getFullFillmentType().equalsIgnoreCase(BOTH)){
-								 if(reqData.get(i).getDeliveryFulfillModeByP1().equalsIgnoreCase(TSHIP)){
-									 fulfilmentTypeList.add(TSHIP);
-									 fulfilmentTypeList.add(SSHIP);
-								 }else{
-									 fulfilmentTypeList.add(SSHIP);
-									 fulfilmentTypeList.add(TSHIP);
-								 }
-							}else{
-								fulfilmentTypeList.add(reqData.get(i).getFullFillmentType().toUpperCase());	
+							if (reqData.get(i).getFullFillmentType().equalsIgnoreCase(BOTH))
+							{
+								if (reqData.get(i).getDeliveryFulfillModeByP1().equalsIgnoreCase(TSHIP))
+								{
+									fulfilmentTypeList.add(TSHIP);
+									fulfilmentTypeList.add(SSHIP);
+								}
+								else
+								{
+									fulfilmentTypeList.add(SSHIP);
+									fulfilmentTypeList.add(TSHIP);
+								}
+							}
+							else
+							{
+								fulfilmentTypeList.add(reqData.get(i).getFullFillmentType().toUpperCase());
 							}
 						}
-						if(fulfilmentTypeList.size()>0){
-						pincodereqObj.setFulfilmentType(fulfilmentTypeList);
-					   }
+						if (fulfilmentTypeList.size() > 0)
+						{
+							pincodereqObj.setFulfilmentType(fulfilmentTypeList);
+						}
 						if (null != reqData.get(i).getIsCOD())
 						{
 							pincodereqObj.setIsCOD(reqData.get(i).getIsCOD());
@@ -239,13 +246,16 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 								}
 								if (deliveryMode.equalsIgnoreCase(EXPRESS_DELIVERY))
 								{
-									if(null != reqData.get(i) &&  null != reqData.get(i).getSellerHandlingTime() ){
-										
-										if(reqData.get(i).getSellerHandlingTime().intValue()>=0 && reqData.get(i).getSellerHandlingTime().intValue()<=24){
+									if (null != reqData.get(i) && null != reqData.get(i).getSellerHandlingTime())
+									{
+
+										if (reqData.get(i).getSellerHandlingTime().intValue() >= 0
+												&& reqData.get(i).getSellerHandlingTime().intValue() <= 24)
+										{
 											deliveryModes.add(ED);
 										}
 									}
-									
+
 								}
 								if (deliveryMode.equalsIgnoreCase(CLICK_AND_COLLECT))
 								{
@@ -260,7 +270,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 										}
 										pincodereqObj.setStore(reqStreNames);
 									}
-									pincodereqObj.setStore(reqStreNames);
+									//		pincodereqObj.setStore(reqStreNames);
 								}
 							}
 							pincodereqObj.setDeliveryMode(deliveryModes);
@@ -269,27 +279,39 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 						{
 							pincodereqObj.setIsDeliveryDateRequired(reqData.get(i).getIsDeliveryDateRequired());
 						}
-						
-						
-						if (null != reqData.get(i).getIsFragile()  || StringUtils.isNotEmpty(reqData.get(i).getIsFragile()))
+
+
+						if (null != reqData.get(i).getIsFragile() || StringUtils.isNotEmpty(reqData.get(i).getIsFragile()))
 						{
-							if(reqData.get(i).getIsFragile().equalsIgnoreCase(MarketplacecclientservicesConstants.YES) || reqData.get(i).getIsFragile().equalsIgnoreCase(MarketplacecclientservicesConstants.Y)){
+							if (reqData.get(i).getIsFragile().equalsIgnoreCase(MarketplacecclientservicesConstants.YES)
+									|| reqData.get(i).getIsFragile().equalsIgnoreCase(MarketplacecclientservicesConstants.Y))
+							{
 								pincodereqObj.setIsFragile(MarketplacecclientservicesConstants.Y);
-							}else{
+							}
+							else
+							{
 								pincodereqObj.setIsFragile(MarketplacecclientservicesConstants.N);
 							}
-						}else{
+						}
+						else
+						{
 							pincodereqObj.setIsFragile(MarketplacecclientservicesConstants.N);
 						}
-						
+
 						if (null != reqData.get(i).getIsPrecious() || StringUtils.isNotEmpty(reqData.get(i).getIsPrecious()))
 						{
-							if(reqData.get(i).getIsPrecious().equalsIgnoreCase(MarketplacecclientservicesConstants.YES) || reqData.get(i).getIsPrecious().equalsIgnoreCase(MarketplacecclientservicesConstants.Y)){
+							if (reqData.get(i).getIsPrecious().equalsIgnoreCase(MarketplacecclientservicesConstants.YES)
+									|| reqData.get(i).getIsPrecious().equalsIgnoreCase(MarketplacecclientservicesConstants.Y))
+							{
 								pincodereqObj.setIsPrecious(MarketplacecclientservicesConstants.Y);
-							}else{
+							}
+							else
+							{
 								pincodereqObj.setIsPrecious(MarketplacecclientservicesConstants.N);
 							}
-						}else{
+						}
+						else
+						{
 							pincodereqObj.setIsPrecious(MarketplacecclientservicesConstants.N);
 						}
 
@@ -464,13 +486,13 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	/*
 	 * @desc used for validate connect timeout and read time out exceptions from oms rest call for pincode serviceabilty
 	 * and inventory reservation
-	 *
+	 * 
 	 * @param ex
-	 *
+	 * 
 	 * @param exceptionType
-	 *
+	 * 
 	 * @return void
-	 *
+	 * 
 	 * @throws ClientEtailNonBusinessExceptions
 	 */
 	@Override
@@ -531,7 +553,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	 */
 	@Override
 	public StoreLocatorAtsResponseObject prepStoreLocationsToOMS(
-			final List<StoreLocationRequestData> storeLocationRequestDataList, CartModel cartModel)
+			final List<StoreLocationRequestData> storeLocationRequestDataList, final CartModel cartModel)
 	{
 		LOG.debug("from prepStoreLocationsToOMS method in serive");
 		StoreLocatorAtsResponseObject storeLocatorResfromOMS = null;

@@ -132,7 +132,7 @@ import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
-import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
+
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -174,6 +174,7 @@ import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facade.mystyleprofile.MyStyleProfileFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
+import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.preference.MplPreferenceFacade;
 import com.tisl.mpl.facades.account.register.FriendsInviteFacade;
@@ -236,7 +237,7 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
 
-
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 
 /**
  * Controller for home page
@@ -1751,7 +1752,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<StateData> stateDataList = getAccountAddressFacade().getStates();
 			final List<StateData> stateDataListNew = getFinalStateList(stateDataList);
 			model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataListNew);
-			final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+			//final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
 			final AddressData address = orderDetails.getDeliveryAddress();
 			storeCmsPageInModel(model, getContentPageForLabelOrId(RETURN_SUBMIT));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(RETURN_SUBMIT));
@@ -2221,7 +2222,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final String reasonCode = returnRequestForm.getReasonCode();
 			final String ticketTypeCode = returnRequestForm.getTicketTypeCode();
 			final String ussid = returnRequestForm.getUssid();
-			//final String refundType = returnRequestForm.getRefundType();
+			final String refundType = returnRequestForm.getRefundType();
 			final String transactionId = returnRequestForm.getTransactionId();
 
 			final ReturnItemAddressData returnAddrData = (ReturnItemAddressData) session.getAttribute(RETURN_ADDRESS);
@@ -2240,7 +2241,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 			}
 
-			//final CustomerData customerData = customerFacade.getCurrentCustomer();
+			final CustomerData customerData = customerFacade.getCurrentCustomer();
 
 			model.addAttribute(ModelAttributetConstants.ORDERCODE, returnRequestForm.getOrderCode());
 
@@ -2251,12 +2252,13 @@ public class AccountPageController extends AbstractMplSearchPageController
 				if (sellerInfo.getSellerArticleSKU().equalsIgnoreCase(ussid))
 				{
 					model.addAttribute(ModelAttributetConstants.SELLERID, sellerInfo.getSellerID());
+					
 				}
 			}
 
 			//Bellow code written in RetrunPage Controller No use in this location
 			
-			/*if (ticketTypeCode.equalsIgnoreCase("R"))
+			if (ticketTypeCode.equalsIgnoreCase("R"))
 			{
 				cancellationStatus = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, reasonCode, ussid,
 						ticketTypeCode, customerData, refundType, true, SalesApplication.WEB, returnAddrData);
