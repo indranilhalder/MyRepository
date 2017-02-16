@@ -109,7 +109,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends AddressCreateWidge
 		addresslabel.setParent(addressDiv);
 		final Textbox addressField = createTextbox(addressDiv);
 		addressField.setSclass("address1ForAddressField");
-		addressField.setMaxlength(30);
+		addressField.setMaxlength(120);
 
 		// Creates Address Line2 field
 		final Br br4 = new Br();
