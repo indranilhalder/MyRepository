@@ -563,8 +563,10 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		{
 
 			if (userFacade.isAnonymousUser())
-			{
-				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
+			{//changes for CarProject
+			 //cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
+				cartModel = cartService.getSessionCart();
+				//changes for CarProject ends
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug("************ Anonymous cart mobile (addProductToCart) **************" + cartId);
@@ -572,7 +574,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 			else
 			{
-				cartModel = mplPaymentWebFacade.findCartValues(cartId);
+				//changes for CarProject
+				cartModel = cartService.getSessionCart();
+				//cartModel = mplPaymentWebFacade.findCartValues(cartId);
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug("************ Logged-in cart mobile (addProductToCart)**************" + cartId);
@@ -614,7 +618,10 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 			if (selectedProductModel == null)
 			{
-				selectedProductModel = productService.getProductForCode(defaultPromotionManager.catalogData(), productCode);
+				//changes for CarProject
+				//selectedProductModel = productService.getProductForCode(defaultPromotionManager.catalogData(), productCode);
+				selectedProductModel = productService.getProductForCode(productCode);
+				// changes for CarProject ends
 				if (selectedProductModel == null)
 				{
 					LOG.debug(MarketplacecommerceservicesConstants.INVALID_PRODUCT_CODE + productCode);
@@ -729,23 +736,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		String delistMessage = MarketplacewebservicesConstants.EMPTY;
 		try
 		{
-			if (userFacade.isAnonymousUser())
+			//CAR changes
+			cart = cartService.getSessionCart();
+			if (LOG.isDebugEnabled())
 			{
-
-				cart = mplPaymentWebFacade.findCartAnonymousValues(cartId);
-				if (LOG.isDebugEnabled())
-				{
-					LOG.debug("************ Anonymous cart mobile **************" + cartId);
-				}
-			}
-			else
-			{
-
-				cart = mplPaymentWebFacade.findCartValues(cartId);
-				if (LOG.isDebugEnabled())
-				{
-					LOG.debug("************ Logged-in cart mobile **************" + cartId);
-				}
+				LOG.debug("************ Cart mobile **************" + cartId);
 			}
 			if (cart != null)
 			{
@@ -827,7 +822,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			if (userFacade.isAnonymousUser())
 			{
 
-				cart = mplPaymentWebFacade.findCartAnonymousValues(cartId);
+				//CAR Project performance issue fixed
+
+				//	cart = mplPaymentWebFacade.findCartAnonymousValues(cartId);
+
+				cart = cartService.getSessionCart();
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug("************ Anonymous cart mobile **************" + cartId);
