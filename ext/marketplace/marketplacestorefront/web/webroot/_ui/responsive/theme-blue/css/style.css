@@ -60477,6 +60477,7 @@ body.page-cartPage .cart.wrapper .product-block li.header ul li.delivery span{
 }
 body.page-cartPage .cart.wrapper .product-block li.item > ul > li.delivery li{
 	padding-left:0px;
+	position:relative;
 }
 p#unserviceablepincode_tooltip,p#error-Id_tooltip,p#emptyId_tooltip{	
 	width: 206px;
