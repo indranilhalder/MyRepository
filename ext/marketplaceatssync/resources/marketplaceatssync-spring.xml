@@ -16,9 +16,12 @@
   </bean>-->
 
     <bean class="com.tisl.mpl.atssync.consumer.AtsConsumerService" init-method="call" destroy-method="shutdown">
-        <constructor-arg name="a_groupId" value="${ats.kafka.group.id}"/>
-        <constructor-arg name="a_topic" value="${ats.kafka.topic}"/>
-        <constructor-arg name="a_zookeeper" value="${ats.zookeeper.url}"/>
-        <constructor-arg name="autoCommit" value="${ats.kafka.enable.auto.commit}"/>
+        <constructor-arg name="a_groupId" value="${marketplaceatssync.ats.group.id}"/>
+        <constructor-arg name="a_topic" value="${marketplaceatssync.ats.topic}"/>
+        <constructor-arg name="a_zookeeper" value="${marketplaceatssync.ats.zookeeper.url}"/>
+        <constructor-arg name="autoCommit" value="${marketplaceatssync.ats.enable.auto.commit}"/>
+        <constructor-arg name="commitInterval" value="${marketplaceatssync.ats.auto.commit.interval.ms}"/>
+        <constructor-arg name="sessionTimeout" value="${marketplaceatssync.ats.session.timeout.ms}"/>
+        <constructor-arg name="zookeeperTimeout" value="${marketplaceatssync.ats.zookeeper.session.timeout.ms}"/>
     </bean>
 </beans>

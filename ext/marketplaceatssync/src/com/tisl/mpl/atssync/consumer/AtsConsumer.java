@@ -95,6 +95,10 @@ public class AtsConsumer implements Runnable {
                             }
                             else if(null != stockLevelModel.getSequenceTS() && stockLevelModel.getSequenceTS() > availableTosellDto.getLatestChange())
                             {
+                                if(LOG.isDebugEnabled())
+                                {
+                                    LOG.debug("Message Ignored due to old timestamp for SKU : "+quantityDTO.getSkuId() + " quantitity : "+quantityDTO.getQuantity());
+                                }
                                 continue;
                             }
                             stockLevelModel.setSequenceTS(availableTosellDto.getLatestChange());

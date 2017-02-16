@@ -31,6 +31,9 @@ public class AtsConsumerService {
     @Value("${marketplaceatssync.ats.consumer.threadcount}")
     private int THREAD_COUNT;
 
+    @Value("${marketplaceatssync.ats.consumer.enabled}")
+    private boolean enableJob;
+
     @Resource(name = "deserializer")
     private AvailabilityToSellDTODeserializer availabilityToSellDTODeserializer;
 
@@ -47,11 +50,14 @@ public class AtsConsumerService {
     private static final String ENABLE_AUTO_COMMIT = "enable.auto.commit";
     private static final String AUTO_COMMIT_INTERVAL_MS = "auto.commit.interval.ms";
     private static final String SESSION_TIMEOUT_MS = "session.timeout.ms";
+    private static final String ZOOKEEPER_TIMEOUT_MS = "zookeeper.sync.time.ms";
+    private static final String ZOOKEEPER_CONNECT = "zookeeper.connect";
 
 
-    public AtsConsumerService(String a_zookeeper, String a_groupId, String a_topic, boolean autoCommit) {
+    public AtsConsumerService(String a_zookeeper, String a_groupId, String a_topic, boolean autoCommit,
+                              int sessionTimeout,int commitInterval,int zookeeperTimeout) {
         consumer = kafka.consumer.Consumer.createJavaConsumerConnector(
-                createConsumerConfig(a_zookeeper, a_groupId, autoCommit));
+                createConsumerConfig(a_zookeeper, a_groupId, autoCommit, sessionTimeout, commitInterval, zookeeperTimeout));
         this.topic = a_topic;
     }
 
@@ -79,27 +85,29 @@ public class AtsConsumerService {
         // now create an object to consume the messages
         //
         int threadNumber = 0;
-        for (final KafkaStream stream : streams) {
+        for (final KafkaStream<byte[], byte[]> stream : streams) {
             executor.submit(new AtsConsumer(stream, threadNumber, availabilityToSellDTODeserializer,
                     modelService,stockService,defaultWarehouseService));
             threadNumber++;
         }
     }
 
-    private static ConsumerConfig createConsumerConfig(String a_zookeeper, String a_groupId, boolean autocommit) {
+    private static ConsumerConfig createConsumerConfig(String a_zookeeper, String a_groupId, boolean autocommit,
+                                                       int sessionTimeout,int commitInterval,int zookeeperTimeout) {
         final Properties props = new Properties();
-        props.put("zookeeper.connect", a_zookeeper);
+        props.put(ZOOKEEPER_CONNECT, a_zookeeper);
         props.put(GROUP_ID, a_groupId);
         props.put(ENABLE_AUTO_COMMIT, autocommit);
-        props.put(SESSION_TIMEOUT_MS, "400");
-        props.put("zookeeper.sync.time.ms", "200");
-        props.put(AUTO_COMMIT_INTERVAL_MS, "1000");
+        props.put(SESSION_TIMEOUT_MS, sessionTimeout);
+        props.put(ZOOKEEPER_TIMEOUT_MS, zookeeperTimeout);
+        props.put(AUTO_COMMIT_INTERVAL_MS, commitInterval);
 
         return new ConsumerConfig(props);
     }
 
     public void call() {
-
-        this.run(THREAD_COUNT);
+        if(enableJob) {
+            this.run(THREAD_COUNT);
+        }
     }
 }
