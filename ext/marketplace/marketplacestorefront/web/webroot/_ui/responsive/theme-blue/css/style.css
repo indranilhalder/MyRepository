@@ -59433,6 +59433,13 @@ body.page-productGrid .plp-wishlist.added:hover:before{
 .product-detail .Emi p:after{
 	display:none;
 }
+
+/* UF-68 UF-69 */
+.page-cartPage .cart-total-block ul.checkOutBtnBtm{
+	margin-right: 56px;
+}
+/* UF-68 UF-69 */
+
 }
 @media(min-width:791px){
 	.mini-transient-bag-mobile{
@@ -59628,6 +59635,10 @@ body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#chec
     font-size: 11px !important;
     letter-spacing: normal;
     padding: 15px;
+}
+body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled{
+	background-color: rgba(169, 20, 60, 0.6);
+    cursor: default;
 }
 body.page-cartPage .cartBottomCheck{
 	display:none;
