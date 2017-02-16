@@ -27,13 +27,15 @@
 
 <c:if test="${not empty product.classifications}">
 <c:choose>
-<c:when test="${product.rootCategory!='FineJewellery'}">
+<c:when test="${product.rootCategory!='FineJewellery' && product.rootCategory!='FashionJewellery'}">
  
 	<div class="view-button">Check The Specs</div>
 </c:when>
 </c:choose> 	
 </c:if>
 <!-- <div class="hide-button" style="display:none;">Hide Specifications</div> -->
+
+<c:if test="${product.rootCategory!='FashionJewellery'}">
 
 <c:choose>
 	<c:when test="${product.rootCategory=='FineJewellery'}">
@@ -73,12 +75,6 @@
 		</div>
 	</c:when>
 	<c:otherwise>
-
-
-
-
-
-
 
 		<div class="product-classifications wrapper">
 			<c:if test="${not empty product.classifications}">
@@ -181,16 +177,13 @@
 				</table>
 		</c:if>
 	</div>
-	
-	
-	
-	
-	
-	
-	
-	
+		
 </c:otherwise>
 </c:choose>
+
+
+</c:if>
+
 
 <script>
 	 $(document).ready(function(){

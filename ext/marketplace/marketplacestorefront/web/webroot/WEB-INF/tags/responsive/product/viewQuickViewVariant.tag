@@ -194,14 +194,14 @@
 	</a> --%>
 
 	<!-- End Size guide Pop-up -->
-	<form:form action="/" method="get" id="variantForm"  class="sizeVariantForm" >
+	<form:form action="/" method="get" id="variantForm"  class="sizeVariantForm quickview-popup ${product.rootCategory}" >
 
     <p class="sizetext"><spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if></p>
 		
-		<a class="size-guide" href="${sizeGuideUrl}" role="button" data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}">
+		<%-- <a class="size-guide" href="${sizeGuideUrl}" role="button" data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}">
 			<spring:theme code="product.variants.quickview.size.guide"/>
-		</a>
-		  <!-- FineJewellery restriction added -->                                            
+		</a> --%>
+		  <!-- Jewellery changes  added -->                                            
        <c:choose>  
           <c:when test="${product.rootCategory=='FineJewellery'}">
 	    <!-- dropdown in quickview for jewellery added --> 
@@ -240,7 +240,9 @@
 				</c:forEach>
 			   </select>    
 	    </span>
-	    
+	    <a class="size-guide" href="${sizeGuideUrl}" role="button" data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}">
+			<spring:theme code="product.variants.quickview.size.guide"/>
+		</a>
 	    </c:when>
 	    
 	    
@@ -338,11 +340,17 @@
 		
 			   </select>    
 	    </span>
+	     <a class="size-guide" href="${sizeGuideUrl}" role="button" data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}">
+			<spring:theme code="product.variants.quickview.size.guide"/>
+		</a>
 	     </c:when>
 	    
 	    
 <%--  <c:when test="${product.rootCategory!='FineJewellery'}">
  --%><c:otherwise>
+        <a class="size-guide" href="${sizeGuideUrl}" role="button" data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}">
+			<spring:theme code="product.variants.quickview.size.guide"/>
+		</a>
 		<div class="select-size">
 		 <c:choose>
 		    <c:when test="${selectedSize!=null}"> 
