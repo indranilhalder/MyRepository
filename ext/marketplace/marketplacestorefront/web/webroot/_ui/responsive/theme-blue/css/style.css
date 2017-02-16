@@ -33438,7 +33438,7 @@ body.page-cartPage .cart.wrapper .product-block li.item {
     margin: 0;
     margin-top: -3px;
 }
-body.page-cartPage .cart.wrapper .product-block li.item:nth-child(odd) {
+body.page-cartPage .cart.wrapper .product-block li.item:nth-of-type(even) {
     background: #fff;
     border-top: 1px solid #eaeaeb;
 }
