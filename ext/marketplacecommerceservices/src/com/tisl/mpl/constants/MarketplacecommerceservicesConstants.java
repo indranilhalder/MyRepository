@@ -116,6 +116,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String REFUNDTYPE = "S";
 	public static final String REASONCODE = "03"; // Hard coded value -- I'm not happy with the product quality
 
+	//Bulk Cancellation
+	public static final String initiate_cancel_job_cancellation_count = "initiate.cancel.job.cancellation.count";
+
 
 	//For SuperCategoryDecorator
 	public static final String CONFIGURATION_SER = "configurationService";
@@ -718,8 +721,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String E0021 = "E0021";
 	public static final String E0022 = "E0022";
 
-	//TPR-629
-	public static final String E0023 = "E0023";
 
 
 	//System/Non Business constants
@@ -823,7 +824,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9073 = "B9073";
 	public static final String B9074 = "B9074";
 	public static final String B9075 = "B9075";
-
+	public static final String B9076 = "B9076";
 
 	public static final String E9040 = "E9040";
 	public static final String E9041 = "E9041";
@@ -953,6 +954,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9331 = "B9331";
 	public static final String B9300 = "B9300";
 	public static final String B9301 = "B9301";
+
+	//TISPRD-5986  MSH category 404 error handling
+	public static final String E0023 = "E0023";
 
 
 	//Search error codes ends
@@ -1859,6 +1863,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String MRUPEE_MERCHANT_CODE = "payment.mRupee.merchantID".intern();
 	public static final String MRUPEE_OPTION = "mRupee";
 	public final static String MRUPEEHOSTNAME = "mRupee.hostname.disableSslVerification";
+
+	//For Promotion Apportioning
+	public final static String NONFREE_CONSUMED_ENTRIES = "nonFreeConsumedEntries".intern();
 
 	//PaymentFix2017:-
 	public static final String PAYMENTPENDING_SKIPTIME = "marketplace.PaymentPending.skipTime";

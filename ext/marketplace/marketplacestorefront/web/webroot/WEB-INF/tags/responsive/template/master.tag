@@ -21,7 +21,9 @@
 <html lang="${currentLanguage.isocode}">
 <head>
 	<title>
-			<c:choose>
+
+	<%-- TISPRD-8030 and INC_100385--%>	
+		<c:choose>
 		<c:when test="${isCategoryPage}">
 		
 		 ${not empty metaPageTitle ?metaPageTitle:not empty pageTitle ? pageTitle : 'Tata'}
@@ -29,8 +31,8 @@
 		<c:otherwise>
 			 ${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
 		</c:otherwise>
-	</c:choose>	
-	</title>
+	   </c:choose>	
+   </title>
 	<%-- Meta Content --%>
 	<meta name="apple-itunes-app" content="app-id=1101619385">
 <meta name="google-play-app" content="app-id=com.tul.tatacliq">
@@ -167,7 +169,11 @@
 	
 	
 	<!-- Twitter Card data -->
-	<meta name="twitter:card" content="${baseURL}/">
+	<%-- <meta name="twitter:card" content="${baseURL}/"> --%>
+	<%-- TISPRD-8041 --%>
+	<%-- twitter-card added for INC_10384 --%>
+	<c:set var="summary_large_image" value="${summary_large_image}"/>
+	<meta name="twitter:card" content="summary_large_image" /> 
 	<meta name="twitter:site" content="${twitterHandle}">
 	<meta name="twitter:title" content="${metaTitle}">
 	<meta name="twitter:description" content="${metaDescription}">
