@@ -1539,19 +1539,37 @@ $( document ).ready(function() {
 					return false;
 				} else {
 					var promorestrictedSellers = $("#promotedSellerId").val();
+					var promoindentifier = $("#product_applied_promotion_code").val();
 					if (promorestrictedSellers == null
 							|| promorestrictedSellers == undefined
 							|| promorestrictedSellers == "") {
 						//TPR-772
 						$(".promo-block").show();
+						if(promoindentifier != '') {
+							  $(".pdp-promo-title-link").show();
+						} 
 
 					} else {
 						if (promorestrictedSellers.length > 0
 								&& !(promorestrictedSellers
 										.indexOf(data['sellerId']) == -1))
+							{
+							  //TPR-772 seller id matched with promotion ///*INC144313502*/
+						       $(".pdp-promo-title-link").show();
+						       $(".promo-block").show();
+							}
+						    else {
+						    	 $(".offercalloutdesc").css({'float': 'right'});
+									if($('#product_applied_promotion_code').val() != '') { //no potentialPromotions available  
+										$(".primary_promo_desc").hide();
+										$(".primary_promo_title").hide();
+										$(".primary_promo_img").hide();
+										
+										
+									}
+								
+							}
 
-							//TPR-772
-							$(".promo-block").show();
 					}
 					var allStockZero = data['allOOStock'];
 					// var codEnabled = data['isCod'];
@@ -3169,8 +3187,17 @@ function loadDefaultWishListName_SizeGuide() {
 	/*Offer popup*/
 	function offerPopup(comp) {
 		$("body").append('<div class="modal fade" id="offerPopup"><div class="content offer-content" style="padding: 40px;max-width: 650px;">'+comp+'<button class="close" data-dismiss="modal"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
+		/*if($("#OfferWrap .Inner .Left").children().length == 0) {
+			$("#OfferWrap .Inner .Left").remove();
+		}*/
+		/*INC144313502*/
 		if($("#OfferWrap .Inner .Left").children().length == 0) {
 			$("#OfferWrap .Inner .Left").remove();
+		} else {	
+			if($('.primary_promo_img').css('display') != 'none'){ 
+			  $(".offercalloutdesc").css({'float': 'right'});
+			  $(".offercalloutdesc").css({"padding": "30px 5px 30px 12px", "width": "58%"});
+			}
 		}
 		$("#offerPopup").modal('show');
 	} 
