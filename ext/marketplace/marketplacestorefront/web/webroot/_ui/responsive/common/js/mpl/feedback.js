@@ -2051,7 +2051,7 @@ $(document).ready(function() {
 		/*CLP section js ends*/
 		
 		/* UF-68 UF-69 */
-		var cartBottomCheckTopMargin = $("body.page-cartPage .cart-bottom-block").height() - $("body.page-cartPage .cartBottomCheck button#pinCodeButtonIds").outerHeight();
+		var cartBottomCheckTopMargin = $("body.page-cartPage .cart-bottom-block").height() - $("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").outerHeight();
 		$("body.page-cartPage .cartBottomCheck").addClass("cartBottomCheckShow").css("margin-top",cartBottomCheckTopMargin);
 		
 		/* UF-68 UF-69 */

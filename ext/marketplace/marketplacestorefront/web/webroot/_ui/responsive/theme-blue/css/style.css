@@ -58880,7 +58880,7 @@ li.facet.js-facet.collectionIds{
 
 /* UF-68 UF-69 */
 
-body.page-cartPage .cart-bottom-block .cartBottomCheck.cartBottomCheckShow,.page-cartPage .cart-total-block table.checkOutBtnBtm{
+body.page-cartPage .cart-bottom-block .cartBottomCheck.cartBottomCheckShow,.page-cartPage .cart-total-block ul.checkOutBtnBtm{
 	display:none;
 }
 
@@ -59615,14 +59615,14 @@ body.page-productGrid .listing-leftmenu .checkbox-menu>a,body.page-productGrid .
 
 /* UF-68 UF-69 */
 
-.page-cartPage .cart-total-block table.checkOutBtnBtm{
+.page-cartPage .cart-total-block ul.checkOutBtnBtm{
 	float:right;
 	margin-top: 56px;
 }
-body.page-cartPage .cart-total-block table.checkOutBtnBtm a.checkoutButton.checkout.button{
+body.page-cartPage .cart-total-block ul.checkOutBtnBtm a.checkoutButton.checkout.button{
 	margin: 0;
 }
-body.page-cartPage .cart-total-block table.checkOutBtnBtm li.checkout-button a#checkout-down-enabled{
+body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled{
 	width: 180px;
     height: 42px !important;
     font-size: 11px !important;
@@ -59632,10 +59632,10 @@ body.page-cartPage .cart-total-block table.checkOutBtnBtm li.checkout-button a#c
 body.page-cartPage .cartBottomCheck{
 	display:none;
 }
-body.page-cartPage .cartBottomCheck.cartBottomCheckShow,body.page-cartPage .cartBottomCheck button#pinCodeButtonIds{
+body.page-cartPage .cartBottomCheck.cartBottomCheckShow,body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm{
 	display:inline-block;
 }
-body.page-cartPage .cartBottomCheck button#pinCodeButtonIds{
+body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm{
 	width:110px;
 	height:40px;
 	background:gray;
@@ -59646,7 +59646,7 @@ body.page-cartPage .cartBottomCheck button#pinCodeButtonIds{
 	font-weight: normal;
 	letter-spacing: normal;
 }
-body.page-cartPage .cartBottomCheck input#defaultPinCodeIds{
+body.page-cartPage .cartBottomCheck input#pinCodeButtonIdsBtm{
 	width:148px;
 	height:40px;
 	font-size: 10px;
