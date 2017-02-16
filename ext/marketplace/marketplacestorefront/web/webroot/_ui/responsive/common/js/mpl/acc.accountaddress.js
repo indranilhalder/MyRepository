@@ -115,7 +115,23 @@ function editAddress(addressId) {
     	   contentType : "application/json; charset=utf-8",
     	   success : function(data) {
     		   //TPR-4795 changes
-    		  var fullAddress=data.line1 +" "+ data.line2 +" "+ data.line3;
+    		  var fullAddress="";
+    		  if ((data.line2.value == null || data.line2.value == "") && (data.line3.value == null || data.line3.value == ""))
+			  {
+			   fullAddress = data.line1;
+			  }
+    		  if ((data.line2.value != null || data.line2.value != "") && (data.line3.value != null || data.line3.value != ""))
+			  {
+			   fullAddress=data.line1 +" "+ data.line2 +" "+ data.line3;
+			  }
+    		  if ((data.line2.value == null || data.line2.value == "") && (data.line3.value != null || data.line3.value != ""))
+			  {
+			  fullAddress=data.line1 +" "+ data.line3;
+			  }
+    		  if ((data.line2.value != null || data.line2.value != "") && (data.line3.value == null || data.line3.value == ""))
+			  {
+			  fullAddress=data.line1 +" "+ data.line2;
+			  }
     		   $('#addressId').val(addressId);
    				$('#firstName').val(data.firstName);
    				$('#lastName').val(data.lastName);
