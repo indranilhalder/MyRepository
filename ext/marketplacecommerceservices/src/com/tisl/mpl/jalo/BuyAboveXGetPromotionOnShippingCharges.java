@@ -142,8 +142,35 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 						final Map<String, AbstractOrderEntry> validProductUssidMap = getValidProducts(order, arg0, validProdQCountMap);
 						final Map<String, String> fetchProductRichAttribute = getDefaultPromotionsManager().fetchProductRichAttribute(
 								validProdQCountMap, order);
+						final Map<String, Map<String, Double>> apportionedProdDelChargeMap = new HashMap<String, Map<String, Double>>();
 
-						//for (final Map.Entry<String, Integer> mapEntry : validProdQCountMap.entrySet())
+						final EnumerationValue discountType = getDiscTypesOnShippingCharges();
+						double adjustedDeliveryCharge = 0.00D;
+						boolean isDeliveryFreeFlag = false;
+						if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.PERCENTAGE_MESSAGE)
+								&& (getPercentageDiscount() != null))
+						{
+							adjustedDeliveryCharge = getPercentageDiscount().doubleValue();
+						}
+						else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.AMOUNT)
+								&& (getPriceForOrder(arg0, getDiscountPrices(arg0), order,
+										MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null))
+						{
+							final double amount = getPriceForOrder(arg0, getDiscountPrices(arg0), order,
+									MarketplacecommerceservicesConstants.DISCOUNT_PRICES).doubleValue();
+							final double totalDelCostForValidProds = getDefaultPromotionsManager().getTotalDelCostForValidProds(
+									validProductUssidMap, validProdQCountMap);
+							adjustedDeliveryCharge = (amount / totalDelCostForValidProds) * 100;
+						}
+						else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.FREE))
+						{
+							isDeliveryFreeFlag = true;
+						}
+
+						//For cart level shipping promotion only, to find entries for which product shipping is applied
+						final Map<String, Boolean> isProdShippingPromoAppliedMap = getDefaultPromotionsManager()
+								.getProdShippingPromoAppliedMap(order);
+
 						for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 						{
 							//arg1.startLoggingConsumed(this);
@@ -155,41 +182,9 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 											.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP) && isSShipAsPrimitive())))
 							{
 								arg1.startLoggingConsumed(this);
-								//*******Calculating delivery charges & setting it at entry level starts*******
-								final EnumerationValue discountType = getDiscTypesOnShippingCharges();
-								double adjustedDeliveryCharge = 0.00D;
-								boolean isPercentageFlag = false;
-								boolean isDeliveryFreeFlag = false;
-								if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.PERCENTAGE_MESSAGE)
-										&& (getPercentageDiscount() != null))
-								{
-									isPercentageFlag = true;
-									adjustedDeliveryCharge = getPercentageDiscount().doubleValue();
-								}
-								else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.AMOUNT)
-										&& (getPriceForOrder(arg0, getDiscountPrices(arg0), order,
-												MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null))
-								{
-									adjustedDeliveryCharge = getPriceForOrder(arg0, getDiscountPrices(arg0), order,
-											MarketplacecommerceservicesConstants.DISCOUNT_PRICES).doubleValue();
-								}
-								else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.FREE))
-								{
-									isDeliveryFreeFlag = true;
-								}
+								apportionedProdDelChargeMap.putAll(getDefaultPromotionsManager().calcDeliveryCharges(isDeliveryFreeFlag,
+										adjustedDeliveryCharge, validProdUssid, order, isProdShippingPromoAppliedMap));
 
-
-								final Map<String, Map<String, Double>> apportionedProdDelChargeMap = getDefaultPromotionsManager()
-										.updateDeliveryCharges(isDeliveryFreeFlag, isPercentageFlag, adjustedDeliveryCharge,
-												validProdQCountMap, fetchProductRichAttribute, order);
-
-								arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
-								arg0.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProdQCountMap);
-								arg0.setAttribute(MarketplacecommerceservicesConstants.CARTPROMOCODE, String.valueOf(this.getCode()));
-								arg0.setAttribute(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP,
-										apportionedProdDelChargeMap);
-								//********Calculating delivery charges & setting it at entry level ends*********
-								//final double adjustment = 0.0D;
 								final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
 										arg1.getOrder(), 1.0F);
 								final CustomShippingChargesPromotionAdjustAction poeac = getDefaultPromotionsManager()
@@ -200,6 +195,11 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 								promotionResults.add(result);
 							}
 						}
+
+						arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
+						arg0.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProdQCountMap);
+						arg0.setAttribute(MarketplacecommerceservicesConstants.CARTPROMOCODE, String.valueOf(this.getCode()));
+						arg0.setAttribute(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP, apportionedProdDelChargeMap);
 
 					}
 					else if (orderSubtotalAfterDiscounts > 0.0D)

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -27,7 +28,7 @@ import com.tisl.mpl.model.MplConfigurationModel;
 import com.tisl.mpl.util.ExceptionUtil;
 //Removed as UNUSED IMPORTS
 //import javax.annotation.Resource;
-import org.apache.commons.collections.CollectionUtils;
+// import org.apache.commons.collections.CollectionUtils;   //Sonar fix
 
 
 /**
@@ -46,6 +47,7 @@ public class PromotionPriceUpdaterJob extends AbstractJobPerformable<CronJobMode
 	/*
 	 * @Autowired private MarketplaceCoreHMCExtension marketplaceCoreHMCExtension;
 	 */
+
 	//SONAR FIX-UNUSED VARIABLE
 	//@Resource(name = "mplUpdatePromotionPriceDao")
 	//private UpdatePromotionalPriceDaoImpl updatePromotionalPriceDao;

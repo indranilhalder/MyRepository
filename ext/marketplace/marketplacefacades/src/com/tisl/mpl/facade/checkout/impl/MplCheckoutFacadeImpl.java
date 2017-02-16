@@ -79,7 +79,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
-import com.tisl.mpl.facades.account.address.AccountAddressFacade;
+import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 //import com.tisl.mpl.fulfilmentprocess.events.OrderPlacedEvent;
@@ -110,7 +110,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	private MplDeliveryCostService deliveryCostService;
 
 	@Autowired
-	private AccountAddressFacade accountAddressFacade;
+	private MplAccountAddressFacade accountAddressFacade;
 
 	@Autowired
 	private AcceleratorCheckoutFacade acceleratorCheckoutFacade;
@@ -609,7 +609,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	/**
 	 * @return the accountAddressFacade
 	 */
-	public AccountAddressFacade getAccountAddressFacade()
+	public MplAccountAddressFacade getAccountAddressFacade()
 	{
 		return accountAddressFacade;
 	}
@@ -618,7 +618,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 * @param accountAddressFacade
 	 *           the accountAddressFacade to set
 	 */
-	public void setAccountAddressFacade(final AccountAddressFacade accountAddressFacade)
+	public void setAccountAddressFacade(final MplAccountAddressFacade accountAddressFacade)
 	{
 		this.accountAddressFacade = accountAddressFacade;
 	}

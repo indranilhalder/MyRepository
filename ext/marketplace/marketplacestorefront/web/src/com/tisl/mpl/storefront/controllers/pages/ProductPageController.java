@@ -217,6 +217,7 @@ public class ProductPageController extends MidPageController
 	private static final String USSID = "ussid";
 
 
+
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(ProductPageController.class);
 
@@ -827,17 +828,17 @@ public class ProductPageController extends MidPageController
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK,
 						null != buyboxdata.getAvailable() ? buyboxdata.getAvailable() : ModelAttributetConstants.NOVALUE);
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, null != buyboxdata.getSpecialPrice()
-						&& null != buyboxdata.getSpecialPrice().getFormattedValue()
-						&& !buyboxdata.getSpecialPrice().getFormattedValue().isEmpty() ? buyboxdata.getSpecialPrice()
-						.getFormattedValue() : ModelAttributetConstants.NOVALUE);
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE,
-						null != buyboxdata.getPrice() && null != buyboxdata.getPrice().getFormattedValue()
-								&& !buyboxdata.getPrice().getFormattedValue().isEmpty() ? buyboxdata.getPrice().getFormattedValue()
-								: ModelAttributetConstants.NOVALUE);
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP,
-						null != buyboxdata.getMrp() && null != buyboxdata.getMrp().getFormattedValue()
-								&& !buyboxdata.getMrp().getFormattedValue().isEmpty() ? buyboxdata.getMrp().getFormattedValue()
-								: ModelAttributetConstants.NOVALUE);
+						&& null != buyboxdata.getSpecialPrice().getFormattedValueNoDecimal()
+						&& !buyboxdata.getSpecialPrice().getFormattedValueNoDecimal().isEmpty() ? buyboxdata.getSpecialPrice()
+						.getFormattedValueNoDecimal() : ModelAttributetConstants.NOVALUE);
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, null != buyboxdata.getPrice()
+						&& null != buyboxdata.getPrice().getFormattedValueNoDecimal()
+						&& !buyboxdata.getPrice().getFormattedValueNoDecimal().isEmpty() ? buyboxdata.getPrice()
+						.getFormattedValueNoDecimal() : ModelAttributetConstants.NOVALUE);
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, null != buyboxdata.getMrp()
+						&& null != buyboxdata.getMrp().getFormattedValueNoDecimal()
+						&& !buyboxdata.getMrp().getFormattedValueNoDecimal().isEmpty() ? buyboxdata.getMrp()
+						.getFormattedValueNoDecimal() : ModelAttributetConstants.NOVALUE);
 
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
 
@@ -2671,6 +2672,7 @@ public class ProductPageController extends MidPageController
 		List<String> contentList = null;
 		List<String> imageList = null;
 		List<String> videoList = null;
+
 		//Added for status 500 errors INC_11128
 		//Return this view when no Content Page is found for the Product
 		String returnString = "/pages/layout/productContentblank";
@@ -2744,11 +2746,15 @@ public class ProductPageController extends MidPageController
 			 //INC_11128
 			 //commented as returned inside the if block
 			 //storeCmsPageInModel(model, getContentPageForLabelOrId(contentPage.getUid()));
+
 		}
 		catch (final CMSItemNotFoundException e)
 		{
+
 			LOG.error("CMS Item error while fetching A+ content", e);
+
 		}
+
 
 		//INC_11128
 		//commented as returned inside the if block
@@ -2759,15 +2765,16 @@ public class ProductPageController extends MidPageController
 
 	private ContentPageModel getContentPageForProduct(final ProductModel product) throws CMSItemNotFoundException
 	{
-		//INC_11128
 		//Commented for status 500 errors
 		//		if (productContentPage == null)
 		//		{
 		//			throw new CMSItemNotFoundException("Could not find a product content for the product" + product.getName());
 		//		}
 
+
 		return mplCmsPageService.getContentPageForProduct(product);
 	}
+
 
 	/**
 	 * @description method is to remove products in wishlist in in pdp
