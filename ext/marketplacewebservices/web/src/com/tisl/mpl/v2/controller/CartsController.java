@@ -70,6 +70,7 @@ import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
+import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
@@ -136,7 +137,7 @@ import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
-import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
+import com.tisl.mpl.helper.AddToCartHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
@@ -246,10 +247,17 @@ public class CartsController extends BaseCommerceController
 	private MplSlaveMasterFacade mplSlaveMasterFacade;
 	@Resource(name = "discountUtility")
 	private DiscountUtility discountUtility;
+
+	@Resource(name = "addToCartHelper")
+	private AddToCartHelper addToCartHelper;
+
 	//	@Autowired
 	//	private CartService cartService;
 	//@Autowired
 	//private CommerceCartService commerceCartService;
+	@Resource(name = "cartService")
+	protected CartService cartService;
+
 	@Autowired
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
 
@@ -1837,7 +1845,18 @@ public class CartsController extends BaseCommerceController
 		}
 		try
 		{
-			result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl, channel);
+			//INC144313608
+			final boolean isProductFreebie = getAddToCartHelper().isProductFreebie(productCode);
+			if (isProductFreebie) //freebie product or not
+			{
+				result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+			}
+			else
+			{
+				result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl, channel);
+			}
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -1973,7 +1992,10 @@ public class CartsController extends BaseCommerceController
 			CartModel cartModel = null;
 			if (userFacade.isAnonymousUser())
 			{
-				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
+				//CAR Project performance issue fixed
+				//				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
+				cartModel = cartService.getSessionCart();
+
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug("************ Anonymous cart mobile removeCartEntryMobile **************" + cartId);
@@ -1981,7 +2003,8 @@ public class CartsController extends BaseCommerceController
 			}
 			else
 			{
-				cartModel = mplPaymentWebFacade.findCartValues(cartId);
+				//cartModel = mplPaymentWebFacade.findCartValues(cartId);
+				cartModel = cartService.getSessionCart();
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug("************ Logged-in cart mobile removeCartEntryMobile**************" + cartId);
@@ -1997,25 +2020,6 @@ public class CartsController extends BaseCommerceController
 			{
 				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9056);
 			}
-
-			for (final AbstractOrderEntryModel cartEntry : cartModel.getEntries())
-			{
-				if (cartEntry.getEntryNumber().intValue() == entryNumber.intValue())
-				{
-					selectedUSSID = cartEntry.getSelectedUSSID();
-				}
-			}
-
-			final List<Wishlist2EntryModel> allWishlistEntry = wishlistFacade.getAllWishlistByUssid(selectedUSSID);
-			for (final Wishlist2EntryModel entryModel : allWishlistEntry)
-			{
-				entryModel.setAddToCartFromWl(Boolean.FALSE);
-				entryModelList.add(entryModel);
-			}
-			//For saving all the data at once rather in loop;
-			modelService.saveAll(entryModelList);
-
-
 			if (StringUtils.isNotEmpty(cartModel.getSubtotal().toString()))
 			{
 				final PriceData subtotalprice = discountUtility.createPrice(cartModel,
@@ -2039,29 +2043,29 @@ public class CartsController extends BaseCommerceController
 				cartDataDetails.setDeliveryCharge(cartModel.getDeliveryCost().toString());
 			}
 
-			if (null != cartModel.getEntries() && !cartModel.getEntries().isEmpty())
-			{
-				for (final AbstractOrderEntryModel entry : cartModel.getEntries())
-				{
-					if (null != entry.getGiveAway() && !entry.getGiveAway().booleanValue())
-					{
-						count++;
-					}
-				}
+			//CAR Project performance issue fixed
 
-				cartDataDetails.setCount(count);
-			}
 			double discount = 0.0;
 			double totalPrice = 0.0D;
 			if (null != cartModel.getEntries() && !cartModel.getEntries().isEmpty())
 			{
-				for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+				for (final AbstractOrderEntryModel cartEntry : cartModel.getEntries())
 				{
-					totalPrice = totalPrice + (entry.getBasePrice().doubleValue() * entry.getQuantity().doubleValue());
+					if (cartEntry.getEntryNumber().intValue() == entryNumber.intValue())
+					{
+						selectedUSSID = cartEntry.getSelectedUSSID();
+					}
+					if (null != cartEntry.getGiveAway() && !cartEntry.getGiveAway().booleanValue())
+					{
+						count++;
+					}
+					totalPrice = totalPrice + (cartEntry.getBasePrice().doubleValue() * cartEntry.getQuantity().doubleValue());
 				}
 
 				discount = (totalPrice + cartModel.getDeliveryCost().doubleValue() + cartModel.getConvenienceCharges().doubleValue())
 						- cartModel.getTotalPriceWithConv().doubleValue();
+
+				cartDataDetails.setCount(count);
 			}
 			if (discount >= 0)
 			{
@@ -2071,11 +2075,14 @@ public class CartsController extends BaseCommerceController
 					cartDataDetails.setDiscountPrice(String.valueOf(priceDiscount.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 				}
 			}
-			//}
-			//}
-			/*
-			 * } else { throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9029); }
-			 */
+			final List<Wishlist2EntryModel> allWishlistEntry = wishlistFacade.getAllWishlistByUssid(selectedUSSID);
+			for (final Wishlist2EntryModel entryModel : allWishlistEntry)
+			{
+				entryModel.setAddToCartFromWl(Boolean.FALSE);
+				entryModelList.add(entryModel);
+			}
+			//For saving all the data at once rather in loop;
+			modelService.saveAll(entryModelList);
 			cartDataDetails.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
 
 			cartModel.setChannel(SalesApplication.MOBILE);
@@ -2146,7 +2153,10 @@ public class CartsController extends BaseCommerceController
 		{
 			if (userFacade.isAnonymousUser())
 			{
-				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
+				//	cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
+
+				//CAR Project performance issue fixed
+				cartModel = cartService.getSessionCart();
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug("************ Anonymous cart mobile updateCartEntryMobile**************" + cartId);
@@ -2154,7 +2164,9 @@ public class CartsController extends BaseCommerceController
 			}
 			else
 			{
-				cartModel = mplPaymentWebFacade.findCartValues(cartId);
+				//cartModel = mplPaymentWebFacade.findCartValues(cartId);
+
+				cartModel = cartService.getSessionCart();
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug("************ Logged-in cart mobile updateCartEntryMobile**************" + cartId);
@@ -2541,7 +2553,11 @@ public class CartsController extends BaseCommerceController
 		try
 		{
 			LOG.debug("******************* Soft reservation Mobile web service ******************" + cartId + pincode);
-			cart = mplPaymentWebFacade.findCartValues(cartId);
+			//	cart = mplPaymentWebFacade.findCartValues(cartId);
+
+			//CAR Project performance issue fixed
+			cart = cartService.getSessionCart();
+
 			if (setFreebieDeliverMode(cart))
 			{
 				reservationList = mplCommerceCartService.getReservation(cart, pincode, type);
@@ -2614,7 +2630,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 * 
+			 *
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -2807,7 +2823,10 @@ public class CartsController extends BaseCommerceController
 		CartModel cart = null;
 		try
 		{
-			cart = mplPaymentWebFacade.findCartValues(cartId);
+			//cart = mplPaymentWebFacade.findCartValues(cartId);
+
+			//CAR Project performance issue fixed
+			cart = cartService.getSessionCart();
 
 			final Map<String, String> delModeUssId = (Map<String, String>) JSON.parse(deliverymodeussId);
 			Double finalDeliveryCost = Double.valueOf(0.0);
@@ -3007,17 +3026,20 @@ public class CartsController extends BaseCommerceController
 			//anonymous user must not get toptwo wishlist
 			if (!userFacade.isAnonymousUser())
 			{
-				MplCustomerProfileData mplCustData = new MplCustomerProfileData();
-				mplCustData = mplCustomerProfileService.getCustomerProfileDetail(userId);
-				if (mplCustData == null)
+				//				MplCustomerProfileData mplCustData = new MplCustomerProfileData();
+				//				mplCustData = mplCustomerProfileService.getCustomerProfileDetail(userId);
+
+				final UserModel user = userService.getCurrentUser();
+
+				if (user == null)
 				{
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9007);
 				}
 				if (LOG.isDebugEnabled())
 				{
-					LOG.debug("Customer UID is : " + mplCustData.getUid());
+					LOG.debug("Customer UID is : " + user);
 				}
-				final UserModel user = userService.getUserForUID(mplCustData.getUid());
+				//	final UserModel user = userService.getUserForUID(mplCustData.getUid());
 				cartModel = commerceCartService.getCartForGuidAndSiteAndUser(null, baseSiteService.getCurrentBaseSite(), user);
 
 				getWishListWsDTO = mplCartFacade.getTopTwoWishlistForUser(user, pincode, cartModel);
@@ -3668,7 +3690,10 @@ public class CartsController extends BaseCommerceController
 		{
 			if (null != cartId)
 			{
-				final CartModel cartModel = mplPaymentWebFacade.findCartValues(cartId);
+				//final CartModel cartModel = mplPaymentWebFacade.findCartValues(cartId);
+				//CAR Project performance issue fixed
+				final CartModel cartModel = cartService.getSessionCart();
+
 				if (null != cartModel)
 				{
 					if (null != personName)
@@ -3792,6 +3817,24 @@ public class CartsController extends BaseCommerceController
 	public void setBaseSiteService(final BaseSiteService baseSiteService)
 	{
 		this.baseSiteService = baseSiteService;
+	}
+
+	/**
+	 * @return the addToCartHelper
+	 */
+	public AddToCartHelper getAddToCartHelper()
+	{
+		return addToCartHelper;
+	}
+
+
+	/**
+	 * @param addToCartHelper
+	 *           the addToCartHelper to set
+	 */
+	public void setAddToCartHelper(final AddToCartHelper addToCartHelper)
+	{
+		this.addToCartHelper = addToCartHelper;
 	}
 
 
