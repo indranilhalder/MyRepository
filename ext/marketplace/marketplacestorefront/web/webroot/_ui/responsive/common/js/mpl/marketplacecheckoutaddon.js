@@ -6562,8 +6562,8 @@ function expressbutton()
 	{
 		//TPR-4739 | Expresscheckout | cart
 		utag.link({
-			"link_text": "mybag_express_checkout_button_submit" ,
-			"event_type" : "mybag_express_checkout_button_submit"
+			"link_text": "cart_express_checkout_button_submit" ,
+			"event_type" : "cart_express_checkout_button_submit"
 		});
 	}
 	
@@ -7086,8 +7086,8 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				/*TPR-656*/ /*TPR-4738*/
 				utag.link({
 					link_obj: this, 
-					link_text: 'mybag_to_wishlist' , 
-					event_type : 'mybag_to_wishlist', 
+					link_text: 'cart_to_wishlist' , 
+					event_type : 'cart_to_wishlist', 
 					product_sku_wishlist : productcodearray
 				});
 				/*TPR-656 Ends*/
@@ -7136,9 +7136,7 @@ function removefromCart(entryNo,wishName)
 			// $('.moveToWishlistMsg').html("Item successfully moved to
 			// "+wishName);
 			// $('.moveToWishlistMsg').show();
-			if(typeof utag !="undefined"){
-				utag.link(	{ remove_cart_product_id : productName });
-				}
+			
 			
 			setTimeout(function() {
 				$(".product-block > li.header > span").fadeOut(6000).remove();

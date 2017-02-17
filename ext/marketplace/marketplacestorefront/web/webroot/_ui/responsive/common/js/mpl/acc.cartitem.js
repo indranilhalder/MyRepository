@@ -28,7 +28,7 @@ ACC.cartitem = {
 			  productArray.push(productRemoved);
 				
 			  if(typeof utag !="undefined"){
-				utag.link({ remove_cart_product_id : productArray });
+				utag.link({ "event_type" : 'cart_remove_product' , remove_cart_product_id : productArray });
 			  }
 			  /*TPR-4776 ends*/
 					// for MSD	
