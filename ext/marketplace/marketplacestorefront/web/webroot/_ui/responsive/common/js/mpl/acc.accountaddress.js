@@ -123,7 +123,7 @@ function editAddress(addressId) {
     		   			}
     		   			if (data.line3) {
     		   				console.log("Inside line3 checking***");
- 		     			   fullAddress = fullAddress +" "+ data.line2;
+ 		     			   fullAddress = fullAddress +" "+ data.line3;
     		   			}
        	 	   $('#addressId').val(addressId);
    				$('#firstName').val(data.firstName);
