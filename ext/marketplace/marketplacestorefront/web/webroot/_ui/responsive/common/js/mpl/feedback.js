@@ -1786,12 +1786,13 @@ $(document).ready(function(){
 				}
 			}
 		});
+		// commented as part of UI-UX Fixes cart page UF-61
 		//setTimeout(function () {
-		$("body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.delivery").addClass("collapsed");
+/*		$("body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.delivery").addClass("collapsed");
 				$(".mobile-delivery").click(function(){
 					$(this).parents("li.delivery").toggleClass("collapsed");
 				});
-		//}, 100);
+*/		//}, 100);
 		$(window).on("load resize", function() {
 			$("body.page-cartPage .cart.wrapper .product-block li.item").each(function(){
 				if($(this).find("ul.desktop>li.price").css("position")=="absolute"){
@@ -2856,4 +2857,25 @@ $(this).toggleClass("active");
 $(".gig-rating-readReviewsLink_pdp").on("click",function() {
 	  $("body,html").animate({ scrollTop: $('#ReviewSecion').offset().top - 50 }, "slow");
 
+});
+
+/* UF-73*/
+$('.cartItemBlankPincode a').click(function() {
+
+	$('html,body').animate({ scrollTop: $(this.hash).offset().top}, 300);
+	$(this.hash).focus();
+	return false;
+
+	e.preventDefault();
+
+	}); 
+
+/*UF-85*/
+$("body.page-cartPage .cart.wrapper .checkout-types li#checkout-id").on("mouseover",function(){
+	if($(this).find("a#checkout-enabled.checkout-disabled").length > 0){
+		$(this).css("cursor","not-allowed");
+	}
+	else{
+		$(this).css("cursor","default");
+	}
 });
