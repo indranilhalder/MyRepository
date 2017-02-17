@@ -46,8 +46,11 @@ ${stringMessage}
 									<c:if test="${entry.product.code eq txnScheduleData.key}">
 									<b><spring:theme
 								code="text.scheduledDeliveryDate.productName" /></b>
-									${entry.brandName}<br /> <b>Seller ID:</b> #
-									${entry.selectedSellerInformation.sellerID} <br />
+									${entry.brandName}<br /> 
+									<!-- R2.3 TISRLUAT-1043 start -->
+									<%-- <b>Seller ID:</b> # 
+									${entry.selectedSellerInformation.sellerID} <br /> --%>  
+									<!-- R2.3 TISRLUAT-1043 end -->
 									<b>Quantity :
 									</b>
 									${entry.quantity}<br />
