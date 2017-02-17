@@ -33,6 +33,7 @@
 
 	<div>
 	<div class="cart wrapper">
+	<h1 class="MyBagHeadingDesktop" ><spring:theme code="mpl.myBag" /><span id="mybagcnt"></span></h1>			<!-- UF-62 -->
 	   <c:if test="${not empty cartData.entries}">
 			   <cms:pageSlot position="CenterLeftContentSlot" var="feature" >
 				   <cms:component component="${feature}"/>

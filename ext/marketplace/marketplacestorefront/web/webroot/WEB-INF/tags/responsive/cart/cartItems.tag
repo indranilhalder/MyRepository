@@ -477,7 +477,7 @@ tr.d0 td {
 							<!-- TPR-1458-->
 							<!-- <span class='pincodeServiceError'></span> -->
 							<!-- 1341 -->
-							<p class="cartItemBlankPincode"><spring:theme code="cart.pincode.blank"/></p>	
+							<p class="cartItemBlankPincode"><a href="#defaultPinCodeIds"><spring:theme code="cart.pincode.blanklink"/>&nbsp;</a><spring:theme code="cart.pincode.blank"/></p>	
 							<ul id="${entry.selectedSellerInformation.ussid}">
 						</c:otherwise>
 					</c:choose>	
