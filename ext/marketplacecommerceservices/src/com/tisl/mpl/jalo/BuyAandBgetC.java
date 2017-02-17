@@ -1,6 +1,5 @@
 package com.tisl.mpl.jalo;
 
-import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
@@ -25,6 +24,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -47,6 +47,9 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 	private Map<String, AbstractOrderEntry> validProductUssidMap = null;
 	private Map<String, AbstractOrderEntry> allValidProductUssidMap = null;
 	int totalFactorCount = 0;
+
+	private List<Product> primaryProductList = null;
+	private List<Product> secondaryProductList = null;
 
 	/**
 	 * @Description: Method for Item Creation
@@ -83,11 +86,16 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 		//Populate Excluded Products/Manufacturers in their respective Lists
 		excludedProductList = new ArrayList<Product>();
 		excludeManufactureList = new ArrayList<String>();
+		primaryProductList = new ArrayList<Product>();
+		secondaryProductList = new ArrayList<Product>();
+
 		GenericUtilityMethods.populateExcludedProductManufacturerList(arg0, arg1, excludedProductList, excludeManufactureList,
 				restrictionList, this);
 		//getDefaultPromotionsManager().promotionAlreadyFired(arg0, order, excludedProductList); // Checking if Promotions already Fired on the promotion eligible products
 
-		final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(arg0, arg1);
+		final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager()
+				.findEligibleProductsInBasketForBuyAandBPromo(arg0, arg1, this, getCategories(), getSecondCategories(),
+						primaryProductList, secondaryProductList); // Validates Promotion Restrictions
 		boolean checkChannelFlag = false;
 		try
 		{
@@ -102,7 +110,6 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 			final List<String> eligibleProductList = eligibleForPromotion(cart, arg0); //Get Promotion eligible Products
 
 			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag
-					&& !(getSecondProducts().isEmpty() && getSecondCategories().isEmpty())
 					&& GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, arg0, arg1, this, restrictionList)) // If Satisfies all Restriction and Channel validates to be true
 			{
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(arg0, validProductUssidMap))
@@ -263,7 +270,7 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 		try
 		{
 			final AbstractOrder order = arg1.getOrder(arg0);
-			String data = MarketplacecommerceservicesConstants.EMPTYSPACE;
+			final String data = MarketplacecommerceservicesConstants.EMPTYSPACE;
 			if (order != null)
 			{
 				//final double minimumCategoryValue = calculateMinCategoryAmnt(arg0);
@@ -293,108 +300,119 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 						}
 					}
 
-					if (getProducts() != null && !getProducts().isEmpty())
+					if (minimumCategoryValue > 0.00D)
 					{
-						if (getSecondProducts() != null && !getSecondProducts().isEmpty())
-						{
-							for (final Product secondProduct : getSecondProducts())
-							{
-								data = data + MarketplacecommerceservicesConstants.SINGLE_SPACE + secondProduct.getName() + ",";
-							}
-						}
-						else if (getSecondCategories() != null && !getSecondCategories().isEmpty())
-						{
-							for (final Category category : getSecondCategories())
-							{
-								data = data + MarketplacecommerceservicesConstants.SINGLE_SPACE + category.getName() + ",";
-							}
-
-						}
-
+						args[0] = data;
+						args[1] = Double.valueOf(minimumCategoryValue);
+					}
+					else
+					{
 						args[0] = data;
 						args[1] = MarketplacecommerceservicesConstants.EMPTYSPACE;
 					}
 
-					if (getSecondProducts() != null && !getSecondProducts().isEmpty())
-					{
-						if (getProducts() != null && !getProducts().isEmpty())
-						{
-							for (final Product firstProduct : getProducts())
-							{
-								data = data + MarketplacecommerceservicesConstants.SINGLE_SPACE + firstProduct.getName() + ",";
-							}
-						}
-						else if (getCategories() != null && !getCategories().isEmpty())
-						{
-							for (final Category category : getCategories())
-							{
-								data = data + MarketplacecommerceservicesConstants.SINGLE_SPACE + category.getName() + ",";
-							}
-						}
-
-						args[0] = data;
-						args[1] = MarketplacecommerceservicesConstants.EMPTYSPACE;
-					}
-
-
-					if (getCategories() != null && !getCategories().isEmpty())
-					{
-						if (getSecondCategories() != null && !getSecondCategories().isEmpty())
-						{
-							for (final Category category : getSecondCategories())
-							{
-								data = data + MarketplacecommerceservicesConstants.SINGLE_SPACE + category.getName() + ",";
-							}
-						}
-						else if (getSecondProducts() != null && !getSecondProducts().isEmpty())
-						{
-							for (final Product secondProduct : getSecondProducts())
-							{
-								data = data + MarketplacecommerceservicesConstants.SINGLE_SPACE + secondProduct.getName() + ",";
-							}
-						}
-
-						if (minimumCategoryValue > 0.00D)
-						{
-							args[0] = data;
-							args[1] = Double.valueOf(minimumCategoryValue);
-						}
-						else
-						{
-							args[0] = data;
-							args[1] = MarketplacecommerceservicesConstants.EMPTYSPACE;
-						}
-					}
-
-					if (getSecondCategories() != null && !getSecondCategories().isEmpty())
-					{
-						if (getCategories() != null && !getCategories().isEmpty())
-						{
-							for (final Category category : getCategories())
-							{
-								data = data + MarketplacecommerceservicesConstants.SINGLE_SPACE + category.getName() + ",";
-							}
-						}
-						else if (getProducts() != null && !getProducts().isEmpty())
-						{
-							for (final Product firstProduct : getProducts())
-							{
-								data = data + MarketplacecommerceservicesConstants.SINGLE_SPACE + firstProduct.getName() + ",";
-							}
-						}
-
-						if (minimumCategoryValue > 0.00D)
-						{
-							args[0] = data;
-							args[1] = Double.valueOf(minimumCategoryValue);
-						}
-						else
-						{
-							args[0] = data;
-							args[1] = MarketplacecommerceservicesConstants.EMPTYSPACE;
-						}
-
-					}
+					//					if (getProducts() != null && !getProducts().isEmpty())
+					//					{
+					//						if (getSecondProducts() != null && !getSecondProducts().isEmpty())
+					//						{
+					//							for (final Product secondProduct : getSecondProducts())
+					//							{
+					//								data = data + MarketplacecommerceservicesConstants.SINGLE_SPACE + secondProduct.getName() + ",";
+					//							}
+					//						}
+					//						else if (getSecondCategories() != null && !getSecondCategories().isEmpty())
+					//						{
+					//							for (final Category category : getSecondCategories())
+					//							{
+					//								data = data + MarketplacecommerceservicesConstants.SINGLE_SPACE + category.getName() + ",";
+					//							}
+					//
+					//						}
+					//
+					//						args[0] = data;
+					//						args[1] = MarketplacecommerceservicesConstants.EMPTYSPACE;
+					//					}
+					//
+					//					if (getSecondProducts() != null && !getSecondProducts().isEmpty())
+					//					{
+					//						if (getProducts() != null && !getProducts().isEmpty())
+					//						{
+					//							for (final Product firstProduct : getProducts())
+					//							{
+					//								data = data + MarketplacecommerceservicesConstants.SINGLE_SPACE + firstProduct.getName() + ",";
+					//							}
+					//						}
+					//						else if (getCategories() != null && !getCategories().isEmpty())
+					//						{
+					//							for (final Category category : getCategories())
+					//							{
+					//								data = data + MarketplacecommerceservicesConstants.SINGLE_SPACE + category.getName() + ",";
+					//							}
+					//						}
+					//
+					//						args[0] = data;
+					//						args[1] = MarketplacecommerceservicesConstants.EMPTYSPACE;
+					//					}
+					//
+					//
+					//					if (getCategories() != null && !getCategories().isEmpty())
+					//					{
+					//						if (getSecondCategories() != null && !getSecondCategories().isEmpty())
+					//						{
+					//							for (final Category category : getSecondCategories())
+					//							{
+					//								data = data + MarketplacecommerceservicesConstants.SINGLE_SPACE + category.getName() + ",";
+					//							}
+					//						}
+					//						else if (getSecondProducts() != null && !getSecondProducts().isEmpty())
+					//						{
+					//							for (final Product secondProduct : getSecondProducts())
+					//							{
+					//								data = data + MarketplacecommerceservicesConstants.SINGLE_SPACE + secondProduct.getName() + ",";
+					//							}
+					//						}
+					//
+					//						if (minimumCategoryValue > 0.00D)
+					//						{
+					//							args[0] = data;
+					//							args[1] = Double.valueOf(minimumCategoryValue);
+					//						}
+					//						else
+					//						{
+					//							args[0] = data;
+					//							args[1] = MarketplacecommerceservicesConstants.EMPTYSPACE;
+					//						}
+					//					}
+					//
+					//					if (getSecondCategories() != null && !getSecondCategories().isEmpty())
+					//					{
+					//						if (getCategories() != null && !getCategories().isEmpty())
+					//						{
+					//							for (final Category category : getCategories())
+					//							{
+					//								data = data + MarketplacecommerceservicesConstants.SINGLE_SPACE + category.getName() + ",";
+					//							}
+					//						}
+					//						else if (getProducts() != null && !getProducts().isEmpty())
+					//						{
+					//							for (final Product firstProduct : getProducts())
+					//							{
+					//								data = data + MarketplacecommerceservicesConstants.SINGLE_SPACE + firstProduct.getName() + ",";
+					//							}
+					//						}
+					//
+					//						if (minimumCategoryValue > 0.00D)
+					//						{
+					//							args[0] = data;
+					//							args[1] = Double.valueOf(minimumCategoryValue);
+					//						}
+					//						else
+					//						{
+					//							args[0] = data;
+					//							args[1] = MarketplacecommerceservicesConstants.EMPTYSPACE;
+					//						}
+					//
+					//					}
 
 					if (!deliveryModes.isEmpty())
 					{
@@ -484,23 +502,23 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 		boolean brandFlag = false;
 		boolean sellerFlag = false;
 		//final boolean sellerMatches = false;
-		boolean promoEligible = false;
+		//final boolean promoEligible = false;
 		boolean isFreebie = false;
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());
 		sellerID = MarketplacecommerceservicesConstants.EMPTY;
 
-		boolean productExistsInA = false;
-		boolean productExistsInB = false;
+		//final boolean productExistsInA = false;
+		//final boolean productExistsInB = false;
 
 		final List<String> validProductListA = new ArrayList<String>();
 		final List<String> validProductListB = new ArrayList<String>();
 		final List<String> validProductListFinal = new ArrayList<String>();
 
-		final List<Product> promotionProductListA = new ArrayList<Product>(getProducts());
-		final List<Product> promotionProductListB = new ArrayList<Product>(getSecondProducts());
+		//final List<Product> promotionProductListA = new ArrayList<Product>(getProducts());
+		//final List<Product> promotionProductListB = new ArrayList<Product>(getSecondProducts());
 
-		final List<Category> promotionCategoryListA = new ArrayList<Category>(getCategories());
-		final List<Category> promotionCategoryListB = new ArrayList<Category>(getSecondCategories());
+		//final List<Category> promotionCategoryListA = new ArrayList<Category>(getCategories());
+		//final List<Category> promotionCategoryListB = new ArrayList<Category>(getSecondCategories());
 
 		validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
 		allValidProductUssidMap = new HashMap<String, AbstractOrderEntry>();
@@ -526,131 +544,221 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 							continue;
 						}
 
-						//checking products list A
-						if (!promotionProductListA.isEmpty() && promotionProductListA.contains(product))
+						if (CollectionUtils.isNotEmpty(primaryProductList) && primaryProductList.contains(product))//
 						{
-
+							brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
 							sellerFlag = getDefaultPromotionsManager().checkSellerData(paramSessionContext, restrictionList, entry);
-							if (sellerFlag)
+							if (brandFlag && sellerFlag)
 							{
-								productExistsInA = true;
 								validProductAUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
 										restrictionList, paramSessionContext, entry));
 								sellerID = getDefaultPromotionsManager().getSellerID(paramSessionContext, restrictionList, entry);//Gets the Seller ID of the Primary Promotion Product
 							}
-
 						}
-
-						//checking products list B
-						if (!promotionProductListB.isEmpty() && promotionProductListB.contains(product))
+						else if (CollectionUtils.isNotEmpty(secondaryProductList) && secondaryProductList.contains(product))//
 						{
+							brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
 							sellerFlag = getDefaultPromotionsManager().checkSellerData(paramSessionContext, restrictionList, entry);
-							if (sellerFlag) //Matching of Seller ID of the Primary and Secondary Product
+							if (brandFlag && sellerFlag)
 							{
-								productExistsInB = true;
 								validProductBUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
 										restrictionList, paramSessionContext, entry));
 							}
-
 						}
 
-						//checking products category list A
-						if (promotionProductListA.isEmpty() && !promotionCategoryListA.isEmpty())
-						{
-							final List<String> productCategoryList = getDefaultPromotionsManager().getcategoryList(product,
-									paramSessionContext);
-							promoEligible = GenericUtilityMethods.productExistsIncat(promotionCategoryListA, productCategoryList);
-							if (promoEligible)
-							{
-								brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
-								sellerFlag = getDefaultPromotionsManager().checkSellerData(paramSessionContext, restrictionList, entry);
-								if (sellerFlag && brandFlag)
-								{
-									productExistsInA = true;
-									validProductAUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
-											restrictionList, paramSessionContext, entry));
-									sellerID = getDefaultPromotionsManager().getSellerID(paramSessionContext, restrictionList, entry);//Gets the Seller ID of the Primary Promotion Product
-								}
-
-							}
-						}
-
-						//checking products category list B
-						if (promotionProductListB.isEmpty() && !promotionCategoryListB.isEmpty())
-						{
-							final List<String> productCategoryList = getDefaultPromotionsManager().getcategoryList(product,
-									paramSessionContext);
-							promoEligible = GenericUtilityMethods.productExistsIncat(promotionCategoryListB, productCategoryList);
-							if (promoEligible)
-							{
-								brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
-								sellerFlag = getDefaultPromotionsManager().checkSellerData(paramSessionContext, restrictionList, entry);
-								if (sellerFlag && brandFlag)
-								{
-									productExistsInB = true;
-									validProductBUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
-											restrictionList, paramSessionContext, entry));
-								}
-							}
-						}
 					}
 				}
 
-
-				if (productExistsInA && productExistsInB)
+				for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductAUssidMap.entrySet())
 				{
-					allValidProductUssidMap.putAll(validProductAUssidMap);
-					allValidProductUssidMap.putAll(validProductBUssidMap);
-
-					for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductAUssidMap.entrySet())
+					final AbstractOrderEntry entry = mapEntry.getValue();
+					final String valiProdAUssid = mapEntry.getKey();
+					for (int i = 1; i <= entry.getQuantity().longValue(); i++)
 					{
-						final AbstractOrderEntry entry = mapEntry.getValue();
-						final String valiProdAUssid = mapEntry.getKey();
-						for (int i = 1; i <= entry.getQuantity().longValue(); i++)
-						{
-							validProductListA.add(valiProdAUssid);
-						}
+						validProductListA.add(valiProdAUssid);
 					}
+				}
 
-					for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductBUssidMap.entrySet())
+				for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductBUssidMap.entrySet())
+				{
+					final AbstractOrderEntry entry = mapEntry.getValue();
+					final String valiProdBUssid = mapEntry.getKey();
+					for (int i = 1; i <= entry.getQuantity().longValue(); i++)
 					{
-						final AbstractOrderEntry entry = mapEntry.getValue();
-						final String valiProdBUssid = mapEntry.getKey();
-						for (int i = 1; i <= entry.getQuantity().longValue(); i++)
-						{
-							validProductListB.add(valiProdBUssid);
-						}
+						validProductListB.add(valiProdBUssid);
 					}
+				}
 
-					totalFactorCount = validProductListA.size() < validProductListB.size() ? validProductListA.size()
-							: validProductListB.size();
+				totalFactorCount = validProductListA.size() < validProductListB.size() ? validProductListA.size() : validProductListB
+						.size();
+				if (totalFactorCount > 0)
+				{
 					final Set<String> validProdAUssidSet = getDefaultPromotionsManager().populateSortedValidProdUssidMap(
 							validProductAUssidMap, totalFactorCount, paramSessionContext, restrictionList, null);
 
 					final Set<String> validProdBUssidSet = getDefaultPromotionsManager().populateSortedValidProdUssidMap(
 							validProductBUssidMap, totalFactorCount, paramSessionContext, restrictionList, null);
 
-					validProductAUssidMap.keySet().retainAll(validProdAUssidSet);
-					validProductBUssidMap.keySet().retainAll(validProdBUssidSet);
-
 					validProductListA.retainAll(validProdAUssidSet);
 					validProductListB.retainAll(validProdBUssidSet);
+
+					validProductAUssidMap.keySet().retainAll(validProdAUssidSet);
+					validProductBUssidMap.keySet().retainAll(validProdBUssidSet);
 
 					validProductUssidMap.putAll(validProductAUssidMap);
 					validProductUssidMap.putAll(validProductBUssidMap);
 
 					validProductListFinal.addAll(validProductListA);
 					validProductListFinal.addAll(validProductListB);
-				}
 
-				if (validProductListA.size() > 0)
-				{
-					primaryListSize = validProductListA.size();
+					if (validProductListA.size() > 0)
+					{
+						primaryListSize = validProductListA.size();
+					}
+					if (validProductListB.size() > 0)
+					{
+						secondaryListSize = validProductListB.size();
+					}
 				}
-				if (validProductListB.size() > 0)
-				{
-					secondaryListSize = validProductListB.size();
-				}
+				//				for (final AbstractOrderEntry entry : cart.getEntries())
+				//				{
+				//					//boolean sellerFlag = false;
+				//					isFreebie = getMplPromotionHelper().validateEntryForFreebie(entry);
+				//					if (!isFreebie)
+				//					{
+				//						final Product product = entry.getProduct();
+				//						//excluded product check
+				//						if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
+				//								|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList))
+				//						{
+				//							continue;
+				//						}
+				//
+				//						//checking products list A
+				//						if (!promotionProductListA.isEmpty() && promotionProductListA.contains(product))
+				//						{
+				//
+				//							sellerFlag = getDefaultPromotionsManager().checkSellerData(paramSessionContext, restrictionList, entry);
+				//							if (sellerFlag)
+				//							{
+				//								productExistsInA = true;
+				//								validProductAUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
+				//										restrictionList, paramSessionContext, entry));
+				//								sellerID = getDefaultPromotionsManager().getSellerID(paramSessionContext, restrictionList, entry);//Gets the Seller ID of the Primary Promotion Product
+				//							}
+				//
+				//						}
+				//
+				//						//checking products list B
+				//						if (!promotionProductListB.isEmpty() && promotionProductListB.contains(product))
+				//						{
+				//							sellerFlag = getDefaultPromotionsManager().checkSellerData(paramSessionContext, restrictionList, entry);
+				//							if (sellerFlag) //Matching of Seller ID of the Primary and Secondary Product
+				//							{
+				//								productExistsInB = true;
+				//								validProductBUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
+				//										restrictionList, paramSessionContext, entry));
+				//							}
+				//
+				//						}
+				//
+				//						//checking products category list A
+				//						if (promotionProductListA.isEmpty() && !promotionCategoryListA.isEmpty())
+				//						{
+				//							final List<String> productCategoryList = getDefaultPromotionsManager().getcategoryList(product,
+				//									paramSessionContext);
+				//							promoEligible = GenericUtilityMethods.productExistsIncat(promotionCategoryListA, productCategoryList);
+				//							if (promoEligible)
+				//							{
+				//								brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+				//								sellerFlag = getDefaultPromotionsManager().checkSellerData(paramSessionContext, restrictionList, entry);
+				//								if (sellerFlag && brandFlag)
+				//								{
+				//									productExistsInA = true;
+				//									validProductAUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
+				//											restrictionList, paramSessionContext, entry));
+				//									sellerID = getDefaultPromotionsManager().getSellerID(paramSessionContext, restrictionList, entry);//Gets the Seller ID of the Primary Promotion Product
+				//								}
+				//
+				//							}
+				//						}
+				//
+				//						//checking products category list B
+				//						if (promotionProductListB.isEmpty() && !promotionCategoryListB.isEmpty())
+				//						{
+				//							final List<String> productCategoryList = getDefaultPromotionsManager().getcategoryList(product,
+				//									paramSessionContext);
+				//							promoEligible = GenericUtilityMethods.productExistsIncat(promotionCategoryListB, productCategoryList);
+				//							if (promoEligible)
+				//							{
+				//								brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+				//								sellerFlag = getDefaultPromotionsManager().checkSellerData(paramSessionContext, restrictionList, entry);
+				//								if (sellerFlag && brandFlag)
+				//								{
+				//									productExistsInB = true;
+				//									validProductBUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
+				//											restrictionList, paramSessionContext, entry));
+				//								}
+				//							}
+				//						}
+				//					}
+				//				}
+				//
+				//
+				//				if (productExistsInA && productExistsInB)
+				//				{
+				//					allValidProductUssidMap.putAll(validProductAUssidMap);
+				//					allValidProductUssidMap.putAll(validProductBUssidMap);
+				//
+				//					for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductAUssidMap.entrySet())
+				//					{
+				//						final AbstractOrderEntry entry = mapEntry.getValue();
+				//						final String valiProdAUssid = mapEntry.getKey();
+				//						for (int i = 1; i <= entry.getQuantity().longValue(); i++)
+				//						{
+				//							validProductListA.add(valiProdAUssid);
+				//						}
+				//					}
+				//
+				//					for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductBUssidMap.entrySet())
+				//					{
+				//						final AbstractOrderEntry entry = mapEntry.getValue();
+				//						final String valiProdBUssid = mapEntry.getKey();
+				//						for (int i = 1; i <= entry.getQuantity().longValue(); i++)
+				//						{
+				//							validProductListB.add(valiProdBUssid);
+				//						}
+				//					}
+				//
+				//					totalFactorCount = validProductListA.size() < validProductListB.size() ? validProductListA.size()
+				//							: validProductListB.size();
+				//					final Set<String> validProdAUssidSet = getDefaultPromotionsManager().populateSortedValidProdUssidMap(
+				//							validProductAUssidMap, totalFactorCount, paramSessionContext, restrictionList, null);
+				//
+				//					final Set<String> validProdBUssidSet = getDefaultPromotionsManager().populateSortedValidProdUssidMap(
+				//							validProductBUssidMap, totalFactorCount, paramSessionContext, restrictionList, null);
+				//
+				//					validProductAUssidMap.keySet().retainAll(validProdAUssidSet);
+				//					validProductBUssidMap.keySet().retainAll(validProdBUssidSet);
+				//
+				//					validProductListA.retainAll(validProdAUssidSet);
+				//					validProductListB.retainAll(validProdBUssidSet);
+				//
+				//					validProductUssidMap.putAll(validProductAUssidMap);
+				//					validProductUssidMap.putAll(validProductBUssidMap);
+				//
+				//					validProductListFinal.addAll(validProductListA);
+				//					validProductListFinal.addAll(validProductListB);
+				//				}
+				//
+				//				if (validProductListA.size() > 0)
+				//				{
+				//					primaryListSize = validProductListA.size();
+				//				}
+				//				if (validProductListB.size() > 0)
+				//				{
+				//					secondaryListSize = validProductListB.size();
+				//				}
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -680,7 +788,6 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 	{
 		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
 	}
-
 
 	/**
 	 * @Description : Reset boolean Flag Variables

@@ -59608,3 +59608,14 @@ body.page-cartPage footer .footer-text{
 	border-top:none;
 }
 /* UF-64 end */
+/*changes for pincode servicebility */
+    .product-info .product-content .delivery-block li.do.selected:after{
+	    content: "";
+    background: url(../images/sprite.svg) no-repeat scroll -274px -174px;
+    display: inline-block;
+    height: 32px;
+    width: 23px;
+    position: absolute;
+    right: 0;
+    top: 18px;
+    }

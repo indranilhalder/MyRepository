@@ -99,7 +99,7 @@
 	</ul>
 	
 	<c:if test="${not empty otherProducts}">
-	<ul class="product-listing product-grid">
+	<ul class="product-listing product-grid lazy-grid">
 		<c:forEach items="${searchPageData.results}" var="product" varStatus="status">
 			<product:productListerGridItem product="${product}"/>
 		</c:forEach>

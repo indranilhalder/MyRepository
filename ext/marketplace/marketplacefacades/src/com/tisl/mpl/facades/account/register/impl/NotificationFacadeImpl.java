@@ -140,7 +140,8 @@ public class NotificationFacadeImpl implements NotificationFacade
 	{
 		final List<OrderStatusNotificationModel> notificationModel = getNotificationService().getNotificationDetails(customerUID,
 				isDesktop);
-		final List<VoucherStatusNotificationModel> voucherList = getAllCoupons();
+		//final List<VoucherStatusNotificationModel> voucherList = getAllCoupons();
+		final List<VoucherStatusNotificationModel> voucherList = extendedUserService.getUserByUid(customerUID).getVoucher();
 		List<NotificationData> notificationDataList = new ArrayList<>();
 		for (final OrderStatusNotificationModel osnm : notificationModel)
 		{
@@ -150,11 +151,11 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 		for (final VoucherStatusNotificationModel v : voucherList) //This loop populates notification data from VoucherStatusNotificationModel
 		{
-			if (v.getCustomerUidList().contains(customerUID))
-			{
-				final NotificationData dataForVoucher = getTrackOrderCouponConverter().convert(v);
-				notificationDataList.add(dataForVoucher);
-			}
+			//if (v.getCustomerUidList().contains(customerUID))
+			//{
+			final NotificationData dataForVoucher = getTrackOrderCouponConverter().convert(v);
+			notificationDataList.add(dataForVoucher);
+			//}
 		}
 
 		notificationDataList = getNotificationService().getSortedNotificationData(notificationDataList);

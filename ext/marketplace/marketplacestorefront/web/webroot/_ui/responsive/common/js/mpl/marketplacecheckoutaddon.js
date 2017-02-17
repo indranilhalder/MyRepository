@@ -3806,6 +3806,11 @@ function validateEmiCardNo(formSubmit) {
 					if(response.cardType==null)
 					{
 						binStatus=true;
+						//INC144313385
+						if(formSubmit=="formSubmit")
+						{
+							dopayment(binStatus);
+						}
 						errorHandle.innerHTML = "";
 						return true;
 					}
@@ -5132,24 +5137,23 @@ $('#selectDeliveryMethodForm #deliveryradioul .delivery_options .delivery ul li 
 		
 			  var mode=radioSplit[2]
 			  
-			 
+			//TPR-4755,TPR-4756,TPR-4757
+				var shippingType = '';
 				if(mode=="home-delivery"){
-					utag.link(
-							{link_text: 'deliver_mode_home' , event_type : 'delivery_mode_select'}
-							);
+					shippingType = "home";
 				}
 					
 				else if(mode=="express-delivery"){
-					utag.link(
-							{link_text: 'deliver_mode_express' , event_type : 'delivery_mode_select'}
-							);
+					shippingType = "express";
 				}
 					
 				else{
-					utag.link(
-							{link_text: 'deliver_mode_clickcollect' , event_type : 'delivery_mode_select'}
-							);
+					shippingType = "click_collect";
 				}
+			  utag.link({
+			  	link_text: "deliver_mode_"+shippingType,
+			  	event_type : shippingType+"_delivery_selected"
+			  });
 					
 	/*TPR-685 ends*/		  
     changeCTAButtonName("DefaultName");
@@ -5237,9 +5241,9 @@ function checkPincodeServiceability(buttonType,el)
 			console.log("Utag is undefined")
 		}
 		else{
-			//TPR-683
+			//TPR-683 TPR-4777 | Checkout | Cart 
 			utag.link(
-			{"link_text": "mybag_checkout" , "event_type" : "mybag_checkout"}
+			{"link_text": "cart_checkout_clicked" , "event_type" : "cart_checkout_clicked"}
 			);
 		}
 	}
@@ -5344,9 +5348,13 @@ function checkPincodeServiceability(buttonType,el)
  			{
  				if(typeof utag !="undefined")
  				{
-	 				utag.link(
-	 				{"link_obj": this,"link_text": "mybag_pincode:"+selectedPincode+":not serviceable", "event_type" : "mybag_pincode"}
-	 		 	 	);
+	 				//TPR-4736 | DataLAyerSchema changes | cart
+ 					utag.link({
+		 				"link_obj": this,
+		 				"link_text": "cart_pincode_check_failure", 
+		 				"event_type" : "cart_pincode_check_failure",
+		 				"cart_pin_non_servicable" : selectedPincode
+		 			});
  				}
  				// TISTI-255
 				// Please try later or contact our helpdesk");
@@ -5364,9 +5372,13 @@ function checkPincodeServiceability(buttonType,el)
  				{
  				if(typeof utag !="undefined")
  				{
- 				utag.link(
- 		 	 	{"link_obj": this,"link_text": "mybag_pincode:"+selectedPincode+":success", "event_type" : "mybag_pincode"}
- 		 	 	);
+ 					//TPR-4736 | DataLAyerSchema changes | cart
+ 					utag.link({
+		 				"link_obj": this,
+		 				"link_text": "cart_pincode_check_success", 
+		 				"event_type" : "cart_pincode_check_success",
+		 				"cart_pin_servicable" : selectedPincode
+		 			});
  				}
  				$(".pincodeServiceError").hide();
  				$("#unserviceablepincode").hide();
@@ -5404,9 +5416,13 @@ function checkPincodeServiceability(buttonType,el)
  		},
  		error : function(resp) {
  			if(typeof utag !="undefined"){
- 			utag.link(
- 			{"link_obj": this,"link_text": "mybag_pincode:"+selectedPincode+":not serviceable", "event_type" : "mybag_pincode"}
- 			);
+ 				//TPR-4736 | DataLAyerSchema changes | cart
+	 			utag.link({
+	 				"link_obj": this,
+	 				"link_text": "cart_pincode_check_failure", 
+	 				"event_type" : "cart_pincode_check_failure",
+	 				"cart_pin_non_servicable" : selectedPincode
+	 			});
  			}
  			//TISTI-255
  			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
@@ -6531,6 +6547,11 @@ function updateCart(formId){
 	var entryNumber = formId.split("_");
 	var form = $('#updateCartForm' + entryNumber[1]);
 	form.submit();
+	//TPR-4737 | Quantity update | cart
+	utag.link({
+		"link_text": "quantity_updated" ,
+		"event_type": "quantity_updated"
+	});
 }
 
 
@@ -6539,9 +6560,11 @@ function expressbutton()
 	//TPR-683
 	if(typeof utag !="undefined")
 	{
-		utag.link(
-		{"link_text": "mybag_express_checkout" , "event_type" : "mybag_express_checkout"}
-		);
+		//TPR-4739 | Expresscheckout | cart
+		utag.link({
+			"link_text": "mybag_express_checkout_button_submit" ,
+			"event_type" : "mybag_express_checkout_button_submit"
+		});
 	}
 	
 	//alert(selectedAddress);
@@ -6710,6 +6733,10 @@ $("#couponSubmitButton").click(function(){
 	 				onSubmitAnalytics("invalid_coupon");
 	 				// $("#couponError").css("display","block");
 	 				// document.getElementById("couponError").innerHTML=response.redeemErrorMsg;
+	 				/*TPR-4746*/
+	 				if(typeof utag !="undefined"){
+		 				   utag.link({error_type : 'offer_error'});
+		 				}
 	 			}
 	 			else{
 		 			if(response.couponRedeemed==true){
@@ -6742,6 +6769,10 @@ $("#couponSubmitButton").click(function(){
 	 			$("#couponSubmitButton").prop('disabled', false);
 	 			$("#couponSubmitButton").css("opacity","1");
 	 			$("#no-click,.spinner").remove(); //changes for INC_11738
+	 			/*TPR-4746*/
+	 			if(typeof utag !="undefined"){
+	 				   utag.link({error_type : 'offer_error'});
+	 				}
 	 		}
 	 	});	 
 	}
@@ -7039,7 +7070,9 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				    +'&sizeSelected='+ sizeSelected;
 
 	var entryNo = $("#entryNo").val();
-	
+
+	var productcodearray =[];
+		productcodearray.push(productCode);
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
@@ -7050,13 +7083,13 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				
 				$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
 				
-				/*TPR-656*/
-					utag.link({
-						link_obj: this, 
-						link_text: 'add_to_wishlist' , 
-						event_type : 'add_to_wishlist', 
-						product_sku_wishlist : productCode
-					});
+				/*TPR-656*/ /*TPR-4738*/
+				utag.link({
+					link_obj: this, 
+					link_text: 'mybag_to_wishlist' , 
+					event_type : 'mybag_to_wishlist', 
+					product_sku_wishlist : productcodearray
+				});
 				/*TPR-656 Ends*/
 				
 				localStorage.setItem("movedToWishlist_msgFromCart", "Y");
@@ -7103,6 +7136,10 @@ function removefromCart(entryNo,wishName)
 			// $('.moveToWishlistMsg').html("Item successfully moved to
 			// "+wishName);
 			// $('.moveToWishlistMsg').show();
+			if(typeof utag !="undefined"){
+				utag.link(	{ remove_cart_product_id : productName });
+				}
+			
 			setTimeout(function() {
 				$(".product-block > li.header > span").fadeOut(6000).remove();
 				// $(".moveToWishlistMsg").fadeOut().empty();

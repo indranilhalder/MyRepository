@@ -10,6 +10,7 @@
 		searchUrl="${searchPageData.currentQuery.url}"
 		numberPagesShown="${numberPagesShown}" />
 
+<input type="hidden" name="noOfPages" value="${searchPageData.pagination.numberOfPages}"/>
 	<!-- Hero product pane -->
 	<c:if test="${not empty heroProducts}">
 	 <!-- <h2>Shop Our Top Picks</h2> -->
@@ -32,7 +33,7 @@
 	</ul>
 	
 	<c:if test="${not empty otherProducts}">
-	<ul class="product-listing product-grid">
+	<ul class="product-listing product-grid lazy-grid">
 		<c:forEach items="${searchPageData.results}" var="product" varStatus="status">
 			<product:productListerGridItem product="${product}"/>
 		</c:forEach>

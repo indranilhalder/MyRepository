@@ -1,7 +1,8 @@
-
 var updatedsearchQuery = "";
 var dummyForm ;
 var lessBrands = [];
+var productItemArray = [];
+var res;
 ACC.refinements = {
 
 	_autoload: [
@@ -416,9 +417,17 @@ ACC.refinements = {
 		
 		$(document).on("click",".js-product-facet .js-more-facet-values-link",function(e){
 			e.preventDefault();
-			$(this).parents(".js-facet").find(".js-facet-top-values").hide();
-			$(this).parents(".js-facet").find(".js-facet-list-hidden").show();
-
+			if($('.brandSearchTxt').val()=="")
+			{
+				$(this).parents(".js-facet").find(".js-facet-top-values").hide();
+				$(this).parents(".js-facet").find(".js-facet-list-hidden").show();
+				
+				$(this).parents(".js-facet").find(".js-facet-list-hidden span.facet-label").show();
+			}
+			else
+			{
+				$('.marked').css("display","block");				
+			}
 			$(this).parents(".js-facet").find(".js-more-facet-values").hide();
 			$(this).parents(".js-facet").find(".js-less-facet-values").show();
 		});
@@ -426,10 +435,15 @@ ACC.refinements = {
 			$(document).on("click",".js-less-facet-values-link",function(e){
 			e.preventDefault();
 			//var brandFacet = [];
-			
-			$(this).parents(".js-facet").find(".js-facet-top-values").show();
-			$(this).parents(".js-facet").find(".js-facet-list-hidden").hide();
-
+			if($('.brandSearchTxt').val()=="")
+			{
+				$(this).parents(".js-facet").find(".js-facet-top-values").show();
+				$(this).parents(".js-facet").find(".js-facet-list-hidden").hide();
+			}
+			else
+			{
+				$('.marked').css("display","none");				
+			}
 			$(this).parents(".js-facet").find(".js-more-facet-values").show();
 			$(this).parents(".js-facet").find(".js-less-facet-values").hide();
 		});
@@ -783,12 +797,14 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			// console.log(response);
 			// putting AJAX respons to view
 			if($("#isCategoryPage").val() == 'true' && !$("input[name=customSku]").val()){
-				$("#productGrid").html(response);
+				lazyPaginationFacet(response);
+				//$("#productGrid").html(response);
 			}		
 			else{
 				
 				if(requiredUrl.indexOf("offer") > -1 || requiredUrl.indexOf("viewOnlineProducts") > -1 || requiredUrl.indexOf("/s/") > -1){
-					$("#productGrid").html(response);
+					lazyPaginationFacet(response);
+					//$("#productGrid").html(response);
 				}
 				else{
 					$("#facetSearchAjaxData").html(response);
@@ -945,6 +961,22 @@ function removeMobilePriceRange(){
 	
 }
 
+//UF-15
+function lazyPaginationFacet(response){
+	res = response;
+	var ulProduct = $(response).find('ul.product-listing.product-grid');
+    productItemArray = [];
+    $(ulProduct).find('li.product-item').each(function() {
+        productItemArray.push($(this));
+    });
+	$("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid", response));
+    innerLazyLoad({isSerp:true});
+}
 
-
-
+(function($) {
+    $.strRemove = function(theTarget, theString) {
+        return $("<div/>").append(
+            $(theTarget, theString).empty().end()
+        ).html();
+    };
+})(jQuery);
