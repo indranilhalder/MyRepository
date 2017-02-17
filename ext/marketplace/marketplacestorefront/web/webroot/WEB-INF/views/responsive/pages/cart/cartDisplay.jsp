@@ -16,7 +16,7 @@
     <c:set var="userName" value="${user.firstName}"/>
     <div class="MyBag-top-section">
     <div class="MyBag-buttons">
-	<h1 class="MyBagHeadingDesktop" ><spring:theme code="mpl.myBag" /><span id="mybagcnt"></span></h1>
+	<%-- <h1 class="MyBagHeadingDesktop" ><spring:theme code="mpl.myBag" /><span id="mybagcnt"></span></h1> --%>		<!-- commented for UF-62 -->
 	<p class="desk-view">${welcome_message}</p>
 	
 	<%-- <c:choose>
@@ -36,6 +36,11 @@
 				<!-- TISEE-6257 -->
 				<a  id="checkout-enabled" class="checkoutButton checkout button red"  onclick="return checkServiceabilityRequired('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
 				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
+				
+				<!-- error message position change as part of UF-61 -->
+ 				<p id="unserviceablepincode_tooltip" style="display:none">One or more item(s) are not available at this location. Please remove the item(s) to proceed or try another <span>pincode</span>?</p>
+     			<p id="error-Id_tooltip" style="display:none" >Oops! Invalid <span>pincode</span>.Please enter a valid <span>pincode</span>.</p>
+ 				<p id="emptyId_tooltip" style="display:none">Enter <span>pincode</span> on the left to continue</p> 
 			</li>
 
 			<!-- TISBOX-879
@@ -99,7 +104,7 @@
 		<!-- <a href="/" class="continue-shopping"> Continue Shopping</a> -->
 
 	<div class="top block MyBag-pincode" id="pinCodeDispalyDiv">
-		<h2><spring:theme code="cart.delivery.options" /></h2>
+		<%-- <h2><spring:theme code="cart.delivery.options" /></h2> --%>		<!-- UF-63 -->
 		<%-- <input type="hidden"  name = "defaultPinCodeIdsDefault" id= "defaultPinCodeIdsDefault"  value="${defaultPinCode}"/>
 			<div id="defaultPinDiv">
 				<p><spring:theme code="product.pincode" /> 
@@ -113,9 +118,9 @@
 				<p id="cartPinCodeAvailable"><spring:theme code="product.pincode" /></p>
 				<!-- TPR_1055 EQA -->
 				<p id="AvailableMessage" style="display:none"></p>
-				<p id="unserviceablepincode" style="display:none"><spring:theme code="cart.unserviceable.pincode" /></p>
+				<%-- <p id="unserviceablepincode" style="display:none"><spring:theme code="cart.unserviceable.pincode" /></p>
 				<p id="error-Id" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
-				<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p>
+				<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p> --%>
 				<c:choose>
 		 		<c:when test="${not empty defaultPinCode}">
 				<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="${defaultPinCode}" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
@@ -126,6 +131,11 @@
 				 </c:choose>
 				 <input type="hidden" id="pinId" value=""/>
 				<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
+				
+				<!-- error message position change as part of UF-61 -->
+ 				<p id="unserviceablepincode" style="display:none"><spring:theme code="cart.unserviceable.pincode" /></p>
+ 				<p id="error-Id" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
+ 				<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p>
 			</div>
 		
 		
