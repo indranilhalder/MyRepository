@@ -2712,10 +2712,10 @@ public class DefaultPromotionManager extends PromotionsManager
 
 	/**
 	 * @Description : Checks For Manufacturer Based Restrictions
-	 * @param : SessionContext arg0,PromotionEvaluationContext arg1
+	 * @param : SessionContext ctx,PromotionEvaluationContext evaluationContext
 	 * @return : flag
 	 */
-	public boolean checkMinimumBrandAmount(final SessionContext arg0, final PromotionEvaluationContext arg1,
+	public boolean checkMinimumBrandAmount(final SessionContext ctx, final PromotionEvaluationContext evaluationContext,
 			final Map<String, AbstractOrderEntry> validProductUssidMap, final List<AbstractPromotionRestriction> restrictionList)
 	{
 		boolean flag = true;

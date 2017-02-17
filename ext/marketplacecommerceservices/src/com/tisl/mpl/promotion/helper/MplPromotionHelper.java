@@ -594,7 +594,7 @@ public class MplPromotionHelper
 	 * @param restrictionList
 	 * @return validProductUssidMap
 	 */
-	public Map<String, AbstractOrderEntry> getCartSellerEligibleProducts(final SessionContext arg0, final AbstractOrder order,
+	public Map<String, AbstractOrderEntry> getCartSellerEligibleProducts(final SessionContext ctx, final AbstractOrder order,
 			final List<AbstractPromotionRestriction> restrictionList)
 	{
 		//CR Changes
@@ -612,12 +612,12 @@ public class MplPromotionHelper
 				isFreebie = validateEntryForFreebie(entry);
 				if (!isFreebie)
 				{
-					isofValidSeller = getDefaultPromotionsManager().checkSellerData(arg0, restrictionList, entry);
+					isofValidSeller = getDefaultPromotionsManager().checkSellerData(ctx, restrictionList, entry);
 					if (isofValidSeller)
 					{
 						try
 						{
-							selectedUSSID = (String) entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID);
+							selectedUSSID = (String) entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID);
 						}
 						catch (JaloInvalidParameterException | JaloSecurityException e)
 						{
