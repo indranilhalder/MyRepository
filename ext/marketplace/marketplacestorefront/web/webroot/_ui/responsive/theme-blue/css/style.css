@@ -53993,6 +53993,8 @@ body .lookbook_wrapper .listing.wrapper .left-block{
     .progress-barcheck .step-3.finalstep span {
         right: 9%;
     }
+    
+    #bestPicks{top: 22px;}  /* add for INC144313767 & INC144313553  */
 }
    
    
