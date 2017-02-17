@@ -59603,6 +59603,11 @@ body.page-productGrid .listing-leftmenu .checkbox-menu>a,body.page-productGrid .
 	font-family:"MontserratGoogleReg";
 } 
 
+/* UF-64 start */
+body.page-cartPage footer .footer-text{
+	border-top:none;
+}
+/* UF-64 end */
 /*changes for pincode servicebility */
     .product-info .product-content .delivery-block li.do.selected:after{
 	    content: "";
