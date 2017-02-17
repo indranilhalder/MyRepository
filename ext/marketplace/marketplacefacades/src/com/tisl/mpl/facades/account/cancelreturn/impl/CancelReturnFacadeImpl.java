@@ -1304,7 +1304,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				addressInfo.setPhoneNo(returnAddress.getMobileNo());
 				addressInfo.setAddress1(returnAddress.getAddressLane1());
 				addressInfo.setAddress2(returnAddress.getAddressLane2());
-				addressInfo.setAddress3(returnAddress.getCity());
+				addressInfo.setAddress3(returnAddress.getAddressLine3());
 				addressInfo.setCountry(returnAddress.getCountry());
 				addressInfo.setCity(returnAddress.getCity());
 				addressInfo.setState(returnAddress.getState());
@@ -1430,7 +1430,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				addressInfo.setPhoneNo(returnAddress.getMobileNo());
 				addressInfo.setAddress1(returnAddress.getAddressLane1());
 				addressInfo.setAddress2(returnAddress.getAddressLane2());
-				addressInfo.setAddress3(returnAddress.getCity());
+				addressInfo.setAddress3(returnAddress.getAddressLine3());
 				addressInfo.setCountry(returnAddress.getCountry());
 				addressInfo.setCity(returnAddress.getCity());
 				addressInfo.setState(returnAddress.getState());

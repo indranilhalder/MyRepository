@@ -50,6 +50,9 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.variants.model.VariantProductModel;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,6 +79,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
@@ -84,8 +88,12 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.core.util.DateUtilHelper;
+import com.tisl.mpl.data.CODSelfShipData;
+import com.tisl.mpl.data.CODSelfShipResponseData;
 import com.tisl.mpl.data.MplPaymentInfoData;
 import com.tisl.mpl.data.OTPResponseData;
+import com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.exceptions.NoCheckoutCartException;
@@ -93,6 +101,7 @@ import com.tisl.mpl.exceptions.PaymentAuthorizationException;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
+import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.account.register.impl.DefaultMplOrderFacade;
@@ -126,6 +135,7 @@ import com.tisl.mpl.wsdto.SelectedDeliveryModeWsDTO;
 import com.tisl.mpl.wsdto.StatusResponseDTO;
 import com.tisl.mpl.wsdto.StatusResponseListDTO;
 import com.tisl.mpl.wsdto.StatusResponseMessageDTO;
+import com.tisl.mpl.wsdto.UploadSelfCourierReturnInfoWsDto;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 
@@ -222,6 +232,10 @@ public class OrdersController extends BaseCommerceController
 	
 	@Autowired
 	private MplDeliveryAddressComparator mplDeliveryAddressComparator;
+	@Autowired
+	private CancelReturnFacade cancelReturnFacade;
+	@Autowired
+	private DateUtilHelper dateUtilHelper;
 	
 
 	/**
@@ -1835,4 +1849,153 @@ public class OrdersController extends BaseCommerceController
 		}
 		return webSerResponseWsDTO;
 	}
+	
+	@Secured(
+			{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+			@RequestMapping(value = "/users/{userId}/submitSelfCourierRetrunInfo", method = RequestMethod.POST)
+			@ResponseBody
+			public WebSerResponseWsDTO UploadSelfCourierReturnInfo(@RequestBody final UploadSelfCourierReturnInfoWsDto uploadSCRI) throws WebserviceValidationException
+			{
+				try{
+					 OrderModel orderModel = orderModelService.getParentOrder(uploadSCRI.getOrderId());
+				//to DO Implementeation 
+		      MultipartFile filename=uploadSCRI.getDispatchProof();  
+		      LOG.debug("***************:"+filename.getOriginalFilename()); 
+		      String fileUploadLocation=null;
+		      String shipmentCharge=null;
+				Double configShippingCharge = 0.0d;
+		      if(null!=configurationService){
+		      	fileUploadLocation=configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.FILE_UPLOAD_PATH);
+		      	shipmentCharge=configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.SHIPMENT_CHARGE_AMOUNT);
+		      	if(null !=shipmentCharge && !shipmentCharge.isEmpty()){
+		      		configShippingCharge=Double.parseDouble(shipmentCharge);
+		      	}
+		      	
+		      	 if(null!=fileUploadLocation && !fileUploadLocation.isEmpty()){
+		      		 try{  
+		      	        byte barr[]=filename.getBytes();  
+		      	        BufferedOutputStream bout=new BufferedOutputStream(  
+		      	                 new FileOutputStream(fileUploadLocation+File.separator+filename.getOriginalFilename()));  
+		      	        bout.write(barr);  
+		      	        bout.flush();  
+		      	        bout.close();  
+		      	        LOG.debug("FileUploadLocation   :"+fileUploadLocation);   
+		      	        }catch(Exception e){
+		      	      	  LOG.error("Exception is:"+e);   
+		      	        }  
+		      	 }
+			   }
+				RTSAndRSSReturnInfoRequestData  returnInfoRequestData=new RTSAndRSSReturnInfoRequestData();
+				returnInfoRequestData.setAWBNum(uploadSCRI.getAwbNumber());
+				returnInfoRequestData.setLPNameOther(uploadSCRI.getLpname());
+				
+				if(null!=orderModel.getParentReference() && null!=orderModel.getParentReference().getCode()){
+					returnInfoRequestData.setOrderId(orderModel.getParentReference().getCode());
+				}
+				returnInfoRequestData.setOrderId(uploadSCRI.getOrderId());
+				returnInfoRequestData.setTransactionId(uploadSCRI.getTransactionId());
+				if(uploadSCRI.getAmount() != null && !uploadSCRI.getAmount().isEmpty()){
+					Double enterdShppingCharge=Double.parseDouble(uploadSCRI.getAmount());
+					if(enterdShppingCharge.doubleValue()<configShippingCharge.doubleValue()){
+						returnInfoRequestData.setShipmentCharge(uploadSCRI.getAmount());
+					}else{
+						returnInfoRequestData.setShipmentCharge(String.valueOf(configShippingCharge));
+					}
+				}
+				returnInfoRequestData.setShipmentProofURL(fileUploadLocation+File.separator+filename.getOriginalFilename());
+				returnInfoRequestData.setReturnType(MarketplacecommerceservicesConstants.RSS);
+				
+
+			    cancelReturnFacade.retrunInfoCallToOMS(returnInfoRequestData);
+				
+				
+			   CustomerModel customerModel= (CustomerModel) orderModel.getUser();
+				
+				 CODSelfShipData codSelfShipData = null;
+				 try{
+					
+					 if(null!=customerModel){
+					  codSelfShipData = cancelReturnFacade.getCustomerBankDetailsByCustomerId(customerModel.getUid());
+					 }
+					}
+					catch(EtailNonBusinessExceptions e)
+					{
+						LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :"+customerModel.getUid()+" Actual Stack trace "+e);
+					}
+				 try
+					{
+					 final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(uploadSCRI.getOrderId());
+					 
+					 CODSelfShipData finalCODSelfShipData=new CODSelfShipData();
+					 if(null !=codSelfShipData){
+						 finalCODSelfShipData.setTitle(codSelfShipData.getTitle());
+						 finalCODSelfShipData.setName(codSelfShipData.getName());
+						 finalCODSelfShipData.setBankKey(codSelfShipData.getBankKey());
+						 finalCODSelfShipData.setBankName(codSelfShipData.getBankName());
+						 finalCODSelfShipData.setBankAccount(codSelfShipData.getBankAccount());
+					 }else{
+						 finalCODSelfShipData.setTitle(MarketplacecommerceservicesConstants.NA);
+						 finalCODSelfShipData.setName(MarketplacecommerceservicesConstants.NA);
+						 finalCODSelfShipData.setBankAccount(MarketplacecommerceservicesConstants.ZERO);
+						 finalCODSelfShipData.setBankName(MarketplacecommerceservicesConstants.NA);
+						 finalCODSelfShipData.setBankKey(MarketplacecommerceservicesConstants.NA);
+					 }
+					 
+					 if(subOrderDetails.getMplPaymentInfo().getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.COD)){
+						 finalCODSelfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_POSTPAID); 
+					 }else{
+						 finalCODSelfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_PREPAID); 
+					 }
+					 
+					 SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+					 finalCODSelfShipData.setAmount(returnInfoRequestData.getShipmentCharge());
+					 finalCODSelfShipData.setOrderRefNo(uploadSCRI.getOrderId());
+					 finalCODSelfShipData.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails.getCreated())));
+					 finalCODSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails.getCreated())));
+					 finalCODSelfShipData.setTransactionID(uploadSCRI.getTransactionId());
+					 finalCODSelfShipData.setTransactionType(MarketplacecommerceservicesConstants.INTERFACE_TYPE);
+					 if(orderModel.getChildOrders().size()>0){
+						 for(OrderModel chileOrders :orderModel.getChildOrders()){
+							 for (AbstractOrderEntryModel entry :chileOrders.getEntries()){
+								   if(entry.getTransactionID().equalsIgnoreCase(uploadSCRI.getTransactionId())){
+								   	finalCODSelfShipData.setOrderNo(chileOrders.getCode());
+								   }
+							 }
+						 }
+						 
+					 }
+						if(null!=orderModel.getParentReference() && null!=orderModel.getParentReference().getCode()){
+							finalCODSelfShipData.setOrderRefNo(orderModel.getParentReference().getCode());
+						}
+					 finalCODSelfShipData.setPaymentMode(codSelfShipData.getPaymentMode());
+					 finalCODSelfShipData.setCustomerNumber(codSelfShipData.getCustomerNumber());
+						CODSelfShipResponseData responseData=cancelReturnFacade.codPaymentInfoToFICO(finalCODSelfShipData);
+						
+						if(responseData.getSuccess() == null || !responseData.getSuccess().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS) )
+						{
+							//saving bank details failed payment details in commerce 
+							cancelReturnFacade.saveCODReturnsBankDetails(finalCODSelfShipData);	
+							LOG.debug("Failed to post COD return paymnet details to FICO Order No:"+uploadSCRI.getOrderId());
+						}
+					}
+					catch (EtailNonBusinessExceptions e)
+					{
+						LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + uploadSCRI.getOrderId()
+								+ " Exception cause :" + e);
+					}
+					catch (Exception e)
+					{
+						LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + uploadSCRI.getOrderId()
+								+ " Exception cause :" + e);
+					}
+			}
+				 catch (Exception exp)
+					{
+						LOG.error("Exception Oucer While sending value "+exp.getMessage());
+					}
+					  // isRefundalbe disable 
+					LOG.info("REtrun page controller TransactionId::::::::    "+uploadSCRI.getTransactionId());
+					cancelReturnFacade.saveRTSAndRSSFInfoflag(uploadSCRI.getTransactionId());
+					return null;
+			}
 }

@@ -1920,5 +1920,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String Between = "Between";
 	public final static String TICKET_SUB_TYPE_DNC = "DNC";
 	public static final String REFUND_MODE_C = "C";
+	public final static String INTERFACE_TYPE="02";
+	public static final String FILE_UPLOAD_PATH="return.fileupload.path";
+	public static final String SHIPMENT_CHARGE_AMOUNT="return.shipmentcharge";
+	public static final String RSS="RSS";
 
 }

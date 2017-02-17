@@ -1450,6 +1450,8 @@
 			type="de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO" />
 		<property name="scheduleDeliveryDate" type="String" />
 		<property name="scheduleDeliveryTime" type="String" />
+		<property name="selfCourierDocumentLink" type="String" />
+		<property name="awbPopupLink" type="String" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.StatusResponseListDTO">
 		<property name="statusList"
@@ -2937,5 +2939,15 @@
 		<property name="returnStoreDetailsList"
 			type="java.util.List&lt;de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData>" />
 	</bean>
+	<!--R2.3   SelfCourierReturnInfoWsDto 17-02-2017 start-->
+	<bean class="com.tisl.mpl.wsdto.UploadSelfCourierReturnInfoWsDto">
+		<property name="orderId" type="String" />
+		<property name="lpname" type="String" />
+		<property name="awbNumber" type="String" />
+		<property name="transactionId" type="String" />
+		<property name="amount" type="String" />
+		<property name="dispatchProof" type="org.springframework.web.multipart.MultipartFile" />
+	</bean>
+	<!--R2.3   SelfCourierReturnInfoWsDto End -->
 
 </beans>

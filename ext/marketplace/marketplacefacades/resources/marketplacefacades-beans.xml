@@ -935,6 +935,7 @@
 		<property name="mobileNo" type="String"></property>
 		<property name="addressLane1" type="String"></property>
 		<property name="addressLane2" type="String"></property>
+		<property name="addressLine3" type="String"></property>
 		<property name="pincode" type="String"></property>
 		<property name="landmark" type="String"></property>
 		<property name="city" type="String"></property>

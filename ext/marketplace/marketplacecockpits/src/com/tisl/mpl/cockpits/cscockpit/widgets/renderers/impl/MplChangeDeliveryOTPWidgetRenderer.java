@@ -739,36 +739,11 @@ public class MplChangeDeliveryOTPWidgetRenderer
 
 						String ticketSubType = MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_CDA;
 						if(interfaceType.equalsIgnoreCase(MarketplaceCockpitsConstants.CU)) {
-							boolean isnameChanged=false;
-							boolean isMobileChanged=false;
-							isnameChanged=getIsNameChanged(changeDeliveryAddress,orderModel.getDeliveryAddress());
-							isMobileChanged=getIsMobileChanged(changeDeliveryAddress,orderModel.getDeliveryAddress());
-							
-							if(isnameChanged && isMobileChanged) {
-								ticketSubType = MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DNC;
-								mplDeliveryAddressController.ticketCreateToCrm(
-										orderModel.getParentReference(), customerId,
-										MarketplaceCockpitsConstants.SOURCE,ticketSubType);
-								ticketSubType = MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DMC;
-								mplDeliveryAddressController.ticketCreateToCrm(
-										orderModel.getParentReference(), customerId,
-										MarketplaceCockpitsConstants.SOURCE,ticketSubType);
-							}else if (isnameChanged) {
-								ticketSubType = MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DNC;
-								mplDeliveryAddressController.ticketCreateToCrm(
-										orderModel.getParentReference(), customerId,
-										MarketplaceCockpitsConstants.SOURCE,ticketSubType);
-							}else if (isMobileChanged) {
-								ticketSubType = MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DMC;
-								mplDeliveryAddressController.ticketCreateToCrm(
-										orderModel.getParentReference(), customerId,
-										MarketplaceCockpitsConstants.SOURCE,ticketSubType);
-							}
-						}else {
-							mplDeliveryAddressController.ticketCreateToCrm(
-									orderModel.getParentReference(), customerId,
-									MarketplaceCockpitsConstants.SOURCE,ticketSubType);
+							ticketSubType = MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DMC;
 						}
+						mplDeliveryAddressController.ticketCreateToCrm(
+								orderModel.getParentReference(), customerId,
+								MarketplaceCockpitsConstants.SOURCE,ticketSubType);
 						LOG.debug("CRM Ticket Created for Change Delivery Request");
 						Messagebox.show(LabelUtils.getLabel(widget,
 								CUSTOMER_DETAILS_UPDATED, new Object[0]), INFO,
@@ -850,44 +825,33 @@ public class MplChangeDeliveryOTPWidgetRenderer
 
 		
 
-		private boolean getIsNameChanged(AddressModel changeDeliveryAddress2,
-				AddressModel deliveryAddress) {
-			boolean isNameChanged = false ;
-			if(!changeDeliveryAddress.getFirstname().equalsIgnoreCase(deliveryAddress.getFirstname()) ||  !changeDeliveryAddress.getLastname().equalsIgnoreCase(deliveryAddress.getLastname()) ) {
-				isNameChanged = true;
-			}
-			return isNameChanged;
-		}
-		private boolean getIsMobileChanged(AddressModel changeDeliveryAddress2,
-				AddressModel deliveryAddress) {
-			boolean isMobileChanges = false ;
-			if(!changeDeliveryAddress.getPhone1().equalsIgnoreCase(deliveryAddress.getPhone1())) {
-				isMobileChanges = true;
-			}
-			return isMobileChanges;
-		}
-
-//		private String getTicketSubType(AddressModel changeDeliveryAddress2,
-//				AddressModel deliveryAddress) {
-//			String interfacetype = MarketplaceCockpitsConstants.TICKET_SUB_TYPE_DNC;
-//			if(!changeDeliveryAddress.getPostalcode().equalsIgnoreCase(deliveryAddress.getPostalcode())) {
-//				interfacetype = MarketplaceCockpitsConstants.CA;
-//				return interfacetype;
-//			} 
-//		}
-
 		private String getChangeDeliveryInterfacetype(
 				AddressModel changeDeliveryAddress,
 				AddressModel deliveryAddress) {
-			String interfacetype = MarketplaceCockpitsConstants.CA;
-			if(!changeDeliveryAddress.getFirstname().equalsIgnoreCase(deliveryAddress.getFirstname())) {
-				interfacetype = MarketplaceCockpitsConstants.CU;
+			String interfacetype = MarketplaceCockpitsConstants.CU;
+			if(!changeDeliveryAddress.getPostalcode().equalsIgnoreCase(deliveryAddress.getPostalcode())) {
+				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			} else if (!changeDeliveryAddress.getLastname().equalsIgnoreCase(deliveryAddress.getLastname())) {
-				interfacetype = MarketplaceCockpitsConstants.CU;
+			} else if (!changeDeliveryAddress.getLine1().equalsIgnoreCase(deliveryAddress.getLine1())) {
+				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
-			} else if (!changeDeliveryAddress.getPhone1().equalsIgnoreCase(deliveryAddress.getPhone1())){
-				interfacetype = MarketplaceCockpitsConstants.CU;
+			} else if (!changeDeliveryAddress.getLine2().equalsIgnoreCase(deliveryAddress.getLine2())){
+				interfacetype = MarketplaceCockpitsConstants.CA;
+				return interfacetype;
+			}else if (!changeDeliveryAddress.getAddressLine3().equalsIgnoreCase(deliveryAddress.getAddressLine3())){
+				interfacetype = MarketplaceCockpitsConstants.CA;
+				return interfacetype;
+			}else if (!changeDeliveryAddress.getLandmark().equalsIgnoreCase(deliveryAddress.getLandmark())){
+				interfacetype = MarketplaceCockpitsConstants.CA;
+				return interfacetype;
+			}else if (!changeDeliveryAddress.getCity().equalsIgnoreCase(deliveryAddress.getCity())){
+				interfacetype = MarketplaceCockpitsConstants.CA;
+				return interfacetype;
+			}else if (!changeDeliveryAddress.getState().equalsIgnoreCase(deliveryAddress.getState())){
+				interfacetype = MarketplaceCockpitsConstants.CA;
+				return interfacetype;
+			}else if (!changeDeliveryAddress.getCountry().getName().equalsIgnoreCase(deliveryAddress.getCountry().getName())){
+				interfacetype = MarketplaceCockpitsConstants.CA;
 				return interfacetype;
 			}
 			return interfacetype;

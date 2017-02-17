@@ -430,6 +430,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		
 		returnAddrData.setAddressLane1(returnForm.getAddrLine1());
 		returnAddrData.setAddressLane2(returnForm.getAddrLine2());
+		returnAddrData.setAddressLine3(returnForm.getAddrLine3());
 		returnAddrData.setLandmark(returnForm.getLandMark());
 		returnAddrData.setCity(returnForm.getCity());
 		returnAddrData.setCountry(returnForm.getCountry());

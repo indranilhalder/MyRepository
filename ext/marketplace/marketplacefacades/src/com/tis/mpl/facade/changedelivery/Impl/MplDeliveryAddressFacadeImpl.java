@@ -349,7 +349,6 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		}
 		final ReturnAddressInfo addressinfo = new ReturnAddressInfo();
 		final AddressModel changeDeliveryAddress = Order.getDeliveryAddress();
-		if((MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DNC.equalsIgnoreCase(ticketType)) ){
 			if (null != changeDeliveryAddress.getFirstname())
 			{
 				addressinfo.setShippingFirstName(changeDeliveryAddress.getFirstname());
@@ -358,8 +357,10 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			{
 				addressinfo.setShippingLastName(changeDeliveryAddress.getLastname());
 			}
-		}
-	
+			if (null != changeDeliveryAddress.getPhone1())
+			{
+				addressinfo.setPhoneNo(changeDeliveryAddress.getPhone1());
+			}
 		if(MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_CDA.equalsIgnoreCase(ticketType)){
 		if (null != changeDeliveryAddress.getLine1())
 		{
@@ -396,12 +397,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			addressinfo.setPincode(changeDeliveryAddress.getPostalcode());
 		}
 		}
-		if((MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DMC.equalsIgnoreCase(ticketType))) {
-			if (null != changeDeliveryAddress.getPhone1())
-			{
-				addressinfo.setPhoneNo(changeDeliveryAddress.getPhone1());
-			}
-		}
+		
 		
 
 
@@ -741,27 +737,28 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						{
 							try
 							{
-								boolean isDNC = mplDeliveryAddressComparator.compareNameDetails(orderModel.getDeliveryAddress(),
-										newDeliveryAddressModel);
-							   boolean isDMC = mplDeliveryAddressComparator.compareMobileNumber(orderModel.getDeliveryAddress(),
-											newDeliveryAddressModel);
+								// commented CR-254
+//								boolean isDNC = mplDeliveryAddressComparator.compareNameDetails(orderModel.getDeliveryAddress(),
+//										newDeliveryAddressModel);
+//							   boolean isDMC = mplDeliveryAddressComparator.compareMobileNumber(orderModel.getDeliveryAddress(),
+//											newDeliveryAddressModel);
 							    //save address 
 							 	 mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel, orderModel, false);
 								//changed Name Details 
-								if (isDNC)
-								{
-									createcrmTicketForChangeDeliveryAddress(orderModel, customerID,
-											MarketplacecommerceservicesConstants.SOURCE,
-											MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DNC);
-								}
+//								if (isDNC)
+//								{
+//									createcrmTicketForChangeDeliveryAddress(orderModel, customerID,
+//											MarketplacecommerceservicesConstants.SOURCE,
+//											MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DNC);
+//								}
 							//changed Mobile Details 
-								if (isDMC)
-								{
+//								if (isDMC)
+//								{
 									//CRM Call
 									createcrmTicketForChangeDeliveryAddress(orderModel, customerID,
 											MarketplacecommerceservicesConstants.SOURCE,
 											MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DMC);
-								}
+								//}
 							}
 							catch (final Exception e)
 							{

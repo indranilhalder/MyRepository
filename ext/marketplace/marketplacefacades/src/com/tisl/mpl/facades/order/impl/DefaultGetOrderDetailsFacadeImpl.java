@@ -18,8 +18,11 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
+import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.product.ProductService;
+import de.hybris.platform.returns.model.ReturnEntryModel;
+import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.BaseStoreModel;
@@ -2130,6 +2133,20 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 									}
 								}
 								
+								//R2.3 Changes-Start
+								orderproductdto
+										.setSelfCourierDocumentLink(getSelfCourierDocumentUrl(orderModel, entry.getTransactionId()));
+								String returnType = getAwbPopupLink(entry, subOrder.getCode());
+								if (MarketplacecommerceservicesConstants.SELF_COURIER.equalsIgnoreCase(returnType)
+										&& !entry.isIsRefundable())
+								{
+									orderproductdto.setAwbPopupLink(MarketplacecommerceservicesConstants.Y);
+								}else
+								{
+									orderproductdto.setAwbPopupLink(MarketplacecommerceservicesConstants.N);
+								}
+								//R2.3 Changes-END
+								
 								//Check if invoice is available
 								if (entry.getConsignment() != null)
 								{
@@ -2453,11 +2470,95 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 		return orderTrackingWsDTO;
 	}
 
-	/*
-	 * @param orderCode
-	 *
-	 * @return
+	/**
+	 * @param entry
+	 * @param orderModel
 	 */
+	private String getAwbPopupLink(OrderEntryData entry, String subOrderCode)
+	{
+		try
+		{
+			List<ReturnRequestModel> returnRequestModelList = cancelReturnFacade.getListOfReturnRequest(subOrderCode);
+			if (null != returnRequestModelList && returnRequestModelList.size() > 0)
+			{
+				for (final ReturnRequestModel mm : returnRequestModelList)
+				{
+					for (final ReturnEntryModel mmmodel : mm.getReturnEntries())
+					{
+						if (entry.getTransactionId().equalsIgnoreCase(mmmodel.getOrderEntry().getTransactionID()))
+						{
+							if (null != mm.getTypeofreturn() && null != mm.getTypeofreturn().getCode())
+							{
+								return mm.getTypeofreturn().getCode();
+							}
+						}
+					}
+
+				}
+			}
+		}
+		catch (Exception exception)
+		{
+			LOG.error("Exception Oucer Get getAwbPopupLink DefaultGetOrderDetailsFacadeImpl");
+
+		}
+		return null;
+	}
+
+	/**
+	 * @param orderModel
+	 */
+	private String getSelfCourierDocumentUrl(OrderModel orderModel, String transactionID)
+	{
+		String fileDownloadLocation = null;
+		try
+		{
+			for (OrderModel subOrder : orderModel.getChildOrders())
+			{
+				for (AbstractOrderEntryModel entry : subOrder.getEntries())
+				{
+					if (entry.getTransactionID().equalsIgnoreCase(transactionID))
+					{
+
+						try
+						{
+							//Fetching invoice from consignment entries
+							for (final ConsignmentEntryModel c : entry.getConsignmentEntries())
+							{
+								if (null != c.getConsignment().getInvoice())
+								{
+									fileDownloadLocation = c.getConsignment().getInvoice().getInvoiceUrl();
+									LOG.info(":::::::InvoiceURL    " + fileDownloadLocation);
+									if (fileDownloadLocation == null)
+									{
+										fileDownloadLocation = configurationService.getConfiguration().getString("default.invoice.url");
+									}
+								}
+								else
+								{
+
+									fileDownloadLocation = configurationService.getConfiguration().getString("default.invoice.url");
+
+								}
+							}
+						}
+
+						catch (Exception exp)
+						{
+							LOG.error("Exception Oucer Get Consignment " + exp.getMessage());
+						}
+					}
+				}
+			}
+		}
+		catch (Exception expection)
+		{
+			LOG.error("Exception Oucer Get fileDownloadLocation DefaultGetOrderDetailsFacadeImpl");
+		}
+
+		return fileDownloadLocation;
+	}
+
 	/*
 	 * @param orderCode
 	 *
