@@ -30,16 +30,17 @@ public class MplPincodeSpecificRestriction extends GeneratedMplPincodeSpecificRe
 		return item;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.hybris.platform.promotions.jalo.AbstractPromotionRestriction#evaluate(de.hybris.platform.jalo.SessionContext,
-	 * java.util.Collection, java.util.Date, de.hybris.platform.jalo.order.AbstractOrder)
+	/**
+	 * @Description: Pincode Restriction evaluation Method for Promotions
+	 * @param:SessionContext ctx
+	 * @param:Collection<Product> products
+	 * @param:Date date
+	 * @param:AbstractOrder paramAbstractOrder
+	 * @return:RestrictionResult
 	 */
 	@Override
-	public RestrictionResult evaluate(final SessionContext arg0, final Collection<Product> arg1, final Date arg2,
-			final AbstractOrder arg3)
+	public RestrictionResult evaluate(final SessionContext ctx, final Collection<Product> products, final Date date,
+			final AbstractOrder order)
 	{
 		return RestrictionResult.ALLOW;
 	}

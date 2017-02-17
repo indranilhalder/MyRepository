@@ -162,12 +162,12 @@ public class CustomOrderThresholdFreeGiftPromotion extends GeneratedCustomOrderT
 
 	/**
 	 * @Description : Verify Channel Data
-	 * @param : SessionContext arg0
+	 * @param : SessionContext ctx
 	 * @return : minimumCategoryValue
 	 */
-	private boolean verifyChannelData(final SessionContext arg0, final AbstractOrder cart)
+	private boolean verifyChannelData(final SessionContext ctx, final AbstractOrder cart)
 	{
-		final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(arg0,
+		final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(ctx,
 				MarketplacecommerceservicesConstants.CHANNEL);
 		return getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
 	}
