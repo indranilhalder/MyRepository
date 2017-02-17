@@ -5353,7 +5353,7 @@ function checkPincodeServiceability(buttonType,el)
 		 				"link_obj": this,
 		 				"link_text": "cart_pincode_check_failure", 
 		 				"event_type" : "cart_pincode_check_failure",
-		 				"mybag_pin_non_servicable" : selectedPincode
+		 				"cart_pin_non_servicable" : selectedPincode
 		 			});
  				}
  				// TISTI-255
@@ -5377,7 +5377,7 @@ function checkPincodeServiceability(buttonType,el)
 		 				"link_obj": this,
 		 				"link_text": "cart_pincode_check_success", 
 		 				"event_type" : "cart_pincode_check_success",
-		 				"mybag_pin_servicable" : selectedPincode
+		 				"cart_pin_servicable" : selectedPincode
 		 			});
  				}
  				$(".pincodeServiceError").hide();
@@ -5421,7 +5421,7 @@ function checkPincodeServiceability(buttonType,el)
 	 				"link_obj": this,
 	 				"link_text": "cart_pincode_check_failure", 
 	 				"event_type" : "cart_pincode_check_failure",
-	 				"mybag_pin_non_servicable" : selectedPincode
+	 				"cart_pin_non_servicable" : selectedPincode
 	 			});
  			}
  			//TISTI-255
