@@ -566,68 +566,68 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param promo
 	 * @return noOfProducts
 	 */
-	public int noOfEligibleProducts(final SessionContext ctx, final PromotionEvaluationContext promoContext,
-			final AbstractPromotion promo, final Map<String, AbstractOrderEntry> validProductUssidMap)
-	{
-		int noOfProducts = 0;
-		int realQuantity = 0;
-		final AbstractOrder cart = promoContext.getOrder();
-		List<Product> promotionProductList = null;
-		List<Category> promotionCategoryList = null;
-
-		if (promo instanceof BuyXItemsofproductAgetproductBforfree)
-		{
-			promotionProductList = new ArrayList<>(((BuyXItemsofproductAgetproductBforfree) promo).getProducts());
-			promotionCategoryList = new ArrayList<>(((BuyXItemsofproductAgetproductBforfree) promo).getCategories());
-		}
-		else if (promo instanceof BuyAPercentageDiscount)
-		{
-			promotionProductList = new ArrayList<>(((BuyAPercentageDiscount) promo).getProducts());
-			promotionCategoryList = new ArrayList<>(((BuyAPercentageDiscount) promo).getCategories());
-		}
-		else if (promo instanceof BuyABFreePrecentageDiscount)
-		{
-			promotionProductList = new ArrayList<>(((BuyABFreePrecentageDiscount) promo).getProducts());
-			promotionCategoryList = new ArrayList<>(((BuyABFreePrecentageDiscount) promo).getCategories());
-		}
-		else if (promo instanceof BuyAGetPromotionOnShippingCharges)
-		{
-			promotionProductList = new ArrayList<>(((BuyAGetPromotionOnShippingCharges) promo).getProducts());
-			promotionCategoryList = new ArrayList<>(((BuyAGetPromotionOnShippingCharges) promo).getCategories());
-		}
-		for (final AbstractOrderEntry entry : cart.getEntries())
-		{
-			boolean applyPromotion = false;
-			final Product product = entry.getProduct();
-			//			if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
-			//					|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList))
-			//			{
-			//				continue;
-			//			}
-			if (!promotionProductList.isEmpty())
-			{
-				if (promotionProductList.contains(product))
-				{
-					applyPromotion = true;
-				}
-			}
-			else if (!promotionCategoryList.isEmpty())
-			{
-				final List<String> productCategoryList = getcategoryList(product, ctx);
-				applyPromotion = GenericUtilityMethods.productExistsIncat(promotionCategoryList, productCategoryList);
-			}
-
-			if (applyPromotion)
-			{
-				realQuantity += entry.getQuantity().intValue();
-			}
-		}
-		if (realQuantity > 0)
-		{
-			noOfProducts = realQuantity;
-		}
-		return noOfProducts;
-	}
+	//	public int noOfEligibleProducts(final SessionContext ctx, final PromotionEvaluationContext promoContext,
+	//			final AbstractPromotion promo, final Map<String, AbstractOrderEntry> validProductUssidMap)
+	//	{
+	//		int noOfProducts = 0;
+	//		int realQuantity = 0;
+	//		final AbstractOrder cart = promoContext.getOrder();
+	//		List<Product> promotionProductList = null;
+	//		List<Category> promotionCategoryList = null;
+	//
+	//		if (promo instanceof BuyXItemsofproductAgetproductBforfree)
+	//		{
+	//			promotionProductList = new ArrayList<>(((BuyXItemsofproductAgetproductBforfree) promo).getProducts());
+	//			promotionCategoryList = new ArrayList<>(((BuyXItemsofproductAgetproductBforfree) promo).getCategories());
+	//		}
+	//		else if (promo instanceof BuyAPercentageDiscount)
+	//		{
+	//			promotionProductList = new ArrayList<>(((BuyAPercentageDiscount) promo).getProducts());
+	//			promotionCategoryList = new ArrayList<>(((BuyAPercentageDiscount) promo).getCategories());
+	//		}
+	//		else if (promo instanceof BuyABFreePrecentageDiscount)
+	//		{
+	//			promotionProductList = new ArrayList<>(((BuyABFreePrecentageDiscount) promo).getProducts());
+	//			promotionCategoryList = new ArrayList<>(((BuyABFreePrecentageDiscount) promo).getCategories());
+	//		}
+	//		else if (promo instanceof BuyAGetPromotionOnShippingCharges)
+	//		{
+	//			promotionProductList = new ArrayList<>(((BuyAGetPromotionOnShippingCharges) promo).getProducts());
+	//			promotionCategoryList = new ArrayList<>(((BuyAGetPromotionOnShippingCharges) promo).getCategories());
+	//		}
+	//		for (final AbstractOrderEntry entry : cart.getEntries())
+	//		{
+	//			boolean applyPromotion = false;
+	//			final Product product = entry.getProduct();
+	//			//			if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
+	//			//					|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList))
+	//			//			{
+	//			//				continue;
+	//			//			}
+	//			if (!promotionProductList.isEmpty())
+	//			{
+	//				if (promotionProductList.contains(product))
+	//				{
+	//					applyPromotion = true;
+	//				}
+	//			}
+	//			else if (!promotionCategoryList.isEmpty())
+	//			{
+	//				final List<String> productCategoryList = getcategoryList(product, ctx);
+	//				applyPromotion = GenericUtilityMethods.productExistsIncat(promotionCategoryList, productCategoryList);
+	//			}
+	//
+	//			if (applyPromotion)
+	//			{
+	//				realQuantity += entry.getQuantity().intValue();
+	//			}
+	//		}
+	//		if (realQuantity > 0)
+	//		{
+	//			noOfProducts = realQuantity;
+	//		}
+	//		return noOfProducts;
+	//	}
 
 	/**
 	 * @Description: Category Data corresponding to a Product
@@ -2436,24 +2436,24 @@ public class DefaultPromotionManager extends PromotionsManager
 		//final CartModel cartModel = cartService.getSessionCart();
 		final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) getModelService().get(order); //TPR-969
 
-		if (CollectionUtils.isNotEmpty(abstractOrderModel.getEntries()))
+		//		if (CollectionUtils.isNotEmpty(abstractOrderModel.getEntries()))
+		//		{
+		for (final AbstractOrderEntryModel entryModel : abstractOrderModel.getEntries())
 		{
-			for (final AbstractOrderEntryModel entryModel : abstractOrderModel.getEntries())
+			if (null != entryModel && !entryModel.getGiveAway().booleanValue()) // Added for TPR-1702 : Sprint 1.0
 			{
-				if (null != entryModel && !entryModel.getGiveAway().booleanValue()) // Added for TPR-1702 : Sprint 1.0
+				if (null != entryModel.getMplDeliveryMode() && null != entryModel.getMplDeliveryMode().getDeliveryMode()
+						&& null != entryModel.getMplDeliveryMode().getDeliveryMode().getCode())
 				{
-					if (null != entryModel.getMplDeliveryMode() && null != entryModel.getMplDeliveryMode().getDeliveryMode()
-							&& null != entryModel.getMplDeliveryMode().getDeliveryMode().getCode())
+					final String selectedDeliveryMode = entryModel.getMplDeliveryMode().getDeliveryMode().getCode();
+					if (deliveryModeCodeList.contains(selectedDeliveryMode))
 					{
-						final String selectedDeliveryMode = entryModel.getMplDeliveryMode().getDeliveryMode().getCode();
-						if (deliveryModeCodeList.contains(selectedDeliveryMode))
-						{
-							validProdQCountMap.put(entryModel.getSelectedUSSID(), Integer.valueOf(entryModel.getQuantity().intValue()));
-						}
+						validProdQCountMap.put(entryModel.getSelectedUSSID(), Integer.valueOf(entryModel.getQuantity().intValue()));
 					}
 				}
 			}
 		}
+		//}
 
 
 		return validProdQCountMap;
