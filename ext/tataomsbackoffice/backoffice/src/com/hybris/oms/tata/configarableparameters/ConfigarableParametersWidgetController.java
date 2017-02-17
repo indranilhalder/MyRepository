@@ -193,6 +193,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = TataomsbackofficeConstants.SCHEDULEDDELIVERY_ITEMDELETE, eventName = Events.ON_CLICK)
 	public void sdTimeSlotsDelete() throws InterruptedException
 	{
+		LOG.info("Sd Time slots Delete Operation");
 		if (sdListbox.getSelectedItem() == null || sdListbox.getSelectedItem().equals(""))
 		{
 			Messagebox.show(Localization.getLocalizedString("configurableParamWidget.mesbox.empty.item"), "", Messagebox.OK,
@@ -235,6 +236,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = TataomsbackofficeConstants.EXPRESSDELIVERY_ITEMDELETE, eventName = Events.ON_CLICK)
 	public void edTimeSlotsDelete() throws InterruptedException
 	{
+		LOG.info("ed Time slots Delete Operation");
 		if (edListbox.getSelectedItem() == null || edListbox.getSelectedItem().equals(""))
 		{
 			Messagebox.show(Localization.getLocalizedString("configurableParamWidget.mesbox.empty.item"), "", Messagebox.OK,
@@ -278,6 +280,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = TataomsbackofficeConstants.RETURNDELIVERY_ITEMDELETE, eventName = Events.ON_CLICK)
 	public void rdTimeSlotsDelete() throws InterruptedException
 	{
+		LOG.info("Rd Time slots Delete Operation");
 		if (rdListbox.getSelectedItem() == null || rdListbox.getSelectedItem().equals(""))
 		{
 			Messagebox.show(Localization.getLocalizedString("configurableParamWidget.mesbox.empty.item"), "", Messagebox.OK,
@@ -489,6 +492,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = "sdItemEdit", eventName = Events.ON_CLICK)
 	public void sdTimeSlotsUpdate() throws InterruptedException
 	{
+		LOG.info("Sd Time slots Edit Operation");
 		if (sdListbox.getSelectedItem() == null || sdListbox.getSelectedItem().equals(""))
 		{
 			Messagebox.show(Localization.getLocalizedString("configurableParamWidget.mesbox.empty.item"), "", Messagebox.OK,
@@ -529,10 +533,12 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = "edItemEdit", eventName = Events.ON_CLICK)
 	public void edTimeSlotsUpdate() throws InterruptedException
 	{
+		LOG.info("Ed Time slots Edit Operation");
 		if (edListbox.getSelectedItem() == null || edListbox.getSelectedItem().equals(""))
 		{
 			Messagebox.show(Localization.getLocalizedString("configurableParamWidget.mesbox.empty.item"), "", Messagebox.OK,
 					Messagebox.INFORMATION);
+			return;
 		}
 		else
 		{
@@ -571,6 +577,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = "rdItemEdit", eventName = Events.ON_CLICK)
 	public void rdTimeSlotsUpdate() throws InterruptedException
 	{
+		LOG.info("Rd Time slots Edit Operation");
 		if (rdListbox.getSelectedItem() == null || rdListbox.getSelectedItem().equals(""))
 		{
 			Messagebox.show(Localization.getLocalizedString("configurableParamWidget.mesbox.empty.item"), "", Messagebox.OK,
@@ -613,6 +620,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = "sdItemAdd", eventName = Events.ON_CLICK)
 	public void sdTimeSlotsAdd() throws InterruptedException
 	{
+		LOG.info("Sd Time slots Add Operation");
 		sdTimeBoxFrom.setFormat("short");
 		sdTimeBoxFrom.setValue(new Date());
 		sdTimeBoxTo.setFormat("short");
@@ -628,6 +636,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = "edItemAdd", eventName = Events.ON_CLICK)
 	public void edTimeSlotsAdd() throws InterruptedException
 	{
+		LOG.info("Ed Time slots Add Operation");
 		edTimeBoxFrom.setFormat("short");
 		edTimeBoxFrom.setValue(new Date());
 		edTimeBoxTo.setFormat("short");
@@ -643,6 +652,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = "rdItemAdd", eventName = Events.ON_CLICK)
 	public void rdTimeSlotsAdd() throws InterruptedException
 	{
+		LOG.info("Rd Time slots Add Operation");
 		rdTimeBoxFrom.setFormat("short");
 		rdTimeBoxFrom.setValue(new Date());
 		rdTimeBoxTo.setFormat("short");
@@ -660,6 +670,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = "sdPopupEditSave", eventName = Events.ON_CLICK)
 	public void sdTimeSlotsEditAndSave() throws InterruptedException
 	{
+		LOG.info("Sd Time slots Edit and Save Operation");
 
 		if (sdEditTimeBoxFrom.isValid() && sdEditTimeBoxTo.isValid() && sdEditTimeBoxFrom.getValue() != null
 				&& sdEditTimeBoxTo.getValue() != null)
@@ -668,22 +679,18 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 		}
 	}
 
-	/**
-	 * update new TimeSlot to edlistbox when popup add button clicked
-	 *
-	 * @throws InterruptedException
-	 */
-	@SuppressWarnings("deprecation")
+
 	@ViewEvent(componentID = "edPopupEditSave", eventName = Events.ON_CLICK)
 	public void edTimeSlotsEditAndSave() throws InterruptedException
 	{
+		LOG.info("Ed Time slots Edit and Save Operation");
 		if (edEditTimeBoxFrom.isValid() && edEditTimeBoxTo.isValid() && edTimeBoxFrom.getValue() != null && edEditTimeBoxTo != null)
 		{
 			edTimeSlotsAddAndEdit(edEditTimeBoxFrom, edEditTimeBoxTo, edEditpopup, "configurableParamWidget.item.ed.update", true);
 		}
 	}
 
-	/**
+	/*
 	 * update new TimeSlot to rdlistbox when popup add button clicked
 	 *
 	 * @throws InterruptedException
@@ -692,6 +699,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = "rdPopupEditSave", eventName = Events.ON_CLICK)
 	public void rdTimeSlotsEditAndSave() throws InterruptedException
 	{
+		LOG.info("Rd Time slots Edit and Save Operation");
 		if (rdEditTimeBoxFrom.isValid() && rdEditTimeBoxTo.isValid() && rdEditTimeBoxFrom.getValue() != null
 				&& rdEditTimeBoxTo.getValue() != null)
 		{
@@ -702,7 +710,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = "sdPopupAddSave", eventName = Events.ON_CLICK)
 	public void sdTimeSlotsAddAndSave() throws InterruptedException
 	{
-
+		LOG.info("Sd Time slots Add and Save Operation");
 		if (sdTimeBoxFrom.isValid() && sdTimeBoxTo.isValid() && sdTimeBoxFrom.getValue() != null && sdTimeBoxTo.getValue() != null)
 		{
 			sdTimeSlotsAddAndEdit(sdTimeBoxFrom, sdTimeBoxTo, sdpopup, "configurableParamWidget.item.hd.save", false);
@@ -712,6 +720,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = "edPopupAddSave", eventName = Events.ON_CLICK)
 	public void edTimeSlotsAddAndSave() throws InterruptedException
 	{
+		LOG.info("Ed Time slots Add and Save Operation");
 		if (edTimeBoxFrom.isValid() && edTimeBoxTo.isValid() && edTimeBoxFrom.getValue() != null && edTimeBoxTo.getValue() != null)
 		{
 			edTimeSlotsAddAndEdit(edTimeBoxFrom, edTimeBoxTo, edpopup, "configurableParamWidget.item.ed.save", false);
@@ -721,6 +730,8 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	@ViewEvent(componentID = "rdPopupAddSave", eventName = Events.ON_CLICK)
 	public void rdTimeSlotsAddAndSave() throws InterruptedException
 	{
+		LOG.info("Rd Time slots Add and Save Operation");
+
 		if (rdTimeBoxFrom.isValid() && rdTimeBoxTo.isValid() && rdTimeBoxFrom.getValue() != null && rdTimeBoxTo.getValue() != null)
 		{
 			rdTimeSlotsAddAndEdit(rdTimeBoxFrom, rdTimeBoxTo, rdpopup, "configurableParamWidget.item.rd.save", false);
