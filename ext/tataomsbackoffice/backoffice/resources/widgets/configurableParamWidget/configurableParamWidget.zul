@@ -293,7 +293,7 @@
 	<div class="popuped" id="edEditpopup" visible="false"
 		action="show: slideDown;hide: slideUp">
 		<label class="headingpopup"
-			value="Scheduled Delivery Time Slot" />
+			value="Express Delivery Delivery Time Slot" />
 		<button class="close" image="${wr}/images/close-button.gif"
 			onClick="edEditpopup.setVisible(false)" />
 		<div class="content">
