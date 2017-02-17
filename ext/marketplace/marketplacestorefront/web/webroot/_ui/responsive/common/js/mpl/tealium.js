@@ -122,7 +122,7 @@ $(document).ready(
 						tealiumData += '"page_name":"' + $("#page_name").val()
 								+ '",';
 						tealiumData += '"offer_title":"'       //added for analytics schema
-								+ $("#product_applied_promotion_title").val() + '",';	
+								+ $(".pdp-promo-title pdp-title").val() + '",';	
 						tealiumData += '"product_id":["'
 								+ $("#product_id").val() + '"],';
 						//TPR-430 Start
@@ -1134,8 +1134,8 @@ $(document).on("click",".continue-shopping.desk-view-shopping",function() {
 //TPR-4739 | Expresscheckout | cart
 $(document).on("click","#expressCheckoutButtonId",function(){
 	utag.link({
-		link_text: "mybag_express_checkout_button_start",
-		event_type : "mybag_express_checkout_button_start"
+		link_text: "cart_express_checkout_button_start",
+		event_type : "cart_express_checkout_button_start"
 	});
 })
 
