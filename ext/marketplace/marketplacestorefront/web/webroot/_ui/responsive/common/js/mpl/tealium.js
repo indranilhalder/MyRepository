@@ -1042,7 +1042,7 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 /*Thumbnail tracking*/
 //$(document).on("click",".product-image-container .imageListCarousel .thumb",function(){
 $(document).on("click",".product-info > .product-image-container > .productImageGallery .imageListCarousel .thumb",function(){
-	var thumbnail_value = $(this).parent().attr('id');
+	var thumbnail_value = $(this).parent().attr('class');
 	var thumbnail_type = $(this).find('img').attr('data-type');
 	utag.link({
 		"link_text":"pdp_"+thumbnail_value+"_clicked",
