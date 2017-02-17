@@ -41,7 +41,7 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -91,7 +91,7 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 							variantColor = StringUtils.capitalize(pcmSwatchVariantModel.getColour()) + "_"
 									+ (variantColorHexCode.contains("#") ? variantColorHexCode.replace("#", "") : variantColorHexCode);
 						}
-
+						variantColor = variantColor + "||" + pcmSwatchVariantModel.getCode();
 						colours.add(variantColor);
 
 					}

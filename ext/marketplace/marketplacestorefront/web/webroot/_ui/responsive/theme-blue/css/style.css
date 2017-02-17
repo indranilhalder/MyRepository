@@ -59624,6 +59624,64 @@ body.page-cartPage .cart-total-block ul.totals{
 body.page-cartPage footer .footer-text{
 	border-top:none;
 }
+<<<<<<< HEAD
+/* UF-64 end */
+/*changes for pincode servicebility */
+    .product-info .product-content .delivery-block li.do.selected:after{
+	    content: "";
+    background: url(../images/sprite.svg) no-repeat scroll -274px -174px;
+    display: inline-block;
+    height: 32px;
+    width: 23px;
+    position: absolute;
+    right: 0;
+    top: 18px;
+    }
+    
+    /* UF-68 UF-69 */
+
+.page-cartPage .cart-total-block ul.checkOutBtnBtm{
+	float:right;
+	margin-top: 56px;
+}
+body.page-cartPage .cart-total-block ul.checkOutBtnBtm a.checkoutButton.checkout.button{
+	margin: 0;
+}
+body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled{
+	width: 180px;
+    height: 42px !important;
+    font-size: 11px !important;
+    letter-spacing: normal;
+    padding: 15px;
+}
+body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled{
+	background-color: rgba(169, 20, 60, 0.6);
+    cursor: default;
+}
+body.page-cartPage .cartBottomCheck{
+	display:none;
+}
+body.page-cartPage .cartBottomCheck.cartBottomCheckShow,body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm{
+	display:inline-block;
+}
+body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm{
+	width:110px;
+	height:40px;
+	background:gray;
+	color:#fff;
+	margin-left: -3px;
+	font-size: 12px;
+	padding: 9px;
+	font-weight: normal;
+	letter-spacing: normal;
+}
+body.page-cartPage .cartBottomCheck input#pinCodeButtonIdsBtm{
+	width:148px;
+	height:40px;
+	font-size: 10px;
+}
+
+/* UF-68 UF-69 */
 /* UF-64 end */
 /*changes for pincode servicebility */
     .product-info .product-content .delivery-block li.do.selected:after{
