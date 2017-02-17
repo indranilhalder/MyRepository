@@ -1110,7 +1110,7 @@ tr.d0 td {
  
  
 <div class="cart-bottom-block">
-
+				<!-- UF-69 -->
 				<div class="cartBottomCheck">
            		<div id="changePinDiv">
 				<%-- <p><spring:theme code="product.pincode.input" /></p>
@@ -1128,9 +1128,10 @@ tr.d0 td {
 		    	<input type="text" id= "defaultPinCodeIdsBtm" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
 		   		</c:otherwise>
 				 </c:choose>
-				<button id= "pinCodeButtonIdsBtm" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
+				<button id= "pinCodeButtonIdsBtm" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceabilityBtm('typeSubmit',this);"><spring:theme code="text.submit"/></button>
 			</div>
 			</div>
+			<!-- UF-69 -->
  <%-- <div class="coupon block" style="width: 40%;display: inline-block;">
 <h2>Have a promo code?</h2>
 		<input type="text" id="couponFieldId" placeholder="Enter coupon code" style="width:calc(100% - 65px);display:inline-block;"/>
