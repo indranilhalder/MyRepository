@@ -2607,7 +2607,10 @@ header .content .bottom.active nav>ul>li:first-child+li.hovered > ul {
       left: -webkit-calc(50px - 100%);
       left: calc(50px - 100%);
        }
-      header > .content .top .toggle {
+      /* start change for INC144313397 & INC144313756  */
+      /* header > .content .top .toggle { */
+       header > .content .top > .toggle {		
+      /* end change for INC144313397 & INC144313756  */
         position: absolute;
         width: 50px;
         height: 51px;
@@ -2876,7 +2879,10 @@ header .content .bottom.active nav>ul>li:first-child+li.hovered > ul {
         height:100%;
         overflow: auto;
     }
-        header > .content .top.active .toggle {
+       /* start change for INC144313397 & INC144313756  */
+        /* header > .content .top.active .toggle { */
+        header > .content .top.active > .toggle {
+         /* end change for INC144313397 & INC144313756 */
           background-color: #fff; 
           border: 1px solid #e6e6e6;
         border-top: 0px;
