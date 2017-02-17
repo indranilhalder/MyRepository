@@ -6382,7 +6382,7 @@ $("#lastName").focus(function(){
 
 function validateAddressLine1(addressLine, errorHandle){
 	if(addressLine==""){
-		errorHandle.innerHTML = "Please enter an Address line 1.";
+		errorHandle.innerHTML = "Please enter Address line.";
         return false;
 	}
 	errorHandle.innerHTML = "";
