@@ -33845,7 +33845,7 @@ body.page-cartPage .cart-bottom-block .cart-total-block ul.totals li{
 	font-size:12px;
 }
 body.page-cartPage .cart-bottom-block{
-	padding:20px 50px;
+	padding:20px 0;
 }
 }
 @media (max-width: 1280px){
@@ -58877,6 +58877,13 @@ li.facet.js-facet.collectionIds{
     width: 100%;
     text-align: center;
 }
+
+/* UF-68 UF-69 */
+body.page-cartPage .cart-bottom-block .cartBottomCheck.cartBottomCheckShow,.page-cartPage .cart-total-block ul.checkOutBtnBtm{
+	display:none;
+}
+/* UF-68 UF-69 */
+
 }
 .emptyCart-mobile{
 	height: 100px;
@@ -59424,6 +59431,11 @@ body.page-productGrid .plp-wishlist.added:hover:before{
 .product-detail .Emi p:after{
 	display:none;
 }
+/* UF-68 UF-69 */
+.page-cartPage .cart-total-block ul.checkOutBtnBtm{
+	margin-right: 56px;
+}
+/* UF-68 UF-69 */
 }
 @media(min-width:791px){
 	.mini-transient-bag-mobile{
@@ -59592,6 +59604,11 @@ body.page-productGrid .listing-leftmenu .checkbox-menu>a,body.page-productGrid .
 	body.page-productGrid  .listing.wrapper .left-block{
 	margin-top:	83px !important;
 }
+/* UF-68 UF-69 */
+body.page-cartPage .cart-total-block ul.totals{
+	margin-right: 50px;
+}
+/* UF-68 UF-69 */
 }
 
 /* UF-58 for PLP ends */
@@ -59619,3 +59636,48 @@ body.page-cartPage footer .footer-text{
     right: 0;
     top: 18px;
     }
+    
+    /* UF-68 UF-69 */
+
+.page-cartPage .cart-total-block ul.checkOutBtnBtm{
+	float:right;
+	margin-top: 56px;
+}
+body.page-cartPage .cart-total-block ul.checkOutBtnBtm a.checkoutButton.checkout.button{
+	margin: 0;
+}
+body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled{
+	width: 180px;
+    height: 42px !important;
+    font-size: 11px !important;
+    letter-spacing: normal;
+    padding: 15px;
+}
+body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled{
+	background-color: rgba(169, 20, 60, 0.6);
+    cursor: default;
+}
+body.page-cartPage .cartBottomCheck{
+	display:none;
+}
+body.page-cartPage .cartBottomCheck.cartBottomCheckShow,body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm{
+	display:inline-block;
+}
+body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm{
+	width:110px;
+	height:40px;
+	background:gray;
+	color:#fff;
+	margin-left: -3px;
+	font-size: 12px;
+	padding: 9px;
+	font-weight: normal;
+	letter-spacing: normal;
+}
+body.page-cartPage .cartBottomCheck input#pinCodeButtonIdsBtm{
+	width:148px;
+	height:40px;
+	font-size: 10px;
+}
+
+/* UF-68 UF-69 */
