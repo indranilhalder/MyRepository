@@ -583,10 +583,10 @@ sendAddToBag : function(formId, isBuyNow) {
 						
 						if(!utagError){
 							if(isBuyNow){
-								utagAddProductToBag("buynow");
+								utagAddProductToBag("buy_now");
 							}
 							else{
-								utagAddProductToBag("addtobag");
+								utagAddProductToBag("add_to_bag");
 							}
 						}
 						

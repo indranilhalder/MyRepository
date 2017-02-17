@@ -5241,9 +5241,9 @@ function checkPincodeServiceability(buttonType,el)
 			console.log("Utag is undefined")
 		}
 		else{
-			//TPR-683
+			//TPR-683 TPR-4777 | Checkout | Cart 
 			utag.link(
-			{"link_text": "mybag_checkout" , "event_type" : "mybag_checkout"}
+			{"link_text": "cart_checkout_clicked" , "event_type" : "cart_checkout_clicked"}
 			);
 		}
 	}
@@ -7120,7 +7120,6 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 
 function removefromCart(entryNo,wishName)
 {
-	alert("remove");
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
 		url :  ACC.config.encodedContextPath+"/cart/removeFromMinicart?entryNumber="+entryNo,

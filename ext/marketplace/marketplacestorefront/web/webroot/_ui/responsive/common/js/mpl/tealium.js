@@ -1145,13 +1145,6 @@ $(document).on('click','.pincode-button',function(){
 utag.link({ link_text : 'add_new_address_clicked' ,event_type : 'add_new_address_clicked'});
 })
 
-/*TPR-4777 | Checkout | Cart  */
-$(document).on('click',"#checkout-enabled",function(){
-	utag.link({
-		link_text: "cart_checkout_clicked",
-		event_type : "cart_checkout_clicked"
-	});	
-})	
 
 /* Data Layer Schema Changes Ends*/
 
