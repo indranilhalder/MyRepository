@@ -116,17 +116,16 @@ function editAddress(addressId) {
     	   success : function(data) {
     		   //TPR-4795 changes
     		  //var fullAddress=data.line1 +" "+ data.line2 +" "+ data.line3;
-    			   		var fullAddress=data.line1;
-    		     		  if (data.line2 != null || data.line2 != "")
-    		     			  {
-    		     			   fullAddress = fullAddress +" "+ data.line2;
-    		     			  }
-    		     		  if (data.line3 != null || data.line3 != "")
-    		     			  {
-    		     			   fullAddress=fullAddress +" "+ data.line3;
-    		     			  }
-    		     		 
-    		   $('#addressId').val(addressId);
+    		  		var fullAddress=data.line1;
+    		   			if (data.line2) {
+    		   				console.log("Inside line2 checking***");
+ 		     			   fullAddress = fullAddress +" "+ data.line2;
+    		   			}
+    		   			if (data.line3) {
+    		   				console.log("Inside line3 checking***");
+ 		     			   fullAddress = fullAddress +" "+ data.line2;
+    		   			}
+       	 	   $('#addressId').val(addressId);
    				$('#firstName').val(data.firstName);
    				$('#lastName').val(data.lastName);
    				$('#line1').val(fullAddress);
