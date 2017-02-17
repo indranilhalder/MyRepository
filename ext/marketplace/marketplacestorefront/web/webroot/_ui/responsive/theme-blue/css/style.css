@@ -60226,7 +60226,7 @@ body.page-cartPage .MyBagHeadingDesktop{
     margin-top: 8px;
 }
 /* UF-66 */
-body.page-cartPage .express-checkout, body.page-cartPage .continue-shopping.desk-view-shopping,
+body.page-cartPage .express-checkout,body.page-cartPage .continue-shopping.desk-view-shopping,
 body.page-cartPage .continue-shopping.mob-tab-view-shopping{
 	display:none;
 }
@@ -60470,13 +60470,16 @@ body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.qty,
 body.page-cartPage .cart.wrapper .product-block li.header ul li.quantity{
 	width: 10% !important;
 }
+@media(max-width:1400px){
 body.page-cartPage .cart.wrapper .product-block li.header ul li.delivery{
 	margin-left:5px !important;
+}
 }
 body.page-cartPage span.delSeat.delAction{
 	    color: #999999;
 }
-body.page-cartPage .cart.wrapper .product-block li.header ul li.productInfo{
+body.page-cartPage .cart.wrapper .product-block li.header ul li.productInfo, 
+body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.productItemInfo{
 	    width: 39% !important;
 }
 body.page-cartPage p.cartItemBlankPincode{
@@ -60498,7 +60501,7 @@ body.page-cartPage .cart-bottom-block{
 	background:none;
 	border-bottom:none;
 }
-body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.delivery{
+body.page-cartPage .cart.wrapper .product-block li.header ul li.delivery, body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.delivery{
 	width:25% !important;
 }
 body.page-cartPage .cart.wrapper .product-block li.item > ul > li.delivery li.methodHome:after,
@@ -60625,5 +60628,12 @@ p#unserviceablepincode_tooltip:after,p#error-Id_tooltip:after,p#emptyId_tooltip:
 }
 body.page-cartPage .cart.wrapper .product-block li.item > ul > li.delivery ul{
  	color:#000;
+}
+body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds,
+ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #pinCodeButtonIds{
+	border: 1px solid #ff0000;
+}
+body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
+	border-right:0;
 }
 /* UF-61 Cart Page end */
