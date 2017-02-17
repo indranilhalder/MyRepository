@@ -45950,7 +45950,7 @@ float: right;
 }
 
 .star-review .empty.sel:before {
-	content: "Ã¯â‚¬â€¦";
+	content: "ï€…";
 
 }
 
@@ -50294,7 +50294,7 @@ border-bottom: 1px solid #ccc;
 	margin-bottom: 1.1%;
 }
 .shop_for_blp .shop_for_links_blp a:after {
-	content: "ï„…";
+	content: "";
 	font-family: "FontAwesome";
 	position: absolute;
 	right: 4%;
@@ -52163,7 +52163,7 @@ overflow: hidden;
 	margin-bottom: 1.1%;
 }
 .shop_for .shop_for_links a:after {
-	content: "ï„…";
+	content: "";
 	font-family: "FontAwesome";
 	position: absolute;
 	right: 4%;
@@ -58879,11 +58879,9 @@ li.facet.js-facet.collectionIds{
 }
 
 /* UF-68 UF-69 */
-
 body.page-cartPage .cart-bottom-block .cartBottomCheck.cartBottomCheckShow,.page-cartPage .cart-total-block ul.checkOutBtnBtm{
 	display:none;
 }
-
 /* UF-68 UF-69 */
 
 }
@@ -59433,13 +59431,11 @@ body.page-productGrid .plp-wishlist.added:hover:before{
 .product-detail .Emi p:after{
 	display:none;
 }
-
 /* UF-68 UF-69 */
 .page-cartPage .cart-total-block ul.checkOutBtnBtm{
 	margin-right: 56px;
 }
 /* UF-68 UF-69 */
-
 }
 @media(min-width:791px){
 	.mini-transient-bag-mobile{
@@ -59608,15 +59604,11 @@ body.page-productGrid .listing-leftmenu .checkbox-menu>a,body.page-productGrid .
 	body.page-productGrid  .listing.wrapper .left-block{
 	margin-top:	83px !important;
 }
-
 /* UF-68 UF-69 */
-
 body.page-cartPage .cart-total-block ul.totals{
 	margin-right: 50px;
 }
-
 /* UF-68 UF-69 */
-
 }
 
 /* UF-58 for PLP ends */
@@ -59628,7 +59620,24 @@ body.page-cartPage .cart-total-block ul.totals{
 	font-family:"MontserratGoogleReg";
 } 
 
-/* UF-68 UF-69 */
+/* UF-64 start */
+body.page-cartPage footer .footer-text{
+	border-top:none;
+}
+/* UF-64 end */
+/*changes for pincode servicebility */
+    .product-info .product-content .delivery-block li.do.selected:after{
+	    content: "";
+    background: url(../images/sprite.svg) no-repeat scroll -274px -174px;
+    display: inline-block;
+    height: 32px;
+    width: 23px;
+    position: absolute;
+    right: 0;
+    top: 18px;
+    }
+    
+    /* UF-68 UF-69 */
 
 .page-cartPage .cart-total-block ul.checkOutBtnBtm{
 	float:right;
