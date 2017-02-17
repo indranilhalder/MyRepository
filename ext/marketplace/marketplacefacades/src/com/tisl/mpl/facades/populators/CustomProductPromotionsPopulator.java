@@ -409,7 +409,7 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 		}
 		else if (oModel instanceof BuyAGetPrecentageDiscountCashbackModel)
 		{
-			count = ((BuyABFreePrecentageDiscountModel) oModel).getQuantity().intValue();
+			count = ((BuyAGetPrecentageDiscountCashbackModel) oModel).getQuantity().intValue();
 		}
 
 		return count;
