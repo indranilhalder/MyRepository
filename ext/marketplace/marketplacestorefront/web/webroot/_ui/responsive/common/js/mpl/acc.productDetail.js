@@ -2163,7 +2163,7 @@ function populateEMIDetailsForPDP(){
 					
 					/*TPR-641 starts*/
 					emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, '').toLowerCase();
-					emiBankSelected = selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, '').toLowerCase();
+					emiBankSelected = selectedBank.toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/[',."]/g,"");
 					utag.link({
 						link_obj: this, 
 						link_text: emiBankSelectedTealium , 
