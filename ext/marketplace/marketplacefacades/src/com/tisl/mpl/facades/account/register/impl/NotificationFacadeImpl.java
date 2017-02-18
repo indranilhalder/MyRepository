@@ -130,7 +130,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.facades.account.register.NotificationFacade#getNotificationDetail(com.tisl.mpl.data.NotificationData)
 	 */
@@ -140,8 +140,8 @@ public class NotificationFacadeImpl implements NotificationFacade
 	{
 		final List<OrderStatusNotificationModel> notificationModel = getNotificationService().getNotificationDetails(customerUID,
 				isDesktop);
-		//final List<VoucherStatusNotificationModel> voucherList = getAllCoupons();
-		final List<VoucherStatusNotificationModel> voucherList = extendedUserService.getUserByUid(customerUID).getVoucher();
+		final List<VoucherStatusNotificationModel> voucherList = getAllCoupons();
+		//final List<VoucherStatusNotificationModel> voucherList = extendedUserService.getUserByUid(customerUID).getVoucher();
 		List<NotificationData> notificationDataList = new ArrayList<>();
 		for (final OrderStatusNotificationModel osnm : notificationModel)
 		{
@@ -151,11 +151,11 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 		for (final VoucherStatusNotificationModel v : voucherList) //This loop populates notification data from VoucherStatusNotificationModel
 		{
-			//if (v.getCustomerUidList().contains(customerUID))
-			//{
-			final NotificationData dataForVoucher = getTrackOrderCouponConverter().convert(v);
-			notificationDataList.add(dataForVoucher);
-			//}
+			if (v.getCustomerUidList().contains(customerUID))
+			{
+				final NotificationData dataForVoucher = getTrackOrderCouponConverter().convert(v);
+				notificationDataList.add(dataForVoucher);
+			}
 		}
 
 		notificationDataList = getNotificationService().getSortedNotificationData(notificationDataList);
@@ -183,7 +183,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#checkCustomerFacingEntry(com.tisl.mpl.core.model.
 	 * OrderStatusNotificationModel)
 	 */
@@ -196,7 +196,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#getNotificationDetailForEmailID(java.lang.String)
 	 */
 	@Override
@@ -222,7 +222,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -249,7 +249,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#getUnReadNotificationCount(java.util.List)
 	 */
 	@Override
