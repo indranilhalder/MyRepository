@@ -77,6 +77,16 @@ var productSizeVar = '${productSize}';
 </script>
 <!-- logic for displaying color and size variant -->
 <!-- displaying colour swatches -->
+
+<!--CKD:TPR-250:Start -->
+<c:choose>
+	<c:when test="${not empty param.sellerId}">
+		<c:set var="msiteSellerId" value="${param.sellerId}" />
+		<c:set var="msiteSellerForSize" value="&sellerId=${msiteSellerId}" />
+	</c:when>
+</c:choose>
+<!--CKD:TPR-250:End -->
+
 <c:choose>
 <c:when test="${not empty sellerPage}">
 <product:productVariant/>
@@ -91,9 +101,19 @@ var productSizeVar = '${productSize}';
 			<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:choose>
 					<c:when test="${not empty variantOption.defaultUrl}">
-						<li><c:url value="${variantOption.defaultUrl}"
-								var="variantUrl" />
-								 <a href="${variantUrl}">								
+						<li>
+						<!--CKD:TPR-250:Start  -->
+									<c:choose>
+											<c:when test="${not empty msiteSellerId}">
+												<c:url value="${variantOption.defaultUrl}?sellerId=${msiteSellerId}" var="variantUrl" />
+											</c:when>
+											<c:otherwise>
+												<c:url value="${variantOption.defaultUrl}" var="variantUrl" />
+											</c:otherwise>
+										</c:choose> 
+										<%--  <a href="${variantUrl}">	 --%>
+								<!--CKD:TPR-250:End  -->
+															
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
 								<c:choose>

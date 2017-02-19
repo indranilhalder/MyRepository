@@ -230,6 +230,10 @@
 	<bean class="de.hybris.platform.commercefacades.product.data.BrandData">
 		<property name="brandname" type="String" />
 		<property name="brandtype" type="String" />
+		<!-- CKD:TPR-250 -->
+		<property name="brandCode" type="String" />
+		<property name="brandDescription" type="String" />
+		<!-- CKD:TPR-250 End-->
 
 	</bean>
 

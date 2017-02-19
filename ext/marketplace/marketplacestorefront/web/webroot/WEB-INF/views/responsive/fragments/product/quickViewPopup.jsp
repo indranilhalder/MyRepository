@@ -95,13 +95,16 @@ tr.d0 td {
  var emiCuttOffAmount = '${emiCuttOffAmount}';
  var productCodeQuickView = '${product.code}';
  var variantCodesPdp = '${allVariantsString}';
-
- 
+ var msiteBuyBoxSeller = '${msiteBuyBoxSellerId}'; //CKD:TPR-250 
  $( document ).ready(function() {
 	//AKAMAI Fix
 	 setSizeforAkamai();
 	//AJAX BuyBox call
-	 setBuyBoxDetails();
+	
+//CKD:TPR-250:Start
+	// setBuyBoxDetails();
+	 setBuyBoxDetails(msiteBuyBoxSeller);
+//CKD:TPR-250:End
 	 
 	 
 	 
@@ -289,7 +292,19 @@ display:none;
 <input type="hidden" value="false"  id="isBinded"/>
 <input type="hidden" value="true"  id="isQuickView"/>
 <input type="hidden" value="${product.rootCategory}" id="categoryType"/>
-<c:url value="${product.url}" var="productUrl" />
+
+<!-- CKD:TPR-250:Start -->
+<c:choose>
+	<c:when test="${not empty msiteBuyBoxSellerId}">
+		<c:url value="${product.url}?sellerId=${msiteBuyBoxSellerId}" var="productUrl" />
+	</c:when>
+	<c:otherwise>
+		<c:url value="${product.url}" var="productUrl" />
+	</c:otherwise>
+</c:choose>
+<%-- <c:url value="${product.url}" var="productUrl" /> --%>
+<!-- CKD:TPR-250:Start -->
+
 <input type="hidden" value=""  id="ussidInQuickView"/>
 <input type="hidden" value="${product.code}"  id="productCode"/>
 <%-- <input type="hidden" maxlength="3" size="1" id="stock" name="stock"
@@ -427,10 +442,23 @@ display:none;
 		
 	</div>	
     <div class="product-detail">
-    
-    <h2 class="company">
-              <span class="logo"></span>${product.brand.brandname}<%-- &nbsp;<spring:theme code="product.by"/>&nbsp;<span id="sellerNameIdQuick"></span>${sellerName} --%></h2><!-- Convert into AJAX call -->
-              
+   <!-- CKD:TPR-250-Start-->
+				<c:set var="clickableBrandname" value="${msiteBrandName}"/>
+				<c:set var="clickableBrandCode" value="${msiteBrandCode}"/>
+				<c:choose>
+					<c:when test="${not empty clickableBrandname && not empty clickableBrandCode}">
+						<h2 class="company">
+							<a href="/${clickableBrandname}/c-${clickableBrandCode}">${product.brand.brandname}</a>
+						</h2>
+					</c:when>
+					<c:otherwise>
+						<h2 class="company">${product.brand.brandname}</a>
+						</h2>
+					</c:otherwise>
+				</c:choose>
+				<!-- CKD:TPR-250-End-->
+              <%-- &nbsp;<spring:theme code="product.by"/>&nbsp;<span id="sellerNameIdQuick"></span>${sellerName} --%>
+            <!-- Convert into AJAX call -->    
     <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>
     <div class="price">
     

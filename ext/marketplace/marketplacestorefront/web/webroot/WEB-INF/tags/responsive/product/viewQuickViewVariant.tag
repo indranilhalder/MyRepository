@@ -80,8 +80,21 @@
     <c:when test="${not empty product.variantOptions}">
 	<c:forEach items="${product.variantOptions}" var="variantOption">
 		<c:if test="${not empty variantOption.defaultUrl}">
-			<c:url value="${variantOption.defaultUrl}/quickView" var="variantUrl" />
-			<li>
+			<!--CKD:TPR-250:start  -->
+						<c:choose>
+							<c:when test="${not empty msiteBuyBoxSellerId}">
+								<c:url
+									value="${variantOption.defaultUrl}/quickView?sellerId=${msiteBuyBoxSellerId}"
+									var="variantUrl" />
+							</c:when>
+							<c:otherwise>
+								<c:url value="${variantOption.defaultUrl}/quickView"
+									var="variantUrl" />
+							</c:otherwise>
+						</c:choose>
+						<%-- <c:url value="${variantOption.defaultUrl}/quickView" var="variantUrl" /> --%>
+						<!--CKD:TPR-250:end  -->
+						<li>
 			<a href="${variantUrl}" class="js-reference-item cboxElement"
 				data-quickview-title="<spring:theme code="popup.quick.view.select"/>">
 				<%-- <c:forEach items="${variantOption.colourCode}" var="color">

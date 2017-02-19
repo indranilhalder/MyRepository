@@ -28,5 +28,9 @@ public interface MplSellerInformationDAO
 			final String sellerName);
 
 	public SellerSalesCategoryModel getActiveSellerRootCategoryBySellerId(final String sellerId);
+
 	public String getparentFulfillmenttype(String transactionId);
+
+	//TPR-4471
+	public SellerInformationModel getSellerInformationBySellerID(CatalogVersionModel catalogVersion, String sellerID);
 }

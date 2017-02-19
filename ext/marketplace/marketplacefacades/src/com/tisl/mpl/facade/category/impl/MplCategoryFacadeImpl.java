@@ -423,5 +423,19 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 	}
 
 	// ######################### TISLUX-356 END
+	@Override
+	public String getSellerInformationBySellerID(final String sellerId)
+	{
+		String sellerName = null;
+		final SellerInformationModel sellerInformationModel = mplSellerInformationService.getSellerInformationBySellerID(
+				cmsSiteService.getCurrentCatalogVersion(), sellerId);
+		if (null != sellerInformationModel)
+		{
+			sellerName = sellerInformationModel.getSellerName();
+		}
+		return sellerName;
+	}
+
+
 
 }

@@ -38,7 +38,7 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 {
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
-	@Autowired 
+	@Autowired
 	private ModelService modelService;
 
 	private static final Logger LOG = Logger.getLogger(MplSellerInformationDAOImpl.class);
@@ -66,7 +66,7 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplSellerInformationDAO#getSellerInforationDetails(java.lang.String)
 	 */
@@ -107,7 +107,7 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplSellerInformationDAO#getSellerInforationDetails(java.lang.String)
 	 */
@@ -337,7 +337,7 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplSellerInformationDAO#getSellerInformationWithSellerMaster(java
 	 * .lang.String)
@@ -376,15 +376,16 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 	}
 
 	/**
+	 *
+	 * This method is used to get the parent OrderEntryModel
 	 * 
-	 *  This method is used to get the parent OrderEntryModel 
 	 * @author TECHOUTS
 	 * @param transactionId
 	 * @Return String
 	 */
 
 	@Override
-	public String getparentFulfillmenttype(String  transactionId) throws EtailBusinessExceptions
+	public String getparentFulfillmenttype(final String transactionId) throws EtailBusinessExceptions
 	{
 		LOG.info("Inside getparentFulfillmenttype Method");
 		String parentFulfillmenttype = StringUtils.EMPTY;
@@ -392,11 +393,11 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 		{
 			final Map<String, Object> params = new HashMap<String, Object>();
 			params.put("transactionId", transactionId);
-			String query = "SELECT {" + OrderEntryModel.PK + "} FROM {OrderEntry} where {transactionId} =?transactionId";
+			final String query = "SELECT {" + OrderEntryModel.PK + "} FROM {OrderEntry} where {transactionId} =?transactionId";
 			final SearchResult<OrderEntryModel> searchRes = flexibleSearchService.search(query, params);
 			if (searchRes != null && searchRes.getCount() > 0)
 			{
-				OrderEntryModel entry = searchRes.getResult().get(0);
+				final OrderEntryModel entry = searchRes.getResult().get(0);
 				parentFulfillmenttype = entry.getFulfillmentType();
 			}
 			if (searchRes.getCount() <= 0)
@@ -408,27 +409,60 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 				throw new EtailBusinessExceptions("Fullfillment type is Blanck for Transaction Id :" + transactionId);
 			}
 		}
-		catch (FlexibleSearchException exception)
+		catch (final FlexibleSearchException exception)
 		{
 			LOG.error("Flecible search exception :Failed to Fetech OrderEntryModel from  DB :" + exception);
 			throw new EtailBusinessExceptions(exception.getMessage(), exception);
 		}
-		catch (ModelNotFoundException exception)
+		catch (final ModelNotFoundException exception)
 		{
 			LOG.error("Order Entry Not Found with transaction Id : " + transactionId);
 			throw new EtailBusinessExceptions(exception.getMessage(), exception);
 		}
-		catch (EtailBusinessExceptions e)
+		catch (final EtailBusinessExceptions e)
 		{
 			LOG.error(" EtailBusinessExceptions " + e.getErrorCode());
 			throw new EtailBusinessExceptions(e.getErrorCode(), e);
 		}
-		catch (Exception exception)
+		catch (final Exception exception)
 		{
 			LOG.error("Exception occurred " + exception.getCause());
 			throw new EtailBusinessExceptions(exception.getMessage(), exception);
 		}
 		return parentFulfillmenttype;
+	}
+
+
+	@Override
+	public SellerInformationModel getSellerInformationBySellerID(final CatalogVersionModel catalogVersion, final String sellerID)
+	{
+		SellerInformationModel sellerInformationModel = null;
+		try
+		{
+			//	final StringBuilder query = new StringBuilder("SELECT {sim." + SellerInformationModel.PK + "} ");
+			final StringBuilder query = new StringBuilder();
+			query.append("SELECT {sim." + SellerInformationModel.PK + "} ");
+			query.append(FROM_CLASS + SellerInformationModel._TYPECODE + " AS sim} ");
+			query.append("WHERE UPPER({sim." + SellerInformationModel.SELLERID + "}) = (?" + SellerInformationModel.SELLERID + ")");
+			query.append(" AND {sim." + SellerInformationModel.CATALOGVERSION + "} = (?" + SellerInformationModel.CATALOGVERSION
+					+ ")");
+
+			final Map<String, Object> params = new HashMap<String, Object>();
+			params.put(SellerInformationModel.CATALOGVERSION, catalogVersion);
+			params.put(SellerInformationModel.SELLERID, sellerID.toUpperCase());
+
+			final SearchResult<SellerInformationModel> searchRes = flexibleSearchService.search(query.toString(), params);
+			if (searchRes != null && searchRes.getCount() > 0)
+			{
+				sellerInformationModel = searchRes.getResult().get(0);
+			}
+			return sellerInformationModel;
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
 	}
 
 }

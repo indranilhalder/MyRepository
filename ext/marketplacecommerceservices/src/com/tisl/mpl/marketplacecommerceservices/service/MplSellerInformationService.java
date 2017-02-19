@@ -29,6 +29,9 @@ public interface MplSellerInformationService
 	public SellerSalesCategoryModel getActiveSellerRootCategoryBySellerId(final String sellerId);
 
 	SellerInformationModel getSellerInformationWithSellerMaster(final String sellerID);
-	
+
 	public String getFullfillmentTypeOfParent(OrderEntryModel orderEntry) throws EtailNonBusinessExceptions;
+
+	//TPR-4471
+	public SellerInformationModel getSellerInformationBySellerID(CatalogVersionModel currentCatalogVersion, String sellerId);
 }

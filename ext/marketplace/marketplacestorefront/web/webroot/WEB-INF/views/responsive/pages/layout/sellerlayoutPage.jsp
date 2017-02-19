@@ -2,6 +2,10 @@
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template" %>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags" %>
 
+<!--CKD:TPR-250:Start -->
+<input type="hidden" id="msiteBuyBoxSellerId" value="${msiteBuyBoxSellerId}"/>
+<!--CKD:TPR-250:End -->	
+
 <template:page pageTitle="${pageTitle}">
 
 	<cms:pageSlot position="Section1" var="feature">

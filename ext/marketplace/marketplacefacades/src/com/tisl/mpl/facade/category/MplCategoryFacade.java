@@ -40,4 +40,7 @@ public interface MplCategoryFacade extends CatalogFacade
 	 * @return BreadcrumbResponseWsDTO
 	 */
 	public BreadcrumbResponseWsDTO getBreadcrumb(String code, String type);
+
+	//TPR-4471
+	public String getSellerInformationBySellerID(String sellerId);
 }

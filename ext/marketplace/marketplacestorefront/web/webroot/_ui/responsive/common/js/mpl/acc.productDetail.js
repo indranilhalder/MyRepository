@@ -1421,6 +1421,7 @@ $( document ).ready(function() {
 	var productCode = $("#product").val();
 	var variantCodes = $("#product_allVariantsListingId").val();
 	var variantCodesJson = "";
+	var msiteBuyBoxSeller = $("#msiteBuyBoxSellerId").val(); //CKD:TPR-250
 	if(typeof(variantCodes)!= 'undefined' && variantCodes!= ""){
 		variantCodes = variantCodes.split(",");
 		variantCodesJson = JSON.stringify(variantCodes);
@@ -1438,7 +1439,9 @@ $( document ).ready(function() {
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
-		data : {productCode:productCode,variantCode:variantCodesJson},
+		data : {productCode:productCode,variantCode:variantCodesJson,
+			sellerId:msiteBuyBoxSeller //CKD:TPR-250
+			},
 		cache : false,//added to resolve browser specific the OOS issue
 		dataType : "json",
 		success : function(data) {

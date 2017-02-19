@@ -94,7 +94,8 @@ tr.d0 td {
 
 <!-- TISPRM-56 -->
 <input type="hidden" id="product_allVariantsListingId" value="${allVariantsString}"/>
-
+<!-- CKD:TPR-250 -->
+<input type="hidden" id="msiteBuyBoxSellerId" value="${msiteBuyBoxSellerId}"/> 
 
 
 
@@ -170,7 +171,18 @@ tr.d0 td {
   			</c:choose>
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
+				<!-- CKD:TPR-250-Start-->
+				<c:set var="clickableBrandname" value="${msiteBrandName}"/>
+				<c:set var="clickableBrandCode" value="${msiteBrandCode}"/>
+				<c:choose>
+					<c:when test="${not empty clickableBrandname && not empty clickableBrandCode}">
+				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name"><a href="/${clickableBrandname}/c-${clickableBrandCode}">${product.brand.brandname}</a></span></h3>
+				</c:when>
+					<c:otherwise>
 				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name">${product.brand.brandname}</span></h3>
+					</c:otherwise>
+				</c:choose>
+				<!-- CKD:TPR-250-End-->
 				<a itemprop="url" href="${mainurl}">
 				<!-- For TPR-4358 -->
 				<h1 itemprop="name" class="product-name">${product.productTitle}</h1>

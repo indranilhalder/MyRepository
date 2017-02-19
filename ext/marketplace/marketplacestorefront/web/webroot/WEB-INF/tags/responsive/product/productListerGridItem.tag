@@ -19,7 +19,49 @@
 	}
 </script>
 <spring:theme code="text.addToCart" var="addToCartText" />
+<!--   tpr-250 CHANGES -->
+                   <c:set var="ussidVal"
+									value="${product.ussID}" />
+				   <c:forEach var="type" items="${product.ussidList}">
+								<c:if test="${msiteSellerId  eq type.key}"> 
+								<c:set var="ussidVal"
+									value="${type.value}" />
+                                </c:if>
+                   </c:forEach>
+                     <c:forEach var="type" items="${product.mrpMap}">
+								<c:if test="${msiteSellerId  eq type.key}"> 
+								 <c:set var="priceValue"
+									value="${type.value}" />
+                                </c:if> 
+                    </c:forEach>	
+                    <c:forEach var="type" items="${product.priceMap}">
+								<c:if test="${msiteSellerId  eq type.key}"> 
+								 <c:set var="mrpPriceValue"
+									value="${type.value}" />
+                                </c:if>
+                    </c:forEach>
+                    <c:forEach var="type" items="${product.savingsMap}">
+								<c:if test="${msiteSellerId  eq type.key}"> 
+								 <c:set var="savValue"
+									value="${type.value}" />
+                                </c:if>
+                    </c:forEach>	 
+    <!--   tpr-250 CHANGES -->
+
+<!--CKD:TPR-250:Start -->
 <c:url value="${product.url}" var="productUrl" />
+<c:choose>
+	<c:when test="${not empty msiteSellerId}">
+		<c:url value="${product.url}?sellerId=${msiteSellerId}" var="productUrl" />
+		<c:url value="${product.url}/quickView?sellerId=${msiteSellerId}" var="quickViewUrl" />
+	</c:when>
+	<c:otherwise>
+		<c:url value="${product.url}" var="productUrl" />
+		<c:url value="${productUrl}/quickView" var="quickViewUrl"/>
+	</c:otherwise>
+</c:choose>
+<%-- <c:url value="${product.url}" var="productUrl" /> --%>
+<!--CKD:TPR-250:End -->
 <c:set value="${not empty product.potentialPromotions}"
 	var="hasPromotion" />
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
@@ -35,6 +77,9 @@
 <input type ="hidden"  id="mrpPriceValue" value='${product.displayMrp}'/>
 <input type ="hidden"  id="sizeStockLevel" value='${product.displayStock}'/>
 <input type ="hidden"  id="productPromotion" value='${product.displayPromotion}'/>
+ <!--   tpr-250 CHANGES -->
+<input type ="hidden"  id="ussidVal" value="${ussidVal}"/>
+ <!--   tpr-250 CHANGES -->
 <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
 <input type="hidden" id="loggedIn" value="false"/> 
 </sec:authorize>
@@ -58,7 +103,10 @@
 				<a class="thumb_${product.code}" href="${productUrl}"
 					title="${product.name}"> <%-- <product:productPrimaryImage
 						product="${product}" format="searchPage" /> --%> <product:productSearchPrimaryImage product="${product}" format="searchPage"/>
-						<span class="plp-wishlist" data-product="${productUrl}"></span>
+						<!-- TPR-250 -->
+						        <span class="plp-wishlist" data-product="${productUrl}" data-ussid="${ussidVal}"></span>
+						<!-- TPR-250 -->
+						<%-- <span class="plp-wishlist" data-product="${productUrl}"></span> --%>
 						<span class="plpWlcode" style="display: none;">${productUrl}</span>
 			
 
@@ -159,8 +207,13 @@
 									value="${product.code}" />
 								<input type="hidden" name="wishlistNamePost"
 									id="wishlistNamePost" value="N" />
-								<input type="hidden" maxlength="3" size="" id="ussid"
-									name="ussid" value="${product.ussID}" />
+									
+									 <!--   tpr-250 CHANGES -->
+								<input type="hidden" maxlength="3" size="" id="ussid" 
+									name="ussid" value="${ussidVal}" />
+									<%-- <input type="hidden" maxlength="3" size="" id="ussid"
+									name="ussid" value="${product.ussID}" /> --%>
+								 <!--   tpr-250 CHANGES -->
 
 								<button id="addToCartButton${product.code}"
 									class=" serp-addtobag js-add-to-cart" disabled="disabled">
@@ -286,7 +339,81 @@
 					</div>
 				</c:if>
 
-				<ycommerce:testId code="product_productPrice">
+					<ycommerce:testId code="product_productPrice">
+				<!-- tpr-250 CHANGES -->
+				<c:choose>
+				<c:when test="${fn:contains(currentQuery, 'sellerId')|| not empty msiteSellerId}">
+				<c:if
+						test="${priceValue.value > 0 && (mrpPriceValue.value > priceValue.value)}">
+						<div class="price">
+							<p class="old">
+								 <%-- <format:price priceData="${product.productMRP}" />  --%>
+								 <c:choose>
+									<c:when test="${mrpPriceValue.value > 0}">
+										<span class="priceFormat">
+											<span id="mrpprice_${product.code}"> ${mrpPriceValue.formattedValue}</span></span>
+									</c:when>
+									<c:otherwise>
+										<c:if test="${displayFreeForZero}">
+											<spring:theme code="text.free" text="FREE" />
+										</c:if>
+										<c:if test="${not displayFreeForZero}">
+											<%-- <span class="priceFormat">${product.price.formattedValue}</span> --%>
+										</c:if>
+									</c:otherwise>
+								</c:choose>
+							</p>
+							<p class="sale">
+								<%-- <format:price priceData="${product.price}" /> --%>
+								<c:choose>
+									<c:when test="${priceValue.value > 0}">
+										<span class="priceFormat">
+											<span id="price_${product.code}"> ${priceValue.formattedValue}</span></span>
+									</c:when>
+									<c:otherwise>
+										<c:if test="${displayFreeForZero}">
+											<spring:theme code="text.free" text="FREE" />
+										</c:if>
+										<c:if test="${not displayFreeForZero}">
+											<%-- <span class="priceFormat">${product.price.formattedValue}</span> --%>
+										</c:if>
+									</c:otherwise>
+								</c:choose>
+							</p>
+							<!-- TISCR-405: set the savings for the current currency -->
+							<c:if test="${savValue.value > 0}">																		
+							<p class="savings">																				
+							<%-- <span id="savings_${product.code}">  You save ${product.savingsOnProduct.formattedValue} </span> --%>
+							 <span id="savings_${product.code}">  ( -${savValue.value}% ) </span>
+							</p>
+							</c:if>
+							
+						</div>
+					</c:if>
+					<c:if
+						test="${priceValue.value <= 0 || (mrpPriceValue.value == priceValue.value)}">
+						<div class="price">
+							<c:if test="${mrpPriceValue.value > 0}">
+							<c:choose>
+									<c:when test="${mrpPriceValue.value > 0}">
+										<span class="priceFormat">
+										<span id="priceEqual_${product.code}">${mrpPriceValue.formattedValue}</span></span>
+									</c:when>
+									<c:otherwise>
+										<c:if test="${displayFreeForZero}">
+											<spring:theme code="text.free" text="FREE" />
+										</c:if>
+										<c:if test="${not displayFreeForZero}">
+											<%-- <span class="priceFormat">${product.price.formattedValue}</span> --%>
+										</c:if>
+									</c:otherwise>
+								</c:choose>
+
+							</c:if>
+						</div>
+					</c:if>
+					</c:when>
+					<c:otherwise>
 					<c:if
 						test="${product.price.value > 0 && (product.productMRP.value > product.price.value)}">
 						<div class="price">
@@ -295,7 +422,7 @@
 								 <c:choose>
 									<c:when test="${product.productMRP.value > 0}">
 										<span class="priceFormat">
-											<span id="mrpprice_${product.code}"> ${product.productMRP.formattedValueNoDecimal}</span></span>
+											<span id="mrpprice_${product.code}"> ${product.productMRP.formattedValue}</span></span>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${displayFreeForZero}">
@@ -312,7 +439,7 @@
 								<c:choose>
 									<c:when test="${product.price.value > 0}">
 										<span class="priceFormat">
-											<span id="price_${product.code}"> ${product.price.formattedValueNoDecimal}</span></span>
+											<span id="price_${product.code}"> ${product.price.formattedValue}</span></span>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${displayFreeForZero}">
@@ -341,7 +468,7 @@
 							<c:choose>
 									<c:when test="${product.productMRP.value > 0}">
 										<span class="priceFormat">
-										<span id="priceEqual_${product.code}">${product.productMRP.formattedValueNoDecimal}</span></span>
+										<span id="priceEqual_${product.code}">${product.productMRP.formattedValue}</span></span>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${displayFreeForZero}">
@@ -356,6 +483,9 @@
 							</c:if>
 						</div>
 					</c:if>
+					</c:otherwise>
+					</c:choose>
+					<!-- TPR-250 changes -->
 				</ycommerce:testId>
 				<%-- <c:if test="${product.stock.stockLevelStatus eq 'outOfStock'}">
 					<div class="stockLevelStatus">

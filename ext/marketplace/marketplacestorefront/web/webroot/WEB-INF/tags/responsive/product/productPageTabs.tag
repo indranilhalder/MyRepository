@@ -64,6 +64,12 @@ var buyboxskuId='';
 			<spring:theme code="product.product.knowmore" />
 		</li>
 	</c:if>
+		<!--CKD:TPR-250:Start -->
+	<c:if test="${fn:contains(validTabs, 'brandInfo')}">
+		<li id="tabs_brandInfo"><spring:theme
+				code="product.product.brandInfo" /></li>
+	</c:if>
+	<!--CKD:TPR-250:End -->
 </ul>
 </div>
 <ul class="tabs pdp productTabs">
@@ -92,6 +98,13 @@ var buyboxskuId='';
 			<product:productTataPromiseTab product="${product}" />
 		</li>
 	</c:if>
+	<!--CKD:TPR-250:Start -->
+	<c:if test="${fn:contains(validTabs, 'brandInfo')}">
+		<li >
+			<product:brandInfoTab product="${product}" />
+		</li>
+	</c:if>
+	<!--CKD:TPR-250:End -->
 </ul>
 
  <div id="servicableUssid"></div>

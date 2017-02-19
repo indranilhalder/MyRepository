@@ -1638,6 +1638,18 @@
 							</columntype>
 						</persistence>
 					</attribute>
+					<!--CKD:TPR-250:Starts- Added Brand Code -->
+					<attribute qualifier='brandCode' type="java.lang.String">
+						<description>Represents the Brand code of the product</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property">
+							<columntype database='oracle'>
+								<value>VARCHAR2(100)</value>
+							</columntype>
+						</persistence>
+					</attribute>
+					<!--CKD:TPR-250:Ends-->
 					<attribute qualifier='typeDescription' type="java.lang.String">
 						<description>Specifies description of the brand type</description>
 						<modifiers read="true" write="true" optional="true"

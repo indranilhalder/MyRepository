@@ -137,7 +137,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 
 	@Override
-	public Map<String, Object> buyboxPricePDP(final String productCode) throws EtailNonBusinessExceptions
+	public Map<String, Object> buyboxPricePDP(final String productCode, final String bBoxSellerId //CKD:TPR-250
+	) throws EtailNonBusinessExceptions
 	{
 		BuyBoxData buyboxData = new BuyBoxData();
 		boolean onlyBuyBoxHasStock = false;
@@ -175,6 +176,12 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		{
 			//TISPRM -56
 			final List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPrice(productCode));
+			//CKD:TPR-250 Start : Manipulating (rearranging) elements of the buy box list for microsite seller
+			if (StringUtils.isNotBlank(bBoxSellerId))
+			{
+				rearrangeBuyBoxListElements(bBoxSellerId, buyboxModelListAll);
+			}
+			//CKD:TPR-250 End
 			for (final BuyBoxModel buyBoxModel : buyboxModelListAll)
 			{
 				if (null != pdpProduct && pdpProduct.equalsIgnoreCase(buyBoxModel.getProduct()))
@@ -813,7 +820,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 * 
+	 *
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
@@ -917,5 +924,36 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		buyboxData.setAllOOStock(outOfStockFlag);
 		return buyboxData;
 
+	}
+
+	/**
+	 * @param bBoxSellerId
+	 * @param buyboxModelListAll
+	 */
+	private void rearrangeBuyBoxListElements(final String bBoxSellerId, final List<BuyBoxModel> buyboxModelListAll)
+	{
+		{
+			List<BuyBoxModel> msiteBboxOtherSellerList = null;
+			List<BuyBoxModel> msiteBboxWinningSellerList = null;
+			msiteBboxWinningSellerList = new ArrayList<BuyBoxModel>();
+			msiteBboxOtherSellerList = new ArrayList<BuyBoxModel>();
+			for (final BuyBoxModel buyBoxModel : buyboxModelListAll)
+			{
+				if (bBoxSellerId.equalsIgnoreCase(buyBoxModel.getSellerId()) && buyBoxModel.getAvailable() > 0)
+				{
+					msiteBboxWinningSellerList.add(buyBoxModel);
+				}
+				else
+				{
+					msiteBboxOtherSellerList.add(buyBoxModel);
+				}
+			}
+			buyboxModelListAll.clear();
+			buyboxModelListAll.addAll(msiteBboxWinningSellerList);
+			buyboxModelListAll.addAll(msiteBboxOtherSellerList);
+			// nullifying the lists as they are no more required
+			msiteBboxWinningSellerList = null;
+			msiteBboxOtherSellerList = null;
+		}
 	}
 }

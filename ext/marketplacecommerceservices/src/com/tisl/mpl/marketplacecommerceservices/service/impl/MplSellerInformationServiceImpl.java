@@ -158,4 +158,15 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 			throw new EtailBusinessExceptions(e.getMessage(),e);
 		}
 	}
+	
+	@Override
+	public SellerInformationModel getSellerInformationBySellerID(final CatalogVersionModel catalogVersion, final String sellerID)
+	{
+		if (sellerID != null)
+		{
+			return getMplSellerInformationDAO().getSellerInformationBySellerID(catalogVersion, sellerID);
+		}
+		return null;
+	}
+
 }

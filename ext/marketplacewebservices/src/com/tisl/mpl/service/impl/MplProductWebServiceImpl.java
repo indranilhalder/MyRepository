@@ -278,7 +278,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -353,7 +353,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					{
 						variantsString = productData.getCode() + "," + variantCodes;
 					}
-					final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString);
+
+					//CKD:TPR-250:Start
+					//final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString);
+					final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString, null);
+					//CKD:TPR-250:End
 					if (MapUtils.isNotEmpty(buydata))
 					{
 						final List<String> noStockPCodes = (List<String>) buydata.get("no_stock_p_codes");
@@ -2308,7 +2312,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					{
 						variantsString = productData.getCode() + "," + variantCodes;
 					}
-					final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString);
+					//CKD:TPR-250:Start
+					//final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString);
+					final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString, null);
+					//CKD:TPR-250:End
 					if (MapUtils.isNotEmpty(buydata))
 					{
 						final List<String> noStockPCodes = (List<String>) buydata.get("no_stock_p_codes");
