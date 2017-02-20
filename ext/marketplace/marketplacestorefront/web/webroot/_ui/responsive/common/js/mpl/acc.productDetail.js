@@ -1413,7 +1413,8 @@ $(function() {
 								$("#pdpPincodeCheck").text("Check")				/*UF-42*/
 							} else {
 							
-								$("#pdpPincodeCheck").text("Change Pincode")
+								//$("#pdpPincodeCheck").text("Change Pincode")
+								$("#pdpPincodeCheck").text("Check"); //UF-71
 							}
 							//TPR-900
 						}
