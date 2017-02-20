@@ -216,42 +216,42 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 				: consignmentModel.getCarrier();
 		if (shipmentNewStatus.toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED))
 		{
-		  for (final AbstractOrderEntryModel orderEntryModel : orderModel.getEntries())
-		  {
-			if (shipment.getShipmentId().equals(orderEntryModel.getTransactionID())
-					&& consignmentModel.getCode().equals(orderEntryModel.getTransactionID()))
+			for (final AbstractOrderEntryModel orderEntryModel : orderModel.getEntries())
 			{
-
-
-				/*
-				 * storeName =(StringUtils.isEmpty(orderEntryModel.getDeliveryPointOfService().getDisplayName())) ?
-				 * MarketplacecommerceservicesConstants.EMPTY :
-				 * orderEntryModel.getDeliveryPointOfService().getDisplayName();
-				 */
-				storeName = (orderEntryModel.getDeliveryPointOfService() != null && StringUtils.isNotEmpty(orderEntryModel
-						.getDeliveryPointOfService().getDisplayName())) ? orderEntryModel.getDeliveryPointOfService().getDisplayName()
-						: MarketplacecommerceservicesConstants.EMPTY;
-				final DateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
-				final Date currentDate = new Date();
-				if (null != consignmentModel.getDeliveryDate())
+				if (shipment.getShipmentId().equals(orderEntryModel.getTransactionID())
+						&& consignmentModel.getCode().equals(orderEntryModel.getTransactionID()))
 				{
-					final String formatDate = dateFormatter.format(consignmentModel.getDeliveryDate());
-					deliverdDate = (StringUtils.isEmpty(formatDate)) ? dateFormatter.format(currentDate) : formatDate;
-				}
-				else
-				{
-					deliverdDate = dateFormatter.format(currentDate);
-				}
 
-				pickUpMobileNumber = (StringUtils.isEmpty(orderModel.getPickupPersonMobile())) ? MarketplaceomsordersConstants.EMPTY
-						: orderModel.getPickupPersonMobile();
 
-				pickUpPersonName = (StringUtils.isEmpty(orderModel.getPickupPersonName())) ? MarketplaceomsordersConstants.CUSTOMER_NAME
-						: orderModel.getPickupPersonName();
+					/*
+					 * storeName =(StringUtils.isEmpty(orderEntryModel.getDeliveryPointOfService().getDisplayName())) ?
+					 * MarketplacecommerceservicesConstants.EMPTY :
+					 * orderEntryModel.getDeliveryPointOfService().getDisplayName();
+					 */
+					storeName = (orderEntryModel.getDeliveryPointOfService() != null && StringUtils.isNotEmpty(orderEntryModel
+							.getDeliveryPointOfService().getDisplayName())) ? orderEntryModel.getDeliveryPointOfService()
+							.getDisplayName() : MarketplacecommerceservicesConstants.EMPTY;
+					final DateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+					final Date currentDate = new Date();
+					if (null != consignmentModel.getDeliveryDate())
+					{
+						final String formatDate = dateFormatter.format(consignmentModel.getDeliveryDate());
+						deliverdDate = (StringUtils.isEmpty(formatDate)) ? dateFormatter.format(currentDate) : formatDate;
+					}
+					else
+					{
+						deliverdDate = dateFormatter.format(currentDate);
+					}
+
+					pickUpMobileNumber = (StringUtils.isEmpty(orderModel.getPickupPersonMobile())) ? MarketplaceomsordersConstants.EMPTY
+							: orderModel.getPickupPersonMobile();
+
+					pickUpPersonName = (StringUtils.isEmpty(orderModel.getPickupPersonName())) ? MarketplaceomsordersConstants.CUSTOMER_NAME
+							: orderModel.getPickupPersonName();
+
+				}
 
 			}
-
-		}
 		}
 
 
@@ -268,11 +268,17 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 			}
 
 			// Notifications: HOTC : Email & SMS
-			if (shipmentNewStatus.toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_STATUS_HOTC))
+			//Bug Id TISRLUAT-986 20-02-2017 Start
+			if (shipment.getInScan() != null)
 			{
-				LOG.info("******************** Sending notification for HOTC");
-				sendNotificationForHotc(orderModel, orderNumber, mobileNumber, trackingUrl, logisticPartner);
+				if (shipment.getInScan().booleanValue()
+						&& shipmentNewStatus.toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_STATUS_HOTC))
+				{
+					LOG.info("******************** Sending notification for HOTC");
+					sendNotificationForHotc(orderModel, orderNumber, mobileNumber, trackingUrl, logisticPartner);
+				}
 			}
+			//Bug Id TISRLUAT-986 20-02-2017 End
 
 			// Notifications: DELIVERED : Email & SMS
 			if (shipmentNewStatus.toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_STATUS_DELIVERED))
@@ -444,8 +450,8 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	 * MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, String.valueOf(childOrders.size()))); if (null !=
 	 * orderNumber && !orderNumber.isEmpty()) { pushData.setOrderId(orderNumber); }
 	 * mplSNSMobilePushService.setUpNotification(customer.getOriginalUid(), pushData);
-	 *
-	 *
+	 * 
+	 * 
 	 * }
 	 */
 
@@ -639,7 +645,8 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 		try
 		{
 			LOG.info("******Inside sendSMSHotc******");
-			trackingUrl = (getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT));
+			trackingUrl = (getConfigurationService().getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT));
 			final SendSMSRequestData smsRequestDataHOTC = new SendSMSRequestData();
 
 			//call google short url service to generate short url for an order code
@@ -649,12 +656,13 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 
 			//print parent order number in the url
 			trackingUrl = orderModel.getParentReference() == null ? (getConfigurationService().getConfiguration().getString(
-					MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)+"/"+orderModel.getCode()) : getConfigurationService()
-					.getConfiguration().getString(MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
-					+"/"+orderModel.getParentReference().getCode();
+					MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
+					+ "/" + orderModel.getCode()) : getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
+					+ "/" + orderModel.getParentReference().getCode();
 
 			smsRequestDataHOTC.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
-			
+
 			final String smsContent = MarketplacecommerceservicesConstants.SMS_MESSAGE_HOTC
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, String.valueOf(childOrders.size()))
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderNumber)
@@ -814,7 +822,8 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	private void sendNotificationForHotc(final OrderModel orderModel, final String orderNumber, final String mobileNumber,
 			final String trackingUrl, final String logisticPartner)
 	{
-		if(LOG.isDebugEnabled()){
+		if (LOG.isDebugEnabled())
+		{
 			LOG.debug(UPDATE_CONSIGNMENT + MarketplacecommerceservicesConstants.ORDER_STATUS_HOTC);
 		}
 		String awbNumber = "";
@@ -1107,7 +1116,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 				//sending SMS
 				LOG.info("****************************Sending SMS for Order Delivered ");
 				sendSMSUnDelivered(childOrders, orderNumber, mobileNumber, contactNumber, firstName, orderModel, awbNumber);
-				
+
 				//sending Email R2.3 New EMAIL
 				LOG.info("****************************Sending Email for Order UnDelivered ");
 				sendEmailUnDelivered(orderModel, childOrders, awbNumber);
@@ -1119,10 +1128,11 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 		}
 
 	}
-	
-	
+
+
 	/**
-	 * Added R2.3 new  Email
+	 * Added R2.3 new Email
+	 *
 	 * @description Method for sending UnDelivered Email Notification
 	 * @param orderModel
 	 * @param childOrders
@@ -1137,7 +1147,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 		if (null != orderUpdateModelList && !orderUpdateModelList.isEmpty())
 		{
 			numOfRows = orderUpdateModelList.size();
-			
+
 		}
 		LOG.info("*******Before checking isToSendNotification for UNDELIVERED EMAIL********");
 		final boolean flag = isToSendNotification(awbNumber, orderModel, ConsignmentStatus.UNDELIVERED);
