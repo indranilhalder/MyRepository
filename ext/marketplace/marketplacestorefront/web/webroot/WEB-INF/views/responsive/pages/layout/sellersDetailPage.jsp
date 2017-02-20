@@ -465,7 +465,21 @@ var allSellers='${allsellers}';
 		<div class="product-detail">
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
-				<h2 class="company">${product.brand.brandname}</h2>
+				<!-- CKD:TPR-250-Start-->
+				<c:set var="clickableBrandname" value="${msiteBrandName}"/>
+				<c:set var="clickableBrandCode" value="${msiteBrandCode}"/>
+				<c:choose>
+					<c:when test="${not empty clickableBrandname && not empty clickableBrandCode}">
+						<h2 class="company">
+							<a href="/${clickableBrandname}/c-${clickableBrandCode}">${product.brand.brandname}</a>
+						</h2>
+					</c:when>
+					<c:otherwise>
+						<h2 class="company">${product.brand.brandname}</a>
+						</h2>
+					</c:otherwise>
+				</c:choose>
+				<!-- CKD:TPR-250-End-->
 				<h3 class="product-name">${product.productTitle}</h3>
 			</ycommerce:testId>
 			<ycommerce:testId
@@ -498,12 +512,19 @@ var allSellers='${allsellers}';
 			</div>
 
 			<!-- Returning to the PDP page -->
+
+			<!--  CKD:TPR-250:Start-->
+			<c:set var="qStrPart" value="?sellerId=" />
+			<c:set var="queryString" value="" />
+			<c:if test="${ not empty param.sellerId}">
+				<c:set var="queryString" value="${qStrPart}${param.sellerId}" />
+			</c:if>
+			<%-- <c:url var="productUrl" value="${product.url}" /> --%>
 			<p class="other-sellers back">
-				<c:url var="productUrl" value="${product.url}" />
+				<c:url var="productUrl" value="${product.url}${queryString}" />
+				<!--  CKD:TPR-250:End-->
 				<a href="${productUrl}"><spring:theme code="product.returnpdp"></spring:theme></a>
 			</p>
-
-
 
 			<cms:pageSlot position="AddToCart" var="component">
 				<cms:component component="${component}" />

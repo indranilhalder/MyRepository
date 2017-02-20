@@ -769,6 +769,12 @@ $(document).on("click",".plp-wishlist",function(e){
 		function urlToProductCode(productURL) {
 			var n = productURL.lastIndexOf("-");
 			var productCode=productURL.substring(n+1, productURL.length);
+			//CKD:TPR-250:Start : to discard msiteSellerId from URL when adding to Wishlist
+			var ind = productCode.indexOf("?");
+			if (ind != -1){
+				productCode=productCode.substring(0,ind);
+			}
+			//CKD:TPR-250:End
 		    return productCode.toUpperCase();
 			
 		}

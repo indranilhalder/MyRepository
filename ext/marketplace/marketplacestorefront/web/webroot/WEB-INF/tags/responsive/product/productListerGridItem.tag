@@ -170,7 +170,10 @@
 					<%-- <c:if test="${product.isVariant eq true}"> --%>
 
 					<!-- 	<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference"> -->
-					<c:url value="${productUrl}/quickView" var="productQVUrl" />
+					<!--CKD:TPR-250:Start  -->
+					<%-- <c:url value="${productUrl}/quickView" var="productQVUrl" /> --%>
+					<c:url value="${quickViewUrl}" var="productQVUrl" />
+					<!--CKD:TPR-250:End  -->
 
 
 					<a id='quickview_${product.code}' href="${productQVUrl}"

@@ -8,6 +8,14 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
+<!--  CKD:TPR-250:Start-->
+<c:set var="qStringPart" value ="?sellerId="/>
+<c:set var="msiteSllerId" value =""/>
+<c:if test="${ not empty param.sellerId}">
+	<c:set  var="msiteSllerId"  value="${qStringPart}${param.sellerId}"/>
+</c:if>
+<!--  CKD:TPR-250:End-->
+
 				<form:form
 					action="${request.contextPath}/p/${product.code}/viewSellers" id="sellerForm"
 					method="post">
@@ -44,8 +52,10 @@
 						</div>
 					</button> --%>
 					<!-- UF-32 -->
-					<a href="${request.contextPath}/p/${product.code}/viewSellers" id="submit"
-						class="otherSellersFont">
+					<!--  CKD:TPR-250:Start-->
+					<%-- <a href="${request.contextPath}/p/${product.code}/viewSellers" id="submit" class="otherSellersFont"> --%>
+					<a href="${request.contextPath}/p/${product.code}/viewSellers${msiteSllerId}" id="submit" class="otherSellersFont">
+					<!--  CKD:TPR-250:End-->
 						<p id="otherSellerInfoId" class="other-sellers">
 							&nbsp;&&nbsp;<span class="other-sellers-link"><span id="otherSellersId"></span>&nbsp;<span><spring:theme code="product.othersellers"></spring:theme></span></span><%-- &nbsp;
 							<spring:theme code="product.available"></spring:theme>
