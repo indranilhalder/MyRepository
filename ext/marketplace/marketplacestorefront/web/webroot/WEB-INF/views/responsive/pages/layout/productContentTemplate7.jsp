@@ -37,6 +37,9 @@ $(document).ready(function(){
 			$(this).hide();
 		}
 	});
+	if ($(".Manufacturer.Temp04 .Padd h2:first-child span").is(':empty')) {
+		$(".Manufacturer.Temp04 .Padd h2").first().hide();
+	}
 });
 
 
