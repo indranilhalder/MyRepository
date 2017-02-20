@@ -60753,6 +60753,9 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 .progress-barcheck .step-3 a {
     padding-right: 9%;
 }
+.progress-barcheck {
+    margin: 15px auto 0;
+}
 }
 /*Delivery Option page start*/
 #selectDeliveryMethodForm .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryMethodSubmit{
