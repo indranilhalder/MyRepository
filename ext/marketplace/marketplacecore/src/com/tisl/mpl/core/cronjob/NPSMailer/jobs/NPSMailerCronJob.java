@@ -4,7 +4,7 @@
 package com.tisl.mpl.core.cronjob.NPSMailer.jobs;
 
 import de.hybris.platform.core.Registry;
-import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.cronjob.enums.CronJobResult;
@@ -67,7 +67,7 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 			 * Query for fetching all the orderModels along with the transaction ids from commerce end whose delivery date
 			 * is 24 hours ago
 			 */
-			Map<OrderModel, AbstractOrderEntryModel> parentOrderAbstractEntryModel = null;
+			Map<OrderModel, OrderEntryModel> parentOrderAbstractEntryModel = null;
 			final MplConfigurationModel configModel = getFetchSalesOrderService().getCronDetails(oModel.getCode());
 			if (null != configModel && null != configModel.getMplConfigDate())
 			{
@@ -80,7 +80,7 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 			if (MapUtils.isNotEmpty(parentOrderAbstractEntryModel))
 			{
 				LOG.info("parentOrderAbstractEntryModel is not empty");
-				for (final Map.Entry<OrderModel, AbstractOrderEntryModel> entry : parentOrderAbstractEntryModel.entrySet())
+				for (final Map.Entry<OrderModel, OrderEntryModel> entry : parentOrderAbstractEntryModel.entrySet())
 				{
 					LOG.info("Cronjob perform" + parentOrderAbstractEntryModel.entrySet());
 

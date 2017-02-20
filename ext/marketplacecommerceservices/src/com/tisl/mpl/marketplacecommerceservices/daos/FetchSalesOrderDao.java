@@ -3,7 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos;
 
-import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.cronjob.model.CronJobModel;
 
@@ -33,7 +33,7 @@ public interface FetchSalesOrderDao
 	public List<OrderModel> fetchSpecifiedCancelData(Date startTime, Date endTime);
 
 	//TPR-1984 Start
-	public Map<OrderModel, AbstractOrderEntryModel> fetchOrderDetailsforDeliveryMail(Date mplConfigDate);
+	public Map<OrderModel, OrderEntryModel> fetchOrderDetailsforDeliveryMail(Date mplConfigDate);
 
 	public Map<String, Integer> getTransactionIdCount();
 

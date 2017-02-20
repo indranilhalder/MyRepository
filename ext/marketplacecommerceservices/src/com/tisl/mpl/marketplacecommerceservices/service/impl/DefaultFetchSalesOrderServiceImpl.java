@@ -3,7 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
-import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.cronjob.model.CronJobModel;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -130,7 +130,7 @@ public class DefaultFetchSalesOrderServiceImpl implements FetchSalesOrderService
 	//TPR-1984 Start
 
 	@Override
-	public Map<OrderModel, AbstractOrderEntryModel> fetchOrderDetailsforDeliveryMail(final Date mplConfigDate)
+	public Map<OrderModel, OrderEntryModel> fetchOrderDetailsforDeliveryMail(final Date mplConfigDate)
 	{
 		return fetchSalesOrderDao.fetchOrderDetailsforDeliveryMail(mplConfigDate);
 	}

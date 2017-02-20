@@ -3,7 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
-import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.cronjob.model.CronJobModel;
@@ -230,28 +230,40 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	 * @return Map<OrderModel, AbstractOrderEntryModel>
 	 */
 	@Override
-	public Map<OrderModel, AbstractOrderEntryModel> fetchOrderDetailsforDeliveryMail(final Date mplConfigDate)
+	public Map<OrderModel, OrderEntryModel> fetchOrderDetailsforDeliveryMail(final Date mplConfigDate)
 	{
-		final Map<OrderModel, AbstractOrderEntryModel> orderWithSingleEntry = new HashMap<OrderModel, AbstractOrderEntryModel>();
+		final Map<OrderModel, OrderEntryModel> orderWithSingleEntry = new HashMap<OrderModel, OrderEntryModel>();
 
 		try
 		{
 
-			final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			final String cronJobModifiedTimeFormattedDate = dateFormat.format(mplConfigDate);
 			LOG.debug("cronJobModifiedTimeFormattedDate is >>>>>>>>>>>>>>>>" + cronJobModifiedTimeFormattedDate);
 			final Date currentSystemDate = new Date();
 			final String currentSystemDateFormattedDate = dateFormat.format(currentSystemDate);
 			LOG.debug("currentSystemDateFormattedDate is >>>>>>>>>>>>>>>>" + currentSystemDateFormattedDate);
 
-			final String queryString = "SELECT DISTINCT {po.pk},{oe.pk},{po.user} FROM  {" + ConsignmentModel._TYPECODE
-					+ " AS c JOIN " + ConsignmentEntryModel._TYPECODE + " " + "AS ce ON {ce.consignment} = {c.PK} JOIN"
-					+ " ConsignmentStatus AS cs ON {c.status} = {cs.PK} JOIN " + AbstractOrderEntryModel._TYPECODE
-					+ " AS oe ON {ce.orderentry}= {oe.PK} JOIN " + OrderModel._TYPECODE + " AS co  ON {c.order}={co.PK} JOIN "
-					+ OrderModel._TYPECODE + " AS po  ON {co.parentreference} = {po.PK} LEFT JOIN " + NPSMailerModel._TYPECODE
-					+ " AS nps ON {oe.pk}={nps.transactionId }} " + "WHERE " + "{c.deliveryDate}  BETWEEN "
+			final String queryString = "SELECT DISTINCT {po.pk},{oe.pk},{po.user} FROM  {"
+					+ ConsignmentModel._TYPECODE
+					+ " AS c JOIN "
+					+ ConsignmentEntryModel._TYPECODE
+					+ " "
+					+ "AS ce ON {ce.consignment} = {c.PK} JOIN"
+					+ " ConsignmentStatus AS cs ON {c.status} = {cs.PK} JOIN "
+					+ OrderEntryModel._TYPECODE
+					+ " AS oe ON {ce.orderentry}= {oe.PK} JOIN "
+					+ OrderModel._TYPECODE
+					+ " AS co  ON {c.order}={co.PK} JOIN "
+					+ OrderModel._TYPECODE
+					+ " AS po  ON {co.parentreference} = {po.PK} LEFT JOIN "
+					+ NPSMailerModel._TYPECODE
+					+ " AS nps ON {oe.pk}={nps.transactionId }} "
+					+ "WHERE "
+					+ "{c.deliveryDate}  BETWEEN "
 					+ " to_date('?beforeTime','yyyy-MM-DD HH24:MI:ss') AND to_date('?aftertime','yyyy-MM-DD HH24:MI:ss') AND "
-					+ " ({cs.code}='DELIVERED' OR {cs.code}='ORDER_COLLECTED')  AND {nps.transactionId} IS NULL";
+
+					+ " ({cs.code}='DELIVERED' OR {cs.code}='ORDER_COLLECTED')  AND {nps.transactionId} IS NULL AND {po.type}= 'SubOrder'";
 
 
 			//old script
@@ -264,7 +276,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("beforeTime", cronJobModifiedTimeFormattedDate);
 			query.addQueryParameter("aftertime", currentSystemDateFormattedDate);
-			query.setResultClassList(Arrays.asList(OrderModel.class, AbstractOrderEntryModel.class, CustomerModel.class));
+			query.setResultClassList(Arrays.asList(OrderModel.class, OrderEntryModel.class, CustomerModel.class));
 			LOG.debug("query>>>>>>>>>>>>>>>>>>>>>>>generated nps job" + query);
 			final SearchResult<List<Object>> result = flexibleSearchService.search(query);
 			LOG.debug("result>>>>>>>>>>>>>>>>>>>>>>>nps mailer job" + result);
@@ -274,7 +286,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 				for (final List<Object> obj : result.getResult())
 				{
 					final OrderModel orderModel = (OrderModel) obj.get(0);
-					final AbstractOrderEntryModel absOrderEntryModel = (AbstractOrderEntryModel) obj.get(1);
+					final OrderEntryModel absOrderEntryModel = (OrderEntryModel) obj.get(1);
 					if (!orderWithSingleEntry.containsKey(orderModel))
 					{
 						orderWithSingleEntry.put(orderModel, absOrderEntryModel);
@@ -294,7 +306,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getTransactionIdCount(de.hybris.platform.core
 	 * .model.order.OrderModel)
