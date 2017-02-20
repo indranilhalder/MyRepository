@@ -6,6 +6,7 @@ package com.techouts.backoffice.widget.controller;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -15,8 +16,11 @@ import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Datebox;
+import org.zkoss.zul.Filedownload;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Listhead;
+import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
 
@@ -56,6 +60,7 @@ public class PickUpAddressChangeRequestWidgetController extends DefaultWidgetCon
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final String PIN_REGEX = "^[1-9][0-9]{5}";
+	private List<MplReturnPickUpAddressInfoModel> returnPickUpAddressData;
 
 	@Override
 	public void initialize(final Component comp)
@@ -148,8 +153,7 @@ public class PickUpAddressChangeRequestWidgetController extends DefaultWidgetCon
 	private void getPickUpReturnReportByParams(final String orderId, final String custimerId, final String pincode)
 	{
 
-		final List<MplReturnPickUpAddressInfoModel> returnPickUpAddressData = cancelReturnFacade
-				.getPickUpReturnReportByParams(orderId, custimerId, pincode);
+		returnPickUpAddressData = cancelReturnFacade.getPickUpReturnReportByParams(orderId, custimerId, pincode);
 		listBoxData.setModel(new ListModelList<MplReturnPickUpAddressInfoModel>(returnPickUpAddressData));
 		listBoxData.setItemRenderer(new ReturnPickupAddressItemRenderer());
 
@@ -158,10 +162,60 @@ public class PickUpAddressChangeRequestWidgetController extends DefaultWidgetCon
 	private void getReturnPickUpAddressByDate(final Date fromDate, final Date toDate)
 	{
 
-		final List<MplReturnPickUpAddressInfoModel> returnPickUpAddressData = cancelReturnFacade
-				.getPickUpReturnReportByDates(fromDate, toDate);
+		returnPickUpAddressData = cancelReturnFacade.getPickUpReturnReportByDates(fromDate, toDate);
 		listBoxData.setModel(new ListModelList<MplReturnPickUpAddressInfoModel>(returnPickUpAddressData));
 		listBoxData.setItemRenderer(new ReturnPickupAddressItemRenderer());
 
+	}
+
+	/**
+	 * export csv file from listview
+	 *
+	 * @throws InterruptedException
+	 */
+	@ViewEvent(componentID = "savecsv", eventName = Events.ON_CLICK)
+	public void getCsv() throws InterruptedException
+	{
+
+		exportToCsv(listBoxData, returnPickUpAddressData,
+				"PickUpAddressChangeREquest_" + startDateValue.getValue() + "_" + endDateValue.getValue());
+
+	}
+
+	public static void exportToCsv(final Listbox listbox, final List<MplReturnPickUpAddressInfoModel> returnPickUpAddressList,
+			final String fileName) throws InterruptedException
+	{
+		final String saperator = ",";
+		final StringBuffer stringBuff = new StringBuffer("");
+
+		if (returnPickUpAddressList == null || listbox.getItems() == null || returnPickUpAddressList.isEmpty())
+		{
+			LOG.info("****************************Return pickup Address is empty***************************");
+			Messagebox.show("List is empty", "Empty Data", Messagebox.OK, Messagebox.ERROR);
+			return;
+		}
+		for (final Object head : listbox.getHeads())
+		{
+			for (final Object header : ((Listhead) head).getChildren())
+			{
+				stringBuff.append(((Listheader) header).getLabel().concat(saperator));
+			}
+			stringBuff.append("\n");
+		}
+		returnPickUpAddressList.forEach(new Consumer<MplReturnPickUpAddressInfoModel>()
+		{
+			@Override
+			public void accept(final MplReturnPickUpAddressInfoModel returnPickUpAddressData)
+			{
+
+				stringBuff.append(returnPickUpAddressData.getOrderId().concat(saperator));
+				stringBuff.append(returnPickUpAddressData.getTransactionId().concat(saperator));
+				stringBuff.append(returnPickUpAddressData.getPincode().concat(saperator));
+				stringBuff.append(returnPickUpAddressData.getCreationtime().toString().concat(saperator));
+				stringBuff.append(returnPickUpAddressData.getStatus().concat(saperator));
+				stringBuff.append("\n");
+			}
+		});
+		Filedownload.save(stringBuff.toString().getBytes(), "text/plain", fileName.concat(".csv"));
 	}
 }
