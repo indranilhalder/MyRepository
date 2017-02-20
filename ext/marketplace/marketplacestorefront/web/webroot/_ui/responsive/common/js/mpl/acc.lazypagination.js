@@ -23,9 +23,9 @@ function innerLazyLoad(options) {
             }
         }
     });
-    if(initPageLoad && !/page-[0-9]+/.test(window.location.pathname)){//TODO: duplicate loading prevention
+    if(initPageLoad){//TODO: duplicate loading prevention
     	//$('ul.product-listing.product-grid').eq(2).html(gridHTML).hide().fadeIn(500);
-		$('ul.product-listing.product-grid.lazy-grid').html(gridHTML);
+		$('ul.product-listing.product-grid.lazy-grid').html(gridHTML).hide().fadeIn(500);
     	initPageLoad = false;
     }else{
     	//$('ul.product-listing.product-grid').eq(2).append(gridHTML);
