@@ -57,11 +57,11 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 
 	/*
 	 * @Desc Adding product to cart
-	 *
+	 * 
 	 * @param parameter
-	 *
+	 * 
 	 * @return CommerceCartModification
-	 *
+	 * 
 	 * @throws CommerceCartModificationException
 	 */
 	@Override
@@ -227,19 +227,19 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 
 	/*
 	 * @Desc Fetching eligible quantity for a ussid which can be added in cart
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @param productModel
-	 *
+	 * 
 	 * @param quantityToAdd
-	 *
+	 * 
 	 * @param pointOfServiceModel
-	 *
+	 * 
 	 * @param ussid
-	 *
+	 * 
 	 * @return long
-	 *
+	 * 
 	 * @throws CommerceCartModificationException
 	 */
 	private long getAllowedCartAdjustmentForProduct(final CartModel cartModel, final ProductModel productModel,
@@ -270,11 +270,11 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 
 	/*
 	 * @Desc Fetching available stock information for a ussid from Stock Level
-	 *
+	 * 
 	 * @param ussid
-	 *
+	 * 
 	 * @return long
-	 *
+	 * 
 	 * @throws CommerceCartModificationException
 	 */
 	private long getAvailableStockLevel(final String ussid) throws CommerceCartModificationException
@@ -333,7 +333,7 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 	/**
 	 * @return the maxOrderQuantityConstant
 	 */
-	public int getMaxOrderQuantityConstant()
+	public String getMaxOrderQuantityConstant()
 	{
 		return maxOrderQuantityConstant;
 	}

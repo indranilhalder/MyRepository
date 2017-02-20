@@ -125,6 +125,7 @@ $(document).ready(
 								+ $(".pdp-promo-title pdp-title").val() + '",';	
 						tealiumData += '"product_id":["'
 								+ $("#product_id").val() + '"],';
+						
 						//TPR-430 Start
 						if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
 						tealiumData += '"product_category":'
@@ -383,6 +384,20 @@ $(document).ready(
 							+ qtyUpdated + ',';			
 						tealiumData += '"checkout_seller_ids":"'		//for TPR-429
 							+ $("#checkoutSellerIDs").val() + '",';
+						//L1 L2 L3 For cart  TPR-4831
+						if($("#page_subcategory_L1").val() !=undefined || $("#page_subcategory_L1").val() !=null){ 
+							tealiumData += '"page_subcategory_L1":'
+								+ getListValue("page_subcategory_L1") + ',';           
+							}
+						if($("#page_subcategory_L2").val() !=undefined || $("#page_subcategory_L2").val() !=null){ 
+							tealiumData += '"page_subcategory_L2":'
+								+ getListValue("page_subcategory_L2") + ',';            
+							}
+						if($("#page_subcategory_l3").val() !=undefined || $("#page_subcategory_l3").val() !=null){ 
+							tealiumData += '"page_subcategory_l3":'
+								+ getListValue("page_subcategory_l3") + ',';            
+							}
+						//L1 L2 L3 cart ends
 						//TPR-430 Start
 						if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
 						tealiumData += '"product_category":'
