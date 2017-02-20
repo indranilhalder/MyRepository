@@ -461,10 +461,11 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 										if(null !=rich && null != rich.iterator().next().getDeliveryFulfillModeByP1()) {
 										  cartEntry.setFulfillmentTypeP1(rich.iterator().next().getDeliveryFulfillModeByP1().getCode());
 										}
-										cartdatalist.add(cartSoftReservationRequestData);
+										
 					     					}
 										
 									}
+									cartdatalist.add(cartSoftReservationRequestData);
 								}
 							}
 						}
