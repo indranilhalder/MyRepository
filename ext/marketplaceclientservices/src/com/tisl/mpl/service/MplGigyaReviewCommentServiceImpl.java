@@ -445,6 +445,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 				final GSObject gsObj = new GSObject(gsResponse.getResponseText());
 				return gsObj.getString(MarketplacecclientservicesConstants.STATUS_REASON);
 			}
+
 		}
 		catch (final Exception e)
 		{
@@ -678,6 +679,11 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 				reviewAndRating.put(gsCommentObject.getString(MarketplacecclientservicesConstants.COMMENTCOUNTS),
 						gsRatingObject.getString(MarketplacecclientservicesConstants.OVERALL));
 
+			}
+			else
+			{
+				LOG.debug("**********ERROR MESSAGE****" + gsResponse.getErrorMessage());
+				LOG.debug("**********ERROR CODE********" + gsResponse.getErrorCode());
 			}
 		}
 

@@ -362,16 +362,17 @@ public class ProductPageController extends MidPageController
 			final ProductModel productModel = productService.getProductForCode(productCode);
 			final Map<String, String> reviewAndRating = mplGigyaReviewService.getReviewsAndRatingByCategoryId(
 					productModel.getProductCategoryType(), productCode);
-			/*
-			 * reviewAndRating =
-			 * mplGigyaReviewService.getReviewsAndRatingByCategoryId(productModel.getProductCategoryType(), productCode);
-			 */for (final Map.Entry<String, String> entry : reviewAndRating.entrySet())
-			{
-				final String commentCount = entry.getKey();
-				final String ratingCount = entry.getValue();
-				model.addAttribute("commentCount", commentCount);
-				model.addAttribute("averageRating", ratingCount);
 
+			if (reviewAndRating != null)
+			{
+				for (final Map.Entry<String, String> entry : reviewAndRating.entrySet())
+				{
+					final String commentCount = entry.getKey();
+					final String ratingCount = entry.getValue();
+					model.addAttribute("commentCount", commentCount);
+					model.addAttribute("averageRating", ratingCount);
+
+				}
 			}
 			//   TPR-4389 ENDS HERE
 
