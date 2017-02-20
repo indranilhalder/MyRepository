@@ -6810,6 +6810,11 @@
 				jaloclass="com.tisl.mpl.core.jalo.MplBrandSearchBoxComponent">
 				<description>Represents Microsite Enhanced Search Box component that displays a list of categories, brands and seller as a dropdown.</description>
 			</itemtype>
+			<!-- TPR-4471 & 250 -->
+			<itemtype code="MicrositeSelectLogoComponent"
+				generate="true" autocreate="true" extends="SimpleBannerComponent"
+				jaloclass="com.tisl.mpl.core.jalo.MicrositeSelectLogoComponent">
+			</itemtype>
 		</typegroup>
 		<!-- For Microsite -->
 
