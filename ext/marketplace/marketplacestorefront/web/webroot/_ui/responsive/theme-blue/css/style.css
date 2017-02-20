@@ -60879,6 +60879,10 @@ body.page-multiStepCheckoutSummaryPage .checkout.wrapper .left-block .checkout-h
     padding-left:30px;
 }
 }
-
+@media(max-width:335px){
+	.address-list .edit>a:before {
+    font-size: 25px;
+}
+}
 /*Delivery Option page end*/
 /*checkout pages end*/
