@@ -111,6 +111,10 @@ function getProductSetData() {
     	
 }
 $(document).ready(function() {
+//js hide will be changed after jstl changes
+$('.pageSizeForm').remove();
+$('.bottom-pagination').remove();
+$('.paginationForm').remove();
     //set the total no of pages 
     totalNoOfPages = $('input[name=noOfPages]').val();
     totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
