@@ -58,6 +58,12 @@
 			</panel>
 			<panel>
 				<panelchildren>
+					<hbox pack="center">
+						<button id="savecsv" sclass="cng-action-icon"
+							style="margin-left:2px;padding:0px 3px 0px 0px;font-size:12px"
+							image="${wr}/images/csv_text.png" label="Download" />
+					</hbox>
+					<separator />
 					<listbox id="listBoxData" multiple="true"
 						mold="paging" pageSize="10" checkmark="false"
 						emptyMessage="No result found in the result">

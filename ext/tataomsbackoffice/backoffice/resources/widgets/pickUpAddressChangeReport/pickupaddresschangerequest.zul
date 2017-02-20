@@ -8,7 +8,7 @@
 
 	<columnlayout width="100%" height="100%">
 		<columnchildren width="100%">
-		<panel
+			<panel
 				style="height:15%;font-size:14px;border-bottom:4px solid #27394f">
 				<panelchildren style="border:none">
 					<hlayout style="text-align:left">
@@ -73,8 +73,8 @@
 									style="width:200px;height:10px">
 								</textbox>
 							</vlayout>
-						 </hlayout>
-						 <hlayout>
+						</hlayout>
+						<hlayout>
 							<vlayout width="100px">
 								<label value="Shipping Address Pincode"
 									hflex="1" />
@@ -91,6 +91,12 @@
 							</vlayout>
 						</hlayout>
 						<separator />
+						<hbox pack="center">
+							<button id="savecsv"
+								sclass="cng-action-icon"
+								style="margin-left:2px;padding:0px 3px 0px 0px;font-size:12px"
+								image="${wr}/images/csv_text.png" label="Download" />
+						</hbox>
 						<listbox id="listBoxData"
 							emptyMessage="No result found in the result" mold="paging"
 							pageSize="12">
@@ -100,13 +106,13 @@
 								</listheader>
 								<listheader style="text-align:left"
 									label="${labels.lbl.lbx.header2}">
-								</listheader>		
+								</listheader>
 								<listheader style="text-align:left"
 									label="${labels.lbl.lbx.header3}">
-								</listheader>	
+								</listheader>
 								<listheader style="text-align:left"
 									label="${labels.lbl.lbx.header4}">
-								</listheader>					
+								</listheader>
 								<listheader style="text-align:left"
 									label="${labels.lbl.lbx.header5}">
 								</listheader>
