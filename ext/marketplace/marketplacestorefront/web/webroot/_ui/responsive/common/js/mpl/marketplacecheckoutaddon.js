@@ -7326,8 +7326,8 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				/*TPR-656*/ /*TPR-4738*/
 				utag.link({
 					link_obj: this, 
-					link_text: 'cart_to_wishlist' , 
-					event_type : 'cart_to_wishlist', 
+					link_text: 'cart_add_to_wishlist' , 
+					event_type : 'cart_add_to_wishlist', 
 					product_sku_wishlist : productcodearray
 				});
 				/*TPR-656 Ends*/
