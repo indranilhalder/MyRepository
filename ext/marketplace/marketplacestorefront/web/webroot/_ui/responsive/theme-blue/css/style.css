@@ -60593,3 +60593,13 @@ body.page-cartPage .cart.wrapper .product-block li.item > ul > li.delivery ul{
  	color:#000;
 }
 /* UF-61 Cart Page end */
+
+/* TPR-1325 start */
+.bundle-promo{
+	padding-top:15px;
+}
+#OfferWrap .Inner .bundle-promo > a{
+    font-size:13px;
+    text-decoration:none;
+}
+/* TPR-1325 end */
