@@ -6,7 +6,7 @@ ${stringMessage}
 <c:if test="${empty stringMessage}">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form class="form-horizontal otpForm">
+				<div class="form-horizontal otpForm">
 					<div class="modal-body">
 						<button type="button" class="close" data-dismiss="modal"
 							aria-label="Close">
@@ -48,7 +48,7 @@ ${stringMessage}
 					</div>
 					<p style="clear: both;"></p>
 
-				</form>
+				</div>
 			</div>
 		</div>
 	<script>

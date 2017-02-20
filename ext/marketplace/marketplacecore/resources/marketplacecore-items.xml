@@ -6954,6 +6954,14 @@
 							<description>for return Initiate</description>
 							<persistence type="property" />
 					</attribute>
+					<!--R2.3  Start Bug Id TISRLUAT-986 20-02-2017 Start -->
+					<attribute qualifier="isInscan" type="java.lang.Boolean">
+							<description>for order Inscan status</description>
+							<defaultvalue>Boolean.FALSE</defaultvalue>
+							<modifiers optional="true" read="true" write="true" />
+							<persistence type="property" />
+					</attribute>
+				  <!--R2.3  End  -->
 					
 					<!--End  Added new Attributes for Order Update  -->
 
