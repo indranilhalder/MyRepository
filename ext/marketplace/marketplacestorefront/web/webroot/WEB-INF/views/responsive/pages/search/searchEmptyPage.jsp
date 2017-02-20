@@ -25,7 +25,19 @@ $(document).ready(function() {
 	
 	<div class="search-empty no-results wrapper">
 	<nav:searchSpellingSuggestion spellingSuggestion="${searchPageData.spellingSuggestion}" />
+	        <!--  TPR-250 changes --> 
+	        <c:choose>   
+	        <c:when test="${not empty msiteSellerId}">
+	        <h3 class="desktop"><spring:theme code="search.no.results_micro" text="Sorry! No items matched your search. Why don't you try a less specific keyword?" /></h3> 
+			<h3 class="mobile"><spring:theme code="search.no.results.mobile_micro" text="We're sorry, but we couldn't find any results for"/></h3>   
+	        </c:when>
+	        <c:otherwise>
+	        <h3 class="desktop"><spring:theme code="search.no.results" text="Sorry! No items matched your search. Why don't you try a less specific keyword?" /></h3> 
+			<h3 class="mobile"><spring:theme code="search.no.results.mobile" text="We're sorry, but we couldn't find any results for"/></h3>   
+	        </c:otherwise>
+			</c:choose> 
 	
+	        <!--  TPR-250 changes -->
 			<h3 class="desktop"><spring:theme code="search.no.results" text="Sorry! No items matched your search. Why don't you try a less specific keyword?" /></h3> 
 			<h3 class="mobile"><spring:theme code="search.no.results.mobile" text="We're sorry, but we couldn't find any results for"/></h3>   
 			<span class="help"><spring:theme code="needhelp.needhelptext" /></span>
