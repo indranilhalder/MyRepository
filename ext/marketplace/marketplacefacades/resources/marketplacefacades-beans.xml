@@ -195,7 +195,12 @@
 		<property name="allVariantsId" type="java.util.List&lt;java.lang.String>"/>
 		<!-- CHANGES FOR TPR-249 -->
 		<property name="displaySizes" type="java.util.List&lt;java.lang.String>"></property>
-
+         <!-- TPR-250 changes -->
+        <property name="ussidList" type="java.util.Map&lt;String,String>"></property>
+        <property name="mrpMap" type="java.util.Map&lt;String,de.hybris.platform.commercefacades.product.data.PriceData>"></property>
+        <property name="priceMap" type="java.util.Map&lt;String,de.hybris.platform.commercefacades.product.data.PriceData>"></property>
+        <property name="savingsMap" type="java.util.Map&lt;String,de.hybris.platform.commercefacades.product.data.PriceData>"></property>
+        <!-- TPR-250 changes -->
 	</bean>
 
 	<!-- pdp changes begins -->

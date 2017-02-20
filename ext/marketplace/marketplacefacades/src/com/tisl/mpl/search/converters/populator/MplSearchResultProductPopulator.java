@@ -16,12 +16,13 @@ import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 
 
 /**
@@ -39,6 +40,7 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	private SizeAttributeComparator sizeAttributeComparator;
 	//private static final String DELIMETER = ":";
 	//private static final String STOCK = "STOCK";
+	private static final String DELIMETER = ":";
 
 	@Override
 	public void populate(final SearchResultValueData source, final ProductData target)
@@ -107,7 +109,10 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 			 */
 			if (getValue(source, "ussID") != null)
 			{
-				target.setUssID(this.<String> getValue(source, "ussID"));
+				/* TPR-250 changes */
+				poulateUssidData(source, target);
+				/* TPR-250 changes */
+				//target.setUssID(this.<String> getValue(source, "ussID"));
 			}
 			if (getValue(source, "immediateCategory") != null)
 			{
@@ -299,23 +304,95 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	/*
 	 * @Override protected void addImageData(final SearchResultValueData source, final String imageFormat, final String
 	 * mediaFormatQualifier, final ImageDataType type, final List<ImageData> images) {
-	 * 
+	 *
 	 * final Object imgObj = getValue(source, "img-" + mediaFormatQualifier); List<String> imgList = new ArrayList(); if
 	 * (imgObj instanceof ArrayList) { imgList = (List) imgObj; } else { final String imgStr = (String) imgObj;
 	 * imgList.add(imgStr); }
-	 * 
-	 * 
+	 *
+	 *
 	 * if (!imgList.isEmpty()) { for (int i = 0; i < imgList.size(); i++) { final ImageData imageSearchData =
 	 * createImageData(); imageSearchData.setImageType(type); imageSearchData.setFormat(imageFormat);
 	 * imageSearchData.setUrl(imgList.get(i)); images.add(imageSearchData);
-	 * 
-	 * 
+	 *
+	 *
 	 * }
-	 * 
-	 * 
+	 *
+	 *
 	 * } }
 	 */
+	/**
+	 * TPR-250
+	 *
+	 * @param source
+	 * @param target
+	 */
+	private void poulateUssidData(final SearchResultValueData source, final ProductData target)
+	{
+		final Map<String, String> ussidMap = new HashMap<String, String>();
+		final Map<String, PriceData> priceMap = new HashMap<String, PriceData>();
+		final Map<String, PriceData> mrpMap = new HashMap<String, PriceData>();
+		final Map<String, PriceData> saveMap = new HashMap<String, PriceData>();
+		final List<String> ussidList = (List<String>) getValue(source, "ussID");
+		if (CollectionUtils.isNotEmpty(ussidList) && ussidList.get(0).contains(":"))
+		{
+			final String[] value = ussidList.get(0).split(DELIMETER);
+			final String ussid = value[0];
+			final String mrp = value[1];
+			final String price = value[2];
+			target.setUssID(ussid);
+			final PriceData mrpPrice = getPriceDataFactory().create(PriceDataType.BUY,
+					BigDecimal.valueOf(Double.valueOf(mrp).doubleValue()), getCommonI18NService().getCurrentCurrency());
+			final PriceData mopPrice = getPriceDataFactory().create(PriceDataType.BUY,
+					BigDecimal.valueOf(Double.valueOf(price).doubleValue()), getCommonI18NService().getCurrentCurrency());
+			final PriceData savings = getSavingsValue(Double.valueOf(mrp), Double.valueOf(price));
+			priceMap.put(ussid.substring(0, 6), mrpPrice);
+			mrpMap.put(ussid.substring(0, 6), mopPrice);
+			saveMap.put(ussid.substring(0, 6), savings);
 
+
+		}
+		for (final String ussid : ussidList)
+		{
+			if (ussid.contains(":"))
+			{
+				final String[] value = ussid.split(DELIMETER);
+				final String ussidVal = value[0];
+				final String mrp = value[1];
+				final String price = value[2];
+				final PriceData mrpVal = getPriceDataFactory().create(PriceDataType.BUY,
+						BigDecimal.valueOf(Double.valueOf(mrp).doubleValue()), getCommonI18NService().getCurrentCurrency());
+				final PriceData mopVal = getPriceDataFactory().create(PriceDataType.BUY,
+						BigDecimal.valueOf(Double.valueOf(price).doubleValue()), getCommonI18NService().getCurrentCurrency());
+				final PriceData savVal = getSavingsValue(Double.valueOf(mrp), Double.valueOf(price));
+				ussidMap.put(ussidVal.substring(0, 6), ussidVal);
+				priceMap.put(ussid.substring(0, 6), mrpVal);
+				mrpMap.put(ussid.substring(0, 6), mopVal);
+				saveMap.put(ussid.substring(0, 6), savVal);
+			}
+		}
+		target.setUssidList(ussidMap);
+		target.setMrpMap(mrpMap);
+		target.setPriceMap(priceMap);
+		target.setSavingsMap(saveMap);
+	}
+
+	/**
+	 * tpr-250 get saving data value
+	 *
+	 * @param mrp
+	 * @param mop
+	 * @return priceData
+	 */
+	private PriceData getSavingsValue(final Double mrp, final Double mop)
+	{
+		final double savingsAmt = mrp.doubleValue() - mop.doubleValue();
+		final double calculatedPerSavings = (savingsAmt / mrp.doubleValue()) * 100;
+		//final double roundedOffValuebefore = Math.round(calculatedPerSavings * 100.0) / 100.0;
+		final double floorValue = Math.floor((calculatedPerSavings * 100.0) / 100.0);
+		final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf((int) floorValue),
+				getCommonI18NService().getCurrentCurrency());
+		return priceData;
+	}
 
 
 
