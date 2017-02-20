@@ -314,11 +314,9 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 						{
 							pincodereqObj.setIsPrecious(MarketplacecclientservicesConstants.N);
 						}
-
 						pincodeList.add(pincodereqObj);
 					}
-					pincodeList.add(pincodereqObj);
-					//}
+					
 				}
 				if (null != pin)
 				{

@@ -1335,6 +1335,10 @@ public class CartPageController extends AbstractPageController
 						{
 							responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData);
 						}
+						if (null != responseData)
+						{
+							getSessionService().setAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION, responseData);
+						}
 						if (responseData != null)
 						{
 							for (PinCodeResponseData pinCodeResponseData : responseData)
