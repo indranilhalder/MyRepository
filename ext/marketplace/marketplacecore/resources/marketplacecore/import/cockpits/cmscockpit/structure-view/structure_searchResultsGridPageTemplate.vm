@@ -23,6 +23,19 @@
 					<cockpit code="NavigationBar" />
 				</td>
 			</tr>
+			
+			<tr>
+				<td width="33%" class="structureViewSection">
+					<cockpit code="ProductGridMenu"/>
+				</td>
+				<td width="33%" class="structureViewSection">
+					<cockpit code="ProductGridLogo"/>
+				</td>
+				<td width="33%" class="structureViewSection">
+					<cockpit code="ProductGridSearch"/>
+				</td>
+			</tr>
+			
 			<tr>
 				<td colspan="7" class="structureViewSection">
 					<cockpit code="BottomHeaderSlot"/>

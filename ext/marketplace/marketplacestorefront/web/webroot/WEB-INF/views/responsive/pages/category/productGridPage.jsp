@@ -14,7 +14,58 @@
 <input type="hidden" id="product_category" value="${product_category}"/>
 <input type="hidden" id="page_subcategory_name" value="${page_subcategory_name}"/>
 <input type="hidden" id="page_subcategory_name_l3" value="${page_subcategory_name_l3}"/>
+<input type="hidden" id="mSeller_name" value="${mSellerName}"> <!-- TPR-4471 -->
+<input type="hidden" id="mSellerID" value="${mSellerID}"> <!-- TPR-4471 -->
+
 <template:page pageTitle="${pageTitle}">
+<!-- TPR-4471 Starts -->
+
+<c:set value ="${mSellerName}" var="sellerName"></c:set>
+
+<c:if test="${not empty sellerName}">
+<div class="productGrid-header-wrapper">
+<div class="productGrid-header">
+<div class="productGrid-menu">
+ <nav>
+					<ul>
+						<c:if test="${empty showOnlySiteLogo }">
+						
+									<cms:pageSlot position="ProductGridMenu" var="component">
+										<cms:component component="${component}" />
+									</cms:pageSlot>
+								
+							</c:if>
+					</ul>
+				</nav>
+				</div>
+<div class="productGrid-logo">
+			<cms:pageSlot position="ProductGridLogo" var="feature">
+				<cms:component component="${feature}"/>
+			</cms:pageSlot>
+	</div>
+	
+	
+	<div class="product-grid-search">
+			<cms:pageSlot position="ProductGridSearch" var="feature">
+				<cms:component component="${feature}"/>
+			</cms:pageSlot>
+	</div>
+
+	
+
+	<div class="bag">
+					<a href="/cart" class="mini-cart-link myBag-sticky"
+						data-mini-cart-url="/cart/rollover/MiniCart"
+						data-mini-cart-refresh-url="/cart/miniCart/SUBTOTAL"
+						data-mini-cart-name="Cart" data-mini-cart-empty-name="Empty Cart"
+						style="position: static;"><spring:theme code="minicart.mybag" />&nbsp;(<span
+						class="js-mini-cart-count-hover"></span>) </a>
+			</div>
+			</div>
+	</div>
+	</c:if>
+	<!-- TPR-4471 Ends -->
+	
 <div class="list_title"><h1>${dropDownText}</h1></div>
 <div class="listing wrapper">
 	<div class="search-result">

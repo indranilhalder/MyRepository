@@ -5,11 +5,14 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!-- Tealium hidden fields -->
 <input type="hidden" id="search_keyword" value="${searchPageData.freeTextSearch}">
 <input type="hidden" id="searchCategory" value="${searchCategory}">
 <input type="hidden" id="search_results" value="${searchPageData.pagination.totalNumberOfResults}">
 <input type="hidden" id="search_type" value="${searchType}">	<!-- For TPR-666 -->
+<input type="hidden" id="mSeller_name" value="${mSellerName}"> <!-- TPR-4471 -->
+<input type="hidden" id="mSellerID" value="${mSellerID}"> <!-- TPR-4471 -->
 <template:page pageTitle="${pageTitle}">
 <script language='javascript'>
 $(document).ready(function() {
@@ -22,7 +25,49 @@ $(document).ready(function() {
 
 </script>
 	<c:url value="/" var="homePageUrl" />
+	<!-- TPR-4471 Starts -->
+<c:url value="${param}" var="paramUrl" />
+
+<c:if test="${fn:contains(paramUrl,'mSellerID')}">
+<div class="productGrid-header-wrapper">
+<div class="productGrid-header">
+<div class="productGrid-menu">
+ <nav>
+					<ul>
+						<c:if test="${empty showOnlySiteLogo }">
+						
+									<cms:pageSlot position="ProductGridMenu" var="component">
+										<cms:component component="${component}" />
+									</cms:pageSlot>
+								
+							</c:if>
+					</ul>
+				</nav>
+				</div>
+<div class="productGrid-logo">
+			<cms:pageSlot position="ProductGridLogo" var="feature">
+				<cms:component component="${feature}"/>
+			</cms:pageSlot>
+	</div>
 	
+	
+	<div class="product-grid-search">
+			<cms:pageSlot position="ProductGridSearch" var="feature">
+				<cms:component component="${feature}"/>
+			</cms:pageSlot>
+	</div>
+
+	<div class="bag">
+					<a href="/cart" class="mini-cart-link myBag-sticky"
+						data-mini-cart-url="/cart/rollover/MiniCart"
+						data-mini-cart-refresh-url="/cart/miniCart/SUBTOTAL"
+						data-mini-cart-name="Cart" data-mini-cart-empty-name="Empty Cart"
+						style="position: static;"></a>
+			</div>
+			</div>
+			</div>
+	</c:if>
+<!-- TPR-4471 Ends -->	
 	<div class="search-empty no-results wrapper">
 	<nav:searchSpellingSuggestion spellingSuggestion="${searchPageData.spellingSuggestion}" />
 	        <!--  TPR-250 changes --> 

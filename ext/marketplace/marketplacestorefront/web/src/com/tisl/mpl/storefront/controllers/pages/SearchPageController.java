@@ -89,6 +89,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.category.MplCategoryFacade;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.helpmeshop.HelpMeShopFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
@@ -157,6 +158,10 @@ public class SearchPageController extends AbstractSearchPageController
 	private UserService userService;
 	@Autowired
 	private WishlistFacade wishlistFacade;
+
+	//TPR-4471
+	@Autowired
+	private MplCategoryFacade mplCategoryFacade;
 
 	@Resource(name = "productSearchFacade")
 	private ProductSearchFacade<ProductData> productSearchFacade;
@@ -233,6 +238,20 @@ public class SearchPageController extends AbstractSearchPageController
 			@RequestParam(value = "mSellerID", required = false) final String mSellerID, final HttpServletRequest request,
 			final Model model) throws CMSItemNotFoundException
 	{
+		//CKD:TPR-250:Start
+		if (StringUtils.isNotBlank(mSellerID))
+		{
+			model.addAttribute("msiteSellerId", mSellerID);
+		}
+		//CKD:TPR-250:End
+		// TPR-4471
+		String sellerName = "";
+		if (null != mSellerID)
+		{
+			sellerName = mplCategoryFacade.getSellerInformationBySellerID(mSellerID);
+			model.addAttribute("mSellerName", sellerName);
+			model.addAttribute("mSellerID", mSellerID);
+		}
 		//---------------start--------------
 		String whichSearch = null;
 		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;

@@ -12,10 +12,20 @@
 <script>
 	
 $(document).ready(function () {
-	var pageLabel = '${cmsPage.label}';
-		var siteName = '${cmsSite.uid}';
-	var lastSegment = pageLabel.split('/').pop();
-		
+	//var pageLabel = '${cmsPage.label}';
+	//var lastSegment = pageLabel.split('/').pop();
+	//TPR-4471
+	var requestParam = window.location.href;
+	var siteName = '${cmsSite.uid}';
+	var sellerName = $('#mSeller_name').val();
+	var lastSegment = "";
+	if(sellerName != undefined) {
+		lastSegment = sellerName.toLowerCase();
+	}
+	else
+	{
+		lastSegment = requestParam.split('/').pop();
+	}
 	    var url='/m/fetchSellerSalesHierarchyCategories/'+lastSegment;
 	      if(lastSegment != ''){  
 	        $.ajax({

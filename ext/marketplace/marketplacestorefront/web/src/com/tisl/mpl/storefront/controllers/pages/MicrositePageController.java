@@ -3,9 +3,12 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+import de.hybris.platform.acceleratorcms.model.components.SimpleBannerComponentModel;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractSearchPageController;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
+import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 
 import java.io.UnsupportedEncodingException;
@@ -15,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -114,7 +118,7 @@ public class MicrositePageController extends AbstractSearchPageController
 
 	/*
 	 * This method will get category data from MplCategoryFacade for the given category name.
-	 *
+	 * 
 	 * @param sellerName category name comes from ajax url
 	 */
 	@RequestMapping(value = "/fetchSellerSalesHierarchyCategories/{sellerName}", method = RequestMethod.GET)
@@ -141,6 +145,61 @@ public class MicrositePageController extends AbstractSearchPageController
 		}
 
 		return catData;
+	}
+
+	//TPR-4471 && TPR-250
+	/**
+	 * @param sellerName
+	 * @return jsonObject
+	 * @throws CMSItemNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping(value = "/fetchSellerLogo/{sellerName}", method = RequestMethod.GET)
+	@ResponseBody
+	public JSONObject getMicrositeAllLogo(@PathVariable final String sellerName) throws CMSItemNotFoundException,
+			UnsupportedEncodingException
+	{
+		final JSONObject logoJson = new JSONObject();
+		SimpleBannerComponentModel logoComponent = null;
+		try
+		{
+			final String label = "/m/" + sellerName;
+			final ContentPageModel page = getCmsPageService().getPageForLabel(label);
+			if (page != null)
+			{
+				for (final ContentSlotForPageModel contentSlotForPage : page.getContentSlots())
+				{
+					if (contentSlotForPage.getPosition().equalsIgnoreCase("MicroSiteLogo"))
+					{
+						for (final AbstractCMSComponentModel abstractCMSComponentModel : contentSlotForPage.getContentSlot()
+								.getCmsComponents())
+						{
+							if (abstractCMSComponentModel instanceof SimpleBannerComponentModel)
+							{
+								logoComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
+								logoJson.put("url", logoComponent.getMedia().getURL());
+								break;
+							}
+						}
+						break;
+					}
+				}
+			}
+		}
+		catch (final EtailBusinessExceptions businessException)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(businessException, null);
+		}
+		catch (final EtailNonBusinessExceptions nonBusinessException)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(nonBusinessException);
+		}
+		catch (final Exception exception)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception));
+		}
+
+		return logoJson;
 	}
 
 }
