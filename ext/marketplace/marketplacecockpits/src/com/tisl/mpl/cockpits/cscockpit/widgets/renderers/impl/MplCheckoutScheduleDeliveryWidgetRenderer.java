@@ -2,10 +2,13 @@ package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.zkoss.zk.ui.api.HtmlBasedComponent;
@@ -223,6 +226,21 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 							if(null != edd) {
 								String eddDateBetween = getEddDateBetween(cartEntry,edd);
 								if(null != eddDateBetween) {
+									try {
+										String estDeliveryDateAndTime = null;
+										if (null != edd)
+										{
+											estDeliveryDateAndTime = edd;
+										}
+										if(null != estDeliveryDateAndTime && StringUtils.isNotEmpty(estDeliveryDateAndTime)){
+											SimpleDateFormat parseFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+											Date dateForEDD=null;
+											dateForEDD = parseFormat.parse(estDeliveryDateAndTime);
+											cartEntry.setExpectedDeliveryDate(dateForEDD);
+										} 
+									}catch (java.text.ParseException e) {
+										LOG.error("Error While ExpectedDeliveryDate" );
+									}
 									cartEntry.setSddDateBetween(eddDateBetween);
 									modelService.save(cartEntry);
 								}
