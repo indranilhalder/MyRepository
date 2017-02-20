@@ -3,6 +3,7 @@ var totalNoOfPages = 0;
 var innerRecordSize = 7;
 var loadMoreCount = 72;
 var initPageLoad = true;
+var directPaginatedLoad = true;
 var serpURL;
 var ajaxUrl = '';
 var recordsLoadedCount = 0;
@@ -22,7 +23,7 @@ function innerLazyLoad(options) {
             }
         }
     });
-    if(initPageLoad){//TODO: duplicate loading prevention
+    if(initPageLoad && !/page-[0-9]+/.test(window.location.pathname)){//TODO: duplicate loading prevention
     	//$('ul.product-listing.product-grid').eq(2).html(gridHTML).hide().fadeIn(500);
 		$('ul.product-listing.product-grid.lazy-grid').html(gridHTML);
     	initPageLoad = false;
@@ -59,8 +60,11 @@ function getProductSetData() {
     		currentPageNo = currentPageNo[0].split("-");
 			console.log(currentPageNo);
     		currentPageNo = parseInt(currentPageNo[1]);
-    		currentPageNo++; // TODO: replace the state 
-			
+    		if(directPaginatedLoad){
+				directPaginatedLoad = false;
+			}else{
+				currentPageNo++; // TODO: replace the state 
+			}
     		if(currentPageNo <= totalNoOfPages){
     			ajaxUrl = pathName.replace(/page-[0-9]+/,'page-'+currentPageNo);
 				var nextPaginatedAjaxUrl = pathName.replace(/page-[0-9]+/,'page-'+currentPageNo);
