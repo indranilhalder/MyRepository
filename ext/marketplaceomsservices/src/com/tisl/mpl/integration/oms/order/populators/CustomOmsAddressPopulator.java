@@ -240,15 +240,6 @@ public class CustomOmsAddressPopulator implements Populator<AddressModel, Addres
 		target.setName(getCustomerNameStrategy().getName(source.getFirstname(), source.getLastname()));
 	}
 
-	/**
-	 *
-	 */
-	private void updatePointer()
-	{
-		// YTODO Auto-generated method stub
-
-	}
-
 	public CustomerNameStrategy getCustomerNameStrategy()
 	{
 		return this.customerNameStrategy;
