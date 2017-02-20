@@ -55545,7 +55545,7 @@ display:block;}
 }
 .checkout.wrapper.checkout-payment h1{font-size:16px;}
 .cart.wrapper.checkout-payment p.cart-items{font-size:13px;}
-.checkout-payment.cart.checkout.wrapper .step-body{    padding: 60px 24px 0;}
+.checkout-payment.cart.checkout.wrapper .step-body{    padding: 70px 24px 0;}
 
 
 }
@@ -55570,7 +55570,7 @@ display:block;}
 ---------------------------------------------*/
 @media(max-width:767px){
 .choose-payment{  /* padding: 70px 0 0; */}
-.checkout-payment.cart.checkout.wrapper .step-body{ padding: 70px 0px 0;}
+.checkout-payment.cart.checkout.wrapper .step-body{ padding: 90px 0px 0;}
 .checkout.wrapper.checkout-payment h1,
 .cart.wrapper.checkout-payment p.cart-items{display:none;}
 
@@ -59792,7 +59792,7 @@ body.template-pages-layout-electronicsCategoryLandingPage #categoryPageDeptHierT
 body.template-pages-layout-BrandLayoutPage .facet_mobile .facet-values.js-facet-values.js-facet-form p.filter-name,body.template-pages-layout-BrandLayoutPage p.filter-name.facet_mobile,
 body.template-pages-layout-BrandLayoutPage #categoryPageDeptHierTreeForm p.filter-name,body.template-pages-layout-BrandLayoutPage #searchPageDeptHierTreeForm p.filter-name ,
 body.template-pages-layout-ShoeBrandLandingLayoutPage .facet_mobile .facet-values.js-facet-values.js-facet-form p.filter-name,body.template-pages-layout-ShoeBrandLandingLayoutPage p.filter-name.facet_mobile,
-body.template-pages-layout-ShoeBrandLandingLayoutPage #categoryPageDeptHierTreeForm p.filter-name,body.template-pages-layout-ShoeBrandLandingLayoutPage #searchPageDeptHierTreeForm p.filter-name .
+body.template-pages-layout-ShoeBrandLandingLayoutPage #categoryPageDeptHierTreeForm p.filter-name,body.template-pages-layout-ShoeBrandLandingLayoutPage #searchPageDeptHierTreeForm p.filter-name,
 body.template-pages-layout-footwearCategoryLandingPage .facet_mobile .facet-values.js-facet-values.js-facet-form p.filter-name,body.template-pages-layout-footwearCategoryLandingPage p.filter-name.facet_mobile,
 body.template-pages-layout-footwearCategoryLandingPage #categoryPageDeptHierTreeForm p.filter-name,body.template-pages-layout-footwearCategoryLandingPage #searchPageDeptHierTreeForm p.filter-name {
     display: none !important;
@@ -60568,6 +60568,9 @@ body.page-cartPage .cart.wrapper .product-block li.item > ul > li.delivery li.me
 p#unserviceablepincode_tooltip,p#error-Id_tooltip,p#emptyId_tooltip{	
 	display:none !important;
 	}
+	body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.productItemInfo{
+	width: 100% !important;
+	}
 }
 @media (max-width: 790px){
 body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo ul.item-edit-details a.move-to-wishlist-button.cart_move_wishlist{
@@ -60637,3 +60640,242 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
 	border-right:0;
 }
 /* UF-61 Cart Page end */
+
+/*checkout pages start*/
+.progress-barcheck .progress-barg{
+	background: rgba(151,151,151,0.3);
+    height: 4px;
+    border-radius: 0px;
+}
+.progress-barcheck .step1, .progress-barcheck .step2, .progress-barcheck .step3 {
+    background: #a5173c;
+    height: 4px;
+    border-radius: 0px;
+}
+.progress-barcheck .step-1.active span, .progress-barcheck .step-2.active span, .progress-barcheck .step-3.active span {
+    border: 0px;
+    background: #a5173c;
+    width: 20px;
+  	height: 20px;
+  	top: -8px;
+}
+.progress-barcheck .step-1.in-active span, .progress-barcheck .step-2.in-active span, .progress-barcheck .step-3.in-active span {
+    width: 20px;
+  	height: 20px;
+  	background-color: #ffffff;
+  	border: solid 1px #979797;
+    top: -8px !important;
+}
+.progress-barcheck .active a, .progress-barcheck .step-done a {
+    color: #272727;
+}
+.progress-barcheck div a {
+    text-transform: capitalize;
+    color: rgba(0,0,0,0.4);
+    letter-spacing: normal;
+}
+.progress-barcheck .step-1.active a, .progress-barcheck .step-1.step-done a {
+    padding-left: 9%;
+}
+.progress-barcheck .step-2.active a, .progress-barcheck .step-2.step-done a {
+    padding-left: 3%;
+}
+.progress-barcheck .step-3 a {
+    padding-right: 20%;
+}
+.progress-barcheck .step-1.step-done span, .progress-barcheck .step-2.step-done span, .progress-barcheck .step-3.step-done span{
+	border: 0;
+}
+.progress-barcheck .step-1 span, .progress-barcheck .step-2 span, .progress-barcheck .step-3 span{
+	width:20px;
+	height:20px;
+}
+.progress-barcheck .step-1.step-done span.paymentStepDone:after, .progress-barcheck .step-2.step-done span.paymentStepDone:after, .progress-barcheck .step-3.step-done span.paymentStepDone:after {
+    top: 1px;
+    width: 20px;
+    height: 20px;
+}
+.progress-barcheck .step-3.active a, .progress-barcheck .step-3.finalstep a {
+    padding-right: 19%;
+}
+.progress-barcheck .step-1.step-done span:after, .progress-barcheck .step-2.step-done span:after, .progress-barcheck .step-3.step-done span:after {
+    width: 20px;
+    height: 20px;
+    top: 1px;
+}
+.wrapper .container-address {
+    max-width: 100%;
+    left: 0;
+}
+.progress-barcheck {
+    margin: 30px auto 0;
+    max-width: 1200px;
+}
+.progress-barcheck div a {
+    padding-top: 6px;
+}
+@media only screen and (max-width: 1450px){
+.progress-barcheck div a {
+    font-size: 14px;
+}
+body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
+    padding: 19px 24px;
+}
+}
+@media (max-width: 790px){
+.progress-barcheck div.step-1.active a, .progress-barcheck div.step-2.active a, .progress-barcheck div.step-3.active a {
+    font-size: 14px;
+    line-height: 18px;
+    padding-top: 12px;
+}
+.progress-barcheck .step-1.finalstep span, .progress-barcheck .step-2.finalstep span, .progress-barcheck .step-3.finalstep span, .progress-barcheck .step-1 span, .progress-barcheck .step-2 span, .progress-barcheck .step-3 span {
+    width: 20px !important;
+    height: 20px !important;
+}
+.progress-barcheck .step-1 span, .progress-barcheck .step-2 span, .progress-barcheck .step-3 span {
+    top: -8px !important;
+}
+.progress-barcheck .step-1.step-done span:after, .progress-barcheck .step-2.step-done span:after, .progress-barcheck .step-3.step-done span:after {
+    width: 20px;
+    height: 20px;
+    top: 0px;
+}
+}
+@media (max-width: 767px){
+.wrapper .container-address {
+    padding: 5px 0 0;
+}
+.progress-barcheck .step-1.active a, .progress-barcheck .step-1.step-done a {
+    padding-left: 5px;
+    line-height: 18px;
+    padding-top: 12px;
+}
+.progress-barcheck .step-3 a {
+    padding-right: 9%;
+}
+}
+/*Delivery Option page start*/
+#selectDeliveryMethodForm .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryMethodSubmit{
+	font-size:12px !important;
+	font-weight: normal;
+	line-height: 40px;
+    padding: 0;
+}
+body.page-multiStepCheckoutSummaryPage .checkout.wrapper .left-block .checkout-headers .desk-view {
+    color: #535353;
+}
+body.page-multiStepCheckoutSummaryPage .checkout.wrapper .left-block .checkout-headers .desk-view span {
+    color: #92002e;
+    padding-left: 2px;
+}
+@media (min-width: 768px){
+#selectDeliveryMethodForm .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryMethodSubmit{
+	width:216px;
+	background-color: #a5173c;
+}
+.checkout-content.cart.checkout.wrapper.delivery .right-block.shipping{
+	height:100px;
+}
+}
+
+
+.checkout-content.delivery .checkout-shipping.left-block div.product .product-brand-name{
+	font-size: 14px;
+	text-transform: none;
+}
+.checkout-content.delivery .checkout-shipping.left-block .product-block li.item > ul > li:first-child div.product .product-name{
+	font-size: 12px;
+	text-transform: none;
+	line-height: 15px;
+}
+.checkout-content.delivery .checkout-shipping.left-block .item.delivery_options>ul>li .details.product .size{
+	color:#000;
+	margin-top: 5px;
+}
+@media(min-width:768px){
+.checkout-content.delivery .checkout-shipping.left-block .product-block li.item > ul > li:first-child{
+	padding: 15px 0 15px 0px;
+}
+}
+.checkout-content.delivery .checkout-shipping.left-block .checkout-table.product-block.mybag-items.checkout-items .deliveryModeLabel{
+	    font-size: 14px;
+	    text-transform: none; 
+	    line-height:inherit;   
+}
+.checkout-content.delivery .checkout-shipping.left-block li.delivery ul li.home-delivery input[type="radio"]:checked ~ label,
+.checkout-content.delivery .checkout-shipping.left-block li.home-delivery input[type="radio"]:checked ~ label:after,
+.checkout-content.delivery .checkout-shipping.left-block li.delivery ul li.express-delivery input[type="radio"]:checked ~ label,
+.checkout-content.delivery .checkout-shipping.left-block li.express-delivery input[type="radio"]:checked ~ label:after,
+.checkout-content.delivery .checkout-shipping.left-block li.delivery ul li.click-collect input[type="radio"]:checked ~ label,
+.checkout-content.delivery .checkout-shipping.left-block li.click-collect input[type="radio"]:checked ~ label:after{
+	color:#000 !important;
+	opacity:1;
+}
+.checkout-content.delivery .checkout-shipping.left-block .item.delivery_options li.delivery ul li.home-delivery input[type="radio"] ~ span,
+.checkout-content.delivery .checkout-shipping.left-block li.delivery ul li.home-delivery input[type="radio"] ~ label,
+.checkout-content.delivery .checkout-shipping.left-block li.home-delivery input[type="radio"] ~ label:after,
+.checkout-content.delivery .checkout-shipping.left-block .item.delivery_options li.delivery ul li.express-delivery input[type="radio"] ~ span,
+.checkout-content.delivery .checkout-shipping.left-block li.delivery ul li.express-delivery input[type="radio"] ~ label,
+.checkout-content.delivery .checkout-shipping.left-block li.express-delivery input[type="radio"] ~ label:after,
+.checkout-content.delivery .checkout-shipping.left-block .item.delivery_options li.delivery ul li.click-collect input[type="radio"] ~ span,
+.checkout-content.delivery .checkout-shipping.left-block li.delivery ul li.click-collect input[type="radio"] ~ label,
+.checkout-content.delivery .checkout-shipping.left-block li.click-collect input[type="radio"] ~ label:after{
+	opacity:0.5;
+}
+.checkout-content.delivery .checkout-shipping.left-block .cart.wrapper .checkout-shipping.left-block .product-block li.item > ul > li.delivery ul{
+	color:#000 !important;
+}
+.checkout-content.delivery .checkout-shipping.left-block .item.delivery_options li.delivery ul li.home-delivery input[type="radio"] ~ span,
+.checkout-content.delivery .checkout-shipping.left-block .item.delivery_options li.delivery ul li.express-delivery input[type="radio"] ~ span,
+.checkout-content.delivery .checkout-shipping.left-block .item.delivery_options li.delivery ul li.click-collect input[type="radio"] ~ span{
+	color:#666 !important;
+	font-size: 11px;
+	margin-top:2px;
+}
+.checkout-content.delivery .checkout-shipping.left-block .item.delivery_options li.delivery ul li.home-delivery input[type="radio"]:checked ~ span,
+.checkout-content.delivery .checkout-shipping.left-block .item.delivery_options li.delivery ul li.express-delivery input[type="radio"]:checked ~ span,
+.checkout-content.delivery .checkout-shipping.left-block .item.delivery_options li.delivery ul li.click-collect input[type="radio"]:checked ~ span{
+	opacity:1;
+}
+.checkout-content.delivery .checkout-shipping.left-block .checkout-table.product-block.mybag-items.checkout-items .item.delivery_options .delivery .home-delivery label:after{
+	    background: url(../images/sprite.svg) no-repeat -294px -116px;
+}
+.checkout-content.delivery .checkout-shipping.left-block .checkout-table.product-block.mybag-items.checkout-items .item.delivery_options .delivery .express-delivery label:after{
+	background: url(../images/sprite.svg) no-repeat -336px -116px;
+}
+.checkout-content.delivery .checkout-shipping.left-block .checkout-table.product-block.mybag-items.checkout-items .item.delivery_options .delivery .click-and-collect.click-collect label:after{
+	    background: url(../images/sprite.svg) no-repeat -254px -116px;
+}
+.checkout-content.delivery .checkout-shipping.left-block  .product-block li.header .mybag-item-head .dev{
+	    width: 21%;
+}
+@media(min-width:1401px){
+.checkout-content.delivery .checkout-shipping.left-block  .product-block li.header .mybag-item-head .dev{
+	    width: 22%;
+}
+}
+.checkout-content.delivery .checkout-shipping.left-block .product-block li.item:last-of-type{
+	    border-bottom: 1px solid #eee;
+}
+.checkout-content.delivery .checkout-shipping.left-block .product-block li.item {
+    border: none;
+    border-top: 1px solid #eee;
+}
+.checkout-content.delivery .checkout-shipping.left-block .product-block li.item:not(:last-of-type){
+	    border-bottom: none;
+}
+.checkout-content.delivery .checkout-shipping.left-block .product-block li.item{
+	margin:0;
+}
+@media (max-width: 980px) and (min-width: 791px){
+.checkout-content.delivery .checkout-shipping.left-block .product-block li.item > ul > li.delivery {
+ padding-left: 0px; 
+}}
+@media (max-width: 767px){
+.checkout-content.delivery .checkout-shipping.left-block .item.delivery_options .delivery {
+    padding-left:30px;
+}
+}
+
+/*Delivery Option page end*/
+/*checkout pages end*/
