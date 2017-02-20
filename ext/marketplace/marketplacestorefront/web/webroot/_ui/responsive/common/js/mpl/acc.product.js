@@ -164,7 +164,9 @@ ACC.product = {
 			
 			 $("#sizeQty").val($("#sizeGuideQty").val());
 			//alert($('#variant.size-g option:selected').val());
-			 if($('#variant.size-g option:selected').val()!="#")
+			 // Sanity issue (Product is added to bag without selecting size guide)
+			 //if($('#variant.size-g option:selected').val()!="#")
+			 if ($('#variant.size-g li').hasClass('selected'))
 			 {
 				ACC.product.sendAddToBagSizeGuide("addToCartSizeGuide");
 			 
@@ -853,6 +855,7 @@ sendAddToBagQuick:function(formId){
 	
 	//SizeGuide 
 	sendAddToBagSizeGuide: function(formId){
+		
 		//alert("Size Guide sendAddToBagSizeGuide 3 "+formId);
 		
 		var input_name="qty";
