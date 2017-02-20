@@ -44,7 +44,7 @@
 								value="${searchPageData.pagination.currentPage - 1}" />
 						</spring:url> <ycommerce:testId code="searchResults_previousPage_link">
 							<!-- TISPRD-2315 -->
-							<a href="${newPaginationUrlPrev}" class="pagination_a_link" rel="prev"><span class="anglelft"></span></a>
+							<a href="${newPaginationUrlPrev}" class="pagination_a_link" rel="prev" onclick="javascript:return isCustomSku('${newPaginationUrlPrev}');"><span class="anglelft"></span></a>
 						</ycommerce:testId>
 					</li>
 				</c:if>
@@ -104,7 +104,7 @@
 						
 							<li>
 							<!-- TISPRD-2315 -->
-							<a href="${newPaginationUrlDotPrev}" class="pagination_a_link">1</a>
+							<a href="${newPaginationUrlDotPrev}" class="pagination_a_link" onclick="javascript:return isCustomSku('${newPaginationUrlDotPrev}');">1</a>
 								<c:if test="${beginPage ne 2}">
 									...
 								</c:if>
@@ -125,7 +125,7 @@
 							
 							<ycommerce:testId code="pageNumber_link">
 							<!-- TISPRD-2315 -->
-							<li><a href="${newPaginationUrl}" class="pagination_a_link">${pageNumber}</a></li>
+							<li><a href="${newPaginationUrl}" class="pagination_a_link" onclick="javascript:return isCustomSku('${newPaginationUrl}');">${pageNumber}</a></li>
 							</ycommerce:testId>
 						</c:when>
 						<c:otherwise>
@@ -150,7 +150,7 @@
 							...
 						</c:if>
 
-						   <a href="${newPaginationUrlDotsNext}" class="pagination_a_link">${searchPageData.pagination.numberOfPages}</a>
+						   <a href="${newPaginationUrlDotsNext}" class="pagination_a_link" onclick="javascript:return isCustomSku('${newPaginationUrlDotsNext}');">${searchPageData.pagination.numberOfPages}</a>
 						</li>
 						</ycommerce:testId>
 					</c:when>
@@ -167,7 +167,7 @@
 						</spring:url> <ycommerce:testId code="searchResults_nextPage_link">
 							<!-- TISPRD-2315 -->
 
-							<a href="${newPaginationUrlNext}" class="pagination_a_link" rel="next"><span class="anglerght"></span></a>
+							<a href="${newPaginationUrlNext}" class="pagination_a_link" rel="next" onclick="javascript:return isCustomSku('${newPaginationUrlNext}');"><span class="anglerght"></span></a>
 						
 						</ycommerce:testId></li>
 				</c:if>
@@ -192,7 +192,7 @@
 								value="${searchPageData.pagination.currentPage - 1}" />
 						</spring:url> <ycommerce:testId code="searchResults_previousPage_link">
 							<!-- TISPRD-2315 -->
-							<a href="${newPaginationUrlPrev}" class="pagination_a_link" rel="prev"><span class="anglelft"></span></a>
+							<a href="${newPaginationUrlPrev}" class="pagination_a_link" rel="prev" onclick="javascript:return isCustomSku('${newPaginationUrlPrev}');"><span class="anglelft"></span></a>
 						</ycommerce:testId>
 					</li>
 				</c:if>
@@ -315,7 +315,7 @@
 						</spring:url> <ycommerce:testId code="searchResults_nextPage_link">
 							<!-- TISPRD-2315 -->
 
-							<a href="${newPaginationUrlNext}" class="pagination_a_link" rel="next"><span class="anglerght"></span></a>
+							<a href="${newPaginationUrlNext}" class="pagination_a_link" rel="next" onclick="javascript:return isCustomSku('${newPaginationUrlNext}');"><span class="anglerght"></span></a>
 						
 						</ycommerce:testId></li>
 				</c:if>
@@ -362,7 +362,7 @@
 								value="${searchPageData.pagination.currentPage - 1}" />
 						</spring:url> <ycommerce:testId code="searchResults_previousPage_link">
 							<!-- TISPRD-2315 -->
-							<a href="${newPaginationUrlPrev}" class="pagination_a_link" rel="prev"><span class="anglelft"></span></a>
+							<a href="${newPaginationUrlPrev}" class="pagination_a_link" rel="prev" onclick="javascript:return isCustomSku('${newPaginationUrlPrev}');"><span class="anglelft"></span></a>
 						</ycommerce:testId>
 					</li>
 				</c:if>
@@ -422,7 +422,7 @@
 						
 							<li>
 							<!-- TISPRD-2315 -->
-							<a href="${newPaginationUrlDotPrev}" class="pagination_a_link">1</a>
+							<a href="${newPaginationUrlDotPrev}" class="pagination_a_link" onclick="javascript:return isCustomSku('${newPaginationUrlDotPrev}');">1</a>
 								<c:if test="${beginPage ne 2}">
 									...
 								</c:if>
@@ -443,7 +443,7 @@
 							
 							<ycommerce:testId code="pageNumber_link">
 							<!-- TISPRD-2315 -->
-							<li><a href="${newPaginationUrl}" class="pagination_a_link">${pageNumber}</a></li>
+							<li><a href="${newPaginationUrl}" class="pagination_a_link" onclick="javascript:return isCustomSku('${newPaginationUrl}');">${pageNumber}</a></li>
 							</ycommerce:testId>
 						</c:when>
 						<c:otherwise>
@@ -467,7 +467,7 @@
 						<c:if test="${searchPageData.pagination.currentPage ne (searchPageData.pagination.numberOfPages-4)}">
 							...
 						</c:if>
-						   <a href="${newPaginationUrlDotsNext}" class="pagination_a_link">${searchPageData.pagination.numberOfPages}</a>
+						   <a href="${newPaginationUrlDotsNext}" class="pagination_a_link" onclick="javascript:return isCustomSku('${newPaginationUrlDotsNext}');">${searchPageData.pagination.numberOfPages}</a>
 						</li>
 						</ycommerce:testId>
 					</c:when>
@@ -483,7 +483,7 @@
 								value="${searchPageData.pagination.currentPage + 1}" />
 						</spring:url> <ycommerce:testId code="searchResults_nextPage_link">
 							<!-- TISPRD-2315 -->
-							<a href="${newPaginationUrlNext}" class="pagination_a_link" rel="next"><span class="anglerght"></span></a>
+							<a href="${newPaginationUrlNext}" class="pagination_a_link" rel="next" onclick="javascript:return isCustomSku('${newPaginationUrlNext}');"><span class="anglerght"></span></a>
 						
 						</ycommerce:testId></li>
 				</c:if>

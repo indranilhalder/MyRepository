@@ -2709,5 +2709,32 @@
 		<property name="temlateName" type="String" />
 		<property name="productContent" type="java.util.HashMap&lt;String, com.tisl.mpl.wsdto.ProductContentWsData>" />
 	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.ReturnPincodeDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="isPincodeServiceable" type="boolean" />
+		<property name="returnLogisticsResponseDTO"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.ReturnLogisticsResponseDTO>" />
+	</bean>
+<bean class="com.tisl.mpl.wsdto.ReturnLogisticsResponseDTO">
+		<property name="isReturnLogisticsAvailable" type="String" />
+		<property name="orderId" type="String" />
+		<property name="responseDescription" type="String" />
+		<property name="responseMessage" type="String" />
+		<property name="transactionId" type="String" />
+	</bean>
+
+	<bean class="com.tisl.mpl.wsdto.ReturnRequestDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="orderProductWsDTO"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.OrderProductWsDTO>" />
+		<property name="returnReasonDetailsWsDTO"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.ReturnReasonDTO>" />
+	</bean>
+
+	<bean class="com.tisl.mpl.wsdto.ReturnReasonDTO">
+		<property name="reasonDescription" type="String" />
+		<property name="code" type="String" />
+		<property name="returnKey" type="String" />
+	</bean>
+
 
 </beans>

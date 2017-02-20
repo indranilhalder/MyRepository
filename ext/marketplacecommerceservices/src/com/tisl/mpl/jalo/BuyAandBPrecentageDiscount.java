@@ -94,6 +94,8 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 				.findEligibleProductsInBasketForBuyAandBPromo(arg0, arg1, this, getCategories(), getSecondCategories(),
 						primaryProductList, secondaryProductList); // Validates Promotion Restrictions
 
+
+		//final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 		boolean checkChannelFlag = false;
 		final AbstractOrder cart = arg1.getOrder();
 		try
@@ -111,6 +113,7 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 			{
 				//final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 				final List<String> eligibleProductList = eligibleForPromotion(cart, arg0); // Gets the Eligible Product List
+
 
 
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(arg0, validProductUssidMap))

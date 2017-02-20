@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- [y] hybris Platform Copyright (c) 2000-2013 hybris AG All rights reserved. 
+	This software is the confidential and proprietary information of hybris ("Confidential 
+	Information"). You shall not disclose such Confidential Information and shall 
+	use it only in accordance with the terms of the license agreement you entered 
+	into with hybris. -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:cache="http://www.springframework.org/schema/cache" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+	<context:component-scan base-package="com.hybris.dtocache" />
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+	<bean id="config" class="com.hybris.dtocache.config.ResourceBundleConfig">
+		<constructor-arg index="0"
+			value="com.hybris.dtocache.cache.test1" />
+	</bean>
+
+	<bean id="testConverter" class="com.hybris.dtocache.populator.TestConverter">
+		<property name="populators">
+			<util:list>
+				<bean class="com.hybris.dtocache.populator.TestPopulator" />
+			</util:list>
+		</property>
+		<property name="targetClass">
+			<value type="java.lang.Class">com.hybris.dtocache.testmodel.TestData</value>
+		</property>
+	</bean>
+
+	<bean id="anotherTestConverter" class="com.hybris.dtocache.populator.AnotherTestConverter">
+		<property name="populators">
+			<util:list>
+				<bean class="com.hybris.dtocache.populator.AnotherTestPopulator" />
+			</util:list>
+		</property>
+		<property name="targetClass">
+			<value type="java.lang.Class">com.hybris.dtocache.testmodel.TestData</value>
+		</property>
+	</bean>
+
+
+
+</beans>

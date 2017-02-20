@@ -722,7 +722,7 @@ ACC.refinements = {
 				
 			});
 		});
-		$(document).on("click",".pagination.mobile li a",function(e){
+		/*$(document).on("click",".pagination.mobile li a",function(e){
 				if ($("input[name=customSku]").val()) {			
 					// for pagination ajax call
 					e.preventDefault();
@@ -748,7 +748,7 @@ ACC.refinements = {
 					});
 					return false;
 				}
-		});
+		});*/
 		
 
 		$(document).on("click",".priceBucketExpand, .any_price_mobile",function(e){
@@ -961,6 +961,7 @@ function removeMobilePriceRange(){
 	
 }
 
+
 //UF-15
 function lazyPaginationFacet(response){
 	res = response;
@@ -980,3 +981,27 @@ function lazyPaginationFacet(response){
         ).html();
     };
 })(jQuery);
+function isCustomSku(requiredUrl){
+	if (($("input[name=customSku]").length) && ($("input[name=customSku]").val() == "true")) {			
+		// for pagination ajax call
+		var dataString = '';
+		$.ajax({
+			contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			data : dataString,
+			success : function(response) {
+				// putting AJAX respons to view
+				$('#facetSearchAjaxData .right-block, #facetSearchAjaxData .bottom-pagination, #facetSearchAjaxData .facet-list.filter-opt').remove();
+				$('#facetSearchAjaxData .left-block').after(response);
+			},
+			error : function(xhr, status, error) {				
+				console.log("Error >>>>>> " + error);
+			},
+			complete: function() {
+			// AJAX changes for custom price filter
+			}
+		});
+		return false;
+	}
+	return true;
+}

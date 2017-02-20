@@ -13,7 +13,6 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
-import de.hybris.platform.acceleratorcms.model.components.FooterComponentModel;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
@@ -72,15 +71,16 @@ import com.tisl.mpl.data.NotificationData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
+import com.tisl.mpl.facade.cms.MplCmsFacade;
 import com.tisl.mpl.facade.latestoffers.LatestOffersFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
+import com.tisl.mpl.facades.data.FooterComponentData;
 import com.tisl.mpl.facades.data.LatestOffersData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
-import com.tisl.mpl.model.cms.components.NeedHelpComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -139,6 +139,9 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "notificationFacade")
 	private NotificationFacade notificationFacade;
+
+	@Resource(name = "mplCmsFacade")
+	private MplCmsFacade mplCmsFacade;
 
 	/**
 	 * @return the notificationFacade
@@ -706,15 +709,21 @@ public class HomePageController extends AbstractPageController
 			{
 				if (buyBoxData.getSpecialPrice() != null)
 				{
-					productPrice = buyBoxData.getSpecialPrice().getFormattedValue();
+					//productPrice = buyBoxData.getSpecialPrice().getFormattedValue();
+					/* TPR-182 */
+					productPrice = buyBoxData.getSpecialPrice().getFormattedValueNoDecimal();
 				}
 				else if (buyBoxData.getPrice() != null)
 				{
-					productPrice = buyBoxData.getPrice().getFormattedValue();
+					//productPrice = buyBoxData.getPrice().getFormattedValue();
+					/* TPR-182 */
+					productPrice = buyBoxData.getPrice().getFormattedValueNoDecimal();
 				}
 				else
 				{
-					productPrice = buyBoxData.getMrp().getFormattedValue();
+					//productPrice = buyBoxData.getMrp().getFormattedValue();
+					/* TPR-182 */
+					productPrice = buyBoxData.getMrp().getFormattedValueNoDecimal();
 				}
 			}
 			LOG.info("ProductPrice>>>>>>>" + productPrice);
@@ -1143,36 +1152,50 @@ public class HomePageController extends AbstractPageController
 		try
 		{
 
-			FooterComponentModel footer = null;
-			NeedHelpComponentModel needHelpFooter = null;
-			final ContentSlotModel footerSlot = contentSlotService.getContentSlotForId(slotId);
+			final FooterComponentData fData = mplCmsFacade.getContentSlotData(slotId);
 
-			if (null != footerSlot && CollectionUtils.isNotEmpty(footerSlot.getCmsComponents()))
-			{
-				for (final AbstractCMSComponentModel cmsComponentModel : footerSlot.getCmsComponents())
-				{
-					if (cmsComponentModel instanceof FooterComponentModel)
-					{
-						footer = (FooterComponentModel) cmsComponentModel;
-					}
-					if (cmsComponentModel instanceof NeedHelpComponentModel)
-					{
-						needHelpFooter = (NeedHelpComponentModel) cmsComponentModel;
-					}
-				}
-			}
+			model.addAttribute("footerSocialIconList", fData.getFooterSocialIconList());
+			model.addAttribute("footerText", fData.getFooterText());
+			model.addAttribute("notice", fData.getNotice());
+			model.addAttribute("footerAppImageList", fData.getFooterAppImageList());
+			model.addAttribute("navigationNodes", fData.getNavigationNodes());
+			model.addAttribute("wrapAfter", fData.getWrapAfter());
+			//			//Need help section
+			model.addAttribute("contactNumber", fData.getContactNumber());
+
+			//			FooterComponentModel footer = null;
+			//			NeedHelpComponentModel needHelpFooter = null;
+			//			final ContentSlotModel footerSlot = contentSlotService.getContentSlotForId(slotId);
+			//
+			//			if (null != footerSlot && CollectionUtils.isNotEmpty(footerSlot.getCmsComponents()))
+			//			{
+			//				for (final AbstractCMSComponentModel cmsComponentModel : footerSlot.getCmsComponents())
+			//				{
+			//					if (cmsComponentModel instanceof FooterComponentModel)
+			//					{
+			//						footer = (FooterComponentModel) cmsComponentModel;
+			//					}
+			//					if (cmsComponentModel instanceof NeedHelpComponentModel)
+			//					{
+			//						needHelpFooter = (NeedHelpComponentModel) cmsComponentModel;
+			//					}
+			//				}
+			//			}
+			//
+			//
+			//			//final FooterComponentModel footer = cmsComponentService.getSimpleCMSComponent(componentId);
+			//			model.addAttribute("footerSocialIconList", footer.getFooterImageList());
+			//			model.addAttribute("footerText", footer.getFooterText());
+			//			model.addAttribute("notice", footer.getNotice());
+			//			model.addAttribute("footerAppImageList", footer.getFooterAppImageList());
+			//			model.addAttribute("navigationNodes", footer.getNavigationNodes());
+			//			model.addAttribute("wrapAfter", footer.getWrapAfter());
+			//
+			//			//Need help section
+			//			model.addAttribute("contactNumber", (needHelpFooter == null) ? "" : needHelpFooter.getContactNumber());
 
 
-			//final FooterComponentModel footer = cmsComponentService.getSimpleCMSComponent(componentId);
-			model.addAttribute("footerSocialIconList", footer.getFooterImageList());
-			model.addAttribute("footerText", footer.getFooterText());
-			model.addAttribute("notice", footer.getNotice());
-			model.addAttribute("footerAppImageList", footer.getFooterAppImageList());
-			model.addAttribute("navigationNodes", footer.getNavigationNodes());
-			model.addAttribute("wrapAfter", footer.getWrapAfter());
 
-			//Need help section
-			model.addAttribute("contactNumber", (needHelpFooter == null) ? "" : needHelpFooter.getContactNumber());
 
 		}
 

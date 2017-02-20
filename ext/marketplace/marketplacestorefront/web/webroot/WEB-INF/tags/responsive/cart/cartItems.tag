@@ -64,8 +64,14 @@ tr.d0 td {
    <c:if test="${not empty cartLevelDiscountModified}">
    	<li class="promo-msg"># ${cartLevelDiscountModified}</li>
    </c:if>
-   
-  <c:forEach items="${cartData.entries}" var="entry">
+  
+  <%---start changes for TISPRD-9417 --%> 
+  <%--<c:forEach items="${cartData.entries}" var="entry"> --%>
+  <c:forEach items="${cartData.entries}" var="entry" varStatus="status">
+   <c:if test="${status.last}">
+	<input type="hidden" value="${status.index}" id="ProductCount">			
+   </c:if>
+   <%---end changes for TISPRD-9417 --%>  
    <c:url value="${entry.product.url}" var="productUrl" />
    <input type="hidden" value="${entry.selectedSellerInformation.ussid}" id=ussid />
    <input type="hidden" value="${entry.product.code}" id="product" />
@@ -471,7 +477,7 @@ tr.d0 td {
 							<!-- TPR-1458-->
 							<!-- <span class='pincodeServiceError'></span> -->
 							<!-- 1341 -->
-							<p class="cartItemBlankPincode"><spring:theme code="cart.pincode.blank"/></p>	
+							<p class="cartItemBlankPincode"><a href="#defaultPinCodeIds"><spring:theme code="cart.pincode.blanklink"/>&nbsp;</a><spring:theme code="cart.pincode.blank"/></p>	
 							<ul id="${entry.selectedSellerInformation.ussid}">
 						</c:otherwise>
 					</c:choose>	

@@ -921,13 +921,13 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<bean id="defaultZoneDeliveryModePopulator"
 			class="com.tisl.mpl.converter.populator.MplDeliveryModePopulator"/>
 	
-	<alias name="defaultOrderEntryPopulator" alias="orderEntryPopulator"/>
-	<bean id="defaultOrderEntryPopulator"
-			class="com.tisl.mpl.converter.populator.MplOrderEntryPopulator">
+	<alias name="mplOrderEntryPopulator" alias="orderEntryPopulator"/>
+	<bean id="mplOrderEntryPopulator"
+			class="com.tisl.mpl.converter.populator.MplOrderEntryPopulator" parent="defaultOrderEntryPopulator">
 		<property name="productConverter" ref="orderEntryProductConverter"/>
 		<property name="priceDataFactory" ref="priceDataFactory"/>
 		<property name="entryOrderChecker" ref="commerceOrderEntryModifiableChecker"/>
-		<property name="deliveryModeConverter" ref="mplDeliveryModeConverter"/>
+		<property name="mplDeliveryModeConverter" ref="mplDeliveryModeConverter"/>
 		<property name="pointOfServiceConverter" ref="pointOfServiceConverter"/>
 		<property name="consignmentConverter" ref="consignmentConverter"/>
 		<!-- <property name="mplOrderService" ref="mplOrderService"/> -->
@@ -958,6 +958,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		
 	</bean>
 	
+	<alias name="mplExtendedCartPopulator" alias="cartPopulator"/>
 	<bean id="mplExtendedCartPopulator"
 			class="com.tisl.mpl.converter.populator.DefaultExtendedCartPopulator"
 			parent="defaultCartPopulator">
@@ -1670,8 +1671,79 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<bean id="initiateCancelForOrderJob"
 		class="com.tisl.mpl.facade.job.InitiateCancelForOrderJob"
 		autowire="byName" >
+	</bean>	
+
+	<bean id="bulkCancelStoreData"
+ 	class="com.tisl.mpl.facades.data.BulkCancelStoreData"
+  		autowire="byName" >
+  	</bean>  	
+
+	<!-- Thread Dump CMS changes -->
+  	
+	<bean id="mplBrandCollectionPopulator" class="com.tisl.mpl.facades.populators.MplBrandCollectionPopulator">
+	<property name="cmsSubBrandConvertor" ref="mplCmsSubBrandConvertor"></property>
+	<property name="categoryConverter" ref="categoryConverter"></property>
 	</bean>
 	<!-- AddtoCart Helper Class -->
 	<bean id="addToCartHelper" class="com.tisl.mpl.helper.AddToCartHelper" />
+	<bean id="mplBrandCollectionConvertor" parent="abstractPopulatingConverter">
+			<property name="populators">
+			<list>
+				<ref bean="mplBrandCollectionPopulator" />
+			</list>
+		</property>
+		<property name="targetClass" value="de.hybris.platform.commercefacades.component.data.BrandComponentData"/>
+	</bean>
 	
-</beans>
+
+	<bean id="mplCmsSubBrandPopulator" class="com.tisl.mpl.facades.populators.MplCmsSubBrandPopulator">
+		<property name="imageConverter" ref="imageConverter"></property>
+	</bean>
+	
+  	<bean id="mplCmsSubBrandConvertor" parent="abstractPopulatingConverter">
+			<property name="populators">
+			<list>
+				<ref bean="mplCmsSubBrandPopulator" />
+			</list>
+		</property>
+		<property name="targetClass" value="de.hybris.platform.commercefacades.component.data.CMSSubbrandData"/>
+	</bean>	
+	
+	<bean id="mplBannerConverter" parent="abstractPopulatingConverter">
+		<property name="populators">
+			<list>
+				<ref bean="simpleBannerPopulator" />
+			</list>
+		</property>
+		<property name="targetClass"
+			value="com.tisl.mpl.facades.data.SimpleBannerComponentData" />
+	</bean>
+
+	<bean id="simpleBannerPopulator"
+		class="com.tisl.mpl.facades.populators.MplsimpleBannerPopulator">
+		<property name="imageConverter" ref="imageConverter"></property>
+	</bean>
+
+	<alias name="mplCategoryPopulator" alias="categoryPopulator"/>
+	<bean id="mplCategoryPopulator"
+			class="com.tisl.mpl.facades.converter.populator.MplCategoryPopulator" parent="defaultCategoryPopulator">
+		<property name="mplSubSuperCategoryConverter" ref="mplSubSuperCategoryConverter"/>
+	</bean>
+	
+	<alias name="mplSubSuperCategoryConverter" alias="mplSubSuperCategoryConverter"/>
+	<bean id="mplSubSuperCategoryConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="de.hybris.platform.commercefacades.product.data.CategoryData"/>
+		<property name="populators">
+			<list>
+				<ref bean="mplSubSuperCategoryPopulator"/>
+			</list>
+		</property>
+	</bean>
+
+	<alias name="mplSubSuperCategoryPopulator" alias="mplSubSuperCategoryPopulator"/>
+	<bean id="mplSubSuperCategoryPopulator"
+			class="com.tisl.mpl.facades.converter.populator.MplSubSuperCategoryPopulator">
+		<property name="imageConverter" ref="imageConverter"/>
+		<property name="categoryModelUrlResolver" ref="categoryModelUrlResolver"/>
+	</bean>
+	</beans>

@@ -1347,7 +1347,11 @@ public class DefaultPromotionManager extends PromotionsManager
 							if (entry.getValue().getPrice().doubleValue() == minPrice.doubleValue() && !minmumValObtained)
 							{
 								final String sellerArticleSKU = entry.getKey();
-								final StockLevelModel stockData = mplStockService.getStockLevelDetail(sellerArticleSKU).get(0);
+
+								//final StockLevelModel stockData = mplStockService.getStockLevelDetail(sellerArticleSKU).get(0);
+
+								final StockLevelModel stockData = mplStockService.getStockLevelDetail(sellerArticleSKU);
+
 								if (stockData.getAvailable() > 0)
 
 								{

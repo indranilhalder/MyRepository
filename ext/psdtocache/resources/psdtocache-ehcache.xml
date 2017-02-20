@@ -1,0 +1,17 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+	updateCheck="false">
+<!-- [y] hybris Platform Copyright (c) 2000-2015 hybris AG All rights reserved. 
+	This software is the confidential and proprietary information of hybris ("Confidential 
+	Information"). You shall not disclose such Confidential Information and shall
+	use it only in accordance with the terms of the license agreement you entered
+	into with hybris. -->
+
+	<!-- Location of persistent caches on disk -->
+	<diskStore path="java.io.tmpdir/PsDtoCacheDiskCache" />
+
+	<defaultCache eternal="false" maxElementsInMemory="10000"
+		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
+		timeToLiveSeconds="3600" memoryStoreEvictionPolicy="LRU" />
+
+</ehcache>

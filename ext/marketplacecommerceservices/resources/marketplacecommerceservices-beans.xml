@@ -48,6 +48,10 @@
 		<property name="doubleValue" type="Double"/>
 	</bean>
 
+<!-- TPR-182 -->
+	<bean class="de.hybris.platform.commercefacades.product.data.PriceData">
+		<property name="formattedValueNoDecimal" type="String"/>
+	</bean>
 	<!-- <bean class="com.tisl.mpl.data.SellerInfoDetailsData">
 		<property name="priceData" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 		<property name="sellerDetail" type="de.hybris.platform.commerceservices.model.SellerModel"/>
@@ -196,6 +200,9 @@
 	<bean class="de.hybris.platform.commercefacades.order.data.CartData">
 		<property name="convenienceChargeForCOD" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 		<property name="totalPriceWithConvCharge" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="pickupPersonName" type="java.lang.String"/>
+		<property name="pickupPersonMobile" type="java.lang.String"/>
+		
 		<!-- TPR-928 -->
 		<property name="discountPercentage" type="java.lang.String"/>
 		<!-- TPR-174 - Welcome back status message -->
@@ -397,6 +404,8 @@
 	<!-- MplPaymentInfoData in AbstractOrderData-->
 	<bean class="de.hybris.platform.commercefacades.order.data.AbstractOrderData" >
 		<property name="mplPaymentInfo" type="com.tisl.mpl.data.MplPaymentInfoData"/>
+		<property name="currencySymbol" type="String"/>
+		
 	</bean>
 	<!-- MplPaymentInfoData in AbstractOrderData Ends-->
 	

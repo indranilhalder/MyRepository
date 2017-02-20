@@ -76,6 +76,12 @@
 					}
 					//TPR-1214
 					$("#newAddressButton,#newAddressButtonUp").click(function() {
+
+				     	$("form#addressForm :input[type=text]").each(function(){
+				    		 var input = $(this);    
+				    		 $(this).val($(this).val().trim());    		     		
+				    	});  
+
 						var validate=true;
 						var regPostcode = /^([1-9])([0-9]){5}$/;
 					    var mob = /^[1-9]{1}[0-9]{9}$/;

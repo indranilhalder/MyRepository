@@ -40,17 +40,17 @@ public interface MplCustomAddressFacade
 	/**
 	 * @return
 	 */
-	boolean hasValidCart();
+	boolean hasValidCart(final CartData cart);
 
 	/**
 	 * @return
 	 */
-	boolean hasNoDeliveryAddress();
+	boolean hasNoDeliveryAddress(final CartData cart);
 
 	/**
 	 * @return
 	 */
-	boolean hasNoDeliveryMode();
+	boolean hasNoDeliveryMode(final CartData cart);
 
 	/**
 	 * @return
@@ -99,7 +99,7 @@ public interface MplCustomAddressFacade
 	 */
 	PriceData setTotalWithConvCharge(OrderModel source, OrderData prototype);
 
-	
+
 	/**
 	 * @param deliveryCode
 	 * @param sellerArticleSKU
@@ -110,7 +110,7 @@ public interface MplCustomAddressFacade
 
 	/**
 	 * It is responsible for fetching Cart Data
-	 * 
+	 *
 	 * @param cartModel
 	 * @return
 	 */

@@ -1679,7 +1679,7 @@ $( document ).ready(function() {
 					//	alert(data['othersSellersCount']);
 						$("#otherSellerInfoId").show();
 						$("#otherSellersId").html(data['othersSellersCount']);
-						$("#minPriceId").html(data['minPrice'].formattedValue);
+						$("#minPriceId").html(data['minPrice'].formattedValueNoDecimal);
 					}
 
 					$("#ussid").val(data['sellerArticleSKU']);
@@ -1704,7 +1704,7 @@ $( document ).ready(function() {
 					
 					if (isproductPage == 'false') {
 						fetchAllSellers();
-						$("#minPrice").html(data['minPrice'].formattedValue);
+						$("#minPrice").html(data['minPrice'].formattedValueNoDecimal);
 					}
 					//Added for displaying offer messages other than promotion, TPR-589	
 				//	ACC.productDetail.
@@ -1929,15 +1929,15 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 	
 	if(null!= mrp){
 		//$("#mrpPriceId").html("");
-		$("#mrpPriceId").append(mrp.formattedValue);
+		$("#mrpPriceId").append(mrp.formattedValueNoDecimal);
 	}
 	if(null!= mop){
 		//$("#mopPriceId").html("");
-		$("#mopPriceId").append(mop.formattedValue);
+		$("#mopPriceId").append(mop.formattedValueNoDecimal);
 	}
 	if(null!= spPrice){
 		//$("#spPriceId").html("");
-		$("#spPriceId").append(spPrice.formattedValue);
+		$("#spPriceId").append(spPrice.formattedValueNoDecimal);
 	} 
 	////TISPRM-33 , TPR-140
 	if(null!= savingsOnProduct){
