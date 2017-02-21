@@ -1,5 +1,5 @@
 /*----------Start of  validate email in feedback-----------*/
-	var mobileVal=false,deskVal=false,styleMobContainer=null;
+	var mobileVal=false,deskVal=false,styleMobContainer=null,longStyleContainer=null;
 	function validateEmail()
     { 	 var x = document.getElementById("emailField");
 		 if (/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/.test(x.value))  
@@ -1369,6 +1369,8 @@ $(document).ready(function(){
 						} else {
 							$(".long.words").hide();
 						}
+						longStyleContainer=$(this).parent(".short.words").next(".long.words").attr("style");
+					
 				  });
 				/*--- Mobile view shop by brand and department ---*/
 
@@ -1399,6 +1401,17 @@ $(document).ready(function(){
 				$("#mobile-menu-toggle").next().attr("style",style);
 				$("li.short.words,li.long.words").next().attr("style",style); 
 			}
+			
+			div_container=$(".productGrid-menu nav #mobile-menu-toggle.mainli.menu-dropdown-arrow").parent(".short.words");
+			for(var i=1;i<$(".long.words").length;i++){
+				if(div_container.next().hasClass("long")){
+					div_container.next().attr("style",longStyleContainer);
+					div_container=div_container.next();
+				}
+				else
+					break;
+				}	
+			
 		});
 	$(".customer-care-tabs>.tabs .customer-care-tab>ul>li .tabs li").click(function(){
 							$(this).nextAll().removeClass( "active" );
@@ -3207,23 +3220,35 @@ $(window).on("load resize",function(){
 	$(".productGrid-header-wrapper .productGrid-header>div.productGrid-menu").removeClass("prodGridMargin");
 	//$(".productGrid-header-wrapper .overlay.overlay-sideNav").remove();
 	if($(window).width() > 773){
-		$(".productGrid-menu #shopMicrositeSeller").removeClass("clicked-menu clicked-menu-mobile");
+		$(".productGrid-menu #shopMicrositeSeller").removeClass("clicked-menu-mobile");
 		$(".productGrid-menu  nav > ul > li > ul > li.level1").attr("style",null);
-		if(deskVal === false)
-		$(".productGrid-menu nav > ul > li > ul > li > ul").addClass("heightZero");
+		if(deskVal === false){
+			$(".productGrid-menu nav > ul > li > ul > li > ul").addClass("heightZero");
+			$(".productGrid-menu #shopMicrositeSeller").removeClass("clicked-menu active");
+		}
+		else{
+			$(".productGrid-menu nav > ul > li > ul > li > ul").removeClass("heightZero");	
+			$(".productGrid-menu #shopMicrositeSeller").addClass("clicked-menu active");
+		}
 	}
 	if($(window).width() <= 773 && mobileVal === true){
 		$(".productGrid-menu #shopMicrositeSeller").addClass("clicked-menu clicked-menu-mobile active");
-		if($(".productGrid-menu nav ul#topul > li.level1 > #mobile-menu-toggle").hasClass("menu-dropdown-arrow"))
-			$(this).parent("li.level1").css("background-color","rgb(169, 20, 60)");
+		$(".productGrid-menu nav #mobile-menu-toggle.mainli.menu-dropdown-arrow").parent("li.level1").attr("style","background-color:rgb(169, 20, 60)");
+	}
+	if($(window).width() <= 773 && mobileVal === false){
+		$(".productGrid-menu #shopMicrositeSeller").removeClass("clicked-menu active");
 	}
 	$(document).on("mouseenter",".productGrid-header-wrapper .productGrid-header .productGrid-menu #shopMicrositeSeller",function(){
-		if($(window).width() > 773)
+		if($(window).width() > 773){
 			$(".productGrid-header-wrapper .productGrid-header .productGrid-menu #shopMicrositeSeller").addClass("clicked-menu active");
+			deskVal=true;
+		}
 	});
 	$(document).on("mouseleave",".productGrid-header-wrapper .productGrid-header .productGrid-menu #shopMicrositeSeller",function(){
-		if($(window).width() > 773)
+		if($(window).width() > 773){
 			$(".productGrid-header-wrapper .productGrid-header .productGrid-menu #shopMicrositeSeller").removeClass("clicked-menu active");
+			deskVal=false;
+		}
 	});
 	var width= ($(".productGrid-header").width() - 50 ) + "px";
 	$("#topul").css("width", width);

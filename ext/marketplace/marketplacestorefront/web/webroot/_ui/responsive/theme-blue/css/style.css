@@ -61733,6 +61733,13 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
                       max-width:100%; }
             .productGrid-menu nav > ul > li > ul > li:hover > .toggle {
               background-color: #A9143C; }
+              .productGrid-menu nav > ul > li > .toggle:hover ~ ul#topul > li:first-of-type > .toggle{
+              	background-color: #A9143C;
+              }
+              .productGrid-menu nav > ul > li > .toggle:hover ~ ul#topul > li:first-of-type > ul.words{
+              	opacity:1;
+              	z-index:1;
+              }
               .productGrid-menu nav > ul > li > ul > li:hover > .toggle a {
                 color: #fff; }
               .productGrid-menu nav > ul > li > ul > li:hover > .toggle:after {
@@ -62087,6 +62094,9 @@ header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_
      .productGrid-menu nav #mobile-menu-toggle + ul li ul li.short.words{
      	/* text-transform: uppercase;
      	font-weight: bold; */
+     }
+     .productGrid-menu nav>ul>li.clicked-menu>ul.heightZero{
+     	height:0;
      }
     /* Tab View Start */
     @media (max-width:1024px) and (min-width:791px){
