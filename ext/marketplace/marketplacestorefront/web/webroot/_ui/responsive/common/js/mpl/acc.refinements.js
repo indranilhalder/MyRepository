@@ -797,14 +797,14 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			// console.log(response);
 			// putting AJAX respons to view
 			if($("#isCategoryPage").val() == 'true' && !$("input[name=customSku]").val()){
-				lazyPaginationFacet(response);
-				//$("#productGrid").html(response);
+				//lazyPaginationFacet(response);
+				$("#productGrid").html(response);
 			}		
 			else{
 				
 				if(requiredUrl.indexOf("offer") > -1 || requiredUrl.indexOf("viewOnlineProducts") > -1 || requiredUrl.indexOf("/s/") > -1){
-					lazyPaginationFacet(response);
-					//$("#productGrid").html(response);
+					//lazyPaginationFacet(response);
+					$("#productGrid").html(response);
 				}
 				else{
 					$("#facetSearchAjaxData").html(response);
