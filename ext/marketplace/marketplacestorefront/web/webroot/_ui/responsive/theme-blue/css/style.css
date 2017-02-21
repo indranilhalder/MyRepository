@@ -41206,6 +41206,7 @@ button#expressCheckoutButtonId.express-checkout-disabled:hover {
 	padding: 8px 12px !important;
 }
 /* TPR-1075 firstPurchaseOfferError id added*/
+/*TPR-4460  invalidChannelError id added*/
 #netbanking, #submitButtons, #paymentDetails, #radioForEMI, #otpNUM,
 	#codMessage, #otpValidationMessage, #form-actions,
 	#wrongOtpValidationMessage, #expiredOtpValidationMessage,
@@ -41214,7 +41215,7 @@ button#expressCheckoutButtonId.express-checkout-disabled:hover {
 	#mobileNoError,.saved-card-button, #netbankingError, #ebsErrorSavedCard, #juspayconnErrorDiv,
 	#netbankingIssueError, #cvvErrorSavedCard, #maestroMessage, #newMaestroMessage, #invalidCouponError, 
 	#couponApplied, #expiredCouponError, #issueCouponError, #priceCouponError, #appliedCouponError, #emptyCouponError,
-	#notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, .nbAjaxError {
+	#notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError, .nbAjaxError {
 	display: none;
 }
 

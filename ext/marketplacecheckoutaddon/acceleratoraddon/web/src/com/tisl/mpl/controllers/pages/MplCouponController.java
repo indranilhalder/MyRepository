@@ -166,6 +166,11 @@ public class MplCouponController
 					data.setRedeemErrorMsg(MarketplacecouponConstants.FIRSTPURUSERINVALID);
 				}
 				/* TPR-1075 Changes End */
+				//TPR-4460
+				else if (e.getMessage().contains(MarketplacecouponConstants.EXCHANNELINVALID))
+				{
+					data.setRedeemErrorMsg(MarketplacecouponConstants.CHANNELINVALID);
+				}
 			}
 			catch (final EtailNonBusinessExceptions e)
 			{
@@ -238,6 +243,11 @@ public class MplCouponController
 				else if (e.getMessage().contains(MarketplacecouponConstants.EXCUSERINVALID))
 				{
 					data.setRedeemErrorMsg(MarketplacecouponConstants.USERINVALID);
+				}
+				//TPR-4460
+				else if (e.getMessage().contains(MarketplacecouponConstants.EXCHANNELINVALID))
+				{
+					data.setRedeemErrorMsg(MarketplacecouponConstants.CHANNELINVALID);
 				}
 			}
 			catch (final EtailNonBusinessExceptions e)

@@ -57,6 +57,7 @@ import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+import com.tisl.mpl.model.ChannelRestrictionModel;
 import com.tisl.mpl.model.UnregisteredUserRestrictionModel;
 
 
@@ -380,6 +381,12 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDNEWCUST + voucherCode);
 						}
 						/* TPR-1075 Changes End */
+						//TPR-4460 Changes
+						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION + voucherCode);
+						}
+
 						else
 						{
 							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE + voucherCode);
@@ -449,10 +456,18 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 						{
 							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
 						}
+						//TPR-4460 Changes
+						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION + voucherCode);
+						}
+
 						else
 						{
 							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE + voucherCode);
 						}
+
+
 					}
 
 					else if (!checkVoucherIsReservable(voucher, voucherCode, orderModel)) //Checks whether voucher is reservable
@@ -653,6 +668,14 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				break;
 			}
 			/* TPR-1075 Changes End */
+			/* TPR-4460 Changes Start */
+			else if (restriction instanceof ChannelRestrictionModel)
+			{
+				LOG.error(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION);
+				error = MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION;
+				break;
+			}
+			/* TPR-4460 Changes End */
 			else
 			{
 				continue;

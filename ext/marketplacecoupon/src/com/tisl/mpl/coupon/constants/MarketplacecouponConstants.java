@@ -86,6 +86,9 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 
 	public static final String VOUCHERCAMPAIGNJOBEXTN = "cronjob.campaign.voucher.extension".intern();
 	public static final String DEFVOUCAMPAIGNJOBEXTN = ".csv".intern();
+	//TPR-4460
+	public static final String EXCHANNELINVALID = "Voucher Not applicable for selected Channel".intern();
+	public static final String CHANNELINVALID = "Channel_Not_Applicable".intern();
 
 	private MarketplacecouponConstants()
 	{
