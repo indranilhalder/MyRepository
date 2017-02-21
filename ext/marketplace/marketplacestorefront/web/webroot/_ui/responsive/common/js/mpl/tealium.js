@@ -1129,14 +1129,20 @@ $(document).on("mouseover",".zoomContainer",function(e) {
 
 /*PDP Add to bag & Buy Now*/
 function utagAddProductToBag(triggerPoint,productCodeMSD){
-	var productCodeArray=[];
-   	productCodeArray.push(productCodeMSD);
-   
-	var pageName='';
-	var pageType = $('#pageName').val();
-	if( pageType == "Product Details" || pageType == "View Seller Page"){
-		pageName="pdp";
-	}
+	    var productCodeArray=[];
+	    var productcode='';
+		var pageName='';
+		var pageType = $('#pageName').val();
+		if( pageType == "Product Details"){
+			pageName="pdp";
+			productCodeArray.push(productCodeMSD);
+		}
+		if(  pageType == "View Seller Page"){
+			pageName="pdp";
+			 productCode= $('#productCode').val();
+			 productCodeArray.push(productCode);
+		}
+
 	utag.link({
 		link_obj: this,
 		link_text: triggerPoint ,
