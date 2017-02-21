@@ -155,6 +155,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		LOG.debug("Generationg Contents..");
 		LOG.debug("Error Checking Contents..");
 		int lineNo = 0;
+		sbError = new StringBuilder();
 		while (reader.readNextLine())
 		{
 			lineNo++;
@@ -469,7 +470,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			 * isUpdatefeed); componentlist.add(sm); } else if (entry.getKey().startsWith("Video") &&
 			 * StringUtils.isNotEmpty(entry.getValue())) { final VideoComponentModel vm =
 			 * makeVideoComponent(entry.getValue(), entry.getKey(), line, writer, isUpdatefeed); componentlist.add(vm);
-			 *
+			 * 
 			 * } else if (entry.getKey().startsWith("Text") && StringUtils.isNotEmpty(entry.getValue())) { final
 			 * CMSParagraphComponentModel cmspara = makeTextComponent(entry.getValue(), entry.getKey(), line, writer,
 			 * isUpdatefeed); componentlist.add(cmspara); }
