@@ -190,6 +190,7 @@
 						<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
 							<cms:component component="${logo}"/>
 						</cms:pageSlot>
+						<button class="searchButtonGlobal"></button>
 						<div class="mobile-bag bag">
 						<!-- TISPRD-32-fix -->
 							<!-- <a href="/store/mpl/en/cart">(<span class="responsive-bag-count"></span>)</a> -->

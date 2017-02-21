@@ -53,7 +53,7 @@ $(document).ready(function () {
 	            					$container.append('<li class="level1"><div class="toggle" ><a href= "'+siteName+'' + v.url + '">'+v.name+'</a></div><span id="mobile-menu-toggle" class="mainli"></span><ul class="words words'+v.code+'"><li><a href="'+siteName+'' + v.url + '" class="view_dept">View '+v.name+' </a></li></ul>');
 	            					if(v.subCategories!=null){
 	    	        		 			$.each(v.subCategories, function(j, v1) {	
-	    	        		 				$( "ul.words"+v.code).append('<li class="short words"><div class="toggle"><a href="'+siteName+''+v1.url+'" style="">'+v1.name+'</a></div></li>');
+	    	        		 				$( "ul.words"+v.code).append('<li class="short words"><div class="toggle"><a href="'+siteName+''+v1.url+'" style="">'+v1.name+'</a></div><span id="mobile-menu-toggle" class="mainli"></span></li>');
 	    	        			 			if(v1.subCategories!=null){
 	    	        			 				$.each(v1.subCategories, function(q, v2) {	
 	    	        			 					$( "ul.words"+v.code ).append('<li class="long words"><div class="toggle" style="text-transform: capitalize !important;"><a href="'+siteName+''+v2.url+'" style="font-weight:normal;">'+v2.name+'</a></div></li>');
