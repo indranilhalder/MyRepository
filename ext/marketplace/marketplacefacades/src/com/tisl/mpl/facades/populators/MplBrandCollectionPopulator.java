@@ -42,9 +42,12 @@ public class MplBrandCollectionPopulator implements Populator<BrandComponentMode
 	{
 		Assert.notNull(source, MarketplacecommerceservicesConstants.SOURCENOTNULL);
 		Assert.notNull(target, MarketplacecommerceservicesConstants.TARGETNOTNULL);
-
 		target.setUid(source.getUid());
-		target.setLayout(source.getLayout().getCode());
+
+		if (null != source.getLayout())
+		{
+			target.setLayout(source.getLayout().getCode());
+		}
 		target.setMasterBrandName(source.getMasterBrandName());
 		target.setMasterBrandURL(source.getMasterBrandURL());
 		if (CollectionUtils.isNotEmpty(source.getSubBrandList()))
