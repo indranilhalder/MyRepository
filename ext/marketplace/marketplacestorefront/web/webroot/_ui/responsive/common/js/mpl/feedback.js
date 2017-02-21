@@ -3199,14 +3199,20 @@ $(document).click(function (e)
 		    	containerGlobal.css("display","none");
 			    }*/
 		});
-$(document).ready(function(){
-	if($(".productGrid-header-wrapper .productGrid-header > div input[type='text']").val().length != 0)
-		$(".productGrid-header-wrapper .productGrid-header > div input[type='text']").css("margin-left","0");
-	if(($("header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_form[name='search_form'] input#js-site-search-input").val() != "") && $(window).width() < 791)
-		$("header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_form[name='search_form']").addClass("searchButtonGlobalTextBar");
-	else
-		$("header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_form[name='search_form']").removeClass("searchButtonGlobalTextBar");
-});
+//$(document).ready(function(){
+//	if(typeof($(".productGrid-header-wrapper .productGrid-header > div input[type='text']").val() != undefined)){
+//		if($(".productGrid-header-wrapper .productGrid-header > div input[type='text']").val().length != 0){
+//
+//		$(".productGrid-header-wrapper .productGrid-header > div input[type='text']").css("margin-left","0");
+//		alert();
+//		if(($("header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_form[name='search_form'] input#js-site-search-input").val() != "") && $(window).width() < 791)
+//			$("header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_form[name='search_form']").addClass("searchButtonGlobalTextBar");
+//		else
+//			$("header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_form[name='search_form']").removeClass("searchButtonGlobalTextBar");
+//		}
+//	}
+//		
+//});
 
 $(document).on("click",".searchButtonGlobal",function(){
 	if(($("header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_form[name='search_form'] input#js-site-search-input").val() == "" && !$("form#search_form[name='search_form']").hasClass("searchButtonGlobalTextBar")) || 
