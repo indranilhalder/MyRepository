@@ -85,7 +85,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.gigya.json.JSONObject;
+import com.granule.json.JSONObject;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.tisl.mpl.checkout.form.DeliveryMethodEntry;
 import com.tisl.mpl.checkout.form.DeliveryMethodForm;
@@ -2512,8 +2512,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		return getCheckoutStep().previousStep();
 	}
 
-	//@RequestMapping(value = "/next", method = RequestMethod.GET)
-	//@RequireHardLogIn
+	@RequestMapping(value = "/next", method = RequestMethod.GET)
+	@RequireHardLogIn
 	@Override
 	public String next(final RedirectAttributes redirectAttributes)
 	{
