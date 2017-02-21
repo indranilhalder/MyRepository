@@ -50,8 +50,8 @@
 		/*TPR-643*/
 		utag.link({
 			link_obj: this, 
-			link_text: 'pdp_image_zoom' , 
-			event_type : 'pdp_image_zoom' 
+			link_text: 'pdp_image_zoomed' , 
+			event_type : 'pdp_image_zoomed' 
 		});
 		/*TPR-643 Ends*/
 	}

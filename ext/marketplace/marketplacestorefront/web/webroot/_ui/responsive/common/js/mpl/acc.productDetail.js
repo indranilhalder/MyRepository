@@ -421,14 +421,6 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 				    zoomWindowFadeIn: 500,
 				    zoomWindowFadeOut: 750
 				       });
-			
-				/*TPR-643 starts*/
-				utag.link({
-					link_obj: this, 
-					link_text: "pdp_"+thumbnail_value+"_zoomed" , 	//Modification for
-					event_type : "pdp_"+thumbnail_type+"_zoomed" 	//Analytics Data Layer Schema changes
-				});
-				/*TPR-643 ends*/
 			}
 		    }else{
 		    	var url = $(this).attr("data-videosrc");
