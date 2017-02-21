@@ -12,8 +12,6 @@
 <script>
 	
 $(document).ready(function () {
-	//var pageLabel = '${cmsPage.label}';
-	//var lastSegment = pageLabel.split('/').pop();
 	//TPR-4471
 	var requestParam = window.location.href;
 	var siteName = '${cmsSite.uid}';

@@ -28,7 +28,7 @@ $(document).ready(function () {
                     $("#micrositeSellerLogo").append("<img src="+data.url+">");
 			 	},
 				 error : function(data){
-					alert("error " +data); 
+					//console.log("error " +data); 
 				 }
 			 
 			 });
