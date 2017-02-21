@@ -419,6 +419,8 @@ function displayCODForm()
 			$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
 			if(codEligible=="BLACKLISTED")
 			{
+				//TPR-4746
+				paymentErrorTrack("cod_unavailable");
 				$("#customerBlackListMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
@@ -428,6 +430,8 @@ function displayCODForm()
 			}
 			else if(codEligible=="NOT_TSHIP")
 			{
+				//TPR-4746
+				paymentErrorTrack("cod_unavailable");
 				$("#fulfillmentMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
@@ -437,6 +441,8 @@ function displayCODForm()
 			}
 			else if(codEligible=="ITEMS_NOT_ELIGIBLE")
 			{
+				//TPR-4746
+				paymentErrorTrack("cod_unavailable");
 				$("#codItemEligibilityMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
@@ -446,6 +452,8 @@ function displayCODForm()
 			}
 			else if(codEligible=="NOT_PINCODE_SERVICEABLE")
 			{
+				//TPR-4746
+				paymentErrorTrack("cod_unavailable");
 				$("#codMessage").css("display","block");
 				$("#otpNUM").css("display","none");
 				$("#otpSentMessage").css("display","none");
@@ -455,6 +463,7 @@ function displayCODForm()
 			}
 			else{
 				if(isCodSet == false){
+					alert("is cod check");
 				   	$.ajax({
 						url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setConvCharge",
 						type: "GET",
@@ -494,6 +503,9 @@ function displayCODForm()
 							}
 						},
 						error : function(resp) {
+							
+							//TPR-4746
+							paymentErrorTrack("cod_unavailable");
 							//alert("COD is not available at this time. Please select another payment mode and proceed");
 							$("#paymentDetails").css("display","block");
 							$("#otpSentMessage").css("display","none");
@@ -509,6 +521,8 @@ function displayCODForm()
 			}
 		},
 		error : function(resp) {
+			//TPR-4746
+			paymentErrorTrack("cod_unavailable");
 			//alert("COD is not available at this time. Please select another payment mode and proceed");	
 			$("#paymentDetails").css("display","block");
 			$("#otpSentMessage").css("display","none");
@@ -755,7 +769,7 @@ function submitForm(){
 				$(".pay button,.cod_payment_button_top").css("opacity","1");
 				$(".pay .spinner").remove();
 				$("#no-click,.spinner").remove();
-				
+				paymentErrorTrack("pay_cod_otp_error");
 			}
 		});
 		}
@@ -1191,7 +1205,8 @@ function displayEMICards(){
 		},
 		error : function(resp) {
 			//alert("Some issues are there with Payment at this time. Please try payment later or contact out helpdesk");
-
+			/*TPR-4776*/
+			paymentErrorTrack("emi_unavailable");
 		}
 	});
 	// TISEE-5555
@@ -1675,6 +1690,8 @@ $("#otpMobileNUMField").focus(function(){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
 //					}
+					/*TPR-4776*/
+					paymentErrorTrack("juspay_unavailable");
 					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The system is down, please try again";
 					$("#juspayconnErrorDiv").css("display","block");
 					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
@@ -1787,6 +1804,8 @@ $("#otpMobileNUMField").focus(function(){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
 //					}
+					/*TPR-4776*/
+					paymentErrorTrack("juspay_unavailable");
 					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The system is down, please try again";
 					$("#juspayconnErrorDiv").css("display","block");
 					$(".pay button, #make_saved_dc_payment_up").prop("disabled",false);
@@ -1922,6 +1941,8 @@ $("#otpMobileNUMField").focus(function(){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
 //					}
+					/*TPR-4776*/
+					paymentErrorTrack("juspay_unavailable");
 					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The system is down, please try again";
 					$("#juspayconnErrorDiv").css("display","block");
 					$(".pay button, #make_cc_payment_up").prop("disabled",false);
@@ -1960,6 +1981,7 @@ $("#otpMobileNUMField").focus(function(){
 				$(".pay button, #make_cc_payment_up").css("opacity","1");
 				$(".pay .spinner").remove();
 				$("#no-click,.spinner").remove();
+				paymentErrorTrack("juspay_unavailable");
 			}
 		});		
 	}
@@ -2024,7 +2046,9 @@ $("#otpMobileNUMField").focus(function(){
 				else if(response=='redirect_with_details'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
 				}
-				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){	
+				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
+					/*TPR-4776*/
+					paymentErrorTrack("juspay_unavailable");
 					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The system is down, please try again";
 					$("#juspayconnErrorDiv").css("display","block");
 					$(".pay button, #make_emi_payment_up").prop("disabled",false);
@@ -2055,6 +2079,7 @@ $("#otpMobileNUMField").focus(function(){
 				$(".pay button, #make_cc_payment_up").css("opacity","1");
 				$(".pay .spinner").remove();
 				$("#no-click,.spinner").remove();
+				paymentErrorTrack("juspay_unavailable");
 			}
 		});		
 	}
@@ -4613,6 +4638,8 @@ function applyPromotion(bankName,binValue,formSubmit)
 								
 							},
 							error : function(resp) {
+								//TPR-4746
+								paymentErrorTrack("emi_unavailable");
 								$("#bankNameForEMI, #listOfEMiBank").css("display","none");
 								$("#emiRangeError").css("display","block");
 							}
@@ -4675,6 +4702,8 @@ function applyPromotion(bankName,binValue,formSubmit)
 							},
 							error : function(resp) {
 								alert("Please select a Bank again");
+								//TPR-4746
+								paymentErrorTrack("emi_unavailable");
 							}
 						});
 					}
@@ -4780,6 +4809,8 @@ function submitNBForm(){
 						cache: false,
 						success : function(response) {
 								if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
+									/*TPR-4776*/
+									paymentErrorTrack("juspay_unavailable");
 									document.getElementById("juspayErrorMsg").innerHTML="Sorry! The system is down, please try again";
 									$("#juspayconnErrorDiv").css("display","block");
 									$(".pay button, .make_payment_top_nb").prop("disabled",false);
@@ -4847,6 +4878,7 @@ function submitNBForm(){
 							$(".pay button, .make_payment_top_nb").css("opacity","1");
 							$(".pay .spinner").remove();
 							$("#no-click,.spinner").remove();
+							paymentErrorTrack("juspay_unavailable");
 						}
 					});		
 				}
@@ -6998,6 +7030,11 @@ $("#couponSubmitButton").click(function(){
 		var couponCode=$("#couponFieldId").val();
 		var paymentMode=$("#paymentMode").val();
 		var guid=$("#guid").val();
+		//TPR-4746
+		if(typeof utag !="undefined"){
+			utag.link({ coupon_code : couponCode });
+			}
+		
 		/*start changes for INC_11738*/
 		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
@@ -7785,4 +7822,9 @@ function teliumTrack(){
 function updateMobileNo(){
 	$("#otpMobileNUMField").val('');
 	$("#otpMobileNUMField").focus();    
+}
+function paymentErrorTrack(msg){
+	if(typeof utag !="undefined"){
+		utag.link({"error_type": msg});
+		}
 }
