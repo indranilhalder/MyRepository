@@ -355,9 +355,15 @@ function callFBApi(facebook_id, access_token, session_id) {
 }
 
 /*Calls API which returns product recommendations*/
+
+function callRecApi(params, requestURL) {  
+  start = new Date(); 
+  console.log("START TIME "+ start.getHours() + ":" + start.getMinutes() + ":" + start.getSeconds()); 
+
 function callRecApi(params, requestURL) { 
 	start = new Date(); 
 	console.log("START TIME "+ start.getHours() + ":" + start.getMinutes() + ":" + start.getSeconds()); 
+
   jQuery.extend(params, emailCheck());
   
   return jQuery.ajax({ 

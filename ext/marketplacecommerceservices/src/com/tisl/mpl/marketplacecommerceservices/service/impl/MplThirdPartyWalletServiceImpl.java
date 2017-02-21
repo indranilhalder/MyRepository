@@ -249,15 +249,6 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 					final Date orderTATForTimeout = getTatTimeOut(new Date(), getmRupeeJobTAT(), order.getCreationtime());
 					final MplPaymentAuditModel auditModelData = mplOrderDao.getAuditList(cartGuid);
 
-
-					LOG.debug("#####################AuditModelDate**" + auditModelData);
-					LOG.debug("#####################orderTATForTimeout**" + orderTATForTimeout);
-
-					if (auditModelData != null)
-					{
-						LOG.debug("#####################AuditModel" + auditModelData.getIsExpired().booleanValue());
-					}
-
 					if (auditModelData != null && !auditModelData.getIsExpired().booleanValue())
 					{
 						final List<MplPaymentAuditEntryModel> entryList = Lists.newArrayList(auditModelData.getAuditEntries());
@@ -266,7 +257,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 								&& !auditModelData.getIsExpired().booleanValue() && new Date().after(orderTATForTimeout))
 						{
 							isPayment = true;
-							LOG.debug("###################timeout");
+							LOG.debug("###################timeout############"+order.getCode());
 							performProcessingOrder(auditModelData, order, T, isPayment, isReturn);
 							sendNotification(order);
 						}
@@ -311,8 +302,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 								}
 								catch (final JAXBException e)
 								{
-									LOG.error("**************************error final in sending order confirmation notification>>>>>>", e);
-									throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+								LOG.error("**************************error in notification sending for order****"+order.getCode());
 								}
 
 							}
@@ -370,13 +360,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 								}
 							}
 
-							//timeout handling
-							//							if (new Date().after(orderTATForTimeout))
-							//							{
-							//								performProcessingOrder(auditModelData, order, T, isPayment, isReturn);
-							//								sendNotification(order);
-							//							}
-							//no response
+							
 							if (StringUtils.isEmpty(status) && new Date().before(orderTATForTimeout))
 							{
 								performProcessingOrder(auditModelData, order, "", isPayment, isReturn);
@@ -396,13 +380,13 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 		}
 		catch (final AdapterException e)
 		{
-			LOG.error("exception##### : error in connection>>>>>>", e);
+			LOG.error("****************error in connection>>>>>>", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 
 		}
 		catch (final Exception e)
 		{
-			LOG.error("exception##### in refund processing of  >>>>>>", e);
+			LOG.error("*******************exception in  processing orders >>>>>>", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
@@ -425,8 +409,8 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 		}
 		catch (final JAXBException e)
 		{
-			LOG.error("***********************error final in sending payment final timeout notification>>>>>>", e);
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		       LOG.error("***********************error final in sending payment final timeout notification>>>>>>"+order.getCode());
+		       LOG.error("***********************error final in sending payment final timeout notification>>>>>>", e);
 		}
 	}
 
@@ -468,9 +452,8 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 					}
 					catch (final VoucherOperationException e)
 					{
-						// YTODO Auto-generated catch block
+						
 						LOG.error("exception##### error in updating voucher models >>>>>>", e);
-						throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 					}
 					mplVoucherService.recalculateCartForCoupon(null, order);
 				}
@@ -489,8 +472,8 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("exception##### ERROR IN SAVING ORDER>>>>>>", e);
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		        LOG.error("*****************ERROR IN MODEL SAVING FOR ORDER ***************>>>>>"+order.getCode());
+			LOG.error("exception##### ERROR IN SAVING DETAIL FOR  ORDER>>>>>>", e);
 		}
 
 	}
@@ -542,14 +525,14 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 		}
 		catch (final InvalidCartException e)
 		{
+		        LOG.error("***************** ORDER INVALIDATION***************>>>>>"+order.getCode());
 			LOG.error("******************exception##### : INAVLID CART>>>>>>", e);
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 
 		}
 		catch (final CalculationException e)
 		{
-			LOG.error("*****************8*exception##### ERROR IN ORDER TOTAL CALCULATION>>>>>>", e);
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		        LOG.error("*****************ERROR IN CART CALCULATION FOR ORDER ***************>>>>>"+order.getCode());
+			LOG.error("******************exception##### ERROR IN ORDER TOTAL CALCULATION>>>>>>", e);
 		}
 		getOrderService().submitOrder(order);
 		orderStatusSpecifier.setOrderStatus(order, OrderStatus.PAYMENT_SUCCESSFUL);
@@ -564,7 +547,6 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	 */
 	private String getMrupeeResponse(final MplPaymentAuditModel auditModelData)
 	{
-		//	final MrupeePaymentService mRupeeService = new MrupeePaymentService();
 		final String checksumKey = mRupeeService.generateCheckSumForVerification(auditModelData.getAuditId());
 		final String mId = configurationService.getConfiguration().getString(PAYMENT_M_RUPEE_MERCHANT_ID);
 		final String url = configurationService.getConfiguration().getString(PAYMENT_M_RUPEE_VERIFICATION_URL);
