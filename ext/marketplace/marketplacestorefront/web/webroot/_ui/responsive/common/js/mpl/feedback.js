@@ -2862,13 +2862,25 @@ $(".gig-rating-readReviewsLink_pdp").on("click",function() {
 /* UF-73*/
 $('.cartItemBlankPincode a').click(function() {
 
-	$('html,body').animate({ scrollTop: $(this.hash).offset().top}, 300);
+	$('html,body').animate({ scrollTop: $(this.hash).offset().top - 85}, 300);
+	$('#changePinDiv').addClass('blankPincode');
 	$(this.hash).focus();
 	return false;
 
 	e.preventDefault();
 
 	}); 
+
+$(document).mouseup(function (e)
+		{
+		    var container = $(".cartItemBlankPincode a");
+
+		    if (!container.is(e.target)
+		        && container.has(e.target).length === 0)
+		    {
+		    	$('#changePinDiv').removeClass('blankPincode');
+		    }
+		});
 
 /*UF-85*/
 $("body.page-cartPage .cart.wrapper .checkout-types li#checkout-id").on("mouseover",function(){
