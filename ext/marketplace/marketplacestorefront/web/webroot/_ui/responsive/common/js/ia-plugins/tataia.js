@@ -698,7 +698,10 @@ function makeProductHtml(widgetElement, obj, rid) {
 	var mrp=""
 	var spPrice="";
 	var isProductPresent=false;
-	for(var i in iaResponseData) {
+	
+	if(iaResponseData != null && iaResponseData != undefined)
+	{
+	   for(var i in iaResponseData) {
 		if(iaUssid==i){
 	    if (iaResponseData.hasOwnProperty(i)) {
 	    	var priceData = iaResponseData[i];
@@ -714,6 +717,7 @@ function makeProductHtml(widgetElement, obj, rid) {
 	    
 	}
 	 }
+}
 	//End tpr-3736
 	
 	/* This is a bad image */
