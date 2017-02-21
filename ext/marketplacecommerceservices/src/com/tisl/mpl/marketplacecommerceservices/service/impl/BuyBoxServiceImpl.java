@@ -181,5 +181,19 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	}
 
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#getBuyBoxDataForUssids(java.util.List)
+	 */
+	//TPR-3736
+	@Override
+	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions
+	{
+		// YTODO Auto-generated method stub
+		return buyBoxDao.getBuyBoxDataForUssids(ussidList);
+	}
+
+
 
 }

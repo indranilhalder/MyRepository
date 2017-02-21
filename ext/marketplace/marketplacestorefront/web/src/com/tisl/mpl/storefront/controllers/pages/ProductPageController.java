@@ -215,6 +215,8 @@ public class ProductPageController extends MidPageController
 	private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
 	private static final String BOXING = "boxing";
 	private static final String USSID = "ussid";
+	//TPR-3736
+	private static final String IA_USS_IDS = "iaUssIds";
 
 
 
@@ -2864,6 +2866,34 @@ public class ProductPageController extends MidPageController
 			model.addAttribute("showSizeGuideForFA", showSizeGuideForFA);
 
 		}
+	}
+
+
+	//TPR-3736
+	/**
+	 * @param ussids
+	 * @return dataMap
+	 * @throws JSONException
+	 * @throws com.granule.json.JSONException
+	 */
+	@SuppressWarnings(BOXING)
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-getIAResponse", method = RequestMethod.GET)
+	public @ResponseBody JSONObject getIAResponse(@RequestParam(IA_USS_IDS) final String ussids) throws JSONException,
+			com.granule.json.JSONException
+	{
+		final String ussidList[] = ussids.split(",");
+		final StringBuilder ussidIds = new StringBuilder();
+		for (int i = 0; i < ussidList.length; i++)
+		{
+			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + ussidList[i]
+					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
+			ussidIds.append(",");
+		}
+		final JSONObject buyboxJson = new JSONObject();
+		final Map<String, List<Double>> dataMap = buyBoxFacade.getBuyBoxDataForUssids(ussidIds.toString().substring(0,
+				ussidIds.lastIndexOf(",")));
+		LOG.debug("##################Data Map for IA" + dataMap);
+		return buyboxJson.put("iaResponse", dataMap);
 	}
 
 }
