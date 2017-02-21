@@ -284,7 +284,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 {
 
 	  SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-	  SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+	  SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss");
 	  String timeFromWithDate = null;
 	  String timeToWithDate = null;
 
