@@ -167,9 +167,17 @@ public class MplCouponController
 				}
 				/* TPR-1075 Changes End */
 				//TPR-4460
-				else if (e.getMessage().contains(MarketplacecouponConstants.EXCHANNELINVALID))
+				else if (e.getMessage().contains(MarketplacecouponConstants.CHANNELRESTVIOLATION_WEB))
 				{
-					data.setRedeemErrorMsg(MarketplacecouponConstants.CHANNELINVALID);
+					data.setRedeemErrorMsg(MarketplacecouponConstants.CHANNELINVALID_WEB);
+				}
+				else if (e.getMessage().contains(MarketplacecouponConstants.CHANNELRESTVIOLATION_MOBILE))
+				{
+					data.setRedeemErrorMsg(MarketplacecouponConstants.CHANNELINVALID_MOBILE);
+				}
+				else if (e.getMessage().contains(MarketplacecouponConstants.CHANNELRESTVIOLATION_CALLCENTRE))
+				{
+					data.setRedeemErrorMsg(MarketplacecouponConstants.CHANNELINVALID_CALLCENTRE);
 				}
 			}
 			catch (final EtailNonBusinessExceptions e)
@@ -245,9 +253,17 @@ public class MplCouponController
 					data.setRedeemErrorMsg(MarketplacecouponConstants.USERINVALID);
 				}
 				//TPR-4460
-				else if (e.getMessage().contains(MarketplacecouponConstants.EXCHANNELINVALID))
+				else if (e.getMessage().contains(MarketplacecouponConstants.CHANNELRESTVIOLATION_WEB))
 				{
-					data.setRedeemErrorMsg(MarketplacecouponConstants.CHANNELINVALID);
+					data.setRedeemErrorMsg(MarketplacecouponConstants.CHANNELINVALID_WEB);
+				}
+				else if (e.getMessage().contains(MarketplacecouponConstants.CHANNELRESTVIOLATION_MOBILE))
+				{
+					data.setRedeemErrorMsg(MarketplacecouponConstants.CHANNELINVALID_MOBILE);
+				}
+				else if (e.getMessage().contains(MarketplacecouponConstants.CHANNELRESTVIOLATION_CALLCENTRE))
+				{
+					data.setRedeemErrorMsg(MarketplacecouponConstants.CHANNELINVALID_CALLCENTRE);
 				}
 			}
 			catch (final EtailNonBusinessExceptions e)

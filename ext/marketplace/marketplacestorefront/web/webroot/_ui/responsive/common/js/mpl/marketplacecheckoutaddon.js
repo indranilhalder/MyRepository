@@ -6718,6 +6718,7 @@ $("#couponSubmitButton").click(function(){
 	 		cache: false,
 	 		data: { 'couponCode' : couponCode , 'paymentMode' : paymentMode , 'bankNameSelected' : bankNameSelected , 'guid' : guid},
 	 		success : function(response) {
+	 			console.log(response.redeemErrorMsg);
 	 			$("#no-click,.spinner").remove(); //add for INC_11738
 	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
 	 			$("#codAmount").text(response.totalPrice.formattedValue);
@@ -6760,8 +6761,19 @@ $("#couponSubmitButton").click(function(){
 	 					$("#firstPurchaseOfferError").css("display","block");
 	 				}
 	 				//TPR-4460
-	 				else if(response.redeemErrorMsg=="Channel_Not_Applicable")
+	 				else if(response.redeemErrorMsg=="Channel_Not_Applicable_Web")
 	 				{
+	 					$("#invalidChannelError").html("Oh snap! This coupon is valid only on our website");
+	 					$("#invalidChannelError").css("display","block");
+	 				}
+	 				else if(response.redeemErrorMsg=="Channel_Not_Applicable_Mobile")
+	 				{
+	 					$("#invalidChannelError").html("Oh snap! This coupon is valid only on our app");
+	 					$("#invalidChannelError").css("display","block");
+	 				}
+	 				else if(response.redeemErrorMsg=="Channel_Not_Applicable_CallCentre")
+	 				{
+	 					$("#invalidChannelError").html("Oh snap! This coupon is valid only on our CallCentre");
 	 					$("#invalidChannelError").css("display","block");
 	 				}
 	 				//TPR-658

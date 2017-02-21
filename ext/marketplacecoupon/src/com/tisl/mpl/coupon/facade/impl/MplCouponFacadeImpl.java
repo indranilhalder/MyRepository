@@ -8,6 +8,7 @@ import de.hybris.platform.commercefacades.voucher.VoucherFacade;
 import de.hybris.platform.commercefacades.voucher.data.VoucherData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commercefacades.voucher.impl.DefaultVoucherFacade;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.converters.Converters;
@@ -382,9 +383,21 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 						}
 						/* TPR-1075 Changes End */
 						//TPR-4460 Changes
-						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION))
+						else if (null != error
+								&& error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_MOBILE))
 						{
-							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION + voucherCode);
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_MOBILE
+									+ voucherCode);
+						}
+						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_WEB))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_WEB
+									+ voucherCode);
+						}
+						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_CALLCENTRE
+									+ voucherCode);
 						}
 
 						else
@@ -457,9 +470,21 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
 						}
 						//TPR-4460 Changes
-						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION))
+						else if (null != error
+								&& error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_MOBILE))
 						{
-							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION + voucherCode);
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_MOBILE
+									+ voucherCode);
+						}
+						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_WEB))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_WEB
+									+ voucherCode);
+						}
+						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_CALLCENTRE
+									+ voucherCode);
 						}
 
 						else
@@ -671,9 +696,21 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			/* TPR-4460 Changes Start */
 			else if (restriction instanceof ChannelRestrictionModel)
 			{
-				LOG.error(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION);
-				error = MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION;
-				break;
+
+
+				LOG.error(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION);
+				if (((ChannelRestrictionModel) restriction).getChannel().contains(SalesApplication.MOBILE))
+				{
+					error = MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_MOBILE;
+				}
+				else if (((ChannelRestrictionModel) restriction).getChannel().contains(SalesApplication.WEB))
+				{
+					error = MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_WEB;
+				}
+				else
+				{
+					error = MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER;
+				}
 			}
 			/* TPR-4460 Changes End */
 			else
@@ -683,7 +720,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		}
 		return error;
 	}
-
 
 	/**
 	 * This method adds global discount

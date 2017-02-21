@@ -89,6 +89,12 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 	//TPR-4460
 	public static final String EXCHANNELINVALID = "Voucher Not applicable for selected Channel".intern();
 	public static final String CHANNELINVALID = "Channel_Not_Applicable".intern();
+	public static final String CHANNELRESTVIOLATION_WEB = "Voucher Not applicable for Web Channel".intern();
+	public static final String CHANNELRESTVIOLATION_MOBILE = "Voucher Not applicable for Mobile Channel".intern();
+	public static final String CHANNELRESTVIOLATION_CALLCENTRE = "Voucher Not applicable for CallCentre Channel".intern();
+	public static final String CHANNELINVALID_WEB = "Channel_Not_Applicable_Web".intern();
+	public static final String CHANNELINVALID_MOBILE = "Channel_Not_Applicable_Mobile".intern();
+	public static final String CHANNELINVALID_CALLCENTRE = "Channel_Not_Applicable_CallCentre".intern();
 
 	private MarketplacecouponConstants()
 	{

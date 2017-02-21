@@ -1556,8 +1556,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SYSDATE = "sysdate".intern();
 	public static final String VOUCHERIDENTIFIER = "voucherIndentifier".intern();
 	//TPR-4460
-	public static final String CHANNELRESTVIOLATION = "Voucher Not applicable for selected Channel".intern();
-	public static final String CHANNEL_RESTRICTION = "Channel".intern();
+	public static final String CHANNELRESTVIOLATION_WEB = "Voucher Not applicable for Web Channel".intern();
+	public static final String CHANNELRESTVIOLATION_MOBILE = "Voucher Not applicable for Mobile Channel".intern();
+	public static final String CHANNELRESTVIOLATION_CALLCENTRE = "Voucher Not applicable for CallCentre Channel".intern();
+	public static final String CHANNEL_RESTRICTION_MOBILE = "ChannelMobile".intern();
+	public static final String CHANNEL_RESTRICTION_WEB = "ChannelWeb".intern();
+	public static final String CHANNEL_RESTRICTION = "Channel Restriction for coupons".intern();
 	public static final String FIND_USER_BY_UID = "SELECT {u.pk} FROM {User as u} WHERE ({u.UID} = ?uid )";
 	//Added for constants for clickandcollect and active.
 	public static final String CLICK_N_COLLECT = "Y";
