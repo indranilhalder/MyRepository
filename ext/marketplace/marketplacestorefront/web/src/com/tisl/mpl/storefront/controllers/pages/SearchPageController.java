@@ -1599,6 +1599,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 
 
+
 	/**
 	 * @description method is to add products in wishlist in popup in plp
 	 * @param productCode
@@ -1611,8 +1612,9 @@ public class SearchPageController extends AbstractSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.ADD_WISHLIST_IN_POPUP_PLP, method = RequestMethod.GET)
 	//@RequireHardLogIn
 	public boolean addWishListsForPLP(@RequestParam(ModelAttributetConstants.PRODUCT) final String productCode,
-			@RequestParam("wish") final String wishName, @RequestParam("sizeSelected") final String sizeSelected, final Model model,
-			final HttpServletRequest request, final HttpServletResponse response) throws CMSItemNotFoundException
+			@RequestParam("ussid") final String ussid, @RequestParam("wish") final String wishName,
+			@RequestParam("sizeSelected") final String sizeSelected, final Model model, final HttpServletRequest request,
+			final HttpServletResponse response) throws CMSItemNotFoundException
 	{
 		model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.N_CAPS_VAL);
 
@@ -1620,7 +1622,7 @@ public class SearchPageController extends AbstractSearchPageController
 		try
 		{
 			//add = productDetailsHelper.addToWishListInPopup(productCode, ussid, wishName, Boolean.valueOf(sizeSelected));
-			add = productDetailsHelper.addSingleToWishListForPLP(productCode, Boolean.valueOf(sizeSelected));
+			add = productDetailsHelper.addSingleToWishListForPLP(productCode, ussid, Boolean.valueOf(sizeSelected));
 
 		}
 		catch (final EtailBusinessExceptions e)

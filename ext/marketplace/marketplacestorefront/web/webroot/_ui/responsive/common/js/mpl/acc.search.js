@@ -703,10 +703,13 @@ function donotShowAll()
 
 $(document).on("click",".plp-wishlist",function(e){
 	
-	addToWishlistForPLP($(this).data("product"),this);
+	 /*TPR-250 changes*/
+	var ussid=$(this).data("ussid");
+	addToWishlistForPLP($(this).data("product"),$(this).data("ussid"),this);
+	/*TPR-250 changes*/
 	return false;
 })
-		function addToWishlistForPLP(productURL,el) {
+		function addToWishlistForPLP(productURL,ussid,el) {
 			var loggedIn=$("#loggedIn").val();
 			var productCode=urlToProductCode(productURL);
 			var wishName = "";
@@ -720,7 +723,7 @@ $(document).on("click",".plp-wishlist",function(e){
 		    if( $("#variant,#sizevariant option:selected").val()=="#"){
 		    	sizeSelected=false;
 		    }
-		    var dataString = 'wish=' + wishName + '&product=' + productCode
+		     var dataString = 'wish=' + wishName + '&product=' + productCode + '&ussid=' + ussid
 					+ '&sizeSelected=' + sizeSelected;
 			
 			if(loggedIn == 'false') {
