@@ -60749,7 +60749,7 @@ body.page-cartPage .cart.wrapper .product-block li.item > ul > li.delivery li{
 	padding-left:0px;
 	position:relative;
 }
-p#unserviceablepincode_tooltip,p#error-Id_tooltip,p#emptyId_tooltip{	
+p#unserviceablepincode_tooltip,p#error-Id_tooltip,p#emptyId_tooltip,p#error-Id_tooltip_btm{	
 	width: 206px;
     position: absolute;
     right: -13px;
@@ -60762,7 +60762,7 @@ p#unserviceablepincode_tooltip,p#error-Id_tooltip,p#emptyId_tooltip{
     opacity:0;
 }
 	
-#checkout-id:hover p#unserviceablepincode_tooltip,#checkout-id:hover p#error-Id_tooltip,#checkout-id:hover p#emptyId_tooltip{
+#checkout-id:hover p#unserviceablepincode_tooltip,#checkout-id:hover p#error-Id_tooltip,#checkout-id:hover p#emptyId_tooltip,#checkout-id-down:hover p#unserviceablepincode_tooltip_btm{
 	opacity:1;
 	cursor: text !important;
 }
