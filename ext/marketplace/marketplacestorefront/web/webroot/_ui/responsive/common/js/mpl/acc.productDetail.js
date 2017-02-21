@@ -1049,7 +1049,7 @@ $(function() {
 
 					function() {
 						//TPR900
-						if($("#pdpPincodeCheck").text() == 'Check Availability')
+						if($("#pdpPincodeCheck").text() == 'Check')
 						{
 							pinCodeChecked = true;
 							$("#home").hide();
@@ -1361,7 +1361,7 @@ $(function() {
 							$('#pin').blur();
 							
 							if ( $('#pin').val() == "") {
-								$("#pdpPincodeCheck").text("Check Availability")
+								$("#pdpPincodeCheck").text("Check")				/*UF-42*/
 							} else {
 							
 								$("#pdpPincodeCheck").text("Change Pincode")
@@ -1458,6 +1458,7 @@ $( document ).ready(function() {
 					if(typeof($(this).attr("href"))!= 'undefined' && $(this).attr("href").toUpperCase().indexOf(key)!= -1 && value == 0){ 
 
 					$(this).removeAttr("href");
+					$(this).attr("title","out of stock");		/*UF-30*/
 					$(this).parent().addClass('strike');
 				//$(this).parent().css("border-color","gray");
 				$("#outOfStockId").hide();
@@ -1612,7 +1613,7 @@ $( document ).ready(function() {
 					//	alert(data['othersSellersCount']);
 						$("#otherSellerInfoId").show();
 						$("#otherSellersId").html(data['othersSellersCount']);
-						$("#minPriceId").html(data['minPrice'].formattedValue);
+						$("#minPriceId").html(data['minPrice'].formattedValueNoDecimal);
 					}
 
 					$("#ussid").val(data['sellerArticleSKU']);
@@ -1637,7 +1638,7 @@ $( document ).ready(function() {
 					
 					if (isproductPage == 'false') {
 						fetchAllSellers();
-						$("#minPrice").html(data['minPrice'].formattedValue);
+						$("#minPrice").html(data['minPrice'].formattedValueNoDecimal);
 					}
 					//Added for displaying offer messages other than promotion, TPR-589	
 				//	ACC.productDetail.
@@ -1840,15 +1841,15 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 	
 	if(null!= mrp){
 		//$("#mrpPriceId").html("");
-		$("#mrpPriceId").append(mrp.formattedValue);
+		$("#mrpPriceId").append(mrp.formattedValueNoDecimal);
 	}
 	if(null!= mop){
 		//$("#mopPriceId").html("");
-		$("#mopPriceId").append(mop.formattedValue);
+		$("#mopPriceId").append(mop.formattedValueNoDecimal);
 	}
 	if(null!= spPrice){
 		//$("#spPriceId").html("");
-		$("#spPriceId").append(spPrice.formattedValue);
+		$("#spPriceId").append(spPrice.formattedValueNoDecimal);
 	} 
 	////TISPRM-33 , TPR-140
 	if(null!= savingsOnProduct){
@@ -2954,7 +2955,7 @@ function loadDefaultWishListName_SizeGuide() {
 		}); 
 		
 		$("#pin").focus(function(){
-			$("#pdpPincodeCheck").text("Check Availability")
+			$("#pdpPincodeCheck").text("Check")
 		});
 /*		$("#pin").blur(function() {
 			if ($(this).val() == "") {
@@ -2964,6 +2965,13 @@ function loadDefaultWishListName_SizeGuide() {
 			}
 
 		});*/
+		
+			/*UF-32*/
+		 $("a.otherSellersFont").click(function(){
+		 
+		 $("#sellerForm").submit();
+						 
+			});
 	});
 	/*Wishlist In PDP changes*/
 	function getLastModifiedWishlist(ussidValue) {

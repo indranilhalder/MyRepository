@@ -36,7 +36,7 @@ import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
 import com.tisl.mpl.core.enums.AddressType;
 import com.tisl.mpl.data.AddressTypeData;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
-import com.tisl.mpl.facades.account.address.AccountAddressFacade;
+import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.validator.AccountAddressValidator;
@@ -48,7 +48,7 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 {
 	protected static final Logger LOG = Logger.getLogger(DeliveryAddressCheckoutStepController.class);
 	@Autowired
-	private AccountAddressFacade accountAddressFacade;
+	private MplAccountAddressFacade accountAddressFacade;
 	@Autowired
 	private MplEnumerationHelper mplEnumerationHelper;
 	@Resource(name = "accountAddressValidator")
@@ -72,14 +72,14 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 
 		//final CartData cartData = getCheckoutFacade().getCheckoutCart();      //DSC_006: Commented for Address state field addition
 		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
-		
-		
+
+
 
 		model.addAttribute("cartData", cartData);
 		//model.addAttribute("deliveryAddresses", getDeliveryAddresses(cartData.getDeliveryAddress())); //DSC_006: Commented for Address state field addition
-		if(null != cartData)
+		if (null != cartData)
 		{
-		model.addAttribute("deliveryAddresses", getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress()));
+			model.addAttribute("deliveryAddresses", getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress()));
 		}
 		model.addAttribute("noAddress", Boolean.valueOf(getCheckoutFlowFacade().hasNoDeliveryAddress()));
 		final AccountAddressForm addressForm = new AccountAddressForm();
@@ -122,9 +122,10 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 
 		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 		model.addAttribute("cartData", cartData);
-		
-		if(null != cartData){
-		model.addAttribute("deliveryAddresses", getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress()));
+
+		if (null != cartData)
+		{
+			model.addAttribute("deliveryAddresses", getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress()));
 		}
 
 		this.prepareDataForPage(model);
@@ -191,7 +192,7 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 		 * getAddressVerificationResultHandler().handleResult(verificationResult, newAddress, model, redirectModel,
 		 * bindingResult, getAddressVerificationFacade().isCustomerAllowedToIgnoreAddressSuggestions(),
 		 * "checkout.multi.address.updated");
-		 *
+		 * 
 		 * if (addressRequiresReview) { storeCmsPageInModel(model,
 		 * getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL)); setUpMetaDataForContentPage(model,
 		 * getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL)); return
@@ -220,7 +221,7 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 	/*
 	 * private List<CartSoftReservationData> populateDataForSoftReservation(final CartData cartData) {
 	 * CartSoftReservationData cartSoftReservationData;
-	 *
+	 * 
 	 * final List<CartSoftReservationData> cartSoftReservationDataList = new ArrayList<CartSoftReservationData>(); for
 	 * (final OrderEntryData entry : cartData.getEntries()) { cartSoftReservationData = new CartSoftReservationData();
 	 * cartSoftReservationData.setUSSID(entry.getSelectedSellerInformation().getUssid());
@@ -231,7 +232,7 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 	 * cartSoftReservationData.setIsCOD("true");
 	 * cartSoftReservationData.setTransportMode(entry.getDeliveryMode().getName());
 	 * cartSoftReservationData.setFulfillmentType("");
-	 *
+	 * 
 	 * cartSoftReservationDataList.add(cartSoftReservationData); } return cartSoftReservationDataList; }
 	 */
 
@@ -282,8 +283,9 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 
 		final CartData cartData = getCheckoutFacade().getCheckoutCart();
 		model.addAttribute("cartData", cartData);
-		if(null !=cartData){
-		model.addAttribute("deliveryAddresses", getDeliveryAddresses(cartData.getDeliveryAddress()));
+		if (null != cartData)
+		{
+			model.addAttribute("deliveryAddresses", getDeliveryAddresses(cartData.getDeliveryAddress()));
 		}
 		if (StringUtils.isNotBlank(addressForm.getCountryIso()))
 		{
@@ -374,18 +376,18 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 		 * getAddressVerificationResultHandler().handleResult(verificationResult, newAddress, model, redirectModel,
 		 * bindingResult, getAddressVerificationFacade().isCustomerAllowedToIgnoreAddressSuggestions(),
 		 * "checkout.multi.address.updated");
-		 *
+		 * 
 		 * if (addressRequiresReview) { if (StringUtils.isNotBlank(addressForm.getCountryIso())) {
 		 * model.addAttribute("regions", getI18NFacade().getRegionsForCountryIso(addressForm.getCountryIso()));
 		 * model.addAttribute("country", addressForm.getCountryIso()); } storeCmsPageInModel(model,
 		 * getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL)); setUpMetaDataForContentPage(model,
 		 * getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-		 *
+		 * 
 		 * if (StringUtils.isNotEmpty(addressForm.getAddressId())) { final AddressData addressData =
 		 * getCheckoutFacade().getDeliveryAddressForCode(addressForm.getAddressId()); if (addressData != null) {
 		 * model.addAttribute("showSaveToAddressBook", Boolean.valueOf(!addressData.isVisibleInAddressBook()));
 		 * model.addAttribute("edit", Boolean.TRUE); } }
-		 *
+		 * 
 		 * return MarketplacecheckoutaddonControllerConstants.AddEditDeliveryAddressPage; }
 		 */
 
@@ -423,8 +425,8 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 	{
 
 
-		final Set<String> resolveCountryRegions = org.springframework.util.StringUtils
-				.commaDelimitedListToSet(Config.getParameter("resolve.country.regions"));
+		final Set<String> resolveCountryRegions = org.springframework.util.StringUtils.commaDelimitedListToSet(Config
+				.getParameter("resolve.country.regions"));
 
 		final AddressData selectedAddress = new AddressData();
 		selectedAddress.setId(addressForm.getAddressId());

@@ -217,68 +217,76 @@
 				 <%-- <li><spring:theme
 							code="text.select.size" /></li> --%>
 				<c:forEach items="${product.variantOptions}" var="variantOption">
-					
-					<c:url value="${variantOption.url}/quickView" var="variantUrl" />
-					<c:forEach items="${variantOption.colourCode}" var="color">
-						<c:choose>
-							<c:when test="${not empty currentColor}">
-								<c:if test="${currentColor eq color}">
-									<c:set var="currentColor" value="${color}" />
-									<c:forEach var="entry" items="${variantOption.sizeLink}">
-										<c:url value="${entry.key}" var="link" />
-							            	
-										<c:choose>									
-											<c:when test="${(product.code eq variantOption.code && selectedSize != null)}">
-											<li class="selected"><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
-											</c:when>
-											<c:otherwise>  
-												<li><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
-											</c:otherwise>
-										</c:choose>
-									</c:forEach>
-								</c:if>
-							</c:when>
-							<c:otherwise>
+				<c:url	value="${variantOption.url}/quickView"	var="variantUrl" />
+				<c:forEach items="${variantOption.colourCode}" var="color">
+					<c:choose>
+						<c:when test="${not empty currentColor}">
+							<c:if test="${currentColor eq color}">
+								<c:set var="currentColor" value="${color}" />
+								
 								<c:forEach var="entry" items="${variantOption.sizeLink}">
 									<c:url value="${entry.key}" var="link" />
-									<c:if test="${entry.key eq product.url}">
-										<c:set var="currentColor" value="${color}" />
-										
-									</c:if>
-									<c:url
-										value="${variantOption.url}/quickView"
-										var="variantUrl" />
-									<c:forEach items="${product.variantOptions}"
-										var="variantOption">
-										<c:forEach items="${variantOption.colourCode}" var="color">
-											<c:if test="${currentColor eq color}">
-												<c:url
-													value="${variantOption.url}/quickView"
-													var="variantUrl" />
-												<c:forEach var="entry" items="${variantOption.sizeLink}">
-													<c:url value="${entry.key}" var="link" />                                                
-													<c:choose>
-														<c:when test="${(product.code eq variantOption.code && selectedSize != null )}">                                                    
-															<c:url
-																value="${variantOption.url}/quickView" 
-																var="variantUrl" />
-															   <li class="selected"><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li> 
-															   <!--<li class="selected"><a href="${variantUrl}" class="js-reference-item cboxElement">${entry.value}</a></li>-->	
-														</c:when>
-														<c:otherwise>
-															<li><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
-															<!--<li><a href="${variantUrl}" class="js-reference-item cboxElement">${entry.value}</a></li>--> 
-														</c:otherwise>
-													</c:choose>
-												</c:forEach>
-											</c:if>
-										</c:forEach>
+									<%--  <a href="${link}?selectedSize=true">${entry.value}</a> --%>
+									<c:choose>
+										<c:when test="${(variantOption.code eq product.code)}">
+											<c:choose>
+												<c:when test="${selectedSize eq null}">
+													<li><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
+												</c:when>
+												<c:otherwise>
+														<li class="selected"><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+										<c:otherwise>
+											<li data-vcode="${link}"><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
+										</c:otherwise>
+									</c:choose>
+								</c:forEach>
+							</c:if>
+						</c:when>	
+						<c:otherwise>									
+							<c:forEach var="entry" items="${variantOption.sizeLink}">
+								<c:url value="${entry.key}" var="link" />
+								<c:if test="${entry.key eq product.url}">
+									<c:set var="currentColor" value="${color}" />
+									<c:set var="currentColor" value="${variantOption.colour}" />
+								</c:if>
+								
+								<c:forEach items="${product.variantOptions}" var="variantOption">
+									<c:forEach items="${variantOption.colour}" var="color">
+										<c:if test="${currentColor eq color}">
+										<c:url	value="${variantOption.url}/quickView"	var="variantUrl" />
+											<c:forEach var="entry" items="${variantOption.sizeLink}">
+												<c:url value="${entry.key}" var="link" />
+												<c:choose>
+												<c:when test="${(variantOption.code eq product.code)}">
+												<c:url	value="${variantOption.url}/quickView"	var="variantUrl" />
+												<c:choose>
+												
+												
+													<c:when test="${selectedSize eq null}">
+														<li><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
+													</c:when>
+													
+												<c:otherwise>
+														<li class="selected"><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
+												</c:otherwise>
+												</c:choose>
+											</c:when>	
+										<c:otherwise>
+											<li data-vcode="${link}"><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
+										</c:otherwise>												
+												</c:choose>
+											</c:forEach>
+										</c:if>
 									</c:forEach>
 								</c:forEach>
-							</c:otherwise>
-						</c:choose>
-					</c:forEach>
+							</c:forEach>
+						</c:otherwise>
+					</c:choose>
 				</c:forEach>
+			</c:forEach>
 			</ul>		
 			<!-- </select> -->
 			

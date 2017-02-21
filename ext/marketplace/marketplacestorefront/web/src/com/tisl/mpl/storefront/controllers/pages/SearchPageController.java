@@ -376,14 +376,17 @@ public class SearchPageController extends AbstractSearchPageController
 			{
 				model.addAttribute("searchPageData", searchPageData);
 				storeCmsPageInModel(model, getContentPageForLabelOrId(NO_RESULTS_CMS_PAGE_ID));
-				updatePageTitle(searchText, model);
+				updatePageTitle("", model);
+				//TISPRD-8030
+
 			}
 			else
 			{
 				storeContinueUrl(request);
 				populateModel(model, searchPageData, ShowMode.Page);
 				storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
-				updatePageTitle(searchText, model);
+				updatePageTitle("", model);
+				//TISPRD-8030
 			}
 			model.addAttribute(MarketplaceCoreConstants.USER_LOCATION, customerLocationService.getUserLocation());
 			getRequestContextData(request).setSearch(searchPageData);
@@ -567,6 +570,7 @@ public class SearchPageController extends AbstractSearchPageController
 			throws CMSItemNotFoundException
 	{
 		final String uri = request.getRequestURI();
+		final String pageTitle = "";
 		if (uri.contains("page"))
 		{
 			final Pattern p = Pattern.compile(COMPILE_PATTERN);
@@ -634,14 +638,16 @@ public class SearchPageController extends AbstractSearchPageController
 
 		if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
 		{
-			updatePageTitle(searchPageData.getFreeTextSearch(), model);
+			// Order of calling updatPageTitle changed for For INC_10385
 			storeCmsPageInModel(model, getContentPageForLabelOrId(NO_RESULTS_CMS_PAGE_ID));
+			updatePageTitle(searchPageData.getFreeTextSearch(), model);
 		}
 		else
 		{
+			// Order of calling updatPageTitle changed for For INC_10385
 			storeContinueUrl(request);
-			updatePageTitle(searchPageData.getFreeTextSearch(), model);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
+			updatePageTitle(searchPageData.getFreeTextSearch(), model);
 		}
 		final List<Breadcrumb> breadcrumbs = searchBreadcrumbBuilder.getBreadcrumbs(null, searchPageData);
 		model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
@@ -668,6 +674,8 @@ public class SearchPageController extends AbstractSearchPageController
 
 		final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(searchText);
 		setUpMetaData(model, metaKeywords, metaDescription);
+		//Added for INC_10385
+		model.addAttribute("pageTitle", pageTitle);
 	}
 
 	/**
@@ -697,6 +705,16 @@ public class SearchPageController extends AbstractSearchPageController
 		}
 
 		model.addAttribute("page_name", "Search Results Page:" + breadcrumbName);
+		//TPR-430
+		/*
+		 * if (null != breadcrumbs.get(0).getName()) { model.addAttribute("product_category",
+		 * breadcrumbs.get(0).getName().replaceAll(" ", "_").toLowerCase()); } if (null != breadcrumbs.get(1).getName()) {
+		 * model.addAttribute("page_subcategory_name", breadcrumbs.get(1).getName().replaceAll(" ", "_").toLowerCase()); }
+		 * if (null != breadcrumbs.get(2).getName()) { model.addAttribute("page_subcategory_name_L3",
+		 * breadcrumbs.get(2).getName().replaceAll(" ", "_").toLowerCase()); }
+		 */
+
+
 	}
 
 	/**

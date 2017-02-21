@@ -97,6 +97,7 @@ public class SizeGuideHeaderComparator implements Comparator<String>
 			if (value2SizeSystemIndex == -1)
 			{
 				//values out of size-systems are placed as last thus so big number.
+
 				return Integer.MIN_VALUE;
 			}
 			else

@@ -231,6 +231,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 									MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
 
 							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
+
 							//Code to remove coupon for Payment_Timeout orders
 							if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
 							{
@@ -420,6 +421,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					{
 						modelService.save(orderModel);
 					}
+
 					//PaymentFix2017: setIsSentToOMS not required
 					orderModel.setIsSentToOMS(Boolean.FALSE);
 					orderModel.setOmsSubmitStatus("");
@@ -443,7 +445,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 				}
 
 				//SprintPaymentFixes:- for modeOfPayment as COD, if there is no child orders the Order will be failed
-				if (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD") && null != orderModel.getPaymentInfo()
+				if (null != orderModel.getModeOfOrderPayment() && orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD") && null != orderModel.getPaymentInfo()
 						&& CollectionUtils.isNotEmpty(orderModel.getChildOrders())
 						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
 				{
@@ -510,6 +512,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					{
 						if (paymentTransaction.getStatus().equalsIgnoreCase("SUCCESS"))
 						{
+
 							//PaymentFix2017: setIsSentToOMS not required
 							orderModel.setIsSentToOMS(Boolean.FALSE);
 							orderModel.setOmsSubmitStatus("");
@@ -529,7 +532,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 				}
 
 				//SprintPaymentFixes:- for modeOfPayment as COD, if there is no child orders the Order will be failed
-				if (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD")
+				if (null != orderModel.getModeOfOrderPayment() && orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD")
 						&& CollectionUtils.isEmpty(orderModel.getChildOrders()))
 				{
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
@@ -539,12 +542,12 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 		}
 		catch (final ModelSavingException e)
 		{
-			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
+			//getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
 			LOG.error("Error while saving into DB from job>>>>>>", e);
 		}
 		catch (final Exception e)
 		{
-			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
+			//getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
 			LOG.error("Error while updating updateOrder from job>>>>>>", e);
 		}
 	}
