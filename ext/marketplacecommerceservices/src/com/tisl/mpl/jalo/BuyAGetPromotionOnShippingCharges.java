@@ -56,7 +56,7 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 
 	/**
 	 * @Description : Buy Product A and get Percentage/Amount Discount on shipping charges or Free Shipping
-	 * @param : SessionContext arg0 ,PromotionEvaluationContext arg1
+	 * @param : SessionContext ctx ,PromotionEvaluationContext promotionEvalCtx
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override

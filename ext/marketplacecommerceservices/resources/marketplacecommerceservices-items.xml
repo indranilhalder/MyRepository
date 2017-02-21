@@ -344,6 +344,7 @@
 			</attributes>
 		</itemtype>
 		
+		
 			<!-- CustomBuyAgetPercentageDiscountOnBAdjustAction class for apportioned value 
 			for Product level promotions -->
 		<!-- <itemtype code="CustomBuyAgetPercentageDiscountOnBAdjustAction"

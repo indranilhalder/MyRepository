@@ -699,7 +699,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 	 * @param order
 	 * @return orderSubtotalAfterDiscounts
 	 */
-	private double getSubtotalAfterDiscount(final SessionContext arg0, final AbstractOrder order)
+	private double getSubtotalAfterDiscount(final SessionContext ctx, final AbstractOrder order)
 	{
 		double orderSubtotalAfterDiscounts = 0.0D;
 		double totalPrice = 0.0D;
@@ -714,11 +714,11 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 					{
 						totalPrice = totalPrice + entry.getTotalPrice().doubleValue();
 					}
-					else if ((null != entry.getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED)
-							&& BooleanUtils.toBoolean(entry.getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED)
-									.toString()) && null != entry.getAttribute(arg0, MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT)))
+					else if ((null != entry.getAttribute(ctx, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED)
+							&& BooleanUtils.toBoolean(entry.getAttribute(ctx, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED)
+									.toString()) && null != entry.getAttribute(ctx, MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT)))
 					{
-						final double freecount = Double.parseDouble(entry.getAttribute(arg0,
+						final double freecount = Double.parseDouble(entry.getAttribute(ctx,
 								MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT).toString());
 						totalPrice = totalPrice + (freecount * 0.01);
 					}
@@ -726,18 +726,18 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 
 				if (totalPrice != 0.0D)
 				{
-					orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(arg0, order) - totalPrice;
+					orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(ctx, order) - totalPrice;
 				}
 				else
 				{
-					orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(arg0, order);
+					orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(ctx, order);
 				}
 			}
 		}
 		catch (final Exception exception)
 		{
 			LOG.error(exception.getMessage());
-			orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(arg0, order);
+			orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(ctx, order);
 		}
 
 		return orderSubtotalAfterDiscounts;
@@ -753,7 +753,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 	 * @param validProductUssidMap
 	 * @return orderSubtotalAfterDiscounts
 	 */
-	private double getSellerSpecificSubtotal(final SessionContext arg0, final Map<String, AbstractOrderEntry> validProductUssidMap)
+	private double getSellerSpecificSubtotal(final SessionContext ctx, final Map<String, AbstractOrderEntry> validProductUssidMap)
 	{
 		double orderSubtotalAfterDiscounts = 0.0D;
 		try
@@ -770,13 +770,13 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 						totalPrice = totalPrice + (mapentry.getValue().getTotalPrice().doubleValue());
 					}
 
-					if ((null != mapentry.getValue().getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED)
+					if ((null != mapentry.getValue().getAttribute(ctx, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED)
 							&& BooleanUtils.toBoolean(mapentry.getValue()
-									.getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED).toString()) && null != mapentry
-							.getValue().getAttribute(arg0, MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT)))
+									.getAttribute(ctx, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED).toString()) && null != mapentry
+							.getValue().getAttribute(ctx, MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT)))
 					{
 						final double freecount = Double.parseDouble(mapentry.getValue()
-								.getAttribute(arg0, MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT).toString());
+								.getAttribute(ctx, MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT).toString());
 						bogoFreePrice = bogoFreePrice + (freecount * 0.01);
 					}
 				}

@@ -74,11 +74,11 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 
 	/**
 	 * @Description : Buy Product A and B to get Product C Free
-	 * @param : SessionContext arg0 ,PromotionEvaluationContext arg1
+	 * @param : SessionContext ctx ,PromotionEvaluationContext arg1
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
-	public List<PromotionResult> evaluate(final SessionContext arg0, final PromotionEvaluationContext arg1)
+	public List<PromotionResult> evaluate(final SessionContext ctx, final PromotionEvaluationContext evaluationContext)
 	{
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions()); //Get the Promotion set Restrictions
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
@@ -89,32 +89,35 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 		primaryProductList = new ArrayList<Product>();
 		secondaryProductList = new ArrayList<Product>();
 
-		GenericUtilityMethods.populateExcludedProductManufacturerList(arg0, arg1, excludedProductList, excludeManufactureList,
-				restrictionList, this);
-		//getDefaultPromotionsManager().promotionAlreadyFired(arg0, order, excludedProductList); // Checking if Promotions already Fired on the promotion eligible products
+		GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, evaluationContext, excludedProductList,
+				excludeManufactureList, restrictionList, this);
+		//getDefaultPromotionsManager().promotionAlreadyFired(ctx, order, excludedProductList); // Checking if Promotions already Fired on the promotion eligible products
 
 		final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager()
-				.findEligibleProductsInBasketForBuyAandBPromo(arg0, arg1, this, getCategories(), getSecondCategories(),
+				.findEligibleProductsInBasketForBuyAandBPromo(ctx, evaluationContext, this, getCategories(), getSecondCategories(),
 						primaryProductList, secondaryProductList); // Validates Promotion Restrictions
 		boolean checkChannelFlag = false;
 		try
 		{
-			final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(arg0,
+			final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(ctx,
 					MarketplacecommerceservicesConstants.CHANNEL);
 			//commented for omni cart issue
 			//checkChannelFlag = getMplPromotionHelper().checkChannel(listOfChannel); // Verifying the Channel : Web/Web Mobile/ CockPit
-			final AbstractOrder cart = arg1.getOrder();
+			final AbstractOrder cart = evaluationContext.getOrder();
 
 			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
 
-			final List<String> eligibleProductList = eligibleForPromotion(cart, arg0); //Get Promotion eligible Products
+			final List<String> eligibleProductList = eligibleForPromotion(cart, ctx); //Get Promotion eligible Products
 
-			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag
-					&& GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, arg0, arg1, this, restrictionList)) // If Satisfies all Restriction and Channel validates to be true
+			if ((rsr.isAllowedToContinue())
+					&& (!(rsr.getAllowedProducts().isEmpty()))
+					&& checkChannelFlag
+					&& GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, ctx, evaluationContext, this,
+							restrictionList)) // If Satisfies all Restriction and Channel validates to be true
 			{
-				if (!getDefaultPromotionsManager().promotionAlreadyFired(arg0, validProductUssidMap))
+				if (!getDefaultPromotionsManager().promotionAlreadyFired(ctx, validProductUssidMap))
 				{
-					promotionResults = promotionEvaluation(arg0, arg1, validProductUssidMap, restrictionList, cart,
+					promotionResults = promotionEvaluation(ctx, evaluationContext, validProductUssidMap, restrictionList, cart,
 							eligibleProductList);
 				}
 			}
@@ -138,12 +141,12 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 
 	/**
 	 * @Description : Promotion Evaluation Method
-	 * @param arg0
+	 * @param ctx
 	 * @param arg1
 	 * @param validProductUssidMap
 	 * @return promotionResults
 	 */
-	private List<PromotionResult> promotionEvaluation(final SessionContext arg0, final PromotionEvaluationContext arg1,
+	private List<PromotionResult> promotionEvaluation(final SessionContext ctx, final PromotionEvaluationContext arg1,
 			final Map<String, AbstractOrderEntry> validProductUssidMap, final List<AbstractPromotionRestriction> restrictionList,
 			final AbstractOrder order, final List<String> eligibleProductList)
 	{
@@ -167,8 +170,8 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 			if (!eligibleProductList.isEmpty()) //Apply percentage/amount discount to valid products
 			{
 				final int noOfTimes = totalFactorCount;
-				arg0.setAttribute(MarketplacecommerceservicesConstants.FREEGIFT_QUANTITY, String.valueOf(noOfTimes)); // Setting Free gift details in Session Context
-				arg0.setAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, String.valueOf(this.getCode()));
+				ctx.setAttribute(MarketplacecommerceservicesConstants.FREEGIFT_QUANTITY, String.valueOf(noOfTimes)); // Setting Free gift details in Session Context
+				ctx.setAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, String.valueOf(this.getCode()));
 				//getting eligible Product List
 				final List<Product> validProductList = new ArrayList<Product>();
 				for (final AbstractOrderEntry orderEntry : validProductUssidMap.values())
@@ -176,14 +179,14 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 					validProductList.add(orderEntry.getProduct());
 				}
 				//@Description:Gift Product can be multiple
-				final List<Product> productList = (List<Product>) this.getGiftProducts(arg0); // Get Promotion set Free Gifts
+				final List<Product> productList = (List<Product>) this.getGiftProducts(ctx); // Get Promotion set Free Gifts
 
-				final List<PromotionOrderEntryConsumed> consumed = getDefaultPromotionsManager().getConsumedEntriesForFreebie(arg0,
+				final List<PromotionOrderEntryConsumed> consumed = getDefaultPromotionsManager().getConsumedEntriesForFreebie(ctx,
 						this, validProductUssidMap, null, Integer.valueOf(noOfTimes), tcMapForValidEntries);
 
-				final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this, arg1.getOrder(),
+				final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this, arg1.getOrder(),
 						1.00F);
-				result.setConsumedEntries(arg0, consumed);
+				result.setConsumedEntries(ctx, consumed);
 
 				if (null != productList && !productList.isEmpty())
 				{
@@ -198,13 +201,13 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 						final Map<String, List<String>> productAssociatedItemsMap = getMplPromotionHelper().getAssociatedData(order,
 								validProductUssidMap, entry.getKey());
 
-						arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
-						arg0.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, qCount);
-						arg0.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
+						ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
+						ctx.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, qCount);
+						ctx.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
 
 						result.addAction(
-								arg0,
-								getDefaultPromotionsManager().createCustomPromotionOrderAddFreeGiftAction(arg0, entry.getValue(),
+								ctx,
+								getDefaultPromotionsManager().createCustomPromotionOrderAddFreeGiftAction(ctx, entry.getValue(),
 										entry.getKey(), result, Double.valueOf(noOfTimes))); //Adding Free gifts to cart
 					}
 				}
@@ -215,7 +218,7 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 				{// For Message Localization
 					certainty = 0.00F;
 				}
-				final PromotionResult result1 = PromotionsManager.getInstance().createPromotionResult(arg0, this, arg1.getOrder(),
+				final PromotionResult result1 = PromotionsManager.getInstance().createPromotionResult(ctx, this, arg1.getOrder(),
 						certainty);
 				promotionResults.add(result1);
 			}
@@ -226,7 +229,7 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 					final Product orderProduct = entry.getProduct();
 					if (!excludedProductList.contains(orderProduct) && GenericUtilityMethods.checkRestrictionData(restrictionList))
 					{
-						final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
+						final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
 								arg1.getOrder(), 0.00F);
 						promotionResults.add(result);
 					}
@@ -242,16 +245,16 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 
 	/**
 	 * @Description : Returns Minimum Category Amount
-	 * @param : SessionContext arg0
+	 * @param : SessionContext ctx
 	 * @return : minimumCategoryValue
 	 */
-	//	private double calculateMinCategoryAmnt(final SessionContext arg0)
+	//	private double calculateMinCategoryAmnt(final SessionContext ctx)
 	//	{
 	//		double minimumCategoryValue = 0.00D;
-	//		if (null != arg0 && null != getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)
-	//				&& ((Double) getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() > 0.00D)
+	//		if (null != ctx && null != getProperty(ctx, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)
+	//				&& ((Double) getProperty(ctx, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() > 0.00D)
 	//		{
-	//			minimumCategoryValue = ((Double) getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue();
+	//			minimumCategoryValue = ((Double) getProperty(ctx, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue();
 	//		}
 	//		return minimumCategoryValue;
 	//	}
@@ -261,31 +264,31 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
-	 * @param : SessionContext arg0 ,PromotionResult arg1 ,Locale arg2
+	 * @param : SessionContext ctx ,PromotionResult arg1 ,Locale arg2
 	 * @return : String
 	 */
 	@Override
-	public String getResultDescription(final SessionContext arg0, final PromotionResult arg1, final Locale arg2)
+	public String getResultDescription(final SessionContext ctx, final PromotionResult promotionResult, final Locale locale)
 	{
 		try
 		{
-			final AbstractOrder order = arg1.getOrder(arg0);
+			final AbstractOrder order = promotionResult.getOrder(ctx);
 			final String data = MarketplacecommerceservicesConstants.EMPTYSPACE;
 			if (order != null)
 			{
-				//final double minimumCategoryValue = calculateMinCategoryAmnt(arg0);
+				//final double minimumCategoryValue = calculateMinCategoryAmnt(ctx);
 
-				if (arg1.getFired(arg0))
+				if (promotionResult.getFired(ctx))
 				{
 					final Object[] args = {};
-					return formatMessage(this.getMessageFired(arg0), args, arg2);
+					return formatMessage(this.getMessageFired(ctx), args, locale);
 				}
-				else if (arg1.getCouldFire(arg0))
+				else if (promotionResult.getCouldFire(ctx))
 				{
-					//eligibleForPromotion(order, arg0);
+					//eligibleForPromotion(order, ctx);
 					final Object[] args = new Object[6];
-					final double minimumCategoryValue = getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT) != null ? ((Double) getProperty(
-							arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() : 0.00D;
+					final double minimumCategoryValue = getProperty(ctx, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT) != null ? ((Double) getProperty(
+							ctx, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() : 0.00D;
 
 					final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(
 							getRestrictions());
@@ -423,7 +426,7 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 						args[2] = paymentModes;
 					}
 
-					return formatMessage(this.getMessageCouldHaveFired(arg0), args, arg2);
+					return formatMessage(this.getMessageCouldHaveFired(ctx), args, locale);
 				}
 			}
 		}

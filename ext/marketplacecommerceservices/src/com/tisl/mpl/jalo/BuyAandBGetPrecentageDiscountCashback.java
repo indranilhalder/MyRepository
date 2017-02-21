@@ -269,27 +269,27 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
-	 * @param : SessionContext arg0 ,PromotionResult arg1 ,Locale arg2
+	 * @param : SessionContext ctx ,PromotionResult promotionResult ,Locale locale
 	 * @return : String
 	 */
 	@Override
-	public String getResultDescription(final SessionContext arg0, final PromotionResult arg1, final Locale arg2)
+	public String getResultDescription(final SessionContext ctx, final PromotionResult promotionResult, final Locale locale)
 	{
-		final AbstractOrder order = arg1.getOrder(arg0);
+		final AbstractOrder order = promotionResult.getOrder(ctx);
 		final String data = MarketplacecommerceservicesConstants.EMPTYSPACE;
 		if (null != order)
 		{
-			if (arg1.getFired(arg0))
+			if (promotionResult.getFired(ctx))
 			{
 				final Object[] args =
 				{ Double.valueOf(totalCachback) };
-				return formatMessage(this.getMessageFired(arg0), args, arg2);
+				return formatMessage(this.getMessageFired(ctx), args, locale);
 			}
-			else if (arg1.getCouldFire(arg0))
+			else if (promotionResult.getCouldFire(ctx))
 			{
 				final Object[] args = new Object[6];
-				final double minimumCategoryValue = getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT) != null ? ((Double) getProperty(
-						arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() : 0.00D;
+				final double minimumCategoryValue = getProperty(ctx, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT) != null ? ((Double) getProperty(
+						ctx, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() : 0.00D;
 				final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(
 						getRestrictions());
 				String paymentModes = "";
@@ -465,7 +465,7 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 					args[2] = "purchase";
 				}
 
-				return formatMessage(this.getMessageCouldHaveFired(arg0), args, arg2);
+				return formatMessage(this.getMessageCouldHaveFired(ctx), args, locale);
 			}
 		}
 		return MarketplacecommerceservicesConstants.EMPTY;
