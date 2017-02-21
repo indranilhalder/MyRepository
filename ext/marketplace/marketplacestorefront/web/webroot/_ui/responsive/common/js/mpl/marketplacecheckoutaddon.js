@@ -5373,14 +5373,14 @@ function checkPincodeServiceability(buttonType,el)
         $(".cartItemBlankPincode").show();
 		$("#emptyId").hide();
 		$("#emptyId_tooltip").hide();
-		$("#emptyId_tooltip_btm").hide();
+		//$("#emptyId_tooltip_btm").hide();
 		$("#error-Id").css({
 			"color":"red",
 			"display":"block",
 
 			});
 		$("#error-Id_tooltip").show();
-		$( "#error-Id_tooltip_btm").show();
+		//$( "#error-Id_tooltip_btm").show();
 		$('#checkout-id #checkout-enabled').addClass('checkout-disabled');
 		$('#checkout-id-down #checkout-down-enabled').addClass('checkout-disabled'); //UF-69
 		// setTimeout(function(){
@@ -5395,7 +5395,7 @@ function checkPincodeServiceability(buttonType,el)
 	{		
 		$("#unserviceablepincode").hide();
 		$("#unserviceablepincode_tooltip").hide();
-		 $("#unserviceablepincode_tooltip_btm").hide();
+		 //$("#unserviceablepincode_tooltip_btm").hide();
 		$("#cartPinCodeAvailable").show();
 		 $(".pincodeServiceError").hide();
 		 $("#AvailableMessage").hide();
@@ -5410,7 +5410,7 @@ function checkPincodeServiceability(buttonType,el)
 		$("#emptyId_tooltip_btm").hide();
 		$("#error-Id").hide();
 		$("#error-Id_tooltip").hide();
-		$( "#error-Id_tooltip_btm").hide();
+		//$( "#error-Id_tooltip_btm").hide();
 		$("#no-click,.spinner").remove();
 		$(".delivery ul.success_msg").hide();//TPR-1341
 		return false; 
@@ -5424,11 +5424,11 @@ function checkPincodeServiceability(buttonType,el)
 		$("#defaultPinCodeIds").css("color","black");
 		$( "#error-Id").hide();
 		$( "#error-Id_tooltip").hide();
-		$( "#error-Id_tooltip_btm").hide();
+		//$( "#error-Id_tooltip_btm").hide();
 		// $("#cartPinCodeAvailable").show();//TPR-1055
 		$("#emptyId").hide();
 		$("#emptyId_tooltip").hide();
-		$("#emptyId_tooltip_btm").hide();
+		//$("#emptyId_tooltip_btm").hide();
 	$.ajax({
  		url: ACC.config.encodedContextPath + "/cart/checkPincodeServiceability/"+selectedPincode,
  		type: "GET",
@@ -5585,11 +5585,11 @@ function checkPincodeServiceabilityBtm(buttonType,el)
 		 //$("#pinCodeButtonIdsBtm").text("Change Pincode");
 		 document.getElementById("pinCodeButtonIdsBtm").className = "ChangePincode";//UF-71
 		// setTimeout(function(){
-		 $("#unserviceablepincode").hide();// tpr-1341
+		 $("#unserviceablepincodeBtm").hide();// tpr-1341
 		 $(".cartItemBlankPincode").show();
 		//$("#pinCodeButtonIdsBtm").text("Check Availability");
 		 document.getElementById("pinCodeButtonIdsBtm").className = "CheckAvailability";//UF-71
-		 $("#AvailableMessage").hide();
+		 $("#AvailableMessageBtm").hide();
 		 $(".pincodeServiceError").hide();
 		 $(".delivery ul.success_msg").hide();
 		$("#pinCodeDispalyDiv .spinner").remove();
@@ -5603,8 +5603,8 @@ function checkPincodeServiceabilityBtm(buttonType,el)
     	$("#defaultPinCodeIdsBtm").css("color","red");
         $("#error-Id").show();
         $("#cartPinCodeAvailable").hide();// TPR-1055
-        $("#unserviceablepincode").hide();
-        $("#AvailableMessage").hide();
+        $("#unserviceablepincodeBtm").hide();
+        $("#AvailableMessageBtm").hide();
         //TPR-1341
         $(".pincodeServiceError").hide();
         $(".delivery ul.success_msg").hide();
@@ -5627,10 +5627,10 @@ function checkPincodeServiceabilityBtm(buttonType,el)
 	//else if($("#pinCodeButtonIdsBtm").text() == 'Change Pincode'&& $(el).attr("id") =="pinCodeButtonIdsBtm"){
 	else if(document.getElementById("pinCodeButtonIdsBtm").className == 'ChangePincode'&& $(el).attr("id") =="pinCodeButtonIdsBtm"){//UF-71
 		
-		$("#unserviceablepincode").hide();
+		$("#unserviceablepincodeBtm").hide();
 		$("#cartPinCodeAvailable").show();
 		 $(".pincodeServiceError").hide();
-		 $("#AvailableMessage").hide();
+		 $("#AvailableMessageBtm").hide();
 		 $(".cartItemBlankPincode").show();
 		//$("#pinCodeButtonIdsBtm").text("Check Availability");
 		 document.getElementById("pinCodeButtonIdsBtm").className = "CheckAvailability";//UF-71
@@ -5673,9 +5673,9 @@ function checkPincodeServiceabilityBtm(buttonType,el)
  				// TISTI-255
 				// Please try later or contact our helpdesk");
  				// TISPRD-1666 - console replaced with alert and resp print
- 				$("#AvailableMessage").hide();
+ 				$("#AvailableMessageBtm").hide();
  				$("#cartPinCodeAvailable").hide();
- 				$("#unserviceablepincode").show();
+ 				$("#unserviceablepincodeBtm").show();
  				$("#unserviceablepincode_tooltip").show();
  				 $("#unserviceablepincode_tooltip_btm").show();
  				 $(".pincodeServiceError").show();
@@ -5693,12 +5693,12 @@ function checkPincodeServiceabilityBtm(buttonType,el)
  		 	 	);
  				}
  				$(".pincodeServiceError").hide();
- 				$("#unserviceablepincode").hide();
+ 				$("#unserviceablepincodeBtm").hide();
  				$("#unserviceablepincode_tooltip").hide();
  				 $("#unserviceablepincode_tooltip_btm").hide();
  				$("#cartPinCodeAvailable").hide();
- 				$("#AvailableMessage").html("Available delivery options for the pincode " +selectedPincode+ " are");
-	 			$("#AvailableMessage").show();
+ 				$("#AvailableMessageBtm").html("Available delivery options for the pincode " +selectedPincode+ " are");
+	 			$("#AvailableMessageBtm").show();
  					populatePincodeDeliveryMode(response,buttonType);
  					reloadpage(selectedPincode,buttonType);
  				}
@@ -5884,7 +5884,7 @@ $("#defaultPinCodeIds").click(function(){
 });
 //UF-69
 $("#defaultPinCodeIdsBtm").click(function(){
-	$("#unserviceablepincode").hide();
+	$("#unserviceablepincodeBtm").hide();
 	$(".deliveryUlClass").remove();//TPR-1341
 	$("#cartPinCodeAvailable").show();
 	 $( "#error-Id").hide();
@@ -5897,7 +5897,7 @@ $("#defaultPinCodeIdsBtm").click(function(){
 		$("#pinCodeButtonIdsBtm").text("Check Availability");*/
 	 if(document.getElementById("pinCodeButtonIdsBtm").className == 'ChangePincode'){	//UF-71
 		 document.getElementById("pinCodeButtonIdsBtm").className = "CheckAvailability";
-		$("#AvailableMessage").hide();
+		$("#AvailableMessageBtm").hide();
 	}
 	
 });
@@ -6185,6 +6185,7 @@ function checkIsServicable()
 	//$("#pinCodeButtonIdsBtm").text("Check Availability");// UF-69
 	document.getElementById("pinCodeButtonIdsBtm").className = "CheckAvailability";//UF-71
 	$("#unserviceablepincode").hide();
+	$("#unserviceablepincodeBtm").hide();
 	$("#unserviceablepincode_tooltip").hide();
 	 $("#unserviceablepincode_tooltip_btm").hide();
 	// TPR-1055 ends
@@ -6201,10 +6202,12 @@ function checkIsServicable()
 	 			if(responeStr[0]=="N"){
 	 			$("#cartPinCodeAvailable").hide();
 	 			$("#AvailableMessage").hide();
+	 			$("#AvailableMessageBtm").hide();//UF-68
  				// $("#unserviceablepincode").html("One or more item(s) are not
 				// available at this location. Please remove the item(s) to
 				// proceed or try an other pincode?");
  				$("#unserviceablepincode").show();// TPR-1329
+ 				$("#unserviceablepincodeBtm").show();//UF-68
  				$("#unserviceablepincode_tooltip").show();
  				 $("#unserviceablepincode_tooltip_btm").show();
  				 $(".pincodeServiceError").show();
@@ -6217,6 +6220,7 @@ function checkIsServicable()
 	 				$(".deliveryUlClass").remove();//TPR-1341
 	 				 $(".pincodeServiceError").hide();
 	 				$("#unserviceablepincode").hide();
+	 				$("#unserviceablepincodeBtm").show();//UF-68
 	 				$("#unserviceablepincode_tooltip").hide();
 	 				 $("#unserviceablepincode_tooltip_btm").hide();
 	 				$("#cartPinCodeAvailable").hide();
@@ -7820,7 +7824,7 @@ $("#savedDebitCard").find("input[type=password]").click(function(){
 	//UF-69 STARTS
 	$("#defaultPinCodeIdsBtm").click(function(){
 		$(this).css("color","black"); //TPR-1470
-		$("#unserviceablepincode").hide();
+		$("#unserviceablepincodeBtm").hide();
 		$(".deliveryUlClass").remove();//TPR-1341
 		$("#cartPinCodeAvailable").show();
 		 $( "#error-Id").hide();
@@ -7833,7 +7837,7 @@ $("#savedDebitCard").find("input[type=password]").click(function(){
 			$("#pinCodeButtonIdsBtm").text("Check Availability");*/
 		 if(document.getElementById("pinCodeButtonIdsBtm").className == 'ChangePincode'){
 			 document.getElementById("pinCodeButtonIdsBtm").className = "CheckAvailability";//UF-71
-			$("#AvailableMessage").hide();
+			$("#AvailableMessageBtm").hide();
 		}
 		
 	});//UF-69 ENDS

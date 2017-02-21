@@ -1122,10 +1122,10 @@ tr.d0 td {
 				<%-- <p><spring:theme code="product.pincode.input" /></p>
 				<p id="cartPinCodeAvailable"><spring:theme code="product.pincode" /></p> --%>
 				<!-- TPR_1055 EQA -->
-				<p id="AvailableMessage" style="display:none"></p>
-				<p id="unserviceablepincode" style="display:none"><spring:theme code="cart.unserviceable.pincode" /></p>
-				<p id="error-Id" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
-				<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p>
+				<p id="AvailableMessageBtm" style="display:none"></p>
+				<p id="unserviceablepincodeBtm" style="display:none"><spring:theme code="cart.unserviceable.pincode" /></p>
+				<p id="error-IdBtm" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
+				<p id="emptyIdBtm" style="display:none"><spring:theme code="product.empty.pincode" /></p>
 				<c:choose>
 		 		<c:when test="${not empty defaultPinCode}">
 				<input type="text" id= "defaultPinCodeIdsBtm" name = "defaultPinCodeIds" style="" value="${defaultPinCode}" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
