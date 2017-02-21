@@ -280,6 +280,13 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 						}
 					}
 				}
+
+				//TISSQAUAT-451 starts
+				bestOffers.put("autoPlay", bestOfferCarouselComponent.getAutoPlay());
+				bestOffers.put("slideBy", bestOfferCarouselComponent.getSlideBy());
+				bestOffers.put("autoplayTimeout", bestOfferCarouselComponent.getAutoplayTimeout());
+				//TISSQAUAT-451 ends
+
 				bestOffers.put("subItems", subComponentJsonArray);
 
 			}
