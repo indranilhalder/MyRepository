@@ -409,7 +409,7 @@ function focusOnElement() {
         productCodeArray.push(productCode);    
 	        utag.link({
 				link_obj: this,
-				link_text: 'addtobag' ,
+				link_text: 'add_to_bag' ,
 				event_type : 'add_to_bag_other_seller_pdp' ,
 				product_sku : productCodeArray                     // Product code passed as an array for Web Analytics   -- INC_11511  fix
 			});
