@@ -115,14 +115,20 @@ $(document).ready(
 								+ $("#product_name").val() + '"],';
 						tealiumData += '"product_sku":["'
 								+ $("#product_sku").val() + '"],';
-						tealiumData += '"page_category_name":"'
+						if ($("#page_category_name").val() != 'undefined' && $("#page_category_name").val() != ''){
+							tealiumData += '"page_category_name":"'
 								+ $("#page_category_name").val() + '",';
-						tealiumData += '"page_section_name":"'
+						}
+						if ($("#page_section_name").val() != 'undefined' && $("#page_section_name").val() != ''){
+							tealiumData += '"page_section_name":"'
 								+ $("#page_section_name").val() + '",';
+						}
 						tealiumData += '"page_name":"' + $("#page_name").val()
 								+ '",';
-						tealiumData += '"offer_title":"'       //added for analytics schema
-								+ $(".pdp-promo-title pdp-title").val() + '",';	
+						if(typeof(promo_title) != 'undefined' && promo_title !=''){ 
+							tealiumData += '"offer_title":"'       //added for analytics schema
+								+ promo_title + '",';
+						}
 						tealiumData += '"product_id":["'
 								+ $("#product_id").val() + '"],';
 						
@@ -169,8 +175,10 @@ $(document).ready(
 							+ $("#pdpBuyboxWinnerSellerID").val() + '",';
 						tealiumData += '"seller_name":"'
 							+ $("#sellerNameId").html() + '",';
-						tealiumData += '"other_seller_ids":"'
+						if($("#pdpOtherSellerIDs").val() != 'undefined' && $("#pdpOtherSellerIDs").val() !=''){ 
+							tealiumData += '"other_seller_ids":"'
 							+ $("#pdpOtherSellerIDs").val() + '",';
+						}
 						//TPR-429 END
 						
 						//TPR-4688
