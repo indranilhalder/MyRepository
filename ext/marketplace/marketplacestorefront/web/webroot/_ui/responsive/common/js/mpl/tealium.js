@@ -1128,10 +1128,10 @@ $(document).on("mouseover",".zoomContainer",function(e) {
 });
 
 /*PDP Add to bag & Buy Now*/
-function utagAddProductToBag(triggerPoint){
-	var productCode=$('#productCode').val();
+function utagAddProductToBag(triggerPoint,productCodeMSD){
 	var productCodeArray=[];
-   	productCodeArray.push(productCode);
+   	productCodeArray.push(productCodeMSD);
+   
 	var pageName='';
 	var pageType = $('#pageName').val();
 	if( pageType == "Product Details" || pageType == "View Seller Page"){
