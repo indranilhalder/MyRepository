@@ -5323,12 +5323,15 @@ function checkPincodeServiceability(buttonType,el)
 	if(selectedPincode === ""){	
 		$( "#error-Id").hide();
 		$( "#error-Id_tooltip").hide();
+		$( "#error-Id_tooltip_btm").hide();
 		$("#emptyId").css({
 			"color":"#ff1c47",
 			"display":"block",
 			});
 		$( "#emptyId_tooltip").show();
+		$("#emptyId_tooltip_btm").show();
 		$('#checkout-id #checkout-enabled').addClass('checkout-disabled');
+		$('#checkout-id-down #checkout-down-enabled').addClass('checkout-disabled'); //UF-69
 		 $("#cartPinCodeAvailable").hide();// TPR-1055
 		//$("#pinCodeButtonIds").text("Change Pincode");
 		 document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
@@ -5337,6 +5340,7 @@ function checkPincodeServiceability(buttonType,el)
 		// setTimeout(function(){
 		 $("#unserviceablepincode").hide();// tpr-1341
 		 $("#unserviceablepincode_tooltip").hide();
+		 $("#unserviceablepincode_tooltip_btm").hide();
 		 $(".cartItemBlankPincode").show();
 		//$("#pinCodeButtonIds").text("Check");
 		//$("#pinCodeButtonIds").text("Check Availability");
@@ -5355,9 +5359,11 @@ function checkPincodeServiceability(buttonType,el)
     	$("#defaultPinCodeIds").css("color","red");
         $("#error-Id").show();
         $("#error-Id_tooltip").show();
+        $( "#error-Id_tooltip_btm").show();
         $("#cartPinCodeAvailable").hide();// TPR-1055
         $("#unserviceablepincode").hide();
         $("#unserviceablepincode_tooltip").hide();
+        $("#unserviceablepincode_tooltip_btm").hide();
         $("#AvailableMessage").hide();
         //TPR-1341
         $(".pincodeServiceError").hide();
@@ -5367,13 +5373,16 @@ function checkPincodeServiceability(buttonType,el)
         $(".cartItemBlankPincode").show();
 		$("#emptyId").hide();
 		$("#emptyId_tooltip").hide();
+		$("#emptyId_tooltip_btm").hide();
 		$("#error-Id").css({
 			"color":"red",
 			"display":"block",
 
 			});
 		$("#error-Id_tooltip").show();
+		$( "#error-Id_tooltip_btm").show();
 		$('#checkout-id #checkout-enabled').addClass('checkout-disabled');
+		$('#checkout-id-down #checkout-down-enabled').addClass('checkout-disabled'); //UF-69
 		// setTimeout(function(){
 		$("#pinCodeDispalyDiv .spinner").remove();
 		$("#no-click,.spinner").remove();
@@ -5386,6 +5395,7 @@ function checkPincodeServiceability(buttonType,el)
 	{		
 		$("#unserviceablepincode").hide();
 		$("#unserviceablepincode_tooltip").hide();
+		 $("#unserviceablepincode_tooltip_btm").hide();
 		$("#cartPinCodeAvailable").show();
 		 $(".pincodeServiceError").hide();
 		 $("#AvailableMessage").hide();
@@ -5397,8 +5407,10 @@ function checkPincodeServiceability(buttonType,el)
 		$("#pinCodeDispalyDiv .spinner").remove();
 		$("#emptyId").hide();
 		$("#emptyId_tooltip").hide();
+		$("#emptyId_tooltip_btm").hide();
 		$("#error-Id").hide();
 		$("#error-Id_tooltip").hide();
+		$( "#error-Id_tooltip_btm").hide();
 		$("#no-click,.spinner").remove();
 		$(".delivery ul.success_msg").hide();//TPR-1341
 		return false; 
@@ -5412,9 +5424,11 @@ function checkPincodeServiceability(buttonType,el)
 		$("#defaultPinCodeIds").css("color","black");
 		$( "#error-Id").hide();
 		$( "#error-Id_tooltip").hide();
+		$( "#error-Id_tooltip_btm").hide();
 		// $("#cartPinCodeAvailable").show();//TPR-1055
 		$("#emptyId").hide();
 		$("#emptyId_tooltip").hide();
+		$("#emptyId_tooltip_btm").hide();
 	$.ajax({
  		url: ACC.config.encodedContextPath + "/cart/checkPincodeServiceability/"+selectedPincode,
  		type: "GET",
@@ -5663,6 +5677,7 @@ function checkPincodeServiceabilityBtm(buttonType,el)
  				$("#cartPinCodeAvailable").hide();
  				$("#unserviceablepincode").show();
  				$("#unserviceablepincode_tooltip").show();
+ 				 $("#unserviceablepincode_tooltip_btm").show();
  				 $(".pincodeServiceError").show();
  				populatePincodeDeliveryMode(response,buttonType);
 					reloadpage(selectedPincode,buttonType);
@@ -5680,6 +5695,7 @@ function checkPincodeServiceabilityBtm(buttonType,el)
  				$(".pincodeServiceError").hide();
  				$("#unserviceablepincode").hide();
  				$("#unserviceablepincode_tooltip").hide();
+ 				 $("#unserviceablepincode_tooltip_btm").hide();
  				$("#cartPinCodeAvailable").hide();
  				$("#AvailableMessage").html("Available delivery options for the pincode " +selectedPincode+ " are");
 	 			$("#AvailableMessage").show();
@@ -5843,12 +5859,15 @@ function populateCartDetailsafterPincodeCheck(responseData){
 $("#defaultPinCodeIds").click(function(){
 	$("#unserviceablepincode").hide();
 	$("#unserviceablepincode_tooltip").hide();
+	 $("#unserviceablepincode_tooltip_btm").hide();
 	$(".deliveryUlClass").remove();//TPR-1341
 	$("#cartPinCodeAvailable").show();
 	 $( "#error-Id").hide();
 	 $( "#error-Id_tooltip").hide();
+	 $( "#error-Id_tooltip_btm").hide();
 	 $("#emptyId").hide();
 	 $("#emptyId_tooltip").hide();
+	 $("#emptyId_tooltip_btm").hide();
 	 $(".pincodeServiceError").hide();
 	 //TPR-1341
 	 $(".cartItemBlankPincode").show();
@@ -6167,6 +6186,7 @@ function checkIsServicable()
 	document.getElementById("pinCodeButtonIdsBtm").className = "CheckAvailability";//UF-71
 	$("#unserviceablepincode").hide();
 	$("#unserviceablepincode_tooltip").hide();
+	 $("#unserviceablepincode_tooltip_btm").hide();
 	// TPR-1055 ends
 	if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){
 	
@@ -6186,6 +6206,7 @@ function checkIsServicable()
 				// proceed or try an other pincode?");
  				$("#unserviceablepincode").show();// TPR-1329
  				$("#unserviceablepincode_tooltip").show();
+ 				 $("#unserviceablepincode_tooltip_btm").show();
  				 $(".pincodeServiceError").show();
  				//$("#pinCodeButtonIds").text("Change Pincode");
  				document.getElementById("pinCodeButtonIds").className = "ChangePincode";//UF-71
@@ -6197,6 +6218,7 @@ function checkIsServicable()
 	 				 $(".pincodeServiceError").hide();
 	 				$("#unserviceablepincode").hide();
 	 				$("#unserviceablepincode_tooltip").hide();
+	 				 $("#unserviceablepincode_tooltip_btm").hide();
 	 				$("#cartPinCodeAvailable").hide();
 	 				$("#AvailableMessage").html("Available delivery options for the pincode " +selectedPincode+ " are");
 	 				$("#AvailableMessage").show();
@@ -7771,12 +7793,15 @@ $("#savedDebitCard").find("input[type=password]").click(function(){
 		$(this).css("color","black"); //TPR-1470
 		$("#unserviceablepincode").hide();
 		$("#unserviceablepincode_tooltip").hide();
+		 $("#unserviceablepincode_tooltip_btm").hide();
 		$(".deliveryUlClass").remove();//TPR-1341
 		$("#cartPinCodeAvailable").show();
 		 $( "#error-Id").hide();
 		 $( "#error-Id_tooltip").hide();
+		 $("#error-Id_tooltip_btm").hide();
 		 $("#emptyId").hide();
 		 $("#emptyId_tooltip").hide();
+		 $("#emptyId_tooltip_btm").hide();
 		 $(".pincodeServiceError").hide();
 		 //TPR-1341
 		 $(".cartItemBlankPincode").show();
