@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.enums.MplPaymentAuditStatusEnum;
+import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.JuspayEBSResponseModel;
 import com.tisl.mpl.core.model.JuspayRefundResponseModel;
 import com.tisl.mpl.core.model.JuspayWebhookModel;
@@ -97,6 +98,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	private static final String REFUND = "REFUND_SUCCESSFUL";
 	private static final String REFUND_FAIL = "REFUND_UNSUCCESSFUL";
 
+
 	/**
 	 * @Description : Fetch Web Hook Data
 	 */
@@ -121,6 +123,21 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		if (CollectionUtils.isNotEmpty(webHookDetailList))
 		{
 			final List<JuspayWebhookModel> uniqueList = new ArrayList<JuspayWebhookModel>();
+
+			for (final JuspayWebhookModel oModel : webHookDetailList)
+			{
+				if (null != oModel.getOrderStatus() && oModel.getIsExpired().booleanValue())
+				{
+					final OrderModel ordrMdl = getMplPaymentService().fetchOrderOnGUID(oModel.getOrderStatus().getOrderId());
+					if ((null != ordrMdl.getIsWallet() && WalletEnum.NONWALLET.toString().equals(ordrMdl.getIsWallet().getCode()))
+							|| ordrMdl.getIsWallet() == null)
+					{
+						//getting all the webhook data where isExpired is Y and adding into a list
+						uniqueList.add(oModel);
+					}
+				}
+			}
+
 			//			for (final JuspayWebhookModel oModel : webHookDetailList)
 			//			{
 			//				if (null != oModel.getOrderStatus() && oModel.getIsExpired().booleanValue())
@@ -180,19 +197,27 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		//TISPRO-607
 		if (null != hook.getOrderStatus())
 		{
-
-			if (CollectionUtils.isEmpty(hook.getOrderStatus().getRefunds()))
+			final OrderModel order = getMplPaymentService().fetchOrderOnGUID(hook.getOrderStatus().getOrderId());
+			if ((null != order.getIsWallet() && WalletEnum.NONWALLET.toString().equals(order.getIsWallet().getCode()))
+					|| order.getIsWallet() == null)
 			{
-				//For Positive Flow
-				getResponseBasedOnStatus(hook, hook.getOrderStatus().getOrderId(), hook.getOrderStatus().getStatus());
-			}
-			//For Refund Flow
-			else
-			{
-				//Action for refund scenarios
-				performActionForRefund(webHookDetailList);
-				//Processed in Webhook
-				updateWebHookExpired(hook);
+				if (CollectionUtils.isEmpty(hook.getOrderStatus().getRefunds()))
+				{
+					//For Positive Flow
+					//				final OrderModel order = getMplPaymentService().fetchOrderOnGUID(hook.getOrderStatus().getOrderId());
+					//				if (order.getIsWallet().getCode().equals(WalletEnum.NONWALLET.toString()))
+					//				{
+					getResponseBasedOnStatus(hook, hook.getOrderStatus().getOrderId(), hook.getOrderStatus().getStatus());
+					//}
+				}
+				//For Refund Flow
+				else
+				{
+					//Action for refund scenarios
+					performActionForRefund(webHookDetailList);
+					//Processed in Webhook
+					updateWebHookExpired(hook);
+				}
 			}
 		}
 	}
@@ -791,6 +816,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		try
 		{
 			//For Normal Forward Payment Flow
+
 			if (status.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED))
 			{
 				final MplPaymentAuditModel auditDataModel = juspayWebHookDao.fetchAuditData(orderId);
@@ -841,7 +867,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 								LOG.error(e.getMessage(), e);
 							}
 							LOG.debug(MarketplacecommerceservicesConstants.WEBHOOKUPDATEMSG);
-							//updateWebHookExpired(oModel);		//Commented for TPR-629 --- forward flow handled in processOrderJob
+							updateWebHookExpired(oModel);		//Commented for TPR-629 --- forward flow handled in processOrderJob
 						}
 
 						//Logic when juspay webhook data does not come before payment_timeout TAT ---- TPR-629
@@ -883,6 +909,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 					}
 				}
 			}
+
 
 		}
 		catch (final ModelNotFoundException exception)

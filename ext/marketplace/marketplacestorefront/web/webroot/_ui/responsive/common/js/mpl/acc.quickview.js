@@ -328,13 +328,13 @@ function getRichAttributeQuickView(sellerName)
 function dispQuickViewPrice(mrp, mop, spPrice, savingsOnProduct) {
 
 	if(null!= mrp){
-		$("#quickMrpPriceId").append(mrp.formattedValue);
+		$("#quickMrpPriceId").append(mrp.formattedValueNoDecimal);
 	}
 	if(null!= mop){
-		$("#quickMopPriceId").append(mop.formattedValue);
+		$("#quickMopPriceId").append(mop.formattedValueNoDecimal);
 	}
 	if(null!= spPrice){
-		$("#quickSpPriceId").append(spPrice.formattedValue);
+		$("#quickSpPriceId").append(spPrice.formattedValueNoDecimal);
 	} 
 ////TISPRM-33
 	if(null!= savingsOnProduct){

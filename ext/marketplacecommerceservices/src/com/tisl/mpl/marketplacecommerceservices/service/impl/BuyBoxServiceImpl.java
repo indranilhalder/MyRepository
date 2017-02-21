@@ -180,6 +180,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 		return buyBoxDao.getClassAttrAssignmentsForCode(code);
 	}
 
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -192,5 +193,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 		// YTODO Auto-generated method stub
 		return buyBoxDao.getBuyBoxDataForUssids(ussidList);
 	}
+
+
 
 }

@@ -7,8 +7,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-
-
+<!-- TPR 4389 STARTS HERE -->
+<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" style="display: none;">
+	<span id="ratingvalue" itemprop="ratingValue">${averageRating}</span> based on <span id="reviewcount" itemprop="reviewCount">${commentCount}</span> reviews 
+</div>
 <div id="ReviewSecion" class="reviews">
 <div class="header">
       <h3>Ratings and Reviews</h3>		<!-- UF-57 -->

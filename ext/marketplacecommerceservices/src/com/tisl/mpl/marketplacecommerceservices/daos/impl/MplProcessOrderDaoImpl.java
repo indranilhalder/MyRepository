@@ -30,6 +30,7 @@ public class MplProcessOrderDaoImpl implements MplProcessOrderDao
 	private FlexibleSearchService flexibleSearchService;
 
 	/*
+
 	 * (non-Javadoc) //PaymentFix2017:- queryTAT added
 	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplProcessOrderDao#getPaymentPedingOrders()
@@ -59,10 +60,6 @@ public class MplProcessOrderDaoImpl implements MplProcessOrderDao
 		catch (final UnknownIdentifierException e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
-		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
 		}
 		catch (final Exception e)
 		{
@@ -121,5 +118,39 @@ public class MplProcessOrderDaoImpl implements MplProcessOrderDao
 	{
 		this.flexibleSearchService = flexibleSearchService;
 	}
+
+	/**
+	 * fetch orders in pending or refund initiated status
+	 */
+	@Override
+	public List<OrderModel> getPendingOrRefundInitiatedOrders(final String statusCode1, final String statusCode2)
+	{
+		try
+		{
+			final String queryString = MarketplacecommerceservicesConstants.PAYMENTPENDING;
+			//			/*final String queryString = "SELECT {o.pk},{o.iswallet} FROM {order as o},{OrderStatus as os},{WalletEnum as w} WHERE  {o.status}={os.pk} and {o.iswallet}={w.pk} and ({os.code}='PAYMENT_PENDING' or {os.code}='REFUND_INITIATED') and {w.code}='mRupee'"
+			//					.intern();*/
+			//forming the flexible search query
+			final FlexibleSearchQuery orderListQuery = new FlexibleSearchQuery(queryString);
+			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.STATUS1, statusCode1);
+			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.STATUS2, statusCode2);
+			//fetching PAYMENT PENDING order list from DB using flexible search query
+			final List<OrderModel> orderList = getFlexibleSearchService().<OrderModel> search(orderListQuery).getResult();
+			return orderList;
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
 
 }

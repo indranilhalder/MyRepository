@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -443,6 +445,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 				final GSObject gsObj = new GSObject(gsResponse.getResponseText());
 				return gsObj.getString(MarketplacecclientservicesConstants.STATUS_REASON);
 			}
+
 		}
 		catch (final Exception e)
 		{
@@ -636,4 +639,61 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		return null;
 
 	}
+
+	//TPR-4389 STARTS HERE
+	@Override
+	public Map<String, String> getReviewsAndRatingByCategoryId(final String categoryId, final String productCode)
+	{
+
+		final String proxySet = configService.getConfiguration()
+				.getString(MarketplacecclientservicesConstants.RATING_PROXY_ENABLED);
+		final Map<String, String> reviewAndRating = new HashMap<String, String>();
+		final String secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_SECRETKEY);
+		final String apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_APIKEY);
+		final String method = "comments.getStreamInfo";
+		try
+		{
+			final GSRequest gsRequest = new GSRequest(apiKey, secretKey, method);
+			gsRequest.setParam(MarketplacecclientservicesConstants.CATEGORY_ID, categoryId);
+			gsRequest.setParam(MarketplacecclientservicesConstants.STREAM_ID, productCode);
+			gsRequest.setParam(MarketplacecclientservicesConstants.INCLUDE_STREAM_INFO, "true");
+
+			if (TRUE_STATUS.equalsIgnoreCase(proxySet))
+			{
+				final Proxy proxy = getConfiguredProxy();
+				if (null != proxy)
+				{
+					gsRequest.setProxy(proxy);
+				}
+			}
+			final GSResponse gsResponse = gsRequest.send();
+			if (gsResponse.getErrorCode() == 0)
+			{
+
+				final GSObject gsObj = new GSObject(gsResponse.getResponseText());
+
+				final GSObject gsCommentObject = gsObj.getObject(MarketplacecclientservicesConstants.STREAM_INFO);
+				final GSObject gsRatingObject = gsCommentObject.getObject(MarketplacecclientservicesConstants.AVG_RATINGS);
+
+
+				reviewAndRating.put(gsCommentObject.getString(MarketplacecclientservicesConstants.COMMENTCOUNTS),
+						gsRatingObject.getString(MarketplacecclientservicesConstants.OVERALL));
+
+			}
+			else
+			{
+				LOG.debug("**********ERROR MESSAGE****" + gsResponse.getErrorMessage());
+				LOG.debug("**********ERROR CODE********" + gsResponse.getErrorCode());
+			}
+		}
+
+		catch (final Exception e)
+		{
+			LOG.error(MarketplacecclientservicesConstants.REVIEWS_RATING_EXCEPTION + e.getMessage());
+
+		}
+		return reviewAndRating;
+
+	}
+	//TPR 4389 ENDS HERE
 }

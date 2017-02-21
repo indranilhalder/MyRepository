@@ -23,6 +23,7 @@
 		<requires-extension name="acceleratorcms"/>
 		<requires-extension name="marketplaceJuspayServices" />
 		<requires-extension name="virtualjdbc"/> 
+		<requires-extension name="marketplaceWalletServices"/>
       <coremodule generated="true" manager="com.tisl.mpl.jalo.MarketplacecommerceservicesManager" packageroot="com.tisl.mpl"/>
 
       <webmodule jspcompile="false" webroot="/marketplacecommerceservices"/>

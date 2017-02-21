@@ -53,6 +53,7 @@ import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -112,6 +113,7 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
+import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -229,27 +231,32 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public String enterStep(final Model model, final RedirectAttributes redirectAttributes,
 			@RequestParam(value = "value", required = false, defaultValue = "") final String guid) throws CMSItemNotFoundException
 	{
-		//		final CartModel serviceCart = getCartService().getSessionCart();			//Commented for TPR-629
-		//		serviceCart.setIsExpressCheckoutSelected(Boolean.valueOf(true));
-		//		modelService.save(serviceCart);
-
-		//TPR-1080
-		ValidationResults validationResult = null;
+		//redirecting to previous page for anonymous user
+				if (getUserFacade().isAnonymousUser())
+				{
+					return getCheckoutStep().previousStep();
+				}
+				final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+				ValidationResults validationResult = null;
+				//Validator called explicitly TPR-629
+				if (StringUtils.isEmpty(guid))
+				{
+					validationResult = paymentValidator.validateOnEnterOptimized(cartData, redirectAttributes);
+				}
+				if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
+				{
+					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+				}
 		//Validator called explicitly TPR-629
 		if (StringUtils.isEmpty(guid))
 		{
-			validationResult = paymentValidator.validateOnEnter(redirectAttributes);
+			validationResult = paymentValidator.validateOnEnterOptimized(cartData, redirectAttributes);
 		}
-
 		if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
 		{
 			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 		}
-		//redirecting to previous page for anonymous user
-		if (getUserFacade().isAnonymousUser())
-		{
-			return getCheckoutStep().previousStep();
-		}
+
 		try
 		{
 			boolean selectPickupDetails = false;
@@ -261,11 +268,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			//code to restrict user to continue the checkout if he has not selected pickup person name and mobile number.
 			//this is only when cart entry contains cnc delivery mode.
-			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+			final Map<String, MarketplaceDeliveryModeData> freebieModelMap = new HashMap<String, MarketplaceDeliveryModeData>();
 			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 			Map<String, Boolean> paymentModeMap = null;
 			OrderData orderData = null;
-			final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+			//final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 			if (null == orderModel)
 			{
 				//Existing code
@@ -277,17 +284,17 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 				// TPR-429 END
 
-				if (cartModel != null)
+				if (cartData != null)
 				{
-					cartModel.setIsExpressCheckoutSelected(Boolean.valueOf(true));
-					getModelService().save(cartModel);
+					//cartModel.setIsExpressCheckoutSelected(Boolean.valueOf(true));
+					//getModelService().save(cartModel);
 
-					for (final AbstractOrderEntryModel abstractOrderEntryModel : cartModel.getEntries())
+					for (final OrderEntryData orderEntry : cartData.getEntries())
 					{
-						if (null != abstractOrderEntryModel.getDeliveryPointOfService())
+						if (null != orderEntry.getDeliveryPointOfService())
 						{
-							final String pickupPersonName = cartModel.getPickupPersonName();
-							final String pickupPersonMobile = cartModel.getPickupPersonMobile();
+							final String pickupPersonName = cartData.getPickupPersonName();
+							final String pickupPersonMobile = cartData.getPickupPersonMobile();
 							if ((pickupPersonName == null) || (pickupPersonMobile == null))
 							{
 								selectPickupDetails = true;
@@ -295,12 +302,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
 							}
 						}
-						if (abstractOrderEntryModel.getGiveAway() != null & !abstractOrderEntryModel.getGiveAway().booleanValue()
-								&& abstractOrderEntryModel.getSelectedUSSID() != null)
+						if (!orderEntry.isGiveAway() && orderEntry.getSelectedUssid() != null)
 						{
-							freebieModelMap
-									.put(abstractOrderEntryModel.getSelectedUSSID(), abstractOrderEntryModel.getMplDeliveryMode());
-							freebieParentQtyMap.put(abstractOrderEntryModel.getSelectedUSSID(), abstractOrderEntryModel.getQuantity());
+							freebieModelMap.put(orderEntry.getSelectedUssid(), orderEntry.getMplDeliveryMode());
+							freebieParentQtyMap.put(orderEntry.getSelectedUssid(), orderEntry.getQuantity());
 						}
 					}
 				}
@@ -318,12 +323,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				}
 
 				//Getting Payment modes
-				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, false, null);
+				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, false, cartData);
 
 				//Cart guid added to propagate to further methods via jsp
-				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, cartModel.getGuid());
+				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, cartData.getGuid());
 
-				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartModel);
+				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 
 			}
 			//TPR-629 --- based on orderModel
@@ -337,9 +342,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//Getting Payment modes
 				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, orderData);
 
-				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, orderModel.getGuid());
+				//model.addAttribute(MarketplacecheckoutaddonConstants.GUID, orderModel.getGuid());
 
-				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, orderModel);
+				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 			}
 
 			//creating new Payment Form
@@ -354,7 +359,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				timeOutSet(model);
 
 				//setting silent orders
-				setupSilentOrderPostPage(paymentForm, model, orderData);
+				setupSilentOrderPostPage(paymentForm, model, orderData, cartData);
 			}
 
 			final String payNowPromotionCheck = getSessionService().getAttribute(
@@ -365,6 +370,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				getSessionService().removeAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED);
 				GlobalMessages.addErrorMessage(model, MarketplacecheckoutaddonConstants.PROMOTIONEXPIRED);
 			}
+
 
 		}
 		//Nullpointer exception commented TPR-629
@@ -1298,7 +1304,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * @param paymentForm
 	 * @param model
 	 */
-	private void setupSilentOrderPostPage(final PaymentForm paymentForm, final Model model, final OrderData orderData)
+	private void setupSilentOrderPostPage(final PaymentForm paymentForm, final Model model, final OrderData orderData,
+			final CartData cartData)
 	{
 		try
 		{
@@ -1311,7 +1318,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			model.addAttribute(MarketplacecheckoutaddonConstants.NEWPAYMENTFORMMPLURL,
 					MarketplacecheckoutaddonConstants.NEWPAYMENTVIEWURL);
 
-			setupMplPaymentPage(model, orderData);
+			setupMplPaymentPage(model, orderData, cartData);
 			model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTFORM, paymentForm);
 
 		}
@@ -1338,13 +1345,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 *
 	 * @param model
 	 */
-	private void setupMplPaymentPage(final Model model, final OrderData orderData) throws Exception
+	private void setupMplPaymentPage(final Model model, final OrderData orderData, final CartData cartData) throws Exception
 	{
 		if (null == orderData)
 		{
 			//Existing code for cart
 			//getting cartdata
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+			//final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 
 			if (null != cartData && cartData.getAppliedOrderPromotions() != null)
 			{
@@ -1424,6 +1431,21 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			model.addAttribute(MarketplacecheckoutaddonConstants.ORDERDATA, orderData);
 			model.addAttribute("isCart", Boolean.FALSE);
 		}
+
+		//Added for mRupee
+
+		//getting merchant for mRupee
+		model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_MERCHANT_URL, getConfigurationService().getConfiguration()
+				.getString(MarketplacecheckoutaddonConstants.MRUPEEURL));
+
+		//getting redirect url mRupee
+		model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_CODE,
+				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.MRUPEE_MERCHANT_CODE));
+
+		model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_NARRATION, getConfigurationService().getConfiguration()
+				.getString(MarketplacecheckoutaddonConstants.MRUPEE_NARRATION_VALUE));
+
+		//mRupee configuration ends
 
 		model.addAttribute(MarketplacecheckoutaddonConstants.JUSPAYJSNAME,
 				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYJSNAMEVALUE));
@@ -1783,7 +1805,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	//			LOG.error(MarketplacecheckoutaddonConstants.B6004, e);
 	//		}
 	//	}
-
 
 
 
@@ -2737,8 +2758,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						&& StringUtils.isNotEmpty(paymentMode)
 						&& (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
 								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
-								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE) || paymentMode
-									.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE)))
+								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE)
+								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE) || paymentMode
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE)))
 				{
 					//setting in cartmodel
 					cart.setConvenienceCharges(Double.valueOf(0));
@@ -2878,6 +2900,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						getModelService().save(cart);
 					}
 
+					//Added for third party wallet
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE))
+					{
+						cart.setModeOfPayment(MarketplacecommerceservicesConstants.MRUPEE);
+						getModelService().save(cart);
+					}
+
 					//TISST-7955
 					final CartData promotedCartData = getMplCustomAddressFacade().getCheckoutCart();
 					final Map<String, String> ussidPricemap = new HashMap<String, String>();
@@ -2906,8 +2936,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				if (StringUtils.isNotEmpty(paymentMode)
 						&& (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
 								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
-								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE) || paymentMode
-									.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE)))
+								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE)
+								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE) || paymentMode
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE)))
 				{
 					//setting in orderModel
 					orderModel.setConvenienceCharges(Double.valueOf(0));
@@ -2977,6 +3008,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("COD"))
 				{
 					orderModel.setModeOfOrderPayment("COD");
+					getModelService().save(orderModel);
+				}
+
+				//Added for third party wallet
+				else if (StringUtils.isNotEmpty(paymentMode)
+						&& paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE))
+				{
+					orderModel.setModeOfOrderPayment(MarketplacecommerceservicesConstants.MRUPEE);
 					getModelService().save(orderModel);
 				}
 
@@ -4215,5 +4254,359 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return cartLevelSellerID;
 	}
 
+
+	/**
+	 * This method creates mRupee related order.
+	 *
+	 * @param walletName
+	 * @param cartGuid
+	 * @return String
+	 * @throws EtailNonBusinessExceptions
+	 */
+	@RequestMapping(value = "createWalletorder", method = RequestMethod.GET)
+	@RequireHardLogIn
+	public @ResponseBody String createWalletorder(final String walletName, final String cartGuid)
+			throws EtailNonBusinessExceptions
+	{
+		List<String> orderId = new ArrayList<String>();
+		String response = null;
+		String refNumber = null;
+		String checksum = null;
+		try
+		{
+			//Getting redirect url to send to mRupee
+			final StringBuilder returnUrlBuilder = new StringBuilder();
+			returnUrlBuilder
+					.append(request.getRequestURL().substring(0, request.getRequestURL().indexOf("/", 8)))
+					.append(request.getContextPath())
+					.append(
+							getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.MRUPEERETURNMETHOD));
+			OrderModel orderModel = null;
+			if (StringUtils.isNotEmpty(cartGuid))
+			{
+				orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+			}
+
+			if (orderModel == null)
+			{
+				final CartModel cart = getCartService().getSessionCart();
+				final Double cartTotal = cart.getTotalPrice();
+				final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
+				boolean redirectFlag = false;
+
+
+				LOG.debug("Checking - onclick of pay now button pincode servicabilty and promotion");
+				if (!redirectFlag && !getMplCheckoutFacade().isPromotionValid(cart))
+				{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
+					redirectFlag = true;
+					LOG.info("::setting redirect flag--1::");
+				}
+
+
+				if (!redirectFlag)
+				{
+					final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cart);
+					if (cartItemDelistedStatus)
+					{
+						redirectFlag = true;
+						LOG.info("::setting redirect flag--2::");
+					}
+				}
+
+				if (!redirectFlag)
+				{
+					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+					if (!inventoryReservationStatus)
+					{
+
+						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
+						redirectFlag = true;
+						LOG.info("::setting redirect flag--3::");
+					}
+				}
+
+				if (!redirectFlag && !getMplCheckoutFacade().isCouponValid(cart))
+				{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
+					redirectFlag = true;
+					LOG.info("::setting redirect flag--4::");
+				}
+
+				//Merged nested if statement as for PMD
+				if (!redirectFlag && (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0))
+				{
+					//if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
+					//{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
+					redirectFlag = true;
+					LOG.info("::setting redirect flag--5::");
+					//}
+				}
+
+				if (!redirectFlag && !getMplPaymentFacade().isValidCart(cart))
+				{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID, "TRUE");
+					redirectFlag = true;
+					LOG.info("::setting redirect flag--6::");
+				}
+
+				if (redirectFlag)
+				{
+					LOG.info("::returning redirect String::");
+					return MarketplacecheckoutaddonConstants.REDIRECTSTRING;
+				}
+				else
+				{
+
+					//getCommerceCartService().recalculateCart(cart);
+					LOG.info("::Going to Create Wallet OrderId::");
+
+					orderId = getMplPaymentFacade().createWalletorder(cart, walletName, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+
+					if (CollectionUtils.isNotEmpty(orderId))
+					{
+						refNumber = orderId.get(0);
+						checksum = orderId.get(1);
+					}
+
+					final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
+
+					if (isValidCart)
+					{
+						getMplPaymentFacade().entryInTPWaltAudit(null, MarketplacecheckoutaddonConstants.CHANNEL_WEB, cartGuid,
+								refNumber);
+						getMplCheckoutFacade().placeOrder();
+					}
+					else
+					{
+						throw new InvalidCartException("************PaymentMethodCheckoutStepController : placeOrder : Invalid Cart!!!"
+								+ (StringUtils.isNotEmpty(cart.getGuid()) ? cart.getGuid() : MarketplacecommerceservicesConstants.EMPTY));
+					}
+
+					LOG.info("::Created Wallet OrderId::" + orderId);
+
+				}
+
+				response = refNumber + "|" + checksum + "|" + cartGuid + "|" + cartTotal + "|" + returnUrlBuilder;
+				LOG.info("Reference number from createWalletOrder when order is null -- " + refNumber);
+				LOG.info("Response from createWalletOrder when order is null -- " + response);
+				return response;
+
+			}
+
+			else
+			{
+				if (null == orderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus()))
+				{
+					boolean redirectFlag = false;
+					if (!getMplCheckoutFacade().isPromotionValid(orderModel))
+					{
+						getMplCartFacade().recalculateOrder(orderModel);
+						redirectFlag = true;
+					}
+
+					if (!redirectFlag)
+					{
+						final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+								MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel);
+						if (!inventoryReservationStatus)
+						{
+							getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_ORDER_INVENTORY_RESV_SESSION_ID,
+									"TRUE");
+							getMplCartFacade().recalculateOrder(orderModel);
+							redirectFlag = true;
+							mplCartFacade.notifyEmailAndSmsOnInventoryFail(orderModel);
+						}
+					}
+					if (redirectFlag)
+					{
+						return MarketplacecheckoutaddonConstants.REDIRECTTOPAYMENT;
+					}
+					else
+					{
+						orderId = getMplPaymentFacade().createWalletorder(orderModel, walletName,
+								MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+
+						if (CollectionUtils.isNotEmpty(orderId))
+						{
+							refNumber = orderId.get(0);
+							checksum = orderId.get(1);
+						}
+						getMplPaymentFacade().entryInTPWaltAudit(null, MarketplacecheckoutaddonConstants.CHANNEL_WEB, cartGuid,
+								refNumber);
+						LOG.info("::Created Wallet OrderId::" + orderId);
+
+						response = refNumber + "|" + checksum + "|" + cartGuid + "|" + orderModel.getTotalPrice() + "|"
+								+ returnUrlBuilder;
+						LOG.info("Reference number from createWalletOrder when order is not null -- " + refNumber);
+						LOG.info("Response from createWalletOrder when order is not null -- " + response);
+						return response;
+
+					}
+				}
+				else if (null != orderModel.getPaymentInfo())
+				{
+					LOG.error("Order already has payment info >>>" + orderModel.getPaymentInfo().getCode());
+					return "redirect_with_details";
+				}
+				else
+				{
+					LOG.error("Order status is Payment_Pending for orderCode>>>" + orderModel.getCode());
+					return "redirect_with_details";
+				}
+			}
+
+		}
+
+		catch (final ModelSavingException e)
+		{
+			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+		}
+
+		return response;
+
+
+	}
+
+	/**
+	 * This method processes mRupee related order after getting response from mRupee.
+	 *
+	 * @param redirectAttributes
+	 * @param request
+	 * @return String
+	 * @throws EtailNonBusinessExceptions
+	 */
+
+	@RequestMapping(value = "walletPayment", method = RequestMethod.GET)
+	@RequireHardLogIn
+	public String walletPayment(final RedirectAttributes redirectAttributes, final HttpServletRequest request)
+			throws EtailNonBusinessExceptions
+	{
+		String guid = null;
+
+		OrderModel orderModel = null;
+
+		String status = null;
+
+		final DecimalFormat format = new DecimalFormat("0.##");
+
+		try
+		{
+			final String refNo = request.getParameter("REFNO");
+
+			LOG.info("walletPayment-method***REF NO:" + refNo);
+
+			final Double transactionAmount = Double.valueOf(request.getParameter("AMT"));
+			/* Getting guid from audit table based on the reference no. received from mRupee */
+			if (StringUtils.isNotEmpty(refNo))
+			{
+				guid = getMplPaymentFacade().getWalletAuditEntries(refNo);
+
+			}
+
+			if (StringUtils.isNotEmpty(guid))
+			{
+				orderModel = getMplPaymentFacade().getOrderByGuid(guid);
+
+			}
+
+			if (null != orderModel)
+			{
+				final Double orderAmount = orderModel.getTotalPriceWithConv();
+
+				LOG.info("Total Convenience Price in walletPayment::" + orderAmount);
+
+				LOG.info("Total Price in walletPayment::" + orderModel.getTotalPrice());
+
+				/* Checking transaction status from mRupee */
+				if (null != request.getParameter("STATUS") && "S".equalsIgnoreCase(request.getParameter("STATUS")))
+				{
+					LOG.info("Order Amount -- " + format.format(orderAmount) + "Transaction Amount is --- "
+							+ format.format(transactionAmount));
+
+					/* Checking transaction amount received from mRupee and order amount */
+					/*
+					 * if (format.format(orderAmount).compareTo(format.format(transactionAmount)) == 0) {
+					 */
+					status = MarketplacecheckoutaddonConstants.SUCCESS;
+					getMplPaymentFacade().entryInTPWaltAudit(status, MarketplacecheckoutaddonConstants.CHANNEL_WEB,
+							orderModel.getGuid(), refNo);
+
+					//saving TPWallet Payment related info
+					getMplPaymentFacade().saveTPWalletPaymentInfo(orderModel, request);
+
+					return updateOrder(orderModel, redirectAttributes);
+					/*
+					 * } else { LOG.info("OrderAmount--TransactionAmount Mismatch"); status =
+					 * MarketplacecheckoutaddonConstants.FAIL; //setting the audit table to DECLINED if order amount is not
+					 * equal getMplPaymentFacade().entryInTPWaltAudit(status, MarketplacecheckoutaddonConstants.CHANNEL_WEB,
+					 * orderModel.getGuid(), refNo); GlobalMessages.addFlashMessage(redirectAttributes,
+					 * GlobalMessages.ERROR_MESSAGES_HOLDER, MarketplacecheckoutaddonConstants.TRANERRORMSG); return
+					 * MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL +
+					 * MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid; }
+					 */
+				}
+
+				else
+				{
+
+					final String reason = request.getParameter("REASON");
+
+					LOG.info("The reason is for mRupee payment failure for reference number -- " + refNo + " is --- " + reason);
+
+					//setting the audit table to DECLINED if transaction status is not successful
+					status = MarketplacecheckoutaddonConstants.FAIL;
+					getMplPaymentFacade().entryInTPWaltAudit(status, MarketplacecheckoutaddonConstants.CHANNEL_WEB, guid, refNo);
+
+					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+							MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+							+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+				}
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("EtailBusinessExceptions in walletPayment", e);
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+					+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			//ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("EtailNonBusinessExceptions in walletPayment", e);
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+					+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception in walletPayment", e);
+			//Redirection when transaction is failed
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+					+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+		}
+
+		return null;
+
+	}
 
 }

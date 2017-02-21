@@ -535,5 +535,14 @@ public class MarketplacewebservicesConstants
 	public static final String WARRANTY = "Warranty";
 	public static final String PDP_DESC_TAB = "pdp.desc.tab.".intern();
 
+	//Third party wallet
+
+	public static final String THIRDPARTYWALLETORDER = "/{userId}/createThirdPartyWalletOrder";
+	public static final String WALLETPAYMENT = "/{userId}/walletPayment";
+	public static final String MRUPEE = "MRUPEE".intern();
+
+	public final static String MRUPEE_NARRATION_VALUE = "payment.mRupee.narration".intern();
+	public final static String MRUPEE_MERCHANT_CODE = "payment.mRupee.merchantID".intern();
+	public final static String FAIL = "fail";
 
 }

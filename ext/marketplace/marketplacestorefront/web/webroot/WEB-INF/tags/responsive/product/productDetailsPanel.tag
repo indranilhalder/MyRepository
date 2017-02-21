@@ -21,6 +21,13 @@ tr.d0 td {
      po.src = 'https://apis.google.com/js/client:plusone.js';
      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
  });
+ <!-- Change for INC_10528 -->
+ $(document).ready(function(){
+	 $('.gig-rating-readReviewsLink_pdp').css( 'cursor', 'pointer' );
+	 $(".gig-rating-readReviewsLink_pdp").click(function() {
+		    $('html,body').animate({scrollTop: $("#ReviewSecion").offset().top},'slow');
+		});
+ });
  
       $("#sellersSkuListId").val("");
       $("#skuIdForED").val("");
@@ -82,6 +89,7 @@ tr.d0 td {
 <input type="hidden" id="pdpSellerIDs" value='${pdpSellerIDs}'/>
 <input type="hidden" id="pdpBuyboxWinnerSellerID" value=''/>
 <input type="hidden" id="pdpOtherSellerIDs" value=''/>
+<input type="hidden" id="browser_type" value='${browser_type}'/>
 <!-- TPR-429 END-->
 <!-- End Tealium -->
 
@@ -169,6 +177,7 @@ tr.d0 td {
 				<h1 itemprop="name" class="product-name">${product.productTitle}</h1>
 				<meta itemprop="sku" content="${product_sku}"/>
 				</a>
+
 			</ycommerce:testId>
 
 			<ycommerce:testId
@@ -360,7 +369,8 @@ tr.d0 td {
 		</c:when>
 		<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
 			<div class="trending"  id="ia_products_bought_together"></div>
-			<div class="trending"  id="ia_products_similar"></div>
+			<!-- Change for INC_10849 -->
+			<!-- <div class="trending"  id="ia_products_similar"></div> -->
 		</c:when>
 </c:choose>
 <!-- For Infinite Analytics End -->
@@ -384,6 +394,12 @@ tr.d0 td {
 <c:otherwise>
 </c:otherwise> 
 </c:choose>	
+ <!-- Change for INC_10849 -->
+<c:choose>
+		<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
+			<div class="trending"  id="ia_products_similar"></div>
+		</c:when>
+</c:choose>
 	
 	
 	<!-- Made For Living Section Starts -->

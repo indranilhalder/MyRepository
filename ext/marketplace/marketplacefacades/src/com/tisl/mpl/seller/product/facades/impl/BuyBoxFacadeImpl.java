@@ -919,6 +919,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	}
 
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -931,4 +932,5 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		// YTODO Auto-generated method stub
 		return buyBoxService.getBuyBoxDataForUssids(ussidList);
 	}
+
 }

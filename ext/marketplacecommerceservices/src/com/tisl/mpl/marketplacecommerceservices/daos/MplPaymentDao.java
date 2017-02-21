@@ -177,4 +177,6 @@ public interface MplPaymentDao
 	 */
 	OrderModel fetchOrderOnGUID(String guid);
 
+	MplPaymentAuditModel getWalletAuditEntries(String auditId);
+
 }

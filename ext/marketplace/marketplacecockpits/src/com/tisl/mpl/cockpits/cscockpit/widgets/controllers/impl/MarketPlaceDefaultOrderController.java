@@ -28,6 +28,7 @@ import com.tisl.mpl.cockpits.cscockpit.services.MarketPlaceOrderSearchServices;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceOrderController;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
+import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.InvoiceDetailModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -36,6 +37,7 @@ import com.tisl.mpl.facades.product.data.SendInvoiceData;
 import com.tisl.mpl.integration.oms.adapter.CustomOmsOrderSyncAdapter;
 import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplMWalletRefundService;
 
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.cockpit.model.meta.TypedObject;
@@ -102,6 +104,9 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 	
 	private static final Logger LOG = Logger
 			.getLogger(MarketPlaceDefaultOrderController.class);
+	
+	@Autowired
+	private MplMWalletRefundService mplMWalletRefundService;
 
 	/*
 	 * (non-Javadoc)
@@ -170,7 +175,10 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 		for (OrderEntryModel orderEntry : orderEntryModel) {
 			totalRefundAmount += orderEntry.getNetAmountAfterAllDisc();
 		}
+//		Mrupee implementation 
+		final OrderModel order=orderEntryModel.get(0).getOrder();
 		final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
+		if((null !=order.getIsWallet() &&  WalletEnum.NONWALLET.toString().equalsIgnoreCase(order.getIsWallet().getCode()))||null ==order.getIsWallet()){
 		try {
 			paymentTransactionModel = mplJusPayRefundService.doRefund(
 					orderEntryModel.get(0).getOrder(), totalRefundAmount,
@@ -267,6 +275,74 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 			mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
 			
 		}
+	}
+		else if(null !=order.getIsWallet() &&  WalletEnum.MRUPEE.toString().equalsIgnoreCase(order.getIsWallet().getCode())){
+			
+			final String uniqueRequestId1 = mplMWalletRefundService.getRefundUniqueRequestId();
+			try {
+				paymentTransactionModel = mplMWalletRefundService.doRefund(
+						orderEntryModel.get(0).getOrder(), totalRefundAmount,
+						PaymentTransactionType.RETURN,uniqueRequestId1);
+				if (null != paymentTransactionModel) {
+					mplJusPayRefundService.attachPaymentTransactionModel(
+							orderEntryModel.get(0).getOrder(),
+							paymentTransactionModel);
+					for (OrderEntryModel orderEntry : orderEntryModel) {
+						// If CosignmentEnteries are present then update OMS with
+						// the state.
+						ConsignmentStatus newStatus = null;
+						if (orderEntry != null
+								&& CollectionUtils.isNotEmpty(orderEntry
+										.getConsignmentEntries())) {
+							
+							if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
+									MarketplacecommerceservicesConstants.SUCCESS))
+							{
+								newStatus = ConsignmentStatus.RETURN_COMPLETED;
+							}
+							else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
+									MarketplacecommerceservicesConstants.FAILURE))
+							{
+								newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
+							}
+							else
+							{
+								newStatus = ConsignmentStatus.REFUND_INITIATED;
+							}
+							// getModelService().save(consignmentModel);
+							mplJusPayRefundService.makeRefundOMSCall(orderEntry,
+									paymentTransactionModel,
+									orderEntry.getNetAmountAfterAllDisc(),
+									newStatus);
+							if(newStatus.equals(ConsignmentStatus.RETURN_COMPLETED)){
+								//orderEntry.setJuspayRequestId(uniqueRequestId);
+								getModelService().save(orderEntry);
+							}
+						}
+					}
+				} else {
+					LOG.error("Manual Refund Failed");
+					for (OrderEntryModel orderEntry : orderEntryModel) {
+						mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_IN_PROGRESS);
+					}
+					
+					paymentTransactionModel = mplJusPayRefundService
+							.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(), "FAILURE", totalRefundAmount,
+									PaymentTransactionType.RETURN, "NO Response FROM PG", uniqueRequestId);
+					mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
+				}
+			} catch (Exception e) {
+				LOG.error(e.getMessage(), e);
+				for (OrderEntryModel orderEntry : orderEntryModel) {
+					mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_INITIATED);
+				}
+				paymentTransactionModel = mplJusPayRefundService
+						.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(), "FAILURE", totalRefundAmount,
+								PaymentTransactionType.RETURN, "FAILURE", uniqueRequestId);
+				mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
+			}
+		}
+		
 		String result = paymentTransactionModel.getStatus() + ","
 				+ paymentTransactionModel.getCode() + "," + totalRefundAmount;
 		return result;
@@ -293,6 +369,9 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 					modelService.save(refundEntry.getKey());
 
 				}
+//				Mrupee implementation 
+				if((null !=orderModel.getIsWallet() &&  WalletEnum.NONWALLET.toString().equalsIgnoreCase(orderModel.getIsWallet().getCode()))||null ==orderModel.getIsWallet())
+				{
 				paymentTransactionModel = mplJusPayRefundService.doRefund(
 						orderModel, totalRefundDeliveryCharges,
 						PaymentTransactionType.REFUND_DELIVERY_CHARGES,uniqueRequestId);
@@ -334,12 +413,34 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 																				// is
 																				// required.
 					}
+				} 
+				else {
+
+					LOG.error("Refund Delivery Charges Failed");
+				}
+			} 
+			else if(null !=orderModel.getIsWallet() &&  WalletEnum.MRUPEE.toString().equalsIgnoreCase(orderModel.getIsWallet().getCode())){
+				
+				paymentTransactionModel = mplMWalletRefundService.doRefund(
+						orderModel, totalRefundDeliveryCharges,
+						PaymentTransactionType.REFUND_DELIVERY_CHARGES,uniqueRequestId);
+				if (null != paymentTransactionModel) {
+					mplJusPayRefundService.attachPaymentTransactionModel(
+							orderModel, paymentTransactionModel);
+					
+					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
+							.entrySet()) {
+						mplJusPayRefundService.makeRefundOMSCall(refundEntry
+								.getKey(), paymentTransactionModel, refundEntry
+								.getKey().getRefundedDeliveryChargeAmt(), null);
+					}
 				} else {
 
 					LOG.error("Refund Delivery Charges Failed");
 				}
-
-			} catch (Exception e) {
+			}
+		}
+			catch (Exception e) {
 				LOG.error(e.getMessage(), e);
 				paymentTransactionModel = mplJusPayRefundService
 						.createPaymentTransactionModel(orderModel, "FAILURE",

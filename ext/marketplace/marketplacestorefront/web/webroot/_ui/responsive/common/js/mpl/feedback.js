@@ -863,20 +863,30 @@ $(document).ready(function(){
 	$(".brands-page .list_custom li").hide();
 		$(".brands-page .list_custom li span.letter.a-g-set").parent().show();
 				
-		
+		 // TPR-1287 Start
 	    $(".brandCategory").click(function(){
 	    	
 	    	var elementId =$(this).attr('id') ;
-	    	window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
+	    	var brandCatName = $(this).text().toLowerCase().trim() + "-brands";
+	    		    	
+	    	//window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
+	    	window.history.pushState('obj', 'newtitle', '/brands/' + brandCatName +'/b-'+elementId.toLowerCase());
+	    	
+	    	
 	    });
 	    
 	    
 	    $(".cmsManagedBrands").click(function(){
 	    	
 	    	var elementId =$(this).attr('id') ;
-	    	window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
+	    	
+	    	var brandCatName = $(this).text().toLowerCase().trim().replace(/\s/g, "-") + "-brands";
+	    	
+	    	//window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
+	    	window.history.pushState('obj', 'newtitle', '/brands/' + brandCatName +'/b-'+elementId);
+	    	
 	    });
-	    
+	  // TPR-1287 end
 	
 	    
 	    $(".brands-page .desktop ul.nav > li").click(function() {
@@ -944,6 +954,10 @@ $(document).ready(function(){
 		}
 		
 	/*---END of Mobile view left nav --*/	
+		
+		
+		
+		
 		
 	/*----Start of Wishlist Codes---------*/
 		
@@ -1772,12 +1786,13 @@ $(document).ready(function(){
 				}
 			}
 		});
+		// commented as part of UI-UX Fixes cart page UF-61
 		//setTimeout(function () {
-		$("body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.delivery").addClass("collapsed");
+/*		$("body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.delivery").addClass("collapsed");
 				$(".mobile-delivery").click(function(){
 					$(this).parents("li.delivery").toggleClass("collapsed");
 				});
-		//}, 100);
+*/		//}, 100);
 		$(window).on("load resize", function() {
 			$("body.page-cartPage .cart.wrapper .product-block li.item").each(function(){
 				if($(this).find("ul.desktop>li.price").css("position")=="absolute"){
@@ -2726,14 +2741,16 @@ $(document).ready(function(){
 		$(".step-1,.step-2").addClass("step-done");
 		$(".progress-barg span.step").addClass("step3");
 	}
-	 setTimeout(function () {
+	/*start changes for INC_11120*/
+	 /*setTimeout(function () {
 		 if ($('body').find(".smartbanner.smartbanner-android").length > 0){
 				$("body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header").css("margin-top","82px");
 			}
 			else{
 				$("body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header").css("margin-top","0px");
 			}
-     }, 100);
+     }, 100);*/
+	/*end changes for INC_11120*/
 	 $(document).on("click",".smartbanner-close",function(){
 		$("body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header").css("margin-top","0px");
 	 });
@@ -2840,4 +2857,37 @@ $(this).toggleClass("active");
 $(".gig-rating-readReviewsLink_pdp").on("click",function() {
 	  $("body,html").animate({ scrollTop: $('#ReviewSecion').offset().top - 50 }, "slow");
 
+});
+
+/* UF-73*/
+$('.cartItemBlankPincode a').click(function() {
+
+	$('html,body').animate({ scrollTop: $(this.hash).offset().top - 85}, 300);
+	$('#changePinDiv').addClass('blankPincode');
+	$(this.hash).focus();
+	return false;
+
+	e.preventDefault();
+
+	}); 
+
+$(document).mouseup(function (e)
+		{
+		    var container = $(".cartItemBlankPincode a");
+
+		    if (!container.is(e.target)
+		        && container.has(e.target).length === 0)
+		    {
+		    	$('#changePinDiv').removeClass('blankPincode');
+		    }
+		});
+
+/*UF-85*/
+$("body.page-cartPage .cart.wrapper .checkout-types li#checkout-id").on("mouseover",function(){
+	if($(this).find("a#checkout-enabled.checkout-disabled").length > 0){
+		$(this).css("cursor","not-allowed");
+	}
+	else{
+		$(this).css("cursor","default");
+	}
 });

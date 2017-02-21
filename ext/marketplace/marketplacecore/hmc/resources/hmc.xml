@@ -3861,6 +3861,7 @@
 							<text name="text.promotion.excludedproductcodeslist" />
 							<attribute name="excludedProductCodeList" />
 							<attribute name="promourl" />
+							<attribute name="bundlepromolinktext" />
 							</listlayout>
 							<listlayout>
 							<text name="text.productpromotion.discountPrices" />

@@ -597,6 +597,7 @@ public final class ModelAttributetConstants
 	//FOR MSD
 	public static final String MSD_JS_URL = "msdjsURL";
 	public static final String IS_MSD_ENABLED = "isMSDEnabled";
+	public static final String IS_PRODUCTPAGE = "isProductPage";
 	public static final String MSD_REST_URL = "msdRESTURL";
 	// Friends Invite **************
 

@@ -18,7 +18,7 @@ import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.facades.account.address.AccountAddressFacade;
+import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.marketplacecommerceservices.daos.AccountAddressDao;
 
@@ -60,7 +60,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends AddressCreateWidge
 	private EnumerationService enumService;
 	
 	@Autowired
-	private AccountAddressFacade accountAddressFacade;
+	private MplAccountAddressFacade accountAddressFacade;
 
 	@Override
 	protected HtmlBasedComponent createContentInternal(
@@ -109,7 +109,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends AddressCreateWidge
 		addresslabel.setParent(addressDiv);
 		final Textbox addressField = createTextbox(addressDiv);
 		addressField.setSclass("address1ForAddressField");
-		addressField.setMaxlength(30);
+		addressField.setMaxlength(120);
 
 		// Creates Address Line2 field
 		final Br br4 = new Br();

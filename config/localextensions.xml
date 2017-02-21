@@ -106,6 +106,10 @@
 		<!-- New extension for JusPay integration -->
 		<extension name="marketplaceJuspayServices" />
 
+<!-- New Extension for mrupee integartion -->
+
+     <extension name="marketplaceWalletServices"/>
+
 		<!-- New extension for Marketplace BinDB -->
 		<extension name="marketplaceBinDb" />
 		<extension name="marketplaceclientservices" />
@@ -148,6 +152,13 @@
 	     
 	     <!-- Extension for individual cache clear - TISPT-358 -->
 		 <extension name="cacheclear" />
+		 
+		 <!-- Extension for Node Warmer-->
+	    
+<!-- 	    <extension name="psdtocache" /> 
+	  	<extension name="ypsnodewarmer" /> --> 
+	
+	    <!-- Extension for Node Warmer-->
 
 	</extensions>
 </hybrisconfig>

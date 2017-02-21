@@ -26,6 +26,9 @@
 		<requires-extension name="commercesearch"/>
 		<requires-extension name="marketplaceBinDb" />
 		<requires-extension name="commercewebservicescommons" />
+		<!--Added for third party wallet -->
+		<requires-extension name="marketplaceWalletServices" />
+		<!--Added for third party wallet -->
 		
 		<coremodule generated="true" manager="de.hybris.platform.jalo.extension.GenericManager" packageroot="com.tisl.mpl.facades"/>
 

@@ -346,7 +346,7 @@
 		
 			<!-- CustomBuyAgetPercentageDiscountOnBAdjustAction class for apportioned value 
 			for Product level promotions -->
-		<itemtype code="CustomBuyAgetPercentageDiscountOnBAdjustAction"
+		<!-- <itemtype code="CustomBuyAgetPercentageDiscountOnBAdjustAction"
 			extends="AbstractPromotionAction" jaloclass="com.tisl.mpl.jalo.CustomBuyAgetPercentageDiscountOnBAdjustAction"
 			autocreate="true" generate="true">
 			<attributes>
@@ -372,7 +372,7 @@
 					<persistence type="property" />
 				</attribute>
 
-				<!-- since 4.4, see PRO-75 -->
+				since 4.4, see PRO-75
 				<attribute qualifier="orderEntryNumber" autocreate="true"
 					type="java.lang.Integer">
 					<description>The entry number in the order</description>
@@ -381,7 +381,7 @@
 				</attribute>
 
 			</attributes>
-		</itemtype>
+		</itemtype> -->
 		
 		
 
@@ -2767,6 +2767,7 @@
 						</columntype>
 					</persistence>
 				</attribute>
+				<!-- TPR-1325 : changes starts -->
 				<attribute qualifier="promourl" type="localized:java.lang.String">
 					<description>Configurable link on PDP to be displayed for Bundling promotion</description>
 					<modifiers read="true" write="true" optional="true" />
@@ -2788,6 +2789,28 @@
 						</columntype>
 					</persistence>
 				</attribute>
+				<attribute qualifier="bundlepromolinktext" type="localized:java.lang.String">
+					<description>Configurable link name on PDP to be displayed for Bundling promotion</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<!-- TPR-1325 : changes ends -->
 			</attributes>
 		</itemtype>
 			<!-- TPR-1294 : Item Declaration ends -->

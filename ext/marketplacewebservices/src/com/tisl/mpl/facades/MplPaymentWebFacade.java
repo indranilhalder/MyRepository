@@ -10,6 +10,8 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.exceptions.CalculationException;
 
+import java.util.Map;
+
 import com.tisl.mpl.data.MplPromoPriceWsDTO;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -154,4 +156,29 @@ public interface MplPaymentWebFacade
 	 * @return updated
 	 */
 	public boolean updateOrder(final OrderModel order) throws EtailBusinessExceptions, InvalidCartException, CalculationException;
+
+
+	/**
+	 * This method makes entry for mobile mRupee orders in Audit table
+	 *
+	 * @param status
+	 * @param channelmobile
+	 * @param guid
+	 * @param walletOrderId
+	 */
+
+	public void entryInTPWaltAuditMobile(final String status, String channelmobile, String guid, String walletOrderId);
+
+
+	/**
+	 * This method saves payment info model for mobile mRupee orders and the returning the order
+	 *
+	 * @param cart
+	 * @param refernceCode
+	 * @param paymentMode
+	 * @param amount
+	 *
+	 */
+	public void saveTPWalletPaymentInfoMobile(AbstractOrderModel cart, final String refernceCode, Map<String, Double> paymentMode,
+			String amount);
 }

@@ -521,7 +521,7 @@
 	<alias name="mplDefaultCommerceAddToCartStrategyImpl" alias="commerceAddToCartStrategy" />
 	<bean id="mplDefaultCommerceAddToCartStrategyImpl"
 		class="com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl"
-		parent="abstractCommerceAddToCartStrategy">
+		parent="defaultCommerceAddToCartStrategy">
 		<property name="commerceAddToCartMethodHooks" ref="commerceAddToCartMethodHooks" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>
@@ -959,6 +959,11 @@
 
 	<bean id="mplJusPayRefundService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplJusPayRefundService" />
+		
+		<!-- Mrupee implementation -->	
+	
+		<bean id="mplMWalletRefundService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplMWalletRefundService" />
 
 	<!-- For Bulk Upload of Promotions -->
 	<bean id="promotionCreationJob"
@@ -1256,6 +1261,17 @@
 		<property name="numeric" value="true" />
 	</bean>
 	<!-- Key generator for COD Payment Transaction Ends -->
+	
+	<!-- Key generator for Third Party Wallet -->
+	<bean id="walletOrderIdGenerator"
+		class="de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator"
+		init-method="init" scope="tenant">
+		<property name="key" value="walletOrderId" />
+		<property name="digits" value="9" />
+		<property name="start" value="#{configurationService.configuration.getProperty('wallet.orderId.startId')}" />
+		<property name="numeric" value="true" />
+	</bean>
+	<!-- Key generator for Third Party Wallet Ends --> 
 
 
 	<!-- For Payment Web Hook Integration -->
@@ -1965,6 +1981,34 @@
             </bean>
         </property>
     </bean>
+   <!--  mrupee changes starts -->
+   <bean id="mRupeeWalletService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplThirdPartyWalletServiceImpl">
+      <property name="configurationService" ref="configurationService" />
+      <property name="orderService" ref="orderService" />
+   </bean>
+   <bean id="mplThirdPartyWalletDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplThirdPartyWalletDaoImpl">
+   </bean>
+  <!--  mrupee changes ends -->
+	<!-- Old Cron Job Deletion Logic ends: -->
+
+    <!-- <bean id="nodeWarmupService" class="com.hybris.yps.nodewarmer.service.NodeWarmupService">
+		<property name="warmerStrategies">
+			<list>
+				<bean class="com.hybris.yps.nodewarmer.warmer.impl.ComposedTypeWarmer" />
+				<bean class="com.hybris.yps.nodewarmer.warmer.impl.EnumerationTypesWarmer" />
+				<bean class="com.hybris.yps.nodewarmer.warmer.impl.PageWarmer">
+					<property name="hostname"
+						value="#{configurationService.configuration.getProperty('nodewarmer.test.http.host')}" />
+					<property name="throwExceptionOnFailure" value="true" />
+					<property name="urls">
+						<list>
+							<value>/</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean> -->
 	<!-- Old Cron Job Deletion Logic ends: -->
 
 </beans>

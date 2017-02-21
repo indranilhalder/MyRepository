@@ -62,4 +62,5 @@ public interface BuyBoxService
 	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions;
 
 
+
 }

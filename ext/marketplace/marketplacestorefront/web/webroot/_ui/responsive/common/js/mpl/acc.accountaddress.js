@@ -102,6 +102,7 @@ $(document).ready(function(){
  /*-----------End of Left Nav script -----------------*/
  
 function editAddress(addressId) {
+	
        var requiredUrl = ACC.config.encodedContextPath+"/my-account/populateAddressDetail";
        var dataString = "&addressId="+addressId;
  
@@ -113,12 +114,23 @@ function editAddress(addressId) {
     	   cache: false,
     	   contentType : "application/json; charset=utf-8",
     	   success : function(data) {
-   				$('#addressId').val(addressId);
+    		   //TPR-4795 changes
+    		  //var fullAddress=data.line1 +" "+ data.line2 +" "+ data.line3;
+    		  		var fullAddress=data.line1;
+    		   			if (data.line2) {
+    		   				console.log("Inside line2 checking***");
+ 		     			   fullAddress = fullAddress +" "+ data.line2;
+    		   			}
+    		   			if (data.line3) {
+    		   				console.log("Inside line3 checking***");
+ 		     			   fullAddress = fullAddress +" "+ data.line3;
+    		   			}
+       	 	   $('#addressId').val(addressId);
    				$('#firstName').val(data.firstName);
    				$('#lastName').val(data.lastName);
-   				$('#line1').val(data.line1);
-   				$('#line2').val(data.line2);
-   				$('#line3').val(data.line3);
+   				$('#line1').val(fullAddress);
+   				$('#line2').val("");
+   				$('#line3').val("");
    				$('#postcode').val(data.postcode);
    				$('#townCity').val(data.townCity);
    				$('#mobileNo').val(data.mobileNo);
@@ -984,11 +996,15 @@ function editAddress(addressId) {
     
  // Validation of Account address page
     function validateAccountAddress() {
-    	   
+    	 //Trimming all the fields before validation
+    	$("form#addressForm :input[type=text]").each(function(){
+   		 var input = $(this);    
+   		 $(this).val($(this).val().trim());    		     		
+   	});  
         var selectedValueState = document.getElementById('stateListBox').selectedIndex;
 //        var regexCharSpace = /^[a-zA-Z ]*$/;
         var regexCharSpace = /^[a-zA-Z]+$/;
-//        var regexCharSpace = /^[a-zA-Z]+(\s[a-zA-Z]+)?$/;
+       var regexCharWithSpace = /^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/;
         var regexSpace = /\s/;
         var equalNoCheck = /^\D*(\d)(?:\D*|\1)*$/;
         var flagFn = true; 
@@ -1068,7 +1084,7 @@ function editAddress(addressId) {
         	document.getElementById("erraddressCity").innerHTML = "<font color='#ff1c47' size='2'>Please enter city</font>";
         	flagCity = false;
         }
-        else if (!regexCharSpace.test(document.getElementById("townCity").value)) { 
+        else if (!regexCharWithSpace.test(document.getElementById("townCity").value)) { 
         	$("#errddressCity").css({"display":"block"});
         	document.getElementById("erraddressCity").innerHTML = "<font color='#ff1c47' size='2'>City should contain alphabets only</font>";
         	flagCity = false;

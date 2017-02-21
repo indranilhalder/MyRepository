@@ -13,10 +13,16 @@ if (location.protocol === "https:") {
 }
 recEndPoint = rootEP + '/SocialGenomix/recommendations/products';
 
+
 // *******************************************************************************
 // Populating Dynamic Parameter Values For IA
 var allsizes = [ "XXS", "XS", "S", "M", "L", "XL", "XXL" ];
 var hotDropdownselected = 'All Department';
+=======
+//******************************************************************************* Populating Dynamic Parameter Values For IA
+var allsizes = ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
+var hotDropdownselected = 'All Departments';
+
 var sortDropdownselected = "";
 var currentPageURL = window.location.href;
 ecompany = $('#ecompanyForIA').val();
@@ -1503,6 +1509,7 @@ function updatePage(response, widgetMode) {
 				 */
 
 				});
+
 			}
 			/* Animate Carousel */
 			$("#" + widgetElement + "_list").owlCarousel({
@@ -1967,6 +1974,563 @@ function updatePage(response, widgetMode) {
 
 		// console.log("widget mode we don't account for: " + widgetMode);
 	}
+
+			    /*Removing duplicate categories*/
+			    categoryFilters = jQuery.unique(categoryFilters);
+			    categoryCodeForFilters = jQuery.unique(categoryCodeForFilters);
+			    /*SortBY dropdown*/
+			    var sortHtml = '<div class="select-view ia_select-view-sort">';
+			    	sortHtml += '<div class="select-list ia_select-list-sort"><span class="selected sortSelected">Sort by: '+sortDropdownselected+'</span><ul id="ia_category_select" style="width: auto;">';
+			    	sortHtml += '<li class="sort_li" id="name-asc">Name: A to Z</li>';
+			    	sortHtml += '<li class="sort_li" id="name-desc">Name: Z to A</li>';
+			    	sortHtml += '<li class="sort_li" id="price-asc">Price: Low to High</li>';
+			    	sortHtml += '<li class="sort_li" id="price-desc">Price: High to Low</li>';
+			    	sortHtml += '</ul></div></div>';
+			 
+			    var catHtml = '<div class="select-view ">'; 
+			    //for release 2 changes in home-page headers-All Departments
+			    catHtml += '<div class="select-list"><span class="selected hotSelected">'+hotDropdownselected+'</span><ul id="ia_category_select" style="width: auto;">';
+			    for (var i=0; i<categoryFilters.length; i++) {
+			    	if(i==0){
+			    		 catHtml += '<li class="category_li" id="allCat">All Departments</li>';
+			    	}
+			      catHtml += '<li class="category_li" id="'+categoryCodeForFilters[i]+'">'+categoryFilters[i]+'</li>';
+			    } 
+			    catHtml += '</ul></div></div>';
+			    
+			    if(slider) {
+			    	if(site_page_type === 'search' && widgetElement === 'ia_products_search'){
+			    		html += '<h2><span style="color: black !important;">Best Sellers</span>';
+			    	}else if(site_page_type === 'viewSellers' && widgetElement === 'ia_products'){
+			    		html += '<h2><span style="color: black !important;">You May Also Need</span>';
+			    	}else{
+			    		//for release 2 changes in pdp-page 
+			    		if(site_page_type === 'productpage' && widgetElement ==='ia_products_complements'){
+			    			html += '<h2><span style="color: black !important;">Things That Go With This</span>';
+			    		}else{
+						
+			    		html += '<h2><span style="color: black !important;">'+productWidgetTitle[jQuery.inArray(widgetMode, productWidget)]+'</span>';
+			    	}
+			    		}
+			      
+			      /*For hot we need a scrolldown bar to select filters*/
+			      if(site_page_type === "homepage" || site_page_type ==="viewAllTrending" && widgetMode != "recent") {
+			        html += catHtml;
+			      }
+			      html += '</h2>';
+			      html += '<div class="spacer" style="padding: 0 25px;"><div class="slider product ready"><div class="frame"><ul id="' + widgetElement + '_list" class="overflow owl-carousel" style="width: 0.953empx; left: 0px;">';
+			    } else {
+			      if(site_page_type === "homepage" || site_page_type ==="viewAllTrending") {
+			        html += '<div class="listing wrapper"><div class="left-block"><ul class="listing-leftmenu"><h3><span>Filter By</span></h3><div>';
+			        html += '<li class="price"><h4 class="active">price</h4>';
+			        html += '<ul class="checkbox-menu price">';
+			        html += '<li><input type="checkbox" id="0-500"> <label for="0-500">₹0 - ₹500</label></li><li><input type="checkbox" id="500-1000"> <label for="500-1000">₹500 - ₹1000</label></li><li><input type="checkbox" id="1000-2000"> <label for="1000-2000">₹1000 - ₹2000</label></li><li><input type="checkbox" id="2000-3000"> <label for="2000-3000">₹2000 - ₹3000</label></li><li><input type="checkbox" id="3000-4000"> <label for="3000-4000">₹3000 - ₹4000</label></li><li><input type="checkbox" id="4000-5000"> <label for="4000-5000">₹4000 - ₹5000</label></li>';
+			        html += '<li><input type="checkbox" id="5000-10000"> <label for="5000-10000">₹5000 - ₹10000</label></li><li><input type="checkbox" id="10000-25000"> <label for="10000-25000">₹10000 - ₹25000</label></li><li><input type="checkbox" id="25000-50000"> <label for="25000-50000">₹25000 - ₹50000</label></li><li><input type="checkbox" id="And>50000"> <label for="And>50000">₹50000 And Above</label></li>';
+			        html += '</ul></li><li class="on sale"><h4 class="active">Sale</h4><ul class="checkbox-menu on-sale">';
+			        html += '<li><input type="checkbox" id="sale-filter"><label for="sale-filter">On Sale</label></li></ul></li></div></ul></div>';
+			        html += '<div class="right-block">';
+			        
+			        html += '<div><h1 class="ia_trending">'+productWidgetTitle[jQuery.inArray(widgetMode, productWidget)]+'</h1>';
+			        html += '</div>';
+			        /*SortBY dropdown only for search widget */
+			        if(widgetMode === "search"){
+			      	 html += sortHtml;
+			        }
+			        
+			        html += catHtml;
+			        
+			      }
+			      html += '<ul id="'+widgetElement+'_list" class="product-list" style="width: 100%; float: left;margin-top: 55px; ">';
+			      
+			    }
+
+			    var pageData = []; //array of strings each containing 20 products as HTML
+			    var page = -1; //index of page, immediately becomes 0 upon first product
+			    var activePage = 'iapage1'; //page we're currently on if in grid view
+			     
+			    if(slider) {
+			      /*Make recommendation html for a carousel*/
+			      jQuery.each(respData, function(i, v) {
+			        html += makeProductHtml(widgetElement, this, response.request_id);
+			        recIndex++;
+			      });
+			      if(widgetMode === "hot" && site_page_type == "homepage"){
+			          html += '</ul></div>';
+			          /* IA Changes Start for store/mpl/en */
+			          html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
+			          }
+			      /* IA Changes End for store/mpl/en */
+			          else{
+			        	  html += '</ul></div>';
+			              html += '</div></div>'; 
+			          }
+
+			    } else {
+
+			      /*Make recommendation html for gridview by pages*/
+			      jQuery.each(respData, function(i, v) {
+			        if(recIndex % 20 === 0) {
+			          page++;
+			          pageData[page] = "";
+			        }
+			        pageData[page] += makeProductHtml(widgetElement, this, response.request_id);
+			        recIndex++;
+			      });
+			      html += pageData[0]; //start off with first page
+			      html += '</ul>';
+
+			      html += '<ul id="' + widgetElement + 'page_numbers" class="pagination" style="position: absolute; right: 0;line-height: 0px;cursor: pointer;margin-top: 15px;padding:0px;">';
+			      html += '<li id="iapage1" class="number first active iapage" style="padding: 5px;"><a>1</a></li>';
+			      for(var i=1; i<pageData.length;i++) {
+			        html += '<li id="iapage'+(i+1)+'" class="number iapage" style="padding: 5px;"><a>'+(i+1)+'</a></li>';
+			      }
+			      html += '<li id="iapage_next" class="next" style="padding: 5px;"><a>Next <span class="lookbook-only"></span></a></li>';
+			      html += '</ul>';
+			      html += '</div>';
+			    }
+
+			    /*Insert the HTML*/
+			    if(recIndex > 0) {
+			      document.getElementById(widgetElement).innerHTML = html; 
+			    }
+
+			    /*if trending, reupdate based on user selection on dropdown.*/
+			    if(widgetMode === "hot" || widgetMode === "search") { 
+			      jQuery( ".category_li" ).on('click', function() { //
+			      var category_name = jQuery(this).text();
+			     $('.hotSelected').text(category_name);
+			    	  // selected category id from hot dropdown
+			    	  category_id = jQuery(this).attr('id');
+			        //console.log("category id slected in hot widget dropdown : "+category_id);
+			        var params = { 'count': '10' };
+			        if(!slider) {
+			          params.count = '100';
+			        }
+			        
+			        
+			        
+			        if(category_id === "allCat") {
+			        	hotDropdownselected = category_name;
+			        } 
+			        else {
+			        	params.category_id = category_id;
+				        hotDropdownselected = category_name;
+			        }
+			        
+			        
+			        //params.category = category_id;
+			        var endpoint = '/SocialGenomix/recommendations/products/hot';
+			        //$( ".owl-item" ).css( "display", "none" );
+			        callRecApi(buildParamsHotNow(params), rootEP + endpoint);
+			      });
+			    }	
+
+			    /*SortBY dropdown*/
+			    if(widgetMode === "search"){
+			    jQuery( ".sort_li" ).on('click', function() { //
+			        var sort_type = jQuery(this).text();
+			       $('.sortSelected').text(sort_type);
+			      	  // selected category id from hot dropdown
+			      	  sort_key = jQuery(this).attr('id');
+			          // params.category_id = category_id;
+			           sortDropdownselected = sort_type;
+			    
+			      	  if(sort_key === "name-asc"){
+			      		respData.sort(iaSortNameAsc);
+			      	  }else if(sort_key === "name-desc"){
+			      		respData.sort(iaSortNameDesc);
+			      	  }else if(sort_type === "price-asc"){
+			      		respData.sort(iaSortPriceAsc);
+			      	  }else{
+			      		respData.sort(iaSortPriceDesc);
+			      	  }
+			          if(slider) {
+			            document.getElementById(widgetElement + '_list').innerHTML = reorderRecommendation(widgetElement, respData, response.request_id);
+			          } else {
+			            pageData = reorderRecommendationGrid(widgetElement, respData, response.request_id);
+			            document.getElementById(widgetElement + '_list').innerHTML = pageData[0];
+			            /*Reset page numbers*/
+			            var pages = document.getElementById("ia_products_hotpage_numbers").childNodes;
+			            for(var i=pageData.length;i<pages.length-1;i++) { //ignore next
+			              pages[i].visibility='visible';
+			            }
+			            for(var i=pageData.length;i<pages.length-1;i++) { //ignore next
+			              pages[i].visibility='hidden';
+			            }
+			            activePage = 'iapage1';
+			          }
+			        });
+			    }
+
+			    /*Setup UI*/
+			    if(slider) { 
+			    	if(site_page_type == 'search' && widgetElement == 'ia_products_search'){
+			    		/*Animate Carousel*/
+			    	      $("#" + widgetElement + "_list").owlCarousel({
+			    	    	  
+			    	    	  items:4,
+			            		loop: true,
+			            		nav:true,
+			            		dots:false,
+			            		navText:[],
+			            		responsive: {
+			                        // breakpoint from 0 up
+			                        0: {
+			                            items: 1,
+			                            stagePadding: 50,
+			                        },
+			                        // breakpoint from 480 up
+			                        480: {
+			                            items: 2,
+			                            stagePadding: 50,
+			                        },
+			                        // breakpoint from 768 up
+			                        768: {
+			                            items: 3,
+			                        },
+			                        // breakpoint from 768 up
+			                        1280: {
+			                            items: 5,
+			                        }
+			                    }
+
+						    	    	  /*items : 4,
+						    	          scrollPerPage: true,
+						    	          itemsDesktop : [1199,3],
+						    	          itemsDesktopSmall : [980,2],
+						    	          itemsTablet: [768,2],
+						    	          itemsMobile : [479,1],
+						    	          navigation: true,
+						    	          navigationText : [],
+						    	          pagination:false,
+						    	          rewindNav : false
+											*/
+
+			    	        });
+			    	} 
+			      /*Animate Carousel*/
+			      $("#" + widgetElement + "_list").owlCarousel({
+			    	  
+			    	  items:5,
+	            		loop: true,
+	            		nav:true,
+	            		dots:false,
+	            		navText:[],
+	            		responsive: {
+	                        // breakpoint from 0 up
+	                        0: {
+	                            items: 1,
+	                            stagePadding: 50,
+	                        },
+	                        // breakpoint from 480 up
+	                        480: {
+	                            items: 2,
+	                            stagePadding: 50,
+	                        },
+	                        // breakpoint from 768 up
+	                        768: {
+	                            items: 3,
+	                        },
+	                        // breakpoint from 768 up
+	                        1280: {
+	                            items: 5,
+	                        }
+	                    }
+
+			        /*items : 5,
+			        scrollPerPage: true,
+			        itemsDesktop : [1199,4],
+			        itemsDesktopSmall : [980,3],
+			        itemsTablet: [768,2],
+			        itemsMobile : [479,1],
+			        navigation: true,
+			        navigationText : [],
+			        pagination:false,
+			        rewindNav : false*/
+			      });
+
+			    } else { 
+
+			      /*Paginate GridView*/
+			      /*Go to page clicked*/
+			      jQuery(".iapage").on('click', function() {
+			    	  if(pageData[parseInt(jQuery(this).text()) - 1] != undefined){
+			        document.getElementById(widgetElement + '_list').innerHTML = pageData[parseInt(jQuery(this).text()) - 1];
+			    	  }else{
+			    		  document.getElementById(widgetElement + '_list').innerHTML = "<h1 style='text-align:center;color: #22bfe6;font-size: 24px;'>No Results Found.</h1>";
+			    	  }
+			        jQuery('#'+activePage).removeClass('active');
+			        jQuery(this).addClass('active');
+			        activePage = this.id;
+			      });
+			      
+			      /*Go to next page if it exists*/
+			      jQuery( "#iapage_next").on('click', function() {
+			        var pageIndex = parseInt(activePage.replace( /^\D+/g, '')) + 1;
+			        if(pageIndex > 5){
+			        	pageIndex = pageIndex % 5;
+			        }
+			        if(document.getElementById('iapage' + pageIndex) !== null) {
+			          var el = document.getElementById('iapage' + pageIndex);
+			          if(pageData[parseInt(jQuery(el).text()) - 1] != undefined){
+			          document.getElementById(widgetElement + '_list').innerHTML = pageData[parseInt(jQuery(el).text()) - 1];
+			          }else{
+			        	  document.getElementById(widgetElement + '_list').innerHTML = "<h1 style='text-align:center;color: #22bfe6;font-size: 24px;'>No Results Found.</h1>";
+			          }
+			          jQuery('#'+activePage).removeClass('active');
+			          jQuery(document.getElementById(el.id)).addClass('active');
+			          activePage = el.id;
+			        }   
+			      }); 
+
+			      /*Filter by price range, and whether it's on sale*/
+			      var priceRanges = [];
+			      var saleOptions = [];
+
+			      /*Select Price Filter*/
+			      jQuery(".price li label").on('click', function() {
+			        /*Follow the checkmark which isn't visible as an html element*/
+			        if(priceRanges.indexOf(this.textContent) > -1) {
+			          priceRanges.splice(priceRanges.indexOf(this.textContent), 1);
+			        } else {
+			          priceRanges.push(this.textContent);
+			        }
+			        pageData = getFilteredRecommendations(widgetElement, respData, priceRanges, saleOptions, response.request_id);          
+			        if(pageData[0] != undefined || pageData[0] != null){
+			        document.getElementById(widgetElement + '_list').innerHTML = pageData[0];
+			        }else{
+			        	document.getElementById(widgetElement + '_list').innerHTML = "<h1 style='text-align:center;color: #22bfe6;font-size: 24px;'>No Results Found.</h1>";
+			        }
+			        /*Reset page numbers*/
+			        var pages = document.getElementById("ia_products_hotpage_numbers").childNodes;
+			        for(var i=pageData.length;i<pages.length-1;i++) { //ignore next
+			          pages[i].visibility='visible';
+			        }
+			        for(var i=pageData.length;i<pages.length-1;i++) { //ignore next
+			          pages[i].visibility='hidden';
+			        }
+			        activePage = 'iapage1';
+			      });
+
+			      /*Select sale filter*/
+			      jQuery(".on-sale li label").on('click', function() {
+			        /*Follow the checkmark which isn't visible as an html element*/
+			        if(saleOptions.indexOf(this.textContent) > -1) {
+			          saleOptions.splice(saleOptions.indexOf(this.textContent), 1);
+			        } else {
+			          saleOptions.push(this.textContent);
+			        }
+			        pageData = getFilteredRecommendations(widgetElement, respData, priceRanges, saleOptions, response.request_id);          
+			         if(pageData[0] != undefined){       
+			        document.getElementById(widgetElement + '_list').innerHTML = pageData[0];
+			         }else{
+			         	document.getElementById(widgetElement + '_list').innerHTML = "<h1 style='text-align:center;color: #22bfe6;font-size: 24px;'>No Results Found.</h1>";
+			         }
+			        /*Reset page numbers*/
+			        var pages = document.getElementById("ia_products_hotpage_numbers").childNodes;
+			        for(var i=pageData.length;i<pages.length-1;i++) { //ignore next
+			          pages[i].visibility='visible';
+			        }
+			        for(var i=pageData.length;i<pages.length-1;i++) { //ignore next
+			          pages[i].visibility='hidden';
+			        }
+			        activePage = 'iapage1';
+			      });
+			    }
+			  } else if (jQuery.inArray(widgetMode, brandWidget) > -1) {
+
+			    /*Brand Widgets*/
+
+			    widgetElement = brandWidgetElement[jQuery.inArray(widgetMode, brandWidget)];
+			    if (!document.getElementById(widgetElement)) {
+			      return;
+			    }
+			    document.getElementById(widgetElement).innerHTML = "";    
+			    var html = "";
+			    var respData = response.data.brands;
+			    /* response check addition for 'Hot Brands' start*/
+			    if(response.data.brands.length > 0){
+			    	html += '<div class="wrapper"><h1 class="">'+brandWidgetTitle[jQuery.inArray(widgetMode, brandWidget)]+'</h1><ul class="feature-brands ia_feature_brands">';
+			    	}
+			    else
+			    	{
+			    	$("#ia_brands_hot_searches").css("background-color","#FFFFFF"); 
+			    	}
+			    /* response check addition for 'Hot Brands' end*/
+			    numRec = 0;
+			   
+			    jQuery.each(respData, function () {
+			    	queryUrl = this.url + '?req=' + response.request_id;
+			      if(numRec < 3) {
+			        html += '<li><a href="'+queryUrl+'" style=""><img class="image" src="'+this.image_url+'" width="432" height="439">';
+			        //logo and tagline, to be made obsolete with larger image
+			        html += '<img class="logo" src="'+this.logo_image_url+'" width="140" height="43">';
+			        html += '<span>'+this.description+'</span>';
+			        html += '</a></li>';
+			      } else if (numRec === 3) {
+			        html += '</ul><ul class="more-brands">';
+			      } 
+			      if (numRec >= 3) {
+			        html += '<li><a href="'+queryUrl+'"><img class="logo  hover-logo" src="'+this.logo_image_url+'" width="160" height="43">';
+			        html += '<img class="background" src="'+this.overlay_image_url+'" width="206" height="206" style="left: 0";></a></li>';
+			      }
+			      numRec++;
+			      if(numRec === 9) {
+			        return false;
+			      }
+			    });
+			    
+			    html += '</ul></div></div>';
+			    document.getElementById(widgetElement).innerHTML = html;
+			  } else if (jQuery.inArray(widgetMode, categoryWidget) > -1) {
+			    
+				  /*Category Widgets*/
+
+				    widgetElement = categoryWidgetElement[jQuery.inArray(widgetMode, categoryWidget)];
+				    if (!document.getElementById(widgetElement)) {
+				      return;
+				    }
+				    document.getElementById(widgetElement).innerHTML = "";    
+				    var html = "";
+				    var respData="";
+				    if(widgetMode === "categories/recent") {
+				     respData = response.data.recommendations;
+				    }else{
+				     respData = response.data.categories;
+				    }
+				    if (respData === null) {
+				      return;
+				    }
+				    if(widgetMode !== "categories/recent") {
+				      html += '<div class="wrapper">';
+				    }
+				    if(widgetMode === "categories/recent") { 
+				    html += '<h1 class="">'+categoryWidgetTitle[jQuery.inArray(widgetMode, categoryWidget)]+'</h1>';
+				    }else{
+				    	html += '<h1 class="">'+categoryWidgetTitle[jQuery.inArray(widgetMode, categoryWidget)]+'</h1>';
+				    	html += '<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference owl-carousel owl-theme" id="mplCategoryCarousel" style="opacity: 1; display: block;">';
+				    }
+				    var numRec = 0;
+				    jQuery.each(respData, function () {
+				    	queryUrl = this.url + '?req=' + response.request_id;
+				      if(widgetMode === "categories/recent") { //FlyOut Menu
+				        html += '<div style="display:inline-block; padding: 0; width: 100px; margin: 0px 10px;"><a href="'+queryUrl+'"><img class="image" src="'+this.image_url+'" width="113"/>';
+				        html += '<p style="text-align: center;margin-top: 5px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">'+this.name+'</p></a></div>';
+				      }else { //Normal Widget
+				    	  html += '<div class="item slide">';
+				    	  html += '<a href="'+queryUrl+'"><img src="'+this.image_url+'" class="image" style="height: 324px;"></a><span>'+this.name+'</span>';
+				    	  html += '<a class="shop_link" href="'+queryUrl+'"><b>SHOP NOW</b></a></div>';
+				      }
+				      numRec++;
+				      /*if(numRec === respData.length) {
+				        return false;
+				      }*/
+				    });
+				    if(widgetMode !== "categories/recent") {
+				    	html += '</div>';
+				    }
+				    
+				    html += '</div>';
+				    
+				    if(widgetMode !== "categories/recent") {
+				      html += '</div>';
+				    }    
+				    if(numRec > 0) {
+				      document.getElementById(widgetElement).innerHTML = html;
+				    }
+			var carousel = $("#mplCategoryCarousel");
+				    
+				    carousel.owlCarousel({
+				    	items:4,
+	            		loop: true,
+	            		nav:true,
+	            		dots:false,
+	            		navText:[],
+	            		responsive: {
+	                        // breakpoint from 0 up
+	                        0: {
+	                            items: 1,
+	                            stagePadding: 50,
+	                        },
+	                        // breakpoint from 480 up
+	                        480: {
+	                            items: 2,
+	                            stagePadding: 50,
+	                        },
+	                        // breakpoint from 768 up
+	                        768: {
+	                            items: 3,
+	                        },
+	                        // breakpoint from 768 up
+	                        1280: {
+	                            items: 5,
+	                        }
+	                    }
+					    	/*items : 4,
+							navigation:true,
+							navigationText : [],
+							pagination:false,
+							itemsDesktop : [1199,3],
+				            itemsDesktopSmall : [980,2],
+				            itemsTablet: [768,2],
+				            itemsMobile : [479,1], 
+				rewindNav: false,
+				lazyLoad:true,
+				navigation : true,	        
+		        rewindNav : false,
+		        scrollPerPage : true*/
+	    });
+
+	  } else if (jQuery.inArray(widgetMode, collectionWidget) > -1) {
+
+		  /*Collection Widgets*/
+
+    widgetElement = collectionWidgetElement[jQuery.inArray(widgetMode, collectionWidget)];
+    if (!document.getElementById(widgetElement)) {
+      return;
+    }
+    document.getElementById(widgetElement).innerHTML = "";    
+    document.getElementById(widgetElement).className = "feature-collections";
+    var html = "";
+    var respData = response.data.bundles;
+    if (respData === null) {
+      return;
+    }
+    html += '<div class="wrapper background"><h1 class="">'+collectionWidgetTitle[jQuery.inArray(widgetMode, collectionWidget)]+'</h1><ul class="collections">';
+    var numRec = 0;
+    jQuery.each(respData, function () {
+    	queryUrl = this.url + '?req=' + response.request_id;
+      if(numRec < 1) { //first one show both images
+        html += '<li class="chef sub "><img class="background brush-strokes-sprite sprite-water_color_copy_4" src="//'+mplStaticResourceHost+'/store/_ui/responsive/common/images/transparent.png">';
+        html += '<img class="background brush-strokes-sprite sprite-water_color_copy_3" src="//'+mplStaticResourceHost+'/store/_ui/responsive/common/images/transparent.png">';
+        html += '<h3>'+this.name+'</h3>';
+        html += '<img class="image" src="//'+DamMediaHost+''+this.top_left_image_url+'" style="margin-right: 20px;width: calc(40% - 140px);">';
+        html += '<img class="image" src="//'+DamMediaHost+''+this.top_right_image_url+'" style="width: calc(60% - 140px);width: -webkit-calc(60% - 140px);">';
+        html += '<span>'+this.description+'';
+        html += '<a href="'+queryUrl+'">Shop The Collection</a></span>';
+        html += '</li>';
+      } else if (numRec < 2){  //show only one image, different format
+        html += '<li class=" sub "><img class="image" src="//'+DamMediaHost+''+this.bottom_left_image_url+'"><div class="copy"><h3>'+this.name+'</h3>';
+        html += '<a href="'+queryUrl+'">The Hottest New Styles</a></div></li>';
+      } else if (numRec < 3){
+        html += '<li class="spotlight sub "><img class="image" src="//'+DamMediaHost+''+this.bottom_right_image_url+'"><div class="copy"><h3>'+this.name+'</h3>';
+        html += '<a href="'+queryUrl+'">The Hottest New Styles</a></div></li>';
+      } else {
+        return;
+      }
+      numRec++;
+    });
+    html += '</ul></div></div>';
+    if (numRec > 0) {
+      document.getElementById(widgetElement).innerHTML = html;
+    }
+  } else {
+
+    /*We should never get to this part of the code*/
+
+    //console.log("widget mode we don't account for: " + widgetMode);
+  }
+
 }
 $(document).on('click', ".IAQuickView,.iaAddToCartButton", function(e) {
 	e.preventDefault();

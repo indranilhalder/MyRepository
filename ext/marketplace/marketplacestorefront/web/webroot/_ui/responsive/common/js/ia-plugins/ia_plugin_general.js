@@ -3,7 +3,7 @@ David Phipps
 June 2014
 This code contains methods 
 */
-
+var start ='';	
 var rootEP = ''; //server/port combination of 
 var recEndPoint = ''; //make api calls to here
 var ecompany = ''; //ecompany
@@ -252,6 +252,22 @@ function buildParams(moreParams) {
   return currentParams;
 }
 
+//TISPRD-8849 Handles building generalized parameter object for api calls for Hot Now
+function buildParamsHotNow(moreParams) {
+	currentParams = { 'session_id': ssid,
+    'client_user_agent': navigator.userAgent,
+    'user_id': uid,
+    'user_type': user_type,
+    'ecompany': ecompany,
+    'site_page_type': site_page_type,
+    'client_type':'web_site'
+  };
+
+ 
+  jQuery.extend(currentParams, moreParams);
+  return currentParams;
+}
+
 /*Call init API to get session id*/
 function callInitApi() {
   var requestURL = rootEP + '/SocialGenomix/recommendations/init/jsonp';
@@ -339,9 +355,15 @@ function callFBApi(facebook_id, access_token, session_id) {
 }
 
 /*Calls API which returns product recommendations*/
+
 function callRecApi(params, requestURL) {  
   start = new Date(); 
   console.log("START TIME "+ start.getHours() + ":" + start.getMinutes() + ":" + start.getSeconds()); 
+
+function callRecApi(params, requestURL) { 
+	start = new Date(); 
+	console.log("START TIME "+ start.getHours() + ":" + start.getMinutes() + ":" + start.getSeconds()); 
+
   jQuery.extend(params, emailCheck());
   
   return jQuery.ajax({ 
