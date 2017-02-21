@@ -50,6 +50,45 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 
 #######  Microsite ::::  END #########
 
+## White labelling Start ####
+
+## Menu Start ##
+INSERT_UPDATE MicrositeSelectBrandCollectionComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;brandCollection(&componentRef);
+;;MicrositeMenuNavigationComponent;Microsite Shop By Brand;MicrositeMenuNavigationComponent;;
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;cmsComponents(&componentRef)
+;;MicroSiteMenuNavigationSlot;Product Grid Menu Slot;MicrositeMenuNavigationComponent
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='SearchResultsEmptyPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;ProductGridMenuSlotNoSerpForTemplate;ProductGridMenu;;MicroSiteMenuNavigationSlot;true
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ProductGridPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;ProductGridMenuSlotPlpForTemplate;ProductGridMenu;;MicroSiteMenuNavigationSlot;true
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='SearchResultsGridPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;ProductGridMenuSlotSerpForTemplate;ProductGridMenu;;MicroSiteMenuNavigationSlot;true
+
+## Menu End ##
+
+## Logo Start
+INSERT_UPDATE MicrositeSelectLogoComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;
+;;MicrositeSelLogoComponent;Microsite Logo;MicrositeSelLogoComponent;;
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;cmsComponents(&componentRef)
+;;MicroSiteSelLogoSlot;Product Grid Logo Slot;MicrositeSelLogoComponent
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='SearchResultsEmptyPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;MicrositeLogoSlotNoSerpForTemplate;ProductGridLogo;;MicroSiteSelLogoSlot;true
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ProductGridPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;MicrositeLogoSlotPLPForTemplate;ProductGridLogo;;MicroSiteSelLogoSlot;true
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='SearchResultsGridPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;MicrositeLogoSlotSerpForTemplate;ProductGridLogo;;MicroSiteSelLogoSlot;true
+
+## Logo End ##
+## White labelling END ####
+
 INSERT_UPDATE FooterComponent;$contentCV[unique=true];uid[unique=true];wrapAfter;showLanguageCurrency
 ;;FooterComponent;6;true
 

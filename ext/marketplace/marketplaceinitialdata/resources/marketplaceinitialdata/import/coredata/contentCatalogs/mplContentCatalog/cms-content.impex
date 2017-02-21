@@ -254,6 +254,11 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;BreadcrumbComponent
+#TPR-4471 START
+;ProductGridMenu;;MicrositeSelectBrandCollectionComponent,BrandComponent;
+;ProductGridLogo;;MicrositeSelectLogoComponent;
+;ProductGridSearch;;MplMicrositeEnhancedSearchBoxComponent;
+#TPR-4471 END
 ;PlaceholderContentSlot;;;
 
 # Search Result List / Grid are two layouts for Search Result pages
@@ -286,6 +291,11 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;BreadcrumbComponent
+#TPR-4471 START
+;ProductGridMenu;;MicrositeSelectBrandCollectionComponent,BrandComponent;
+;ProductGridLogo;;MicrositeSelectLogoComponent;
+;ProductGridSearch;;MplMicrositeEnhancedSearchBoxComponent;
+#TPR-4471 END
 ;PlaceholderContentSlot;;;
 
 # Search Results Empty Page Template
@@ -301,6 +311,11 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;BreadcrumbComponent
+#TPR-4471 START
+;ProductGridMenu;;MicrositeSelectBrandCollectionComponent,BrandComponent;
+;ProductGridLogo;;MicrositeSelectLogoComponent;
+;ProductGridSearch;;MplMicrositeEnhancedSearchBoxComponent;
+#TPR-4471 END
 ;PlaceholderContentSlot;;;
 
 # Category and Landing Pages are various layouts for a Category Landing page
