@@ -404,16 +404,15 @@ function focusOnElement() {
 				 return false;
 		   	 }
         //TISQAEE-64
-       /* var productCode= $('#productCode').val();
+        var productCode= $('#productCode').val();
         var productCodeArray=[];
         productCodeArray.push(productCode);    
 	        utag.link({
 				link_obj: this,
 				link_text: 'addtobag' ,
-				event_type : 'addtobag_other_seller' ,
+				event_type : 'add_to_bag_other_seller_pdp' ,
 				product_sku : productCodeArray                     // Product code passed as an array for Web Analytics   -- INC_11511  fix
-			});*/
-	        utagAddToBag();
+			});
 			ACC.product.sendAddToBag("addToCartFormId"+index);
 		});
 		 
