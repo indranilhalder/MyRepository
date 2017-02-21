@@ -1192,17 +1192,17 @@ public class ProductDetailsHelper
 	 * @param valueOf
 	 * @return
 	 */
-	public boolean addSingleToWishListForPLP(final String productCode, final Boolean sizeSelected)
+	public boolean addSingleToWishListForPLP(final String productCode, final String ussid, final Boolean sizeSelected)
 	{
 		boolean add = false;
 		final String wishName = MarketplaceFacadesConstants.DEFAULT_WISHLIST_NAME;
 		Wishlist2Model lastCreatedWishlist = null;
 		final UserModel user = userService.getCurrentUser();
-		String ussid = null;
-		if (getBuyBoxService().getBuyboxPricesForSearch(productCode) != null)
-		{
-			ussid = getBuyBoxService().getBuyboxPricesForSearch(productCode).get(0).getSellerArticleSKU();
-		}
+		//String ussid = null;
+//		if (getBuyBoxService().getBuyboxPricesForSearch(productCode) != null)
+//		{
+//			ussid = getBuyBoxService().getBuyboxPricesForSearch(productCode).get(0).getSellerArticleSKU();
+//		}
 		try
 		{
 			lastCreatedWishlist = wishlistFacade.getSingleWishlist(user);
