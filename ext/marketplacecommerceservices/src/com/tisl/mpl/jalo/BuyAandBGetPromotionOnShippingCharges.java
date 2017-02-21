@@ -737,13 +737,13 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 	 * @param : SessionContext arg0
 	 * @return : minimumCategoryValue
 	 */
-	private double calculateMinCategoryAmnt(final SessionContext arg0)
+	private double calculateMinCategoryAmnt(final SessionContext ctx)
 	{
 		double minimumCategoryValue = 0.00D;
-		if (null != arg0 && null != getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)
-				&& ((Double) getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() > 0.00D)
+		if (null != ctx && null != getProperty(ctx, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)
+				&& ((Double) getProperty(ctx, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() > 0.00D)
 		{
-			minimumCategoryValue = ((Double) getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue();
+			minimumCategoryValue = ((Double) getProperty(ctx, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue();
 		}
 		return minimumCategoryValue;
 	}
