@@ -4986,32 +4986,32 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @return PinCodeResponseData
 	 */
 	@Override
-	public PinCodeResponseData getVlaidDeliveryModesByInventory(final PinCodeResponseData pinCodeResponseData)
-			throws EtailNonBusinessExceptions
+	public PinCodeResponseData getVlaidDeliveryModesByInventory(final PinCodeResponseData pinCodeResponseData,
+			final CartData cartData) throws EtailNonBusinessExceptions
 	{
 		LOG.info("Inside getVlaidDeliveryModesByInventory Method");
 		try
 		{
 			final List<DeliveryDetailsData> validDeliveryDetailsData = new ArrayList<DeliveryDetailsData>();
-			final CartModel cartModel = cartService.getSessionCart();
+			//final CartModel cartModel = cartService.getSessionCart();
 			// Start Modified as part of performance fix
 			if (null != pinCodeResponseData && CollectionUtils.isNotEmpty(pinCodeResponseData.getValidDeliveryModes())
-					&& cartModel != null && CollectionUtils.isNotEmpty(cartModel.getEntries()))
+					&& cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries()))
 			{
 				for (final DeliveryDetailsData deliveryDetailsData : pinCodeResponseData.getValidDeliveryModes())
 				{
 					long inventory = 0;
 					long selectedQuantity = 0;
-					for (final AbstractOrderEntryModel abstractOrderEntryModel : cartModel.getEntries())
+					for (final OrderEntryData orderEntryData : cartData.getEntries())
 					{
-						if (deliveryDetailsData != null && abstractOrderEntryModel != null
-								&& abstractOrderEntryModel.getSelectedUSSID().equalsIgnoreCase(pinCodeResponseData.getUssid())
-								&& !abstractOrderEntryModel.getGiveAway().booleanValue()) //TISPRDT-219
+						if (deliveryDetailsData != null && orderEntryData != null
+								&& orderEntryData.getSelectedUssid().equalsIgnoreCase(pinCodeResponseData.getUssid())
+								&& !orderEntryData.isGiveAway()) //TISPRDT-219
 						{
 							inventory = (deliveryDetailsData.getInventory() != null) ? Long
 									.parseLong(deliveryDetailsData.getInventory()) : inventory;
-							selectedQuantity = (abstractOrderEntryModel.getQuantity() != null) ? abstractOrderEntryModel.getQuantity()
-									.longValue() : selectedQuantity;
+							selectedQuantity = (orderEntryData.getQuantity() != null) ? orderEntryData.getQuantity().longValue()
+									: selectedQuantity;
 							if (inventory >= selectedQuantity)
 							{
 								validDeliveryDetailsData.add(deliveryDetailsData);
@@ -5021,6 +5021,28 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					pinCodeResponseData.setValidDeliveryModes(validDeliveryDetailsData);
 				}
 			}
+
+
+
+			/*
+			 * @Override public PinCodeResponseData getVlaidDeliveryModesByInventory(final PinCodeResponseData
+			 * pinCodeResponseData) throws EtailNonBusinessExceptions {
+			 * LOG.info("Inside getVlaidDeliveryModesByInventory Method"); try { final List<DeliveryDetailsData>
+			 * validDeliveryDetailsData = new ArrayList<DeliveryDetailsData>(); final CartModel cartModel =
+			 * cartService.getSessionCart(); // Start Modified as part of performance fix if (null != pinCodeResponseData
+			 * && CollectionUtils.isNotEmpty(pinCodeResponseData.getValidDeliveryModes()) && cartModel != null &&
+			 * CollectionUtils.isNotEmpty(cartModel.getEntries())) { for (final DeliveryDetailsData deliveryDetailsData :
+			 * pinCodeResponseData.getValidDeliveryModes()) { final long inventory = 0; long selectedQuantity = 0; for
+			 * (final AbstractOrderEntryModel abstractOrderEntryModel : cartModel.getEntries()) { if (deliveryDetailsData
+			 * != null && abstractOrderEntryModel != null &&
+			 * abstractOrderEntryModel.getSelectedUSSID().equalsIgnoreCase(pinCodeResponseData.getUssid()) &&
+			 * !abstractOrderEntryModel.getGiveAway().booleanValue()) //TISPRDT-219 { inventory =
+			 * (deliveryDetailsData.getInventory() != null) ? Long .parseLong(deliveryDetailsData.getInventory()) :
+			 * inventory; selectedQuantity = (abstractOrderEntryModel.getQuantity() != null) ?
+			 * abstractOrderEntryModel.getQuantity() .longValue() : selectedQuantity; if (inventory >= selectedQuantity) {
+			 * validDeliveryDetailsData.add(deliveryDetailsData); } } }
+			 * pinCodeResponseData.setValidDeliveryModes(validDeliveryDetailsData); } }
+			 */
 			// End Modified as part of performance fix TISPT-104
 			/*
 			 * final List<DeliveryDetailsData> validDeliveryDetailsData = new ArrayList<DeliveryDetailsData>(); if (null !=
