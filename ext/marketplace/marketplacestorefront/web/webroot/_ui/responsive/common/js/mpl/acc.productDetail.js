@@ -1045,6 +1045,8 @@ $(function() {
 						//TPR900
 						if($("#pdpPincodeCheck").text() == 'Check')
 						{
+							//INC144314017
+							$(this).data('clicked', true);
 							pinCodeChecked = true;
 							//$("#home").hide();
 							//$("#homeli").hide();
@@ -1804,54 +1806,58 @@ function displayDeliveryDetails(sellerName) {
 					$('#fulFilledBySship').show();
 					$('#fulFilledBySship').html(sellerName);
 				}
-				if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
-					//$("#home").hide();
-					//$("#homeli").hide();
-					$("#homeli").css("opacity","0.5");
-					$("#homeli").removeClass("selected");
-				} else {
-					var start=parseInt($("#homeStartId").val())+leadTime;
-					var end=parseInt($("#homeEndId").val())+leadTime;
-					$("#homeDate").html(pretext+start+"-"+end+posttext);
-					$("#home").show();
-					$("#homeli").show();
-					$("#homeli").addClass("selected");
-					$("#homeli").css("opacity","1");
-				}
-				
-				if (null != deliveryModes && deliveryModes.indexOf("ED") == -1) {
-					//$("#express").hide();
-					//$("#expressli").hide();
-					$("#expressli").css("opacity","0.5");
-					$("#expressli").removeClass("selected");
-				} else {
-					var start=$("#expressStartId").val();
-					var end=$("#expressEndId").val();
-					$("#expressDate").html(pretext+start+"-"+end+posttext);
-					$("#express").show();
-					$("#expressli").show();
-					$("#expressli").addClass("selected");
-					$("#expressli").css("opacity","1");
+				//INC144314017 start
+				if(!$('#pdpPincodeCheck').data('clicked')) {
+					if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
+						//$("#home").hide();
+						//$("#homeli").hide();
+						$("#homeli").css("opacity","0.5");
+						$("#homeli").removeClass("selected");
+					} else {
+						var start=parseInt($("#homeStartId").val())+leadTime;
+						var end=parseInt($("#homeEndId").val())+leadTime;
+						$("#homeDate").html(pretext+start+"-"+end+posttext);
+						$("#home").show();
+						$("#homeli").show();
+						$("#homeli").addClass("selected");
+						$("#homeli").css("opacity","1");
+					}
+					
+					if (null != deliveryModes && deliveryModes.indexOf("ED") == -1) {
+						//$("#express").hide();
+						//$("#expressli").hide();
+						$("#expressli").css("opacity","0.5");
+						$("#expressli").removeClass("selected");
+					} else {
+						var start=$("#expressStartId").val();
+						var end=$("#expressEndId").val();
+						$("#expressDate").html(pretext+start+"-"+end+posttext);
+						$("#express").show();
+						$("#expressli").show();
+						$("#expressli").addClass("selected");
+						$("#expressli").css("opacity","1");
+					}
+					
+					if (null != deliveryModes && deliveryModes.indexOf("CNC") == -1) {
+						
+						//$("#collect").hide();
+						//$("#collectli").hide();
+						$("#collectli").css("opacity","0.5");
+						$("#collectli").removeClass("selected");
+					} else {
+						var start=$("#clickStartId").val();
+						var end=$("#clickEndId").val();
+						$("#clickDate").html(pretext+start+"-"+end+posttext);
+						$("#collect").show();
+						$("#collectli").show();
+						$("#collectli").css("opacity","1");
+						$("#collectli").addClass("selected");
+					}
 				}
 				if (null != deliveryModes){
-		//		console.log(deliveryModes.indexOf("CNC") );
+					//		console.log(deliveryModes.indexOf("CNC") );
 				}
-				if (null != deliveryModes && deliveryModes.indexOf("CNC") == -1) {
-					
-					//$("#collect").hide();
-					//$("#collectli").hide();
-					$("#collectli").css("opacity","0.5");
-					$("#collectli").removeClass("selected");
-				} else {
-					var start=$("#clickStartId").val();
-					var end=$("#clickEndId").val();
-					$("#clickDate").html(pretext+start+"-"+end+posttext);
-					$("#collect").show();
-					$("#collectli").show();
-					$("#collectli").css("opacity","1");
-					$("#collectli").addClass("selected");
-				}
-
+				//INC144314017 end
 				// enable COD flag if COD enabled
 				if (data['isCod'] == 'Y') {
 					$("#codId").show();
