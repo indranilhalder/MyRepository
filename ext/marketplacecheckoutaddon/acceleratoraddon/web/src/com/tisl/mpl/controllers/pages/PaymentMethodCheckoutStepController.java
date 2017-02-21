@@ -232,21 +232,21 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			@RequestParam(value = "value", required = false, defaultValue = "") final String guid) throws CMSItemNotFoundException
 	{
 		//redirecting to previous page for anonymous user
-				if (getUserFacade().isAnonymousUser())
-				{
-					return getCheckoutStep().previousStep();
-				}
-				final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-				ValidationResults validationResult = null;
-				//Validator called explicitly TPR-629
-				if (StringUtils.isEmpty(guid))
-				{
-					validationResult = paymentValidator.validateOnEnterOptimized(cartData, redirectAttributes);
-				}
-				if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
-				{
-					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
-				}
+		if (getUserFacade().isAnonymousUser())
+		{
+			return getCheckoutStep().previousStep();
+		}
+		final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+		ValidationResults validationResult = null;
+		//Validator called explicitly TPR-629
+		if (StringUtils.isEmpty(guid))
+		{
+			validationResult = paymentValidator.validateOnEnterOptimized(cartData, redirectAttributes);
+		}
+		if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
+		{
+			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+		}
 		//Validator called explicitly TPR-629
 		if (StringUtils.isEmpty(guid))
 		{
@@ -4202,7 +4202,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
@@ -4289,111 +4289,121 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 			if (orderModel == null)
 			{
-				final CartModel cart = getCartService().getSessionCart();
-				final Double cartTotal = cart.getTotalPrice();
-				final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
-				boolean redirectFlag = false;
-
-
-				LOG.debug("Checking - onclick of pay now button pincode servicabilty and promotion");
-				if (!redirectFlag && !getMplCheckoutFacade().isPromotionValid(cart))
+				//As per EQA comments checking for hasSessionCart
+				if (getCartService().hasSessionCart())
 				{
-					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
-					redirectFlag = true;
-					LOG.info("::setting redirect flag--1::");
-				}
+					final CartModel cart = getCartService().getSessionCart();
+					final Double cartTotal = cart.getTotalPrice();
+					final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
+					boolean redirectFlag = false;
 
 
-				if (!redirectFlag)
-				{
-					final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cart);
-					if (cartItemDelistedStatus)
+					LOG.debug("Checking - onclick of pay now button pincode servicabilty and promotion");
+					if (!redirectFlag && !getMplCheckoutFacade().isPromotionValid(cart))
 					{
+						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
 						redirectFlag = true;
-						LOG.info("::setting redirect flag--2::");
+						LOG.info("::setting redirect flag--1::");
 					}
-				}
 
-				if (!redirectFlag)
-				{
-					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
-					if (!inventoryReservationStatus)
+
+					if (!redirectFlag)
 					{
+						final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cart);
+						if (cartItemDelistedStatus)
+						{
+							redirectFlag = true;
+							LOG.info("::setting redirect flag--2::");
+						}
+					}
 
-						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
+					if (!redirectFlag)
+					{
+						final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+								MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+						if (!inventoryReservationStatus)
+						{
+
+							getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
+							redirectFlag = true;
+							LOG.info("::setting redirect flag--3::");
+						}
+					}
+
+					if (!redirectFlag && !getMplCheckoutFacade().isCouponValid(cart))
+					{
+						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
 						redirectFlag = true;
-						LOG.info("::setting redirect flag--3::");
-					}
-				}
-
-				if (!redirectFlag && !getMplCheckoutFacade().isCouponValid(cart))
-				{
-					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
-					redirectFlag = true;
-					LOG.info("::setting redirect flag--4::");
-				}
-
-				//Merged nested if statement as for PMD
-				if (!redirectFlag && (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0))
-				{
-					//if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
-					//{
-					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
-					redirectFlag = true;
-					LOG.info("::setting redirect flag--5::");
-					//}
-				}
-
-				if (!redirectFlag && !getMplPaymentFacade().isValidCart(cart))
-				{
-					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID, "TRUE");
-					redirectFlag = true;
-					LOG.info("::setting redirect flag--6::");
-				}
-
-				if (redirectFlag)
-				{
-					LOG.info("::returning redirect String::");
-					return MarketplacecheckoutaddonConstants.REDIRECTSTRING;
-				}
-				else
-				{
-
-					//getCommerceCartService().recalculateCart(cart);
-					LOG.info("::Going to Create Wallet OrderId::");
-
-					orderId = getMplPaymentFacade().createWalletorder(cart, walletName, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
-
-					if (CollectionUtils.isNotEmpty(orderId))
-					{
-						refNumber = orderId.get(0);
-						checksum = orderId.get(1);
+						LOG.info("::setting redirect flag--4::");
 					}
 
-					final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
-
-					if (isValidCart)
+					//Merged nested if statement as for PMD
+					if (!redirectFlag && (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0))
 					{
-						getMplPaymentFacade().entryInTPWaltAudit(null, MarketplacecheckoutaddonConstants.CHANNEL_WEB, cartGuid,
-								refNumber);
-						getMplCheckoutFacade().placeOrder();
+						//if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
+						//{
+						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
+						redirectFlag = true;
+						LOG.info("::setting redirect flag--5::");
+						//}
+					}
+
+					if (!redirectFlag && !getMplPaymentFacade().isValidCart(cart))
+					{
+						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID, "TRUE");
+						redirectFlag = true;
+						LOG.info("::setting redirect flag--6::");
+					}
+
+					if (redirectFlag)
+					{
+						LOG.info("::returning redirect String::");
+						return MarketplacecheckoutaddonConstants.REDIRECTSTRING;
 					}
 					else
 					{
-						throw new InvalidCartException("************PaymentMethodCheckoutStepController : placeOrder : Invalid Cart!!!"
-								+ (StringUtils.isNotEmpty(cart.getGuid()) ? cart.getGuid() : MarketplacecommerceservicesConstants.EMPTY));
+
+						//getCommerceCartService().recalculateCart(cart);
+						LOG.info("::Going to Create Wallet OrderId::");
+
+						orderId = getMplPaymentFacade().createWalletorder(cart, walletName,
+								MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+
+						if (CollectionUtils.isNotEmpty(orderId))
+						{
+							refNumber = orderId.get(0);
+							checksum = orderId.get(1);
+						}
+
+						final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
+
+						if (isValidCart)
+						{
+							getMplPaymentFacade().entryInTPWaltAudit(null, MarketplacecheckoutaddonConstants.CHANNEL_WEB, cartGuid,
+									refNumber);
+							getMplCheckoutFacade().placeOrder();
+						}
+						else
+						{
+							throw new InvalidCartException(
+									"************PaymentMethodCheckoutStepController : placeOrder : Invalid Cart!!!"
+											+ (StringUtils.isNotEmpty(cart.getGuid()) ? cart.getGuid()
+													: MarketplacecommerceservicesConstants.EMPTY));
+						}
+
+						LOG.info("::Created Wallet OrderId::" + orderId);
+
 					}
 
-					LOG.info("::Created Wallet OrderId::" + orderId);
-
+					response = refNumber + "|" + checksum + "|" + cartGuid + "|" + cartTotal + "|" + returnUrlBuilder;
+					LOG.info("Reference number from createWalletOrder when order is null -- " + refNumber);
+					LOG.info("Response from createWalletOrder when order is null -- " + response);
+					return response;
 				}
-
-				response = refNumber + "|" + checksum + "|" + cartGuid + "|" + cartTotal + "|" + returnUrlBuilder;
-				LOG.info("Reference number from createWalletOrder when order is null -- " + refNumber);
-				LOG.info("Response from createWalletOrder when order is null -- " + response);
-				return response;
-
+				else
+				{
+					LOG.info("User has no cart in session from createWalletOrder when order is null -- ");
+				}
 			}
 
 			else

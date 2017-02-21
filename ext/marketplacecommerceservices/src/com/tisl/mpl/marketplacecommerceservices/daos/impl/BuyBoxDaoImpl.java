@@ -734,7 +734,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 					priceList.add(buyBox.getPrice() == null ? Double.valueOf(0.0D) : buyBox.getPrice());
 					priceList.add(buyBox.getPrice() == null ? Double.valueOf(0.0D) : buyBox.getSpecialPrice());
 					buyBoxData.put(buyBox.getSellerArticleSKU(), priceList);
-					log.debug("#####################skuList" + buyBox.getSellerArticleSKU() + priceList);
+					LOG.debug("#####################skuList" + buyBox.getSellerArticleSKU() + priceList);
 				}
 			}
 			return buyBoxData;
