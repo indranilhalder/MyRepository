@@ -34,12 +34,26 @@ public class CustomOmsAddressPopulator implements Populator<AddressModel, Addres
 	@Autowired
 	private MplCommerceCartService mplCommerceCartService;
 
+	private int updatePointer(final StringBuilder addressLine)
+	{
+		int pointer = MarketplaceomsordersConstants.ZERO_INT;
+		if (addressLine.length() > MarketplaceomsordersConstants.MAX_LEN_PER_ADDR_LINE
+				&& addressLine.length() <= MarketplaceomsordersConstants.MAX_LEN_OF_ADDR_LINE
+				&& addressLine.toString().substring(0, MarketplaceomsordersConstants.MAX_LEN_PER_ADDR_LINE + 1)
+						.contains(MarketplaceomsordersConstants.SINGLE_SPACE))
+		{
+
+			pointer = addressLine.toString().substring(0, MarketplaceomsordersConstants.MAX_LEN_PER_ADDR_LINE + 1)
+					.lastIndexOf(MarketplaceomsordersConstants.SINGLE_SPACE);
+
+		}
+		return pointer;
+	}
 
 	public void populate(final AddressModel source, final Address target) throws ConversionException
 	{
 		Assert.notNull(source, "source Address can't be null");
 		Assert.notNull(target, "target Address can't be null");
-
 
 		if (StringUtils.isNotBlank(source.getFirstname()))
 		{
@@ -69,11 +83,12 @@ public class CustomOmsAddressPopulator implements Populator<AddressModel, Addres
 			final StringBuilder addressLine3 = new StringBuilder(source.getAddressLine3());
 			addressLine = addressLine.append(MarketplaceomsordersConstants.SINGLE_SPACE).append(addressLine3.toString());
 		}
+
 		String addrLine1 = StringUtils.EMPTY;
 		String addrLine2 = StringUtils.EMPTY;
 		String addrLine3 = StringUtils.EMPTY;
 
-		int pointer = MarketplaceomsordersConstants.ZERO_INT;
+		int pointer = updatePointer(addressLine);
 		addressLine = new StringBuilder(addressLine.toString().trim());
 
 		if (addressLine.length() <= MarketplaceomsordersConstants.MAX_LEN_PER_ADDR_LINE)
@@ -86,10 +101,9 @@ public class CustomOmsAddressPopulator implements Populator<AddressModel, Addres
 				&& addressLine.toString()
 						.substring(MarketplaceomsordersConstants.ZERO_INT, MarketplaceomsordersConstants.MAX_LEN_PER_ADDR_LINE + 1)
 						.contains(MarketplaceomsordersConstants.SINGLE_SPACE))
+
 		{
-			pointer = addressLine.toString()
-					.substring(MarketplaceomsordersConstants.ZERO_INT, MarketplaceomsordersConstants.MAX_LEN_PER_ADDR_LINE + 1)
-					.lastIndexOf(MarketplaceomsordersConstants.SINGLE_SPACE);
+
 			addrLine1 = addressLine.toString().substring(MarketplaceomsordersConstants.ZERO_INT, pointer);
 
 			//addrLine1 = addrLine1.trim();
@@ -101,9 +115,7 @@ public class CustomOmsAddressPopulator implements Populator<AddressModel, Addres
 							MarketplaceomsordersConstants.MAX_LEN_PER_ADDR_LINE + 1)
 							.contains(MarketplaceomsordersConstants.SINGLE_SPACE))
 			{
-				pointer = addressLine.toString()
-						.substring(MarketplaceomsordersConstants.ZERO_INT, MarketplaceomsordersConstants.MAX_LEN_PER_ADDR_LINE + 1)
-						.lastIndexOf(MarketplaceomsordersConstants.SINGLE_SPACE);
+				pointer = updatePointer(addressLine);
 
 				addrLine2 = addressLine.toString().substring(MarketplaceomsordersConstants.ZERO_INT, pointer).trim();
 

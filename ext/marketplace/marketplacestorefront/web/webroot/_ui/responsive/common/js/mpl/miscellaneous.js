@@ -76,12 +76,13 @@
         	});
 		//end
 		
-		//Tealium js.tag
+		//INC144313785 fixes
+        //Tealium js.tag
 		/*$(document).on("click", ".header-myAccountSignOut", function() {
 			window.localStorage.removeItem("eventFired");
 		});*/
 
-		 $(document).on("click","form .pagination_a_link",function(e){
+		 /*$(document).on("click","form .pagination_a_link",function(e){
 			event.preventDefault();
 			var hrefurl = $(this).attr('href');
 			// Added For TISPRD-8621
@@ -98,7 +99,7 @@
 			$("#paginationForm").attr("action", hrefurl);
 			$("#paginationFormBottom").attr("action", hrefurl);
 			$(this).closest('form').submit();
-		 });  
+		 }); */ 
          //TPR-565	
    		 /*$(document).on("click","form .pagination_a_link",function(e){
    			event.preventDefault();
