@@ -2063,6 +2063,7 @@ $("#otpMobileNUMField").focus(function(){
   
 
  $("#make_saved_cc_payment,#make_saved_cc_payment_up").click(function(){
+	 $("#cvvError").css("display", "none");
 	var password = $(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").val();
 	var ebsDownCheck=$("#ebsDownCheck").val();
 	var isDomestic=$(".card_token").parent().parent().parent().find('.card').find('.radio').find('.card_is_domestic').val();
