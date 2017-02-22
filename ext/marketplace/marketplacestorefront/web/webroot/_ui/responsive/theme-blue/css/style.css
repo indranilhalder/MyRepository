@@ -61132,11 +61132,8 @@ text-transform:none;}
 	background-color: #a5173c !important;
 } 
 
-
-
 /*Choose Address Page end*/
 
-/*Delivery Option page end*/
 /* Payment Page change start */
 .cart.wrapper .left-block .payments.tab-view{
 	border: solid 1px #dddddd;
@@ -61300,5 +61297,140 @@ text-transform:none;}
 	color: #92002e;
 }
 /* right section end*/
+/*Left section start*/
+.checkout.wrapper.checkout-payment h1{
+	font-size:20px;
+	font-weight:normal;
+	line-height: 1.2;
+  	letter-spacing: normal;
+  	text-transform: none;
+	
+}
+.cart.wrapper.checkout-payment p.cart-items {
+    color: #535353;
+    line-height: 1.33;
+    font-size:12px;
+}
+.cart.wrapper.checkout-payment p.cart-items .prices{
+	font-size: 16px;
+  	line-height: 1;
+  	color: #92002e;
+  	font-weight: normal;
+}
+.cart.wrapper .left-block .payments.tab-view .nav li{
+	height: 64px;
+    width: 159px;
+}
+.cart.wrapper .left-block .payments.tab-view .nav li.active:after{
+	content:"";
+	border-left:1px solid #fff;
+	position: absolute;
+    right: -1px;
+    height: 63px;
+    width: 1px;
+    top: 0;
+}
+.cart.wrapper.checkout-payment .blocks {
+    padding: 27px 115px 36px 35.5px;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.saved.active, .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.new-form.active, .confirmation .left-block .payments.tab-view .tabs .product-block li.saved.active, .confirmation .left-block .payments.tab-view .tabs .product-block li.new-form.active{
+	padding:0;
+}
+.cart.wrapper .left-block form fieldset{
+	border-radius: 8px;
+    background-color: #eeeeee;
+    padding: 10px 28.8px 32px 28px;
+}
+.cart.wrapper .left-block .payments.tab-view .new-card fieldset .half label, .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full label,
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .cvv label{
+	padding-top:14px;
+	padding-bottom: 0;
+    margin-bottom: 5px !important;
+	font-size: 11px;
+  	font-weight: normal;
+  	line-height: normal;
+  	letter-spacing: 0.6px;
+  	color: #999999;
+  	text-transform: none;
+}
+.cart.wrapper.checkout-payment .blocks .new-card  .name-card{
+margin: 0;
+}
+.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.cvv input{
+	margin-top:0px;
+}
+.cart.wrapper.checkout-payment .blocks .new-card input, .cart.wrapper.checkout-payment .blocks.net-bank input,
+.cart.wrapper.checkout-payment .blocks .new-card .card_exp_month, .cart.wrapper.checkout-payment .blocks .new-card .card_exp_year,
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .cvv input, #bankNameForEMI, #card .form-group select {
+    border: 1px solid #ddd;
+    height: 41px;
+    font-size: 11px;
+  	letter-spacing: 0.6px;
+}
+.cart.wrapper.checkout-payment .blocks .new-card .remember input[type="checkbox"] + label {
+    font-size: 11px;
+    font-weight: normal;
+    letter-spacing: 0.6px;
+    text-transform: none;
+}
+.cart.wrapper.checkout-payment .blocks .new-card .remember input[type="checkbox"] + label:before {
+    background: none;
+    box-shadow: 0 0 0 1px #979797;
+    border:3px solid #fff;
+    height: 15px;
+    outline: none;
+    width: 15px;
+    margin-right: 12px;
+}
+.cart.wrapper.checkout-payment .blocks .new-card .remember input[type="checkbox"]:checked + label:before{
+	background: none;
+	background-color: #000;
+}
+#billingAddress {
+    margin-top: 7px;
+}
+.cart.wrapper .left-block .payments.tab-view .pay .button#make_cc_payment, .cart.wrapper .left-block .payments.tab-view .pay .button#make_dc_payment, .cart.wrapper .left-block .payments.tab-view .pay .button#make_emi_payment {
+    margin: 0;
+    margin-top: 12px;
+}
+.cart.wrapper .left-block .payments.tab-view .pay .button {
+    background: #a5173c !important;
+    height: 42px !important;
+    width: 216px;
+    font-size: 12px !important;
+    font-weight: normal;
+}
+.cart.wrapper .left-block .payments.tab-view .pay .button:hover {
+    background: #a5173c !important;
+}
+.cart.wrapper.checkout-payment .terms {
+    font-size: 11px;
+    font-weight: normal;
+    letter-spacing: 0.6px;
+    color:#999;
+}
+.cart.wrapper.checkout-payment .terms .redirect {
+    font-size: 11px;
+    font-weight: normal;
+    letter-spacing: 0.6px;
+    padding: 0px 0 4px 0px;
+    color:#999;
+    text-transform: none;
+    width: 100%;
+}
+.cart.wrapper.checkout-payment .conditions {
+    color: #000;
+    display: inline;
+    margin-top: 0px;
+    text-transform: capitalize;
+    line-height: normal;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs{
+	padding-bottom: 63px;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block #newCardCCEmi.new-form{
+	display:block;
+}
+/*Left section end*/
 /* Payment Page change end */
 /*checkout pages end*/

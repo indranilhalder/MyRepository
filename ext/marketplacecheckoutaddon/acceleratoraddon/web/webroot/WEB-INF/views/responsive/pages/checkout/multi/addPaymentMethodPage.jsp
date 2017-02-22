@@ -419,16 +419,16 @@
 									<input class="last" placeholder="4444" id="cardNo4">
 								</div> -->
 								<!-- Static section end -->
-						                            	<%-- <label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardNo"/></label> --%>
-						                            	<input type="text" class="card_number" id="cardNo" maxlength="16" autocomplete="off" placeholder="CARD NUMBER*"> 
+						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardNo"/></label>
+						                            	<input type="text" class="card_number" id="cardNo" maxlength="16" autocomplete="off"> 
 						                            	 <!-- <input type="hidden" class="card_number" value="" /> -->  
 						                            	<input type="hidden" id="cardType" disabled="disabled"/>
 						                            	<span class="error-message" id="cardNoError"></span>
 													</div>
 						                            
 						                            <div class="controls full">
-						                            	<%-- <label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardName"/></label> --%>
-						                            	<input type="text" name="memberName" class="name_on_card name-card" maxlength="79" autocomplete="off" placeholder="NAME ON CARD*">
+						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardName"/></label>
+						                            	<input type="text" name="memberName" class="name_on_card name-card" maxlength="79" autocomplete="off">
 						                            	<span class="error-message" id="memberNameError"></span>
 						                            </div>
 						                           
@@ -466,8 +466,8 @@
 														
 														<%-- <input type="hidden" id="cvvHelpContent" value="<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelpContent"/>"> --%>
 														<input type="hidden" id="cvvHelpContent" value="${cvvHelp}">
-						                            	<%-- <label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label> --%>
-						                           		<input type="password" autocomplete="new-password" class="security_code span1" name="cvv" maxlength="4" placeholder="CVV" />
+						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label>
+						                           		<input type="password" autocomplete="new-password" class="security_code span1" name="cvv" maxlength="4" />
 						                           		<%-- <a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelp"/></a> --%>
 						                           		<span class="error-message" id="cvvError"></span> 
 						                            </div>
@@ -725,16 +725,16 @@
 					  										</select>
 													</div>
 						                            <div class="controls full">
-						                            	<%-- <label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardNo"/></label> --%>
+						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardNo"/></label>
 						                            	
-						                             <input type="text" class="card_number" id="cardNoDc" maxlength="16" autocomplete="off" placeholder="CARD NUMBER*"> 
+						                             <input type="text" class="card_number" id="cardNoDc" maxlength="16" autocomplete="off"> 
 						                            	<input type="hidden" id="cardTypeDc" disabled="disabled"/>
 						                            	<span class="error-message" id="cardNoErrorDc"></span>
 													</div>
 						                            
 						                            <div class="controls full">
-						                            	<%-- <label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardName"/></label> --%>
-						                            	<input type="text" name="memberName" class="name_on_card name-card" maxlength="79" autocomplete="off" placeholder="NAME ON CARD*">
+						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardName"/></label>
+						                            	<input type="text" name="memberName" class="name_on_card name-card" maxlength="79" autocomplete="off">
 						                            	<span class="error-message" id="memberNameErrorDc"></span>
 						                            </div>
 						                           
@@ -772,7 +772,7 @@
 														
 														<%-- <input type="hidden" id="cvvHelpContent" value="<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelpContent"/>"> --%>
 														<input type="hidden" id="cvvHelpContent" value="${cvvHelp}">
-						                            	<%-- <label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label> --%>
+						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label>
 						                           		<input type="password" autocomplete="new-password" class="security_code span1" name="cvv" maxlength="4" />
 						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelp"/></a>
 						                           		<span class="error-message" id="cvvErrorDc"></span> 
@@ -929,16 +929,16 @@
 					  										</select>
 													</div>
 						                            <div class="controls full">
-						                            	<%-- <label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardNo"/></label> --%>
-						                            	<input type="text" class="card_number" id="cardNoEmi" maxlength="16" autocomplete="off" placeholder="CARD NUMBER*"> 
+						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardNo"/></label>
+						                            	<input type="text" class="card_number" id="cardNoEmi" maxlength="16" autocomplete="off"> 
 						                            	 <!-- <input type="hidden" class="card_number" value="" /> -->  
 						                            	<input type="hidden" id="cardTypeEmi" disabled="disabled"/>
 						                            	<span class="error-message" id="cardNoErrorEmi"></span>
 													</div>
 						                            
 						                            <div class="controls full">
-						                            	<%-- <label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardName"/></label> --%>
-						                            	<input type="text" name="memberName" class="name_on_card name-card" maxlength="79" autocomplete="off" placeholder="NAME ON CARD*">
+						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardName"/></label>
+						                            	<input type="text" name="memberName" class="name_on_card name-card" maxlength="79" autocomplete="off">
 						                            	<span class="error-message" id="memberNameErrorEmi"></span>
 						                            </div>
 						                           
@@ -976,8 +976,8 @@
 														
 														<%-- <input type="hidden" id="cvvHelpContent" value="<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelpContent"/>"> --%>
 														<input type="hidden" id="cvvHelpContent" value="${cvvHelp}">
-						                            	<%-- <label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label> --%>
-						                           		<input type="password" autocomplete="new-password" class="security_code span1" name="cvv" maxlength="4" placeholder="CVV" />
+						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label>
+						                           		<input type="password" autocomplete="new-password" class="security_code span1" name="cvv" maxlength="4" />
 						                           		<%-- <a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelp"/></a> --%>
 						                           		<span class="error-message" id="cvvErrorEmi"></span> 
 						                            </div>
