@@ -546,10 +546,11 @@ public class PaymentServicesController extends BaseController
 	{
 		final PaymentServiceWsData updateTransactionDtls = new PaymentServiceWsData();
 		OrderModel orderModel = null;
-		OrderData orderData = null;
+		//OrderData orderData = null;
 		CartModel cart = null;
 		String failErrorCode = "";
 		boolean failFlag = false;
+		String orderCode = null;
 		LOG.debug(String.format("updateTransactionDetailsforCOD : CartId: %s | UserId : %s |", cartGuid, userId));
 		try
 		{
@@ -629,15 +630,18 @@ public class PaymentServicesController extends BaseController
 						}
 						else
 						{
-							orderData = mplCheckoutFacade.placeOrderByCartId(cartGuid);
-							if (orderData == null)
+							//CAR-110
+							//orderData = mplCheckoutFacade.placeOrderByCartId(cartGuid);
+							orderCode = mplCheckoutFacade.placeOrderByCartId(cart);
+							//Please note: order data is now just order code
+							if (orderCode == null)
 							{
 								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9321);
 							}
 							else
 							{
 								updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-								updateTransactionDtls.setOrderId(orderData.getCode());
+								updateTransactionDtls.setOrderId(orderCode);
 							}
 						}
 
