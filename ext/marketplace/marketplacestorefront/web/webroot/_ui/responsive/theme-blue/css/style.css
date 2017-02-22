@@ -61186,6 +61186,8 @@ text-transform:none;}
 	color:#666;
 	padding-bottom:0;
 	margin-bottom:0;
+	margin-top: 15px;
+    padding-top: 19px;
 }
 .cart.wrapper .right-block.billing .block.summary-info  ul.totals li#total span{
 	font-size:18px;
@@ -61201,8 +61203,8 @@ text-transform:none;}
 .checkout-payment h2.coupon{
 	font-size:16px;
 	text-transform:none;
-	margin-bottom:8px;
 	font-weight: normal;
+	letter-spacing: normal;
 }
 .cart.wrapper .right-block.billing.checkout-list-right .block.coupon{
 	padding:27px 28px 32px;
@@ -61215,8 +61217,86 @@ text-transform:none;}
 	color:#999;
 	margin-bottom:3px;
 }
+.cart.wrapper .right-block .block.coupon input{
+	border:1px solid #ddd;
+}
 .cart.wrapper .right-block.billing .block.coupon button{
 	background-color:#666;
+}
+.cart.wrapper .right-block.billing.checkout-list-right .order-details.block.delivery-info{
+	border:none;
+	padding: 15px 28px 37px 28px;
+}
+.cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info p{
+	color:#666;
+	margin-bottom: 10px;
+	line-height: normal;
+}
+.cart.wrapper .right-block.billing .block address,
+.cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info  span{
+	font-size:12px !important;
+	letter-spacing: 0.6px;
+	line-height:1.67;
+}
+.cart.wrapper .right-block.billing .block.bottom.order-details.delivery-info>address span b{
+	font-size:12px;
+	color:#000;
+	font-weight: normal;
+}
+.cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info hr{
+	border-top: solid 1px #ddd;;
+	margin: 24px 0;
+}
+.prd-info .item-adds{
+	color:#666;
+}
+.checkout-order-summary	.item .product-name a{
+	font-size:14px;
+	color:#000;
+	letter-spacing: 0.6px;
+}
+.cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info .item .product .prd-rate p{
+	font-size:12px;
+	color:#000;
+	letter-spacing: 0.6px;
+	text-transform:none;
+}
+.cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info .item .product .prd-rate p.delivery-price{
+	font-size:14px;
+	font-weight: normal;
+}
+.cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info .item-mthd{
+	border: solid 1px #dddddd;
+	font-size:12px;
+	padding: 8px 23px;
+    letter-spacing: normal;
+    margin-top: 16px;
+    line-height: normal;
+}
+.cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info .item-mthd h3{
+	color:#666;
+	letter-spacing: 0.6px;
+	margin-bottom: 8px;
+}
+.cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info .item-mthd p{
+	text-transform:none;
+	letter-spacing: 0.4px;
+	line-height: 18px;
+	padding-left:21px;
+	position:relative;
+}
+.cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info .item-mthd h3 + p.delivery-method-description:before{
+	background: url(../images/sprite.svg) no-repeat scroll -255px -174px;
+    content: "";
+    display: inline-block;
+    height: 15px;
+    position: absolute;
+    top: 0;
+    width: 15px;
+    left: -1px;
+}
+.cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info .item-mthd p.delivery-method-description-time{
+	color: #92002e;
 }
 /* right section end*/
 /* Payment Page change end */
