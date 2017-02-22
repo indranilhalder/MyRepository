@@ -5395,7 +5395,7 @@ function checkPincodeServiceability(buttonType,el)
 	{		
 		$("#unserviceablepincode").hide();
 		$("#unserviceablepincode_tooltip").hide();
-		 //$("#unserviceablepincode_tooltip_btm").hide();
+		$("#unserviceablepincode_tooltip_btm").hide();
 		$("#cartPinCodeAvailable").show();
 		 $(".pincodeServiceError").hide();
 		 $("#AvailableMessage").hide();

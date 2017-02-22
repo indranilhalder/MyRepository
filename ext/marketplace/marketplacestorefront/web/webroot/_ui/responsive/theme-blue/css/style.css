@@ -60328,7 +60328,7 @@ body.page-cartPage .cartBottomCheck input#pinCodeButtonIdsBtm{
 
 .page-cartPage .cart-total-block ul.checkOutBtnBtm{
 	float:right;
-	margin-top: 56px;
+	margin-top: 15px;
 }
 body.page-cartPage .cart-total-block ul.checkOutBtnBtm a.checkoutButton.checkout.button{
 	margin: 0;
@@ -60353,7 +60353,7 @@ body.page-cartPage .cartBottomCheck.cartBottomCheckShow,body.page-cartPage .cart
 body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm{
 	width:110px;
 	height:40px;
-	background:gray;
+	background:#666;
 	color:#fff;
 	margin-left: -3px;
 	font-size: 12px;
@@ -60749,7 +60749,7 @@ body.page-cartPage .cart.wrapper .product-block li.item > ul > li.delivery li{
 	padding-left:0px;
 	position:relative;
 }
-p#unserviceablepincode_tooltip,p#error-Id_tooltip,p#emptyId_tooltip,p#error-Id_tooltip_btm{	
+p#unserviceablepincode_tooltip,p#error-Id_tooltip,p#emptyId_tooltip,p#error-Id_tooltip_btm,p#unserviceablepincode_tooltip_btm,p#emptyId_tooltip_btm{	
 	width: 206px;
     position: absolute;
     right: -13px;
@@ -60761,13 +60761,20 @@ p#unserviceablepincode_tooltip,p#error-Id_tooltip,p#emptyId_tooltip,p#error-Id_t
     line-height: 15px;
     opacity:0;
 }
+p#error-Id_tooltip_btm,p#unserviceablepincode_tooltip_btm,p#emptyId_tooltip_btm{
+	position: relative;
+    top: 7px;
+    right: 13px;
+}
 	
-#checkout-id:hover p#unserviceablepincode_tooltip,#checkout-id:hover p#error-Id_tooltip,#checkout-id:hover p#emptyId_tooltip,#checkout-id-down:hover p#unserviceablepincode_tooltip_btm{
+#checkout-id:hover p#unserviceablepincode_tooltip,#checkout-id:hover p#error-Id_tooltip,#checkout-id:hover p#emptyId_tooltip,#checkout-id-down:hover p#error-Id_tooltip_btm,
+#checkout-id-down:hover p#unserviceablepincode_tooltip_btm,#checkout-id-down:hover p#emptyId_tooltip_btm{
 	opacity:1;
 	cursor: text !important;
 }
 	
-p#unserviceablepincode_tooltip:after,p#error-Id_tooltip:after,p#emptyId_tooltip:after {
+p#unserviceablepincode_tooltip:after,p#error-Id_tooltip:after,p#emptyId_tooltip:after,p#error-Id_tooltip_btm:after,
+p#unserviceablepincode_tooltip_btm:after,p#emptyId_tooltip_btm:after {
     content: "";
     display: block;
     width: 10px;
@@ -60782,7 +60789,10 @@ p#unserviceablepincode_tooltip:after,p#error-Id_tooltip:after,p#emptyId_tooltip:
     right: 0;
     margin: auto;
 }
-#emptyId_tooltip span, #unserviceablepincode_tooltip span, #error-Id_tooltip span{
+p#error-Id_tooltip_btm:after,p#unserviceablepincode_tooltip_btm:after,p#emptyId_tooltip_btm:after{
+	top:-5px;
+}
+#emptyId_tooltip span, #unserviceablepincode_tooltip span, #error-Id_tooltip span,#error-Id_tooltip_btm span,#unserviceablepincode_tooltip_btm span,#emptyId_tooltip_btm span{
 	color: #fb0007;
 }
 body.page-cartPage .cart.wrapper .product-block li.item > ul > li.delivery ul{
