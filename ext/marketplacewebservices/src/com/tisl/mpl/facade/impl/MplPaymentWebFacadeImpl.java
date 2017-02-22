@@ -1080,6 +1080,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 		//getting the current user
 		//final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
 		CustomerModel mplCustomer = null;
+		String custName = null;
 		if (null != cart)
 		{
 			mplCustomer = (CustomerModel) cart.getUser();
@@ -1091,14 +1092,16 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 				if (StringUtils.isNotEmpty(mplCustomer.getFirstName()) && !mplCustomer.getFirstName().equalsIgnoreCase(" "))
 				{
-					final String custName = mplCustomer.getFirstName();
+					custName = mplCustomer.getFirstName();
 					modelService.save(mplPaymentService.saveTPWalletPaymentInfo(custName, entries, cart, refernceCode));
 				}
+
 				else
 				{
-					final String custEmail = mplCustomer.getOriginalUid();
-					modelService.save(mplPaymentService.saveTPWalletPaymentInfo(custEmail, entries, cart, refernceCode));
+					custName = cart.getDeliveryAddress().getFirstname();
+					modelService.save(mplPaymentService.saveTPWalletPaymentInfo(custName, entries, cart, refernceCode));
 				}
+
 			}
 			mplPaymentService.paymentModeApportion(cart);
 		}

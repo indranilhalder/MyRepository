@@ -3176,6 +3176,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		//final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
 		CustomerModel mplCustomer = null;
 		final Map<String, Double> paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
+		String custName = null;
 
 		if (null != order)
 		{
@@ -3194,21 +3195,16 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			{
 				if (StringUtils.isNotEmpty(mplCustomer.getFirstName()) && !mplCustomer.getFirstName().equalsIgnoreCase(" "))
 				{
-					final String custName = mplCustomer.getFirstName();
-					//setting payment info for mRupee orders
-					//Commented for Mobile use
-					// getMplPaymentService().saveTPWalletPaymentInfo(custName, entries, cart, request);
+					custName = mplCustomer.getFirstName();
 					modelService.save(getMplPaymentService().saveTPWalletPaymentInfo(custName, entries, order, refernceCode));
 				}
+
 				else
 				{
-
-					final String custEmail = mplCustomer.getOriginalUid();
-					//Commented for Mobile use
-					//					getMplPaymentService().saveTPWalletPaymentInfo(custEmail, entries, cart, request);
-					modelService.save(getMplPaymentService().saveTPWalletPaymentInfo(custEmail, entries, order, refernceCode));
-
+					custName = StringUtils.trim(order.getDeliveryAddress().getFirstname());
+					modelService.save(getMplPaymentService().saveTPWalletPaymentInfo(custName, entries, order, refernceCode));
 				}
+
 			}
 			getMplPaymentService().paymentModeApportion(order);
 
