@@ -4,6 +4,7 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.wishlist2.enums.Wishlist2EntryPriority;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
@@ -11,6 +12,8 @@ import de.hybris.platform.wishlist2.model.Wishlist2Model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,8 @@ public class MplWishlistServiceImpl implements MplWishlistService
 	private boolean saveAnonymousWishlists;
 	@Autowired
 	private MplWishlistDao mplWishlistDao;
+	@Resource
+	private UserService userService;
 
 	/**
 	 * @description This method is used to accumulate all detail of product to add to wishlist
@@ -242,8 +247,10 @@ public class MplWishlistServiceImpl implements MplWishlistService
 	 * @return Wishlist2EntryModel
 	 */
 	@Override
-	public Wishlist2EntryModel findWishlistEntryByProductAndUssid(final String ussid)
+	public List<Wishlist2EntryModel> findWishlistEntryByProductAndUssid(final String ussid)
 	{
-		return getMplWishlistDao().findWishlistEntryByProductAndUssid(ussid);
+		//CAR Project performance issue fixed
+		final UserModel user = userService.getCurrentUser();
+		return getMplWishlistDao().findWishlistByUserAndUssid(user, ussid);
 	}
 }

@@ -236,20 +236,12 @@ public class DefaultWishlistFacade implements WishlistFacade
 		{
 			LOG.debug("addProductToWishlist in Mobile : *****productCode: " + productCode + " **** ussid: " + ussid
 					+ " *** selectedSize: " + selectedSize);
-			Wishlist2EntryModel wishlist2Entry = null;
+			List<Wishlist2EntryModel> wishlist2Entry = null;
 
 			wishlist2Entry = mplWishlistService.findWishlistEntryByProductAndUssid(ussid);
-			ProductModel product = null;
-			if (null != wishlist2Entry)
-			{
-				product = wishlist2Entry.getProduct();
 
-				if ((null != product) && (productCode.equals(product.getCode())) && (ussid.equals(wishlist2Entry.getUssid())))
-				{
-					add = false;
-				}
-			}
-			if (add)
+			ProductModel product = null;
+			if (CollectionUtils.isEmpty(wishlist2Entry))
 			{
 				product = productService.getProductForCode(productCode);
 				final String comment = MplConstants.MPL_WISHLIST_COMMENT;
@@ -258,6 +250,10 @@ public class DefaultWishlistFacade implements WishlistFacade
 					mplWishlistService.addWishlistEntry(wishlist, product, Integer.valueOf(1), Wishlist2EntryPriority.HIGH, comment,
 							ussid, selectedSize);
 				}
+			}
+			else
+			{
+				add = false;
 			}
 		}
 		catch (final Exception ex)
