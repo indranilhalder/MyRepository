@@ -61,7 +61,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 		if (orderEntry != null)
 		{
-
+			LOG.info("In NPSEmaiContext orderEntry is not null>>>>>>>>>>" + orderEntry);
 			final ProductModel productInfo = orderEntry.getProduct();
 			final String productName = productInfo.getName();
 			put(PRODUCT_NAME, productName);
@@ -148,7 +148,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 			put(WEBSITE_URL, websiteUrl);
 		}
 
-
+		LOG.info("All the NPSEmailContext data have been set sucessfully in context file>>>>>>>>>>");
 
 	}
 
