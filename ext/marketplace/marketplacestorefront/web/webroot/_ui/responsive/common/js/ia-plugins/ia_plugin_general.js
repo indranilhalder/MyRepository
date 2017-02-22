@@ -360,10 +360,6 @@ function callRecApi(params, requestURL) {
   start = new Date(); 
   console.log("START TIME "+ start.getHours() + ":" + start.getMinutes() + ":" + start.getSeconds()); 
 
-function callRecApi(params, requestURL) { 
-	start = new Date(); 
-	console.log("START TIME "+ start.getHours() + ":" + start.getMinutes() + ":" + start.getSeconds()); 
-
   jQuery.extend(params, emailCheck());
   
   return jQuery.ajax({ 
