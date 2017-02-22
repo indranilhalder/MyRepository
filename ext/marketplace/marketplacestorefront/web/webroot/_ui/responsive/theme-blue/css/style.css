@@ -476,7 +476,7 @@ body.page-shopTheStyle .timeout-slider .owl-controls .owl-dots {
 .temp4-features .contOvrlay {
     position: relative;
 }
-.temp4-features li .show_des {
+/* .temp4-features li .show_des {
     content: '';
     background: url(../images/sprite1.svg) no-repeat -296px -77px;
     width: 26px;
@@ -486,6 +486,39 @@ body.page-shopTheStyle .timeout-slider .owl-controls .owl-dots {
     position: absolute;
     right: 0;
     cursor: pointer;
+} */
+/* TISSQAUAT-453 */
+.temp4-features li .show_des {
+        width: 26px;
+    height: 26px;
+    display: block;
+    bottom: 0;
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+    z-index:101;
+}
+.temp4-features li .show_des:before{  
+    width: 26px;
+    height: 26px;
+    display: block;
+    bottom: 0;
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+    content: "+";
+    font-family: FontAwesome;
+    color: #fff;
+    font-size: 28px;
+    background-color: #000;
+    padding-left: 6px;
+    z-index:100;
+}
+.temp4-features li .hide_des:before{	
+    content: "_";
+    line-height: 2px;
+    padding-left: 6px;
+    margin-bottom: 5px;
 }
 .temp4-features li .contOvrlay .media-content {
     background: #000000;
@@ -510,6 +543,8 @@ body.page-shopTheStyle .timeout-slider .owl-controls .owl-dots {
     font-size: 14px;
     letter-spacing: 0.3px;
     line-height: 20px;
+    padding-left: 5px;
+    word-break: break-word;
 }
 .temp4-features li .media-content h4:after {
     content: '';
@@ -34732,7 +34767,7 @@ margin-right: 9px;
 	.temp4-features li .contOvrlay .media-content p {
         font-size: 12px;
         letter-spacing: 0;
-        line-height: 12px;
+        line-height: 14px;
    }
 }
 @media(min-width:1025px){
