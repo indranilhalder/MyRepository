@@ -22,6 +22,6 @@
 <input type="hidden" id="page_subcategory_name" value='${pageSubCategories}'/>
 <input type="hidden" id="page_subcategory_name_l3" value='${page_subcategory_name_L3}'/>
 <!-- TPR-4831 -->
-<input type="hidden" id="page_subcategory_L1" value='${pageSubCategories}'/>
-<input type="hidden" id="page_subcategory_L2" value='${productCategoryList}'/>
+<input type="hidden" id="page_subcategory_L1" value='${productCategoryList}'/>
+<input type="hidden" id="page_subcategory_L2" value='${pageSubCategories}'/>
 <input type="hidden" id="page_subcategory_l3" value='${page_subcategory_name_L3}'/>

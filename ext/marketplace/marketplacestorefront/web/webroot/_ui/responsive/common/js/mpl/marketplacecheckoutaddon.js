@@ -4634,6 +4634,8 @@ function applyPromotion(bankName,binValue,formSubmit)
 								else{								
 									$("#bankNameForEMI, #listOfEMiBank , .bank-label").css("display","none");
 									$("#emiRangeError").css("display","block");
+									//TPR-4746
+									paymentErrorTrack("emi_unavailable");
 								}
 								
 							},
@@ -4654,6 +4656,8 @@ function applyPromotion(bankName,binValue,formSubmit)
 				    	if(null!=response.errorMsgForEMI){
 				    		$("#emiPromoError").css("display","block");
 				    		$("#emiPromoError").text(response.errorMsgForEMI);
+				    		//TPR-4746
+							paymentErrorTrack("emi_unavailable");
 				    	}
 						$.ajax({
 							url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/getTerms",
@@ -4698,6 +4702,8 @@ function applyPromotion(bankName,binValue,formSubmit)
 								else{
 									$("#radioForEMI").css("display","none");
 									$("#emiNoBankError").show();
+									//TPR-4746
+									paymentErrorTrack("emi_unavailable");
 								}
 							},
 							error : function(resp) {
