@@ -54183,7 +54183,7 @@ body .lookbook_wrapper .listing.wrapper .left-block{
 
 @media only screen and (max-width: 1450px) {
     .checkTab .choose-address {
-        padding: 15px 20px;
+        padding: 15px 16px;
         margin-bottom: 20px;
     }
 
@@ -60813,7 +60813,8 @@ body.page-multiStepCheckoutSummaryPage .checkout.wrapper .left-block .checkout-h
 .checkout-content.delivery .checkout-shipping.left-block .checkout-table.product-block.mybag-items.checkout-items .deliveryModeLabel{
 	    font-size: 14px;
 	    text-transform: none; 
-	    line-height:inherit;   
+	    line-height:inherit; 
+	    font-weight: normal;  
 }
 .checkout-content.delivery .checkout-shipping.left-block li.delivery ul li.home-delivery input[type="radio"]:checked ~ label,
 .checkout-content.delivery .checkout-shipping.left-block li.home-delivery input[type="radio"]:checked ~ label:after,
@@ -61029,8 +61030,8 @@ span.default input[type="radio"]+label:before {
 	padding-left:0;
 }
 .addNew_wrapper .addnewAddresPage .formaddress{
-	 width: calc(50% - 10px) !important;
-	 margin-left:20px;
+	 width: calc(50% - 6px) !important;
+	 margin-left:12px;
 }
 @media (min-width: 768px){
 #deliveryAddressSubmitUp{
@@ -61061,11 +61062,11 @@ span.default input[type="radio"]+label:before {
 }
 }
 .checkTab .address-list{
-	margin-right: 20px;
+	margin-right: 12px;
 }
 .add-address {
     margin: 0 auto;
-    margin-left: 20px;
+    margin-left: 12px;
 }
 .addsign:before {
     content: "+";
@@ -61082,7 +61083,7 @@ content: "-";
     width: 100%;
 }
 .checkTab .address-list, .checkTab .add-address, .checkTab .add-address_viewMore.viewMoreContainer, .checkTab .moreEvens_address .add-address_viewMore.viewMoreContainer {
-    width: calc(50% - 10px);
+    width: calc(50% - 6px);
 }
 .checkTab .add-address_viewMore.viewMoreContainer {
     float: left;
@@ -61096,7 +61097,7 @@ content: "-";
 }
 @media only screen and (max-width: 1350px){
 .checkTab .address-list {
-    margin-right: 20px;
+    margin-right: 12px;
 }
 }
 @media (max-width: 980px){
@@ -61107,6 +61108,7 @@ content: "-";
     width: 93%;
     margin: 0px auto;
     float: none !important;
+    clear: both;
 }
 .checkTab .add-address_viewMore.viewMoreContainer, .checkTab .moreEvens_address .add-address_viewMore.viewMoreContainer{
 	margin: 0px auto 20px;
@@ -61143,8 +61145,24 @@ text-transform:none;}
 	margin-top: 15px;
 	background-color: #a5173c !important;
 } 
-
-
+.checkTab .addNew_wrapper.no_address .add-address{
+	float:none !important;
+}
+.address-list .address .name + span{
+	line-height: 18px;
+} 
+.checkTab .address-list .address{
+	letter-spacing: 0.6px;
+}
+.checkout-table.product-block.mybag-items.checkout-items  .mybag-item-head {
+    margin: 27px 0 8.5px;
+    }
+    .checkout.wrapper .left-block  .checkout-shipping-items .checkout-headers h1{
+    	padding-bottom:2px;
+    }
+footer .banner{
+	border-top: solid 1px #eeeeee;
+}
 
 /*Choose Address Page end*/
 /*checkout pages end*/
