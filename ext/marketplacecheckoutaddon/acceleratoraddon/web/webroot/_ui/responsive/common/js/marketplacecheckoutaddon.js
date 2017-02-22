@@ -1572,6 +1572,9 @@ $("#otpMobileNUMField").focus(function(){
 	var password = $(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").val();
 	var ebsDownCheck=$("#ebsDownCheck").val();
 	var isDomestic=$(".card_token").parent().parent().parent().find('.card').find('.radio').find('.card_is_domestic').val();
+	  //TISRLEE-3196 Start
+	  $("#cvvError").css("display", "none");
+	  //TISRLEE-3196 END
 	if (password.length < 3 && 	$(".card_brand").val()!="MAESTRO"){
 		$(".card_cvvErrorSavedCard").css("display","block");		
 		return false;
