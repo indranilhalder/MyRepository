@@ -535,5 +535,10 @@ public class MarketplacewebservicesConstants
 	public static final String WARRANTY = "Warranty";
 	public static final String PDP_DESC_TAB = "pdp.desc.tab.".intern();
 	public static final String TO = "TO";
+	public static final String RETURN_SELF_COURIER_FILE_DOWNLOAD_URL = "/my-account/returns/returnFileDownload?orderCode=";
+	public static final String TRANSACTION_ID ="transactionId";
+	public static final String AMPERSAND = "&";
+	public static final String EQUALS_TO = "=";
+	
 
 }

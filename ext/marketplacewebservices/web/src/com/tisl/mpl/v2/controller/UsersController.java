@@ -7077,7 +7077,7 @@ public class UsersController extends BaseCommerceController
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/{emailId}/returnRequest", method = RequestMethod.GET, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public ReturnDetailsWsDTO getReturnDetailsForOrderItem(@RequestParam final String orderCode,
+	public ReturnDetailsWsDTO getReturnDetailsForOrderItem(final HttpServletRequest request ,@RequestParam final String orderCode,
 			final String transactionId, final String userId, @RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields) throws Exception
 	{
 		String sellerRichAttrOfQuickDrop = null;
@@ -7159,38 +7159,54 @@ public class UsersController extends BaseCommerceController
 			dataList.setOrderEntries(returnOrderEntry);
 			OrderEntryListWsDTO returndto = dataMapper.map(dataList, OrderEntryListWsDTO.class, fields);
 			//OrderDataWsDTO orderDto = getOrderDetailsFacade.getOrderdetails(subOrderModel.getParentReference().getCode());
-			String fileDownloadLocation=null;
-			try{
-         //TISRLUAT-818	start
-			  AbstractOrderEntryModel entry= mplOrderService.getEntryModel(transactionId);
-		
-					if (entry != null)
-					{
-						//Fetching invoice from consignment entries
-						for (final ConsignmentEntryModel c : entry.getConsignmentEntries())
-						{
-							if (null != c.getConsignment().getInvoice())
-							{
-								fileDownloadLocation = c.getConsignment().getInvoice().getInvoiceUrl();
-								LOG.info(":::::::InvoiceURL    " + fileDownloadLocation);
-								if (fileDownloadLocation == null)
-								{
-									fileDownloadLocation = configurationService.getConfiguration().getString("default.invoice.url");
-								}
-							}
-							else
-							{
+			 //TISRLUAT-818	start
+			      String requestUrl = String.valueOf(request.getRequestURL());
+					requestUrl=requestUrl.replaceAll(request.getRequestURI(), "");
+					LOG.debug("host in Request URl :"+requestUrl);
+				    StringBuilder sb = new StringBuilder(requestUrl);
+					sb.append(MarketplacewebservicesConstants.RETURN_SELF_COURIER_FILE_DOWNLOAD_URL);
+					sb.append(orderCode);
+					sb.append(MarketplacewebservicesConstants.AMPERSAND);
+					sb.append(MarketplacewebservicesConstants.TRANSACTION_ID);
+					sb.append(MarketplacewebservicesConstants.EQUALS_TO);
+					sb.append(transactionId);
+					String SelfCourierDocumentLink = String.valueOf(sb);
+					if(LOG.isDebugEnabled()) {
+						LOG.debug("Self Courier return file download location for transaction id "+transactionId+" with order code  "+orderCode+" is "+SelfCourierDocumentLink);
+					}
+					returnDeatails.setSelfCourierDocumentLink(SelfCourierDocumentLink);
 
-								fileDownloadLocation = configurationService.getConfiguration().getString("default.invoice.url");
-
-							}
-						}
-			  }
-			}
-				catch (Exception exp)
-				{
-					LOG.error("Exception Oucer Get Consignment "+exp.getMessage());
-				}
+//			try{
+//        
+//			  AbstractOrderEntryModel entry= mplOrderService.getEntryModel(transactionId);
+//		
+//					if (entry != null)
+//					{
+//						//Fetching invoice from consignment entries
+//						for (final ConsignmentEntryModel c : entry.getConsignmentEntries())
+//						{
+//							if (null != c.getConsignment().getInvoice())
+//							{
+//								fileDownloadLocation = c.getConsignment().getInvoice().getInvoiceUrl();
+//								LOG.info(":::::::InvoiceURL    " + fileDownloadLocation);
+//								if (fileDownloadLocation == null)
+//								{
+//									fileDownloadLocation = configurationService.getConfiguration().getString("default.invoice.url");
+//								}
+//							}
+//							else
+//							{
+//
+//								fileDownloadLocation = configurationService.getConfiguration().getString("default.invoice.url");
+//
+//							}
+//						}
+//			  }
+//			}
+//				catch (Exception exp)
+//				{
+//					LOG.error("Exception Oucer Get Consignment "+exp.getMessage());
+//				}
 			 //TISRLUAT-818 end
 			try
 			{
@@ -7211,7 +7227,7 @@ public class UsersController extends BaseCommerceController
 			}
 			returnDeatails.setDeliveryAddressesList(addressList);
 			//returnDeatails.setOrderDetails(orderDto);
-			returnDeatails.setSelfCourierDocumentLink(fileDownloadLocation);
+			
 			returnDeatails.setDeliveryAddress(subOrderDetails.getDeliveryAddress());
 			returnDeatails.setReturnEntry(returndto);
 			returnDeatails.setProductRichAttrOfQuickDrop(productRichAttrOfQuickDrop);
