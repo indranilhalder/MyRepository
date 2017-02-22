@@ -214,6 +214,7 @@ function refresh(){
 	// TISEE-5555
 	$('.security_code_hide').prop('disabled', true);
 	$('.security_code').prop('disabled', false); 
+	$(".cart.wrapper .left-block .payments.tab-view .tabs > li").hide();
 }
 
 
@@ -239,7 +240,7 @@ function displayNetbankingForm(){
 	refresh();
 	$("#paymentMode").val("Netbanking");
 	$("#paymentModeValue").val("Netbanking");
-	
+	$("#netbanking").css("display","block");
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setupMplNetbankingForm",
 		type: "GET",
@@ -268,6 +269,7 @@ function displayNetbankingForm(){
 
 function displayEMIForm(){
 	refresh();
+	$("#emi").css("display","block");
 	var select = document.getElementById("bankNameForEMI");
 	var length = select.options.length;
 	for (i = 0; i < length; i++) {
@@ -402,6 +404,7 @@ function displayCODForm()
 	// applyPromotion(null);
 	$("#paymentMode").val("COD");
 	$("#paymentModeValue").val("COD");
+	$("li#COD").css("display","block");
 	var paymentMode=$("#paymentMode").val();
 	//var cartValue=$("#cartValue").val();
 	var httpRequest=$("#httpRequest").val();
@@ -540,6 +543,7 @@ function displayDCForm(){
 	$("#is_emi").val("false");
 	//$("#card, #dcHeader, #savedCard, #savedDebitCard, .make_payment").show();
 	//$("#ccHeader, #savedCreditCard, #billingAddress").hide();
+	$("#cardDebit").css("display","block");
 	$("input[name=debitCards]:radio.card_token,input[name=creditCards]:radio.card_token,input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	$("input[name=debitCards]:radio").first().removeClass("card_token_hide").addClass("card_token");
 	$(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide");

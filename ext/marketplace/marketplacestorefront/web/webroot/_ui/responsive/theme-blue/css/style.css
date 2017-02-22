@@ -6075,7 +6075,7 @@ text-transform: uppercase;
     top: 0;
     margin-top:0px;
 }
-   /*     .cart.wrapper .left-block .payments.tab-view .nav, .confirmation .left-block .payments.tab-view .nav {
+   .cart.wrapper .left-block .payments.tab-view .nav, .confirmation .left-block .payments.tab-view .nav {
       width: 25%;
       float: left;
       padding-right: 5px; } 
@@ -6086,7 +6086,7 @@ text-transform: uppercase;
     color: #4A4A4A;
     height: 46px;
     cursor: pointer;
-    background: #EDEEF0;}*/
+    background: #EDEEF0;}
        
         .cart.wrapper .left-block .payments.tab-view .nav li span.mobile-back, .confirmation .left-block .payments.tab-view .nav li span.mobile-back {
           display: none; }
@@ -6289,7 +6289,7 @@ text-transform: uppercase;
           border-right: none;  */
           height: 45px;
    	 	  line-height: 45px;}
-   	 	/*   .cart.wrapper .left-block .payments.tab-view .nav li span{
+   	 	  .cart.wrapper .left-block .payments.tab-view .nav li span{
            	display: block;
     		height: 45px;
     		line-height: 45px !important;
@@ -6298,7 +6298,7 @@ text-transform: uppercase;
     		line-height: 45px;
     		padding: 0 15px;
 
-           } */
+           }
 
           .cart.wrapper .left-block .payments.tab-view .nav li.active, .confirmation .left-block .payments.tab-view .nav li.active {
             padding-left: 0; }
@@ -32149,8 +32149,8 @@ body .account .right-account .order-history .product-block li.item .product-name
 	width:42%;
 }
 @media (min-width:651px){
-		/*  .cart.wrapper .left-block .payments.tab-view .nav li span{
-	 padding:16px 10px;} */
+		.cart.wrapper .left-block .payments.tab-view .nav li span{
+	 padding:16px 10px;} 
 	 .listing-leftmenu .Colour li span {
     display: none;
     position: absolute;
@@ -54935,83 +54935,75 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 .checkout-payment h2 { font-size: 24px; font-weight: bold; color: #202020; text-transform:uppercase; }
 .cart.wrapper.checkout-payment p.cart-items { color: #000000; font-size: 14px; padding:10px 0 25px 0; letter-spacing:1px;}
 .cart.wrapper.checkout-payment p.cart-items .prices { font-size:24px; color:#a7183e; font-weight:bold; }
-.checkout-list .acc_head{ letter-spacing:0.5px; }
-.choose-payment .smk_accordion{ padding:0;}
-.smk_accordion { position: relative; margin: 0; padding: 0; list-style: none; margin-bottom: 20px; /* padding: 120px 0 0; */}
-.smk_accordion .accordion_in { background: #fff url(../images/down-arrow.png) 96% 36px no-repeat; border: 1px solid #e4e4e4; cursor:pointer; position: relative; margin-bottom: 9px; overflow: hidden; z-index: 10; }
-.smk_accordion .accordion_in.acc_active { background: url(../images/up-arrow.png) 96% 36px no-repeat; }
-.smk_accordion .accordion_in .acc_head { position: relative; font-size: 24px; font-weight:bold; display: block; cursor: pointer; text-transform:uppercase;     letter-spacing: 0.5px;}
-.smk_accordion .accordion_in .acc_head span{ padding: 28px 0 25px 30px; display:block;}
-.smk_accordion .accordion_in .acc_content, #COD{ background-color:#f8f8f8; margin:0 145px 30px 30px; cursor:text; }
-.smk_accordion .accordion_in .acc_content .blocks { font-weight:bold; padding:46px 66px 30px 66px; text-transform:uppercase; }
-.smk_accordion .accordion_in .acc_content .blocks.netbankingPanel {  padding-bottom:0px;}
-.smk_accordion .accordion_in .acc_content .blocks h3 { font-size: 16px; padding-bottom :15px; letter-spacing:.8px; font-weight:500;}
-.smk_accordion .accordion_in .acc_content .blocks .mycards { color:#a7183e; display:block; font-size:16px; padding-bottom:15px; }
-.smk_accordion .accordion_in .acc_content .blocks .card-sec {border:1px solid #dbdbdb; background-color:#fff; font-weight:normal; padding:8px 15px 13px 14px; margin-top:10px; }
-.smk_accordion .accordion_in .acc_content .blocks .card-sec:first-child {margin-top:0px; }
-.smk_accordion .accordion_in .acc_content .card-sec .card-num .visa { margin-right:12px; }
-.smk_accordion .accordion_in .acc_content .card-sec .card-num .card_image { float:left;     margin-bottom: 30px;}
-.smk_accordion .accordion_in .acc_content .card-sec .card-num .saved{ color:#a5a5a5; display:block; font-size:13px;padding:0 0 10px 20px; text-transform:capitalize; }
-.smk_accordion .accordion_in .acc_content .card-sec .card-num .numbers { font-size:14px; line-height:18px; font-weight: normal;}
-.smk_accordion .accordion_in .acc_content .card-sec .digits { padding-left:54px; }
-.smk_accordion .accordion_in .acc_content .card-sec .digits label { font-size:13px; padding-bottom:8px; text-transform:capitalize; }
-.smk_accordion .accordion_in .acc_content .card-sec .digits .select-box { display:block;  }
-.smk_accordion .accordion_in .acc_content .card-sec .digits .select-box input { background-color:#fff; border:1px solid #dbdbdb; height:38px; width:90px; }
-.smk_accordion .accordion_in .acc_content .card-sec .digits .select-box .tick { padding-left:10px; }
+ .cart.wrapper.checkout-payment .blocks { font-weight:bold; padding:46px 66px 30px 66px; text-transform:uppercase; }
+.cart.wrapper.checkout-payment .blocks.netbankingPanel {  padding-bottom:0px;}
+.cart.wrapper.checkout-payment .blocks h3 { font-size: 16px; padding-bottom :15px; letter-spacing:.8px; font-weight:500;}
+.cart.wrapper.checkout-payment .blocks .mycards { color:#a7183e; display:block; font-size:16px; padding-bottom:15px; }
+.cart.wrapper.checkout-payment .blocks .card-sec {border:1px solid #dbdbdb; background-color:#fff; font-weight:normal; padding:8px 15px 13px 14px; margin-top:10px; }
+.cart.wrapper.checkout-payment .blocks .card-sec:first-child {margin-top:0px; }
+.cart.wrapper.checkout-payment .card-sec .card-num .visa { margin-right:12px; }
+.cart.wrapper.checkout-payment .card-sec .card-num .card_image { float:left;     margin-bottom: 30px;}
+.cart.wrapper.checkout-payment .card-sec .card-num .saved{ color:#a5a5a5; display:block; font-size:13px;padding:0 0 10px 20px; text-transform:capitalize; }
+.cart.wrapper.checkout-payment .card-sec .card-num .numbers { font-size:14px; line-height:18px; font-weight: normal;}
+.cart.wrapper.checkout-payment .card-sec .digits { padding-left:54px; }
+.cart.wrapper.checkout-payment .card-sec .digits label { font-size:13px; padding-bottom:8px; text-transform:capitalize; }
+.cart.wrapper.checkout-payment .card-sec .digits .select-box { display:block;  }
+.cart.wrapper.checkout-payment .card-sec .digits .select-box input { background-color:#fff; border:1px solid #dbdbdb; height:38px; width:90px; }
+.cart.wrapper.checkout-payment .card-sec .digits .select-box .tick { padding-left:10px; }
 
-.smk_accordion .accordion_in .acc_content .blocks .new-card {   }
-.smk_accordion .accordion_in .acc_content .blocks .new-card input,
-.smk_accordion .accordion_in .acc_content .blocks.net-bank input { border:1px solid #dbdbdb; height:45px; width:100%}
-.smk_accordion .accordion_in .acc_content .blocks .new-card p,
-.smk_accordion .accordion_in .acc_content .blocks.net-bank p { color:#a7183e; font-size: 16px;  }
-.smk_accordion .accordion_in .acc_content .blocks .new-card p { padding:29px 0 13px 0; }
-.smk_accordion .accordion_in .acc_content .blocks.net-bank p { padding:0 0 16px 0; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card  .name-card { margin:30px 0; width:100%; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card .cardNumber input,
-.smk_accordion .accordion_in .acc_content .blocks.net-bank .cardNumber input { width:21.1%; margin-right:4.5%; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card .cardNumber input.last,
-.smk_accordion .accordion_in .acc_content .blocks.net-bank .cardNumber input.last { float:right; margin-right:0; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card .cardExpiration { padding-bottom:28px; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card .expires { color:#a5a5a5; display:block; font-size:14px; font-weight:normal; text-transform:capitalize; padding-bottom:12px; width:100%;margin-bottom:0px; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card .card_exp_month,.smk_accordion .accordion_in .acc_content .blocks .new-card .card_exp_year { margin-right:8.5%; width:40.77%; height:45px; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card .cardExpiration .csc { float:right; width:47%; background:url(../images/xxx.png) right 6px no-repeat #fff; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card .remember { display:block; width:100%; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card .remember input[type="checkbox"] { visibility:hidden;  }
-.smk_accordion .accordion_in .acc_content .blocks .new-card .remember input[type="checkbox"] + label{ color:#999999; font-size:14px; font-weight:normal; padding:0; line-height:26px; width:96%; letter-spacing:0.5px;    text-transform: uppercase; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card .remember input[type="checkbox"] + label:before{ transition: none 0s ease 0s ;background: url("../images/payment-checbox.png") no-repeat scroll left top;    border: 0 none;    box-shadow: none;    height: 18px;    outline: medium none;    width: 18px;}
-.smk_accordion .accordion_in .acc_content .blocks .new-card .remember input[type="checkbox"]:checked + label:before{background: url("../images/payment-checbox.png") no-repeat scroll left bottom;}
-.smk_accordion .accordion_in .acc_content .terms .redirect { padding:16px 0 30px 30px;   text-transform: none; width:100%; font-weight:normal; font-size:14px; color:#333; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card button,
-.smk_accordion .accordion_in .acc_content .blocks.net-bank button { background:#a7183e; color:#fff; font-size:14px; font-weight:normal; height:47px; text-align:center; width:204px; padding:0; }
+.cart.wrapper.checkout-payment .blocks .new-card {   }
+.cart.wrapper.checkout-payment .blocks .new-card input,
+.cart.wrapper.checkout-payment .blocks.net-bank input { border:1px solid #dbdbdb; height:45px; width:100%}
+.cart.wrapper.checkout-payment .blocks .new-card p,
+.cart.wrapper.checkout-payment .blocks.net-bank p { color:#a7183e; font-size: 16px;  }
+.cart.wrapper.checkout-payment .blocks .new-card p { padding:29px 0 13px 0; }
+.cart.wrapper.checkout-payment .blocks.net-bank p { padding:0 0 16px 0; }
+.cart.wrapper.checkout-payment .blocks .new-card  .name-card { margin:30px 0; width:100%; }
+.cart.wrapper.checkout-payment .blocks .new-card .cardNumber input,
+.cart.wrapper.checkout-payment .blocks.net-bank .cardNumber input { width:21.1%; margin-right:4.5%; }
+.cart.wrapper.checkout-payment .blocks .new-card .cardNumber input.last,
+.cart.wrapper.checkout-payment .blocks.net-bank .cardNumber input.last { float:right; margin-right:0; }
+.cart.wrapper.checkout-payment .blocks .new-card .cardExpiration { padding-bottom:28px; }
+.cart.wrapper.checkout-payment .blocks .new-card .expires { color:#a5a5a5; display:block; font-size:14px; font-weight:normal; text-transform:capitalize; padding-bottom:12px; width:100%;margin-bottom:0px; }
+.cart.wrapper.checkout-payment .blocks .new-card .card_exp_month,.cart.wrapper.checkout-payment .blocks .new-card .card_exp_year { margin-right:8.5%; width:40.77%; height:45px; }
+.cart.wrapper.checkout-payment .blocks .new-card .cardExpiration .csc { float:right; width:47%; background:url(../images/xxx.png) right 6px no-repeat #fff; }
+.cart.wrapper.checkout-payment .blocks .new-card .remember { display:block; width:100%; }
+.cart.wrapper.checkout-payment .blocks .new-card .remember input[type="checkbox"] { visibility:hidden;  }
+.cart.wrapper.checkout-payment .blocks .new-card .remember input[type="checkbox"] + label{ color:#999999; font-size:14px; font-weight:normal; padding:0; line-height:26px; width:96%; letter-spacing:0.5px;    text-transform: uppercase; }
+.cart.wrapper.checkout-payment .blocks .new-card .remember input[type="checkbox"] + label:before{ transition: none 0s ease 0s ;background: url("../images/payment-checbox.png") no-repeat scroll left top;    border: 0 none;    box-shadow: none;    height: 18px;    outline: medium none;    width: 18px;}
+.cart.wrapper.checkout-payment .blocks .new-card .remember input[type="checkbox"]:checked + label:before{background: url("../images/payment-checbox.png") no-repeat scroll left bottom;}
+.cart.wrapper.checkout-payment .terms .redirect { padding:16px 0 30px 30px;   text-transform: none; width:100%; font-weight:normal; font-size:14px; color:#333; }
+.cart.wrapper.checkout-payment .blocks .new-card button,
+.cart.wrapper.checkout-payment .blocks.net-bank button { background:#a7183e; color:#fff; font-size:14px; font-weight:normal; height:47px; text-align:center; width:204px; padding:0; }
 
-.smk_accordion .accordion_in .acc_content .blocks.net-bank .cardNumber input { margin-bottom:20px; }
-.smk_accordion .accordion_in .acc_content .blocks.net-bank .trigger,
-.smk_accordion .accordion_in .acc_content .blocks.net-bank .activetrigger { font-size:14px; width:97%; padding:14px 10px; font-weight:normal; letter-spacing:1px; color:#000; }
-.smk_accordion .accordion_in .acc_content .blocks.net-bank .dropcontainer ul { width:93.3%; font-weight:normal; padding:0; }
-.smk_accordion .accordion_in .acc_content .blocks.net-bank .dropcontainer li { padding:10px; }
-.smk_accordion .accordion_in .acc_content .terms .redirect { font-size:14px; font-weight:normal; padding: 16px 0 30px 30px; text-transform: none;width: 100%;}
-.smk_accordion .accordion_in .acc_content .terms .redirect{ padding-left:0px;}
+.cart.wrapper.checkout-payment .blocks.net-bank .cardNumber input { margin-bottom:20px; }
+.cart.wrapper.checkout-payment .blocks.net-bank .trigger,
+.cart.wrapper.checkout-payment .blocks.net-bank .activetrigger { font-size:14px; width:97%; padding:14px 10px; font-weight:normal; letter-spacing:1px; color:#000; }
+.cart.wrapper.checkout-payment .blocks.net-bank .dropcontainer ul { width:93.3%; font-weight:normal; padding:0; }
+.cart.wrapper.checkout-payment .blocks.net-bank .dropcontainer li { padding:10px; }
+.cart.wrapper.checkout-payment .terms .redirect { font-size:14px; font-weight:normal; padding: 16px 0 30px 30px; text-transform: none;width: 100%;}
+.cart.wrapper.checkout-payment .terms .redirect{ padding-left:0px;}
 .terms { background:#fff; font-size:13px; text-align:left;padding-left:30px;}
 .saved-card-button + .terms { background:inherit;    font-weight: normal;text-transform: none; }
-.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del .terms p { color:#000;font-size:13px;text-transform:none;    line-height: inherit;}
+.cart.wrapper.checkout-payment .blocks .cash .cont-del .terms p { color:#000;font-size:13px;text-transform:none;    line-height: inherit;}
 .conditions { color:#a7183e; display:block; margin-top:10px; text-transform:uppercase; line-height:13px;}
 
-.smk_accordion .accordion_in .acc_content .blocks .cash { font-size:14px; }
-.smk_accordion .accordion_in .acc_content .blocks .cash p { color:#a7183e; line-height:26px; }
-.smk_accordion .accordion_in .acc_content .blocks .cash h4  { padding:8px 0 30px 0; text-transform:none; font-weight:normal; }
-.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del p { padding:0; }
-.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input { height:45px; margin:7px 0 10px 0; width: 85%; }
-.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input#otpNUMField { width:93.3%; }
-.smk_accordion .accordion_in .acc_content .blocks .cash #otpNUM p.process, .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del .cod-link { font-size:13px; font-weight:normal; text-transform:capitalize;    color: #000;line-height: 13px; }
-.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del button { color:#a7183e;line-height:20px; font-weight:normal; margin:15px 0 36px 0; background:none; border:1px solid #a7183e; height:47px !important;font-size: 13px !important;    letter-spacing: 1px;    padding: 13px 18px; width:204px; }
-.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del .otp	{ color:#60a119; display:block; text-transform:capitalize; font-size:13px; font-weight:normal; }
-.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del button.confirm { width:273px; height:47px !important;font-size: 13px !important;background:#f8f8f8 !important; }
-.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del button.confirm:hover {background:inherit !important; }
+.cart.wrapper.checkout-payment .blocks .cash { font-size:14px; }
+.cart.wrapper.checkout-payment .blocks .cash p { color:#a7183e; line-height:26px; }
+.cart.wrapper.checkout-payment .blocks .cash h4  { padding:8px 0 30px 0; text-transform:none; font-weight:normal; }
+.cart.wrapper.checkout-payment .blocks .cash .cont-del p { padding:0; }
+.cart.wrapper.checkout-payment .blocks .cash .cont-del input { height:45px; margin:7px 0 10px 0; width: 85%; }
+.cart.wrapper.checkout-payment .blocks .cash .cont-del input#otpNUMField { width:93.3%; }
+.cart.wrapper.checkout-payment .blocks .cash #otpNUM p.process, .cart.wrapper.checkout-payment .blocks .cash .cont-del .cod-link { font-size:13px; font-weight:normal; text-transform:capitalize;    color: #000;line-height: 13px; }
+.cart.wrapper.checkout-payment .blocks .cash .cont-del button { color:#a7183e;line-height:20px; font-weight:normal; margin:15px 0 36px 0; background:none; border:1px solid #a7183e; height:47px !important;font-size: 13px !important;    letter-spacing: 1px;    padding: 13px 18px; width:204px; }
+.cart.wrapper.checkout-payment .blocks .cash .cont-del .otp	{ color:#60a119; display:block; text-transform:capitalize; font-size:13px; font-weight:normal; }
+.cart.wrapper.checkout-payment .blocks .cash .cont-del button.confirm { width:273px; height:47px !important;font-size: 13px !important;background:#f8f8f8 !important; }
+.cart.wrapper.checkout-payment .blocks .cash .cont-del button.confirm:hover {background:inherit !important; }
 .cart-mobile, .head-mobile { display:none; }
 
 /* One radio button per line */
 .checkout-content.checkout-payment.cart.checkout.wrapper .product-block li.item > ul > li { background:#fff; margin-bottom:20px; font-weight:normal; cursor: pointer; line-height: 16px; font-size: 13px; min-width: 21.2%;width:auto; border: 1px solid #dfdfdf;     padding: 14px 5px 14px 10px;margin-right:20px;	}
-.smk_accordion .accordion_in .acc_content .blocks.net-bank [type="radio"] + span { display: block; }
+.cart.wrapper.checkout-payment .blocks.net-bank [type="radio"] + span { display: block; }
 
 /*Custom Radio Button*/
 [type="radio"] {
@@ -55171,8 +55163,8 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 #netbankingError{margin-top:10px;}
 .cart.wrapper .product-block li.item.cardForm{margin:0px;}
 .cart.wrapper .left-block .payments.tab-view .new-card input[type="checkbox"]+label:before{position:static;margin:0px;margin-right: 8px;}
-.smk_accordion .accordion_in .acc_content .blocks .card-sec p{padding-left:20px;line-height: 18px;}
-.smk_accordion .accordion_in .acc_content .card-sec .digits input.cvvValdiation {border: 1px solid #dbdbdb; height: 38px;width: 90px;}
+.cart.wrapper.checkout-payment .blocks .card-sec p{padding-left:20px;line-height: 18px;}
+.cart.wrapper.checkout-payment .card-sec .digits input.cvvValdiation {border: 1px solid #dbdbdb; height: 38px;width: 90px;}
 .cart.wrapper .product-block li.item#savedCard{margin:0px;}
 .cart.wrapper .step-body{
 	position:relative;
@@ -55239,7 +55231,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 .cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info .item-mthd h3{
 	color:#000;
 }
-.smk_accordion .accordion_in .acc_content .blocks .cash #otpNUM p{
+.cart.wrapper.checkout-payment .blocks .cash #otpNUM p{
 	font-weight:bold;
 	padding:0px;
 	font-size:14px;
@@ -55292,7 +55284,7 @@ a#cvvHelp{display:none;}
 	margin:0px;
 }
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full label.expires{margin-bottom:0px;    font-weight: normal;}
-.smk_accordion .accordion_in .acc_content .blocks .new-card input{padding-left:18px;}
+.cart.wrapper.checkout-payment .blocks .new-card input{padding-left:18px;}
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp select.card_exp_month, .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp select.card_exp_year{
 	padding-left:18px;
 	text-transform:uppercase;
@@ -55350,11 +55342,11 @@ padding-top:1px;
 }
 .saved-card-button{
 display:block;}
-.smk_accordion .accordion_in .acc_content .blocks .new-card #billingAddressEmi input,
-.smk_accordion .accordion_in .acc_content .blocks .new-card #billingAddressEmi select{
+.cart.wrapper.checkout-payment .blocks .new-card #billingAddressEmi input,
+.cart.wrapper.checkout-payment .blocks .new-card #billingAddressEmi select{
 	margin:10px 0;
 }
-.smk_accordion .accordion_in .acc_content .blocks .new-card #billingAddressEmi fieldset .half,.cart.wrapper .left-block .payments.tab-view .new-card #billingAddressEmi fieldset .half{
+.cart.wrapper.checkout-payment .blocks .new-card #billingAddressEmi fieldset .half,.cart.wrapper .left-block .payments.tab-view .new-card #billingAddressEmi fieldset .half{
 	margin-bottom:0px;
 }
 #juspayconnErrorDiv{
@@ -55402,16 +55394,16 @@ display:block;}
 .smk_accordion .accordion_in .acc_head span{ padding: 20px 0 20px 20px;}
 .smk_accordion .accordion_in{ background: #fff url("../images/down-arrow.png") no-repeat scroll 96% 25px;}
 .smk_accordion .accordion_in.acc_active{ background: rgba(0, 0, 0, 0) url("../images/up-arrow.png") no-repeat scroll 96% 25px;}
-.smk_accordion .accordion_in .acc_content .blocks{padding: 20px 30px 30px;}
-/* .smk_accordion .accordion_in .acc_content#COD .blocks{padding: 20px 28px 0px 30px;} */
-.smk_accordion .accordion_in .acc_content .blocks.netbankingPanel{padding-bottom: 0px;}
+.cart.wrapper.checkout-payment .blocks{padding: 20px 30px 30px;}
+/* .cart.wrapper.checkout-payment#COD .blocks{padding: 20px 28px 0px 30px;} */
+.cart.wrapper.checkout-payment .blocks.netbankingPanel{padding-bottom: 0px;}
 
 .prd-info .product,
 .prd-info .item-adds,
-.smk_accordion .accordion_in .acc_content .blocks .new-card p, 
-.smk_accordion .accordion_in .acc_content .blocks.net-bank p,
-.smk_accordion .accordion_in .acc_content .blocks .mycards,
-.smk_accordion .accordion_in .acc_content .blocks h3{font-size: 12px;}
+.cart.wrapper.checkout-payment .blocks .new-card p, 
+.cart.wrapper.checkout-payment .blocks.net-bank p,
+.cart.wrapper.checkout-payment .blocks .mycards,
+.cart.wrapper.checkout-payment .blocks h3{font-size: 12px;}
 .cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info .item .product .prd-rate p{font-size: 14px;}
 .cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info .item-mthd{padding: 30px 0 0;font-size: 12px;}
 .choose-payment{/* padding: 90px 0 0; */padding-bottom: 65px;}
@@ -55462,7 +55454,7 @@ display:block;}
 .cart.wrapper .right-block.billing.checkout-list-right {
     width: 31.8%;
 } */
-.smk_accordion .accordion_in .acc_content,#COD {
+.cart.wrapper.checkout-payment,#COD {
     margin: 0 30px 30px 30px;
 }
 .checkout-payment.cart.checkout.wrapper .step-body {
@@ -55508,16 +55500,16 @@ display:block;}
 .smk_accordion .accordion_in{background: #fff url("../images/down-arrow.png") no-repeat scroll 96% 23px;}
 .smk_accordion .accordion_in.acc_active{background: url("../images/up-arrow.png") no-repeat scroll 96% 23px;}
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.cvv{ width:37%; }
-.smk_accordion .accordion_in .acc_content .blocks.net-bank label { margin-right:15px; }
+.cart.wrapper.checkout-payment .blocks.net-bank label { margin-right:15px; }
 .smk_accordion .accordion_in .acc_head { font-size:16px; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card .cardExpiration input.month, input.year { width:26.5%; }
-.smk_accordion .accordion_in .acc_content .blocks.net-bank label { width:23%; }
-.smk_accordion .accordion_in .acc_content .blocks.net-bank.netbankingPanel label { width:auto; }
-.smk_accordion .accordion_in .acc_content .blocks.net-bank label.cod-mob-label{ width:100%;}
-.smk_accordion .accordion_in .acc_content, #COD { margin-right:100px; }
-.smk_accordion .accordion_in .acc_content.cont-5 .blocks { padding:46px 40px 30px 40px; }
-.smk_accordion .accordion_in .acc_content .blocks.net-bank [type="radio"] + span { font-size:12px; }
-.smk_accordion .accordion_in .acc_content .blocks.netbankingPanel{padding: 46px 40px 0px 40px;}
+.cart.wrapper.checkout-payment .blocks .new-card .cardExpiration input.month, input.year { width:26.5%; }
+.cart.wrapper.checkout-payment .blocks.net-bank label { width:23%; }
+.cart.wrapper.checkout-payment .blocks.net-bank.netbankingPanel label { width:auto; }
+.cart.wrapper.checkout-payment .blocks.net-bank label.cod-mob-label{ width:100%;}
+.cart.wrapper.checkout-payment, #COD { margin-right:100px; }
+.cart.wrapper.checkout-payment.cont-5 .blocks { padding:46px 40px 30px 40px; }
+.cart.wrapper.checkout-payment .blocks.net-bank [type="radio"] + span { font-size:12px; }
+.cart.wrapper.checkout-payment .blocks.netbankingPanel{padding: 46px 40px 0px 40px;}
 .cart.wrapper .left-block .payments.tab-view .pay.nbButton .terms{
     padding-left: 40px;
 }
@@ -55541,7 +55533,7 @@ display:block;}
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp{
 	width:63%;
 }
-.smk_accordion .accordion_in .acc_content .blocks .new-card .card_exp_month, .smk_accordion .accordion_in .acc_content .blocks .new-card .card_exp_year {
+.cart.wrapper.checkout-payment .blocks .new-card .card_exp_month, .cart.wrapper.checkout-payment .blocks .new-card .card_exp_year {
     margin-right: 6%;
     width: 42.49%;
 }
@@ -55586,14 +55578,13 @@ display:block;}
 .smk_accordion .accordion_in .acc_head span { padding:12px; }
 .smk_accordion .accordion_in { background: #fff url(../images/down-arrow.png) 96% 14px no-repeat; margin-bottom:0; margin-top:-1px; }
 .smk_accordion .accordion_in.acc_active { background: url(../images/up-arrow.png) 96% 14px no-repeat; }
-.smk_accordion .accordion_in .acc_content { margin:0; }
-.smk_accordion .accordion_in .acc_content .blocks, .smk_accordion .accordion_in .acc_content#COD .blocks, .smk_accordion .accordion_in .acc_content .blocks.netbankingPanel{ font-size:12px; padding:15px 12px 10px 11px; border-top: 1px solid #ccc;}
-.smk_accordion .accordion_in .acc_content.cont-5 .blocks { font-size:12px; padding:15px 12px 10px 11px; }
-.smk_accordion .accordion_in .acc_content .blocks h3 { padding-bottom:11px; }
-.smk_accordion .accordion_in .acc_content .blocks h3,
-.smk_accordion .accordion_in .acc_content .blocks .mycards,
-.smk_accordion .accordion_in .acc_content .card-sec .card-num .numbers,
-.smk_accordion .accordion_in .acc_content .blocks .new-card p,
+.cart.wrapper.checkout-payment .blocks, .cart.wrapper.checkout-payment#COD .blocks, .cart.wrapper.checkout-payment .blocks.netbankingPanel{ font-size:12px; padding:15px 12px 10px 11px; border-top: 1px solid #ccc;}
+.cart.wrapper.checkout-payment.cont-5 .blocks { font-size:12px; padding:15px 12px 10px 11px; }
+.cart.wrapper.checkout-payment .blocks h3 { padding-bottom:11px; }
+.cart.wrapper.checkout-payment .blocks h3,
+.cart.wrapper.checkout-payment .blocks .mycards,
+.cart.wrapper.checkout-payment .card-sec .card-num .numbers,
+.cart.wrapper.checkout-payment .blocks .new-card p,
 .cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info h2,
 .cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info p,
 .cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info address  span b,
@@ -55601,29 +55592,29 @@ display:block;}
 .prd-info .product,
 .prd-info .item .product .prd-rate,
 .prd-info .item-mthd,
-.smk_accordion .accordion_in .acc_content .terms .redirect,
-.smk_accordion .accordion_in .acc_content .blocks.net-bank .trigger,
-.smk_accordion .accordion_in .acc_content .blocks .cash { font-size:12px; }
+.cart.wrapper.checkout-payment .terms .redirect,
+.cart.wrapper.checkout-payment .blocks.net-bank .trigger,
+.cart.wrapper.checkout-payment .blocks .cash { font-size:12px; }
 .cart.wrapper .left-block .payments.tab-view .nav li span.mycards { padding:0px;padding-bottom:10px; line-height:12px !important;    height: auto;}
 .cart.wrapper .left-block .payments.tab-view .nav li span.saved { line-height:9px !important;    height: auto;}
-.smk_accordion .accordion_in .acc_content .blocks .new-card .cardNumber input, 
-.smk_accordion .accordion_in .acc_content .blocks.net-bank .cardNumber input { margin-right:4%; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card .cardExpiration input.month, input.year { margin-right: 4.5%; width: 26%; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card .remember p { font-size:10.5px; float:left; width:60%; line-height: 16px; padding-top: 5px; }	
-.smk_accordion .accordion_in .acc_content .blocks .new-card .remember { display:inline-block; }
-.smk_accordion .accordion_in .acc_content .blocks .card-sec { padding:3px 15px 13px 5px; font-size:12px; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card p, .smk_accordion .accordion_in .acc_content .blocks.net-bank p { padding:0 15px 13px 5px; }
-.smk_accordion .accordion_in .acc_content .card-sec .digits p,
-.smk_accordion .accordion_in .acc_content .card-sec .card-num .saved { font-size:9px; }
-.smk_accordion .accordion_in .acc_content .card-sec .digits input.cvvValdiation { height:29px; width:74px; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card { padding:14px 0 0 0; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card  .name-card { margin:10px 0 18px 0; height:40px; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card .cardNumber input,
+.cart.wrapper.checkout-payment .blocks .new-card .cardNumber input, 
+.cart.wrapper.checkout-payment .blocks.net-bank .cardNumber input { margin-right:4%; }
+.cart.wrapper.checkout-payment .blocks .new-card .cardExpiration input.month, input.year { margin-right: 4.5%; width: 26%; }
+.cart.wrapper.checkout-payment .blocks .new-card .remember p { font-size:10.5px; float:left; width:60%; line-height: 16px; padding-top: 5px; }	
+.cart.wrapper.checkout-payment .blocks .new-card .remember { display:inline-block; }
+.cart.wrapper.checkout-payment .blocks .card-sec { padding:3px 15px 13px 5px; font-size:12px; }
+.cart.wrapper.checkout-payment .blocks .new-card p, .cart.wrapper.checkout-payment .blocks.net-bank p { padding:0 15px 13px 5px; }
+.cart.wrapper.checkout-payment .card-sec .digits p,
+.cart.wrapper.checkout-payment .card-sec .card-num .saved { font-size:9px; }
+.cart.wrapper.checkout-payment .card-sec .digits input.cvvValdiation { height:29px; width:74px; }
+.cart.wrapper.checkout-payment .blocks .new-card { padding:14px 0 0 0; }
+.cart.wrapper.checkout-payment .blocks .new-card  .name-card { margin:10px 0 18px 0; height:40px; }
+.cart.wrapper.checkout-payment .blocks .new-card .cardNumber input,
 input.year { height:40px; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card .cardExpiration { padding-bottom:18px; }
-.smk_accordion .accordion_in .acc_content .terms .redirect { font-weight:normal; padding-bottom:0; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card button,
-/* .smk_accordion .accordion_in .acc_content .blocks.net-bank button { display:none; } */
+.cart.wrapper.checkout-payment .blocks .new-card .cardExpiration { padding-bottom:18px; }
+.cart.wrapper.checkout-payment .terms .redirect { font-weight:normal; padding-bottom:0; }
+.cart.wrapper.checkout-payment .blocks .new-card button,
+/* .cart.wrapper.checkout-payment .blocks.net-bank button { display:none; } */
 .cart.wrapper .right-block.billing.checkout-list-right h3 { font-size:15px; font-weight:bold; }
 .cart.wrapper .right-block.billing.checkout-list-right .summary-info { /* padding:25px 0 0; margin:10px 0 15px 0; */ padding:0px; margin:0px; }
 .cart.wrapper .right-block.billing.checkout-list-right { padding:0 12px !important;    margin: 0 0 70px; }
@@ -55634,18 +55625,18 @@ input.year { height:40px; }
 .cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info hr { margin:10px 0; }
 .cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info .item-mthd { padding:10px 0; }
 
-.smk_accordion .accordion_in .acc_content .blocks.net-bank label { margin:0 0 10px 0; width:48%; font-size:12px; }
-.smk_accordion .accordion_in .acc_content .blocks.net-bank .trigger { width:100%; }
-.smk_accordion .accordion_in .acc_content .terms .redirect{ padding:12px 0 12px 11px; }
-.smk_accordion .accordion_in .acc_content .blocks .cash h4{ padding:8px 0;font-size:12px; }
-.smk_accordion .accordion_in .acc_content .blocks .cash h3 { line-height:14px; }
-.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del button {/*  border:0 none; */ width:100%; margin:15px 0; text-align:center; }
+.cart.wrapper.checkout-payment .blocks.net-bank label { margin:0 0 10px 0; width:48%; font-size:12px; }
+.cart.wrapper.checkout-payment .blocks.net-bank .trigger { width:100%; }
+.cart.wrapper.checkout-payment .terms .redirect{ padding:12px 0 12px 11px; }
+.cart.wrapper.checkout-payment .blocks .cash h4{ padding:8px 0;font-size:12px; }
+.cart.wrapper.checkout-payment .blocks .cash h3 { line-height:14px; }
+.cart.wrapper.checkout-payment .blocks .cash .cont-del button {/*  border:0 none; */ width:100%; margin:15px 0; text-align:center; }
 .terms,.cart.wrapper .left-block .payments.tab-view .pay.nbButton .terms { font-size:11px;     padding:15px 12px 10px 11px; }
-.smk_accordion .accordion_in .acc_content .blocks.net-bank label.odd { margin-right:1%; }
-.smk_accordion .accordion_in .acc_content .blocks.net-bank label.even { margin-right:0; float:right; }
-.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del button.confirm { width:100%; }
+.cart.wrapper.checkout-payment .blocks.net-bank label.odd { margin-right:1%; }
+.cart.wrapper.checkout-payment .blocks.net-bank label.even { margin-right:0; float:right; }
+.cart.wrapper.checkout-payment .blocks .cash .cont-del button.confirm { width:100%; }
 .head-mobile { display:block; color:#a7183e; padding:0 0 10px 12px; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card .remember input[type="checkbox"] + label{font-size: 12px;}
+.cart.wrapper.checkout-payment .blocks .new-card .remember input[type="checkbox"] + label{font-size: 12px;}
 .cart.wrapper .left-block .payments.tab-view .nav li{height:auto; line-height:inherit;}
 .cart.wrapper.payment .product-block li.item{padding:0px;}
 /* .cart.wrapper .left-block .payments.tab-view .pay .button{bottom: 0;left: 0;position: fixed;top: inherit; width: 100%;z-index: 99; margin: 0px;} */
@@ -55656,13 +55647,13 @@ input.year { height:40px; }
 	margin-bottom:0px;
 }
 #COD{margin:0px;}
-.smk_accordion .accordion_in .acc_content .blocks .cash #otpNUM p{padding:0px;font-size:12px;}
-.smk_accordion .accordion_in .acc_content .blocks.net-bank label.cod-mob-label{margin:0px; width:100%;}
-.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input{width:81%;}
+.cart.wrapper.checkout-payment .blocks .cash #otpNUM p{padding:0px;font-size:12px;}
+.cart.wrapper.checkout-payment .blocks.net-bank label.cod-mob-label{margin:0px; width:100%;}
+.cart.wrapper.checkout-payment .blocks .cash .cont-del input{width:81%;}
 #mobilePrefix {
     width: 12.3%;
 }
-.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input#otpNUMField{width:93.3%;}
+.cart.wrapper.checkout-payment .blocks .cash .cont-del input#otpNUMField{width:93.3%;}
 .cart.wrapper .right-block.billing .block.summary-info .totals {
 /*    padding: 25px 0;
     margin: 10px 0 15px 0; */
@@ -55672,7 +55663,7 @@ input.year { height:40px; }
 .cart.wrapper .product-block li.item.cardForm > ul > li{margin-right:0px;margin-bottom:10px;width:48%;padding: 16px 5px 16px 10px;}
 .cart.wrapper .product-block li.item.cardForm > ul > li:nth-child(odd){margin-right:1%;}
 .cart.wrapper .product-block li.item.cardForm > ul > li:nth-child(even){float:right;}
-.smk_accordion .accordion_in .acc_content .blocks.net-bank.netbankingPanel label{margin:0px;}
+.cart.wrapper.checkout-payment .blocks.net-bank.netbankingPanel label{margin:0px;}
 #bankCodeSelection{width:100%;}
 .cart.wrapper .left-block .payments.tab-view .pay.nbButton .button, .cart.wrapper .left-block .payments.tab-view .pay .button.confirm,
 .cart.wrapper .left-block .payments.tab-view .pay .button
@@ -55688,11 +55679,11 @@ input.year { height:40px; }
 .cart.wrapper .right-block.billing .block.bottom.order-details.delivery-info>address span b{
 	    font-size: 12px;
 }
-.smk_accordion .accordion_in .acc_content .blocks .card-sec p, .smk_accordion .accordion_in .acc_content .card-sec .digits label {
+.cart.wrapper.checkout-payment .blocks .card-sec p, .cart.wrapper.checkout-payment .card-sec .digits label {
     line-height: 9px;
     font-size: 9px;
 }
-.smk_accordion .accordion_in .acc_content .card-sec .card-num .card_image {
+.cart.wrapper.checkout-payment .card-sec .card-num .card_image {
     margin-bottom: 15px;
 }
 .cart.wrapper .left-block li#savedCard div.card input[type="radio"] + label:before, .cart.wrapper .left-block li#savedCardEmi div.card input[type="radio"]+label:before{left:-21px;}
@@ -55709,8 +55700,8 @@ div#savedCreditCard, div#savedDebitCard {
 .cart.wrapper .left-block .payments.tab-view .nav li#newCardCC,
 .cart.wrapper .left-block .payments.tab-view .nav #emi li
 {margin:0;padding:0;}
-.smk_accordion .accordion_in .acc_content .blocks .new-card input.card_number{height:40px;}
-.smk_accordion .accordion_in .acc_content .terms .redirect{overflow:hidden;}
+.cart.wrapper.checkout-payment .blocks .new-card input.card_number{height:40px;}
+.cart.wrapper.checkout-payment .terms .redirect{overflow:hidden;}
 .cart.wrapper .product-block.emi #EMITermTable tr{
 	    width: 48.5%;
     margin-right: 1%;
@@ -55731,7 +55722,7 @@ div#savedCreditCard, div#savedDebitCard {
 	width:100%;
 	height:40px;
 }
-.smk_accordion .accordion_in .acc_content .terms .redirect{
+.cart.wrapper.checkout-payment .terms .redirect{
 	padding-bottom:0px;
 	display:none;
 }
@@ -55745,7 +55736,7 @@ div#savedCreditCard, div#savedDebitCard {
     padding-left: 5px;
     text-transform:none;
 }
-.smk_accordion .accordion_in .acc_content .blocks .new-card .card_exp_month, .smk_accordion .accordion_in .acc_content .blocks .new-card .card_exp_year {
+.cart.wrapper.checkout-payment .blocks .new-card .card_exp_month, .cart.wrapper.checkout-payment .blocks .new-card .card_exp_year {
     margin-right: 2.5%;
     width: 45.6%;
 }
@@ -57138,7 +57129,7 @@ div.radio.creditDebitLabelRadio{
 	margin: 12px 0;
     padding-top: 0;
 } */
-/* .smk_accordion .accordion_in .acc_content .blocks .new-card .creditDebitLabelRadio + .card-group .form-group .controls.full input.name-card{
+/* .cart.wrapper.checkout-payment .blocks .new-card .creditDebitLabelRadio + .card-group .form-group .controls.full input.name-card{
 	margin: 0;
 } */
 .checkout-content.checkout-payment.cart.checkout.wrapper .checkout-order-summary{
@@ -57225,10 +57216,10 @@ div.radio.creditDebitLabelRadio{
 .checkout-content.checkout-payment.cart.checkout.wrapper .right-block.billing .block.summary-info #totalPriceConvChargeId .totalsSpan {
     font-weight: bold;
 }}
-.smk_accordion .accordion_in .acc_content .blocks .error-message{
+.cart.wrapper.checkout-payment .blocks .error-message{
 	padding-bottom:5px;
 }
-.smk_accordion .accordion_in .acc_content .blocks .error-message#memberNameError{
+.cart.wrapper.checkout-payment .blocks .error-message#memberNameError{
 	padding-top	:0px;
 }
  /* Payment bug fix end*/
@@ -60758,9 +60749,6 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 .progress-barcheck .step-3 a {
     padding-right: 9%;
 }
-.progress-barcheck {
-    margin: 15px auto 0;
-}
 }
 /*Delivery Option page start*/
 #selectDeliveryMethodForm .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryMethodSubmit{
@@ -61147,4 +61135,89 @@ text-transform:none;}
 
 
 /*Choose Address Page end*/
+
+/*Delivery Option page end*/
+/* Payment Page change start */
+.cart.wrapper .left-block .payments.tab-view{
+	border: solid 1px #dddddd;
+	display:flex;
+}
+.cart.wrapper .left-block .payments.tab-view .nav{
+	width:20%;
+	background-color:#eee;
+	padding-right:0px;
+	border-right:1px solid #ddd;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs{
+	width:80%;
+}
+.cart.wrapper .left-block .payments.tab-view .nav li{
+	height:auto;
+	color:#666;
+	background-color:#eee;
+	margin:0;
+	border-bottom:1px solid #ddd;
+}
+.cart.wrapper .left-block .payments.tab-view .nav li.active{
+	background:#fff;
+	color:#a5173c;
+	border-right:none;
+}
+.cart.wrapper .left-block .payments.tab-view .nav li span{
+	padding:25px 19px;
+	font-size:14px;
+}
+/* right section start*/
+.cart.wrapper .right-block.billing.checkout-list-right h3{
+	font-size:16px;
+	color:#000;
+	text-transform:none;
+	font-weight: normal;
+}
+.cart.wrapper .right-block.billing.checkout-list-right .block{
+	margin:8px auto 28px;
+	padding: 38px 28px 28px;
+	background:#f8f8f8;
+}
+.cart.wrapper .right-block.billing .block.summary-info  ul.totals li#total{
+	border-top:1px solid #ddd;
+	border-bottom:none;
+	font-size:18px;
+	color:#666;
+	padding-bottom:0;
+	margin-bottom:0;
+}
+.cart.wrapper .right-block.billing .block.summary-info  ul.totals li#total span{
+	font-size:18px;
+	padding-top:0px;
+	font-weight:normal;
+	color:#000;
+}
+.checkout-order-summary .subtotal span.subTotalSpan, .checkout-order-summary .shipping span.shippingSpan, 
+.checkout-order-summary #cartPromotionApplied span.cartpromotionSpan, .cart.wrapper .right-block .block.top li#couponApplied .couponSpan{
+	text-transform:none;
+	color:#666;
+}
+.checkout-payment h2.coupon{
+	font-size:16px;
+	text-transform:none;
+	margin-bottom:8px;
+	font-weight: normal;
+}
+.cart.wrapper .right-block.billing.checkout-list-right .block.coupon{
+	padding:27px 28px 32px;
+	background-color: #f8f8f8;
+	border:none;
+}
+.cart.wrapper .right-block.billing.checkout-list-right .block.coupon label{
+	font-size:11px;
+	letter-spacing:0.6px;
+	color:#999;
+	margin-bottom:3px;
+}
+.cart.wrapper .right-block.billing .block.coupon button{
+	background-color:#666;
+}
+/* right section end*/
+/* Payment Page change end */
 /*checkout pages end*/
