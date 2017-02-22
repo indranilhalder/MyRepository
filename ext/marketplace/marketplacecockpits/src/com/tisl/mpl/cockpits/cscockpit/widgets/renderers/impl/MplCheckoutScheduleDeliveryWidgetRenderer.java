@@ -139,18 +139,18 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 		LOG.debug("calling oms For InvReserForDeliverySlots");
 		InvReserForDeliverySlotsResponseData deliverySlotsResponseData = new InvReserForDeliverySlotsResponseData();
 		if(null != cart.getIsInventoryChanged() && cart.getIsInventoryChanged()) {
-			 deliverySlotsResponseData=((MarketplaceCheckoutController) widget.getWidgetController()).deliverySlotsRequestDataCallToOms(deliverySlotsRequestData);
+			 deliverySlotsResponseData=((MarketplaceCheckoutController) widget.getWidgetController()).deliverySlotsRequestDataCallToOms(deliverySlotsRequestData,cart);
 			 if(null !=deliverySlotsResponseData ) {
 				 sessionService.setAttribute(MarketplacecommerceservicesConstants.SCHEDULE_DELIVRY_DATA, deliverySlotsResponseData);
-				 setEddDatebetween(cart, deliverySlotsResponseData);
+				// setEddDatebetween(cart, deliverySlotsResponseData);
 			 }
 			 cart.setIsInventoryChanged(Boolean.FALSE);
 		}else {
 			 deliverySlotsResponseData= sessionService.getAttribute(MarketplacecommerceservicesConstants.SCHEDULE_DELIVRY_DATA);
 			 if(null == deliverySlotsResponseData) {
-				 deliverySlotsResponseData=((MarketplaceCheckoutController) widget.getWidgetController()).deliverySlotsRequestDataCallToOms(deliverySlotsRequestData); 
+				 deliverySlotsResponseData=((MarketplaceCheckoutController) widget.getWidgetController()).deliverySlotsRequestDataCallToOms(deliverySlotsRequestData,cart); 
 				 if(null != deliverySlotsResponseData) {
-					 setEddDatebetween(cart, deliverySlotsResponseData);
+					// setEddDatebetween(cart, deliverySlotsResponseData);
 				 }
 			 }
 		}

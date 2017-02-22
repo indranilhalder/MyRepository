@@ -1763,17 +1763,18 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				String selectedUssId = null;
 				String fulfillmentType = null;
 				List<String> dateList;
+				final CartModel cartModel = getCartService().getSessionCart();
 				final InvReserForDeliverySlotsRequestData deliverySlotsRequestData = new InvReserForDeliverySlotsRequestData();
 				deliverySlotsRequestData.setCartId(cartDataSupport.getGuid());
 				final InvReserForDeliverySlotsResponseData deliverySlotsResponseData = getMplCartFacade()
-						.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData);
+						.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData,cartModel);
 				final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
 				final MplLPHolidaysModel mplLPHolidaysModel = mplConfigFacade
 						.getMplLPHolidays(MarketplacecommerceservicesConstants.CAMPAIGN_URL_ALL);
 				final Map<String, List<String>> dateTimeslotMapList = new HashMap<String, List<String>>();
 
 
-				final CartModel cartModel = getCartService().getSessionCart();
+				
 				final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
 				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 				{

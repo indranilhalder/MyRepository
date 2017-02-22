@@ -137,6 +137,6 @@ public interface MarketplaceCheckoutController extends
 			MplZoneDeliveryModeValueModel deliveryMode);
 
 	void setCODPaymentMode(final CartModel cartModel);	//TPR-3471
-	InvReserForDeliverySlotsResponseData deliverySlotsRequestDataCallToOms(InvReserForDeliverySlotsRequestData deliverySlotsRequestData);
+	InvReserForDeliverySlotsResponseData deliverySlotsRequestDataCallToOms(InvReserForDeliverySlotsRequestData deliverySlotsRequestData, CartModel cartModel);
 	public Double getScheduleDeliveryCharges();
 }

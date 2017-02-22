@@ -509,5 +509,5 @@ public interface MplCartFacade extends CartFacade
 	 * @param cartdata
 	 * @return
 	 */
-	InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(InvReserForDeliverySlotsRequestData cartdata);
+	InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(InvReserForDeliverySlotsRequestData cartdata,CartModel cart);
 }

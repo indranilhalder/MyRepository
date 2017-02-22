@@ -758,10 +758,10 @@ public class MarketplaceCheckoutControllerImpl extends
 
 	@Override
 	public InvReserForDeliverySlotsResponseData deliverySlotsRequestDataCallToOms(
-			InvReserForDeliverySlotsRequestData deliverySlotsRequestData) {
+			InvReserForDeliverySlotsRequestData deliverySlotsRequestData,CartModel cart) {
 		InvReserForDeliverySlotsResponseData omsResponceData = null;
 		try {
-			omsResponceData = mplCartFacade.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData);
+			omsResponceData = mplCartFacade.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData,cart);
 		}catch(Exception e) {
 			LOG.error("Exception while getting the delivery Slots from OMS "+e.getMessage());
 		}

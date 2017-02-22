@@ -53,6 +53,7 @@ import de.hybris.platform.wishlist2.model.Wishlist2Model;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -2686,7 +2687,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		mplCommerceCartService.recalculateOrder(orderModel);
 	}
 	@Override
-	public InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(final InvReserForDeliverySlotsRequestData cartdata)
+	public InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(final InvReserForDeliverySlotsRequestData cartdata,CartModel cart)
 	{
 		LOG.debug("from convertDeliverySlotsDatatoWsdto");
 		InvReserForDeliverySlotsResponseData responce = new InvReserForDeliverySlotsResponseData();
@@ -2696,10 +2697,10 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 					&& !responce.getInvReserForDeliverySlotsItemEDDInfoData().isEmpty())
 			{
 				//	getCartService.
-				final CartModel cartModel = cartService.getSessionCart();
-				if(null != cartModel) {
-					LOG.debug("Setting setEddDatebetween for cart Id :"+cartModel.getGuid());
-					setEddDatebetween(cartModel, responce);
+				//final CartModel cartModel = cartService.getSessionCart();
+				if(null != cart) {
+					LOG.debug("Setting setEddDatebetween for cart Id :"+cart.getGuid());
+					setEddDatebetween(cart, responce);
 				}
 			}
 		}catch(Exception e) {
@@ -2728,6 +2729,22 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 									cartEntry.setSddDateBetween(eddDateBetween);
 									modelService.save(cartEntry);
 								}
+								try
+								{
+									String estDeliveryDateAndTime = edd;
+									if(StringUtils.isNotEmpty(estDeliveryDateAndTime)){
+										SimpleDateFormat parseFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+										Date dateForEDD=null;
+										dateForEDD = parseFormat.parse(estDeliveryDateAndTime);
+										cartEntry.setExpectedDeliveryDate(dateForEDD);
+									}
+								}
+									catch (ParseException e)
+									{
+										LOG.error("Exception occurred while saving the ExpectedDeliveryDate" );
+									}
+									
+								}
 							}
 						}
 					}
@@ -2736,7 +2753,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			}
 		}
 
-	}
 	private String getEddDateBetween(AbstractOrderEntryModel orderEntry,String edd) {
 		String eddDateBetween = null;
 		String timeSlotType = null;
