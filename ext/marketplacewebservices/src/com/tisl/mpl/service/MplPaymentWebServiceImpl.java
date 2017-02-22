@@ -126,7 +126,7 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 			/*
 			 * for (final AbstractOrderEntryModel entry : cartModel.getEntries()) { //getting the product code
 			 * LOG.debug(" getCODDetails ServiceImpl : entry.getProduct().getCode() : " + entry.getProduct().getCode());
-			 * 
+			 *
 			 * if (entry.getSelectedUSSID() != null) { final SellerInformationModel sellerInfoModel =
 			 * getMplSellerInformationService().getSellerDetail( entry.getSelectedUSSID()); List<RichAttributeModel>
 			 * richAttributeModel = null; if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null) {
@@ -135,7 +135,7 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 			 * richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
 			 * LOG.debug(" getCODDetails ServiceImpl : fulfillmentType : " + fulfillmentType);
 			 * fulfillmentDataList.add(fulfillmentType.toUpperCase()); }
-			 * 
+			 *
 			 * if (richAttributeModel != null && richAttributeModel.get(0).getPaymentModes() != null) { final String
 			 * paymentMode = richAttributeModel.get(0).getPaymentModes().toString(); if
 			 * (StringUtils.isNotEmpty(paymentMode)) { //setting the payment mode in a list
@@ -389,9 +389,9 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * "getPaymentMode : paymentMode  JSON Response : " + paymentMode); // Payment Mode Map final Map<String, Double>
 	 * paymentModeMap = new HashMap<String, Double>(); try { final JSONObject rec_paymode = (JSONObject)
 	 * JSONValue.parse(paymentMode);
-	 * 
+	 *
 	 * LOG.debug("getPaymentMode : rec_paymode  JSON Response : " + rec_paymode);
-	 * 
+	 *
 	 * // Fetch Details from Json final String debit = rec_paymode.get(MarketplacewebservicesConstants.DEBIT) != null ?
 	 * rec_paymode.get( MarketplacewebservicesConstants.DEBIT).toString() :
 	 * MarketplacewebservicesConstants.DECIMALULLCHK; final String credit =
@@ -401,10 +401,10 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * MarketplacewebservicesConstants.EMI).toString() : MarketplacewebservicesConstants.DECIMALULLCHK; final String
 	 * netBanking = rec_paymode.get(MarketplacewebservicesConstants.NETBANKING) != null ? rec_paymode.get(
 	 * MarketplacewebservicesConstants.NETBANKING).toString() : MarketplacewebservicesConstants.DECIMALULLCHK;
-	 * 
+	 *
 	 * // Get data in Double value final Double debit_amt = new Double(debit); final Double credit_amt = new
 	 * Double(credit); final Double emi_amt = new Double(emi); final Double net_amt = new Double(netBanking);
-	 * 
+	 *
 	 * // Validate Payment Mode Value and set value into map if (debit != MarketplacewebservicesConstants.DECIMALULLCHK)
 	 * { paymentModeMap.put(MarketplacewebservicesConstants.DEBIT, debit_amt); } if (credit !=
 	 * MarketplacewebservicesConstants.DECIMALULLCHK) { paymentModeMap.put(MarketplacewebservicesConstants.CREDIT,
@@ -412,7 +412,7 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * paymentModeMap.put(MarketplacewebservicesConstants.EMI, emi_amt); } if (netBanking !=
 	 * MarketplacewebservicesConstants.DECIMALULLCHK) { paymentModeMap.put(MarketplacewebservicesConstants.NETBANKING,
 	 * net_amt); }
-	 * 
+	 *
 	 * LOG.debug("getPaymentMode : rec_paymode  JSON Response paymentModeMap : " + paymentModeMap); } catch (final
 	 * EtailBusinessExceptions | EtailNonBusinessExceptions e) { throw e; } catch (final Exception e) { throw new
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } // returns a Map return
@@ -1231,7 +1231,7 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 			LOG.debug(String.format("productAndCartpromotion: | orderPromo.getEndDate(): %s   ", endDate));
 
 			// Validate if Promotion is enable and not expired
-			if (orderPromo.getEnabled().booleanValue() && !endDate.before(new Date()))
+			if (orderPromo.getEnabled().booleanValue() && endDate != null && !endDate.before(new Date()))
 			{
 				final List<SalesApplication> salesChannel = orderPromo.getChannel();
 				LOG.debug(String.format("productAndCartpromotion: | orderPromo--salesChannel: %s   ", salesChannel));
