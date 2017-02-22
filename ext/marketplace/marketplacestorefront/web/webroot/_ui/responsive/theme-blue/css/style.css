@@ -33550,7 +33550,8 @@ body.page-cartPage .MyBagHeadingDesktop,body.page-cartPage .MyBag-pincode h2 {
 body.page-cartPage .MyBag-pincode h2 {
     color: #a7183e;
 }
-body.page-cartPage .MyBag-buttons p.desk-view, .MyBag-pincode #changePinDiv>p, body.page-cartPage .MyBag-pincode #defaultPinDiv,body.page-cartPage .exp_checkout_msg {
+body.page-cartPage .MyBag-buttons p.desk-view, .MyBag-pincode #changePinDiv>p, body.page-cartPage .MyBag-pincode #defaultPinDiv,body.page-cartPage .exp_checkout_msg,
+#changePinDiv>p.unservicePins,#changePinDiv>p.errorPins,#changePinDiv>p.emptyPins {
     font-size: 14px;
     line-height: 24px;
     padding: 5px 0px;
@@ -33839,7 +33840,8 @@ body.page-cartPage .continue-shopping.desk-view-shopping{
 body.page-cartPage .MyBagHeadingDesktop, body.page-cartPage .MyBag-pincode h2 {
     font-size: 20px;
 }
-body.page-cartPage .MyBag-buttons p.desk-view, .MyBag-pincode #changePinDiv>p, body.page-cartPage .MyBag-pincode #defaultPinDiv, body.page-cartPage .exp_checkout_msg {
+body.page-cartPage .MyBag-buttons p.desk-view, .MyBag-pincode #changePinDiv>p, body.page-cartPage .MyBag-pincode #defaultPinDiv, body.page-cartPage .exp_checkout_msg,
+#changePinDiv>p.unservicePins,#changePinDiv>p.errorPins,#changePinDiv>p.emptyPins {
     font-size: 12px;
     line-height: 18px; /*--- TPR-3595 ---*/
 }
@@ -60342,13 +60344,16 @@ body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#chec
 }
 body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled{
 	background-color: rgba(169, 20, 60, 0.6);
-    cursor: default;
+    cursor: not-allowed;
 }
 body.page-cartPage .cartBottomCheck{
 	display:none;
 }
 body.page-cartPage .cartBottomCheck.cartBottomCheckShow,body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm{
 	display:inline-block;
+}
+body.page-cartPage .cartBottomCheck.cartBottomCheckShow{
+	width:50%;
 }
 body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm{
 	width:110px;
@@ -60440,7 +60445,8 @@ display:none;
 .MyBag-pincode #changePinDiv>p{
 clear:both;
 }
-.MyBag-pincode #changePinDiv>p#unserviceablepincode,.MyBag-pincode #changePinDiv>p#error-Id, .MyBag-pincode #changePinDiv>p#emptyId{
+.MyBag-pincode #changePinDiv>p#unserviceablepincode,.MyBag-pincode #changePinDiv>p#error-Id, .MyBag-pincode #changePinDiv>p#emptyId,#changePinDiv>p.unservicePins,
+#changePinDiv>p.errorPins,#changePinDiv>p.emptyPins{
 	color: #fb0007;
 	padding: 8px 0px 0px 0px;
     margin: 0;
@@ -60799,10 +60805,11 @@ body.page-cartPage .cart.wrapper .product-block li.item > ul > li.delivery ul{
  	color:#000;
 }
 body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds,
- body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #pinCodeButtonIds{
+ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #pinCodeButtonIds,body.page-cartPage #changePinDiv.blankPincode #defaultPinCodeIdsBtm,
+ body.page-cartPage #changePinDiv.blankPincode #pinCodeButtonIdsBtm{
 	border: 1px solid #ff0000;
 }
-body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
+body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds,body.page-cartPage #changePinDiv.blankPincode #defaultPinCodeIdsBtm{
 	border-right:0;
 }
 /* UF-61 Cart Page end */
