@@ -2614,7 +2614,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 * 
+			 *
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -3019,8 +3019,9 @@ public class CartsController extends BaseCommerceController
 				}
 				final UserModel user = userService.getUserForUID(mplCustData.getUid());
 				cartModel = commerceCartService.getCartForGuidAndSiteAndUser(null, baseSiteService.getCurrentBaseSite(), user);
-
-				getWishListWsDTO = mplCartFacade.getTopTwoWishlistForUser(user, pincode, cartModel);
+				//final CartData cartData = getSessionCart();
+				final CartData cartData = mplExtendedCartConverter.convert(cartModel);
+				getWishListWsDTO = mplCartFacade.getTopTwoWishlistForUser(user, pincode, cartData);
 				if (null != getWishListWsDTO)
 				{
 					if (null != getWishListWsDTO.getStatus()
