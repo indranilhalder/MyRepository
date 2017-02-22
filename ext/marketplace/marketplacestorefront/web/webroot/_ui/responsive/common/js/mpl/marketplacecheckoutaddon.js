@@ -7984,3 +7984,8 @@ $(document).click(function (e)
 	if(pincode.length != 6 && pincode.length !=0)
 		$(".errorPins").attr("style","display:block");
 });*/
+
+$(document).ajaxComplete(function(){
+	if($("#unserviceablepincode").css("display") === "none")
+		$(".unservicePins").hide();
+});
