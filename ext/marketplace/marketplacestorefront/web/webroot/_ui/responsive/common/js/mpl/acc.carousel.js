@@ -560,9 +560,9 @@ ACC.carousel = {
 	ClpTopDealsCarousel: function(){
 		
 		//changes for tpr-599(BLP and CLP changes)
-		var slideBy= $('#slideByOffer').val()?$('#slideByOffer').val():1;
-		var autoPlay= $('#autoPlayOffer').val()?$.parseJSON($('#autoPlayOffer').val()):true;
-		var autoplayTimeout= $('#autoplayTimeoutOffer').val()?$('#autoplayTimeoutOffer').val():5000;
+		var slideBy= $('.top_deal #slideByOffer').val()?$('.top_deal #slideByOffer').val():1;
+		var autoPlay= $('.top_deal #autoPlayOffer').val()?$.parseJSON($('.top_deal #autoPlayOffer').val()):true;
+		var autoplayTimeout= $('.top_deal #autoplayTimeoutOffer').val()?$('.top_deal #autoplayTimeoutOffer').val():5000;
 		
 		$(".top_deal .offersCarousel").owlCarousel({
 					items:5,
