@@ -1037,5 +1037,15 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 					utag.link({ link_text : "add_to_bag_serp" , event_type : "add_to_bag_serp" , product_sku : productarray });
 				} 
 			 });
-			 
-			 
+
+/*TPR-4721, TPR-4706 | Sort By in SERP|PLP*/
+$('#sortOptions1').on('change', function() {
+  if(typeof utag !="undefined"){
+	var value = $(this).find('option:selected').text().trim().toLowerCase().replace(/ +$/, "").replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	utag.link({ 
+		link_text : "sort_by_"+value , 
+		event_type : "sort_by_selected" , 
+		"sort_by_value" : value 
+	});
+  } 
+})
