@@ -539,6 +539,8 @@ public class MarketplacewebservicesConstants
 	public static final String TRANSACTION_ID ="transactionId";
 	public static final String AMPERSAND = "&";
 	public static final String EQUALS_TO = "=";
+	public static final String COLON = ":";
+	public static final String FORWARD_SLASHES = "//";
 	
 
 }

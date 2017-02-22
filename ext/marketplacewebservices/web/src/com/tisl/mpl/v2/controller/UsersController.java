@@ -7160,10 +7160,17 @@ public class UsersController extends BaseCommerceController
 			OrderEntryListWsDTO returndto = dataMapper.map(dataList, OrderEntryListWsDTO.class, fields);
 			//OrderDataWsDTO orderDto = getOrderDetailsFacade.getOrderdetails(subOrderModel.getParentReference().getCode());
 			 //TISRLUAT-818	start
-			      String requestUrl = String.valueOf(request.getRequestURL());
-					requestUrl=requestUrl.replaceAll(request.getRequestURI(), "");
-					LOG.debug("host in Request URl :"+requestUrl);
-				    StringBuilder sb = new StringBuilder(requestUrl);
+			      String scheme = request.getScheme();
+			      String serverName = request.getServerName();
+			      String portNumber = String.valueOf(request.getServerPort());
+			      StringBuilder sb = new StringBuilder(scheme);
+			      sb.append(MarketplacewebservicesConstants.COLON);
+			      sb.append(MarketplacewebservicesConstants.FORWARD_SLASHES);
+			      sb.append(serverName);
+			      if(null != portNumber) {
+			      	 sb.append(MarketplacewebservicesConstants.COLON);
+			      	 sb.append(portNumber);
+			      }
 					sb.append(MarketplacewebservicesConstants.RETURN_SELF_COURIER_FILE_DOWNLOAD_URL);
 					sb.append(orderCode);
 					sb.append(MarketplacewebservicesConstants.AMPERSAND);
@@ -7175,39 +7182,8 @@ public class UsersController extends BaseCommerceController
 						LOG.debug("Self Courier return file download location for transaction id "+transactionId+" with order code  "+orderCode+" is "+SelfCourierDocumentLink);
 					}
 					returnDeatails.setSelfCourierDocumentLink(SelfCourierDocumentLink);
-
-//			try{
-//        
-//			  AbstractOrderEntryModel entry= mplOrderService.getEntryModel(transactionId);
-//		
-//					if (entry != null)
-//					{
-//						//Fetching invoice from consignment entries
-//						for (final ConsignmentEntryModel c : entry.getConsignmentEntries())
-//						{
-//							if (null != c.getConsignment().getInvoice())
-//							{
-//								fileDownloadLocation = c.getConsignment().getInvoice().getInvoiceUrl();
-//								LOG.info(":::::::InvoiceURL    " + fileDownloadLocation);
-//								if (fileDownloadLocation == null)
-//								{
-//									fileDownloadLocation = configurationService.getConfiguration().getString("default.invoice.url");
-//								}
-//							}
-//							else
-//							{
-//
-//								fileDownloadLocation = configurationService.getConfiguration().getString("default.invoice.url");
-//
-//							}
-//						}
-//			  }
-//			}
-//				catch (Exception exp)
-//				{
-//					LOG.error("Exception Oucer Get Consignment "+exp.getMessage());
-//				}
-			 //TISRLUAT-818 end
+			
+					//TISRLUAT-818 end
 			try
 			{
 				codSelfShipData = cancelReturnFacade.getCustomerBankDetailsByCustomerId(userId);
