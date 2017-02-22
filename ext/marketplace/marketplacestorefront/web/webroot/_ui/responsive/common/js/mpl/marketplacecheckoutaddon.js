@@ -463,7 +463,6 @@ function displayCODForm()
 			}
 			else{
 				if(isCodSet == false){
-					alert("is cod check");
 				   	$.ajax({
 						url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setConvCharge",
 						type: "GET",
