@@ -6773,8 +6773,7 @@ $("#couponSubmitButton").click(function(){
 	 				}
 	 				else if(response.redeemErrorMsg=="Channel_Not_Applicable_CallCentre")
 	 				{
-	 					$("#invalidChannelError").html("Oh snap! This coupon is valid only on our CallCentre");
-	 					$("#invalidChannelError").css("display","block");
+	 					$("#notApplicableCouponError").css("display","block");
 	 				}
 	 				//TPR-658
 	 				onSubmitAnalytics("invalid_coupon");

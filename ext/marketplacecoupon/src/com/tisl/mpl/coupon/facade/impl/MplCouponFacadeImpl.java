@@ -707,7 +707,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				{
 					error = MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_WEB;
 				}
-				else
+				else if (((ChannelRestrictionModel) restriction).getChannel().contains(SalesApplication.CALLCENTER))
 				{
 					error = MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER;
 				}
