@@ -42,10 +42,5 @@ public interface MplWishlistDao
 	 */
 	public int findMobileWishlistswithNameCount(final UserModel user, final String name);
 
-	/**
-	 * Description -- Method will access single Entry of a Wishlist
-	 *
-	 * @return Wishlist2Model
-	 */
-	public Wishlist2EntryModel findWishlistEntryByProductAndUssid(final String ussid);
+
 }

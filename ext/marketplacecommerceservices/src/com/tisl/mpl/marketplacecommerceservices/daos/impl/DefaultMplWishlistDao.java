@@ -117,30 +117,4 @@ public class DefaultMplWishlistDao implements MplWishlistDao
 		return 0;
 	}
 
-	/**
-	 * Description -- Method will access single Entry of a Wishlist
-	 *
-	 * @return Wishlist2EntryModel
-	 */
-
-	@Override
-	public Wishlist2EntryModel findWishlistEntryByProductAndUssid(final String ussid/* , final String product */)
-	{
-		//		final String queryString = //
-		//		"SELECT {pk} FROM {Wishlist2Entry as wishEntry} WHERE  {wishEntry.ussid}=?ussid AND {wishEntry.product}=?product";
-
-		final String queryString = //
-		"SELECT {pk} FROM {Wishlist2Entry as wishEntry} WHERE  {wishEntry.ussid}=?ussid";
-
-		final Map<String, Object> params = new HashMap<String, Object>(1);
-		params.put("ussid", ussid);
-		//	params.put("product", product);
-
-		final SearchResult<Wishlist2EntryModel> searchRes = flexibleSearchService.search(queryString, params);
-		if (searchRes != null && searchRes.getCount() > 0)
-		{
-			return searchRes.getResult().get(0);
-		}
-		return null;
-	}
 }

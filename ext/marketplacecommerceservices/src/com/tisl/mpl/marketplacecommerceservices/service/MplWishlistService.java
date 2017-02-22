@@ -65,5 +65,5 @@ public interface MplWishlistService
 	 *
 	 * @return Wishlist2Model
 	 */
-	public Wishlist2EntryModel findWishlistEntryByProductAndUssid(final String ussid);
+	public List<Wishlist2EntryModel> findWishlistEntryByProductAndUssid(final String ussid);
 }
