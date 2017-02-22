@@ -61367,6 +61367,11 @@ margin: 0;
     font-size: 11px;
   	letter-spacing: 0.6px;
 }
+.cart.wrapper.checkout-payment .blocks .new-card input:focus, .cart.wrapper.checkout-payment .blocks.net-bank input:focus,
+.cart.wrapper.checkout-payment .blocks .new-card .card_exp_month:focus, .cart.wrapper.checkout-payment .blocks .new-card .card_exp_year:focus,
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .cvv input:focus, #bankNameForEMI:focus, #card .form-group select:focus {
+    border: 1px solid #ddd;
+}
 .cart.wrapper.checkout-payment .blocks .new-card .remember input[type="checkbox"] + label {
     font-size: 11px;
     font-weight: normal;
@@ -61408,28 +61413,70 @@ margin: 0;
     font-weight: normal;
     letter-spacing: 0.6px;
     color:#999;
+    padding-left:35.5px;
 }
-.cart.wrapper.checkout-payment .terms .redirect {
+.cart.wrapper.checkout-payment .terms .redirect,
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block #newCardCCEmi.new-form .terms .redirect {
     font-size: 11px;
     font-weight: normal;
     letter-spacing: 0.6px;
-    padding: 0px 0 4px 0px;
+    padding: 36px 0 4px 0px;
     color:#999;
     text-transform: none;
     width: 100%;
 }
-.cart.wrapper.checkout-payment .conditions {
+.cart.wrapper.checkout-payment .conditions,
+ .cart.wrapper .left-block .payments.tab-view .tabs .product-block #newCardCCEmi.new-form .conditions{
     color: #000;
     display: inline;
     margin-top: 0px;
     text-transform: capitalize;
     line-height: normal;
 }
+.cart.wrapper .product-block #cardEmi div.terms{
+	padding-left:0px;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block #newCardCCEmi.new-form .terms .redirect ~ p{
+    font-size: 11px;
+    font-weight: normal;
+    letter-spacing: 0.6px;
+    padding: 0px;
+    color:#999;
+    text-transform: none;
+}
 .cart.wrapper .left-block .payments.tab-view .tabs{
 	padding-bottom: 63px;
 }
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block #newCardCCEmi.new-form{
 	display:block;
+}
+.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.cvv {
+    float: right;
+    width: 45%;
+}
+.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp {
+    width: 55%;
+    margin-bottom: 0px;
+}
+.cart.wrapper.checkout-payment .blocks .new-card .card_exp_month, .cart.wrapper.checkout-payment .blocks .new-card .card_exp_year {
+    margin-right: 8px;
+    width: calc(50% - 8px);
+    width: -webkit-calc(50% - 8px);
+    float: left;
+    color: #c1c1c1;
+    padding: 0 12px !important;
+    background-image: none;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block  .cvv label{
+	margin-left:32px;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .cvv input{
+	margin-left:32px;
+	width: calc(100% - 32px);
+	width: -webkit-calc(100% - 32px);
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item{
+	padding:0;
 }
 /*Left section end*/
 /* Payment Page change end */
