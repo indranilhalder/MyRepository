@@ -289,7 +289,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#mplProductSearch(de.hybris.platform.commercefacades.search.
 	 * data.SearchStateData, de.hybris.platform.commerceservices.search.pagedata.PageableData, java.lang.String)
@@ -748,25 +748,20 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	protected SolrSearchQueryData decodeSearchCategoryState(final SearchStateData searchState, final String categoryCode)
 	{
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
-		final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms();
-		final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
-		if (categoryCode != null)
-		{
-
-			if (categoryCode.startsWith(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
-			{
-				solrSearchQueryTermData.setKey(MarketplaceCoreConstants.CATEGORY);
-			}
-			else if (categoryCode.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX))
-			{
-				solrSearchQueryTermData.setKey(MarketplaceCoreConstants.BRAND);
-			}
-			solrSearchQueryTermData.setValue(categoryCode);
-			filterTerms.add(solrSearchQueryTermData);
-			searchQueryData.setFilterTerms(filterTerms);
-
-
-		}
+		/*
+		 * final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms(); final
+		 * SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData(); if (categoryCode != null) {
+		 * 
+		 * if (categoryCode.startsWith(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX)) {
+		 * solrSearchQueryTermData.setKey(MarketplaceCoreConstants.CATEGORY); } else if
+		 * (categoryCode.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX)) {
+		 * solrSearchQueryTermData.setKey(MarketplaceCoreConstants.BRAND); }
+		 * solrSearchQueryTermData.setValue(categoryCode); filterTerms.add(solrSearchQueryTermData);
+		 * searchQueryData.setFilterTerms(filterTerms);
+		 * 
+		 * 
+		 * }
+		 */
 		populateSolrSearchQueryData(searchState, searchQueryData);
 		return searchQueryData;
 	}
@@ -1123,7 +1118,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#populateSearchState(de.hybris.platform.commercefacades.search
 	 * .data.SearchStateData)
