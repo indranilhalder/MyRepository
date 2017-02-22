@@ -13,6 +13,8 @@
  */
 package com.tisl.mpl.controllers.pages;
 
+
+
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.PreValidateCheckoutStep;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.CheckoutStep;
@@ -117,7 +119,6 @@ import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
-import com.granule.json.JSONObject;
 
 
 @Controller
@@ -497,6 +498,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
 			// TPR-429 END
 
+
+
+
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 			List<AddressData> deliveryAddress = null;
 
@@ -623,8 +627,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		//TISPT-400
 		final CartModel cartModel = getCartService().getSessionCart();
 
+
+		//CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
+
 		try
 		{
+			//final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cartData); //CAR-197
 			final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cartModel);
 			if (cartItemDelistedStatus)
 			{
@@ -649,7 +657,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		//create session object for deliveryMethodForm which will be used if cart contains both cnc and home delivery.
 		session.setAttribute("deliveryMethodForm", deliveryMethodForm);
 
-		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+
+		// CAR-197  start
+		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(); //CAR-197
+
 		model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
 		this.prepareDataForPage(model);
 
@@ -669,12 +680,19 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		double configurableRadius = 0;
 		//retrieve pincode from session
 		final String defaultPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
-		if (cartModel != null && cartModel.getEntries() != null)
+		if (cartData != null && cartData.getEntries() != null) //CAR-197
 		{
-			for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+			//for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+			for (final OrderEntryData cartD : cartData.getEntries())
 			{
-				if (null != cartEntryModel && null != cartEntryModel.getGiveAway() && !cartEntryModel.getGiveAway().booleanValue()
-						&& null != deliveryMethodForm && CollectionUtils.isNotEmpty(deliveryMethodForm.getDeliveryMethodEntry()))
+				if (null != cartD && !cartD.isGiveAway() && null != deliveryMethodForm //CAR-197
+						&& CollectionUtils.isNotEmpty(deliveryMethodForm.getDeliveryMethodEntry()))
+
+				/*
+				 * if (null != cartEntryModel && null != cartEntryModel.getGiveAway() &&
+				 * !cartEntryModel.getGiveAway().booleanValue() && null != deliveryMethodForm &&
+				 * CollectionUtils.isNotEmpty(deliveryMethodForm.getDeliveryMethodEntry()))
+				 */
 				{
 					try
 					{
@@ -682,8 +700,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						//final ProductData productData = productFacade.getProductForOptions(productModel,
 						//		Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE)); // Performance fix TISPT-104
 
-						final String deliveryCode = deliveryMethodForm.getDeliveryMethodEntry()
-								.get(cartEntryModel.getEntryNumber().intValue()).getDeliveryCode();
+						/*
+						 * final String deliveryCode = deliveryMethodForm.getDeliveryMethodEntry()
+						 * .get(cartEntryModel.getEntryNumber().intValue()).getDeliveryCode();
+						 */
+						final String deliveryCode = deliveryMethodForm.getDeliveryMethodEntry().get(cartD.getEntryNumber().intValue())
+								.getDeliveryCode();
 						if (deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
 						{
 							count++;
@@ -708,8 +730,17 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 							}
 							final Location myLocation = new LocationDtoWrapper(dto);
 							//first calls commerce to get all the stores for a sellerId based on the given pincode
+
+
+							/*
+							 * final StoreLocationRequestData storeLocationRequestData = papulateClicknCollectRequesrData(
+							 * cartEntryModel.getSelectedUSSID(), myLocation.getGPS(), Double.valueOf(configurableRadius));
+							 */
+
+
+
 							final StoreLocationRequestData storeLocationRequestData = papulateClicknCollectRequesrData(
-									cartEntryModel.getSelectedUSSID(), myLocation.getGPS(), Double.valueOf(configurableRadius));
+									cartD.getSelectedUssid(), myLocation.getGPS(), Double.valueOf(configurableRadius));
 							storeLocationRequestDataList.add(storeLocationRequestData);
 						}
 						else
