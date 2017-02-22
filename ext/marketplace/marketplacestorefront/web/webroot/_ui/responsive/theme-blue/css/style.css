@@ -58131,9 +58131,10 @@ header > .content .top.header_fix .toggle{
 .Temp07 .Padd h2 span {
     position: relative;
 }
-.Temp07 .Padd .every-scene .owl-theme .owl-controls {
+.Temp07 .Padd .every-scene .every-scene-carousel.owl-theme .owl-controls {
     margin: 0;
     top: 30%;
+    z-index: 1;
 }
 .Temp07 .Padd .every-scene li .media-content {
     width: 88%;
@@ -62151,3 +62152,27 @@ header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_
  
 	
 /*TPR-4471 ends*/
+
+/* A+ content fixes start */
+.Manufacturer.Temp07 .every-scene .owl-item .media-content>div>.content{
+	width: inherit;
+}
+#productContentDivId{
+	padding: 0 20px;
+}
+.Temp07 .Padd .every-scene .every-scene-carousel.owl-theme .owl-controls .owl-nav div{
+	width: 41px;
+    height: 56px;
+    background: #fff;
+    opacity: 0.5;
+}
+.Temp07 .Padd .every-scene .every-scene-carousel .owl-prev:after, .Temp07 .Padd .every-scene .every-scene-carousel .owl-next:after{
+	    top: 12px;
+}
+
+@media (max-width: 767px){
+.Temp07 .Padd .every-scene .every-scene-carousel.owl-theme .owl-controls{
+	display:block !important;
+}
+}
+/* A+ content fixes end */
