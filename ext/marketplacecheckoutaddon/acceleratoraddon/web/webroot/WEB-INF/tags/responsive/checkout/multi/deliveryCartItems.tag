@@ -45,7 +45,7 @@
 	
 		<c:choose>
 			<c:when test="${showDeliveryAddress and not empty deliveryAddress}">
-			<h2>Delivery Details</h2>
+			
 				<p><spring:theme code="checkout.pickup.items.to.be.shipped" text="Shipping Address"/></p>
 				<address>
 				<span>
@@ -109,7 +109,7 @@
 <c:if test="${ not empty cartData.totalUnitCount }">
 <%-- 	${cartData.totalUnitCount}&nbsp;<spring:theme code="basket.page.totalQtyForAddress"/> --%>
 		<c:if test="${not hasShippedItems}">
-			<c:if test="${cartData.totalUnitCount > 0}">${cartData.totalUnitCount}&nbsp;<%-- <spring:theme code="basket.page.totalQtyForAddress.items" /> --%> ITEMS PICKUP FROM BELOW STORE</c:if>
+			<c:if test="${cartData.totalUnitCount > 0}">${cartData.totalUnitCount}&nbsp;<%-- <spring:theme code="basket.page.totalQtyForAddress.items" /> --%> Items pickup from below store</c:if>
 			<%-- <c:if test="${cartData.totalUnitCount <= 1}">${cartData.totalUnitCount}&nbsp;<spring:theme code="basket.page.totalQtyForAddress.item" /></c:if> --%>
 		</c:if>
 		<c:if test="${hasShippedItems}">

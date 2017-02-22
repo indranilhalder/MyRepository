@@ -61179,6 +61179,7 @@ text-transform:none;}
 	padding: 38px 28px 28px;
 	background:#f8f8f8;
 }
+
 .cart.wrapper .right-block.billing .block.summary-info  ul.totals li#total{
 	border-top:1px solid #ddd;
 	border-bottom:none;
@@ -61200,7 +61201,7 @@ text-transform:none;}
 	text-transform:none;
 	color:#666;
 }
-.checkout-payment h2.coupon{
+.checkout-payment h2.coupon,.checkout-payment h2.payment-delivery-details{
 	font-size:16px;
 	text-transform:none;
 	font-weight: normal;
