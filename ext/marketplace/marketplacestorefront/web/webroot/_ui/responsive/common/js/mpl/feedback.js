@@ -1,5 +1,5 @@
 /*----------Start of  validate email in feedback-----------*/
-	var mobileVal=false,deskVal=false,styleMobContainer=null,longStyleContainer=null;
+	mobileVal=false,deskVal=false,styleMobContainer=null,longStyleContainer=null;
 	function validateEmail()
     { 	 var x = document.getElementById("emailField");
 		 if (/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/.test(x.value))  
@@ -3229,11 +3229,11 @@ $(window).on("load resize",function(){
 		$(".productGrid-menu #shopMicrositeSeller").removeClass("clicked-menu-mobile");
 		$(".productGrid-menu  nav > ul > li > ul > li.level1").attr("style",null);
 		if(deskVal === false){
-			$(".productGrid-menu nav > ul > li > ul > li > ul").addClass("heightZero");
+			$(".productGrid-menu nav>ul>li.clicked-menu>ul").addClass("heightZero");
 			$(".productGrid-menu #shopMicrositeSeller").removeClass("clicked-menu active");
 		}
 		else{
-			$(".productGrid-menu nav > ul > li > ul > li > ul").removeClass("heightZero");	
+			$(".productGrid-menu nav>ul>li.clicked-menu>ul").removeClass("heightZero");	
 			$(".productGrid-menu #shopMicrositeSeller").addClass("clicked-menu active");
 		}
 	}
@@ -3245,6 +3245,7 @@ $(window).on("load resize",function(){
 		$(".productGrid-menu #shopMicrositeSeller").removeClass("clicked-menu active");
 	}
 	$(document).on("mouseenter",".productGrid-header-wrapper .productGrid-header .productGrid-menu #shopMicrositeSeller",function(){
+		$(".productGrid-menu nav>ul>li.clicked-menu>ul").removeClass("heightZero");
 		if($(window).width() > 773){
 			$(".productGrid-header-wrapper .productGrid-header .productGrid-menu #shopMicrositeSeller").addClass("clicked-menu active");
 			deskVal=true;
