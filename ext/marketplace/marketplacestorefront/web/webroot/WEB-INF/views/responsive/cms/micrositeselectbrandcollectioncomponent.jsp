@@ -18,7 +18,7 @@ $(document).ready(function () {
 	var sellerName = $('#mSeller_name').val();
 	var lastSegment = "";
 	if(sellerName != undefined) {
-		lastSegment = sellerName.toLowerCase();
+		lastSegment = sellerName;
 	}
 	else
 	{

@@ -15,7 +15,7 @@ $(document).ready(function () {
 	var sellerName = $('#mSeller_name').val();
 	var lastSegment = "";
 	if(sellerName != undefined) {
-		lastSegment = sellerName.toLowerCase();
+		lastSegment = sellerName;
 	}
 	 var url='/m/fetchSellerLogo/'+lastSegment;
 	      if(lastSegment != ''){  
