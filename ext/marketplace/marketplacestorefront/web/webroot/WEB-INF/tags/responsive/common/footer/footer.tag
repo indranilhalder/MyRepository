@@ -5,7 +5,7 @@
 
 <!-- <footer id="footerByAjaxId"> -->
 <footer>
-<c:if test="${!fn:containsIgnoreCase(cmsPage.name, 'Cart Page')}">
+<%-- <c:if test="${!fn:containsIgnoreCase(cmsPage.name, 'Cart Page')}"> --%>
 <div class="callouts">
 					  <div class="Padd">
 						<ul>
@@ -16,7 +16,7 @@
 						</ul>
 					  </div>
 					</div>
-					</c:if>
+					<%-- </c:if> --%>
 
 	<div id="footerByAjaxId"></div>
 	<!-- <footer> -->
