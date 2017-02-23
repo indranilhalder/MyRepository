@@ -40,8 +40,8 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 {
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(BuyAandBGetPrecentageDiscountCashback.class.getName());
-	private List<Product> excludedProductList = null;
-	private List<String> excludeManufactureList = null;
+	//private List<Product> excludedProductList = null;
+	//private List<String> excludeManufactureList = null;
 	private double totalCachback = 0.0D;
 	private int primaryListSize = 0;
 	private int secondaryListSize = 0;
@@ -84,13 +84,13 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions()); //Get the Promotion set Restrictions
 
-		excludedProductList = new ArrayList<Product>();
-		excludeManufactureList = new ArrayList<String>();
+		//excludedProductList = new ArrayList<Product>();
+		//excludeManufactureList = new ArrayList<String>();
 		primaryProductList = new ArrayList<Product>();
 		secondaryProductList = new ArrayList<Product>();
 
-		GenericUtilityMethods.populateExcludedProductManufacturerList(paramSessionContext, paramPromotionEvaluationContext,
-				excludedProductList, excludeManufactureList, restrictionList, this);
+		//		GenericUtilityMethods.populateExcludedProductManufacturerList(paramSessionContext, paramPromotionEvaluationContext,
+		//				excludedProductList, excludeManufactureList, restrictionList, this);
 		final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager()
 				.findEligibleProductsInBasketForBuyAandBPromo(paramSessionContext, paramPromotionEvaluationContext, this,
 						getCategories(), getSecondCategories(), primaryProductList, secondaryProductList); // Validates Promotion Restrictions
@@ -484,7 +484,7 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 		resetFlag();
 		final List<String> validProductListA = new ArrayList<String>();
 		final List<String> validProductListB = new ArrayList<String>();
-		boolean brandFlag = false;
+		//boolean brandFlag = false;
 		boolean sellerFlag = false;
 		//final boolean promoEligible = false;
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());
@@ -509,18 +509,20 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 			{
 				final Product product = entry.getProduct();
 				//excluded product check
-				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
-						|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
-						|| getDefaultPromotionsManager().isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
+				//				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
+				//						|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
+				//						|| getDefaultPromotionsManager().isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
+				if (getDefaultPromotionsManager().isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
 				{
 					continue;
 				}
 
 				if (CollectionUtils.isNotEmpty(primaryProductList) && primaryProductList.contains(product))//
 				{
-					brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+					//brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
 					sellerFlag = getDefaultPromotionsManager().checkSellerData(paramSessionContext, restrictionList, entry);
-					if (brandFlag && sellerFlag)
+					//					if (brandFlag && sellerFlag)
+					if (sellerFlag)
 					{
 						validProductAUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
 								restrictionList, paramSessionContext, entry));
@@ -528,9 +530,10 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 				}
 				else if (CollectionUtils.isNotEmpty(secondaryProductList) && secondaryProductList.contains(product))//
 				{
-					brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+					//brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
 					sellerFlag = getDefaultPromotionsManager().checkSellerData(paramSessionContext, restrictionList, entry);
-					if (brandFlag && sellerFlag)
+					//if (brandFlag && sellerFlag)
+					if (sellerFlag)
 					{
 						validProductBUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
 								restrictionList, paramSessionContext, entry));
@@ -800,36 +803,36 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 	/**
 	 * @return the excludedProductList
 	 */
-	public List<Product> getExcludedProductList()
-	{
-		return excludedProductList;
-	}
+	//	public List<Product> getExcludedProductList()
+	//	{
+	//		return excludedProductList;
+	//	}
 
 	/**
 	 * @param excludedProductList
 	 *           the excludedProductList to set
 	 */
-	public void setExcludedProductList(final List<Product> excludedProductList)
-	{
-		this.excludedProductList = excludedProductList;
-	}
+	//	public void setExcludedProductList(final List<Product> excludedProductList)
+	//	{
+	//		this.excludedProductList = excludedProductList;
+	//	}
 
 	/**
 	 * @return the excludeManufactureList
 	 */
-	public List<String> getExcludeManufactureList()
-	{
-		return excludeManufactureList;
-	}
+	//	public List<String> getExcludeManufactureList()
+	//	{
+	//		return excludeManufactureList;
+	//	}
 
 	/**
 	 * @param excludeManufactureList
 	 *           the excludeManufactureList to set
 	 */
-	public void setExcludeManufactureList(final List<String> excludeManufactureList)
-	{
-		this.excludeManufactureList = excludeManufactureList;
-	}
+	//	public void setExcludeManufactureList(final List<String> excludeManufactureList)
+	//	{
+	//		this.excludeManufactureList = excludeManufactureList;
+	//	}
 
 	/**
 	 * @return the totalCachback

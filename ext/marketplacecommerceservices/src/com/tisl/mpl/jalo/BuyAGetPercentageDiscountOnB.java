@@ -35,7 +35,6 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.util.ExceptionUtil;
-import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 @SuppressWarnings(
@@ -46,7 +45,7 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 
 	private final static Logger LOG = Logger.getLogger(BuyAGetPercentageDiscountOnB.class.getName());
 
-	private List<Product> excludedProductList = null;
+	//private List<Product> excludedProductList = null;
 	private boolean productFlag = false;
 	private boolean categoryFlag = false;
 	private int noOfProducts = 0;
@@ -95,13 +94,13 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 				.findEligibleProductsInBasketForBuyAandBPromo(ctx, evaluationContext, this, getCategories(), getSecondCategories(),
 						primaryProductList, secondaryProductList); // Validates Promotion Restrictions
 		boolean checkChannelFlag = false;
-		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
+		//final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
 
 		try
 		{
-			excludedProductList = new ArrayList<Product>();
-			GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, evaluationContext, excludedProductList, null,
-					restrictionList, this);
+			//excludedProductList = new ArrayList<Product>();
+			//			GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, evaluationContext, excludedProductList, null,
+			//					restrictionList, this);
 			final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(ctx,
 					MarketplacecommerceservicesConstants.CHANNEL);
 			Object cartChennal = null;
@@ -242,7 +241,7 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 	{
 		//final Map<String, Integer> validUssidList = new HashMap<String, Integer>();
 		boolean sellerFlag = false;
-		boolean brandFlag = false;
+		//boolean brandFlag = false;
 		//String sellerID = MarketplacecommerceservicesConstants.EMPTY;
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());
 		final Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
@@ -261,16 +260,17 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 			{
 				//boolean applyPromotion = false;
 				final Product product = entry.getProduct();
-				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList))
-				{
-					continue;
-				}
+				//				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList))
+				//				{
+				//					continue;
+				//				}
 
 				if (CollectionUtils.isNotEmpty(primaryProductList) && primaryProductList.contains(product))//
 				{
-					brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+					//brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
 					sellerFlag = getDefaultPromotionsManager().checkSellerData(ctx, restrictionList, entry);
-					if (brandFlag && sellerFlag)
+					//if (brandFlag && sellerFlag)
+					if (sellerFlag)
 					{
 						//						validProductAUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
 						//								restrictionList, ctx, entry));
@@ -280,9 +280,10 @@ public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDisc
 				}
 				else if (CollectionUtils.isNotEmpty(secondaryProductList) && secondaryProductList.contains(product))//
 				{
-					brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+					//brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
 					sellerFlag = getDefaultPromotionsManager().checkSellerData(ctx, restrictionList, entry);
-					if (brandFlag && sellerFlag)
+					//if (brandFlag && sellerFlag)
+					if (sellerFlag)
 					{
 						//						validProductBUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
 						//								restrictionList, ctx, entry));

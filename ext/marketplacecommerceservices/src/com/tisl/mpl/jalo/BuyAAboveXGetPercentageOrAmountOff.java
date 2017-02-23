@@ -37,14 +37,13 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.util.ExceptionUtil;
-import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPercentageOrAmountOff
 {
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(BuyAAboveXGetPercentageOrAmountOff.class.getName());
-	private List<Product> excludedProductList = null;
+	//private List<Product> excludedProductList = null;
 	private boolean productFlag = false;
 	private boolean categoryFlag = false;
 	private int noOfProducts = 0;
@@ -84,15 +83,17 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 		//final boolean isMultipleSeller = false;  //sonar fix
 
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
-		final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(ctx, evaluationContext);
+		//final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(ctx, evaluationContext);
+		final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager().findEligibleProductsInBasket(ctx,
+				evaluationContext, this, getCategories());
 		boolean checkChannelFlag = false;
-		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
+		//final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
 
 		try
 		{
-			excludedProductList = new ArrayList<Product>();
-			GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, evaluationContext, excludedProductList, null,
-					restrictionList, this);
+			//excludedProductList = new ArrayList<Product>();
+			//			GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, evaluationContext, excludedProductList, null,
+			//					restrictionList, this);
 			final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(ctx,
 					MarketplacecommerceservicesConstants.CHANNEL);
 			Object cartChennal = null;
@@ -360,24 +361,25 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 			for (final AbstractOrderEntry entry : cart.getEntries())
 			{
 				boolean sellerFlag = false;
-				boolean brandFlag = false;
+				//boolean brandFlag = false;
 				//final boolean applyPromotion = false;
 				final Product product = entry.getProduct();
 
 				//excluded product check
-				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList))
-				{
-					continue;
-				}
+				//				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList))
+				//				{
+				//					continue;
+				//				}
 
 				//checking product is a valid product for promotion
 				if (CollectionUtils.isNotEmpty(allowedProductList) && allowedProductList.contains(product))
 				{
-					brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+					//brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
 					sellerFlag = getDefaultPromotionsManager().checkSellerData(ctx, restrictionList, entry);
 				}
 
-				if (brandFlag && sellerFlag)
+				//if (brandFlag && sellerFlag)
+				if (sellerFlag)
 				{
 					validProductUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
 							restrictionList, ctx, entry));
@@ -651,9 +653,9 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 	/**
 	 * @return the excludedProductList
 	 */
-	public List<Product> getExcludedProductList()
-	{
-		return excludedProductList;
-	}
+	//	public List<Product> getExcludedProductList()
+	//	{
+	//		return excludedProductList;
+	//	}
 
 }

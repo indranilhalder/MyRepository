@@ -43,8 +43,8 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 {
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(BuyAandBPrecentageDiscount.class.getName());
-	private List<Product> excludedProductList = null;
-	private List<String> excludeManufactureList = null;
+	//private List<Product> excludedProductList = null;
+	//private List<String> excludeManufactureList = null;
 	private List<Product> primaryProductList = null;
 	private List<Product> secondaryProductList = null;
 	private Map<String, AbstractOrderEntry> validProductUssidMap = null;
@@ -83,13 +83,13 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>(); // Method returns List of Type PromotionResult
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
 
-		excludedProductList = new ArrayList<Product>();
-		excludeManufactureList = new ArrayList<String>();
+		//excludedProductList = new ArrayList<Product>();
+		//excludeManufactureList = new ArrayList<String>();
 		primaryProductList = new ArrayList<Product>();
 		secondaryProductList = new ArrayList<Product>();
 
-		GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, evaluationContext, excludedProductList,
-				excludeManufactureList, restrictionList, this);
+		//		GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, evaluationContext, excludedProductList,
+		//				excludeManufactureList, restrictionList, this);
 		final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager()
 				.findEligibleProductsInBasketForBuyAandBPromo(ctx, evaluationContext, this, getCategories(), getSecondCategories(),
 						primaryProductList, secondaryProductList); // Validates Promotion Restrictions
@@ -307,8 +307,9 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 			}
 			else
 			{
-				final int count = getMplPromotionHelper().returnValidProductCount(ctx, cart, validProductUssidMap,
-						excludedProductList);
+				//				final int count = getMplPromotionHelper().returnValidProductCount(ctx, cart, validProductUssidMap,
+				//						excludedProductList);
+				final int count = validProductUssidMap.size();
 				if (count > 0)
 				{
 					final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
@@ -319,7 +320,8 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 		}
 		else
 		{
-			final int count = getMplPromotionHelper().returnValidProductCount(ctx, cart, validProductUssidMap, excludedProductList);
+			//			final int count = getMplPromotionHelper().returnValidProductCount(ctx, cart, validProductUssidMap, excludedProductList);
+			final int count = validProductUssidMap.size();
 			if (count > 0)
 			{
 				final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
@@ -679,7 +681,7 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 	private List<String> eligibleForPromotion(final AbstractOrder cart, final SessionContext paramSessionContext)
 	{
 		resetFlag();
-		boolean brandFlag = false;
+		//boolean brandFlag = false;
 		boolean sellerFlag = false;
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());
 		final List<String> validProductListFinal = new ArrayList<String>();
@@ -694,17 +696,19 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 			{
 				final Product product = entry.getProduct();
 				//excluded product check
-				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
-						|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
-						|| getDefaultPromotionsManager().isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
+				//				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
+				//						|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
+				//						|| getDefaultPromotionsManager().isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
+				if (getDefaultPromotionsManager().isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
 				{
 					continue;
 				}
 				if (CollectionUtils.isNotEmpty(primaryProductList) && primaryProductList.contains(product))//
 				{
-					brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+					//brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
 					sellerFlag = getDefaultPromotionsManager().checkSellerData(paramSessionContext, restrictionList, entry);
-					if (brandFlag && sellerFlag)
+					//					if (brandFlag && sellerFlag)
+					if (sellerFlag)
 					{
 						validProductAUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
 								restrictionList, paramSessionContext, entry));
@@ -712,9 +716,10 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 				}
 				else if (CollectionUtils.isNotEmpty(secondaryProductList) && secondaryProductList.contains(product))//
 				{
-					brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+					//brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
 					sellerFlag = getDefaultPromotionsManager().checkSellerData(paramSessionContext, restrictionList, entry);
-					if (brandFlag && sellerFlag)
+					//if (brandFlag && sellerFlag)
+					if (sellerFlag)
 					{
 						validProductBUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
 								restrictionList, paramSessionContext, entry));

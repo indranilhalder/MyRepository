@@ -1850,4 +1850,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//FREEBIE FIX
 	public static final String FREEBIEPRICETHRESHOLD = "freebiePriceThreshold";
 
+	public static final String CATALOGVERSION = "CatalogVersion";
+
 }

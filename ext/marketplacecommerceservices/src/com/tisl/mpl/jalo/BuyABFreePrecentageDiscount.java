@@ -79,14 +79,16 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());
 		//Blocked for TISPT-154
-		final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(ctx, evaluationContext);
-		final List<Product> excludedProductList = new ArrayList<Product>();
-		final List<String> excludeManufactureList = new ArrayList<String>();
+		//final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(ctx, evaluationContext);
+		final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager().findEligibleProductsInBasket(ctx,
+				evaluationContext, this, getCategories());
+		//final List<Product> excludedProductList = new ArrayList<Product>();
+		//final List<String> excludeManufactureList = new ArrayList<String>();
 		//final List<Product> promotionProductList = new ArrayList<>(getProducts()); // Fetching Promotion set Primary Products
 		//final List<Category> promotionCategoryList = new ArrayList<>(getCategories()); // Fetching Promotion set Primary Categories
 
-		GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, evaluationContext, excludedProductList,
-				excludeManufactureList, restrictionList, this);
+		//		GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, evaluationContext, excludedProductList,
+		//				excludeManufactureList, restrictionList, this);
 
 		boolean checkChannelFlag = false;
 		try
@@ -115,8 +117,7 @@ public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDis
 				//								excludedProductList, excludeManufactureList, sellerIDData, eligibleProductMap);
 				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
-						.getValidProdListForBuyXofA(order, ctx, allowedProductList, restrictionList, excludedProductList,
-								excludeManufactureList, sellerIDData, eligibleProductMap);
+						.getValidProdListForBuyXofA(order, ctx, allowedProductList, restrictionList, sellerIDData, eligibleProductMap);
 
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(ctx, validProductUssidMap))
 				{

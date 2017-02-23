@@ -39,8 +39,8 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 {
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(BuyAandBgetC.class.getName());
-	private List<Product> excludedProductList = null;
-	private List<String> excludeManufactureList = null;
+	//private List<Product> excludedProductList = null;
+	//private List<String> excludeManufactureList = null;
 	private int primaryListSize = 0;
 	private int secondaryListSize = 0;
 	private String sellerID;
@@ -84,13 +84,13 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 
 		//Populate Excluded Products/Manufacturers in their respective Lists
-		excludedProductList = new ArrayList<Product>();
-		excludeManufactureList = new ArrayList<String>();
+		//excludedProductList = new ArrayList<Product>();
+		//excludeManufactureList = new ArrayList<String>();
 		primaryProductList = new ArrayList<Product>();
 		secondaryProductList = new ArrayList<Product>();
 
-		GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, evaluationContext, excludedProductList,
-				excludeManufactureList, restrictionList, this);
+		//		GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, evaluationContext, excludedProductList,
+		//				excludeManufactureList, restrictionList, this);
 		//getDefaultPromotionsManager().promotionAlreadyFired(ctx, order, excludedProductList); // Checking if Promotions already Fired on the promotion eligible products
 
 		final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager()
@@ -224,16 +224,17 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 			}
 			else
 			{
-				for (final AbstractOrderEntry entry : order.getEntries())
-				{// For Message Localization
-					final Product orderProduct = entry.getProduct();
-					if (!excludedProductList.contains(orderProduct) && GenericUtilityMethods.checkRestrictionData(restrictionList))
-					{
-						final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
-								arg1.getOrder(), 0.00F);
-						promotionResults.add(result);
-					}
+				//for (final AbstractOrderEntry entry : order.getEntries())
+				//{// For Message Localization
+				//final Product orderProduct = entry.getProduct();
+				//if (!excludedProductList.contains(orderProduct) && GenericUtilityMethods.checkRestrictionData(restrictionList))
+				if (GenericUtilityMethods.checkRestrictionData(restrictionList))
+				{
+					final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this, arg1.getOrder(),
+							0.00F);
+					promotionResults.add(result);
 				}
+				//}
 			}
 		}
 		return promotionResults;
@@ -502,7 +503,7 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 	private List<String> eligibleForPromotion(final AbstractOrder cart, final SessionContext paramSessionContext)
 	{
 		resetFlag();
-		boolean brandFlag = false;
+		//boolean brandFlag = false;
 		boolean sellerFlag = false;
 		//final boolean sellerMatches = false;
 		//final boolean promoEligible = false;
@@ -541,17 +542,18 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 					{
 						final Product product = entry.getProduct();
 						//excluded product check
-						if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
-								|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList))
-						{
-							continue;
-						}
+						//						if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
+						//								|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList))
+						//						{
+						//							continue;
+						//						}
 
 						if (CollectionUtils.isNotEmpty(primaryProductList) && primaryProductList.contains(product))//
 						{
-							brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+							//brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
 							sellerFlag = getDefaultPromotionsManager().checkSellerData(paramSessionContext, restrictionList, entry);
-							if (brandFlag && sellerFlag)
+							//if (brandFlag && sellerFlag)
+							if (sellerFlag)
 							{
 								validProductAUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
 										restrictionList, paramSessionContext, entry));
@@ -560,9 +562,10 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 						}
 						else if (CollectionUtils.isNotEmpty(secondaryProductList) && secondaryProductList.contains(product))//
 						{
-							brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+							//brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
 							sellerFlag = getDefaultPromotionsManager().checkSellerData(paramSessionContext, restrictionList, entry);
-							if (brandFlag && sellerFlag)
+							//if (brandFlag && sellerFlag)
+							if (sellerFlag)
 							{
 								validProductBUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
 										restrictionList, paramSessionContext, entry));

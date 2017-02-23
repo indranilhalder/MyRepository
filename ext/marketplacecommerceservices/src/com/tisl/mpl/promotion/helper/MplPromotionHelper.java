@@ -13,7 +13,6 @@ import de.hybris.platform.jalo.enumeration.EnumerationValue;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.order.delivery.DeliveryMode;
-import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
@@ -351,39 +350,39 @@ public class MplPromotionHelper
 	 * @param excludedProductList
 	 * @return count
 	 */
-	public int returnValidProductCount(final SessionContext arg0, final AbstractOrder cart,
-			final Map<String, AbstractOrderEntry> validProductUssidMap,
-			@SuppressWarnings("deprecation") final List<Product> excludedProductList)
-	{
-		int count = 0;
-		{
-			try
-			{
-				if (null != cart)
-				{
-					for (final AbstractOrderEntry entry : cart.getEntries()) // For localization Purpose
-					{
-						@SuppressWarnings("deprecation")
-						final Product orderProduct = entry.getProduct();
-
-						if (!excludedProductList.contains(orderProduct))
-						{
-							count = count + 1;
-						}
-					}
-				}
-			}
-			catch (final JaloInvalidParameterException exception)
-			{
-				LOG.error(exception.getMessage());
-			}
-			catch (final Exception exception)
-			{
-				LOG.error(exception.getMessage());
-			}
-		}
-		return count;
-	}
+	//	public int returnValidProductCount(final SessionContext arg0, final AbstractOrder cart,
+	//			final Map<String, AbstractOrderEntry> validProductUssidMap,
+	//			@SuppressWarnings("deprecation") final List<Product> excludedProductList)
+	//	{
+	//		int count = 0;
+	//		{
+	//			try
+	//			{
+	//				if (null != cart)
+	//				{
+	//					for (final AbstractOrderEntry entry : cart.getEntries()) // For localization Purpose
+	//					{
+	//						@SuppressWarnings("deprecation")
+	//						final Product orderProduct = entry.getProduct();
+	//
+	//						if (!excludedProductList.contains(orderProduct))
+	//						{
+	//							count = count + 1;
+	//						}
+	//					}
+	//				}
+	//			}
+	//			catch (final JaloInvalidParameterException exception)
+	//			{
+	//				LOG.error(exception.getMessage());
+	//			}
+	//			catch (final Exception exception)
+	//			{
+	//				LOG.error(exception.getMessage());
+	//			}
+	//		}
+	//		return count;
+	//	}
 
 	/**
 	 * @Description : Returns Valid Count of USSIDs for A and B Discount Promotions

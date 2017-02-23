@@ -81,8 +81,8 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 		primaryProductList = new ArrayList<Product>();
 		secondaryProductList = new ArrayList<Product>();
 		// To filter out the Products on which Promotion is already applied
-		GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, evaluationContext, excludedProductList,
-				excludeManufactureList, restrictionList, this);
+		//		GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, evaluationContext, excludedProductList,
+		//				excludeManufactureList, restrictionList, this);
 
 		final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager()
 				.findEligibleProductsInBasketForBuyAandBPromo(ctx, evaluationContext, this, getCategories(), getSecondCategories(),
@@ -479,7 +479,7 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 	private List<String> eligibleForPromotion(final AbstractOrder cart, final SessionContext paramSessionContext)
 	{
 		resetFlag();
-		boolean brandFlag = false;
+		//boolean brandFlag = false;
 		boolean sellerFlag = false;
 		//boolean promoEligible = false;
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());
@@ -514,9 +514,10 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 
 				if (CollectionUtils.isNotEmpty(primaryProductList) && primaryProductList.contains(product))//
 				{
-					brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+					//brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
 					sellerFlag = getDefaultPromotionsManager().checkSellerData(paramSessionContext, restrictionList, entry);
-					if (brandFlag && sellerFlag)
+					//					if (brandFlag && sellerFlag)
+					if (sellerFlag)
 					{
 						validProductAUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
 								restrictionList, paramSessionContext, entry));
@@ -524,9 +525,10 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 				}
 				else if (CollectionUtils.isNotEmpty(secondaryProductList) && secondaryProductList.contains(product))//
 				{
-					brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+					//brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
 					sellerFlag = getDefaultPromotionsManager().checkSellerData(paramSessionContext, restrictionList, entry);
-					if (brandFlag && sellerFlag)
+					//if (brandFlag && sellerFlag)
+					if (sellerFlag)
 					{
 						validProductBUssidMap.putAll(getDefaultPromotionsManager().populateValidProductUssidMap(product, cart,
 								restrictionList, paramSessionContext, entry));
