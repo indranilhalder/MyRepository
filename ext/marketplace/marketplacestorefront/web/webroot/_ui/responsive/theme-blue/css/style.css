@@ -58199,7 +58199,7 @@ header > .content .top.header_fix .toggle{
     font-size: 14px;
     line-height: 22px;
     text-align: center;
-   /*  margin: 30px auto; */
+    margin: 30px auto; 
     width: 79%;
 }
 .Temp07 .Padd .twocolumn .onecolumn .media-content .yCmsComponent {
