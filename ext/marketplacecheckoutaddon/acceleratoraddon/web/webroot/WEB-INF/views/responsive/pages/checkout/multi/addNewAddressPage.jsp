@@ -120,8 +120,7 @@
 					    var firstName = document.getElementById("address.firstName");
 						var lastName = document.getElementById("address.surname");
 						var address1 = document.getElementById("address.line1");
-						
-						 		   			
+					 		   			
     		   			var regAddress = /^[0-9a-zA-Z\-\/\,\s]+$/;
 						//var address2 = document.getElementById("address.line2");
 						//var address3 = document.getElementById("address.line3");
