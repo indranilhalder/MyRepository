@@ -61668,6 +61668,71 @@ margin: 0;
 .cart.wrapper.checkout-payment .blocks .new-card .remember input[type="checkbox"] + label[for="sameAsShippingEmi"]{
 	margin-top:7px;
 }
+/* net banking start */
+.cart.wrapper.checkout-payment .blocks.netbankingPanel{
+	padding-right:36px;
+}
+.product-block.net-bank .item.cardForm p.popular-netbanks{
+	color:#000;
+	font-size:14px;
+	text-transform:none;
+	letter-spacing:0.6px;
+	padding:0;
+}
+.product-block.net-bank .item.cardForm p.popular-banks{
+	color:#666;
+	font-size:11px;
+	letter-spacing:0.6px;
+	padding: 0 0 12px 0;
+	text-transform: none;
+	font-weight: normal;
+	margin-top: 25px;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block.net-bank li.item.cardForm > ul li{
+	height: 60px;
+    background-color: #eee;
+    border: solid 1px #cccccc;
+    text-transform: none;
+    font-size: 12px;
+    letter-spacing: 0.6px;
+    line-height: 1.33;
+    border-radius:0;
+    margin: 0 3.5px 7px;
+    padding: 21px 0;
+    width:calc(33% - 14px);
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block.net-bank li.item.cardForm > ul li:nth-child(3n){
+margin-right:0;
+}
+.cart.wrapper .left-block  .payments.tab-view .tabs .product-block.net-bank .item.cardForm li input[type="radio"] + label:before{
+	width:15px;
+	height:15px;
+	background: #fff;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select label{
+	text-align: left;
+    text-transform: none;
+    font-size: 11px;
+    letter-spacing: 0.6px;
+    color: #999999;
+    margin-bottom: 12px;
+}
+#bankCodeSelection{
+	height:41px;
+	font-size:11px;
+	letter-spacing:0.6px;
+	border: 1px solid #ddd;
+	float: left;
+	width:47%;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select select{
+	    background-image: url(../images/select-arrow-new.png);
+}
+.cart.wrapper .left-block .payments.tab-view .pay.nbButton .button{
+	margin-left:35px;
+	margin-bottom:0px;
+}
+/* net banking end */
 /*Left section end*/
 /* Payment Page change end */
 /*checkout pages end*/
