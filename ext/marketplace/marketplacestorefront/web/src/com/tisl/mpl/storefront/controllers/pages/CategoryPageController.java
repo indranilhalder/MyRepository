@@ -403,7 +403,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			if (preferencesData != null && preferencesData.getPageSize() != null)
 			{
 				count = preferencesData.getPageSize().intValue();
-			} // End Change for // CAR-236
+			}
 
 			//final List<ProductModel> heroProducts = new ArrayList<ProductModel>();
 			if (StringUtils.isNotEmpty(searchCode) && !(searchCode.substring(0, 5).equals(categoryCode))
@@ -413,6 +413,16 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 			model.addAttribute(ModelAttributetConstants.SEARCH_CODE, searchCode);
 			model.addAttribute(ModelAttributetConstants.IS_CATEGORY_PAGE, Boolean.TRUE);
+			final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
+
+			final ContentPageModel categoryLandingPage = getLandingPageForCategory(category); // CAR-237 moved here for called only Once rather  line # 409 , 469 & 1053 available Code review pt#4
+			//SEO
+			this.getSEOContents(category, model, categoryLandingPage);
+
+			/* CAR-242 Moved here for calling once */
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
+					categoryCode, searchQuery, pageNo, showMode, sortCode, count, resetAll, pageFacets);
+
 
 			CategoryModel category = null;
 			try
@@ -437,19 +447,58 @@ public class CategoryPageController extends AbstractCategoryPageController
 						if (categoryModel != null)
 						{
 							dropDownText = (StringUtils.isNotEmpty(categoryModel.getName())) ? categoryModel.getName() : dropDownText;
+
 						}
 					}
+
+					//final ContentPageModel categoryLandingPage = getLandingPageForCategory(category); // CAR-237 called above at line 392 once. doing the same logic to throw pt # 4
+					if (categoryLandingPage == null)
+					{
+						throw new CMSItemNotFoundException("Could not find a landing page for the category" + category.getName());
+					}
+
+					/*
+					 * CAR-242 moved up for caling once line # 397 final ProductCategorySearchPageData<SearchStateData, ProductData,
+					 * CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData,
+					 * CategoryData>) performSearch( categoryCode, searchQuery, pageNo, showMode, sortCode, getSearchPageSize(),
+					 * resetAll, pageFacets);
+					 */
+					final List<ProductData> normalProductDatas = searchPageData.getResults();
+					//Set department hierarchy
+					//if (normalProductDatas.size() > 0)
+					if (CollectionUtils.isNotEmpty(normalProductDatas))
+					{
+						model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA, searchPageData.getDepartmentHierarchyData());
+						model.addAttribute(ModelAttributetConstants.DEPARTMENTS, searchPageData.getDepartments());
+						model.addAttribute(ModelAttributetConstants.CURRENT_QUERY, searchPageData.getCurrentQuery().getQuery().getValue());
+					}
+
+					final String categoryName = category.getName();
+					//				model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY, categoryName.replaceAll(SPECIAL_CHARACTERS, "")
+					//						.replaceAll(" ", "_").toLowerCase());
+					model.addAttribute(WebConstants.BREADCRUMBS_KEY,
+							getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, categoryName, false));
+					populateModel(model, searchPageData, ShowMode.Page);
+					model.addAttribute(ModelAttributetConstants.NORMAL_PRODUCTS, normalProductDatas);
+					model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
+					// For Category Footer
+					//				if (null != category.getCategoryFooterText())
+					//				{
+					//					model.addAttribute(CATEGORY_FOOTER_TEXT, category.getCategoryFooterText());
+					//				}
+					storeCmsPageInModel(model, categoryLandingPage);
 					//Added For TISPRD-1243
 					model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropDownText);
 				}
-				else
-				{
-					final String categoryName = (category == null) ? "" : category.getName();
-					model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, categoryName);
-				}
-				//int count = getSearchPageSize();  //moved up
-				//Check if there is a landing page for the category
-
+			else
+			{
+				final String categoryName = (category == null) ? "" : category.getName();
+				model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, categoryName);
+			}
+			//int count = getSearchPageSize();  //moved up
+			//Check if there is a landing page for the category
+			try
+			{
 				//final UserPreferencesData preferencesData = updateUserPreferences(pageSize); // CAR-236 redefined at the top line # 380 for review comment Point # 3
 				if (preferencesData != null && preferencesData.getPageSize() != null)
 				{
@@ -473,11 +522,12 @@ public class CategoryPageController extends AbstractCategoryPageController
 						throw new CMSItemNotFoundException("Could not find a landing page for the category" + category.getName());
 					}
 
+
 					/*
-					 * CAR-242 moved above to call it only once final ProductCategorySearchPageData<SearchStateData,
-					 * ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData,
-					 * ProductData, CategoryData>) performSearch( categoryCode, searchQuery, pageNo, showMode, sortCode,
-					 * count, resetAll, pageFacets);
+					 * CAR-242 moved above to call it only once final ProductCategorySearchPageData<SearchStateData, ProductData,
+					 * CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData,
+					 * CategoryData>) performSearch( categoryCode, searchQuery, pageNo, showMode, sortCode, count, resetAll,
+					 * pageFacets);
 					 */
 
 					final List<ProductData> normalProductDatas = searchPageData.getResults();
