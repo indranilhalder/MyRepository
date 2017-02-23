@@ -61187,6 +61187,16 @@ text-transform:none;}
 	margin-top: 15px;
     padding-top: 19px;
 }
+.cart.wrapper .right-block.billing .block.summary-info  ul.totals li{
+   text-transform:none;
+   color:#666;
+}
+.cart.wrapper .right-block.billing .block .totals li .amt,.cart.wrapper .right-block.billing .block .totals li span + span{
+	font-weight:normal;
+	color:#000;
+	font-size:14px;
+	text-transform:uppercase;
+}
 .cart.wrapper .right-block.billing .block.summary-info  ul.totals li#total span{
 	font-size:18px;
 	padding-top:0px;
@@ -61205,7 +61215,7 @@ text-transform:none;}
 	letter-spacing: normal;
 }
 .cart.wrapper .right-block.billing.checkout-list-right .block.coupon{
-	padding:27px 28px 32px;
+	padding:24px 28px 32px;
 	background-color: #f8f8f8;
 	border:none;
 }
@@ -61220,6 +61230,9 @@ text-transform:none;}
 }
 .cart.wrapper .right-block.billing .block.coupon button{
 	background-color:#666;
+	font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 0.6px;
 }
 .cart.wrapper .right-block.billing.checkout-list-right .order-details.block.delivery-info{
 	border:none;
@@ -61236,6 +61249,9 @@ text-transform:none;}
 	letter-spacing: 0.6px;
 	line-height:1.67;
 }
+.cart.wrapper .right-block.billing .block.bottom.order-details.delivery-info>address{
+	line-height:1.67 !important;
+}
 .cart.wrapper .right-block.billing .block.bottom.order-details.delivery-info>address span b{
 	font-size:12px;
 	color:#000;
@@ -61247,6 +61263,8 @@ text-transform:none;}
 }
 .prd-info .item-adds{
 	color:#666;
+	text-transform:none;
+	padding-bottom: 18px;
 }
 .checkout-order-summary	.item .product-name a{
 	font-size:14px;
@@ -61258,6 +61276,7 @@ text-transform:none;}
 	color:#000;
 	letter-spacing: 0.6px;
 	text-transform:none;
+	line-height: 21px;
 }
 .cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info .item .product .prd-rate p.delivery-price{
 	font-size:14px;
@@ -61296,8 +61315,23 @@ text-transform:none;}
 .cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info .item-mthd p.delivery-method-description-time{
 	color: #92002e;
 }
+@media (max-width: 1024px){
+.cart.wrapper .right-block.billing .block.summary-info .totals {
+    padding: 0px;
+}
+}
+@media (max-width: 767px){
+.cart.wrapper .right-block.billing .block.summary-info  ul.totals li#total{
+	    padding: 19px 0px 0px;
+}
+}
 /* right section end*/
 /*Left section start*/
+@media only screen and (max-width: 1250px){
+.cart.wrapper.checkout-payment{
+	margin:0 auto;
+}
+}
 .checkout.wrapper.checkout-payment h1{
 	font-size:20px;
 	font-weight:normal;
