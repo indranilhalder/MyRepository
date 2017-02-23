@@ -157,6 +157,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private static final String CATEGORY_FOOTER_TEXT = "categoryFooterTxt";
 	private static final String SPECIAL_CHARACTERS = "[^\\w\\s]";
 	private int pageSiseCount;
+	//UF-15,16
+	private static final Integer PAGE_SIZE = new Integer(24);
 
 	/**
 	 * @return the pageSiseCount
@@ -363,12 +365,14 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = PAGE, defaultValue = "0") int pageNo,
 			@RequestParam(value = SHOW, defaultValue = PAGEVAl) final ShowMode showMode,
 			@RequestParam(value = SORT, required = false) final String sortCode,
-			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "searchCategory", required = false) String dropDownText,
 			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException,
 			CMSItemNotFoundException
 	{
+		//UF-15
+		pageSize = PAGE_SIZE;
 		categoryCode = categoryCode.toUpperCase();
 		String returnStatement = null;
 		if (!redirectIfLuxuryCategory(categoryCode, response))
@@ -401,7 +405,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 			model.addAttribute(ModelAttributetConstants.SEARCH_CODE, searchCode);
 			model.addAttribute(ModelAttributetConstants.IS_CATEGORY_PAGE, Boolean.TRUE);
-			
+
 			try
 			{
 				final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
@@ -409,18 +413,18 @@ public class CategoryPageController extends AbstractCategoryPageController
 				this.getSEOContents(category, model);
 
 				//Set the drop down text if the attribute is not empty or null
-			if (dropDownText != null && !dropDownText.isEmpty())
+				if (dropDownText != null && !dropDownText.isEmpty())
 				//Added For TISPRD-1243
-			{
-				if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND))
 				{
-					final CategoryModel categoryModel = categoryService.getCategoryForCode(dropDownText);
-
-					if (categoryModel != null)
+					if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND))
 					{
-						dropDownText = (StringUtils.isNotEmpty(categoryModel.getName())) ? categoryModel.getName() : dropDownText;
+						final CategoryModel categoryModel = categoryService.getCategoryForCode(dropDownText);
+
+						if (categoryModel != null)
+						{
+							dropDownText = (StringUtils.isNotEmpty(categoryModel.getName())) ? categoryModel.getName() : dropDownText;
+						}
 					}
-				}
 					//Added For TISPRD-1243
 					model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropDownText);
 				}
@@ -431,7 +435,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				}
 				int count = getSearchPageSize();
 				//Check if there is a landing page for the category
-				
+
 				final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
 				if (preferencesData != null && preferencesData.getPageSize() != null)
 				{
