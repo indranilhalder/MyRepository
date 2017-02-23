@@ -855,7 +855,25 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						parentTransactionId = freebieParentMap.get(parentUssId).get(0);
 						if (StringUtils.isNotEmpty(parentTransactionId))
 						{
+						
 							subOrderEntryModel.setParentTransactionID(parentTransactionId);
+							//R2.3 Code Chages bug ID TISRLEE-3197
+							try
+							{
+								AbstractOrderEntryModel perentEntry = mplOrderService.getEntryModel(parentTransactionId);
+								if (perentEntry != null)
+								{
+									subOrderEntryModel.setSddDateBetween(perentEntry.getSddDateBetween());
+									subOrderEntryModel.setTimeSlotFrom(perentEntry.getTimeSlotFrom());
+									subOrderEntryModel.setTimeSlotTo(perentEntry.getTimeSlotTo());
+									subOrderEntryModel.setSddDateBetween(perentEntry.getSddDateBetween());
+								}
+							}
+							catch (Exception exception)
+							{
+								LOG.error("MplDefaultPlaceOrderCommerceHooks:::::" + exception.getMessage());
+							}
+							//R2.3 Code Chages bug ID TISRLEE-3197
 							getModelService().save(subOrderEntryModel);
 							for (final String freebieUssid : associatedItemMap.get(parentUssId))
 							{
@@ -867,6 +885,23 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 												&& subOrderEntryModel2.getParentTransactionID() == null
 												&& subOrderEntryModel.getGiveAway().booleanValue())
 										{
+											//R2.3 Code Chages bug ID TISRLEE-3197
+											try
+											{
+												AbstractOrderEntryModel perentEntry = mplOrderService.getEntryModel(parentTransactionId);
+												if (perentEntry != null)
+												{
+													subOrderEntryModel2.setSddDateBetween(perentEntry.getSddDateBetween());
+													subOrderEntryModel2.setTimeSlotFrom(perentEntry.getTimeSlotFrom());
+													subOrderEntryModel2.setTimeSlotTo(perentEntry.getTimeSlotTo());
+													subOrderEntryModel2.setSddDateBetween(perentEntry.getSddDateBetween());
+												}
+											}
+											catch (Exception exception)
+											{
+												LOG.error("MplDefaultPlaceOrderCommerceHooks:::::" + exception.getMessage());
+											}
+											//R2.3 Code Chages bug ID TISRLEE-3197
 											subOrderEntryModel2.setParentTransactionID(parentTransactionId);
 											getModelService().save(subOrderEntryModel2);
 											break;
