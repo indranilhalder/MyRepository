@@ -54,14 +54,14 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 	{
 		LOG.info("In NPS email context");
 		super.init(npsUpdateProcessModel, emailPageModel);
-		orderData = getOrderConverter().convert(npsUpdateProcessModel.getOrder());
+		//orderData = getOrderConverter().convert(npsUpdateProcessModel.getOrder());
 		final AbstractOrderEntryModel orderEntry = npsUpdateProcessModel.getAbstractOrderEntry();
 		LOG.info("In NPS email context orderEntry" + orderEntry);
 
 
 		if (orderEntry != null)
 		{
-
+			LOG.info("In NPSEmaiContext orderEntry is not null>>>>>>>>>>" + orderEntry);
 			final ProductModel productInfo = orderEntry.getProduct();
 			final String productName = productInfo.getName();
 			put(PRODUCT_NAME, productName);
@@ -148,7 +148,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 			put(WEBSITE_URL, websiteUrl);
 		}
 
-
+		LOG.info("All the NPSEmailContext data have been set sucessfully in context file>>>>>>>>>>");
 
 	}
 
@@ -172,7 +172,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getSite(de.hybris.platform.
 	 * processengine.model.BusinessProcessModel)
 	 */
@@ -184,7 +184,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getCustomer(de.hybris.platform
 	 * .processengine.model.BusinessProcessModel)
@@ -193,7 +193,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getEmailLanguage(de.hybris.platform
 	 * .processengine.model.BusinessProcessModel)
@@ -206,7 +206,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getCustomer(de.hybris.platform
 	 * .processengine.model.BusinessProcessModel)

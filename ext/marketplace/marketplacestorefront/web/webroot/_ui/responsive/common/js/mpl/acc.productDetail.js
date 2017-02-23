@@ -3185,7 +3185,43 @@ function getProductContents() {
 		data : dataString,
 		success : function(data) {
 			 $('#productContentDivId').html(data);
-			 
+			 if (data.indexOf('class="Manufacturer Temp07"') > -1 ) {
+				 $(".every-scene-carousel").owlCarousel({
+						items:3,
+						loop: true,
+						nav:true,
+						dots:false,
+						navText:[],
+						responsive : {
+							// breakpoint from 0 up
+							0 : {
+								items:1,
+							},	
+							// breakpoint from 767 up
+							768 : {
+								items:2,
+							},
+							// breakpoint from 1122 up
+							1123 : {
+								items:3,
+							}			
+						}	
+						/*navigation:true,
+						rewindNav: false,
+						navigationText :[],
+						pagination:false,
+						items:4,
+						itemsDesktop : false, 
+						itemsDesktopSmall : false, 
+						itemsTablet: false, 
+						itemsMobile : true
+					itemsDesktop : [5000,4], 
+					itemsDesktopSmall : [1400,4], 
+					itemsTablet: [650,2], 
+					itemsMobile : [480,2],*/
+				});
+			}
+				 
 		},
 		error : function(xhr, status, error) {
 			

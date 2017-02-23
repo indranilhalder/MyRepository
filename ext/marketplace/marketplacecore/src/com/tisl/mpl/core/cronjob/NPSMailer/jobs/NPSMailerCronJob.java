@@ -54,7 +54,7 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 
 	/*
 	 * TPR-1984 This cron job is triggered as configured to run at 12 PM and 4 PM
-	 *
+	 * 
 	 * )
 	 */
 	@Override
@@ -96,20 +96,21 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 					final String processState = notificationService.triggerNpsEmail(entry.getValue(), entry.getKey());
 					if (processState.equalsIgnoreCase("SUCCEEDED"))
 					{
-
+						LOG.info("Nps Email have been fired sucessfully>>>>>>>>>>>>>>>");
 						npsEmailerModel.setIsEmailSent(Boolean.TRUE);
 						npsEmailerModel.setTimeSent(new Date());
 					}
 
 					else
 					{
-
+						LOG.info("Nps Email have not been fired sucessfully>>>>>>>>>>>>>>>");
 						npsEmailerModel.setIsEmailSent(Boolean.FALSE);
 
 					}
 
 					npsEmailerModelList.add(npsEmailerModel);
 				}
+				LOG.info("Nps Email data have been saved>>>>>>>>>>>>>>>");
 				modelService.saveAll(npsEmailerModelList);
 			}
 		}
