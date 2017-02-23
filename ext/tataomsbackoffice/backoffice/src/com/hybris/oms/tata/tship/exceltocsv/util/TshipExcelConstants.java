@@ -125,7 +125,7 @@ public class TshipExcelConstants
 	public static final String EKART_OUTPUT_NAME = "EKART,";
 	//Ouput Header Name for the Logistic Partner inCSV
 	public static final String HEADER_COLUMNS = "deliveryMode,pinCode,transportMode,courierCode,codAvailable,prepaidLimit,codLimit,carea,cscrcd,cloctype,newzone,tatPrepaid,tatCOD,formRequired,returnFlag,isPickup,codPriority,prepaidPriority,adjCodLimit,adjPrepaidLimit,city,state,country";
-	public static final String ROW_VALUE = "Row;";
+	public static final String ROW_VALUE = "Row";
 	public static final String STATICDATA_HD = "HD,BOF,";
 	public static final String STATICDATA_ED = "ED,BOF,";
 	//data mode ed or hd
@@ -140,7 +140,7 @@ public class TshipExcelConstants
 	//adding number of commas at the end of file of csv file
 	public static final String COMMAS_COUNTOF_EOF = "19";
 	public static final String COD_COLUMN_INDEX = "21";
-	public static final String LAST_COLUMN_INDEX = "120";
+	public static final String LAST_COLUMN_INDEX = "183";
 	public static final String SURFACE_MODE_START_INDEX = "102";
 	public static final String TAT_PREPAID = "";//default value we can configure hear r2.3 add
 	public static final String TAT_COD = "";
