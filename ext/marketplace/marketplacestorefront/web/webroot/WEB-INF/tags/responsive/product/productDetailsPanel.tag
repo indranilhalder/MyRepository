@@ -415,13 +415,13 @@ tr.d0 td {
 </c:choose>	
 <!--- END:MSD ---> 
 	
-<c:choose>
+<%-- <c:choose>
 <c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
 <product:productDetailsClassifications product="${product}"/>
 </c:when>
 <c:otherwise>
 </c:otherwise> 
-</c:choose>	
+</c:choose>	 --%>
  <!-- Change for INC_10849 -->
 <c:choose>
 		<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
