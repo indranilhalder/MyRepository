@@ -278,7 +278,7 @@
 					<!-- div for Cards -->
 							<li id="card">
 							<ul class="product-block blocks">
-							<h3>Pay by a credit card</h3>
+							<h3>Enter your card details</h3>
 							<!-- SAVED CREDIT CARD -->
 								<c:if test="${not empty creditCards}">
 									<li id="savedCard" class="item">
@@ -420,7 +420,7 @@
 								</div> -->
 								<!-- Static section end -->
 						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardNo"/></label>
-						                            	<input type="text" class="card_number" id="cardNo" maxlength="16" autocomplete="off"> 
+						                            	<input type="text" class="card_number" id="cardNo" maxlength="16" autocomplete="off" placeholder="Enter your card number"> 
 						                            	 <!-- <input type="hidden" class="card_number" value="" /> -->  
 						                            	<input type="hidden" id="cardType" disabled="disabled"/>
 						                            	<span class="error-message" id="cardNoError"></span>
@@ -591,7 +591,7 @@
 
 				<li id="cardDebit">
 							<ul class="product-block blocks">
-							<h3>Pay by a debit card</h3>
+							<h3>Enter your card details</h3>
 								<c:if test="${not empty debitCards}">
 									<li id="savedCardDebit" class="item">
 									<span class="mycards">My cards</span>
@@ -727,7 +727,7 @@
 						                            <div class="controls full">
 						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardNo"/></label>
 						                            	
-						                             <input type="text" class="card_number" id="cardNoDc" maxlength="16" autocomplete="off"> 
+						                             <input type="text" class="card_number" id="cardNoDc" maxlength="16" autocomplete="off" placeholder="Enter your card number"> 
 						                            	<input type="hidden" id="cardTypeDc" disabled="disabled"/>
 						                            	<span class="error-message" id="cardNoErrorDc"></span>
 													</div>
@@ -872,10 +872,11 @@
 										<ul class="product-block emi blocks">
 										<li class="item">
 										<div class="bank-select">
+										<h3>Select your bank for EMI options</h3>
 														<%-- <label id="listOfEMiBank"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.listOfEMIBanks"/></label> --%>
 														<p id="emi-notice"><spring:theme code="checkout.multi.paymentMethod.emi.notice"/></p>
-														 <label class="control-label bank-label">
-						                             		SELECT YOUR BANK </label>
+														 <!-- <label class="control-label bank-label">
+						                             		SELECT YOUR BANK </label> -->
 														<select id="bankNameForEMI" onchange="getSelectedEMIBank()">
 														</select>
 														
@@ -883,7 +884,7 @@
 														<span class="error-message" id="emiNoBankError">No Banks available.</span>
 														<span class="error-message" id="emiPromoError"></span>
 														<div id="radioForEMI" class="banks">
-														<p class="emi-plan">Select EMI plan</p>	
+														<p class="emi-plan">Select a plan</p>	
 										 					<table id="EMITermTable">
 													 			<%-- <th>&nbsp;</th>
 								        						<th><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.terms"/></th>
@@ -906,7 +907,7 @@
 											<!-- EMI CREDIT CARD -->
 													<div id="cardEmi" style="display: none;">
 														<!-- <ul class="product-block blocks"> -->
-														<h3>Pay by a credit card</h3>
+														<h3 class="emi-card-title">Enter card details</h3>
 														<!--  CREDIT CARD SECTION  -->
 														<div id="newCardCCEmi" class="item new-form new-card active">
 										
@@ -930,7 +931,7 @@
 													</div>
 						                            <div class="controls full">
 						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardNo"/></label>
-						                            	<input type="text" class="card_number" id="cardNoEmi" maxlength="16" autocomplete="off"> 
+						                            	<input type="text" class="card_number" id="cardNoEmi" maxlength="16" autocomplete="off" placeholder="Enter your card number"> 
 						                            	 <!-- <input type="hidden" class="card_number" value="" /> -->  
 						                            	<input type="hidden" id="cardTypeEmi" disabled="disabled"/>
 						                            	<span class="error-message" id="cardNoErrorEmi"></span>
@@ -1229,557 +1230,13 @@
 							</form:form>
 						</ycommerce:testId>
 						
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-						
-					</ul>
+			</ul>
 				</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-				</div>
-				
-
+				</div>				
 				</jsp:body>
 		</multiCheckout:checkoutSteps>	
 		<multiCheckout:checkoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" isCart="${isCart}" orderData="${orderData}"/>
-	</div>	
-	
-	
-	
+	</div>		
 </template:page>
 
 <style>

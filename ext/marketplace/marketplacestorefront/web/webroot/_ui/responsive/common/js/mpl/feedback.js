@@ -2877,3 +2877,20 @@ $("body.page-cartPage .cart.wrapper .checkout-types li#checkout-id").on("mouseov
 		$(this).css("cursor","default");
 	}
 });
+
+
+if($("#sameAsShippingEmi").is(":checked")){
+	$("#sameAsShippingEmi").prev('h2').hide();
+}
+else{
+	$("#sameAsShippingEmi").prev('h2').show();
+}
+$("#sameAsShippingEmi").click(function(){
+	if($("#sameAsShippingEmi").is(":checked")){
+		//$("#billingAddress fieldset .error-message").html("");
+		$(this).prev('h2').hide();
+	}
+	else{
+		$(this).prev('h2').show();
+	}
+	});
