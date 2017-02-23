@@ -203,92 +203,107 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 			{
 				final MplOfferImageCarouselComponentModel bestOfferCarouselComponent = (MplOfferImageCarouselComponentModel) component;
 				String title = "";
-				if (StringUtils.isNotEmpty(bestOfferCarouselComponent.getTitle()))
+				//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+				if (bestOfferCarouselComponent.getVisible().booleanValue() && showOnTimeRestriction(bestOfferCarouselComponent))
 				{
-					title = bestOfferCarouselComponent.getTitle();
-				}
-
-				//Added for making the button link cmsmanaged
-				if (StringUtils.isNotEmpty(bestOfferCarouselComponent.getButtonText()))
-				{
-					bestOffers.put("buttonText", bestOfferCarouselComponent.getButtonText());
-				}
-				if (StringUtils.isNotEmpty(bestOfferCarouselComponent.getButtonLink()))
-				{
-					bestOffers.put("buttonLink", bestOfferCarouselComponent.getButtonLink());
-				}
-
-				bestOffers.put("title", title);
-
-				final JSONArray subComponentJsonArray = new JSONArray();
-				if (CollectionUtils.isNotEmpty(bestOfferCarouselComponent.getCollectionItems()))
-				{
-					String imageURL = "";
-					String text = "";
-					String linkUrl = "#";
-
-					for (final CMSMediaParagraphComponentModel bestOfferItem : bestOfferCarouselComponent.getCollectionItems())
+					if (StringUtils.isNotEmpty(bestOfferCarouselComponent.getTitle()))
 					{
-						final JSONObject bestOfferItemJson = new JSONObject();
+						title = bestOfferCarouselComponent.getTitle();
+					}
 
-						if (null != bestOfferItem)
+					//Added for making the button link cmsmanaged
+					if (StringUtils.isNotEmpty(bestOfferCarouselComponent.getButtonText()))
+					{
+						bestOffers.put("buttonText", bestOfferCarouselComponent.getButtonText());
+					}
+					if (StringUtils.isNotEmpty(bestOfferCarouselComponent.getButtonLink()))
+					{
+						bestOffers.put("buttonLink", bestOfferCarouselComponent.getButtonLink());
+					}
+
+					bestOffers.put("title", title);
+
+					final JSONArray subComponentJsonArray = new JSONArray();
+					if (CollectionUtils.isNotEmpty(bestOfferCarouselComponent.getCollectionItems()))
+					{
+						String imageURL = "";
+						String text = "";
+						String linkUrl = "#";
+
+						for (final CMSMediaParagraphComponentModel bestOfferItem : bestOfferCarouselComponent.getCollectionItems())
 						{
-							if (null != bestOfferItem.getMedia())
+							final JSONObject bestOfferItemJson = new JSONObject();
+
+							if (null != bestOfferItem)
 							{
-								if (null != bestOfferItem.getMedia().getURL()
-										&& StringUtils.isNotEmpty(bestOfferItem.getMedia().getURL()))
+								//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+								if (bestOfferItem.getVisible().booleanValue() && showOnTimeRestriction(bestOfferItem))
 								{
-									imageURL = bestOfferItem.getMedia().getURL();
+									if (null != bestOfferItem.getMedia())
+									{
+										if (null != bestOfferItem.getMedia().getURL()
+												&& StringUtils.isNotEmpty(bestOfferItem.getMedia().getURL()))
+										{
+											imageURL = bestOfferItem.getMedia().getURL();
+										}
+
+									}
+									else
+									{
+										LOG.info("No Media for this item");
+										//imageURL = MISSING_IMAGE_URL;
+										imageURL = GenericUtilityMethods.getMissingImageUrl();
+									}
+
+									bestOfferItemJson.put("imageUrl", imageURL);
+
+									if (null != bestOfferItem.getContent() && StringUtils.isNotEmpty(bestOfferItem.getContent()))
+									{
+										text = bestOfferItem.getContent();
+									}
+									else
+									{
+										LOG.info("No text for this item");
+									}
+									bestOfferItemJson.put("text", text);
+
+									if (null != bestOfferItem.getUrl() && StringUtils.isNotEmpty(bestOfferItem.getUrl()))
+									{
+										linkUrl = bestOfferItem.getUrl();
+									}
+									else
+									{
+										LOG.info("No URL for this item");
+									}
+									bestOfferItemJson.put("url", linkUrl);
+									bestOfferItemJson.put(ICID, bestOfferItem.getPk().getLongValueAsString());
 								}
+								else
+								{
+									LOG.info("Component visiblity set to false");
+								}
+								subComponentJsonArray.add(bestOfferItemJson);
 
 							}
 							else
 							{
-								LOG.info("No Media for this item");
-								//imageURL = MISSING_IMAGE_URL;
-								imageURL = GenericUtilityMethods.getMissingImageUrl();
+								LOG.info("No instance of bestOffersCarouselComponent found!!!");
 							}
-
-							bestOfferItemJson.put("imageUrl", imageURL);
-
-							if (null != bestOfferItem.getContent() && StringUtils.isNotEmpty(bestOfferItem.getContent()))
-							{
-								text = bestOfferItem.getContent();
-							}
-							else
-							{
-								LOG.info("No text for this item");
-							}
-							bestOfferItemJson.put("text", text);
-
-							if (null != bestOfferItem.getUrl() && StringUtils.isNotEmpty(bestOfferItem.getUrl()))
-							{
-								linkUrl = bestOfferItem.getUrl();
-							}
-							else
-							{
-								LOG.info("No URL for this item");
-							}
-							bestOfferItemJson.put("url", linkUrl);
-							bestOfferItemJson.put(ICID, bestOfferItem.getPk().getLongValueAsString());
-							subComponentJsonArray.add(bestOfferItemJson);
-
-						}
-						else
-						{
-							LOG.info("No instance of bestOffersCarouselComponent found!!!");
 						}
 					}
+
+					//TISSQAUAT-451 starts
+					bestOffers.put("autoPlay", bestOfferCarouselComponent.getAutoPlay());
+					bestOffers.put("slideBy", bestOfferCarouselComponent.getSlideBy());
+					bestOffers.put("autoplayTimeout", bestOfferCarouselComponent.getAutoplayTimeout());
+					//TISSQAUAT-451 ends
+
+					bestOffers.put("subItems", subComponentJsonArray);
 				}
-
-				//TISSQAUAT-451 starts
-				bestOffers.put("autoPlay", bestOfferCarouselComponent.getAutoPlay());
-				bestOffers.put("slideBy", bestOfferCarouselComponent.getSlideBy());
-				bestOffers.put("autoplayTimeout", bestOfferCarouselComponent.getAutoplayTimeout());
-				//TISSQAUAT-451 ends
-
-				bestOffers.put("subItems", subComponentJsonArray);
-
+				else
+				{
+					LOG.info("Component visiblity set to false");
+				}
 			}
 		}
 
