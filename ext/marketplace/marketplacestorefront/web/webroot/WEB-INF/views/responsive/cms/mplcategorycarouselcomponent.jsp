@@ -7,7 +7,16 @@
 <%@ taglib prefix="component" tagdir="/WEB-INF/tags/shared/component"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-
+<!--CKD:TPR-250:Start -->
+<c:choose>
+	<c:when test="${not empty component.sellerName}">
+		<c:set var="msiteSellerId" value="${component.sellerName}" />
+	</c:when>
+	<c:otherwise>
+		<c:set var="msiteSellerId" value="${mSellerID}" />
+	</c:otherwise>
+</c:choose>
+<!--CKD:TPR-250:End -->
 
 
 <div class="feature-categories">
@@ -22,10 +31,10 @@
 
 				<c:url value="/Categories/${category.name}/c-${category.code}"
 					var="categoryUrl">
-					<c:if test="${not empty component.sellerName}">
+					<c:if test="${not empty msiteSellerId}">
 
 						<c:param name="q"
-							value=":relevance:sellerId:${fn:toUpperCase(component.sellerName)}"></c:param>
+							value=":relevance:sellerId:${fn:toUpperCase(msiteSellerId)}"></c:param>
 					</c:if>
 				</c:url>
 				<li>
@@ -78,10 +87,10 @@
 
 				<c:url value="/Categories/${category.name}/c-${category.code}"
 					var="categoryUrl">
-					<c:if test="${not empty component.sellerName}">
+					<c:if test="${not empty msiteSellerId}">
 
 						<c:param name="q"
-							value=":relevance:sellerId:${fn:toUpperCase(component.sellerName)}"></c:param>
+							value=":relevance:sellerId:${fn:toUpperCase(msiteSellerId)}"></c:param>
 					</c:if>
 				</c:url>
 				<div class="item slide">

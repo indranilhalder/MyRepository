@@ -58199,7 +58199,7 @@ header > .content .top.header_fix .toggle{
     font-size: 14px;
     line-height: 22px;
     text-align: center;
-   /*  margin: 30px auto; */
+    margin: 30px auto; 
     width: 79%;
 }
 .Temp07 .Padd .twocolumn .onecolumn .media-content .yCmsComponent {
@@ -61778,7 +61778,7 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
               }
               .productGrid-menu nav > ul > li > ul > li:hover > .toggle a {
                 color: #fff; }
-              .productGrid-menu nav > ul > li > ul > li:hover > .toggle:after {
+              .productGrid-menu nav > ul > li > ul > li:hover > .toggle:after,.productGrid-menu nav > ul > li > .toggle:hover ~ ul#topul > li:first-of-type > .toggle:after {
                 height: 0;
                 width: 0;
                 border-bottom: 25px solid transparent;
@@ -61841,6 +61841,10 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
 		-webkit-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
 		-moz-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
 		transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
+	}
+	.productGrid-menu nav > ul > li > ul > li > ul.heightZero{
+		height: 0;
+		transition: height 0s;
 	}
      .productGrid-menu  nav {
       color: #fff; }
