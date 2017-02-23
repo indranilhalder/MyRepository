@@ -3808,7 +3808,7 @@ public class CartsController extends BaseCommerceController
 			InvReserForDeliverySlotsRequestData deliverySlotsRequestData = new InvReserForDeliverySlotsRequestData();
 			deliverySlotsRequestData.setCartId(cartModel.getGuid());
 			InvReserForDeliverySlotsResponseData deliverySlotsResponseData = mplCartFacade
-					.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData);
+					.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData,cartModel);
 
 			if (CollectionUtils.isNotEmpty(deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()))
 			{
