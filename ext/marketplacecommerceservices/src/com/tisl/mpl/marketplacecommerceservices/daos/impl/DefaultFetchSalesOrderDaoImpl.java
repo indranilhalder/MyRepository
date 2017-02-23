@@ -261,8 +261,11 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 					+ " AS nps ON {oe.orderLineId}={nps.transactionId }} "
 					+ "WHERE "
 					+ "{c.deliveryDate}  BETWEEN "
-					+ " to_date('2017-02-22 11:00:00','yyyy-MM-DD HH24:MI:ss') AND to_date('2017-02-23 18:29:16','yyyy-MM-DD HH24:MI:ss') AND "
-
+					+ " to_date('"
+					+ cronJobModifiedTimeFormattedDate
+					+ "','yyyy-MM-DD HH24:MI:ss') AND to_date('"
+					+ currentSystemDateFormattedDate
+					+ "','yyyy-MM-DD HH24:MI:ss') AND "
 					+ " ({cs.code}='DELIVERED' OR {cs.code}='ORDER_COLLECTED')  AND {nps.transactionId} IS NULL AND {co.type}= 'SubOrder' AND {po.type}= 'Parent'";
 
 
@@ -306,7 +309,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getTransactionIdCount(de.hybris.platform.core
 	 * .model.order.OrderModel)
