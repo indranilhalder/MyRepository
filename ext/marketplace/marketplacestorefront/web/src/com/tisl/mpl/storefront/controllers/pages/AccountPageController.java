@@ -3517,7 +3517,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			else if (fullAddress.length() > 80 && fullAddress.length() <= 120)
 			{
-				System.out.println("**Inside FFF");
 				addressLine1 = fullAddress.substring(0, 40);
 				addressLine2 = fullAddress.substring(40, 80);
 				addressLine3 = fullAddress.substring(80, fullAddress.length());
