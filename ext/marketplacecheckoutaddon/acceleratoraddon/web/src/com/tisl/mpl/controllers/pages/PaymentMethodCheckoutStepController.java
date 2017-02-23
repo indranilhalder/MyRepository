@@ -231,21 +231,21 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			@RequestParam(value = "value", required = false, defaultValue = "") final String guid) throws CMSItemNotFoundException
 	{
 		//redirecting to previous page for anonymous user
-				if (getUserFacade().isAnonymousUser())
-				{
-					return getCheckoutStep().previousStep();
-				}
-				final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-				ValidationResults validationResult = null;
-				//Validator called explicitly TPR-629
-				if (StringUtils.isEmpty(guid))
-				{
-					validationResult = paymentValidator.validateOnEnterOptimized(cartData, redirectAttributes);
-				}
-				if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
-				{
-					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
-				}
+		if (getUserFacade().isAnonymousUser())
+		{
+			return getCheckoutStep().previousStep();
+		}
+		final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+		ValidationResults validationResult = null;
+		//Validator called explicitly TPR-629
+		if (StringUtils.isEmpty(guid))
+		{
+			validationResult = paymentValidator.validateOnEnterOptimized(cartData, redirectAttributes);
+		}
+		if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
+		{
+			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+		}
 		//Validator called explicitly TPR-629
 		if (StringUtils.isEmpty(guid))
 		{
@@ -275,7 +275,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			if (null == orderModel)
 			{
 				//Existing code
-				final CartModel cartModel = getCartService().getSessionCart();
+
 
 				// TPR-429 START
 
@@ -309,6 +309,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 				}
 
+				final CartModel cartModel = getCartService().getSessionCart();
 				//Moved to single method in facade TPR-629
 				getMplPaymentFacade().populateDeliveryPointOfServ(cartModel);
 
@@ -4168,7 +4169,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
