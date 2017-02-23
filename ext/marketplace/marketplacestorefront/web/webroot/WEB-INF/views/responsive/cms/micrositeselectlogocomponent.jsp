@@ -6,7 +6,7 @@
 
 
 
-<li id="micrositeSellerLogo">
+<li id="micrositeSellerLogo" class="simple-banner-component">
 </li>
 
 <script>
