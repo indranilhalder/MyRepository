@@ -258,12 +258,12 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 					+ OrderModel._TYPECODE
 					+ " AS po  ON {co.parentreference} = {po.PK} LEFT JOIN "
 					+ NPSMailerModel._TYPECODE
-					+ " AS nps ON {oe.pk}={nps.transactionId }} "
+					+ " AS nps ON {oe.orderLineId}={nps.transactionId }} "
 					+ "WHERE "
 					+ "{c.deliveryDate}  BETWEEN "
 					+ " to_date('?beforeTime','yyyy-MM-DD HH24:MI:ss') AND to_date('?aftertime','yyyy-MM-DD HH24:MI:ss') AND "
 
-					+ " ({cs.code}='DELIVERED' OR {cs.code}='ORDER_COLLECTED')  AND {nps.transactionId} IS NULL AND {po.type}= 'SubOrder'";
+					+ " ({cs.code}='DELIVERED' OR {cs.code}='ORDER_COLLECTED')  AND {nps.transactionId} IS NULL AND {co.type}= 'SubOrder' AND {po.type}= 'Parent'";
 
 
 			//old script
@@ -306,7 +306,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getTransactionIdCount(de.hybris.platform.core
 	 * .model.order.OrderModel)
