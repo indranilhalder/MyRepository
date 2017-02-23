@@ -32,6 +32,7 @@ import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
@@ -87,7 +88,6 @@ import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.EMITermRowModel;
 import com.tisl.mpl.core.model.JuspayEBSResponseModel;
 import com.tisl.mpl.core.model.JuspayOrderStatusModel;
-import com.tisl.mpl.core.model.JuspayWebhookModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.PaymentModeApportionModel;
@@ -97,6 +97,7 @@ import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.MplPromotionData;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.juspay.PaymentService;
 import com.tisl.mpl.juspay.request.GetOrderStatusRequest;
 import com.tisl.mpl.juspay.response.CardResponse;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
@@ -3415,23 +3416,27 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				paymentModeFromInfo = orderModel.getModeOfOrderPayment();
 			}
 
-			LOG.debug("Creating Payment transaction from Submit Order Job:- paymentModeFromInfo :- " + paymentModeFromInfo);
+			LOG.info("Creating Payment transaction from Submit Order Job:- paymentModeFromInfo :- " + paymentModeFromInfo
+					+ " For Order ID:- " + orderModel.getCode());
 
 			final List<OrderModel> orderList = new ArrayList<OrderModel>();
 			orderList.add(orderModel);
 			orderList.addAll(orderModel.getChildOrders());
 
-			//orderModel.getChildOrders();
-			//subOrders.add(orderModel);
-
 			final Map<String, Double> paymentMode = new HashMap<String, Double>();
 			paymentMode.put(paymentModeFromInfo, orderModel.getTotalPriceWithConv());
 
-			LOG.debug("Creating Payment transaction from Submit Order Job:- ModeOfPayment :- " + paymentMode);
+			LOG.info("Creating Payment transaction from Submit Order Job:- ModeOfPayment :- " + paymentMode + " For Order ID:- "
+					+ orderModel.getCode());
+
 			if (!paymentModeFromInfo.equalsIgnoreCase("COD"))
 			{
-				LOG.debug("Creating Payment transaction from Submit Order Job:- ModeOfPayment Prepaid");
+				LOG.info("Creating Payment transaction from Submit Order Job:- ModeOfPayment Prepaid" + " For Order ID:- "
+						+ orderModel.getCode());
+
 				final String cartGuid = orderModel.getGuid();
+				LOG.info("Order  GUID:- " + cartGuid);
+
 				MplPaymentAuditModel auditModel = null;
 				if (StringUtils.isNotEmpty(cartGuid))
 				{
@@ -3440,55 +3445,98 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 				if (null != auditModel && StringUtils.isNotEmpty(auditModel.getAuditId()))
 				{
-					final List<JuspayWebhookModel> hooks = getMplProcessOrderDao().getEventsForPendingOrders(auditModel.getAuditId());
-					//}
-					for (final JuspayWebhookModel juspayWebhook : hooks)
+					LOG.info("Audit ID:- :- " + auditModel.getAuditId() + "for Order ID:- " + orderModel.getCode());
+					final PaymentService juspayService = new PaymentService();
+
+					juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+							MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+					juspayService.withKey(
+							getConfigurationService().getConfiguration().getString(
+									MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)).withMerchantId(
+							getConfigurationService().getConfiguration()
+									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+
+					final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
+					orderStatusRequest.withOrderId(auditModel.getAuditId());
+
+					//getting the response by calling get Order Status service
+					final GetOrderStatusResponse orderStatusResponse = juspayService.getOrderStatus(orderStatusRequest);
+
+					LOG.info("orderStatusResponse for Order Id:- " + orderModel.getCode() + "  and Audit ID:- "
+							+ auditModel.getAuditId() + "***********");
+					LOG.info("orderStatusResponse " + orderStatusResponse);
+
+					if (orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED)
+							&& CollectionUtils.isEmpty(orderStatusResponse.getRefunds()))
 					{
-						if (null != juspayWebhook.getOrderStatus()
-								&& juspayWebhook.getOrderStatus().getStatus().equalsIgnoreCase("charged"))
+
+						for (final OrderModel so : orderList)
 						{
-							final JuspayOrderStatusModel juspayOrderStatusModel = juspayWebhook.getOrderStatus();
-
-
-							final GetOrderStatusResponse orderStatusResponse = getJuspayOrderResponseConverter().convert(
-									juspayOrderStatusModel);
-
-							for (final OrderModel so : orderList)
-							{
-								setPaymentTransactionFromJob(orderStatusResponse, paymentMode, so);
-								so.setModeOfOrderPayment(paymentModeFromInfo);
-							}
-							modelService.saveAll(orderList);
-							returnFlag = true;
-							break;
+							LOG.info("Order ID creating Payment Transaction " + so);
+							so.setModeOfOrderPayment(paymentModeFromInfo);
+							setPaymentTransactionFromJob(orderStatusResponse, paymentMode, so);
 						}
+						//modelService.saveAll(orderList);
+						returnFlag = true;
+						LOG.info("Payment transaction Created:- order ID:- " + orderModel.getCode());
 					}
+					//					final List<JuspayWebhookModel> hooks = getMplProcessOrderDao().getEventsForPendingOrders(auditModel.getAuditId());
+					//					//}
+					//					for (final JuspayWebhookModel juspayWebhook : hooks)
+					//					{
+					//						if (null != juspayWebhook.getOrderStatus()
+					//								&& juspayWebhook.getOrderStatus().getStatus().equalsIgnoreCase("charged"))
+					//						{
+					//							final JuspayOrderStatusModel juspayOrderStatusModel = juspayWebhook.getOrderStatus();
+					//
+					//
+					//							final GetOrderStatusResponse orderStatusResponse = getJuspayOrderResponseConverter().convert(
+					//									juspayOrderStatusModel);
+					//
+					//							for (final OrderModel so : orderList)
+					//							{
+					//								setPaymentTransactionFromJob(orderStatusResponse, paymentMode, so);
+					//								so.setModeOfOrderPayment(paymentModeFromInfo);
+					//							}
+					//							modelService.saveAll(orderList);
+					//							returnFlag = true;
+					//							break;
+					//						}
+					//					}
 				}
 				else
 				{
+					LOG.info("audit Model doesnot exist for Order Id:- " + orderModel.getCode());
 					returnFlag = false;
 				}
 			}
 			else
 			{
-				LOG.debug("Creating Payment transaction from Submit Order Job:- ModeOfPayment COD");
+				LOG.info("Creating Payment transaction from Submit Order Job:- ModeOfPayment COD");
 				for (final OrderModel so : orderList)
 				{
+					LOG.info("Order ID creating Payment Transaction " + so);
 					setPaymentTransactionForCODFromSubmitProcess(paymentMode, so);
 					so.setModeOfOrderPayment(paymentModeFromInfo);
 				}
 				modelService.saveAll(orderList);
 				returnFlag = true;
+				LOG.info("Payment transaction Created:- order ID:- " + orderModel.getCode());
 			}
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("Creating Payment transaction from Submit Order Job:- " + e);
+			LOG.error("Creating Payment transaction from Submit Order Job-  ModelSavingException:- ", e);
 			returnFlag = false;
+		}
+		catch (final AdapterException e)
+		{
+			LOG.error("Creating Payment transaction from Submit Order Job - Error with connection", e);
+			//throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0023);
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Creating Payment transaction from Submit Order Job:- " + e);
+			LOG.error("Creating Payment transaction from Submit Order Job Exception:- ", e);
 			returnFlag = false;
 		}
 		return returnFlag;
@@ -3539,7 +3587,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * (non-Javadoc)
 	 * 
 	 * @see SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
-	 * against the cart for non-COD from OMS Submit Order Job
+	 * against the cart for pre paid from OMS Submit Order Job
 	 */
 	@Override
 	public void setPaymentTransactionFromJob(final GetOrderStatusResponse orderStatusResponse,
@@ -3578,6 +3626,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				paymentTransactionList.add(payTranModel);
 			}
 
+			order.setPaymentTransactions(paymentTransactionList);
+			getModelService().save(order);
 			if (saveCard.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE)
 					&& null != orderStatusResponse.getCardResponse()
 					&& StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardReference()))
@@ -3609,7 +3659,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		try
 		{
-			//final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
+			final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
 
 			final List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
 
@@ -3672,9 +3722,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 
 			getModelService().save(paymentTransactionModel);
-			//paymentTransactionList.add(paymentTransactionModel);
-			//orderModel.setPaymentTransactions(paymentTransactionList);
-			//getModelService().save(orderModel);
+			paymentTransactionList.add(paymentTransactionModel);
+			orderModel.setPaymentTransactions(paymentTransactionList);
+			getModelService().save(orderModel);
 		}
 		catch (final ModelSavingException e)
 		{

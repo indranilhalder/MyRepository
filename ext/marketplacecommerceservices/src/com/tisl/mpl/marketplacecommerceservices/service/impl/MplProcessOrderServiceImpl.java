@@ -94,6 +94,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	private Converter<OrderModel, OrderData> orderConverter;
 	//For CAR:127
 	private static final String ERROR_NOTIF = "Error while sending notifications>>>>>>";
+	final Double skipPendingOrdersTATStFinal = new Double(10);
 
 	/**
 	 * This method processes pending orders
@@ -108,7 +109,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			//PaymentFix2017:- System time minus configured time from property file
 			final String skipPendingOrdersTATSt = getConfigurationService().getConfiguration().getString(
 					MarketplacecommerceservicesConstants.PAYMENTPENDING_SKIPTIME);
-			final Double skipPendingOrdersTAT = Double.valueOf(skipPendingOrdersTATSt);
+			final Double skipPendingOrdersTAT = (null != skipPendingOrdersTATSt ? Double.valueOf(skipPendingOrdersTATSt)
+					: skipPendingOrdersTATStFinal);
 			final Calendar cal = Calendar.getInstance();
 			cal.setTime(new Date());
 			cal.add(Calendar.MINUTE, -skipPendingOrdersTAT.intValue());

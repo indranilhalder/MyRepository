@@ -230,6 +230,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public String enterStep(final Model model, final RedirectAttributes redirectAttributes,
 			@RequestParam(value = "value", required = false, defaultValue = "") final String guid) throws CMSItemNotFoundException
 	{
+		// multiple Payment Response from juspay restriction
+		getSessionService().setAttribute(MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE,
+				MarketplacecommerceservicesConstants.FALSE);
 		//redirecting to previous page for anonymous user
 		if (getUserFacade().isAnonymousUser())
 		{
@@ -2518,64 +2521,78 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//Order Status from Juspay
 		try
 		{
-			final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
-			if (null != orderToBeUpdated && null == orderToBeUpdated.getPaymentInfo()
-					&& !OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
+			final String duplicateJuspayRes = getSessionService().getAttribute(
+					MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE);
+			// multiple Payment Response from juspay restriction
+			if (null == duplicateJuspayRes || duplicateJuspayRes.equalsIgnoreCase("false"))
 			{
-				final String orderStatusResponse = getMplPaymentFacade().getOrderStatusFromJuspay(guid, null, orderToBeUpdated, null);
-				//Redirection when transaction is successful i.e. CHARGED
-				if (null != orderStatusResponse)
+				final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
+				if (null != orderToBeUpdated && null == orderToBeUpdated.getPaymentInfo()
+						&& !OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
 				{
-					if (MarketplacecheckoutaddonConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
+					final String orderStatusResponse = getMplPaymentFacade().getOrderStatusFromJuspay(guid, null, orderToBeUpdated,
+							null);
+					//Redirection when transaction is successful i.e. CHARGED
+					if (null != orderStatusResponse)
 					{
-						model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
-						setCheckoutStepLinksForModel(model, getCheckoutStep());
-						//return placeOrder(model, redirectAttributes);
-						//Code commented and new code added for TPR-629
-						return updateOrder(orderToBeUpdated, redirectAttributes);
+						if (MarketplacecheckoutaddonConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
+						{
+							model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
+							setCheckoutStepLinksForModel(model, getCheckoutStep());
+							//return placeOrder(model, redirectAttributes);
+							//Code commented and new code added for TPR-629
+							return updateOrder(orderToBeUpdated, redirectAttributes);
+						}
+						else if (MarketplacecheckoutaddonConstants.JUSPAY_DECLINED.equalsIgnoreCase(orderStatusResponse))
+						{
+							GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+									MarketplacecheckoutaddonConstants.DECLINEDERRORMSG);
+							return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+									+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+						}
+						else if (MarketplacecheckoutaddonConstants.AUTHORIZATION_FAILED.equalsIgnoreCase(orderStatusResponse)
+								|| MarketplacecheckoutaddonConstants.AUTHENTICATION_FAILED.equalsIgnoreCase(orderStatusResponse)
+								|| MarketplacecheckoutaddonConstants.PENDING_VBV.equalsIgnoreCase(orderStatusResponse))
+						{
+							GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+									MarketplacecheckoutaddonConstants.VBVERRORMSG);
+							//LOG.info("redirecting to::" + MarketplacecheckoutaddonConstants.REDIRECT
+							//		+ MarketplacecheckoutaddonConstants.MPLPAYMENTURL + MarketplacecheckoutaddonConstants.PAYVALUE
+							//		+ "  with redirect parameters::" + redirectAttributes.toString());
+							return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+									+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+							//return MarketplacecheckoutaddonConstants.REDIRECT + safeRedirect(errorUrl);
+							//httpResponse.sendRedirect(errorUrl);
+						}
+						else
+						{
+							GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+									MarketplacecheckoutaddonConstants.TRANERRORMSG);
+							return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+									+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+							//httpResponse.sendRedirect(errorUrl);
+						}
 					}
-					else if (MarketplacecheckoutaddonConstants.JUSPAY_DECLINED.equalsIgnoreCase(orderStatusResponse))
-					{
-						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-								MarketplacecheckoutaddonConstants.DECLINEDERRORMSG);
-						return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
-								+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
-					}
-					else if (MarketplacecheckoutaddonConstants.AUTHORIZATION_FAILED.equalsIgnoreCase(orderStatusResponse)
-							|| MarketplacecheckoutaddonConstants.AUTHENTICATION_FAILED.equalsIgnoreCase(orderStatusResponse)
-							|| MarketplacecheckoutaddonConstants.PENDING_VBV.equalsIgnoreCase(orderStatusResponse))
-					{
-						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-								MarketplacecheckoutaddonConstants.VBVERRORMSG);
-						//LOG.info("redirecting to::" + MarketplacecheckoutaddonConstants.REDIRECT
-						//		+ MarketplacecheckoutaddonConstants.MPLPAYMENTURL + MarketplacecheckoutaddonConstants.PAYVALUE
-						//		+ "  with redirect parameters::" + redirectAttributes.toString());
-						return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
-								+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
-						//return MarketplacecheckoutaddonConstants.REDIRECT + safeRedirect(errorUrl);
-						//httpResponse.sendRedirect(errorUrl);
-					}
+					//Redirection when transaction is failed
 					else
 					{
 						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-								MarketplacecheckoutaddonConstants.TRANERRORMSG);
+								MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
 						return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
 								+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
-						//httpResponse.sendRedirect(errorUrl);
 					}
 				}
-				//Redirection when transaction is failed
 				else
 				{
-					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-							MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
-					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
-							+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+					return updateOrder(orderToBeUpdated, redirectAttributes);
 				}
 			}
 			else
 			{
-				return updateOrder(orderToBeUpdated, redirectAttributes);
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+						+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -2606,7 +2623,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
 		}
 	}
-
 
 
 	/**
@@ -3401,6 +3417,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 							cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(),
 							uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+
+					//orderId = "987654321";
 
 					LOG.info("::Created Juspay OrderId::" + orderId);
 
