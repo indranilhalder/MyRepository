@@ -3034,16 +3034,14 @@ $(".cvvHelp").popover({
     html: 'true',
     placement: 'bottom',
     trigger: 'hover',
-    title: 'Card Security Code',
     content: $("#cvvHelpContent").val()
 });
 	}
 	else{
 		$(".cvvHelp").popover({
 		    html: 'true',
-		    placement: 'right',
+		    placement: 'bottom',
 		    trigger: 'hover',
-		    title: 'Card Security Code',
 		    content: $("#cvvHelpContent").val()
 		});
 	}
@@ -4649,8 +4647,8 @@ function applyPromotion(bankName,binValue,formSubmit)
 										var row = emiTable.insertRow(rowCount);
 										row.insertCell(0).innerHTML= '<input type="radio" name="termRadio" id="termRadioId' + index + '" value="" style="display: inherit;" onclick="validateSelection()"><label for="termRadioId' + index + '">' + data[index].term + ' Months </label>';
 										//row.insertCell(1).innerHTML= data[index].term + " months";
-										row.insertCell(1).innerHTML= /*"Rs. " + */data[index].monthlyInstallment;
-										row.insertCell(2).innerHTML= data[index].interestRate + "%";
+										row.insertCell(1).innerHTML= data[index].interestRate + "%,";
+										row.insertCell(2).innerHTML= /*"Rs. " + */data[index].monthlyInstallment + " p.m";
 										row.insertCell(3).innerHTML= /*"Rs. " + */data[index].interestPayable;
 										var radioId=document.getElementsByName("termRadio")[index].id;
 										document.getElementById(radioId).value=data[index].term;

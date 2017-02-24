@@ -464,11 +464,11 @@
 						                            
 													<div class="controls full cvv">
 														
-														<%-- <input type="hidden" id="cvvHelpContent" value="<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelpContent"/>"> --%>
+														<input type="hidden" id="cvvHelpContent" value="<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelpContent"/>">
 														<input type="hidden" id="cvvHelpContent" value="${cvvHelp}">
 						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label>
 						                           		<input type="password" autocomplete="new-password" class="security_code span1" name="cvv" maxlength="4" />
-						                           		<%-- <a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelp"/></a> --%>
+						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
 						                           		<span class="error-message" id="cvvError"></span> 
 						                            </div>
 												</fieldset>
@@ -770,11 +770,11 @@
 						                            
 													<div class="controls full cvv">
 														
-														<%-- <input type="hidden" id="cvvHelpContent" value="<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelpContent"/>"> --%>
+														<input type="hidden" id="cvvHelpContent" value="<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelpContent"/>">
 														<input type="hidden" id="cvvHelpContent" value="${cvvHelp}">
 						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label>
 						                           		<input type="password" autocomplete="new-password" class="security_code span1" name="cvv" maxlength="4" />
-						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelp"/></a>
+						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
 						                           		<span class="error-message" id="cvvErrorDc"></span> 
 						                            </div>
 												</fieldset>
@@ -811,25 +811,6 @@
 									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
 									</div>				
 					</li>	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 					<li id="netbanking">
 								<ul class="product-block net-bank netbankingPanel blocks" ></ul>
 									<%-- <p class="redirect"><spring:theme code="text.secure.payment.gateway"/></p> --%>
@@ -848,25 +829,6 @@
 									</div> 
 								</li>
 
-
-
-
-
-
-								
-
-
-
-
-
-
-
-
-
-
-
-
-
 						<li id="emi">
 										<input type="hidden" id="EMI" value="${map.value}" />	
 										<ul class="product-block emi blocks">
@@ -874,7 +836,7 @@
 										<div class="bank-select">
 										<h3>Select your bank for EMI options</h3>
 														<%-- <label id="listOfEMiBank"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.listOfEMIBanks"/></label> --%>
-														<p id="emi-notice"><spring:theme code="checkout.multi.paymentMethod.emi.notice"/></p>
+														<%-- <p id="emi-notice"><spring:theme code="checkout.multi.paymentMethod.emi.notice"/></p> --%>
 														 <!-- <label class="control-label bank-label">
 						                             		SELECT YOUR BANK </label> -->
 														<select id="bankNameForEMI" onchange="getSelectedEMIBank()">
@@ -919,7 +881,7 @@
 				                  		<input type="hidden" class="emi_tenure" id="emi_tenure" />
 				                  		<input type="hidden" class="emi_bank" id="emi_bank">
 				                  		<input type="hidden" id="ebsDownCheck" value="${ebsDownCheck}"/>
-				                  		<p>NEW CARD</p>
+				                  		<!-- <p>NEW CARD</p> -->
 										<div class="card-group">
 											<div class="form-group">
 						                    	<fieldset>
@@ -975,11 +937,11 @@
 						                            
 													<div class="controls full cvv">
 														
-														<%-- <input type="hidden" id="cvvHelpContent" value="<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelpContent"/>"> --%>
+														<input type="hidden" id="cvvHelpContent" value="<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelpContent"/>">
 														<input type="hidden" id="cvvHelpContent" value="${cvvHelp}">
 						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label>
 						                           		<input type="password" autocomplete="new-password" class="security_code span1" name="cvv" maxlength="4" />
-						                           		<%-- <a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelp"/></a> --%>
+						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
 						                           		<span class="error-message" id="cvvErrorEmi"></span> 
 						                            </div>
 												</fieldset>
@@ -1070,6 +1032,7 @@
 									<!-- <p class="payment-redirect">You will be re-directed to secure payment gateway</p> -->
 									<%-- <p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p> --%>
 								    </div>
+								    <p id="emi-notice"><spring:theme code="checkout.multi.paymentMethod.emi.notice"/></p>
 								    <div class="terms">
 								    <p class="redirect">You will be re-directed to secure payment gateway</p>
 									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
