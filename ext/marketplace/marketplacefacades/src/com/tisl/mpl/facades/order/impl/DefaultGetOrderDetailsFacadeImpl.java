@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -1596,7 +1597,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	}
 
 	@Override
-	public OrderTrackingWsDTO getOrderDetailsWithTracking(final String orderCode)
+	public OrderTrackingWsDTO getOrderDetailsWithTracking(final HttpServletRequest request,final String orderCode)
 	{
 		final OrderTrackingWsDTO orderTrackingWsDTO = new OrderTrackingWsDTO();
 		final List<OrderProductWsDTO> orderproductdtos = new ArrayList<OrderProductWsDTO>();
@@ -2135,7 +2136,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								
 								//R2.3 Changes-Start
 								orderproductdto
-										.setSelfCourierDocumentLink(getSelfCourierDocumentUrl(orderModel, entry.getTransactionId()));
+										.setSelfCourierDocumentLink(getSelfCourierDocumentUrl(request,subOrder.getCode(), entry.getTransactionId()));
 								String returnType = getAwbPopupLink(entry, subOrder.getCode());
 								if (MarketplacecommerceservicesConstants.SELF_COURIER.equalsIgnoreCase(returnType)
 										&& !entry.isIsRefundable())
@@ -2442,6 +2443,19 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							orderproductdto.setShipmentdetails(ordershipmentdetailstdtos.get(0));
 
 							orderproductdtos.add(orderproductdto);
+							//R2.3 Changes-Start
+							orderproductdto
+									.setSelfCourierDocumentLink(getSelfCourierDocumentUrl(request,orderDetail.getCode(), orderEntry.getTransactionId()));
+							String returnType = getAwbPopupLink(orderEntry, orderDetail.getCode());
+							if (MarketplacecommerceservicesConstants.SELF_COURIER.equalsIgnoreCase(returnType)
+									&& !orderEntry.isIsRefundable())
+							{
+								orderproductdto.setAwbPopupLink(MarketplacecommerceservicesConstants.Y);
+							}else
+							{
+								orderproductdto.setAwbPopupLink(MarketplacecommerceservicesConstants.N);
+							}
+							//R2.3 Changes-END
 						}
 					}
 					orderTrackingWsDTO.setProducts(orderproductdtos);
@@ -2508,55 +2522,39 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	/**
 	 * @param orderModel
 	 */
-	private String getSelfCourierDocumentUrl(OrderModel orderModel, String transactionID)
+	private String getSelfCourierDocumentUrl(final HttpServletRequest request,String orderCode, String transactionID)
 	{
-		String fileDownloadLocation = null;
-		try
-		{
-			for (OrderModel subOrder : orderModel.getChildOrders())
-			{
-				for (AbstractOrderEntryModel entry : subOrder.getEntries())
-				{
-					if (entry.getTransactionID().equalsIgnoreCase(transactionID))
-					{
-
-						try
-						{
-							//Fetching invoice from consignment entries
-							for (final ConsignmentEntryModel c : entry.getConsignmentEntries())
-							{
-								if (null != c.getConsignment().getInvoice())
-								{
-									fileDownloadLocation = c.getConsignment().getInvoice().getInvoiceUrl();
-									LOG.info(":::::::InvoiceURL    " + fileDownloadLocation);
-									if (fileDownloadLocation == null)
-									{
-										fileDownloadLocation = configurationService.getConfiguration().getString("default.invoice.url");
-									}
-								}
-								else
-								{
-
-									fileDownloadLocation = configurationService.getConfiguration().getString("default.invoice.url");
-
-								}
-							}
-						}
-
-						catch (Exception exp)
-						{
-							LOG.error("Exception Oucer Get Consignment " + exp.getMessage());
-						}
-					}
-				}
+		try {
+			String scheme = request.getScheme();
+			String serverName = request.getServerName();
+			String portNumber = String.valueOf(request.getServerPort());
+			StringBuilder sb = new StringBuilder(scheme);
+			sb.append(MarketplaceFacadesConstants.COLON);
+			sb.append(MarketplaceFacadesConstants.FORWARD_SLASHES);
+			sb.append(serverName);
+			if(null != portNumber) {
+				sb.append(MarketplaceFacadesConstants.COLON);
+				sb.append(portNumber);
 			}
+			sb.append(MarketplaceFacadesConstants.RETURN_SELF_COURIER_FILE_DOWNLOAD_URL);
+			sb.append(orderCode);
+			sb.append(MarketplaceFacadesConstants.AMPERSAND);
+			sb.append(MarketplaceFacadesConstants.TRANSACTION_ID);
+			sb.append(MarketplaceFacadesConstants.EQUALS_TO);
+			sb.append(transactionID);
+			String SelfCourierDocumentLink = String.valueOf(sb);
+			if(LOG.isDebugEnabled()) {
+				LOG.debug("Self Courier return file download location for transaction id "+transactionID+" with order code  "+orderCode+" is "+SelfCourierDocumentLink);
+			}
+			return  SelfCourierDocumentLink;
+
 		}
 		catch (Exception expection)
 		{
 			LOG.error("Exception Oucer Get fileDownloadLocation DefaultGetOrderDetailsFacadeImpl");
 		}
 
-		return fileDownloadLocation;
+		return null;
 	}
 
 	/*

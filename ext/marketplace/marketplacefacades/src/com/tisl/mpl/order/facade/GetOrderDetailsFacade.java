@@ -11,6 +11,8 @@ import de.hybris.platform.core.model.order.OrderModel;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.tisl.mpl.facades.data.AWBResponseData;
 import com.tisl.mpl.wsdto.OrderDataWsDTO;
 import com.tisl.mpl.wsdto.OrderProductWsDTO;
@@ -33,7 +35,7 @@ public interface GetOrderDetailsFacade
 	 * @param orderCode
 	 * @return
 	 */
-	public OrderTrackingWsDTO getOrderDetailsWithTracking(String orderCode);
+	public OrderTrackingWsDTO getOrderDetailsWithTracking(final HttpServletRequest request,String orderCode);
 
 	/**
 	 * @param orderEntryDetail

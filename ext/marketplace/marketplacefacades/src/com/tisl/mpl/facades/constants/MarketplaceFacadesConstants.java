@@ -157,6 +157,12 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String PINCODE_NOT_SERVICEABLE="Pincode not Serviceable";
 	public static final String TATA_CLIQ="TATA-CLIQ";
 	public static final String REFUND_MODE_C="C";
+	public static final String RETURN_SELF_COURIER_FILE_DOWNLOAD_URL = "/my-account/returns/returnFileDownload?orderCode=";
+	public static final String TRANSACTION_ID ="transactionId";
+	public static final String AMPERSAND = "&";
+	public static final String EQUALS_TO = "=";
+	public static final String COLON = ":";
+	public static final String FORWARD_SLASHES = "//";
 	private MarketplaceFacadesConstants()
 	{
 		//empty
