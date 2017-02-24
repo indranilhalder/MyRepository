@@ -572,7 +572,7 @@ $(document).ready(function(){
 	/*----END of  SHop by brand A_E hover functionality  -----*/
 			 
 	/*---Start of Checkout Payment tab switching  ----*/
-			 var paymentModes =  $("#viewPaymentCredit, #viewPaymentDebit, #viewPaymentNetbanking, #viewPaymentCOD, #viewPaymentEMI");
+			 var paymentModes =  $("#viewPaymentCredit, #viewPaymentDebit, #viewPaymentNetbanking, #viewPaymentCOD, #viewPaymentEMI,#viewPaymentCreditMobile, #viewPaymentDebitMobile, #viewPaymentNetbankingMobile, #viewPaymentCODMobile, #viewPaymentEMIMobile");
 			 $(window).on('load resize',function(){	
 			 paymentModes.on("click",function(e) {
 				 $('.cart.wrapper .left-block .payments.tab-view ul.tabs').show(200);

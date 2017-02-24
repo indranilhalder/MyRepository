@@ -274,7 +274,23 @@
 					</ul>
 					<input type="hidden" id="paymentMode" name="paymentMode"/>
 					<ul class="tabs">
+					<c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
+											<c:when test="${map.key eq 'Credit Card'}">
+												<input type="hidden" id="CreditCard" value="${map.value}" />
+	
+												<li class="active paymentModeMobile">
 
+
+													<span id="viewPaymentCreditMobile" >
+														<spring:theme code="checkout.multi.paymentMethod.selectMode.CC" />
+													</span>
+												</li>
+												</c:when>
+											</c:choose>
+										</c:if>
+									</c:forEach>
 					<!-- div for Cards -->
 							<li id="card">
 							<ul class="product-block blocks">
@@ -571,24 +587,21 @@
 					</li>				
 
 				<!-- Card ends -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
+		    								<c:when test="${map.key eq 'Debit Card'}">
+		    									<input type="hidden" id="DebitCard" value="${map.value}" />
+		    								
+		    									<li class="paymentModeMobile">
+		    										<span id="viewPaymentDebitMobile" >
+														<spring:theme code="checkout.multi.paymentMethod.selectMode.DC" />
+													</span>
+												</li>
+												</c:when>
+											</c:choose>
+										</c:if>
+									</c:forEach>
 				<li id="cardDebit">
 							<ul class="product-block blocks">
 							<h3>Enter your card details</h3>
@@ -811,6 +824,21 @@
 									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
 									</div>				
 					</li>	
+					<c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
+			    							<c:when test="${map.key eq 'Netbanking'}">
+			    								<input type="hidden" id="Netbanking" value="${map.value}" />
+			    							
+			    								<li class="paymentModeMobile">
+			      	 								<span id="viewPaymentNetbankingMobile" >
+			      	 									<spring:theme code="checkout.multi.paymentMethod.selectMode.NB" />
+			      	 								</span>
+			      	 							</li>
+											</c:when>
+											</c:choose>
+										</c:if>
+									</c:forEach>
 					<li id="netbanking">
 								<ul class="product-block net-bank netbankingPanel blocks" ></ul>
 									<%-- <p class="redirect"><spring:theme code="text.secure.payment.gateway"/></p> --%>
@@ -828,6 +856,20 @@
 										
 									</div> 
 								</li>
+								
+							<c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
+			    							<c:when test="${map.key eq 'EMI'}">
+											<li class="paymentModeMobile">
+				       								<span id="viewPaymentEMIMobile" >
+														<spring:theme code="checkout.multi.paymentMethod.selectMode.EMI" />
+													</span>
+												</li>
+											</c:when>
+											</c:choose>
+										</c:if>
+									</c:forEach>
 
 						<li id="emi">
 										<input type="hidden" id="EMI" value="${map.value}" />	
@@ -1047,16 +1089,21 @@
 									</ul>
 								</li> <!-- End of div id EMI -->
 								
-
-
-
-
-
-
-
-
-
-
+						<c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
+			    							<c:when test="${map.key eq 'COD'}">
+			    								<input type="hidden" id="COD" value="${map.value}" />
+												<li class="paymentModeMobile">
+				       								<span id="viewPaymentCODMobile" >
+				       									<spring:theme code="checkout.multi.paymentMethod.selectMode.COD" />
+				       								</span>
+			       								</li>
+												
+													</c:when>
+											</c:choose>
+										</c:if>
+									</c:forEach>
 
 						<ycommerce:testId code="paymentDetailsForm">
 								
@@ -1076,16 +1123,6 @@
 								<c:forEach items="${sopPaymentDetailsForm.subscriptionSignatureParams}" var="entry" varStatus="status">
 									<input type="hidden" id="${entry.key}" name="${entry.key}" value="${entry.value}"/>
 								</c:forEach>
-								
-			    								
-
-
-
-
-
-
-
-				
 								
 				<!-- div for COD -->
 								<li id="COD">
@@ -1205,8 +1242,7 @@
 <style>
  .checkout-paymentmethod {
 	display: none;
-} 
-
+}
 </style>
 
 <script>
