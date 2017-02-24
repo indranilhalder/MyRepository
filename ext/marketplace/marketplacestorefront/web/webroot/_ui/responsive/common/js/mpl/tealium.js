@@ -662,6 +662,7 @@ $(document).on('click','.jqtree-title.jqtree_common',function(){
 		"filter_type" : filter_type,
 		"filter_value" : filter_value
 	});
+	restrictionFlag='true';
 })
 /*TPR-645 End*/
 
@@ -1067,29 +1068,84 @@ window.onbeforeunload = function(event) {
 	
 	if(pageType == 'category' || pageType == 'productsearch'){
 		if(restrictionFlag != 'true'){
-			finalUtagDetals();
+			setupSessionValues();
 		}
 	}
 }; 
 
 var restrictionFlag='false';
 
-function finalUtagDetals(){
+function setupSessionValues(){
 	if($('.bottom-pagination .facet-list.filter-opt').children().length > 0){
 		var filterTypeList=[];
 		var filterValueList=[];
-
+		var sessionPageUrl=window.location.href;
+		
 		$('.bottom-pagination .facet-list.filter-opt').children().each(function(){
 			filterTypeList.push($(this).children().eq(0).attr('class').toLowerCase().replace(/ +$/, "").replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,""));
 			filterValueList.push($(this).children().eq(1).attr('value').toLowerCase().replace(/ +$/, "").replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,""))
 		})
-		if(typeof utag !="undefined"){
-			utag.link({ 
-				link_text : "final_filter_list" , 
-				event_type : "final_filter_list" , 
-				"filter_types_final":filterTypeList,
-				"filter_values_final":filterValueList
-			});
+		if(typeof(Storage) !== "undefined") {
+			var formattedValue='';
+			for(var i=0;i<filterValueList.length;i++){
+				if(formattedValue==''){
+					formattedValue=filterValueList[i];
+				}
+				else{
+					formattedValue=';'+filterValueList[i];
+				}
+			}
+			sessionStorage.setItem("filterTypeList", filterTypeList); 
+			sessionStorage.setItem("filterValueList", formattedValue);
+			sessionStorage.setItem("pageSessionUrl", sessionPageUrl);
+		}
+		else {
+			document.getElementById("result").innerHTML = "Sorry, your browser does not support web storage...";
 		}
 	}
 }
+
+$(window).load(function() {
+	var filterTypeList='';
+	var filterValueList='';
+	var pageSessionUrl;
+	if(typeof(Storage) !== "undefined") {
+		
+		if(sessionStorage.getItem("filterTypeList") != null ){
+			filterTypeList = sessionStorage.getItem("filterTypeList").split(",");
+			sessionStorage.removeItem("filterTypeList");
+		}
+		if(sessionStorage.getItem("filterValueList") != null ){
+			filterValueList = sessionStorage.getItem("filterValueList").split(";");
+			sessionStorage.removeItem("filterValueList");
+		}
+		if(sessionStorage.getItem("pageSessionUrl") != null ){
+			pageSessionUrl = sessionStorage.getItem("pageSessionUrl");
+			sessionStorage.removeItem("pageSessionUrl");
+		}
+	}
+	else {
+		document.getElementById("result").innerHTML = "Sorry, your browser does not support web storage...";
+	}
+	var currentPageUrl=window.location.href;
+	
+	if(typeof(pageSessionUrl) != 'undefined' && currentPageUrl != pageSessionUrl && restrictionFlag != 'true'){
+		//safety check, here both the list should not be empty
+		console.log(filterTypeList);
+		console.log(filterValueList);
+		if(filterValueList.length > 0 && filterTypeList.length > 0){
+
+			if(typeof(utag) !="undefined"){
+				utag.link({ 
+					link_text : "final_filter_list" , 
+					event_type : "final_filter_list" , 
+					"filter_types_final":filterTypeList,
+					"filter_values_final":filterValueList
+				});
+			}
+		}
+		
+	}
+	
+});
+
