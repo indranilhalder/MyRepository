@@ -231,21 +231,21 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			@RequestParam(value = "value", required = false, defaultValue = "") final String guid) throws CMSItemNotFoundException
 	{
 		//redirecting to previous page for anonymous user
-				if (getUserFacade().isAnonymousUser())
-				{
-					return getCheckoutStep().previousStep();
-				}
-				final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-				ValidationResults validationResult = null;
-				//Validator called explicitly TPR-629
-				if (StringUtils.isEmpty(guid))
-				{
-					validationResult = paymentValidator.validateOnEnterOptimized(cartData, redirectAttributes);
-				}
-				if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
-				{
-					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
-				}
+		if (getUserFacade().isAnonymousUser())
+		{
+			return getCheckoutStep().previousStep();
+		}
+		final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+		ValidationResults validationResult = null;
+		//Validator called explicitly TPR-629
+		if (StringUtils.isEmpty(guid))
+		{
+			validationResult = paymentValidator.validateOnEnterOptimized(cartData, redirectAttributes);
+		}
+		if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
+		{
+			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+		}
 		//Validator called explicitly TPR-629
 		if (StringUtils.isEmpty(guid))
 		{
@@ -341,7 +341,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//Getting Payment modes
 				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, orderData);
 
-				//model.addAttribute(MarketplacecheckoutaddonConstants.GUID, orderModel.getGuid());
+				//For Total Calculation
+				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, orderModel.getGuid());
 
 				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 			}
