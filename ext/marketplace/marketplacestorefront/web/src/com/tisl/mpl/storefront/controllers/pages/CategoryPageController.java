@@ -158,6 +158,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private static final String CATEGORY_FOOTER_TEXT = "categoryFooterTxt";
 	private static final String SPECIAL_CHARACTERS = "[^\\w\\s]";
 	private int pageSiseCount;
+	//UF-15,16
+	private static final Integer PAGE_SIZE = new Integer(24);
 
 	/**
 	 * @return the pageSiseCount
@@ -365,12 +367,14 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = PAGE, defaultValue = "0") int pageNo,
 			@RequestParam(value = SHOW, defaultValue = PAGEVAl) final ShowMode showMode,
 			@RequestParam(value = SORT, required = false) final String sortCode,
-			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "searchCategory", required = false) String dropDownText,
 			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException,
 			CMSItemNotFoundException
 	{
+		//UF-15
+		pageSize = PAGE_SIZE;
 		categoryCode = categoryCode.toUpperCase();
 		String returnStatement = null;
 		if (!redirectIfLuxuryCategory(categoryCode, response))
