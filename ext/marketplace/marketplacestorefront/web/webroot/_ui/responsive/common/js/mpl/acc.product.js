@@ -714,6 +714,7 @@ sendAddToBagQuick:function(formId){
 		},
 		complete: function(){
 	        $('#ajax-loader').hide();
+	        forceUpdateHeader();
 	    },
 		error : function(resp) {
 			
