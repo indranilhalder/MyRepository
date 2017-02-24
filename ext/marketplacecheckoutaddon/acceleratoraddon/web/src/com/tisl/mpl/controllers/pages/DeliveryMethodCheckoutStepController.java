@@ -627,6 +627,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			LOG.debug("from doFindDelivaryMode methodin Controller");
 		}
 		//TISPT-400
+		
+		if (getCartService().hasSessionCart())
+		{
 		final CartModel cartModel = getCartService().getSessionCart();
 
 
@@ -952,6 +955,11 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		model.addAttribute("checkoutPageName", checkoutPageName);
 		model.addAttribute("progressBarClass", "choosePage");
 		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChoosePickupLocationPage;
+	}
+		else
+		{
+			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+		}
 	}
 
 	/**
@@ -2617,4 +2625,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		}
 		return cartLevelSellerID;
 	}
+
+
 }
