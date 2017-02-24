@@ -6,13 +6,14 @@
 <%@ attribute name="supportShowPaged" required="true" type="java.lang.Boolean" %>
 <%@ attribute name="msgKey" required="false" %>
 <%@ attribute name="numberPagesShown" required="false" type="java.lang.Integer" %>
+<%@ attribute name="hide" required="false" type="java.lang.Boolean" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="pagination" tagdir="/WEB-INF/tags/responsive/nav/pagination" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="ycommerce"  uri="http://hybris.com/tld/ycommercetags" %>
 
-
+<c:if test="${hide eq false}">
 <c:set var="themeMsgKey" value="${not empty msgKey ? msgKey : 'search.page'}"/>
 <c:if test="${searchPageData.pagination.totalNumberOfResults == 0 && top }">
 	<div class="paginationBar top clearfix">
@@ -228,4 +229,5 @@
 			</div> --%>
 			
 	</div>
+</c:if>
 </c:if>
