@@ -275,7 +275,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						if (pinCodeResponseData != null && pinCodeResponseData.getIsServicable() != null
 								&& pinCodeResponseData.getIsServicable().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
 						{
-							pinCodeResponseData = getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData);
+							pinCodeResponseData = getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData, cartData);
 						}
 					}
 					catch (final Exception e)
