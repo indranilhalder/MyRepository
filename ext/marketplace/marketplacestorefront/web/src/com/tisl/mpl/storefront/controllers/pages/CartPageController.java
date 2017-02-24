@@ -208,6 +208,12 @@ public class CartPageController extends AbstractPageController
 				//TISEE-3676 & TISEE-4013
 				//final boolean deListedStatus = getMplCartFacade().isCartEntryDelisted(serviceCart); Moved to facade layer //TISPT-104
 				//LOG.debug("Cart Delisted Status " + deListedStatus);
+				//CAR-246
+				if (StringUtils.isNotEmpty(pinCode))
+				{
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pinCode);
+				}
+
 				final Object sessionPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 				if (null != sessionPincode)
 				{
