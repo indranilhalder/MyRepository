@@ -51,7 +51,7 @@ public class NPSFeedbackQuestionDaoImpl implements NPSFeedbackQuestionDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.NPSFeedbackQuestionDao#getFeedback(java.lang.String)
 	 */
 	@Override
@@ -72,7 +72,7 @@ public class NPSFeedbackQuestionDaoImpl implements NPSFeedbackQuestionDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.NPSFeedbackQuestionDao#validateCustomerForTransaction(java.lang.
 	 * String)
@@ -80,13 +80,13 @@ public class NPSFeedbackQuestionDaoImpl implements NPSFeedbackQuestionDao
 	@Override
 	public CustomerModel validateCustomerForTransaction(final String transactionId)
 	{
-		final String queryString = "SELECT {o.user} FROM  {" + AbstractOrderEntryModel.PK + " AS aoe JOIN " + OrderModel.PK
-				+ " AS o ON {aoe.order} = {o.pk}} WHERE {aoe.transactionid} = ?transactionId";
+		final String queryString = "SELECT {o.user} FROM  {" + AbstractOrderEntryModel._TYPECODE + " AS aoe JOIN "
+				+ OrderModel._TYPECODE + " AS o ON {aoe.order} = {o.pk}} WHERE {aoe.transactionid} = ?transactionId";
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("transactionId", transactionId);
 		LOG.debug("Fetching validateCustomerForTransaction " + query);
 
-		return (CustomerModel) flexibleSearchService.search(query).getResult();
+		return flexibleSearchService.<CustomerModel> search(query).getResult().get(0);
 	}
 
 
