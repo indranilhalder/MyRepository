@@ -783,12 +783,14 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			// console.log(response);
 			// putting AJAX respons to view
 			if($("#isCategoryPage").val() == 'true' && !$("input[name=customSku]").val()){
-				$("#productGrid").html(response);
+				//$("#productGrid").html(response);
+				lazyPaginationFacet(response);
 			}		
 			else{
 				
 				if(requiredUrl.indexOf("offer") > -1 || requiredUrl.indexOf("viewOnlineProducts") > -1 || requiredUrl.indexOf("/s/") > -1){
-					$("#productGrid").html(response);
+					//$("#productGrid").html(response);
+					lazyPaginationFacet(response);
 				}
 				else{
 					$("#facetSearchAjaxData").html(response);
@@ -969,3 +971,23 @@ function isCustomSku(requiredUrl){
 	}
 	return true;
 }
+
+//UF-15
+function lazyPaginationFacet(response){
+	res = response;
+	var ulProduct = $(response).find('ul.product-listing.product-grid');
+    productItemArray = [];
+    $(ulProduct).find('li.product-item').each(function() {
+        productItemArray.push($(this));
+    });
+	$("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid", response));
+    innerLazyLoad({isSerp:true});
+}
+//UF-15
+(function($) {
+    $.strRemove = function(theTarget, theString) {
+        return $("<div/>").append(
+            $(theTarget, theString).empty().end()
+        ).html();
+    };
+})(jQuery);

@@ -5,7 +5,7 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-
+<script src="https://www.google.com/recaptcha/api.js"></script>
 <p>
 	<spring:theme
 		code="checkout.multi.paymentMethod.addPaymentDetails.cod.desc" />
@@ -24,11 +24,11 @@
 	<div class="description">
 		<spring:theme code="" />
 	</div>
-	<label name="Enter OTP" class="cod-mob-label"><spring:theme
+<%-- 	<label name="Enter OTP" class="cod-mob-label"><spring:theme
 			code="checkout.multi.paymentMethod.addPaymentDetails.mobileNo" /></label> <input
 		type="text" id="mobilePrefix" name="mobilePrefix" value="+91"
 		disabled="disabled" /><input type="text" id="otpMobileNUMField"
-		name="otpNUM" value="${cellNo}" maxlength="10" />
+		name="otpNUM" value="${cellNo}" maxlength="10" /> --%>
 	<div id="mobileNoError" class="error-message">
 		<spring:theme
 			code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoErrorMessage" />
@@ -49,7 +49,7 @@
 				code="checkout.multi.paymentMethod.cod.updateItHereLink" /></a>
 	</p> 
 
-	<div id="sendOTPButton">
+<%-- 	<div id="sendOTPButton">
 
 		<button type="button" class="positive right cod-otp-button"
 			onclick="mobileBlacklist()">
@@ -61,16 +61,51 @@
 			<spring:theme
 				code="checkout.multi.paymentMethod.addPaymentDetails.codResendMessage" />
 		</div>
-	</div>
+	</div> --%>
 	<div id="OTPGenerationErrorMessage" class="error-message">
 		<spring:theme
 			code="checkout.multi.paymentMethod.addPaymentDetails.codMessage" />
 	</div>
 </div>
-
 <div id="enterOTP" class="cont-del">
 	<%-- <label name="Enter OTP"><spring:theme
 			code="checkout.multi.paymentMethod.CODPayment.enterOTP"
 			text="Enter OTP:&nbsp;" /> --%> <input type="text" id="otpNUMField" placeholder="OTP"
 		name="otpNUM" onfocus="hideErrorMsg()" autocomplete="off" /> <!-- </label> -->
 </div>
+<div class="g-recaptcha" data-sitekey="${grecaptchaKey}"></div>
+<div id="captchaError"></div>
+<script type="text/javascript" >
+ $(document).ready(function (){
+	$.ajax({
+		url: ACC.config.encodedContextPath + "/login/captcha/widget/recaptcha",
+		type: 'GET',
+		cache: false,
+		success: function (html)
+		{			
+			if ($(html) != [])
+			{
+				//if($('#captchaCount').val() >= 5)
+				{
+//					alert("Please validate with captcha !")
+					$("#recaptchaWidgetForLogin").show();
+					$("#captchaError").empty();
+
+					$("#paymentButtonId").click(function(){	
+						if(!$("#g-recaptcha-response").val()){
+						//	alert("TWO=>"+$("#g-recaptcha-response").val());
+							$('#captchaError').html("<font color='red'>Please verify that you are not a robot! </font>")
+							return false;
+						}
+						else{
+							submitCODForm();
+							return true;
+						}
+					});
+				}
+			}
+		}
+	});
+	
+}); 
+</script>
