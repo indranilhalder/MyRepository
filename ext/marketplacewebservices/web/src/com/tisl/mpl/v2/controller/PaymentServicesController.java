@@ -542,13 +542,14 @@ public class PaymentServicesController extends BaseController
 	@RequestMapping(value = MarketplacewebservicesConstants.UPDATETRANSACTIONFORCODURL, method = RequestMethod.POST, produces = MarketplacewebservicesConstants.APPLICATIONPRODUCES)
 	@ResponseBody
 	public PaymentServiceWsData updateTransactionDetailsforCOD(@PathVariable final String userId,
-			@RequestParam final String otpPin, @RequestParam final String cartGuid)
+			@RequestParam(required = false) final String otpPin, @RequestParam final String cartGuid)
 	{
 		final PaymentServiceWsData updateTransactionDtls = new PaymentServiceWsData();
 		OrderModel orderModel = null;
 		OrderData orderData = null;
 		CartModel cart = null;
 		String failErrorCode = "";
+		String validationMsg = "";
 		boolean failFlag = false;
 		LOG.debug(String.format("updateTransactionDetailsforCOD : CartId: %s | UserId : %s |", cartGuid, userId));
 		try
@@ -561,7 +562,14 @@ public class PaymentServicesController extends BaseController
 			}
 			//final UserModel user = getExtUserService().getUserForOriginalUid(userId);
 			//final String validationMsg = getMplPaymentFacade().validateOTPforCODWeb(userId, otpPin);
-			final String validationMsg = getMplPaymentFacade().validateOTPforCODWV(customerData.getDisplayUid(), otpPin);
+			if (StringUtils.isNotEmpty(otpPin) && null != otpPin)
+			{
+				validationMsg = getMplPaymentFacade().validateOTPforCODWV(customerData.getDisplayUid(), otpPin);
+			}
+			else
+			{
+				validationMsg = MarketplacecommerceservicesConstants.OTPVALIDITY;
+			}
 			//IF valid then proceed saving COD payment
 			if (validationMsg.equalsIgnoreCase(MarketplacecommerceservicesConstants.OTPVALIDITY))
 			{
