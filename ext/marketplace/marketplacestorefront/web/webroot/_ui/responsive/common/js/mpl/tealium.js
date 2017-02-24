@@ -652,14 +652,15 @@ $('#deliveryAddressSubmit').click(function(){
 
 /*TPR-645 Start*/
 $(document).on('click','.jqtree-title.jqtree_common',function(){
-	var val= $(this).text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['-]/g,"");
-	var name=$(this).parents('form').siblings('div').find('h4').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/'/g,"");
-	var msg = name+"_"+val;
+	var filter_value= $(this).text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['-]/g,"");
+	var filter_type=$(this).parents('form').siblings('div.facet-name.js-facet-name.facet_desktop').find('h3').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/'/g,"");
+	//var msg = name+"_"+val;
 	utag.link({
 		link_obj: this,
-		link_text: msg ,
-		event_type : 'search_filter_usage',
-		search_filter : msg 
+		link_text: 'search_filter_applied' ,
+		event_type : 'search_filter_applied',
+		"filter_type" : filter_type,
+		"filter_value" : filter_value
 	});
 })
 /*TPR-645 End*/
@@ -1039,7 +1040,7 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 			 });
 
 /*TPR-4721, TPR-4706 | Sort By in SERP|PLP*/
-$('#sortOptions1').on('change', function() {
+$(document).on('change','#sortOptions1', function() {
   if(typeof utag !="undefined"){
 	var value = $(this).find('option:selected').text().trim().toLowerCase().replace(/ +$/, "").replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	utag.link({ 
@@ -1047,5 +1048,48 @@ $('#sortOptions1').on('change', function() {
 		event_type : "sort_by_selected" , 
 		"sort_by_value" : value 
 	});
+	restrictionFlag='true';
   } 
 })
+
+/*TPR-4719, TPR-4704 | Search Filter in SERP|PLP*/
+//On click of view page size dropdown
+$(document).on('change','#pageSizeOptions1', function() {
+	restrictionFlag='true';
+})
+//On click of pagination
+$(document).on('click','.pagination_a_link',function(){
+	restrictionFlag='true';
+})
+
+window.onbeforeunload = function(event) {
+	var pageType = $('#pageType').val();
+	
+	if(pageType == 'category' || pageType == 'productsearch'){
+		if(restrictionFlag != 'true'){
+			finalUtagDetals();
+		}
+	}
+}; 
+
+var restrictionFlag='false';
+
+function finalUtagDetals(){
+	if($('.bottom-pagination .facet-list.filter-opt').children().length > 0){
+		var filterTypeList=[];
+		var filterValueList=[];
+
+		$('.bottom-pagination .facet-list.filter-opt').children().each(function(){
+			filterTypeList.push($(this).children().eq(0).attr('class').toLowerCase().replace(/ +$/, "").replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,""));
+			filterValueList.push($(this).children().eq(1).attr('value').toLowerCase().replace(/ +$/, "").replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,""))
+		})
+		if(typeof utag !="undefined"){
+			utag.link({ 
+				link_text : "final_filter_list" , 
+				event_type : "final_filter_list" , 
+				"filter_types_final":filterTypeList,
+				"filter_values_final":filterValueList
+			});
+		}
+	}
+}

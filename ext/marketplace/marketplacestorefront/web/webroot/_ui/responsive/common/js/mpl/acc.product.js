@@ -1425,7 +1425,7 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						//TPR-645 start  -- INC_11511  fix--h3 tag done
 						var filterValue = (minPriceSearchTxt+"-"+maxPriceSearchTxt).replace(/,/g,"");
 						var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
-						onFilterClickAnalytics(filterName,filterValue);
+						onFilterAddAnalytics(filterName,filterValue);
 						//TPR-645 end
 						
 					}
