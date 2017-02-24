@@ -8,7 +8,7 @@ var bankNameSelected=null;
 //var bankAvailable=$("#bankAvailable").val();
 
 // Display forms based on mode button click
-$("#viewPaymentCredit").click(function(){
+$("#viewPaymentCredit, #viewPaymentCreditMobile ").click(function(){
 	
 	/*TPR-3446 new starts*/
 	var staticHost = $('#staticHost').val();
@@ -45,7 +45,7 @@ $("#viewPaymentCredit").click(function(){
 	}
 });
 
-$("#viewPaymentDebit").click(function(){
+$("#viewPaymentDebit, #viewPaymentDebitMobile").click(function(){
 	/*TPR-3446 new starts*/
 	var staticHost = $('#staticHost').val();
 	//$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -77,7 +77,7 @@ $("#viewPaymentDebit").click(function(){
 	});
 });
 
-$("#viewPaymentNetbanking").click(function(){
+$("#viewPaymentNetbanking, #viewPaymentNetbankingMobile").click(function(){
 	/*TPR-3446 new starts*/
 	var staticHost = $('#staticHost').val();
 	//$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -97,7 +97,7 @@ $("#viewPaymentNetbanking").click(function(){
 	});
 });
 
-$("#viewPaymentCOD").click(function(){
+$("#viewPaymentCOD, #viewPaymentCODMobile").click(function(){
 	if (!$("#paymentButtonId_up").is(':visible')){
 		$(".totals.outstanding-totalss").css("bottom","0px");
 	}
@@ -123,7 +123,7 @@ $("#viewPaymentCOD").click(function(){
 	});
 });
 
-$("#viewPaymentEMI").click(function(){
+$("#viewPaymentEMI, #viewPaymentEMIMobile").click(function(){
 	/*TPR-3446 new starts*/
 	var staticHost = $('#staticHost').val();
 	//$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");

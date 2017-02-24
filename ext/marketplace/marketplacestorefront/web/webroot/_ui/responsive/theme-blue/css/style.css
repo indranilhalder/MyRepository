@@ -61826,7 +61826,9 @@ margin-right:0;
     width: 100%;
 }
 /* net banking end */
-
+.cart.wrapper .left-block .payments.tab-view .nav li.paymentModeMobile{
+	display:none !important;
+}
 /*Left section end*/
 @media (max-width: 767px){
 .totals.outstanding-totalss {
@@ -61858,6 +61860,33 @@ margin-right:0;
     background-color: #a5173c;
     line-height: 1 !important;
     font-size: 12px !important;
+}
+.cart.wrapper .left-block .payments.tab-view{
+	border:none;
+	border-top: solid 1px #e8e8e8;
+}
+.cart.wrapper .left-block .payments.tab-view .nav{
+	display:none !important;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs li.paymentModeMobile{
+	display:block !important;
+	height: 49px;
+	border-bottom: solid 1px #e8e8e8;
+	font-size: 14px;
+	letter-spacing: 0.6px;
+	padding: 17px;
+	padding-left:56px;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs{
+	display:block;
+	width:100%;
+}
+.cart.wrapper.checkout-payment .blocks,.cart.wrapper.checkout-payment .blocks.netbankingPanel{
+	border-top:none;
+	border-bottom: solid 1px #e8e8e8;
+}
+.cart.wrapper.checkout-payment .blocks.netbankingPanel{
+	padding-bottom:36px;
 }
 }
 /* Payment Page change end */
