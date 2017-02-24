@@ -181,8 +181,20 @@
 								<c:otherwise>
 								<c:set var="paymentError" value="false"/>
 									<div class="payment-method">
-								<h2>Payment Method:
+									<!-- Checked for mRupee order -->
+									 <c:choose>
+  										<c:when test="${not empty subOrder.mplPaymentInfo.paymentOption && fn:toLowerCase(subOrder.mplPaymentInfo.paymentOption) eq 'mrupee'}">	
+  											<h2>Payment Method: <spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
+									</h2>
+									<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
+									${subOrder.mplPaymentInfo.paymentOption}
+  										</c:when>
+								  		<c:otherwise>
+								  			<h2>Payment Method:
 									${subOrder.mplPaymentInfo.paymentOption}</h2>
+									<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
+								  		</c:otherwise>
+								  	</c:choose>
 								<c:set var="cardNumberMasked"
 									value="${subOrder.mplPaymentInfo.cardIssueNumber}" />
 								<c:set var="cardNumberLength"
@@ -196,7 +208,6 @@
 										value="${subOrder.mplPaymentInfo.billingAddress}" />
 								</c:if>
 								<!--  TISBOX-1182 -->
-								<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
 								<c:if
 									test="${subOrder.mplPaymentInfo.paymentOption eq 'Credit Card' or 'EMI' or 'Debit Card'}">
 									<p>${subOrder.mplPaymentInfo.cardCardType} ending in

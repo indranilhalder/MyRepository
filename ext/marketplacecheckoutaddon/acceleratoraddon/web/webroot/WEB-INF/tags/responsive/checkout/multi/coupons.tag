@@ -24,6 +24,8 @@
 		<span class="error-message" id="userInvalidCouponError"><spring:theme code="checkout.multi.coupons.userInvalid"/></span>
 <!-- changes for  [ TPR-1075]-->
 	   <span class="error-message" id="firstPurchaseOfferError"><spring:theme code="checkout.multi.coupons.firstPurchaseInvalid"/></span>
+<!-- changes for  [ TPR-4460]-->
+	   <span class="error-message" id="invalidChannelError"><spring:theme code="checkout.multi.coupons.channelInvalid"/></span>
 	<!-- Top 5 coupons-----Commented as functionality out of scope of R2.1   Uncomment when in scope -->
 	<%-- <div id="voucherDisplay">
 		<c:if test="${not empty voucherDataList}">

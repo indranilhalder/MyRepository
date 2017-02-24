@@ -703,4 +703,63 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 	}
 
 
+
+	/*
+	 * Get Buybox data in respect of ussid (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#getBuyBoxDataForUssids(java.util.List)
+	 */
+	//TPR-3736
+	@Override
+	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions
+	{
+		final Map<String, List<Double>> buyBoxData = new HashMap<String, List<Double>>();
+
+		try
+		{
+
+			final String queryString = //
+			"select {b.pk} from {" + BuyBoxModel._TYPECODE + " as b } " + " where {b.available}>0 and {b.mrp}>0"
+					+ "  AND {b.sellerArticleSKU} in (" + ussidList + ")";
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+
+			final List<BuyBoxModel> buyBoxList = flexibleSearchService.<BuyBoxModel> search(query).getResult();
+			if (CollectionUtils.isNotEmpty(buyBoxList))
+			{
+				for (final BuyBoxModel buyBox : buyBoxList)
+				{
+					final List<Double> priceList = new ArrayList<Double>();
+					priceList.add(buyBox.getMrp());
+					priceList.add(buyBox.getPrice() == null ? Double.valueOf(0.0D) : buyBox.getPrice());
+					priceList.add(buyBox.getPrice() == null ? Double.valueOf(0.0D) : buyBox.getSpecialPrice());
+					buyBoxData.put(buyBox.getSellerArticleSKU(), priceList);
+					LOG.debug("#####################skuList" + buyBox.getSellerArticleSKU() + priceList);
+				}
+			}
+			return buyBoxData;
+
+		}
+
+
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+
+	}
+
 }

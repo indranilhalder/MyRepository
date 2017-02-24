@@ -4512,8 +4512,9 @@ function applyPromotion(bankName,binValue,formSubmit)
 				{
 					if(response.voucherDiscount.couponDiscount.doubleValue<=0)
 					{
+						//TPR-4460 changes -- invalidChannelError id added
 		 				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
-		 						" #expiredCouponError, #issueCouponError, #freebieCouponError").css("display","none");
+		 						" #expiredCouponError, #issueCouponError, #freebieCouponError ,#invalidChannelError").css("display","none");
 		 				document.getElementById("couponValue").innerHTML=response.voucherDiscount.couponDiscount.formattedValue;
 		 				$('#couponFieldId').attr('readonly', false);
 		 				var selection = $("#voucherDisplaySelection").val();
@@ -6712,6 +6713,7 @@ function clearDisable()
 
 // Coupon
 $("#couponSubmitButton").click(function(){
+	
 	if(!isSessionActive()){
 		redirectToCheckoutLogin();
 	}else{
@@ -6719,7 +6721,7 @@ $("#couponSubmitButton").click(function(){
 	$(this).css("opacity","0.5");
 	$("#priceCouponError, #emptyCouponError, #appliedCouponError, " +
 			"#invalidCouponError, #expiredCouponError, #issueCouponError, " +
-			"#notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError").css("display","none");
+			"#notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display","none");
 	if($("#couponFieldId").val()==""){
 		$("#emptyCouponError").css("display","block");	
 		// document.getElementById("couponError").innerHTML="Please enter a
@@ -6749,6 +6751,7 @@ $("#couponSubmitButton").click(function(){
 	 		cache: false,
 	 		data: { 'couponCode' : couponCode , 'paymentMode' : paymentMode , 'bankNameSelected' : bankNameSelected , 'guid' : guid},
 	 		success : function(response) {
+	 			console.log(response.redeemErrorMsg);
 	 			$("#no-click,.spinner").remove(); //add for INC_11738
 	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
 	 			$("#codAmount").text(response.totalPrice.formattedValue);
@@ -6789,6 +6792,21 @@ $("#couponSubmitButton").click(function(){
 	 				else if(response.redeemErrorMsg=="First_Purchase_User_Invalid")
 	 				{
 	 					$("#firstPurchaseOfferError").css("display","block");
+	 				}
+	 				//TPR-4460
+	 				else if(response.redeemErrorMsg=="Channel_Not_Applicable_Web")
+	 				{
+	 					$("#invalidChannelError").html("Oh snap! This coupon is valid only on our website");
+	 					$("#invalidChannelError").css("display","block");
+	 				}
+	 				else if(response.redeemErrorMsg=="Channel_Not_Applicable_Mobile")
+	 				{
+	 					$("#invalidChannelError").html("Oh snap! This coupon is valid only on our app");
+	 					$("#invalidChannelError").css("display","block");
+	 				}
+	 				else if(response.redeemErrorMsg=="Channel_Not_Applicable_CallCentre")
+	 				{
+	 					$("#notApplicableCouponError").css("display","block");
 	 				}
 	 				//TPR-658
 	 				onSubmitAnalytics("invalid_coupon");
@@ -6847,9 +6865,10 @@ function onSubmitAnalytics(msg){
 
 $("#couponFieldId").focus(function(){
 	// $("#couponError").css("display","none");
+	//TPR-4460 changes -- invalidChannelError id added
 	$("#priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
 			" #expiredCouponError, #issueCouponError, #notApplicableCouponError," +
-			" #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError").css("display","none");
+			" #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display","none");
 });
 
 
@@ -6869,8 +6888,9 @@ $(".remove-coupon-button").click(function(){
  				couponApplied=true;
  			}
  			if(couponApplied==true){
+ 				//TPR-4460 changes -- invalidChannelError id added
  				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
- 						" #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError").css("display","none");
+ 						" #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display","none");
  				document.getElementById("couponValue").innerHTML=response.couponDiscount.formattedValue;
  				// $("#couponFieldId").attr('disabled','enabled');
  				$('#couponFieldId').attr('readonly', false);
