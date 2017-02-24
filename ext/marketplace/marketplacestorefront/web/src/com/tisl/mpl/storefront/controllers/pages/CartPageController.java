@@ -40,7 +40,6 @@ import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.core.Constants.USER;
-import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
@@ -874,10 +873,10 @@ public class CartPageController extends AbstractPageController
 			{
 				final String defaultPinCodeId = fetchPincode(isUserAnym);
 
-				//final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true); TISPT-169
-				final CartModel cartModel = getCartService().getSessionCart();
-				//if (cartData != null && StringUtils.isNotEmpty(cartData.getGuid())) TISPT-169
-				if (getCartService().hasSessionCart())
+				final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+
+				//if (getCartService().hasSessionCart()) TISPT-169
+				if (cartData != null && StringUtils.isNotEmpty(cartData.getGuid()) && getCartService().hasSessionCart())
 				{
 					final Map<String, String> ussidMap = new HashMap<String, String>();
 					Map<String, List<String>> giftYourselfDeliveryModeDataMap = new HashMap<String, List<String>>();
@@ -889,12 +888,14 @@ public class CartPageController extends AbstractPageController
 					LOG.debug("Class NameprepareDataForPag :" + className + " minimum_gift_quantity :" + minimum_gift_quantity);
 
 					//final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists(); TISPT-179 Point 1
+					//TISPT-169
+					final CartModel cartModel = getCartService().getSessionCart();
 					final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlistsForCustomer(cartModel.getUser());
 					//TISPT-179 Point 3
 					//entryModels = getMplCartFacade().getGiftYourselfDetails(minimum_gift_quantity, allWishlists, defaultPinCodeId,cartModel); // Code moved to Facade and Impl
 
 					final Tuple2<?, ?> wishListPincodeObject = getMplCartFacade().getGiftYourselfDetails(minimum_gift_quantity,
-							allWishlists, defaultPinCodeId, cartModel);
+							allWishlists, defaultPinCodeId, cartData);
 					entryModels = (List<Wishlist2EntryModel>) wishListPincodeObject.getFirst();
 
 					for (final Wishlist2EntryModel entryModel : entryModels)
@@ -945,9 +946,9 @@ public class CartPageController extends AbstractPageController
 							}
 
 							//TISPT-169
-							for (final AbstractOrderEntryModel cart : cartModel.getEntries())
+							for (final OrderEntryData cart : cartData.getEntries())
 							{
-								if ((cart.getSelectedUSSID().equals(entryModel.getUssid())))
+								if ((cart.getSelectedUssid().equals(entryModel.getUssid())))
 								{
 									flag = false;
 									break;
@@ -1362,7 +1363,8 @@ public class CartPageController extends AbstractPageController
 									// then removing that deliveryMode in Choose DeliveryMode Page
 									try
 									{
-										pinCodeResponseData = getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData);
+										pinCodeResponseData = getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData,
+												cartData);
 									}
 									catch (final Exception e)
 									{
@@ -1696,7 +1698,7 @@ public class CartPageController extends AbstractPageController
 						// then removing that deliveryMode in Choose DeliveryMode Page
 						try
 						{
-							pinCodeResponseData = getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData);
+							pinCodeResponseData = getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData, cartData);
 						}
 						catch (final Exception e)
 						{

@@ -7455,3 +7455,138 @@ function updateMobileNo(){
 	$("#otpMobileNUMField").focus();    
 }
 
+function submitCODForm(){
+	if($("#paymentMode").val()=="Netbanking")
+	{
+		var code=bankCodeCheck();
+		if(code){
+			submitNBForm();
+		}
+		else{
+			$("#netbankingIssueError").css("display","block");
+		}
+	}
+	else if($("#paymentMode").val()=="COD"){
+		var otpNUMField= $('#otpNUMField').val();
+		//TPR-665
+		if(typeof utag !="undefined"){
+		utag.link({"link_text": "pay_cod_validate_otp" , "event_type" : "payment_mode_cod"});
+		}
+		
+/*		if(otpNUMField=="")
+		{
+			//TPR-665
+			if(typeof utag !="undefined"){
+			utag.link({"link_text": "pay_cod_otp_error" , "event_type" : "payment_mode_cod"});
+			}
+			
+			$("#otpNUM, #sendOTPNumber, #emptyOTPMessage, #otpSentMessage").css("display","block");
+		}
+		else*/
+		{
+			$("#otpNUM, #sendOTPNumber, #paymentFormButton, #sendOTPButton, #otpSentMessage").css("display","block");
+			$("#emptyOTPMessage").css("display","none");
+			$('#paymentButtonId').prop('disabled', true); //TISPRD-958
+			var guid=$("#guid").val();
+		$.ajax({
+			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/confirmCodOrder",
+			type: "POST",
+			data: {'guid' : guid},
+			cache: false,		
+			success : function(response) {
+				if(response=='redirect'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TIS 404
+
+				}
+				//TPR-815
+				else if(response=='redirect_to_payment'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TPR-629
+				}
+				else{
+					$("#emptyOTPMessage").css("display","none");
+					if(response!=null)
+					{
+						if(response=="INVALID")
+						{
+							//TPR-665
+							utag.link(
+							{"link_text": "pay_cod_otp_error" , "event_type" : "payment_mode_cod"}
+							);
+							
+							$("#otpNUM, #sendOTPNumber, #enterOTP, #wrongOtpValidationMessage").css("display","block");		
+							$("#expiredOtpValidationMessage").css("display","none");
+							$("#otpSentMessage").css("display","none");
+							$('#paymentButtonId').prop('disabled', false); // TISPRD-958
+						}
+						else if(response=="EXPIRED")
+						{
+							//TPR-665
+							if(typeof utag !="undefined"){
+							utag.link({"link_text": "pay_cod_otp_timeout" , "event_type" : "payment_mode_cod"});
+							}
+							
+							$("#otpNUM, #sendOTPNumber, #enterOTP, #expiredOtpValidationMessage").css("display","block");
+							$("#wrongOtpValidationMessage").css("display","none");	
+							$("#otpSentMessage").css("display","none");
+							$('#paymentButtonId').prop('disabled', false); // TISPRD-958
+						}
+						else{
+							//TPR-665
+							if(typeof utag !="undefined"){
+							utag.link({"link_text": "pay_cod_otp_success" , "event_type" : "payment_mode_cod"});
+							}
+							
+							var staticHost=$('#staticHost').val();
+							// TISPRO-153
+							sendTealiumData();	
+							$("#form-actions, #otpNUM").css("display","block");
+							$("#wrongOtpValidationMessage, #expiredOtpValidationMessage").css("display","none");
+							$("#otpSentMessage").css("display","none");
+							$(".pay .payment-button,.cod_payment_button_top").prop("disabled",true);
+							$(".pay .payment-button,.cod_payment_button_top").css("opacity","0.5");
+							// store url change
+							/*TPR-3446 COD After OTP Entered starts*/
+							/*$(".pay").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 23%;bottom: 100px; height: 30px;">');
+							$(".pay .spinner").css("left",(($(".pay#paymentFormButton").width()+$(".pay#paymentFormButton .payment-button").width())/2)+10);
+							$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
+							$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+							$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+							/*TPR-3446 COD After OTP Entered ends*/
+							$("#silentOrderPostForm").submit();
+						}
+					}
+					else
+					{
+						//TPR-665
+						if(typeof utag !="undefined"){
+						utag.link({"link_text": "pay_cod_otp_error" , "event_type" : "payment_mode_cod"});
+						}
+						
+						alert("Error validating OTP. Please select another payment mode and proceed");
+						$(".pay button,.cod_payment_button_top").prop("disabled",false);
+						$(".pay button,.cod_payment_button_top").css("opacity","1");
+						$(".pay .spinner").remove();
+						$("#no-click,.spinner").remove();
+						$('#paymentButtonId').prop('disabled', false); // TISPRD-958
+					}
+				}
+			},
+			error : function(resp) {
+				//TPR-665
+				if(typeof utag !="undefined"){
+				utag.link({link_text: 'pay_cod_otp_error' , event_type : 'payment_mode_cod'});
+				}
+				
+				alert("Error validating OTP. Please select another payment mode and proceed");
+				$(".pay button,.cod_payment_button_top").prop("disabled",false);
+				$(".pay button,.cod_payment_button_top").css("opacity","1");
+				$(".pay .spinner").remove();
+				$("#no-click,.spinner").remove();
+				
+			}
+		});
+		}
+	}
+	else
+		alert("Please make valid selection and proceed");
+}

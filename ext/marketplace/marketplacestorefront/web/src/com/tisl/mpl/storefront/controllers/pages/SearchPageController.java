@@ -215,6 +215,8 @@ public class SearchPageController extends AbstractSearchPageController
 
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
+	//UF-15,16
+	private static final Integer PAGE_SIZE = new Integer(24);
 
 
 	/**
@@ -546,10 +548,11 @@ public class SearchPageController extends AbstractSearchPageController
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "text", required = false) final String searchText,
-			@RequestParam(value = "pageSize", required = false) final Integer pageSize, final HttpServletRequest request,
-			final Model model) throws CMSItemNotFoundException, JSONException, ParseException
+			@RequestParam(value = "pageSize", required = false) Integer pageSize, final HttpServletRequest request, final Model model)
+			throws CMSItemNotFoundException, JSONException, ParseException
 	{
-
+		//UF-15,16
+		pageSize = PAGE_SIZE;
 		populateRefineSearchResult(searchQuery, page, showMode, sortCode, searchText, pageSize, request, model);
 		return getViewForPage(model);
 	}
@@ -1293,9 +1296,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 *
+	 * 
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 *
+	 * 
 	 * return list; }
 	 */
 
