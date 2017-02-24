@@ -850,6 +850,8 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 				$("#clickToMore").hide();
 				});	
 			// TPR-158 and TPR-413 ends here
+			//TPR-4720 first 5 product display
+			populateFirstFive();
 		},
 		error : function(xhr, status, error) {
 			$('#wrongPin,#unsevisablePin,#emptyPin')

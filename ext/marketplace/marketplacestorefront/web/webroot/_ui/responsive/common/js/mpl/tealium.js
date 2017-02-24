@@ -1095,3 +1095,26 @@ $(document).on('click','#compareBtn',function(){
 		 utag.link({ link_text : "compare_now_clicked" , event_type : "compare_now_clicked" });
 	 }	
 })
+//TPR-4720 | Display First 5 Products starts
+function populateFirstFive(){
+	var count = 5; 
+	var productArray= [];
+	var searchResult = $("ul.product-list li.product-item").length;
+	if(searchResult < count ){
+		count = searchResult;
+                    }
+   for(var i=0;i< count;i++)
+   {
+	var selector='ul.product-list li.product-item:eq('+i+') span.serpProduct #productCode';
+	product =$(selector).val();
+	productArray.push(product);
+	if(typeof utag !="undefined"){
+		 utag.link({ serp_first_5_products : productArray });
+	 }	
+  }
+}
+
+$( window ).load(function() {
+	populateFirstFive();
+});
+//TPR-4720 | Display First 5 Products ends
