@@ -22,7 +22,7 @@ public interface SellerBasedPromotionDao
 
 	List<PriceRowModel> fetchPriceInformation(String code, CatalogVersionModel oModel);
 
-	List<AbstractPromotionModel> fetchPromotionDetails(String code);
+	List<AbstractPromotionModel> fetchPromotionDetails(String code) throws Exception;
 
 	List<AbstractPromotionModel> getPromoDetails();
 

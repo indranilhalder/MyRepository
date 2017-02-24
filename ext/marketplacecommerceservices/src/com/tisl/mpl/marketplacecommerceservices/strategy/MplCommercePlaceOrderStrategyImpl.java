@@ -182,7 +182,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				getModelService().save(orderModel);
 
 				result.setOrder(orderModel);
-				// 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved here
+				// OrderIssues:- 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved here
 				afterPlaceOrder(parameter, result);
 
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())

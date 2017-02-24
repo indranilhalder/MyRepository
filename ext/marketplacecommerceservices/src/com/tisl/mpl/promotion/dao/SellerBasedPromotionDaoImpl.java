@@ -90,19 +90,28 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 	 * @param : code
 	 * @return List<AbstractPromotionModel>
 	 */
+	//OrderIssues:-
 	@Override
-	public List<AbstractPromotionModel> fetchPromotionDetails(final String code)
+	public List<AbstractPromotionModel> fetchPromotionDetails(final String code) throws Exception
 	{
 		LOG.debug("Fetching Promotion Details");
-		final String queryString = //
-		"SELECT {promo:" + AbstractPromotionModel.PK
-				+ "} "//
-				+ QUERY_FROM + AbstractPromotionModel._TYPECODE + " AS promo } where" + PROMO + AbstractPromotionModel.CODE
-				+ "} = ?code";
+		try
+		{
+			final String queryString = //
+			"SELECT {promo:" + AbstractPromotionModel.PK
+					+ "} "//
+					+ QUERY_FROM + AbstractPromotionModel._TYPECODE + " AS promo } where" + PROMO + AbstractPromotionModel.CODE
+					+ "} = ?code";
 
-		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter(CODE, code);
-		return flexibleSearchService.<AbstractPromotionModel> search(query).getResult();
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter(CODE, code);
+			return flexibleSearchService.<AbstractPromotionModel> search(query).getResult();
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Fetching Promotion Details", e);
+			throw new Exception(e);
+		}
 	}
 
 	/**

@@ -230,7 +230,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public String enterStep(final Model model, final RedirectAttributes redirectAttributes,
 			@RequestParam(value = "value", required = false, defaultValue = "") final String guid) throws CMSItemNotFoundException
 	{
-		// multiple Payment Response from juspay restriction
+		//OrderIssues:-  multiple Payment Response from juspay restriction
 		getSessionService().setAttribute(MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE,
 				MarketplacecommerceservicesConstants.FALSE);
 		//redirecting to previous page for anonymous user
@@ -636,7 +636,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.VIEWVALUE, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public String add(final Model model, @Valid final PaymentForm paymentForm, final RedirectAttributes redirectAttributes)
-			throws CMSItemNotFoundException, InvalidCartException, CommerceCartModificationException
+	//OrderIssues:-  Removed Throws 
+	//throws CMSItemNotFoundException, InvalidCartException, CommerceCartModificationException
 	{
 		//TISPRD-361
 		try
@@ -2523,7 +2524,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			final String duplicateJuspayRes = getSessionService().getAttribute(
 					MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE);
-			// multiple Payment Response from juspay restriction
+			// OrderIssues:-  multiple Payment Response from juspay restriction
 			if (null == duplicateJuspayRes || duplicateJuspayRes.equalsIgnoreCase("false"))
 			{
 				final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
@@ -4253,7 +4254,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

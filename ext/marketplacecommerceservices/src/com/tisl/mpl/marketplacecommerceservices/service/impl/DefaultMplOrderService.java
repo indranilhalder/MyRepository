@@ -257,7 +257,7 @@ public class DefaultMplOrderService implements MplOrderService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplAwbStatusService#prepAwbStatus(com.tisl.mpl.xml.pojo.AWBStatusResponse)
 	 */
 	@Override
@@ -337,7 +337,7 @@ public class DefaultMplOrderService implements MplOrderService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplOrderService#findProductsByCode(java.lang.String)
 	 */
 	@Override
@@ -354,11 +354,11 @@ public class DefaultMplOrderService implements MplOrderService
 
 	/*
 	 * @Desc : used to check if BuyAandBGetC is applied on order entry or not TISPRO-249
-	 *
+	 * 
 	 * @param orderEntryModel
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -371,6 +371,7 @@ public class DefaultMplOrderService implements MplOrderService
 					.getProductPromoCode());
 			isApplied = (CollectionUtils.isNotEmpty(promoDetailsList) && promoDetailsList.get(0) instanceof BuyAandBgetCModel) ? true
 					: false;
+			LOG.debug("checkIfBuyABGetCApplied isApplied:_ " + isApplied);
 		}
 		return isApplied;
 	}

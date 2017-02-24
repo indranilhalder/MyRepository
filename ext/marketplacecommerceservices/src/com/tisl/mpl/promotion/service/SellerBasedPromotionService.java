@@ -22,9 +22,9 @@ public interface SellerBasedPromotionService
 
 	List<PriceRowModel> fetchPriceInformation(String code, CatalogVersionModel oModel);
 
-	List<AbstractPromotionModel> fetchPromotionDetails(String code);
+	List<AbstractPromotionModel> fetchPromotionDetails(String code) throws Exception;
 
-	void modifyFiredMessage(String string);
+	void modifyFiredMessage(String string) throws Exception;
 
 	List<AbstractPromotionModel> getPromoDetails();
 
