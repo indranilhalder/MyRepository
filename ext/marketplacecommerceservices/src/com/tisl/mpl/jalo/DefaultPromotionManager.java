@@ -3951,29 +3951,10 @@ public class DefaultPromotionManager extends PromotionsManager
 			}
 
 			//---------Check for brand: starts------------//
-			String PromotionType = null;
-			Collection<String> brandList = null;
-
-			for (final AbstractPromotionRestriction restriction : promotion.getRestrictions())
+			final StringBuilder brandQuery = evaluateBrandRestriction(params, promotion, ctx);
+			if (brandQuery != null)
 			{
-				if (restriction instanceof ManufacturesRestriction)
-				{
-					PromotionType = MarketplacecommerceservicesConstants.BRANDRESTRICTION;
-					brandList = fetchBrandsForPromotion(params, ctx, PromotionType);
-					break;
-				}
-				else if (restriction instanceof ExcludeManufacturesRestriction)
-				{
-					PromotionType = MarketplacecommerceservicesConstants.EXCLUDEBRANDRESTRICTION;
-					brandList = fetchBrandsForPromotion(params, ctx, PromotionType);
-					break;
-				}
-			}
-
-			if (CollectionUtils.isNotEmpty(brandList))
-			{
-				params.put("brands", brandList);
-				promQuery.append(constructBrandQuery(brandList, PromotionType));
+				promQuery.append(brandQuery);
 			}
 			//---------Check for brand: starts------------//
 
@@ -3991,20 +3972,16 @@ public class DefaultPromotionManager extends PromotionsManager
 
 			primaryProductList.addAll(cartProducts);
 
-			//			if (CollectionUtils.isNotEmpty(secondCategories))
-			//			{
-			//				populateSecondaryListForCategory(secondCategories, secondaryProductList, params, ctx);
-			//			}
-
-			secondaryProductList.addAll(primaryProductList);
+			final List<Product> allProductList = new ArrayList<Product>(primaryProductList);
+			allProductList.addAll(secondaryProductList);
 
 			if (promoContext.getObserveRestrictions())
 			{
-				return PromotionsManager.getInstance().evaluateRestrictions(ctx, secondaryProductList, promoContext.getOrder(),
-						promotion, promoContext.getDate());
+				return PromotionsManager.getInstance().evaluateRestrictions(ctx, allProductList, promoContext.getOrder(), promotion,
+						promoContext.getDate());
 			}
 
-			return new PromotionsManager.RestrictionSetResult(secondaryProductList);
+			return new PromotionsManager.RestrictionSetResult(allProductList);
 		}
 
 		return new PromotionsManager.RestrictionSetResult(new ArrayList(0));
@@ -4062,10 +4039,10 @@ public class DefaultPromotionManager extends PromotionsManager
 		{
 			final Product product = aoe.getProduct(ctx);
 
-			if (CollectionUtils.isEmpty(secondCategories))
-			{
-				secondaryProductList.addAll(getSecondProducts(product, secondProductsAsString));
-			}
+			//			if (CollectionUtils.isEmpty(secondCategories))
+			//			{
+			//				secondaryProductList.addAll(getSecondProducts(product, secondProductsAsString));
+			//			}
 
 			if (product == null
 					|| (CollectionUtils.isNotEmpty(excludedProductList) && excludedProductList.contains(product.getPK().toString())))
@@ -4080,17 +4057,16 @@ public class DefaultPromotionManager extends PromotionsManager
 			}
 			products.addAll(baseProducts);
 
-			//			if (CollectionUtils.isEmpty(secondCategories))
-			//			{
-			//				secondaryProductList.addAll(getSecondProducts(products, secondProductsAsString));
-			//			}
-
 		}
 
 		if (CollectionUtils.isNotEmpty(secondCategories))
 		{
 			params.put("product", products);
 			populateSecondaryListForCategory(secondCategories, secondaryProductList, params, ctx);
+		}
+		else
+		{
+			secondaryProductList.addAll(getSecondProducts(params, products, secondProductsAsString, ctx));
 		}
 
 		return products;
@@ -4102,25 +4078,38 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @return RestrictionSetResult
 	 * @return Collection<Product>
 	 */
-	//private List<Product> getSecondProducts(final SortedSet products, final String secondProductsAsString)
-	private List<Product> getSecondProducts(final Product product, final String secondProductsAsString)
+	//private List<Product> getSecondProducts(final Product product, final String secondProductsAsString)
+	private List<Product> getSecondProducts(final Flat3Map params, final SortedSet products, final String secondProductsAsString,
+			final SessionContext ctx)
 	{
 		final List<Product> secondProductList = new ArrayList<Product>();
-		if (product != null && StringUtils.isNotEmpty(secondProductsAsString)
-				&& secondProductsAsString.contains(product.getPK().toString()))
+
+		//		if (product != null && StringUtils.isNotEmpty(secondProductsAsString)
+		//				&& secondProductsAsString.contains(product.getPK().toString()))
+		//		{
+		//			secondProductList.add(product);
+		//		}
+
+		for (final Object obj : products)
 		{
-			secondProductList.add(product);
+			final Product product = (Product) obj;
+			if (StringUtils.isNotEmpty(secondProductsAsString) && secondProductsAsString.contains(product.getPK().toString()))
+			{
+				secondProductList.add(product);
+			}
 		}
 
-		//		for (final Object obj : products)
-		//		{
-		//			final Product product = (Product) obj;
-		//			if (StringUtils.isNotEmpty(secondProductsAsString) && secondProductsAsString.contains(product.getPK().toString()))
-		//			{
-		//				secondProductList.add(product);
-		//				break;
-		//			}
-		//		}
+		params.put("secondProduct", secondProductList);
+		final StringBuilder promQuery = evaluateBrandRestriction(params, (AbstractPromotion) params.get("promo"), ctx);
+		if (promQuery != null)
+		{
+			final List<Product> cartSecondProducts = getSession().getFlexibleSearch()
+					.search(ctx, promQuery.toString(), params, Product.class).getResult();
+			params.remove("secondProduct");
+			return cartSecondProducts;
+			//secondProductList.retainAll(cartSecondProducts);
+		}
+
 		return secondProductList;
 	}
 
@@ -4204,6 +4193,12 @@ public class DefaultPromotionManager extends PromotionsManager
 					promQuery.append(")   AND {cat2prod:").append("target").append("} in (?product) }} ");
 				}
 			}
+		}
+
+		final StringBuilder brandQuery = evaluateBrandRestriction(params, (AbstractPromotion) params.get("promo"), ctx);
+		if (brandQuery != null)
+		{
+			promQuery.append(brandQuery);
 		}
 
 		final List cartSecondProducts = getSession().getFlexibleSearch().search(ctx, promQuery.toString(), params, Product.class)
@@ -4294,29 +4289,10 @@ public class DefaultPromotionManager extends PromotionsManager
 			}
 
 			//---------Check for brand: starts------------//
-			String PromotionType = null;
-			Collection<String> brandList = null;
-
-			for (final AbstractPromotionRestriction restriction : promotion.getRestrictions())
+			final StringBuilder brandQuery = evaluateBrandRestriction(params, promotion, ctx);
+			if (brandQuery != null)
 			{
-				if (restriction instanceof ManufacturesRestriction)
-				{
-					PromotionType = MarketplacecommerceservicesConstants.BRANDRESTRICTION;
-					brandList = fetchBrandsForPromotion(params, ctx, PromotionType);
-					break;
-				}
-				else if (restriction instanceof ExcludeManufacturesRestriction)
-				{
-					PromotionType = MarketplacecommerceservicesConstants.EXCLUDEBRANDRESTRICTION;
-					brandList = fetchBrandsForPromotion(params, ctx, PromotionType);
-					break;
-				}
-			}
-
-			if (CollectionUtils.isNotEmpty(brandList))
-			{
-				params.put("brands", brandList);
-				promQuery.append(constructBrandQuery(brandList, PromotionType));
+				promQuery.append(brandQuery);
 			}
 			//---------Check for brand: starts------------//
 
@@ -4424,40 +4400,96 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param PromotionType
 	 * @return StringBuilder query
 	 */
-	private StringBuilder constructBrandQuery(final Collection<String> brandList, final String PromotionType)
+	private StringBuilder constructBrandQuery(final Collection<String> brandList, final String PromotionType, final Flat3Map params)
 	{
-		final StringBuilder promQuery = new StringBuilder("INTERSECT ");
+		final StringBuilder promQuery = new StringBuilder();
 
-		if (StringUtils.isNotEmpty(PromotionType)
-				&& PromotionType.equalsIgnoreCase(MarketplacecommerceservicesConstants.BRANDRESTRICTION)
-				&& CollectionUtils.isNotEmpty(brandList))
+		if ((params.get("secondProduct") != null))
 		{
-			promQuery.append("{{ SELECT {cat2prod:target} as pk  ");
-			promQuery.append("FROM  {").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
-					.append(" AS cat2prod } ");
-			promQuery.append("WHERE {cat2prod:target} in (?product) AND {cat2prod:source} in (?brands) }} ");
-			//promQuery.append("JOIN ").append(MarketplacecommerceservicesConstants.CATEGORY).append(" AS category ");
-			//promQuery.append(" ON {cat2prod:source} = {category:pk} ");
-			//promQuery.append("JOIN ").append(MarketplacecommerceservicesConstants.CATALOGVERSION).append(" AS catelogVersion ");
-			//promQuery.append(" ON {catelogVersion:pk} = {category:catalogversion}} ");
-			//promQuery.append("WHERE {catelogVersion.version} = '' AND {cat2prod:target} in (?product) AND {cat2prod:source} in (?brands) }} ");
+			if (StringUtils.isNotEmpty(PromotionType)
+					&& PromotionType.equalsIgnoreCase(MarketplacecommerceservicesConstants.BRANDRESTRICTION)
+					&& CollectionUtils.isNotEmpty(brandList))
+			{
+				promQuery.append("SELECT {cat2prod:target} as pk  ");
+				promQuery.append("FROM  {").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
+						.append(" AS cat2prod } ");
+				promQuery.append("WHERE {cat2prod:target} in (?secondProduct) AND {cat2prod:source} in (?brands)");
+			}
+			else if (StringUtils.isNotEmpty(PromotionType)
+					&& PromotionType.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXCLUDEBRANDRESTRICTION)
+					&& CollectionUtils.isNotEmpty(brandList))
+			{
+				promQuery.append("{{ SELECT {cat2prod:target} as pk  ");
+				promQuery.append("FROM  {").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION);
+				promQuery.append(" AS cat2prod JOIN ").append(MarketplacecommerceservicesConstants.TYPE_CATEGORY)
+						.append(" AS category on {cat2prod:source} = {category.pk}} ");
+				promQuery
+						.append(
+								"WHERE {cat2prod:target} in (?secondProduct) AND {cat2prod:source} not in (?brands) AND {category.code} like '%")
+						.append(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX).append("%' }} ");
+			}
 		}
-		else if (StringUtils.isNotEmpty(PromotionType)
-				&& PromotionType.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXCLUDEBRANDRESTRICTION)
-				&& CollectionUtils.isNotEmpty(brandList))
+		else
 		{
-			promQuery.append("{{ SELECT {cat2prod:target} as pk  ");
-			promQuery.append("FROM  {").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
-					.append(" AS cat2prod } ");
-			promQuery.append("WHERE {cat2prod:target} in (?product) AND {cat2prod:source} not in (?brands) }} ");
-			//promQuery.append("JOIN ").append(MarketplacecommerceservicesConstants.CATEGORY).append(" AS category ");
-			//promQuery.append(" ON {cat2prod:source} = {category:pk} ");
-			//promQuery.append("JOIN ").append(MarketplacecommerceservicesConstants.CATALOGVERSION).append(" AS catelogVersion ");
-			//promQuery.append(" ON {catelogVersion:pk} = {category:catalogversion}} ");
-			//promQuery.append("WHERE {catelogVersion.version} = '' AND {cat2prod:target} in (?product) AND {cat2prod:source} in (?brands) }} ");
-		}
+			promQuery.append(" INTERSECT ");
 
+			if (StringUtils.isNotEmpty(PromotionType)
+					&& PromotionType.equalsIgnoreCase(MarketplacecommerceservicesConstants.BRANDRESTRICTION)
+					&& CollectionUtils.isNotEmpty(brandList))
+			{
+				promQuery.append("{{ SELECT {cat2prod:target} as pk  ");
+				promQuery.append("FROM  {").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
+						.append(" AS cat2prod } ");
+				promQuery.append("WHERE {cat2prod:target} in (?product) AND {cat2prod:source} in (?brands) }} ");
+			}
+			else if (StringUtils.isNotEmpty(PromotionType)
+					&& PromotionType.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXCLUDEBRANDRESTRICTION)
+					&& CollectionUtils.isNotEmpty(brandList))
+			{
+				promQuery.append("{{ SELECT {cat2prod:target} as pk  ");
+				promQuery.append("FROM  {").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION);
+				promQuery.append(" AS cat2prod JOIN ").append(MarketplacecommerceservicesConstants.TYPE_CATEGORY)
+						.append(" AS category on {cat2prod:source} = {category.pk}} ");
+				promQuery
+						.append(
+								"WHERE {cat2prod:target} in (?product) AND {cat2prod:source} not in (?brands) AND {category.code} like '%")
+						.append(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX).append("%' }} ");
+			}
+		}
 		return promQuery;
 	}
+
+	private StringBuilder evaluateBrandRestriction(final Flat3Map params, final AbstractPromotion promotion,
+			final SessionContext ctx)
+	{
+		StringBuilder stringBuilder = null;
+		String PromotionType = null;
+		Collection<String> brandList = null;
+
+		for (final AbstractPromotionRestriction restriction : promotion.getRestrictions())
+		{
+			if (restriction instanceof ManufacturesRestriction)
+			{
+				PromotionType = MarketplacecommerceservicesConstants.BRANDRESTRICTION;
+				brandList = fetchBrandsForPromotion(params, ctx, PromotionType);
+				break;
+			}
+			else if (restriction instanceof ExcludeManufacturesRestriction)
+			{
+				PromotionType = MarketplacecommerceservicesConstants.EXCLUDEBRANDRESTRICTION;
+				brandList = fetchBrandsForPromotion(params, ctx, PromotionType);
+				break;
+			}
+		}
+
+		if (CollectionUtils.isNotEmpty(brandList))
+		{
+			params.put("brands", brandList);
+			stringBuilder = constructBrandQuery(brandList, PromotionType, params);
+		}
+		return stringBuilder;
+
+	}
+
 	//ends A type promotions
 }
