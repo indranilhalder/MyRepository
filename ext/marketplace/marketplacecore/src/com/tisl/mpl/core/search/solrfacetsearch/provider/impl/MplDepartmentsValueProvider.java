@@ -30,6 +30,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MplConstants;
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 
 
 public class MplDepartmentsValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider, Serializable
@@ -37,7 +38,7 @@ public class MplDepartmentsValueProvider extends AbstractPropertyFieldValueProvi
 	/**
 	 *
 	 */
-	private static final String LSH1 = "LSH1";
+	//	private static final String LSH1 = "LSH1";
 	private CategorySource categorySource;
 	private FieldNameProvider fieldNameProvider;
 	private CategoryService categoryService;
@@ -89,7 +90,8 @@ public class MplDepartmentsValueProvider extends AbstractPropertyFieldValueProvi
 					isLuxury = true;
 				}
 			}
-			else /* added part of value provider go through */
+			else
+			/* added part of value provider go through */
 			{
 				throw new FieldValueProviderException("Cannot evaluate Luxury flag of non-product item");
 			}
@@ -104,8 +106,8 @@ public class MplDepartmentsValueProvider extends AbstractPropertyFieldValueProvi
 		}
 		catch (final Exception e) /* added part of value provider go through */
 		{
-			throw new FieldValueProviderException(
-					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
+			throw new FieldValueProviderException("Cannot evaluate " + indexedProperty.getName() + " using "
+					+ super.getClass().getName() + "exception" + e, e);
 		}
 	}
 
@@ -143,7 +145,7 @@ public class MplDepartmentsValueProvider extends AbstractPropertyFieldValueProvi
 			for (final List categoryPath : pathsForCategory)
 			{
 				if (categoryPath != null && categoryPath.size() > 0 && isLuxury
-						&& ((CategoryModel) categoryPath.get(0)).getCode().contains(LSH1))
+						&& ((CategoryModel) categoryPath.get(0)).getCode().contains(MarketplaceCoreConstants.LSH1))
 				{
 					accumulateCategoryPaths(categoryPath, allPaths);
 				}

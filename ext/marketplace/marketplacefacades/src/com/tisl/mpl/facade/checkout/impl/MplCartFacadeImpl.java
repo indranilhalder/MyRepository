@@ -610,7 +610,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			final List<PinCodeResponseData> omsDeliveryResponse, final CartModel cartModel) throws CMSItemNotFoundException
 	{
 		// Changes for Duplicate Cart fix
-		return mplCommerceCartService.getDeliveryMode(cartData, omsDeliveryResponse, cartModel);
+		return mplCommerceCartService.getDeliveryMode(cartData, omsDeliveryResponse);
 	}
 
 	/*
@@ -673,9 +673,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 */
 	@Override
 	public Tuple2<?, ?> getGiftYourselfDetails(final int minGiftQuantity, final List<Wishlist2Model> allWishlists,
-			final String pincode, final CartModel cartModel) throws CMSItemNotFoundException
+			final String pincode, final CartData cartData) throws CMSItemNotFoundException
 	{
-		return mplCommerceCartService.getGiftYourselfDetails(minGiftQuantity, allWishlists, pincode, cartModel); //TISPT-179 Point 2
+		/* return mplCommerceCartService.getGiftYourselfDetails(minGiftQuantity, allWishlists, pincode, cartModel); *///TISPT-179 Point 2
+
+		return mplCommerceCartService.getGiftYourselfDetails(minGiftQuantity, allWishlists, pincode, cartData);
 	}
 
 	//	@Override TISPT-179 Point 3
@@ -1246,12 +1248,12 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 */
 
 	@Override
-	public GetWishListWsDTO getTopTwoWishlistForUser(final UserModel userModel, final String pincode, final CartModel cartModel)
+	public GetWishListWsDTO getTopTwoWishlistForUser(final UserModel userModel, final String pincode, final CartData cartData)
 			throws EtailNonBusinessExceptions
 	{
 		if (userModel != null)
 		{
-			return mplCommerceCartService.getTopTwoWishlistForUser(userModel, pincode, cartModel);
+			return mplCommerceCartService.getTopTwoWishlistForUser(userModel, pincode, cartData);
 		}
 		else
 		{
@@ -2628,10 +2630,12 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * @return PinCodeResponseData
 	 */
 	@Override
-	public PinCodeResponseData getVlaidDeliveryModesByInventory(final PinCodeResponseData pinCodeResponseData)
-			throws EtailNonBusinessExceptions
+	public PinCodeResponseData getVlaidDeliveryModesByInventory(final PinCodeResponseData pinCodeResponseData,
+			final CartData cartData) throws EtailNonBusinessExceptions
 	{
-		return mplCommerceCartService.getVlaidDeliveryModesByInventory(pinCodeResponseData);
+		//return mplCommerceCartService.getVlaidDeliveryModesByInventory(pinCodeResponseData);
+
+		return mplCommerceCartService.getVlaidDeliveryModesByInventory(pinCodeResponseData, cartData);
 	}
 
 
