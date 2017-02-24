@@ -61160,8 +61160,9 @@ text-transform:none;}
 	border-right:none;
 }
 .cart.wrapper .left-block .payments.tab-view .nav li span{
-	padding:25px 19px;
-	font-size:14px;
+	padding: 22px 19px;
+    font-size: 14px;
+    line-height: normal;
 }
 /* right section start*/
 .cart.wrapper .right-block.billing.checkout-list-right h3{
@@ -61354,8 +61355,7 @@ text-transform:none;}
   	font-weight: normal;
 }
 .cart.wrapper .left-block .payments.tab-view .nav li{
-	height: 64px;
-    width: 159px;
+	min-height: 64px;
 }
 .cart.wrapper .left-block .payments.tab-view .nav li.active:after{
 	content:"";
@@ -61681,9 +61681,6 @@ margin: 0;
 .error-message#cvvError {
     margin-left:32px;
 }
-.cart.wrapper .make_payment_top_savedCard, .cart.wrapper .make_payment_top_newCard, .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod_payment_button_top{
-	display: none !important;
-}
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .cvv{
 	position:relative;
 }
@@ -61723,6 +61720,11 @@ a.cvvHelp#cvvHelp + div.popover.bottom>.arrow {
     left: auto;
     border-width: 10px;
     top: -20px !important;
+}
+@media(min-width:768px){
+	.cart.wrapper .make_payment_top_savedCard, .cart.wrapper .make_payment_top_newCard, .cart.wrapper .make_payment_top_nb, .cart.wrapper .cod_payment_button_top{
+	display: none !important;
+}
 }
 /*Credit, debit card and EMI section end*/
 
