@@ -67,11 +67,11 @@ function getProductSetData() {
             currentPageNo = currentPageNo[0].split("-");
             console.log(currentPageNo);
             currentPageNo = parseInt(currentPageNo[1]);
-            //if (directPaginatedLoad) {
-              //  directPaginatedLoad = false;
-           // } else {
-                currentPageNo++; // TODO: replace the state 
-           // }
+            if (directPaginatedLoad) {
+                directPaginatedLoad = false;
+            } else {
+                currentPageNo++; 
+            }
             if (currentPageNo <= totalNoOfPages) {
                 ajaxUrl = pathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
                 var nextPaginatedAjaxUrl = pathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
