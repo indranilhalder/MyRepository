@@ -60637,3 +60637,12 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
 	border-right:0;
 }
 /* UF-61 Cart Page end */
+
+/* UF-155 COD captcha */
+#paymentFormButton.pay.cont-del{
+	display:block !important;
+}
+#paymentFormButton.pay.cont-del #submitPaymentFormCODButton{
+	display:block !important;
+}
+/* UF-155 COD captcha end */

@@ -4793,6 +4793,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
 			throws EtailNonBusinessExceptions
 	{
+		//added for car-124 implementation
+		final List<AbstractOrderEntryModel> abstractOrderEntryModelList = new ArrayList<AbstractOrderEntryModel>();
 		if (abstractOrderModel != null && abstractOrderModel.getEntries() != null && freebieModelMap != null
 				&& !freebieModelMap.isEmpty())
 		{
@@ -4801,24 +4803,35 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				if (cartEntryModel != null && cartEntryModel.getGiveAway().booleanValue()
 						&& cartEntryModel.getAssociatedItems() != null && cartEntryModel.getAssociatedItems().size() > 0)
 				{
-					saveDeliveryMethForFreebie(cartEntryModel, freebieModelMap, freebieParentQtyMap);
+					//commented for car-124 implementation
+					//saveDeliveryMethForFreebie(cartEntryModel,freebieModelMap, freebieParentQtyMap);
+					final AbstractOrderEntryModel abstractOrderEntryModel = saveDeliveryMethForFreebie(cartEntryModel,
+							freebieModelMap, freebieParentQtyMap);
+					//car-124 changes starts
+					if (null != abstractOrderEntryModel)
+					{
+						abstractOrderEntryModelList.add(abstractOrderEntryModel);
+					}
 				}
 			}
+			getModelService().saveAll(abstractOrderEntryModelList);
+			//car-124 changes ends
 		}
 	}
-
 
 	/**
 	 * This method saves delivery modes for freebie order entries
 	 *
-	 * @param cartEntryModel
+	 * @param abstractOrderEntryModel
 	 * @param freebieModelMap
 	 * @param freebieParentQtyMap
 	 */
-	private void saveDeliveryMethForFreebie(final AbstractOrderEntryModel cartEntryModel,
+	//commented for car-124 implementation
+	//private void saveDeliveryMethForFreebie(final AbstractOrderEntryModel cartEntryModel,
+	//final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
+	private AbstractOrderEntryModel saveDeliveryMethForFreebie(final AbstractOrderEntryModel cartEntryModel,
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
 	{
-
 		MplZoneDeliveryModeValueModel mplDeliveryMode = null;
 		if (cartEntryModel.getAssociatedItems().size() == 1)
 		{
@@ -4905,8 +4918,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		{
 			//saving parent product delivery mode to freebie item
 			cartEntryModel.setMplDeliveryMode(mplDeliveryMode);
-			getModelService().save(cartEntryModel);
+			//commented for car-124 implementation
+			//getModelService().save(cartEntryModel);
+			return cartEntryModel;
 		}
+		return null;
 	}
 
 	/**
