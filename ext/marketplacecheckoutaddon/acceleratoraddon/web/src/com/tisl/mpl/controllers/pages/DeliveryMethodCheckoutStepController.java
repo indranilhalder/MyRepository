@@ -13,6 +13,8 @@
  */
 package com.tisl.mpl.controllers.pages;
 
+
+
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.PreValidateCheckoutStep;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.CheckoutStep;
@@ -471,7 +473,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			LOG.debug(">>>>>>>>>>  Step 4:  Inventory soft reservation status  " + inventoryReservationStatus);
 			Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 			List<PinCodeResponseData> responseData = null;
-			final CartData cartUssidData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+			CartData cartUssidData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 
 			final String defaultPinCodeId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 
@@ -496,21 +498,26 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
 			// TPR-429 END
 
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+
+
+			//CAR-130
+			/* final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(); */
+			cartUssidData = getMplCustomAddressFacade().getCheckoutCart();
 			List<AddressData> deliveryAddress = null;
 
 			//TIS 391:  In case of normal checkout , delivery address will be null and for express checkout delivery address will be ore selected from the cart page
 			// In case of express checkout it will redirect to the payment page from delivery mode selection
 
-			if (cartData != null)
+			if (cartUssidData != null)
 			{
-				if (cartData.getDeliveryAddress() != null)
+				if (cartUssidData.getDeliveryAddress() != null)
 				{
-					LOG.debug("Express checkout selected for address id : " + cartData.getDeliveryAddress().getId());
+					LOG.debug("Express checkout selected for address id : " + cartUssidData.getDeliveryAddress().getId());
 					return getCheckoutStep().nextStep();
 				}
 
-				deliveryAddress = (List<AddressData>) getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress());
+				deliveryAddress = (List<AddressData>) getMplCustomAddressFacade().getDeliveryAddresses(
+						cartUssidData.getDeliveryAddress());
 			}
 
 
@@ -538,7 +545,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 			model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE); //TPR-629
 
-			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
+			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartUssidData);
 			model.addAttribute(MarketplacecheckoutaddonConstants.DELIVERYADDRESSES, deliveryAddress);
 			model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataList);
 			model.addAttribute(MarketplacecheckoutaddonConstants.NOADDRESS,
@@ -558,7 +565,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 							MarketplacecheckoutaddonConstants.CHECKOUT_MULTI_DELIVERYMETHOD_BREADCRUMB));
 			model.addAttribute("metaRobots", "noindex,nofollow");
 			//GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
-			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
+			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartUssidData);
 			model.addAttribute("checkoutPageName", selectAddress);
 			setCheckoutStepLinksForModel(model, getCheckoutStep());
 			model.addAttribute("progressBarClass", "selectPage");
@@ -620,10 +627,17 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			LOG.debug("from doFindDelivaryMode methodin Controller");
 		}
 		//TISPT-400
+		
+		if (getCartService().hasSessionCart())
+		{
 		final CartModel cartModel = getCartService().getSessionCart();
+
+
+		//CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
 
 		try
 		{
+			//final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cartData); //CAR-197
 			final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cartModel);
 			if (cartItemDelistedStatus)
 			{
@@ -648,7 +662,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		//create session object for deliveryMethodForm which will be used if cart contains both cnc and home delivery.
 		session.setAttribute("deliveryMethodForm", deliveryMethodForm);
 
-		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+
+		// CAR-197  start
+		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(); //CAR-197
+
 		model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
 		this.prepareDataForPage(model);
 
@@ -668,12 +685,19 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		double configurableRadius = 0;
 		//retrieve pincode from session
 		final String defaultPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
-		if (cartModel != null && cartModel.getEntries() != null)
+		if (cartData != null && cartData.getEntries() != null) //CAR-197
 		{
-			for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+			//for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+			for (final OrderEntryData cartD : cartData.getEntries())
 			{
-				if (null != cartEntryModel && null != cartEntryModel.getGiveAway() && !cartEntryModel.getGiveAway().booleanValue()
-						&& null != deliveryMethodForm && CollectionUtils.isNotEmpty(deliveryMethodForm.getDeliveryMethodEntry()))
+				if (null != cartD && !cartD.isGiveAway() && null != deliveryMethodForm //CAR-197
+						&& CollectionUtils.isNotEmpty(deliveryMethodForm.getDeliveryMethodEntry()))
+
+				/*
+				 * if (null != cartEntryModel && null != cartEntryModel.getGiveAway() &&
+				 * !cartEntryModel.getGiveAway().booleanValue() && null != deliveryMethodForm &&
+				 * CollectionUtils.isNotEmpty(deliveryMethodForm.getDeliveryMethodEntry()))
+				 */
 				{
 					try
 					{
@@ -681,8 +705,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						//final ProductData productData = productFacade.getProductForOptions(productModel,
 						//		Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE)); // Performance fix TISPT-104
 
-						final String deliveryCode = deliveryMethodForm.getDeliveryMethodEntry()
-								.get(cartEntryModel.getEntryNumber().intValue()).getDeliveryCode();
+						/*
+						 * final String deliveryCode = deliveryMethodForm.getDeliveryMethodEntry()
+						 * .get(cartEntryModel.getEntryNumber().intValue()).getDeliveryCode();
+						 */
+						final String deliveryCode = deliveryMethodForm.getDeliveryMethodEntry().get(cartD.getEntryNumber().intValue())
+								.getDeliveryCode();
 						if (deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
 						{
 							count++;
@@ -707,8 +735,17 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 							}
 							final Location myLocation = new LocationDtoWrapper(dto);
 							//first calls commerce to get all the stores for a sellerId based on the given pincode
+
+
+							/*
+							 * final StoreLocationRequestData storeLocationRequestData = papulateClicknCollectRequesrData(
+							 * cartEntryModel.getSelectedUSSID(), myLocation.getGPS(), Double.valueOf(configurableRadius));
+							 */
+
+
+
 							final StoreLocationRequestData storeLocationRequestData = papulateClicknCollectRequesrData(
-									cartEntryModel.getSelectedUSSID(), myLocation.getGPS(), Double.valueOf(configurableRadius));
+									cartD.getSelectedUssid(), myLocation.getGPS(), Double.valueOf(configurableRadius));
 							storeLocationRequestDataList.add(storeLocationRequestData);
 						}
 						else
@@ -918,6 +955,11 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		model.addAttribute("checkoutPageName", checkoutPageName);
 		model.addAttribute("progressBarClass", "choosePage");
 		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChoosePickupLocationPage;
+	}
+		else
+		{
+			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+		}
 	}
 
 	/**
@@ -2583,4 +2625,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		}
 		return cartLevelSellerID;
 	}
+
+
 }
