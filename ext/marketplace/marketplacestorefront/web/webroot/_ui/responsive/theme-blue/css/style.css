@@ -54037,7 +54037,7 @@ body .lookbook_wrapper .listing.wrapper .left-block{
     }
 
     .progress-barcheck div.step-3.active a {
-        padding-right: 0;
+        padding-right: 5px;
     }
 
     .progress-barcheck .step-3.finalstep span {
@@ -61332,7 +61332,10 @@ text-transform:none;}
 	margin:0 auto;
 }
 }
-
+.progress-barcheck.paymentPage .step-2.active a, .progress-barcheck.paymentPage .step-2.step-done a{
+	padding-left: 0%;
+    margin-left: -15px;
+}
 /*Credit, debit card and EMI section start*/
 .checkout.wrapper.checkout-payment h1{
 	font-size:20px;
@@ -61678,7 +61681,7 @@ margin: 0;
     background-image: url(../images/select-arrow-new.png);
     background-position: 98%;
 }
-.error-message#cvvError {
+.error-message#cvvError, .error-message#cvvErrorEmi {
     margin-left:32px;
 }
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .cvv{
@@ -61814,5 +61817,37 @@ margin-right:0;
 /* net banking end */
 
 /*Left section end*/
+@media (max-width: 767px){
+.totals.outstanding-totalss {
+    padding: 18px 8px !important;
+    border-top: 1px solid #e8e8e8;
+    z-index: 98;
+    bottom: 0px;
+}
+.totals.outstanding-totalss li span {
+    text-align: left;
+    color: #a5173c;
+    float: none;
+    padding-left: 4px;
+}
+.totals.outstanding-totalss li,
+.cart.wrapper .right-block.shipping .checkout-order-summary .totals.outstanding-totalss li {
+    width: 50%;
+    font-size: 14px;
+    float: none;
+}
+#chckoutadrs .proceed-button, .cart.wrapper .button.proceed-button, 
+#selectDeliveryMethodForm .button#deliveryMethodSubmitUp, #deliveryAddressSubmitUp{
+    bottom: 7.2px;
+    left:auto;
+    right: 8px !important;
+    width: 50%;
+    height: 33.5px !important;
+    font-weight: normal;
+    background-color: #a5173c;
+    line-height: 1 !important;
+    font-size: 12px !important;
+}
+}
 /* Payment Page change end */
 /*checkout pages end*/
