@@ -61,6 +61,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -71,6 +73,7 @@ import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.service.MplCategoryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
@@ -108,6 +111,9 @@ public class DefaultPromotionManager extends PromotionsManager
 	private MplDeliveryCostService deliveryCostService;
 	@Autowired
 	private ModelService modelService;
+
+	@Resource(name = "mplCategoryServiceImpl")
+	MplCategoryService mplCategoryServiceImpl;
 
 
 	/**
@@ -630,34 +636,64 @@ public class DefaultPromotionManager extends PromotionsManager
 	public List<String> getcategoryList(final Product product, final SessionContext paramSessionContext)
 	{
 		List<String> productCategoryList = null;
-		List<Category> productCategoryData = null;
-		List<CategoryModel> superCategoryData = null;
-		final CatalogVersionModel oCatalogVersionModel = catalogData();
+		//final List<Category> productCategoryData = null;
+		//List<CategoryModel> superCategoryData = null;
+		List<CategoryModel> productCategoryData = null;
+
+		HashSet<CategoryModel> superCategoryData = null;
+
+		//final CatalogVersionModel oCatalogVersionModel = catalogData();
 		try
 		{
-			productCategoryData = (List<Category>) product.getAttribute(paramSessionContext,
-					MarketplacecommerceservicesConstants.PROMO_CATEGORY);
-			if (null != productCategoryData && !productCategoryData.isEmpty())
+			//			productCategoryData = (List<Category>) product.getAttribute(paramSessionContext,
+			//					MarketplacecommerceservicesConstants.PROMO_CATEGORY);
+			//			if (CollectionUtils.isNotEmpty(productCategoryData))
+			//			{
+			//				productCategoryList = new ArrayList<String>();
+			//				for (final Category category : productCategoryData)
+			//				{
+			//					if (null != category && null != category.getCode(paramSessionContext))
+			//					{
+			//						productCategoryList.add(category.getCode(paramSessionContext));
+			//						//final CategoryModel oModel = categoryService.getCategoryForCode(category.getCode(paramSessionContext));
+			//						//Commented to fix defect TISUATPII-1558 -- multiple category giving erroneous promotion result
+			//						final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel,
+			//								category.getCode(paramSessionContext));
+			//						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(oModel));
+			//						if (!superCategoryData.isEmpty())
+			//						{
+			//							for (final CategoryModel categoryModel : superCategoryData)
+			//							{
+			//								productCategoryList.add(categoryModel.getCode());
+			//							}
+			//						}
+			//					}
+			//				}
+			//			}
+
+
+			final ProductModel productModel = getModelService().get(product);
+
+			productCategoryData = new ArrayList<>(productModel.getSupercategories());
+			if (CollectionUtils.isNotEmpty(productCategoryData))
 			{
 				productCategoryList = new ArrayList<String>();
-				for (final Category category : productCategoryData)
+
+				superCategoryData = (HashSet<CategoryModel>) mplCategoryServiceImpl
+						.getAllSupercategoriesForCategoryList(productCategoryData);
+				if (CollectionUtils.isNotEmpty(superCategoryData))
 				{
-					if (null != category && null != category.getCode(paramSessionContext))
+					final List<CategoryModel> dataList = new ArrayList<CategoryModel>(superCategoryData);
+
+					for (final CategoryModel oModel : dataList)
 					{
-						productCategoryList.add(category.getCode(paramSessionContext));
-						//final CategoryModel oModel = categoryService.getCategoryForCode(category.getCode(paramSessionContext));
-						//Commented to fix defect TISUATPII-1558 -- multiple category giving erroneous promotion result
-						final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel,
-								category.getCode(paramSessionContext));
-						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(oModel));
-						if (!superCategoryData.isEmpty())
-						{
-							for (final CategoryModel categoryModel : superCategoryData)
-							{
-								productCategoryList.add(categoryModel.getCode());
-							}
-						}
+						productCategoryList.add(oModel.getCode());
 					}
+				}
+
+				for (final CategoryModel oModel : productCategoryData)
+				{
+					productCategoryList.add(oModel.getCode());
 				}
 			}
 		}
@@ -790,34 +826,52 @@ public class DefaultPromotionManager extends PromotionsManager
 	public List<CategoryModel> getcategoryData(final ProductModel productdata)
 	{
 		List<CategoryModel> productCategoryData = null;
-		List<CategoryModel> superCategoryData = null;
-		final CatalogVersionModel oCatalogVersionModel = catalogData();
+		//final List<CategoryModel> superCategoryData = null;
+		//final CatalogVersionModel oCatalogVersionModel = catalogData();
 
-		if (null != productdata && null != productdata.getSupercategories() && null != oCatalogVersionModel)
+		HashSet<CategoryModel> superCategoryData = null;
+		List<CategoryModel> superCategoryList = null;
+
+		if (null != productdata)
 		{
-			superCategoryData = new ArrayList<CategoryModel>(productdata.getSupercategories());
-			if (!superCategoryData.isEmpty())
+			productCategoryData = new ArrayList<>(productdata.getSupercategories());
+
+			//			superCategoryData = new ArrayList<CategoryModel>(productdata.getSupercategories());
+			//			if (!superCategoryData.isEmpty())
+			//			{
+			//				productCategoryData = new ArrayList<CategoryModel>();
+			//				for (final CategoryModel category : superCategoryData)
+			//				{
+			//					if (null != category && null != category.getCode())
+			//					{
+			//						//final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel, category.getCode());
+			//						productCategoryData.add(category);
+			//						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(category));
+			//						if (!superCategoryData.isEmpty())
+			//						{
+			//							for (final CategoryModel categoryModel : superCategoryData)
+			//							{
+			//								productCategoryData.add(categoryModel);
+			//							}
+			//						}
+			//					}
+			//				}
+			//			}
+
+			if (CollectionUtils.isNotEmpty(productCategoryData))
 			{
-				productCategoryData = new ArrayList<CategoryModel>();
-				for (final CategoryModel category : superCategoryData)
+				superCategoryList = new ArrayList<CategoryModel>();
+				superCategoryData = (HashSet<CategoryModel>) mplCategoryServiceImpl
+						.getAllSupercategoriesForCategoryList(productCategoryData);
+				if (CollectionUtils.isNotEmpty(superCategoryData))
 				{
-					if (null != category && null != category.getCode())
-					{
-						//final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel, category.getCode());
-						productCategoryData.add(category);
-						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(category));
-						if (!superCategoryData.isEmpty())
-						{
-							for (final CategoryModel categoryModel : superCategoryData)
-							{
-								productCategoryData.add(categoryModel);
-							}
-						}
-					}
+					final List<CategoryModel> dataList = new ArrayList<CategoryModel>(superCategoryData);
+					superCategoryList.addAll(dataList);
 				}
+				superCategoryList.addAll(productCategoryData);
 			}
 		}
-		return productCategoryData;
+		return superCategoryList;
 	}
 
 	/**
@@ -830,32 +884,58 @@ public class DefaultPromotionManager extends PromotionsManager
 	{
 		List<CategoryModel> productCategoryData = null;
 		List<CategoryModel> superCategoryData = null;
-		final CatalogVersionModel oCatalogVersionModel = catalogData();
+		//final CatalogVersionModel oCatalogVersionModel = catalogData();
+		HashSet<CategoryModel> categoryData = null;
 
-		if (null != product && null != product.getSupercategories() && null != oCatalogVersionModel)
+		if (null != product)
 		{
 			superCategoryData = new ArrayList<CategoryModel>(product.getSupercategories());
-			if (!superCategoryData.isEmpty())
+			//if (!superCategoryData.isEmpty())
+			if (CollectionUtils.isNotEmpty(superCategoryData))
 			{
 				productCategoryData = new ArrayList<CategoryModel>();
+				final List<CategoryModel> finalCategoryList = new ArrayList<CategoryModel>();
+				final String primaryCat = configurationService.getConfiguration().getString("decorator.primary",
+						MarketplacecommerceservicesConstants.EMPTY);
+
+				//				for (final CategoryModel category : superCategoryData)
+				//				{
+				//					//TISUAT-4621
+				//					final String primaryCat = configurationService.getConfiguration().getString("decorator.primary", "");
+				//					if (null != category && null != category.getCode() && category.getCode().indexOf(primaryCat) > -1)
+				//					{
+				//						final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel, category.getCode());
+				//						productCategoryData.add(oModel);
+				//						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(oModel));
+				//						if (!superCategoryData.isEmpty())
+				//						{
+				//							for (final CategoryModel categoryModel : superCategoryData)
+				//							{
+				//								productCategoryData.add(categoryModel);
+				//							}
+				//						}
+				//					}
+				//				}
+
 				for (final CategoryModel category : superCategoryData)
 				{
-					//TISUAT-4621
-					final String primaryCat = configurationService.getConfiguration().getString("decorator.primary", "");
-					if (null != category && null != category.getCode() && category.getCode().indexOf(primaryCat) > -1)
+					if (StringUtils.isNotEmpty(category.getCode()) && category.getCode().indexOf(primaryCat) > -1)
 					{
-						final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel, category.getCode());
-						productCategoryData.add(oModel);
-						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(oModel));
-						if (!superCategoryData.isEmpty())
-						{
-							for (final CategoryModel categoryModel : superCategoryData)
-							{
-								productCategoryData.add(categoryModel);
-							}
-						}
+						finalCategoryList.add(category);
 					}
 				}
+
+				if (CollectionUtils.isNotEmpty(finalCategoryList))
+				{
+					categoryData = (HashSet<CategoryModel>) mplCategoryServiceImpl
+							.getAllSupercategoriesForCategoryList(finalCategoryList);
+					if (CollectionUtils.isNotEmpty(categoryData))
+					{
+						final List<CategoryModel> dataList = new ArrayList<CategoryModel>(superCategoryData);
+						productCategoryData.addAll(dataList);
+					}
+				}
+				productCategoryData.addAll(finalCategoryList);
 			}
 		}
 		return productCategoryData;
@@ -3845,5 +3925,22 @@ public class DefaultPromotionManager extends PromotionsManager
 		}
 
 		return validProductUssidMap;
+	}
+
+	/**
+	 * @return the mplCategoryServiceImpl
+	 */
+	public MplCategoryService getMplCategoryServiceImpl()
+	{
+		return mplCategoryServiceImpl;
+	}
+
+	/**
+	 * @param mplCategoryServiceImpl
+	 *           the mplCategoryServiceImpl to set
+	 */
+	public void setMplCategoryServiceImpl(final MplCategoryService mplCategoryServiceImpl)
+	{
+		this.mplCategoryServiceImpl = mplCategoryServiceImpl;
 	}
 }
