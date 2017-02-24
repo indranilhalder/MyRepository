@@ -564,7 +564,6 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				{
 					LOG.info("CustomOmsShipmentSyncAdapte:::InScan::::" + shipment.getInScan());
 					if (shipment.getInScan() != null && shipment.getInScan().booleanValue()
-							&& shipmentNewStatus.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_STATUS_HOTC)
 							&& !consignmentModel.getIsInscan().booleanValue())
 					{
 						sendOrderNotification(shipment, consignmentModel, orderModel, shipmentNewStatus);

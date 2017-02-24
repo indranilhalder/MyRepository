@@ -2448,7 +2448,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			ticketUpdateData.setEcomRequestId(ticketDetailModel.getEcomRequestId());
 			ticketUpdateData.setTicketId(ticketDetailModel.getTicketId());
 			ticketUpdateData.setTransactionId(returnInfoRequestData.getTransactionId());
-			ticketUpdateData.setRssLPName(returnInfoRequestData.getLPNameOther());
+			ticketUpdateData.setRssOtherLPName(returnInfoRequestData.getLPNameOther());
 			ticketUpdateData.setRssAWBNumber(returnInfoRequestData.getAWBNum());
 			ticketUpdateData.setRssCharge(returnInfoRequestData.getShipmentCharge());
 			ticketUpdateData.setRssDispathProofURL(returnInfoRequestData.getShipmentProofURL());

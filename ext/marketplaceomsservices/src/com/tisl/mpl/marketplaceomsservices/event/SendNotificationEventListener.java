@@ -270,8 +270,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 			//Bug Id TISRLUAT-986 20-02-2017 Start
 			if (shipment.getInScan() != null)
 			{
-				if (shipment.getInScan().booleanValue()
-						&& shipmentNewStatus.toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_STATUS_HOTC))
+				if (shipment.getInScan().booleanValue())
 				{
 					LOG.info("******************** Sending notification for HOTC");
 					sendNotificationForHotc(orderModel, orderNumber, mobileNumber, trackingUrl, logisticPartner);
