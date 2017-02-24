@@ -1095,26 +1095,53 @@ $(document).on('click','#compareBtn',function(){
 		 utag.link({ link_text : "compare_now_clicked" , event_type : "compare_now_clicked" });
 	 }	
 })
-//TPR-4720 | Display First 5 Products starts
-function populateFirstFive(){
+//TPR-4720 | Display First 5 Products  |serp 
+function populateFirstFiveProductsSerp(){
 	var count = 5; 
 	var productArray= [];
-	var searchResult = $("ul.product-list li.product-item").length;
+    var searchResult = $("ul.product-list li.product-item").length;
 	if(searchResult < count ){
 		count = searchResult;
-                    }
+    }
    for(var i=0;i< count;i++)
    {
-	var selector='ul.product-list li.product-item:eq('+i+') span.serpProduct #productCode';
-	product =$(selector).val();
+	 var selector = 'ul.product-list li.product-item:eq('+i+') span.serpProduct #productCode';
+	product = $(selector).val();
 	productArray.push(product);
-	if(typeof utag !="undefined"){
+   }
+   if(typeof utag !="undefined"){
 		 utag.link({ serp_first_5_products : productArray });
-	 }	
-  }
+	 }
 }
 
+
 $( window ).load(function() {
-	populateFirstFive();
+	if($('#pageType').val() == "productsearch"){
+		populateFirstFiveProductsSerp();	
+	}
+	
+	if($('#pageType').val() == "category"){
+		populateFirstFiveProductsPlp();
+	}
 });
-//TPR-4720 | Display First 5 Products ends
+
+//TPR-4705 | Display first 5  products |plp 
+function populateFirstFiveProductsPlp(){
+	var count = 5; 
+	var productArray= [];
+    var searchResult = $("ul.product-listing.product-grid li.product-item").length;
+	if(searchResult < count ){
+		count = searchResult;
+    }
+   for(var i=0;i< count;i++)
+   {
+      var  selector = 'ul.product-listing.product-grid li.product-item:eq('+i+') span.serpProduct #productCode';
+	 product = $(selector).val();
+	 productArray.push(product);
+	
+  }
+   if(typeof utag !="undefined"){
+		 utag.link({ plp_first_5_products : productArray });
+	 }	
+}
+
