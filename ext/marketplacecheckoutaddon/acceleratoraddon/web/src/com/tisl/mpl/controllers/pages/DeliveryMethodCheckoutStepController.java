@@ -518,8 +518,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					return getCheckoutStep().nextStep();
 				}
 
-				deliveryAddress = (List<AddressData>) getMplCustomAddressFacade().getDeliveryAddresses(
-						cartUssidData.getDeliveryAddress());
+
+				deliveryAddress = getMplCustomAddressFacade().getDeliveryAddresses(cartUssidData.getDeliveryAddress(), cartModel); //CAR-194
+
 			}
 
 
@@ -1277,7 +1278,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@RequireHardLogIn
 	public String doSelectSavedAddress(final Model model)
 	{
-
+		final CartModel cartModel = getCartService().getSessionCart(); //CAR-194
 		String returnPage = MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
 		try
 		{
@@ -1286,7 +1287,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			List<AddressData> deliveryAddress = null;
 			if (null != cartData)
 			{
-				deliveryAddress = (List<AddressData>) getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress());
+				deliveryAddress = getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress(), cartModel); //CAR-194
 			}
 
 			deliveryAddress = (deliveryAddress == null || deliveryAddress.isEmpty()) ? accountAddressFacade.getAddressBook()
@@ -1481,21 +1482,21 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		try
 		{
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
-
+			final CartModel cartModel = getCartService().getSessionCart();
 			final AccountAddressForm addressForm = new AccountAddressForm();
 			addressForm.setCountryIso(MarketplacecheckoutaddonConstants.COUNTRYISO);
 			final List<StateData> stateDataList = accountAddressFacade.getStates();
 
 			if (null != cartData)
 			{
-				deliveryAddress = (List<AddressData>) getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress());
+				deliveryAddress = getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress(), cartModel); //CAR-194
 			}
 
 
 			deliveryAddress = (deliveryAddress == null || deliveryAddress.isEmpty()) ? accountAddressFacade.getAddressBook()
 					: deliveryAddress;
 
-			final CartModel cartModel = getCartService().getSessionCart();
+			//final CartModel cartModel = getCartService().getSessionCart();
 			if (cartModel != null)
 
 
