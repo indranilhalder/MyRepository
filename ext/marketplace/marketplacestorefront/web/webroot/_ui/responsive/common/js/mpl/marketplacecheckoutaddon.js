@@ -5354,6 +5354,9 @@ function checkPincodeServiceability(buttonType,el)
 		$(".delivery ul.success_msg").hide();//TPR-1341
 		return false; 
 		// TPR-1055 ends
+	} //CAR-246
+	else if(selectedPincode!==""){
+		$(location).attr('href',ACC.config.encodedContextPath + "/cart?pincode="+selectedPincode);
 	}
 	else
     {
@@ -5804,9 +5807,8 @@ function populatePincodeDeliveryMode(response,buttonType){
 
 //TPR-1786
 //TISBOX-879
-function redirectToCheckout(checkoutLinkURlId)
+function redirectToCheckout(checkoutUrl)
 {
-	var checkoutUrl = checkoutLinkURlId;
 	var cartEntriesError=false;
 	cartEntriesError = ACC.pickupinstore.validatePickupinStoreCartEntires();
 	if (!cartEntriesError)
@@ -7452,3 +7454,4 @@ function updateMobileNo(){
 	$("#otpMobileNUMField").val('');
 	$("#otpMobileNUMField").focus();    
 }
+
