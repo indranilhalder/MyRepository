@@ -900,8 +900,9 @@ public class PaymentServicesController extends BaseController
 		PaymentServiceWsData paymentModesData = new PaymentServiceWsData();
 		CartModel cart = null;
 		OrderModel orderModel = null;
-		CartData cartData = null;
-		OrderData orderData = null;
+		//CAR-111
+		//final CartData cartData = null;
+		//OrderData orderData = null;
 		try
 		{
 			if (StringUtils.isNotEmpty(cartGuid))
@@ -913,9 +914,10 @@ public class PaymentServicesController extends BaseController
 				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
 				if (cart != null)
 				{
-					cartData = getMplExtendedCartConverter().convert(cart);
+					//CAR-111
+					//cartData = getMplExtendedCartConverter().convert(cart);
 					final Map<String, Boolean> paymentMode = getMplPaymentFacade().getPaymentModes(
-							MarketplacewebservicesConstants.MPLSTORE, true, cartData);
+							MarketplacewebservicesConstants.MPLSTORE, cart);
 					paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(cart);
 					paymentModesData.setPaymentModes(paymentMode);
 				}
@@ -926,10 +928,11 @@ public class PaymentServicesController extends BaseController
 			}
 			else
 			{
-				orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
+				//CAR-111
+				//orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
 				//Getting Payment modes
 				final Map<String, Boolean> paymentMode = getMplPaymentFacade().getPaymentModes(
-						MarketplacewebservicesConstants.MPLSTORE, orderData);
+						MarketplacewebservicesConstants.MPLSTORE, orderModel);
 				paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(orderModel);
 				paymentModesData.setPaymentModes(paymentMode);
 			}
