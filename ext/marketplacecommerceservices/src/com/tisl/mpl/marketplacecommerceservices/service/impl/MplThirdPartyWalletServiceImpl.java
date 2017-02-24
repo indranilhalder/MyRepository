@@ -94,6 +94,8 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	 */
 	private static final String T = "T";
 
+	private static final String F = "F";
+
 	/**
 	 *
 	 */
@@ -238,7 +240,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 			//DAO call to fetch PAYMENT PENDING or REFUND-INITIATED orders
 			pendingOrders = mplProcessOrderDao.getPendingOrRefundInitiatedOrders(OrderStatus.PAYMENT_PENDING.toString(),
 					OrderStatus.REFUND_INITIATED.toString());
-                        LOG.debug("#####################pendingOrders**" + pendingOrders);
+			LOG.debug("#####################pendingOrders**" + pendingOrders);
 			boolean isPayment = true;
 			boolean isReturn = false;
 			for (final OrderModel order : pendingOrders)
@@ -257,9 +259,9 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 								&& !auditModelData.getIsExpired().booleanValue() && new Date().after(orderTATForTimeout))
 						{
 							isPayment = true;
-							LOG.debug("###################timeout############"+order.getCode());
+							LOG.debug("###################timeout############" + order.getCode());
 							performProcessingOrder(auditModelData, order, T, isPayment, isReturn);
-							sendNotification(order);
+							sendNotification(order, T);
 						}
 						else
 						{
@@ -285,13 +287,14 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 									transAmt = Double.valueOf(params1[5]);
 								}
 
-								mplPaymentService.setTPWalletPaymentTransaction(paymentMode, order, auditModelData.getAuditId(),
-										transAmt);
+								mplPaymentService
+										.setTPWalletPaymentTransaction(paymentMode, order, auditModelData.getAuditId(), transAmt);
 								final CustomerModel mplCustomer = (CustomerModel) order.getUser();
 								updateAuditInfoForPayment(auditModelData, entryList, mplCustomer, order);
 								//sending notification mail
-								final String trackOrderUrl = getConfigurationService().getConfiguration()
-										.getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + order.getCode();
+								final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+										MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+										+ order.getCode();
 
 								LOG.debug("#######################payment processiong in mrupee cronjob" + order.getCode());
 
@@ -302,7 +305,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 								}
 								catch (final JAXBException e)
 								{
-								LOG.error("**************************error in notification sending for order****"+order.getCode());
+									LOG.error("**************************error in notification sending for order****" + order.getCode());
 								}
 
 							}
@@ -360,17 +363,17 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 								}
 							}
 
-							
+
 							if (StringUtils.isEmpty(status) && new Date().before(orderTATForTimeout))
 							{
 								performProcessingOrder(auditModelData, order, "", isPayment, isReturn);
-								sendNotification(order);
+								sendNotification(order, F);
 							}
 							//getting response other than S
 							if (!(S.equalsIgnoreCase(status)) && new Date().before(orderTATForTimeout))
 							{
 								performProcessingOrder(auditModelData, order, status, isPayment, isReturn);
-								sendNotification(order);
+								sendNotification(order, F);
 							}
 						}
 					}
@@ -396,21 +399,32 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	 * send notification on payment timeout
 	 *
 	 * @param order
+	 * @param status
 	 *
 	 */
-	private void sendNotification(final OrderModel order)
+	private void sendNotification(final OrderModel order, final String status)
 	{
 		// YTODO Auto-generated method stub
-		final String trackOrderUrl = getConfigurationService().getConfiguration()
-				.getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + order.getCode();
+		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+				+ order.getCode();
 		try
 		{
-			notificationService.triggerEmailAndSmsOnPaymentTimeout(order, trackOrderUrl);
+			if (status.equalsIgnoreCase(T))
+			{
+				notificationService.triggerEmailAndSmsOnPaymentTimeout(order, trackOrderUrl);
+				LOG.debug("***************** Trigger notification for TimeOut Email");
+			}
+			else if (status.equalsIgnoreCase(F))
+			{
+				notificationService.triggerEmailAndSmsOnPaymentFailed(order, trackOrderUrl);
+				LOG.debug("***************** Trigger notification for Failed Email");
+			}
 		}
 		catch (final JAXBException e)
 		{
-		       LOG.error("***********************error final in sending payment final timeout notification>>>>>>"+order.getCode());
-		       LOG.error("***********************error final in sending payment final timeout notification>>>>>>", e);
+			LOG.error("***********************error final in sending payment final timeout notification>>>>>>" + order.getCode());
+			LOG.error("***********************error final in sending payment final timeout notification>>>>>>", e);
 		}
 	}
 
@@ -452,7 +466,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 					}
 					catch (final VoucherOperationException e)
 					{
-						
+
 						LOG.error("exception##### error in updating voucher models >>>>>>", e);
 					}
 					mplVoucherService.recalculateCartForCoupon(null, order);
@@ -472,7 +486,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 		}
 		catch (final ModelSavingException e)
 		{
-		        LOG.error("*****************ERROR IN MODEL SAVING FOR ORDER ***************>>>>>"+order.getCode());
+			LOG.error("*****************ERROR IN MODEL SAVING FOR ORDER ***************>>>>>" + order.getCode());
 			LOG.error("exception##### ERROR IN SAVING DETAIL FOR  ORDER>>>>>>", e);
 		}
 
@@ -525,13 +539,13 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 		}
 		catch (final InvalidCartException e)
 		{
-		        LOG.error("***************** ORDER INVALIDATION***************>>>>>"+order.getCode());
+			LOG.error("***************** ORDER INVALIDATION***************>>>>>" + order.getCode());
 			LOG.error("******************exception##### : INAVLID CART>>>>>>", e);
 
 		}
 		catch (final CalculationException e)
 		{
-		        LOG.error("*****************ERROR IN CART CALCULATION FOR ORDER ***************>>>>>"+order.getCode());
+			LOG.error("*****************ERROR IN CART CALCULATION FOR ORDER ***************>>>>>" + order.getCode());
 			LOG.error("******************exception##### ERROR IN ORDER TOTAL CALCULATION>>>>>>", e);
 		}
 		getOrderService().submitOrder(order);
@@ -755,8 +769,8 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 			{
 				public boolean verify(final String hostname, final SSLSession session)
 				{
-					final String mRupeehostname = getConfigurationService().getConfiguration()
-							.getString(MarketplacecommerceservicesConstants.MRUPEEHOSTNAME);
+					final String mRupeehostname = getConfigurationService().getConfiguration().getString(
+							MarketplacecommerceservicesConstants.MRUPEEHOSTNAME);
 					//	if (hostname.equals(_14_140_248_13))
 					if (hostname.equals(mRupeehostname))
 					{
