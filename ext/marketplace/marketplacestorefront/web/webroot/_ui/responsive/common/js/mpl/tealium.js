@@ -33,7 +33,21 @@ $(document).ready(
 			promo_id=$("#product_applied_promotion_code").val().replace(/([~!@#$%^&*()-+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '_');
 			}
 			//TPR-672 END
+			//TPR-4726
+			var offerCount = '';
+			if( $('.on-sale').length > 0 ){
+				offerCount =	$('.on-sale').length ;
+			}
 			
+			var newCount = '';
+			if( $('.new').length > 0 ){
+				newCount =		$('.new').length ;
+			}
+		
+			var onlineExclusive='';
+			if($('.online-exclusive').length > 0){
+				onlineExclusive = $('.online-exclusive').length ;
+			}
 
 			
 			// Added for tealium
@@ -276,6 +290,20 @@ $(document).ready(
 							+ $("#search_results").val() + '",';
 						tealiumData += '"search_type":"'		// TPR-666
 							+ $("#search_type").val() + '",';
+						tealiumData += '"out_of_stock_count":"'		// TPR-4722
+							+ $("#out_of_stock_count").val() + '",';
+						if(offerCount != undefined || offerCount !=null){ 
+						tealiumData += '"offer_product_count":"'		// TPR-4726
+							+ offerCount + '",';
+						}
+						if(newCount != undefined || newCount !=null){ 
+							tealiumData += '"new_product_count":"'		// TPR-4726
+								+ newCount + '",';
+							}
+						if(onlineExclusive != undefined || onlineExclusive !=null){ 
+							tealiumData += '"onlineExclusive_product_count":"'		// TPR-4726
+								+ onlineExclusive + '",';
+							}
 						//TPR-430 Start
 						tealiumData += '"product_category":"'
 							+ product_category + '",';
@@ -1053,6 +1081,7 @@ $(document).on('change','#sortOptions1', function() {
   } 
 })
 
+
 /*TPR-4719, TPR-4704 | Search Filter in SERP|PLP*/
 //On click of view page size dropdown
 $(document).on('change','#pageSizeOptions1', function() {
@@ -1105,7 +1134,54 @@ function setupSessionValues(){
 	}
 }
 
-$(window).load(function() {
+//TPR-4725 | quickview
+$(document).on('click','.quick-view-prod-details-link',function(){
+	 if(typeof utag !="undefined"){
+		 utag.link({ link_text : "quick_view_full_details_clicked" , event_type : "quick_view_full_details_clicked" });
+	 }
+})
+//TPR-4727 | add to compare 2nd part
+$(document).on('click','.compareRemoveLink',function(){
+	if(typeof utag !="undefined"){
+		 utag.link({ link_text : "add_to_compare_removed" , event_type : "add_to_compare_removed" });
+	 }	
+})
+//TPR-4727 | add to compare 3rd part
+$(document).on('click','#compareBtn',function(){
+	if(typeof utag !="undefined"){
+		 utag.link({ link_text : "compare_now_clicked" , event_type : "compare_now_clicked" });
+	 }	
+})
+//TPR-4720 | Display First 5 Products  |serp 
+function populateFirstFiveProductsSerp(){
+	var count = 5; 
+	var productArray= [];
+    var searchResult = $("ul.product-list li.product-item").length;
+	if(searchResult < count ){
+		count = searchResult;
+    }
+   for(var i=0;i< count;i++)
+   {
+	 var selector = 'ul.product-list li.product-item:eq('+i+') span.serpProduct #productCode';
+	product = $(selector).val();
+	productArray.push(product);
+   }
+   if(typeof utag !="undefined"){
+		 utag.link({ serp_first_5_products : productArray });
+	 }
+}
+
+
+$( window ).load(function() {
+	if($('#pageType').val() == "productsearch"){
+		populateFirstFiveProductsSerp();	
+	}
+	
+	if($('#pageType').val() == "category"){
+		populateFirstFiveProductsPlp();
+	}
+	
+	/*For Search Filter TPR-4719, TPR-4704 | Start*/
 	var filterTypeList='';
 	var filterValueList='';
 	var pageSessionUrl;
@@ -1146,6 +1222,27 @@ $(window).load(function() {
 		}
 		
 	}
-	
+	/*For Search Filter TPR-4719, TPR-4704 | Start*/
 });
+
+//TPR-4705 | Display first 5  products |plp 
+function populateFirstFiveProductsPlp(){
+	var count = 5; 
+	var productArray= [];
+    var searchResult = $("ul.product-listing.product-grid li.product-item").length;
+	if(searchResult < count ){
+		count = searchResult;
+    }
+   for(var i=0;i< count;i++)
+   {
+      var  selector = 'ul.product-listing.product-grid li.product-item:eq('+i+') span.serpProduct #productCode';
+	 product = $(selector).val();
+	 productArray.push(product);
+	
+  }
+   if(typeof utag !="undefined"){
+		 utag.link({ plp_first_5_products : productArray });
+	 }	
+}
+>>>>>>> branch 'Analytics_DataLayerSchema_PLP/SERP' of https://github.com/tcs-chennai/TCS_COMMERCE_REPO
 
