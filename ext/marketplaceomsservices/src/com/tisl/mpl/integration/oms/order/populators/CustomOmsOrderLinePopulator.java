@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -333,6 +334,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			   final String timeSlotFrom= source.getEdScheduledDate().concat(" " + source.getTimeSlotFrom());
 		       final SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
 		       final SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		       format2.setTimeZone(TimeZone.getTimeZone("GMT"));
 			    
 				try
 				{
@@ -349,6 +351,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			   final String timeSlotTo=source.getEdScheduledDate().concat(" " + source.getTimeSlotTo());
 		       final SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
 		       final SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");  
+		       format2.setTimeZone(TimeZone.getTimeZone("GMT"));
 				try
 				{
 					target.setTimeSlotTo(String.valueOf(format2.format(format1.parse(timeSlotTo))));
