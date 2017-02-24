@@ -706,32 +706,38 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 
 		try
 		{
-			if (null != order && CollectionUtils.isNotEmpty(order.getEntries()))
+			if (null != order)
 			{
-				for (final AbstractOrderEntry entry : order.getEntries())
+				final List<AbstractOrderEntry> orderEntryList = order.getEntries();
+				if (CollectionUtils.isNotEmpty(orderEntryList))
 				{
-					if (getMplPromotionHelper().validateEntryForFreebie(entry))
+					for (final AbstractOrderEntry entry : orderEntryList)
 					{
-						totalPrice = totalPrice + entry.getTotalPrice().doubleValue();
+						if (getMplPromotionHelper().validateEntryForFreebie(entry))
+						{
+							totalPrice = totalPrice + entry.getTotalPrice().doubleValue();
+						}
+						else if ((null != entry.getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED)
+								&& BooleanUtils.toBoolean(entry.getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED)
+										.toString()) && null != entry.getAttribute(arg0,
+								MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT)))
+						{
+							final double freecount = Double.parseDouble(entry.getAttribute(arg0,
+									MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT).toString());
+							totalPrice = totalPrice + (freecount * 0.01);
+						}
 					}
-					else if ((null != entry.getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED)
-							&& BooleanUtils.toBoolean(entry.getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED)
-									.toString()) && null != entry.getAttribute(arg0, MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT)))
+
+					if (totalPrice != 0.0D)
 					{
-						final double freecount = Double.parseDouble(entry.getAttribute(arg0,
-								MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT).toString());
-						totalPrice = totalPrice + (freecount * 0.01);
+						orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(arg0, order) - totalPrice;
+					}
+					else
+					{
+						orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(arg0, order);
 					}
 				}
 
-				if (totalPrice != 0.0D)
-				{
-					orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(arg0, order) - totalPrice;
-				}
-				else
-				{
-					orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(arg0, order);
-				}
 			}
 		}
 		catch (final Exception exception)
