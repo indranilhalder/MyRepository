@@ -135,7 +135,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -248,7 +248,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -262,7 +262,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -277,10 +277,25 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		final List<OrderModel> orderList = getSubOrders(orderModel);
 
 		//TISPRO-249
-		setParentTransBuyABGetC(orderList);
-		//TISUTO-128
-		setFreebieParentTransactionId(orderList);
-		setBOGOParentTransactionId(orderList);
+		//OrderIssues:-  refactoring done
+		if (CollectionUtils.isNotEmpty(orderList))
+		{
+			// Set the Child Orders with Order
+			orderModel.setChildOrders(orderList);
+			getModelService().refresh(orderModel);
+			getModelService().save(orderModel);
+
+			setParentTransBuyABGetC(orderList);
+			//TISUTO-128
+			setFreebieParentTransactionId(orderList);
+			setBOGOParentTransactionId(orderList);
+
+			setSuborderTotalAfterOrderSplitting(orderList);
+		}
+		else
+		{
+			throw new InvalidCartException("Exception while creating Suborder for Parent Order:-  " + orderModel.getCode());
+		}
 
 		//Commented as ordercode creation is handled earlier for TPR-629
 		//		final String sequenceGeneratorApplicable = getConfigurationService().getConfiguration()
@@ -300,10 +315,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		//			final Random rand = new Random();
 		//			orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000)));
 		//		}
-		setSuborderTotalAfterOrderSplitting(orderList);
+		//		setSuborderTotalAfterOrderSplitting(orderList);
 
-		orderModel.setChildOrders(orderList);
-		getModelService().save(orderModel);
+
+		//OrderIssues:-  Code moved to upward
+		//		orderModel.setChildOrders(orderList);
+		//getModelService().save(orderModel);
 		if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
 		{
 			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
@@ -340,9 +357,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
-	 * 
+	 *
 	 * @param subOrderList
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -407,6 +424,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 										subOrderEntryModel
 												.setBuyABGetcParentTransactionId((null != parentTransactionId ? parentTransactionId : ""));
 										getModelService().save(subOrderEntryModel);
+										//OrderIssues:- refresh model added
+										getModelService().refresh(subOrderEntryModel);
 									}
 								}
 								else
@@ -437,9 +456,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
-	 * 
+	 *
 	 * @param subOrderList
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -663,54 +682,63 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		}
 	}
 
-
-	private void setBOGOParentTransactionId(final List<OrderModel> subOrderList) throws EtailNonBusinessExceptions
+	//OrderIssues:- thows changed from Exception to InvalidCartException
+	private void setBOGOParentTransactionId(final List<OrderModel> subOrderList) throws InvalidCartException
 	{
 		final List<String> uniquePromoCodeList = getUniquePromocode(subOrderList);
-		if (!uniquePromoCodeList.isEmpty())
+		try
 		{
-			final List<String> ussidTransIDForNonBOGOMap = getUssidTransIDForNonBOGOMap(uniquePromoCodeList, subOrderList);
-			String commaSeparetedParentTransId = null;
-			int removeCount = 1;
-			for (final String promoCode : uniquePromoCodeList)
+			if (!uniquePromoCodeList.isEmpty())
 			{
-				for (final OrderModel subOrderModel : subOrderList)
+				final List<String> ussidTransIDForNonBOGOMap = getUssidTransIDForNonBOGOMap(uniquePromoCodeList, subOrderList);
+				String commaSeparetedParentTransId = null;
+				int removeCount = 1;
+				for (final String promoCode : uniquePromoCodeList)
 				{
-					for (final AbstractOrderEntryModel subOrderEntryModel : subOrderModel.getEntries())
+					for (final OrderModel subOrderModel : subOrderList)
 					{
-						if (subOrderEntryModel.getProductPromoCode() != null
-								&& subOrderEntryModel.getProductPromoCode().equalsIgnoreCase(promoCode)
-								&& subOrderEntryModel.getIsBOGOapplied().booleanValue())
+						for (final AbstractOrderEntryModel subOrderEntryModel : subOrderModel.getEntries())
 						{
-							final String parentUssId = getParentUssid(subOrderEntryModel.getAssociatedItems(), subOrderModel);
-							final int setQualifyingCount = getSetQualifyingCount(subOrderModel, promoCode);
-							final int promoFreeCount = getPromoFreeCount(subOrderModel, promoCode);
-							if ((commaSeparetedParentTransId == null || commaSeparetedParentTransId.isEmpty())
-									&& !ussidTransIDForNonBOGOMap.isEmpty())
+							if (subOrderEntryModel.getProductPromoCode() != null
+									&& subOrderEntryModel.getProductPromoCode().equalsIgnoreCase(promoCode)
+									&& subOrderEntryModel.getIsBOGOapplied().booleanValue())
 							{
-								commaSeparetedParentTransId = getParentTransId(parentUssId, setQualifyingCount, ussidTransIDForNonBOGOMap);
-							}
-							if (StringUtils.isNotEmpty(commaSeparetedParentTransId))
-							{
-								subOrderEntryModel.setParentTransactionID(commaSeparetedParentTransId);
-								getModelService().save(subOrderEntryModel);
-							}
-							if (promoFreeCount == removeCount)
-							{
-								final String[] removeList = commaSeparetedParentTransId.split(",");
-								for (int i = 0; i < removeList.length; i++)
+								final String parentUssId = getParentUssid(subOrderEntryModel.getAssociatedItems(), subOrderModel);
+								final int setQualifyingCount = getSetQualifyingCount(subOrderModel, promoCode);
+								final int promoFreeCount = getPromoFreeCount(subOrderModel, promoCode);
+								if ((commaSeparetedParentTransId == null || commaSeparetedParentTransId.isEmpty())
+										&& !ussidTransIDForNonBOGOMap.isEmpty())
 								{
-									ussidTransIDForNonBOGOMap.remove(removeList[i]);
+									commaSeparetedParentTransId = getParentTransId(parentUssId, setQualifyingCount,
+											ussidTransIDForNonBOGOMap);
 								}
-								removeCount = 0;
-								commaSeparetedParentTransId = null;
+								if (StringUtils.isNotEmpty(commaSeparetedParentTransId))
+								{
+									subOrderEntryModel.setParentTransactionID(commaSeparetedParentTransId);
+									getModelService().save(subOrderEntryModel);
+								}
+								if (promoFreeCount == removeCount)
+								{
+									final String[] removeList = commaSeparetedParentTransId.split(",");
+									for (int i = 0; i < removeList.length; i++)
+									{
+										ussidTransIDForNonBOGOMap.remove(removeList[i]);
+									}
+									removeCount = 0;
+									commaSeparetedParentTransId = null;
+								}
+								removeCount++;
 							}
-							removeCount++;
 						}
 					}
 				}
 			}
 		}
+		catch (final Exception e)
+		{
+			throw new InvalidCartException(e);
+		}
+
 	}
 
 	/**
@@ -842,99 +870,171 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 * 
+	 *
 	 * @param orderList
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
-	private void setFreebieParentTransactionId(final List<OrderModel> subOrderList) throws EtailNonBusinessExceptions
+	// OrderIssues:- InvalidCartException exception throws
+	private void setFreebieParentTransactionId(final List<OrderModel> subOrderList) throws EtailNonBusinessExceptions,
+			InvalidCartException
 	{
 		final Map<String, List<String>> freebieParentMap = new HashMap<String, List<String>>();
 		final Map<String, List<String>> associatedItemMap = new HashMap<String, List<String>>();
 
-		// Populate transaction id for normal and freebie items parent order line
-		for (final OrderModel subOrderModel : subOrderList)
+		try
 		{
-			for (final AbstractOrderEntryModel subOrderEntryModel : subOrderModel.getEntries())
+			// Populate transaction id for normal and freebie items parent order line
+			for (final OrderModel subOrderModel : subOrderList)
 			{
-				if (!subOrderEntryModel.getGiveAway().booleanValue() && !subOrderEntryModel.getIsBOGOapplied().booleanValue())
+				// OrderIssues: Null or empty check added
+				if (CollectionUtils.isNotEmpty(subOrderModel.getEntries()))
 				{
-					final String selectedUssid = subOrderEntryModel.getSelectedUSSID();
-					final String transactionId = subOrderEntryModel.getTransactionID();
-					associatedItemMap.put(selectedUssid, subOrderEntryModel.getAssociatedItems());
-					if (StringUtils.isNotEmpty(selectedUssid) && StringUtils.isNotEmpty(transactionId))
+					LOG.info("Populate transaction id for normal and freebie items for Order " + subOrderModel.getCode()
+							+ "  and Child Entry:-  " + subOrderModel.getEntries());
+					for (final AbstractOrderEntryModel subOrderEntryModel : subOrderModel.getEntries())
 					{
-						if (freebieParentMap.get(selectedUssid) == null)
+						// OrderIssues: Null or empty check added
+						LOG.info("Populate transaction id for normal and freebie items for entry "
+								+ subOrderEntryModel.getSelectedUSSID());
+						if (null != subOrderEntryModel.getGiveAway() && !subOrderEntryModel.getGiveAway().booleanValue()
+								&& null != subOrderEntryModel.getIsBOGOapplied() && !subOrderEntryModel.getIsBOGOapplied().booleanValue()
+								&& null != subOrderEntryModel.getSelectedUSSID() && null != subOrderEntryModel.getTransactionID())
 						{
-							final List<String> tempList = new ArrayList<String>();
-							tempList.add(subOrderEntryModel.getTransactionID());
-							freebieParentMap.put(selectedUssid, tempList);
+							//final String selectedUssid = subOrderEntryModel.getSelectedUSSID();
+							//final String transactionId = subOrderEntryModel.getTransactionID();
+							associatedItemMap.put(subOrderEntryModel.getSelectedUSSID(), subOrderEntryModel.getAssociatedItems());
+							//							if (StringUtils.isNotEmpty(selectedUssid) && StringUtils.isNotEmpty(transactionId))
+							//							{
+							if (freebieParentMap.get(subOrderEntryModel.getSelectedUSSID()) == null)
+							{
+								final List<String> tempList = new ArrayList<String>();
+								tempList.add(null != subOrderEntryModel.getTransactionID() ? subOrderEntryModel.getTransactionID() : "");
+								freebieParentMap.put(subOrderEntryModel.getSelectedUSSID(), tempList);
+							}
+							else
+							{
+								freebieParentMap.get(subOrderEntryModel.getSelectedUSSID()).add(
+										null != subOrderEntryModel.getTransactionID() ? subOrderEntryModel.getTransactionID() : "");
+							}
+							//							}
+							//							else
+							//							{
+							//								LOG.debug((StringUtils.isEmpty(selectedUssid) ? "Ussid  null or empty for entry number"
+							//										+ subOrderEntryModel.getEntryNumber() : ""));
+							//								LOG.debug((StringUtils.isEmpty(transactionId) ? "transactionId  null or empty for entry number"
+							//										+ subOrderEntryModel.getEntryNumber() : ""));
+							//							}
 						}
 						else
 						{
-							freebieParentMap.get(selectedUssid).add(subOrderEntryModel.getTransactionID());
+							LOG.debug((StringUtils.isEmpty(subOrderEntryModel.getSelectedUSSID()) ? "Ussid  null or empty for entry number"
+									+ subOrderEntryModel.getEntryNumber()
+									: ""));
+							LOG.debug((StringUtils.isEmpty(subOrderEntryModel.getTransactionID()) ? "transactionId  null or empty for entry number"
+									+ subOrderEntryModel.getEntryNumber()
+									: ""));
 						}
 					}
-					else
-					{
-						LOG.debug((StringUtils.isEmpty(selectedUssid) ? "Ussid  null or empty for entry number"
-								+ subOrderEntryModel.getEntryNumber() : ""));
-						LOG.debug((StringUtils.isEmpty(transactionId) ? "transactionId  null or empty for entry number"
-								+ subOrderEntryModel.getEntryNumber() : ""));
-					}
+				}
+				else
+				{
+					LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+					throw new InvalidCartException("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
 				}
 			}
-		}
 
-		// Populating parent transaction id for freebie items
-		for (final OrderModel subOrderModel : subOrderList)
-		{
-			final List<String> assignedParentList = new ArrayList<String>();
-			for (final AbstractOrderEntryModel subOrderEntryModel : subOrderModel.getEntries())
+			// Populating parent transaction id for freebie items
+			for (final OrderModel subOrderModel : subOrderList)
 			{
-				List<String> associatedItemList = subOrderEntryModel.getAssociatedItems();
-				if (subOrderEntryModel.getGiveAway().booleanValue() && CollectionUtils.isNotEmpty(associatedItemList))
+				// OrderIssues: Null or empty check added
+				if (CollectionUtils.isNotEmpty(subOrderModel.getEntries()))
 				{
-					associatedItemList = updateAssociatedItem(associatedItemList, assignedParentList, freebieParentMap);
+					LOG.info("Populating parent transaction id for freebie items for Order " + subOrderModel.getCode()
+							+ "  and Child Entry:-  " + subOrderModel.getEntries());
 
-					final String parentUssId = getParentUssid(associatedItemList, subOrderModel);
-					String parentTransactionId = null;
-					assignedParentList.add(parentUssId);
-					if (subOrderEntryModel.getParentTransactionID() == null && parentUssId != null
-							&& freebieParentMap.get(parentUssId) != null)
+					final List<String> assignedParentList = new ArrayList<String>();
+					for (final AbstractOrderEntryModel subOrderEntryModel : subOrderModel.getEntries())
 					{
-						parentTransactionId = freebieParentMap.get(parentUssId).get(0);
-						if (StringUtils.isNotEmpty(parentTransactionId))
+						LOG.info("Populating parent transaction id for freebie items for entry "
+								+ (null != subOrderEntryModel.getSelectedUSSID() ? subOrderEntryModel.getSelectedUSSID() : ""));
+
+						if (null != subOrderEntryModel.getGiveAway() && subOrderEntryModel.getGiveAway().booleanValue()
+								&& CollectionUtils.isNotEmpty(subOrderEntryModel.getAssociatedItems())
+								&& MapUtils.isNotEmpty(freebieParentMap))
 						{
-							subOrderEntryModel.setParentTransactionID(parentTransactionId);
-							getModelService().save(subOrderEntryModel);
-							for (final String freebieUssid : associatedItemMap.get(parentUssId))
+							List<String> associatedItemList = subOrderEntryModel.getAssociatedItems();
+							associatedItemList = updateAssociatedItem(associatedItemList, assignedParentList, freebieParentMap);
+
+							final String parentUssId = getParentUssid(associatedItemList, subOrderModel);
+							String parentTransactionId = null;
+							assignedParentList.add(parentUssId);
+							if (subOrderEntryModel.getParentTransactionID() == null && parentUssId != null
+									&& freebieParentMap.get(parentUssId) != null)
 							{
-								if (!freebieUssid.equalsIgnoreCase(subOrderEntryModel.getSelectedUSSID()))
+								parentTransactionId = freebieParentMap.get(parentUssId).get(0);
+								if (StringUtils.isNotEmpty(parentTransactionId))
 								{
-									for (final AbstractOrderEntryModel subOrderEntryModel2 : subOrderModel.getEntries())
+									subOrderEntryModel.setParentTransactionID(parentTransactionId);
+									getModelService().save(subOrderEntryModel);
+									for (final String freebieUssid : associatedItemMap.get(parentUssId))
 									{
-										if (freebieUssid.equalsIgnoreCase(subOrderEntryModel2.getSelectedUSSID())
-												&& subOrderEntryModel2.getParentTransactionID() == null
-												&& subOrderEntryModel.getGiveAway().booleanValue())
+										if (null != subOrderEntryModel.getSelectedUSSID())
 										{
-											subOrderEntryModel2.setParentTransactionID(parentTransactionId);
-											getModelService().save(subOrderEntryModel2);
-											break;
+											LOG.info("Check Freebie Product USSID:-  " + subOrderEntryModel.getSelectedUSSID());
+											if (!freebieUssid.equalsIgnoreCase(subOrderEntryModel.getSelectedUSSID()))
+											{
+												for (final AbstractOrderEntryModel subOrderEntryModel2 : subOrderModel.getEntries())
+												{
+													if (null != subOrderEntryModel2.getSelectedUSSID())
+													{
+														if (freebieUssid.equalsIgnoreCase(subOrderEntryModel2.getSelectedUSSID())
+																&& subOrderEntryModel2.getParentTransactionID() == null
+																&& null != subOrderEntryModel.getGiveAway()
+																&& subOrderEntryModel.getGiveAway().booleanValue())
+														{
+															subOrderEntryModel2.setParentTransactionID(parentTransactionId);
+															getModelService().save(subOrderEntryModel2);
+															break;
+														}
+													}
+													else
+													{
+														LOG.error("USSID does not exist while checking freebie product for Sub Order ID:- "
+																+ subOrderModel.getCode());
+													}
+												}
+											}
+										}
+										else
+										{
+											LOG.error("USSID does not exist for Sub Order ID:- " + subOrderModel.getCode());
 										}
 
 									}
+									LOG.debug("Product getting removed from total freebie Parent Map " + freebieParentMap.get(parentUssId));
+									freebieParentMap.get(parentUssId).remove(0);
 								}
-
 							}
-
-							freebieParentMap.get(parentUssId).remove(0);
+						}
+						else
+						{
+							LOG.debug((StringUtils.isEmpty(subOrderEntryModel.getTransactionID()) ? "transactionId  null or empty for entry number"
+									+ subOrderEntryModel.getEntryNumber()
+									: ""));
+							LOG.debug((MapUtils.isNotEmpty(freebieParentMap) ? "freebieParentMap  null or empty for entry number"
+									+ freebieParentMap.size() : ""));
 						}
 					}
-
 				}
 			}
 		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception while executing setFreebieParentTransactionId:- ", e);
+			throw new InvalidCartException(e);
+		}
+
 	}
 
 	/**
@@ -948,11 +1048,17 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	{
 		// YTODO Auto-generated method stub
 		final List<String> updatedAssociatedList = new ArrayList<String>(associatedItemList);
-		for (final String parentUssid : assignedParentList)
+		//OrderIssues:- Null or Empty check added
+		if (CollectionUtils.isNotEmpty(assignedParentList))
 		{
-			if (CollectionUtils.isEmpty(freebieParentMap.get(parentUssid)))
+			for (final String parentUssid : assignedParentList)
 			{
-				updatedAssociatedList.remove(parentUssid);
+				LOG.debug("assignedParentList to check in freebieParentMap :- " + parentUssid);
+				if (CollectionUtils.isEmpty(freebieParentMap.get(parentUssid)))
+				{
+					LOG.debug("parentUssid to be remove:- " + parentUssid);
+					updatedAssociatedList.remove(parentUssid);
+				}
 			}
 		}
 		return updatedAssociatedList;
@@ -962,48 +1068,68 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @param associatedItems
 	 * @param subOrderEntryModel
 	 * @return
+	 * @throws Exception
 	 */
+	//OrderIssues:-
 	//TISUTO-163 --- Changes
-	private String getParentUssid(final List<String> associatedItems, final OrderModel subOrderModel)
+	private String getParentUssid(final List<String> associatedItems, final OrderModel subOrderModel) throws Exception
 	{
 		String parentUssid = StringUtils.EMPTY;
 		try
 		{
-			parentUssid = associatedItems.get(0);
-			int count = 0;
-			// ####  TISOMSII-230  START ##############
-			// Getting Parent Transaction Id for freebie product Based On  Delivery Mode
-			for (final AbstractOrderEntryModel entry : subOrderModel.getEntries())
+			//OrderIssues:- Null or Empty check added
+			if (CollectionUtils.isNotEmpty(associatedItems))
 			{
-				if (entry.getGiveAway().booleanValue() && mplOrderService.checkIfBuyABGetCApplied(entry))
+				parentUssid = associatedItems.get(0);
+				LOG.info("associatedItems:- " + associatedItems.get(0) + "  for Order :- " + subOrderModel.getCode());
+				int count = 0;
+				// ####  TISOMSII-230  START ##############
+				// Getting Parent Transaction Id for freebie product Based On  Delivery Mode
+				if (CollectionUtils.isNotEmpty(subOrderModel.getEntries()))
 				{
-					parentUssid = getParentUssidForBuyABgetC(associatedItems, subOrderModel);
-				}
-			}
-			// ####  TISOMSII-230  END  ##############
-
-			for (final String ussid : associatedItems)
-			{
-				int inCount = 0;
-				for (final AbstractOrderEntryModel entries : subOrderModel.getEntries())
-				{
-					if (ussid.equalsIgnoreCase(entries.getSelectedUSSID()))
+					for (final AbstractOrderEntryModel entry : subOrderModel.getEntries())
 					{
-						inCount++;
-
+						if (null != entry.getGiveAway() && entry.getGiveAway().booleanValue()
+								&& mplOrderService.checkIfBuyABGetCApplied(entry))
+						{
+							parentUssid = getParentUssidForBuyABgetC(associatedItems, subOrderModel);
+						}
 					}
+					// ####  TISOMSII-230  END  ##############
 
+					for (final String ussid : associatedItems)
+					{
+						int inCount = 0;
+						for (final AbstractOrderEntryModel entries : subOrderModel.getEntries())
+						{
+							if (ussid.equalsIgnoreCase(null != entries.getSelectedUSSID() ? entries.getSelectedUSSID() : ""))
+							{
+								inCount++;
+							}
+
+						}
+						if (inCount < count)
+						{
+							parentUssid = ussid;
+						}
+						count = inCount;
+					}
 				}
-				if (inCount < count)
+				else
 				{
-					parentUssid = ussid;
+					LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+					throw new Exception("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
 				}
-				count = inCount;
 			}
-		}
+			else
+			{
+				LOG.error("associatedItems Doesnot Exist for Order ID:- " + subOrderModel.getCode());
+			}
+		}//OrderIssues:- Exception throws with proper logging
 		catch (final Exception e)
 		{
-			LOG.error("Exception occured" + e.getMessage());
+			LOG.error("Exception occured", e);
+			throw new Exception(e);
 		}
 		return parentUssid;
 	}
@@ -1013,46 +1139,67 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 *
 	 * @param subOrderModel
 	 * @return String
+	 * @throws Exception
 	 */
-	private String getParentUssidForBuyABgetC(final List<String> associatedItems, final OrderModel subOrderModel)
+	private String getParentUssidForBuyABgetC(final List<String> associatedItems, final OrderModel subOrderModel) throws Exception
 	{
 		LOG.info("Inside getParentUssidForBuyABgetC Method");
 		String parentUssid = StringUtils.EMPTY;
 		String ussIdA = StringUtils.EMPTY;
-		Long ussIdAQty = null;
-		Long ussIdBQty = null;
+		//OrderIssues:- Long initialization changed from Null to new Long(0);
+		Long ussIdAQty = new Long(0);
+		Long ussIdBQty = new Long(0);
 		String ussIdB = StringUtils.EMPTY;
 		String ussIdADelMod = StringUtils.EMPTY;
 		String ussIdBDelMod = StringUtils.EMPTY;
 		try
 		{
-			LOG.debug("Getting parent Order and entries delivery modes with quantity");
-			final OrderModel orderModel = subOrderModel.getParentReference();
-
-			for (final AbstractOrderEntryModel entry : orderModel.getEntries())
+			LOG.debug("Getting parent Order and entries delivery modes with quantity for Order ID:- " + subOrderModel.getCode());
+			if (null != subOrderModel.getParentReference() && CollectionUtils.isNotEmpty(associatedItems)
+					&& associatedItems.size() > 1)
 			{
-				if (entry.getSelectedUSSID().equalsIgnoreCase(associatedItems.get(0)))
+				final OrderModel orderModel = subOrderModel.getParentReference();
+				LOG.info("Getting parent Order " + orderModel.getCode() + "  for SubOrder:- " + subOrderModel.getCode());
+				if (CollectionUtils.isNotEmpty(orderModel.getEntries()))
 				{
-					ussIdA = entry.getSelectedUSSID();
-					ussIdADelMod = entry.getMplDeliveryMode().getDeliveryMode().getCode();
-					ussIdAQty = entry.getQuantity();
+					for (final AbstractOrderEntryModel entry : orderModel.getEntries())
+					{
+						LOG.info("Order Entry to be updated:- " + orderModel.getEntries());
+						if (entry.getSelectedUSSID().equalsIgnoreCase(associatedItems.get(0)))
+						{
+							LOG.info("associatedItems in 1st position :- " + associatedItems.get(0));
+							ussIdA = entry.getSelectedUSSID();
+							ussIdADelMod = (null != entry.getMplDeliveryMode().getDeliveryMode().getCode() ? entry.getMplDeliveryMode()
+									.getDeliveryMode().getCode() : "");
+							ussIdAQty = entry.getQuantity();
+						}
+						else if (entry.getSelectedUSSID().equalsIgnoreCase(associatedItems.get(1)))
+						{
+							LOG.info("associatedItems in 2nd position :- " + associatedItems.get(1));
+							ussIdB = associatedItems.get(1);
+							ussIdBDelMod = (null != entry.getMplDeliveryMode().getDeliveryMode().getCode() ? entry.getMplDeliveryMode()
+									.getDeliveryMode().getCode() : "");
+							ussIdBQty = entry.getQuantity();
+						}
+					}
 				}
-				else if (entry.getSelectedUSSID().equalsIgnoreCase(associatedItems.get(1)))
+				else
 				{
-					ussIdB = associatedItems.get(1);
-					ussIdBDelMod = entry.getMplDeliveryMode().getDeliveryMode().getCode();
-					ussIdBQty = entry.getQuantity();
+					LOG.error("No  Entries available for Suborder ID:- " + orderModel.getCode());
+					throw new Exception("No  Entries available for Suborder ID:- " + orderModel.getCode());
 				}
 			}
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception while getting parent order deliveryModes with quantity" + e.getMessage());
+			LOG.error("Exception while getting parent order deliveryModes with quantity", e);
+			throw new Exception(e);
 		}
 
 		try
 		{
 			LOG.debug("Checking Delivery Modes with Quantity");
+			LOG.info("ussIdAQty:-  " + ussIdAQty + "  ussIdBQty:-  " + ussIdBQty);
 			if (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
 					&& ussIdAQty.longValue() <= ussIdBQty.longValue())
 			{
@@ -1089,11 +1236,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occurred " + e.getMessage());
+			LOG.error("Exception occurred ", e);
+			throw new Exception(e);
 		}
-		return parentUssid;
+		//return parentUssid;
 	}
-
 
 
 	/**

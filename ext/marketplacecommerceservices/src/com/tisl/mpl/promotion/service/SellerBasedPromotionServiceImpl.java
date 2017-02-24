@@ -89,6 +89,7 @@ public class SellerBasedPromotionServiceImpl implements SellerBasedPromotionServ
 	 * Modify the promotion Fired Message
 	 *
 	 * @param promoCode
+	 * @throws Exception
 	 */
 	@Override
 	public void modifyFiredMessage(final String promoCode) throws Exception
