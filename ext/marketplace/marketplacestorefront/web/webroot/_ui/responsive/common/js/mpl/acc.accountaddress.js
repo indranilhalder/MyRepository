@@ -101,7 +101,37 @@ $(document).ready(function(){
  });
  /*-----------End of Left Nav script -----------------*/
  
+ maxL=120;
+ var bName = navigator.appName;
+ function taLimit(taObj) {
+ 	if (taObj.value.length==maxL) return false;
+ 	return true;
+ }
+
+ function taCount(taObj,Cnt) { 
+	 document.getElementById("erraddressline1").innerHTML = "";
+	 
+ 	objCnt=createObject(Cnt);
+ 	objVal=taObj.value;
+ 	if (objVal.length>maxL) objVal=objVal.substring(0,maxL);
+ 	if (objCnt) {
+ 		if(bName == "Netscape"){	
+ 			objCnt.textContent=maxL-objVal.length;}
+ 		else{objCnt.innerText=maxL-objVal.length;}
+ 	}
+ 
+ 	return true;
+ }
+ function createObject(objId) {
+ 	if (document.getElementById) return document.getElementById(objId);
+ 	else if (document.layers) return eval("document." + objId);
+ 	else if (document.all) return eval("document.all." + objId);
+ 	else return eval("document." + objId);
+ }
+ /**************End of character count********/
+ 
 function editAddress(addressId) {
+	
 	
        var requiredUrl = ACC.config.encodedContextPath+"/my-account/populateAddressDetail";
        var dataString = "&addressId="+addressId;
@@ -115,16 +145,17 @@ function editAddress(addressId) {
     	   contentType : "application/json; charset=utf-8",
     	   success : function(data) {
     		   //TPR-4795 changes
-    		  //var fullAddress=data.line1 +" "+ data.line2 +" "+ data.line3;
     		  		var fullAddress=data.line1;
     		   			if (data.line2) {
     		   				console.log("Inside line2 checking***");
- 		     			   fullAddress = fullAddress +" "+ data.line2;
+ 		     			   fullAddress = fullAddress + data.line2;
     		   			}
     		   			if (data.line3) {
     		   				console.log("Inside line3 checking***");
- 		     			   fullAddress = fullAddress +" "+ data.line3;
+ 		     			   fullAddress = fullAddress + data.line3;
     		   			}
+    		   			var len = fullAddress.length;
+        		   			
        	 	   $('#addressId').val(addressId);
    				$('#firstName').val(data.firstName);
    				$('#lastName').val(data.lastName);
@@ -149,12 +180,17 @@ function editAddress(addressId) {
    				
    				$("#addNewAddress").css("display","none");
    				$("#edit").css("display","block");
+   				
+   				
+   				myLen=document.getElementById("line1").value.length;
+   				$("#myCounter").html((120 - myLen));
     	   },
     	   error : function(data) {
     		   	console.log(data.responseText) 
     	   }
        });
-    } 
+       
+       } 
     
     $(document).ready(function(){    	
     	$("#addNewAddress").css("display","block");

@@ -109,7 +109,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends AddressCreateWidge
 		addresslabel.setParent(addressDiv);
 		final Textbox addressField = createTextbox(addressDiv);
 		addressField.setSclass("address1ForAddressField");
-		addressField.setMaxlength(120);
+		addressField.setMaxlength(40);
 
 		// Creates Address Line2 field
 		final Br br4 = new Br();
@@ -122,7 +122,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends AddressCreateWidge
 		address2label.setParent(address2Div);
 		final Textbox address2Field = createTextbox(address2Div);
 		address2Field.setSclass("address2ForAddressField");
-		address2Field.setMaxlength(30);
+		address2Field.setMaxlength(40);
 
 		// Creates LandMark field
 		final Br br5 = new Br();
@@ -135,7 +135,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends AddressCreateWidge
 		address3label.setParent(address3Div);
 		final Textbox address3Field = createTextbox(address3Div);
 		address3Field.setSclass("address3ForAddressField");
-		address3Field.setMaxlength(30);
+		address3Field.setMaxlength(40);
 
 		// Creates City/District field
 		final Br br6 = new Br();

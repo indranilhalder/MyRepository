@@ -201,7 +201,7 @@
 		</div>
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
-		<formElement:formTextArea idKey="address.line1" labelKey="address.line1" path="line1" areaCSS="textarea" mandatory="true" />
+		<formElement:formTextArea idKey="address.line1"   labelKey="address.line1" path="line1" areaCSS="textarea" mandatory="true" />
 			 <div class="help-block has-error" id="address1Error" style="display: none;">
 			</div>
 			</div>
