@@ -11,6 +11,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -216,7 +217,15 @@ public class SalesOrderXMLUtility
 											&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 									{
 										LOG.debug("Inside Parent order: Pyment Transaction model");
-										salesXMLData.setMerchantCode(oModel.getPaymentProvider());
+										if (MarketplacecommerceservicesConstants.MRUPEE_CODE.equalsIgnoreCase(oModel.getPaymentProvider()))
+										{
+											salesXMLData.setMerchantCode(getConfigurationService().getConfiguration().getString(
+													MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE));
+										}
+										else
+										{
+											salesXMLData.setMerchantCode(oModel.getPaymentProvider());
+										}
 										if (null != oModel.getCode())
 										{
 											payemntrefid = oModel.getCode();
@@ -337,15 +346,18 @@ public class SalesOrderXMLUtility
 					if (null != entry.getMplDeliveryMode() && xmlToFico)
 					{
 						LOG.debug("DeliveryMode Setting into childOrderDataforXml");
-						if (entry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+						if (entry.getMplDeliveryMode().getDeliveryMode().getCode()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
 						{
 							xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.CnC);
 						}
-						if (entry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+						if (entry.getMplDeliveryMode().getDeliveryMode().getCode()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
 						{
 							xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.HD);
 						}
-						if (entry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+						if (entry.getMplDeliveryMode().getDeliveryMode().getCode()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
 						{
 							xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.ED);
 						}
@@ -542,6 +554,14 @@ public class SalesOrderXMLUtility
 	protected SellerBasedPromotionService getSellerBasedPromotionService()
 	{
 		return Registry.getApplicationContext().getBean("sellerBasedPromotionService", SellerBasedPromotionService.class);
+	}
+
+	/**
+	 * @return the configurationService
+	 */
+	protected ConfigurationService getConfigurationService()
+	{
+		return Registry.getApplicationContext().getBean("configurationService", ConfigurationService.class);
 	}
 
 }
