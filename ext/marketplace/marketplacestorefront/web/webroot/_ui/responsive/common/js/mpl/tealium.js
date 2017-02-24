@@ -33,7 +33,21 @@ $(document).ready(
 			promo_id=$("#product_applied_promotion_code").val().replace(/([~!@#$%^&*()-+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '_');
 			}
 			//TPR-672 END
+			//TPR-4726
+			var offerCount = '';
+			if( $('.on-sale').length > 0 ){
+				offerCount =	$('.on-sale').length ;
+			}
 			
+			var newCount = '';
+			if( $('.new').length > 0 ){
+				newCount =		$('.new').length ;
+			}
+		
+			var onlineExclusive='';
+			if($('.online-exclusive').length > 0){
+				onlineExclusive = $('.online-exclusive').length ;
+			}
 
 			
 			// Added for tealium
@@ -276,6 +290,20 @@ $(document).ready(
 							+ $("#search_results").val() + '",';
 						tealiumData += '"search_type":"'		// TPR-666
 							+ $("#search_type").val() + '",';
+						tealiumData += '"out_of_stock_count":"'		// TPR-4722
+							+ $("#out_of_stock_count").val() + '",';
+						if(offerCount != undefined || offerCount !=null){ 
+						tealiumData += '"offer_product_count":"'		// TPR-4726
+							+ offerCount + '",';
+						}
+						if(newCount != undefined || newCount !=null){ 
+							tealiumData += '"new_product_count":"'		// TPR-4726
+								+ newCount + '",';
+							}
+						if(onlineExclusive != undefined || onlineExclusive !=null){ 
+							tealiumData += '"onlineExclusive_product_count":"'		// TPR-4726
+								+ onlineExclusive + '",';
+							}
 						//TPR-430 Start
 						tealiumData += '"product_category":"'
 							+ product_category + '",';
@@ -1048,4 +1076,22 @@ $('#sortOptions1').on('change', function() {
 		"sort_by_value" : value 
 	});
   } 
+})
+//TPR-4725 | quickview
+$(document).on('click','.quick-view-prod-details-link',function(){
+	 if(typeof utag !="undefined"){
+		 utag.link({ link_text : "quick_view_full_details_clicked" , event_type : "quick_view_full_details_clicked" });
+	 }
+})
+//TPR-4727 | add to compare 2nd part
+$(document).on('click','.compareRemoveLink',function(){
+	if(typeof utag !="undefined"){
+		 utag.link({ link_text : "add_to_compare_removed" , event_type : "add_to_compare_removed" });
+	 }	
+})
+//TPR-4727 | add to compare 3rd part
+$(document).on('click','#compareBtn',function(){
+	if(typeof utag !="undefined"){
+		 utag.link({ link_text : "compare_now_clicked" , event_type : "compare_now_clicked" });
+	 }	
 })

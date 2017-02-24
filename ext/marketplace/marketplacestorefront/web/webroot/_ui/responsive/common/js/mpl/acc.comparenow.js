@@ -27,6 +27,10 @@ ACC.comparenow = {
 								var items=2;
 							}
 							//End
+							
+							 if(typeof utag !="undefined"){
+								 utag.link({ link_text : "add_to_compare_clicked" , event_type : "add_to_compare_clicked" });
+							 }
 							if ($(this).prop("checked") == true) {
 								// AJAX CALL
 								$

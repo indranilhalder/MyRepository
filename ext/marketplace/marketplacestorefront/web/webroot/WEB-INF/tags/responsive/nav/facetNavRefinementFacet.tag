@@ -41,6 +41,9 @@ function navigateToPage(queryString,textString)
 <c:if test="${facetData.code ne 'vouchers'}">
 <!-- End  fixed for TISSTRT-615-Fixed -->
 
+
+
+
 <c:if test="${not empty facetData.values && facetData.code == 'inStockFlag'}">
 
 	<c:set var="facetValuesForStock" value="${facetData.values}" />
@@ -84,6 +87,8 @@ function navigateToPage(queryString,textString)
 			<c:if test="${not empty facetData.topValues}">
 				<ul class="facet-list js-facet-top-values active">
 					<c:forEach items="${facetData.topValues}" var="facetValue">
+					
+					
 						<li class="filter-${facetData.code}">
 						
 						<c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
@@ -193,7 +198,13 @@ function navigateToPage(queryString,textString)
 
 
 
-				<c:forEach items="${facetData.values}" var="facetValue">					
+				<c:forEach items="${facetData.values}" var="facetValue">		
+				<!-- TPR-4722 -->
+					<c:if test="${facetValue.name== 'Exclude out of stock'}">
+				            <input type="hidden" id="out_of_stock_count" value="${facetValue.count}"/>
+				     	 </c:if>
+				  <!-- TPR-4722 -->   	 
+							
 				  <c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
 					<li class="filter-${facetData.code}">
 
