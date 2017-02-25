@@ -487,7 +487,7 @@ function focusOnElement() {
 					fetchSellers(data,buyboxSeller);
 					otherSellersCount = data.length;
 					//UF-34 Default Sorting as Price Low to High at the time of loading
-					sortSellers("1");
+					//sortSellers("1");
 					setSellerLimits(1);
 					  var stock_id="stock";
 					  var ussid = "ussid";
@@ -534,7 +534,7 @@ function focusOnElement() {
 		     var aFinalPrice="";
 		     var bFinalPrice="";
 		     //UF-34
-		     var oosSellers = [];
+		     //var oosSellers = [];
 		
 		      sellerDetailsArray.sort(function(a, b){
 		    	  for (var p =0; p <skuPriceArray.length; p++) {  
@@ -552,7 +552,7 @@ function focusOnElement() {
 		});
 		      
 		      //UF-34
-		      for (var sel =0; sel <sellerDetailsArray.length; sel++) { 
+		      /*for (var sel =0; sel <sellerDetailsArray.length; sel++) { 
 					 if(sellerDetailsArray[sel].availableStock < 1) {
 						 oosSellers.push(sellerDetailsArray[sel]);
 					 }
@@ -562,7 +562,7 @@ function focusOnElement() {
 		    	  return oosSellers.indexOf(val) == -1;
 		      });
 		      
-		      sellerDetailsArray = sellerDetailsArray.concat(oosSellers);
+		      sellerDetailsArray = sellerDetailsArray.concat(oosSellers);*/
 		      
 		      fetchSellers(sellerDetailsArray,buyboxSeller)
 			  setSellerLimits(sellerPageCount);
@@ -722,8 +722,8 @@ function focusOnElement() {
 		 var buyboxSeller = $("#ussid").val();
 		 var aFinalPrice="";
 	     var bFinalPrice="";
-	     
-	     var oosSellers = [];
+	     //UF-34
+	     //var oosSellers = [];
 	     
 		 sellerDetailsArray.sort(function(a, b){
 				
@@ -743,7 +743,7 @@ function focusOnElement() {
 		  
 		//UF-34
 	      
-	      for (var sel =0; sel <sellerDetailsArray.length; sel++) { 
+	      /*for (var sel =0; sel <sellerDetailsArray.length; sel++) { 
 				 if(sellerDetailsArray[sel].availableStock < 1) {
 					 oosSellers.push(sellerDetailsArray[sel]);
 				 }
@@ -753,7 +753,7 @@ function focusOnElement() {
 	    	  return oosSellers.indexOf(val) == -1;
 	    	});
 	      
-	      sellerDetailsArray = sellerDetailsArray.concat(oosSellers);
+	      sellerDetailsArray = sellerDetailsArray.concat(oosSellers);*/
 	      
 		  fetchSellers(sellerDetailsArray,buyboxSeller)
 		  setSellerLimits(sellerPageCount);
