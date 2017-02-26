@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="src" path="/platform"/>
+	<classpathentry exported="true" kind="lib" path="resources"/>
+	<classpathentry kind="src" output="eclipsebin/classes" path="src"/>
+	<classpathentry kind="src" output="eclipsebin/web/classes" path="web/src"/>
+	<classpathentry kind="src" output="eclipsebin/classes" path="testsrc"/>
+	<classpathentry kind="src" output="eclipsebin/classes" path="gensrc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/basecommerce"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/omsats"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/omsclient"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/marketplacecommerceservices"/>
+	<classpathentry kind="lib" path="C:/Users/Techouts/Desktop/Tata/ATS/avro-1.7.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Techouts/Desktop/Tata/ATS/kafka-clients-0.9.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Techouts/Desktop/kafkajjars/kafka_2.10-0.8.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Techouts/Desktop/kafkajjars/metrics-core-2.2.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Techouts/Desktop/kafkajjars/scala-library-2.10.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Techouts/Desktop/kafkajjars/spring-boot-1.2.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Techouts/Desktop/kafkajjars/spring-boot-autoconfigure-1.2.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Techouts/Desktop/kafkajjars/spring-boot-starter-integration-1.2.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Techouts/Desktop/kafkajjars/spring-integration-java-dsl-1.1.0.M1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Techouts/Desktop/kafkajjars/spring-integration-kafka-1.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Techouts/Desktop/kafkajjars/zkclient-0.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Techouts/Desktop/kafkajjars/zookeeper-3.3.4.jar"/>
+	<classpathentry kind="output" path="eclipsebin/notused"/>
+</classpath>

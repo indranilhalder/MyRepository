@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>MODULES</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="47.5" y="240.0">mdl-platform</node>
+    <node x="121.05555555555557" y="0.0">mdl-marketplaceatssync</node>
+    <node x="0.0" y="80.0">mdl-omsats</node>
+    <node x="44.0" y="160.0">mdl-omsclient</node>
+    <node x="313.0" y="80.0">mdl-marketplacecommerceservices</node>
+    <node x="212.0" y="160.0">mdl-basecommerce</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="mdl-marketplaceatssync" target="mdl-basecommerce">
+      <point x="26.375" y="15.0" />
+      <point x="252.93055555555557" y="60.0" />
+      <point x="302.5" y="60.0" />
+      <point x="0.0" y="-15.0" />
+    </edge>
+    <edge source="mdl-marketplaceatssync" target="mdl-marketplacecommerceservices">
+      <point x="79.125" y="15.0" />
+      <point x="305.68055555555554" y="50.0" />
+      <point x="451.0" y="50.0" />
+      <point x="0.0" y="-15.0" />
+    </edge>
+    <edge source="mdl-marketplaceatssync" target="mdl-omsats">
+      <point x="-79.125" y="15.0" />
+      <point x="147.43055555555557" y="50.0" />
+      <point x="67.0" y="50.0" />
+      <point x="0.0" y="-15.0" />
+    </edge>
+    <edge source="mdl-marketplaceatssync" target="mdl-omsclient">
+      <point x="-26.375" y="15.0" />
+      <point x="200.18055555555557" y="50.0" />
+      <point x="155.0" y="50.0" />
+      <point x="37.0" y="-15.0" />
+    </edge>
+    <edge source="mdl-omsclient" target="mdl-platform">
+      <point x="0.0" y="15.0" />
+      <point x="0.0" y="-15.0" />
+    </edge>
+    <edge source="mdl-omsats" target="mdl-platform">
+      <point x="-33.5" y="15.0" />
+      <point x="33.5" y="215.0" />
+      <point x="71.0" y="215.0" />
+      <point x="-47.0" y="-15.0" />
+    </edge>
+    <edge source="mdl-omsats" target="mdl-omsclient">
+      <point x="33.5" y="15.0" />
+      <point x="100.5" y="135.0" />
+      <point x="81.0" y="135.0" />
+      <point x="-37.0" y="-15.0" />
+    </edge>
+    <edge source="mdl-basecommerce" target="mdl-platform">
+      <point x="0.0" y="15.0" />
+      <point x="302.5" y="215.0" />
+      <point x="165.0" y="215.0" />
+      <point x="47.0" y="-15.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="294.5" y="235.0" />
+  <SelectedNodes />
+  <Categories />
+</Diagram>
+
