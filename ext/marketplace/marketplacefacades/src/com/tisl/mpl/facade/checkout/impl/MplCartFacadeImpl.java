@@ -2724,10 +2724,20 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 								edd= data.getNextEDD();
 							}
 							if(null != edd) {
+								if(LOG.isDebugEnabled()){
+									LOG.debug("oms responce Edd for cart entry with USSID"+cartEntry.getSelectedUSSID()+" and cart id"+cart.getGuid()+" is"+edd);
+									
+								}
 								String eddDateBetween = getEddDateBetween(cartEntry,edd);
 								if(null != eddDateBetween) {
+									if(LOG.isDebugEnabled()){
+										LOG.debug("Setting EddDateBetween as "+eddDateBetween+"for cartEntry with USSID "+cartEntry.getSelectedUSSID()+"and cart id"+cart.getGuid());
+										
+									}
 									cartEntry.setSddDateBetween(eddDateBetween);
 									modelService.save(cartEntry);
+									modelService.save(cart);
+									modelService.refresh(cart);
 								}
 								try
 								{
@@ -2736,6 +2746,10 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 										SimpleDateFormat parseFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
 										Date dateForEDD=null;
 										dateForEDD = parseFormat.parse(estDeliveryDateAndTime);
+										if(LOG.isDebugEnabled()){
+											LOG.debug("Setting ExpectedDeliveryDate as "+dateForEDD+"for cartEntry with USSID "+cartEntry.getSelectedUSSID()+"and cart id"+cart.getGuid());
+											
+										}
 										cartEntry.setExpectedDeliveryDate(dateForEDD);
 									}
 								}

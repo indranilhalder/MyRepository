@@ -136,26 +136,36 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 		listHead.setParent(listBox);
 		InvReserForDeliverySlotsRequestData deliverySlotsRequestData=new InvReserForDeliverySlotsRequestData();
 		deliverySlotsRequestData.setCartId(cart.getGuid());
-		LOG.debug("calling oms For InvReserForDeliverySlots");
+		if(LOG.isDebugEnabled()){
+			LOG.debug("calling oms For InvReserForDeliverySlots for cart id"+cart.getGuid());
+		}
 		InvReserForDeliverySlotsResponseData deliverySlotsResponseData = new InvReserForDeliverySlotsResponseData();
 		if(null != cart.getIsInventoryChanged() && cart.getIsInventoryChanged()) {
 			 deliverySlotsResponseData=((MarketplaceCheckoutController) widget.getWidgetController()).deliverySlotsRequestDataCallToOms(deliverySlotsRequestData,cart);
 			 if(null !=deliverySlotsResponseData ) {
+				 if(LOG.isDebugEnabled()){
+						LOG.debug("After calling oms For InvReserForDeliverySlots for cart id"+cart.getGuid());
+					}
 				 sessionService.setAttribute(MarketplacecommerceservicesConstants.SCHEDULE_DELIVRY_DATA, deliverySlotsResponseData);
-				// setEddDatebetween(cart, deliverySlotsResponseData);
+				 for (AbstractOrderEntryModel cartEntry : cart.getEntries()) {
+						if(null != cartEntry) {
+							 if(LOG.isDebugEnabled()){
+									LOG.debug("EddDateBetween for cartEntry "+cartEntry.getSelectedUSSID()+" with cart guid "+cart.getGuid()+ " is" +cartEntry.getSddDateBetween());
+									LOG.debug("ExpectedDeliveryDate for cartEntry "+cartEntry.getSelectedUSSID()+" with cart guid "+cart.getGuid()+ " is" +cartEntry.getExpectedDeliveryDate());
+								}
+						}
 			 }
 			 cart.setIsInventoryChanged(Boolean.FALSE);
+			 modelService.save(cart);
+		}
 		}else {
 			 deliverySlotsResponseData= sessionService.getAttribute(MarketplacecommerceservicesConstants.SCHEDULE_DELIVRY_DATA);
 			 if(null == deliverySlotsResponseData) {
-				 deliverySlotsResponseData=((MarketplaceCheckoutController) widget.getWidgetController()).deliverySlotsRequestDataCallToOms(deliverySlotsRequestData,cart); 
-				 if(null != deliverySlotsResponseData) {
-					// setEddDatebetween(cart, deliverySlotsResponseData);
-				 }
+				 deliverySlotsResponseData=((MarketplaceCheckoutController) widget.getWidgetController()).deliverySlotsRequestDataCallToOms(deliverySlotsRequestData,cart); 			
 			 }
 		}
 		
-       
+      
 		boolean eligigleForScheduleSlots = Boolean.FALSE;
 	 	if(null != deliverySlotsResponseData && null != deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()) {
 	 		for(AbstractOrderEntryModel orderEntry: cart.getEntries()) {

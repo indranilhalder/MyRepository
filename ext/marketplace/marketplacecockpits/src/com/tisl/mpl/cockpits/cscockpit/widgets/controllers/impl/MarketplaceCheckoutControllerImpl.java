@@ -760,10 +760,15 @@ public class MarketplaceCheckoutControllerImpl extends
 	public InvReserForDeliverySlotsResponseData deliverySlotsRequestDataCallToOms(
 			InvReserForDeliverySlotsRequestData deliverySlotsRequestData,CartModel cart) {
 		InvReserForDeliverySlotsResponseData omsResponceData = null;
-		try {
-			omsResponceData = mplCartFacade.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData,cart);
-		}catch(Exception e) {
-			LOG.error("Exception while getting the delivery Slots from OMS "+e.getMessage());
+		if(null != cart ){
+			try {
+				if(LOG.isDebugEnabled()){
+					LOG.debug("calling oms For InvReserForDeliverySlots for cart id"+cart.getGuid());
+				}
+				omsResponceData = mplCartFacade.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData,cart);
+			}catch(Exception e) {
+				LOG.error("Exception while getting the delivery Slots from OMS "+e.getMessage());
+			}
 		}
 
 		return omsResponceData;
