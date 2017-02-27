@@ -563,12 +563,20 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				try
 				{
 					LOG.info("CustomOmsShipmentSyncAdapte:::InScan::::" + shipment.getInScan());
-					if (shipment.getInScan() != null && shipment.getInScan().booleanValue()
-							&& !consignmentModel.getIsInscan().booleanValue())
+					if (shipment.getInScan() != null && shipment.getInScan().booleanValue())
+					{
+					if (consignmentModel.getIsInscan() == null)
 					{
 						sendOrderNotification(shipment, consignmentModel, orderModel, shipmentNewStatus);
 						consignmentModel.setIsInscan(Boolean.TRUE);
 						modelService.saveAll(consignmentModel);
+					}
+					else if (!consignmentModel.getIsInscan().booleanValue())
+					{
+						sendOrderNotification(shipment, consignmentModel, orderModel, shipmentNewStatus);
+						consignmentModel.setIsInscan(Boolean.TRUE);
+						modelService.saveAll(consignmentModel);
+					}
 					}
 				}
 				catch (final Exception exception)
