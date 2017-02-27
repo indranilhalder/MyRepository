@@ -31,7 +31,6 @@
 	<input type="hidden" name="q" value="${searchPageData.currentQuery.query.value}"/>
 
 	<input type="hidden" name="pageSize" value="${searchPageData.pagination.pageSize}"/>
-	
 
 		<c:if test="${(searchPageData.pagination.numberOfPages > 1)}">
 			<ul class="pagination mobile">

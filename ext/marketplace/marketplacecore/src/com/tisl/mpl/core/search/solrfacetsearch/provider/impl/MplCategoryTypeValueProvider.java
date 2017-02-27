@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Required;
 
-import reactor.util.StringUtils;
 
 /**
  * @author 361234
@@ -49,7 +48,7 @@ public class MplCategoryTypeValueProvider extends AbstractPropertyFieldValueProv
 
 		String productCategoryType = productModel.getProductCategoryType();
 
-		if (!StringUtils.isEmpty(productCategoryType)) /* CAR-92 : replaced with StringUtils.isEmpty() */
+		if (productCategoryType != null && !productCategoryType.isEmpty())
 		{
 
 			if (productCategoryType.equalsIgnoreCase("Clothing"))
@@ -57,6 +56,17 @@ public class MplCategoryTypeValueProvider extends AbstractPropertyFieldValueProv
 
 				productCategoryType = "Apparel";
 			}
+			else if (productCategoryType.equalsIgnoreCase("Electronics"))
+			{
+
+				productCategoryType = "Electronics";
+
+			}
+			else if (productCategoryType.equalsIgnoreCase("Footwear"))
+			{
+				productCategoryType = "Footwear";
+			}
+
 
 			final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
 

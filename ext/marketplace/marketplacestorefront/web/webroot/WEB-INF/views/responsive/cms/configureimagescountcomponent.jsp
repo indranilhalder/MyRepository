@@ -47,7 +47,7 @@ $(document).ready(function(){
 		<ul class="jcarousel-skin imageListCarousel" style="display:none; position: relative; top: 0; width: 100%;"> 
 			<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLength}">
 			
-				<li id="addiImage${varStatus.index}" class="thumbailItem${varStatus.index +1}"> <!-- For TPR-4687 -->
+				<li id="addiImage${varStatus.index}">
 					<span class="thumb ${(varStatus.index==0)? "active":""}">
 					<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
 						<img src="${container.thumbnail.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	

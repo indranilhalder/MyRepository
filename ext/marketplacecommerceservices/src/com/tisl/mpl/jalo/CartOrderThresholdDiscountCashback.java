@@ -183,13 +183,13 @@ public class CartOrderThresholdDiscountCashback extends GeneratedCartOrderThresh
 
 	/**
 	 * @Description : Verify Channel Data
-	 * @param : SessionContext ctx
+	 * @param : SessionContext arg0
 	 * @return : minimumCategoryValue
 	 */
-	private boolean verifyChannelData(final SessionContext ctx, final AbstractOrder cart)
+	private boolean verifyChannelData(final SessionContext arg0, final AbstractOrder cart)
 	{
 		//The Method validates the Channel through a generic method in Default Promotion Manager
-		final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(ctx,
+		final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(arg0,
 				MarketplacecommerceservicesConstants.CHANNEL);
 		return getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
 	}

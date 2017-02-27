@@ -91,20 +91,18 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 		//				paramPromotionEvaluationContext);
 
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
-		//List<String> excludeManufactureList = null;
-		//List<Product> excludedProductList = null;
+		List<String> excludeManufactureList = null;
+		List<Product> excludedProductList = null;
 		boolean checkChannelFlag = false;
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
-		//excludedProductList = new ArrayList<Product>();
-		//excludeManufactureList = new ArrayList<String>();
+		excludedProductList = new ArrayList<Product>();
+		excludeManufactureList = new ArrayList<String>();
 
-		final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager().findEligibleProductsInBasket(
-				paramSessionContext, paramPromotionEvaluationContext, this, getCategories());
-
+		final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(paramSessionContext,
+				paramPromotionEvaluationContext);
 		final AbstractOrder order = paramPromotionEvaluationContext.getOrder();
-
-		//		GenericUtilityMethods.populateExcludedProductManufacturerList(paramSessionContext, paramPromotionEvaluationContext,
-		//				excludedProductList, excludeManufactureList, restrictionList, this);
+		GenericUtilityMethods.populateExcludedProductManufacturerList(paramSessionContext, paramPromotionEvaluationContext,
+				excludedProductList, excludeManufactureList, restrictionList, this);
 
 		try
 		{
@@ -128,7 +126,8 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 
 				//getting the valid products
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
-						.getValidProdListForBuyXofA(order, paramSessionContext, allowedProductList, restrictionList, null, null); // Adding Eligible Products to List
+						.getValidProdListForBuyXofA(order, paramSessionContext, allowedProductList, restrictionList,
+								excludedProductList, excludeManufactureList, null, null); // Adding Eligible Products to List
 
 				//				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
 				//						.getValidProdListForBuyXofAPromo(order, paramSessionContext, promotionProductList, promotionCategoryList,

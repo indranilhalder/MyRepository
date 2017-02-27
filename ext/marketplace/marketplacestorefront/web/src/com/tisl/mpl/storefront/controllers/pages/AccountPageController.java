@@ -2155,9 +2155,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 	{
 		try
 		{
-			//added for car project: Car:80
-			final OrderModel orderModel = orderModelService.getOrder(orderCode);
-			//added for car project ends
 			final SendTicketRequestData sendTicketRequestData = new SendTicketRequestData();
 			final CustomerData customerData = customerFacade.getCurrentCustomer();
 			if (!(StringUtils.isEmpty(action)) && !(StringUtils.isBlank(action)) && !(StringUtils.isEmpty(orderCode))
@@ -2183,8 +2180,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 					invoiceData.setCustomerEmail(customerData.getDisplayUid());
 					invoiceData.setInvoiceUrl(configurationService.getConfiguration().getString(MessageConstants.DEFAULT_INVOICE_URL));
 					invoiceData.setOrdercode(orderCode);
-					//orderModel added for car project implementation in sendInvoice
-					registerCustomerFacade.sendInvoice(invoiceData, null, orderModel);
+					registerCustomerFacade.sendInvoice(invoiceData, null);
 
 					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.CONF_MESSAGES_HOLDER,
 							MessageConstants.TEXT_ACCOUNT_ORDER_INVOICE_SUCCESS, null);
@@ -2295,8 +2291,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				sendInvoiceData.setOrdercode(orderCode);
 				sendInvoiceData.setTransactionId(transactionId);
 				sendInvoiceData.setLineItemId(lineID);
-				//orderModel added for car project implementation in sendInvoice
-				registerCustomerFacade.sendInvoice(sendInvoiceData, null, orderModel);
+				registerCustomerFacade.sendInvoice(sendInvoiceData, null);
 
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.CONF_MESSAGES_HOLDER,
 						MessageConstants.TEXT_ACCOUNT_ORDER_INVOICE_SUCCESS, null);

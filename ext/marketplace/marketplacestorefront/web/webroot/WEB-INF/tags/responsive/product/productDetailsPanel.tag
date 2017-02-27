@@ -90,16 +90,13 @@ tr.d0 td {
 <input type="hidden" id="pdpBuyboxWinnerSellerID" value=''/>
 <input type="hidden" id="pdpOtherSellerIDs" value=''/>
 <!-- TPR-429 END-->
-<!-- For Data Layer Schema changes -->
-<input type="hidden" id="product_stock_count" value="${product_stock_count}" />
-<input type="hidden" id="out_of_stock" value="${out_of_stock}" />
-<input type="hidden" id="product_discount" value="${product_discount}" />
-<input type="hidden" id="product_discount_percentage" value="${product_discount_percentage}" />
-
 <!-- End Tealium -->
 
 <!-- TISPRM-56 -->
 <input type="hidden" id="product_allVariantsListingId" value="${allVariantsString}"/>
+
+
+
 
 
 <div itemscope itemtype="http://schema.org/Product" class="pdp">
@@ -222,9 +219,8 @@ tr.d0 td {
 			</div>
 			
 			<!--  Added for displaying offer messages other than promotion, TPR-589 -->
-			<!--INC144313502-->
 				 <div>
-					<a class="pdp-promo-title-link" style="display:none">View more</a>
+					<a class="pdp-promo-title-link">View more</a>
 				</div>	
 				
 			<!-- TISPRM-97 ends -->
