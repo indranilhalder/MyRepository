@@ -138,6 +138,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 		{
 
 			put(ORIGINAL_UID, customerModel.getOriginalUid());
+			put(EMAIL, customerModel.getOriginalUid());
 		}
 
 		String websiteUrl = null;
@@ -147,6 +148,8 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 		{
 			put(WEBSITE_URL, websiteUrl);
 		}
+
+
 
 		LOG.info("All the NPSEmailContext data have been set sucessfully in context file>>>>>>>>>>");
 
