@@ -135,7 +135,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -248,7 +248,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -262,7 +262,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -357,9 +357,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
-	 * 
+	 *
 	 * @param subOrderList
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -456,9 +456,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
-	 * 
+	 *
 	 * @param subOrderList
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -516,115 +516,123 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 *              seller specific orders while splitting
 	 * @param orderList
 	 */
-	private void setSuborderTotalAfterOrderSplitting(final List<OrderModel> orderList)
+	//OrderIssues:- Exception handelled
+	private void setSuborderTotalAfterOrderSplitting(final List<OrderModel> orderList) throws InvalidCartException
 	{
-
-		for (final OrderModel sellerOrderList : orderList)
+		try
 		{
-			BigDecimal totalPrice = BigDecimal.valueOf(0);
-			BigDecimal totalPriceWithConv = BigDecimal.valueOf(0);
-			double totalDeliveryPrice = 0D;
-			double totalCartLevelDiscount = 0D;
-			double totalDeliveryDiscount = 0D;
-			double totalPriceForSubTotal = 0D;
-			double totalProductDiscount = 0D;
-			double totalConvChargeForCOD = 0D;
-			double totalCouponDiscount = 0D;
-			for (final AbstractOrderEntryModel entryModelList : sellerOrderList.getEntries())
+			for (final OrderModel sellerOrderList : orderList)
 			{
-				if (entryModelList.getTotalProductLevelDisc() != null && entryModelList.getTotalProductLevelDisc().doubleValue() > 0D)
+				BigDecimal totalPrice = BigDecimal.valueOf(0);
+				BigDecimal totalPriceWithConv = BigDecimal.valueOf(0);
+				double totalDeliveryPrice = 0D;
+				double totalCartLevelDiscount = 0D;
+				double totalDeliveryDiscount = 0D;
+				double totalPriceForSubTotal = 0D;
+				double totalProductDiscount = 0D;
+				double totalConvChargeForCOD = 0D;
+				double totalCouponDiscount = 0D;
+				for (final AbstractOrderEntryModel entryModelList : sellerOrderList.getEntries())
 				{
-					totalProductDiscount += entryModelList.getTotalProductLevelDisc().doubleValue();
-				}
+					if (null != entryModelList.getTotalProductLevelDisc()
+							&& entryModelList.getTotalProductLevelDisc().doubleValue() > 0D)
+					{
+						totalProductDiscount += entryModelList.getTotalProductLevelDisc().doubleValue();
+					}
 
-				if (entryModelList.getCouponValue() != null && entryModelList.getCouponValue().doubleValue() > 0D)
-				{
-					totalCouponDiscount += entryModelList.getCouponValue().doubleValue();
-				}
-
-
-				if (entryModelList.getPrevDelCharge() != null && entryModelList.getPrevDelCharge().doubleValue() > 0D)
-				{
-					totalDeliveryDiscount += entryModelList.getPrevDelCharge().doubleValue()
-							- entryModelList.getCurrDelCharge().doubleValue();
-					LOG.debug("totalDeliveryDiscount:" + totalDeliveryDiscount);
-				}
-				else
-				{
-					LOG.debug("totalDeliveryDiscount is either zero or empty");
-				}
-				if (entryModelList.getConvenienceChargeApportion() != null
-						&& entryModelList.getConvenienceChargeApportion().doubleValue() > 0D)
-				{
-					totalConvChargeForCOD += entryModelList.getConvenienceChargeApportion().doubleValue();
-
-				}
-				else
-				{
-					LOG.debug("ConvenienceChargeApportion is either zero or empty");
-				}
-				//sellerOrderList.setSubtotal(Double.valueOf(totalDeliveryDiscount));
-				if (entryModelList.getBasePrice() != null && entryModelList.getBasePrice().doubleValue() > 0D)
-				{
-					totalPriceForSubTotal += entryModelList.getBasePrice().doubleValue();
-				}
-				sellerOrderList.setSubtotal(Double.valueOf(totalPriceForSubTotal));
+					if (null != entryModelList.getCouponValue() && entryModelList.getCouponValue().doubleValue() > 0D)
+					{
+						totalCouponDiscount += entryModelList.getCouponValue().doubleValue();
+					}
 
 
-				if (entryModelList.getCartLevelDisc() != null && entryModelList.getCartLevelDisc().doubleValue() > 0D)
-				{
+					if (null != entryModelList.getPrevDelCharge() && entryModelList.getPrevDelCharge().doubleValue() > 0D)
+					{
+						totalDeliveryDiscount += entryModelList.getPrevDelCharge().doubleValue()
+								- entryModelList.getCurrDelCharge().doubleValue();
+						LOG.debug("totalDeliveryDiscount:" + totalDeliveryDiscount);
+					}
+					else
+					{
+						LOG.debug("totalDeliveryDiscount is either zero or empty");
+					}
+					if (null != entryModelList.getConvenienceChargeApportion()
+							&& entryModelList.getConvenienceChargeApportion().doubleValue() > 0D)
+					{
+						totalConvChargeForCOD += entryModelList.getConvenienceChargeApportion().doubleValue();
 
-					totalCartLevelDiscount += entryModelList.getCartLevelDisc().doubleValue();
-				}
-				else
-				{
-					LOG.debug("Cart level discount is either NULL or Zero");
-				}
-				LOG.info("Total Cart Level Discount>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + totalCartLevelDiscount);
-				sellerOrderList.setTotalDiscounts(Double.valueOf(totalCartLevelDiscount + totalCouponDiscount));
+					}
+					else
+					{
+						LOG.debug("ConvenienceChargeApportion is either zero or empty");
+					}
+					//sellerOrderList.setSubtotal(Double.valueOf(totalDeliveryDiscount));
+					if (null != entryModelList.getBasePrice() && entryModelList.getBasePrice().doubleValue() > 0D)
+					{
+						totalPriceForSubTotal += entryModelList.getBasePrice().doubleValue();
+					}
+					sellerOrderList.setSubtotal(Double.valueOf(totalPriceForSubTotal));
 
 
-				if (entryModelList.getCurrDelCharge() != null && entryModelList.getCurrDelCharge().doubleValue() > 0D)
-				{
-					totalDeliveryPrice += entryModelList.getCurrDelCharge().doubleValue();
-				}
-				else
-				{
-					LOG.debug("Delivery charge for the entry is either NULL or Zero");
-				}
+					if (null != entryModelList.getCartLevelDisc() && entryModelList.getCartLevelDisc().doubleValue() > 0D)
+					{
 
+						totalCartLevelDiscount += entryModelList.getCartLevelDisc().doubleValue();
+					}
+					else
+					{
+						LOG.debug("Cart level discount is either NULL or Zero");
+					}
+					LOG.info("Total Cart Level Discount>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + totalCartLevelDiscount);
+					sellerOrderList.setTotalDiscounts(Double.valueOf(totalCartLevelDiscount + totalCouponDiscount));
+
+
+					if (null != entryModelList.getCurrDelCharge() && entryModelList.getCurrDelCharge().doubleValue() > 0D)
+					{
+						totalDeliveryPrice += entryModelList.getCurrDelCharge().doubleValue();
+					}
+					else
+					{
+						LOG.debug("Delivery charge for the entry is either NULL or Zero");
+					}
+
+				}
+				sellerOrderList.setDeliveryCost(Double.valueOf(totalDeliveryPrice));
+				//totalPrice = totalPriceForSubTotal + totalConvChargeForCOD + totalDeliveryPrice
+				//		- (totalDeliveryDiscount + totalCartLevelDiscount + totalProductDiscount + totalCouponDiscount);
+				//			totalPrice = BigDecimal.valueOf(totalPriceForSubTotal).add(BigDecimal.valueOf(totalConvChargeForCOD))
+				//					.add(BigDecimal.valueOf(totalDeliveryPrice)).subtract(BigDecimal.valueOf(totalDeliveryDiscount))
+				//					.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
+				//					.subtract(BigDecimal.valueOf(totalCouponDiscount));
+
+				totalPrice = BigDecimal.valueOf(totalPriceForSubTotal)/* .add(BigDecimal.valueOf(totalConvChargeForCOD)) */
+				.add(BigDecimal.valueOf(totalDeliveryPrice))/* .subtract(BigDecimal.valueOf(totalDeliveryDiscount)) */
+				.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
+						.subtract(BigDecimal.valueOf(totalCouponDiscount));
+				totalPriceWithConv = totalPrice.add(BigDecimal.valueOf(totalConvChargeForCOD));
+
+				final DecimalFormat decimalFormat = new DecimalFormat("#.00");
+				totalPrice = totalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+				totalPriceWithConv = totalPriceWithConv.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+
+				//				totalPrice = Double.valueOf(decimalFormat.format(totalPrice)).doubleValue();
+				//				totalConvChargeForCOD = Double.valueOf(decimalFormat.format(totalConvChargeForCOD)).doubleValue();
+				//changed for SONAR fix
+				//totalPrice = Double.parseDouble(decimalFormat.format(totalPrice));
+				totalConvChargeForCOD = Double.parseDouble(decimalFormat.format(totalConvChargeForCOD));
+				sellerOrderList.setTotalPrice(Double.valueOf(totalPrice.doubleValue()));
+				//			sellerOrderList.setTotalPriceWithConv(Double.valueOf(totalPrice.doubleValue()));
+
+				sellerOrderList.setTotalPriceWithConv(Double.valueOf(totalPriceWithConv.doubleValue()));
+				sellerOrderList.setConvenienceCharges(Double.valueOf(totalConvChargeForCOD));
+				modelService.save(sellerOrderList);
 			}
-			sellerOrderList.setDeliveryCost(Double.valueOf(totalDeliveryPrice));
-			//totalPrice = totalPriceForSubTotal + totalConvChargeForCOD + totalDeliveryPrice
-			//		- (totalDeliveryDiscount + totalCartLevelDiscount + totalProductDiscount + totalCouponDiscount);
-			//			totalPrice = BigDecimal.valueOf(totalPriceForSubTotal).add(BigDecimal.valueOf(totalConvChargeForCOD))
-			//					.add(BigDecimal.valueOf(totalDeliveryPrice)).subtract(BigDecimal.valueOf(totalDeliveryDiscount))
-			//					.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
-			//					.subtract(BigDecimal.valueOf(totalCouponDiscount));
-
-			totalPrice = BigDecimal.valueOf(totalPriceForSubTotal)/* .add(BigDecimal.valueOf(totalConvChargeForCOD)) */
-			.add(BigDecimal.valueOf(totalDeliveryPrice))/* .subtract(BigDecimal.valueOf(totalDeliveryDiscount)) */
-			.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
-					.subtract(BigDecimal.valueOf(totalCouponDiscount));
-			totalPriceWithConv = totalPrice.add(BigDecimal.valueOf(totalConvChargeForCOD));
-
-			final DecimalFormat decimalFormat = new DecimalFormat("#.00");
-			totalPrice = totalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-			totalPriceWithConv = totalPriceWithConv.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-
-			//				totalPrice = Double.valueOf(decimalFormat.format(totalPrice)).doubleValue();
-			//				totalConvChargeForCOD = Double.valueOf(decimalFormat.format(totalConvChargeForCOD)).doubleValue();
-			//changed for SONAR fix
-			//totalPrice = Double.parseDouble(decimalFormat.format(totalPrice));
-			totalConvChargeForCOD = Double.parseDouble(decimalFormat.format(totalConvChargeForCOD));
-			sellerOrderList.setTotalPrice(Double.valueOf(totalPrice.doubleValue()));
-			//			sellerOrderList.setTotalPriceWithConv(Double.valueOf(totalPrice.doubleValue()));
-
-			sellerOrderList.setTotalPriceWithConv(Double.valueOf(totalPriceWithConv.doubleValue()));
-			sellerOrderList.setConvenienceCharges(Double.valueOf(totalConvChargeForCOD));
-			modelService.save(sellerOrderList);
 		}
-
+		catch (final Exception e)
+		{
+			LOG.error(" error occured while calculating subtotal from setSuborderTotalAfterOrderSplitting", e);
+			throw new InvalidCartException(e);
+		}
 	}
 
 
@@ -970,9 +978,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 * 
+	 *
 	 * @param orderList
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	// OrderIssues:- InvalidCartException exception throws
@@ -1342,6 +1350,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @return List<OrderModel>
 	 *
 	 */
+	//OrderIssues:-
 	private List<OrderModel> getSubOrders(final OrderModel orderModel) throws InvalidCartException //TISPRD-958
 	{
 		/*
@@ -1353,11 +1362,23 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		{
 			final Map<String, SellerInformationModel> cachedSellerInfoMap = new HashMap<String, SellerInformationModel>();
 			final Map<String, List<AbstractOrderEntryModel>> sellerEntryMap = createSellerEntryMap(orderModel, cachedSellerInfoMap);
-
-			for (final Map.Entry<String, List<AbstractOrderEntryModel>> sellerEntry : sellerEntryMap.entrySet())
+			if (MapUtils.isNotEmpty(sellerEntryMap))
 			{
-				subOrders.add(createSubOrders(orderModel, sellerEntry.getValue(), cachedSellerInfoMap, sellerEntry.getKey()));
+				for (final Map.Entry<String, List<AbstractOrderEntryModel>> sellerEntry : sellerEntryMap.entrySet())
+				{
+					subOrders.add(createSubOrders(orderModel, sellerEntry.getValue(), cachedSellerInfoMap, sellerEntry.getKey()));
+				}
 			}
+			else
+			{
+				LOG.error("sellerEntryMap is Empty from getSubOrders");
+				throw new InvalidCartException("sellerEntryMap is Empty from getSubOrders");
+			}
+		}
+		catch (final EtailNonBusinessExceptions ex) //TISPRD-958
+		{
+			LOG.error("EtailNonBusinessExceptions occured while getSubOrders ", ex);
+			throw new InvalidCartException(ex);
 		}
 		catch (final Exception ex) //TISPRD-958
 		{
@@ -1376,8 +1397,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 *
 	 *
 	 */
+	//OrderIssues:- throws added
 	private Map<String, List<AbstractOrderEntryModel>> createSellerEntryMap(final OrderModel orderModel,
-			final Map<String, SellerInformationModel> cachedSellerInfoMap)
+			final Map<String, SellerInformationModel> cachedSellerInfoMap) throws EtailNonBusinessExceptions
 	{
 		final Map<String, List<AbstractOrderEntryModel>> sellerEntryMap = new HashMap<String, List<AbstractOrderEntryModel>>();
 		final Collection<AbstractOrderEntryModel> entryModelList = getCloneAbstractOrderStrategy().cloneEntries(
@@ -1388,7 +1410,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		{
 			for (final AbstractOrderEntryModel abstractOrderEntryModel : entryModelList)
 			{
-				LOG.info("Cloned Entries for sub Order:- " + abstractOrderEntryModel.getSelectedUSSID());
+				LOG.info("Cloned Entries for Order:- " + orderModel.getCode() + "  USSID:- "
+						+ abstractOrderEntryModel.getSelectedUSSID());
 
 				final SellerInformationModel sellerEntry = getMplSellerInformationService().getSellerDetail(
 						abstractOrderEntryModel.getSelectedUSSID());
@@ -1402,11 +1425,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 					if (sellerEntryMap.get(sellerEntry.getSellerID()) != null)
 					{
+						LOG.info("Entry USSID  added in sellerEntryMap:- " + abstractOrderEntryModel.getSelectedUSSID());
 						sellerEntryMap.get(sellerEntry.getSellerID()).add(abstractOrderEntryModel);
 					}
 					else
 					{
 						final List<AbstractOrderEntryModel> subOrderEntryList = new ArrayList<AbstractOrderEntryModel>();
+						LOG.info("Entry USSID  added in sellerEntryMap:- " + abstractOrderEntryModel.getSelectedUSSID());
 						subOrderEntryList.add(abstractOrderEntryModel);
 						sellerEntryMap.put(sellerEntry.getSellerID(), subOrderEntryList);
 					}
@@ -1440,7 +1465,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		Double prevDelCharge = Double.valueOf(0.0);
 		final OrderModel clonedSubOrder = getCloneAbstractOrderStrategy().clone(null, null, orderModel, generateSubOrderCode(),
 				OrderModel.class, OrderEntryModel.class);
+
+		LOG.debug("Sub Order Clone:- Suborder ID:- " + clonedSubOrder.getCode());
+
 		getModelService().save(clonedSubOrder);
+
+		LOG.debug("Sub Order Saved in DB:- Suborder ID:- " + clonedSubOrder.getCode());
+
 		if (CollectionUtils.isNotEmpty(clonedSubOrder.getEntries()))
 		{
 			getModelService().removeAll(clonedSubOrder.getEntries());
@@ -1449,6 +1480,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 		clonedSubOrder.setType("SubOrder");
 		clonedSubOrder.setParentReference(orderModel);
+
+		//OrderIssues:- Refresh added before saving suborder
+		getModelService().refresh(clonedSubOrder);
 		getModelService().save(clonedSubOrder);
 
 		//Blocked for TISPRO-288
@@ -1463,7 +1497,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//TISEE-893
 			deliveryCharge = abstractOrderEntryModel.getCurrDelCharge();
 			LOG.debug(">> Order spliting : before apportoning delivery cost " + deliveryCharge);
-			if (abstractOrderEntryModel.getIsBOGOapplied().booleanValue())
+			if (null != abstractOrderEntryModel.getIsBOGOapplied() && abstractOrderEntryModel.getIsBOGOapplied().booleanValue())
 			{
 				deliveryCharge = deliveryCharge.doubleValue() > 0.0 ? Double.valueOf(deliveryCharge.doubleValue()
 						/ abstractOrderEntryModel.getQualifyingCount().doubleValue()) : deliveryCharge;
