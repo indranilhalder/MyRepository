@@ -354,14 +354,14 @@
 								 <c:choose>
 									<c:when test="${mrpPriceValue.value > 0}">
 										<span class="priceFormat">
-											<span id="mrpprice_${product.code}"> ${mrpPriceValue.formattedValue}</span></span>
+											<span id="mrpprice_${product.code}"> ${mrpPriceValue.formattedValueNoDecimal}</span></span>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${displayFreeForZero}">
 											<spring:theme code="text.free" text="FREE" />
 										</c:if>
 										<c:if test="${not displayFreeForZero}">
-											<%-- <span class="priceFormat">${product.price.formattedValue}</span> --%>
+											<%-- <span class="priceFormat">${product.price.formattedValueNoDecimalNoDecimal}</span> --%>
 										</c:if>
 									</c:otherwise>
 								</c:choose>
@@ -371,14 +371,14 @@
 								<c:choose>
 									<c:when test="${priceValue.value > 0}">
 										<span class="priceFormat">
-											<span id="price_${product.code}"> ${priceValue.formattedValue}</span></span>
+											<span id="price_${product.code}"> ${priceValue.formattedValueNoDecimal}</span></span>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${displayFreeForZero}">
 											<spring:theme code="text.free" text="FREE" />
 										</c:if>
 										<c:if test="${not displayFreeForZero}">
-											<%-- <span class="priceFormat">${product.price.formattedValue}</span> --%>
+											<%-- <span class="priceFormat">${product.price.formattedValueNoDecimal}</span> --%>
 										</c:if>
 									</c:otherwise>
 								</c:choose>
@@ -386,7 +386,7 @@
 							<!-- TISCR-405: set the savings for the current currency -->
 							<c:if test="${savValue.value > 0}">																		
 							<p class="savings">																				
-							<%-- <span id="savings_${product.code}">  You save ${product.savingsOnProduct.formattedValue} </span> --%>
+							<%-- <span id="savings_${product.code}">  You save ${product.savingsOnProduct.formattedValueNoDecimal} </span> --%>
 							 <span id="savings_${product.code}">  ( -${savValue.value}% ) </span>
 							</p>
 							</c:if>
@@ -400,14 +400,14 @@
 							<c:choose>
 									<c:when test="${mrpPriceValue.value > 0}">
 										<span class="priceFormat">
-										<span id="priceEqual_${product.code}">${mrpPriceValue.formattedValue}</span></span>
+										<span id="priceEqual_${product.code}">${mrpPriceValue.formattedValueNoDecimal}</span></span>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${displayFreeForZero}">
 											<spring:theme code="text.free" text="FREE" />
 										</c:if>
 										<c:if test="${not displayFreeForZero}">
-											<%-- <span class="priceFormat">${product.price.formattedValue}</span> --%>
+											<%-- <span class="priceFormat">${product.price.formattedValueNoDecimal}</span> --%>
 										</c:if>
 									</c:otherwise>
 								</c:choose>
@@ -425,14 +425,14 @@
 								 <c:choose>
 									<c:when test="${product.productMRP.value > 0}">
 										<span class="priceFormat">
-											<span id="mrpprice_${product.code}"> ${product.productMRP.formattedValue}</span></span>
+											<span id="mrpprice_${product.code}"> ${product.productMRP.formattedValueNoDecimal}</span></span>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${displayFreeForZero}">
 											<spring:theme code="text.free" text="FREE" />
 										</c:if>
 										<c:if test="${not displayFreeForZero}">
-											<%-- <span class="priceFormat">${product.price.formattedValue}</span> --%>
+											<%-- <span class="priceFormat">${product.price.formattedValueNoDecimal}</span> --%>
 										</c:if>
 									</c:otherwise>
 								</c:choose>
@@ -442,14 +442,14 @@
 								<c:choose>
 									<c:when test="${product.price.value > 0}">
 										<span class="priceFormat">
-											<span id="price_${product.code}"> ${product.price.formattedValue}</span></span>
+											<span id="price_${product.code}"> ${product.price.formattedValueNoDecimal}</span></span>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${displayFreeForZero}">
 											<spring:theme code="text.free" text="FREE" />
 										</c:if>
 										<c:if test="${not displayFreeForZero}">
-											<%-- <span class="priceFormat">${product.price.formattedValue}</span> --%>
+											<%-- <span class="priceFormat">${product.price.formattedValueNoDecimal}</span> --%>
 										</c:if>
 									</c:otherwise>
 								</c:choose>
@@ -457,7 +457,7 @@
 							<!-- TISCR-405: set the savings for the current currency -->
 							<c:if test="${product.savingsOnProduct.value > 0}">																		
 							<p class="savings">																				
-							<%-- <span id="savings_${product.code}">  You save ${product.savingsOnProduct.formattedValue} </span> --%>
+							<%-- <span id="savings_${product.code}">  You save ${product.savingsOnProduct.formattedValueNoDecimal} </span> --%>
 							 <span id="savings_${product.code}">  ( -${product.savingsOnProduct.value}% ) </span>
 							</p>
 							</c:if>
@@ -471,14 +471,14 @@
 							<c:choose>
 									<c:when test="${product.productMRP.value > 0}">
 										<span class="priceFormat">
-										<span id="priceEqual_${product.code}">${product.productMRP.formattedValue}</span></span>
+										<span id="priceEqual_${product.code}">${product.productMRP.formattedValueNoDecimal}</span></span>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${displayFreeForZero}">
 											<spring:theme code="text.free" text="FREE" />
 										</c:if>
 										<c:if test="${not displayFreeForZero}">
-											<%-- <span class="priceFormat">${product.price.formattedValue}</span> --%>
+											<%-- <span class="priceFormat">${product.price.formattedValueNoDecimal}</span> --%>
 										</c:if>
 									</c:otherwise>
 								</c:choose>
