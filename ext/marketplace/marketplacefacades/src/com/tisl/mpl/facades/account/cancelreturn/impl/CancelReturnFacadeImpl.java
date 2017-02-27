@@ -1315,7 +1315,19 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			//set ECOM request prefix as E to for COMM triggered Ticket
 			prefixableKeyGenerator.setPrefix(MarketplacecommerceservicesConstants.TICKETID_PREFIX_E);
 			sendTicketRequestData.setEcomRequestId(prefixableKeyGenerator.generate().toString());
-			sendTicketRequestData.setReturnPickupDate(returnInfoData.getReturnPickupDate());
+			if(null != returnInfoData.getReturnPickupDate()) {
+				try {
+					String returnPickUpdate = returnInfoData.getReturnPickupDate();
+					returnPickUpdate=returnPickUpdate.concat("00:00:00");
+					final SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMddhh:mm:ss");
+					final SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+					Date da = format1.parse(returnPickUpdate);
+					String date =format2.format(da);
+					sendTicketRequestData.setReturnPickupDate(date);
+				}catch(Exception e) {
+					LOG.error("Exception occurred while setting ReturnPickupDate");
+				}
+			}
 			sendTicketRequestData.setTimeSlotFrom(returnInfoData.getTimeSlotFrom());
 			sendTicketRequestData.setTimeSlotTo(returnInfoData.getTimeSlotTo());
 			sendTicketRequestData.setCustomerID(customerData.getUid());
