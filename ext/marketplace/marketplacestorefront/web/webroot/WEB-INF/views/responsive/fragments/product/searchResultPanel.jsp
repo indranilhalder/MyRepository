@@ -5,7 +5,9 @@
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
+<input type="hidden" name="noOfPages" value="${searchPageData.pagination.numberOfPages}"/>
 <c:if test="${searchPageData.pagination.totalNumberOfResults ne 0}">
+
 	<div class="left-block">
 
 		<script>
@@ -75,7 +77,7 @@
 		supportShowAll="${isShowAllAllowed}"
 		searchPageData="${searchPageData}"
 		searchUrl="${searchPageData.currentQuery.url}"
-		numberPagesShown="${numberPagesShown}" />
+		numberPagesShown="${numberPagesShown}" hide="true"/>
 
 	<!-- Hero product pane -->
 	<c:if test="${not empty heroProducts}">
@@ -91,7 +93,7 @@
 
 	<!-- Subtracted normal product pane -->
 
-	<ul class="product-listing product-grid">
+	<ul class="product-listing product-grid lazy-grid-facet">
 		<c:forEach items="${normalProducts}" var="product"
 			varStatus="status">
 			<product:productListerGridItem product="${product}" />
@@ -120,7 +122,7 @@
 		supportShowAll="${isShowAllAllowed}"
 		searchPageData="${searchPageData}"
 		searchUrl="${searchPageData.currentQuery.url}"
-		numberPagesShown="${numberPagesShown}" />
+		numberPagesShown="${numberPagesShown}" hide="true"/>
 </div>
 <script>
 	$(document).ready(function(){

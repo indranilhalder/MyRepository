@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.PcmProductVariantModel;
+import com.tisl.mpl.util.MplBuyBoxUtility;
 
 
 /**
@@ -38,6 +39,25 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 
 	@Autowired
 	private ConfigurationService configurationService;
+
+	private MplBuyBoxUtility mplBuyBoxUtility;
+
+	/**
+	 * @return the mplBuyBoxUtility
+	 */
+	public MplBuyBoxUtility getMplBuyBoxUtility()
+	{
+		return mplBuyBoxUtility;
+	}
+
+	/**
+	 * @param mplBuyBoxUtility
+	 *           the mplBuyBoxUtility to set
+	 */
+	public void setMplBuyBoxUtility(final MplBuyBoxUtility mplBuyBoxUtility)
+	{
+		this.mplBuyBoxUtility = mplBuyBoxUtility;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -69,26 +89,32 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 
 			String variantColor = null;
 			String variantColorHexCode = null;
+			String pcmSwatchVariantColor = null;
+			String pcmVariantColour = null;
+
 			//Fetch colors in all the Variants
 			for (final VariantProductModel pcmProductVariantModel : pcmVariantModel.getBaseProduct().getVariants())
 			{
 
 				final PcmProductVariantModel pcmSwatchVariantModel = (PcmProductVariantModel) pcmProductVariantModel;
 
-				if (pcmSwatchVariantModel.getColour() != null && pcmVariantModel.getColour() != null)
+				pcmSwatchVariantColor = mplBuyBoxUtility.getVariantColour(pcmSwatchVariantModel);
+				pcmVariantColour = mplBuyBoxUtility.getVariantColour(pcmVariantModel);
+
+				if (pcmSwatchVariantColor != null && pcmVariantColour != null)
 				{
 
-					if (!pcmSwatchVariantModel.getColour().equalsIgnoreCase(pcmVariantModel.getColour()))
+					if (!pcmSwatchVariantColor.equalsIgnoreCase(pcmVariantColour))
 					{
 						variantColorHexCode = pcmSwatchVariantModel.getColourHexCode();
 
 						if (pcmSwatchVariantModel.getColourHexCode() == null || pcmSwatchVariantModel.getColourHexCode().isEmpty())
 						{
-							variantColor = getColorWithHexCode(pcmSwatchVariantModel.getColour().toLowerCase());
+							variantColor = getColorWithHexCode(pcmSwatchVariantColor.toLowerCase());
 						}
 						else
 						{
-							variantColor = StringUtils.capitalize(pcmSwatchVariantModel.getColour()) + "_"
+							variantColor = StringUtils.capitalize(pcmSwatchVariantColor) + "_"
 									+ (variantColorHexCode.contains("#") ? variantColorHexCode.replace("#", "") : variantColorHexCode);
 						}
 						variantColor = variantColor + "||" + pcmSwatchVariantModel.getCode();

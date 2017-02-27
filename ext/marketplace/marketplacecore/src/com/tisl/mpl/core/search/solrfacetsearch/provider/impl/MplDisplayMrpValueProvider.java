@@ -28,6 +28,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.util.MplBuyBoxUtility;
@@ -48,7 +49,8 @@ public class MplDisplayMrpValueProvider extends AbstractPropertyFieldValueProvid
 	@Resource
 	private BuyBoxService buyBoxService;
 	private PriceDataFactory priceDataFactory;
-	public static final String INR = "INR";
+
+	//public static final String INR = "INR";
 
 	protected PriceDataFactory getPriceDataFactory()
 	{
@@ -63,7 +65,7 @@ public class MplDisplayMrpValueProvider extends AbstractPropertyFieldValueProvid
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -196,7 +198,7 @@ public class MplDisplayMrpValueProvider extends AbstractPropertyFieldValueProvid
 	public PriceData formPriceData(final Double price)
 	{
 
-		return priceDataFactory.create(PriceDataType.BUY, new BigDecimal(price.doubleValue()), INR);
+		return priceDataFactory.create(PriceDataType.BUY, new BigDecimal(price.doubleValue()), MarketplaceCoreConstants.INR);
 	}
 
 	/**

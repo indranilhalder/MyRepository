@@ -2327,6 +2327,8 @@ public class CartsController extends BaseCommerceController
 		String delistMessage = MarketplacewebservicesConstants.EMPTY;
 		List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
+		//CAR-57
+		List<PinCodeResponseData> pinCodeRes = null;
 		try
 		{
 			if (userFacade.isAnonymousUser())
@@ -2359,8 +2361,8 @@ public class CartsController extends BaseCommerceController
 					{
 						//gwlpList = productDetails(cartModel, cartData, aoem, true, pincode, true, cartId);
 						LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + postalCode);
-						final List<PinCodeResponseData> pinCodeRes = mplCartWebService.checkPinCodeAtCart(cartDataOrdered, cartModel,
-								postalCode);
+						//CAR-57
+						pinCodeRes = mplCartWebService.checkPinCodeAtCart(cartDataOrdered, cartModel, postalCode);
 						deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes, cartModel);
 						LOG.debug("************ Mobile webservice DeliveryModeData Map Mobile *******" + deliveryModeDataMap);
 					}
@@ -2373,11 +2375,13 @@ public class CartsController extends BaseCommerceController
 				/* Product Details */
 				if (StringUtils.isNotEmpty(postalCode))
 				{
-					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, true, false);
+					//CAR-57
+					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, true, false, pinCodeRes);
 				}
 				else
 				{
-					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, false, false);
+					//CAR-57
+					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, false, false, pinCodeRes);
 				}
 
 				cartDetailsData.setProducts(gwlpList);
@@ -3015,8 +3019,9 @@ public class CartsController extends BaseCommerceController
 				}
 				//	final UserModel user = userService.getUserForUID(mplCustData.getUid());
 				cartModel = commerceCartService.getCartForGuidAndSiteAndUser(null, baseSiteService.getCurrentBaseSite(), user);
-
-				getWishListWsDTO = mplCartFacade.getTopTwoWishlistForUser(user, pincode, cartModel);
+				//final CartData cartData = getSessionCart();
+				final CartData cartData = mplExtendedCartConverter.convert(cartModel);
+				getWishListWsDTO = mplCartFacade.getTopTwoWishlistForUser(user, pincode, cartData);
 				if (null != getWishListWsDTO)
 				{
 					if (null != getWishListWsDTO.getStatus()

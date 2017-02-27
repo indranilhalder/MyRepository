@@ -23,134 +23,165 @@ function innerLazyLoad(options) {
             }
         }
     });
-    if(initPageLoad){//TODO: duplicate loading prevention
-    	//$('ul.product-listing.product-grid').eq(2).html(gridHTML).hide().fadeIn(500);
-		$('ul.product-listing.product-grid.lazy-grid').html(gridHTML).hide().fadeIn(500);
-    	initPageLoad = false;
-    }else{
-    	//$('ul.product-listing.product-grid').eq(2).append(gridHTML);
-		$('ul.product-listing.product-grid.lazy-grid').append(gridHTML);
+    if (initPageLoad) { //TODO: duplicate loading prevention
+        //$('ul.product-listing.product-grid').eq(2).html(gridHTML).hide().fadeIn(500);
+        $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list').html(gridHTML).hide().fadeIn(500);
+        initPageLoad = false;
+    } else {
+        //$('ul.product-listing.product-grid').eq(2).append(gridHTML);
+        $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list').append(gridHTML);
     }
-    
-    
     deleteArraySet(productItemArray);
+    if(typeof(options)!='undefined' && options.isSerp){
+    	totalNoOfPages = $('input[name=noOfPages]').val();
+        totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
+    }
 }
 
 function deleteArraySet(productItemArray) {
     if (productItemArray.length != 0) {
         for (i = 0; i <= innerRecordSize; i++) {
-            productItemArray.shift();
-			recordsLoadedCount++;
+        	productItemArray.shift();
+        }
+        //for serp
+        if($('ul.product-listing.product-grid').length==0){
+        	recordsLoadedCount = $('.product-list').find('li.product-item').length;
+        }else{
+        	recordsLoadedCount = $('.product-listing.product-grid.lazy-grid').find('li.product-item').length;
         }
     }
-    console.log('Availabe blocks ' + productItemArray.length +' Record count == '+recordsLoadedCount);
+    console.log('Availabe blocks ' + productItemArray.length + ' Record count == ' + recordsLoadedCount);
 }
 
 function getProductSetData() {
-	
-	
-	var pathName = window.location.pathname; 
-	var query = window.location.search;
-	if (pageNoPagination <= totalNoOfPages) {
-		
-		//url with page no occourance found.
-    	if(/page-[0-9]+/.test(pathName)){
-    		var currentPageNo = pathName.match(/page-[0-9]+/);
-			
-    		currentPageNo = currentPageNo[0].split("-");
-			console.log(currentPageNo);
-    		currentPageNo = parseInt(currentPageNo[1]);
-    		if(directPaginatedLoad){
-				directPaginatedLoad = false;
-			}else{
-				currentPageNo++; // TODO: replace the state 
-			}
-    		if(currentPageNo <= totalNoOfPages){
-    			ajaxUrl = pathName.replace(/page-[0-9]+/,'page-'+currentPageNo);
-				var nextPaginatedAjaxUrl = pathName.replace(/page-[0-9]+/,'page-'+currentPageNo);
-    			if(query){
-    				ajaxUrl = ajaxUrl + query;
-					nextPaginatedAjaxUrl = nextPaginatedAjaxUrl + query;
-    			}
-    			window.history.replaceState({},"",nextPaginatedAjaxUrl);
-    		}
-    	}else{ // if no url with page no occourance found.
-    		if (pageNoPagination <= totalNoOfPages) {
-    			ajaxUrl = pathName + '/page-' + pageNoPagination;
-    			var nextPaginatedAjaxUrl = pathName + '/page-' + pageNoPagination;
-				pageNoPagination++; // TODO: replace the state 	
-    			if (query) {
-    				ajaxUrl = ajaxUrl + query;
-					nextPaginatedAjaxUrl = nextPaginatedAjaxUrl + query;
+
+
+    var pathName = window.location.pathname;
+    var query = window.location.search;
+    if (pageNoPagination <= totalNoOfPages) {
+
+        //url with page no occourance found.
+        if (/page-[0-9]+/.test(pathName)) {
+            var currentPageNo = pathName.match(/page-[0-9]+/);
+
+            currentPageNo = currentPageNo[0].split("-");
+            console.log(currentPageNo);
+            currentPageNo = parseInt(currentPageNo[1]);
+            if (directPaginatedLoad) {
+                directPaginatedLoad = false;
+            } else {
+                currentPageNo++; 
+            }
+            if (currentPageNo <= totalNoOfPages) {
+                ajaxUrl = pathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+                var nextPaginatedAjaxUrl = pathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+                if (query) {
+                    ajaxUrl = ajaxUrl + query;
+                    nextPaginatedAjaxUrl = nextPaginatedAjaxUrl + query;
                 }
-				window.history.replaceState({},"",nextPaginatedAjaxUrl);
-    		}
-    	}
-		
-		   $.ajax({
-    	            url: ajaxUrl,
-    	            data:{pageSize:24,q:''},
-					beforeSend: function(){
-						$('ul.product-listing.product-grid.lazy-grid').after('<p class="loadingLazyPagination" style="color:red;text-align:center;"><strong>Loading...</strong></p>');
-					},
-    	            success: function(x) {
-    	                var filtered = $.parseHTML(x);
-    	                var ulProduct = $(filtered).find('ul.product-listing.product-grid');
-    	                productItemArray = [];
-    	                $(ulProduct).find('li.product-item').each(function() {
-    	                    productItemArray.push($(this))
-    	                });
-    	            },
-    	            complete: function() {
-    	                //$('#loadMorePagination').val('LOAD MORE');
-    	                innerLazyLoad();
-						$('.loadingLazyPagination').remove();
-    	            }
-    	        });
-	}
-    	
+                window.history.replaceState({}, "", nextPaginatedAjaxUrl);
+            }
+        } else { // if no url with page no occourance found.
+            if (pageNoPagination <= totalNoOfPages) {
+                ajaxUrl = pathName.replace(/[/]$/,"") + '/page-' + pageNoPagination;
+                pageNoPagination++; // TODO: replace the state 	
+                
+                if($('ul.product-listing.product-grid').length==0){//for serp initial page 
+                	ajaxUrl = ajaxUrl + '?q='+findGetParameter('text')+':relevance:isLuxuryProduct:false';
+            	}else if(query){
+            		ajaxUrl = ajaxUrl + query;
+            	}
+                var nextPaginatedAjaxUrl = ajaxUrl;
+                window.history.replaceState({}, "", nextPaginatedAjaxUrl);
+                directPaginatedLoad =false;
+            }
+        }
+
+        $.ajax({
+            url: ajaxUrl,
+            data: {
+                pageSize: 24,
+                q: ''
+            },
+            beforeSend: function() {
+                var staticHost = $('#staticHost').val();
+                $('ul.product-listing.product-grid.lazy-grid,ul.product-list').after('<p class="lazyLoadPagination" style="text-align: center;margin: 5px 0;font-size: 18px;">Loading...<img src="' + staticHost + '/_ui/responsive/common/images/spinner.gif" class="spinner" style="margin-left:5px;"></p>');
+            },
+            success: function(x) {
+                var filtered = $.parseHTML(x);
+                var ulProduct = null;
+                //for serp
+                if($('ul.product-listing.product-grid').length==0){
+                	 ulProduct = $(filtered).find('ul.product-list');
+                }else{
+                	 ulProduct = $(filtered).find('ul.product-listing.product-grid');
+                }
+                productItemArray = [];
+                
+                $(ulProduct).find('li.product-item').each(function() {
+                    productItemArray.push($(this))
+                });
+            },
+            complete: function() {
+                //$('#loadMorePagination').val('LOAD MORE');
+            	console.log(productItemArray);
+                innerLazyLoad();
+                $('.lazyLoadPagination').remove();
+            }
+        });
+    }
+
 }
 $(document).ready(function() {
-//js hide will be changed after jstl changes
-$('.pageSizeForm').remove();
-$('.bottom-pagination').remove();
-$('.paginationForm').remove();
     //set the total no of pages 
     totalNoOfPages = $('input[name=noOfPages]').val();
     totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
-	
-    if($("#isCategoryPage").val() == 'true'){
-		getProductSetData();
-    $(window).on('scroll', function() {
-        if ($('.lazy-reached').length != 0) {
-            var hT = $('.lazy-reached').offset().top,
-                hH = $('.lazy-reached').outerHeight(),
-                wH = $(window).height(),
-                wS = $(this).scrollTop();
-            // console.log((hT - wH), wS);
-            if (wS > (hT + hH - wH)) {
-				$('.lazy-reached').attr('class', 'product-item');
-				if((recordsLoadedCount % loadMoreCount)==0){
-					$('.loadMorePageButton').remove();
-					$('ul.product-listing.product-grid.lazy-grid').after('<a href="#nogo" class="loadMorePageButton"><div class="list_title"><h1>Load More</h1></div></a>');
-				}else{
-                if (productItemArray.length == 0 ) { //TODO: check if category page 
-                	//window.history.replaceState({},"",ajaxUrl);
-                	getProductSetData();
-                }else{
-					innerLazyLoad({
-                    effect: true
-                });
-				}
-				}
+
+    //if ($("#isCategoryPage").val() == 'true') {
+        getProductSetData();
+        $(window).on('scroll', function() {
+            if ($('.lazy-reached').length != 0) {
+                var hT = $('.lazy-reached').offset().top,
+                    hH = $('.lazy-reached').outerHeight(),
+                    wH = $(window).height(),
+                    wS = $(this).scrollTop();
+                // console.log((hT - wH), wS);
+                if (wS > (hT + hH - wH)) {
+                    $('.lazy-reached').attr('class', 'product-item');
+                    if ((recordsLoadedCount % loadMoreCount) == 0) {
+                        $('.loadMorePageButton').remove();
+                        $('ul.product-listing.product-grid.lazy-grid,ul.product-list').after('<button class="loadMorePageButton" style="background: #a9143c;color: #fff;margin: 5px auto;font-size: 12px;height: 40px;padding: 9px 18px;width: 250px;">Load More</button>');
+                    } else {
+                        if (productItemArray.length == 0) { //TODO: check if category page 
+                            //window.history.replaceState({},"",ajaxUrl);
+                            getProductSetData();
+                        } else {
+                            innerLazyLoad({
+                                effect: true
+                            });
+                        }
+                    }
+                }
             }
-        }
-    });
-	// listner for load more
-	$(document).on('click','.loadMorePageButton',function(){
-		getProductSetData();
-		$('.loadMorePageButton').remove();
-	});
-	}
-	
+        });
+        // listner for load more
+        $(document).on('click', '.loadMorePageButton', function() {
+            getProductSetData();
+            $('.loadMorePageButton').remove();
+        });
+   // }
+
 });
+
+function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    location.search
+    .substr(1)
+        .split("&")
+        .forEach(function (item) {
+        tmp = item.split("=");
+        if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+    });
+    return result;
+}

@@ -6507,12 +6507,13 @@ public class UsersController extends BaseCommerceController
 		boolean failFlag = false;
 		String juspayOrderId = "";
 		OrderModel orderModel = null;
-		OrderData orderData = null;
+		//final OrderData orderData = null;
 		CustomerModel customer = null;
 		CartModel cart = null;
 		String juspayMerchantId = "";
 		String juspayReturnUrl = "";
 		final StringBuilder returnUrlBuilder = new StringBuilder();
+		String orderCode = null;
 		if (LOG.isDebugEnabled())
 		{
 			LOG.debug("********* Creating juspay Order mobile web service" + userId);
@@ -6554,10 +6555,13 @@ public class UsersController extends BaseCommerceController
 			{
 
 				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-				if (!failFlag && !mplCheckoutFacade.isPromotionValid(cart))
+				if (null != cart)
 				{
-					failFlag = true;
-					failErrorCode = MarketplacecommerceservicesConstants.B9075;
+					if (!failFlag && !mplCheckoutFacade.isPromotionValid(cart))
+					{
+						failFlag = true;
+						failErrorCode = MarketplacecommerceservicesConstants.B9075;
+					}
 				}
 				if (!failFlag && mplCartFacade.isCartEntryDelistedMobile(cart))
 				{
@@ -6638,8 +6642,10 @@ public class UsersController extends BaseCommerceController
 					//getSessionService().setAttribute("guid", cart.getGuid());
 					if (isValidCart)
 					{
-						orderData = mplCheckoutFacade.placeOrderByCartId(cartGuid);
-						if (orderData == null)
+						//CAR-110
+						//orderData = mplCheckoutFacade.placeOrderByCartId(cartGuid);
+						orderCode = mplCheckoutFacade.placeOrderByCartId(cart);
+						if (orderCode == null)
 						{
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9321);
 						}
@@ -6651,6 +6657,7 @@ public class UsersController extends BaseCommerceController
 					}
 
 				}
+
 
 			}
 			else
@@ -6686,7 +6693,8 @@ public class UsersController extends BaseCommerceController
 							paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 							cardSaved + MarketplacecommerceservicesConstants.STRINGSEPARATOR + sameAsShipping,
 							returnUrlBuilder.toString(), uid, MarketplacecommerceservicesConstants.CHANNEL_MOBILE);
-					orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
+					//CAR-110
+					//orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
 				}
 
 			}
@@ -6706,9 +6714,10 @@ public class UsersController extends BaseCommerceController
 			{
 				orderCreateInJusPayWsDto.setCartGuid(cartGuid);
 			}
-			if (orderData != null && StringUtils.isNotEmpty(orderData.getCode()))
+			//if (orderCode != null && StringUtils.isNotEmpty(orderData.getCode()))
+			if (orderCode != null && StringUtils.isNotEmpty(orderCode))
 			{
-				orderCreateInJusPayWsDto.setOrderId(orderData.getCode());
+				orderCreateInJusPayWsDto.setOrderId(orderCode);
 			}
 
 			orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
