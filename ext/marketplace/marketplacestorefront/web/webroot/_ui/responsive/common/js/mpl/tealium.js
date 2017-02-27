@@ -1195,3 +1195,12 @@ function populateFirstFiveProductsPlp(){
 	 }	
 }
 
+//TPR-4725 |quick view  size|serp
+$(document).on('click',"#quickViewVariant > li", function(){
+	var product_size = $(this).find('a').html();
+	utag.link({
+		"link_text":"quick_view_size_"+product_size,
+		"event_type":"quick_view_size_selected",
+		"product_size":product_size
+	});
+})
