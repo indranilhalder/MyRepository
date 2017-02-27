@@ -46,6 +46,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 	private static final String ORIGINAL_UID = "originalUid";
 	private static final String TRANSACTIONID = "transactionId";
 	private static final String WEBSITE_URL = "websiteUrl";
+	private static final String CUSTOMER = "Customer";
 
 	private static final Logger LOG = Logger.getLogger(NPSEmailContext.class);
 
@@ -149,6 +150,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 			put(WEBSITE_URL, websiteUrl);
 		}
 
+		put(DISPLAY_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
 
 
 		LOG.info("All the NPSEmailContext data have been set sucessfully in context file>>>>>>>>>>");
@@ -175,7 +177,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getSite(de.hybris.platform.
 	 * processengine.model.BusinessProcessModel)
 	 */
@@ -187,7 +189,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getCustomer(de.hybris.platform
 	 * .processengine.model.BusinessProcessModel)
@@ -196,7 +198,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getEmailLanguage(de.hybris.platform
 	 * .processengine.model.BusinessProcessModel)
@@ -209,7 +211,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getCustomer(de.hybris.platform
 	 * .processengine.model.BusinessProcessModel)
