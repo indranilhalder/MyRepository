@@ -129,9 +129,9 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 		Div div = new 	Div();
 		Hbox hbox = new Hbox();
 		try {
-			//	Div paymentModeDropdownContent = new Div();
+				Div paymentModeDropdownContent = new Div();
 				
-	//			createPaymentModeField(widget,paymentModeDropdownContent);
+				createPaymentModeField(widget,paymentModeDropdownContent);
 				
 //				Button generateOTP = new Button(LabelUtils.getLabel(
 //						widget, "generateButton"));
@@ -144,10 +144,10 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 //				});
 //				generateOTP.setParent(paymentModeDropdownContent);
 				
-//				hbox.appendChild(paymentModeDropdownContent);
+				hbox.appendChild(paymentModeDropdownContent);
 				
-	//			div.appendChild(hbox);
-//				hbox = new Hbox();
+				div.appendChild(hbox);
+				hbox = new Hbox();
 				
 				//boolean oTPValidated =!( opt==null ||( opt.getIsValidated() !=null && opt.getIsValidated().booleanValue()));
 //				boolean oTPValidated=false;
@@ -188,13 +188,19 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 				div.appendChild(hbox);
 				div.setParent(rootContainer);
 			
+		}catch(ValidationException ex) {
+			try {
+				Messagebox.show(ex.getMessage(), LabelUtils.getLabel(widget, "failedToCreatePayment", new Object[0]), 1, "z-msgbox z-msgbox-error");
+			} catch (InterruptedException e) {
+				LOG.error("EtailNonBusinessExceptions in createContentInternal:",ex);
+			}
 		}catch(EtailNonBusinessExceptions ex) {
 			LOG.error("EtailNonBusinessExceptions in createContentInternal:",ex);
 			popupMessage(widget, MarketplaceCockpitsConstants.SERVER_ERROR+":"+ex,Messagebox.ERROR);
 		} catch(ClientEtailNonBusinessExceptions e) {
 			LOG.error("ClientEtailNonBusinessExceptions in createContentInternal:",e);
 			popupMessage(widget, MarketplaceCockpitsConstants.SERVER_ERROR+":"+e,Messagebox.ERROR);
-		}
+		} 
 		return div;
 	}
 
@@ -310,7 +316,6 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 
 	/**
 	 * Creates the payment mode field.
-	 *
 	 * @param widget the widget
 	 * @param parent the parent
 	 * @return the listbox
