@@ -820,7 +820,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 *
+	 * 
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
@@ -939,7 +939,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			msiteBboxOtherSellerList = new ArrayList<BuyBoxModel>();
 			for (final BuyBoxModel buyBoxModel : buyboxModelListAll)
 			{
-				if (bBoxSellerId.equalsIgnoreCase(buyBoxModel.getSellerId()) && buyBoxModel.getAvailable() > 0)
+				if (bBoxSellerId.equalsIgnoreCase(buyBoxModel.getSellerId()))
 				{
 					msiteBboxWinningSellerList.add(buyBoxModel);
 				}
