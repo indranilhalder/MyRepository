@@ -6,6 +6,7 @@ import de.hybris.platform.commerceservices.search.solrfacetsearch.data.Autocompl
 import de.hybris.platform.commerceservices.search.solrfacetsearch.strategies.SolrFacetSearchConfigSelectionStrategy;
 import de.hybris.platform.commerceservices.search.solrfacetsearch.strategies.exceptions.NoValidSolrConfigException;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.solrfacetsearch.config.FacetSearchConfig;
 import de.hybris.platform.solrfacetsearch.config.FacetSearchConfigService;
 import de.hybris.platform.solrfacetsearch.config.IndexConfig;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -37,6 +39,26 @@ public class MplSolrProductSearchAutocompleteService implements ProductSearchAut
 	private SolrAutoSuggestService solrAutoSuggestService;
 	private SolrIndexedTypeCodeResolver solrIndexedTypeCodeResolver;
 	private SolrFacetSearchConfigSelectionStrategy solrFacetSearchConfigSelectionStrategy;
+	private static final Logger LOG = Logger.getLogger(MplSolrProductSearchAutocompleteService.class);
+
+	private SessionService sessionService;
+
+	/**
+	 * @return the sessionService
+	 */
+	protected SessionService getSessionService()
+	{
+		return sessionService;
+	}
+
+	/**
+	 * @param sessionService
+	 *           the sessionService to set
+	 */
+	public void setSessionService(final SessionService sessionService)
+	{
+		this.sessionService = sessionService;
+	}
 
 	protected FacetSearchConfigService getFacetSearchConfigService()
 	{
@@ -69,7 +91,10 @@ public class MplSolrProductSearchAutocompleteService implements ProductSearchAut
 
 			final SolrFacetSearchConfigModel solrFacetSearchConfigModel = getSolrFacetSearchConfigSelectionStrategy()
 					.getCurrentSolrFacetSearchConfig();
-			solrFacetSearchConfigModel.setQueryType("SEARCH");
+
+			LOG.debug("Before session attribute set");
+			sessionService.setAttribute("queryType", "SEARCH");
+			LOG.debug("commenting as a part of  search PT Fix.. //solrFacetSearchConfigModel.setQueryType()");
 			final FacetSearchConfig facetSearchConfig = getFacetSearchConfigService()
 					.getConfiguration(solrFacetSearchConfigModel.getName());
 			final IndexedType indexedType = getIndexedType(facetSearchConfig);

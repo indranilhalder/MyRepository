@@ -397,7 +397,7 @@ function focusOnElement() {
 			 
 			 
 			
-        if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches'&& $("#showSize").val()=='true'){
+        if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='Accessories' && $("#showSize").val()=='true'){
 		  		
 		   		$("#addToCartFormIdOthersel"+index).html($('#selectSizeId').text());
 				$("#addToCartFormIdOthersel"+index).show();
@@ -405,20 +405,21 @@ function focusOnElement() {
 		   	 }
         //TISQAEE-64
         var productCode= $('#productCode').val();
-	        
+        var productCodeArray=[];
+        productCodeArray.push(productCode);    
 	        utag.link({
 				link_obj: this,
 				link_text: 'addtobag' ,
 				event_type : 'addtobag_other_seller' ,
-				product_sku : productCode
+				product_sku : productCodeArray                     // Product code passed as an array for Web Analytics   -- INC_11511  fix
 			});
         
 			ACC.product.sendAddToBag("addToCartFormId"+index);
 		});
 		 
-		//TPR-887
+		//TPR-887 //INC144313255
 		 $(document).on('click','#addToCartFormId'+index+' #buyNowButton'+index,function(){
-	        if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){
+	        if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Accessories' && $("#ia_product_rootCategory_type").val()!='Watches'){
 			  		
 			   		$("#buyNowFormIdOthersel"+index).html($('#selectSizeId').text());
 					$("#buyNowFormIdOthersel"+index).show();
@@ -597,15 +598,7 @@ function focusOnElement() {
 								$("#promolist").val(offerMessageMap);
 								$(".pdp-promo-title-link").css("display", "block");		
 							} 
-							if(!$.isEmptyObject(offerMessageMap)){			
-								if($(".pdp-promo-title").length > 0){
-									$(pagelevelOffer).insertAfter(".pdp-promo-title");
-									$(modallevelOffer).insertAfter(".show-date");
-								}else{				
-									$(".pdp-promo-block").append(pagelevelOffer);
-									$(".offer-block").append(modallevelOffer);					
-								}			
-							}			
+									
 												
 							$.each( offerMessageMap, function(key,value){		
 								
@@ -624,7 +617,16 @@ function focusOnElement() {
 								 });
 								 
 								 if(sellerId == key)
-								 {						
+								 {	
+									if(!$.isEmptyObject(offerMessageMap)){			
+											if($(".pdp-promo-title").length > 0){
+												$(pagelevelOffer).insertAfter(".pdp-promo-title");
+												$(modallevelOffer).insertAfter(".show-date");
+											}else{				
+												$(".pdp-promo-block").append(pagelevelOffer);
+												$(".offer-block").append(modallevelOffer);					
+											}			
+									}	
 									if(divId != null)
 									{
 										//var offerMessageDiv="<div class='offerMessage-block' id='offerMessageId'>"+message+"</div>";
@@ -667,6 +669,9 @@ function focusOnElement() {
 								 }
 								 else
 								 {
+									 if($(".pdp-promo-title").length == 0) {
+										 $(".pdp-promo-title-link").css("display","none");		
+									 }
 									 x.append("<p>"+message+"</p>");								 
 								 }				
 								})	
