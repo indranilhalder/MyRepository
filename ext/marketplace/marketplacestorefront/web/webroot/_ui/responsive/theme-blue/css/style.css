@@ -61324,6 +61324,13 @@ body.page-cartPage .cart.wrapper .product-block li.item > ul > li.delivery li.me
 p#unserviceablepincode_tooltip,p#error-Id_tooltip,p#emptyId_tooltip{	
 	display:none !important;
 	}
+	/* Start TISSQAUAT-466 */
+body.page-cartPage .cart.wrapper .product-block li.header ul li.productInfo, 
+body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.productItemInfo{
+		width:100% !important;	
+	}
+	/* End TISSQAUAT-466 */  
+	
 }
 @media (max-width: 790px){
 body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo ul.item-edit-details a.move-to-wishlist-button.cart_move_wishlist{
