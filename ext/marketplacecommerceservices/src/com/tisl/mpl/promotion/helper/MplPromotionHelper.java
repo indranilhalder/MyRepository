@@ -13,7 +13,6 @@ import de.hybris.platform.jalo.enumeration.EnumerationValue;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.order.delivery.DeliveryMode;
-import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
@@ -351,39 +350,39 @@ public class MplPromotionHelper
 	 * @param excludedProductList
 	 * @return count
 	 */
-	public int returnValidProductCount(final SessionContext arg0, final AbstractOrder cart,
-			final Map<String, AbstractOrderEntry> validProductUssidMap,
-			@SuppressWarnings("deprecation") final List<Product> excludedProductList)
-	{
-		int count = 0;
-		{
-			try
-			{
-				if (null != cart)
-				{
-					for (final AbstractOrderEntry entry : cart.getEntries()) // For localization Purpose
-					{
-						@SuppressWarnings("deprecation")
-						final Product orderProduct = entry.getProduct();
-
-						if (!excludedProductList.contains(orderProduct))
-						{
-							count = count + 1;
-						}
-					}
-				}
-			}
-			catch (final JaloInvalidParameterException exception)
-			{
-				LOG.error(exception.getMessage());
-			}
-			catch (final Exception exception)
-			{
-				LOG.error(exception.getMessage());
-			}
-		}
-		return count;
-	}
+	//	public int returnValidProductCount(final SessionContext arg0, final AbstractOrder cart,
+	//			final Map<String, AbstractOrderEntry> validProductUssidMap,
+	//			@SuppressWarnings("deprecation") final List<Product> excludedProductList)
+	//	{
+	//		int count = 0;
+	//		{
+	//			try
+	//			{
+	//				if (null != cart)
+	//				{
+	//					for (final AbstractOrderEntry entry : cart.getEntries()) // For localization Purpose
+	//					{
+	//						@SuppressWarnings("deprecation")
+	//						final Product orderProduct = entry.getProduct();
+	//
+	//						if (!excludedProductList.contains(orderProduct))
+	//						{
+	//							count = count + 1;
+	//						}
+	//					}
+	//				}
+	//			}
+	//			catch (final JaloInvalidParameterException exception)
+	//			{
+	//				LOG.error(exception.getMessage());
+	//			}
+	//			catch (final Exception exception)
+	//			{
+	//				LOG.error(exception.getMessage());
+	//			}
+	//		}
+	//		return count;
+	//	}
 
 	/**
 	 * @Description : Returns Valid Count of USSIDs for A and B Discount Promotions
@@ -475,13 +474,16 @@ public class MplPromotionHelper
 	public double getTotalPrice(final AbstractOrder order)
 	{
 		double totalPrice = 0;
-		if (null != order && null != order.getEntries())
+		final List<AbstractOrderEntry> entryList = (null != order) ? order.getEntries() : new ArrayList<AbstractOrderEntry>();
+
+		//		if (null != order && null != order.getEntries())
+		//		{
+		//			for (final AbstractOrderEntry entry : order.getEntries())
+		for (final AbstractOrderEntry entry : entryList)
 		{
-			for (final AbstractOrderEntry entry : order.getEntries())
-			{
-				totalPrice = totalPrice + entry.getTotalPrice().doubleValue();
-			}
+			totalPrice = totalPrice + entry.getTotalPrice().doubleValue();
 		}
+		//}
 
 		return totalPrice;
 	}
@@ -594,40 +596,41 @@ public class MplPromotionHelper
 	 * @param restrictionList
 	 * @return validProductUssidMap
 	 */
-	public Map<String, AbstractOrderEntry> getCartSellerEligibleProducts(final SessionContext arg0, final AbstractOrder order,
+	public Map<String, AbstractOrderEntry> getCartSellerEligibleProducts(final SessionContext ctx, final AbstractOrder order,
 			final List<AbstractPromotionRestriction> restrictionList)
 	{
 		//CR Changes
 		final Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
+		final List<AbstractOrderEntry> entryList = (order != null) ? order.getEntries() : new ArrayList<AbstractOrderEntry>();
 
-		if (null != order && CollectionUtils.isNotEmpty(order.getEntries()))
+		//		if (null != order && CollectionUtils.isNotEmpty(order.getEntries()))
+		//		{
+		boolean isFreebie = false;
+		boolean isofValidSeller = false;
+		String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
+
+		//			for (final AbstractOrderEntry entry : order.getEntries())
+		for (final AbstractOrderEntry entry : entryList)
 		{
-			boolean isFreebie = false;
-			boolean isofValidSeller = false;
-			String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
-
-
-			for (final AbstractOrderEntry entry : order.getEntries())
+			isFreebie = validateEntryForFreebie(entry);
+			if (!isFreebie)
 			{
-				isFreebie = validateEntryForFreebie(entry);
-				if (!isFreebie)
+				isofValidSeller = getDefaultPromotionsManager().checkSellerData(ctx, restrictionList, entry);
+				if (isofValidSeller)
 				{
-					isofValidSeller = getDefaultPromotionsManager().checkSellerData(arg0, restrictionList, entry);
-					if (isofValidSeller)
+					try
 					{
-						try
-						{
-							selectedUSSID = (String) entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID);
-						}
-						catch (JaloInvalidParameterException | JaloSecurityException e)
-						{
-							LOG.error(e);
-						}
-						validProductUssidMap.put(selectedUSSID, entry);
+						selectedUSSID = (String) entry.getAttribute(ctx, MarketplacecommerceservicesConstants.SELECTEDUSSID);
 					}
+					catch (JaloInvalidParameterException | JaloSecurityException e)
+					{
+						LOG.error(e);
+					}
+					validProductUssidMap.put(selectedUSSID, entry);
 				}
 			}
 		}
+		//}
 
 		return validProductUssidMap;
 	}
@@ -648,34 +651,36 @@ public class MplPromotionHelper
 	{
 		//CR Changes
 		final Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
+		final List<AbstractOrderEntry> entryList = (null != order) ? order.getEntries() : new ArrayList<AbstractOrderEntry>();
 
-		if (null != order && CollectionUtils.isNotEmpty(order.getEntries()))
+		//		if (null != order && CollectionUtils.isNotEmpty(order.getEntries()))
+		//		{
+		boolean isFreebie = false;
+		boolean isofValidSeller = false;
+		String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
+
+		//			for (final AbstractOrderEntry entry : order.getEntries())
+		for (final AbstractOrderEntry entry : entryList)
 		{
-			boolean isFreebie = false;
-			boolean isofValidSeller = false;
-			String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
-
-			for (final AbstractOrderEntry entry : order.getEntries())
+			isFreebie = validateEntryForFreebie(entry);
+			if (!isFreebie)
 			{
-				isFreebie = validateEntryForFreebie(entry);
-				if (!isFreebie)
+				isofValidSeller = getDefaultPromotionsManager().isProductExcludedForSeller(arg0, restrictionList, entry);
+				if (!isofValidSeller)
 				{
-					isofValidSeller = getDefaultPromotionsManager().isProductExcludedForSeller(arg0, restrictionList, entry);
-					if (!isofValidSeller)
+					try
 					{
-						try
-						{
-							selectedUSSID = (String) entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID);
-						}
-						catch (JaloInvalidParameterException | JaloSecurityException e)
-						{
-							LOG.error(e);
-						}
-						validProductUssidMap.put(selectedUSSID, entry);
+						selectedUSSID = (String) entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID);
 					}
+					catch (JaloInvalidParameterException | JaloSecurityException e)
+					{
+						LOG.error(e);
+					}
+					validProductUssidMap.put(selectedUSSID, entry);
 				}
 			}
 		}
+		//}
 
 		return validProductUssidMap;
 	}
@@ -703,24 +708,27 @@ public class MplPromotionHelper
 		}
 		try
 		{
-			if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+			final List<AbstractOrderEntryModel> entryList = (null != cartModel) ? cartModel.getEntries()
+					: new ArrayList<AbstractOrderEntryModel>();
+			//			if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+			//			{
+			//				for (final AbstractOrderEntryModel oModel : cartModel.getEntries())
+			for (final AbstractOrderEntryModel oModel : entryList)
 			{
-				for (final AbstractOrderEntryModel oModel : cartModel.getEntries())
+				for (final Map.Entry<String, AbstractOrderEntry> mapentry : validUssidMap.entrySet())
 				{
-					for (final Map.Entry<String, AbstractOrderEntry> mapentry : validUssidMap.entrySet())
+					if (null != mapentry.getValue() && null != mapentry.getValue().getEntryNumber()
+							&& mapentry.getValue().getEntryNumber() == oModel.getEntryNumber() && oModel.getMplDeliveryMode() != null)
 					{
-						if (null != mapentry.getValue() && null != mapentry.getValue().getEntryNumber()
-								&& mapentry.getValue().getEntryNumber() == oModel.getEntryNumber() && oModel.getMplDeliveryMode() != null)
+						final String selectedDeliveryMode = oModel.getMplDeliveryMode().getDeliveryMode().getCode();
+						if (deliveryModeCodeList.contains(selectedDeliveryMode))
 						{
-							final String selectedDeliveryMode = oModel.getMplDeliveryMode().getDeliveryMode().getCode();
-							if (deliveryModeCodeList.contains(selectedDeliveryMode))
-							{
-								validProdQCountMap.put(oModel.getSelectedUSSID(), Integer.valueOf(oModel.getQuantity().intValue()));
-							}
+							validProdQCountMap.put(oModel.getSelectedUSSID(), Integer.valueOf(oModel.getQuantity().intValue()));
 						}
 					}
 				}
 			}
+			//}
 		}
 		catch (final Exception e)
 		{

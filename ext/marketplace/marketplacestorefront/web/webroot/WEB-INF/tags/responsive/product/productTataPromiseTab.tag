@@ -17,6 +17,9 @@
 		<li id="defaultKnowMoreLi"><spring:theme code="know.more.second"/>&nbsp;<span id="returnWindow">0</span>&nbsp;<spring:theme code="know.more.third"/></li>
 		<li id="lingerieKnowMoreLi1" style="display:none"><spring:theme code="know.more.second.lingerie1"/></li>
 		<li id="lingerieKnowMoreLi2" style="display:none"><spring:theme code="know.more.second.lingerie2"/></li>
+		<!-- Added for UF-98 -->
+		 <li id="defaultKnowMoreLi4"><spring:theme code="know.more.sixth"/>&nbsp;</li>
+		
 		<li><spring:theme code="know.more.fourth"/>&nbsp;${cliqCareNumber}&nbsp;<spring:theme code="know.more.fifth"/>&nbsp;${cliqCareMail}&nbsp;</li>
 	</ul>
 	</ycommerce:testId>

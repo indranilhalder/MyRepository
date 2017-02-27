@@ -39,14 +39,14 @@ public class EtailExcludeSellerSpecificRestriction extends GeneratedEtailExclude
 
 	/**
 	 * @Description: Exclude Seller Based Restriction evaluation Method for Promotions
-	 * @param:SessionContext arg0
-	 * @param:Collection<Product> arg1
-	 * @param:Date arg2
+	 * @param:SessionContext ctx
+	 * @param:Collection<Product> products
+	 * @param:Date date
 	 * @param:AbstractOrder paramOrder
 	 * @return:RestrictionResult
 	 */
 	@Override
-	public RestrictionResult evaluate(final SessionContext arg0, final Collection<Product> arg1, final Date arg2,
+	public RestrictionResult evaluate(final SessionContext ctx, final Collection<Product> products, final Date date,
 			final AbstractOrder paramOrder)
 	{
 
