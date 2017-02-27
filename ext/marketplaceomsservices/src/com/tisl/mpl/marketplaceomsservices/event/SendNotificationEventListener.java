@@ -638,7 +638,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	 */
 
 	private void sendSMSHotc(final List<AbstractOrderEntryModel> childOrders, final String orderNumber, final String mobileNumber,
-			String trackingUrl, final String logisticPartner, final String awbNumber, final OrderModel orderModel)
+			String trackingUrl, final String logisticPartner, final String awbNumber, final OrderModel orderModel,ConsignmentStatus newStatus)
 	{
 		try
 		{
@@ -681,7 +681,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 				//totalEntries = entryList.size();
 			}
 			LOG.info("*******Before checking isToSendNotification for HOTC SMS********");
-			final boolean flag = isToSendNotification(awbNumber, orderModel, ConsignmentStatus.HOTC);
+			final boolean flag = isToSendNotification(awbNumber, orderModel,newStatus);
 			LOG.info("*******After checking isToSendNotification for HOTC SMS******** SMS sent ? " + flag);
 			if (numOfRows == 0 && flag)
 			{
@@ -766,7 +766,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	 * @param childOrders
 	 * @param awbNumber
 	 */
-	private void sendEmailHotc(final OrderModel orderModel, final List<AbstractOrderEntryModel> childOrders, final String awbNumber)
+	private void sendEmailHotc(final OrderModel orderModel, final List<AbstractOrderEntryModel> childOrders, final String awbNumber,ConsignmentStatus newStatus)
 	{
 		final List<OrderUpdateProcessModel> orderUpdateModelList = checkEmailSent(awbNumber, ConsignmentStatus.HOTC);
 		int numOfRows = 0;
@@ -780,7 +780,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 
 
 		LOG.info("*******Before checking isToSendNotification for HOTC Email********");
-		final boolean flag = isToSendNotification(awbNumber, orderModel, ConsignmentStatus.HOTC);
+		final boolean flag = isToSendNotification(awbNumber, orderModel, newStatus);
 		LOG.info("*******After checking isToSendNotification for HOTC Email********");
 		LOG.info("No of Rows:::::sendEmailHotc" + numOfRows);
 		if (numOfRows == 0 && flag)
@@ -832,11 +832,11 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 
 				//sending SMS
 				LOG.info("********* Sending SMS for HOTC ");
-				sendSMSHotc(childOrders, orderNumber, mobileNumber, trackingUrl, logisticPartner, awbNumber, orderModel);
+				sendSMSHotc(childOrders, orderNumber, mobileNumber, trackingUrl, logisticPartner, awbNumber, orderModel,newStatus);
 				LOG.info("******************* SMS sent");
 				//sending Email
 				LOG.info("********* Sending Email for HOTC ");
-				sendEmailHotc(orderModel, childOrders, awbNumber);
+				sendEmailHotc(orderModel, childOrders, awbNumber,newStatus);
 
 			}
 		}
