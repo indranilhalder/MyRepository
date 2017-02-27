@@ -60646,3 +60646,7 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
 	display:block !important;
 }
 /* UF-155 COD captcha end */
+
+.lowOpacity{
+	opacity:0.5;
+}

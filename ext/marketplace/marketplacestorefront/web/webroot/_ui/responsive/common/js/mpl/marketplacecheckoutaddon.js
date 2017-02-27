@@ -5710,41 +5710,57 @@ function populatePincodeDeliveryMode(response,buttonType){
 			isStockAvailable="N";
 		}
 			
-			for ( var count in jsonObj) {
-				var inventory=0;
-				var deliveryType=jsonObj[count].type;
-				inventory=jsonObj[count].inventory;
-				if(deliveryType==='HD' /*
+		for ( var count in jsonObj) {
+			var inventory=0;
+			var deliveryType=jsonObj[count].type;
+			inventory=jsonObj[count].inventory;
+			/*if(deliveryType==='HD' 
+									 * && parseFloat(inventory) >=
+									 * parseFloat(quantityValue)
+									  ){*/
+				var newLi = document.createElement("li");
+				newLi.setAttribute("class", "methodHome");
+				var text = document.createTextNode("Home Delivery");
+				newLi.appendChild(text);
+				//newUi.appendChild(newLi);
+			/*}
+			else if(deliveryType==='ED'
 										 * && parseFloat(inventory) >=
 										 * parseFloat(quantityValue)
-										 */ ){
-					var newLi = document.createElement("li");
-					newLi.setAttribute("class", "methodHome");
-					var text = document.createTextNode("Home Delivery");
-					newLi.appendChild(text);
-					newUi.appendChild(newLi);
+										 ){*/
+				var newLi1 = document.createElement("li");
+				newLi1.setAttribute("class", "methodExpress");
+				var text = document.createTextNode("Express Delivery");
+				newLi1.appendChild(text);
+				//newUi.appendChild(newLi1);
+			/*}
+			else if(deliveryType==='CNC'
+										 * && parseFloat(inventory) >=
+										 * parseFloat(quantityValue)
+										 ){*/
+				var newLi2 = document.createElement("li");
+				newLi2.setAttribute("class", "methodClick");
+				var text = document.createTextNode("Click and Collect");
+				newLi2.appendChild(text);
+				//newUi.appendChild(newLi2);
+			//}
+				if(deliveryType==='HD') {
+					newLi1.setAttribute("class", "methodExpress lowOpacity");
+					newLi2.setAttribute("class", "methodClick lowOpacity");
 				}
-				else if(deliveryType==='ED'/*
-											 * && parseFloat(inventory) >=
-											 * parseFloat(quantityValue)
-											 */){
-					var newLi = document.createElement("li");
-					newLi.setAttribute("class", "methodExpress");
-					var text = document.createTextNode("Express Delivery");
-					newLi.appendChild(text);
-					newUi.appendChild(newLi);
+				else if(deliveryType==='ED'){
+					newLi.setAttribute("class", "methodHome lowOpacity");
+					newLi2.setAttribute("class", "methodClick lowOpacity");
 				}
-				else if(deliveryType==='CNC'/*
-											 * && parseFloat(inventory) >=
-											 * parseFloat(quantityValue)
-											 */){
-					var newLi = document.createElement("li");
-					newLi.setAttribute("class", "methodClick");
-					var text = document.createTextNode("Click and Collect");
-					newLi.appendChild(text);
-					newUi.appendChild(newLi);
+				else if(deliveryType==='CNC'){
+					newLi.setAttribute("class", "methodHome lowOpacity");
+					newLi1.setAttribute("class", "methodExpress lowOpacity");
 				}
-			}
+				
+				newUi.appendChild(newLi);
+				newUi.appendChild(newLi1);
+				newUi.appendChild(newLi2);
+		}
 			/** **TISPRM-65 - Cart Page show pincode serviceability msg** */
 			/** **Tpr-634 - commented for scope of improvement** */
 			/*
