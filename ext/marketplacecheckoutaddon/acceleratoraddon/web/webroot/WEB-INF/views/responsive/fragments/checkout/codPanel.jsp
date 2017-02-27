@@ -6,19 +6,20 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
-<p>
-	<spring:theme
-		code="checkout.multi.paymentMethod.addPaymentDetails.cod.desc" />
-</p>
-<div class="amtPayable">
-	<h4>
+<p class="title"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.desc" /></p>
+<p class="desc"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.desc1" /></p>
+<p class="desc-ext"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.desc2" /></p>
+<!-- commented as part of UF-203 -->
+<!-- <div class="amtPayable"> -->
+	<%-- <h4>
 		<spring:theme
 			code="checkout.multi.paymentMethod.addPaymentDetails.cod.amtPayable" />
 		&nbsp;<span id="codAmount"></span>
-	</h4>
+	</h4> --%>
 	<%-- &nbsp;<span id="convChargeMessage"><spring:theme
 			code="checkout.multi.paymentMethod.addPaymentDetails.cod.convChargeMsg" /></span> --%>
-</div>
+<!-- </div> -->
+<!-- commented as part of UF-203 -->
 <div id="sendOTPNumber" class="cont-del">
 	<input type="hidden" id="codEligible" value="${codEligible}" />
 	<div class="description">
@@ -33,6 +34,8 @@
 		<spring:theme
 			code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoErrorMessage" />
 	</div>
+	<div id="otpSentMessage" class="error-message payment-notification"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otpSentMessage"/>
+									</div>
 	<%-- <p class="process">
 		<spring:theme
 			code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoMessage" />
@@ -42,12 +45,14 @@
 				code="checkout.multi.paymentMethod.cod.updateItHereLink" /></a>
 	</p> --%>
 	<!-- INC_11794 -->
-	<p class="process">
+	<!-- commented as part of UF-203 -->
+<%-- 	<p class="process"> 
 		<spring:theme
 			code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoMessage" />
 		 <a class="cod-link" onclick="updateMobileNo()"><spring:theme
 				code="checkout.multi.paymentMethod.cod.updateItHereLink" /></a>
-	</p> 
+	</p>  --%>
+	<!-- commented as part of UF-203 -->
 
 	<div id="sendOTPButton">
 
@@ -71,6 +76,8 @@
 <div id="enterOTP" class="cont-del">
 	<%-- <label name="Enter OTP"><spring:theme
 			code="checkout.multi.paymentMethod.CODPayment.enterOTP"
-			text="Enter OTP:&nbsp;" /> --%> <input type="text" id="otpNUMField" placeholder="OTP"
+			text="Enter OTP:&nbsp;" /> --%> 
+			<label for="otpNUMField"><spring:theme code="checkout.multi.paymentMethod.cod.otp" /></label>
+			<input type="text" id="otpNUMField"
 		name="otpNUM" onfocus="hideErrorMsg()" autocomplete="off" /> <!-- </label> -->
 </div>

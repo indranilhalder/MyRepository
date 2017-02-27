@@ -61168,6 +61168,7 @@ text-transform:none;}
 	color:#000;
 	text-transform:none;
 	font-weight: normal;
+	letter-spacing: normal;
 }
 .cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .block{
 	margin:8px auto 28px;
@@ -61184,6 +61185,9 @@ text-transform:none;}
 	margin-bottom:0;
 	margin-top: 15px;
     padding-top: 19px;
+    text-transform:uppercase;
+    letter-spacing: normal;
+    font-weight: normal;
 }
 .cart.wrapper.checkout-payment .right-block.billing .block.summary-info  ul.totals li{
    text-transform:none;
@@ -61205,6 +61209,7 @@ text-transform:none;}
 .checkout-order-summary #cartPromotionApplied span.cartpromotionSpan, .cart.wrapper.checkout-payment .right-block .block.top li#couponApplied .couponSpan{
 	text-transform:none;
 	color:#666;
+	letter-spacing: normal;
 }
 .checkout-payment h2.coupon,.checkout-payment h2.payment-delivery-details{
 	font-size:16px;
@@ -61470,17 +61475,7 @@ margin: 0;
     color:#fff;
     padding:0;
 }
-.cart.wrapper.checkout-payment .blocks .cash .cont-del button{
-	margin:15px 0 0;
-	height:42px !important;
-	line-height: inherit;
-}
-#resendOTPMessage{
-	margin-top:36px;
-}
-#COD{
-	    margin: 0 auto;
-}
+
 .cart.wrapper.checkout-payment .left-block .payments.tab-view .pay .button:hover {
     background: #a5173c !important;
 }
@@ -61844,6 +61839,68 @@ margin-right:0;
     width: 100%;
 }
 /* net banking end */
+/* cod start */
+.cart.wrapper.checkout-payment .blocks .cash #otpNUM p{
+  letter-spacing: 0.6px;
+  color: #000000;
+  font-weight: normal;
+  text-transform: none;
+  line-height: inherit;
+  line-height: 16px;
+}
+.cart.wrapper.checkout-payment .blocks .cash #otpNUM p.title{
+ margin-bottom:25px;
+}
+.cart.wrapper.checkout-payment .blocks .cash #otpNUM p.desc-ext{
+ color:#999;
+ font-size:11px;
+ margin-bottom:24px;
+}
+.cod-container label, .cart.wrapper.checkout-payment .blocks .error-message#otpSentMessage{
+ color:#999;
+ font-size:11px;
+ letter-spacing: 0.6px;
+}
+.cart.wrapper.checkout-payment .blocks .error-message#otpSentMessage{
+ padding-bottom: 10px;
+ }
+.cart.wrapper.checkout-payment .blocks .cash .cont-del input{
+	width:175px;
+	height: 41px;
+	font-size: 14px;
+    letter-spacing: 0.5px;
+    margin:5px 0;
+}
+#mobilePrefix {
+    color: #000;
+}
+
+.cart.wrapper.checkout-payment .blocks .cash .cont-del button{
+	background-color: #a5173c;
+	color:#fff;
+	margin:11px 0 0;
+	height:42px !important;
+	line-height: inherit;
+	opacity: 1;
+    font-size:12px !important;
+}
+.cart.wrapper.checkout-payment .blocks .cash .cont-del input#otpNUMField{
+	width:216px;
+}
+#resendOTPMessage{
+	margin-top:36px;
+}
+#COD{
+	    margin: 0 auto;
+}
+.cod-container #enterOTP label {
+    line-height: inherit;
+    margin-top: 5px;
+}
+.cart.wrapper.checkout-payment .terms.cod{
+	 margin-top: -20px;
+}
+/* cod end */
 .cart.wrapper .left-block .payments.tab-view .nav li.paymentModeMobile{
 	display:none !important;
 }
