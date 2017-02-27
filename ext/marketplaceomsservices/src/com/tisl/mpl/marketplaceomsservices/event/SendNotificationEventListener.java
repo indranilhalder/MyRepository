@@ -273,7 +273,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 				if (shipment.getInScan().booleanValue())
 				{
 					LOG.info("******************** Sending notification for HOTC");
-					sendNotificationForHotc(orderModel, orderNumber, mobileNumber, trackingUrl, logisticPartner);
+					sendNotificationForHotc(orderModel, orderNumber, mobileNumber, trackingUrl, logisticPartner,shipmentNewStatus);
 				}
 			}
 			//Bug Id TISRLUAT-986 20-02-2017 End
@@ -816,7 +816,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	 *
 	 */
 	private void sendNotificationForHotc(final OrderModel orderModel, final String orderNumber, final String mobileNumber,
-			final String trackingUrl, final String logisticPartner)
+			final String trackingUrl, final String logisticPartner,ConsignmentStatus newStatus)
 	{
 		if(LOG.isDebugEnabled()){
 			LOG.debug(UPDATE_CONSIGNMENT + MarketplacecommerceservicesConstants.ORDER_STATUS_HOTC);
@@ -824,7 +824,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 		String awbNumber = "";
 		try
 		{
-			final Map<String, List<AbstractOrderEntryModel>> mapAWB = updateAWBNumber(orderModel, ConsignmentStatus.HOTC);
+			final Map<String, List<AbstractOrderEntryModel>> mapAWB = updateAWBNumber(orderModel,newStatus);
 			for (final Map.Entry<String, List<AbstractOrderEntryModel>> entry : mapAWB.entrySet())
 			{
 				awbNumber = entry.getKey();
