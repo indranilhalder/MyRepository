@@ -113,7 +113,7 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 			if (CollectionUtils.isNotEmpty(mplPaymentAuditModels) && auditid != null && !isCODOrder(order))
 			{
 				mplPaymentAuditModel = mplPaymentAuditModels.get(0);
-				MplPaymentAuditEntryModel mplPaymentAuditEntryModel = modelService.create(MplPaymentAuditEntryModel.class);
+				final MplPaymentAuditEntryModel mplPaymentAuditEntryModel = modelService.create(MplPaymentAuditEntryModel.class);
 
 				mplPaymentAuditEntryModel.setAuditId(mplPaymentAuditModel.getAuditId());
 				mplPaymentAuditEntryModel.setStatus(MplPaymentAuditStatusEnum.REFUND_INITIATED);
@@ -160,9 +160,9 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 
 				LOG.debug("MRUPEE REFUND RESPONSE" + refundResponse);
 				LOG.debug("after calling refund service *******************************");
-				mplPaymentAuditEntryModel = modelService.create(MplPaymentAuditEntryModel.class);
-				mplPaymentAuditEntryModel.setAuditId(mplPaymentAuditModel.getAuditId());
-				mplPaymentAuditEntryModel.setResponseDate(new Date());
+				//				mplPaymentAuditEntryModel = modelService.create(MplPaymentAuditEntryModel.class);
+				//				mplPaymentAuditEntryModel.setAuditId(mplPaymentAuditModel.getAuditId());
+				//				mplPaymentAuditEntryModel.setResponseDate(new Date());
 				PaymentTransactionModel paymentTransactionModel = null;
 
 				if (refundResponse != null && refundResponse.isSuccess())

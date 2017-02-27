@@ -2221,6 +2221,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 				if (null != paymentTransactionModel)
 				{
+
+					LOG.debug(" ############### MRupee doRefund  paymentTransactionModel not null  *************");
 					mplJusPayRefundService.attachPaymentTransactionModel(subOrderModel, paymentTransactionModel);
 
 					if (CollectionUtils.isNotEmpty(orderRequestRecord.getOrderEntriesModificationEntries()))
@@ -2257,12 +2259,17 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 												MarketplacecommerceservicesConstants.SUCCESS)
 												|| entryValue.getType().toString().equalsIgnoreCase("CANCEL"))
 										{
+											LOG.debug(" ########## ConsignmentStatus for MRupee cancel order ******************************"
+													+ paymentTransactionModel.getStatus());
+
 											newStatus = ConsignmentStatus.ORDER_CANCELLED;
 										}
 										else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
 												MarketplacecommerceservicesConstants.SUCCESS)
 												|| entryValue.getType().toString().equalsIgnoreCase("RETURN"))
 										{
+											LOG.debug(" ########## ConsignmentStatus for MRupee return order ******************************"
+													+ paymentTransactionModel.getStatus());
 											newStatus = ConsignmentStatus.RETURN_COMPLETED;
 										}
 									}
@@ -2270,10 +2277,16 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 								else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
 										MarketplacecommerceservicesConstants.FAILURE))
 								{
+									LOG.debug(" ########## ConsignmentStatus for MRupee refund Inprogress ******************************"
+											+ paymentTransactionModel.getStatus());
+
 									newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
 								}
 								else
 								{
+									LOG.debug(" ########## ConsignmentStatus for MRupee refund initiated ******************************"
+											+ paymentTransactionModel.getStatus());
+
 									newStatus = ConsignmentStatus.REFUND_INITIATED;
 								}
 								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
@@ -2282,6 +2295,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 								LOG.debug(
 										"****** initiateRefund : Step 3  >>Payment transaction mode is not null >> Calling OMS with status as received from JUSPAY "
 												+ newStatus.getCode());
+
+								LOG.debug(" ########## Calling Oms refund method at the time of Mrupee order*************" + newStatus);
 								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
 										Double.valueOf(refundAmount), newStatus);
 							}
@@ -2352,6 +2367,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		modelService.save(orderRequestRecord);
 
 	}
+
 	@Override
 	public ReturnPincodeDTO checkReturnLogisticsForApp(final OrderData orderDetails, final String pincode,
 			final String returntransactionId)
@@ -2421,10 +2437,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 								if (orderLine.getIsReturnLogisticsAvailable().equalsIgnoreCase("Y"))
 								{
-									returnLogisticsResponseDTO
-											.setResponseMessage(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_MESSAGE);
-									returnLogisticsResponseDTO
-											.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_DESC);
+									returnLogisticsResponseDTO.setResponseMessage(
+											MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_MESSAGE);
+									returnLogisticsResponseDTO.setResponseDescription(
+											MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_DESC);
 									//returnLogRespData
 									//	.setResponseMessage(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_MESSAGE);
 									//returnLogRespData
@@ -2432,11 +2448,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 								}
 								else
 								{
-									returnLogisticsResponseDTO
-											.setResponseMessage((MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_MESSAGE));
+									returnLogisticsResponseDTO.setResponseMessage(
+											(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_MESSAGE));
 									//returnLogRespData.setResponseMessage(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_MESSAGE);
-									returnLogisticsResponseDTO
-											.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
+									returnLogisticsResponseDTO.setResponseDescription(
+											MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
 									//returnLogRespData.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
 								}
 
@@ -2464,8 +2480,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						returnLogRespDTO.setOrderId(orderDetails.getCode());
 						//returnLogRespData
 						//	.setResponseMessage(MarketplacecommerceservicesConstants.REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE);
-						returnLogRespDTO
-								.setResponseMessage(MarketplacecommerceservicesConstants.REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE);
+						returnLogRespDTO.setResponseMessage(
+								MarketplacecommerceservicesConstants.REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE);
 					}
 					returnLogRespDTO.setTransactionId(transactionId);
 					//returnLogRespData.setTransactionId(transactionId);
