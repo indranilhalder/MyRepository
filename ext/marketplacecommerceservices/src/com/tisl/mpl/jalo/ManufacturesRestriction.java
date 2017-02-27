@@ -39,14 +39,14 @@ public class ManufacturesRestriction extends GeneratedManufacturesRestriction
 
 	/**
 	 * @Description: Brand Based Restriction evaluation Method for Promotions
-	 * @param:SessionContext ctx
-	 * @param:Collection<Product> products
-	 * @param:Date date
+	 * @param:SessionContext arg0
+	 * @param:Collection<Product> arg1
+	 * @param:Date arg2
 	 * @param:AbstractOrder paramAbstractOrder
 	 * @return:RestrictionResult
 	 */
 	@Override
-	public RestrictionResult evaluate(final SessionContext ctx, final Collection<Product> products, final Date date,
+	public RestrictionResult evaluate(final SessionContext arg0, final Collection<Product> arg1, final Date arg2,
 			final AbstractOrder paramAbstractOrder)
 	{
 		return RestrictionResult.ALLOW;

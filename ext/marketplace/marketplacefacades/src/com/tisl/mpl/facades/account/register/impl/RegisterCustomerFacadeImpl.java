@@ -593,14 +593,13 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	 */
 
 	@Override
-	public void sendInvoice(final SendInvoiceData sendInvoiceData, final CustomerModel customer, final OrderModel orderModel)
+	public void sendInvoice(final SendInvoiceData sendInvoiceData, final CustomerModel customer)
 	{
 		try
 		{
 			final SendInvoiceProcessModel sendInvoiceProcessModel = (SendInvoiceProcessModel) businessProcessService.createProcess(
 					"sendInvoice-" + sendInvoiceData.getCustomerEmail() + "-" + System.currentTimeMillis(), "sendInvoiceEmailProcess");
-			//commented for carProject implementation
-			//final OrderModel orderModel = getOrderModelService().getOrder(sendInvoiceData.getOrdercode());
+			final OrderModel orderModel = getOrderModelService().getOrder(sendInvoiceData.getOrdercode());
 			if (null != customer)
 			{
 				sendInvoiceProcessModel.setCustomer(customer);

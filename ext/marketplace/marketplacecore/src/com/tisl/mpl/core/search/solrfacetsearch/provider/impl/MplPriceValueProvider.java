@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.marketplacecommerceservices.service.MplPriceRowService;
@@ -131,16 +130,20 @@ public class MplPriceValueProvider extends AbstractPropertyFieldValueProvider im
 										.getFieldNames(indexedProperty, currencyValue);
 								for (final String fieldName : fieldNames)
 								{
-									if (!CollectionUtils.isEmpty(rangeNameList)) /* Altered as a part of CAR-81 */
+									if (rangeNameList != null)
 									{
-										for (final String rangeName : rangeNameList)
+
+										if (rangeNameList.isEmpty())
 										{
-											fieldValues.add(new FieldValue(fieldName, (rangeName == null) ? value : rangeName));
+											fieldValues.add(new FieldValue(fieldName, value));
 										}
-									}
-									else if (rangeNameList != null)
-									{
-										fieldValues.add(new FieldValue(fieldName, value));
+										else
+										{
+											for (final String rangeName : rangeNameList)
+											{
+												fieldValues.add(new FieldValue(fieldName, (rangeName == null) ? value : rangeName));
+											}
+										}
 									}
 								}
 							}

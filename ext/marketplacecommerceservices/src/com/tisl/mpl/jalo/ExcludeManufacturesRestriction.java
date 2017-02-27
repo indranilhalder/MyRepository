@@ -32,15 +32,15 @@ public class ExcludeManufacturesRestriction extends GeneratedExcludeManufactures
 
 	/**
 	 * @Description: Exclude Brand Based Restriction evaluation Method for Promotions
-	 * @param:SessionContext ctx
-	 * @param:Collection<Product> products
-	 * @param:Date date
-	 * @param:AbstractOrder order
+	 * @param:SessionContext arg0
+	 * @param:Collection<Product> arg1
+	 * @param:Date arg2
+	 * @param:AbstractOrder arg3
 	 * @return:RestrictionResult
 	 */
 	@Override
-	public RestrictionResult evaluate(final SessionContext ctx, final Collection<Product> products, final Date date,
-			final AbstractOrder order)
+	public RestrictionResult evaluate(final SessionContext arg0, final Collection<Product> arg1, final Date arg2,
+			final AbstractOrder arg3)
 	{
 		return RestrictionResult.ALLOW;
 	}

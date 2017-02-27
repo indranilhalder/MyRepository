@@ -87,16 +87,15 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 
 		final AbstractOrder cart = promoContext.getOrder(); // Fetch Order Details
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
-		//final List<Product> excludedProductList = new ArrayList<Product>();
-		//final List<String> excludeManufactureList = new ArrayList<String>();
+		final List<Product> excludedProductList = new ArrayList<Product>();
+		final List<String> excludeManufactureList = new ArrayList<String>();
 
 
-		//		GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, promoContext, excludedProductList,
-		//				excludeManufactureList, restrictionList, this);
+		GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, promoContext, excludedProductList,
+				excludeManufactureList, restrictionList, this);
 
-		//final PromotionsManager.RestrictionSetResult restrictResult = findEligibleProductsInBasket(ctx, promoContext); // Validating Promotion set restrictions
-		final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager().findEligibleProductsInBasket(ctx,
-				promoContext, this, getCategories());
+		final PromotionsManager.RestrictionSetResult restrictResult = findEligibleProductsInBasket(ctx, promoContext); // Validating Promotion set restrictions
+
 		//final List<Product> promotionProductList = new ArrayList<>(getProducts()); // Fetch Promotion set Primary Products
 		//final List<Category> promotionCategoryList = new ArrayList<>(getCategories()); // Fetch Promotion set Primary Categories
 		//Populating Excluded Products and Excluded Manufacturer in separate Lists
@@ -117,13 +116,13 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 
 			//changes end for omni cart fix @atmaram
 
-			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag
+			if ((restrictResult.isAllowedToContinue()) && (!(restrictResult.getAllowedProducts().isEmpty())) && checkChannelFlag
 					&& flagForPincodeRestriction)
 			{
-				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
+				final List<Product> allowedProductList = new ArrayList<Product>(restrictResult.getAllowedProducts());
 
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager().getValidProductListBOGO(
-						cart, ctx, allowedProductList, restrictionList);
+						cart, ctx, allowedProductList, excludedProductList, excludeManufactureList, restrictionList);
 
 				// Get the valid Products for Promotions
 				//				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager().getValidProdListForBOGO(

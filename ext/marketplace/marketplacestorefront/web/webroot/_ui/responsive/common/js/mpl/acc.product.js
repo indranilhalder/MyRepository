@@ -434,7 +434,6 @@ sendAddToBag : function(formId, isBuyNow) {
 	var stock = $("#" + formId + " :input[name='" + stock_id + "']").val();
 	var isSuccess = false;
 	var ussid = $("#" + formId + " :input[name='" + ussid + "']").val();
-	var utagError=false;
 	/*
 	 * if(parseInt(stock)<parseInt(quantity)){
 	 * $("#"+formId+"noInventory").html("<font color='#ff1c47'>" +
@@ -493,8 +492,6 @@ sendAddToBag : function(formId, isBuyNow) {
 											+ $('#bagfull').text()
 											+ "</font>");
 							$("#" + formId + "Title").show().fadeOut(5000);
-							errorAddToBag("bag_is_full");
-							utagError=true;
 						} else if (data == "outofinventory") {
 							$("#" + formId + "noInventory")
 									.html(
@@ -505,8 +502,6 @@ sendAddToBag : function(formId, isBuyNow) {
 													+ "</font>");
 							$("#" + formId + "noInventory").show().fadeOut(
 									6000);
-							errorAddToBag("out_of_stock");
-							utagError=true;
 							return false;
 						} else if (data == "willexceedeinventory") {
 							$("#" + formId + "excedeInventory")
@@ -519,13 +514,7 @@ sendAddToBag : function(formId, isBuyNow) {
 							$("#" + formId + "excedeInventory").show()
 									.fadeOut(6000);
 							return false;
-						} 
-						else if(data == "freebieErrorMsg") { //freebie unable to add
-							$("#" + formId + "Title").html("Freebie: This product is not on sale");						
-							$("#" + formId + "Title").show().fadeOut(5000);
-							return false;
-						}
-						else {
+						} else {
 							$("#" + formId + "Title").html("");
 							$("#" + formId + "Title").html(
 									"<br/><font color='#ff1c47'>"
@@ -572,23 +561,15 @@ sendAddToBag : function(formId, isBuyNow) {
 										salesHierarchyCategoryMSD,
 										priceformad, "INR");
 							}
-						
 						}
 						// End MSD
 						if (isSuccess == true) {
+							
 							var cartUrl = ACC.config.encodedContextPath
 									+ "/cart";
 							location.href = cartUrl;
 						}
-						
-						if(!utagError){
-							if(isBuyNow){
-								utagAddProductToBag("buy_now");
-							}
-							else{
-								utagAddProductToBag("add_to_bag");
-							}
-						}
+				
 						
 						$("#bag-clickSpin,.bagspinner").remove();			
 					},
@@ -601,6 +582,7 @@ sendAddToBag : function(formId, isBuyNow) {
 					error : function(resp) {
 						$("#bag-clickSpin,.bagspinner").remove();
 						$('.js-add-to-cart').removeAttr("disabled");//For TISPRD-4631
+						// alert("Add to Bag unsuccessful");
 					}
 				});
 	}
@@ -1076,66 +1058,37 @@ sendAddToBagQuick:function(formId){
 		}
 	},
 	brandFilter: function(){
-		$(document).on("keyup",'input[class="brandSearchTxt"]',function(){
-			var facetTopValuesCnt=$("#facetTopValuesCnt").val();		
-			var that = this, $allListElements =$('.facet_desktop ul.js-facet-list > li.filter-brand').find("span.facet-label");
+		$('input[class="brandSearchTxt"]').keyup(function(){
+		    var that = this, $allListElements = $('ul > li.filter-brand').find("span.facet-label");
 		    var $matchingListElements = $allListElements.filter(function(i, li){
-		    	var spanTxt=$(li).text().trim();		    	
-		    	var lastIndexOfFirstBracket=spanTxt.lastIndexOf("(");
-		    	var searchText = that.value.toUpperCase();		    	
-		    	var listItemText = (lastIndexOfFirstBracket!=-1)?spanTxt.substring(0,lastIndexOfFirstBracket).trim().toUpperCase():spanTxt.toUpperCase();		    	
-		    	if($(li).hasClass('marked')){	
-		    		$(li).removeClass('marked');
-		    	}		    	
+		        var listItemText = $(li).text().toUpperCase(), searchText = that.value.toUpperCase();
 		        return ~listItemText.indexOf(searchText);
-		    });		    		    
-		    if(~~facetTopValuesCnt!=0)
-		    {
-		    	var remainingFacetValuesCnt=$("#remainingFacetValuesCnt").val();
-			    $(".brand .js-facet-top-values").hide();
-				$(".brand .js-facet-list.js-facet-list-hidden").show();
-				$allListElements.hide();
-				var matchingListElementsSize=$matchingListElements.length;			
-				if($('input[class="brandSearchTxt"]').val() == "") {				
-					$(".brand .js-facet-top-values").show();
-					$(".brand .js-facet-list.js-facet-list-hidden").hide();
-					
-					$(this).parents(".js-facet").find(".js-more-facet-values span").text((~~remainingFacetValuesCnt)-(~~facetTopValuesCnt));
-					if($allListElements.length>facetTopValuesCnt)
-					{
-						$(this).parents(".js-facet").find(".js-more-facet-values").show();					
-						$(this).parents(".js-facet").find(".js-less-facet-values").hide();
-					}
-			    }
-				else{
-					$.each($matchingListElements,function(index,element)
-					{
-						index<facetTopValuesCnt?$(this).css('display','block'):$(this).addClass('marked');					
-					});
-					if(matchingListElementsSize>0 && matchingListElementsSize>facetTopValuesCnt)
-					{				
-						$(this).parents(".js-facet").find(".js-more-facet-values span").text(~~matchingListElementsSize-~~facetTopValuesCnt);
-						$(this).parents(".js-facet").find(".js-more-facet-values").show();
-						$(this).parents(".js-facet").find(".js-less-facet-values").hide();
-					}
-					else if(matchingListElementsSize==0 || (matchingListElementsSize>0 && matchingListElementsSize<=facetTopValuesCnt))
-					{
-						$(this).parents(".js-facet").find(".js-more-facet-values").hide();
-						$(this).parents(".js-facet").find(".js-less-facet-values").hide();
-					}
-				}
+		    });
+		    if(($matchingListElements).size() > 0) {
+			    $(this).parents(".js-facet").find(".js-facet-top-values").hide();
+				$(this).parents(".js-facet").find(".js-facet-list-hidden").show();
+	
+				$(this).parents(".js-facet").find(".js-more-facet-values").hide();
+				$(this).parents(".js-facet").find(".js-less-facet-values").show();
 		    }
-		    else
-	    	{
-		    	if($('input[class="brandSearchTxt"]').val() == "")
-		    	{
-					$allListElements.show();
-		    	}
-				else{
-					$allListElements.hide();
-					$matchingListElements.show();
-				}
-	    	}
+		    if(that.value.toUpperCase() == ''){
+		    	$(this).parents(".js-facet").find(".js-facet-top-values").show();
+				$(this).parents(".js-facet").find(".js-facet-list-hidden").hide();
+
+				$(this).parents(".js-facet").find(".js-more-facet-values").show();
+				$(this).parents(".js-facet").find(".js-less-facet-values").hide();
+		    }
+			    
+		    $allListElements.hide();
+		    $(".brand .js-facet-top-values").hide();
+			$(".brand .js-facet-list.js-facet-list-hidden").show();
+		    $matchingListElements.show();
+		    
+		    if($('input[class="brandSearchTxt"]').val() == "") {
+		    	
+		    	$(".brand .js-facet-top-values").show();
+				$(".brand .js-facet-list.js-facet-list-hidden").hide();
+		    }
 		});
 	},
 	

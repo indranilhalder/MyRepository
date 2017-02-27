@@ -1599,8 +1599,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			final long quantity, final String ussid) throws InvalidCartException, CommerceCartModificationException
 	{
 		boolean success = false;
-		//commented for car project implementation CAR:62
-		//CartData cartData = null;
+		CartData cartData = null;
 		final CommerceCartParameter parameter = new CommerceCartParameter();
 		CartModificationData cartModificationData = null;
 		String sellerUssId = null;
@@ -1618,9 +1617,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			{
 				throw new CommerceCartModificationException("Invalid quantity " + quantity);
 			}
-			//commented for car project implementation CAR:62
-			//cartData = getCartConverter().convert(cartModel);
 
+			cartData = getCartConverter().convert(cartModel);
 			// Check if ussid is null then fetch ussid
 			if (ussid == null || ussid.isEmpty())
 			{
@@ -1631,9 +1629,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				sellerUssId = ussid;
 			}
 			//			if (isMaxQuantityAlreadyAdded(cartData, productCode))
-			//commented for car project implementation CAR:62: added cartModel instead of carData as param in isMaxQuantityAlreadyAdded
-			//if (isMaxQuantityAlreadyAdded(cartData, sellerUssId, quantity, productModel.getCode()))
-			if (isMaxQuantityAlreadyAdded(cartModel, sellerUssId, quantity, productModel.getCode()))
+			if (isMaxQuantityAlreadyAdded(cartData, sellerUssId, quantity, productModel.getCode()))
 			{
 				parameter.setEnableHooks(true);
 				parameter.setCart(cartModel);
@@ -1698,28 +1694,19 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 *
 	 */
 	@SuppressWarnings("javadoc")
-	//commented for car project implementation CAR:62: added cartModel instead of carData as param
-	//private boolean isMaxQuantityAlreadyAdded(final CartData cartData, final String ussid, final long quantity,
-	private boolean isMaxQuantityAlreadyAdded(final CartModel cartModel, final String ussid, final long quantity,
+	private boolean isMaxQuantityAlreadyAdded(final CartData cartData, final String ussid, final long quantity,
 			final String productCode)
 	{
 		boolean addToCartFlag = true;
 		final int maximum_configured_quantiy = getSiteConfigService().getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
-		//commented for car project implementation CAR:62
-		//if (cartData.getEntries() != null && ussid != null && !cartData.getEntries().isEmpty())
-		if (cartModel.getEntries() != null && ussid != null && !cartModel.getEntries().isEmpty())
+		if (cartData.getEntries() != null && ussid != null && !cartData.getEntries().isEmpty())
 		{
-			//commented for car project implementation CAR:62
-			//for (final OrderEntryData entry : cartData.getEntries())
-			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
-			{
-				//commented for car project implementation CAR:62
-				//final ProductData productData = entry.getProduct();
-				final ProductModel productModel = entry.getProduct();
 
-				//commented for car project implementation CAR:62
-				//if (productCode.equals(productData.getCode()) && entry.getSelectedUssid().equalsIgnoreCase(ussid))
-				if (productCode.equals(productModel.getCode()) && entry.getSelectedUSSID().equalsIgnoreCase(ussid))
+			for (final OrderEntryData entry : cartData.getEntries())
+			{
+				final ProductData productData = entry.getProduct();
+
+				if (productCode.equals(productData.getCode()) && entry.getSelectedUssid().equalsIgnoreCase(ussid))
 				{
 
 					LOG.debug(" Product already present in the cart so now we will check the qunatity present in the cart already");

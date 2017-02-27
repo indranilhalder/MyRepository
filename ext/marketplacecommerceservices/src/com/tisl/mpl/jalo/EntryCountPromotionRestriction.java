@@ -48,16 +48,16 @@ public class EntryCountPromotionRestriction extends GeneratedEntryCountPromotion
 	 * This method evaluates Entry count restriction. Allowed in restriction. Logic is handled in PromotionManager.
 	 * TPR-969
 	 *
-	 * @param ctx
-	 * @param products
-	 * @param date
-	 * @param order
+	 * @param arg0
+	 * @param arg1
+	 * @param arg2
+	 * @param arg3
 	 * @return RestrictionResult
 	 *
 	 */
 	@Override
-	public RestrictionResult evaluate(final SessionContext ctx, final Collection<Product> products, final Date date,
-			final AbstractOrder order)
+	public RestrictionResult evaluate(final SessionContext arg0, final Collection<Product> arg1, final Date arg2,
+			final AbstractOrder arg3)
 	{
 		return RestrictionResult.ALLOW;
 	}
