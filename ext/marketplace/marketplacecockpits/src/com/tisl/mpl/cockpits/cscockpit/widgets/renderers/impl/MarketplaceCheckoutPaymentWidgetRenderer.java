@@ -129,56 +129,65 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 		Div div = new 	Div();
 		Hbox hbox = new Hbox();
 		try {
-				Div paymentModeDropdownContent = new Div();
+			//	Div paymentModeDropdownContent = new Div();
 				
-				createPaymentModeField(widget,paymentModeDropdownContent);
+	//			createPaymentModeField(widget,paymentModeDropdownContent);
 				
-				Button generateOTP = new Button(LabelUtils.getLabel(
-						widget, "generateButton"));
-				generateOTP.setDisabled(cart.getPaymentInfo()==null);
-				generateOTP.addEventListener(Events.ON_CLICK, new EventListener() {
-					@Override
-					public void onEvent(Event arg0) throws Exception {
-						handleGenerateOTP(widget);
-					}
-				});
-				generateOTP.setParent(paymentModeDropdownContent);
+//				Button generateOTP = new Button(LabelUtils.getLabel(
+//						widget, "generateButton"));
+//				generateOTP.setDisabled(cart.getPaymentInfo()==null);
+//				generateOTP.addEventListener(Events.ON_CLICK, new EventListener() {
+//					@Override
+//					public void onEvent(Event arg0) throws Exception {
+//						handleGenerateOTP(widget);
+//					}
+//				});
+//				generateOTP.setParent(paymentModeDropdownContent);
 				
-				hbox.appendChild(paymentModeDropdownContent);
+//				hbox.appendChild(paymentModeDropdownContent);
 				
-				div.appendChild(hbox);
-				hbox = new Hbox();
+	//			div.appendChild(hbox);
+//				hbox = new Hbox();
 				
-				boolean oTPValidated =!( opt==null ||( opt.getIsValidated() !=null && opt.getIsValidated().booleanValue()));
+				//boolean oTPValidated =!( opt==null ||( opt.getIsValidated() !=null && opt.getIsValidated().booleanValue()));
+//				boolean oTPValidated=false;
+//				Div otparea = new Div();
+//				otparea.setVisible(oTPValidated);
+//				Textbox OTPTextBox = new Textbox();
+//				OTPTextBox.setMaxlength(8);
+//				
+//				OTPTextBox.setParent(otparea);
 				
+				
+//				Button validateOTP = new Button(LabelUtils.getLabel(
+//						widget, "validateButton"));
+										
+				
+//				validateOTP.setParent(otparea);
+//				
+//				hbox.appendChild(otparea);
+//				
+//				validateOTP.addEventListener(
+//						Events.ON_CLICK,
+//						createValidateOTPEventListener(widget,
+//								OTPTextBox));
+				
+				boolean authorize=true;
 				Div otparea = new Div();
-				otparea.setVisible(oTPValidated);
-				Textbox OTPTextBox = new Textbox();
-				OTPTextBox.setMaxlength(8);
+				otparea.setVisible(authorize);				
 				
-				OTPTextBox.setParent(otparea);
-				
-				
-				Button validateOTP = new Button(LabelUtils.getLabel(
-						widget, "validateButton"));
-				
-				validateOTP.setParent(otparea);
+				Button authorizeButton = new Button(LabelUtils.getLabel(
+						widget, "authorizeButton"));
+				authorizeButton.setParent(otparea);
 				
 				hbox.appendChild(otparea);
 				
-				validateOTP.addEventListener(
+				authorizeButton.addEventListener(
 						Events.ON_CLICK,
-						createValidateOTPEventListener(widget,
-								OTPTextBox));
+						createAuthorizeEventListener(widget));
 				div.appendChild(hbox);
 				div.setParent(rootContainer);
 			
-		}catch(ValidationException ex) {
-			try {
-				Messagebox.show(ex.getMessage(), LabelUtils.getLabel(widget, "failedToCreatePayment", new Object[0]), 1, "z-msgbox z-msgbox-error");
-			} catch (InterruptedException e) {
-				LOG.error("EtailNonBusinessExceptions in createContentInternal:",ex);
-			}
 		}catch(EtailNonBusinessExceptions ex) {
 			LOG.error("EtailNonBusinessExceptions in createContentInternal:",ex);
 			popupMessage(widget, MarketplaceCockpitsConstants.SERVER_ERROR+":"+ex,Messagebox.ERROR);
@@ -189,6 +198,102 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 		return div;
 	}
 
+
+	private EventListener createAuthorizeEventListener(
+			DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget) {
+		 return new ValidateAuthorizeEventListener(widget);		
+	}
+
+protected class ValidateAuthorizeEventListener implements EventListener {
+		
+		/** The widget. */
+		private DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget;
+		
+		
+		
+		/**
+		 * Instantiates a new validate otp event listener.
+		 *
+		 * @param widget the widget
+		 * @param oTPTextBox the o tp text box
+		 * @param userId the user id
+		 * @param cart the cart
+		 */
+		public ValidateAuthorizeEventListener(
+				DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget) {
+			// TODO Auto-generated constructor stub
+			super();
+			this.widget = widget;		
+		}
+
+		/* (non-Javadoc)
+		 * @see org.zkoss.zk.ui.event.EventListener#onEvent(org.zkoss.zk.ui.event.Event)
+		 */
+		@Override
+		public void onEvent(Event event) throws InterruptedException {
+			// TODO Auto-generated method stub
+			//if (!oTPTextBox.getText().isEmpty()) {
+			handleValidateAuthorizeEvent(widget,  event);
+//			} else {
+//				Messagebox.show(
+//						LabelUtils.getLabel(widget, ENTER_OTP, new Object[0]),
+//						INFO, Messagebox.OK, Messagebox.ERROR);
+//			}
+		}
+
+		/**
+		 * Handle validate otp event.
+		 *
+		 * @param widget the widget
+		 * @param oTPTextBox the o tp text box
+		 * @param userId the user id
+		 * @param cart the cart
+		 * @param event the event
+		 * @throws InterruptedException the interrupted exception
+		 */
+		private void handleValidateAuthorizeEvent(
+				DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget,
+				 Event event)
+				throws InterruptedException {
+			CartModel cart = ((CartModel) ((CheckoutController) widget
+					.getWidgetController()).getBasketController().getCart()
+					.getObject());
+			long time=0l;
+			String userId = ((CustomerModel)cart.getUser()).getOriginalUid();
+			try{
+			time=Long.parseLong(configurationService.getConfiguration().getString("OTP_Valid_Time_milliSeconds"));
+			
+			}catch (NumberFormatException exp){
+				LOG.error("on Time limit defined");
+			}	
+				if(widget.getWidgetController().needPaymentOption()){
+					try {
+						((MarketplaceCheckoutController)widget.getWidgetController()).processPayment(cart);
+					} catch (PaymentException e) {
+						Messagebox
+						.show(LabelUtils.getLabel(widget, e.getLocalizedMessage(),
+								new Object[0]), INFO, Messagebox.OK,
+								Messagebox.ERROR);
+					} catch (ValidationException e) {
+						Messagebox
+						.show(LabelUtils.getLabel(widget, e.getLocalizedMessage(),
+								new Object[0]), INFO, Messagebox.OK,
+								Messagebox.ERROR);
+					}
+					catch (Exception e) {
+						Messagebox
+						.show(LabelUtils.getLabel(widget, e.getLocalizedMessage(),
+								new Object[0]), INFO, Messagebox.OK,
+								Messagebox.ERROR);
+					}
+				}
+			Map data = Collections.singletonMap("refresh", Boolean.TRUE);
+				((CheckoutController) widget.getWidgetController()).getBasketController()
+						.dispatchEvent(null, widget.getWidgetController(), data);		
+
+		}
+
+	}
 
 	/**
 	 * Creates the payment event listener.
@@ -480,13 +585,13 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 		@Override
 		public void onEvent(Event event) throws InterruptedException {
 			// TODO Auto-generated method stub
-			if (!oTPTextBox.getText().isEmpty()) {
+			//if (!oTPTextBox.getText().isEmpty()) {
 				handleValidateOTPEvent(widget, oTPTextBox, event);
-			} else {
-				Messagebox.show(
-						LabelUtils.getLabel(widget, ENTER_OTP, new Object[0]),
-						INFO, Messagebox.OK, Messagebox.ERROR);
-			}
+//			} else {
+//				Messagebox.show(
+//						LabelUtils.getLabel(widget, ENTER_OTP, new Object[0]),
+//						INFO, Messagebox.OK, Messagebox.ERROR);
+//			}
 		}
 
 		/**
@@ -518,10 +623,10 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 			
 //			OTPResponseData otpResponse = oTPGenericService.validateOTP(userId,null,
 //					oTPTextBox.getValue(), OTPTypeEnum.COD, time);
-			OTPResponseData otpResponse = oTPGenericService.validateLatestOTP(userId,null,
-					oTPTextBox.getValue(), OTPTypeEnum.COD, time);
+		/*	OTPResponseData otpResponse = oTPGenericService.validateLatestOTP(userId,null,
+					oTPTextBox.getValue(), OTPTypeEnum.COD, time);*/
 			
-			boolean validate = otpResponse.getOTPValid();
+			boolean validate = true; /*otpResponse.getOTPValid();*/
 			
 				
 			if(validate){	
@@ -653,19 +758,19 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 //				 smsContent, oTPMobileNumber);
 		String mplCustomerName = (null ==  cart.getUser().getName()) ? "" : cart.getUser().getName();
 		
-		sendSMSFacade.sendSms(
-				MarketplacecommerceservicesConstants.SMS_SENDER_ID,
-				MarketplacecommerceservicesConstants.SMS_MESSAGE_COD_OTP
-						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO,
-								mplCustomerName != null ? mplCustomerName : "There")
-						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, smsContent)
-						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, contactNumber), oTPMobileNumber);
+//		sendSMSFacade.sendSms(
+//				MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+//				MarketplacecommerceservicesConstants.SMS_MESSAGE_COD_OTP
+//						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO,
+//								mplCustomerName != null ? mplCustomerName : "There")
+//						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, smsContent)
+//						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, contactNumber), oTPMobileNumber);
 		
 		
 		Map data = Collections.singletonMap("refresh", Boolean.TRUE);
 		((CheckoutController) widget.getWidgetController()).getBasketController()
 				.dispatchEvent(null, widget.getWidgetController(), data);
-		popupMessage(widget, OTP_IS_SENT,Messagebox.INFORMATION);
+		//popupMessage(widget, OTP_IS_SENT,Messagebox.INFORMATION);
 		} catch (Exception e) {
 			try {
 				Messagebox.show(e.getMessage() + ((e.getCause() == null) ? "" : new StringBuilder(" - ").append(e.getCause().getMessage()).toString()), 
