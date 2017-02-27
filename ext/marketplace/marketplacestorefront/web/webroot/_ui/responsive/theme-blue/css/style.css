@@ -55564,9 +55564,6 @@ display:block;}
 @media(max-width:767px){
 .choose-payment{  /* padding: 70px 0 0; */}
 .checkout-payment.cart.checkout.wrapper .step-body{ padding: 90px 0px 0;}
-.checkout.wrapper.checkout-payment h1,
-.cart.wrapper.checkout-payment p.cart-items{display:none;}
-
 #wrapper .container-address{ padding: 14px 0 0;}
 #wrapper.checkout-payment, .checkout-payment .container-mobile { margin:0; width:100%; font-size:12px; }
 #wrapper.checkout-payment{ margin: 0 0 65px;}
@@ -61893,6 +61890,11 @@ margin-right:0;
 	letter-spacing: 0.6px;
 	padding: 17px;
 	padding-left:56px;
+	position:relative;
+	cursor: pointer;
+}
+.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs li.paymentModeMobile.active{
+	border-bottom: 0px;
 }
 .cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs{
 	display:block;
@@ -61986,6 +61988,50 @@ margin-right:0;
 }
 #bankCodeSelection{
 	width:100%;
+}
+body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
+    padding: 0;
+}
+.progress-barcheck {
+    margin: 10px auto 0;
+}
+.checkout.wrapper.checkout-payment.checkout-payment h1 {
+    font-size: 14px;
+    line-height: 1.14;
+    padding-left: 11px;
+}
+.cart.wrapper.checkout-payment.checkout-payment p.cart-items {
+    line-height: 1.45;
+    font-size: 11px;
+    padding-left: 11px;
+}
+.cart.wrapper.checkout-payment.checkout-payment p.cart-items .prices {
+    font-size: 14px;
+    line-height: 1.14;
+}
+.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs {
+    padding-bottom: 0px;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.new-form.active {
+    top: 0px;
+}
+.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs li.paymentModeMobile:before{
+	content: "";
+    display: inline-block;
+    position: absolute;
+    left: 16px;
+    top: 0px;
+    bottom: 0;
+    margin: auto;
+    width: 15px;
+    height: 15px;
+    box-shadow: 0 0 0 1px #979797;
+    border-radius: 100%;
+    border: 3px solid #fff;
+    background: #fff;
+}
+.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs li.paymentModeMobile.active:before{
+    background: #000;
 }
 }
 /* Payment Page change end */

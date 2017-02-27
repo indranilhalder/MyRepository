@@ -52,7 +52,7 @@
     					if(updateItHereLink.indexOf("updateItHereLink")>=0)
     					{
     						displayCODForm();
-    						$("#viewPaymentCOD").parent("li").addClass("active");
+    						$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").addClass("active");
     						$(".checkout-paymentmethod").css("display","block");
     						document.getElementById("otpMobileNUMField").focus();    						
     					}
@@ -61,35 +61,35 @@
     						if($("#CreditCard").val()=="true")
         					{
         						displayCreditCardForm();
-        						$("#viewPaymentCredit").parent("li").addClass("active");
+        						$("#viewPaymentCredit, #viewPaymentCreditMobile").parent("li").addClass("active");
         						$(".checkout-paymentmethod").css("display","block");
         						//setTimeout(function(){$('#viewPaymentCredit').click();},1000);
         					}
         					else if($("#DebitCard").val()=="true")
         					{
         						displayDebitCardForm();
-        						$("#viewPaymentDebit").parent("li").addClass("active");
+        						$("#viewPaymentDebit, #viewPaymentDebitMobile").parent("li").addClass("active");
         						$(".checkout-paymentmethod").css("display","block");
         						//setTimeout(function(){$('#viewPaymentDebit').click();},1000);
         					}
         					else if($("#EMI").val()=="true")
         					{
         						displayEMIForm();
-        						$("#viewPaymentEMI").parent("li").addClass("active");
+        						$("#viewPaymentEMI, #viewPaymentEMIMobile").parent("li").addClass("active");
         						$(".checkout-paymentmethod").css("display","block");
         						//setTimeout(function(){$('#viewPaymentEMI').click();},1000);
         					}
         					else if($("#Netbanking").val()=="true")
         					{
         						displayNetbankingForm();
-        						$("#viewPaymentNetbanking").parent("li").addClass("active");
+        						$("#viewPaymentNetbanking, #viewPaymentNetbankingMobile").parent("li").addClass("active");
         						$(".checkout-paymentmethod").css("display","block");
         						//setTimeout(function(){$('#viewPaymentNetbanking').click();},1000);
         					}
         					else if($("#COD").val()=="true")
         					{
         						displayCODForm();
-        						$("#viewPaymentCOD").parent("li").addClass("active");
+        						$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").addClass("active");
         						$(".checkout-paymentmethod").css("display","block");
         						//setTimeout(function(){$('#viewPaymentCOD').click();},1000);
         					}	
