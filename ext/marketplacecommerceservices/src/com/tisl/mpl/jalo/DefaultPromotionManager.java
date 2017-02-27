@@ -3949,20 +3949,18 @@ public class DefaultPromotionManager extends PromotionsManager
 
 			primaryProductList.addAll(cartProducts);
 
-			//			if (CollectionUtils.isNotEmpty(secondCategories))
-			//			{
-			//				populateSecondaryListForCategory(secondCategories, secondaryProductList, params, ctx);
-			//			}
+			final List<Product> totalProductList = new ArrayList<Product>(primaryProductList);
+			totalProductList.addAll(secondaryProductList);
 
-			secondaryProductList.addAll(primaryProductList);
+			//secondaryProductList.addAll(primaryProductList);
 
 			if (promoContext.getObserveRestrictions())
 			{
-				return PromotionsManager.getInstance().evaluateRestrictions(ctx, secondaryProductList, promoContext.getOrder(),
+				return PromotionsManager.getInstance().evaluateRestrictions(ctx, totalProductList, promoContext.getOrder(),
 						promotion, promoContext.getDate());
 			}
 
-			return new PromotionsManager.RestrictionSetResult(secondaryProductList);
+			return new PromotionsManager.RestrictionSetResult(totalProductList);
 		}
 
 		return new PromotionsManager.RestrictionSetResult(new ArrayList(0));
