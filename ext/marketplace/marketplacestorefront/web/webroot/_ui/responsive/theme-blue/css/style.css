@@ -61907,6 +61907,90 @@ margin-right:0;
 .cvv_mobile{
 	display:none;
 }
+/*saved card start*/
+#savedDebitCard, #savedCreditCard{
+	border: 1px solid #eee;
+	border-radius: 4px;
+}
+.cart.wrapper.checkout-payment .blocks .card-sec{
+	border:0px;
+	border-bottom: 1px solid #eee;
+	padding: 25px 16px;
+}
+.cart.wrapper.checkout-payment .blocks .card-sec:last-child{
+	border-bottom: 0px;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .card input[type="radio"] + label:after, .confirmation .left-block .payments.tab-view .tabs .product-block li.item .card input[type="radio"] + label:after {
+    display: none;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .card, .confirmation .left-block .payments.tab-view .tabs .product-block li.item .card {
+    width: -webkit-calc(100% - 97px);
+    width: calc(100% - 97px);
+}
+div#savedCreditCard .credit-card-group .right-align-form, div#savedDebitCard .debit-card-group .right-align-form {
+    width: 87px;
+    padding-left:0;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedCreditCard .cvv input, .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedDebitCard .cvv input {
+    width: 100%;
+    padding-right: 0px;
+    font-size: 12px;
+}
+.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block .card-sec .cvv label,
+.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block .card-sec .cvv input {
+    margin-left: 0px !important;
+    background-image: none;
+}
+.cart.wrapper.checkout-payment .blocks .card-sec .radio label{
+    position: static !important;
+    padding-left: 0px !important;
+    font-size: 12px !important;
+    font-weight: normal !important;
+    text-transform: none;
+    letter-spacing: 0.6px;
+    color: #666666;
+    margin-bottom: 0px !important;
+}
+.cart.wrapper.checkout-payment .blocks .card-sec .radio label span{
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #000 !important;
+    text-transform: none;
+    display: inline !important;
+}
+.cart.wrapper.checkout-payment .blocks .card-sec .radio{
+	padding-left: 40px;
+    position: relative;
+    margin-right:0px;
+}
+.cart.wrapper .left-block #savedDebitCard .debit-card-group input[type="radio"] + label:before, .cart.wrapper .left-block li#savedCard div.card input[type="radio"] + label:before {
+    left: 0px;
+    margin-top: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    box-shadow: 0 0 0 1px #979797;
+    border:3px solid #fff;
+    height: 15px;
+    width: 15px;
+}
+.cart.wrapper .left-block #savedDebitCard .debit-card-group input[type="radio"]:checked + label:before, .cart.wrapper .left-block li#savedCard div.card input[type="radio"]:checked + label:before {
+    background: #000;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .card .radio p {
+    line-height: normal;
+    font-size: 10px;
+    text-transform: none;
+    color: #666666;
+    letter-spacing: 0.6px;
+        margin: 0 0 0 34px;
+}
+.cart.wrapper.checkout-payment .card-sec .card-num .card_image {
+    float: left;
+    margin-bottom: 15px;
+    margin-top: 6px;
+}
+/*saved card end*/
 /*Left section end*/
 @media (max-width: 767px){
 .totals.outstanding-totalss {

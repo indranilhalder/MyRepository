@@ -344,7 +344,7 @@
 														        </c:choose>		
 										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" />
 									                 	 		<label for="cc${status.index}" data-id="savedCCard" class="numbers">
-									                 	 			${map.value.cardBrand} ending in ${map.value.cardEndingDigits}</label>
+									                 	 			<span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}</label>
 									                 	 			<!-- <span class="saved">Saved card</span> -->
 									                  				<p>${map.value.nameOnCard}</p>
 									                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
@@ -358,8 +358,8 @@
 										            		</div>
 										       			</div>
 										        		<div class="cvv right-align-form digits">
-										        			<label class="sr-only" for="cvv${status.index+1}"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label>
-												            <input type="password" autocomplete="off" class="cvvValdiation form-control security_code" id="cvv${status.index+1}"  maxlength="4" onkeypress="return isNumber(event)" />
+										        			<%-- <label class="sr-only" for="cvv${status.index+1}"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label> --%>
+												            <input type="password" autocomplete="off" placeholder="CVV" class="cvvValdiation form-control security_code" id="cvv${status.index+1}"  maxlength="4" onkeypress="return isNumber(event)" />
 										        			<div id="cvvErrorSavedCard" class="card_cvvErrorSavedCard error-message">
 																<spring:theme code="checkout.multi.paymentMethod.savedCard.cvvError"/>
 															</div>
@@ -655,7 +655,7 @@
 				        							
 										        			<%-- <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span> --%>
 										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}"/>
-										                    		<label for="dc${status.index}" data-id="savedDCard" class="numbers">${map.value.cardBrand} ending in ${map.value.cardEndingDigits}</label>
+										                    		<label for="dc${status.index}" data-id="savedDCard" class="numbers"><span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}</label>
 										                  				<p>${map.value.nameOnCard}</p>
 										                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
 										                   			<input type="hidden" name="debitCardsBank" class="card_bank" value="${map.value.cardIssuer}" />
@@ -668,8 +668,8 @@
 										            			</div>
 										        			</div>
 										        			<div class="cvv right-align-form digits">
-										        				<label class="sr-only" for="cvv${status.index+1}"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label>
-										            			<input type="password" autocomplete="off" class="cvvValdiation form-control security_code_hide" id="cvv${status.index+1}" maxlength="4" onkeypress="return isNumber(event)" />		
+										        				<%-- <label class="sr-only" for="cvv${status.index+1}"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label> --%>
+										            			<input type="password" autocomplete="off" placeholder="CVV" class="cvvValdiation form-control security_code_hide" id="cvv${status.index+1}" maxlength="4" onkeypress="return isNumber(event)" />		
 										        				<br>
 										        				<div id="cvvErrorSavedCard" class="card_cvvErrorSavedCard error-message">
 																	<spring:theme code="checkout.multi.paymentMethod.savedCard.cvvError"/>
