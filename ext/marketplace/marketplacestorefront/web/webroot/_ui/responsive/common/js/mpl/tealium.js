@@ -1244,5 +1244,4 @@ function populateFirstFiveProductsPlp(){
 		 utag.link({ plp_first_5_products : productArray });
 	 }	
 }
->>>>>>> branch 'Analytics_DataLayerSchema_PLP/SERP' of https://github.com/tcs-chennai/TCS_COMMERCE_REPO
 
