@@ -59,6 +59,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -1315,21 +1316,69 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			//set ECOM request prefix as E to for COMM triggered Ticket
 			prefixableKeyGenerator.setPrefix(MarketplacecommerceservicesConstants.TICKETID_PREFIX_E);
 			sendTicketRequestData.setEcomRequestId(prefixableKeyGenerator.generate().toString());
+			
+			/*TISRLEE-3290 start*/
 			if(null != returnInfoData.getReturnPickupDate()) {
 				try {
 					String returnPickUpdate = returnInfoData.getReturnPickupDate();
 					returnPickUpdate=returnPickUpdate.concat("00:00:00");
 					final SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMddhh:mm:ss");
-					final SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+					final SimpleDateFormat format2 = new SimpleDateFormat("dd-MM-yyyy");
 					Date da = format1.parse(returnPickUpdate);
 					String date =format2.format(da);
+					if(LOG.isDebugEnabled()) {
+						LOG.debug("ReturnPickupDate"+date);
+					}
 					sendTicketRequestData.setReturnPickupDate(date);
 				}catch(Exception e) {
 					LOG.error("Exception occurred while setting ReturnPickupDate");
 				}
 			}
-			sendTicketRequestData.setTimeSlotFrom(returnInfoData.getTimeSlotFrom());
-			sendTicketRequestData.setTimeSlotTo(returnInfoData.getTimeSlotTo());
+			
+			if(null != returnInfoData.getReturnPickupDate() && null != returnInfoData.getTimeSlotFrom()) {
+				try {
+					String timeslot = returnInfoData.getReturnPickupDate();
+					String strDate = timeslot.concat("00:00:00");
+					final SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMddhh:mm:ss");
+					final SimpleDateFormat format2 = new SimpleDateFormat("dd-MM-yyyy");
+					Date da = format1.parse(strDate);
+					String date =format2.format(da);
+					System.out.println("date"+date);
+					final String timeSlotFrom= date.concat(" " + returnInfoData.getTimeSlotFrom());
+					final SimpleDateFormat format3 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+					final SimpleDateFormat format4 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+					format4.setTimeZone(TimeZone.getTimeZone("GMT"));
+					if(LOG.isDebugEnabled()) {
+						LOG.debug("ReturnPickupDate Time Slot From"+String.valueOf(format4.format(format3.parse(timeSlotFrom))));
+					}
+					sendTicketRequestData.setTimeSlotFrom(String.valueOf(format4.format(format3.parse(timeSlotFrom))));
+				}catch(Exception e) {
+					LOG.error("Exception occurred while setting ReturnPickupDate Time Slot From");
+				}
+			}
+			
+			if(null != returnInfoData.getReturnPickupDate() && null != returnInfoData.getTimeSlotTo()) {
+				try {
+					String timeslot = returnInfoData.getReturnPickupDate();
+					String strDate = timeslot.concat("00:00:00");
+					final SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMddhh:mm:ss");
+					final SimpleDateFormat format2 = new SimpleDateFormat("dd-MM-yyyy");
+					Date da = format1.parse(strDate);
+					String date =format2.format(da);
+					System.out.println("date"+date);
+					final String timeSlotTo= date.concat(" " + returnInfoData.getTimeSlotTo());
+					final SimpleDateFormat format3 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+					final SimpleDateFormat format4 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+					format4.setTimeZone(TimeZone.getTimeZone("GMT"));
+					if(LOG.isDebugEnabled()) {
+						LOG.debug("ReturnPickupDate Time Slot To"+String.valueOf(format4.format(format3.parse(timeSlotTo))));
+					}
+					sendTicketRequestData.setTimeSlotTo(String.valueOf(format4.format(format3.parse(timeSlotTo))));
+				}catch(Exception e) {
+					LOG.error("Exception occurred while setting ReturnPickupDate");
+				}
+			}
+			/*TISRLEE-3290 end*/
 			sendTicketRequestData.setCustomerID(customerData.getUid());
 			sendTicketRequestData.setLineItemDataList(lineItemDataList);
 			sendTicketRequestData.setOrderId(subOrderModel.getParentReference().getCode());
