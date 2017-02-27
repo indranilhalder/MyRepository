@@ -46,7 +46,6 @@ import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.promotions.result.PromotionEvaluationContext;
 import de.hybris.platform.promotions.result.PromotionException;
 import de.hybris.platform.promotions.result.PromotionOrderEntry;
-import de.hybris.platform.promotions.util.Helper;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -4119,23 +4118,19 @@ public class DefaultPromotionManager extends PromotionsManager
 		{
 			final Product product = aoe.getProduct(ctx);
 
-			//			if (CollectionUtils.isEmpty(secondCategories))
-			//			{
-			//				secondaryProductList.addAll(getSecondProducts(product, secondProductsAsString));
-			//			}
-
 			if (product == null
 					|| (CollectionUtils.isNotEmpty(excludedProductList) && excludedProductList.contains(product.getPK().toString())))
 			{
 				continue;
 			}
 			products.add(product);
-			final List baseProducts = Helper.getBaseProducts(ctx, product);
-			if ((baseProducts == null) || (baseProducts.isEmpty()))
-			{
-				continue;
-			}
-			products.addAll(baseProducts);
+
+			//			final List baseProducts = Helper.getBaseProducts(ctx, product);
+			//			if ((baseProducts == null) || (baseProducts.isEmpty()))
+			//			{
+			//				continue;
+			//			}
+			//			products.addAll(baseProducts);
 
 		}
 
@@ -4423,12 +4418,13 @@ public class DefaultPromotionManager extends PromotionsManager
 				continue;
 			}
 			products.add(product);
-			final List baseProducts = Helper.getBaseProducts(ctx, product);
-			if ((baseProducts == null) || (baseProducts.isEmpty()))
-			{
-				continue;
-			}
-			products.addAll(baseProducts);
+
+			//			final List baseProducts = Helper.getBaseProducts(ctx, product);
+			//			if ((baseProducts == null) || (baseProducts.isEmpty()))
+			//			{
+			//				continue;
+			//			}
+			//			products.addAll(baseProducts);
 		}
 
 		return products;
