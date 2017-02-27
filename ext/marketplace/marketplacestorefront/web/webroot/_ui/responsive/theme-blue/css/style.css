@@ -55563,7 +55563,7 @@ display:block;}
 ---------------------------------------------*/
 @media(max-width:767px){
 .choose-payment{  /* padding: 70px 0 0; */}
-.checkout-payment.cart.checkout.wrapper .step-body{ padding: 90px 0px 0;}
+.checkout-payment.cart.checkout.wrapper .step-body{ padding: 74px 0px 0;}
 #wrapper .container-address{ padding: 14px 0 0;}
 #wrapper.checkout-payment, .checkout-payment .container-mobile { margin:0; width:100%; font-size:12px; }
 #wrapper.checkout-payment{ margin: 0 0 65px;}
@@ -55604,9 +55604,9 @@ display:block;}
 .cart.wrapper.checkout-payment .card-sec .card-num .saved { font-size:9px; }
 .cart.wrapper.checkout-payment .card-sec .digits input.cvvValdiation { height:29px; width:74px; }
 .cart.wrapper.checkout-payment .blocks .new-card { padding:14px 0 0 0; }
-.cart.wrapper.checkout-payment .blocks .new-card  .name-card { margin:10px 0 18px 0; height:40px; }
+.cart.wrapper.checkout-payment .blocks .new-card  .name-card { margin:10px 0 18px 0; height:41px; }
 .cart.wrapper.checkout-payment .blocks .new-card .cardNumber input,
-input.year { height:40px; }
+input.year { height:41px; }
 .cart.wrapper.checkout-payment .blocks .new-card .cardExpiration { padding-bottom:18px; }
 .cart.wrapper.checkout-payment .terms .redirect { font-weight:normal; padding-bottom:0; }
 .cart.wrapper.checkout-payment .blocks .new-card button,
@@ -55696,7 +55696,7 @@ div#savedCreditCard, div#savedDebitCard {
 .cart.wrapper .left-block .payments.tab-view .nav li#newCardCC,
 .cart.wrapper .left-block .payments.tab-view .nav #emi li
 {margin:0;padding:0;}
-.cart.wrapper.checkout-payment .blocks .new-card input.card_number{height:40px;}
+.cart.wrapper.checkout-payment .blocks .new-card input.card_number{height:41px;}
 .cart.wrapper.checkout-payment .terms .redirect{overflow:hidden;}
 .cart.wrapper .product-block.emi #EMITermTable tr{
 	    width: 48.5%;
@@ -60291,7 +60291,7 @@ body.page-cartPage footer > div#footerByAjaxId, body.page-cartPage footer .foote
 footer .banner{
 	color:#999;
 	font-size:14px;
-	background: transparent;
+	background: #fff;
 }
 .callouts .Padd ul li{
 	border:0px;
@@ -61566,7 +61566,8 @@ margin: 0;
     font-weight: normal;
     text-transform:none;
 }
-.cart.wrapper.checkout-payment .left-block form #billingAddress fieldset{
+.cart.wrapper.checkout-payment .left-block form #billingAddress fieldset,
+.cart.wrapper.checkout-payment .left-block form #billingAddressEmi fieldset{
 	margin:10px 0;
 }
 .cart.wrapper.checkout-payment .left-block .payments.tab-view .new-card #billingAddress fieldset .half,
@@ -61745,6 +61746,9 @@ a.cvvHelp#cvvHelp + div.popover.bottom>.arrow {
     border-width: 10px;
     top: -20px !important;
 }
+.cart.wrapper.checkout-payment .blocks .new-card #billingAddressEmi input, .cart.wrapper.checkout-payment .blocks .new-card #billingAddressEmi select {
+    margin: 0;
+}
 @media(min-width:768px){
 	.cart.wrapper.checkout-payment .make_payment_top_savedCard, .cart.wrapper.checkout-payment .make_payment_top_newCard, .cart.wrapper.checkout-payment .make_payment_top_nb, .cart.wrapper.checkout-payment .cod_payment_button_top{
 	display: none !important;
@@ -61843,6 +61847,9 @@ margin-right:0;
 .cart.wrapper .left-block .payments.tab-view .nav li.paymentModeMobile{
 	display:none !important;
 }
+.cvv_mobile{
+	display:none;
+}
 /*Left section end*/
 @media (max-width: 767px){
 .totals.outstanding-totalss {
@@ -61888,13 +61895,18 @@ margin-right:0;
 	border-bottom: solid 1px #e8e8e8;
 	font-size: 14px;
 	letter-spacing: 0.6px;
-	padding: 17px;
-	padding-left:56px;
 	position:relative;
 	cursor: pointer;
 }
 .cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs li.paymentModeMobile.active{
 	border-bottom: 0px;
+}
+.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs li.paymentModeMobile span{
+	display: block;
+	padding: 17px;
+    padding-left: 56px;
+    position: relative;
+    z-index: 5;
 }
 .cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs{
 	display:block;
@@ -62032,6 +62044,39 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 }
 .cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs li.paymentModeMobile.active:before{
     background: #000;
+}
+.wrapper .container-address {
+    padding: 5px 8px;
+    border-bottom: 1px solid #e8e8e8;
+}
+.progress-barcheck div a, .progress-barcheck div.step-1.active a, .progress-barcheck div.step-2.active a, .progress-barcheck div.step-3.active a {
+    font-size: 12px;
+}
+.progress-barcheck .step-1.step-done span.paymentStepDone:after, .progress-barcheck .step-2.step-done span.paymentStepDone:after, .progress-barcheck .step-3.step-done span.paymentStepDone:after {
+    top: -8px;
+    width: 12px;
+    height: 12px;
+}
+.progress-barcheck .step-1.finalstep span, .progress-barcheck .step-2.finalstep span, .progress-barcheck .step-3.finalstep span, .progress-barcheck .step-1 span, .progress-barcheck .step-2 span, .progress-barcheck .step-3 span {
+    width: 12px !important;
+    height: 12px !important;
+}
+.progress-barcheck .step-1 span, .progress-barcheck .step-2 span, .progress-barcheck .step-3 span,
+.progress-barcheck .step-1.in-active span, .progress-barcheck .step-2.in-active span, .progress-barcheck .step-3.in-active span {
+    top: -4px !important;
+}
+#selectDeliveryMethodForm{
+	padding-top:50px;
+	padding-bottom: 31px;
+}
+.cart.wrapper #selectDeliveryMethodForm .checkout-shipping .checkout-shipping-items ul li.header{
+	display:none;
+}
+.page-multiStepCheckoutSummaryPage footer {
+    display:none;
+}
+.cvv_mobile{
+	display: inline-block;
 }
 }
 /* Payment Page change end */

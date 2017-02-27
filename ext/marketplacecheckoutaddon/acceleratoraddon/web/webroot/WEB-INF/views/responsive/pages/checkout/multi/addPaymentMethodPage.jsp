@@ -482,7 +482,7 @@
 														
 														<input type="hidden" id="cvvHelpContent" value="<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelpContent"/>">
 														<input type="hidden" id="cvvHelpContent" value="${cvvHelp}">
-						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label>
+						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/><span class="cvv_mobile"> [?]</span></label>
 						                           		<input type="password" autocomplete="new-password" class="security_code span1" name="cvv" maxlength="4" />
 						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
 						                           		<span class="error-message" id="cvvError"></span> 
@@ -785,7 +785,7 @@
 														
 														<input type="hidden" id="cvvHelpContent" value="<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelpContent"/>">
 														<input type="hidden" id="cvvHelpContent" value="${cvvHelp}">
-						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label>
+						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/><span class="cvv_mobile"> [?]</span></label>
 						                           		<input type="password" autocomplete="new-password" class="security_code span1" name="cvv" maxlength="4" />
 						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
 						                           		<span class="error-message" id="cvvErrorDc"></span> 
@@ -981,7 +981,7 @@
 														
 														<input type="hidden" id="cvvHelpContent" value="<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelpContent"/>">
 														<input type="hidden" id="cvvHelpContent" value="${cvvHelp}">
-						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label>
+						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/><span class="cvv_mobile"> [?]</span></label>
 						                           		<input type="password" autocomplete="new-password" class="security_code span1" name="cvv" maxlength="4" />
 						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
 						                           		<span class="error-message" id="cvvErrorEmi"></span> 
@@ -1012,42 +1012,42 @@
 					                           	</c:if>   	
 					                           		<fieldset>
 						                           		<div class="half">
-							                           		<%-- <label><spring:theme code="text.first.name"/></label> --%>
-							                           		<input type="text" id="firstNameEmi" required="required" maxlength="40" placeholder="FIRST NAME*">
+							                           		<label><spring:theme code="text.first.name"/></label>
+							                           		<input type="text" id="firstNameEmi" required="required" maxlength="40">
 							                           		<span class="error-message" id="firstNameErrorEmi"></span>
 						                           		</div>
 						                           		<div class="half">
-							                           		<%-- <label><spring:theme code="text.last.name"/></label> --%>
-							                           		<input type="text" id="lastNameEmi" required="required" maxlength="40" placeholder="LAST NAME*">
+							                           		<label><spring:theme code="text.last.name"/></label>
+							                           		<input type="text" id="lastNameEmi" required="required" maxlength="40">
 							                           		<span class="error-message" id="lastNameErrorEmi"></span>
 						                           		</div>
 						                           		<div class="full">
-							                           		<%-- <label><spring:theme code="text.addressline1"/></label> --%>
-							                           		<input type="text" id="address1Emi" maxlength="40" required="required" placeholder="ADDRESS LINE 1*">
+							                           		<label><spring:theme code="text.addressline1"/></label>
+							                           		<input type="text" id="address1Emi" maxlength="40" required="required">
 							                           		<span class="error-message" id="address1ErrorEmi"></span>
 						                           		</div>
 						                           		<div class="full">
-							                           		<%-- <label><spring:theme code="text.addressline2"/></label> --%>
-							                           		<input type="text" id="address2Emi" maxlength="40" placeholder="ADDRESS LINE 2*">
+							                           		<label><spring:theme code="text.addressline2"/></label>
+							                           		<input type="text" id="address2Emi" maxlength="40">
 							                           		<span class="error-message" id="address2ErrorEmi"></span>
 						                           		</div>
 						                           		<div class="full">
-							                           		<%-- <label><spring:theme code="text.landmark"/> </label> --%>
-							                           		<input type="text" id="address3Emi" maxlength="40" placeholder="ADDRESS LINE 3*">
+							                           		<label><spring:theme code="text.landmark"/> </label>
+							                           		<input type="text" id="address3Emi" maxlength="40">
 							                           		<span class="error-message" id="address3ErrorEmi"></span>
 						                           		</div>
 						                           		<div class="full">
-							                           		<%-- <label><spring:theme code="text.city"/></label> --%>
-							                           		<input type="text" id="cityEmi" required="required" maxlength="40" placeholder="CITY*">
+							                           		<label><spring:theme code="text.city"/></label>
+							                           		<input type="text" id="cityEmi" required="required" maxlength="40">
 							                           		<span class="error-message" id="cityErrorEmi"></span>
 						                           		</div>
 						                           		<div class="half">
-							                           		<%-- <label><spring:theme code="text.state"/></label> --%>
-							                           		<input type="text" id="stateEmi" required="required" maxlength="40" placeholder="STATE*">
+							                           		<label><spring:theme code="text.state"/></label>
+							                           		<input type="text" id="stateEmi" required="required" maxlength="40">
 							                           		<span class="error-message" id="stateErrorEmi"></span>
 						                           		</div>
 						                           		<div class="half">
-						                           		<%-- 	<label><spring:theme code="text.country"/></label> --%>
+						                           			<label><spring:theme code="text.country"/></label>
 						                           			<select id="countryEmi" >
 						                           				<c:forEach var="countryName" items="${country}">
 																	<option value="${countryName}">${countryName}</option>
@@ -1055,8 +1055,8 @@
 															</select>
 						                           		</div>
 						                           		<div class="full">
-							                           		<%-- <label><spring:theme code="text.pincode"/></label> --%>
-							                           		<input type="text" id="pincodeEmi" maxlength="10" onchange="validatePin()" placeholder="PINCODE*"><span class="error-message" id="pinErrorEmi"></span>
+							                           		<label><spring:theme code="text.pincode"/></label>
+							                           		<input type="text" id="pincodeEmi" maxlength="10" onchange="validatePin()"><span class="error-message" id="pinErrorEmi"></span>
 						                           		</div>
 					                           		</fieldset>
 					                            </div> 
