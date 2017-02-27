@@ -1377,7 +1377,7 @@ function generateOTP(){
 			else{
 				$("#codMessage").css("display","none");
 				$("#otpNUM, #otpSentMessage, #sendOTPNumber, #enterOTP, #paymentFormButton, #submitPaymentFormCODButton, .make_payment, #sendOTPButton, #resendOTPMessage, .cod_payment_button_top").css("display","block");
-				$(".totals.outstanding-totalss").css("bottom","40px");
+				//$(".totals.outstanding-totalss").css("bottom","40px");
 				//$(".checkout-content.checkout-payment .left-block").css("margin-top","-48px");
 				
 			}

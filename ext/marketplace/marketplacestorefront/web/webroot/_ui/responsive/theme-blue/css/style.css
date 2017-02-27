@@ -61244,7 +61244,7 @@ text-transform:none;}
 }
 .cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .block.delivery-info p:not(.company){
 	color:#666;
-	margin-bottom: 10px;
+	/* margin-bottom: 10px; */
 	line-height: normal;
 }
 .cart.wrapper.checkout-payment .right-block.billing .block address,
@@ -61470,6 +61470,19 @@ margin: 0;
     width: 216px;
     font-size: 12px !important;
     font-weight: normal;
+    color:#fff;
+    padding:0;
+}
+.cart.wrapper.checkout-payment .blocks .cash .cont-del button{
+	margin:15px 0 0;
+	height:42px !important;
+	line-height: inherit;
+}
+#resendOTPMessage{
+	margin-top:36px;
+}
+#COD{
+	    margin: 0 auto;
 }
 .cart.wrapper.checkout-payment .left-block .payments.tab-view .pay .button:hover {
     background: #a5173c !important;
@@ -61967,6 +61980,12 @@ margin-right:0;
 }
 .bank-select #bankNameForEMI {
     max-width: 100%;
+}
+.cart.wrapper.checkout-payment .blocks.netbankingPanel{
+	padding-bottom:36px !important;
+}
+#bankCodeSelection{
+	width:100%;
 }
 }
 /* Payment Page change end */
