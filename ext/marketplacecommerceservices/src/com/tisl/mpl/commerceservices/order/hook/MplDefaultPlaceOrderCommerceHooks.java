@@ -704,7 +704,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 									final int setQualifyingCount = getSetQualifyingCount(subOrderModel, promoCode);
 									final int promoFreeCount = getPromoFreeCount(subOrderModel, promoCode);
 									if ((commaSeparetedParentTransId == null || commaSeparetedParentTransId.isEmpty())
-											&& !ussidTransIDForNonBOGOMap.isEmpty())
+											&& CollectionUtils.isNotEmpty(ussidTransIDForNonBOGOMap))
 									{
 										commaSeparetedParentTransId = getParentTransId(parentUssId, setQualifyingCount,
 												ussidTransIDForNonBOGOMap);
@@ -761,66 +761,119 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @param promoCode
 	 * @return int
 	 */
+	//OrderIssues:-
 	private int getSetQualifyingCount(final OrderModel subOrderModel, final String promoCode) throws Exception
 	{
 		int setQualifyingCount = 0;
 		int qualifyingCount = 0;
-		for (final AbstractOrderEntryModel subEntry : subOrderModel.getParentReference().getEntries())
+		if (null != subOrderModel.getParentReference()
+				&& CollectionUtils.isNotEmpty(subOrderModel.getParentReference().getEntries()))
 		{
-			if (subEntry.getProductPromoCode() != null && subEntry.getProductPromoCode().equals(promoCode))
+			for (final AbstractOrderEntryModel subEntry : subOrderModel.getParentReference().getEntries())
 			{
-				qualifyingCount += subEntry.getQualifyingCount().intValue();
-			}
+				LOG.debug("Parent Order Number- " + subOrderModel.getParentReference().getCode() + "  for SubOrder:- "
+						+ subOrderModel.getCode());
+				if (null != subEntry.getProductPromoCode() && subEntry.getProductPromoCode().equals(promoCode)
+						&& null != subEntry.getQualifyingCount())
+				{
+					qualifyingCount += subEntry.getQualifyingCount().intValue();
+				}
 
+			}
+		}
+		else
+		{
+			LOG.error(null == subOrderModel.getParentReference() ? "Parent Order SubOrder association doesnot exist for Sub order :- "
+					+ subOrderModel.getCode()
+					: "");
+			LOG.error(CollectionUtils.isEmpty(subOrderModel.getParentReference().getEntries()) ? "Parent Order Entry is null for Sub order :- "
+					+ subOrderModel.getCode()
+					: "");
 		}
 
-		for (final PromotionResultModel allPromotion : subOrderModel.getAllPromotionResults())
+		if (CollectionUtils.isNotEmpty(subOrderModel.getAllPromotionResults()))
 		{
-			if (allPromotion.getPromotion() != null && allPromotion.getPromotion().getCode().equals(promoCode))
+			for (final PromotionResultModel allPromotion : subOrderModel.getAllPromotionResults())
 			{
-				final AbstractPromotionModel executingPromotion = allPromotion.getPromotion();
-				if (executingPromotion instanceof CustomProductBOGOFPromotionModel)
+				if (null != allPromotion.getPromotion() && null != allPromotion.getPromotion().getCode()
+						&& allPromotion.getPromotion().getCode().equals(promoCode))
 				{
-					final CustomProductBOGOFPromotionModel bogoPromotion = (CustomProductBOGOFPromotionModel) executingPromotion;
-					final Integer promotionQualifingCount = bogoPromotion.getQualifyingCount();
-					final Integer promotionFreeCount = bogoPromotion.getFreeCount();
-					setQualifyingCount = qualifyingCount / (promotionQualifingCount.intValue() - promotionFreeCount.intValue());
+					final AbstractPromotionModel executingPromotion = allPromotion.getPromotion();
+					if (executingPromotion instanceof CustomProductBOGOFPromotionModel)
+					{
+						final CustomProductBOGOFPromotionModel bogoPromotion = (CustomProductBOGOFPromotionModel) executingPromotion;
+						//OrderIssues:- null check added
+						final Integer promotionQualifingCount = null != bogoPromotion.getQualifyingCount() ? bogoPromotion
+								.getQualifyingCount() : new Integer(0);
+						final Integer promotionFreeCount = null != bogoPromotion.getFreeCount() ? bogoPromotion.getFreeCount()
+								: new Integer(0);
+						//OrderIssues:-
+						if ((promotionQualifingCount.intValue() - promotionFreeCount.intValue()) > 0)
+						{
+							setQualifyingCount = qualifyingCount / (promotionQualifingCount.intValue() - promotionFreeCount.intValue());
+						}
+						else
+						{
+							LOG.error("qualifyingCount:- " + qualifyingCount + "promotionQualifingCount:- "
+									+ promotionQualifingCount.intValue() + " promotionFreeCount:- " + promotionFreeCount.intValue());
+						}
+					}
 				}
 			}
 		}
-		setQualifyingCount = qualifyingCount / setQualifyingCount;
+		else
+		{
+			LOG.error(CollectionUtils.isEmpty(subOrderModel.getAllPromotionResults()) ? "AllPromotionResults does nit exist for Sub order :- "
+					+ subOrderModel.getCode()
+					: "");
+		}
+		if (setQualifyingCount > 0)
+		{
+			setQualifyingCount = qualifyingCount / setQualifyingCount;
+		}
 
 		return setQualifyingCount;
 	}
 
-	private int getPromoFreeCount(final OrderModel subOrderModel, final String promoCode)
+	private int getPromoFreeCount(final OrderModel subOrderModel, final String promoCode) throws Exception
 	{
 		int promotionFreeCount = 0;
-		for (final PromotionResultModel allPromotion : subOrderModel.getAllPromotionResults())
+		if (CollectionUtils.isNotEmpty(subOrderModel.getAllPromotionResults()))
 		{
-			if (allPromotion.getPromotion() != null && allPromotion.getPromotion().getCode().equals(promoCode))
+			for (final PromotionResultModel allPromotion : subOrderModel.getAllPromotionResults())
 			{
-				final AbstractPromotionModel executingPromotion = allPromotion.getPromotion();
-				if (executingPromotion instanceof CustomProductBOGOFPromotionModel)
+				if (allPromotion.getPromotion() != null && allPromotion.getPromotion().getCode().equals(promoCode))
 				{
-					final CustomProductBOGOFPromotionModel bogoPromotion = (CustomProductBOGOFPromotionModel) executingPromotion;
-					promotionFreeCount = bogoPromotion.getFreeCount().intValue();
+					final AbstractPromotionModel executingPromotion = allPromotion.getPromotion();
+					if (executingPromotion instanceof CustomProductBOGOFPromotionModel)
+					{
+						final CustomProductBOGOFPromotionModel bogoPromotion = (CustomProductBOGOFPromotionModel) executingPromotion;
+						promotionFreeCount = null != bogoPromotion.getFreeCount() ? bogoPromotion.getFreeCount().intValue() : '0';
 
+					}
 				}
 			}
+		}
+		else
+		{
+			LOG.error(CollectionUtils.isEmpty(subOrderModel.getAllPromotionResults()) ? "AllPromotionResults does not exist for Sub order :- "
+					+ subOrderModel.getCode()
+					: "");
 		}
 
 		return promotionFreeCount;
 	}
 
+	//OrderIssues
 	private String getParentTransId(final String parentUssId, final int setQualifyingCount,
-			final List<String> ussidTransIDForNonBOGOMap) throws EtailNonBusinessExceptions
+			final List<String> ussidTransIDForNonBOGOMap) throws Exception
 	{
 		String paranetTransId = null;
 		final int parentCount = setQualifyingCount;
 		int count = 0;
 		for (final String transactionId : ussidTransIDForNonBOGOMap)
 		{
+			LOG.debug("Transaction ID:- " + transactionId);
 
 			if (count == 0)
 			{
@@ -855,7 +908,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					{
 						if (null != subOrderEntryModel.getProductPromoCode()
 								&& subOrderEntryModel.getProductPromoCode().equalsIgnoreCase(promoCode)
-								&& null != subOrderEntryModel.getIsBOGOapplied() && !subOrderEntryModel.getIsBOGOapplied().booleanValue())
+								&& null != subOrderEntryModel.getIsBOGOapplied() && !subOrderEntryModel.getIsBOGOapplied().booleanValue()
+								&& null != subOrderEntryModel.getTransactionID())
 						{
 							ussidTransIDForNonBOGOMap.add(subOrderEntryModel.getTransactionID());
 						}
