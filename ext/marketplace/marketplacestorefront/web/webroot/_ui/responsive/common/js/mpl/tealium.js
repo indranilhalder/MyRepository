@@ -1167,7 +1167,7 @@ function populateFirstFiveProductsSerp(){
 	productArray.push(product);
    }
    if(typeof utag !="undefined"){
-		 utag.link({ serp_first_5_products : productArray });
+		 utag.link({ event_type: 'top_five_products_serp',serp_first_5_products : productArray });
 	 }
 }
 
@@ -1236,12 +1236,14 @@ function populateFirstFiveProductsPlp(){
    for(var i=0;i< count;i++)
    {
       var  selector = 'ul.product-listing.product-grid li.product-item:eq('+i+') span.serpProduct #productCode';
-	 product = $(selector).val();
-	 productArray.push(product);
-	
+      if(typeof selector !="undefined"){
+  	    product = $(selector).val();
+      }
+      productArray.push(product);
+      
   }
    if(typeof utag !="undefined"){
-		 utag.link({ plp_first_5_products : productArray });
+		 utag.link({ event_type :'top_five_products_plp',plp_first_5_products : productArray });
 	 }	
 }
 
