@@ -635,10 +635,12 @@ sendAddToBagQuick:function(formId){
 
 			//$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
 			//$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
+			//Sanity issue fixing
+			$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 			ACC.product.showTransientCart(ussid);
 			ACC.product.scrollForTransientCart();
 			//ACC.product.displayAddToCart(data,formId,false);
-			$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
+			
 			}
 			else if(data=="reachedMaxLimit") {
 				$("#"+formId+"Title").html("");
@@ -714,7 +716,6 @@ sendAddToBagQuick:function(formId){
 		},
 		complete: function(){
 	        $('#ajax-loader').hide();
-	        forceUpdateHeader();
 	    },
 		error : function(resp) {
 			
