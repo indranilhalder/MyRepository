@@ -61198,6 +61198,7 @@ text-transform:none;}
 	color:#000;
 	font-size:14px;
 	text-transform:uppercase;
+	letter-spacing: normal
 }
 .cart.wrapper.checkout-payment .right-block.billing .block.summary-info  ul.totals li#total span{
 	font-size:18px;
@@ -61320,6 +61321,10 @@ text-transform:none;}
 }
 .cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .block.delivery-info .prd-info .item-mthd p.delivery-method-description-time{
 	color: #92002e;
+}
+.cart.wrapper .right-block #promotionApplied > span:first-child{
+	color:#666;
+	letter-spacing: normal
 }
 @media (max-width: 1024px){
 .cart.wrapper.checkout-payment .right-block.billing .block.summary-info .totals {
@@ -61764,7 +61769,7 @@ a.cvvHelp#cvvHelp + div.popover.bottom>.arrow {
 	font-weight: normal;
 }
 .product-block.net-bank .item.cardForm p.popular-banks{
-	color:#666;
+	color:#999;
 	font-size:11px;
 	letter-spacing:0.6px;
 	padding: 0 0 12px 0;
@@ -61785,8 +61790,18 @@ a.cvvHelp#cvvHelp + div.popover.bottom>.arrow {
     padding: 21px 0;
     width:calc(33% - 7px);
 }
+.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block.net-bank li.item.cardForm label {
+    font-size: 12px;
+    letter-spacing: 0.6px;
+    line-height: 1.33;
+    padding-left: 30px;
+}
 .cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block.net-bank li.item.cardForm > ul li:nth-child(3n){
 margin-right:0;
+}
+.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block.net-bank li.item.cardForm > ul li:nth-child(3n+4),
+.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block.net-bank li.item.cardForm > ul li:first-child{
+margin-left:0;
 }
 .cart.wrapper.checkout-payment .left-block  .payments.tab-view .tabs .product-block.net-bank .item.cardForm li input[type="radio"] + label:before{
 	width:15px;
@@ -61815,13 +61830,16 @@ margin-right:0;
 	border: 1px solid #ddd;
 	float: left;
 	width:47%;
+	text-transform: none;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select{
+	margin-top:21px;
 }
 .cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select select{
 	    background-image: url(../images/select-arrow-new.png);
 }
 .cart.wrapper.checkout-payment .left-block .payments.tab-view .pay.nbButton .button{
-	margin-left:35px;
-	margin-bottom:0px;
+	    margin: 28px 0 0 35.5px;
 }
 .cart.wrapper.checkout-payment.checkout-payment .blocks.netbankingPanel{
 	    padding: 26px 36px 0px 35.5px;
