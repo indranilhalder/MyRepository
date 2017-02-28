@@ -270,56 +270,46 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param product
 	 * @return boolean
 	 */
-	public boolean brandDataCheck(final List<String> promotionManufacturerList, final Product product)
-	{
-		//Code Modified for  TISPT-148
-		boolean applyPromotion = false;
-		String brandName = MarketplacecommerceservicesConstants.EMPTY;
-		try
-		{ //final ProductModel productModel = productService.getProductForCode(product.getCode());
-			final List<Category> categoryList = (List<Category>) product.getAttribute("supercategories");
-			if (CollectionUtils.isNotEmpty(categoryList))
-			{
-				for (final Category category : categoryList)
-				{
-					if (category.getCode().startsWith("MBH"))
-					{
-						brandName = category.getName();
-						break;
-					}
-				}
-			}
-
-			if (CollectionUtils.isNotEmpty(promotionManufacturerList) && StringUtils.isNotEmpty(brandName))
-			{
-				applyPromotion = isEligibleManufacturer(promotionManufacturerList, brandName);
-			}
-
-			// Code Blocked for TISPT-148
-			//			if (!productModel.getBrands().isEmpty())
-			//			{
-			//				final BrandModel brand = ((List<BrandModel>) productModel.getBrands()).get(0);
-			//
-			//				if (null != promotionManufacturerList && !promotionManufacturerList.isEmpty() && null != brand)
-			//				{
-			//					applyPromotion = isEligibleManufacturer(promotionManufacturerList, brand);
-			//				}
-			//			}}
-		}
-		catch (final EtailBusinessExceptions e)
-		{
-			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-		}
-		catch (final Exception e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
-		}
-		return applyPromotion;
-	}
+	//	public boolean brandDataCheck(final List<String> promotionManufacturerList, final Product product)
+	//	{
+	//		//Code Modified for  TISPT-148
+	//		boolean applyPromotion = false;
+	//		String brandName = MarketplacecommerceservicesConstants.EMPTY;
+	//		try
+	//		{ //final ProductModel productModel = productService.getProductForCode(product.getCode());
+	//			final List<Category> categoryList = (List<Category>) product.getAttribute("supercategories");
+	//			if (CollectionUtils.isNotEmpty(categoryList))
+	//			{
+	//				for (final Category category : categoryList)
+	//				{
+	//					if (category.getCode().startsWith("MBH"))
+	//					{
+	//						brandName = category.getName();
+	//						break;
+	//					}
+	//				}
+	//			}
+	//
+	//			if (CollectionUtils.isNotEmpty(promotionManufacturerList) && StringUtils.isNotEmpty(brandName))
+	//			{
+	//				applyPromotion = isEligibleManufacturer(promotionManufacturerList, brandName);
+	//			}
+	//			
+	//		}
+	//		catch (final EtailBusinessExceptions e)
+	//		{
+	//			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+	//		}
+	//		catch (final EtailNonBusinessExceptions e)
+	//		{
+	//			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+	//		}
+	//		return applyPromotion;
+	//	}
 
 
 	/**
@@ -366,11 +356,11 @@ public class DefaultPromotionManager extends PromotionsManager
 			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 			{
 				final AbstractOrderEntry entry = mapEntry.getValue();
-				final Product product = entry.getProduct();
-				if (brandDataCheck(manufactureList, product))
-				{
-					totalEligibleEntryAmount += entry.getTotalPrice().doubleValue();
-				}
+				//final Product product = entry.getProduct();
+				//				if (brandDataCheck(manufactureList, product))
+				//				{
+				totalEligibleEntryAmount += entry.getTotalPrice().doubleValue();
+				//}
 
 			}
 			if (totalEligibleEntryAmount >= minimumManufactureAmount)

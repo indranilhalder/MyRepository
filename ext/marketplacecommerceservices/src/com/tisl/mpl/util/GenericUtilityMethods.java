@@ -17,7 +17,6 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
-import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
 import de.hybris.platform.promotions.jalo.ProductPromotion;
 import de.hybris.platform.promotions.result.PromotionEvaluationContext;
@@ -44,12 +43,10 @@ import org.springframework.ui.Model;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.data.MplPaymentInfoData;
-import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.jalo.EtailExcludeSellerSpecificRestriction;
 import com.tisl.mpl.jalo.EtailSellerSpecificRestriction;
-import com.tisl.mpl.jalo.ManufacturesRestriction;
 import com.tisl.mpl.jalo.SellerMaster;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
@@ -432,54 +429,54 @@ public class GenericUtilityMethods
 	 * @param product
 	 * @return boolean
 	 */
-	public static boolean checkBrandData(final List<AbstractPromotionRestriction> restrictionList, final Product product)
-	{
-		boolean applyPromotion = false;
-		try
-		{
-			if (CollectionUtils.isNotEmpty(restrictionList))
-			{
-				for (final AbstractPromotionRestriction retrManufacturer : restrictionList)
-				{
-					applyPromotion = false;
-					if (retrManufacturer instanceof ManufacturesRestriction)
-					{
-						final List<String> promotionManufacturerList = new ArrayList<String>();
-						final ManufacturesRestriction manufacturesRestriction = (ManufacturesRestriction) retrManufacturer;
-						final List<Category> brandList = (List<Category>) manufacturesRestriction.getManufacturers();
-						for (final Category restrBrand : brandList)
-						{
-							promotionManufacturerList.add(restrBrand.getName());
-						}
-						applyPromotion = getDefaultPromotionsManager().brandDataCheck(promotionManufacturerList, product);
-						break;
-					}
-					else
-					{
-						applyPromotion = true;
-					}
-				}
-			}
-			else
-			{
-				applyPromotion = true;
-			}
-		}
-		catch (final EtailBusinessExceptions e)
-		{
-			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-		}
-		catch (final Exception e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
-		}
-		return applyPromotion;
-
-	}
+	//	public static boolean checkBrandData(final List<AbstractPromotionRestriction> restrictionList, final Product product)
+	//	{
+	//		boolean applyPromotion = false;
+	//		try
+	//		{
+	//			if (CollectionUtils.isNotEmpty(restrictionList))
+	//			{
+	//				for (final AbstractPromotionRestriction retrManufacturer : restrictionList)
+	//				{
+	//					applyPromotion = false;
+	//					if (retrManufacturer instanceof ManufacturesRestriction)
+	//					{
+	//						final List<String> promotionManufacturerList = new ArrayList<String>();
+	//						final ManufacturesRestriction manufacturesRestriction = (ManufacturesRestriction) retrManufacturer;
+	//						final List<Category> brandList = (List<Category>) manufacturesRestriction.getManufacturers();
+	//						for (final Category restrBrand : brandList)
+	//						{
+	//							promotionManufacturerList.add(restrBrand.getName());
+	//						}
+	//						applyPromotion = getDefaultPromotionsManager().brandDataCheck(promotionManufacturerList, product);
+	//						break;
+	//					}
+	//					else
+	//					{
+	//						applyPromotion = true;
+	//					}
+	//				}
+	//			}
+	//			else
+	//			{
+	//				applyPromotion = true;
+	//			}
+	//		}
+	//		catch (final EtailBusinessExceptions e)
+	//		{
+	//			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+	//		}
+	//		catch (final EtailNonBusinessExceptions e)
+	//		{
+	//			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+	//		}
+	//		return applyPromotion;
+	//
+	//	}
 
 	/**
 	 * @Description: Verifies Seller Data corresponding to the cart added Product
@@ -719,11 +716,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
