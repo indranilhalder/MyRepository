@@ -250,17 +250,19 @@ $(document).ready(
 									+ $("#page_name").val() + '",';
 								tealiumData += '"categoryId":"'
 									+ $("#categoryId").val() + '",';
+								if($("#out_of_stock_count").val() != undefined || $("#out_of_stock_count").val() != null || $("#out_of_stock_count").val() !=''){
 								tealiumData += '"out_of_stock_count":"'		// TPR-4707
 									+ $("#out_of_stock_count").val() + '",';
-								if(offerCount != undefined && offerCount != null && offerCount !=''){ 
+								}
+								if(offerCount != undefined || offerCount != null || offerCount !=''){ 
 								tealiumData += '"offer_product_count":"'		// TPR-4714
 									+ offerCount + '",';
 								}
-								if(newCount != undefined && newCount != null && newCount !=''){ 
+								if(newCount != undefined || newCount != null || newCount !=''){ 
 									tealiumData += '"new_product_count":"'		// TPR-4714
 										+ newCount + '",';
 									}
-								if(onlineExclusive != undefined && onlineExclusive != null && onlineExclusive !='' ){ 
+								if(onlineExclusive != undefined || onlineExclusive != null || onlineExclusive !='' ){ 
 									tealiumData += '"onlineExclusive_product_count":"'		// TPR-4726
 										+ onlineExclusive + '",';
 									}
@@ -315,15 +317,15 @@ $(document).ready(
 							+ $("#search_type").val() + '",';
 						tealiumData += '"out_of_stock_count":"'		// TPR-4722
 							+ $("#out_of_stock_count").val() + '",';
-						if(offerCount != undefined && offerCount != null && offerCount !=''){ 
+						if(offerCount != undefined || offerCount != null || offerCount !=''){ 
 						tealiumData += '"offer_product_count":"'		// TPR-4726
 							+ offerCount + '",';
 						}
-						if(newCount != undefined && newCount != null && newCount !=''){ 
+						if(newCount != undefined || newCount != null || newCount !=''){ 
 							tealiumData += '"new_product_count":"'		// TPR-4726
 								+ newCount + '",';
 							}
-						if(onlineExclusive != undefined && onlineExclusive != null && onlineExclusive !='' ){ 
+						if(onlineExclusive != undefined || onlineExclusive != null || onlineExclusive !='' ){ 
 							tealiumData += '"onlineExclusive_product_count":"'		// TPR-4726
 								+ onlineExclusive + '",';
 							}
@@ -535,6 +537,8 @@ $(document).ready(
 					}
 				});
 			}
+			
+			
 			//for order page
 			
 			//Comma separated strings changed to array of strings
