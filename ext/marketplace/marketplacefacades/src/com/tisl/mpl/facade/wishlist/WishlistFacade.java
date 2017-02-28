@@ -25,6 +25,9 @@ public interface WishlistFacade
 
 	Wishlist2Model removeProductFromWl(final String productCode, final String wishlistName, String ussid);
 
+
+	Wishlist2Model removeProductFromWl(final String productCode, final String wishlistName); /* Changes for INC144313867 */
+
 	List<Wishlist2Model> getAllWishlists();
 
 	Wishlist2Model createNewWishlist(final UserModel user, final String name, final String description);

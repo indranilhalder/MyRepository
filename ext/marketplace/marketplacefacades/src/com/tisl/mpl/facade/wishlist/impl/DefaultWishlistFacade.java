@@ -117,6 +117,39 @@ public class DefaultWishlistFacade implements WishlistFacade
 		}
 	}
 
+	/* Changes for INC144313867 */
+
+	/**
+	 * @description this method is called to remove Product From Wishlist
+	 * @return wishlist2Model
+	 */
+	@Override
+	public Wishlist2Model removeProductFromWl(final String productCode, final String wishlistName)
+	{
+		try
+		{
+			final Wishlist2Model wishlist2Model = getWishlistForName(wishlistName);
+			Wishlist2EntryModel wishlist2EntryModel = null;
+			for (final Wishlist2EntryModel entryModel : wishlist2Model.getEntries())
+			{
+				if (null != entryModel.getProduct() && entryModel.getProduct().getCode().equals(productCode))
+				{
+					wishlist2EntryModel = entryModel;
+					wishlistService.removeWishlistEntry(wishlist2Model, wishlist2EntryModel);
+
+					//break;
+				}
+			}
+
+			//wishlistService.removeWishlistEntry(wishlist2Model, wishlist2EntryModel);
+			return wishlist2Model;
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
 	/**
 	 * @description to get all wishlist
 	 * @return List<Wishlist2Model>

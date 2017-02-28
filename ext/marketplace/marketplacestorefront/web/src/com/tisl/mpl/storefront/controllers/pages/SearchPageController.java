@@ -1620,4 +1620,43 @@ public class SearchPageController extends AbstractSearchPageController
 		return add;
 
 	}
+
+	/* Changes for INC144313867 */
+
+	/**
+	 * @description method is to remove products from wishlist in plp
+	 * @param productCode
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @throws CMSItemNotFoundException
+	 */
+	@ResponseBody
+	@RequestMapping(value = RequestMappingUrlConstants.REMOVE_FROM_WISHLIST_IN_PLP, method = RequestMethod.GET)
+	//@RequireHardLogIn
+	public boolean removeFromWishListsForPLP(@RequestParam(ModelAttributetConstants.PRODUCT) final String productCode,
+			final Model model, final HttpServletRequest request, final HttpServletResponse response) throws CMSItemNotFoundException
+	{
+		model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.N_CAPS_VAL);
+
+		boolean remove = false;
+		try
+		{
+			//add = productDetailsHelper.addToWishListInPopup(productCode, ussid, wishName, Boolean.valueOf(sizeSelected));
+			remove = productDetailsHelper.removeFromWishListForPLP(productCode);
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+
+		return remove;
+
+	}
 }
