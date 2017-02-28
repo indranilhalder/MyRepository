@@ -4476,14 +4476,14 @@ public class DefaultPromotionManager extends PromotionsManager
 					&& PromotionType.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXCLUDEBRANDRESTRICTION)
 					&& CollectionUtils.isNotEmpty(brandList))
 			{
-				promQuery.append("{{ SELECT {cat2prod:target} as pk  ");
+				promQuery.append("SELECT {cat2prod:target} as pk  ");
 				promQuery.append("FROM  {").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION);
 				promQuery.append(" AS cat2prod JOIN ").append(MarketplacecommerceservicesConstants.TYPE_CATEGORY)
 						.append(" AS category on {cat2prod:source} = {category.pk}} ");
 				promQuery
 						.append(
 								"WHERE {cat2prod:target} in (?secondProduct) AND {cat2prod:source} not in (?brands) AND {category.code} like '%")
-						.append(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX).append("%' }} ");
+						.append(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX).append("%'");
 			}
 		}
 		else
