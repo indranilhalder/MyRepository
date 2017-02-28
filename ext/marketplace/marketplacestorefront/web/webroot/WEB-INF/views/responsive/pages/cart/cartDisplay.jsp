@@ -129,7 +129,7 @@
 		    	<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
 		   		</c:otherwise>
 				 </c:choose>
-				 <input type="hidden" id="pinId" value=""/>
+				 <input type="hidden" id="pinId" value="${defaultPinCode}"/>
 				<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
 				
 				<!-- error message position change as part of UF-61 -->
