@@ -172,8 +172,7 @@
 	<meta name="twitter:title" content="${canonical}">
 	<!-- Code Added For INC_11638 - End -->	
 	<!-- <meta name="twitter:card" content="summary_large_image" 
-	     <meta name="twitter:title" content="${metaTitle}">/>  -->	
-	<c:set var="summary_large_image" value="${summary_large_image}"/>	
+	     <meta name="twitter:title" content="${metaTitle}">/>  -->
 	<meta name="twitter:site" content="${twitterHandle}">	
 	<meta name="twitter:description" content="${metaDescription}">
 	<%-- <meta name="twitter:image:src" content="${protocolString[0]}://${mediaHost}${seoMediaURL}">
