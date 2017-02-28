@@ -61790,7 +61790,7 @@ a.cvvHelp#cvvHelp + div.popover.bottom>.arrow {
     padding: 21px 0;
     width:calc(33% - 7px);
 }
-.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block.net-bank li.item.cardForm label {
+.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block.net-bank li.item.cardForm > ul li label {
     font-size: 12px;
     letter-spacing: 0.6px;
     line-height: 1.33;
