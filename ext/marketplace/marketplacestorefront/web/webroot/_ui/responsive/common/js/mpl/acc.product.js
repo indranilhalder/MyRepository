@@ -128,27 +128,27 @@ ACC.product = {
 		$(document).off('click', '#addToCartFormQuick').on('click', '#addToCartFormQuick', function(event) { 
 		   
 			 $("#qty1").val($("#quantity").val());
-			 
 				if($("#sizeSelected").val()!='no'){
 				
-					/*TPR-681*/
+					/*TPR-681
 					var productCodePost = $("#productCodePost").val();
 					// Product code passed as an array for Web Analytics   INC_11511 
 					var productCodeArray=[];
 					productCodeArray.push(productCodePost);	// Product code passed as an array for Web Analytics
 					utag.link({
 						link_obj: this, 
-						link_text: 'quick_view_addto_bag' , 
-						event_type : 'quick_view_addto_bag', 
+						link_text: 'quick_view_addtobag' , 
+						event_type : 'quick_view_addtobag', 
 						product_sku_quick_view : productCodeArray
 					});
-					/*TPR-681 Ends*/
+					TPR-681 Ends*/
 				
 				ACC.product.sendAddToBagQuick("addToCartFormQuick");
 				
 				}else{
 					$("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 					$("#addToCartFormQuickTitle").show().fadeOut(6000);
+					errorAddToBag("size_not_selected");
 				}
 				event.preventDefault();
 				return false;
@@ -599,6 +599,7 @@ sendAddToBagQuick:function(formId){
 	 var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
 	 var ussid=$('#ussid_quick').val();
 	var productCode = $("#productCode").val();
+	var utagError=false;
 		
 	 /*if(parseInt(stock)<parseInt(quantity)){
 		    $("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#inventory').text() + "</font>");
@@ -640,10 +641,14 @@ sendAddToBagQuick:function(formId){
 				$("#"+formId+"Title").html("");
 				$("#"+formId+"Title").html("<font color='#ff1c47'>"+$('#bagfull').text()+"</font>");
 				$("#"+formId+"Title").show().fadeOut(5000);
+				errorAddToBag("bag_is_full");
+				utagError=true;
 			}
 			else if(data=="outofinventory"){
 				 //$("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#addToCartFormnoInventory').text() + "</font>");
 				$("#addToCartFormnoInventory").show().fadeOut(6000);
+				errorAddToBag("out_of_stock");
+				utagError=true;
 		   	     return false;
 			}
 			else if(data=="willexceedeinventory"){
@@ -689,16 +694,19 @@ sendAddToBagQuick:function(formId){
 				ACC.track.trackAddToCartForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad,"INR");
 				}	
 			}
-			//TISQAEE-64
-			//Code is not being called, utag is being fired from inline js
-			/*utag.link({
-				link_obj: this,
-				link_text: 'addtobag' ,
-				event_type : 'addtobag_winner_seller' ,
-				product_sku : productCode
-			});*/
-			
-			
+			/*TPR-681,TPR-4725*/
+			// Product code passed as an array for Web Analytics   INC_11511 
+			if(!utagError){
+				var productCodeArray=[];
+				productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
+				utag.link({
+					link_obj: this, 
+					link_text: 'quick_view_addtobag' , 
+					event_type : 'quick_view_addtobag', 
+					product_sku_quick_view : productCodeArray
+				});
+			}
+			/*TPR-681 Ends*/
 			//End MSD
 			
 		},
@@ -713,7 +721,6 @@ sendAddToBagQuick:function(formId){
 },
 
 	sendToCartPageQuick: function(formId,isBuyNow){
-		
 		 var input_name="qty";
 		  var stock_id="stock";
 		 var dataString=$('#'+formId).serialize();	
@@ -722,6 +729,7 @@ sendAddToBagQuick:function(formId){
 		 var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
 		 var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
 		 var ussid=$('#ussid_quick').val();
+		 var utagError=false;
 		 /*if(parseInt(stock)<parseInt(quantity)){
 			    $("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#inventory').text() + "</font>");
 			    $("#"+formId+"noInventory").show().fadeOut(6000);
@@ -767,10 +775,14 @@ sendAddToBagQuick:function(formId){
 					$("#"+formId+"Title").html("");
 					$("#"+formId+"Title").html("<font color='#ff1c47'>"+$('#bagfull').text()+"</font>");
 					$("#"+formId+"Title").show().fadeOut(5000);
+					errorAddToBag("bag_is_full");
+					utagError=true;
 				}
 				else if(data=="outofinventory"){
 					 //$("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#addToCartFormnoInventory').text() + "</font>");
 					$("#addToCartFormnoInventory").show().fadeOut(6000);
+					errorAddToBag("out_of_stock");
+					utagError=true;
 			   	     return false;
 				}
 				else if(data=="willexceedeinventory"){
@@ -816,12 +828,13 @@ sendAddToBagQuick:function(formId){
 					ACC.track.trackAddToCartForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad,"INR");
 					}	
 				}
-				if(isSuccess){
+				//if(isSuccess){
+				if(!utagError){
 					//TISQAEE-64 Buy Now Quick View
 					 utag.link({
 							link_obj: this,
-							link_text: 'buynow' ,
-							event_type : 'buynow_winner_seller',
+							link_text: 'quickview_buynow' ,
+							event_type : 'quickview_buynow',
 							product_sku : productCodeArray
 						});
 					

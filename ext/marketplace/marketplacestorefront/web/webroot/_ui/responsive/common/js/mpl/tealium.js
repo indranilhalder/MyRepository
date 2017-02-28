@@ -1243,3 +1243,9 @@ $(document).on('click',".color-swatch > li", function(){
  		"product_color":product_color
  	});
  })
+ 
+ 
+ /*Out Of Stock During adding to bag*/
+function errorAddToBag(errorMessage){
+	utag.link({"error_type":errorMessage});
+}

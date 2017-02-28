@@ -911,6 +911,7 @@ $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
 		 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 		 				$("#addToCartFormQuickTitle").show();
 		  				$("#addToCartFormQuickTitle").fadeOut(5000);
+		  				errorAddToBag("size_not_selected"); //Error for tealium analytics
  	    return false;
  }else{			 
 	ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
