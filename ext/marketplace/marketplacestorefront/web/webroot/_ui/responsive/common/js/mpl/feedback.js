@@ -2002,7 +2002,15 @@ $(document).ready(function() {
 		//Winter Launch section
 		$(".winter_launch  > .winter_launch_section").slice(-4).wrapAll("<div class='clp_winter_launch_wrapper'>");
 		//Top deal blog section
-		$(".top_deal  > a").nextAll().wrapAll("<div class='blog_container'>");
+		/* start change for INC_11268*/
+		/*$(".top_deal  > a").nextAll().wrapAll("<div class='blog_container'>");*/
+		if($(".top_deal > .carousel-component").length > 0){
+			$(".top_deal  > .carousel-component + a").nextAll().wrapAll("<div class='blog_container'>");
+		}
+		else{
+				$(".top_deal").children().wrapAll("<div class='blog_container'>");
+		}
+		/*end change for INC_11268*/
 		var clp_blog_count = $(".top_deal  > .blog_container").children().length;
 		$(".top_deal  > .blog_container").children().slice(0,clp_blog_count/2).wrapAll("<div class='blog_feature'>");
 		$(".top_deal  > .blog_container").children().slice(1,clp_blog_count - 1).wrapAll("<div class='blog_feature'>");
@@ -2775,7 +2783,15 @@ $(".shop_for_blp > .shop_for_left_wrapper_blp").nextAll().slice(0,4).wrapAll("<d
 $(".shop_the_look > div").slice(2,4).wrapAll("<div class='shop_the_look_left'>");
 //----shop the look section end-----//
 //----blog section start------//
-$(".top_deal_blp  > a").nextAll().wrapAll("<div class='blog_container_blp'>");
+/*start change for INC_11268*/
+/*$(".top_deal_blp  > a").nextAll().wrapAll("<div class='blog_container_blp'>");*/
+if($(".top_deal_blp > .carousel-component").length > 0){
+	$(".top_deal_blp  > .carousel-component + a").nextAll().wrapAll("<div class='blog_container_blp'>");
+}
+else{
+		$(".top_deal_blp").children().wrapAll("<div class='blog_container_blp'>");
+}
+/*end change for INC_11268*/
 var blp_blog_count = $(".top_deal_blp  > .blog_container_blp").children().length;
 $(".top_deal_blp  > .blog_container_blp").children().slice(0,blp_blog_count/2).wrapAll("<div class='blog_feature_blp'>");
 $(".top_deal_blp  > .blog_container_blp").children().slice(1,blp_blog_count - 1).wrapAll("<div class='blog_feature_blp'>");
@@ -2828,7 +2844,10 @@ if($("body.template-pages-layout-newBrandLandingPageTemplate .body-Content").fin
 	});
 }*/
 if($("body.template-pages-layout-newBrandLandingPageTemplate .body-Content").find(".shop_the_look").children().length==0){	
-	$(".shop_the_look").prop("style","padding:0px !important;margin:0px");
+	/* start change for INC_11268*/
+	/*$(".shop_the_look").prop("style","padding:0px !important;margin:0px");*/
+	$(".shop_the_look").prop("style","padding:0px !important;margin:0px;border-bottom:none");
+	/*end change for INC_11268*/
 }
 
 //-----BLP------//
