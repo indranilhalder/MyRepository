@@ -40,7 +40,6 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.promotion.helper.MplBundlePromotionHelper;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.util.ExceptionUtil;
-import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 @SuppressWarnings("deprecation")
@@ -81,8 +80,8 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 		LOG.debug("Inside Multi Step Bundle Promotion");
 
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
-		final List<String> excludeManufactureList = new ArrayList<String>();
-		final List<Product> excludedProductList = new ArrayList<Product>();
+		//final List<String> excludeManufactureList = new ArrayList<String>();
+		//final List<Product> excludedProductList = new ArrayList<Product>();
 
 
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
@@ -92,8 +91,8 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 		final AbstractOrder cart = paramPromotionEvaluationContext.getOrder();
 
 
-		GenericUtilityMethods.populateExcludedProductManufacturerList(paramSessionContext, paramPromotionEvaluationContext,
-				excludedProductList, excludeManufactureList, restrictionList, this);
+		//		GenericUtilityMethods.populateExcludedProductManufacturerList(paramSessionContext, paramPromotionEvaluationContext,
+		//				excludedProductList, excludeManufactureList, restrictionList, this);
 
 		try
 		{
@@ -103,8 +102,10 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 					MarketplacecommerceservicesConstants.CHANNEL);
 
 			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
-			final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(paramSessionContext,
-					paramPromotionEvaluationContext);
+			//			final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(paramSessionContext,
+			//					paramPromotionEvaluationContext);
+			final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager().findEligibleProductsInBasket(
+					paramSessionContext, paramPromotionEvaluationContext, this, getCategories());
 
 			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag)
 			{
@@ -120,8 +121,7 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 
 				//getting the valid products
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
-						.getValidProdListForBuyXofA(cart, paramSessionContext, allowedProductList, restrictionList,
-								excludedProductList, excludeManufactureList, null, null); // Adding Eligible Products to List
+						.getValidProdListForBuyXofA(cart, paramSessionContext, allowedProductList, restrictionList, null, null); // Adding Eligible Products to List
 
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(paramSessionContext, validProductUssidMap)
 						&& MapUtils.isNotEmpty(validProductUssidMap) /* && validProductUssidMap.size() == 1 */) // For One Eligible line for Promotion in cart

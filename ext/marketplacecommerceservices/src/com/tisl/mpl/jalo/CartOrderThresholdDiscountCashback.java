@@ -28,6 +28,10 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
+/**
+ * This promotion is of type Buy above threshold value X and get cashback
+ *
+ */
 public class CartOrderThresholdDiscountCashback extends GeneratedCartOrderThresholdDiscountCashback
 {
 
