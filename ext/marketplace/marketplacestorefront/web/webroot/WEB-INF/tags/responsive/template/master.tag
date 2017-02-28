@@ -143,7 +143,10 @@
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('seo.media.url')" var="seoMediaURL"/>
 	
 	<!-- Markup for Google+ -->
-	<meta itemprop="name" content="${metaTitle}">
+	<!-- <meta itemprop="name" content="${metaTitle}"> -->
+	<!-- Code Added For INC_11638 - Start -->
+	 <meta itemprop="name" content="${canonical}">
+	<!-- Code Added For INC_11638 - End -->	
 	<meta itemprop="description" content="${metaDescription}">
 	<%-- <meta itemprop="image" content="${protocolString[0]}://${mediaHost}${seoMediaURL}"> --%>
 	
@@ -164,10 +167,13 @@
 	<%-- <meta name="twitter:card" content="${baseURL}/"> --%>
 	<%-- TISPRD-8041 --%>
 	<%-- twitter-card added for INC_10384 --%>
-	<c:set var="summary_large_image" value="${summary_large_image}"/>
-	<meta name="twitter:card" content="summary_large_image" /> 
-	<meta name="twitter:site" content="${twitterHandle}">
-	<meta name="twitter:title" content="${metaTitle}">
+	<!-- Code Added For INC_11638 - Start -->
+	<meta name="twitter:card" content="summary_large_image">	
+	<meta name="twitter:title" content="${canonical}">
+	<!-- Code Added For INC_11638 - End -->	
+	<!-- <meta name="twitter:card" content="summary_large_image" 
+	     <meta name="twitter:title" content="${metaTitle}">/>  -->
+	<meta name="twitter:site" content="${twitterHandle}">	
 	<meta name="twitter:description" content="${metaDescription}">
 	<%-- <meta name="twitter:image:src" content="${protocolString[0]}://${mediaHost}${seoMediaURL}">
 	 --%>
@@ -185,7 +191,10 @@
 	</c:choose>
 	
 	<!-- FB Open Graph data -->
-	<meta property="og:title" content="${metaTitle}" />
+	<!-- <meta property="og:title" content="${metaTitle}" /> -->	
+	<!-- Code Added For INC_11638 - Start -->
+	<meta property="og:title" content="${canonical}" />
+	<!-- Code Added For INC_11638 - End -->
 	<meta property="og:url" content="${canonical}" />
 	
 	
@@ -204,6 +213,22 @@
 	
 	<meta property="og:description" content="${metaDescription}" />
 	<meta property="og:site_name" content="${siteName}" />
+	
+		<!-- Code Added For INC_11638 - Start -->
+		
+		<meta property="fb:app_id" content="484004418446735"/>
+
+		<!-- For iOS  -->
+		<meta property="al:ios:app_store_id" content="1101619385" />
+		<meta property="al:ios:url" content="${canonical}" />
+		<meta property="al:ios:app_name" content="Tata Cliq" />
+		
+		<!-- For Android -->
+		<meta property="al:android:package" content="com.tataunistore.unistore" />
+		<meta property="al:android:url" content="${canonical}" />
+		<meta property="al:android:app_name" content="Tata Cliq" />
+		
+		<!-- Code Added For INC_11638 - End -->
 	
 	<%-- Favourite Icon --%>
 	<%-- <spring:theme code="img.favIcon" text="/" var="favIconPath"/> --%>
