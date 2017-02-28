@@ -298,7 +298,7 @@
 							<!-- SAVED CREDIT CARD -->
 								<c:if test="${not empty creditCards}">
 									<li id="savedCard" class="item">
-									<span class="mycards">My cards</span>
+									<!-- <span class="mycards">My cards</span> -->
 										<form class="form-inline" id="card_form" autocomplete="off" >
 											<%-- <h4><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.enterSavedCardDetails"/></h4> --%>
 											<%-- <multiCheckout:paymentError /> --%>
@@ -607,7 +607,7 @@
 							<h3>Enter your card details</h3>
 								<c:if test="${not empty debitCards}">
 									<li id="savedCardDebit" class="item">
-									<span class="mycards">My cards</span>
+									<!-- <span class="mycards">My cards</span> -->
 										<form class="form-inline" id="card_form_saved_debit" autocomplete="off" >
 											<%-- <h4><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.enterSavedCardDetails"/></h4> --%>
 											<%-- <multiCheckout:paymentError /> --%>
