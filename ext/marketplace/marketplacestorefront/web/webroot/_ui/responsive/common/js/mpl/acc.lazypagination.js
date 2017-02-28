@@ -13,7 +13,7 @@ function innerLazyLoad(options) {
     var gridHTML = '';
     $.each(productItemArray, function(index, element) {
         if (index <= innerRecordSize) {
-            if (index == innerRecordSize && pageNoPagination != totalNoOfPages) {
+            if (index == innerRecordSize) {
                 //productsLoaded+= index;
                 gridHTML += '<li class="product-item lazy-reached">' + $(element).html() + '</li>';
                 //$('ul.product-listing.product-grid').eq(1).append('<li class="product-item lazy-reached">' + $(element).html() + '</li>');
@@ -25,6 +25,7 @@ function innerLazyLoad(options) {
     });
     if (initPageLoad) { //TODO: duplicate loading prevention
         //$('ul.product-listing.product-grid').eq(2).html(gridHTML).hide().fadeIn(500);
+		console.log(gridHTML);
         $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list').html(gridHTML).hide().fadeIn(500);
         initPageLoad = false;
     } else {
@@ -36,6 +37,9 @@ function innerLazyLoad(options) {
     	totalNoOfPages = $('input[name=noOfPages]').val();
         totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
     }
+	if(pageNoPagination == totalNoOfPages){
+		$('li').removeClass('lazy-reached');
+	}
 }
 
 function deleteArraySet(productItemArray) {
