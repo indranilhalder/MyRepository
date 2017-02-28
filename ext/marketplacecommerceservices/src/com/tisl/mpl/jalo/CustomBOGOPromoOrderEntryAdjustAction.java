@@ -48,7 +48,7 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotionAction#apply(de.hybris.platform.jalo.SessionContext)
 	 */
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -166,7 +166,7 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 			{
 				amtTobeDeductedAtlineItemLevel = -1.0D * orderEntryAdjustment;
 				//				qCount = getOrderEntryQuantity(ctx).intValue() + nonFreeCount;
-				qCount = getOrderEntryQuantity(ctx).intValue();
+				qCount = nonFreeCount;
 
 				setPrices(orderEntry, amtTobeDeductedAtlineItemLevel, ctx);
 				setAssociatedItem(freeEntryUSSID, productAssociatedItemsMap, orderEntry, ctx);
