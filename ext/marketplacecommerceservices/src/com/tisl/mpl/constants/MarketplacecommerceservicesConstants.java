@@ -673,6 +673,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CONSIGNMENTCODE = "consignmentCode".intern();
 
 	public final static String SESSION_PINCODE = "defaultPinCode";
+	public final static String SESSION_PINCODE_RES = "sessionPincoderesponseData";
+
 	public final static String SESSION_PINCODE_PDP = "pincode";
 
 	//For Cancellation Reason Query
