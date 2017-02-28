@@ -250,6 +250,20 @@ $(document).ready(
 									+ $("#page_name").val() + '",';
 								tealiumData += '"categoryId":"'
 									+ $("#categoryId").val() + '",';
+								tealiumData += '"out_of_stock_count":"'		// TPR-4707
+									+ $("#out_of_stock_count").val() + '",';
+								if(offerCount != undefined && offerCount != null && offerCount !=''){ 
+								tealiumData += '"offer_product_count":"'		// TPR-4714
+									+ offerCount + '",';
+								}
+								if(newCount != undefined && newCount != null && newCount !=''){ 
+									tealiumData += '"new_product_count":"'		// TPR-4714
+										+ newCount + '",';
+									}
+								if(onlineExclusive != undefined && onlineExclusive != null && onlineExclusive !='' ){ 
+									tealiumData += '"onlineExclusive_product_count":"'		// TPR-4726
+										+ onlineExclusive + '",';
+									}
 								/*TPR-430 Start*/
 								if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
 								tealiumData += '"product_category":'
@@ -301,15 +315,15 @@ $(document).ready(
 							+ $("#search_type").val() + '",';
 						tealiumData += '"out_of_stock_count":"'		// TPR-4722
 							+ $("#out_of_stock_count").val() + '",';
-						if(offerCount != undefined || offerCount !=null){ 
+						if(offerCount != undefined && offerCount != null && offerCount !=''){ 
 						tealiumData += '"offer_product_count":"'		// TPR-4726
 							+ offerCount + '",';
 						}
-						if(newCount != undefined || newCount !=null){ 
+						if(newCount != undefined && newCount != null && newCount !=''){ 
 							tealiumData += '"new_product_count":"'		// TPR-4726
 								+ newCount + '",';
 							}
-						if(onlineExclusive != undefined || onlineExclusive !=null){ 
+						if(onlineExclusive != undefined && onlineExclusive != null && onlineExclusive !='' ){ 
 							tealiumData += '"onlineExclusive_product_count":"'		// TPR-4726
 								+ onlineExclusive + '",';
 							}
