@@ -232,7 +232,8 @@ public class SearchPageController extends AbstractSearchPageController
 	public String textSearch(@RequestParam(value = "text", defaultValue = "") final String searchText,
 			@RequestParam(value = ModelAttributetConstants.SEARCH_CATEGORY, required = false) final String dropDownValue,
 			@RequestParam(value = "micrositeSearchCategory", required = false) final String micrositedropDownValue,
-			@RequestParam(value = "mSellerID", required = false) final String mSellerID, final HttpServletRequest request,
+			@RequestParam(value = "mSellerID", required = false) final String mSellerID,
+			@RequestParam(value = "lazyInterface", required = false) final String lazyInterface, final HttpServletRequest request,
 			final Model model) throws CMSItemNotFoundException
 	{
 		//---------------start--------------
@@ -466,6 +467,14 @@ public class SearchPageController extends AbstractSearchPageController
 			return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
 			//frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
+		if (null != lazyInterface && lazyInterface.equals("Y"))
+		{
+			model.addAttribute("lazyInterface", Boolean.TRUE);
+		}
+		else
+		{
+			model.addAttribute("lazyInterface", Boolean.FALSE);
+		}
 		return getViewForPage(model);
 	}
 
@@ -548,12 +557,21 @@ public class SearchPageController extends AbstractSearchPageController
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "text", required = false) final String searchText,
-			@RequestParam(value = "pageSize", required = false) Integer pageSize, final HttpServletRequest request, final Model model)
-			throws CMSItemNotFoundException, JSONException, ParseException
+			@RequestParam(value = "pageSize", required = false) Integer pageSize,
+			@RequestParam(value = "lazyInterface", required = false) final String lazyInterface, final HttpServletRequest request,
+			final Model model) throws CMSItemNotFoundException, JSONException, ParseException
 	{
 		//UF-15,16
 		pageSize = PAGE_SIZE;
 		populateRefineSearchResult(searchQuery, page, showMode, sortCode, searchText, pageSize, request, model);
+		if (null != lazyInterface && lazyInterface.equals("Y"))
+		{
+			model.addAttribute("lazyInterface", Boolean.TRUE);
+		}
+		else
+		{
+			model.addAttribute("lazyInterface", Boolean.FALSE);
+		}
 		return getViewForPage(model);
 	}
 
