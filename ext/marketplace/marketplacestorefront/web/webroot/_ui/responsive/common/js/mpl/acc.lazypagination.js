@@ -199,7 +199,8 @@ function ajaxPLPLoad(ajaxUrl){
         url: ajaxUrl,
         data: {
             pageSize: 24,
-            q: ''
+            q: '',
+            lazyInterface:'Y'
         },
         beforeSend: function() {
             var staticHost = $('#staticHost').val();
