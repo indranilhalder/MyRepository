@@ -1191,7 +1191,7 @@ $( window ).load(function() {
 		populateFirstFiveProductsSerp();	
 	}
 	
-	if($('#pageType').val() == "category"){
+	if($('#pageType').val() == "category" || $('#pageType').val() == "electronics" ){
 		populateFirstFiveProductsPlp();
 	}
 });
