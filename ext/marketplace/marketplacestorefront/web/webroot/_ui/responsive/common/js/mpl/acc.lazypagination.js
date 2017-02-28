@@ -84,7 +84,7 @@ function getProductSetData() {
         } else { // if no url with page no occourance found.
             if (pageNoPagination <= totalNoOfPages) {
                 ajaxUrl = pathName.replace(/[/]$/,"") + '/page-' + pageNoPagination;
-                pageNoPagination++; // TODO: replace the state 	
+                //pageNoPagination++; // TODO: replace the state 	
                 
                 if($('ul.product-listing.product-grid').length==0){//for serp initial page 
                 	ajaxUrl = ajaxUrl + '?q='+findGetParameter('text')+':relevance:isLuxuryProduct:false';
