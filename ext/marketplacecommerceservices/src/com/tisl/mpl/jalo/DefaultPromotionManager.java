@@ -4099,8 +4099,8 @@ public class DefaultPromotionManager extends PromotionsManager
 			secondProductsAsString = resultList.get(0);
 		}
 
-		final Collection<String> excludedProductList = CollectionUtils.isNotEmpty(resultList) ? new ArrayList<String>() : Arrays
-				.asList(resultList.get(1).split(","));
+		final Collection<String> excludedProductList = CollectionUtils.isNotEmpty(resultList) ? Arrays.asList(resultList.get(1)
+				.split(",")) : new ArrayList<String>();
 
 		for (final AbstractOrderEntry aoe : order.getEntries())
 		{
@@ -4189,7 +4189,7 @@ public class DefaultPromotionManager extends PromotionsManager
 		final StringBuilder promQuery = new StringBuilder(
 				"SELECT {promo.secondProducts} as secondProducts, {promo.excludedProducts} as excludedProducts  ");
 		promQuery.append("FROM  {").append(promotionType).append(" AS promo} ");
-		promQuery.append("WHERE {promo.secondProducts} IS NOT NULL AND {promo:pk} = ?promo ");
+		promQuery.append(" WHERE {promo.secondProducts} IS NOT NULL AND {promo:pk} = ?promo ");
 
 		final List<List<String>> resultStr = getSession().getFlexibleSearch()
 				.search(ctx, promQuery.toString(), params, Arrays.asList(String.class, String.class), true, true, 0, -1).getResult();
