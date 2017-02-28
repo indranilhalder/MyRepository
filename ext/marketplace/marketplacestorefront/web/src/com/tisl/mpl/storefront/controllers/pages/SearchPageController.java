@@ -245,7 +245,9 @@ public class SearchPageController extends AbstractSearchPageController
 		String micrositeDropDownText = "";
 		final String spellingSearchterm = searchText;
 		String spellingtermDYM = "";
-		final PageableData pageableData = createPageableData(0, getSearchPageSize(), null, ShowMode.Page);
+		//UF-15
+		//final PageableData pageableData = createPageableData(0, getSearchPageSize(), null, ShowMode.Page);
+		final PageableData pageableData = createPageableData(0, 24, null, ShowMode.Page);
 
 		final SearchStateData searchState = new SearchStateData();
 		final SearchQueryData searchQueryData = new SearchQueryData();

@@ -1071,8 +1071,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 		{
 			count = getPageSiseCount();
 		}
-
-		return count;
+		return 24;	
+		//return count;
 	}
 
 	private void getSEOContents(final CategoryModel category, final Model model, final ContentPageModel categoryLandingPage)
