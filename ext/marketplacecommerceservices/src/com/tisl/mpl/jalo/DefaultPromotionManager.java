@@ -4485,6 +4485,7 @@ public class DefaultPromotionManager extends PromotionsManager
 								"WHERE {cat2prod:target} in (?secondProduct) AND {cat2prod:source} not in (?brands) AND {category.code} like '%")
 						.append(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX).append("%'");
 			}
+
 		}
 		else
 		{
