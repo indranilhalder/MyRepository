@@ -30,7 +30,6 @@ ACC.quickview = {
 			maxWidth:"100%",
 			onComplete: function ()
 			{
-				tealiumBrokenImage();
 				/*TPR-690*/
 				var productCode = productCodeQuickView;
 				// Product code passed as an array for Web Analytics   INC_11511 
@@ -48,6 +47,7 @@ ACC.quickview = {
 				ACC.quickview.refreshScreenReaderBuffer();
 				ACC.quickview.initQuickviewLightbox();
 				ACC.ratingstars.bindRatingStars($(".quick-view-stars"));
+				tealiumBrokenImageQuickview();
 			},
 
 			onClosed: function ()
@@ -65,7 +65,25 @@ ACC.quickview = {
 	
 };
 
+function tealiumBrokenImageQuickview(){
+var brokenImageCount=0;	
+	$('#cboxWrapper img').each(function(){
+		var url = $(this).attr('src');
+		if(url){
+			if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+			      // image is broken
+			    	brokenImageCount++;
+			    }
+		}
 
+	});
+	if(brokenImageCount > 0){
+		var msg = brokenImageCount+" broken_image_found";
+		utag.link({ 
+			error_type : msg
+		});
+	}
+}
 
 function quickviewGallery() {
 	$(document).ready(function(){

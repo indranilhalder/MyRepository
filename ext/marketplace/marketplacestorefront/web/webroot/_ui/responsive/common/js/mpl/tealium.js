@@ -1273,6 +1273,7 @@ $(window).load(function() {
 
 function tealiumBrokenImage(){
 	var brokenImageCount=0;	
+	
 	$('.mainContent-wrapper img').each(function(){
 		var url = $(this).attr('src');
 		if(url){
