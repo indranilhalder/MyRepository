@@ -36,9 +36,11 @@ import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.UnregisteredUserRestrictionModel;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
+import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
 import com.tisl.mpl.service.InventoryReservationService;
 import com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -145,6 +147,9 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	private MplDefaultCommerceAddToCartStrategyImpl mplDefaultCommerceAddToCartStrategyImpl;
     @Autowired
 	private MplCommerceCartCalculationStrategy calculationStrategy;
+    
+    @Autowired
+    private MplSellerInformationFacade mplSellerInformationFacade;
 	/**
 	 * Adds the to market place cart.
 	 *
@@ -448,20 +453,31 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 													cartSoftReservationRequestData.setFulfillmentType(DeliveryData.getFulfilmentType());
 											}
 										}
-										Collection<RichAttributeModel> rich=cartEntry.getProduct().getRichAttribute();
-										rich.iterator().next().getShippingModes().toString();
-										if(null !=rich && null != rich.iterator().next().getShippingModes()) {
-											String transportMode = rich.iterator().next().getShippingModes().getCode();
-										cartSoftReservationRequestData.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(transportMode.toUpperCase()));
-										}
+										
+											/*TISRLEE-2073 START  populating transport Mode from seller Level in Inventory Reservation*/
+											try {
+												if(null != cartEntry.getSelectedUSSID()) {
+													SellerInformationModel	sellerInformation= mplSellerInformationFacade.getSellerDetail(cartEntry.getSelectedUSSID());
+													if(null !=sellerInformation && null != sellerInformation.getRichAttribute()) {
+														List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>) sellerInformation.getRichAttribute();
+														if(null != richAttributeModel && null != richAttributeModel.get(0) && null != richAttributeModel.get(0).getShippingModes()) {
+															String transportMode = richAttributeModel.iterator().next().getShippingModes().getCode();
+															if(null != transportMode && null != MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(transportMode.toUpperCase())) {
+																cartSoftReservationRequestData.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(transportMode.toUpperCase()));
+															}
+														}
+													}
+												}
+
+											}catch(Exception e) {
+												LOG.error("Exception occurred while getting the seller information for USSID"+cartEntry.getSelectedUSSID());
+											}
+											/*TISRLEE-2073 END */
 										if(null != DeliveryData.getFulfilmentType()) {
 											cartEntry.setFulfillmentMode(DeliveryData.getFulfilmentType());
 											cartEntry.setFulfillmentType(DeliveryData.getFulfilmentType());
+											cartEntry.setFulfillmentTypeP1(DeliveryData.getFulfilmentType());
 										}
-										if(null !=rich && null != rich.iterator().next().getDeliveryFulfillModeByP1()) {
-										  cartEntry.setFulfillmentTypeP1(rich.iterator().next().getDeliveryFulfillModeByP1().getCode());
-										}
-										
 					     					}
 										
 									}
