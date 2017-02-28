@@ -33,6 +33,7 @@ $(document).ready(
 			promo_id=$("#product_applied_promotion_code").val().replace(/([~!@#$%^&*()-+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '_');
 			}
 			//TPR-672 END
+			
 			//TPR-4726
 			var offerCount = '';
 			if( $('.on-sale').length > 0 ){
@@ -48,7 +49,15 @@ $(document).ready(
 			if($('.online-exclusive').length > 0){
 				onlineExclusive = $('.online-exclusive').length ;
 			}
-
+			//Web Thumbnail Images
+			var thumbnailImageCount=0;
+			var pdp_video_product_id;
+			$(".product-info > .product-image-container > .productImageGallery .imageListCarousel").find("li").each(function(){
+				thumbnailImageCount++;
+				if($(this).find('img').attr('data-type') == 'video'){
+					pdp_video_product_id=$('#product_id').val();
+				}
+			})
 			
 			// Added for tealium
 			if (pageType == "homepage") {
@@ -149,7 +158,7 @@ $(document).ready(
 						tealiumData += '"promo_id":["'
 							+promo_id+ '"],';
 						//TPR-672 END
-					
+						
 						//TPR-429 START
 						tealiumData += '"buybox_seller_id":"'
 							+ $("#pdpBuyboxWinnerSellerID").val() + '",';
@@ -1202,5 +1211,18 @@ $(document).on('click',"#quickViewVariant > li", function(){
 		"link_text":"quick_view_size_"+product_size,
 		"event_type":"quick_view_size_selected",
 		"product_size":product_size
+	});
+})
+
+
+/*Thumbnail tracking*/
+//$(document).on("click",".product-image-container .imageListCarousel .thumb",function(){
+$(document).on("click",".quick-view-popup > .product-image-container > .productImageGallery .imageListCarousel .thumb",function(){
+	var thumbnail_value = $(this).parent().attr('class');
+	var thumbnail_type = $(this).find('img').attr('data-type');
+	utag.link({
+		"link_text":"quickview_"+thumbnail_value+"_clicked",
+		"event_type":"quickview_"+thumbnail_type+"_clicked",
+		"thumbnail_value":thumbnail_value
 	});
 })

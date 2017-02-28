@@ -87,15 +87,15 @@ function quickviewGallery() {
 			  });
 			}
 	 	
-	 	$(".productImageGallery img").click(function(e) {
-			/*TPR-643 starts*/
+	 	/*$(".productImageGallery img").click(function(e) {
+			TPR-643 starts
 				utag.link({
 					link_obj: this, 
-					link_text: 'pdp_image_click' , 
-					event_type : 'pdp_image_click' 
+					link_text: 'quickview_image_click' , 
+					event_type : 'quickview_image_click' 
 				});
-				/*TPR-643 ends*/
-		});
+				TPR-643 ends
+		});*/
 	 	
 	 });
 	if($("#cboxContent #cboxLoadedContent .quickview.active")[0].offsetHeight < $("#cboxContent #cboxLoadedContent .quickview.active")[0].scrollHeight){
