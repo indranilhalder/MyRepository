@@ -1226,3 +1226,20 @@ $(document).on("click",".quick-view-popup > .product-image-container > .productI
 		"thumbnail_value":thumbnail_value
 	});
 })
+
+/*TPR-4725,4712 | colour selection on quickview*/
+$(document).on('click',".color-swatch > li", function(){
+	var page='';
+	if($('#pageType').val() == "product"){
+		page="pdp";
+	}
+	else{
+		page="quickview";
+	}
+ 	var product_color = $(this).find('img').attr('title').toLowerCase().replace(/ +$/, "").replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+ 	utag.link({
+ 		"link_text":page+"_color_"+product_color,
+ 		"event_type":page+"_color_selected",
+ 		"product_color":product_color
+ 	});
+ })
