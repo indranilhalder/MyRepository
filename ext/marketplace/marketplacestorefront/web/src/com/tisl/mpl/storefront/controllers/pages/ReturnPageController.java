@@ -422,8 +422,8 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		}
 		returnData.setReturnPickupDate(dateUtilHelper.convertDateWithFormat(returnPickupDate));
 		returnData.setTicketTypeCode(MarketplacecommerceservicesConstants.RETURN_TYPE);
-		returnData.setTimeSlotFrom(dateUtilHelper.convertTo24HourWithSecodnds(timeSlotFrom));
-		returnData.setTimeSlotTo(dateUtilHelper.convertTo24HourWithSecodnds(timeSlotto));
+		returnData.setTimeSlotFrom(timeSlotFrom);
+		returnData.setTimeSlotTo(timeSlotto);
 		returnData.setUssid(returnForm.getUssid());
 		returnData.setReturnMethod(returnForm.getReturnMethod());
 		returnData.setReturnFulfillmentMode(returnFulfillmentType);

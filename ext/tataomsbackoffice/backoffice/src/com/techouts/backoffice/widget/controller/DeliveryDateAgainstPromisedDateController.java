@@ -9,7 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Consumer;
 
 import org.apache.commons.lang.StringUtils;
@@ -65,6 +64,7 @@ public class DeliveryDateAgainstPromisedDateController extends DefaultWidgetCont
 	private Date fromDate;
 	private Date toDate;
 	private List<DeliveredVsPromised> listOfSshipResponse;
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
 	@Override
 	public void initialize(final Component comp)
@@ -76,6 +76,8 @@ public class DeliveryDateAgainstPromisedDateController extends DefaultWidgetCont
 		final SShipTxnInfo requestDto = new SShipTxnInfo();
 		requestDto.setFromDate(cal.getTime());
 		requestDto.setToDate(new Date());
+		startDate = dateFormat.format(cal.getTime());
+		endDate = dateFormat.format(new Date());
 		displayDeliveredVsPromisedData(requestDto);
 	}
 
@@ -181,7 +183,8 @@ public class DeliveryDateAgainstPromisedDateController extends DefaultWidgetCont
 	public void getCsv() throws InterruptedException
 	{
 
-		exportToCsv(listBoxData, listOfSshipResponse, "DeliveryDateAgainstPromisedReport_" + new Random(123456));
+		exportToCsv(listBoxData, listOfSshipResponse,
+				"DeliveryDateAgainstPromisedReport_" + startDate.replace("-", "") + "_" + endDate.replace("-", ""));
 
 	}
 
