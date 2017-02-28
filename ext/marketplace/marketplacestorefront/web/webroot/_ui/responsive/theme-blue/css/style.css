@@ -60654,6 +60654,19 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
 .lowOpacity{
 	opacity:0.5;
 }
+  @media (min-width: 1025px){
+ body.page-cartPage .cart.wrapper .product-block li.item>ul>li.delivery li.methodHome.lowOpacity:after,
+ body.page-cartPage .cart.wrapper .product-block li.item>ul>li.delivery li.methodExpress.lowOpacity:after, 
+ body.page-cartPage .cart.wrapper .product-block li.item>ul>li.delivery li.methodClick.lowOpacity:after{
+         background: url(../images/sprite.svg) no-repeat scroll -255px -190px;
+     }}
+  @media (max-width: 1024px){
+  body.page-cartPage .cart.wrapper .product-block li.item>ul>li.delivery li.methodHome.lowOpacity:before,
+  body.page-cartPage .cart.wrapper .product-block li.item>ul>li.delivery li.methodExpress.lowOpacity:before, 
+  body.page-cartPage .cart.wrapper .product-block li.item>ul>li.delivery li.methodClick.lowOpacity:before{
+         background: url(../images/sprite.svg) no-repeat scroll -255px -190px;
+     }}
+  
 
 /*changes for pincode servicebility */
     .product-info .product-content .delivery-block li.do.selected:after{
@@ -60666,3 +60679,5 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
     right: 0;
     top: 18px;
     }
+    
+   
