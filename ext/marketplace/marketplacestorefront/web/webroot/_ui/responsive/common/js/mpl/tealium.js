@@ -1243,3 +1243,17 @@ $(document).on('click',".color-swatch > li", function(){
  		"product_color":product_color
  	});
  })
+ 
+  /*TPR-4728 | add to compare page |1st part*/
+ $('ul.jump li a').on('click',function(){
+	 var categorySelected = $(this).text();
+	 if(typeof utag !="undefined"){
+		 utag.link({ link_text : categorySelected+"_clicked" , event_type :'jump_to_section_clicked' });
+	 }	
+ })
+ /*TPR-4728 | add to compare page |2nd part*/
+ $(document).on('click','.shop-now',function(){
+	 if(typeof utag !="undefined"){
+		 utag.link({ link_text : 'shop_now_clicked' , event_type :'shop_now_clicked' });
+	 }
+ })
