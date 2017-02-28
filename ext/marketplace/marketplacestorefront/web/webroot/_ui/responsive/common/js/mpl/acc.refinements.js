@@ -880,7 +880,7 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 				populateFirstFiveProductsSerp();	
 			}
 			
-			if($('#pageType').val() == "category"){
+			if($('#pageType').val() == "category" || $('#pageType').val() == "electronics"){
 				populateFirstFiveProductsPlp();
 			}
 		},
