@@ -50,6 +50,7 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.variants.model.VariantProductModel;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -64,6 +65,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.pmd.util.StringUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -81,6 +84,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.sun.jersey.core.header.FormDataContentDisposition;
@@ -1851,57 +1855,81 @@ public class OrdersController extends BaseCommerceController
 		return webSerResponseWsDTO;
 	}
 	
-
+//R2.3 Changes Developed 27-02-2017 start
 	@Secured(
 	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
-	@RequestMapping(value = "/users/{userId}/submitSelfCourierRetrunInfo", method = RequestMethod.POST, consumes =
-	{ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
+	@RequestMapping(value = "/users/{userId}/submitSelfCourierRetrunInfo", method = RequestMethod.POST)
 	@ResponseBody
-	public WebSerResponseWsDTO uploadSelfCourierReturnInfo(@RequestBody final UploadSelfCourierReturnInfoWsDto uploadSCRI,@FormDataParam("file") InputStream uploadedInputStream,
-			@FormDataParam("file") FormDataContentDisposition fileDetail)
+	public WebSerResponseWsDTO uploadSelfCourierReturnInfo(@RequestParam("file")
+   final MultipartFile multipartFile,@RequestParam("amount")
+   final String amount, @RequestParam("orderId")
+   final String orderId, @RequestParam("lpname")
+   final String lpname, @RequestParam("transactionId")
+   final String transactionId,@RequestParam("awbNumber")
+   final String awbNumber)
 			throws WebserviceValidationException
 	{
-		
 		WebSerResponseWsDTO webSerResponseWsDTO = new WebSerResponseWsDTO();
-		if (uploadSCRI == null)
+		if (multipartFile == null || StringUtils.isEmpty(amount) || StringUtils.isEmpty(orderId)
+				|| StringUtils.isEmpty(lpname) || StringUtils.isEmpty(transactionId) || StringUtils.isEmpty(awbNumber))
 		{
 			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE);
 			return webSerResponseWsDTO;
 		}
 		try
 		{
-			String fileUploadLocation = configurationService.getConfiguration().getString(
-					MarketplacecommerceservicesConstants.FILE_UPLOAD_PATH);
-
-			// save it
-			writeToFile(uploadedInputStream, fileUploadLocation,fileDetail.getFileName());					
-			OrderModel orderModel = orderModelService.getParentOrder(uploadSCRI.getOrderId());
-			//to DO Implementeation 
-			String shipmentCharge = null;
-			Double configShippingCharge = 0.0d;
+		
+		      LOG.debug("***************:"+multipartFile.getOriginalFilename()); 
+		      String fileUploadLocation=null;
+		      String shipmentCharge=null;
+		      //TISRLUAT-50
+				Double configShippingCharge = 0.0d;
+		      if(null!=configurationService){
+		      	fileUploadLocation=configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.FILE_UPLOAD_PATH);
+		      	shipmentCharge=configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.SHIPMENT_CHARGE_AMOUNT);
+		      	if(null !=shipmentCharge && !shipmentCharge.isEmpty()){
+		      		configShippingCharge=Double.parseDouble(shipmentCharge);
+		      	}
+		      	
+		      	 if(null!=fileUploadLocation && !fileUploadLocation.isEmpty()){
+		      		 try{  
+		      	        byte barr[]=multipartFile.getBytes();  
+		      	        BufferedOutputStream bout=new BufferedOutputStream(  
+		      	                 new FileOutputStream(fileUploadLocation+File.separator+multipartFile.getOriginalFilename()));  
+		      	        bout.write(barr);  
+		      	        bout.flush();  
+		      	        bout.close();  
+		      	        LOG.debug("FileUploadLocation   :"+fileUploadLocation);   
+		      	        }catch(Exception e){
+		      	      	  LOG.error("Exception is:"+e);   
+		      	        }  
+		      	 }
+			   }
+		      
+			OrderModel orderModel = orderModelService.getParentOrder(orderId);
 			RTSAndRSSReturnInfoRequestData returnInfoRequestData = new RTSAndRSSReturnInfoRequestData();
-			returnInfoRequestData.setAWBNum(uploadSCRI.getAwbNumber());
-			returnInfoRequestData.setLPNameOther(uploadSCRI.getLpname());
+			returnInfoRequestData.setAWBNum(awbNumber);
+			returnInfoRequestData.setLPNameOther(lpname);
 
 			if (null != orderModel.getParentReference() && null != orderModel.getParentReference().getCode())
 			{
 				returnInfoRequestData.setOrderId(orderModel.getParentReference().getCode());
 			}
-			returnInfoRequestData.setOrderId(uploadSCRI.getOrderId());
-			returnInfoRequestData.setTransactionId(uploadSCRI.getTransactionId());
-			if (uploadSCRI.getAmount() != null && !uploadSCRI.getAmount().isEmpty())
+			returnInfoRequestData.setOrderId(orderId);
+			returnInfoRequestData.setTransactionId(transactionId);
+			if (amount != null && !amount.isEmpty())
 			{
-				Double enterdShppingCharge = Double.parseDouble(uploadSCRI.getAmount());
+				Double enterdShppingCharge = Double.parseDouble(amount);
 				if (enterdShppingCharge.doubleValue() < configShippingCharge.doubleValue())
 				{
-					returnInfoRequestData.setShipmentCharge(uploadSCRI.getAmount());
+					returnInfoRequestData.setShipmentCharge(amount);
 				}
 				else
 				{
 					returnInfoRequestData.setShipmentCharge(String.valueOf(configShippingCharge));
 				}
 			}
-			returnInfoRequestData.setShipmentProofURL(fileUploadLocation + File.separator + fileDetail.getFileName());
+			returnInfoRequestData.setShipmentProofURL(fileUploadLocation);
 			returnInfoRequestData.setReturnType(MarketplacecommerceservicesConstants.RSS);
 
 
@@ -1926,7 +1954,7 @@ public class OrdersController extends BaseCommerceController
 			}
 			try
 			{
-				final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(uploadSCRI.getOrderId());
+				final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderId);
 
 				CODSelfShipData finalCODSelfShipData = new CODSelfShipData();
 				if (null != codSelfShipData)
@@ -1957,12 +1985,12 @@ public class OrdersController extends BaseCommerceController
 
 				SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 				finalCODSelfShipData.setAmount(returnInfoRequestData.getShipmentCharge());
-				finalCODSelfShipData.setOrderRefNo(uploadSCRI.getOrderId());
+				finalCODSelfShipData.setOrderRefNo(orderId);
 				finalCODSelfShipData
 						.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails.getCreated())));
 				finalCODSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails
 						.getCreated())));
-				finalCODSelfShipData.setTransactionID(uploadSCRI.getTransactionId());
+				finalCODSelfShipData.setTransactionID(transactionId);
 				finalCODSelfShipData.setTransactionType(MarketplacecommerceservicesConstants.INTERFACE_TYPE);
 				if (orderModel.getChildOrders().size() > 0)
 				{
@@ -1970,7 +1998,7 @@ public class OrdersController extends BaseCommerceController
 					{
 						for (AbstractOrderEntryModel entry : chileOrders.getEntries())
 						{
-							if (entry.getTransactionID().equalsIgnoreCase(uploadSCRI.getTransactionId()))
+							if (entry.getTransactionID().equalsIgnoreCase(transactionId))
 							{
 								finalCODSelfShipData.setOrderNo(chileOrders.getCode());
 							}
@@ -1991,7 +2019,7 @@ public class OrdersController extends BaseCommerceController
 				{
 					//saving bank details failed payment details in commerce 
 					cancelReturnFacade.saveCODReturnsBankDetails(finalCODSelfShipData);
-					LOG.debug("Failed to post COD return paymnet details to FICO Order No:" + uploadSCRI.getOrderId());
+					LOG.debug("Failed to post COD return paymnet details to FICO Order No:" +orderId);
 				}
 				webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 			}
@@ -2029,36 +2057,10 @@ public class OrdersController extends BaseCommerceController
 		}
 
 		// isRefundalbe disable 
-		LOG.info("REtrun page controller TransactionId::::::::    " + uploadSCRI.getTransactionId());
-		cancelReturnFacade.saveRTSAndRSSFInfoflag(uploadSCRI.getTransactionId());
+		LOG.info("REtrun page controller TransactionId::::::::    " + transactionId);
+		cancelReturnFacade.saveRTSAndRSSFInfoflag(transactionId);
 		
 		return webSerResponseWsDTO;
 	}
-
-	// save uploaded file to new location
-	private void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation, String fileName)
-	{
-
-		try
-		{
-			OutputStream out = new FileOutputStream(new File(uploadedFileLocation));
-			int read = 0;
-			byte[] bytes = new byte[1024];
-
-			out = new FileOutputStream(new File(uploadedFileLocation, fileName));
-			while ((read = uploadedInputStream.read(bytes)) != -1)
-			{
-				out.write(bytes, 0, read);
-			}
-			out.flush();
-			out.close();
-		}
-		catch (IOException e)
-		{
-
-			e.printStackTrace();
-		}
-
-	}
-	
+	//R2.3 Changes Developed 27-02-2017 END
 }
