@@ -30,6 +30,7 @@ ACC.quickview = {
 			maxWidth:"100%",
 			onComplete: function ()
 			{
+				tealiumBrokenImage();
 				/*TPR-690*/
 				var productCode = productCodeQuickView;
 				// Product code passed as an array for Web Analytics   INC_11511 
@@ -630,7 +631,6 @@ function selectWishlist_quick(i) {
 	});
 }*/
 function openPop_quick(ussidfromSeller){
-
 	
 	var loggedIn=$("#loggedIn").val();
 
@@ -911,6 +911,7 @@ $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
 		 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 		 				$("#addToCartFormQuickTitle").show();
 		  				$("#addToCartFormQuickTitle").fadeOut(5000);
+		  				errorAddToBag("size_not_selected"); //Error for tealium analytics
  	    return false;
  }else{			 
 	ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
