@@ -135,7 +135,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -248,7 +248,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -262,7 +262,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -357,9 +357,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
-	 *
+	 * 
 	 * @param subOrderList
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -456,9 +456,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
-	 *
+	 * 
 	 * @param subOrderList
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -978,9 +978,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 *
+	 * 
 	 * @param orderList
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	// OrderIssues:- InvalidCartException exception throws
@@ -1706,6 +1706,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					orderEntryModel.setTransactionID(sellerID.concat(middleDigits).concat(Integer.toString(num)));
 				}
 			}
+
+
 			if (StringUtils.isNotEmpty(String.valueOf(price)))
 			{
 				orderEntryModel.setTotalSalePrice(Double.valueOf(price));
@@ -1766,6 +1768,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			orderEntryModel.setCurrDelCharge(deliveryCharge);
 			orderEntryModel.setPrevDelCharge(prevDelCharge);
 
+			LOG.debug("Sub Order Saved in DB:- netAmountAfterAllDisc:- " + netAmountAfterAllDisc);
+
 			if (abstractOrderEntryModel.getGiveAway() != null && abstractOrderEntryModel.getGiveAway().booleanValue())
 			{
 				orderEntryModel.setGiveAway(Boolean.TRUE);
@@ -1809,7 +1813,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @param oModel
 	 * @return orderEntryModel
 	 */
-	private OrderEntryModel setAdditionalDetails(final OrderEntryModel oModel)
+
+	private OrderEntryModel setAdditionalDetails(final OrderEntryModel oModel) throws Exception
 	{
 		final OrderEntryModel orderEntryModel = oModel;
 		List<RichAttributeModel> richAttributeModelList = null;
@@ -1879,14 +1884,18 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @param sellerId
 	 * @param setSubPromo
 	 */
+	//OrderIssues:-throws added
 	private void setPromotionsHmcTabChildOrder(final OrderModel orderModel, final OrderModel clonedSubOrder,
-			final String sellerId, final Set setSubPromo)
+			final String sellerId, final Set setSubPromo) throws Exception
 	{
 		final List<PromotionResultModel> SellerSpecificPromoResultList = new ArrayList<PromotionResultModel>(
 				orderModel.getAllPromotionResults());
 		setPromotionResults(SellerSpecificPromoResultList, sellerId);
+		if (clonedSubOrder.getAllPromotionResults() != null)
+		{
+			setChildOrderConsumedEntries(clonedSubOrder.getAllPromotionResults());
+		}
 
-		setChildOrderConsumedEntries(clonedSubOrder.getAllPromotionResults());
 		final List<Integer> processedEntryNumList = new ArrayList<Integer>();
 
 		for (final PromotionResultModel promotionResultParent : SellerSpecificPromoResultList)
@@ -1968,20 +1977,23 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	private void setPromotionResults(final List<PromotionResultModel> PromoResultList, final String sellerId)
 	{
 		final Iterator<PromotionResultModel> iter = PromoResultList.iterator();
-
-		outer: while (iter.hasNext())
+		//OrderIssues:-Null or empty check added
+		if (iter != null)
 		{
-			final PromotionResultModel promoResult = iter.next();
-			final List<PromotionOrderEntryConsumedModel> consumedEntries = new ArrayList<PromotionOrderEntryConsumedModel>(
-					promoResult.getConsumedEntries());
-
-			for (final PromotionOrderEntryConsumedModel entry : consumedEntries)
+			outer: while (iter.hasNext())
 			{
-				final String ussid = entry.getOrderEntry().getSelectedUSSID();
-				if (!ussid.substring(0, 6).equalsIgnoreCase(sellerId))
+				final PromotionResultModel promoResult = iter.next();
+				final List<PromotionOrderEntryConsumedModel> consumedEntries = new ArrayList<PromotionOrderEntryConsumedModel>(
+						promoResult.getConsumedEntries());
+
+				for (final PromotionOrderEntryConsumedModel entry : consumedEntries)
 				{
-					iter.remove();
-					continue outer;
+					final String ussid = entry.getOrderEntry().getSelectedUSSID();
+					if (!ussid.substring(0, 6).equalsIgnoreCase(sellerId))
+					{
+						iter.remove();
+						continue outer;
+					}
 				}
 			}
 		}
