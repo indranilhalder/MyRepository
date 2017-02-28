@@ -3023,8 +3023,9 @@ public class CartsController extends BaseCommerceController
 				}
 				final UserModel user = userService.getUserForUID(mplCustData.getUid());
 				cartModel = commerceCartService.getCartForGuidAndSiteAndUser(null, baseSiteService.getCurrentBaseSite(), user);
-
-				getWishListWsDTO = mplCartFacade.getTopTwoWishlistForUser(user, pincode, cartModel);
+				//final CartData cartData = getSessionCart();
+				final CartData cartData = mplExtendedCartConverter.convert(cartModel);
+				getWishListWsDTO = mplCartFacade.getTopTwoWishlistForUser(user, pincode, cartData);
 				if (null != getWishListWsDTO)
 				{
 					if (null != getWishListWsDTO.getStatus()
