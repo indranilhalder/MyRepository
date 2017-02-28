@@ -1842,10 +1842,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String NONFREE_CONSUMED_ENTRIES = "nonFreeConsumedEntries".intern();
 
 	//PaymentFix2017:-
-	public static final String PAYMENTPENDING_SKIPTIME = "marketplace.PaymentPending.skipTime";
+	public static final String PAYMENTPENDING_SKIPTIME = "marketplace.PaymentPending.skipTime".intern();
 
+	public static final String COUNTRYCODE = "91".intern();
 	//Promotion Related
 	public static final String BUYAANDBGETPROMOTIONONSHIPPINGCHARGES = "BuyAandBGetPromotionOnShippingCharges".intern();
 	public static final String BUYAGETPERCENTAGEDISCOUNTONB = "BuyAGetPercentageDiscountOnB".intern();
+	public static final String DATEFORMATMMDDYYYY = "MM/dd/yy".intern();
 
 }

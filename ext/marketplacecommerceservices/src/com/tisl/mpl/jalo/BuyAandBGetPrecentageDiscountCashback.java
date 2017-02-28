@@ -36,6 +36,10 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
 
+/**
+ * This promotion is of type Buy A and B both, get cashback
+ *
+ */
 public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetPrecentageDiscountCashback
 {
 	@SuppressWarnings("unused")

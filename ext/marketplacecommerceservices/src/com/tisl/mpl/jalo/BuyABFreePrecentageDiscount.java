@@ -41,6 +41,10 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
 
+/**
+ * This promotion is of type Buy A get B free and discount
+ *
+ */
 public class BuyABFreePrecentageDiscount extends GeneratedBuyABFreePrecentageDiscount
 {
 	@SuppressWarnings("unused")

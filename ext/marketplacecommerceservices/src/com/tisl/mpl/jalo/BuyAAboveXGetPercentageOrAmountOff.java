@@ -39,6 +39,10 @@ import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
+/**
+ * This promotion is of type Buy A above threshold value X and get discount
+ *
+ */
 public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPercentageOrAmountOff
 {
 	@SuppressWarnings("unused")

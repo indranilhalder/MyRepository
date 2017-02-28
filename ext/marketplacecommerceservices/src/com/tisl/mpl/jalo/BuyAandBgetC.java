@@ -35,6 +35,10 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
 
+/**
+ * This promotion is of type Buy A and B get C free
+ *
+ */
 public class BuyAandBgetC extends GeneratedBuyAandBgetC
 {
 	@SuppressWarnings("unused")

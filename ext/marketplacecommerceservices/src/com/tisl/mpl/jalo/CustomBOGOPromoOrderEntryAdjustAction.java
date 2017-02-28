@@ -25,6 +25,10 @@ import org.apache.log4j.Logger;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 
 
+/**
+ * Customized action class for BOGO promotion
+ *
+ */
 public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPromoOrderEntryAdjustAction
 {
 	@SuppressWarnings("unused")
@@ -44,7 +48,7 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotionAction#apply(de.hybris.platform.jalo.SessionContext)
 	 */
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

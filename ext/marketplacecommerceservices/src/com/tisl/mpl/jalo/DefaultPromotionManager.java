@@ -96,7 +96,7 @@ import com.tisl.mpl.util.ValueComparator;
 
 
 /**
- * @author TCS This is implemented version of PromotionsManager
+ * Customized PromotionsManager for mpl
  *
  */
 @SuppressWarnings("deprecation")
@@ -294,7 +294,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	//			{
 	//				applyPromotion = isEligibleManufacturer(promotionManufacturerList, brandName);
 	//			}
-	//			
+	//
 	//		}
 	//		catch (final EtailBusinessExceptions e)
 	//		{
@@ -893,7 +893,8 @@ public class DefaultPromotionManager extends PromotionsManager
 			{
 				productCategoryData = new ArrayList<CategoryModel>();
 				final List<CategoryModel> finalCategoryList = new ArrayList<CategoryModel>();
-				final String primaryCat = configurationService.getConfiguration().getString("decorator.primary",
+				final String primaryCat = configurationService.getConfiguration().getString(
+						MarketplacecommerceservicesConstants.PRIMARYHIERARCHY, //"decorator.primary",
 						MarketplacecommerceservicesConstants.EMPTY);
 
 				//				for (final CategoryModel category : superCategoryData)
@@ -945,9 +946,10 @@ public class DefaultPromotionManager extends PromotionsManager
 	 */
 	public CatalogVersionModel catalogData()
 	{
-		final String catalogId = configurationService.getConfiguration().getString("cronjob.promotion.catelog", "");
-		final String catalogVersionName = configurationService.getConfiguration().getString("cronjob.promotion.catalogVersionName",
-				"");
+		final String catalogId = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.DEFAULTCATALOGID, "");
+		final String catalogVersionName = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.DEFAULTCATALOGVERISONID, "");
 		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(catalogId, catalogVersionName);
 		return catalogVersionModel;
 	}

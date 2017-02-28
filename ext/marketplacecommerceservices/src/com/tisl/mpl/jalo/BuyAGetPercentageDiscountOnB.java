@@ -37,6 +37,10 @@ import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
+/**
+ * This promotion is of type Buy A and B both, get discount on B
+ *
+ */
 @SuppressWarnings(
 { "unused", "deprecation" })
 public class BuyAGetPercentageDiscountOnB extends GeneratedBuyAGetPercentageDiscountOnB

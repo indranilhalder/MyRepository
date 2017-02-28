@@ -36,6 +36,10 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
 
+/**
+ * This promotion is of type Buy A get discount on shipping charges
+ *
+ */
 public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotionOnShippingCharges
 {
 	@SuppressWarnings("unused")
