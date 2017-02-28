@@ -61,7 +61,7 @@
 		</div>
 	</div>
 	</div>
-<div class="bottom-pagination">
+<div class="bottom-pagination" style="display: none;">
 	<nav:pagination top="false"  supportShowPaged="${isShowPageAllowed}" supportShowAll="${isShowAllAllowed}"  searchPageData="${searchPageData}" searchUrl="${searchPageData.currentQuery.url}"  numberPagesShown="${numberPagesShown}"/>
 
 </div>
