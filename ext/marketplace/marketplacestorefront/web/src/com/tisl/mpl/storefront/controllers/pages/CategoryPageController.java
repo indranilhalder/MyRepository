@@ -369,7 +369,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = SORT, required = false) final String sortCode,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "searchCategory", required = false) String dropDownText,
-			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
+			@RequestParam(value = "resetAll", required = false) final boolean resetAll,
+			@RequestParam(value = "lazyInterface", required = false) final String lazyInterface, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException,
 			CMSItemNotFoundException
 	{
@@ -525,7 +526,15 @@ public class CategoryPageController extends AbstractCategoryPageController
 					final String performSearch = performSearchAndGetResultsPage(categoryCode, searchQuery, pageNo, showMode, sortCode,
 							model, request, response, pageFacets, category);
 
-
+					//UF-15
+					if (null != lazyInterface && lazyInterface.equals("Y"))
+					{
+						model.addAttribute("lazyInterface", Boolean.TRUE);
+					}
+					else
+					{
+						model.addAttribute("lazyInterface", Boolean.FALSE);
+					}
 					return performSearch;
 				}
 				catch (final Exception exception)
