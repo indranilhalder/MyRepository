@@ -702,10 +702,20 @@ function donotShowAll()
 		}
 
 $(document).on("click",".plp-wishlist",function(e){
-	/*TPR-4723*/
-	if(typeof utag !="undefined"){
-		utag.link({link_text: "add_to_wishlist_serp" , event_type : "add_to_wishlist_serp"});
-		}
+	/*TPR-4723*/ /*TPR-4708*/
+	
+	if($('#pageType').val() == "productsearch"){
+		if(typeof utag !="undefined"){
+			utag.link({link_text: "add_to_wishlist_serp" , event_type : "add_to_wishlist_serp"});
+			}
+	}
+	
+	if($('#pageType').val() == "category" || $('#pageType').val() == "electronics" ){
+		if(typeof utag !="undefined"){
+			utag.link({link_text: "add_to_wishlist_plp" , event_type : "add_to_wishlist_plp"});
+			}
+	}
+	
 	addToWishlistForPLP($(this).data("product"),this);
 	return false;
 })
