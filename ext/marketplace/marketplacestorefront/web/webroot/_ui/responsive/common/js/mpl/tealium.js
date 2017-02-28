@@ -1291,4 +1291,13 @@ function tealiumBrokenImage(){
 		});
 	}
 }
-
+/*TPR-4728 | add to compare page  3rd part */
+$(".product-tile.cboxElement").click(function(){
+	 var url = $(this).attr('href').split("/")[2];
+	var productID = url.split("p-");
+	var productArray=[];
+	productArray.push(productID[1]);
+	if(typeof utag !="undefined"){
+		 utag.link({ link_text : 'shop_now_pop_up' , shop_now_product_id : productArray});
+	 }
+	}) 
