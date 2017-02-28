@@ -4343,7 +4343,10 @@ color:inherit;}
 .feature-collections {
 	background-color: transparent;
 	position:relative;
-	z-index:10;
+	/* start change of INC144313425 */
+	/* z-index:10; */
+	z-index:0;
+	/* end change of INC144313425 */
 }
 
 .feature-collections::after {
