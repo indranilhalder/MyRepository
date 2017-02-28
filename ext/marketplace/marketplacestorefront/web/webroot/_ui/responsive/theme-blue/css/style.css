@@ -60681,46 +60681,61 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
     }
     
  /* UF-15-16*/
-body.page-productGrid .product-listing.product-grid.lazy-grid{
-padding-top:65px;}
-body.page-productGrid .listing.wrapper .right-block .listing-menu{
-float:right;}
+body.page-productGrid .product-listing.product-grid.lazy-grid {
+    padding-top: 65px
+}
+
+.listing.wrapper .right-block .listing-menu {
+    float: right
+}
+
 body.page-productGrid .list_title h1 {
     float: left;
     margin-left: 292px;
+	position: absolute;
+    margin-top: 22px;
 }
-body.page-productGrid .list_title .UlContainer {
+.list_title .UlContainer {
     float: right;
     margin-right: 15px;
-	margin-top: 6px;
+    margin-top: 6px
 }
-body.page-productGrid .list_title .UlContainer ul {
+
+.list_title .UlContainer ul {
     float: left;
-    font-size: 12px;
+    font-size: 12px
 }
-body.page-productGrid .list_title .UlContainer ul:first-of-type {
-    margin-right: 10px;
+
+.list_title .UlContainer ul:first-of-type {
+    margin-right: 10px
 }
-body.page-productGrid .list_title .UlContainer ul > span {
+
+ .list_title .UlContainer ul>span {
     float: left;
-    font-weight: bold;
+    font-weight: bold
 }
-body.page-productGrid .list_title .UlContainer ul li {
+.list_title .UlContainer ul li {
     float: left;
     border-right: 1px solid #666;
     padding: 0 5px;
-    color: #666;
+    color: #666
 }
-body.page-productGrid .list_title .UlContainer ul li:last-of-type {
-    border-right: 0;
+.list_title .UlContainer ul li:last-of-type {
+    border-right: 0
 }
+
 body.page-productGrid .search-result {
-    display: none;
+    display: none
 }
-body.page-productGrid .facet-list.filter-opt{
-    padding-top:24px;
+
+body.page-productGrid .facet-list.filter-opt {
+    padding-top: 24px;
 }
-.sort{
-cursor: pointer;
+
+.sort {
+    cursor: pointer
 }
-   
+
+.listing.wrapper .right-block .listing-menu>div.list_title{
+float:right;
+margin-right: 15px;}   
