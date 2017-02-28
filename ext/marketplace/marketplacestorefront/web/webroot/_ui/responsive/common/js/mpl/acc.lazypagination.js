@@ -97,38 +97,7 @@ function getProductSetData() {
             }
         }
 
-        $.ajax({
-            url: ajaxUrl,
-            data: {
-                pageSize: 24,
-                q: ''
-            },
-            beforeSend: function() {
-                var staticHost = $('#staticHost').val();
-                $('ul.product-listing.product-grid.lazy-grid,ul.product-list').after('<p class="lazyLoadPagination" style="text-align: center;margin: 5px 0;font-size: 18px;">Loading...<img src="' + staticHost + '/_ui/responsive/common/images/spinner.gif" class="spinner" style="margin-left:5px;"></p>');
-            },
-            success: function(x) {
-                var filtered = $.parseHTML(x);
-                var ulProduct = null;
-                //for serp
-                if($('ul.product-listing.product-grid').length==0){
-                	 ulProduct = $(filtered).find('ul.product-list');
-                }else{
-                	 ulProduct = $(filtered).find('ul.product-listing.product-grid');
-                }
-                productItemArray = [];
-                
-                $(ulProduct).find('li.product-item').each(function() {
-                    productItemArray.push($(this))
-                });
-            },
-            complete: function() {
-                //$('#loadMorePagination').val('LOAD MORE');
-            	console.log(productItemArray);
-                innerLazyLoad();
-                $('.lazyLoadPagination').remove();
-            }
-        });
+        ajaxPLPLoad(ajaxUrl)
     }
 
 }
@@ -170,7 +139,45 @@ $(document).ready(function() {
             $('.loadMorePageButton').remove();
         });
    // }
-
+        $(window).on("load resize",function(){
+        $("body.page-productGrid .list_title h1").css("margin-left",$(".right-block").offset().left+parseInt($(".right-block").css("padding-left")));
+        });
+        
+        $('.sort').click(function(){
+        	var item = $(this).attr('data-name');
+        	$('.sort').removeAttr('style');
+        	$(this).css('color', 'red');
+        	
+        	switch (item) {
+			case 'relevance':
+				var url = 'searchCategory=&sort=relevance&q=:isDiscountedPrice:isLuxuryProduct:false';
+				ajaxPLPLoad(window.location.pathname+'?'+url);
+				sortReplaceState(); 
+				break;
+			case 'new':
+				var url = 'searchCategory=&sort=isProductNew&q=:relevance:isLuxuryProduct:false';
+				ajaxPLPLoad(window.location.pathname+'?'+url);
+				sortReplaceState(); 
+				break;
+			case 'discount':
+				var url = 'searchCategory=&sort=isDiscountedPrice&q=:isProductNew:isLuxuryProduct:false';
+				ajaxPLPLoad(window.location.pathname+'?'+url);
+				sortReplaceState(); 
+				break;
+			case 'low':
+				var url = 'searchCategory=&sort=price-asc&q=:isDiscountedPrice:isLuxuryProduct:false';
+				ajaxPLPLoad(window.location.pathname+'?'+url);
+				sortReplaceState(); 
+				break;
+			case 'high':
+				var url = 'searchCategory=&sort=price-desc&q=:price-asc:isLuxuryProduct:false';
+				ajaxPLPLoad(window.location.pathname+'?'+url);
+				sortReplaceState(); 
+				break;
+			default:
+				break;
+			}
+        }); 
 });
 
 function findGetParameter(parameterName) {
@@ -184,4 +191,46 @@ function findGetParameter(parameterName) {
         if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
     });
     return result;
+}
+
+function ajaxPLPLoad(ajaxUrl){
+	
+    $.ajax({
+        url: ajaxUrl,
+        data: {
+            pageSize: 24,
+            q: ''
+        },
+        beforeSend: function() {
+            var staticHost = $('#staticHost').val();
+            $('ul.product-listing.product-grid.lazy-grid,ul.product-list').after('<p class="lazyLoadPagination" style="text-align: center;margin: 5px 0;font-size: 18px;">Loading...<img src="' + staticHost + '/_ui/responsive/common/images/spinner.gif" class="spinner" style="margin-left:5px;"></p>');
+        },
+        success: function(x) {
+            var filtered = $.parseHTML(x);
+            var ulProduct = null;
+            //for serp
+            if($('ul.product-listing.product-grid').length==0){
+            	 ulProduct = $(filtered).find('ul.product-list');
+            }else{
+            	 ulProduct = $(filtered).find('ul.product-listing.product-grid');
+            }
+            productItemArray = [];
+            
+            $(ulProduct).find('li.product-item').each(function() {
+                productItemArray.push($(this))
+            });
+        },
+        complete: function() {
+            //$('#loadMorePagination').val('LOAD MORE');
+        	console.log(productItemArray);
+            innerLazyLoad();
+            $('.lazyLoadPagination').remove();
+        }
+    });
+}
+
+function sortReplaceState(){
+	if (!/page-[0-9]+/.test(pathName)) {
+		 window.history.replaceState({}, '', window.location.pathname+'/page-1');
+	 }
 }

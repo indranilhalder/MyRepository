@@ -148,4 +148,6 @@ public final class RequestMappingUrlConstants
 	public static final String SHOP_BY_DEPARTMENT_AJAX = "/shopbydepartment";
 	public static final String ADD_WISHLIST_IN_POPUP_PLP = "/addToWishListInPLP";
 
+	public static final String REMOVE_FROM_WISHLIST_IN_PLP = "/removeFromWishListInPLP"; /* Changes for INC144313867 */
+
 }

@@ -5271,9 +5271,7 @@ function checkPincodeServiceability(buttonType,el)
 	// .spinner").css("left",(($("#pinCodeDispalyDiv").width()+$("#pinCodeDispalyDiv").width())/2)+10);
 	/*TPR-3446 new starts*/
 	//$("body").append("<div id='no-click' style='opacity:0.6; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	var staticHost = $('#staticHost').val();
-	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+	
 	/*TPR-3446 new ends*/
 	var selectedPincode=$('#defaultPinCodeIds').val();
 	var regPostcode = /^([1-9])([0-9]){5}$/;
@@ -5301,7 +5299,7 @@ function checkPincodeServiceability(buttonType,el)
 		$("#pinCodeDispalyDiv .spinner").remove();
 		$("#no-click,.spinner").remove();
 		// },500);
-
+		$("body,html").animate({ scrollTop: $('#emptyId').offset().top - 5000 }); //added for INC_11152
 		return false;
 	}
 	else if(regPostcode.test(selectedPincode) != true){
@@ -5368,6 +5366,10 @@ function checkPincodeServiceability(buttonType,el)
 		// $("#cartPinCodeAvailable").show();//TPR-1055
 		$("#emptyId").hide();
 		$("#emptyId_tooltip").hide();
+		var staticHost = $('#staticHost').val();
+		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+		
 	$.ajax({
  		url: ACC.config.encodedContextPath + "/cart/checkPincodeServiceability/"+selectedPincode,
  		type: "GET",

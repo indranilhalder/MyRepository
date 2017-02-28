@@ -503,7 +503,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                         }
                         defaultHtml += "</a></div>"
                     }
-                    defaultHtml +=
+                    /*defaultHtml +=
                         "<div class='home-brands-you-love-main-image'>";
                     if (typeof response.bannerImageUrl !==
                         "undefined") {
@@ -517,7 +517,31 @@ function getBrandsYouLoveContentAjaxCall(id) {
                         }
                         defaultHtml += "<img src='" + response.bannerImageUrl +
                             "'></img></div></div>";
+                    }*/
+                    /******* changes for INC_11934 ***/
+                    defaultHtml +=
+                        "<div class='home-brands-you-love-main-image'>";
+                    if (typeof response.bannerImageUrl !==
+                        "undefined") {
+                        defaultHtml +=
+                            "<div class='home-brands-you-love-main-image-wrapper'>";
+                        if (typeof response.bannerText !==
+                            "undefined") {
+                            defaultHtml +=
+                                "<div class='visit-store-wrapper'>" +
+                                response.bannerText + "</div>";
+                        }
+                        if (typeof response.bannerUrl !== "undefined") {
+                        	 defaultHtml += "<a href='"+response.bannerUrl+"'><img src='" + response.bannerImageUrl +
+                             "'></img></a></div>";
+                        } else {
+                        	 defaultHtml += "<img src='" + response.bannerImageUrl +
+                             "'></img></div>";
+                        }
+                       
                     }
+                    defaultHtml += '</div>';
+                    
                     if (typeof response.secondproductImageUrl !==
                         "undefined") {
                         defaultHtml +=
