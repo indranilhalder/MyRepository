@@ -4516,6 +4516,12 @@ public class DefaultPromotionManager extends PromotionsManager
 		return promQuery;
 	}
 
+	/**
+	 * @param params
+	 * @param promotion
+	 * @param ctx
+	 * @return StringBuilder query
+	 */
 	private StringBuilder evaluateBrandRestriction(final Flat3Map params, final AbstractPromotion promotion,
 			final SessionContext ctx)
 	{
