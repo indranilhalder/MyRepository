@@ -876,7 +876,7 @@
 										<ul class="product-block emi blocks">
 										<li class="item">
 										<div class="bank-select">
-										<h3>Select your bank for EMI options</h3>
+										<h3>Select your bank for EMI</h3>
 														<%-- <label id="listOfEMiBank"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.listOfEMIBanks"/></label> --%>
 														<%-- <p id="emi-notice"><spring:theme code="checkout.multi.paymentMethod.emi.notice"/></p> --%>
 														 <!-- <label class="control-label bank-label">

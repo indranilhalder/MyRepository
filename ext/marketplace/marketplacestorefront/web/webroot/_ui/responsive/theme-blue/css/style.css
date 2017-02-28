@@ -61336,6 +61336,12 @@ text-transform:none;}
 	    padding: 19px 0px 0px;
 }
 }
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right h3.product-brand-name{
+	font-size: 14px !important;
+}
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right h3.product-name a{
+	font-size: 12px;
+}
 /* right section end*/
 /*Left section start*/
 @media only screen and (max-width: 1250px){
@@ -61814,7 +61820,7 @@ margin-left:0;
 	background: #000;
 }
 
-.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select label{
+.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block.net-bank li.item.cardForm .bank-select label{
 	text-align: left;
     text-transform: none;
     font-size: 11px;
@@ -61822,6 +61828,7 @@ margin-left:0;
     color: #999999;
     margin-bottom: 12px;
     font-weight: normal;
+    padding-left: 0px;
 }
 #bankCodeSelection{
 	height:41px;
@@ -61855,6 +61862,19 @@ margin-left:0;
     color: #999;
     text-transform: none;
     width: 100%;
+}
+#netbankingError {
+    padding-top: 10px;
+    float: none;
+    clear: both;
+    text-transform: none;
+    font-weight: normal;
+    font-size: 11px;
+    letter-spacing: 0.6px;
+}
+.cart.wrapper .right-block .block.coupon .error-message {
+    font-size: 11px;
+    letter-spacing: 0.6px;
 }
 /* net banking end */
 /* cod start */
@@ -61917,6 +61937,12 @@ margin-left:0;
 }
 .cart.wrapper.checkout-payment .terms.cod{
 	 margin-top: -20px;
+}
+.cart.wrapper.checkout-payment .blocks .error-message {
+    font-size: 11px;
+    text-transform: none;
+    font-weight: normal;
+    letter-spacing: 0.6px;
 }
 /* cod end */
 .cart.wrapper .left-block .payments.tab-view .nav li.paymentModeMobile{
