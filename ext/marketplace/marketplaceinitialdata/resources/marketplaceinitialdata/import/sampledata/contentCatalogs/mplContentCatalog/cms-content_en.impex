@@ -70,9 +70,9 @@ UPDATE FooterComponent;$contentCV[unique=true];uid[unique=true];footerText[lang=
 ;;FooterComponent;"<p>Tata CLIQ........ Lorem ipsum dolor sit amet, <a href='#'>consectetur</a> adipiscing elit. In egestas, purus id imperdiet dignissim, nunc urna semper sapien, vitae varius erat felis et erat.</p> "
 
 # CMS Paragraph Components
-UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
-;;EmptyCartParagraphComponent;"Your bag's empty - let's fill it up shall we?"
-;;EmptyCartSignInParagraphComponent;"Your bag's empty - let's fill it up shall we? Hey there. You will need to <a href='https://www.tatacliq.com/login'>Sign In</a> to see what's in your cart. No account? No problem. <a href='https://www.tatacliq.com/login?isSignInActive=N'>Sign Up</a> here."
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content[lang=$lang]
+;;EmptyCartParagraphComponent;EmptyCartParagraphComponent;EmptyCartParagraphComponent;"Your bag's empty - let's fill it up shall we?"
+;;EmptyCartSignInParagraphComponent;EmptyCartSignInParagraphComponent;EmptyCartSignInParagraphComponent;"Your bag's empty - let's fill it up shall we?</br>Hey there. You will need to <a href='https://www.tatacliq.com/login'>Sign In</a> to see what's in your cart. No account? No problem. <a href='https://www.tatacliq.com/login?isSignInActive=N'>Sign Up</a> here."
 
 ;;TitleForSellWithUsComponent;"Sell With Us"
 ;;TitleForShippingPageComponent;"Shipping"
