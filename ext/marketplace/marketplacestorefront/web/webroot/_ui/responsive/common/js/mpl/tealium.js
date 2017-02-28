@@ -1249,3 +1249,29 @@ $(document).on('click',".color-swatch > li", function(){
 function errorAddToBag(errorMessage){
 	utag.link({"error_type":errorMessage});
 }
+
+/*TPR-4687 | Broken Image*/
+$(window).load(function() {
+	tealiumBrokenImage();
+});
+
+
+function tealiumBrokenImage(){
+	var brokenImageCount=0;	
+	$('.mainContent-wrapper img').each(function(){
+		var url = $(this).attr('src');
+		if(url){
+			if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+			      // image is broken
+			    	brokenImageCount++;
+			    }
+		}
+
+	});
+	if(brokenImageCount > 0){
+		var msg = brokenImageCount+" broken_image_found";
+		utag.link({ 
+			error_type : msg
+		});
+	}
+}

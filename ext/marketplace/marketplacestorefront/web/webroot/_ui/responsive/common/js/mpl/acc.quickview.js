@@ -30,6 +30,7 @@ ACC.quickview = {
 			maxWidth:"100%",
 			onComplete: function ()
 			{
+				tealiumBrokenImage();
 				/*TPR-690*/
 				var productCode = productCodeQuickView;
 				// Product code passed as an array for Web Analytics   INC_11511 
@@ -630,7 +631,6 @@ function selectWishlist_quick(i) {
 	});
 }*/
 function openPop_quick(ussidfromSeller){
-
 	
 	var loggedIn=$("#loggedIn").val();
 
