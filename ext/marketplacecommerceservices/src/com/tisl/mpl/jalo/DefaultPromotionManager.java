@@ -2515,24 +2515,27 @@ public class DefaultPromotionManager extends PromotionsManager
 		//final CartModel cartModel = cartService.getSessionCart();
 		final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) getModelService().get(order); //TPR-969
 
-		if (CollectionUtils.isNotEmpty(abstractOrderModel.getEntries()))
+		final List<AbstractOrderEntryModel> entries = (abstractOrderModel != null) ? abstractOrderModel.getEntries()
+				: new ArrayList<AbstractOrderEntryModel>();
+
+		//		if (CollectionUtils.isNotEmpty(abstractOrderModel.getEntries()))
+		//		{
+		for (final AbstractOrderEntryModel entryModel : entries)
 		{
-			for (final AbstractOrderEntryModel entryModel : abstractOrderModel.getEntries())
+			if (null != entryModel && !entryModel.getGiveAway().booleanValue()) // Added for TPR-1702 : Sprint 1.0
 			{
-				if (null != entryModel && !entryModel.getGiveAway().booleanValue()) // Added for TPR-1702 : Sprint 1.0
+				if (null != entryModel.getMplDeliveryMode() && null != entryModel.getMplDeliveryMode().getDeliveryMode()
+						&& null != entryModel.getMplDeliveryMode().getDeliveryMode().getCode())
 				{
-					if (null != entryModel.getMplDeliveryMode() && null != entryModel.getMplDeliveryMode().getDeliveryMode()
-							&& null != entryModel.getMplDeliveryMode().getDeliveryMode().getCode())
+					final String selectedDeliveryMode = entryModel.getMplDeliveryMode().getDeliveryMode().getCode();
+					if (deliveryModeCodeList.contains(selectedDeliveryMode))
 					{
-						final String selectedDeliveryMode = entryModel.getMplDeliveryMode().getDeliveryMode().getCode();
-						if (deliveryModeCodeList.contains(selectedDeliveryMode))
-						{
-							validProdQCountMap.put(entryModel.getSelectedUSSID(), Integer.valueOf(entryModel.getQuantity().intValue()));
-						}
+						validProdQCountMap.put(entryModel.getSelectedUSSID(), Integer.valueOf(entryModel.getQuantity().intValue()));
 					}
 				}
 			}
 		}
+		//}
 
 
 		return validProdQCountMap;
