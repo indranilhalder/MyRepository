@@ -64,8 +64,7 @@
 						data-mini-cart-url="/cart/rollover/MiniCart"
 						data-mini-cart-refresh-url="/cart/miniCart/SUBTOTAL"
 						data-mini-cart-name="Cart" data-mini-cart-empty-name="Empty Cart"
-						style="position: static;"><spring:theme code="minicart.mybag" />&nbsp;(<span
-						class="js-mini-cart-count-hover"></span>) </a>
+						style="position: static;"></a>
 			</div>
 			</div>
 			</div>

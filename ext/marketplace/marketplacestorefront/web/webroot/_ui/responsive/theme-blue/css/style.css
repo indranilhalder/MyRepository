@@ -61425,6 +61425,7 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
 	/* margin-left: 12px; */
 	float: none;
     /* margin-left: 0; */
+    height:100%;
 }
 .productGrid-header-wrapper:not(.active-header) .productGrid-header > div.productGrid-logo {
     /* margin-left: 15px; */
@@ -61562,7 +61563,9 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
 	 @media (min-width:791px) {
     .productGrid-menu nav > ul {
       clear: both;
-      /* padding-top: 10px; */ }
+      /* padding-top: 10px; */
+      height:100%;
+       }
       .productGrid-menu nav > ul::after {
         clear: both;
         content: "";
@@ -61571,7 +61574,7 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
         float: left;
         margin-right: 20px;
         padding: 0;
-        width: 120px;
+        /* width: 120px; */
         -webkit-transition: background-color 0.3s 0.3s;
         -moz-transition: background-color 0.3s 0.3s;
         transition: background-color 0.3s 0.3s; }
@@ -61603,7 +61606,10 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
 		  	padding-bottom:9px;
 		  	background: #000;
     		user-select: none;
-    		margin-left: 13px;
+    		/* margin-left: 13px; */
+    		height: 35px;
+    		width: 19px;
+    		padding-bottom: 0;
     }
           .productGrid-menu nav > ul > li > .toggle:after {
             font-family: 'FontAwesome';
@@ -61627,7 +61633,7 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
     		height: 3px;
     		width: 20px;
     		top:17px;
-    		left:29px;
+    		/* left:29px; */
 	}
 	.productGrid-menu nav > ul > li > div.toggle > span:first-child {
     		top: 24px;
@@ -61774,9 +61780,12 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
                       margin: 0 auto;
                       height: 30px;
                       max-width:100%; }
-            .productGrid-menu nav > ul > li > ul > li:hover > .toggle {
+            .productGrid-menu nav > ul > li > ul > li:hover > .toggle,.productGrid-menu nav > ul > li > ul > li.hovered > .toggle {
               background-color: #A9143C; }
               .productGrid-menu nav > ul > li > .toggle:hover ~ ul#topul > li:first-of-type > .toggle{
+              	background-color: #A9143C;
+              }
+               .productGrid-menu nav > ul > li > .toggle:hovered ~ ul#topul > li:first-of-type > .toggle{
               	background-color: #A9143C;
               }
               .productGrid-menu nav > ul > li > .toggle:hover ~ ul#topul > li:first-of-type > ul.words{
@@ -61785,13 +61794,13 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
               }
               .productGrid-menu nav > ul > li > ul > li:hover > .toggle a {
                 color: #fff; }
-              .productGrid-menu nav > ul > li > ul > li:hover > .toggle:after,.productGrid-menu nav > ul > li > .toggle:hover ~ ul#topul > li:first-of-type > .toggle:after {
+              .productGrid-menu nav > ul > li > ul > li:hover > .toggle:after,.productGrid-menu nav > ul > li > ul > li.hovered > .toggle:after,.productGrid-menu nav > ul > li > .toggle:hover ~ ul#topul > li:first-of-type > .toggle:after {
                 height: 0;
                 width: 0;
                 border-bottom: 25px solid transparent;
                 border-left: 15px solid #A9143C;
                 border-top: 25px solid transparent; }
-            .productGrid-menu nav > ul > li > ul > li:hover > ul {
+            .productGrid-menu nav > ul > li > ul > li:hover > ul, .productGrid-menu nav > ul > li > ul > li.hovered > ul {
               z-index: 1;
               opacity: 1; 
               }
@@ -61849,12 +61858,15 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
 		-moz-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
 		transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
 	}
-	.productGrid-menu nav > ul > li > ul > li > ul.heightZero{
+	.productGrid-menu nav > ul > li > ul.heightZero{
 		height: 0;
 		transition: height 0s;
 	}
      .productGrid-menu  nav {
-      color: #fff; }
+      	color: #fff; 
+      	display: inline-block;
+      	margin-left: 30px;
+      }
        .productGrid-menu  nav > ul > li:hover {
         background-color: #000; }
        .productGrid-menu  nav > ul > li > ul {
@@ -62145,6 +62157,11 @@ header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_
      .productGrid-menu nav>ul>li.clicked-menu>ul.heightZero{
      	height:0;
      }
+     .productGrid-menu nav>ul>li.clicked-menu>ul.heightEase{
+     	webkit-transition: height 0s;
+    	-moz-transition: height 0s;
+    	transition: height 0s;
+     }
     /* Tab View Start */
     @media (max-width:1024px) and (min-width:791px){
 	.productGrid-menu nav > ul > li > ul > li > ul.words{
@@ -62184,7 +62201,7 @@ header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_
 		margin-left: 20px; */
 	}
 	.productGrid-menu nav > ul > li > .toggle{
-		margin-left: 10px;
+		/* margin-left: 10px; */
 	}
 }
 @media(max-width:963px) and (min-width:791px){
