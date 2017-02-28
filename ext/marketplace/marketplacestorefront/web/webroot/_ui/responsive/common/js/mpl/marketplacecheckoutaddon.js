@@ -5299,7 +5299,7 @@ function checkPincodeServiceability(buttonType,el)
 		$("#pinCodeDispalyDiv .spinner").remove();
 		$("#no-click,.spinner").remove();
 		// },500);
-
+		$("body,html").animate({ scrollTop: $('#emptyId').offset().top - 5000 }); //added for INC_11152
 		return false;
 	}
 	else if(regPostcode.test(selectedPincode) != true){
