@@ -104,8 +104,8 @@ public final class MplConstants
 
 	public static final String MPL_WISHLIST_COMMENT = "New Wishlist";
 	//CKD:TPR-250: Regular exp to detect seller Id in Seller Sales Hierarchy URL
-	public static final String MSITE_SLR_SLS_HIERARCHY_URL_PTRN_RGX = ".*\\/m\\/mpl\\/\\d{6}.*\\/c-\\d{6}.*";
-	public static final String MSITE_SLR_SLS_PTRN_PART1 = "\\/m\\/mpl\\/";
+	public static final String MSITE_SLR_SLS_HIERARCHY_URL_PTRN_RGX = ".*\\/mpl\\/\\d{6}.*\\/c-\\d{6}.*";
+	public static final String MSITE_SLR_SLS_PTRN_PART1 = "\\/mpl\\/";
 	//CKD:TPR-250: Brand info character limit
 	public static final int BRANDINFO_CHAR_LIMIT = 250;
 }

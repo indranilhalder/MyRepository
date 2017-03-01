@@ -61456,9 +61456,6 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
     right: 18px;
     top:18px;
 }
-.productGrid-header-wrapper.active-header .productGrid-header > div #micrositesearchButton:before{
-	right:74px;
-}
 .productGrid-header-wrapper .productGrid-header > div input[type="text"]{
 	background: transparent;
     border: 0px;
@@ -62133,7 +62130,7 @@ header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_
     color: #fff;
     line-height: 18px;
     margin-right: 25px;
-    top: 15px;
+    top: 3px;
     position: relative;
     font-weight: bold;}
     
@@ -62178,7 +62175,7 @@ header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_
     	margin-left: -18px;
     }
 } 
-@media (max-width:791px){
+@media (max-width:790px){
 	.productGrid-menu #shopMicrositeSeller > div{
 	/*  margin-left: 100%; */
 	    margin-left: 11px;
@@ -62188,6 +62185,12 @@ header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_
 	}
 	.productGrid-header-wrapper .productGrid-header > div.productGrid-logo{
 		/* margin-left: 25px; */
+	}
+	.productGrid-header-wrapper.active-header .productGrid-header div.bag{
+		display: none;
+	}
+	.productGrid-header-wrapper.active-header .productGrid-header div.mobile-bag.bag{
+		display: block;
 	}
 }
 @media (max-width:500px){
@@ -62213,6 +62216,39 @@ header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_
     
     /* Tab view End */
  
+ @media(min-width:791px){
+.productGrid-header-wrapper.active-header .productGrid-header > div #search_form_microsite {
+    margin-right: 68px;
+}	
+.productGrid-header-wrapper.active-header .productGrid-header > div #micrositesearchButton:before{
+	right:128px;
+}
+.productGrid-header-wrapper.active-header .productGrid-header div.bag .mini-cart-link{
+	/* position:relative !important; */
+	right:0;
+	color: #fff;
+    position: relative !important;
+    top: 12px;
+}
+.productGrid-header-wrapper .productGrid-header div.bag .mini-cart-link.myBag-sticky:before{
+	margin-right: 5px;
+}
+.productGrid-header-wrapper .productGrid-header div.bag .mini-cart-link.myBag-sticky > span:nth-of-type(1){
+	/* color: #fff;
+    top: 12px;
+    position: relative;
+    right: 14px; */
+}
+.productGrid-header-wrapper .productGrid-header div.bag .mini-cart-link.myBag-sticky > span:nth-of-type(2){
+	/* color: #fff;
+    top: 19px;
+    position: absolute;
+    right: 0px; */
+}
+.productGrid-header-wrapper.active-header .productGrid-header div.bag{
+	margin-right: 22px;
+}
+}
 	
 /*TPR-4471 ends*/
 
