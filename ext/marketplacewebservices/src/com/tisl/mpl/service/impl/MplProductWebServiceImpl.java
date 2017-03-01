@@ -2316,7 +2316,16 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					}
 					//CKD:TPR-250:Start
 					//final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString);
-					final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString, null);
+					Map<String, Object> buydata = null;
+					if (StringUtils.isNotEmpty(variantsString))
+					{
+						buydata = buyBoxFacade.buyboxPricePDP(variantsString, null);
+					}
+					else
+					{
+						buydata = buyBoxFacade.buyboxPricePDP(productData.getCode(), null);
+					}
+
 					//CKD:TPR-250:End
 					if (MapUtils.isNotEmpty(buydata))
 					{
