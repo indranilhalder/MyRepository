@@ -297,6 +297,8 @@
 							<h3>Enter your card details</h3>
 							<!-- SAVED CREDIT CARD -->
 								<c:if test="${not empty creditCards}">
+								<p class="saved_card_tab active_tab credit_tab">Saved Cards</p>
+								<p class="new_card_tab credit_tab">New Credit Card</p>
 									<li id="savedCard" class="item">
 									<!-- <span class="mycards">My cards</span> -->
 										<form class="form-inline" id="card_form" autocomplete="off" >
@@ -606,6 +608,8 @@
 							<ul class="product-block blocks">
 							<h3>Enter your card details</h3>
 								<c:if test="${not empty debitCards}">
+								<p class="saved_card_tab active_tab debit_tab">Saved Cards</p>
+								<p class="new_card_tab debit_tab">New Debit Card</p>
 									<li id="savedCardDebit" class="item">
 									<!-- <span class="mycards">My cards</span> -->
 										<form class="form-inline" id="card_form_saved_debit" autocomplete="off" >
@@ -1261,5 +1265,55 @@
 		});
 	</script> -->
 
-				
+	<script>
+	if($("#savedDebitCard").length > 0)
+	{
+		$("#cardDebit").find(".terms").last().hide();
+	}
+	if($("#savedCard").length > 0)
+	{
+		$("#card").find(".terms").last().hide();
+	}
+	
+	$(".saved_card_tab.credit_tab").click(function(){
+		$(this).addClass("active_tab");
+		$(".new_card_tab.credit_tab").removeClass("active_tab");
+		$(this).parents("#card").find("#savedCard").show();
+		$(this).parents("#card").find("#savedCard").next("li").show();
+		$(this).parents("#card").find(".terms").first().show();
+		$(this).parents("#card").find("#newCardCC").hide();
+		$(this).parents("#card").find("#newCardCC").next("li").hide();
+		$(this).parents("#card").find(".terms").last().hide();
+	});
+	$(".new_card_tab.credit_tab").click(function(){
+		$(this).addClass("active_tab");
+		$(".saved_card_tab.credit_tab").removeClass("active_tab");
+		$(this).parents("#card").find("#savedCard").hide();
+		$(this).parents("#card").find("#savedCard").next("li").hide();
+		$(this).parents("#card").find(".terms").first().hide();
+		$(this).parents("#card").find("#newCardCC").show();
+		$(this).parents("#card").find("#newCardCC").next("li").show();
+		$(this).parents("#card").find(".terms").last().show();
+	});
+	$(".saved_card_tab.debit_tab").click(function(){
+		$(this).addClass("active_tab");
+		$(".new_card_tab.debit_tab").removeClass("active_tab");
+		$(this).parents("#cardDebit").find("#savedCardDebit").show();
+		$(this).parents("#cardDebit").find("#savedCardDebit").next("li").show();
+		$(this).parents("#cardDebit").find(".terms").first().show();
+		$(this).parents("#cardDebit").find("#debitCard").hide();
+		$(this).parents("#cardDebit").find("#debitCard").next("li").hide();
+		$(this).parents("#cardDebit").find(".terms").last().hide();
+	});
+	$(".new_card_tab.debit_tab").click(function(){
+		$(this).addClass("active_tab");
+		$(".saved_card_tab.debit_tab").removeClass("active_tab");
+		$(this).parents("#cardDebit").find("#savedCardDebit").hide();
+		$(this).parents("#cardDebit").find("#savedCardDebit").next("li").hide();
+		$(this).parents("#cardDebit").find(".terms").first().hide();
+		$(this).parents("#cardDebit").find("#debitCard").show();
+		$(this).parents("#cardDebit").find("#debitCard").next("li").show();
+		$(this).parents("#cardDebit").find(".terms").last().show();
+	});
+	</script>			
 				

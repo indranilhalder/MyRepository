@@ -55368,7 +55368,6 @@ display:block;}
 }
  .cart.wrapper .payments.tab-view .product-block li.item#savedCardDebit + li + .terms,
  .cart.wrapper .payments.tab-view .product-block li.item#savedCard + li + .terms{
-    border-bottom: 1px solid #e4e4e4;
         padding: 25px 0px 30px 0px;
             margin-bottom: 29px;
  }
@@ -55687,7 +55686,7 @@ div#savedCreditCard, div#savedDebitCard {
     width: 95%;
     right: 0;
     float: right;
-    margin-bottom:20px;
+    /* margin-bottom:20px; */
 }
  .cart.wrapper .payments.tab-view .product-block li.item#savedCardDebit,
  .cart.wrapper .payments.tab-view .product-block li.item#savedCard{
@@ -61971,7 +61970,8 @@ margin-left:0;
     width: -webkit-calc(100% - 97px);
     width: calc(100% - 97px);
 }
-div#savedCreditCard .credit-card-group .right-align-form, div#savedDebitCard .debit-card-group .right-align-form {
+div#savedCreditCard .credit-card-group .right-align-form, div#savedDebitCard .debit-card-group .right-align-form ,
+div#savedEMICard .credit-card-group .right-align-form {
     width: 87px;
     padding-left:0;
     display: inline-block;
@@ -61995,6 +61995,11 @@ div#savedCreditCard .credit-card-group .right-align-form, div#savedDebitCard .de
     letter-spacing: 0.6px;
     color: #666666;
     margin-bottom: 0px !important;
+    display: inline-block;
+    width: calc(100% - 50px);
+}
+.cart.wrapper.checkout-payment .card-sec .card-num .card_image img {
+    max-width: 42px;
 }
 .cart.wrapper.checkout-payment .blocks .card-sec .radio label span{
     font-size: 14px !important;
@@ -62008,7 +62013,8 @@ div#savedCreditCard .credit-card-group .right-align-form, div#savedDebitCard .de
     position: relative;
     margin-right:0px;
 }
-.cart.wrapper .left-block #savedDebitCard .debit-card-group input[type="radio"] + label:before, .cart.wrapper .left-block li#savedCard div.card input[type="radio"] + label:before {
+.cart.wrapper .left-block #savedDebitCard .debit-card-group input[type="radio"] + label:before, .cart.wrapper .left-block li#savedCard div.card input[type="radio"] + label:before ,
+.cart.wrapper .left-block #savedEMICard .credit-card-group input[type="radio"] + label:before {
     left: 0px;
     margin-top: 0;
     top: 0;
@@ -62019,7 +62025,8 @@ div#savedCreditCard .credit-card-group .right-align-form, div#savedDebitCard .de
     height: 15px;
     width: 15px;
 }
-.cart.wrapper .left-block #savedDebitCard .debit-card-group input[type="radio"]:checked + label:before, .cart.wrapper .left-block li#savedCard div.card input[type="radio"]:checked + label:before {
+.cart.wrapper .left-block #savedDebitCard .debit-card-group input[type="radio"]:checked + label:before, .cart.wrapper .left-block li#savedCard div.card input[type="radio"]:checked + label:before,
+.cart.wrapper .left-block #savedEMICard .credit-card-group input[type="radio"]:checked + label:before {
     background: #000;
 }
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .card .radio p {
@@ -62036,35 +62043,71 @@ div#savedCreditCard .credit-card-group .right-align-form, div#savedDebitCard .de
     margin-top: 6px;
 }
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedCreditCard .cvv input::-webkit-input-placeholder, 
-.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedDebitCard .cvv input::-webkit-input-placeholder{
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedDebitCard .cvv input::-webkit-input-placeholder,
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedEMICard .cvv input::-webkit-input-placeholder{
 	color:#ccc;
 }
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedCreditCard .cvv input::-moz-placeholder, 
-.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedDebitCard .cvv input::-moz-placeholder{
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedDebitCard .cvv input::-moz-placeholder,
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedEMICard .cvv input::-moz-placeholder{
 	color:#ccc;
 }
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedCreditCard .cvv input:-ms-input-placeholder, 
-.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedDebitCard .cvv input:-ms-input-placeholder{
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedDebitCard .cvv input:-ms-input-placeholder,
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedEMICard .cvv input:-ms-input-placeholder{
 	color:#ccc;
 }
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedCreditCard .cvv input::-webkit-input-placeholder, 
-.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedDebitCard .cvv input::-webkit-input-placeholder{
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedDebitCard .cvv input::-webkit-input-placeholder,
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedEMICard .cvv input::-webkit-input-placeholder{
 	color:#ccc;
 }
-@media(max-width:1010px) and (min-width:980px){
-.cart.wrapper.checkout-payment .blocks .card-sec .radio {
-    padding-left: 30px;
+.cart.wrapper.checkout-payment .terms p{
+	text-transform: none;
 }
+.saved_card_tab,.new_card_tab{
+	width: 160px;
+    height: 40px;
+    float: left;
+    text-align: center;
+    border-radius: 4px;
+    background-image: linear-gradient(to bottom, #ffffff, #dddddd);
+    border: solid 1px #cccccc;
+    font-size: 14px;
+    color: rgba(0,0,0,0.5);
+    padding:12px 0;
+    margin-top: 20px;
+    margin-bottom: 16px;
+    text-transform: none;
+    font-weight: normal;
+    cursor: pointer;
+}
+.saved_card_tab.active_tab,.new_card_tab.active_tab{
+    background-image: none;
+    color: rgba(0,0,0,1);
+    background-color: #ffffff;
+}
+.new_card_tab{
+	border-radius: 0px 4px 4px 0px;
+    margin-left: -1px;
+}
+.saved_card_tab{
+	border-radius: 4px 0px 0px 4px;
+}
+li#savedCardDebit ~ #debitCard + li, li#savedCardDebit ~ #debitCard ,
+li#savedCard ~ #newCardCC + li, li#savedCard ~ #newCardCC {
+    display: none;
 }
 @media(max-width:767px){
-	div#savedCreditCard, div#savedDebitCard {
+	div#savedCreditCard, div#savedDebitCard, div#savedEMICard {
     width: 100%;
     border: 0;
 }
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .card, .confirmation .left-block .payments.tab-view .tabs .product-block li.item .card {
     width: 100%;
 }
-div#savedCreditCard .credit-card-group .right-align-form, div#savedDebitCard .debit-card-group .right-align-form {
+div#savedCreditCard .credit-card-group .right-align-form, div#savedDebitCard .debit-card-group .right-align-form ,
+div#savedEMICard .credit-card-group .right-align-form {
     width: 131px;
     margin-left: 95px;
 }
@@ -62073,6 +62116,16 @@ div#savedCreditCard .credit-card-group .right-align-form, div#savedDebitCard .de
 }
 .cart.wrapper.checkout-payment .blocks .card-sec {
     padding: 10px 0px;
+}
+.saved_card_tab,.new_card_tab{
+	display:none;
+	}
+	#card .terms, #cardDebit .terms{
+	display: none !important;
+	}
+	li#savedCardDebit ~ #debitCard + li, li#savedCardDebit ~ #debitCard ,
+li#savedCard ~ #newCardCC + li, li#savedCard ~ #newCardCC {
+    display: list-item !important;
 }
 }
 /*saved card end*/
@@ -62305,6 +62358,9 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 .cvv_mobile{
 	display: inline-block;
 }
+}
+div.radio.creditDebitLabelRadio{
+	display: none;
 }
 /* Payment Page change end */
 /*checkout pages end*/

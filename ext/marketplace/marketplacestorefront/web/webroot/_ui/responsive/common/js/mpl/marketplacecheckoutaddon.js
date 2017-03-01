@@ -558,6 +558,8 @@ function displayDCForm(){
 	$(".card_token").parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
 	$(".card_token").parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
 	$(".card_token").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
+	//UF-219
+	$("#save-card-dc").prop("checked", true);
 	//if(document.getElementsByName("debitCards")[0]==undefined){
 		//$("#savedCard, #savedCreditCard, #savedDebitCard, .newCard, .savedCard, .saved-card-button").css("display","none");
 		$("#newCard, .newCardPayment").css("display","block");
@@ -1021,6 +1023,8 @@ function displayEMICards(){
 	$(".card_token_hide").parent().find('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
 	$(".card_token_hide").parent().find('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
 	$(".card_token_hide").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
+	//UF-231
+	$("#save-card-emi").prop("checked", true);
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/listEMICards",
 		data: { 'bankName' : bankName },
@@ -1215,7 +1219,8 @@ function displayFormForCC(){
 	$(".card_token_hide").parent().find('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
 	$(".card_token_hide").parent().find('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
 	$(".card_token_hide").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
-	
+	//UF-213
+	$("#save-card").prop("checked", true);
 	//if(document.getElementsByName("creditCards")[0]==undefined){
 		//$("#savedCard, #savedCreditCard, #savedDebitCard, .newCard, .savedCard, .saved-card-button").css("display","none");
 		//$(".make_payment_top_savedCard").css("display","none");
@@ -4583,7 +4588,7 @@ function applyPromotion(bankName,binValue,formSubmit)
 									var bankList=document.getElementById("bankNameForEMI");
 									var fragment = document.createDocumentFragment();
 									var opt = document.createElement('option');
-									opt.innerHTML = "Select";
+									opt.innerHTML = "Select your bank";
 									opt.value = "select";
 									fragment.appendChild(opt);
 								    bankList.appendChild(fragment);
