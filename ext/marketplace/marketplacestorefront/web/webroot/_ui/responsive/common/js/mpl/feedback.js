@@ -2896,3 +2896,23 @@ $("body.page-cartPage .cart.wrapper .checkout-types li#checkout-id").on("mouseov
 		$(this).css("cursor","default");
 	}
 });
+if ($(".facet-list.filter-opt").children().length){
+	$("body.page-productGrid .product-listing.product-grid.lazy-grid").css("padding-top","15px");
+	$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top","-95px");
+	$("body.page-productGrid .facet-list.filter-opt").css("padding-top","65px");
+	
+}
+
+$(document).ready(function(){ 
+    $(window).scroll(function(){ 
+        if ($(this).scrollTop() > 100) { 
+            $('#scroll_to_top').fadeIn(); 
+        } else { 
+            $('#scroll_to_top').fadeOut(); 
+        } 
+    }); 
+    $('#scroll_to_top').click(function(){ 
+        $("html, body").animate({ scrollTop: 0 }, 600); 
+        return false; 
+    }); 
+});

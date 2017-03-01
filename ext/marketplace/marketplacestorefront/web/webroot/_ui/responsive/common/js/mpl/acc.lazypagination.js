@@ -144,7 +144,9 @@ $(document).ready(function() {
         });
    // }
         $(window).on("load resize",function(){
+        if($("body").hasClass("page-productGrid")){
         $("body.page-productGrid .list_title h1").css("margin-left",$(".right-block").offset().left+parseInt($(".right-block").css("padding-left")));
+        }
         });
         
         $('.sort').click(function(){

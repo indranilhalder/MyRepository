@@ -288,6 +288,7 @@
 			</div>
 		</c:when>
 		<c:otherwise>
+		<a href="javascript:void(0);" id="scroll_to_top" title="Scroll to Top" style="display: none;">Top<span></span></a>
 		<div class="pagination-bar listing-menu ${(top)?"top":"bottom"}">
 			<div class="list_title">
 				<div class="UlContainer">

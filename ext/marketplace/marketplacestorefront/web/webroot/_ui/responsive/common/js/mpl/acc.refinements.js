@@ -384,7 +384,6 @@ ACC.refinements = {
 			else {
 				requiredUrl = action[0].concat("/getFacetData");
 			}
-			
 			// AJAX call
 			filterDataAjax(requiredUrl,dataString,pageURL);
 			return false;
@@ -799,7 +798,7 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			
 			$("#no-click").remove();
 			$(".spinner").remove();
-			
+			$("body.page-productGrid .product-listing.product-grid").css("margin-top","60px");
 			// Keeps expansion-closure state of facets
 			$(".facet-name.js-facet-name h3").each(function(){
 				if($(this).hasClass("true")){

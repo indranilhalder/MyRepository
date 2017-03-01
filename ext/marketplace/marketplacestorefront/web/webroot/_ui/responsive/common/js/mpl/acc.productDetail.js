@@ -2909,12 +2909,14 @@ function loadDefaultWishListName_SizeGuide() {
 	 	    return false;
 	 }
 		 //TISQAEE-64
-		 utag.link({
+		 if(typeof utag !="undefined"){ 
+			 utag.link({
 				link_obj: this,
 				link_text: 'buynow' ,
 				event_type : 'buynow_winner_seller',
 				product_sku : productCodeArray
 			});
+		}
 		ACC.product.sendAddToBag("addToCartForm",true);
 	});
 

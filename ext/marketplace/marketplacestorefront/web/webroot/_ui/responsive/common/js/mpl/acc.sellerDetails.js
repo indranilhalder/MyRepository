@@ -392,7 +392,8 @@ function focusOnElement() {
 	 function addToBag(index){
 		
 		//$(document).on('click','#addToCartFormId'+index+' .js-add-to-cart',function(){ //Changed for TPR-887
-		 $(document).on('click','#addToCartFormId'+index+' #addToCartButton'+index,function(){
+		 $(document).off('click', '#addToCartFormId'+index+' #addToCartButton'+index).on('click', '#addToCartFormId'+index+' #addToCartButton'+index, function(event) {
+		 //$(document).on('click','#addToCartFormId'+index+' #addToCartButton'+index,function(){
 			 
 			 
 			 
@@ -418,7 +419,8 @@ function focusOnElement() {
 		});
 		 
 		//TPR-887 //INC144313255
-		 $(document).on('click','#addToCartFormId'+index+' #buyNowButton'+index,function(){
+		 $(document).off('click', '#addToCartFormId'+index+' #buyNowButton'+index).on('click', '#addToCartFormId'+index+' #buyNowButton'+index, function(event) {
+		 //$(document).on('click','#addToCartFormId'+index+' #buyNowButton'+index,function(){
 	        if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Accessories' && $("#ia_product_rootCategory_type").val()!='Watches'){
 			  		
 			   		$("#buyNowFormIdOthersel"+index).html($('#selectSizeId').text());
@@ -487,6 +489,8 @@ function focusOnElement() {
 					var stockDataArrayList=
 					fetchSellers(data,buyboxSeller);
 					otherSellersCount = data.length;
+					//UF-34 Default Sorting as Price Low to High at the time of loading
+					sortSellers("1");
 					setSellerLimits(1);
 					  var stock_id="stock";
 					  var ussid = "ussid";
@@ -530,26 +534,42 @@ function focusOnElement() {
 	 }
 	 function sortPrice(sellerPageCount){
 		 var buyboxSeller = $("#ussid").val();
-		     var aFinalPrice="";
-		     var bFinalPrice="";
-		
-		      sellerDetailsArray.sort(function(a, b){
-		    	  for (var p =0; p <skuPriceArray.length; p++) {  
-		 	  		 if(skuPriceArray[p]['key']==a.ussid){
-		 	  			aFinalPrice=skuPriceArray[p]['value'];
+	     var aFinalPrice="";
+	     var bFinalPrice="";
+	     //UF-34
+	     var oosSellers = [];
+	
+	      sellerDetailsArray.sort(function(a, b){
+	    	  for (var p =0; p <skuPriceArray.length; p++) {  
+	 	  		 if(skuPriceArray[p]['key']==a.ussid){
+	 	  			aFinalPrice=skuPriceArray[p]['value'];
+	 	  		 }
+	 	  		 if(skuPriceArray[p]['key']==b.ussid){
+		 	  			bFinalPrice=skuPriceArray[p]['value'];
 		 	  		 }
-		 	  		 if(skuPriceArray[p]['key']==b.ussid){
-			 	  			bFinalPrice=skuPriceArray[p]['value'];
-			 	  		 }
-		 			
-		 		  }	  
-		    
-		    	  
-			  return aFinalPrice - bFinalPrice;
-		});
-		      fetchSellers(sellerDetailsArray,buyboxSeller)
-			  setSellerLimits(sellerPageCount);
-	 }
+	 			
+	 		  }	  
+	    
+	    	  
+		  return aFinalPrice - bFinalPrice;
+	});
+	      
+	      //UF-34
+	      for (var sel =0; sel <sellerDetailsArray.length; sel++) { 
+				 if(sellerDetailsArray[sel].availableStock < 1) {
+					 oosSellers.push(sellerDetailsArray[sel]);
+				 }
+			 }
+	      
+	      sellerDetailsArray = sellerDetailsArray.filter(function(val) {
+	    	  return oosSellers.indexOf(val) == -1;
+	      });
+	      
+	      sellerDetailsArray = sellerDetailsArray.concat(oosSellers);
+	      
+	      fetchSellers(sellerDetailsArray,buyboxSeller)
+		  setSellerLimits(sellerPageCount);
+ }
 	
 	 
 	 
@@ -703,6 +723,9 @@ function focusOnElement() {
 		 var buyboxSeller = $("#ussid").val();
 		 var aFinalPrice="";
 	     var bFinalPrice="";
+	     
+	     var oosSellers = [];
+	     
 		 sellerDetailsArray.sort(function(a, b){
 				
 			 for (var p =0; p <skuPriceArray.length; p++) {  
@@ -718,6 +741,21 @@ function focusOnElement() {
 			 return bFinalPrice - aFinalPrice;
 			 
 			});
+		  
+		//UF-34
+	      
+	      for (var sel =0; sel <sellerDetailsArray.length; sel++) { 
+				 if(sellerDetailsArray[sel].availableStock < 1) {
+					 oosSellers.push(sellerDetailsArray[sel]);
+				 }
+			 }
+	      
+	      sellerDetailsArray = sellerDetailsArray.filter(function(val) {
+	    	  return oosSellers.indexOf(val) == -1;
+	    	});
+	      
+	      sellerDetailsArray = sellerDetailsArray.concat(oosSellers);
+	      
 		  fetchSellers(sellerDetailsArray,buyboxSeller)
 		  setSellerLimits(sellerPageCount);
 		 }
