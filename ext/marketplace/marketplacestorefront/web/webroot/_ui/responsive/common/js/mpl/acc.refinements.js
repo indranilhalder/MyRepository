@@ -2,6 +2,7 @@
 var updatedsearchQuery = "";
 var dummyForm ;
 var lessBrands = [];
+var facetAjaxUrl = '';
 ACC.refinements = {
 
 	_autoload: [
@@ -768,6 +769,7 @@ ACC.refinements = {
 
 // function implements AJAX : TPR-198
 function filterDataAjax(requiredUrl,dataString,pageURL){
+	facetAjaxUrl = requiredUrl;
 	console.log(requiredUrl);
 	console.log(pageURL);
 	if ($("input[name=customSku]").val()) {

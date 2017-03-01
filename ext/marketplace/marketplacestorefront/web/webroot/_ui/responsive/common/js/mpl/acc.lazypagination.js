@@ -151,8 +151,8 @@ $(document).ready(function() {
         }
         });
         
-        $('.sort').click(function(){
-        	var item = $(this).attr('data-name');
+        $(document).on('click','.sort',function(){
+          	var item = $(this).attr('data-name');
         	$('.sort').removeAttr('style');
         	$(this).css('color', 'red');
         	var pathName = window.location.pathname;
@@ -211,7 +211,7 @@ $(document).ready(function() {
 			default:
 				break;
 			}
-        }); 
+        });
 });
 
 function findGetParameter(parameterName) {
