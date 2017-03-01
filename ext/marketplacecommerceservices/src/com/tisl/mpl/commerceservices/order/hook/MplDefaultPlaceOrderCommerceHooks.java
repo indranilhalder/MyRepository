@@ -864,9 +864,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 								if (perentEntry != null)
 								{
 									subOrderEntryModel.setSddDateBetween(perentEntry.getSddDateBetween());
-									subOrderEntryModel.setTimeSlotFrom(perentEntry.getTimeSlotFrom());
-									subOrderEntryModel.setTimeSlotTo(perentEntry.getTimeSlotTo());
-									subOrderEntryModel.setEdScheduledDate(perentEntry.getEdScheduledDate());
 								}
 							}
 							catch (Exception exception)
@@ -892,9 +889,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 												if (perentEntry != null)
 												{
 													subOrderEntryModel2.setSddDateBetween(perentEntry.getSddDateBetween());
-													subOrderEntryModel2.setTimeSlotFrom(perentEntry.getTimeSlotFrom());
-													subOrderEntryModel2.setTimeSlotTo(perentEntry.getTimeSlotTo());
-													subOrderEntryModel2.setEdScheduledDate(perentEntry.getEdScheduledDate());
 												}
 											}
 											catch (Exception exception)

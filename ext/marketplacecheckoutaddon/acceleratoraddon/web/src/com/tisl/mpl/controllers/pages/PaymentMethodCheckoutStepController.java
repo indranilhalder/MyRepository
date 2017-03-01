@@ -1408,9 +1408,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			setupMplCardForm(model, cartTotal);
 
 			//Adding all the details in model to be accessed from jsp
-			//Bug id TISRLEE-3197 start
-			setFreebieProductSelectedDateAndTime(cartData);
-			//Bug id TISRLEE-3197 END
+
 			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
 			//TODO: Top 5 coupons-----Commented as functionality out of scope of R2.1   Uncomment when in scope
 			//model.addAttribute("voucherDataList",
@@ -1472,41 +1470,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	}
 
-	//Bug id TISRLEE-3197 Start
-	/**
-	 * setFreebieProductSelectedDateAndTime 
-	 * @param cartData
-	 */
-	private void setFreebieProductSelectedDateAndTime(CartData cartData)
-	{
-		try{
-		if (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries()))
-		{
-			for (OrderEntryData freebieEntry : cartData.getEntries())
-			{
-				if (freebieEntry.isGiveAway() || freebieEntry.isIsBOGOapplied())
-				{
-					setDate(cartData, freebieEntry);
-				}
-			}
-		}}catch(Exception exception){
-			LOG.info("PaymentMethodCheckoutStepController:::setFreebieProductSelectedDateAndTime"+exception.getMessage());
-		}
-	}
-	private void setDate(CartData cartData,OrderEntryData freebieEntry)
-	{
-		for (OrderEntryData associatedEntry : cartData.getEntries())
-		{
-			if (associatedEntry.getAssociatedItems().contains(freebieEntry.getSelectedUssid()))
-			{
-				freebieEntry.setSelectedDeliverySlotDate(associatedEntry.getSelectedDeliverySlotDate());
-				freebieEntry.setTimeSlotFrom(associatedEntry.getTimeSlotFrom());
-				freebieEntry.setTimeSlotTo(associatedEntry.getTimeSlotTo());
-				break;
-			}
-		}
-	}
-	//Bug id TISRLEE-3197 END
 
 	//COde commented as not used
 	//	/**
