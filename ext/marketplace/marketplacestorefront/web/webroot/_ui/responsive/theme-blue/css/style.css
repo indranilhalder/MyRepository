@@ -62293,6 +62293,9 @@ header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_
 .productGrid-header-wrapper.active-header .productGrid-header div.bag{
 	margin-right: 22px;
 }
+.productGrid-header-wrapper.active-header .productGrid-header div.mobile-bag.bag{
+	display: none;
+}
 }
 	
 /*TPR-4471 ends*/
