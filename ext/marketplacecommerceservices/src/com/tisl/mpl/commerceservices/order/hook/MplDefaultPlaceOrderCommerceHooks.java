@@ -144,7 +144,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	@Override
 	public void afterPlaceOrder(final CommerceCheckoutParameter paramCommerceCheckoutParameter,
-			final CommerceOrderResult commerceOrderResult) throws InvalidCartException
+			final CommerceOrderResult commerceOrderResult) throws InvalidCartException, EtailNonBusinessExceptions
 	{
 		try
 		{
@@ -157,9 +157,47 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//				updateFraudModel(orderModel);
 			//
 			//			}
-
 			if (null != orderModel)
 			{
+				//Set order-id
+				final String sequenceGeneratorApplicable = getConfigurationService().getConfiguration()
+						.getString(MarketplacecclientservicesConstants.GENERATE_ORDER_SEQUENCE).trim();
+				//private method for seting Sub-order Total-TISEE-3986
+				if (StringUtils.isNotEmpty(sequenceGeneratorApplicable)
+						&& sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE))
+				{
+					LOG.debug("Order Sequence Generation True");
+					final String orderIdSequence = getMplCommerceCartService().generateOrderId();
+					LOG.debug("Order Sequence Generated:- " + orderIdSequence);
+
+					orderModel.setCode(orderIdSequence);
+				}
+				else
+				{
+					LOG.debug("Order Sequence Generation False");
+					final Random rand = new Random();
+					orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000)));
+				}
+				orderModel.setType("Parent");
+				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+				{
+					LOG.debug("Payment Info COD");
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+				}
+				else
+				{
+					LOG.debug("Payment Info Prepaid");
+
+					final String realEbs = getConfigurationService().getConfiguration().getString("payment.ebs.chek.realtimecall");
+					if (realEbs.equalsIgnoreCase("Y"))
+					{
+						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
+					}
+				}
+
+
+				////////////// Order Issue:- Order  ID updated first then Voucher Invalidation Model update
+
 				final Collection<DiscountModel> voucherColl = getVoucherService().getAppliedVouchers(orderModel);
 				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>();
 				if (CollectionUtils.isNotEmpty(voucherColl))
@@ -168,48 +206,26 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				}
 				if (CollectionUtils.isNotEmpty(voucherList))
 				{
+					// Order Issue:- Null check added
 					final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) voucherList.get(0);
 					final VoucherInvalidationModel voucherInvalidationModel = getVoucherModelService().createVoucherInvalidation(
-							(VoucherModel) voucherList.get(0), promotionVoucherModel.getVoucherCode(), orderModel);
-					for (final DiscountValue discount : orderModel.getGlobalDiscountValues())
+							(VoucherModel) voucherList.get(0),
+							null != promotionVoucherModel.getVoucherCode() ? promotionVoucherModel.getVoucherCode() : "", orderModel);
+					// Order Issue:- Null or Empty check added
+					if (CollectionUtils.isNotEmpty(orderModel.getGlobalDiscountValues()))
 					{
-						if (discount.getCode().equalsIgnoreCase(promotionVoucherModel.getCode()))
+						for (final DiscountValue discount : orderModel.getGlobalDiscountValues())
 						{
-							voucherInvalidationModel.setSavedAmount(Double.valueOf(discount.getAppliedValue()));
-							break;
+							LOG.info(null != discount.getCode() ? discount.getCode() : "Discount Code is null");
+							if ((null != discount.getCode() ? discount.getCode() : "").equalsIgnoreCase(null != promotionVoucherModel
+									.getCode() ? promotionVoucherModel.getCode() : ""))
+							{
+								voucherInvalidationModel.setSavedAmount(Double.valueOf(discount.getAppliedValue()));
+								break;
+							}
 						}
 					}
 					getModelService().save(voucherInvalidationModel);
-				}
-
-				//Set order-id
-				final String sequenceGeneratorApplicable = getConfigurationService().getConfiguration()
-						.getString(MarketplacecclientservicesConstants.GENERATE_ORDER_SEQUENCE).trim();
-				//private method for seting Sub-order Total-TISEE-3986
-				if (StringUtils.isNotEmpty(sequenceGeneratorApplicable)
-						&& sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE))
-				{
-					final String orderIdSequence = getMplCommerceCartService().generateOrderId();
-					orderModel.setCode(orderIdSequence);
-				}
-				else
-				{
-					final Random rand = new Random();
-					orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000)));
-				}
-				orderModel.setType("Parent");
-				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
-				{
-					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-				}
-				else
-				{
-
-					final String realEbs = getConfigurationService().getConfiguration().getString("payment.ebs.chek.realtimecall");
-					if (realEbs.equalsIgnoreCase("Y"))
-					{
-						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
-					}
 				}
 			}
 		}
@@ -218,9 +234,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		{
 			throw new EtailNonBusinessExceptions(e, "E0007");
 		}
+		catch (final Exception e)
+		{
+			throw e;
+		}
+
 
 	}
-
 
 
 	//	/**
@@ -270,7 +290,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 */
 	@Override
 	public void beforeSubmitOrder(final CommerceCheckoutParameter paramCommerceCheckoutParameter,
-			final CommerceOrderResult paramCommerceOrderResult) throws InvalidCartException
+			final CommerceOrderResult paramCommerceOrderResult) throws InvalidCartException, EtailNonBusinessExceptions
 	{
 		final OrderModel orderModel = paramCommerceOrderResult.getOrder();
 		//orderModel.setType("Parent");
@@ -447,10 +467,15 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				}
 			}
 		}
+		catch (final InvalidCartException e)
+		{
+			LOG.error(" error occured while setting parent transaction id for Buy A B Get C ", e);
+			throw e;
+		}
 		catch (final Exception e)
 		{
 			LOG.error(" error occured while setting parent transaction id for Buy A B Get C ", e);
-			throw new InvalidCartException(e);
+			throw new EtailNonBusinessExceptions(e);
 		}
 	}
 
@@ -628,10 +653,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				modelService.save(sellerOrderList);
 			}
 		}
-		catch (final Exception e)
+		catch (final ModelSavingException e)
 		{
 			LOG.error(" error occured while calculating subtotal from setSuborderTotalAfterOrderSplitting", e);
-			throw new InvalidCartException(e);
+			throw new EtailNonBusinessExceptions(e);
+		}
+		catch (final Exception e)
+		{
+			throw e;
 		}
 	}
 
@@ -757,9 +786,15 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				LOG.error("uniquePromoCodeList is Empty for BOGO Promotion");
 			}
 		}
+		catch (final InvalidCartException e)
+		{
+			LOG.error("Error while executing setBOGOParentTransactionId:- ", e);
+			throw e;
+		}
 		catch (final Exception e)
 		{
-			throw new InvalidCartException(e);
+			LOG.error("Error while executing setBOGOParentTransactionId:- ", e);
+			throw new EtailNonBusinessExceptions(e);
 		}
 
 	}
@@ -1136,10 +1171,15 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				}
 			}
 		}
+		catch (final InvalidCartException e)
+		{
+			LOG.error(" Exception while executing setFreebieParentTransactionId:- ", e);
+			throw e;
+		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception while executing setFreebieParentTransactionId:- ", e);
-			throw new InvalidCartException(e);
+			LOG.error(" Exception while executing setFreebieParentTransactionId:-", e);
+			throw new EtailNonBusinessExceptions(e);
 		}
 
 	}
