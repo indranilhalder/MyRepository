@@ -155,7 +155,6 @@
 											<span class="terms-text"><p>${product.potentialPromotions[0].termsAndConditions}</p></span>
 											</div>											
 										</c:if>	
-									<p><a style="text-decoration:none" href="${request.contextPath}${product.potentialPromotions[0].promourl}">Bundle offer promotion page</a></p>
 									</div>
 									</li>
 								</c:if>

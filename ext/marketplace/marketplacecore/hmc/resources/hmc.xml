@@ -3915,7 +3915,6 @@
 							</attribute>
 							<text name="text.promotion.excludedproductcodeslist" />
 							<attribute name="excludedProductCodeList" />
-							<attribute name="promourl" />
 							</listlayout>
 							<listlayout>
 							<text name="text.productpromotion.discountPrices" />

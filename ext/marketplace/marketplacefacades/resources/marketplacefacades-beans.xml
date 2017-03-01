@@ -254,7 +254,6 @@
 
 		<property name="termsAndConditions" type="String" />
 
-		<property name="promourl" type="java.lang.String"></property>
 
 	</bean>
 

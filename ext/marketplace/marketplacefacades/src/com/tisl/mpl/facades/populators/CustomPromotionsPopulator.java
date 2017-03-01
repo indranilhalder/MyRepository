@@ -32,7 +32,6 @@ import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
 import com.tisl.mpl.model.BuyAandBgetCModel;
 import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
-import com.tisl.mpl.model.MplProductSteppedMultiBuyPromotionModel;
 import com.tisl.mpl.model.SellerMasterModel;
 
 
@@ -115,15 +114,6 @@ public class CustomPromotionsPopulator implements Populator<AbstractPromotionMod
 		target.setStartDate(source.getStartDate());
 		target.setEnabled(source.getEnabled());
 		target.setTitle(source.getTitle());
-		if (source instanceof MplProductSteppedMultiBuyPromotionModel)
-		{
-			//final MplProductSteppedMultiBuyPromotionModel promo = (MplProductSteppedMultiBuyPromotionModel) source;
-			/*
-			 * if(promo!=null) { getPromourl() }
-			 */
-			target.setPromourl(((MplProductSteppedMultiBuyPromotionModel) source).getPromourl());
-
-		}
 		final List<String> channelList = new ArrayList<String>();
 		for (final SalesApplication channel : source.getChannel())
 		{
@@ -147,7 +137,7 @@ public class CustomPromotionsPopulator implements Populator<AbstractPromotionMod
 			 * sellerRestriction.getSellerMasterList(); for (final SellerMasterModel seller : sellerList) {
 			 * allowedSellerList.add(seller.getId()); } //setting allowed seller list
 			 * target.setAllowedSellers(allowedSellerList); }
-			 * 
+			 *
 			 * } }
 			 */
 			//}
