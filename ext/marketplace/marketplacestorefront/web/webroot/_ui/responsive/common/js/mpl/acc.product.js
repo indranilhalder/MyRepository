@@ -818,13 +818,14 @@ sendAddToBagQuick:function(formId){
 				}
 				if(isSuccess){
 					//TISQAEE-64 Buy Now Quick View
-					 utag.link({
+					if(typeof utag !="undefined"){
+						utag.link({
 							link_obj: this,
 							link_text: 'buynow' ,
 							event_type : 'buynow_winner_seller',
 							product_sku : productCodeArray
 						});
-					
+					}
 					location.href=ACC.config.encodedContextPath + '/cart';
 				}
 				//End MSD
