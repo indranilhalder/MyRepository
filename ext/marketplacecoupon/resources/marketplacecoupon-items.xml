@@ -24,19 +24,19 @@
 	   
 		<collectiontype code="SellerDataCollection" elementtype="SellerMaster" 
 			autocreate="true" generate="false" />
-	</collectiontypes>	
-	<!-- <collectiontypes>
-	    <collectiontype code="DeliveryModeDataCollection" elementtype="DeliveryMode"
+
+
+	   <!--  <collectiontype code="DeliveryModeDataCollection" elementtype="DeliveryMode"
 			autocreate="true" generate="false" type="list" /> 
 		<collectiontype code="PaymentModeDataCollection" elementtype="PaymentMode"
 			autocreate="true" generate="false" type="list" />
 		<collectiontype code="BankDataCollection" elementtype="Bank" 
 			autocreate="true" generate="false" type="list" />
 		<collectiontype code="SellerDataCollection" elementtype="SellerMaster" 
-			autocreate="true" generate="false" />
+			autocreate="true" generate="false" />-->
 		<collectiontype code="ChannelDataCollection" elementtype="SalesApplication"
 			autocreate="true" generate="false" type="list" /> 
-	</collectiontypes> -->
+	</collectiontypes> 
 	
 	<enumtypes>
         <!-- Event Type Enum -->
@@ -223,7 +223,8 @@
           
           <!-- Restriction : Commented as functionality out of scope of R2.1   Uncomment when in scope -->
           <!-- Channel Restriction for Voucher -->
-		<!-- <itemtype generate="true" code="ChannelRestriction"
+          <!-- TPR-4460 -->
+		<itemtype generate="true" code="ChannelRestriction"
 			jaloclass="com.tisl.mpl.jalo.ChannelRestriction" extends="Restriction"
 			autocreate="true">
 			<attributes>
@@ -234,7 +235,7 @@
 						optional="false" initial="false" />
 				</attribute>
 			</attributes>
-		</itemtype> -->
+		</itemtype> 
 
 		<!-- Restriction : Commented as functionality out of scope of R2.1   Uncomment when in scope -->
 		<!-- Seller Restriction for Voucher -->

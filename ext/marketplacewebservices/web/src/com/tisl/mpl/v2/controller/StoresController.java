@@ -24,8 +24,6 @@ import de.hybris.platform.commercewebservicescommons.dto.store.ListOfPointOfServ
 import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.store.StoreFinderSearchPageWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
-import de.hybris.platform.core.model.order.CartModel;
-import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.site.BaseSiteService;
 
 import javax.annotation.Resource;
@@ -180,12 +178,6 @@ public class StoresController extends BaseController
 		{
 			LOG.debug("from storesAtCart method");
 		}
-		CartModel cartModel = null;
-		if (!userId.equalsIgnoreCase("anonymous"))
-		{
-			final UserModel user = extendedUserService.getUserForOriginalUid(userId);
-			cartModel = commerceCartService.getCartForGuidAndSiteAndUser(null, baseSiteService.getCurrentBaseSite(), user);
-		}
-		return storesHelper.storesAtCart(pincode, ussId, fields, cartModel);
+		return storesHelper.storesAtCart(pincode, ussId, fields, null);
 	}
 }

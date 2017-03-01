@@ -41,12 +41,12 @@ var buyboxskuId='';
 		</li>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'reviewsAndRatings')}">
-		<li id="tabs_styleNotes" class="active">
+		<li id="tabs_styleNotes">
 			 <spring:theme code="product.product.reviewsAndRatings" />
 		</li>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'returnsAndRefunds')}">
-		<li id="tabs_styleNotes" class="active">
+		<li id="tabs_styleNotes">
 			 <spring:theme code="product.product.returnsAndRefunds" />
 		</li>
 	</c:if>
@@ -74,42 +74,42 @@ var buyboxskuId='';
 </div>
 <ul class="tabs pdp">
 	<c:if test="${fn:contains(validTabs, 'aboutproduct')}">
-		<li class="active">
+		<li id="about" class="tab-content active">
 			<product:productAboutProductTab product="${product}" />
 		</li>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
-		<li class="active">
+		<li id="style" class="tab-content active">
 			<product:productStyleNotesTab product="${product}" />
 		</li>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'reviewsAndRatings')}">
-		<li>
+		<li id="review" class="tab-content">
 			<product:productReveiwsAndRatings product="${product}" />
 		</li>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'returnsAndRefunds')}">
-		<li>
+		<li id="return" class="tab-content">
 			<product:productReturnsAndRefunds product="${product}" />
 		</li>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'details')}">
-		<li>
+		<li id="details" class="tab-content">
 			<product:productDetailsTab product="${product}" />
 		</li>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'description')}">
-		<li class="active">
+		<li id="description" class="tab-content active">
 			<product:productDescriptionTab product="${product}" />
 		</li>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'warranty')}">
-		<li >
+		<li id="warranty" class="tab-content">
 			<product:productWarrantyTab product="${product}" />
 		</li>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'knowmore')}">
-		<li >
+		<li id="knowmore" class="tab-content">
 			<product:productTataPromiseTab product="${product}" />
 		</li>
 	</c:if>	

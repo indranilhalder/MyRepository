@@ -81,21 +81,22 @@
 												 	<ycommerce:testId code="cart_product_size">
 														<div class="size"><spring:theme code="text.size"/>${entry.product.size}</div>
 													</ycommerce:testId>
-													  <div class="item-price delivery-price delivery-price-mobile">
-											<ycommerce:testId code="cart_totalProductPrice_label">
-											<c:choose>
-											<c:when test="${not empty entry.totalSalePrice}">
-												<format:price priceData="${entry.totalSalePrice}"
-													displayFreeForZero="true" />
-													</c:when>
-													<c:otherwise>
-													<format:price priceData="${entry.totalPrice}"
-													displayFreeForZero="true" />
-													</c:otherwise>
-													</c:choose>
-											</ycommerce:testId>
-											
-										</div>
+													<!-- INC_11620/INC_11466 -->
+													 <!--<div class="item-price delivery-price delivery-price-mobile">
+														<ycommerce:testId code="cart_totalProductPrice_label">
+														<c:choose>
+														<c:when test="${not empty entry.totalSalePrice}">
+															<format:price priceData="${entry.totalSalePrice}"
+																displayFreeForZero="true" />
+																</c:when>
+																<c:otherwise>
+																<format:price priceData="${entry.totalPrice}"
+																displayFreeForZero="true" />
+																</c:otherwise>
+																</c:choose>
+														</ycommerce:testId>
+														
+													   </div>-->
 													<ycommerce:testId code="cart_product_colour">
 																<%-- <div class="colour"><spring:theme code="text.colour"/>${entry.product.colour}</div> --%>
 													</ycommerce:testId>
@@ -234,7 +235,8 @@
 											
 										</div>  --%>
 									</li>
-								    <li class="price">
+									<!-- INC_11620/INC_11466 -->
+								    <!--  <li class="price">
 								    
 								    <div class="item-price delivery-price">
 											<ycommerce:testId code="cart_totalProductPrice_label">
@@ -253,7 +255,7 @@
 										</div>
 								    
 								    
-								    </li>
+								    </li>-->
 								    
 								    <li class="quantity">
 								      <div>

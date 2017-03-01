@@ -2767,6 +2767,27 @@
 						</columntype>
 					</persistence>
 				</attribute>
+				<attribute qualifier="promourl" type="localized:java.lang.String">
+					<description>Configurable link on PDP to be displayed for Bundling promotion</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
 			</attributes>
 		</itemtype>
 			<!-- TPR-1294 : Item Declaration ends -->

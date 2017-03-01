@@ -100,6 +100,7 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 					{ order.getCode(), omsResult.getCause().getMessage() }));
 			order.setIsSentToOMS(Boolean.FALSE);
 			getModelService().save(order);
+
 			return AbstractSimpleDecisionAction.Transition.OK;
 		}
 		if ((crmResult.getResult().equals(OrderPlacementResult.Status.FAILED))
@@ -120,6 +121,8 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 
 		if (result.getResult().equals(OrderPlacementResult.Status.SUCCESS))
 		{
+			//order.setIsSentToOMS(Boolean.TRUE);
+			//getModelService().save(order);
 			return Transition.OK;
 		}
 

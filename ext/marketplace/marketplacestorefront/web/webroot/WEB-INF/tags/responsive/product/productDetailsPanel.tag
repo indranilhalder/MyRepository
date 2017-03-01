@@ -92,14 +92,15 @@ tr.d0 td {
 
 
 
-<div class="pdp">
+<div itemscope itemtype="http://schema.org/Product" class="pdp">
 	<div class="product-info wrapper">
-		<div class="product-image-container">
+		<div class="product-image-container ${product.rootCategory}">
 			<cms:pageSlot position="ConfigureImagesCount" var="component">
 				<cms:component component="${component}" />
 			</cms:pageSlot>
 			<product:productImagePanel galleryImages="${galleryImages}"
 				product="${product}" />
+				
 
 				<%-- <input id="emiCuttOffAmount" type="hidden" value="${emiCuttOffAmount}"/>
 				<!-- EMI section -->
@@ -107,12 +108,18 @@ tr.d0 td {
 			
 			<!-- promotion  section -->
 			<product:productPromotionSection product="${product}" />
-
+			
+			
+			
+			
+			
+			
+			
 		</div>
 		<!-- Added for carousel in mobile view -->
 		<div class="product-image-container device">
-		<a class="wishlist-icon" onclick="addToWishlist()"></a>
-		<c:set var="thumbNailImageLengthDevice" value="${fn:length(galleryImages)}" />
+			<a class="wishlist-icon" onclick="addToWishlist()"></a>
+			<c:set var="thumbNailImageLengthDevice" value="${fn:length(galleryImages)}" />
 			<div class="jcarousel-skin imageListCarousel" id="pdpProductCarousel"> 
 				<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLengthDevice}">	
 	
@@ -148,23 +155,62 @@ tr.d0 td {
 			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
 		</div>
 		
-		<div class="product-detail">
+		<!-- <div class="product-detail"> 
+		<c:set var="req" value="${pageContext.request}" />
+  			<c:set var="baseURL" value="${fn:replace(req.requestURL, req.requestURI, '')}" />
+  			<c:set var="params" value="${requestScope['javax.servlet.forward.query_string']}"/>
+  			<c:set var="requestPath" value="${requestScope['javax.servlet.forward.request_uri']}"/>
+  			<c:choose>
+  				<c:when test="${not empty params}">	
+  					<c:set var="mainurl" value="${baseURL}${requestPath}?${params}"></c:set>
+  				</c:when>
+  				<c:otherwise>
+  					<c:set var="mainurl" value="${baseURL}${requestPath}"></c:set>
+  				</c:otherwise>
+  			</c:choose>
+		-->
+			
+		<div class="product-detail ${product.rootCategory}">
+		
+		<c:set var="req" value="${pageContext.request}" />
+  			<c:set var="baseURL" value="${fn:replace(req.requestURL, req.requestURI, '')}" />
+  			<c:set var="params" value="${requestScope['javax.servlet.forward.query_string']}"/>
+  			<c:set var="requestPath" value="${requestScope['javax.servlet.forward.request_uri']}"/>
+  			<c:choose>
+  				<c:when test="${not empty params}">	
+  					<c:set var="mainurl" value="${baseURL}${requestPath}?${params}"></c:set>
+  				</c:when>
+  				<c:otherwise>
+  					<c:set var="mainurl" value="${baseURL}${requestPath}"></c:set>
+  				</c:otherwise>
+  			</c:choose>
+		
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
-				<h3 class="company">${product.brand.brandname}</h3>
-				<h1 class="product-name">${product.productTitle}</h1>
+				<%-- <h3 class="company">${product.brand.brandname}</h3>
+				<h1 class="product-name">${product.productTitle}</h1> --%>
 				
-			<!-- //TPR-3752 Jewel Heading Added -->
-			<c:choose>
+
+				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name">${product.brand.brandname}</span></h3>
+				<a itemprop="url" href="${mainurl}">
+				<!-- For TPR-4358 -->
+				<h1 itemprop="name" class="product-name">${product.productTitle}</h1>
+				<meta itemprop="sku" content="${product_sku}"/>
+				</a>
+				<!-- //TPR-3752 Jewel Heading Added -->
+				<c:choose>
   				<c:when test="${product.rootCategory=='FineJewellery'}">
 	  				<input id="jwelPDP" type="hidden" value="${product.rootCategory}"/>
-						<p class="key-label">
-		  					<c:forEach var="classification" items="${mapConfigurableAttributes}"> 
-							</c:forEach>
-		  				</p>
+	  				<div class="product-desc">
+						<span class="key-label">
+			  					<c:forEach var="classification" items="${mapConfigurableAttributes}"> 
+								</c:forEach>
+		  				</span>
+		  				<a href="" id="jewelleryProdDetail" class="more-link">View More</a>
+		  			</div>
   				</c:when>
   			</c:choose>
-  			
+
 			</ycommerce:testId>
 
 			<ycommerce:testId
@@ -186,7 +232,7 @@ tr.d0 td {
 			<c:choose>
 				<c:when test="${not empty product.potentialPromotions[0].channels}">
 				
-				<c:forEach var="channel"
+					<c:forEach var="channel"
 							items="${product.potentialPromotions[0].channels}">
 				<c:if test="${channel eq 'Web'||channel eq ''||channel==null}">	
 			<div class="pdp-promo-title pdp-title">
@@ -195,7 +241,7 @@ tr.d0 td {
 			</div>
 			</c:if> <!-- end if check for channel web -->
 			</c:forEach>
-			</c:when>
+				</c:when>
 			
 			<c:otherwise>
 			<div class="pdp-promo-title pdp-title">
@@ -225,6 +271,8 @@ tr.d0 td {
 			<cms:pageSlot position="AddToCart" var="component">
 					<cms:component component="${component}" />
 				</cms:pageSlot>
+				
+				
 			<div class="SoldWrap">
 				<ycommerce:testId
 					code="productDetails_productNamePrice_label_${product.code}">
@@ -236,6 +284,7 @@ tr.d0 td {
 				</div>
 			</div>
 			
+			
 			<c:if test="${isGigyaEnabled=='Y'}">
 				<ul class="star-review" id="pdp_rating">
 					<li class="empty"></li>
@@ -243,8 +292,9 @@ tr.d0 td {
 					<li class="empty"></li>
 					<li class="empty"></li>
 					<li class="empty"></li>
-					<span class="gig-rating-readReviewsLink_pdp"> <spring:theme
-							code="rating.noreviews" /></span>
+				<%-- 	<span class="gig-rating-readReviewsLink_pdp"> <spring:theme
+							code="rating.noreviews" /></span> --%>
+							<span class="gig-rating-readReviewsLink_pdp"></span>			<!-- UF-29 -->
 					<!-- OOTB Code Commented to facilitate Rest Call -->
 					<%-- <c:choose>
 				<c:when test="${not empty product.ratingCount}">
@@ -257,6 +307,12 @@ tr.d0 td {
 			</c:choose>  --%>
 				</ul>
 			</c:if>
+			
+			
+				
+		
+		
+			
 			<%-- <cms:pageSlot position="AddToCart" var="component">
 					<cms:component component="${component}" />
 				</cms:pageSlot> --%>
@@ -266,14 +322,13 @@ tr.d0 td {
 			
 			<!-- seller information section  -->
 			<div class="seller-details">
-			<product:sellerInfoDetailsSection/>
 			</div>
 
 			
 
 		</div>
 
-		<div class="product-content">
+		<div class="product-content ${product.rootCategory}">
 			<div class="swatch">
 				<%-- <cms:pageSlot position="VariantSelector" var="component">
 					<cms:component component="${component}" />
@@ -316,27 +371,68 @@ tr.d0 td {
 
 			<div id="fb-root"></div>
 			<div class="Wrap">
-			<cms:pageSlot position="PinCodeService" var="component">
-				<cms:component component="${component}" />
-			</cms:pageSlot>
-          </div>
-          <ul class="wish-share desktop">
+				<cms:pageSlot position="PinCodeService" var="component">
+					<cms:component component="${component}" />
+				</cms:pageSlot>
+            </div>
+            <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION STARTS HERE-->
+            <c:if test="${product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">
+            <div class="certified-by"> 
+               <h2>certified by</h2>
+               <ul>
+                  <li><img src="images/certified-by.jpg" alt="certified by"></li>
+                  <li>30 day returns</li>
+                  <li>tata guarantee</li>
+               </ul>
+            </div>
+            </c:if>
+            <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION ENDS HERE-->
+            <!-- BLOCK MODIFIED FOR JEWELLERY CERTIFICATION STARTS HERE-->
+            <c:if test="${product.rootCategory !='FineJewellery' && product.rootCategory !='FashionJewellery'}">
+	          	<ul class="wish-share desktop">
+	
+					<%-- <li><!-- <span id="addedMessage" style="display:none"></span> -->
+					<!-- Commented as per PDP CR Change -->
+					<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li> --%>
+					<li>
+					<product:socialSharing product="${product}" />
+						
+					</li>
+				</ul>
+			</c:if>
+			<%-- <c:if test="${product.rootCategory !='FashionJewellery'  }">
+	          	<ul class="wish-share desktop">
+	
+					<li><!-- <span id="addedMessage" style="display:none"></span> -->
+					<!-- Commented as per PDP CR Change -->
+					<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li>
+					<li>
+					<product:socialSharing product="${product}" />
+						
+					</li>
+				</ul>
+			</c:if> --%>
+			
 
-				<%-- <li><!-- <span id="addedMessage" style="display:none"></span> -->
-				<!-- Commented as per PDP CR Change -->
-				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li> --%>
-				<li>
-				<product:socialSharing product="${product}" />
-					
-				</li>
-			</ul>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			<!-- BLOCK MODIFIED FOR JEWELLERY CERTIFICATION ENDS HERE-->
 		</div>
 	
 	<!-- CODE MOVED HERE FOR OTHER PRODUCTS APART FROM JEWELLERY TO DISPLAY DETAILS IN TAB STARTS HERE -->
 	<c:set var="finejewellery"><spring:theme code='product.finejewellery'/></c:set>
 	<c:choose>		
-	    <c:when test ="${product.rootCategory!=finejewellery}"> 
-				<div class="tabs-block">
+	    <c:when test ="${product.rootCategory!=finejewellery}">
+				<div class="tabs-block" id="tabsBlock">
 					<product:productPageTabs />
 				</div>
 		</c:when> 
@@ -482,4 +578,3 @@ tr.d0 td {
 	var prop = '${mapConfigurableAttributes}';
 	prop =prop.replace(/[{}]/g, '');	
 </script>
-
