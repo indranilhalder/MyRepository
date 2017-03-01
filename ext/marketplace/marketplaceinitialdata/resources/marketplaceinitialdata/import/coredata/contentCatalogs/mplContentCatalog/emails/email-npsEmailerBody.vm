@@ -35,7 +35,7 @@
                 <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif;color:#313131; background: #FBFBFB;">
                     <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
                       <tr valign="top">
-                        <td width="288"><img src="http:${ctx.productImg}" alt="" style="display: block; border:1px solid #aaaaaa;">
+                        <td width="288"><img src="http:${ctx.productImg}" alt="" style="display: block; border:1px solid #aaaaaa; width: 288px; height: auto;">
                         <td style="width: 20px;" width="20px">&nbsp;</td>
                       	<td>
                       	 <p style="font-size:15px; color: #a5164c;"><strong>${ctx.productName}</strong></p>
@@ -222,9 +222,9 @@
                               <td style="color:#fff;font-size:16px; font-family:Arial, Helvetica, sans-serif; font-weight: bold; text-align: center;" width="20" align="center">|</td>
                               <td><a href="https://www.tatacliq.com/womens-clothing/c-msh10" style="color:#fff;font-size:14px; font-family:Arial, Helvetica, sans-serif; font-weight: normal;text-decoration: none;"><span style="color:#fff;font-size:14px; font-family:Arial, Helvetica, sans-serif; font-weight: bold;text-decoration: none;">womens apparel</span></a></td>
  <td style="color:#fff;font-size:16px; font-family:Arial, Helvetica, sans-serif; font-weight: bold; text-align: center;" width="20" align="center">|</td>
-                              <td><a href="https://www.tatacliq.com/electronics/c-msh12" style="color:#fff;font-size:14px; font-family:Arial, Helvetica, sans-serif; font-weight: normal;text-decoration: none;"><span style="color:#fff;font-size:14px; font-family:Arial, Helvetica, sans-serif; font-weight: bold;text-decoration: none;">Electronics</span></a></td>
+                              <td><a href="https://www.tatacliq.com/electronics/c-msh12" style="color:#fff;font-size:14px; font-family:Arial, Helvetica, sans-serif; font-weight: normal;text-decoration: none;"><span style="color:#fff;font-size:14px; font-family:Arial, Helvetica, sans-serif; font-weight: bold;text-decoration: none;">electronics</span></a></td>
  <td style="color:#fff;font-size:16px; font-family:Arial, Helvetica, sans-serif; font-weight: bold; text-align: center;" width="20" align="center">|</td>
-                              <td><a href="https://www.tatacliq.com/footwear/c-msh13" style="color:#fff;font-size:14px; font-family:Arial, Helvetica, sans-serif; font-weight: normal;text-decoration: none;"><span style="color:#fff;font-size:14px; font-family:Arial, Helvetica, sans-serif; font-weight: bold;text-decoration: none;">Footwear</span></a></td>
+                              <td><a href="https://www.tatacliq.com/footwear/c-msh13" style="color:#fff;font-size:14px; font-family:Arial, Helvetica, sans-serif; font-weight: normal;text-decoration: none;"><span style="color:#fff;font-size:14px; font-family:Arial, Helvetica, sans-serif; font-weight: bold;text-decoration: none;">footwear</span></a></td>
                             </tr>
 
                         </table>
