@@ -159,26 +159,31 @@ $(document).ready(function() {
 				var url = 'searchCategory=&sort=relevance&q=:isDiscountedPrice:isLuxuryProduct:false';
 				ajaxPLPLoad(window.location.pathname+'?'+url);
 				sortReplaceState(); 
+				initPageLoad = true;
 				break;
 			case 'new':
 				var url = 'searchCategory=&sort=isProductNew&q=:relevance:isLuxuryProduct:false';
 				ajaxPLPLoad(window.location.pathname+'?'+url);
 				sortReplaceState(); 
+				initPageLoad = true;
 				break;
 			case 'discount':
 				var url = 'searchCategory=&sort=isDiscountedPrice&q=:isProductNew:isLuxuryProduct:false';
 				ajaxPLPLoad(window.location.pathname+'?'+url);
 				sortReplaceState(); 
+				initPageLoad = true;
 				break;
 			case 'low':
 				var url = 'searchCategory=&sort=price-asc&q=:isDiscountedPrice:isLuxuryProduct:false';
 				ajaxPLPLoad(window.location.pathname+'?'+url);
-				sortReplaceState(); 
+				sortReplaceState();
+				initPageLoad = true;
 				break;
 			case 'high':
 				var url = 'searchCategory=&sort=price-desc&q=:price-asc:isLuxuryProduct:false';
 				ajaxPLPLoad(window.location.pathname+'?'+url);
-				sortReplaceState(); 
+				sortReplaceState();
+				initPageLoad = true;
 				break;
 			default:
 				break;
@@ -219,7 +224,7 @@ function ajaxPLPLoad(ajaxUrl){
             if($('ul.product-listing.product-grid').length==0){
             	 ulProduct = $(filtered).find('ul.product-list');
             }else{
-            	 ulProduct = $(filtered).find('ul.product-listing.product-grid');
+            	 ulProduct = $(filtered).find('ul.product-listing.product-grid.lazy-grid');
             }
             productItemArray = [];
             
@@ -237,7 +242,7 @@ function ajaxPLPLoad(ajaxUrl){
 }
 
 function sortReplaceState(){
-	if (!/page-[0-9]+/.test(pathName)) {
+	if (!/page-[0-9]+/.test(window.location.pathname)) {
 		 window.history.replaceState({}, '', window.location.pathname+'/page-1');
 	 }
 }
