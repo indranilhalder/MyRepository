@@ -1140,12 +1140,13 @@ function setupSessionValues(){
 			filterTypeList.push($(this).children().eq(0).attr('class').toLowerCase().replace(/ +$/, "").replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,""));
 			filterValueList.push($(this).children().eq(1).attr('value').toLowerCase().replace(/ +$/, "").replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,""))
 		})
+		
 		if(filterValueList.length > 0 && filterTypeList.length > 0){
 			if(typeof(utag) !="undefined"){
 				utag.link({ 
 					link_text : "final_filter_list" , 
 					event_type : "final_filter_list" , 
-					"filter_types_final":filterTypeList,
+					"filter_types_final":filterTypeList.toString(),
 					"filter_values_final":filterValueList
 				});
 			}
