@@ -1790,6 +1790,8 @@
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplProcessOrderServiceImpl">
 		<property name="orderService" ref="orderService" />
 		<property name="juspayOrderResponseConverter" ref="juspayOrderResponseConverter" />
+		<!-- CAR:127 -->
+		<property name="orderConverter" ref="orderConverter"></property>
 	</bean>
 	
 	<bean id="mplProcessOrderDao"

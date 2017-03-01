@@ -13,6 +13,7 @@
  */
 package com.tisl.mpl.fulfilmentprocess.actions.order;
 
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -24,6 +25,7 @@ import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.processengine.action.AbstractAction;
 import de.hybris.platform.processengine.enums.ProcessState;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.task.RetryLaterException;
 import de.hybris.platform.ticket.enums.CsTicketCategory;
 import de.hybris.platform.ticket.enums.CsTicketPriority;
@@ -86,7 +88,11 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 	private MplCancelOrderTicketImpl mplCancelOrderTicketImpl;
 	@Autowired
 	private OrderStatusSpecifier orderStatusSpecifier;
+	//added for CAR:127
 
+	private Converter<OrderModel, OrderData> orderConverter;
+
+	//added for CAR:127
 
 
 	public enum Transition
@@ -201,6 +207,9 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 	 */
 	protected Transition checkOrderStatus(final OrderModel orderModel, final OrderProcessModel process) throws JAXBException
 	{
+		//added for CAR:127
+		final OrderData orderData = getOrderConverter().convert(orderModel);
+		//added for CAR:127
 		final String orderStatus = orderModel.getStatus().toString();
 		String defaultPinCode = "".intern();
 		if (null != orderModel.getDeliveryAddress() && StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPostalcode()))
@@ -211,7 +220,7 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 		{
 			/*
 			 * TISOMSII-86
-			 * 
+			 *
 			 * This block will execute only incase of standalone CNC cart and OMS is not using pincode to deallocate cart
 			 * reservation. As pincode is mandatory in Inventory reservation adding dummy pincode for cart deallocation
 			 */
@@ -230,8 +239,13 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 			if (StringUtils.isNotEmpty(defaultPinCode))
 			{
 				//OMS Deallocation call for failed order
-				mplCommerceCartService.isInventoryReserved(orderModel,
-						MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+				//commented for CAR:127
+				/*
+				 * mplCommerceCartService.isInventoryReserved(orderModel,
+				 * MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+				 */
+				mplCommerceCartService.isInventoryReserved(orderData,
+						MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode, orderModel);
 
 				//Creating cancel order ticket
 				final boolean ticketstatus = mplCancelOrderTicketImpl.createCancelTicket(orderModel);
@@ -255,8 +269,13 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 			if (StringUtils.isNotEmpty(defaultPinCode))
 			{
 				//OMS Deallocation call for failed order
-				mplCommerceCartService.isInventoryReserved(orderModel,
-						MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+				//commented for CAR:127
+				/*
+				 * mplCommerceCartService.isInventoryReserved(orderModel,
+				 * MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+				 */
+				mplCommerceCartService.isInventoryReserved(orderData,
+						MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode, orderModel);
 
 				//Creating cancel order ticket
 				final boolean ticketstatus = mplCancelOrderTicketImpl.createCancelTicket(orderModel);
@@ -300,8 +319,13 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 			if (StringUtils.isNotEmpty(defaultPinCode))
 			{
 				//OMS Allocation 6 hours call for failed order
-				mplCommerceCartService.isInventoryReserved(orderModel,
-						MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERHELD, defaultPinCode);
+				//commented for CAR:127
+				/*
+				 * mplCommerceCartService.isInventoryReserved(orderModel,
+				 * MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERHELD, defaultPinCode);
+				 */
+				mplCommerceCartService.isInventoryReserved(orderData,
+						MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERHELD, defaultPinCode, orderModel);
 
 				//Order Creation in CRM for held orders
 				orderCreationInCRM(orderModel);
@@ -320,9 +344,13 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 			if (StringUtils.isNotEmpty(defaultPinCode))
 			{
 				//OMS Allocation 6 hours call for failed order
-				mplCommerceCartService.isInventoryReserved(orderModel,
-						MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_PAYMENT, defaultPinCode);
-
+				//commented for CAR:127
+				/*
+				 * mplCommerceCartService.isInventoryReserved(orderModel,
+				 * MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_PAYMENT, defaultPinCode);
+				 */
+				mplCommerceCartService.isInventoryReserved(orderData,
+						MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_PAYMENT, defaultPinCode, orderModel);
 			}
 			return Transition.NOK;
 
@@ -624,6 +652,15 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 		this.orderStatusSpecifier = orderStatusSpecifier;
 	}
 
+	protected Converter<OrderModel, OrderData> getOrderConverter()
+	{
+		return orderConverter;
+	}
 
+	@Required
+	public void setOrderConverter(final Converter<OrderModel, OrderData> orderConverter)
+	{
+		this.orderConverter = orderConverter;
+	}
 
 }

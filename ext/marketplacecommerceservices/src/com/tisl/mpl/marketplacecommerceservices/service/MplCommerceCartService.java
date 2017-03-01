@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
@@ -55,8 +56,8 @@ public interface MplCommerceCartService
 	 * @param paramCommerceCartParameter
 	 * @return CommerceCartModification
 	 * @throws CommerceCartModificationException
-	 * 
-	 * 
+	 *
+	 *
 	 *            CommerceCartModification addToCartWithUSSID(CommerceCartParameter paramCommerceCartParameter) throws
 	 *            CommerceCartModificationException;
 	 */
@@ -235,8 +236,13 @@ public interface MplCommerceCartService
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
-	ReservationListWsDTO getReservation(final AbstractOrderModel cartModel, final String pincode, final String type)
-			throws EtailNonBusinessExceptions;
+	//commented for CAR:127
+	/*
+	 * ReservationListWsDTO getReservation(final AbstractOrderModel cartModel, final String pincode, final String type)
+	 * throws EtailNonBusinessExceptions;
+	 */
+	ReservationListWsDTO getReservation(final AbstractOrderData cartData, final String pincode, final String type,
+			AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @DESC MobileWS105 : get top two wish list for mobile web service
@@ -354,8 +360,13 @@ public interface MplCommerceCartService
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
-	boolean isInventoryReserved(AbstractOrderModel abstractOrderModel, String requestType, String defaultPinCodeId)
-			throws EtailNonBusinessExceptions;
+	//commented for CAR:127
+	/*
+	 * boolean isInventoryReserved(AbstractOrderModel abstractOrderModel, String requestType, String defaultPinCodeId)
+	 * throws EtailNonBusinessExceptions;
+	 */
+	boolean isInventoryReserved(AbstractOrderData abstractOrderData, String requestType, String defaultPinCodeId,
+			AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @description: It is responsible to find possible delivery mode of a cart entry

@@ -654,6 +654,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="mplExtendedPromoCartConverter" ref="mplExtendedPromoCartConverter"/> <!-- TISPT-104 -->
 		<property name="modelService" ref="modelService" />
 		<property name="mplDefaultCommerceCartCalculationStrategy" ref="mplDefaultCommerceCartCalculationStrategy" />
+		<!-- CAR:127 -->
+		<property name="orderConverter" ref="orderConverter"></property>
 
 	
 	</bean>

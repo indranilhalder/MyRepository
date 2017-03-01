@@ -22,6 +22,7 @@ import de.hybris.platform.commercefacades.order.data.CCPaymentInfoData;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.CartModificationData;
 import de.hybris.platform.commercefacades.order.data.DeliveryModesData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
@@ -246,6 +247,7 @@ public class CartsController extends BaseCommerceController
 	private MplSlaveMasterFacade mplSlaveMasterFacade;
 	@Resource(name = "discountUtility")
 	private DiscountUtility discountUtility;
+
 	//	@Autowired
 	//	private CartService cartService;
 	//@Autowired
@@ -2544,7 +2546,11 @@ public class CartsController extends BaseCommerceController
 			cart = mplPaymentWebFacade.findCartValues(cartId);
 			if (setFreebieDeliverMode(cart))
 			{
-				reservationList = mplCommerceCartService.getReservation(cart, pincode, type);
+				//added for CAR:127
+				final CartData caData = mplCartFacade.getCartDataFromCartModel(cart, false);
+				//commented for CAR:127
+				//reservationList = mplCommerceCartService.getReservation(cart, pincode, type);
+				reservationList = mplCommerceCartService.getReservation(caData, pincode, type, cart);
 				LOG.debug("******************* Soft reservation Mobile web service response received from OMS ******************"
 						+ cartId);
 			}
@@ -2600,6 +2606,7 @@ public class CartsController extends BaseCommerceController
 		ReservationListWsDTO reservationList = new ReservationListWsDTO();
 		CartModel cart = null;
 		OrderModel orderModel = null;
+		OrderData orderData = null;
 		boolean deListedStatus = false;
 		boolean delvieryModeset = false;
 		String delistMessage = MarketplacecommerceservicesConstants.EMPTY;
@@ -2626,6 +2633,9 @@ public class CartsController extends BaseCommerceController
 			if (null == orderModel)
 			{
 				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				//CAR:127
+				final CartData caData = mplCartFacade.getCartDataFromCartModel(cart, false);
+				//CAR:127
 				delvieryModeset = setFreebieDeliverMode(cart);
 				LOG.debug("************ Logged-in cart mobile checking validity of promotion **************" + cartGuid);
 				if (!mplCheckoutFacade.isPromotionValid(cart))
@@ -2656,8 +2666,13 @@ public class CartsController extends BaseCommerceController
 				}
 				if (delvieryModeset)
 				{
-					reservationList = mplCommerceCartService.getReservation(cart, pincode,
-							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING);
+					//commented for CAR:127
+					/*
+					 * reservationList = mplCommerceCartService.getReservation(cart, pincode,
+					 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING);
+					 */
+					reservationList = mplCommerceCartService.getReservation(caData, pincode,
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart);
 				}
 				else
 				{
@@ -2695,8 +2710,15 @@ public class CartsController extends BaseCommerceController
 				}
 				if (delvieryModeset)
 				{
-					reservationList = mplCommerceCartService.getReservation(orderModel, pincode,
-							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING);
+					//commented for CAR:127
+					/*
+					 * reservationList = mplCommerceCartService.getReservation(orderModel, pincode,
+					 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING);
+					 */
+					//added for CAR:127
+					orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
+					reservationList = mplCommerceCartService.getReservation(orderData, pincode,
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel);
 				}
 				else
 				{
