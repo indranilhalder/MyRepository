@@ -60788,7 +60788,7 @@ margin-right: 15px;}
     border:2px solid #bbb;
     text-indent:-9999px;
     display:none;
-    z-index: 100000;
+    z-index: 9998;
 }
 #scroll_to_top span {
     position:absolute;

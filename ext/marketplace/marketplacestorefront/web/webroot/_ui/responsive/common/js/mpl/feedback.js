@@ -2911,7 +2911,8 @@ $(document).ready(function(){
             $('#scroll_to_top').fadeOut(); 
         } 
     }); 
-    $('#scroll_to_top').click(function(){ 
+    //$('#scroll_to_top').click(function(e){ 
+    $(document).on("click","#scroll_to_top",function(){
         $("html, body").animate({ scrollTop: 0 }, 600); 
         return false; 
     }); 
