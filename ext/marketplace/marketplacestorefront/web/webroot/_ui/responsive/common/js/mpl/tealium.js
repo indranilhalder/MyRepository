@@ -250,33 +250,33 @@ $(document).ready(
 									+ $("#page_name").val() + '",';
 								tealiumData += '"categoryId":"'
 									+ $("#categoryId").val() + '",';
-								if($("#out_of_stock_count").val() != undefined || $("#out_of_stock_count").val() != null || $("#out_of_stock_count").val() !=''){
+								if($("#out_of_stock_count").val() != undefined  && $("#out_of_stock_count").val() != null && $("#out_of_stock_count").val() != ''){
 								tealiumData += '"out_of_stock_count":"'		// TPR-4707
 									+ $("#out_of_stock_count").val() + '",';
 								}
-								if(offerCount != undefined || offerCount != null || offerCount !=''){ 
+								if(offerCount != undefined && offerCount != null && offerCount != ''){ 
 								tealiumData += '"offer_product_count":"'		// TPR-4714
 									+ offerCount + '",';
 								}
-								if(newCount != undefined || newCount != null || newCount !=''){ 
+								if(newCount != undefined && newCount != null && newCount != ''){ 
 									tealiumData += '"new_product_count":"'		// TPR-4714
 										+ newCount + '",';
 									}
-								if(onlineExclusive != undefined || onlineExclusive != null || onlineExclusive !='' ){ 
+								if(onlineExclusive != undefined && onlineExclusive != null && onlineExclusive != '' ){ 
 									tealiumData += '"onlineExclusive_product_count":"'		// TPR-4726
 										+ onlineExclusive + '",';
 									}
 								/*TPR-430 Start*/
-								if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
+								if($("#product_category").val() != undefined && $("#product_category").val() != null && $("#product_category").val() != ''){ 
 								tealiumData += '"product_category":'
 									+ getListValue("product_category") + ',';                /*value passed as array instead of single string  INC_11511*/
 									/*+ $("#product_category").val().replace(/_+/g, '_') + '",';*/
 								}
-								if($("#page_subcategory_name").val() !=undefined || $("#page_subcategory_name").val() !=null){ 
+								if($("#page_subcategory_name").val() != undefined && $("#page_subcategory_name").val() != null && $("#page_subcategory_name").val() != ''){ 
 								tealiumData += '"page_subcategory_name":"'
 									+ $("#page_subcategory_name").val().replace(/_+/g, '_') + '",';
 								}
-								if($("#page_subcategory_name_l3").val() !=undefined || $("#page_subcategory_name_l3").val() !=null){ 
+								if($("#page_subcategory_name_l3").val() != undefined && $("#page_subcategory_name_l3").val() != null){ 
 								tealiumData += '"page_subcategory_name_L3":"'
 									+ $("#page_subcategory_name_l3").val().replace(/_+/g, '_') + '"}';
 								}
@@ -315,27 +315,34 @@ $(document).ready(
 							+ $("#search_results").val() + '",';
 						tealiumData += '"search_type":"'		// TPR-666
 							+ $("#search_type").val() + '",';
+						if($("#out_of_stock_count").val() != undefined  && $("#out_of_stock_count").val() != null && $("#out_of_stock_count").val() != ''){
 						tealiumData += '"out_of_stock_count":"'		// TPR-4722
 							+ $("#out_of_stock_count").val() + '",';
-						if(offerCount != undefined || offerCount != null || offerCount !=''){ 
+						}
+						if(offerCount != undefined && offerCount != null && offerCount != ''){ 
 						tealiumData += '"offer_product_count":"'		// TPR-4726
 							+ offerCount + '",';
 						}
-						if(newCount != undefined || newCount != null || newCount !=''){ 
+						if(newCount != undefined && newCount != null && newCount != ''){ 
 							tealiumData += '"new_product_count":"'		// TPR-4726
 								+ newCount + '",';
 							}
-						if(onlineExclusive != undefined || onlineExclusive != null || onlineExclusive !='' ){ 
+						if(onlineExclusive != undefined && onlineExclusive != null && onlineExclusive != '' ){ 
 							tealiumData += '"onlineExclusive_product_count":"'		// TPR-4726
 								+ onlineExclusive + '",';
 							}
 						//TPR-430 Start
+						if(page_subcategory_name != undefined && page_subcategory_name != null && page_subcategory_name != ''){ 
 						tealiumData += '"product_category":"'
 							+ product_category + '",';
+						}
+						if(page_subcategory_name != undefined && page_subcategory_name != null && page_subcategory_name != ''){ 
 						tealiumData += '"page_subcategory_name":"'		
 							+ page_subcategory_name +'",';
+						}
 						tealiumData += '"page_subcategory_name_L3":"'		
 							+ page_subcategory_name_L3 +'"}';
+						
 						data = data.replace("}<TealiumScript>", tealiumData);
 						$('#tealiumHome').html(data);
 					}
