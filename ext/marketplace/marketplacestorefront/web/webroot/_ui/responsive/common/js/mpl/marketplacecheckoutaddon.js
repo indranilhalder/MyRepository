@@ -5676,10 +5676,10 @@ function populatePincodeDeliveryMode(response,buttonType){
 		$("#"+ussId+"_li").append(newUi);
 		$(".cartItemBlankPincode").hide();//TPR-1341
 		 $(".pincodeServiceError").hide();
-		console.log("Not servicable");
+		//console.log("Not servicable");
 	}
 	else{
-		console.log("No Stock");
+		//console.log("No Stock");
 		$("#"+ussId).remove();
 		var newUi = document.createElement("ul");
 		newUi.setAttribute("id", ussId);
