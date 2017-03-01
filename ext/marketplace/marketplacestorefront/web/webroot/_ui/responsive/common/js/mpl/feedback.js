@@ -3278,6 +3278,9 @@ $(document).on("click",".overlay.overlay-sideNav",function(){
 	$(".productGrid-menu nav > ul > li#shopMicrositeSeller > div").trigger("click");
 });
 
-
+//$(document).ready(function(){
+//	var countBag = $(".productGrid-header-wrapper .productGrid-header div.bag .mini-cart-link.myBag-sticky > span:nth-of-type(2)").text();
+//	$(".productGrid-header-wrapper .productGrid-header div.bag .mini-cart-link.myBag-sticky > span:nth-of-type(2)").text("("+countBag+")");
+//});
 
 /*TPR-4471 ends*/
