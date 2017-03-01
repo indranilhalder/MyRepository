@@ -1199,7 +1199,7 @@ function populateFirstFiveProductsSerp(){
    
    if(productArray.length == 0){
 	   if(typeof utag !="undefined"){
-			 utag.link({ error_type: 'no_products_found' });
+			 utag.link({ error_type: 'NoProductsFound' });
 		 }  
    }
 }
@@ -1211,6 +1211,13 @@ $( window ).load(function() {
 	
 	if($('#pageType').val() == "category" || $('#pageType').val() == "electronics" ){
 		populateFirstFiveProductsPlp();
+	}
+	
+	if($('#pageType').val() == "productsearch" ){
+		  var isVisible = $('.search-empty.no-results.wrapper:visible').is(':visible');
+		   if(isVisible && typeof utag !="undefined" ){
+			     utag.link({"error_type":'nullSearch'});
+		}
 	}
 });
 
@@ -1237,7 +1244,7 @@ function populateFirstFiveProductsPlp(){
    
    if(productArray.length == 0){
 	   if(typeof utag !="undefined"){
-			 utag.link({ error_type: 'no_products_found' });
+			 utag.link({ error_type: 'NoProductsFound' });
 		 }  
    }
 }
@@ -1339,3 +1346,5 @@ $(".product-tile.cboxElement").click(function(){
 		 utag.link({ link_text : 'shop_now_pop_up' , shop_now_product_id : productArray});
 	 }
 	}) 
+
+	
