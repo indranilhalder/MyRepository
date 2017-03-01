@@ -60804,3 +60804,31 @@ margin-right: 15px;}
 #scroll_to_top:hover {
     background-color:#bbb;
 } 
+/* payment cod start */
+.smk_accordion .accordion_in .acc_content .blocks .cash #otpNUM p{
+	font-weight: normal;
+    color: #000;
+    text-transform: none;
+    letter-spacing: 0.6px;
+    padding-bottom: 25px;
+    line-height: normal;
+}
+.smk_accordion .accordion_in .acc_content .blocks .cash #otpNUM p:last-child{
+padding-bottom: 5px;
+	}
+.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del button.confirm{
+    width: 216px !important;
+    height: 42px !important;
+    font-size: 12px !important;
+    background: #a5173c !important;
+    color: #fff;
+}
+.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del button.confirm:hover{
+    background: #a5173c !important;
+    color: #fff;
+}
+@media(max-width:767px){
+.cart.wrapper .left-block .payments.tab-view .pay .button.confirm{
+   display:block !important;
+}}
+/* payment cod end */
