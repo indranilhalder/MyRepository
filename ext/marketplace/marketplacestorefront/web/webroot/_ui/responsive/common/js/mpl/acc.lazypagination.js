@@ -7,6 +7,8 @@ var directPaginatedLoad = true;
 var serpURL;
 var ajaxUrl = '';
 var recordsLoadedCount = 0;
+var pageType = $('#pageType').val();
+var isSerp = false;
 
 function innerLazyLoad(options) {
     //get the 8 items from the array and render // TODO: identify place holder done
@@ -25,7 +27,6 @@ function innerLazyLoad(options) {
     });
     if (initPageLoad) { //TODO: duplicate loading prevention
         //$('ul.product-listing.product-grid').eq(2).html(gridHTML).hide().fadeIn(500);
-		console.log(gridHTML);
         $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list').html(gridHTML).hide().fadeIn(500);
         initPageLoad = false;
     } else {
@@ -36,6 +37,7 @@ function innerLazyLoad(options) {
     if(typeof(options)!='undefined' && options.isSerp){
     	totalNoOfPages = $('input[name=noOfPages]').val();
         totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
+        isSerp = true;
     }
 	if(pageNoPagination == totalNoOfPages){
 		$('li').removeClass('lazy-reached');
@@ -153,36 +155,57 @@ $(document).ready(function() {
         	var item = $(this).attr('data-name');
         	$('.sort').removeAttr('style');
         	$(this).css('color', 'red');
-        	
+        	var pathName = window.location.pathname;
+        	var url = '';
         	switch (item) {
 			case 'relevance':
-				var url = 'searchCategory=&sort=relevance&q=:isDiscountedPrice:isLuxuryProduct:false';
-				ajaxPLPLoad(window.location.pathname+'?'+url);
-				sortReplaceState(); 
+				if(pageType == 'productsearch'){
+					url = 'searchCategory=&sort=relevance&q='+$('#js-site-search-input').val()+':isLuxuryProduct:false';
+				}else{
+					url = 'searchCategory=&sort=relevance&q=:isLuxuryProduct:false';
+				}
+				ajaxPLPLoad(pathName +'?'+url);
+				sortReplaceState(pathName +'?'+url); 
 				initPageLoad = true;
 				break;
 			case 'new':
-				var url = 'searchCategory=&sort=isProductNew&q=:relevance:isLuxuryProduct:false';
-				ajaxPLPLoad(window.location.pathname+'?'+url);
-				sortReplaceState(); 
+				if(pageType == 'productsearch'){
+					url = 'searchCategory=&sort=isProductNew&q='+$('#js-site-search-input').val()+':isLuxuryProduct:false';
+				}else{
+					url = 'searchCategory=&sort=isProductNew&q=:isLuxuryProduct:false';
+				}
+				ajaxPLPLoad(pathName +'?'+url);
+				sortReplaceState(pathName +'?'+url); 
 				initPageLoad = true;
 				break;
 			case 'discount':
-				var url = 'searchCategory=&sort=isDiscountedPrice&q=:isProductNew:isLuxuryProduct:false';
-				ajaxPLPLoad(window.location.pathname+'?'+url);
-				sortReplaceState(); 
+				if(pageType == 'productsearch'){
+					url = 'searchCategory=&sort=isDiscountedPrice&q='+$('#js-site-search-input').val()+':isLuxuryProduct:false';
+				}else{
+					url = 'searchCategory=&sort=isDiscountedPrice&q=:isLuxuryProduct:false';
+				}
+				ajaxPLPLoad(pathName +'?'+url);
+				sortReplaceState(pathName +'?'+url); 
 				initPageLoad = true;
 				break;
 			case 'low':
-				var url = 'searchCategory=&sort=price-asc&q=:isDiscountedPrice:isLuxuryProduct:false';
-				ajaxPLPLoad(window.location.pathname+'?'+url);
-				sortReplaceState();
+				if(pageType == 'productsearch'){
+					url = 'searchCategory=&sort=price-asc&q='+$('#js-site-search-input').val()+':isLuxuryProduct:false';
+				}else{
+					url = 'searchCategory=&sort=price-asc&q=:isLuxuryProduct:false';
+				}
+				ajaxPLPLoad(pathName +'?'+url);
+				sortReplaceState(pathName +'?'+url);
 				initPageLoad = true;
 				break;
 			case 'high':
-				var url = 'searchCategory=&sort=price-desc&q=:price-asc:isLuxuryProduct:false';
-				ajaxPLPLoad(window.location.pathname+'?'+url);
-				sortReplaceState();
+				if(pageType == 'productsearch'){
+					url = 'searchCategory=&sort=price-desc&q='+$('#js-site-search-input').val()+':isLuxuryProduct:false';
+				}else{
+					url = 'searchCategory=&sort=price-desc&q=:isLuxuryProduct:false';
+				}
+				ajaxPLPLoad(pathName +'?'+url);
+				sortReplaceState(pathName +'?'+url);
 				initPageLoad = true;
 				break;
 			default:
@@ -241,8 +264,7 @@ function ajaxPLPLoad(ajaxUrl){
     });
 }
 
-function sortReplaceState(){
-	if (!/page-[0-9]+/.test(window.location.pathname)) {
-		 window.history.replaceState({}, '', window.location.pathname+'/page-1');
-	 }
+function sortReplaceState(url){
+		var nextPaginatedAjaxUrl = url.replace(/page-[0-9]+/, 'page-1');
+		 window.history.replaceState({}, '', nextPaginatedAjaxUrl);
 }
