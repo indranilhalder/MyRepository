@@ -41,7 +41,7 @@
                       	 <p style="font-size:15px; color: #a5164c;"><strong>${ctx.productName}</strong></p><br>
                       	 <div style="color: #6f6f6f;font-size:14px;">Size: ${ctx.productSize}<br><br>
                       	 Qty: 1<br><br>
-                      	 Sold By: ${ctx.sellerName}</div>
+                      	 Sold By: ${ctx.sellerName}</div><br>
                       	  <p style="color:#a5164c;font-size:18px;">
                       	    &#8377; ${ctx.totalPrice}/-*<br/>
                       	    
