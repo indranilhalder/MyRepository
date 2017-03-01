@@ -1196,6 +1196,12 @@ function populateFirstFiveProductsSerp(){
    if(typeof utag !="undefined"){
 		 utag.link({ event_type: 'top_five_products_serp',serp_first_5_products : productArray });
 	 }
+   
+   if(productArray.length == 0){
+	   if(typeof utag !="undefined"){
+			 utag.link({ error_type: 'no_products_found' });
+		 }  
+   }
 }
 
 $( window ).load(function() {
@@ -1228,6 +1234,12 @@ function populateFirstFiveProductsPlp(){
    if(typeof utag !="undefined"){
 		 utag.link({ event_type :'top_five_products_plp',plp_first_5_products : productArray });
 	 }	
+   
+   if(productArray.length == 0){
+	   if(typeof utag !="undefined"){
+			 utag.link({ error_type: 'no_products_found' });
+		 }  
+   }
 }
 
 //TPR-4725 |quick view  size|serp
