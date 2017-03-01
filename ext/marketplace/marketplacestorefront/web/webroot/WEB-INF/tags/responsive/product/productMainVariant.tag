@@ -111,7 +111,7 @@ var productSizeVar = '${productSize}';
 												<c:url value="${variantOption.defaultUrl}" var="variantUrl" />
 											</c:otherwise>
 										</c:choose> 
-										<%--  <a href="${variantUrl}">	 --%>
+										  <a href="${variantUrl}">
 								<!--CKD:TPR-250:End  -->
 															
 								 <c:forEach
@@ -295,20 +295,23 @@ share mobile -->
 								
 								<c:forEach var="entry" items="${variantOption.sizeLink}">
 									<c:url value="${entry.key}" var="link" />
-									<%--  <a href="${link}?selectedSize=true">${entry.value}</a> --%>
+									<%--  <a href="${link}?selectedSize=true${msiteSellerForSize}">${entry.value}</a> --%>
 									<c:choose>
 										<c:when test="${(variantOption.code eq product.code)}">
 											<c:choose>
 												<c:when test="${selectedSize eq null}">
-													<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
+												<!--CKD:TPR-250  -->
+													<li><a href="${link}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 												</c:when>
 												<c:otherwise>
-														<li class="selected"><a href="${link}?selectedSize=true">${entry.value}</a></li>
+													<!--CKD:TPR-250  -->
+														<li class="selected"><a href="${link}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 												</c:otherwise>
 											</c:choose>
 										</c:when>
 										<c:otherwise>
-											<li data-vcode="${link}"><a href="${link}?selectedSize=true">${entry.value}</a></li>
+											<!--CKD:TPR-250  -->
+											<li data-vcode="${link}"><a href="${link}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -332,16 +335,19 @@ share mobile -->
 												
 												
 													<c:when test="${selectedSize eq null}">
-														<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
+														<!--CKD:TPR-250  -->
+														<li><a href="${link}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 													</c:when>
 													
 												<c:otherwise>
-														<li class="selected"><a href="${link}?selectedSize=true">${entry.value}</a></li>
+													<!--CKD:TPR-250  -->
+														<li class="selected"><a href="${link}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 												</c:otherwise>
 												</c:choose>
 											</c:when>	
 										<c:otherwise>
-											<li data-vcode="${link}"><a href="${link}?selectedSize=true">${entry.value}</a></li>
+											<!--CKD:TPR-250  -->
+											<li data-vcode="${link}"><a href="${link}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 										</c:otherwise>												
 												</c:choose>
 											</c:forEach>
