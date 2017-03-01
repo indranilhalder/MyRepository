@@ -177,6 +177,9 @@ function registerUserGigya(eventObject)
     		 
     		$.getJSON(url, function(data){
     		//	console.log(data);
+    			if(data!=undefined && data.streamInfo!=undefined){	
+    				
+    			
     		  	var totalCount=data.streamInfo.ratingCount;
     			//Reverse the source array
     			var ratingArray = data.streamInfo.ratingDetails._overall.ratings;
@@ -216,6 +219,8 @@ function registerUserGigya(eventObject)
     						$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEWS");
     						}
     				$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
+    				
+    			}
     				
     				
     				
