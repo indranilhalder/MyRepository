@@ -5711,58 +5711,69 @@ function populatePincodeDeliveryMode(response,buttonType){
 			$("#"+ussId+"_qty").append(newUl);
 			isStockAvailable="N";
 		}
-			
+		var newLi = document.createElement("li");
+		newLi.setAttribute("class", "methodHome");
+		var text = document.createTextNode("Home Delivery");
+		newLi.appendChild(text);
+		var newLi1 = document.createElement("li");
+		newLi1.setAttribute("class", "methodExpress");
+		var text = document.createTextNode("Express Delivery");
+		newLi1.appendChild(text);
+		var newLi2 = document.createElement("li");
+		newLi2.setAttribute("class", "methodClick");
+		var text = document.createTextNode("Click and Collect");
+		newLi2.appendChild(text);
+		
+		var isHd = false;
+		var isEd = false;
+		var isCnc = false;
+		//newUi.appendChild(newLi1);
 		for ( var count in jsonObj) {
 			var inventory=0;
 			var deliveryType=jsonObj[count].type;
 			inventory=jsonObj[count].inventory;
-			/*if(deliveryType==='HD' 
-									 * && parseFloat(inventory) >=
-									 * parseFloat(quantityValue)
-									  ){*/
-				var newLi = document.createElement("li");
-				newLi.setAttribute("class", "methodHome");
-				var text = document.createTextNode("Home Delivery");
-				newLi.appendChild(text);
-				//newUi.appendChild(newLi);
-			/*}
-			else if(deliveryType==='ED'
-										 * && parseFloat(inventory) >=
-										 * parseFloat(quantityValue)
-										 ){*/
-				var newLi1 = document.createElement("li");
-				newLi1.setAttribute("class", "methodExpress");
-				var text = document.createTextNode("Express Delivery");
-				newLi1.appendChild(text);
-				//newUi.appendChild(newLi1);
-			/*}
-			else if(deliveryType==='CNC'
-										 * && parseFloat(inventory) >=
-										 * parseFloat(quantityValue)
-										 ){*/
-				var newLi2 = document.createElement("li");
-				newLi2.setAttribute("class", "methodClick");
-				var text = document.createTextNode("Click and Collect");
-				newLi2.appendChild(text);
-				//newUi.appendChild(newLi2);
-			//}
+			
 				if(deliveryType==='HD') {
-					newLi1.setAttribute("class", "methodExpress lowOpacity");
-					newLi2.setAttribute("class", "methodClick lowOpacity");
+					//newLi1.setAttribute("class", "methodExpress lowOpacity");
+					//newLi2.setAttribute("class", "methodClick lowOpacity");
+					isHd = true;
+					
 				}
 				else if(deliveryType==='ED'){
-					newLi.setAttribute("class", "methodHome lowOpacity");
-					newLi2.setAttribute("class", "methodClick lowOpacity");
+					//newLi.setAttribute("class", "methodHome lowOpacity");
+					//newLi2.setAttribute("class", "methodClick lowOpacity");
+					isEd = true;
 				}
 				else if(deliveryType==='CNC'){
-					newLi.setAttribute("class", "methodHome lowOpacity");
-					newLi1.setAttribute("class", "methodExpress lowOpacity");
+					//newLi.setAttribute("class", "methodHome lowOpacity");
+					//newLi1.setAttribute("class", "methodExpress lowOpacity");
+					isCnc = true;
 				}
 				
-				newUi.appendChild(newLi);
-				newUi.appendChild(newLi1);
-				newUi.appendChild(newLi2);
+				
 		}
+		if (isHd) {
+			newLi.setAttribute("class", "methodHome");
+		}
+		else {
+			newLi.setAttribute("class", "methodHome lowOpacity");
+		}
+		if (isEd) {
+			newLi1.setAttribute("class", "methodExpress");
+		}
+		else {
+			newLi1.setAttribute("class", "methodExpress lowOpacity");
+		}
+		if (isCnc) {
+			newLi2.setAttribute("class", "methodClick");
+		}
+		else {
+			newLi2.setAttribute("class", "methodClick lowOpacity");
+		}
+		
+		newUi.appendChild(newLi);
+		newUi.appendChild(newLi1);
+		newUi.appendChild(newLi2);
 			/** **TISPRM-65 - Cart Page show pincode serviceability msg** */
 			/** **Tpr-634 - commented for scope of improvement** */
 			/*
