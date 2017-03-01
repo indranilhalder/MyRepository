@@ -187,6 +187,9 @@ function refresh(){
 	$(".card_ebsErrorSavedCard, .card_cvvErrorSavedCard, #maestroMessage, #newMaestroMessage").css("display","none");
 	$(".make_payment_top_nb, .make_payment_top_savedCard, .make_payment_top_newCard, .cod_payment_button_top").css("display","none");
 	$("").css("display","none");
+	$(".card_cvvErrorSavedCard_popup").css("display","none");	//UF-211,UF-217
+	$("#make_saved_cc_payment").removeClass("saved_card_disabled");	//UF-211
+	$("#make_saved_dc_payment").removeClass("saved_card_disabled");	//UF-217
 	hideTable();
 	if("undefined" != typeof(document.silentOrderPostForm)){
 		var selection = document.silentOrderPostForm.EMIBankCode;
@@ -543,6 +546,7 @@ function displayDCForm(){
 	$("#is_emi").val("false");
 	//$("#card, #dcHeader, #savedCard, #savedDebitCard, .make_payment").show();
 	//$("#ccHeader, #savedCreditCard, #billingAddress").hide();
+	$(".saved-card-button").show();
 	$("#cardDebit").css("display","block");
 	$("input[name=debitCards]:radio.card_token,input[name=creditCards]:radio.card_token,input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	$("input[name=debitCards]:radio").first().removeClass("card_token_hide").addClass("card_token");
@@ -1049,7 +1053,7 @@ function displayEMICards(){
 				$(".proceed-button").each(function(){
 	    			$(this).hide();
 	    		});
-	    		//$("#make_emi_payment_up").show();
+	    		$("#make_emi_payment_up").show();
 				$(".accepted-cards .maestro").parent().css("display","none");
 				$(".accepted-cards .visa").parent().css("display","inline-block");
 				$(".accepted-cards .master").parent().css("display","inline-block");
@@ -1066,7 +1070,7 @@ function displayEMICards(){
 				$(".proceed-button").each(function(){
 	    			$(this).hide();
 	    		});
-	    		//$("#make_emi_payment_up").show();
+	    		$("#make_emi_payment_up").show();
 				var index=-1;
 				var index1=0;
 				$.each(myMap, function(i, val) {
@@ -1211,6 +1215,7 @@ function displayEMICards(){
 function displayFormForCC(){
 	//$("#savedCard, #savedCreditCard, #billingAddress, .make_payment").show();
 	//$("#savedDebitCard").hide();
+	$(".saved-card-button").show();
 	$("input[name=debitCards]:radio.card_token,input[name=creditCards]:radio.card_token,input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	$("input[name=creditCards]:radio").first().removeClass("card_token_hide").addClass("card_token");
 	$(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide");
@@ -2076,7 +2081,10 @@ $("#otpMobileNUMField").focus(function(){
 	var ebsDownCheck=$("#ebsDownCheck").val();
 	var isDomestic=$(".card_token").parent().parent().parent().find('.card').find('.radio').find('.card_is_domestic').val();
 	if (password.length < 3 && 	$(".card_brand").val()!="MAESTRO"){
-		$(".card_cvvErrorSavedCard").css("display","block");		
+		$(".card_cvvErrorSavedCard").css("display","block");	
+		$(".card_cvvErrorSavedCard_popup").css("display","block");	//UF-211
+		$(this).addClass("saved_card_disabled");	//UF-211
+		$(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").focus();	//UF-211
 		return false;
 	}
  	else if($(".card_brand").val()=="MAESTRO" && password==""){
@@ -2099,7 +2107,10 @@ $("#otpMobileNUMField").focus(function(){
 		var isDomestic=$(".card_token").parent().parent().parent().find('.card').find('.radio').find('.card_is_domestic').val();
 		
 		if (password.length < 3 && 	$(".card_brand").val()!="MAESTRO"){
-			$(".card_cvvErrorSavedCard").css("display","block");		
+			$(".card_cvvErrorSavedCard").css("display","block");	
+			$(".card_cvvErrorSavedCard_popup").css("display","block");	//UF-217
+			$(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").focus();	//UF-217
+			$(this).addClass("saved_card_disabled");	//UF-217
 			return false;
 		}
 	 	else if($(".card_brand").val()=="MAESTRO" && password==""){
@@ -2118,7 +2129,7 @@ $("#otpMobileNUMField").focus(function(){
  
  $(".security_code").focus(function(){
 	 $("#savedCVVError").css("display","none");
-	 $(".card_ebsErrorSavedCard, .card_cvvErrorSavedCard").css("display","none");	
+	 $(".card_ebsErrorSavedCard").css("display","none");	
 	 document.getElementById("cvvError").innerHTML="";
 	 
  })
@@ -7348,6 +7359,8 @@ $("*[data-id=savedCCard]").change(function(){
 	$("#memberNameError").empty();
 	$("#expYYError").empty();
 	$("#cvvError").empty();
+	$(".card_cvvErrorSavedCard_popup").css("display","none");	//UF-211
+	$("#make_saved_cc_payment").removeClass("saved_card_disabled");	//UF-211
 	//$("#payment_form").find(".error-message").hide();
 });
 
@@ -7370,6 +7383,8 @@ $("*[data-id=savedDCard]").change(function(){
 	$("#memberNameErrorDc").empty();
 	$("#expYYErrorDc").empty();
 	$("#cvvErrorDc").empty();
+	$(".card_cvvErrorSavedCard_popup").css("display","none");	//UF-217
+	$("#make_saved_dc_payment").removeClass("saved_card_disabled");	//UF-217
 	//$("#debit_payment_form").find(".error-message").hide();
 });
 
@@ -7407,6 +7422,8 @@ $("#savedCreditCard").find("input[type=password]").click(function(){
 	$("#memberNameError").empty();
 	$("#expYYError").empty();
 	$("#cvvError").empty();
+	$(".card_cvvErrorSavedCard_popup").css("display","none");	//UF-211
+	$("#make_saved_cc_payment").removeClass("saved_card_disabled");	//UF-211
 	$(".proceed-button").each(function(){
 		$(this).hide();
 	});
@@ -7420,6 +7437,8 @@ $("#savedDebitCard").find("input[type=password]").click(function(){
 	$("#memberNameErrorDc").empty();
 	$("#expYYErrorDc").empty();
 	$("#cvvErrorDc").empty();
+	$(".card_cvvErrorSavedCard_popup").css("display","none");	//UF-217
+	$("#make_saved_dc_payment").removeClass("saved_card_disabled");	//UF-217
 	$(".proceed-button").each(function(){
 		$(this).hide();
 	});

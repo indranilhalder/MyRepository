@@ -26174,7 +26174,7 @@ line-height:19px;
 }
 .cart.wrapper .left-block li#savedCard div.card input[type="radio"]:checked + label:before{
 	background:#a9143c;
-	border:2px solid #fff;
+	border:3px solid #fff;
 }
 .credit-card-group, .debit-card-group {
     clear: both;
@@ -55163,7 +55163,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 #netbankingError{margin-top:10px;}
 .cart.wrapper .product-block li.item.cardForm{margin:0px;}
 .cart.wrapper .left-block .payments.tab-view .new-card input[type="checkbox"]+label:before{position:static;margin:0px;margin-right: 8px;}
-.cart.wrapper.checkout-payment .blocks .card-sec p{padding-left:20px;line-height: 18px;}
+.cart.wrapper.checkout-payment .blocks .card-sec p{padding-left:18px;line-height: 18px;}
 .cart.wrapper.checkout-payment .card-sec .digits input.cvvValdiation {border: 1px solid #dbdbdb; height: 38px;width: 90px;}
 .cart.wrapper .product-block li.item#savedCard{margin:0px;}
 .cart.wrapper .step-body{
@@ -55368,8 +55368,8 @@ display:block;}
 }
  .cart.wrapper .payments.tab-view .product-block li.item#savedCardDebit + li + .terms,
  .cart.wrapper .payments.tab-view .product-block li.item#savedCard + li + .terms{
-        padding: 25px 0px 30px 0px;
-            margin-bottom: 29px;
+        padding: 25px 0px 0px 0px;
+            margin-bottom: 0px;
  }
  .cart.wrapper .right-block.billing .checkout-order-summary{
  padding:0px;}
@@ -61758,6 +61758,9 @@ a.cvvHelp#cvvHelp + div.popover.bottom>.arrow {
 	.cart.wrapper.checkout-payment .make_payment_top_savedCard, .cart.wrapper.checkout-payment .make_payment_top_newCard, .cart.wrapper.checkout-payment .make_payment_top_nb, .cart.wrapper.checkout-payment .cod_payment_button_top{
 	display: none !important;
 }
+.paymentModeMobile{
+	display: none;
+}
 }
 /*Credit, debit card and EMI section end*/
 
@@ -62098,6 +62101,59 @@ li#savedCardDebit ~ #debitCard + li, li#savedCardDebit ~ #debitCard ,
 li#savedCard ~ #newCardCC + li, li#savedCard ~ #newCardCC {
     display: none;
 }
+li#savedCardDebit + li, li#savedCard + li {
+    position: relative;
+    width: 216px;
+}
+.cart.wrapper.checkout-payment .blocks .error-message.card_cvvErrorSavedCard_popup{
+	width: 206px;
+    height: 43px;
+    border-radius: 4px;
+    background-color: #000000;
+    color: #fff;
+    font-size: 12px;
+    text-transform: none;
+    font-weight: normal;
+    text-align: center;
+    padding: 14px 0;
+    position: absolute;
+    top: -50px;
+    left: 5px;
+    opacity:0;
+}
+.card_cvvErrorSavedCard_popup span{
+	color: #fb0007;
+}
+.card_cvvErrorSavedCard_popup:after{
+	content: "";
+    display: block;
+    width: 10px;
+    height: 10px;
+    background-color: #000;
+    -ms-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    transform: rotate(45deg);
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 38px;
+}
+li#savedCardDebit + li:hover > .card_cvvErrorSavedCard_popup , li#savedCard + li:hover > .card_cvvErrorSavedCard_popup {
+    opacity:1;
+}
+li#savedCardDebit , li#savedCard{
+	margin: 0;
+}
+@media(min-width: 768px){
+	.card_cvvErrorSavedCard{
+		 display: none !important;
+	}
+	.saved_card_disabled{
+		cursor: not-allowed;
+	}
+}
 @media(max-width:767px){
 	div#savedCreditCard, div#savedDebitCard, div#savedEMICard {
     width: 100%;
@@ -62126,6 +62182,9 @@ div#savedEMICard .credit-card-group .right-align-form {
 	li#savedCardDebit ~ #debitCard + li, li#savedCardDebit ~ #debitCard ,
 li#savedCard ~ #newCardCC + li, li#savedCard ~ #newCardCC {
     display: list-item !important;
+}
+.card_cvvErrorSavedCard_popup{
+	display: none !important;
 }
 }
 /*saved card end*/
@@ -62218,6 +62277,8 @@ li#savedCard ~ #newCardCC + li, li#savedCard ~ #newCardCC {
 	margin-left:4px;
 	width: calc(100% - 4px);
 	width: -webkit-calc(100% - 4px);
+	background-image: none;
+	padding-right: 12px;
 }
 .cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block  .cvv label{
 	margin-left:4px;
@@ -62357,6 +62418,19 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 }
 .cvv_mobile{
 	display: inline-block;
+}
+.cvv_mobile:after{
+	content: "[?]";
+	margin-left:5px;
+}
+a#cvvHelp {
+    width: 10px;
+    height: 12px;
+    bottom: auto;
+    right: auto;
+    top: 8px;
+    left: 36px;
+    margin: 0;
 }
 }
 div.radio.creditDebitLabelRadio{

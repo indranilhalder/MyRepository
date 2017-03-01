@@ -379,6 +379,9 @@
 											<li>	
 		
 				<!-- Terms & Conditions Link -->
+					<div id="cvvErrorSavedCard2" class="card_cvvErrorSavedCard_popup error-message" style="display : none;">
+												Enter a valid <span>CVV</span> to continue
+											</div>
 											<div class="pay top-padding saved-card-button">
 												<button type="submit" class="make_payment button btn-block payment-button" id="make_saved_cc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 												
@@ -693,6 +696,10 @@
 											<li>	
 		
 											<!-- Terms & Conditions Link -->
+											<!-- Adding here the cvv error message -->
+											<div id="cvvErrorSavedCard1" class="card_cvvErrorSavedCard_popup error-message" style="display : none;">
+												Enter a valid <span>CVV</span> to continue
+											</div>
 											<div class="pay top-padding saved-card-button">
 												<button type="submit" class="make_payment button btn-block payment-button" id="make_saved_dc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 												<!-- <p class="payment-redirect">You will be re-directed to secure payment gateway</p> -->
@@ -1266,6 +1273,9 @@
 	</script> -->
 
 	<script>
+	
+	/* As part of UF-210 */
+	
 	if($("#savedDebitCard").length > 0)
 	{
 		$("#cardDebit").find(".terms").last().hide();
@@ -1294,6 +1304,8 @@
 		$(this).parents("#card").find("#newCardCC").show();
 		$(this).parents("#card").find("#newCardCC").next("li").show();
 		$(this).parents("#card").find(".terms").last().show();
+		$(".card_cvvErrorSavedCard_popup").css("display","none");
+		$("#make_saved_cc_payment").removeClass("saved_card_disabled");
 	});
 	$(".saved_card_tab.debit_tab").click(function(){
 		$(this).addClass("active_tab");
@@ -1314,6 +1326,8 @@
 		$(this).parents("#cardDebit").find("#debitCard").show();
 		$(this).parents("#cardDebit").find("#debitCard").next("li").show();
 		$(this).parents("#cardDebit").find(".terms").last().show();
+		$(".card_cvvErrorSavedCard_popup").css("display","none");
+		$("#make_saved_dc_payment").removeClass("saved_card_disabled");
 	});
 	</script>			
 				
