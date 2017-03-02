@@ -170,7 +170,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			//For Electronics
 			totalProductCount = 1;//as there are no variants
 		}
-
+		boolean isSellerPresent = false;
 		//END
 		try
 		{
@@ -179,6 +179,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			//CKD:TPR-250 Start : Manipulating (rearranging) elements of the buy box list for microsite seller
 			if (StringUtils.isNotBlank(bBoxSellerId))
 			{
+				isSellerPresent = true;
 				rearrangeBuyBoxListElements(bBoxSellerId, buyboxModelListAll);
 			}
 			//CKD:TPR-250 End
@@ -225,7 +226,24 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					productsWithNoStock.add(pdpProduct);
 				}
 			}
-
+			else if (isSellerPresent)
+			{
+				buyboxModelList = buyBoxService.buyBoxPriceNoStock(pdpProduct);
+				for (final BuyBoxModel buybx : buyboxModelList)
+				{
+					if (buybx.getSellerId().equals(bBoxSellerId))
+					{
+						buyBoxMod = buybx;
+						break;
+					}
+				}
+				//Availability counts
+				if (null != arrayToProductList)
+				{
+					arrayToProductList.removeAll(productsList);
+					productsWithNoStock = arrayToProductList;
+				}
+			}
 			else if (buyboxModelList.size() == 1)
 			{
 				onlyBuyBoxHasStock = true;
@@ -394,15 +412,15 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				//other sellers count
 				final int sellerSize = buyboxModelList.size() - 1;
 				final Integer noofsellers = Integer.valueOf(sellerSize);
-				if (onlyBuyBoxHasStock && sellerSize > 0)
-				{
-					buyboxData.setNumberofsellers(Integer.valueOf(-1));
-					//buyboxData.setNumberofsellers(Integer.valueOf(-1));
-				}
-				else
-				{
-					buyboxData.setNumberofsellers(noofsellers);
-				}
+				//				if (onlyBuyBoxHasStock && sellerSize > 0)
+				//				{
+				//					buyboxData.setNumberofsellers(Integer.valueOf(-1));
+				//					//buyboxData.setNumberofsellers(Integer.valueOf(-1));
+				//				}
+				//				else
+				//				{
+				buyboxData.setNumberofsellers(noofsellers);
+				//}
 				//Minimum price for other sellers
 				double minPrice = 0.0d;
 				if (sellerSize > 0)
@@ -820,7 +838,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 * 
+	 *
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
@@ -864,15 +882,15 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		//other sellers count
 		final int sellerSize = buyboxModelList.size() - 1;
 		final Integer noofsellers = Integer.valueOf(sellerSize);
-		if (onlyBuyBoxHasStock && sellerSize > 0)
-		{
-			buyboxData.setNumberofsellers(Integer.valueOf(-1));
-			//buyboxData.setNumberofsellers(Integer.valueOf(-1));
-		}
-		else
-		{
-			buyboxData.setNumberofsellers(noofsellers);
-		}
+		//		if (onlyBuyBoxHasStock && sellerSize > 0)
+		//		{
+		//			buyboxData.setNumberofsellers(Integer.valueOf(-1));
+		//			//buyboxData.setNumberofsellers(Integer.valueOf(-1));
+		//		}
+		////		else
+		//		{
+		buyboxData.setNumberofsellers(noofsellers);
+		//	}
 		//Minimum price for other sellers
 		double minPrice = 0.0d;
 		if (sellerSize > 0)
