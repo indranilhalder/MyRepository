@@ -795,6 +795,7 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 				}
 				else{
 					$("#facetSearchAjaxData").html(response);
+					lazyPaginationFacet(response);
 				}
 			}
 			
@@ -981,7 +982,7 @@ function lazyPaginationFacet(response){
     $(ulProduct).find('li.product-item').each(function() {
         productItemArray.push($(this));
     });
-	$("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid", response));
+	$("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet", response));
     innerLazyLoad({isSerp:true});
 }
 //UF-15

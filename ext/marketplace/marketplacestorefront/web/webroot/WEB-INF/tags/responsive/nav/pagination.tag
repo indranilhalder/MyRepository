@@ -53,7 +53,8 @@
 					<li><c:url
 							value="${breadcrumb.removeQuery.url}&searchCategory=${searchCategory}"
 							var="removeQueryUrl" /> Exclude OutofStock&nbsp;<a
-						href="${removeQueryUrl}"><span class="remove_filter">x</span></a>
+						href="${fn:replace(removeQueryUrl, 
+                                '{pageNo}', '1')}"><span class="remove_filter">x</span></a>
 					</li>
 				</c:if>
 				<c:if
@@ -85,7 +86,8 @@
 						</c:choose> <input type="hidden" class="${breadcrumb.facetCode}"> <input
 						type="hidden" class="applied-color"
 						value="${breadcrumb.facetValueName}">
-						${breadcrumb.facetValueName}&nbsp;<a href="${removeQueryUrl}"><span
+						${breadcrumb.facetValueName}&nbsp;<a href="${fn:replace(removeQueryUrl, 
+                                '{pageNo}', '1')}"><span 
 							class="remove_filter">x</span></a></li>
 				</c:if>
 			</c:forEach>

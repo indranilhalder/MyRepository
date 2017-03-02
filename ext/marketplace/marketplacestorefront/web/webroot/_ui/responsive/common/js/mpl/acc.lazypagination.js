@@ -79,13 +79,18 @@ function getProductSetData() {
                 currentPageNo++; 
             }
             if (currentPageNo <= totalNoOfPages) {
-                ajaxUrl = pathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
-                var nextPaginatedAjaxUrl = pathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
-                if (query) {
-                    ajaxUrl = ajaxUrl + query;
-                    nextPaginatedAjaxUrl = nextPaginatedAjaxUrl + query;
-                }
-                window.history.replaceState({}, "", nextPaginatedAjaxUrl);
+            	if(facetAjaxUrl){
+            		ajaxUrl = facetAjaxUrl.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+            		window.history.replaceState({}, "", ajaxUrl);
+            	}else{
+            		ajaxUrl = pathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+            		var nextPaginatedAjaxUrl = pathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+                    if (query) {
+                        ajaxUrl = ajaxUrl + query;
+                        nextPaginatedAjaxUrl = nextPaginatedAjaxUrl + query;
+                    }
+                    window.history.replaceState({}, "", nextPaginatedAjaxUrl);
+            	}
             }
         } else { // if no url with page no occourance found.
             if (pageNoPagination <= totalNoOfPages) {
@@ -156,6 +161,8 @@ $(document).ready(function() {
         	$('.sort').removeAttr('style');
         	$(this).css('color', 'red');
         	var pathName = window.location.pathname;
+        	pathName = pathName.replace(/page-[0-9]+/, 'page-1');
+        	
         	var url = '';
         	switch (item) {
 			case 'relevance':
