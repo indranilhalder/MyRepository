@@ -176,10 +176,14 @@ public class NPSFeedbackController
 				feedbackData.setOriginalUid(feedbackForm.getOriginalUid());
 				feedbackData.setTransactionId(feedbackForm.getTransactionId());
 				feedbackData.setAnyOtherFeedback(feedbackForm.getOtherFeedback());
+
+
 				for (final NPSFeedbackQuestionForm formDetail : feedbackForm.getNpsQuestionlist())
 				{
 					final NPSFeedbackQRDetailData feedbackDetailData = new NPSFeedbackQRDetailData();
 					feedbackDetailData.setQuestionCode(formDetail.getQuestionCode());
+					feedbackDetailData.setQuestionName(formDetail.getQuestionName());
+					feedbackDetailData.setRating(formDetail.getRating());
 					feedbackDataDetail.add(feedbackDetailData);
 				}
 				feedbackData.setFeedbackQRList(feedbackDataDetail);
