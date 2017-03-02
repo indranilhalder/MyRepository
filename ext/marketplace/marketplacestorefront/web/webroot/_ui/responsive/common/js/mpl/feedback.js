@@ -256,13 +256,13 @@ $(document).ready(function(){
 						 if( $(window).scrollTop() > $('.bottom').offset().top && !($('.bottom').hasClass('active'))){
 				      $('.bottom').addClass('active');
 				      $('.productGrid-header-wrapper').addClass('active-header');	
-			    		$(".productGrid-header-wrapper").addClass("active_adjust");
+			    		//$(".productGrid-header-wrapper").addClass("active_adjust");
 			      /*TPR-4471 change*/
 				      $('header > .content .top').addClass('header_fix');
 				    } else if ($(window).scrollTop() == 0){
 				      $('.bottom').removeClass('active');
 				      $('.productGrid-header-wrapper').removeClass('active-header');
-				      $(".productGrid-header-wrapper").removeClass("active_adjust");/*TPR-4471 change*/
+				      //$(".productGrid-header-wrapper").removeClass("active_adjust");/*TPR-4471 change*/
 				   $('header > .content .top').removeClass('header_fix');
 				    }
 					  }
@@ -3179,7 +3179,8 @@ $(document).on("click",".clicked-menu.active.clicked-menu-mobile .level1 > span#
 	$(".productGrid-header-wrapper .productGrid-header > div input[type='text']").animate({marginLeft: 0},{duration:500});
 });*/
 $(".productGrid-header-wrapper .productGrid-header > div button#micrositesearchButton").click(function(){
-	$(".productGrid-header-wrapper.active-header").addClass("active_adjust");
+	$(".productGrid-header-wrapper").addClass("active_adjust");
+	
 	$(".productGrid-header-wrapper .productGrid-header > div input[type='text']").animate({marginLeft: 2},{duration:200});
 });
 $(document).click(function (e)
@@ -3190,7 +3191,7 @@ $(document).click(function (e)
 		    if ((!container.is(e.target) // if the target of the click isn't the container...
 		        && container.has(e.target).length === 0) && container.find("input[type='text']").val().length === 0) // ... nor a descendant of the container
 		    {
-		    	$(".productGrid-header-wrapper.active-header").removeClass("active_adjust");
+		    	$(".productGrid-header-wrapper").removeClass("active_adjust");
 		    	$(".productGrid-header-wrapper .productGrid-header > div input[type='text']").animate({marginLeft: 1000},{duration:200});
 		    }
 		   /* if ((((!containerGlobal.is(e.target) // if the target of the click isn't the container...
