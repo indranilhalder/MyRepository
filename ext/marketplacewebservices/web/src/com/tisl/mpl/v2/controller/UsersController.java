@@ -7285,7 +7285,7 @@ public class UsersController extends BaseCommerceController
    			boolean returnLogisticsCheck = true;			
    			String returnFulfillmentType =null;
    			final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(subOrderDetails,
-   					pinCode);
+   					pinCode,transactionId);
    			for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
    			{
    				if(response.getTransactionId().equalsIgnoreCase(returnData.getTransactionId()))
@@ -7298,6 +7298,7 @@ public class UsersController extends BaseCommerceController
    				   else if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase("Y"))
    				   {
    				    returnFulfillmentType = response.getReturnFulfillmentType();
+   				    output.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
    				   }
    				}
    			}
@@ -7341,6 +7342,8 @@ public class UsersController extends BaseCommerceController
 			{
 				output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 				return output;
+			}else {
+				output.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 			}
 		}
 			
