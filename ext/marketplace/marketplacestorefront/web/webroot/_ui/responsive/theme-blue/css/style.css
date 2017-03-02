@@ -60518,10 +60518,11 @@ body.page-cartPage .cart.wrapper .product-block li.header ul li.delivery{
 body.page-cartPage span.delSeat.delAction{
 	    color: #999999;
 }
+@media(min-width:1025px){
 body.page-cartPage .cart.wrapper .product-block li.header ul li.productInfo, 
 body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.productItemInfo{
 	    width: 39% !important;
-}
+}}
 body.page-cartPage p.cartItemBlankPincode{
 	color:#666666;
 }
