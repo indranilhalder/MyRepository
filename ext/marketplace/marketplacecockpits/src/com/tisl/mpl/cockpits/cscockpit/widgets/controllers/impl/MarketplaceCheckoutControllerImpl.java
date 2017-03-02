@@ -34,8 +34,10 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
+import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
 import com.tisl.mpl.service.PinCodeDeliveryModeService;
 
 import de.hybris.platform.catalog.impl.DefaultCatalogVersionService;
@@ -128,6 +130,8 @@ public class MarketplaceCheckoutControllerImpl extends
 	
 	@Autowired
 	private MplCartFacade mplCartFacade;
+	@Autowired
+	private MplSellerInformationFacade  mplSellerInformationFacade;
 	/**
 	 * Gets the product value.
 	 *
@@ -763,7 +767,7 @@ public class MarketplaceCheckoutControllerImpl extends
 		if(null != cart ){
 			try {
 				if(LOG.isDebugEnabled()){
-					LOG.debug("calling oms For InvReserForDeliverySlots for cart id"+cart.getGuid());
+					LOG.debug("calling oms For InvReserForDeliverySlots for cart id "+cart.getGuid());
 				}
 				omsResponceData = mplCartFacade.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData,cart);
 			}catch(Exception e) {
@@ -787,6 +791,20 @@ public class MarketplaceCheckoutControllerImpl extends
 			LOG.error("Exception while Getting SChedule Delivery Charges from DB :"+e.getMessage());
 		}
 		return scheduleDeliveryCharge;
+	}
+
+	@Override
+	public SellerInformationModel getSellerInformationByUssid(String ussid) {
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("from getSellerDetail method in facade");
+		}
+		try {
+			return mplSellerInformationFacade.getSellerDetail(ussid);
+		}catch(Exception e) {
+			LOG.error("Exception occurred while getting the seller information for USSID"+ussid);
+		}
+		return null;
 	}
 	
 	

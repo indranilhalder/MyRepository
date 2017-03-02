@@ -8,6 +8,7 @@ import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 
@@ -139,4 +140,6 @@ public interface MarketplaceCheckoutController extends
 	void setCODPaymentMode(final CartModel cartModel);	//TPR-3471
 	InvReserForDeliverySlotsResponseData deliverySlotsRequestDataCallToOms(InvReserForDeliverySlotsRequestData deliverySlotsRequestData, CartModel cartModel);
 	public Double getScheduleDeliveryCharges();
+	public SellerInformationModel getSellerInformationByUssid(String Ussid);
+	
 }

@@ -67,35 +67,45 @@ public class DateUtilHelper
 	 /* Take input has 12:00 AM/PM Format but it returns 24 Hours Format
 		 * 
 		 */
-	public  String convertTo24Hour(String Time) {
- 	    DateFormat f1 = new SimpleDateFormat("hh:mm"); //11:00 pm
- 	    Date d = null;
- 	    try {
- 	        d = f1.parse(Time);
- 	    } catch (ParseException e) {
- 	   	LOG.error("Time Formater ********:"+e.getMessage());
- 	    }
- 	    DateFormat f2 = new SimpleDateFormat("HH:mm");
- 	    String convertTime = f2.format(d); // "23:00"
- 	    LOG.debug("convertTime  *****:"+convertTime);
- 	    return convertTime;
- 	}
+	
+	
+	
+	public  String convertTo24Hour(String time) {
+		DateFormat df = new SimpleDateFormat("hh:mm aa");
+		DateFormat outputformat = new SimpleDateFormat("HH:mm:ss");
+		Date date = null;
+		String 	timeIn24hoursFormate =null;
+		try{
+			date= df.parse(time);
+		 	timeIn24hoursFormate = outputformat.format(date);
+		 	if(LOG.isDebugEnabled()){
+		 		LOG.debug("TwentyFourHourFormate input="+time+" output  "+timeIn24hoursFormate);
+		 	}
+			
+		}catch(ParseException pe){
+			pe.printStackTrace();
+		}
+		return timeIn24hoursFormate;
+	}
 	
 	 /* Take input has 12:00 AM/PM Format but it returns 24 Hours Format
 		 * 
 		 */
-	public  String convertTo12Hour(String Time) {
-	    DateFormat f1 = new SimpleDateFormat("HH:mm"); //23:00 
-	    Date d = null;
-	    try {
-	        d = f1.parse(Time);
-	    } catch (ParseException e) {
-	   	LOG.error("Time Formater ********:"+e.getMessage());
-	    }
-	    DateFormat f2 = new SimpleDateFormat("hh:mm");
-	    String convertTime = f2.format(d); // "11:00 PM"
-	    LOG.debug("convertTime  *****:"+convertTime);
-	    return convertTime;
+	public  String convertTo12Hour(String time) {
+		DateFormat df = new SimpleDateFormat("HH:mm");
+		DateFormat outputformat = new SimpleDateFormat("hh:mm aa");
+		String 	timeIn12hoursFormate=null;
+		Date date = null;
+		try{
+			date= df.parse(time);
+			timeIn12hoursFormate = outputformat.format(date);
+			if(LOG.isDebugEnabled()){
+		 		LOG.debug("TwelveHourFormate input="+time+" output  "+timeIn12hoursFormate);
+			}
+		}catch(ParseException pe){
+			pe.printStackTrace();
+		}
+		return timeIn12hoursFormate;
 	}
 	 /* Take input has Date Format   but it returns 3 next Dates 
 		 * 

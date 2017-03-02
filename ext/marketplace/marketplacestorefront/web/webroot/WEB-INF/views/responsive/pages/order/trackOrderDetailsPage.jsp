@@ -111,9 +111,9 @@
 													priceData="${subOrder.convenienceChargeForCOD}" />
 <!-- 										</li> -->
 									</c:if>
-									<li><spring:theme text="Gift Wrap:" /><span><format:price
+									<%-- <li><spring:theme text="Gift Wrap:" /><span><format:price
 												priceData="${subOrder.deliveryCost}"
-												displayFreeForZero="true" /></span></li> 									<li class="grand-total">
+												displayFreeForZero="true" /></span></li> --%> 									<li class="grand-total">
 										<spring:theme code="text.account.order.total.new" text="Total" />
 										<c:choose>
 											<c:when test="${subOrder.net}">

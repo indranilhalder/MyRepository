@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -422,8 +423,9 @@ public class MplChangeDeliveryOTPWidgetRenderer
 			for (TransactionSDDto sdDto : SdDto) {
 				if(sdDto.getTransactionID().equalsIgnoreCase(transactionEddDto.getTransactionID())) {
 					sdDto.setPickupDate(dateGroup.getSelectedItem().getLabel());
-					sdDto.setTimeSlotFrom(fromTime);
-					sdDto.setTimeSlotTo(toTime);
+					DateUtilHelper dateutilHelper = new DateUtilHelper();
+					sdDto.setTimeSlotFrom(dateutilHelper.convertTo24Hour(fromTime));
+					sdDto.setTimeSlotTo(dateutilHelper.convertTo24Hour(toTime));
 				}
 			}
 			dateGroup.addEventListener(Events.ON_CHECK, new EventListener() {
@@ -486,9 +488,23 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		for (TransactionSDDto sdDto : sdDtoList) {
 			if(sdDto.getTransactionID().equalsIgnoreCase(transactionEddDto.getTransactionID())) {
 				sdDto.setPickupDate(dateGroup.getSelectedItem().getLabel());
+				if (null != radioTimeGroup && null != radioTimeGroup.getSelectedItem()) {
+					LOG.debug("Selected time = "+radioTimeGroup.getSelectedItem().getLabel());
+					String selectedTime = radioTimeGroup.getSelectedItem().getLabel();
+					String[] fromAndToTime =  selectedTime.split("TO");
+					String fromTime = fromAndToTime[0];
+					String toTime   = fromAndToTime[1];
+							DateUtilHelper dateutilHelper = new DateUtilHelper();
+							if(null !=fromTime ) {
+								sdDto.setTimeSlotFrom(dateutilHelper.convertTo24Hour(fromTime));
+							}
+							if(null !=toTime ) {
+								sdDto.setTimeSlotTo(dateutilHelper.convertTo24Hour(toTime));
+							}
+						}
+					}
+				}
 			}
-		}
-	}
 	
 	private void createTimeChangeEventListener(
 			Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
@@ -715,6 +731,20 @@ public class MplChangeDeliveryOTPWidgetRenderer
 					changeDeliveryAddress.setOwner(customermodel);
 					String interfaceType = getChangeDeliveryInterfacetype(changeDeliveryAddress,orderModel.getDeliveryAddress());
 					LOG.debug("interface type :"+interfaceType);
+					final List<TransactionSDDto>  scheduleList = new ArrayList<TransactionSDDto>();
+					ScheduledeliveryDtoList.forEach(new Consumer<TransactionSDDto>() {
+
+						@Override
+						public void accept(TransactionSDDto tDto) {
+							TransactionSDDto dto = new TransactionSDDto();
+							dto.setPickupDate(tDto.getPickupDate());
+							dto.setTimeSlotFrom(tDto.getTimeSlotFrom());
+							dto.setTimeSlotTo(tDto.getTimeSlotTo());
+							dto.setTransactionID(tDto.getTransactionID());
+							scheduleList.add(dto);
+						}
+					});
+					
 					omsStatus = mplDeliveryAddressController
 							.changeDeliveryAddressCallToOMS(orderModel
 									.getParentReference().getCode(), changeDeliveryAddress,interfaceType,ScheduledeliveryDtoList);
