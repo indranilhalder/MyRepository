@@ -74,6 +74,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	@Autowired
 	private MplOrderDao mplOrderDao;
 
+	@Override
 	public CommerceOrderResult placeOrder(final CommerceCheckoutParameter parameter) throws InvalidCartException,
 			EtailNonBusinessExceptions
 	{
@@ -200,7 +201,6 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					{
 						LOG.error("Error while submit order", e);
 					}
-
 					getOrderService().submitOrder(orderModel);
 				}
 
