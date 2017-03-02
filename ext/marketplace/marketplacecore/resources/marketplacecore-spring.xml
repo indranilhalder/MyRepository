@@ -1788,7 +1788,12 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
  		class="com.tisl.mpl.core.cronjob.NPSMailer.jobs.NPSMailerCronJob"
  		autowire="byName" >
  	</bean>
-	
+	  <bean id="productKeywordsValueProvider" class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplKeyWordValueProvider"
+		parent="abstractPropertyFieldValueProvider">
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="commonI18NService" ref="commonI18NService" />
+		<property name="sessionService" ref="sessionService" /> 
+	</bean>
   	<!-- TPR-1984 End-->
 
 			
