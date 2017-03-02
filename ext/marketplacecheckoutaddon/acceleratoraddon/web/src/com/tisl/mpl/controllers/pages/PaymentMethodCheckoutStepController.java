@@ -231,8 +231,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			@RequestParam(value = "value", required = false, defaultValue = "") final String guid) throws CMSItemNotFoundException
 	{
 		//OrderIssues:-  multiple Payment Response from juspay restriction
-		getSessionService().setAttribute(MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE,
-				MarketplacecommerceservicesConstants.FALSE);
+
 		//redirecting to previous page for anonymous user
 		if (getUserFacade().isAnonymousUser())
 		{
@@ -268,6 +267,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				orderModel = getMplPaymentFacade().getOrderByGuid(guid);
 			}
+
+			// OrderIssues:- Set the value duplicatJuspayResponse in session to false  ones cart GUID available in session
+			final Map<String, String> duplicatJuspayResponseMap = new HashMap<String, String>();
+			duplicatJuspayResponseMap.put(guid, "False");
+
+			getSessionService().setAttribute(MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE, duplicatJuspayResponseMap);
+
 			//code to restrict user to continue the checkout if he has not selected pickup person name and mobile number.
 			//this is only when cart entry contains cnc delivery mode.
 			final Map<String, MarketplaceDeliveryModeData> freebieModelMap = new HashMap<String, MarketplaceDeliveryModeData>();
@@ -2522,10 +2528,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//Order Status from Juspay
 		try
 		{
-			final String duplicateJuspayRes = getSessionService().getAttribute(
+			final Map<String, String> duplicateJuspayResMap = getSessionService().getAttribute(
 					MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE);
 			// OrderIssues:-  multiple Payment Response from juspay restriction
-			if (null == duplicateJuspayRes || duplicateJuspayRes.equalsIgnoreCase("false"))
+			if (MapUtils.isNotEmpty(duplicateJuspayResMap) && duplicateJuspayResMap.get(guid).equalsIgnoreCase("False"))
 			{
 				final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
 				if (null != orderToBeUpdated && null == orderToBeUpdated.getPaymentInfo()

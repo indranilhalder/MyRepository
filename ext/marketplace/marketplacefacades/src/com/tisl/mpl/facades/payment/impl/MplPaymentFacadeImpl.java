@@ -2245,9 +2245,12 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					//Logic when transaction is successful i.e. CHARGED
 					if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
 					{
-						// OrderIssues:-  Set the value in session ones executed with success response from juspay
+						// OrderIssues:- Set the value duplicatJuspayResponse in session to true  ones cart GUID executed with success response from juspay
+						final Map<String, String> duplicatJuspayResponseMap = new HashMap<String, String>();
+						duplicatJuspayResponseMap.put(orderGuid, "True");
+
 						getSessionService().setAttribute(MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE,
-								MarketplacecommerceservicesConstants.TRUE);
+								duplicatJuspayResponseMap);
 
 						//TIS-3168
 						LOG.error("Payment successful with transaction ID::::" + juspayOrderId);

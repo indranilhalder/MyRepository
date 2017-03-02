@@ -135,7 +135,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -268,7 +268,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -282,7 +282,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -377,9 +377,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
-	 *
+	 * 
 	 * @param subOrderList
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -482,9 +482,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
-	 *
+	 * 
 	 * @param subOrderList
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -1021,9 +1021,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 *
+	 * 
 	 * @param orderList
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	// OrderIssues:- InvalidCartException exception throws
@@ -1401,7 +1401,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 *
 	 */
 	//OrderIssues:-
-	private List<OrderModel> getSubOrders(final OrderModel orderModel) throws InvalidCartException //TISPRD-958
+	private List<OrderModel> getSubOrders(final OrderModel orderModel) throws InvalidCartException, EtailNonBusinessExceptions//TISPRD-958
 	{
 		/*
 		 * The sellerEntryMap holds the seller id as the key and the corresponding order line entries for that seller id
@@ -1425,15 +1425,15 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				throw new InvalidCartException("sellerEntryMap is Empty from getSubOrders");
 			}
 		}
-		catch (final EtailNonBusinessExceptions ex) //TISPRD-958
+		catch (final InvalidCartException ex) //TISPRD-958
 		{
 			LOG.error("EtailNonBusinessExceptions occured while getSubOrders ", ex);
-			throw new InvalidCartException(ex);
+			throw ex;
 		}
 		catch (final Exception ex) //TISPRD-958
 		{
-			LOG.error("Exception occured while getSubOrders ", ex);
-			throw new InvalidCartException(ex);
+			LOG.error("EtailNonBusinessExceptions occured while getSubOrders ", ex);
+			throw new EtailNonBusinessExceptions(ex);
 		}
 		return subOrders;
 	}
@@ -1516,7 +1516,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		final OrderModel clonedSubOrder = getCloneAbstractOrderStrategy().clone(null, null, orderModel, generateSubOrderCode(),
 				OrderModel.class, OrderEntryModel.class);
 
-		LOG.debug("Sub Order Clone:- Suborder ID:- " + clonedSubOrder.getCode());
+		LOG.debug("Sub Order Clone:- Suborder ID:- " + null != clonedSubOrder.getCode() ? clonedSubOrder.getCode()
+				: "Sub Order code is empty");
 
 		getModelService().save(clonedSubOrder);
 
