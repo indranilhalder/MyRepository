@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
@@ -741,9 +742,13 @@ public class MplChangeDeliveryOTPWidgetRenderer
 						if(interfaceType.equalsIgnoreCase(MarketplaceCockpitsConstants.CU)) {
 							ticketSubType = MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DMC;
 						}
+						boolean isEDScheduled = false;
+						if(CollectionUtils.isNotEmpty(ScheduledeliveryDtoList)) {
+							isEDScheduled=true;
+						}
 						mplDeliveryAddressController.ticketCreateToCrm(
 								orderModel.getParentReference(), customerId,
-								MarketplaceCockpitsConstants.SOURCE,ticketSubType);
+								MarketplaceCockpitsConstants.SOURCE,ticketSubType,isEDScheduled);
 						LOG.debug("CRM Ticket Created for Change Delivery Request");
 						Messagebox.show(LabelUtils.getLabel(widget,
 								CUSTOMER_DETAILS_UPDATED, new Object[0]), INFO,

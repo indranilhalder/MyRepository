@@ -30,6 +30,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TimeZone;
 
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
@@ -318,7 +319,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 */
 	@Override
 	public void createcrmTicketForChangeDeliveryAddress(final OrderModel Order, final String costomerId, final String source,
-			final String ticketType)
+			final String ticketType ,boolean isEdSchedule)
 	{
 		final List<SendTicketLineItemData> lineItemDataList = new ArrayList<SendTicketLineItemData>();
 		final SendTicketRequestData sendTicketRequestData = new SendTicketRequestData();
@@ -340,6 +341,40 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 							{
 								sendTicketLineItemData.setLineItemId(entry.getTransactionID());
 
+							}
+							if(isEdSchedule){
+								SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+								SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+							if (StringUtils.isNotEmpty(entry.getEdScheduledDate()))
+							{
+								sendTicketLineItemData.setReturnPickupDate(entry.getEdScheduledDate());
+							}
+							if (StringUtils.isNotEmpty(entry.getTimeSlotFrom()))
+							{
+								String timeSlotFrom=entry.getEdScheduledDate().concat(" "+entry.getTimeSlotFrom());
+								format2.setTimeZone(TimeZone.getTimeZone("GMT"));
+								try
+								{
+									sendTicketLineItemData.setTimeSlotFrom(String.valueOf(format2.format(format.parse(timeSlotFrom))));
+								}
+								catch (ParseException parseException)
+								{
+									LOG.error("MplDeliveryAddressFacadeImpl:::::::Error"+parseException.getMessage());
+								}
+							}
+							if (StringUtils.isNotEmpty(entry.getTimeSlotTo()))
+							{
+								String timeSlotTo=entry.getEdScheduledDate().concat(" "+entry.getTimeSlotTo());
+								format2.setTimeZone(TimeZone.getTimeZone("GMT"));
+								try
+								{
+									sendTicketLineItemData.setTimeSlotTo(String.valueOf(format2.format(format.parse(timeSlotTo))));
+								}
+								catch (ParseException parseException)
+								{
+									LOG.error("MplDeliveryAddressFacadeImpl:::::::Error"+parseException.getMessage());
+								}
+							}
 							}
 						}
 						lineItemDataList.add(sendTicketLineItemData);
@@ -397,12 +432,9 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			addressinfo.setPincode(changeDeliveryAddress.getPostalcode());
 		}
 		}
-		
-		
-
-
+	
 		sendTicketRequestData.setAddressInfo(addressinfo);
-
+	
 		sendTicketRequestData.setCustomerID(Order.getUser().getUid());
 		sendTicketRequestData.setLineItemDataList(lineItemDataList);
 		sendTicketRequestData.setOrderId(Order.getCode());
@@ -659,6 +691,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			final AddressData newDeliveryAddressData, final boolean isMobile, List<TransactionSDDto> transactionSDDtoList)
 	{
 		String valditionMsg = null;
+		boolean isEDScheduled = false;
 		final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
 		try
 		{
@@ -673,22 +706,29 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 				{
 					try
 					{
-						 RescheduleDataList rescheduleDataList=null;
-						 final boolean isEligibleScheduledDelivery = mplDeliveryAddressService.checkScheduledDeliveryForOrder(orderModel);
-							//checking  order Eligible for ReScheduledDelivery
-							if (isEligibleScheduledDelivery)
+						RescheduleDataList rescheduleDataList = null;
+						final boolean isEligibleScheduledDelivery = mplDeliveryAddressService
+								.checkScheduledDeliveryForOrder(orderModel);
+						//checking  order Eligible for ReScheduledDelivery
+						if (isEligibleScheduledDelivery)
+						{
+							if (!orderModel.getDeliveryAddress().getPostalcode()
+									.equalsIgnoreCase(newDeliveryAddressModel.getPostalcode()))
 							{
-								if (!isMobile)
+								isEDScheduled = true;
+							}
+
+							if (!isMobile)
+							{
+								rescheduleDataList = sessionService
+										.getAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
+								//Bug ID 686
+								if (rescheduleDataList != null && CollectionUtils.isNotEmpty(rescheduleDataList.getRescheduleDataList()))
 								{
-									 rescheduleDataList = sessionService
-											.getAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
-									//Bug ID 686
-									if (rescheduleDataList != null && CollectionUtils.isNotEmpty(rescheduleDataList.getRescheduleDataList()))
-									{
-										transactionSDDtoList = reScheduleddeliveryDate(orderModel, rescheduleDataList);
-									}
+									transactionSDDtoList = reScheduleddeliveryDate(orderModel, rescheduleDataList);
 								}
 							}
+						}
 							
 						//OMS realTime Call
 						valditionMsg=changeDeliveryRequestCallToOMS(orderCode, newDeliveryAddressModel, MarketplaceFacadesConstants.CA,
@@ -708,7 +748,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						  
 							//CRM call
 							createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE,
-									MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_CDA);
+									MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_CDA,isEDScheduled);
 						}
 						else
 						{
@@ -737,28 +777,11 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						{
 							try
 							{
-								// commented CR-254
-//								boolean isDNC = mplDeliveryAddressComparator.compareNameDetails(orderModel.getDeliveryAddress(),
-//										newDeliveryAddressModel);
-//							   boolean isDMC = mplDeliveryAddressComparator.compareMobileNumber(orderModel.getDeliveryAddress(),
-//											newDeliveryAddressModel);
-							    //save address 
 							 	 mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel, orderModel, false);
-								//changed Name Details 
-//								if (isDNC)
-//								{
-//									createcrmTicketForChangeDeliveryAddress(orderModel, customerID,
-//											MarketplacecommerceservicesConstants.SOURCE,
-//											MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DNC);
-//								}
-							//changed Mobile Details 
-//								if (isDMC)
-//								{
-									//CRM Call
 									createcrmTicketForChangeDeliveryAddress(orderModel, customerID,
 											MarketplacecommerceservicesConstants.SOURCE,
-											MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DMC);
-								//}
+											MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DMC,isEDScheduled);
+								
 							}
 							catch (final Exception e)
 							{
@@ -766,8 +789,6 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 										+ e.getMessage());
 							}
 
-							
-							
 						}
 						else
 						{

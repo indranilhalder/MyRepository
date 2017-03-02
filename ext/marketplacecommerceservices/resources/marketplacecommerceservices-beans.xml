@@ -305,6 +305,11 @@
 		<property name="lineItemId" type="String"/>
 		<property name="returnReasonCode" type="String"/>
 		<property name="cancelReasonCode" type="String"/>
+		<!-- R2.3 Start   -->
+		<property name="returnPickupDate" type="String"/>
+		<property name="TimeSlotFrom" type="String"/>
+		<property name="TimeSlotTo" type="String"/>
+		<!-- R2.3 END -->
 	</bean>
 	
 	<!-- Return Item AddressInfo Data -->
