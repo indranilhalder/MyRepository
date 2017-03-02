@@ -239,8 +239,20 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 
 						user.setAddresses(customerAddressesList);
 						modelService.save(user);
-							customerAddressesList.add(newAddressModel);
+					boolean isEditAddress = getCustomerProfileAddress(customerAddressesList, newAddressModel, orderModel
+							.getDeliveryAddress().getPk().toString());
+					if (!isEditAddress)
+					{
+						customerAddressesList.add(newAddressModel);
+						modelService.saveAll(customerAddressesList);
+						user.setAddresses(customerAddressesList);
 						modelService.save(user);
+
+					}else{
+						modelService.saveAll(customerAddressesList);
+						user.setAddresses(customerAddressesList);
+						modelService.save(user);
+					}
 					sessionService.removeAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
 
 				}
@@ -253,6 +265,47 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		return isDeliveryAddressChanged;
 	}
 
+
+	/**
+	 * @param customerAddressesList
+	 * @param newAddressModel
+	 * @return 
+	 */
+	private boolean getCustomerProfileAddress(Collection<AddressModel> customerAddressesList, AddressModel newAddressModel,
+			String addressID)
+	{
+		boolean isEditAddress = false;
+		if (StringUtils.isNotBlank(addressID))
+		{
+			for (AddressModel model : customerAddressesList)
+			{
+				if (model.getPk().toString().equalsIgnoreCase(addressID))
+				{
+					model.setFirstname(newAddressModel.getFirstname());
+					model.setLastname(newAddressModel.getLastname());
+					model.setStreetname(newAddressModel.getStreetname());
+					model.setStreetnumber(newAddressModel.getStreetnumber());
+					model.setAddressLine3(newAddressModel.getAddressLine3());
+					model.setLandmark(newAddressModel.getLandmark());
+					model.setTown(newAddressModel.getTown());
+					model.setCity(newAddressModel.getCity());
+					model.setState(newAddressModel.getState());
+					model.setPostalcode(newAddressModel.getPostalcode());
+					model.setPhone1(newAddressModel.getPhone1());
+					model.setCellphone(newAddressModel.getCellphone());
+					model.setPhone2(newAddressModel.getPhone2());
+					isEditAddress = true;
+				}
+			}
+		}
+		else
+		{
+			return true;
+		}
+		return isEditAddress;
+	}
+	
+	
 
 	/**
 	 * This method is used to save the failure requests of change delivery address
