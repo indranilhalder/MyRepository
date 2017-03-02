@@ -230,7 +230,6 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 						modelService.save(newDeliveryAddressInfoModel);
 					}
 					
-					if(isNewAddress) {
 						UserModel user = orderModel.getUser();
 						Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
 						if (null != user && null != user.getAddresses())
@@ -240,11 +239,8 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 
 						user.setAddresses(customerAddressesList);
 						modelService.save(user);
-						if(null != customerAddressesList) {
 							customerAddressesList.add(newAddressModel);
-						}
 						modelService.save(user);
-					}
 					sessionService.removeAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
 
 				}
