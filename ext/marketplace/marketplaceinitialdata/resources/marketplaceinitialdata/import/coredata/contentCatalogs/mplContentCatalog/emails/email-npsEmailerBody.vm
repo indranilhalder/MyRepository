@@ -39,7 +39,10 @@
                         <td style="width: 20px;" width="20px">&nbsp;</td>
                       	<td>
                       	 <p style="font-size:15px; color: #a5164c;"><strong>${ctx.productName}</strong></p>
-                      	 <div style="color: #6f6f6f;font-size:14px;">Size: ${ctx.productSize}<br><br>
+                      	 #if(${ctx.productSize})
+                      	 <p style="color: #6f6f6f;font-size:14px;">Size: ${ctx.productSize}</p>
+                      	 #end
+                      	 <br><br>
                       	 Qty: 1<br><br>
                       	 Sold By: ${ctx.sellerName}</div>
                       	  <p style="color:#a5164c;font-size:18px;">
