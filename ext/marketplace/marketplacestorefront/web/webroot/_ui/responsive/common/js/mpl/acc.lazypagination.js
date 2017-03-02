@@ -156,6 +156,8 @@ $(document).ready(function() {
         	$('.sort').removeAttr('style');
         	$(this).css('color', 'red');
         	var pathName = window.location.pathname;
+        	pathName = pathName.replace(/page-[0-9]+/, 'page-1');
+        	
         	var url = '';
         	switch (item) {
 			case 'relevance':
