@@ -3429,11 +3429,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			//returningTransactionId = sessionService.getAttribute("transactionId"); // Commented for Bulk Return Initiation
 			returningTransactionId = transId;
 			String transactionId = "";
-			for (final OrderEntryData eachEntry : entries)
+			for (final OrderEntryData orderEntry : entries)
 			{
 				final ReturnLogistics returnLogistics = new ReturnLogistics();
 				//TISEE-5557
-				if (!(eachEntry.isGiveAway() || eachEntry.isIsBOGOapplied()))
+				if (!(orderEntry.isGiveAway() || orderEntry.isIsBOGOapplied()))
 				//	|| (null != eachEntry.getAssociatedItems() && !eachEntry.getAssociatedItems().isEmpty())))
 				{
 					returnLogistics.setOrderId(orderModel.getParentReference().getCode());
@@ -3441,17 +3441,56 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					{
 						returnLogistics.setPinCode(pincode);
 					}
-					if (StringUtils.isNotEmpty(eachEntry.getOrderLineId()))
+					if (StringUtils.isNotEmpty(orderEntry.getOrderLineId()))
 					{
-						transactionId = eachEntry.getOrderLineId();
-						returnLogistics.setTransactionId(eachEntry.getOrderLineId());
+						transactionId = orderEntry.getOrderLineId();
+						returnLogistics.setTransactionId(orderEntry.getOrderLineId());
 					}
-					else if (StringUtils.isNotEmpty(eachEntry.getTransactionId()))
+					else if (StringUtils.isNotEmpty(orderEntry.getTransactionId()))
 					{
-						transactionId = eachEntry.getTransactionId();
-						returnLogistics.setTransactionId(eachEntry.getTransactionId());
+						transactionId = orderEntry.getTransactionId();
+						returnLogistics.setTransactionId(orderEntry.getTransactionId());
 					}
 				}
+				
+				String returnFulfillmentType=null;
+				String returnFulfillmentByP1=null;
+				//getting the product code
+				final ProductModel productModel = mplOrderFacade.getProductForCode(orderEntry.getProduct().getCode());
+				
+				for (final SellerInformationModel sellerInfo : productModel.getSellerInformationRelator())
+				{
+					if(orderEntry.getSelectedUssid().equalsIgnoreCase(sellerInfo.getUSSID()))
+					{
+					if(CollectionUtils.isNotEmpty(sellerInfo.getRichAttribute()))
+					{
+					for (RichAttributeModel richAttribute : sellerInfo.getRichAttribute())
+					{
+						if(null != richAttribute.getReturnFulfillMode())
+						{
+							LOG.info(richAttribute.getReturnFulfillMode());
+						returnFulfillmentType=richAttribute.getReturnFulfillMode().getCode();
+						}
+
+						if(null != richAttribute.getReturnFulfillModeByP1())
+						{
+							LOG.info(richAttribute.getReturnFulfillModeByP1());
+						returnFulfillmentByP1=richAttribute.getReturnFulfillModeByP1().getCode();
+						}
+					}
+					}
+					}
+				}
+				
+				if (StringUtils.isNotEmpty(returnFulfillmentType))
+				{
+					returnLogistics.setReturnFulfillmentType(returnFulfillmentType.toUpperCase());
+				}
+				if(StringUtils.isNotEmpty(returnFulfillmentByP1))
+				{
+					returnLogistics.setReturnFulfillmentByP1(returnFulfillmentByP1);
+				}
+				
 				returnLogisticsList.add(returnLogistics);
 			}
 			final List<OrderLineDataResponse> responseList = new ArrayList<OrderLineDataResponse>();
