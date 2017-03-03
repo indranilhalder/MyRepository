@@ -109,7 +109,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String CREATEDEBITCARDORDER = "/createDebitCardOrder";
 	public static final String MERCHANTID = "payment.juspay.merchantID";
 	public final static String PAYMENTCOD = "COD";
-	public final static String PAYMENTMODE = "paymentMode";
+	public final static String PAYMENTMODE = "paymentMode".intern();
 	public final static String PAYMENTMODEFORPROMOTION = "paymentModeForPromotion";
 	public final static String CARDPAYMENTERRORMSG = "Card Payment Cancelled. Please select a Payment Method and proceed again";
 	public final static String SETSHIPPINGADDRESS = "/setShippingAddress";
