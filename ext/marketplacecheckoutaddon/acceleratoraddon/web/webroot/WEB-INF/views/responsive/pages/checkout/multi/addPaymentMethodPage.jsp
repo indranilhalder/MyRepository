@@ -173,6 +173,12 @@
 					<%-- <button type="button" class="positive right cod-otp-button_top" onclick="mobileBlacklist()" ><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sendOTP" text="Verify Number" /></button> --%>
 					<button type="button" class="button positive right cod_payment_button_top proceed-button" onclick="submitForm()" id="paymentButtonId_up"><spring:theme code="checkout.multi.paymentMethod.codContinue" /></button>
 					<h1 class="payment-options"><spring:theme code="text.payment.options"/></h1>
+					                                 
+					           <c:if test="${dispMsg eq true }">
+						           <p class="disclaimer-txt">
+										<spring:theme code="pay.price.change.notification"></spring:theme>
+									</p>
+					           </c:if>               
 						<p class="cart-items">You have an outstanding amount of &nbsp;&nbsp;<span class="prices"  id="outstanding-amount">
 					<ycommerce:testId code="cart_totalPrice_label">
 				<!-- Unwanted code commented -->

@@ -376,7 +376,7 @@ tr.d0 td {
 				</cms:pageSlot>
             </div>
             <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION STARTS HERE-->
-            <c:if test="${product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">
+            <c:if test="${product.rootCategory =='FineJewellery'}">
             <div class="certified-by"> 
                <h2>certified by</h2>
                <ul>
