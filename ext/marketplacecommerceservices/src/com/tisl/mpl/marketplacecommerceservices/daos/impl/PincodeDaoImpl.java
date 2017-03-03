@@ -263,11 +263,10 @@ public class PincodeDaoImpl implements PincodeDao
 			final Double lonMin = Double.valueOf(((GPS) corners.get(0)).getDecimalLongitude());
 			final StringBuilder query = new StringBuilder(280);
 			query.append("SELECT {PK} FROM {").append(GeneratedBasecommerceConstants.TC.POINTOFSERVICE).append("} WHERE {")
-					.append(LATITUDE).append(IS_NOT_NULL).append(LONGITUDE).append(IS_NOT_NULL).append(LATITUDE)
-					.append("} >= ?latMin AND {").append(LATITUDE).append("} <= ?latMax AND {").append(LONGITUDE)
-					.append("} >= ?lonMin AND {").append(LONGITUDE).append("} <= ?lonMax ").append(" AND {sellerid")
-					.append("} = ?sellerId AND {").append("clicknCollect").append("} = ?clicknCollect AND  { active ")
-					.append("} = ?active AND {isReturnable}=?isReturnToStoreAllowed");
+			.append(LATITUDE).append(IS_NOT_NULL).append(LONGITUDE).append(IS_NOT_NULL).append(LATITUDE)
+			.append("} >= ?latMin AND {").append(LATITUDE).append("} <= ?latMax AND {").append(LONGITUDE)
+			.append("} >= ?lonMin AND {").append(LONGITUDE).append("} <= ?lonMax ").append(" AND {sellerid")
+			.append("} = ?sellerId AND {").append("active").append("} = ?active AND {isReturnable}=?isReturnToStoreAllowed");
 			//
 			LOG.debug("Query for get SlaveIds from PointofService :" + query.toString());
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query.toString());
@@ -277,7 +276,7 @@ public class PincodeDaoImpl implements PincodeDao
 			fQuery.addQueryParameter("lonMin", lonMin);
 			fQuery.addQueryParameter("sellerId", sellerId);
 			fQuery.addQueryParameter("isReturnToStoreAllowed", MarketplacecommerceservicesConstants.RETURNABLE);
-			fQuery.addQueryParameter("clicknCollect", MarketplacecommerceservicesConstants.CLICK_N_COLLECT);
+			/*fQuery.addQueryParameter("clicknCollect", MarketplacecommerceservicesConstants.CLICK_N_COLLECT);*/
 			fQuery.addQueryParameter("active", MarketplacecommerceservicesConstants.ACTIVE);
 			return fQuery;
 		}

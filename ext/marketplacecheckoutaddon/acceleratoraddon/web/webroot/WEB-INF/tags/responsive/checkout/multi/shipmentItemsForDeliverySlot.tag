@@ -151,6 +151,13 @@ li.deliverySlotRadio .reset{margin: 3px 0px !important;    height: 30px !importa
 .w100 {height: 40px !important;
     width: 175px !important;
     font-size: 10px !important;font-weight: normal !important; line-height: 20px !important;}
+    
+    .checkout.wrapper .product-block li.header > ul li.delivery, .checkout.wrapper .product-block li.item > ul li.delivery{
+	    width: 31%;
+	    /* padding: 20px 0 0; */
+	    float: right;
+	    text-align:center;
+}
 </style>
 <script>
 	$(document).ready(function(){
@@ -257,9 +264,12 @@ li.deliverySlotRadio .reset{margin: 3px 0px !important;    height: 30px !importa
 		<ul id="deliveryradioul" class="checkout-table product-block">
 				<li class="header">
 					<ul class="headline">
-						<li style="width:40px" id="header2"><spring:theme code="text.product.information"/></li>
+					
 						<li class="delivery" id="header4"><spring:theme code="text.delivery.modes"/></li>
 						<li class="delivery" id="header4">Delivery Slots</li>
+						<li  id="header2" class="delivery"><spring:theme code="text.product.information"/></li>
+					
+					
 					</ul>
 				</li>
 				 			<c:set var="scheduleIndex" value="0" scope="page"></c:set>
@@ -385,7 +395,7 @@ li.deliverySlotRadio .reset{margin: 3px 0px !important;    height: 30px !importa
 													</c:if>
 												</c:forEach>
 											</c:if>
-											<div class="item-price delivery-price">
+											<div class="item-price delivery-price"style="line-height: 0px;">
 											<ycommerce:testId code="cart_totalProductPrice_label">
 											<c:choose>
 												<c:when test="${not empty entry.totalPrice}">
