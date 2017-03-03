@@ -48253,7 +48253,9 @@ padding:0 40px;	}
     transition: all 0.3s;
 
 } */
-
+.product-info .color-swatch li img{
+	vertical-align: bottom;
+}
 .product-info .color-swatch li:hover {
 	box-shadow: 0 0 0px 1px #000;
 	transition: all 0.3s;
