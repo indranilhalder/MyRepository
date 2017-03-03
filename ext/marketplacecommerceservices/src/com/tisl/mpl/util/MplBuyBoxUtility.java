@@ -579,7 +579,14 @@ public class MplBuyBoxUtility
 		String priceRange = null;
 		if (min.doubleValue() > 0 && max.doubleValue() > 0)
 		{
-			priceRange = currency + String.valueOf(min) + HYPHEN + currency + String.valueOf(max);
+			if (min.doubleValue() == max.doubleValue())
+			{
+				priceRange = currency + String.valueOf(min);
+			}
+			else
+			{
+				priceRange = currency + String.valueOf(min) + HYPHEN + currency + String.valueOf(max);
+			}
 		}
 		return priceRange;
 	}
