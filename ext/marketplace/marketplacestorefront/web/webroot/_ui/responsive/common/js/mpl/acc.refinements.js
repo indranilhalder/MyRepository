@@ -801,7 +801,16 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			
 			$("#no-click").remove();
 			$(".spinner").remove();
-			$("body.page-productGrid .product-listing.product-grid").css("margin-top","60px");
+			//UF-15
+			if ($(".facet-list.filter-opt").children().length){
+				$("body.page-productGrid .product-listing.product-grid.lazy-grid").css("padding-top","15px");
+				$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top","-95px");
+				$("body.page-productGrid .facet-list.filter-opt").css("padding-top","65px");
+				
+			}
+			else{
+				$("body.page-productGrid .product-listing.product-grid").css("margin-top","60px");
+			}
 			// Keeps expansion-closure state of facets
 			$(".facet-name.js-facet-name h3").each(function(){
 				if($(this).hasClass("true")){
