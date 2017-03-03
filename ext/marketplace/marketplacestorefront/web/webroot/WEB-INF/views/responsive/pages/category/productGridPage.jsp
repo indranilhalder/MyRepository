@@ -6,6 +6,8 @@
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
 <input type="hidden"  id="page_name" value="${page_name}"/>
 <input type="hidden" id="page_category_name" value="${dropDownText}"/>
 <input type="hidden" id="categoryId" value="${categoryCode}"/>
