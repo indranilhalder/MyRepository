@@ -410,11 +410,11 @@ function focusOnElement() {
         productCodeArray.push(productCode);    
 	        utag.link({
 				link_obj: this,
-				link_text: 'addtobag' ,
-				event_type : 'addtobag_other_seller' ,
+				link_text: 'add_to_bag' ,
+				event_type : 'add_to_bag_pdp' ,
 				product_sku : productCodeArray                     // Product code passed as an array for Web Analytics   -- INC_11511  fix
-			});
-        
+			});      
+
 			ACC.product.sendAddToBag("addToCartFormId"+index);
 		});
 		 
@@ -539,7 +539,7 @@ function focusOnElement() {
 	     //UF-34
 	     var oosSellers = [];
 	
-	      sellerDetailsArray.sort(function(a, b){
+	     sellerDetailsArray.sort(function(a, b){
 	    	  for (var p =0; p <skuPriceArray.length; p++) {  
 	 	  		 if(skuPriceArray[p]['key']==a.ussid){
 	 	  			aFinalPrice=skuPriceArray[p]['value'];
@@ -547,29 +547,30 @@ function focusOnElement() {
 	 	  		 if(skuPriceArray[p]['key']==b.ussid){
 		 	  			bFinalPrice=skuPriceArray[p]['value'];
 		 	  		 }
-	 			
+
 	 		  }	  
-	    
-	    	  
+
+
 		  return aFinalPrice - bFinalPrice;
 	});
 	      
-	      //UF-34
+	     //UF-34
 	      for (var sel =0; sel <sellerDetailsArray.length; sel++) { 
 				 if(sellerDetailsArray[sel].availableStock < 1) {
 					 oosSellers.push(sellerDetailsArray[sel]);
 				 }
 			 }
-	      
+
 	      sellerDetailsArray = sellerDetailsArray.filter(function(val) {
 	    	  return oosSellers.indexOf(val) == -1;
 	      });
-	      
+
 	      sellerDetailsArray = sellerDetailsArray.concat(oosSellers);
-	      
+
 	      fetchSellers(sellerDetailsArray,buyboxSeller)
 		  setSellerLimits(sellerPageCount);
- }
+	 }
+
 	
 	 
 	 
@@ -723,8 +724,8 @@ function focusOnElement() {
 		 var buyboxSeller = $("#ussid").val();
 		 var aFinalPrice="";
 	     var bFinalPrice="";
-	     
-	     var oosSellers = [];
+	     //UF-34
+	     //var oosSellers = [];
 	     
 		 sellerDetailsArray.sort(function(a, b){
 				

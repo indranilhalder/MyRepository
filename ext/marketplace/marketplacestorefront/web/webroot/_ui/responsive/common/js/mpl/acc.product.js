@@ -569,7 +569,15 @@ sendAddToBag : function(formId, isBuyNow) {
 									+ "/cart";
 							location.href = cartUrl;
 						}
-				
+						
+						if(!utagError){
+							if(isBuyNow){
+								utagAddProductToBag("buy_now",productCodeMSD);
+							}
+							else{
+								utagAddProductToBag("add_to_bag",productCodeMSD);
+							}
+						}
 						
 						$("#bag-clickSpin,.bagspinner").remove();			
 					},

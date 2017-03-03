@@ -254,6 +254,48 @@ public class DefaultWishlistFacade implements WishlistFacade
 		return add;
 	}
 
+	//CAR Project performance issue fixed
+
+	/**
+	 * @description to add product to Wishlist for mobile
+	 * @return boolean
+	 */
+	@Override
+	public boolean addProductToWishlistMobile(final Wishlist2Model wishlist, final String productCode, final String ussid,
+			final boolean selectedSize)
+	{
+		boolean add = true;
+		try
+		{
+			LOG.debug("addProductToWishlist in Mobile : *****productCode: " + productCode + " **** ussid: " + ussid
+					+ " *** selectedSize: " + selectedSize);
+			List<Wishlist2EntryModel> wishlist2Entry = null;
+
+			wishlist2Entry = mplWishlistService.findWishlistEntryByProductAndUssid(ussid);
+
+			ProductModel product = null;
+			if (CollectionUtils.isEmpty(wishlist2Entry))
+			{
+				product = productService.getProductForCode(productCode);
+				final String comment = MplConstants.MPL_WISHLIST_COMMENT;
+				if (null != ussid && !ussid.isEmpty())
+				{
+					mplWishlistService.addWishlistEntry(wishlist, product, Integer.valueOf(1), Wishlist2EntryPriority.HIGH, comment,
+							ussid, selectedSize);
+				}
+			}
+			else
+			{
+				add = false;
+			}
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		return add;
+	}
+
 
 	/**
 	 * @description to fetch a particular Wishlist by name
@@ -324,7 +366,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.wishlist.WishlistFacade#getBuyBoxPrice(java.lang.String,
 	 * de.hybris.platform.commercefacades.product.data.ProductData)
 	 */
@@ -362,7 +404,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.wishlist.WishlistFacade#removeProductFromWL(java.lang.String)
 	 */
 	@Override
@@ -473,7 +515,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.wishlist.WishlistFacade#getSingleWishlist(de.hybris.platform.core.model.user.UserModel)
 	 */
 	@Override

@@ -4041,6 +4041,7 @@ public class DefaultPromotionManager extends PromotionsManager
 
 			final List<Product> allProductList = new ArrayList<Product>(primaryProductList);
 			allProductList.addAll(secondaryProductList);
+			//secondaryProductList.addAll(primaryProductList);
 
 			if (promoContext.getObserveRestrictions())
 			{
@@ -4112,14 +4113,6 @@ public class DefaultPromotionManager extends PromotionsManager
 				continue;
 			}
 			products.add(product);
-
-			//			final List baseProducts = Helper.getBaseProducts(ctx, product);
-			//			if ((baseProducts == null) || (baseProducts.isEmpty()))
-			//			{
-			//				continue;
-			//			}
-			//			products.addAll(baseProducts);
-
 		}
 
 		if (CollectionUtils.isNotEmpty(secondCategories))

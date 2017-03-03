@@ -4,6 +4,7 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.wishlist2.enums.Wishlist2EntryPriority;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
@@ -11,6 +12,8 @@ import de.hybris.platform.wishlist2.model.Wishlist2Model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,8 @@ public class MplWishlistServiceImpl implements MplWishlistService
 	private boolean saveAnonymousWishlists;
 	@Autowired
 	private MplWishlistDao mplWishlistDao;
+	@Resource
+	private UserService userService;
 
 	/**
 	 * @description This method is used to accumulate all detail of product to add to wishlist
@@ -125,7 +130,7 @@ public class MplWishlistServiceImpl implements MplWishlistService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWishlistService#getWishlists()
 	 */
 	@Override
@@ -138,7 +143,7 @@ public class MplWishlistServiceImpl implements MplWishlistService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWishlistService#getWishlists()
 	 */
 	@Override
@@ -201,12 +206,53 @@ public class MplWishlistServiceImpl implements MplWishlistService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWishlistService#getWishlists()
 	 */
 	@Override
 	public List<Wishlist2Model> getWishListAgainstUser(final UserModel user)
 	{
 		return getMplWishlistDao().getWishListAgainstUser(user);
+
+	}
+
+	//CAR Project performance issue fixed
+
+	/**
+	 * Description -- Method will access single WishlistModel for user with respect to Wishlistname
+	 *
+	 * @return Wishlist2Model
+	 */
+	@Override
+	public Wishlist2Model findMobileWishlistswithName(final UserModel user, final String name)
+	{
+
+		return getMplWishlistDao().findMobileWishlistswithName(user, name);
+	}
+
+	/**
+	 * Description -- Method will access single WishlistModel for user with respect to Wishlistname
+	 *
+	 * @return Wishlist2Model
+	 */
+	@Override
+	public int findMobileWishlistswithNameCount(final UserModel user, final String name)
+	{
+
+		return getMplWishlistDao().findMobileWishlistswithNameCount(user, name);
+	}
+
+	/**
+	 * Description -- Method will access single Entry of a Wishlist
+	 *
+	 * @return Wishlist2EntryModel
+	 */
+	@Override
+	public List<Wishlist2EntryModel> findWishlistEntryByProductAndUssid(final String ussid)
+	{
+		//CAR Project performance issue fixed
+		final UserModel user = userService.getCurrentUser();
+		return getMplWishlistDao().findWishlistByUserAndUssid(user, ussid);
+
 	}
 }
