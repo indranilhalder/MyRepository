@@ -1201,7 +1201,7 @@ tr.d0 td {
 				
 				<ul class="checkout-types onlyCheckoutButton checkOutBtnBtm">
 				<li id="checkout-id-down" class="checkout-button">
-				<a  id="checkout-down-enabled" class="checkoutButton checkout button red"  onclick="return checkPincodeServiceability('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
+				<a  id="checkout-down-enabled" class="checkoutButton checkout button red"  onclick="return checkServiceabilityRequired('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
 				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
 				<p id="unserviceablepincode_tooltip_btm" style="display:none">One or more item(s) are not available at this location. Please remove the item(s) to proceed or try another <span>pincode</span>?</p>
      			<p id="error-Id_tooltip_btm" style="display:none" >Oops! Invalid <span>pincode</span>.Please enter a valid <span>pincode</span>.</p>
