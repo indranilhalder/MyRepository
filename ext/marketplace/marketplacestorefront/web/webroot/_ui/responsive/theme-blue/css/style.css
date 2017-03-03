@@ -62068,8 +62068,8 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
     right:3%;
 }
 .productGrid-header-wrapper.active-header .productGrid-header > div #micrositesearchButton:before{
-    /* right: calc(6% + 24px); */
-    right:45px;
+    right: calc(6% + 27px);
+    /* right:45px; */
 }
 header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_form[name='search_form']{
 	display: none;
@@ -62268,7 +62268,7 @@ header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_
     	width: 26px;
 	}
 	.productGrid-header-wrapper.active_adjust .productGrid-header div.product-grid-search {
-		width:89%;
+		width:87%;
 	}
 	.productGrid-header-wrapper.active_adjust:not(.active-header) .productGrid-header div.product-grid-search {
     	width: 92%;
