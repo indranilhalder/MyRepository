@@ -315,8 +315,12 @@ public class CartPageController extends AbstractPageController
 				model.addAttribute(ModelAttributetConstants.WELCOME_BACK_MESSAGE, MessageConstants.WELCOME_BACK_MESSAGE);
 			}
 			//TPR-174
-			cartModel.setMerged(false);
-			modelService.save(cartModel);
+			//TISSQAUATS-522
+			if (null != cartModel)
+			{
+				cartModel.setMerged(false);
+				modelService.save(cartModel);
+			}
 			final String msdjsURL = getConfigurationService().getConfiguration().getString("msd.js.url");
 			final Boolean isMSDEnabled = Boolean.valueOf(getConfigurationService().getConfiguration().getString("msd.enabled"));
 			model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
