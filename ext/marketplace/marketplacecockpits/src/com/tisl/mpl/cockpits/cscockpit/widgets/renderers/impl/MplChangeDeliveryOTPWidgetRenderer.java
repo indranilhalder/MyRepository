@@ -293,44 +293,49 @@ public class MplChangeDeliveryOTPWidgetRenderer
 	}
 
 	private void renderScheduledDeliveryListbox(List<TransactionSDDto>  SdDtoList,
-			List<TransactionEddDto> transactionEddDto, Listbox listBox,
+			List<TransactionEddDto> transactionEddDtoList, Listbox listBox,
 			Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget) throws java.text.ParseException {
 		 Listhead listHead = new Listhead();
          listHead.setParent(listBox);
          try {
-         // Displaying headers for Schedule delivery 
+        	 // Displaying headers for Schedule delivery 
         	 renderScheduledDeliveryHeaders(widget, listHead);
 
-	           listHead.setParent(listBox);
-	           //  Displaying Schedule delivery Timings 
-	           for (TransactionEddDto transactionEdDto : transactionEddDto) {
-	        	   Listitem row = new Listitem();
-		           row.setSclass("listbox-row-item");
-		           row.setParent(listBox);
-	        	   renderDeliverySlots(widget, row,transactionEdDto,SdDtoList);
-	           }
+        	 listHead.setParent(listBox);
+        	 //  Displaying Schedule delivery Timings 
+        	 OrderModel order = (OrderModel) getOrder().getObject();
+        	 TransactionEddDto transactionEddDto = new TransactionEddDto();
+        	 OrderModel mainOrder= order.getParentReference();
+        	 
+        	 for(AbstractOrderEntryModel entry : mainOrder.getEntries()) {
+        		 if(null != entry.getEdScheduledDate()) {
+        			 Listitem row = new Listitem();
+        			 row.setSclass("listbox-row-item");
+        			 row.setParent(listBox);
+        			 for (OrderModel orderModel : order.getParentReference().getChildOrders()) {
+                		 for (AbstractOrderEntryModel entryModel :orderModel.getEntries()) {
+                			 for (TransactionEddDto transactionEdDto : transactionEddDtoList) {
+                				 if(transactionEdDto.getTransactionID().equalsIgnoreCase(entryModel.getTransactionID())) {
+                					 transactionEddDto = transactionEdDto;
+                					 break;
+                				 }
+                			 }
+                		 }
+                	 }
+        			 renderDeliverySlots(entry,widget, row,transactionEddDto,SdDtoList);
+        		 }
+
+        	 }
          }catch(Exception e) {
         	 LOG.error("Exception Occurred while rendering schedule Delivery ListBox "+e.getMessage());
          }
      }
 
 	private void renderDeliverySlots(
-			final Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
+			final AbstractOrderEntryModel orderEntry,final Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
 			Listitem parent, final TransactionEddDto transactionEddDto,final List<TransactionSDDto>  SdDto) throws java.text.ParseException {
 		OrderModel order = (OrderModel) getOrder().getObject();
-
-		AbstractOrderEntryModel orderEntry = modelService.create(AbstractOrderEntryModel.class);
-
-		
-		for (OrderModel orderModel : order.getParentReference().getChildOrders()) {
-			for (AbstractOrderEntryModel entryModel :orderModel.getEntries()) {
-				if(entryModel.getTransactionID().equalsIgnoreCase(transactionEddDto.getTransactionID()))
-				{
-					orderEntry = entryModel;
-				}
-			}
-			
-		}
+	
 		// Entry number 
 		Listcell entryNoCell = new Listcell();
 		entryNoCell.setParent(parent);
@@ -340,14 +345,13 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		Label entryNoLabel = new Label(String.valueOf(orderEntry.getEntryNumber()));
 		entryNoLabel.setParent(entryNoDiv);
 
-		// Transaction Id 
+		// USSID
 		Listcell transactionIDCell = new Listcell();
 		transactionIDCell.setParent(parent);
 		Div transactionIdDiv = new Div();
 		transactionIdDiv.setParent(transactionIDCell);
 		transactionIdDiv.setSclass("editorWidgetEditor");
-		Label transactionIdLabel = new Label(String.valueOf(transactionEddDto
-				.getTransactionID()));
+		Label transactionIdLabel = new Label(String.valueOf(orderEntry.getSelectedUSSID()));
 		transactionIdLabel.setParent(transactionIdDiv);
 		
 		// Product Name 
@@ -428,12 +432,30 @@ public class MplChangeDeliveryOTPWidgetRenderer
 					sdDto.setTimeSlotTo(dateutilHelper.convertTo24Hour(toTime));
 				}
 			}
+			OrderModel mainOrder = order.getParentReference();
+			for(OrderModel subOrder: mainOrder.getChildOrders()) {
+				for(AbstractOrderEntryModel subOrderEntry : subOrder.getEntries()) {
+					if(subOrderEntry.getSelectedUSSID().equalsIgnoreCase(orderEntry.getSelectedUSSID()))  {
+						for (TransactionSDDto sdDto : SdDto) {
+							if(sdDto.getTransactionID().equalsIgnoreCase(subOrderEntry.getTransactionID())) {
+								sdDto.setPickupDate(dateGroup.getSelectedItem().getLabel());
+								DateUtilHelper dateutilHelper = new DateUtilHelper();
+								sdDto.setTimeSlotFrom(dateutilHelper.convertTo24Hour(fromTime));
+								sdDto.setTimeSlotTo(dateutilHelper.convertTo24Hour(toTime));
+							}
+
+						}
+					}
+				}
+			}
+			
+			
 			dateGroup.addEventListener(Events.ON_CHECK, new EventListener() {
 				@Override
 				public void onEvent(final Event event) throws InterruptedException,
 						ParseException, InvalidKeyException,
 						NoSuchAlgorithmException {
-					createDateChangeEventListener(widget, radioTimeGroup,dateGroup,
+					createDateChangeEventListener(widget, orderEntry,radioTimeGroup,dateGroup,
 							Timecell,dateTimeslotMapList,transactionEddDto,SdDto);
 				}
 
@@ -445,7 +467,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 				public void onEvent(final Event event) throws InterruptedException,
 						ParseException, InvalidKeyException,
 						NoSuchAlgorithmException {
-					createTimeChangeEventListener(widget, radioTimeGroup,dateGroup,
+					createTimeChangeEventListener(widget,orderEntry, radioTimeGroup,dateGroup,
 							SdDto,transactionEddDto.getTransactionID());
 				}
 			});
@@ -458,7 +480,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 	
 	
 	private void createDateChangeEventListener(
-			Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
+			Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,final AbstractOrderEntryModel mainOrderEntry,
 			Radiogroup radioTimeGroup, Radiogroup dateGroup, Listcell timecell, Map<String, List<String>> dateTimeslotMapList, TransactionEddDto transactionEddDto,List<TransactionSDDto> sdDtoList) {
 		LOG.info("Inside date change Even Listener");
 		List<String> timeList = dateTimeslotMapList.get(dateGroup.getSelectedItem().getLabel());
@@ -484,30 +506,37 @@ public class MplChangeDeliveryOTPWidgetRenderer
 			radioTimeGroup.appendChild(radio);
 		}
 		radioTimeGroup.setSelectedIndex(0);
-		
-		for (TransactionSDDto sdDto : sdDtoList) {
-			if(sdDto.getTransactionID().equalsIgnoreCase(transactionEddDto.getTransactionID())) {
-				sdDto.setPickupDate(dateGroup.getSelectedItem().getLabel());
-				if (null != radioTimeGroup && null != radioTimeGroup.getSelectedItem()) {
-					LOG.debug("Selected time = "+radioTimeGroup.getSelectedItem().getLabel());
-					String selectedTime = radioTimeGroup.getSelectedItem().getLabel();
-					String[] fromAndToTime =  selectedTime.split("TO");
-					String fromTime = fromAndToTime[0];
-					String toTime   = fromAndToTime[1];
-							DateUtilHelper dateutilHelper = new DateUtilHelper();
-							if(null !=fromTime ) {
-								sdDto.setTimeSlotFrom(dateutilHelper.convertTo24Hour(fromTime));
-							}
-							if(null !=toTime ) {
-								sdDto.setTimeSlotTo(dateutilHelper.convertTo24Hour(toTime));
+		OrderModel order = (OrderModel) getOrder().getObject();
+		OrderModel mainOrder = order.getParentReference();
+		for(OrderModel subOrder: mainOrder.getChildOrders()) {
+			for(AbstractOrderEntryModel subOrderEntry : subOrder.getEntries()) {
+				if(subOrderEntry.getSelectedUSSID().equalsIgnoreCase(mainOrderEntry.getSelectedUSSID())) {
+					for (TransactionSDDto sdDto : sdDtoList) {
+						if(sdDto.getTransactionID().equalsIgnoreCase(subOrderEntry.getTransactionID())) {
+							sdDto.setPickupDate(dateGroup.getSelectedItem().getLabel());
+							if (null != radioTimeGroup && null != radioTimeGroup.getSelectedItem()) {
+								LOG.debug("Selected time = "+radioTimeGroup.getSelectedItem().getLabel());
+								String selectedTime = radioTimeGroup.getSelectedItem().getLabel();
+								String[] fromAndToTime =  selectedTime.split("TO");
+								String fromTime = fromAndToTime[0];
+								String toTime   = fromAndToTime[1];
+								DateUtilHelper dateutilHelper = new DateUtilHelper();
+								if(null !=fromTime ) {
+									sdDto.setTimeSlotFrom(dateutilHelper.convertTo24Hour(fromTime));
+								}
+								if(null !=toTime ) {
+									sdDto.setTimeSlotTo(dateutilHelper.convertTo24Hour(toTime));
+								}
 							}
 						}
 					}
 				}
 			}
+		}
+	}
 	
 	private void createTimeChangeEventListener(
-			Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,
+			Widget<OrderItemWidgetModel, OrderManagementActionsWidgetController> widget,final AbstractOrderEntryModel mainOrderEntry,
 			Radiogroup radioTimeGroup, Radiogroup dateGroup,List<TransactionSDDto> sdDtoList,String transactionId) {
 		LOG.info("Inside TimeChangeEventListener");
 		if (null != radioTimeGroup && null != radioTimeGroup.getSelectedItem()) {
@@ -516,14 +545,23 @@ public class MplChangeDeliveryOTPWidgetRenderer
 			String[] fromAndToTime =  selectedTime.split("TO");
 			String fromTime = fromAndToTime[0];
 			String toTime   = fromAndToTime[1];
-			for (TransactionSDDto sdDto : sdDtoList) {
-				if(sdDto.getTransactionID().equalsIgnoreCase(transactionId)) {
-					DateUtilHelper dateutilHelper = new DateUtilHelper();
-					if(null !=fromTime ) {
-						sdDto.setTimeSlotFrom(dateutilHelper.convertTo24Hour(fromTime));
-					}
-					if(null !=toTime ) {
-						sdDto.setTimeSlotTo(dateutilHelper.convertTo24Hour(toTime));
+			
+			OrderModel order = (OrderModel) getOrder().getObject();
+			OrderModel mainOrder = order.getParentReference();
+			for(OrderModel subOrder: mainOrder.getChildOrders()) {
+				for(AbstractOrderEntryModel subOrderEntry : subOrder.getEntries()) {
+					if(subOrderEntry.getSelectedUSSID().equalsIgnoreCase(mainOrderEntry.getSelectedUSSID())) {
+						for (TransactionSDDto sdDto : sdDtoList) {
+							if(sdDto.getTransactionID().equalsIgnoreCase(subOrderEntry.getTransactionID())) {
+								DateUtilHelper dateutilHelper = new DateUtilHelper();
+								if(null !=fromTime ) {
+									sdDto.setTimeSlotFrom(dateutilHelper.convertTo24Hour(fromTime));
+								}
+								if(null !=toTime ) {
+									sdDto.setTimeSlotTo(dateutilHelper.convertTo24Hour(toTime));
+								}
+							}
+						}
 					}
 				}
 			}
@@ -546,7 +584,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 		colEntryNoHeader.setParent(parent);
 
 		Listheader colTransactionIdHeader = new Listheader(LabelUtils.getLabel(
-				widget, "transactionId", new Object[0]));
+				widget, "Ussid", new Object[0]));
 		colTransactionIdHeader.setWidth("200px");
 		colTransactionIdHeader.setParent(parent);
 
@@ -732,7 +770,8 @@ public class MplChangeDeliveryOTPWidgetRenderer
 					String interfaceType = getChangeDeliveryInterfacetype(changeDeliveryAddress,orderModel.getDeliveryAddress());
 					LOG.debug("interface type :"+interfaceType);
 					final List<TransactionSDDto>  scheduleList = new ArrayList<TransactionSDDto>();
-					ScheduledeliveryDtoList.forEach(new Consumer<TransactionSDDto>() {
+					if(CollectionUtils.isNotEmpty(ScheduledeliveryDtoList)) {
+						ScheduledeliveryDtoList.forEach(new Consumer<TransactionSDDto>() {
 
 						@Override
 						public void accept(TransactionSDDto tDto) {
@@ -744,6 +783,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 							scheduleList.add(dto);
 						}
 					});
+					}
 					
 					omsStatus = mplDeliveryAddressController
 							.changeDeliveryAddressCallToOMS(orderModel
@@ -911,7 +951,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 						modelService.save(entry);
 						if(null != orderModel.getParentReference() && null != orderModel.getParentReference().getEntries()) {
 							for(AbstractOrderEntryModel parentOrderEntry : orderModel.getParentReference().getEntries()) {
-								if(null != parentOrderEntry.getProduct() && null !=entry.getProduct() && parentOrderEntry.getProduct().getCode().equalsIgnoreCase(entry.getProduct().getCode())) {
+								if(null != parentOrderEntry.getProduct() && null !=entry.getProduct() && parentOrderEntry.getSelectedUSSID().equalsIgnoreCase(entry.getSelectedUSSID())) {
 									parentOrderEntry.setEdScheduledDate(dto.getPickupDate());
 									if(null !=dto.getTimeSlotFrom() ) {
 										parentOrderEntry.setTimeSlotFrom(dateUtilHelper.convertTo12Hour(dto.getTimeSlotFrom()));

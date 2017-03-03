@@ -507,7 +507,7 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 			}
 			final List<TransactionEddDto> transactionEddDto = new ArrayList<TransactionEddDto>();
 
-			if (null != responce.getTransactionEddDtos())
+			if (null != responce.getTransactionEddDtos() && !responce.getTransactionEddDtos().isEmpty())
 			{
 				for (final TransactionEddDto dto : responce.getTransactionEddDtos())
 				{
@@ -516,20 +516,6 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 					dto1.setEDD(dto.getEDD());
 					transactionEddDto.add(dto1);
 				}
-			}
-			else
-			{
-				for (final TransactionSDDto dto : request.getTransactionSDDtos())
-				{
-					final TransactionEddDto dto1 = new TransactionEddDto();
-					dto1.setTransactionID(dto.getTransactionID());
-					dto1.setEDD("12-08-2016 10:54 AM");
-					transactionEddDto.add(dto1);
-				}
-				//}
-				responce.setTransactionEddDtos(transactionEddDto);
-				//   SimpleDateFormat sdf = new SimpleDateFormat(pattern)
-
 			}
 		}
 		catch (final Exception e)
