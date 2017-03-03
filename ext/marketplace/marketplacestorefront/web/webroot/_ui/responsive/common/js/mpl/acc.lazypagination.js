@@ -211,7 +211,11 @@ $(document).ready(function() {
 				}else{
 					url = 'searchCategory=&sort=price-desc&q=:isLuxuryProduct:false';
 				}
-				ajaxPLPLoad(pathName +'?'+url);
+				if(facetAjaxUrl){
+					ajaxPLPLoad(facetAjaxUrl +'&'+url);
+				}else{
+					ajaxPLPLoad(pathName +'?'+url);
+				}
 				sortReplaceState(pathName +'?'+url);
 				initPageLoad = true;
 				break;
@@ -219,6 +223,7 @@ $(document).ready(function() {
 				break;
 			}
         });
+        
 });
 
 function findGetParameter(parameterName) {
@@ -275,3 +280,4 @@ function sortReplaceState(url){
 		var nextPaginatedAjaxUrl = url.replace(/page-[0-9]+/, 'page-1');
 		 window.history.replaceState({}, '', nextPaginatedAjaxUrl);
 }
+
