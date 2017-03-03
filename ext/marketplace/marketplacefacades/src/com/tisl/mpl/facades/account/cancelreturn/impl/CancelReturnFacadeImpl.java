@@ -1269,8 +1269,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					{
 						//LOG.info("Setting Type of Return::::::" + returnLogisticsCheck);
 						sendTicketRequestData.setTicketSubType(MarketplacecommerceservicesConstants.RETURN_TYPE_RSP);
+					}else {
+						sendTicketRequestData.setTicketSubType(MarketplacecommerceservicesConstants.RETURN_TYPE_RSS);
 					}
-					
 					}
               }
 					
