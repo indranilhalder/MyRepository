@@ -694,22 +694,37 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//Handled for OrderModel TPR-629
 			else
 			{
-				if (null == orderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus()))
+
+				final Map<String, String> duplicateJuspayResMap = getSessionService().getAttribute(
+						MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE);
+				// OrderIssues:-  multiple Payment Response from juspay restriction
+				if (MapUtils.isNotEmpty(duplicateJuspayResMap)
+						&& duplicateJuspayResMap.get(paymentForm.getGuid()).equalsIgnoreCase("False"))
 				{
-					final Double orderValue = orderModel.getSubtotal();
-					final Double totalCODCharge = orderModel.getConvenienceCharges();
+					if (null == orderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus()))
+					{
+						final Double orderValue = orderModel.getSubtotal();
+						final Double totalCODCharge = orderModel.getConvenienceCharges();
 
-					//saving COD Payment related info
-					getMplPaymentFacade().saveCODPaymentInfo(orderValue, totalCODCharge, orderModel);
+						//saving COD Payment related info
+						getMplPaymentFacade().saveCODPaymentInfo(orderValue, totalCODCharge, orderModel);
 
-					//adding Payment id to model
-					model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
-					setCheckoutStepLinksForModel(model, getCheckoutStep());
-					return updateOrder(orderModel, redirectAttributes);
+						//adding Payment id to model
+						model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
+						setCheckoutStepLinksForModel(model, getCheckoutStep());
+						return updateOrder(orderModel, redirectAttributes);
+					}
+					else
+					{
+						return updateOrder(orderModel, redirectAttributes);
+					}
 				}
 				else
 				{
-					return updateOrder(orderModel, redirectAttributes);
+					LOG.error("Exception while completing COD Payment in /view");
+					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+							MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+					return getCheckoutStep().previousStep();
 				}
 			}
 

@@ -421,12 +421,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 										{
 											parentTransactionIdBuffer.append(freebieParentMap.get(ussId).get(0));
 											parentTransactionIdBuffer.append(',');
+
+											LOG.info("USSID removed from freebieParentMap :-  "
+													+ (null != freebieParentMap.get(ussId).get(0) ? freebieParentMap.get(ussId).get(0)
+															: " Null Value"));
 										}
-
-										LOG.info("USSID removed from freebieParentMap :-  "
-												+ (null != freebieParentMap.get(ussId).get(0) ? freebieParentMap.get(ussId).get(0)
-														: " Null Value"));
-
 										freebieParentMap.get(ussId).remove(0);
 									}
 
@@ -1121,7 +1120,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 							String parentTransactionId = null;
 							assignedParentList.add(parentUssId);
 							if (subOrderEntryModel.getParentTransactionID() == null && parentUssId != null
-									&& freebieParentMap.get(parentUssId) != null)
+									&& MapUtils.isNotEmpty(freebieParentMap) && freebieParentMap.get(parentUssId) != null)
 							{
 								parentTransactionId = freebieParentMap.get(parentUssId).get(0);
 								if (StringUtils.isNotEmpty(parentTransactionId))
@@ -1305,7 +1304,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		{
 			LOG.debug("Getting parent Order and entries delivery modes with quantity for Order ID:- " + subOrderModel.getCode());
 			if (null != subOrderModel.getParentReference() && CollectionUtils.isNotEmpty(associatedItems)
-					&& associatedItems.size() > 1)
+					&& associatedItems.size() > 2)
 			{
 				final OrderModel orderModel = subOrderModel.getParentReference();
 				LOG.info("Getting parent Order " + orderModel.getCode() + "  for SubOrder:- " + subOrderModel.getCode());
