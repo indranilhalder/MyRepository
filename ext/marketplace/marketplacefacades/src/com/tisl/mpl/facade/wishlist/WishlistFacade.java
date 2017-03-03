@@ -73,4 +73,7 @@ public interface WishlistFacade
 	 * @return
 	 */
 	Wishlist2Model getSingleWishlist(UserModel user);
+
+	boolean addProductToWishlistMobile(final Wishlist2Model wishlist, final String productCode, final String ussid,
+			final boolean selectedSize);
 }

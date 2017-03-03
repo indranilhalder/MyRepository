@@ -6,10 +6,13 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.search.SearchResult;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -47,7 +50,7 @@ public class DefaultMplWishlistDao implements MplWishlistDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplWishlistDao#getWishListAgainstUser(de.hybris.platform.core.model
 	 * .user.UserModel)
