@@ -36,10 +36,6 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
 
-/**
- * This promotion is of type Buy A get discount on shipping charges
- *
- */
 public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotionOnShippingCharges
 {
 	@SuppressWarnings("unused")
@@ -60,7 +56,7 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 
 	/**
 	 * @Description : Buy Product A and get Percentage/Amount Discount on shipping charges or Free Shipping
-	 * @param : SessionContext ctx ,PromotionEvaluationContext promotionEvalCtx
+	 * @param : SessionContext arg0 ,PromotionEvaluationContext arg1
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
@@ -75,17 +71,15 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 			final AbstractOrder order = promotionEvalCtx.getOrder();
 			final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
 
-			//final List<Product> excludedProductList = new ArrayList<Product>();
-			//final List<String> excludeManufactureList = new ArrayList<String>();
+			final List<Product> excludedProductList = new ArrayList<Product>();
+			final List<String> excludeManufactureList = new ArrayList<String>();
 
-			//			GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, promotionEvalCtx, excludedProductList,
-			//					excludeManufactureList, restrictionList, this);
+			GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, promotionEvalCtx, excludedProductList,
+					excludeManufactureList, restrictionList, this);
 			// To check whether Promotion already applied on Product
 			//getDefaultPromotionsManager().promotionAlreadyFired(ctx, order, excludedProductList);
-			//			final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(ctx, // Promotion added Restriction evaluation
-			//					promotionEvalCtx);
-			final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager().findEligibleProductsInBasket(ctx,
-					promotionEvalCtx, this, getCategories());
+			final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(ctx, // Promotion added Restriction evaluation
+					promotionEvalCtx);
 			final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(ctx,
 					MarketplacecommerceservicesConstants.CHANNEL);
 			//checkChannelFlag = getMplPromotionHelper().checkChannel(listOfChannel); // Verifying the Channel : Web/Web Mobile/ CockPit
@@ -107,7 +101,8 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
-						.getValidProdListForBuyXofA(order, ctx, allowedProductList, restrictionList, null, null); // Adding Eligible Products to List
+						.getValidProdListForBuyXofA(order, ctx, allowedProductList, restrictionList, excludedProductList,
+								excludeManufactureList, null, null); // Adding Eligible Products to List
 
 				//				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
 				//						.getValidProdListForBuyXofAPromo(order, ctx, promotionProductList, promotionCategoryList, restrictionList,

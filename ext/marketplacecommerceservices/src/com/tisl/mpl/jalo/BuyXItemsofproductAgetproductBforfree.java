@@ -37,10 +37,6 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
 
-/**
- * This promotion is of type Buy x quantity of A and get B free
- *
- */
 public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofproductAgetproductBforfree
 {
 	@SuppressWarnings("unused")
@@ -81,10 +77,10 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 		//final List<Product> promotionProductList = new ArrayList<>(getProducts()); // Fetching Promotion set Primary Products
 		//final List<Category> promotionCategoryList = new ArrayList<>(getCategories()); // Fetching Promotion set Primary Categories
 		// Validating Exclude Manufacturer and Adding excluded Products to their respective lists
-		//final List<Product> excludedProductList = new ArrayList<Product>();
-		//final List<String> excludeManufactureList = new ArrayList<String>();
-		//		GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, promoContext, excludedProductList,
-		//				excludeManufactureList, restrictionList, this);
+		final List<Product> excludedProductList = new ArrayList<Product>();
+		final List<String> excludeManufactureList = new ArrayList<String>();
+		GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, promoContext, excludedProductList,
+				excludeManufactureList, restrictionList, this);
 		final List<String> skuFreebieList;
 		final Map<String, Product> freegiftInfoMap;
 
@@ -107,9 +103,7 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 
 			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
 			//changes end for omni cart fix @atmaram
-			//final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(ctx, promoContext);
-			final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager().findEligibleProductsInBasket(ctx,
-					promoContext, this, getCategories());
+			final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(ctx, promoContext);
 
 			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag && sellerFlag
 					&& flagForPincodeRestriction) //***Blocked for TISPT-154**
@@ -124,7 +118,8 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 				//						.getValidProdListForBuyXofAPromo(order, ctx, promotionProductList, promotionCategoryList, restrictionList,
 				//								excludedProductList, excludeManufactureList, sellerIDData, eligibleProductMap);
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
-						.getValidProdListForBuyXofA(order, ctx, allowedProductList, restrictionList, sellerIDData, eligibleProductMap);
+						.getValidProdListForBuyXofA(order, ctx, allowedProductList, restrictionList, excludedProductList,
+								excludeManufactureList, sellerIDData, eligibleProductMap);
 
 				if (GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, ctx, promoContext, this,
 						restrictionList) && !getDefaultPromotionsManager().promotionAlreadyFired(ctx, validProductUssidMap))
@@ -303,16 +298,16 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 
 	/**
 	 * @Description : Returns Minimum Category Amount
-	 * @param : SessionContext ctx
+	 * @param : SessionContext arg0
 	 * @return : minimumCategoryValue
 	 */
-	private double calculateMinCategoryAmnt(final SessionContext ctx)
+	private double calculateMinCategoryAmnt(final SessionContext arg0)
 	{
 		double minimumCategoryValue = 0.00D;
-		if (null != ctx && null != getProperty(ctx, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)
-				&& ((Double) getProperty(ctx, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() > 0.00D)
+		if (null != arg0 && null != getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)
+				&& ((Double) getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() > 0.00D)
 		{
-			minimumCategoryValue = ((Double) getProperty(ctx, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue();
+			minimumCategoryValue = ((Double) getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue();
 
 		}
 		return minimumCategoryValue;
