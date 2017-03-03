@@ -91,7 +91,7 @@ function navigateToPage(queryString,textString)
 						
 						<c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
 						<c:choose>
-						<!-- INC_12606  check added for dialColour-classification-->
+						<%-- INC_12606  check added for dialColour-classification--%>
 						<c:when test="${(facetData.code eq 'colour'  || facetData.code  eq 'dialColourWatches' || facetData.code eq 'dialColour-classification')&& not empty facetValue.name}">
 						<li class="filter-colour">
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
@@ -189,7 +189,7 @@ function navigateToPage(queryString,textString)
 							</li>
 							</c:otherwise>
 						</c:choose>
-<!-- 						</li> -->
+<%-- 						</li> --%>
 					</c:forEach>
 				</ul>
 			</c:if>
@@ -206,7 +206,7 @@ function navigateToPage(queryString,textString)
 <%-- 					<li class="filter-${facetData.code}"> --%>
 
 					<c:choose>
-						<!-- INC_12606  check added for dialColour-classification-->
+						<%-- INC_12606  check added for dialColour-classification--%>
 						<c:when test="${(facetData.code eq 'colour' || facetData.code  eq 'dialColourWatches' || facetData.code eq 'dialColour-classification') && not empty facetValue.name }">						
 						<li class="filter-colour">	
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
