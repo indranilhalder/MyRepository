@@ -34808,7 +34808,7 @@ body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo p.size 
 	display: block !important;
 }
 /*PLP changes starts*/
-body.template-pages-category-productGridPage .breadcrumbs,body.template-pages-search-searchGridPage .breadcrumbs {
+body.template-pages-category-productGridPage .breadcrumbs,body.template-pages-search-searchGridPage .breadcrumbs,body.page-searchEmpty .breadcrumbs{
     margin: 10px 0 30px;
 }
 body.template-pages-category-productGridPage .trending h1,body.template-pages-search-searchGridPage .trending h1 {
@@ -61404,7 +61404,7 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
 .productGrid-header-wrapper{
 	background: #000;
     height: 50px;
-    
+    margin-bottom: 12px;
 }
 .productGrid-header-wrapper.active-header{
 	top:0;

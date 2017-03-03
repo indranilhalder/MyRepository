@@ -3288,6 +3288,21 @@ $(document).on("click",".overlay.overlay-sideNav",function(){
 	$(".productGrid-menu nav > ul > li#shopMicrositeSeller > div").trigger("click");
 });
 
+$(document).ready(function(){
+	$("head").append("<style></style>");
+});
+$(window).on("load resize",function(){
+	var rightAdjust = "";
+	if($(".productGrid-header-wrapper.active-header").hasClass("active_adjust"))
+	rightAdjust = $(".productGrid-header-wrapper.active-header.active_adjust .productGrid-header > div input[type='text']").offset().left+2;
+	if($(window).width() <= 773){
+		$('head style:last').html(('.productGrid-header-wrapper.active-header .productGrid-header > div.product-grid-search #micrositesearchButton:before{right:'+rightAdjust+'}'));
+	}
+		else
+		$('head style:last').html("");
+});
+
+
 //$(document).ready(function(){
 //	var countBag = $(".productGrid-header-wrapper .productGrid-header div.bag .mini-cart-link.myBag-sticky > span:nth-of-type(2)").text();
 //	$(".productGrid-header-wrapper .productGrid-header div.bag .mini-cart-link.myBag-sticky > span:nth-of-type(2)").text("("+countBag+")");
