@@ -312,9 +312,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -329,15 +329,24 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	{
 		Double totalPrice = Double.valueOf(0);
 		//final OrderData orderData = getOrderConverter().convert(orderModel);
-		final Double subtotal = orderModel.getSubtotal();
+		//	final Double subtotal = orderModel.getSubtotal();
 		final Double deliveryCost = orderModel.getDeliveryCost();
 
 		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 
-		final Double discount = getTotalDiscount(orderModel.getEntries(), true);
+		// OrderIssues:- Double Promotion subtraction handled
+		double subtotal = 0.0;
+		for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
+		{
+			subtotal = subtotal + orderEntry.getBasePrice().doubleValue();
+		}
 
-		totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
+
+		final Double discount = getTotalDiscount(orderModel.getEntries());
+
+		//		totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
+		totalPrice = Double.valueOf(subtotal + deliveryCost.doubleValue() - discount.doubleValue());
 		return totalPrice;
 	}
 
@@ -345,15 +354,25 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	{
 		Double totalPrice = Double.valueOf(0);
 		//final OrderData orderData = getOrderConverter().convert(orderModel);
-		final Double subtotal = orderModel.getSubtotal();
-		final Double deliveryCost = orderModel.getDeliveryCost();
+		//final Double subtotal = orderModel.getSubtotal();
+
 
 		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
+		//final double entryTotal = entry.getTotalPrice().doubleValue();
 
-		final Double discount = getTotalDiscount(orderModel.getEntries(), false);
+		// OrderIssues:- Double Promotion subtraction handled
+		double subtotal = 0.0;
+		final Double discount = getTotalDiscount(orderModel.getEntries());
 
-		totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
+		for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
+		{
+			subtotal = subtotal + orderEntry.getBasePrice().doubleValue();
+		}
+
+
+		//		totalPrice = Double.valueOf(subtotal.doubleValue() - discount.doubleValue());
+		totalPrice = Double.valueOf(subtotal - discount.doubleValue());
 		return totalPrice;
 	}
 

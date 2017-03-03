@@ -269,8 +269,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 
 			// OrderIssues:- Set the value duplicatJuspayResponse in session to false  ones cart GUID available in session
-			final Map<String, String> duplicatJuspayResponseMap = new HashMap<String, String>();
-			duplicatJuspayResponseMap.put(guid, "False");
+			final Map<String, Boolean> duplicatJuspayResponseMap = new HashMap<String, Boolean>();
+			duplicatJuspayResponseMap.put(guid, Boolean.FALSE);
 
 			getSessionService().setAttribute(MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE, duplicatJuspayResponseMap);
 
@@ -695,36 +695,22 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			else
 			{
 
-				final Map<String, String> duplicateJuspayResMap = getSessionService().getAttribute(
-						MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE);
-				// OrderIssues:-  multiple Payment Response from juspay restriction
-				if (MapUtils.isNotEmpty(duplicateJuspayResMap)
-						&& duplicateJuspayResMap.get(paymentForm.getGuid()).equalsIgnoreCase("False"))
+				if (null == orderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus()))
 				{
-					if (null == orderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus()))
-					{
-						final Double orderValue = orderModel.getSubtotal();
-						final Double totalCODCharge = orderModel.getConvenienceCharges();
+					final Double orderValue = orderModel.getSubtotal();
+					final Double totalCODCharge = orderModel.getConvenienceCharges();
 
-						//saving COD Payment related info
-						getMplPaymentFacade().saveCODPaymentInfo(orderValue, totalCODCharge, orderModel);
+					//saving COD Payment related info
+					getMplPaymentFacade().saveCODPaymentInfo(orderValue, totalCODCharge, orderModel);
 
-						//adding Payment id to model
-						model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
-						setCheckoutStepLinksForModel(model, getCheckoutStep());
-						return updateOrder(orderModel, redirectAttributes);
-					}
-					else
-					{
-						return updateOrder(orderModel, redirectAttributes);
-					}
+					//adding Payment id to model
+					model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
+					setCheckoutStepLinksForModel(model, getCheckoutStep());
+					return updateOrder(orderModel, redirectAttributes);
 				}
 				else
 				{
-					LOG.error("Exception while completing COD Payment in /view");
-					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-							MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
-					return getCheckoutStep().previousStep();
+					return updateOrder(orderModel, redirectAttributes);
 				}
 			}
 
@@ -2543,10 +2529,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//Order Status from Juspay
 		try
 		{
-			final Map<String, String> duplicateJuspayResMap = getSessionService().getAttribute(
+			final Map<String, Boolean> duplicateJuspayResMap = getSessionService().getAttribute(
 					MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE);
 			// OrderIssues:-  multiple Payment Response from juspay restriction
-			if (MapUtils.isNotEmpty(duplicateJuspayResMap) && duplicateJuspayResMap.get(guid).equalsIgnoreCase("False"))
+			if (MapUtils.isNotEmpty(duplicateJuspayResMap) && !duplicateJuspayResMap.get(guid).booleanValue())
 			{
 				final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
 				if (null != orderToBeUpdated && null == orderToBeUpdated.getPaymentInfo()
@@ -4275,7 +4261,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

@@ -828,10 +828,10 @@ public class PaymentServicesController extends BaseController
 			//final String orderGuid = decryptKey(guid);
 			orderToBeUpdated = mplPaymentFacade.getOrderByGuid(cartGuid);
 
-			final Map<String, String> duplicateJuspayResMap = getSessionService().getAttribute(
+			final Map<String, Boolean> duplicateJuspayResMap = getSessionService().getAttribute(
 					MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE);
 			// OrderIssues:-  multiple Payment Response from juspay restriction
-			if (MapUtils.isNotEmpty(duplicateJuspayResMap) && duplicateJuspayResMap.get(cartGuid).equalsIgnoreCase("False"))
+			if (MapUtils.isNotEmpty(duplicateJuspayResMap) && !duplicateJuspayResMap.get(cartGuid).booleanValue())
 			{
 
 				if (null == orderToBeUpdated.getPaymentInfo())
