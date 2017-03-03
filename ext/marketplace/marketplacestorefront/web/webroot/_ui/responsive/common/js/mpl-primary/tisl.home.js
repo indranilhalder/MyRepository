@@ -1540,7 +1540,7 @@ function populateEnhancedSearch(enhancedSearchData)
 	function getFooterOnLoad()
 	{
 		var slotUid = "FooterSlot";
-		
+		var pageName = $('#pageName').val();
 		if (!$.cookie("dept-list") && window.localStorage) {
 	        for (var key in localStorage) {
 	            if (key.indexOf("footerhtml") >= 0) {
@@ -1549,9 +1549,11 @@ function populateEnhancedSearch(enhancedSearchData)
 	        }
 	    }
 		
-		if (window.localStorage && (html = window.localStorage.getItem("footerhtml")) && html != "") {
+		if (window.localStorage && (html = window.localStorage.getItem("footerhtml")) && html != "" && pageName != "Cart Page") {
 			$("#footerByAjaxId").html(decodeURI(html));
 	    } else {
+	    	if(pageName != "Cart Page")
+	    	{
 	        $.ajax({
 	            url: ACC.config.encodedContextPath +
 	                "/getFooterContent",
@@ -1582,6 +1584,7 @@ function populateEnhancedSearch(enhancedSearchData)
 					}
 	            }
 	        });
+	    }
 	    }	
 	}
 	
