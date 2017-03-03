@@ -232,7 +232,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@RequireHardLogIn
 	//@PreValidateCheckoutStep(checkoutStep = MarketplacecheckoutaddonConstants.PAYMENT_METHOD)
 	public String enterStep(final Model model, final RedirectAttributes redirectAttributes,
-			@RequestParam(value = "value", required = false, defaultValue = "") final String guid) throws CMSItemNotFoundException
+			@RequestParam(value = "value", required = false, defaultValue = "") final String guid,
+			@RequestParam(value = "dispMsg", required = false) final String dispMsg) throws CMSItemNotFoundException
 	{
 		//		final CartModel serviceCart = getCartService().getSessionCart();			//Commented for TPR-629
 		//		serviceCart.setIsExpressCheckoutSelected(Boolean.valueOf(true));
@@ -432,7 +433,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					MarketplacecheckoutaddonConstants.ERRORMSG);
 			return getCheckoutStep().previousStep();
 		}
-
+		if (StringUtils.isNotEmpty(dispMsg))
+		{
+			model.addAttribute("dispMsg", dispMsg);
+		}
 		//return values
 		model.addAttribute("checkoutPageName", checkoutPageName);
 		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.AddPaymentMethodPage;
@@ -1006,8 +1010,34 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//Existing code for cart
 				boolean redirectFlag = false;
 
+				//TPR3780 STARTS HERE
+				final double prevTotalCartPrice = cart.getTotalPrice().doubleValue();
+				//TPR3780 ENDS HERE
+
 				final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
 						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+
+
+
+				//TPR3780 STARTS HERE
+				final CartModel cartModelAfterinventoryCheck = getCartService().getSessionCart();
+				final double newTotalCartPrice = cartModelAfterinventoryCheck.getTotalPrice().doubleValue();
+
+
+				if (!StringUtils.equals(String.valueOf(prevTotalCartPrice), String.valueOf(newTotalCartPrice)))
+				{
+					return MarketplacecheckoutaddonConstants.INVENTORYRESERVED;
+				}
+
+				//TPR3780 ENDS HERE
+
+
+
+
+
+
+
+
 				if (!inventoryReservationStatus)
 				{
 					getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
@@ -1152,8 +1182,29 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//TISUTO-12 , TISUTO-11
 				if (!redirectFlag)
 				{
+
+					//TPR3780 STARTS HERE
+					final double prevTotalCartPrice = cart.getTotalPrice().doubleValue();
+					//TPR3780 ENDS HERE
+
 					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
 							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+
+
+
+					//TPR3780 STARTS HERE
+					final CartModel cartModelAfterinventoryCheck = getCartService().getSessionCart();
+					final double newTotalCartPrice = cartModelAfterinventoryCheck.getTotalPrice().doubleValue();
+
+
+					if (!StringUtils.equals(String.valueOf(prevTotalCartPrice), String.valueOf(newTotalCartPrice)))
+					{
+						return MarketplacecheckoutaddonConstants.INVENTORYRESERVED;
+					}
+
+					//TPR3780 ENDS HERE
+
+
 					if (!inventoryReservationStatus)
 					{
 						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
@@ -3187,7 +3238,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@RequireHardLogIn
 	public @ResponseBody String createJuspayOrder(final String firstName, final String lastName, final String addressLine1,
 			final String addressLine2, final String addressLine3, final String country, final String state, final String city,
-			final String pincode, final String cardSaved, final String sameAsShipping, final String guid) //Parameter guid added for TPR-629
+			final String pincode, final String cardSaved, final String sameAsShipping, final String guid, final Model model) //Parameter guid added for TPR-629
 			throws EtailNonBusinessExceptions
 	{
 		String orderId = null;
@@ -3290,8 +3341,26 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//TISUTO-12 , TISUTO-11
 				if (!redirectFlag)
 				{
+					//TPR3780 STARTS HERE
+					final double prevTotalCartPrice = cart.getTotalPrice().doubleValue();
+					//TPR3780 ENDS HERE
+
 					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
 							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+
+					//TPR3780 STARTS HERE
+					final CartModel cartModelAfterinventoryCheck = getCartService().getSessionCart();
+					final double newTotalCartPrice = cartModelAfterinventoryCheck.getTotalPrice().doubleValue();
+
+
+					if (!StringUtils.equals(String.valueOf(prevTotalCartPrice), String.valueOf(newTotalCartPrice)))
+					{
+						return MarketplacecheckoutaddonConstants.INVENTORYRESERVED;
+					}
+
+					//TPR3780 ENDS HERE
+
+
 					if (!inventoryReservationStatus)
 					{
 
@@ -3453,7 +3522,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		return orderId;
 	}
-
 
 
 
@@ -4177,7 +4245,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

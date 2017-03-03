@@ -717,7 +717,12 @@ a.morelink, .more-link {
     line-height: 18px;
     display: block;
 }
-
+.tabs-block .FineJewellery .nav>li, 
+.tabs-block .FashionJewellery .nav>li,
+.tabs-block .FineJewellery .nav>li#tabs_styleNotes,
+.tabs-block .FashionJewellery .nav>li#tabs_styleNotes{
+	width: 25%;
+}
 @media (min-width: 651px){
     input[type="checkbox"] + label, input[type="radio"] + label {
       padding-left: 10px; } 
