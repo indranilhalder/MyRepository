@@ -61797,7 +61797,7 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
                       margin: 0 auto;
                       height: 30px;
                       max-width:100%; }
-            .productGrid-menu nav > ul > li > ul > li:hover > .toggle,.productGrid-menu nav > ul > li > ul > li.hovered > .toggle {
+            /* .productGrid-menu nav > ul > li > ul > li:hover > .toggle, */.productGrid-menu nav > ul > li > ul > li.hovered > .toggle {
               background-color: #A9143C; }
               .productGrid-menu nav > ul > li > .toggle:hover ~ ul#topul > li:first-of-type > .toggle{
               	background-color: #A9143C;
@@ -61811,7 +61811,7 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
               }
               .productGrid-menu nav > ul > li > ul > li:hover > .toggle a {
                 color: #fff; }
-              .productGrid-menu nav > ul > li > ul > li:hover > .toggle:after,.productGrid-menu nav > ul > li > ul > li.hovered > .toggle:after,.productGrid-menu nav > ul > li > .toggle:hover ~ ul#topul > li:first-of-type > .toggle:after {
+              /* .productGrid-menu nav > ul > li > ul > li:hover > .toggle:after, */.productGrid-menu nav > ul > li > ul > li.hovered > .toggle:after,.productGrid-menu nav > ul > li > .toggle:hover ~ ul#topul > li:first-of-type > .toggle:after {
                 height: 0;
                 width: 0;
                 border-bottom: 25px solid transparent;
@@ -62185,6 +62185,9 @@ header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_
      	webkit-transition: height 0s;
     	-moz-transition: height 0s;
     	transition: height 0s;
+     }
+     .productGrid-header-wrapper .productGrid-header .productGrid-menu #shopMicrositeSeller{
+     	display:none;
      }
     /* Tab View Start */
     @media (max-width:1024px) and (min-width:791px){

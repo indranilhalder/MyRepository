@@ -61,6 +61,11 @@
 						style="position: static;"><spring:theme code="minicart.mybag" />&nbsp;(<span
 						class="js-mini-cart-count-hover"></span>) </a>
 			</div>
+			<div class="mobile-bag bag">
+						<!-- TISPRD-32-fix -->
+							<!-- <a href="/store/mpl/en/cart">(<span class="responsive-bag-count"></span>)</a> -->
+							<a href="/cart"><span class="responsive-bag-count">${totalItems}</span></a>
+						</div>
 			</div>
 	</div>
 	</c:if>
