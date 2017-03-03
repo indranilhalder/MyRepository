@@ -12,6 +12,7 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.io.StringReader;
@@ -302,7 +303,18 @@ public class SalesOrderReverseXMLUtility
 											&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS)
 											&& xmlToFico)
 									{
-										salesXMLData.setMerchantCode(oModel.getPaymentProvider());
+										//salesXMLData.setMerchantCode(oModel.getPaymentProvider());
+										//TISSQAEE-227
+										if (MarketplacecommerceservicesConstants.MRUPEE_CODE.equalsIgnoreCase(oModel.getPaymentProvider()))
+										{
+											salesXMLData.setMerchantCode(getConfigurationService().getConfiguration().getString(
+													MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE));
+										}
+										else
+										{
+											salesXMLData.setMerchantCode(oModel.getPaymentProvider());
+										}
+
 										if (null != oModel.getCode())
 										{
 											payemntrefid = oModel.getCode();
@@ -783,6 +795,11 @@ public class SalesOrderReverseXMLUtility
 	protected SellerBasedPromotionService getSellerBasedPromotionService()
 	{
 		return Registry.getApplicationContext().getBean("sellerBasedPromotionService", SellerBasedPromotionService.class);
+	}
+
+	protected ConfigurationService getConfigurationService()
+	{
+		return Registry.getApplicationContext().getBean("configurationService", ConfigurationService.class);
 	}
 
 }
