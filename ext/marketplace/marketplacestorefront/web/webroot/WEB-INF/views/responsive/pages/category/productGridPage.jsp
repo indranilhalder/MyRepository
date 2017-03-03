@@ -6,6 +6,8 @@
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
 <input type="hidden"  id="page_name" value="${page_name}"/>
 <input type="hidden" id="page_category_name" value="${dropDownText}"/>
 <input type="hidden" id="categoryId" value="${categoryCode}"/>
@@ -61,6 +63,11 @@
 						style="position: static;"><spring:theme code="minicart.mybag" />&nbsp;(<span
 						class="js-mini-cart-count-hover"></span>) </a>
 			</div>
+			<div class="mobile-bag bag">
+						<!-- TISPRD-32-fix -->
+							<!-- <a href="/store/mpl/en/cart">(<span class="responsive-bag-count"></span>)</a> -->
+							<a href="/cart"><span class="responsive-bag-count">${totalItems}</span></a>
+						</div>
 			</div>
 	</div>
 	</c:if>

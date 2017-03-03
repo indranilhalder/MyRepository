@@ -42,7 +42,7 @@ tr.d0 td {
 
 
 <ul class="product-block">
-		<span id="removeFromCart_Cart" style="display:none;color:#60A119; "><!-- And it's out!</span> --><spring:theme code="remove.product.cartmsg"/></span>
+		<span id="removeFromCart_Cart" style="display:none;color:#60A119;"><!-- And it's out!</span> --><spring:theme code="remove.product.cartmsg"/></span>
    <li class="header">
    <ul>
    

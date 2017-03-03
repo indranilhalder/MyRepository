@@ -50,6 +50,14 @@ function loadVariant(x){
 <c:url var="sizeGuideUrl"
 	value="/p-sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}" scope="request"></c:url>
 <input type="hidden" id="product_allVariantsListingId" value="${allVariantsString}"/>
+<!--CKD:TPR-250 Start -->
+<c:choose>
+	<c:when test="${not empty param.sellerId}">
+		<c:set var="msiteSellerId" value="${param.sellerId}" />
+		<c:set var="msiteSellerForSize" value="&sellerId=${msiteSellerId}" />
+	</c:when>
+</c:choose>
+<!--CKD:TPR-250 End -->
 <div class="swatch">
 
 	<form:form action="/" id="variantForm" method="post">
@@ -80,7 +88,17 @@ function loadVariant(x){
 				<c:choose>
 					<c:when test="${not empty variantOption.defaultUrl}">
 						<li><%-- <c:url value="${variantOption.defaultUrl}" var="variantUrl" /> --%>
-						<c:url value="/p/${variantOption.code}/viewSellers"	var="variantUrl" />
+						<!--CKD:TPR-250 start  -->
+						<%-- <c:url value="/p/${variantOption.code}/viewSellers"	var="variantUrl" /> --%>
+									<c:choose>
+										<c:when test="${not empty msiteSellerId}">
+										<c:url value="/p/${variantOption.code}/viewSellers?sellerId=${msiteSellerId}"	var="variantUrl" />
+										</c:when>
+										<c:otherwise>
+											<c:url value="/p/${variantOption.code}/viewSellers"	var="variantUrl" />
+										</c:otherwise>
+									</c:choose>
+									<!--CKD:TPR-250 End  -->
 								 <a href="${variantUrl}">								
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
@@ -291,16 +309,19 @@ function loadVariant(x){
 										<c:when test="${(variantOption.code eq product.code)}">
 											<c:choose>
 												<c:when test="${selectedSize eq null}">
-													<li><a href="${variantUrl}?selectedSize=true">${entry.value}</a></li>
+												<!--CKD:TPR-250:  -->
+													<li><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 												</c:when>
 												<c:otherwise>
-														<li class="selected"><a href="${variantUrl}?selectedSize=true">${entry.value}</a></li>
+												<!--CKD:TPR-250:  -->
+														<li class="selected"><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 												</c:otherwise>
 											</c:choose>
 										</c:when>
 										<c:otherwise>
 											<%-- <c:url value="/p/${variantOption.code}/viewSellers"	var="variantUrl" /> --%>
-											<li><a href="${variantUrl}?selectedSize=true">${entry.value}</a></li>
+											<!--CKD:TPR-250:  -->
+											<li><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -328,16 +349,19 @@ function loadVariant(x){
 												
 												
 													<c:when test="${selectedSize eq null}">
-														<li><a href="${variantUrl}?selectedSize=true">${entry.value}</a></li>
+													<!--CKD:TPR-250:  -->
+														<li><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 													</c:when>
 													
 												<c:otherwise>
-														<li class="selected"><a href="${variantUrl}?selectedSize=true">${entry.value}</a></li>
+												<!--CKD:TPR-250:  -->
+														<li class="selected"><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 												</c:otherwise>
 												</c:choose>
 											</c:when>	
 										<c:otherwise>
-											<li data-vcode="${link}"><a href="${variantUrl}?selectedSize=true">${entry.value}</a></li>
+										<!--CKD:TPR-250:  -->
+											<li data-vcode="${link}"><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 										</c:otherwise>												
 												</c:choose>
 											</c:forEach>

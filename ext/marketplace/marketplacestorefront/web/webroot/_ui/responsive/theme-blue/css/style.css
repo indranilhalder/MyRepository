@@ -48253,7 +48253,6 @@ padding:0 40px;	}
     transition: all 0.3s;
 
 } */
-
 .product-info .color-swatch li:hover {
 	box-shadow: 0 0 0px 1px #000;
 	transition: all 0.3s;
@@ -61797,7 +61796,7 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
                       margin: 0 auto;
                       height: 30px;
                       max-width:100%; }
-            .productGrid-menu nav > ul > li > ul > li:hover > .toggle,.productGrid-menu nav > ul > li > ul > li.hovered > .toggle {
+            /* .productGrid-menu nav > ul > li > ul > li:hover > .toggle, */.productGrid-menu nav > ul > li > ul > li.hovered > .toggle {
               background-color: #A9143C; }
               .productGrid-menu nav > ul > li > .toggle:hover ~ ul#topul > li:first-of-type > .toggle{
               	background-color: #A9143C;
@@ -61811,7 +61810,7 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
               }
               .productGrid-menu nav > ul > li > ul > li:hover > .toggle a {
                 color: #fff; }
-              .productGrid-menu nav > ul > li > ul > li:hover > .toggle:after,.productGrid-menu nav > ul > li > ul > li.hovered > .toggle:after,.productGrid-menu nav > ul > li > .toggle:hover ~ ul#topul > li:first-of-type > .toggle:after {
+              /* .productGrid-menu nav > ul > li > ul > li:hover > .toggle:after, */.productGrid-menu nav > ul > li > ul > li.hovered > .toggle:after,.productGrid-menu nav > ul > li > .toggle:hover ~ ul#topul > li:first-of-type > .toggle:after {
                 height: 0;
                 width: 0;
                 border-bottom: 25px solid transparent;
@@ -62068,8 +62067,8 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
     right:3%;
 }
 .productGrid-header-wrapper.active-header .productGrid-header > div #micrositesearchButton:before{
-    /* right: calc(6% + 24px); */
-    right:45px;
+    right: calc(6% + 27px);
+    /* right:45px; */
 }
 header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_form[name='search_form']{
 	display: none;
@@ -62186,6 +62185,9 @@ header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_
     	-moz-transition: height 0s;
     	transition: height 0s;
      }
+     .productGrid-header-wrapper .productGrid-header .productGrid-menu #shopMicrositeSeller{
+     	/* display:none; */
+     }
     /* Tab View Start */
     @media (max-width:1024px) and (min-width:791px){
 	.productGrid-menu nav > ul > li > ul > li > ul.words{
@@ -62235,7 +62237,7 @@ header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_
     	content: "\e605";
     	font-size: 18px;
     	line-height: 18px;
-    	margin-right: -3px;
+    	margin-right: -2px;
     	top: 16px;
     	font-weight: bold;
     	color: #fff;
@@ -62249,7 +62251,7 @@ header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_
     	display: inline-block;
     	font-size: 16px;
     	position: absolute;
-    	right: 17px;
+    	right: 18px;
     	text-transform: capitalize;
     	top: 24px;
 	}
@@ -62265,7 +62267,7 @@ header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_
     	width: 26px;
 	}
 	.productGrid-header-wrapper.active_adjust .productGrid-header div.product-grid-search {
-		width:89%;
+		width:87%;
 	}
 	.productGrid-header-wrapper.active_adjust:not(.active-header) .productGrid-header div.product-grid-search {
     	width: 92%;
