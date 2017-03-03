@@ -2191,7 +2191,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//For Mobile
 			if (MapUtils.isEmpty(paymentMode))
 			{
-				paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
+				//paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
+				LOG.error("Inside paymentMode is empty...");
+				paymentMode.put(orderModel.getModeOfOrderPayment(), Double.valueOf(orderModel.getTotalPriceWithConv().doubleValue()));
 			}
 
 			String orderStatus = null;
