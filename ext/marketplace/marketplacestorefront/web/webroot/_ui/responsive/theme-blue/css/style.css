@@ -35267,14 +35267,22 @@ position:static !important;
 	padding-left:10px;
     display: inline-block;
 }
+/* Start TISSQAEE-244 */
 .pagination-bar.listing-menu.bottom .pagination li.next {
     right: 0;
-    position: absolute;
+    /* position: absolute; */
 }
 .pagination-bar.listing-menu.bottom .pagination li.prev {
     left: 0;
-    position: absolute;
+    /* position: absolute; */
 }
+/* End TISSQAEE-244 */
+
+/* Start TISSQAEE-246 */
+.product-info .color-swatch li img{
+	vertical-align: bottom;
+}
+/* End TISSQAEE-246 */
 .pagination .prev .anglelft:before, .pagination .next .anglerght:after{
 	line-height:18px;
 }

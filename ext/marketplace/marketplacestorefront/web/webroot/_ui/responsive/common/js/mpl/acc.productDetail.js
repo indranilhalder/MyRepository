@@ -152,7 +152,8 @@
 		 
 			if(localStorage.getItem("removeFromCart_msgFromCart")=="Y")
 			{
-			$('#removeFromCart_Cart').show();
+			/*$('#removeFromCart_Cart').show();*/
+			$('#removeFromCart_Cart').css("display","inline-block"); /*TISSQAEE-245*/
 			setTimeout(function() {
 				  $("#removeFromCart_Cart").fadeOut().empty();
 				}, 1500);
@@ -160,7 +161,7 @@
 			 localStorage.removeItem('removeFromCart_msgFromCart');
 			 
 // added in merging.....
-	
+			 
 	// SizeGuide
 		
 		// Sise Guide Select Color
