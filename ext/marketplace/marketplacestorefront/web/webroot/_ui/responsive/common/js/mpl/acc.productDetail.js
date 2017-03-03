@@ -152,7 +152,7 @@
 		 
 			if(localStorage.getItem("removeFromCart_msgFromCart")=="Y")
 			{
-			$('#removeFromCart_Cart').css("display","inline-block");
+			$('#removeFromCart_Cart').show();
 			setTimeout(function() {
 				  $("#removeFromCart_Cart").fadeOut().empty();
 				}, 1500);
