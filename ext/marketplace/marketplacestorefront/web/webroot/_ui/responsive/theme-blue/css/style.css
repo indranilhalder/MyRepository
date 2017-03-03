@@ -60869,12 +60869,13 @@ body.page-productGrid .listing.wrapper .right-block .listing-menu {
     float: right;
    /*  margin-top: -50px; */
 }
-
+@media(min-width:791px){
 body.page-productGrid .list_title h1 {
     float: left;
     margin-left: 292px;
 	position: absolute;
     margin-top: 22px;
+}
 }
 .list_title .UlContainer {
     float: right;
@@ -60915,6 +60916,14 @@ body.page-productGrid .facet-list.filter-opt {
 
 .sort {
     cursor: pointer
+}
+@media(max-width:790px){
+	body.page-productGrid .product-listing.product-grid.lazy-grid{
+	padding-top:0px;}
+	body.page-productGrid .listing.wrapper .right-block .listing-menu{
+	margin-top:-50px !important;}
+	body.page-productGrid .list_title h1 {
+	margin:0 auto !important;}
 }
 
 .listing.wrapper .right-block .listing-menu>div.list_title{
