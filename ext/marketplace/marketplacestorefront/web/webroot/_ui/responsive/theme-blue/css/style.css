@@ -33906,6 +33906,8 @@ body.page-cartPage .cart-bottom-block .cart-total-block ul.totals li{
 }
 body.page-cartPage .cart-bottom-block{
 	padding:20px 50px;
+	padding-right: 0;
+	padding-left: 0;
 }
 }
 @media (max-width: 1280px){
@@ -58977,6 +58979,13 @@ li.facet.js-facet.collectionIds{
     width: 100%;
     text-align: center;
 }
+
+/* UF-68 UF-69 */
+body.page-cartPage .cart-bottom-block .cartBottomCheck.cartBottomCheckShow,.page-cartPage .cart-total-block ul.checkOutBtnBtm{
+	display:none;
+}
+/* UF-68 UF-69 */
+
 }
 .emptyCart-mobile{
 	height: 100px;
@@ -59629,7 +59638,17 @@ font-weight:500 !important;
 	color: #a9143c;
 }
 
-
+.product-info .product-content .delivery-block li.do.selected:after{
+	    font-family: FontAwesome;
+    	font-weight: lighter;
+    	color: #a9143c;
+    	content: "\f05d";
+    	font-size: 18px;
+    	line-height: 18px;
+    	margin-right: 5px;
+    	top: 2px;
+    	position: relative;
+}
 
 /* UI-UX Fixes for PLP start */
 
