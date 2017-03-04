@@ -17,11 +17,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
-import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
-import de.hybris.platform.core.model.order.payment.EMIPaymentInfoModel;
-import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -80,22 +76,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.enums.EBSResponseStatus;
-import com.tisl.mpl.core.enums.EBSRiskLevelEnum;
-import com.tisl.mpl.core.enums.MplPaymentAuditStatusEnum;
-import com.tisl.mpl.core.model.BankforNetbankingModel;
-import com.tisl.mpl.core.model.EMIBankModel;
-import com.tisl.mpl.core.model.EMITermRowModel;
-import com.tisl.mpl.core.model.JuspayEBSResponseModel;
-import com.tisl.mpl.core.model.JuspayOrderStatusModel;
-import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
-import com.tisl.mpl.core.model.MplPaymentAuditModel;
-import com.tisl.mpl.core.model.PaymentModeApportionModel;
-import com.tisl.mpl.core.model.SavedCardModel;
-import com.tisl.mpl.data.EMITermRateData;
-import com.tisl.mpl.data.MplPromoPriceData;
-import com.tisl.mpl.data.MplPromotionData;
-import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.PaymentService;
 import com.tisl.mpl.juspay.request.GetOrderStatusRequest;
@@ -103,16 +83,12 @@ import com.tisl.mpl.juspay.response.CardResponse;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplPaymentDao;
-import com.tisl.mpl.marketplacecommerceservices.daos.MplProcessOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplFraudModelService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentTransactionService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
-import com.tisl.mpl.model.BankModel;
-import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
-import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.util.MplEMICalculator;
@@ -515,9 +491,17 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 
 			//Soln Changes
-			payTranModel = getMplPaymentTransactionService().createPaymentTransaction(order, orderStatusResponse,
-					paymentTransactionEntryList);
-			paymentTransactionList.add(payTranModel);
+			//OrderIssues:- Null or Empty check added
+			if (CollectionUtils.isNotEmpty(paymentTransactionEntryList))
+			{
+				payTranModel = getMplPaymentTransactionService().createPaymentTransaction(order, orderStatusResponse,
+						paymentTransactionEntryList);
+				paymentTransactionList.add(payTranModel);
+			}
+			else
+			{
+				LOG.error("paymentTransactionEntryList is Empty");
+			}
 		}
 
 		if (null == order.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(order.getStatus()))
@@ -688,7 +672,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final DebitCardPaymentInfoModel debitCardPaymentInfoModel = getModelService().create(DebitCardPaymentInfoModel.class);
 			final CardResponse response = orderStatusResponse.getCardResponse();
 
-			if (StringUtils.isNotEmpty(response.getCardReference()))
+			// OrderIssues:- Null check added
+			if (null != response && StringUtils.isNotEmpty(response.getCardReference()))
 			{
 				debitCardPaymentInfoModel.setCode(response.getCardReference());
 			}
@@ -698,7 +683,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			//debitCardPaymentInfoModel.setUser(getUserService().getCurrentUser());			//Commented for TPR-629
 			debitCardPaymentInfoModel.setUser(cart.getUser());
-			if (StringUtils.isNotEmpty(response.getNameOnCard()))
+			if (null != response && StringUtils.isNotEmpty(response.getNameOnCard()))
 			{
 				debitCardPaymentInfoModel.setCcOwner(response.getNameOnCard());
 			}
@@ -706,7 +691,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				debitCardPaymentInfoModel.setCcOwner(MarketplacecommerceservicesConstants.DUMMYCCOWNER);//To Be Removed
 			}
-			if (StringUtils.isNotEmpty(response.getCardNumber()))
+			if (null != response && StringUtils.isNotEmpty(response.getCardNumber()))
 			{
 				debitCardPaymentInfoModel.setNumber(response.getCardNumber());
 			}
@@ -714,7 +699,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				debitCardPaymentInfoModel.setNumber(MarketplacecommerceservicesConstants.DUMMYNUMBER);//To Be Removed
 			}
-			if (StringUtils.isNotEmpty(response.getExpiryMonth()))
+			if (null != response && StringUtils.isNotEmpty(response.getExpiryMonth()))
 			{
 				debitCardPaymentInfoModel.setValidToMonth(response.getExpiryMonth());
 			}
@@ -722,7 +707,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				debitCardPaymentInfoModel.setValidToMonth(MarketplacecommerceservicesConstants.DUMMYMM);//To Be Removed
 			}
-			if (StringUtils.isNotEmpty(response.getExpiryYear()))
+			if (null != response && StringUtils.isNotEmpty(response.getExpiryYear()))
 			{
 				debitCardPaymentInfoModel.setValidToYear(response.getExpiryYear());
 			}
@@ -731,35 +716,42 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				debitCardPaymentInfoModel.setValidToYear(MarketplacecommerceservicesConstants.DUMMYYY);
 			}
 
-			if (StringUtils.isNotEmpty(response.getCardType()))
+			if (null != response && StringUtils.isNotEmpty(response.getCardType()))
 			{
-				if (MarketplacecommerceservicesConstants.MASTERCARD.equalsIgnoreCase(response.getCardBrand()))
+				//OrderIssues:- CardBrand Null Check added
+				if (null != response.getCardBrand()
+						&& MarketplacecommerceservicesConstants.MASTERCARD.equalsIgnoreCase(response.getCardBrand()))
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.MASTER);
 				}
-				else if (MarketplacecommerceservicesConstants.MAESTRO.equalsIgnoreCase(response.getCardBrand()))
+				else if (null != response.getCardBrand()
+						&& MarketplacecommerceservicesConstants.MAESTRO.equalsIgnoreCase(response.getCardBrand()))
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.MAESTRO);
 				}
-				else if (MarketplacecommerceservicesConstants.AMEX.equalsIgnoreCase(response.getCardBrand())
-						|| MarketplacecommerceservicesConstants.AMERICAN_EXPRESS.equalsIgnoreCase(orderStatusResponse.getCardResponse()
-								.getCardBrand()))
+				else if (null != response.getCardBrand()
+						&& (MarketplacecommerceservicesConstants.AMEX.equalsIgnoreCase(response.getCardBrand()) || MarketplacecommerceservicesConstants.AMERICAN_EXPRESS
+								.equalsIgnoreCase(orderStatusResponse.getCardResponse().getCardBrand())))
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.AMEX);
 				}
-				else if (MarketplacecommerceservicesConstants.DINERSCARD.equalsIgnoreCase(response.getCardBrand()))
+				else if (null != response.getCardBrand()
+						&& MarketplacecommerceservicesConstants.DINERSCARD.equalsIgnoreCase(response.getCardBrand()))
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.DINERS);
 				}
-				else if (MarketplacecommerceservicesConstants.VISA.equalsIgnoreCase(response.getCardBrand()))
+				else if (null != response.getCardBrand()
+						&& MarketplacecommerceservicesConstants.VISA.equalsIgnoreCase(response.getCardBrand()))
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.VISA);
 				}
-				else if (MarketplacecommerceservicesConstants.EUROCARD.equalsIgnoreCase(response.getCardBrand()))
+				else if (null != response.getCardBrand()
+						&& MarketplacecommerceservicesConstants.EUROCARD.equalsIgnoreCase(response.getCardBrand()))
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.MASTERCARD_EUROCARD);
 				}
-				else if (MarketplacecommerceservicesConstants.SWITCHCARD.equalsIgnoreCase(response.getCardBrand()))
+				else if (null != response.getCardBrand()
+						&& MarketplacecommerceservicesConstants.SWITCHCARD.equalsIgnoreCase(response.getCardBrand()))
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.SWITCH);
 				}
@@ -873,92 +865,87 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			//for saving Billing Address against credit card
 
 			//final AddressModel address = saveBillingAddress(orderStatusResponse, cart, sameAsShipping);
-			if (StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardReference()))
+
+			//OrderIssues:- getting the cardRespone and and null check added
+			final CardResponse response = orderStatusResponse.getCardResponse();
+			if (null != response && StringUtils.isNotEmpty(response.getCardReference()))
 			{
-				creditCardPaymentInfoModel.setCode(orderStatusResponse.getCardResponse().getCardReference());
+				creditCardPaymentInfoModel.setCode(response.getCardReference());
 			}
 			else
 			{
 				creditCardPaymentInfoModel.setCode("DUMMY_CC_" + cart.getCode());//To Be Removed
 			}
 			creditCardPaymentInfoModel.setUser(getUserService().getCurrentUser());
-			if (StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getNameOnCard()))
+			if (null != response && StringUtils.isNotEmpty(response.getNameOnCard()))
 			{
-				creditCardPaymentInfoModel.setCcOwner(orderStatusResponse.getCardResponse().getNameOnCard());
+				creditCardPaymentInfoModel.setCcOwner(response.getNameOnCard());
 			}
 			else
 			{
 				creditCardPaymentInfoModel.setCcOwner(MarketplacecommerceservicesConstants.DUMMYCCOWNER);//To Be Removed
 			}
-			if (StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardNumber()))
+			if (null != response && StringUtils.isNotEmpty(response.getCardNumber()))
 			{
-				creditCardPaymentInfoModel.setNumber(orderStatusResponse.getCardResponse().getCardNumber());
+				creditCardPaymentInfoModel.setNumber(response.getCardNumber());
 			}
 			else
 			{
 				creditCardPaymentInfoModel.setNumber(MarketplacecommerceservicesConstants.DUMMYNUMBER);//To Be Removed
 			}
-			if (StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getExpiryMonth()))
+			if (null != response && StringUtils.isNotEmpty(response.getExpiryMonth()))
 			{
-				creditCardPaymentInfoModel.setValidToMonth(orderStatusResponse.getCardResponse().getExpiryMonth());
+				creditCardPaymentInfoModel.setValidToMonth(response.getExpiryMonth());
 			}
 			else
 			{
 				creditCardPaymentInfoModel.setValidToMonth(MarketplacecommerceservicesConstants.DUMMYMM);//To Be Removed
 			}
-			if (StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getExpiryYear()))
+			if (null != response && StringUtils.isNotEmpty(response.getExpiryYear()))
 			{
-				creditCardPaymentInfoModel.setValidToYear(orderStatusResponse.getCardResponse().getExpiryYear());
+				creditCardPaymentInfoModel.setValidToYear(response.getExpiryYear());
 			}
 			else
 			{
 				creditCardPaymentInfoModel.setValidToYear(MarketplacecommerceservicesConstants.DUMMYYY);
 			}
-			if (StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardReference()))
+			if (null != response && StringUtils.isNotEmpty(response.getCardReference()))
 			{
-				creditCardPaymentInfoModel.setSubscriptionId(orderStatusResponse.getCardResponse().getCardReference());//Card Reference
+				creditCardPaymentInfoModel.setSubscriptionId(response.getCardReference());//Card Reference
 			}
 			else
 			{
 				creditCardPaymentInfoModel.setSubscriptionId(MarketplacecommerceservicesConstants.DUMMYCARDREF);
 			}
 
-			if (StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardBrand()))
+			if (null != response && StringUtils.isNotEmpty(response.getCardBrand()))
 			{
-				if (MarketplacecommerceservicesConstants.MASTERCARD.equalsIgnoreCase(orderStatusResponse.getCardResponse()
-						.getCardBrand()))
+				if (MarketplacecommerceservicesConstants.MASTERCARD.equalsIgnoreCase(response.getCardBrand()))
 				{
 					creditCardPaymentInfoModel.setType(CreditCardType.MASTER);
 				}
-				else if (MarketplacecommerceservicesConstants.MAESTRO.equalsIgnoreCase(orderStatusResponse.getCardResponse()
-						.getCardBrand()))
+				else if (MarketplacecommerceservicesConstants.MAESTRO.equalsIgnoreCase(response.getCardBrand()))
 				{
 					creditCardPaymentInfoModel.setType(CreditCardType.MAESTRO);
 				}
-				else if (MarketplacecommerceservicesConstants.AMEX.equalsIgnoreCase(orderStatusResponse.getCardResponse()
-						.getCardBrand())
-						|| MarketplacecommerceservicesConstants.AMERICAN_EXPRESS.equalsIgnoreCase(orderStatusResponse.getCardResponse()
-								.getCardBrand()))
+				else if (MarketplacecommerceservicesConstants.AMEX.equalsIgnoreCase(response.getCardBrand())
+						|| MarketplacecommerceservicesConstants.AMERICAN_EXPRESS.equalsIgnoreCase(response.getCardBrand()))
 				{
 					creditCardPaymentInfoModel.setType(CreditCardType.AMEX);
 				}
-				else if (MarketplacecommerceservicesConstants.DINERSCARD.equalsIgnoreCase(orderStatusResponse.getCardResponse()
-						.getCardBrand()))
+				else if (MarketplacecommerceservicesConstants.DINERSCARD.equalsIgnoreCase(response.getCardBrand()))
 				{
 					creditCardPaymentInfoModel.setType(CreditCardType.DINERS);
 				}
-				else if (MarketplacecommerceservicesConstants.VISA.equalsIgnoreCase(orderStatusResponse.getCardResponse()
-						.getCardBrand()))
+				else if (MarketplacecommerceservicesConstants.VISA.equalsIgnoreCase(response.getCardBrand()))
 				{
 					creditCardPaymentInfoModel.setType(CreditCardType.VISA);
 				}
-				else if (MarketplacecommerceservicesConstants.EUROCARD.equalsIgnoreCase(orderStatusResponse.getCardResponse()
-						.getCardBrand()))
+				else if (MarketplacecommerceservicesConstants.EUROCARD.equalsIgnoreCase(response.getCardBrand()))
 				{
 					creditCardPaymentInfoModel.setType(CreditCardType.MASTERCARD_EUROCARD);
 				}
-				else if (MarketplacecommerceservicesConstants.SWITCHCARD.equalsIgnoreCase(orderStatusResponse.getCardResponse()
-						.getCardBrand()))
+				else if (MarketplacecommerceservicesConstants.SWITCHCARD.equalsIgnoreCase(response.getCardBrand()))
 				{
 					creditCardPaymentInfoModel.setType(CreditCardType.SWITCH);
 				}
@@ -1089,10 +1076,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				address = createDummyAddress(cart);
 			}
-
-			if (StringUtils.isNotEmpty(response.getCardResponse().getCardReference()))
+			//OrderIssues:- Getting the card response and null check added
+			final CardResponse cardRes = response.getCardResponse();
+			if (null != cardRes && StringUtils.isNotEmpty(cardRes.getCardReference()))
 			{
-				emiPaymentInfoModel.setCode(response.getCardResponse().getCardReference());
+				emiPaymentInfoModel.setCode(cardRes.getCardReference());
 			}
 			else
 			{
@@ -1100,41 +1088,41 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			//emiPaymentInfoModel.setUser(getUserService().getCurrentUser());		//Commented for TPR-629
 			emiPaymentInfoModel.setUser(cart.getUser());
-			if (StringUtils.isNotEmpty(response.getCardResponse().getNameOnCard()))
+			if (null != cardRes && StringUtils.isNotEmpty(cardRes.getNameOnCard()))
 			{
-				emiPaymentInfoModel.setCcOwner(response.getCardResponse().getNameOnCard());
+				emiPaymentInfoModel.setCcOwner(cardRes.getNameOnCard());
 			}
 			else
 			{
 				emiPaymentInfoModel.setCcOwner(MarketplacecommerceservicesConstants.DUMMYCCOWNER);//To Be Removed
 			}
-			if (StringUtils.isNotEmpty(response.getCardResponse().getCardNumber()))
+			if (null != cardRes && StringUtils.isNotEmpty(cardRes.getCardNumber()))
 			{
-				emiPaymentInfoModel.setNumber(response.getCardResponse().getCardNumber());
+				emiPaymentInfoModel.setNumber(cardRes.getCardNumber());
 			}
 			else
 			{
 				emiPaymentInfoModel.setNumber(MarketplacecommerceservicesConstants.DUMMYNUMBER);//To Be Removed
 			}
-			if (StringUtils.isNotEmpty(response.getCardResponse().getExpiryMonth()))
+			if (null != cardRes && StringUtils.isNotEmpty(cardRes.getExpiryMonth()))
 			{
-				emiPaymentInfoModel.setValidToMonth(response.getCardResponse().getExpiryMonth());
+				emiPaymentInfoModel.setValidToMonth(cardRes.getExpiryMonth());
 			}
 			else
 			{
 				emiPaymentInfoModel.setValidToMonth(MarketplacecommerceservicesConstants.DUMMYMM);//To Be Removed
 			}
-			if (StringUtils.isNotEmpty(response.getCardResponse().getExpiryYear()))
+			if (null != cardRes && StringUtils.isNotEmpty(cardRes.getExpiryYear()))
 			{
-				emiPaymentInfoModel.setValidToYear(response.getCardResponse().getExpiryYear());
+				emiPaymentInfoModel.setValidToYear(cardRes.getExpiryYear());
 			}
 			else
 			{
 				emiPaymentInfoModel.setValidToYear(MarketplacecommerceservicesConstants.DUMMYYY);
 			}
-			if (StringUtils.isNotEmpty(response.getCardResponse().getCardReference()))
+			if (null != cardRes && StringUtils.isNotEmpty(cardRes.getCardReference()))
 			{
-				emiPaymentInfoModel.setSubscriptionId(response.getCardResponse().getCardReference());
+				emiPaymentInfoModel.setSubscriptionId(cardRes.getCardReference());
 			}
 			else
 			{
@@ -1164,35 +1152,34 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 
 			//TODO:Add EMI related values from response to emiPaymentInfoModel
-			if (StringUtils.isNotEmpty(response.getCardResponse().getCardBrand()))
+			if (null != cardRes && StringUtils.isNotEmpty(cardRes.getCardBrand()))
 			{
-				if (MarketplacecommerceservicesConstants.MASTERCARD.equalsIgnoreCase(response.getCardResponse().getCardBrand()))
+				if (MarketplacecommerceservicesConstants.MASTERCARD.equalsIgnoreCase(cardRes.getCardBrand()))
 				{
 					emiPaymentInfoModel.setType(CreditCardType.MASTER);
 				}
-				else if (MarketplacecommerceservicesConstants.MAESTRO.equalsIgnoreCase(response.getCardResponse().getCardBrand()))
+				else if (MarketplacecommerceservicesConstants.MAESTRO.equalsIgnoreCase(cardRes.getCardBrand()))
 				{
 					emiPaymentInfoModel.setType(CreditCardType.MAESTRO);
 				}
-				else if (MarketplacecommerceservicesConstants.AMEX.equalsIgnoreCase(response.getCardResponse().getCardBrand())
-						|| MarketplacecommerceservicesConstants.AMERICAN_EXPRESS.equalsIgnoreCase(response.getCardResponse()
-								.getCardBrand()))
+				else if (MarketplacecommerceservicesConstants.AMEX.equalsIgnoreCase(cardRes.getCardBrand())
+						|| MarketplacecommerceservicesConstants.AMERICAN_EXPRESS.equalsIgnoreCase(cardRes.getCardBrand()))
 				{
 					emiPaymentInfoModel.setType(CreditCardType.AMEX);
 				}
-				else if (MarketplacecommerceservicesConstants.DINERSCARD.equalsIgnoreCase(response.getCardResponse().getCardBrand()))
+				else if (MarketplacecommerceservicesConstants.DINERSCARD.equalsIgnoreCase(cardRes.getCardBrand()))
 				{
 					emiPaymentInfoModel.setType(CreditCardType.DINERS);
 				}
-				else if (MarketplacecommerceservicesConstants.VISA.equalsIgnoreCase(response.getCardResponse().getCardBrand()))
+				else if (MarketplacecommerceservicesConstants.VISA.equalsIgnoreCase(cardRes.getCardBrand()))
 				{
 					emiPaymentInfoModel.setType(CreditCardType.VISA);
 				}
-				else if (MarketplacecommerceservicesConstants.EUROCARD.equalsIgnoreCase(response.getCardResponse().getCardBrand()))
+				else if (MarketplacecommerceservicesConstants.EUROCARD.equalsIgnoreCase(cardRes.getCardBrand()))
 				{
 					emiPaymentInfoModel.setType(CreditCardType.MASTERCARD_EUROCARD);
 				}
-				else if (MarketplacecommerceservicesConstants.SWITCHCARD.equalsIgnoreCase(response.getCardResponse().getCardBrand()))
+				else if (MarketplacecommerceservicesConstants.SWITCHCARD.equalsIgnoreCase(cardRes.getCardBrand()))
 				{
 					emiPaymentInfoModel.setType(CreditCardType.SWITCH);
 				}
@@ -2710,7 +2697,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			getModelService().save(address);
 
 			//setting as saved card
-			setInSavedCard(orderStatusResponse, address, cart.getUser());
+			if (null != address)
+			{
+				setInSavedCard(orderStatusResponse, address, cart.getUser());
+			}
 		}
 		catch (final ModelSavingException e)
 		{
@@ -2926,7 +2916,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 
 			//			if (MarketplacecommerceservicesConstants.DEBIT.equalsIgnoreCase(cart.getModeOfPayment()))
-			if (orderStatusResponse.getCardResponse().getCardType().equalsIgnoreCase("DEBIT"))
+
+			//OrderIssues:- getting the CardType Or PaymentMethodType in a variable
+
+			final String cardType = null != orderStatusResponse.getCardResponse().getCardType() ? orderStatusResponse
+					.getCardResponse().getCardType() : orderStatusResponse.getPaymentMethodType();
+
+			if (cardType.equalsIgnoreCase("DEBIT"))
 			{
 				//try
 				//{
@@ -2940,7 +2936,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			//			else if (MarketplacecommerceservicesConstants.CREDIT.equalsIgnoreCase(cart.getModeOfPayment())
 			//					|| MarketplacecommerceservicesConstants.EMI.equalsIgnoreCase(cart.getModeOfPayment()))
-			if (orderStatusResponse.getCardResponse().getCardType().equalsIgnoreCase("CREDIT"))
+			if (cardType.equalsIgnoreCase("CREDIT"))
 			{
 				//try
 				//{
@@ -3466,8 +3462,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							+ auditModel.getAuditId() + "***********");
 					LOG.info("orderStatusResponse " + orderStatusResponse);
 
-					if (orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED)
-							&& CollectionUtils.isEmpty(orderStatusResponse.getRefunds()))
+					if (orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED))
 					{
 
 						for (final OrderModel so : orderList)

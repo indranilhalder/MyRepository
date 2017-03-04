@@ -27,7 +27,6 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplPaymentDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentTransactionService;
-import com.tisl.mpl.model.PaymentTypeModel;
 
 
 /**
@@ -58,7 +57,7 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 			final AbstractOrderModel cart, final Map.Entry<String, Double> entry,
 			final List<PaymentTransactionEntryModel> paymentTransactionEntryList) //Changed to abstractOrderModel for TPR-629
 	{
-
+		//OrderIssues:- Null check added
 		final PaymentTransactionEntryModel paymentTransactionEntry = getModelService().create(PaymentTransactionEntryModel.class);
 		try
 		{
@@ -70,10 +69,13 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 							.getRootReferenceNumber());
 				}
 
-				paymentTransactionEntry.setTransactionStatusDetails(getOrderStatusResponse.getPaymentGatewayResponse()
-						.getResponseMessage());
-				paymentTransactionEntry.setRequestToken(getOrderStatusResponse.getPaymentGatewayResponse().getTxnId());
-				paymentTransactionEntry.setRequestId(getOrderStatusResponse.getPaymentGatewayResponse().getExternalGatewayTxnId());
+				paymentTransactionEntry.setTransactionStatusDetails(null != getOrderStatusResponse.getPaymentGatewayResponse()
+						.getResponseMessage() ? getOrderStatusResponse.getPaymentGatewayResponse().getResponseMessage() : "");
+				paymentTransactionEntry
+						.setRequestToken(null != getOrderStatusResponse.getPaymentGatewayResponse().getTxnId() ? getOrderStatusResponse
+								.getPaymentGatewayResponse().getTxnId() : "");
+				paymentTransactionEntry.setRequestId(null != getOrderStatusResponse.getPaymentGatewayResponse()
+						.getExternalGatewayTxnId() ? getOrderStatusResponse.getPaymentGatewayResponse().getExternalGatewayTxnId() : "");
 
 				if (StringUtils.isNotEmpty(getOrderStatusResponse.getPaymentGatewayResponse().getAuthIdCode()))
 				{
@@ -87,6 +89,7 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 			}
 			else
 			{
+				LOG.error("Payment Gateway Response is empty");
 				paymentTransactionEntry.setCode(cart.getCode() + "-" + System.currentTimeMillis());
 			}
 
@@ -125,6 +128,11 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 					&& getOrderStatusResponse.getPaymentMethodType().equalsIgnoreCase("CARD"))
 			{
 				final String cardType = getOrderStatusResponse.getCardResponse().getCardType();
+				if (StringUtils.isEmpty(cardType))
+				{
+					// TODO :- Check with Barun Da wt to set the payment Mode, Since paymntmode is mandatory
+					//paymentTransactionEntry.setPaymentMode("");
+				}
 				if (cardType.equalsIgnoreCase("DEBIT"))
 				{
 					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Debit Card");
