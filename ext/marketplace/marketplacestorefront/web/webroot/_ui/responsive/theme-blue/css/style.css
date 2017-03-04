@@ -60293,7 +60293,7 @@ body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#chec
 }
 body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled{
 	background-color: rgba(169, 20, 60, 0.6);
-    cursor: default;
+    cursor: not-allowed;
 }
 body.page-cartPage .cartBottomCheck{
 	display:none;
@@ -60456,6 +60456,7 @@ clear:both;
 	color: #fb0007;
 	padding: 8px 0px 0px 0px;
     margin: 0;
+    color:#000;
 }
 body.page-cartPage .MyBag-top-section{
 margin-top:10px;
