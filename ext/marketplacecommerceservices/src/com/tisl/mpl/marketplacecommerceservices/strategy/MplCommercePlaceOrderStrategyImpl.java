@@ -307,9 +307,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -417,7 +417,17 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	public void beforeSubmitOrder(final CommerceCheckoutParameter parameter, final CommerceOrderResult result)
 			throws InvalidCartException, CalculationException
 	{
+		// New Changes added for Promotion+ Sub total Fix
+		final OrderModel order = result.getOrder();
+		final Double subTotal = (null != order && null != order.getSubtotal()) ? order.getSubtotal() : Double.valueOf(0);
+
 		getCalculationService().calculateTotals(result.getOrder(), false);
+
+		if (subTotal.doubleValue() > 0)
+		{
+			order.setSubtotal(subTotal);
+			getModelService().save(order);
+		}
 
 		if ((getCommercePlaceOrderMethodHooks() == null) || (!(parameter.isEnableHooks())) || (!(getConfigurationService()
 
