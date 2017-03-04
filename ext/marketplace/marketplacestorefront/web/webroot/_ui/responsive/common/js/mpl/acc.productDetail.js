@@ -1041,7 +1041,8 @@ $(function() {
 
 					function() {
 						//TPR900
-						if($("#pdpPincodeCheck").text() == 'Check')
+						//if($("#pdpPincodeCheck").text() == 'Check')
+						if(document.getElementById("pdpPincodeCheck").className == "Check")//UF-71
 						{
 							//INC144314017
 							$(this).data('clicked', true);
@@ -1394,10 +1395,12 @@ $(function() {
 							$('#pin').blur();
 							
 							if ( $('#pin').val() == "") {
-								$("#pdpPincodeCheck").text("Check")				/*UF-42*/
+								//$("#pdpPincodeCheck").text("Check")				/*UF-42*/
+								document.getElementById("pdpPincodeCheck").className = "Check";//UF-71
 							} else {
 							
-								$("#pdpPincodeCheck").text("Change Pincode")
+								//$("#pdpPincodeCheck").text("Change Pincode")
+								document.getElementById("pdpPincodeCheck").className = "ChangePincode";//UF-71
 							}
 							//TPR-900
 						}
@@ -3071,7 +3074,8 @@ function loadDefaultWishListName_SizeGuide() {
 		}); 
 		
 		$("#pin").focus(function(){
-			$("#pdpPincodeCheck").text("Check")
+			//$("#pdpPincodeCheck").text("Check")
+			document.getElementById("pdpPincodeCheck").className = "Check";//UF-71
 		});
 /*		$("#pin").blur(function() {
 			if ($(this).val() == "") {
