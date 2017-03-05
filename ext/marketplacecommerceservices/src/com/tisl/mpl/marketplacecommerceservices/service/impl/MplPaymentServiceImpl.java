@@ -672,8 +672,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final DebitCardPaymentInfoModel debitCardPaymentInfoModel = getModelService().create(DebitCardPaymentInfoModel.class);
 			final CardResponse response = orderStatusResponse.getCardResponse();
 
-			// OrderIssues:- Null check added
-			if (null != response && StringUtils.isNotEmpty(response.getCardReference()))
+			if (StringUtils.isNotEmpty(response.getCardReference()))
 			{
 				debitCardPaymentInfoModel.setCode(response.getCardReference());
 			}
@@ -683,7 +682,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			//debitCardPaymentInfoModel.setUser(getUserService().getCurrentUser());			//Commented for TPR-629
 			debitCardPaymentInfoModel.setUser(cart.getUser());
-			if (null != response && StringUtils.isNotEmpty(response.getNameOnCard()))
+			if (StringUtils.isNotEmpty(response.getNameOnCard()))
 			{
 				debitCardPaymentInfoModel.setCcOwner(response.getNameOnCard());
 			}
@@ -691,7 +690,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				debitCardPaymentInfoModel.setCcOwner(MarketplacecommerceservicesConstants.DUMMYCCOWNER);//To Be Removed
 			}
-			if (null != response && StringUtils.isNotEmpty(response.getCardNumber()))
+			if (StringUtils.isNotEmpty(response.getCardNumber()))
 			{
 				debitCardPaymentInfoModel.setNumber(response.getCardNumber());
 			}
@@ -699,7 +698,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				debitCardPaymentInfoModel.setNumber(MarketplacecommerceservicesConstants.DUMMYNUMBER);//To Be Removed
 			}
-			if (null != response && StringUtils.isNotEmpty(response.getExpiryMonth()))
+			if (StringUtils.isNotEmpty(response.getExpiryMonth()))
 			{
 				debitCardPaymentInfoModel.setValidToMonth(response.getExpiryMonth());
 			}
@@ -707,7 +706,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				debitCardPaymentInfoModel.setValidToMonth(MarketplacecommerceservicesConstants.DUMMYMM);//To Be Removed
 			}
-			if (null != response && StringUtils.isNotEmpty(response.getExpiryYear()))
+			if (StringUtils.isNotEmpty(response.getExpiryYear()))
 			{
 				debitCardPaymentInfoModel.setValidToYear(response.getExpiryYear());
 			}
@@ -716,7 +715,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				debitCardPaymentInfoModel.setValidToYear(MarketplacecommerceservicesConstants.DUMMYYY);
 			}
 
-			if (null != response && StringUtils.isNotEmpty(response.getCardType()))
+			if (StringUtils.isNotEmpty(response.getCardType()))
 			{
 				//OrderIssues:- CardBrand Null Check added
 				if (null != response.getCardBrand()
@@ -866,9 +865,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 			//final AddressModel address = saveBillingAddress(orderStatusResponse, cart, sameAsShipping);
 
-			//OrderIssues:- getting the cardRespone and and null check added
+			//OrderIssues:-
 			final CardResponse response = orderStatusResponse.getCardResponse();
-			if (null != response && StringUtils.isNotEmpty(response.getCardReference()))
+			if (StringUtils.isNotEmpty(response.getCardReference()))
 			{
 				creditCardPaymentInfoModel.setCode(response.getCardReference());
 			}
@@ -877,7 +876,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				creditCardPaymentInfoModel.setCode("DUMMY_CC_" + cart.getCode());//To Be Removed
 			}
 			creditCardPaymentInfoModel.setUser(getUserService().getCurrentUser());
-			if (null != response && StringUtils.isNotEmpty(response.getNameOnCard()))
+			if (StringUtils.isNotEmpty(response.getNameOnCard()))
 			{
 				creditCardPaymentInfoModel.setCcOwner(response.getNameOnCard());
 			}
@@ -885,7 +884,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				creditCardPaymentInfoModel.setCcOwner(MarketplacecommerceservicesConstants.DUMMYCCOWNER);//To Be Removed
 			}
-			if (null != response && StringUtils.isNotEmpty(response.getCardNumber()))
+			if (StringUtils.isNotEmpty(response.getCardNumber()))
 			{
 				creditCardPaymentInfoModel.setNumber(response.getCardNumber());
 			}
@@ -893,7 +892,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				creditCardPaymentInfoModel.setNumber(MarketplacecommerceservicesConstants.DUMMYNUMBER);//To Be Removed
 			}
-			if (null != response && StringUtils.isNotEmpty(response.getExpiryMonth()))
+			if (StringUtils.isNotEmpty(response.getExpiryMonth()))
 			{
 				creditCardPaymentInfoModel.setValidToMonth(response.getExpiryMonth());
 			}
@@ -901,7 +900,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				creditCardPaymentInfoModel.setValidToMonth(MarketplacecommerceservicesConstants.DUMMYMM);//To Be Removed
 			}
-			if (null != response && StringUtils.isNotEmpty(response.getExpiryYear()))
+			if (StringUtils.isNotEmpty(response.getExpiryYear()))
 			{
 				creditCardPaymentInfoModel.setValidToYear(response.getExpiryYear());
 			}
@@ -909,7 +908,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				creditCardPaymentInfoModel.setValidToYear(MarketplacecommerceservicesConstants.DUMMYYY);
 			}
-			if (null != response && StringUtils.isNotEmpty(response.getCardReference()))
+			if (StringUtils.isNotEmpty(response.getCardReference()))
 			{
 				creditCardPaymentInfoModel.setSubscriptionId(response.getCardReference());//Card Reference
 			}
@@ -918,7 +917,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				creditCardPaymentInfoModel.setSubscriptionId(MarketplacecommerceservicesConstants.DUMMYCARDREF);
 			}
 
-			if (null != response && StringUtils.isNotEmpty(response.getCardBrand()))
+			if (StringUtils.isNotEmpty(response.getCardBrand()))
 			{
 				if (MarketplacecommerceservicesConstants.MASTERCARD.equalsIgnoreCase(response.getCardBrand()))
 				{
@@ -1076,9 +1075,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				address = createDummyAddress(cart);
 			}
-			//OrderIssues:- Getting the card response and null check added
+			//OrderIssues:-
 			final CardResponse cardRes = response.getCardResponse();
-			if (null != cardRes && StringUtils.isNotEmpty(cardRes.getCardReference()))
+			if (StringUtils.isNotEmpty(cardRes.getCardReference()))
 			{
 				emiPaymentInfoModel.setCode(cardRes.getCardReference());
 			}
@@ -1088,7 +1087,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			//emiPaymentInfoModel.setUser(getUserService().getCurrentUser());		//Commented for TPR-629
 			emiPaymentInfoModel.setUser(cart.getUser());
-			if (null != cardRes && StringUtils.isNotEmpty(cardRes.getNameOnCard()))
+			if (StringUtils.isNotEmpty(cardRes.getNameOnCard()))
 			{
 				emiPaymentInfoModel.setCcOwner(cardRes.getNameOnCard());
 			}
@@ -1096,7 +1095,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				emiPaymentInfoModel.setCcOwner(MarketplacecommerceservicesConstants.DUMMYCCOWNER);//To Be Removed
 			}
-			if (null != cardRes && StringUtils.isNotEmpty(cardRes.getCardNumber()))
+			if (StringUtils.isNotEmpty(cardRes.getCardNumber()))
 			{
 				emiPaymentInfoModel.setNumber(cardRes.getCardNumber());
 			}
@@ -1104,7 +1103,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				emiPaymentInfoModel.setNumber(MarketplacecommerceservicesConstants.DUMMYNUMBER);//To Be Removed
 			}
-			if (null != cardRes && StringUtils.isNotEmpty(cardRes.getExpiryMonth()))
+			if (StringUtils.isNotEmpty(cardRes.getExpiryMonth()))
 			{
 				emiPaymentInfoModel.setValidToMonth(cardRes.getExpiryMonth());
 			}
@@ -1112,7 +1111,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				emiPaymentInfoModel.setValidToMonth(MarketplacecommerceservicesConstants.DUMMYMM);//To Be Removed
 			}
-			if (null != cardRes && StringUtils.isNotEmpty(cardRes.getExpiryYear()))
+			if (StringUtils.isNotEmpty(cardRes.getExpiryYear()))
 			{
 				emiPaymentInfoModel.setValidToYear(cardRes.getExpiryYear());
 			}
@@ -1120,7 +1119,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				emiPaymentInfoModel.setValidToYear(MarketplacecommerceservicesConstants.DUMMYYY);
 			}
-			if (null != cardRes && StringUtils.isNotEmpty(cardRes.getCardReference()))
+			if (StringUtils.isNotEmpty(cardRes.getCardReference()))
 			{
 				emiPaymentInfoModel.setSubscriptionId(cardRes.getCardReference());
 			}
@@ -1152,7 +1151,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 
 			//TODO:Add EMI related values from response to emiPaymentInfoModel
-			if (null != cardRes && StringUtils.isNotEmpty(cardRes.getCardBrand()))
+			if (StringUtils.isNotEmpty(cardRes.getCardBrand()))
 			{
 				if (MarketplacecommerceservicesConstants.MASTERCARD.equalsIgnoreCase(cardRes.getCardBrand()))
 				{
@@ -3005,11 +3004,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3021,9 +3020,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3390,7 +3389,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for non-COD from OMS Submit Order Job de.hybris.platform.core.model.order.OrderModel)
 	 */
@@ -3539,7 +3538,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @desc getPaymentModeFrompayInfo
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 	 */
 	@Override
@@ -3580,7 +3579,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for pre paid from OMS Submit Order Job
 	 */
@@ -3644,7 +3643,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @desc SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for COD from OMS Submit Order Job
 	 */
