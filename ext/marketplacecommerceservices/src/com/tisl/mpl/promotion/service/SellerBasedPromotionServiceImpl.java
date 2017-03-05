@@ -19,9 +19,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
-import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
-import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.promotion.dao.SellerBasedPromotionDao;
 
 
@@ -80,7 +77,7 @@ public class SellerBasedPromotionServiceImpl implements SellerBasedPromotionServ
 	 * @throws Exception
 	 */
 	@Override
-	public List<AbstractPromotionModel> fetchPromotionDetails(final String code) throws Exception
+	public List<AbstractPromotionModel> fetchPromotionDetails(final String code)
 	{
 		return getSellerBasedPromotionDao().fetchPromotionDetails(code);
 	}
@@ -92,7 +89,7 @@ public class SellerBasedPromotionServiceImpl implements SellerBasedPromotionServ
 	 * @throws Exception
 	 */
 	@Override
-	public void modifyFiredMessage(final String promoCode) throws Exception
+	public void modifyFiredMessage(final String promoCode)
 	{
 		try
 		{
@@ -125,7 +122,6 @@ public class SellerBasedPromotionServiceImpl implements SellerBasedPromotionServ
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured while modifyFiredMessage:- ", e);
-			throw new Exception(e);
 		}
 
 	}

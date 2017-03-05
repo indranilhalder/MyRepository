@@ -9,8 +9,6 @@ import de.hybris.platform.promotions.model.AbstractPromotionModel;
 
 import java.util.List;
 
-import com.tisl.mpl.model.SellerInformationModel;
-
 
 /**
  * @author TCS
@@ -22,9 +20,9 @@ public interface SellerBasedPromotionService
 
 	List<PriceRowModel> fetchPriceInformation(String code, CatalogVersionModel oModel);
 
-	List<AbstractPromotionModel> fetchPromotionDetails(String code) throws Exception;
+	List<AbstractPromotionModel> fetchPromotionDetails(String code);
 
-	void modifyFiredMessage(String string) throws Exception;
+	void modifyFiredMessage(String string);
 
 	List<AbstractPromotionModel> getPromoDetails();
 

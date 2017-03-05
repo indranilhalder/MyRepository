@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.model.SellerInformationModel;
 
 
 /**
@@ -89,6 +88,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 	 * @Description: Fetch Promotion Details corresponding to a code
 	 * @param : code
 	 * @return List<AbstractPromotionModel>
+	 * @throws Exception
 	 */
 	//OrderIssues:-
 	@Override
@@ -106,6 +106,11 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(CODE, code);
 			return flexibleSearchService.<AbstractPromotionModel> search(query).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			LOG.error("Fetching Promotion Details", e);
+			return null;
 		}
 		catch (final Exception e)
 		{
