@@ -92,7 +92,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 	 */
 	//OrderIssues:-
 	@Override
-	public List<AbstractPromotionModel> fetchPromotionDetails(final String code) throws Exception
+	public List<AbstractPromotionModel> fetchPromotionDetails(final String code)
 	{
 		LOG.debug("Fetching Promotion Details");
 		try
@@ -111,11 +111,6 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 		{
 			LOG.error("Fetching Promotion Details", e);
 			return null;
-		}
-		catch (final Exception e)
-		{
-			LOG.error("Fetching Promotion Details", e);
-			throw new Exception(e);
 		}
 	}
 
