@@ -147,12 +147,10 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 
 		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
+
 		catch (final Exception e)
 		{
+			e.printStackTrace();
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
@@ -734,12 +732,9 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 
 		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
 		catch (final Exception e)
 		{
+			e.printStackTrace();
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
@@ -788,12 +783,10 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 
 		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
+
 		catch (final Exception e)
 		{
+			e.printStackTrace();
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
@@ -854,12 +847,10 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 							});
 
 		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
+
 		catch (final Exception e)
 		{
+			e.printStackTrace();
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}

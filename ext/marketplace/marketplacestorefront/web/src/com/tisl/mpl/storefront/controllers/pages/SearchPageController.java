@@ -477,7 +477,7 @@ public class SearchPageController extends AbstractSearchPageController
 		catch (final Exception exp)
 		{
 
-
+			exp.printStackTrace();
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp,
 					MarketplacecommerceservicesConstants.E0000));
 			return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
@@ -1312,9 +1312,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 * 
+	 *
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 * 
+	 *
 	 * return list; }
 	 */
 
