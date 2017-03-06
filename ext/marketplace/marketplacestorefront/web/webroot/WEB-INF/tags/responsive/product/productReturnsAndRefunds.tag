@@ -21,7 +21,7 @@
 		<li><spring:theme code="know.more.fourth"/>&nbsp;${cliqCareNumber}&nbsp;<spring:theme code="know.more.fifth"/>&nbsp;${cliqCareMail}&nbsp;</li>
 	</ul>
 	</ycommerce:testId>
-</div>
+</div> 
 
 <!-- PDP changes end -->
 

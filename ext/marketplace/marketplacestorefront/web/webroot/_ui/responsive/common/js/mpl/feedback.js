@@ -429,7 +429,7 @@ $(document).ready(function(){
 					$(this).addClass("selected-multi-colour");
 				}
 			}
-			});
+			}); 
 		}
 		if($(this).find("input.size").length > 0){
 			var selected_size = $(this).find("input.applied-color").val();
