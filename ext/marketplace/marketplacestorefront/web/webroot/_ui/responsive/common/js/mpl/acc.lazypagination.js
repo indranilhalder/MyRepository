@@ -159,7 +159,7 @@ $(document).ready(function() {
         $(document).on('click','.sort',function(){
           	var item = $(this).attr('data-name');
         	$('.sort').removeAttr('style');
-        	$(this).css('color', 'red');
+        	$(this).css('color', '#92002e');
         	var pathName = window.location.pathname;
         	pathName = pathName.replace(/page-[0-9]+/, 'page-1');
         	

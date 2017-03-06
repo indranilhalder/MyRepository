@@ -301,7 +301,6 @@
 						<li><span class="sort" data-name="new">New</span></li>
 						<li><span class="sort" data-name="discount">Discount</span></li>
 					</ul>
-
 					<ul>
 						<span>Price:</span>
 
@@ -317,8 +316,8 @@
 			<option class="sort" data-name="relevance">Relevance</option>
 			<option class="sort" data-name="new">New</option>
 			<option class="sort" data-name="discount">Discount</option>
-			<option class="sort" data-name="low">Low to High</option>
-			<option class="sort" data-name="high">High to Low</option>
+			<option class="sort" data-name="low">Price Low to High</option>
+			<option class="sort" data-name="high">Price High to Low</option>
 			
 			</select>
 			</div>
