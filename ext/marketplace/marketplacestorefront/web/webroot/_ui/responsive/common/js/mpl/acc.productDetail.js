@@ -1918,6 +1918,12 @@ function displayDeliveryDetails(sellerName) {
 					$("#lingerieKnowMoreLi2").show();
 					$("#defaultKnowMoreLi").hide();
 					}
+				//Added for UF-98 
+				else if(rWindowValue=="0")
+				{        
+					$("#defaultKnowMoreLi4").show();
+					$("#defaultKnowMoreLi").hide();
+				}
 				else
 					{
 					$("#returnWindow").text(data['returnWindow']);
@@ -1926,6 +1932,8 @@ function displayDeliveryDetails(sellerName) {
 				}
 				else
 					{
+					$("#defaultKnowMoreLi4").show();
+					$("#defaultKnowMoreLi").hide();
 					$("#returnWindow").text("0");
 					}
 			}
