@@ -2246,8 +2246,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
 					{
 						// OrderIssues:- Set the value duplicatJuspayResponse in session to true  ones cart GUID executed with success response from juspay
-						final Map<String, Boolean> duplicatJuspayResponseMap = getSessionService().getAttribute(
-								MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE);
+						final Map<String, Boolean> duplicatJuspayResponseMap = new HashMap<String, Boolean>();
 						duplicatJuspayResponseMap.put(orderGuid, Boolean.TRUE);
 
 						getSessionService().setAttribute(MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE,

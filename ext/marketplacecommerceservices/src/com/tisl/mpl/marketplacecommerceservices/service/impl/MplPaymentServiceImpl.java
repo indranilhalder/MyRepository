@@ -2927,10 +2927,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		//		if (null != orderStatusResponse && null != orderStatusResponse.getCardResponse()
 		//				&& StringUtils.isNotEmpty(cart.getModeOfPayment()))
-		if (null != orderStatusResponse
-				&& null != orderStatusResponse.getCardResponse()
-				&& (StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardType()) || StringUtils
-						.isNotEmpty(orderStatusResponse.getPaymentMethodType())))
+		if (null != orderStatusResponse && null != orderStatusResponse.getCardResponse()
+				&& StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardType()))
+		//			&& (StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardType()) || StringUtils
+		//					.isNotEmpty(orderStatusResponse.getPaymentMethodType()))
 		{
 			//Logic if the order status response is not null
 			//			for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
@@ -2942,8 +2942,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 			//OrderIssues:- getting the CardType Or PaymentMethodType in a variable
 
-			final String cardType = null != orderStatusResponse.getCardResponse().getCardType() ? orderStatusResponse
-					.getCardResponse().getCardType() : orderStatusResponse.getPaymentMethodType();
+			final String cardType = orderStatusResponse.getCardResponse().getCardType();
 
 			if (cardType.equalsIgnoreCase("DEBIT"))
 			{
@@ -3028,11 +3027,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3044,9 +3043,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3413,7 +3412,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for non-COD from OMS Submit Order Job de.hybris.platform.core.model.order.OrderModel)
 	 */
@@ -3562,7 +3561,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @desc getPaymentModeFrompayInfo
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 	 */
 	@Override
@@ -3603,7 +3602,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for pre paid from OMS Submit Order Job
 	 */
@@ -3667,7 +3666,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @desc SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for COD from OMS Submit Order Job
 	 */

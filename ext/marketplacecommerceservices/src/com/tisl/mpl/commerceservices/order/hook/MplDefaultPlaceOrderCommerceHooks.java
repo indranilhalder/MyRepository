@@ -1259,7 +1259,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//			if (CollectionUtils.isNotEmpty(subOrderModel.getEntries()))
 			//			{
 			final List<AbstractOrderEntryModel> subOrderEntries = subOrderModel.getEntries();
-
+			boolean buyABGetC = false;
 			if (CollectionUtils.isNotEmpty(subOrderEntries))
 			{
 				for (final AbstractOrderEntryModel entry : subOrderEntries)
@@ -1267,8 +1267,16 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					if (null != entry.getGiveAway() && entry.getGiveAway().booleanValue()
 							&& mplOrderService.checkIfBuyABGetCApplied(entry))
 					{
-						parentUssid = getParentUssidForBuyABgetC(associatedItems, subOrderModel); // TODO:- while checking is done
+						buyABGetC = true;
+						//parentUssid = getParentUssidForBuyABgetC(associatedItems, subOrderModel);
 					}
+				}
+
+				//OrderIssues:- 
+
+				if (buyABGetC)
+				{
+					parentUssid = getParentUssidForBuyABgetC(associatedItems, subOrderModel);
 				}
 				// ####  TISOMSII-230  END  ##############
 

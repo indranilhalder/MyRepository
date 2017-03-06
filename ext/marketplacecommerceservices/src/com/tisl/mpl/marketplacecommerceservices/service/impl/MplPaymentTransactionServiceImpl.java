@@ -131,8 +131,9 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 				final String cardType = getOrderStatusResponse.getCardResponse().getCardType();
 				if (StringUtils.isEmpty(cardType))
 				{
-					// TODO :- Check with Barun Da wt to set the payment Mode, Since paymntmode is mandatory
-					//paymentTransactionEntry.setPaymentMode("");
+					//:- Check with Barun Da wt to set the payment Mode, Since paymntmode is mandatory
+					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("UNKNOWN");
+					paymentTransactionEntry.setPaymentMode(paymenttype);
 				}
 				if (cardType.equalsIgnoreCase("DEBIT"))
 				{
