@@ -293,6 +293,8 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String GUID = "guid";
 	public static final String REDIRECTSTRING = "redirect";
 	public static final String REDIRECTTOPAYMENT = "redirect_to_payment";
+	//TPR-3780:fine jewellery
+	public static final String INVENTORYRESERVED = "reload_for_inventory";
 	public final static String PAYMENTIMEOUTRRORMSG = "checkout.multi.paymentMethod.addPaymentDetails.PaymentTimeoutError";
 
 	//TPR-3780
