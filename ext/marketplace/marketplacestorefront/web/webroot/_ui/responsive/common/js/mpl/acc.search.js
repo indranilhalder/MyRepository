@@ -708,26 +708,7 @@ function donotShowAll()
 		}
 
 $(document).on("click",".plp-wishlist",function(e){
-	/*TPR-4723*/ /*TPR-4708*/
-	
-	if($('#pageType').val() == "productsearch"){
-		if(typeof utag !="undefined"){
-			utag.link({link_text: "add_to_wishlist_serp" , event_type : "add_to_wishlist_serp"});
-			}
-	}
-	
-	if($('#pageType').val() == "category" || $('#pageType').val() == "electronics" ){
-		if(typeof utag !="undefined"){
-			utag.link({link_text: "add_to_wishlist_plp" , event_type : "add_to_wishlist_plp"});
-			}
-	}
-	
-	//addToWishlistForPLP($(this).data("product"),this);
-	if ( $( this ).hasClass( "added" ) ) {
-		removeToWishlistForPLP($(this).data("product"),this);
-	} else {
-		addToWishlistForPLP($(this).data("product"),this);
-	}
+	addToWishlistForPLP($(this).data("product"),this);
 	return false;
 })
 		/*Changes for INC144313867*/
@@ -839,14 +820,26 @@ $(document).on("click",".plp-wishlist",function(e){
 								$(".wishAlreadyAddedPlp").removeClass("active")
 							},3000)
 						}
-						/*TPR-4723*/
-						if(typeof utag !="undefined"){
-							utag.link({product_sku_wishlist : productarray });
-							}	
+						/*TPR-4723*//*TPR-4708*/
+						if($('#pageType').val() == "productsearch"){
+							if(typeof utag !="undefined"){
+								utag.link({link_text: "add_to_wishlist_serp" , event_type : "add_to_wishlist_serp" ,product_sku_wishlist : productarray});
+								}
+						}
+						
+						if($('#pageType').val() == "category" || $('#pageType').val() == "electronics" ){
+							if(typeof utag !="undefined"){
+								utag.link({link_text: "add_to_wishlist_plp" , event_type : "add_to_wishlist_plp" ,product_sku_wishlist : productarray});
+								}
+						}
+						
 						
 					},
 					error : function(xhr, status, error){
 						alert(error);
+						if(typeof utag !="undefined"){
+							utag.link({error_type : 'wishlist_error'});
+							}
 					}
 				});
 				

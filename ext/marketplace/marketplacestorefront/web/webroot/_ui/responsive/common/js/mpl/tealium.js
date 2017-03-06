@@ -5,7 +5,6 @@ $(document).ready(
 			tealiumCallOnPageLoad();//Moving tealium on-load call to function so that it can be re-used.
 });
 
-
 /*TPR-429 Start*/
 
 function differentiateSeller(){
@@ -866,7 +865,7 @@ function tealiumCallOnPageLoad()
 						tealiumData += '"categoryId":"'
 							+ $("#categoryId").val() + '",';
 						if($("#out_of_stock_count").val() != undefined  && $("#out_of_stock_count").val() != null && $("#out_of_stock_count").val() != ''){
-						tealiumData += '"out_of_stock_count":"'		// TPR-4707
+						tealiumData += '"out_of_stock_totalcount":"'		// TPR-4707
 							+ $("#out_of_stock_count").val() + '",';
 						}
 						if(offerCount != undefined && offerCount != null && offerCount != ''){ 
