@@ -30783,12 +30783,15 @@ right: 0px !important;
 
 
 /* Start QuickView for non sealable product */
-.prod-dlisted-msg{
+
+/* TPR-4966 */
+.prod-dlisted-msg,#addToCartFormnoInventory.no_inventory,#addToCartFormexcedeInventory{
 	color: #ff1c47;
 	display: block;
 	margin-bottom: 10px;
 	text-align: center;
 }
+/* TPR-4966 */
 
 .buy-btn-holder{
 	/* margin-bottom: 10px; */ /* TPR-1870 remove whitespace*/
