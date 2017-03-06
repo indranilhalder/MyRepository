@@ -1262,8 +1262,8 @@ $(function() {
 															} else {
 																//$("#home").hide();
 																//$("#homeli").hide();
-																$("#collectli").css("opacity","0.5");
-																$("#collectli").removeClass("selected");
+																$("#homeli").css("opacity","0.5");
+																$("#homeli").removeClass("selected");
 															}
 
 															if (exp == true) {
@@ -1822,10 +1822,10 @@ function displayDeliveryDetails(sellerName) {
 				    $("#expressli").css("opacity","1");
 
 					if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
-						$("#home").hide();
-						$("#homeli").hide();
-						//$("#homeli").css("opacity","0.5");
-						//$("#homeli").removeClass("selected");
+						//$("#home").hide();
+						//$("#homeli").hide();
+						$("#homeli").css("opacity","0.5");
+						$("#homeli").removeClass("selected");
 					} else {
 						var start=parseInt($("#homeStartId").val())+leadTime;
 						var end=parseInt($("#homeEndId").val())+leadTime;
