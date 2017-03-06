@@ -8,7 +8,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<style type="text/css">
+<style type="text/css"> 
 tr.d0 td {
   background-color:#E0E0E0 ;
   color: black;
@@ -117,7 +117,7 @@ tr.d0 td {
 			
 		</div>
 		<!-- Added for carousel in mobile view -->
-		<div class="product-image-container device">
+		<div class="product-image-container ${product.rootCategory} device">
 			<a class="wishlist-icon" onclick="addToWishlist()"></a>
 			<c:set var="thumbNailImageLengthDevice" value="${fn:length(galleryImages)}" />
 			<div class="jcarousel-skin imageListCarousel" id="pdpProductCarousel"> 

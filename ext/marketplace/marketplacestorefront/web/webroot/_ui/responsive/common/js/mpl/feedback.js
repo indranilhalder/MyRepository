@@ -429,7 +429,7 @@ $(document).ready(function(){
 					$(this).addClass("selected-multi-colour");
 				}
 			}
-			});
+			}); 
 		}
 		if($(this).find("input.size").length > 0){
 			var selected_size = $(this).find("input.applied-color").val();
@@ -549,12 +549,50 @@ $(document).ready(function(){
 			    });
 	/*----Start of SignIn & SignUp tab Switching -----*/
 			 
+	
+	/*----START-- Added for tab horizontal scrolling while working on Jewellery  -----*/
+			 
+			 
+			 $(".nav.pdp").owlCarousel({
+					items: 5,
+					loop: false,
+					nav: false,
+					dots: false,
+					navText: [],
+					touchDrag: true,
+					mouseDrag: true,
+				    responsive: {
+						0 : {
+						  items: 2,
+						  autoHeight: false,
+						  stagePadding: 0,
+						},
+						480 : {
+						   items: 2,
+						  autoHeight: false,
+						},
+						768 : {
+						   items: 4,
+						   autoHeight: false,
+						   stagePadding: 0,
+						},
+						980 : {
+						   items: 4,
+						},
+						1024 : {
+						   items: 4,
+						}
+					 }
+				});
+			 
+	/*----END-- Added for tab horizontal scrolling while working on Jewellery  -----*/
+			 
 	/*----Start of  PDP tabs -----*/
-			 $(".tabs-block .nav.pdp li").on("click",function(e) {
-				 $("ul.nav.pdp li").removeClass('active'); 
-				 $(this).addClass('active');
-				 var count = $(this).index();
-				 $("ul.tabs.pdp>li").removeClass('active'); 
+			 $(".tabs-block .nav.pdp .owl-item").on("click",function(e) {
+				 var count = $(".tabs-block .nav.pdp .owl-item").index(this);
+				 $(".tabs-block .nav.pdp .owl-item").removeClass("current");
+				 $(this).addClass("current");
+				 $("ul.tabs.pdp>li").removeClass("active");
 				 $("ul.tabs.pdp>li").eq(count).addClass("active");
 			    }); 
 	/*----END of  PDP tabs -----*/
