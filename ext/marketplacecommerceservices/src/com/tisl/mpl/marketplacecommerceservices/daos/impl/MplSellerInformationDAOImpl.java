@@ -23,6 +23,9 @@ import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplSellerInformationDAO;
+import com.tisl.mpl.model.RestrictionsetupModel;
+import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.model.SellerSalesCategoryModel;
 
 
 /**
@@ -63,7 +66,7 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplSellerInformationDAO#getSellerInforationDetails(java.lang.String)
 	 */
@@ -103,7 +106,7 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplSellerInformationDAO#getSellerInforationDetails(java.lang.String)
 	 */
@@ -333,7 +336,7 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplSellerInformationDAO#getSellerInformationWithSellerMaster(java
 	 * .lang.String)

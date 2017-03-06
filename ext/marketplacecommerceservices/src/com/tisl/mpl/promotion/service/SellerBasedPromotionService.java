@@ -9,6 +9,8 @@ import de.hybris.platform.promotions.model.AbstractPromotionModel;
 
 import java.util.List;
 
+import com.tisl.mpl.model.SellerInformationModel;
+
 
 /**
  * @author TCS

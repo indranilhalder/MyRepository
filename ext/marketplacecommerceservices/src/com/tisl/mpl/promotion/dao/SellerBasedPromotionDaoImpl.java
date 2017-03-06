@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.model.SellerInformationModel;
 
 
 /**
@@ -32,8 +33,8 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 	private static final Logger LOG = Logger.getLogger(SellerBasedPromotionDaoImpl.class);
 
 	private static final String P = "{p.";
-	private static final String PRM = "{prm.";
 	private static final String PROMO = "{promo.";
+	private static final String PRM = "{prm.";
 	private static final String APM = "{apm.";
 	private static final String QUERY_FROM = "FROM {";
 	private static final String CODE = "code";
