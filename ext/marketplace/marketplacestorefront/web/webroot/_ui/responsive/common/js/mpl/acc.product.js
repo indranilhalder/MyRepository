@@ -1072,37 +1072,68 @@ sendAddToBagQuick:function(formId){
 		}
 	},
 	brandFilter: function(){
-		$('input[class="brandSearchTxt"]').keyup(function(){
-		    var that = this, $allListElements = $('ul > li.filter-brand').find("span.facet-label");
-		    var $matchingListElements = $allListElements.filter(function(i, li){
-		        var listItemText = $(li).text().toUpperCase(), searchText = that.value.toUpperCase();
+		$(document).on("keyup",'input[class="brandSearchTxt"]',function(){
+			var facetTopValuesCnt=$("#facetTopValuesCnt").val();		
+			var that = this, $allListElements =$('.facet_desktop ul.js-facet-list > li.filter-brand').find("span.facet-label");
+		    //get all matching elements
+			var $matchingListElements = $allListElements.filter(function(i, li){
+		    	var spanTxt=$(li).text().trim();		    	
+		    	var lastIndexOfFirstBracket=spanTxt.lastIndexOf("(");
+		    	var searchText = that.value.toUpperCase();		    	
+		    	var listItemText = (lastIndexOfFirstBracket!=-1)?spanTxt.substring(0,lastIndexOfFirstBracket).trim().toUpperCase():spanTxt.toUpperCase();		    	
+		    	if($(li).hasClass('marked')){	
+		    		$(li).removeClass('marked');
+		    	}		    	
 		        return ~listItemText.indexOf(searchText);
-		    });
-		    if(($matchingListElements).size() > 0) {
-			    $(this).parents(".js-facet").find(".js-facet-top-values").hide();
-				$(this).parents(".js-facet").find(".js-facet-list-hidden").show();
-	
-				$(this).parents(".js-facet").find(".js-more-facet-values").hide();
-				$(this).parents(".js-facet").find(".js-less-facet-values").show();
+		    });		    		    
+			//If top value is configured to be greater than 0
+		    if(~~facetTopValuesCnt!=0)
+		    {
+		    	var remainingFacetValuesCnt=$("#remainingFacetValuesCnt").val();
+			    $(".brand .js-facet-top-values").hide();
+				$(".brand .js-facet-list.js-facet-list-hidden").show();
+				$allListElements.hide();
+				var matchingListElementsSize=$matchingListElements.length;			
+				if($('input[class="brandSearchTxt"]').val() == "") {//If text box is blank 				
+					$(".brand .js-facet-top-values").show();
+					$(".brand .js-facet-list.js-facet-list-hidden").hide();
+					
+					$(this).parents(".js-facet").find(".js-more-facet-values span").text((~~remainingFacetValuesCnt)-(~~facetTopValuesCnt));
+					if($allListElements.length>facetTopValuesCnt)
+					{
+						$(this).parents(".js-facet").find(".js-more-facet-values").show();					
+						$(this).parents(".js-facet").find(".js-less-facet-values").hide();
+					}
+			    }
+				else{//If text box has data
+					$.each($matchingListElements,function(index,element)
+					{
+						index<facetTopValuesCnt?$(this).css('display','block'):$(this).addClass('marked');					
+					});
+					if(matchingListElementsSize>0 && matchingListElementsSize>facetTopValuesCnt)
+					{				
+						$(this).parents(".js-facet").find(".js-more-facet-values span").text(~~matchingListElementsSize-~~facetTopValuesCnt);
+						$(this).parents(".js-facet").find(".js-more-facet-values").show();
+						$(this).parents(".js-facet").find(".js-less-facet-values").hide();
+					}
+					else if(matchingListElementsSize==0 || (matchingListElementsSize>0 && matchingListElementsSize<=facetTopValuesCnt))
+					{
+						$(this).parents(".js-facet").find(".js-more-facet-values").hide();
+						$(this).parents(".js-facet").find(".js-less-facet-values").hide();
+					}
+				}
 		    }
-		    if(that.value.toUpperCase() == ''){
-		    	$(this).parents(".js-facet").find(".js-facet-top-values").show();
-				$(this).parents(".js-facet").find(".js-facet-list-hidden").hide();
-
-				$(this).parents(".js-facet").find(".js-more-facet-values").show();
-				$(this).parents(".js-facet").find(".js-less-facet-values").hide();
-		    }
-			    
-		    $allListElements.hide();
-		    $(".brand .js-facet-top-values").hide();
-			$(".brand .js-facet-list.js-facet-list-hidden").show();
-		    $matchingListElements.show();
-		    
-		    if($('input[class="brandSearchTxt"]').val() == "") {
-		    	
-		    	$(".brand .js-facet-top-values").show();
-				$(".brand .js-facet-list.js-facet-list-hidden").hide();
-		    }
+		    else
+	    	{//If top value is configured to be 0
+		    	if($('input[class="brandSearchTxt"]').val() == "")
+		    	{
+					$allListElements.show();
+		    	}
+				else{
+					$allListElements.hide();
+					$matchingListElements.show();
+				}
+	    	}
 		});
 	},
 	
