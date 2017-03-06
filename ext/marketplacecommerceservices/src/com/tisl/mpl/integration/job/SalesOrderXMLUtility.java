@@ -249,8 +249,8 @@ public class SalesOrderXMLUtility
 								salesXMLData.setSubOrderList(subOrderDataList);
 								LOG.debug("set sub order list");
 							}
-							bulkSalesDataList.add(salesXMLData);
 						}
+						bulkSalesDataList.add(salesXMLData);
 					}
 				}
 			}
