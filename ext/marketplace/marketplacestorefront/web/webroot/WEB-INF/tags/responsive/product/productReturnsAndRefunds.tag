@@ -9,7 +9,7 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!-- Details of style notes tab -->
-<div class="tab-details">
+<div class="tab-details return-refnd-dtls"> <!-- /* CLASS return-refnd-dtls ADDED TO REDUCE WIDTH OF CONTAINER */ -->
 	<%-- <ycommerce:testId code="productDetails_content_label"> --%>
 	<ycommerce:testId code="productTataPromise_content_label">
 		<ul>
