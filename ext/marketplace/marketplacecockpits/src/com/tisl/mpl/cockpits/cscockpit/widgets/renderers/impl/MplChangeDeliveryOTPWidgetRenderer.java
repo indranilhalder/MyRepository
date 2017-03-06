@@ -792,7 +792,7 @@ public class MplChangeDeliveryOTPWidgetRenderer
 						try {
 							if(null !=ScheduledeliveryDtoList) {
 								try {
-									saveDeliveryDates (orderModel,ScheduledeliveryDtoList);
+									saveDeliveryDates (orderModel,scheduleList);
 								}catch(Exception e) {
 									LOG.error("Exception while saving schedule delivery dates");
 								}
