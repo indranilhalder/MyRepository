@@ -30783,12 +30783,16 @@ right: 0px !important;
 
 
 /* Start QuickView for non sealable product */
-.prod-dlisted-msg{
+
+/* TPR-4966 */
+.prod-dlisted-msg,#addToCartFormnoInventory.no_inventory,#addToCartFormexcedeInventory{
 	color: #ff1c47;
 	display: block;
 	margin-bottom: 10px;
 	text-align: center;
+	line-height: 15px;
 }
+/* TPR-4966 */
 
 .buy-btn-holder{
 	/* margin-bottom: 10px; */ /* TPR-1870 remove whitespace*/
@@ -35743,6 +35747,11 @@ span.jqtree-facetCount.jqtree_common{
 .short-info .company .old, .short-info .price .old {
     margin-right: -3px;
 }
+/* TISSQAUAT-517 start*/
+ .product-info .color-swatch li img{
+	vertical-align: bottom;
+}
+/* TISSQAUAT-517 end */
 }
 @media (max-width: 767px){
 .product-listing.product-grid li.product-item, .listing.wrapper .right-block .product-list > li{
@@ -46032,7 +46041,6 @@ float: right;
 	width: 20px;
 	height: 20px;
 }
-
 .product-info .size {
 	clear: both;
 	display: inline-block;
