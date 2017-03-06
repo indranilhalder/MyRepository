@@ -301,7 +301,6 @@
 						<li><span class="sort" data-name="new">New</span></li>
 						<li><span class="sort" data-name="discount">Discount</span></li>
 					</ul>
-
 					<ul>
 						<span>Price:</span>
 
@@ -313,12 +312,12 @@
 			
 			<div class="list_title_sort">
 			<label class="sortByMobile">Sort by</label>
-			<select>
-			<option class="sort" data-name="relevance">Relevance</option>
-			<option class="sort" data-name="new">New</option>
-			<option class="sort" data-name="discount">Discount</option>
-			<option class="sort" data-name="low">Low to High</option>
-			<option class="sort" data-name="high">High to Low</option>
+			<select class="responsiveSort">
+			<option  data-name="relevance">Relevance</option>
+			<option  data-name="new">New</option>
+			<option  data-name="discount">Discount</option>
+			<option  data-name="low">Low to High</option>
+			<option  data-name="high">High to Low</option>
 			
 			</select>
 			</div>

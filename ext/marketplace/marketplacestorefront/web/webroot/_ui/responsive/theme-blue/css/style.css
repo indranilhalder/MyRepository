@@ -61015,6 +61015,8 @@ body.page-productGrid .facet-list.filter-opt {
     margin-top: 14px;
     font-size: 9px;
     text-transform: uppercase;
+    /* float:left;
+    padding-left:0px; */
 	}
 }
 @media(max-width:767px){
@@ -61052,6 +61054,13 @@ body.page-productGrid .facet-list.filter-opt {
     top: 14px;
     background-position: -332px -2px;
     width: 24px;
+	}
+}
+@media(max-width:486px){
+	.list_title_sort select{
+	float: left !important;
+    left: -15px;
+    margin-top: -7px;
 	}
 }
 

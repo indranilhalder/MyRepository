@@ -39,9 +39,9 @@ function innerLazyLoad(options) {
         totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
         isSerp = true;
     }
-	if(pageNoPagination == totalNoOfPages){
+	/*if(pageNoPagination == totalNoOfPages){
 		$('li').removeClass('lazy-reached');
-	}
+	}*/
 }
 
 function deleteArraySet(productItemArray) {
@@ -56,7 +56,7 @@ function deleteArraySet(productItemArray) {
         	recordsLoadedCount = $('.product-listing.product-grid.lazy-grid').find('li.product-item').length;
         }
     }
-    console.log('Availabe blocks ' + productItemArray.length + ' Record count == ' + recordsLoadedCount);
+   // console.log('Availabe blocks ' + productItemArray.length + ' Record count == ' + recordsLoadedCount);
 }
 
 function getProductSetData() {
@@ -71,7 +71,6 @@ function getProductSetData() {
             var currentPageNo = pathName.match(/page-[0-9]+/);
 
             currentPageNo = currentPageNo[0].split("-");
-            console.log(currentPageNo);
             currentPageNo = parseInt(currentPageNo[1]);
             if (directPaginatedLoad) {
                 directPaginatedLoad = false;
@@ -125,7 +124,6 @@ $(document).ready(function() {
                     hH = $('.lazy-reached').outerHeight(),
                     wH = $(window).height(),
                     wS = $(this).scrollTop();
-                // console.log((hT - wH), wS);
                 if (wS > (hT + hH - wH)) {
                     $('.lazy-reached').attr('class', 'product-item');
                     if ((recordsLoadedCount % loadMoreCount) == 0) {
@@ -157,71 +155,11 @@ $(document).ready(function() {
         });
         
         $(document).on('click','.sort',function(){
-          	var item = $(this).attr('data-name');
-        	$('.sort').removeAttr('style');
-        	$(this).css('color', 'red');
-        	var pathName = window.location.pathname;
-        	pathName = pathName.replace(/page-[0-9]+/, 'page-1');
-        	
-        	var url = '';
-        	switch (item) {
-			case 'relevance':
-				if(pageType == 'productsearch'){
-					url = 'searchCategory=&sort=relevance&q='+$('#js-site-search-input').val()+':isLuxuryProduct:false';
-				}else{
-					url = 'searchCategory=&sort=relevance&q=:isLuxuryProduct:false';
-				}
-				ajaxPLPLoad(pathName +'?'+url);
-				sortReplaceState(pathName +'?'+url); 
-				initPageLoad = true;
-				break;
-			case 'new':
-				if(pageType == 'productsearch'){
-					url = 'searchCategory=&sort=isProductNew&q='+$('#js-site-search-input').val()+':isLuxuryProduct:false';
-				}else{
-					url = 'searchCategory=&sort=isProductNew&q=:isLuxuryProduct:false';
-				}
-				ajaxPLPLoad(pathName +'?'+url);
-				sortReplaceState(pathName +'?'+url); 
-				initPageLoad = true;
-				break;
-			case 'discount':
-				if(pageType == 'productsearch'){
-					url = 'searchCategory=&sort=isDiscountedPrice&q='+$('#js-site-search-input').val()+':isLuxuryProduct:false';
-				}else{
-					url = 'searchCategory=&sort=isDiscountedPrice&q=:isLuxuryProduct:false';
-				}
-				ajaxPLPLoad(pathName +'?'+url);
-				sortReplaceState(pathName +'?'+url); 
-				initPageLoad = true;
-				break;
-			case 'low':
-				if(pageType == 'productsearch'){
-					url = 'searchCategory=&sort=price-asc&q='+$('#js-site-search-input').val()+':isLuxuryProduct:false';
-				}else{
-					url = 'searchCategory=&sort=price-asc&q=:isLuxuryProduct:false';
-				}
-				ajaxPLPLoad(pathName +'?'+url);
-				sortReplaceState(pathName +'?'+url);
-				initPageLoad = true;
-				break;
-			case 'high':
-				if(pageType == 'productsearch'){
-					url = 'searchCategory=&sort=price-desc&q='+$('#js-site-search-input').val()+':isLuxuryProduct:false';
-				}else{
-					url = 'searchCategory=&sort=price-desc&q=:isLuxuryProduct:false';
-				}
-				if(facetAjaxUrl){
-					ajaxPLPLoad(facetAjaxUrl +'&'+url);
-				}else{
-					ajaxPLPLoad(pathName +'?'+url);
-				}
-				sortReplaceState(pathName +'?'+url);
-				initPageLoad = true;
-				break;
-			default:
-				break;
-			}
+        	sort($(this),false);
+        });
+        
+        $('.responsiveSort').change(function(){
+        	sort($(this).find(':selected'),true);
         });
         
 });
@@ -245,7 +183,7 @@ function ajaxPLPLoad(ajaxUrl){
         url: ajaxUrl,
         data: {
             pageSize: 24,
-            q: '',
+            /* q: '', */
             lazyInterface:'Y'
         },
         beforeSend: function() {
@@ -269,7 +207,6 @@ function ajaxPLPLoad(ajaxUrl){
         },
         complete: function() {
             //$('#loadMorePagination').val('LOAD MORE');
-        	console.log(productItemArray);
             innerLazyLoad();
             $('.lazyLoadPagination').remove();
         }
@@ -281,3 +218,73 @@ function sortReplaceState(url){
 		 window.history.replaceState({}, '', nextPaginatedAjaxUrl);
 }
 
+function sort(this_data,drop_down){
+	console.log(typeof(this_data));
+	var item = $(this_data).attr('data-name');
+	$('.sort').removeAttr('style');
+	if(!drop_down){
+		$(this_data).css('color', 'red');
+	}
+	var pathName = window.location.pathname;
+	pathName = pathName.replace(/page-[0-9]+/, 'page-1');
+	
+	var url = '';
+	switch (item) {
+	case 'relevance':
+		if(pageType == 'productsearch'){
+			url = 'searchCategory=&sort=relevance&q='+$('#js-site-search-input').val()+':isLuxuryProduct:false';
+		}else{
+			url = 'searchCategory=&sort=relevance&q=:isLuxuryProduct:false';
+		}
+		ajaxPLPLoad(pathName +'?'+url);
+		sortReplaceState(pathName +'?'+url); 
+		initPageLoad = true;
+		break;
+	case 'new':
+		if(pageType == 'productsearch'){
+			url = 'searchCategory=&sort=isProductNew&q='+$('#js-site-search-input').val()+':isLuxuryProduct:false';
+		}else{
+			url = 'searchCategory=&sort=isProductNew&q=:isLuxuryProduct:false';
+		}
+		ajaxPLPLoad(pathName +'?'+url);
+		sortReplaceState(pathName +'?'+url); 
+		initPageLoad = true;
+		break;
+	case 'discount':
+		if(pageType == 'productsearch'){
+			url = 'searchCategory=&sort=isDiscountedPrice&q='+$('#js-site-search-input').val()+':isLuxuryProduct:false';
+		}else{
+			url = 'searchCategory=&sort=isDiscountedPrice&q=:isLuxuryProduct:false';
+		}
+		ajaxPLPLoad(pathName +'?'+url);
+		sortReplaceState(pathName +'?'+url); 
+		initPageLoad = true;
+		break;
+	case 'low':
+		if(pageType == 'productsearch'){
+			url = 'searchCategory=&sort=price-asc&q='+$('#js-site-search-input').val()+':isLuxuryProduct:false';
+		}else{
+			url = 'searchCategory=&sort=price-asc&q=:isLuxuryProduct:false';
+		}
+		ajaxPLPLoad(pathName +'?'+url);
+		sortReplaceState(pathName +'?'+url);
+		initPageLoad = true;
+		break;
+	case 'high':
+		if(pageType == 'productsearch'){
+			url = 'searchCategory=&sort=price-desc&q='+$('#js-site-search-input').val()+':isLuxuryProduct:false';
+		}else{
+			url = 'searchCategory=&sort=price-desc&q=:isLuxuryProduct:false';
+		}
+		if(facetAjaxUrl){
+			ajaxPLPLoad(facetAjaxUrl +'&'+url);
+		}else{
+			ajaxPLPLoad(pathName +'?'+url);
+		}
+		sortReplaceState(pathName +'?'+url);
+		initPageLoad = true;
+		break;
+	default:
+		break;
+	}
+}
