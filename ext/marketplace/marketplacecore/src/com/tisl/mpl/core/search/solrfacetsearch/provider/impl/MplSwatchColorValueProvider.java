@@ -17,8 +17,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -85,7 +87,7 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 			//Model should be instance of PcmProductVariantModel
 			final PcmProductVariantModel pcmVariantModel = (PcmProductVariantModel) model;
 
-			final HashSet<String> colours = new HashSet<String>();
+			final Map<String, String> colours = new HashMap<String, String>();
 
 			String variantColor = null;
 			String variantColorHexCode = null;
@@ -108,7 +110,8 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 					{
 						variantColorHexCode = pcmSwatchVariantModel.getColourHexCode();
 
-						if (pcmSwatchVariantModel.getColourHexCode() == null || pcmSwatchVariantModel.getColourHexCode().isEmpty())
+						//if (pcmSwatchVariantModel.getColourHexCode() == null || pcmSwatchVariantModel.getColourHexCode().isEmpty())
+						if (StringUtils.isBlank(variantColorHexCode))
 						{
 							variantColor = getColorWithHexCode(pcmSwatchVariantColor.toLowerCase());
 						}
@@ -117,8 +120,7 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 							variantColor = StringUtils.capitalize(pcmSwatchVariantColor) + "_"
 									+ (variantColorHexCode.contains("#") ? variantColorHexCode.replace("#", "") : variantColorHexCode);
 						}
-						variantColor = variantColor + "||" + pcmSwatchVariantModel.getCode();
-						colours.add(variantColor);
+						colours.put(variantColor, pcmSwatchVariantModel.getCode());
 
 					}
 
@@ -131,7 +133,7 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 
 			{
 				//add field values
-				fieldValues.addAll(createFieldValue(colours, indexedProperty));
+				fieldValues.addAll(createFieldValue(hashMaptoSet(colours), indexedProperty));
 			}
 			//return the field values
 			return fieldValues;
@@ -188,6 +190,17 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 			return colorHexCode.replace("#", "");
 		}
 		return color;
+	}
+
+	private Set<String> hashMaptoSet(final Map<String, String> colours)
+	{
+		final Set<String> colourSet = new HashSet<>();
+		for (final Map.Entry<String, String> entry : colours.entrySet())
+		{
+			colourSet.add(entry.getKey() + "||" + entry.getValue());
+		}
+
+		return colourSet;
 	}
 
 	/**
