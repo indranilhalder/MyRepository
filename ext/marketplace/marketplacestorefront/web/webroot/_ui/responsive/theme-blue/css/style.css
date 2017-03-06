@@ -20924,7 +20924,7 @@ body.account .right-account ul.saved-cards>li img {
 
 #billingAddress .half select#country{
 width:100%;
-border: 1px solid #DFD1D5;
+border: 1px solid #DDD;
 }
 .cart.wrapper .left-block form{
     margin: 0;
@@ -55360,11 +55360,11 @@ display:block;}
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .half input#stateEmi,
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .half input#firstNameEmi,
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .half input#lastNameEmi{
-	height:45px;
+	height:41px;
 }
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .half select#countryEmi{
 	width:100%;
-	height:45px;
+	height:41px;
 }
  .cart.wrapper .payments.tab-view .product-block li.item#savedCardDebit + li + .terms,
  .cart.wrapper .payments.tab-view .product-block li.item#savedCard + li + .terms{
@@ -61381,7 +61381,7 @@ text-transform:none;}
 	border-left:1px solid #fff;
 	position: absolute;
     right: -1px;
-    height: 63px;
+    height: 100%;
     width: 1px;
     top: 0;
 }
@@ -61600,6 +61600,8 @@ margin: 0;
   	letter-spacing: 0.6px;
   	height: 41px;
   	border: solid 1px #dddddd;
+  	background-size: 10px;
+  	background-position: calc(100% - 12px) center;
 }
 .cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block.emi .bank-select p.emi-plan{
 	border-top: 0;
@@ -61735,7 +61737,6 @@ a.cvvHelp#cvvHelp + div.popover{
   color: #ffffff;
   text-transform:none;
   right: 0;
-  left: auto !important;
   border-color: #000;
 }
 a.cvvHelp#cvvHelp + div.popover .popover-content{
@@ -61759,7 +61760,7 @@ a.cvvHelp#cvvHelp + div.popover.bottom>.arrow {
 	display: none !important;
 }
 .paymentModeMobile{
-	display: none;
+	display: none !important;
 }
 }
 /*Credit, debit card and EMI section end*/
@@ -61840,6 +61841,16 @@ margin-left:0;
 	float: left;
 	width:47%;
 	text-transform: none;
+	background-size: 10px;
+  	background-position: calc(100% - 12px) center;
+}
+#card .form-group select,.cart.wrapper .left-block .payments.tab-view .new-card fieldset .half select#countryEmi{
+	background-size: 10px;
+  	background-position: calc(100% - 12px) center;
+  	border: 1px solid #ddd;
+}
+.cart.wrapper .left-block .payments.tab-view .new-card fieldset .half select#countryEmi:focus{
+	border-color: #000;
 }
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select{
 	margin-top:21px;
@@ -62153,6 +62164,12 @@ li#savedCardDebit , li#savedCard{
 	.saved_card_disabled{
 		cursor: not-allowed;
 	}
+	.popular_bank_option, .other_bank_label{
+		display:none;
+	}
+	a.cvvHelp#cvvHelp + div.popover{
+		left: auto !important;
+	}
 }
 @media(max-width:767px){
 	div#savedCreditCard, div#savedDebitCard, div#savedEMICard {
@@ -62186,6 +62203,11 @@ li#savedCard ~ #newCardCC + li, li#savedCard ~ #newCardCC {
 .card_cvvErrorSavedCard_popup{
 	display: none !important;
 }
+/* div#savedDebitCard .debit-card-group .right-align-form input.cvvValdiation.security_code_hide, 
+div#savedCreditCard .credit-card-group .right-align-form input.cvvValdiation.security_code_hide, 
+div#savedEMICard .credit-card-group .right-align-form input.cvvValdiation.security_code_hide{
+	display: none;
+} */
 }
 /*saved card end*/
 /*Left section end*/
@@ -62241,7 +62263,7 @@ li#savedCard ~ #newCardCC + li, li#savedCard ~ #newCardCC {
 }
 .cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs li.paymentModeMobile span{
 	display: block;
-	padding: 17px;
+	padding: 17.5px;
     padding-left: 56px;
     position: relative;
     z-index: 5;
@@ -62353,6 +62375,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     padding-left: 11px;
 }
 .cart.wrapper.checkout-payment.checkout-payment p.cart-items {
+	color: #878787;
     line-height: 1.45;
     font-size: 11px;
     padding-left: 11px;
@@ -62424,13 +62447,63 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 	margin-left:5px;
 }
 a#cvvHelp {
-    width: 10px;
-    height: 12px;
+    width: 15px;
+    height: 15px;
     bottom: auto;
     right: auto;
-    top: 8px;
-    left: 36px;
+    top: 7px;
+    left: 32px;
     margin: 0;
+}
+a.cvvHelp#cvvHelp + div.popover{
+	width:auto;
+	min-width: 60px;
+    padding: 2px;
+	}
+	a.cvvHelp#cvvHelp + div.popover.right>.arrow:after {
+    border-right-color: #000;
+}
+.checkout.wrapper .product-block.emi li.item{
+	margin-top: 0px;
+}
+.cart.wrapper.checkout-payment .right-block.billing .block.subtotals.summary-info,
+.checkout-payment h2.payment-delivery-details,
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .order-details.block.delivery-info{
+	display: none;
+}
+.cart.wrapper .right-block.billing.checkout-list-right{
+	background: #f8f8f8;
+	padding: 16px !important;
+	margin: 0 0 76px;
+	clear: both;
+}
+.checkout-payment h2.coupon{
+	font-size: 12px;
+}
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .block.coupon{
+	margin: 0px;
+    padding: 10px 0 0 0;
+}
+.cart.wrapper.checkout-payment .right-block .block input {
+    line-height: 41px;
+    height: 41px;
+}
+.cart.wrapper.checkout-payment .right-block.billing .block.coupon button{
+	height: 41px !important;
+}
+.left-block.choose-payment{
+	margin-bottom: 24px;
+}
+.cart.wrapper.checkout-payment .blocks.netbankingPanel{
+	padding: 8.5px 20px 36px 20px !important;
+}
+.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select{
+	margin: 0;
+}
+.cart.wrapper.checkout-payment .blocks.netbankingPanel p,
+.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select label,
+.cart.wrapper.checkout-payment .blocks.netbankingPanel p.popular-banks + ul{
+	display: none;
 }
 }
 div.radio.creditDebitLabelRadio{

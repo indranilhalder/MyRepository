@@ -3045,11 +3045,11 @@ function validateNameEmi() {
 }
 
 $(window).on('load resize',function(){	
-	if($(window).width()<651){
+	if($(window).width()<768){
 $(".cvvHelp").popover({
     html: 'true',
-    placement: 'bottom',
-    trigger: 'hover',
+    placement: 'right',
+    trigger: 'click',
     content: $("#cvvHelpContent").val()
 });
 	}
