@@ -1245,7 +1245,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
               if(!(returnInfoData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_SELF))){
 					boolean returnLogisticsCheck = true; //Start
 
-					final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails, pinCode);
+					final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails, pinCode,subOrderEntry.getTransactionId());
 					if (CollectionUtils.isNotEmpty(returnLogisticsRespList))
 					{
 						for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
@@ -1267,10 +1267,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					{
 				   if (returnLogisticsCheck)
 					{
-						//LOG.info("Setting Type of Return::::::" + returnLogisticsCheck);
 						sendTicketRequestData.setTicketSubType(MarketplacecommerceservicesConstants.RETURN_TYPE_RSP);
-					}else {
-						sendTicketRequestData.setTicketSubType(MarketplacecommerceservicesConstants.RETURN_TYPE_RSS);
 					}
 					}
               }
@@ -1299,6 +1296,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 				lineItemDataList.add(sendTicketLineItemData);
 			}
+			if(StringUtils.isNotEmpty(sendTicketRequestData.getTicketSubType())){
 			if (!((sendTicketRequestData.getTicketSubType()).equals("RSS")))
 			{
 				addressInfo.setShippingFirstName(returnAddress.getFirstName());
@@ -1312,6 +1310,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				addressInfo.setState(returnAddress.getState());
 				addressInfo.setPincode(returnAddress.getPincode());
 				addressInfo.setLandmark(returnAddress.getLandmark());
+			}
 			}
 			
 			//set ECOM request prefix as E to for COMM triggered Ticket
@@ -2244,6 +2243,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			final List<ReturnLogistics> returnLogisticsList = new ArrayList<ReturnLogistics>();
 			String returningTransactionId;
 			returningTransactionId = sessionService.getAttribute("transactionId");
+			if (StringUtils.isEmpty(returningTransactionId))
+			{
+				return null;
+			}
 			String transactionId = "";
 			for (final OrderEntryData eachEntry : entries)
 			{
