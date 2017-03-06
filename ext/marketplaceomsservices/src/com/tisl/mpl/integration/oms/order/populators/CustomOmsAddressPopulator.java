@@ -76,12 +76,12 @@ public class CustomOmsAddressPopulator implements Populator<AddressModel, Addres
 		{
 			final StringBuilder addressLine2 = new StringBuilder((source.getLine2() != null ? source.getLine2()
 					: source.getStreetnumber()));
-			addressLine = addressLine.append(MarketplaceomsordersConstants.SINGLE_SPACE).append(addressLine2);
+			addressLine = addressLine.append(addressLine2);
 		}
 		if (StringUtils.isNotEmpty(source.getAddressLine3()))
 		{
 			final StringBuilder addressLine3 = new StringBuilder(source.getAddressLine3());
-			addressLine = addressLine.append(MarketplaceomsordersConstants.SINGLE_SPACE).append(addressLine3.toString());
+			addressLine = addressLine.append(addressLine3);
 		}
 
 		String addrLine1 = StringUtils.EMPTY;
