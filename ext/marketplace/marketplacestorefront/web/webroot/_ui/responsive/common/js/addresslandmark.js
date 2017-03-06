@@ -167,7 +167,7 @@ function loadPincodeData(parm) {
 				//}	
 			} else {
 				
-				if(response.landMarks != null || response.landMarks != "") {
+				if(response.landMarks != null && response.landMarks != "") {
 				console.log("addresslandmark line 186 "+ response);
 				//$(".saveBlockData,#newAddressButton,#saveAddress").css({'opacity':'1'}).prop("disabled",false);
 			//	$(".pincodeNoError,#pincodeError,#erraddressPost,#addAddressForm #pincode + .errorText").hide();
