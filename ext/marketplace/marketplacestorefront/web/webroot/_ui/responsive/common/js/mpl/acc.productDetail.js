@@ -1871,10 +1871,10 @@ function displayDeliveryDetails(sellerName) {
 					
 					if (null != deliveryModes && deliveryModes.indexOf("CNC") == -1) {
 						
-						$("#collect").hide();
-						$("#collectli").hide();
-						//$("#collectli").css("opacity","0.5");
-						//$("#collectli").removeClass("selected");
+						//$("#collect").hide();
+						//$("#collectli").hide();
+						$("#collectli").css("opacity","0.5");
+						$("#collectli").removeClass("selected");
 					} else {
 						var start=$("#clickStartId").val();
 						var end=$("#clickEndId").val();
