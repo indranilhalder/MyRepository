@@ -49,15 +49,28 @@ public interface MplCommerceCartDao
 
 	/*
 	 * @Desc fetching state details for a state name
-	 *
+	 * 
 	 * @param stateName
-	 *
+	 * 
 	 * @return StateModel
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
 	List<StateModel> fetchStateDetails(String stateName) throws EtailNonBusinessExceptions;
+
+	/**
+	 * This method return the latest cart for a user.
+	 *
+	 * @param guid
+	 * @param site
+	 * @param user
+	 * @return CartModel
+	 * @throws InvalidCartException
+	 *
+	 *            This method was developed for CAR-256
+	 */
+	public CartModel fetchLatestCart(BaseSiteModel site, UserModel user) throws InvalidCartException;
 
 }
