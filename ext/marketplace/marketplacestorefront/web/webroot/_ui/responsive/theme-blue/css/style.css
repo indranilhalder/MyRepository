@@ -721,6 +721,7 @@ a.morelink, .more-link {
 }
 .tabs-block{
 	padding-left: 20px;
+	padding-right: 20px;
 	width: 99%;
 }
 .tabs-block .wrapper{
@@ -32170,6 +32171,9 @@ img.r2-app-brand-img {
 	img.r2-app-mob-down {
 		margin-left: 0;
 	    margin-top: -125px;
+	}	
+	.tabs-block{
+		padding-right: 0;
 	}
 	.tabs-block .tabs li .about-pro {
 	    float: left;
@@ -60220,6 +60224,9 @@ body.page-productGrid .listing-leftmenu .checkbox-menu>a,body.page-productGrid .
 	}
 	.accordin{
 		width: 45%;
+	}	
+	.tabs-block{
+		padding-right: 0;
 	}
 	.tabs-block .nav-wrapper{
 		margin-left: 15px;
@@ -60292,6 +60299,9 @@ body.page-productGrid .listing-leftmenu .checkbox-menu>a,body.page-productGrid .
 	}
 	.accordin{
 		width: 45%;
+	}
+	.tabs-block{
+		padding-right: 0;
 	}
 	.tabs-block .FineJewellery, .tabs-block .FashionJewellery{
 		margin-top: 60px;
