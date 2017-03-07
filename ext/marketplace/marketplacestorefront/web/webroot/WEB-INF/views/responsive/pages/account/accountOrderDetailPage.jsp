@@ -2943,7 +2943,7 @@ $(function() {
 			      console.log("blur line 394");
 					 var value = $(".address_landmarkOtherDiv").attr("data-value");
 					 console.log("blur line 396 "+value);
-					 otherLandMarkTri(value,"blur");
+					 otherLandMarkTri(value,"defult");
 			      $("#deliveryAddressForm #city").val($("#deliveryAddressForm #city").attr("value")); 
 			      $("#deliveryAddressForm #state").val($("#deliveryAddressForm #state").attr("value")); 
 			      $("#deliveryAddressForm #mobileNo").val($("#deliveryAddressForm #mobileNo").attr("value")); 
