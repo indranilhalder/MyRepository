@@ -2407,7 +2407,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			if (null != cartEntryData && null != cartEntryData.getMplDeliveryMode())
 			{
 				if (cartEntryData.getMplDeliveryMode().getCode()
-						.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+						.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY) || cartEntryData.getMplDeliveryMode().getCode()
+						.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
 				{
 					deliveryModelList.add(cartEntryData.getMplDeliveryMode().getCode());
 				}
