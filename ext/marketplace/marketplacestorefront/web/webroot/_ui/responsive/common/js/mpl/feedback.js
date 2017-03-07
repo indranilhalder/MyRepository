@@ -2058,8 +2058,20 @@ $(document).ready(function() {
 		
 		
 		/*CLP section js ends*/
+		
+		/* UF-68 UF-69 */
+		var cartBottomCheckTopMargin = $("body.page-cartPage .cart-bottom-block").height() - $("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").outerHeight();
+		$("body.page-cartPage .cartBottomCheck").addClass("cartBottomCheckShow").css("margin-top",cartBottomCheckTopMargin);
+		
+		/* UF-68 UF-69 */
 });
 $(window).resize(function() {
+	
+	/* UF-68 UF-69 */
+	var cartBottomCheckTopMargin = $("body.page-cartPage .cart-bottom-block").height() - $("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").outerHeight();
+	$("body.page-cartPage .cartBottomCheck").addClass("cartBottomCheckShow").css("margin-top",cartBottomCheckTopMargin);
+	
+	/* UF-68 UF-69 */
 
 	clearTimeout(colorSwatchFlag);
 	clearTimeout(sizeSwatchFlag);
@@ -2073,6 +2085,16 @@ $(window).resize(function() {
 			sizeSwatch();
 		}
 	}, 200)
+	
+	/* UF-68 UF-69 */
+	
+	if($(window).width() >= 1008){
+		//$("body.page-cartPage .cartBottomCheck").removeClass("cartBottomCheckShow");
+	var cartBottomCheckTopMargin = $("body.page-cartPage .cart-bottom-block").height() - $("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").outerHeight();
+	$("body.page-cartPage .cartBottomCheck").addClass("cartBottomCheckShow").css("margin-top",cartBottomCheckTopMargin);
+	}
+	
+	/* UF-68 UF-69 */
 });
 
 $(document).on("click",".facet.js-facet.Colour .more-lessFacetLinks .more",function(e) {
@@ -2895,4 +2917,26 @@ $("body.page-cartPage .cart.wrapper .checkout-types li#checkout-id").on("mouseov
 	else{
 		$(this).css("cursor","default");
 	}
+});
+if ($(".facet-list.filter-opt").children().length){
+	$("body.page-productGrid .product-listing.product-grid.lazy-grid").css("padding-top","15px");
+	$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top","-95px");
+	$("body.page-productGrid .facet-list.filter-opt").css("padding-top","65px");
+	var height = $(".facet-list.filter-opt").outerHeight() + 33 + "px";
+	$(".pagination-bar.listing-menu.top.sort_by_wrapper").css("top", height);
+}
+
+$(document).ready(function(){ 
+    $(window).scroll(function(){ 
+        if ($(this).scrollTop() > 100) { 
+            $('#scroll_to_top').fadeIn(); 
+        } else { 
+            $('#scroll_to_top').fadeOut(); 
+        } 
+    }); 
+    //$('#scroll_to_top').click(function(e){ 
+    $(document).on("click","#scroll_to_top",function(){
+        $("html, body").animate({ scrollTop: 0 }, 600); 
+        return false; 
+    }); 
 });

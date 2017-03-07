@@ -1338,6 +1338,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>3XL</value>
 				<value>4XL</value>
 				<value>5XL</value>
+				<value>Plus Size</value>	<!-- Added for INC144314300 -->
 			</list>
 		</property>
 	</bean>
@@ -1365,6 +1366,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>3XL</value>
 				<value>4XL</value>
 				<value>5XL</value>
+				<value>Plus Size</value>	<!-- Added for INC144314300 -->
 			</list>
 		</property>
 	</bean>
@@ -1404,6 +1406,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 			    <value>MEDIUM</value> 
 				<value>LARGE</value>
 				<value>X-LARGE</value>
+				<value>Plus Size</value> <!-- Added for INC144314300 -->
 			</list>
 		</property>
 	</bean>
@@ -1437,6 +1440,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>${footwear.header.EURO}</value>
 				<value>${footwear.header.footlength}</value>
 				<value>${footwear.header.Witdth}</value>
+				<value>Plus Size</value>   <!-- Added for INC144314300 -->
 			</list>
 		</property>
 	</bean>
@@ -1746,5 +1750,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="categoryModelUrlResolver" ref="categoryModelUrlResolver"/>
 	</bean>
 	 
-
+	<!-- AddtoCart Helper Class -->
+	<bean id="addToCartHelper" class="com.tisl.mpl.helper.AddToCartHelper" />
+	
 </beans>

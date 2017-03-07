@@ -6,7 +6,10 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <script src="https://www.google.com/recaptcha/api.js"></script>
-<p>
+
+<p>Pay Using Cash-On-delivery</p>
+<p>Verify Order</p>
+<%-- <p>
 	<spring:theme
 		code="checkout.multi.paymentMethod.addPaymentDetails.cod.desc" />
 </p>
@@ -15,10 +18,10 @@
 		<spring:theme
 			code="checkout.multi.paymentMethod.addPaymentDetails.cod.amtPayable" />
 		&nbsp;<span id="codAmount"></span>
-	</h4>
+	</h4>--%>
 	<%-- &nbsp;<span id="convChargeMessage"><spring:theme
 			code="checkout.multi.paymentMethod.addPaymentDetails.cod.convChargeMsg" /></span> --%>
-</div>
+<!-- </div>  -->
 <div id="sendOTPNumber" class="cont-del">
 	<input type="hidden" id="codEligible" value="${codEligible}" />
 	<div class="description">
@@ -42,12 +45,12 @@
 				code="checkout.multi.paymentMethod.cod.updateItHereLink" /></a>
 	</p> --%>
 	<!-- INC_11794 -->
-	<p class="process">
+<%-- 	<p class="process">
 		<spring:theme
 			code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoMessage" />
 		 <a class="cod-link" onclick="updateMobileNo()"><spring:theme
 				code="checkout.multi.paymentMethod.cod.updateItHereLink" /></a>
-	</p> 
+	</p>  --%>
 
 <%-- 	<div id="sendOTPButton">
 

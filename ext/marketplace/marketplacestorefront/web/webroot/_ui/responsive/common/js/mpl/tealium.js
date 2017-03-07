@@ -1011,3 +1011,141 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 				 
 				 utag.link({"link_text":parentItem+"_"+lastItem,"event_type" : navigationClick});
 			 }); 
+
+			 
+/* Data Layer Schema Changes Starts*/
+
+/*Thumbnail tracking*/
+//$(document).on("click",".product-image-container .imageListCarousel .thumb",function(){
+$(document).on("click",".product-info > .product-image-container > .productImageGallery .imageListCarousel .thumb",function(){
+	var thumbnail_value = $(this).parent().attr('class');
+	var thumbnail_type = $(this).find('img').attr('data-type');
+	utag.link({
+		"link_text":"pdp_"+thumbnail_value+"_clicked",
+		"event_type":"pdp_"+thumbnail_type+"_clicked",
+		"thumbnail_value":thumbnail_value
+	});
+})
+
+/*Product Specification*/
+$(document).on("click",".nav-wrapper .nav.pdp",function(){
+	utag.link({"link_text":"product_specification", "event_type":"view_prod_specification"});
+})
+
+/*Out Of Stock During adding to bag*/
+function errorAddToBag(errorMessage){
+	utag.link({"error_type":errorMessage});
+}
+
+/*On Size selection | PDP*/
+$(document).on('click',".variant-select > li", function(){
+	var product_size = $(this).find('a').html();
+	utag.link({
+		"link_text":"pdp_size_"+product_size,
+		"event_type":"pdp_size_selected",
+		"product_size":product_size
+	});
+})
+
+
+/*On Colour selection | PDP*/
+$(document).on('click',".color-swatch > li", function(){
+	var product_color = $(this).find('img').attr('title').toLowerCase();
+	utag.link({
+		"link_text":"pdp_color_"+product_color,
+		"event_type":"pdp_color_selected",
+		"product_color":product_color
+	});
+})
+
+/*PDP similar product recommendations*/
+$(document).on("click",".owl-stage .owl-item",function(){
+	var url = $(this).find('a').attr('href').split('/p/');
+	var productID = url[1].split('/');
+	var productArray=[];
+	productArray.push(productID[0]);
+	utag.link({
+			link_text: "similar_products_clicked",
+			event_type : "similar_products_clicked",
+			similar_product_id : productArray
+			
+		});
+})
+
+/*PDP image hover*/
+$(document).on("mouseover",".zoomContainer",function(e) {
+	utag.link({
+		link_text: "pdp_image_hover",
+		event_type : "pdp_image_hover"
+	});
+});
+
+/*PDP Add to bag & Buy Now*/
+function utagAddProductToBag(triggerPoint,productCodeMSD){
+	    var productCodeArray=[];
+	    var productcode='';
+		var pageName='';
+		var pageType = $('#pageName').val();
+		if( pageType == "Product Details"){
+			pageName="pdp";
+			productCodeArray.push(productCodeMSD);
+		}
+		if(  pageType == "View Seller Page"){
+			pageName="pdp";
+			 productCode= $('#productCode').val();
+			 productCodeArray.push(productCode);
+		}
+
+	utag.link({
+		link_obj: this,
+		link_text: triggerPoint ,
+		event_type : triggerPoint+"_"+ pageName,
+		product_sku : productCodeArray              // Product code passed as an array for Web Analytics - INC_11511  fix
+	});
+}
+
+
+/*TPR-4740  Continue Shopping | Cart  */
+$(document).on("click",".continue-shopping.desk-view-shopping",function() {
+	utag.link({
+		link_text: "continue_shopping_clicked",
+		event_type : "continue_shopping_clicked"
+	});
+})
+
+//TPR-4739 | Expresscheckout | cart
+$(document).on("click","#expressCheckoutButtonId",function(){
+	utag.link({
+		link_text: "cart_express_checkout_button_start",
+		event_type : "cart_express_checkout_button_start"
+	});
+})
+
+ /*TPR-4745  | Add New Address | Checkout */
+$(document).on('click','.pincode-button',function(){
+				 
+utag.link({ link_text : 'add_new_address_clicked' ,event_type : 'add_new_address_clicked'});
+})
+
+/*TPR-4687 | Broken Image*/
+$(window).load(function() {
+	var brokenImageCount=0;	
+	$('.mainContent-wrapper img').each(function(){
+		var url = $(this).attr('src');
+		if(url){
+			if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+			      // image is broken
+			    	brokenImageCount++;
+			    }
+		}
+
+	});
+	if(brokenImageCount > 0){
+		var msg = brokenImageCount+" broken_image_found";
+		utag.link({ 
+			error_type : msg
+		});
+	}
+});
+/* Data Layer Schema Changes Ends*/
+

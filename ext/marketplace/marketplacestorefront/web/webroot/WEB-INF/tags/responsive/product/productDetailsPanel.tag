@@ -171,11 +171,11 @@ tr.d0 td {
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
 				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name">${product.brand.brandname}</span></h3>
-				<a itemprop="url" href="${mainurl}">
+				<%-- <a itemprop="url" href="${mainurl}"> --%>		<!-- Commented as part of UF-181 -->
 				<!-- For TPR-4358 -->
 				<h1 itemprop="name" class="product-name">${product.productTitle}</h1>
 				<meta itemprop="sku" content="${product_sku}"/>
-				</a>
+				<!-- </a> -->
 			</ycommerce:testId>
 
 			<ycommerce:testId
@@ -219,8 +219,9 @@ tr.d0 td {
 			</div>
 			
 			<!--  Added for displaying offer messages other than promotion, TPR-589 -->
+			<!--INC144313502-->
 				 <div>
-					<a class="pdp-promo-title-link">View more</a>
+					<a class="pdp-promo-title-link" style="display:none">View more</a>
 				</div>	
 				
 			<!-- TISPRM-97 ends -->

@@ -420,14 +420,6 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 				    zoomWindowFadeIn: 500,
 				    zoomWindowFadeOut: 750
 				       });
-			
-				/*TPR-643 starts*/
-				utag.link({
-					link_obj: this, 
-					link_text: 'pdp_image_click' , 
-					event_type : 'pdp_image_click' 
-				});
-				/*TPR-643 ends*/
 			}
 		    }else{
 		    	var url = $(this).attr("data-videosrc");
@@ -1049,7 +1041,8 @@ $(function() {
 
 					function() {
 						//TPR900
-						if($("#pdpPincodeCheck").text() == 'Check')
+						//if($("#pdpPincodeCheck").text() == 'Check')
+						if(document.getElementById("pdpPincodeCheck").className == "Check")//UF-71
 						{
 							//INC144314017
 							$(this).data('clicked', true);
@@ -1269,8 +1262,8 @@ $(function() {
 															} else {
 																//$("#home").hide();
 																//$("#homeli").hide();
-																$("#collectli").css("opacity","0.5");
-																$("#collectli").removeClass("selected");
+																$("#homeli").css("opacity","0.5");
+																$("#homeli").removeClass("selected");
 															}
 
 															if (exp == true) {
@@ -1286,8 +1279,8 @@ $(function() {
 																$("#expressli").removeClass("selected");
 
 															}if (click == true) {
-																//$("#collect").show();
-																//$("#collectli").show();
+																$("#collect").show();
+																$("#collectli").show();
 																$("#collectli").addClass("selected");
 															    $("#collectli").css("opacity","1");
 																deliverModeTealium.push("clickandcollect");
@@ -1402,10 +1395,12 @@ $(function() {
 							$('#pin').blur();
 							
 							if ( $('#pin').val() == "") {
-								$("#pdpPincodeCheck").text("Check")				/*UF-42*/
+								//$("#pdpPincodeCheck").text("Check")				/*UF-42*/
+								document.getElementById("pdpPincodeCheck").className = "Check";//UF-71
 							} else {
 							
-								$("#pdpPincodeCheck").text("Change Pincode")
+								//$("#pdpPincodeCheck").text("Change Pincode")
+								document.getElementById("pdpPincodeCheck").className = "ChangePincode";//UF-71
 							}
 							//TPR-900
 						}
@@ -1531,19 +1526,37 @@ $( document ).ready(function() {
 					return false;
 				} else {
 					var promorestrictedSellers = $("#promotedSellerId").val();
+					var promoindentifier = $("#product_applied_promotion_code").val();
 					if (promorestrictedSellers == null
 							|| promorestrictedSellers == undefined
 							|| promorestrictedSellers == "") {
 						//TPR-772
 						$(".promo-block").show();
+						if(promoindentifier != '') {
+							  $(".pdp-promo-title-link").show();
+						} 
 
 					} else {
 						if (promorestrictedSellers.length > 0
 								&& !(promorestrictedSellers
 										.indexOf(data['sellerId']) == -1))
+							{
+							  //TPR-772 seller id matched with promotion ///*INC144313502*/
+						       $(".pdp-promo-title-link").show();
+						       $(".promo-block").show();
+							}
+						    else {
+						    	 $(".offercalloutdesc").css({'float': 'right'});
+									if($('#product_applied_promotion_code').val() != '') { //no potentialPromotions available  
+										$(".primary_promo_desc").hide();
+										$(".primary_promo_title").hide();
+										$(".primary_promo_img").hide();
+										
+										
+									}
+								
+							}
 
-							//TPR-772
-							$(".promo-block").show();
 					}
 					var allStockZero = data['allOOStock'];
 					// var codEnabled = data['isCod'];
@@ -1787,6 +1800,7 @@ function displayDeliveryDetails(sellerName) {
 				}
 				//INC144314017 start
 				if(!$('#pdpPincodeCheck').data('clicked')) {
+
 					var start_hd=parseInt($("#homeStartId").val())+leadTime;
 					var end_hd=parseInt($("#homeEndId").val())+leadTime;
 				if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
@@ -1824,10 +1838,58 @@ function displayDeliveryDetails(sellerName) {
 					$("#expressli").show();
 					$("#expressli").addClass("selected");
 				    $("#expressli").css("opacity","1");
+
+					if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
+						//$("#home").hide();
+						//$("#homeli").hide();
+						$("#homeli").css("opacity","0.5");
+						$("#homeli").removeClass("selected");
+					} else {
+						var start=parseInt($("#homeStartId").val())+leadTime;
+						var end=parseInt($("#homeEndId").val())+leadTime;
+						$("#homeDate").html(pretext+start+"-"+end+posttext);
+						$("#home").show();
+						$("#homeli").show();
+						$("#homeli").addClass("selected");
+						$("#homeli").css("opacity","1");
+					}
+					
+					if (null != deliveryModes && deliveryModes.indexOf("ED") == -1) {
+						$("#express").hide();
+						$("#expressli").hide();
+						//$("#expressli").css("opacity","0.5");
+						//$("#expressli").removeClass("selected");
+					} else {
+						var start=$("#expressStartId").val();
+						var end=$("#expressEndId").val();
+						$("#expressDate").html(pretext+start+"-"+end+posttext);
+						$("#express").show();
+						$("#expressli").show();
+						$("#expressli").addClass("selected");
+						$("#expressli").css("opacity","1");
+					}
+					
+					if (null != deliveryModes && deliveryModes.indexOf("CNC") == -1) {
+						
+						$("#collect").hide();
+						$("#collectli").hide();
+						//$("#collectli").css("opacity","0.5");
+						//$("#collectli").removeClass("selected");
+					} else {
+						var start=$("#clickStartId").val();
+						var end=$("#clickEndId").val();
+						$("#clickDate").html(pretext+start+"-"+end+posttext);
+						$("#collect").show();
+						$("#collectli").show();
+						$("#collectli").css("opacity","1");
+						$("#collectli").addClass("selected");
+					}
+
 				}
-				if (null != deliveryModes){
-		//		console.log(deliveryModes.indexOf("CNC") );
-				}
+//				if (null != deliveryModes){
+//					//		console.log(deliveryModes.indexOf("CNC") );
+//				}
+
 				
 				var start_cnc=$("#clickStartId").val();
 				var end_cnc=$("#clickEndId").val();
@@ -1850,6 +1912,9 @@ function displayDeliveryDetails(sellerName) {
 				  }
 				}
 
+
+				//INC144314017 end
+
 				// enable COD flag if COD enabled
 				if (data['isCod'] == 'Y') {
 					$("#codId").show();
@@ -1871,6 +1936,12 @@ function displayDeliveryDetails(sellerName) {
 					$("#lingerieKnowMoreLi2").show();
 					$("#defaultKnowMoreLi").hide();
 					}
+				//Added for UF-98 
+				else if(rWindowValue=="0")
+				{        
+					$("#defaultKnowMoreLi4").show();
+					$("#defaultKnowMoreLi").hide();
+				}
 				else
 					{
 					$("#returnWindow").text(data['returnWindow']);
@@ -1879,6 +1950,8 @@ function displayDeliveryDetails(sellerName) {
 				}
 				else
 					{
+					$("#defaultKnowMoreLi4").show();
+					$("#defaultKnowMoreLi").hide();
 					$("#returnWindow").text("0");
 					}
 			}
@@ -2909,12 +2982,14 @@ function loadDefaultWishListName_SizeGuide() {
 	 	    return false;
 	 }
 		 //TISQAEE-64
-		 utag.link({
+		 if(typeof utag !="undefined"){ 
+			 utag.link({
 				link_obj: this,
 				link_text: 'buynow' ,
 				event_type : 'buynow_winner_seller',
 				product_sku : productCodeArray
 			});
+		}
 		ACC.product.sendAddToBag("addToCartForm",true);
 	});
 
@@ -3025,7 +3100,8 @@ function loadDefaultWishListName_SizeGuide() {
 		}); 
 		
 		$("#pin").focus(function(){
-			$("#pdpPincodeCheck").text("Check")
+			//$("#pdpPincodeCheck").text("Check")
+			document.getElementById("pdpPincodeCheck").className = "Check";//UF-71
 		});
 /*		$("#pin").blur(function() {
 			if ($(this).val() == "") {
@@ -3174,8 +3250,17 @@ function loadDefaultWishListName_SizeGuide() {
 	/*Offer popup*/
 	function offerPopup(comp) {
 		$("body").append('<div class="modal fade" id="offerPopup"><div class="content offer-content" style="padding: 40px;max-width: 650px;">'+comp+'<button class="close" data-dismiss="modal"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
+		/*if($("#OfferWrap .Inner .Left").children().length == 0) {
+			$("#OfferWrap .Inner .Left").remove();
+		}*/
+		/*INC144313502*/
 		if($("#OfferWrap .Inner .Left").children().length == 0) {
 			$("#OfferWrap .Inner .Left").remove();
+		} else {	
+			if($('.primary_promo_img').css('display') != 'none'){ 
+			  $(".offercalloutdesc").css({'float': 'right'});
+			  $(".offercalloutdesc").css({"padding": "30px 5px 30px 12px", "width": "58%"});
+			}
 		}
 		$("#offerPopup").modal('show');
 	} 
