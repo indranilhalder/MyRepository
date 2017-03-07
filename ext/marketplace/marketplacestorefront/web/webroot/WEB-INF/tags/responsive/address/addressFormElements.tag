@@ -201,11 +201,13 @@
 		</div>
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
-		<formElement:formTextArea idKey="address.line1" labelKey="address.line1" path="line1" areaCSS="textarea" mandatory="true" />
+		<formElement:formInputBox idKey="address.line1"
+ 			 path="line1"
+ 			mandatory="true" maxLength="40"  placeholder="Address Line 1*"/>
 			 <div class="help-block has-error" id="address1Error" style="display: none;">
 			</div>
 			</div>
-			<div class='hide'>
+			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line2"
 			 path="line2" 
@@ -213,7 +215,7 @@
 			 <div class="help-block has-error" id="address2Error" style="display: none;">
 			</div>
 			</div>
-			<div class='hide'>
+			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line3"
 			 path="line3" 
