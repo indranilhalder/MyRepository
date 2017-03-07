@@ -1831,8 +1831,7 @@
 					<persistence type="property" />
 				</attribute>
 				<attribute autocreate="true" qualifier="cusRedeemCount"
-					type="java.lang.Integer">
-					<defaultvalue>Integer.valueOf(0)</defaultvalue>
+					type="java.lang.String">
 					<modifiers read="true" write="true" search="false"
 						optional="true" />
 					<persistence type="property" />

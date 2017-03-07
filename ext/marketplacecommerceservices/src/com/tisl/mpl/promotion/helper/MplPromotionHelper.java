@@ -1058,17 +1058,21 @@ public class MplPromotionHelper
 			if (restriction instanceof EtailLimitedStockRestriction)
 			{
 				final EtailLimitedStockRestriction data = (EtailLimitedStockRestriction) restriction;
-				if (null != data.getCusRedeemCount() && data.getCusRedeemCount().intValue() > 0)
+				if (StringUtils.isNotEmpty(data.getCusRedeemCount()))
 				{
 					try
 					{
-						count = data.getCusRedeemCount().intValue();
+						count = Integer.parseInt(data.getCusRedeemCount()); // For TPR-4925
 					}
-					catch (final NumberFormatException exception)
+					catch (final Exception exception)
 					{
 						count = 0;
 					}
 
+				}
+				else
+				{
+					count = 0;
 				}
 
 			}
