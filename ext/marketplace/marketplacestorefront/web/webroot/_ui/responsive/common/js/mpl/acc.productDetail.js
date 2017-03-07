@@ -1286,8 +1286,8 @@ $(function() {
 																$("#expressli").removeClass("selected");
 
 															}if (click == true) {
-																//$("#collect").show();
-																//$("#collectli").show();
+																$("#collect").show();
+																$("#collectli").show();
 																$("#collectli").addClass("selected");
 															    $("#collectli").css("opacity","1");
 																deliverModeTealium.push("clickandcollect");
