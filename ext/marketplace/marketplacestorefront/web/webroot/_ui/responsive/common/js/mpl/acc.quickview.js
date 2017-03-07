@@ -724,9 +724,7 @@ function openPop_quick(ussidfromSeller){
 			data : dataString,
 			dataType : "json",
 			success : function(data) {
-				
 				if (data == true) {
-					
 					//$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
 					//var msg=$('#wishlistSuccess').text();
 					//$('#addedMessage').show();
@@ -777,7 +775,17 @@ function openPop_quick(ussidfromSeller){
 						}	
 					}
 					//End MSD
-					
+					// For TPR-4712,TPR-4725
+					var productCode = $('#cboxLoadedContent #productCode').val();
+					var productarray=[];
+					productarray.push(productCode);
+					if(typeof utag !="undefined"){
+						utag.link({
+							link_text: "add_to_wishlist_quickview" ,
+							event_type : "add_to_wishlist_quickview" ,
+							product_sku_wishlist : productarray
+						});
+					}
 					
 					
 					//openPop(ussidValue);
@@ -789,6 +797,9 @@ function openPop_quick(ussidfromSeller){
 					setTimeout(function(){
 						$(".wishAlreadyAddedQv").removeClass("active")
 					},3000)
+					if(typeof utag !="undefined"){
+						utag.link({error_type : 'wishlist_error'});
+						}
 				}
 			},
 		});
