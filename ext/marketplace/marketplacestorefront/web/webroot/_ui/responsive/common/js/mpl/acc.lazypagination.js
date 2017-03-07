@@ -171,8 +171,12 @@ $(document).ready(function() {
 				}else{
 					url = 'searchCategory=&sort=relevance&q=:isLuxuryProduct:false';
 				}
-				ajaxPLPLoad(pathName +'?'+url);
-				sortReplaceState(pathName +'?'+url); 
+				if(facetAjaxUrl){
+					ajaxPLPLoad(facetAjaxUrl +'&'+url);
+				}else{
+					ajaxPLPLoad(pathName +'?'+url);
+				}
+				sortReplaceState(facetAjaxUrl +'&'+url); 
 				initPageLoad = true;
 				break;
 			case 'new':
@@ -181,8 +185,12 @@ $(document).ready(function() {
 				}else{
 					url = 'searchCategory=&sort=isProductNew&q=:isLuxuryProduct:false';
 				}
-				ajaxPLPLoad(pathName +'?'+url);
-				sortReplaceState(pathName +'?'+url); 
+				if(facetAjaxUrl){
+					ajaxPLPLoad(facetAjaxUrl +'&'+url);
+				}else{
+					ajaxPLPLoad(pathName +'?'+url);
+				}
+				sortReplaceState(facetAjaxUrl +'&'+url); 
 				initPageLoad = true;
 				break;
 			case 'discount':
@@ -191,8 +199,12 @@ $(document).ready(function() {
 				}else{
 					url = 'searchCategory=&sort=isDiscountedPrice&q=:isLuxuryProduct:false';
 				}
-				ajaxPLPLoad(pathName +'?'+url);
-				sortReplaceState(pathName +'?'+url); 
+				if(facetAjaxUrl){
+					ajaxPLPLoad(facetAjaxUrl +'&'+url);
+				}else{
+					ajaxPLPLoad(pathName +'?'+url);
+				}
+				sortReplaceState(facetAjaxUrl +'&'+url); 
 				initPageLoad = true;
 				break;
 			case 'low':
@@ -201,8 +213,12 @@ $(document).ready(function() {
 				}else{
 					url = 'searchCategory=&sort=price-asc&q=:isLuxuryProduct:false';
 				}
-				ajaxPLPLoad(pathName +'?'+url);
-				sortReplaceState(pathName +'?'+url);
+				if(facetAjaxUrl){
+					ajaxPLPLoad(facetAjaxUrl +'&'+url);
+				}else{
+					ajaxPLPLoad(pathName +'?'+url);
+				}
+				sortReplaceState(facetAjaxUrl +'&'+url);
 				initPageLoad = true;
 				break;
 			case 'high':
@@ -216,7 +232,7 @@ $(document).ready(function() {
 				}else{
 					ajaxPLPLoad(pathName +'?'+url);
 				}
-				sortReplaceState(pathName +'?'+url);
+				sortReplaceState(facetAjaxUrl +'&'+url);
 				initPageLoad = true;
 				break;
 			default:
