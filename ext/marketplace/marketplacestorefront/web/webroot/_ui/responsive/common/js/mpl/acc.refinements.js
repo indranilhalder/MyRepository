@@ -782,7 +782,7 @@ ACC.refinements = {
 
 // function implements AJAX : TPR-198
 function filterDataAjax(requiredUrl,dataString,pageURL){
-	facetAjaxUrl = requiredUrl;
+	facetAjaxUrl = pageURL;
 	console.log(requiredUrl);
 	console.log(pageURL);
 	if ($("input[name=customSku]").val()) {
