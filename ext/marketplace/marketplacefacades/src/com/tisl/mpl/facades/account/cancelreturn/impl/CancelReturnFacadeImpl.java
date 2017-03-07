@@ -3146,7 +3146,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 	/**
 	 * @author Techouts
-	 * @return boolean Retun Item Pincode Serviceability
+	 * @return boolean Return Item Pincode Serviceability
 	 */
 	@Override
 	public boolean implementReturnItem(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
@@ -3330,7 +3330,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			returnRequestModel.setRMA(returnService.createRMA(returnRequestModel));
 			//TISEE-5471
 			//final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(subOrderModel.getCode()); //Changes for Bulk Return Initiation
-			final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails, pinCode);
+			//TISRLUAT-1090 Return Initiate API issue 
+			final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails, pinCode,abstractOrderEntryModel.getTransactionID());
 			if (CollectionUtils.isNotEmpty(returnLogisticsRespList))
 			{
 				for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
@@ -3364,9 +3365,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				returnRequestModel.setReturnRaisedFrom(salesApplication);
 			}
 			//End
-
-			if (null != abstractOrderEntryModel)
-			{
+           //TISRLUAT-1090 Return Initiate API issue
+			/*if (null != abstractOrderEntryModel)
+			{*/
 				final RefundEntryModel refundEntryModel = modelService.create(RefundEntryModel.class);
 				refundEntryModel.setOrderEntry(abstractOrderEntryModel);
 				refundEntryModel.setReturnRequest(returnRequestModel);
@@ -3399,7 +3400,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					}
 				}
 				modelService.save(refundEntryModel);
-			}
+	/*	}*/
 
 			modelService.save(returnRequestModel);
 
