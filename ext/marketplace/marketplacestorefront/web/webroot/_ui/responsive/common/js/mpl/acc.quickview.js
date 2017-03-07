@@ -40,12 +40,22 @@ ACC.quickview = {
 				var productCode = productCodeQuickView;
 				// Product code passed as an array for Web Analytics   INC_11511 
 				var productCodeArray=[];
+				var sellerIdArray=[];
 				productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
+				sellerIdArray.push($("#sellerSelId").val());
+				var sellerName = $("#sellerNameIdQuick").text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+				var thumbnailImageCount=0;
+				$(".product-info > .product-image-container > .productImageGallery .imageListCarousel").find("li").each(function(){
+					thumbnailImageCount++;
+				})
+				
 				utag.link({
-					link_obj: this, 
 					link_text: 'quick_view_click' ,
-					event_type : 'quick_view_click', 
-					product_sku_quick_view : productCodeArray
+					event_type : 'quick_view_click',
+					product_sku_quick_view : productCodeArray,
+					seller_id : sellerIdArray,
+					seller_name : sellerName,
+					product_image_count : thumbnailImageCount
 				});
 				
 				/*TPR-690 ends*/
