@@ -339,22 +339,22 @@ display: none;
  	<c:choose>
  	<c:when test="${deliveryAddress.defaultAddress}">
  		<span class="default default-selected">
- 	  <input type="radio" value="Make this default address"
+ 	  <input type="radio" value="Make this my default address"
  																class="regular-radio" name="default"
  																id="radio-default2_${deliveryAddress.id}"
  																data-address-id="${deliveryAddress.id}">				      
- 	  <label class="radio-checked" for="radio-default2_${deliveryAddress.id}">Make this default address</label>
+ 	  <label class="radio-checked" for="radio-default2_${deliveryAddress.id}">Make this my default address</label>
  	  </span>
  	</c:when>
  		</c:choose>
 
 
 		  <span class="default">
-		  <input type="radio" value="Make this default address"
+		  <input type="radio" value="Make this my default address"
 																	class="regular-radio" name="default"
 																	id="radio-default2_${deliveryAddress.id}"
 																	data-address-id="${deliveryAddress.id}">				      
-		  <label for="radio-default2_${deliveryAddress.id}">Make this default address</label>
+		  <label for="radio-default2_${deliveryAddress.id}">Make this my default address</label>
 		  </span>
 		  </p>
 		  <span class="edit">
@@ -598,11 +598,11 @@ display: none;
 		  </c:if>
 		  
 		  <span class="default">
-		  <input type="radio" value="Make this default address"
+		  <input type="radio" value="Make this my default address"
 																	class="regular-radio" name="default"
 																	id="radio-default2_${deliveryAddress.id}"
 																	data-address-id="${deliveryAddress.id}">				      
-		  <label for="radio-default2_${deliveryAddress.id}">Make this default address</label>
+		  <label for="radio-default2_${deliveryAddress.id}">Make this my default address</label>
 		  </span>
 		  </p>
 		  <span class="edit">

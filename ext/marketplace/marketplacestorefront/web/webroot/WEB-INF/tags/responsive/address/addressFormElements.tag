@@ -191,78 +191,74 @@
 		<%-- <c:forEach items="${addressType}" var="type"> --%>
 		<%-- <label  class="asd" for="${type}"></label><form:radiobutton path="addressType" value="${type}" /> --%>
 		
-		<div class="row">
-		<div class="col-md-6 col-sm-6 col-xs-6 padd">
+		
 		<input type="radio" name="addressType" id="new-address-option-1" value="Home"  checked="checked"/>
 		<label class="residential" for="new-address-option-1"><spring:theme code="text.addressBook.Residentialaddress" text="Residential Address" /></label>
-		</div>
-		<div class="col-md-6 col-sm-6 col-xs-6 padd">
 		<input type="radio" id="new-address-option-2" value="Work" name="addressType" />
 		<label class="commercial" for="new-address-option-2"><spring:theme code="text.addressBook.commercialaddress" text="Commercial Address" /></label>
-		</div></div>
 		<fieldset> 
 		<div class='half'>
-		
-		<formElement:formInputBox idKey="address.firstName"
+
+		<formElement:formInputBox idKey="address.firstName" labelKey="First Name*"
 			 path="firstName" 
-			mandatory="true" maxLength="40" placeholder="FirstName*"/>
+			mandatory="true" maxLength="40"/>
 			<div class="help-block has-error" id="firstnameError" style="display: none;">		
 			</div>	
 			</div>
 			<div class='half'>
-		<formElement:formInputBox idKey="address.surname"
+		<formElement:formInputBox idKey="address.surname" labelKey="Last Name*"
 			 path="lastName" 
-			mandatory="true" maxLength="40" placeholder="Lastname*"/>
+			mandatory="true" maxLength="40"/>
 			<div class="help-block has-error" id="lastnameError" style="display: none;">		
 			</div>
 			</div>
 			<!-- <div class='half'> -->
-         <div class='full'>
+         <div class='half'>
           <%-- <label for="myselect"><spring:theme code="text.addressBook.PhoneNumber" text="Mobile Number" /></label>	 --%>	
       <div class="showPhone">
-		<select name="myselect" disabled="disabled">
+       <label class="control-label " for="address.mobile">Mobile Number*</label>
+		<!-- <select name="myselect" disabled="disabled">
        <option value="myselectedvalue" selected="selected">+91</option>
-     </select>
+     </select> -->
         <input type="hidden" name="myselect" value="myselectedvalue" /> 
-	 	<form:input type="text" idKey="address.mobile" id="mobileNonewForm"
+	 	<form:input type="text" idKey="address.mobile" id="mobileNonewForm" 
 			 path="MobileNo" inputCSS="form-control"
-			mandatory="true" maxLength="10" placeholder="Phone Number*"/> 
+			mandatory="true" maxLength="10"/> 
 			<div class="help-block has-error" id="mobileError" style="display: none;">		
 			</div>	 
 		</div>	
-		
-		<div class='full'>
-		<formElement:formInputBox idKey="address.postcode"
+		</div>
+
+		<div class='half'>
+		<formElement:formInputBox idKey="address.postcode" labelKey="Pincode*"
 			path="postcode"
-			mandatory="true" maxLength="6" placeholder="Pincode*" inputCSS="address_postcode"/>
+			mandatory="true" maxLength="6" />
 		<div class="help-block has-error" id="addressPincodeServicableDiv"
 			style="display: none;"></div>
 			<div class="help-block has-error" id="pincodeError" style="display: none;">
 			</div>
 			</div>
-		
-		</div>
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
-		<formElement:formInputBox idKey="address.line1"
+		<formElement:formInputBox idKey="address.line1" labelKey="Address Line 1*"
 			 path="line1"
-			mandatory="true" maxLength="40"  placeholder="Address Line 1*"/>
+			mandatory="true" maxLength="40" />
 			 <div class="help-block has-error" id="address1Error" style="display: none;">
 			</div>
 			</div>
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
-		<formElement:formInputBox idKey="address.line2"
+		<formElement:formInputBox idKey="address.line2" labelKey="Address Line 2"
 			 path="line2" 
-			mandatory="true" maxLength="40" placeholder="Address Line 2"/>
+			mandatory="true" maxLength="40"/>
 			 <div class="help-block has-error" id="address2Error" style="display: none;">
 			</div>
 			</div>
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
-		<formElement:formInputBox idKey="address.line3"
+		<formElement:formInputBox idKey="address.line3" labelKey="Address Line 3"
 			 path="line3" 
-			mandatory="true" maxLength="40" placeholder="Address Line 3"/>
+			mandatory="true" maxLength="40"/>
 			 <div class="help-block has-error" id="address3Error" style="display: none;">
 			</div>
 			</div>
@@ -298,7 +294,7 @@
 			<!-- <div class="half address-select"> -->
 			<!-- R2.3: START: Commeted --><!--
 			<div class="full address-select">
-		<formElement:formSelectBox idKey="address.states" 
+		<formElement:formSelectBox idKey="address.states" labelKey="State*"
 			 path="state" mandatory="true"
 			skipBlank="false" skipBlankMessageKey="address.state.pleaseSelectState"
 			items="${stateDataList}" selectedValue="${addressForm.state}"
@@ -335,25 +331,26 @@
 					</div>
 			</div> --%>
 			</div>
-			<!-- R2.3: END -->	   		
-				   		
+			</div>
+<!-- R2.3: END -->
 		<!-- <div class="half country-select"> -->
 		<div class="full country-select">
 		<c:set var='count'  value='1' />
 		<div class="country">
 		<%-- <label><spring:theme code="address.selectCountry"/></label> --%>
-		
+
 		    	<c:forEach items="${supportedCountries}" var="country">
 					<c:if test="${country.isocode eq 'IN' and count==1}">
 						<c:set var='countyName'  value='${country.name}' />
 						<c:set var='countryIsoCode'  value='${country.isocode}' />
 					</c:if>
 				</c:forEach>
+				<label class="control-label " for="country"> Country*</label>
 				<input type="text" id="country" value='${countyName}'  readonly /> 
 			   	<input type="hidden" id="country"  name="countryIso" value="${countryIsoCode}"/>
 			</div>
 		</div>
-				
+
 		<%-- <formElement:formInputBox idKey="address.states" labelKey="address.states" path="state" inputCSS="form-control" mandatory="true"/> --%>
 		<!-- <div class='half'> -->
 		<%-- <div class='full'>
@@ -365,7 +362,7 @@
 			<div class="help-block has-error" id="pincodeError" style="display: none;">
 			</div>
 			</div> --%>
-				
+
          <%-- <!-- <div class='half'> -->
          <div class='full'>
           <label for="myselect"><spring:theme code="text.addressBook.PhoneNumber" text="Mobile Number" /></label>		
@@ -381,7 +378,7 @@
 			</div>	 
 		</div>	
 		</div> --%>
-			</fieldset>						
+			</fieldset>					
 			
 
 		<%-- <div>

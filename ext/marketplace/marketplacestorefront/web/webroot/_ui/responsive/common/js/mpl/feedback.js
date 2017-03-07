@@ -2050,6 +2050,12 @@ $(document).ready(function() {
 		
 		
 		/*CLP section js ends*/
+		
+		/* UF-68 UF-69 */
+		var cartBottomCheckTopMargin = $("body.page-cartPage .cart-bottom-block").height() - $("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").outerHeight();
+		$("body.page-cartPage .cartBottomCheck").addClass("cartBottomCheckShow").css("margin-top",cartBottomCheckTopMargin);
+		
+		/* UF-68 UF-69 */
 });
 $(window).resize(function() {
 
@@ -2065,6 +2071,17 @@ $(window).resize(function() {
 			sizeSwatch();
 		}
 	}, 200)
+	
+	/* UF-68 UF-69 */
+	
+	if($(window).width() >= 1008){
+		//$("body.page-cartPage .cartBottomCheck").removeClass("cartBottomCheckShow");
+	var cartBottomCheckTopMargin = $("body.page-cartPage .cart-bottom-block").height() - $("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").outerHeight();
+	$("body.page-cartPage .cartBottomCheck").addClass("cartBottomCheckShow").css("margin-top",cartBottomCheckTopMargin);
+	}
+	
+	/* UF-68 UF-69 */
+	
 });
 
 $(document).on("click",".facet.js-facet.Colour .more-lessFacetLinks .more",function(e) {
