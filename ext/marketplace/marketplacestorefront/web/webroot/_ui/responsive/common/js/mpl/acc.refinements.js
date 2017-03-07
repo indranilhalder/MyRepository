@@ -1,8 +1,9 @@
-
 var updatedsearchQuery = "";
 var dummyForm ;
 var lessBrands = [];
 var facetAjaxUrl = '';
+var productItemArray = [];
+var res;
 ACC.refinements = {
 
 	_autoload: [
@@ -799,12 +800,14 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			if($("#isCategoryPage").val() == 'true' && !$("input[name=customSku]").val()){
 				//$("#productGrid").html(response);
 				lazyPaginationFacet(response);
+
 			}		
 			else{
 				
 				if(requiredUrl.indexOf("offer") > -1 || requiredUrl.indexOf("viewOnlineProducts") > -1 || requiredUrl.indexOf("/s/") > -1){
 					//$("#productGrid").html(response);
 					lazyPaginationFacet(response);
+
 				}
 				else{
 					$("#facetSearchAjaxData").html(response);
@@ -1022,7 +1025,6 @@ function isCustomSku(requiredUrl){
 function lazyPaginationFacet(response){
 	res = response;
 	var ulProduct = $(response).find('ul.product-listing.product-grid');
-    productItemArray = [];
     $(ulProduct).find('li.product-item').each(function() {
         productItemArray.push($(this));
     });

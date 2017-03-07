@@ -120,7 +120,8 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 							variantColor = StringUtils.capitalize(pcmSwatchVariantColor) + "_"
 									+ (variantColorHexCode.contains("#") ? variantColorHexCode.replace("#", "") : variantColorHexCode);
 						}
-						colours.put(variantColor, pcmSwatchVariantModel.getCode());
+						variantColor = variantColor + "||" + pcmSwatchVariantModel.getCode();
+						colours.add(variantColor);
 
 					}
 

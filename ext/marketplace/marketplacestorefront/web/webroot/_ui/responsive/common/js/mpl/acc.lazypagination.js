@@ -289,6 +289,7 @@ function ajaxPLPLoad(ajaxUrl){
             $('.lazyLoadPagination').remove();
         }
     });
+
 }
 
 function sortReplaceState(url){

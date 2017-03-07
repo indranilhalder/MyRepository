@@ -413,8 +413,7 @@ function focusOnElement() {
 				link_text: 'add_to_bag' ,
 				event_type : 'add_to_bag_pdp' ,
 				product_sku : productCodeArray                     // Product code passed as an array for Web Analytics   -- INC_11511  fix
-			});      
-
+			});
 			ACC.product.sendAddToBag("addToCartFormId"+index);
 		});
 		 
@@ -569,6 +568,7 @@ function focusOnElement() {
 
 	      fetchSellers(sellerDetailsArray,buyboxSeller)
 		  setSellerLimits(sellerPageCount);
+
 	 }
 
 	

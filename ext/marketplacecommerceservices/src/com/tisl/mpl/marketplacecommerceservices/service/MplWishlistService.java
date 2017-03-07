@@ -40,7 +40,6 @@ public interface MplWishlistService
 	 */
 	List<Wishlist2Model> getWishListAgainstUser(UserModel user);
 
-
 	//CAR Project performance issue fixed
 
 	/**
