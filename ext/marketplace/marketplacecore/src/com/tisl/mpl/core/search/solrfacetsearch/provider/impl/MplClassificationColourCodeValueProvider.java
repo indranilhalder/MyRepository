@@ -149,7 +149,13 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 					value = value.toString().replaceAll(MarketplaceCoreConstants.COLORFAMILYFOOTWEAR,
 							MarketplaceCoreConstants.COLORFAMILYFOOTWEARBLANK);
 				}
-
+				// INC_12606 starts
+				else if (value.toString().startsWith(MarketplaceCoreConstants.DIALCOLORELECTRONICS))
+				{
+					value = value.toString().replaceAll(MarketplaceCoreConstants.DIALCOLORELECTRONICS,
+							MarketplaceCoreConstants.DIALCOLORELECTRONICSBLANK);
+				}
+				// INC_12606 ends
 			}
 			final List<String> rangeNameList = getRangeNameList(indexedProperty, value);
 			final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty, (language == null) ? null

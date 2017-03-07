@@ -39,4 +39,33 @@ public interface MplWishlistService
 	 * @return
 	 */
 	List<Wishlist2Model> getWishListAgainstUser(UserModel user);
+
+
+	//CAR Project performance issue fixed
+
+	/**
+	 * Description -- Method will access single WishlistModel for user with respect to Wishlistname
+	 *
+	 * @return Wishlist2Model
+	 */
+
+	public Wishlist2Model findMobileWishlistswithName(UserModel user, String name);
+
+	//CAR Project performance issue fixed
+
+	/**
+	 * Description -- Method will count for user with respect to Wishlistname
+	 *
+	 * @return Wishlist2Model
+	 */
+
+	public int findMobileWishlistswithNameCount(UserModel user, String name);
+
+	/**
+	 * Description -- Method will access single Entry of a Wishlist
+	 *
+	 * @return Wishlist2Model
+	 */
+	public List<Wishlist2EntryModel> findWishlistEntryByProductAndUssid(final String ussid);
+
 }

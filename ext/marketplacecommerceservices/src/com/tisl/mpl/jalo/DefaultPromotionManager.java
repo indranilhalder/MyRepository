@@ -4,7 +4,6 @@
 package com.tisl.mpl.jalo;
 
 import de.hybris.platform.catalog.CatalogVersionService;
-import de.hybris.platform.catalog.constants.GeneratedCatalogConstants;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.jalo.Category;
@@ -32,7 +31,6 @@ import de.hybris.platform.jalo.type.JaloGenericCreationException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.ordersplitting.model.StockLevelModel;
 import de.hybris.platform.product.ProductService;
-import de.hybris.platform.promotions.constants.GeneratedPromotionsConstants;
 import de.hybris.platform.promotions.jalo.AbstractPromotion;
 import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
 import de.hybris.platform.promotions.jalo.ProductPromotion;
@@ -43,19 +41,15 @@ import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.PromotionOrderEntryConsumedModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
-import de.hybris.platform.promotions.result.PromotionEvaluationContext;
 import de.hybris.platform.promotions.result.PromotionException;
 import de.hybris.platform.promotions.result.PromotionOrderEntry;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
-import de.hybris.platform.util.Config;
 import de.hybris.platform.util.localization.Localization;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -64,14 +58,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.map.Flat3Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -270,46 +261,46 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param product
 	 * @return boolean
 	 */
-	//	public boolean brandDataCheck(final List<String> promotionManufacturerList, final Product product)
-	//	{
-	//		//Code Modified for  TISPT-148
-	//		boolean applyPromotion = false;
-	//		String brandName = MarketplacecommerceservicesConstants.EMPTY;
-	//		try
-	//		{ //final ProductModel productModel = productService.getProductForCode(product.getCode());
-	//			final List<Category> categoryList = (List<Category>) product.getAttribute("supercategories");
-	//			if (CollectionUtils.isNotEmpty(categoryList))
-	//			{
-	//				for (final Category category : categoryList)
-	//				{
-	//					if (category.getCode().startsWith("MBH"))
-	//					{
-	//						brandName = category.getName();
-	//						break;
-	//					}
-	//				}
-	//			}
-	//
-	//			if (CollectionUtils.isNotEmpty(promotionManufacturerList) && StringUtils.isNotEmpty(brandName))
-	//			{
-	//				applyPromotion = isEligibleManufacturer(promotionManufacturerList, brandName);
-	//			}
-	//
-	//		}
-	//		catch (final EtailBusinessExceptions e)
-	//		{
-	//			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-	//		}
-	//		catch (final EtailNonBusinessExceptions e)
-	//		{
-	//			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-	//		}
-	//		catch (final Exception e)
-	//		{
-	//			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
-	//		}
-	//		return applyPromotion;
-	//	}
+	public boolean brandDataCheck(final List<String> promotionManufacturerList, final Product product)
+	{
+		//Code Modified for  TISPT-148
+		boolean applyPromotion = false;
+		String brandName = MarketplacecommerceservicesConstants.EMPTY;
+		try
+		{ //final ProductModel productModel = productService.getProductForCode(product.getCode());
+			final List<Category> categoryList = (List<Category>) product.getAttribute("supercategories");
+			if (CollectionUtils.isNotEmpty(categoryList))
+			{
+				for (final Category category : categoryList)
+				{
+					if (category.getCode().startsWith("MBH"))
+					{
+						brandName = category.getName();
+						break;
+					}
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(promotionManufacturerList) && StringUtils.isNotEmpty(brandName))
+			{
+				applyPromotion = isEligibleManufacturer(promotionManufacturerList, brandName);
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+		}
+		return applyPromotion;
+	}
 
 
 	/**
@@ -634,64 +625,34 @@ public class DefaultPromotionManager extends PromotionsManager
 	public List<String> getcategoryList(final Product product, final SessionContext paramSessionContext)
 	{
 		List<String> productCategoryList = null;
-		//final List<Category> productCategoryData = null;
-		//List<CategoryModel> superCategoryData = null;
-		List<CategoryModel> productCategoryData = null;
-
-		HashSet<CategoryModel> superCategoryData = null;
-
-		//final CatalogVersionModel oCatalogVersionModel = catalogData();
+		List<Category> productCategoryData = null;
+		List<CategoryModel> superCategoryData = null;
+		final CatalogVersionModel oCatalogVersionModel = catalogData();
 		try
 		{
-			//			productCategoryData = (List<Category>) product.getAttribute(paramSessionContext,
-			//					MarketplacecommerceservicesConstants.PROMO_CATEGORY);
-			//			if (CollectionUtils.isNotEmpty(productCategoryData))
-			//			{
-			//				productCategoryList = new ArrayList<String>();
-			//				for (final Category category : productCategoryData)
-			//				{
-			//					if (null != category && null != category.getCode(paramSessionContext))
-			//					{
-			//						productCategoryList.add(category.getCode(paramSessionContext));
-			//						//final CategoryModel oModel = categoryService.getCategoryForCode(category.getCode(paramSessionContext));
-			//						//Commented to fix defect TISUATPII-1558 -- multiple category giving erroneous promotion result
-			//						final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel,
-			//								category.getCode(paramSessionContext));
-			//						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(oModel));
-			//						if (!superCategoryData.isEmpty())
-			//						{
-			//							for (final CategoryModel categoryModel : superCategoryData)
-			//							{
-			//								productCategoryList.add(categoryModel.getCode());
-			//							}
-			//						}
-			//					}
-			//				}
-			//			}
-
-
-			final ProductModel productModel = getModelService().get(product);
-
-			productCategoryData = new ArrayList<>(productModel.getSupercategories());
-			if (CollectionUtils.isNotEmpty(productCategoryData))
+			productCategoryData = (List<Category>) product.getAttribute(paramSessionContext,
+					MarketplacecommerceservicesConstants.PROMO_CATEGORY);
+			if (null != productCategoryData && !productCategoryData.isEmpty())
 			{
 				productCategoryList = new ArrayList<String>();
-
-				superCategoryData = (HashSet<CategoryModel>) mplCategoryServiceImpl
-						.getAllSupercategoriesForCategoryList(productCategoryData);
-				if (CollectionUtils.isNotEmpty(superCategoryData))
+				for (final Category category : productCategoryData)
 				{
-					final List<CategoryModel> dataList = new ArrayList<CategoryModel>(superCategoryData);
-
-					for (final CategoryModel oModel : dataList)
+					if (null != category && null != category.getCode(paramSessionContext))
 					{
-						productCategoryList.add(oModel.getCode());
+						productCategoryList.add(category.getCode(paramSessionContext));
+						//final CategoryModel oModel = categoryService.getCategoryForCode(category.getCode(paramSessionContext));
+						//Commented to fix defect TISUATPII-1558 -- multiple category giving erroneous promotion result
+						final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel,
+								category.getCode(paramSessionContext));
+						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(oModel));
+						if (!superCategoryData.isEmpty())
+						{
+							for (final CategoryModel categoryModel : superCategoryData)
+							{
+								productCategoryList.add(categoryModel.getCode());
+							}
+						}
 					}
-				}
-
-				for (final CategoryModel oModel : productCategoryData)
-				{
-					productCategoryList.add(oModel.getCode());
 				}
 			}
 		}
@@ -824,52 +785,83 @@ public class DefaultPromotionManager extends PromotionsManager
 	public List<CategoryModel> getcategoryData(final ProductModel productdata)
 	{
 		List<CategoryModel> productCategoryData = null;
-		//final List<CategoryModel> superCategoryData = null;
-		//final CatalogVersionModel oCatalogVersionModel = catalogData();
+		List<CategoryModel> superCategoryData = null;
+		final CatalogVersionModel oCatalogVersionModel = catalogData();
 
-		HashSet<CategoryModel> superCategoryData = null;
-		List<CategoryModel> superCategoryList = null;
-
-		if (null != productdata)
+		if (null != productdata && null != productdata.getSupercategories() && null != oCatalogVersionModel)
 		{
-			productCategoryData = new ArrayList<>(productdata.getSupercategories());
-
-			//			superCategoryData = new ArrayList<CategoryModel>(productdata.getSupercategories());
-			//			if (!superCategoryData.isEmpty())
-			//			{
-			//				productCategoryData = new ArrayList<CategoryModel>();
-			//				for (final CategoryModel category : superCategoryData)
-			//				{
-			//					if (null != category && null != category.getCode())
-			//					{
-			//						//final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel, category.getCode());
-			//						productCategoryData.add(category);
-			//						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(category));
-			//						if (!superCategoryData.isEmpty())
-			//						{
-			//							for (final CategoryModel categoryModel : superCategoryData)
-			//							{
-			//								productCategoryData.add(categoryModel);
-			//							}
-			//						}
-			//					}
-			//				}
-			//			}
-
-			if (CollectionUtils.isNotEmpty(productCategoryData))
+			superCategoryData = new ArrayList<CategoryModel>(productdata.getSupercategories());
+			if (!superCategoryData.isEmpty())
 			{
-				superCategoryList = new ArrayList<CategoryModel>();
-				superCategoryData = (HashSet<CategoryModel>) mplCategoryServiceImpl
-						.getAllSupercategoriesForCategoryList(productCategoryData);
-				if (CollectionUtils.isNotEmpty(superCategoryData))
+				productCategoryData = new ArrayList<CategoryModel>();
+				for (final CategoryModel category : superCategoryData)
 				{
-					final List<CategoryModel> dataList = new ArrayList<CategoryModel>(superCategoryData);
-					superCategoryList.addAll(dataList);
+					if (null != category && null != category.getCode())
+					{
+						//final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel, category.getCode());
+						productCategoryData.add(category);
+						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(category));
+						if (!superCategoryData.isEmpty())
+						{
+							for (final CategoryModel categoryModel : superCategoryData)
+							{
+								productCategoryData.add(categoryModel);
+							}
+						}
+					}
 				}
-				superCategoryList.addAll(productCategoryData);
 			}
 		}
-		return superCategoryList;
+		return productCategoryData;
+
+
+		//		List<CategoryModel> productCategoryData = null;
+		//		//final List<CategoryModel> superCategoryData = null;
+		//		//final CatalogVersionModel oCatalogVersionModel = catalogData();
+		//
+		//		HashSet<CategoryModel> superCategoryData = null;
+		//		List<CategoryModel> superCategoryList = null;
+		//
+		//		if (null != productdata)
+		//		{
+		//			productCategoryData = new ArrayList<>(productdata.getSupercategories());
+		//
+		//			//			superCategoryData = new ArrayList<CategoryModel>(productdata.getSupercategories());
+		//			//			if (!superCategoryData.isEmpty())
+		//			//			{
+		//			//				productCategoryData = new ArrayList<CategoryModel>();
+		//			//				for (final CategoryModel category : superCategoryData)
+		//			//				{
+		//			//					if (null != category && null != category.getCode())
+		//			//					{
+		//			//						//final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel, category.getCode());
+		//			//						productCategoryData.add(category);
+		//			//						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(category));
+		//			//						if (!superCategoryData.isEmpty())
+		//			//						{
+		//			//							for (final CategoryModel categoryModel : superCategoryData)
+		//			//							{
+		//			//								productCategoryData.add(categoryModel);
+		//			//							}
+		//			//						}
+		//			//					}
+		//			//				}
+		//			//			}
+		//
+		//			if (CollectionUtils.isNotEmpty(productCategoryData))
+		//			{
+		//				superCategoryList = new ArrayList<CategoryModel>();
+		//				superCategoryData = (HashSet<CategoryModel>) mplCategoryServiceImpl
+		//						.getAllSupercategoriesForCategoryList(productCategoryData);
+		//				if (CollectionUtils.isNotEmpty(superCategoryData))
+		//				{
+		//					final List<CategoryModel> dataList = new ArrayList<CategoryModel>(superCategoryData);
+		//					superCategoryList.addAll(dataList);
+		//				}
+		//				superCategoryList.addAll(productCategoryData);
+		//			}
+		//		}
+		//		return superCategoryList;
 	}
 
 	/**
@@ -882,59 +874,32 @@ public class DefaultPromotionManager extends PromotionsManager
 	{
 		List<CategoryModel> productCategoryData = null;
 		List<CategoryModel> superCategoryData = null;
-		//final CatalogVersionModel oCatalogVersionModel = catalogData();
-		HashSet<CategoryModel> categoryData = null;
+		final CatalogVersionModel oCatalogVersionModel = catalogData();
 
-		if (null != product)
+		if (null != product && null != product.getSupercategories() && null != oCatalogVersionModel)
 		{
 			superCategoryData = new ArrayList<CategoryModel>(product.getSupercategories());
-			//if (!superCategoryData.isEmpty())
-			if (CollectionUtils.isNotEmpty(superCategoryData))
+			if (!superCategoryData.isEmpty())
 			{
 				productCategoryData = new ArrayList<CategoryModel>();
-				final List<CategoryModel> finalCategoryList = new ArrayList<CategoryModel>();
-				final String primaryCat = configurationService.getConfiguration().getString(
-						MarketplacecommerceservicesConstants.PRIMARYHIERARCHY, //"decorator.primary",
-						MarketplacecommerceservicesConstants.EMPTY);
-
-				//				for (final CategoryModel category : superCategoryData)
-				//				{
-				//					//TISUAT-4621
-				//					final String primaryCat = configurationService.getConfiguration().getString("decorator.primary", "");
-				//					if (null != category && null != category.getCode() && category.getCode().indexOf(primaryCat) > -1)
-				//					{
-				//						final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel, category.getCode());
-				//						productCategoryData.add(oModel);
-				//						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(oModel));
-				//						if (!superCategoryData.isEmpty())
-				//						{
-				//							for (final CategoryModel categoryModel : superCategoryData)
-				//							{
-				//								productCategoryData.add(categoryModel);
-				//							}
-				//						}
-				//					}
-				//				}
-
 				for (final CategoryModel category : superCategoryData)
 				{
-					if (StringUtils.isNotEmpty(category.getCode()) && category.getCode().indexOf(primaryCat) > -1)
+					//TISUAT-4621
+					final String primaryCat = configurationService.getConfiguration().getString("decorator.primary", "");
+					if (null != category && null != category.getCode() && category.getCode().indexOf(primaryCat) > -1)
 					{
-						finalCategoryList.add(category);
+						final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel, category.getCode());
+						productCategoryData.add(oModel);
+						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(oModel));
+						if (!superCategoryData.isEmpty())
+						{
+							for (final CategoryModel categoryModel : superCategoryData)
+							{
+								productCategoryData.add(categoryModel);
+							}
+						}
 					}
 				}
-
-				if (CollectionUtils.isNotEmpty(finalCategoryList))
-				{
-					categoryData = (HashSet<CategoryModel>) mplCategoryServiceImpl
-							.getAllSupercategoriesForCategoryList(finalCategoryList);
-					if (CollectionUtils.isNotEmpty(categoryData))
-					{
-						final List<CategoryModel> dataList = new ArrayList<CategoryModel>(superCategoryData);
-						productCategoryData.addAll(dataList);
-					}
-				}
-				productCategoryData.addAll(finalCategoryList);
 			}
 		}
 		return productCategoryData;
@@ -2731,10 +2696,71 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param paramSessionContext
 	 * @return Map<Product, Integer>
 	 */
+	//	protected Map<String, AbstractOrderEntry> getValidProdListForBuyXofA(final AbstractOrder cart,
+	//			final SessionContext paramSessionContext, final List<Product> allowedProductList,
+	//			final List<AbstractPromotionRestriction> restrictionList, final List<String> sellerIDData,
+	//			final Map<AbstractOrderEntry, String> eligibleProductMap)//, final List<Product> excludedProductList, final List<String> excludeManufactureList)
+	//	{
+	//		final Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
+	//		String sellerID = MarketplacecommerceservicesConstants.EMPTY;
+	//		boolean isFreebie = false;
+	//
+	//		//final int productQty = 0;
+	//		for (final AbstractOrderEntry entry : cart.getEntries())
+	//		{
+	//			//boolean brandFlag = false;
+	//			boolean sellerFlag = false;
+	//			isFreebie = getMplPromotionHelper().validateEntryForFreebie(entry);
+	//
+	//			if (!isFreebie)
+	//			{
+	//				final Product product = entry.getProduct();
+	//
+	//				//excluded product check
+	//				//				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
+	//				//						|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
+	//				//						|| isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
+	//				if (isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
+	//				{
+	//					continue;
+	//				}
+	//
+	//				//checking product is a valid product for promotion
+	//				if (CollectionUtils.isNotEmpty(allowedProductList) && allowedProductList.contains(product))
+	//				{
+	//					//brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+	//					sellerFlag = checkSellerData(paramSessionContext, restrictionList, entry);
+	//				}
+	//
+	//				//				if (brandFlag && sellerFlag)
+	//				if (sellerFlag)
+	//				{
+	//					sellerID = getSellerID(paramSessionContext, restrictionList, entry);//Gets the Seller ID of the Primary Promotion Product
+	//					validProductUssidMap.putAll(populateValidProductUssidMap(product, cart, restrictionList, paramSessionContext,
+	//							entry));
+	//					if (sellerIDData != null && eligibleProductMap != null)
+	//					{
+	//						sellerIDData.add(sellerID);
+	//						eligibleProductMap.put(entry, sellerID);
+	//					}
+	//				}
+	//			}
+	//		}
+	//
+	//		return validProductUssidMap;
+	//	}
+
+	/**
+	 * @Description : Returns Valid Product List
+	 * @param cart
+	 * @param paramSessionContext
+	 * @return Map<Product, Integer>
+	 */
 	protected Map<String, AbstractOrderEntry> getValidProdListForBuyXofA(final AbstractOrder cart,
 			final SessionContext paramSessionContext, final List<Product> allowedProductList,
-			final List<AbstractPromotionRestriction> restrictionList, final List<String> sellerIDData,
-			final Map<AbstractOrderEntry, String> eligibleProductMap)//, final List<Product> excludedProductList, final List<String> excludeManufactureList)
+			final List<AbstractPromotionRestriction> restrictionList, final List<Product> excludedProductList,
+			final List<String> excludeManufactureList, final List<String> sellerIDData,
+			final Map<AbstractOrderEntry, String> eligibleProductMap)
 	{
 		final Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
 		String sellerID = MarketplacecommerceservicesConstants.EMPTY;
@@ -2743,7 +2769,7 @@ public class DefaultPromotionManager extends PromotionsManager
 		//final int productQty = 0;
 		for (final AbstractOrderEntry entry : cart.getEntries())
 		{
-			//boolean brandFlag = false;
+			boolean brandFlag = false;
 			boolean sellerFlag = false;
 			isFreebie = getMplPromotionHelper().validateEntryForFreebie(entry);
 
@@ -2752,10 +2778,9 @@ public class DefaultPromotionManager extends PromotionsManager
 				final Product product = entry.getProduct();
 
 				//excluded product check
-				//				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
-				//						|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
-				//						|| isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
-				if (isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
+				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
+						|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
+						|| isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
 				{
 					continue;
 				}
@@ -2763,12 +2788,11 @@ public class DefaultPromotionManager extends PromotionsManager
 				//checking product is a valid product for promotion
 				if (CollectionUtils.isNotEmpty(allowedProductList) && allowedProductList.contains(product))
 				{
-					//brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+					brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
 					sellerFlag = checkSellerData(paramSessionContext, restrictionList, entry);
 				}
 
-				//				if (brandFlag && sellerFlag)
-				if (sellerFlag)
+				if (brandFlag && sellerFlag)
 				{
 					sellerID = getSellerID(paramSessionContext, restrictionList, entry);//Gets the Seller ID of the Primary Promotion Product
 					validProductUssidMap.putAll(populateValidProductUssidMap(product, cart, restrictionList, paramSessionContext,
@@ -3692,60 +3716,60 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param product
 	 * @return
 	 */
-	//	public boolean excludeBrandDataCheck(final List<String> excludedManufactureList, final Product product)
-	//	{
-	//		//final long startTime = System.currentTimeMillis();
-	//
-	//		//Code Modified for  TISPT-148
-	//		boolean isExcludeBrand = false;
-	//		String brandName = MarketplacecommerceservicesConstants.EMPTY;
-	//		try
-	//		{ //final ProductModel productModel = productService.getProductForCode(product.getCode());
-	//			final List<Category> categoryList = (List<Category>) product.getAttribute("supercategories");
-	//			if (CollectionUtils.isNotEmpty(categoryList))
-	//			{
-	//				for (final Category category : categoryList)
-	//				{
-	//					if (category.getCode().startsWith("MBH"))
-	//					{
-	//						brandName = category.getName();
-	//						break;
-	//					}
-	//				}
-	//			}
-	//
-	//			if (CollectionUtils.isNotEmpty(excludedManufactureList) && StringUtils.isNotEmpty(brandName))
-	//			{
-	//				for (final String manufacturer : excludedManufactureList)
-	//				{
-	//					if (manufacturer.equalsIgnoreCase(brandName))
-	//					{
-	//						isExcludeBrand = true;
-	//						break;
-	//					}
-	//				}
-	//			}
-	//		}
-	//		catch (final EtailBusinessExceptions e)
-	//		{
-	//			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-	//		}
-	//		catch (final EtailNonBusinessExceptions e)
-	//		{
-	//			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-	//		}
-	//		catch (final Exception e)
-	//		{
-	//			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
-	//		}
-	//
-	//		//		final long endTime = System.currentTimeMillis();
-	//		//		LOG.info("*******************New TIME DIFFERENCE*****************************************************************"
-	//		//				+ (endTime - startTime));
-	//
-	//		return isExcludeBrand;
-	//
-	//	}
+	public boolean excludeBrandDataCheck(final List<String> excludedManufactureList, final Product product)
+	{
+		//final long startTime = System.currentTimeMillis();
+
+		//Code Modified for  TISPT-148
+		boolean isExcludeBrand = false;
+		String brandName = MarketplacecommerceservicesConstants.EMPTY;
+		try
+		{ //final ProductModel productModel = productService.getProductForCode(product.getCode());
+			final List<Category> categoryList = (List<Category>) product.getAttribute("supercategories");
+			if (CollectionUtils.isNotEmpty(categoryList))
+			{
+				for (final Category category : categoryList)
+				{
+					if (category.getCode().startsWith("MBH"))
+					{
+						brandName = category.getName();
+						break;
+					}
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(excludedManufactureList) && StringUtils.isNotEmpty(brandName))
+			{
+				for (final String manufacturer : excludedManufactureList)
+				{
+					if (manufacturer.equalsIgnoreCase(brandName))
+					{
+						isExcludeBrand = true;
+						break;
+					}
+				}
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+		}
+
+		//		final long endTime = System.currentTimeMillis();
+		//		LOG.info("*******************New TIME DIFFERENCE*****************************************************************"
+		//				+ (endTime - startTime));
+
+		return isExcludeBrand;
+
+	}
 
 	/**
 	 *
@@ -3885,13 +3909,72 @@ public class DefaultPromotionManager extends PromotionsManager
 	 *
 	 * @return Map<String, AbstractOrderEntry>
 	 */
+	//	public Map<String, AbstractOrderEntry> getValidProductListBOGO(final AbstractOrder cart, final SessionContext ctx,
+	//			final List<Product> allowedProductList, final List<AbstractPromotionRestriction> restrictionList)
+	//	{
+	//		final Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
+	//
+	//
+	//		//boolean brandFlag = false;
+	//		boolean sellerFlag = false;
+	//		boolean isFreebie = false;
+	//
+	//		for (final AbstractOrderEntry entry : cart.getEntries())
+	//		{
+	//
+	//			isFreebie = getMplPromotionHelper().validateEntryForFreebie(entry);
+	//			if (!isFreebie)
+	//			{
+	//				final Product product = entry.getProduct();
+	//
+	//				//				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
+	//				//						|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
+	//				//						|| isProductExcludedForSeller(ctx, restrictionList, entry))
+	//				if (isProductExcludedForSeller(ctx, restrictionList, entry))
+	//				{
+	//					continue;
+	//				}
+	//
+	//				if (CollectionUtils.isNotEmpty(allowedProductList) && allowedProductList.contains(product))
+	//				{
+	//					//brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+	//					sellerFlag = checkSellerBOGOData(ctx, restrictionList, entry);
+	//				}
+	//
+	//				//if (sellerFlag && brandFlag)
+	//				if (sellerFlag)
+	//				{
+	//					validProductUssidMap.putAll(populateValidProductUssidMap(product, cart, restrictionList, ctx, entry));
+	//
+	//					sellerFlag = false;
+	//					//brandFlag = false;
+	//				}
+	//			}
+	//
+	//		}
+	//
+	//		return validProductUssidMap;
+	//	}
+
+	/**
+	 * @param cart
+	 * @param ctx
+	 * @param allowedProductList
+	 * @param excludedProductList
+	 * @param excludeManufactureList
+	 * @param restrictionList
+	 *
+	 *
+	 * @return Map<String, AbstractOrderEntry>
+	 */
 	public Map<String, AbstractOrderEntry> getValidProductListBOGO(final AbstractOrder cart, final SessionContext ctx,
-			final List<Product> allowedProductList, final List<AbstractPromotionRestriction> restrictionList)
+			final List<Product> allowedProductList, final List<Product> excludedProductList,
+			final List<String> excludeManufactureList, final List<AbstractPromotionRestriction> restrictionList)
 	{
 		final Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
 
 
-		//boolean brandFlag = false;
+		boolean brandFlag = false;
 		boolean sellerFlag = false;
 		boolean isFreebie = false;
 
@@ -3903,27 +3986,25 @@ public class DefaultPromotionManager extends PromotionsManager
 			{
 				final Product product = entry.getProduct();
 
-				//				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
-				//						|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
-				//						|| isProductExcludedForSeller(ctx, restrictionList, entry))
-				if (isProductExcludedForSeller(ctx, restrictionList, entry))
+				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
+						|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
+						|| isProductExcludedForSeller(ctx, restrictionList, entry))
 				{
 					continue;
 				}
 
 				if (CollectionUtils.isNotEmpty(allowedProductList) && allowedProductList.contains(product))
 				{
-					//brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+					brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
 					sellerFlag = checkSellerBOGOData(ctx, restrictionList, entry);
 				}
 
-				//if (sellerFlag && brandFlag)
-				if (sellerFlag)
+				if (sellerFlag && brandFlag)
 				{
 					validProductUssidMap.putAll(populateValidProductUssidMap(product, cart, restrictionList, ctx, entry));
 
 					sellerFlag = false;
-					//brandFlag = false;
+					brandFlag = false;
 				}
 			}
 
@@ -3933,627 +4014,620 @@ public class DefaultPromotionManager extends PromotionsManager
 	}
 
 	//Added for A and B promotion getProducts fix: starts
-	/**
-	 * @param promoContext
-	 * @param ctx
-	 * @param promotion
-	 * @param categories
-	 * @param secondCategories
-	 * @param primaryProductList
-	 * @param secondaryProductList
-	 * @return RestrictionSetResult
-	 */
-	protected PromotionsManager.RestrictionSetResult findEligibleProductsInBasketForBuyAandBPromo(final SessionContext ctx,
-			final PromotionEvaluationContext promoContext, final AbstractPromotion promotion, final Collection<Category> categories,
-			final Collection<Category> secondCategories, final List<Product> primaryProductList,
-			final List<Product> secondaryProductList)
-	{
-		final Flat3Map params = new Flat3Map();
-		params.put("promo", promotion);
-
-		final Collection products = getBaseProductsForOrderForBuyAandBPromo(ctx, promoContext.getOrder(), secondaryProductList,
-				promotion, params, secondCategories);
-
-		if (!(products.isEmpty()))
-		{
-			final Set promotionCategories = new HashSet();
-			for (final Category cat : categories)
-			{
-				promotionCategories.add(cat);
-				promotionCategories.addAll(cat.getAllSubcategories(ctx));
-			}
-
-			final List promotionCategoriesList = new ArrayList(promotionCategories);
-
-			//			final Flat3Map params = new Flat3Map();
-			//			params.put("promo", promotion);
-			params.put("product", products);
-
-			final StringBuilder promQuery = new StringBuilder("SELECT DISTINCT pprom.pk FROM (");
-			promQuery.append(" {{ SELECT {p2p:").append("source").append("} as pk ");
-			promQuery.append(" FROM {").append(GeneratedPromotionsConstants.Relations.PRODUCTPROMOTIONRELATION).append(" AS p2p } ");
-			promQuery.append(" WHERE ?promo = {p2p:").append("target").append("} ");
-			promQuery.append(" AND {p2p:").append("source").append("} in (?product) }} ");
-
-
-			if (!(Config.isOracleUsed()))
-			{
-				if (!(promotionCategoriesList.isEmpty()))
-				{
-					promQuery.append(" UNION ");
-
-					promQuery.append("{{ SELECT {cat2prod:").append("target").append("} as pk ");
-					promQuery.append(" FROM { ").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
-							.append(" AS cat2prod} ");
-					promQuery.append(" WHERE {cat2prod:").append("source").append("} in (?promotionCategories)  ");
-					promQuery.append("   AND {cat2prod:").append("target").append("} in (?product) }} ");
-
-					params.put("promotionCategories", promotionCategories);
-				}
-				//promQuery.append(" ) AS pprom");
-			}
-			else
-			{
-				if (!(promotionCategoriesList.isEmpty()))
-				{
-					int pages = 0;
-					for (int i = 0; i < promotionCategoriesList.size(); i += 1000)
-					{
-						params.put("promotionCategories_" + pages,
-								promotionCategoriesList.subList(i, Math.min(i + 1000, promotionCategoriesList.size())));
-						++pages;
-					}
-					for (int i = 0; i < pages; ++i)
-					{
-						promQuery.append(" UNION ");
-
-						promQuery.append("{{ SELECT {cat2prod:").append("target").append("} as pk ");
-						promQuery.append(" FROM { ").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
-								.append(" AS cat2prod} ");
-						promQuery.append(" WHERE {cat2prod:").append("source").append("} in (?promotionCategories_").append(i);
-						promQuery.append(")   AND {cat2prod:").append("target").append("} in (?product) }} ");
-					}
-				}
-				//promQuery.append(" ) pprom");
-			}
-
-			//---------Check for brand: starts------------//
-			final StringBuilder brandQuery = evaluateBrandRestriction(params, promotion, ctx);
-			if (brandQuery != null)
-			{
-				promQuery.append(brandQuery);
-			}
-			//---------Check for brand: starts------------//
-
-			if (!(Config.isOracleUsed()))
-			{
-				promQuery.append(" ) AS pprom");
-			}
-			else
-			{
-				promQuery.append(" ) pprom");
-			}
-
-			final List cartProducts = getSession().getFlexibleSearch().search(ctx, promQuery.toString(), params, Product.class)
-					.getResult();
-
-			primaryProductList.addAll(cartProducts);
-
-			final List<Product> allProductList = new ArrayList<Product>(primaryProductList);
-			allProductList.addAll(secondaryProductList);
-
-			if (promoContext.getObserveRestrictions())
-			{
-				return PromotionsManager.getInstance().evaluateRestrictions(ctx, allProductList, promoContext.getOrder(), promotion,
-						promoContext.getDate());
-			}
-
-			return new PromotionsManager.RestrictionSetResult(allProductList);
-		}
-
-		return new PromotionsManager.RestrictionSetResult(new ArrayList(0));
-	}
-
-	/**
-	 * @param params
-	 * @param ctx
-	 * @param promotion
-	 * @param secondCategories
-	 * @param order
-	 * @param secondaryProductList
-	 * @return Collection<Product>
-	 */
-	private Collection<Product> getBaseProductsForOrderForBuyAandBPromo(final SessionContext ctx, final AbstractOrder order,
-			final List<Product> secondaryProductList, final AbstractPromotion promotion, final Flat3Map params,
-			final Collection<Category> secondCategories)
-	{
-		final SortedSet products = new TreeSet();
-		String secondProductsAsString = null;
-		String promotionType = null;
-
-		if (promotion instanceof BuyAandBPrecentageDiscount)
-		{
-			promotionType = MarketplacecommerceservicesConstants.BUYAANDBPERCENTAGEDISCOUNT;
-		}
-		else if (promotion instanceof BuyAandBgetC)
-		{
-			promotionType = MarketplacecommerceservicesConstants.BUYAANDBGETC;
-		}
-		else if (promotion instanceof BuyAandBGetPromotionOnShippingCharges)
-		{
-			promotionType = MarketplacecommerceservicesConstants.BUYAANDBGETPROMOTIONONSHIPPINGCHARGES;
-		}
-		else if (promotion instanceof BuyAGetPercentageDiscountOnB)
-		{
-			promotionType = MarketplacecommerceservicesConstants.BUYAGETPERCENTAGEDISCOUNTONB;
-		}
-		else if (promotion instanceof BuyAandBGetPrecentageDiscountCashback)
-		{
-			promotionType = MarketplacecommerceservicesConstants.ABCASHBACKPROMO;
-		}
-
-		final List<String> resultList = fetchSecProdsExcludedProdsForPromotion(params, ctx, promotionType);
-
-		if (CollectionUtils.isEmpty(secondCategories) && CollectionUtils.isNotEmpty(resultList))
-		{
-			secondProductsAsString = resultList.get(0);
-		}
-
-		final Collection<String> excludedProductList = CollectionUtils.isNotEmpty(resultList) ? Arrays.asList(resultList.get(1)
-				.split(",")) : new ArrayList<String>();
-
-		for (final AbstractOrderEntry aoe : order.getEntries())
-		{
-			final Product product = aoe.getProduct(ctx);
-
-			if (product == null
-					|| (CollectionUtils.isNotEmpty(excludedProductList) && excludedProductList.contains(product.getPK().toString())))
-			{
-				continue;
-			}
-			products.add(product);
-
-			//			final List baseProducts = Helper.getBaseProducts(ctx, product);
-			//			if ((baseProducts == null) || (baseProducts.isEmpty()))
-			//			{
-			//				continue;
-			//			}
-			//			products.addAll(baseProducts);
-
-		}
-
-		if (CollectionUtils.isNotEmpty(secondCategories))
-		{
-			params.put("product", products);
-			populateSecondaryListForCategory(secondCategories, secondaryProductList, params, ctx);
-		}
-		else
-		{
-			secondaryProductList.addAll(getSecondProducts(params, products, secondProductsAsString, ctx));
-		}
-
-		return products;
-	}
-
-	/**
-	 * @param product
-	 * @param secondProductsAsString
-	 * @return RestrictionSetResult
-	 * @return Collection<Product>
-	 */
-	//private List<Product> getSecondProducts(final Product product, final String secondProductsAsString)
-	private List<Product> getSecondProducts(final Flat3Map params, final SortedSet products, final String secondProductsAsString,
-			final SessionContext ctx)
-	{
-		final List<Product> secondProductList = new ArrayList<Product>();
-
-		//		if (product != null && StringUtils.isNotEmpty(secondProductsAsString)
-		//				&& secondProductsAsString.contains(product.getPK().toString()))
-		//		{
-		//			secondProductList.add(product);
-		//		}
-
-		for (final Object obj : products)
-		{
-			final Product product = (Product) obj;
-			if (StringUtils.isNotEmpty(secondProductsAsString) && secondProductsAsString.contains(product.getPK().toString()))
-			{
-				secondProductList.add(product);
-			}
-		}
-
-		params.put("secondProduct", secondProductList);
-		final StringBuilder promQuery = evaluateBrandRestriction(params, (AbstractPromotion) params.get("promo"), ctx);
-		if (promQuery != null)
-		{
-			final List<Product> cartSecondProducts = getSession().getFlexibleSearch()
-					.search(ctx, promQuery.toString(), params, Product.class).getResult();
-			params.remove("secondProduct");
-			return cartSecondProducts;
-			//secondProductList.retainAll(cartSecondProducts);
-		}
-
-		return secondProductList;
-	}
-
-	/**
-	 * @param params
-	 * @param ctx
-	 * @param promotionType
-	 * @return String
-	 */
-	private List<String> fetchSecProdsExcludedProdsForPromotion(final Flat3Map params, final SessionContext ctx,
-			final String promotionType)
-	{
-
-		final StringBuilder promQuery = new StringBuilder(
-				"SELECT {promo.secondProducts} as secondProducts, {promo.excludedProducts} as excludedProducts  ");
-		promQuery.append("FROM  {").append(promotionType).append(" AS promo} ");
-		promQuery.append(" WHERE {promo.secondProducts} IS NOT NULL AND {promo:pk} = ?promo ");
-
-		final List<List<String>> resultStr = getSession().getFlexibleSearch()
-				.search(ctx, promQuery.toString(), params, Arrays.asList(String.class, String.class), true, true, 0, -1).getResult();
-
-		return CollectionUtils.isNotEmpty(resultStr) ? resultStr.get(0) : new ArrayList<String>();
-	}
-
-	/**
-	 * @param secondCategories
-	 * @param ctx
-	 * @param secondaryProductList
-	 * @param params
-	 * @return String
-	 */
-	private void populateSecondaryListForCategory(final Collection<Category> secondCategories,
-			final List<Product> secondaryProductList, final Flat3Map params, final SessionContext ctx)
-	{
-		final StringBuilder promQuery = new StringBuilder();
-		final Set promotionCategories = new HashSet();
-		for (final Category cat : secondCategories)
-		{
-			promotionCategories.add(cat);
-			promotionCategories.addAll(cat.getAllSubcategories(ctx));
-		}
-		final List promotionCategoriesList = new ArrayList(promotionCategories);
-
-		if (!(Config.isOracleUsed()))
-		{
-			if (!(promotionCategoriesList.isEmpty()))
-			{
-				promQuery.append("SELECT {cat2prod:").append("target").append("} as pk ");
-				promQuery.append(" FROM { ").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
-						.append(" AS cat2prod} ");
-				promQuery.append(" WHERE {cat2prod:").append("source").append("} in (?promotionCategories)  ");
-				promQuery.append("   AND {cat2prod:").append("target").append("} in (?product)");
-
-				params.put("promotionCategories", promotionCategories);
-			}
-		}
-		else
-		{
-			if (!(promotionCategoriesList.isEmpty()))
-			{
-				int pages = 0;
-				for (int i = 0; i < promotionCategoriesList.size(); i += 1000)
-				{
-					params.put("promotionCategories_" + pages,
-							promotionCategoriesList.subList(i, Math.min(i + 1000, promotionCategoriesList.size())));
-					++pages;
-				}
-				for (int i = 0; i < pages; ++i)
-				{
-					promQuery.append("SELECT {cat2prod:").append("target").append("} as pk ");
-					promQuery.append(" FROM { ").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
-							.append(" AS cat2prod} ");
-					promQuery.append(" WHERE {cat2prod:").append("source").append("} in (?promotionCategories_").append(i);
-					promQuery.append(")   AND {cat2prod:").append("target").append("} in (?product) }} ");
-				}
-			}
-		}
-
-		final StringBuilder brandQuery = evaluateBrandRestriction(params, (AbstractPromotion) params.get("promo"), ctx);
-		if (brandQuery != null)
-		{
-			promQuery.append(brandQuery);
-		}
-
-		final List cartSecondProducts = getSession().getFlexibleSearch().search(ctx, promQuery.toString(), params, Product.class)
-				.getResult();
-
-		secondaryProductList.addAll(cartSecondProducts);
-	}
-
-	//ends
-	//Added for A type promotions getProducts fix: starts
-	/**
-	 * @param promoContext
-	 * @param ctx
-	 * @param promotion
-	 * @param categories
-	 * @param secondCategories
-	 * @param primaryProductList
-	 * @param secondaryProductList
-	 * @return RestrictionSetResult
-	 */
-	protected PromotionsManager.RestrictionSetResult findEligibleProductsInBasket(final SessionContext ctx,
-			final PromotionEvaluationContext promoContext, final AbstractPromotion promotion, final Collection<Category> categories)
-	{
-		final Flat3Map params = new Flat3Map();
-		params.put("promo", promotion);
-
-		final Collection products = getBaseProductsInBasket(ctx, promoContext.getOrder(), params);
-
-		if (!(products.isEmpty()))
-		{
-			final Set promotionCategories = new HashSet();
-			for (final Category cat : categories)
-			{
-				promotionCategories.add(cat);
-				promotionCategories.addAll(cat.getAllSubcategories(ctx));
-			}
-			final List promotionCategoriesList = new ArrayList(promotionCategories);
-
-			//			final Flat3Map params = new Flat3Map();
-			//			params.put("promo", promotion);
-			params.put("product", products);
-
-			final StringBuilder promQuery = new StringBuilder("SELECT DISTINCT pprom.pk FROM (");
-			promQuery.append(" {{ SELECT {p2p:").append("source").append("} as pk ");
-			promQuery.append(" FROM {").append(GeneratedPromotionsConstants.Relations.PRODUCTPROMOTIONRELATION).append(" AS p2p } ");
-			promQuery.append(" WHERE ?promo = {p2p:").append("target").append("} ");
-			promQuery.append(" AND {p2p:").append("source").append("} in (?product) }}");
-
-			if (!(Config.isOracleUsed()))
-			{
-				if (!(promotionCategoriesList.isEmpty()))
-				{
-					promQuery.append(" UNION ");
-
-					promQuery.append("{{ SELECT {cat2prod:").append("target").append("} as pk ");
-					promQuery.append(" FROM { ").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
-							.append(" AS cat2prod} ");
-					promQuery.append(" WHERE {cat2prod:").append("source").append("} in (?promotionCategories)  ");
-					promQuery.append("   AND {cat2prod:").append("target").append("} in (?product) }}");
-
-					params.put("promotionCategories", promotionCategories);
-				}
-				//promQuery.append(" ) AS pprom");
-			}
-			else
-			{
-				if (!(promotionCategoriesList.isEmpty()))
-				{
-					int pages = 0;
-					for (int i = 0; i < promotionCategoriesList.size(); i += 1000)
-					{
-						params.put("promotionCategories_" + pages,
-								promotionCategoriesList.subList(i, Math.min(i + 1000, promotionCategoriesList.size())));
-						++pages;
-					}
-					for (int i = 0; i < pages; ++i)
-					{
-						promQuery.append(" UNION ");
-
-						promQuery.append("{{ SELECT {cat2prod:").append("target").append("} as pk ");
-						promQuery.append(" FROM { ").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
-								.append(" AS cat2prod} ");
-						promQuery.append(" WHERE {cat2prod:").append("source").append("} in (?promotionCategories_").append(i);
-						promQuery.append(")   AND {cat2prod:").append("target").append("} in (?product) }}");
-					}
-				}
-				//				promQuery.append(" ) pprom");
-			}
-
-			//---------Check for brand: starts------------//
-			final StringBuilder brandQuery = evaluateBrandRestriction(params, promotion, ctx);
-			if (brandQuery != null)
-			{
-				promQuery.append(brandQuery);
-			}
-			//---------Check for brand: starts------------//
-
-			if (!(Config.isOracleUsed()))
-			{
-				promQuery.append(" ) AS pprom");
-			}
-			else
-			{
-				promQuery.append(" ) pprom");
-			}
-
-			final List cartProducts = getSession().getFlexibleSearch().search(ctx, promQuery.toString(), params, Product.class)
-					.getResult();
-
-			if (promoContext.getObserveRestrictions())
-			{
-				return PromotionsManager.getInstance().evaluateRestrictions(ctx, cartProducts, promoContext.getOrder(), promotion,
-						promoContext.getDate());
-			}
-
-			return new PromotionsManager.RestrictionSetResult(cartProducts);
-		}
-
-		return new PromotionsManager.RestrictionSetResult(new ArrayList(0));
-	}
-
-	/**
-	 * @param params
-	 * @param ctx
-	 * @param promotion
-	 * @param secondCategories
-	 * @param order
-	 * @param secondaryProductList
-	 * @return Collection<Product>
-	 */
-	private Collection<Product> getBaseProductsInBasket(final SessionContext ctx, final AbstractOrder order, final Flat3Map params)
-	{
-		final SortedSet products = new TreeSet();
-		final Collection<String> excludedProductList = fetchExcludedProductsForPromotion(params, ctx);
-
-		for (final AbstractOrderEntry aoe : order.getEntries())
-		{
-			final Product product = aoe.getProduct(ctx);
-			if (product == null
-					|| (CollectionUtils.isNotEmpty(excludedProductList) && excludedProductList.contains(product.getPK().toString())))
-			{
-				continue;
-			}
-			products.add(product);
-
-			//			final List baseProducts = Helper.getBaseProducts(ctx, product);
-			//			if ((baseProducts == null) || (baseProducts.isEmpty()))
-			//			{
-			//				continue;
-			//			}
-			//			products.addAll(baseProducts);
-		}
-
-		return products;
-	}
-
-	/**
-	 * @param params
-	 * @param ctx
-	 * @param promotionType
-	 * @return String
-	 */
-	private Collection<String> fetchExcludedProductsForPromotion(final Flat3Map params, final SessionContext ctx)
-	{
-		final StringBuilder promQuery = new StringBuilder("SELECT {promotion.excludedProducts} as excludedProducts  ");
-		promQuery.append("FROM  {").append(MarketplacecommerceservicesConstants.PRODUCT_PROMO).append(" AS promotion} ");
-		promQuery.append("WHERE {promotion.excludedProducts} IS NOT NULL AND {promotion:pk} = ?promo ");
-
-		final List<String> excludedProductStr = getSession().getFlexibleSearch()
-				.search(ctx, promQuery.toString(), params, String.class).getResult();
-
-		final String excludedProducts = CollectionUtils.isNotEmpty(excludedProductStr) ? excludedProductStr.get(0) : "";
-
-		return Arrays.asList(excludedProducts.split(","));
-
-	}
-
-	/**
-	 * @param params
-	 * @param ctx
-	 * @param promotionType
-	 * @return Collection<String>
-	 */
-	private Collection<String> fetchBrandsForPromotion(final Flat3Map params, final SessionContext ctx, final String PromotionType)
-	{
-		final StringBuilder promQuery = new StringBuilder("SELECT {brand.manufacturers} as brands  ");
-		promQuery.append("FROM  {").append(PromotionType).append(" AS brand} ");
-		promQuery.append("WHERE {brand.manufacturers} IS NOT NULL AND {brand.promotion} = ?promo ");
-
-		final List<String> brandStr = getSession().getFlexibleSearch().search(ctx, promQuery.toString(), params, String.class)
-				.getResult();
-
-		final String brands = CollectionUtils.isNotEmpty(brandStr) ? brandStr.get(0) : "";
-
-		return Arrays.asList(brands.substring(4).split(","));
-	}
-
-	/**
-	 * @param brandList
-	 * @param PromotionType
-	 * @return StringBuilder query
-	 */
-	private StringBuilder constructBrandQuery(final Collection<String> brandList, final String PromotionType, final Flat3Map params)
-	{
-		final StringBuilder promQuery = new StringBuilder();
-
-		if ((params.get("secondProduct") != null))
-		{
-			if (StringUtils.isNotEmpty(PromotionType)
-					&& PromotionType.equalsIgnoreCase(MarketplacecommerceservicesConstants.BRANDRESTRICTION)
-					&& CollectionUtils.isNotEmpty(brandList))
-			{
-				promQuery.append("SELECT {cat2prod:target} as pk  ");
-				promQuery.append("FROM  {").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
-						.append(" AS cat2prod } ");
-				promQuery.append("WHERE {cat2prod:target} in (?secondProduct) AND {cat2prod:source} in (?brands)");
-			}
-			else if (StringUtils.isNotEmpty(PromotionType)
-					&& PromotionType.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXCLUDEBRANDRESTRICTION)
-					&& CollectionUtils.isNotEmpty(brandList))
-			{
-				promQuery.append("SELECT {cat2prod:target} as pk  ");
-				promQuery.append("FROM  {").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION);
-				promQuery.append(" AS cat2prod JOIN ").append(MarketplacecommerceservicesConstants.TYPE_CATEGORY)
-						.append(" AS category on {cat2prod:source} = {category.pk}} ");
-				promQuery
-						.append(
-								"WHERE {cat2prod:target} in (?secondProduct) AND {cat2prod:source} not in (?brands) AND {category.code} like '%")
-						.append(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX).append("%'");
-			}
-
-		}
-		else
-		{
-			promQuery.append(" INTERSECT ");
-
-			if (StringUtils.isNotEmpty(PromotionType)
-					&& PromotionType.equalsIgnoreCase(MarketplacecommerceservicesConstants.BRANDRESTRICTION)
-					&& CollectionUtils.isNotEmpty(brandList))
-			{
-				promQuery.append("{{ SELECT {cat2prod:target} as pk  ");
-				promQuery.append("FROM  {").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
-						.append(" AS cat2prod } ");
-				promQuery.append("WHERE {cat2prod:target} in (?product) AND {cat2prod:source} in (?brands) }} ");
-			}
-			else if (StringUtils.isNotEmpty(PromotionType)
-					&& PromotionType.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXCLUDEBRANDRESTRICTION)
-					&& CollectionUtils.isNotEmpty(brandList))
-			{
-				promQuery.append("{{ SELECT {cat2prod:target} as pk  ");
-				promQuery.append("FROM  {").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION);
-				promQuery.append(" AS cat2prod JOIN ").append(MarketplacecommerceservicesConstants.TYPE_CATEGORY)
-						.append(" AS category on {cat2prod:source} = {category.pk}} ");
-				promQuery
-						.append(
-								"WHERE {cat2prod:target} in (?product) AND {cat2prod:source} not in (?brands) AND {category.code} like '%")
-						.append(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX).append("%' }} ");
-			}
-		}
-		return promQuery;
-	}
-
-	/**
-	 * @param params
-	 * @param promotion
-	 * @param ctx
-	 * @return StringBuilder query
-	 */
-	private StringBuilder evaluateBrandRestriction(final Flat3Map params, final AbstractPromotion promotion,
-			final SessionContext ctx)
-	{
-		StringBuilder stringBuilder = null;
-		String PromotionType = null;
-		Collection<String> brandList = null;
-
-		for (final AbstractPromotionRestriction restriction : promotion.getRestrictions())
-		{
-			if (restriction instanceof ManufacturesRestriction)
-			{
-				PromotionType = MarketplacecommerceservicesConstants.BRANDRESTRICTION;
-				brandList = fetchBrandsForPromotion(params, ctx, PromotionType);
-				break;
-			}
-			else if (restriction instanceof ExcludeManufacturesRestriction)
-			{
-				PromotionType = MarketplacecommerceservicesConstants.EXCLUDEBRANDRESTRICTION;
-				brandList = fetchBrandsForPromotion(params, ctx, PromotionType);
-				break;
-			}
-		}
-
-		if (CollectionUtils.isNotEmpty(brandList))
-		{
-			params.put("brands", brandList);
-			stringBuilder = constructBrandQuery(brandList, PromotionType, params);
-		}
-		return stringBuilder;
-
-	}
+	//	/**
+	//	 * @param promoContext
+	//	 * @param ctx
+	//	 * @param promotion
+	//	 * @param categories
+	//	 * @param secondCategories
+	//	 * @param primaryProductList
+	//	 * @param secondaryProductList
+	//	 * @return RestrictionSetResult
+	//	 */
+	//	protected PromotionsManager.RestrictionSetResult findEligibleProductsInBasketForBuyAandBPromo(final SessionContext ctx,
+	//			final PromotionEvaluationContext promoContext, final AbstractPromotion promotion, final Collection<Category> categories,
+	//			final Collection<Category> secondCategories, final List<Product> primaryProductList,
+	//			final List<Product> secondaryProductList)
+	//	{
+	//		final Flat3Map params = new Flat3Map();
+	//		params.put("promo", promotion);
+	//
+	//		final Collection products = getBaseProductsForOrderForBuyAandBPromo(ctx, promoContext.getOrder(), secondaryProductList,
+	//				promotion, params, secondCategories);
+	//
+	//		if (!(products.isEmpty()))
+	//		{
+	//			final Set promotionCategories = new HashSet();
+	//			for (final Category cat : categories)
+	//			{
+	//				promotionCategories.add(cat);
+	//				promotionCategories.addAll(cat.getAllSubcategories(ctx));
+	//			}
+	//
+	//			final List promotionCategoriesList = new ArrayList(promotionCategories);
+	//
+	//			//			final Flat3Map params = new Flat3Map();
+	//			//			params.put("promo", promotion);
+	//			params.put("product", products);
+	//
+	//			final StringBuilder promQuery = new StringBuilder("SELECT DISTINCT pprom.pk FROM (");
+	//			promQuery.append(" {{ SELECT {p2p:").append("source").append("} as pk ");
+	//			promQuery.append(" FROM {").append(GeneratedPromotionsConstants.Relations.PRODUCTPROMOTIONRELATION).append(" AS p2p } ");
+	//			promQuery.append(" WHERE ?promo = {p2p:").append("target").append("} ");
+	//			promQuery.append(" AND {p2p:").append("source").append("} in (?product) }} ");
+	//
+	//
+	//			if (!(Config.isOracleUsed()))
+	//			{
+	//				if (!(promotionCategoriesList.isEmpty()))
+	//				{
+	//					promQuery.append(" UNION ");
+	//
+	//					promQuery.append("{{ SELECT {cat2prod:").append("target").append("} as pk ");
+	//					promQuery.append(" FROM { ").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
+	//							.append(" AS cat2prod} ");
+	//					promQuery.append(" WHERE {cat2prod:").append("source").append("} in (?promotionCategories)  ");
+	//					promQuery.append("   AND {cat2prod:").append("target").append("} in (?product) }} ");
+	//
+	//					params.put("promotionCategories", promotionCategories);
+	//				}
+	//				//promQuery.append(" ) AS pprom");
+	//			}
+	//			else
+	//			{
+	//				if (!(promotionCategoriesList.isEmpty()))
+	//				{
+	//					int pages = 0;
+	//					for (int i = 0; i < promotionCategoriesList.size(); i += 1000)
+	//					{
+	//						params.put("promotionCategories_" + pages,
+	//								promotionCategoriesList.subList(i, Math.min(i + 1000, promotionCategoriesList.size())));
+	//						++pages;
+	//					}
+	//					for (int i = 0; i < pages; ++i)
+	//					{
+	//						promQuery.append(" UNION ");
+	//
+	//						promQuery.append("{{ SELECT {cat2prod:").append("target").append("} as pk ");
+	//						promQuery.append(" FROM { ").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
+	//								.append(" AS cat2prod} ");
+	//						promQuery.append(" WHERE {cat2prod:").append("source").append("} in (?promotionCategories_").append(i);
+	//						promQuery.append(")   AND {cat2prod:").append("target").append("} in (?product) }} ");
+	//					}
+	//				}
+	//				//promQuery.append(" ) pprom");
+	//			}
+	//
+	//			//---------Check for brand: starts------------//
+	//			final StringBuilder brandQuery = evaluateBrandRestriction(params, promotion, ctx);
+	//			if (brandQuery != null)
+	//			{
+	//				promQuery.append(brandQuery);
+	//			}
+	//			//---------Check for brand: starts------------//
+	//
+	//			if (!(Config.isOracleUsed()))
+	//			{
+	//				promQuery.append(" ) AS pprom");
+	//			}
+	//			else
+	//			{
+	//				promQuery.append(" ) pprom");
+	//			}
+	//
+	//			final List cartProducts = getSession().getFlexibleSearch().search(ctx, promQuery.toString(), params, Product.class)
+	//					.getResult();
+	//
+	//			primaryProductList.addAll(cartProducts);
+	//
+	//			final List<Product> allProductList = new ArrayList<Product>(primaryProductList);
+	//			allProductList.addAll(secondaryProductList);
+	//			//secondaryProductList.addAll(primaryProductList);
+	//
+	//			if (promoContext.getObserveRestrictions())
+	//			{
+	//				return PromotionsManager.getInstance().evaluateRestrictions(ctx, allProductList, promoContext.getOrder(), promotion,
+	//						promoContext.getDate());
+	//			}
+	//
+	//			return new PromotionsManager.RestrictionSetResult(allProductList);
+	//		}
+	//
+	//		return new PromotionsManager.RestrictionSetResult(new ArrayList(0));
+	//	}
+	//
+	//	/**
+	//	 * @param params
+	//	 * @param ctx
+	//	 * @param promotion
+	//	 * @param secondCategories
+	//	 * @param order
+	//	 * @param secondaryProductList
+	//	 * @return Collection<Product>
+	//	 */
+	//	private Collection<Product> getBaseProductsForOrderForBuyAandBPromo(final SessionContext ctx, final AbstractOrder order,
+	//			final List<Product> secondaryProductList, final AbstractPromotion promotion, final Flat3Map params,
+	//			final Collection<Category> secondCategories)
+	//	{
+	//		final SortedSet products = new TreeSet();
+	//		String secondProductsAsString = null;
+	//		String promotionType = null;
+	//
+	//		if (promotion instanceof BuyAandBPrecentageDiscount)
+	//		{
+	//			promotionType = MarketplacecommerceservicesConstants.BUYAANDBPERCENTAGEDISCOUNT;
+	//		}
+	//		else if (promotion instanceof BuyAandBgetC)
+	//		{
+	//			promotionType = MarketplacecommerceservicesConstants.BUYAANDBGETC;
+	//		}
+	//		else if (promotion instanceof BuyAandBGetPromotionOnShippingCharges)
+	//		{
+	//			promotionType = MarketplacecommerceservicesConstants.BUYAANDBGETPROMOTIONONSHIPPINGCHARGES;
+	//		}
+	//		else if (promotion instanceof BuyAGetPercentageDiscountOnB)
+	//		{
+	//			promotionType = MarketplacecommerceservicesConstants.BUYAGETPERCENTAGEDISCOUNTONB;
+	//		}
+	//		else if (promotion instanceof BuyAandBGetPrecentageDiscountCashback)
+	//		{
+	//			promotionType = MarketplacecommerceservicesConstants.ABCASHBACKPROMO;
+	//		}
+	//
+	//		final List<String> resultList = fetchSecProdsExcludedProdsForPromotion(params, ctx, promotionType);
+	//
+	//		if (CollectionUtils.isEmpty(secondCategories) && CollectionUtils.isNotEmpty(resultList))
+	//		{
+	//			secondProductsAsString = resultList.get(0);
+	//		}
+	//
+	//		final Collection<String> excludedProductList = CollectionUtils.isNotEmpty(resultList) ? Arrays.asList(resultList.get(1)
+	//				.split(",")) : new ArrayList<String>();
+	//
+	//		for (final AbstractOrderEntry aoe : order.getEntries())
+	//		{
+	//			final Product product = aoe.getProduct(ctx);
+	//
+	//			if (product == null
+	//					|| (CollectionUtils.isNotEmpty(excludedProductList) && excludedProductList.contains(product.getPK().toString())))
+	//			{
+	//				continue;
+	//			}
+	//			products.add(product);
+	//		}
+	//
+	//		if (CollectionUtils.isNotEmpty(secondCategories))
+	//		{
+	//			params.put("product", products);
+	//			populateSecondaryListForCategory(secondCategories, secondaryProductList, params, ctx);
+	//		}
+	//		else
+	//		{
+	//			secondaryProductList.addAll(getSecondProducts(params, products, secondProductsAsString, ctx));
+	//		}
+	//
+	//		return products;
+	//	}
+	//
+	//	/**
+	//	 * @param product
+	//	 * @param secondProductsAsString
+	//	 * @return RestrictionSetResult
+	//	 * @return Collection<Product>
+	//	 */
+	//	//private List<Product> getSecondProducts(final Product product, final String secondProductsAsString)
+	//	private List<Product> getSecondProducts(final Flat3Map params, final SortedSet products, final String secondProductsAsString,
+	//			final SessionContext ctx)
+	//	{
+	//		final List<Product> secondProductList = new ArrayList<Product>();
+	//
+	//		//		if (product != null && StringUtils.isNotEmpty(secondProductsAsString)
+	//		//				&& secondProductsAsString.contains(product.getPK().toString()))
+	//		//		{
+	//		//			secondProductList.add(product);
+	//		//		}
+	//
+	//		for (final Object obj : products)
+	//		{
+	//			final Product product = (Product) obj;
+	//			if (StringUtils.isNotEmpty(secondProductsAsString) && secondProductsAsString.contains(product.getPK().toString()))
+	//			{
+	//				secondProductList.add(product);
+	//			}
+	//		}
+	//
+	//		params.put("secondProduct", secondProductList);
+	//		final StringBuilder promQuery = evaluateBrandRestriction(params, (AbstractPromotion) params.get("promo"), ctx);
+	//		if (promQuery != null)
+	//		{
+	//			final List<Product> cartSecondProducts = getSession().getFlexibleSearch()
+	//					.search(ctx, promQuery.toString(), params, Product.class).getResult();
+	//			params.remove("secondProduct");
+	//			return cartSecondProducts;
+	//			//secondProductList.retainAll(cartSecondProducts);
+	//		}
+	//
+	//		return secondProductList;
+	//	}
+	//
+	//	/**
+	//	 * @param params
+	//	 * @param ctx
+	//	 * @param promotionType
+	//	 * @return String
+	//	 */
+	//	private List<String> fetchSecProdsExcludedProdsForPromotion(final Flat3Map params, final SessionContext ctx,
+	//			final String promotionType)
+	//	{
+	//
+	//		final StringBuilder promQuery = new StringBuilder(
+	//				"SELECT {promo.secondProducts} as secondProducts, {promo.excludedProducts} as excludedProducts  ");
+	//		promQuery.append("FROM  {").append(promotionType).append(" AS promo} ");
+	//		promQuery.append(" WHERE {promo.secondProducts} IS NOT NULL AND {promo:pk} = ?promo ");
+	//
+	//		final List<List<String>> resultStr = getSession().getFlexibleSearch()
+	//				.search(ctx, promQuery.toString(), params, Arrays.asList(String.class, String.class), true, true, 0, -1).getResult();
+	//
+	//		return CollectionUtils.isNotEmpty(resultStr) ? resultStr.get(0) : new ArrayList<String>();
+	//	}
+	//
+	//	/**
+	//	 * @param secondCategories
+	//	 * @param ctx
+	//	 * @param secondaryProductList
+	//	 * @param params
+	//	 * @return String
+	//	 */
+	//	private void populateSecondaryListForCategory(final Collection<Category> secondCategories,
+	//			final List<Product> secondaryProductList, final Flat3Map params, final SessionContext ctx)
+	//	{
+	//		final StringBuilder promQuery = new StringBuilder();
+	//		final Set promotionCategories = new HashSet();
+	//		for (final Category cat : secondCategories)
+	//		{
+	//			promotionCategories.add(cat);
+	//			promotionCategories.addAll(cat.getAllSubcategories(ctx));
+	//		}
+	//		final List promotionCategoriesList = new ArrayList(promotionCategories);
+	//
+	//		if (!(Config.isOracleUsed()))
+	//		{
+	//			if (!(promotionCategoriesList.isEmpty()))
+	//			{
+	//				promQuery.append("SELECT {cat2prod:").append("target").append("} as pk ");
+	//				promQuery.append(" FROM { ").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
+	//						.append(" AS cat2prod} ");
+	//				promQuery.append(" WHERE {cat2prod:").append("source").append("} in (?promotionCategories)  ");
+	//				promQuery.append("   AND {cat2prod:").append("target").append("} in (?product)");
+	//
+	//				params.put("promotionCategories", promotionCategories);
+	//			}
+	//		}
+	//		else
+	//		{
+	//			if (!(promotionCategoriesList.isEmpty()))
+	//			{
+	//				int pages = 0;
+	//				for (int i = 0; i < promotionCategoriesList.size(); i += 1000)
+	//				{
+	//					params.put("promotionCategories_" + pages,
+	//							promotionCategoriesList.subList(i, Math.min(i + 1000, promotionCategoriesList.size())));
+	//					++pages;
+	//				}
+	//				for (int i = 0; i < pages; ++i)
+	//				{
+	//					promQuery.append("SELECT {cat2prod:").append("target").append("} as pk ");
+	//					promQuery.append(" FROM { ").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
+	//							.append(" AS cat2prod} ");
+	//					promQuery.append(" WHERE {cat2prod:").append("source").append("} in (?promotionCategories_").append(i);
+	//					promQuery.append(")   AND {cat2prod:").append("target").append("} in (?product) }} ");
+	//				}
+	//			}
+	//		}
+	//
+	//		final StringBuilder brandQuery = evaluateBrandRestriction(params, (AbstractPromotion) params.get("promo"), ctx);
+	//		if (brandQuery != null)
+	//		{
+	//			promQuery.append(brandQuery);
+	//		}
+	//
+	//		final List cartSecondProducts = getSession().getFlexibleSearch().search(ctx, promQuery.toString(), params, Product.class)
+	//				.getResult();
+	//
+	//		secondaryProductList.addAll(cartSecondProducts);
+	//	}
+	//
+	//	//ends
+	//	//Added for A type promotions getProducts fix: starts
+	//	/**
+	//	 * @param promoContext
+	//	 * @param ctx
+	//	 * @param promotion
+	//	 * @param categories
+	//	 * @param secondCategories
+	//	 * @param primaryProductList
+	//	 * @param secondaryProductList
+	//	 * @return RestrictionSetResult
+	//	 */
+	//	protected PromotionsManager.RestrictionSetResult findEligibleProductsInBasket(final SessionContext ctx,
+	//			final PromotionEvaluationContext promoContext, final AbstractPromotion promotion, final Collection<Category> categories)
+	//	{
+	//		final Flat3Map params = new Flat3Map();
+	//		params.put("promo", promotion);
+	//
+	//		final Collection products = getBaseProductsInBasket(ctx, promoContext.getOrder(), params);
+	//
+	//		if (!(products.isEmpty()))
+	//		{
+	//			final Set promotionCategories = new HashSet();
+	//			for (final Category cat : categories)
+	//			{
+	//				promotionCategories.add(cat);
+	//				promotionCategories.addAll(cat.getAllSubcategories(ctx));
+	//			}
+	//			final List promotionCategoriesList = new ArrayList(promotionCategories);
+	//
+	//			//			final Flat3Map params = new Flat3Map();
+	//			//			params.put("promo", promotion);
+	//			params.put("product", products);
+	//
+	//			final StringBuilder promQuery = new StringBuilder("SELECT DISTINCT pprom.pk FROM (");
+	//			promQuery.append(" {{ SELECT {p2p:").append("source").append("} as pk ");
+	//			promQuery.append(" FROM {").append(GeneratedPromotionsConstants.Relations.PRODUCTPROMOTIONRELATION).append(" AS p2p } ");
+	//			promQuery.append(" WHERE ?promo = {p2p:").append("target").append("} ");
+	//			promQuery.append(" AND {p2p:").append("source").append("} in (?product) }}");
+	//
+	//			if (!(Config.isOracleUsed()))
+	//			{
+	//				if (!(promotionCategoriesList.isEmpty()))
+	//				{
+	//					promQuery.append(" UNION ");
+	//
+	//					promQuery.append("{{ SELECT {cat2prod:").append("target").append("} as pk ");
+	//					promQuery.append(" FROM { ").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
+	//							.append(" AS cat2prod} ");
+	//					promQuery.append(" WHERE {cat2prod:").append("source").append("} in (?promotionCategories)  ");
+	//					promQuery.append("   AND {cat2prod:").append("target").append("} in (?product) }}");
+	//
+	//					params.put("promotionCategories", promotionCategories);
+	//				}
+	//				//promQuery.append(" ) AS pprom");
+	//			}
+	//			else
+	//			{
+	//				if (!(promotionCategoriesList.isEmpty()))
+	//				{
+	//					int pages = 0;
+	//					for (int i = 0; i < promotionCategoriesList.size(); i += 1000)
+	//					{
+	//						params.put("promotionCategories_" + pages,
+	//								promotionCategoriesList.subList(i, Math.min(i + 1000, promotionCategoriesList.size())));
+	//						++pages;
+	//					}
+	//					for (int i = 0; i < pages; ++i)
+	//					{
+	//						promQuery.append(" UNION ");
+	//
+	//						promQuery.append("{{ SELECT {cat2prod:").append("target").append("} as pk ");
+	//						promQuery.append(" FROM { ").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
+	//								.append(" AS cat2prod} ");
+	//						promQuery.append(" WHERE {cat2prod:").append("source").append("} in (?promotionCategories_").append(i);
+	//						promQuery.append(")   AND {cat2prod:").append("target").append("} in (?product) }}");
+	//					}
+	//				}
+	//				//				promQuery.append(" ) pprom");
+	//			}
+	//
+	//			//---------Check for brand: starts------------//
+	//			final StringBuilder brandQuery = evaluateBrandRestriction(params, promotion, ctx);
+	//			if (brandQuery != null)
+	//			{
+	//				promQuery.append(brandQuery);
+	//			}
+	//			//---------Check for brand: starts------------//
+	//
+	//			if (!(Config.isOracleUsed()))
+	//			{
+	//				promQuery.append(" ) AS pprom");
+	//			}
+	//			else
+	//			{
+	//				promQuery.append(" ) pprom");
+	//			}
+	//
+	//			final List cartProducts = getSession().getFlexibleSearch().search(ctx, promQuery.toString(), params, Product.class)
+	//					.getResult();
+	//
+	//			if (promoContext.getObserveRestrictions())
+	//			{
+	//				return PromotionsManager.getInstance().evaluateRestrictions(ctx, cartProducts, promoContext.getOrder(), promotion,
+	//						promoContext.getDate());
+	//			}
+	//
+	//			return new PromotionsManager.RestrictionSetResult(cartProducts);
+	//		}
+	//
+	//		return new PromotionsManager.RestrictionSetResult(new ArrayList(0));
+	//	}
+	//
+	//	/**
+	//	 * @param params
+	//	 * @param ctx
+	//	 * @param promotion
+	//	 * @param secondCategories
+	//	 * @param order
+	//	 * @param secondaryProductList
+	//	 * @return Collection<Product>
+	//	 */
+	//	private Collection<Product> getBaseProductsInBasket(final SessionContext ctx, final AbstractOrder order, final Flat3Map params)
+	//	{
+	//		final SortedSet products = new TreeSet();
+	//		final Collection<String> excludedProductList = fetchExcludedProductsForPromotion(params, ctx);
+	//
+	//		for (final AbstractOrderEntry aoe : order.getEntries())
+	//		{
+	//			final Product product = aoe.getProduct(ctx);
+	//			if (product == null
+	//					|| (CollectionUtils.isNotEmpty(excludedProductList) && excludedProductList.contains(product.getPK().toString())))
+	//			{
+	//				continue;
+	//			}
+	//			products.add(product);
+	//
+	//			//			final List baseProducts = Helper.getBaseProducts(ctx, product);
+	//			//			if ((baseProducts == null) || (baseProducts.isEmpty()))
+	//			//			{
+	//			//				continue;
+	//			//			}
+	//			//			products.addAll(baseProducts);
+	//		}
+	//
+	//		return products;
+	//	}
+	//
+	//	/**
+	//	 * @param params
+	//	 * @param ctx
+	//	 * @param promotionType
+	//	 * @return String
+	//	 */
+	//	private Collection<String> fetchExcludedProductsForPromotion(final Flat3Map params, final SessionContext ctx)
+	//	{
+	//		final StringBuilder promQuery = new StringBuilder("SELECT {promotion.excludedProducts} as excludedProducts  ");
+	//		promQuery.append("FROM  {").append(MarketplacecommerceservicesConstants.PRODUCT_PROMO).append(" AS promotion} ");
+	//		promQuery.append("WHERE {promotion.excludedProducts} IS NOT NULL AND {promotion:pk} = ?promo ");
+	//
+	//		final List<String> excludedProductStr = getSession().getFlexibleSearch()
+	//				.search(ctx, promQuery.toString(), params, String.class).getResult();
+	//
+	//		final String excludedProducts = CollectionUtils.isNotEmpty(excludedProductStr) ? excludedProductStr.get(0) : "";
+	//
+	//		return Arrays.asList(excludedProducts.split(","));
+	//
+	//	}
+	//
+	//	/**
+	//	 * @param params
+	//	 * @param ctx
+	//	 * @param promotionType
+	//	 * @return Collection<String>
+	//	 */
+	//	private Collection<String> fetchBrandsForPromotion(final Flat3Map params, final SessionContext ctx, final String PromotionType)
+	//	{
+	//		final StringBuilder promQuery = new StringBuilder("SELECT {brand.manufacturers} as brands  ");
+	//		promQuery.append("FROM  {").append(PromotionType).append(" AS brand} ");
+	//		promQuery.append("WHERE {brand.manufacturers} IS NOT NULL AND {brand.promotion} = ?promo ");
+	//
+	//		final List<String> brandStr = getSession().getFlexibleSearch().search(ctx, promQuery.toString(), params, String.class)
+	//				.getResult();
+	//
+	//		final String brands = CollectionUtils.isNotEmpty(brandStr) ? brandStr.get(0) : "";
+	//
+	//		return Arrays.asList(brands.substring(4).split(","));
+	//	}
+	//
+	//	/**
+	//	 * @param brandList
+	//	 * @param PromotionType
+	//	 * @return StringBuilder query
+	//	 */
+	//	private StringBuilder constructBrandQuery(final Collection<String> brandList, final String PromotionType, final Flat3Map params)
+	//	{
+	//		final StringBuilder promQuery = new StringBuilder();
+	//
+	//		if ((params.get("secondProduct") != null))
+	//		{
+	//			if (StringUtils.isNotEmpty(PromotionType)
+	//					&& PromotionType.equalsIgnoreCase(MarketplacecommerceservicesConstants.BRANDRESTRICTION)
+	//					&& CollectionUtils.isNotEmpty(brandList))
+	//			{
+	//				promQuery.append("SELECT {cat2prod:target} as pk  ");
+	//				promQuery.append("FROM  {").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
+	//						.append(" AS cat2prod } ");
+	//				promQuery.append("WHERE {cat2prod:target} in (?secondProduct) AND {cat2prod:source} in (?brands)");
+	//			}
+	//			else if (StringUtils.isNotEmpty(PromotionType)
+	//					&& PromotionType.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXCLUDEBRANDRESTRICTION)
+	//					&& CollectionUtils.isNotEmpty(brandList))
+	//			{
+	//				promQuery.append("SELECT {cat2prod:target} as pk  ");
+	//				promQuery.append("FROM  {").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION);
+	//				promQuery.append(" AS cat2prod JOIN ").append(MarketplacecommerceservicesConstants.TYPE_CATEGORY)
+	//						.append(" AS category on {cat2prod:source} = {category.pk}} ");
+	//				promQuery
+	//						.append(
+	//								"WHERE {cat2prod:target} in (?secondProduct) AND {cat2prod:source} not in (?brands) AND {category.code} like '%")
+	//						.append(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX).append("%'");
+	//			}
+	//
+	//		}
+	//		else
+	//		{
+	//			promQuery.append(" INTERSECT ");
+	//
+	//			if (StringUtils.isNotEmpty(PromotionType)
+	//					&& PromotionType.equalsIgnoreCase(MarketplacecommerceservicesConstants.BRANDRESTRICTION)
+	//					&& CollectionUtils.isNotEmpty(brandList))
+	//			{
+	//				promQuery.append("{{ SELECT {cat2prod:target} as pk  ");
+	//				promQuery.append("FROM  {").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
+	//						.append(" AS cat2prod } ");
+	//				promQuery.append("WHERE {cat2prod:target} in (?product) AND {cat2prod:source} in (?brands) }} ");
+	//			}
+	//			else if (StringUtils.isNotEmpty(PromotionType)
+	//					&& PromotionType.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXCLUDEBRANDRESTRICTION)
+	//					&& CollectionUtils.isNotEmpty(brandList))
+	//			{
+	//				promQuery.append("{{ SELECT {cat2prod:target} as pk  ");
+	//				promQuery.append("FROM  {").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION);
+	//				promQuery.append(" AS cat2prod JOIN ").append(MarketplacecommerceservicesConstants.TYPE_CATEGORY)
+	//						.append(" AS category on {cat2prod:source} = {category.pk}} ");
+	//				promQuery
+	//						.append(
+	//								"WHERE {cat2prod:target} in (?product) AND {cat2prod:source} not in (?brands) AND {category.code} like '%")
+	//						.append(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX).append("%' }} ");
+	//			}
+	//		}
+	//		return promQuery;
+	//	}
+	//
+	//	/**
+	//	 * @param params
+	//	 * @param promotion
+	//	 * @param ctx
+	//	 * @return StringBuilder query
+	//	 */
+	//	private StringBuilder evaluateBrandRestriction(final Flat3Map params, final AbstractPromotion promotion,
+	//			final SessionContext ctx)
+	//	{
+	//		StringBuilder stringBuilder = null;
+	//		String PromotionType = null;
+	//		Collection<String> brandList = null;
+	//
+	//		for (final AbstractPromotionRestriction restriction : promotion.getRestrictions())
+	//		{
+	//			if (restriction instanceof ManufacturesRestriction)
+	//			{
+	//				PromotionType = MarketplacecommerceservicesConstants.BRANDRESTRICTION;
+	//				brandList = fetchBrandsForPromotion(params, ctx, PromotionType);
+	//				break;
+	//			}
+	//			else if (restriction instanceof ExcludeManufacturesRestriction)
+	//			{
+	//				PromotionType = MarketplacecommerceservicesConstants.EXCLUDEBRANDRESTRICTION;
+	//				brandList = fetchBrandsForPromotion(params, ctx, PromotionType);
+	//				break;
+	//			}
+	//		}
+	//
+	//		if (CollectionUtils.isNotEmpty(brandList))
+	//		{
+	//			params.put("brands", brandList);
+	//			stringBuilder = constructBrandQuery(brandList, PromotionType, params);
+	//		}
+	//		return stringBuilder;
+	//
+	//	}
 
 	//ends A type promotions
 

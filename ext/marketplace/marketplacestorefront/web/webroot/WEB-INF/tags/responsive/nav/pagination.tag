@@ -53,7 +53,8 @@
 					<li><c:url
 							value="${breadcrumb.removeQuery.url}&searchCategory=${searchCategory}"
 							var="removeQueryUrl" /> Exclude OutofStock&nbsp;<a
-						href="${removeQueryUrl}"><span class="remove_filter">x</span></a>
+						href="${fn:replace(removeQueryUrl, 
+                                '{pageNo}', '1')}"><span class="remove_filter">x</span></a>
 					</li>
 				</c:if>
 				<c:if
@@ -85,7 +86,8 @@
 						</c:choose> <input type="hidden" class="${breadcrumb.facetCode}"> <input
 						type="hidden" class="applied-color"
 						value="${breadcrumb.facetValueName}">
-						${breadcrumb.facetValueName}&nbsp;<a href="${removeQueryUrl}"><span
+						${breadcrumb.facetValueName}&nbsp;<a href="${fn:replace(removeQueryUrl, 
+                                '{pageNo}', '1')}"><span 
 							class="remove_filter">x</span></a></li>
 				</c:if>
 			</c:forEach>
@@ -289,7 +291,7 @@
 		</c:when>
 		<c:otherwise>
 		<a href="javascript:void(0);" id="scroll_to_top" title="Scroll to Top" style="display: none;">Top<span></span></a>
-		<div class="pagination-bar listing-menu ${(top)?"top":"bottom"}">
+		<div class="sort_by_wrapper pagination-bar listing-menu ${(top)?"top":"bottom"}">
 			<div class="list_title">
 				<div class="UlContainer">
 					<ul>
@@ -299,7 +301,6 @@
 						<li><span class="sort" data-name="new">New</span></li>
 						<li><span class="sort" data-name="discount">Discount</span></li>
 					</ul>
-
 					<ul>
 						<span>Price:</span>
 
@@ -307,6 +308,18 @@
 						<li><span class="sort" data-name="high">High</span></li>
 					</ul>
 				</div>
+			</div>
+			
+			<div class="list_title_sort">
+			<label class="sortByMobile">Sort by</label>
+			<select class="responsiveSort">
+			<option  data-name="relevance">Relevance</option>
+			<option  data-name="new">New</option>
+			<option  data-name="discount">Discount</option>
+			<option  data-name="low">Low to High</option>
+			<option  data-name="high">High to Low</option>
+			
+			</select>
 			</div>
 			</div>
 		</c:otherwise>

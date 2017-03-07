@@ -39,10 +39,6 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
 
-/**
- * This promotion is of type Buy A and get cashback
- *
- */
 public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentageDiscountCashback
 {
 	@SuppressWarnings("unused")
@@ -87,15 +83,14 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 		//final List<Product> promotionProductList = new ArrayList<>(getProducts());
 		//final List<Category> promotionCategoryList = new ArrayList<>(getCategories());
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions()); // Fetching Promotion set Restrictions
-		//final List<Product> excludedProductList = new ArrayList<Product>();
-		//final List<String> excludeManufactureList = new ArrayList<String>();
-		//		GenericUtilityMethods.populateExcludedProductManufacturerList(paramSessionContext, evaluationContext, excludedProductList,
-		//				excludeManufactureList, restrictionList, this);
+		final List<Product> excludedProductList = new ArrayList<Product>();
+		final List<String> excludeManufactureList = new ArrayList<String>();
+		GenericUtilityMethods.populateExcludedProductManufacturerList(paramSessionContext, evaluationContext, excludedProductList,
+				excludeManufactureList, restrictionList, this);
 		// To check whether Promotion already applied on Product
 		//getDefaultPromotionsManager().promotionAlreadyFired(paramSessionContext, order, excludedProductList);
-		//final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(paramSessionContext, evaluationContext);
-		final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager().findEligibleProductsInBasket(
-				paramSessionContext, evaluationContext, this, getCategories());
+		final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(paramSessionContext, evaluationContext);
+
 		try
 		{
 			final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(paramSessionContext,
@@ -116,7 +111,8 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 				//getting the valid products
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
-						.getValidProdListForBuyXofA(order, paramSessionContext, allowedProductList, restrictionList, null, null); // Adding Eligible Products to List
+						.getValidProdListForBuyXofA(order, paramSessionContext, allowedProductList, restrictionList,
+								excludedProductList, excludeManufactureList, null, null); // Adding Eligible Products to List
 
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(paramSessionContext, validProductUssidMap))
 				{

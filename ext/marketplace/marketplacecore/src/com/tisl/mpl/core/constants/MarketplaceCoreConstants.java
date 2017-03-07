@@ -98,6 +98,8 @@ public final class MarketplaceCoreConstants extends GeneratedMarketplaceCoreCons
 	//Added for CAR-183
 	public static final String COLORFAMILYFOOTWEAR = "colorfamilyfootwear";
 	public static final String COLORFAMILYFOOTWEARBLANK = "";
+	public static final String DIALCOLORELECTRONICS = "dialcolor"; // for INC_12606
+	public static final String DIALCOLORELECTRONICSBLANK = ""; // for INC_12606
 	public static final String DYNAMICATTRIBUTE = "classification.attirbutes.dynamic.";
 	public static final String LSH1 = "LSH1";
 	public static final String INR = "INR";
