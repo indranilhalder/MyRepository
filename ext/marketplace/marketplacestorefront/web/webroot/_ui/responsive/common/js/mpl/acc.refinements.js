@@ -1005,7 +1005,7 @@ function isCustomSku(requiredUrl){
 //UF-15
 function lazyPaginationFacet(response){
 	res = response;
-	var ulProduct = $(response).find('ul.product-listing.product-grid');
+	var ulProduct = $(response).find('ul.product-listing.product-grid,ul.product-list.product-item');
     $(ulProduct).find('li.product-item').each(function() {
         productItemArray.push($(this));
     });
