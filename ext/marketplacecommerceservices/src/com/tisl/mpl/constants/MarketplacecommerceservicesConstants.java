@@ -1924,5 +1924,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FILE_UPLOAD_PATH="return.fileupload.path";
 	public static final String SHIPMENT_CHARGE_AMOUNT="return.shipmentcharge";
 	public static final String RSS="RSS";
+    public static final String RETURN_TRANSACTON_TYPE_01 = "01";
 
 }

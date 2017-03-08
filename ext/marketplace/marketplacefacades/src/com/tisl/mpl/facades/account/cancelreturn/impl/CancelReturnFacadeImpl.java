@@ -3538,7 +3538,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 									returnLogRespData
 											.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
 								}
-
+								/*R2.3 START */
+								if (StringUtils.isNotBlank(orderLine.getReturnFulfillmentType()))
+								{
+									returnLogRespData.setReturnFulfillmentType(orderLine.getReturnFulfillmentType());
+								}
+								/*R2.3 END */
 								returnLogRespDataList.add(returnLogRespData);
 								responseList.add(orderLine);
 

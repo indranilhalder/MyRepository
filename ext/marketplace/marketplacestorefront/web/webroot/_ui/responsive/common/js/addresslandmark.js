@@ -541,7 +541,7 @@ function newOTPGenerate(orderCode){
 			success : function(response) {
 				if(response==true){
 					$(".otpError").show();
-					$(".otpError").text("Rsending OTP limt remaining "+(10-count));
+					$(".otpError").text("Resend OTP limit remaining "+(10-count));
 					
 				}else{
 					$(".otpError").show();
