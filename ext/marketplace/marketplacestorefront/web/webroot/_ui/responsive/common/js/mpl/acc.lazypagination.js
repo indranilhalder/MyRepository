@@ -11,6 +11,11 @@ var pageType = $('#pageType').val();
 var isSerp = false;
 
 function innerLazyLoad(options) {
+	if(typeof(options)!='undefined' && options.isSerp){
+    	totalNoOfPages = $('input[name=noOfPages]').val();
+        totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
+        isSerp = true;
+    }
     //get the 8 items from the array and render // TODO: identify place holder done
     var gridHTML = '';
     //if total no of pages is 1 then load all 24 products at once.
@@ -42,11 +47,7 @@ function innerLazyLoad(options) {
         $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list').append(gridHTML);
     }
     deleteArraySet(productItemArray);
-    if(typeof(options)!='undefined' && options.isSerp){
-    	totalNoOfPages = $('input[name=noOfPages]').val();
-        totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
-        isSerp = true;
-    }
+    
 	/*if(pageNoPagination == totalNoOfPages){
 		$('li').removeClass('lazy-reached');
 	}*/
