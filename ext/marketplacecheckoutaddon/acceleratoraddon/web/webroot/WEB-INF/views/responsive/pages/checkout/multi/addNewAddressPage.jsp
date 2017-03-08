@@ -140,7 +140,7 @@
 						if(result == undefined || result == "")
 						{	
 							$("#address1Error").show();
-							$("#address1Error").html("<p>Address Line cannot be blank</p>");	
+							$("#address1Error").html("<p>Address Line 1 cannot be blank</p>");	
 							validate= false;
 						}
 						else
