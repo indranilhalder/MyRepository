@@ -214,10 +214,6 @@ $(document).ready(function() {
         	window.localStorage.removeItem('lazyfrompdp');
       		window.localStorage.removeItem('productlazyarray');
         });
-        $(document).on('click','.remove_filter',function(){
-        	getProductSetData();
-        });
-       
 });
 
 function findGetParameter(parameterName) {
