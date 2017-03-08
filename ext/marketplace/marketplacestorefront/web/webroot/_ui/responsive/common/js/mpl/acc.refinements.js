@@ -1006,9 +1006,11 @@ function isCustomSku(requiredUrl){
 function lazyPaginationFacet(response){
 	res = response;
 	var ulProduct = $(response).find('ul.product-listing.product-grid,ul.product-list');
+	productItemArray = [];
     $(ulProduct).find('li.product-item').each(function() {
         productItemArray.push($(this));
     });
+    console.log(""+productItemArray);
 	$("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list", response));
     innerLazyLoad({isSerp:true});
 }
