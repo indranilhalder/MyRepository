@@ -729,7 +729,7 @@ function focusOnElement() {
 		 var aFinalPrice="";
 	     var bFinalPrice="";
 	     //UF-34
-	     //var oosSellers = [];
+	     var oosSellers = [];
 	     
 		 sellerDetailsArray.sort(function(a, b){
 				
