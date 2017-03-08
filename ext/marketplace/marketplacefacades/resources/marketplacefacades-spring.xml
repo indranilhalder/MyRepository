@@ -1752,6 +1752,6 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	</bean>
 	 
 	<!-- AddtoCart Helper Class -->
-	<bean id="addToCartHelper" class="com.tisl.mpl.helper.AddToCartHelper" />
+	<!-- <bean id="addToCartHelper" class="com.tisl.mpl.helper.AddToCartHelper" /> -->
 	
 </beans>
