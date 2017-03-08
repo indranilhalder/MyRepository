@@ -5460,7 +5460,7 @@ function checkPincodeServiceability(buttonType,el)
 		 $(".cartItemBlankPincode").show();
 		//$("#pinCodeButtonIds").text("Check");
 		//$("#pinCodeButtonIds").text("Check Availability");
-		 document.getElementById("pinCodeButtonIds").className = "CheckAvailability";	//UF-71
+		 document.getElementById("pinCodeButtonIdsBtm").className = "CheckAvailability";	//UF-71
 		 $('#defaultPinCodeIds').focus();
 		 $('#defaultPinCodeIdsBtm').focus();//UF-68
 		$("#pinCodeDispalyDiv .spinner").remove();
