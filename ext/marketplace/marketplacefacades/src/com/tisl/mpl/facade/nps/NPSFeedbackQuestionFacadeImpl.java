@@ -59,6 +59,7 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 				final NPSFeedbackQRDetailData npsFeedbackQuestionData = new NPSFeedbackQRDetailData();
 				npsFeedbackQuestionData.setQuestionCode(npsfeedback.getQuestionCode());
 				npsFeedbackQuestionData.setQuestionName(npsfeedback.getQuestion());
+				npsFeedbackQuestionData.setNpsDeliveryModeType(npsfeedback.getNpsDeliveryModeType().getCode());
 				npsFeedbackQuestionDetail.add(npsFeedbackQuestionData);
 			}
 			npsFeedbackQuestion.setFeedbackQRList(npsFeedbackQuestionDetail);

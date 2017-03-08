@@ -136,27 +136,27 @@
                   <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tbody><tr>
                      <td height="20" width="25"></td>
-                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=0" target="_blank">${ctx.cmsSlotContents.Rank0}</a></td>
+                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=0&deliveryMode=${ctx.deliveryMode}" target="_blank">${ctx.cmsSlotContents.Rank0}</a></td>
                     <td align="center" valign="middle" width="17" height="10" style="width:17px;"></td>
-                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=1" target="_blank">${ctx.cmsSlotContents.Rank1}</a></td>
+                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=1&deliveryMode=${ctx.deliveryMode}" target="_blank">${ctx.cmsSlotContents.Rank1}</a></td>
                     <td align="center" valign="middle" width="17" height="10"style="width:17px;"></td>
-                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=2" target="_blank">${ctx.cmsSlotContents.Rank2}</a></td>
+                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=2&deliveryMode=${ctx.deliveryMode}" target="_blank">${ctx.cmsSlotContents.Rank2}</a></td>
                     <td align="center" valign="middle" width="17" height="10" style="width:17px;"></td>
-                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=3" target="_blank">${ctx.cmsSlotContents.Rank3}</a></td>
+                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=3&deliveryMode=${ctx.deliveryMode}" target="_blank">${ctx.cmsSlotContents.Rank3}</a></td>
                     <td align="center" valign="middle" width="17" height="10" style="width:17px;"></td>
-                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=4" target="_blank">${ctx.cmsSlotContents.Rank4}</a></td>
+                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=4&deliveryMode=${ctx.deliveryMode}" target="_blank">${ctx.cmsSlotContents.Rank4}</a></td>
                     <td align="center" valign="middle" width="17" height="10" style="width:17px;"></td>
-                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=5" target="_blank">${ctx.cmsSlotContents.Rank5}</a></td>
+                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=5&deliveryMode=${ctx.deliveryMode}" target="_blank">${ctx.cmsSlotContents.Rank5}</a></td>
                     <td align="center" valign="middle" width="17" height="10" style="width:17px;"></td>
-                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=6" target="_blank">${ctx.cmsSlotContents.Rank6}</a></td>
+                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=6&deliveryMode=${ctx.deliveryMode}" target="_blank">${ctx.cmsSlotContents.Rank6}</a></td>
                     <td align="center" valign="middle" width="17" height="10" style="width:17px;"></td>
-                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=7" target="_blank">${ctx.cmsSlotContents.Rank7}</a></td>
+                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=7&deliveryMode=${ctx.deliveryMode}" target="_blank">${ctx.cmsSlotContents.Rank7}</a></td>
                     <td align="center" valign="middle" width="17" height="10" style="width:17px;"></td>
-                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=8" target="_blank">${ctx.cmsSlotContents.Rank8}</a></td>
+                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=8&deliveryMode=${ctx.deliveryMode}" target="_blank">${ctx.cmsSlotContents.Rank8}</a></td>
                     <td align="center" valign="middle" width="18" height="10" style="width:18px;"></td>
-                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=9" target="_blank">${ctx.cmsSlotContents.Rank9}</a></td>
+                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=9&deliveryMode=${ctx.deliveryMode}" target="_blank">${ctx.cmsSlotContents.Rank9}</a></td>
                     <td align="center" valign="middle" width="18" height="10" style="width:18px;"></td>
-                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=10" target="_blank">${ctx.cmsSlotContents.Rank10}</a></td>
+                    <td align="center" valign="middle"><a href="${ctx.websiteUrl}feedback/NPSFeedbackForm?originalUid=${ctx.originalUid}&transactionId=${ctx.transactionId}&rating=10&deliveryMode=${ctx.deliveryMode}" target="_blank">${ctx.cmsSlotContents.Rank10}</a></td>
                      <td height="20" width="25"></td>
                   </tr>
                 </tbody></table></td>

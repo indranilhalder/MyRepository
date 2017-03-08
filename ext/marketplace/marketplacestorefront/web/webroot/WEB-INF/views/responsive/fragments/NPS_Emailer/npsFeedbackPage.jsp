@@ -44,6 +44,10 @@
 						<input type="hidden" name="rating" value="${param.rating}"/>
 						</c:if>
 						
+						<c:if test="${param.deliveryMode ne null }">
+						<input type="hidden" name="deliveryMode" value="${param.deliveryMode}"/>
+						</c:if>
+						
 						<c:forEach items="${npsFeedbackForm.npsQuestionlist}" var="item" varStatus="myIndex">
 
 							<div class="feedback-form-question">
