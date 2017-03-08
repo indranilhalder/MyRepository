@@ -135,21 +135,25 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("UNKNOWN");
 					paymentTransactionEntry.setPaymentMode(paymenttype);
 				}
-				if (cardType.equalsIgnoreCase("DEBIT"))
-				{
-					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Debit Card");
-					paymentTransactionEntry.setPaymentMode(paymenttype);
-				}
-				else if (cardType.equalsIgnoreCase("CREDIT"))
-				{
-					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Credit Card");
-					paymentTransactionEntry.setPaymentMode(paymenttype);
-				}
 				else
 				{
-					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("EMI");
-					paymentTransactionEntry.setPaymentMode(paymenttype);
+					if (cardType.equalsIgnoreCase("DEBIT"))
+					{
+						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Debit Card");
+						paymentTransactionEntry.setPaymentMode(paymenttype);
+					}
+					else if (cardType.equalsIgnoreCase("CREDIT"))
+					{
+						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Credit Card");
+						paymentTransactionEntry.setPaymentMode(paymenttype);
+					}
+					else
+					{
+						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("EMI");
+						paymentTransactionEntry.setPaymentMode(paymenttype);
+					}
 				}
+
 			}
 
 			//Check handled to remove concurrent scenario - TPR-629
@@ -417,9 +421,9 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
-	 * 
+	 *
 	 * @desc SprintPaymentFixes:-:- To handle missing paymentTransaction for specific order
 	 */
 	@Override
@@ -509,9 +513,9 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
-	 *
+	 * 
 	 * @desc SprintPaymentFixes:-:- To handle missing paymentTransaction for specific order
 	 */
 	@Override
@@ -583,21 +587,25 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("UNKNOWN");
 					paymentTransactionEntry.setPaymentMode(paymenttype);
 				}
-				if (cardType.equalsIgnoreCase("DEBIT"))
-				{
-					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Debit Card");
-					paymentTransactionEntry.setPaymentMode(paymenttype);
-				}
-				else if (cardType.equalsIgnoreCase("CREDIT"))
-				{
-					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Credit Card");
-					paymentTransactionEntry.setPaymentMode(paymenttype);
-				}
 				else
 				{
-					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("EMI");
-					paymentTransactionEntry.setPaymentMode(paymenttype);
+					if (cardType.equalsIgnoreCase("DEBIT"))
+					{
+						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Debit Card");
+						paymentTransactionEntry.setPaymentMode(paymenttype);
+					}
+					else if (cardType.equalsIgnoreCase("CREDIT"))
+					{
+						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Credit Card");
+						paymentTransactionEntry.setPaymentMode(paymenttype);
+					}
+					else
+					{
+						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("EMI");
+						paymentTransactionEntry.setPaymentMode(paymenttype);
+					}
 				}
+
 			}
 
 			//Check handled to remove concurrent scenario - TPR-629

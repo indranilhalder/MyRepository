@@ -739,42 +739,35 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				debitCardPaymentInfoModel.setValidToYear(MarketplacecommerceservicesConstants.DUMMYYY);
 			}
 
-			if (StringUtils.isNotEmpty(response.getCardType()))
+			if (StringUtils.isNotEmpty(response.getCardBrand()))
 			{
 				//OrderIssues:- CardBrand Null Check added
-				if (null != response.getCardBrand()
-						&& MarketplacecommerceservicesConstants.MASTERCARD.equalsIgnoreCase(response.getCardBrand()))
+				if (MarketplacecommerceservicesConstants.MASTERCARD.equalsIgnoreCase(response.getCardBrand()))
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.MASTER);
 				}
-				else if (null != response.getCardBrand()
-						&& MarketplacecommerceservicesConstants.MAESTRO.equalsIgnoreCase(response.getCardBrand()))
+				else if (MarketplacecommerceservicesConstants.MAESTRO.equalsIgnoreCase(response.getCardBrand()))
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.MAESTRO);
 				}
-				else if (null != response.getCardBrand()
-						&& (MarketplacecommerceservicesConstants.AMEX.equalsIgnoreCase(response.getCardBrand()) || MarketplacecommerceservicesConstants.AMERICAN_EXPRESS
-								.equalsIgnoreCase(orderStatusResponse.getCardResponse().getCardBrand())))
+				else if ((MarketplacecommerceservicesConstants.AMEX.equalsIgnoreCase(response.getCardBrand()) || MarketplacecommerceservicesConstants.AMERICAN_EXPRESS
+						.equalsIgnoreCase(orderStatusResponse.getCardResponse().getCardBrand())))
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.AMEX);
 				}
-				else if (null != response.getCardBrand()
-						&& MarketplacecommerceservicesConstants.DINERSCARD.equalsIgnoreCase(response.getCardBrand()))
+				else if (MarketplacecommerceservicesConstants.DINERSCARD.equalsIgnoreCase(response.getCardBrand()))
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.DINERS);
 				}
-				else if (null != response.getCardBrand()
-						&& MarketplacecommerceservicesConstants.VISA.equalsIgnoreCase(response.getCardBrand()))
+				else if (MarketplacecommerceservicesConstants.VISA.equalsIgnoreCase(response.getCardBrand()))
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.VISA);
 				}
-				else if (null != response.getCardBrand()
-						&& MarketplacecommerceservicesConstants.EUROCARD.equalsIgnoreCase(response.getCardBrand()))
+				else if (MarketplacecommerceservicesConstants.EUROCARD.equalsIgnoreCase(response.getCardBrand()))
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.MASTERCARD_EUROCARD);
 				}
-				else if (null != response.getCardBrand()
-						&& MarketplacecommerceservicesConstants.SWITCHCARD.equalsIgnoreCase(response.getCardBrand()))
+				else if (MarketplacecommerceservicesConstants.SWITCHCARD.equalsIgnoreCase(response.getCardBrand()))
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.SWITCH);
 				}

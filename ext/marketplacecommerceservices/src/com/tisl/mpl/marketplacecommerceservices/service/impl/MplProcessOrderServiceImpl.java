@@ -219,7 +219,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 							}
 
 							//If ORDER_FAILED event posted after juspayWebhookRetryTAT
-							if (CollectionUtils.isNotEmpty(postedAfterTime))
+							if (CollectionUtils.isNotEmpty(postedAfterTime) && !latestSuccess.getIsExpired().booleanValue())
 							{
 								LOG.debug("Change the Order to Order Failed for greater then juspayWebhookRetryTAT time ");
 								takeActionAgainstOrder(latestSuccess, orderModel, false, orderData);
