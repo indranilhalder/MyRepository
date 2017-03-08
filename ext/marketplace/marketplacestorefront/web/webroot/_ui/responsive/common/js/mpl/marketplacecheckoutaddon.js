@@ -5296,7 +5296,7 @@ function checkServiceabilityRequired(buttonType,el){
 function checkPincodeServiceability(buttonType,el)
 {
 // alert($(el).attr("id")+" :::button id")
-	if(buttonType == "typeCheckout")
+	if(buttonType == "typeCheckout" || buttonType == "typeSubmit")
 	{
 		
 		if(typeof utag == "undefined"){
