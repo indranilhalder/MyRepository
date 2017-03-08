@@ -535,4 +535,27 @@ public class DefaultWishlistFacade implements WishlistFacade
 
 
 	}
+
+	/**
+	 * Description -- Method will access single WishlistModel for user with respect to Wishlistname
+	 *
+	 * @return Wishlist2Model
+	 */
+	@Override
+	public Wishlist2Model findMobileWishlistswithName(final UserModel user, final String name)
+	{
+		return mplWishlistService.findMobileWishlistswithName(user, name);
+	}
+
+	/**
+	 * Description -- Method will access single WishlistModel for user with respect to Wishlistname
+	 *
+	 * @return Wishlist2Model
+	 */
+	@Override
+	public int findMobileWishlistswithNameCount(final UserModel user, final String name)
+	{
+		return mplWishlistService.findMobileWishlistswithNameCount(user, name);
+	}
+
 }

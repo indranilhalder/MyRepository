@@ -1584,7 +1584,7 @@ function populateEnhancedSearch(enhancedSearchData)
 					}
 	            }
 	        });
-	    }
+	      }  
 	    }	
 	}
 	
@@ -2147,6 +2147,8 @@ $(document).ready(function()
 					$.ajax({
 						url: ACC.config.encodedContextPath +  "/shopbydepartment",
 						type: 'GET',
+						//cache:false,
+						//changes for CAR-224
 						cache:true,
 						success: function(html) {
 							$(".shopByDepartment_ajax").html(html);

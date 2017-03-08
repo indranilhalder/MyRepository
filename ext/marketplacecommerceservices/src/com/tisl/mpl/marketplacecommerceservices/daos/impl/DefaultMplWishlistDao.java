@@ -50,7 +50,7 @@ public class DefaultMplWishlistDao implements MplWishlistDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplWishlistDao#getWishListAgainstUser(de.hybris.platform.core.model
 	 * .user.UserModel)

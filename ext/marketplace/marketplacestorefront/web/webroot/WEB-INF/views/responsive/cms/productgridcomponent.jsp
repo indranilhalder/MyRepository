@@ -10,6 +10,7 @@
 		searchUrl="${searchPageData.currentQuery.url}"
 		numberPagesShown="${numberPagesShown}" hide="true" />
 		
+
 <input type="hidden" name="noOfPages" value="${searchPageData.pagination.numberOfPages}"/>
 	<!-- Hero product pane -->
 	<c:if test="${not empty heroProducts}">

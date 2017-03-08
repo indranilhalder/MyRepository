@@ -74,6 +74,31 @@ public interface WishlistFacade
 	 */
 	Wishlist2Model getSingleWishlist(UserModel user);
 
-	boolean addProductToWishlistMobile(final Wishlist2Model wishlist, final String productCode, final String ussid,
+	//CAR Project performance issue fixed
+
+	/**
+	 * Description -- Method will access single WishlistModel for user with respect to Wishlistname
+	 *
+	 * @return Wishlist2Model
+	 */
+
+	Wishlist2Model findMobileWishlistswithName(UserModel user, String name);
+
+	//CAR Project performance issue fixed
+
+	/**
+	 * Description -- Method will count for user with respect to Wishlistname
+	 *
+	 * @return Wishlist2Model
+	 */
+
+	int findMobileWishlistswithNameCount(UserModel user, String name);
+
+	/**
+	 * Description -- To add product in Wishlistname
+	 *
+	 * @return boolean
+	 */
+	public boolean addProductToWishlistMobile(final Wishlist2Model wishlist, final String productCode, final String ussid,
 			final boolean selectedSize);
 }

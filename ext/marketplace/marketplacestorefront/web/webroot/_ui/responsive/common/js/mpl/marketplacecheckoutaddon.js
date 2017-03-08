@@ -5339,7 +5339,6 @@ function checkPincodeServiceability(buttonType,el)
 		$( "#emptyId_tooltip").show();
 		$("#emptyId_tooltip_btm").show();
 		$('#checkout-id #checkout-enabled').addClass('checkout-disabled');
-
 		$('#checkout-id-down #checkout-down-enabled').addClass('checkout-disabled'); //UF-69
 		 $("#cartPinCodeAvailable").hide();
 		 $("#cartPinCodeAvailableBtm").hide();// TPR-1055//UF-68
@@ -5347,7 +5346,6 @@ function checkPincodeServiceability(buttonType,el)
 		 document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
 		 //$("#pinCodeButtonIds").text("Change Pincode");
 		 document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
-
 		// setTimeout(function(){
 		 $("#unserviceablepincode").hide();// tpr-1341
 		 $("#unserviceablepincodeBtm").hide();// tpr-1341//UF-68
@@ -5486,7 +5484,6 @@ function checkPincodeServiceability(buttonType,el)
 	else
     {
 		// $("#defaultPinCodeIds").prop('disabled', true);
-
 		//$("#pinCodeButtonIds").text("Check Pincode");
 		document.getElementById("pinCodeButtonIds").className = "CheckPincode"; //UF-71
 		document.getElementById("pinCodeButtonIdsBtm").className = "CheckPincode"; //UF-71//UF-68
@@ -5753,7 +5750,6 @@ $("#defaultPinCodeIds").click(function(){
 	}
 	
 });
-
 //UF-69
 $("#defaultPinCodeIdsBtm").click(function(){
 	$("#unserviceablepincode").hide();
@@ -5820,7 +5816,6 @@ function populatePincodeDeliveryMode(response,buttonType){
 		$("#checkout-enabled").css("pointer-events","none");
 		$("#checkout-enabled").css("cursor","not-allowed");
 		$("#checkout-enabled").css("opacity","0.5");
-
 		/*UF-69*/
 		$("#checkout-down-enabled").css("pointer-events","none");
 		$("#checkout-down-enabled").css("cursor","not-allowed");
@@ -7706,7 +7701,6 @@ $("#savedDebitCard").find("input[type=password]").click(function(){
 		
 	});
 	// TPR-1055 ends
-
 	//UF-69 STARTS
 	$("#defaultPinCodeIdsBtm").click(function(){
 		$(this).css("color","black"); //TPR-1470
@@ -7874,7 +7868,6 @@ function submitCODForm(){
 	else
 		alert("Please make valid selection and proceed");
 }
-
 
 function paymentErrorTrack(msg){
 	if(typeof utag !="undefined"){

@@ -572,10 +572,10 @@ sendAddToBag : function(formId, isBuyNow) {
 										salesHierarchyCategoryMSD,
 										priceformad, "INR");
 							}
+						
 						}
 						// End MSD
 						if (isSuccess == true) {
-							
 							var cartUrl = ACC.config.encodedContextPath
 									+ "/cart";
 							location.href = cartUrl;
@@ -601,7 +601,6 @@ sendAddToBag : function(formId, isBuyNow) {
 					error : function(resp) {
 						$("#bag-clickSpin,.bagspinner").remove();
 						$('.js-add-to-cart').removeAttr("disabled");//For TISPRD-4631
-						// alert("Add to Bag unsuccessful");
 					}
 				});
 	}

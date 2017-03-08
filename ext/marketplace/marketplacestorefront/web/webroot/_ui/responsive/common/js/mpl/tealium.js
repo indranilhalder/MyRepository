@@ -34,6 +34,15 @@ $(document).ready(
 			}
 			//TPR-672 END
 			
+			//Web Thumbnail Images
+			var thumbnailImageCount=0;
+			var pdp_video_product_id;
+			$(".product-info > .product-image-container > .productImageGallery .imageListCarousel").find("li").each(function(){
+				thumbnailImageCount++;
+				if($(this).find('img').attr('data-type') == 'video'){
+					pdp_video_product_id=$('#product_id').val();
+				}
+			})
 
 			
 			// Added for tealium
@@ -88,28 +97,41 @@ $(document).ready(
 					type : 'GET',
 					cache : false,
 					success : function(data) {
-
+						
 						var tealiumData = "";
 						tealiumData += ',"user_login_type":"'	//TPR-668
 							+ user_login_type + '",';
-						tealiumData += '"product_unit_price":["'
+						tealiumData += '"product_mrp":["'
 								+ $("#product_unit_price").val() + '"],';
 						tealiumData += '"site_section":"'
 								+ $("#site_section").val() + '",';
-						tealiumData += '"product_list_price":["'
+						tealiumData += '"product_mop":["'
 								+ $("#product_list_price").val() + '"],';
+						tealiumData += '"product_discount":["'
+							+ $("#product_discount").val() + '"],';
+						tealiumData += '"product_discount_percentage":"'
+							+ $("#product_discount_percentage").val() + '%",';
 						tealiumData += '"product_name":["'
 								+ $("#product_name").val() + '"],';
 						tealiumData += '"product_sku":["'
 								+ $("#product_sku").val() + '"],';
-						tealiumData += '"page_category_name":"'
+						if ($("#page_category_name").val() != 'undefined' && $("#page_category_name").val() != ''){
+							tealiumData += '"page_category_name":"'
 								+ $("#page_category_name").val() + '",';
-						tealiumData += '"page_section_name":"'
+						}
+						if ($("#page_section_name").val() != 'undefined' && $("#page_section_name").val() != ''){
+							tealiumData += '"page_section_name":"'
 								+ $("#page_section_name").val() + '",';
+						}
 						tealiumData += '"page_name":"' + $("#page_name").val()
 								+ '",';
+						if(typeof(promo_title) != 'undefined' && promo_title !=''){ 
+							tealiumData += '"offer_title":"'       //added for analytics schema
+								+ promo_title + '",';
+						}
 						tealiumData += '"product_id":["'
 								+ $("#product_id").val() + '"],';
+						
 						//TPR-430 Start
 						if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
 						tealiumData += '"product_category":'
@@ -135,13 +157,53 @@ $(document).ready(
 						tealiumData += '"promo_id":["'
 							+promo_id+ '"],';
 						//TPR-672 END
-					
+						
+						//Data Layer Schema changes
+						tealiumData += '"product_stock_count":["'
+							+ $("#product_stock_count").val() + '"],';
+						tealiumData += '"out_of_stock":["'
+							+ $("#out_of_stock").val() + '"],';
+						tealiumData += '"product_image_count":"'
+							+ thumbnailImageCount + '",';
+						if (typeof(pdp_video_product_id) != 'undefined' || pdp_video_product_id != null){
+							tealiumData += '"pdp_video_product_id":["'
+								+ pdp_video_product_id + '"],';
+						}
+						
 						//TPR-429 START
-						tealiumData += '"buybox_seller_id":"'
+						tealiumData += '"seller_id":"'				//variable name changed | Data Layer Schema Changes 
 							+ $("#pdpBuyboxWinnerSellerID").val() + '",';
-						tealiumData += '"other_seller_ids":"'
-							+ $("#pdpOtherSellerIDs").val() + '"}';
+						tealiumData += '"seller_name":"'
+							+ $("#sellerNameId").html() + '",';
+						if($("#pdpOtherSellerIDs").val() != 'undefined' && $("#pdpOtherSellerIDs").val() !=''){ 
+							tealiumData += '"other_seller_ids":"'
+							+ $("#pdpOtherSellerIDs").val() + '",';
+						}
 						//TPR-429 END
+						
+						//TPR-4688
+						var sizeVariantList=$('#variant').find('li');
+						if(sizeVariantList.length > 0){
+							tealiumData += '"size_variant_count":"'
+								+ sizeVariantList.length + '",';
+						}
+						
+						//TPR-4692 | Breadcrumb 
+						var breadcrum=[];
+						$('.breadcrumbs.wrapper').find('li:not(.active)').each(function(){
+							breadcrum.push($(this).find('a').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,""));
+						})
+						if(typeof(breadcrum) != 'undefined' || breadcrum != null){
+							for(var i=0;i<breadcrum.length;i++){
+								if(i!=0){
+									var fieldName = "page_subcategory_L"+i;
+									tealiumData += '"'+fieldName+'":"'
+										+ breadcrum[i] + '",';
+								}
+							}
+							tealiumData += '"product_display_hierarchy":"'
+								+ breadcrum + '"}';
+						}
 						data = data.replace("}<TealiumScript>", tealiumData);
 						// console.log(data);
 						
@@ -330,6 +392,20 @@ $(document).ready(
 							+ qtyUpdated + ',';			
 						tealiumData += '"checkout_seller_ids":"'		//for TPR-429
 							+ $("#checkoutSellerIDs").val() + '",';
+						//L1 L2 L3 For cart  TPR-4831
+						if($("#page_subcategory_L1").val() !=undefined || $("#page_subcategory_L1").val() !=null){ 
+							tealiumData += '"page_subcategory_L1":'
+								+ getListValue("page_subcategory_L1") + ',';           
+							}
+						if($("#page_subcategory_L2").val() !=undefined || $("#page_subcategory_L2").val() !=null){ 
+							tealiumData += '"page_subcategory_L2":'
+								+ getListValue("page_subcategory_L2") + ',';            
+							}
+						if($("#page_subcategory_l3").val() !=undefined || $("#page_subcategory_l3").val() !=null){ 
+							tealiumData += '"page_subcategory_l3":'
+								+ getListValue("page_subcategory_l3") + ',';            
+							}
+						//L1 L2 L3 cart ends
 						//TPR-430 Start
 						if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
 						tealiumData += '"product_category":'
@@ -535,48 +611,6 @@ $(document).ready(
 		});
 
 /*TPR-429 Start*/
-/*TPR-689 (Part of TPR-429) Start*/
-/*$(document).on('click','#buyNowButton',function(){
-	var productSKU = $('.add_to_cart_form').find('input[type="hidden"]#productCodePost').val();
-	utag.link({
-		link_obj: this,
-		link_text: 'buynow' ,
-		event_type : 'buynow_winner_seller',
-		product_sku : productSKU
-	});
-})
-TPR-689 End
-
-
-$(document).on('mousedown','.btn-block.js-add-to-cart',function(){
-	
-	var eventType;
-	var parentWrap = $(this).parents('div.pdp').attr('class');
-	if (typeof parentWrap != 'undefined'){
-		eventType = 'addtobag_winner_seller';
-	}
-	else{
-		if($(this).attr('id').indexOf("Quick") != -1){
-			eventType = 'addtobag_winner_seller';
-		}
-		else{
-			eventType = 'addtobag_other_seller';
-		}
-	}
-	
-	var productSKU = $(this).parents('form').find('input[type="hidden"]#ussid').val();
-	var productSKU = $('#productCodePost').val();
-
-	if($(this).attr('id').toLowerCase().indexOf("buynow") == -1){
-		utag.link({
-			link_obj: this,
-			link_text: 'addtobag' ,
-			event_type : eventType ,
-			product_sku : productSKU
-		});
-	}
-})*/
-
 
 function differentiateSeller(){
 	var sellerList = $('#pdpSellerIDs').val();
@@ -660,12 +694,7 @@ $(document).on('click','.jqtree-title.jqtree_common',function(){
 $(document).on('mousedown','.owl-prev,.owl-next',function(e){
 	var direction='';
 	var title='';
-	if($(this).parents('.owl-carousel').parents('.trending').length > 0){
-		title=$(this).parents('.owl-carousel').parents('.trending').find('h2>span').text().trim();
-	}
-	else{
-		title=$(this).parents('.owl-carousel').parent('div').find('h2').text().trim();
-	}
+	var msg='';
 	
 	if($(e.currentTarget).hasClass('owl-next')){
 		direction="Next";
@@ -673,8 +702,25 @@ $(document).on('mousedown','.owl-prev,.owl-next',function(e){
 	else{
 		direction="Previous";
 	}
-	title = title.toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	direction = direction.toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	
+	var pageType=$('#pageType').val();
+	//Changes for Analytics Data layer schema changes | PDP
+	if(pageType=='product'){
+		title="similar_products";
+		msg = title;
+	}
+	else{
+		if($(this).parents('.owl-carousel').parents('.trending').length > 0){
+			title=$(this).parents('.owl-carousel').parents('.trending').find('h2>span').text().trim();
+		}
+		else{
+			title=$(this).parents('.owl-carousel').parent('div').find('h2').text().trim();
+		}
+		title = title.toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+		msg = (title+"_"+direction);
+	}
+	
 	var msg = (title+"_"+direction);
 	if(title){
 		utag.link({

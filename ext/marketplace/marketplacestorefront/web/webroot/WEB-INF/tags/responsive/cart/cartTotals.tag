@@ -46,8 +46,7 @@ $(document).ready(function() {
             return false;  
         }
     });
-	
-  //UF-69
+	//UF-69
     $("#pinCodeButtonIdsBtm").click(function() {
     	/* if($("#defaultPinCodeIdsDefault").val() !=null)
     	{
