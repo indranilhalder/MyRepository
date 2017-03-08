@@ -287,7 +287,19 @@ public class CheckoutController extends AbstractCheckoutController
 		OrderData orderDetails = null;
 		try
 		{
-			orderModel = mplOrderFacade.getOrder(orderCode); //TISPT-175 --- order model changes : reduce same call from two places
+			
+			if (getCheckoutCustomerStrategy().isAnonymousCheckout())
+			{
+				LOG.debug("Inside Anonymous Checkout::" + orderCode);
+				orderModel = getMplPaymentFacade().getOrderByGuid(orderCode);//TISSQAEE-242
+			}
+			else
+			{
+				LOG.debug("Inside Normal Checkout::" + orderCode);
+				orderModel = mplOrderFacade.getOrder(orderCode); //TISPT-175 --- order model changes : reduce same call from two places
+			}
+			
+			
 			orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderModel); //TISPT-175 --- order details : reduce same call from two places
 			//wishlistFacade.removeProductFromWL(orderCode);
 			wishlistFacade.remProdFromWLForConf(orderDetails, orderModel.getUser()); //TISPT-175 --- removing products from wishlist : passing order data as it was fetching order data based on code again inside the method
