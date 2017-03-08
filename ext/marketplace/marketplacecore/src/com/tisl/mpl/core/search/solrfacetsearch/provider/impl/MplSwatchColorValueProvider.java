@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ import com.tisl.mpl.util.MplBuyBoxUtility;
 
 
 /**
- * @author 361234
+ * @author TCS
  *
  */
 public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider, Serializable
@@ -86,7 +87,7 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 			//Model should be instance of PcmProductVariantModel
 			final PcmProductVariantModel pcmVariantModel = (PcmProductVariantModel) model;
 
-			final HashSet<String> colours = new HashSet<String>();
+			final Map<String, String> colours = new HashMap<String, String>();
 
 			String variantColor = null;
 			String variantColorHexCode = null;
@@ -120,7 +121,7 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 									+ (variantColorHexCode.contains("#") ? variantColorHexCode.replace("#", "") : variantColorHexCode);
 						}
 						variantColor = variantColor + "||" + pcmSwatchVariantModel.getCode();
-						colours.add(variantColor);
+						colours.put(variantColor, pcmSwatchVariantModel.getCode());
 
 					}
 
@@ -133,8 +134,9 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 
 			{
 				//add field values
-				//fieldValues.addAll(createFieldValue(hashMaptoSet(colours), indexedProperty));
-				fieldValues.addAll(createFieldValue(colours, indexedProperty));
+				//New Fix
+				fieldValues.addAll(createFieldValue(hashMaptoSet(colours), indexedProperty));
+				//fieldValues.addAll(createFieldValue(colours, indexedProperty));
 			}
 			//return the field values
 			return fieldValues;
