@@ -1962,8 +1962,7 @@ function displayDeliveryDetails(sellerName) {
 					$("#defaultKnowMoreLi4").show();
 					$("#defaultKnowMoreLi").hide();
 					$("#returnWindow").text("0");
-					$("#defaultKnowMoreLi4").show();
-					$("#defaultKnowMoreLi").hide();
+					
 					}
 			}
 		}
