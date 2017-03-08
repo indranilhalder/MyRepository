@@ -1005,11 +1005,11 @@ function isCustomSku(requiredUrl){
 //UF-15
 function lazyPaginationFacet(response){
 	res = response;
-	var ulProduct = $(response).find('ul.product-listing.product-grid,ul.product-list.product-item');
+	var ulProduct = $(response).find('ul.product-listing.product-grid,ul.product-list');
     $(ulProduct).find('li.product-item').each(function() {
         productItemArray.push($(this));
     });
-	$("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list.product-item", response));
+	$("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list", response));
     innerLazyLoad({isSerp:true});
 }
 //UF-15
