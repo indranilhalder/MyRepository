@@ -1895,7 +1895,11 @@ if($(".facet.js-facet.Colour").length > 0){
 if($(".facet.js-facet.Size").length > 0){
 	sizeSwatch();
 }
-			
+$(".product-tile .image .item.quickview").each(function(){
+	if($(this).find(".addtocart-component").length == 1){
+		$(this).addClass("quick-bag-both");
+	}
+	});		
 		});
 		$(window).on("load resize", function() {
 		if($(".listing.wrapper").length > 0){
