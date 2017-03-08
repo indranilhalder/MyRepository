@@ -130,7 +130,7 @@ public class MplWishlistServiceImpl implements MplWishlistService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWishlistService#getWishlists()
 	 */
 	@Override
@@ -143,7 +143,7 @@ public class MplWishlistServiceImpl implements MplWishlistService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWishlistService#getWishlists()
 	 */
 	@Override
@@ -206,7 +206,7 @@ public class MplWishlistServiceImpl implements MplWishlistService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWishlistService#getWishlists()
 	 */
 	@Override
@@ -254,44 +254,5 @@ public class MplWishlistServiceImpl implements MplWishlistService
 		final UserModel user = userService.getCurrentUser();
 		return getMplWishlistDao().findWishlistByUserAndUssid(user, ussid);
 
-	}
-
-	//CAR Project performance issue fixed
-
-	/**
-	 * Description -- Method will access single WishlistModel for user with respect to Wishlistname
-	 *
-	 * @return Wishlist2Model
-	 */
-	@Override
-	public Wishlist2Model findMobileWishlistswithName(final UserModel user, final String name)
-	{
-
-		return getMplWishlistDao().findMobileWishlistswithName(user, name);
-	}
-
-	/**
-	 * Description -- Method will access single WishlistModel for user with respect to Wishlistname
-	 *
-	 * @return Wishlist2Model
-	 */
-	@Override
-	public int findMobileWishlistswithNameCount(final UserModel user, final String name)
-	{
-
-		return getMplWishlistDao().findMobileWishlistswithNameCount(user, name);
-	}
-
-	/**
-	 * Description -- Method will access single Entry of a Wishlist
-	 *
-	 * @return Wishlist2EntryModel
-	 */
-	@Override
-	public List<Wishlist2EntryModel> findWishlistEntryByProductAndUssid(final String ussid)
-	{
-		//CAR Project performance issue fixed
-		final UserModel user = userService.getCurrentUser();
-		return getMplWishlistDao().findWishlistByUserAndUssid(user, ussid);
 	}
 }

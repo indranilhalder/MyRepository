@@ -5,7 +5,6 @@ package com.tisl.mpl.v2.controller;
 
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
-import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -274,11 +273,12 @@ public class PaymentServicesController extends BaseController
 				//TISPT-29
 				if (null != cart)
 				{
-					if (StringUtils.isNotEmpty(paymentMode) && (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
-							|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
-							|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
-							|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)
-							|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
+					if (StringUtils.isNotEmpty(paymentMode)
+							&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
+									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
+									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
+									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI) || paymentMode
+										.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
 					{
 						if (!paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
 						{
@@ -316,11 +316,12 @@ public class PaymentServicesController extends BaseController
 					getMplPaymentFacade().setBankForSavedCard(bankName);
 				}
 
-				if (StringUtils.isNotEmpty(paymentMode) && (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
-						|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
-						|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
-						|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)
-						|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
+				if (StringUtils.isNotEmpty(paymentMode)
+						&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
+								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
+								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
+								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI) || paymentMode
+									.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
 				{
 					if (!paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
 					{
@@ -956,8 +957,8 @@ public class PaymentServicesController extends BaseController
 				{
 					//CAR-111
 					//cartData = getMplExtendedCartConverter().convert(cart);
-					final Map<String, Boolean> paymentMode = getMplPaymentFacade()
-							.getPaymentModes(MarketplacewebservicesConstants.MPLSTORE, true, cartData);
+					final Map<String, Boolean> paymentMode = getMplPaymentFacade().getPaymentModes(
+							MarketplacewebservicesConstants.MPLSTORE, cart);
 					paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(cart);
 					paymentModesData.setPaymentModes(paymentMode);
 				}

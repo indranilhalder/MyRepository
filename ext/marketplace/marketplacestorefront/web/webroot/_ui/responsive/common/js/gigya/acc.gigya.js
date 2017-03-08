@@ -233,7 +233,7 @@ function registerUserGigya(eventObject)
     				//added for tealium to get average product rating
    				     utag.link({"product_rating":avgreview});
     				
-    		  });
+    		  }
     		  
     		//TISUATPII-471 fix
     		  var ratingsParams = {
@@ -271,7 +271,7 @@ function registerUserGigya(eventObject)
 //    		          });
     		
 
-    	}
+    	});
     	
     	function CheckUserLogedIn() {
     		
@@ -338,7 +338,7 @@ function registerUserGigya(eventObject)
     		            ,enabledProviders : 'facebook,google'
     		            });
     		}
-    /*	});*/
+ 	}
     
     
     		

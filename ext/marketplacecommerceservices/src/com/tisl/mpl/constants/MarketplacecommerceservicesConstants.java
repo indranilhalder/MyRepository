@@ -1847,12 +1847,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String COUNTRYCODE = "91".intern();
 	//Promotion Related
-	public static final String BUYAANDBGETPROMOTIONONSHIPPINGCHARGES = "BuyAandBGetPromotionOnShippingCharges".intern();
-	public static final String BUYAGETPERCENTAGEDISCOUNTONB = "BuyAGetPercentageDiscountOnB".intern();
+	//public static final String BUYAANDBGETPROMOTIONONSHIPPINGCHARGES = "BuyAandBGetPromotionOnShippingCharges".intern();
+	//public static final String BUYAGETPERCENTAGEDISCOUNTONB = "BuyAGetPercentageDiscountOnB".intern();
 	public static final String DATEFORMATMMDDYYYY = "MM/dd/yy".intern();
 
 	//FREEBIE FIX
-	public static final String FREEBIEPRICETHRESHOLD = "freebiePriceThreshold";
+	//public static final String FREEBIEPRICETHRESHOLD = "freebiePriceThreshold";
 
 	public static final String BUYAANDBGETPROMOTIONONSHIPPINGCHARGES = "BuyAandBGetPromotionOnShippingCharges".intern();
 	public static final String BUYAGETPERCENTAGEDISCOUNTONB = "BuyAGetPercentageDiscountOnB".intern();

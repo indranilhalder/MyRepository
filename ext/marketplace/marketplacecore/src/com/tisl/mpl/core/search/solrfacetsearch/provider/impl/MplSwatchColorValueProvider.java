@@ -17,7 +17,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +62,7 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -87,7 +86,7 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 			//Model should be instance of PcmProductVariantModel
 			final PcmProductVariantModel pcmVariantModel = (PcmProductVariantModel) model;
 
-			final Map<String, String> colours = new HashMap<String, String>();
+			final HashSet<String> colours = new HashSet<String>();
 
 			String variantColor = null;
 			String variantColorHexCode = null;
@@ -134,7 +133,8 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 
 			{
 				//add field values
-				fieldValues.addAll(createFieldValue(hashMaptoSet(colours), indexedProperty));
+				//fieldValues.addAll(createFieldValue(hashMaptoSet(colours), indexedProperty));
+				fieldValues.addAll(createFieldValue(colours, indexedProperty));
 			}
 			//return the field values
 			return fieldValues;
