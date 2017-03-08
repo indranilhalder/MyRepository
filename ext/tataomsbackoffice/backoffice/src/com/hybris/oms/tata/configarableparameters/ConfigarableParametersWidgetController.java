@@ -684,7 +684,8 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	public void edTimeSlotsEditAndSave() throws InterruptedException
 	{
 		LOG.info("Ed Time slots Edit and Save Operation");
-		if (edEditTimeBoxFrom.isValid() && edEditTimeBoxTo.isValid() && edTimeBoxFrom.getValue() != null && edEditTimeBoxTo != null)
+		if (edEditTimeBoxFrom.isValid() && edEditTimeBoxTo.isValid() && edEditTimeBoxFrom.getValue() != null
+				&& edEditTimeBoxTo.getValue() != null)
 		{
 			edTimeSlotsAddAndEdit(edEditTimeBoxFrom, edEditTimeBoxTo, edEditpopup, "configurableParamWidget.item.ed.update", true);
 		}
