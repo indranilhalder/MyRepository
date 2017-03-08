@@ -5181,25 +5181,24 @@ $('#selectDeliveryMethodForm #deliveryradioul .delivery_options .delivery ul li 
 			 var radioId = radioSplit[0]+"_"+radioSplit[1];
 		
 			  var mode=radioSplit[2]
-			  
+			//TPR-4755,TPR-4756,TPR-4757
+				var shippingType = '';
 			 
 				if(mode=="home-delivery"){
-					utag.link(
-							{link_text: 'deliver_mode_home' , event_type : 'delivery_mode_select'}
-							);
+					shippingType = "home";
 				}
 					
 				else if(mode=="express-delivery"){
-					utag.link(
-							{link_text: 'deliver_mode_express' , event_type : 'delivery_mode_select'}
-							);
+					shippingType = "express";
 				}
 					
 				else{
-					utag.link(
-							{link_text: 'deliver_mode_clickcollect' , event_type : 'delivery_mode_select'}
-							);
+					shippingType = "click_collect";
 				}
+				utag.link({
+				  	link_text: "deliver_mode_"+shippingType,
+				  	event_type : shippingType+"_delivery_selected"
+				  });
 					
 	/*TPR-685 ends*/		  
     changeCTAButtonName("DefaultName");
@@ -5304,9 +5303,9 @@ function checkPincodeServiceability(buttonType,el)
 			console.log("Utag is undefined")
 		}
 		else{
-			//TPR-683
+			//TPR-683 TPR-4777 | Checkout | Cart 
 			utag.link(
-			{"link_text": "mybag_checkout" , "event_type" : "mybag_checkout"}
+			{"link_text": "cart_checkout_clicked" , "event_type" : "cart_checkout_clicked"}
 			);
 		}
 	}
@@ -6824,6 +6823,13 @@ function updateCart(formId){
 	var entryNumber = formId.split("_");
 	var form = $('#updateCartForm' + entryNumber[1]);
 	form.submit();
+	//TPR-4737 | Quantity update | cart
+	if(typeof utag !="undefined"){
+	utag.link({
+		"link_text": "quantity_updated" ,
+		"event_type": "quantity_updated"
+	});
+	}
 }
 
 
@@ -6833,7 +6839,7 @@ function expressbutton()
 	if(typeof utag !="undefined")
 	{
 		utag.link(
-		{"link_text": "mybag_express_checkout" , "event_type" : "mybag_express_checkout"}
+		{"link_text": "cart_express_checkout_button_submit" , "event_type" : "cart_express_checkout_button_submit"}
 		);
 	}
 	
@@ -7008,6 +7014,10 @@ $("#couponSubmitButton").click(function(){
 	 				onSubmitAnalytics("invalid_coupon");
 	 				// $("#couponError").css("display","block");
 	 				// document.getElementById("couponError").innerHTML=response.redeemErrorMsg;
+	 				/*TPR-4746*/
+	 				if(typeof utag !="undefined"){
+		 				   utag.link({error_type : 'offer_error'});
+		 				}
 	 			}
 	 			else{
 		 			if(response.couponRedeemed==true){
@@ -7040,6 +7050,10 @@ $("#couponSubmitButton").click(function(){
 	 			$("#couponSubmitButton").prop('disabled', false);
 	 			$("#couponSubmitButton").css("opacity","1");
 	 			$("#no-click,.spinner").remove(); //changes for INC_11738
+	 			/*TPR-4746*/
+	 			if(typeof utag !="undefined"){
+	 				   utag.link({error_type : 'offer_error'});
+	 				}
 	 		}
 	 	});	 
 	}
@@ -7337,7 +7351,9 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				    +'&sizeSelected='+ sizeSelected;
 
 	var entryNo = $("#entryNo").val();
-	
+
+	var productcodearray =[];
+		productcodearray.push(productCode);
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
@@ -7348,12 +7364,12 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				
 				$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
 				
-				/*TPR-656*/
+				/*TPR-656*//*TPR-4738*/
 					utag.link({
 						link_obj: this, 
-						link_text: 'add_to_wishlist' , 
-						event_type : 'add_to_wishlist', 
-						product_sku_wishlist : productCode
+						link_text: 'cart_add_to_wishlist' , 
+						event_type : 'cart_add_to_wishlist', 
+						product_sku_wishlist : productcodearray
 					});
 				/*TPR-656 Ends*/
 				
