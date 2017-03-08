@@ -4,6 +4,7 @@
       <title>Order Confirmation</title>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+	  
       <style type="text/css">
          body,td,th {
          font-family: Arial, Helvetica, sans-serif;
@@ -315,7 +316,7 @@
           #if($totalFineJewelleryPrice>200000)
               <td colspan="5" style="padding-left:16px;" align="left" bgcolor="#fbfbfb">
            		 <p style="margin-bottom: 10px;"><font size="3" color="#000000">
-           		<strong> Hi ${ctx.customerName} !!! you have to update your pancard details for Fine jewellery shopping at site:</strong> <a href="https://www.tatacliq.com/pancard/pancarddetailsupload/${ctx.orderReferenceNumber}/$(ctx.nameofperson)">Click here</a>
+           		<strong> Hi ${ctx.customerName} !!! you have to update your pancard details for Fine jewellery shopping at site:</strong> <a href="https://www.tatacliq.com/pancard/pancarddetailsupload/${ctx.orderReferenceNumber}/$(ctx.nameofperson)" target="_blank">Click here</a>
            		 </p>
               </td>
            #end 
