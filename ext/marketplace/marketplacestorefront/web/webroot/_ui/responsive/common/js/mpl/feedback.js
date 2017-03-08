@@ -2970,4 +2970,8 @@ function topMarginAdjust(){
 	else
 		$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm").css("margin-top","");
 }
+
+$(document).on("click","button[name='pinCodeButtonId']",function(){
+	$("input[name='defaultPinCodeIds']").css("color","#000");
+}); 
 /* UF-68 UF-69 */
