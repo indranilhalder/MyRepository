@@ -5432,7 +5432,7 @@ function checkPincodeServiceability(buttonType,el)
 		 document.getElementById("pinCodeButtonIds").className = "CheckAvailability"; 	//UF-71
 		 $('#defaultPinCodeIds').focus();
 		 $('#defaultPinCodeIdsBtm').focus();//UF-68
-		$("#pinCodeDispalyDiv .spinner").re();
+		$("#pinCodeDispalyDiv .spinner").remove();
 		$("#emptyId").hide();
 		$("#emptyIdBtm").hide();//UF-68
 		$("#emptyId_tooltip").hide();
