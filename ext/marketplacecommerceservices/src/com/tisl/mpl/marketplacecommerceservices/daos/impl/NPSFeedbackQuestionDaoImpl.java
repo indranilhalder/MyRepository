@@ -43,7 +43,7 @@ public class NPSFeedbackQuestionDaoImpl implements NPSFeedbackQuestionDao
 	{
 		final String queryString = "SELECT {err: " + NPSFeedbackQuestionModel.PK + " } " + " FROM { "
 				+ NPSFeedbackQuestionModel._TYPECODE + " AS err} " + "where " + " { err. " + NPSFeedbackQuestionModel.ENABLE
-				+ " }  = 1 ";
+				+ " }  = 1 ORDER BY {err.questionCode} ASC";
 		LOG.debug("Fetching NPSFeedbackQuestionModel " + queryString);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		return flexibleSearchService.<NPSFeedbackQuestionModel> search(query).getResult();
@@ -51,7 +51,7 @@ public class NPSFeedbackQuestionDaoImpl implements NPSFeedbackQuestionDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.NPSFeedbackQuestionDao#getFeedback(java.lang.String)
 	 */
 	@Override
@@ -72,7 +72,7 @@ public class NPSFeedbackQuestionDaoImpl implements NPSFeedbackQuestionDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.NPSFeedbackQuestionDao#validateCustomerForTransaction(java.lang.
 	 * String)

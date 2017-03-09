@@ -22,6 +22,7 @@ public class NPSFeedbackQRForm
 	private String otherFeedback;
 	private String originalUid;
 	private String rating;
+	private String deliveryMode;
 
 	/**
 	 * @return the npsQuestionlist
@@ -157,5 +158,21 @@ public class NPSFeedbackQRForm
 	public void setRating(final String rating)
 	{
 		this.rating = rating;
+	}
+
+	/**
+	 * @return the deliveryMode
+	 */
+	public String getDeliveryMode()
+	{
+		return deliveryMode;
+	}
+
+	/**
+	 * @param deliveryMode the deliveryMode to set
+	 */
+	public void setDeliveryMode(String deliveryMode)
+	{
+		this.deliveryMode = deliveryMode;
 	}
 }

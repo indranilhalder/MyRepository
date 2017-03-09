@@ -147,11 +147,13 @@ ACC.carousel = {
 		
 		if(typeof homePageBannerTimeout!== "undefined"){
 			var timeout = parseInt(homePageBannerTimeout) * 1000 ;
+			var loop = $(".homepage-banner #rotatingImageTimeout img").length > 1 ? true :false;
+			var dots = $(".homepage-banner #rotatingImageTimeout img").length > 1 ? true :false; 
 			$(".home-rotatingImage").owlCarousel({
 				items:1,
 				nav:false,
-				dots:true,
-				loop: true,
+				dots:dots,
+				loop: loop,
 		        autoplay: true,
 		        autoHeight : true,
 		        autoplayTimeout: timeout

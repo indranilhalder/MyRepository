@@ -44,6 +44,10 @@
 						<input type="hidden" name="rating" value="${param.rating}"/>
 						</c:if>
 						
+						<c:if test="${param.deliveryMode ne null }">
+						<input type="hidden" name="deliveryMode" value="${param.deliveryMode}"/>
+						</c:if>
+						
 						<c:forEach items="${npsFeedbackForm.npsQuestionlist}" var="item" varStatus="myIndex">
 
 							<div class="feedback-form-question">
@@ -56,6 +60,10 @@
 								<form:hidden
 									path="npsQuestionlist[${myIndex.count-1}].questionCode"
 									value="${item.questionCode}" />
+									
+								<form:hidden
+									path="npsQuestionlist[${myIndex.count-1}].questionName"
+									value="${item.questionName}" />	
 								
 									
 								<div class="feedback-form-question-options">
@@ -87,13 +95,13 @@
 												<td class="rating-label rating-label-data">
 												<form:radiobutton
 														path="npsQuestionlist[${myIndex.count-1}].rating"
-														value="1" label=""
+														value="5" label=""
 														class="feedback-form-input feedback-form-input-radio" /> <%-- <label for="npsFeedbackQuestionlist[${myIndex.count-1}].rating"></label> --%>
 												</td>
 												<td class="rating-label rating-label-data">
 												<form:radiobutton
 														path="npsQuestionlist[${myIndex.count-1}].rating"
-														value="2" label=""
+														value="4" label=""
 														class="feedback-form-input feedback-form-input-radio" /> <%--  <label for="npsFeedbackQuestionlist[${myIndex.count-1}].rating"></label> --%>
 												</td>
 												<td class="rating-label rating-label-data">
@@ -105,13 +113,13 @@
 												<td class="rating-label rating-label-data">
 												<form:radiobutton
 														path="npsQuestionlist[${myIndex.count-1}].rating"
-														value="4" label=""
+														value="2" label=""
 														class="feedback-form-input feedback-form-input-radio" /> <%-- <label for="npsFeedbackQuestionlist[${myIndex.count-1}].rating"></label> --%>
 												</td>
 												<td class="rating-label rating-label-data">
 												<form:radiobutton
 														path="npsQuestionlist[${myIndex.count-1}].rating"
-														value="5" label=""
+														value="1" label=""
 														class="feedback-form-input feedback-form-input-radio" /> <%-- <label for="npsFeedbackQuestionlist[${myIndex.count-1}].rating"></label> --%>
 												</td>
 												<td class="rating-label rating-right-label">Very Bad</td>

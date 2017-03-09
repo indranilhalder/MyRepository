@@ -64,8 +64,8 @@ public class NPSFeedbackController
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping(value = "/NPSFeedbackForm", method = RequestMethod.GET)
-	public String getFeedbackQuestionDetails(final Model model, @RequestParam(required = false) final String transactionId)
-			throws CMSItemNotFoundException, UnsupportedEncodingException
+	public String getFeedbackQuestionDetails(final Model model, @RequestParam(required = false) final String transactionId,
+			@RequestParam(required = false) final String deliveryMode) throws CMSItemNotFoundException, UnsupportedEncodingException
 
 	{
 		String returnStatement = null;
@@ -87,9 +87,29 @@ public class NPSFeedbackController
 			for (final NPSFeedbackQRDetailData npsQuestionDetail : npsFeedbackQRData.getFeedbackQRList())
 			{
 				final NPSFeedbackQuestionForm npsQRDetail = new NPSFeedbackQuestionForm();
-				npsQRDetail.setQuestionCode(npsQuestionDetail.getQuestionCode());
-				npsQRDetail.setQuestionName(npsQuestionDetail.getQuestionName());
-				npsFeedbackQRDetail.add(npsQRDetail);
+				boolean addQuestion = true;
+
+				if (npsQuestionDetail.getNpsDeliveryModeType().equalsIgnoreCase("cnc")
+						&& (deliveryMode.equalsIgnoreCase("home-delivery") || deliveryMode.equalsIgnoreCase("express-delivery")))
+				{
+					addQuestion = false;
+				}
+				else if (npsQuestionDetail.getNpsDeliveryModeType().equalsIgnoreCase("od")
+						&& deliveryMode.equalsIgnoreCase("click-and-collect"))
+				{
+					addQuestion = false;
+				}
+
+
+				if (addQuestion)
+				{
+					npsQRDetail.setQuestionCode(npsQuestionDetail.getQuestionCode());
+					npsQRDetail.setQuestionName(npsQuestionDetail.getQuestionName());
+					npsFeedbackQRDetail.add(npsQRDetail);
+				}
+
+
+
 			}
 			npsFeedbackQRForm.setNpsQuestionlist(npsFeedbackQRDetail);
 			npsFeedbackQRForm.setTransactionId(transactionId);
@@ -176,10 +196,14 @@ public class NPSFeedbackController
 				feedbackData.setOriginalUid(feedbackForm.getOriginalUid());
 				feedbackData.setTransactionId(feedbackForm.getTransactionId());
 				feedbackData.setAnyOtherFeedback(feedbackForm.getOtherFeedback());
+
+
 				for (final NPSFeedbackQuestionForm formDetail : feedbackForm.getNpsQuestionlist())
 				{
 					final NPSFeedbackQRDetailData feedbackDetailData = new NPSFeedbackQRDetailData();
 					feedbackDetailData.setQuestionCode(formDetail.getQuestionCode());
+					feedbackDetailData.setQuestionName(formDetail.getQuestionName());
+					feedbackDetailData.setRating(formDetail.getRating());
 					feedbackDataDetail.add(feedbackDetailData);
 				}
 				feedbackData.setFeedbackQRList(feedbackDataDetail);

@@ -7,6 +7,7 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -58,6 +59,7 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 				final NPSFeedbackQRDetailData npsFeedbackQuestionData = new NPSFeedbackQRDetailData();
 				npsFeedbackQuestionData.setQuestionCode(npsfeedback.getQuestionCode());
 				npsFeedbackQuestionData.setQuestionName(npsfeedback.getQuestion());
+				npsFeedbackQuestionData.setNpsDeliveryModeType(npsfeedback.getNpsDeliveryModeType().getCode());
 				npsFeedbackQuestionDetail.add(npsFeedbackQuestionData);
 			}
 			npsFeedbackQuestion.setFeedbackQRList(npsFeedbackQuestionDetail);
@@ -94,16 +96,26 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 			}
 			if (StringUtils.isNotEmpty(feedbackForm.getOriginalUid()))
 			{
-				customer = (CustomerModel) extendedUserService.getUserForEmailid(feedbackForm.getOriginalUid());
+				customer = extendedUserService.getUserForOriginalUid(feedbackForm.getOriginalUid());
 				if (customer != null)
 				{
-					npsFeedbackModel.setEmailId(customer.getOriginalUid());
+					npsFeedbackModel.setEmailId(feedbackForm.getOriginalUid());
 					npsFeedbackModel.setFirstName(customer.getFirstName());
 					npsFeedbackModel.setLastName(customer.getLastName());
 				}
 			}
+
 			npsFeedbackModel.setNpsId(npsFeedbackQuestionService.getNPSId()); // need to check the error
 			npsFeedbackModel.setNpsId(String.valueOf(Math.random()));
+			npsFeedbackModel.setResponseId(String.valueOf(Math.random()));
+			final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+			final SimpleDateFormat dateFormatParse = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+			final Date date = new Date();
+			final String SurveyDate = dateFormat.format(date);
+
+
+			npsFeedbackModel.setOriginalSurveyDate(dateFormatParse.parse(SurveyDate));
+			//npsFeedbackModel.setResponseTime(dateFormatParse.parse(SurveyDate));
 			if (StringUtils.isNotEmpty(feedbackForm.getAnyOtherFeedback()))
 			{
 				npsFeedbackModel.setAnyOtherFeedback(feedbackForm.getAnyOtherFeedback());

@@ -254,7 +254,6 @@
 
 		<property name="termsAndConditions" type="String" />
 
-		<property name="promourl" type="java.lang.String"></property>
 
 	</bean>
 
@@ -978,6 +977,7 @@
 		<property name="questionCode" type="String"></property>
 		<property name="questionName" type="String"></property>
 		<property name="rating" type="String"></property>
+		<property name="npsDeliveryModeType" type="String"></property>
 	</bean>
 	<bean class="com.tisl.mpl.facades.data.NPSFeedbackQRData">
 		<property name="originalUid" type="String"></property>

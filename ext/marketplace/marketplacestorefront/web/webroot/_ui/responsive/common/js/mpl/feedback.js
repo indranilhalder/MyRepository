@@ -256,13 +256,13 @@ $(document).ready(function(){
 						 if( $(window).scrollTop() > $('.bottom').offset().top && !($('.bottom').hasClass('active'))){
 				      $('.bottom').addClass('active');
 				      $('.productGrid-header-wrapper').addClass('active-header');	
-			    		$(".productGrid-header-wrapper").addClass("active_adjust");
+			    		//$(".productGrid-header-wrapper").addClass("active_adjust");
 			      /*TPR-4471 change*/
 				      $('header > .content .top').addClass('header_fix');
 				    } else if ($(window).scrollTop() == 0){
 				      $('.bottom').removeClass('active');
 				      $('.productGrid-header-wrapper').removeClass('active-header');
-				      $(".productGrid-header-wrapper").removeClass("active_adjust");/*TPR-4471 change*/
+				      //$(".productGrid-header-wrapper").removeClass("active_adjust");/*TPR-4471 change*/
 				   $('header > .content .top').removeClass('header_fix');
 				    }
 					  }
@@ -2854,7 +2854,7 @@ $(document).ready(function(){
 	 $(document).on("click",".smartbanner-close",function(){
 		$("body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header").css("margin-top","0px");
 	 });
-	
+	 $(".productGrid-header-wrapper .productGrid-header .productGrid-menu #shopMicrositeSeller").show(); //TPR-4471
 });
 /* TPR-1601 checkout progress bar end  */
 
@@ -3149,7 +3149,13 @@ $(window).on("load resize",function(e){
 	if($(window).width() < 791 && !$(".productGrid-header-wrapper .productGrid-header .productGrid-menu > nav > .overlay").hasClass("overlay-sideNav"))
 		$(".productGrid-header-wrapper .productGrid-header .productGrid-menu > nav").append(overlayContainer);
 });*/
-$(window).on("load",function(){
+/*$(window).on("load",function(){
+	//$(".productGrid-menu #shopMicrositeSeller > div").css("display","block");
+	$(".productGrid-menu #shopMicrositeSeller > div").html(" ");
+	var span_container="<span></span><span></span><span></span>";
+	$(".productGrid-menu nav > ul > li > div.toggle").append(span_container);
+});*/
+$(document).ajaxComplete(function(){
 	//$(".productGrid-menu #shopMicrositeSeller > div").css("display","block");
 	$(".productGrid-menu #shopMicrositeSeller > div").html(" ");
 	var span_container="<span></span><span></span><span></span>";
@@ -3179,7 +3185,8 @@ $(document).on("click",".clicked-menu.active.clicked-menu-mobile .level1 > span#
 	$(".productGrid-header-wrapper .productGrid-header > div input[type='text']").animate({marginLeft: 0},{duration:500});
 });*/
 $(".productGrid-header-wrapper .productGrid-header > div button#micrositesearchButton").click(function(){
-	$(".productGrid-header-wrapper.active-header").addClass("active_adjust");
+	$(".productGrid-header-wrapper").addClass("active_adjust");
+	
 	$(".productGrid-header-wrapper .productGrid-header > div input[type='text']").animate({marginLeft: 2},{duration:200});
 });
 $(document).click(function (e)
@@ -3190,7 +3197,7 @@ $(document).click(function (e)
 		    if ((!container.is(e.target) // if the target of the click isn't the container...
 		        && container.has(e.target).length === 0) && container.find("input[type='text']").val().length === 0) // ... nor a descendant of the container
 		    {
-		    	$(".productGrid-header-wrapper.active-header").removeClass("active_adjust");
+		    	$(".productGrid-header-wrapper").removeClass("active_adjust");
 		    	$(".productGrid-header-wrapper .productGrid-header > div input[type='text']").animate({marginLeft: 1000},{duration:200});
 		    }
 		   /* if ((((!containerGlobal.is(e.target) // if the target of the click isn't the container...
@@ -3228,6 +3235,7 @@ $(window).on("load resize",function(){
 	$(".productGrid-header-wrapper .productGrid-header>div.productGrid-menu").removeClass("prodGridMargin");
 	//$(".productGrid-header-wrapper .overlay.overlay-sideNav").remove();
 	if($(window).width() > 773){
+		$(".productGrid-menu nav > ul > li > ul > li > ul.words").css("display","");
 		$(".productGrid-menu #shopMicrositeSeller").removeClass("clicked-menu-mobile");
 		$(".productGrid-menu  nav > ul > li > ul > li.level1").attr("style",null);
 		if(deskVal === false){
@@ -3244,6 +3252,7 @@ $(window).on("load resize",function(){
 		$(".productGrid-menu #shopMicrositeSeller").addClass("clicked-menu clicked-menu-mobile active");
 		$(".productGrid-menu nav #mobile-menu-toggle.mainli.menu-dropdown-arrow").parent("li.level1").attr("style","background-color:rgb(169, 20, 60)");
 		$(".productGrid-menu nav #mobile-menu-toggle + ul#topul").show();
+		$(".productGrid-menu nav #mobile-menu-toggle.mainli.menu-dropdown-arrow + ul.words").css("display","block");
 	}
 	if($(window).width() <= 773 && mobileVal === false){
 		$(".productGrid-menu #shopMicrositeSeller").removeClass("clicked-menu active");
@@ -3255,6 +3264,7 @@ $(window).on("load resize",function(){
 			deskVal=true;
 			$(".productGrid-menu nav > ul > li > ul > li").removeClass("hovered");
 			$(".productGrid-menu nav > ul > li > ul > li:first-child").addClass("hovered");
+			$(".productGrid-menu nav>ul>li.clicked-menu>ul").css("display","");
 		}
 	});
 	$(document).on("mouseleave",".productGrid-header-wrapper .productGrid-header .productGrid-menu #shopMicrositeSeller",function(){
@@ -3277,6 +3287,21 @@ $(window).on("load resize",function(){
 $(document).on("click",".overlay.overlay-sideNav",function(){
 	$(".productGrid-menu nav > ul > li#shopMicrositeSeller > div").trigger("click");
 });
+
+$(document).ready(function(){
+	$("head").append("<style></style>");
+});
+$(window).on("load resize",function(){
+	var rightAdjust = "";
+	if($(".productGrid-header-wrapper.active-header").hasClass("active_adjust"))
+	rightAdjust = $(".productGrid-header-wrapper.active-header.active_adjust .productGrid-header > div input[type='text']").offset().left+2;
+	if($(window).width() <= 773){
+		$('head style:last').html(('.productGrid-header-wrapper.active-header .productGrid-header > div.product-grid-search #micrositesearchButton:before{right:'+rightAdjust+'}'));
+	}
+		else
+		$('head style:last').html("");
+});
+
 
 //$(document).ready(function(){
 //	var countBag = $(".productGrid-header-wrapper .productGrid-header div.bag .mini-cart-link.myBag-sticky > span:nth-of-type(2)").text();

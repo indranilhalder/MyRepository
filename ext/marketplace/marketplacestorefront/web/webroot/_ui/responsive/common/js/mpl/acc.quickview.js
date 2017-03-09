@@ -134,7 +134,9 @@ function isOOSQuick(){
 		return false;
 	}
 }
-function setBuyBoxDetails()
+
+//function setBuyBoxDetails()
+function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 {
 	var productCode = productCodeQuickView;//$("#productCodePost").val();
 	var variantCodesJson = "";

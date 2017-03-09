@@ -64,8 +64,16 @@
 						data-mini-cart-url="/cart/rollover/MiniCart"
 						data-mini-cart-refresh-url="/cart/miniCart/SUBTOTAL"
 						data-mini-cart-name="Cart" data-mini-cart-empty-name="Empty Cart"
-						style="position: static;"></a>
+						style="position: static;">
+					<spring:theme code="minicart.mybag" />&nbsp;(<span
+						class="js-mini-cart-count-hover"></span>)	
+					</a>
 			</div>
+			<div class="mobile-bag bag">
+						<!-- TISPRD-32-fix -->
+							<!-- <a href="/store/mpl/en/cart">(<span class="responsive-bag-count"></span>)</a> -->
+							<a href="/cart"><span class="responsive-bag-count">${totalItems}</span></a>
+						</div>
 			</div>
 			</div>
 	</c:if>

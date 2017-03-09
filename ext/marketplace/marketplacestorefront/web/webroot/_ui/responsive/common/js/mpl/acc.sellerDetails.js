@@ -611,7 +611,8 @@ function focusOnElement() {
 							var messageStartDate = null;
 							var messageEndDate = null;		
 							$(".pdp-promo-title-link").css("display","none");			
-							if($("#promolist").val()!=""||!$.isEmptyObject(offerMessageMap)){
+							//TISSQAUAT-472 starts here
+							if($("#promolist").val()=="All" || $("#promolist").val()=="Web" ||!$.isEmptyObject(offerMessageMap)){
 								$("#promolist").val(offerMessageMap);
 								$(".pdp-promo-title-link").css("display", "block");		
 							} 

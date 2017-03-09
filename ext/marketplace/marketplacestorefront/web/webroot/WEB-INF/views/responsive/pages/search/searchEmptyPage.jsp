@@ -97,8 +97,8 @@ $(document).ready(function() {
 			</c:choose> 
 	
 	        <!--  TPR-250 changes -->
-			<h3 class="desktop"><spring:theme code="search.no.results" text="Sorry! No items matched your search. Why don't you try a less specific keyword?" /></h3> 
-			<h3 class="mobile"><spring:theme code="search.no.results.mobile" text="We're sorry, but we couldn't find any results for"/></h3>   
+			<%-- <h3 class="desktop"><spring:theme code="search.no.results" text="Sorry! No items matched your search. Why don't you try a less specific keyword?" /></h3> 
+			<h3 class="mobile"><spring:theme code="search.no.results.mobile" text="We're sorry, but we couldn't find any results for"/></h3> --%>   
 			<span class="help"><spring:theme code="needhelp.needhelptext" /></span>
 			<p><spring:theme code="needhelp.desc" text="Make our hotline blink"/></p>
 		<br>

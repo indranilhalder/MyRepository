@@ -1005,8 +1005,8 @@ function editAddress(addressId) {
         var flagState = true;
         var flagMob = true;
         var addLine1=encodeURIComponent(addressForm.line1.value);
-     //   var addLine2=encodeURIComponent(addressForm.line2.value);
-     //    var addLine3=encodeURIComponent(addressForm.line3.value);        
+        var addLine2=encodeURIComponent(addressForm.line2.value);
+        var addLine3=encodeURIComponent(addressForm.line3.value);        
         if ((addressForm.addressRadioType[0].checked == false) && (addressForm.addressRadioType[1].checked == false )){
         	document.getElementById("errtype").innerHTML = "<font color='#ff1c47' size='2'>Please select an address type</font>";
         	flagFn = false;
@@ -1035,7 +1035,7 @@ function editAddress(addressId) {
         }
         if (addressForm.line1.value == null || addressForm.line1.value == "") {
         	$("#errddressline1").css({"display":"block"});
-        	document.getElementById("erraddressline1").innerHTML = "<font color='#ff1c47' size='2'>Please enter full address</font>";
+        	document.getElementById("erraddressline1").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 1</font>";
         	flagAd1 = false;
         }
        /* if (addressForm.line2.value == null || addressForm.line2.value == "") {

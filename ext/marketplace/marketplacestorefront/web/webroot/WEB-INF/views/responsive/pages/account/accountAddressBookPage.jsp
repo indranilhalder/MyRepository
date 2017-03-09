@@ -387,14 +387,14 @@
 									<!-- TISUAT-4696 /TPR-215-->
 									<div class="half" style="clear:both;">
 									<label><spring:theme code="text.addressBook.addressline1" text="Address Line 1 *" /></label>
-										<form:textarea rows="2" cols="60" path="line1" id="line1" onkeyup="kpressaddressln1()"
-											maxlength="120" />
+										<form:input path="line1" id="line1" onkeyup="kpressaddressln1()"
+ 											maxlength="40" />
 											<div class="errorMessage"><div id="erraddressline1"></div></div>
 									</div>
 									
 
 									<!-- TISUAT-4696  /TPR-215-->
-			<!-- TPR-3402 -->		<div class="hide">
+			<!-- TPR-3402 -->		<div class="half">
 									<label><spring:theme code="text.addressBook.addressline2" text="Address Line 2 *" /></label>
 										<form:input path="line2" id="line2" onkeyup="kpressaddressln2()"
 											maxlength="40" />
@@ -403,7 +403,7 @@
 							
 
 									<!-- TISUAT-4696  /TPR-215-->
-			<!-- TPR-3402 -->		<div class="hide">
+			<!-- TPR-3402 -->		<div class="half">
 									<label><spring:theme code="text.addressBook.landmark" text="Landmark *" /></label>
 										<form:input path="line3" id="line3" onkeyup="kpressaddressln3()"
 											maxlength="40" />

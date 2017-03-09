@@ -837,6 +837,12 @@
 			<value code="CUSTOM" />
 			<value code="ALL" />
 		</enumtype>
+		<!-- TPR-1984 Nps feedback Emailer -->
+		<enumtype generate="true" code="npsDeliveryModeEnum" autocreate="true">
+			<value code="all" /> <!-- ALL => comomn to all delivery -->
+			<value code="cnc" /> <!-- CNC => only for click and collect -->
+			<value code="od" /> <!-- OD => only for home and express delivery -->
+		</enumtype>
 	</enumtypes>
 	<!-- Product Feature Enum Ends -->
 
@@ -9716,6 +9722,14 @@
 						<description>Enable</description>
 						<persistence type="property" />
 					</attribute>
+					
+					<attribute qualifier="npsDeliveryModeType" type="npsDeliveryModeEnum" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>NpsDeliveryModeType</description>
+						<persistence type="property" />
+					</attribute>
+					
 				</attributes>
 			</itemtype>
 			<itemtype code="NPSFeedback" generate="true" autocreate="true"
