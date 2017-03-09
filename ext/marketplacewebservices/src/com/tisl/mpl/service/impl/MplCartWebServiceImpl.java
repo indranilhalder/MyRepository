@@ -32,7 +32,6 @@ import de.hybris.platform.commerceservices.order.CommerceCartMergingException;
 import de.hybris.platform.commerceservices.order.CommerceCartModification;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartRestorationException;
-import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.user.AddressListWsDTO;
@@ -107,7 +106,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.service.MplCartWebService;
-import com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.utility.MplDiscountUtil;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
@@ -159,8 +157,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	private DiscountUtility discountUtility;
 	@Resource
 	private MplProductWebServiceImpl mplProductWebService;
-	@Resource
-	private CommerceCartService commerceCartService;
+	
 	@Resource
 	private MplPaymentWebFacade mplPaymentWebFacade;
 	@Resource
@@ -182,8 +179,6 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	private final static Logger LOG = Logger.getLogger(MplCartWebServiceImpl.class);
 
-	@Autowired
-	private MplDefaultCommerceAddToCartStrategyImpl mplDefaultCommerceAddToCartStrategyImpl;
     @Autowired
 	private CustomAddressReversePopulator addressReversePopulator;
 

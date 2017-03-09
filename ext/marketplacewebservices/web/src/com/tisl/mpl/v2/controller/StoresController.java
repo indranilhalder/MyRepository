@@ -16,7 +16,6 @@ package com.tisl.mpl.v2.controller;
 
 import de.hybris.platform.commercefacades.dto.storeats.StoreLocationResponseDataWsDTO;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
-import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commerceservices.storefinder.data.StoreFinderSearchPageData;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective;
@@ -24,7 +23,6 @@ import de.hybris.platform.commercewebservicescommons.dto.store.ListOfPointOfServ
 import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.store.StoreFinderSearchPageWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
-import de.hybris.platform.site.BaseSiteService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +35,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.v2.helper.StoresHelper;
 
 
@@ -55,12 +52,8 @@ public class StoresController extends BaseController
 	private static final String DEFAULT_ACCURACY = "0.0";
 	@Resource(name = "storesHelper")
 	private StoresHelper storesHelper;
-	@Resource
-	private ExtendedUserService extendedUserService;
-	@Resource
-	private BaseSiteService baseSiteService;
-	@Resource
-	private CommerceCartService commerceCartService;
+	
+	
 
 	/**
 	 * Lists all store locations that are near the location specified in a query or based on latitude and longitude.

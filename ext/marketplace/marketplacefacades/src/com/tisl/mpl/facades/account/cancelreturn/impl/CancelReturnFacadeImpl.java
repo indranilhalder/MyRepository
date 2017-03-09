@@ -227,10 +227,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private OrderModelDao orderModelDao;
 	@Autowired
 	private SendSMSFacade sendSMSFacade;
-	
-	@Resource(name = "customerFacade")
-	private CustomerFacade customerFacade;
-	
 	@Autowired
 	private Populator customerPopulator;
 	

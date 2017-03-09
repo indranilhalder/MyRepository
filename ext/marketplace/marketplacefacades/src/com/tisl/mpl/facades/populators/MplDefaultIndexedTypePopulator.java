@@ -34,6 +34,7 @@ public class MplDefaultIndexedTypePopulator extends DefaultIndexedTypePopulator
 			final IndexedProperty indexedProperty = getIndexedPropertyFromItem(property);
 			result.add(indexedProperty);
 		}
+		LOG.info("MplDefaultIndexedTypePopulator:::::>>>>>>>>");
 		return result;
 	}
 
