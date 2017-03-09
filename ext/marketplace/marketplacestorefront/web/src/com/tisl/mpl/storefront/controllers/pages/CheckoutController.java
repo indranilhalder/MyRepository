@@ -76,6 +76,7 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
+import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -162,8 +163,9 @@ public class CheckoutController extends AbstractCheckoutController
 
 	@Autowired
 	private MplOrderFacade mplOrderFacade;//TISPT-175
-	
-        @Resource(name = "mplPaymentFacade")//TISSQAEE-242
+
+	@Resource(name = "mplPaymentFacade")
+	//TISSQAEE-242
 	private MplPaymentFacade mplPaymentFacade;
 
 	/**
@@ -290,7 +292,7 @@ public class CheckoutController extends AbstractCheckoutController
 		OrderData orderDetails = null;
 		try
 		{
-			
+
 			if (getCheckoutCustomerStrategy().isAnonymousCheckout())
 			{
 				LOG.debug("Inside Anonymous Checkout::" + orderCode);
@@ -301,8 +303,8 @@ public class CheckoutController extends AbstractCheckoutController
 				LOG.debug("Inside Normal Checkout::" + orderCode);
 				orderModel = mplOrderFacade.getOrder(orderCode); //TISPT-175 --- order model changes : reduce same call from two places
 			}
-			
-			
+
+
 			orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderModel); //TISPT-175 --- order details : reduce same call from two places
 			//wishlistFacade.removeProductFromWL(orderCode);
 			wishlistFacade.remProdFromWLForConf(orderDetails, orderModel.getUser()); //TISPT-175 --- removing products from wishlist : passing order data as it was fetching order data based on code again inside the method
@@ -454,11 +456,11 @@ public class CheckoutController extends AbstractCheckoutController
 	 * private void callNonBusinessError(final Model model, final String messageKey) throws CMSItemNotFoundException {
 	 * storeCmsPageInModel(model, getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE)); setUpMetaDataForContentPage(model,
 	 * getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE));
-	 * 
+	 *
 	 * model.addAttribute(WebConstants.MODEL_KEY_ADDITIONAL_BREADCRUMB,
 	 * resourceBreadcrumbBuilder.getBreadcrumbs(MessageConstants.BREADCRUMB_NOT_FOUND));
 	 * GlobalMessages.addErrorMessage(model, messageKey);
-	 * 
+	 *
 	 * storeContentPageTitleInModel(model, MessageConstants.NON_BUSINESS_ERROR); }
 	 */
 
@@ -727,6 +729,7 @@ public class CheckoutController extends AbstractCheckoutController
 	{
 		this.mplCustomAddressFacade = mplCustomAddressFacade;
 	}
+
 	/**
 	 * @return the mplPaymentFacade
 	 */
@@ -743,6 +746,7 @@ public class CheckoutController extends AbstractCheckoutController
 	{
 		this.mplPaymentFacade = mplPaymentFacade;
 	}
+
 	/**
 	 * @return the configurationService
 	 */
