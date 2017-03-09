@@ -1030,7 +1030,8 @@ public class MplPromotionHelper
 					}
 					else
 					{
-						data.setActualCustomerCount(offerCount - count);
+						final int countData = (offerCount - count) < 0 ? ((offerCount - count) * (-1)) : (offerCount - count);
+						data.setActualCustomerCount(countData);
 						data.setExhausted(false);
 					}
 				}
