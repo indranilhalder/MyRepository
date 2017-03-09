@@ -2942,7 +2942,7 @@ $(document).ready(function(){
     
     /*UF-68 UF-69*/
     $(".page-cartPage .cart-total-block ul.checkOutBtnBtm > li.checkout-button").css("visibility","visible");
-    $("#pinCodeButtonIdsBtm").addClass("CheckAvailability");
+    //$("#pinCodeButtonIdsBtm").addClass("CheckAvailability");
     /*UF-68 UF-69*/
 });
 
@@ -2977,7 +2977,7 @@ $(document).on("click","button[name='pinCodeButtonId']",function(){
 }); 
 
 $(document).ajaxComplete(function(){
-	$("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").addClass("CheckAvailability");
+	//$("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").addClass("CheckAvailability");
 	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").css("pointer-events","");
 	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").removeAttr("onclick");
 	$("a#checkout-enabled.checkout-disabled").removeAttr("onclick");
