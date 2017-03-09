@@ -2531,7 +2531,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			final Map<String, Boolean> duplicateJuspayResMap = getSessionService().getAttribute(
 					MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE);
 			// OrderIssues:-  multiple Payment Response from juspay restriction
-			if (MapUtils.isNotEmpty(duplicateJuspayResMap) && !duplicateJuspayResMap.get(guid).booleanValue())
+			if (MapUtils.isNotEmpty(duplicateJuspayResMap) && null != duplicateJuspayResMap.get(guid)
+					&& !duplicateJuspayResMap.get(guid).booleanValue())
 			{
 				final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
 				if (null != orderToBeUpdated && null == orderToBeUpdated.getPaymentInfo()
@@ -2612,8 +2613,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			LOG.error("Exception in cardPayment", e);
 			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
-			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
-					+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+			//return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+			//	+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
