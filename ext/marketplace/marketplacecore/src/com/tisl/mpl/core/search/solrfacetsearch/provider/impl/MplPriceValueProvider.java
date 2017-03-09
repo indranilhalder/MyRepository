@@ -189,7 +189,7 @@ public class MplPriceValueProvider extends AbstractPropertyFieldValueProvider im
 	public Double getBuyBoxPrice(final ProductModel productModel)
 	{
 		final Double price = mplBuyBoxUtility.getBuyBoxSellingPrice(productModel);
-		LOG.debug("Price is not available in Buy Box for product :>>>>>>>>>>>>>>>>>>" + price)
+		LOG.debug("Price is not available in Buy Box for product :>>>>>>>>>>>>>>>>>>" + price);
 		if (price != null && price.intValue() <= 0)
 		{
 			LOG.debug("Price is not available in Buy Box for product :" + productModel.getCode());
