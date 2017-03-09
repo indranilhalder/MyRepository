@@ -2978,6 +2978,7 @@ $(document).on("click","button[name='pinCodeButtonId']",function(){
 
 $(document).ajaxComplete(function(){
 	$("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").addClass("CheckAvailability");
+	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").css("pointer-events","");
 });
 
 /* UF-68 UF-69 */
