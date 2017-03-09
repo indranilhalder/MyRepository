@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.enums.LuxIndicatorEnum;
@@ -33,6 +34,7 @@ import com.tisl.mpl.util.MplBuyBoxUtility;
  */
 public class MplPriceValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider, Serializable
 {
+	private static final Logger LOG = Logger.getLogger(MplPriceValueProvider.class);
 	private FieldNameProvider fieldNameProvider;
 
 	private MplPriceRowService mplPriceRowService;
@@ -187,10 +189,10 @@ public class MplPriceValueProvider extends AbstractPropertyFieldValueProvider im
 	public Double getBuyBoxPrice(final ProductModel productModel)
 	{
 		final Double price = mplBuyBoxUtility.getBuyBoxSellingPrice(productModel);
-
+		LOG.debug("Price is not available in Buy Box for product :>>>>>>>>>>>>>>>>>>" + price)
 		if (price != null && price.intValue() <= 0)
 		{
-			LOG.warn("Price is not available in Buy Box for product :" + productModel.getCode());
+			LOG.debug("Price is not available in Buy Box for product :" + productModel.getCode());
 		}
 
 		return price;

@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -40,7 +41,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
  */
 public class MplBuyBoxUtility
 {
-	/* private static final Logger LOG = Logger.getLogger(MplBuyBoxUtility.class); */
+	private static final Logger LOG = Logger.getLogger(MplBuyBoxUtility.class);
 
 	//---------------Solve for Issue TISPRD-58---------------------//
 	private static final String COLORAPPAREL = "colorapparel";
@@ -78,7 +79,9 @@ public class MplBuyBoxUtility
 		else
 		{
 			price = productModel.getMrp();
+
 		}
+		LOG.debug("Inside MplBuyBoxUtility price value is" + price);
 		return price;
 	}
 
@@ -159,6 +162,7 @@ public class MplBuyBoxUtility
 				}
 			}
 			finalpriceValueMap.putAll(priceValueMap);
+			LOG.debug("value of priceValueMap >>>>>>>>>" + priceValueMap);
 		}
 		else
 		{
@@ -179,6 +183,7 @@ public class MplBuyBoxUtility
 				finalpriceValueMap.putAll(priceValueMap);
 			}
 		}
+		LOG.debug("value of priceValueMap *******" + priceValueMap);
 		//TISPRD-1079
 		if (finalpriceValueMap.isEmpty())
 		{
