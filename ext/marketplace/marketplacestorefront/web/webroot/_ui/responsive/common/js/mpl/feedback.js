@@ -2980,6 +2980,7 @@ $(document).ajaxComplete(function(){
 	$("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").addClass("CheckAvailability");
 	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").css("pointer-events","");
 	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").removeAttr("onclick");
+	$("a#checkout-enabled.checkout-disabled").removeAttr("onclick");
 });
 
 /* UF-68 UF-69 */

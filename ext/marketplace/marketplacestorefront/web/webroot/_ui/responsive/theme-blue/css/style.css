@@ -60892,7 +60892,8 @@ p#error-Id_tooltip_btm,p#unserviceablepincode_tooltip_btm,p#emptyId_tooltip_btm{
 }
 	
 #checkout-id:hover p#unserviceablepincode_tooltip,#checkout-id:hover p#error-Id_tooltip,#checkout-id:hover p#emptyId_tooltip,#checkout-id-down a#checkout-down-enabled:hover ~ p#error-Id_tooltip_btm,
-#checkout-id-down a#checkout-down-enabled:hover ~ p#unserviceablepincode_tooltip_btm,#checkout-id-down a#checkout-down-enabled:hover ~ p#emptyId_tooltip_btm{
+#checkout-id-down a#checkout-down-enabled:hover ~ p#unserviceablepincode_tooltip_btm,#checkout-id-down a#checkout-down-enabled:hover ~ p#emptyId_tooltip_btm,
+p#error-Id_tooltip_btm:hover,p#unserviceablepincode_tooltip_btm:hover,p#emptyId_tooltip_btm:hover{
 	opacity:1;
 	cursor: text !important;
 }
