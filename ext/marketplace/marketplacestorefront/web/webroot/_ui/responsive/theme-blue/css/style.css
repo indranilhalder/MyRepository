@@ -59024,16 +59024,6 @@ li.facet.js-facet.collectionIds{
     width: 100%;
     text-align: center;
 }
-
-/* UF-68 UF-69 */
-body.page-cartPage .cart-bottom-block .cartBottomCheck.cartBottomCheckShow,.page-cartPage .cart-total-block ul.checkOutBtnBtm{
-	display:none;
-}
-body.page-cartPage .cartBottomCheck {
-    display: none;
-}
-/* UF-68 UF-69 */
-
 }
 .emptyCart-mobile{
 	height: 100px;
@@ -59165,6 +59155,10 @@ header.compact .content .top {
 header .content .marketplace.compact a img{
 	margin-top:24px;
 }
+}
+
+/* UF-68 UF-69 */
+@media(min-width:768px){
 body.page-cartPage .cart-bottom-block{
 	padding-right: 0;
 	padding-left: 0;
@@ -59172,6 +59166,8 @@ body.page-cartPage .cart-bottom-block{
 	margin-left: 0;
 }
 }
+/* UF-68 UF-69 */
+
 @media (max-width:790px){
 	header > .content .top .toggle {
   margin-top: 32px;
@@ -59253,7 +59249,18 @@ z-index:11;}
 @media (max-width: 767px){
 .luxury-header {
   margin-bottom:25px;
-}}
+}
+
+/* UF-68 UF-69 */
+body.page-cartPage .cart-bottom-block .cartBottomCheck.cartBottomCheckShow,.page-cartPage .cart-total-block ul.checkOutBtnBtm{
+	display:none;
+}
+body.page-cartPage .cartBottomCheck {
+    display: none;
+}
+/* UF-68 UF-69 */
+
+}
 /*TISLUX-2855 Ends*/
 
 
@@ -60124,7 +60131,7 @@ body.template-pages-layout-footwearCategoryLandingPage .plp-wishlist.added:hover
 
 /* UF-68 UF-69 */
 body.page-cartPage .cart-total-block ul.checkOutBtnBtm{
-	margin-top: 20px;
+	margin-top: 30px;
 }
 /* UF-68 UF-69 */
 
@@ -60896,14 +60903,6 @@ p#error-Id_tooltip_btm,p#unserviceablepincode_tooltip_btm,p#emptyId_tooltip_btm{
     right: 0;
     float: right;
 }
-	
-#checkout-id:hover p#unserviceablepincode_tooltip,#checkout-id:hover p#error-Id_tooltip,#checkout-id:hover p#emptyId_tooltip,#checkout-id-down a#checkout-down-enabled:hover ~ p#error-Id_tooltip_btm,
-#checkout-id-down a#checkout-down-enabled:hover ~ p#unserviceablepincode_tooltip_btm,#checkout-id-down a#checkout-down-enabled:hover ~ p#emptyId_tooltip_btm,
-p#error-Id_tooltip_btm:hover,p#unserviceablepincode_tooltip_btm:hover,p#emptyId_tooltip_btm:hover{
-	opacity:1;
-	cursor: text !important;
-}
-	
 p#unserviceablepincode_tooltip:after,p#error-Id_tooltip:after,p#emptyId_tooltip:after,p#error-Id_tooltip_btm:after,
 p#unserviceablepincode_tooltip_btm:after,p#emptyId_tooltip_btm:after {
     content: "";
@@ -60957,7 +60956,18 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds,
  body.page-cartPage .cart.wrapper .product-block li.item>ul>li.delivery li.methodExpress.lowOpacity:after, 
  body.page-cartPage .cart.wrapper .product-block li.item>ul>li.delivery li.methodClick.lowOpacity:after{
          background: url(../images/sprite.svg) no-repeat scroll -255px -190px;
-     }}
+     }
+     
+     /* UF-68 UF-69 */
+ #checkout-id:hover p#unserviceablepincode_tooltip,#checkout-id:hover p#error-Id_tooltip,#checkout-id:hover p#emptyId_tooltip,#checkout-id-down a#checkout-down-enabled:hover ~ p#error-Id_tooltip_btm,
+#checkout-id-down a#checkout-down-enabled:hover ~ p#unserviceablepincode_tooltip_btm,#checkout-id-down a#checkout-down-enabled:hover ~ p#emptyId_tooltip_btm,
+p#error-Id_tooltip_btm:hover,p#unserviceablepincode_tooltip_btm:hover,p#emptyId_tooltip_btm:hover{
+	opacity:1;
+	cursor: text !important;
+}
+/* UF-68 UF-69 */
+
+     }
   @media (max-width: 1024px){
   body.page-cartPage .cart.wrapper .product-block li.item>ul>li.delivery li.methodHome.lowOpacity:before,
   body.page-cartPage .cart.wrapper .product-block li.item>ul>li.delivery li.methodExpress.lowOpacity:before, 
@@ -60973,8 +60983,11 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds,
 	 letter-spacing: 0;
     font-size: 12px;
     line-height: 20px;
-	 /* UF-68 UF-69 */
 	 }
+	  body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled{
+	 	cursor: default;
+	  }
+	 /* UF-68 UF-69 */
      }
   
 

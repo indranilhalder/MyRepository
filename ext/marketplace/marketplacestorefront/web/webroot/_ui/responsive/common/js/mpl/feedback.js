@@ -2967,7 +2967,7 @@ else{
 function topMarginAdjust(){
 	var heightTotals = $("body.page-cartPage .cart-bottom-block .cart-total-block .totals").outerHeight();
 	if($(window).width() > 1007)
-		$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm").css("margin-top",heightTotals+20);
+		$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm").css("margin-top",heightTotals+30);
 	else
 		$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm").css("margin-top","");
 }
