@@ -5283,20 +5283,8 @@ function checkServiceabilityRequired(buttonType,el){
 	var sessionPin = $("#pinId").val();
 	var selectedPin=$('#defaultPinCodeIds').val();
 	var checkoutLinkURlId = $('#checkoutLinkURlId').val();
-	if(sessionPin != selectedPin){
-		checkPincodeServiceability(buttonType,el);
-	}
-	else{
-		
-		redirectToCheckout(checkoutLinkURlId);
-	}
-}
-
-
-function checkPincodeServiceability(buttonType,el)
-{
-// alert($(el).attr("id")+" :::button id")
-	if(buttonType == "typeCheckout" || buttonType == "typeSubmit")
+	
+	if(buttonType == "typeCheckout" )
 	{
 		
 		if(typeof utag == "undefined"){
@@ -5309,6 +5297,19 @@ function checkPincodeServiceability(buttonType,el)
 			);
 		}
 	}
+	if(sessionPin != selectedPin){
+		checkPincodeServiceability(buttonType,el);
+	}
+	else{
+		
+		redirectToCheckout(checkoutLinkURlId);
+	}
+}
+
+
+function checkPincodeServiceability(buttonType,el)
+{
+
 	/*spinner commented starts*/
 	//$("#pinCodeDispalyDiv").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right:0;bottom:0; left:0; top:0; margin:auto; height: 30px;">');
 	/*spinner commented ends*/
@@ -5364,7 +5365,6 @@ function checkPincodeServiceability(buttonType,el)
 		return false;
 	}
 	else if(regPostcode.test(selectedPincode) != true){
-		
     	$("#defaultPinCodeIds").css("color","red");
         $("#error-Id").show();
         $("#error-IdBtm").show();//UF-68
@@ -5417,7 +5417,6 @@ function checkPincodeServiceability(buttonType,el)
 	//else if($("#pinCodeButtonIds").text() == 'Change Pincode'&& $(el).attr("id") =="pinCodeButtonIds"){
 	else if(document.getElementById("pinCodeButtonIds").className == 'ChangePincode' && $(el).attr("id") =="pinCodeButtonIds")//UF-71
 	{		
-
 		$("#unserviceablepincode").hide();
 		$("#unserviceablepincodeBtm").hide();//UF-68
 		$("#unserviceablepincode_tooltip").hide();
@@ -5447,7 +5446,7 @@ function checkPincodeServiceability(buttonType,el)
 		// TPR-1055 ends
 	}
 	else if(document.getElementById("pinCodeButtonIdsBtm").className == 'ChangePincode' && $(el).attr("id") =="pinCodeButtonIdsBtm")//UF-71
-	{		
+	{	
 		$("#unserviceablepincode").hide();
 		$("#unserviceablepincodeBtm").hide();//UF-68
 		$("#unserviceablepincode_tooltip").hide();
@@ -6114,6 +6113,7 @@ function checkIsServicable()
  				//$("#pinCodeButtonIds").text("Change Pincode");
  				document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
  				document.getElementById("pinCodeButtonIdsBtm").className = "ChangePincode";//UF-71
+ 				pincodeServicabilityFailure(selectedPincode);
 	 			}
 	 			else{
 	 				$(".deliveryUlClass").remove();//TPR-1341
@@ -6128,6 +6128,7 @@ function checkIsServicable()
 	 				//$("#pinCodeButtonIds").text("Change Pincode");
 	 				document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
 	 				document.getElementById("pinCodeButtonIdsBtm").className = "ChangePincode";//UF-71
+	 				pincodeServicabilitySuccess(selectedPincode);
 	 			}
 	 			// TPR-1055 ends
 	 			populatePincodeDeliveryMode(response,'pageOnLoad');
@@ -6151,6 +6152,13 @@ function checkIsServicable()
 	 			$('#defaultPinCodeIdsq').val(selectedPincode);
  	 			$("#defaultPinDiv").show();
  	 			// $("#changePinDiv").hide();
+ 	 			if(typeof utag !="undefined")
+ 	 			{
+ 	 				//TPR-4736 | DataLAyerSchema changes | cart
+ 	 				utag.link({
+ 	 					"error_type" : "pincode_check_error",
+ 	 				});
+ 	 			}
 	 		}
 
 	 	});

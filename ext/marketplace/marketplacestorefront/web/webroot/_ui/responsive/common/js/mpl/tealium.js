@@ -1197,5 +1197,34 @@ $(window).load(function() {
 		});
 	}
 });
+
+/*TPR-4736|checkout|cart start*/
+function pincodeServicabilityFailure(selectedPincode){
+	if(typeof utag !="undefined")
+		{
+			//TPR-4736 | DataLAyerSchema changes | cart
+			utag.link({
+				"link_obj": this,
+				"link_text": "cart_pincode_check_failure", 
+				"event_type" : "cart_pincode_check_failure",
+				"cart_pin_non_servicable" : selectedPincode
+			});
+		}
+	
+}
+
+function pincodeServicabilitySuccess(selectedPincode){
+	if(typeof utag !="undefined")
+	{
+		//TPR-4736 | DataLAyerSchema changes | cart
+		utag.link({
+			"link_obj": this,
+			"link_text": "cart_pincode_check_success", 
+			"event_type" : "cart_pincode_check_success",
+			"cart_pin_servicable" : selectedPincode
+		});
+	}
+}
+/*TPR-4736|checkout|cart ends*/
 /* Data Layer Schema Changes Ends*/
 
