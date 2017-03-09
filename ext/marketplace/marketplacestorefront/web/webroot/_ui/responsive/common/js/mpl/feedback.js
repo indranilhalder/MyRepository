@@ -2942,6 +2942,7 @@ $(document).ready(function(){
     
     /*UF-68 UF-69*/
     $(".page-cartPage .cart-total-block ul.checkOutBtnBtm > li.checkout-button").css("visibility","visible");
+    $("#pinCodeButtonIdsBtm").addClass("CheckAvailability");
     /*UF-68 UF-69*/
 });
 
@@ -2974,4 +2975,9 @@ function topMarginAdjust(){
 $(document).on("click","button[name='pinCodeButtonId']",function(){
 	$("input[name='defaultPinCodeIds']").css("color","#000");
 }); 
+
+$(document).ajaxComplete(function(){
+	$("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").addClass("CheckAvailability");
+});
+
 /* UF-68 UF-69 */
