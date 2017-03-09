@@ -342,6 +342,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	private Double fetchTotalPrice(final OrderModel orderModel)
 	{
 		Double totalPrice = Double.valueOf(0);
+		double scheduleDeliveryCharge=0.0D;
 		//final OrderData orderData = getOrderConverter().convert(orderModel);
 		final Double subtotal = orderModel.getSubtotal();
 
@@ -349,8 +350,16 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 
 		final Double discount = getTotalDiscount(orderModel.getEntries());
-
-		totalPrice = Double.valueOf(subtotal.doubleValue() - discount.doubleValue());
+		
+		//Start  Add schedule delivery charges for COD order TISRLUAT-1097
+		for(AbstractOrderEntryModel entry :orderModel.getEntries()){
+			if(entry.getScheduledDeliveryCharge()!=null && entry.getScheduledDeliveryCharge().doubleValue()>0 ){
+				scheduleDeliveryCharge+=entry.getScheduledDeliveryCharge().doubleValue();
+			}
+		}
+		//End  Add schedule delivery charges for COD order TISRLUAT-1097
+		
+		totalPrice = Double.valueOf(subtotal.doubleValue() + scheduleDeliveryCharge  - discount.doubleValue());
 		return totalPrice;
 	}
 
