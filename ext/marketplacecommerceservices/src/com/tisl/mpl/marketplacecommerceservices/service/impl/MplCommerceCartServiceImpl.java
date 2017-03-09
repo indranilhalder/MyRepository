@@ -165,9 +165,6 @@ import com.tisl.mpl.wsdto.PinCodeDeliveryModeResponse;
 import com.tisl.mpl.wsdto.ReservationItemWsDTO;
 import com.tisl.mpl.wsdto.ReservationListWsDTO;
 import com.tisl.mpl.wsdto.ServiceableSlavesDTO;
-import com.tisl.mpl.wsdto.StoreLocatorAtsResponse;
-import com.tisl.mpl.wsdto.StoreLocatorAtsResponseObject;
-import com.tisl.mpl.wsdto.StoreLocatorResponseItem;
 
 
 

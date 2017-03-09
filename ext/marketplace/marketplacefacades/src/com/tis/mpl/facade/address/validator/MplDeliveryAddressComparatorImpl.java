@@ -9,8 +9,6 @@ import de.hybris.platform.core.model.user.AddressModel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.sun.jndi.url.rmi.rmiURLContext;
-
 
 
 /**
