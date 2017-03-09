@@ -119,8 +119,8 @@
 																
 																<address>
 																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
-																	${fn:escapeXml(address.line1)},
-																	&nbsp;<br>
+						<!-- TISUATSE-63 -->						${fn:escapeXml(address.line1)},
+																	<br>
 																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
 																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
 																	 91&nbsp;${fn:escapeXml(address.phone)} <br>
@@ -131,8 +131,8 @@
 																
 																<address>
 																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
-																	${fn:escapeXml(address.line1)},&nbsp;${fn:escapeXml(address.line2)},
-																	&nbsp;<br>
+						<!-- TISUATSE-63 -->					    ${fn:escapeXml(address.line1)}${fn:escapeXml(address.line2)},
+																	<br>
 																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
 																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
 																	 91&nbsp;${fn:escapeXml(address.phone)} <br>
@@ -143,8 +143,8 @@
 																
 																<address>
 																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
-																	${fn:escapeXml(address.line1)},&nbsp;
-																	${fn:escapeXml(address.line3)},&nbsp;<br>
+									<!-- TISUATSE-63 -->			${fn:escapeXml(address.line1)}
+																	${fn:escapeXml(address.line3)},<br>
 																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
 																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
 																	 91&nbsp;${fn:escapeXml(address.phone)} <br>
@@ -154,8 +154,8 @@
                                                                <c:if test="${not empty myline2  && not empty myline3}">
 																<address>
 																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
-																	${fn:escapeXml(address.line1)},&nbsp;${fn:escapeXml(address.line2)},
-																	${fn:escapeXml(address.line3)},&nbsp;<br>
+									<!-- TISUATSE-63 -->			${fn:escapeXml(address.line1)}${fn:escapeXml(address.line2)}
+																	${fn:escapeXml(address.line3)},<br>
 																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
 																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
 																	 91&nbsp;${fn:escapeXml(address.phone)} <br>
