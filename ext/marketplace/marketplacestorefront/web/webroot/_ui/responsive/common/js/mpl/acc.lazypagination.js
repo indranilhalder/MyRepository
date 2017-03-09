@@ -107,6 +107,7 @@ function getProductSetData() {
                     }
                     window.history.replaceState({}, "", nextPaginatedAjaxUrl);
             	}
+				ajaxPLPLoad(ajaxUrl);
             }
         } else { // if no url with page no occourance found.
             if (pageNoPagination <= totalNoOfPages) {
@@ -120,8 +121,9 @@ function getProductSetData() {
                 window.history.replaceState({}, "", nextPaginatedAjaxUrl);
                 directPaginatedLoad =false;
             }
+			ajaxPLPLoad(ajaxUrl);
         }
-        ajaxPLPLoad(ajaxUrl);
+        //ajaxPLPLoad(ajaxUrl);
     }
 }
 
@@ -318,16 +320,21 @@ function sort(this_data,drop_down){
 	case 'relevance':
 		if(pageType == 'productsearch'){
 			url = 'q='+$('#js-site-search-input').val()+':relevance:isLuxuryProduct:false';
+		}else if(facetAjaxUrl!= ''){
+			url = facetAjaxUrl+'&sort=relevance';
 		}else{
-			url = 'sort=relevance';
+			'sort=relevance';
 		}
-		if(facetAjaxUrl){
+		if(facetAjaxUrl && pageType == 'productsearch'){
 			var extractedFacetQuery = findGetParameterUrl('q',facetAjaxUrl);
 			var removedQParam = removeURLParameter(facetAjaxUrl,'q');
-			var finalUrl = removedQParam+'&'+url+':'+extractedFacetQuery
+			var finalUrl = removedQParam+'&'+url+':'+extractedFacetQuery;
 			console.log(finalUrl);
 			ajaxPLPLoad(finalUrl);
 			sortReplaceState(finalUrl); 
+		}else if(facetAjaxUrl){
+			ajaxPLPLoad(url);
+			sortReplaceState(url); 
 		}else{
 			ajaxPLPLoad(pathName +'?'+url);
 			sortReplaceState(pathName +'?'+url); 
@@ -337,16 +344,21 @@ function sort(this_data,drop_down){
 	case 'new':
 		if(pageType == 'productsearch'){
 			url = 'q='+$('#js-site-search-input').val()+':isProductNew:isLuxuryProduct:false';
+		}else if(facetAjaxUrl!= ''){
+			url = facetAjaxUrl+'&sort=isProductNew';
 		}else{
 			url = 'sort=isProductNew';
 		}
-		if(facetAjaxUrl){
+		if(facetAjaxUrl && pageType == 'productsearch'){
 			var extractedFacetQuery = findGetParameterUrl('q',facetAjaxUrl);
 			var removedQParam = removeURLParameter(facetAjaxUrl,'q');
 			var finalUrl = removedQParam+'&'+url+':'+extractedFacetQuery
 			console.log(finalUrl);
 			ajaxPLPLoad(finalUrl);
 			sortReplaceState(finalUrl); 
+		}else if(facetAjaxUrl){
+			ajaxPLPLoad(url);
+			sortReplaceState(url); 
 		}else{
 			ajaxPLPLoad(pathName +'?'+url);
 			sortReplaceState(pathName +'?'+url); 
@@ -356,16 +368,21 @@ function sort(this_data,drop_down){
 	case 'discount':
 		if(pageType == 'productsearch'){
 			url = 'q='+$('#js-site-search-input').val()+':isDiscountedPrice:isLuxuryProduct:false';
+		}else if(facetAjaxUrl!= ''){
+			url = facetAjaxUrl+'&sort=isDiscountedPrice';
 		}else{
 			url = 'sort=isDiscountedPrice';
 		}
-		if(facetAjaxUrl){
+		if(facetAjaxUrl && pageType == 'productsearch'){
 			var extractedFacetQuery = findGetParameterUrl('q',facetAjaxUrl);
 			var removedQParam = removeURLParameter(facetAjaxUrl,'q');
 			var finalUrl = removedQParam+'&'+url+':'+extractedFacetQuery
 			console.log(finalUrl);
 			ajaxPLPLoad(finalUrl);
 			sortReplaceState(finalUrl); 
+		}else if(facetAjaxUrl){
+			ajaxPLPLoad(url);
+			sortReplaceState(url); 
 		}else{
 			ajaxPLPLoad(pathName +'?'+url);
 			sortReplaceState(pathName +'?'+url); 
@@ -375,16 +392,21 @@ function sort(this_data,drop_down){
 	case 'low':
 		if(pageType == 'productsearch'){
 			url = 'q='+$('#js-site-search-input').val()+':price-asc:isLuxuryProduct:false';
+		}else if(facetAjaxUrl!= ''){
+			url = facetAjaxUrl+'&sort=price-asc';
 		}else{
 			url = 'sort=price-asc';
 		}
-		if(facetAjaxUrl){
+		if(facetAjaxUrl && pageType == 'productsearch'){
 			var extractedFacetQuery = findGetParameterUrl('q',facetAjaxUrl);
 			var removedQParam = removeURLParameter(facetAjaxUrl,'q');
 			var finalUrl = removedQParam+'&'+url+':'+extractedFacetQuery
 			console.log(finalUrl);
 			ajaxPLPLoad(finalUrl);
 			sortReplaceState(finalUrl);
+		}else if(facetAjaxUrl){
+			ajaxPLPLoad(url);
+			sortReplaceState(url); 
 		}else{
 			ajaxPLPLoad(pathName +'?'+url);
 			sortReplaceState(pathName +'?'+url); 
@@ -394,16 +416,21 @@ function sort(this_data,drop_down){
 	case 'high':
 		if(pageType == 'productsearch'){
 			url = 'q='+$('#js-site-search-input').val()+':price-desc:isLuxuryProduct:false';
+		}else if(facetAjaxUrl!=''){
+			url = facetAjaxUrl+'&sort=price-desc';
 		}else{
 			url = 'sort=price-desc';
 		}
-		if(facetAjaxUrl){
+		if(facetAjaxUrl && pageType == 'productsearch'){
 			var extractedFacetQuery = findGetParameterUrl('q',facetAjaxUrl);
 			var removedQParam = removeURLParameter(facetAjaxUrl,'q');
 			var finalUrl = removedQParam+'&'+url+':'+extractedFacetQuery
 			console.log(finalUrl);
 			ajaxPLPLoad(finalUrl);
 			sortReplaceState(finalUrl); 
+		}else if(facetAjaxUrl){
+			ajaxPLPLoad(url);
+			sortReplaceState(url);
 		}else{
 			ajaxPLPLoad(pathName +'?'+url);
 			sortReplaceState(pathName +'?'+url);
