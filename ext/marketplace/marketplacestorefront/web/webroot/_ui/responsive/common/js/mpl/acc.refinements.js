@@ -1006,6 +1006,13 @@ function isCustomSku(requiredUrl){
 function lazyPaginationFacet(response){
 	res = response;
 	var ulProduct = $(response).find('ul.product-listing.product-grid,ul.product-list');
+	//Add to bag and quick view ui fixes starts here
+	$(".product-tile .image .item.quickview").each(function(){
+    	if($(this).find(".addtocart-component").length == 1){
+    		$(this).addClass("quick-bag-both");
+    	}
+    });
+	//Add to bag and quick view ui fixes ends here
 	productItemArray = [];
     $(ulProduct).find('li.product-item').each(function() {
         productItemArray.push($(this));
