@@ -131,6 +131,7 @@ public class MarketplaceRefundConfirmationWidgetRenderer extends
 		return container;
 	}
 	
+	/*  R2.3 START  */
 	protected void handleRefundConfirmedEvent(
 			ListboxWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
 			Event event) throws Exception {
@@ -138,7 +139,7 @@ public class MarketplaceRefundConfirmationWidgetRenderer extends
 		Session session = Executions.getCurrent().getDesktop().getSession();
 		String returnType = (String) session.getAttribute("typeofReturn");
 		TypedObject returnRequest  = null;
-		
+		// for quick Drop No need to create refundEntry Model , refundEntryModel will be created when customer given the product at store
 		if (null != returnType && !returnType.equalsIgnoreCase(TypeofReturn.QUICK_DROP.getCode())) {
 			 returnRequest = ((ReturnsController) widget
 					.getWidgetController()).createRefundRequest();
@@ -167,9 +168,12 @@ public class MarketplaceRefundConfirmationWidgetRenderer extends
 			Messagebox.show("Return Initiated Successfully");
 			getPopupWidgetHelper().getCurrentPopup().getParent().getChildren().clear();
 			getPopupWidgetHelper().dismissCurrentPopup();
+			((ReturnsController) widget.getWidgetController()).dispatchEvent(
+					null, widget, null);
 		}
 
 	}
+	/*  R2.3 START  */
 
 	protected HtmlBasedComponent createContentInternalNew(ListboxWidget widget,
 			HtmlBasedComponent rootContainer) {
