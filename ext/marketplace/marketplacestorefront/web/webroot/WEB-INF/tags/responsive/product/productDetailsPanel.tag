@@ -114,10 +114,10 @@ tr.d0 td {
 				<%-- <input id="emiCuttOffAmount" type="hidden" value="${emiCuttOffAmount}"/>
 				<!-- EMI section -->
 				<product:emiDetail product="${product}" /> --%>
-			
+			<span id="productPromotionSection"><!-- UF-60 wrapping product:productPromotionSection in a span -->
 			<!-- promotion  section -->
 			<product:productPromotionSection product="${product}" />
-
+			</span>
 		</div>
 		<!-- Added for carousel in mobile view -->
 		<div class="product-image-container device">
@@ -437,6 +437,8 @@ tr.d0 td {
 
 <%-- Start Gigya Rating & Reviews --%>
 	<c:if test="${isGigyaEnabled=='Y'}">
+<!-- Below line added for UF-60 -->
+	<input type="hidden" value="${isGigyaEnabled}" name="isGigyaEnabled" id="isGigyaEnabled"/>
 	<product:reviewComments/>
 	</c:if>
 	 

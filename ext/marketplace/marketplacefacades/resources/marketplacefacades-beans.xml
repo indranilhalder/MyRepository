@@ -992,4 +992,14 @@
 		<property name="media" type="de.hybris.platform.commercefacades.product.data.ImageData"></property>
 		<property name="urlLink" type="String"></property>	
 	</bean>
+	
+	<bean class="com.tisl.mpl.facades.data.MplAjaxProductData" extends="de.hybris.platform.commercefacades.product.data.ProductData">
+		<property name="productSize" type="String"></property>
+		<property name="pdpSellerIDs" type="java.util.List&lt;String>"></property>
+		<property name="validTabs" type="String"></property>
+		<property name="mapConfigurableAttributes" type="java.util.Map&lt;String,Map>"></property>
+		<property name="mapConfigurableAttribute" type="java.util.Map&lt;String,String>"></property>
+		<property name="Warranty" type="java.util.List&lt;String>"></property>
+		<property name="error" type="String"></property>
+	</bean>
 </beans>

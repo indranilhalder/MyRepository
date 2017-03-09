@@ -340,5 +340,44 @@ function registerUserGigya(eventObject)
     		}
  	}
     
-    
+    	function getPdpRatingOnSizeSelect(key,productCode,category)//UF-60
+    	{
+    		//As acc.productDetails.js already has a getRating method hence wrapping getRating of acc.gigya.js in getPdpRatingOnSizeSelect so that it can be reused
+    		getRating(key,productCode,category);
+
+    	}
+    	function lazyLoadGigyaCommentsUi(){//UF-60
     		
+    		if ($(window).scrollTop() + $(window).height() >= ($('#ReviewSecion').offset().top)) {
+    	        if($('#ReviewSecion .commentcontent').attr('loaded')!="true") {
+    	            //not in ajax.success due to multiple sroll events
+    	            $('#ReviewSecion .commentcontent').attr('loaded', true);
+
+    	            //ajax goes here
+    	            //by theory, this code still may be called several times
+    	            if ($('#ReviewSecion ul#commentsDiv').children().length == 0) {
+    	            	var params = {
+    	    	    			categoryID : $('input[name=gigya_product_root_category]').val(),
+    	    	    			streamID : $('input[name=gigya_product_code]').val(),
+    	    	    			scope : 'both',
+    	    	    			privacy : 'public',
+    	    	    			version : 2,
+    	    	    			containerID : 'commentsDiv',
+    	    	    			onCommentSubmitted:reviewCount, 
+    	    	    			cid : '',
+    	    	    			enabledShareProviders : 'facebook,twitter',
+    	    	    			enabledProviders : 'facebook,google,twitter', // login
+    	    																	// providers
+    	    																	// that should
+    	    																	// be displayed
+    	    																	// when click
+    	    																	// post
+    	    	    			onLoad :commentBox,
+    	    	    			onError: onErrorHandler
+    	    	    			// userAction: shareUserAction
+    	    	    		}
+	    	    	    gigya.comments.showCommentsUI(params);
+    	            }
+    	        }
+    		}
+    	}

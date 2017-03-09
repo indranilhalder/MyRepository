@@ -693,6 +693,12 @@ function donotShowAll()
 					$("#add_to_wishlist").attr("disabled",true);
 					$('.add_to_cart_form .out_of_stock #add_to_wishlist').addClass("wishDisabled");
 				}
+				else if(data == false) //UF-60
+				{
+					$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').removeClass("added");
+					$("#add_to_wishlist").attr("disabled",false);
+					$('.add_to_cart_form .out_of_stock #add_to_wishlist').removeClass("wishDisabled");
+				}
 				
 				},
 				error : function(xhr, status, error) {		
