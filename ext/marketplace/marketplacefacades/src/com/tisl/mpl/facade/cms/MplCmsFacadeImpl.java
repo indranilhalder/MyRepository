@@ -3216,8 +3216,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	{
 		final FooterComponentData fData = new FooterComponentData();
 		FooterComponentModel footer = null;
-		final FooterComponentData footerData = null;
-		final ContentSlotModel footerSlot = contentSlotService.getContentSlotForId(slotId);
+     	final ContentSlotModel footerSlot = contentSlotService.getContentSlotForId(slotId);
 		final NeedHelpComponentModel needHelpFooter = null;
 
 		if (null != footerSlot && CollectionUtils.isNotEmpty(footerSlot.getCmsComponents()))

@@ -13,6 +13,7 @@ import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 
+import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
 
 
@@ -24,7 +25,7 @@ import org.springframework.util.Assert;
 public class AdressDtoToModelPopulator implements Populator<AddressData,AddressModel>
 {
 	private CommonI18NService commonI18NService;
-
+	private static final Logger LOG = Logger.getLogger(AdressDtoToModelPopulator.class);
 	@Override
 	public void populate(AddressData addressData,AddressModel addressModel)
 			throws ConversionException
@@ -47,6 +48,7 @@ public class AdressDtoToModelPopulator implements Populator<AddressData,AddressM
 		addressModel.setCity(addressData.getCity());
 		addressModel.setBillingAddress(Boolean.valueOf(addressData.isBillingAddress()));
 		addressModel.setShippingAddress(Boolean.valueOf(addressData.isShippingAddress()));
+		addressModel.setPublicKey(addressData.getId());
 		if (addressData.getCountry() != null)
 		{
 			final String isocode = addressData.getCountry().getIsocode();
@@ -57,11 +59,11 @@ public class AdressDtoToModelPopulator implements Populator<AddressData,AddressM
 			}
 			catch (final UnknownIdentifierException e)
 			{
-				throw new ConversionException("No country with the code " + isocode + " found.", e);
+				LOG.error("No country with the code " + isocode + " found."+e.getMessage());
 			}
 			catch (final AmbiguousIdentifierException e)
 			{
-				throw new ConversionException("More than one country with the code " + isocode + " found.", e);
+				LOG.error("More than one country with the code " + isocode + " found."+e.getMessage());
 			}
 		}
 
@@ -77,11 +79,11 @@ public class AdressDtoToModelPopulator implements Populator<AddressData,AddressM
 			}
 			catch (final UnknownIdentifierException e)
 			{
-				throw new ConversionException("No region with the code " + isocode + " found.", e);
+				LOG.error("No region with the code " + isocode + " found."+e.getMessage());
 			}
 			catch (final AmbiguousIdentifierException e)
 			{
-				throw new ConversionException("More than one region with the code " + isocode + " found.", e);
+				LOG.error("More than one region with the code " + isocode + " found."+e.getMessage());
 			}
 		}
 	}

@@ -319,7 +319,7 @@ public class TrackOrderPageController extends AbstractPageController
 		}
 		catch (final IllegalArgumentException e)
 		{
-			LOG.error(" IllegalArgumentException "+e.getMessage() +"In Tracking the Order =="+orderCode);
+			LOG.error("Exception::::TrackOrderPageController "+e.getMessage());
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);

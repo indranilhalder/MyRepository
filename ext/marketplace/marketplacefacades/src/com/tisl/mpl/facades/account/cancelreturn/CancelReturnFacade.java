@@ -136,7 +136,7 @@ public interface CancelReturnFacade
 	 * @param updateTicketData
 	 * @return CRMTicketUpdateResponseData
 	 */
-	public CRMTicketUpdateResponseData UpdateCRMTicket(final CRMTicketUpdateData updateTicketData);
+	public CRMTicketUpdateResponseData updateCRMTicket(final CRMTicketUpdateData updateTicketData);
 
 
 

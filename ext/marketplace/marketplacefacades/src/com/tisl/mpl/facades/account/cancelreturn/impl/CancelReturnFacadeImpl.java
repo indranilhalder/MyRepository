@@ -1349,7 +1349,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					}
 					sendTicketRequestData.setTimeSlotFrom(String.valueOf(format4.format(format3.parse(timeSlotFrom))));
 				}catch(Exception e) {
-					LOG.error("Exception occurred while setting ReturnPickupDate Time Slot From");
+					LOG.error("Exception ReturnPickupDate Time Slot From"+e.getMessage());
 				}
 			}
 			
@@ -1371,7 +1371,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					}
 					sendTicketRequestData.setTimeSlotTo(String.valueOf(format4.format(format3.parse(timeSlotTo))));
 				}catch(Exception e) {
-					LOG.error("Exception occurred while setting ReturnPickupDate");
+					LOG.error("Exception ReturnPickupDate"+e.getMessage());
 				}
 			}
 			/*TISRLEE-3290 end*/
@@ -2513,7 +2513,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			ticketUpdateData.setRssAWBNumber(returnInfoRequestData.getAWBNum());
 			ticketUpdateData.setRssCharge(returnInfoRequestData.getShipmentCharge());
 			ticketUpdateData.setRssDispathProofURL(returnInfoRequestData.getShipmentProofURL());
-			UpdateCRMTicket(ticketUpdateData);
+			updateCRMTicket(ticketUpdateData);
 			}
 		}
 		
@@ -2669,7 +2669,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
     * 
     */
 	@Override
-	public CRMTicketUpdateResponseData UpdateCRMTicket(CRMTicketUpdateData updateTicketData)
+	public CRMTicketUpdateResponseData updateCRMTicket(CRMTicketUpdateData updateTicketData)
 	{
 		
 		TicketUpdateRequestXML requestXml=new TicketUpdateRequestXML();

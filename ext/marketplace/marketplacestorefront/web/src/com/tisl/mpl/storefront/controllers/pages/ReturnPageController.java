@@ -556,15 +556,9 @@ public class ReturnPageController extends AbstractMplSearchPageController
 					}
 					
 				}
-				catch (EtailNonBusinessExceptions e)
-				{
-					LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
-							+ " Exception cause :" + e);
-				}
 				catch (Exception e)
 				{
-					LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
-							+ " Exception cause :" + e);
+					LOG.error("Exception Occured during saving Customer BankDetails for COD order" + orderCode + e.getMessage());
 				}
 				
 				

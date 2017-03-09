@@ -96,7 +96,8 @@ public class PincodeDaoImpl implements PincodeDao
 	@Override
 	public PincodeModel getLatAndLongForPincode(final String pincode)
 	{
-		PincodeModel pincodeModel = null;
+/*		PincodeModel pincodeModel = null;
+*/	//Sonar Issue 
 		try
 		{
 			final StringBuilder query = new StringBuilder(50);

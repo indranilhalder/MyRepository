@@ -820,7 +820,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 		CartModel cart = null;
 		CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
-		final String delistMessage = MarketplacewebservicesConstants.EMPTY;
+	/*	final String delistMessage = MarketplacewebservicesConstants.EMPTY;*/
 		try
 		{
 			if (userFacade.isAnonymousUser())

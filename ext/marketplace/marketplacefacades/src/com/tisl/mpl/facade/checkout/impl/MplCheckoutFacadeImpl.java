@@ -1491,11 +1491,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			LOG.error("Error while searching for order :" + orderNumber);
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
-		catch (final UnknownIdentifierException ex)
-		{
-			LOG.error("Error while searching for order :" + orderNumber);
-			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
-		}
 		catch (final Exception ex)
 		{
 			LOG.error("Error while searching for order :" + orderNumber);
