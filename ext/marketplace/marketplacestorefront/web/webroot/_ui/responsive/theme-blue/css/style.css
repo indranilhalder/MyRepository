@@ -11701,6 +11701,10 @@ button.otherSellersFont {
 .FashionJewellery .wish-share>li .share{
     cursor: pointer
 }
+.FineJewellery .wish-share.desktop>li .share, 
+.FashionJewellery .wish-share.desktop>li .share{
+	float: right;
+}
 .quickview .product-info .product-content .wish-share>li .share span {
     text-transform: uppercase;
     font-size: 11px;
@@ -32380,6 +32384,10 @@ img.r2-app-brand-img {
 	    padding: 0 0 20px 0;
 		width: 33.33%;
 	}
+	.product-info .product-content.FineJewellery .wish-share.desktop,
+	.product-info .product-content.FashionJewellery .wish-share.desktop {
+		display: none;
+	}
 }
 /*App landing page css ends*/
 .totalPayable{
@@ -47839,6 +47847,8 @@ float: right;
 	.product-info.wrapper .product-image-container.FashionJewellery{
 		width: 100%;
 	}
+	
+	
 }
 
 .searchString{
@@ -60435,6 +60445,11 @@ body.page-productGrid .listing-leftmenu .checkbox-menu>a,body.page-productGrid .
 	}
 	.return-refnd-dtls, .tabs_warranty{
 		width: 100%;
+	}
+	.product-info .product-content.FineJewellery .wish-share.desktop,
+	.product-info .product-content.FashionJewellery .wish-share.desktop {
+		padding: 0;
+
 	}
 }
 

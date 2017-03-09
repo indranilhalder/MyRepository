@@ -375,6 +375,9 @@ tr.d0 td {
 					<cms:component component="${component}" />
 				</cms:pageSlot>
             </div>
+            
+            
+            
             <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION STARTS HERE-->
             <c:if test="${product.rootCategory =='FineJewellery'}">
             <div class="certified-by"> 
@@ -387,8 +390,9 @@ tr.d0 td {
             </div>
             </c:if>
             <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION ENDS HERE-->
+            
             <!-- BLOCK MODIFIED FOR JEWELLERY CERTIFICATION STARTS HERE-->
-            <c:if test="${product.rootCategory !='FineJewellery' && product.rootCategory !='FashionJewellery'}">
+            
 	          	<ul class="wish-share desktop">
 	
 					<%-- <li><!-- <span id="addedMessage" style="display:none"></span> -->
@@ -399,7 +403,7 @@ tr.d0 td {
 						
 					</li>
 				</ul>
-			</c:if>
+			
 			<%-- <c:if test="${product.rootCategory !='FashionJewellery'  }">
 	          	<ul class="wish-share desktop">
 	
