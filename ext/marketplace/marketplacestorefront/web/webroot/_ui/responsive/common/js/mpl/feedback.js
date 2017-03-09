@@ -572,10 +572,10 @@ $(document).ready(function(){
 	/*----END of  SHop by brand A_E hover functionality  -----*/
 			 
 	/*---Start of Checkout Payment tab switching  ----*/
-			 var paymentModes =  $("#viewPaymentCredit, #viewPaymentDebit, #viewPaymentNetbanking, #viewPaymentCOD, #viewPaymentEMI");
+			 var paymentModes =  $("#viewPaymentCredit, #viewPaymentDebit, #viewPaymentNetbanking, #viewPaymentCOD, #viewPaymentEMI,#viewPaymentCreditMobile, #viewPaymentDebitMobile, #viewPaymentNetbankingMobile, #viewPaymentCODMobile, #viewPaymentEMIMobile");
 			 $(window).on('load resize',function(){	
 			 paymentModes.on("click",function(e) {
-				// $('.cart.wrapper .left-block .payments.tab-view ul.tabs').show(200);
+				 $('.cart.wrapper .left-block .payments.tab-view ul.tabs').show(200);
 				/*if($(window).width()<651){
 				 $('.cart.wrapper .left-block .payments.tab-view ul.tabs').show(200);
 				 $(this).parents('ul.nav').addClass('hide-menu');
@@ -584,7 +584,7 @@ $(document).ready(function(){
 				 if(paymentModes.parent().hasClass("active")){
 					 paymentModes.parent().removeClass("active");
 				 }
-				// $(this).parent().addClass("active"); 
+				 $(this).parent().addClass("active"); 
 				 $('ul.accepted-cards li').removeClass('active-card');
 			 });
 			
@@ -2984,3 +2984,20 @@ $(document).ajaxComplete(function(){
 });
 
 /* UF-68 UF-69 */
+
+
+if($("#sameAsShippingEmi").is(":checked")){
+	$("#sameAsShippingEmi").prev('h2').hide();
+}
+else{
+	$("#sameAsShippingEmi").prev('h2').show();
+}
+$("#sameAsShippingEmi").click(function(){
+	if($("#sameAsShippingEmi").is(":checked")){
+		//$("#billingAddress fieldset .error-message").html("");
+		$(this).prev('h2').hide();
+	}
+	else{
+		$(this).prev('h2').show();
+	}
+	});
