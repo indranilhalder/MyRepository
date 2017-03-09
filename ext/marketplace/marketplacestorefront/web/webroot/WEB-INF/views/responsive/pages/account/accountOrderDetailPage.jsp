@@ -322,20 +322,26 @@
 								</c:if>
 								<c:set var="subOrderLine2" value="${fn:trim(subOrder.deliveryAddress.line2)}"/>
 								<c:set var="subOrderLine3" value="${fn:trim(subOrder.deliveryAddress.line3)}"/>
+	<!-- TISUATSE-69 starts -->
 								<address>
 									${fn:escapeXml(subOrder.deliveryAddress.firstName)}&nbsp;
 									${fn:escapeXml(subOrder.deliveryAddress.lastName)}<br>
-									${fn:escapeXml(subOrder.deliveryAddress.line1)},&nbsp;
-									<c:if test="${not empty subOrderLine2}">
-									${fn:escapeXml(subOrder.deliveryAddress.line2)},
+									<c:if test="${empty subOrderLine2  && empty subOrderLine3}">
+									${fn:escapeXml(subOrder.deliveryAddress.line1)}
 									</c:if>
-									<c:if test="${not empty subOrderLine3}">
-												&nbsp;${fn:escapeXml(subOrder.deliveryAddress.line3)},
+									<c:if test="${not empty subOrderLine2  && empty subOrderLine3}">
+									${fn:escapeXml(subOrder.deliveryAddress.line1)}${fn:escapeXml(subOrder.deliveryAddress.line2)},
+									</c:if>
+									<c:if test="${ empty subOrderLine2  && not empty subOrderLine3}">
+												${fn:escapeXml(subOrder.deliveryAddress.line1)}${fn:escapeXml(subOrder.deliveryAddress.line3)},
 											</c:if>
+									<c:if test="${ not empty subOrderLine2  && not empty subOrderLine3}">
+												${fn:escapeXml(subOrder.deliveryAddress.line1)}${fn:escapeXml(subOrder.deliveryAddress.line2)}${fn:escapeXml(subOrder.deliveryAddress.line3)},
+		<!-- TISUATSE-69 ends -->	</c:if>	
 									<br> ${fn:escapeXml(subOrder.deliveryAddress.town)},&nbsp;
 									<c:if test="${not empty subOrder.deliveryAddress.state}">
 												${fn:escapeXml(subOrder.deliveryAddress.state)},&nbsp;
-											</c:if>
+									</c:if>
 									${fn:escapeXml(subOrder.deliveryAddress.postalCode)}&nbsp;${fn:escapeXml(subOrder.deliveryAddress.country.isocode)}
 									<br>
 									91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>

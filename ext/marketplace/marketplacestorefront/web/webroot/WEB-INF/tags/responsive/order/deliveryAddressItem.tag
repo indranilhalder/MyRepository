@@ -32,7 +32,7 @@
 	
 			${fn:escapeXml(order.deliveryAddress.title)}${fn:escapeXml(order.deliveryAddress.firstName)}&nbsp;${fn:escapeXml(order.deliveryAddress.lastName)}<br>
 			${fn:escapeXml(order.deliveryAddress.line1)},<br>
-		${fn:escapeXml(order.deliveryAddress.town)},&nbsp;${fn:escapeXml(order.deliveryAddress.region.name)}${fn:escapeXml(order.deliveryAddress.state)},&nbsp;
+			${fn:escapeXml(order.deliveryAddress.town)},&nbsp;${fn:escapeXml(order.deliveryAddress.region.name)}${fn:escapeXml(order.deliveryAddress.state)},&nbsp;
 			${fn:escapeXml(order.deliveryAddress.postalCode)}&nbsp;
 			${fn:escapeXml(order.deliveryAddress.country.isocode)}<br>
 			<spring:theme code="checkout.phone.no" text="91"/>	&nbsp;${fn:escapeXml(order.deliveryAddress.phone)}
@@ -46,8 +46,8 @@
 	<address>
 	
 			${fn:escapeXml(order.deliveryAddress.title)}${fn:escapeXml(order.deliveryAddress.firstName)}&nbsp;${fn:escapeXml(order.deliveryAddress.lastName)}<br>
-			${fn:escapeXml(order.deliveryAddress.line1)},&nbsp;${fn:escapeXml(order.deliveryAddress.line2)},<br>
-		${fn:escapeXml(order.deliveryAddress.town)},&nbsp;${fn:escapeXml(order.deliveryAddress.region.name)}${fn:escapeXml(order.deliveryAddress.state)},&nbsp;
+<!-- TISUATSE-69 -->${fn:escapeXml(order.deliveryAddress.line1)}${fn:escapeXml(order.deliveryAddress.line2)},<br>
+			${fn:escapeXml(order.deliveryAddress.town)},&nbsp;${fn:escapeXml(order.deliveryAddress.region.name)}${fn:escapeXml(order.deliveryAddress.state)},&nbsp;
 			${fn:escapeXml(order.deliveryAddress.postalCode)}&nbsp;
 			${fn:escapeXml(order.deliveryAddress.country.isocode)}<br>
 			<spring:theme code="checkout.phone.no" text="91"/>	&nbsp;${fn:escapeXml(order.deliveryAddress.phone)}
@@ -61,7 +61,7 @@
 	<address>
 	
 			${fn:escapeXml(order.deliveryAddress.title)}${fn:escapeXml(order.deliveryAddress.firstName)}&nbsp;${fn:escapeXml(order.deliveryAddress.lastName)}<br>
-			${fn:escapeXml(order.deliveryAddress.line1)},&nbsp;${fn:escapeXml(order.deliveryAddress.line3)},<br>
+<!-- TISUATSE-69 -->${fn:escapeXml(order.deliveryAddress.line1)}${fn:escapeXml(order.deliveryAddress.line3)},<br>
 		${fn:escapeXml(order.deliveryAddress.town)},&nbsp;${fn:escapeXml(order.deliveryAddress.region.name)}${fn:escapeXml(order.deliveryAddress.state)},&nbsp;
 			${fn:escapeXml(order.deliveryAddress.postalCode)}&nbsp;
 			${fn:escapeXml(order.deliveryAddress.country.isocode)}<br>
@@ -75,7 +75,7 @@
 	<address>
 	
 			${fn:escapeXml(order.deliveryAddress.title)}${fn:escapeXml(order.deliveryAddress.firstName)}&nbsp;${fn:escapeXml(order.deliveryAddress.lastName)}<br>
-			${fn:escapeXml(order.deliveryAddress.line1)},&nbsp;${fn:escapeXml(order.deliveryAddress.line2)},&nbsp;${fn:escapeXml(order.deliveryAddress.line3)},<br>
+<!-- TISUATSE-69 -->${fn:escapeXml(order.deliveryAddress.line1)}${fn:escapeXml(order.deliveryAddress.line2)}${fn:escapeXml(order.deliveryAddress.line3)},<br>
 		${fn:escapeXml(order.deliveryAddress.town)},&nbsp;${fn:escapeXml(order.deliveryAddress.region.name)}${fn:escapeXml(order.deliveryAddress.state)},&nbsp;
 			${fn:escapeXml(order.deliveryAddress.postalCode)}&nbsp;
 			${fn:escapeXml(order.deliveryAddress.country.isocode)}<br>
