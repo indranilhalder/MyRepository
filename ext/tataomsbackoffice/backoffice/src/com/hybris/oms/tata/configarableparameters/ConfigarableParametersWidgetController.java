@@ -509,7 +509,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 			final Date fromDate = new Date();
 			fromDate.setHours(fromTimeHours);
 			fromDate.setMinutes(fromTimeMins);
-			sdEditTimeBoxFrom.setFormat("short");
+			//sdEditTimeBoxFrom.setFormat("short");
 			sdEditTimeBoxFrom.setValue(fromDate);
 
 			final String toTime = mplTimeSlotsData.getToTime();
@@ -519,7 +519,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 			final Date toTimeDate = new Date();
 			toTimeDate.setHours(toTimeHours);
 			toTimeDate.setMinutes(toTimeMins);
-			sdEditTimeBoxTo.setFormat("short");
+			//sdEditTimeBoxTo.setFormat("short");
 			sdEditTimeBoxTo.setValue(toTimeDate);
 			sdEditpopup.setVisible(true);
 		}
@@ -551,7 +551,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 			final Date fromDate = new Date();
 			fromDate.setHours(fromTimeHours);
 			fromDate.setMinutes(fromTimeMins);
-			edEditTimeBoxFrom.setFormat("short");
+			//edEditTimeBoxFrom.setFormat("short");
 			edEditTimeBoxFrom.setValue(fromDate);
 
 			final String toTime = mplTimeSlotsData.getToTime();
@@ -561,7 +561,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 			final Date toTimeDate = new Date();
 			toTimeDate.setHours(toTimeHours);
 			toTimeDate.setMinutes(toTimeMins);
-			edEditTimeBoxTo.setFormat("short");
+			//edEditTimeBoxTo.setFormat("short");
 			edEditTimeBoxTo.setValue(toTimeDate);
 			edEditpopup.setVisible(true);
 		}
@@ -595,7 +595,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 			final Date fromDate = new Date();
 			fromDate.setHours(fromTimeHours);
 			fromDate.setMinutes(fromTimeMins);
-			rdEditTimeBoxFrom.setFormat("short");
+			//rdEditTimeBoxFrom.setFormat("short");
 			rdEditTimeBoxFrom.setValue(fromDate);
 
 			final String toTime = mplTimeSlotsData.getToTime();
@@ -605,7 +605,7 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 			final Date toTimeDate = new Date();
 			toTimeDate.setHours(toTimeHours);
 			toTimeDate.setMinutes(toTimeMins);
-			rdEditTimeBoxTo.setFormat("short");
+			//rdEditTimeBoxTo.setFormat("short");
 			rdEditTimeBoxTo.setValue(toTimeDate);
 			rdEditpopup.setVisible(true);
 		}
@@ -621,9 +621,9 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	public void sdTimeSlotsAdd() throws InterruptedException
 	{
 		LOG.info("Sd Time slots Add Operation");
-		sdTimeBoxFrom.setFormat("short");
+		//sdTimeBoxFrom.setFormat("short");
 		sdTimeBoxFrom.setValue(new Date());
-		sdTimeBoxTo.setFormat("short");
+		//sdTimeBoxTo.setFormat("short");
 		sdTimeBoxTo.setValue(new Date());
 		sdpopup.setVisible(true);
 	}
@@ -637,9 +637,9 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	public void edTimeSlotsAdd() throws InterruptedException
 	{
 		LOG.info("Ed Time slots Add Operation");
-		edTimeBoxFrom.setFormat("short");
+		//edTimeBoxFrom.setFormat("short");
 		edTimeBoxFrom.setValue(new Date());
-		edTimeBoxTo.setFormat("short");
+		//edTimeBoxTo.setFormat("short");
 		edTimeBoxTo.setValue(new Date());
 		edpopup.setVisible(true);
 	}
@@ -653,9 +653,9 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	public void rdTimeSlotsAdd() throws InterruptedException
 	{
 		LOG.info("Rd Time slots Add Operation");
-		rdTimeBoxFrom.setFormat("short");
+		//rdTimeBoxFrom.setFormat("short");
 		rdTimeBoxFrom.setValue(new Date());
-		rdTimeBoxTo.setFormat("short");
+		//rdTimeBoxTo.setFormat("short");
 		rdTimeBoxTo.setValue(new Date());
 		rdpopup.setVisible(true);
 	}
