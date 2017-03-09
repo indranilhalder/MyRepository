@@ -3338,22 +3338,42 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 							});
 							//On buybox success
 							xhrBuyBox.done(function(data){
-								//Populate tealium data part-2, If size is selected UF-60		
-								var spPrice = data['specialPrice'];
-								var mrpPrice = data['mrp'];
-								var mop = data['price'];
+								//START:Populate tealium data part-2, If size is selected UF-60		
+								var spPrice = typeof(data['specialPrice'])!='undefined'?data['specialPrice']:null;
+								var mrpPrice =typeof(data['mrp'])!='undefined'?data['mrp']:null;
+								var mop = typeof(data['price'])!='undefined'?data['price']:null;
 								if(mrpPrice!=null)
 								{
-									$('#product_unit_price').val(mrpPrice);
+									$('#product_unit_price').val(mrpPrice.doubleValue);
 								}
 								if (spPrice != null)
 								{
-									$('#product_list_price').val(spPrice);
+									$('#product_list_price').val(spPrice.doubleValue);
 								}
 								else if (null != mop)
 								{
-									$('#product_list_price').val(mop);
+									$('#product_list_price').val(mop.doubleValue);
 								}
+								if(typeof(data['availablestock'])!='undefined')
+								{
+									$('#product_stock_count').val(parseInt(data['availablestock']));
+								}
+								var savingPriceCal;
+								var savingPriceCalPer;
+								var savingsOnProduct;
+								if(null!=mrpPrice && null!=spPrice){
+									savingPriceCal=(mrpPrice.doubleValue-spPrice.doubleValue);
+									savingPriceCalPer=(savingPriceCal/mrpPrice.doubleValue)*100;
+									savingsOnProduct=Math.round((savingPriceCalPer*100)/100);
+								}
+								else if(null!=mrpPrice && null!=mop){
+									savingPriceCal=(mrpPrice.doubleValue-mop.doubleValue);
+									savingPriceCalPer=(savingPriceCal/mrpPrice.doubleValue)*100;
+									savingsOnProduct=Math.round((savingPriceCalPer*100)/100);
+								}
+								$('#product_discount').val(Math.round((savingPriceCal*100)/100));
+								$('#product_discount_percentage').val(savingsOnProduct);
+								//END:Populate tealium data part-2, If size is selected UF-60
 							});
 							//On buybox complete
 							xhrBuyBox.always(function(){
