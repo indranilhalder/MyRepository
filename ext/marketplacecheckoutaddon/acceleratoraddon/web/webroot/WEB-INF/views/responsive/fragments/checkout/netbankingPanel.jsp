@@ -39,6 +39,10 @@
 				onchange="deselectRadio()">
 				<option value="select"><spring:theme
 						code="checkout.multi.paymentMethod.addPaymentDetails.selectBank" /></option>
+						<c:forEach var="bank" items="${popularBankNames}" varStatus="status">
+						<option value="${bank.bankCode}" class="popular_bank_option">${bank.bankName}</option>
+						</c:forEach>
+						<optgroup label="---------------------" class="other_bank_label"></optgroup>
 				<c:forEach var="bankMap" items="${otherBankNames}">
 					<option value="${bankMap.value}">${bankMap.key}</option>
 				</c:forEach>

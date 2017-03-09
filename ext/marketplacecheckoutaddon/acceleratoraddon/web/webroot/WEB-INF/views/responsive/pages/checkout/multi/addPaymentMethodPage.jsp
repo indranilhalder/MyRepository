@@ -59,37 +59,47 @@
     					else
     					{
     						if($("#CreditCard").val()=="true")
-        					{
+        					{	
+    							if($(window).width()>=768){
         						displayCreditCardForm();
         						$("#viewPaymentCredit, #viewPaymentCreditMobile").parent("li").addClass("active");
+    							}
         						$(".checkout-paymentmethod").css("display","block");
         						//setTimeout(function(){$('#viewPaymentCredit').click();},1000);
         					}
         					else if($("#DebitCard").val()=="true")
         					{
+        						if($(window).width()>=768){
         						displayDebitCardForm();
         						$("#viewPaymentDebit, #viewPaymentDebitMobile").parent("li").addClass("active");
+        						}
         						$(".checkout-paymentmethod").css("display","block");
         						//setTimeout(function(){$('#viewPaymentDebit').click();},1000);
         					}
         					else if($("#EMI").val()=="true")
         					{
+        						if($(window).width()>=768){
         						displayEMIForm();
         						$("#viewPaymentEMI, #viewPaymentEMIMobile").parent("li").addClass("active");
+        						}
         						$(".checkout-paymentmethod").css("display","block");
         						//setTimeout(function(){$('#viewPaymentEMI').click();},1000);
         					}
         					else if($("#Netbanking").val()=="true")
         					{
+        						if($(window).width()>=768){
         						displayNetbankingForm();
         						$("#viewPaymentNetbanking, #viewPaymentNetbankingMobile").parent("li").addClass("active");
+        						}
         						$(".checkout-paymentmethod").css("display","block");
         						//setTimeout(function(){$('#viewPaymentNetbanking').click();},1000);
         					}
         					else if($("#COD").val()=="true")
         					{
+        						if($(window).width()>=768){
         						displayCODForm();
         						$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").addClass("active");
+        						}
         						$(".checkout-paymentmethod").css("display","block");
         						//setTimeout(function(){$('#viewPaymentCOD').click();},1000);
         					}	
@@ -280,7 +290,7 @@
 											<c:when test="${map.key eq 'Credit Card'}">
 												<input type="hidden" id="CreditCard" value="${map.value}" />
 	
-												<li class="active paymentModeMobile">
+												<li class="paymentModeMobile">
 
 
 													<span id="viewPaymentCreditMobile" >
@@ -353,7 +363,6 @@
 									                  			<input type="hidden" name="creditCardsBank" class="card_bank" value="${map.value.cardIssuer}" />
 									                  			<input type="hidden" name="creditCardsBrand" class="card_brand" value="${map.value.cardBrand}" />
 									                  			<input type="hidden" name="creditIsDomestic" class="card_is_domestic" value="${map.value.isDomestic}" />
-									                  			<br>
 									                  			<div id="ebsErrorSavedCard" class="card_ebsErrorSavedCard error-message">
 																	<spring:theme code="checkout.multi.paymentMethod.savedCard.ebsError"/>
 																</div>
@@ -668,7 +677,6 @@
 										                   			<input type="hidden" name="debitCardsBank" class="card_bank" value="${map.value.cardIssuer}" />
 										                   			<input type="hidden" name="debitCardsBrand" class="card_brand" value="${map.value.cardBrand}" />
 										                   			<input type="hidden" name="debitIsDomestic" class="card_is_domestic" value="${map.value.isDomestic}" />
-										                   		<br>
 										            			<div id="ebsErrorSavedCard" class="card_ebsErrorSavedCard error-message">
 																	<spring:theme code="checkout.multi.paymentMethod.savedCard.ebsError"/>
 																</div>

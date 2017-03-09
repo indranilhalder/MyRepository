@@ -61549,7 +61549,7 @@ margin: 0;
     float: left;
     color: #c1c1c1;
     padding: 0 12px !important;
-    background-image: none;
+    /* background-image: none; */
 }
 .cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block  .cvv label{
 	margin-left:32px;
@@ -61844,7 +61844,9 @@ margin-left:0;
 	background-size: 10px;
   	background-position: calc(100% - 12px) center;
 }
-#card .form-group select,.cart.wrapper .left-block .payments.tab-view .new-card fieldset .half select#countryEmi{
+#card .form-group select,.cart.wrapper .left-block .payments.tab-view .new-card fieldset .half select#countryEmi,
+.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp select.card_exp_month, 
+.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp select.card_exp_year{
 	background-size: 10px;
   	background-position: calc(100% - 12px) center;
   	border: 1px solid #ddd;
@@ -62013,7 +62015,11 @@ div#savedEMICard .credit-card-group .right-align-form {
     width: calc(100% - 50px);
 }
 .cart.wrapper.checkout-payment .card-sec .card-num .card_image img {
-    max-width: 42px;
+    width: 42px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
 }
 .cart.wrapper.checkout-payment .blocks .card-sec .radio label span{
     font-size: 14px !important;
@@ -62053,8 +62059,10 @@ div#savedEMICard .credit-card-group .right-align-form {
 }
 .cart.wrapper.checkout-payment .card-sec .card-num .card_image {
     float: left;
-    margin-bottom: 15px;
-    margin-top: 6px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    height: 35px;
+    width: 42px;
 }
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedCreditCard .cvv input::-webkit-input-placeholder, 
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedDebitCard .cvv input::-webkit-input-placeholder,
@@ -62184,7 +62192,8 @@ div#savedEMICard .credit-card-group .right-align-form {
     width: 131px;
     margin-left: 95px;
 }
-.cart.wrapper.checkout-payment .blocks .card-sec .radio {
+.cart.wrapper.checkout-payment .blocks .card-sec .radio,
+.cart.wrapper .product-block li.item#savedCard div.radio {
     margin: 5px 0;
 }
 .cart.wrapper.checkout-payment .blocks .card-sec {
@@ -62346,7 +62355,7 @@ div#savedEMICard .credit-card-group .right-align-form input.cvvValdiation.securi
     top: 0px;
 }
 .cart.wrapper.checkout-payment .product-block.emi.blocks {
-    padding: 21px 20px 20px 20px;
+    padding: 18.5px 20px 20px 20px;
 }
 .cart.wrapper.checkout-payment .left-block .payments.tab-view #newCardCCEmi.new-card .form-group {
     padding-right: 0px;
@@ -62509,5 +62518,93 @@ a.cvvHelp#cvvHelp + div.popover{
 div.radio.creditDebitLabelRadio{
 	display: none;
 }
+/* progress bar non-sticky start */
+.wrapper .container-address.nav{
+	position:relative;
+	z-index:2;
+}
+.progress-barcheck{
+	 padding: 30px 0 0;
+	 margin:0 auto;
+}
+.progress-barcheck .step-1 span, .progress-barcheck .step-2 span, .progress-barcheck .step-3 span{
+	top:0px !important;
+}
+.progress-barcheck .step-1.step-done span.paymentStepDone:after,
+ .progress-barcheck .step-2.step-done span.paymentStepDone:after,
+  .progress-barcheck .step-3.step-done span.paymentStepDone:after{
+	top:22px;
+}
+.progress-barcheck .step-1.step-done span:after, 
+.progress-barcheck .step-2.step-done span:after,
+ .progress-barcheck .step-3.step-done span:after{
+	top:22px;
+ }
+ .progress-barcheck .step-1.in-active span,
+  .progress-barcheck .step-2.in-active span,
+   .progress-barcheck .step-3.in-active span{
+  top:22px !important; 
+   }
+.progress-barcheck .step-1.active span, .progress-barcheck .step-2.active span, .progress-barcheck .step-3.active span{
+	    top: 21px !important;
+}
+@media only screen and (max-width: 1450px){
+.checkout-payment.cart.checkout.wrapper .step-body {
+	    padding: 16px 0px 0;
+	}
+}
+@media only screen and (max-width: 1250px){
+.checkout-payment.cart.checkout.wrapper .step-body {
+	 padding: 16px 24px 0;
+	}
+}
+@media (min-width: 981px){
+body:not(.page-checkout-login) .step-body .checkout-shipping {
+    padding-top: 40px;
+}
+body:not(.page-checkout-login) .step-body .checkout-shipping.left-block{
+	padding-top: 40px;
+}
+}
+@media (max-width:980px){
+	body.page-multiStepCheckoutSummaryPage header{
+	    border-bottom: 2px solid #f9f9f9;
+	}
+	.wrapper .container-address.nav{
+	padding-top:20px;
+	}
+	.smk_accordion {
+    padding: 40px 0 0;
+}
+}
+@media (max-width: 790px){
+.smk_accordion {
+    padding: 40px 24px 0;
+}}
+@media (max-width:767px){
+	.wrapper .container-address{
+	border-bottom:none;
+	}
+	.progress-barcheck{
+	    padding: 15px 0 0;
+	}
+	  .progress-barcheck .step-3.active span {
+    top: 11px !important;
+	}
+	.checkout-payment.cart.checkout.wrapper .step-body {
+    padding: 16px 0px 0;
+	}
+	.progress-barcheck .step-1.step-done span:after,.progress-barcheck .step-2.step-done span:after,.progress-barcheck .step-3.step-done span:after,
+	.progress-barcheck .step-1.active span, .progress-barcheck .step-2.active span, .progress-barcheck .step-3.active span,
+	.progress-barcheck .step-1.in-active span, .progress-barcheck .step-2.in-active span, .progress-barcheck .step-3.in-active span{
+	   top: 11px !important;
+	  }
+	  	.progress-barcheck .step-1.step-done span.paymentStepDone,
+	 .progress-barcheck .step-2.step-done span.paymentStepDone,
+	  .progress-barcheck .step-3.step-done span.paymentStepDone{
+	      top: -8px !important;
+	  }
+}
+/* progress bar non-sticky end */
 /* Payment Page change end */
 /*checkout pages end*/
