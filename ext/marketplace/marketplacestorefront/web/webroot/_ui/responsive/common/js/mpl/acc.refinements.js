@@ -976,25 +976,6 @@ function removeMobilePriceRange(){
 	
 }
 
-//UF-15
-function lazyPaginationFacet(response){
-	res = response;
-	var ulProduct = $(response).find('ul.product-listing.product-grid');
-    productItemArray = [];
-    $(ulProduct).find('li.product-item').each(function() {
-        productItemArray.push($(this));
-    });
-	$("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid", response));
-    innerLazyLoad({isSerp:true});
-}
-
-(function($) {
-    $.strRemove = function(theTarget, theString) {
-        return $("<div/>").append(
-            $(theTarget, theString).empty().end()
-        ).html();
-    };
-})(jQuery);
 
 function isCustomSku(requiredUrl){
 	if (($("input[name=customSku]").length) && ($("input[name=customSku]").val() == "true")) {			
@@ -1024,12 +1005,16 @@ function isCustomSku(requiredUrl){
 //UF-15
 function lazyPaginationFacet(response){
 	res = response;
-	var ulProduct = $(response).find('ul.product-listing.product-grid');
+	var ulProduct = $(response).find('ul.product-listing.product-grid,ul.product-list');
+	productItemArray = [];
     $(ulProduct).find('li.product-item').each(function() {
         productItemArray.push($(this));
     });
-	$("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet", response));
+    console.log(""+productItemArray);
+	$("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list", response));
+	initPageLoad = true;
     innerLazyLoad({isSerp:true});
+    
 }
 //UF-15
 (function($) {
