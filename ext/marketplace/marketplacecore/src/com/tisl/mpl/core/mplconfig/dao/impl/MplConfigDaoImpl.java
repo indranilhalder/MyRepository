@@ -34,9 +34,9 @@ public class MplConfigDaoImpl implements MplConfigDao
 	private static final Logger LOGGER = Logger.getLogger(MplConfigDaoImpl.class);
 	public static final String CONFIG_QUERY = "select {pk} from {MplConfig} where {ID}=?id";
 	public static final String ID_STRING = "id";
-	
-	public static final String TIMESLOT_CONFIG_QUERY = "select {pk} from {MplTimeSlots} where {timeslotType}=?configKey order by {fromtime}";
-	
+
+	public static final String TIMESLOT_CONFIG_QUERY = "select {pk} from {MplTimeSlots as m} where {timeslotType}=?configKey order by {m.fromtime},{m.toTime}";
+
 	public static final String DELIVERYCHARG_CONFIG_QUERY = "select {pk} from {MplBUCConfigurations} ";
 	public static final String TIMESLOT_CONFIG_KEY = "configKey";
 	
