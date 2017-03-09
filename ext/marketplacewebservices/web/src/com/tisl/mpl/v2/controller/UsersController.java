@@ -193,6 +193,7 @@ import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
+import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.helper.MplUserHelper;
 import com.tisl.mpl.helper.ProductDetailsHelper;
@@ -252,10 +253,6 @@ import com.tisl.mpl.wsdto.UpdateCustomerDetailDto;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.ValidateOtpWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
-import com.tisl.mpl.wsdto.QuickDropStoresList;
-import com.tisl.mpl.wsdto.ReturnDetailsWsDTO;
-import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
-import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 
 
 /**
@@ -7336,13 +7333,14 @@ public class UsersController extends BaseCommerceController
 
 						returnAddrData.setAddressLane1(returnData.getAddrLine1());
 						returnAddrData.setAddressLane2(returnData.getAddrLine2());
+						returnAddrData.setAddressLine3(returnData.getAddrLine3());
 						returnAddrData.setLandmark(returnData.getLandMark());
 						returnAddrData.setCity(returnData.getCity());
 						returnAddrData.setCountry(returnData.getCountry());
 						returnAddrData.setFirstName(returnData.getFirstName());
 						returnAddrData.setLastName(returnData.getLastName());
 						returnAddrData.setMobileNo(returnData.getPhoneNumber());
-						returnAddrData.setState(returnData.getState());
+						returnAddrData.setState(getStateCode(returnData.getState()));
 						returnAddrData.setPincode(returnData.getPincode());
 						if (returnData.getRefundType().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_TYPE))
 						{
@@ -7555,7 +7553,27 @@ public class UsersController extends BaseCommerceController
 	}
 
 	// Getter Setter
-
+	//Get State name R2.3 TISRLUAT-1090 start and
+		private String getStateCode(String statName)
+		{
+			try
+			{
+				for (final StateData state : accountAddressFacade.getStates())
+				{
+					if (state.getName().equalsIgnoreCase(statName))
+					{
+						return state.getCode();
+					}
+				}
+			}
+			catch (Exception exception)
+			{
+				LOG.error(" UsersController Exception getting State name" + exception.getMessage());
+			}
+			LOG.info("State Code Not found This Name " + statName);
+			return statName;
+		}
+		//Get State name R2.3 TISRLUAT-1090 END 
 	/**
 	 * @return the mplProductWebService
 	 */
