@@ -59778,7 +59778,9 @@ body.template-pages-layout-footwearCategoryLandingPage .product-tile .short-info
    max-height: 44px;     
    }
    
+   
 body.page-productGrid .product-tile .image .quickview div.addtocart-component,
+body.page-search .product-tile .image .quickview div.addtocart-component,
 body.template-pages-layout-apparelCategoryLandingPage .image .quickview div.addtocart-component,
 body.template-pages-layout-apparelCategoryLandingPageV1 .image .quickview div.addtocart-component,
 body.template-pages-layout-electronicsCategoryLandingPage .image .quickview div.addtocart-component,
@@ -59788,6 +59790,7 @@ body.template-pages-layout-footwearCategoryLandingPage .image .quickview div.add
 	display:none;		/* UF-17 */
 }
 body.page-productGrid .product-tile .image .quickview span:before,
+body.page-search .product-tile .image .quickview span:before,
 body.template-pages-layout-apparelCategoryLandingPage .product-tile .image .quickview span:before,
 body.template-pages-layout-apparelCategoryLandingPageV1 .product-tile .image .quickview span:before,
 body.template-pages-layout-electronicsCategoryLandingPage .product-tile .image .quickview span:before,
@@ -59797,6 +59800,7 @@ body.template-pages-layout-footwearCategoryLandingPage .product-tile .image .qui
 margin-top:2px;	/* UF-17 */
 }
 body.page-productGrid .product-tile .image .quick-bag-both.quickview .js-reference-item,
+body.page-search .product-tile .image .quick-bag-both.quickview .js-reference-item,
 body.template-pages-layout-apparelCategoryLandingPage .product-tile .image .quick-bag-both.quickview .js-reference-item,
 body.template-pages-layout-apparelCategoryLandingPageV1 .product-tile .image .quick-bag-both.quickview .js-reference-item,
 body.template-pages-layout-electronicsCategoryLandingPage .product-tile .image .quick-bag-both.quickview .js-reference-item,
@@ -59806,6 +59810,7 @@ body.template-pages-layout-footwearCategoryLandingPage .product-tile .image .qui
 	width: 100%;	/* UF-17 */
 }
 body.page-productGrid .product-tile .image .quick-bag-both.quickview span,
+body.page-search .product-tile .image .quick-bag-both.quickview span,
 body.template-pages-layout-apparelCategoryLandingPage .product-tile .image .quick-bag-both.quickview span,
 body.template-pages-layout-apparelCategoryLandingPageV1 .product-tile .image .quick-bag-both.quickview span,
 body.template-pages-layout-electronicsCategoryLandingPage .product-tile .image .quick-bag-both.quickview span,
@@ -59815,6 +59820,7 @@ body.template-pages-layout-footwearCategoryLandingPage .product-tile .image .qui
 	padding-right: 0;	/* UF-17 */
 }
 body.page-productGrid .product-tile .image .quick-bag-both.quickview span:before,
+body.page-search .product-tile .image .quick-bag-both.quickview span:before,
 body.template-pages-layout-apparelCategoryLandingPage .product-tile .image .quick-bag-both.quickview span:before,
 body.template-pages-layout-apparelCategoryLandingPageV1 .product-tile .image .quick-bag-both.quickview span:before,
 body.template-pages-layout-electronicsCategoryLandingPage .product-tile .image .quick-bag-both.quickview span:before,
