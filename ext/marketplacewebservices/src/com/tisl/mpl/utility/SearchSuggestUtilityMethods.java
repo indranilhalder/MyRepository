@@ -73,7 +73,7 @@ public class SearchSuggestUtilityMethods
 
 	@Resource(name = "mplCompetingProductsUtility")
 	private MplCompetingProductsUtility mplCompetingProductsUtility;
-	@Resource(name = "mplProductWebServioce")
+	@Resource(name = "mplProductWebService")
 	private MplProductWebService mplProductWebService;
 	//	@Resource(name = "productService")
 	//	private ProductService productService;
