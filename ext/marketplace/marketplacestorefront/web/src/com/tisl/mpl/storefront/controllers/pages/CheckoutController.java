@@ -162,6 +162,9 @@ public class CheckoutController extends AbstractCheckoutController
 
 	@Autowired
 	private MplOrderFacade mplOrderFacade;//TISPT-175
+	
+        @Resource(name = "mplPaymentFacade")//TISSQAEE-242
+	private MplPaymentFacade mplPaymentFacade;
 
 	/**
 	 * @return the modelService
@@ -724,7 +727,22 @@ public class CheckoutController extends AbstractCheckoutController
 	{
 		this.mplCustomAddressFacade = mplCustomAddressFacade;
 	}
+	/**
+	 * @return the mplPaymentFacade
+	 */
+	public MplPaymentFacade getMplPaymentFacade()
+	{
+		return mplPaymentFacade;
+	}
 
+	/**
+	 * @param mplPaymentFacade
+	 *           the mplPaymentFacade to set
+	 */
+	public void setMplPaymentFacade(final MplPaymentFacade mplPaymentFacade)
+	{
+		this.mplPaymentFacade = mplPaymentFacade;
+	}
 	/**
 	 * @return the configurationService
 	 */
