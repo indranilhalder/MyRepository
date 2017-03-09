@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Resource;
 
@@ -73,7 +74,7 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.nps.NPSFeedbackQuestionFacade#saveFeedbackQuestionAnswer()
 	 */
 	@Override
@@ -104,10 +105,11 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 					npsFeedbackModel.setLastName(customer.getLastName());
 				}
 			}
-
-			npsFeedbackModel.setNpsId(npsFeedbackQuestionService.getNPSId()); // need to check the error
-			npsFeedbackModel.setNpsId(String.valueOf(Math.random()));
-			npsFeedbackModel.setResponseId(String.valueOf(Math.random()));
+			final Random rnd = new Random();
+			final int responseId = 100000 + rnd.nextInt(90000000);
+			final Integer responseIdInt = new Integer(responseId);
+			npsFeedbackModel.setNpsId(npsFeedbackQuestionService.getNPSId());
+			npsFeedbackModel.setResponseId(responseIdInt.toString());
 			final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
 			final SimpleDateFormat dateFormatParse = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
 			final Date date = new Date();
@@ -154,7 +156,7 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.nps.NPSFeedbackQuestionFacade#saveFeedbackRating(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -190,7 +192,7 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.nps.NPSFeedbackQuestionFacade#getFeedback(java.lang.String)
 	 */
 	@Override
