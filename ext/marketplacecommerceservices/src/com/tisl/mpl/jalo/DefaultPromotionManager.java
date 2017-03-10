@@ -873,32 +873,58 @@ public class DefaultPromotionManager extends PromotionsManager
 	{
 		List<CategoryModel> productCategoryData = null;
 		List<CategoryModel> superCategoryData = null;
-		final CatalogVersionModel oCatalogVersionModel = catalogData();
+		//final CatalogVersionModel oCatalogVersionModel = catalogData();
+		HashSet<CategoryModel> categoryData = null;
 
-		if (null != product && null != product.getSupercategories() && null != oCatalogVersionModel)
+		if (null != product)
 		{
 			superCategoryData = new ArrayList<CategoryModel>(product.getSupercategories());
-			if (!superCategoryData.isEmpty())
+			//if (!superCategoryData.isEmpty())
+			if (CollectionUtils.isNotEmpty(superCategoryData))
 			{
 				productCategoryData = new ArrayList<CategoryModel>();
+				final List<CategoryModel> finalCategoryList = new ArrayList<CategoryModel>();
+				final String primaryCat = configurationService.getConfiguration().getString("decorator.primary",
+						MarketplacecommerceservicesConstants.EMPTY);
+
+				//				for (final CategoryModel category : superCategoryData)
+				//				{
+				//					//TISUAT-4621
+				//					final String primaryCat = configurationService.getConfiguration().getString("decorator.primary", "");
+				//					if (null != category && null != category.getCode() && category.getCode().indexOf(primaryCat) > -1)
+				//					{
+				//						final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel, category.getCode());
+				//						productCategoryData.add(oModel);
+				//						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(oModel));
+				//						if (!superCategoryData.isEmpty())
+				//						{
+				//							for (final CategoryModel categoryModel : superCategoryData)
+				//							{
+				//								productCategoryData.add(categoryModel);
+				//							}
+				//						}
+				//					}
+				//				}
+
 				for (final CategoryModel category : superCategoryData)
 				{
-					//TISUAT-4621
-					final String primaryCat = configurationService.getConfiguration().getString("decorator.primary", "");
-					if (null != category && null != category.getCode() && category.getCode().indexOf(primaryCat) > -1)
+					if (StringUtils.isNotEmpty(category.getCode()) && category.getCode().indexOf(primaryCat) > -1)
 					{
-						final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel, category.getCode());
-						productCategoryData.add(oModel);
-						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(oModel));
-						if (!superCategoryData.isEmpty())
-						{
-							for (final CategoryModel categoryModel : superCategoryData)
-							{
-								productCategoryData.add(categoryModel);
-							}
-						}
+						finalCategoryList.add(category);
 					}
 				}
+
+				if (CollectionUtils.isNotEmpty(finalCategoryList))
+				{
+					categoryData = (HashSet<CategoryModel>) mplCategoryServiceImpl
+							.getAllSupercategoriesForCategoryList(finalCategoryList);
+					if (CollectionUtils.isNotEmpty(categoryData))
+					{
+						final List<CategoryModel> dataList = new ArrayList<CategoryModel>(categoryData);
+						productCategoryData.addAll(dataList);
+					}
+				}
+				productCategoryData.addAll(finalCategoryList);
 			}
 		}
 		return productCategoryData;
