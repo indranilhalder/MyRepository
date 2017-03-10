@@ -539,6 +539,17 @@ display:none;
 	<span id="dListedErrorMsg" style="display: none"  class="dlist_message prod-dlisted-msg">
 		<spring:theme code="pdp.delisted.message" />
     </span>
+    
+    <!--  UF-88-->
+	<script>
+$(document).ready(function() {
+    $("#buyNowButton").removeAttr('disabled');
+});
+
+$(document).ready(function() {
+    $("#addToCartButtonQuick").removeAttr('disabled');
+});
+</script>
 	
 	
 	 <!-- TPR-924 -->

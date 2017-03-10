@@ -261,6 +261,16 @@ function setBuyBoxDetails()
 				}
 				else
 					{
+					//UF-88
+					$(document).ready(function() {
+					    $("#buyNowButton").removeAttr('disabled');
+					});
+					
+					$(document).ready(function() {
+					    $("#addToCartButtonQuick").removeAttr('disabled');
+					});
+
+					
 					$("#addToCartButtonQuick").show();
 					$('#buyNowButton').show();
 					$("#outOfStockIdQuick").hide();
