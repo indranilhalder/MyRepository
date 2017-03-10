@@ -75,7 +75,7 @@ public interface MplDeliveryAddressFacade
 	 * @return String msg Valid or not
 	 */
 	public String submitChangeDeliveryAddress(String customerID, String orderCode, AddressData addressData, boolean isMobile,
-			List<TransactionSDDto> transactionSDDtoList);
+			List<TransactionSDDto> transactionSDDtoList,RescheduleDataList mobileData);
 
 	//Generate new OTP
 	public boolean newOTPRequest(String orderCode,boolean isMobile,String newNumber);

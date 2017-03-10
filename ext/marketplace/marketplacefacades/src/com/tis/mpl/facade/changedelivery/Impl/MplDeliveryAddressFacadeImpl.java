@@ -700,7 +700,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 */
 	@Override
 	public String submitChangeDeliveryAddress(final String customerID, final String orderCode,
-			final AddressData newDeliveryAddressData, final boolean isMobile, List<TransactionSDDto> transactionSDDtoList)
+			final AddressData newDeliveryAddressData, final boolean isMobile, List<TransactionSDDto> transactionSDDtoList,RescheduleDataList mobileData)
 	{
 		String valditionMsg = null;
 		boolean isEDScheduled = false;
@@ -757,7 +757,21 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 								sessionService.removeAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
 								mplDeliveryAddressService.saveSelectedDateAndTime(orderModel, transactionSDDtoList);
 							}
-						  
+							
+							if (isMobile && isEligibleScheduledDelivery && mobileData != null)
+							{
+								try
+								{
+									List<TransactionSDDto> mobileDataList=new ArrayList<TransactionSDDto>();
+									mobileDataList = changeScheduleddeliveryTimeFormate(orderModel, mobileData);
+									mplDeliveryAddressService.saveSelectedDateAndTime(orderModel, mobileDataList);
+								}
+								catch (Exception exception)
+								{
+									LOG.error("Exception :::" + exception.getMessage());
+								}
+							}
+
 							//CRM call
 							createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE,
 									MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_CDA,isEDScheduled);

@@ -1727,22 +1727,21 @@ public class OrdersController extends BaseCommerceController
 				{
 					AddressData newAddress = newAddressData.getChangedAddress();
 					List<TransactionSDDto> transactionSDDtoList = null;
-					
-					if (CollectionUtils.isNotEmpty(newAddressData.getRescheduleData())
-							&& MarketplaceFacadesConstants.SUCCESS.equalsIgnoreCase(validateOTPMesg))
+					RescheduleDataList reScheduleMobileData=null;
+					if(CollectionUtils.isNotEmpty(newAddressData.getRescheduleData())){
+						 reScheduleMobileData = new RescheduleDataList();
+						reScheduleMobileData.setRescheduleDataList(newAddressData.getRescheduleData());
+					}
+					RescheduleDataList reScheduleDataList=null;
+					if (CollectionUtils.isNotEmpty(newAddressData.getRescheduleData()))
 					{
-						RescheduleDataList reScheduleDataList = new RescheduleDataList();
+						 reScheduleDataList = new RescheduleDataList();
 						reScheduleDataList.setRescheduleDataList(newAddressData.getRescheduleData());
 						transactionSDDtoList = mplDeliveryAddressFacade.reScheduleddeliveryDate(orderModel, reScheduleDataList);
 					}
 
 					validateOTPMesg = mplDeliveryAddressFacade.submitChangeDeliveryAddress(customerModel.getUid(), orderCode,
-							newAddress, true, transactionSDDtoList);
-					
-					if (CollectionUtils.isNotEmpty(transactionSDDtoList))
-					{
-						mplDeliveryAddressFacade.saveSelectedDateAndTime(orderModel, transactionSDDtoList);
-					}
+							newAddress, true, transactionSDDtoList,reScheduleDataList);
 				
 				}
 				else
