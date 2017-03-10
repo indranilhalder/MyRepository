@@ -338,18 +338,23 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 			final String messageDisplay, final boolean isUpdate)
 	{
 
+		final String fromHours = (sdTimeBoxFrom.getValue().getHours() <= 9) ? "0" + sdTimeBoxFrom.getValue().getHours()
+				: "" + sdTimeBoxFrom.getValue().getHours();
 		final String fromMinitues = (sdTimeBoxFrom.getValue().getMinutes() <= 9) ? "0" + sdTimeBoxFrom.getValue().getMinutes()
 				: "" + sdTimeBoxFrom.getValue().getMinutes();
-
+		final String toHours = (sdTimeBoxTo.getValue().getHours() <= 9) ? "0" + sdTimeBoxTo.getValue().getHours()
+				: "" + sdTimeBoxTo.getValue().getHours();
 		final String toTimeMinitues = (sdTimeBoxTo.getValue().getMinutes() <= 9) ? "0" + sdTimeBoxTo.getValue().getMinutes()
 				: "" + sdTimeBoxTo.getValue().getMinutes();
 		final StringBuilder fromTime = new StringBuilder();
-		fromTime.append(sdTimeBoxFrom.getValue().getHours());
+		//fromTime.append(sdTimeBoxFrom.getValue().getHours());
+		fromTime.append(fromHours);
 		fromTime.append(":");
 		fromTime.append(fromMinitues);
 
 		final StringBuilder toTime = new StringBuilder();
-		toTime.append(sdTimeBoxTo.getValue().getHours());
+		//	toTime.append(sdTimeBoxTo.getValue().getHours());
+		toTime.append(toHours);
 		toTime.append(":");
 		toTime.append(toTimeMinitues);
 		if (validateTimeSlotsUniqueCheck(sdTimeSlots, fromTime.toString(), toTime.toString()))
@@ -389,19 +394,24 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 	public void edTimeSlotsAddAndEdit(final Timebox edTimeBoxFrom, final Timebox edTimeBoxTo, final Div edpopup,
 			final String messageDisplay, final boolean isUpdate)
 	{
+		final String fromHours = (edTimeBoxFrom.getValue().getHours() <= 9) ? "0" + edTimeBoxFrom.getValue().getHours()
+				: "" + edTimeBoxFrom.getValue().getHours();
 		final String fromMinitues = (edTimeBoxFrom.getValue().getMinutes() <= 9) ? "0" + edTimeBoxFrom.getValue().getMinutes()
 				: "" + edTimeBoxFrom.getValue().getMinutes();
-
+		final String toHours = (edTimeBoxTo.getValue().getHours() <= 9) ? "0" + edTimeBoxTo.getValue().getHours()
+				: "" + edTimeBoxTo.getValue().getHours();
 		final String toTimeMinitues = (edTimeBoxTo.getValue().getMinutes() <= 9) ? "0" + edTimeBoxTo.getValue().getMinutes()
 				: "" + edTimeBoxTo.getValue().getMinutes();
 
 		final StringBuilder fromTime = new StringBuilder();
-		fromTime.append(edTimeBoxFrom.getValue().getHours());
+		//fromTime.append(edTimeBoxFrom.getValue().getHours());
+		fromTime.append(fromHours);
 		fromTime.append(":");
 		fromTime.append(fromMinitues);
 
 		final StringBuilder toTime = new StringBuilder();
-		toTime.append(edTimeBoxTo.getValue().getHours());
+	//	toTime.append(edTimeBoxTo.getValue().getHours());
+		toTime.append(toHours);
 		toTime.append(":");
 		toTime.append(toTimeMinitues);
 
@@ -444,17 +454,23 @@ public class ConfigarableParametersWidgetController extends DefaultWidgetControl
 			final String messageDisplay, final boolean isUpdate)
 	{
 
+		final String fromHours = (rdTimeBoxFrom.getValue().getHours() <= 9) ? "0" + rdTimeBoxFrom.getValue().getHours()
+				: "" + rdTimeBoxFrom.getValue().getHours();
 		final String fromMinitues = (rdTimeBoxFrom.getValue().getMinutes() <= 9) ? "0" + rdTimeBoxFrom.getValue().getMinutes()
 				: "" + rdTimeBoxFrom.getValue().getMinutes();
+		final String toHours = (rdTimeBoxTo.getValue().getHours() <= 9) ? "0" + rdTimeBoxTo.getValue().getHours()
+				: "" + rdTimeBoxTo.getValue().getHours();
 		final String toTimeMinitues = (rdTimeBoxTo.getValue().getMinutes() <= 9) ? "0" + rdTimeBoxTo.getValue().getMinutes()
 				: "" + rdTimeBoxTo.getValue().getMinutes();
 		final StringBuilder fromTime = new StringBuilder();
-		fromTime.append(rdTimeBoxFrom.getValue().getHours());
+	//	fromTime.append(rdTimeBoxFrom.getValue().getHours());
+		fromTime.append(fromHours);
 		fromTime.append(":");
 		fromTime.append(fromMinitues);
 
 		final StringBuilder toTime = new StringBuilder();
-		toTime.append(rdTimeBoxTo.getValue().getHours());
+	//	toTime.append(rdTimeBoxTo.getValue().getHours());
+		toTime.append(toHours);
 		toTime.append(":");
 		toTime.append(toTimeMinitues);
 
