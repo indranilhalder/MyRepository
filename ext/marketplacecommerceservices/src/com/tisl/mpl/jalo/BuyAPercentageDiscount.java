@@ -25,6 +25,7 @@ import de.hybris.platform.util.localization.Localization;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -636,13 +637,32 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
 	}
 
+	//	@Override
+	//	protected void buildDataUniqueKey(final SessionContext ctx, final StringBuilder builder)
+	//	{
+	//		super.buildDataUniqueKey(ctx, builder);
+	//		builder.append(getPercentageDiscount(ctx)).append('|');
+	//	}
+
+	/**
+	 * Building the Hash Key for Promotion
+	 *
+	 * @param builder
+	 * @param ctx
+	 */
 	@Override
 	protected void buildDataUniqueKey(final SessionContext ctx, final StringBuilder builder)
 	{
-		super.buildDataUniqueKey(ctx, builder);
-		builder.append(getPercentageDiscount(ctx)).append('|');
-	}
+		builder.append(super.getClass().getSimpleName()).append('|').append(getPromotionGroup(ctx).getIdentifier(ctx)).append('|')
+				.append(getCode(ctx)).append('|').append(getPriority(ctx)).append('|').append(ctx.getLanguage().getIsocode())
+				.append('|');
 
+
+		//final Date modifyDate = ((Date) getProperty(ctx, "modifiedtime"));
+
+		final Date modifyDate = getModificationTime();
+		builder.append(modifyDate);
+	}
 
 	/**
 	 * @Description: Method Blocked for Performance Fix
