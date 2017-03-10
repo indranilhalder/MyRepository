@@ -2726,17 +2726,23 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Override
 	public CartData getLuxCart()
 	{
-		// YTODO Auto-generated method stub
+		//CAR-256
 		CartData cartData = null;
-		final UserModel luxUser = userService.getCurrentUser();
-		final List<CartModel> userCarts = new ArrayList(luxUser.getCarts());
-		if (CollectionUtils.isNotEmpty(userCarts))
+		CartModel cartModel = null;
+		try
 		{
-			cartData = getCartConverter().convert(userCarts.get(0));
-
-
+			//TO-DO
+			final UserModel luxUser = userService.getCurrentUser();
+			cartModel = mplCommerceCartService.fetchLatestCart(baseSiteService.getCurrentBaseSite(), luxUser);
+			if (null != cartModel)
+			{
+				cartData = getCartConverter().convert(cartModel);
+			}
 		}
-
+		catch (final Exception e)
+		{
+			LOG.info("Error in fetching latest user cart", e);
+		}
 		return cartData;
 	}
 
