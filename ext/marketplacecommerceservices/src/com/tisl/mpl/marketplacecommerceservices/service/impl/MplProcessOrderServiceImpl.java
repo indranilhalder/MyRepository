@@ -94,6 +94,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	private Converter<OrderModel, OrderData> orderConverter;
 	//For CAR:127
 	private static final String ERROR_NOTIF = "Error while sending notifications>>>>>>";
+	final Double skipPendingOrdersTATStFinal = new Double(10);
 
 	/**
 	 * This method processes pending orders
@@ -108,7 +109,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			//PaymentFix2017:- System time minus configured time from property file
 			final String skipPendingOrdersTATSt = getConfigurationService().getConfiguration().getString(
 					MarketplacecommerceservicesConstants.PAYMENTPENDING_SKIPTIME);
-			final Double skipPendingOrdersTAT = Double.valueOf(skipPendingOrdersTATSt);
+			final Double skipPendingOrdersTAT = (null != skipPendingOrdersTATSt ? Double.valueOf(skipPendingOrdersTATSt)
+					: skipPendingOrdersTATStFinal);
 			final Calendar cal = Calendar.getInstance();
 			cal.setTime(new Date());
 			cal.add(Calendar.MINUTE, -skipPendingOrdersTAT.intValue());
@@ -189,7 +191,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 								latestSuccess = postedBeforeTime.get(0);
 								LOG.debug("latest Juspay Event ID:- " + latestSuccess.getEventId() + " Event Neme:- "
 										+ latestSuccess.getEventName());
-								if (StringUtils.equalsIgnoreCase(latestSuccess.getEventName(), "ORDER_SUCCEEDED"))
+								if (!latestSuccess.getIsExpired().booleanValue()
+										&& StringUtils.equalsIgnoreCase(latestSuccess.getEventName(), "ORDER_SUCCEEDED"))
 								{
 									LOG.debug("latest Juspay Event Success");
 									//commented for CAR:127
@@ -201,6 +204,15 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 										jspayPostBefore.setIsExpired(Boolean.TRUE);
 									}
 									getModelService().saveAll(postedBeforeTime);
+								}
+								else if (latestSuccess.getIsExpired().booleanValue()
+										&& StringUtils.equalsIgnoreCase(latestSuccess.getEventName(), "ORDER_SUCCEEDED"))
+								{
+									LOG.error("For juspay id:- " + latestSuccess.getOrderStatus().getOrderId()
+											+ "  one Parent ID already been processed.  this is duplicate Order ID");
+									LOG.error("Hence , changing the Order to Payment Failed");
+
+									getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
 								}
 								//If ORDER_FAILED event posted with in juspayWebhookRetryTAT time with no ORDER_SUCCEEDED event
 								else if ((new Date()).after(orderTATForTimeout)
