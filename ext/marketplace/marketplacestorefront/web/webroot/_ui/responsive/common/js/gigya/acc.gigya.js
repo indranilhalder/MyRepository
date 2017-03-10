@@ -272,6 +272,7 @@ function registerUserGigya(eventObject)
     		
 
     	});
+    }
     	
     	function CheckUserLogedIn() {
     		
@@ -338,7 +339,7 @@ function registerUserGigya(eventObject)
     		            ,enabledProviders : 'facebook,google'
     		            });
     		}
- 	}
+ 
     
     
     		
