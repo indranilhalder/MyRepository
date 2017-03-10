@@ -6,10 +6,13 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.search.SearchResult;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -63,6 +66,51 @@ public class DefaultMplWishlistDao implements MplWishlistDao
 		return flexibleSearchService.<Wishlist2Model> search(query).getResult();
 	}
 
+
+
+
+	@Override
+	public Wishlist2Model findMobileWishlistswithName(final UserModel user, final String name)
+	{
+		final String queryString = //
+		"SELECT {pk} FROM {Wishlist2 as wish} WHERE {wish.user} = ?user AND {wish.name}=?name";
+		final Map<String, Object> params = new HashMap<String, Object>(1);
+		params.put("user", user);
+		params.put("name", name);
+
+		final SearchResult<Wishlist2Model> searchRes = flexibleSearchService.search(queryString, params);
+		if (searchRes != null && searchRes.getCount() > 0)
+		{
+			return searchRes.getResult().get(0);
+		}
+
+		return null;
+	}
+
+	//CAR Project performance issue fixed
+	/**
+	 * Description -- Method will access single WishlistModel for user with respect to Wishlistname
+	 *
+	 * @return Wishlist2Model
+	 */
+
+	@Override
+	public int findMobileWishlistswithNameCount(final UserModel user, final String name)
+	{
+		final String queryString = "SELECT {pk} FROM {Wishlist2 as wish} WHERE {wish.user} = ?user AND {wish.name} like '%" + name
+				+ "%' ";
+		final Map<String, Object> params = new HashMap<String, Object>(1);
+		params.put("user", user);
+		//params.put("name", name);
+
+		final SearchResult<Wishlist2Model> searchRes = flexibleSearchService.search(queryString, params);
+		if (searchRes != null && searchRes.getCount() > 0)
+		{
+			return searchRes.getCount();
+		}
+
+		return 0;
+	}
 
 
 }

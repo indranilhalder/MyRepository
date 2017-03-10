@@ -2844,6 +2844,87 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	}
 
+	/**
+	 * This method returns the map of all active Payment modes(eg. Credit Card, Debit Card, COD, etc.) and their
+	 * availability for the specific store and displays them on the payment page of the store
+	 *
+	 * @param store
+	 * @return Map<String, Boolean>
+	 * @throws EtailNonBusinessExceptions
+	 *
+	 */
+	//CAR-111
+	@Override
+	public Map<String, Boolean> getPaymentModes(final String store, final AbstractOrderModel abstractOrderModel)
+			throws EtailNonBusinessExceptions
+	{
+		final Map<String, Boolean> data = new HashMap<String, Boolean>();
+		try
+		{
+			//Get payment modes
+			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
+			boolean flag = false;
+			if (null != abstractOrderModel)
+			{
+				for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
+				{
+					if (entry.getMplDeliveryMode() != null && entry.getMplDeliveryMode().getDeliveryMode() != null)
+					{
+						if (entry.getMplDeliveryMode().getDeliveryMode() != null)
+						{
+							if (null != entry.getMplDeliveryMode().getDeliveryMode().getCode())
+							{
+								if (entry.getMplDeliveryMode().getDeliveryMode().getCode()
+										.equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+								{
+									LOG.info("Any product Content CnC Then break loop and change flag value");
+									flag = true;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(paymentTypes))
+			{
+				//looping through the mode to get payment Types
+				for (final PaymentTypeModel mode : paymentTypes)
+				{
+					//retrieving the data
+					if (flag && mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD))
+					{
+						LOG.debug("Ignoring to add COD payment for CNC Product ");
+					}
+					else
+					{
+						LOG.info("****Print all Payment type ");
+						data.put(mode.getMode(), mode.getIsAvailable());
+					}
+				}
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B6001);
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			LOG.error(MarketplaceFacadesConstants.PAYMENTTYPEERROR, e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error(MarketplaceFacadesConstants.PAYMENTTYPEERROR, e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(MarketplaceFacadesConstants.PAYMENTTYPEERROR, e);
+		}
+
+		//returning data
+		return data;
+	}
 
 
 	/**

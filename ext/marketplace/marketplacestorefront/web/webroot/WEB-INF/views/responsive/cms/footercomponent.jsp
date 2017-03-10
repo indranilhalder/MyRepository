@@ -15,7 +15,9 @@
 			${categoryFooterTxt}
 		</c:when>
 		<c:otherwise>
+		<c:if test="${!fn:containsIgnoreCase(cmsPage.name, 'Cart Page')}">
 			${footerText}
+			</c:if>
 		</c:otherwise>
 	</c:choose>
 </div>
