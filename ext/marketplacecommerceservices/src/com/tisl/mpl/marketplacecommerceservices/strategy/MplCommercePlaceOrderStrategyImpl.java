@@ -183,6 +183,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 				result.setOrder(orderModel);
 
+				// OrderIssues:- 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved here
+				afterPlaceOrder(parameter, result);
+
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
 						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
 				{
@@ -201,7 +204,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 				getExternalTaxesService().clearSessionTaxDocument();
 
-				afterPlaceOrder(parameter, result);
+				//afterPlaceOrder(parameter, result);
 
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
 						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
@@ -307,9 +310,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -422,17 +425,18 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	public void beforeSubmitOrder(final CommerceCheckoutParameter parameter, final CommerceOrderResult result)
 			throws InvalidCartException, CalculationException
 	{
+		//Commented out as it is not required at this stage, hence creating issues with order calculation.
 		// New Changes added for Promotion+ Sub total Fix
-		final OrderModel order = result.getOrder();
-		final Double subTotal = (null != order && null != order.getSubtotal()) ? order.getSubtotal() : Double.valueOf(0);
-
-		getCalculationService().calculateTotals(result.getOrder(), false);
-
-		if (subTotal.doubleValue() > 0)
-		{
-			order.setSubtotal(subTotal);
-			getModelService().save(order);
-		}
+		//		final OrderModel order = result.getOrder();
+		//		final Double subTotal = (null != order && null != order.getSubtotal()) ? order.getSubtotal() : Double.valueOf(0);
+		//
+		//		getCalculationService().calculateTotals(result.getOrder(), false);
+		//
+		//		if (subTotal.doubleValue() > 0)
+		//		{
+		//			order.setSubtotal(subTotal);
+		//			getModelService().save(order);
+		//	   }
 
 		if ((getCommercePlaceOrderMethodHooks() == null) || (!(parameter.isEnableHooks())) || (!(getConfigurationService()
 

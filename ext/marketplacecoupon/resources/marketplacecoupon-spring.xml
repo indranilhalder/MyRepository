@@ -79,6 +79,12 @@
 		<property name="typeCode" value="SellerRestriction" />
 	</bean>
 	
-	<!-- CouponSaveInterceptor ends -->			
+	<!-- CouponSaveInterceptor ends -->		
+	
+	<!-- Added for custom coupon service -->
+	<alias alias="voucherService" name="mplDefaultVoucherService" />
+	<bean id="mplDefaultVoucherService" class="com.tisl.mpl.coupon.service.impl.MplDefaultVoucherService" parent="defaultVoucherService"
+		scope="tenant">
+	</bean>		
 
 </beans>
