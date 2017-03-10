@@ -1652,11 +1652,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1707,9 +1707,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -2191,9 +2191,18 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//For Mobile
 			if (MapUtils.isEmpty(paymentMode))
 			{
-				//paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
-				LOG.error("Inside paymentMode is empty...");
-				paymentMode.put(orderModel.getModeOfOrderPayment(), Double.valueOf(orderModel.getTotalPriceWithConv().doubleValue()));
+				paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
+				LOG.info("Outside if block..." + paymentMode);
+				if (null == paymentMode)
+				{
+					LOG.info("Inside paymentMode is empty...");
+					final Map<String, Double> paymentInfo = new HashMap<String, Double>();
+					LOG.info("Mode of Order Payment" + orderModel.getModeOfOrderPayment());
+					LOG.info("Total Price is " + orderModel.getTotalPriceWithConv().doubleValue());
+					paymentInfo.put(orderModel.getModeOfOrderPayment(),
+							Double.valueOf(orderModel.getTotalPriceWithConv().doubleValue()));
+					paymentMode = paymentInfo;
+				}
 			}
 
 			String orderStatus = null;
