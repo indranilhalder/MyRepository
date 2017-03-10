@@ -3278,7 +3278,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						//Remove highlighted pincode error/success messages
 						$("#wrongPin,#unableprocessPin,#unsevisablePin,#emptyPin,#serviceablePin").hide();
 						$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options  ");
-						
+						$("#pdpPinCodeAvailable").show();
 						//Populating productStyleNotesTab.tag,productDescriptionTab.tag with articleDescription
 						if(responseProductArticleDescription !="" && typeof($('.tab-details span:eq(0)').text())!='undefined')
 						{
