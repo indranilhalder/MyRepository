@@ -90,7 +90,8 @@ public class MplPincodeController extends BaseCommerceController
 		if (pincodeData == null)
 		{
 			LOG.debug("PincodeData not found for the entered pincode :" + pincode);
-			pincodeDataWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			pincodeDataWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			pincodeDataWsDTO.setErrorCode(MarketplacecommerceservicesConstants.B9354);
 			return pincodeDataWsDTO;
 		}
 		return dataMapper.map(pincodeData, PincodeDataWsDTO.class, fields);

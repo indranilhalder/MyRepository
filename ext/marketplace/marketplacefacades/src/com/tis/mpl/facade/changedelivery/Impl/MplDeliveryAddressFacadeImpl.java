@@ -1148,7 +1148,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			final MplLPHolidaysModel mplLPHolidaysModel = mplConfigFacade
 					.getMplLPHolidays(MarketplacecommerceservicesConstants.CAMPAIGN_URL_ALL);
 			if(timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD)) {
-				if (mplLPHolidaysModel.getWorkingDays().contains("0"))
+				if (null != mplLPHolidaysModel && null != mplLPHolidaysModel.getWorkingDays())
 				{
 					calculatedDateList = dateUtilHelper.calculatedLpHolidays(deteWithOutTIme, 3);
 				}else {
@@ -1156,7 +1156,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 				}
 
 			}else if(timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED)) {
-				if (mplLPHolidaysModel.getWorkingDays().contains("0"))
+				if (null != mplLPHolidaysModel && null != mplLPHolidaysModel.getWorkingDays())
 				{
 					calculatedDateList = dateUtilHelper.calculatedLpHolidays(deteWithOutTIme,2);
 				}else {

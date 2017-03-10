@@ -2034,7 +2034,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				final String nextDate = dateUtilHelper.getNextDete(deteWithOutTime, format);
 				if (cartEntryData.getMplDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
 				{
-					if (mplLPHolidaysModel.getWorkingDays().contains("0"))
+					if (null !=mplLPHolidaysModel && null !=mplLPHolidaysModel.getWorkingDays() )
 					{
 						calculatedDateList = dateUtilHelper.calculatedLpHolidays(nextDate, 3);
 					}
@@ -2046,7 +2046,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				else if (cartEntryData.getMplDeliveryMode().getCode()
 						.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
 				{
-					if (mplLPHolidaysModel.getWorkingDays().contains("0"))
+					if (null !=mplLPHolidaysModel && null !=mplLPHolidaysModel.getWorkingDays() )
 					{
 						calculatedDateList = dateUtilHelper.calculatedLpHolidays(nextDate, 2);
 					}
@@ -2104,7 +2104,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			cartEntryData.setSelectedDeliveryModeForUssId(MarketplacecommerceservicesConstants.CART_HOME_DELIVERY);
 			modelList = mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
 
-			if (mplLPHolidaysModel.getWorkingDays().contains("0"))
+			if (null !=mplLPHolidaysModel && null !=mplLPHolidaysModel.getWorkingDays() )
 			{
 				calculatedDateList = dateUtilHelper.calculatedLpHolidays(deteWithOutTime, 3);
 			}
@@ -2119,7 +2119,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		{
 			cartEntryData.setSelectedDeliveryModeForUssId(MarketplacecommerceservicesConstants.CART_EXPRESS_DELIVERY);
 			modelList = mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.ED);
-			if (mplLPHolidaysModel.getWorkingDays().contains("0"))
+			if (null !=mplLPHolidaysModel && null !=mplLPHolidaysModel.getWorkingDays() )
 			{
 				calculatedDateList = dateUtilHelper.calculatedLpHolidays(deteWithOutTime, 2);
 			}

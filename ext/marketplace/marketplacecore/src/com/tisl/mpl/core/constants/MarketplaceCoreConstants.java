@@ -94,5 +94,6 @@ public final class MarketplaceCoreConstants extends GeneratedMarketplaceCoreCons
 	public static final String PRICEFALLBACK = ";PRICEFALLBACK";
 	public static final String IMPORTCONFIG_NOTFOUND = "Import config not found. The file %s won't be imported.";
 	public static final String YES = "Y";
-
+	public static final String ALL = "all";
+   
 }
