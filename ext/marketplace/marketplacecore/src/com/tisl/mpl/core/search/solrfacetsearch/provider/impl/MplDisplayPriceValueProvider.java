@@ -129,17 +129,18 @@ public class MplDisplayPriceValueProvider extends AbstractPropertyFieldValueProv
 				{
 					double price = 0.0;
 					/* TISPRD-2611 */
-					if (null != buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getSpecialPrice()
-							&& buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getSpecialPrice()
-									.doubleValue() > 0.0)
+					final Double specialPrice = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0)
+							.getSpecialPrice();
+					Double pcmPrice = null;
+
+					if (null != specialPrice && specialPrice.doubleValue() > 0.0)
 					{
-						price = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getSpecialPrice()
-								.doubleValue();
+						price = specialPrice.doubleValue();
 					}
-					else if (null != buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getPrice()
-							&& buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getPrice().doubleValue() > 0.0)
+					else if (null != (pcmPrice = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0)
+							.getPrice()) && pcmPrice.doubleValue() > 0.0)
 					{
-						price = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getPrice().doubleValue();
+						price = pcmPrice.doubleValue();
 					}
 					final JSONObject sizePriceJson = new JSONObject();
 					sizePriceJson.put(pcmSizeVariantModel.getSize().toUpperCase(), Double.valueOf(price));
