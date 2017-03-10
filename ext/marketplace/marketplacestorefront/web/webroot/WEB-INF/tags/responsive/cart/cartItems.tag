@@ -1116,6 +1116,32 @@ tr.d0 td {
  
  
 <div class="cart-bottom-block">
+				<!-- UF-69 -->
+				<%-- <div class="cartBottomCheck">
+           		<div id="changePinDiv">
+				<p><spring:theme code="product.pincode.input" /></p>
+				<p id="cartPinCodeAvailableBtm" class="cartPins"><spring:theme code="product.pincode" /></p> 
+				<!-- TPR_1055 EQA -->
+				<p id="AvailableMessageBtm" style="display:none"></p>
+				<p id="unserviceablepincodeBtm" style="display:none"><spring:theme code="cart.unserviceable.pincode" /></p>
+				<p id="error-IdBtm" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
+				<p id="emptyIdBtm" style="display:none"><spring:theme code="product.empty.pincode" /></p>
+				<c:choose>
+		 		<c:when test="${not empty defaultPinCode}">
+				<input type="text" id= "defaultPinCodeIdsBtm" name = "defaultPinCodeIds" style="" value="${defaultPinCode}" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
+				</c:when>
+		   		 <c:otherwise>
+		    	<input type="text" id= "defaultPinCodeIdsBtm" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
+		   		</c:otherwise>
+				 </c:choose>
+				<button id= "pinCodeButtonIdsBtm" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
+				<p id="AvailableMessageBtm" style="display:none" class="availablePins"></p>
+				<p id="unserviceablepincodeBtm" style="display:none" class="unservicePins"><spring:theme code="cart.unserviceable.pincode" /></p>
+				<p id="error-IdBtm" style="display:none" class="errorPins"><spring:theme code="product.invalid.pincode" /></p>	
+				<p id="emptyIdBtm" style="display:none" class="emptyPins"><spring:theme code="product.empty.pincode" /></p>
+			</div>
+			</div> --%>
+			<!-- UF-69 -->
  <%-- <div class="coupon block" style="width: 40%;display: inline-block;">
 <h2>Have a promo code?</h2>
 		<input type="text" id="couponFieldId" placeholder="Enter coupon code" style="width:calc(100% - 65px);display:inline-block;"/>
@@ -1171,7 +1197,85 @@ tr.d0 td {
                 </c:choose>
             </ycommerce:testId></span></li>
           </ul>
+         <!--  UF-68 and UF-69 -->
+           <%-- <table class="checkOutBtnBtm">
+           	<tr><td>
+           		<div id="changePinDiv">
+				<p><spring:theme code="product.pincode.input" /></p>
+				<p id="cartPinCodeAvailable"><spring:theme code="product.pincode" /></p>
+				<!-- TPR_1055 EQA -->
+				<p id="AvailableMessage" style="display:none"></p>
+				<p id="unserviceablepincode" style="display:none"><spring:theme code="cart.unserviceable.pincode" /></p>
+				<p id="error-Id" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
+				<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p>
+				<c:choose>
+		 		<c:when test="${not empty defaultPinCode}">
+				<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="${defaultPinCode}" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
+				</c:when>
+		   		 <c:otherwise>
+		    	<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
+		   		</c:otherwise>
+				 </c:choose>
+				<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
+			</div>
+			</td>
+			<td>
+				<li id="checkout-id" class="checkout-button">
+				<!-- TISEE-6257 -->
+				<a  id="checkout-enabled" class="checkoutButton checkout button red"  onclick="return checkPincodeServiceability('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
+				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
+				</li>
+				<ul class="checkout-types onlyCheckoutButton">
+				<li id="checkout-id-down" class="checkout-button">
+				<a  id="checkout-down-enabled" class="checkoutButton checkout button red"  onclick="return checkPincodeServiceability('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
+				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
+				</li>
+				 </ul>
+			</td>
+           	</tr>           		
+           </table>  --%>
+           
+           
           
+				
+				<ul class="checkout-types onlyCheckoutButton checkOutBtnBtm">
+				<li id="checkout-id-down" class="checkout-button">
+				<a  id="checkout-down-enabled" class="checkoutButton checkout button red"  onclick="return checkServiceabilityRequired('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
+				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
+				<p id="unserviceablepincode_tooltip_btm" style="display:none">One or more item(s) are not available at this location. Please remove the item(s) to proceed or try another <span>pincode</span>?</p>
+     			<p id="error-Id_tooltip_btm" style="display:none" >Oops! Invalid <span>pincode</span>.Please enter a valid <span>pincode</span>.</p>
+ 				<p id="emptyId_tooltip_btm" style="display:none">Enter <span>pincode</span> on the left to continue</p> 
+				</li>
+				 </ul>
+           
+           <!-- UF-68 -->
+           
+           <ul class="cartBottomCheck">
+           		<li id="changePinDiv">
+				<%-- <p><spring:theme code="product.pincode.input" /></p>--%>
+				<%-- <p id="cartPinCodeAvailableBtm" class="cartPins"><spring:theme code="product.pincode" /></p> --%> 
+				<!-- TPR_1055 EQA -->
+				<%-- <p id="AvailableMessageBtm" style="display:none"></p>
+				<p id="unserviceablepincodeBtm" style="display:none"><spring:theme code="cart.unserviceable.pincode" /></p>
+				<p id="error-IdBtm" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
+				<p id="emptyIdBtm" style="display:none"><spring:theme code="product.empty.pincode" /></p> --%>
+				<c:choose>
+		 		<c:when test="${not empty defaultPinCode}">
+				<input type="text" id= "defaultPinCodeIdsBtm" name = "defaultPinCodeIds" style="" value="${defaultPinCode}" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
+				</c:when>
+		   		 <c:otherwise>
+		    	<input type="text" id= "defaultPinCodeIdsBtm" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
+		   		</c:otherwise>
+				 </c:choose>
+				<button id= "pinCodeButtonIdsBtm" name="pinCodeButtonId" style="" type=""><spring:theme code="text.submit"/></button>
+				<p id="AvailableMessageBtm" style="display:none" class="availablePins"></p>
+				<p id="unserviceablepincodeBtm" style="display:none" class="unservicePins"><spring:theme code="cart.unserviceable.pincode" /></p>
+				<p id="error-IdBtm" style="display:none" class="errorPins"><spring:theme code="product.invalid.pincode" /></p>
+				<p id="emptyIdBtm" style="display:none" class="emptyPins"><spring:theme code="product.empty.pincode" /></p>
+			</li>
+			</ul>
+			
+			<!-- UF-68 -->
 
           </div>
 </div>

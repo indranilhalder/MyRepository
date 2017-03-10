@@ -11,9 +11,12 @@ import de.hybris.platform.product.daos.impl.DefaultProductDao;
 import de.hybris.platform.search.restriction.SearchRestrictionService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.SearchResult;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +32,7 @@ import com.tisl.mpl.model.SellerInformationModel;
  */
 public class MplProductDaoImpl extends DefaultProductDao implements MplProductDao
 {
-	
+
 	@Autowired
 	private CatalogVersionService catalogVersionService;
 
@@ -42,6 +45,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 	private static final String FROM_STRING = "FROM {";
 	private static final String CODE_STRING = "} = (?code) AND {p:";
 	private static final String CODE = "code";
+	private static final String PRODUCT_PARAM = "{c.code}=?productParam";
 
 
 	public MplProductDaoImpl(final String typecode)
@@ -64,7 +68,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 				.append("} } ");
 		final String inPart = "{p:" + ProductModel.CODE + CODE_STRING + ProductModel.CATALOGVERSION
 
-				+ "} = ?catalogVersion and  sysdate between {s.startdate} and {s.enddate} ";
+		+ "} = ?catalogVersion and  sysdate between {s.startdate} and {s.enddate} ";
 		stringBuilder.append("WHERE ").append(inPart);
 		LOG.debug("findProductsByCode: stringBuilder******* " + stringBuilder);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(stringBuilder.toString());
@@ -193,6 +197,78 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 		query.setResultClassList(Collections.singletonList(ProductFeatureModel.class));
 		final SearchResult<ProductFeatureModel> searchResult = getFlexibleSearchService().search(query);
 		return searchResult.getResult();
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.daos.product.MplProductDao#findProductListByCodeList(de.hybris.platform
+	 * .catalog.model.CatalogVersionModel, java.util.List)
+	 */
+	@Override
+	public List<ProductModel> findProductListByCodeList(final CatalogVersionModel catalogVersion,
+			final List<String> productCodeList)
+	{
+		// YTODO Auto-generated method stub
+		List<ProductModel> productModelList = null;
+		final StringBuilder productCodes = new StringBuilder(100);
+		final Map<String, String> queryParamMap = new HashMap<String, String>();
+		try
+		{
+
+			if (productCodeList != null)
+			{
+				int cnt = 0;
+				productCodes.append("( ");
+				for (final String id : productCodeList)
+				{
+					cnt = cnt + 1;
+					if (cnt == 1)
+					{
+						productCodes.append(PRODUCT_PARAM + (cnt));
+					}
+					else
+					{
+						productCodes.append(" OR " + PRODUCT_PARAM + (cnt));
+					}
+					queryParamMap.put("productParam" + (cnt), id);
+				}
+				productCodes.append(" )");
+			}
+
+
+			final String queryString = "SELECT {c.pk} FROM {Product AS c}  Where " + productCodes.toString()
+					+ " AND {c.catalogVersion}=?catalogVersion";
+
+
+
+			//LOG.debug("QueryStringFetchingPrice" + queryStringForPrice);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+
+			query.addQueryParameter("catalogVersion", catalogVersion);
+
+			for (final Map.Entry<String, String> entry : queryParamMap.entrySet())
+			{
+				query.addQueryParameter(entry.getKey(), entry.getValue());
+			}
+
+			productModelList = getFlexibleSearchService().<ProductModel> search(query).getResult();
+
+
+		}
+
+		catch (final FlexibleSearchException e)
+		{
+			e.printStackTrace();
+		}
+
+		catch (final Exception e)
+		{
+			e.printStackTrace();
+		}
+		return productModelList;
 	}
 
 
