@@ -180,7 +180,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			//CKD:TPR-250 Start : Manipulating (rearranging) elements of the buy box list for microsite seller
 			if (StringUtils.isNotBlank(bBoxSellerId))
 			{
-				// overridding buyBox for buyboxPrice method for  microsite TPR-250 (TPR-4955)
+				// overridding buyBox for buyboxPrice method for  microsite TPR-250 (TPR-4955) : adding sellers with No stock as well
 				buyboxModelListAll = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPriceForMicrosite(productCode));
 				isSellerPresent = true;
 				rearrangeBuyBoxListElements(bBoxSellerId, buyboxModelListAll);
@@ -443,7 +443,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
 
 				//other sellers count
-				final int sellerSize = buyboxModelList.size() - 1;
+				final int oosSellerforMsite = getOosSellerCountInBuyBoxModel(buyboxModelList);
+				final int sellerSize = buyboxModelList.size() - 1 - oosSellerforMsite; // CKD:TPR-250:TPR-4495
 				final Integer noofsellers = Integer.valueOf(sellerSize);
 
 				//TPR-250:Start
@@ -874,7 +875,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 *
+	 * 
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
@@ -914,9 +915,11 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			buyboxData.setMrp(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
 		}
 		buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
-
+		//CKD:TPR-250:Start: checking if list has Buy Box list has OOS seller to be removed from other sellers count when call comes from microsite
+		final int oosSellerforMsite = getOosSellerCountInBuyBoxModel(buyboxModelList);
 		//other sellers count
-		final int sellerSize = buyboxModelList.size() - 1;
+		final int sellerSize = buyboxModelList.size() - 1 - oosSellerforMsite;
+		//CKD:TPR-250:End
 		final Integer noofsellers = Integer.valueOf(sellerSize);
 		//TPR-250:Start
 		//		if (onlyBuyBoxHasStock && sellerSize > 0)
@@ -980,6 +983,23 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		buyboxData.setAllOOStock(outOfStockFlag);
 		return buyboxData;
 
+	}
+
+	/**
+	 * @param buyboxModelList
+	 * @return
+	 */
+	private int getOosSellerCountInBuyBoxModel(final List<BuyBoxModel> buyboxModelList)
+	{
+		int oosSellerforMsite = 0;
+		for (final BuyBoxModel buyBoxModel : buyboxModelList)
+		{
+			if (buyBoxModel.getAvailable() <= 0)
+			{
+				oosSellerforMsite = oosSellerforMsite + 1;
+			}
+		}
+		return oosSellerforMsite;
 	}
 
 	/**
