@@ -831,7 +831,8 @@ public class PaymentServicesController extends BaseController
 			final Map<String, Boolean> duplicateJuspayResMap = getSessionService().getAttribute(
 					MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE);
 			// OrderIssues:-  multiple Payment Response from juspay restriction
-			if (MapUtils.isNotEmpty(duplicateJuspayResMap) && !duplicateJuspayResMap.get(cartGuid).booleanValue())
+			if (MapUtils.isNotEmpty(duplicateJuspayResMap) && null != duplicateJuspayResMap.get(cartGuid)
+					&& !duplicateJuspayResMap.get(cartGuid).booleanValue())
 			{
 
 				if (null == orderToBeUpdated.getPaymentInfo())
