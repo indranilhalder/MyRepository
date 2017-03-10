@@ -387,10 +387,21 @@ public class ProductPageController extends MidPageController
 				model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
 				model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
 				model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
-				final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-						ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-						//					ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION,
-						ProductOption.VARIANT_FULL));
+
+				//CAR-255
+				/*
+				 * final ProductData productData = productFacade.getProductForOptions(productModel,
+				 * Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+				 * ProductOption.GALLERY, ProductOption.CATEGORIES, // ProductOption.PROMOTIONS,
+				 * ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+				 */
+
+
+
+
+
+
+
 				/*
 				 * final String brandName = productData.getBrand().getBrandname(); final String metaDescription =
 				 * ModelAttributetConstants.Product_Page_Meta_Description
@@ -405,14 +416,16 @@ public class ProductPageController extends MidPageController
 				 * .replace(ModelAttributetConstants.META_VARIABLE_FOUR, productData.getName())
 				 * .replace(ModelAttributetConstants.META_VARIABLE_FIVE, productData.getName());
 				 */
-				final String metaTitle = productData.getSeoMetaTitle();
-				final String pdCode = productData.getCode();
-				final String metaDescription = productData.getSeoMetaDescription();
-				//TISPRD-4977
-				final String metaKeyword = productData.getSeoMetaKeyword();
-				//final String metaKeywords = productData.gets
 
-				setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
+
+				//CAR-255
+				/*
+				 * final String metaTitle = productData.getSeoMetaTitle(); final String pdCode = productData.getCode();
+				 * final String metaDescription = productData.getSeoMetaDescription(); //TISPRD-4977 final String
+				 * metaKeyword = productData.getSeoMetaKeyword(); //final String metaKeywords = productData.gets
+				 *
+				 * setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
+				 */
 				//AKAMAI fix
 				if (productModel instanceof PcmProductVariantModel)
 				{
