@@ -58,7 +58,7 @@
 				<c:choose>		
 				    <c:when test ="${product.rootCategory==finejewellery}"> 
 				    	<div class="container">
-							<div class="tabs-block">
+							<div class="tabs-block ${product.rootCategory}">
 								 <product:productPageTabs /> 
 							</div>
 						</div>

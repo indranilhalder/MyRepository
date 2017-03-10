@@ -549,11 +549,12 @@ $(document).ready(function(){
 			    });
 	/*----Start of SignIn & SignUp tab Switching -----*/
 			 
+		 
 	
 	/*----START-- Added for tab horizontal scrolling while working on Jewellery  -----*/
 			 
 			 
-			 $(".nav.pdp").owlCarousel({
+			 $(".FineJewellery .nav.pdp, .FashionJewellery .nav.pdp").owlCarousel({
 					items: 5,
 					loop: false,
 					nav: false,
@@ -587,15 +588,26 @@ $(document).ready(function(){
 			 
 	/*----END-- Added for tab horizontal scrolling while working on Jewellery  -----*/
 			 
-	/*----Start of  PDP tabs -----*/
-			 $(".tabs-block .nav.pdp .owl-item").on("click",function(e) {
-				 var count = $(".tabs-block .nav.pdp .owl-item").index(this);
-				 $(".tabs-block .nav.pdp .owl-item").removeClass("current");
-				 $(this).addClass("current");
-				 $("ul.tabs.pdp>li").removeClass("active");
-				 $("ul.tabs.pdp>li").eq(count).addClass("active");
+	/*----Start of  PDP tabs for Jewellery -----*/
+			 
+			 if($(".tabs-block").hasClass("FineJewellery") || $(".tabs-block").hasClass("FashionJewellery")){			 
+				 $(".tabs-block.FineJewellery .nav.pdp .owl-item, .tabs-block.FashionJewellery .nav.pdp .owl-item").on("click",function(e) {
+					 var count = $(".tabs-block .nav.pdp .owl-item").index(this);
+					 $(".tabs-block .nav.pdp .owl-item").removeClass("current");
+					 $(this).addClass("current");
+					 $("ul.tabs.pdp>li").removeClass("active");
+					 $("ul.tabs.pdp>li").eq(count).addClass("active");
 			    }); 
-	/*----END of  PDP tabs -----*/
+			 } else {
+				 $(".tabs-block .nav.pdp li").on("click",function(e) {
+	 				$("ul.nav.pdp li").removeClass('active'); 
+	 				$(this).addClass('active');
+	 				var count = $(this).index();
+	 				$("ul.tabs.pdp>li").removeClass('active'); 
+	 				$("ul.tabs.pdp>li").eq(count).addClass("active");
+			    }); 
+			 }
+	/*----END of  PDP tabs for Jewellery -----*/
 	
 	/*----Start of  SHop by brand A_E hover functionality  -----*/
 			 $(".range").hide();
