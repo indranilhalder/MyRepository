@@ -72,11 +72,14 @@ public class MplCategoryNameCodeMappingValueProvider extends AbstractPropertyFie
 			if (indexedProperty.isLocalized())
 			{
 				final Collection<LanguageModel> languages = indexConfig.getLanguages();
-				for (final LanguageModel language : languages)
+				if(null!=languages)
 				{
-					for (final CategoryModel category : categories)
+					for (final LanguageModel language : languages)
 					{
-						fieldValues.addAll(createFieldValue(category, language, indexedProperty));
+						for (final CategoryModel category : categories)
+						{
+							fieldValues.addAll(createFieldValue(category, language, indexedProperty));
+						}
 					}
 				}
 			}
@@ -116,9 +119,12 @@ public class MplCategoryNameCodeMappingValueProvider extends AbstractPropertyFie
 				this.i18nService.setCurrentLocale(locale);
 			}
 			final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty, language.getIsocode());
-			for (final String fieldName : fieldNames)
+			if(null!=fieldNames)
 			{
-				fieldValues.add(new FieldValue(fieldName, value));
+				for (final String fieldName : fieldNames)
+				{
+					fieldValues.add(new FieldValue(fieldName, value));
+				}
 			}
 		}
 		else
@@ -126,9 +132,12 @@ public class MplCategoryNameCodeMappingValueProvider extends AbstractPropertyFie
 			value = getPropertyValue(category, "code") + "|" + getPropertyValue(category, "name");
 			//System.out.println(" %%%%%%% value:" + value);
 			final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty, null);
-			for (final String fieldNameVal : fieldNames)
+			if(null!=fieldNames)
 			{
-				fieldValues.add(new FieldValue(fieldNameVal, value));
+				for (final String fieldNameVal : fieldNames)
+				{
+					fieldValues.add(new FieldValue(fieldNameVal, value));
+				}
 			}
 		}
 
