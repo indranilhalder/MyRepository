@@ -5530,6 +5530,8 @@ function checkPincodeServiceability(buttonType,el)
  		type: "GET",
  		cache: false,
  		success : function(response) {
+ 			//UF-84
+ 			$("#pincodeforcart").html("("+ selectedPincode + ")");
  			//"sprint merger issue
  			var responeStr=response['pincodeData'].split("|");
  			//TPR-970 changes
@@ -6119,6 +6121,8 @@ function checkIsServicable()
 	 		type: "GET",
 	 		cache: false,
 	 		success : function(response) {
+	 			//UF-84
+	 			$("#pincodeforcart").html("("+ selectedPincode + ")");
 	 			// TPR-1055
 	 			//Sprint merge issue
 	 			var responeStr=response['pincodeData'].split("|");
