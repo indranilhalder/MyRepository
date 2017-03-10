@@ -335,7 +335,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 
-		final Double discount = getTotalDiscount(orderModel.getEntries());
+		final Double discount = getTotalDiscount(orderModel.getEntries(),true);
 
 		totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 		return totalPrice;
@@ -350,7 +350,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 
-		final Double discount = getTotalDiscount(orderModel.getEntries());
+		final Double discount = getTotalDiscount(orderModel.getEntries(),false);
 
 		totalPrice = Double.valueOf(subtotal.doubleValue() - discount.doubleValue());
 		return totalPrice;
