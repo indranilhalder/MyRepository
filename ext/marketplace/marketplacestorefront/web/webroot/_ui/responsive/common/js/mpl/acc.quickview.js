@@ -49,6 +49,7 @@ ACC.quickview = {
 				});
 				
 				/*TPR-690 ends*/
+				tealiumBrokenImageQuickview();
 			},
 
 			onClosed: function ()
@@ -66,7 +67,25 @@ ACC.quickview = {
 	
 };
 
+function tealiumBrokenImageQuickview(){
+var brokenImageCount=0;	
+	$('#cboxWrapper img').each(function(){
+		var url = $(this).attr('src');
+		if(url){
+			if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+			      // image is broken
+			    	brokenImageCount++;
+			    }
+		}
 
+	});
+	if(brokenImageCount > 0){
+		var msg = brokenImageCount+" broken_image_found";
+		utag.link({ 
+			error_type : msg
+		});
+	}
+}
 
 function quickviewGallery() {
 	$(document).ready(function(){
@@ -92,15 +111,15 @@ function quickviewGallery() {
 				  });
 				}
 		 	
-		 	$(".productImageGallery img").click(function(e) {
-				/*TPR-643 starts*/
+		 	/*$(".productImageGallery img").click(function(e) {
+				TPR-643 starts
 					utag.link({
 						link_obj: this, 
 						link_text: 'pdp_image_click' , 
 						event_type : 'pdp_image_click' 
 					});
-					/*TPR-643 ends*/
-			});
+					TPR-643 ends
+			});*/
 		}).each(function() {
 	    	  if(this.complete) $(this).load();
 	    });
@@ -638,7 +657,6 @@ function selectWishlist_quick(i) {
 	});
 }*/
 function openPop_quick(ussidfromSeller){
-
 	
 	var loggedIn=$("#loggedIn").val();
 
@@ -919,6 +937,7 @@ $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
 		 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 		 				$("#addToCartFormQuickTitle").show();
 		  				$("#addToCartFormQuickTitle").fadeOut(5000);
+		  				errorAddToBag("size_not_selected"); //Error for tealium analytics
  	    return false;
  }else{			 
 	ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
