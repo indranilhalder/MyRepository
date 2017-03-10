@@ -214,7 +214,7 @@
 					<c:forEach var="returnDate" items="${returnDates}" varStatus="i">
 					<div class="selectRadio date col-md-4 col-sm-4 col-xs-4">
 						<form:radiobutton class="radioButton selectRadioDate${i.index}" value="${returnDate}"
-							name="selectDate" path="scheduleReturnDate" /> <br />
+							name="selectDate" path="scheduleReturnDate" />
 						<p style="clear: both"></p>
 						<fmt:parseDate value="${returnDate}" var="scheduleReturnDate" pattern="dd-MM-yyyy" />
 						<div><fmt:formatDate value="${scheduleReturnDate}" pattern="MMM dd"/></div> 
@@ -225,15 +225,16 @@
 					<br /> <br /> <br />
 				</div>
 
-
-				<div class="row col-md-12 col-sm-6  col-xs-12 selectDateTime">
+				<!-- R2.3 START -->
+				<p style="clear: both"></p>				
+				<div class="row selectDateTime" style="padding-top: 15px;">
 					<div class="sideHead"><spring:theme code="text.order.returns.preferredtime"/></div>
 					<br />
                    <c:if test="${returnDates.size()>0}">
 					<c:forEach var="timeSlot" items="${timeSlots}">
 						<div class="selectRadio time col-md-4 col-sm-4 col-xs-4">
 							<form:radiobutton  class="radioButton" value="${timeSlot}" path="scheduleReturnTime"
-								name="scheduleReturnTime" /> <br />
+								name="scheduleReturnTime" />
 							<p style="clear: both"></p>
 
 							<div>${timeSlot}</div>
@@ -241,6 +242,8 @@
 					</c:forEach>
 				 </c:if>
 				</div>
+				<p style="clear: both"></p>
+				<!-- R2.3 END  -->
 				<c:if test="${ScheduleDatesEmpty eq 'true'}">
 				<span>  The Product needs to be shipped on next immediate else the return will be deemed non eligible </span>
 				</c:if>
