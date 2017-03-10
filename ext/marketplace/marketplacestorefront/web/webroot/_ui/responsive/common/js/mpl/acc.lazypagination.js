@@ -112,8 +112,8 @@ function getProductSetData() {
         } else { // if no url with page no occourance found.
             if (pageNoPagination <= totalNoOfPages) {
                 ajaxUrl = pathName.replace(/[/]$/,"") + '/page-' + pageNoPagination;
-                if($('ul.product-listing.product-grid').length==0){//for serp initial page 
-                	ajaxUrl = ajaxUrl + '?q='+findGetParameter('text')+':relevance:isLuxuryProduct:false';
+                if(pageType == 'productsearch'){//for serp initial page 
+                	ajaxUrl = ajaxUrl + '?'+ $('#searchPageDeptHierTreeForm').serialize();
             	}else if(query){
             		ajaxUrl = ajaxUrl + query;
             	}
@@ -123,7 +123,6 @@ function getProductSetData() {
             }
 			ajaxPLPLoad(ajaxUrl);
         }
-        //ajaxPLPLoad(ajaxUrl);
     }
 }
 
@@ -311,7 +310,7 @@ function sort(this_data,drop_down){
 	var item = $(this_data).attr('data-name');
 	$('.sort').removeAttr('style');
 	if(!drop_down){
-		$(this_data).css('color', 'red');
+		$(this_data).css('color', '#a5173c');
 	}
 	var pathName = window.location.pathname;
 	pathName = pathName.replace(/page-[0-9]+/, 'page-1');

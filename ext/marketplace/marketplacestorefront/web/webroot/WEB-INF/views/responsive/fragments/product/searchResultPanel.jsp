@@ -56,7 +56,7 @@
 					<p class="filter-name facet_mobile"><spring:theme code="search.nav.facetTitle" arguments="Department"/></p>
 						<input type="hidden" name="q" id="q" />
 						<input type="hidden" name="text" id="text" value="${searchPageData.freeTextSearch}"/>
-						<input type="hidden" name="searchCategory" id="searchCategoryTree"/>
+						<input type="hidden" name="searchCategory" id="searchCategoryTree" value="${searchCategory}"/>
 						<div id="searchPageDeptHierTree"></div>
 					</form>
 				</c:otherwise>

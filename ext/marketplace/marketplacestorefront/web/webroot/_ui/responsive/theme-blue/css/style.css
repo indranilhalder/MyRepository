@@ -17362,7 +17362,7 @@ header.brand-header .select-view .select-list li {
   bottom: 0;
   right: 0;
   color: #fff;
-  background-color: #a91e3e;
+  background-color: #666;
   position: fixed;
   height: 35px;
   width: 170px;
@@ -17372,6 +17372,9 @@ header.brand-header .select-view .select-list li {
   cursor:pointer;
   font-size:14px;	
 }
+.loadMorePageButton{ 
+background-color: #666 !important; line-height: 22px;
+}  
  .feedback-links{
  right: 175px;}
 
