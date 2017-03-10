@@ -27,6 +27,7 @@ import java.util.TreeMap;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.security.access.annotation.Secured;
@@ -575,17 +576,16 @@ public class PaymentServicesController extends BaseController
 			@RequestParam(required = false) final String otpPin, @RequestParam final String cartGuid)
 	{
 		final PaymentServiceWsData updateTransactionDtls = new PaymentServiceWsData();
+		OrderModel orderModel = null;
+		//OrderData orderData = null;
+		CartModel cart = null;
 		String failErrorCode = "";
 		String validationMsg = "";
 		boolean failFlag = false;
 		String orderCode = null;
-		OrderModel orderModel = null;
-		//OrderData orderData = null;
-		CartModel cart = null;
-
+		LOG.debug(String.format("updateTransactionDetailsforCOD : CartId: %s | UserId : %s |", cartGuid, userId));
 		try
 		{
-			LOG.debug(String.format("updateTransactionDetailsforCOD : CartId: %s | UserId : %s |", cartGuid, userId));
 			//updateTransactionDtls = getMplPaymentWebFacade().updateCODTransactionDetails(cartGuid, userId);
 			final CustomerData customerData = customerFacade.getCurrentCustomer();
 			if (null == customerData)
@@ -729,16 +729,22 @@ public class PaymentServicesController extends BaseController
 					}
 					else
 					{
-						//adding Payment id to model
-						if (mplPaymentWebFacade.updateOrder(orderModel))
+						final Map<String, String> duplicateJuspayResMap = getSessionService().getAttribute(
+								MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE);
+						// OrderIssues:-  multiple Payment Response from juspay restriction
+						if (MapUtils.isNotEmpty(duplicateJuspayResMap) && duplicateJuspayResMap.get(cartGuid).equalsIgnoreCase("False"))
 						{
-							updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-							updateTransactionDtls.setOrderId(orderModel.getCode());
-						}
-						else
-						{
-							updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-							updateTransactionDtls.setError(MarketplacecommerceservicesConstants.INVALIDORDERID);
+							//adding Payment id to model
+							if (mplPaymentWebFacade.updateOrder(orderModel))
+							{
+								updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+								updateTransactionDtls.setOrderId(orderModel.getCode());
+							}
+							else
+							{
+								updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+								updateTransactionDtls.setError(MarketplacecommerceservicesConstants.INVALIDORDERID);
+							}
 						}
 					}
 				}
@@ -811,80 +817,89 @@ public class PaymentServicesController extends BaseController
 			@RequestParam final String paymentMode, @PathVariable final String userId, @RequestParam final String cartGuid)
 	{
 		final PaymentServiceWsData updateTransactionDetail = new PaymentServiceWsData();
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug(String.format("PaymentMode: %s | cartGuid: %s | UserId : %s | juspayOrderID : %s", paymentMode, cartGuid,
+					userId, juspayOrderID));
+		}
 		OrderModel orderToBeUpdated = null;
 		String statusResponse = "";
 		try
 		{
-			if (LOG.isDebugEnabled())
-			{
-				LOG.debug(String.format("PaymentMode: %s | cartGuid: %s | UserId : %s | juspayOrderID : %s", paymentMode, cartGuid,
-						userId, juspayOrderID));
-			}
 			//final String orderGuid = decryptKey(guid);
 			orderToBeUpdated = mplPaymentFacade.getOrderByGuid(cartGuid);
-			//  INC144314180  PRDI-25
-			if (null != orderToBeUpdated && null == orderToBeUpdated.getPaymentInfo()
-					&& !OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
-			{
-				//Wallet amount assigned. Will be changed after release1
-				//final double walletAmount = MarketplacewebservicesConstants.WALLETAMOUNT;
-				//setting the payment modes and the amount against it in session to be used later
-				final Map<String, Double> paymentInfo = new HashMap<String, Double>();
-				paymentInfo.put(paymentMode, Double.valueOf(orderToBeUpdated.getTotalPriceWithConv().doubleValue()));
 
-				statusResponse = mplPaymentFacade.getOrderStatusFromJuspay(cartGuid, paymentInfo, orderToBeUpdated, juspayOrderID);
-				//Redirection when transaction is successful i.e. CHARGED
-				if (null != statusResponse)
+			final Map<String, Boolean> duplicateJuspayResMap = getSessionService().getAttribute(
+					MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE);
+			// OrderIssues:-  multiple Payment Response from juspay restriction
+			if (MapUtils.isNotEmpty(duplicateJuspayResMap) && null != duplicateJuspayResMap.get(cartGuid)
+					&& !duplicateJuspayResMap.get(cartGuid).booleanValue())
+			{
+
+				//  INC144314180  PRDI-25
+				if (null != orderToBeUpdated && null == orderToBeUpdated.getPaymentInfo()
+						&& !OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
 				{
-					if (MarketplacewebservicesConstants.CHARGED.equalsIgnoreCase(statusResponse))
+					//Wallet amount assigned. Will be changed after release1
+					//final double walletAmount = MarketplacewebservicesConstants.WALLETAMOUNT;
+					//setting the payment modes and the amount against it in session to be used later
+					final Map<String, Double> paymentInfo = new HashMap<String, Double>();
+					paymentInfo.put(paymentMode, Double.valueOf(orderToBeUpdated.getTotalPriceWithConv().doubleValue()));
+
+					statusResponse = mplPaymentFacade.getOrderStatusFromJuspay(cartGuid, paymentInfo, orderToBeUpdated, juspayOrderID);
+					//Redirection when transaction is successful i.e. CHARGED
+					if (null != statusResponse)
 					{
-						//return placeOrder(model, redirectAttributes);
-						if (mplPaymentWebFacade.updateOrder(orderToBeUpdated))
+						if (MarketplacewebservicesConstants.CHARGED.equalsIgnoreCase(statusResponse))
 						{
-							updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
-							updateTransactionDetail.setOrderId(orderToBeUpdated.getCode());
+							//return placeOrder(model, redirectAttributes);
+							if (mplPaymentWebFacade.updateOrder(orderToBeUpdated))
+							{
+								updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
+								updateTransactionDetail.setOrderId(orderToBeUpdated.getCode());
+							}
+							else
+							{
+								updateTransactionDetail.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+								updateTransactionDetail.setOrderId(orderToBeUpdated.getCode());
+							}
+						}
+						else if (MarketplacewebservicesConstants.JUSPAY_DECLINED.equalsIgnoreCase(statusResponse))
+						{
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9322);
+						}
+						else if (MarketplacewebservicesConstants.AUTHORIZATION_FAILED.equalsIgnoreCase(statusResponse)
+								|| MarketplacewebservicesConstants.AUTHENTICATION_FAILED.equalsIgnoreCase(statusResponse)
+								|| MarketplacewebservicesConstants.PENDING_VBV.equalsIgnoreCase(statusResponse))
+						{
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9323);
 						}
 						else
 						{
-							updateTransactionDetail.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-							updateTransactionDetail.setOrderId(orderToBeUpdated.getCode());
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9324);
 						}
 					}
-					else if (MarketplacewebservicesConstants.JUSPAY_DECLINED.equalsIgnoreCase(statusResponse))
-					{
-						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9322);
-					}
-					else if (MarketplacewebservicesConstants.AUTHORIZATION_FAILED.equalsIgnoreCase(statusResponse)
-							|| MarketplacewebservicesConstants.AUTHENTICATION_FAILED.equalsIgnoreCase(statusResponse)
-							|| MarketplacewebservicesConstants.PENDING_VBV.equalsIgnoreCase(statusResponse))
-					{
-						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9323);
-					}
+					//Redirection when transaction is failed
 					else
 					{
 						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9324);
+
 					}
 				}
-				//Redirection when transaction is failed
 				else
 				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9324);
+					if (mplPaymentWebFacade.updateOrder(orderToBeUpdated))
+					{
+						updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
+						updateTransactionDetail.setOrderId(orderToBeUpdated.getCode());
+					}
+					else
+					{
+						updateTransactionDetail.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+						updateTransactionDetail.setOrderId(orderToBeUpdated.getCode());
+					}
 
 				}
-			}
-			else
-			{
-				if (mplPaymentWebFacade.updateOrder(orderToBeUpdated))
-				{
-					updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
-					updateTransactionDetail.setOrderId(orderToBeUpdated.getCode());
-				}
-				else
-				{
-					updateTransactionDetail.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-					updateTransactionDetail.setOrderId(orderToBeUpdated.getCode());
-				}
-
 			}
 		}
 		catch (final EtailNonBusinessExceptions ex)

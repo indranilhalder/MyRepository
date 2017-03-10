@@ -7,6 +7,7 @@ import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.catalog.CatalogService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.CartModificationData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
@@ -154,6 +155,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	private MplConfigService mplConfigService;
 	@Resource
 	MplCommerceCartCalculationStrategy mplDefaultCommerceCartCalculationStrategy;
+
+
+	private Converter<OrderModel, OrderData> orderConverter;
 
 
 	public MplCommerceCartCalculationStrategy getMplDefaultCommerceCartCalculationStrategy()
@@ -1522,18 +1526,27 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
+
+
+
+	//commented for CAR:127
+	/*
+	 * @Override public boolean isInventoryReserved(final String requestType, final AbstractOrderModel
+	 * abstractOrderModel) //Parameter AbstractOrderModel added extra for TPR-629 throws EtailNonBusinessExceptions
+	 */
 	@Override
-	public boolean isInventoryReserved(final String requestType, AbstractOrderModel abstractOrderModel) //Parameter AbstractOrderModel added extra for TPR-629
-			throws EtailNonBusinessExceptions
+	public boolean isInventoryReserved(final String requestType, final AbstractOrderData abstractOrderData,
+			final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions
 	{
-		if (null == abstractOrderModel)
-		{
-			abstractOrderModel = cartService.getSessionCart();
-		}
+		//commented for CAR:127
+		/*
+		 * if (null == abstractOrderModel) { abstractOrderModel = cartService.getSessionCart(); }
+		 */
 		//final AbstractOrderModel abstractOrderModel = cartService.getSessionCart();
 		final String defaultPinCodeId = sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
-		return mplCommerceCartService.isInventoryReserved(abstractOrderModel, requestType, defaultPinCodeId);
-
+		//commented for CAR:127
+		//return mplCommerceCartService.isInventoryReserved(abstractOrderModel, requestType, defaultPinCodeId);
+		return mplCommerceCartService.isInventoryReserved(abstractOrderData, requestType, defaultPinCodeId, abstractOrderModel);
 	}
 
 	/*
@@ -1549,12 +1562,36 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
+
+
 	@Override
 	public boolean isInventoryReservedMobile(final String requestType, final AbstractOrderModel abstractOrderModel,
 			final String defaultPinCodeId) throws EtailNonBusinessExceptions
 	{
-		return mplCommerceCartService.isInventoryReserved(abstractOrderModel, requestType, defaultPinCodeId);
+		//added for CAR:127
+		boolean isInventoryReservedMobile = false;
+		//added for CAR:127
+		if (abstractOrderModel instanceof CartModel)
+		{
+			final CartModel cartModel = (CartModel) abstractOrderModel;
+			//final CartData cartData = getCartConverter().convert(cartModel);
+			final CartData cartData = getCartDataFromCartModel(cartModel, false);
+			isInventoryReservedMobile = mplCommerceCartService.isInventoryReserved(cartData, requestType, defaultPinCodeId,
+					abstractOrderModel);
+		}
+		else if (abstractOrderModel instanceof OrderModel)
+		{
+			final OrderModel orderModel = (OrderModel) abstractOrderModel;
+			final OrderData orderData = getOrderConverter().convert(orderModel);
+			isInventoryReservedMobile = mplCommerceCartService.isInventoryReserved(orderData, requestType, defaultPinCodeId,
+					abstractOrderModel);
+		}
+		//commented for CAR:127
+		//return mplCommerceCartService.isInventoryReserved(abstractOrderModel, requestType, defaultPinCodeId);
+		return isInventoryReservedMobile;
+		//end CAR:127
 	}
+
 
 	/**
 	 * @return the productService
@@ -1870,9 +1907,13 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 			if (isServicable.equalsIgnoreCase(MarketplacecclientservicesConstants.Y))
 			{
-
+				//commented for CAR:127
+				/*
+				 * final boolean inventoryReservationStatus = isInventoryReserved(
+				 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART, null, null);
+				 */
 				final boolean inventoryReservationStatus = isInventoryReserved(
-						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART, null);
+						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART, cartData, cartModel);
 				if (!inventoryReservationStatus)
 				{
 					sessionService.setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,
@@ -2747,5 +2788,47 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	}
 
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.facade.checkout.MplCartFacade#getCartDataFromCartModel(de.hybris.platform.core.model.order.CartModel)
+	 */
+	@Override
+	public CartData getCartDataFromCartModel(final CartModel cartModel, final boolean recentlyAddedFirst)
+			throws EtailNonBusinessExceptions
+	{
+		// YTODO Auto-generated method stub
+		CartData cartData = null;
+		if (null != cartModel)
+		{
+			cartData = getCartConverter().convert(cartModel);
+			//cartData = mplExtendedCartConverter.convert(cartModel);
+			if (recentlyAddedFirst)
+			{
+				final List<OrderEntryData> listEntries = cartData.getEntries();
+				final List<OrderEntryData> recentlyAddedListEntries = new ArrayList<OrderEntryData>();
+
+				for (int index = listEntries.size(); index > 0; index--)
+				{
+					recentlyAddedListEntries.add(listEntries.get(index - 1));
+				}
+				cartData.setEntries(Collections.unmodifiableList(recentlyAddedListEntries));
+			}
+			return cartData;
+		}
+		return createEmptyCart();
+	}
+
+	protected Converter<OrderModel, OrderData> getOrderConverter()
+	{
+		return orderConverter;
+	}
+
+	@Required
+	public void setOrderConverter(final Converter<OrderModel, OrderData> orderConverter)
+	{
+		this.orderConverter = orderConverter;
+	}
 
 }

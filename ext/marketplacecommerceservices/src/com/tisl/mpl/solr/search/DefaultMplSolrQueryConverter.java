@@ -123,6 +123,14 @@ public class DefaultMplSolrQueryConverter extends DefaultSolrQueryConverter
 			}
 			solrQuery.setFacetMinCount(1);
 			solrQuery.setFacetLimit(3);
+
+			//Architectural Review Finding Point 16
+			solrQuery.addField("name_text_en");
+			solrQuery.addField("url_en_string");
+			solrQuery.addField("img-252Wx374H_string");
+			solrQuery.addField("priceValue_inr_double");
+			solrQuery.addField("code_string");
+			solrQuery.addField("isLuxuryProduct_boolean");
 			/*
 			 * if (getFacetSort() == null) { this.facetSort = DEFAULT_FACET_SORT; }
 			 */
@@ -267,6 +275,7 @@ public class DefaultMplSolrQueryConverter extends DefaultSolrQueryConverter
 			final Map results = new HashMap();
 
 			final IndexedType indexedType = searchQuery.getIndexedType();
+			//Architectural Review Finding Point 17
 			populatedFacetDetails(searchQuery, results, 0, indexedType, "snsCategory");
 			populatedFacetDetails(searchQuery, results, 1, indexedType, "brand");
 			populatedFacetDetails(searchQuery, results, 2, indexedType, "micrositeSnsCategory");

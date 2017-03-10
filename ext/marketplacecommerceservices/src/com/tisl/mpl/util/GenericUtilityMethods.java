@@ -49,7 +49,6 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.jalo.EtailExcludeSellerSpecificRestriction;
 import com.tisl.mpl.jalo.EtailSellerSpecificRestriction;
-import com.tisl.mpl.jalo.ExcludeManufacturesRestriction;
 import com.tisl.mpl.jalo.ManufacturesRestriction;
 import com.tisl.mpl.jalo.SellerMaster;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -258,24 +257,24 @@ public class GenericUtilityMethods
 	 * @param restrictionList
 	 * @return manufactureList
 	 */
-	public static List<String> getExcludeManufactureList(final List<AbstractPromotionRestriction> restrictionList)
-	{
-		final List<String> manufactureList = new ArrayList<String>();
-		for (final AbstractPromotionRestriction restriction : restrictionList)
-		{
-			if (restriction instanceof ExcludeManufacturesRestriction)
-			{
-				final ExcludeManufacturesRestriction excludeManufacturesRestriction = (ExcludeManufacturesRestriction) restriction;
-				final List<Category> excludeBrandList = (List<Category>) excludeManufacturesRestriction.getManufacturers();
-				for (final Category excludeBrand : excludeBrandList)
-				{
-					manufactureList.add(excludeBrand.getName());
-				}
-			}
-		}
-
-		return manufactureList;
-	}
+	//	public static List<String> getExcludeManufactureList(final List<AbstractPromotionRestriction> restrictionList)
+	//	{
+	//		final List<String> manufactureList = new ArrayList<String>();
+	//		for (final AbstractPromotionRestriction restriction : restrictionList)
+	//		{
+	//			if (restriction instanceof ExcludeManufacturesRestriction)
+	//			{
+	//				final ExcludeManufacturesRestriction excludeManufacturesRestriction = (ExcludeManufacturesRestriction) restriction;
+	//				final List<Category> excludeBrandList = (List<Category>) excludeManufacturesRestriction.getManufacturers();
+	//				for (final Category excludeBrand : excludeBrandList)
+	//				{
+	//					manufactureList.add(excludeBrand.getName());
+	//				}
+	//			}
+	//		}
+	//
+	//		return manufactureList;
+	//	}
 
 	/**
 	 * @Description: @Promtion: Checks whether Product Exist in Category
@@ -645,36 +644,36 @@ public class GenericUtilityMethods
 	 * @Description : Populate the Excluded Product and Manufacture Data in separate Lists
 	 * @param : SessionContext arg0,PromotionEvaluationContext arg1
 	 */
-	public static void populateExcludedProductManufacturerList(final SessionContext arg0, final PromotionEvaluationContext arg1,
-			final List<Product> excludedProductList, final List<String> excludeManufactureList,
-			final List<AbstractPromotionRestriction> restrictionList, final ProductPromotion productPromotion)
-	{
-		try
-		{
-			if (productPromotion.getProperty(arg0, MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS) != null
-					&& excludedProductList != null)
-			{
-				excludedProductList.addAll((List<Product>) productPromotion.getProperty(arg0,
-						MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS));
-			}
-			if (excludeManufactureList != null)
-			{
-				excludeManufactureList.addAll(getExcludeManufactureList(restrictionList));
-			}
-		}
-		catch (final EtailBusinessExceptions e)
-		{
-			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-		}
-		catch (final Exception e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
-		}
-	}
+	//	public static void populateExcludedProductManufacturerList(final SessionContext arg0, final PromotionEvaluationContext arg1,
+	//			final List<Product> excludedProductList, final List<String> excludeManufactureList,
+	//			final List<AbstractPromotionRestriction> restrictionList, final ProductPromotion productPromotion)
+	//	{
+	//		try
+	//		{
+	//			if (productPromotion.getProperty(arg0, MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS) != null
+	//					&& excludedProductList != null)
+	//			{
+	//				excludedProductList.addAll((List<Product>) productPromotion.getProperty(arg0,
+	//						MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS));
+	//			}
+	//			if (excludeManufactureList != null)
+	//			{
+	//				excludeManufactureList.addAll(getExcludeManufactureList(restrictionList));
+	//			}
+	//		}
+	//		catch (final EtailBusinessExceptions e)
+	//		{
+	//			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+	//		}
+	//		catch (final EtailNonBusinessExceptions e)
+	//		{
+	//			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+	//		}
+	//	}
 
 	/**
 	 * @Description: It validates the Brand And Category Minimum Amt
@@ -725,11 +724,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
