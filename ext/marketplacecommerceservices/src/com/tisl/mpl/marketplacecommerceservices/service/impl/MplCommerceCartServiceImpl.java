@@ -5156,4 +5156,18 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	{
 		this.baseStoreService = baseStoreService;
 	}
+
+	/**
+	 * This service was developed for CAR-256
+	 *
+	 * @param site
+	 * @param user
+	 * @return CartModel
+	 * @throws InvalidCartException
+	 */
+	@Override
+	public CartModel fetchLatestCart(final BaseSiteModel site, final UserModel user) throws InvalidCartException
+	{
+		return mplCommerceCartDao.fetchLatestCart(site, user);
+	}
 }

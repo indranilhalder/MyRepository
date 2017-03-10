@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
@@ -484,6 +485,16 @@ public interface MplCommerceCartService
 	 */
 	public Map<String, List<MarketplaceDeliveryModeData>> getDeliveryMode(CartData cartData,
 			List<PinCodeResponseData> omsDeliveryResponse) throws CMSItemNotFoundException;
+	/**
+	 * This method was developed for CAR-256
+	 *
+	 * @param guid
+	 * @param site
+	 * @param user
+	 * @return CartModel
+	 * @throws InvalidCartException
+	 */
+	public CartModel fetchLatestCart(final BaseSiteModel site, final UserModel user) throws InvalidCartException;
 
 
 
