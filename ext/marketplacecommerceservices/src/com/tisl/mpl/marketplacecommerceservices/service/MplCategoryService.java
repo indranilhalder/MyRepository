@@ -7,6 +7,7 @@ import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.model.CategoryModel;
 
 import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -33,5 +34,5 @@ public interface MplCategoryService
 	 * @param categoryList
 	 * @return Collection<CategoryModel>
 	 */
-	//Collection<CategoryModel> getAllSupercategoriesForCategoryList(List<CategoryModel> categoryList);
+	Collection<CategoryModel> getAllSupercategoriesForCategoryList(List<CategoryModel> categoryList);
 }
