@@ -21,10 +21,16 @@ import de.hybris.platform.core.initialization.SystemSetup.Type;
 import de.hybris.platform.core.initialization.SystemSetupContext;
 import de.hybris.platform.core.initialization.SystemSetupParameter;
 import de.hybris.platform.core.initialization.SystemSetupParameterMethod;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 
 
@@ -36,7 +42,12 @@ import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 @SystemSetup(extension = MarketplaceCoreConstants.EXTENSIONNAME)
 public class CoreSystemSetup extends AbstractSystemSetup
 {
+	//Added for adhoc impex
+	@Autowired
+	private ConfigurationService configurationService;
+
 	public static final String IMPORT_ACCESS_RIGHTS = "accessRights";
+	ArrayList<String> releaseList = new ArrayList<String>();
 
 	/**
 	 * This method will be called by system creator during initialization and system update. Be sure that this method can
@@ -48,6 +59,7 @@ public class CoreSystemSetup extends AbstractSystemSetup
 	@SystemSetup(type = Type.ESSENTIAL, process = Process.ALL)
 	public void createEssentialData(final SystemSetupContext context)
 	{
+
 		importImpexFile(context, "/marketplacecore/import/common/essential-data.impex");
 		importImpexFile(context, "/marketplacecore/import/common/countries.impex");
 		importImpexFile(context, "/marketplacecore/import/common/delivery-modes.impex");
@@ -66,9 +78,32 @@ public class CoreSystemSetup extends AbstractSystemSetup
 	@SystemSetupParameterMethod
 	public List<SystemSetupParameter> getInitializationOptions()
 	{
+		//Added for adhoc.impex
+		final String releases = configurationService.getConfiguration().getString(MarketplaceCoreConstants.releaseImpex);
+		if (!StringUtils.isEmpty(releases))
+		{
+
+			for (final String release : releases.split(MarketplacecommerceservicesConstants.COMMA))
+			{
+				releaseList.add(release);
+			}
+
+		}
+
+
+
+
 		final List<SystemSetupParameter> params = new ArrayList<SystemSetupParameter>();
 
 		params.add(createBooleanSystemSetupParameter(IMPORT_ACCESS_RIGHTS, "Import Users & Groups", true));
+		//Added for adhoc.impex
+		if (CollectionUtils.isNotEmpty(releaseList))
+		{
+			for (final String rel : releaseList)
+			{
+				params.add(createBooleanSystemSetupParameter(rel, rel, false));
+			}
+		}
 
 		return params;
 	}
@@ -82,6 +117,9 @@ public class CoreSystemSetup extends AbstractSystemSetup
 	@SystemSetup(type = Type.PROJECT, process = Process.ALL)
 	public void createProjectData(final SystemSetupContext context)
 	{
+
+
+
 		final boolean importAccessRights = getBooleanSystemSetupParameter(context, IMPORT_ACCESS_RIGHTS);
 
 		final List<String> extensionNames = getExtensionNames();
@@ -120,6 +158,19 @@ public class CoreSystemSetup extends AbstractSystemSetup
 		if (extensionNames.contains("mcc"))
 		{
 			importImpexFile(context, "/marketplacecore/import/common/mcc-sites-links.impex");
+		}
+
+		//Added for adhoc.impex
+		if (CollectionUtils.isNotEmpty(releaseList))
+		{
+			for (final String rel : releaseList)
+			{
+				if (getBooleanSystemSetupParameter(context, rel))
+				{
+					System.out.println("Executing" + rel + "impexex");
+					importImpexFile(context, "/marketplacecore/import/release/" + rel + ".impex");
+				}
+			}
 		}
 	}
 
