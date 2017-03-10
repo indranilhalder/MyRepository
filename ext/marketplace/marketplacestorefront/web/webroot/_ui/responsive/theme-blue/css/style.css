@@ -17372,9 +17372,10 @@ header.brand-header .select-view .select-list li {
   cursor:pointer;
   font-size:14px;	
 }
-.loadMorePageButton{ 
-background-color: #666 !important; line-height: 22px;
-}  
+.loadMorePageButton{
+	background-color: #666 !important;
+	line-height: 22px;
+}
  .feedback-links{
  right: 175px;}
 
