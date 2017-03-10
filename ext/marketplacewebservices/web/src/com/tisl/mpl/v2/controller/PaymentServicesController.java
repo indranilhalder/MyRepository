@@ -6,6 +6,7 @@ package com.tisl.mpl.v2.controller;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
+import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -574,16 +575,17 @@ public class PaymentServicesController extends BaseController
 			@RequestParam(required = false) final String otpPin, @RequestParam final String cartGuid)
 	{
 		final PaymentServiceWsData updateTransactionDtls = new PaymentServiceWsData();
-		OrderModel orderModel = null;
-		//OrderData orderData = null;
-		CartModel cart = null;
 		String failErrorCode = "";
 		String validationMsg = "";
 		boolean failFlag = false;
 		String orderCode = null;
-		LOG.debug(String.format("updateTransactionDetailsforCOD : CartId: %s | UserId : %s |", cartGuid, userId));
+		OrderModel orderModel = null;
+		//OrderData orderData = null;
+		CartModel cart = null;
+
 		try
 		{
+			LOG.debug(String.format("updateTransactionDetailsforCOD : CartId: %s | UserId : %s |", cartGuid, userId));
 			//updateTransactionDtls = getMplPaymentWebFacade().updateCODTransactionDetails(cartGuid, userId);
 			final CustomerData customerData = customerFacade.getCurrentCustomer();
 			if (null == customerData)
@@ -669,7 +671,7 @@ public class PaymentServicesController extends BaseController
 						{
 							//CAR-110
 							//orderData = mplCheckoutFacade.placeOrderByCartId(cartGuid);
-							orderCode = mplCheckoutFacade.placeOrderByCartId(cart);
+							orderCode = mplCheckoutFacade.placeOrderMobile(cart);
 							//Please note: order data is now just order code
 							if (orderCode == null)
 							{
@@ -809,24 +811,26 @@ public class PaymentServicesController extends BaseController
 			@RequestParam final String paymentMode, @PathVariable final String userId, @RequestParam final String cartGuid)
 	{
 		final PaymentServiceWsData updateTransactionDetail = new PaymentServiceWsData();
-		if (LOG.isDebugEnabled())
-		{
-			LOG.debug(String.format("PaymentMode: %s | cartGuid: %s | UserId : %s | juspayOrderID : %s", paymentMode, cartGuid,
-					userId, juspayOrderID));
-		}
 		OrderModel orderToBeUpdated = null;
 		String statusResponse = "";
 		try
 		{
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug(String.format("PaymentMode: %s | cartGuid: %s | UserId : %s | juspayOrderID : %s", paymentMode, cartGuid,
+						userId, juspayOrderID));
+			}
 			//final String orderGuid = decryptKey(guid);
 			orderToBeUpdated = mplPaymentFacade.getOrderByGuid(cartGuid);
-			if (null == orderToBeUpdated.getPaymentInfo())
+			//  INC144314180  PRDI-25
+			if (null != orderToBeUpdated && null == orderToBeUpdated.getPaymentInfo()
+					&& !OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
 			{
 				//Wallet amount assigned. Will be changed after release1
-				final double walletAmount = MarketplacewebservicesConstants.WALLETAMOUNT;
+				//final double walletAmount = MarketplacewebservicesConstants.WALLETAMOUNT;
 				//setting the payment modes and the amount against it in session to be used later
 				final Map<String, Double> paymentInfo = new HashMap<String, Double>();
-				paymentInfo.put(paymentMode, Double.valueOf(orderToBeUpdated.getTotalPriceWithConv().doubleValue() - walletAmount));
+				paymentInfo.put(paymentMode, Double.valueOf(orderToBeUpdated.getTotalPriceWithConv().doubleValue()));
 
 				statusResponse = mplPaymentFacade.getOrderStatusFromJuspay(cartGuid, paymentInfo, orderToBeUpdated, juspayOrderID);
 				//Redirection when transaction is successful i.e. CHARGED

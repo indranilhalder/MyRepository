@@ -392,7 +392,7 @@ public class MplPaymentServiceImplUnitTest
 		Mockito.when(modelService.create(PaymentTransactionModel.class)).thenReturn(paymentTransactionModel);
 		Mockito.when(modelService.create(PaymentTypeModel.class)).thenReturn(paymentTypeModel);
 
-		mplPaymentServiceImpl.setPaymentTransactionForCOD(paymentMode, abstractOrderModel);
+		mplPaymentServiceImpl.setPaymentTransactionForCOD(abstractOrderModel);
 
 	}
 

@@ -109,12 +109,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	//	@Autowired
 	//	private MplFraudModelService mplFraudModelService;
-
-	private static final String middleDigits = "000";
-	private static final String middlecharacters = "-";
-
-
-
 	@Autowired
 	private OrderStatusSpecifier orderStatusSpecifier;
 
@@ -132,6 +126,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	@Autowired
 	private MplOrderService mplOrderService;
+
+
+	private static final String middleDigits = "000";
+	private static final String middlecharacters = "-";
+	private static final String PARENT = "Parent";
 
 	/*
 	 * (non-Javadoc)
@@ -274,65 +273,72 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	{
 		final OrderModel orderModel = paramCommerceOrderResult.getOrder();
 		//orderModel.setType("Parent");
-		final List<OrderModel> orderList = getSubOrders(orderModel);
-
-		//TISPRO-249
-		setParentTransBuyABGetC(orderList);
-		//TISUTO-128
-		setFreebieParentTransactionId(orderList);
-		setBOGOParentTransactionId(orderList);
-
-		//Commented as ordercode creation is handled earlier for TPR-629
-		//		final String sequenceGeneratorApplicable = getConfigurationService().getConfiguration()
-		//				.getString(MarketplacecclientservicesConstants.GENERATE_ORDER_SEQUENCE).trim();
-		//		//private method for seting Sub-order Total-TISEE-3986
-		//
-		//
-		//
-		//		if (StringUtils.isNotEmpty(sequenceGeneratorApplicable)
-		//				&& sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE))
-		//		{
-		//			final String orderIdSequence = getMplCommerceCartService().generateOrderId();
-		//			orderModel.setCode(orderIdSequence);
-		//		}
-		//		else
-		//		{
-		//			final Random rand = new Random();
-		//			orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000)));
-		//		}
-		setSuborderTotalAfterOrderSplitting(orderList);
-
-		orderModel.setChildOrders(orderList);
-		getModelService().save(orderModel);
-		if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+		if (StringUtils.isNotEmpty(orderModel.getType()) && PARENT.equalsIgnoreCase(orderModel.getType()))
 		{
-			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+			final List<OrderModel> orderList = getSubOrders(orderModel);
+
+			//TISPRO-249
+			setParentTransBuyABGetC(orderList);
+			//TISUTO-128
+			setFreebieParentTransactionId(orderList);
+			setBOGOParentTransactionId(orderList);
+
+			//Commented as ordercode creation is handled earlier for TPR-629
+			//		final String sequenceGeneratorApplicable = getConfigurationService().getConfiguration()
+			//				.getString(MarketplacecclientservicesConstants.GENERATE_ORDER_SEQUENCE).trim();
+			//		//private method for seting Sub-order Total-TISEE-3986
+			//
+			//
+			//
+			//		if (StringUtils.isNotEmpty(sequenceGeneratorApplicable)
+			//				&& sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE))
+			//		{
+			//			final String orderIdSequence = getMplCommerceCartService().generateOrderId();
+			//			orderModel.setCode(orderIdSequence);
+			//		}
+			//		else
+			//		{
+			//			final Random rand = new Random();
+			//			orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000)));
+			//		}
+			setSuborderTotalAfterOrderSplitting(orderList);
+
+			orderModel.setChildOrders(orderList);
+			getModelService().save(orderModel);
+			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+			{
+				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+			}
+			else
+			{
+
+				final String realEbs = getConfigurationService().getConfiguration().getString("payment.ebs.chek.realtimecall");
+				if (realEbs.equalsIgnoreCase("Y") && StringUtils.isNotEmpty(orderModel.getGuid()))
+				{
+					//				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+					//				{
+					//					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+					//				}
+					//				else
+					//				{
+					//if (StringUtils.isNotEmpty(orderModel.getGuid()))
+					//{
+					final MplPaymentAuditModel mplAudit = getMplOrderDao().getAuditList(orderModel.getGuid());
+					if (null != mplAudit)
+					{
+						final List<MplPaymentAuditEntryModel> mplAuditEntryList = mplAudit.getAuditEntries();
+						if (null != mplAuditEntryList && !mplAuditEntryList.isEmpty())
+						{
+							updateOrderStatus(mplAuditEntryList, orderModel);
+						}
+					}
+					//}
+				}
+			}
 		}
 		else
 		{
-
-			final String realEbs = getConfigurationService().getConfiguration().getString("payment.ebs.chek.realtimecall");
-			if (realEbs.equalsIgnoreCase("Y") && StringUtils.isNotEmpty(orderModel.getGuid()))
-			{
-				//				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
-				//				{
-				//					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-				//				}
-				//				else
-				//				{
-				//if (StringUtils.isNotEmpty(orderModel.getGuid()))
-				//{
-				final MplPaymentAuditModel mplAudit = getMplOrderDao().getAuditList(orderModel.getGuid());
-				if (null != mplAudit)
-				{
-					final List<MplPaymentAuditEntryModel> mplAuditEntryList = mplAudit.getAuditEntries();
-					if (null != mplAuditEntryList && !mplAuditEntryList.isEmpty())
-					{
-						updateOrderStatus(mplAuditEntryList, orderModel);
-					}
-				}
-				//}
-			}
+			LOG.error("MplDefaultPlaceOrderCommerceHooks--beforeSubmitOrder--Without parent trying to create suborder");
 		}
 	}
 
@@ -529,12 +535,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//					.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
 			//					.subtract(BigDecimal.valueOf(totalCouponDiscount));
 
-			totalPrice = BigDecimal.valueOf(totalPriceForSubTotal)/*.add(BigDecimal.valueOf(totalConvChargeForCOD)) */
-					.add(BigDecimal.valueOf(totalDeliveryPrice))/* .subtract(BigDecimal.valueOf(totalDeliveryDiscount)) */
-					.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
+			totalPrice = BigDecimal.valueOf(totalPriceForSubTotal)/* .add(BigDecimal.valueOf(totalConvChargeForCOD)) */
+			.add(BigDecimal.valueOf(totalDeliveryPrice))/* .subtract(BigDecimal.valueOf(totalDeliveryDiscount)) */
+			.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
 					.subtract(BigDecimal.valueOf(totalCouponDiscount));
 			totalPriceWithConv = totalPrice.add(BigDecimal.valueOf(totalConvChargeForCOD));
-			
+
 			final DecimalFormat decimalFormat = new DecimalFormat("#.00");
 			totalPrice = totalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 			totalPriceWithConv = totalPriceWithConv.setScale(2, BigDecimal.ROUND_HALF_EVEN);
