@@ -719,10 +719,11 @@ a.morelink, .more-link {
     line-height: 18px;
     display: block;
 }
-.tabs-block{
+.tabs-block.FineJewellery,
+.tabs-block.FashionJewellery{
 	padding-left: 20px;
 	padding-right: 20px;
-	width: 99%;
+	width: 100%;
 }
 .tabs-block .wrapper{
 	padding: 0;
@@ -3710,9 +3711,13 @@ header .content .bottom.active nav>ul>li:first-child+li.hovered > ul {
     width: 100%;
     height: 4px;
     position: absolute;
-    bottom: 4px;
+    bottom: 0;
     z-index: -1;
     background-color: lightgray;
+}
+.tabs-block .nav-wrapper.FineJewellery:after,
+.tabs-block .nav-wrapper.FashionJewellery:after {
+    bottom: 4px;
 }
 .tabs-block .nav {
     width: 100%;
@@ -33061,298 +33066,302 @@ p.showcase-para {
 }
 @media (max-width: 767px){
 	.MenuWrap {
-    position: relative;
-}
-#showcase .mobile {
-    display: block;
-}
-.selectmenu {
-    border: 1px solid #ccc;
-    color: #000;
-    text-transform: uppercase;
-    padding: 14px;
-    position: relative;
-    cursor: pointer;
-    width: 100%;
-    margin: 0 auto 30px;
-}
-.selectmenu::after {
-    color: rgb(0, 0, 0);
-    content: "\f107";
-    font-family: FontAwesome;
-    font-size: 20px;
-    font-weight: lighter;
-    position: absolute;
-    right: 10px;
-    top: 10px;
-}
-.showcase-heading {
-    background: #f7f8fa none repeat scroll 0 0;
-    border: 1px solid #ccc;
-    border-bottom: 0;
-    padding: 0;
-    width: 100%;
-    position: absolute;
-    top: 41px;
-    text-indent: 15px;
-    display: none;
-    margin: 0 auto 35px;
-}
-.showcase-heading > div:first-child {
-    text-align: left;
-}
-.showcase-heading > div {
-    margin: 10px 0 0;
-    text-align: left;
-    border-bottom: 1px solid #ccc;
-    display: inline-block;
-    float: left;
-    padding: 0 0 10px;
-    width: 100%;
-    cursor: pointer;
-}
-.showcaseItem > a {
-    font-size: 12px;
-}
-.showcaseItem > a.showcase-border {
-    border-bottom: 0 none;
-    font-weight: bold;
-    padding: 0;
-}
-#bestPicks .owl-controls,#productYouCare .owl-controls,#new_exclusive .owl-controls,#brandsYouLove .bulprev, #brandsYouLove .bulnext ,#brandsYouLove .owl-controls,
- .trending .owl-controls,.visuallySimilarItems .owl-controls, .owl-controls {
-    display: none !important;
-}
-.slider.product .frame .overflow{
-padding:0px;}
-header > .content {
-    padding: 0 12px 15px;
-}
-select#enhancedSearchCategory {
-    background-position: 87% 51%;
-}
-.shop-promos {
-    display: none;
-}
-#stayQued {
-    margin: 20px 0 0 0 !important;
-    width: auto;
-}
-.qued-content a.button.maroon {
-       position: absolute;
-    font-size: 11px !important;
-        font-weight: bold;
-    height: 35px;
-    letter-spacing: 1px;
-    line-height: 32px;
-    width: 170px;
-    padding: 0;
-    bottom: 32px;
-    left: 50%;
-    margin: 0 0 0 -80px;
-}
-.qued-image {
-    width: 100%;
-    margin: 0 0 30px;
-    padding: 0 10%;
-}
-.qued-padding {
-    padding: 30px 40px 65px !important;
-}
-.feature-collections .qued .qued-content h1 {
-    margin: 0 0 30px;
-        font-size: 20px;
-}
-.qued-content h3,.qued-content h2,.qued-content h5 {
-    font-size: 21px;
-}
-.qued-content p {
-    line-height: 15px;
-    margin: 10px 10px 20px;
-}
-.qued-image img {
-    display: block;
-    float: none;
-    margin: 0 auto;
-}
-#newAndExclusive .newExclusiveElement {
-    padding: 0 10px;
-}
-#newAndExclusive a.new_exclusive_viewAll {
-    font-size: 11px;
-    height: 35px;
-    letter-spacing: 1px;
-    line-height: 32px;
-    width: 170px;
-    padding: 0;
-    margin: 0 0 0 -80px;
-    font-weight: bold;
-}
-.home-brands-you-love-main-image {
-    left: 0;
-    bottom: -20px;
-    position: absolute;
-    width: 100%;
-}
-.home-brands-you-love-side-image.left, .home-brands-you-love-side-image.right {
-    width: 49%;
-}
-#brandsYouLove h1 {
-    font-size: 20px;
-}
-.buy-banner p{
-	margin: 78px 0 0px !important;
-	font-size: 13px;
-    padding: 15px 25px;
-}
-.about-one.showcase-section {
-    padding: 0 10% 30px;
-}
-
-#showcase {
-    padding: 0 15px;
-    margin: 20px 0 0;
-}
-.showcase-section .desc-section {
-    float: none;
-    width: 100%;
-}
-.newsletter h3 {
-    font-size: 14px;
-}
-.newsletter input {
-    height: 40px;
-}
-.newsletter button {
-    line-height: 15px;
-    height: 40px;
-    letter-spacing: 0;
-}
-.social h3 {
-    font-size: 12px;
-    padding: 15px 20px;
-}
-footer > div > ul > li {
-    line-height: 35px;
-}
-footer > div > ul > li h3 > img {
-    position: relative;
-    left: -8px;
-    margin-bottom: 10px;
-}
-footer .footer-text p {
-    font-size: 10px;
-    line-height: 15px;
-}
-footer .footer-text p b {
-    display: block;
-    margin: 0 0 10px;
-}
-footer .footer-text p {
-    font-size: 10px;
-    line-height: 15px;
-}
-#showcase.feature-collections h1 {
-    padding: 40px 0 15px;
-}
-footer>div>ul>li h3 {
-    font-size: 12px;
-}
-footer > div > ul > li h3:after,footer>div>ul>li.active h3:after {
-    width: 8px;
-    height: 8px;
-}
-#showcase a.button.trending-button, #showcase a.button.maroon {
-       font-size: 11px !important;
-    height: 35px;
-    letter-spacing: 1px;
-    line-height: 32px;
-    width: 180px;
-    padding: 0;
-    margin: 10px auto 0 !important;
-}
-#showcase a.button.trending-button{
-	margin-top:12px;
-}
-p.showcase-para {
-    width: 100%;
-}
-.feature-collections .qued .qued-content {
-    width: 100%;
-}
-.showcase-section .desc-section:last-child{
-	display:none;
-}
-header > .content {
-    padding: 0 12px 15px !important;
-}
-header > .content .bottom .mobile-bag.bag:before {
-    right: -12px !important;
-}
-header > .content .bottom .mobile-bag.bag a{
-	right: -1px !important;
-}
-.visit-store-wrapper {
-    bottom: -45px;
-}
-#bestPicks {
-    margin: 0;
-    padding: 0;
-}
-.home-best-pick-carousel,.home-brands-you-love-carousel,.home-product-you-care-carousel,#newAndExclusive #new_exclusive {
-    padding: 0;
-}
-body.page-homepage .home-brands-you-love-wrapper h1 {
-    font-size: 18px;
-}
-body.page-homepage #bestPicks > h1 {
-    font-size: 20px;
-    padding: 30px 0 10px;
-}
-body.page-homepage #productYouCare h1 {
-    padding: 30px 0 10px;
-    font-size: 20px;
-}
-body.page-homepage #newAndExclusive h1 {
-    font-size: 20px;
-    padding: 30px 0;
-}
-body.page-homepage .trending h1 > span {
-    font-size: 20px !important;
-}
-body.page-homepage .trending .button {
-    font-size: 11px !important;
-    height: 35px !important;
-    letter-spacing: 1px;
-    line-height: 32px !important;
-        margin: 0 auto;
-}
-header > .content .bottom .search form input {
-    font-size: 12px;
-    padding: 0 5px 0 8px;
-}
-.home-brands-you-love-wrapper p.home-brands-you-love-main-image-heading {
-    font-size: 12px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    line-height: 17px;
-    margin: 0 auto;
-    width: 70%;
-}
-.home-brands-you-love-wrapper p.home-brands-you-love-main-image-desc {
-    width: 100%;
-}
-.home-brands-you-love-main-image-wrapper .visit-store {
-    font-size: 11px;
-    height: 35px;
-    letter-spacing: 1px;
-    line-height: 32px;
-    width: 170px;
-    font-weight: bold;
-}
-.home-brands-you-love-main-image img, .home-brands-you-love-main-image-wrapper .text {
-    display: none;
-}
+	    position: relative;
+	}
+	#showcase .mobile {
+	    display: block;
+	}
+	.selectmenu {
+	    border: 1px solid #ccc;
+	    color: #000;
+	    text-transform: uppercase;
+	    padding: 14px;
+	    position: relative;
+	    cursor: pointer;
+	    width: 100%;
+	    margin: 0 auto 30px;
+	}
+	.selectmenu::after {
+	    color: rgb(0, 0, 0);
+	    content: "\f107";
+	    font-family: FontAwesome;
+	    font-size: 20px;
+	    font-weight: lighter;
+	    position: absolute;
+	    right: 10px;
+	    top: 10px;
+	}
+	.showcase-heading {
+	    background: #f7f8fa none repeat scroll 0 0;
+	    border: 1px solid #ccc;
+	    border-bottom: 0;
+	    padding: 0;
+	    width: 100%;
+	    position: absolute;
+	    top: 41px;
+	    text-indent: 15px;
+	    display: none;
+	    margin: 0 auto 35px;
+	}
+	.showcase-heading > div:first-child {
+	    text-align: left;
+	}
+	.showcase-heading > div {
+	    margin: 10px 0 0;
+	    text-align: left;
+	    border-bottom: 1px solid #ccc;
+	    display: inline-block;
+	    float: left;
+	    padding: 0 0 10px;
+	    width: 100%;
+	    cursor: pointer;
+	}
+	.showcaseItem > a {
+	    font-size: 12px;
+	}
+	.showcaseItem > a.showcase-border {
+	    border-bottom: 0 none;
+	    font-weight: bold;
+	    padding: 0;
+	}
+	#bestPicks .owl-controls,#productYouCare .owl-controls,#new_exclusive .owl-controls,#brandsYouLove .bulprev, #brandsYouLove .bulnext ,#brandsYouLove .owl-controls,
+	 .trending .owl-controls,.visuallySimilarItems .owl-controls, .owl-controls {
+	    display: none !important;
+	}
+	.slider.product .frame .overflow{
+		padding:0px;
+	}
+	header > .content {
+	    padding: 0 12px 15px;
+	}
+	select#enhancedSearchCategory {
+	    background-position: 87% 51%;
+	}
+	.shop-promos {
+	    display: none;
+	}
+	#stayQued {
+	    margin: 20px 0 0 0 !important;
+	    width: auto;
+	}
+	.qued-content a.button.maroon {
+	    position: absolute;
+	    font-size: 11px !important;
+	    font-weight: bold;
+	    height: 35px;
+	    letter-spacing: 1px;
+	    line-height: 32px;
+	    width: 170px;
+	    padding: 0;
+	    bottom: 32px;
+	    left: 50%;
+	    margin: 0 0 0 -80px;
+	}
+	.qued-image {
+	    width: 100%;
+	    margin: 0 0 30px;
+	    padding: 0 10%;
+	}
+	.qued-padding {
+	    padding: 30px 40px 65px !important;
+	}
+	.feature-collections .qued .qued-content h1 {
+	    margin: 0 0 30px;
+	        font-size: 20px;
+	}
+	.qued-content h3,.qued-content h2,.qued-content h5 {
+	    font-size: 21px;
+	}
+	.qued-content p {
+	    line-height: 15px;
+	    margin: 10px 10px 20px;
+	}
+	.qued-image img {
+	    display: block;
+	    float: none;
+	    margin: 0 auto;
+	}
+	#newAndExclusive .newExclusiveElement {
+	    padding: 0 10px;
+	}
+	#newAndExclusive a.new_exclusive_viewAll {
+	    font-size: 11px;
+	    height: 35px;
+	    letter-spacing: 1px;
+	    line-height: 32px;
+	    width: 170px;
+	    padding: 0;
+	    margin: 0 0 0 -80px;
+	    font-weight: bold;
+	}
+	.home-brands-you-love-main-image {
+	    left: 0;
+	    bottom: -20px;
+	    position: absolute;
+	    width: 100%;
+	}
+	.home-brands-you-love-side-image.left, .home-brands-you-love-side-image.right {
+	    width: 49%;
+	}
+	#brandsYouLove h1 {
+	    font-size: 20px;
+	}
+	.buy-banner p{
+		margin: 78px 0 0px !important;
+		font-size: 13px;
+	    padding: 15px 25px;
+	}
+	.about-one.showcase-section {
+	    padding: 0 10% 30px;
+	}
+	
+	#showcase {
+	    padding: 0 15px;
+	    margin: 20px 0 0;
+	}
+	.showcase-section .desc-section {
+	    float: none;
+	    width: 100%;
+	}
+	.newsletter h3 {
+	    font-size: 14px;
+	}
+	.newsletter input {
+	    height: 40px;
+	}
+	.newsletter button {
+	    line-height: 15px;
+	    height: 40px;
+	    letter-spacing: 0;
+	}
+	.social h3 {
+	    font-size: 12px;
+	    padding: 15px 20px;
+	}
+	footer > div > ul > li {
+	    line-height: 35px;
+	}
+	footer > div > ul > li h3 > img {
+	    position: relative;
+	    left: -8px;
+	    margin-bottom: 10px;
+	}
+	footer .footer-text p {
+	    font-size: 10px;
+	    line-height: 15px;
+	}
+	footer .footer-text p b {
+	    display: block;
+	    margin: 0 0 10px;
+	}
+	footer .footer-text p {
+	    font-size: 10px;
+	    line-height: 15px;
+	}
+	#showcase.feature-collections h1 {
+	    padding: 40px 0 15px;
+	}
+	footer>div>ul>li h3 {
+	    font-size: 12px;
+	}
+	footer > div > ul > li h3:after,footer>div>ul>li.active h3:after {
+	    width: 8px;
+	    height: 8px;
+	}
+	#showcase a.button.trending-button, #showcase a.button.maroon {
+	    font-size: 11px !important;
+	    height: 35px;
+	    letter-spacing: 1px;
+	    line-height: 32px;
+	    width: 180px;
+	    padding: 0;
+	    margin: 10px auto 0 !important;
+	}
+	#showcase a.button.trending-button{
+		margin-top:12px;
+	}
+	p.showcase-para {
+	    width: 100%;
+	}
+	.feature-collections .qued .qued-content {
+	    width: 100%;
+	}
+	.showcase-section .desc-section:last-child{
+		display:none;
+	}
+	header > .content {
+	    padding: 0 12px 15px !important;
+	}
+	header > .content .bottom .mobile-bag.bag:before {
+	    right: -12px !important;
+	}
+	header > .content .bottom .mobile-bag.bag a{
+		right: -1px !important;
+	}
+	.visit-store-wrapper {
+	    bottom: -45px;
+	}
+	#bestPicks {
+	    margin: 0;
+	    padding: 0;
+	}
+	.home-best-pick-carousel,.home-brands-you-love-carousel,.home-product-you-care-carousel,#newAndExclusive #new_exclusive {
+	    padding: 0;
+	}
+	body.page-homepage .home-brands-you-love-wrapper h1 {
+	    font-size: 18px;
+	}
+	body.page-homepage #bestPicks > h1 {
+	    font-size: 20px;
+	    padding: 30px 0 10px;
+	}
+	body.page-homepage #productYouCare h1 {
+	    padding: 30px 0 10px;
+	    font-size: 20px;
+	}
+	body.page-homepage #newAndExclusive h1 {
+	    font-size: 20px;
+	    padding: 30px 0;
+	}
+	body.page-homepage .trending h1 > span {
+	    font-size: 20px !important;
+	}
+	body.page-homepage .trending .button {
+	    font-size: 11px !important;
+	    height: 35px !important;
+	    letter-spacing: 1px;
+	    line-height: 32px !important;
+	        margin: 0 auto;
+	}
+	header > .content .bottom .search form input {
+	    font-size: 12px;
+	    padding: 0 5px 0 8px;
+	}
+	.home-brands-you-love-wrapper p.home-brands-you-love-main-image-heading {
+	    font-size: 12px;
+	    font-weight: bold;
+	    letter-spacing: 1px;
+	    line-height: 17px;
+	    margin: 0 auto;
+	    width: 70%;
+	}
+	.home-brands-you-love-wrapper p.home-brands-you-love-main-image-desc {
+	    width: 100%;
+	}
+	.home-brands-you-love-main-image-wrapper .visit-store {
+	    font-size: 11px;
+	    height: 35px;
+	    letter-spacing: 1px;
+	    line-height: 32px;
+	    width: 170px;
+	    font-weight: bold;
+	}
+	.home-brands-you-love-main-image img, .home-brands-you-love-main-image-wrapper .text {
+	    display: none;
+	}
+	.tabs-block .nav-wrapper.FineJewellery, .tabs-block .nav-wrapper.FashionJewellery{
+		margin-left: 0;
+	} 
 }
 @media (max-width: 790px){
  	.temp4-features li .contOvrlay .media-content h4 {
@@ -33361,7 +33370,7 @@ header > .content .bottom .search form input {
         letter-spacing: 0;
         line-height: 20px;
         margin-bottom: 0;
-   }
+    }
 	#newAndExclusive .New_Exclusive_title, #newAndExclusive .New_Exclusive_price {
 	    font-size: 12px;
 	}
@@ -33434,7 +33443,7 @@ header > .content .bottom .search form input {
 	    width: 26px;
 	}
 	header > .content .bottom .mobile-bag.bag a {
-	        width: 26px;
+	    width: 26px;
 	    height: 19px;
 	    background: #a8103d;
 	    border: 2px solid #fff;
@@ -33482,7 +33491,7 @@ header > .content .bottom .search form input {
 		margin-bottom:40px;
 	}
 	.qued-content p{
-		    font-size: 12px;
+		font-size: 12px;
 	}
 	.feature-collections .qued .qued-content h1 .h1-qued {
 	    top: 5px;
@@ -33495,13 +33504,13 @@ header > .content .bottom .search form input {
 	}
 	.home-product-you-care-carousel{
 		padding:0px 15px 10px;
-		    margin-bottom: 10px;
+		margin-bottom: 10px;
 	}
 	#newAndExclusive .New_Exclusive_title{
 		margin: 20px 0 10px;
 	}
 	 #newAndExclusive .New_Exclusive_price{
-	margin: 10px 0 15px; }
+		margin: 10px 0 15px; }
 	.trending h1{
 		margin: 0px 0 40px;
 	}
@@ -46846,7 +46855,12 @@ float: right;
 
 /*Products tabs*/
 .product-info>div.tabs-block {
-	/* width: 58%; */
+	width: 58%;
+	float: right;
+}
+
+.product-info>div.tabs-block.FineJewellery,
+.product-info>div.tabs-block.FashionJewellery {
 	width: 98%;
 	float: right;
 }
