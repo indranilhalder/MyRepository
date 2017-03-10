@@ -1205,10 +1205,19 @@ $(document).ready(function(){
 								$(".feed-back-categories").hide();
 								$(".feed-back").hide();
 								$(".feed-back-form").fadeIn();
+								/*TPR-4730*/
+								if(typeof utag !="undefined"){
+									utag.link({ link_text: 'search_feedback_no_submit', event_type : 'search_feedback_no_submit' });
+									}	
 							}
 						},
 						fail : function(data) {
 							alert("Failed to load categories");
+							/*TPR-4730*/
+							if(typeof utag !="undefined"){
+								utag.link({ error_type : "search_feedback_error" });
+								}
+							
 						}
 					});
 				});

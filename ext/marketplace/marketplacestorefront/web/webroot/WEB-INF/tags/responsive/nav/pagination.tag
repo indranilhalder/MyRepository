@@ -83,9 +83,8 @@
 									value="${breadcrumb.removeQuery.url}&searchCategory=${searchCategory}"
 									var="removeQueryUrl" />
 							</c:otherwise>
-						</c:choose> <input type="hidden" class="${breadcrumb.facetCode}"> <input
-						type="hidden" class="applied-color"
-						value="${breadcrumb.facetValueName}">
+						</c:choose> <input type="hidden" class="${breadcrumb.facetName}"><!-- TPR-4704 | For relating the same filter name -->
+						<input type="hidden" class="applied-color" value="${breadcrumb.facetValueName}">
 						${breadcrumb.facetValueName}&nbsp;<a href="${fn:replace(removeQueryUrl, 
                                 '{pageNo}', '1')}"><span 
 							class="remove_filter">x</span></a></li>
