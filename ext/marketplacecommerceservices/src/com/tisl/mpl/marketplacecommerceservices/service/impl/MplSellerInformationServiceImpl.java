@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplSellerInformationDAO;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -36,12 +37,12 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getSellerDetail(java.lang.String)
 	 */
 	@Override
-	public SellerInformationModel getSellerDetail(final String aticleSKUID)
+	public SellerInformationModel getSellerDetail(final String aticleSKUID) throws EtailNonBusinessExceptions
 	{
 		if (aticleSKUID != null)
 		{
@@ -58,7 +59,7 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getSellerDetail(java.lang.String)
 	 */
@@ -126,13 +127,14 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 	}
 
 	/**
-	 * get Fulfillment type for FreeBie Parent Transaction   
+	 * get Fulfillment type for FreeBie Parent Transaction
+	 * 
 	 * @author TECHOUTS
 	 * @param orderEntry
-	 * @return String 
+	 * @return String
 	 */
 	@Override
-	public String getFullfillmentTypeOfParent(OrderEntryModel orderEntry) throws EtailBusinessExceptions
+	public String getFullfillmentTypeOfParent(final OrderEntryModel orderEntry) throws EtailBusinessExceptions
 	{
 		LOG.info("Inside getFullfillmentTypeOfParent method");
 		String parentFulfillmentType = StringUtils.EMPTY;
@@ -140,22 +142,23 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 		{
 			if (null != orderEntry && null != orderEntry.getParentTransactionID())
 			{
-				LOG.debug("parent transaction Id for"+orderEntry.getTransactionID()+" is : " + orderEntry.getParentTransactionID());
+				LOG.debug("parent transaction Id for" + orderEntry.getTransactionID() + " is : "
+						+ orderEntry.getParentTransactionID());
 
 				parentFulfillmentType = mplSellerInformationDAO.getparentFulfillmenttype(orderEntry.getParentTransactionID());
-				
-				LOG.debug(" Parent Fulfillment Type for "+orderEntry.getTransactionID()+" is :"+parentFulfillmentType);
+
+				LOG.debug(" Parent Fulfillment Type for " + orderEntry.getTransactionID() + " is :" + parentFulfillmentType);
 			}
 			return parentFulfillmentType;
 		}
-		catch (EtailBusinessExceptions e)
+		catch (final EtailBusinessExceptions e)
 		{
-			throw new EtailBusinessExceptions(e.getErrorCode(),e);
+			throw new EtailBusinessExceptions(e.getErrorCode(), e);
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			LOG.error("Exception occured " + e.getMessage());
-			throw new EtailBusinessExceptions(e.getMessage(),e);
+			throw new EtailBusinessExceptions(e.getMessage(), e);
 		}
 	}
 }
