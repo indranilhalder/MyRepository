@@ -40,11 +40,11 @@ function innerLazyLoad(options) {
    
     if (initPageLoad) { //TODO: duplicate loading prevention
         //$('ul.product-listing.product-grid').eq(2).html(gridHTML).hide().fadeIn(500);
-        $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list').html(gridHTML).hide().fadeIn(500);
+        $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid').html(gridHTML).hide().fadeIn(500);
         initPageLoad = false;
     } else {
         //$('ul.product-listing.product-grid').eq(2).append(gridHTML);
-        $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list').append(gridHTML);
+        $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid').append(gridHTML);
     }
     deleteArraySet(productItemArray);
     
@@ -278,7 +278,7 @@ function ajaxPLPLoad(ajaxUrl){
             if($('ul.product-listing.product-grid').length==0){
             	 ulProduct = $(filtered).find('ul.product-list');
             }else{
-            	 ulProduct = $(filtered).find('ul.product-listing.product-grid.lazy-grid');
+            	 ulProduct = $(filtered).find('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid');
             }
           //Add to bag and quick view ui fixes starts here
             $(".product-tile .image .item.quickview").each(function(){
