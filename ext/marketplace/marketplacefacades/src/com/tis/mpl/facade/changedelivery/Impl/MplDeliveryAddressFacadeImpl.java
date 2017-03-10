@@ -608,7 +608,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					{
 						try
 						{
-							generateOTP(customer, mobileNumber);
+							generateOTP(customer, mobileNumber,true,addressData.getPhone());
 						}
 						catch (final InvalidKeyException excption)
 						{
@@ -642,23 +642,35 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 * @throws InvalidKeyException
 	 * @throws NoSuchAlgorithmException
 	 */
-	String generateOTP(final CustomerModel customerModel, final String mobileNumber) throws InvalidKeyException,
-			NoSuchAlgorithmException
+	String generateOTP(final CustomerModel customerModel, final String mobileNumber, boolean isMobile, String newNumber)
+			throws InvalidKeyException, NoSuchAlgorithmException
 	{
-		final String otp = otpGenericService.generateOTP(customerModel.getUid(), OTPTypeEnum.CDA.getCode(), mobileNumber);
-		AddressData newDeliveryAddressData = sessionService
-			    .getAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
-			  
-			  if (mobileNumber.equalsIgnoreCase(newDeliveryAddressData.getPhone()))
-			  {
-			   sendPushNotificationForCDA(customerModel, otp, mobileNumber);
-			  }
-			  else
-			  {
-			   sendPushNotificationForCDA(customerModel, otp, mobileNumber);
-			   sendPushNotificationForCDA(customerModel, otp, newDeliveryAddressData.getPhone());
-			  }
-			  return otp;
+		String otp = null;
+		try
+		{
+			otp = otpGenericService.generateOTP(customerModel.getUid(), OTPTypeEnum.CDA.getCode(), mobileNumber);
+			if (!isMobile)
+			{
+				AddressData newDeliveryAddressData = sessionService
+						.getAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
+				newNumber = newDeliveryAddressData.getPhone();
+
+			}
+			if (mobileNumber.equalsIgnoreCase(newNumber))
+			{
+				sendPushNotificationForCDA(customerModel, otp, mobileNumber);
+			}
+			else
+			{
+				sendPushNotificationForCDA(customerModel, otp, mobileNumber);
+				sendPushNotificationForCDA(customerModel, otp, newNumber);
+			}
+		}
+		catch (Exception exception)
+		{
+			LOG.error("MplDeliveryAddressFacadeImpl:::::OTP Genrate" + exception.getMessage());
+		}
+		return otp;
 	}
 
 
@@ -814,7 +826,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 * new OTP Request For CDA Based On orderCode
 	 */
 	@Override
-	public boolean newOTPRequest(final String orderCode)
+	public boolean newOTPRequest(final String orderCode,boolean isMobile,String newNumber)
 	{
 		boolean isGenerated = false;
 		final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
@@ -834,7 +846,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			{
 				if (StringUtils.isNotEmpty(mobileNumber))
 				{
-					generateOTP(customer, mobileNumber);
+					generateOTP(customer, mobileNumber,isMobile,newNumber);
 				}
 				isGenerated = true;
 			}

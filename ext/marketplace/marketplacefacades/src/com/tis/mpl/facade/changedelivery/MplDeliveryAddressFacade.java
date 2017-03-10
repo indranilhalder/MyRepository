@@ -78,7 +78,7 @@ public interface MplDeliveryAddressFacade
 			List<TransactionSDDto> transactionSDDtoList);
 
 	//Generate new OTP
-	public boolean newOTPRequest(String orderCode);
+	public boolean newOTPRequest(String orderCode,boolean isMobile,String newNumber);
 
 	public String getPartialEncryptValue(String encryptSymbol, int encryptLength, String source);
 

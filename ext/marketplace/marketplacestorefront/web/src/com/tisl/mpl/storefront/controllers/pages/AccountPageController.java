@@ -7578,7 +7578,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 					//Save Address Data In session
 					sessionService.setAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS, newAddressData);
 					//preparing  OTP jsp Page Data when only change Contact Details Updated
-					mplDeliveryAddressFacade.newOTPRequest(orderCode);
+					mplDeliveryAddressFacade.newOTPRequest(orderCode,false,null);
 					String phoneNumber = orderData.getDeliveryAddress().getPhone();
 					phoneNumber = mplDeliveryAddressFacade.getPartialEncryptValue("*", 6, phoneNumber);
 					model.addAttribute(ModelAttributetConstants.PHONE_NUMBER, phoneNumber);
@@ -7639,7 +7639,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	{
 		boolean isNewOTPCreated;
 		LOG.debug("Generate new OTP For change Delivery Address ");
-		isNewOTPCreated = mplDeliveryAddressFacade.newOTPRequest(orderCode);
+		isNewOTPCreated = mplDeliveryAddressFacade.newOTPRequest(orderCode,false,null);
 		return isNewOTPCreated;
 	}
 
@@ -7665,7 +7665,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			if (StringUtils.isNotEmpty(orderCode))
 			{
 				LOG.info("AccountPageController:OTP Creating for ChangeDeliveryAddress");
-			 	mplDeliveryAddressFacade.newOTPRequest(orderCode);
+			 	mplDeliveryAddressFacade.newOTPRequest(orderCode,false,null);
 			 	//preparing  OTP jsp Page Data
 				final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
 				String phoneNumber = orderDetail.getDeliveryAddress().getPhone();

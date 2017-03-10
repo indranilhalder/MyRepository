@@ -1797,9 +1797,9 @@ public class OrdersController extends BaseCommerceController
    //R2.3 FLO1 New OTP Request
 	@Secured(
 	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
-	@RequestMapping(value = "/users/{userId}/newOTPRequest/{orderCode}", method = RequestMethod.POST)
+	@RequestMapping(value = "/users/{userId}/newOTPRequest/{orderCode}/{mobileNumber}", method = RequestMethod.POST)
 	@ResponseBody
-	public WebSerResponseWsDTO newOTPRequest(@PathVariable final String orderCode) throws WebserviceValidationException
+	public WebSerResponseWsDTO newOTPRequest(@PathVariable final String orderCode,@PathVariable final String mobileNumber) throws WebserviceValidationException
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -1810,7 +1810,7 @@ public class OrdersController extends BaseCommerceController
 		{
 			if (StringUtils.isNotEmpty(orderCode))
 			{
-				mplDeliveryAddressFacade.newOTPRequest(orderCode);
+				mplDeliveryAddressFacade.newOTPRequest(orderCode,true,mobileNumber);
 			   webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 
 			}
