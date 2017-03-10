@@ -1781,11 +1781,13 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				$('#mrpPriceId').css('text-decoration', 'line-through');
 				$("#mrpPriceId").show();
 				$("#spPriceId").show();
+				$("#mopPriceId").hide();//UF-60
 			} else {
 
 				$('#mrpPriceId').css('text-decoration', 'line-through');
 				$("#mrpPriceId").show();
 				$("#spPriceId").show();
+				$("#mopPriceId").hide();//UF-60
 			}
 
 		} else {			
@@ -1798,6 +1800,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 					$('#mrpPriceId').css('text-decoration', 'line-through');
 					$("#mrpPriceId").show();
 					$("#mopPriceId").show();
+					$("#spPriceId").hide();//UF-60
 				}
 			} else if(mop.value != 0 && mop.value <= freebiePriceThresVal){
 				 $(".size").hide(); 	
@@ -1819,6 +1822,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				 $(".delivery-block").hide();
 				 $(".seller").hide();
 				 $(".star-review").hide();
+				 $("#spPriceId").hide();//UF-60
 				 //$("#dListedErrorMsg").show();	//Need to Change
 				// $("#freebieProductMsgId").show();
 			var ussId=  $("#ussid").val();
@@ -3196,8 +3200,10 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 		productCode=getProductCodeFromPdpUrl(href);
 		//To get original URL
 		var a = $('<a>', { href:href } )[0];
-		var originalUrl=staticHost+a.pathname+"?selectedSize=true";
-		
+		var port= ":"+window.location.port;
+		var hostName = window.location.hostname;
+		var baseUrl="//"+hostName+port;
+		var originalUrl=baseUrl+a.pathname+"?selectedSize=true";
 		$("#addToCartFormTitle").hide(); //Hide 'please select size' on selecting size
 		if(productCode!="" && $('#pageType').val()=='product')
 		{
@@ -3219,8 +3225,9 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 					//Populating productPromotionSection.tag
 					$('#productPromotionSection').html(data);
 					var jsonData= JSON.parse($('#sizeSelectAjaxData').text());
+					$('#sizeSelectAjaxData').remove();
 					if(typeof(jsonData['error'])=='undefined')
-					{	
+					{
 						//If no server side error occured the below code executes
 						var responseProductCode=jsonData['code'];
 						var responseProductUrl=jsonData['url'];
@@ -3470,7 +3477,7 @@ function getClassificationAttributes(productCode)
 	return $.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
-		cache : false,//added to resolve browser specific the OOS issue
+		cache : true,
 		dataType : "json",
 	});
 }

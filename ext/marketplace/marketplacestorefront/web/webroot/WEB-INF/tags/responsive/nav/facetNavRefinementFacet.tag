@@ -40,6 +40,9 @@ function navigateToPage(queryString,textString)
 <!--  fixed for TISSTRT-615-Fixed -->
 <c:if test="${facetData.code ne 'vouchers'}">
 <!-- End  fixed for TISSTRT-615-Fixed -->
+<!-- Change for CAR-245 -->
+<c:if test="${facetData.code ne 'categoryNameCodeMapping'}">
+<!-- End Change for CAR-245 -->
 
 
 
@@ -608,6 +611,7 @@ function navigateToPage(queryString,textString)
 		
 	</li> </c:if> 
 			</ycommerce:testId>
+			</c:if>
 			</c:if>
 			</c:if>
 			</c:if>

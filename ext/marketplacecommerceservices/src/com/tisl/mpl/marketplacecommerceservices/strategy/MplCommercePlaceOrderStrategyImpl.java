@@ -42,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
@@ -73,7 +74,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	@Autowired
 	private MplOrderDao mplOrderDao;
 
-	public CommerceOrderResult placeOrder(final CommerceCheckoutParameter parameter) throws InvalidCartException
+	@Override
+	public CommerceOrderResult placeOrder(final CommerceCheckoutParameter parameter) throws InvalidCartException,
+			EtailNonBusinessExceptions
 	{
 		final CartModel cartModel = parameter.getCart();
 		ServicesUtil.validateParameterNotNull(cartModel, "Cart model cannot be null");
@@ -182,6 +185,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				getModelService().save(orderModel);
 
 				result.setOrder(orderModel);
+				// OrderIssues:- 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved here
+				afterPlaceOrder(parameter, result);
+
 
 				// OrderIssues:- 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved here
 				afterPlaceOrder(parameter, result);
@@ -198,13 +204,12 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					{
 						LOG.error("Error while submit order", e);
 					}
-
 					getOrderService().submitOrder(orderModel);
 				}
 
 				getExternalTaxesService().clearSessionTaxDocument();
-
-				//afterPlaceOrder(parameter, result);
+				
+				//afterPlaceOrder(parameter, result);  // 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved before
 
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
 						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
@@ -333,7 +338,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 
-		final Double discount = getTotalDiscount(orderModel.getEntries(), true);
+		final Double discount = getTotalDiscount(orderModel.getEntries(),true);
 
 		totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 		return totalPrice;
@@ -344,14 +349,13 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		Double totalPrice = Double.valueOf(0);
 		//final OrderData orderData = getOrderConverter().convert(orderModel);
 		final Double subtotal = orderModel.getSubtotal();
-		final Double deliveryCost = orderModel.getDeliveryCost();
 
 		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 
-		final Double discount = getTotalDiscount(orderModel.getEntries(), false);
+		final Double discount = getTotalDiscount(orderModel.getEntries(),false);
 
-		totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
+		totalPrice = Double.valueOf(subtotal.doubleValue() - discount.doubleValue());
 		return totalPrice;
 	}
 
