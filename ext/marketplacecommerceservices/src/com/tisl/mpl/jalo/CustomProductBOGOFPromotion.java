@@ -28,6 +28,7 @@ import de.hybris.platform.promotions.util.Helper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -704,13 +705,33 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 		return results;
 	}
 
+	//	@Override
+	//	protected void buildDataUniqueKey(final SessionContext ctx, final StringBuilder builder)
+	//	{
+	//		super.buildDataUniqueKey(ctx, builder);
+	//
+	//		builder.append(getQualifyingCount(ctx)).append('|');
+	//		builder.append(getFreeCount(ctx)).append('|');
+	//	}
+
+	/**
+	 * Building the Hash Key for Promotion
+	 *
+	 * @param builder
+	 * @param ctx
+	 */
 	@Override
 	protected void buildDataUniqueKey(final SessionContext ctx, final StringBuilder builder)
 	{
-		super.buildDataUniqueKey(ctx, builder);
+		builder.append(super.getClass().getSimpleName()).append('|').append(getPromotionGroup(ctx).getIdentifier(ctx)).append('|')
+				.append(getCode(ctx)).append('|').append(getPriority(ctx)).append('|').append(ctx.getLanguage().getIsocode())
+				.append('|');
 
-		builder.append(getQualifyingCount(ctx)).append('|');
-		builder.append(getFreeCount(ctx)).append('|');
+
+		//final Date modifyDate = ((Date) getProperty(ctx, "modifiedtime"));
+
+		final Date modifyDate = getModificationTime();
+		builder.append(modifyDate);
 	}
 
 	protected CartService getCartService()

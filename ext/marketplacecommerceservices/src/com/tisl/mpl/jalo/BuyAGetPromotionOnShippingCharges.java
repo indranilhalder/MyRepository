@@ -21,6 +21,7 @@ import de.hybris.platform.promotions.result.PromotionOrderView;
 import de.hybris.platform.util.localization.Localization;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -594,6 +595,26 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 	protected MplPromotionHelper getMplPromotionHelper()
 	{
 		return Registry.getApplicationContext().getBean("mplPromotionHelper", MplPromotionHelper.class);
+	}
+
+	/**
+	 * Building the Hash Key for Promotion
+	 *
+	 * @param builder
+	 * @param ctx
+	 */
+	@Override
+	protected void buildDataUniqueKey(final SessionContext ctx, final StringBuilder builder)
+	{
+		builder.append(super.getClass().getSimpleName()).append('|').append(getPromotionGroup(ctx).getIdentifier(ctx)).append('|')
+				.append(getCode(ctx)).append('|').append(getPriority(ctx)).append('|').append(ctx.getLanguage().getIsocode())
+				.append('|');
+
+
+		//final Date modifyDate = ((Date) getProperty(ctx, "modifiedtime"));
+
+		final Date modifyDate = getModificationTime();
+		builder.append(modifyDate);
 	}
 
 }
