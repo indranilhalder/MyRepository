@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -117,21 +118,24 @@ public class MplMrpPriceValueProvider extends AbstractPropertyFieldValueProvider
 									currency.getIsocode().toLowerCase());
 							for (final String fieldName : fieldNames)
 							{
-								if (rangeNameList != null)
+								if (!CollectionUtils.isEmpty(rangeNameList)) /* Altered as a part of CAR-81 */
 								{
-
-									if (rangeNameList.isEmpty())
+									for (final String rangeName : rangeNameList)
 									{
-										fieldValues.add(new FieldValue(fieldName, value));
-									}
-									else
-									{
-										for (final String rangeName : rangeNameList)
-										{
-											fieldValues.add(new FieldValue(fieldName, (rangeName == null) ? value : rangeName));
-										}
+										fieldValues.add(new FieldValue(fieldName, (rangeName == null) ? value : rangeName));
 									}
 								}
+								else if (rangeNameList != null)
+								{
+									fieldValues.add(new FieldValue(fieldName, value));
+								}
+								/*
+								 * Altered as a part of CAR-81 if (rangeNameList != null) {
+								 * 
+								 * if (rangeNameList.isEmpty()) { fieldValues.add(new FieldValue(fieldName, value)); } else {
+								 * for (final String rangeName : rangeNameList) { fieldValues.add(new FieldValue(fieldName,
+								 * (rangeName == null) ? value : rangeName)); } } }
+								 */
 							}
 
 						}

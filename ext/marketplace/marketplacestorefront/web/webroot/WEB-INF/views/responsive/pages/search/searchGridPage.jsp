@@ -26,6 +26,13 @@
 <input type="hidden" id="page_subcategory_name_l3" value="${page_subcategory_name_l3}"> --%>
 	<!-- For TPR-666 -->
 <!-- End -->
+<c:choose>
+	<c:when test="${lazyInterface}">
+<div id="facetSearchAjaxData"> <!-- Div to be overridden by AJAX response : TPR-198 -->
+		<nav:searchFacetFilterData/>
+	</div>
+</c:when>
+<c:otherwise>
 <template:page pageTitle="${pageTitle}">
 	<div id="facetSearchAjaxData"> <!-- Div to be overridden by AJAX response : TPR-198 -->
 		<nav:searchFacetFilterData/>
@@ -54,3 +61,6 @@
 	<storepickup:pickupStorePopup />
 
 </template:page>
+</c:otherwise>
+</c:choose>
+

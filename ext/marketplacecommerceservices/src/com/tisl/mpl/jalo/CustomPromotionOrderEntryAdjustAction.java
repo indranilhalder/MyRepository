@@ -33,6 +33,10 @@ import org.apache.log4j.Logger;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 
 
+/**
+ * Customized action class for product level promotions
+ *
+ */
 public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromotionOrderEntryAdjustAction
 {
 	private final static Logger log = Logger.getLogger(CustomPromotionOrderEntryAdjustAction.class.getName());
