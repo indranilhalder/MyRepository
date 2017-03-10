@@ -132,6 +132,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	 * for the given product code
 	 *
 	 * @param productCode
+	 * @param bBoxSellerId
 	 * @return-buyboxData
 	 */
 
@@ -149,7 +150,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		//TISPRM -56
 		String products[] = null;
 		String pdpProduct = null;
-		final List<String> productsList = new ArrayList<String>();
+		List<String> productsList = new ArrayList<String>();
 
 		final Map<String, Object> returnData = new HashMap<String, Object>();
 		List<BuyBoxModel> buyboxModelList = new ArrayList<BuyBoxModel>();
@@ -175,12 +176,18 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		try
 		{
 			//TISPRM -56
-			final List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPrice(productCode));
+			List<BuyBoxModel> buyboxModelListAll = null;
 			//CKD:TPR-250 Start : Manipulating (rearranging) elements of the buy box list for microsite seller
 			if (StringUtils.isNotBlank(bBoxSellerId))
 			{
+				// overridding buyBox for buyboxPrice method for  microsite TPR-250 (TPR-4955)
+				buyboxModelListAll = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPriceForMicrosite(productCode));
 				isSellerPresent = true;
 				rearrangeBuyBoxListElements(bBoxSellerId, buyboxModelListAll);
+			}
+			else
+			{
+				buyboxModelListAll = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPrice(productCode));
 			}
 			//CKD:TPR-250 End
 			for (final BuyBoxModel buyBoxModel : buyboxModelListAll)
@@ -226,6 +233,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					productsWithNoStock.add(pdpProduct);
 				}
 			}
+			// TPR-250: Start
 			else if (isSellerPresent)
 			{
 				buyboxModelList = buyBoxService.buyBoxPriceNoStock(pdpProduct);
@@ -240,10 +248,12 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				//Availability counts
 				if (null != arrayToProductList)
 				{
+					productsList = identifyProductsWithNoStock(buyboxModelListAll, pdpProduct, productsList);
 					arrayToProductList.removeAll(productsList);
 					productsWithNoStock = arrayToProductList;
 				}
 			}
+			// TPR-250: End
 			else if (buyboxModelList.size() == 1)
 			{
 				onlyBuyBoxHasStock = true;
@@ -331,6 +341,29 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	}
 
 	/**
+	 * @param buyboxModelListAll
+	 * @param pdpProduct
+	 * @param productsList
+	 * @return productsList
+	 */
+	//CKD:TPR-250: Start
+	//  to create a productlist to generate availability property in buybox json response similar to non-microsite call in PDP
+	List<String> identifyProductsWithNoStock(final List<BuyBoxModel> buyboxModelListAll, final String pdpProduct,
+			final List<String> productsList)
+	{
+		for (final BuyBoxModel bbModel : buyboxModelListAll)
+		{
+			if (bbModel.getAvailable() <= 0)
+			{
+				productsList.remove(bbModel.getProduct());
+			}
+		}
+		return productsList;
+	}
+
+	//CKD:TPR-250: End
+
+	/**
 	 * This method is responsible for get the winning buybox seller and other sellers count and minimum price information
 	 * for the given product code
 	 *
@@ -412,6 +445,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				//other sellers count
 				final int sellerSize = buyboxModelList.size() - 1;
 				final Integer noofsellers = Integer.valueOf(sellerSize);
+
+				//TPR-250:Start
 				//				if (onlyBuyBoxHasStock && sellerSize > 0)
 				//				{
 				//					buyboxData.setNumberofsellers(Integer.valueOf(-1));
@@ -421,6 +456,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				//				{
 				buyboxData.setNumberofsellers(noofsellers);
 				//}
+				//TPR-250:End
 				//Minimum price for other sellers
 				double minPrice = 0.0d;
 				if (sellerSize > 0)
@@ -882,6 +918,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		//other sellers count
 		final int sellerSize = buyboxModelList.size() - 1;
 		final Integer noofsellers = Integer.valueOf(sellerSize);
+		//TPR-250:Start
 		//		if (onlyBuyBoxHasStock && sellerSize > 0)
 		//		{
 		//			buyboxData.setNumberofsellers(Integer.valueOf(-1));
@@ -891,6 +928,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		//		{
 		buyboxData.setNumberofsellers(noofsellers);
 		//	}
+		//TPR-250:end
 		//Minimum price for other sellers
 		double minPrice = 0.0d;
 		if (sellerSize > 0)
@@ -963,7 +1001,11 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				}
 				else
 				{
-					msiteBboxOtherSellerList.add(buyBoxModel);
+					// Adding only those as other sellers which are having stock
+					if (buyBoxModel.getAvailable() > 0)
+					{
+						msiteBboxOtherSellerList.add(buyBoxModel);
+					}
 				}
 			}
 			buyboxModelListAll.clear();
