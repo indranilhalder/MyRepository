@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
+import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.daos.PromotionPriceUpdaterDao;
-import com.tisl.mpl.model.BuyAPercentageDiscountModel;
 
 
 /**
@@ -35,31 +35,37 @@ public class PromotionPriceUpdaterDaoImpl implements PromotionPriceUpdaterDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.PromotionPriceUpdaterDao#getRequiredPromotionList()
 	 */
 	@Override
-	public List<BuyAPercentageDiscountModel> getRequiredPromotionList(final Date mplConfigDate)
+	public List<ProductPromotionModel> getRequiredPromotionList(final Date mplConfigDate)
 	{
 
 		LOG.debug("Fetching promotion Details");
-		List<BuyAPercentageDiscountModel> PromotionResult = new ArrayList<BuyAPercentageDiscountModel>();
+		List<ProductPromotionModel> PromotionResult = new ArrayList<ProductPromotionModel>();
 
+		//		final String queryString = //
+		//		"SELECT {" + BuyAPercentageDiscountModel.PK + "} " + MarketplacecommerceservicesConstants.QUERYFROM
+		//				+ BuyAPercentageDiscountModel._TYPECODE + " AS pr} " + " WHERE SYSDATE BETWEEN {pr:"
+		//				+ BuyAPercentageDiscountModel.STARTDATE + "} AND {pr:" + BuyAPercentageDiscountModel.ENDDATE + "}" + " AND {pr:"
+		//				+ BuyAPercentageDiscountModel.ENABLED + "} = '1' AND " + "({pr." + BuyAPercentageDiscountModel.STARTDATE
+		//				+ "} >= ?earlierDate AND " + "{pr." + BuyAPercentageDiscountModel.STARTDATE + "} <= SYSDATE)   ORDER BY {pr:"
+		//				+ BuyAPercentageDiscountModel.PRIORITY + "} ASC";
+		//CAR-158 changes
 		final String queryString = //
-		"SELECT {" + BuyAPercentageDiscountModel.PK + "} " + MarketplacecommerceservicesConstants.QUERYFROM
-				+ BuyAPercentageDiscountModel._TYPECODE + " AS pr} " + " WHERE SYSDATE BETWEEN {pr:"
-				+ BuyAPercentageDiscountModel.STARTDATE + "} AND {pr:" + BuyAPercentageDiscountModel.ENDDATE + "}" + " AND {pr:"
-				+ BuyAPercentageDiscountModel.ENABLED + "} = '1' AND " + "({pr." + BuyAPercentageDiscountModel.STARTDATE
-				+ "} >= ?earlierDate AND " + "{pr." + BuyAPercentageDiscountModel.STARTDATE + "} <= SYSDATE)   ORDER BY {pr:"
-				+ BuyAPercentageDiscountModel.PRIORITY + "} ASC";
-
+		"SELECT {" + ProductPromotionModel.PK + "} " + MarketplacecommerceservicesConstants.QUERYFROM
+				+ ProductPromotionModel._TYPECODE + " AS pr} " + " WHERE SYSDATE BETWEEN {pr:" + ProductPromotionModel.STARTDATE
+				+ "} AND {pr:" + ProductPromotionModel.ENDDATE + "}" + " AND {pr:" + ProductPromotionModel.ENABLED + "} = '1' AND "
+				+ "({pr." + ProductPromotionModel.MODIFIEDTIME + "} >= ?earlierDate AND " + "{pr." + ProductPromotionModel.STARTDATE
+				+ "} <= SYSDATE)   ORDER BY {pr:" + ProductPromotionModel.PRIORITY + "} ASC";
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 
 		query.addQueryParameter("earlierDate", mplConfigDate);
 		//return
 		// YTODO Auto-generated method stub
 
-		PromotionResult = getFlexibleSearchService().<BuyAPercentageDiscountModel> search(query).getResult();
+		PromotionResult = getFlexibleSearchService().<ProductPromotionModel> search(query).getResult();
 		return PromotionResult;
 
 	}
