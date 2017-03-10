@@ -59245,8 +59245,6 @@ body.page-cartPage .cartBottomCheck {
     display: none;
 }
 /* UF-68 UF-69 */
-
-}
 }
 /*TISLUX-2855 Ends*/
 
@@ -62535,20 +62533,23 @@ margin-left:0;
   line-height: 16px;
 }
 .cart.wrapper.checkout-payment .blocks .cash #otpNUM p.title{
- margin-bottom:25px;
+ 	margin-bottom:25px;
+}
+.cart.wrapper.checkout-payment .blocks .cash #otpNUM p.title + p{
+	padding-bottom: 5px;
 }
 .cart.wrapper.checkout-payment .blocks .cash #otpNUM p.desc-ext{
- color:#999;
- font-size:11px;
- margin-bottom:24px;
+ 	color:#999;
+ 	font-size:11px;
+ 	margin-bottom:24px;
 }
 .cod-container label, .cart.wrapper.checkout-payment .blocks .error-message#otpSentMessage{
- color:#999;
- font-size:11px;
- letter-spacing: 0.6px;
+ 	color:#999;
+ 	font-size:11px;
+ 	letter-spacing: 0.6px;
 }
 .cart.wrapper.checkout-payment .blocks .error-message#otpSentMessage{
- padding-bottom: 10px;
+ 	padding-bottom: 10px;
  }
 .cart.wrapper.checkout-payment .blocks .cash .cont-del input{
 	width:175px;
@@ -62564,7 +62565,7 @@ margin-left:0;
 .cart.wrapper.checkout-payment .blocks .cash .cont-del button{
 	background-color: #a5173c;
 	color:#fff;
-	margin:11px 0 0;
+	margin:34px 0 0;
 	height:42px !important;
 	line-height: inherit;
 	opacity: 1;
@@ -62584,13 +62585,16 @@ margin-left:0;
     margin-top: 5px;
 }
 .cart.wrapper.checkout-payment .terms.cod{
-	 margin-top: -20px;
+	/*  margin-top: -20px; */
 }
-.cart.wrapper.checkout-payment .blocks .error-message {
+.cart.wrapper.checkout-payment .blocks .error-message, #captchaError {
     font-size: 11px;
     text-transform: none;
     font-weight: normal;
     letter-spacing: 0.6px;
+}
+#captchaError{
+    margin-top: 10px;
 }
 /* cod end */
 .cart.wrapper .left-block .payments.tab-view .nav li.paymentModeMobile{
@@ -63147,6 +63151,30 @@ a.cvvHelp#cvvHelp + div.popover{
 .cart.wrapper.checkout-payment .blocks.netbankingPanel p.popular-banks + ul{
 	display: none;
 }
+.cart.wrapper.checkout-payment #COD .blocks{
+	padding: 0px 16px 36px 16px;
+}
+.cart.wrapper.checkout-payment .blocks .cash #otpNUM p.title{
+	display: none;
+}
+.cart.wrapper .left-block .payments.tab-view  .cod-container.cash .pay .button.confirm{
+	position: fixed;
+    bottom: 7.2px;
+    left: auto;
+    right: 8px !important;
+    width: 50% !important;
+    height: 33.5px !important;
+    font-weight: normal;
+    background-color: #a5173c;
+    line-height: 1 !important;
+    font-size: 12px !important;
+    z-index: 99;
+}
+.cart.wrapper.checkout-payment .blocks .cash #otpNUM p {
+    font-size: 14px;
+    padding-top: 17.5px;
+    padding-bottom: 5px;
+}
 }
 div.radio.creditDebitLabelRadio{
 	display: none;
@@ -63201,7 +63229,7 @@ body:not(.page-checkout-login) .step-body .checkout-shipping.left-block{
 }
 @media (max-width:980px){
 	body.page-multiStepCheckoutSummaryPage header{
-	    border-bottom: 2px solid #f9f9f9;
+	    border-bottom: 1px solid #e8e8e8;
 	}
 	.wrapper .container-address.nav{
 	padding-top:20px;

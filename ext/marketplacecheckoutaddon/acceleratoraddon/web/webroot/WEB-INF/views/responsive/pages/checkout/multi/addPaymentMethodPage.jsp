@@ -401,7 +401,7 @@
 										
 									</li>
 									<div class="terms">
-									<p class="redirect">You will be re-directed to secure payment gateway</p>
+									<p class="redirect">You will be redirected to secure payment gateway.</p>
 									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
 									</div>
 								</c:if> 
@@ -595,7 +595,7 @@
 							</li>
 						</ul>
 						<div class="terms">
-						<p class="redirect">You will be re-directed to secure payment gateway</p>
+						<p class="redirect">You will be redirected to secure payment gateway.</p>
 									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
 									</div>					
 					</li>				
@@ -716,7 +716,7 @@
 										
 									</li>
 									<div class="terms">
-									<p class="redirect">You will be re-directed to secure payment gateway</p>
+									<p class="redirect">You will be redirected to secure payment gateway.</p>
 									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
 									</div>
 								</c:if> 
@@ -839,7 +839,7 @@
 							</li>
 						</ul>	
 						<div class="terms">
-						<p class="redirect">You will be re-directed to secure payment gateway</p>
+						<p class="redirect">You will be redirected to secure payment gateway.</p>
 									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
 									</div>				
 					</li>	
@@ -1095,7 +1095,7 @@
 								    </div>
 								    <p id="emi-notice"><spring:theme code="checkout.multi.paymentMethod.emi.notice"/></p>
 								    <div class="terms">
-								    <p class="redirect">You will be re-directed to secure payment gateway</p>
+								    <p class="redirect">You will be redirected to secure payment gateway.</p>
 									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
 									</div>	
 			            			</div>
@@ -1243,7 +1243,7 @@
 													
 									</li>
 									</ul>	
-									<div class="terms cod"><p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><br/><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p></div>	
+									<div class="terms cod"><p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /> <a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p></div>	
 								</li>
 														
 
