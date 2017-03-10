@@ -74,7 +74,7 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.nps.NPSFeedbackQuestionFacade#saveFeedbackQuestionAnswer()
 	 */
 	@Override
@@ -117,7 +117,7 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 
 
 			npsFeedbackModel.setOriginalSurveyDate(dateFormatParse.parse(SurveyDate));
-			//npsFeedbackModel.setResponseTime(dateFormatParse.parse(SurveyDate));
+			npsFeedbackModel.setResponseTime(dateFormatParse.parse(SurveyDate));
 			if (StringUtils.isNotEmpty(feedbackForm.getAnyOtherFeedback()))
 			{
 				npsFeedbackModel.setAnyOtherFeedback(feedbackForm.getAnyOtherFeedback());
@@ -156,7 +156,7 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.nps.NPSFeedbackQuestionFacade#saveFeedbackRating(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -192,7 +192,7 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.nps.NPSFeedbackQuestionFacade#getFeedback(java.lang.String)
 	 */
 	@Override
