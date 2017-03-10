@@ -17362,7 +17362,7 @@ header.brand-header .select-view .select-list li {
   bottom: 0;
   right: 0;
   color: #fff;
-  background-color: #a91e3e;
+  background-color: #666;
   position: fixed;
   height: 35px;
   width: 170px;
@@ -17371,6 +17371,10 @@ header.brand-header .select-view .select-list li {
   text-align: center;
   cursor:pointer;
   font-size:14px;	
+}
+.loadMorePageButton{
+	background-color: #666 !important;
+	line-height: 22px;
 }
  .feedback-links{
  right: 175px;}
@@ -61780,3 +61784,6 @@ footer .banner{
 /*Choose Address Page end*/
 /*checkout pages end*/
 
+/* body.page-cartPage .cartBottomCheck #changePinDiv p{
+	display: none;
+} */

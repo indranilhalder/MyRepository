@@ -40,11 +40,11 @@ function innerLazyLoad(options) {
    
     if (initPageLoad) { //TODO: duplicate loading prevention
         //$('ul.product-listing.product-grid').eq(2).html(gridHTML).hide().fadeIn(500);
-        $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list').html(gridHTML).hide().fadeIn(500);
+        $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid').html(gridHTML).hide().fadeIn(500);
         initPageLoad = false;
     } else {
         //$('ul.product-listing.product-grid').eq(2).append(gridHTML);
-        $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list').append(gridHTML);
+        $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid').append(gridHTML);
     }
     deleteArraySet(productItemArray);
     
@@ -112,8 +112,8 @@ function getProductSetData() {
         } else { // if no url with page no occourance found.
             if (pageNoPagination <= totalNoOfPages) {
                 ajaxUrl = pathName.replace(/[/]$/,"") + '/page-' + pageNoPagination;
-                if($('ul.product-listing.product-grid').length==0){//for serp initial page 
-                	ajaxUrl = ajaxUrl + '?q='+findGetParameter('text')+':relevance:isLuxuryProduct:false';
+                if(pageType == 'productsearch'){//for serp initial page 
+                	ajaxUrl = ajaxUrl + '?'+ $('#searchPageDeptHierTreeForm').serialize();
             	}else if(query){
             		ajaxUrl = ajaxUrl + query;
             	}
@@ -123,7 +123,6 @@ function getProductSetData() {
             }
 			ajaxPLPLoad(ajaxUrl);
         }
-        //ajaxPLPLoad(ajaxUrl);
     }
 }
 
@@ -279,7 +278,7 @@ function ajaxPLPLoad(ajaxUrl){
             if($('ul.product-listing.product-grid').length==0){
             	 ulProduct = $(filtered).find('ul.product-list');
             }else{
-            	 ulProduct = $(filtered).find('ul.product-listing.product-grid.lazy-grid');
+            	 ulProduct = $(filtered).find('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid');
             }
           //Add to bag and quick view ui fixes starts here
             $(".product-tile .image .item.quickview").each(function(){
@@ -308,11 +307,10 @@ function sortReplaceState(url){
 }
 
 function sort(this_data,drop_down){
-	console.log(typeof(this_data));
 	var item = $(this_data).attr('data-name');
 	$('.sort').removeAttr('style');
 	if(!drop_down){
-		$(this_data).css('color', 'red');
+		$(this_data).css('color', '#a5173c');
 	}
 	var pathName = window.location.pathname;
 	pathName = pathName.replace(/page-[0-9]+/, 'page-1');
@@ -321,122 +319,62 @@ function sort(this_data,drop_down){
 	switch (item) {
 	case 'relevance':
 		if(pageType == 'productsearch'){
-			url = 'q='+$('#js-site-search-input').val()+':relevance:isLuxuryProduct:false';
-		}else if(facetAjaxUrl!= ''){
-			url = facetAjaxUrl+'&sort=relevance';
+			var url = $('#searchPageDeptHierTreeForm').serialize();
+			url = url+'&sort=relevance';
 		}else{
-			'sort=relevance';
+			var url = $('#categoryPageDeptHierTreeForm').serialize();
+			url = url+'&sort=relevance';
 		}
-		if(facetAjaxUrl && pageType == 'productsearch'){
-			var extractedFacetQuery = findGetParameterUrl('q',facetAjaxUrl);
-			var removedQParam = removeURLParameter(facetAjaxUrl,'q');
-			var finalUrl = removedQParam+'&'+url+':'+extractedFacetQuery;
-			console.log(finalUrl);
-			ajaxPLPLoad(finalUrl);
-			sortReplaceState(finalUrl); 
-		}else if(facetAjaxUrl){
-			ajaxPLPLoad(url);
-			sortReplaceState(url); 
-		}else{
-			ajaxPLPLoad(pathName +'?'+url);
-			sortReplaceState(pathName +'?'+url); 
-		}
+		ajaxPLPLoad(pathName +'?'+url);
+		sortReplaceState(pathName +'?'+url); 
 		initPageLoad = true;
 		break;
 	case 'new':
 		if(pageType == 'productsearch'){
-			url = 'q='+$('#js-site-search-input').val()+':isProductNew:isLuxuryProduct:false';
-		}else if(facetAjaxUrl!= ''){
-			url = facetAjaxUrl+'&sort=isProductNew';
+			var url = $('#searchPageDeptHierTreeForm').serialize();
+			url = url+'&sort=isProductNew';
 		}else{
-			url = 'sort=isProductNew';
+			var url = $('#categoryPageDeptHierTreeForm').serialize();
+			url = url+'&sort=isProductNew';
 		}
-		if(facetAjaxUrl && pageType == 'productsearch'){
-			var extractedFacetQuery = findGetParameterUrl('q',facetAjaxUrl);
-			var removedQParam = removeURLParameter(facetAjaxUrl,'q');
-			var finalUrl = removedQParam+'&'+url+':'+extractedFacetQuery
-			console.log(finalUrl);
-			ajaxPLPLoad(finalUrl);
-			sortReplaceState(finalUrl); 
-		}else if(facetAjaxUrl){
-			ajaxPLPLoad(url);
-			sortReplaceState(url); 
-		}else{
-			ajaxPLPLoad(pathName +'?'+url);
-			sortReplaceState(pathName +'?'+url); 
-		} 
+		ajaxPLPLoad(pathName +'?'+url);
+		sortReplaceState(pathName +'?'+url); 
 		initPageLoad = true;
 		break;
 	case 'discount':
 		if(pageType == 'productsearch'){
-			url = 'q='+$('#js-site-search-input').val()+':isDiscountedPrice:isLuxuryProduct:false';
-		}else if(facetAjaxUrl!= ''){
-			url = facetAjaxUrl+'&sort=isDiscountedPrice';
+			var url = $('#searchPageDeptHierTreeForm').serialize();
+			url = url+'&sort=isDiscountedPrice';
 		}else{
-			url = 'sort=isDiscountedPrice';
+			var url = $('#categoryPageDeptHierTreeForm').serialize();
+			url = url+'&sort=isDiscountedPrice';
 		}
-		if(facetAjaxUrl && pageType == 'productsearch'){
-			var extractedFacetQuery = findGetParameterUrl('q',facetAjaxUrl);
-			var removedQParam = removeURLParameter(facetAjaxUrl,'q');
-			var finalUrl = removedQParam+'&'+url+':'+extractedFacetQuery
-			console.log(finalUrl);
-			ajaxPLPLoad(finalUrl);
-			sortReplaceState(finalUrl); 
-		}else if(facetAjaxUrl){
-			ajaxPLPLoad(url);
-			sortReplaceState(url); 
-		}else{
-			ajaxPLPLoad(pathName +'?'+url);
-			sortReplaceState(pathName +'?'+url); 
-		}
+		ajaxPLPLoad(pathName +'?'+url);
+		sortReplaceState(pathName +'?'+url); 
 		initPageLoad = true;
 		break;
 	case 'low':
 		if(pageType == 'productsearch'){
-			url = 'q='+$('#js-site-search-input').val()+':price-asc:isLuxuryProduct:false';
-		}else if(facetAjaxUrl!= ''){
-			url = facetAjaxUrl+'&sort=price-asc';
+			var url = $('#searchPageDeptHierTreeForm').serialize();
+			url = url+'&sort=price-asc';
 		}else{
-			url = 'sort=price-asc';
+			var url = $('#categoryPageDeptHierTreeForm').serialize();
+			url = url+'&sort=price-asc';
 		}
-		if(facetAjaxUrl && pageType == 'productsearch'){
-			var extractedFacetQuery = findGetParameterUrl('q',facetAjaxUrl);
-			var removedQParam = removeURLParameter(facetAjaxUrl,'q');
-			var finalUrl = removedQParam+'&'+url+':'+extractedFacetQuery
-			console.log(finalUrl);
-			ajaxPLPLoad(finalUrl);
-			sortReplaceState(finalUrl);
-		}else if(facetAjaxUrl){
-			ajaxPLPLoad(url);
-			sortReplaceState(url); 
-		}else{
-			ajaxPLPLoad(pathName +'?'+url);
-			sortReplaceState(pathName +'?'+url); 
-		}
+		ajaxPLPLoad(pathName +'?'+url);
+		sortReplaceState(pathName +'?'+url); 
 		initPageLoad = true;
 		break;
 	case 'high':
 		if(pageType == 'productsearch'){
-			url = 'q='+$('#js-site-search-input').val()+':price-desc:isLuxuryProduct:false';
-		}else if(facetAjaxUrl!=''){
-			url = facetAjaxUrl+'&sort=price-desc';
+			var url = $('#searchPageDeptHierTreeForm').serialize();
+			url = url+'&sort=price-desc';
 		}else{
-			url = 'sort=price-desc';
+			var url = $('#categoryPageDeptHierTreeForm').serialize();
+			url = url+'&sort=price-desc';
 		}
-		if(facetAjaxUrl && pageType == 'productsearch'){
-			var extractedFacetQuery = findGetParameterUrl('q',facetAjaxUrl);
-			var removedQParam = removeURLParameter(facetAjaxUrl,'q');
-			var finalUrl = removedQParam+'&'+url+':'+extractedFacetQuery
-			console.log(finalUrl);
-			ajaxPLPLoad(finalUrl);
-			sortReplaceState(finalUrl); 
-		}else if(facetAjaxUrl){
-			ajaxPLPLoad(url);
-			sortReplaceState(url);
-		}else{
-			ajaxPLPLoad(pathName +'?'+url);
-			sortReplaceState(pathName +'?'+url);
-		}
+		ajaxPLPLoad(pathName +'?'+url);
+		sortReplaceState(pathName +'?'+url); 
 		initPageLoad = true;
 		break;
 	default:
