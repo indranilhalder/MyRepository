@@ -30,7 +30,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.standardizationfactory.StandardizationService;
+
 
 
 
@@ -44,7 +46,7 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 	@Autowired
 	private StandardizationService sizeStandard;
 
-	private static final String DYNAMICATTRIBUTE = "classification.attirbutes.dynamic.";
+	//private static final String DYNAMICATTRIBUTE = "classification.attirbutes.dynamic.";
 
 	@Override
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
@@ -58,10 +60,11 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 				final ProductModel productModel = (ProductModel) model;
 				/********** TISPRO-326 changes **********/
 				if (!"Electronics".equalsIgnoreCase(((ProductModel) model).getProductCategoryType())
-						&& StringUtils.isEmpty(indexedProperty.getClassificationProductType()) ||
+						&& StringUtils.isEmpty(indexedProperty.getClassificationProductType())
+						||
 
-						("Electronics".equalsIgnoreCase(((ProductModel) model).getProductCategoryType())
-								&& "Electronics".equalsIgnoreCase(indexedProperty.getClassificationProductType())))
+						("Electronics".equalsIgnoreCase(((ProductModel) model).getProductCategoryType()) && "Electronics"
+								.equalsIgnoreCase(indexedProperty.getClassificationProductType())))
 				{
 
 					final List<ClassAttributeAssignmentModel> classAttrAssignmentList = new ArrayList<ClassAttributeAssignmentModel>();
@@ -116,8 +119,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 
 									final List<FieldValue> temp = getFeaturesValues(indexConfig, feature, indexedProperty);
 									//Added for Tata-24 Start :::
-									final String dynCategory = configurationService.getConfiguration()
-											.getString(DYNAMICATTRIBUTE + productModel.getProductCategoryType());
+									final String dynCategory = configurationService.getConfiguration().getString(
+											MarketplaceCoreConstants.DYNAMICATTRIBUTE + productModel.getProductCategoryType());
 									if (StringUtils.isNotEmpty(dynCategory))
 									{
 										final String[] dynProperties = dynCategory.split(",");
@@ -208,15 +211,16 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 
 				return Collections.emptyList();
 			}
-			else /* added part of value provider go through */
+			else
+			/* added part of value provider go through */
 			{
 				throw new FieldValueProviderException("Cannot provide classification property of non-product item");
 			}
 		}
 		catch (final Exception e) /* Try added part of value provider go through */
 		{
-			throw new FieldValueProviderException(
-					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
+			throw new FieldValueProviderException("Cannot evaluate " + indexedProperty.getName() + " using "
+					+ super.getClass().getName() + "exception" + e, e);
 		}
 		//throw new FieldValueProviderException("Cannot provide classification property of non-product item");
 	}
@@ -291,8 +295,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 				try
 				{
 					this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
-					result.addAll(extractFieldValues(indexedProperty, language,
-							(feature.isLocalized()) ? feature.getValues() : featureValues));
+					result.addAll(extractFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues()
+							: featureValues));
 				}
 				finally
 				{
@@ -315,7 +319,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 	public void dynGroupFeaturesValues(final String property, final List<FieldValue> list)
 	{
 
-		final String dynGroup = configurationService.getConfiguration().getString(DYNAMICATTRIBUTE + property);
+		final String dynGroup = configurationService.getConfiguration().getString(
+				MarketplaceCoreConstants.DYNAMICATTRIBUTE + property);
 		if (StringUtils.isNotEmpty(dynGroup))
 		{
 			boolean flag = false;
@@ -327,8 +332,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 				{
 					final String name = groupName.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
 					//classification.attirbutes.dynamic.materialtype.metal=Metal,Alloys,Titanium,Aluminium,Stainless Steel
-					final String dynAttribute = configurationService.getConfiguration()
-							.getString(DYNAMICATTRIBUTE + property + "." + name);
+					final String dynAttribute = configurationService.getConfiguration().getString(
+							MarketplaceCoreConstants.DYNAMICATTRIBUTE + property + "." + name);
 					if (StringUtils.isNotEmpty(dynAttribute))
 					{
 						//dynAttributes=[Metal,Alloys,Titanium,Aluminium,Stainless Steel]
@@ -378,7 +383,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 		final List<FeatureValue> newFeatures = new ArrayList<FeatureValue>();
 
 		//classification.attirbutes.dynamic.materialtype=Canvas,Cotton,Leather,Others,PU,Suede,Fabric,Metal,Plastic
-		final String dynGroup = configurationService.getConfiguration().getString(DYNAMICATTRIBUTE + property);
+		final String dynGroup = configurationService.getConfiguration().getString(
+				MarketplaceCoreConstants.DYNAMICATTRIBUTE + property);
 		if (StringUtils.isNotEmpty(dynGroup))
 		{
 			boolean flag = false;
@@ -390,8 +396,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 				{
 					final String name = groupName.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
 					//classification.attirbutes.dynamic.materialtype.metal=Metal,Alloys,Titanium,Aluminium,Stainless Steel
-					final String dynAttribute = configurationService.getConfiguration()
-							.getString(DYNAMICATTRIBUTE + property + "." + name);
+					final String dynAttribute = configurationService.getConfiguration().getString(
+							MarketplaceCoreConstants.DYNAMICATTRIBUTE + property + "." + name);
 					if (StringUtils.isNotEmpty(dynAttribute))
 					{
 						//dynAttributes=[Metal,Alloys,Titanium,Aluminium,Stainless Steel]

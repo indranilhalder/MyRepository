@@ -215,6 +215,8 @@ public class SearchPageController extends AbstractSearchPageController
 
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
+	//UF-15,16
+	private static final Integer PAGE_SIZE = new Integer(24);
 
 
 	/**
@@ -230,7 +232,8 @@ public class SearchPageController extends AbstractSearchPageController
 	public String textSearch(@RequestParam(value = "text", defaultValue = "") final String searchText,
 			@RequestParam(value = ModelAttributetConstants.SEARCH_CATEGORY, required = false) final String dropDownValue,
 			@RequestParam(value = "micrositeSearchCategory", required = false) final String micrositedropDownValue,
-			@RequestParam(value = "mSellerID", required = false) final String mSellerID, final HttpServletRequest request,
+			@RequestParam(value = "mSellerID", required = false) final String mSellerID,
+			@RequestParam(value = "lazyInterface", required = false) final String lazyInterface, final HttpServletRequest request,
 			final Model model) throws CMSItemNotFoundException
 	{
 		//---------------start--------------
@@ -242,7 +245,9 @@ public class SearchPageController extends AbstractSearchPageController
 		String micrositeDropDownText = "";
 		final String spellingSearchterm = searchText;
 		String spellingtermDYM = "";
-		final PageableData pageableData = createPageableData(0, getSearchPageSize(), null, ShowMode.Page);
+		//UF-15
+		//final PageableData pageableData = createPageableData(0, getSearchPageSize(), null, ShowMode.Page);
+		final PageableData pageableData = createPageableData(0, 24, null, ShowMode.Page);
 
 		final SearchStateData searchState = new SearchStateData();
 		final SearchQueryData searchQueryData = new SearchQueryData();
@@ -464,6 +469,14 @@ public class SearchPageController extends AbstractSearchPageController
 			return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
 			//frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
+		if (null != lazyInterface && lazyInterface.equals("Y"))
+		{
+			model.addAttribute("lazyInterface", Boolean.TRUE);
+		}
+		else
+		{
+			model.addAttribute("lazyInterface", Boolean.FALSE);
+		}
 		return getViewForPage(model);
 	}
 
@@ -546,11 +559,21 @@ public class SearchPageController extends AbstractSearchPageController
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "text", required = false) final String searchText,
-			@RequestParam(value = "pageSize", required = false) final Integer pageSize, final HttpServletRequest request,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize,
+			@RequestParam(value = "lazyInterface", required = false) final String lazyInterface, final HttpServletRequest request,
 			final Model model) throws CMSItemNotFoundException, JSONException, ParseException
 	{
-
+		//UF-15,16
+		pageSize = PAGE_SIZE;
 		populateRefineSearchResult(searchQuery, page, showMode, sortCode, searchText, pageSize, request, model);
+		if (null != lazyInterface && lazyInterface.equals("Y"))
+		{
+			model.addAttribute("lazyInterface", Boolean.TRUE);
+		}
+		else
+		{
+			model.addAttribute("lazyInterface", Boolean.FALSE);
+		}
 		return getViewForPage(model);
 	}
 
@@ -1293,9 +1316,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 *
+	 * 
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 *
+	 * 
 	 * return list; }
 	 */
 
@@ -1615,6 +1638,45 @@ public class SearchPageController extends AbstractSearchPageController
 		}
 
 		return add;
+
+	}
+
+	/* Changes for INC144313867 */
+
+	/**
+	 * @description method is to remove products from wishlist in plp
+	 * @param productCode
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @throws CMSItemNotFoundException
+	 */
+	@ResponseBody
+	@RequestMapping(value = RequestMappingUrlConstants.REMOVE_FROM_WISHLIST_IN_PLP, method = RequestMethod.GET)
+	//@RequireHardLogIn
+	public boolean removeFromWishListsForPLP(@RequestParam(ModelAttributetConstants.PRODUCT) final String productCode,
+			final Model model, final HttpServletRequest request, final HttpServletResponse response) throws CMSItemNotFoundException
+	{
+		model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.N_CAPS_VAL);
+
+		boolean remove = false;
+		try
+		{
+			//add = productDetailsHelper.addToWishListInPopup(productCode, ussid, wishName, Boolean.valueOf(sizeSelected));
+			remove = productDetailsHelper.removeFromWishListForPLP(productCode);
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+
+		return remove;
 
 	}
 }
