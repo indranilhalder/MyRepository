@@ -213,7 +213,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	private static final String UTF = "UTF-8";
 
 
-
 	/**
 	 * This is the GET method which renders the Payment Page. Custom method written instead of overridden method to
 	 * handle additional parameters for TPR-629
@@ -988,6 +987,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	{
 		//String mplCustomerID = "";
 		OrderModel orderModel = null;
+		OrderData odata = null;
 		try
 		{
 
@@ -995,6 +995,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			if (StringUtils.isNotEmpty(guid))
 			{
 				orderModel = getMplPaymentFacade().getOrderByGuid(guid);
+
 			}
 
 			//getting current user
@@ -1005,11 +1006,18 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			if (null == orderModel)
 			{
 				final CartModel cart = getCartService().getSessionCart();
+				//added for CAR:127
+				final CartData cData = getMplCartFacade().getCartDataFromCartModel(cart, false);
+				//added for CAR:127
 				//Existing code for cart
 				boolean redirectFlag = false;
-
+				//commented for CAR:127
+				/*
+				 * final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+				 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+				 */
 				final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cData, cart);
 				if (!inventoryReservationStatus)
 				{
 					getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
@@ -1042,6 +1050,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//Code implemented for Order TPR-629
 			else
 			{
+				//added for CAR:127
+				odata = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
+				//added for CAR:127
 				boolean redirectFlag = false;
 				if (!getMplCheckoutFacade().isPromotionValid(orderModel))
 				{
@@ -1053,8 +1064,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				if (!redirectFlag)
 				{
+					//commented for CAR:127
+					/*
+					 * final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+					 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel);
+					 */
 					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel);
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, odata, orderModel);
 					if (!inventoryReservationStatus)
 					{
 						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_ORDER_INVENTORY_RESV_SESSION_ID,
@@ -1124,6 +1140,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		String validationMsg = "";
 		OrderModel orderModel = null;
 		String emailId = null;
+		//added for CAR:127
+		OrderData oData = null;
+		//added for CAR:127
 		try
 		{
 			//getting current user
@@ -1132,11 +1151,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			if (StringUtils.isNotEmpty(guid))
 			{
 				orderModel = getMplPaymentFacade().getOrderByGuid(guid);
+
 			}
 			if (null == orderModel)
 			{
 				//Existing code for cartModel
 				final CartModel cart = getCartService().getSessionCart();
+				//added for CAR:127
+				final CartData cData = getMplCartFacade().getCartDataFromCartModel(cart, false);
+				//added for CAR:127
 				LOG.debug(" TIS-414 : Checking - onclick of pay now button pincode servicabilty and promotion");
 				if (!getMplCheckoutFacade().isPromotionValid(cart))
 				{
@@ -1154,8 +1177,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//TISUTO-12 , TISUTO-11
 				if (!redirectFlag)
 				{
+					//commented for CAR:127
+					/*
+					 * final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+					 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+					 */
 					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cData, cart);
 					if (!inventoryReservationStatus)
 					{
 						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
@@ -1206,6 +1234,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//Code implemented for Order TPR-629
 			else
 			{
+				//added for CAR:127
+				oData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
+				//added for CAR:127
 				//TPR-815
 				if (!getMplCheckoutFacade().isPromotionValid(orderModel))
 				{
@@ -1216,8 +1247,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				if (!redirectFlag)
 				{
+					//commented for CAR:127
+					/*
+					 * final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+					 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel);
+					 */
 					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel);
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, oData, orderModel);
 					if (!inventoryReservationStatus)
 					{
 						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_ORDER_INVENTORY_RESV_SESSION_ID,
@@ -3235,6 +3271,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 			//Payment Soln changes	TPR-629
 			OrderModel orderModel = null;
+			//added for CAR:127
+			OrderData oData = null;
+			//added for CAR:127
 			if (StringUtils.isNotEmpty(guid))
 			{
 				orderModel = getMplPaymentFacade().getOrderByGuid(guid);
@@ -3244,6 +3283,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				//Existing code for catModel
 				final CartModel cart = getCartService().getSessionCart();
+				//added for CAR:127
+				final CartData cData = getMplCartFacade().getCartDataFromCartModel(cart, false);
+				//added for CAR:127
 
 				//final Double cartTotals = cart.getTotalPriceWithConv();
 				boolean redirectFlag = false;
@@ -3292,8 +3334,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//TISUTO-12 , TISUTO-11
 				if (!redirectFlag)
 				{
+					//commented for CAR:127
+					/*
+					 * final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+					 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+					 */
 					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cData, cart);
 					if (!inventoryReservationStatus)
 					{
 
@@ -3377,6 +3424,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			else
 			{
+				//added for CAR:127
+				oData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
+				//added for CAR:127
 				if (null == orderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus()))
 				{
 					//Code for orderModel --- do not create order again TPR-629
@@ -3389,8 +3439,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					if (!redirectFlag)
 					{
+						//commmented for CAR:127
+						/*
+						 * final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+						 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel);
+						 */
 						final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-								MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel);
+								MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, oData, orderModel);
+
 						if (!inventoryReservationStatus)
 						{
 							//TPR-815
@@ -4179,7 +4235,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
@@ -4248,6 +4304,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		String validationMsg = "";
 		OrderModel orderModel = null;
 		String emailId = null;
+		//added for CAR:127
+		OrderData oData = null;
+		//added for CAR:127
 		try
 		{
 			//getting current user
@@ -4261,6 +4320,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				//Existing code for cartModel
 				final CartModel cart = getCartService().getSessionCart();
+				//added for CAR:127
+				final CartData cData = getMplCartFacade().getCartDataFromCartModel(cart, false);
+				//added for CAR:127
 				LOG.debug(" TIS-414 : Checking - onclick of pay now button pincode servicabilty and promotion");
 				if (!getMplCheckoutFacade().isPromotionValid(cart))
 				{
@@ -4278,8 +4340,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//TISUTO-12 , TISUTO-11
 				if (!redirectFlag)
 				{
+					//commented for CAR:127
+					/*
+					 * final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+					 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+					 */
 					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cData, cart);
 					if (!inventoryReservationStatus)
 					{
 						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
@@ -4340,8 +4407,16 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				if (!redirectFlag)
 				{
+					//added for CAR:127
+					oData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
+					//added for CAR:127
+					//commented for CAR:127
+					/*
+					 * final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+					 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel);
+					 */
 					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel);
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, oData, orderModel);
 					if (!inventoryReservationStatus)
 					{
 						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_ORDER_INVENTORY_RESV_SESSION_ID,

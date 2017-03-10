@@ -31,6 +31,8 @@
 		  class="com.tisl.mpl.fulfilmentprocess.actions.order.CheckTransactionReviewStatusAction"
 		  scope="tenant" parent="abstractAction">
 		<property name="ticketBusinessService" ref="ticketBusinessService"/>
+		<!-- CAR:127 -->
+		<property name="orderConverter" ref="orderConverter"></property>
 	</bean>
 
 	<!-- <alias name="defaultOmsCreateOmsOrderAction" alias="omsCreateOmsOrderAction"/>
