@@ -1250,10 +1250,37 @@ tr.d0 td {
            
            <!-- UF-68 -->
            
-           <ul class="cartBottomCheck">
+           <%-- <ul class="cartBottomCheck" style="display:none;">
            		<li id="changePinDiv">
-				<%-- <p><spring:theme code="product.pincode.input" /></p>--%>
-				<%-- <p id="cartPinCodeAvailableBtm" class="cartPins"><spring:theme code="product.pincode" /></p> --%> 
+				<p><spring:theme code="product.pincode.input" /></p>
+				<p id="cartPinCodeAvailableBtm" class="cartPins"><spring:theme code="product.pincode" /></p> 
+				<!-- TPR_1055 EQA -->
+				<p id="AvailableMessageBtm" style="display:none"></p>
+				<p id="unserviceablepincodeBtm" style="display:none"><spring:theme code="cart.unserviceable.pincode" /></p>
+				<p id="error-IdBtm" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
+				<p id="emptyIdBtm" style="display:none"><spring:theme code="product.empty.pincode" /></p>
+				<c:choose>
+		 		<c:when test="${not empty defaultPinCode}">
+				<input type="text" id= "defaultPinCodeIdsBtm" name = "defaultPinCodeIds" style="" value="${defaultPinCode}" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
+				</c:when>
+		   		 <c:otherwise>
+		    	<input type="text" id= "defaultPinCodeIdsBtm" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
+		   		</c:otherwise>
+				 </c:choose>
+				<button id= "pinCodeButtonIdsBtm" name="pinCodeButtonId" style="" type=""><spring:theme code="text.submit"/></button>
+				<p id="AvailableMessageBtm" style="display:none" class="availablePins"></p>
+				<p id="unserviceablepincodeBtm" style="display:none" class="unservicePins"><spring:theme code="cart.unserviceable.pincode" /></p>
+				<p id="error-IdBtm" style="display:none" class="errorPins"><spring:theme code="product.invalid.pincode" /></p>
+				<p id="emptyIdBtm" style="display:none" class="emptyPins"><spring:theme code="product.empty.pincode" /></p>
+			</li>
+			</ul> --%>
+			
+			
+			
+			<ul class="cartBottomCheck">
+           		<li id="changePinDiv">
+				<%-- <p><spring:theme code="product.pincode.input" /></p>
+				<p id="cartPinCodeAvailableBtm" class="cartPins"><spring:theme code="product.pincode" /></p>  --%>
 				<!-- TPR_1055 EQA -->
 				<%-- <p id="AvailableMessageBtm" style="display:none"></p>
 				<p id="unserviceablepincodeBtm" style="display:none"><spring:theme code="cart.unserviceable.pincode" /></p>
@@ -1267,10 +1294,10 @@ tr.d0 td {
 		    	<input type="text" id= "defaultPinCodeIdsBtm" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
 		   		</c:otherwise>
 				 </c:choose>
-				<button id= "pinCodeButtonIdsBtm" name="pinCodeButtonId" style="" type=""><spring:theme code="text.submit"/></button>
+				<button id= "pinCodeButtonIdsBtm" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
 				<p id="AvailableMessageBtm" style="display:none" class="availablePins"></p>
 				<p id="unserviceablepincodeBtm" style="display:none" class="unservicePins"><spring:theme code="cart.unserviceable.pincode" /></p>
-				<p id="error-IdBtm" style="display:none" class="errorPins"><spring:theme code="product.invalid.pincode" /></p>
+				<p id="error-IdBtm" style="display:none" class="errorPins"><spring:theme code="product.invalid.pincode" /></p>	
 				<p id="emptyIdBtm" style="display:none" class="emptyPins"><spring:theme code="product.empty.pincode" /></p>
 			</li>
 			</ul>
