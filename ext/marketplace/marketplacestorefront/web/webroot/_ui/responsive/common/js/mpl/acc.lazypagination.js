@@ -40,11 +40,11 @@ function innerLazyLoad(options) {
    
     if (initPageLoad) { //TODO: duplicate loading prevention
         //$('ul.product-listing.product-grid').eq(2).html(gridHTML).hide().fadeIn(500);
-        $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid').html(gridHTML).hide().fadeIn(500);
+        $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal').html(gridHTML).hide().fadeIn(500);
         initPageLoad = false;
     } else {
         //$('ul.product-listing.product-grid').eq(2).append(gridHTML);
-        $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid').append(gridHTML);
+        $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal').append(gridHTML);
     }
     deleteArraySet(productItemArray);
     
@@ -58,7 +58,7 @@ function innerLazyStorageLoad(productItemArrayStore) {
     $.each(productItemArrayStore, function(index, element) {
                 gridHTML += '<li class="product-item">' + $(element).html() + '</li>';
     });
-    $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list').html(gridHTML).hide().fadeIn(500);
+    $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal').html(gridHTML).hide().fadeIn(500);
 }
 
 function deleteArraySet(productItemArray) {
@@ -71,7 +71,7 @@ function deleteArraySet(productItemArray) {
         if($('ul.product-listing.product-grid').length==0){
         	recordsLoadedCount = $('.product-list').find('li.product-item').length;
         }else{
-        	recordsLoadedCount = $('.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet').find('li.product-item').length;
+        	recordsLoadedCount = $('.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet,.product-listing.product-grid.lazy-grid-normal').find('li.product-item').length;
         }
     }
     console.log('Availabe blocks ' + productItemArray.length + ' Record count == ' + recordsLoadedCount);
@@ -140,11 +140,11 @@ $(document).ready(function() {
             if($('ul.product-listing.product-grid').length==0){
             	recordsLoadedCount = $('.product-list').find('li.product-item').length;
             }else{
-            	recordsLoadedCount = $('.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet').find('li.product-item').length;
+            	recordsLoadedCount = $('.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet,.product-listing.product-grid.lazy-grid-normal').find('li.product-item').length;
             }
             if (recordsLoadedCount!=0 && (recordsLoadedCount % loadMoreCount) == 0) {
                 $('.loadMorePageButton').remove();
-                $('ul.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet,ul.product-list').after('<button class="loadMorePageButton" style="background: #a9143c;color: #fff;margin: 5px auto;font-size: 12px;height: 40px;padding: 9px 18px;width: 250px;">Load More</button>');
+                $('ul.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet,ul.product-list,.product-listing.product-grid.lazy-grid-normal').after('<button class="loadMorePageButton" style="background: #a9143c;color: #fff;margin: 5px auto;font-size: 12px;height: 40px;padding: 9px 18px;width: 250px;">Load More</button>');
             }
             //end added for load more
             window.localStorage.setItem('lazyfrompdp','false');
@@ -163,7 +163,7 @@ $(document).ready(function() {
 					//$('li').removeClass('lazy-reached');
                     if (recordsLoadedCount!=0 && (recordsLoadedCount % loadMoreCount) == 0) {
                         $('.loadMorePageButton').remove();
-                        $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list').after('<button class="loadMorePageButton" style="background: #a9143c;color: #fff;margin: 5px auto;font-size: 12px;height: 40px;padding: 9px 18px;width: 250px;">Load More</button>');
+                        $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,.product-listing.product-grid.lazy-grid-normal').after('<button class="loadMorePageButton" style="background: #a9143c;color: #fff;margin: 5px auto;font-size: 12px;height: 40px;padding: 9px 18px;width: 250px;">Load More</button>');
                     } else {
                         if (productItemArray.length == 0) { //TODO: check if category page 
                             //window.history.replaceState({},"",ajaxUrl);
@@ -199,7 +199,7 @@ $(document).ready(function() {
         
         $(document).on('click','.product-item',function(){
         	if(window.localStorage){
-        		var productGridHtml = $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list').html();
+        		var productGridHtml = $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,.product-listing.product-grid.lazy-grid-normal').html();
         		window.localStorage.setItem("productlazyarray",encodeURI(productGridHtml));
         		window.localStorage.setItem('lazyfrompdp','true');
         	}
@@ -278,7 +278,7 @@ function ajaxPLPLoad(ajaxUrl){
             if($('ul.product-listing.product-grid').length==0){
             	 ulProduct = $(filtered).find('ul.product-list');
             }else{
-            	 ulProduct = $(filtered).find('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid');
+            	 ulProduct = $(filtered).find('ul.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-normal');
             }
           //Add to bag and quick view ui fixes starts here
             $(".product-tile .image .item.quickview").each(function(){
