@@ -1164,7 +1164,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			if(timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD)) {
 				if (null != mplLPHolidaysModel && null != mplLPHolidaysModel.getWorkingDays())
 				{
-					calculatedDateList = dateUtilHelper.calculatedLpHolidays(deteWithOutTIme, 3);
+					calculatedDateList = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(),deteWithOutTIme, 3);
 				}else {
 					calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,3);
 				}
@@ -1172,7 +1172,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			}else if(timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED)) {
 				if (null != mplLPHolidaysModel && null != mplLPHolidaysModel.getWorkingDays())
 				{
-					calculatedDateList = dateUtilHelper.calculatedLpHolidays(deteWithOutTIme,2);
+					calculatedDateList = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(),deteWithOutTIme,2);
 				}else {
 					calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,2);
 				}

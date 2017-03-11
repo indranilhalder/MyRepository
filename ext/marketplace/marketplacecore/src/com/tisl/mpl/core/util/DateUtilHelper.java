@@ -33,9 +33,6 @@ public class DateUtilHelper
 {
 	private static final Logger LOG = Logger.getLogger(DateUtilHelper.class);
 	
-	@Autowired
-	MplConfigDao mplConfigDao;
-	
 	public static final String SUNDAY = "Sunday";
 	public static final String MONDAY = "Monday";
 	public static final String TUESDAY = "Tuesday";
@@ -308,16 +305,13 @@ public class DateUtilHelper
 	}
 
 
-	public List<String> calculatedLpHolidays(final String date, final int requiredNumberOfDays)
+	public List<String> calculatedLpHolidays(String workingDays,final String date, final int requiredNumberOfDays)
 	{
 		try {
 			List<String> calculatedDates = new ArrayList<String>();
 			if(LOG.isInfoEnabled()) {
 				LOG.info("Calculating next "+requiredNumberOfDays+" days with LP Holidays for the given date"+date);
 			}
-			MplLPHolidaysModel mplLPHolidaysModel =mplConfigDao.getMplLPHolidays(MarketplaceCoreConstants.ALL);
-			if(null != mplLPHolidaysModel && null != mplLPHolidaysModel.getWorkingDays()) {
-				String workingDays = mplLPHolidaysModel.getWorkingDays();
 				if(null !=workingDays && !workingDays.isEmpty() ){
 					String[] workingDaysList =  workingDays.split(",");
 					DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
@@ -358,7 +352,7 @@ public class DateUtilHelper
 					LOG.debug("final dates with LP holidays for the given date"+date+" are"+calculatedDates);
 				}
 				return calculatedDates;
-			}
+			
 		}catch(Exception e) {
 			LOG.error("Exception while getting the LpHolidays "+e.getMessage());
 		}

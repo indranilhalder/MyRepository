@@ -2036,7 +2036,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				{
 					if (null !=mplLPHolidaysModel && null !=mplLPHolidaysModel.getWorkingDays() )
 					{
-						calculatedDateList = dateUtilHelper.calculatedLpHolidays(nextDate, 3);
+						calculatedDateList = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(),nextDate, 3);
 					}
 					else
 					{
@@ -2048,7 +2048,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				{
 					if (null !=mplLPHolidaysModel && null !=mplLPHolidaysModel.getWorkingDays() )
 					{
-						calculatedDateList = dateUtilHelper.calculatedLpHolidays(nextDate, 2);
+						calculatedDateList = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(),nextDate, 2);
 					}
 					else
 					{
@@ -2106,7 +2106,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 			if (null !=mplLPHolidaysModel && null !=mplLPHolidaysModel.getWorkingDays() )
 			{
-				calculatedDateList = dateUtilHelper.calculatedLpHolidays(deteWithOutTime, 3);
+				calculatedDateList = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(),deteWithOutTime, 3);
 			}
 			else
 			{
@@ -2121,7 +2121,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			modelList = mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.ED);
 			if (null !=mplLPHolidaysModel && null !=mplLPHolidaysModel.getWorkingDays() )
 			{
-				calculatedDateList = dateUtilHelper.calculatedLpHolidays(deteWithOutTime, 2);
+				calculatedDateList = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(),deteWithOutTime, 2);
 			}
 			else
 			{

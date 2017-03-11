@@ -2748,7 +2748,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			if((actualReturnWindow-returnWindow)>=3)
 			{
 				if(null !=mplLPHolidaysModel && null !=mplLPHolidaysModel.getWorkingDays() ){
-					returnableDates = dateUtilHelper.calculatedLpHolidays(dtfOut.print(today),3);
+					returnableDates = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(),dtfOut.print(today),3);
 				}else{
 					for(int i=0; i<3; i++)
 					{	
@@ -2759,7 +2759,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			else if((actualReturnWindow-returnWindow)==2)
 			{
 				if(null !=mplLPHolidaysModel && null !=mplLPHolidaysModel.getWorkingDays() ){
-					returnableDates = dateUtilHelper.calculatedLpHolidays(dtfOut.print(today),2);
+					returnableDates = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(),dtfOut.print(today),2);
 				}else{
 				for(int i=0; i<2; i++)
 				{
@@ -2770,7 +2770,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			else if((actualReturnWindow-returnWindow)==1)
 			{
 				if(null !=mplLPHolidaysModel && null !=mplLPHolidaysModel.getWorkingDays() ){
-				returnableDates = dateUtilHelper.calculatedLpHolidays(dtfOut.print(today),1);
+				returnableDates = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(),dtfOut.print(today),1);
 			}else{
 				for(int i=0; i<1; i++)
 				{
@@ -2781,7 +2781,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			else if((actualReturnWindow-returnWindow)==0)
 			{
 				if(null !=mplLPHolidaysModel && null !=mplLPHolidaysModel.getWorkingDays() ){
-					returnableDates = dateUtilHelper.calculatedLpHolidays(dtfOut.print(today),0);
+					returnableDates = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(),dtfOut.print(today),0);
 				}else{
 					returnableDates.add(dtfOut.print( today.plusDays(0).withTimeAtStartOfDay()));	
 				}
