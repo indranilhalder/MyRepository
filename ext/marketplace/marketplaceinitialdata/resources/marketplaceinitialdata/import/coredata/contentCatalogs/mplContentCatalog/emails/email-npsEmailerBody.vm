@@ -7,6 +7,11 @@
 
 <body>
 <table width="600" border="0" align="center" cellpadding="0" cellspacing="0">
+<style>
+table p{
+margin:14px 0 !important;
+}
+</style>
   <tr>
     <td align="left" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr>
@@ -42,9 +47,8 @@
                       	 #if(${ctx.productSize})
                       	 <p style="color: #6f6f6f;font-size:14px;">Size: ${ctx.productSize}</p>
                       	 #end
-                      	 <br><br>
-                      	 Qty: 1<br><br>
-                      	 Sold By: ${ctx.sellerName}</div>
+                      	 <p>Qty: 1</p>
+                      	 <p>Sold By: ${ctx.sellerName}</p>
                       	  <p style="color:#a5164c;font-size:18px;">
                       	    &#8377; ${ctx.totalPrice}/-<br/>
                       	    
