@@ -9,8 +9,10 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.util.DiscountValue;
+import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
@@ -91,5 +93,16 @@ public interface MplVoucherService
 	 * @throws EtailNonBusinessExceptions
 	 */
 	void checkCartWithVoucher(CartModel cartModel) throws VoucherOperationException, EtailNonBusinessExceptions;
+
+	/**
+	 * This method returns Invalidation model for a particular voucher-user-order
+	 *
+	 * @param voucher
+	 * @param user
+	 * @param order
+	 * @return VoucherInvalidationModel
+	 */
+	public VoucherInvalidationModel findVoucherInvalidation(final VoucherModel voucher, final UserModel user,
+			final OrderModel order);
 
 }

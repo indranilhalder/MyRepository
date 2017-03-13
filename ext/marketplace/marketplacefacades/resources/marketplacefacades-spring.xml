@@ -654,6 +654,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="mplExtendedPromoCartConverter" ref="mplExtendedPromoCartConverter"/> <!-- TISPT-104 -->
 		<property name="modelService" ref="modelService" />
 		<property name="mplDefaultCommerceCartCalculationStrategy" ref="mplDefaultCommerceCartCalculationStrategy" />
+		<!-- CAR:127 -->
+		<property name="orderConverter" ref="orderConverter"></property>
 
 	
 	</bean>
@@ -1754,4 +1756,26 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<!-- AddtoCart Helper Class -->
 	<!-- <bean id="addToCartHelper" class="com.tisl.mpl.helper.AddToCartHelper" /> -->
 	
+	<alias name="customAjaxProductConverter" alias="customAjaxProductConverter"/>
+	<bean id="customAjaxProductConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="de.hybris.platform.commercefacades.product.data.ProductData"/>
+		<property name="populators">
+			<list>
+				<ref bean="customAjaxProductPopulator"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="customAjaxProductPopulator"
+			class="com.tisl.mpl.facades.populators.CustomAjaxProductPopulator"
+			parent="defaultProductUrlPopulator">
+		<property name="productBasicPopulator" ref="productBasicPopulator"/>
+		<property name="variantSelectedPopulator" ref="variantSelectedPopulator"/>
+	    <property name="sellerPopulator" ref="sellerPopulator"/> 
+	</bean>
+
+	<alias name="customProductFacadeImpl" alias="customProductFacade"/>
+	<bean id="customProductFacadeImpl" class="com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl" parent="productFacade">
+		<property name="customProductConverter" ref="customAjaxProductConverter"/>
+	</bean>
 </beans>
