@@ -40,6 +40,12 @@ function navigateToPage(queryString,textString)
 <!--  fixed for TISSTRT-615-Fixed -->
 <c:if test="${facetData.code ne 'vouchers'}">
 <!-- End  fixed for TISSTRT-615-Fixed -->
+<!-- Change for CAR-245 -->
+<c:if test="${facetData.code ne 'categoryNameCodeMapping'}">
+<!-- End Change for CAR-245 -->
+
+
+
 
 <c:if test="${not empty facetData.values && facetData.code == 'inStockFlag'}">
 
@@ -54,7 +60,7 @@ function navigateToPage(queryString,textString)
 <c:set var="url" value="${fn:substring(url, 0, subStringIndex)}" />
 </c:if>
 
-<ycommerce:testId code="facetNav_title_${facetData.name}">
+<ycommerce:testId code="facetNav_title_${facetData.code}">
 <c:if test="${facetData.values.size()>0}">
 	<li class="facet js-facet ${facetData.name}">
 		<div class="facet-name js-facet-name">
@@ -79,20 +85,50 @@ function navigateToPage(queryString,textString)
 				<h3 class="true">${facetData.name}</h3>
 			</c:otherwise>
 	   </c:choose>
+		<c:if test="${facetData.code eq 'brand'}">
+		<div class="brandSelectAllMain search ">
+		<form class="brandSearchForm" action="#" id="brandNoFormSubmit">
 		
-                                	
+		<!-- <button></button> -->
+		        <spring:theme code="text.brandSearch.placeholder" var="brandSearchPlaceholder" />
+				<input class="brandSearchTxt" type="text" placeholder="${brandSearchPlaceholder}">
+			</form>
+			
+		<!-- <input type="checkbox" id="brandSelectAll" data-url=""> -->
+				<%-- <label class="applyBrandFilters" style="float: right;margin-right: 12%;margin-top: -1%;padding-bottom: 4%;">Apply</label>
+				Below currentQueryParams input tag is for (brand facet) apply option in SERT page
+				<input type="hidden" name="currentQueryParams" value="${searchPageData.currentQuery.query.value}" class="currentQueryParamsApply"/>
+							<form action="${url}" method="get" id="brandApply"> 
+									<input type="hidden" name="searchCategory" value="${searchCategory}"/>
+									<input type="hidden" name="q" value="" class="qValueForApply"/>
+									<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
+									<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
+							</form> --%>
+		<%-- <c:choose>
+		
+		<c:when test="${param.selectAllBrand eq 'true' }">
+		<label class="brandSelectAll" for="brandSelectAll">Uncheck All</label>
+		</c:when>
+			<c:otherwise>
+		<label class="brandSelectAll" for="brandSelectAll">Check All</label>
+		</c:otherwise>
+		</c:choose> --%>
+			
+				</div>
+		</c:if>
 		</div>
 
 		<div class="facet-values js-facet-values js-facet-form ">
 			<c:if test="${not empty facetData.topValues}">
 				<ul class="facet-list js-facet-top-values active">
 					<c:forEach items="${facetData.topValues}" var="facetValue">
-						<li class="filter-${facetData.code}">
+ 							<%-- 			<li class="filter-${facetData.code}">    --%>
 						
 						<c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
 						<c:choose>
-						
-						<c:when test="${(facetData.code eq 'colour'  || facetData.code  eq 'dialColourWatches')&& not empty facetValue.name}">
+						<%-- INC_12606  check added for dialColour-classification--%>
+						<c:when test="${(facetData.code eq 'colour'  || facetData.code  eq 'dialColourWatches' || facetData.code eq 'dialColour-classification')&& not empty facetValue.name}">
+						<li class="filter-colour">
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
@@ -134,10 +170,39 @@ function navigateToPage(queryString,textString)
 									<a href="${facetValueQueryUrl}&amp;text=${searchPageData.freeTextSearch}&amp;searchCategory=${searchCategory}" title="${facetValue.name}" style="background-color:${colorHexCode}; border: 1px solid rgb(204, 211, 217)"></a> --%>
 								</c:otherwise>
 							</c:choose>
+							</li>
 						</c:when>
 						
 						<c:otherwise>
+						<li class="filter-${facetData.code}">
 							<c:if test="${facetData.multiSelect}">
+							<c:choose>
+								<c:when test="${facetData.code eq 'brand'}">
+								<form action="${url}" method="get"> 
+									<input type="hidden" name="offer" value="${offer}"/>
+									<input type="hidden" name="searchCategory" value="${searchCategory}"/>
+									<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
+									<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
+									<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
+									<input type="hidden" name="isFacet" value="true"/>
+									<input type="hidden" name="facetValue" value="${facetValue.code}"/>
+									<label>
+										<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''}  class="facet-checkbox js-facet-checkbox sr-only" />
+										<span class="facet-label">
+											<span class="facet-mark"></span>
+											<div class="facet-text">
+											<span class="facet-text">
+												${facetValue.name}												 
+											</span>
+											 <ycommerce:testId code="facetNav_count">
+													<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
+												</ycommerce:testId>
+											</div>
+										</span>
+									</label>
+								</form>
+								</c:when>
+								<c:otherwise>
 								<form action="${url}" method="get"> 
 									<input type="hidden" name="offer" value="${offer}"/>
 									<input type="hidden" name="searchCategory" value="${searchCategory}"/>
@@ -161,6 +226,8 @@ function navigateToPage(queryString,textString)
 										</span>
 									</label>
 								</form>
+								</c:otherwise>
+								</c:choose>
 							</c:if>
 							<c:if test="${not facetData.multiSelect}">
 								<c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
@@ -183,26 +250,30 @@ function navigateToPage(queryString,textString)
 									</ycommerce:testId> --%>
 								</span>
 							</c:if>
+							</li>
 							</c:otherwise>
 						</c:choose>
-						</li>
+<%-- 						</li> --%>
 					</c:forEach>
 				</ul>
 			</c:if>
 			
 			<ul class="facet-list js-facet-list <c:if test="${not empty facetData.topValues}">facet-list-hidden js-facet-list-hidden</c:if>">
-			
-
-
-
-
-
-				<c:forEach items="${facetData.values}" var="facetValue">					
+				<c:forEach items="${facetData.values}" var="facetValue">		
+				<!-- TPR-4722 -->
+					<c:if test="${facetValue.name== 'Exclude out of stock'}">
+				            <input type="hidden" id="out_of_stock_count" value="${facetValue.count}"/>
+				     	 </c:if>
+				  <!-- TPR-4722 -->   	 
+							
 				  <c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
-					<li class="filter-${facetData.code}">
+<%-- 					<li class="filter-${facetData.code}"> --%>
 
 					<c:choose>
-						<c:when test="${(facetData.code eq 'colour' || facetData.code  eq 'dialColourWatches') && not empty facetValue.name }">						
+
+						<%--  INC_12606  check added for dialColour-classification --%>
+						<c:when test="${(facetData.code eq 'colour' || facetData.code  eq 'dialColourWatches' || facetData.code eq 'dialColour-classification') && not empty facetValue.name }">						
+						<li class="filter-colour">	
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
@@ -275,12 +346,14 @@ function navigateToPage(queryString,textString)
 									<%-- <a href="${facetValueQueryUrl}&amp;text=${searchPageData.freeTextSearch}&amp;searchCategory=${searchCategory}" title="${facetValue.name}" style="background-color:${colorHexCode}; border: 1px solid rgb(204, 211, 217)"></a> --%>
 								</c:otherwise>
 							</c:choose>
+							</li>
 						</c:when>
 						<%-- <c:when test="${facetData.name eq 'size'}"> --%>	
 						
 						
 						
-						<c:when test="${facetData.code eq 'size' && not empty facetValue.name}">					
+						<c:when test="${facetData.code eq 'size' && not empty facetValue.name}">
+						<li class="filter-${facetData.code}">					
 							  <form action="${url}" method="get"> 
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
@@ -293,11 +366,12 @@ function navigateToPage(queryString,textString)
 								</form>
 						<%-- <a href="#">${facetValue.name}</a> --%>
 							<%-- <a href="${facetValueQueryUrl}&amp;text=${searchPageData.freeTextSearch}">${facetValue.name}</a> --%>
+							</li>
 						</c:when>						
 						
 						<c:otherwise>
 							
-						
+						<li class="filter-${facetData.code}">
 					
 						<c:if test="${facetData.multiSelect}">											
 							<ycommerce:testId code="facetNav_selectForm"> 
@@ -316,6 +390,34 @@ function navigateToPage(queryString,textString)
 							</c:if>
 							<!-- Added for TISPRO-490 End here -->
 							<c:choose>
+								<c:when test="${facetData.code eq 'brand'}">
+									<form action="${url}" method="get"> 
+								<input type="hidden" name="offer" value="${offer}"/>
+								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
+								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
+								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
+								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
+								<input type="hidden" name="isFacet" value="true"/>
+								<input type="hidden" name="facetValue" value="${facetValue.code}"/>										
+								<label>
+									<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''}  class="facet-checkbox js-facet-checkbox sr-only" />																		
+										<span class="facet-label">
+										<c:if test="${not empty facetValue.name}">
+												<span class="facet-mark"></span>
+											</c:if>	
+											<div class="facet-text">
+												<span class="facet-text">
+												${facetValue.name}&nbsp;
+												   
+												</span>
+												<ycommerce:testId code="facetNav_count">
+													<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
+												</ycommerce:testId>
+											</div>
+										</span>									
+								</label>
+							</form>
+								</c:when>
 								<c:when test="${facetData.code eq 'price'}">
 								<form action="${url}" method="get"> 
 									<input type="hidden" name="offer" value="${offer}"/>
@@ -418,13 +520,18 @@ function navigateToPage(queryString,textString)
 								</ycommerce:testId> --%> 
 							</span>
 						</c:if>
+						</li>
 							</c:otherwise>
 
 					</c:choose>
-					</li>
+<!-- 					</li> -->
 				</c:forEach>
 			</ul>
 
+			<c:if test="${facetData.code eq 'brand'}">
+				<input type="hidden" id="facetTopValuesCnt" value="${fn:length(facetData.topValues)}"/>
+		    	<input type="hidden" id="remainingFacetValuesCnt" value="${fn:length(facetData.values)}"/>
+			</c:if>
 			<c:if test="${not empty facetData.topValues}">
 			
 			<c:set var="remainingFacetValues" value="${facetData.values}" />
@@ -443,6 +550,9 @@ function navigateToPage(queryString,textString)
 				<c:when test="${facetData.code eq 'colour'}" >
 				<a href="#" class="js-more-facet-values-link more" >+&nbsp;${remainingFacetValuesSize}&nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" /></a>
 				
+				</c:when>
+				<c:when test="${facetData.code eq 'brand'}" >
+					<a href="#" class="js-more-facet-values-link more" >+&nbsp;<span>${remainingFacetValuesSize}</span>&nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" text="more" /></a>
 				</c:when>
 				<c:otherwise>
 					<a href="#" class="js-more-facet-values-link more" >+&nbsp;${remainingFacetValuesSize}&nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" text="more" /></a>
@@ -501,6 +611,7 @@ function navigateToPage(queryString,textString)
 		
 	</li> </c:if> 
 			</ycommerce:testId>
+			</c:if>
 			</c:if>
 			</c:if>
 			</c:if>

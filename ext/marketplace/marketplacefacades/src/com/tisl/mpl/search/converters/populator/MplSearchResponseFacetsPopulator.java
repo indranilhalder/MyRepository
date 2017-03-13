@@ -4,11 +4,13 @@
 package com.tisl.mpl.search.converters.populator;
 
 import de.hybris.platform.commerceservices.search.facetdata.FacetData;
+import de.hybris.platform.commerceservices.search.facetdata.FacetValueData;
 import de.hybris.platform.commerceservices.search.solrfacetsearch.data.SolrSearchQueryData;
 import de.hybris.platform.commerceservices.search.solrfacetsearch.populators.SearchResponseFacetsPopulator;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
 import de.hybris.platform.solrfacetsearch.config.IndexedType;
 import de.hybris.platform.solrfacetsearch.search.Facet;
+import de.hybris.platform.solrfacetsearch.search.FacetValue;
 import de.hybris.platform.solrfacetsearch.search.SearchResult;
 
 import java.util.ArrayList;
@@ -45,11 +47,35 @@ public class MplSearchResponseFacetsPopulator extends SearchResponseFacetsPopula
 			facetData.setVisible(indexedProperty.isVisible());
 
 			facetData.setGenericFilter(indexedProperty.isGenericFacet());
-			buildFacetValues(facetData, facet, indexedProperty, solrSearchResult, searchQueryData);
-
-			if ((facetData.getValues() == null) || (facetData.getValues().isEmpty()))
+			if (!"categoryNameCodeMapping".equalsIgnoreCase(facet.getName()))
 			{
-				continue;
+				buildFacetValues(facetData, facet, indexedProperty, solrSearchResult, searchQueryData);
+
+				if ((facetData.getValues() == null) || (facetData.getValues().isEmpty()))
+				{
+					continue;
+				}
+			}
+			else if ("categoryNameCodeMapping".equalsIgnoreCase(facet.getName()))
+			{
+				List allFacetValues = null;
+
+				if (null != facet.getFacetValues())
+				{
+					allFacetValues = new ArrayList(facet.getFacetValues().size());
+
+					for (final FacetValue facetValue : facet.getFacetValues())
+					{
+						final FacetValueData facetValueData = createFacetValueData();
+						facetValueData.setCode(facetValue.getName());
+						facetValueData.setName(facetValue.getDisplayName());
+						facetValueData.setCount(facetValue.getCount());
+
+						allFacetValues.add(facetValueData);
+					}
+				}
+
+				facetData.setValues(allFacetValues);
 			}
 			result.add(facetData);
 		}

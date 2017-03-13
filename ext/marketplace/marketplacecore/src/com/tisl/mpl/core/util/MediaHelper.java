@@ -23,7 +23,7 @@ import java.net.URL;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.tils.mpl.media.MplMediaService;
@@ -47,9 +47,9 @@ public class MediaHelper
 		MediaModel media = null;
 		try
 		{
-			if ((product != null) && (mediaFormat != null) && CollectionUtils.isNotEmpty(product.getGalleryImages()))
+			if ((product != null) && (mediaFormat != null) && StringUtils.isNotEmpty(product.getCode()))
 			{ //TPR-796 EQA check
-				media = mplMediService.getMediaForIndexing(product, mediaFormat, product.getGalleryImages());
+				media = mplMediService.getMediaForIndexing(product, mediaFormat, product.getCode());
 				if (media.getUrl() != null && media.getUrl().length() > 0)
 				{
 					final String prodCode = product.getCode().toString();

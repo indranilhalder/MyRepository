@@ -8,11 +8,15 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -29,7 +33,7 @@ public class MplCategoryServiceImpl extends DefaultCategoryService implements Mp
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplCatalogService#getCategoryModelForName(de.hybris.platform.
 	 * catalog.model.CatalogVersionModel, java.lang.String)
@@ -63,7 +67,7 @@ public class MplCategoryServiceImpl extends DefaultCategoryService implements Mp
 
 	/**
 	 * @param catModel
-	 * @param catalogCode
+	 * @param catalogName
 	 * @return CategoryModel
 	 */
 	@Override
@@ -164,6 +168,64 @@ public class MplCategoryServiceImpl extends DefaultCategoryService implements Mp
 	public void setMplCategoryDao(final MplCategoryDao mplCategoryDao)
 	{
 		this.mplCategoryDao = mplCategoryDao;
+	}
+
+
+	/**
+	 * Returns List of Super categories for a list of Category
+	 *
+	 * @param categoryList
+	 */
+	@Override
+	public Collection<CategoryModel> getAllSupercategoriesForCategoryList(final List<CategoryModel> categoryList)
+	{
+		return getAllSupercategories(categoryList);
+	}
+
+	/**
+	 * Get All Category Tree Structure
+	 *
+	 * @param categories
+	 * @return result
+	 */
+	private Collection<CategoryModel> getAllSupercategories(final Collection<CategoryModel> categories)
+	{
+		Collection<CategoryModel> result = null;
+		Collection<CategoryModel> currentLevel = new ArrayList<CategoryModel>();
+		for (final CategoryModel categoryModel : categories)
+		{
+			final List<CategoryModel> superCategories = categoryModel.getSupercategories();
+			if (superCategories != null)
+			{
+				currentLevel.addAll(superCategories);
+			}
+		}
+
+		while (!CollectionUtils.isEmpty(currentLevel))
+		{
+			for (final Iterator iterator = currentLevel.iterator(); iterator.hasNext();)
+			{
+				final CategoryModel categoryModel = (CategoryModel) iterator.next();
+				if (result == null)
+				{
+					result = new HashSet<CategoryModel>();
+				}
+				if (!result.add(categoryModel))
+				{
+					// avoid cycles by removing all which are already found
+					iterator.remove();
+				}
+			}
+
+			if (currentLevel.isEmpty())
+			{
+				break;
+			}
+			final Collection<CategoryModel> nextLevel = getAllSupercategories(currentLevel);
+			currentLevel = nextLevel;
+		}
+
+		return result == null ? Collections.EMPTY_LIST : result;
 	}
 
 

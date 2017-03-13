@@ -536,7 +536,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_MESSAGE = "Test from TatauniStore";
 	public static final String SMS_MESSAGE_COD_OTP = "Peek-a-boo {0}! One-time password for your COD order is {1}. Please feel free to call us at {2} in case of any queries.";
 	public static final String SMS_MESSAGE_C2C_OTP = "Hi, one time password for your request is {0}. Please enter this to submit the request. Thanks!";
-	public static final String SMS_MESSAGE_PAYMENT_PENDING = "Hmmm… There seems to be a spot of bother. Please hold on.";
+	public static final String SMS_MESSAGE_PAYMENT_PENDING = "HmmmÂ… There seems to be a spot of bother. Please hold on.";
 	public static final String SMS_MESSAGE_PAYMENT_FAILED = "Uh oh. Looks like your order was declined for some reason. Please try again.";
 	public static final String SMS_MESSAGE_PAYMENT_TIMEOUT = "Oh no! Your order couldn't go through due to techincal issues. Please try again.";
 	public static final String SMS_MESSAGE_INVENTORY_RESERVATION_FAILED = "Uh oh! Looks like what you wanted isn't available right now, but it could come back soon. Please try again later";
@@ -585,7 +585,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static char FIELD_SEPARATOR = ',';
 
 	public static final String BUYAALONGBGETSHIPPINGFREE = "BuyAalongBgetShippingFree".intern();
-	public static final String BUYAANDBPERCENTAGEDISCOUNT = "BuyAandBPercentageDiscount".intern();
+	public static final String BUYAANDBPERCENTAGEDISCOUNT = "BuyAandBPrecentageDiscount".intern();
 	public static final String BUYAANDBGETC = "BuyAandBgetC".intern();
 	public static final String BUYABFREEPERCENTAGEDISCOUNT = "BuyABFreePrecentageDiscount".intern();
 	public static final String BOGO = "CustomProductBOGOFPromotion".intern();
@@ -685,6 +685,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NOSTOCK = "noStock";
 	public static final String TYPE_MISMATCH_ERROR_CODE = "typeMismatch";
 	public static final String ERROR_MSG_TYPE = "errorMsg";
+	public static final String ERROR_MSG_TYPE_FREEBIE = "freebieErrorMsg";
 	public static final String QUANTITY_INVALID_BINDING_MESSAGE_KEY = "basket.error.quantity.invalid.binding";
 	public static final String MINIMUM_CONFIGURED_QUANTIY = "mpl.cart.minimumConfiguredQuantity.lineItem";
 	public static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
@@ -1530,7 +1531,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EXCUSERINVALID = "User not valid".intern();
 
 
-	public static final String USER = "User".intern();
+	public static final String USER = "user".intern();
 	public static final String DATE = "Date".intern();
 	//TPR-1075
 	public static final String NEWCUSTOMER = "NewCustomer".intern();
@@ -1544,7 +1545,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ERRORAPPLYVOUCHER = "Error while applying voucher: ".intern();
 	public static final String PRICEEXCEEDED = "Price_exceeded".intern();
 	public static final String NOTAPPLICABLE = "not_applicable".intern();
-	public static final String VOUCHER = "Voucher ".intern();
+	public static final String VOUCHER = "voucher".intern();
 	public static final String FREEBIEERROR = " cannot be redeemed: freebie".intern();
 	public static final String PRICEEXCEEDERROR = " cannot be redeemed: total price exceeded".intern();
 	public static final String DATERESTVIOLATION = "Date restriction is violated".intern();
@@ -1724,7 +1725,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//TPR-629
 	//public static final String VOUCHERINVALIDATIONQUERY = "select {v.pk} from {voucherinvalidation as v},{order as o},{customer as c},{voucher as vo} where {v.order}={o.pk} and {o.code}=?code and {v.user}={c.pk} and {c.originaluid}=?customerUid and {v.voucher}={vo.pk} and {vo.code}=?voucherIdentifier";
-	public static final String VOUCHERINVALIDATIONQUERY = "select {v.pk} from {voucherinvalidation as v},{order as o},{customer as c},{voucher as vo} where {v.order}={o.pk} and {o.code}=?code and {v.user}={c.pk} and {c.originaluid}=?customerUid and {v.voucher}={vo.pk} ";
+	//public static final String VOUCHERINVALIDATIONQUERY = "select {v.pk} from {voucherinvalidation as v},{order as o},{customer as c},{voucher as vo} where {v.order}={o.pk} and {o.code}=?code and {v.user}={c.pk} and {c.originaluid}=?customerUid and {v.voucher}={vo.pk} ";
 	public static final String CUSTOMERUID = "customerUid";
 	public static final String OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING = "paymentPending";
 
@@ -1842,6 +1843,25 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String NONFREE_CONSUMED_ENTRIES = "nonFreeConsumedEntries".intern();
 
 	//PaymentFix2017:-
-	public static final String PAYMENTPENDING_SKIPTIME = "marketplace.PaymentPending.skipTime";
+	public static final String PAYMENTPENDING_SKIPTIME = "marketplace.PaymentPending.skipTime".intern();
 
+	public static final String COUNTRYCODE = "91".intern();
+	//Promotion Related
+	//public static final String BUYAANDBGETPROMOTIONONSHIPPINGCHARGES = "BuyAandBGetPromotionOnShippingCharges".intern();
+	//public static final String BUYAGETPERCENTAGEDISCOUNTONB = "BuyAGetPercentageDiscountOnB".intern();
+	public static final String DATEFORMATMMDDYYYY = "MM/dd/yy".intern();
+
+	//FREEBIE FIX
+	//public static final String FREEBIEPRICETHRESHOLD = "freebiePriceThreshold";
+
+	public static final String BUYAANDBGETPROMOTIONONSHIPPINGCHARGES = "BuyAandBGetPromotionOnShippingCharges".intern();
+	public static final String BUYAGETPERCENTAGEDISCOUNTONB = "BuyAGetPercentageDiscountOnB".intern();
+	//FREEBIE FIX
+	public static final String FREEBIEPRICETHRESHOLD = "freebiePriceThreshold";
+	
+	// OrderIssues:- multiple Payment Response from juspay restriction
+	public static final String DUPLICATEJUSPAYRESONSE = "duplicatJuspayResponse";
+
+	//Query for fetching invalidation of a particular order-voucher-user
+	public static final String VOUCHERINVALIDATIONQUERY = "select {pk} from {voucherinvalidation} where {order}=?order and {user}=?user and {voucher}=?voucher ";
 }

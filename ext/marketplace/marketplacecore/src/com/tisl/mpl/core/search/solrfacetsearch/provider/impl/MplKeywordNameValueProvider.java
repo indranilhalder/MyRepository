@@ -104,44 +104,27 @@ public class MplKeywordNameValueProvider extends AbstractPropertyFieldValueProvi
 					for (final ProductFeatureModel productFeature : productFeatures)
 					{
 						if (null != productFeature.getClassificationAttributeAssignment()
-								&& null != productFeature.getClassificationAttributeAssignment().getClassificationAttribute()
-								&& productFeature.getClassificationAttributeAssignment().getClassificationAttribute().getCode()
-										.equalsIgnoreCase("colorelectronics"))
-
+								&& null != productFeature.getClassificationAttributeAssignment().getClassificationAttribute())
 						{
-							final ClassificationAttributeValueModel colorElectronicsModel = (ClassificationAttributeValueModel) productFeature
-									.getValue();
-
-							if (colorElectronicsModel != null)
+							final String code = productFeature.getClassificationAttributeAssignment().getClassificationAttribute()
+									.getCode();
+							if (colorElectronics == null && (code != null) && code.equalsIgnoreCase("colorelectronics")) // colorElectronics == null is to ensure if value set for colorElectronics no need to set further. it works like break;
 							{
-
-
-								colorElectronics = colorElectronicsModel.getName();
-								break;
-
+								final ClassificationAttributeValueModel colorElectronicsModel = (ClassificationAttributeValueModel) productFeature
+										.getValue();
+								if (colorElectronicsModel != null)
+								{
+									colorElectronics = colorElectronicsModel.getName();
+								}
 							}
-						}
 
 
-
-					}
-
-
-					for (final ProductFeatureModel productFeature : productFeatures)
-					{
-						if (null != productFeature.getClassificationAttributeAssignment()
-								&& null != productFeature.getClassificationAttributeAssignment().getClassificationAttribute()
-								&& productFeature.getClassificationAttributeAssignment().getClassificationAttribute().getCode()
-										.equalsIgnoreCase("modelnumber"))
-
-						{
-
-							if (productFeature.getValue() != null && colorElectronics != null)
+							if (modelNumber == null && (code != null) && code.equalsIgnoreCase("modelnumber")) // modelNumber == null is to ensure if value set for modelNumber no need to set further. it works like break;
 							{
-
-								modelNumber = productFeature.getValue().toString();
-								break;
-
+								if (productFeature.getValue() != null)
+								{
+									modelNumber = productFeature.getValue().toString();
+								}
 							}
 
 						}

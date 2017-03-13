@@ -28,6 +28,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.util.MplBuyBoxUtility;
@@ -48,7 +49,8 @@ public class MplDisplayPriceValueProvider extends AbstractPropertyFieldValueProv
 	@Resource
 	private BuyBoxService buyBoxService;
 	private PriceDataFactory priceDataFactory;
-	public static final String INR = "INR";
+
+	//public static final String INR = "INR";
 
 	protected PriceDataFactory getPriceDataFactory()
 	{
@@ -63,7 +65,7 @@ public class MplDisplayPriceValueProvider extends AbstractPropertyFieldValueProv
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -127,17 +129,18 @@ public class MplDisplayPriceValueProvider extends AbstractPropertyFieldValueProv
 				{
 					double price = 0.0;
 					/* TISPRD-2611 */
-					if (null != buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getSpecialPrice()
-							&& buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getSpecialPrice()
-									.doubleValue() > 0.0)
+					final Double specialPrice = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0)
+							.getSpecialPrice();
+					Double pcmPrice = null;
+
+					if (null != specialPrice && specialPrice.doubleValue() > 0.0)
 					{
-						price = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getSpecialPrice()
-								.doubleValue();
+						price = specialPrice.doubleValue();
 					}
-					else if (null != buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getPrice()
-							&& buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getPrice().doubleValue() > 0.0)
+					else if (null != (pcmPrice = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0)
+							.getPrice()) && pcmPrice.doubleValue() > 0.0)
 					{
-						price = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getPrice().doubleValue();
+						price = pcmPrice.doubleValue();
 					}
 					final JSONObject sizePriceJson = new JSONObject();
 					sizePriceJson.put(pcmSizeVariantModel.getSize().toUpperCase(), Double.valueOf(price));
@@ -208,7 +211,7 @@ public class MplDisplayPriceValueProvider extends AbstractPropertyFieldValueProv
 	public PriceData formPriceData(final Double price)
 	{
 
-		return priceDataFactory.create(PriceDataType.BUY, new BigDecimal(price.doubleValue()), INR);
+		return priceDataFactory.create(PriceDataType.BUY, new BigDecimal(price.doubleValue()), MarketplaceCoreConstants.INR);
 	}
 
 	/**

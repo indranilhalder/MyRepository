@@ -4,11 +4,11 @@
 package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.cronjob.model.CronJobModel;
+import de.hybris.platform.promotions.model.ProductPromotionModel;
 
 import java.util.Date;
 import java.util.List;
 
-import com.tisl.mpl.model.BuyAPercentageDiscountModel;
 import com.tisl.mpl.model.MplConfigurationModel;
 
 
@@ -18,9 +18,9 @@ import com.tisl.mpl.model.MplConfigurationModel;
  */
 public interface PromotionPriceUpdaterService
 {
-	List<BuyAPercentageDiscountModel> getRequiredPromotion(Date mplConfigDate);
+	List<ProductPromotionModel> getRequiredPromotion(Date mplConfigDate);
 
-	boolean poulatePriceRowData(final BuyAPercentageDiscountModel buyAPercentageDiscount);
+	boolean poulatePriceRowData(final ProductPromotionModel buyAPercentageDiscount);
 
 	MplConfigurationModel getCronDetails(String code);
 

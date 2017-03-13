@@ -35,6 +35,10 @@ import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
+/**
+ * This promotion is of type Buy above threshold value X and get discount on shipping charges
+ *
+ */
 @SuppressWarnings("deprecation")
 public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGetPromotionOnShippingCharges
 {
@@ -244,7 +248,7 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.promotions.jalo.AbstractPromotion#getResultDescription(de.hybris.platform.jalo.SessionContext,
 	 * de.hybris.platform.promotions.jalo.PromotionResult, java.util.Locale)

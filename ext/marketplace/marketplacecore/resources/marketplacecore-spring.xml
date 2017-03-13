@@ -109,6 +109,16 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="commonI18NService" ref="commonI18NService" />
 	</bean>
+	<!-- ADDED FOR CAR-245 -->
+	<bean id="mplCategoryNameCodeMappingValueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplCategoryNameCodeMappingValueProvider"
+		parent="abstractPropertyFieldValueProvider">
+		<property name="categorySource" ref="mplCategoryBrandSource" />
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="i18nService" ref="i18nService" />
+		<property name="commonI18NService" ref="commonI18NService" />
+	</bean>
+	<!-- Ends FOR CAR-245  -->
 	<bean id="classificationValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.ClassificationValueProvider"
 		parent="abstractPropertyFieldValueProvider">
@@ -999,6 +1009,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="configurationService" ref="configurationService" />
+		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
 	</bean>
 
 	<bean id="mplColorFacetDisplayNameProvider"

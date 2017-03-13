@@ -325,8 +325,36 @@
 					<persistence type="property"/>
 					<modifiers read="true" write="true" search="true" optional="true"/>
 				</attribute>
+				<attribute qualifier="products" type="ProductCollection" redeclare="true" autocreate="false" generate="false">
+					<description>the products the given voucher is valid for.</description>
+					<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+				    </persistence>
+					<modifiers search="false"/>
+				</attribute>
 			</attributes>
 		</itemtype>
+		
+		<itemtype code="UserRestriction"
+			extends="Restriction"
+			jaloclass="de.hybris.platform.voucher.jalo.UserRestriction"
+			autocreate="false"
+			generate="false">
+			<attributes>
+				<attribute qualifier="users" type="PrincipalCollection" redeclare="true" autocreate="false" generate="false">
+					<description>the principals the given voucher is valid for.</description>
+					<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+				    </persistence>
+					<modifiers read="true" write="true" search="false" initial="false" optional="false"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+		
 		<!-- added for TPR-1076 -->
 		<itemtype code="UnregisteredUserRestriction"
 		 	extends="Restriction"

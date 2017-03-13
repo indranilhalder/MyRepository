@@ -1365,12 +1365,16 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge, final AbstractOrderModel abstractOrderModel) //Parameter abstractOrderModel added extra for TPR-629
 			throws EtailNonBusinessExceptions, Exception
 	{
-		//getting the current user
-		final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
-		final Map<String, Double> paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
-		//IQA changes TPR-629 and Refactor
 		if (null != abstractOrderModel)
 		{
+			//getting the current user
+			//OrderIssues:- Customer data is getting from Order in place of session
+			final CustomerModel mplCustomer = (CustomerModel) abstractOrderModel.getUser();
+			//		final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
+			final Map<String, Double> paymentMode = getSessionService().getAttribute(
+					MarketplacecommerceservicesConstants.PAYMENTMODE);
+			//IQA changes TPR-629 and Refactor
+
 			final List<AbstractOrderEntryModel> entries = abstractOrderModel.getEntries();
 
 			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
@@ -1395,6 +1399,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					//saving COD PaymentInfo
 					getMplPaymentService().saveCODPaymentInfo(custEmail, cartValue, totalCODCharge, entries, abstractOrderModel);
 				}
+			}// OrderIssues:- else block added to track the log
+			else
+			{
+				LOG.error("Customer data not available");
 			}
 			getMplPaymentService().paymentModeApportion(abstractOrderModel);
 
@@ -1647,11 +1655,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1702,9 +1710,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
@@ -2245,6 +2253,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					//Logic when transaction is successful i.e. CHARGED
 					if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
 					{
+						// OrderIssues:- Set the value duplicatJuspayResponse in session to true  ones cart GUID executed with success response from juspay
+						final Map<String, Boolean> duplicatJuspayResponseMap = new HashMap<String, Boolean>();
+						duplicatJuspayResponseMap.put(orderGuid, Boolean.TRUE);
+
+						getSessionService().setAttribute(MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE,
+								duplicatJuspayResponseMap);
+
 						//TIS-3168
 						LOG.error("Payment successful with transaction ID::::" + juspayOrderId);
 						//saving card details
@@ -2844,6 +2859,87 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	}
 
+	/**
+	 * This method returns the map of all active Payment modes(eg. Credit Card, Debit Card, COD, etc.) and their
+	 * availability for the specific store and displays them on the payment page of the store
+	 *
+	 * @param store
+	 * @return Map<String, Boolean>
+	 * @throws EtailNonBusinessExceptions
+	 *
+	 */
+	//CAR-111
+	@Override
+	public Map<String, Boolean> getPaymentModes(final String store, final AbstractOrderModel abstractOrderModel)
+			throws EtailNonBusinessExceptions
+	{
+		final Map<String, Boolean> data = new HashMap<String, Boolean>();
+		try
+		{
+			//Get payment modes
+			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
+			boolean flag = false;
+			if (null != abstractOrderModel)
+			{
+				for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
+				{
+					if (entry.getMplDeliveryMode() != null && entry.getMplDeliveryMode().getDeliveryMode() != null)
+					{
+						if (entry.getMplDeliveryMode().getDeliveryMode() != null)
+						{
+							if (null != entry.getMplDeliveryMode().getDeliveryMode().getCode())
+							{
+								if (entry.getMplDeliveryMode().getDeliveryMode().getCode()
+										.equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+								{
+									LOG.info("Any product Content CnC Then break loop and change flag value");
+									flag = true;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(paymentTypes))
+			{
+				//looping through the mode to get payment Types
+				for (final PaymentTypeModel mode : paymentTypes)
+				{
+					//retrieving the data
+					if (flag && mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD))
+					{
+						LOG.debug("Ignoring to add COD payment for CNC Product ");
+					}
+					else
+					{
+						LOG.info("****Print all Payment type ");
+						data.put(mode.getMode(), mode.getIsAvailable());
+					}
+				}
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B6001);
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			LOG.error(MarketplaceFacadesConstants.PAYMENTTYPEERROR, e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error(MarketplaceFacadesConstants.PAYMENTTYPEERROR, e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(MarketplaceFacadesConstants.PAYMENTTYPEERROR, e);
+		}
+
+		//returning data
+		return data;
+	}
 
 
 	/**
