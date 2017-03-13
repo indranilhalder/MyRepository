@@ -272,8 +272,14 @@ public interface MplCommerceCartService
 	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
+	/*
+	 * boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap, final
+	 * List<PinCodeResponseData> pincodeResponseData, CartModel cartModel) throws EtailNonBusinessExceptions;
+	 */
+
 	boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
-			final List<PinCodeResponseData> pincodeResponseData, CartModel cartModel) throws EtailNonBusinessExceptions;
+			final List<PinCodeResponseData> pincodeResponseData, CartModel cartModel, CartData cartData)
+			throws EtailNonBusinessExceptions;
 
 
 	public PriceData addConvCharge(final CartModel source, final CartData prototype);
