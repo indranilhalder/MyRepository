@@ -121,6 +121,10 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 			if (orderModel != null && isValidOrder)
 			{
+				result.setOrder(orderModel);
+				// OrderIssues:- 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved here
+				afterPlaceOrder(parameter, result);
+
 				orderModel.setDate(new Date());
 
 				orderModel.setSite(getBaseSiteService().getCurrentBaseSite());
@@ -150,6 +154,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				final boolean deliveryCostPromotionApplied = isDeliveryCostPromotionApplied(orderModel);
 				Double totalPrice = Double.valueOf(0.0);
 
+
 				if (deliveryCostPromotionApplied)
 				{
 					totalPrice = fetchTotalPriceForDelvCostPromo(orderModel);
@@ -158,7 +163,6 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				{
 					totalPrice = fetchTotalPrice(orderModel);
 				}
-
 				try
 				{
 					getCalculationService().calculateTotals(orderModel, false);
@@ -168,6 +172,8 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				{
 					LOG.error("Failed to calculate order [" + orderModel + "]", ex);
 				}
+				final Double totalPriceWithconv = Double.valueOf(totalPrice.doubleValue()
+						+ orderModel.getDeliveryCost().doubleValue() + orderModel.getConvenienceCharges().doubleValue());
 
 				getModelService().refresh(orderModel);
 				getModelService().refresh(customer);
@@ -179,18 +185,20 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				//				}
 
 				orderModel.setTotalPrice(totalPrice);
+				orderModel.setTotalPriceWithConv(totalPriceWithconv);
 
 				orderModel.setModeOfOrderPayment(modeOfPayment);
 
 				getModelService().save(orderModel);
 
-				result.setOrder(orderModel);
-				// OrderIssues:- 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved here
-				afterPlaceOrder(parameter, result);
+				/*
+				 * result.setOrder(orderModel); // OrderIssues:- 9 digit Order Id getting populated after Order Split and
+				 * Submit order process for cod, hence moved here afterPlaceOrder(parameter, result);
+				 */
 
 
-				// OrderIssues:- 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved here
-				afterPlaceOrder(parameter, result);
+
+
 
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
 						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
@@ -208,7 +216,8 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				}
 
 				getExternalTaxesService().clearSessionTaxDocument();
-				
+
+
 				//afterPlaceOrder(parameter, result);  // 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved before
 
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
@@ -338,7 +347,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 
-		final Double discount = getTotalDiscount(orderModel.getEntries(),true);
+		final Double discount = getTotalDiscount(orderModel.getEntries(), true);
 
 		totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 		return totalPrice;
@@ -353,7 +362,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 
-		final Double discount = getTotalDiscount(orderModel.getEntries(),false);
+		final Double discount = getTotalDiscount(orderModel.getEntries(), false);
 
 		totalPrice = Double.valueOf(subtotal.doubleValue() - discount.doubleValue());
 		return totalPrice;
@@ -433,13 +442,17 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		// New Changes added for Promotion+ Sub total Fix
 		//		final OrderModel order = result.getOrder();
 		//		final Double subTotal = (null != order && null != order.getSubtotal()) ? order.getSubtotal() : Double.valueOf(0);
+
 		//
 		//		getCalculationService().calculateTotals(result.getOrder(), false);
+
 		//
 		//		if (subTotal.doubleValue() > 0)
+
 		//		{
 		//			order.setSubtotal(subTotal);
 		//			getModelService().save(order);
+
 		//	   }
 
 		if ((getCommercePlaceOrderMethodHooks() == null) || (!(parameter.isEnableHooks())) || (!(getConfigurationService()
