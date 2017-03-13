@@ -1830,8 +1830,6 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		/* Product Details */
 		List<GetWishListProductWsDTO> gwlpList = new ArrayList<>();
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<>();
-		final boolean deListedStatus = false;
-		final String delistMessage = "";
 		//CAR-57
 		List<PinCodeResponseData> pinCodeRes = null;
 

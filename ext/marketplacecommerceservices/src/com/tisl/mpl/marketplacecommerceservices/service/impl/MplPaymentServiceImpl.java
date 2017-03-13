@@ -558,13 +558,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * This method is setting paymentTransactionModel and the paymentTransactionEntryModel against the cart for COD and
 	 * wallet
 	 *
-	 * @param paymentMode
 	 * @param abstractOrderModel
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public void setPaymentTransactionForCOD(final Map<String, Double> paymentMode, final AbstractOrderModel abstractOrderModel)
-			throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
+	public void setPaymentTransactionForCOD(final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
 		try
 		{
