@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.CollectionUtils;
@@ -41,15 +42,13 @@ import com.tisl.mpl.wsdto.BreadcrumbResponseWsDTO;
  */
 public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCategoryFacade
 {
-
+	private static final Logger LOG = Logger.getLogger(MplCategoryFacadeImpl.class);
 	private ConfigurationService configurationService;
 	@Autowired
 	private UrlResolver<ProductModel> productModelUrlResolver;
 	@Autowired
 	private UrlResolver<CategoryModel> categoryModelUrlResolver;
 	private ProductService productService;
-
-
 
 
 
@@ -70,6 +69,9 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 	{
 		this.productService = productService;
 	}
+
+
+
 
 
 	@Autowired
@@ -179,12 +181,12 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 			boolean isCategoryIDAvailable = false;
 
 			CategoryData secondLevelCategoryData = null;
-			List<CategoryData> thirdLevelCategorydataList = null;
-			CategoryData thirdLevelCategoryData = null;
-			CategoryData fourthLevelCategoryData = null;
-			List<CategoryData> fourthLevelCategorydataList = null;
-			List<CategoryData> fifthLevelCategorydataList = null;
-			CategoryData fifthLevelCategoryData = null;
+			//List<CategoryData> thirdLevelCategorydataList = null;
+			//CategoryData thirdLevelCategoryData = null;
+			//	CategoryData fourthLevelCategoryData = null;
+			//List<CategoryData> fourthLevelCategorydataList = null;
+			//	List<CategoryData> fifthLevelCategorydataList = null;
+			//	CategoryData fifthLevelCategoryData = null;
 
 			if (topCategoryDetails == null)
 			{
@@ -197,38 +199,34 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 				if (secondLevelCategoryModel.getCode().equalsIgnoreCase(sellerRootCategoryId))
 				{
 					isCategoryIDAvailable = true;
-					secondLevelCategoryData = categoryConverter.convert(secondLevelCategoryModel);
 
-					thirdLevelCategorydataList = new ArrayList<CategoryData>();
-					if (!secondLevelCategoryModel.getCategories().isEmpty())
-					{
-						for (final CategoryModel thirdLevelCategoryModel : secondLevelCategoryModel.getCategories())
-						{
-							thirdLevelCategoryData = categoryConverter.convert(thirdLevelCategoryModel);
-							fourthLevelCategorydataList = new ArrayList<CategoryData>();
-							if (!thirdLevelCategoryModel.getCategories().isEmpty())
-							{
-								for (final CategoryModel fourthLevelCategoryModel : thirdLevelCategoryModel.getCategories())
-								{
-									fourthLevelCategoryData = categoryConverter.convert(fourthLevelCategoryModel);
-									fifthLevelCategorydataList = new ArrayList<CategoryData>();
-									if (!fourthLevelCategoryModel.getCategories().isEmpty())
-									{
-										for (final CategoryModel fifthLevelCategoryModel : fourthLevelCategoryModel.getAllSubcategories())
-										{
-											fifthLevelCategoryData = categoryConverter.convert(fifthLevelCategoryModel);
-											fifthLevelCategorydataList.add(fifthLevelCategoryData);
-										}
-										fourthLevelCategoryData.setSubCategories(fifthLevelCategorydataList);
-									}
-									fourthLevelCategorydataList.add(fourthLevelCategoryData);
-								}
-								thirdLevelCategoryData.setSubCategories(fourthLevelCategorydataList);
-							}
-							thirdLevelCategorydataList.add(thirdLevelCategoryData);
-						}
-					}
-					secondLevelCategoryData.setSubCategories(thirdLevelCategorydataList);
+					secondLevelCategoryData = recursioveMethod(secondLevelCategoryModel);
+
+					/*
+					 * secondLevelCategoryData = categoryConverter.convert(secondLevelCategoryModel);
+					 *
+					 * thirdLevelCategorydataList = new ArrayList<CategoryData>();
+					 *
+					 *
+					 * if (!secondLevelCategoryModel.getCategories().isEmpty()) { for (final CategoryModel
+					 * thirdLevelCategoryModel : secondLevelCategoryModel.getCategories()) { thirdLevelCategoryData =
+					 * categoryConverter.convert(thirdLevelCategoryModel); fourthLevelCategorydataList = new
+					 * ArrayList<CategoryData>(); if (!thirdLevelCategoryModel.getCategories().isEmpty()) { for (final
+					 * CategoryModel fourthLevelCategoryModel : thirdLevelCategoryModel.getCategories()) {
+					 * fourthLevelCategoryData = categoryConverter.convert(fourthLevelCategoryModel);
+					 * fifthLevelCategorydataList = new ArrayList<CategoryData>(); if
+					 * (!fourthLevelCategoryModel.getCategories().isEmpty()) { for (final CategoryModel
+					 * fifthLevelCategoryModel : fourthLevelCategoryModel.getAllSubcategories()) { fifthLevelCategoryData =
+					 * categoryConverter.convert(fifthLevelCategoryModel);
+					 * fifthLevelCategorydataList.add(fifthLevelCategoryData); }
+					 * fourthLevelCategoryData.setSubCategories(fifthLevelCategorydataList); }
+					 * fourthLevelCategorydataList.add(fourthLevelCategoryData); }
+					 * thirdLevelCategoryData.setSubCategories(fourthLevelCategorydataList); }
+					 * thirdLevelCategorydataList.add(thirdLevelCategoryData); }
+					 *
+					 *
+					 * } secondLevelCategoryData.setSubCategories(thirdLevelCategorydataList);
+					 */
 				}
 			}
 			if (!isCategoryIDAvailable)
@@ -241,6 +239,32 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 		return null;
 	}
 
+	CategoryData recursioveMethod(final CategoryModel CurrentLevelcategoryModel)
+	{
+		final List<CategoryModel> categories = CurrentLevelcategoryModel.getCategories();
+
+		if (!CollectionUtils.isEmpty(categories))
+		{
+			final CategoryData categoryData = categoryConverter.convert(CurrentLevelcategoryModel);
+			List<CategoryData> CategorydataList = null;
+			CategorydataList = new ArrayList<CategoryData>();
+
+			for (final CategoryModel NextLevelcategoryModel : categories)
+			{
+				CategoryData categoryData1 = null;
+				categoryData1 = recursioveMethod(NextLevelcategoryModel);
+				CategorydataList.add(categoryData1);
+			}
+			categoryData.setSubCategories(CategorydataList);
+			return categoryData;
+		}
+		else
+		{
+			final CategoryData categoryData = categoryConverter.convert(CurrentLevelcategoryModel);
+			return categoryData;
+		}
+
+	}
 
 	/**
 	 * @return the configurationService

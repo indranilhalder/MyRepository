@@ -2166,7 +2166,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			//TISEE-957 isCodEligible flag update
 			if (null != responseData)
 			{
-				final boolean isCOdEligible = mplCartFacade.addCartCodEligible(deliveryModeDataMap, responseData, cartModel);
+				final boolean isCOdEligible = mplCartFacade
+						.addCartCodEligible(deliveryModeDataMap, responseData, cartModel, cartData);
 				LOG.debug("isCOdEligible " + isCOdEligible);
 			}
 		}

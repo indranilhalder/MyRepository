@@ -261,8 +261,14 @@ public interface MplCartFacade extends CartFacade
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
+	/*
+	 * boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap, final
+	 * List<PinCodeResponseData> pincodeResponseData, CartModel cartModel) throws EtailNonBusinessExceptions;
+	 */
+
 	boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
-			final List<PinCodeResponseData> pincodeResponseData, CartModel cartModel) throws EtailNonBusinessExceptions;
+			final List<PinCodeResponseData> pincodeResponseData, CartModel cartModel, CartData cartData)
+			throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Desc checking max added quantity with store configuration

@@ -24,7 +24,6 @@ import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
@@ -67,6 +66,7 @@ import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotifyPaymentGroupMailService;
 import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificationService;
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
@@ -131,6 +131,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	private static final String middleDigits = "000";
 	private static final String middlecharacters = "-";
 	private static final String PARENT = "Parent";
+
+	@Resource(name = "mplVoucherService")
+	private MplVoucherService mplVoucherService;
 
 	/*
 	 * (non-Javadoc)
@@ -197,50 +200,128 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 				////////////// Order Issue:- Order  ID updated first then Voucher Invalidation Model update
 
-				final Collection<DiscountModel> voucherColl = getVoucherService().getAppliedVouchers(orderModel);
-				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>();
-				if (CollectionUtils.isNotEmpty(voucherColl))
-				{
-					voucherList.addAll(voucherColl);
-				}
+				//final Collection<DiscountModel> voucherColl = getVoucherService().getAppliedVouchers(orderModel);
+				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService().getAppliedVouchers(
+						orderModel));
+				//				if (CollectionUtils.isNotEmpty(voucherColl))
+				//				{
+				//					voucherList.addAll(voucherColl);
+				//				}
 				if (CollectionUtils.isNotEmpty(voucherList))
 				{
-					// Order Issue:- Null check added
-					final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) voucherList.get(0);
-					final VoucherInvalidationModel voucherInvalidationModel = getVoucherModelService().createVoucherInvalidation(
-							(VoucherModel) voucherList.get(0),
-							null != promotionVoucherModel.getVoucherCode() ? promotionVoucherModel.getVoucherCode() : "", orderModel);
-					// Order Issue:- Null or Empty check added
-					if (CollectionUtils.isNotEmpty(orderModel.getGlobalDiscountValues()))
+					VoucherModel appliedVoucher = null;
+
+					try
 					{
-						for (final DiscountValue discount : orderModel.getGlobalDiscountValues())
+						final DiscountModel discount = voucherList.get(0);
+
+						if (discount instanceof PromotionVoucherModel)
 						{
-							LOG.info(null != discount.getCode() ? discount.getCode() : "Discount Code is null");
-							if ((null != discount.getCode() ? discount.getCode() : "").equalsIgnoreCase(null != promotionVoucherModel
-									.getCode() ? promotionVoucherModel.getCode() : ""))
+							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+							appliedVoucher = promotionVoucherModel;
+							final VoucherInvalidationModel voucherInvalidationModel = getVoucherModelService()
+									.createVoucherInvalidation(promotionVoucherModel,
+											null != promotionVoucherModel.getVoucherCode() ? promotionVoucherModel.getVoucherCode() : "",
+											orderModel);
+							LOG.error(null != discount.getCode() ? discount.getCode() : "Discount Code is null");
+							if (StringUtils.isNotEmpty(discount.getCode()))
 							{
-								voucherInvalidationModel.setSavedAmount(Double.valueOf(discount.getAppliedValue()));
-								break;
+								voucherInvalidationModel.setSavedAmount(discount.getValue());
+							}
+
+							getModelService().save(voucherInvalidationModel);
+
+							// Order Issue:- Null or Empty check added
+							//							if (CollectionUtils.isNotEmpty(orderModel.getGlobalDiscountValues()))
+							//							{
+							//								for (final DiscountValue discount : orderModel.getGlobalDiscountValues())
+							//								{
+							//									LOG.info(null != discount.getCode() ? discount.getCode() : "Discount Code is null");
+							//									if ((null != discount.getCode() ? discount.getCode() : "")
+							//											.equalsIgnoreCase(null != promotionVoucherModel.getCode() ? promotionVoucherModel.getCode() : ""))
+							//									{
+							//										voucherInvalidationModel.setSavedAmount(Double.valueOf(discount.getAppliedValue()));
+							//										break;
+							//									}
+							//								}
+							//							}
+							//							getModelService().save(voucherInvalidationModel);
+						}
+					}
+					catch (final Exception e)
+					{
+						final ArrayList<DiscountModel> parentOrderVoucherList = new ArrayList<DiscountModel>(getVoucherService()
+								.getAppliedVouchers(orderModel));
+
+						final VoucherInvalidationModel voucherInvalidation = mplVoucherService.findVoucherInvalidation(appliedVoucher,
+								orderModel.getUser(), orderModel);
+
+						if (CollectionUtils.isEmpty(parentOrderVoucherList) && voucherInvalidation != null) //voucher is NOT attached with order but invalidation exists
+						{
+							LOG.error(
+									"Initially the voucher was applied in "
+											+ orderModel.getCode()
+											+ " , now due to exception it has been removed internally. Hence removing the invalidation. The exception is: ",
+									e);
+
+							getModelService().remove(voucherInvalidation);
+							getModelService().refresh(voucherInvalidation);
+
+						}
+						else if (CollectionUtils.isNotEmpty(parentOrderVoucherList) && voucherInvalidation == null) //voucher is attached with order but invalidation does not exist
+						{
+							final DiscountModel orderVoucherDisc = parentOrderVoucherList.get(0);
+
+							if (orderVoucherDisc instanceof PromotionVoucherModel)
+							{
+								final PromotionVoucherModel promotionVoucher = (PromotionVoucherModel) orderVoucherDisc;
+								try
+								{
+									LOG.info("Trying to create invalidation again...");
+									//trying to create invalidation again
+									final VoucherInvalidationModel voucherInvalidationModel = getVoucherModelService()
+											.createVoucherInvalidation(promotionVoucher,
+													null != promotionVoucher.getVoucherCode() ? promotionVoucher.getVoucherCode() : "",
+													orderModel);
+									if (StringUtils.isNotEmpty(promotionVoucher.getCode()))
+									{
+										voucherInvalidationModel.setSavedAmount(promotionVoucher.getValue());
+									}
+									getModelService().save(voucherInvalidationModel);
+								}
+								catch (final Exception ex)
+								{
+									LOG.error("Error while creating invalidation when voucher is attached with order for id: "
+											+ orderModel.getCode() + ", hence releasing the voucher from order", ex);
+									//releasing voucher from order if exception occurs
+									getVoucherService().releaseVoucher(promotionVoucher.getVoucherCode(), orderModel);
+									orderModel.setGlobalDiscountValuesInternal(null);
+									getModelService().save(orderModel);
+									getModelService().refresh(orderModel);
+								}
 							}
 						}
 					}
-					getModelService().save(voucherInvalidationModel);
 				}
 			}
 		}
-
 		catch (final ModelSavingException e)
 		{
 			throw new EtailNonBusinessExceptions(e, "E0007");
 		}
 		catch (final Exception e)
 		{
-			throw e;
+			try
+			{
+				throw e;
+			}
+			catch (final Exception e1)
+			{
+				// YTODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
-
-
 	}
-
 
 	//	/**
 	//	 * This method updates Fraud Model
@@ -1764,10 +1845,31 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		//Method added for TISPRO-288
 		setPromotionsHmcTabChildOrder(orderModel, clonedSubOrder, sellerId, setSubPromo);
 
-
 		clonedSubOrder.setAllPromotionResults(setSubPromo);
 		getModelService().save(clonedSubOrder);
 		getModelService().refresh(clonedSubOrder);
+
+		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService().getAppliedVouchers(
+				clonedSubOrder));
+
+		if (CollectionUtils.isNotEmpty(voucherList))
+		{
+			if (voucherList.get(0) instanceof PromotionVoucherModel)
+			{
+				final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) voucherList.get(0);
+				if (null != promotionVoucherModel)
+				{
+					getVoucherService().releaseVoucher(promotionVoucherModel.getVoucherCode(), clonedSubOrder);
+					clonedSubOrder.setGlobalDiscountValuesInternal(null);
+					getModelService().save(clonedSubOrder);
+					getModelService().refresh(clonedSubOrder);
+
+					LOG.info("Voucher " + promotionVoucherModel.getVoucherCode() + "released from suborder "
+							+ clonedSubOrder.getCode());
+				}
+			}
+
+		}
 
 		return clonedSubOrder;
 
