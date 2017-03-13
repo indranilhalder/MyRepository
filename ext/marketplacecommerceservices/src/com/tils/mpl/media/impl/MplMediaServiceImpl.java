@@ -41,9 +41,8 @@ public class MplMediaServiceImpl implements MplMediaService
 	}
 
 	@Override
-	public MediaModel getMediaForIndexing(final ProductModel product, final MediaFormatModel mediaFormat,
-			final List<MediaContainerModel> galleryImages)
+	public MediaModel getMediaForIndexing(final ProductModel product, final MediaFormatModel mediaFormat, final String productCode)
 	{
-		return mediaDao.getMediaForIndexing(product, mediaFormat, galleryImages);
+		return mediaDao.getMediaForIndexing(product, mediaFormat, productCode);
 	}
 }

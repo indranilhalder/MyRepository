@@ -42,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
@@ -73,7 +74,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	@Autowired
 	private MplOrderDao mplOrderDao;
 
-	public CommerceOrderResult placeOrder(final CommerceCheckoutParameter parameter) throws InvalidCartException
+	@Override
+	public CommerceOrderResult placeOrder(final CommerceCheckoutParameter parameter) throws InvalidCartException,
+			EtailNonBusinessExceptions
 	{
 		final CartModel cartModel = parameter.getCart();
 		ServicesUtil.validateParameterNotNull(cartModel, "Cart model cannot be null");
@@ -182,6 +185,12 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				getModelService().save(orderModel);
 
 				result.setOrder(orderModel);
+				// OrderIssues:- 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved here
+				afterPlaceOrder(parameter, result);
+
+
+				// OrderIssues:- 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved here
+				afterPlaceOrder(parameter, result);
 
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
 						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
@@ -195,13 +204,12 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					{
 						LOG.error("Error while submit order", e);
 					}
-
 					getOrderService().submitOrder(orderModel);
 				}
 
 				getExternalTaxesService().clearSessionTaxDocument();
-
-				afterPlaceOrder(parameter, result);
+				
+				//afterPlaceOrder(parameter, result);  // 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved before
 
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
 						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
@@ -307,9 +315,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -330,7 +338,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 
-		final Double discount = getTotalDiscount(orderModel.getEntries());
+		final Double discount = getTotalDiscount(orderModel.getEntries(),true);
 
 		totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 		return totalPrice;
@@ -345,13 +353,13 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 
-		final Double discount = getTotalDiscount(orderModel.getEntries());
+		final Double discount = getTotalDiscount(orderModel.getEntries(),false);
 
 		totalPrice = Double.valueOf(subtotal.doubleValue() - discount.doubleValue());
 		return totalPrice;
 	}
 
-	private Double getTotalDiscount(final List<AbstractOrderEntryModel> entries)
+	private Double getTotalDiscount(final List<AbstractOrderEntryModel> entries, final boolean deliveryFlag)
 	{
 		Double discount = Double.valueOf(0);
 
@@ -365,9 +373,13 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			{
 				if (null != oModel && !oModel.getGiveAway().booleanValue())
 				{
-					deliveryCost += (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue()) < 0 ? (-1)
-							* (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue()) : (oModel
-							.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue());
+					if (deliveryFlag)
+					{
+						deliveryCost += (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue()) < 0 ? (-1)
+								* (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue()) : (oModel
+								.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue());
+					}
+
 					couponDiscount += (null == oModel.getCouponValue() ? 0.0d : oModel.getCouponValue().doubleValue());
 					promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d : oModel.getTotalProductLevelDisc()
 							.doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d : oModel.getCartLevelDisc().doubleValue());
@@ -417,7 +429,18 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	public void beforeSubmitOrder(final CommerceCheckoutParameter parameter, final CommerceOrderResult result)
 			throws InvalidCartException, CalculationException
 	{
-		getCalculationService().calculateTotals(result.getOrder(), false);
+		//Commented out as it is not required at this stage, hence creating issues with order calculation.
+		// New Changes added for Promotion+ Sub total Fix
+		//		final OrderModel order = result.getOrder();
+		//		final Double subTotal = (null != order && null != order.getSubtotal()) ? order.getSubtotal() : Double.valueOf(0);
+		//
+		//		getCalculationService().calculateTotals(result.getOrder(), false);
+		//
+		//		if (subTotal.doubleValue() > 0)
+		//		{
+		//			order.setSubtotal(subTotal);
+		//			getModelService().save(order);
+		//	   }
 
 		if ((getCommercePlaceOrderMethodHooks() == null) || (!(parameter.isEnableHooks())) || (!(getConfigurationService()
 

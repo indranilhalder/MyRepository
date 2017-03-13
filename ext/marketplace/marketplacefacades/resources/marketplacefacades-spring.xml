@@ -654,6 +654,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="mplExtendedPromoCartConverter" ref="mplExtendedPromoCartConverter"/> <!-- TISPT-104 -->
 		<property name="modelService" ref="modelService" />
 		<property name="mplDefaultCommerceCartCalculationStrategy" ref="mplDefaultCommerceCartCalculationStrategy" />
+		<!-- CAR:127 -->
+		<property name="orderConverter" ref="orderConverter"></property>
 
 	
 	</bean>
@@ -1338,6 +1340,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>3XL</value>
 				<value>4XL</value>
 				<value>5XL</value>
+				<value>Plus Size</value>	<!-- Added for INC144314300 -->
 			</list>
 		</property>
 	</bean>
@@ -1365,6 +1368,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>3XL</value>
 				<value>4XL</value>
 				<value>5XL</value>
+				<value>Plus Size</value>	<!-- Added for INC144314300 -->
 			</list>
 		</property>
 	</bean>
@@ -1404,6 +1408,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 			    <value>MEDIUM</value> 
 				<value>LARGE</value>
 				<value>X-LARGE</value>
+				<value>Plus Size</value> <!-- Added for INC144314300 -->
 			</list>
 		</property>
 	</bean>
@@ -1437,6 +1442,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>${footwear.header.EURO}</value>
 				<value>${footwear.header.footlength}</value>
 				<value>${footwear.header.Witdth}</value>
+				<value>Plus Size</value>   <!-- Added for INC144314300 -->
 			</list>
 		</property>
 	</bean>
@@ -1684,8 +1690,9 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<property name="cmsSubBrandConvertor" ref="mplCmsSubBrandConvertor"></property>
 	<property name="categoryConverter" ref="categoryConverter"></property>
 	</bean>
-	
-  	<bean id="mplBrandCollectionConvertor" parent="abstractPopulatingConverter">
+	<!-- AddtoCart Helper Class -->
+	<bean id="addToCartHelper" class="com.tisl.mpl.helper.AddToCartHelper" />
+	<bean id="mplBrandCollectionConvertor" parent="abstractPopulatingConverter">
 			<property name="populators">
 			<list>
 				<ref bean="mplBrandCollectionPopulator" />
@@ -1746,5 +1753,29 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="categoryModelUrlResolver" ref="categoryModelUrlResolver"/>
 	</bean>
 	 
+	<!-- AddtoCart Helper Class -->
+	<!-- <bean id="addToCartHelper" class="com.tisl.mpl.helper.AddToCartHelper" /> -->
+	
+	<alias name="customAjaxProductConverter" alias="customAjaxProductConverter"/>
+	<bean id="customAjaxProductConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="de.hybris.platform.commercefacades.product.data.ProductData"/>
+		<property name="populators">
+			<list>
+				<ref bean="customAjaxProductPopulator"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="customAjaxProductPopulator"
+			class="com.tisl.mpl.facades.populators.CustomAjaxProductPopulator"
+			parent="defaultProductUrlPopulator">
+		<property name="productBasicPopulator" ref="productBasicPopulator"/>
+		<property name="variantSelectedPopulator" ref="variantSelectedPopulator"/>
+	    <property name="sellerPopulator" ref="sellerPopulator"/> 
+	</bean>
 
+	<alias name="customProductFacadeImpl" alias="customProductFacade"/>
+	<bean id="customProductFacadeImpl" class="com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl" parent="productFacade">
+		<property name="customProductConverter" ref="customAjaxProductConverter"/>
+	</bean>
 </beans>

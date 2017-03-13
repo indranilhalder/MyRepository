@@ -3,7 +3,9 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
@@ -127,10 +129,10 @@ public interface MplCommerceCartService
 	//List<Wishlist2EntryModel> getGiftYourselfDetails(int minGiftQuantity, final List<Wishlist2Model> allWishlists, String pincode,CartModel cartModel) throws CMSItemNotFoundException;
 
 	Tuple2<?, ?> getGiftYourselfDetails(int minGiftQuantity, final List<Wishlist2Model> allWishlists, String pincode,
-			CartModel cartModel) throws CMSItemNotFoundException;
+			CartData cartData) throws CMSItemNotFoundException;
 
 	List<Wishlist2EntryModel> getGiftYourselfDetailsMobile(int minGiftQuantity, final List<Wishlist2Model> allWishlists,
-			String pincode, CartModel cartModel) throws EtailNonBusinessExceptions;
+			String pincode, CartData cartData) throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -190,8 +192,10 @@ public interface MplCommerceCartService
 	 * @throws CMSItemNotFoundException
 	 */
 	// Changes for Duplicate Cart fix
-	public Map<String, List<MarketplaceDeliveryModeData>> getDeliveryMode(final CartData cartData,
-			final List<PinCodeResponseData> omsDeliveryResponse, CartModel cartModel) throws CMSItemNotFoundException;
+	/*
+	 * public Map<String, List<MarketplaceDeliveryModeData>> getDeliveryMode(final CartData cartData, final
+	 * List<PinCodeResponseData> omsDeliveryResponse, CartModel cartModel) throws CMSItemNotFoundException;
+	 */
 
 	/**
 	 * @Desc fetching oms pincode response data
@@ -235,8 +239,13 @@ public interface MplCommerceCartService
 	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
-	ReservationListWsDTO getReservation(final AbstractOrderModel cartModel, final String pincode, final String type)
-			throws EtailNonBusinessExceptions;
+	//commented for CAR:127
+	/*
+	 * ReservationListWsDTO getReservation(final AbstractOrderModel cartModel, final String pincode, final String type)
+	 * throws EtailNonBusinessExceptions;
+	 */
+	ReservationListWsDTO getReservation(final AbstractOrderData cartData, final String pincode, final String type,
+			AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @DESC MobileWS105 : get top two wish list for mobile web service
@@ -249,7 +258,7 @@ public interface MplCommerceCartService
 	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
-	GetWishListWsDTO getTopTwoWishlistForUser(final UserModel userModel, final String pincode, final CartModel cartModel)
+	GetWishListWsDTO getTopTwoWishlistForUser(final UserModel userModel, final String pincode, final CartData cartData)
 			throws EtailNonBusinessExceptions;
 
 	/*
@@ -360,8 +369,13 @@ public interface MplCommerceCartService
 	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
-	boolean isInventoryReserved(AbstractOrderModel abstractOrderModel, String requestType, String defaultPinCodeId)
-			throws EtailNonBusinessExceptions;
+	//commented for CAR:127
+	/*
+	 * boolean isInventoryReserved(AbstractOrderModel abstractOrderModel, String requestType, String defaultPinCodeId)
+	 * throws EtailNonBusinessExceptions;
+	 */
+	boolean isInventoryReserved(AbstractOrderData abstractOrderData, String requestType, String defaultPinCodeId,
+			AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @description: It is responsible to find possible delivery mode of a cart entry
@@ -460,8 +474,13 @@ public interface MplCommerceCartService
 	 * @return
 	 * @throws EtailNonBusinessExceptions
 	 */
-	public abstract PinCodeResponseData getVlaidDeliveryModesByInventory(final PinCodeResponseData pinCodeResponseData)
-			throws EtailNonBusinessExceptions;
+	/*
+	 * public PinCodeResponseData getVlaidDeliveryModesByInventory(final PinCodeResponseData pinCodeResponseData) throws
+	 * EtailNonBusinessExceptions;
+	 */
+
+	public PinCodeResponseData getVlaidDeliveryModesByInventory(final PinCodeResponseData pinCodeResponseData,
+			final CartData cartData) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @param source
@@ -474,6 +493,25 @@ public interface MplCommerceCartService
 	 * @param orderModel
 	 */
 	void recalculateOrder(OrderModel orderModel);
+
+	/**
+	 * @param cartData
+	 * @param omsDeliveryResponse
+	 * @return
+	 * @throws CMSItemNotFoundException
+	 */
+	public Map<String, List<MarketplaceDeliveryModeData>> getDeliveryMode(CartData cartData,
+			List<PinCodeResponseData> omsDeliveryResponse) throws CMSItemNotFoundException;
+	/**
+	 * This method was developed for CAR-256
+	 *
+	 * @param guid
+	 * @param site
+	 * @param user
+	 * @return CartModel
+	 * @throws InvalidCartException
+	 */
+	public CartModel fetchLatestCart(final BaseSiteModel site, final UserModel user) throws InvalidCartException;
 
 
 

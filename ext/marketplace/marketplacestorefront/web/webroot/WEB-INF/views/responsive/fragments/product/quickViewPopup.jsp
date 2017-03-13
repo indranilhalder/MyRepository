@@ -320,7 +320,7 @@ display:none;
 	<div class="imageList" style="overflow: hidden;">
 		<ul class="jcarousel-skin imageListCarousel" style="display:none; position: relative; top: 0; width: 100%;"> 
 			<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLength}">
-				<li id="addiImage${varStatus.index}">
+				<li id="addiImage${varStatus.index}" class="thumbailItem${varStatus.index +1}"> <!-- For TPR-4712 -->
 					<span class="thumb ${(varStatus.index==0)? "active":""}">
 						<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
 							<img src="${container.thumbnail.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
@@ -539,6 +539,17 @@ display:none;
 	<span id="dListedErrorMsg" style="display: none"  class="dlist_message prod-dlisted-msg">
 		<spring:theme code="pdp.delisted.message" />
     </span>
+    
+    <!--  UF-88-->
+	<script>
+$(document).ready(function() {
+    $("#buyNowButton").removeAttr('disabled');
+});
+
+$(document).ready(function() {
+    $("#addToCartButtonQuick").removeAttr('disabled');
+});
+</script>
 	
 	
 	 <!-- TPR-924 -->

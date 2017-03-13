@@ -6,6 +6,7 @@ package com.tisl.mpl.core.promotion.job;
 import de.hybris.platform.cronjob.enums.CronJobResult;
 import de.hybris.platform.cronjob.enums.CronJobStatus;
 import de.hybris.platform.cronjob.model.CronJobModel;
+import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -21,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.PromotionPriceUpdaterService;
-import com.tisl.mpl.model.BuyAPercentageDiscountModel;
 import com.tisl.mpl.model.MplConfigurationModel;
 //Removed as UNUSED IMPORTS
 //import com.tisl.mpl.promotion.dao.impl.UpdatePromotionalPriceDaoImpl;
@@ -90,13 +90,15 @@ public class PromotionPriceUpdaterJob extends AbstractJobPerformable<CronJobMode
 			if (null != configModel && null != configModel.getMplConfigDate())
 			{
 				LOG.debug("CRON LAST START DATE" + configModel.getMplConfigDate());
-				List<BuyAPercentageDiscountModel> PromotionList = new ArrayList<BuyAPercentageDiscountModel>();
+				List<ProductPromotionModel> PromotionList = new ArrayList<ProductPromotionModel>();
 				PromotionList = fetchRequiredPromotion(configModel.getMplConfigDate());
 				if (CollectionUtils.isNotEmpty(PromotionList))
 				{
-					for (final BuyAPercentageDiscountModel buyAPercentageDiscount : PromotionList)
+					for (final ProductPromotionModel promoModel : PromotionList)
 					{
-						errorFlag = promotionPriceUpdaterService.poulatePriceRowData(buyAPercentageDiscount);
+
+						errorFlag = promotionPriceUpdaterService.poulatePriceRowData(promoModel);
+
 					}
 				}
 			}
@@ -135,9 +137,9 @@ public class PromotionPriceUpdaterJob extends AbstractJobPerformable<CronJobMode
 	 * @description fetch Required Promotions
 	 * @param promotionList
 	 */
-	private List<BuyAPercentageDiscountModel> fetchRequiredPromotion(final Date mplConfigDate)
+	private List<ProductPromotionModel> fetchRequiredPromotion(final Date mplConfigDate)
 	{
-		List<BuyAPercentageDiscountModel> PromotionResultList = new ArrayList<BuyAPercentageDiscountModel>();
+		List<ProductPromotionModel> PromotionResultList = new ArrayList<ProductPromotionModel>();
 
 		PromotionResultList = promotionPriceUpdaterService.getRequiredPromotion(mplConfigDate);
 		return PromotionResultList;

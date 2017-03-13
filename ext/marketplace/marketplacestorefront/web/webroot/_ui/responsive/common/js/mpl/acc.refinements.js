@@ -1,7 +1,9 @@
-
 var updatedsearchQuery = "";
 var dummyForm ;
 var lessBrands = [];
+var facetAjaxUrl = '';
+var productItemArray = [];
+var res;
 ACC.refinements = {
 
 	_autoload: [
@@ -175,7 +177,12 @@ ACC.refinements = {
 			// TPR-645 Start  INC_11511  fix--h3 tag done
 			var filterValue = $(this).parent().find('span.facet-text').text().trim();
 			var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
-			onFilterClickAnalytics(filterName,filterValue);
+			if($(this).attr('checked')){
+				onFilterRemoveAnalytics(filterName,filterValue);
+			}
+			else{
+				onFilterAddAnalytics(filterName,filterValue);
+			}
 			// TPR-645 End
 		})
 		
@@ -317,7 +324,12 @@ ACC.refinements = {
 				// console.log($(this).attr('class').text());
 				filterValue = $(this).parent().find('span > span').text();
 			}
-			onFilterClickAnalytics(filterName,filterValue);
+			if($(this).attr('checked')){
+				onFilterRemoveAnalytics(filterName,filterValue);
+			}
+			else{
+				onFilterAddAnalytics(filterName,filterValue);
+			}
 			// TPR-645 End
 		});
 		
@@ -384,9 +396,24 @@ ACC.refinements = {
 			else {
 				requiredUrl = action[0].concat("/getFacetData");
 			}
-			
 			// AJAX call
 			filterDataAjax(requiredUrl,dataString,pageURL);
+			
+			//Utag Fire on remove filter or any price start
+			if($(this).attr('class') == "remove_filter"){
+				var filterName=$(this).parents('li').children().eq(0).attr('class');
+				var filterValue=$(this).parents('li').children().eq(1).attr('value');
+				
+				onFilterRemoveAnalytics(filterName,filterValue);
+			}
+			else{
+				var filterName="price"
+				var filterValue=$('.facet-list.filter-opt .price').siblings('.applied-color').val();
+
+				onFilterRemoveAnalytics(filterName,filterValue);
+			}
+			
+			//utag firing on remove filter or any price end
 			return false;
 		});
 		
@@ -416,9 +443,17 @@ ACC.refinements = {
 		
 		$(document).on("click",".js-product-facet .js-more-facet-values-link",function(e){
 			e.preventDefault();
-			$(this).parents(".js-facet").find(".js-facet-top-values").hide();
-			$(this).parents(".js-facet").find(".js-facet-list-hidden").show();
-
+			if($('.brandSearchTxt').val()=="")
+			{
+				$(this).parents(".js-facet").find(".js-facet-top-values").hide();
+				$(this).parents(".js-facet").find(".js-facet-list-hidden").show();
+				
+				$(this).parents(".js-facet").find(".js-facet-list-hidden span.facet-label").show();
+			}
+			else
+			{
+				$('.marked').css("display","block");				
+			}
 			$(this).parents(".js-facet").find(".js-more-facet-values").hide();
 			$(this).parents(".js-facet").find(".js-less-facet-values").show();
 		});
@@ -426,10 +461,15 @@ ACC.refinements = {
 			$(document).on("click",".js-less-facet-values-link",function(e){
 			e.preventDefault();
 			//var brandFacet = [];
-			
-			$(this).parents(".js-facet").find(".js-facet-top-values").show();
-			$(this).parents(".js-facet").find(".js-facet-list-hidden").hide();
-
+			if($('.brandSearchTxt').val()=="")
+			{
+				$(this).parents(".js-facet").find(".js-facet-top-values").show();
+				$(this).parents(".js-facet").find(".js-facet-list-hidden").hide();
+			}
+			else
+			{
+				$('.marked').css("display","none");				
+			}
 			$(this).parents(".js-facet").find(".js-more-facet-values").show();
 			$(this).parents(".js-facet").find(".js-less-facet-values").hide();
 		});
@@ -769,6 +809,7 @@ ACC.refinements = {
 
 // function implements AJAX : TPR-198
 function filterDataAjax(requiredUrl,dataString,pageURL){
+	facetAjaxUrl = pageURL;
 	console.log(requiredUrl);
 	console.log(pageURL);
 	if ($("input[name=customSku]").val()) {
@@ -783,21 +824,37 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			// console.log(response);
 			// putting AJAX respons to view
 			if($("#isCategoryPage").val() == 'true' && !$("input[name=customSku]").val()){
-				$("#productGrid").html(response);
+				//$("#productGrid").html(response);
+				lazyPaginationFacet(response);
+
 			}		
 			else{
 				
 				if(requiredUrl.indexOf("offer") > -1 || requiredUrl.indexOf("viewOnlineProducts") > -1 || requiredUrl.indexOf("/s/") > -1){
-					$("#productGrid").html(response);
+					//$("#productGrid").html(response);
+					lazyPaginationFacet(response);
+
 				}
 				else{
 					$("#facetSearchAjaxData").html(response);
+					lazyPaginationFacet(response);
 				}
 			}
 			
 			$("#no-click").remove();
 			$(".spinner").remove();
-			
+			//UF-15
+			if ($(".facet-list.filter-opt").children().length){
+				$("body.page-productGrid .product-listing.product-grid.lazy-grid").css("padding-top","15px");
+				$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top","-95px");
+				$("body.page-productGrid .facet-list.filter-opt").css("padding-top","65px");
+				var height = $(".facet-list.filter-opt").outerHeight() + 33 + "px";
+				$(".pagination-bar.listing-menu.top.sort_by_wrapper").css("top", height);
+				
+			}
+			else{
+				$("body.page-productGrid .product-listing.product-grid").css("margin-top","60px");
+			}
 			// Keeps expansion-closure state of facets
 			$(".facet-name.js-facet-name h3").each(function(){
 				if($(this).hasClass("true")){
@@ -850,6 +907,14 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 				$("#clickToMore").hide();
 				});	
 			// TPR-158 and TPR-413 ends here
+			//TPR-4720 first 5 product display
+			if($('#pageType').val() == "productsearch"){
+				populateFirstFiveProductsSerp();	
+			}
+			
+			if($('#pageType').val() == "category" || $('#pageType').val() == "electronics"){
+				populateFirstFiveProductsPlp();
+			}
 		},
 		error : function(xhr, status, error) {
 			$('#wrongPin,#unsevisablePin,#emptyPin')
@@ -887,16 +952,34 @@ function createSearchQuery(filterMobileQuery){
 	return queryString;
 }
 
-// TPR-645
-function onFilterClickAnalytics(filterName,filterValue){
-	var msg = (filterName+"_"+filterValue).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+// TPR-645,TPR-4704,TPR-4719
+
+function onFilterAddAnalytics(filterName,filterValue){
+	var filter_type = (filterName).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	var filter_value = (filterValue).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	
 	utag.link({
 		link_obj: this,
-		link_text: msg ,
-		event_type : 'search_filter_usage',
-		search_filter : msg
+		link_text: 'search_filter_applied' ,
+		event_type : 'search_filter_applied',
+		"filter_type" : filter_type,
+		"filter_value" : filter_value
 	});
 }
+
+function onFilterRemoveAnalytics(filterName,filterValue){
+	var filter_type = (filterName).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	var filter_value = (filterValue).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	
+	utag.link({
+		link_obj: this,
+		link_text: 'search_filter_removed' ,
+		event_type : 'search_filter_removed',
+		"filter_type" : filter_type,
+		"filter_value" : filter_value
+	});
+}
+
 
 function loadMobilePriceRange(){
 	var q = updatedsearchQuery;
@@ -945,6 +1028,7 @@ function removeMobilePriceRange(){
 	
 }
 
+
 function isCustomSku(requiredUrl){
 	if (($("input[name=customSku]").length) && ($("input[name=customSku]").val() == "true")) {			
 		// for pagination ajax call
@@ -969,3 +1053,33 @@ function isCustomSku(requiredUrl){
 	}
 	return true;
 }
+
+//UF-15
+function lazyPaginationFacet(response){
+	res = response;
+	var ulProduct = $(response).find('ul.product-listing.product-grid,ul.product-list');
+	//Add to bag and quick view ui fixes starts here
+	$(".product-tile .image .item.quickview").each(function(){
+    	if($(this).find(".addtocart-component").length == 1){
+    		$(this).addClass("quick-bag-both");
+    	}
+    });
+	//Add to bag and quick view ui fixes ends here
+	productItemArray = [];
+    $(ulProduct).find('li.product-item').each(function() {
+        productItemArray.push($(this));
+    });
+    console.log(""+productItemArray);
+	$("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list", response));
+	initPageLoad = true;
+    innerLazyLoad({isSerp:true});
+    
+}
+//UF-15
+(function($) {
+    $.strRemove = function(theTarget, theString) {
+        return $("<div/>").append(
+            $(theTarget, theString).empty().end()
+        ).html();
+    };
+})(jQuery);

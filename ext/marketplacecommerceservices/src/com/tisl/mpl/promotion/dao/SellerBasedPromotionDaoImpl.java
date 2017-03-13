@@ -33,8 +33,8 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 	private static final Logger LOG = Logger.getLogger(SellerBasedPromotionDaoImpl.class);
 
 	private static final String P = "{p.";
-	private static final String PRM = "{prm.";
 	private static final String PROMO = "{promo.";
+	private static final String PRM = "{prm.";
 	private static final String APM = "{apm.";
 	private static final String QUERY_FROM = "FROM {";
 	private static final String CODE = "code";
@@ -89,20 +89,30 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 	 * @Description: Fetch Promotion Details corresponding to a code
 	 * @param : code
 	 * @return List<AbstractPromotionModel>
+	 * @throws Exception
 	 */
+	//OrderIssues:-
 	@Override
 	public List<AbstractPromotionModel> fetchPromotionDetails(final String code)
 	{
 		LOG.debug("Fetching Promotion Details");
-		final String queryString = //
-		"SELECT {promo:" + AbstractPromotionModel.PK
-				+ "} "//
-				+ QUERY_FROM + AbstractPromotionModel._TYPECODE + " AS promo } where" + PROMO + AbstractPromotionModel.CODE
-				+ "} = ?code";
+		try
+		{
+			final String queryString = //
+			"SELECT {promo:" + AbstractPromotionModel.PK
+					+ "} "//
+					+ QUERY_FROM + AbstractPromotionModel._TYPECODE + " AS promo } where" + PROMO + AbstractPromotionModel.CODE
+					+ "} = ?code";
 
-		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter(CODE, code);
-		return flexibleSearchService.<AbstractPromotionModel> search(query).getResult();
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter(CODE, code);
+			return flexibleSearchService.<AbstractPromotionModel> search(query).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			LOG.error("Fetching Promotion Details", e);
+			return null;
+		}
 	}
 
 	/**

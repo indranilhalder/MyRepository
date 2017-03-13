@@ -17,13 +17,13 @@
 
 
 	<!-- filters -->
-	<!-- <filter>
+	<filter>
 	<filter-name>nodeWarmerServletFilter</filter-name><filter-class>com.hybris.yps.nodewarmer.filter.NodeWarmerServletFilter</filter-class>
 		<init-param>
 		<param-name>bypassableHosts</param-name>
-		<param-value>localhost,10.145.34.70,127.0.0.1, 0:0:0:0:0:0:0:1, ::1</param-value>
+		<param-value>localhost,127.0.0.1, 0:0:0:0:0:0:0:1, ::1</param-value>
 		</init-param>
-	</filter> -->
+	</filter>
 	
 	<filter>
 		<filter-name>XSSFilter</filter-name>
@@ -72,10 +72,10 @@
 
 	<!-- filter mappings -->
 	<!-- Newly Added for ypsnodewarmer -->
-	<!-- <filter-mapping>
+	<filter-mapping>
  		<filter-name>nodeWarmerServletFilter</filter-name>
 		<url-pattern>/*</url-pattern>
-	</filter-mapping> -->
+	</filter-mapping>
 	<!-- ******Newly Added for ypsnodewarmer ends***************-->
 	
 	
@@ -235,11 +235,11 @@
 
 		</cookie-config>  -->
 	   	
-<!-- 	  	  <cookie-config>
+ 	  	  <cookie-config>
 			<secure>true</secure>
 			<http-only>true</http-only>
 		</cookie-config> 
- -->       <session-timeout>30</session-timeout>
+       <session-timeout>30</session-timeout>
 	</session-config> 
 	<!-- JSP Configuration -->
 

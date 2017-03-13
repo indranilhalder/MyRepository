@@ -58,7 +58,6 @@ import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.BuyABFreePrecentageDiscount;
-import com.tisl.mpl.jalo.BuyAPercentageDiscount;
 import com.tisl.mpl.jalo.BuyAandBPrecentageDiscount;
 import com.tisl.mpl.jalo.BuyAandBgetC;
 import com.tisl.mpl.jalo.BuyXItemsofproductAgetproductBforfree;
@@ -276,19 +275,20 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 			final Map initialValues, final ActionResult actionResult)
 	{
 		LOG.debug("Inside aftersave >>>>>>>>>");
-		boolean errorCheck = false;
+		//	boolean errorCheck = false;
 		try
 		{
-			if (item instanceof BuyAPercentageDiscount || item instanceof BuyABFreePrecentageDiscount)
-			{
-				LOG.debug("******** Special price check for BuyAPercentageDiscount:" + item.getAttribute("title"));
-				errorCheck = poulatePromoPriceData(item);
-				if (errorCheck)
-				{
-					return new ActionResult(ActionResult.FAILED, false);
-				}
-
-			}
+			//commented for car-158
+			//			if (item instanceof BuyAPercentageDiscount || item instanceof BuyABFreePrecentageDiscount)
+			//			{
+			//				LOG.debug("******** Special price check for BuyAPercentageDiscount:" + item.getAttribute("title"));
+			//				errorCheck = poulatePromoPriceData(item);
+			//				if (errorCheck)
+			//				{
+			//					return new ActionResult(ActionResult.FAILED, false);
+			//				}
+			//
+			//			}
 
 
 

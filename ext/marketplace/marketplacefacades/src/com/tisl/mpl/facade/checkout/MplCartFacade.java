@@ -5,6 +5,7 @@ package com.tisl.mpl.facade.checkout;
 
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.order.CartFacade;
+import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.CartModificationData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
@@ -132,7 +133,7 @@ public interface MplCartFacade extends CartFacade
 	//TISPT-179 Point 2
 	//List<Wishlist2EntryModel> getGiftYourselfDetails(int minGiftQuantity, List<Wishlist2Model> allWishlists, String pincode, CartModel cartModel) throws CMSItemNotFoundException;
 	//TISPT-179 Point 3
-	Tuple2<?, ?> getGiftYourselfDetails(int minGiftQuantity, List<Wishlist2Model> allWishlists, String pincode, CartModel cartModel)
+	Tuple2<?, ?> getGiftYourselfDetails(int minGiftQuantity, List<Wishlist2Model> allWishlists, String pincode, CartData cartData)
 			throws CMSItemNotFoundException;
 
 	/**
@@ -244,7 +245,7 @@ public interface MplCartFacade extends CartFacade
 	 * @throws EtailNonBusinessExceptions
 	 */
 
-	GetWishListWsDTO getTopTwoWishlistForUser(UserModel userModel, String pincode, CartModel cartModel)
+	GetWishListWsDTO getTopTwoWishlistForUser(UserModel userModel, String pincode, CartData cartData)
 			throws EtailNonBusinessExceptions;
 
 	/*
@@ -296,7 +297,12 @@ public interface MplCartFacade extends CartFacade
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
-	boolean isInventoryReserved(String requestType, AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
+	//commented for CAR:127
+	//boolean isInventoryReserved(String requestType, AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
+	boolean isInventoryReserved(String requestType, AbstractOrderData abstractOrderData, AbstractOrderModel abstractOrderModel)
+			throws EtailNonBusinessExceptions;
+
+
 
 	/*
 	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment For Mobile
@@ -307,8 +313,11 @@ public interface MplCartFacade extends CartFacade
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
+
+
 	public boolean isInventoryReservedMobile(final String requestType, final AbstractOrderModel abstractOrderModel,
 			final String defaultPinCodeId) throws EtailNonBusinessExceptions;
+
 
 	/**
 	 * @param cart
@@ -430,8 +439,11 @@ public interface MplCartFacade extends CartFacade
 	 * @return PinCodeResponseData
 	 * @throws EtailNonBusinessExceptions
 	 */
-	PinCodeResponseData getVlaidDeliveryModesByInventory(PinCodeResponseData pinCodeResponseData)
-			throws EtailNonBusinessExceptions;
+
+	/*
+	 * PinCodeResponseData getVlaidDeliveryModesByInventory(PinCodeResponseData pinCodeResponseData) throws
+	 * EtailNonBusinessExceptions;
+	 */
 
 	/**
 	 * This Method is used to get Ordered Cart entry in Mobile
@@ -487,5 +499,16 @@ public interface MplCartFacade extends CartFacade
 	 * @throws CommerceCartModificationException
 	 */
 	public CartModel getCalculatedCartMobile(CartModel cart) throws CommerceCartModificationException, EtailNonBusinessExceptions;
+
+	/**
+	 * @param pinCodeResponseData
+	 * @param cartData
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 */
+	PinCodeResponseData getVlaidDeliveryModesByInventory(PinCodeResponseData pinCodeResponseData, CartData cartData);
+	
+	public CartData getCartDataFromCartModel(final CartModel cartModel, final boolean recentlyAddedFirst)
+			throws EtailNonBusinessExceptions;
 
 }

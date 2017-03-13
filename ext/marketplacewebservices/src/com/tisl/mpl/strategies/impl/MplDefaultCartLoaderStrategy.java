@@ -9,14 +9,12 @@
  * Information and shall use it only in accordance with the terms of the
  * license agreement you entered into with hybris.
  *
- *
  */
 package com.tisl.mpl.strategies.impl;
 
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commerceservices.enums.CustomerType;
 import de.hybris.platform.commerceservices.i18n.CommerceCommonI18NService;
-import de.hybris.platform.commerceservices.order.CommerceCartRestorationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.CartException;
 import de.hybris.platform.commercewebservicescommons.strategies.CartLoaderStrategy;
@@ -152,8 +150,8 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 						{
 							throw new CartException("Cart not found.", CartException.NOT_FOUND, cartID);
 						}
-						commerceCartService.restoreCart(cart);
-						//cartService.setSessionCart(cart);
+						//commerceCartService.restoreCart(cart);
+						cartService.setSessionCart(cart);
 						applyCurrencyToCartAndRecalculateIfNeeded();
 					}
 					else
@@ -167,9 +165,13 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 					throw new CartException("Cart not found.", CartException.NOT_FOUND, cartID);
 				}
 			}
-			catch (final CommerceCartRestorationException e)
+			/*
+			 * catch (final CommerceCartRestorationException e) { throw new CartException("Couldn't restore cart: " +
+			 * e.getMessage(), CartException.INVALID, cartID, e); }
+			 */
+			catch (final Exception e)
 			{
-				throw new CartException("Couldn't restore cart: " + e.getMessage(), CartException.INVALID, cartID, e);
+				throw new CartException("Couldn't load cart: " + e.getMessage(), CartException.INVALID, cartID, e);
 			}
 
 			// guid might be different because of cart expiration

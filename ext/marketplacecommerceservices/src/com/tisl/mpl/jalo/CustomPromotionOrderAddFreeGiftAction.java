@@ -36,6 +36,10 @@ import org.apache.log4j.Logger;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 
 
+/**
+ * Customized action class for freebie promotion
+ *
+ */
 public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromotionOrderAddFreeGiftAction
 {
 	@SuppressWarnings("unused")

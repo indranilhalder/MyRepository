@@ -50,6 +50,7 @@
 
 	<bean id="checkTransactionReviewStatusAction" class="com.tisl.mpl.fulfilmentprocess.actions.order.CheckTransactionReviewStatusAction"  parent="abstractAction">
 		<property name="ticketBusinessService" ref="ticketBusinessService"/>
+		<property name="orderConverter" ref="orderConverter"></property>
 	</bean>
 
 	<bean id="fraudCheckOrderAction" class="com.tisl.mpl.fulfilmentprocess.actions.order.FraudCheckOrderAction"  parent="abstractOrderAction">

@@ -12,6 +12,8 @@ import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CountryData;
 import de.hybris.platform.commercefacades.user.data.RegionData;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
+import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.order.CartService;
 import de.hybris.platform.util.Config;
 
 import java.util.ArrayList;
@@ -61,6 +63,9 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 
 	private final String checkoutPageName = "Shipping Address";
 
+	@Autowired
+	private CartService cartService;
+
 	@Override
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	@RequireHardLogIn
@@ -72,14 +77,15 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 
 		//final CartData cartData = getCheckoutFacade().getCheckoutCart();      //DSC_006: Commented for Address state field addition
 		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
-
+		final CartModel cartModel = getCartService().getSessionCart();
 
 
 		model.addAttribute("cartData", cartData);
 		//model.addAttribute("deliveryAddresses", getDeliveryAddresses(cartData.getDeliveryAddress())); //DSC_006: Commented for Address state field addition
 		if (null != cartData)
 		{
-			model.addAttribute("deliveryAddresses", getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress()));
+			model.addAttribute("deliveryAddresses",
+					getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress(), cartModel)); //CAR-194
 		}
 		model.addAttribute("noAddress", Boolean.valueOf(getCheckoutFlowFacade().hasNoDeliveryAddress()));
 		final AccountAddressForm addressForm = new AccountAddressForm();
@@ -122,10 +128,11 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 
 		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 		model.addAttribute("cartData", cartData);
-
+		final CartModel cartModel = getCartService().getSessionCart();
 		if (null != cartData)
 		{
-			model.addAttribute("deliveryAddresses", getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress()));
+			model.addAttribute("deliveryAddresses",
+					getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress(), cartModel)); //CAR-194
 		}
 
 		this.prepareDataForPage(model);
@@ -192,7 +199,7 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 		 * getAddressVerificationResultHandler().handleResult(verificationResult, newAddress, model, redirectModel,
 		 * bindingResult, getAddressVerificationFacade().isCustomerAllowedToIgnoreAddressSuggestions(),
 		 * "checkout.multi.address.updated");
-		 * 
+		 *
 		 * if (addressRequiresReview) { storeCmsPageInModel(model,
 		 * getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL)); setUpMetaDataForContentPage(model,
 		 * getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL)); return
@@ -221,7 +228,7 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 	/*
 	 * private List<CartSoftReservationData> populateDataForSoftReservation(final CartData cartData) {
 	 * CartSoftReservationData cartSoftReservationData;
-	 * 
+	 *
 	 * final List<CartSoftReservationData> cartSoftReservationDataList = new ArrayList<CartSoftReservationData>(); for
 	 * (final OrderEntryData entry : cartData.getEntries()) { cartSoftReservationData = new CartSoftReservationData();
 	 * cartSoftReservationData.setUSSID(entry.getSelectedSellerInformation().getUssid());
@@ -232,7 +239,7 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 	 * cartSoftReservationData.setIsCOD("true");
 	 * cartSoftReservationData.setTransportMode(entry.getDeliveryMode().getName());
 	 * cartSoftReservationData.setFulfillmentType("");
-	 * 
+	 *
 	 * cartSoftReservationDataList.add(cartSoftReservationData); } return cartSoftReservationDataList; }
 	 */
 
@@ -376,18 +383,18 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 		 * getAddressVerificationResultHandler().handleResult(verificationResult, newAddress, model, redirectModel,
 		 * bindingResult, getAddressVerificationFacade().isCustomerAllowedToIgnoreAddressSuggestions(),
 		 * "checkout.multi.address.updated");
-		 * 
+		 *
 		 * if (addressRequiresReview) { if (StringUtils.isNotBlank(addressForm.getCountryIso())) {
 		 * model.addAttribute("regions", getI18NFacade().getRegionsForCountryIso(addressForm.getCountryIso()));
 		 * model.addAttribute("country", addressForm.getCountryIso()); } storeCmsPageInModel(model,
 		 * getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL)); setUpMetaDataForContentPage(model,
 		 * getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-		 * 
+		 *
 		 * if (StringUtils.isNotEmpty(addressForm.getAddressId())) { final AddressData addressData =
 		 * getCheckoutFacade().getDeliveryAddressForCode(addressForm.getAddressId()); if (addressData != null) {
 		 * model.addAttribute("showSaveToAddressBook", Boolean.valueOf(!addressData.isVisibleInAddressBook()));
 		 * model.addAttribute("edit", Boolean.TRUE); } }
-		 * 
+		 *
 		 * return MarketplacecheckoutaddonControllerConstants.AddEditDeliveryAddressPage; }
 		 */
 
@@ -580,4 +587,26 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 	{
 		this.mplCustomAddressFacade = mplCustomAddressFacade;
 	}
+
+
+
+	/**
+	 * @return the cartService
+	 */
+	public CartService getCartService()
+	{
+		return cartService;
+	}
+
+
+	/**
+	 * @param cartService
+	 *           the cartService to set
+	 */
+	public void setCartService(final CartService cartService)
+	{
+		this.cartService = cartService;
+	}
+
+
 }

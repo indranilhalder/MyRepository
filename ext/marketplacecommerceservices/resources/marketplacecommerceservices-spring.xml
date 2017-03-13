@@ -1790,6 +1790,8 @@
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplProcessOrderServiceImpl">
 		<property name="orderService" ref="orderService" />
 		<property name="juspayOrderResponseConverter" ref="juspayOrderResponseConverter" />
+		<!-- CAR:127 -->
+		<property name="orderConverter" ref="orderConverter"></property>
 	</bean>
 	
 	<bean id="mplProcessOrderDao"
@@ -1967,7 +1969,7 @@
     </bean>
 	<!-- Old Cron Job Deletion Logic ends: -->
 
-    <!-- <bean id="nodeWarmupService" class="com.hybris.yps.nodewarmer.service.NodeWarmupService">
+    <bean id="nodeWarmupService" class="com.hybris.yps.nodewarmer.service.NodeWarmupService">
 		<property name="warmerStrategies">
 			<list>
 				<bean class="com.hybris.yps.nodewarmer.warmer.impl.ComposedTypeWarmer" />
@@ -1984,8 +1986,8 @@
 				</bean>
 			</list>
 		</property>
-	</bean> -->
-	<!-- Old Cron Job Deletion Logic ends: -->
+	</bean>
+	<!-- Node Warmer Changes: -->
 
 </beans>
 
