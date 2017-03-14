@@ -1782,12 +1782,14 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				$("#mrpPriceId").show();
 				$("#spPriceId").show();
 				$("#mopPriceId").hide();//UF-60
+				$("#mrpPriceId").removeClass("sale").addClass("old");//UF-60
 			} else {
 
 				$('#mrpPriceId').css('text-decoration', 'line-through');
 				$("#mrpPriceId").show();
 				$("#spPriceId").show();
 				$("#mopPriceId").hide();//UF-60
+				$("#mrpPriceId").removeClass("sale").addClass("old");//UF-60
 			}
 
 		} else {			
@@ -1796,11 +1798,15 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				if (mop.value == mrp.value) {
 					$("#mrpPriceId").removeClass("old").addClass("sale");
 					$("#mrpPriceId").show();
+					$('#mrpPriceId').css('text-decoration', '');//UF-60
+					$("#mopPriceId").hide();//UF-60
+					$("#spPriceId").hide();//UF-60
 				} else {
 					$('#mrpPriceId').css('text-decoration', 'line-through');
 					$("#mrpPriceId").show();
 					$("#mopPriceId").show();
 					$("#spPriceId").hide();//UF-60
+					$("#mrpPriceId").removeClass("sale").addClass("old");//UF-60
 				}
 			} else if(mop.value != 0 && mop.value <= freebiePriceThresVal){
 				 $(".size").hide(); 	
@@ -3254,7 +3260,6 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						$('a.size-guide').data("sizeSelected",'true');
 						$('#pdpPincodeCheck').data('clicked', false);
 						$('#ia_product_code').val(responseProductCode);
-						
 						
 						//Deselect the previously selected li and highlight the current li
 						$('ul#variant.variant-select li').each(function (index, value) { 
