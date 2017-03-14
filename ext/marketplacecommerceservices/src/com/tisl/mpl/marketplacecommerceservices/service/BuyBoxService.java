@@ -58,5 +58,11 @@ public interface BuyBoxService
 
 	List<ClassAttributeAssignmentModel> getClassAttrAssignmentsForCode(String code);
 
+	/**
+	 * @param productCode
+	 * @return
+	 */
+	//CKD:TPR-250
+	List<BuyBoxModel> buyboxPriceForMicrosite(String productCode) throws EtailNonBusinessExceptions;
 
 }

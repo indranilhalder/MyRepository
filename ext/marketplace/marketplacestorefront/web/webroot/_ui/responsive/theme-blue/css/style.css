@@ -46415,6 +46415,12 @@ float: right;
 	padding: 0;
 }
 
+/* TPR-5061 defect fix*/
+.tabs-block .nav>li#tabs_knowmore {
+    width: 18%;
+}
+/* TPR-5061 defect fix*/
+
 .tabs-block .nav>li#tabs_styleNotes {
 	width: 17%;
 }

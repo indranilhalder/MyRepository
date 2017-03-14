@@ -184,7 +184,10 @@
 		});
 		//End
 		//added for Size guide Variant select
-		$(document).on("click", '.variant-select li span',
+		//Sprint 7 Sanity Issue fixing starts here
+		//$(document).on("click", '.variant-select li span',
+		  $(document).on("click", '.variant-select li span, .color-swatch li span',
+		//Sprint 7 Sanity Issue fixing ends here
 				function() {
 				  var target = $(this).attr('data-producturl');
 				//   console.log(target);
@@ -1384,7 +1387,9 @@ function isOOS(){
 	//totalOptions = totalOptions -1; // UI got changed from select option to li strike off 
 	var disabledOption = $("#variant li.strike").length;
 	
-	if(availibility!=undefined && availibility.length > 0){
+	//if(availibility!=undefined && availibility.length > 0){
+	// availibility.length  was coming undefined even if availability was NOT Undefined
+	if(availibility!=undefined && Object.keys(availibility).length > 0){
 		$.each(availibility,function(k,v){
 			if(window.location.pathname.endsWith(k.toLowerCase()) && v == 0){
 				skuOOS = true;
@@ -2485,7 +2490,9 @@ function isOOSSizeGuide(){
 	//totalOptions = totalOptions -1; // UI got changed from select option to li strike off 
 	var disabledOption = $(".variant-select-sizeGuidePopUp li.strike").length;
 	
-	if(availibility!=undefined && availibility.length > 0){
+	//if(availibility!=undefined && availibility.length > 0){
+	// availibility.length  was coming undefined even if availability was NOT Undefined
+	if(availibility!=undefined && Object.keys(availibility).length > 0){
 		$.each(availibility,function(k,v){
 			if(window.location.pathname.endsWith(k.toLowerCase()) && v == 0){
 				skuOOS = true;

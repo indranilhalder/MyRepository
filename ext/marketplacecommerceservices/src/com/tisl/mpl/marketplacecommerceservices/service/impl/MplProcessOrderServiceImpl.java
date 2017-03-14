@@ -14,19 +14,19 @@ import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
+import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
-
 import de.hybris.platform.servicelayer.exceptions.ModelRemovalException;
-
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
-
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -59,6 +59,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
+import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
 import com.tisl.mpl.util.OrderStatusSpecifier;
 
 
@@ -457,8 +458,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 				}
 
 				//SprintPaymentFixes:- for modeOfPayment as COD, if there is no child orders the Order will be failed
-				if (null != orderModel.getModeOfOrderPayment() && orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD") && null != orderModel.getPaymentInfo()
-						&& CollectionUtils.isNotEmpty(orderModel.getChildOrders())
+				if (null != orderModel.getModeOfOrderPayment() && orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD")
+						&& null != orderModel.getPaymentInfo() && CollectionUtils.isNotEmpty(orderModel.getChildOrders())
 						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
 				{
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
@@ -487,6 +488,9 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 							MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
 
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
+					//limited stock promotion issue starts here
+					removePromotionInvalidation(orderModel);
+					//limited stock promotion issue ends here
 
 
 					if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
@@ -536,6 +540,9 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					if (successFlag == false)
 					{
 						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
+						//limited stock promotion issue starts here
+						removePromotionInvalidation(orderModel);
+						//limited stock promotion issue ends here
 					}
 
 					juspayWebhookModel.setIsExpired(Boolean.TRUE);
@@ -548,6 +555,9 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 						&& CollectionUtils.isEmpty(orderModel.getChildOrders()))
 				{
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
+					//limited stock promotion issue starts here
+					removePromotionInvalidation(orderModel);
+					//limited stock promotion issue ends here
 				}
 
 			}
@@ -651,28 +661,73 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	@Override
 	public void removePromotionInvalidation(final OrderModel orderModel) throws EtailNonBusinessExceptions
 	{
-		LOG.debug("removing promotion invalidation entries..............");
+		LOG.error("Chcking to remove promotion invalidation entries..............");
 		try
 		{
-			if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
+			//TISSQAUAT-468 and TISSQAUATS-752  code starts here for promotion offercount revert back logic
+			//marketplace.PaymentPending.skipTime
+			boolean isLimitedStockRestrictionAppliedflag = false;
+			final List<PromotionResultModel> promotionlist = new ArrayList<PromotionResultModel>(orderModel.getAllPromotionResults());
+			final Iterator<PromotionResultModel> iter2 = promotionlist.iterator();
+			while (iter2.hasNext())
 			{
-				final List<LimitedStockPromoInvalidationModel> invalidationList = new ArrayList<LimitedStockPromoInvalidationModel>(
-						stockPromoCheckService.getPromoInvalidationList(orderModel.getGuid()));
+				//final EtailLimitedStockRestriction limitedStockRestriction = new EtailLimitedStockRestriction();
+				final PromotionResultModel model2 = iter2.next();
+				if ((model2.getCertainty().floatValue() == 1f)
+						&& (CollectionUtils.isNotEmpty(model2.getPromotion().getRestrictions()) && checkForLimitedStockPromo(model2
+								.getPromotion().getRestrictions())))
 
-				final Iterator<LimitedStockPromoInvalidationModel> iter = invalidationList.iterator();
-
-				//Remove the existing discount
-				while (iter.hasNext())
 				{
-					final LimitedStockPromoInvalidationModel model = iter.next();
-					getModelService().remove(model);
+					isLimitedStockRestrictionAppliedflag = true;
+					LOG.error("Promotion Type of Limited Offer");
 				}
+
+				//TISSQAUAT-468 and TISSQAUATS-752 code ends here for promotion offercount revert back logic
+
+				if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()) || isLimitedStockRestrictionAppliedflag == true)//TISSQAUAT-468 and TISSQAUATS-752  flag condition added for limited stock promotion check(promotion offercount revert back logic)
+				{
+					final List<LimitedStockPromoInvalidationModel> invalidationList = new ArrayList<LimitedStockPromoInvalidationModel>(
+							stockPromoCheckService.getPromoInvalidationList(orderModel.getGuid()));
+
+					final Iterator<LimitedStockPromoInvalidationModel> iter = invalidationList.iterator();
+
+					//Remove the existing discount
+					while (iter.hasNext())
+					{
+						final LimitedStockPromoInvalidationModel model = iter.next();
+						LOG.error("Removing Invalidation Entries" + model.getPk());
+						getModelService().remove(model);
+					}
+				}
+
 			}
 		}
 		catch (final ModelRemovalException e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0020);
 		}
+	}
+
+	/**
+	 * Validating for Limited Offer Promotion
+	 *
+	 *
+	 * @param restrictions
+	 * @return boolean
+	 */
+	private boolean checkForLimitedStockPromo(final Collection<AbstractPromotionRestrictionModel> restrictions)
+	{
+		if (CollectionUtils.isNotEmpty(restrictions))
+		{
+			for (final AbstractPromotionRestrictionModel restriction : restrictions)
+			{
+				if (restriction instanceof EtailLimitedStockRestrictionModel)
+				{
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	//Not used

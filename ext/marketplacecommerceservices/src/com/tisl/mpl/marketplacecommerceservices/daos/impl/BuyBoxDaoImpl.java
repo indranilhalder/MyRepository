@@ -140,6 +140,78 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		}
 	}
 
+	//CKD:TPR-250:Start : Exactly same method as buyboxPrice only to have a different path till DAO
+	//which uses a query without having clause for availability
+	@Override
+	public List<BuyBoxModel> buyboxPriceForMicrosite(final String productCode)
+	{
+		final StringBuilder productCodes = new StringBuilder(100);
+		final Map<String, String> queryParamMap = new HashMap<String, String>();
+		try
+		{
+			//TISPRM-56
+			if (productCode.indexOf(MarketplacecommerceservicesConstants.COMMA) != -1)//if multiple products
+			{
+
+				final String[] codes = productCode.split(MarketplacecommerceservicesConstants.COMMA);
+				int cnt = 0;
+				productCodes.append("( ");
+				for (final String id : codes)
+				{
+					cnt = cnt + 1;
+					if (cnt == 1)
+					{
+						productCodes.append(PRODUCT_PARAM + (cnt));
+					}
+					else
+					{
+						productCodes.append(" OR " + PRODUCT_PARAM + (cnt));
+					}
+					queryParamMap.put("productParam" + (cnt), id);
+				}
+				productCodes.append(" )");
+			}
+			else
+			//if no variant
+			{
+				productCodes.append("( ");
+				productCodes.append(" {bb.product}=?productParam1");
+				queryParamMap.put("productParam1", productCode);
+				productCodes.append(" )");
+			}
+
+			final String queryStringForPrice = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS + " Where " + productCodes.toString()
+					+ " AND ( {bb:" + BuyBoxModel.DELISTED + "}  IS NULL OR {bb:" + BuyBoxModel.DELISTED
+					+ "}=0) AND (sysdate between  {bb:" + BuyBoxModel.SELLERSTARTDATE + "} and {bb:" + BuyBoxModel.SELLERENDDATE
+					+ "}) AND {bb:" + BuyBoxModel.PRICE + "} > 0  ORDER BY {bb:" + BuyBoxModel.WEIGHTAGE + "} DESC,{bb:"
+					+ BuyBoxModel.AVAILABLE + "} DESC";
+
+			LOG.debug("QueryStringFetchingPrice" + queryStringForPrice);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryStringForPrice);
+
+			for (final Map.Entry<String, String> entry : queryParamMap.entrySet())
+			{
+				query.addQueryParameter(entry.getKey(), entry.getValue());
+			}
+
+			final List<BuyBoxModel> retList = flexibleSearchService.<BuyBoxModel> search(query).getResult();
+			return retList;
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+	//CKD:TPR-250:End
+
 	//	@Override
 	//	public List<BuyBoxModel> buyBoxPrice(String productCode)
 	//	{

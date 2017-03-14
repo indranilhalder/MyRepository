@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Resource;
 
@@ -104,10 +105,11 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 					npsFeedbackModel.setLastName(customer.getLastName());
 				}
 			}
-
-			npsFeedbackModel.setNpsId(npsFeedbackQuestionService.getNPSId()); // need to check the error
-			npsFeedbackModel.setNpsId(String.valueOf(Math.random()));
-			npsFeedbackModel.setResponseId(String.valueOf(Math.random()));
+			final Random rnd = new Random();
+			final int responseId = 100000 + rnd.nextInt(90000000);
+			final Integer responseIdInt = new Integer(responseId);
+			npsFeedbackModel.setNpsId(npsFeedbackQuestionService.getNPSId());
+			npsFeedbackModel.setResponseId(responseIdInt.toString());
 			final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
 			final SimpleDateFormat dateFormatParse = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
 			final Date date = new Date();
@@ -115,7 +117,7 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 
 
 			npsFeedbackModel.setOriginalSurveyDate(dateFormatParse.parse(SurveyDate));
-			//npsFeedbackModel.setResponseTime(dateFormatParse.parse(SurveyDate));
+			npsFeedbackModel.setResponseTime(dateFormatParse.parse(SurveyDate));
 			if (StringUtils.isNotEmpty(feedbackForm.getAnyOtherFeedback()))
 			{
 				npsFeedbackModel.setAnyOtherFeedback(feedbackForm.getAnyOtherFeedback());

@@ -54,4 +54,11 @@ public interface BuyBoxDao
 
 	List<ClassAttributeAssignmentModel> getClassAttrAssignmentsForCode(String code) throws EtailNonBusinessExceptions;
 
+
+	/**
+	 * @param productCode
+	 * @return
+	 */
+	public List<BuyBoxModel> buyboxPriceForMicrosite(String productCode) throws EtailNonBusinessExceptions;
+
 }
