@@ -2394,6 +2394,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		{
 			//Make entry in Audit Table
 			final MplPaymentAuditModel auditModel = getMplPaymentDao().getAuditEntries(orderStatusResponse.getOrderId());
+			final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
 			//changes for JuspayEBSResponseFIX
 			final ArrayList<JuspayEBSResponseDataModel> juspayEBSResponseList = new ArrayList<JuspayEBSResponseDataModel>();
 			final JuspayEBSResponseDataModel juspayEBSResponseModel = getModelService().create(JuspayEBSResponseDataModel.class);
@@ -2410,195 +2411,208 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				LOG.error("payment mode is null    ------->" + orderStatusResponse.getOrderId());
 			}
 
-			if (null != auditModel)
+			if (!MarketplacecommerceservicesConstants.AUTHORIZATION_FAILED.equalsIgnoreCase(orderStatusResponse.getStatus())
+					&& !MarketplacecommerceservicesConstants.AUTHENTICATION_FAILED.equalsIgnoreCase(orderStatusResponse.getStatus()))
 			{
-				List<MplPaymentAuditEntryModel> collection = auditModel.getAuditEntries();
-				final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
-				if (null == collection || collection.isEmpty())
-				{
-					collection = new ArrayList<MplPaymentAuditEntryModel>();
-				}
-				auditEntryList.addAll(collection);
 
-				final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
-				if (StringUtils.isNotEmpty(orderStatusResponse.getOrderId()))
+				if (null != auditModel)
 				{
-					auditEntry.setAuditId(orderStatusResponse.getOrderId());
-				}
-
-				//Condition when RiskResponse is available in OrderStatusResponse
-				if (null != orderStatusResponse.getRiskResponse())
-				{
-					LOG.debug("orderStatusResponse status ------> " + orderStatusResponse.getStatus());
-					//Condition when PG Response status is available and charged
-					if (StringUtils.isNotEmpty(orderStatusResponse.getStatus())
-							&& orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED))
+					List<MplPaymentAuditEntryModel> collection = auditModel.getAuditEntries();
+					final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
+					if (null == collection || collection.isEmpty())
 					{
-						if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsRiskLevel()))
-						{
-							LOG.debug("orderStatusResponse getRiskResponse ------> "
-									+ orderStatusResponse.getRiskResponse().getEbsRiskLevel());
+						collection = new ArrayList<MplPaymentAuditEntryModel>();
+					}
+					auditEntryList.addAll(collection);
 
-							//Condition when RiskLevel is GREEN
-							if (orderStatusResponse.getRiskResponse().getEbsRiskLevel()
-									.equalsIgnoreCase(MarketplacecommerceservicesConstants.GREEN))
+
+					if (StringUtils.isNotEmpty(orderStatusResponse.getOrderId()))
+					{
+						auditEntry.setAuditId(orderStatusResponse.getOrderId());
+					}
+
+					//Condition when RiskResponse is available in OrderStatusResponse
+					if (null != orderStatusResponse.getRiskResponse())
+					{
+						LOG.debug("orderStatusResponse status ------> " + orderStatusResponse.getStatus());
+						//Condition when PG Response status is available and charged
+						if (StringUtils.isNotEmpty(orderStatusResponse.getStatus())
+								&& orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED))
+						{
+							if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsRiskLevel()))
 							{
-								auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
-								auditModel.setIsExpired(Boolean.TRUE);
-							}
+								LOG.debug("orderStatusResponse getRiskResponse ------> "
+										+ orderStatusResponse.getRiskResponse().getEbsRiskLevel());
 
-							//Condition when RiskLevel is NOT GREEN
-							else
-							{
-								//Condition for Domestic Card //TODO::Change once this is finalized
-								if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsBinCountry())
-										&& orderStatusResponse.getRiskResponse().getEbsBinCountry()
-												.equalsIgnoreCase(MarketplacecommerceservicesConstants.INDIA))
+								//Condition when RiskLevel is GREEN
+								if (orderStatusResponse.getRiskResponse().getEbsRiskLevel()
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.GREEN))
 								{
-									if (orderStatusResponse.getRiskResponse().getEbsRiskLevel()
-											.equalsIgnoreCase(MarketplacecommerceservicesConstants.YELLOW)
-											|| orderStatusResponse.getRiskResponse().getEbsRiskLevel()
-													.equalsIgnoreCase(MarketplacecommerceservicesConstants.RED))
-									{
-										auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
-									}
-								}
-								//Condition for International Card
-								else
-								{
-									if (orderStatusResponse.getRiskResponse().getEbsRiskLevel()
-											.equalsIgnoreCase(MarketplacecommerceservicesConstants.YELLOW)
-											|| orderStatusResponse.getRiskResponse().getEbsRiskLevel()
-													.equalsIgnoreCase(MarketplacecommerceservicesConstants.RED))
-									{
-										auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
-									}
-								}
-							}
-						}
-						else
-						{
-							auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
-						}
-					}
-					//Condition when PG Response status is NOT available or it is NOT charged
-					else
-					{
-						auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
-						auditModel.setIsExpired(Boolean.TRUE);
-					}
-
-					LOG.debug("auditEntry status risk ne null------> " + auditEntry.getStatus());
-
-					if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsBinCountry()))
-					{
-						juspayEBSResponseModel.setEbs_bin_country(orderStatusResponse.getRiskResponse().getEbsBinCountry());
-					}
-					if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsRiskLevel()))
-					{
-						setEBSRiskLevel(orderStatusResponse.getRiskResponse().getEbsRiskLevel(), juspayEBSResponseModel);
-					}
-					if (null != orderStatusResponse.getRiskResponse().getEbsRiskPercentage())
-					{
-						final Double scoreDouble = Double.valueOf(orderStatusResponse.getRiskResponse().getEbsRiskPercentage()
-								.doubleValue());
-						juspayEBSResponseModel.setEbsRiskPercentage(scoreDouble.toString());
-					}
-					else
-					{
-						juspayEBSResponseModel.setEbsRiskPercentage(MarketplacecommerceservicesConstants.DEFAULT_RISK);
-					}
-					if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsPaymentStatus())
-							&& !orderStatusResponse.getRiskResponse().getEbsPaymentStatus()
-									.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAID))
-					{
-						setEBSRiskStatus(orderStatusResponse.getRiskResponse().getEbsPaymentStatus(), juspayEBSResponseModel);
-					}
-					else if (StringUtils.isEmpty(orderStatusResponse.getRiskResponse().getEbsPaymentStatus())
-							&& !juspayEBSResponseModel.getEbsRiskPercentage().equalsIgnoreCase(
-									MarketplacecommerceservicesConstants.DEFAULT_RISK))
-					{
-						if (MplPaymentAuditStatusEnum.PENDING.equals(auditEntry.getStatus()))
-						{
-							setEBSRiskStatus(MarketplacecommerceservicesConstants.REVIEW, juspayEBSResponseModel);
-						}
-						else if (MplPaymentAuditStatusEnum.COMPLETED.equals(auditEntry.getStatus()))
-						{
-							setEBSRiskStatus(MarketplacecommerceservicesConstants.APPROVED, juspayEBSResponseModel);
-						}
-						else if (MplPaymentAuditStatusEnum.DECLINED.equals(auditEntry.getStatus())
-								|| MplPaymentAuditStatusEnum.EBS_DECLINED.equals(auditEntry.getStatus()))
-						{
-							setEBSRiskStatus(MarketplacecommerceservicesConstants.REJECTED, juspayEBSResponseModel);
-						}
-					}
-					flag = true;
-				}
-				//Condition when RiskResponse is NOT available in OrderStatusResponse
-				//For NetBanking , we will not get any RISK structure
-				else
-				{
-					if (StringUtils.isNotEmpty(orderStatusResponse.getStatus())
-							&& orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED))
-					{
-						if (StringUtils.isNotEmpty(ebsDowntime) && ebsDowntime.equalsIgnoreCase("Y"))
-						{
-							auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
-							auditModel.setIsExpired(Boolean.TRUE);
-						}
-						else
-						{
-
-							boolean netBanking = false;
-							for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
-							{
-								//if (entry.getKey() != null
-								//		&& MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(entry.getKey()))
-								if (entry.getKey() != null
-										&& MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(entry.getKey().trim()))
-								{
-									LOG.debug("Payment mode netbanking ------> " + orderStatusResponse.getOrderId());
-
 									auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
 									auditModel.setIsExpired(Boolean.TRUE);
-									netBanking = true;
-									break;
+								}
+
+								//Condition when RiskLevel is NOT GREEN
+								else
+								{
+									//Condition for Domestic Card //TODO::Change once this is finalized
+									if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsBinCountry())
+											&& orderStatusResponse.getRiskResponse().getEbsBinCountry()
+													.equalsIgnoreCase(MarketplacecommerceservicesConstants.INDIA))
+									{
+										if (orderStatusResponse.getRiskResponse().getEbsRiskLevel()
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.YELLOW)
+												|| orderStatusResponse.getRiskResponse().getEbsRiskLevel()
+														.equalsIgnoreCase(MarketplacecommerceservicesConstants.RED))
+										{
+											auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
+										}
+									}
+									//Condition for International Card
+									else
+									{
+										if (orderStatusResponse.getRiskResponse().getEbsRiskLevel()
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.YELLOW)
+												|| orderStatusResponse.getRiskResponse().getEbsRiskLevel()
+														.equalsIgnoreCase(MarketplacecommerceservicesConstants.RED))
+										{
+											auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
+										}
+									}
 								}
 							}
-							// For credit card/debit card and emi , if risk block is not available
-							if (!netBanking)
+							else
 							{
-								LOG.debug("Payment mode not netbanking and no risk block present ------> "
-										+ orderStatusResponse.getOrderId());
-
 								auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
 								juspayEBSResponseModel.setEbsRiskPercentage(MarketplacecommerceservicesConstants.DEFAULT_RISK);
 							}
 						}
+						//Condition when PG Response status is NOT available or it is NOT charged
+						else
+						{
+							auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
+							auditModel.setIsExpired(Boolean.TRUE);
+						}
+
+						LOG.debug("auditEntry status risk ne null------> " + auditEntry.getStatus());
+
+						if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsBinCountry()))
+						{
+							juspayEBSResponseModel.setEbs_bin_country(orderStatusResponse.getRiskResponse().getEbsBinCountry());
+						}
+						if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsRiskLevel()))
+						{
+							setEBSRiskLevel(orderStatusResponse.getRiskResponse().getEbsRiskLevel(), juspayEBSResponseModel);
+						}
+						if (null != orderStatusResponse.getRiskResponse().getEbsRiskPercentage())
+						{
+							final Double scoreDouble = Double.valueOf(orderStatusResponse.getRiskResponse().getEbsRiskPercentage()
+									.doubleValue());
+							juspayEBSResponseModel.setEbsRiskPercentage(scoreDouble.toString());
+						}
+						else
+						{
+							juspayEBSResponseModel.setEbsRiskPercentage(MarketplacecommerceservicesConstants.DEFAULT_RISK);
+						}
+						if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsPaymentStatus())
+								&& !orderStatusResponse.getRiskResponse().getEbsPaymentStatus()
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAID))
+						{
+							setEBSRiskStatus(orderStatusResponse.getRiskResponse().getEbsPaymentStatus(), juspayEBSResponseModel);
+						}
+						else if (StringUtils.isEmpty(orderStatusResponse.getRiskResponse().getEbsPaymentStatus())
+								&& !juspayEBSResponseModel.getEbsRiskPercentage().equalsIgnoreCase(
+										MarketplacecommerceservicesConstants.DEFAULT_RISK))
+						{
+							if (MplPaymentAuditStatusEnum.PENDING.equals(auditEntry.getStatus()))
+							{
+								setEBSRiskStatus(MarketplacecommerceservicesConstants.REVIEW, juspayEBSResponseModel);
+							}
+							else if (MplPaymentAuditStatusEnum.COMPLETED.equals(auditEntry.getStatus()))
+							{
+								setEBSRiskStatus(MarketplacecommerceservicesConstants.APPROVED, juspayEBSResponseModel);
+							}
+							else if (MplPaymentAuditStatusEnum.DECLINED.equals(auditEntry.getStatus())
+									|| MplPaymentAuditStatusEnum.EBS_DECLINED.equals(auditEntry.getStatus()))
+							{
+								setEBSRiskStatus(MarketplacecommerceservicesConstants.REJECTED, juspayEBSResponseModel);
+							}
+						}
+						flag = true;
 					}
+					//Condition when RiskResponse is NOT available in OrderStatusResponse
+					//For NetBanking , we will not get any RISK structure
 					else
 					{
-						auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
-						auditModel.setIsExpired(Boolean.TRUE);
+						if (StringUtils.isNotEmpty(orderStatusResponse.getStatus())
+								&& orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED))
+						{
+							if (StringUtils.isNotEmpty(ebsDowntime) && ebsDowntime.equalsIgnoreCase("Y"))
+							{
+								auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
+								auditModel.setIsExpired(Boolean.TRUE);
+							}
+							else
+							{
+
+								boolean netBanking = false;
+								for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
+								{
+									//if (entry.getKey() != null
+									//		&& MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(entry.getKey()))
+									if (entry.getKey() != null
+											&& MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(entry.getKey().trim()))
+									{
+										LOG.debug("Payment mode netbanking ------> " + orderStatusResponse.getOrderId());
+
+										auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
+										auditModel.setIsExpired(Boolean.TRUE);
+										netBanking = true;
+										break;
+									}
+								}
+								// For credit card/debit card and emi , if risk block is not available
+								if (!netBanking)
+								{
+									LOG.debug("Payment mode not netbanking and no risk block present ------> "
+											+ orderStatusResponse.getOrderId());
+
+									auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
+									juspayEBSResponseModel.setEbsRiskPercentage(MarketplacecommerceservicesConstants.DEFAULT_RISK);
+								}
+							}
+						}
+						else
+						{
+							auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
+							auditModel.setIsExpired(Boolean.TRUE);
+						}
+						flag = true;
 					}
-					flag = true;
+
+					auditEntry.setResponseDate(new Date());
+
+					LOG.debug("auditEntry status risk null------> " + auditEntry.getStatus());
+
+					getModelService().save(auditEntry);
+					auditEntryList.add(auditEntry);
+
+					getModelService().save(juspayEBSResponseModel);
+					juspayEBSResponseList.add(juspayEBSResponseModel);
+
+					auditModel.setAuditEntries(auditEntryList);
+					//changes for JuspayEBSResponseFIX
+					auditModel.setRiskData(juspayEBSResponseList);
+					getModelService().save(auditModel);
 				}
-
-				auditEntry.setResponseDate(new Date());
-
-				LOG.debug("auditEntry status risk null------> " + auditEntry.getStatus());
-
-				getModelService().save(auditEntry);
-				auditEntryList.add(auditEntry);
-
-				getModelService().save(juspayEBSResponseModel);
-				juspayEBSResponseList.add(juspayEBSResponseModel);
-
-				auditModel.setAuditEntries(auditEntryList);
-				//changes for JuspayEBSResponseFIX
-				auditModel.setRiskData(juspayEBSResponseList);
-				getModelService().save(auditModel);
 			}
+			else
+			{
+				auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
+				auditModel.setIsExpired(Boolean.TRUE);
+			}
+
+
 		}
 		//PMD Fixes
 		//		catch (final NullPointerException e)
@@ -3020,11 +3034,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3036,9 +3050,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3094,6 +3108,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		{
 			//Make entry in Audit Table
 			final MplPaymentAuditModel auditModel = getMplPaymentDao().getAuditEntries(orderStatusResponse.getOrderId());
+			final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
 			//changes for JuspayEBSResponseFIX
 			final ArrayList<JuspayEBSResponseDataModel> juspayEBSResponseList = new ArrayList<JuspayEBSResponseDataModel>();
 			final JuspayEBSResponseDataModel juspayEBSResponseModel = getModelService().create(JuspayEBSResponseDataModel.class);
@@ -3109,227 +3124,236 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 				LOG.error("payment mode is null    ------->" + orderStatusResponse.getOrderId());
 			}
-
-			if (null != auditModel)
+			if (!MarketplacecommerceservicesConstants.AUTHORIZATION_FAILED.equalsIgnoreCase(orderStatusResponse.getStatus())
+					&& !MarketplacecommerceservicesConstants.AUTHENTICATION_FAILED.equalsIgnoreCase(orderStatusResponse.getStatus()))
 			{
-				List<MplPaymentAuditEntryModel> collection = auditModel.getAuditEntries();
-				final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
-				if (null == collection || collection.isEmpty())
-				{
-					collection = new ArrayList<MplPaymentAuditEntryModel>();
-				}
-				auditEntryList.addAll(collection);
 
-				final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
-				if (StringUtils.isNotEmpty(orderStatusResponse.getOrderId()))
+				if (null != auditModel)
 				{
-					auditEntry.setAuditId(orderStatusResponse.getOrderId());
-				}
-
-				//Condition when RiskResponse is available in OrderStatusResponse
-				if (null != orderStatusResponse.getRiskResponse())
-				{
-					LOG.debug("orderStatusResponse status ------> " + orderStatusResponse.getStatus());
-					//Condition when PG Response status is available and charged
-					if (StringUtils.isNotEmpty(orderStatusResponse.getStatus())
-							&& orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED))
+					List<MplPaymentAuditEntryModel> collection = auditModel.getAuditEntries();
+					final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
+					if (null == collection || collection.isEmpty())
 					{
-						if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsRiskLevel()))
-						{
-							LOG.debug("orderStatusResponse getRiskResponse ------> "
-									+ orderStatusResponse.getRiskResponse().getEbsRiskLevel());
+						collection = new ArrayList<MplPaymentAuditEntryModel>();
+					}
+					auditEntryList.addAll(collection);
 
-							//Condition when RiskLevel is GREEN
-							if (orderStatusResponse.getRiskResponse().getEbsRiskLevel()
-									.equalsIgnoreCase(MarketplacecommerceservicesConstants.GREEN))
+					if (StringUtils.isNotEmpty(orderStatusResponse.getOrderId()))
+					{
+						auditEntry.setAuditId(orderStatusResponse.getOrderId());
+					}
+
+					//Condition when RiskResponse is available in OrderStatusResponse
+					if (null != orderStatusResponse.getRiskResponse())
+					{
+						LOG.debug("orderStatusResponse status ------> " + orderStatusResponse.getStatus());
+						//Condition when PG Response status is available and charged
+						if (StringUtils.isNotEmpty(orderStatusResponse.getStatus())
+								&& orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED))
+						{
+							if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsRiskLevel()))
 							{
-								auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
-								auditModel.setIsExpired(Boolean.TRUE);
-							}
+								LOG.debug("orderStatusResponse getRiskResponse ------> "
+										+ orderStatusResponse.getRiskResponse().getEbsRiskLevel());
 
-							//Condition when RiskLevel is NOT GREEN
-							else
-							{
-								//Condition for Domestic Card //TODO::Change once this is finalized
-								if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsBinCountry())
-										&& orderStatusResponse.getRiskResponse().getEbsBinCountry()
-												.equalsIgnoreCase(MarketplacecommerceservicesConstants.INDIA))
+								//Condition when RiskLevel is GREEN
+								if (orderStatusResponse.getRiskResponse().getEbsRiskLevel()
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.GREEN))
 								{
-									if (orderStatusResponse.getRiskResponse().getEbsRiskLevel()
-											.equalsIgnoreCase(MarketplacecommerceservicesConstants.YELLOW)
-											|| orderStatusResponse.getRiskResponse().getEbsRiskLevel()
-													.equalsIgnoreCase(MarketplacecommerceservicesConstants.RED))
-									{
-										auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
-									}
-								}
-								//Condition for International Card
-								else
-								{
-									if (orderStatusResponse.getRiskResponse().getEbsRiskLevel()
-											.equalsIgnoreCase(MarketplacecommerceservicesConstants.YELLOW)
-											|| orderStatusResponse.getRiskResponse().getEbsRiskLevel()
-													.equalsIgnoreCase(MarketplacecommerceservicesConstants.RED))
-									{
-										auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
-									}
-								}
-							}
-						}
-						else
-						{
-							auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
-						}
-					}
-					//Condition when PG Response status is NOT available or it is NOT charged
-					else
-					{
-						auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
-						auditModel.setIsExpired(Boolean.TRUE);
-					}
-
-					LOG.debug("auditEntry status risk ne null------> " + auditEntry.getStatus());
-
-					if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsBinCountry()))
-					{
-						juspayEBSResponseModel.setEbs_bin_country(orderStatusResponse.getRiskResponse().getEbsBinCountry());
-					}
-					if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsRiskLevel()))
-					{
-						setEBSRiskLevel(orderStatusResponse.getRiskResponse().getEbsRiskLevel(), juspayEBSResponseModel);
-					}
-					if (null != orderStatusResponse.getRiskResponse().getEbsRiskPercentage())
-					{
-						final Double scoreDouble = Double.valueOf(orderStatusResponse.getRiskResponse().getEbsRiskPercentage()
-								.doubleValue());
-						juspayEBSResponseModel.setEbsRiskPercentage(scoreDouble.toString());
-					}
-					else
-					{
-						juspayEBSResponseModel.setEbsRiskPercentage(MarketplacecommerceservicesConstants.DEFAULT_RISK);
-					}
-					if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsPaymentStatus())
-							&& !orderStatusResponse.getRiskResponse().getEbsPaymentStatus()
-									.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAID))
-					{
-						setEBSRiskStatus(orderStatusResponse.getRiskResponse().getEbsPaymentStatus(), juspayEBSResponseModel);
-					}
-					else if (StringUtils.isEmpty(orderStatusResponse.getRiskResponse().getEbsPaymentStatus())
-							&& !juspayEBSResponseModel.getEbsRiskPercentage().equalsIgnoreCase(
-									MarketplacecommerceservicesConstants.DEFAULT_RISK))
-					{
-						if (MplPaymentAuditStatusEnum.PENDING.equals(auditEntry.getStatus()))
-						{
-							setEBSRiskStatus(MarketplacecommerceservicesConstants.REVIEW, juspayEBSResponseModel);
-						}
-						else if (MplPaymentAuditStatusEnum.COMPLETED.equals(auditEntry.getStatus()))
-						{
-							setEBSRiskStatus(MarketplacecommerceservicesConstants.APPROVED, juspayEBSResponseModel);
-						}
-						else if (MplPaymentAuditStatusEnum.DECLINED.equals(auditEntry.getStatus())
-								|| MplPaymentAuditStatusEnum.EBS_DECLINED.equals(auditEntry.getStatus()))
-						{
-							setEBSRiskStatus(MarketplacecommerceservicesConstants.REJECTED, juspayEBSResponseModel);
-						}
-					}
-					flag = true;
-				}
-				//Condition when RiskResponse is NOT available in OrderStatusResponse
-				//For NetBanking , we will not get any RISK structure
-				else
-				{
-					if (StringUtils.isNotEmpty(orderStatusResponse.getStatus())
-							&& orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED))
-					{
-						if (StringUtils.isNotEmpty(ebsDowntime) && ebsDowntime.equalsIgnoreCase("Y"))
-						{
-							auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
-							auditModel.setIsExpired(Boolean.TRUE);
-						}
-						else
-						{
-
-							boolean netBanking = false;
-							for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
-							{
-								//if (entry.getKey() != null
-								//		&& MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(entry.getKey()))
-								if (entry.getKey() != null
-										&& MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(entry.getKey().trim()))
-								{
-									LOG.debug("Payment mode netbanking ------> " + orderStatusResponse.getOrderId());
-
 									auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
 									auditModel.setIsExpired(Boolean.TRUE);
-									netBanking = true;
-									break;
+								}
+
+								//Condition when RiskLevel is NOT GREEN
+								else
+								{
+									//Condition for Domestic Card //TODO::Change once this is finalized
+									if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsBinCountry())
+											&& orderStatusResponse.getRiskResponse().getEbsBinCountry()
+													.equalsIgnoreCase(MarketplacecommerceservicesConstants.INDIA))
+									{
+										if (orderStatusResponse.getRiskResponse().getEbsRiskLevel()
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.YELLOW)
+												|| orderStatusResponse.getRiskResponse().getEbsRiskLevel()
+														.equalsIgnoreCase(MarketplacecommerceservicesConstants.RED))
+										{
+											auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
+										}
+									}
+									//Condition for International Card
+									else
+									{
+										if (orderStatusResponse.getRiskResponse().getEbsRiskLevel()
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.YELLOW)
+												|| orderStatusResponse.getRiskResponse().getEbsRiskLevel()
+														.equalsIgnoreCase(MarketplacecommerceservicesConstants.RED))
+										{
+											auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
+										}
+									}
 								}
 							}
-							// For credit card/debit card and emi , if risk block is not available
-							if (!netBanking)
+							else
 							{
-								LOG.debug("Payment mode not netbanking and no risk block present ------> "
-										+ orderStatusResponse.getOrderId());
-
 								auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
 								juspayEBSResponseModel.setEbsRiskPercentage(MarketplacecommerceservicesConstants.DEFAULT_RISK);
 							}
 						}
+						//Condition when PG Response status is NOT available or it is NOT charged
+						else
+						{
+							auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
+							auditModel.setIsExpired(Boolean.TRUE);
+						}
+
+						LOG.debug("auditEntry status risk ne null------> " + auditEntry.getStatus());
+
+						if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsBinCountry()))
+						{
+							juspayEBSResponseModel.setEbs_bin_country(orderStatusResponse.getRiskResponse().getEbsBinCountry());
+						}
+						if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsRiskLevel()))
+						{
+							setEBSRiskLevel(orderStatusResponse.getRiskResponse().getEbsRiskLevel(), juspayEBSResponseModel);
+						}
+						if (null != orderStatusResponse.getRiskResponse().getEbsRiskPercentage())
+						{
+							final Double scoreDouble = Double.valueOf(orderStatusResponse.getRiskResponse().getEbsRiskPercentage()
+									.doubleValue());
+							juspayEBSResponseModel.setEbsRiskPercentage(scoreDouble.toString());
+						}
+						else
+						{
+							juspayEBSResponseModel.setEbsRiskPercentage(MarketplacecommerceservicesConstants.DEFAULT_RISK);
+						}
+						if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsPaymentStatus())
+								&& !orderStatusResponse.getRiskResponse().getEbsPaymentStatus()
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAID))
+						{
+							setEBSRiskStatus(orderStatusResponse.getRiskResponse().getEbsPaymentStatus(), juspayEBSResponseModel);
+						}
+						else if (StringUtils.isEmpty(orderStatusResponse.getRiskResponse().getEbsPaymentStatus())
+								&& !juspayEBSResponseModel.getEbsRiskPercentage().equalsIgnoreCase(
+										MarketplacecommerceservicesConstants.DEFAULT_RISK))
+						{
+							if (MplPaymentAuditStatusEnum.PENDING.equals(auditEntry.getStatus()))
+							{
+								setEBSRiskStatus(MarketplacecommerceservicesConstants.REVIEW, juspayEBSResponseModel);
+							}
+							else if (MplPaymentAuditStatusEnum.COMPLETED.equals(auditEntry.getStatus()))
+							{
+								setEBSRiskStatus(MarketplacecommerceservicesConstants.APPROVED, juspayEBSResponseModel);
+							}
+							else if (MplPaymentAuditStatusEnum.DECLINED.equals(auditEntry.getStatus())
+									|| MplPaymentAuditStatusEnum.EBS_DECLINED.equals(auditEntry.getStatus()))
+							{
+								setEBSRiskStatus(MarketplacecommerceservicesConstants.REJECTED, juspayEBSResponseModel);
+							}
+						}
+						flag = true;
 					}
+					//Condition when RiskResponse is NOT available in OrderStatusResponse
+					//For NetBanking , we will not get any RISK structure
 					else
 					{
-						auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
-						auditModel.setIsExpired(Boolean.TRUE);
+						if (StringUtils.isNotEmpty(orderStatusResponse.getStatus())
+								&& orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED))
+						{
+							if (StringUtils.isNotEmpty(ebsDowntime) && ebsDowntime.equalsIgnoreCase("Y"))
+							{
+								auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
+								auditModel.setIsExpired(Boolean.TRUE);
+							}
+							else
+							{
+
+								boolean netBanking = false;
+								for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
+								{
+									//if (entry.getKey() != null
+									//		&& MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(entry.getKey()))
+									if (entry.getKey() != null
+											&& MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(entry.getKey().trim()))
+									{
+										LOG.debug("Payment mode netbanking ------> " + orderStatusResponse.getOrderId());
+
+										auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
+										auditModel.setIsExpired(Boolean.TRUE);
+										netBanking = true;
+										break;
+									}
+								}
+								// For credit card/debit card and emi , if risk block is not available
+								if (!netBanking)
+								{
+									LOG.debug("Payment mode not netbanking and no risk block present ------> "
+											+ orderStatusResponse.getOrderId());
+
+									auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
+									juspayEBSResponseModel.setEbsRiskPercentage(MarketplacecommerceservicesConstants.DEFAULT_RISK);
+								}
+							}
+						}
+						else
+						{
+							auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
+							auditModel.setIsExpired(Boolean.TRUE);
+						}
+						flag = true;
 					}
-					flag = true;
+
+					auditEntry.setResponseDate(new Date());
+
+					final ObjectMapper objectMapper = new ObjectMapper();
+					final String jsonResponse = objectMapper.writeValueAsString(orderStatusResponse);
+					final String jsonRequest = objectMapper.writeValueAsString(orderStatusRequest);
+
+
+					if (null != jsonRequest)
+					{
+						if (jsonRequest.length() >= 255)
+						{
+							auditEntry.setRequestStructure(jsonRequest.substring(0, 254));
+						}
+						else
+						{
+							auditEntry.setRequestStructure(jsonRequest);
+						}
+					}
+					if (null != jsonResponse)
+					{
+						if (jsonResponse.length() >= 255)
+						{
+							auditEntry.setResponseStructure(jsonResponse.substring(0, 254));
+						}
+						else
+						{
+							auditEntry.setResponseStructure(jsonResponse);
+						}
+					}
+
+
+					LOG.debug("auditEntry status risk null------> " + auditEntry.getStatus());
+
+					getModelService().save(auditEntry);
+
+					auditEntryList.add(auditEntry);
+
+					getModelService().save(juspayEBSResponseModel);
+					juspayEBSResponseList.add(juspayEBSResponseModel);
+
+					auditModel.setAuditEntries(auditEntryList);
+					//changes for JuspayEBSResponseFIX
+					auditModel.setRiskData(juspayEBSResponseList);
+					getModelService().save(auditModel);
+
+					updateFraudModel(orderModel, juspayEBSResponseModel, auditModel);
 				}
-
-				auditEntry.setResponseDate(new Date());
-
-				final ObjectMapper objectMapper = new ObjectMapper();
-				final String jsonResponse = objectMapper.writeValueAsString(orderStatusResponse);
-				final String jsonRequest = objectMapper.writeValueAsString(orderStatusRequest);
-
-
-				if (null != jsonRequest)
-				{
-					if (jsonRequest.length() >= 255)
-					{
-						auditEntry.setRequestStructure(jsonRequest.substring(0, 254));
-					}
-					else
-					{
-						auditEntry.setRequestStructure(jsonRequest);
-					}
-				}
-				if (null != jsonResponse)
-				{
-					if (jsonResponse.length() >= 255)
-					{
-						auditEntry.setResponseStructure(jsonResponse.substring(0, 254));
-					}
-					else
-					{
-						auditEntry.setResponseStructure(jsonResponse);
-					}
-				}
-
-
-				LOG.debug("auditEntry status risk null------> " + auditEntry.getStatus());
-
-				getModelService().save(auditEntry);
-
-				auditEntryList.add(auditEntry);
-
-				getModelService().save(juspayEBSResponseModel);
-				juspayEBSResponseList.add(juspayEBSResponseModel);
-
-				auditModel.setAuditEntries(auditEntryList);
-				//changes for JuspayEBSResponseFIX
-				auditModel.setRiskData(juspayEBSResponseList);
-				getModelService().save(auditModel);
-
-				updateFraudModel(orderModel, juspayEBSResponseModel, auditModel);
+			}
+			else
+			{
+				auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
+				auditModel.setIsExpired(Boolean.TRUE);
 			}
 		}
 		//catch (final NullPointerException e)
@@ -3366,7 +3390,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		}
 		return flag;
 	}
-
 
 
 	/**
@@ -3406,7 +3429,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for non-COD from OMS Submit Order Job de.hybris.platform.core.model.order.OrderModel)
 	 */
@@ -3556,7 +3579,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @desc getPaymentModeFrompayInfo
-	 *
+	 * 
 	 * @see SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 	 */
 	@Override
@@ -3597,7 +3620,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for pre paid from OMS Submit Order Job
 	 */
@@ -3661,7 +3684,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @desc SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for COD from OMS Submit Order Job
 	 */
