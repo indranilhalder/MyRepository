@@ -407,6 +407,8 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 			
 			if(null != orderEntry.getTimeSlotFrom() && null != orderEntry.getTimeSlotTo()){
 				 selectedTime = orderEntry.getTimeSlotFrom().toString();
+				 selectedTime = selectedTime.concat("TO");
+				 selectedTime = selectedTime.concat(orderEntry.getTimeSlotTo().toString());
 			}
 			final Radiogroup dateGroup = new Radiogroup();
 			
@@ -447,7 +449,7 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 						radio.setParent(timeDiv1);
 						radioTimeGroup.appendChild(radio);
 						if(null != selectedTime) {
-							if(time.trim().startsWith(selectedTime.trim())){
+							if(time.trim().equalsIgnoreCase(selectedTime.trim())){
 								radio.setSelected(true);
 							}
 						}

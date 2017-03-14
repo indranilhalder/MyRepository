@@ -1038,7 +1038,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
    				LOG.debug("************************In "+newStatus +" Check .......");
    				isRetrunInitiatedCheck=Boolean.TRUE;
 
-   				
+   				 RefundEntryModel refundEntryModel = modelService.create(RefundEntryModel.class);
    				boolean refundEntryModelExists = false;  
    				try {
       				if(null != orderModel.getReturnRequests()) {
@@ -1048,6 +1048,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
          							for (ReturnEntryModel returnEntry : returnRequest.getReturnEntries()) {
          								if(null != returnEntry.getOrderEntry()) {
          									if(returnEntry.getOrderEntry().getTransactionID().equalsIgnoreCase(shipment.getShipmentId())) {
+         										refundEntryModel = (RefundEntryModel) returnEntry;
          										refundEntryModelExists  = true;
          										break;
          									}
@@ -1057,12 +1058,23 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
          					}
          				}
       				}
+      				
+      				if(!refundEntryModelExists) {
+      					createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
+      				}else if(null != refundEntryModel){
+      							String refundMode = shipment.getRefundType();
+      							if(LOG.isDebugEnabled()) {
+      								LOG.debug(" Refund Mode for the order Line id :"+shipment.getShipmentId()+" is "+refundMode);
+      							}
+      							if(null != refundMode) {
+      								refundEntryModel.setRefundMode(refundMode);
+      								modelService.save(refundEntryModel);
+      							}
+      					}
    				}catch(Exception e) {
    					LOG.error("Exception occurred while checking return requests for order entry"+shipment.getShipmentId());
    				}
-   				if(!refundEntryModelExists) {
-   					createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
-   				}
+   				
    				consignmentModel.setReturnInitiateCheck(Boolean.TRUE);
 					modelService.save(consignmentModel);
 					isRetrunInitiatedCheck=Boolean.FALSE; 
