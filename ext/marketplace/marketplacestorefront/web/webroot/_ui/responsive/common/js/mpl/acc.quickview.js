@@ -300,25 +300,27 @@ function setBuyBoxDetails()
 				getRichAttributeQuickView(sellerName);
 				
 			},
-			complete: function() {	//TPR-4712,4725 | quickview
-				var priceMOP='';
-				var priceMOPvalue='';
-				var priceMRP=mrpPrice.formattedValueNoDecimal;
-				var priceMRPvalue=mrpPrice.value;
-				if(spPrice != '' && typeof(spPrice) != "undefined"){
-					priceMOP = spPrice.formattedValueNoDecimal;
-					priceMOPvalue = spPrice.value;
+			complete: function() {
+				if($('#pageType').val() != "/compare"){
+					//TPR-4712,4725 | quickview
+					var priceMOP='';
+					var priceMOPvalue='';
+					var priceMRP=mrpPrice.formattedValueNoDecimal;
+					var priceMRPvalue=mrpPrice.value;
+					if(spPrice != '' && typeof(spPrice) != "undefined"){
+						priceMOP = spPrice.formattedValueNoDecimal;
+						priceMOPvalue = spPrice.value;
+					}
+					else{
+						priceMOP = mop.formattedValueNoDecimal;
+						priceMOPvalue = mop.value;
+					}
+					
+					var discount= priceMRPvalue - priceMOPvalue;
+					var discountPercentage = savingsOnProduct+"%";
+					quickViewUtag(productCode,sellerId,sellerName,priceMRP,priceMOP,discount,discountPercentage,stock);
 				}
-				else{
-					priceMOP = mop.formattedValueNoDecimal;
-					priceMOPvalue = mop.value;
-				}
-				
-				var discount= priceMRPvalue - priceMOPvalue;
-				var discountPercentage = savingsOnProduct+"%";
-				quickViewUtag(productCode,sellerId,sellerName,priceMRP,priceMOP,discount,discountPercentage,stock);
 			}
-
 		});	
 		
 		$(".size-guide").on("click",function(){

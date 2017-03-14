@@ -1469,17 +1469,21 @@ $(".product-tile.cboxElement").click(function(){
 
 /*PDP, quickview image hover*/
 $(document).on("mouseover",".zoomContainer",function(e) {
-	var page='';
-	if($('#pageType').val() == "product"){
-		page = "pdp";
+	if($('#pageType').val() != "/compare"){
+		var page='';
+		if($('#pageType').val() == "product"){
+			page = "pdp";
+		}
+		else {
+			page = "quickview";
+		}
+		if(typeof utag !="undefined"){
+			utag.link({
+				link_text: page+"_image_hover",
+				event_type : page+"_image_hover"
+			});
+		}
 	}
-	else{
-		page = "quickview";
-	}
-	utag.link({
-		link_text: page+"_image_hover",
-		event_type : page+"_image_hover"
-	});
 });	
 
 
