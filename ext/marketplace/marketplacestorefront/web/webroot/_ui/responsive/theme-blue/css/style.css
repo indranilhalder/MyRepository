@@ -46969,13 +46969,19 @@ float: right;
 		width: 46%;
 		padding-top:40px;
 	}
-	.tabs-block .nav>li#tabs_details {
-		width: 33%;
+	.tabs-block .nav>li#tabs_details,.tabs-block .nav>li#tabs_knowmore {
+		width: 25%;
 		text-align: center;
+		font-size: 12px;
+	}
+	.tabs-block .nav>li#tabs_brandInfo{
+		text-align: center;
+		font-size: 12px;
 	}
 	.tabs-block .nav>li#tabs_styleNotes {
-		width: 33%;
+		width: 25%;
 		text-align: center;
+		font-size: 12px;
 	}
 	.tabs.pdp {
 		padding: 5px 0 0;
@@ -47098,6 +47104,12 @@ float: right;
 	#variantForm {
 		width: 50%;
 		display: inline-block;
+	}
+}
+
+@media(max-width:400px){
+	.tabs-block .nav>li#tabs_brandInfo{
+		text-align: right;
 	}
 }
 /*Mobile
