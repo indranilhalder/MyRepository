@@ -184,7 +184,10 @@
 		});
 		//End
 		//added for Size guide Variant select
-		$(document).on("click", '.variant-select li span',
+		//Sprint 7 Sanity Issue fixing starts here
+		//$(document).on("click", '.variant-select li span',
+		  $(document).on("click", '.variant-select li span, .color-swatch li span',
+		//Sprint 7 Sanity Issue fixing ends here
 				function() {
 				  var target = $(this).attr('data-producturl');
 				//   console.log(target);
