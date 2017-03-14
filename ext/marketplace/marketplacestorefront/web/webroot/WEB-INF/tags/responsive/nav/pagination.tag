@@ -297,7 +297,7 @@
 					<ul>
 						<span>Sort:</span>
 
-						<li><span class="sort" data-name="relevance">Relevance</span></li>
+						<li><span class="sort" data-name="relevance" style="color: #a5173c;">Relevance</span></li>
 						<li><span class="sort" data-name="new">New</span></li>
 						<li><span class="sort" data-name="discount">Discount</span></li>
 					</ul>

@@ -1895,7 +1895,11 @@ if($(".facet.js-facet.Colour").length > 0){
 if($(".facet.js-facet.Size").length > 0){
 	sizeSwatch();
 }
-			
+$(".product-tile .image .item.quickview").each(function(){
+	if($(this).find(".addtocart-component").length == 1){
+		$(this).addClass("quick-bag-both");
+	}
+	});		
 		});
 		$(window).on("load resize", function() {
 		if($(".listing.wrapper").length > 0){
@@ -2060,17 +2064,13 @@ $(document).ready(function() {
 		/*CLP section js ends*/
 		
 		/* UF-68 UF-69 */
-		var cartBottomCheckTopMargin = $("body.page-cartPage .cart-bottom-block").height() - $("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").outerHeight();
-		$("body.page-cartPage .cartBottomCheck").addClass("cartBottomCheckShow").css("margin-top",cartBottomCheckTopMargin);
-		
+		topMarginAdjust();
 		/* UF-68 UF-69 */
 });
 $(window).resize(function() {
 	
 	/* UF-68 UF-69 */
-	var cartBottomCheckTopMargin = $("body.page-cartPage .cart-bottom-block").height() - $("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").outerHeight();
-	$("body.page-cartPage .cartBottomCheck").addClass("cartBottomCheckShow").css("margin-top",cartBottomCheckTopMargin);
-	
+	topMarginAdjust();
 	/* UF-68 UF-69 */
 
 	clearTimeout(colorSwatchFlag);
@@ -2088,11 +2088,11 @@ $(window).resize(function() {
 	
 	/* UF-68 UF-69 */
 	
-	if($(window).width() >= 1008){
+	/*if($(window).width() >= 1008){
 		//$("body.page-cartPage .cartBottomCheck").removeClass("cartBottomCheckShow");
 	var cartBottomCheckTopMargin = $("body.page-cartPage .cart-bottom-block").height() - $("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").outerHeight();
 	$("body.page-cartPage .cartBottomCheck").addClass("cartBottomCheckShow").css("margin-top",cartBottomCheckTopMargin);
-	}
+	}*/
 	
 	/* UF-68 UF-69 */
 });
@@ -2939,4 +2939,48 @@ $(document).ready(function(){
         $("html, body").animate({ scrollTop: 0 }, 600); 
         return false; 
     }); 
+    
+    /*UF-68 UF-69*/
+    $(".page-cartPage .cart-total-block ul.checkOutBtnBtm > li.checkout-button").css("visibility","visible");
+    //$("#pinCodeButtonIdsBtm").addClass("CheckAvailability");
+    /*UF-68 UF-69*/
 });
+
+/* UF-68 UF-69 */
+/*function topMarginAdjust(){
+var arr_error = ["#unserviceablepincode_tooltip_btm","#error-Id_tooltip_btm","#emptyId_tooltip_btm"];
+for(var i=0;i<arr_error.length;i++){
+	if($(arr_error[i]).css("display") != "none")
+		heightTopAdjust = $(arr_error[i]).outerHeight() + parseInt($(arr_error[i]).css("top"));
+}
+if($(window).width()>1007){
+	var cartBottomCheckTopMargin = $("body.page-cartPage .cart-bottom-block .cart-total-block").height() - $("body.page-cartPage .cartBottomCheck button[name='pinCodeButtonId']").outerHeight() - heightTopAdjust;
+	$("body.page-cartPage .cartBottomCheck").addClass("cartBottomCheckShow").css("margin-top",cartBottomCheckTopMargin);
+}
+else{
+	$("body.page-cartPage .cartBottomCheck").addClass("cartBottomCheckShow").css("margin-top","");
+	var changePinDivHeight = $("body.page-cartPage .cartBottomCheck.cartBottomCheckShow #changePinDiv").outerHeight();
+	var cartBottomCheckTopMarginTab = $("body.page-cartPage .cart-bottom-block .cart-total-block .totals").outerHeight() + $("body.page-cartPage .cart-bottom-block .cart-total-block .checkout-types.onlyCheckoutButton.checkOutBtnBtm").outerHeight() + parseInt($("body.page-cartPage .cart-bottom-block .cart-total-block .checkout-types.onlyCheckoutButton.checkOutBtnBtm").css("margin-top"));
+	$("body.page-cartPage .cartBottomCheck.cartBottomCheckShow").css("top",cartBottomCheckTopMarginTab);
+}
+}*/
+function topMarginAdjust(){
+	var heightTotals = $("body.page-cartPage .cart-bottom-block .cart-total-block .totals").outerHeight();
+	if($(window).width() > 1007)
+		$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm").css("margin-top",heightTotals+30);
+	else
+		$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm").css("margin-top","");
+}
+
+$(document).on("click","button[name='pinCodeButtonId']",function(){
+	$("input[name='defaultPinCodeIds']").css("color","#000");
+}); 
+
+$(document).ajaxComplete(function(){
+	//$("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").addClass("CheckAvailability");
+	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").css("pointer-events","");
+	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").removeAttr("onclick");
+	$("a#checkout-enabled.checkout-disabled").removeAttr("onclick");
+});
+
+/* UF-68 UF-69 */

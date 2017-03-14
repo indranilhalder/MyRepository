@@ -5181,25 +5181,24 @@ $('#selectDeliveryMethodForm #deliveryradioul .delivery_options .delivery ul li 
 			 var radioId = radioSplit[0]+"_"+radioSplit[1];
 		
 			  var mode=radioSplit[2]
-			  
+			//TPR-4755,TPR-4756,TPR-4757
+				var shippingType = '';
 			 
 				if(mode=="home-delivery"){
-					utag.link(
-							{link_text: 'deliver_mode_home' , event_type : 'delivery_mode_select'}
-							);
+					shippingType = "home";
 				}
 					
 				else if(mode=="express-delivery"){
-					utag.link(
-							{link_text: 'deliver_mode_express' , event_type : 'delivery_mode_select'}
-							);
+					shippingType = "express";
 				}
 					
 				else{
-					utag.link(
-							{link_text: 'deliver_mode_clickcollect' , event_type : 'delivery_mode_select'}
-							);
+					shippingType = "click_collect";
 				}
+				utag.link({
+				  	link_text: "deliver_mode_"+shippingType,
+				  	event_type : shippingType+"_delivery_selected"
+				  });
 					
 	/*TPR-685 ends*/		  
     changeCTAButtonName("DefaultName");
@@ -5284,6 +5283,20 @@ function checkServiceabilityRequired(buttonType,el){
 	var sessionPin = $("#pinId").val();
 	var selectedPin=$('#defaultPinCodeIds').val();
 	var checkoutLinkURlId = $('#checkoutLinkURlId').val();
+	
+	if(buttonType == "typeCheckout" )
+	{
+		
+		if(typeof utag == "undefined"){
+			console.log("Utag is undefined")
+		}
+		else{
+			//TPR-683 TPR-4777 | Checkout | Cart 
+			utag.link(
+			{"link_text": "cart_checkout_clicked" , "event_type" : "cart_checkout_clicked"}
+			);
+		}
+	}
 	if(sessionPin != selectedPin){
 		checkPincodeServiceability(buttonType,el);
 	}
@@ -5296,20 +5309,7 @@ function checkServiceabilityRequired(buttonType,el){
 
 function checkPincodeServiceability(buttonType,el)
 {
-// alert($(el).attr("id")+" :::button id")
-	if(buttonType == "typeCheckout")
-	{
-		
-		if(typeof utag == "undefined"){
-			console.log("Utag is undefined")
-		}
-		else{
-			//TPR-683
-			utag.link(
-			{"link_text": "mybag_checkout" , "event_type" : "mybag_checkout"}
-			);
-		}
-	}
+
 	/*spinner commented starts*/
 	//$("#pinCodeDispalyDiv").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right:0;bottom:0; left:0; top:0; margin:auto; height: 30px;">');
 	/*spinner commented ends*/
@@ -5365,7 +5365,6 @@ function checkPincodeServiceability(buttonType,el)
 		return false;
 	}
 	else if(regPostcode.test(selectedPincode) != true){
-		
     	$("#defaultPinCodeIds").css("color","red");
         $("#error-Id").show();
         $("#error-IdBtm").show();//UF-68
@@ -5418,7 +5417,6 @@ function checkPincodeServiceability(buttonType,el)
 	//else if($("#pinCodeButtonIds").text() == 'Change Pincode'&& $(el).attr("id") =="pinCodeButtonIds"){
 	else if(document.getElementById("pinCodeButtonIds").className == 'ChangePincode' && $(el).attr("id") =="pinCodeButtonIds")//UF-71
 	{		
-
 		$("#unserviceablepincode").hide();
 		$("#unserviceablepincodeBtm").hide();//UF-68
 		$("#unserviceablepincode_tooltip").hide();
@@ -5433,7 +5431,7 @@ function checkPincodeServiceability(buttonType,el)
 		 document.getElementById("pinCodeButtonIds").className = "CheckAvailability"; 	//UF-71
 		 $('#defaultPinCodeIds').focus();
 		 $('#defaultPinCodeIdsBtm').focus();//UF-68
-		$("#pinCodeDispalyDiv .spinner").re();
+		$("#pinCodeDispalyDiv .spinner").remove();
 		$("#emptyId").hide();
 		$("#emptyIdBtm").hide();//UF-68
 		$("#emptyId_tooltip").hide();
@@ -5448,7 +5446,7 @@ function checkPincodeServiceability(buttonType,el)
 		// TPR-1055 ends
 	}
 	else if(document.getElementById("pinCodeButtonIdsBtm").className == 'ChangePincode' && $(el).attr("id") =="pinCodeButtonIdsBtm")//UF-71
-	{		
+	{	
 		$("#unserviceablepincode").hide();
 		$("#unserviceablepincodeBtm").hide();//UF-68
 		$("#unserviceablepincode_tooltip").hide();
@@ -5461,7 +5459,7 @@ function checkPincodeServiceability(buttonType,el)
 		 $(".cartItemBlankPincode").show();
 		//$("#pinCodeButtonIds").text("Check");
 		//$("#pinCodeButtonIds").text("Check Availability");
-		 document.getElementById("pinCodeButtonIds").className = "CheckAvailability";	//UF-71
+		 document.getElementById("pinCodeButtonIdsBtm").className = "CheckAvailability";	//UF-71
 		 $('#defaultPinCodeIds').focus();
 		 $('#defaultPinCodeIdsBtm').focus();//UF-68
 		$("#pinCodeDispalyDiv .spinner").remove();
@@ -6115,6 +6113,7 @@ function checkIsServicable()
  				//$("#pinCodeButtonIds").text("Change Pincode");
  				document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
  				document.getElementById("pinCodeButtonIdsBtm").className = "ChangePincode";//UF-71
+ 				pincodeServicabilityFailure(selectedPincode);
 	 			}
 	 			else{
 	 				$(".deliveryUlClass").remove();//TPR-1341
@@ -6129,6 +6128,7 @@ function checkIsServicable()
 	 				//$("#pinCodeButtonIds").text("Change Pincode");
 	 				document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
 	 				document.getElementById("pinCodeButtonIdsBtm").className = "ChangePincode";//UF-71
+	 				pincodeServicabilitySuccess(selectedPincode);
 	 			}
 	 			// TPR-1055 ends
 	 			populatePincodeDeliveryMode(response,'pageOnLoad');
@@ -6152,6 +6152,13 @@ function checkIsServicable()
 	 			$('#defaultPinCodeIdsq').val(selectedPincode);
  	 			$("#defaultPinDiv").show();
  	 			// $("#changePinDiv").hide();
+ 	 			if(typeof utag !="undefined")
+ 	 			{
+ 	 				//TPR-4736 | DataLAyerSchema changes | cart
+ 	 				utag.link({
+ 	 					"error_type" : "pincode_check_error",
+ 	 				});
+ 	 			}
 	 		}
 
 	 	});
@@ -6824,6 +6831,13 @@ function updateCart(formId){
 	var entryNumber = formId.split("_");
 	var form = $('#updateCartForm' + entryNumber[1]);
 	form.submit();
+	//TPR-4737 | Quantity update | cart
+	if(typeof utag !="undefined"){
+	utag.link({
+		"link_text": "quantity_updated" ,
+		"event_type": "quantity_updated"
+	});
+	}
 }
 
 
@@ -6833,7 +6847,7 @@ function expressbutton()
 	if(typeof utag !="undefined")
 	{
 		utag.link(
-		{"link_text": "mybag_express_checkout" , "event_type" : "mybag_express_checkout"}
+		{"link_text": "cart_express_checkout_button_submit" , "event_type" : "cart_express_checkout_button_submit"}
 		);
 	}
 	
@@ -7008,6 +7022,10 @@ $("#couponSubmitButton").click(function(){
 	 				onSubmitAnalytics("invalid_coupon");
 	 				// $("#couponError").css("display","block");
 	 				// document.getElementById("couponError").innerHTML=response.redeemErrorMsg;
+	 				/*TPR-4746*/
+	 				if(typeof utag !="undefined"){
+		 				   utag.link({error_type : 'offer_error'});
+		 				}
 	 			}
 	 			else{
 		 			if(response.couponRedeemed==true){
@@ -7040,6 +7058,10 @@ $("#couponSubmitButton").click(function(){
 	 			$("#couponSubmitButton").prop('disabled', false);
 	 			$("#couponSubmitButton").css("opacity","1");
 	 			$("#no-click,.spinner").remove(); //changes for INC_11738
+	 			/*TPR-4746*/
+	 			if(typeof utag !="undefined"){
+	 				   utag.link({error_type : 'offer_error'});
+	 				}
 	 		}
 	 	});	 
 	}
@@ -7337,7 +7359,9 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				    +'&sizeSelected='+ sizeSelected;
 
 	var entryNo = $("#entryNo").val();
-	
+
+	var productcodearray =[];
+		productcodearray.push(productCode);
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
@@ -7348,12 +7372,12 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				
 				$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
 				
-				/*TPR-656*/
+				/*TPR-656*//*TPR-4738*/
 					utag.link({
 						link_obj: this, 
-						link_text: 'add_to_wishlist' , 
-						event_type : 'add_to_wishlist', 
-						product_sku_wishlist : productCode
+						link_text: 'cart_add_to_wishlist' , 
+						event_type : 'cart_add_to_wishlist', 
+						product_sku_wishlist : productcodearray
 					});
 				/*TPR-656 Ends*/
 				
@@ -7884,8 +7908,9 @@ $("button[name='pinCodeButtonId']").click(function(){
 	checkPincodeServiceability('typeSubmit',this);
 	});
 
+/*UF-68 UF-69*/
 $(".cartItemBlankPincode > a").click(function(){
-	$(".cartBottomCheck.cartBottomCheckShow #changePinDiv").addClass("blankPincode");
+	$(".cartBottomCheck #changePinDiv").addClass("blankPincode");
 });
 
 $(document).click(function (e)
@@ -7894,9 +7919,11 @@ $(document).click(function (e)
 		    if ((!container.is(e.target) // if the target of the click isn't the container...
 		        && container.has(e.target).length === 0)) // ... nor a descendant of the container
 		    {
-		    	$(".cartBottomCheck.cartBottomCheckShow #changePinDiv").removeClass("blankPincode");
+		    	$(".cartBottomCheck #changePinDiv").removeClass("blankPincode");
 		    }
 		});
+/*UF-68 UF-69*/
+
 
 /*$("input[name='defaultPinCodeIds']").click(function(){
 	if(pincode.length === 0)

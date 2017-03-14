@@ -26,7 +26,7 @@ $(document).ready(
 			var promo_title='';
 			var promo_id='';
 			
-			if($("#product_applied_promotion_title").val() && $("#product_applied_promotion_code").val() !=undefined)
+			if($("#product_applied_promotion_title").val() && $("#product_applied_promotion_code").val() !=undefined )
 			{
 				
 			promo_title=$("#product_applied_promotion_title").val().replace(/([~!@#$%^&*()-+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '_');
@@ -152,10 +152,14 @@ $(document).ready(
 						tealiumData += '"site_section_detail":"'
 								+ $("#site_section_detail").val() + '",';
 						//TPR-672 START
+						if(typeof(promo_title) != 'undefined' && promo_title !=''){ 
 						tealiumData += '"promo_title":["'
 							+promo_title+ '"],';
+						}
+						if(typeof(promo_id) != 'undefined' && promo_id !=''){ 
 						tealiumData += '"promo_id":["'
 							+promo_id+ '"],';
+						}
 						//TPR-672 END
 						
 						//Data Layer Schema changes
@@ -1193,5 +1197,34 @@ $(window).load(function() {
 		});
 	}
 });
+
+/*TPR-4736|checkout|cart start*/
+function pincodeServicabilityFailure(selectedPincode){
+	if(typeof utag !="undefined")
+		{
+			//TPR-4736 | DataLAyerSchema changes | cart
+			utag.link({
+				"link_obj": this,
+				"link_text": "cart_pincode_check_failure", 
+				"event_type" : "cart_pincode_check_failure",
+				"cart_pin_non_servicable" : selectedPincode
+			});
+		}
+	
+}
+
+function pincodeServicabilitySuccess(selectedPincode){
+	if(typeof utag !="undefined")
+	{
+		//TPR-4736 | DataLAyerSchema changes | cart
+		utag.link({
+			"link_obj": this,
+			"link_text": "cart_pincode_check_success", 
+			"event_type" : "cart_pincode_check_success",
+			"cart_pin_servicable" : selectedPincode
+		});
+	}
+}
+/*TPR-4736|checkout|cart ends*/
 /* Data Layer Schema Changes Ends*/
 
