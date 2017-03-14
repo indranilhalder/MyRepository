@@ -1949,7 +1949,6 @@ function openPopForBankEMI() {
 //TISPRO-533
 function populateEMIDetailsForPDP(){
 //$( "#bankNameForEMI" ).change(function() {
-	
 	var productVal = $("#prodPrice").val();
 		
 		var selectedBank = $('#bankNameForEMI :selected').text();
@@ -1987,8 +1986,9 @@ function populateEMIDetailsForPDP(){
 						$('#emiNoData').show();
 					}
 					
-					/*TPR-641 starts*/
+					/*TPR-641 starts  */
 					emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, '').toLowerCase();
+					/* TPR-4725  quick view emi*/
 					emiBankSelected = selectedBank.toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/[',."]/g,"");
 					utag.link({
 						link_obj: this, 
