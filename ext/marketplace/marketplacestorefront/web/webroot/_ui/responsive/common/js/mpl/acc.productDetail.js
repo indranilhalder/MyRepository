@@ -1904,6 +1904,10 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 	if (parseInt($("#prodPrice").val()) > emiCuttOffAmount.value) { 
 		$("#emiStickerId").show();
 	}
+	else
+	{  //UF-60
+		$("#emiStickerId").hide();
+	}
 	// EMI change ends
 
 }
