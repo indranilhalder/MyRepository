@@ -345,6 +345,13 @@ function quickViewUtag(productCode,sellerId,sellerName,priceMRP,priceMOP,discoun
 		thumbnailImageCount++;
 	})
 	
+	var sizeVariantCount=0;
+	$(".quickview .product-content .sizeVariantForm").find("#quickViewVariant li").each(function(){
+		if($(this).find('a').attr('href') != "#"){
+			sizeVariantCount++;
+		}
+	})
+	
 	utag.link({
 		link_text: 'quick_view_click' ,
 		event_type : 'quick_view_click',
@@ -356,7 +363,8 @@ function quickViewUtag(productCode,sellerId,sellerName,priceMRP,priceMOP,discoun
 		product_mop : priceMOP,
 		product_discount : discount,
 		product_discount_percentage : discountPercentage,
-		product_stock_count : stock
+		product_stock_count : stock,
+		size_variant_count : sizeVariantCount
 	});
 }
 
