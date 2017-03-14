@@ -785,23 +785,27 @@
 																			<c:if test="${entry.mplDeliveryMode.code ne 'click-and-collect'}">
 																			<div id="track-more-info">
 																				<p class="active">
-																					<span class="view-more-consignment"
+																				<!-- TISRLUAT-1119 start  -->
+																					<span class="view-more"
 																						orderlineid="${entry.orderLineId}"
 																						index="${loop.index}" ordercode="${subOrder.code}">
 																						View more
 																					</span>
 																				</p>
-																				<p>
+																				
+																				<%-- <p>
 																					<span class="view-more-consignment"
 																						orderlineid="${entry.orderLineId}"
 																						index="${loop.index}" ordercode="${subOrder.code}">View less</span>
-																				</p>
+																				</p> --%>
+																				
+																					<!-- TISRLUAT-1119 end  -->
 																		  </div>
 																		  <div id="shippingStatusRecord${entry.orderLineId}_${loop.index}" class="view-more-consignment-data"></div>
 																	 </c:if>
 
 																	 </c:if>
-																	
+																	<p class="login-acc">In order to see the complete tracking, please log into you account.</p>
 																</div>
 															</c:if>
 
@@ -958,6 +962,25 @@
 			</div>
 		</div>
 	</div>
+<script>
+$(document).ready(function(){
+	
+	$(".view-more").click(function(){
 		
+		$(this).closest(".order").find(".login-acc").show();
+		
+	});
+	
+});
+
+
+</script>	
+
+<style>
+.login-acc{
+color: #777;font-size: 13px;font-weight: bold;display: none;
+}
+
+</style>
 </template:page>
 

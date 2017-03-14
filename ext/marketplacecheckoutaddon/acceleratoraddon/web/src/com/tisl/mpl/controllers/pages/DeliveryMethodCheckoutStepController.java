@@ -2220,7 +2220,36 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				getMplCustomAddressFacade().setDeliveryAddress(newAddress);
 				//TISUTO-12 , TISUTO-11
 				final String redirectURL = getMplCartFacade().checkPincodeAndInventory(addressForm.getPostcode());
-				if (redirectURL.trim().length() > 0)
+				
+				//Added the code for Delivery Method slots
+				final CartData cartDataSupport = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+				final List<String> deliveryModelList = new ArrayList<String>();
+				for (final OrderEntryData cartEntryData : cartDataSupport.getEntries())
+				{
+					if (null != cartEntryData && null != cartEntryData.getMplDeliveryMode())
+					{
+						if (cartEntryData.getMplDeliveryMode().getCode()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+						{
+							deliveryModelList.add(cartEntryData.getMplDeliveryMode().getCode());
+						}
+						else if (cartEntryData.getMplDeliveryMode().getCode()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+						{
+							deliveryModelList.add(cartEntryData.getMplDeliveryMode().getCode());
+						}
+					}
+				}
+				if (deliveryModelList.size() > 0)
+				{
+					LOG.debug("****************:" + MarketplacecommerceservicesConstants.REDIRECT
+							+ MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
+							+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL);
+//					return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
+//							+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL;
+					jsonObj.put("redirect_url", MarketplacecommerceservicesConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
+						+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL);
+				}else if (redirectURL.trim().length() > 0)
 				{
 					jsonObj.put("redirect_url", redirectURL);
 					//return redirectURL;

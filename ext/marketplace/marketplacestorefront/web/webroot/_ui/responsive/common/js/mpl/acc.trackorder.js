@@ -154,6 +154,7 @@ $(function() {
 
 	$(".dot").each(function() {
 		$(this).mouseenter(function() {
+		
 			var orderLineId = $(this).parent().attr("orderlineid");
 			var orderCode = $(this).parent().attr("ordercode");
 			var index = $(this).attr("index");
@@ -161,6 +162,7 @@ $(function() {
 			if ($(this).parent().hasClass("orderStatus")) {
 				hideAll(orderLineId);
 				showDiv("orderStatus" + orderLineId + "_" + index);
+				
 			}
 			if ($(this).parent().hasClass('processingStatus')) {
 				// alert("2")
@@ -176,6 +178,7 @@ $(function() {
 				// checkAWBstatus(orderLineId,orderCode,"shippingStatusRecord" +
 				// orderLineId+"_"+index);
 				showDiv("shippingStatus" + orderLineId + "_" + index);
+					$(".login-acc").hide();
 			}
 			if ($(this).parent().hasClass('returnStatus')) {
 				hideAll(orderLineId);
@@ -185,6 +188,7 @@ $(function() {
 			}
 			$(this).parents(".progtrckr").find('.dot-arrow').hide();
 			$(this).find('.dot-arrow').stop(true, true).fadeIn();
+
 		});
 	});
 
