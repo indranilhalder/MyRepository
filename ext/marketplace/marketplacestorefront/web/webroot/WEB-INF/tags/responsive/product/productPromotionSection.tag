@@ -83,6 +83,9 @@
 												</div>
 												</div>
 											</div>
+										<!-- TPR-1325 starts-->
+										<p class="bundle-promo"><a href="${request.contextPath}${product.potentialPromotions[0].promourl}">${product.potentialPromotions[0].bundlepromolinktext}</a></p>
+										<!-- TPR-1325 ends-->
 										</div>
 										</div>
 									 </li>
@@ -145,7 +148,9 @@
 												</div>
 										</div>										
 										</div>
+										<!-- TPR-1325 starts-->
 										<p class="bundle-promo"><a href="${request.contextPath}${product.potentialPromotions[0].promourl}">${product.potentialPromotions[0].bundlepromolinktext}</a></p>
+										<!-- TPR-1325 ends-->
 									</div>
 									</div>
 									</li>
