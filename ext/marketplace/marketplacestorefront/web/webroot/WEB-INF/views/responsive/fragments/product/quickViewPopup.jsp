@@ -556,7 +556,7 @@ $(document).ready(function() {
 	 
 	<div class="buy-btn-holder clearfix"> 
 		<div id="buyNowQv"> 
-	        <button style="display: block" id="buyNowButton" type="button" class="btn-block js-add-to-cart-qv">
+	        <button style="display: block" id="buyNowButton" type="button"  disabled="disabled" class="btn-block js-add-to-cart-qv">
 				<spring:theme code="buyNow.button.pdp" />
 			</button> 
 			<%-- <button id="buyNowButtonQuick-wrong" type="button" class="btn-block" disabled="disabled"> <spring:theme code="buyNow.button.pdp" /></button> --%>
@@ -583,7 +583,7 @@ $(document).ready(function() {
 		 /> <!-- value="${availablestock}" --> <!-- Convert into AJAX call -->
 		 <input type="hidden" name="sellerSelId" id="sellerSelId" /> 
 		
-		 <button id="addToCartButtonQuick" type="${buttonType}" class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
+		 <button id="addToCartButtonQuick" type="${buttonType}" disabled="disabled" class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
 			<spring:theme code="basket.add.to.basket" />
 		</button>
 		<%-- <span id="dListedErrorMsg" style="display: none"  class="dlist_message">
