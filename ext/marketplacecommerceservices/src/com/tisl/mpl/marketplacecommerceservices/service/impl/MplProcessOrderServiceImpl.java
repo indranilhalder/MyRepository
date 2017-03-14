@@ -14,6 +14,7 @@ import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
@@ -25,6 +26,7 @@ import de.hybris.platform.voucher.model.PromotionVoucherModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -45,7 +47,6 @@ import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.JuspayWebhookModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.jalo.EtailLimitedStockRestriction;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.daos.JuspayWebHookDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
@@ -58,6 +59,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
+import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
 import com.tisl.mpl.util.OrderStatusSpecifier;
 
 
@@ -659,7 +661,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	@Override
 	public void removePromotionInvalidation(final OrderModel orderModel) throws EtailNonBusinessExceptions
 	{
-		LOG.debug("removing promotion invalidation entries..............");
+		LOG.error("Chcking to remove promotion invalidation entries..............");
 		try
 		{
 			//TISSQAUAT-468 and TISSQAUATS-752  code starts here for promotion offercount revert back logic
@@ -669,13 +671,15 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			final Iterator<PromotionResultModel> iter2 = promotionlist.iterator();
 			while (iter2.hasNext())
 			{
-				final EtailLimitedStockRestriction limitedStockRestriction = new EtailLimitedStockRestriction();
+				//final EtailLimitedStockRestriction limitedStockRestriction = new EtailLimitedStockRestriction();
 				final PromotionResultModel model2 = iter2.next();
 				if ((model2.getCertainty().floatValue() == 1f)
-						&& (model2.getPromotion().getRestrictions().contains(limitedStockRestriction)))
+						&& (CollectionUtils.isNotEmpty(model2.getPromotion().getRestrictions()) && checkForLimitedStockPromo(model2
+								.getPromotion().getRestrictions())))
 
 				{
 					isLimitedStockRestrictionAppliedflag = true;
+					LOG.error("Promotion Type of Limited Offer");
 				}
 
 				//TISSQAUAT-468 and TISSQAUATS-752 code ends here for promotion offercount revert back logic
@@ -691,6 +695,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					while (iter.hasNext())
 					{
 						final LimitedStockPromoInvalidationModel model = iter.next();
+						LOG.error("Removing Invalidation Entries" + model.getPk());
 						getModelService().remove(model);
 					}
 				}
@@ -701,6 +706,28 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0020);
 		}
+	}
+
+	/**
+	 * Validating for Limited Offer Promotion
+	 *
+	 *
+	 * @param restrictions
+	 * @return boolean
+	 */
+	private boolean checkForLimitedStockPromo(final Collection<AbstractPromotionRestrictionModel> restrictions)
+	{
+		if (CollectionUtils.isNotEmpty(restrictions))
+		{
+			for (final AbstractPromotionRestrictionModel restriction : restrictions)
+			{
+				if (restriction instanceof EtailLimitedStockRestrictionModel)
+				{
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	//Not used
