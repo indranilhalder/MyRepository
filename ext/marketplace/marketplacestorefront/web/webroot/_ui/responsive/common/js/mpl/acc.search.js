@@ -733,7 +733,7 @@ $(document).on("click",".plp-wishlist",function(e){
 		/*Changes for INC144313867*/
 
 		function removeToWishlistForPLP(productURL,el) {
-			var loggedIn=$("#loggedIn").val();
+			//var loggedIn=$("#loggedIn").val();
 			var productCode=urlToProductCode(productURL);
 			var wishName = "";
 			var requiredUrl = ACC.config.encodedContextPath + "/search/"
@@ -749,7 +749,9 @@ $(document).on("click",".plp-wishlist",function(e){
 		    var dataString = 'wish=' + wishName + '&product=' + productCode
 					+ '&sizeSelected=' + sizeSelected;
 			
-			if(loggedIn == 'false') {
+		    //change for INC144314854 
+			//if(loggedIn == 'false') {
+		    if(!headerLoggedinStatus) {
 				$(".wishAddLoginPlp").addClass("active");
 				setTimeout(function(){
 					$(".wishAddLoginPlp").removeClass("active")
@@ -794,7 +796,7 @@ $(document).on("click",".plp-wishlist",function(e){
 
 
 		function addToWishlistForPLP(productURL,el) {
-			var loggedIn=$("#loggedIn").val();
+			//var loggedIn=$("#loggedIn").val();
 			var productCode=urlToProductCode(productURL);
 			var productarray=[];
 			productarray.push(productCode);
@@ -812,7 +814,9 @@ $(document).on("click",".plp-wishlist",function(e){
 		    var dataString = 'wish=' + wishName + '&product=' + productCode
 					+ '&sizeSelected=' + sizeSelected;
 			
-			if(loggedIn == 'false') {
+		    // Change for INC144314854 
+			//if(loggedIn == 'false') {
+		    if(!headerLoggedinStatus) {
 				$(".wishAddLoginPlp").addClass("active");
 				setTimeout(function(){
 					$(".wishAddLoginPlp").removeClass("active")
