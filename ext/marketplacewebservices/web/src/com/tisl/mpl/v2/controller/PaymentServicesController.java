@@ -28,6 +28,7 @@ import java.util.TreeMap;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -833,12 +834,15 @@ public class PaymentServicesController extends BaseController
 			//OrderIssue:- If PaymentTransaction with Success already been created, we wont allow to re process the order
 			boolean alreadyProcessed = false;
 			final List<PaymentTransactionModel> payTranModelList = orderToBeUpdated.getPaymentTransactions();
-			for (final PaymentTransactionModel payTranModel : payTranModelList)
+			if (CollectionUtils.isNotEmpty(payTranModelList))
 			{
-				if (payTranModel.getStatus().equalsIgnoreCase("success"))
+				for (final PaymentTransactionModel payTranModel : payTranModelList)
 				{
-					alreadyProcessed = true;
-					break;
+					if (payTranModel.getStatus().equalsIgnoreCase("success"))
+					{
+						alreadyProcessed = true;
+						break;
+					}
 				}
 			}
 
