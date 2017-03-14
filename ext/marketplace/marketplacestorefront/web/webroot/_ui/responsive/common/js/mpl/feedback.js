@@ -3300,6 +3300,16 @@ $(window).on("load resize",function(){
 	}
 		else
 		$('head style:last').html("");
+	
+	/*TPR-5061*/
+	if($(window).width() <= 1007){
+		var lenLi = $(".tabs-block .nav.pdp.productNav>li").length;
+		widthPerLi = 100/lenLi;
+		$(".tabs-block .nav.pdp.productNav>li").css("width",widthPerLi+"%");
+	}
+	else
+		$(".tabs-block .nav.pdp.productNav>li").css("width","");
+	/*TPR-5061*/
 });
 
 

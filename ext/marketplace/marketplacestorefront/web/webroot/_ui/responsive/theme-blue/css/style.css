@@ -46428,7 +46428,12 @@ float: right;
 .tabs-block .nav>li#tabs_details {
 	width: 15%;
 }
-
+.tabs-block .nav-wrapper .nav>li{
+	width: 16%;
+}
+.tabs-block .nav-wrapper .nav>li:last-of-type {
+    width: auto;
+}
 .tabs-block .nav>li, .tabs-block .nav>.wrapper>li {
 	border-bottom: 3px solid transparent;
 }
@@ -46974,6 +46979,14 @@ float: right;
 		text-align: center;
 		font-size: 12px;
 	}
+	/*TPR-5061*/
+	.tabs-block .nav-wrapper .nav>li{
+		padding-left: 6px;
+		padding-right: 6px;
+		font-size: 12px;
+		text-align: center;
+	}
+	/*TPR-5061*/
 	.tabs-block .nav>li#tabs_brandInfo{
 		text-align: center;
 		font-size: 12px;
