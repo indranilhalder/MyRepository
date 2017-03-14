@@ -1046,7 +1046,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
          					for (ReturnRequestModel returnRequest : orderModel.getReturnRequests()) {
          						if(null != returnRequest.getReturnEntries()) {
          							for (ReturnEntryModel returnEntry : returnRequest.getReturnEntries()) {
-         								if(null != returnEntry.getOrderEntry()) {
+         								if(null != returnEntry.getOrderEntry() && null != returnEntry.getOrderEntry().getTransactionID()) {
          									if(returnEntry.getOrderEntry().getTransactionID().equalsIgnoreCase(shipment.getShipmentId())) {
          										refundEntryModel = (RefundEntryModel) returnEntry;
          										refundEntryModelExists  = true;
