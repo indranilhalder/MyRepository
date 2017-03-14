@@ -86,7 +86,7 @@ import com.tisl.mpl.core.enums.MplPaymentAuditStatusEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.EMITermRowModel;
-import com.tisl.mpl.core.model.JuspayEBSResponseModel;
+import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
 import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
@@ -2394,9 +2394,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		{
 			//Make entry in Audit Table
 			final MplPaymentAuditModel auditModel = getMplPaymentDao().getAuditEntries(orderStatusResponse.getOrderId());
-
-			final ArrayList<JuspayEBSResponseModel> juspayEBSResponseList = new ArrayList<JuspayEBSResponseModel>();
-			final JuspayEBSResponseModel juspayEBSResponseModel = getModelService().create(JuspayEBSResponseModel.class);
+			//changes for JuspayEBSResponseFIX
+			final ArrayList<JuspayEBSResponseDataModel> juspayEBSResponseList = new ArrayList<JuspayEBSResponseDataModel>();
+			final JuspayEBSResponseDataModel juspayEBSResponseModel = getModelService().create(JuspayEBSResponseDataModel.class);
 			final String ebsDowntime = getConfigurationService().getConfiguration().getString("payment.ebs.downtime");
 			final Map<String, Double> paymentMode = getSessionService().getAttribute(
 					MarketplacecommerceservicesConstants.PAYMENTMODE);
@@ -2595,7 +2595,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				juspayEBSResponseList.add(juspayEBSResponseModel);
 
 				auditModel.setAuditEntries(auditEntryList);
-				auditModel.setRisk(juspayEBSResponseList);
+				//changes for JuspayEBSResponseFIX
+				auditModel.setRiskData(juspayEBSResponseList);
 				getModelService().save(auditModel);
 			}
 		}
@@ -2626,7 +2627,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param juspayEBSResponseModel
 	 */
 	@Override
-	public void setEBSRiskStatus(final String riskStatus, final JuspayEBSResponseModel juspayEBSResponseModel)
+	public void setEBSRiskStatus(final String riskStatus, final JuspayEBSResponseDataModel juspayEBSResponseModel)
 			throws EtailNonBusinessExceptions
 	{
 		try
@@ -2662,7 +2663,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param juspayEBSResponseModel
 	 */
 	@Override
-	public void setEBSRiskLevel(final String riskLevel, final JuspayEBSResponseModel juspayEBSResponseModel)
+	public void setEBSRiskLevel(final String riskLevel, final JuspayEBSResponseDataModel juspayEBSResponseModel)
 			throws EtailNonBusinessExceptions
 	{
 		try
@@ -3005,11 +3006,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	}
 
 	@Override
-	public JuspayEBSResponseModel getEntryInAuditByOrder(final String auditId)
+	public JuspayEBSResponseDataModel getEntryInAuditByOrder(final String auditId)
 	{
-		JuspayEBSResponseModel jusModelLast = null;
+		//changes for JuspayEBSResponseFIX
+		JuspayEBSResponseDataModel jusModelLast = null;
 		final MplPaymentAuditModel auditModel = getMplPaymentDao().getAuditEntries(auditId);
-		for (final JuspayEBSResponseModel jusModel : auditModel.getRisk())
+		for (final JuspayEBSResponseDataModel jusModel : auditModel.getRiskData())
 		{
 			jusModelLast = jusModel;
 		}
@@ -3018,11 +3020,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3034,9 +3036,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3092,9 +3094,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		{
 			//Make entry in Audit Table
 			final MplPaymentAuditModel auditModel = getMplPaymentDao().getAuditEntries(orderStatusResponse.getOrderId());
-
-			final ArrayList<JuspayEBSResponseModel> juspayEBSResponseList = new ArrayList<JuspayEBSResponseModel>();
-			final JuspayEBSResponseModel juspayEBSResponseModel = getModelService().create(JuspayEBSResponseModel.class);
+			//changes for JuspayEBSResponseFIX
+			final ArrayList<JuspayEBSResponseDataModel> juspayEBSResponseList = new ArrayList<JuspayEBSResponseDataModel>();
+			final JuspayEBSResponseDataModel juspayEBSResponseModel = getModelService().create(JuspayEBSResponseDataModel.class);
 			final String ebsDowntime = getConfigurationService().getConfiguration().getString("payment.ebs.downtime");
 			//final Map<String, Double> paymentMode = getSessionService().getAttribute(
 			//		MarketplacecommerceservicesConstants.PAYMENTMODE);		//Added as parameter for TPR-629
@@ -3323,7 +3325,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				juspayEBSResponseList.add(juspayEBSResponseModel);
 
 				auditModel.setAuditEntries(auditEntryList);
-				auditModel.setRisk(juspayEBSResponseList);
+				//changes for JuspayEBSResponseFIX
+				auditModel.setRiskData(juspayEBSResponseList);
 				getModelService().save(auditModel);
 
 				updateFraudModel(orderModel, juspayEBSResponseModel, auditModel);
@@ -3388,7 +3391,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param mplAudit
 	 * @throws EtailNonBusinessExceptions
 	 */
-	private void updateFraudModel(final OrderModel orderModel, final JuspayEBSResponseModel juspayEBSResponseModel,
+	private void updateFraudModel(final OrderModel orderModel, final JuspayEBSResponseDataModel juspayEBSResponseModel,
 			final MplPaymentAuditModel mplAudit) throws EtailNonBusinessExceptions
 	{
 		if (null != juspayEBSResponseModel && StringUtils.isNotEmpty(juspayEBSResponseModel.getEbsRiskPercentage())
@@ -3403,7 +3406,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for non-COD from OMS Submit Order Job de.hybris.platform.core.model.order.OrderModel)
 	 */
@@ -3553,7 +3556,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @desc getPaymentModeFrompayInfo
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 	 */
 	@Override
@@ -3594,7 +3597,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for pre paid from OMS Submit Order Job
 	 */
@@ -3658,7 +3661,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @desc SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for COD from OMS Submit Order Job
 	 */

@@ -14,7 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.util.Assert;
 
 import com.tisl.mpl.core.model.JuspayCardResponseModel;
-import com.tisl.mpl.core.model.JuspayEBSResponseModel;
+import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
 import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.JuspayPGResponseModel;
 import com.tisl.mpl.core.model.JuspayRefundResponseModel;
@@ -122,7 +122,8 @@ public class JuspayOrderResponsePopulator implements Populator<JuspayOrderStatus
 			target.setPaymentGatewayResponse(paymentGatewayResponse);
 		}
 
-		final JuspayEBSResponseModel riskResponseModel = source.getEbsResponse();
+		//changes for JuspayEBSResponseFIX
+		final JuspayEBSResponseDataModel riskResponseModel = source.getEbsResponseData();
 
 		if (null != riskResponseModel)
 		{

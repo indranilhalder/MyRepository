@@ -19,7 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.model.JuspayEBSResponseModel;
+import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.MplFraudModelService;
@@ -50,8 +50,9 @@ public class MplFraudModelServiceImpl implements MplFraudModelService
 			fraudModel.setOrder(orderModel);
 			fraudModel.setCode(mplAudit.getAuditId());
 			fraudModel.setTimestamp(new Date());
-			final Collection<JuspayEBSResponseModel> riskList = mplAudit.getRisk();
-			final List<JuspayEBSResponseModel> mplFraudList = new ArrayList<JuspayEBSResponseModel>();
+			//changes for JuspayEBSResponseFIX
+			final Collection<JuspayEBSResponseDataModel> riskList = mplAudit.getRiskData();
+			final List<JuspayEBSResponseDataModel> mplFraudList = new ArrayList<JuspayEBSResponseDataModel>();
 			if (null != riskList)
 			{
 				mplFraudList.addAll(riskList);
@@ -162,7 +163,7 @@ public class MplFraudModelServiceImpl implements MplFraudModelService
 	 */
 	@Override
 	public void updateFraudModel(final OrderModel orderModel, final MplPaymentAuditModel mplAudit,
-			final JuspayEBSResponseModel juspayEBSResponseModel)
+			final JuspayEBSResponseDataModel juspayEBSResponseModel)
 	{
 		try
 		{
