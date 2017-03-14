@@ -3167,7 +3167,6 @@ function getProductContents() {
 	}
 
 ////Start of UF-60 changes
-var variantSelectedSize=false;
 $(document).ready(function(){
 	onSizeSelectPopulateDOM();
 });
@@ -3188,16 +3187,9 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 		
-		//To get url params
-		for(var i=0;i<params.length;i++)
-		{
-			if(params[i].includes("selectedSize"))
-			{
-				variantSelectedSize=params[i].split("=")[1];
-			}
-		}
+		productCode=$(currentSelectedElement).attr("data-productCode");
 		//To get product code from URL
-		productCode=getProductCodeFromPdpUrl(href);
+		//productCode=getProductCodeFromPdpUrl(href);
 		//To get original URL
 		var a = $('<a>', { href:href } )[0];
 		var port= ":"+window.location.port;
@@ -3251,7 +3243,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						}
 						
 						
-						$('#selectedSize').val(variantSelectedSize);
+						$('#selectedSize').val("true");
 						
 						$("input[name=productCodeMSD]").val(responseProductCode);
 						$("#product").val(responseProductCode);
