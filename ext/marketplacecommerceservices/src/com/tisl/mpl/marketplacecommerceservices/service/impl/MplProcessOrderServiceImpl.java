@@ -661,7 +661,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	@Override
 	public void removePromotionInvalidation(final OrderModel orderModel) throws EtailNonBusinessExceptions
 	{
-		LOG.error("Chcking to remove promotion invalidation entries..............");
+		LOG.debug("Chcking to remove promotion invalidation entries..............");
 		try
 		{
 			//TISSQAUAT-468 and TISSQAUATS-752  code starts here for promotion offercount revert back logic
@@ -679,7 +679,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 				{
 					isLimitedStockRestrictionAppliedflag = true;
-					LOG.error("Promotion Type of Limited Offer");
+					LOG.debug("Promotion Type of Limited Offer");
 				}
 
 				//TISSQAUAT-468 and TISSQAUATS-752 code ends here for promotion offercount revert back logic
@@ -695,7 +695,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					while (iter.hasNext())
 					{
 						final LimitedStockPromoInvalidationModel model = iter.next();
-						LOG.error("Removing Invalidation Entries" + model.getPk());
+						LOG.debug("Removing Invalidation Entries" + model.getPk());
 						getModelService().remove(model);
 					}
 				}
