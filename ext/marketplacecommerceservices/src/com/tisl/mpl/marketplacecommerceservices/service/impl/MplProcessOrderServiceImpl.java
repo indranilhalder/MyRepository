@@ -674,7 +674,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 				//final EtailLimitedStockRestriction limitedStockRestriction = new EtailLimitedStockRestriction();
 				final PromotionResultModel model2 = iter2.next();
 				if ((model2.getCertainty().floatValue() == 1f)
-						&& (checkForLimitedStockPromo(model2.getPromotion().getRestrictions())))
+						&& (CollectionUtils.isNotEmpty(model2.getPromotion().getRestrictions()) && checkForLimitedStockPromo(model2
+								.getPromotion().getRestrictions())))
 
 				{
 					isLimitedStockRestrictionAppliedflag = true;
