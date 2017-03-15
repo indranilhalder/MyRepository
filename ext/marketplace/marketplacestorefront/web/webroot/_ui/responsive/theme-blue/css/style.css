@@ -57873,6 +57873,9 @@ div.radio.creditDebitLabelRadio{
     -moz-transition: position .3s;
     transition: position .3s;
 }
+.bottom.active .marketplace .simple-banner-component img{
+	margin-top: -2px;
+}
 header > .content .top.header_fix {position:fixed;}
 header > .content .top.header_fix .toggle{
 	margin-top:0px;
@@ -62164,7 +62167,7 @@ header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_
     display: inline-block;
     height: 18px;
     width: 18px;
-    margin-top: 13px;
+    margin-top: 12px;
     /* position: absolute;
     top: 18px; */
     /* right: 109px; */
