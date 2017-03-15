@@ -387,7 +387,7 @@
 									<!-- TISUAT-4696 /TPR-215-->
 									<div class="half" style="clear:both;">
 									<label><spring:theme code="text.addressBook.addressline1" text="Address Line 1 *" /></label>
-									<form:textarea rows="2" cols="60" path="line1" id="line1"  onKeyPress="return taLimit(this)" onKeyUp="return taCount(this,'myCounter')"  maxlength="120" />
+									<form:textarea rows="2" cols="60" path="line1" id="line1"  onKeyUp="return taCount(this,'myCounter')"  maxlength="120" />
 										<br><br>Remaining characters :<span id='myCounter'>120</span>
 											<div class="errorMessage"><div id="erraddressline1"></div></div>
 									</div>
