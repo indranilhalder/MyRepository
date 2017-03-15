@@ -37510,7 +37510,7 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
 	position: relative;
 	/* TISRLEE-1660 */
 	border:0px !important;
-	top: -6px !important;
+	top: 6px !important;
 	right: -21px;
 	color: transparent;
     background-image: url(../images/Clear.png);
@@ -54571,7 +54571,8 @@ body .lookbook_wrapper .listing.wrapper .left-block{
     color: #a5a5a5;
     background-image: url('../images/arrow.png');
   }
-  .checkout.wrapper .formaddress  select[name="myselect"]{
+  /*TISRLUAT-1151*/
+  .checkout.wrapper .formaddress  select[name="myselect"],.checkout.wrapper .formaddress  select[name="landmark"]{
   margin-bottom: 20px;
     font-size: 14px;
     border: 1px solid #dbdbdb;
@@ -54726,7 +54727,8 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
     margin-bottom: 9px;
     height: 40px;
 }
-.checkout.wrapper .formaddress select[name="myselect"] ,.checkout.wrapper .formaddress  select[name="state"]{
+ /*TISRLUAT-1151*/
+.checkout.wrapper .formaddress select[name="myselect"] ,.checkout.wrapper .formaddress  select[name="state"],.checkout.wrapper .formaddress  select[name="landmark"]{
     height: 40px;
     margin-bottom:9px;
 }
@@ -61143,9 +61145,11 @@ padding-left:12px;
 	height:41px;
 	    border: 1px solid #ddd;
 }
-#mobileNonewForm{
+/*
+TISRLUAT-1151
+ #mobileNonewForm{
 	width:100%;
-}
+} */
 .checkout.wrapper .formaddress select[name="state"],
 .full.country-select .country #country{
 text-transform:none;}

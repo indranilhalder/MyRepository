@@ -37,6 +37,10 @@
     width:100%;
     
 }
+/* R2.3 START */
+.dupDisplay{
+display: none;}
+/* R2.3 end */
 @media(min-width:791px) {
    
     #new-address-option-1+label,
@@ -203,14 +207,14 @@
 		<fieldset> 
 		<div class='half'>
 		
-		<formElement:formInputBox idKey="address.firstName"
+		<formElement:formInputBox idKey="address.firstName" labelKey="First Name*"
 			 path="firstName" 
 			mandatory="true" maxLength="40" placeholder="FirstName*"/>
 			<div class="help-block has-error" id="firstnameError" style="display: none;">		
 			</div>	
 			</div>
 			<div class='half'>
-		<formElement:formInputBox idKey="address.surname"
+		<formElement:formInputBox idKey="address.surname"  labelKey="Last Name*"
 			 path="lastName" 
 			mandatory="true" maxLength="40" placeholder="Lastname*"/>
 			<div class="help-block has-error" id="lastnameError" style="display: none;">		
@@ -218,34 +222,34 @@
 			</div>
 			<!-- <div class='half'> -->
          <div class='full'>
+           <input type="hidden" name="myselect" value="myselectedvalue" /> 
           <%-- <label for="myselect"><spring:theme code="text.addressBook.PhoneNumber" text="Mobile Number" /></label>	 --%>	
       <div class="showPhone">
+       <label class="control-label " for="address.mobile">Mobile Number*</label>
 		<select name="myselect" disabled="disabled">
        <option value="myselectedvalue" selected="selected">+91</option>
      </select>
-        <input type="hidden" name="myselect" value="myselectedvalue" /> 
+      
 	 	<form:input type="text" idKey="address.mobile" id="mobileNonewForm"
 			 path="MobileNo" inputCSS="form-control"
 			mandatory="true" maxLength="10" placeholder="Phone Number*"/> 
 			<div class="help-block has-error" id="mobileError" style="display: none;">		
 			</div>	 
 		</div>	
-		
+		</div>
 		<div class='full'>
 		<formElement:formInputBox idKey="address.postcode"
-			path="postcode"
+			path="postcode"  labelKey="Pincode*"
 			mandatory="true" maxLength="6" placeholder="Pincode*" inputCSS="address_postcode"/>
 		<div class="help-block has-error" id="addressPincodeServicableDiv"
 			style="display: none;"></div>
 			<div class="help-block has-error" id="pincodeError" style="display: none;">
 			</div>
 			</div>
-		
-		</div>
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line1"
-			 path="line1"
+			 path="line1" labelKey="Address Line 1*"
 			mandatory="true" maxLength="40"  placeholder="Address Line 1*"/>
 			 <div class="help-block has-error" id="address1Error" style="display: none;">
 			</div>
@@ -253,7 +257,7 @@
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line2"
-			 path="line2" 
+			 path="line2"  labelKey="Address Line 2"
 			mandatory="true" maxLength="40" placeholder="Address Line 2"/>
 			 <div class="help-block has-error" id="address2Error" style="display: none;">
 			</div>
@@ -261,12 +265,13 @@
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line3"
-			 path="line3" 
+			 path="line3"  labelKey="Address Line 3"
 			mandatory="true" maxLength="40" placeholder="Address Line 3"/>
 			 <div class="help-block has-error" id="address3Error" style="display: none;">
 			</div>
 			</div>
 			<!-- R2.3: START -->
+			<div class='full'>
 			<div class='half'>
 				<div class="optionsLandmark">
 					<formElement:formSelectBox  idKey="address.landmarks" selectCSSClass="address_landmarks"
@@ -284,6 +289,7 @@
 							maxLength="30" />
 							<div class="error_text otherLandMarkError"></div>
 				</div>
+			</div>
 			</div>
 			<!-- R2.3: END -->
 		<%-- <formElement:formInputBox idKey="address.locality" labelKey="address.locality" path="locality" inputCSS="form-control" mandatory="true"/> --%>
@@ -341,7 +347,7 @@
 		<div class="full country-select">
 		<c:set var='count'  value='1' />
 		<div class="country">
-		<%-- <label><spring:theme code="address.selectCountry"/></label> --%>
+		<label><spring:theme code="address.selectCountry"/></label>
 		
 		    	<c:forEach items="${supportedCountries}" var="country">
 					<c:if test="${country.isocode eq 'IN' and count==1}">
@@ -426,5 +432,4 @@ $(document).ready(function(){
 	});
 </script>
 <!-- R2.3: END -->
-
 
