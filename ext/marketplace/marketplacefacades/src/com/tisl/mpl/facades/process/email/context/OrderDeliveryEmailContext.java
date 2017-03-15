@@ -131,13 +131,14 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 		deliveryAddr.append(deliveryAddress.getStreetname());
 		if (!StringUtils.isEmpty(deliveryAddress.getStreetnumber()))
 		{
-			deliveryAddr.append(COMMA).append(deliveryAddress.getStreetnumber());
+			//TISUATSE-80 starts
+			deliveryAddr.append(deliveryAddress.getStreetnumber());
 		}
 		if (!StringUtils.isEmpty(deliveryAddress.getAddressLine3()))
 		{
-			deliveryAddr.append(COMMA).append(deliveryAddress.getAddressLine3());
+			deliveryAddr.append(deliveryAddress.getAddressLine3());
 		}
-
+		//TISUATSE-80 ends
 		deliveryAddr.append(COMMA).append(deliveryAddress.getTown()).append(COMMA).append(deliveryAddress.getDistrict())
 				.append(COMMA).append(deliveryAddress.getPostalcode());
 
