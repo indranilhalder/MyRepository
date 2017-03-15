@@ -63239,9 +63239,16 @@ body:not(.page-checkout-login) .step-body .checkout-shipping.left-block{
 }
 }
 @media (max-width: 790px){
-.smk_accordion {
-    padding: 40px 24px 0;
-}}
+	.smk_accordion {
+	    padding: 40px 24px 0;
+	}
+	/* start change for INC144314113 & INC144314406 */
+	 body.page-multiStepCheckoutSummaryPage,
+	 body.page-cartPage{
+		margin-top:-80px;
+	 } 
+	 /* end change for INC144314113 & INC144314406 */
+}
 @media (max-width:767px){
 	.wrapper .container-address{
 	border-bottom:none;
