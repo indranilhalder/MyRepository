@@ -33027,7 +33027,7 @@ header > .content .bottom .search form input {
 	    padding: 0 23px 30px;
 	}
 	header > .content .bottom .marketplace {
-	    padding: 3px 25px;
+	    padding: 3px 25px 0px;
 	}
 	header > .content .bottom .mobile-bag.bag {
 	    top: -6px;
@@ -57867,7 +57867,7 @@ div.radio.creditDebitLabelRadio{
     left: 0;
     z-index: 200;
     width: 100%;
-    padding: 0 10px 10px;
+    padding: 0 10px 0px;
     border-bottom: 1px solid rgba(0,0,0,0.1);
     -webkit-transition: position .3s;
     -moz-transition: position .3s;
@@ -62164,6 +62164,7 @@ header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_
     display: inline-block;
     height: 18px;
     width: 18px;
+    margin-top: 13px;
     /* position: absolute;
     top: 18px; */
     /* right: 109px; */
