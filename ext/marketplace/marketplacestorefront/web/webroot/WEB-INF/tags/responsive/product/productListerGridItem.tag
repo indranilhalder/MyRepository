@@ -37,6 +37,11 @@
 <input type ="hidden"  id="productPromotion" value='${product.displayPromotion}'/>
 <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
 <input type="hidden" id="loggedIn" value="false"/> 
+<!-- start change for INC_12953 -->
+<c:set var="singlequote" value="'"/>
+<c:set var="values_promotion" value="${fn:replace(product.displayPromotion, singlequote, '&#39;')}" />
+<input type ="hidden"  id="productPromotion" value='${values_promotion}'/>
+<!-- end change for INC_12953 -->
 </sec:authorize>
 <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
 <input type="hidden" id="loggedIn" value="true"/> 
