@@ -42,7 +42,7 @@
 					</c:when>				
 					<c:otherwise>
 					 <spring:theme code="search.page.searchText"/>	<!-- Added for INC_11276 -->
-					 <span>"<spring:theme code="search.page.searchResultsCount" arguments="${searchPageData.pagination.totalNumberOfResults"/>"</span> 
+					 <span>"<spring:theme code="search.page.searchResultsCount" arguments="${searchPageData.pagination.totalNumberOfResults}"/>"</span> 
 					 <spring:theme code="search.page.searchTextItem"/>
 					 <span class="searchString">					
 					 "<spring:theme code="search.page.searchTextValue" arguments="${searchPageData.freeTextSearch}"/>"</span>
