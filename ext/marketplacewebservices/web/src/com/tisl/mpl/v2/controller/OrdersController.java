@@ -1660,6 +1660,7 @@ public class OrdersController extends BaseCommerceController
 				}
 				else
 				{
+					mplDeliveryAddressFacade.newOTPRequest(orderCode,true,newAddressData.getPhone());
 					mplDeliveryAddressResponseWsDTO.setIsScheduled(false);
 					mplDeliveryAddressResponseWsDTO.setIsPincodeServiceable(true);
 				}
