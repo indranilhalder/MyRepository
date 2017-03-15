@@ -5,7 +5,6 @@ $(document).ready(
 			tealiumCallOnPageLoad();//Moving tealium on-load call to function so that it can be re-used.
 });
 
-
 /*TPR-429 Start*/
 
 function differentiateSeller(){
@@ -516,14 +515,6 @@ $(document).on("click",".owl-stage .owl-item",function(){
 		});
 })
 
-/*PDP image hover*/
-$(document).on("mouseover",".zoomContainer",function(e) {
-	utag.link({
-		link_text: "pdp_image_hover",
-		event_type : "pdp_image_hover"
-	});
-});
-
 /*PDP Add to bag & Buy Now*/
 function utagAddProductToBag(triggerPoint,productCodeMSD){
 	    var productCodeArray=[];
@@ -874,7 +865,7 @@ function tealiumCallOnPageLoad()
 						tealiumData += '"categoryId":"'
 							+ $("#categoryId").val() + '",';
 						if($("#out_of_stock_count").val() != undefined  && $("#out_of_stock_count").val() != null && $("#out_of_stock_count").val() != ''){
-						tealiumData += '"out_of_stock_count":"'		// TPR-4707
+						tealiumData += '"out_of_stock_totalcount":"'		// TPR-4707
 							+ $("#out_of_stock_count").val() + '",';
 						}
 						if(offerCount != undefined && offerCount != null && offerCount != ''){ 
@@ -1245,44 +1236,25 @@ function tealiumCallOnPageLoad()
  });
 
 /*TPR-4721, TPR-4706 | Sort By in SERP|PLP*/
-$(document).on('change','#sortOptions1', function() {
-  if(typeof utag !="undefined"){
-	var value = $(this).find('option:selected').text().trim().toLowerCase().replace(/ +$/, "").replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
-	utag.link({ 
-		link_text : "sort_by_"+value , 
-		event_type : "sort_by_selected" , 
-		"sort_by_value" : value 
-	});
-	restrictionFlag='true';
-  } 
+$(document).on('click','.list_title .UlContainer .sort',function(){
+	if(typeof utag !="undefined"){
+		var value = $(this).text().trim().toLowerCase().replace(/ +$/, "").replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+		utag.link({ 
+			link_text : "sort_by_"+value , 
+			event_type : "sort_by_selected" , 
+			"sort_by_value" : value 
+		});
+	 }
 })
 
 
 /*TPR-4719, TPR-4704 | Search Filter in SERP|PLP*/
-//On click of view page size dropdown
-$(document).on('change','#pageSizeOptions1', function() {
-	restrictionFlag='true';
-})
-//On click of pagination
-$(document).on('click','.pagination_a_link',function(){
-	restrictionFlag='true';
-})
-
-window.onbeforeunload = function(event) {
-	var pageType = $('#pageType').val();
-	
-	if(pageType == 'category' || pageType == 'productsearch'){
-		if(restrictionFlag != 'true'){
-			setupSessionValues();
-		}
-	}
-}; 
-
 var restrictionFlag='false';
 
 function setupSessionValues(){
 	if($('.bottom-pagination .facet-list.filter-opt').children().length > 0){
 		var filterTypeList=[];
+		var filterTypeFinalList=[];
 		var filterValueList=[];
 		var sessionPageUrl=window.location.href;
 		
@@ -1291,12 +1263,17 @@ function setupSessionValues(){
 			filterValueList.push($(this).children().eq(1).attr('value').toLowerCase().replace(/ +$/, "").replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,""))
 		})
 		
+		$.each(filterTypeList, function(i, el){
+			if($.inArray(el, filterTypeFinalList) === -1){
+				filterTypeFinalList.push(el)
+			};
+		});
 		if(filterValueList.length > 0 && filterTypeList.length > 0){
 			if(typeof(utag) !="undefined"){
 				utag.link({ 
 					link_text : "final_filter_list" , 
 					event_type : "final_filter_list" , 
-					"filter_types_final":filterTypeList.toString(),
+					"filter_types_final":filterTypeFinalList.toString(),
 					"filter_values_final":filterValueList
 				});
 			}
@@ -1492,15 +1469,29 @@ $(".product-tile.cboxElement").click(function(){
 
 /*PDP, quickview image hover*/
 $(document).on("mouseover",".zoomContainer",function(e) {
-	var page='';
-	if($('#pageType').val() == "product"){
-		page = "pdp";
+	if($('#pageType').val() != "/compare"){
+		var page='';
+		if($('#pageType').val() == "product"){
+			page = "pdp";
+		}
+		else {
+			page = "quickview";
+		}
+		if(typeof utag !="undefined"){
+			utag.link({
+				link_text: page+"_image_hover",
+				event_type : page+"_image_hover"
+			});
+		}
 	}
-	else{
-		page = "quickview";
-	}
-	utag.link({
-		link_text: page+"_image_hover",
-		event_type : page+"_image_hover"
-	});
 });	
+
+
+$(window).unload(function(event) {
+	var pageType = $('#pageType').val();
+	if(pageType == 'category' || pageType == 'productsearch'){
+		if(restrictionFlag != 'true'){
+			setupSessionValues();
+		}
+	}
+});

@@ -708,32 +708,13 @@ function donotShowAll()
 		}
 
 $(document).on("click",".plp-wishlist",function(e){
-	/*TPR-4723*/ /*TPR-4708*/
-	
-	if($('#pageType').val() == "productsearch"){
-		if(typeof utag !="undefined"){
-			utag.link({link_text: "add_to_wishlist_serp" , event_type : "add_to_wishlist_serp"});
-			}
-	}
-	
-	if($('#pageType').val() == "category" || $('#pageType').val() == "electronics" ){
-		if(typeof utag !="undefined"){
-			utag.link({link_text: "add_to_wishlist_plp" , event_type : "add_to_wishlist_plp"});
-			}
-	}
-	
-	//addToWishlistForPLP($(this).data("product"),this);
-	if ( $( this ).hasClass( "added" ) ) {
-		removeToWishlistForPLP($(this).data("product"),this);
-	} else {
-		addToWishlistForPLP($(this).data("product"),this);
-	}
+	addToWishlistForPLP($(this).data("product"),this);
 	return false;
 })
 		/*Changes for INC144313867*/
 
 		function removeToWishlistForPLP(productURL,el) {
-			var loggedIn=$("#loggedIn").val();
+			//var loggedIn=$("#loggedIn").val();
 			var productCode=urlToProductCode(productURL);
 			var wishName = "";
 			var requiredUrl = ACC.config.encodedContextPath + "/search/"
@@ -749,7 +730,9 @@ $(document).on("click",".plp-wishlist",function(e){
 		    var dataString = 'wish=' + wishName + '&product=' + productCode
 					+ '&sizeSelected=' + sizeSelected;
 			
-			if(loggedIn == 'false') {
+		    //change for INC144314854 
+			//if(loggedIn == 'false') {
+		    if(!headerLoggedinStatus) {
 				$(".wishAddLoginPlp").addClass("active");
 				setTimeout(function(){
 					$(".wishAddLoginPlp").removeClass("active")
@@ -794,7 +777,7 @@ $(document).on("click",".plp-wishlist",function(e){
 
 
 		function addToWishlistForPLP(productURL,el) {
-			var loggedIn=$("#loggedIn").val();
+			//var loggedIn=$("#loggedIn").val();
 			var productCode=urlToProductCode(productURL);
 			var productarray=[];
 			productarray.push(productCode);
@@ -812,7 +795,9 @@ $(document).on("click",".plp-wishlist",function(e){
 		    var dataString = 'wish=' + wishName + '&product=' + productCode
 					+ '&sizeSelected=' + sizeSelected;
 			
-			if(loggedIn == 'false') {
+		    // Change for INC144314854 
+			//if(loggedIn == 'false') {
+		    if(!headerLoggedinStatus) {
 				$(".wishAddLoginPlp").addClass("active");
 				setTimeout(function(){
 					$(".wishAddLoginPlp").removeClass("active")
@@ -839,14 +824,26 @@ $(document).on("click",".plp-wishlist",function(e){
 								$(".wishAlreadyAddedPlp").removeClass("active")
 							},3000)
 						}
-						/*TPR-4723*/
-						if(typeof utag !="undefined"){
-							utag.link({product_sku_wishlist : productarray });
-							}	
+						/*TPR-4723*//*TPR-4708*/
+						if($('#pageType').val() == "productsearch"){
+							if(typeof utag !="undefined"){
+								utag.link({link_text: "add_to_wishlist_serp" , event_type : "add_to_wishlist_serp" ,product_sku_wishlist : productarray});
+								}
+						}
+						
+						if($('#pageType').val() == "category" || $('#pageType').val() == "electronics" ){
+							if(typeof utag !="undefined"){
+								utag.link({link_text: "add_to_wishlist_plp" , event_type : "add_to_wishlist_plp" ,product_sku_wishlist : productarray});
+								}
+						}
+						
 						
 					},
 					error : function(xhr, status, error){
 						alert(error);
+						if(typeof utag !="undefined"){
+							utag.link({error_type : 'wishlist_error'});
+							}
 					}
 				});
 				

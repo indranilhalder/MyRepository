@@ -1288,14 +1288,25 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
+	/*
+	 * @Override public boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
+	 * final List<PinCodeResponseData> pincodeResponseData, final CartModel cartModel) throws EtailNonBusinessExceptions
+	 * {
+	 * 
+	 * ServicesUtil.validateParameterNotNull(deliveryModeMap, "deliveryModeMap cannot be null");
+	 * ServicesUtil.validateParameterNotNull(pincodeResponseData, "pincodeResponseData cannot be null"); return
+	 * mplCommerceCartService.addCartCodEligible(deliveryModeMap, pincodeResponseData, cartModel); }
+	 */
+
 	@Override
 	public boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
-			final List<PinCodeResponseData> pincodeResponseData, final CartModel cartModel) throws EtailNonBusinessExceptions
+			final List<PinCodeResponseData> pincodeResponseData, final CartModel cartModel, final CartData cartData)
+			throws EtailNonBusinessExceptions
 	{
 
 		ServicesUtil.validateParameterNotNull(deliveryModeMap, "deliveryModeMap cannot be null");
 		ServicesUtil.validateParameterNotNull(pincodeResponseData, "pincodeResponseData cannot be null");
-		return mplCommerceCartService.addCartCodEligible(deliveryModeMap, pincodeResponseData, cartModel);
+		return mplCommerceCartService.addCartCodEligible(deliveryModeMap, pincodeResponseData, cartModel, cartData);
 	}
 
 
@@ -1894,7 +1905,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				{
 					Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 					deliveryModeDataMap = getDeliveryMode(cartData, responseDataList, cartModel);
-					final boolean isCOdEligible = addCartCodEligible(deliveryModeDataMap, responseDataList, cartModel);
+					final boolean isCOdEligible = addCartCodEligible(deliveryModeDataMap, responseDataList, cartModel, cartData);
 					LOG.info("isCOdEligible " + isCOdEligible);
 				}
 

@@ -53,7 +53,6 @@ import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
 import de.hybris.platform.commerceservices.url.UrlResolver;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
@@ -121,6 +120,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
 import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
+import com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl;
 import com.tisl.mpl.facades.data.MplAjaxProductData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.RichAttributeData;
@@ -284,6 +284,9 @@ public class ProductPageController extends MidPageController
 	//TPR-978
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
+
+	@Resource(name = "customProductFacade")
+	private CustomProductFacadeImpl customProductFacade;
 
 	/**
 	 * @param buyBoxFacade
@@ -2917,8 +2920,8 @@ public class ProductPageController extends MidPageController
 			LOG.debug("***************************ajaxProductData call for*************" + productCode);
 			final ProductModel productModel = productService.getProductForCode(productCode);
 			mplAjaxProductData = new MplAjaxProductData();
-			final ProductData productData = productFacade
-					.getProductForOptions(productModel, Arrays.asList(ProductOption.PROMOTIONS));
+			final ProductData productData = customProductFacade.getProductForAjaxOptions(productModel,
+					Arrays.asList(ProductOption.PROMOTIONS));
 			mplAjaxProductData.setCode(productData.getCode());
 			mplAjaxProductData.setName(productData.getName());
 			mplAjaxProductData.setUrl(productData.getUrl());
@@ -2982,7 +2985,7 @@ public class ProductPageController extends MidPageController
 				productCode = productCode.toUpperCase();
 			}
 			final ProductModel productModel = productService.getProductForCode(productCode);
-			final ProductData productData = productFacade.getProductForOptions(productModel,
+			final ProductData productData = customProductFacade.getProductForAjaxOptions(productModel,
 					Arrays.asList(ProductOption.CATEGORIES, ProductOption.CLASSIFICATION));
 			mplAjaxProductData = new MplAjaxProductData();
 			displayConfigurableAttribute(productData, model);

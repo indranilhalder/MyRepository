@@ -257,7 +257,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			timeOutSet(model);
 			if (StringUtils.isNotEmpty(defaultPinCodeId) && (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries())))
 			{
-				responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartData);
+				//CAR-126/128/129
+				responseData = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES);
+				if (CollectionUtils.isEmpty(responseData))
+				{
+					responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartData);
+				}
 				// TPR-429 START
 				final String cartLevelSellerID = populateCheckoutSellers(cartData);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
@@ -501,13 +506,20 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			if (StringUtils.isNotEmpty(defaultPinCodeId)
 					&& (cartUssidData != null && cartUssidData.getEntries() != null && !cartUssidData.getEntries().isEmpty()))
 			{
-				responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartUssidData);
+				//CAR-126/128/129
+				responseData = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES);
+				if (CollectionUtils.isEmpty(responseData))
+				{
+					responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartUssidData);
+				}
 				deliveryModeDataMap = getMplCartFacade().getDeliveryMode(cartUssidData, responseData, cartModel);
 
 				getMplCartFacade().setDeliveryDate(cartUssidData, responseData);
 				//TISUTO-72 TISST-6994,TISST-6990 set cart COD eligible
-				final boolean isCOdEligible = getMplCartFacade().addCartCodEligible(deliveryModeDataMap, responseData, cartModel);
+				final boolean isCOdEligible = getMplCartFacade().addCartCodEligible(deliveryModeDataMap, responseData, cartModel,
+						cartUssidData);
 				LOG.info("isCOdEligible " + isCOdEligible);
+
 			}
 
 			LOG.debug(">>>>>>>>>>  Step 5:  Cod status setting done  ");

@@ -1314,9 +1314,11 @@ public class CartPageController extends AbstractPageController
 		//TISSEC-11
 		final String regex = "\\d{6}";
 		//final CartModel cart = getCartService().getSessionCart();
+
 		try
 		{
 			String isServicable = MarketplacecommerceservicesConstants.Y;
+
 			if (selectedPincode.matches(regex))
 			{
 				LOG.debug("selectedPincode " + selectedPincode);
@@ -1334,6 +1336,7 @@ public class CartPageController extends AbstractPageController
 				try
 				{
 					final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+
 					if (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries()))
 					{
 						//if ((cartData.getEntries() != null && !cartData.getEntries().isEmpty()))
@@ -1341,6 +1344,8 @@ public class CartPageController extends AbstractPageController
 						if (!StringUtil.isEmpty(selectedPincode))
 						{
 							responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData);
+							getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES, responseData); //CAR-126/128/129
+
 						}
 						if (responseData != null)
 						{

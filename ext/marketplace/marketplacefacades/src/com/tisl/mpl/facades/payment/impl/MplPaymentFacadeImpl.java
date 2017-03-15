@@ -1365,18 +1365,22 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge, final AbstractOrderModel abstractOrderModel) //Parameter abstractOrderModel added extra for TPR-629
 			throws EtailNonBusinessExceptions, Exception
 	{
-		//getting the current user
-		final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
-		final Map<String, Double> paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
-		//IQA changes TPR-629 and Refactor
 		if (null != abstractOrderModel)
 		{
+			//getting the current user
+			//OrderIssues:- Customer data is getting from Order in place of session
+			final CustomerModel mplCustomer = (CustomerModel) abstractOrderModel.getUser();
+			//		final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
+			//final Map<String, Double> paymentMode = getSessionService().getAttribute(
+			//		MarketplacecommerceservicesConstants.PAYMENTMODE);
+			//IQA changes TPR-629 and Refactor
+
 			final List<AbstractOrderEntryModel> entries = abstractOrderModel.getEntries();
 
 			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
 			if (abstractOrderModel.getTotalPriceWithConv() != null || abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
 			{
-				getMplPaymentService().setPaymentTransactionForCOD(paymentMode, abstractOrderModel);
+				getMplPaymentService().setPaymentTransactionForCOD(abstractOrderModel);
 			}
 
 			if (null != mplCustomer)
@@ -1395,6 +1399,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					//saving COD PaymentInfo
 					getMplPaymentService().saveCODPaymentInfo(custEmail, cartValue, totalCODCharge, entries, abstractOrderModel);
 				}
+			}// OrderIssues:- else block added to track the log
+			else
+			{
+				LOG.error("Customer data not available");
 			}
 			getMplPaymentService().paymentModeApportion(abstractOrderModel);
 
@@ -1647,11 +1655,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1702,9 +1710,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
@@ -2245,6 +2253,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					//Logic when transaction is successful i.e. CHARGED
 					if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
 					{
+						// OrderIssues:- Set the value duplicatJuspayResponse in session to true  ones cart GUID executed with success response from juspay
+						final Map<String, Boolean> duplicatJuspayResponseMap = new HashMap<String, Boolean>();
+						duplicatJuspayResponseMap.put(orderGuid, Boolean.TRUE);
+
+						getSessionService().setAttribute(MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE,
+								duplicatJuspayResponseMap);
+
 						//TIS-3168
 						LOG.error("Payment successful with transaction ID::::" + juspayOrderId);
 						//saving card details

@@ -37,7 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.enums.MplPaymentAuditStatusEnum;
-import com.tisl.mpl.core.model.JuspayEBSResponseModel;
+import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
 import com.tisl.mpl.core.model.JuspayRefundResponseModel;
 import com.tisl.mpl.core.model.JuspayWebhookModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
@@ -841,7 +841,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 								LOG.error(e.getMessage(), e);
 							}
 							LOG.debug(MarketplacecommerceservicesConstants.WEBHOOKUPDATEMSG);
-							updateWebHookExpired(oModel);		//Commented for TPR-629 --- forward flow handled in processOrderJob
+							updateWebHookExpired(oModel); //Commented for TPR-629 --- forward flow handled in processOrderJob
 						}
 
 						//Logic when juspay webhook data does not come before payment_timeout TAT ---- TPR-629
@@ -1130,9 +1130,9 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		}
 		auditEntryList.addAll(collection);
 
-
-		final Collection<JuspayEBSResponseModel> ebsResponseColl = auditModel.getRisk();
-		final List<JuspayEBSResponseModel> ebsResponseList = new ArrayList<JuspayEBSResponseModel>();
+		//changes for JuspayEBSResponseFIX
+		final Collection<JuspayEBSResponseDataModel> ebsResponseColl = auditModel.getRiskData();
+		final List<JuspayEBSResponseDataModel> ebsResponseList = new ArrayList<JuspayEBSResponseDataModel>();
 		if (null != ebsResponseColl)
 		{
 			ebsResponseList.addAll(ebsResponseColl);
@@ -1144,10 +1144,11 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 			updateAuditRisk(orderStatusResponse, orderModel, auditEntryList, ebsResponseList, auditModel);
 		}
 
-		final ArrayList<JuspayEBSResponseModel> riskList = new ArrayList<JuspayEBSResponseModel>();
-		if (null != auditModel.getRisk() && !auditModel.getRisk().isEmpty())
+		//changes for JuspayEBSResponseFIX
+		final ArrayList<JuspayEBSResponseDataModel> riskList = new ArrayList<JuspayEBSResponseDataModel>();
+		if (null != auditModel.getRiskData() && !auditModel.getRiskData().isEmpty())
 		{
-			riskList.addAll(auditModel.getRisk());
+			riskList.addAll(auditModel.getRiskData());
 
 			if (!riskList.isEmpty() && StringUtils.isNotEmpty(riskList.get(0).getEbsRiskPercentage())
 					&& !riskList.get(0).getEbsRiskPercentage().equalsIgnoreCase("-1.0"))
@@ -1181,8 +1182,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		auditEntryList.addAll(collection);
 
 
-		final Collection<JuspayEBSResponseModel> ebsResponseColl = auditModel.getRisk();
-		final List<JuspayEBSResponseModel> ebsResponseList = new ArrayList<JuspayEBSResponseModel>();
+		final Collection<JuspayEBSResponseDataModel> ebsResponseColl = auditModel.getRiskData();
+		final List<JuspayEBSResponseDataModel> ebsResponseList = new ArrayList<JuspayEBSResponseDataModel>();
 		if (null != ebsResponseColl)
 		{
 			ebsResponseList.addAll(ebsResponseColl);
@@ -1202,7 +1203,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 
 		if (!ebsResponseList.isEmpty())
 		{
-			for (final JuspayEBSResponseModel ebsResponse : ebsResponseList)
+			for (final JuspayEBSResponseDataModel ebsResponse : ebsResponseList)
 			{
 				if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsPaymentStatus())
 						&& !orderStatusResponse.getRiskResponse().getEbsPaymentStatus()
@@ -1280,12 +1281,12 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	 * @param orderStatusResponse
 	 * @param auditEntry
 	 */
-	private void setEbsResponseRisk(final List<JuspayEBSResponseModel> ebsResponseList,
+	private void setEbsResponseRisk(final List<JuspayEBSResponseDataModel> ebsResponseList,
 			final GetOrderStatusResponse orderStatusResponse, final MplPaymentAuditEntryModel auditEntry)
 	{
 		if (!ebsResponseList.isEmpty())
 		{
-			for (final JuspayEBSResponseModel ebsResponse : ebsResponseList)
+			for (final JuspayEBSResponseDataModel ebsResponse : ebsResponseList)
 			{
 				if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsBinCountry()))
 				{
@@ -1344,7 +1345,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	 * @param ebsResponseList
 	 */
 	private void updateAuditRisk(final GetOrderStatusResponse orderStatusResponse, final OrderModel orderModel,
-			final List<MplPaymentAuditEntryModel> auditEntryList, final List<JuspayEBSResponseModel> ebsResponseList,
+			final List<MplPaymentAuditEntryModel> auditEntryList, final List<JuspayEBSResponseDataModel> ebsResponseList,
 			final MplPaymentAuditModel auditModel)
 	{
 
@@ -1412,7 +1413,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 			}
 		}
 
-		auditModel.setRisk(ebsResponseList);
+		auditModel.setRiskData(ebsResponseList);
 		modelService.save(auditModel);
 
 	}

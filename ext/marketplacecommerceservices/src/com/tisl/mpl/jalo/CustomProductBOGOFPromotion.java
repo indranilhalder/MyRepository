@@ -28,6 +28,7 @@ import de.hybris.platform.promotions.util.Helper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -44,6 +45,10 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
 
+/**
+ * This promotion is of type Buy one get one free
+ *
+ */
 public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFPromotion
 {
 	@SuppressWarnings("unused")
@@ -87,15 +92,16 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 
 		final AbstractOrder cart = promoContext.getOrder(); // Fetch Order Details
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
-		final List<Product> excludedProductList = new ArrayList<Product>();
-		final List<String> excludeManufactureList = new ArrayList<String>();
+		//final List<Product> excludedProductList = new ArrayList<Product>();
+		//final List<String> excludeManufactureList = new ArrayList<String>();
 
 
-		GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, promoContext, excludedProductList,
-				excludeManufactureList, restrictionList, this);
+		//		GenericUtilityMethods.populateExcludedProductManufacturerList(ctx, promoContext, excludedProductList,
+		//				excludeManufactureList, restrictionList, this);
 
-		final PromotionsManager.RestrictionSetResult restrictResult = findEligibleProductsInBasket(ctx, promoContext); // Validating Promotion set restrictions
-
+		//final PromotionsManager.RestrictionSetResult restrictResult = findEligibleProductsInBasket(ctx, promoContext); // Validating Promotion set restrictions
+		final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager().findEligibleProductsInBasket(ctx,
+				promoContext, this, getCategories());
 		//final List<Product> promotionProductList = new ArrayList<>(getProducts()); // Fetch Promotion set Primary Products
 		//final List<Category> promotionCategoryList = new ArrayList<>(getCategories()); // Fetch Promotion set Primary Categories
 		//Populating Excluded Products and Excluded Manufacturer in separate Lists
@@ -116,13 +122,13 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 
 			//changes end for omni cart fix @atmaram
 
-			if ((restrictResult.isAllowedToContinue()) && (!(restrictResult.getAllowedProducts().isEmpty())) && checkChannelFlag
+			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag
 					&& flagForPincodeRestriction)
 			{
-				final List<Product> allowedProductList = new ArrayList<Product>(restrictResult.getAllowedProducts());
+				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager().getValidProductListBOGO(
-						cart, ctx, allowedProductList, excludedProductList, excludeManufactureList, restrictionList);
+						cart, ctx, allowedProductList, restrictionList);
 
 				// Get the valid Products for Promotions
 				//				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager().getValidProdListForBOGO(
@@ -699,13 +705,33 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 		return results;
 	}
 
+	//	@Override
+	//	protected void buildDataUniqueKey(final SessionContext ctx, final StringBuilder builder)
+	//	{
+	//		super.buildDataUniqueKey(ctx, builder);
+	//
+	//		builder.append(getQualifyingCount(ctx)).append('|');
+	//		builder.append(getFreeCount(ctx)).append('|');
+	//	}
+
+	/**
+	 * Building the Hash Key for Promotion
+	 *
+	 * @param builder
+	 * @param ctx
+	 */
 	@Override
 	protected void buildDataUniqueKey(final SessionContext ctx, final StringBuilder builder)
 	{
-		super.buildDataUniqueKey(ctx, builder);
+		builder.append(super.getClass().getSimpleName()).append('|').append(getPromotionGroup(ctx).getIdentifier(ctx)).append('|')
+				.append(getCode(ctx)).append('|').append(getPriority(ctx)).append('|').append(ctx.getLanguage().getIsocode())
+				.append('|');
 
-		builder.append(getQualifyingCount(ctx)).append('|');
-		builder.append(getFreeCount(ctx)).append('|');
+
+		//final Date modifyDate = ((Date) getProperty(ctx, "modifiedtime"));
+
+		final Date modifyDate = getModificationTime();
+		builder.append(modifyDate);
 	}
 
 	protected CartService getCartService()

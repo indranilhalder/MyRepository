@@ -907,14 +907,14 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 				$("#clickToMore").hide();
 				});	
 			// TPR-158 and TPR-413 ends here
-			//TPR-4720 first 5 product display
+			/*//TPR-4720 first 5 product display
 			if($('#pageType').val() == "productsearch"){
 				populateFirstFiveProductsSerp();	
 			}
 			
 			if($('#pageType').val() == "category" || $('#pageType').val() == "electronics"){
 				populateFirstFiveProductsPlp();
-			}
+			}*/
 		},
 		error : function(xhr, status, error) {
 			$('#wrongPin,#unsevisablePin,#emptyPin')

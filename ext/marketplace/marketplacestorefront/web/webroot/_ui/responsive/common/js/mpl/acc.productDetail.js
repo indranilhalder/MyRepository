@@ -1781,11 +1781,15 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				$('#mrpPriceId').css('text-decoration', 'line-through');
 				$("#mrpPriceId").show();
 				$("#spPriceId").show();
+				$("#mopPriceId").hide();//UF-60
+				$("#mrpPriceId").removeClass("sale").addClass("old");//UF-60
 			} else {
 
 				$('#mrpPriceId').css('text-decoration', 'line-through');
 				$("#mrpPriceId").show();
 				$("#spPriceId").show();
+				$("#mopPriceId").hide();//UF-60
+				$("#mrpPriceId").removeClass("sale").addClass("old");//UF-60
 			}
 
 		} else {			
@@ -1794,10 +1798,15 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				if (mop.value == mrp.value) {
 					$("#mrpPriceId").removeClass("old").addClass("sale");
 					$("#mrpPriceId").show();
+					$('#mrpPriceId').css('text-decoration', '');//UF-60
+					$("#mopPriceId").hide();//UF-60
+					$("#spPriceId").hide();//UF-60
 				} else {
 					$('#mrpPriceId').css('text-decoration', 'line-through');
 					$("#mrpPriceId").show();
 					$("#mopPriceId").show();
+					$("#spPriceId").hide();//UF-60
+					$("#mrpPriceId").removeClass("sale").addClass("old");//UF-60
 				}
 			} else if(mop.value != 0 && mop.value <= freebiePriceThresVal){
 				 $(".size").hide(); 	
@@ -1819,6 +1828,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				 $(".delivery-block").hide();
 				 $(".seller").hide();
 				 $(".star-review").hide();
+				 $("#spPriceId").hide();//UF-60
 				 //$("#dListedErrorMsg").show();	//Need to Change
 				// $("#freebieProductMsgId").show();
 			var ussId=  $("#ussid").val();
@@ -1894,6 +1904,10 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 	if (parseInt($("#prodPrice").val()) > emiCuttOffAmount.value) { 
 		$("#emiStickerId").show();
 	}
+	else
+	{  //UF-60
+		$("#emiStickerId").hide();
+	}
 	// EMI change ends
 
 }
@@ -1935,7 +1949,6 @@ function openPopForBankEMI() {
 //TISPRO-533
 function populateEMIDetailsForPDP(){
 //$( "#bankNameForEMI" ).change(function() {
-	
 	var productVal = $("#prodPrice").val();
 		
 		var selectedBank = $('#bankNameForEMI :selected').text();
@@ -1973,8 +1986,9 @@ function populateEMIDetailsForPDP(){
 						$('#emiNoData').show();
 					}
 					
-					/*TPR-641 starts*/
+					/*TPR-641 starts  */
 					emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, '').toLowerCase();
+					/* TPR-4725  quick view emi*/
 					emiBankSelected = selectedBank.toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/[',."]/g,"");
 					utag.link({
 						link_obj: this, 
@@ -3163,7 +3177,6 @@ function getProductContents() {
 	}
 
 ////Start of UF-60 changes
-var variantSelectedSize=false;
 $(document).ready(function(){
 	onSizeSelectPopulateDOM();
 });
@@ -3184,20 +3197,15 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 		
-		//To get url params
-		for(var i=0;i<params.length;i++)
-		{
-			if(params[i].includes("selectedSize"))
-			{
-				variantSelectedSize=params[i].split("=")[1];
-			}
-		}
+		productCode=$(currentSelectedElement).attr("data-productCode");
 		//To get product code from URL
-		productCode=getProductCodeFromPdpUrl(href);
+		//productCode=getProductCodeFromPdpUrl(href);
 		//To get original URL
 		var a = $('<a>', { href:href } )[0];
-		var originalUrl=staticHost+a.pathname+"?selectedSize=true";
-		
+		var port= ":"+window.location.port;
+		var hostName = window.location.hostname;
+		var baseUrl="//"+hostName+port;
+		var originalUrl=baseUrl+a.pathname+"?selectedSize=true";
 		$("#addToCartFormTitle").hide(); //Hide 'please select size' on selecting size
 		if(productCode!="" && $('#pageType').val()=='product')
 		{
@@ -3219,8 +3227,9 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 					//Populating productPromotionSection.tag
 					$('#productPromotionSection').html(data);
 					var jsonData= JSON.parse($('#sizeSelectAjaxData').text());
+					$('#sizeSelectAjaxData').remove();
 					if(typeof(jsonData['error'])=='undefined')
-					{	
+					{
 						//If no server side error occured the below code executes
 						var responseProductCode=jsonData['code'];
 						var responseProductUrl=jsonData['url'];
@@ -3244,7 +3253,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						}
 						
 						
-						$('#selectedSize').val(variantSelectedSize);
+						$('#selectedSize').val("true");
 						
 						$("input[name=productCodeMSD]").val(responseProductCode);
 						$("#product").val(responseProductCode);
@@ -3255,7 +3264,6 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						$('a.size-guide').data("sizeSelected",'true');
 						$('#pdpPincodeCheck').data('clicked', false);
 						$('#ia_product_code').val(responseProductCode);
-						
 						
 						//Deselect the previously selected li and highlight the current li
 						$('ul#variant.variant-select li').each(function (index, value) { 
@@ -3470,7 +3478,7 @@ function getClassificationAttributes(productCode)
 	return $.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
-		cache : false,//added to resolve browser specific the OOS issue
+		cache : true,
 		dataType : "json",
 	});
 }
