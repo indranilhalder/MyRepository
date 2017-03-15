@@ -29,6 +29,9 @@ $(document).ready(function(){
 	if (($(".Temp07 .Padd .every-scene li .media").children().length == 0) && ($(".Temp07 .Padd .every-scene li .media-content").children().length == 0)){
 		$(".Temp07 .Padd .every-scene").css("display","none");
 	}
+	if($(".Temp07 .Padd h2:first-child span").is(':empty')){
+		$(".Temp07 .Padd h2").first().hide();
+	}
 });
 
 </script>
