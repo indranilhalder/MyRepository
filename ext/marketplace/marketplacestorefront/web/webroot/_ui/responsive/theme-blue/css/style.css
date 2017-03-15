@@ -62257,6 +62257,7 @@ margin: 0;
     margin-bottom: 4px;
     padding: 14px;
     padding-left: 0;
+    height: 60px;
 }
 .cart.wrapper.checkout-payment .product-block.emi #EMITermTable tr:nth-of-type(odd) {
     margin-right: 4px;
@@ -62385,6 +62386,9 @@ a.cvvHelp#cvvHelp + div.popover.bottom>.arrow {
 }
 .cart.wrapper.checkout-payment .blocks .new-card #billingAddressEmi input, .cart.wrapper.checkout-payment .blocks .new-card #billingAddressEmi select {
     margin: 0;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block.emi .bank-select label{
+    font-size: 12px;
 }
 @media(min-width:768px){
 	.cart.wrapper.checkout-payment .make_payment_top_savedCard, .cart.wrapper.checkout-payment .make_payment_top_newCard, .cart.wrapper.checkout-payment .make_payment_top_nb, .cart.wrapper.checkout-payment .cod_payment_button_top{
@@ -62973,6 +62977,7 @@ div#savedEMICard .credit-card-group .right-align-form input.cvvValdiation.securi
     margin-bottom: 0px;
     padding: 12px;
     padding-left: 0;
+    height: auto;
 }
 .cart.wrapper.checkout-payment .product-block.emi #EMITermTable td:first-child {
     padding-left: 0px;
