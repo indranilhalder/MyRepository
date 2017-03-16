@@ -132,7 +132,6 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 	public void getCsv() throws InterruptedException
 	{
 
-		LOG.info("Size list " + sellerLogisticsRptList.size());
 		exportToCsv(listview, sellerLogisticsRptList,
 				"SnL_Perf_Report_" + startDate.replace("-", "") + "_" + endDate.replace("-", ""));
 
