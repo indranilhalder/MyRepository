@@ -158,6 +158,7 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 			cache : false,
 			dataType : "json",
 			success : function(data) {
+				var oosMicro=data['isOOsForMicro'];
 				var stockInfo = data['availibility'];
 				availibility = stockInfo;
 				$.each(stockInfo,function(key,value){
@@ -261,7 +262,11 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 					$('#buyNowButton').show();
 					$("#outOfStockIdQuick").hide();
 					}				
-				
+				if(oosMicro==true){ //TPR-250 change
+					$("#addToCartButtonQuick").hide();
+					$('#buyNowButton').hide();
+					$("#outOfStockIdQuick").show();
+				}
 				dispQuickViewPrice(mrpPrice, mop, spPrice, savingsOnProduct);
 				
 				

@@ -1624,7 +1624,12 @@ $( document ).ready(function() {
 						$("#otherSellersId").html(data['othersSellersCount']);
 						$("#minPriceId").html(data['minPrice'].formattedValueNoDecimal);
 					}
-
+                    var isMicroOOS=data['isOOsForMicro'];
+                    if(isMicroOOS==true){//TPR-250
+                    	$("#addToCartButton").hide();
+						$("#buyNowButton").hide();
+						$("#outOfStockId").show();
+                    }
 					$("#ussid").val(data['sellerArticleSKU']);
 					$("#sellerSkuId").val(data['sellerArticleSKU']);
 

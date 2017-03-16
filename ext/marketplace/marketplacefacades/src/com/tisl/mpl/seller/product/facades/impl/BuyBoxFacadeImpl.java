@@ -172,6 +172,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			totalProductCount = 1;//as there are no variants
 		}
 		boolean isSellerPresent = false;
+		boolean isMicroSellerOOS = false;
 		//END
 		try
 		{
@@ -236,19 +237,45 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			// TPR-250: Start
 			else if (isSellerPresent)
 			{
+
 				buyboxModelList = buyBoxService.buyBoxPriceNoStock(pdpProduct);
+				final int buyBoxCount = buyboxModelList.size();
+				int oosCountForMicroSite = 0;
+				boolean allOSSForMicro = false;
+				for (final BuyBoxModel buybx : buyboxModelList)
+				{
+					if (null != buybx.getAvailable() && buybx.getAvailable().intValue() <= 0)
+					{
+						oosCountForMicroSite++;
+					}
+				}
+				if (oosCountForMicroSite == buyBoxCount)
+				{
+					allOSSForMicro = true;
+				}
 				for (final BuyBoxModel buybx : buyboxModelList)
 				{
 					if (buybx.getSellerId().equals(bBoxSellerId))
 					{
 						buyBoxMod = buybx;
+						if (null != buybx.getAvailable() && buybx.getAvailable().intValue() <= 0)
+						{
+							isMicroSellerOOS = true;
+						}
 						break;
 					}
 				}
 				//Availability counts
 				if (null != arrayToProductList)
 				{
-					productsList = identifyProductsWithNoStock(buyboxModelListAll, pdpProduct, productsList);
+					if (isSellerPresent && !allOSSForMicro)//TPR-250
+					{
+						productsList = identifyProductsForMicrosite(buyboxModelListAll, pdpProduct, productsList, bBoxSellerId);//getting products having stock
+					}
+					else
+					{
+						productsList = identifyProductsWithNoStock(buyboxModelListAll, pdpProduct, productsList);//getting products having stock
+					}
 					arrayToProductList.removeAll(productsList);
 					productsWithNoStock = arrayToProductList;
 				}
@@ -336,8 +363,31 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		}
 		returnData.put("pdp_buy_box", buyboxData);
 		returnData.put("no_stock_p_codes", productsWithNoStock);
+		returnData.put("isOOsForMicro", Boolean.valueOf(isMicroSellerOOS));
 
 		return returnData;
+	}
+
+	/**
+	 * @param buyboxModelListAll
+	 * @param pdpProduct
+	 * @param productsList
+	 * @param bBoxSellerId
+	 * @return
+	 */
+	private List<String> identifyProductsForMicrosite(final List<BuyBoxModel> buyboxModelListAll, final String pdpProduct,
+			final List<String> productsList, final String bBoxSellerId)
+	{
+		// YTODO Auto-generated method stub
+		for (final BuyBoxModel bbModel : buyboxModelListAll)
+		{
+			if (null != bbModel.getAvailable() && bbModel.getAvailable().intValue() <= 0
+					&& !(bbModel.getSellerId().equals(bBoxSellerId)))
+			{
+				productsList.remove(bbModel.getProduct());
+			}
+		}
+		return productsList;
 	}
 
 	/**
