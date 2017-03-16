@@ -3264,6 +3264,9 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						$('a.size-guide').data("sizeSelected",'true');
 						$('#pdpPincodeCheck').data('clicked', false);
 						$('#ia_product_code').val(responseProductCode);
+						$("#dListedErrorMsg").hide();//TISSTRT-1469
+						$(".reviews").show();
+						$(".fullfilled-by").show();
 						
 						//Deselect the previously selected li and highlight the current li
 						$('ul#variant.variant-select li').each(function (index, value) { 
@@ -3435,8 +3438,8 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 									attachOnScrollEventForPdpOnSizeSelect();
 								}
 								
-								//Calling Tealium after 1000 milisec
-								setTimeout(function(){tealiumCallOnPageLoad();}, 1000);
+								//Calling Tealium after 500 milisec
+								setTimeout(function(){tealiumCallOnPageLoad();}, 500);
 								
 								//Calling MSD if MSD is enabled
 //								if(typeof($('input[name=isMSDEnabled]').val())!='undefined' && $('input[name=isMSDEnabled]').val()=="true")
@@ -3478,7 +3481,7 @@ function getClassificationAttributes(productCode)
 	return $.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
-		cache : true,
+		cache : false,
 		dataType : "json",
 	});
 }
@@ -3912,7 +3915,7 @@ function populateProductPageTabs(jsonData)
 function attachOnScrollEventForPdpOnSizeSelect()
 {
 	$(window).on('scroll load',function() {
-		if(typeof($('input[name=isGigyaEnabled]').val())!='undefined' && $('input[name=isGigyaEnabled]').val()=="Y")
+		if(typeof($('input[name=isGigyaEnabled]').val())!='undefined' && $('input[name=isGigyaEnabled]').val()=="Y" && typeof(params)!='undefined')
 		{
 			lazyLoadGigyaCommentsUi();
 		}
