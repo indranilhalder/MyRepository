@@ -50,5 +50,25 @@ $classificationAttributeAssignments=classificationAttributeAssignments(classific
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);localized[default=false];multiValue[default=true];categoryField[default=true];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;facet[default=true]
 ;$solrIndexedType; categoryNameCodeMapping     	  ;string   ;true		   ;	;	 ;	  ;			;mplCategoryNameCodeMappingValueProvider;
 
+#
+# Import the Solr configuration for the store
+#
+$prefix=mpl
+$productCatalog=$prefixProductCatalog
+$catalogVersions=catalogVersions(catalog(id),version);
+$serverConfigName=$prefixSolrServerConfig
+$indexConfigName=$prefixSolrIndexConfig
+$searchConfigName=$prefixPageSize
+$facetSearchConfigName=$prefixIndex
+$facetSearchConfigDescription=Marketplace Solr Index
+$searchIndexNamePrefix=$prefix
+$solrIndexedType=$prefixProductType
+$indexBaseSite=$prefix
+$indexLanguages=en
+$indexCurrencies=INR
+$priceRangeINR=$prefixPriceRangeINR
+$classAttributeAssignment=classAttributeAssignment(classificationAttribute(code),classificationClass(code))
+$classificationAttributeAssignments=classificationAttributeAssignments(classificationAttribute(code),classificationClass(code))
+
 REMOVE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter;visible;facet[default=true];topValuesProvider;facetTopValue
 ;$solrIndexedType; inStockFlagForAddtoCart;boolean;            ;    ;    ;    ;    ;    ;mplProductInStockFlagValueProvider;
