@@ -2606,6 +2606,7 @@ public class ProductPageController extends MidPageController
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.MIN_PRICE, buyboxdata.getMinPrice());
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.ALL_OF_STOCK, buyboxdata.getAllOOStock());
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
+		buyboxJson.put("isOOsForMicro", buydata.get("isOOsForMicro"));//TPR-250
 		final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
 		final List<String> noStockPCodes = (List<String>) buydata.get("no_stock_p_codes");
 		for (final String pCode : noStockPCodes)

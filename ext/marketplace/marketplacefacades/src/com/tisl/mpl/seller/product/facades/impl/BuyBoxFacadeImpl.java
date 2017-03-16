@@ -362,6 +362,10 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		returnData.put("pdp_buy_box", buyboxData);
+		if (isSellerPresent && CollectionUtils.isNotEmpty(buyboxModelList))
+		{
+			buyboxData.setNumberofsellers(Integer.valueOf(buyboxModelList.size() - 1));
+		}
 		returnData.put("no_stock_p_codes", productsWithNoStock);
 		returnData.put("isOOsForMicro", Boolean.valueOf(isMicroSellerOOS));
 
