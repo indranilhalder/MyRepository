@@ -49,12 +49,12 @@
 		<li id="total"> 
 			<spring:theme code="text.account.order.total" text="Total"/>
 			<c:choose>
-				<c:when test="${order.convenienceChargeForCOD.value > 0}">
+				<%-- <c:when test="${order.convenienceChargeForCOD.value > 0}">
 					<span class="amt"><format:price priceData="${order.totalPriceWithConvCharge}"/></span>
 				</c:when>
 				<c:when test="${order.deliveryCost.value > 0}">
 					<span class="amt"><format:price priceData="${order.totalPriceWithConvCharge}"/></span>
-				</c:when>
+				</c:when> --%>
 				<c:when test="${order.net}">
 					<span class="amt"><format:price priceData="${order.totalPriceWithTax}"/></span>
 				</c:when>
