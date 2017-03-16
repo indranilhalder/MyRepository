@@ -503,7 +503,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                         }
                         defaultHtml += "</a></div>"
                     }
-                    defaultHtml +=
+                    /*defaultHtml +=
                         "<div class='home-brands-you-love-main-image'>";
                     if (typeof response.bannerImageUrl !==
                         "undefined") {
@@ -517,7 +517,31 @@ function getBrandsYouLoveContentAjaxCall(id) {
                         }
                         defaultHtml += "<img src='" + response.bannerImageUrl +
                             "'></img></div></div>";
+                    }*/
+                    /******* changes for INC_11934 ***/
+                    defaultHtml +=
+                        "<div class='home-brands-you-love-main-image'>";
+                    if (typeof response.bannerImageUrl !==
+                        "undefined") {
+                        defaultHtml +=
+                            "<div class='home-brands-you-love-main-image-wrapper'>";
+                        if (typeof response.bannerText !==
+                            "undefined") {
+                            defaultHtml +=
+                                "<div class='visit-store-wrapper'>" +
+                                response.bannerText + "</div>";
+                        }
+                        if (typeof response.bannerUrl !== "undefined") {
+                        	 defaultHtml += "<a href='"+response.bannerUrl+"'><img src='" + response.bannerImageUrl +
+                             "'></img></a></div>";
+                        } else {
+                        	 defaultHtml += "<img src='" + response.bannerImageUrl +
+                             "'></img></div>";
+                        }
+                       
                     }
+                    defaultHtml += '</div>';
+                    
                     if (typeof response.secondproductImageUrl !==
                         "undefined") {
                         defaultHtml +=
@@ -1516,7 +1540,7 @@ function populateEnhancedSearch(enhancedSearchData)
 	function getFooterOnLoad()
 	{
 		var slotUid = "FooterSlot";
-		
+		var pageName = $('#pageName').val();
 		if (!$.cookie("dept-list") && window.localStorage) {
 	        for (var key in localStorage) {
 	            if (key.indexOf("footerhtml") >= 0) {
@@ -1525,9 +1549,11 @@ function populateEnhancedSearch(enhancedSearchData)
 	        }
 	    }
 		
-		if (window.localStorage && (html = window.localStorage.getItem("footerhtml")) && html != "") {
+		if (window.localStorage && (html = window.localStorage.getItem("footerhtml")) && html != "" && pageName != "Cart Page") {
 			$("#footerByAjaxId").html(decodeURI(html));
 	    } else {
+	    	if(pageName != "Cart Page")
+	    	{
 	        $.ajax({
 	            url: ACC.config.encodedContextPath +
 	                "/getFooterContent",
@@ -1558,6 +1584,7 @@ function populateEnhancedSearch(enhancedSearchData)
 					}
 	            }
 	        });
+	      }  
 	    }	
 	}
 	
@@ -2120,7 +2147,9 @@ $(document).ready(function()
 					$.ajax({
 						url: ACC.config.encodedContextPath +  "/shopbydepartment",
 						type: 'GET',
-						cache:false,
+						//cache:false,
+						//changes for CAR-224
+						cache:true,
 						success: function(html) {
 							$(".shopByDepartment_ajax").html(html);
 						}

@@ -158,8 +158,12 @@
 						</div>
 					</div>
 					<script type="text/javascript">
-					$(".g-interactivepost").attr("data-contenturl",window.location);
-					$(".g-interactivepost").attr("data-calltoactionurl",window.location);
+					/* start change of INC144313760 */
+					$(document).ready(function(){
+						$(".g-interactivepost").attr("data-contenturl",window.location);
+						$(".g-interactivepost").attr("data-calltoactionurl",window.location);
+					});
+					/* end change of INC144313760 */
 					</script>
 					<div class="personal-invites">
 					
