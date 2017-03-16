@@ -7980,8 +7980,9 @@ $("button[name='pinCodeButtonId']").click(function(){
 	checkPincodeServiceability('typeSubmit',this);
 	});
 
+/*UF-68 UF-69*/
 $(".cartItemBlankPincode > a").click(function(){
-	$(".cartBottomCheck.cartBottomCheckShow #changePinDiv").addClass("blankPincode");
+	$(".cartBottomCheck #changePinDiv").addClass("blankPincode");
 });
 
 $(document).click(function (e)
@@ -7990,9 +7991,11 @@ $(document).click(function (e)
 		    if ((!container.is(e.target) // if the target of the click isn't the container...
 		        && container.has(e.target).length === 0)) // ... nor a descendant of the container
 		    {
-		    	$(".cartBottomCheck.cartBottomCheckShow #changePinDiv").removeClass("blankPincode");
+		    	$(".cartBottomCheck #changePinDiv").removeClass("blankPincode");
 		    }
 		});
+/*UF-68 UF-69*/
+
 
 /*$("input[name='defaultPinCodeIds']").click(function(){
 	if(pincode.length === 0)
