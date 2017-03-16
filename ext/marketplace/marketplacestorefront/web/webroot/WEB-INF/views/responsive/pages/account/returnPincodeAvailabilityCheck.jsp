@@ -19,6 +19,40 @@
 				window.location = url;
 				
 			});
+			
+			//TPR-3402 start
+			maxL=120;
+			 var bName = navigator.appName;
+			/* function taLimit(taObj) {
+			 	if (taObj.value.length==maxL) return false;
+			 	return true;
+			 }*/
+
+			 function taCount(taObj,Cnt) { 
+				 
+			 	objCnt=createObject(Cnt);
+			 	objVal=taObj.value;
+			 	if (objVal.length>maxL) objVal=objVal.substring(0,maxL);
+			 	if (objCnt) {
+			 		if(bName == "Netscape"){	
+			 			objCnt.textContent=maxL-objVal.length;}
+			 		else{objCnt.innerText=maxL-objVal.length;}
+			 	}
+			 
+			 	return true;
+			 }
+			 function createObject(objId) {
+			 	if (document.getElementById) return document.getElementById(objId);
+			 	else if (document.layers) return eval("document." + objId);
+			 	else if (document.all) return eval("document.all." + objId);
+			 	else return eval("document." + objId);
+			 }
+			 /**************End of character count********/
+			myLen=document.getElementsByClassName("Address1")[0].value.length;
+				console.log("value"+myLen);
+				$("#myCounter").html((120 - myLen));
+			//TPR-3402 end
+			
 			var firstname = $(".firstName").val();
 			var lastname=$(".latName").val();
 			var mobileno=$(".mobileNo").val();
@@ -65,7 +99,7 @@
 
 			        if ($("#addressLane1").val().length < 1) {
 			            $(".address1Error").show();
-			            $(".address1Error").text("Address Line 1 cannot be blank");
+			            $(".address1Error").text("Address Line cannot be blank");
 			        }
 
 			       /*  if ($("#addressLane2").val().length < 1) {
@@ -195,13 +229,15 @@
 								
 								<div class="row">
 									<div class="col-md-12 inputBoxHeight">
-										<label class="returnLabel">Address Line1*</label><br>
-										<form:input path="addressLane1" class="Address1" maxlength="40" placeholder="Enter Address Line1" />
+										<label class="returnLabel">Full Address*</label><br>
+	<!-- TISUATSE-85 --> 				<form:textarea path="addressLane1" class="Address1" maxlength="120" onKeyUp="return taCount(this,'myCounter')" onKeyPress="return taLimit(this)" placeholder="Enter Full Address" rows="2" cols="60" />
+										<br><br>Remaining characters :<span id='myCounter'>120</span>
 										<div class="error_text address1Error"></div>
 									</div>
 								</div>
 								
 								
+	<!-- TISUATSE-85 -->       <div class="hide">
 								<div class="row">
 									<div class="col-md-12 inputBoxHeight">
 										<label class="returnLabel">Address Line2</label><br>
@@ -211,6 +247,7 @@
 										<div class="error_text address2Error"></div>
 									</div>
 								</div>
+								</div>
 								
 								<div class="row">
 									<div class="col-md-4 inputBoxHeight">
@@ -219,11 +256,13 @@
 										<div class="error_text pincodeNoError"></div>
 									</div>
 									
+	<!-- TISUATSE-85 -->			<div class="hide">
 									<div class="col-md-8 inputBoxHeight">
 										<label class="returnLabel">LandMark</label><br>
 										<form:input path="landmark" maxlength="40" placeholder="Enter Your Nearest Land mark" />
 										<div class="error_text landMarkError"></div>
 									</div>
+								</div>
 								</div>
 								
 								<div class="row">

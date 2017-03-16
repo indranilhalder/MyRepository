@@ -224,9 +224,24 @@
 																
 																<li>${fn:escapeXml(address.firstName)}
 																	&nbsp;${fn:escapeXml(address.lastName)}</li>
-																<li>${fn:escapeXml(address.line1)},
-																	&nbsp;${fn:escapeXml(address.line2)},</li>
-																<li>${fn:escapeXml(address.line3)},</li>
+																
+																<!-- TPR-3402 -->	
+																
+																 <c:if test="${ empty address.line2  && empty address.line3}">
+																		<li>${fn:escapeXml(address.line1)},</li>
+																	</c:if>
+																	<c:if test="${ not empty address.line2 && empty address.line3}">
+																		<li>${fn:escapeXml(address.line1)}${fn:escapeXml(address.line2)},</li>
+																	</c:if>
+																	<c:if test="${empty address.line2 && not empty address.line3}">
+																		<li>${fn:escapeXml(address.line1)}${fn:escapeXml(address.line3)},</li>
+																	</c:if>
+																	<c:if test="${not empty address.line2 && not empty address.line3}">
+																		<li>${fn:escapeXml(address.line1)}${fn:escapeXml(address.line2)}${fn:escapeXml(address.line3)},</li>
+																	</c:if>
+																	
+																 <!-- TPR-3402 -->
+																 
 																<li>${fn:escapeXml(address.town)},
 																	&nbsp;${fn:escapeXml(address.state)},
 																	&nbsp;${fn:escapeXml(address.postalCode)} &emsp;IN</li>
