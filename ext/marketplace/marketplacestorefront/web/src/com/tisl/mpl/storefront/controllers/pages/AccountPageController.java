@@ -1561,14 +1561,31 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 				returnPincodeCheckForm.setFirstName(address.getFirstName());
 				returnPincodeCheckForm.setLastName(address.getLastName());
-				returnPincodeCheckForm.setAddressLane1(address.getLine1());
-				returnPincodeCheckForm.setAddressLane2(address.getLine2());
+
+				//TISUATSE-85 starts//
+				StringBuilder fullAddress = new StringBuilder(120);
+				if (StringUtils.isNotEmpty(address.getLine1()))
+				{
+					fullAddress = fullAddress.append(address.getLine1());
+				}
+				if (StringUtils.isNotEmpty(address.getLine2()))
+				{
+					fullAddress = fullAddress.append(address.getLine2());
+				}
+				if (StringUtils.isNotEmpty(address.getLine3()))
+				{
+					fullAddress = fullAddress.append(address.getLine3());
+				}
+				returnPincodeCheckForm.setAddressLane1(fullAddress.toString());
+				//returnPincodeCheckForm.setAddressLane2(address.getLine2());
 				returnPincodeCheckForm.setMobileNo(address.getPhone());
+
+				//TISUATSE-85 ends//
 				returnPincodeCheckForm.setPincode(address.getPostalCode());
 				returnPincodeCheckForm.setCity(address.getTown());
 				returnPincodeCheckForm.setState(address.getState());
 				returnPincodeCheckForm.setCountry(address.getCountry().getName());
-				returnPincodeCheckForm.setLandmark(address.getLine3());
+				//returnPincodeCheckForm.setLandmark(address.getLine3());
 			}
 			model.addAttribute(ModelAttributetConstants.RETURN_PINCODE_FORM, returnPincodeCheckForm);
 		}
@@ -1607,9 +1624,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 		returnAddrData.setLastName(returnAddress.getLastName());
 		returnAddrData.setMobileNo(returnAddress.getMobileNo());
 		returnAddrData.setAddressLane1(returnAddress.getAddressLane1());
-		returnAddrData.setAddressLane2(returnAddress.getAddressLane2());
+		//returnAddrData.setAddressLane2(returnAddress.getAddressLane2());
 		returnAddrData.setPincode(returnAddress.getPincode());
-		returnAddrData.setLandmark(returnAddress.getLandmark());
+		//returnAddrData.setLandmark(returnAddress.getLandmark());
 		returnAddrData.setCity(returnAddress.getCity());
 		returnAddrData.setState(returnAddress.getState());
 		returnAddrData.setCountry(returnAddress.getCountry());
