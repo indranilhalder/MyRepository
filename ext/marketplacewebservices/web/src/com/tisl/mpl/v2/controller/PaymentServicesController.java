@@ -6,6 +6,7 @@ package com.tisl.mpl.v2.controller;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
+import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -21,7 +22,6 @@ import de.hybris.platform.util.localization.Localization;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -826,43 +826,36 @@ public class PaymentServicesController extends BaseController
 		}
 		OrderModel orderToBeUpdated = null;
 		String statusResponse = "";
+		boolean alreadyProcessed = false;
 		try
 		{
 			//final String orderGuid = decryptKey(guid);
 			orderToBeUpdated = mplPaymentFacade.getOrderByGuid(cartGuid);
-
 			//OrderIssue:- If PaymentTransaction with Success already been created, we wont allow to re process the order
-			boolean alreadyProcessed = false;
-			final List<PaymentTransactionModel> payTranModelList = orderToBeUpdated.getPaymentTransactions();
-			if (CollectionUtils.isNotEmpty(payTranModelList))
+			if (null != orderToBeUpdated)
 			{
-				for (final PaymentTransactionModel payTranModel : payTranModelList)
+				if (CollectionUtils.isNotEmpty(orderToBeUpdated.getPaymentTransactions()))
 				{
-					if (payTranModel.getStatus().equalsIgnoreCase("success"))
+					for (final PaymentTransactionModel payTranModel : orderToBeUpdated.getPaymentTransactions())
 					{
-						alreadyProcessed = true;
-						break;
+						if (payTranModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+						{
+							alreadyProcessed = true;
+							break;
+						}
 					}
 				}
-			}
 
-			if (!alreadyProcessed)
-			{
-				final Map<String, Boolean> duplicateJuspayResMap = getSessionService().getAttribute(
-						MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE);
-				// OrderIssues:-  multiple Payment Response from juspay restriction
-				if (MapUtils.isNotEmpty(duplicateJuspayResMap) && null != duplicateJuspayResMap.get(cartGuid)
-						&& !duplicateJuspayResMap.get(cartGuid).booleanValue())
+				if (!alreadyProcessed)
 				{
-
-					if (null == orderToBeUpdated.getPaymentInfo())
+					//  INC144314180  PRDI-25
+					if (null == orderToBeUpdated.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
 					{
-						//Wallet amount assigned. Will be changed after release1
-						final double walletAmount = MarketplacewebservicesConstants.WALLETAMOUNT;
-						//setting the payment modes and the amount against it in session to be used later
+						//TODO Wallet amount assigned. Will be changed after release1
+						//final double walletAmount = MarketplacewebservicesConstants.WALLETAMOUNT;
 						final Map<String, Double> paymentInfo = new HashMap<String, Double>();
-						paymentInfo.put(paymentMode,
-								Double.valueOf(orderToBeUpdated.getTotalPriceWithConv().doubleValue() - walletAmount));
+						//paymentInfo.put(paymentMode, Double.valueOf(orderToBeUpdated.getTotalPriceWithConv().doubleValue() - walletAmount));
+						paymentInfo.put(paymentMode, Double.valueOf(orderToBeUpdated.getTotalPriceWithConv().doubleValue()));
 
 						statusResponse = mplPaymentFacade.getOrderStatusFromJuspay(cartGuid, paymentInfo, orderToBeUpdated,
 								juspayOrderID);
@@ -920,12 +913,19 @@ public class PaymentServicesController extends BaseController
 
 					}
 				}
+				else
+				{
+					LOG.error("For GUID:- " + cartGuid + " order already been processed");
+					updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
+					updateTransactionDetail.setOrderId(orderToBeUpdated.getCode());
+
+				}
 			}
 			else
 			{
 				LOG.error("For GUID:- " + cartGuid + " order already been processed");
-				updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
-				updateTransactionDetail.setOrderId(orderToBeUpdated.getCode());
+				updateTransactionDetail.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				updateTransactionDetail.setOrderId("");
 			}
 		}
 		catch (final EtailNonBusinessExceptions ex)
