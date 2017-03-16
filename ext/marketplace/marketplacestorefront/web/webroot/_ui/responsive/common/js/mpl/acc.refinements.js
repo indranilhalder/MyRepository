@@ -4,6 +4,10 @@ var lessBrands = [];
 var facetAjaxUrl = '';
 var productItemArray = [];
 var res;
+var filterValue = "";
+var filterName = "";
+var filterChecked = "";
+
 ACC.refinements = {
 
 	_autoload: [
@@ -172,13 +176,20 @@ ACC.refinements = {
 				}
 			}
 			
+			// TPR-645 Start  INC_11511  fix--h3 tag done
+			filterValue = $(this).parent().find('span.facet-text').text().trim();
+			filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
+			if($(this).attr('checked')){
+				filterChecked = true;
+				//onFilterRemoveAnalytics(filterName,filterValue);
+			}
+			else{
+				filterChecked = false;
+				//onFilterAddAnalytics(filterName,filterValue);
+			}
+			// TPR-645 End
 			// AJAX call
 			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
-			// TPR-645 Start  INC_11511  fix--h3 tag done
-			var filterValue = $(this).parent().find('span.facet-text').text().trim();
-			var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
-			onFilterClickAnalytics(filterName,filterValue);
-			// TPR-645 End
 		})
 		
 		// TPR-845
@@ -307,8 +318,6 @@ ACC.refinements = {
 					requiredUrl = action;
 				}
 			}
-			// AJAX call
-			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
 			// TPR-645 Start INC_11511  fix--h3 tag done
 			var filterValue = '';
 			var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
@@ -319,8 +328,18 @@ ACC.refinements = {
 				// console.log($(this).attr('class').text());
 				filterValue = $(this).parent().find('span > span').text();
 			}
-			onFilterClickAnalytics(filterName,filterValue);
+			if($(this).attr('checked')){
+				filterChecked = true;
+				//onFilterRemoveAnalytics(filterName,filterValue);
+			}
+			else{
+				filterChecked = false;
+				//onFilterAddAnalytics(filterName,filterValue);
+			}
 			// TPR-645 End
+			// AJAX call
+			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
+			
 		});
 		
 		// TPR-845
@@ -386,8 +405,25 @@ ACC.refinements = {
 			else {
 				requiredUrl = action[0].concat("/getFacetData");
 			}
+			
+			//Utag Fire on remove filter or any price start
+			if($(this).attr('class') == "remove_filter"){
+				filterName=$(this).parents('li').children().eq(0).attr('class');
+				filterValue=$(this).parents('li').children().eq(1).attr('value');
+				filterChecked = true;
+				//onFilterRemoveAnalytics(filterName,filterValue);
+			}
+			else{
+				filterName="price"
+				filterValue=$('.facet-list.filter-opt .price').siblings('.applied-color').val();
+				filterChecked = true;
+				//onFilterRemoveAnalytics(filterName,filterValue);
+			}
+			
 			// AJAX call
 			filterDataAjax(requiredUrl,dataString,pageURL);
+			
+			//utag firing on remove filter or any price end
 			return false;
 		});
 		
@@ -573,7 +609,8 @@ ACC.refinements = {
 				}
 				// AJAX call
 				// console.log("Controle Came");
-
+				filterValue = "";
+				filterName = "";
 				filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
 				return false;
 			}	
@@ -898,6 +935,14 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 		complete: function() {
 			// AJAX changes for custom price filter
 			loadPriceRange();
+			if(filterName != "" && filterValue != ""){
+				if(filterChecked == true){
+					onFilterRemoveAnalytics(filterName,filterValue);
+				}
+				else{
+					onFilterAddAnalytics(filterName,filterValue);
+				}
+			}
 		}
 	});
 	
@@ -924,14 +969,29 @@ function createSearchQuery(filterMobileQuery){
 	return queryString;
 }
 
-// TPR-645
-function onFilterClickAnalytics(filterName,filterValue){
-	var msg = (filterName+"_"+filterValue).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+// TPR-645,TPR-4704,TPR-4719
+
+function onFilterAddAnalytics(filterName,filterValue){
+	var filter_type = (filterName).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	var filter_value = (filterValue).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	
 	utag.link({
-		link_obj: this,
-		link_text: msg ,
-		event_type : 'search_filter_usage',
-		search_filter : msg
+		link_text: 'search_filter_applied' ,
+		event_type : 'search_filter_applied',
+		"filter_type" : filter_type,
+		"filter_value" : filter_value
+	});
+}
+
+function onFilterRemoveAnalytics(filterName,filterValue){
+	var filter_type = (filterName).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	var filter_value = (filterValue).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	
+	utag.link({
+		link_text: 'search_filter_removed' ,
+		event_type : 'search_filter_removed',
+		"filter_type" : filter_type,
+		"filter_value" : filter_value
 	});
 }
 
