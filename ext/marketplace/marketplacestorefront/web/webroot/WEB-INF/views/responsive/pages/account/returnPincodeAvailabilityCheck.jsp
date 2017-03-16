@@ -231,7 +231,7 @@
 									<div class="col-md-12 inputBoxHeight">
 										<label class="returnLabel">Full Address*</label><br>
 	<!-- TISUATSE-85 --> 				<form:textarea path="addressLane1" class="Address1" maxlength="120" onKeyUp="return taCount(this,'myCounter')" placeholder="Enter Full Address" rows="2" cols="60" />
-										<br><br>Remaining characters :<span id='myCounter'>120</span>
+										Remaining characters :<span id='myCounter'>120</span>
 										<div class="error_text address1Error"></div>
 									</div>
 								</div>

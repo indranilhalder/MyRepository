@@ -60735,3 +60735,30 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds{
     text-decoration:none;
 }
 /* TPR-1325 end */
+
+
+/* TISUATSE-85 */
+
+body.page-returnSubmit form#returnPincodeCheckForm textarea#addressLane1 {
+    width: 100%;
+    height: 58px;
+    margin-bottom: 7px;
+}
+body.page-returnSubmit #returnPincodeCheckForm .col-md-12.inputBoxHeight{
+	height: auto !important;
+}
+body.page-returnSubmit #returnPincodeCheckForm .error_text.address1Error{
+	margin-top: 7px;
+}
+@media (max-width:700px){
+	body.page-returnSubmit form#returnPincodeCheckForm textarea#addressLane1{
+		height: 70px;
+	}
+}
+@media(max-width:550px){
+	body.page-returnSubmit form#returnPincodeCheckForm textarea#addressLane1{
+		height: 106px;
+	}
+}
+
+/* TISUATSE-85 */
