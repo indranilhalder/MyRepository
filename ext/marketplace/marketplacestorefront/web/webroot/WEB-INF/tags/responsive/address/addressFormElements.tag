@@ -221,23 +221,23 @@ display: none;}
 			</div>
 			</div>
 			<!-- <div class='half'> -->
-         <div class='full'>
+         <div class='half'>
            <input type="hidden" name="myselect" value="myselectedvalue" /> 
           <%-- <label for="myselect"><spring:theme code="text.addressBook.PhoneNumber" text="Mobile Number" /></label>	 --%>	
       <div class="showPhone">
        <label class="control-label " for="address.mobile">Mobile Number*</label>
-		<select name="myselect" disabled="disabled">
+		<!-- <select name="myselect" disabled="disabled">
        <option value="myselectedvalue" selected="selected">+91</option>
-     </select>
+     </select> -->
       
-	 	<form:input type="text" idKey="address.mobile" id="mobileNonewForm"
+	 	<form:input type="text" idKey="address.mobile" 
 			 path="MobileNo" inputCSS="form-control"
 			mandatory="true" maxLength="10" placeholder="Phone Number*"/> 
 			<div class="help-block has-error" id="mobileError" style="display: none;">		
 			</div>	 
 		</div>	
 		</div>
-		<div class='full'>
+		<div class='half'>
 		<formElement:formInputBox idKey="address.postcode"
 			path="postcode"  labelKey="Pincode*"
 			mandatory="true" maxLength="6" placeholder="Pincode*" inputCSS="address_postcode"/>
