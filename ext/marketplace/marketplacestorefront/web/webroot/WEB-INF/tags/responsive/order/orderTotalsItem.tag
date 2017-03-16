@@ -52,6 +52,9 @@
 				<c:when test="${order.convenienceChargeForCOD.value > 0}">
 					<span class="amt"><format:price priceData="${order.totalPriceWithConvCharge}"/></span>
 				</c:when>
+				<c:when test="${order.deliveryCost.value > 0}">
+					<span class="amt"><format:price priceData="${order.totalPriceWithConvCharge}"/></span>
+				</c:when>
 				<c:when test="${order.net}">
 					<span class="amt"><format:price priceData="${order.totalPriceWithTax}"/></span>
 				</c:when>

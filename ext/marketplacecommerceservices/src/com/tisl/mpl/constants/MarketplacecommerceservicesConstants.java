@@ -673,6 +673,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CONSIGNMENTCODE = "consignmentCode".intern();
 
 	public final static String SESSION_PINCODE = "defaultPinCode";
+	public final static String SESSION_PINCODE_RES = "sessionPincoderesponseData";
+
 	public final static String SESSION_PINCODE_PDP = "pincode";
 
 	//For Cancellation Reason Query
@@ -1841,7 +1843,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//For Promotion Apportioning
 	public final static String NONFREE_CONSUMED_ENTRIES = "nonFreeConsumedEntries".intern();
-
 	//PaymentFix2017:-
 	public static final String PAYMENTPENDING_SKIPTIME = "marketplace.PaymentPending.skipTime".intern();
 

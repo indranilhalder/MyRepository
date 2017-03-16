@@ -1371,8 +1371,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//OrderIssues:- Customer data is getting from Order in place of session
 			final CustomerModel mplCustomer = (CustomerModel) abstractOrderModel.getUser();
 			//		final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
-			final Map<String, Double> paymentMode = getSessionService().getAttribute(
-					MarketplacecommerceservicesConstants.PAYMENTMODE);
+			//final Map<String, Double> paymentMode = getSessionService().getAttribute(
+			//		MarketplacecommerceservicesConstants.PAYMENTMODE);
 			//IQA changes TPR-629 and Refactor
 
 			final List<AbstractOrderEntryModel> entries = abstractOrderModel.getEntries();
@@ -1380,7 +1380,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
 			if (abstractOrderModel.getTotalPriceWithConv() != null || abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
 			{
-				getMplPaymentService().setPaymentTransactionForCOD(paymentMode, abstractOrderModel);
+				getMplPaymentService().setPaymentTransactionForCOD(abstractOrderModel);
 			}
 
 			if (null != mplCustomer)

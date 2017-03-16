@@ -47,6 +47,7 @@
 					<form id="categoryPageDeptHierTreeForm" name="categoryPageDeptHierTreeForm" method="get">
 					<p class="filter-name facet_mobile"><spring:theme code="search.nav.facetTitle" arguments="Department"/></p>
 						<input type="hidden" name="q" id="q" value="${searchPageData.currentQuery.query.value}"/>
+						<input type="hidden" name="searchCategory" value="${searchCategory}" />
 						<div id="categoryPageDeptHierTree"></div>
 					</form>
 				</c:when>
@@ -55,7 +56,7 @@
 					<p class="filter-name facet_mobile"><spring:theme code="search.nav.facetTitle" arguments="Department"/></p>
 						<input type="hidden" name="q" id="q" />
 						<input type="hidden" name="text" id="text" value="${searchPageData.freeTextSearch}"/>
-						<input type="hidden" name="searchCategory" id="searchCategoryTree"/>
+						<input type="hidden" name="searchCategory" id="searchCategoryTree" value="${searchCategory}"/>
 						<div id="searchPageDeptHierTree"></div>
 					</form>
 				</c:otherwise>
@@ -117,12 +118,12 @@
 		</div>
 	</div>
 </div>
-<div class="bottom-pagination">
+<div class="bottom-pagination" style="display: none;">
 	<nav:pagination top="false" supportShowPaged="${isShowPageAllowed}"
 		supportShowAll="${isShowAllAllowed}"
 		searchPageData="${searchPageData}"
 		searchUrl="${searchPageData.currentQuery.url}"
-		numberPagesShown="${numberPagesShown}" hide="true"/>
+		numberPagesShown="${numberPagesShown}"/>
 </div>
 <script>
 	$(document).ready(function(){

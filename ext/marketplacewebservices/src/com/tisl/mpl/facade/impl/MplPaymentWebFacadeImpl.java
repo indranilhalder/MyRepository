@@ -44,6 +44,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
+import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.juspay.PaymentService;
 import com.tisl.mpl.juspay.request.DeleteCardRequest;
@@ -100,6 +101,8 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 	//	@Resource(name = "sessionService")
 	//	private SessionService sessionService;
+	@Resource(name = "notificationFacade")
+	private NotificationFacade notificationFacade;
 
 	/**
 	 * To Check COD Eligibility for Cart Items
@@ -794,16 +797,20 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 		//OrderData orderData = null;
 		if (null != order.getPaymentInfo() && CollectionUtils.isEmpty(order.getChildOrders()))
 		{
-			mplCheckoutFacade.beforeSubmitOrder(order);
+			// INC144314180  PRDI-25
+			mplCheckoutFacade.beforeSubmitOrderMobile(order);
 			mplCheckoutFacade.submitOrder(order);
+			//order confirmation email and sms
+			notificationFacade.sendOrderConfirmationNotification(order);
 			//CAR-110
 			//orderData = mplCheckoutFacade.getOrderDetailsForCode(order);
 			updated = true;
 		}
-		else if (null != order.getPaymentInfo() && CollectionUtils.isNotEmpty(order.getChildOrders()))
+		else
 		{
 			//orderData = mplCheckoutFacade.getOrderDetailsForCode(order);
-			updated = true;
+			updated = false;
+			LOG.error("CardPayment Fail----as paymentinfo already attached");
 		}
 		/*
 		 * if (orderData != null) { updated = true; }

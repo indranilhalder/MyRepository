@@ -27,8 +27,10 @@ import javax.annotation.Resource;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.util.CollectionUtils;
 
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.util.MplBuyBoxUtility;
@@ -65,7 +67,7 @@ public class MplDisplayPriceValueProvider extends AbstractPropertyFieldValueProv
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -127,24 +129,35 @@ public class MplDisplayPriceValueProvider extends AbstractPropertyFieldValueProv
 				if (sizeVariantColour != null && pcmVariantColour != null && sizeVariantColour.equalsIgnoreCase(pcmVariantColour)
 						&& pcmSizeVariantModel.getSize() != null)
 				{
+
+					// Added For INC144314878 - MOP not reflecting in PLP while selecting Size
+
+					final List<BuyBoxModel> priceListForProduct = buyBoxService
+							.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode());
+
 					double price = 0.0;
 					/* TISPRD-2611 */
-					final Double specialPrice = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0)
-							.getSpecialPrice();
-					Double pcmPrice = null;
 
-					if (null != specialPrice && specialPrice.doubleValue() > 0.0)
+					if (null != priceListForProduct && !CollectionUtils.isEmpty(priceListForProduct))
 					{
-						price = specialPrice.doubleValue();
+						final Double specialPrice = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0)
+								.getSpecialPrice();
+						Double pcmPrice = null;
+
+						if (null != specialPrice && specialPrice.doubleValue() > 0.0)
+						{
+							price = specialPrice.doubleValue();
+						}
+						else if (null != (pcmPrice = priceListForProduct.get(0).getPrice()) && pcmPrice.doubleValue() > 0.0)
+						{
+							price = pcmPrice.doubleValue();
+						}
+						final JSONObject sizePriceJson = new JSONObject();
+						sizePriceJson.put(pcmSizeVariantModel.getSize().toUpperCase(), Double.valueOf(price));
+						sizePriceJsonArray.add(sizePriceJson);
 					}
-					else if (null != (pcmPrice = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0)
-							.getPrice()) && pcmPrice.doubleValue() > 0.0)
-					{
-						price = pcmPrice.doubleValue();
-					}
-					final JSONObject sizePriceJson = new JSONObject();
-					sizePriceJson.put(pcmSizeVariantModel.getSize().toUpperCase(), Double.valueOf(price));
-					sizePriceJsonArray.add(sizePriceJson);
+
+
 
 				}
 

@@ -268,12 +268,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				orderModel = getMplPaymentFacade().getOrderByGuid(guid);
 			}
 
-			// OrderIssues:- Set the value duplicatJuspayResponse in session to false  ones cart GUID available in session
-			final Map<String, Boolean> duplicatJuspayResponseMap = new HashMap<String, Boolean>();
-			duplicatJuspayResponseMap.put(guid, Boolean.FALSE);
-
-			getSessionService().setAttribute(MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE, duplicatJuspayResponseMap);
-
 			//code to restrict user to continue the checkout if he has not selected pickup person name and mobile number.
 			//this is only when cart entry contains cnc delivery mode.
 			final Map<String, MarketplaceDeliveryModeData> freebieModelMap = new HashMap<String, MarketplaceDeliveryModeData>();
@@ -333,6 +327,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				//Getting Payment modes
 				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, false, cartData);
+
+				// OrderIssues:- Set the value duplicatJuspayResponse in session to false  ones cart GUID available in session
+				final Map<String, Boolean> duplicatJuspayResponseMap = new HashMap<String, Boolean>();
+				duplicatJuspayResponseMap.put(cartData.getGuid(), Boolean.FALSE);
+
+				getSessionService().setAttribute(MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE,
+						duplicatJuspayResponseMap);
 
 				//Cart guid added to propagate to further methods via jsp
 				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, cartData.getGuid());
@@ -2601,10 +2602,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			else
 			{
+				LOG.error("For GUID:- " + guid + " order already been processed");
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 						MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
-				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
-						+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+				//return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+				//		+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 			}
 		}
 		catch (final EtailBusinessExceptions e)
