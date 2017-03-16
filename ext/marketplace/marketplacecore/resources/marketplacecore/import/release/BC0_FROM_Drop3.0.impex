@@ -1,0 +1,54 @@
+#essentialdata-omsbackoffice-usergroups.impex
+INSERT_UPDATE BackofficeRole;UID[unique=true]								;locname[lang=en]						;description											;groups(uid);readableLanguages(isocode);writeableLanguages(isocode);authorities      					;backOfficeLoginDisabled        
+							;omsadmin										;omsadmin								;Admin													;						;de,en		;de,en		   ;	omsadmin											         	 ;false
+							;OMSDeliveryModeConfRole						;DeliveryMode Manager					;Group for print example publication					;						;de,en		;de,en		   ;	OMSDeliveryModeConfRole					         			 ;false
+							;OMSLogisticsPincodeMasterUpldRole				;PincodeMaster Manager					;Shipping User Group									;						;de,en		;de,en		   ;	OMSLogisticsPincodeMasterUpldRole				        		 ;false
+							;OMSLogisticsCalRole							;Logistics Calendar Manager				;InStorePickUp User Group								;						;de,en		;de,en		   ;	OMSLogisticsCalRole							        		 ;false
+							;OMSLogisticsContactRole						;Logistics Contact Manager				;Inventory Manager User Group							;						;de,en		;de,en		   ;	OMSLogisticsContactRole					         			 ;false
+							;OMSInventoryByUssidRole						;Search Inventory Manager				;Instore Pickup and Shipping User Group					;						;de,en		;de,en		   ;	OMSInventoryByUssidRole			         					 ;false
+							;OMSOrderScreenRole								;Order Screen Manager					;Instore Pickup and Shipping User Group					;						;de,en		;de,en		   ;	OMSOrderScreenRole					         					 ;false
+							;OMSSellerLogistcisRptRole						;Logistics-Seller Report Manager		;Instore Pickup and Shipping User Group					;						;de,en		;de,en		   ;	OMSSellerLogistcisRptRole			        					 ;false
+							;OMSPincodeServLogisticsRptRole					;PincodeServiceability Manager			;Instore Pickup and Shipping User Group					;						;de,en		;de,en		   ;	OMSPincodeServLogisticsRptRole		        					 ;false
+							;OMSReportAdminRole								;ReportAdminRole Manager				;ReportAdminRole										;						;de,en		;de,en		   ;	OMSReportAdminRole					        					 ;false
+							;OMSOrderAdminRole								;OrderAdminRole Manager					;OrderAdminRole											;						;de,en		;de,en		   ;	OMSOrderAdminRole					        					 ;false
+							;OMSLogisticsAdminRole							;LogisticsAdminRole Manager				;LogisticsAdminRole										;						;de,en		;de,en		   ;	OMSLogisticsAdminRole				        					 ;false
+
+
+							
+							
+# TISPRO-371 Start update and delete index solr cron job into single composite cronjob
+INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isocode);runningOnClusterNode
+ ;mplIndexingCompositeCronjob;compositeJobPerformable;en;1
+
+ INSERT_UPDATE CronJob;code[unique=true];runningOnClusterNode
+# Run the update-mplIndex-cronJob every 15 minutes
+;full-mplIndex-cronJob;1
+;update-mplIndex-cronJob;1
+;delete-mplIndex-cronJob;1 
+
+
+#
+# Import the Solr configuration for the store
+#
+$prefix=mpl
+$productCatalog=$prefixProductCatalog
+$catalogVersions=catalogVersions(catalog(id),version);
+$serverConfigName=$prefixSolrServerConfig
+$indexConfigName=$prefixSolrIndexConfig
+$searchConfigName=$prefixPageSize
+$facetSearchConfigName=$prefixIndex
+$facetSearchConfigDescription=Marketplace Solr Index
+$searchIndexNamePrefix=$prefix
+$solrIndexedType=$prefixProductType
+$indexBaseSite=$prefix
+$indexLanguages=en
+$indexCurrencies=INR
+$priceRangeINR=$prefixPriceRangeINR
+$classAttributeAssignment=classAttributeAssignment(classificationAttribute(code),classificationClass(code))
+$classificationAttributeAssignments=classificationAttributeAssignments(classificationAttribute(code),classificationClass(code))
+
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);localized[default=false];multiValue[default=true];categoryField[default=true];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;facet[default=true]
+;$solrIndexedType; categoryNameCodeMapping     	  ;string   ;true		   ;	;	 ;	  ;			;mplCategoryNameCodeMappingValueProvider;
+
+REMOVE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter;visible;facet[default=true];topValuesProvider;facetTopValue
+;$solrIndexedType; inStockFlagForAddtoCart;boolean;            ;    ;    ;    ;    ;    ;mplProductInStockFlagValueProvider;
