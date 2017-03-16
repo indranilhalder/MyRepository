@@ -1484,13 +1484,12 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 						$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
 						
-						filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
 						//TPR-645 start  -- INC_11511  fix--h3 tag done
-						var filterValue = (minPriceSearchTxt+"-"+maxPriceSearchTxt).replace(/,/g,"");
-						var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
-						onFilterAddAnalytics(filterName,filterValue);
+						filterValue = (minPriceSearchTxt+"-"+maxPriceSearchTxt).replace(/,/g,"");
+						filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
+						//onFilterAddAnalytics(filterName,filterValue);
+						filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
 						//TPR-645 end
-						
 					}
 					
 				});
