@@ -98,6 +98,8 @@ tr.d0 td {
 
  
  $( document ).ready(function() {
+	 //Enable CTA's
+	 removedisabled();
 	//AKAMAI Fix
 	 setSizeforAkamai();
 	//AJAX BuyBox call
@@ -540,17 +542,8 @@ display:none;
 		<spring:theme code="pdp.delisted.message" />
     </span>
     
-    <!--  UF-88-->
-	<script>
-$(document).ready(function() {
-    $("#buyNowButton").removeAttr('disabled');
-});
+   
 
-$(document).ready(function() {
-    $("#addToCartButtonQuick").removeAttr('disabled');
-});
-</script>
-	
 	
 	 <!-- TPR-924 -->
 	 

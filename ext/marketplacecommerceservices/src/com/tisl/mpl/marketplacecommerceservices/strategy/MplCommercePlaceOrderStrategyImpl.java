@@ -123,7 +123,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			{
 				result.setOrder(orderModel);
 				// OrderIssues:- 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved here
-				afterPlaceOrder(parameter, result);
+				//				afterPlaceOrder(parameter, result);
 
 				orderModel.setDate(new Date());
 
@@ -184,7 +184,8 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				//					orderModel.setTotalPrice(totalPrice);
 				//				}
 
-				orderModel.setTotalPrice(totalPrice);
+				//orderModel.setTotalPrice(totalPrice);
+				orderModel.setTotalPrice(totalPriceWithconv);
 				orderModel.setTotalPriceWithConv(totalPriceWithconv);
 
 				orderModel.setModeOfOrderPayment(modeOfPayment);
@@ -196,9 +197,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				 * Submit order process for cod, hence moved here afterPlaceOrder(parameter, result);
 				 */
 
-
-
-
+				afterPlaceOrder(parameter, result);
 
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
 						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))

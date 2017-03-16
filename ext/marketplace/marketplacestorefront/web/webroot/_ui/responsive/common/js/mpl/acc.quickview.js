@@ -125,6 +125,14 @@ function quickviewGallery() {
 }
 
 ////jsp to js move
+//Enable CTA's on page load (UF-88)
+
+function removedisabled()
+{
+	    $("#buyNowButton").removeAttr('disabled');
+	    $("#addToCartButtonQuick").removeAttr('disabled');
+}
+
 
 function setSizeforAkamai()
 {
@@ -279,14 +287,11 @@ function setBuyBoxDetails()
 				else
 					{
 					//UF-88
-					$(document).ready(function() {
-					    $("#buyNowButton").removeAttr('disabled');
-					});
 					
-					$(document).ready(function() {
-					    $("#addToCartButtonQuick").removeAttr('disabled');
+					$(document).ready(function() 
+					{
+						removedisabled();
 					});
-
 					
 					$("#addToCartButtonQuick").show();
 					$('#buyNowButton').show();
