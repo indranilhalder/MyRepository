@@ -75,8 +75,7 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 		if (crmResult.getResult().equals(OrderPlacementResult.Status.SUCCESS)
 				&& omsResult.getResult().equals(OrderPlacementResult.Status.SUCCESS))
 		{
-			//PaymentFix2017
-			order.setIsSentToOMS(Boolean.TRUE);
+
 			getModelService().save(order);
 			return AbstractSimpleDecisionAction.Transition.OK;
 		}
