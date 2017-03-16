@@ -240,9 +240,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 		ValidationResults validationResult = null;
 
-		final String cartGuid = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.CARTGUID);
+		//	final String cartGuid = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.CARTGUID);
+		final String refNumber = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.REFNUMBER);
 
-		LOG.debug("cartGuid number is ...................." + cartGuid);
+		LOG.debug("refNumber number is ...................." + refNumber);
 		//Validator called explicitly TPR-629
 
 		//Commented for implementing mRupee TISSQAEE-229
@@ -253,6 +254,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		//Implementing mRupee Logic with cartGuid TISSQAEE-229
 		OrderModel mRupeeorderModel = null;
+		String cartGuid = null;
+		/* Getting guid from audit table based on the reference no. received from mRupee */
+		if (StringUtils.isNotEmpty(refNumber))
+		{
+			cartGuid = getMplPaymentFacade().getWalletAuditEntries(refNumber);
+		}
+		LOG.debug("cartGuid number is ...................." + cartGuid);
 		if (StringUtils.isNotEmpty(cartGuid))
 		{
 			mRupeeorderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
@@ -4439,7 +4447,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					LOG.info("Reference number from createWalletOrder when order is null -- " + refNumber);
 					LOG.info("Response from createWalletOrder when order is null -- " + response);
 
-					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTGUID, cartGuid);
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.REFNUMBER, refNumber);
 					return response;
 				}
 				else
@@ -4494,7 +4502,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								+ returnUrlBuilder;
 						LOG.info("Reference number from createWalletOrder when order is not null -- " + refNumber);
 						LOG.info("Response from createWalletOrder when order is not null -- " + response);
-						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTGUID, cartGuid);
+						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.REFNUMBER, refNumber);
 						return response;
 
 					}
