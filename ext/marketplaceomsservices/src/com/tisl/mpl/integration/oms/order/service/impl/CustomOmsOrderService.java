@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.hybris.commons.client.RestCallException;
 import com.hybris.oms.api.order.OrderFacade;
 import com.hybris.oms.domain.exception.DuplicateEntityException;
+import com.hybris.oms.domain.exception.EntityValidationException;
 import com.hybris.oms.domain.exception.RestClientException;
 import com.hybris.oms.domain.order.Order;
 import com.hybris.oms.domain.order.UpdatedSinceList;
@@ -206,6 +207,10 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 				result = new OrderPlacementResult(OrderPlacementResult.Status.ERROR, ex);
 			}
 		}
+		catch (final EntityValidationException evx)
+		{
+			LOG.error("EntityValidationException>> Exception occured while placing order : ", evx);
+		}
 		catch (final Exception ex)
 		{
 			LOG.error("CreateOmsOrder >> Exception occured while placing order due to ", ex);
@@ -350,9 +355,9 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 
 	/*
 	 * @Desc Used for generating xml
-	 *
+	 * 
 	 * @param order
-	 *
+	 * 
 	 * @return String
 	 */
 	protected String getOrderAuditXml(final Order order)
