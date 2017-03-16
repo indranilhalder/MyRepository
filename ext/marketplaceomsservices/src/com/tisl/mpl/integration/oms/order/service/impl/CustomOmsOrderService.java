@@ -18,6 +18,7 @@ import de.hybris.platform.ticket.service.TicketBusinessService;
 import de.hybris.platform.util.localization.Localization;
 
 import java.io.StringWriter;
+import java.net.SocketTimeoutException;
 import java.util.Date;
 
 import javax.annotation.Resource;
@@ -30,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hybris.commons.client.RestCallException;
 import com.hybris.oms.api.order.OrderFacade;
+import com.hybris.oms.domain.exception.DuplicateEntityException;
 import com.hybris.oms.domain.exception.RestClientException;
 import com.hybris.oms.domain.order.Order;
 import com.hybris.oms.domain.order.UpdatedSinceList;
@@ -147,6 +149,8 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 				{
 					LOG.debug("createOmsOrder responseXml is null or empty ");
 				}
+				//PaymentFix2017
+				orderModel.setIsSentToOMS(Boolean.TRUE);
 				getModelService().save(orderModel);
 				result = new OrderPlacementResult(OrderPlacementResult.Status.SUCCESS);
 			}
@@ -158,15 +162,30 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 
 			}
 		}
+		catch (final DuplicateEntityException dee)
+		{
+			LOG.error("DuplicateEntityException occured due to order already created", dee);
+			//PaymentFix2017
+			orderModel.setIsSentToOMS(Boolean.TRUE);
+			getModelService().save(orderModel);
+			result = new OrderPlacementResult(OrderPlacementResult.Status.SUCCESS);
+		}
 		catch (final RestClientException rce)
 		{
 			LOG.error("RestClientException occured while creating order", rce);
 			result = new OrderPlacementResult(OrderPlacementResult.Status.ERROR, rce);
+
 		}
 		catch (final ClientHandlerException cex)
 		{
 			LOG.error("ClientHandlerException occured while creating order", cex);
 			result = new OrderPlacementResult(OrderPlacementResult.Status.ERROR, cex);
+			if (cex.getCause() instanceof SocketTimeoutException)
+			{
+				LOG.error("SocketTimeoutException occured while creating order", cex);
+				result = new OrderPlacementResult(OrderPlacementResult.Status.FAILED, cex);
+
+			}
 		}
 		catch (final RestCallException ex)
 		{
@@ -331,9 +350,9 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 
 	/*
 	 * @Desc Used for generating xml
-	 * 
+	 *
 	 * @param order
-	 * 
+	 *
 	 * @return String
 	 */
 	protected String getOrderAuditXml(final Order order)

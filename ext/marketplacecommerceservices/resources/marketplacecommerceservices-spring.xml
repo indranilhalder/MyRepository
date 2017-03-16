@@ -535,6 +535,8 @@
 			ref="#{configurationService.configuration.getProperty('commerceservices.orderCode.keyGenerator')}" />
 		<property name="mplCommerceCartDao" ref="mplCommerceCartDao" />
 		<property name="cartConverter" ref="cartConverter" />
+		<!-- CAR:127 -->
+		<property name="orderConverter" ref="orderConverter"/>
 		<property name="cartModificationConverter" ref="cartModificationConverter" />
 		<property name="siteConfigService" ref="siteConfigService" />
 		<property name="baseSiteService" ref="baseSiteService" />
