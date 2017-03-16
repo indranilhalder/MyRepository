@@ -7,7 +7,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <script src="https://www.google.com/recaptcha/api.js"></script>
 
-<p class="title">Pay Using Cash-On-delivery</p>
+<p class="title">Pay using Cash-on-Delivery</p>
 <p>Verify Order</p>
 <%-- <p>
 	<spring:theme
