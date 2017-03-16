@@ -4,6 +4,10 @@ var lessBrands = [];
 var facetAjaxUrl = '';
 var productItemArray = [];
 var res;
+var filterValue = "";
+var filterName = "";
+var filterChecked = "";
+
 ACC.refinements = {
 
 	_autoload: [
@@ -172,18 +176,20 @@ ACC.refinements = {
 				}
 			}
 			
-			// AJAX call
-			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
 			// TPR-645 Start  INC_11511  fix--h3 tag done
-			var filterValue = $(this).parent().find('span.facet-text').text().trim();
-			var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
+			filterValue = $(this).parent().find('span.facet-text').text().trim();
+			filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
 			if($(this).attr('checked')){
-				onFilterRemoveAnalytics(filterName,filterValue);
+				filterChecked = true;
+				//onFilterRemoveAnalytics(filterName,filterValue);
 			}
 			else{
-				onFilterAddAnalytics(filterName,filterValue);
+				filterChecked = false;
+				//onFilterAddAnalytics(filterName,filterValue);
 			}
 			// TPR-645 End
+			// AJAX call
+			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
 		})
 		
 		// TPR-845
@@ -312,8 +318,6 @@ ACC.refinements = {
 					requiredUrl = action;
 				}
 			}
-			// AJAX call
-			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
 			// TPR-645 Start INC_11511  fix--h3 tag done
 			var filterValue = '';
 			var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
@@ -325,12 +329,17 @@ ACC.refinements = {
 				filterValue = $(this).parent().find('span > span').text();
 			}
 			if($(this).attr('checked')){
-				onFilterRemoveAnalytics(filterName,filterValue);
+				filterChecked = true;
+				//onFilterRemoveAnalytics(filterName,filterValue);
 			}
 			else{
-				onFilterAddAnalytics(filterName,filterValue);
+				filterChecked = false;
+				//onFilterAddAnalytics(filterName,filterValue);
 			}
 			// TPR-645 End
+			// AJAX call
+			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
+			
 		});
 		
 		// TPR-845
@@ -396,22 +405,23 @@ ACC.refinements = {
 			else {
 				requiredUrl = action[0].concat("/getFacetData");
 			}
-			// AJAX call
-			filterDataAjax(requiredUrl,dataString,pageURL);
 			
 			//Utag Fire on remove filter or any price start
 			if($(this).attr('class') == "remove_filter"){
-				var filterName=$(this).parents('li').children().eq(0).attr('class');
-				var filterValue=$(this).parents('li').children().eq(1).attr('value');
-				
-				onFilterRemoveAnalytics(filterName,filterValue);
+				filterName=$(this).parents('li').children().eq(0).attr('class');
+				filterValue=$(this).parents('li').children().eq(1).attr('value');
+				filterChecked = true;
+				//onFilterRemoveAnalytics(filterName,filterValue);
 			}
 			else{
-				var filterName="price"
-				var filterValue=$('.facet-list.filter-opt .price').siblings('.applied-color').val();
-
-				onFilterRemoveAnalytics(filterName,filterValue);
+				filterName="price"
+				filterValue=$('.facet-list.filter-opt .price').siblings('.applied-color').val();
+				filterChecked = true;
+				//onFilterRemoveAnalytics(filterName,filterValue);
 			}
+			
+			// AJAX call
+			filterDataAjax(requiredUrl,dataString,pageURL);
 			
 			//utag firing on remove filter or any price end
 			return false;
@@ -599,7 +609,8 @@ ACC.refinements = {
 				}
 				// AJAX call
 				// console.log("Controle Came");
-
+				filterValue = "";
+				filterName = "";
 				filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
 				return false;
 			}	
@@ -926,6 +937,14 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 		complete: function() {
 			// AJAX changes for custom price filter
 			loadPriceRange();
+			if(filterName != "" && filterValue != ""){
+				if(filterChecked == true){
+					onFilterRemoveAnalytics(filterName,filterValue);
+				}
+				else{
+					onFilterAddAnalytics(filterName,filterValue);
+				}
+			}
 		}
 	});
 	
@@ -959,7 +978,6 @@ function onFilterAddAnalytics(filterName,filterValue){
 	var filter_value = (filterValue).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	
 	utag.link({
-		link_obj: this,
 		link_text: 'search_filter_applied' ,
 		event_type : 'search_filter_applied',
 		"filter_type" : filter_type,
@@ -972,7 +990,6 @@ function onFilterRemoveAnalytics(filterName,filterValue){
 	var filter_value = (filterValue).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	
 	utag.link({
-		link_obj: this,
 		link_text: 'search_filter_removed' ,
 		event_type : 'search_filter_removed',
 		"filter_type" : filter_type,
