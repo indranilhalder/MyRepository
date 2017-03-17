@@ -60768,6 +60768,7 @@ body.page-returnSubmit #returnPincodeCheckForm .error_text.address1Error{
 
 .alert.alert-danger.alert-dismissable{
 	padding: 0;
+	margin-bottom: 17px !important;
 }
 @media(max-width:650px){
 .global-alerts button.close{
