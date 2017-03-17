@@ -4373,7 +4373,7 @@ public class DefaultPromotionManager extends PromotionsManager
 				promQuery.append(" FROM { ").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
 						.append(" AS cat2prod} ");
 				promQuery.append(" WHERE {cat2prod:").append("source").append("} in (?promotionCategories)  ");
-				promQuery.append("   AND {cat2prod:").append("target").append("} in (?product)");
+				promQuery.append("   AND {cat2prod:").append("target").append("} in (?product) ");
 
 				params.put("promotionCategories", promotionCategories);
 			}
@@ -4395,7 +4395,7 @@ public class DefaultPromotionManager extends PromotionsManager
 					promQuery.append(" FROM { ").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
 							.append(" AS cat2prod} ");
 					promQuery.append(" WHERE {cat2prod:").append("source").append("} in (?promotionCategories_").append(i);
-					promQuery.append(")   AND {cat2prod:").append("target").append("} in (?product) }} ");
+					promQuery.append(")   AND {cat2prod:").append("target").append("} in (?product) ");
 				}
 			}
 		}

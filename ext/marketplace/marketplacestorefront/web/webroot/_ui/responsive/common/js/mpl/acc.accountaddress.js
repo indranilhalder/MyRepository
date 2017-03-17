@@ -239,6 +239,8 @@ function editAddress(addressId) {
     		
     		var nowValue = $("#cancellationreasonSelectBox_"+transactionId+" option:selected").val();
     		var reasonCode=Rejectionselectedvalue;
+    		//TPR-4752 | for order cancellation reason
+    		var reasonCancel = $("#cancellationreasonSelectBox_"+transactionId+" option:selected").text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
     	//	console.log("Reasone code : "+Rejectionselectedvalue);
         	if(reasonCode==null)
         	{
@@ -279,12 +281,22 @@ function editAddress(addressId) {
         					$(".reason #reasonTitle").text("Reason for Cancellation:");
         					$(".reason #reasonDesc").text(reasonDesc);
         					$("body .spinner,body #no-click").remove();
+        					//TPR-4752 | for order cancellation reason
+         					if(typeof utag !="undefined"){
+   			 				   utag.link({
+   			 					   event_type : 'cancel_confirmation_clicked',
+   			 					   'cancel_order_reason' : reasonCancel
+   			 				   });
+   			 				}
         				}
         				else{
         					$(".cancellation-request-block #resultTitle").text("Failure!");
         					$(".cancellation-request-block #resultDesc").text(bogoreason);
         					$(".reason").css("display","none");
         					$("body .spinner,body #no-click").remove();
+        					if(typeof utag !="undefined"){
+        					   utag.link({error_type : 'cancel_confirmation_error'});
+        					}
         				}
         				
         				//$("#cancelOrder"+orderCode).modal('hide');
@@ -298,6 +310,9 @@ function editAddress(addressId) {
         			},
         			error : function(resp) {
         				alert("Error");
+        				if(typeof utag !="undefined"){
+        				   utag.link({error_type : 'cancel_confirmation_error'});
+        				}
         				$("body .spinner,body #no-click").remove();
         			}
         		});
