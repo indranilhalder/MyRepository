@@ -587,6 +587,8 @@
 			<value code="REFUND_DELIVERY_CHARGES" />
 			<value code="REFUND_SCHEDULE_DELIVERY_CHARGES" />
 			<value code="MANUAL_REFUND" />
+			<value code="ED_MANUAL_REFUND" />
+			<value code="SD_MANUAL_REFUND" />
 			<value code="JUSPAY_DECLINED" />
 			<value code="RETURN" />
 			<value code="COD_PAYMENT" />

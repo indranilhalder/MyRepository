@@ -228,13 +228,15 @@ li.deliverySlotRadio .reset{margin: 3px 0px !important;    height: 30px !importa
     		$(this).parent().parent().find(".pardhuBlock input[data-name='time']").prop('checked', false);
     		var ussId=$(this).attr('data-ussid');
     		var mplconfigModel= $('#mplconfigModel').val();
-    		$(this).parent().parent().find(".displayClick").hide()
+    		$(this).parent().parent().find(".displayClick").hide();
+    		$(this).closest(".deliverySlotRadio .tribhuvanClosest").attr('data-ajax','3bu1');
     		var dataString = 'deliverySlotCost='+mplconfigModel+'&ussId='+ussId;
     		//alert(dataString);
     		 $.ajax({                            
     	 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/updateDeliverySlotCostForEd",
     	 		data : dataString,
     	 		success : function(response) {
+    	 			
     	 			currentReset.prop('disabled','disabled');
     	 			var result = response.split("-");
     	 			$("#deliveryCostSpanId").empty().text(result[0]);

@@ -106,9 +106,10 @@ function loadPincodeData(parm) {
 			//var arg1 = false;
 			console.log(response.countryCode+ " response.countryCode");
 			if(response == "" || response == " " || response == "NULL" || response == null) {
+				console.log("addresslandmark line 154"+ response+ "##");
 				//alert("in if");
 			/*	if(response.countryCode == undefined){
-				console.log("addresslandmark line 154"+ response+ "##");
+			
 				if(Pincode.length > 0){
 				if($("#pincodeError").length>0){
 					$("#pincodeError").css('color','#ff1c47').show().text("Pincode None serviceble, please enter another pincode");
@@ -248,6 +249,7 @@ $(".address_landmarkOther, .address_landmarkOtherDiv label").hide();
 function changeFuncLandMark(value) {
 	$(".errland1").hide();
 	if(value == "Other") {
+		$(".half .address_landmarkOtherDiv").css("margin-left","10px");
 		$(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").show();
 		//$("#otherLandmark").prop('value','');
 	} else {
