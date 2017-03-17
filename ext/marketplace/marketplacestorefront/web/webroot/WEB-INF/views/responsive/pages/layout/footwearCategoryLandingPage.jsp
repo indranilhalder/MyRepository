@@ -79,7 +79,7 @@
 			</div>
 	
 
-
+<product:productCompare/>
 
 	<!-- For Infinite Analytics Start -->
 <!-- 	<TISPRO-271 CHANGES> -->
