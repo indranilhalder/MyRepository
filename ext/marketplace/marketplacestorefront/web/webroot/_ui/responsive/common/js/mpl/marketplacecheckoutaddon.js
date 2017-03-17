@@ -7619,3 +7619,24 @@ function updateMobileNo(){
 	$("#otpMobileNUMField").val('');
 	$("#otpMobileNUMField").focus();    
 }
+/* TISUATSE-84 */
+$(window).on("resize load",function(){
+	
+	if($(window).width() > 963)
+		alert_top= $("header").outerHeight() + $(".wrapper .container-address").outerHeight();
+	else
+		alert_top= $("header").height() + $(".wrapper .container-address").height();
+	$(".alert-danger").css({
+				  position : "fixed",
+				  width: "100%",
+				  margin:"0px",
+				  top: alert_top
+			});
+
+			$(".alert-danger").css("z-index","101");
+			var ht=$(".alert-danger>span").outerHeight();
+	$(".alert-danger").css("height",ht);
+	var htSpanAlert = $(".alert.alert-danger.alert-dismissable").height()+7;
+	$(".checkout-payment.cart.checkout.wrapper .step-body").css("margin-top",htSpanAlert);
+	}); 
+/* TISUATSE-84 */
