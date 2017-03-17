@@ -51,7 +51,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
-import com.tisl.mpl.core.model.JuspayEBSResponseModel;
+import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
 import com.tisl.mpl.data.MplPaymentInfoData;
 import com.tisl.mpl.data.SalesReportData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -169,7 +169,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 
 	/*
 	 * This method is used to convert the Order Model into Order Data
-	 * 
+	 *
 	 * @param orderModel
 	 */
 	protected OrderData convertToData(final OrderModel orderModel)
@@ -746,7 +746,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 						{
 							try
 							{
-								final JuspayEBSResponseModel jusPay = mplPaymentService.getEntryInAuditByOrder(auditId);
+								final JuspayEBSResponseDataModel jusPay = mplPaymentService.getEntryInAuditByOrder(auditId);
 								if (null != jusPay && null != jusPay.getEbsRiskLevel())
 								{
 									riskScore = jusPay.getEbsRiskLevel().getCode();

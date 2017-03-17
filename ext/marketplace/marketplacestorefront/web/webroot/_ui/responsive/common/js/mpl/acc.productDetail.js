@@ -1782,12 +1782,14 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				$("#mrpPriceId").show();
 				$("#spPriceId").show();
 				$("#mopPriceId").hide();//UF-60
+				$("#mrpPriceId").removeClass("sale").addClass("old");//UF-60
 			} else {
 
 				$('#mrpPriceId').css('text-decoration', 'line-through');
 				$("#mrpPriceId").show();
 				$("#spPriceId").show();
 				$("#mopPriceId").hide();//UF-60
+				$("#mrpPriceId").removeClass("sale").addClass("old");//UF-60
 			}
 
 		} else {			
@@ -1796,11 +1798,15 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				if (mop.value == mrp.value) {
 					$("#mrpPriceId").removeClass("old").addClass("sale");
 					$("#mrpPriceId").show();
+					$('#mrpPriceId').css('text-decoration', '');//UF-60
+					$("#mopPriceId").hide();//UF-60
+					$("#spPriceId").hide();//UF-60
 				} else {
 					$('#mrpPriceId').css('text-decoration', 'line-through');
 					$("#mrpPriceId").show();
 					$("#mopPriceId").show();
 					$("#spPriceId").hide();//UF-60
+					$("#mrpPriceId").removeClass("sale").addClass("old");//UF-60
 				}
 			} else if(mop.value != 0 && mop.value <= freebiePriceThresVal){
 				 $(".size").hide(); 	
@@ -1897,6 +1903,10 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 
 	if (parseInt($("#prodPrice").val()) > emiCuttOffAmount.value) { 
 		$("#emiStickerId").show();
+	}
+	else
+	{  //UF-60
+		$("#emiStickerId").hide();
 	}
 	// EMI change ends
 
@@ -3167,7 +3177,6 @@ function getProductContents() {
 	}
 
 ////Start of UF-60 changes
-var variantSelectedSize=false;
 $(document).ready(function(){
 	onSizeSelectPopulateDOM();
 });
@@ -3188,16 +3197,9 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 		
-		//To get url params
-		for(var i=0;i<params.length;i++)
-		{
-			if(params[i].includes("selectedSize"))
-			{
-				variantSelectedSize=params[i].split("=")[1];
-			}
-		}
+		productCode=$(currentSelectedElement).attr("data-productCode");
 		//To get product code from URL
-		productCode=getProductCodeFromPdpUrl(href);
+		//productCode=getProductCodeFromPdpUrl(href);
 		//To get original URL
 		var a = $('<a>', { href:href } )[0];
 		var port= ":"+window.location.port;
@@ -3251,7 +3253,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						}
 						
 						
-						$('#selectedSize').val(variantSelectedSize);
+						$('#selectedSize').val("true");
 						
 						$("input[name=productCodeMSD]").val(responseProductCode);
 						$("#product").val(responseProductCode);
@@ -3262,7 +3264,9 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						$('a.size-guide').data("sizeSelected",'true');
 						$('#pdpPincodeCheck').data('clicked', false);
 						$('#ia_product_code').val(responseProductCode);
-						
+						$("#dListedErrorMsg").hide();//TISSTRT-1469
+						$(".reviews").show();
+						$(".fullfilled-by").show();
 						
 						//Deselect the previously selected li and highlight the current li
 						$('ul#variant.variant-select li').each(function (index, value) { 
@@ -3434,8 +3438,8 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 									attachOnScrollEventForPdpOnSizeSelect();
 								}
 								
-								//Calling Tealium after 1000 milisec
-								setTimeout(function(){tealiumCallOnPageLoad();}, 1000);
+								//Calling Tealium after 500 milisec
+								setTimeout(function(){tealiumCallOnPageLoad();}, 500);
 								
 								//Calling MSD if MSD is enabled
 //								if(typeof($('input[name=isMSDEnabled]').val())!='undefined' && $('input[name=isMSDEnabled]').val()=="true")
@@ -3477,7 +3481,7 @@ function getClassificationAttributes(productCode)
 	return $.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
-		cache : true,
+		cache : false,
 		dataType : "json",
 	});
 }
@@ -3911,7 +3915,7 @@ function populateProductPageTabs(jsonData)
 function attachOnScrollEventForPdpOnSizeSelect()
 {
 	$(window).on('scroll load',function() {
-		if(typeof($('input[name=isGigyaEnabled]').val())!='undefined' && $('input[name=isGigyaEnabled]').val()=="Y")
+		if(typeof($('input[name=isGigyaEnabled]').val())!='undefined' && $('input[name=isGigyaEnabled]').val()=="Y" && typeof(params)!='undefined')
 		{
 			lazyLoadGigyaCommentsUi();
 		}

@@ -26,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.MplPaymentAuditStatusEnum;
-import com.tisl.mpl.core.model.JuspayEBSResponseModel;
+import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.juspay.PaymentService;
@@ -183,9 +183,9 @@ public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 	public void actionOnResponse(final GetOrderStatusResponse orderStatusResponse, final MplPaymentAuditModel audit)
 	{
 
-		if (null != orderStatusResponse && null != audit && null != audit.getRisk() && !audit.getRisk().isEmpty())
+		if (null != orderStatusResponse && null != audit && null != audit.getRiskData() && !audit.getRiskData().isEmpty())
 		{
-			for (final JuspayEBSResponseModel ebsModel : audit.getRisk())
+			for (final JuspayEBSResponseDataModel ebsModel : audit.getRiskData())
 			{
 				if (null != ebsModel.getEbsRiskStatus() && null != orderStatusResponse.getRiskResponse()
 						&& null != orderStatusResponse.getRiskResponse().getEbsPaymentStatus())
@@ -204,7 +204,7 @@ public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 	 * @param orderStatusResponse
 	 * @param audit
 	 */
-	private void setOrderStatusAfterEbsResp(final JuspayEBSResponseModel ebsModel,
+	private void setOrderStatusAfterEbsResp(final JuspayEBSResponseDataModel ebsModel,
 			final GetOrderStatusResponse orderStatusResponse, final MplPaymentAuditModel audit)
 	{
 		boolean errorFlag = false;

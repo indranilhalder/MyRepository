@@ -45,7 +45,7 @@ import com.tisl.mpl.core.enums.MplPaymentAuditStatusEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.EMITermRowModel;
-import com.tisl.mpl.core.model.JuspayEBSResponseModel;
+import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.SavedCardModel;
@@ -111,7 +111,8 @@ public class MplPaymentServiceImplUnitTest
 	private OrderModel orderModel;
 	private MplPaymentAuditModel mplPaymentAuditModel;
 	private MplPaymentAuditEntryModel mplPaymentAuditEntryModel;
-	private JuspayEBSResponseModel juspayEBSResponseModel;
+	//changes for JuspayEBSResponseFIX
+	private JuspayEBSResponseDataModel juspayEBSResponseModel;
 	private RiskResponse riskResponse;
 	//private ObjectMapper objectMapper;
 	private GetOrderStatusRequest orderStatusRequest;
@@ -169,7 +170,8 @@ public class MplPaymentServiceImplUnitTest
 		this.emiBankModel = Mockito.mock(EMIBankModel.class);
 		this.orderModel = Mockito.mock(OrderModel.class);
 		this.mplPaymentAuditModel = Mockito.mock(MplPaymentAuditModel.class);
-		this.juspayEBSResponseModel = Mockito.mock(JuspayEBSResponseModel.class);
+		//changes for JuspayEBSResponseFIX
+		this.juspayEBSResponseModel = Mockito.mock(JuspayEBSResponseDataModel.class);
 		this.mplPaymentAuditEntryModel = Mockito.mock(MplPaymentAuditEntryModel.class);
 		this.riskResponse = Mockito.mock(RiskResponse.class);
 		//this.objectMapper = Mockito.mock(ObjectMapper.class);
@@ -392,7 +394,7 @@ public class MplPaymentServiceImplUnitTest
 		Mockito.when(modelService.create(PaymentTransactionModel.class)).thenReturn(paymentTransactionModel);
 		Mockito.when(modelService.create(PaymentTypeModel.class)).thenReturn(paymentTypeModel);
 
-		mplPaymentServiceImpl.setPaymentTransactionForCOD(paymentMode, abstractOrderModel);
+		mplPaymentServiceImpl.setPaymentTransactionForCOD(abstractOrderModel);
 
 	}
 
@@ -419,7 +421,8 @@ public class MplPaymentServiceImplUnitTest
 
 		Mockito.when(orderStatusResponse.getOrderId()).thenReturn("111111111");
 		Mockito.when(mplPaymentDao.getAuditEntries(orderStatusResponse.getOrderId())).thenReturn(mplPaymentAuditModel);
-		Mockito.when(modelService.create(JuspayEBSResponseModel.class)).thenReturn(juspayEBSResponseModel);
+		//changes for JuspayEBSResponseFIX
+		Mockito.when(modelService.create(JuspayEBSResponseDataModel.class)).thenReturn(juspayEBSResponseModel);
 		Mockito.when(configurationService.getConfiguration()).thenReturn(configuration);
 		Mockito.when(configuration.getString("payment.ebs.downtime")).thenReturn("N");
 
