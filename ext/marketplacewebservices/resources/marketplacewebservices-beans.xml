@@ -659,6 +659,10 @@
 			<!--  Added for luxury -->
 			<property name="isLuxury" type="String" /> 
 			
+			<!-- Added for CAR-57: Check pincode decomission -->
+			<property name="pinCodeResponse" type="de.hybris.platform.commercefacades.product.data.PinCodeResponseData" /> 
+			
+			
 			
 			<!-- 	-->	
 			<property name="discountPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />

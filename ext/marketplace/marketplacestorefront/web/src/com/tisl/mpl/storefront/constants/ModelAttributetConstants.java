@@ -444,6 +444,7 @@ public final class ModelAttributetConstants
 	public static final String ORDER_RETURN_CATEGORY = "RSP";
 	public static final String RECAPTCHA_PUBLIC_KEY_PROPERTY = "recaptcha.publickey";
 	public static final String RECAPTCHA_KEY = "recaptchaKey";
+	public static final String CODRECAPTCHA_KEY = "grecaptchaKey";
 	public static final String TRANS_ID_SUBSTRING = "000";
 	public static final String REFUNDTYPE = "refundType";
 	public static final String SELLERID = "sellerId".intern();

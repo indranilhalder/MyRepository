@@ -181,7 +181,9 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 * @return OrderData
 	 * @throws EtailNonBusinessExceptions
 	 */
-	public OrderData placeOrderByCartId(final String cartID) throws EtailNonBusinessExceptions;
+	//CAR-110
+	//public OrderData placeOrderByCartId(final String cartID) throws EtailNonBusinessExceptions;
+	public String placeOrderByCartId(final CartModel cart) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @description: It is used for converting date into ordinal date

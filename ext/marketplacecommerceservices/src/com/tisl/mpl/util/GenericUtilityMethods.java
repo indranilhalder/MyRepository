@@ -111,9 +111,9 @@ public class GenericUtilityMethods
 	{
 		try
 		{
-			final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+			final DateFormat dateFormat = new SimpleDateFormat(MarketplacecommerceservicesConstants.YYYYMMDD);
 			final String bDayString = dateFormat.format(date);
-			final String bDayStringArry[] = bDayString.split("/");
+			final String bDayStringArry[] = bDayString.split(MarketplacecommerceservicesConstants.FRONTSLASH);
 
 			final String year = bDayStringArry[0];
 
@@ -136,15 +136,16 @@ public class GenericUtilityMethods
 	{
 		try
 		{
-			final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			final DateFormat dateFormat = new SimpleDateFormat(MarketplacecommerceservicesConstants.DMY_DATE_FORMAT);
 			final String bDayString = dateFormat.format(date);
-			final String bDayStringArry[] = bDayString.split("/");
+			final String bDayStringArry[] = bDayString.split(MarketplacecommerceservicesConstants.FRONTSLASH);
 
 			final String month = bDayStringArry[1];
 			final String day = bDayStringArry[0];
 
 
-			final String modifiedBDay = day + "/" + month + "/" + yeartoModify;
+			final String modifiedBDay = day + MarketplacecommerceservicesConstants.FRONTSLASH + month
+					+ MarketplacecommerceservicesConstants.FRONTSLASH + yeartoModify;
 
 			final Date modifedDate = dateFormat.parse(modifiedBDay);
 
@@ -167,15 +168,16 @@ public class GenericUtilityMethods
 		Date modifedDate = null;
 		try
 		{
-			final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			final DateFormat dateFormat = new SimpleDateFormat(MarketplacecommerceservicesConstants.DMY_DATE_FORMAT);
 			final String bDayString = dateFormat.format(date);
-			final String bDayStringArry[] = bDayString.split("/");
+			final String bDayStringArry[] = bDayString.split(MarketplacecommerceservicesConstants.FRONTSLASH);
 
 			final String month = bDayStringArry[1];
 			final String day = bDayStringArry[0];
 			final String year = bDayStringArry[2];
 
-			final String modifiedBDay = day + "/" + month + "/" + year;
+			final String modifiedBDay = day + MarketplacecommerceservicesConstants.FRONTSLASH + month
+					+ MarketplacecommerceservicesConstants.FRONTSLASH + year;
 
 			modifedDate = dateFormat.parse(modifiedBDay);
 
@@ -332,7 +334,7 @@ public class GenericUtilityMethods
 	public static int daysBetweenPresentDateAndGivenDate(final Date date)
 	{
 
-		final SimpleDateFormat myFormat = new SimpleDateFormat("MM/dd/yy");
+		final SimpleDateFormat myFormat = new SimpleDateFormat(MarketplacecommerceservicesConstants.DATEFORMATMMDDYYYY);
 
 		final Date presentDate = new Date();
 		long diffDays = 0L;
@@ -364,13 +366,13 @@ public class GenericUtilityMethods
 	{
 		try
 		{
-			final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			final DateFormat dateFormat = new SimpleDateFormat(MarketplacecommerceservicesConstants.DMY_DATE_FORMAT);
 			final String dayString = dateFormat.format(date);
-			final String dayStringArry[] = dayString.split("/");
+			final String dayStringArry[] = dayString.split(MarketplacecommerceservicesConstants.FRONTSLASH);
 
 			final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 			final String timeFormatString = timeFormat.format(date);
-			final String timeFormatStringArry[] = timeFormatString.split(":");
+			final String timeFormatStringArry[] = timeFormatString.split(MarketplacecommerceservicesConstants.COLON);
 
 			final String month = dayStringArry[1];
 			final String day = dayStringArry[0];
@@ -380,7 +382,10 @@ public class GenericUtilityMethods
 			final String min = timeFormatStringArry[1];
 			//final String sec = timeFormatStringArry[2];
 
-			final String modifiedBDay = day + "_" + month + "_" + year + "(" + hour + "_" + min + ")";
+			final String modifiedBDay = day + MarketplacecommerceservicesConstants.UNDER_SCORE + month
+					+ MarketplacecommerceservicesConstants.UNDER_SCORE + year + MarketplacecommerceservicesConstants.LEFT_PARENTHESIS
+					+ hour + MarketplacecommerceservicesConstants.UNDER_SCORE + min
+					+ MarketplacecommerceservicesConstants.RIGHT_PARENTHESIS;
 			return modifiedBDay;
 		}
 		catch (final Exception e)
@@ -695,7 +700,7 @@ public class GenericUtilityMethods
 			final List<AbstractPromotionRestriction> restrictionList)
 	{
 		return (getDefaultPromotionsManager().checkMinimumCategoryValue(validProductUssidMap, ctx, productPromotion) && getDefaultPromotionsManager()
-				.checkMinimumBrandAmount(ctx, promoEvalCtx, validProductUssidMap, restrictionList));
+				.checkMinimumBrandAmount(validProductUssidMap, restrictionList));
 
 	}
 
@@ -742,7 +747,7 @@ public class GenericUtilityMethods
 
 		if (null != orderDetail.getDeliveryAddress() && StringUtils.isNotEmpty(orderDetail.getDeliveryAddress().getId()))
 		{
-			final String countrycode = "91";
+			final String countrycode = MarketplacecommerceservicesConstants.COUNTRYCODE;//"91";
 			final AddressData address = orderDetail.getDeliveryAddress();
 
 			if (StringUtils.isNotEmpty(address.getFirstName()))

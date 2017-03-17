@@ -156,6 +156,8 @@ public final class RequestMappingUrlConstants
 	public static final String SHOP_BY_DEPARTMENT_AJAX = "/shopbydepartment";
 	public static final String ADD_WISHLIST_IN_POPUP_PLP = "/addToWishListInPLP";
 
+	public static final String REMOVE_FROM_WISHLIST_IN_PLP = "/removeFromWishListInPLP"; /* Changes for INC144313867 */
+
 	//order tracking page start
 	public static final String ANONYMOUS_ORDER_TRACKING_URL = "/trackOrder";
 	public static final String BEFORE_ANONYMOUS_USER_TRACK_URL = "/beforeTrack/{orderId}";
@@ -183,5 +185,5 @@ public final class RequestMappingUrlConstants
 	public static final String RETURN_FILE_DOWNLOAD="/returnFileDownload";
 	public static final String FILE_DOWNLOAD_PATH="return.filedownload.path";
 	public static final String RETURN_FILE_NAME="return.filedownload.filename";
-	
+
 }
