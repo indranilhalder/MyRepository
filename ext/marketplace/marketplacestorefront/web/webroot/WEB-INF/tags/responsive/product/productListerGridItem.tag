@@ -34,7 +34,7 @@
 <input type ="hidden"  id="list" value='${product.displaySize}'/>
 <input type ="hidden"  id="mrpPriceValue" value='${product.displayMrp}'/>
 <input type ="hidden"  id="sizeStockLevel" value='${product.displayStock}'/>
-<input type ="hidden"  id="productPromotion" value='${product.displayPromotion}'/>
+<!-- <input type ="hidden"  id="productPromotion" value='${product.displayPromotion}'/> -->
 <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
 <input type="hidden" id="loggedIn" value="false"/> 
 <!-- start change for INC_12953 -->
