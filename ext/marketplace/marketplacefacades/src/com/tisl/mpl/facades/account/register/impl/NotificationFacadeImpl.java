@@ -3,7 +3,8 @@
  */
 package com.tisl.mpl.facades.account.register.impl;
 
-import de.hybris.platform.core.GenericSearchConstants.LOG;
+import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 
@@ -18,6 +19,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.OrderStatusNotificationModel;
+import com.tisl.mpl.core.model.VoucherStatusNotificationModel;
+import com.tisl.mpl.data.NotificationData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
@@ -126,7 +130,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.facades.account.register.NotificationFacade#getNotificationDetail(com.tisl.mpl.data.NotificationData)
 	 */
@@ -179,7 +183,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#checkCustomerFacingEntry(com.tisl.mpl.core.model.
 	 * OrderStatusNotificationModel)
 	 */
@@ -192,7 +196,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#getNotificationDetailForEmailID(java.lang.String)
 	 */
 	@Override
@@ -218,7 +222,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -245,7 +249,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#getUnReadNotificationCount(java.util.List)
 	 */
 	@Override
