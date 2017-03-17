@@ -60772,7 +60772,7 @@ body.page-returnSubmit #returnPincodeCheckForm .error_text.address1Error{
 }
 @media(max-width:650px){
 .global-alerts button.close{
-		height: 100%;
+		/* height: 100%; */
 }
 }
 

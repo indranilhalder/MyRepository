@@ -7642,5 +7642,9 @@ alert_top= $("header").outerHeight() + $(".wrapper .container-address").outerHei
 	$(".alert-danger").css("height",ht);
 	var htSpanAlert = $(".alert.alert-danger.alert-dismissable").height()+parseInt($(".alert.alert-danger.alert-dismissable").css("margin-bottom"))+7;
 	$(".checkout-payment.cart.checkout.wrapper .step-body").css("margin-top",htSpanAlert);
+	if($(".alert.alert-danger.alert-dismissable").height() > 32)
+		$(".global-alerts button.close").css("height","100%");
+	else
+		$(".global-alerts button.close").css("height","");
 	}); 
 /* TISUATSE-84 */
