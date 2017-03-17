@@ -824,6 +824,16 @@ public class OrdersController extends BaseCommerceController
 								orderProductDTO.setProductColour(product.getColour());
 							}
 							/* capacity */
+						  // R2.3 ChangesStart Bug ID TISRLUAT-1134 Start 17-03-2017
+							if(entry.getSelectedDeliverySlotDate()!=null)
+							{
+								orderProductDTO.setScheduleDeliveryDate(entry.getSelectedDeliverySlotDate());
+								if(StringUtils.isNotEmpty(entry.getTimeSlotFrom()) && StringUtils.isNotEmpty(entry.getTimeSlotFrom())){
+										orderProductDTO.setScheduleDeliveryTime(entry.getTimeSlotFrom().concat(" to ").concat(entry.getTimeSlotTo()));
+								}
+							}
+							//R2.3 Changes End 
+							
 							ProductModel productModel = null;
 							if (null != entry.getProduct() && null != entry.getProduct().getCode())
 							{
