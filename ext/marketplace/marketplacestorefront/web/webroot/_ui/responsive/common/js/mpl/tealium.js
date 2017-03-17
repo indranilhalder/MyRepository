@@ -501,18 +501,36 @@ $(document).on('click',".color-swatch > li", function(){
 	});
 })
 
-/*PDP similar product recommendations*/
-$(document).on("click",".owl-stage .owl-item",function(){
-	var url = $(this).find('a').attr('href').split('/p/');
-	var productID = url[1].split('/');
+/*TPR-4803|Hot now home page,pdp recommendations generic method|*/
+$(document).on("click",".trending .owl-stage .owl-item",function(){
+	var productID='';
+	var url = $(this).find('a').attr('href');
+	if(typeof(url) != "undefined"){
+		url = url.split('/p/');
+		var productIDlist = url[1].split('/');
+		productID=productIDlist[0]
+	}
 	var productArray=[];
-	productArray.push(productID[0]);
+	productArray.push(productID);
+	
+	
+	if($('#pageType').val() == "product" || $('#pageType').val() == "/sellersdetailpage"){
 	utag.link({
 			link_text: "similar_products_clicked",
 			event_type : "similar_products_clicked",
 			similar_product_id : productArray
 			
 		});
+      }
+	
+	if($('#pageType').val() == "homepage"){
+		utag.link({
+			link_text: "hotnow_product_clicked",
+			event_type : "hotnow_product_clicked",
+			product_id : productArray
+			
+		});
+	}
 })
 
 /*PDP Add to bag & Buy Now*/
@@ -608,6 +626,126 @@ function pincodeServicabilitySuccess(selectedPincode){
 	}
 }
 /*TPR-4736|checkout|cart ends*/
+
+/*Homepage changes starts*/	
+
+/*TPR-4797 | Brand Studio changes Start*/
+$(document).on("click", ".home-brands-you-love-carousel-brands", function() {
+	var text = $(this).find('img').attr('alt');
+	if(text != ""){
+		text = $(this).find('img').attr('alt').toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+		//TISQAEE-59
+		var header = $('#brandsYouLove').find('h2').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+		utag.link({
+			link_text: text,
+			event_type : header+"_brand_clicked",
+		});
+	}
+})
+
+
+$(document).on('click','.home-brands-you-love-side-image',function(){
+	var productName=$(this).find('.product-name').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	var header = $('#brandsYouLove').find('h2').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	if(typeof utag !="undefined"){
+		utag.link({ 
+			link_text : productName, 
+			event_type : header+"_clicked", 
+		});
+	} 
+})
+
+$(document).on('click','#brandsYouLove .visit-store',function(){
+	var brandName ='';
+	var header = $('#brandsYouLove').find('h2').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	$('#brandsYouLove').find('.home-brands-you-love-carousel-brands.item').each(function(){
+		if($(this).parent().hasClass('center')){
+			brandName = $(this).find('img').attr('alt').toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+		}
+	})
+	if(typeof utag !="undefined"){
+		utag.link({ 
+			link_text : brandName, 
+			event_type : header+"_visit_store"
+		});
+	}
+})
+/*TPR-4797 | Brand Studio changes End*/
+
+/*TPR-4798 | Top Deals changes start*/
+$(document).on('click','.home-best-pick-carousel .owl-item a',function(){
+	var productName = '';
+	var header = $(this).parents('#bestPicks').children('h2').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	$(this).find('.short-info span').each(function(){
+		if(productName == ''){
+			productName = $(this).text().trim().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+		}
+		else{
+			productName = productName +"_"+ $(this).text().trim().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+		}
+	})
+	if(typeof utag !="undefined"){
+		utag.link({ 
+			link_text : productName, 
+			event_type : header+"_image_clicked"
+		});
+	}
+})
+/*TPR-4798 | Top Deals changes end*/
+
+/*TPR-4807 | Homepage banner ads*/
+$(document).on('click','.home-rotatingImage .owl-item img',function(){
+	var bannerName=$(this).attr('alt').trim().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	if(typeof utag !="undefined"){
+		utag.link({ 
+			link_text : 'banner_ad_'+bannerName, 
+			event_type : 'banner_ad_clicked', 
+		});
+	}
+})
+/*Homepage changes Ends*/
+
+/*Order History page changes Start*/
+/*TPR-4751 & 4753 | Order history and track order changes*/
+$(document).on('click','.pagination_ul .header .links a',function(){
+	var message='';
+	if($(this).attr('href').indexOf('viewOrder') >0){
+		message='view_order_details';
+	}
+	else if($(this).attr('href').indexOf('trackOrder') >0){
+		message='track_order_details';
+	}
+	if(typeof utag !="undefined"){
+		utag.link({ 
+			link_text : message, 
+			event_type : message 
+		});
+	}
+})
+
+/*TPR-4752 |cancel order*/
+$(document).on('click','.pagination_ul .item .actions a',function(){
+if(typeof utag !="undefined"){
+	 utag.link({ link_text : 'cancel_order' , event_type : 'cancel_order_clicked' });
+}
+})
+
+/*TPR-4754|invite friends start*/
+$(document).on('click','#lnInvite',function(){
+if(typeof utag !="undefined"){
+	 utag.link({ link_text : 'invite_your_friends_start' , event_type : 'invite_your_friends_start' });
+}
+})
+
+$(document).on('click','#inviteFriends',function(){
+	if(typeof utag !="undefined"){
+		 utag.link({ link_text : 'invite_your_friends_completed' , event_type : 'invite_your_friends_completed' });
+	}
+})
+/*TPR-4754|invite friends end*/
+/*Order History page changes End*/
+
+
 /* Data Layer Schema Changes Ends*/
 
 //Moved tealium on-load call to function so that it can be re-used.
