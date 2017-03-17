@@ -1138,7 +1138,6 @@ $(function() {
 												
 												/*TPR-642 & 640*/
 												utag.link({
-													link_obj: this, 
 													link_text: 'pdp_pincode_check_failure' , 
 													event_type : 'pdp_pincode_check' , 
 													pdp_pin_sku : productCode, 
@@ -1171,7 +1170,6 @@ $(function() {
 												
 												/*TPR-642 & 640*/
 												utag.link({
-													link_obj: this, 
 													link_text: 'pdp_pincode_check_failure' , 
 													event_type : 'pdp_pincode_check' , 
 													pdp_pin_sku : productCode, 
@@ -1300,7 +1298,6 @@ $(function() {
 															
 															/*TPR- 642 & 640*/
 																utag.link({
-																	link_obj: this, 
 																	link_text: 'pdp_pincode_check_success' , 
 																	event_type : 'pdp_pincode_check' , 
 																	pdp_pin_sku : productCode, 
@@ -1340,7 +1337,6 @@ $(function() {
 															
 															/*TPR-642 & 640 */
 															utag.link({
-																link_obj: this, 
 																link_text: 'pdp_pincode_check_failure' , 
 																event_type : 'pdp_pincode_check' , 
 																pdp_pin_sku : productCode, 
@@ -1935,7 +1931,8 @@ function openPopForBankEMI() {
 			utag.link({
 				link_obj: this,
 				link_text: 'emi_more_information' ,
-				event_type : 'emi_more_information'
+				event_type : 'emi_more_information',
+				product_id : productIdArray
 			});
 
 		},
