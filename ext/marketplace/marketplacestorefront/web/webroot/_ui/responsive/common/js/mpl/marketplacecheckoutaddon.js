@@ -7624,6 +7624,10 @@ $(window).on("resize load",function(){
 	
 	if($(window).width() > 963)
 		alert_top= $("header").outerHeight() + $(".wrapper .container-address").outerHeight();
+else if($(window).width() <= 773 && $(window).width() > 750)
+alert_top= $("header").outerHeight() + $(".wrapper .container-address").outerHeight() + 10;
+else if($(window).width() <= 750)
+alert_top= $("header").outerHeight() + $(".wrapper .container-address").outerHeight() + 10;
 	else
 		alert_top= $("header").height() + $(".wrapper .container-address").height();
 	$(".alert-danger").css({

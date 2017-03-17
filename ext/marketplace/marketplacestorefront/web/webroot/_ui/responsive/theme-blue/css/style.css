@@ -60769,5 +60769,10 @@ body.page-returnSubmit #returnPincodeCheckForm .error_text.address1Error{
 .alert.alert-danger.alert-dismissable{
 	padding: 0;
 }
+@media(max-width:650px){
+.global-alerts button.close{
+		height: 100%;
+}
+}
 
 /* TISUATSE-84 */
