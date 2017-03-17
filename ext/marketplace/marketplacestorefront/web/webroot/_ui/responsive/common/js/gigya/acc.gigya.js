@@ -167,7 +167,7 @@ function registerUserGigya(eventObject)
     		}
     		  utag.link(
    					{"link_text": title.replace(/ /g,'_').toLowerCase() , "event_type" : "review_post" , "review_overall_rating" : overall , "review_quality" : quality ,
-   						"review_ease_of_use" : ease_of_use	, "review_fit" : fit , "review_value_for_money": value_for_money,"user_product_rating":overall,"Seller_rating" : " " }
+   						"review_ease_of_use" : ease_of_use	, "review_fit" : fit , "review_value_for_money": value_for_money,"user_product_rating":overall,"Seller_rating" : " " ,product_id : productIdArray}
    				);
     		  
     		 
