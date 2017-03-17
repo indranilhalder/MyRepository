@@ -60762,3 +60762,11 @@ body.page-returnSubmit #returnPincodeCheckForm .error_text.address1Error{
 }
 
 /* TISUATSE-85 */
+
+/* TISUATSE-84 */
+
+.alert.alert-danger.alert-dismissable{
+	padding: 0;
+}
+
+/* TISUATSE-84 */
