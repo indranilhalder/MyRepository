@@ -860,28 +860,41 @@ function tealiumCallOnPageLoad()
 			type : 'GET',
 			cache : false,
 			success : function(data) {
-
+				
 				var tealiumData = "";
 				tealiumData += ',"user_login_type":"'	//TPR-668
 					+ user_login_type + '",';
-				tealiumData += '"product_unit_price":["'
+				tealiumData += '"product_mrp":["'
 						+ $("#product_unit_price").val() + '"],';
 				tealiumData += '"site_section":"'
 						+ $("#site_section").val() + '",';
-				tealiumData += '"product_list_price":["'
+				tealiumData += '"product_mop":["'
 						+ $("#product_list_price").val() + '"],';
+				tealiumData += '"product_discount":["'
+					+ $("#product_discount").val() + '"],';
+				tealiumData += '"product_discount_percentage":"'
+					+ $("#product_discount_percentage").val() + '%",';
 				tealiumData += '"product_name":["'
 						+ $("#product_name").val() + '"],';
 				tealiumData += '"product_sku":["'
 						+ $("#product_sku").val() + '"],';
-				tealiumData += '"page_category_name":"'
+				if ($("#page_category_name").val() != 'undefined' && $("#page_category_name").val() != ''){
+					tealiumData += '"page_category_name":"'
 						+ $("#page_category_name").val() + '",';
-				tealiumData += '"page_section_name":"'
+				}
+				if ($("#page_section_name").val() != 'undefined' && $("#page_section_name").val() != ''){
+					tealiumData += '"page_section_name":"'
 						+ $("#page_section_name").val() + '",';
+				}
 				tealiumData += '"page_name":"' + $("#page_name").val()
 						+ '",';
+				if(typeof(promo_title) != 'undefined' && promo_title !=''){ 
+					tealiumData += '"offer_title":"'       //added for analytics schema
+						+ promo_title + '",';
+				}
 				tealiumData += '"product_id":["'
 						+ $("#product_id").val() + '"],';
+				
 				//TPR-430 Start
 				if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
 				tealiumData += '"product_category":'
@@ -902,18 +915,62 @@ function tealiumCallOnPageLoad()
 				tealiumData += '"site_section_detail":"'
 						+ $("#site_section_detail").val() + '",';
 				//TPR-672 START
+				if(typeof(promo_title) != 'undefined' && promo_title !=''){ 
 				tealiumData += '"promo_title":["'
 					+promo_title+ '"],';
+				}
+				if(typeof(promo_id) != 'undefined' && promo_id !=''){ 
 				tealiumData += '"promo_id":["'
 					+promo_id+ '"],';
+				}
 				//TPR-672 END
 				
+				//Data Layer Schema changes
+				tealiumData += '"product_stock_count":["'
+					+ $("#product_stock_count").val() + '"],';
+				tealiumData += '"out_of_stock":["'
+					+ $("#out_of_stock").val() + '"],';
+				tealiumData += '"product_image_count":"'
+					+ thumbnailImageCount + '",';
+				if (typeof(pdp_video_product_id) != 'undefined' || pdp_video_product_id != null){
+					tealiumData += '"pdp_video_product_id":["'
+						+ pdp_video_product_id + '"],';
+				}
+				
 				//TPR-429 START
-				tealiumData += '"buybox_seller_id":"'
+				tealiumData += '"seller_id":"'				//variable name changed | Data Layer Schema Changes 
 					+ $("#pdpBuyboxWinnerSellerID").val() + '",';
-				tealiumData += '"other_seller_ids":"'
-					+ $("#pdpOtherSellerIDs").val() + '"}';
+				tealiumData += '"seller_name":"'
+					+ $("#sellerNameId").html() + '",';
+				if($("#pdpOtherSellerIDs").val() != 'undefined' && $("#pdpOtherSellerIDs").val() !=''){ 
+					tealiumData += '"other_seller_ids":"'
+					+ $("#pdpOtherSellerIDs").val() + '",';
+				}
 				//TPR-429 END
+				
+				//TPR-4688
+				var sizeVariantList=$('#variant').find('li');
+				if(sizeVariantList.length > 0){
+					tealiumData += '"size_variant_count":"'
+						+ sizeVariantList.length + '",';
+				}
+				
+				//TPR-4692 | Breadcrumb 
+				var breadcrum=[];
+				$('.breadcrumbs.wrapper').find('li:not(.active)').each(function(){
+					breadcrum.push($(this).find('a').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,""));
+				})
+				if(typeof(breadcrum) != 'undefined' || breadcrum != null){
+					for(var i=0;i<breadcrum.length;i++){
+						if(i!=0){
+							var fieldName = "page_subcategory_L"+i;
+							tealiumData += '"'+fieldName+'":"'
+								+ breadcrum[i] + '",';
+						}
+					}
+					tealiumData += '"product_display_hierarchy":"'
+						+ breadcrum + '"}';
+				}
 				data = data.replace("}<TealiumScript>", tealiumData);
 				// console.log(data);
 				
@@ -1139,6 +1196,20 @@ function tealiumCallOnPageLoad()
 					+ qtyUpdated + ',';			
 				tealiumData += '"checkout_seller_ids":"'		//for TPR-429
 					+ $("#checkoutSellerIDs").val() + '",';
+				//L1 L2 L3 For cart  TPR-4831
+				if($("#page_subcategory_L1").val() !=undefined || $("#page_subcategory_L1").val() !=null){ 
+					tealiumData += '"page_subcategory_L1":'
+						+ getListValue("page_subcategory_L1") + ',';           
+					}
+				if($("#page_subcategory_L2").val() !=undefined || $("#page_subcategory_L2").val() !=null){ 
+					tealiumData += '"page_subcategory_L2":'
+						+ getListValue("page_subcategory_L2") + ',';            
+					}
+				if($("#page_subcategory_l3").val() !=undefined || $("#page_subcategory_l3").val() !=null){ 
+					tealiumData += '"page_subcategory_l3":'
+						+ getListValue("page_subcategory_l3") + ',';            
+					}
+				//L1 L2 L3 cart ends
 				//TPR-430 Start
 				if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
 				tealiumData += '"product_category":'
