@@ -4369,11 +4369,11 @@ public class DefaultPromotionManager extends PromotionsManager
 		{
 			if (!(promotionCategoriesList.isEmpty()))
 			{
-				promQuery.append("{{ SELECT {cat2prod:").append("target").append("} as pk ");
+				promQuery.append("SELECT {cat2prod:").append("target").append("} as pk ");
 				promQuery.append(" FROM { ").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
 						.append(" AS cat2prod} ");
 				promQuery.append(" WHERE {cat2prod:").append("source").append("} in (?promotionCategories)  ");
-				promQuery.append("   AND {cat2prod:").append("target").append("} in (?product) }} ");
+				promQuery.append("   AND {cat2prod:").append("target").append("} in (?product) ");
 
 				params.put("promotionCategories", promotionCategories);
 			}
@@ -4391,11 +4391,11 @@ public class DefaultPromotionManager extends PromotionsManager
 				}
 				for (int i = 0; i < pages; ++i)
 				{
-					promQuery.append("{{ SELECT {cat2prod:").append("target").append("} as pk ");
+					promQuery.append("SELECT {cat2prod:").append("target").append("} as pk ");
 					promQuery.append(" FROM { ").append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION)
 							.append(" AS cat2prod} ");
 					promQuery.append(" WHERE {cat2prod:").append("source").append("} in (?promotionCategories_").append(i);
-					promQuery.append(")   AND {cat2prod:").append("target").append("} in (?product) }} ");
+					promQuery.append(")   AND {cat2prod:").append("target").append("} in (?product) ");
 				}
 			}
 		}
