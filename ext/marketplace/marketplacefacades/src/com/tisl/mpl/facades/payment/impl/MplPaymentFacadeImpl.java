@@ -1655,11 +1655,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1710,9 +1710,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -2181,39 +2181,40 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			String juspayOrderId) throws EtailBusinessExceptions, EtailNonBusinessExceptions
 	{
 		final PaymentService juspayService = new PaymentService();
-
-		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-		juspayService.withKey(
-				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
-				.withMerchantId(
-						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
-
+		String orderStatus = null;
+		boolean updAuditErrStatus = false;
 		try
 		{
+			juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+			juspayService
+					.withKey(
+							getConfigurationService().getConfiguration().getString(
+									MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)).withMerchantId(
+							getConfigurationService().getConfiguration()
+									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+
 			//For Mobile
 			if (MapUtils.isEmpty(paymentMode))
 			{
 				paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
 			}
 
-			String orderStatus = null;
-			boolean updAuditErrStatus = false;
-
 			//creating OrderStatusRequest
 			final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
-
-			//TISPT-200 implementing fallback for null audit id
 			try
 			{
-				//For Mobile
+				//If from Audit JuspayOrderId is fetched than no need to fetch from Session
+				if (StringUtils.isNotEmpty(orderGuid))
+				{
+					juspayOrderId = getMplPaymentService().getAuditId(orderGuid);
+				}
+
+				//TISPT-200 implementing fallback for null audit id
+				//For Web
 				if (StringUtils.isEmpty(juspayOrderId))
 				{
 					juspayOrderId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID);
-					if (StringUtils.isEmpty(juspayOrderId))
-					{
-						juspayOrderId = getMplPaymentService().getAuditId(orderGuid);
-					}
 				}
 			}
 			catch (final Exception e)

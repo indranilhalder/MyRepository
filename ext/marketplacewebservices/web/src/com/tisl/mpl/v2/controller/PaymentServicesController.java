@@ -815,7 +815,7 @@ public class PaymentServicesController extends BaseController
 	{ "ROLE_CLIENT", CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = MarketplacewebservicesConstants.UPDATETRANSACTIONFORCARDURL, method = RequestMethod.POST, produces = MarketplacewebservicesConstants.APPLICATIONPRODUCES)
 	@ResponseBody
-	public PaymentServiceWsData updateTransactionDetailsforCard(@RequestParam final String juspayOrderID,
+	public PaymentServiceWsData updateTransactionDetailsforCard(@RequestParam(required = false) final String juspayOrderID,
 			@RequestParam final String paymentMode, @PathVariable final String userId, @RequestParam final String cartGuid)
 	{
 		final PaymentServiceWsData updateTransactionDetail = new PaymentServiceWsData();

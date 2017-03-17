@@ -193,6 +193,7 @@ public class NotificationServiceImpl implements NotificationService
 			getModelService().saveAll(voucherNotifListModifiable);
 
 			user.setVoucher(voucherNotifListModifiable);
+			modelService.save(user);
 
 
 			/*
@@ -201,8 +202,10 @@ public class NotificationServiceImpl implements NotificationService
 			 * }
 			 */
 
+
 			//final List<VoucherStatusNotificationModel> voucherNotificationListModifiable = new ArrayList<VoucherStatusNotificationModel>();
-			//final VoucherStatusNotificationModel voucherNotificationTobeRemoved = null;
+			//final VoucherStatusNotificationModel voucherNotificationTobeRemoved = null;			
+			//VoucherStatusNotificationModel voucherNotificationTobeRemoved = null;
 
 			/*
 			 * for (final VoucherStatusNotificationModel vsn : voucherNotificationList) {
@@ -214,17 +217,29 @@ public class NotificationServiceImpl implements NotificationService
 			 * else { //voucherNotificationListModifiable.add(vsn); }
 			 */
 
-			//}
+//			for (final VoucherStatusNotificationModel vsn : voucherNotificationList)
+//			{
+//				if (vsn.getVoucherCode().equalsIgnoreCase(orderNo))
+//				{
+//					continue;
+//					//voucherNotificationTobeRemoved = vsn;
+//					//break;
+//				}
+//				else
+//				{
+//					voucherNotificationListModifiable.add(vsn);
+//				}
+//
+//			}
 			//Removing the voucher notification from customers voucher notification List
-			/*
-			 * if (voucherNotificationTobeRemoved != null) {
-			 * voucherNotificationList.remove(voucherNotificationTobeRemoved); }
-			 */
+			//			if (voucherNotificationTobeRemoved != null)
+			//			{
+			//				voucherNotificationList.remove(voucherNotificationTobeRemoved);
+			//			}
 			//set the updated voucherNotification Data against user
 			//user.setVoucher(voucherNotificationListModifiable);
-			//user.setVoucher(voucherNotificationList);
 			//save the user
-			modelService.save(user);
+//			modelService.save(user);
 
 		}
 		catch (final ModelSavingException e)
@@ -678,11 +693,11 @@ public class NotificationServiceImpl implements NotificationService
 						&& CollectionUtils.isNotEmpty(userList))
 				{
 
+
 					//					for (final PrincipalModel user : userList)
 					//					{
 					//						restrUserUidList.add(user.getUid());
 					//					}
-
 
 					if (null != voucherIndentifier && null != voucherCode)
 					{
