@@ -1180,7 +1180,7 @@
 		<!-- End -->
 		
 		
-		<!-- <relation code="VoucherStatusNotificationCustomerRelation"
+		<relation code="VoucherStatusNotificationCustomerRelation"
 			autocreate="true" generate="true" localized="false">
 			<deployment table="Voucher2CustomerRel" typecode="18900" />
 			<sourceElement qualifier="Users" type="Principal"
@@ -1193,7 +1193,7 @@
 				<modifiers read="true" write="true" search="true"
 					optional="true" />
 			</targetElement>
-		</relation>  -->
+		</relation>
 	</relations>
 
 		

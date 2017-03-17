@@ -89,3 +89,6 @@ UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript
  
 ;mpl_Email_Customer_Registration_Body;"Customer Registration Email Body";$emailResource/email-customerRegistrationBody.vm
 ;mpl_Email_Customer_Registration_Subject;"Customer Registration Email Subject";$emailResource/email-customerRegistrationSubject.vm
+
+INSERT_UPDATE SearchRestriction;code[unique=true];active;query;principal(uid);restrictedtype(code);generate[default=FALSE]
+;VoucherSatusNotificationRestriction;true;( {voucherstartdate} IS NULL OR {voucherstartdate} <= ?session.user.currentDate) AND ( {voucherenddate} IS NULL OR {voucherenddate} >= ?session.user.currentDate);customergroup;VoucherStatusNotification;
