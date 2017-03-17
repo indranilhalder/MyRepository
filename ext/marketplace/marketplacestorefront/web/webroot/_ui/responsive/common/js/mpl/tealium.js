@@ -1,3 +1,4 @@
+var productIdArray = [];
 $(document).ready(
 		
 
@@ -466,13 +467,14 @@ $(document).on("click",".product-info > .product-image-container > .productImage
 	utag.link({
 		"link_text":"pdp_"+thumbnail_value+"_clicked",
 		"event_type":"pdp_"+thumbnail_type+"_clicked",
-		"thumbnail_value":thumbnail_value
+		"thumbnail_value":thumbnail_value,
+		product_id : productIdArray
 	});
 })
 
 /*Product Specification*/
 $(document).on("click",".nav-wrapper .nav.pdp",function(){
-	utag.link({"link_text":"product_specification", "event_type":"view_prod_specification"});
+	utag.link({"link_text":"product_specification", "event_type":"view_prod_specification",product_id : productIdArray});
 })
 
 /*Out Of Stock During adding to bag*/
@@ -486,7 +488,8 @@ $(document).on('click',".variant-select > li", function(){
 	utag.link({
 		"link_text":"pdp_size_"+product_size,
 		"event_type":"pdp_size_selected",
-		"product_size":product_size
+		"product_size":product_size,
+		product_id : productIdArray
 	});
 })
 
@@ -497,7 +500,8 @@ $(document).on('click',".color-swatch > li", function(){
 	utag.link({
 		"link_text":"pdp_color_"+product_color,
 		"event_type":"pdp_color_selected",
-		"product_color":product_color
+		"product_color":product_color,
+		product_id : productIdArray
 	});
 })
 
@@ -975,6 +979,7 @@ function tealiumCallOnPageLoad()
 				// console.log(data);
 				
 				$('#tealiumHome').html(data);
+				productIdArray.push($("#product_id").val());
 			}
 		});
 	}
