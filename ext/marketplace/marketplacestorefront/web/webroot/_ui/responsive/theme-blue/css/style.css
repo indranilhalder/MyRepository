@@ -37530,6 +37530,7 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
     background-image: url(../images/Delete.png);
     height: 24px;
     width: 24px;
+    background-repeat: no-repeat;
 }
 .alert-dismissable.alert-info .close, .alert-dismissible.alert-info .close {
 	position: relative;
