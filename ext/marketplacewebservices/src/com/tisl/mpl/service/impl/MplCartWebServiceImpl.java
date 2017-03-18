@@ -98,6 +98,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
+import com.tisl.mpl.facades.populators.CustomAddressPopulator;
 import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
@@ -179,6 +180,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	private PriceDataFactory priceDataFactory;
 	@Autowired
 	private MplCouponFacade mplCouponFacade;
+	@Autowired
+	private CustomAddressReversePopulator addressReversePopulator;
 
 	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
 
@@ -821,7 +824,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 				if (deListedStatus)
 				{
-					delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
+					String delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
 					cartDataDetails.setDelistedMessage(delistMessage);
 				}
 
@@ -840,6 +843,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			{
 				LOG.debug("Cart model is empty");
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9038);
+			}
 			}
 		}
 		catch (final ConversionException ce)
@@ -1845,8 +1849,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		/* Product Details */
 		List<GetWishListProductWsDTO> gwlpList = new ArrayList<>();
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<>();
-		boolean deListedStatus = false;
-		String delistMessage = "";
+//		boolean deListedStatus = false;
+//		String delistMessage = "";
 		//CAR-57
 		List<PinCodeResponseData> pinCodeRes = null;
 
@@ -2227,7 +2231,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		final AddressModel addressModel = getModelService().create(AddressModel.class);
 		try
 		{
-			getAddressReversePopulator().populate(addressData, addressModel);
+			addressReversePopulator.populate(addressData, addressModel);
 			if (null != addressData.getState())
 			{
 				addressModel.setDistrict(addressData.getState());

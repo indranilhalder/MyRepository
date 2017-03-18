@@ -527,7 +527,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 
 			//CAR-130
-			/* final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(); */
+			 final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(); 
 			cartUssidData = getMplCustomAddressFacade().getCheckoutCart();
 			List<AddressData> deliveryAddress = null;
 

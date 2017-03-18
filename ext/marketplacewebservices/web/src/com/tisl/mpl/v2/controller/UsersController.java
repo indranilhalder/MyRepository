@@ -2470,7 +2470,7 @@ public class UsersController extends BaseCommerceController
 	@ResponseBody
 	public UserResultWsDto addAddress(@RequestParam final String emailId, @RequestParam final String firstName,
 			@RequestParam final String lastName, @RequestParam final String line1, @RequestParam final String line2,
-			@RequestParam final String line3, @RequestParam final String town, @RequestParam final String state,
+			@RequestParam final String line3, @RequestParam(required = false) final String landmark,@RequestParam final String town, @RequestParam final String state,
 			@RequestParam final String countryIso, @RequestParam final String postalCode, @RequestParam final String phone,
 			@RequestParam final String addressType, @RequestParam final boolean defaultFlag) throws RequestParameterException
 	{

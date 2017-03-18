@@ -229,19 +229,6 @@ public interface MplCommerceCartService
 	List<PinCodeResponseData> getAllResponsesForPinCode(final String pin, final List<PincodeServiceData> reqData)
 			throws EtailNonBusinessExceptions, ClientEtailNonBusinessExceptions;
 
-	/*
-	 * @Desc fetching reservation details
-	 * 
-	 * @param cartId
-	 * 
-	 * @param cartData
-	 * 
-	 * @param pincode
-	 * 
-	 * @throws EtailNonBusinessExceptions
-	 */
-	ReservationListWsDTO getReservation(final AbstractOrderModel cartModel, final String pincode, final String type)
-			throws EtailNonBusinessExceptions;
 
 	/*
 	 * @DESC MobileWS105 : get top two wish list for mobile web service
