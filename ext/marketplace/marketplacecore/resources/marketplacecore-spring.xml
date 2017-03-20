@@ -999,6 +999,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="configurationService" ref="configurationService" />
+		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
 	</bean>
 
 	<bean id="mplColorFacetDisplayNameProvider"

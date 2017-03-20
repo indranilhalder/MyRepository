@@ -104,3 +104,11 @@
 				</form>
 				</div>
 </div>
+<!-- start change of INC144313760 -->
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".g-interactivepost").attr("data-contenturl",window.location);
+	$(".g-interactivepost").attr("data-calltoactionurl",window.location);						
+});					
+</script>
+<!-- end change of INC144313760 -->

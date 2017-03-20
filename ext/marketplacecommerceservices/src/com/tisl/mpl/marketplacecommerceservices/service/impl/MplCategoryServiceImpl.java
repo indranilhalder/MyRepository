@@ -63,7 +63,7 @@ public class MplCategoryServiceImpl extends DefaultCategoryService implements Mp
 
 	/**
 	 * @param catModel
-	 * @param catalogCode
+	 * @param catalogName
 	 * @return CategoryModel
 	 */
 	@Override
@@ -165,6 +165,64 @@ public class MplCategoryServiceImpl extends DefaultCategoryService implements Mp
 	{
 		this.mplCategoryDao = mplCategoryDao;
 	}
+
+
+	/**
+	 * Returns List of Super categories for a list of Category
+	 *
+	 * @param categoryList
+	 */
+	//	@Override
+	//	public Collection<CategoryModel> getAllSupercategoriesForCategoryList(final List<CategoryModel> categoryList)
+	//	{
+	//		return getAllSupercategories(categoryList);
+	//	}
+
+	/**
+	 * Get All Category Tree Structure
+	 *
+	 * @param categories
+	 * @return result
+	 */
+	//	private Collection<CategoryModel> getAllSupercategories(final Collection<CategoryModel> categories)
+	//	{
+	//		Collection<CategoryModel> result = null;
+	//		Collection<CategoryModel> currentLevel = new ArrayList<CategoryModel>();
+	//		for (final CategoryModel categoryModel : categories)
+	//		{
+	//			final List<CategoryModel> superCategories = categoryModel.getSupercategories();
+	//			if (superCategories != null)
+	//			{
+	//				currentLevel.addAll(superCategories);
+	//			}
+	//		}
+	//
+	//		while (!CollectionUtils.isEmpty(currentLevel))
+	//		{
+	//			for (final Iterator iterator = currentLevel.iterator(); iterator.hasNext();)
+	//			{
+	//				final CategoryModel categoryModel = (CategoryModel) iterator.next();
+	//				if (result == null)
+	//				{
+	//					result = new HashSet<CategoryModel>();
+	//				}
+	//				if (!result.add(categoryModel))
+	//				{
+	//					// avoid cycles by removing all which are already found
+	//					iterator.remove();
+	//				}
+	//			}
+	//
+	//			if (currentLevel.isEmpty())
+	//			{
+	//				break;
+	//			}
+	//			final Collection<CategoryModel> nextLevel = getAllSupercategories(currentLevel);
+	//			currentLevel = nextLevel;
+	//		}
+	//
+	//		return result == null ? Collections.EMPTY_LIST : result;
+	//	}
 
 
 }

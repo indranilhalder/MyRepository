@@ -544,5 +544,7 @@ public class MarketplacewebservicesConstants
 	public final static String MRUPEE_NARRATION_VALUE = "payment.mRupee.narration".intern();
 	public final static String MRUPEE_MERCHANT_CODE = "payment.mRupee.merchantID".intern();
 	public final static String FAIL = "fail";
+	public static final String ORDER_HISTORY_PAGESIZE_WEBSERVICE = "orderHistory.pagesize.defaultValue";
+
 
 }

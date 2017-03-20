@@ -752,7 +752,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.MplPaymentWebFacade#potentialPromotionOnPaymentMode(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -818,29 +818,25 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	public boolean updateOrder(final OrderModel order) throws EtailBusinessExceptions, InvalidCartException, CalculationException
 	{
 		boolean updated = false;
-		OrderData orderData = null;
+		//OrderData orderData = null;
 		if (null != order.getPaymentInfo() && CollectionUtils.isEmpty(order.getChildOrders()))
 		{
-			//	mplCheckoutFacade.beforeSubmitOrder(order);
-			mplCheckoutFacade.beforeSubmitOrderMobile(order);
+			mplCheckoutFacade.beforeSubmitOrder(order);
 			mplCheckoutFacade.submitOrder(order);
+			//CAR-110
+			//orderData = mplCheckoutFacade.getOrderDetailsForCode(order);
 			//order confirmation email and sms
 			getNotificationFacade().sendOrderConfirmationNotification(order);
-
-			orderData = mplCheckoutFacade.getOrderDetailsForCode(order);
+			updated = true;
 		}
 		else if (null != order.getPaymentInfo() && CollectionUtils.isNotEmpty(order.getChildOrders()))
 		{
-			orderData = mplCheckoutFacade.getOrderDetailsForCode(order);
-		}
-		else if (null == order.getPaymentInfo() && OrderStatus.PAYMENT_TIMEOUT.equals(order.getStatus()))
-		{
-			LOG.error("Issue with update order...redirecting to payment page only");
-		}
-		if (orderData != null)
-		{
+			//orderData = mplCheckoutFacade.getOrderDetailsForCode(order);
 			updated = true;
 		}
+		/*
+		 * if (orderData != null) { updated = true; }
+		 */
 		return updated;
 	}
 

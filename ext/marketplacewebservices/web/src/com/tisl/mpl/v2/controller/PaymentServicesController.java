@@ -5,16 +5,17 @@ package com.tisl.mpl.v2.controller;
 
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
-import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
+import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.localization.Localization;
 
 import java.util.Date;
@@ -104,6 +105,12 @@ public class PaymentServicesController extends BaseController
 	private static final String CUSTOMERMANAGER = "ROLE_CUSTOMERMANAGERGROUP";
 	private static final String TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT";
 
+	@Resource(name = "userService")
+	private UserService userService;
+
+	@Resource(name = "cartService")
+	protected CartService cartService;
+
 	//  COD Eligible Check
 	/**
 	 * @Description COD Eligibility check for all the items in the cart (check Bleack list Consumer Sailor Fulfillment
@@ -138,11 +145,17 @@ public class PaymentServicesController extends BaseController
 			//final String ip = getBlacklistByIPStatus(); TISPT-204 Point No 2
 			final String ip = getMplPaymentFacade().getBlacklistByIPStatus(request);
 			LOG.debug("The ip of the system is::::::::::::::::::::::::" + ip);
-			customer = getMplPaymentWebFacade().getCustomer(userId);
+
+			//CAR Project performance issue fixed
+			//customer = getMplPaymentWebFacade().getCustomer(userId);
+			customer = (CustomerModel) userService.getCurrentUser();
 
 			if (null == orderModel)
 			{
+				//CAR Project performance issue fixed
 				final CartModel cart = getMplPaymentWebFacade().findCartAnonymousValues(cartGuid);
+				//final CartModel cart = cartService.getSessionCart();
+
 				if (null != cart)
 				{
 					final boolean mplCustomerIsBlackListed = null != customer ? getMplPaymentFacade().isBlackListed(ip, cart) : true;
@@ -265,24 +278,31 @@ public class PaymentServicesController extends BaseController
 									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
 									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
 									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI) || paymentMode
-										.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE)))
+										.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE)
+						 || paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
 					{
-						//setting in cartmodel
-						cart.setConvenienceCharges(Double.valueOf(0));
-						//saving cartmodel
-						modelService.save(cart);
-					}
+						if (!paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
+						{
+							//setting in cartmodel
+							cart.setConvenienceCharges(Double.valueOf(0));
+							//saving cartmodel
+							modelService.save(cart);
+						}
 
-					if (getMplCheckoutFacade().isPromotionValid(cart))
-					{
-						//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
-						promoPriceData = getMplPaymentWebFacade().binValidation(binNo, paymentMode, cart, userId, bankName);
+						if (getMplCheckoutFacade().isPromotionValid(cart))
+						{
+							//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
+							promoPriceData = getMplPaymentWebFacade().binValidation(binNo, paymentMode, cart, userId, bankName);
+						}
+						else
+						{
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
+						}
 					}
 					else
 					{
-						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9053);
 					}
-
 				}
 				else
 				{
@@ -297,41 +317,49 @@ public class PaymentServicesController extends BaseController
 					getMplPaymentFacade().setBankForSavedCard(bankName);
 				}
 
-				//TISPT-29
 				if (StringUtils.isNotEmpty(paymentMode)
 						&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
 								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
 								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
 								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI) || paymentMode
-									.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE)))
-				{
-					//setting in cartmodel
-					orderModel.setConvenienceCharges(Double.valueOf(0));
-					//saving cartmodel
-					modelService.save(orderModel);
-				}
+									.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE) || paymentMode
+									.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
 
-				if (getMplCheckoutFacade().isPromotionValid(orderModel))
 				{
-					//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
-					promoPriceData = getMplPaymentWebFacade().binValidation(binNo, paymentMode, orderModel, userId, bankName);
+					if (!paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
+					{
+						//setting in cartmodel
+						orderModel.setConvenienceCharges(Double.valueOf(0));
+						//saving cartmodel
+						modelService.save(orderModel);
+					}
+
+					if (getMplCheckoutFacade().isPromotionValid(orderModel))
+					{
+						//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
+						promoPriceData = getMplPaymentWebFacade().binValidation(binNo, paymentMode, orderModel, userId, bankName);
+					}
+					else
+					{
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
+					}
 				}
 				else
 				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9053);
 				}
 			}
+
 		}
 		catch (final ModelSavingException ex)
 		{
 			// Error message for EtailNonBusinessExceptions Exceptions
-			LOG.error(MarketplacewebservicesConstants.BINVALIDATIONURL, ex);
 			ExceptionUtil.getCustomizedExceptionTrace(ex);
 			// Error message for All Exceptions
 			if (null != ex.getMessage())
 			{
-				promoPriceData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0007));
-				promoPriceData.setErrorCode(MarketplacecommerceservicesConstants.E0007);
+				promoPriceData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+				promoPriceData.setErrorCode(MarketplacecommerceservicesConstants.B9004);
 			}
 		}
 		catch (final EtailNonBusinessExceptions ex)
@@ -356,7 +384,6 @@ public class PaymentServicesController extends BaseController
 		}
 		catch (final Exception e)
 		{
-			LOG.error(MarketplacewebservicesConstants.BINVALIDATIONURL, e);
 			ExceptionUtil.getCustomizedExceptionTrace(e);
 			// Error message for All Exceptions
 			if (null != e.getMessage())
@@ -391,8 +418,11 @@ public class PaymentServicesController extends BaseController
 		Map<Date, SavedCardData> savedDebitCards = new TreeMap<Date, SavedCardData>();
 		try
 		{
-			CustomerModel customer = modelService.create(CustomerModel.class);
-			customer = getMplPaymentWebFacade().getCustomer(userId);
+			//CAR-104
+			//CustomerModel customer = modelService.create(CustomerModel.class);
+			//customer = getMplPaymentWebFacade().getCustomer(userId);
+			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+
 			//validate if all the inputs are available
 			//			if (StringUtils.isNotEmpty(cardType) || StringUtils.isNotEmpty(bankName))
 			//			{
@@ -544,14 +574,16 @@ public class PaymentServicesController extends BaseController
 	@RequestMapping(value = MarketplacewebservicesConstants.UPDATETRANSACTIONFORCODURL, method = RequestMethod.POST, produces = MarketplacewebservicesConstants.APPLICATIONPRODUCES)
 	@ResponseBody
 	public PaymentServiceWsData updateTransactionDetailsforCOD(@PathVariable final String userId,
-			@RequestParam final String otpPin, @RequestParam final String cartGuid)
+			@RequestParam(required = false) final String otpPin, @RequestParam final String cartGuid)
 	{
 		final PaymentServiceWsData updateTransactionDtls = new PaymentServiceWsData();
 		OrderModel orderModel = null;
-		OrderData orderData = null;
+		//OrderData orderData = null;
 		CartModel cart = null;
 		String failErrorCode = "";
+		String validationMsg = "";
 		boolean failFlag = false;
+		String orderCode = null;
 		LOG.debug(String.format("updateTransactionDetailsforCOD : CartId: %s | UserId : %s |", cartGuid, userId));
 		try
 		{
@@ -563,7 +595,14 @@ public class PaymentServicesController extends BaseController
 			}
 			//final UserModel user = getExtUserService().getUserForOriginalUid(userId);
 			//final String validationMsg = getMplPaymentFacade().validateOTPforCODWeb(userId, otpPin);
-			final String validationMsg = getMplPaymentFacade().validateOTPforCODWV(customerData.getDisplayUid(), otpPin);
+			if (StringUtils.isNotEmpty(otpPin) && null != otpPin)
+			{
+				validationMsg = getMplPaymentFacade().validateOTPforCODWV(customerData.getDisplayUid(), otpPin);
+			}
+			else
+			{
+				validationMsg = MarketplacecommerceservicesConstants.OTPVALIDITY;
+			}
 			//IF valid then proceed saving COD payment
 			if (validationMsg.equalsIgnoreCase(MarketplacecommerceservicesConstants.OTPVALIDITY))
 			{
@@ -631,15 +670,18 @@ public class PaymentServicesController extends BaseController
 						}
 						else
 						{
-							orderData = mplCheckoutFacade.placeOrderByCartId(cartGuid);
-							if (orderData == null)
+							//CAR-110
+							//orderData = mplCheckoutFacade.placeOrderByCartId(cartGuid);
+							orderCode = mplCheckoutFacade.placeOrderByCartId(cart);
+							//Please note: order data is now just order code
+							if (orderCode == null)
 							{
 								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9321);
 							}
 							else
 							{
 								updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-								updateTransactionDtls.setOrderId(orderData.getCode());
+								updateTransactionDtls.setOrderId(orderCode);
 							}
 						}
 
@@ -902,8 +944,9 @@ public class PaymentServicesController extends BaseController
 		PaymentServiceWsData paymentModesData = new PaymentServiceWsData();
 		CartModel cart = null;
 		OrderModel orderModel = null;
-		CartData cartData = null;
-		OrderData orderData = null;
+		//CAR-111
+		//final CartData cartData = null;
+		//OrderData orderData = null;
 		try
 		{
 			if (StringUtils.isNotEmpty(cartGuid))
@@ -915,9 +958,10 @@ public class PaymentServicesController extends BaseController
 				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
 				if (cart != null)
 				{
-					cartData = getMplExtendedCartConverter().convert(cart);
+					//CAR-111
+					//cartData = getMplExtendedCartConverter().convert(cart);
 					final Map<String, Boolean> paymentMode = getMplPaymentFacade().getPaymentModes(
-							MarketplacewebservicesConstants.MPLSTORE, true, cartData);
+							MarketplacewebservicesConstants.MPLSTORE, cart);
 					paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(cart);
 					paymentModesData.setPaymentModes(paymentMode);
 				}
@@ -928,10 +972,11 @@ public class PaymentServicesController extends BaseController
 			}
 			else
 			{
-				orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
+				//CAR-111
+				//orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
 				//Getting Payment modes
 				final Map<String, Boolean> paymentMode = getMplPaymentFacade().getPaymentModes(
-						MarketplacewebservicesConstants.MPLSTORE, orderData);
+						MarketplacewebservicesConstants.MPLSTORE, orderModel);
 				paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(orderModel);
 				paymentModesData.setPaymentModes(paymentMode);
 			}

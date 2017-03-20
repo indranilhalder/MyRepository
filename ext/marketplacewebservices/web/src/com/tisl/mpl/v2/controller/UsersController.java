@@ -76,6 +76,7 @@ import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
+import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
@@ -396,6 +397,8 @@ public class UsersController extends BaseCommerceController
 	private GigyaFacade gigyaFacade;
 	@Autowired
 	private ExtendedUserService extendedUserService;
+    @Resource(name = "productService")
+	private ProductService productService;
 	@Autowired
 	private DefaultGetOrderDetailsFacadeImpl getOrderDetailsFacade;
 
@@ -535,9 +538,15 @@ public class UsersController extends BaseCommerceController
 		MplUserResultWsDto result = new MplUserResultWsDto();
 		GigyaWsDTO gigyaWsDTO = new GigyaWsDTO();
 		boolean isNewusers = false;
-		final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailId);
+		//		final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailId);
+		CustomerModel customerModel = null;
 		try
 		{
+			//CAR Project performance issue fixed
+
+			customerModel = (CustomerModel) userService.getCurrentUser();
+			//customerModel = mplPaymentWebFacade.getCustomer(emailId);
+
 			LOG.debug("****************** User Login mobile web service ***********" + emailId);
 			//Login user with username and password
 			isNewusers = newCustomer.equalsIgnoreCase(MarketplacecommerceservicesConstants.Y) ? true : false;
@@ -2064,10 +2073,13 @@ public class UsersController extends BaseCommerceController
 		final UserResultWsDto result = new UserResultWsDto();
 		try
 		{
-			MplCustomerProfileData mplCustData = new MplCustomerProfileData();
-			mplCustData = mplCustomerProfileService.getCustomerProfileDetail(emailId);
-			LOG.debug(CUSTOMER_MESSAGE + mplCustData.getUid());
-			final UserModel user = userService.getUserForUID(mplCustData.getUid());
+			//CAR-74
+			//MplCustomerProfileData mplCustData = new MplCustomerProfileData();
+			//mplCustData = mplCustomerProfileService.getCustomerProfileDetail(emailId);
+			//LOG.debug(CUSTOMER_MESSAGE + mplCustData.getUid());
+			//final UserModel user = userService.getUserForUID(mplCustData.getUid());
+			final UserModel user = userService.getCurrentUser();
+			LOG.debug(CUSTOMER_MESSAGE + user.getUid());
 
 			final AddressData addressData = new AddressData();
 
@@ -2111,8 +2123,8 @@ public class UsersController extends BaseCommerceController
 				addressData.setPhone(phone);
 
 				LOG.debug("addrestype=addaddress" + addressData.getAddressType());
-
-				final CustomerModel currentCustomer = (CustomerModel) user;
+				//CAR-74
+				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 
 				if (null != currentCustomer)
 				{
@@ -2276,66 +2288,52 @@ public class UsersController extends BaseCommerceController
 			@RequestParam final String ussid, @RequestParam(required = false) final boolean isSelectedSize)
 					throws RequestParameterException
 	{
-		MplCustomerProfileData mplCustData = new MplCustomerProfileData();
-		final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
 		final UserResultWsDto result = new UserResultWsDto();
-		if (null == allWishlists)
-		{
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9206);
-		}
 		boolean add = false;
-
-		mplCustData = mplCustomerProfileService.getCustomerProfileDetail(emailId);
-		LOG.debug(CUSTOMER_MESSAGE + mplCustData.getUid());
 		String name = null;
-		final UserModel user = userService.getUserForUID(mplCustData.getUid());
-
+		Wishlist2Model getWishlistforName = null;
+		int getWishlistforNameCount = 0;
 		final List<WishlistData> wishListData = new ArrayList<WishlistData>();
-		String nameSet = null;
-		int wSize = 0;
-		if (null == user)
-		{
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
-		}
-
+		Wishlist2Model requiredWl = null;
+		List<Wishlist2Model> allWishlists = null;
 		try
 		{
+			//CAR Project performance issue fixed
+			final UserModel user = userService.getCurrentUser();
+			if (null == user)
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
+			}
+
 			if (StringUtils.isNotEmpty(wishlistName))
 			{
 				name = wishlistName;
+				getWishlistforName = wishlistFacade.findMobileWishlistswithName(user, name);
+				if (null != getWishlistforName)
+				{
+					requiredWl = getWishlistforName;
+				}
 			}
+			//CAR Project performance issue fixed
 			else
 			{
-				nameSet = MarketplacecommerceservicesConstants.WISHLIST_NO;
-				for (final Wishlist2Model wishlist2Model : allWishlists)
-				{
-					if (wishlist2Model.getName().contains(nameSet))
-					{
-						wSize++;
-					}
-				}
+				getWishlistforNameCount = wishlistFacade.findMobileWishlistswithNameCount(user,
+						MarketplacecommerceservicesConstants.WISHLIST_NO);
+
 				name = MarketplacecommerceservicesConstants.WISHLIST_NO + MarketplacecommerceservicesConstants.UNDER_SCORE
-						+ (wSize + 1);
+						+ (++getWishlistforNameCount);
 			}
 
-			Wishlist2Model requiredWl = null;
-
-			for (final Wishlist2Model wl : allWishlists)
+			//CAR Project performance issue fixed
+			if (StringUtils.isNotEmpty(ussid) && StringUtils.isNotEmpty(productCode))
 			{
-				if (null != wl && name.equals(wl.getName()))
-				{
-					requiredWl = wl;
-					break;
-				}
-			}
-			if (null != ussid && !ussid.isEmpty() && null != productCode && !productCode.isEmpty())
-			{
-
 				if (null != requiredWl)
 				{
-					//add to existing wishlists
+					//CAR Project performance issue fixed
 
-					add = wishlistFacade.addProductToWishlist(requiredWl, productCode, ussid, isSelectedSize);
+					//add to existing wishlists
+					//add = wishlistFacade.addProductToWishlist(requiredWl, productCode, ussid, isSelectedSize);
+					add = wishlistFacade.addProductToWishlistMobile(requiredWl, productCode, ussid, isSelectedSize);
 					if (add)
 					{
 						result.setStatus(MarketplacecommerceservicesConstants.PRODUCT_ADDED);
@@ -2348,17 +2346,13 @@ public class UsersController extends BaseCommerceController
 				}
 				else
 				{
-
+					allWishlists = wishlistFacade.getAllWishlists();
 					//if (!allWishlists.isEmpty() && allWishlists.size() > 0)
 					if (CollectionUtils.isNotEmpty(allWishlists))
 					{
 						final List<String> wishlistnames = new ArrayList<String>();
 						for (final Wishlist2Model wishlist2Model : allWishlists)
 						{
-							//							String wishList = new String(); Avoid instantiating String objects; this is usually unnecessary
-							//							wishList = wish.getName();
-							//							wishlistnames.add(wishList);
-
 							wishlistnames.add(wishlist2Model.getName());
 						}
 
@@ -2367,13 +2361,13 @@ public class UsersController extends BaseCommerceController
 						result.setWishlistNames(wishlistnames);
 						return result;
 					}
-
 					else
 					{
 						//add product to new wishlist if there is no wishlist present
-
+						//CAR Project performance issue fixed
 						final Wishlist2Model createdWishlist = wishlistFacade.createNewWishlist(user, name, productCode);
-						add = wishlistFacade.addProductToWishlist(createdWishlist, productCode, ussid, isSelectedSize);
+						//add = wishlistFacade.addProductToWishlist(createdWishlist, productCode, ussid, isSelectedSize);
+						add = wishlistFacade.addProductToWishlistMobile(createdWishlist, productCode, ussid, isSelectedSize);
 						final WishlistData wishData = new WishlistData();
 						wishData.setParticularWishlistName(createdWishlist.getName());
 						wishData.setProductCode(productCode);
@@ -2393,13 +2387,7 @@ public class UsersController extends BaseCommerceController
 			}
 			else
 			{
-
-				if (!(null != requiredWl) || !(null != ussid) || StringUtils.isEmpty(ussid) || !(null != productCode)
-						|| StringUtils.isEmpty(productCode))
-				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9208);
-				}
-
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9208);
 			}
 
 		}
@@ -2446,7 +2434,6 @@ public class UsersController extends BaseCommerceController
 			}
 			return result;
 		}
-		return result;
 	}
 
 	@SuppressWarnings(MarketplacewebservicesConstants.DEPRECATION)
@@ -2466,10 +2453,15 @@ public class UsersController extends BaseCommerceController
 		boolean successFlag = false;
 		try
 		{
-			MplCustomerProfileData mplCustData = new MplCustomerProfileData();
-			mplCustData = mplCustomerProfileService.getCustomerProfileDetail(emailId);
-			LOG.debug(CUSTOMER_MESSAGE + mplCustData.getUid());
-			final UserModel user = userService.getUserForUID(mplCustData.getUid());
+			//CAR-76
+			//final MplCustomerProfileData mplCustData = new MplCustomerProfileData();
+			//mplCustData = mplCustomerProfileService.getCustomerProfileDetail(emailId);
+			//LOG.debug(CUSTOMER_MESSAGE + mplCustData.getUid());
+			//final UserModel user = userService.getUserForUID(mplCustData.getUid());
+			final UserModel user = userService.getCurrentUser();
+			LOG.debug(CUSTOMER_MESSAGE + user.getUid());
+
+
 			final AddressData newAddress = new AddressData();
 
 			errorMsg = validateStringField(countryIso, AddressField.COUNTRY, MAX_FIELD_LENGTH_COUNTRY);
@@ -2524,7 +2516,8 @@ public class UsersController extends BaseCommerceController
 				}
 
 				LOG.debug("addrestype=addaddress" + newAddress.getAddressType());
-				final CustomerModel currentCustomer = (CustomerModel) user;
+				//CAR-76
+				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 
 				if (null != currentCustomer)
 				{
@@ -2620,18 +2613,23 @@ public class UsersController extends BaseCommerceController
 	public UserResultWsDto removeAddress(@RequestParam final String emailId, @RequestParam final String addressId)
 			throws RequestParameterException
 	{
-		MplCustomerProfileData mplCustData = new MplCustomerProfileData();
-		mplCustData = mplCustomerProfileService.getCustomerProfileDetail(emailId);
-		LOG.debug(CUSTOMER_MESSAGE + mplCustData.getUid());
-		final UserModel user = userService.getUserForUID(mplCustData.getUid());
+		//CAR-76
+		//MplCustomerProfileData mplCustData = new MplCustomerProfileData();
+		//mplCustData = mplCustomerProfileService.getCustomerProfileDetail(emailId);
+		//LOG.debug(CUSTOMER_MESSAGE + mplCustData.getUid());
+		//final UserModel user = userService.getUserForUID(mplCustData.getUid());
+		final UserModel user = userService.getCurrentUser();
+		LOG.debug(CUSTOMER_MESSAGE + user.getUid());
 		final UserResultWsDto result = new UserResultWsDto();
+
 
 		boolean successFlag = false;
 		try
 		{
 			final AddressData addressData = new AddressData();
 			addressData.setId(addressId);
-			final CustomerModel currentCustomer = (CustomerModel) user;
+			//CAR-76
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 
 			if (null != currentCustomer)
 			{
@@ -2715,10 +2713,13 @@ public class UsersController extends BaseCommerceController
 		boolean successFlag = false;
 		try
 		{
-			MplCustomerProfileData mplCustData = new MplCustomerProfileData();
-			mplCustData = mplCustomerProfileService.getCustomerProfileDetail(emailId);
-			LOG.debug(CUSTOMER_MESSAGE + mplCustData.getUid());
-			final UserModel user = userService.getUserForUID(mplCustData.getUid());
+			//CAR-76
+			//MplCustomerProfileData mplCustData = new MplCustomerProfileData();
+			//mplCustData = mplCustomerProfileService.getCustomerProfileDetail(emailId);
+			//LOG.debug(CUSTOMER_MESSAGE + mplCustData.getUid());
+			//final UserModel user = userService.getUserForUID(mplCustData.getUid());
+			final UserModel user = userService.getCurrentUser();
+			LOG.debug(CUSTOMER_MESSAGE + user.getUid());
 
 			errorMsg = validateStringField(countryIso, AddressField.COUNTRY, MAX_FIELD_LENGTH_COUNTRY);
 			validation(errorMsg);
@@ -2763,8 +2764,8 @@ public class UsersController extends BaseCommerceController
 				newAddress.setPhone(phone);
 				newAddress.setState(state);
 				newAddress.setDefaultAddress(defaultFlag);
-
-				final CustomerModel currentCustomer = (CustomerModel) user;
+				//CAR-76
+				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 
 				if (null != currentCustomer)
 				{
@@ -2938,13 +2939,16 @@ public class UsersController extends BaseCommerceController
 			throws RequestParameterException
 	{
 		final WebSerResponseWsDTO userResult = new WebSerResponseWsDTO();
+		int getWishlistforNameCount = 0;
 		try
 		{
-			List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
+			//			List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
+			List<Wishlist2Model> allWishlists = null;
+
 			final UserModel user = userService.getCurrentUser();
 			String name = null;
-			String nameSet = null;
-			int wSize = 0;
+			//			final String nameSet = null;
+			//			final int wSize = 0;
 			if (null == user)
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
@@ -2955,18 +2959,14 @@ public class UsersController extends BaseCommerceController
 			}
 			else
 			{
-				nameSet = MarketplacecommerceservicesConstants.WISHLIST_NO;
-				for (final Wishlist2Model wishlist2Model : allWishlists)
-				{
-					if (wishlist2Model.getName().contains(nameSet))
-					{
-						wSize++;
-					}
-				}
+				getWishlistforNameCount = wishlistFacade.findMobileWishlistswithNameCount(user,
+						MarketplacecommerceservicesConstants.WISHLIST_NO);
+
 				name = MarketplacecommerceservicesConstants.WISHLIST_NO + MarketplacecommerceservicesConstants.UNDER_SCORE
-						+ (wSize + 1);
+						+ (++getWishlistforNameCount);
 			}
 			allWishlists = wishlistService.getWishlists(user);
+
 			Wishlist2Model requiredWl = null;
 			for (final Wishlist2Model wl : allWishlists)
 			{
@@ -2984,8 +2984,6 @@ public class UsersController extends BaseCommerceController
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9209);
 			}
-
-
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -3242,7 +3240,10 @@ public class UsersController extends BaseCommerceController
 								}
 							}
 
-							final ProductModel productModel = getMplOrderFacade().getProductForCode(entryModel.getProduct().getCode());
+							//	final ProductModel productModel = getMplOrderFacade().getProductForCode(entryModel.getProduct().getCode());
+
+							final ProductModel productModel = productService.getProductForCode(entryModel.getProduct().getCode());
+
 							if (null != productModel.getSellerInformationRelator())
 							{
 								final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
@@ -3329,11 +3330,13 @@ public class UsersController extends BaseCommerceController
 		boolean wishlistflag = false;
 
 		final UserResultWsDto result = new UserResultWsDto();
-		final MplCustomerProfileData mplCustData = new MplCustomerProfileData();
-		mplCustData.setDisplayUid(userId);
+		//		final MplCustomerProfileData mplCustData = new MplCustomerProfileData();
+		//		mplCustData.setDisplayUid(userId);
 		try
 		{
-			final UserModel user = userexService.getUserForUID(mplCustData.getDisplayUid());
+			//final UserModel user = userexService.getUserForUID(mplCustData.getDisplayUid());
+			final UserModel user = userService.getCurrentUser();
+
 			if (null == user)
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
@@ -4697,16 +4700,25 @@ public class UsersController extends BaseCommerceController
 		final UserResultWsDto userResultWsDto = new UserResultWsDto();
 		try
 		{
-			final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
-			if (null != allWishlists && !allWishlists.isEmpty())
+			//			final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
+			//CAR Project performance issue fixed
+			final UserModel user = userService.getCurrentUser();
+			if (StringUtils.isNotEmpty(wishlistName))
 			{
-				for (final Wishlist2Model wishlist2Model : allWishlists)
+				final Wishlist2Model wishList = wishlistFacade.findMobileWishlistswithName(user, wishlistName);
+
+				//if (null != allWishlists && !allWishlists.isEmpty())
+				if (null != wishList)
 				{
-					if (wishlist2Model.getName().equals(wishlistName))
-					{
-						modelService.remove(wishlist2Model);
-						userResultWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
-					}
+					//					for (final Wishlist2Model wishlist2Model : allWishlists)
+					//					{
+					//						if (wishlist2Model.getName().equals(wishlistName))
+					//						{
+					//					modelService.remove(wishlist2Model);
+					modelService.remove(wishList);
+					userResultWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+					//						}
+					//					}
 				}
 			}
 		}
@@ -6504,12 +6516,13 @@ public class UsersController extends BaseCommerceController
 		boolean failFlag = false;
 		String juspayOrderId = "";
 		OrderModel orderModel = null;
-		OrderData orderData = null;
+		//final OrderData orderData = null;
 		CustomerModel customer = null;
 		CartModel cart = null;
 		String juspayMerchantId = "";
 		String juspayReturnUrl = "";
 		final StringBuilder returnUrlBuilder = new StringBuilder();
+		String orderCode = null;
 		if (LOG.isDebugEnabled())
 		{
 			LOG.debug("********* Creating juspay Order mobile web service" + userId);
@@ -6551,10 +6564,13 @@ public class UsersController extends BaseCommerceController
 			{
 
 				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-				if (!failFlag && !mplCheckoutFacade.isPromotionValid(cart))
+				if (null != cart)
 				{
-					failFlag = true;
-					failErrorCode = MarketplacecommerceservicesConstants.B9075;
+					if (!failFlag && !mplCheckoutFacade.isPromotionValid(cart))
+					{
+						failFlag = true;
+						failErrorCode = MarketplacecommerceservicesConstants.B9075;
+					}
 				}
 				if (!failFlag && mplCartFacade.isCartEntryDelistedMobile(cart))
 				{
@@ -6635,8 +6651,10 @@ public class UsersController extends BaseCommerceController
 					//getSessionService().setAttribute("guid", cart.getGuid());
 					if (isValidCart)
 					{
-						orderData = mplCheckoutFacade.placeOrderByCartId(cartGuid);
-						if (orderData == null)
+						//CAR-110
+						//orderData = mplCheckoutFacade.placeOrderByCartId(cartGuid);
+						orderCode = mplCheckoutFacade.placeOrderByCartId(cart);
+						if (orderCode == null)
 						{
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9321);
 						}
@@ -6648,6 +6666,7 @@ public class UsersController extends BaseCommerceController
 					}
 
 				}
+
 
 			}
 			else
@@ -6683,7 +6702,8 @@ public class UsersController extends BaseCommerceController
 							paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 							cardSaved + MarketplacecommerceservicesConstants.STRINGSEPARATOR + sameAsShipping,
 							returnUrlBuilder.toString(), uid, MarketplacecommerceservicesConstants.CHANNEL_MOBILE);
-					orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
+					//CAR-110
+					//orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
 				}
 
 			}
@@ -6703,9 +6723,10 @@ public class UsersController extends BaseCommerceController
 			{
 				orderCreateInJusPayWsDto.setCartGuid(cartGuid);
 			}
-			if (orderData != null && StringUtils.isNotEmpty(orderData.getCode()))
+			//if (orderCode != null && StringUtils.isNotEmpty(orderData.getCode()))
+			if (orderCode != null && StringUtils.isNotEmpty(orderCode))
 			{
-				orderCreateInJusPayWsDto.setOrderId(orderData.getCode());
+				orderCreateInJusPayWsDto.setOrderId(orderCode);
 			}
 
 			orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);

@@ -38,7 +38,7 @@ import com.tisl.mpl.integration.oms.adapter.CustomOmsOrderSyncAdapter;
 import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplMWalletRefundService;
-
+import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
@@ -101,6 +101,11 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 	private CustomOmsOrderService omsOrderService;
 	@Autowired
 	private CustomOmsOrderSyncAdapter customOmsOrderSyncAdapter;
+	
+	
+	//car-80 
+	@Autowired
+	private OrderModelService orderModelService;
 	
 	private static final Logger LOG = Logger
 			.getLogger(MarketPlaceDefaultOrderController.class);
@@ -616,6 +621,8 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 	public boolean sendInvoice(List<TypedObject> orderLineId, String orderId) {
 		String customerEmail = null;
 
+		//car-80
+		OrderModel orderModel = orderModelService.getOrder(orderId);
 		CustomerModel customerModel = (CustomerModel) getCallContextController()
 				.getCurrentCustomer().getObject();
 		customerEmail = customerModel.getOriginalUid();
@@ -642,8 +649,9 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 						.setTransactionId(orderEntry.getTransactionID());
 						invoiceData.setOrdercode(orderId);
 						try {
+							//car-80:orderModel added as parameter.
 							registerCustomerFacade.sendInvoice(invoiceData,
-									customerModel);
+									customerModel, orderModel);
 							LOG.info("Invoice Sending Succesfull");
 							return true;
 						} catch (EtailNonBusinessExceptions e) {

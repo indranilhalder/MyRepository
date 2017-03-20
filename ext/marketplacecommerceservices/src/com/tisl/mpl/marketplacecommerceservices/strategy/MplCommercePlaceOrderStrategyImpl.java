@@ -346,7 +346,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 
-		final Double discount = getTotalDiscount(orderModel.getEntries());
+		final Double discount = getTotalDiscount(orderModel.getEntries(), true);
 
 		totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 		return totalPrice;
@@ -357,20 +357,19 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		Double totalPrice = Double.valueOf(0);
 		//final OrderData orderData = getOrderConverter().convert(orderModel);
 		final Double subtotal = orderModel.getSubtotal();
+		final Double deliveryCost = orderModel.getDeliveryCost();
 
 		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 
-		final Double discount = getTotalDiscount(orderModel.getEntries());
+		final Double discount = getTotalDiscount(orderModel.getEntries(), false);
 
-		totalPrice = Double.valueOf(subtotal.doubleValue() - discount.doubleValue());
-
+		totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 		LOG.info("totalPrice for order entry in fetchTotalPrice is = " + totalPrice);
-
 		return totalPrice;
 	}
 
-	private Double getTotalDiscount(final List<AbstractOrderEntryModel> entries)
+	private Double getTotalDiscount(final List<AbstractOrderEntryModel> entries, final boolean deliveryFlag)
 	{
 		Double discount = Double.valueOf(0);
 
@@ -384,9 +383,13 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			{
 				if (null != oModel && !oModel.getGiveAway().booleanValue())
 				{
-					deliveryCost += (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue()) < 0 ? (-1)
-							* (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue()) : (oModel
-							.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue());
+					if (deliveryFlag)
+					{
+						deliveryCost += (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue()) < 0 ? (-1)
+								* (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue()) : (oModel
+								.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue());
+					}
+
 					couponDiscount += (null == oModel.getCouponValue() ? 0.0d : oModel.getCouponValue().doubleValue());
 					promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d : oModel.getTotalProductLevelDisc()
 							.doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d : oModel.getCartLevelDisc().doubleValue());
@@ -444,7 +447,17 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	public void beforeSubmitOrder(final CommerceCheckoutParameter parameter, final CommerceOrderResult result)
 			throws InvalidCartException, CalculationException
 	{
+		// New Changes added for Promotion+ Sub total Fix
+		final OrderModel order = result.getOrder();
+		final Double subTotal = (null != order && null != order.getSubtotal()) ? order.getSubtotal() : Double.valueOf(0);
+
 		getCalculationService().calculateTotals(result.getOrder(), false);
+
+		if (subTotal.doubleValue() > 0)
+		{
+			order.setSubtotal(subTotal);
+			getModelService().save(order);
+		}
 
 		if ((getCommercePlaceOrderMethodHooks() == null) || (!(parameter.isEnableHooks())) || (!(getConfigurationService()
 
