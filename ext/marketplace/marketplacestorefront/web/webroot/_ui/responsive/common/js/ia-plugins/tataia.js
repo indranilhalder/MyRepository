@@ -152,6 +152,7 @@ if (searchCategory_id){
                             }
                             return newArray;
                         }
+                        
 			 
 			/*
 			Check if user has logged into the site
