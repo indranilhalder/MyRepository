@@ -354,11 +354,11 @@ $(document).on("click", ".home-brands-you-love-carousel-brands", function() {
 				//alert(selectedOption)
 				 if(selectedOption=="twitter")
 				  {
-					 utag.link({link_text: 'review_social_share_twitter' , event_type : 'review_social_share'});
+					 utag.link({link_text: 'review_social_share_twitter' , event_type : 'review_social_share' ,product_id : productIdArray });
 				  }
 			     else if(selectedOption=="facebook")
 				  {
-			    	 utag.link({link_text: 'review_social_share_facebook' , event_type : 'review_social_share'});
+			    	 utag.link({link_text: 'review_social_share_facebook' , event_type : 'review_social_share' ,product_id : productIdArray });
 				  }
 				});
 			/*TPR-675 ends 2nd part*/ 
@@ -749,11 +749,7 @@ if(typeof utag !="undefined"){
 }
 })
 
-/*$(document).on('click','#inviteFriends',function(){
-	if(typeof utag !="undefined"){
-		 utag.link({ link_text : 'invite_your_friends_completed' , event_type : 'invite_your_friends_completed' });
-	}
-})*/
+
 /*TPR-4754|invite friends end*/
 /*Order History page changes End*/
 
