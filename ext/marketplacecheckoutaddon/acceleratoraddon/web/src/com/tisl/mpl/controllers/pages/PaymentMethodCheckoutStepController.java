@@ -4607,6 +4607,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					//saving TPWallet Payment related info
 					getMplPaymentFacade().saveTPWalletPaymentInfo(orderModel, request);
 
+					LOG.info("Removing Attribute inside IF::");
+
+					getSessionService().removeAttribute(MarketplacecheckoutaddonConstants.REFNUMBER);
+
 					return updateOrder(orderModel, redirectAttributes);
 					/*
 					 * } else { LOG.info("OrderAmount--TransactionAmount Mismatch"); status =
@@ -4632,6 +4636,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 							MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+
+					getSessionService().removeAttribute(MarketplacecheckoutaddonConstants.REFNUMBER);
+
+					LOG.info("Removing Attribute REFNUMBER inside ELSE::");
+
 					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
 							+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
 				}
