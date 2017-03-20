@@ -3484,7 +3484,7 @@ function getClassificationAttributes(productCode)
 	return $.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
-		cache : false,
+		cache : true,//it will not append timestamp and will help to make it AKAMAI cached
 		dataType : "json",
 	});
 }
