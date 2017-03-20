@@ -61080,7 +61080,7 @@ body.page-productGrid .facet-list.filter-opt {
 	padding-top:0px;
 	}
 	body.page-productGrid .listing.wrapper .right-block .listing-menu{
-	margin-top:-12px !important;
+	margin-top:-12px; /*UF-253 */
 	}
 	body.page-productGrid .list_title h1 {
 	margin:0 auto !important;
