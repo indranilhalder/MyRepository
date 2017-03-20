@@ -2944,9 +2944,14 @@ $(window).on("load resize", function() {
 				$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top",sort_height);	
 			}
 	}	
-	
+	/* UF-257 start */
+	if($('.smartbanner-show .smartbanner').css('display') == 'none'){
+		$(".smartbanner-show").css("margin-top","0px");
+	}
+	/* UF-257 end */
 });
 /* UF-253 end */
+
 
 $(document).ready(function(){ 
     $(window).scroll(function(){ 
