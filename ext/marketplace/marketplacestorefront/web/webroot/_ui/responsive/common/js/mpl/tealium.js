@@ -505,6 +505,14 @@ $(document).on('click',".color-swatch > li", function(){
 	});
 })
 
+/*TPR-4803| hot now | homepage*/
+$(document).on('click','#ia_products_hot a',function(){
+	if(typeof utag !="undefined"){
+		 utag.link({ link_text : 'shop_the_hotlist_clicked' , event_type : 'shop_the_hotlist_clicked' });
+	 }	
+})
+
+
 /*TPR-4803|Hot now home page,pdp recommendations generic method|*/
 $(document).on("click",".trending .owl-stage .owl-item",function(){
 	var productID='';
@@ -741,11 +749,11 @@ if(typeof utag !="undefined"){
 }
 })
 
-$(document).on('click','#inviteFriends',function(){
+/*$(document).on('click','#inviteFriends',function(){
 	if(typeof utag !="undefined"){
 		 utag.link({ link_text : 'invite_your_friends_completed' , event_type : 'invite_your_friends_completed' });
 	}
-})
+})*/
 /*TPR-4754|invite friends end*/
 /*Order History page changes End*/
 
@@ -1525,7 +1533,7 @@ function populateFirstFiveProductsSerp(){
 	productArray.push(product);
    }
    if(typeof utag !="undefined"){
-		 utag.link({ event_type: 'top_five_products_serp',serp_first_5_products : productArray });
+		 utag.link({ event_type: 'top_five_products_serp',serp_first_5_products : productArray,product_id : productArray  });
 	 }
    
    if(productArray.length == 0){
@@ -1570,7 +1578,7 @@ function populateFirstFiveProductsPlp(){
       
   }
    if(typeof utag !="undefined"){
-		 utag.link({ event_type :'top_five_products_plp',plp_first_5_products : productArray });
+		 utag.link({ event_type :'top_five_products_plp',plp_first_5_products : productArray,product_id : productArray });
 	 }	
    
    if(productArray.length == 0){
