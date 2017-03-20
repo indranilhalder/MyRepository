@@ -1947,9 +1947,10 @@ function openPopForBankEMI() {
 function populateEMIDetailsForPDP(){
 //$( "#bankNameForEMI" ).change(function() {
 	var productVal = $("#prodPrice").val();
-		
 		var selectedBank = $('#bankNameForEMI :selected').text();
 		var contentData = '';
+		var productId=[];
+		productId.push($('#product_id').val());
 		if (selectedBank != "select") {
 			var dataString = 'selectedEMIBank=' + selectedBank + '&productVal=' + productVal;
 			$.ajax({
@@ -1987,12 +1988,15 @@ function populateEMIDetailsForPDP(){
 					emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, '').toLowerCase();
 					/* TPR-4725  quick view emi*/
 					emiBankSelected = selectedBank.toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/[',."]/g,"");
+					
+					if(typeof utag !="undefined"){
 					utag.link({
-						link_obj: this, 
 						link_text: emiBankSelectedTealium , 
 						event_type : 'emi_option_selected',
-						emi_selected_bank : emiBankSelected
+						emi_selected_bank : emiBankSelected,
+						product_id :productId
 					});
+					}
 					/*TPR-641 ends*/
 				},
 				error : function(resp) {
