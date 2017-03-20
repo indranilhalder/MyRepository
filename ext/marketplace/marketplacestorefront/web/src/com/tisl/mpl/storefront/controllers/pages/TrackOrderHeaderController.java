@@ -71,15 +71,17 @@ public class TrackOrderHeaderController
 
 						model.addAttribute(ModelAttributetConstants.NOTIFICATION_MESSAGE_LIST, notificationMessagelist);
 
-						int notificationCount = 0;
-						for (final NotificationData single : notificationMessagelist)
-						{
-							if (single.getNotificationRead() != null && !single.getNotificationRead().booleanValue())
-							{
-								notificationCount++;
-							}
+						final int notificationCount = notificationMessagelist.size();
 
-						}
+						//						int notificationCount = 0;
+						//						for (final NotificationData single : notificationMessagelist)
+						//						{
+						//							if (single.getNotificationRead() != null && !single.getNotificationRead().booleanValue())
+						//							{
+						//								notificationCount++;
+						//							}
+						//
+						//						}
 						model.addAttribute(ModelAttributetConstants.NOTIFICATION_COUNT, notificationCount);
 						model.addAttribute(ModelAttributetConstants.IS_SIGNED_IN, "yes");
 					}
@@ -114,7 +116,8 @@ public class TrackOrderHeaderController
 		try
 		{
 			final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
-			final String customerUID = currentCustomer.getUid();
+			//final String customerUID = currentCustomer.getUid();
+			final String customerUID = currentCustomer.getOriginalUid();
 			if (null != customerUID)
 			{
 				getNotificationFacade().markNotificationRead(customerUID, currentId, consignmentNo, shopperStatus);
