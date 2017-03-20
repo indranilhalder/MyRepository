@@ -7108,7 +7108,7 @@ public class UsersController extends BaseCommerceController
 		List<PointOfServiceData> returnableStores = new ArrayList<PointOfServiceData>();
 		try
 		{
-			//OrderModel subOrderModel = orderModelService.getOrder(orderCode);
+			OrderModel subOrderModel = orderModelService.getOrder(orderCode);
 			final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
 			final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
 			OrderEntryData orderEntry = new OrderEntryData();
@@ -7205,7 +7205,10 @@ public class UsersController extends BaseCommerceController
 					//TISRLUAT-818 end
 			try
 			{
-				codSelfShipData = cancelReturnFacade.getCustomerBankDetailsByCustomerId(userId);
+				//TISRLUAT-1160 Start
+	            CustomerModel customerModel=  (CustomerModel) subOrderModel.getUser();
+				codSelfShipData = cancelReturnFacade.getCustomerBankDetailsByCustomerId(customerModel.getUid());
+				//TISRLUAT-1160 End
 
 			}
 			catch(EtailNonBusinessExceptions e)
