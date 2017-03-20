@@ -1138,7 +1138,6 @@ $(function() {
 												
 												/*TPR-642 & 640*/
 												utag.link({
-													link_obj: this, 
 													link_text: 'pdp_pincode_check_failure' , 
 													event_type : 'pdp_pincode_check' , 
 													pdp_pin_sku : productCode, 
@@ -1171,7 +1170,6 @@ $(function() {
 												
 												/*TPR-642 & 640*/
 												utag.link({
-													link_obj: this, 
 													link_text: 'pdp_pincode_check_failure' , 
 													event_type : 'pdp_pincode_check' , 
 													pdp_pin_sku : productCode, 
@@ -1300,7 +1298,6 @@ $(function() {
 															
 															/*TPR- 642 & 640*/
 																utag.link({
-																	link_obj: this, 
 																	link_text: 'pdp_pincode_check_success' , 
 																	event_type : 'pdp_pincode_check' , 
 																	pdp_pin_sku : productCode, 
@@ -1340,7 +1337,6 @@ $(function() {
 															
 															/*TPR-642 & 640 */
 															utag.link({
-																link_obj: this, 
 																link_text: 'pdp_pincode_check_failure' , 
 																event_type : 'pdp_pincode_check' , 
 																pdp_pin_sku : productCode, 
@@ -1935,7 +1931,8 @@ function openPopForBankEMI() {
 			utag.link({
 				link_obj: this,
 				link_text: 'emi_more_information' ,
-				event_type : 'emi_more_information'
+				event_type : 'emi_more_information',
+				product_id : productIdArray
 			});
 
 		},
@@ -3330,17 +3327,23 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						var variantCodes = $("#product_allVariantsListingId").val();
 						var variantCodesJson = "";
 						var currentProductCode=responseProductCode;
-						if(typeof(variantCodes)!= 'undefined' && variantCodes!= ""){
-							variantCodes = variantCodes.split(",");
-						}
+						
+						//Fix for TISSIT-2200
+//						if(typeof(variantCodes)!= 'undefined' && variantCodes!= ""){
+//							variantCodes = variantCodes.split(",");
+//						}
 						if(typeof(prvsProductCode)!='undefined' && currentProductCode!="")
 						{
-							variantCodes.push(prvsProductCode);
-							var index = variantCodes.indexOf(currentProductCode);
-							variantCodes.splice(index, 1);
-							variantCodesJson = JSON.stringify(variantCodes);
-							$("#product_allVariantsListingId").val(variantCodes.join());
+							//Fix for TISSIT-2200
+							if(typeof(variantCodes)!= 'undefined' && variantCodes!= ""){
+								variantCodes = variantCodes.split(",");
 								
+								variantCodes.push(prvsProductCode);
+								var index = variantCodes.indexOf(currentProductCode);
+								variantCodes.splice(index, 1);
+								variantCodesJson = JSON.stringify(variantCodes);
+								$("#product_allVariantsListingId").val(variantCodes.join());
+							}	
 							//Calling buybox
 							var xhrBuyBox=getBuyBoxDataAjax(currentProductCode,variantCodesJson);
 							//On buybox failure

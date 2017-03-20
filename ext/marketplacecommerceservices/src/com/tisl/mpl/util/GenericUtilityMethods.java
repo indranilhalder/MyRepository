@@ -724,11 +724,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1077,7 +1077,7 @@ public class GenericUtilityMethods
 							}
 							if (null != entry.getProduct() && StringUtils.isNotEmpty(entry.getProduct().getName()))
 							{
-								name = appendQuote(entry.getProduct().getName());
+								name = appendQuote(entry.getProduct().getName().replace("\"", "").replace("\'", ""));
 
 							}
 							if (null != entry.getQuantity())

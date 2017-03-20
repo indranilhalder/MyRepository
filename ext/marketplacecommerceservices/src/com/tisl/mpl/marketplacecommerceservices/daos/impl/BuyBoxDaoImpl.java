@@ -37,7 +37,7 @@ import com.tisl.mpl.model.SellerInformationModel;
  *
  */
 
-public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
+public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao 
 {
 
 

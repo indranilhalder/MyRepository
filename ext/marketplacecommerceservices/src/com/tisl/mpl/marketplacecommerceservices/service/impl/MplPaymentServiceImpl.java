@@ -634,8 +634,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						.setPlannedAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPriceWithConv().doubleValue()));
 				//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
 			}
-
-			if (StringUtils.isNotEmpty(paymentTransactionEntryList.get(0).getTransactionStatus())
+			//COD Payment transaction check
+			if (CollectionUtils.isNotEmpty(paymentTransactionEntryList)
+					&& StringUtils.isNotEmpty(paymentTransactionEntryList.get(0).getTransactionStatus())
 					&& paymentTransactionEntryList.get(0).getTransactionStatus()
 							.equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 			{
@@ -668,12 +669,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		catch (final ModelSavingException e)
 		{
 			LOG.error("Exception while saving cart with ", e);
-			throw new EtailNonBusinessExceptions(e, ": Exception while setPaymentTransactionForCOD");
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9214);
 		}
 		catch (final Exception ex)
 		{
 			LOG.error("Exception while setPaymentTransactionForCOD ", ex);
-			throw new EtailNonBusinessExceptions(ex);
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.B9214);
 		}
 	}
 
@@ -1447,7 +1448,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					catch (final ModelSavingException e)
 					{
 						LOG.error("Exception while saving abstract order entry model with " + e);
-						throw new EtailNonBusinessExceptions(e, " :Exception while saving abstract order entry model with");
+						throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E9051);
 					}
 				}
 
@@ -1459,7 +1460,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 		//setting values in CODPaymentInfoModel
 		cODPaymentInfoModel.setCashOwner(custName);
-		cODPaymentInfoModel.setCode(MarketplacecommerceservicesConstants.COD + "_" + entries.get(0).getOrder().getCode());
+		cODPaymentInfoModel.setCode(MarketplacecommerceservicesConstants.COD + "_" + abstractOrderModel.getCode());
 		cODPaymentInfoModel.setUser(getUserService().getCurrentUser());
 		if (null == abstractOrderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(abstractOrderModel.getStatus()))
 		{
@@ -1472,8 +1473,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			catch (final ModelSavingException e)
 			{
 				//LOG.error("Exception while saving cod payment info with " + e);
-				LOG.debug("COD Payment Info set for cart with GUID" + abstractOrderModel.getGuid());
-				throw new EtailNonBusinessExceptions(e, "Exception while saving cod payment info with");
+				LOG.error("COD Payment cODPaymentInfoModel set for cart with GUID" + abstractOrderModel.getGuid());
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E9051);
 
 			}
 
@@ -1487,7 +1488,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				//TIS-3168
 				if (null != abstractOrderModel.getGuid())
 				{
-					LOG.error("COD Payment Info set for cart with GUID" + abstractOrderModel.getGuid());
+					LOG.error("COD Payment abstractOrderModel set for cart with GUID" + abstractOrderModel.getGuid());
 				}
 
 			}
@@ -1500,7 +1501,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				}
 
 				LOG.error("Exception while saving cart with ", e);
-				throw new EtailNonBusinessExceptions(e, "Exception while saving cart with");
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E9051);
 			}
 		}
 		else if (null != abstractOrderModel.getPaymentInfo())
@@ -3362,22 +3363,22 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		//}		//Commented as it was NullPointerException and not advisable to catch
 		catch (final ModelSavingException e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E9042);
 		}
 		catch (final JsonGenerationException e)
 		{
 			LOG.error("Exception in parsing into json ", e);
-			throw new EtailNonBusinessExceptions(e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E9042);
 		}
 		catch (final JsonMappingException e)
 		{
 			LOG.error("Exception in parsing into json ", e);
-			throw new EtailNonBusinessExceptions(e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E9042);
 		}
 		catch (final IOException e)
 		{
 			LOG.error("Exception in parsing into json ", e);
-			throw new EtailNonBusinessExceptions(e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E9042);
 		}
 		//PMD Fix
 		//		catch (final EtailNonBusinessExceptions e)
@@ -3764,12 +3765,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		catch (final ModelSavingException e)
 		{
 			LOG.error("Exception while saving cart with ", e);
-			throw new EtailNonBusinessExceptions(e, ": Exception while setPaymentTransactionForCOD");
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9214);
 		}
 		catch (final Exception ex)
 		{
 			LOG.error("Exception while setPaymentTransactionForCOD ", ex);
-			throw new EtailNonBusinessExceptions(ex);
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.B9214);
 		}
 	}
 

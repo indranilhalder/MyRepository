@@ -63291,3 +63291,34 @@ body:not(.page-checkout-login) .step-body .checkout-shipping.left-block{
 /* body.page-cartPage .cartBottomCheck #changePinDiv p{
 	display: none;
 } */
+
+/* TISSIT-2212 start */
+@media(min-width:768px){
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width+.right-block.shipping.right-block-width{
+    width: 216px !important;
+	margin-top:-142px;
+}
+}
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width{
+margin-top:0px;
+}
+@media (max-width: 1024px) and (min-width: 768px){
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width+.right-block.shipping.right-block-width{
+	margin-top:-148px;
+}
+}
+
+@media(max-width:790px){
+.wrapper .container-address.nav{
+padding-top:90px;
+}	
+}
+.checkout-content.cart.checkout.wrapper.shipCartWrapper .continue_btn_anchor{
+	font-size: 12px !important;
+    font-weight: normal;
+    line-height: 40px;
+    padding: 0;
+    background-color: #a5173c;
+    letter-spacing: .5px;
+}
+/* TISSIT-2212 end */

@@ -72,3 +72,23 @@ $classificationAttributeAssignments=classificationAttributeAssignments(classific
 
 REMOVE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter;visible;facet[default=true];topValuesProvider;facetTopValue
 ;$solrIndexedType; inStockFlagForAddtoCart;boolean;            ;    ;    ;    ;    ;    ;mplProductInStockFlagValueProvider;
+
+# Import the CMS content for the site emails
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+
+# Language
+$lang=en   
+
+# CMS components and Email velocity templates
+UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+
+ 
+;mpl_Email_Customer_Registration_Body;"Customer Registration Email Body";$emailResource/email-customerRegistrationBody.vm
+;mpl_Email_Customer_Registration_Subject;"Customer Registration Email Subject";$emailResource/email-customerRegistrationSubject.vm
+
+INSERT_UPDATE SearchRestriction;code[unique=true];active;query;principal(uid);restrictedtype(code);generate[default=FALSE]
+;VoucherSatusNotificationRestriction;true;( {voucherstartdate} IS NULL OR {voucherstartdate} <= ?session.user.currentDate) AND ( {voucherenddate} IS NULL OR {voucherenddate} >= ?session.user.currentDate);customergroup;VoucherStatusNotification;
