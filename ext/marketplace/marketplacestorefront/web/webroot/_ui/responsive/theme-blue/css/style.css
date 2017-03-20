@@ -37530,7 +37530,7 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
     background-image: url(../images/Delete.png);
     height: 24px;
     width: 24px;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat; /* TISUATSE-84 */
 }
 .alert-dismissable.alert-info .close, .alert-dismissible.alert-info .close {
 	position: relative;
@@ -60750,6 +60750,9 @@ body.page-returnSubmit #returnPincodeCheckForm .col-md-12.inputBoxHeight{
 }
 body.page-returnSubmit #returnPincodeCheckForm .error_text.address1Error{
 	margin-top: 7px;
+}
+.cart.wrapper .left-block .payments.tab-view .new-card #billingAddress fieldset .full .full-address{
+	resize:none;
 }
 @media (max-width:700px){
 	body.page-returnSubmit form#returnPincodeCheckForm textarea#addressLane1{
