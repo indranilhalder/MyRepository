@@ -1635,19 +1635,16 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		LOG.debug("Sub Order Clone:- Suborder ID:- " + null != clonedSubOrder.getCode() ? clonedSubOrder.getCode()
 				: "Sub Order code is empty");
 		//save once only
-		//getModelService().save(clonedSubOrder);
+		clonedSubOrder.setType("SubOrder");
+		clonedSubOrder.setParentReference(orderModel);
+		getModelService().save(clonedSubOrder);
 
 		LOG.debug("Sub Order Saved in DB:- Suborder ID:- " + clonedSubOrder.getCode());
-
 		if (CollectionUtils.isNotEmpty(clonedSubOrder.getEntries()))
 		{
 			getModelService().removeAll(clonedSubOrder.getEntries());
 			clonedSubOrder.setEntries(null);
 		}
-
-		clonedSubOrder.setType("SubOrder");
-		clonedSubOrder.setParentReference(orderModel);
-
 		//OrderIssues:- Refresh added before saving suborder
 		getModelService().save(clonedSubOrder);
 		getModelService().refresh(clonedSubOrder);
