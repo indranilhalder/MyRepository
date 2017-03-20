@@ -296,6 +296,8 @@ function ajaxPLPLoad(ajaxUrl){
         complete: function() {
             $('.lazyLoadPagination').remove();
             innerLazyLoad();
+            //UF-24 quickView call on ajax complete
+            ACC.quickview.bindToUiCarouselLink();
             
         }
     });
