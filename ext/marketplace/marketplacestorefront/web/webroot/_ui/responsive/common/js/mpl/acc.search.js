@@ -708,7 +708,13 @@ function donotShowAll()
 		}
 
 $(document).on("click",".plp-wishlist",function(e){
-	addToWishlistForPLP($(this).data("product"),this);
+	//addToWishlistForPLP($(this).data("product"),this);
+	
+	if ($(this).hasClass("added")){
+		 removeToWishlistForPLP($(this).data("product"),this);
+	} else {
+		 addToWishlistForPLP($(this).data("product"),this);
+	}
 	return false;
 })
 		/*Changes for INC144313867*/
