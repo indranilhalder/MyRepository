@@ -72,7 +72,6 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	@Autowired
 	private MplOrderDao mplOrderDao;
-	
 
 	public CommerceOrderResult placeOrder(final CommerceCheckoutParameter parameter) throws InvalidCartException
 	{
@@ -179,7 +178,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				orderModel.setTotalPrice(totalPrice);
 
 				orderModel.setModeOfOrderPayment(modeOfPayment);
-				
+
 				getModelService().save(orderModel);
 
 				result.setOrder(orderModel);
@@ -203,7 +202,6 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				getExternalTaxesService().clearSessionTaxDocument();
 
 				afterPlaceOrder(parameter, result);
-				
 
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
 						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
@@ -214,7 +212,6 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 							+ orderModel.getCode();
 					try
 					{
-						
 						notificationService.triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
 						//notificationService.sendMobileNotifications(orderModel);
 					}
@@ -333,7 +330,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 
-		final Double discount = getTotalDiscount(orderModel.getEntries());
+		final Double discount = getTotalDiscount(orderModel.getEntries(), true);
 
 		totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 		return totalPrice;
@@ -345,12 +342,12 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		double scheduleDeliveryCharge=0.0D;
 		//final OrderData orderData = getOrderConverter().convert(orderModel);
 		final Double subtotal = orderModel.getSubtotal();
+		final Double deliveryCost = orderModel.getDeliveryCost();
 
 		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 
-		final Double discount = getTotalDiscount(orderModel.getEntries());
-		
+		final Double discount = getTotalDiscount(orderModel.getEntries(), false);
 		//Start  Add schedule delivery charges for COD order TISRLUAT-1097
 		for(AbstractOrderEntryModel entry :orderModel.getEntries()){
 			if(entry.getScheduledDeliveryCharge()!=null && entry.getScheduledDeliveryCharge().doubleValue()>0 ){
@@ -363,7 +360,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		return totalPrice;
 	}
 
-	private Double getTotalDiscount(final List<AbstractOrderEntryModel> entries)
+	private Double getTotalDiscount(final List<AbstractOrderEntryModel> entries, final boolean deliveryFlag)
 	{
 		Double discount = Double.valueOf(0);
 
@@ -377,9 +374,13 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			{
 				if (null != oModel && !oModel.getGiveAway().booleanValue())
 				{
-					deliveryCost += (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue()) < 0 ? (-1)
-							* (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue()) : (oModel
-							.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue());
+					if (deliveryFlag)
+					{
+						deliveryCost += (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue()) < 0 ? (-1)
+								* (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue()) : (oModel
+								.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue());
+					}
+
 					couponDiscount += (null == oModel.getCouponValue() ? 0.0d : oModel.getCouponValue().doubleValue());
 					promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d : oModel.getTotalProductLevelDisc()
 							.doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d : oModel.getCartLevelDisc().doubleValue());
@@ -429,7 +430,17 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	public void beforeSubmitOrder(final CommerceCheckoutParameter parameter, final CommerceOrderResult result)
 			throws InvalidCartException, CalculationException
 	{
+		// New Changes added for Promotion+ Sub total Fix
+		final OrderModel order = result.getOrder();
+		final Double subTotal = (null != order && null != order.getSubtotal()) ? order.getSubtotal() : Double.valueOf(0);
+
 		getCalculationService().calculateTotals(result.getOrder(), false);
+
+		if (subTotal.doubleValue() > 0)
+		{
+			order.setSubtotal(subTotal);
+			getModelService().save(order);
+		}
 
 		if ((getCommercePlaceOrderMethodHooks() == null) || (!(parameter.isEnableHooks())) || (!(getConfigurationService()
 
@@ -472,8 +483,6 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		}
 	}
 
-	
-	
 	protected ModelService getModelService()
 	{
 		return this.modelService;

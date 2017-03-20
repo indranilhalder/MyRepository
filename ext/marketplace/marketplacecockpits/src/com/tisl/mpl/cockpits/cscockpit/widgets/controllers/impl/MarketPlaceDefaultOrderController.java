@@ -18,6 +18,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,6 +38,7 @@ import com.tisl.mpl.integration.oms.adapter.CustomOmsOrderSyncAdapter;
 import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
+import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.cockpit.model.meta.TypedObject;
@@ -49,6 +51,7 @@ import de.hybris.platform.cscockpit.widgets.controllers.CallContextController;
 import de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultOrderController;
 import de.hybris.platform.orderhistory.OrderHistoryService;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
+import de.hybris.platform.ordermodify.model.OrderEntryModificationRecordEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
@@ -100,8 +103,14 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 	@Autowired
 	private CustomOmsOrderSyncAdapter customOmsOrderSyncAdapter;
 	
+	
+	//car-80 
+	@Autowired
+	private OrderModelService orderModelService;
+	
 	@Autowired
 	private MplOrderDao mplOrderDao;
+
 	private static final Logger LOG = Logger
 			.getLogger(MarketPlaceDefaultOrderController.class);
 
@@ -217,11 +226,11 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 						} else {
 							newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
 						}
-						
+						// getModelService().save(consignmentModel);
 						mplJusPayRefundService.makeRefundOMSCall(orderEntry,
 								paymentTransactionModel,
 								orderEntry.getNetAmountAfterAllDisc(),
-								newStatus, null);
+								newStatus,null);
 						
 						//Start TISPRD-871
 						if(newStatus.equals(ConsignmentStatus.RETURN_COMPLETED)){
@@ -612,6 +621,8 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 	public boolean sendInvoice(List<TypedObject> orderLineId, String orderId) {
 		String customerEmail = null;
 
+		//car-80
+		OrderModel orderModel = orderModelService.getOrder(orderId);
 		CustomerModel customerModel = (CustomerModel) getCallContextController()
 				.getCurrentCustomer().getObject();
 		customerEmail = customerModel.getOriginalUid();
@@ -638,8 +649,9 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 						.setTransactionId(orderEntry.getTransactionID());
 						invoiceData.setOrdercode(orderId);
 						try {
+							//car-80:orderModel added as parameter.
 							registerCustomerFacade.sendInvoice(invoiceData,
-									customerModel);
+									customerModel, orderModel);
 							LOG.info("Invoice Sending Succesfull");
 							return true;
 						} catch (EtailNonBusinessExceptions e) {
@@ -659,7 +671,25 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 		List<PaymentTransactionModel> tranactions = new ArrayList<PaymentTransactionModel>(
 				order.getPaymentTransactions());
 		boolean flag = false;
-		flag = checkIsOrderCod(tranactions);
+		if (CollectionUtils.isNotEmpty(tranactions)) {
+			for (PaymentTransactionModel transaction : tranactions) {
+				if (CollectionUtils.isNotEmpty(transaction.getEntries())) {
+					for (PaymentTransactionEntryModel entry : transaction
+							.getEntries()) {
+						if (entry.getPaymentMode() != null
+								&& entry.getPaymentMode().getMode() != null
+								&& entry.getPaymentMode().getMode()
+										.equalsIgnoreCase("COD")) {
+							flag = true;
+							break;
+						}
+					}
+				}
+				if (flag) {
+					break;
+				}
+			}
+		}
 		if (flag) {
 			Double totalRefundDeliveryCharges = Double.valueOf(0);
 			if (MapUtils.isNotEmpty(refundMap)) {

@@ -10,7 +10,6 @@ import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commerceservices.search.resultdata.SearchResultValueData;
-import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 
 import java.math.BigDecimal;
@@ -35,6 +34,9 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 
 	@Autowired
 	private SizeAttributeComparator sizeAttributeComparator;
+
+	//private static final String DELIMETER = ":";
+	//private static final String STOCK = "STOCK";
 
 	@Override
 	public void populate(final SearchResultValueData source, final ProductData target)
@@ -240,6 +242,7 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	}
 
 	//@Override
+	//CAR-257
 	protected void populateStockDetails(final SearchResultValueData source, final ProductData target)
 	{
 		if (getValue(source, "stockLevelStatus") != null)
@@ -253,11 +256,12 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 			{
 				// In case of low stock then make a call to the stock service to determine if in or out of stock.
 				// In this case (low stock) it is ok to load the product from the DB and do the real stock check
-				final ProductModel productModel = getProductService().getProductForCode(target.getCode());
-				if (productModel != null)
-				{
-					target.setStockValue(stockLevelStatus);
-				}
+				//CAR-257
+				//final ProductModel productModel = getProductService().getProductForCode(target.getCode());
+				//	if (productModel != null)
+				//{
+				target.setStockValue(stockLevelStatus);
+				//}
 			}
 			catch (final UnknownIdentifierException ex)
 			{
@@ -297,20 +301,20 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	/*
 	 * @Override protected void addImageData(final SearchResultValueData source, final String imageFormat, final String
 	 * mediaFormatQualifier, final ImageDataType type, final List<ImageData> images) {
-	 * 
+	 *
 	 * final Object imgObj = getValue(source, "img-" + mediaFormatQualifier); List<String> imgList = new ArrayList(); if
 	 * (imgObj instanceof ArrayList) { imgList = (List) imgObj; } else { final String imgStr = (String) imgObj;
 	 * imgList.add(imgStr); }
-	 * 
-	 * 
+	 *
+	 *
 	 * if (!imgList.isEmpty()) { for (int i = 0; i < imgList.size(); i++) { final ImageData imageSearchData =
 	 * createImageData(); imageSearchData.setImageType(type); imageSearchData.setFormat(imageFormat);
 	 * imageSearchData.setUrl(imgList.get(i)); images.add(imageSearchData);
-	 * 
-	 * 
+	 *
+	 *
 	 * }
-	 * 
-	 * 
+	 *
+	 *
 	 * } }
 	 */
 
@@ -318,3 +322,6 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 
 
 }
+
+
+

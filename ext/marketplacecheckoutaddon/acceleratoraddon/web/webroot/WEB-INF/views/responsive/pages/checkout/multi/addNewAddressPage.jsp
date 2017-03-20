@@ -228,6 +228,10 @@
 						 		cache: false,
 						 		dataType: "json",
 						 		success : function(response) {
+						 			//TPR-4745
+						 			if(typeof utag !="undefined"){
+								 		 utag.link({ link_text : 'add_new_address_saved' ,event_type : 'add_new_address_saved'});
+								 		 }
 						 		if(response.hasOwnProperty("error")){
 						 			
 						 		}else if(response.hasOwnProperty("redirect_url")){

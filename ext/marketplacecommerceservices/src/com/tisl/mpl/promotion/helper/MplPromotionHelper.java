@@ -475,13 +475,15 @@ public class MplPromotionHelper
 	public double getTotalPrice(final AbstractOrder order)
 	{
 		double totalPrice = 0;
-		if (null != order && null != order.getEntries())
+		final List<AbstractOrderEntry> entries = (null != order) ? order.getEntries() : new ArrayList<AbstractOrderEntry>();
+
+		//		if (CollectionUtils.isNotEmpty(entries))
+		//		{
+		for (final AbstractOrderEntry entry : entries)
 		{
-			for (final AbstractOrderEntry entry : order.getEntries())
-			{
-				totalPrice = totalPrice + entry.getTotalPrice().doubleValue();
-			}
+			totalPrice = totalPrice + entry.getTotalPrice().doubleValue();
 		}
+		//}
 
 		return totalPrice;
 	}
@@ -600,34 +602,36 @@ public class MplPromotionHelper
 		//CR Changes
 		final Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
 
-		if (null != order && CollectionUtils.isNotEmpty(order.getEntries()))
+		final List<AbstractOrderEntry> entries = (null != order) ? order.getEntries() : new ArrayList<AbstractOrderEntry>();
+
+		//		if (CollectionUtils.isNotEmpty(entries))
+		//		{
+		boolean isFreebie = false;
+		boolean isofValidSeller = false;
+		String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
+
+
+		for (final AbstractOrderEntry entry : entries)
 		{
-			boolean isFreebie = false;
-			boolean isofValidSeller = false;
-			String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
-
-
-			for (final AbstractOrderEntry entry : order.getEntries())
+			isFreebie = validateEntryForFreebie(entry);
+			if (!isFreebie)
 			{
-				isFreebie = validateEntryForFreebie(entry);
-				if (!isFreebie)
+				isofValidSeller = getDefaultPromotionsManager().checkSellerData(arg0, restrictionList, entry);
+				if (isofValidSeller)
 				{
-					isofValidSeller = getDefaultPromotionsManager().checkSellerData(arg0, restrictionList, entry);
-					if (isofValidSeller)
+					try
 					{
-						try
-						{
-							selectedUSSID = (String) entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID);
-						}
-						catch (JaloInvalidParameterException | JaloSecurityException e)
-						{
-							LOG.error(e);
-						}
-						validProductUssidMap.put(selectedUSSID, entry);
+						selectedUSSID = (String) entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID);
 					}
+					catch (JaloInvalidParameterException | JaloSecurityException e)
+					{
+						LOG.error(e);
+					}
+					validProductUssidMap.put(selectedUSSID, entry);
 				}
 			}
 		}
+		//}
 
 		return validProductUssidMap;
 	}
@@ -649,33 +653,35 @@ public class MplPromotionHelper
 		//CR Changes
 		final Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
 
-		if (null != order && CollectionUtils.isNotEmpty(order.getEntries()))
-		{
-			boolean isFreebie = false;
-			boolean isofValidSeller = false;
-			String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
+		final List<AbstractOrderEntry> entries = (null != order) ? order.getEntries() : new ArrayList<AbstractOrderEntry>();
 
-			for (final AbstractOrderEntry entry : order.getEntries())
+		//		if (null != order && CollectionUtils.isNotEmpty(order.getEntries()))
+		//		{
+		boolean isFreebie = false;
+		boolean isofValidSeller = false;
+		String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
+
+		for (final AbstractOrderEntry entry : entries)
+		{
+			isFreebie = validateEntryForFreebie(entry);
+			if (!isFreebie)
 			{
-				isFreebie = validateEntryForFreebie(entry);
-				if (!isFreebie)
+				isofValidSeller = getDefaultPromotionsManager().isProductExcludedForSeller(arg0, restrictionList, entry);
+				if (!isofValidSeller)
 				{
-					isofValidSeller = getDefaultPromotionsManager().isProductExcludedForSeller(arg0, restrictionList, entry);
-					if (!isofValidSeller)
+					try
 					{
-						try
-						{
-							selectedUSSID = (String) entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID);
-						}
-						catch (JaloInvalidParameterException | JaloSecurityException e)
-						{
-							LOG.error(e);
-						}
-						validProductUssidMap.put(selectedUSSID, entry);
+						selectedUSSID = (String) entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID);
 					}
+					catch (JaloInvalidParameterException | JaloSecurityException e)
+					{
+						LOG.error(e);
+					}
+					validProductUssidMap.put(selectedUSSID, entry);
 				}
 			}
 		}
+		//}
 
 		return validProductUssidMap;
 	}

@@ -445,6 +445,7 @@ public class OrdersController extends BaseCommerceController
 		final UserResultWsDto response = new UserResultWsDto();
 		try
 		{
+			String invoicePathURL = "";
 			final SendInvoiceData sendInvoiceData = new SendInvoiceData();
 			// invoiceFile emailAttachedment
 			final OrderModel orderModel = orderModelService.getOrder(orderNumber);
@@ -453,17 +454,18 @@ public class OrdersController extends BaseCommerceController
 				int count = 0;
 				for (final AbstractOrderEntryModel entry : orderModel.getEntries())
 				{
-					if (entry.getOrderLineId() != null && entry.getConsignmentEntries() != null)
+					if (entry.getOrderLineId() != null && entry.getConsignmentEntries() != null
+							&& CollectionUtils.isNotEmpty(entry.getConsignmentEntries()))
 					{
 						if (entry.getOrderLineId().equalsIgnoreCase(lineID))
 						{
 							//Fetching invoice from consignment entries
 							for (final ConsignmentEntryModel c : entry.getConsignmentEntries())
 							{
-								if (null != c.getConsignment().getInvoice())
+								if (null != c.getConsignment() && null != c.getConsignment().getInvoice())
 								{
 
-									final String invoicePathURL = c.getConsignment().getInvoice().getInvoiceUrl();
+									invoicePathURL = c.getConsignment().getInvoice().getInvoiceUrl();
 
 									//Fix for defect TISPIT-145
 									if (null == invoicePathURL)
@@ -471,47 +473,15 @@ public class OrdersController extends BaseCommerceController
 										LOG.error("***************INVOICE URL is missing******************");
 										throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0015);
 									}
-									else
-									{
-										sendInvoiceData.setInvoiceUrl(invoicePathURL);
-									}
-
+									//commented for carProject implementation
 									/*
-									 * final File invoiceFile = new File(invoicePathURL); FileInputStream input = null;
-									 * 
-									 * if (invoiceFile.exists()) { String invoiceFileName = null; final String preInvoiceFileName
-									 * = invoiceFile.getName(); if (!preInvoiceFileName.isEmpty()) { final int index =
-									 * preInvoiceFileName.lastIndexOf('.'); if (index > 0) { invoiceFileName =
-									 * preInvoiceFileName.substring(0, index) + "_" + lineID + "_" + new
-									 * Timestamp(System.currentTimeMillis()) + "." + preInvoiceFileName.substring(index + 1); } }
+									 * else { sendInvoiceData.setInvoiceUrl(invoicePathURL); }
 									 */
-									try
-									{
-										/*
-										 * input = new FileInputStream(invoiceFile); final EmailAttachmentModel emailAttachment =
-										 * emailService.createEmailAttachment( new DataInputStream(input), invoiceFileName,
-										 * "application/octet-stream"); sendInvoiceData.setInvoiceUrl(emailAttachment.getCode());
-										 */
-										sendInvoiceData.setCustomerEmail(emailID);
-										sendInvoiceData.setOrdercode(orderNumber);
-										sendInvoiceData.setLineItemId(lineID);
-										sendInvoiceData.setTransactionId(lineID);
-										registerCustomerFacade.sendInvoice(sendInvoiceData, null);
-										response.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-
-
-									}
-									catch (final Exception ex)
-									{
-										ExceptionUtil.getCustomizedExceptionTrace(ex);
-										response.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
-										response.setErrorCode(MarketplacecommerceservicesConstants.E0000);
-										response.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-										return response;
-									}
-
-									//}
-
+								}
+								//added for carProject implementation
+								else
+								{
+									throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9033);
 								}
 							}
 							break;
@@ -520,8 +490,8 @@ public class OrdersController extends BaseCommerceController
 					}
 					else
 					{
-
-						response.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+						//commented for carProject implementation
+						//response.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9033);
 					}
 					count++;
@@ -529,15 +499,39 @@ public class OrdersController extends BaseCommerceController
 				if (count == orderModel.getEntries().size())
 				{
 					//invalid lineID entry
-					response.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					//commented for carProject implementation
+					//response.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9058);
 				}
+				try
+				{
+					sendInvoiceData.setCustomerEmail(emailID);
+					sendInvoiceData.setOrdercode(orderNumber);
+					sendInvoiceData.setLineItemId(lineID);
+					sendInvoiceData.setTransactionId(lineID);
+					sendInvoiceData.setInvoiceUrl(invoicePathURL);
+					//CAR-80
+					registerCustomerFacade.sendInvoice(sendInvoiceData, null, orderModel);
+					response.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+
+
+				}
+				catch (final Exception ex)
+				{
+					ExceptionUtil.getCustomizedExceptionTrace(ex);
+					response.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+					response.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+					response.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					return response;
+				}
+
 
 			}
 			else
 			{
 				//invalid lineID entry
-				response.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				//commented for carProject implementation
+				//response.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9034);
 			}
 
@@ -566,6 +560,7 @@ public class OrdersController extends BaseCommerceController
 		return response;
 
 	}
+
 
 	/**
 	 * @description Confirm the Order and send response as success
@@ -1406,9 +1401,10 @@ public class OrdersController extends BaseCommerceController
 	@RequestMapping(value = "/users/{userId}/orderhistorylist", method = RequestMethod.GET)
 	@ResponseBody
 	public GetOrderHistoryListWsDTO getOrders(@RequestParam(required = false) final String statuses,
-			@RequestParam final int currentPage, @RequestParam final int pageSize,
-			@RequestParam(required = false) final String sort, @PathVariable final String userId,
-			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+			@RequestParam final int currentPage, @RequestParam(required = false) final int pageSize,
+			@RequestParam(value = MarketplacewebservicesConstants.SORT, required = false) final String sort,
+			@PathVariable final String userId, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
+			@RequestParam(required = false) final ShowMode showMode)
 	{
 
 		final GetOrderHistoryListWsDTO getOrderHistoryListWsDTO = new GetOrderHistoryListWsDTO();
@@ -1420,7 +1416,16 @@ public class OrdersController extends BaseCommerceController
 			//			final SearchPageData<OrderData> searchPageDataParentOrder = ordersHelper.getParentOrders(currentPage, pageSize, sort,
 			//					userId);
 			//TISEE-6323
-			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = ordersHelper.getParentOrders(0, pageSize, sort);
+			//	final SearchPageData<OrderHistoryData> searchPageDataParentOrder1 = ordersHelper.getParentOrders(0, pageSize, sort);
+
+			//CAR Project performance issue fixed ---Pagination implemented for getOrders of Mobile webservices
+
+			final int pageSizeConFig = Integer.parseInt(configurationService.getConfiguration()
+					.getString(MarketplacewebservicesConstants.ORDER_HISTORY_PAGESIZE_WEBSERVICE, "10").trim());
+
+			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = ordersHelper.getParentOrders(0, pageSizeConFig, sort,
+					showMode);
+
 
 			if (null == searchPageDataParentOrder.getResults())
 			{
@@ -1454,8 +1459,14 @@ public class OrdersController extends BaseCommerceController
 					 */
 					getOrderHistoryListWsDTO.setTotalNoOfOrders(Integer.valueOf(orderCount));
 					//setting start end
-					start = currentPage * pageSize;
-					end = start + pageSize;
+					//					start = currentPage * pageSize;
+					//					end = start + pageSize;
+
+					//CAR Project performance issue fixed ---Pagination implemented for getOrders of Mobile webservices
+
+					start = currentPage * pageSizeConFig;
+					end = start + pageSizeConFig;
+
 					if (end > orderTrackingListWsDTO.size())
 					{
 						end = orderTrackingListWsDTO.size();

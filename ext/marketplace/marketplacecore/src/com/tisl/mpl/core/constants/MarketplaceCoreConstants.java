@@ -94,6 +94,16 @@ public final class MarketplaceCoreConstants extends GeneratedMarketplaceCoreCons
 	public static final String PRICEFALLBACK = ";PRICEFALLBACK";
 	public static final String IMPORTCONFIG_NOTFOUND = "Import config not found. The file %s won't be imported.";
 	public static final String YES = "Y";
+
+	//Added for CAR-183
+	public static final String COLORFAMILYFOOTWEAR = "colorfamilyfootwear";
+	public static final String COLORFAMILYFOOTWEARBLANK = "";
+	public static final String DIALCOLORELECTRONICS = "dialcolor"; // for INC_12606
+	public static final String DIALCOLORELECTRONICSBLANK = ""; // for INC_12606
+	public static final String DYNAMICATTRIBUTE = "classification.attirbutes.dynamic.";
+	public static final String LSH1 = "LSH1";
+	public static final String INR = "INR";
+	
 	public static final String ALL = "all";
-   
+
 }

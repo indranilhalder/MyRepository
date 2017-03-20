@@ -14,6 +14,24 @@
 <input type="hidden" id="product_category" value="${product_category}"/>
 <input type="hidden" id="page_subcategory_name" value="${page_subcategory_name}"/>
 <input type="hidden" id="page_subcategory_name_l3" value="${page_subcategory_name_l3}"/>
+<!-- UF-15-16 -->
+<c:choose>
+	<c:when test="${lazyInterface}">
+	<div id="productGrid">	<!-- Div to be overridden by AJAX response : TPR-198 --> 
+	<c:if test="${searchPageData.pagination.totalNumberOfResults ne 0}">
+	<div class="left-block">
+			<cms:pageSlot position="ProductLeftRefinements" var="feature">
+				<cms:component component="${feature}"/>
+			</cms:pageSlot>
+	</div>
+	</c:if>
+	
+		<cms:pageSlot position="ProductGridSlot" var="feature">
+			<cms:component component="${feature}"/>
+		</cms:pageSlot>
+	</div>
+</c:when>
+<c:otherwise>
 <template:page pageTitle="${pageTitle}">
 <div class="list_title"><h1>${dropDownText}</h1></div>
 <div class="listing wrapper">
@@ -45,3 +63,7 @@
 	
 	
 </template:page>
+</c:otherwise>
+</c:choose>
+
+
