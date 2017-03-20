@@ -2919,7 +2919,7 @@ $("body.page-cartPage .cart.wrapper .checkout-types li#checkout-id").on("mouseov
 	}
 });
 if ($(".facet-list.filter-opt").children().length){
-	$("body.page-productGrid .product-listing.product-grid.lazy-grid").css("padding-top","15px");
+	$("body.page-productGrid .product-listing.product-grid.lazy-grid, body.page-productGrid .product-listing.product-grid.lazy-grid-facet, body.page-productGrid .product-listing.product-grid.lazy-grid-normal").css("padding-top","15px");  //INC144315068
 	$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top","-95px");
 	$("body.page-productGrid .facet-list.filter-opt").css("padding-top","65px");
 	var height = $(".facet-list.filter-opt").outerHeight() + 33 + "px";

@@ -61007,8 +61007,11 @@ p#error-Id_tooltip_btm:hover,p#unserviceablepincode_tooltip_btm:hover,p#emptyId_
     top: 18px;
     }
     
- /* UF-15-16 start*/
-body.page-productGrid .product-listing.product-grid.lazy-grid {
+/* UF-15-16 start*/
+ /* INC144315068 fix */
+body.page-productGrid .product-listing.product-grid.lazy-grid, 
+body.page-productGrid .product-listing.product-grid.lazy-grid-facet, 
+body.page-productGrid .product-listing.product-grid.lazy-grid-normal {
     padding-top: 65px
 }
 
