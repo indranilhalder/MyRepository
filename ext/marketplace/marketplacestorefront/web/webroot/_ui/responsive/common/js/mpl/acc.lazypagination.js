@@ -16,7 +16,7 @@ function innerLazyLoad(options) {
         totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
         isSerp = true;
     }
-    //get the 8 items from the array and render // TODO: identify place holder done
+    //get the 8 items from the array and render 
     var gridHTML = '';
     //if total no of pages is 1 then load all 24 products at once.
     if(1 == totalNoOfPages){
@@ -27,30 +27,21 @@ function innerLazyLoad(options) {
     	 $.each(productItemArray, function(index, element) {
     	        if (index <= innerRecordSize) {
     	            if (index == innerRecordSize) {
-    	                //productsLoaded+= index;
     	                gridHTML += '<li class="product-item lazy-reached">' + $(element).html() + '</li>';
-    	                //$('ul.product-listing.product-grid').eq(1).append('<li class="product-item lazy-reached">' + $(element).html() + '</li>');
     	            } else {
     	                gridHTML += '<li class="product-item">' + $(element).html() + '</li>';
-    	                //$('ul.product-listing.product-grid').eq(1).append('<li class="product-item">' + $(element).html() + '</li>');
     	            }
     	        }
     	    });
     }
    
-    if (initPageLoad) { //TODO: duplicate loading prevention
-        //$('ul.product-listing.product-grid').eq(2).html(gridHTML).hide().fadeIn(500);
+    if (initPageLoad) { 
         $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal').html(gridHTML).hide().fadeIn(500);
-        initPageLoad = false;
+        //initPageLoad = false;
     } else {
-        //$('ul.product-listing.product-grid').eq(2).append(gridHTML);
         $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal').append(gridHTML);
     }
     deleteArraySet(productItemArray);
-    
-	/*if(pageNoPagination == totalNoOfPages){
-		$('li').removeClass('lazy-reached');
-	}*/
 }
 
 function innerLazyStorageLoad(productItemArrayStore) {
@@ -97,6 +88,9 @@ function getProductSetData() {
             if (currentPageNo <= totalNoOfPages) {
             	if(facetAjaxUrl){
             		ajaxUrl = facetAjaxUrl.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+            		if(query){
+            			ajaxUrl = ajaxUrl + query;
+            		}
             		window.history.replaceState({}, "", ajaxUrl);
             	}else{
             		ajaxUrl = pathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
@@ -117,8 +111,8 @@ function getProductSetData() {
             	}else if(query){
             		ajaxUrl = ajaxUrl + query;
             	}
-                var nextPaginatedAjaxUrl = ajaxUrl;
-                window.history.replaceState({}, "", nextPaginatedAjaxUrl);
+               // var nextPaginatedAjaxUrl = ajaxUrl;
+               // window.history.replaceState({}, "", nextPaginatedAjaxUrl); //UF-254 commented 
                 directPaginatedLoad =false;
             }
 			ajaxPLPLoad(ajaxUrl);
@@ -158,15 +152,25 @@ $(document).ready(function() {
                     wH = $(window).height(),
                     wS = $(this).scrollTop();
                 if (wS > (hT + hH - wH)) {
-				console.log("Lazy Reached");
+				console.log("LR");
                     $('.product-item').removeClass('lazy-reached');
 					//$('li').removeClass('lazy-reached');
                     if (recordsLoadedCount!=0 && (recordsLoadedCount % loadMoreCount) == 0) {
                         $('.loadMorePageButton').remove();
                         $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,.product-listing.product-grid.lazy-grid-normal').after('<button class="loadMorePageButton" style="background: #a9143c;color: #fff;margin: 5px auto;font-size: 12px;height: 40px;padding: 9px 18px;width: 250px;">Load More</button>');
                     } else {
-                        if (productItemArray.length == 0) { //TODO: check if category page 
-                            //window.history.replaceState({},"",ajaxUrl);
+                        if (productItemArray.length == 0) { //UF-254
+                        	if(initPageLoad){
+            					var query = window.location.search;
+            					var initialUrl = window.location.pathname.replace(/[/]$/,"") + '/page-1';
+            					if(pageType == 'productsearch'){//for serp initial page 
+            					initialUrl = initialUrl + '?'+ $('#searchPageDeptHierTreeForm').serialize();
+            					}else if(query){
+            					initialUrl = initialUrl + query;
+            					}
+                        		initPageLoad = false; 
+                        		window.history.replaceState({}, "", initialUrl);
+                        	}
                             getProductSetData();
                         } else {
                             innerLazyLoad({
@@ -217,46 +221,6 @@ $(document).ready(function() {
         });
 });
 
-function findGetParameter(parameterName) {
-    var result = null,
-        tmp = [];
-    location.search
-    .substr(1)
-        .split("&")
-        .forEach(function (item) {
-        tmp = item.split("=");
-        if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
-    });
-    return result;
-}
-function findGetParameterUrl(parameterName,URL) {
-    var result = null,
-        tmp = [];
-    URL
-    .substr(1)
-        .split("&")
-        .forEach(function (item) {
-        tmp = item.split("=");
-        if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
-    });
-    return result;
-}
-function removeURLParameter(url, parameter) {
-    var urlparts= url.split('?');   
-    if (urlparts.length>=2) {
-        var prefix= encodeURIComponent(parameter)+'=';
-        var pars= urlparts[1].split(/[&;]/g);
-        for (var i= pars.length; i-- > 0;) {    
-            if (pars[i].lastIndexOf(prefix, 0) !== -1) {  
-                pars.splice(i, 1);
-            }
-        }
-        url= urlparts[0] + (pars.length > 0 ? '?' + pars.join('&') : "");
-        return url;
-    } else {
-        return url;
-    }
-}
 function ajaxPLPLoad(ajaxUrl){
 	
     $.ajax({
@@ -296,9 +260,15 @@ function ajaxPLPLoad(ajaxUrl){
         complete: function() {
             $('.lazyLoadPagination').remove();
             innerLazyLoad();
-            //UF-24 quickView call on ajax complete
-            ACC.quickview.bindToUiCarouselLink();
-            
+            //TPR-4720 first 5 product display
+			if($('#pageType').val() == "productsearch"){
+				populateFirstFiveProductsSerp();	
+			}
+			
+			if($('#pageType').val() == "category" || $('#pageType').val() == "electronics"){
+				populateFirstFiveProductsPlp();
+			}
+			ACC.quickview.bindToUiCarouselLink();
         }
     });
 }
