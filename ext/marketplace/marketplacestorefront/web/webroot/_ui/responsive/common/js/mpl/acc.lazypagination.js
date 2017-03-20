@@ -250,14 +250,6 @@ function ajaxPLPLoad(ajaxUrl){
         complete: function() {
             $('.lazyLoadPagination').remove();
             innerLazyLoad();
-            //TPR-4720 first 5 product display
-			if($('#pageType').val() == "productsearch"){
-				populateFirstFiveProductsSerp();	
-			}
-			
-			if($('#pageType').val() == "category" || $('#pageType').val() == "electronics"){
-				populateFirstFiveProductsPlp();
-			}
 			ACC.quickview.bindToUiCarouselLink();
         }
     });
