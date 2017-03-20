@@ -147,6 +147,9 @@ $(document).ready(function() {
     }
         $(window).on('scroll', function() {
             if ($('.lazy-reached').length != 0) {
+				if(productItemArray.length == 16){
+					lazyPushInitalPage();
+				}
                 var hT = $('.lazy-reached').offset().top,
                     hH = $('.lazy-reached').outerHeight(),
                     wH = $(window).height(),
@@ -160,7 +163,7 @@ $(document).ready(function() {
                         $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,.product-listing.product-grid.lazy-grid-normal').after('<button class="loadMorePageButton" style="background: #a9143c;color: #fff;margin: 5px auto;font-size: 12px;height: 40px;padding: 9px 18px;width: 250px;">Load More</button>');
                     } else {
                         if (productItemArray.length == 0) { 
-                            lazyPushInitalPage(); //UF-254
+                            //lazyPushInitalPage(); //UF-254
                         	getProductSetData();
                         } else {
                             innerLazyLoad({
@@ -340,7 +343,7 @@ function lazyPushInitalPage(){
 	
 	if(initPageLoad){
 		var query = window.location.search;
-		var initialUrl = window.location.pathname.replace(/[/]$/,"") + '/page-1';
+		var initialUrl = window.location.pathname.replace(/[/]$/,"") + '/page-' + pageNoPagination;
 		if(pageType == 'productsearch'){//for serp initial page 
 		initialUrl = initialUrl + '?'+ $('#searchPageDeptHierTreeForm').serialize();
 		}else if(query){
