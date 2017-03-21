@@ -230,7 +230,7 @@ public class MarketPlaceRefundScheduleDeliveryChargeWidgetRenderer extends
 															LabelUtils
 																	.getLabel(
 																			widget,
-																			"refund.failed",
+																			"refund.inProgress",
 																			new Object[] { paymentTransactionModel
 																					.getCode() }),
 															MarketplaceCockpitsConstants.INFO,
