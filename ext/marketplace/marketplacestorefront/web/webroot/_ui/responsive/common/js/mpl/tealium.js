@@ -564,7 +564,8 @@ function utagAddProductToBag(triggerPoint,productCodeMSD){
 	utag.link({
 		link_text: triggerPoint ,
 		event_type : triggerPoint+"_"+ pageName,
-		product_sku : productCodeArray              // Product code passed as an array for Web Analytics - INC_11511  fix
+		product_sku : productCodeArray,		// Product code passed as an array for Web Analytics - INC_11511  fix
+		product_id :  productCodeArray
 	});
 }
 
@@ -1673,6 +1674,7 @@ function tealiumBrokenImage(){
 }
 /*TPR-4728 | add to compare page  3rd part */
 $(".product-tile.cboxElement").click(function(){
+	alert("pop up");
 	 var url = $(this).attr('href').split("/")[2];
 	var productID = url.split("p-");
 	var productArray=[];
