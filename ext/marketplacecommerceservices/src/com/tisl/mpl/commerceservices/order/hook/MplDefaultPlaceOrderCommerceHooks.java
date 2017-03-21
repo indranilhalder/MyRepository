@@ -161,25 +161,19 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//			}
 			if (null != orderModel)
 			{
-				//Set order-id
-				final String sequenceGeneratorApplicable = getConfigurationService().getConfiguration()
-						.getString(MarketplacecclientservicesConstants.GENERATE_ORDER_SEQUENCE).trim();
-				//private method for seting Sub-order Total-TISEE-3986
-				if (StringUtils.isNotEmpty(sequenceGeneratorApplicable)
-						&& sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE))
-				{
-					LOG.debug("Order Sequence Generation True");
-					final String orderIdSequence = getMplCommerceCartService().generateOrderId();
-					LOG.debug("Order Sequence Generated:- " + orderIdSequence);
-
-					orderModel.setCode(orderIdSequence);
-				}
-				else
-				{
-					LOG.debug("Order Sequence Generation False");
-					final Random rand = new Random();
-					orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000)));
-				}
+				//INC144315079
+				/*
+				 * //Set order-id final String sequenceGeneratorApplicable = getConfigurationService().getConfiguration()
+				 * .getString(MarketplacecclientservicesConstants.GENERATE_ORDER_SEQUENCE).trim(); //private method for
+				 * seting Sub-order Total-TISEE-3986 if (StringUtils.isNotEmpty(sequenceGeneratorApplicable) &&
+				 * sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE)) {
+				 * LOG.debug("Order Sequence Generation True"); final String orderIdSequence =
+				 * getMplCommerceCartService().generateOrderId(); LOG.debug("Order Sequence Generated:- " +
+				 * orderIdSequence);
+				 * 
+				 * orderModel.setCode(orderIdSequence); } else { LOG.debug("Order Sequence Generation False"); final Random
+				 * rand = new Random(); orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000))); }
+				 */
 				orderModel.setType("Parent");
 				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
 				{
@@ -1634,20 +1628,17 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 		LOG.debug("Sub Order Clone:- Suborder ID:- " + null != clonedSubOrder.getCode() ? clonedSubOrder.getCode()
 				: "Sub Order code is empty");
-
+		//save once only
+		clonedSubOrder.setType("SubOrder");
+		clonedSubOrder.setParentReference(orderModel);
 		getModelService().save(clonedSubOrder);
 
 		LOG.debug("Sub Order Saved in DB:- Suborder ID:- " + clonedSubOrder.getCode());
-
 		if (CollectionUtils.isNotEmpty(clonedSubOrder.getEntries()))
 		{
 			getModelService().removeAll(clonedSubOrder.getEntries());
 			clonedSubOrder.setEntries(null);
 		}
-
-		clonedSubOrder.setType("SubOrder");
-		clonedSubOrder.setParentReference(orderModel);
-
 		//OrderIssues:- Refresh added before saving suborder
 		getModelService().save(clonedSubOrder);
 		getModelService().refresh(clonedSubOrder);

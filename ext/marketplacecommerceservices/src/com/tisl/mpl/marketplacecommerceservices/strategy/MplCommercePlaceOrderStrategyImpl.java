@@ -31,6 +31,7 @@ import de.hybris.platform.store.services.BaseStoreService;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import javax.xml.bind.JAXBException;
@@ -42,8 +43,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
+import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
@@ -73,6 +76,10 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	@Autowired
 	private MplOrderDao mplOrderDao;
+
+	//INC144315079
+	@Autowired
+	private MplCommerceCartService mplCommerceCartService;
 
 	@Override
 	public CommerceOrderResult placeOrder(final CommerceCheckoutParameter parameter) throws InvalidCartException,
@@ -121,82 +128,92 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 			if (orderModel != null && isValidOrder)
 			{
-				result.setOrder(orderModel);
-				// OrderIssues:- 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved here
-				//				afterPlaceOrder(parameter, result);
-
-				orderModel.setDate(new Date());
-
-				orderModel.setSite(getBaseSiteService().getCurrentBaseSite());
-				orderModel.setStore(getBaseStoreService().getCurrentBaseStore());
-				orderModel.setLanguage(getCommonI18NService().getCurrentLanguage());
-
-				if (parameter.getSalesApplication() != null)
-				{
-					orderModel.setSalesApplication(parameter.getSalesApplication());
-				}
-
-				orderModel.setAllPromotionResults(Collections.<PromotionResultModel> emptySet());
-
-				getModelService().saveAll(new Object[]
-				{ customer, orderModel });
-
-				/*
-				 * if ((cartModel.getPaymentInfo() != null) && (cartModel.getPaymentInfo().getBillingAddress() != null)) {
-				 * final AddressModel billingAddress = cartModel.getPaymentInfo().getBillingAddress();
-				 * orderModel.setPaymentAddress(billingAddress);
-				 * orderModel.getPaymentInfo().setBillingAddress(getModelService().clone(billingAddress));
-				 * getModelService().save(orderModel.getPaymentInfo()); } getModelService().save(orderModel);
-				 */
-
-				getPromotionsService().transferPromotionsToOrder(cartModel, orderModel, false);
-				final Double subTotal = orderModel.getSubtotal();
-				final boolean deliveryCostPromotionApplied = isDeliveryCostPromotionApplied(orderModel);
-				Double totalPrice = Double.valueOf(0.0);
-
-
-				if (deliveryCostPromotionApplied)
-				{
-					totalPrice = fetchTotalPriceForDelvCostPromo(orderModel);
-				}
-				else
-				{
-					totalPrice = fetchTotalPrice(orderModel);
-				}
 				try
 				{
-					getCalculationService().calculateTotals(orderModel, false);
-					getExternalTaxesService().calculateExternalTaxes(orderModel);
+					result.setOrder(orderModel);
+					// OrderIssues:- 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved here
+					//				afterPlaceOrder(parameter, result);
+					//INC144315079
+					orderIdGenerator(orderModel);
+					orderModel.setDate(new Date());
+
+					orderModel.setSite(getBaseSiteService().getCurrentBaseSite());
+					orderModel.setStore(getBaseStoreService().getCurrentBaseStore());
+					orderModel.setLanguage(getCommonI18NService().getCurrentLanguage());
+
+					if (parameter.getSalesApplication() != null)
+					{
+						orderModel.setSalesApplication(parameter.getSalesApplication());
+					}
+
+					orderModel.setAllPromotionResults(Collections.<PromotionResultModel> emptySet());
+
+					getModelService().saveAll(new Object[]
+					{ customer, orderModel });
+
+					/*
+					 * if ((cartModel.getPaymentInfo() != null) && (cartModel.getPaymentInfo().getBillingAddress() != null))
+					 * { final AddressModel billingAddress = cartModel.getPaymentInfo().getBillingAddress();
+					 * orderModel.setPaymentAddress(billingAddress);
+					 * orderModel.getPaymentInfo().setBillingAddress(getModelService().clone(billingAddress));
+					 * getModelService().save(orderModel.getPaymentInfo()); } getModelService().save(orderModel);
+					 */
+
+					getPromotionsService().transferPromotionsToOrder(cartModel, orderModel, false);
+					final Double subTotal = orderModel.getSubtotal();
+					final boolean deliveryCostPromotionApplied = isDeliveryCostPromotionApplied(orderModel);
+					Double totalPrice = Double.valueOf(0.0);
+
+
+					if (deliveryCostPromotionApplied)
+					{
+						totalPrice = fetchTotalPriceForDelvCostPromo(orderModel);
+					}
+					else
+					{
+						totalPrice = fetchTotalPrice(orderModel);
+					}
+					try
+					{
+						getCalculationService().calculateTotals(orderModel, false);
+						getExternalTaxesService().calculateExternalTaxes(orderModel);
+					}
+					catch (final CalculationException ex)
+					{
+						LOG.error("Failed to calculate order [" + orderModel + "]", ex);
+					}
+					final Double totalPriceWithconv = Double.valueOf(totalPrice.doubleValue()
+							+ orderModel.getDeliveryCost().doubleValue() + orderModel.getConvenienceCharges().doubleValue());
+
+					getModelService().refresh(orderModel);
+					getModelService().refresh(customer);
+
+					orderModel.setSubtotal(subTotal);
+					//				if (deliveryCostPromotionApplied)
+					//				{
+					//					orderModel.setTotalPrice(totalPrice);
+					//				}
+
+					//orderModel.setTotalPrice(totalPrice);
+					orderModel.setTotalPrice(totalPriceWithconv);
+					orderModel.setTotalPriceWithConv(totalPriceWithconv);
+
+					orderModel.setModeOfOrderPayment(modeOfPayment);
+
+					getModelService().save(orderModel);
+
+					/*
+					 * result.setOrder(orderModel); // OrderIssues:- 9 digit Order Id getting populated after Order Split and
+					 * Submit order process for cod, hence moved here afterPlaceOrder(parameter, result);
+					 */
 				}
-				catch (final CalculationException ex)
+				catch (final Exception e)
 				{
-					LOG.error("Failed to calculate order [" + orderModel + "]", ex);
+
+					LOG.error("Error after cart to order conversation and before calling afterplaceorder for order ID :"
+							+ orderModel.getCode() + "mode of payment :" + modeOfPayment);
+					LOG.error("Error while submit order:" + e.getMessage());
 				}
-				final Double totalPriceWithconv = Double.valueOf(totalPrice.doubleValue()
-						+ orderModel.getDeliveryCost().doubleValue() + orderModel.getConvenienceCharges().doubleValue());
-
-				getModelService().refresh(orderModel);
-				getModelService().refresh(customer);
-
-				orderModel.setSubtotal(subTotal);
-				//				if (deliveryCostPromotionApplied)
-				//				{
-				//					orderModel.setTotalPrice(totalPrice);
-				//				}
-
-				//orderModel.setTotalPrice(totalPrice);
-				orderModel.setTotalPrice(totalPriceWithconv);
-				orderModel.setTotalPriceWithConv(totalPriceWithconv);
-
-				orderModel.setModeOfOrderPayment(modeOfPayment);
-
-				getModelService().save(orderModel);
-
-				/*
-				 * result.setOrder(orderModel); // OrderIssues:- 9 digit Order Id getting populated after Order Split and
-				 * Submit order process for cod, hence moved here afterPlaceOrder(parameter, result);
-				 */
-
 				afterPlaceOrder(parameter, result);
 
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
@@ -323,9 +340,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -495,6 +512,31 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		}
 	}
 
+	//INC144315079
+	//Order ID generator
+	private void orderIdGenerator(final OrderModel orderModel)
+	{
+		//Set order-id
+		final String sequenceGeneratorApplicable = getConfigurationService().getConfiguration()
+				.getString(MarketplacecclientservicesConstants.GENERATE_ORDER_SEQUENCE).trim();
+		//private method for seting Sub-order Total-TISEE-3986
+		if (StringUtils.isNotEmpty(sequenceGeneratorApplicable)
+				&& sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE))
+		{
+			LOG.debug("Order Sequence Generation True");
+			final String orderIdSequence = getMplCommerceCartService().generateOrderId();
+			LOG.debug("Order Sequence Generated:- " + orderIdSequence);
+
+			orderModel.setCode(orderIdSequence);
+		}
+		else
+		{
+			LOG.debug("Order Sequence Generation False");
+			final Random rand = new Random();
+			orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000)));
+		}
+	}
+
 	protected ModelService getModelService()
 	{
 		return this.modelService;
@@ -643,4 +685,12 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		this.orderConverter = orderConverter;
 	}
 
+	//INC144315079
+	/**
+	 * @return the mplCommerceCartService
+	 */
+	public MplCommerceCartService getMplCommerceCartService()
+	{
+		return mplCommerceCartService;
+	}
 }
