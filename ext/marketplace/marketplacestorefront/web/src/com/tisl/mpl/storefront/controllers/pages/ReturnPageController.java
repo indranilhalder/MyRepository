@@ -31,10 +31,14 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -597,11 +601,15 @@ public class ReturnPageController extends AbstractMplSearchPageController
       LOG.debug("***************:"+filename.getOriginalFilename()); 
       String fileUploadLocation=null;
       String shipmentCharge=null;
+      String typeofReturn=null;
+      String date =null;
+      Path path =null;
       //TISRLUAT-50
 		Double configShippingCharge = 0.0d;
       if(null!=configurationService){
       	fileUploadLocation=configurationService.getConfiguration().getString(RequestMappingUrlConstants.FILE_UPLOAD_PATH);
       	shipmentCharge=configurationService.getConfiguration().getString(RequestMappingUrlConstants.SHIPMENT_CHARGE_AMOUNT);
+      	typeofReturn=configurationService.getConfiguration().getString(RequestMappingUrlConstants.TYPE_OF_RETURN_FOR_RSS);
       	if(null !=shipmentCharge && !shipmentCharge.isEmpty()){
       		configShippingCharge=Double.parseDouble(shipmentCharge);
       	}
@@ -609,8 +617,20 @@ public class ReturnPageController extends AbstractMplSearchPageController
       	 if(null!=fileUploadLocation && !fileUploadLocation.isEmpty()){
       		 try{  
       	        byte barr[]=filename.getBytes();  
+      	     	SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
+      			 date = sdf.format(new Date());
+      			 path = Paths.get(fileUploadLocation+File.separator+date);
+      	       //if directory exists?
+      	       if (!Files.exists(path)) {
+      	           try {
+      	               Files.createDirectories(path);
+      	           } catch (IOException e) {
+      	               //fail to create directory
+      	         	  LOG.error("Exception ,While creating the Directory "+e.getMessage());
+      	           }
+      	       }
       	        BufferedOutputStream bout=new BufferedOutputStream(  
-      	                 new FileOutputStream(fileUploadLocation+File.separator+filename.getOriginalFilename()));  
+      	                 new FileOutputStream(path+File.separator+typeofReturn+mplReturnInfoForm.getTransactionId()+filename.getOriginalFilename()));  
       	        bout.write(barr);  
       	        bout.flush();  
       	        bout.close();  
@@ -637,7 +657,10 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				returnInfoRequestData.setShipmentCharge(String.valueOf(configShippingCharge));
 			}
 		}
-		returnInfoRequestData.setShipmentProofURL(fileUploadLocation+File.separator+filename.getOriginalFilename());
+	
+		LOG.debug("Final Path for ShipmentProofURL :"+path+File.separator+typeofReturn+mplReturnInfoForm.getTransactionId()+filename.getOriginalFilename());
+		//returnInfoRequestData.setShipmentProofURL(fileUploadLocation+File.separator+filename.getOriginalFilename());
+		returnInfoRequestData.setShipmentProofURL(path+File.separator+typeofReturn+mplReturnInfoForm.getTransactionId()+filename.getOriginalFilename());
 		returnInfoRequestData.setLogisticsID(mplReturnInfoForm.getLpNameOther());
 		returnInfoRequestData.setReturnType(RequestMappingUrlConstants.RSS);
 		
