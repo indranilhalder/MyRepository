@@ -24,6 +24,10 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 
 
+/**
+ * Customized action class for order level promotions
+ *
+ */
 @SuppressWarnings("deprecation")
 public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromotionOrderAdjustTotalAction
 {
