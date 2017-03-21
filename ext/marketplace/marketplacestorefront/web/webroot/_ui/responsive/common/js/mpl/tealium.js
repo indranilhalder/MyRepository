@@ -104,7 +104,7 @@ $(document).on('mousedown','.owl-prev,.owl-next',function(e){
 	
 	var pageType=$('#pageType').val();
 	//Changes for Analytics Data layer schema changes | PDP
-	if(pageType=='product'){
+	if(pageType=='product' || pageType=='/sellersdetailpage'){
 		title="similar_products";
 		msg = title;
 	}
@@ -506,7 +506,7 @@ $(document).on('click',".color-swatch > li", function(){
 })
 
 /*TPR-4803| hot now | homepage*/
-$(document).on('click','#ia_products_hot a',function(){
+$(document).on('click','#ia_products_hot .hotShowHide',function(){
 	if(typeof utag !="undefined"){
 		 utag.link({ link_text : 'shop_the_hotlist_clicked' , event_type : 'shop_the_hotlist_clicked' });
 	 }	
@@ -1529,7 +1529,7 @@ function populateFirstFiveProductsSerp(){
 	productArray.push(product);
    }
    if(typeof utag !="undefined"){
-		 utag.link({ event_type: 'top_five_products_serp',serp_first_5_products : productArray,product_id : productArray  });
+		 utag.link({ serp_first_5_products : productArray,product_id : productArray  });
 	 }
    
    if(productArray.length == 0){
@@ -1574,7 +1574,7 @@ function populateFirstFiveProductsPlp(){
       
   }
    if(typeof utag !="undefined"){
-		 utag.link({ event_type :'top_five_products_plp',plp_first_5_products : productArray,product_id : productArray });
+		 utag.link({ plp_first_5_products : productArray,product_id : productArray });
 	 }	
    
    if(productArray.length == 0){
