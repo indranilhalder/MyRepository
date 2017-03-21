@@ -101,9 +101,9 @@
 									<b><spring:theme code="text.order.returns.refundmode"/></b> <br/>
 									<form:select name="size" class="refundMode" path="refundMode" value="${customerBankDetails.transactionType}">
 										    <form:option value="N">NEFT</form:option>
-											<!--form:option value="R">RTGS</form:option>
-											<form:option value="C">CHEQUE</form:option>
-											<form:option value="B">Bank Transfer</form:option-->						
+<%-- 											<form:option value="R">RTGS</form:option> --%>
+<%-- 											<form:option value="C">CHEQUE</form:option> --%>
+<%-- 											<form:option value="B">Bank Transfer</form:option>						 --%>
 									</form:select>
 								</div>
 								<div class="col-md-2 col-sm-2">

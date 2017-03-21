@@ -378,6 +378,9 @@ $(document).ready(function(){
 						 //console.log(tempHtml);
 						 $('.quickDropArea').empty().html(tempHtml);
 						  getQuickDropData();
+						  //Author Tribhuvan R2.3 TISRLUAT-1174 start 
+							$('#saveBlockData').prop('disabled', false);
+							//Author Tribhuvan R2.3 TISRLUAT-1174 end 
 				  }
 			  
 			  },
