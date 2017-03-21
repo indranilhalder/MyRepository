@@ -4,6 +4,7 @@ var innerRecordSize = 7;
 var loadMoreCount = 72;
 var initPageLoad = true;
 var directPaginatedLoad = true;
+var lazyPagePush = true;
 var serpURL;
 var ajaxUrl = '';
 var recordsLoadedCount = 0;
@@ -341,15 +342,18 @@ function sort(this_data,drop_down){
 
 function lazyPushInitalPage(){
 	
-	if(initPageLoad){
+	var pathName = window.location.pathname;
+	var pageNoExists = /page-[0-9]+/.test(pathName);
+
+	if(lazyPagePush && !pageNoExists){
 		var query = window.location.search;
-		var initialUrl = window.location.pathname.replace(/[/]$/,"") + '/page-' + pageNoPagination;
+		var initialUrl = pathName.replace(/[/]$/,"") + '/page-1';
 		if(pageType == 'productsearch'){//for serp initial page 
 		initialUrl = initialUrl + '?'+ $('#searchPageDeptHierTreeForm').serialize();
 		}else if(query){
 		initialUrl = initialUrl + query;
 		}
-		initPageLoad = false; 
 		window.history.replaceState({}, "", initialUrl);
+		lazyPagePush = false;
 	}
 }
