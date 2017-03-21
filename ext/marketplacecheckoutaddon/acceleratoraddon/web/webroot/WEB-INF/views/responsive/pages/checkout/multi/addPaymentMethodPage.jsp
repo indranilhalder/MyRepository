@@ -1126,8 +1126,8 @@
 									<div id="wrongOtpValidationMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.wrongOtpValidationMessage"/>
 									</div>
 									
-									<div id="otpSentMessage" class="error-message payment-notification"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otpSentMessage"/>
-									</div>
+									<%-- <div id="otpSentMessage" class="error-message payment-notification"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otpSentMessage"/>
+									</div> --%>
 									
 									<div id="expiredOtpValidationMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.expiredOtpValidationMessage"/>
 									</div>
@@ -1146,11 +1146,16 @@
 										<div id="paymentFormButton" class="pay cont-del">	
 						<!-- Terms & Conditions Link -->
 
-								<button type="button" class="make_payment button btn-block payment-button confirm" onclick="submitForm()" id="paymentButtonId">		
+								<%-- <button type="button" class="make_payment button btn-block payment-button confirm" onclick="submitForm()" id="paymentButtonId">		
 									<div id="submitPaymentFormCODButton">	
 										<spring:theme code="checkout.multi.paymentMethod.codContinue" />
 									</div>
-								</button>
+								</button> --%>
+							 	<button type="button" class="make_payment button btn-block payment-button confirm" id="paymentButtonId" style="display:block;">		
+									<div id="submitPaymentFormCODButton"  style="display:block;">	
+										<spring:theme code="checkout.multi.paymentMethod.codContinue" />
+									</div>
+								</button> 
 								<%-- <p class="payment-redirect"><spring:theme code="text.secure.payment.gateway"/></p> --%>
 									
 							</div>

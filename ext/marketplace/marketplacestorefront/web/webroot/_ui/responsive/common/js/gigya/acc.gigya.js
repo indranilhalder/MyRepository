@@ -107,10 +107,12 @@ function registerUserGigya(eventObject)
     		gigya.comments.showCommentsUI(params);	
     		
     		//TISPRD-3152 FIX
+    		var pageName = $('#pageName').val();
+    		if(typeof(pageName)!= "undefined"  && pageName == 'Product Details'){
     		$(document).ready(function(){
     			getRating($('input[name=gigya_api_key]').val(),$('input[name=gigya_product_code]').val(),$('input[name=gigya_product_root_category]').val());		
      		});
-    		
+    		}
     		//TISPRD-3152 FIX ends
     	function commentBox(response)
     	{		
@@ -123,7 +125,14 @@ function registerUserGigya(eventObject)
     	function onErrorHandler(responseObj){
     		$(".gig-composebox-error").text(responseObj.errorDetails);
     		$(".gig-composebox-error").show();
+    		//added for tealium to capture review submit error
+    		if(pageType == 'product'){
+    		utag.link(
+   					{"error_type": "review_submit_error", "error_message": responseObj.errorMessage});
+
     		}
+    		}
+    		
 
 
     	function reviewCount(response) {
@@ -158,9 +167,10 @@ function registerUserGigya(eventObject)
     		}
     		  utag.link(
    					{"link_text": title.replace(/ /g,'_').toLowerCase() , "event_type" : "review_post" , "review_overall_rating" : overall , "review_quality" : quality ,
-   						"review_ease_of_use" : ease_of_use	, "review_fit" : fit , "review_value_for_money": value_for_money }
+   						"review_ease_of_use" : ease_of_use	, "review_fit" : fit , "review_value_for_money": value_for_money,"user_product_rating":overall,"Seller_rating" : " " }
    				);
     		  
+    		 
     		//TPR-675 PART-A  ends
     		  
     		getRating($('input[name=gigya_api_key]').val(),$('input[name=gigya_product_code]').val(),$('input[name=gigya_product_root_category]').val());
@@ -177,6 +187,9 @@ function registerUserGigya(eventObject)
     		 
     		$.getJSON(url, function(data){
     		//	console.log(data);
+    			if(data!=undefined && data.streamInfo!=undefined){	
+    				
+    			
     		  	var totalCount=data.streamInfo.ratingCount;
     			//Reverse the source array
     			var ratingArray = data.streamInfo.ratingDetails._overall.ratings;
@@ -217,11 +230,10 @@ function registerUserGigya(eventObject)
     						}
     				$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
     				
+    				//added for tealium to get average product rating
+   				     utag.link({"product_rating":avgreview});
     				
-    				
-    				
-    				
-    		  });
+    		  }
     		  
     		//TISUATPII-471 fix
     		  var ratingsParams = {
@@ -259,7 +271,8 @@ function registerUserGigya(eventObject)
 //    		          });
     		
 
-    	}
+    	});
+    }
     	
     	function CheckUserLogedIn() {
     		
@@ -326,5 +339,3 @@ function registerUserGigya(eventObject)
     		            ,enabledProviders : 'facebook,google'
     		            });
     		}
-    /*	});*/
-    		

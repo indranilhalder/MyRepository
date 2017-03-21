@@ -54,6 +54,19 @@ public interface MplPaymentFacade
 	Map<String, Boolean> getPaymentModes(String store, final boolean isMobile, final CartData cartDataMobile)
 			throws EtailNonBusinessExceptions;
 
+	//CAR-111: Added new
+	/**
+	 * This method returns the map of all active Payment modes(eg. Credit Card, Debit Card, COD, etc.) and their
+	 * availability for the specific store and displays them on the payment page of the store
+	 *
+	 * @param store
+	 * @param abstractOrderModel
+	 * @return Map<String, Boolean>
+	 * @throws EtailNonBusinessExceptions
+	 */
+	Map<String, Boolean> getPaymentModes(String store, final AbstractOrderModel abstractOrderModel)
+			throws EtailNonBusinessExceptions;
+
 
 	/**
 	 * This method searches all those banks for Netbanking which have Priority field set as true and returns them in a

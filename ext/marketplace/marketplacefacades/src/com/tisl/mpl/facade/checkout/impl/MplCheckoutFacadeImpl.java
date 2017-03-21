@@ -980,14 +980,17 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 * @see com.tisl.mpl.facade.checkout.MplCheckoutFacade#placeOrder(java.lang.String)
 	 */
 	@Override
-	public OrderData placeOrderByCartId(final String cartID) throws EtailNonBusinessExceptions
+	public String placeOrderByCartId(final CartModel cartModel) throws EtailNonBusinessExceptions
 	{
-		OrderData orderData = null;
+		//final OrderData orderData = null;
+		String orderCode = null;
 		try
 		{
 			//final CartModel cartModel = getCommerceCartService().getCartForCodeAndUser(cartID, user);
 			//now guid
-			final CartModel cartModel = getCommerceCartService().getCartForGuidAndSite(cartID, baseService.getCurrentBaseSite());
+
+			//CAR-110
+			//final CartModel cartModel = getCommerceCartService().getCartForGuidAndSite(cartID, baseService.getCurrentBaseSite());
 			/*
 			 * CartModel cartModel = modelService.create(CartModel.class); cartModel.setCode(cartCode); cartModel =
 			 * flexibleSearchService.getModelByExample(cartModel);
@@ -1001,13 +1004,19 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 				final OrderModel orderModel = placeOrderWS(cartModel);
 
+
+
 				//TISUT-1810
 				afterPlaceOrderWS(cartModel, orderModel);
 
 				// Convert the order to an order data
-				if (orderModel != null)
+				//CAR-110
+				/*
+				 * if (orderModel != null) { orderData = getOrderConverter().convert(orderModel); }
+				 */
+				if (null != orderModel)
 				{
-					orderData = getOrderConverter().convert(orderModel);
+					orderCode = orderModel.getCode();
 				}
 			}
 		}
@@ -1024,7 +1033,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			// Error message for All Exceptions
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
-		return orderData;
+		return orderCode;
 	}
 
 	//TISUT-1810

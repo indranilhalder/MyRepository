@@ -119,6 +119,7 @@ import com.tisl.mpl.juspay.response.ListCardsResponse;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.storefront.constants.MessageConstants;
+import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.web.forms.PaymentForm;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -240,9 +241,19 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 		ValidationResults validationResult = null;
 
-		final String cartGuid = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.CARTGUID);
+		//	final String cartGuid = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.CARTGUID);
+		final String refNumber = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.REFNUMBER);
 
-		LOG.debug("cartGuid number is ...................." + cartGuid);
+		LOG.debug("refNumber number is ...................." + refNumber);
+		//Validator called explicitly TPR-629
+		/*if (StringUtils.isEmpty(guid))
+		{
+			validationResult = paymentValidator.validateOnEnterOptimized(cartData, redirectAttributes);
+		}
+		if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
+		{
+			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+		}*/
 		//Validator called explicitly TPR-629
 
 		//Commented for implementing mRupee TISSQAEE-229
@@ -253,6 +264,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		//Implementing mRupee Logic with cartGuid TISSQAEE-229
 		OrderModel mRupeeorderModel = null;
+		String cartGuid = null;
+		/* Getting guid from audit table based on the reference no. received from mRupee */
+		if (StringUtils.isNotEmpty(refNumber))
+		{
+			cartGuid = getMplPaymentFacade().getWalletAuditEntries(refNumber);
+		}
+		LOG.debug("cartGuid number is ...................." + cartGuid);
 		if (StringUtils.isNotEmpty(cartGuid))
 		{
 			mRupeeorderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
@@ -321,7 +339,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			if (null == orderModel)
 			{
 				//Existing code
-				final CartModel cartModel = getCartService().getSessionCart();
+
 
 				// TPR-429 START
 
@@ -355,6 +373,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 				}
 
+				final CartModel cartModel = getCartService().getSessionCart();
 				//Moved to single method in facade TPR-629
 				getMplPaymentFacade().populateDeliveryPointOfServ(cartModel);
 
@@ -473,6 +492,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//return values
 		model.addAttribute("checkoutPageName", checkoutPageName);
 		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.AddPaymentMethodPage;
+	}
+
+
+	private String getCaptchaKey()
+	{
+		final String recaptchaKey = configurationService.getConfiguration().getString(
+				ModelAttributetConstants.RECAPTCHA_PUBLIC_KEY_PROPERTY);
+
+		return recaptchaKey;
 	}
 
 	/**
@@ -2123,7 +2151,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				}
 
 			}
-
+			model.addAttribute(ModelAttributetConstants.CODRECAPTCHA_KEY, getCaptchaKey());
 		}
 		//		catch (final NullPointerException e)			//Nullpointer exception commented
 		//		{
@@ -4297,6 +4325,156 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return cartLevelSellerID;
 	}
 
+	/**
+	 * Captcha at cod Payment implementation
+	 *
+	 * @param guid
+	 * @return String
+	 * @throws InvalidKeyException
+	 * @throws NoSuchAlgorithmException
+	 */
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.CONFIRMCODORDER, method = RequestMethod.POST)
+	@RequireHardLogIn
+	public @ResponseBody String validateforCOD(final String guid) throws InvalidKeyException, NoSuchAlgorithmException
+	{
+
+		boolean redirectFlag = false;
+		String validationMsg = "";
+		OrderModel orderModel = null;
+		String emailId = null;
+		try
+		{
+			//getting current user
+			emailId = getUserService().getCurrentUser().getUid();
+			//OTP handled for both cart and order
+			if (StringUtils.isNotEmpty(guid))
+			{
+				orderModel = getMplPaymentFacade().getOrderByGuid(guid);
+			}
+			if (null == orderModel)
+			{
+				//Existing code for cartModel
+				final CartModel cart = getCartService().getSessionCart();
+				LOG.debug(" TIS-414 : Checking - onclick of pay now button pincode servicabilty and promotion");
+				if (!getMplCheckoutFacade().isPromotionValid(cart))
+				{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
+					redirectFlag = true;
+				}
+
+				//TISST-13012
+				final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cart);
+				if (!redirectFlag && cartItemDelistedStatus)
+				{
+					redirectFlag = true;
+				}
+
+				//TISUTO-12 , TISUTO-11
+				if (!redirectFlag)
+				{
+					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+					if (!inventoryReservationStatus)
+					{
+						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
+						redirectFlag = true;
+					}
+				}
+
+				if (!redirectFlag && !getMplCheckoutFacade().isCouponValid(cart))
+				{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
+					redirectFlag = true;
+				}
+
+				//TISPRO-497
+				final Double cartTotal = cart.getTotalPrice();
+				final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
+
+				if (!redirectFlag && cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
+				{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
+					redirectFlag = true;
+				}
+				//TISPRO-578
+				if (!redirectFlag && !getMplPaymentFacade().isValidCart(cart))
+				{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID, "TRUE");
+					redirectFlag = true;
+				}
+
+				if (redirectFlag)
+				{
+					return MarketplacecheckoutaddonConstants.REDIRECTSTRING;
+				}
+				else
+				{
+					//If customer is not null
+					if (null != emailId)
+					{
+						validationMsg = "SUCCESS";
+					}
+					else
+					{
+						return null;
+					}
+				}
+
+			}
+			//Code implemented for Order TPR-629
+			else
+			{
+				//TPR-815
+				if (!getMplCheckoutFacade().isPromotionValid(orderModel))
+				{
+					//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
+					getMplCartFacade().recalculateOrder(orderModel);
+					redirectFlag = true;
+				}
+
+				if (!redirectFlag)
+				{
+					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel);
+					if (!inventoryReservationStatus)
+					{
+						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_ORDER_INVENTORY_RESV_SESSION_ID,
+								"TRUE");
+						getMplCartFacade().recalculateOrder(orderModel);
+						redirectFlag = true;
+						//notify EMAil SMS TPR-815
+						mplCartFacade.notifyEmailAndSmsOnInventoryFail(orderModel);
+					}
+				}
+				if (redirectFlag)
+				{
+					return MarketplacecheckoutaddonConstants.REDIRECTTOPAYMENT;
+				}
+				//If customer is not null
+				if (null != emailId)
+				{
+					validationMsg = "SUCCESS";
+				}
+				else
+				{
+					return null;
+				}
+			}
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("Error in validating OTP", e);
+
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error in validating OTP", e);
+		}
+
+		return validationMsg;
+	}
 
 	/**
 	 * This method creates mRupee related order.
@@ -4439,7 +4617,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					LOG.info("Reference number from createWalletOrder when order is null -- " + refNumber);
 					LOG.info("Response from createWalletOrder when order is null -- " + response);
 
-					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTGUID, cartGuid);
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.REFNUMBER, refNumber);
 					return response;
 				}
 				else
@@ -4494,7 +4672,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								+ returnUrlBuilder;
 						LOG.info("Reference number from createWalletOrder when order is not null -- " + refNumber);
 						LOG.info("Response from createWalletOrder when order is not null -- " + response);
-						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTGUID, cartGuid);
+						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.REFNUMBER, refNumber);
 						return response;
 
 					}
@@ -4599,6 +4777,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					//saving TPWallet Payment related info
 					getMplPaymentFacade().saveTPWalletPaymentInfo(orderModel, request);
 
+					LOG.info("Removing Attribute inside IF::");
+
+					getSessionService().removeAttribute(MarketplacecheckoutaddonConstants.REFNUMBER);
+
 					return updateOrder(orderModel, redirectAttributes);
 					/*
 					 * } else { LOG.info("OrderAmount--TransactionAmount Mismatch"); status =
@@ -4624,6 +4806,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 							MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+
+					getSessionService().removeAttribute(MarketplacecheckoutaddonConstants.REFNUMBER);
+
+					LOG.info("Removing Attribute REFNUMBER inside ELSE::");
+
 					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
 							+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
 				}

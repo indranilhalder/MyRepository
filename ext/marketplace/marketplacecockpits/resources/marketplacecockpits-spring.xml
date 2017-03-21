@@ -49,7 +49,7 @@
 	      parent="defaultCsCheckoutService">
 	      <property name="deliveryModeRequired" value="false"/>
 	      <property name="lineItemDeliveryModeRequired" value="true"/>
-	      <property name="otpValidationRequired" value="true"/>
+	      <property name="otpValidationRequired" value="false"/>
 	   
 	</bean>
 	<!-- ***************************  TIS-280 End ********************** -->
