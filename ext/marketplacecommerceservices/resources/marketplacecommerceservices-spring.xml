@@ -1990,6 +1990,15 @@
 		</property>
 	</bean -->
 	<!-- Node Warmer Changes: -->
-
+	
+	
+	<!-- getPointService Thread lock fix -->
+	<alias name="mplPickupAvailabilityStrategy" alias="pickupAvailabilityStrategy"/>
+	<bean id="mplPickupAvailabilityStrategy"
+			class="com.tisl.mpl.marketplacecommerceservices.strategy.impl.ExtDefaultPickupAvailabilityStrategy">
+		<property name="pickupStrategy" ref="pickupStrategy"/>
+		<property name="stockLevelProductStrategy" ref="stockLevelProductID"/>
+		<property name="storePickupDao" ref="storePickupDao"/>
+	</bean>
 </beans>
 
