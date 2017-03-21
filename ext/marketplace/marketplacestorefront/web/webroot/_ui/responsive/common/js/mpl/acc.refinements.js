@@ -1086,7 +1086,6 @@ function lazyPaginationFacet(response){
     console.log(""+productItemArray);
 	$("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list", response));
 	initPageLoad = true;
-	lazyPagePush = true;
     innerLazyLoad({isSerp:true});
     
 }

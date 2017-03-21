@@ -4,7 +4,6 @@ var innerRecordSize = 7;
 var loadMoreCount = 72;
 var initPageLoad = true;
 var directPaginatedLoad = true;
-var lazyPagePush = true;
 var serpURL;
 var ajaxUrl = '';
 var recordsLoadedCount = 0;
@@ -17,7 +16,7 @@ function innerLazyLoad(options) {
         totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
         isSerp = true;
     }
-    //get the 8 items from the array and render 
+    //get the 8 items from the array and render // TODO: identify place holder done
     var gridHTML = '';
     //if total no of pages is 1 then load all 24 products at once.
     if(1 == totalNoOfPages){
@@ -28,21 +27,30 @@ function innerLazyLoad(options) {
     	 $.each(productItemArray, function(index, element) {
     	        if (index <= innerRecordSize) {
     	            if (index == innerRecordSize) {
+    	                //productsLoaded+= index;
     	                gridHTML += '<li class="product-item lazy-reached">' + $(element).html() + '</li>';
+    	                //$('ul.product-listing.product-grid').eq(1).append('<li class="product-item lazy-reached">' + $(element).html() + '</li>');
     	            } else {
     	                gridHTML += '<li class="product-item">' + $(element).html() + '</li>';
+    	                //$('ul.product-listing.product-grid').eq(1).append('<li class="product-item">' + $(element).html() + '</li>');
     	            }
     	        }
     	    });
     }
    
-    if (initPageLoad) { 
+    if (initPageLoad) { //TODO: duplicate loading prevention
+        //$('ul.product-listing.product-grid').eq(2).html(gridHTML).hide().fadeIn(500);
         $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal').html(gridHTML).hide().fadeIn(500);
-        initPageLoad = false; // UF-256
+        initPageLoad = false;
     } else {
+        //$('ul.product-listing.product-grid').eq(2).append(gridHTML);
         $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal').append(gridHTML);
     }
     deleteArraySet(productItemArray);
+    
+	/*if(pageNoPagination == totalNoOfPages){
+		$('li').removeClass('lazy-reached');
+	}*/
 }
 
 function innerLazyStorageLoad(productItemArrayStore) {
@@ -89,8 +97,9 @@ function getProductSetData() {
             if (currentPageNo <= totalNoOfPages) {
             	if(facetAjaxUrl){
             		ajaxUrl = facetAjaxUrl.replace(/page-[0-9]+/, 'page-' + currentPageNo);
-            		if(query){
-            			ajaxUrl = ajaxUrl + query;
+            		var sort = findGetParameter('sort');
+            		if(sort){
+            			ajaxUrl = ajaxUrl + '&sort='+ sort;
             		}
             		window.history.replaceState({}, "", ajaxUrl);
             	}else{
@@ -112,8 +121,8 @@ function getProductSetData() {
             	}else if(query){
             		ajaxUrl = ajaxUrl + query;
             	}
-               // var nextPaginatedAjaxUrl = ajaxUrl;
-               // window.history.replaceState({}, "", nextPaginatedAjaxUrl); //UF-254 commented 
+                var nextPaginatedAjaxUrl = ajaxUrl;
+                window.history.replaceState({}, "", nextPaginatedAjaxUrl);
                 directPaginatedLoad =false;
             }
 			ajaxPLPLoad(ajaxUrl);
@@ -148,24 +157,21 @@ $(document).ready(function() {
     }
         $(window).on('scroll', function() {
             if ($('.lazy-reached').length != 0) {
-				if(productItemArray.length == 16){
-					lazyPushInitalPage();
-				}
                 var hT = $('.lazy-reached').offset().top,
                     hH = $('.lazy-reached').outerHeight(),
                     wH = $(window).height(),
                     wS = $(this).scrollTop();
                 if (wS > (hT + hH - wH)) {
-				console.log("LR");
+				console.log("Lazy Reached");
                     $('.product-item').removeClass('lazy-reached');
 					//$('li').removeClass('lazy-reached');
                     if (recordsLoadedCount!=0 && (recordsLoadedCount % loadMoreCount) == 0) {
                         $('.loadMorePageButton').remove();
                         $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,.product-listing.product-grid.lazy-grid-normal').after('<button class="loadMorePageButton" style="background: #a9143c;color: #fff;margin: 5px auto;font-size: 12px;height: 40px;padding: 9px 18px;width: 250px;">Load More</button>');
                     } else {
-                        if (productItemArray.length == 0) { 
-                            //lazyPushInitalPage(); //UF-254
-                        	getProductSetData();
+                        if (productItemArray.length == 0) { //TODO: check if category page 
+                            //window.history.replaceState({},"",ajaxUrl);
+                            getProductSetData();
                         } else {
                             innerLazyLoad({
                                 effect: true
@@ -215,6 +221,46 @@ $(document).ready(function() {
         });
 });
 
+function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    location.search
+    .substr(1)
+        .split("&")
+        .forEach(function (item) {
+        tmp = item.split("=");
+        if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+    });
+    return result;
+}
+function findGetParameterUrl(parameterName,URL) {
+    var result = null,
+        tmp = [];
+    URL
+    .substr(1)
+        .split("&")
+        .forEach(function (item) {
+        tmp = item.split("=");
+        if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+    });
+    return result;
+}
+function removeURLParameter(url, parameter) {
+    var urlparts= url.split('?');   
+    if (urlparts.length>=2) {
+        var prefix= encodeURIComponent(parameter)+'=';
+        var pars= urlparts[1].split(/[&;]/g);
+        for (var i= pars.length; i-- > 0;) {    
+            if (pars[i].lastIndexOf(prefix, 0) !== -1) {  
+                pars.splice(i, 1);
+            }
+        }
+        url= urlparts[0] + (pars.length > 0 ? '?' + pars.join('&') : "");
+        return url;
+    } else {
+        return url;
+    }
+}
 function ajaxPLPLoad(ajaxUrl){
 	
     $.ajax({
@@ -254,7 +300,7 @@ function ajaxPLPLoad(ajaxUrl){
         complete: function() {
             $('.lazyLoadPagination').remove();
             innerLazyLoad();
-			ACC.quickview.bindToUiCarouselLink();
+            ACC.quickview.bindToUiCarouselLink();
         }
     });
 }
@@ -337,23 +383,5 @@ function sort(this_data,drop_down){
 		break;
 	default:
 		break;
-	}
-}
-
-function lazyPushInitalPage(){
-	
-	var pathName = window.location.pathname;
-	var pageNoExists = /page-[0-9]+/.test(pathName);
-
-	if(lazyPagePush && !pageNoExists){
-		var query = window.location.search;
-		var initialUrl = pathName.replace(/[/]$/,"") + '/page-1';
-		if(pageType == 'productsearch'){//for serp initial page 
-		initialUrl = initialUrl + '?'+ $('#searchPageDeptHierTreeForm').serialize();
-		}else if(query){
-		initialUrl = initialUrl + query;
-		}
-		window.history.replaceState({}, "", initialUrl);
-		lazyPagePush = false;
 	}
 }
