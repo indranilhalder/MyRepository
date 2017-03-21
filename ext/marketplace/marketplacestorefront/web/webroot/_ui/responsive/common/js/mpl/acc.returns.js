@@ -353,7 +353,7 @@
 			$("#hiddenFields #landmark").val($(".update"+classId+" li span.landMark").text());
 			$("#hiddenFields #pincode").val($(".update"+classId+" li span.postalCode").text());
 			$("#hiddenFields #city").val($(".update"+classId+" li span.addressTown").text());
-			$("#hiddenFields #stateListBox").val($(".update"+classId+" li span.state").text());
+			$("#hiddenFields #stateListBoxForm").val($(".update"+classId+" li span.state").text());
 			$("#hiddenFields #country").val($(".update"+classId+" li span.country").text());
 			$("#hiddenFields #phoneNumber").val($(".update"+classId+" li span.phoneNumber").text());
 			//$("#hiddenFields #addressType").val($("#addAddressForm input[name='addressRadioType']:checked").val());
@@ -812,7 +812,7 @@
 								}
 								$("#hiddenFields #pincode").val($("#addAddressForm #pincode").val());
 								$("#hiddenFields #city").val($("#addAddressForm #city").val());
-								$("#hiddenFields #stateListBox").val($("#addAddressForm #stateListBox").val());
+								$("#hiddenFields #stateListBoxForm").val($("#addAddressForm #stateListBox").val());
 								$("#hiddenFields #country").val($("#addAddressForm #country").val());
 								$("#hiddenFields #phoneNumber").val($("#addAddressForm #mobileNo").val());
 								$("#hiddenFields #addressType").val($("#addAddressForm input[name='addressRadioType']:checked").val());
@@ -875,7 +875,7 @@
 					
 					$("#hiddenFields #pincode").val($("#addAddressForm #pincode").val());
 					$("#hiddenFields #city").val($("#addAddressForm #city").val());
-					$("#hiddenFields #stateListBox").val($("#addAddressForm #stateListBox").val());
+					$("#hiddenFields #stateListBoxForm").val($("#addAddressForm #stateListBox").val());
 					$("#hiddenFields #country").val($("#addAddressForm #country").val());
 					$("#hiddenFields #phoneNumber").val($("#addAddressForm #mobileNo").val());
 					$("#hiddenFields #addressType").val($("#addAddressForm input[name='addressRadioType']:checked").val());

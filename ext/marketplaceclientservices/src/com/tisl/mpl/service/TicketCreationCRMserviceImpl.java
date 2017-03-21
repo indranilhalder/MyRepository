@@ -174,10 +174,6 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 						ticketLineObj.setReturnReasonCode(sendTicketLineItemData.getReturnReasonCode());
 					}
 					//R2.3 start 02-03-2017
-					if (StringUtils.isNotEmpty(sendTicketLineItemData.getReturnPickupDate()))
-					{
-						ticketLineObj.setReturnPickupDate(sendTicketLineItemData.getReturnPickupDate());
-					}
 					if (StringUtils.isNotEmpty(sendTicketLineItemData.getTimeSlotFrom()))
 					{
 						ticketLineObj.setTimeSlotFrom(sendTicketLineItemData.getTimeSlotFrom());

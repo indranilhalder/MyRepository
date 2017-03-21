@@ -294,7 +294,7 @@
 <form:hidden path="addrLine2"  id="addressLine2"/>
 <form:hidden path="addrLine3" id="addressLine3"/>
 <form:hidden path="landMark" id="landMark"/> 
-<form:hidden path="state" id="stateListBox"/> 
+<form:hidden path="state" id="stateListBoxForm"/> 
 <form:hidden path="pincode"  id="pincode"/>
 <form:hidden path="phoneNumber"  id="phoneNumber"/>
 <form:hidden path="city"  id="city"/>

@@ -345,10 +345,10 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 							if(isEdSchedule){
 								SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
 								SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-							if (StringUtils.isNotEmpty(entry.getEdScheduledDate()))
+						/*	if (StringUtils.isNotEmpty(entry.getEdScheduledDate()))
 							{
 								sendTicketLineItemData.setReturnPickupDate(entry.getEdScheduledDate());
-							}
+							}*/
 							if (StringUtils.isNotEmpty(entry.getTimeSlotFrom()))
 							{
 								String timeSlotFrom=entry.getEdScheduledDate().concat(" "+entry.getTimeSlotFrom());

@@ -14,14 +14,13 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement(name = "lineItems")
 @XmlType(propOrder =
-{ "lineItemId", "returnReasonCode", "cancelReasonCode", "returnPickupDate", "timeSlotFrom", "timeSlotTo" })
+{ "lineItemId", "returnReasonCode", "cancelReasonCode", "timeSlotFrom", "timeSlotTo" })
 public class TicketlineItemsXMLData
 {
 	private String lineItemId;
 	private String returnReasonCode;
 	private String cancelReasonCode;
 	//R2.3 Changes Start
-	private String returnPickupDate;
 	private String timeSlotFrom;
 	private String timeSlotTo;
 
@@ -81,27 +80,9 @@ public class TicketlineItemsXMLData
 	}
 
 	/**
-	 * @return the returnPickupDate
-	 */
-	@XmlElement(name = "returnPickupDate")
-	public String getReturnPickupDate()
-	{
-		return returnPickupDate;
-	}
-
-	/**
-	 * @param returnPickupDate
-	 *           the returnPickupDate to set
-	 */
-	public void setReturnPickupDate(final String returnPickupDate)
-	{
-		this.returnPickupDate = returnPickupDate;
-	}
-
-	/**
 	 * @return the timeSlotFrom
 	 */
-	@XmlElement(name = "TimeSlotFrom")
+	@XmlElement(name = "ReScheduleTimestampFrom")
 	public String getTimeSlotFrom()
 	{
 		return timeSlotFrom;
@@ -119,7 +100,7 @@ public class TicketlineItemsXMLData
 	/**
 	 * @return the timeSlotTo
 	 */
-	@XmlElement(name = "TimeSlotTo")
+	@XmlElement(name = "ReScheduleTimestampTo")
 	public String getTimeSlotTo()
 	{
 		return timeSlotTo;
