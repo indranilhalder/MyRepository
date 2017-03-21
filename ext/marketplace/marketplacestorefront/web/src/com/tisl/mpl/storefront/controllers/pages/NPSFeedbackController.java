@@ -81,26 +81,20 @@ public class NPSFeedbackController
 				model.addAttribute("npsFeedbackForm", npsFeedbackQRForm);
 				return ControllerConstants.Views.Fragments.NPS_Emailer.NPSFeedback;
 			}
-			//dropped for multi transaction to database.
-			//npsFeedbackQuestionFacade.saveFeedbackRating(originalUid, transactionId, rating);
+			
 			npsFeedbackQRData = npsFeedbackQuestionFacade.getFeedbackQuestionFacade();
 			for (final NPSFeedbackQRDetailData npsQuestionDetail : npsFeedbackQRData.getFeedbackQRList())
 			{
 				final NPSFeedbackQuestionForm npsQRDetail = new NPSFeedbackQuestionForm();
 				boolean addQuestion = true;
 
-				if (npsQuestionDetail.getNpsDeliveryModeType().equalsIgnoreCase("cnc")
-						&& (deliveryMode.equalsIgnoreCase("home-delivery") || deliveryMode.equalsIgnoreCase("express-delivery")))
+				if ((npsQuestionDetail.getNpsDeliveryModeType().equalsIgnoreCase("cnc")
+						&& (deliveryMode.equalsIgnoreCase("home-delivery") || deliveryMode.equalsIgnoreCase("express-delivery"))) || (npsQuestionDetail.getNpsDeliveryModeType().equalsIgnoreCase("od")
+								&& deliveryMode.equalsIgnoreCase("click-and-collect")))
 				{
 					addQuestion = false;
 				}
-				else if (npsQuestionDetail.getNpsDeliveryModeType().equalsIgnoreCase("od")
-						&& deliveryMode.equalsIgnoreCase("click-and-collect"))
-				{
-					addQuestion = false;
-				}
-
-
+				
 				if (addQuestion)
 				{
 					npsQRDetail.setQuestionCode(npsQuestionDetail.getQuestionCode());
@@ -113,7 +107,7 @@ public class NPSFeedbackController
 			}
 			npsFeedbackQRForm.setNpsQuestionlist(npsFeedbackQRDetail);
 			npsFeedbackQRForm.setTransactionId(transactionId);
-			//npsFeedbackQRForm.setFirstName(firstName);
+			
 
 			model.addAttribute("npsFeedbackForm", npsFeedbackQRForm);
 			returnStatement = ControllerConstants.Views.Fragments.NPS_Emailer.NPSFeedback;
@@ -139,7 +133,7 @@ public class NPSFeedbackController
 
 		}
 		return returnStatement;
-		//return "feedbackQuestion";
+		
 	}
 
 	/**

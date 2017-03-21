@@ -45,14 +45,14 @@ import com.tisl.mpl.model.MplConfigurationModel;
 public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 {
 
-	@SuppressWarnings("unused")
+
 	private final static Logger LOG = Logger.getLogger(DefaultFetchSalesOrderDaoImpl.class.getName());
 
 	private final String PARENT = "Parent";
 	private final String SUB = "SubOrder";
 	private static final String SELECT_CLASS = "SELECT {p:";
 	private static final String FROM_CLASS = "FROM {";
-	//private static final String WHERE_CLASS = "WHERE ";
+
 	private static final String P_CLASS = "{p.";
 	private static final String TYPE_CLASS = "} = ?type";
 
@@ -260,25 +260,20 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 					+ NPSMailerModel._TYPECODE
 					+ " AS nps ON {oe.orderLineId}={nps.transactionId }} "
 					+ "WHERE "
+
 					+ "{c.deliveryDate}  BETWEEN "
 					+ " to_date('"
 					+ cronJobModifiedTimeFormattedDate
 					+ "','yyyy-MM-DD HH24:MI:ss') AND to_date('"
 					+ currentSystemDateFormattedDate
 					+ "','yyyy-MM-DD HH24:MI:ss') AND "
+
 					+ " ({cs.code}='DELIVERED' OR {cs.code}='ORDER_COLLECTED')  AND {nps.transactionId} IS NULL AND {co.type}= 'SubOrder' AND {po.type}= 'Parent'";
 
 
-			//old script
-			//final String queryString = "select {po.pk},{oe.pk},{oe.orderlineid} from {" + ConsignmentModel._TYPECODE + " as c JOIN "
-			//	+ ConsignmentEntryModel._TYPECODE + " as ce ON {ce.consignment} = {c.PK}" + " JOIN "
-			//	+ AbstractOrderEntryModel._TYPECODE + " as oe ON {ce.orderentry}= {oe.PK}" + " JOIN " + OrderModel._TYPECODE
-			//	+ " as co  ON {c.order}={co.PK}" + " JOIN " + OrderModel._TYPECODE + " as po  ON {co.parentreference} = {po.PK}} ";
-
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			//query.addQueryParameter("beforeTime", cronJobModifiedTimeFormattedDate);
-			//query.addQueryParameter("aftertime", currentSystemDateFormattedDate);
+
 			query.setResultClassList(Arrays.asList(OrderModel.class, OrderEntryModel.class, CustomerModel.class));
 			LOG.debug("query>>>>>>>>>>>>>>>>>>>>>>>generated nps job" + query);
 			final SearchResult<List<Object>> result = flexibleSearchService.search(query);
@@ -309,7 +304,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getTransactionIdCount(de.hybris.platform.core
 	 * .model.order.OrderModel)
@@ -510,10 +505,10 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		LOG.debug("********inside dao for fetchOrderIdsToday**********");
 		final Map<String, String> ordersEmailSntTodayMap = new HashMap<String, String>();
 
-		//final int date1 = date.getDate();
+
 		final String queryString = "select {po.code} from {Order as po JOIN NPSEmailer as nps ON {po.PK}={nps.parentOrderNo}} where {nps.timeSent}= to_date('05-JAN-17','DD-MON-YY')";
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		System.out.println("queryString" + queryString);
+
 
 		query.setResultClassList(Arrays.asList(String.class));
 		final List<String> orderIdList = flexibleSearchService.<String> search(query).getResult();
