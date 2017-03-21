@@ -35,8 +35,11 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutCo
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MplDeliveryAddressController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.facade.config.MplConfigFacade;
+import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
@@ -44,6 +47,7 @@ import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRes
 import de.hybris.platform.cockpit.widgets.ListboxWidget;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.cscockpit.utils.CssUtils;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.widgets.controllers.BasketController;
@@ -74,6 +78,9 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 	private MplDeliveryAddressController mplDeliveryAddressController;
 	@Autowired
 	MplDeliveryAddressFacade mplDeliveryAddressFacade;
+	
+	@Autowired 
+	private MplSellerInformationService mplSellerInformationService;
 	/**
 	 * Creates the content internal.
 	 *
@@ -177,8 +184,11 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
  						if(deliverySlotsItemEDDInfo.getUssId().trim().equalsIgnoreCase(orderEntry.getSelectedUSSID().trim())) {
  							if(null != deliverySlotsItemEDDInfo.getIsScheduled() && deliverySlotsItemEDDInfo.getIsScheduled().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
  							{
- 								eligigleForScheduleSlots = true;
- 								break;
+ 								boolean eligibleForSlots = getSlotsEligibility(orderEntry); // checking from productRichAttributes 
+ 								if(eligibleForSlots) {
+ 	 								eligigleForScheduleSlots = true;
+ 	 								break;
+ 								}
  							}
  						}
  					}
@@ -195,7 +205,10 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 	 					for( InvReserForDeliverySlotsItemEDDInfoData deliverySlotsItemEDDInfo :deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData() ) {
 	 						if(deliverySlotsItemEDDInfo.getUssId().trim().equalsIgnoreCase(orderEntry.getSelectedUSSID().trim())) {
 	 							if(null != deliverySlotsItemEDDInfo.getIsScheduled() && deliverySlotsItemEDDInfo.getIsScheduled().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y)) {
-	 								renderDeliverySlots(widget,orderEntry,deliverySlotsItemEDDInfo, row);
+	 								boolean eligibleForSlots = getSlotsEligibility(orderEntry); // checking from productRichAttributes 
+	 								if(eligibleForSlots) {
+		 								renderDeliverySlots(widget,orderEntry,deliverySlotsItemEDDInfo, row);
+	 								}
 		 							break;
 	 							}
 	 						}
@@ -221,79 +234,41 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 	}
 	
 
-	private void setEddDatebetween(CartModel cart,InvReserForDeliverySlotsResponseData deliverySlotsResponseData) {
-		if(null != cart && null != deliverySlotsResponseData && null != deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()) {
-			for (AbstractOrderEntryModel cartEntry : cart.getEntries()) {
-				String edd = null;
-				for (InvReserForDeliverySlotsItemEDDInfoData data : deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()) {
-					if(null != cartEntry.getSelectedUSSID() && null !=  data.getUssId()) {
-						if(cartEntry.getSelectedUSSID().equalsIgnoreCase(data.getUssId())){
-							if(null != data.getEDD()) {
-								edd = data.getEDD();
-							}else if(null != data.getNextEDD()) {
-								edd= data.getNextEDD();
-							}
-							if(null != edd) {
-								String eddDateBetween = getEddDateBetween(cartEntry,edd);
-								if(null != eddDateBetween) {
-									try {
-										String estDeliveryDateAndTime = null;
-										if (null != edd)
-										{
-											estDeliveryDateAndTime = edd;
-										}
-										if(null != estDeliveryDateAndTime && StringUtils.isNotEmpty(estDeliveryDateAndTime)){
-											SimpleDateFormat parseFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
-											Date dateForEDD=null;
-											dateForEDD = parseFormat.parse(estDeliveryDateAndTime);
-											cartEntry.setExpectedDeliveryDate(dateForEDD);
-										} 
-									}catch (java.text.ParseException e) {
-										LOG.error("Error While ExpectedDeliveryDate" );
-									}
-									cartEntry.setSddDateBetween(eddDateBetween);
-									modelService.save(cartEntry);
-								}
-							}
-						}
-					}
-
+	private boolean getSlotsEligibility(AbstractOrderEntryModel orderEntry) {
+		boolean eligibleForSlots = false;
+		String productRichAttr = null;
+		String sellerRichAttr = null;
+		List<RichAttributeModel> productRichAttributeModel = null;
+		if(null != orderEntry) {
+			ProductModel productModel = orderEntry.getProduct();
+			if (null != orderEntry && null != orderEntry.getProduct() && null != orderEntry.getProduct().getRichAttribute())
+			{
+				productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
+				if (productRichAttributeModel != null && productRichAttributeModel.get(0).getScheduledDelivery() != null)
+				{
+					productRichAttr = productRichAttributeModel.get(0).getScheduledDelivery().toString();
+				}
+			}
+			final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(orderEntry.getSelectedUSSID());
+			List<RichAttributeModel> sellerRichAttributeModel = null;
+			if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+			{
+				sellerRichAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+				if (sellerRichAttributeModel != null && sellerRichAttributeModel.get(0).getScheduledDelivery() != null)
+				{
+					sellerRichAttr = sellerRichAttributeModel.get(0).getScheduledDelivery().toString();
 				}
 			}
 		}
+		if(null !=productRichAttr && null != sellerRichAttr) {
+			if(sellerRichAttr.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES) && productRichAttr.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES)) {
+				eligibleForSlots = true;
+			}
+		}
+		return eligibleForSlots;
 
 	}
-	private String getEddDateBetween(AbstractOrderEntryModel orderEntry,String edd) {
-		String eddDateBetween = null;
-		String timeSlotType = null;
-		String startingDate = null;
-		String endingDate = null;
-		Map<String, List<String>> dateTimeMap = null;
-		if(orderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)){
-			timeSlotType = MarketplacecommerceservicesConstants.DELIVERY_MODE_SD;
-		}else if (orderEntry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)) {
-			timeSlotType = MarketplacecommerceservicesConstants.DELIVERY_MODE_ED;
-		}
-		try {
-			dateTimeMap = 	mplDeliveryAddressFacade.getDateAndTimeMap(timeSlotType, edd);
-		} catch (java.text.ParseException e) {
-			LOG.error("Exception occurred while getting the Edd Dates "+e);
-		}
-		if(null != dateTimeMap && dateTimeMap.size() == 2) {
-			List<String> dates =new ArrayList<String>(dateTimeMap.keySet());
-			 startingDate = dates.get(0);
-			 endingDate   = dates.get(1);
-		}else if(null != dateTimeMap && dateTimeMap.size() == 3){
-			List<String> dates =new ArrayList<String>(dateTimeMap.keySet());
-			 startingDate = dates.get(0);
-			 endingDate   = dates.get(2);
-		}
-		if(null != startingDate && null != endingDate) {
-			eddDateBetween = MarketplacecommerceservicesConstants.Between.concat(MarketplacecommerceservicesConstants.SPACE).concat(startingDate).concat(MarketplacecommerceservicesConstants.SPACE).concat(MarketplacecommerceservicesConstants.AND).concat(MarketplacecommerceservicesConstants.SPACE).concat(endingDate);
-		}
-		return eddDateBetween;
-
-	}
+	
 	private void renderDeliverySlots(ListboxWidget<CheckoutCartWidgetModel, CheckoutController> widget,AbstractOrderEntryModel orderEntry, InvReserForDeliverySlotsItemEDDInfoData deliverySlotsItemEDDInfo,Listitem parent) {
 
 		LOG.info("rendering deliverySlots ");
