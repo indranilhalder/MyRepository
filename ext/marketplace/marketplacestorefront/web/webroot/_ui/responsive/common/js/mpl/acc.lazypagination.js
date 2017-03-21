@@ -38,7 +38,7 @@ function innerLazyLoad(options) {
    
     if (initPageLoad) { 
         $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal').html(gridHTML).hide().fadeIn(500);
-        //initPageLoad = false; // UF-256
+        initPageLoad = false; // UF-256
     } else {
         $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal').append(gridHTML);
     }
