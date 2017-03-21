@@ -92,3 +92,11 @@ UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript
 
 INSERT_UPDATE SearchRestriction;code[unique=true];active;query;principal(uid);restrictedtype(code);generate[default=FALSE]
 ;VoucherSatusNotificationRestriction;true;( {voucherstartdate} IS NULL OR {voucherstartdate} <= ?session.user.currentDate) AND ( {voucherenddate} IS NULL OR {voucherenddate} >= ?session.user.currentDate);customergroup;VoucherStatusNotification;
+
+
+#impex_dummy_juspayebsresponsedata added
+INSERT_UPDATE JuspayEBSResponseData;oldPK[Unique=true];
+;1234567890123;
+
+REMOVE JuspayEBSResponseData;oldPK[Unique=true];
+;1234567890123;
