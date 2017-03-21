@@ -501,28 +501,49 @@ function editAddress(addressId) {
     						if(data=="success"){
     							$('#friendsEmail').val("");
     							document.getElementById("errfemail").innerHTML = "<font color='green' size='2'>Invite is sent successfully</font>";
+    							if(typeof utag !="undefined"){
+   								 utag.link({ link_text : 'invite_your_friends_completed' , event_type : 'invite_your_friends_completed' });
+   							}
     						}
     						if(data=="error_email_sending"){
     							document.getElementById("errfemail").innerHTML = "<font color='#ff1c47' size='2'>Error in email sending</font>";
+    							if(typeof utag !="undefined"){
+   								 utag.link({ error_type: 'invite_friends_error' });
+   							 } 
     						}
     						if(data=="already_registered_email"){
     							document.getElementById("errfemail").innerHTML = "<font color='#ff1c47' size='2'>One or more entered email id is/are already registered</font>";
+    							if(typeof utag !="undefined"){
+   								 utag.link({ error_type: 'invite_friends_error' });
+   							 } 
     						}
     						if(data=="customer_email"){
     							document.getElementById("errfemail").innerHTML = "<font color='#ff1c47' size='2'>One or more email is/are same as user's email id</font>";
+    							if(typeof utag !="undefined"){
+   								 utag.link({ error_type: 'invite_friends_error' });
+   							 } 
     						}
     					},
     					error: function(){
     						alert("Something is not right! Please try after sometime");
+    						if(typeof utag !="undefined"){
+								 utag.link({ error_type: 'invite_friends_error' });
+							 } 
     					}
     				});
     			}
     			else{
     				document.getElementById("errfemail").innerHTML = "<font color='#ff1c47' size='2'>Please enter one or more valid email id(s) (for multiple - Separated with commas (,))</font>";
+    				if(typeof utag !="undefined"){
+						 utag.link({ error_type: 'invite_friends_error' });
+					 } 
     			}
     		}
     		else{
     			document.getElementById("errfemail").innerHTML = "<font color='#ff1c47' size='2'>Please enter one or more email id(s)</font>";
+    			if(typeof utag !="undefined"){
+					 utag.link({ error_type: 'invite_friends_error' });
+				 } 
     		}
     	});
     });
