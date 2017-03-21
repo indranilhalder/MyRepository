@@ -19,12 +19,12 @@
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/responsive/cart" %>
 
 					<script>
-					maxL=120;
+				 	maxL=120;
 					 var bName = navigator.appName;
-					 function taLimit(taObj) {
+					 /* function taLimit(taObj) {
 					 	if (taObj.value.length==maxL) return false;
 					 	return true;
-					 }
+					 } */
 
 					 function taCount(taObj,Cnt) { 
 					 	objCnt=createObject(Cnt);
@@ -43,9 +43,10 @@
 					 	else if (document.layers) return eval("document." + objId);
 					 	else if (document.all) return eval("document.all." + objId);
 					 	else return eval("document." + objId);
-					 } 
+					 }
 					 	 /**************End of character count********/
-				
+					
+					
 					//TISST-13010
 					$(document).ready(function() {
 						showPromotionTag();
@@ -109,7 +110,9 @@
 				    		 $(this).val($(this).val().trim());    		     		
 				    	});  
 				     	
-				     	var validate=true;
+				     
+
+						var validate=true;
 						var regPostcode = /^([1-9])([0-9]){5}$/;
 					    var mob = /^[1-9]{1}[0-9]{9}$/;
 					    var letters = /^[a-zA-Z]+$/; 
@@ -117,8 +120,8 @@
 					    var firstName = document.getElementById("address.firstName");
 						var lastName = document.getElementById("address.surname");
 						var address1 = document.getElementById("address.line1");
-						
-						var regAddress = /^[0-9a-zA-Z\-\/\,\s]+$/;
+					 		   			
+    		   			var regAddress = /^[0-9a-zA-Z\-\/\,\s]+$/;
 						//var address2 = document.getElementById("address.line2");
 						//var address3 = document.getElementById("address.line3");
 						var city= document.getElementById("address.townCity");

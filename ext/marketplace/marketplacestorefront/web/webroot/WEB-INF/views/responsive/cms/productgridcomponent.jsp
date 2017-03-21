@@ -8,31 +8,35 @@
 		supportShowAll="${isShowAllAllowed}"
 		searchPageData="${searchPageData}"
 		searchUrl="${searchPageData.currentQuery.url}"
-		numberPagesShown="${numberPagesShown}" />
+		numberPagesShown="${numberPagesShown}" hide="true" />
+		
 
+<input type="hidden" name="noOfPages" value="${searchPageData.pagination.numberOfPages}"/>
 	<!-- Hero product pane -->
 	<c:if test="${not empty heroProducts}">
 	 <!-- <h2>Shop Our Top Picks</h2> -->
 	</c:if>
+	<c:if test="${not empty heroProducts}">
 	<ul class="product-listing product-grid hero_carousel">
 		<c:forEach items="${heroProducts}" var="heroProduct"
 			varStatus="status">
 			<product:productListerGridHeroItem product="${heroProduct}" />
 		</c:forEach>
 	</ul>
-
+	</c:if>
 
 	<!-- Subtracted normal product pane -->
-
-	<ul class="product-listing product-grid">
+	<c:if test="${not empty normalProducts}">
+	<ul class="product-listing product-grid lazy-grid-normal">
 		<c:forEach items="${normalProducts}" var="product"
 			varStatus="status">
 			<product:productListerGridItem product="${product}" />
 		</c:forEach>
 	</ul>
+	</c:if>
 	
 	<c:if test="${not empty otherProducts}">
-	<ul class="product-listing product-grid">
+	<ul class="product-listing product-grid lazy-grid">
 		<c:forEach items="${searchPageData.results}" var="product" varStatus="status">
 			<product:productListerGridItem product="${product}"/>
 		</c:forEach>
@@ -48,12 +52,12 @@
 		</div>
 	</div>
 </div>
-<div class="bottom-pagination">
+<div class="bottom-pagination" style="display: none;">
 	<nav:pagination top="false" supportShowPaged="${isShowPageAllowed}"
 		supportShowAll="${isShowAllAllowed}"
 		searchPageData="${searchPageData}"
 		searchUrl="${searchPageData.currentQuery.url}"
-		numberPagesShown="${numberPagesShown}" />
+		numberPagesShown="${numberPagesShown}" hide="true"/>
 </div>
 <script>
 	$(document).ready(function(){

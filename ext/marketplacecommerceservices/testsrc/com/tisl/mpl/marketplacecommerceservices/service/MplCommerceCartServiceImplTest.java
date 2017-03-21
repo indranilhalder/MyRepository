@@ -219,10 +219,10 @@ public class MplCommerceCartServiceImplTest
 		deliveryModeData.setDeliveryCost(priceData);
 
 		final List<MarketplaceDeliveryModeData> deliveryModeDataList = new ArrayList<MarketplaceDeliveryModeData>();
-		final CartModel cartModel = Mockito.mock(CartModel.class);
+		//final CartModel cartModel = Mockito.mock(CartModel.class);
 		deliveryModeDataList.add(deliveryModeData);
 		deliveryModeDataMap.put("entryNumber", deliveryModeDataList);
-		given(mplCommerceCartServiceImpl.getDeliveryMode(cartDataMock, omsDeliveryResponse, cartModel)).willReturn(
+		given(mplCommerceCartServiceImpl.getDeliveryMode(cartDataMock, omsDeliveryResponse)).willReturn(
 				deliveryModeDataMap);
 	}
 

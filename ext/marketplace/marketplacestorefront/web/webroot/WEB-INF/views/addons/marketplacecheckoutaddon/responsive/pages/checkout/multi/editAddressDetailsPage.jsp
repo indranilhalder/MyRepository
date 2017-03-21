@@ -22,10 +22,10 @@
 					
 					maxL=120;
 					 var bName = navigator.appName;
-					 function taLimit(taObj) {
+					/*  function taLimit(taObj) {
 					 	if (taObj.value.length==maxL) return false;
 					 	return true;
-					 }
+					 } */
 
 					 function taCount(taObj,Cnt) { 
 					 	objCnt=createObject(Cnt);
@@ -49,7 +49,7 @@
 					 	 
 					 	 myLen=document.getElementById("address.line1").value.length;
   						$("#myCounter").html((120 - myLen));
-					
+  						
 					//TISST-13010
 					$(document).ready(function() {
 						showPromotionTag();

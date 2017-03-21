@@ -448,7 +448,7 @@
 						                           		<div class="full">
 						                           			<label><spring:theme code="text.addressBook.addressline1"/></label> <!-- TPR-4387 -->
 							                           		<!-- <input type="text" id="address1" maxlength="40" required="required"> -->
-							                           		<textarea class="full-address" id="address1" maxlength="120" onKeyPress="return taLimit(this)" onKeyUp="return taCount(this,'myCounter')" required="required"></textarea>
+							                           		<textarea class="full-address" id="address1" maxlength="120" onKeyUp="return taCount(this,'myCounter')" required="required"></textarea>
 							                           			<br><br>Remaining characters :<span id='myCounter'></span>
 							                           		<span class="error-message" id="address1Error"></span>
 						                           		</div>
@@ -1126,8 +1126,8 @@
 									<div id="wrongOtpValidationMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.wrongOtpValidationMessage"/>
 									</div>
 									
-									<div id="otpSentMessage" class="error-message payment-notification"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otpSentMessage"/>
-									</div>
+									<%-- <div id="otpSentMessage" class="error-message payment-notification"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otpSentMessage"/>
+									</div> --%>
 									
 									<div id="expiredOtpValidationMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.expiredOtpValidationMessage"/>
 									</div>
@@ -1146,11 +1146,16 @@
 										<div id="paymentFormButton" class="pay cont-del">	
 						<!-- Terms & Conditions Link -->
 
-								<button type="button" class="make_payment button btn-block payment-button confirm" onclick="submitForm()" id="paymentButtonId">		
+								<%-- <button type="button" class="make_payment button btn-block payment-button confirm" onclick="submitForm()" id="paymentButtonId">		
 									<div id="submitPaymentFormCODButton">	
 										<spring:theme code="checkout.multi.paymentMethod.codContinue" />
 									</div>
-								</button>
+								</button> --%>
+							 	<button type="button" class="make_payment button btn-block payment-button confirm" id="paymentButtonId" style="display:block;">		
+									<div id="submitPaymentFormCODButton"  style="display:block;">	
+										<spring:theme code="checkout.multi.paymentMethod.codContinue" />
+									</div>
+								</button> 
 								<%-- <p class="payment-redirect"><spring:theme code="text.secure.payment.gateway"/></p> --%>
 									
 							</div>

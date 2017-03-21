@@ -117,7 +117,7 @@
 				<%-- <p><spring:theme code="product.pincode.input" /></p> --%>
 				<p id="cartPinCodeAvailable"><spring:theme code="product.pincode" /></p>
 				<!-- TPR_1055 EQA -->
-				<p id="AvailableMessage" style="display:none"></p>
+				<p id="AvailableMessage" style="display:none" class="availablePins"></p>
 				<%-- <p id="unserviceablepincode" style="display:none"><spring:theme code="cart.unserviceable.pincode" /></p>
 				<p id="error-Id" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
 				<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p> --%>
@@ -129,13 +129,13 @@
 		    	<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
 		   		</c:otherwise>
 				 </c:choose>
-				 <input type="hidden" id="pinId" value=""/>
+				 <input type="hidden" id="pinId" value="${defaultPinCode}"/>
 				<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
 				
 				<!-- error message position change as part of UF-61 -->
- 				<p id="unserviceablepincode" style="display:none"><spring:theme code="cart.unserviceable.pincode" /></p>
- 				<p id="error-Id" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
- 				<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p>
+ 				<p id="unserviceablepincode" style="display:none" class="unservicePins"><spring:theme code="cart.unserviceable.pincode" /></p>
+ 				<p id="error-Id" style="display:none" class="errorPins"><spring:theme code="product.invalid.pincode" /></p>
+ 				<p id="emptyId" style="display:none" class="emptyPins"><spring:theme code="product.empty.pincode" /></p>
 			</div>
 		
 		
