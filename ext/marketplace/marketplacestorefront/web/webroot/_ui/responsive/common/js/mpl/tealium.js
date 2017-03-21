@@ -1674,7 +1674,6 @@ function tealiumBrokenImage(){
 }
 /*TPR-4728 | add to compare page  3rd part */
 $(".product-tile.cboxElement").click(function(){
-	alert("pop up");
 	 var url = $(this).attr('href').split("/")[2];
 	var productID = url.split("p-");
 	var productArray=[];
