@@ -38,7 +38,6 @@ import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsD
 import de.hybris.platform.commercewebservicescommons.dto.user.AddressListWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.CartException;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
-import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -78,6 +77,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
+import net.sourceforge.pmd.util.StringUtil;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -98,7 +99,6 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
-import com.tisl.mpl.facades.populators.CustomAddressPopulator;
 import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
@@ -116,8 +116,6 @@ import com.tisl.mpl.wsdto.CartOfferDetailsWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
 import com.tisl.mpl.wsdto.MobdeliveryModeWsDTO;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
-
-import net.sourceforge.pmd.util.StringUtil;
 
 
 /**
@@ -805,11 +803,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 		CartModel cart = null;
 		CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
-	/*	final String delistMessage = MarketplacewebservicesConstants.EMPTY;*/
+		String delistMessage = MarketplacewebservicesConstants.EMPTY;
 		try
 		{
-			if (userFacade.isAnonymousUser())
-			{
 
 			//CAR Project performance issue fixed
 			cart = cartService.getSessionCart();
@@ -824,7 +820,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 				if (deListedStatus)
 				{
-					String delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
+					delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
 					cartDataDetails.setDelistedMessage(delistMessage);
 				}
 
@@ -836,14 +832,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				{
 					cartDataDetails.setPickupPersonMobile(cart.getPickupPersonMobile());
 				}
-
-
 			}
 			else
 			{
 				LOG.debug("Cart model is empty");
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9038);
-			}
 			}
 		}
 		catch (final ConversionException ce)
