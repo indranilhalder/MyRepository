@@ -1046,10 +1046,27 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<entry key="CLASSIFICATION" value-ref="productClassificationPopulatorList"/>
 				<entry key="VARIANT_FULL" value-ref="productVariantFullPopulatorList"/>
 				<entry key="REFERENCES" value-ref="productReferencesPopulator"/>
-				<entry key="DELIVERY_MODE_AVAILABILITY" value-ref="productDeliveryModeAvailabilityPopulator"/>				
+				<entry key="DELIVERY_MODE_AVAILABILITY" value-ref="productDeliveryModeAvailabilityPopulator"/>
+				<entry key="HOMEPAGEPRODUCTS" value-ref="homePageProductPopulatorList"/>				
 			</map>
 		</property>
 	</bean>
+	
+	<!-- #3 Optimization of Homepage Product CAlls-->
+	<alias name="defaultHomePageProductPopulatorList" alias="homePageProductPopulatorList"/>
+	<bean id="defaultHomePageProductPopulatorList" parent="abstractPopulatorList">
+		<property name="populators">
+			<list>
+				<ref bean="homePageProductPopulator"/>
+			</list>
+		</property>
+	</bean>
+	
+	<alias name="defaultHomePageProductPopulator" alias="homePageProductPopulator"/>
+	<bean id="defaultHomePageProductPopulator" parent="baseProductPopulator"
+			class="com.tisl.mpl.facades.populators.HomePageProductPopulator">
+			
+			</bean>
 	
 	<alias name="defaultsellerPopulatorList" alias="sellerPopulatorList"/>
 	<bean id="defaultsellerPopulatorList" parent="abstractPopulatorList">

@@ -172,6 +172,9 @@ public class HomePageController extends AbstractPageController
 
 	private static final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.GALLERY);
 
+	//#3 Change in Populator
+	private static final List<ProductOption> PRODUCT_OPTIONS2 = Arrays.asList(ProductOption.HOMEPAGEPRODUCTS);
+
 	private static final String EMPTY_STRING = "";
 
 	private static final String EXCEPTION_MESSAGE_PRICE = "Exception to fetch price for product code";
@@ -577,9 +580,12 @@ public class HomePageController extends AbstractPageController
 					newAndExclusiveJson.put(TITLE, title);
 					final JSONArray newAndExclusiveJsonArray = new JSONArray();
 
-					if (CollectionUtils.isNotEmpty(newAndExclusiveComponent.getProducts()))
+					//#1 reduced calls to newAndExclusiveComponent.getProducts() using
+					final List<ProductModel> productList = newAndExclusiveComponent.getProducts();
+
+					if (CollectionUtils.isNotEmpty(productList))
 					{
-						for (final ProductModel newAndExclusiveProducts : newAndExclusiveComponent.getProducts())
+						for (final ProductModel newAndExclusiveProducts : productList)
 						{
 							//START :code added for 'NEW' tag on the product image
 							for (final SellerInformationModel seller : newAndExclusiveProducts.getSellerInformationRelator())
@@ -610,8 +616,16 @@ public class HomePageController extends AbstractPageController
 
 
 							ProductData product = null;
-							product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS);
-							newAndExclusiveProductJson.put("productImageUrl", getProductPrimaryImageUrl(product));
+							product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS2);
+							//#4 Image Call
+							if (StringUtils.isBlank(product.getHomepageImageurl()))
+							{
+								newAndExclusiveProductJson.put("productImageUrl", GenericUtilityMethods.getMissingImageUrl());
+							}
+							else
+							{
+								newAndExclusiveProductJson.put("productImageUrl", product.getHomepageImageurl());
+							}
 							newAndExclusiveProductJson.put("productTitle", product.getProductTitle());
 							newAndExclusiveProductJson.put("productUrl", product.getUrl());
 							String price = null;
@@ -634,12 +648,21 @@ public class HomePageController extends AbstractPageController
 								price = EMPTY_STRING;
 								LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
 							}
-							newAndExclusiveProductJson.put("productPrice", price);
-							newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
+							//#2 If Price is available then only show Products
+							if (!StringUtils.isEmpty(price))
+							{
+								newAndExclusiveProductJson.put("productPrice", price);
+								newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
+							}
+
 							existDate = null;
 
 						}
-						newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
+						//#2 If Price is available then only show Products
+						if (!CollectionUtils.isEmpty(newAndExclusiveJsonArray))
+						{
+							newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
+						}
 					}
 				}
 			}
@@ -1049,7 +1072,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 * 
+					 *
 					 * }
 					 */
 

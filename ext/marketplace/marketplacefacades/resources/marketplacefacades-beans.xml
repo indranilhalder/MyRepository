@@ -195,7 +195,8 @@
 		<property name="allVariantsId" type="java.util.List&lt;java.lang.String>"/>
 		<!-- CHANGES FOR TPR-249 -->
 		<property name="displaySizes" type="java.util.List&lt;java.lang.String>"></property>
-
+<!-- Optimization # 4 -->
+		<property name="homepageImageurl" type="java.lang.String"></property>
 	</bean>
 
 	<!-- pdp changes begins -->
@@ -554,6 +555,7 @@
 	<!-- seller changes for pdp -->
 	<enum class="de.hybris.platform.commercefacades.product.ProductOption">
 		<value>SELLER</value>
+		<value>HOMEPAGEPRODUCTS</value>
 		<!-- <value>IMAGES</value> -->
 	</enum>
 	<bean class="com.tisl.mpl.facades.cms.data.HeroComponentData">
