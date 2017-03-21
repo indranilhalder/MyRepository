@@ -79,38 +79,41 @@ public class NPSFeedbackController
 			{
 				GlobalMessages.addErrorMessage(model, "Invalid Transaction , User or Rating. ");
 				model.addAttribute("npsFeedbackForm", npsFeedbackQRForm);
-				return ControllerConstants.Views.Fragments.NPS_Emailer.NPSFeedback;
+				returnStatement = ControllerConstants.Views.Fragments.NPS_Emailer.NPSFeedback;
 			}
-			
-			npsFeedbackQRData = npsFeedbackQuestionFacade.getFeedbackQuestionFacade();
-			for (final NPSFeedbackQRDetailData npsQuestionDetail : npsFeedbackQRData.getFeedbackQRList())
+			else
 			{
-				final NPSFeedbackQuestionForm npsQRDetail = new NPSFeedbackQuestionForm();
-				boolean addQuestion = true;
-
-				if ((npsQuestionDetail.getNpsDeliveryModeType().equalsIgnoreCase("cnc")
-						&& (deliveryMode.equalsIgnoreCase("home-delivery") || deliveryMode.equalsIgnoreCase("express-delivery"))) || (npsQuestionDetail.getNpsDeliveryModeType().equalsIgnoreCase("od")
-								&& deliveryMode.equalsIgnoreCase("click-and-collect")))
+				npsFeedbackQRData = npsFeedbackQuestionFacade.getFeedbackQuestionFacade();
+				for (final NPSFeedbackQRDetailData npsQuestionDetail : npsFeedbackQRData.getFeedbackQRList())
 				{
-					addQuestion = false;
+					final NPSFeedbackQuestionForm npsQRDetail = new NPSFeedbackQuestionForm();
+					boolean addQuestion = true;
+
+					if ((npsQuestionDetail.getNpsDeliveryModeType().equalsIgnoreCase("cnc") && (deliveryMode
+							.equalsIgnoreCase("home-delivery") || deliveryMode.equalsIgnoreCase("express-delivery")))
+							|| (npsQuestionDetail.getNpsDeliveryModeType().equalsIgnoreCase("od") && deliveryMode
+									.equalsIgnoreCase("click-and-collect")))
+					{
+						addQuestion = false;
+					}
+
+					if (addQuestion)
+					{
+						npsQRDetail.setQuestionCode(npsQuestionDetail.getQuestionCode());
+						npsQRDetail.setQuestionName(npsQuestionDetail.getQuestionName());
+						npsFeedbackQRDetail.add(npsQRDetail);
+					}
+
+
+
 				}
-				
-				if (addQuestion)
-				{
-					npsQRDetail.setQuestionCode(npsQuestionDetail.getQuestionCode());
-					npsQRDetail.setQuestionName(npsQuestionDetail.getQuestionName());
-					npsFeedbackQRDetail.add(npsQRDetail);
-				}
+				npsFeedbackQRForm.setNpsQuestionlist(npsFeedbackQRDetail);
+				npsFeedbackQRForm.setTransactionId(transactionId);
 
 
-
+				model.addAttribute("npsFeedbackForm", npsFeedbackQRForm);
+				returnStatement = ControllerConstants.Views.Fragments.NPS_Emailer.NPSFeedback;
 			}
-			npsFeedbackQRForm.setNpsQuestionlist(npsFeedbackQRDetail);
-			npsFeedbackQRForm.setTransactionId(transactionId);
-			
-
-			model.addAttribute("npsFeedbackForm", npsFeedbackQRForm);
-			returnStatement = ControllerConstants.Views.Fragments.NPS_Emailer.NPSFeedback;
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -133,7 +136,7 @@ public class NPSFeedbackController
 
 		}
 		return returnStatement;
-		
+
 	}
 
 	/**
