@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.CollectionUtils;
 
-import com.google.common.base.Preconditions;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.facade.category.MplCategoryFacade;
@@ -164,14 +163,14 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 	 * @param sellerName
 	 */
 	@Override
-	public CategoryData getShopBrandCategories(final String sellerName)
+	public CategoryData getShopBrandCategories(final String sellerId)
 
 	{
-		final String sellerId = getSellerInformationBySellerName(sellerName);
+		//final String sellerId = getSellerInformationBySellerName(sellerName);
 		if (sellerId != null)
 		{
 			final String sellerRootCategoryId = getActiveSellerRootCategoryBySellerId(sellerId);
-			Preconditions.checkArgument(sellerName != null, "Category is required to perform this operation, null given");
+			//Preconditions.checkArgument(sellerName != null, "Category is required to perform this operation, null given");
 			final String categoryCode = getConfigurationService().getConfiguration().getString(
 					"marketplace.mplcatalog.seller.sales.category.root.id");
 
@@ -204,10 +203,10 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 
 					/*
 					 * secondLevelCategoryData = categoryConverter.convert(secondLevelCategoryModel);
-					 *
+					 * 
 					 * thirdLevelCategorydataList = new ArrayList<CategoryData>();
-					 *
-					 *
+					 * 
+					 * 
 					 * if (!secondLevelCategoryModel.getCategories().isEmpty()) { for (final CategoryModel
 					 * thirdLevelCategoryModel : secondLevelCategoryModel.getCategories()) { thirdLevelCategoryData =
 					 * categoryConverter.convert(thirdLevelCategoryModel); fourthLevelCategorydataList = new
@@ -223,15 +222,15 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 					 * fourthLevelCategorydataList.add(fourthLevelCategoryData); }
 					 * thirdLevelCategoryData.setSubCategories(fourthLevelCategorydataList); }
 					 * thirdLevelCategorydataList.add(thirdLevelCategoryData); }
-					 *
-					 *
+					 * 
+					 * 
 					 * } secondLevelCategoryData.setSubCategories(thirdLevelCategorydataList);
 					 */
 				}
 			}
 			if (!isCategoryIDAvailable)
 			{
-				throw new EtailBusinessExceptions("Category with name '" + sellerName
+				throw new EtailBusinessExceptions("Category with name '" + sellerId
 						+ "' not found! (Active session catalogversions: " + cmsSiteService.getCurrentCatalogVersion() + ")");
 			}
 			return secondLevelCategoryData;

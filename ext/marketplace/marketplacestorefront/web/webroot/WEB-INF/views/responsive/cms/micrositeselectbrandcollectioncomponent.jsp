@@ -13,10 +13,12 @@
 	
 $(document).ready(function () {
 	var pageLabel = '${cmsPage.label}';
+	var sellerId = '${cmsPage.associatedSeller.id}';
 		var siteName = '${cmsSite.uid}';
-	var lastSegment = pageLabel.split('/').pop();
+	//var lastSegment = pageLabel.split('/').pop();
 		
-	    var url='/m/fetchSellerSalesHierarchyCategories/'+lastSegment;
+	    //var url='/m/fetchSellerSalesHierarchyCategories/'+lastSegment;
+	    var url='/m/fetchSellerSalesHierarchyCategories/'+sellerId;
 	      if(lastSegment != ''){  
 	        $.ajax({
 	        	type: 'GET',
