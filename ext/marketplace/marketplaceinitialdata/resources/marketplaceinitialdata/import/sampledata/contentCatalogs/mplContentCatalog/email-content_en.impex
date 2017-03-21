@@ -147,7 +147,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;EmailYouTubeSlot;Emailyoutube
 ;;EmailappConfSlot;EmailAppImage;
 ;;EmailInstaSlot;EmailInstagramImage
-;;EmailAppSlot;EmailInstagramImage
+
 
 # Order Collected By PickUp Person Email Template
 # Media
