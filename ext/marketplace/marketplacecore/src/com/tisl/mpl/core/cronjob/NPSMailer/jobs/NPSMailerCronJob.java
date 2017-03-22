@@ -40,7 +40,7 @@ import com.tisl.mpl.util.ExceptionUtil;
  */
 public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 {
-	@SuppressWarnings("unused")
+
 	private final static Logger LOG = Logger.getLogger(NPSMailerCronJob.class.getName());
 
 	@Autowired
@@ -51,6 +51,8 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 
 	@Autowired
 	private NotificationService notificationService;
+
+
 
 	/*
 	 * TPR-1984 This cron job is triggered as configured to run at 12 PM and 4 PM
@@ -89,9 +91,6 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 					npsEmailerModel.setTransactionId(entry.getValue().getTransactionID());
 					npsEmailerModel.setParentOrderNo(entry.getKey());
 					npsEmailerModel.setCustomer((CustomerModel) entry.getKey().getUser());
-					//notificationService.triggerNpsEmail(entry.getValue(), entry.getKey());
-					//npsEmailerModel.setIsEmailSent(Boolean.TRUE);
-					//npsEmailerModel.setTimeSent(new Date());
 
 					final String processState = notificationService.triggerNpsEmail(entry.getValue(), entry.getKey());
 					if (processState.equalsIgnoreCase("SUCCEEDED"))
@@ -113,6 +112,8 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 				LOG.info("Nps Email data have been saved>>>>>>>>>>>>>>>");
 				modelService.saveAll(npsEmailerModelList);
 			}
+
+
 		}
 		catch (final ModelSavingException e)
 		{
@@ -154,6 +155,13 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 			getFetchSalesOrderService().saveCronDetails(oModel.getStartTime(), oModel.getCode());
 		}
 
+	}
+
+	@Override
+	public boolean isAbortable()
+	{
+
+		return true;
 	}
 
 }

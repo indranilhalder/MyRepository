@@ -31,10 +31,6 @@ public class NPSFeedbackQuestionDaoImpl implements NPSFeedbackQuestionDao
 
 	private static final Logger LOG = Logger.getLogger(NPSFeedbackQuestionDaoImpl.class);
 
-	//private static final String Err = "{err."; // Blocked for SONAR FIX
-	@SuppressWarnings("unused")
-	private static final String QUERY_FROM = "FROM {";
-
 	@Resource
 	private FlexibleSearchService flexibleSearchService;
 
@@ -51,7 +47,7 @@ public class NPSFeedbackQuestionDaoImpl implements NPSFeedbackQuestionDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.NPSFeedbackQuestionDao#getFeedback(java.lang.String)
 	 */
 	@Override
@@ -72,7 +68,7 @@ public class NPSFeedbackQuestionDaoImpl implements NPSFeedbackQuestionDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.NPSFeedbackQuestionDao#validateCustomerForTransaction(java.lang.
 	 * String)

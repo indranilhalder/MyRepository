@@ -58,7 +58,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 	{
 		LOG.info("In NPS email context");
 		super.init(npsUpdateProcessModel, emailPageModel);
-		//orderData = getOrderConverter().convert(npsUpdateProcessModel.getOrder());
+
 		final AbstractOrderEntryModel orderEntry = npsUpdateProcessModel.getAbstractOrderEntry();
 		LOG.info("In NPS email context orderEntry" + orderEntry);
 
@@ -187,7 +187,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getSite(de.hybris.platform.
 	 * processengine.model.BusinessProcessModel)
 	 */
@@ -199,7 +199,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getCustomer(de.hybris.platform
 	 * .processengine.model.BusinessProcessModel)
@@ -208,7 +208,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getEmailLanguage(de.hybris.platform
 	 * .processengine.model.BusinessProcessModel)
@@ -221,7 +221,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getCustomer(de.hybris.platform
 	 * .processengine.model.BusinessProcessModel)

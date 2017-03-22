@@ -60,6 +60,7 @@ import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import de.hybris.platform.util.Config;
+import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.wishlist2.Wishlist2Service;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
@@ -2437,7 +2438,10 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						{
 							LOG.debug("Inventory reservationData for Mobile from OMS is not success ###### =" + cartGuid);
 							wsDto.setFailedUSSIDs(failedUSSID);
-							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
+							wsDto.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9047));
+							wsDto.setErrorCode(MarketplacecommerceservicesConstants.B9047);
+							wsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+							//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
 						}
 					}
 				}
