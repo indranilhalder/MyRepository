@@ -132,9 +132,10 @@ ACC.refinements = {
 					}
 				}
 			})
-			
+			//UF-254 later page push is not considered . Putting page 1 for default.
+			var browserUrlLazy = appendPageNo(browserURL[0]);
 			// generating postAjaxURL
-			var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
+			var pageURL = browserUrlLazy +'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
 			var requiredUrl="";
 			var action = $(this).parents("form").attr('action');
 			
@@ -275,9 +276,9 @@ ACC.refinements = {
 					}
 				}
 			})
-			
+			var browserUrlLazy = appendPageNo(browserURL[0]);
 			// generating postAjaxURL
-			var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
+			var pageURL = browserUrlLazy +'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
 			var requiredUrl="";
 			var action = $(this).parents("form").attr('action');
 			
@@ -564,9 +565,9 @@ ACC.refinements = {
 						}
 					}
 				})
-				
+				var browserUrlLazy = appendPageNo(browserURL[0]);
 				// generating postAjaxURL
-				var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/:/g,"%3A");
+				var pageURL = browserUrlLazy +'?'+nonEmptyDataString.replace(/:/g,"%3A");
 				var requiredUrl="";
 				var action = dummyForm.attr('action');
 				
@@ -1089,6 +1090,7 @@ function lazyPaginationFacet(response){
     innerLazyLoad({isSerp:true});
     
 }
+
 //UF-15
 (function($) {
     $.strRemove = function(theTarget, theString) {
@@ -1097,3 +1099,14 @@ function lazyPaginationFacet(response){
         ).html();
     };
 })(jQuery);
+
+//UF-254
+function appendPageNo(url){
+	var modifiedUrl = null;
+	if(!(/page-[0-9]+/).test(url)){
+		modifiedUrl = url.replace(/[/]$/,"") + '/page-1';
+	}else{
+		modifiedUrl = url;
+	}
+	return modifiedUrl;
+}
