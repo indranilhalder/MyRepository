@@ -36,7 +36,7 @@
 									</div>
 									<div class="row clearfix">
 										<div class="col-md-6">
-											<label class="control-label" for="pod">Upload Proof of Delivery</label>
+											<label class="control-label" for="pod">Upload Proof of Delivery(.pdf, .jpg, .gif, .png)</label>
 											
 											<div  style="position: relative;">
 											<input name="dispatchProof" type="file" id="uploadFile" class="file awsTextinput awsUpload uploadFile" style="opacity: 0;z-index:999999; position: absolute;top: 0px;left: 0px;cursor: pointer;" data-show-preview="false">
