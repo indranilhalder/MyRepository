@@ -702,13 +702,80 @@ function donotShowAll()
 		}
 
 $(document).on("click",".plp-wishlist",function(e){
-	
 	 /*TPR-250 changes*/
 	var ussid=$(this).data("ussid");
-	addToWishlistForPLP($(this).data("product"),$(this).data("ussid"),this);
+	//addToWishlistForPLP($(this).data("product"),$(this).data("ussid"),this);
 	/*TPR-250 changes*/
+	if ( $( this ).hasClass( "added" ) ) {
+		removeToWishlistForPLP($(this).data("product"),$(this).data("ussid"),this);
+	} else {
+		addToWishlistForPLP($(this).data("product"),$(this).data("ussid"),this);
+	}
 	return false;
 })
+		/*Changes for INC144313867*/
+
+		function removeToWishlistForPLP(productURL,ussid,el) {
+			var loggedIn=$("#loggedIn").val();
+			var productCode=urlToProductCode(productURL);
+			var wishName = "";
+			var requiredUrl = ACC.config.encodedContextPath + "/search/"
+					+ "removeFromWishListInPLP";	
+		    var sizeSelected=true;
+		    
+		    if(!$('#variant li').hasClass('selected')) {
+		    	sizeSelected=false;
+		    }
+		    if( $("#variant,#sizevariant option:selected").val()=="#"){
+		    	sizeSelected=false;
+		    }
+		    var dataString = 'wish=' + wishName + '&product=' + productCode + '&ussid=' + ussid
+			+ '&sizeSelected=' + sizeSelected;
+			
+			if(loggedIn == 'false') {
+				$(".wishAddLoginPlp").addClass("active");
+				setTimeout(function(){
+					$(".wishAddLoginPlp").removeClass("active")
+				},3000)
+				return false;
+			}	
+			else {	
+				$.ajax({			
+					contentType : "application/json; charset=utf-8",
+					url : requiredUrl,
+					data : dataString,
+					dataType : "json",			
+					success : function(data){
+						if (data == true) {					
+							$(".wishRemoveSucessPlp").addClass("active");
+							setTimeout(function(){
+								$(".wishRemoveSucessPlp").removeClass("active")
+							},3000)
+							$(el).removeClass("added");
+						}
+						else{
+							$(".wishAlreadyAddedPlp").addClass("active");
+							setTimeout(function(){
+								$(".wishAlreadyAddedPlp").removeClass("active")
+							},3000)
+						}
+						
+					},
+					error : function(xhr, status, error){
+						alert(error);
+					}
+				});
+				
+				setTimeout(function() {
+					$('a.wishlist#wishlist').popover('hide');
+					$('input.wishlist#add_to_wishlist').popover('hide');
+
+					}, 0);
+			}
+			return false;
+		}
+
+
 		function addToWishlistForPLP(productURL,ussid,el) {
 			var loggedIn=$("#loggedIn").val();
 			var productCode=urlToProductCode(productURL);

@@ -356,15 +356,15 @@ public class MplBuyBoxUtility
 		String variantColor = "";
 		String code = "";
 
-		if (CLOTHING.equals(variantProductModel.getProductCategoryType()))
+		if (CLOTHING.equalsIgnoreCase(variantProductModel.getProductCategoryType()))
 		{
 			code = COLORAPPAREL;
 		}
-		if (ELECTRONICS.equals(variantProductModel.getProductCategoryType()))
+		if (ELECTRONICS.equalsIgnoreCase(variantProductModel.getProductCategoryType()))
 		{
 			code = COLORELECTRONICS;
 		}
-		else if (FOOTWEAR.equals(variantProductModel.getProductCategoryType()))
+		else if (FOOTWEAR.equalsIgnoreCase(variantProductModel.getProductCategoryType()))
 		{
 			code = COLORFAMILYFOOTWEAR;
 		}

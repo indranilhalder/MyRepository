@@ -695,12 +695,6 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 						displayBanner = banner;
 					}
 
-					/*
-					 * if ("stayQued".equalsIgnoreCase(sq)) { if (promoBanner.getSeqNumForStayQued() ==
-					 * Integer.valueOf(sequenceNumber)) { displayBanner = banner; } } else { if
-					 * (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber)) { displayBanner = banner; } }
-					 */
-
 				}
 				if (banner instanceof MplBigFourPromoBannerComponentModel)
 				{
@@ -710,12 +704,6 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 					{
 						displayBanner = banner;
 					}
-					/*
-					 * if ("stayQued".equalsIgnoreCase(sq)) { if (promoBanner.getSeqNumForStayQued() ==
-					 * Integer.valueOf(sequenceNumber)) { displayBanner = banner; } } else { if
-					 * (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber)) { displayBanner = banner; } }
-					 */
-
 				}
 			}
 

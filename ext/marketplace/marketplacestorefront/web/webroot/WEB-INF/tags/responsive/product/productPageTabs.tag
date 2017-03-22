@@ -73,16 +73,19 @@ var buyboxskuId='';
 </ul>
 </div>
 <ul class="tabs pdp productTabs">
-	<c:if test="${fn:contains(validTabs, 'stylenote')}">
-		<li class="active">
-			<product:productStyleNotesTab product="${product}" />
-		</li>
-	</c:if>
+	<!-- INC144313814 fix start -->
 	<c:if test="${fn:contains(validTabs, 'details')}">
-		<li>
+		<li class="active">
 			<product:productDetailsTab product="${product}" />
 		</li>
 	</c:if>
+	<!-- INC144313814 fix end -->
+	<c:if test="${fn:contains(validTabs, 'stylenote')}">
+		<li>
+			<product:productStyleNotesTab product="${product}" />
+		</li>
+	</c:if>
+	
 	<c:if test="${fn:contains(validTabs, 'description')}">
 		<li class="active">
 			<product:productDescriptionTab product="${product}" />

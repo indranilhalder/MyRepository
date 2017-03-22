@@ -496,7 +496,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 */
 	@Override
 	public Map<String, List<MarketplaceDeliveryModeData>> getDeliveryMode(final CartData cartData,
-			final List<PinCodeResponseData> omsDeliveryResponse, final CartModel cartModel) throws CMSItemNotFoundException
+			final List<PinCodeResponseData> omsDeliveryResponse) throws CMSItemNotFoundException
 	{
 
 		final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
@@ -549,13 +549,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 									if (entry.isIsBOGOapplied())
 									{
 										priceData = formPriceData(Double.valueOf(deliveryModel.getValue().doubleValue()
-												* entry.getQualifyingCount().intValue()), cartModel);
+												* entry.getQualifyingCount().intValue()), cartData);
 									}
 									else
 									{
 										priceData = formPriceData(
 												Double.valueOf(deliveryModel.getValue().doubleValue() * entry.getQuantity().doubleValue()),
-												cartModel);
+												cartData);
 									}
 									deliveryModeData.setCode(checkDataValue(deliveryModel.getDeliveryMode().getCode()));
 									//deliveryModeData.setDescription(checkDataValue(deliveryModel.getDeliveryMode().getDescription()));
@@ -634,7 +634,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @throws CMSItemNotFoundException
 	 */
 	private List<MarketplaceDeliveryModeData> getDeliveryModeTopTwoWishlistMobile(final Wishlist2EntryModel wishlist2EntryModel,
-			final List<PinCodeResponseData> omsDeliveryResponse, final CartModel cartModel) throws CMSItemNotFoundException
+			final List<PinCodeResponseData> omsDeliveryResponse, final CartData cartData) throws CMSItemNotFoundException
 	{
 		//final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 		List<MarketplaceDeliveryModeData> deliveryModeDataList = null;
@@ -674,7 +674,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 						if (deliveryModel != null && deliveryModel.getValue() != null && deliveryModel.getDeliveryMode() != null)
 						{
-							final PriceData priceData = formPriceData(Double.valueOf(deliveryModel.getValue().doubleValue()), cartModel);
+							final PriceData priceData = formPriceData(Double.valueOf(deliveryModel.getValue().doubleValue()), cartData);
 							deliveryModeData.setCode(checkDataValue(deliveryModel.getDeliveryMode().getCode()));
 							//deliveryModeData.setDescription(checkDataValue(deliveryModel.getDeliveryMode().getDescription()));
 
@@ -762,7 +762,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							{
 								final PriceData priceData = formPriceData(
 										Double.valueOf(deliveryModel.getValue().doubleValue() * entry.getQuantity().doubleValue()),
-										cartModel);
+										cartData);
 								deliveryModeData.setCode(checkDataValue(deliveryModel.getDeliveryMode().getCode()));
 								deliveryModeData.setDescription(checkDataValue(deliveryModel.getDeliveryMode().getDescription()));
 								deliveryModeData.setName(checkDataValue(deliveryModel.getDeliveryMode().getName()));
@@ -810,15 +810,15 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc : used to fetch delivery mode description details TISEE-950
-	 *
+	 * 
 	 * @param ussId
-	 *
+	 * 
 	 * @param deliveryMode
-	 *
+	 * 
 	 * @param startTime
-	 *
+	 * 
 	 * @param endTime
-	 *
+	 * 
 	 * @return String
 	 */
 
@@ -995,7 +995,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 */
 	@Override
 	public List<Wishlist2EntryModel> getGiftYourselfDetailsMobile(final int minGiftQuantity,
-			final List<Wishlist2Model> allWishlists, final String pincode, final CartModel cartModel)
+			final List<Wishlist2Model> allWishlists, final String pincode, final CartData cartData)
 			throws EtailNonBusinessExceptions
 	{
 
@@ -1011,14 +1011,25 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				for (final Wishlist2EntryModel entryWishlist : wishlistEntry.getEntries())//getting the latest two
 				{
 
-					if (null != cartModel.getEntries() && !cartModel.getEntries().isEmpty())
+					/*
+					 * if (null != cartModel.getEntries() && !cartModel.getEntries().isEmpty()) { for (final
+					 * AbstractOrderEntryModel entry : cartModel.getEntries()) {
+					 *
+					 * if (null != entry.getSelectedUSSID() && !entry.getSelectedUSSID().isEmpty() && null !=
+					 * entryWishlist.getUssid() && !entryWishlist.getUssid().isEmpty() &&
+					 * entry.getSelectedUSSID().equalsIgnoreCase(entryWishlist.getUssid())) {
+					 * productExistInCartList.add(entryWishlist); } }
+					 *
+					 * }
+					 */
+					if (null != cartData.getEntries() && !cartData.getEntries().isEmpty())
 					{
-						for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+						for (final OrderEntryData entry : cartData.getEntries())
 						{
 
-							if (null != entry.getSelectedUSSID() && !entry.getSelectedUSSID().isEmpty()
+							if (null != entry.getSelectedUssid() && !entry.getSelectedUssid().isEmpty()
 									&& null != entryWishlist.getUssid() && !entryWishlist.getUssid().isEmpty()
-									&& entry.getSelectedUSSID().equalsIgnoreCase(entryWishlist.getUssid()))
+									&& entry.getSelectedUssid().equalsIgnoreCase(entryWishlist.getUssid()))
 							{
 								productExistInCartList.add(entryWishlist);
 							}
@@ -1046,7 +1057,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			LOG.info("Sorted productDataList" + productDataList);
 
 			//finalgiftList = preparingFinalList(productDataList, pincode, (((List<CartModel>) cartModelList).get(0))); // TISPT-179 Point 3
-			final Tuple2<?, ?> wishListPincodeObject = preparingFinalList(productDataList, pincode, cartModel);
+			final Tuple2<?, ?> wishListPincodeObject = preparingFinalList(productDataList, pincode, cartData);
 			finalgiftList = (List<Wishlist2EntryModel>) wishListPincodeObject.getFirst();
 
 		}
@@ -1067,7 +1078,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	//public List<Wishlist2EntryModel> getGiftYourselfDetails(final int minGiftQuantity, final List<Wishlist2Model> allWishlists,final String pincode, final CartModel cartModel) throws CMSItemNotFoundException
 	@Override
 	public Tuple2<?, ?> getGiftYourselfDetails(final int minGiftQuantity, final List<Wishlist2Model> allWishlists,
-			final String pincode, final CartModel cartModel) throws CMSItemNotFoundException
+			final String pincode, final CartData cartData) throws CMSItemNotFoundException
 	{
 
 		final List<Wishlist2EntryModel> productDataList = new ArrayList<Wishlist2EntryModel>();
@@ -1094,7 +1105,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		//	finalgiftList = preparingFinalList(productDataList, pincode, cartModel); TISPT-179 Point 3
 		//return finalgiftList; ISPT-179 Point 3
 
-		final Tuple2<?, ?> wishListPincodeObj = preparingFinalList(productDataList, pincode, cartModel);
+		final Tuple2<?, ?> wishListPincodeObj = preparingFinalList(productDataList, pincode, cartData);
 		return wishListPincodeObj;
 
 	}
@@ -1108,7 +1119,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 */
 
 	private Tuple2<List<?>, List<?>> preparingFinalList(final List<Wishlist2EntryModel> productDataList, final String pincode,
-			final CartModel cartModel) throws EtailNonBusinessExceptions
+			final CartData cartData) throws EtailNonBusinessExceptions
 	{
 		final List<Wishlist2EntryModel> giftList = new ArrayList<Wishlist2EntryModel>();
 		List<PinCodeResponseData> pinCodeResponseDataList = null;
@@ -1124,10 +1135,10 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			{
 				boolean ussidExists = false;
 				boolean isWishlistEntryValid = true;
-				for (final AbstractOrderEntryModel entryModel : cartModel.getEntries())
+				for (final OrderEntryData entryModel : cartData.getEntries())
 				{
 					if (wishListEntryModel.getUssid() != null
-							&& wishListEntryModel.getUssid().equalsIgnoreCase(entryModel.getSelectedUSSID()))
+							&& wishListEntryModel.getUssid().equalsIgnoreCase(entryModel.getSelectedUssid()))
 					{
 						ussidExists = true;
 						break;
@@ -1169,7 +1180,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			if (StringUtil.isNotEmpty(pincode))
 			{
 				// Changes for Duplicate Cart fix
-				final List<PincodeServiceData> pincodeRequestDataList = fetchWishlistPincodeRequestData(sortedMap, cartModel);
+				final List<PincodeServiceData> pincodeRequestDataList = fetchWishlistPincodeRequestData(sortedMap, cartData);
 				if (CollectionUtils.isNotEmpty(pincodeRequestDataList))
 				{
 					pinCodeResponseDataList = getServiceablePinCodeCart(pincode, pincodeRequestDataList);
@@ -1232,11 +1243,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc checking wishlist entry is valid or not , delisted , end date , online from TISEE-5185
-	 *
+	 * 
 	 * @param wishlistEntryModel
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1283,15 +1294,15 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc creating pin code service data for pincode serviceability for wishlist
-	 *
+	 * 
 	 * @param sortedWishListMap
-	 *
+	 * 
 	 * @return List<PincodeServiceData>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private List<PincodeServiceData> fetchWishlistPincodeRequestData(
-			final Map<java.util.Date, Wishlist2EntryModel> sortedWishListMap, final CartModel cartMocdel)
+			final Map<java.util.Date, Wishlist2EntryModel> sortedWishListMap, final CartData cartData)
 			throws EtailNonBusinessExceptions
 	{
 		final List<PincodeServiceData> pincodeRequestDataList = new ArrayList<PincodeServiceData>();
@@ -1359,7 +1370,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 														MarketplacecommerceservicesConstants.CLICK_COLLECT)))
 							{
 								final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
-								final PriceData priceData = formPriceData(deliveryEntry.getValue(), cartMocdel);
+								final PriceData priceData = formPriceData(deliveryEntry.getValue(), cartData);
 								deliveryModeData.setCode(deliveryEntry.getDeliveryMode().getCode());
 								deliveryModeData.setDescription(deliveryEntry.getDeliveryMode().getDescription());
 								deliveryModeData.setName(deliveryEntry.getDeliveryMode().getName());
@@ -1418,15 +1429,15 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc creating pin code service data for pincode serviceability for wishlist
-	 *
+	 * 
 	 * @param sortedWishListMap
-	 *
+	 * 
 	 * @return List<PincodeServiceData>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private List<PincodeServiceData> fetchWishlistPincodeRequestDataMobile(final Wishlist2EntryModel wishlist2EntryModel,
-			final CartModel cartModel) throws EtailNonBusinessExceptions
+			final CartData cartData) throws EtailNonBusinessExceptions
 	{
 		final List<PincodeServiceData> pincodeRequestDataList = new ArrayList<PincodeServiceData>();
 		final List<MarketplaceDeliveryModeData> deliveryModeDataList = new ArrayList<MarketplaceDeliveryModeData>();
@@ -1472,7 +1483,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				{
 					final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
 					// Changes for Duplicate Cart fix
-					final PriceData priceData = formPriceData(deliveryEntry.getValue(), cartModel);
+					final PriceData priceData = formPriceData(deliveryEntry.getValue(), cartData);
 					deliveryModeData.setCode(deliveryEntry.getDeliveryMode().getCode());
 					deliveryModeData.setDescription(deliveryEntry.getDeliveryMode().getDescription());
 					deliveryModeData.setName(deliveryEntry.getDeliveryMode().getName());
@@ -1595,7 +1606,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			final long quantity, final String ussid) throws InvalidCartException, CommerceCartModificationException
 	{
 		boolean success = false;
-		CartData cartData = null;
+		//commented for car project implementation CAR:62
+		//CartData cartData = null;
 		final CommerceCartParameter parameter = new CommerceCartParameter();
 		CartModificationData cartModificationData = null;
 		String sellerUssId = null;
@@ -1613,8 +1625,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			{
 				throw new CommerceCartModificationException("Invalid quantity " + quantity);
 			}
+			//commented for car project implementation CAR:62
+			//cartData = getCartConverter().convert(cartModel);
 
-			cartData = getCartConverter().convert(cartModel);
 			// Check if ussid is null then fetch ussid
 			if (ussid == null || ussid.isEmpty())
 			{
@@ -1625,7 +1638,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				sellerUssId = ussid;
 			}
 			//			if (isMaxQuantityAlreadyAdded(cartData, productCode))
-			if (isMaxQuantityAlreadyAdded(cartData, sellerUssId, quantity, productModel.getCode()))
+			//commented for car project implementation CAR:62: added cartModel instead of carData as param in isMaxQuantityAlreadyAdded
+			//if (isMaxQuantityAlreadyAdded(cartData, sellerUssId, quantity, productModel.getCode()))
+			if (isMaxQuantityAlreadyAdded(cartModel, sellerUssId, quantity, productModel.getCode()))
 			{
 				parameter.setEnableHooks(true);
 				parameter.setCart(cartModel);
@@ -1690,19 +1705,28 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 *
 	 */
 	@SuppressWarnings("javadoc")
-	private boolean isMaxQuantityAlreadyAdded(final CartData cartData, final String ussid, final long quantity,
+	//commented for car project implementation CAR:62: added cartModel instead of carData as param
+	//private boolean isMaxQuantityAlreadyAdded(final CartData cartData, final String ussid, final long quantity,
+	private boolean isMaxQuantityAlreadyAdded(final CartModel cartModel, final String ussid, final long quantity,
 			final String productCode)
 	{
 		boolean addToCartFlag = true;
 		final int maximum_configured_quantiy = getSiteConfigService().getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
-		if (cartData.getEntries() != null && ussid != null && !cartData.getEntries().isEmpty())
+		//commented for car project implementation CAR:62
+		//if (cartData.getEntries() != null && ussid != null && !cartData.getEntries().isEmpty())
+		if (cartModel.getEntries() != null && ussid != null && !cartModel.getEntries().isEmpty())
 		{
-
-			for (final OrderEntryData entry : cartData.getEntries())
+			//commented for car project implementation CAR:62
+			//for (final OrderEntryData entry : cartData.getEntries())
+			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
 			{
-				final ProductData productData = entry.getProduct();
+				//commented for car project implementation CAR:62
+				//final ProductData productData = entry.getProduct();
+				final ProductModel productModel = entry.getProduct();
 
-				if (productCode.equals(productData.getCode()) && entry.getSelectedUssid().equalsIgnoreCase(ussid))
+				//commented for car project implementation CAR:62
+				//if (productCode.equals(productData.getCode()) && entry.getSelectedUssid().equalsIgnoreCase(ussid))
+				if (productCode.equals(productModel.getCode()) && entry.getSelectedUSSID().equalsIgnoreCase(ussid))
 				{
 
 					LOG.debug(" Product already present in the cart so now we will check the qunatity present in the cart already");
@@ -1799,7 +1823,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @throws EtailNonBusinessExceptions
 	 */
 
-	private PriceData formPriceData(final Double price, final CartModel cartModel) throws EtailNonBusinessExceptions
+	private PriceData formPriceData(final Double price, final CartData cartData) throws EtailNonBusinessExceptions
 	{
 		//final AbstractOrderModel cart = null;
 		//final PriceData priceData = new PriceData();
@@ -1819,12 +1843,26 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			//priceData.setCurrencyIso(MarketplacecommerceservicesConstants.INR);
 			final CurrencyModel currency = new CurrencyModel();
 			currency.setIsocode(MarketplacecommerceservicesConstants.INR);
-			currency.setSymbol(cartModel.getCurrency().getSymbol());
+			currency.setSymbol(cartData.getCurrencySymbol());
 			formattedPriceData = getPriceDataFactory().create(PriceDataType.BUY, new BigDecimal(price.doubleValue()), currency);
 
 		}
 		return formattedPriceData;
 	}
+
+	/*
+	 * private PriceData formPriceData(final Double price, final CartModel cartModel) throws EtailNonBusinessExceptions {
+	 * //final AbstractOrderModel cart = null; //final PriceData priceData = new PriceData(); PriceData
+	 * formattedPriceData = new PriceData(); // if (null == cartModel) // { // cart = getCartService().getSessionCart();
+	 * // } // else // { // cart = cartModel; // } if (price != null) { //priceData.setPriceType(PriceDataType.BUY);
+	 * //priceData.setValue(new BigDecimal(price.doubleValue()));
+	 * //priceData.setCurrencyIso(MarketplacecommerceservicesConstants.INR); final CurrencyModel currency = new
+	 * CurrencyModel(); currency.setIsocode(MarketplacecommerceservicesConstants.INR);
+	 * currency.setSymbol(cartModel.getCurrency().getSymbol()); formattedPriceData =
+	 * getPriceDataFactory().create(PriceDataType.BUY, new BigDecimal(price.doubleValue()), currency);
+	 *
+	 * } return formattedPriceData; }
+	 */
 
 	/**
 	 * @Desc fetching oms pincode response data
@@ -2296,13 +2334,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc fetching reservation details
-	 *
+	 * 
 	 * @param cartId
-	 *
+	 * 
 	 * @param cartData
-	 *
+	 * 
 	 * @param pincode
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -2423,11 +2461,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc converting response to dto
-	 *
+	 * 
 	 * @param inventoryReservListResponse
-	 *
+	 * 
 	 * @return List<ReservationItemWsDTO>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private List<ReservationItemWsDTO> converter(final InventoryReservListResponse inventoryReservListResponse)
@@ -2464,11 +2502,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc populating data for soft reservation
-	 *
+	 * 
 	 * @param cartData
-	 *
+	 * 
 	 * @return List<CartSoftReservationData>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	public List<CartSoftReservationData> populateDataForSoftReservation(final CartData cartData) throws EtailNonBusinessExceptions
@@ -2541,18 +2579,18 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @DESC MobileWS105 : get top two wish list for mobile web service
-	 *
+	 * 
 	 * @param userModel
-	 *
+	 * 
 	 * @param pincode
-	 *
+	 * 
 	 * @return GetWishListWsDTO
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
 	@Override
-	public GetWishListWsDTO getTopTwoWishlistForUser(final UserModel userModel, final String pincode, final CartModel cartModel)
+	public GetWishListWsDTO getTopTwoWishlistForUser(final UserModel userModel, final String pincode, final CartData cartData)
 			throws EtailNonBusinessExceptions
 	{
 		GetWishListWsDTO getWishListWsDTO = new GetWishListWsDTO();
@@ -2569,7 +2607,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		final int minGiftQuantity = siteConfigService.getInt("mpl.cart.giftQuantity.lineItem", 0);
 
 
-		sortedWishList = getGiftYourselfDetailsMobile(minGiftQuantity, allWishlists, pincode, cartModel);
+		sortedWishList = getGiftYourselfDetailsMobile(minGiftQuantity, allWishlists, pincode, cartData);
 
 		if (null != sortedWishList && !sortedWishList.isEmpty())
 		{
@@ -2612,7 +2650,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			LOG.debug("Sorted wishlist is empty or null ");
 
 		}
-		getWishListWsDTO = getWishListWebserviceDetails(sortedWishListMap, pincode, cartModel);
+		getWishListWsDTO = getWishListWebserviceDetails(sortedWishListMap, pincode, cartData);
 
 		return getWishListWsDTO;
 
@@ -2620,13 +2658,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @param sortedWishListMap
-	 *
+	 * 
 	 * @return GetWishListWsDTO
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private GetWishListWsDTO getWishListWebserviceDetails(final Map<String, List<Wishlist2EntryModel>> sortedWishListMap,
-			final String pincode, final CartModel cartModel) throws EtailNonBusinessExceptions
+			final String pincode, final CartData cartData) throws EtailNonBusinessExceptions
 	{
 		final GetWishListWsDTO getWishListWsDTO = new GetWishListWsDTO();
 
@@ -2655,7 +2693,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					String capacity = null;
 
 					getWishListProductWsObj = setWSWishlistEligibleDeliveryMode(wishlist2EntryModel, getWishListProductWsObj, pincode,
-							cartModel);
+							cartData);
 
 					List<RichAttributeModel> richAttributeModel = null;
 					if (null != productModel.getRichAttribute() && !productModel.getRichAttribute().isEmpty())
@@ -2861,13 +2899,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc For webservice
-	 *
+	 * 
 	 * @param buyBoxModelList
-	 *
+	 * 
 	 * @param getWishListProductWsObj
-	 *
+	 * 
 	 * @return GetWishListProductWsDTO
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -2896,15 +2934,15 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc For webservice
-	 *
+	 * 
 	 * @param wishlist2EntryModel
-	 *
+	 * 
 	 * @param getWishListProductWsObj
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private GetWishListProductWsDTO setWSWishlistEligibleDeliveryMode(final Wishlist2EntryModel wishlist2EntryModel,
-			final GetWishListProductWsDTO getWishListProductWsObj, final String pincode, final CartModel cartModel)
+			final GetWishListProductWsDTO getWishListProductWsObj, final String pincode, final CartData cartData)
 			throws EtailNonBusinessExceptions
 	{
 		List<MplZoneDeliveryModeValueModel> deliveryModes = null;
@@ -2931,7 +2969,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				List<MarketplaceDeliveryModeData> deliveryModesData = null;
 				// Changes for Duplicate Cart fix
 				final List<PincodeServiceData> pincodeRequestDataList = fetchWishlistPincodeRequestDataMobile(wishlist2EntryModel,
-						cartModel);
+						cartData);
 				if (CollectionUtils.isNotEmpty(pincodeRequestDataList))
 				{
 					pinCodeResponseDataList = getServiceablePinCodeCart(pincode, pincodeRequestDataList);
@@ -2940,7 +2978,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						try
 						{
 							deliveryModesData = getDeliveryModeTopTwoWishlistMobile(wishlist2EntryModel, pinCodeResponseDataList,
-									cartModel);
+									cartData);
 						}
 						catch (final Exception e)
 						{
@@ -2989,7 +3027,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					{
 						final MobdeliveryModeWsDTO delivery = new MobdeliveryModeWsDTO();
 						// Changes for Duplicate Cart fix
-						final PriceData priceData = formPriceData(deliveryEntry.getValue(), cartModel);
+						final PriceData priceData = formPriceData(deliveryEntry.getValue(), cartData);
 						if (null != deliveryEntry.getDeliveryMode() && null != deliveryEntry.getDeliveryMode().getCode())
 						{
 							delivery.setCode(deliveryEntry.getDeliveryMode().getCode());
@@ -3032,13 +3070,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @DESC TISST-6994,TISST-6990 adding to cart COD eligible or not with Pincode serviceabilty and sship product
-	 *
+	 * 
 	 * @param deliveryModeMap
-	 *
+	 * 
 	 * @param pincodeResponseData
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3349,11 +3387,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc fetching state details for a state name
-	 *
+	 * 
 	 * @param stateName
-	 *
+	 * 
 	 * @return StateModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -3378,9 +3416,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc to generate Sub order id
-	 *
+	 * 
 	 * @return String
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3391,9 +3429,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc to generate Order Line id and transaction id
-	 *
+	 * 
 	 * @return String
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3405,9 +3443,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc to generate Order Id
-	 *
+	 * 
 	 * @return String
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3419,13 +3457,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment
-	 *
+	 * 
 	 * @param requestType
-	 *
+	 * 
 	 * @param abstractOrderModel
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3587,9 +3625,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @description:Populate data to CartSoftReservationData
-	 *
+	 * 
 	 * @return:List<CartSoftReservationData>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -4007,11 +4045,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @DESC : Inventory list to be generated for TISPRD-2758
-	 *
+	 * 
 	 * @param abstractOrderModel
-	 *
+	 * 
 	 * @param entryModel
-	 *
+	 * 
 	 * @return Tuple2<?, ?>
 	 */
 	private Tuple2<?, ?> getFreebieInventoryList(final AbstractOrderModel abstractOrderModel,
@@ -4054,13 +4092,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @DESC : Inventory list to be generated for TISPRD-2758
-	 *
+	 * 
 	 * @param abstractOrderModel
-	 *
+	 * 
 	 * @param entryModel
-	 *
+	 * 
 	 * @param productPromoCode
-	 *
+	 * 
 	 * @return List<CartSoftReservationData>
 	 */
 	private List<CartSoftReservationData> populateFreebieInventoryData(final AbstractOrderModel abstractOrderModel,
@@ -4797,15 +4835,15 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @desc use to save freebie delivery mode
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @param freebieModelMap
-	 *
+	 * 
 	 * @param freebieParentQtyMap
-	 *
+	 * 
 	 * @return void
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -4813,6 +4851,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
 			throws EtailNonBusinessExceptions
 	{
+		//added for car-124 implementation
+		final List<AbstractOrderEntryModel> abstractOrderEntryModelList = new ArrayList<AbstractOrderEntryModel>();
 		if (abstractOrderModel != null && abstractOrderModel.getEntries() != null && freebieModelMap != null
 				&& !freebieModelMap.isEmpty())
 		{
@@ -4821,24 +4861,35 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				if (cartEntryModel != null && cartEntryModel.getGiveAway().booleanValue()
 						&& cartEntryModel.getAssociatedItems() != null && cartEntryModel.getAssociatedItems().size() > 0)
 				{
-					saveDeliveryMethForFreebie(cartEntryModel, freebieModelMap, freebieParentQtyMap);
+					//commented for car-124 implementation
+					//saveDeliveryMethForFreebie(cartEntryModel,freebieModelMap, freebieParentQtyMap);
+					final AbstractOrderEntryModel abstractOrderEntryModel = saveDeliveryMethForFreebie(cartEntryModel,
+							freebieModelMap, freebieParentQtyMap);
+					//car-124 changes starts
+					if (null != abstractOrderEntryModel)
+					{
+						abstractOrderEntryModelList.add(abstractOrderEntryModel);
+					}
 				}
 			}
+			getModelService().saveAll(abstractOrderEntryModelList);
+			//car-124 changes ends
 		}
 	}
-
 
 	/**
 	 * This method saves delivery modes for freebie order entries
 	 *
-	 * @param cartEntryModel
+	 * @param abstractOrderEntryModel
 	 * @param freebieModelMap
 	 * @param freebieParentQtyMap
 	 */
-	private void saveDeliveryMethForFreebie(final AbstractOrderEntryModel cartEntryModel,
+	//commented for car-124 implementation
+	//private void saveDeliveryMethForFreebie(final AbstractOrderEntryModel cartEntryModel,
+	//final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
+	private AbstractOrderEntryModel saveDeliveryMethForFreebie(final AbstractOrderEntryModel cartEntryModel,
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
 	{
-
 		MplZoneDeliveryModeValueModel mplDeliveryMode = null;
 		if (cartEntryModel.getAssociatedItems().size() == 1)
 		{
@@ -4925,8 +4976,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		{
 			//saving parent product delivery mode to freebie item
 			cartEntryModel.setMplDeliveryMode(mplDeliveryMode);
-			getModelService().save(cartEntryModel);
+			//commented for car-124 implementation
+			//getModelService().save(cartEntryModel);
+			return cartEntryModel;
 		}
+		return null;
 	}
 
 	/**
@@ -5006,32 +5060,32 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @return PinCodeResponseData
 	 */
 	@Override
-	public PinCodeResponseData getVlaidDeliveryModesByInventory(final PinCodeResponseData pinCodeResponseData)
-			throws EtailNonBusinessExceptions
+	public PinCodeResponseData getVlaidDeliveryModesByInventory(final PinCodeResponseData pinCodeResponseData,
+			final CartData cartData) throws EtailNonBusinessExceptions
 	{
 		LOG.info("Inside getVlaidDeliveryModesByInventory Method");
 		try
 		{
 			final List<DeliveryDetailsData> validDeliveryDetailsData = new ArrayList<DeliveryDetailsData>();
-			final CartModel cartModel = cartService.getSessionCart();
+			//final CartModel cartModel = cartService.getSessionCart();
 			// Start Modified as part of performance fix
 			if (null != pinCodeResponseData && CollectionUtils.isNotEmpty(pinCodeResponseData.getValidDeliveryModes())
-					&& cartModel != null && CollectionUtils.isNotEmpty(cartModel.getEntries()))
+					&& cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries()))
 			{
 				for (final DeliveryDetailsData deliveryDetailsData : pinCodeResponseData.getValidDeliveryModes())
 				{
 					long inventory = 0;
 					long selectedQuantity = 0;
-					for (final AbstractOrderEntryModel abstractOrderEntryModel : cartModel.getEntries())
+					for (final OrderEntryData orderEntryData : cartData.getEntries())
 					{
-						if (deliveryDetailsData != null && abstractOrderEntryModel != null
-								&& abstractOrderEntryModel.getSelectedUSSID().equalsIgnoreCase(pinCodeResponseData.getUssid())
-								&& !abstractOrderEntryModel.getGiveAway().booleanValue()) //TISPRDT-219
+						if (deliveryDetailsData != null && orderEntryData != null
+								&& orderEntryData.getSelectedUssid().equalsIgnoreCase(pinCodeResponseData.getUssid())
+								&& !orderEntryData.isGiveAway()) //TISPRDT-219
 						{
 							inventory = (deliveryDetailsData.getInventory() != null) ? Long
 									.parseLong(deliveryDetailsData.getInventory()) : inventory;
-							selectedQuantity = (abstractOrderEntryModel.getQuantity() != null) ? abstractOrderEntryModel.getQuantity()
-									.longValue() : selectedQuantity;
+							selectedQuantity = (orderEntryData.getQuantity() != null) ? orderEntryData.getQuantity().longValue()
+									: selectedQuantity;
 							if (inventory >= selectedQuantity)
 							{
 								validDeliveryDetailsData.add(deliveryDetailsData);
@@ -5041,6 +5095,28 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					pinCodeResponseData.setValidDeliveryModes(validDeliveryDetailsData);
 				}
 			}
+
+
+
+			/*
+			 * @Override public PinCodeResponseData getVlaidDeliveryModesByInventory(final PinCodeResponseData
+			 * pinCodeResponseData) throws EtailNonBusinessExceptions {
+			 * LOG.info("Inside getVlaidDeliveryModesByInventory Method"); try { final List<DeliveryDetailsData>
+			 * validDeliveryDetailsData = new ArrayList<DeliveryDetailsData>(); final CartModel cartModel =
+			 * cartService.getSessionCart(); // Start Modified as part of performance fix if (null != pinCodeResponseData
+			 * && CollectionUtils.isNotEmpty(pinCodeResponseData.getValidDeliveryModes()) && cartModel != null &&
+			 * CollectionUtils.isNotEmpty(cartModel.getEntries())) { for (final DeliveryDetailsData deliveryDetailsData :
+			 * pinCodeResponseData.getValidDeliveryModes()) { final long inventory = 0; long selectedQuantity = 0; for
+			 * (final AbstractOrderEntryModel abstractOrderEntryModel : cartModel.getEntries()) { if (deliveryDetailsData
+			 * != null && abstractOrderEntryModel != null &&
+			 * abstractOrderEntryModel.getSelectedUSSID().equalsIgnoreCase(pinCodeResponseData.getUssid()) &&
+			 * !abstractOrderEntryModel.getGiveAway().booleanValue()) //TISPRDT-219 { inventory =
+			 * (deliveryDetailsData.getInventory() != null) ? Long .parseLong(deliveryDetailsData.getInventory()) :
+			 * inventory; selectedQuantity = (abstractOrderEntryModel.getQuantity() != null) ?
+			 * abstractOrderEntryModel.getQuantity() .longValue() : selectedQuantity; if (inventory >= selectedQuantity) {
+			 * validDeliveryDetailsData.add(deliveryDetailsData); } } }
+			 * pinCodeResponseData.setValidDeliveryModes(validDeliveryDetailsData); } }
+			 */
 			// End Modified as part of performance fix TISPT-104
 			/*
 			 * final List<DeliveryDetailsData> validDeliveryDetailsData = new ArrayList<DeliveryDetailsData>(); if (null !=

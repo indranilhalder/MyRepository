@@ -115,4 +115,11 @@ public interface MplCustomAddressFacade
 	 * @return
 	 */
 	public CartData getCheckoutCartWS(final CartModel cartModel);
+
+	/**
+	 * @param deliveryAddress
+	 * @param cartModel
+	 * @return
+	 */
+	List<AddressData> getDeliveryAddresses(AddressData deliveryAddress, CartModel cartModel); //CAR-194
 }

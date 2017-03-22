@@ -272,7 +272,7 @@
       <bean id="batchSellerPriorityConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
-              	$catalogVersion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true]
+              	$catalogVersion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Online'])[unique=true]
 				$approved=approvalstatus(code)[default='check']
 				$lang=en
                 $productCatalog=mplProductCatalog
@@ -301,13 +301,13 @@
 					$productCatalogName=Marketplace Product Catalog
 					$classificationCatalog=pcmClassification
 					$uidGroup=admingroup,marketplaceGroup,ETAILREAD
-					$catalogVersion2=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+					$catalogVersion2=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 					$catalogVersion=catalogVersion(catalog(id),version)[unique=true]
 				INSERT_UPDATE category;code[unique=true];name[lang=en];supercategories(code,$catalogVersion)[cellDecorator=com.tisl.mpl.core.celldecorator.SuperCategoryDecorator];$catalogVersion2;allowedPrincipals(uid);
            </value>
         </property>
         <property name="impexRow">
-            <value>;{+0};{+1};{2};$productCatalog:Staged;$uidGroup</value>
+            <value>;{+0};{+1};{2};$productCatalog:Online;$uidGroup</value>
         </property>
         </bean>
         
@@ -318,7 +318,7 @@
             	$productCatalog=mplProductCatalog
 					$productCatalogName=Marketplace Product Catalog
 					$classificationCatalog=pcmClassification
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 					$classCatalogVersion=catalogversion(catalog(id[default='$classificationCatalog']),version[default='1'])[unique=true,default='$classificationCatalog:1']
 					$classSystemVersion=systemVersion(catalog(id[default='$classificationCatalog']),version[default='1'])[unique=true]
 					$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
@@ -343,7 +343,7 @@
             	$productCatalog=mplProductCatalog
 					$productCatalogName=Marketplace Product Catalog
 					$classificationCatalog=pcmClassification
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 					$classCatalogVersion=catalogversion(catalog(id[default='$classificationCatalog']),version[default='1'])[unique=true,default='$classificationCatalog:1']
 					$classSystemVersion=systemVersion(catalog(id[default='$classificationCatalog']),version[default='1'])[unique=true]
 					$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
@@ -368,7 +368,7 @@
             	$productCatalog=mplProductCatalog
 					$productCatalogName=Marketplace Product Catalog
 					$classificationCatalog=pcmClassification
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 					$classCatalogVersion=catalogversion(catalog(id[default='$classificationCatalog']),version[default='1'])[unique=true,default='$classificationCatalog:1']
 					$classSystemVersion=systemVersion(catalog(id[default='$classificationCatalog']),version[default='1'])[unique=true]
 					$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
@@ -392,7 +392,7 @@
             	$productCatalog=mplProductCatalog
 					$productCatalogName=Marketplace Product Catalog
 					$classificationCatalog=pcmClassification
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 					$classCatalogVersion=catalogversion(catalog(id[default='$classificationCatalog']),version[default='1'])[unique=true,default='$classificationCatalog:1']
 					$classSystemVersion=systemVersion(catalog(id[default='$classificationCatalog']),version[default='1'])[unique=true]
 					$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
@@ -413,7 +413,7 @@
 			<value>#{defaultImpexProductHeader}
 				# Macros / Replacement Parameter definitions
 				$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$thumbnail=thumbnail(code, $catalogVersion)
 				$picture=picture(code, $catalogVersion)
 				$thumbnails=thumbnails(code, $catalogVersion)
@@ -438,7 +438,7 @@
 			<value>#{defaultImpexProductHeader}
 				# Macros / Replacement Parameter definitions
 				$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$thumbnail=thumbnail(code, $catalogVersion)
 				$picture=picture(code, $catalogVersion)
 				$thumbnails=thumbnails(code, $catalogVersion)
@@ -462,7 +462,7 @@
 			<value>#{defaultImpexProductHeader}
 				# Macros / Replacement Parameter definitions
 				$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$thumbnail=thumbnail(code, $catalogVersion)
 				$picture=picture(code, $catalogVersion)
 				$thumbnails=thumbnails(code, $catalogVersion)
@@ -488,7 +488,7 @@
 					$productCatalogName=Marketplace Product Catalog
 					$classificationCatalog=pcmClassification
 					$uidGroup=admingroup,marketplaceGroup,ETAILREAD
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 					
 			INSERT_UPDATE Category;code[unique=true];name([lang=en]);medias(code,$catalogVersion);$catalogVersion
 		</value>
@@ -504,7 +504,7 @@
 			<value>#{defaultImpexProductHeader}
 				# Macros / Replacement Parameter definitions
 				$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$thumbnail=thumbnail(code, $catalogVersion)
 				$picture=picture(code, $catalogVersion)
 				$thumbnails=thumbnails(code, $catalogVersion)
@@ -532,7 +532,7 @@
             	$productCatalog=mplProductCatalog
             	$preselected=preselected[default='true']
 					$productCatalogName=Marketplace Product Catalog
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 					$supercategories=supercategories(code, $catalogVersion)
 					$baseProduct=baseProduct(code,$catalogVersion)
 					$approved=approvalstatus(code)[default='check']
@@ -552,7 +552,7 @@
  	     <value> # Insert Brand
  	     $productCatalog=mplProductCatalog
 				$classificationCatalog=pcmClassification
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
                INSERT_UPDATE Brand;name[unique=true];description;productSource(code,$catalogVersion)[unique=true];$catalogVersion
             </value>
         </property>
@@ -582,7 +582,7 @@
             <value># Insert SEO
             	$productCatalog=mplProductCatalog
 				$classificationCatalog=pcmClassification
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
               INSERT_UPDATE SeoContent;seoMetaTitle[unique=true];seoMetaKeyword[unique=true];seoMetaDescription[unique=true];tags;productSource(code,$catalogVersion)[unique=true];$catalogVersion
             </value>
         </property>
@@ -598,7 +598,7 @@
  	     <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
 				$classificationCatalog=pcmClassification
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				
 			  # Insert Global Identifier
               INSERT_UPDATE GlobalIdentifier;productSource(code,$catalogVersion)[unique=true];globalIdentifierType(code);globalIdentifierTypeValue[unique=true][mode=append];$catalogVersion
@@ -618,7 +618,7 @@
             	$productCatalog=mplProductCatalog
 $productCatalogName=Marketplace Product Catalog
 $classificationCatalog=pcmClassification
-$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 $classCatalogVersion=catalogversion(catalog(id[default='$classificationCatalog']),version[default='1.0'])[unique=true,default='$classificationCatalog:1.0']
 $classSystemVersion=systemVersion(catalog(id[default='$classificationCatalog']),version[default='1.0'])[unique=true]
 $categories=target(code, $catalogVersion)[unique=true]
@@ -639,13 +639,13 @@ $language=language(isocode)[default='en'][unique=true];
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$supercategories=supercategories(code, $catalogVersion)
 				$baseProduct=baseProduct(code,$catalogVersion)
 				$approved=approvalstatus(code)[default='approved']
 				$unit=unit(code)[default='pieces']
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
-				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
+				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Online'])[unique=true,default=mplProductCatalog:Online]
 				$variantType=variantType(code)[default='PcmProductVariant']
     			$lang=en
     		      
@@ -664,13 +664,13 @@ $language=language(isocode)[default='en'][unique=true];
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$supercategories=supercategories(code, $catalogVersion)
 				$baseProduct=baseProduct(code,$catalogVersion)
 				$approved=approvalstatus(code)[default='approved']
 				$unit=unit(code)[default='pieces']
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
-				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
+				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Online'])[unique=true,default=mplProductCatalog:Online]
 				          
 				INSERT_UPDATE PcmProductVariant;code[unique=true,alias=PIMID];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];size;colour;baseProduct(code,$catalogVersion);reviews;mrp;$supercategories;deliveryModes(code);capacity;$catalogversion;$approved;$unit;
             </value>
@@ -685,13 +685,13 @@ $language=language(isocode)[default='en'][unique=true];
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$supercategories=supercategories(code, $catalogVersion)
 				$baseProduct=baseProduct(code,$catalogVersion)
 				$approved=approvalstatus(code)[default='check']
 				$unit=unit(code)[default='pieces']
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
-				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
+				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Online'])[unique=true,default=mplProductCatalog:Online]
 				          
 				INSERT_UPDATE RichAttribute;typeOfItem1(code);typeOfItem2(code);shippingmodes(code);paymentModes(code);deliveryfulfillmodes(code);cancellationwindow;returnwindow;replacementwindow;exchangeallowedwindow;warrantyType(code);warrantyPeriod;ispromotionallowed(code);leadtimeforhomedelivery;sellerfulfilledshippingcharge;emi(code);deliveryfulfillmodebyp1(code);returnfulfillmode(code);returnfulfillmodebyp1(code);sellerhandlingtime;giftwrappable(code);returnatstoreeligible(code);isfragile(code);isprecious(code);mediationrequired(code);scheduleddelivery(code);productsource(code,$catalogVersion)[unique=true];$catalogversion
 			</value>
@@ -705,13 +705,13 @@ $language=language(isocode)[default='en'][unique=true];
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$supercategories=supercategories(code, $catalogVersion)
 				$baseProduct=baseProduct(code,$catalogVersion)
 				$approved=approvalstatus(code)[default='check']
 				$unit=unit(code)[default='pieces']
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
-				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
+				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Online'])[unique=true,default=mplProductCatalog:Online]
 			    
 			    
 			    <!-- Header Before -->
@@ -732,11 +732,11 @@ $language=language(isocode)[default='en'][unique=true];
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
 				$classificationCatalog=pcmClassification
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$languages=ja,en,de,zh
 				$uidGroup=admingroup,marketplaceGroup,ETAILREAD
-				$supercategories=supercategories( code, catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged']));;;;;;;;;
-                $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged'])[unique=true,default='mplProductCatalog:Staged'];;;;;;;;;
+				$supercategories=supercategories( code, catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Online']));;;;;;;;;
+                $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Online'])[unique=true,default='mplProductCatalog:Online'];;;;;;;;;
              <!-- TISPRD-207 CHANGES -->
 <!--                 $sellerAssociationStatus=sellerAssociationStatus(code[default='yes']) -->
                <!-- Previous header -->
@@ -768,11 +768,11 @@ $language=language(isocode)[default='en'][unique=true];
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
 				$classificationCatalog=pcmClassification
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$languages=ja,en,de,zh
 				$uidGroup=admingroup,marketplaceGroup,ETAILREAD
-				$supercategories=supercategories( code, catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged']));;;;;;;;;
-                $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged'])[unique=true,default='mplProductCatalog:Staged'];;;;;;;;;
+				$supercategories=supercategories( code, catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Online']));;;;;;;;;
+                $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Online'])[unique=true,default='mplProductCatalog:Online'];;;;;;;;;
                
              INSERT_UPDATE SellerInformation;sellerArticleSku[unique=true];sellerId;delisting;$catalogVersion
             </value>
@@ -789,11 +789,11 @@ $language=language(isocode)[default='en'][unique=true];
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
 				$classificationCatalog=pcmClassification
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$languages=ja,en,de,zh
 				$uidGroup=admingroup,marketplaceGroup,ETAILREAD
-				$supercategories=supercategories( code, catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged']));;;;;;;;;
-                $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged'])[unique=true,default='mplProductCatalog:Staged'];;;;;;;;;
+				$supercategories=supercategories( code, catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Online']));;;;;;;;;
+                $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Online'])[unique=true,default='mplProductCatalog:Online'];;;;;;;;;
                
              INSERT_UPDATE SellerInformation;sellerId;delisting;blockOMS;$catalogVersion
             </value>
@@ -808,13 +808,13 @@ $language=language(isocode)[default='en'][unique=true];
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$supercategories=supercategories(code, $catalogVersion)
 				$baseProduct=baseProduct(code,$catalogVersion)
 				$approved=approvalstatus(code)[default='check']
 				$unit=unit(code)[default='pieces']
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
-				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
+				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Online'])[unique=true,default=mplProductCatalog:Online]
 				          
 				INSERT_UPDATE RichAttribute;homeDelivery(code);expressDelivery(code);clickAndCollect(code);typeOfItem1(code);typeOfItem2(code);shippingmodes(code);paymentModes(code);deliveryfulfillmodes(code);cancellationwindow;returnwindow;replacementwindow;exchangeallowedwindow;warrantyType(code);warrantyPeriod;ispromotionallowed(code);leadtimeforhomedelivery;sellerfulfilledshippingcharge;emi(code);deliveryfulfillmodebyp1(code);returnfulfillmode(code);returnfulfillmodebyp1(code);sellerhandlingtime;giftwrappable(code);returnatstoreeligible(code);isfragile(code);isprecious(code);mediationrequired(code);scheduleddelivery(code);sellerInfo(sellerArticleSKU,$catalogVersion)[unique=true];isSshipCodEligible(code);$catalogversion
         	</value>
@@ -829,11 +829,11 @@ $language=language(isocode)[default='en'][unique=true];
         <property name="header">
             <value>$productCatalog=mplProductCatalog
 				$classificationCatalog=pcmClassification
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$languages=ja,en,de,zh
 				$uidGroup=admingroup,marketplaceGroup,ETAILREAD
-				$supercategories=supercategories( code, catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged']));;;;;;;;;
-                $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged'])[unique=true,default='mplProductCatalog:Staged'];;;;;;;;;
+				$supercategories=supercategories( code, catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Online']));;;;;;;;;
+                $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Online'])[unique=true,default='mplProductCatalog:Online'];;;;;;;;;
                $sellerAssociationStatus=sellerAssociationStatus(code[default='yes'])
                
              INSERT_UPDATE SellerInformation;sellerArticleSku[unique=true][mode=append];USSID[unique=true][mode=append];onlineExclusive(code);$catalogVersion;
@@ -848,7 +848,7 @@ $language=language(isocode)[default='en'][unique=true];
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				UPDATE Product;code[unique=true];isPromotedProduct;promotedProductPriority;$catalogVersion 
             </value>
         </property>
@@ -864,7 +864,7 @@ $language=language(isocode)[default='en'][unique=true];
             	$productCatalog=mplProductCatalog
 					$productCatalogName=Marketplace Product Catalog
 					$classificationCatalog=pcmClassification
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 					$classCatalogVersion=catalogversion(catalog(id[default='$classificationCatalog']),version[default='1'])[unique=true,default='$classificationCatalog:1']
 					$classSystemVersion=systemVersion(catalog(id[default='$classificationCatalog']),version[default='1'])[unique=true]
 					$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
@@ -889,7 +889,7 @@ $language=language(isocode)[default='en'][unique=true];
             	$productCatalog=mplProductCatalog
 					$productCatalogName=Marketplace Product Catalog
 					$classificationCatalog=pcmClassification
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 					$classCatalogVersion=catalogversion(catalog(id[default='$classificationCatalog']),version[default='1'])[unique=true,default='$classificationCatalog:1']
 					$classSystemVersion=systemVersion(catalog(id[default='$classificationCatalog']),version[default='1'])[unique=true]
 					$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
@@ -914,7 +914,7 @@ $language=language(isocode)[default='en'][unique=true];
             	$productCatalog=mplProductCatalog
 					$productCatalogName=Marketplace Product Catalog
 					$classificationCatalog=pcmClassification
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 					$classCatalogVersion=catalogversion(catalog(id[default='$classificationCatalog']),version[default='1'])[unique=true,default='$classificationCatalog:1']
 					$classSystemVersion=systemVersion(catalog(id[default='$classificationCatalog']),version[default='1'])[unique=true]
 					$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
@@ -938,7 +938,7 @@ $language=language(isocode)[default='en'][unique=true];
             	$productCatalog=mplProductCatalog
 					$productCatalogName=Marketplace Product Catalog
 					$classificationCatalog=pcmClassification
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 					$classCatalogVersion=catalogversion(catalog(id[default='$classificationCatalog']),version[default='1'])[unique=true,default='$classificationCatalog:1']
 					$classSystemVersion=systemVersion(catalog(id[default='$classificationCatalog']),version[default='1'])[unique=true]
 					$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
@@ -959,7 +959,7 @@ $language=language(isocode)[default='en'][unique=true];
 			<value>#{defaultImpexProductHeader}
 				# Macros / Replacement Parameter definitions
 				$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$thumbnail=thumbnail(code, $catalogVersion)
 				$picture=picture(code, $catalogVersion)
 				$thumbnails=thumbnails(code, $catalogVersion)
@@ -984,7 +984,7 @@ $language=language(isocode)[default='en'][unique=true];
 			<value>#{defaultImpexProductHeader}
 				# Macros / Replacement Parameter definitions
 				$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$thumbnail=thumbnail(code, $catalogVersion)
 				$picture=picture(code, $catalogVersion)
 				$thumbnails=thumbnails(code, $catalogVersion)
@@ -1008,7 +1008,7 @@ $language=language(isocode)[default='en'][unique=true];
 			<value>#{defaultImpexProductHeader}
 				# Macros / Replacement Parameter definitions
 				$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$thumbnail=thumbnail(code, $catalogVersion)
 				$picture=picture(code, $catalogVersion)
 				$thumbnails=thumbnails(code, $catalogVersion)
@@ -1034,7 +1034,7 @@ $language=language(isocode)[default='en'][unique=true];
 					$productCatalogName=Marketplace Product Catalog
 					$classificationCatalog=pcmClassification
 					$uidGroup=admingroup,marketplaceGroup,ETAILREAD
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 					
 			INSERT_UPDATE Category;code[unique=true];name([lang=en]);medias(code,$catalogVersion);$catalogVersion
 		</value>
@@ -1050,7 +1050,7 @@ $language=language(isocode)[default='en'][unique=true];
 			<value>#{defaultImpexProductHeader}
 				# Macros / Replacement Parameter definitions
 				$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$thumbnail=thumbnail(code, $catalogVersion)
 				$picture=picture(code, $catalogVersion)
 				$thumbnails=thumbnails(code, $catalogVersion)
@@ -1078,7 +1078,7 @@ $language=language(isocode)[default='en'][unique=true];
             	$productCatalog=mplProductCatalog
             	$preselected=preselected[default='true']
 					$productCatalogName=Marketplace Product Catalog
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 					$supercategories=supercategories(code, $catalogVersion)
 					$baseProduct=baseProduct(code,$catalogVersion)
 					$approved=approvalstatus(code)[default='check']
@@ -1097,7 +1097,7 @@ $language=language(isocode)[default='en'][unique=true];
  	     <value> # Insert Brand
  	     $productCatalog=mplProductCatalog
 				$classificationCatalog=pcmClassification
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
                INSERT_UPDATE Brand;name[unique=true];description;productSource(code,$catalogVersion)[unique=true];$catalogVersion
             </value>
         </property>
@@ -1113,7 +1113,7 @@ $language=language(isocode)[default='en'][unique=true];
             <value># Insert SEO
             	$productCatalog=mplProductCatalog
 				$classificationCatalog=pcmClassification
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
               INSERT_UPDATE SeoContent;seoMetaTitle[unique=true];seoMetaKeyword[unique=true];seoMetaDescription[unique=true];tags;productSource(code,$catalogVersion)[unique=true];$catalogVersion
             </value>
         </property>
@@ -1129,7 +1129,7 @@ $language=language(isocode)[default='en'][unique=true];
  	     <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
 				$classificationCatalog=pcmClassification
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				
 			  # Insert Global Identifier
               INSERT_UPDATE GlobalIdentifier;productSource(code,$catalogVersion)[unique=true];globalIdentifierType(code);globalIdentifierTypeValue[unique=true][mode=append];$catalogVersion
@@ -1149,7 +1149,7 @@ $language=language(isocode)[default='en'][unique=true];
             	$productCatalog=mplProductCatalog
 $productCatalogName=Marketplace Product Catalog
 $classificationCatalog=pcmClassification
-$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 $classCatalogVersion=catalogversion(catalog(id[default='$classificationCatalog']),version[default='1.0'])[unique=true,default='$classificationCatalog:1.0']
 $classSystemVersion=systemVersion(catalog(id[default='$classificationCatalog']),version[default='1.0'])[unique=true]
 $categories=target(code, $catalogVersion)[unique=true]
@@ -1170,23 +1170,23 @@ $language=language(isocode)[default='en'][unique=true];
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$supercategories=supercategories(code, $catalogVersion)
 				$baseProduct=baseProduct(code,$catalogVersion)
 				$approved=approvalstatus(code)[default='approved']
 				$unit=unit(code)[default='pieces']
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
-				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
+				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Online'])[unique=true,default=mplProductCatalog:Online]
 				$variantType=variantType(code)[default='PcmProductVariant']
     			$lang=en
     		      
 				
-				INSERT_UPDATE Product;code[unique=true];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];reviews;mrp;$supercategories[cellDecorator=com.tisl.mpl.core.celldecorator.LuxuryProductCategoryDecorator];deliveryModes(code);variantType(code);luxIndicator(code)[default='marketplace'];sequenceId[translator=de.hybris.platform.acceleratorservices.dataimport.batch.converter.SequenceIdTranslator];$catalogversion;$approved;$unit
+				INSERT_UPDATE Product;code[unique=true];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];reviews;mrp;$supercategories[cellDecorator=com.tisl.mpl.core.celldecorator.LuxuryProductCategoryDecorator];deliveryModes(code);variantType(code);luxIndicator(code)[default='marketplace'];$catalogversion;$approved;$unit
             </value>
         </property>
         <property name="impexRow">
         <!-- TISPRD-9023 Changing deliveryModes to Optional from Mandatory -->
-            <value>;{+0};{+1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11};{S}</value>
+            <value>;{+0};{+1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11}</value>
         </property>
         </bean>
      
@@ -1196,13 +1196,13 @@ $language=language(isocode)[default='en'][unique=true];
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$supercategories=supercategories(code, $catalogVersion)
 				$baseProduct=baseProduct(code,$catalogVersion)
 				$approved=approvalstatus(code)[default='approved']
 				$unit=unit(code)[default='pieces']
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
-				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
+				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Online'])[unique=true,default=mplProductCatalog:Online]
 				          
 				INSERT_UPDATE PcmProductVariant;code[unique=true,alias=PIMID];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];size;colour;baseProduct(code,$catalogVersion);reviews;mrp;$supercategories[cellDecorator=com.tisl.mpl.core.celldecorator.LuxuryVariantProductCategoryDecorator];deliveryModes(code);capacity;luxIndicator(code)[default='marketplace'];$catalogversion;$approved;$unit;
             </value>
@@ -1218,13 +1218,13 @@ $language=language(isocode)[default='en'][unique=true];
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$supercategories=supercategories(code, $catalogVersion)
 				$baseProduct=baseProduct(code,$catalogVersion)
 				$approved=approvalstatus(code)[default='check']
 				$unit=unit(code)[default='pieces']
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
-				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
+				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Online'])[unique=true,default=mplProductCatalog:Online]
 				          
 				INSERT_UPDATE RichAttribute;typeOfItem1(code);typeOfItem2(code);shippingmodes(code);paymentModes(code);deliveryfulfillmodes(code);cancellationwindow;returnwindow;replacementwindow;exchangeallowedwindow;warrantyType(code);warrantyPeriod;ispromotionallowed(code);leadtimeforhomedelivery;sellerfulfilledshippingcharge;emi(code);productsource(code,$catalogVersion)[unique=true];$catalogversion
 			</value>
@@ -1238,13 +1238,13 @@ $language=language(isocode)[default='en'][unique=true];
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$supercategories=supercategories(code, $catalogVersion)
 				$baseProduct=baseProduct(code,$catalogVersion)
 				$approved=approvalstatus(code)[default='check']
 				$unit=unit(code)[default='pieces']
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
-				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
+				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Online'])[unique=true,default=mplProductCatalog:Online]
 			    
 			    
 			    Header Before
@@ -1265,11 +1265,11 @@ $language=language(isocode)[default='en'][unique=true];
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
 				$classificationCatalog=pcmClassification
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$languages=ja,en,de,zh
 				$uidGroup=admingroup,marketplaceGroup,ETAILREAD
-				$supercategories=supercategories( code, catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged']));;;;;;;;;
-                $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged'])[unique=true,default='mplProductCatalog:Staged'];;;;;;;;;
+				$supercategories=supercategories( code, catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Online']));;;;;;;;;
+                $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Online'])[unique=true,default='mplProductCatalog:Online'];;;;;;;;;
              TISPRD-207 CHANGES
                 $sellerAssociationStatus=sellerAssociationStatus(code[default='yes'])
                Previous header
@@ -1301,11 +1301,11 @@ INSERT_UPDATE SellerInformation;productSource(code,$catalogVersion);sellerSKU[un
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
 				$classificationCatalog=pcmClassification
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$languages=ja,en,de,zh
 				$uidGroup=admingroup,marketplaceGroup,ETAILREAD
-				$supercategories=supercategories( code, catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged']));;;;;;;;;
-                $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged'])[unique=true,default='mplProductCatalog:Staged'];;;;;;;;;
+				$supercategories=supercategories( code, catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Online']));;;;;;;;;
+                $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Online'])[unique=true,default='mplProductCatalog:Online'];;;;;;;;;
                
              INSERT_UPDATE SellerInformation;sellerArticleSku[unique=true];sellerId;delisting;$catalogVersion
             </value>
@@ -1322,11 +1322,11 @@ INSERT_UPDATE SellerInformation;productSource(code,$catalogVersion);sellerSKU[un
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
 				$classificationCatalog=pcmClassification
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$languages=ja,en,de,zh
 				$uidGroup=admingroup,marketplaceGroup,ETAILREAD
-				$supercategories=supercategories( code, catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged']));;;;;;;;;
-                $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged'])[unique=true,default='mplProductCatalog:Staged'];;;;;;;;;
+				$supercategories=supercategories( code, catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Online']));;;;;;;;;
+                $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Online'])[unique=true,default='mplProductCatalog:Online'];;;;;;;;;
                
              INSERT_UPDATE SellerInformation;sellerId;delisting;blockOMS;$catalogVersion
             </value>
@@ -1341,13 +1341,13 @@ INSERT_UPDATE SellerInformation;productSource(code,$catalogVersion);sellerSKU[un
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$supercategories=supercategories(code, $catalogVersion)
 				$baseProduct=baseProduct(code,$catalogVersion)
 				$approved=approvalstatus(code)[default='check']
 				$unit=unit(code)[default='pieces']
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
-				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
+				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Online'])[unique=true,default=mplProductCatalog:Online]
 				          
 				INSERT_UPDATE RichAttribute;homeDelivery(code);expressDelivery(code);clickAndCollect(code);typeOfItem1(code);typeOfItem2(code);shippingmodes(code);paymentModes(code);deliveryfulfillmodes(code);cancellationwindow;returnwindow;replacementwindow;exchangeallowedwindow;warrantyType(code);warrantyPeriod;ispromotionallowed(code);leadtimeforhomedelivery;sellerfulfilledshippingcharge;emi(code);sellerInfo(sellerArticleSKU,$catalogVersion)[unique=true];isSshipCodEligible(code);$catalogversion
 			</value>
@@ -1362,11 +1362,11 @@ INSERT_UPDATE SellerInformation;productSource(code,$catalogVersion);sellerSKU[un
         <property name="header">
             <value>$productCatalog=mplProductCatalog
 				$classificationCatalog=pcmClassification
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$languages=ja,en,de,zh
 				$uidGroup=admingroup,marketplaceGroup,ETAILREAD
-				$supercategories=supercategories( code, catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged']));;;;;;;;;
-                $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged'])[unique=true,default='mplProductCatalog:Staged'];;;;;;;;;
+				$supercategories=supercategories( code, catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Online']));;;;;;;;;
+                $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Online'])[unique=true,default='mplProductCatalog:Online'];;;;;;;;;
                $sellerAssociationStatus=sellerAssociationStatus(code[default='yes'])
                
              INSERT_UPDATE SellerInformation;sellerArticleSku[unique=true][mode=append];USSID[unique=true][mode=append];onlineExclusive(code);$catalogVersion;
@@ -1381,7 +1381,7 @@ INSERT_UPDATE SellerInformation;productSource(code,$catalogVersion);sellerSKU[un
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				UPDATE Product;code[unique=true];isPromotedProduct;promotedProductPriority;$catalogVersion 
             </value>
         </property>

@@ -39,10 +39,10 @@
 									 
 									 <div class="offer-modal-heading">OFFER</div>
 									 <div class="offer-outer-wrapper">
-									 <h3 class="product-name highlight mob-promo">
+									 <h3 class="product-name highlight mob-promo primary_promo_title">
 												${product.potentialPromotions[0].title}
 											</h3>
-										<div class="Left"><c:forEach
+										<div class="Left primary_promo_img"><c:forEach
 												items="${product.potentialPromotions[0].giftProduct}"
 												var="promotionProduct">
 												<a href="${request.contextPath}${promotionProduct.url}">
@@ -51,7 +51,7 @@
 												</a>
 											</c:forEach>
 										</div>
-										<div class="pdp-promoDesc right">
+										<div class="pdp-promoDesc right primary_promo_desc">
 											<h3 class="product-name highlight desk-promo">
 												${product.potentialPromotions[0].title}
 											</h3>
@@ -114,10 +114,10 @@
 								 <li>
 								 <div class="offer-modal-heading">OFFER</div>
 								 <div class="offer-outer-wrapper">
-								 <h3 class="product-name highlight mob-promo">
+								 <h3 class="product-name highlight mob-promo primary_promo_title">
 											${product.potentialPromotions[0].title}
 										</h3>
-									<div class="Left"> <c:forEach
+									<div class="Left primary_promo_img"> <c:forEach
 											items="${product.potentialPromotions[0].giftProduct}"
 											var="promotionProduct">
 											<a href="${request.contextPath}${promotionProduct.url}">
@@ -126,7 +126,7 @@
 											</a>
 										</c:forEach>
 									</div>
-									<div class="pdp-promoDesc right">
+									<div class="pdp-promoDesc right primary_promo_desc">
 										<h3 class="product-name highlight desk-promo">
 											${product.potentialPromotions[0].title}
 										</h3>

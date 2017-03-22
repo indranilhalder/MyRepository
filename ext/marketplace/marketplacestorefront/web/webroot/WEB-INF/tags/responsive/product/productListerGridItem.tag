@@ -260,16 +260,17 @@
 				<!-- Added for Addtocart -->
 			</div>
 			<div class="details short-info">
-				<!-- Added for colour swatch -->
-
+				<!-- Added for colour swatch -->			
 				<ul class="color-swatch">
 
 					<c:choose>
 						<c:when test="${fn:length(product.swatchColor)>6}">
 							<c:forEach items="${product.swatchColor}" var="swatchColor"
 								begin="1" end="6">
+								<c:set var="swatchUriAry"
+									value="${fn:split(swatchColor, '||')}" />
 								<c:set var="swatchColorAry"
-									value="${fn:split(swatchColor, '_')}" />
+									value="${fn:split(swatchUriAry[0], '_')}" />
 								<c:choose>
 									<c:when
 										test="${fn:startsWith(swatchColorAry[0],'Multi') || fn:startsWith(swatchColorAry[0],'multi')}">
@@ -279,9 +280,15 @@
 									</c:when>
 									<c:otherwise>
 										<c:set var="colorHexCode" value="#${swatchColorAry[1]}" />
-										<li><span
+										<li><%-- <span
 											style="background-color: ${colorHexCode};border: 1px solid rgb(204, 211, 217);"
-											title="${swatchColorAry[0]}"></span></li>
+											title="${swatchColorAry[0]}"></span> --%>
+											<a  href="/p-${swatchUriAry[1]}"> 
+												<span style="background-color: ${colorHexCode};border: 1px solid rgb(204, 211, 217);"
+												title="${swatchColorAry[0]}"></span>
+											</a>
+	
+											</li>
 									</c:otherwise>
 								</c:choose>
 							</c:forEach>
@@ -289,8 +296,10 @@
 						</c:when>
 						<c:otherwise>
 							<c:forEach items="${product.swatchColor}" var="swatchColor">
+								<c:set var="swatchUriAry"
+									value="${fn:split(swatchColor, '||')}" />
 								<c:set var="swatchColorAry"
-									value="${fn:split(swatchColor, '_')}" />
+									value="${fn:split(swatchUriAry[0], '_')}" />
 								<c:choose>
 									<c:when
 										test="${fn:startsWith(swatchColorAry[0],'Multi') || fn:startsWith(swatchColorAry[0],'multi')}">
@@ -300,9 +309,14 @@
 									</c:when>
 									<c:otherwise>
 										<c:set var="colorHexCode" value="#${swatchColorAry[1]}" />
-										<li><span
+										<li><%-- <span
 											style="background-color: ${colorHexCode};border: 1px solid rgb(204, 211, 217);"
-											title="${swatchColorAry[0]}"></span></li>
+											title="${swatchColorAry[0]}"></span> --%>
+											<a  href="/p-${swatchUriAry[1]}"> 
+												<span style="background-color: ${colorHexCode};border: 1px solid rgb(204, 211, 217);"
+												title="${swatchColorAry[0]}"></span>
+											</a>
+	</li>
 									</c:otherwise>
 								</c:choose>
 							</c:forEach>

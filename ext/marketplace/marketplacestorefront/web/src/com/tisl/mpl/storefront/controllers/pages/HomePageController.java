@@ -1131,7 +1131,9 @@ public class HomePageController extends AbstractPageController
 
 				if (null != notificationMessagelist && !notificationMessagelist.isEmpty())
 				{
+					/* final int notificationCount = notificationMessagelist.size(); */
 					int notificationCount = 0;
+
 					for (final NotificationData single : notificationMessagelist)
 					{
 						if (single.getNotificationRead() != null && !single.getNotificationRead().booleanValue())
@@ -1140,6 +1142,7 @@ public class HomePageController extends AbstractPageController
 						}
 
 					}
+
 
 					header.put("notificationCount", notificationCount);
 				}
@@ -1237,41 +1240,6 @@ public class HomePageController extends AbstractPageController
 			model.addAttribute("wrapAfter", fData.getWrapAfter());
 			//			//Need help section
 			model.addAttribute("contactNumber", fData.getContactNumber());
-
-			//			FooterComponentModel footer = null;
-			//			NeedHelpComponentModel needHelpFooter = null;
-			//			final ContentSlotModel footerSlot = contentSlotService.getContentSlotForId(slotId);
-			//
-			//			if (null != footerSlot && CollectionUtils.isNotEmpty(footerSlot.getCmsComponents()))
-			//			{
-			//				for (final AbstractCMSComponentModel cmsComponentModel : footerSlot.getCmsComponents())
-			//				{
-			//					if (cmsComponentModel instanceof FooterComponentModel)
-			//					{
-			//						footer = (FooterComponentModel) cmsComponentModel;
-			//					}
-			//					if (cmsComponentModel instanceof NeedHelpComponentModel)
-			//					{
-			//						needHelpFooter = (NeedHelpComponentModel) cmsComponentModel;
-			//					}
-			//				}
-			//			}
-			//
-			//
-			//			//final FooterComponentModel footer = cmsComponentService.getSimpleCMSComponent(componentId);
-			//			model.addAttribute("footerSocialIconList", footer.getFooterImageList());
-			//			model.addAttribute("footerText", footer.getFooterText());
-			//			model.addAttribute("notice", footer.getNotice());
-			//			model.addAttribute("footerAppImageList", footer.getFooterAppImageList());
-			//			model.addAttribute("navigationNodes", footer.getNavigationNodes());
-			//			model.addAttribute("wrapAfter", footer.getWrapAfter());
-			//
-			//			//Need help section
-			//			model.addAttribute("contactNumber", (needHelpFooter == null) ? "" : needHelpFooter.getContactNumber());
-
-
-
-
 		}
 
 		catch (final EtailBusinessExceptions e)

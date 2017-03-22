@@ -42,7 +42,9 @@
 <input type="hidden" id="pdpBuyboxWinnerSellerID" value=''/>
 <input type="hidden" id="pdpOtherSellerIDs" value=''/>
 <!-- TPR-429 END-->
-
+<!-- For Data Layer Schema changes -->
+<input type="hidden" id="product_stock_count" value="${product_stock_count}" />
+<input type="hidden" id="out_of_stock" value="${out_of_stock}" />
 <!-- End Tealium -->
 	<input type="hidden" maxlength="10" size="1" id="pinCodeCheckedFlag" name="pinCodeCheckedFlag" value="${pincodeChecked}" />	
 		<input type="hidden" value="${productCategoryType}" id="categoryType"/>

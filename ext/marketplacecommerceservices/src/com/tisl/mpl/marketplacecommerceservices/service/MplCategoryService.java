@@ -23,4 +23,15 @@ public interface MplCategoryService
 	CategoryModel getMatchingCategory(final String categoryData);
 
 	CategoryModel getCategoryModelForCode(CatalogVersionModel catModel, String catalogCode);
+
+
+	/**
+	 * Returns List of Super categories for a list of Category
+	 *
+	 * CAR 178/179/180
+	 *
+	 * @param categoryList
+	 * @return Collection<CategoryModel>
+	 */
+	//Collection<CategoryModel> getAllSupercategoriesForCategoryList(List<CategoryModel> categoryList);
 }

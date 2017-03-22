@@ -236,10 +236,10 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			final Map<Integer, String> map, final Integer errorPosition, final boolean headerRowIncluded)
 	{
 		LOG.debug("Mapping to product starts");
-		int lineNo = 0;
+		//int lineNo = 0;
 		while (reader.readNextLine())
 		{
-			lineNo++;
+			//lineNo++;
 			final Map<Integer, String> line = reader.getLine();
 			final StringBuilder invalidColumns = new StringBuilder();
 
@@ -464,17 +464,6 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		//Making Components
 		for (final Map.Entry<String, String> entry : contentMap.entrySet())
 		{
-			/*
-			 * if (entry.getKey().startsWith("Image") && StringUtils.isNotEmpty(entry.getValue())) { final
-			 * SimpleBannerComponentModel sm = makeBannerComponent(entry.getValue(), entry.getKey(), line, writer,
-			 * isUpdatefeed); componentlist.add(sm); } else if (entry.getKey().startsWith("Video") &&
-			 * StringUtils.isNotEmpty(entry.getValue())) { final VideoComponentModel vm =
-			 * makeVideoComponent(entry.getValue(), entry.getKey(), line, writer, isUpdatefeed); componentlist.add(vm);
-			 * 
-			 * } else if (entry.getKey().startsWith("Text") && StringUtils.isNotEmpty(entry.getValue())) { final
-			 * CMSParagraphComponentModel cmspara = makeTextComponent(entry.getValue(), entry.getKey(), line, writer,
-			 * isUpdatefeed); componentlist.add(cmspara); }
-			 */
 			if (entry.getKey().startsWith("Image"))
 			{
 				SimpleBannerComponentModel sm = null;
@@ -692,13 +681,6 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			int index = 0;
 			for (final AbstractCMSComponentModel component : componentlist)
 			{
-				/*
-				 * final List<AbstractCMSComponentModel> tempcomponentlist = new ArrayList<>(); cSlot = new
-				 * ContentSlotModel(); cSlot.setUid(productCode + "_" + template + "_" + component.getUid());
-				 * cSlot.setName(productCode + "_" + template + "_" + component.getUid()); tempcomponentlist.add(component);
-				 * cSlot.setActive(Boolean.TRUE); cSlot.setCmsComponents(tempcomponentlist);
-				 * cSlot.setCatalogVersion(getCatalogVersion()); cSlotList.add(cSlot);
-				 */
 				if (component != null)
 				{
 					final List<AbstractCMSComponentModel> tempcomponentlist = new ArrayList<>();

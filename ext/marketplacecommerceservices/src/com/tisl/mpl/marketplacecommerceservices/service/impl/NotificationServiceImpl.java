@@ -8,6 +8,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.security.PrincipalModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.processengine.constants.GeneratedProcessengineConstants.Enumerations.ProcessState;
@@ -53,6 +54,7 @@ import com.tisl.mpl.marketplacecommerceservices.event.OrderPlacedEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.PaymentPendingEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.PaymentTimeoutEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.CouponRestrictionService;
+import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.sns.push.service.MplSNSMobilePushService;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -99,6 +101,8 @@ public class NotificationServiceImpl implements NotificationService
 		return businessProcessService;
 	}
 
+	@Autowired
+	private ExtendedUserService extendedUserService;
 
 	private static final Logger LOG = Logger.getLogger(NotificationServiceImpl.class);
 
@@ -182,7 +186,11 @@ public class NotificationServiceImpl implements NotificationService
 		{
 			final List<OrderStatusNotificationModel> notificationList = getNotificationDao().getModelforDetails(customerId, orderNo,
 					consignmentNo, shopperStatus);
-			final List<VoucherStatusNotificationModel> voucherList = getModelForVoucherIdentifier(orderNo);
+			//final List<VoucherStatusNotificationModel> voucherList = getModelForVoucherIdentifier(orderNo);
+			//final UserModel user = extendedUserService.getUserForUid(customerId);
+			//get List of all voucher notification applicable for the customer
+			//final List<VoucherStatusNotificationModel> voucherNotificationList = user.getVoucher();
+			//VoucherStatusNotificationModel voucherNotificationTobeRemoved = null;
 			final Boolean isRead = Boolean.TRUE;
 			for (final OrderStatusNotificationModel osn : notificationList)
 			{
@@ -190,14 +198,38 @@ public class NotificationServiceImpl implements NotificationService
 				getModelService().save(osn);
 
 			}
-			for (final VoucherStatusNotificationModel vsn : voucherList)
-			{
-				vsn.setIsRead(isRead);
-			}
-			if (CollectionUtils.isNotEmpty(voucherList)) //Saving the voucherList
-			{
-				getModelService().saveAll(voucherList);
-			}
+			/*
+			 * for (final VoucherStatusNotificationModel vsn : voucherList) { vsn.setIsRead(isRead); } if
+			 * (CollectionUtils.isNotEmpty(voucherList)) //Saving the voucherList { getModelService().saveAll(voucherList);
+			 * }
+			 */
+			final UserModel user = extendedUserService.getUserForUid(customerId);
+			//final List<VoucherStatusNotificationModel> voucherNotificationList = user.getVoucher();
+			//final List<VoucherStatusNotificationModel> voucherNotificationListModifiable = new ArrayList<VoucherStatusNotificationModel>();
+			//final VoucherStatusNotificationModel voucherNotificationTobeRemoved = null;
+
+			/*
+			 * for (final VoucherStatusNotificationModel vsn : voucherNotificationList) {
+			 *
+			 * if (vsn.getVoucherCode().equalsIgnoreCase(orderNo)) { //continue; //voucherNotificationTobeRemoved = vsn;
+			 * break; }
+			 */
+			/*
+			 * else { //voucherNotificationListModifiable.add(vsn); }
+			 */
+
+			//}
+			//Removing the voucher notification from customers voucher notification List
+			/*
+			 * if (voucherNotificationTobeRemoved != null) {
+			 * voucherNotificationList.remove(voucherNotificationTobeRemoved); }
+			 */
+			//set the updated voucherNotification Data against user
+			//user.setVoucher(voucherNotificationListModifiable);
+			//user.setVoucher(voucherNotificationList);
+			//save the user
+			modelService.save(user);
+
 		}
 		catch (final ModelSavingException e)
 		{
@@ -649,10 +681,12 @@ public class NotificationServiceImpl implements NotificationService
 				if (dateRestrObj != null && userRestrObj != null && userRestrObj.getPositive().booleanValue()
 						&& CollectionUtils.isNotEmpty(userList))
 				{
+
 					for (final PrincipalModel user : userList)
 					{
 						restrUserUidList.add(user.getUid());
 					}
+
 
 					if (null != voucherIndentifier && null != voucherCode)
 					{
@@ -669,6 +703,7 @@ public class NotificationServiceImpl implements NotificationService
 						voucherStatus.setVoucherIdentifier(voucherIndentifier);
 						voucherStatus.setVoucherCode(voucherCode);
 						voucherStatus.setCustomerUidList(restrUserUidList);
+						//voucherStatus.setUsers(userList);
 						voucherStatus.setVoucherStartDate(dateRestrObj.getStartDate());
 						voucherStatus.setVoucherEndDate(dateRestrObj.getEndDate());
 						voucherStatus.setIsRead(isRead);

@@ -640,10 +640,9 @@
 			type="java.util.List&lt;de.hybris.platform.commercewebservicescommons.dto.user.AddressListWsDTO>" />
 		<property name="deliveryDetails"
 			type="de.hybris.platform.commercewebservicescommons.dto.user.AddressWsDTO" />
-	<!-- Potential Promotion Details -->
+		<!-- Potential Promotion Details	-->
 		<property name="selectedDeliveryMode" type="com.tisl.mpl.wsdto.MobdeliveryModeWsDTO" />
-		<property name="elligibleDeliveryMode"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.MobdeliveryModeWsDTO>" />
+		<property name="elligibleDeliveryMode" type="java.util.List&lt;com.tisl.mpl.wsdto.MobdeliveryModeWsDTO>" />
 		<property name="fullfillmentType" type="String" />
 		<property name="capacity" type="String" />
 		<property name="isGiveAway" type="String" />
@@ -658,17 +657,15 @@
 		<property name="rootCategory" type="String" />
 		<property name="productLevelDiscount" type="java.lang.Double" />
 		<property name="productCategoryId" type="String" />
-		<!-- Added for luxury -->
-		<property name="isLuxury" type="String" />
-
-
-		<!-- -->
-		<property name="discountPrice"
-			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<!--  Added for luxury -->
+		<property name="isLuxury" type="String" /> 
+		<!-- Added for CAR-57: Check pincode decomission -->
+		<property name="pinCodeResponse" type="de.hybris.platform.commercefacades.product.data.PinCodeResponseData" /> 
+		<!-- 	-->	
+		<property name="discountPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="isPercentage" type="String" />
 		<property name="percentagePromotion" type="String" />
-		<property name="cartDiscountPrice"
-			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cartDiscountPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cartIsPercentage" type="String" />
 		<property name="cartPercentagePromotion" type="String" />
 		<property name="trackingAWB" type="String" />

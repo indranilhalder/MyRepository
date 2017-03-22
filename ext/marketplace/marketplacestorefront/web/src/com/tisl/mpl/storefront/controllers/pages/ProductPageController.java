@@ -53,6 +53,7 @@ import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
 import de.hybris.platform.commerceservices.url.UrlResolver;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
@@ -68,6 +69,7 @@ import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -487,6 +489,10 @@ public class ProductPageController extends MidPageController
 		String productUnitPrice = null;
 		String productSubCategoryName = null;
 
+		//For Analytics Data Layer schema changes
+		int productStock = 0;
+
+
 		try
 		{
 
@@ -541,14 +547,26 @@ public class ProductPageController extends MidPageController
 							LOG.error("Error in fetching price for tealium for product code : " + productData.getCode());
 						}
 
-						//TPR-4358 | product availibity online
-						if (buyboxdata.getAvailable() != null && buyboxdata.getAvailable().intValue() > 0)
+						if (buyboxdata.getAvailable() != null)
 						{
-							model.addAttribute("product_availability", "Available online");
+							productStock = buyboxdata.getAvailable().intValue();
+							model.addAttribute("product_stock_count", productStock);
+
+						}
+
+						populateOtherPriceDataForTealium(model, productUnitPrice, productPrice);
+
+
+						//TPR-4358 | product availibity online
+						if (productStock > 0)
+						{
+							model.addAttribute("out_of_stock", Boolean.FALSE); //For tealium
+							model.addAttribute("product_availability", "Available online"); //For Schema.org
 						}
 						else
 						{
-							model.addAttribute("product_availability", "Not Available online");
+							model.addAttribute("out_of_stock", Boolean.TRUE); //For Tealium
+							model.addAttribute("product_availability", "Not Available online"); //For Schema.org
 						}
 					}
 					//}
@@ -568,7 +586,7 @@ public class ProductPageController extends MidPageController
 
 
 			}
-			model.addAttribute("product_unit_price", productUnitPrice);
+
 			if (CollectionUtils.isNotEmpty(breadcrumbs))
 			{
 				model.addAttribute("site_section", breadcrumbs.get(0).getName());
@@ -586,7 +604,12 @@ public class ProductPageController extends MidPageController
 				}
 				model.addAttribute("page_name", "Product Details:" + breadcrumbName);
 			}
-			model.addAttribute("product_list_price", productPrice);
+			final DecimalFormat df = new DecimalFormat("0.00");
+			model.addAttribute("product_unit_price", df.format(Double.parseDouble(productUnitPrice)));
+			model.addAttribute("product_list_price", df.format(Double.parseDouble(productPrice)));
+			//model.addAttribute("product_list_price", productPrice);
+
+			//Rounding MOP and MRP upto 2 decimal places
 			model.addAttribute("product_name", productName);
 			model.addAttribute("product_sku", productSku);
 			model.addAttribute("page_category_name", "");
@@ -635,6 +658,25 @@ public class ProductPageController extends MidPageController
 			LOG.error("Exception while populating tealium Data for product" + productData.getCode() + ":::" + ex.getMessage());
 			//throw ex;
 		}
+	}
+
+	/**
+	 * @param model
+	 * @param productUnitPrice
+	 * @param productPrice
+	 */
+	//For Analytics Data layer schema changes
+	private void populateOtherPriceDataForTealium(final Model model, final String productUnitPrice, final String productPrice)
+	{
+		//final double mrp = Integer.parseInt(productUnitPrice);
+		//final double mop = Integer.parseInt(productPrice);
+		final double mrp = Double.parseDouble(productUnitPrice);
+		final double mop = Double.parseDouble(productPrice);
+		final double discount = mrp - mop;
+		final double percentageDiscount = (discount / mrp) * 100;
+		final BigDecimal roundedOffValue = new BigDecimal((int) percentageDiscount);
+		model.addAttribute("product_discount", new BigDecimal((int) discount));
+		model.addAttribute("product_discount_percentage", roundedOffValue);
 	}
 
 	/**
@@ -795,18 +837,35 @@ public class ProductPageController extends MidPageController
 			{
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK,
 						null != buyboxdata.getAvailable() ? buyboxdata.getAvailable() : ModelAttributetConstants.NOVALUE);
+
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, null != buyboxdata.getSpecialPrice()
-						&& null != buyboxdata.getSpecialPrice().getFormattedValueNoDecimal()
-						&& !buyboxdata.getSpecialPrice().getFormattedValueNoDecimal().isEmpty() ? buyboxdata.getSpecialPrice()
-						.getFormattedValueNoDecimal() : ModelAttributetConstants.NOVALUE);
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, null != buyboxdata.getPrice()
-						&& null != buyboxdata.getPrice().getFormattedValueNoDecimal()
-						&& !buyboxdata.getPrice().getFormattedValueNoDecimal().isEmpty() ? buyboxdata.getPrice()
-						.getFormattedValueNoDecimal() : ModelAttributetConstants.NOVALUE);
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, null != buyboxdata.getMrp()
-						&& null != buyboxdata.getMrp().getFormattedValueNoDecimal()
-						&& !buyboxdata.getMrp().getFormattedValueNoDecimal().isEmpty() ? buyboxdata.getMrp()
-						.getFormattedValueNoDecimal() : ModelAttributetConstants.NOVALUE);
+						&& null != buyboxdata.getSpecialPrice().getFormattedValue()
+						&& !buyboxdata.getSpecialPrice().getFormattedValue().isEmpty() ? buyboxdata.getSpecialPrice()
+						.getFormattedValue() : ModelAttributetConstants.NOVALUE);
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE,
+						null != buyboxdata.getPrice() && null != buyboxdata.getPrice().getFormattedValue()
+								&& !buyboxdata.getPrice().getFormattedValue().isEmpty() ? buyboxdata.getPrice().getFormattedValue()
+								: ModelAttributetConstants.NOVALUE);
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP,
+						null != buyboxdata.getMrp() && null != buyboxdata.getMrp().getFormattedValue()
+								&& !buyboxdata.getMrp().getFormattedValue().isEmpty() ? buyboxdata.getMrp().getFormattedValue()
+								: ModelAttributetConstants.NOVALUE);
+
+				/*
+				 * buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, null !=
+				 * buyboxdata.getSpecialPrice() && null != buyboxdata.getSpecialPrice().getFormattedValueNoDecimal() &&
+				 * !buyboxdata.getSpecialPrice().getFormattedValueNoDecimal().isEmpty() ? buyboxdata.getSpecialPrice()
+				 * .getFormattedValueNoDecimal() : ModelAttributetConstants.NOVALUE);
+				 * buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, null != buyboxdata.getPrice() && null
+				 * != buyboxdata.getPrice().getFormattedValueNoDecimal() &&
+				 * !buyboxdata.getPrice().getFormattedValueNoDecimal().isEmpty() ? buyboxdata.getPrice()
+				 * .getFormattedValueNoDecimal() : ModelAttributetConstants.NOVALUE);
+				 * buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, null != buyboxdata.getMrp() && null !=
+				 * buyboxdata.getMrp().getFormattedValueNoDecimal() &&
+				 * !buyboxdata.getMrp().getFormattedValueNoDecimal().isEmpty() ? buyboxdata.getMrp()
+				 * .getFormattedValueNoDecimal() : ModelAttributetConstants.NOVALUE);
+				 */
+
 
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
 
@@ -2668,7 +2727,6 @@ public class ProductPageController extends MidPageController
 			contentPage = getContentPageForProduct(productModel);
 			if (null != contentPage)
 			{
-
 				for (final ContentSlotForPageModel contentSlotForPageModel : contentPage.getContentSlots())
 				{
 					final ProductContentData productContentData = new ProductContentData();
@@ -2728,11 +2786,11 @@ public class ProductPageController extends MidPageController
 				storeCmsPageInModel(model, getContentPageForLabelOrId(contentPage.getUid()));
 				returnString = "/pages/" + contentPage.getMasterTemplate().getFrontendTemplateName();
 
+
 			}//final end of if
 			 //INC_11128
 			 //commented as returned inside the if block
 			 //storeCmsPageInModel(model, getContentPageForLabelOrId(contentPage.getUid()));
-
 		}
 		catch (final CMSItemNotFoundException e)
 		{

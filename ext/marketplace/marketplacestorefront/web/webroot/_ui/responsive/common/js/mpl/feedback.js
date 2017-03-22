@@ -1948,7 +1948,11 @@ if($(".facet.js-facet.Colour").length > 0){
 if($(".facet.js-facet.Size").length > 0){
 	sizeSwatch();
 }
-			
+$(".product-tile .image .item.quickview").each(function(){
+	if($(this).find(".addtocart-component").length == 1){
+		$(this).addClass("quick-bag-both");
+	}
+	});		
 		});
 		$(window).on("load resize", function() {
 		if($(".listing.wrapper").length > 0){
@@ -2110,6 +2114,15 @@ $(".top_categories_wrapper").css("padding-top", "40px");
 			$(".winter_launch  > .winter_launch_section").wrapAll("<div class='clp_winter_launch_wrapper'>");
 		}
 		//Top deal blog section
+		/* start change for INC_11268*/
+		/*$(".top_deal  > a").nextAll().wrapAll("<div class='blog_container'>");*/
+		/*if($(".top_deal > .carousel-component").length > 0){
+			$(".top_deal  > .carousel-component + a").nextAll().wrapAll("<div class='blog_container'>");
+		}
+		else{
+				$(".top_deal").children().wrapAll("<div class='blog_container'>");
+		}*/
+		/*end change for INC_11268*/
 		/*$(".top_deal  > a").nextAll().wrapAll("<div class='blog_container'>");
 		var clp_blog_count = $(".top_deal  > .blog_container").children().length;
 		$(".top_deal  > .blog_container").children().slice(0,clp_blog_count/2).wrapAll("<div class='blog_feature'>");
@@ -2164,8 +2177,16 @@ $(".top_categories_wrapper").css("padding-top", "40px");
 		
 		
 		/*CLP section js ends*/
+		
+		/* UF-68 UF-69 */
+		topMarginAdjust();
+		/* UF-68 UF-69 */
 });
 $(window).resize(function() {
+	
+	/* UF-68 UF-69 */
+	topMarginAdjust();
+	/* UF-68 UF-69 */
 
 	clearTimeout(colorSwatchFlag);
 	clearTimeout(sizeSwatchFlag);
@@ -2179,6 +2200,16 @@ $(window).resize(function() {
 			sizeSwatch();
 		}
 	}, 200)
+	
+	/* UF-68 UF-69 */
+	
+	/*if($(window).width() >= 1008){
+		//$("body.page-cartPage .cartBottomCheck").removeClass("cartBottomCheckShow");
+	var cartBottomCheckTopMargin = $("body.page-cartPage .cart-bottom-block").height() - $("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").outerHeight();
+	$("body.page-cartPage .cartBottomCheck").addClass("cartBottomCheckShow").css("margin-top",cartBottomCheckTopMargin);
+	}*/
+	
+	/* UF-68 UF-69 */
 });
 
 $(document).on("click",".facet.js-facet.Colour .more-lessFacetLinks .more",function(e) {
@@ -2925,6 +2956,15 @@ $(".shop_the_look .shop_the_look_left .shop_the_look_section").each(function(){
 });
 //----shop the look section end-----//
 //----blog section start------//
+/*start change for INC_11268*/
+/*$(".top_deal_blp  > a").nextAll().wrapAll("<div class='blog_container_blp'>");*/
+/*if($(".top_deal_blp > .carousel-component").length > 0){
+	$(".top_deal_blp  > .carousel-component + a").nextAll().wrapAll("<div class='blog_container_blp'>");
+}
+else{
+		$(".top_deal_blp").children().wrapAll("<div class='blog_container_blp'>");
+}*/
+/*end change for INC_11268*/
 /*$(".top_deal_blp  > a").nextAll().wrapAll("<div class='blog_container_blp'>");
 var blp_blog_count = $(".top_deal_blp  > .blog_container_blp").children().length;
 $(".top_deal_blp  > .blog_container_blp").children().slice(0,blp_blog_count/2).wrapAll("<div class='blog_feature_blp'>");
@@ -2972,6 +3012,7 @@ if (!$('.shop_for_blp .content').length && !$('.shop_for_blp a').length && !$('.
 		'margin' : '0px'		
 	});
 }*/
+
 if($("body.template-pages-layout-newBrandLandingPageTemplate .body-Content").find(".shop_the_look .shop_the_look_section").length==0){	
 	/*$(".shop_the_look").prop("style","padding:0px !important;margin:0px;border-bottom:none");*/
 	$(".shop_the_look").hide();
@@ -2984,6 +3025,12 @@ if (!$('.top_deal_blp .content').length && !$('.top_deal_blp a').length && !$('.
 
 if (!$('.top_deal_blp .blog_container_blp .blog_feature_blp .simple-banner-component').length && !$('.top_deal_blp .blog_container_blp .blog_feature_blp .content').length && !$('.top_deal_blp .blog_container_blp .blog_feature_blp a').length) {
 	$('.top_deal_blp .blog_container_blp').hide();
+}	
+if($("body.template-pages-layout-newBrandLandingPageTemplate .body-Content").find(".shop_the_look").children().length==0){	
+	/* start change for INC_11268*/
+	/*$(".shop_the_look").prop("style","padding:0px !important;margin:0px");*/
+	$(".shop_the_look").prop("style","padding:0px !important;margin:0px;border-bottom:none");
+	/*end change for INC_11268*/
 }
 
 //-----BLP------//
@@ -3071,7 +3118,6 @@ $("body.page-cartPage .cart.wrapper .checkout-types li#checkout-id").on("mouseov
 		$(this).css("cursor","default");
 	}
 });
-
 
 /*TPR-4471 starts*/
 $(window).on("load resize",function(e){
@@ -3319,3 +3365,69 @@ $(window).on("load resize",function(){
 //});
 
 /*TPR-4471 ends*/
+if ($(".facet-list.filter-opt").children().length){
+	$("body.page-productGrid .product-listing.product-grid.lazy-grid").css("padding-top","15px");
+	$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top","-95px");
+	$("body.page-productGrid .facet-list.filter-opt").css("padding-top","65px");
+	var height = $(".facet-list.filter-opt").outerHeight() + 33 + "px";
+	$(".pagination-bar.listing-menu.top.sort_by_wrapper").css("top", height);
+}
+
+$(document).ready(function(){ 
+    $(window).scroll(function(){ 
+        if ($(this).scrollTop() > 100) { 
+            $('#scroll_to_top').fadeIn(); 
+        } else { 
+            $('#scroll_to_top').fadeOut(); 
+        } 
+    }); 
+    //$('#scroll_to_top').click(function(e){ 
+    $(document).on("click","#scroll_to_top",function(){
+        $("html, body").animate({ scrollTop: 0 }, 600); 
+        return false; 
+    }); 
+    
+    /*UF-68 UF-69*/
+    $(".page-cartPage .cart-total-block ul.checkOutBtnBtm > li.checkout-button").css("visibility","visible");
+    //$("#pinCodeButtonIdsBtm").addClass("CheckAvailability");
+    /*UF-68 UF-69*/
+});
+
+/* UF-68 UF-69 */
+/*function topMarginAdjust(){
+var arr_error = ["#unserviceablepincode_tooltip_btm","#error-Id_tooltip_btm","#emptyId_tooltip_btm"];
+for(var i=0;i<arr_error.length;i++){
+	if($(arr_error[i]).css("display") != "none")
+		heightTopAdjust = $(arr_error[i]).outerHeight() + parseInt($(arr_error[i]).css("top"));
+}
+if($(window).width()>1007){
+	var cartBottomCheckTopMargin = $("body.page-cartPage .cart-bottom-block .cart-total-block").height() - $("body.page-cartPage .cartBottomCheck button[name='pinCodeButtonId']").outerHeight() - heightTopAdjust;
+	$("body.page-cartPage .cartBottomCheck").addClass("cartBottomCheckShow").css("margin-top",cartBottomCheckTopMargin);
+}
+else{
+	$("body.page-cartPage .cartBottomCheck").addClass("cartBottomCheckShow").css("margin-top","");
+	var changePinDivHeight = $("body.page-cartPage .cartBottomCheck.cartBottomCheckShow #changePinDiv").outerHeight();
+	var cartBottomCheckTopMarginTab = $("body.page-cartPage .cart-bottom-block .cart-total-block .totals").outerHeight() + $("body.page-cartPage .cart-bottom-block .cart-total-block .checkout-types.onlyCheckoutButton.checkOutBtnBtm").outerHeight() + parseInt($("body.page-cartPage .cart-bottom-block .cart-total-block .checkout-types.onlyCheckoutButton.checkOutBtnBtm").css("margin-top"));
+	$("body.page-cartPage .cartBottomCheck.cartBottomCheckShow").css("top",cartBottomCheckTopMarginTab);
+}
+}*/
+function topMarginAdjust(){
+	var heightTotals = $("body.page-cartPage .cart-bottom-block .cart-total-block .totals").outerHeight();
+	if($(window).width() > 1007)
+		$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm").css("margin-top",heightTotals+30);
+	else
+		$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm").css("margin-top","");
+}
+
+$(document).on("click","button[name='pinCodeButtonId']",function(){
+	$("input[name='defaultPinCodeIds']").css("color","#000");
+}); 
+
+$(document).ajaxComplete(function(){
+	//$("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").addClass("CheckAvailability");
+	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").css("pointer-events","");
+	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").removeAttr("onclick");
+	$("a#checkout-enabled.checkout-disabled").removeAttr("onclick");
+});
+
+/* UF-68 UF-69 */

@@ -90,15 +90,18 @@ tr.d0 td {
 <input type="hidden" id="pdpBuyboxWinnerSellerID" value=''/>
 <input type="hidden" id="pdpOtherSellerIDs" value=''/>
 <!-- TPR-429 END-->
+<!-- For Data Layer Schema changes -->
+<input type="hidden" id="product_stock_count" value="${product_stock_count}" />
+<input type="hidden" id="out_of_stock" value="${out_of_stock}" />
+<input type="hidden" id="product_discount" value="${product_discount}" />
+<input type="hidden" id="product_discount_percentage" value="${product_discount_percentage}" />
+
 <!-- End Tealium -->
 
 <!-- TISPRM-56 -->
 <input type="hidden" id="product_allVariantsListingId" value="${allVariantsString}"/>
 <!-- CKD:TPR-250 -->
 <input type="hidden" id="msiteBuyBoxSellerId" value="${msiteBuyBoxSellerId}"/> 
-
-
-
 
 <div itemscope itemtype="http://schema.org/Product" class="pdp">
 	<div class="product-info wrapper">
@@ -183,11 +186,11 @@ tr.d0 td {
 					</c:otherwise>
 				</c:choose>
 				<!-- CKD:TPR-250-End-->
-				<a itemprop="url" href="${mainurl}">
+				<%-- <a itemprop="url" href="${mainurl}"> --%>		<!-- Commented as part of UF-181 -->
 				<!-- For TPR-4358 -->
 				<h1 itemprop="name" class="product-name">${product.productTitle}</h1>
 				<meta itemprop="sku" content="${product_sku}"/>
-				</a>
+				<!-- </a> -->
 			</ycommerce:testId>
 
 			<ycommerce:testId
@@ -231,8 +234,9 @@ tr.d0 td {
 			</div>
 			
 			<!--  Added for displaying offer messages other than promotion, TPR-589 -->
+			<!--INC144313502-->
 				 <div>
-					<a class="pdp-promo-title-link">View more</a>
+					<a class="pdp-promo-title-link" style="display:none">View more</a>
 				</div>	
 				
 			<!-- TISPRM-97 ends -->

@@ -536,7 +536,7 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 	{
 		return Registry.getApplicationContext().getBean("mplPromotionHelper", MplPromotionHelper.class);
 	}
-
+	
 	/**
 	 * @return the stockCount
 	 */

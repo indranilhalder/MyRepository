@@ -311,7 +311,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		{
 
 			String sharedText = Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_PRE);
-			productModel = productService.getProductForCode(defaultPromotionManager.catalogData(), productCode);
+			//CAR-86
+			//productModel = productService.getProductForCode(defaultPromotionManager.catalogData(), productCode);
+			productModel = productService.getProductForCode(productCode);
 			if (null != productModel)
 			{
 				productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,

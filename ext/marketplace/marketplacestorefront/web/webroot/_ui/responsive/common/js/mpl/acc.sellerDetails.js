@@ -409,7 +409,8 @@ function focusOnElement() {
 	 function addToBag(index){
 		
 		//$(document).on('click','#addToCartFormId'+index+' .js-add-to-cart',function(){ //Changed for TPR-887
-		 $(document).on('click','#addToCartFormId'+index+' #addToCartButton'+index,function(){
+		 $(document).off('click', '#addToCartFormId'+index+' #addToCartButton'+index).on('click', '#addToCartFormId'+index+' #addToCartButton'+index, function(event) {
+		 //$(document).on('click','#addToCartFormId'+index+' #addToCartButton'+index,function(){
 			 
 			 
 			 
@@ -426,16 +427,16 @@ function focusOnElement() {
         productCodeArray.push(productCode);    
 	        utag.link({
 				link_obj: this,
-				link_text: 'addtobag' ,
-				event_type : 'addtobag_other_seller' ,
+				link_text: 'add_to_bag' ,
+				event_type : 'add_to_bag_pdp' ,
 				product_sku : productCodeArray                     // Product code passed as an array for Web Analytics   -- INC_11511  fix
 			});
-        
 			ACC.product.sendAddToBag("addToCartFormId"+index);
 		});
 		 
 		//TPR-887 //INC144313255
-		 $(document).on('click','#addToCartFormId'+index+' #buyNowButton'+index,function(){
+		 $(document).off('click', '#addToCartFormId'+index+' #buyNowButton'+index).on('click', '#addToCartFormId'+index+' #buyNowButton'+index, function(event) {
+		 //$(document).on('click','#addToCartFormId'+index+' #buyNowButton'+index,function(){
 	        if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Accessories' && $("#ia_product_rootCategory_type").val()!='Watches'){
 			  		
 			   		$("#buyNowFormIdOthersel"+index).html($('#selectSizeId').text());
@@ -504,6 +505,8 @@ function focusOnElement() {
 					var stockDataArrayList=
 					fetchSellers(data,buyboxSeller);
 					otherSellersCount = data.length;
+					//UF-34 Default Sorting as Price Low to High at the time of loading
+					sortSellers("1");
 					setSellerLimits(1);
 					  var stock_id="stock";
 					  var ussid = "ussid";
@@ -547,26 +550,44 @@ function focusOnElement() {
 	 }
 	 function sortPrice(sellerPageCount){
 		 var buyboxSeller = $("#ussid").val();
-		     var aFinalPrice="";
-		     var bFinalPrice="";
-		
-		      sellerDetailsArray.sort(function(a, b){
-		    	  for (var p =0; p <skuPriceArray.length; p++) {  
-		 	  		 if(skuPriceArray[p]['key']==a.ussid){
-		 	  			aFinalPrice=skuPriceArray[p]['value'];
+	     var aFinalPrice="";
+	     var bFinalPrice="";
+	     //UF-34
+	     var oosSellers = [];
+	
+	     sellerDetailsArray.sort(function(a, b){
+	    	  for (var p =0; p <skuPriceArray.length; p++) {  
+	 	  		 if(skuPriceArray[p]['key']==a.ussid){
+	 	  			aFinalPrice=skuPriceArray[p]['value'];
+	 	  		 }
+	 	  		 if(skuPriceArray[p]['key']==b.ussid){
+		 	  			bFinalPrice=skuPriceArray[p]['value'];
 		 	  		 }
-		 	  		 if(skuPriceArray[p]['key']==b.ussid){
-			 	  			bFinalPrice=skuPriceArray[p]['value'];
-			 	  		 }
-		 			
-		 		  }	  
-		    
-		    	  
-			  return aFinalPrice - bFinalPrice;
-		});
-		      fetchSellers(sellerDetailsArray,buyboxSeller)
-			  setSellerLimits(sellerPageCount);
+
+	 		  }	  
+
+
+		  return aFinalPrice - bFinalPrice;
+	});
+	      
+	     //UF-34
+	      for (var sel =0; sel <sellerDetailsArray.length; sel++) { 
+				 if(sellerDetailsArray[sel].availableStock < 1) {
+					 oosSellers.push(sellerDetailsArray[sel]);
+				 }
+			 }
+
+	      sellerDetailsArray = sellerDetailsArray.filter(function(val) {
+	    	  return oosSellers.indexOf(val) == -1;
+	      });
+
+	      sellerDetailsArray = sellerDetailsArray.concat(oosSellers);
+
+	      fetchSellers(sellerDetailsArray,buyboxSeller)
+		  setSellerLimits(sellerPageCount);
+
 	 }
+
 	
 	 
 	 
@@ -602,14 +623,17 @@ function focusOnElement() {
 				dataType : "json",
 				success : function(data) {		
 						var pagelevelOffer = "<div class='pdp-offer-title pdp-title'><b>OFFER: </b><span id='offerDetailId'></span></div>" ;	
-						var modallevelOffer = "<div class='pdp-offerDesc pdp-promo right'><h3 class='product-name highlight desk-offer'><span id='message'></span></h3><h3 class='offer-price'></h3><div class='show-offerdate'><p><span id='messageDet'></span></p><div class='offer-date'><div class='from-date'><span class='from'>From:</span><span class='date-time' id='offerstartyearTime'></span><span class='date-time' id='offerstarthourTime'></span></div><div class='to-date'><span class='to'>To:</span><span class='date-time' id='offerendyearTime'></span><span class='date-time' id='offerendhourTime'></span></div></div></div></div>";
-					   	if (data != null) {			
+
+						var modallevelOffer = "<div class='pdp-offerDesc pdp-promo offercalloutdesc'><h3 class='product-name highlight desk-offer'><span id='message'></span></h3><h3 class='offer-price'></h3><div class='show-offerdate'><p><span id='messageDet'></span></p><div class='offer-date'><div class='from-date'><span class='from'>From:</span><span class='date-time' id='offerstartyearTime'></span><span class='date-time' id='offerstarthourTime'></span></div><div class='to-date'><span class='to'>To:</span><span class='date-time' id='offerendyearTime'></span><span class='date-time' id='offerendhourTime'></span></div></div></div></div>";
+						if (data['offerMessageMap'] != null) {			
+
 						    var offerMessageMap = data['offerMessageMap'];	
 							var x=$('<div/>');	
 							var message = null;
 							var messageDet = null;
 							var messageStartDate = null;
 							var messageEndDate = null;		
+
 							$(".pdp-promo-title-link").css("display","none");			
 							//TISSQAUAT-472 starts here
 							if($("#promolist").val()=="All" || $("#promolist").val()=="Web" ||!$.isEmptyObject(offerMessageMap)){
@@ -636,12 +660,14 @@ function focusOnElement() {
 								 
 								 if(sellerId == key)
 								 {	
-									if(!$.isEmptyObject(offerMessageMap)){			
+									if(!$.isEmptyObject(offerMessageMap)){	
+										    $(".pdp-promo-title-link").show();
 											if($(".pdp-promo-title").length > 0){
-												$(pagelevelOffer).insertAfter(".pdp-promo-title");
-												$(modallevelOffer).insertAfter(".show-date");
+												$(pagelevelOffer).insertAfter(".pdp-promo-block");
+												$(modallevelOffer).insertAfter(".pdp-promoDesc");
 											}else{				
-												$(".pdp-promo-block").append(pagelevelOffer);
+												//$(".pdp-promo-block").append(pagelevelOffer);
+												$(pagelevelOffer).insertAfter(".pdp-promo-block");
 												$(".offer-block").append(modallevelOffer);					
 											}			
 									}	
@@ -687,9 +713,9 @@ function focusOnElement() {
 								 }
 								 else
 								 {
-									 if($(".pdp-promo-title").length == 0) {
-										 $(".pdp-promo-title-link").css("display","none");		
-									 }
+									// if($(".pdp-promo-title").length == 0) {
+										// $(".pdp-promo-title-link").css("display","none");		
+									// }
 									 x.append("<p>"+message+"</p>");								 
 								 }				
 								})	
@@ -721,6 +747,9 @@ function focusOnElement() {
 		 var buyboxSeller = $("#ussid").val();
 		 var aFinalPrice="";
 	     var bFinalPrice="";
+	     //UF-34
+	     var oosSellers = [];
+	     
 		 sellerDetailsArray.sort(function(a, b){
 				
 			 for (var p =0; p <skuPriceArray.length; p++) {  
@@ -736,6 +765,21 @@ function focusOnElement() {
 			 return bFinalPrice - aFinalPrice;
 			 
 			});
+		  
+		//UF-34
+	      
+	      for (var sel =0; sel <sellerDetailsArray.length; sel++) { 
+				 if(sellerDetailsArray[sel].availableStock < 1) {
+					 oosSellers.push(sellerDetailsArray[sel]);
+				 }
+			 }
+	      
+	      sellerDetailsArray = sellerDetailsArray.filter(function(val) {
+	    	  return oosSellers.indexOf(val) == -1;
+	    	});
+	      
+	      sellerDetailsArray = sellerDetailsArray.concat(oosSellers);
+	      
 		  fetchSellers(sellerDetailsArray,buyboxSeller)
 		  setSellerLimits(sellerPageCount);
 		 }

@@ -21,6 +21,10 @@ import org.apache.log4j.Logger;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 
 
+/**
+ * Customized action class for shipping charges promotions
+ *
+ */
 public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomShippingChargesPromotionAdjustAction
 {
 	@SuppressWarnings("unused")
@@ -40,7 +44,7 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotionAction#apply(de.hybris.platform.jalo.SessionContext)
 	 */
 	@Override

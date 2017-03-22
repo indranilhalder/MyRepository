@@ -1185,9 +1185,9 @@ public class ProductDetailsHelper
 		return existUssid;
 	}
 
-	
 
-	/** 
+
+	/**
 	 * @param productCode
 	 * @param valueOf
 	 * @return
@@ -1243,6 +1243,59 @@ public class ProductDetailsHelper
 		return add;
 	}
 
+	/* Changes for INC144313867 */
+
+	/**
+	 * @param productCode
+	 * @param ussid
+	 * @return
+	 */
+	public boolean removeFromWishListForPLP(final String productCode)
+	{
+
+		Wishlist2Model lastCreatedWishlist = null;
+		Wishlist2Model removedWishlist = null;
+		boolean removeFromWl = false;
+		//final String ussid = null;
+		try
+		{
+			final UserModel user = userService.getCurrentUser();
+			lastCreatedWishlist = wishlistFacade.getSingleWishlist(user);
+			if (null != lastCreatedWishlist)
+			{
+
+				if (getBuyBoxService().getBuyboxPricesForSearch(productCode) != null)
+				{
+					//ussid = getBuyBoxService().getBuyboxPricesForSearch(productCode).get(0).getSellerArticleSKU();
+					//if (null != ussid)
+					//{
+					//removedWishlist = wishlistFacade.removeProductFromWl(productCode, lastCreatedWishlist.getName(), ussid);
+
+					//}
+					removedWishlist = wishlistFacade.removeProductFromWl(productCode, lastCreatedWishlist.getName());
+				}
+			}
+			if (null != removedWishlist)
+			{
+				removeFromWl = true;
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return removeFromWl;
+	}
+
 	/**
 	 * @return the buyBoxService
 	 */
@@ -1258,11 +1311,11 @@ public class ProductDetailsHelper
 	public void setBuyBoxService(final BuyBoxService buyBoxService)
 	{
 		this.buyBoxService = buyBoxService;
-	}	
+	}
 
 	/**
 	 * @param productCode
-	 * @param ussid		 
+	 * @param ussid
 	 * @return
 	 */
 	public boolean removeFromWishList(final String productCode, final String ussid)

@@ -283,13 +283,13 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	 * @param selectedAddressData
 	 * @return List<? extends AddressData>
 	 */
-	@Override
-	public List<? extends AddressData> getDeliveryAddresses(final AddressData selectedAddressData)
+	//	@Override                                  //CAR-194
+	public List<AddressData> getDeliveryAddresses(final AddressData selectedAddressData, final CartModel cartModel) //CAR-194
 	{
 		List<AddressData> deliveryAddresses = null;
 		if (selectedAddressData != null)
 		{
-			deliveryAddresses = new ArrayList<AddressData>(getSupportedDeliveryAddresses(true));
+			deliveryAddresses = new ArrayList<AddressData>(getSupportedDeliveryAddresses(true, cartModel));
 
 			if (!isAddressOnList(deliveryAddresses, selectedAddressData))
 			{
@@ -305,10 +305,10 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	 * @param visibleAddressesOnly
 	 * @return List<AddressData>
 	 */
-	@Override
-	public List<AddressData> getSupportedDeliveryAddresses(final boolean visibleAddressesOnly)
+	//@Override                                  //CAR-194
+	public List<AddressData> getSupportedDeliveryAddresses(final boolean visibleAddressesOnly, final CartModel cartModel) //CAR-194
 	{
-		final CartModel cartModel = getCart();
+		//final CartModel cartModel = getCart();
 		if (cartModel != null)
 		{
 			final List<AddressModel> addresses = getDeliveryService().getSupportedDeliveryAddressesForOrder(cartModel,
@@ -919,6 +919,20 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 			}
 		}
 
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.facade.checkout.MplCustomAddressFacade#getDeliveryAddresses(de.hybris.platform.commercefacades.user
+	 * .data.AddressData)
+	 */
+	@Override
+	public List<? extends AddressData> getDeliveryAddresses(final AddressData selectedAddressData)
+	{
+		// YTODO Auto-generated method stub
 		return null;
 	}
 }

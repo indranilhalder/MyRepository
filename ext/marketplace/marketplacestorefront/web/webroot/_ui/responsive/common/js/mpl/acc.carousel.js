@@ -12,13 +12,17 @@ ACC.carousel = {
 	     "shopTheLookCarousel",
 
 	     "ClpTopDealsCarousel",
+
 	     "ClpBestOffersCarousel",
 	     "BlpBestOffersCarousel",
+
+	     "blpTopDealsCarousel",		//add for INC_11189
+
 	     "ClpBestSellerCarousel",
 
 	     "shopByLookCarousel",
 	     "offersCarousel",
-	     "blpTopDealsCarousel",
+	     /*"blpTopDealsCarousel",*/		//commented for INC_11189
 	     "categoryCarousel",
 	     "myStyleCarousel",
 	     "heroProductCarousel",
@@ -493,16 +497,9 @@ ACC.carousel = {
 			itemsMobile : false*/
 		});
 	},
-	
-	
-	
-	blpTopDealsCarousel: function(){
-		
-		//changes for tpr-599(BLP and CLP changes)
-		var slideBy= $('#slideBy').val()?$('#slideBy').val():1;
-		var autoplayTimeout= $('#autoplayTimeout').val()?$('#autoplayTimeout').val():5000;
-		var autoPlay= $('#autoPlay').val()?$.parseJSON($('#autoPlay').val()):true;
-		
+
+	/* start change for INC_11189*/
+	/*blpTopDealsCarousel: function(){
 		$(".top_deal_blp #mplAdvancedCategoryCarousel").owlCarousel({
 					items:5,
             		loop: true,
@@ -541,6 +538,64 @@ ACC.carousel = {
                     		nav: ($(".top_deal_blp #mplAdvancedCategoryCarousel .image").length <= 5)?false:true,
             			}			
             		}	
+			navigation:true,
+			rewindNav: false,
+			navigationText :[],
+			pagination:false,
+			items:4,
+			itemsDesktop : false, 
+			itemsDesktopSmall : false, 
+			itemsTablet: false, 
+			itemsMobile : true
+		itemsDesktop : [5000,4], 
+		itemsDesktopSmall : [1400,4], 
+		itemsTablet: [650,2], 
+		itemsMobile : [480,2],
+			});
+	},*/
+	blpTopDealsCarousel: function(){
+		//changes for tpr-599(BLP and CLP changes)
+		var slideBy= $('#slideBy').val()?$('#slideBy').val():1;
+		var autoplayTimeout= $('#autoplayTimeout').val()?$('#autoplayTimeout').val():5000;
+		var autoPlay= $('#autoPlay').val()?$.parseJSON($('#autoPlay').val()):true;
+		$(".top_deal_blp .offersCarousel").owlCarousel({
+					items:5,
+            		loop: true,
+            		nav:false,
+            		dots:false,
+            		navText:[],
+            		autoplay: autoPlay,
+                    autoHeight : false,
+                    autoplayTimeout: autoplayTimeout,
+                    slideBy: slideBy,
+            		responsive : {
+            			// breakpoint from 0 up
+            			0 : {
+            				items:1,
+            				stagePadding: 50,
+            				loop: ($(".top_deal_blp .offersCarousel .image").length == 1)?false:true,
+                    		nav: ($(".top_deal_blp .offersCarousel .image").length == 1)?false:true,
+            			},
+            			// breakpoint from 480 up
+            			480 : {
+            				items:2,
+            				stagePadding: 75,
+            				loop: ($(".top_deal_blp .offersCarousel .image").length <= 2)?false:true,
+                    		nav: ($(".top_deal_blp .offersCarousel .image").length <= 2)?false:true,
+            			},
+            			// breakpoint from 700 up
+            			700 : {
+            				items:3,
+            				loop: ($(".top_deal_blp .offersCarousel .image").length <= 3)?false:true,
+                    		nav: ($(".top_deal_blp .offersCarousel .image").length <= 3)?false:true,
+            			},
+            			// breakpoint from 768 up
+            			1000 : {
+            				items:5,
+            				loop: ($(".top_deal_blp .offersCarousel .image").length <= 5)?false:true,
+                    		nav: ($(".top_deal_blp .offersCarousel .image").length <= 5)?false:true,
+            			}			
+            		}	
 			/*navigation:true,
 			rewindNav: false,
 			navigationText :[],
@@ -556,8 +611,7 @@ ACC.carousel = {
 		itemsMobile : [480,2],*/
 			});
 	},
-	
-	
+	/* end change for INC_11189*/	
 
 	ClpTopDealsCarousel: function(){
 		
