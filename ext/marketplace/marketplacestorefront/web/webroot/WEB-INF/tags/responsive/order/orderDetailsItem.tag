@@ -257,7 +257,18 @@
 				</p>
 				<ul class="${entry.mplDeliveryMode.name}">
 					<li class="deliver-type">${entry.mplDeliveryMode.name}</li>
-					<li class="deliver">${entry.mplDeliveryMode.description}</li>
+					<c:choose>
+                       <c:when test="${not empty entry.timeSlotFrom  && entry.timeSlotFrom !=null }">
+                         
+                        <li class="deliver">Your Order Will Be Delivered on ${entry.selectedDeliverySlotDate} -  ${entry.timeSlotFrom} TO ${entry.timeSlotTo}</li>
+                        
+                       </c:when>
+                       <c:otherwise>
+                       <li class="deliver"> Your Order Will Be Delivered ${entry.eddDateBetWeen}</li>
+                       
+                       </c:otherwise>
+                  
+                  </c:choose>
 				</ul>
 			</li>
 		</ul>
