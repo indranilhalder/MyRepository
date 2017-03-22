@@ -3184,36 +3184,43 @@ $(document).ready(function(){
 function onSizeSelectPopulateDOM()//First Method to be called in size select ajax call
 {	//Attaching click event on size variant <li>
 	$("ul#variant.variant-select li a").on('click',function(e){
-		e.preventDefault();
-		var href = $(this).attr('href');
-		var params=getParamsFromUrl(href);
-		
-		var productCode="";
-		var prvsProductCode = $("#product").val();
+		//console.log("================>called while size is selected================>");
 		
 		var currentSelectedElement=this;
-		
-		var staticHost = $('#staticHost').val();
-		//Below 2 lines for adding spinner
-		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
-		
+		var productCode="";
 		productCode=$(currentSelectedElement).attr("data-productCode");
-		//To get product code from URL
-		//productCode=getProductCodeFromPdpUrl(href);
-		//To get original URL
-		var a = $('<a>', { href:href } )[0];
-		var port= ":"+window.location.port;
-		var hostName = window.location.hostname;
-		var baseUrl="//"+hostName+port;
-		var originalUrl=baseUrl+a.pathname+"?selectedSize=true";
-		$("#addToCartFormTitle").hide(); //Hide 'please select size' on selecting size
-		if(productCode!="" && $('#pageType').val()=='product')
-		{
+		
+		//console.log("================>data-productCode================>"+productCode);
+		
+		if(typeof(productCode)!='undefined' && productCode!="" && $('#pageType').val()=='product')
+		{//console.log("================>data-productCode in here================>"+productCode);
+			e.preventDefault();
+			var href = $(this).attr('href');
+			var params=getParamsFromUrl(href);
+			
+			
+			var prvsProductCode = $("#product").val();
+			
+			var staticHost = $('#staticHost').val();
+			//Below 2 lines for adding spinner
+			$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+			$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+			
 			if($('#promolist').val()!='')
 			{	//If promotion exist for the existing product
 				$("#promolist").val("");//Set it empty as we are not sure if the new selected product has promotion yet
 			}
+			
+			//To get product code from URL
+			//productCode=getProductCodeFromPdpUrl(href);
+			//To get original URL
+			var a = $('<a>', { href:href } )[0];
+			var port= ":"+window.location.port;
+			var hostName = window.location.hostname;
+			var baseUrl="//"+hostName+port;
+			var originalUrl=baseUrl+a.pathname+"?selectedSize=true";
+			$("#addToCartFormTitle").hide(); //Hide 'please select size' on selecting size
+			
 			
 			//Ajax call happening here
 			var xhrAjaxProductData=getProductDetailOnSizeChange(productCode);
