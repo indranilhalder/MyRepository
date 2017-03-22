@@ -29322,7 +29322,9 @@ body .account .right-account .order-history .bottom .pagination.mobile{
         margin-right:5px;  }
         #displayPaginationCountUp, #displayPaginationCountDown{
         margin: 10px 0;
-        display:inline-block;}
+        display:inline-block;
+        margin-top: 20px; /* TISSQAEE-244 */
+        }
 }
 .trackorder-dropdown li[data-read="true"] a {
 	color: #555;
@@ -61931,3 +61933,28 @@ footer .banner{
 /* body.page-cartPage .cartBottomCheck #changePinDiv p{
 	display: none;
 } */
+
+/* TISSQAEE-244 */
+@media(max-width:400px){
+body .account .right-account .order-history .bottom .pagination.mobile{
+	padding: 0;
+	right: 16px;
+}
+.pagination-bar.listing-menu.bottom{
+	margin-left: 0;
+}
+body .account .right-account .order-history .top .pagination.mobile{
+	padding: 0;
+	right: 16px;
+}
+body .account .right-account .order-history .pagination li{
+	margin: auto 1px;
+}
+.pagination li.next{
+	padding-left: 0px;
+}
+.pagination li.prev{
+	padding-right: 0px;
+}
+}
+/* TISSQAEE-244 */
