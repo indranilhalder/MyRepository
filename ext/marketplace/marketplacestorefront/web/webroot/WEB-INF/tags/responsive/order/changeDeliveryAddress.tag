@@ -17,7 +17,7 @@
 
 <input type="hidden" id="deliveryAddorderCode"
 	value="${orderDetails.code}" />
-<div class="modal-dialog changeAdddd">
+<div class="modal-dialog changeAdddd" >
 	<div class="modal-content">
 		<form:form method="GET" id="deliveryAddressForm"
 			action="${request.contextPath}/my-account/changeDeliveryAddress"
@@ -27,7 +27,7 @@
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
-				<div class="row">
+				<div class="row" id="onTop">
 					<div class="col-md-6">
 					<div class="error_text serverError"></div>
 						<h4><spring:theme code="text.order.deliveryAddress.editAddress"/></h4>
@@ -42,7 +42,7 @@
 			</div>
 			<div class="modal-body">
 				<div class="row">
-					<div class="col-md-7 NOP">
+					<div class="col-md-7 NOP" >
 						<div class="row">
 							<div class="col-md-6 form-group">
 								<label for="firstName"><spring:theme code="text.order.returns.firstname"/></label>
@@ -236,7 +236,7 @@
 								<p style="clear: both;"></p>
 							</c:forEach>
 						</c:if>
-					  <div class="col-md-12"><a href="#" id="addNewAddressPOP">Add a New Address</a></div>
+					  <div class="col-md-12"><a href="#onTop" id="addNewAddressPOP">Add a New Address</a></div>
 					</div>
 				</div>
 

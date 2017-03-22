@@ -3124,6 +3124,8 @@ $(function() {
 }
 
 @media (max-width: 720px) {
+body .account .right-account .order-history.order-details li.item .item-header{margin-bottom:0px }
+#changeAddressLink{line-height: 3;}
 	.awsNumberModal .changeAWS{
 		height: 400px;
 		overflow-y: scroll;
@@ -3262,6 +3264,7 @@ $(function() {
 input[type="radio"]:checked {
 	background: #000;
 }
+
 </style>
 
 <!-- R2.3: END: End of  AWB CSS for PopUp -->
