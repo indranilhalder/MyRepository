@@ -492,10 +492,12 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	</bean>
 	
 	<!-- Price Range Facet customization Start -->
-	<alias name="mplDefaultCommerceFacetSearchService" alias="mplCommerceFacetSearchService" />
+<alias name="mplDefaultCommerceFacetSearchService" alias="mplCommerceFacetSearchService" />
 	<bean id="mplDefaultCommerceFacetSearchService" parent="defaultFacetSearchService"
 	class="com.tisl.mpl.solrfacet.search.service.impl.MplDefaultFacetSearchService" >
 		<property name="solrQueryConverter" ref="mplSolrQueryConverter" />
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="searchResultConverters" ref="searchResultConverters" />
 	</bean>
 	
 	<alias name="defaultMplSolrQueryConverter" alias="mplSolrQueryConverter" />
