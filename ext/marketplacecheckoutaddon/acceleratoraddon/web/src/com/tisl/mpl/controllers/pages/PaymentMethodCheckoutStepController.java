@@ -3909,19 +3909,26 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						if (richAttributeModel != null && richAttributeModel.get(0) != null
 								&& richAttributeModel.get(0).getDeliveryFulfillModes() != null)
 						{
-							final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+							    String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+							/* Added in R2.3 for START*/
+							if(DeliveryFulfillModesEnum.BOTH.toString().equalsIgnoreCase(fulfillmentType)) {
+								if(null != entry.getFulfillmentType()) {
+									fulfillmentType = entry.getFulfillmentType();
+								}else if(null != entry.getFulfillmentTypeP1()){
+									fulfillmentType = entry.getFulfillmentTypeP1();
+								}else if(null != richAttributeModel.get(0).getDeliveryFulfillModeByP1() && null != richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode()){
+									fulfillmentType=richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode();
+								}
+							}
+							/* Added in R2.3 END*/
 							if (DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(fulfillmentType))
 							{
 								LOG.debug("Entry is TSHIP");
-							  //R2.3 BUG-ID TATA-684
-							final String deliveryFulfillModeByP1=entry.getFulfillmentTypeP1()!=null?entry.getFulfillmentTypeP1():richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode();
-							if (DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(fulfillmentType) ||DeliveryFulfillModesEnum.BOTH.toString().equalsIgnoreCase(fulfillmentType) &&
-									DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(deliveryFulfillModeByP1)) {
-								final boolean returnFlag = paymentModecheckForCOD(richAttributeModel, abstractOrder, model);
-								if (!returnFlag)
-								{
-									break;
-								}
+									final boolean returnFlag = paymentModecheckForCOD(richAttributeModel, abstractOrder, model);
+									if (!returnFlag)
+									{
+										break;
+									}
 							}
 							else
 							{
@@ -3952,7 +3959,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							}
 						}
 					}
-				}
 			}
 		}
 	}
