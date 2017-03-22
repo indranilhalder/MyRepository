@@ -349,11 +349,11 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 		final Double discount = getTotalDiscount(orderModel.getEntries(), false);
 		//Start  Add schedule delivery charges for COD order TISRLUAT-1097
-		for(AbstractOrderEntryModel entry :orderModel.getEntries()){
+		/*for(AbstractOrderEntryModel entry :orderModel.getEntries()){
 			if(entry.getScheduledDeliveryCharge()!=null && entry.getScheduledDeliveryCharge().doubleValue()>0 ){
 				scheduleDeliveryCharge+=entry.getScheduledDeliveryCharge().doubleValue();
 			}
-		}
+		}*/
 		//End  Add schedule delivery charges for COD order TISRLUAT-1097
 		
 		totalPrice = Double.valueOf(subtotal.doubleValue() + scheduleDeliveryCharge +deliveryCost.doubleValue()  - discount.doubleValue());
