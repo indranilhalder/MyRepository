@@ -356,7 +356,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		}
 		//End  Add schedule delivery charges for COD order TISRLUAT-1097
 		
-		totalPrice = Double.valueOf(subtotal.doubleValue() + scheduleDeliveryCharge  - discount.doubleValue());
+		totalPrice = Double.valueOf(subtotal.doubleValue() + scheduleDeliveryCharge +deliveryCost.doubleValue()  - discount.doubleValue());
 		return totalPrice;
 	}
 

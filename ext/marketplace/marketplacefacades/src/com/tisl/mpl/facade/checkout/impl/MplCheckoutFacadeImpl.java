@@ -472,38 +472,37 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		if (cartModel != null)
 		{
 			final Double subTotal = getCartService().getSessionCart().getSubtotal();
-			Double finalDeliveryCost = null;
+			double finalDeliveryCost = 0.0D;
 			 //Double finalDeliveryCost = Double.valueOf(cartData.getDeliveryCost().getValue().doubleValue());
 			final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
 			for(AbstractOrderEntryModel cartEntryModel: cartEntryList){
-			     if(null !=cartEntryModel && cartEntryModel.getFulfillmentMode().equalsIgnoreCase("TSHIP")){
+			     if(null !=cartEntryModel && cartEntryModel.getFulfillmentMode().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIPCODE)){
 			   	  if (cartEntryModel.getScheduledDeliveryCharge() != null
 			   	        && cartEntryModel.getScheduledDeliveryCharge().doubleValue() > 0.0)
 			   	      {
-			   	       finalDeliveryCost=cartEntryModel.getScheduledDeliveryCharge();
-			   	      }else{
-			   	         finalDeliveryCost=Double.valueOf(0.0);
+			   		    finalDeliveryCost+=0.0D;
 			   	      }
+			   	  cartEntryModel.setCurrDelCharge(Double.valueOf(finalDeliveryCost));
 			     }else{
 			   	  if(cartData.getDeliveryCost().getValue().doubleValue()==0.0){
 			   	  for(OrderEntryData cardEntryData:cartData.getEntries()){
 			   		  if(cardEntryData.getSelectedUssid().equalsIgnoreCase(cartEntryModel.getSelectedUSSID())){
 			   			  if(null !=cardEntryData.getMplDeliveryMode() && null !=cardEntryData.getMplDeliveryMode().getDeliveryCost()){
-			   				  finalDeliveryCost= cardEntryData.getMplDeliveryMode().getDeliveryCost().getDoubleValue();
+			   				  finalDeliveryCost= cardEntryData.getMplDeliveryMode().getDeliveryCost().getDoubleValue().doubleValue();
 			   			  }
 			   		  }
 			   	  }
 			   	  }else{
-			   		  finalDeliveryCost= Double.valueOf(cartData.getDeliveryCost().getValue().doubleValue()); 
+			   		  finalDeliveryCost= cartData.getDeliveryCost().getValue().doubleValue(); 
 			   	  }
 			   	 
-			   	  cartEntryModel.setCurrDelCharge(finalDeliveryCost);
+			   	  cartEntryModel.setCurrDelCharge(Double.valueOf(finalDeliveryCost));
 			     }
 			}
 			modelService.saveAll(cartEntryList);
-			final Double totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + finalDeliveryCost.doubleValue());
+			final Double totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + finalDeliveryCost);
 			cartModel.setTotalPrice(totalPriceAfterDeliveryCost);
-			cartModel.setDeliveryCost(finalDeliveryCost);
+			cartModel.setDeliveryCost(Double.valueOf(finalDeliveryCost));
 			getModelService().save(cartModel);
 
 			//return true;
