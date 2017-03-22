@@ -121,6 +121,7 @@ import com.tisl.mpl.util.GenericUtilityMethods;
 import com.granule.json.JSONObject;
 import de.hybris.platform.core.model.user.AddressModel;
 
+
 @Controller
 @RequestMapping(value = "/checkout/multi/delivery-method")
 public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepController
@@ -1398,20 +1399,30 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					addressForm.setFirstName(addressData.getFirstName());
 					addressForm.setLastName(addressData.getLastName());
 					//changes TPR-3402
-
+					//TISUATSE-73 starts
 					String addressLine1 = addressData.getLine1();
+					String addressLine2 = "";
+					String addressLine3 = "";
 
-					final String addressLine2 = addressData.getLine2();
-					final String addressLine3 = addressData.getLine3();
-
-					if (addressLine2.length() > 0)
+					if (StringUtils.isNotEmpty(addressData.getLine2()))
 					{
+						addressLine2 = addressData.getLine2();
 						addressLine1 = addressLine1 + addressLine2;
 					}
-					if (addressLine3.length() > 0)
+					if (StringUtils.isNotEmpty(addressData.getLine3()))
 					{
+						addressLine3 = addressData.getLine3();
 						addressLine1 = addressLine1 + addressLine3;
 					}
+					//TISUATSE-73 ends
+					//					if (addressLine2.length() > 0)
+					//					{
+					//						addressLine1 = addressLine1 + addressLine2;
+					//					}
+					//					if (addressLine3.length() > 0)
+					//					{
+					//						addressLine1 = addressLine1 + addressLine3;
+					//					}
 					addressForm.setLine1(addressLine1);
 					//addressForm.setLine1(addressData.getLine1());
 					//addressForm.setLine2(addressData.getLine2());
