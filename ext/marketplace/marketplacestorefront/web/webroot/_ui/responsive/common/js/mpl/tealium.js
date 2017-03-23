@@ -1147,7 +1147,6 @@ function utagAddProductToBag(triggerPoint,productCodeMSD){
 		}
 
 	utag.link({
-		link_obj: this,
 		link_text: triggerPoint ,
 		event_type : triggerPoint+"_"+ pageName,
 		product_sku : productCodeArray              // Product code passed as an array for Web Analytics - INC_11511  fix
@@ -1204,7 +1203,6 @@ function pincodeServicabilityFailure(selectedPincode){
 		{
 			//TPR-4736 | DataLAyerSchema changes | cart
 			utag.link({
-				"link_obj": this,
 				"link_text": "cart_pincode_check_failure", 
 				"event_type" : "cart_pincode_check_failure",
 				"cart_pin_non_servicable" : selectedPincode
@@ -1218,7 +1216,6 @@ function pincodeServicabilitySuccess(selectedPincode){
 	{
 		//TPR-4736 | DataLAyerSchema changes | cart
 		utag.link({
-			"link_obj": this,
 			"link_text": "cart_pincode_check_success", 
 			"event_type" : "cart_pincode_check_success",
 			"cart_pin_servicable" : selectedPincode
