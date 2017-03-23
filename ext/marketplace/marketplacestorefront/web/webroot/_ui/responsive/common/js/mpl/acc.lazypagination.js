@@ -4,6 +4,7 @@ var innerRecordSize = 7;
 var loadMoreCount = 72;
 var initPageLoad = true;
 var directPaginatedLoad = true;
+var lazyPagePush = true;
 var serpURL;
 var ajaxUrl = '';
 var recordsLoadedCount = 0;
@@ -97,6 +98,10 @@ function getProductSetData() {
             if (currentPageNo <= totalNoOfPages) {
             	if(facetAjaxUrl){
             		ajaxUrl = facetAjaxUrl.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+            		var sort = findGetParameter('sort');
+            		if(sort){
+            			ajaxUrl = ajaxUrl + '&sort='+ sort;
+            		}
             		window.history.replaceState({}, "", ajaxUrl);
             	}else{
             		ajaxUrl = pathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
@@ -118,7 +123,7 @@ function getProductSetData() {
             		ajaxUrl = ajaxUrl + query;
             	}
                 var nextPaginatedAjaxUrl = ajaxUrl;
-                window.history.replaceState({}, "", nextPaginatedAjaxUrl);
+                //window.history.replaceState({}, "", nextPaginatedAjaxUrl);
                 directPaginatedLoad =false;
             }
 			ajaxPLPLoad(ajaxUrl);
@@ -153,6 +158,10 @@ $(document).ready(function() {
     }
         $(window).on('scroll', function() {
             if ($('.lazy-reached').length != 0) {
+            	
+            	if(productItemArray.length == 16){
+					lazyPushInitalPage();
+				}
                 var hT = $('.lazy-reached').offset().top,
                     hH = $('.lazy-reached').outerHeight(),
                     wH = $(window).height(),
@@ -296,14 +305,7 @@ function ajaxPLPLoad(ajaxUrl){
         complete: function() {
             $('.lazyLoadPagination').remove();
             innerLazyLoad();
-            //TPR-4720 first 5 product display
-			if($('#pageType').val() == "productsearch"){
-				populateFirstFiveProductsSerp();	
-			}
-			
-			if($('#pageType').val() == "category" || $('#pageType').val() == "electronics"){
-				populateFirstFiveProductsPlp();
-			}
+            ACC.quickview.bindToUiCarouselLink();
         }
     });
 }
@@ -386,5 +388,23 @@ function sort(this_data,drop_down){
 		break;
 	default:
 		break;
+	}
+}
+
+function lazyPushInitalPage(){
+	
+	var pathName = window.location.pathname;
+	var pageNoExists = /page-[0-9]+/.test(pathName);
+
+	if(lazyPagePush && !pageNoExists){
+		var query = window.location.search;
+		var initialUrl = pathName.replace(/[/]$/,"") + '/page-1';
+		if(pageType == 'productsearch'){//for serp initial page 
+		initialUrl = initialUrl + '?'+ $('#searchPageDeptHierTreeForm').serialize();
+		}else if(query){
+		initialUrl = initialUrl + query;
+		}
+		window.history.replaceState({}, "", initialUrl);
+		lazyPagePush = false;
 	}
 }

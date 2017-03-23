@@ -2929,11 +2929,38 @@ $("body.page-cartPage .cart.wrapper .checkout-types li#checkout-id").on("mouseov
 });
 if ($(".facet-list.filter-opt").children().length){
 	$("body.page-productGrid .product-listing.product-grid.lazy-grid, body.page-productGrid .product-listing.product-grid.lazy-grid-facet, body.page-productGrid .product-listing.product-grid.lazy-grid-normal").css("padding-top","15px");  //INC144315068
-	$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top","-95px");
 	$("body.page-productGrid .facet-list.filter-opt").css("padding-top","65px");
-	var height = $(".facet-list.filter-opt").outerHeight() + 33 + "px";
-	$(".pagination-bar.listing-menu.top.sort_by_wrapper").css("top", height);
+	/* UF-253 start */
+	if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
+	var sort_height ="-" + $(".facet-list.filter-opt").outerHeight() + "px";
+	$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top",sort_height);
+	}
+	else{
+		var sort_height =$(".facet-list.filter-opt").outerHeight() - 12 + "px";
+		$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top",sort_height);	
+	}
 }
+$(window).on("load resize", function() {
+	if ($(".facet-list.filter-opt").children().length){
+		$("body.page-productGrid .product-listing.product-grid.lazy-grid, body.page-productGrid .product-listing.product-grid.lazy-grid-facet, body.page-productGrid .product-listing.product-grid.lazy-grid-normal").css("padding-top","15px");  //INC144315068
+		$("body.page-productGrid .facet-list.filter-opt").css("padding-top","65px");
+		if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
+			var sort_height ="-" + $(".facet-list.filter-opt").outerHeight() + "px";
+			$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top",sort_height);
+			}
+			else{
+				var sort_height =$(".facet-list.filter-opt").height() + 12 + "px";
+				$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top",sort_height);	
+			}
+	}	
+	/* UF-257 start */
+	if($('.smartbanner-show .smartbanner').css('display') == 'none'){
+		$(".smartbanner-show").css("margin-top","0px");
+	}
+	/* UF-257 end */
+});
+/* UF-253 end */
+
 
 $(document).ready(function(){ 
     $(window).scroll(function(){ 

@@ -132,9 +132,10 @@ ACC.refinements = {
 					}
 				}
 			})
-			
+			//UF-254 later page push is not considered . Putting page 1 for default.
+			var browserUrlLazy = appendPageNo(browserURL[0]);
 			// generating postAjaxURL
-			var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
+			var pageURL = browserUrlLazy +'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
 			var requiredUrl="";
 			var action = $(this).parents("form").attr('action');
 			
@@ -275,9 +276,9 @@ ACC.refinements = {
 					}
 				}
 			})
-			
+			var browserUrlLazy = appendPageNo(browserURL[0]);
 			// generating postAjaxURL
-			var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
+			var pageURL = browserUrlLazy +'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
 			var requiredUrl="";
 			var action = $(this).parents("form").attr('action');
 			
@@ -564,9 +565,9 @@ ACC.refinements = {
 						}
 					}
 				})
-				
+				var browserUrlLazy = appendPageNo(browserURL[0]);
 				// generating postAjaxURL
-				var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/:/g,"%3A");
+				var pageURL = browserUrlLazy +'?'+nonEmptyDataString.replace(/:/g,"%3A");
 				var requiredUrl="";
 				var action = dummyForm.attr('action');
 				
@@ -856,15 +857,21 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			$(".spinner").remove();
 			//UF-15
 			if ($(".facet-list.filter-opt").children().length){
-				$("body.page-productGrid .product-listing.product-grid.lazy-grid, body.page-productGrid .product-listing.product-grid.lazy-grid-facet, body.page-productGrid .product-listing.product-grid.lazy-grid-normal").css("padding-top","15px"); //INC144315068
-				$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top","-95px");
+				$("body.page-productGrid .product-listing.product-grid.lazy-grid, body.page-productGrid .product-listing.product-grid.lazy-grid-facet, body.page-productGrid .product-listing.product-grid.lazy-grid-normal").css("padding-top","15px");  //INC144315068
 				$("body.page-productGrid .facet-list.filter-opt").css("padding-top","65px");
-				var height = $(".facet-list.filter-opt").outerHeight() + 33 + "px";
-				$(".pagination-bar.listing-menu.top.sort_by_wrapper").css("top", height);
-				
+				/* UF-253 start */
+				if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
+				var sort_height ="-" + $(".facet-list.filter-opt").outerHeight() + "px";
+				$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top",sort_height);
+				}
+				else{
+					var sort_height =$(".facet-list.filter-opt").outerHeight() - 12 + "px";
+					$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top",sort_height);	
+				}
+				/* UF-253 end */
 			}
 			else{
-				//$("body.page-productGrid .product-listing.product-grid").css("margin-top","60px"); //INC144315068
+				//$("body.page-productGrid .product-listing.product-grid").css("margin-top","60px");  //INC144315068
 			}
 			// Keeps expansion-closure state of facets
 			$(".facet-name.js-facet-name h3").each(function(){
@@ -1092,6 +1099,7 @@ function lazyPaginationFacet(response){
     innerLazyLoad({isSerp:true});
     
 }
+
 //UF-15
 (function($) {
     $.strRemove = function(theTarget, theString) {
@@ -1100,3 +1108,14 @@ function lazyPaginationFacet(response){
         ).html();
     };
 })(jQuery);
+
+//UF-254
+function appendPageNo(url){
+	var modifiedUrl = null;
+	if(!(/page-[0-9]+/).test(url)){
+		modifiedUrl = url.replace(/[/]$/,"") + '/page-1';
+	}else{
+		modifiedUrl = url;
+	}
+	return modifiedUrl;
+}
