@@ -133,6 +133,19 @@ setTimeout(function() {
 	}
 }, 2000);
 
+
+/*
+1121425 alternate for jquery unique function 
+*/    
+
+function distinctVal(arr){
+    var newArray = [];
+    for(var i=0, j=arr.length; i<j; i++){
+        if(newArray.indexOf(arr[i]) == -1)
+              newArray.push(arr[i]);  
+    }
+    return newArray;
+}
 /*
  * Check if user has logged into the site
  */
@@ -1221,8 +1234,9 @@ function updatePage(response, widgetMode) {
 			categoryCodeForFilters.push(val.value);
 		});
 		/* Removing duplicate categories */
-		categoryFilters = jQuery.unique(categoryFilters);
-		categoryCodeForFilters = jQuery.unique(categoryCodeForFilters);
+		categoryFilters = distinctVal(categoryFilters);
+		// categoryCodeForFilters = jQuery.unique(categoryCodeForFilters);
+		categoryCodeForFilters = distinctVal(categoryCodeForFilters);
 		/* SortBY dropdown */
 		var sortHtml = '<div class="select-view ia_select-view-sort">';
 		sortHtml += '<div class="select-list ia_select-list-sort"><span class="selected sortSelected">Sort by: '

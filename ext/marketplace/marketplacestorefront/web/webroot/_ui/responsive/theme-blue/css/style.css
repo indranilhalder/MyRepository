@@ -49916,6 +49916,7 @@ body:not(.page-checkout-login) .checkout-header.login{
 	/* top: 5px; */ /* TISSQAEE-267 */
 	}
 
+
 .progress-barcheck .step-1.finalstep span,.progress-barcheck .step-2.finalstep span,.progress-barcheck .step-3.finalstep span{ border: 1px solid #efefef; right:8.5%; width:25px; height:25px; top:24px; }
 .progress-barcheck .step-2.finalstep span{ left:49%; }
 
@@ -61176,8 +61177,11 @@ p#error-Id_tooltip_btm:hover,p#unserviceablepincode_tooltip_btm:hover,p#emptyId_
     top: 18px;
     }
     
- /* UF-15-16 start*/
-body.page-productGrid .product-listing.product-grid.lazy-grid {
+/* UF-15-16 start*/
+ /* INC144315068 fix */
+body.page-productGrid .product-listing.product-grid.lazy-grid, 
+body.page-productGrid .product-listing.product-grid.lazy-grid-facet, 
+body.page-productGrid .product-listing.product-grid.lazy-grid-normal {
     padding-top: 65px
 }
 
@@ -61246,7 +61250,7 @@ body.page-productGrid .facet-list.filter-opt {
 	padding-top:0px;
 	}
 	body.page-productGrid .listing.wrapper .right-block .listing-menu{
-	margin-top:-12px !important;
+	margin-top:-12px; /*UF-253 */
 	}
 	body.page-productGrid .list_title h1 {
 	margin:0 auto !important;
