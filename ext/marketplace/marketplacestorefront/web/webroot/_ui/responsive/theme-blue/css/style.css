@@ -61959,7 +61959,7 @@ body .account .right-account .order-history .pagination li{
 	padding-right: 0px;
 }
 .checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea{
-	height:110px;	/* TISSQAEE-266 */
+	height:125px;	/* TISSQAEE-266 */
 }
 }
 /* TISSQAEE-244 */
