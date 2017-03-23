@@ -43,8 +43,8 @@
         	<table width="598" border="0" cellspacing="0" cellpadding="0">
         	   <tr>
         	     <td>
-        	       <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">Your Order Of</span>
-        	        <span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"> 1 Transaction Id #if($ctx.transactionID)
+        	       <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">Your Order Of</span>
+        	        <span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px ;"> 1 Transaction Id #if($ctx.transactionID)
         	          ${ctx.transactionID}
         	          ${ctx.productName}
         	          #end
@@ -83,12 +83,14 @@
       	      <tr>
                 <td>&nbsp;</td>
               </tr>
+              #if($ctx.cmsSlotContents.Tip)
+			  <tr>
+			   <td valign="middle" align="right">${ctx.cmsSlotContents.Tip}</td>
+			   <td valign="middle" align="left" style="font-weight:bold;color:#000">HERE'S A TIP</td>
+			   </tr>
+			   #end
               <tr>
-
-                #if($ctx.cmsSlotContents.Tip)<td height="60" align="left" valign="top">${ctx.cmsSlotContents.Tip}</td>#end
-              </tr>
-              <tr>
-                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">Need technical help but don't know where to go? Ask one of our experts at Tata CLiQ Care on </span></td>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px;">Need technical help but don't know where to go? Ask one of our experts at Tata CLiQ Care on </span></td>
               </tr>
               #if($ctx.cmsSlotContents.app)
               <tr>
@@ -124,7 +126,7 @@
               </tr>
               </table></td>
 
-            <td width="13">&nbsp;</td>
+            
           </tr>
 
         </table></td>
