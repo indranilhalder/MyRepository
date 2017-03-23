@@ -161,6 +161,7 @@ ${stringMessage}
 }
 
 .timeDelivery {
+	margin-top:20px;
 	width: 300%;
 	position: absolute;
 }

@@ -51,12 +51,15 @@ public class OrderReturnToStoreEmailContext extends AbstractEmailContext<ReturnQ
 	private static final String DELIVERY_CHARGE = "deliveryCharge";
 	private static final String CUSTOMER = "Customer";
 	private static final String CONTACT_US_LINK = "contactUsLink";
-	private static final String NUMBERTOOL = "numberTool";
 	/*private static final String STORE_LIST = "storeList";*/
 
 	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
-
+	//private static final String SHIPPING_CHARGES = "shippingCharges";
+	private static final String COD_CHARGES = "codCharges";
+	private static final String TOTAl_AMOUNT = "total";
+	private static final String PRODUCT_PRICE = "productPrice";
+	private static final String SELLER_ORDER_NUMBER = "sellerOrderNumber";
 
 	@Autowired
 	private ConfigurationService configurationService;
@@ -82,11 +85,15 @@ public class OrderReturnToStoreEmailContext extends AbstractEmailContext<ReturnQ
 		String name=customer.getFirstName()!=null?customer.getFirstName():CUSTOMER;
 		put(CUSTOMER_NAME, name);
 		put(EMAIL, customer.getOriginalUid());
-
+      String subOrderId = null;
+      
 
 	/*	final BigDecimal refundAmount = BigDecimal.ZERO;*/
 		AbstractOrderEntryModel orderEntry = null;
-		final double deliveryCharge = 0.0;
+		 double deliveryCharge = 0.0;
+		 double codCharges = 0.0;
+		 double productPrice = 0.0;
+		 double total = 0.0;
 		final boolean isTrue = false;
 		for (final OrderModel childOrder : orderModel.getChildOrders())
 		{
@@ -96,6 +103,7 @@ public class OrderReturnToStoreEmailContext extends AbstractEmailContext<ReturnQ
 						returnQuickDropProcessModel.getTransactionId().equalsIgnoreCase(entry.getTransactionID()))
 				{
 					orderEntry = new AbstractOrderEntryModel();
+					subOrderId=childOrder.getCode();
 					orderEntry = entry;
 					break;
 				}
@@ -118,11 +126,34 @@ public class OrderReturnToStoreEmailContext extends AbstractEmailContext<ReturnQ
 			storeInfoList.add(rtsData);
 			countName++;
 		}
+		
+		if(null != orderEntry && null != orderEntry.getCurrDelCharge()) {
+			deliveryCharge+=orderEntry.getCurrDelCharge().doubleValue();
+		}
+		
+		if(null != orderEntry && null != orderEntry.getScheduledDeliveryCharge()) {
+			deliveryCharge+=orderEntry.getScheduledDeliveryCharge().doubleValue();
+		}
+		
+		
+		if(null != orderEntry && null != orderEntry.getConvenienceChargeApportion()) {
+			codCharges=orderEntry.getConvenienceChargeApportion().doubleValue();
+		}
+		if(null != orderEntry && null != orderEntry.getNetAmountAfterAllDisc()) {
+			productPrice=orderEntry.getNetAmountAfterAllDisc().doubleValue();
+			total=orderEntry.getNetAmountAfterAllDisc().doubleValue();
+				total += deliveryCharge+codCharges;
+		}
+		
+		
 		put("storeInfoList",storeInfoList);
 		put(TRANSACTION_ID, orderEntry.getTransactionID());
 		put(NAME_OF_PRODUCT, orderEntry.getProduct().getName());
+		put(SELLER_ORDER_NUMBER, subOrderId);
 		put(DELIVERY_CHARGE, Double.valueOf(deliveryCharge));
-		put(NUMBERTOOL, new NumberTool());
+		put(COD_CHARGES, Double.valueOf(codCharges));
+		put(PRODUCT_PRICE, Double.valueOf(productPrice));
+		put(TOTAl_AMOUNT, String.valueOf(total));
 
 
 		final String customerCareNumber = configurationService.getConfiguration().getString("marketplace.sms.service.contactno",
