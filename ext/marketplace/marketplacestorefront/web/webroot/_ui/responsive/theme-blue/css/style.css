@@ -54677,12 +54677,14 @@ body .lookbook_wrapper .listing.wrapper .left-block{
     color: #a5a5a5 !important;
   }
   .checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea{
-  margin-bottom: 20px;
-    font-size: 14px;
+	 /*  margin-bottom: 20px; */ /* TISSQAEE-266 */
+ 	margin-bottom: 12px; /* TISSQAEE-266 */
+   	font-size: 14px;
     border: 1px solid #dbdbdb;
     height: 100px;
     width:100%;
     padding-left: 17px;
+    resize:none; /* TISSQAEE-266 */
   }
   
   .checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea::-webkit-input-placeholder {
@@ -61956,5 +61958,15 @@ body .account .right-account .order-history .pagination li{
 .pagination li.prev{
 	padding-right: 0px;
 }
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea{
+	height:110px;	/* TISSQAEE-266 */
+}
 }
 /* TISSQAEE-244 */
+
+/* TISSQAEE-266 */
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea ~ span{
+	margin-bottom: 12px;
+	display: inline-block;
+}
+/* TISSQAEE-266 */
