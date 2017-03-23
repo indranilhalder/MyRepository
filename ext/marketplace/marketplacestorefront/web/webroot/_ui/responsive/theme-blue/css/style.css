@@ -56265,18 +56265,7 @@ left: -5px;
 	    float: right;
 	    text-align:left;
 }
- /* R2.3 TISRLREG-2465 Author Tribhuvan Start*/
-@media only screen and (max-width: 767px){
-	 
- .checkout.wrapper .product-block li.item > ul li.delivery{
-		    clear: both;
-    float: none;
-    margin-top: 20px;
-    width: 100%;
-    text-align: left;
- }
-	}
-	 /* R2.3 TISRLREG-2465 Author Tribhuvan end*/
+
 .cart.wrapper .product-block li.item > ul > li.qty{
 	width: 15%;
 	padding: 20px 30px 25px 0;
