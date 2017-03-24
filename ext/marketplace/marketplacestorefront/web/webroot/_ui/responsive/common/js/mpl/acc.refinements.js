@@ -7,6 +7,7 @@ var res;
 var filterValue = "";
 var filterName = "";
 var filterChecked = "";
+
 ACC.refinements = {
 
 	_autoload: [
@@ -131,9 +132,10 @@ ACC.refinements = {
 					}
 				}
 			})
-			
+			//UF-254 later page push is not considered . Putting page 1 for default.
+			var browserUrlLazy = appendPageNo(browserURL[0]);
 			// generating postAjaxURL
-			var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
+			var pageURL = browserUrlLazy +'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
 			var requiredUrl="";
 			var action = $(this).parents("form").attr('action');
 			
@@ -274,9 +276,9 @@ ACC.refinements = {
 					}
 				}
 			})
-			
+			var browserUrlLazy = appendPageNo(browserURL[0]);
 			// generating postAjaxURL
-			var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
+			var pageURL = browserUrlLazy +'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
 			var requiredUrl="";
 			var action = $(this).parents("form").attr('action');
 			
@@ -317,7 +319,7 @@ ACC.refinements = {
 					requiredUrl = action;
 				}
 			}
-			
+
 			// TPR-645 Start INC_11511  fix--h3 tag done
 			var filterValue = '';
 			var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
@@ -328,7 +330,7 @@ ACC.refinements = {
 				// console.log($(this).attr('class').text());
 				filterValue = $(this).parent().find('span > span').text();
 			}
-			
+
 			if($(this).attr('checked')){
 				filterChecked = true;
 				//onFilterRemoveAnalytics(filterName,filterValue);
@@ -340,6 +342,7 @@ ACC.refinements = {
 			// TPR-645 End
 			// AJAX call
 			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
+
 		});
 		
 		// TPR-845
@@ -405,22 +408,26 @@ ACC.refinements = {
 			else {
 				requiredUrl = action[0].concat("/getFacetData");
 			}
+
+			
 			//Utag Fire on remove filter or any price start
-  			if($(this).attr('class') == "remove_filter") {
-  				filterName=$(this).parents('li').children().eq(0).attr('class');
-  				filterValue=$(this).parents('li').children().eq(1).attr('value');
-  				filterChecked = true;
-  				//onFilterRemoveAnalytics(filterName,filterValue);
-  			}
-  			else {
-  				filterName="price"
-  				filterValue=$('.facet-list.filter-opt .price').siblings('.applied-color').val();
-  				filterChecked = true;
-  				//onFilterRemoveAnalytics(filterName,filterValue);
-  			}
-  			//utag firing on remove filter or any price end
+			if($(this).attr('class') == "remove_filter"){
+				filterName=$(this).parents('li').children().eq(0).attr('class');
+				filterValue=$(this).parents('li').children().eq(1).attr('value');
+				filterChecked = true;
+				//onFilterRemoveAnalytics(filterName,filterValue);
+			}
+			else{
+				filterName="price"
+				filterValue=$('.facet-list.filter-opt .price').siblings('.applied-color').val();
+				filterChecked = true;
+				//onFilterRemoveAnalytics(filterName,filterValue);
+			}
+			
 			// AJAX call
 			filterDataAjax(requiredUrl,dataString,pageURL);
+			
+			//utag firing on remove filter or any price end
 			return false;
 		});
 		
@@ -561,9 +568,9 @@ ACC.refinements = {
 						}
 					}
 				})
-				
+				var browserUrlLazy = appendPageNo(browserURL[0]);
 				// generating postAjaxURL
-				var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/:/g,"%3A");
+				var pageURL = browserUrlLazy +'?'+nonEmptyDataString.replace(/:/g,"%3A");
 				var requiredUrl="";
 				var action = dummyForm.attr('action');
 				
@@ -853,15 +860,21 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			$(".spinner").remove();
 			//UF-15
 			if ($(".facet-list.filter-opt").children().length){
-				$("body.page-productGrid .product-listing.product-grid.lazy-grid").css("padding-top","15px");
-				$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top","-95px");
+				$("body.page-productGrid .product-listing.product-grid.lazy-grid, body.page-productGrid .product-listing.product-grid.lazy-grid-facet, body.page-productGrid .product-listing.product-grid.lazy-grid-normal").css("padding-top","15px");  //INC144315068
 				$("body.page-productGrid .facet-list.filter-opt").css("padding-top","65px");
-				var height = $(".facet-list.filter-opt").outerHeight() + 33 + "px";
-				$(".pagination-bar.listing-menu.top.sort_by_wrapper").css("top", height);
-				
+				/* UF-253 start */
+				if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
+				var sort_height ="-" + $(".facet-list.filter-opt").outerHeight() + "px";
+				$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top",sort_height);
+				}
+				else{
+					var sort_height =$(".facet-list.filter-opt").outerHeight() - 12 + "px";
+					$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top",sort_height);	
+				}
+				/* UF-253 end */
 			}
 			else{
-				$("body.page-productGrid .product-listing.product-grid").css("margin-top","60px");
+				//$("body.page-productGrid .product-listing.product-grid").css("margin-top","60px");  //INC144315068
 			}
 			// Keeps expansion-closure state of facets
 			$(".facet-name.js-facet-name h3").each(function(){
@@ -960,16 +973,7 @@ function createSearchQuery(filterMobileQuery){
 	return queryString;
 }
 
-/*// TPR-645
-function onFilterClickAnalytics(filterName,filterValue){
-	var msg = (filterName+"_"+filterValue).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
-	utag.link({
-		link_obj: this,
-		link_text: msg ,
-		event_type : 'search_filter_usage',
-		search_filter : msg
-	});
-}*/
+
 
 //TPR-645,TPR-4704,TPR-4719
 
@@ -1091,6 +1095,7 @@ function lazyPaginationFacet(response){
     innerLazyLoad({isSerp:true});
     
 }
+
 //UF-15
 (function($) {
     $.strRemove = function(theTarget, theString) {
@@ -1099,3 +1104,14 @@ function lazyPaginationFacet(response){
         ).html();
     };
 })(jQuery);
+
+//UF-254
+function appendPageNo(url){
+	var modifiedUrl = null;
+	if(!(/page-[0-9]+/).test(url)){
+		modifiedUrl = url.replace(/[/]$/,"") + '/page-1';
+	}else{
+		modifiedUrl = url;
+	}
+	return modifiedUrl;
+}
