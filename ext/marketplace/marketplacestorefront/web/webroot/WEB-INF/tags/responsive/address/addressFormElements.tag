@@ -209,14 +209,14 @@ display: none;}
 		
 		<formElement:formInputBox idKey="address.firstName" labelKey="First Name*"
 			 path="firstName" 
-			mandatory="true" maxLength="40" placeholder="FirstName*"/>
+			mandatory="true" maxLength="40"/>
 			<div class="help-block has-error" id="firstnameError" style="display: none;">		
 			</div>	
 			</div>
 			<div class='half'>
 		<formElement:formInputBox idKey="address.surname"  labelKey="Last Name*"
 			 path="lastName" 
-			mandatory="true" maxLength="40" placeholder="Lastname*"/>
+			mandatory="true" maxLength="40"/>
 			<div class="help-block has-error" id="lastnameError" style="display: none;">		
 			</div>
 			</div>
@@ -232,7 +232,7 @@ display: none;}
       
 	 	<form:input type="text" idKey="address.mobile" 
 			 path="MobileNo" inputCSS="form-control"
-			mandatory="true" maxLength="10" placeholder="Phone Number*"/> 
+			mandatory="true" maxLength="10" /> 
 			<div class="help-block has-error" id="mobileError" style="display: none;">		
 			</div>	 
 		</div>	
@@ -240,7 +240,7 @@ display: none;}
 		<div class='half'>
 		<formElement:formInputBox idKey="address.postcode"
 			path="postcode"  labelKey="Pincode*"
-			mandatory="true" maxLength="6" placeholder="Pincode*" inputCSS="address_postcode"/>
+			mandatory="true" maxLength="6" inputCSS="address_postcode"/>
 		<div class="help-block has-error" id="addressPincodeServicableDiv"
 			style="display: none;"></div>
 			<div class="help-block has-error" id="pincodeError" style="display: none;">
@@ -250,7 +250,7 @@ display: none;}
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line1"
 			 path="line1" labelKey="Address Line 1*"
-			mandatory="true" maxLength="40"  placeholder="Address Line 1*"/>
+			mandatory="true" maxLength="40"  />
 			 <div class="help-block has-error" id="address1Error" style="display: none;">
 			</div>
 			</div>
@@ -258,7 +258,7 @@ display: none;}
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line2"
 			 path="line2"  labelKey="Address Line 2"
-			mandatory="true" maxLength="40" placeholder="Address Line 2"/>
+			mandatory="true" maxLength="40" />
 			 <div class="help-block has-error" id="address2Error" style="display: none;">
 			</div>
 			</div>
@@ -266,7 +266,7 @@ display: none;}
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line3"
 			 path="line3"  labelKey="Address Line 3"
-			mandatory="true" maxLength="40" placeholder="Address Line 3"/>
+			mandatory="true" maxLength="40" />
 			 <div class="help-block has-error" id="address3Error" style="display: none;">
 			</div>
 			</div>
@@ -297,7 +297,7 @@ display: none;}
 		<!-- TISUAT-4696  /TPR-215 / R2.3 --> 
 		<formElement:formInputBox idKey="address.townCity" inputCSS="address_townCity"
 			labelKey="address.townCity" path="townCity" 
-			mandatory="true" maxLength="40" placeholder="City*"/>
+			mandatory="true" maxLength="40" />
 			<div class="help-block has-error" id="cityError" style="display: none;">
 			</div>
 			</div>
