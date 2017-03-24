@@ -142,10 +142,9 @@
 	<%-- <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('media.dammedia.host')" var="mediaHost"/> --%>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('seo.media.url')" var="seoMediaURL"/>
 	
-	<!-- Markup for Google+ -->
-	<!-- <meta itemprop="name" content="${metaTitle}"> -->
+	<!-- Markup for Google+ -->	
 	<!-- Code Added For INC_11638 - Start -->
-	 <meta itemprop="name" content="${canonical}">
+	 <meta itemprop="name" content="${metaTitle}">
 	<!-- Code Added For INC_11638 - End -->	
 	<meta itemprop="description" content="${metaDescription}">
 	<%-- <meta itemprop="image" content="${protocolString[0]}://${mediaHost}${seoMediaURL}"> --%>
@@ -169,10 +168,8 @@
 	<%-- twitter-card added for INC_10384 --%>
 	<!-- Code Added For INC_11638 - Start -->
 	<meta name="twitter:card" content="summary_large_image">	
-	<meta name="twitter:title" content="${canonical}">
-	<!-- Code Added For INC_11638 - End -->	
-	<!-- <meta name="twitter:card" content="summary_large_image" 
-	     <meta name="twitter:title" content="${metaTitle}">/>  -->
+	<meta name="twitter:title" content="${metaTitle}">
+	<!-- Code Added For INC_11638 - End -->		
 	<meta name="twitter:site" content="${twitterHandle}">	
 	<meta name="twitter:description" content="${metaDescription}">
 	<%-- <meta name="twitter:image:src" content="${protocolString[0]}://${mediaHost}${seoMediaURL}">
@@ -190,10 +187,9 @@
 	</c:otherwise>
 	</c:choose>
 	
-	<!-- FB Open Graph data -->
-	<!-- <meta property="og:title" content="${metaTitle}" /> -->	
+	<!-- FB Open Graph data -->	
 	<!-- Code Added For INC_11638 - Start -->
-	<meta property="og:title" content="${canonical}" />
+	<meta property="og:title" content="${metaTitle}" />
 	<!-- Code Added For INC_11638 - End -->
 	<meta property="og:url" content="${canonical}" />
 	
@@ -224,7 +220,7 @@
 		<meta property="al:ios:app_name" content="Tata Cliq" />
 		
 		<!-- For Android -->
-		<meta property="al:android:package" content="com.tataunistore.unistore" />
+		<meta property="al:android:package" content="com.tul.tatacliq" />
 		<meta property="al:android:url" content="${canonical}" />
 		<meta property="al:android:app_name" content="Tata Cliq" />
 		
