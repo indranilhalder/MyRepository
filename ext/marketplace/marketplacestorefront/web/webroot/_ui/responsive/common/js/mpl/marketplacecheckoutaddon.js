@@ -8008,3 +8008,6 @@ $(document).ajaxComplete(function(){
 	if($("#unserviceablepincode").css("display") === "none")
 		$(".unservicePins").hide();
 });
+$(".card_exp_month, .card_exp_year").on("change",function(){
+	$(this).css("color","#000");
+});
