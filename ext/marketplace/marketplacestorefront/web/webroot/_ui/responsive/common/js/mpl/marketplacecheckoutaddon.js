@@ -5541,7 +5541,8 @@ function checkPincodeServiceability(buttonType,el)
  	 			// reloadpage(selectedPincode,buttonType);
  			} 
  			else
- 			{
+
+ 				{
  				utagCheckPincodeStatus = "cart_pincode_check_success";
  				/*if(typeof utag !="undefined")
  				{
@@ -5623,26 +5624,28 @@ function checkPincodeServiceability(buttonType,el)
  	 		// },500);
  		},
  		complete : function(resp){
-		//TPR-4736 | DataLAyerSchema changes | cart
-			if(utagCheckPincodeStatus == "cart_pincode_check_failure"){
-				if(typeof utag !="undefined"){
-	  				utag.link({
-	 	 				"link_text": utagCheckPincodeStatus, 
-	 	 				"event_type" : utagCheckPincodeStatus,
-	 	 				"cart_pin_non_servicable" : selectedPincode
-	 	 			});
-	  			}
-			}
-			else{
-				if(typeof utag !="undefined"){
-					utag.link({
-		 				"link_text": "cart_pincode_check_success", 
-		 				"event_type" : "cart_pincode_check_success",
-		 				"cart_pin_servicable" : selectedPincode
-		 			});
-	  			}
-			}
-   		}
+
+ 					//TPR-4736 | DataLAyerSchema changes | cart
+	  					if(utagCheckPincodeStatus == "cart_pincode_check_failure"){
+	  						if(typeof utag !="undefined"){
+	 			  				utag.link({
+	 			 	 				"link_text": utagCheckPincodeStatus, 
+	 			 	 				"event_type" : utagCheckPincodeStatus,
+	 			 	 				"cart_pin_non_servicable" : selectedPincode
+	 			 	 			});
+	 			  			}
+ 						}
+	  					else{
+	  						if(typeof utag !="undefined"){
+	  							utag.link({
+	  				 				"link_text": "cart_pincode_check_success", 
+	  				 				"event_type" : "cart_pincode_check_success",
+	  				 				"cart_pin_servicable" : selectedPincode
+	  				 			});
+	 			  			}
+	  					}
+ 			   		}
+
  	});
 	
 
@@ -6125,22 +6128,23 @@ function checkIsServicable()
 	 			//Sprint merge issue
 	 			var responeStr=response['pincodeData'].split("|");
 	 			if(responeStr[0]=="N"){
-		 			$("#cartPinCodeAvailable").hide();
-		 			$("#AvailableMessage").hide();
-		 			$("#AvailableMessageBtm").hide();//UF-68
-	 				// $("#unserviceablepincode").html("One or more item(s) are not
-					// available at this location. Please remove the item(s) to
-					// proceed or try an other pincode?");
-	 				$("#unserviceablepincode").show();// TPR-1329
-	 				$("#unserviceablepincodeBtm").show();//UF-68
-	 				$("#unserviceablepincode_tooltip").show();
-	 				$("#unserviceablepincode_tooltip_btm").show();
-	 				$(".pincodeServiceError").show();
-	 				//$("#pinCodeButtonIds").text("Change Pincode");
-	 				document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
-	 				document.getElementById("pinCodeButtonIdsBtm").className = "ChangePincode";//UF-71
-	 				//pincodeServicabilityFailure(selectedPincode);
-	 				utagCheckPincodeStatus = false;
+
+	 			$("#cartPinCodeAvailable").hide();
+	 			$("#AvailableMessage").hide();
+	 			$("#AvailableMessageBtm").hide();//UF-68
+ 				// $("#unserviceablepincode").html("One or more item(s) are not
+				// available at this location. Please remove the item(s) to
+				// proceed or try an other pincode?");
+ 				$("#unserviceablepincode").show();// TPR-1329
+ 				$("#unserviceablepincodeBtm").show();//UF-68
+ 				$("#unserviceablepincode_tooltip").show();
+ 				 $("#unserviceablepincode_tooltip_btm").show();
+ 				 $(".pincodeServiceError").show();
+ 				//$("#pinCodeButtonIds").text("Change Pincode");
+ 				document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
+ 				document.getElementById("pinCodeButtonIdsBtm").className = "ChangePincode";//UF-71
+ 				//pincodeServicabilityFailure(selectedPincode);
+ 				utagCheckPincodeStatus = false;
 	 			}
 	 			else{
 	 				$(".deliveryUlClass").remove();//TPR-1341
@@ -6188,6 +6192,7 @@ function checkIsServicable()
  	 				});
  	 			}
 	 		},
+
 			complete : function(resp){
 				if(utagCheckPincodeStatus == true){
 					pincodeServicabilitySuccess(selectedPincode);
@@ -6196,6 +6201,8 @@ function checkIsServicable()
 					pincodeServicabilityFailure(selectedPincode);
 				}
 			} 
+
+	 		
 
 	 	});
 	}

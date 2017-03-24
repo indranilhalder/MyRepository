@@ -1490,7 +1490,6 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						//onFilterAddAnalytics(filterName,filterValue);
 						filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
 						//TPR-645 end
-						
 					}
 					
 				});
