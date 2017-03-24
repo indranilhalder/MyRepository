@@ -54660,7 +54660,7 @@ body .lookbook_wrapper .listing.wrapper .left-block{
     height: 44px;
     padding-left: 17px;
     color: #a5a5a5;
-    background-image: url('../images/arrow.png');
+    background-image:url(../images/select-arrow-new.png); /*TISPRDT-692 */
   }
   .checkout.wrapper .formaddress  select[name="myselect"]{
   margin-bottom: 20px;
@@ -63257,7 +63257,7 @@ body:not(.page-checkout-login) .step-body .checkout-shipping.left-block{
 	/* start change for INC144314113 & INC144314406 */
 	 body.page-multiStepCheckoutSummaryPage,
 	 body.page-cartPage{
-		margin-top:-80px;
+		/* margin-top:-80px; */
 	 } 
 	 /* end change for INC144314113 & INC144314406 */
 }

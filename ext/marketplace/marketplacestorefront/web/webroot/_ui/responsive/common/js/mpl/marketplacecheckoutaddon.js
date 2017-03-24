@@ -5532,7 +5532,7 @@ function checkPincodeServiceability(buttonType,el)
  		cache: false,
  		success : function(response) {
  			//UF-84
- 			$("#pincodeforcart").html("("+ selectedPincode + ")");
+ 			$("#pincodeforcart").html("&nbsp;("+ selectedPincode + ")"); /*TISPRDT-690 */
  			//"sprint merger issue
  			var responeStr=response['pincodeData'].split("|");
  			//TPR-970 changes
@@ -6148,7 +6148,7 @@ function checkIsServicable()
 	 		cache: false,
 	 		success : function(response) {
 	 			//UF-84
-	 			$("#pincodeforcart").html("("+ selectedPincode + ")");
+	 			$("#pincodeforcart").html("&nbsp;("+ selectedPincode + ")"); /*TISPRDT-690 */
 	 			// TPR-1055
 	 			//Sprint merge issue
 	 			var responeStr=response['pincodeData'].split("|");
