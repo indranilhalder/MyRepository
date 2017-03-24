@@ -101,4 +101,5 @@ INSERT_UPDATE JuspayEBSResponseData;oldPK[Unique=true];
 REMOVE JuspayEBSResponseData;oldPK[Unique=true];
 ;1234567890123;
 
-INSERT_UPDATE PaymentType;baseStore(uid);mode[unique=true];isAvailable;mpl;UNKNOWN;false 
+INSERT_UPDATE PaymentType;baseStore(uid);mode[unique=true];isAvailable
+;mpl;UNKNOWN;false 
