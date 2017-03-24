@@ -2043,8 +2043,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 								double refundAmount = 0D;
 								final Double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge()
 										: NumberUtils.DOUBLE_ZERO;
-
-								refundAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost.doubleValue();
+								// Added in r2.3 START 
+								final Double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry.getScheduledDeliveryCharge()
+										: NumberUtils.DOUBLE_ZERO;
+							// Added in r2.3 END
+								refundAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost.doubleValue()+scheduleDeliveryCost.doubleValue();
 								refundAmount = mplJusPayRefundService.validateRefundAmount(refundAmount, subOrderModel);
 								//TISPRO-216 Ends
 
@@ -2073,7 +2076,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
 								orderEntry.setCurrDelCharge(new Double(0D));
-
+								// Added in R2.3 START 
+								orderEntry.setRefundedScheduleDeliveryChargeAmt(scheduleDeliveryCost);
+								orderEntry.setScheduledDeliveryCharge(new Double(0D));
+							   // Added in R2.3 END
 								//Start TISPRD-871
 								if (newStatus.equals(ConsignmentStatus.ORDER_CANCELLED))
 								{

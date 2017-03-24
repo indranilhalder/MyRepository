@@ -142,6 +142,10 @@ public class MarketPlaceDefaultCancellationController extends
 					// Returning delivery cost in case of cancellation.
 					double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry
 							.getCurrDelCharge() : NumberUtils.DOUBLE_ZERO;
+						//  Added in R2.3 Returning Schedule Delivery delivery cost in case of cancellation 	START
+							deliveryCost+=	orderEntry.getScheduledDeliveryCharge() != null ? orderEntry
+									.getScheduledDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
+						//  Added in R2.3 Returning Schedule Delivery delivery cost in case of cancellation 	END
 					double totalprice = orderEntry.getNetAmountAfterAllDisc();
 					long cancelledQuantitiy = orderCancelEntry
 							.getCancelQuantity();
@@ -197,6 +201,12 @@ public class MarketPlaceDefaultCancellationController extends
 										.getCurrDelCharge() != null ? orderEntry
 										.getCurrDelCharge()
 										: NumberUtils.DOUBLE_ZERO;
+										// Added in R2.3 START  
+								double	scheduleDeliveryCost=orderEntry
+												.getScheduledDeliveryCharge() != null ? orderEntry
+														.getScheduledDeliveryCharge()
+														: NumberUtils.DOUBLE_ZERO;
+										// Added in R2.3 END  
 								ConsignmentStatus newStatus = null;
 								// If CosignmentEnteries are present then update
 								// OMS with the state.
@@ -235,7 +245,7 @@ public class MarketPlaceDefaultCancellationController extends
 												.setRefundType(JuspayRefundType.CANCELLED);
 										refundTransactionMappingModel
 												.setRefundAmount(orderEntry.getNetAmountAfterAllDisc()
-														+deliveryCost);//TISPRO-216 : Refund amount Set in RTM
+														+deliveryCost+scheduleDeliveryCost);//TISPRO-216 : Refund amount Set in RTM
 										getModelService().save(
 												refundTransactionMappingModel);
 									} else {
@@ -255,6 +265,9 @@ public class MarketPlaceDefaultCancellationController extends
 								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
 								orderEntry.setCurrDelCharge(0D);
 								
+								orderEntry.setRefundedScheduleDeliveryChargeAmt(scheduleDeliveryCost);
+								orderEntry.setScheduledDeliveryCharge(0D);
+								
 								//Start TISPRD-871
 								if(newStatus.equals(ConsignmentStatus.ORDER_CANCELLED)){
 									orderEntry.setJuspayRequestId(uniqueRequestId);
@@ -264,7 +277,7 @@ public class MarketPlaceDefaultCancellationController extends
 								getModelService().save(orderEntry);
 								mplJusPayRefundService.makeRefundOMSCall(
 										orderEntry, paymentTransactionModel,
-										totalprice + deliveryCost, newStatus,null);
+										totalprice + deliveryCost+scheduleDeliveryCost, newStatus,null);
 
 							}
 						}
@@ -294,7 +307,7 @@ public class MarketPlaceDefaultCancellationController extends
 					OrderEntryModel orderEntry = modificationEntry
 							.getOrderEntry();
 					refundedAmount += orderEntry.getNetAmountAfterAllDisc()
-							+ orderEntry.getCurrDelCharge()+orderEntry.getConvenienceChargeApportion();
+							+ orderEntry.getCurrDelCharge()+orderEntry.getScheduledDeliveryCharge()+orderEntry.getConvenienceChargeApportion();
 					// If CosignmentEnteries are present then update OMS with
 					// the state.
 					if (orderEntry != null

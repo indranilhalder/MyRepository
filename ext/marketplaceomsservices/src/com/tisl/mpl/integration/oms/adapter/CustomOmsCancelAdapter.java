@@ -343,7 +343,7 @@ public class CustomOmsCancelAdapter implements Serializable
 			double deliveryCost = 0D;
 			if (orderEntry.getCurrDelCharge() != null)
 			{
-				deliveryCost = orderEntry.getCurrDelCharge().doubleValue();
+				deliveryCost = orderEntry.getCurrDelCharge().doubleValue()+orderEntry.getScheduledDeliveryCharge().doubleValue();
 			}
 
 
@@ -641,8 +641,14 @@ public class CustomOmsCancelAdapter implements Serializable
 								}
 								final Double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge()
 										: NumberUtils.DOUBLE_ZERO;
+								final Double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry.getScheduledDeliveryCharge()
+										: NumberUtils.DOUBLE_ZERO;
 								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
 								orderEntry.setCurrDelCharge(new Double(0D));
+								// Added in R2.3 START 
+								orderEntry.setRefundedScheduleDeliveryChargeAmt(scheduleDeliveryCost);
+								orderEntry.setScheduledDeliveryCharge(new Double(0D));
+							   // Added in R2.3 END 
 								if (newStatus.equals(ConsignmentStatus.ORDER_CANCELLED))
 								{
 									orderEntry.setJuspayRequestId(uniqueRequestId);
@@ -652,7 +658,7 @@ public class CustomOmsCancelAdapter implements Serializable
 										+ newStatus.getCode());
 
 								final double refundAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue()
-										+ deliveryCost.doubleValue();
+										+ deliveryCost.doubleValue()+scheduleDeliveryCost.doubleValue();
 								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
 										Double.valueOf(refundAmount), newStatus,null);
 							}

@@ -896,11 +896,17 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			{
 				final double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge().doubleValue()
 						: NumberUtils.DOUBLE_ZERO.doubleValue();
-
-				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost;
+				// Added in R2.3 START 
+				final double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry.getScheduledDeliveryCharge().doubleValue()
+						: NumberUtils.DOUBLE_ZERO.doubleValue();
+			// Added in R2.3 END
+				
+				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost+scheduleDeliveryCost;
 
 				orderEntry.setRefundedDeliveryChargeAmt(Double.valueOf(deliveryCost));
 				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
+				orderEntry.setRefundedScheduleDeliveryChargeAmt(Double.valueOf(scheduleDeliveryCost));
+				orderEntry.setScheduledDeliveryCharge(NumberUtils.DOUBLE_ZERO);
 				getModelService().save(orderEntry);
 
 				makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount), ConsignmentStatus.REFUND_INITIATED,null);
@@ -951,14 +957,20 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			if (orderEntry != null)
 			{
 				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue()
-						+ orderEntry.getCurrDelCharge().doubleValue();
+						+ orderEntry.getCurrDelCharge().doubleValue()+orderEntry.getScheduledDeliveryCharge().doubleValue();
 
 
 				final double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge().doubleValue()
 						: NumberUtils.DOUBLE_ZERO.doubleValue();
+				final double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry.getScheduledDeliveryCharge().doubleValue()
+						: NumberUtils.DOUBLE_ZERO.doubleValue();
 
 				orderEntry.setRefundedDeliveryChargeAmt(Double.valueOf(deliveryCost));
 				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
+				// Added in R2.3 START 
+				orderEntry.setRefundedScheduleDeliveryChargeAmt(Double.valueOf(scheduleDeliveryCost));
+				orderEntry.setScheduledDeliveryCharge(NumberUtils.DOUBLE_ZERO);
+			// Added in R2.3 END
 				getModelService().save(orderEntry);
 
 				makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount), ConsignmentStatus.REFUND_IN_PROGRESS,null);
