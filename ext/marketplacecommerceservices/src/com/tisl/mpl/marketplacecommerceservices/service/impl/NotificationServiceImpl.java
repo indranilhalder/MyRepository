@@ -732,11 +732,11 @@ public class NotificationServiceImpl implements NotificationService
 	 * @return List<VoucherStatusNotificationModel>
 	 * @throws EtailNonBusinessExceptions
 	 */
-	private List<VoucherStatusNotificationModel> getModelForVoucherIdentifier(final String voucherCode)
+	/*private List<VoucherStatusNotificationModel> getModelForVoucherIdentifier(final String voucherCode)
 			throws EtailNonBusinessExceptions
 	{
 		return getNotificationDao().getModelForVoucherIdentifier(voucherCode);
-	}
+	}*///sonar issue 
 
 	/**
 	 * @return the voucherModelService
