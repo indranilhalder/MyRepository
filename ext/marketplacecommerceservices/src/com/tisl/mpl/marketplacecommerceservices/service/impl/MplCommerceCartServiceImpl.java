@@ -3539,10 +3539,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 */
 	@Override
 	public boolean isInventoryReserved(final AbstractOrderModel abstractOrderModel, final String requestType,
-			final String defaultPinCodeId) throws EtailNonBusinessExceptions //Parameter AbstractOrderModel added extra for TPR-629
+			final String defaultPinCodeId,final InventoryReservListRequestWsDTO item,SalesApplication salesApplication) throws EtailNonBusinessExceptions //Parameter AbstractOrderModel added extra for TPR-629
 	{
-		final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel, null,
-				SalesApplication.WEB);
+		final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel, item,salesApplication);
 		final List<CartSoftReservationData> cartSoftForCncReservationDatalist = new ArrayList<CartSoftReservationData>();
 
 
