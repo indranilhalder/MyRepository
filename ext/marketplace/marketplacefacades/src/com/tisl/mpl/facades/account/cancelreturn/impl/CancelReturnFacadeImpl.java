@@ -11,7 +11,6 @@ import de.hybris.platform.basecommerce.enums.RefundReason;
 import de.hybris.platform.basecommerce.enums.ReturnAction;
 import de.hybris.platform.basecommerce.enums.ReturnStatus;
 import de.hybris.platform.basecommerce.jalo.BasecommerceManager;
-import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
@@ -1345,7 +1344,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					final SimpleDateFormat format4 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 					format4.setTimeZone(TimeZone.getTimeZone("GMT"));
 					if(LOG.isDebugEnabled()) {
-						LOG.debug("ReturnPickupDate Time Slot From"+String.valueOf(format4.format(format3.parse(timeSlotFrom))));
+						LOG.debug("ReturnPickupDate Time Slot From");
 					}
 					sendTicketRequestData.setTimeSlotFrom(String.valueOf(format4.format(format3.parse(timeSlotFrom))));
 				}catch(Exception e) {
@@ -1367,7 +1366,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					final SimpleDateFormat format4 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 					format4.setTimeZone(TimeZone.getTimeZone("GMT"));
 					if(LOG.isDebugEnabled()) {
-						LOG.debug("ReturnPickupDate Time Slot To"+String.valueOf(format4.format(format3.parse(timeSlotTo))));
+						LOG.debug("ReturnPickupDate Time Slot To");
 					}
 					sendTicketRequestData.setTimeSlotTo(String.valueOf(format4.format(format3.parse(timeSlotTo))));
 				}catch(Exception e) {
