@@ -200,7 +200,8 @@
 									</div>
 									<div
 										class="col-md-9 addressTextChange addressSpace changeAddress${status.count}">
-										<b>Residential Address ${addressCount} - Default</b> <br /> 
+										<b>Residential Address ${addressCount} <c:if test="${orderDeliveryAddressList.defaultAddress}">&nbsp;&nbsp;-Default Address</c:if></b> <br /> 
+										
 										<span class="firstName addressFont">${orderDeliveryAddressList.firstName}</span>
 										<span class="lastName addressFont">${orderDeliveryAddressList.lastName}</span><br>
 										<c:if test="${not empty orderDeliveryAddressList.line1}">
