@@ -7207,7 +7207,7 @@ $(document).ready(function(){
 	}
 	if ($("#checkoutPageName").val() == "Payment Options"){
 		$(" body.page-multiStepCheckoutSummaryPage .progress-barcheck .step-done span").addClass("paymentStepDone");
-		var alert_top= $("header").outerHeight() + $(".container-address.nav").outerHeight(); 
+		var alert_top= $("header").outerHeight(); /*TISPRDT-653 */
 		$(".alert-danger").css({
 			  position : "fixed",
 			  width: "100%",
