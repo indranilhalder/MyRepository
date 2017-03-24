@@ -1313,37 +1313,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						subOrderEntry.getTransactionId());
 				requestOrderCancel(subOrderDetails, subOrderModel, orderCancelRequest);
 			}
-			//Mrupee  Return implementation
-			else if ("R".equalsIgnoreCase(ticketTypeCode) && subOrderModel.getIsWallet().equals(WalletEnum.MRUPEE))
-			{
-				LOG.debug(" MRupee Return started***********************************cancelOrRetrnanable : " + ticketTypeCode);
-
-				final MplOrderCancelRequest orderCancelRequest = buildCancelRequest(reasonCode, subOrderModel,
-						subOrderEntry.getTransactionId());
-				final OrderCancelRecordEntryModel orderRequestRecord = orderCancelService.requestOrderCancel(orderCancelRequest,
-						userService.getCurrentUser());
-				if (OrderCancelEntryStatus.DENIED.equals(orderRequestRecord.getCancelResult()))
-				{
-					final String orderCode = subOrderDetails.getCode();
-
-					String message = MarketplacecommerceservicesConstants.EMPTY;
-					if (orderRequestRecord.getRefusedMessage() != null)
-					{
-						message = message + orderRequestRecord.getRefusedMessage();
-					}
-					if (orderRequestRecord.getFailedMessage() != null)
-					{
-						message = message + orderRequestRecord.getFailedMessage();
-					}
-
-					throw new OrderCancelException(orderCode, message);
-				}
-				else
-				{
-					LOG.debug(" Entered in MRupee initiateRefundMrupee Method *********************************** ");
-					initiateRefundMrupee(subOrderModel, orderRequestRecord, "R");
-				}
-			}
 			cancellationInitiated = true;
 		}
 		catch (final ModelSavingException e)
@@ -2211,13 +2180,13 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					paymentTransactionModel = walletRefundService.doRefund(subOrderModel,
 							orderRequestRecord.getRefundableAmount().doubleValue(), PaymentTransactionType.CANCEL, uniqueRequestId);
 				}
-				else if ("R".equalsIgnoreCase(ticketTypeCode))
-				{
-					LOG.debug(" ############### MRupee doRefund  Method for Returned order *********************************** "
-							+ ticketTypeCode);
-					paymentTransactionModel = walletRefundService.doRefund(subOrderModel,
-							orderRequestRecord.getRefundableAmount().doubleValue(), PaymentTransactionType.RETURN, uniqueRequestId);
-				}
+				//				else if ("R".equalsIgnoreCase(ticketTypeCode))
+				//				{
+				//					LOG.debug(" ############### MRupee doRefund  Method for Returned order *********************************** "
+				//							+ ticketTypeCode);
+				//					paymentTransactionModel = walletRefundService.doRefund(subOrderModel,
+				//							orderRequestRecord.getRefundableAmount().doubleValue(), PaymentTransactionType.RETURN, uniqueRequestId);
+				//				}
 
 				if (null != paymentTransactionModel)
 				{
@@ -2240,12 +2209,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 								refundAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost.doubleValue();
 								refundAmount = mplJusPayRefundService.validateRefundAmount(refundAmount, subOrderModel);
-
-								//								if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
-								//										MarketplacecommerceservicesConstants.SUCCESS))
-								//								{
-								//									newStatus = ConsignmentStatus.ORDER_CANCELLED;
-								//
 								List<PaymentTransactionEntryModel> entryList = new ArrayList<PaymentTransactionEntryModel>();
 								PaymentTransactionEntryModel entryValue = null;
 								entryList = paymentTransactionModel.getEntries();
@@ -2265,14 +2228,14 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 											newStatus = ConsignmentStatus.ORDER_CANCELLED;
 										}
-										else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
-												MarketplacecommerceservicesConstants.SUCCESS)
-												&& entryValue.getType().toString().equalsIgnoreCase("RETURN"))
-										{
-											LOG.debug(" ########## ConsignmentStatus for MRupee return order ******************************"
-													+ paymentTransactionModel.getStatus());
-											newStatus = ConsignmentStatus.RETURN_COMPLETED;
-										}
+										//										else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
+										//												MarketplacecommerceservicesConstants.SUCCESS)
+										//												&& entryValue.getType().toString().equalsIgnoreCase("RETURN"))
+										//										{
+										//											LOG.debug(" ########## ConsignmentStatus for MRupee return order ******************************"
+										//													+ paymentTransactionModel.getStatus());
+										//											newStatus = ConsignmentStatus.RETURN_COMPLETED;
+										//										}
 									}
 								}
 								else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
@@ -2312,11 +2275,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						walletRefundService.createCancelRefundPgErrorEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
 								uniqueRequestId);
 					}
-					else if (PaymentTransactionType.RETURN.toString().equalsIgnoreCase("RETURN"))
-					{
-						walletRefundService.createCancelRefundPgErrorEntry(orderRequestRecord, PaymentTransactionType.RETURN,
-								uniqueRequestId);
-					}
+					//					else if (PaymentTransactionType.RETURN.toString().equalsIgnoreCase("RETURN"))
+					//					{
+					//						walletRefundService.createCancelRefundPgErrorEntry(orderRequestRecord, PaymentTransactionType.RETURN,
+					//								uniqueRequestId);
+					//					}
 				}
 			}
 
@@ -2328,11 +2291,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
 							uniqueRequestId);
 				}
-				else if (PaymentTransactionType.RETURN.toString().equalsIgnoreCase("RETURN"))
-				{
-					walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.RETURN,
-							uniqueRequestId);
-				}
+				//				else if (PaymentTransactionType.RETURN.toString().equalsIgnoreCase("RETURN"))
+				//				{
+				//					walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.RETURN,
+				//							uniqueRequestId);
+				//				}
 			}
 			catch (final Exception e)
 			{
@@ -2342,11 +2305,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
 							uniqueRequestId);
 				}
-				else if (PaymentTransactionType.RETURN.toString().equalsIgnoreCase("RETURN"))
-				{
-					walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.RETURN,
-							uniqueRequestId);
-				}
+				//				else if (PaymentTransactionType.RETURN.toString().equalsIgnoreCase("RETURN"))
+				//				{
+				//					walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.RETURN,
+				//							uniqueRequestId);
+				//				}
 			}
 		}
 		else
