@@ -5362,6 +5362,7 @@ function checkPincodeServiceability(buttonType,el)
 	var selectedPincode=$('#defaultPinCodeIds').val();
 	var regPostcode = /^([1-9])([0-9]){5}$/;
 	$(".deliveryUlClass").remove();//TPR-1341
+	var utagCheckPincodeStatus="";
 	
 	if(selectedPincode === ""){	
 		$( "#error-Id").hide();
@@ -5553,7 +5554,8 @@ function checkPincodeServiceability(buttonType,el)
  			//TPR-970 changes
  			if(responeStr[0]=="N")
  			{
- 				if(typeof utag !="undefined")
+ 				utagCheckPincodeStatus = "cart_pincode_check_failure";
+ 				/*if(typeof utag !="undefined")
  				{
 	 				//TPR-4736 | DataLAyerSchema changes | cart
  					utag.link({
@@ -5562,7 +5564,7 @@ function checkPincodeServiceability(buttonType,el)
 		 				"event_type" : "cart_pincode_check_failure",
 		 				"cart_pin_non_servicable" : selectedPincode
 		 			});
- 				}
+ 				}*/
  				// TISTI-255
 				// Please try later or contact our helpdesk");
  				// TISPRD-1666 - console replaced with alert and resp print
@@ -5580,7 +5582,8 @@ function checkPincodeServiceability(buttonType,el)
  				} 
  			else
  				{
- 				if(typeof utag !="undefined")
+ 				utagCheckPincodeStatus = "cart_pincode_check_success";
+ 				/*if(typeof utag !="undefined")
  				{
  					//TPR-4736 | DataLAyerSchema changes | cart
  					utag.link({
@@ -5589,7 +5592,7 @@ function checkPincodeServiceability(buttonType,el)
 		 				"event_type" : "cart_pincode_check_success",
 		 				"cart_pin_servicable" : selectedPincode
 		 			});
- 				}
+ 				}*/
  				$(".pincodeServiceError").hide();
  				$("#unserviceablepincode").hide();
  				$("#cartPinCodeAvailable").hide();
@@ -5632,7 +5635,8 @@ function checkPincodeServiceability(buttonType,el)
  	 				}
  		},
  		error : function(resp) {
- 			if(typeof utag !="undefined"){
+ 			utagCheckPincodeStatus = "cart_pincode_check_failure";
+ 			/*if(typeof utag !="undefined"){
  				//TPR-4736 | DataLAyerSchema changes | cart
 	 			utag.link({
 	 				"link_obj": this,
@@ -5640,7 +5644,7 @@ function checkPincodeServiceability(buttonType,el)
 	 				"event_type" : "cart_pincode_check_failure",
 	 				"cart_pin_non_servicable" : selectedPincode
 	 			});
- 			}
+ 			}*/
  			//TISTI-255
  			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
  			console.log(resp);
@@ -5657,7 +5661,28 @@ function checkPincodeServiceability(buttonType,el)
  	 			$("#pinCodeDispalyDiv .spinner").remove();
  	 			$("#no-click,.spinner").remove();
  	 		// },500);
- 		}
+ 		},
+ 		complete : function(resp){
+ 					//TPR-4736 | DataLAyerSchema changes | cart
+	  					if(utagCheckPincodeStatus == "cart_pincode_check_failure"){
+	  						if(typeof utag !="undefined"){
+	 			  				utag.link({
+	 			 	 				"link_text": utagCheckPincodeStatus, 
+	 			 	 				"event_type" : utagCheckPincodeStatus,
+	 			 	 				"cart_pin_non_servicable" : selectedPincode
+	 			 	 			});
+	 			  			}
+ 						}
+	  					else{
+	  						if(typeof utag !="undefined"){
+	  							utag.link({
+	  				 				"link_text": "cart_pincode_check_success", 
+	  				 				"event_type" : "cart_pincode_check_success",
+	  				 				"cart_pin_servicable" : selectedPincode
+	  				 			});
+	 			  			}
+	  					}
+ 			   		}
  	});
 	
 
@@ -6119,6 +6144,7 @@ function checkIsServicable()
 {
 	// TPR-1055
 	var selectedPincode=$("#defaultPinCodeIds").val();
+	var utagCheckPincodeStatus="";
 	// $("#defaultPinCodeIds").prop('disabled', true);
 	//$("#pinCodeButtonIds").text("Check");// tpr-1334
 	document.getElementById("pinCodeButtonIds").className = "CheckAvailability"; 	//UF-71
@@ -6153,7 +6179,8 @@ function checkIsServicable()
  				//$("#pinCodeButtonIds").text("Change Pincode");
  				document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
  				document.getElementById("pinCodeButtonIdsBtm").className = "ChangePincode";//UF-71
- 				pincodeServicabilityFailure(selectedPincode);
+ 				//pincodeServicabilityFailure(selectedPincode);
+ 				utagCheckPincodeStatus = false;
 	 			}
 	 			else{
 	 				$(".deliveryUlClass").remove();//TPR-1341
@@ -6168,7 +6195,8 @@ function checkIsServicable()
 	 				//$("#pinCodeButtonIds").text("Change Pincode");
 	 				document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
 	 				document.getElementById("pinCodeButtonIdsBtm").className = "ChangePincode";//UF-71
-	 				pincodeServicabilitySuccess(selectedPincode);
+	 				//pincodeServicabilitySuccess(selectedPincode);
+	 				utagCheckPincodeStatus = true;
 	 			}
 	 			// TPR-1055 ends
 	 			populatePincodeDeliveryMode(response,'pageOnLoad');
@@ -6199,7 +6227,15 @@ function checkIsServicable()
  	 					"error_type" : "pincode_check_error",
  	 				});
  	 			}
-	 		}
+	 		},
+	 		complete : function(resp){
+	 		 	 			if(utagCheckPincodeStatus == true){
+	 		 	 				pincodeServicabilitySuccess(selectedPincode);
+	 		 	 			}
+	 		 	 			else{
+	 		 	 				pincodeServicabilityFailure(selectedPincode);
+	 		 	 			}
+	 		 	 		} 
 
 	 	});
 	}

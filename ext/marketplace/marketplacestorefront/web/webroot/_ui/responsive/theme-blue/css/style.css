@@ -29322,7 +29322,9 @@ body .account .right-account .order-history .bottom .pagination.mobile{
         margin-right:5px;  }
         #displayPaginationCountUp, #displayPaginationCountDown{
         margin: 10px 0;
-        display:inline-block;}
+        display:inline-block;
+        margin-top: 20px; /* TISSQAEE-244 */
+        }
 }
 .trackorder-dropdown li[data-read="true"] a {
 	color: #555;
@@ -49900,8 +49902,20 @@ body:not(.page-checkout-login) .checkout-header.login{
 
 .progress-barcheck .step-1.step-done span,.progress-barcheck .step-2.step-done span,.progress-barcheck .step-3.step-done span{ border: 1px solid #a7183e; position:absolute; display:inline-block; background:#ffffff; left:7.2%; }
 .progress-barcheck .step-2.step-done span{ left:49%;}
-.progress-barcheck .step-1.step-done span:after,.progress-barcheck .step-2.step-done span:after,.progress-barcheck .step-3.step-done span:after{	content: "";    width: 19px;    height: 19px;    background: #a7183e;    border-radius: 25px;    position: relative;    display: inline-block;  top: 6px; }
-.progress-barcheck.paymentPage .step-1.step-done span:after, .progress-barcheck.paymentPage .step-2.step-done span:after, .progress-barcheck.paymentPage .step-3.step-done span:after{ top: 5px;}
+.progress-barcheck .step-1.step-done span:after,.progress-barcheck .step-2.step-done span:after,.progress-barcheck .step-3.step-done span:after{	
+	content: "";    
+	width: 19px;   
+	height: 19px;   
+	background: #a7183e;    
+	border-radius: 25px;    
+	position: relative;    
+	display: inline-block; 
+	/* top: 6px; */ /* TISSQAEE-267 */
+	}
+.progress-barcheck.paymentPage .step-1.step-done span:after, .progress-barcheck.paymentPage .step-2.step-done span:after, .progress-barcheck.paymentPage .step-3.step-done span:after{
+	/* top: 5px; */ /* TISSQAEE-267 */
+	}
+
 
 .progress-barcheck .step-1.finalstep span,.progress-barcheck .step-2.finalstep span,.progress-barcheck .step-3.finalstep span{ border: 1px solid #efefef; right:8.5%; width:25px; height:25px; top:24px; }
 .progress-barcheck .step-2.finalstep span{ left:49%; }
@@ -49924,7 +49938,9 @@ body:not(.page-checkout-login) .checkout-header.login{
 .progress-barcheck .step-1.step-done a{
 	    padding-left: 15%;
 }
-.progress-barcheck .step-1.step-done span.paymentStepDone:after, .progress-barcheck .step-2.step-done span.paymentStepDone:after, .progress-barcheck .step-3.step-done span.paymentStepDone:after{ top:6px;}
+.progress-barcheck .step-1.step-done span.paymentStepDone:after, .progress-barcheck .step-2.step-done span.paymentStepDone:after, .progress-barcheck .step-3.step-done span.paymentStepDone:after{
+	/* top:6px; */ /* TISSQAEE-267 */
+	}
  @media only screen and (max-width:1450px){
 	.progress-barcheck div a{  font-size: 13px;}
 	}
@@ -49953,9 +49969,17 @@ width:25px; height:25px;
 .progress-barcheck div.step-1.active a, .progress-barcheck div.step-2.active a, .progress-barcheck div.step-3.active a{ font-size:12px; }
 .progress-barcheck .step-1.finalstep span, .progress-barcheck .step-2.finalstep span, .progress-barcheck .step-3.finalstep span,
 .progress-barcheck .step-1 span, .progress-barcheck .step-2 span, .progress-barcheck .step-3 span{ width:18px; height:18px;}
-.progress-barcheck .step-1.step-done span:after, .progress-barcheck .step-2.step-done span:after, .progress-barcheck .step-3.step-done span:after{ width:10px; height:10px; top:3px;}
-.progress-barcheck.paymentPage .step-1.step-done span:after, .progress-barcheck.paymentPage .step-2.step-done span:after, .progress-barcheck.paymentPage .step-3.step-done span:after{ top:-7px;}
-.progress-barcheck .step-1.step-done span.paymentStepDone:after, .progress-barcheck .step-2.step-done span.paymentStepDone:after, .progress-barcheck .step-3.step-done span.paymentStepDone:after{ top:3px;}
+.progress-barcheck .step-1.step-done span:after, .progress-barcheck .step-2.step-done span:after, .progress-barcheck .step-3.step-done span:after{
+		width:10px;
+	 	height:10px;
+	 	/* top:3px; */ /* TISSQAEE-267 */
+	}
+.progress-barcheck.paymentPage .step-1.step-done span:after, .progress-barcheck.paymentPage .step-2.step-done span:after, .progress-barcheck.paymentPage .step-3.step-done span:after{
+	/* top:-7px; */ /* TISSQAEE-267 */
+	}
+.progress-barcheck .step-1.step-done span.paymentStepDone:after, .progress-barcheck .step-2.step-done span.paymentStepDone:after, .progress-barcheck .step-3.step-done span.paymentStepDone:after{ 
+	/* top:3px; */ /* TISSQAEE-267 */
+}
 .progress-barcheck .step-1.active span, .progress-barcheck .step-2.active span, .progress-barcheck .step-3.active span{ border:3px solid #a7183e;}
 .progress-barcheck .step1, .progress-barcheck .step2, .progress-barcheck .step3{ height:7px; margin:0; }
 .progress-barcheck .step-1.step-done a{ padding-left:29px;}
@@ -54675,12 +54699,14 @@ body .lookbook_wrapper .listing.wrapper .left-block{
     color: #a5a5a5 !important;
   }
   .checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea{
-  margin-bottom: 20px;
-    font-size: 14px;
+	 /*  margin-bottom: 20px; */ /* TISSQAEE-266 */
+ 	margin-bottom: 12px; /* TISSQAEE-266 */
+   	font-size: 14px;
     border: 1px solid #dbdbdb;
     height: 100px;
     width:100%;
     padding-left: 17px;
+    resize:none; /* TISSQAEE-266 */
   }
   
   .checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea::-webkit-input-placeholder {
@@ -61151,8 +61177,11 @@ p#error-Id_tooltip_btm:hover,p#unserviceablepincode_tooltip_btm:hover,p#emptyId_
     top: 18px;
     }
     
- /* UF-15-16 start*/
-body.page-productGrid .product-listing.product-grid.lazy-grid {
+/* UF-15-16 start*/
+ /* INC144315068 fix */
+body.page-productGrid .product-listing.product-grid.lazy-grid, 
+body.page-productGrid .product-listing.product-grid.lazy-grid-facet, 
+body.page-productGrid .product-listing.product-grid.lazy-grid-normal {
     padding-top: 65px
 }
 
@@ -61221,7 +61250,7 @@ body.page-productGrid .facet-list.filter-opt {
 	padding-top:0px;
 	}
 	body.page-productGrid .listing.wrapper .right-block .listing-menu{
-	margin-top:-12px !important;
+	margin-top:-12px; /*UF-253 */
 	}
 	body.page-productGrid .list_title h1 {
 	margin:0 auto !important;
@@ -61454,7 +61483,7 @@ padding-bottom: 5px;
 	height:20px;
 }
 .progress-barcheck .step-1.step-done span.paymentStepDone:after, .progress-barcheck .step-2.step-done span.paymentStepDone:after, .progress-barcheck .step-3.step-done span.paymentStepDone:after {
-    top: 1px;
+    /* top: 1px; */ /* TISSQAEE-267 */
     width: 20px;
     height: 20px;
 }
@@ -61464,7 +61493,7 @@ padding-bottom: 5px;
 .progress-barcheck .step-1.step-done span:after, .progress-barcheck .step-2.step-done span:after, .progress-barcheck .step-3.step-done span:after {
     width: 20px;
     height: 20px;
-    top: 1px;
+    /* top: 1px; */ /* TISSQAEE-267 */
 }
 .wrapper .container-address {
     max-width: 100%;
@@ -61931,3 +61960,38 @@ footer .banner{
 /* body.page-cartPage .cartBottomCheck #changePinDiv p{
 	display: none;
 } */
+
+/* TISSQAEE-244 */
+@media(max-width:400px){
+body .account .right-account .order-history .bottom .pagination.mobile{
+	padding: 0;
+	right: 16px;
+}
+.pagination-bar.listing-menu.bottom{
+	margin-left: 0;
+}
+body .account .right-account .order-history .top .pagination.mobile{
+	padding: 0;
+	right: 16px;
+}
+body .account .right-account .order-history .pagination li{
+	margin: auto 1px;
+}
+.pagination li.next{
+	padding-left: 0px;
+}
+.pagination li.prev{
+	padding-right: 0px;
+}
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea{
+	height:125px;	/* TISSQAEE-266 */
+}
+}
+/* TISSQAEE-244 */
+
+/* TISSQAEE-266 */
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea ~ span{
+	margin-bottom: 12px;
+	display: inline-block;
+}
+/* TISSQAEE-266 */

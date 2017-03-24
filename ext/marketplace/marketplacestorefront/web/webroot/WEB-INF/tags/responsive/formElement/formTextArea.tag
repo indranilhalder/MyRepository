@@ -22,6 +22,6 @@
 		
     <form:textarea cssClass="${areaCSS} form-control" id="${idKey}" path="${path}"  onKeyUp="return taCount(this,'myCounter')" maxlength="120" 
     rows="2" cols="60"  placeholder="Full Address*"/>
-										<br><br>Remaining characters :<span id='myCounter'>120</span>
+										<span>Remaining characters :</span><span id='myCounter'>120</span>
 
 </template:errorSpanField>

@@ -16,6 +16,7 @@ import java.util.List;
 public class MplDefaultFacetSearchService extends DefaultFacetSearchService
 {
 
+
 	@Override
 	protected List<ValueRange> getValueRanges(final IndexedProperty property, final String qualifier)
 	{

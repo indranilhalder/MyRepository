@@ -2257,16 +2257,17 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 									{
 										if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
 												MarketplacecommerceservicesConstants.SUCCESS)
-												|| entryValue.getType().toString().equalsIgnoreCase("CANCEL"))
+												&& entryValue.getType().toString().equalsIgnoreCase("CANCEL"))
 										{
-											LOG.debug(" ########## ConsignmentStatus for MRupee cancel order ******************************"
-													+ paymentTransactionModel.getStatus());
+											LOG.debug(
+													" ########## ConsignmentStatus for MRupee cancel order ********************************"
+															+ paymentTransactionModel.getStatus());
 
 											newStatus = ConsignmentStatus.ORDER_CANCELLED;
 										}
 										else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
 												MarketplacecommerceservicesConstants.SUCCESS)
-												|| entryValue.getType().toString().equalsIgnoreCase("RETURN"))
+												&& entryValue.getType().toString().equalsIgnoreCase("RETURN"))
 										{
 											LOG.debug(" ########## ConsignmentStatus for MRupee return order ******************************"
 													+ paymentTransactionModel.getStatus());
