@@ -61167,7 +61167,7 @@ body.page-productGrid .facet-list.filter-opt {
 	.sort_by_wrapper.pagination-bar.listing-menu.bottom{
 	display:none;}
 }
-@media(max-width:486px){
+@media(max-width:424px){
 	.list_title_sort select{
 	float: left !important;
     left: -15px;
