@@ -58,24 +58,25 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 	public List<ProductModel> findProductsByCode(final String code)
 	{
 		LOG.debug("findProductsByCode: code********** " + code);
-		final CatalogVersionModel catalogVersion = getCatalogVersion();
+		//final CatalogVersionModel catalogVersion = getCatalogVersion();
 		final StringBuilder stringBuilder = new StringBuilder(70);
 
-		stringBuilder.append(SELECT_STRING).append(ProductModel.PK).append("} ");
-		stringBuilder.append(FROM_STRING).append(ProductModel._TYPECODE).append(" AS p ");
-		stringBuilder.append("JOIN ").append(SellerInformationModel._TYPECODE).append(" AS s ");
-		stringBuilder.append("ON {s:").append(SellerInformationModel.PRODUCTSOURCE).append("}={p:").append(ProductModel.PK)
-				.append("} } ");
-		final String inPart = "{p:" + ProductModel.CODE + CODE_STRING + ProductModel.CATALOGVERSION
+		stringBuilder.append(SELECT_STRING).append(ProductModel.PK).append("} ").append(FROM_STRING).append(ProductModel._TYPECODE)
+				.append(" AS p ").append("JOIN ").append(SellerInformationModel._TYPECODE).append(" AS s ").append("ON {s:")
+				.append(SellerInformationModel.PRODUCTSOURCE).append("}={p:").append(ProductModel.PK).append("} ").append("JOIN ")
+				.append(CatalogVersionModel._TYPECODE).append(" AS cat ").append("ON {p:").append(ProductModel.CATALOGVERSION)
+				.append("}={cat:").append(CatalogVersionModel.PK).append("} }");
 
-		+ "} = ?catalogVersion and  sysdate between {s.startdate} and {s.enddate} ";
+		final String inPart = "{p:" + ProductModel.CODE + "} = (?code) AND {cat:" + CatalogVersionModel.VERSION
+				+ "} = 'Online' and  sysdate between {s.startdate} and {s.enddate} ";
 		stringBuilder.append("WHERE ").append(inPart);
+
 		LOG.debug("findProductsByCode: stringBuilder******* " + stringBuilder);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(stringBuilder.toString());
 
 		query.addQueryParameter(CODE, code);
 
-		query.addQueryParameter("catalogVersion", catalogVersion);
+		//query.addQueryParameter("catalogVersion", catalogVersion);
 		query.setResultClassList(Collections.singletonList(ProductModel.class));
 		final SearchResult<ProductModel> searchResult = getFlexibleSearchService().search(query);
 		LOG.debug("findProductsByCode: searchResult********** " + searchResult);
@@ -171,7 +172,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.product.MplProductDao#findProductFeaturesByCodeAndQualifier(java
 	 * .lang.String, java.lang.String)
@@ -202,7 +203,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.product.MplProductDao#findProductListByCodeList(de.hybris.platform
 	 * .catalog.model.CatalogVersionModel, java.util.List)

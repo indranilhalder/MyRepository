@@ -40,7 +40,7 @@
 							function() {
 								
 							  //var current = $('.badge').text();
-								var current = '${notificationCount}';
+								var current = '${notificationCount}';								
 								
 								if (current > 0) {
 									current = current - 1;

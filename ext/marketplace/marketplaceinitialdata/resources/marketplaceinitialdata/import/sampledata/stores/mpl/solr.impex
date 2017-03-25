@@ -116,7 +116,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 #Added for Cart
 
 ;$solrIndexedType; isVariant              ;boolean;            ;    ;    ;    ;    ;    ;mplIsVariantValueProvider;
-;$solrIndexedType; inStockFlagForAddtoCart;boolean;            ;    ;    ;    ;    ;    ;mplProductInStockFlagValueProvider;
+
 
 									
 # Category fields
@@ -510,3 +510,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType						; screenSize-classification		;double; 							;	 			;							 ;  				   ;  					   ; 				    ;MultiSelectOr 	;Alpha 			; 3000		;true;   								  ;     						;mplClassificationPropertyValueProvider;	;							;	;mplScreenSizeRange;Screen Size
 ;$solrIndexedType						; memory-classification			;double; 							;	 			;							 ;  				   ;  			true	   ; 				    ;MultiSelectOr 	;Alpha 			; 3000		;true;   								  ;     						;mplClassificationPropertyValueProvider;	;							;	;mplMemoryRange;Internal Memory
 #Search POC end
+
+# Added new Index Property for CAR-245
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);localized[default=false];multiValue[default=true];categoryField[default=true];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;facet[default=true]
+;$solrIndexedType; categoryNameCodeMapping     	  ;string   ;true		   ;	;	 ;	  ;			;mplCategoryNameCodeMappingValueProvider;

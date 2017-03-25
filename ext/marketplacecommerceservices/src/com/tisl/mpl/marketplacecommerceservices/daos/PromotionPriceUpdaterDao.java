@@ -3,10 +3,10 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos;
 
+import de.hybris.platform.promotions.model.ProductPromotionModel;
+
 import java.util.Date;
 import java.util.List;
-
-import com.tisl.mpl.model.BuyAPercentageDiscountModel;
 
 
 /**
@@ -15,5 +15,5 @@ import com.tisl.mpl.model.BuyAPercentageDiscountModel;
  */
 public interface PromotionPriceUpdaterDao
 {
-	List<BuyAPercentageDiscountModel> getRequiredPromotionList(Date mplConfigDate);
+	List<ProductPromotionModel> getRequiredPromotionList(Date mplConfigDate);
 }
