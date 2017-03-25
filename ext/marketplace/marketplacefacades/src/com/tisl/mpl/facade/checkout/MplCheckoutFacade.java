@@ -63,15 +63,15 @@ public interface MplCheckoutFacade extends CheckoutFacade
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param currencyIsoCode
-	 * 
+	 *
 	 * @param sellerArticleSKU
-	 * 
+	 *
 	 * @return MplZoneDeliveryModeValueModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
@@ -86,22 +86,22 @@ public interface MplCheckoutFacade extends CheckoutFacade
 
 	/*
 	 * @ Selected Address set for express checkout : TIS 391
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return ExpressCheckoutResult
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions,Exception
 	 */
 	ExpressCheckoutResult performExpressCheckout(String addressId) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @description Re calculating cart delivery cost: TIS 400
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean reCalculateCart(final CartData cartData) throws EtailNonBusinessExceptions;
@@ -109,13 +109,13 @@ public interface MplCheckoutFacade extends CheckoutFacade
 
 	/*
 	 * @description Storing delivery cost while navigating from Delivery mode to address selection : TIS 400
-	 * 
+	 *
 	 * @param finalDeliveryCost
-	 * 
+	 *
 	 * @param deliveryCostPromotionMap
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean populateDeliveryCost(final Double finalDeliveryCost, Map<String, Map<String, Double>> deliveryCostPromotionMap,
@@ -132,11 +132,11 @@ public interface MplCheckoutFacade extends CheckoutFacade
 
 	/*
 	 * @ to check pincode inventory for Pay now TIS 414
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -144,26 +144,26 @@ public interface MplCheckoutFacade extends CheckoutFacade
 
 	/*
 	 * @ to check promotion expired or not for Pay now : TIS 414
-	 * 
+	 *
 	 * @param abstractOrderModel
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean isPromotionValid(final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @ Override TSHIP : TIS 397
-	 * 
+	 *
 	 * @param fullfillmentDataMap
-	 * 
+	 *
 	 * @param deliveryModeDataMap
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return Map<String, List<MarketplaceDeliveryModeData>>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	Map<String, List<MarketplaceDeliveryModeData>> repopulateTshipDeliveryCost(
@@ -178,7 +178,7 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 */
 	//CAR-110
 	//public OrderData placeOrderByCartId(final String cartID) throws EtailNonBusinessExceptions;
-	public String placeOrderByCartId(final CartModel cart) throws EtailNonBusinessExceptions;
+	public String placeOrderMobile(final CartModel cart) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @description: It is used for converting date into ordinal date
@@ -200,15 +200,15 @@ public interface MplCheckoutFacade extends CheckoutFacade
 
 	/*
 	 * @desc use to save freebie delivery mode
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @param freebieModelMap
-	 * 
+	 *
 	 * @param freebieParentQtyMap
-	 * 
+	 *
 	 * @return void
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	void saveDeliveryMethForFreebie(AbstractOrderModel abstractOrderModel,
@@ -219,11 +219,11 @@ public interface MplCheckoutFacade extends CheckoutFacade
 
 	/*
 	 * @ to check coupon expired or not for Pay now
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean isCouponValid(final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
@@ -242,6 +242,15 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 * @throws CalculationException
 	 */
 	void beforeSubmitOrder(OrderModel orderModel) throws InvalidCartException, CalculationException;
+
+	/**
+	 * INC144314180 PRDI-25
+	 *
+	 * @param orderModel
+	 * @throws InvalidCartException
+	 * @throws CalculationException
+	 */
+	void beforeSubmitOrderMobile(OrderModel orderModel) throws InvalidCartException, CalculationException;
 
 	/**
 	 * @param orderModel

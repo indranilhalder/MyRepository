@@ -45,6 +45,7 @@
 				<cms:component component="${feature}"/>
 			</cms:pageSlot>
 			</div>
+	<product:productCompare/>		
 	<!-- For Infinite Analytics Start -->
 			<div class="trending"  id="ia_products_hot_in_category"></div>
 	<!-- For Infinite Analytics End -->

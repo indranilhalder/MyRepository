@@ -13,6 +13,7 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+import de.hybris.platform.acceleratorcms.model.components.FooterComponentModel;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
@@ -71,16 +72,15 @@ import com.tisl.mpl.data.NotificationData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
-import com.tisl.mpl.facade.cms.MplCmsFacade;
 import com.tisl.mpl.facade.latestoffers.LatestOffersFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
-import com.tisl.mpl.facades.data.FooterComponentData;
 import com.tisl.mpl.facades.data.LatestOffersData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
+import com.tisl.mpl.model.cms.components.NeedHelpComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -140,9 +140,6 @@ public class HomePageController extends AbstractPageController
 	@Resource(name = "notificationFacade")
 	private NotificationFacade notificationFacade;
 
-	@Resource(name = "mplCmsFacade")
-	private MplCmsFacade mplCmsFacade;
-
 	/**
 	 * @return the notificationFacade
 	 */
@@ -174,6 +171,9 @@ public class HomePageController extends AbstractPageController
 	//private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
 
 	private static final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.GALLERY);
+
+	//#3 Change in Populator
+	private static final List<ProductOption> PRODUCT_OPTIONS2 = Arrays.asList(ProductOption.HOMEPAGEPRODUCTS);
 
 	private static final String EMPTY_STRING = "";
 
@@ -580,9 +580,12 @@ public class HomePageController extends AbstractPageController
 					newAndExclusiveJson.put(TITLE, title);
 					final JSONArray newAndExclusiveJsonArray = new JSONArray();
 
-					if (CollectionUtils.isNotEmpty(newAndExclusiveComponent.getProducts()))
+					//#1 reduced calls to newAndExclusiveComponent.getProducts() using
+					final List<ProductModel> productList = newAndExclusiveComponent.getProducts();
+
+					if (CollectionUtils.isNotEmpty(productList))
 					{
-						for (final ProductModel newAndExclusiveProducts : newAndExclusiveComponent.getProducts())
+						for (final ProductModel newAndExclusiveProducts : productList)
 						{
 							//START :code added for 'NEW' tag on the product image
 							for (final SellerInformationModel seller : newAndExclusiveProducts.getSellerInformationRelator())
@@ -613,8 +616,16 @@ public class HomePageController extends AbstractPageController
 
 
 							ProductData product = null;
-							product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS);
-							newAndExclusiveProductJson.put("productImageUrl", getProductPrimaryImageUrl(product));
+							product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS2);
+							//#4 Image Call
+							if (StringUtils.isBlank(product.getHomepageImageurl()))
+							{
+								newAndExclusiveProductJson.put("productImageUrl", GenericUtilityMethods.getMissingImageUrl());
+							}
+							else
+							{
+								newAndExclusiveProductJson.put("productImageUrl", product.getHomepageImageurl());
+							}
 							newAndExclusiveProductJson.put("productTitle", product.getProductTitle());
 							newAndExclusiveProductJson.put("productUrl", product.getUrl());
 							String price = null;
@@ -637,12 +648,21 @@ public class HomePageController extends AbstractPageController
 								price = EMPTY_STRING;
 								LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
 							}
-							newAndExclusiveProductJson.put("productPrice", price);
-							newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
+							//#2 If Price is available then only show Products
+							if (!StringUtils.isEmpty(price))
+							{
+								newAndExclusiveProductJson.put("productPrice", price);
+								newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
+							}
+
 							existDate = null;
 
 						}
-						newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
+						//#2 If Price is available then only show Products
+						if (!CollectionUtils.isEmpty(newAndExclusiveJsonArray))
+						{
+							newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
+						}
 					}
 				}
 			}
@@ -709,21 +729,15 @@ public class HomePageController extends AbstractPageController
 			{
 				if (buyBoxData.getSpecialPrice() != null)
 				{
-					//productPrice = buyBoxData.getSpecialPrice().getFormattedValue();
-					/* TPR-182 */
-					productPrice = buyBoxData.getSpecialPrice().getFormattedValueNoDecimal();
+					productPrice = buyBoxData.getSpecialPrice().getFormattedValue();
 				}
 				else if (buyBoxData.getPrice() != null)
 				{
-					//productPrice = buyBoxData.getPrice().getFormattedValue();
-					/* TPR-182 */
-					productPrice = buyBoxData.getPrice().getFormattedValueNoDecimal();
+					productPrice = buyBoxData.getPrice().getFormattedValue();
 				}
 				else
 				{
-					//productPrice = buyBoxData.getMrp().getFormattedValue();
-					/* TPR-182 */
-					productPrice = buyBoxData.getMrp().getFormattedValueNoDecimal();
+					productPrice = buyBoxData.getMrp().getFormattedValue();
 				}
 			}
 			LOG.info("ProductPrice>>>>>>>" + productPrice);
@@ -1053,18 +1067,14 @@ public class HomePageController extends AbstractPageController
 
 				if (null != notificationMessagelist && !notificationMessagelist.isEmpty())
 				{
-					/* final int notificationCount = notificationMessagelist.size(); */
-					int notificationCount = 0;
-
-					for (final NotificationData single : notificationMessagelist)
-					{
-						if (single.getNotificationRead() != null && !single.getNotificationRead().booleanValue())
-						{
-							notificationCount++;
-						}
-
-					}
-
+					//final int notificationCount = 0;
+					final int notificationCount = notificationMessagelist.size();
+					/*
+					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
+					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
+					 *
+					 * }
+					 */
 
 					header.put("notificationCount", notificationCount);
 				}
@@ -1152,50 +1162,36 @@ public class HomePageController extends AbstractPageController
 		try
 		{
 
-			final FooterComponentData fData = mplCmsFacade.getContentSlotData(slotId);
+			FooterComponentModel footer = null;
+			NeedHelpComponentModel needHelpFooter = null;
+			final ContentSlotModel footerSlot = contentSlotService.getContentSlotForId(slotId);
 
-			model.addAttribute("footerSocialIconList", fData.getFooterSocialIconList());
-			model.addAttribute("footerText", fData.getFooterText());
-			model.addAttribute("notice", fData.getNotice());
-			model.addAttribute("footerAppImageList", fData.getFooterAppImageList());
-			model.addAttribute("navigationNodes", fData.getNavigationNodes());
-			model.addAttribute("wrapAfter", fData.getWrapAfter());
-			//			//Need help section
-			model.addAttribute("contactNumber", fData.getContactNumber());
-
-			//			FooterComponentModel footer = null;
-			//			NeedHelpComponentModel needHelpFooter = null;
-			//			final ContentSlotModel footerSlot = contentSlotService.getContentSlotForId(slotId);
-			//
-			//			if (null != footerSlot && CollectionUtils.isNotEmpty(footerSlot.getCmsComponents()))
-			//			{
-			//				for (final AbstractCMSComponentModel cmsComponentModel : footerSlot.getCmsComponents())
-			//				{
-			//					if (cmsComponentModel instanceof FooterComponentModel)
-			//					{
-			//						footer = (FooterComponentModel) cmsComponentModel;
-			//					}
-			//					if (cmsComponentModel instanceof NeedHelpComponentModel)
-			//					{
-			//						needHelpFooter = (NeedHelpComponentModel) cmsComponentModel;
-			//					}
-			//				}
-			//			}
-			//
-			//
-			//			//final FooterComponentModel footer = cmsComponentService.getSimpleCMSComponent(componentId);
-			//			model.addAttribute("footerSocialIconList", footer.getFooterImageList());
-			//			model.addAttribute("footerText", footer.getFooterText());
-			//			model.addAttribute("notice", footer.getNotice());
-			//			model.addAttribute("footerAppImageList", footer.getFooterAppImageList());
-			//			model.addAttribute("navigationNodes", footer.getNavigationNodes());
-			//			model.addAttribute("wrapAfter", footer.getWrapAfter());
-			//
-			//			//Need help section
-			//			model.addAttribute("contactNumber", (needHelpFooter == null) ? "" : needHelpFooter.getContactNumber());
+			if (null != footerSlot && CollectionUtils.isNotEmpty(footerSlot.getCmsComponents()))
+			{
+				for (final AbstractCMSComponentModel cmsComponentModel : footerSlot.getCmsComponents())
+				{
+					if (cmsComponentModel instanceof FooterComponentModel)
+					{
+						footer = (FooterComponentModel) cmsComponentModel;
+					}
+					if (cmsComponentModel instanceof NeedHelpComponentModel)
+					{
+						needHelpFooter = (NeedHelpComponentModel) cmsComponentModel;
+					}
+				}
+			}
 
 
+			//final FooterComponentModel footer = cmsComponentService.getSimpleCMSComponent(componentId);
+			model.addAttribute("footerSocialIconList", footer.getFooterImageList());
+			model.addAttribute("footerText", footer.getFooterText());
+			model.addAttribute("notice", footer.getNotice());
+			model.addAttribute("footerAppImageList", footer.getFooterAppImageList());
+			model.addAttribute("navigationNodes", footer.getNavigationNodes());
+			model.addAttribute("wrapAfter", footer.getWrapAfter());
 
+			//Need help section
+			model.addAttribute("contactNumber", (needHelpFooter == null) ? "" : needHelpFooter.getContactNumber());
 
 		}
 

@@ -21,7 +21,7 @@ import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.enums.EBSResponseStatus;
 import com.tisl.mpl.core.enums.EBSRiskLevelEnum;
 import com.tisl.mpl.core.model.JuspayCardResponseModel;
-import com.tisl.mpl.core.model.JuspayEBSResponseModel;
+import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
 import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.JuspayPGResponseModel;
 import com.tisl.mpl.core.model.JuspayWebhookModel;
@@ -52,7 +52,8 @@ public class MplPaymentWebHookServiceImpl implements MplPaymentWebHookService
 		final JuspayOrderStatusModel orderResponse = getModelService().create(JuspayOrderStatusModel.class);
 		final JuspayPGResponseModel pgresponse = getModelService().create(JuspayPGResponseModel.class);
 		final JuspayCardResponseModel cardResponse = getModelService().create(JuspayCardResponseModel.class);
-		final JuspayEBSResponseModel ebsResponse = getModelService().create(JuspayEBSResponseModel.class);
+		//changes for JuspayEBSResponseFIX
+		final JuspayEBSResponseDataModel ebsResponse = getModelService().create(JuspayEBSResponseDataModel.class);
 
 		try
 		{
@@ -151,7 +152,8 @@ public class MplPaymentWebHookServiceImpl implements MplPaymentWebHookService
 
 			getModelService().save(ebsResponse);
 			// Set EBS Response into orderStatusResponseJuspay
-			orderResponse.setEbsResponse(ebsResponse);
+			//changes for JuspayEBSResponseFIX
+			orderResponse.setEbsResponseData(ebsResponse);
 
 			getModelService().save(orderResponse);
 			juspayWebhook.setOrderStatus(orderResponse);

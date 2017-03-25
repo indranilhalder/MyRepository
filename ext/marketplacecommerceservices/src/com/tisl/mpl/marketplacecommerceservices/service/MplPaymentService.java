@@ -20,7 +20,7 @@ import java.util.Map;
 
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
-import com.tisl.mpl.core.model.JuspayEBSResponseModel;
+import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -135,8 +135,7 @@ public interface MplPaymentService
 	 *
 	 */
 	//TISPRD-361 method signature changes
-	void setPaymentTransactionForCOD(Map<String, Double> paymentMode, AbstractOrderModel abstractOrderModel)
-			throws EtailNonBusinessExceptions;
+	void setPaymentTransactionForCOD(AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -216,7 +215,7 @@ public interface MplPaymentService
 	 * @param riskStatus
 	 * @param juspayEBSResponseModel
 	 */
-	void setEBSRiskStatus(String riskStatus, JuspayEBSResponseModel juspayEBSResponseModel);
+	void setEBSRiskStatus(String riskStatus, JuspayEBSResponseDataModel juspayEBSResponseModel);
 
 	/**
 	 * This method sets the EbsRiskLevel in JuspayEBSResponseModel
@@ -225,7 +224,7 @@ public interface MplPaymentService
 	 * @param juspayEBSResponseModel
 	 *
 	 */
-	void setEBSRiskLevel(String riskLevel, JuspayEBSResponseModel juspayEBSResponseModel);
+	void setEBSRiskLevel(String riskLevel, JuspayEBSResponseDataModel juspayEBSResponseModel);
 
 	/**
 	 * @param orderStatusResponse
@@ -256,7 +255,7 @@ public interface MplPaymentService
 	 * @return MplPaymentAuditModel
 	 *
 	 */
-	JuspayEBSResponseModel getEntryInAuditByOrder(final String orderId);
+	JuspayEBSResponseDataModel getEntryInAuditByOrder(final String orderId);
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\

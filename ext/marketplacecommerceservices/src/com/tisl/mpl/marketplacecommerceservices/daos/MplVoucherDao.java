@@ -3,9 +3,10 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos;
 
+import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
-
-import java.util.List;
+import de.hybris.platform.voucher.model.VoucherModel;
 
 
 /**
@@ -22,6 +23,8 @@ public interface MplVoucherDao
 	 * @param orderCode
 	 * @return List<VoucherInvalidationModel>
 	 */
-	List<VoucherInvalidationModel> findVoucherInvalidation(String voucherIdentifier, String customerUid, String orderCode);
+	//List<VoucherInvalidationModel> findVoucherInvalidation(String voucherIdentifier, String customerUid, String orderCode);
+	public VoucherInvalidationModel findVoucherInvalidation(final VoucherModel voucher, final UserModel user,
+			final OrderModel order);
 
 }

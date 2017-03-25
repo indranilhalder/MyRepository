@@ -8,10 +8,11 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ attribute name="isCart" required="false" type="java.lang.Boolean" %>	<!-- TPR-629 -->
 	
+<h2 class="coupon">Apply Coupon Code</h2>	
 <div class="coupon block">
-<h2>Apply Coupon Code</h2>
-		<input type="text" id="couponFieldId" placeholder="Enter coupon code"/>
-		<button type="submit" id="couponSubmitButton" class="button btn-block">Submit</button>
+		<label for="couponFieldId">Coupon Code</label>
+		<div><input type="text" id="couponFieldId" />
+		<button type="submit" id="couponSubmitButton" class="button btn-block">Apply</button></div>
 		<span class="error-message" id="invalidCouponError"><spring:theme code="checkout.multi.coupons.invalid"/></span>
 		<span class="error-message" id="expiredCouponError"><spring:theme code="checkout.multi.coupons.expired"/></span>
 		<span class="error-message" id="issueCouponError"><spring:theme code="checkout.multi.coupons.issue"/></span>
