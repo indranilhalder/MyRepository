@@ -49,7 +49,7 @@ public class MediaHelper
 		{
 			if ((product != null) && (mediaFormat != null) && StringUtils.isNotEmpty(product.getCode()))
 			{ //TPR-796 EQA check
-				media = mplMediService.getMediaForIndexing(product, mediaFormat, product.getCode());
+				media = mplMediService.getMediaForIndexing(product, mediaFormat, product.getGalleryImages());
 				if (media.getUrl() != null && media.getUrl().length() > 0)
 				{
 					final String prodCode = product.getCode().toString();
@@ -58,8 +58,8 @@ public class MediaHelper
 					int numberOfHosts;
 					if (configurationService.getConfiguration().getString("search.media.numberofhosts") != null)
 					{
-						numberOfHosts = Integer.parseInt(String.valueOf(configurationService.getConfiguration().getString(
-								"search.media.numberofhosts")));
+						numberOfHosts = Integer.parseInt(
+								String.valueOf(configurationService.getConfiguration().getString("search.media.numberofhosts")));
 					}
 					else
 					{
