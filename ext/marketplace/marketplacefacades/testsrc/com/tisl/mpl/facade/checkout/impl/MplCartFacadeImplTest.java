@@ -13,6 +13,7 @@ import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -174,7 +175,8 @@ public class MplCartFacadeImplTest
 		final AbstractOrderModel abstractOrderModel = Mockito.mock(CartModel.class);
 		final String defaultPinCodeId = "500030";
 
-		Assert.assertEquals(true, mplCartFacadeImpl.isInventoryReservedMobile(requestType, abstractOrderModel, defaultPinCodeId));
+		Assert.assertEquals(true, mplCartFacadeImpl.isInventoryReservedMobile(requestType, abstractOrderModel, defaultPinCodeId,
+				null, SalesApplication.WEB));
 	}
 
 }
