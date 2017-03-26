@@ -4,6 +4,7 @@
 package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
 import de.hybris.platform.basecommerce.enums.StockLevelStatus;
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commerceservices.search.solrfacetsearch.provider.impl.ProductInStockFlagValueProvider;
 import de.hybris.platform.commerceservices.stock.CommerceStockService;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -75,14 +76,14 @@ public class MplProductInStockFlagValueProvider extends ProductInStockFlagValueP
 				productType = "variant";
 				final PcmProductVariantModel product = (PcmProductVariantModel) model;
 				productCode = product.getCode();
-				return getFieldValues(productCode, productType, indexedProperty);
+				return getFieldValues(productCode, productType, indexedProperty, indexConfig);
 			}
 			else if (model instanceof ProductModel)
 			{
 				productType = "simple";
 				final ProductModel product = (ProductModel) model;
 				productCode = product.getCode();
-				return getFieldValues(productCode, productType, indexedProperty);
+				return getFieldValues(productCode, productType, indexedProperty, indexConfig);
 			}
 			return Collections.emptyList();
 		}
@@ -94,19 +95,38 @@ public class MplProductInStockFlagValueProvider extends ProductInStockFlagValueP
 
 	}
 
-	public Collection getFieldValues(final String productCode, final String productType, final IndexedProperty indexedProperty)
+	public Collection getFieldValues(final String productCode, final String productType, final IndexedProperty indexedProperty,
+			final IndexConfig indexConfig)
 	{
 		final Collection fieldValues = new ArrayList();
-		fieldValues.addAll(createFieldValue(productCode, productType, indexedProperty));
 
+		final BaseSiteModel baseSiteModel = indexConfig.getBaseSite();
+
+		if ((baseSiteModel != null) && (baseSiteModel.getStores() != null) && (!(baseSiteModel.getStores().isEmpty()))
+				&& (getCommerceStockService().isStockSystemEnabled(baseSiteModel.getStores().get(0))))
+		{
+			fieldValues
+					.addAll(createFieldValue(productCode, productType, indexConfig.getBaseSite().getStores().get(0), indexedProperty));
+		}
+		else
+		{
+			fieldValues.addAll(createFieldValue(productCode, productType, null, indexedProperty));
+		}
 		return fieldValues;
 	}
 
-	protected List<FieldValue> createFieldValue(final String productCode, final String productType,
+	protected List<FieldValue> createFieldValue(final String productCode, final String productType, final BaseStoreModel baseStore,
 			final IndexedProperty indexedProperty)
 	{
 		final List fieldValues = new ArrayList();
-		addFieldValues(fieldValues, indexedProperty, Boolean.valueOf(isInStock(productCode, productType)));
+		if (baseStore != null)
+		{
+			addFieldValues(fieldValues, indexedProperty, Boolean.valueOf(isInStock(productCode, productType, baseStore)));
+		}
+		else
+		{
+			addFieldValues(fieldValues, indexedProperty, Boolean.valueOf(isInStock(productCode, productType, baseStore)));
+		}
 
 		return fieldValues;
 	}
@@ -127,13 +147,18 @@ public class MplProductInStockFlagValueProvider extends ProductInStockFlagValueP
 		return getCommerceStockService().getStockLevelStatusForProductAndBaseStore(product, baseStore);
 	}
 
-	protected boolean isInStock(final String productCode, final String productType)
+	protected boolean isInStock(final String productCode, final String productType, final BaseStoreModel baseStore)
 	{
-		
-		
-		// OOTB Base store product inventory logic is commented and Buybox is used for Inventory
-		//return isInStock(getProductStockLevelStatus(product, baseStore));
-		return isInStock(getBuyBoxStockLevelStatus(productCode, productType));
+		if (baseStore != null)
+		{
+			// OOTB Base store product inventory logic is commented and Buybox is used for Inventory
+			//return isInStock(getProductStockLevelStatus(product, baseStore));
+			return isInStock(getBuyBoxStockLevelStatus(productCode, productType));
+		}
+		else
+		{
+			return isInStock(getBuyBoxStockLevelStatus(productCode, productType));
+		}
 	}
 
 	protected StockLevelStatus getBuyBoxStockLevelStatus(final String productCode, final String productType)
