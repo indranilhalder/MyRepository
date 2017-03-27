@@ -61990,8 +61990,9 @@ body .account .right-account .order-history .pagination li{
 .pagination li.prev{
 	padding-right: 0px;
 }
-.checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea{
-	height:125px;	/* TISSQAEE-266 */
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea,
+.cart.wrapper .left-block .payments.tab-view .new-card #billingAddress fieldset .full .full-address{
+	height:125px;	/* TISSQAEE-266 */	/* TISUATSE-85 */
 }
 }
 /* TISSQAEE-244 */
