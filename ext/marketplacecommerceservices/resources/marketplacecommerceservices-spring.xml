@@ -535,6 +535,8 @@
 			ref="#{configurationService.configuration.getProperty('commerceservices.orderCode.keyGenerator')}" />
 		<property name="mplCommerceCartDao" ref="mplCommerceCartDao" />
 		<property name="cartConverter" ref="cartConverter" />
+		<!-- CAR:127 -->
+		<property name="orderConverter" ref="orderConverter"/>
 		<property name="cartModificationConverter" ref="cartModificationConverter" />
 		<property name="siteConfigService" ref="siteConfigService" />
 		<property name="baseSiteService" ref="baseSiteService" />
@@ -1790,6 +1792,8 @@
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplProcessOrderServiceImpl">
 		<property name="orderService" ref="orderService" />
 		<property name="juspayOrderResponseConverter" ref="juspayOrderResponseConverter" />
+		<!-- CAR:127 -->
+		<property name="orderConverter" ref="orderConverter"></property>
 	</bean>
 	
 	<bean id="mplProcessOrderDao"
@@ -1966,9 +1970,8 @@
         </property>
     </bean>
 	<!-- Old Cron Job Deletion Logic ends: -->
-    <alias name="defaultmplReturnDao" alias="mplReturnDao"/>
-<bean class="com.tisl.mpl.returns.dao.impl.MplReturnDaoImpl" id="defaultmplReturnDao"></bean>
-    <!-- <bean id="nodeWarmupService" class="com.hybris.yps.nodewarmer.service.NodeWarmupService">
+
+    <!--bean id="nodeWarmupService" class="com.hybris.yps.nodewarmer.service.NodeWarmupService">
 		<property name="warmerStrategies">
 			<list>
 				<bean class="com.hybris.yps.nodewarmer.warmer.impl.ComposedTypeWarmer" />
@@ -1985,14 +1988,20 @@
 				</bean>
 			</list>
 		</property>
-	</bean> -->
-	<!-- Old Cron Job Deletion Logic ends: -->
-<bean id="mplDeliveryAddressServiceImpl"
-		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDeliveryAddressServiceImpl"/>
-<bean id="mplDeliveryAddressDaoImpl"
-		class="com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.impl.MplDeliveryAddressDaoImpl">
-</bean>
-<!--  R2.3 Added 27-02-2017 Start-->
+	</bean -->
+	<!-- Node Warmer Changes: -->
+	
+	
+	<!-- getPointService Thread lock fix -->
+	<alias name="mplPickupAvailabilityStrategy" alias="pickupAvailabilityStrategy"/>
+	<bean id="mplPickupAvailabilityStrategy"
+			class="com.tisl.mpl.marketplacecommerceservices.strategy.impl.ExtDefaultPickupAvailabilityStrategy">
+		<property name="pickupStrategy" ref="pickupStrategy"/>
+		<property name="stockLevelProductStrategy" ref="stockLevelProductID"/>
+		<property name="storePickupDao" ref="storePickupDao"/>
+	</bean>
+	
+  <!--  R2.3 Added 27-02-2017 Start-->
   <bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="maxUploadSize" value="-1" />

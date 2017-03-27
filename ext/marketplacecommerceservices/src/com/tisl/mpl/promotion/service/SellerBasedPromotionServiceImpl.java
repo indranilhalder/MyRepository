@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
@@ -30,7 +31,7 @@ import com.tisl.mpl.promotion.dao.SellerBasedPromotionDao;
  */
 public class SellerBasedPromotionServiceImpl implements SellerBasedPromotionService
 {
-
+	private static final Logger LOG = Logger.getLogger(SellerBasedPromotionService.class);
 	private SellerBasedPromotionDao sellerBasedPromotionDao;
 
 	@Resource(name = "modelService")
@@ -76,6 +77,7 @@ public class SellerBasedPromotionServiceImpl implements SellerBasedPromotionServ
 	/**
 	 * @Description : Fetch Promotion Details Corresponding to a code
 	 * @param : code
+	 * @throws Exception
 	 */
 	@Override
 	public List<AbstractPromotionModel> fetchPromotionDetails(final String code)
@@ -87,34 +89,42 @@ public class SellerBasedPromotionServiceImpl implements SellerBasedPromotionServ
 	 * Modify the promotion Fired Message
 	 *
 	 * @param promoCode
+	 * @throws Exception
 	 */
 	@Override
 	public void modifyFiredMessage(final String promoCode)
 	{
-		final List<AbstractPromotionModel> promoList = fetchPromotionDetails(promoCode);
-		List<AbstractPromotionModel> modifyList = null;
-		String message = MarketplacecommerceservicesConstants.EMPTY;
-		if (CollectionUtils.isNotEmpty(promoList))
+		try
 		{
-			modifyList = new ArrayList<AbstractPromotionModel>();
-			for (final AbstractPromotionModel oModel : promoList)
+			final List<AbstractPromotionModel> promoList = fetchPromotionDetails(promoCode);
+			List<AbstractPromotionModel> modifyList = null;
+			String message = MarketplacecommerceservicesConstants.EMPTY;
+			if (CollectionUtils.isNotEmpty(promoList))
 			{
-				if (null != oModel.getEnabled() && oModel.getEnabled().booleanValue())
+				modifyList = new ArrayList<AbstractPromotionModel>();
+				for (final AbstractPromotionModel oModel : promoList)
 				{
-					message = populateMessage(oModel);
+					if (null != oModel.getEnabled() && oModel.getEnabled().booleanValue())
+					{
+						message = populateMessage(oModel);
+					}
+					else
+					{
+						modifyList.add(oModel);
+					}
 				}
-				else
+
+
+				if (CollectionUtils.isNotEmpty(modifyList) && StringUtils.isNotEmpty(message))
 				{
-					modifyList.add(oModel);
+					modifyMessage(modifyList, message);
 				}
+
 			}
-
-
-			if (CollectionUtils.isNotEmpty(modifyList) && StringUtils.isNotEmpty(message))
-			{
-				modifyMessage(modifyList, message);
-			}
-
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured while modifyFiredMessage:- ", e);
 		}
 
 	}

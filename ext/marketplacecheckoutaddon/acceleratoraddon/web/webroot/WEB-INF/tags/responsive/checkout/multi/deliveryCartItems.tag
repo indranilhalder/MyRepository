@@ -71,6 +71,7 @@
 					<c:if test="${ not empty deliveryAddress.region.name }">
 						${fn:escapeXml(deliveryAddress.region.name)},&nbsp;
 					</c:if>
+					<br>
 					<c:if test="${ not empty deliveryAddress.state }">
 						${fn:escapeXml(deliveryAddress.state)},&nbsp;
 					</c:if>
@@ -112,12 +113,12 @@
 <c:if test="${ not empty cartData.totalUnitCount }">
 <%-- 	${cartData.totalUnitCount}&nbsp;<spring:theme code="basket.page.totalQtyForAddress"/> --%>
 		<c:if test="${not hasShippedItems}">
-			<c:if test="${cartData.totalUnitCount > 0}">${cartData.totalUnitCount}&nbsp;<%-- <spring:theme code="basket.page.totalQtyForAddress.items" /> --%> ITEMS PICKUP FROM BELOW STORE</c:if>
+			<c:if test="${cartData.totalUnitCount > 0}">${cartData.totalUnitCount}&nbsp;<%-- <spring:theme code="basket.page.totalQtyForAddress.items" /> --%> Item(s) pickup from below store</c:if>
 			<%-- <c:if test="${cartData.totalUnitCount <= 1}">${cartData.totalUnitCount}&nbsp;<spring:theme code="basket.page.totalQtyForAddress.item" /></c:if> --%>
 		</c:if>
 		<c:if test="${hasShippedItems}">
 			<c:if test="${cartData.totalUnitCount > 0}">${cartData.deliveryItemsQuantity}&nbsp;<spring:theme code="basket.page.totalQtyForAddress.items" /></c:if>
-		<%-- 	<c:if test="${cartData.totalUnitCount <= 1}">${cartData.totalUnitCount}&nbsp;<spring:theme code="basket.page.totalQtyForAddress.item" /></c:if> --%>
+		<%-- 	<c:if test="${cartData.totalUnitCount <= 1}">${cartData.totalUnitCount}&nbsp;<spring:theme code="basket.page.totalQtyForAddress.item" /></c:if> > --%>
 		</c:if>
 </c:if>
 </li>

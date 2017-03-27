@@ -124,7 +124,7 @@ public class TealiumController extends AbstractController
 		try
 		{
 			final JSONObject utag = populateCommonTealiumData();
-			utag.put(PAGETYPE, "product");
+			utag.put(PAGETYPE, "category");
 			utag.put("page_section_name", "");
 			utag.put("page_subcategory_name", "");
 			final String utagData = utag.toJSONString();

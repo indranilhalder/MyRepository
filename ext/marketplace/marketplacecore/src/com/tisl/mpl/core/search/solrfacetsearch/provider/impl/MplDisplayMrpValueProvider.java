@@ -27,8 +27,10 @@ import javax.annotation.Resource;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.util.CollectionUtils;
 
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.util.MplBuyBoxUtility;
@@ -65,7 +67,7 @@ public class MplDisplayMrpValueProvider extends AbstractPropertyFieldValueProvid
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -122,15 +124,22 @@ public class MplDisplayMrpValueProvider extends AbstractPropertyFieldValueProvid
 				//Included for Electronics Product
 				final String sizeVariantColour = mplBuyBoxUtility.getVariantColour(pcmSizeVariantModel);
 
+				// Added For INC144314878 - MOP not reflecting in PLP while selecting Size
+				final List<BuyBoxModel> priceListForProduct = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode());
+
 				final String pcmVariantColour = mplBuyBoxUtility.getVariantColour(pcmVariantModel);
 				if (sizeVariantColour != null && pcmVariantColour != null && sizeVariantColour.equalsIgnoreCase(pcmVariantColour)
 						&& pcmSizeVariantModel.getSize() != null)
 				{
+					if (null != priceListForProduct && !CollectionUtils.isEmpty(priceListForProduct))
+					{
 
-					final Double price = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getMrp();
-					final JSONObject sizePriceJson = new JSONObject();
-					sizePriceJson.put(pcmSizeVariantModel.getSize().toUpperCase(), price);
-					sizePriceJsonArray.add(sizePriceJson);
+						final Double price = priceListForProduct.get(0).getMrp();
+						final JSONObject sizePriceJson = new JSONObject();
+						sizePriceJson.put(pcmSizeVariantModel.getSize().toUpperCase(), price);
+						sizePriceJsonArray.add(sizePriceJson);
+
+					}
 				}
 
 			}

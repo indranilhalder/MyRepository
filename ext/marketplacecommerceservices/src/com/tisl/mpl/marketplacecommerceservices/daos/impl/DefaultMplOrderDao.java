@@ -12,6 +12,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.jalo.flexiblesearch.FlexibleSearchException;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -382,7 +383,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception while getting the short-url for order:"+orderCode);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return shortUrl;
 	}
@@ -409,7 +410,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 			}
 			catch (final Exception e)
 			{
-				LOG.error("�rror while searching  AbstractOrderEntryModel model by transactionId  " + transactionId);
+				LOG.error("Error while searching  AbstractOrderEntryModel model by transactionId  " + transactionId);
 			}
 			return null;
 		
@@ -448,8 +449,5 @@ public class DefaultMplOrderDao implements MplOrderDao
 	{
 		this.pagedFlexibleSearchService = pagedFlexibleSearchService;
 	}
-	
-	
-	
 
 }

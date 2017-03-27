@@ -135,7 +135,6 @@ import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
-
 @Controller
 @RequestMapping(value = "/checkout/multi/delivery-method")
 public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepController
@@ -279,7 +278,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			timeOutSet(model);
 			if (StringUtils.isNotEmpty(defaultPinCodeId) && (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries())))
 			{
-				responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartData);
+				//CAR-126/128/129
+				responseData = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES);
+				if (CollectionUtils.isEmpty(responseData))
+				{
+					responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartData);
+				}
 				// TPR-429 START
 				final String cartLevelSellerID = populateCheckoutSellers(cartData);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
@@ -408,7 +412,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		try
 		{
 			final CartModel cartModel = getCartService().getSessionCart();
-			//TISST-13012
+
 			final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cartModel);
 			//final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart());
 			if (cartItemDelistedStatus)
@@ -487,8 +491,22 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 			/*** Inventory Soft Reservation Start ***/
 
+			//commented for CAR:127
+
+			/*
+			 * final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+			 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART, cartModel);
+			 */
+
+			//CAR:127
+			//final CartData caData = getMplCartFacade().getCartDataFromCartModel(cartModel, false);
+			 CartData cartUssidData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+			//TISST-13012
+
 			final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART, cartModel);
+					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART, cartUssidData, cartModel);
+
+
 			if (!inventoryReservationStatus)
 			{
 				getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
@@ -499,7 +517,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			LOG.debug(">>>>>>>>>>  Step 4:  Inventory soft reservation status  " + inventoryReservationStatus);
 			Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 			List<PinCodeResponseData> responseData = null;
-			CartData cartUssidData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+
+			//commented for CAR:127
+			//final CartData cartUssidData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 
 			final String defaultPinCodeId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 
@@ -507,13 +527,20 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			if (StringUtils.isNotEmpty(defaultPinCodeId)
 					&& (cartUssidData != null && cartUssidData.getEntries() != null && !cartUssidData.getEntries().isEmpty()))
 			{
-				responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartUssidData);
+				//CAR-126/128/129
+				responseData = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES);
+				if (CollectionUtils.isEmpty(responseData))
+				{
+					responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartUssidData);
+				}
 				deliveryModeDataMap = getMplCartFacade().getDeliveryMode(cartUssidData, responseData, cartModel);
 
 				getMplCartFacade().setDeliveryDate(cartUssidData, responseData);
 				//TISUTO-72 TISST-6994,TISST-6990 set cart COD eligible
-				final boolean isCOdEligible = getMplCartFacade().addCartCodEligible(deliveryModeDataMap, responseData, cartModel);
+				final boolean isCOdEligible = getMplCartFacade().addCartCodEligible(deliveryModeDataMap, responseData, cartModel,
+						cartUssidData);
 				LOG.info("isCOdEligible " + isCOdEligible);
+
 			}
 
 			LOG.debug(">>>>>>>>>>  Step 5:  Cod status setting done  ");
@@ -2842,14 +2869,22 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	public String cncCartReservation(final Model model, final RedirectAttributes redirectAttributes)
 			throws CMSItemNotFoundException
 	{
+		//added for CAR:127
+		final CartModel cart = cartService.getSessionCart();
+		final CartData cData = getMplCartFacade().getCartDataFromCartModel(cart, false);
+		//added for CAR:127
 
 		if (LOG.isDebugEnabled())
 		{
 			LOG.debug("from cncCartReservation method ");
 		}
+		//commented for CAR:127
+		/*
+		 * final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+		 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART, null);
+		 */
 		final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-				MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART, null);
-
+				MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART, cData, cart);
 		if (!inventoryReservationStatus)
 		{
 			if (LOG.isDebugEnabled())

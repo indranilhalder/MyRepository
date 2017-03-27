@@ -227,7 +227,8 @@
 		<property name="allVariantsId" type="java.util.List&lt;java.lang.String>"/>
 		<!-- CHANGES FOR TPR-249 -->
 		<property name="displaySizes" type="java.util.List&lt;java.lang.String>"></property>
-
+<!-- Optimization # 4 -->
+		<property name="homepageImageurl" type="java.lang.String"></property>
 	</bean>
 
 	<!-- pdp changes begins -->
@@ -415,7 +416,7 @@
 			<property name="pickupName" type="String"/>
 			<property name="pickupPhoneNumber" type="String"/>
 			<property name="deliveryAddressList"
-			type="java.util.List&lt;de.hybris.platform.commercefacades.user.data.AddressData>" />		
+			type="java.util.List&lt;de.hybris.platform.commercefacades.user.data.AddressData>" />	
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.data.OrderDataTransactionForXML">
@@ -611,6 +612,7 @@
 	<!-- seller changes for pdp -->
 	<enum class="de.hybris.platform.commercefacades.product.ProductOption">
 		<value>SELLER</value>
+		<value>HOMEPAGEPRODUCTS</value>
 		<!-- <value>IMAGES</value> -->
 	</enum>
 	<bean class="com.tisl.mpl.facades.cms.data.HeroComponentData">
@@ -1049,9 +1051,17 @@
 		<bean class="com.tisl.mpl.facades.data.AbstractBannerComponentData">
 		<property name="media" type="de.hybris.platform.commercefacades.product.data.ImageData"></property>
 		<property name="urlLink" type="String"></property>	
-          
 	</bean>
-
+	
+	<bean class="com.tisl.mpl.facades.data.MplAjaxProductData" extends="de.hybris.platform.commercefacades.product.data.ProductData">
+		<property name="productSize" type="String"></property>
+		<property name="pdpSellerIDs" type="java.util.List&lt;String>"></property>
+		<property name="validTabs" type="String"></property>
+		<property name="mapConfigurableAttributes" type="java.util.Map&lt;String,Map>"></property>
+		<property name="mapConfigurableAttribute" type="java.util.Map&lt;String,String>"></property>
+		<property name="Warranty" type="java.util.List&lt;String>"></property>
+		<property name="error" type="String"></property>
+	</bean>
     <!-- R2.3 FL04 Changes -->
 	
 	<bean class="com.tisl.mpl.facade.data.LandMarksData">
@@ -1068,6 +1078,7 @@
 		<property name="country" type="String"></property>
 		<property name="countryCode" type="String"></property>
 	</bean>
+	
 	<!-- FL04 Close -->
 
 	<bean class="com.tisl.mpl.facades.data.ScheduledDeliveryData">
