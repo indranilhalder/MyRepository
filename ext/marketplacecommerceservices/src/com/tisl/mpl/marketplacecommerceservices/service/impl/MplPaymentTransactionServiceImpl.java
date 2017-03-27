@@ -58,7 +58,7 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 			final AbstractOrderModel cart, final Map.Entry<String, Double> entry,
 			final List<PaymentTransactionEntryModel> paymentTransactionEntryList) //Changed to abstractOrderModel for TPR-629
 	{
-
+		//OrderIssues:- Null check added
 		final PaymentTransactionEntryModel paymentTransactionEntry = getModelService().create(PaymentTransactionEntryModel.class);
 		try
 		{
@@ -70,10 +70,13 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 							.getRootReferenceNumber());
 				}
 
-				paymentTransactionEntry.setTransactionStatusDetails(getOrderStatusResponse.getPaymentGatewayResponse()
-						.getResponseMessage());
-				paymentTransactionEntry.setRequestToken(getOrderStatusResponse.getPaymentGatewayResponse().getTxnId());
-				paymentTransactionEntry.setRequestId(getOrderStatusResponse.getPaymentGatewayResponse().getExternalGatewayTxnId());
+				paymentTransactionEntry.setTransactionStatusDetails(null != getOrderStatusResponse.getPaymentGatewayResponse()
+						.getResponseMessage() ? getOrderStatusResponse.getPaymentGatewayResponse().getResponseMessage() : "");
+				paymentTransactionEntry
+						.setRequestToken(null != getOrderStatusResponse.getPaymentGatewayResponse().getTxnId() ? getOrderStatusResponse
+								.getPaymentGatewayResponse().getTxnId() : "");
+				paymentTransactionEntry.setRequestId(null != getOrderStatusResponse.getPaymentGatewayResponse()
+						.getExternalGatewayTxnId() ? getOrderStatusResponse.getPaymentGatewayResponse().getExternalGatewayTxnId() : "");
 
 				if (StringUtils.isNotEmpty(getOrderStatusResponse.getPaymentGatewayResponse().getAuthIdCode()))
 				{
@@ -87,6 +90,7 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 			}
 			else
 			{
+				LOG.error("Payment Gateway Response is empty");
 				paymentTransactionEntry.setCode(cart.getCode() + "-" + System.currentTimeMillis());
 			}
 
@@ -125,21 +129,31 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 					&& getOrderStatusResponse.getPaymentMethodType().equalsIgnoreCase("CARD"))
 			{
 				final String cardType = getOrderStatusResponse.getCardResponse().getCardType();
-				if (cardType.equalsIgnoreCase("DEBIT"))
+				if (StringUtils.isEmpty(cardType))
 				{
-					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Debit Card");
-					paymentTransactionEntry.setPaymentMode(paymenttype);
-				}
-				else if (cardType.equalsIgnoreCase("CREDIT"))
-				{
-					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Credit Card");
+					//:- Check with Barun Da wt to set the payment Mode, Since paymntmode is mandatory
+					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("UNKNOWN");
 					paymentTransactionEntry.setPaymentMode(paymenttype);
 				}
 				else
 				{
-					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("EMI");
-					paymentTransactionEntry.setPaymentMode(paymenttype);
+					if (cardType.equalsIgnoreCase("DEBIT"))
+					{
+						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Debit Card");
+						paymentTransactionEntry.setPaymentMode(paymenttype);
+					}
+					else if (cardType.equalsIgnoreCase("CREDIT"))
+					{
+						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Credit Card");
+						paymentTransactionEntry.setPaymentMode(paymenttype);
+					}
+					else
+					{
+						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("EMI");
+						paymentTransactionEntry.setPaymentMode(paymenttype);
+					}
 				}
+
 			}
 
 			//Check handled to remove concurrent scenario - TPR-629
@@ -407,9 +421,9 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
-	 * 
+	 *
 	 * @desc SprintPaymentFixes:-:- To handle missing paymentTransaction for specific order
 	 */
 	@Override
@@ -430,7 +444,7 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 			}
 			else
 			{
-				paymentTransactionModel.setCode(order.getCode() + "-" + System.currentTimeMillis());//TODO:Change required when Order Ref No. is ready
+				paymentTransactionModel.setCode(order.getCode() + "-" + System.currentTimeMillis());
 			}
 
 			paymentTransactionModel.setCreationtime(new Date());
@@ -499,9 +513,9 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
-	 *
+	 * 
 	 * @desc SprintPaymentFixes:-:- To handle missing paymentTransaction for specific order
 	 */
 	@Override
@@ -521,10 +535,13 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 							.getRootReferenceNumber());
 				}
 
-				paymentTransactionEntry.setTransactionStatusDetails(getOrderStatusResponse.getPaymentGatewayResponse()
-						.getResponseMessage());
-				paymentTransactionEntry.setRequestToken(getOrderStatusResponse.getPaymentGatewayResponse().getTxnId());
-				paymentTransactionEntry.setRequestId(getOrderStatusResponse.getPaymentGatewayResponse().getExternalGatewayTxnId());
+				paymentTransactionEntry.setTransactionStatusDetails(null != getOrderStatusResponse.getPaymentGatewayResponse()
+						.getResponseMessage() ? getOrderStatusResponse.getPaymentGatewayResponse().getResponseMessage() : "");
+				paymentTransactionEntry
+						.setRequestToken(null != getOrderStatusResponse.getPaymentGatewayResponse().getTxnId() ? getOrderStatusResponse
+								.getPaymentGatewayResponse().getTxnId() : "");
+				paymentTransactionEntry.setRequestId(null != getOrderStatusResponse.getPaymentGatewayResponse()
+						.getExternalGatewayTxnId() ? getOrderStatusResponse.getPaymentGatewayResponse().getExternalGatewayTxnId() : "");
 
 				if (StringUtils.isNotEmpty(getOrderStatusResponse.getPaymentGatewayResponse().getAuthIdCode()))
 				{
@@ -564,21 +581,31 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 					&& getOrderStatusResponse.getPaymentMethodType().equalsIgnoreCase("CARD"))
 			{
 				final String cardType = getOrderStatusResponse.getCardResponse().getCardType();
-				if (cardType.equalsIgnoreCase("DEBIT"))
+				if (StringUtils.isEmpty(cardType))
 				{
-					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Debit Card");
-					paymentTransactionEntry.setPaymentMode(paymenttype);
-				}
-				else if (cardType.equalsIgnoreCase("CREDIT"))
-				{
-					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Credit Card");
+					//:- Check with Barun Da wt to set the payment Mode, Since paymntmode is mandatory
+					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("UNKNOWN");
 					paymentTransactionEntry.setPaymentMode(paymenttype);
 				}
 				else
 				{
-					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("EMI");
-					paymentTransactionEntry.setPaymentMode(paymenttype);
+					if (cardType.equalsIgnoreCase("DEBIT"))
+					{
+						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Debit Card");
+						paymentTransactionEntry.setPaymentMode(paymenttype);
+					}
+					else if (cardType.equalsIgnoreCase("CREDIT"))
+					{
+						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Credit Card");
+						paymentTransactionEntry.setPaymentMode(paymenttype);
+					}
+					else
+					{
+						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("EMI");
+						paymentTransactionEntry.setPaymentMode(paymenttype);
+					}
 				}
+
 			}
 
 			//Check handled to remove concurrent scenario - TPR-629

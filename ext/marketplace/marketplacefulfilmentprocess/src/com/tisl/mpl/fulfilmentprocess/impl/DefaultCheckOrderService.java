@@ -36,14 +36,10 @@ public class DefaultCheckOrderService implements CheckOrderService
 	public boolean check(final OrderModel order)
 	{
 		boolean status = true;
-
-		if (!order.getCalculated().booleanValue())
-		{
-			// Order must be calculated
-			//return false;
-			status = false;
-		}
-		else if (order.getEntries().isEmpty())
+		//OrderIssues:- Calculated check removed since Submit Order is the last call
+		/*
+		 * if (!order.getCalculated().booleanValue()) { // Order must be calculated //return false; status = false; } else
+		 */if (order.getEntries().isEmpty())
 		{
 			// Order must have some lines
 			//return false;
@@ -120,7 +116,7 @@ public class DefaultCheckOrderService implements CheckOrderService
 	}
 
 	/*
-	 * 
+	 *
 	 * //SprintPaymentFixes:- To handle missing paymentTransaction ,Create the Transaction
 	 */
 	@Override
