@@ -53,7 +53,6 @@ import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
 import de.hybris.platform.commerceservices.url.UrlResolver;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
@@ -106,6 +105,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import atg.taglib.json.util.JSONException;
 
+import com.google.gson.Gson;
 import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONObject;
@@ -120,6 +120,8 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
 import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
+import com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl;
+import com.tisl.mpl.facades.data.MplAjaxProductData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.RichAttributeData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
@@ -302,6 +304,8 @@ public class ProductPageController extends MidPageController
 
 	@Autowired
 	private ConfigurationService configService;
+	@Resource(name = "customProductFacade")
+	private CustomProductFacadeImpl customProductFacade;
 
 	/**
 	 * @param buyBoxFacade
@@ -424,11 +428,21 @@ public class ProductPageController extends MidPageController
 				model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
 				model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
 				model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
-				final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-						ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-						//					ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION,
-						ProductOption.VARIANT_FULL));
-				//	model.addAttribute(ModelAttributetConstants.IS_PRODUCTPAGE, isProductPage);
+
+				//CAR-255
+				/*
+				 * final ProductData productData = productFacade.getProductForOptions(productModel,
+				 * Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+				 * ProductOption.GALLERY, ProductOption.CATEGORIES, // ProductOption.PROMOTIONS,
+				 * ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+				 */
+
+
+
+
+
+
+
 				/*
 				 * final String brandName = productData.getBrand().getBrandname(); final String metaDescription =
 				 * ModelAttributetConstants.Product_Page_Meta_Description
@@ -443,14 +457,16 @@ public class ProductPageController extends MidPageController
 				 * .replace(ModelAttributetConstants.META_VARIABLE_FOUR, productData.getName())
 				 * .replace(ModelAttributetConstants.META_VARIABLE_FIVE, productData.getName());
 				 */
-				final String metaTitle = productData.getSeoMetaTitle();
-				final String pdCode = productData.getCode();
-				final String metaDescription = productData.getSeoMetaDescription();
-				//TISPRD-4977
-				final String metaKeyword = productData.getSeoMetaKeyword();
-				//final String metaKeywords = productData.gets
 
-				setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
+
+				//CAR-255
+				/*
+				 * final String metaTitle = productData.getSeoMetaTitle(); final String pdCode = productData.getCode();
+				 * final String metaDescription = productData.getSeoMetaDescription(); //TISPRD-4977 final String
+				 * metaKeyword = productData.getSeoMetaKeyword(); //final String metaKeywords = productData.gets
+				 *
+				 * setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
+				 */
 				//AKAMAI fix
 				if (productModel instanceof PcmProductVariantModel)
 				{
@@ -2953,4 +2969,121 @@ public class ProductPageController extends MidPageController
 		return buyboxJson.put("iaResponse", dataMap);
 	}
 
+	@SuppressWarnings(BOXING)
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-ajaxProductData", method = RequestMethod.GET)
+	public String getAjaxProductDataForProductCode(
+			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode, final Model model)
+	{
+		String returnStatement = null;
+		MplAjaxProductData mplAjaxProductData = null;
+		final Gson gson = new Gson();
+		try
+		{
+			if (null != productCode)
+			{
+				productCode = productCode.toUpperCase();
+			}
+			LOG.debug("***************************ajaxProductData call for*************" + productCode);
+			final ProductModel productModel = productService.getProductForCode(productCode);
+			mplAjaxProductData = new MplAjaxProductData();
+			final ProductData productData = customProductFacade.getProductForAjaxOptions(productModel,
+					Arrays.asList(ProductOption.PROMOTIONS));
+			mplAjaxProductData.setCode(productData.getCode());
+			mplAjaxProductData.setName(productData.getName());
+			mplAjaxProductData.setUrl(productData.getUrl());
+			mplAjaxProductData.setArticleDescription(productData.getArticleDescription());
+			if (productModel instanceof PcmProductVariantModel)
+			{
+				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
+				mplAjaxProductData.setProductSize(variantProductModel.getSize());
+			}
+			mplAjaxProductData.setPotentialPromotions(productData.getPotentialPromotions());
+			final List<SellerInformationData> sellerInfoList = productData.getSeller();
+			final List<String> sellerList = new ArrayList<String>();
+			for (final SellerInformationData seller : sellerInfoList)
+			{
+				sellerList.add(seller.getSellerID());
+			}
+			mplAjaxProductData.setPdpSellerIDs(sellerList);
+
+			//			final String msdRESTURL = configurationService.getConfiguration().getString("msd.rest.url");
+			//			mplAjaxProductData.setMsdRESTURL(msdRESTURL);
+			model.addAttribute(ModelAttributetConstants.PRODUCT, productData);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			mplAjaxProductData.setError(e.getErrorMessage());
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			mplAjaxProductData.setError(e.getErrorMessage());
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+			mplAjaxProductData.setError(e.getMessage());
+		}
+		finally
+		{
+			model.addAttribute("ajaxData", gson.toJson(mplAjaxProductData));
+			returnStatement = ControllerConstants.Views.Fragments.Product.AJAXPRODUCTDATA;
+		}
+		return returnStatement;
+	}
+
+	@SuppressWarnings(BOXING)
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-productClassAttribs", method = RequestMethod.GET)
+	public @ResponseBody String getAjaxProductClassAttribs(
+			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode, final Model model)
+			throws com.granule.json.JSONException
+	{
+		LOG.debug("***************************productClassAttribs call for*************" + productCode);
+		String returnStatement = null;
+		final Gson gson = new Gson();
+		MplAjaxProductData mplAjaxProductData = null;
+		try
+		{
+			if (null != productCode)
+			{
+				productCode = productCode.toUpperCase();
+			}
+			final ProductModel productModel = productService.getProductForCode(productCode);
+			final ProductData productData = customProductFacade.getProductForAjaxOptions(productModel,
+					Arrays.asList(ProductOption.CATEGORIES, ProductOption.CLASSIFICATION));
+			mplAjaxProductData = new MplAjaxProductData();
+			displayConfigurableAttribute(productData, model);
+			final String validTabs = configurationService.getConfiguration().getString(
+					"mpl.categories." + productData.getRootCategory());
+			mplAjaxProductData.setValidTabs(validTabs);
+			mplAjaxProductData.setMapConfigurableAttribute((Map<String, String>) model.asMap().get(
+					ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE));
+			mplAjaxProductData.setMapConfigurableAttributes((Map<String, Map>) model.asMap().get(
+					ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES));
+			mplAjaxProductData.setWarranty((List<String>) model.asMap().get(ModelAttributetConstants.WARRANTY));
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			mplAjaxProductData.setError(e.getErrorMessage());
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			mplAjaxProductData.setError(e.getErrorMessage());
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+			mplAjaxProductData.setError(e.getMessage());
+		}
+		finally
+		{
+			returnStatement = gson.toJson(mplAjaxProductData);
+		}
+		return returnStatement;
+	}
 }

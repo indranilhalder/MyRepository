@@ -178,7 +178,7 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 */
 	//CAR-110
 	//public OrderData placeOrderByCartId(final String cartID) throws EtailNonBusinessExceptions;
-	public String placeOrderByCartId(final CartModel cart) throws EtailNonBusinessExceptions;
+	public String placeOrderMobile(final CartModel cart) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @description: It is used for converting date into ordinal date
@@ -248,6 +248,15 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 *
 	 * @throws InvalidCartException
 	 *
+	 * @throws CalculationException
+	 */
+	void beforeSubmitOrderMobile(OrderModel orderModel) throws InvalidCartException, CalculationException;
+
+	/**
+	 * INC144314180 PRDI-25
+	 *
+	 * @param orderModel
+	 * @throws InvalidCartException
 	 * @throws CalculationException
 	 */
 	void beforeSubmitOrderMobile(OrderModel orderModel) throws InvalidCartException, CalculationException;

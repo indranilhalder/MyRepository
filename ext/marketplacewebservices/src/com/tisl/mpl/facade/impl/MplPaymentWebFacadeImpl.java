@@ -103,8 +103,6 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	private Converter<AddressModel, AddressData> customAddressConverter;
 	private Converter<CreditCardPaymentInfoModel, CCPaymentInfoData> creditCardPaymentInfoConverter;
 
-	@Resource(name = "sessionService")
-	private SessionService sessionService;
 
 	@Resource
 	private MplPaymentService mplPaymentService;
@@ -821,18 +819,22 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 		//OrderData orderData = null;
 		if (null != order.getPaymentInfo() && CollectionUtils.isEmpty(order.getChildOrders()))
 		{
-			mplCheckoutFacade.beforeSubmitOrder(order);
+			// INC144314180  PRDI-25
+			mplCheckoutFacade.beforeSubmitOrderMobile(order);
 			mplCheckoutFacade.submitOrder(order);
+			//order confirmation email and sms
+			notificationFacade.sendOrderConfirmationNotification(order);
 			//CAR-110
 			//orderData = mplCheckoutFacade.getOrderDetailsForCode(order);
 			//order confirmation email and sms
 			getNotificationFacade().sendOrderConfirmationNotification(order);
 			updated = true;
 		}
-		else if (null != order.getPaymentInfo() && CollectionUtils.isNotEmpty(order.getChildOrders()))
+		else
 		{
 			//orderData = mplCheckoutFacade.getOrderDetailsForCode(order);
-			updated = true;
+			updated = false;
+			LOG.error("CardPayment Fail----as paymentinfo already attached");
 		}
 		/*
 		 * if (orderData != null) { updated = true; }

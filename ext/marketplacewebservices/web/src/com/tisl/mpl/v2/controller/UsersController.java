@@ -4357,12 +4357,15 @@ public class UsersController extends BaseCommerceController
 							}
 							netbankingwstolist1.add(netBankingWsDTO1);
 						}
-						netbankingfinallist.addAll(netbankingwstolist1);
-						netbankingfinallist.addAll(netbankingwstolist);
+						//TPR-4855
+						netbankingfinallist.addAll(sortedList(netbankingwstolist));
+						netbankingfinallist.addAll(sortedList(netbankingwstolist1));
 						//TISEE-929
-						final Comparator<NetBankingWsDTO> byName = (final NetBankingWsDTO o1, final NetBankingWsDTO o2) -> o1
-								.getBankName().compareTo(o2.getBankName());
-						Collections.sort(netbankingfinallist, byName);
+						//TPR-4855
+						/*
+						 * final Comparator<NetBankingWsDTO> byName = (final NetBankingWsDTO o1, final NetBankingWsDTO o2) ->
+						 * o1 .getBankName().compareTo(o2.getBankName()); Collections.sort(netbankingfinallist, byName);
+						 */
 						netBankingListWsDTO.setBankList(netbankingfinallist);
 						netBankingListWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 					}
@@ -6655,7 +6658,7 @@ public class UsersController extends BaseCommerceController
 					{
 						//CAR-110
 						//orderData = mplCheckoutFacade.placeOrderByCartId(cartGuid);
-						orderCode = mplCheckoutFacade.placeOrderByCartId(cart);
+						orderCode = mplCheckoutFacade.placeOrderMobile(cart);
 						if (orderCode == null)
 						{
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9321);
@@ -6737,7 +6740,14 @@ public class UsersController extends BaseCommerceController
 		}
 		catch (final AdapterException e)
 		{
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9327);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			// Error message for All Exceptions
+			if (null != e.getMessage())
+			{
+				orderCreateInJusPayWsDto.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9327));
+				orderCreateInJusPayWsDto.setErrorCode(MarketplacecommerceservicesConstants.B9327);
+			}
+			orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -6764,7 +6774,7 @@ public class UsersController extends BaseCommerceController
 		}
 		catch (final Exception e)
 		{
-			LOG.error(MarketplacewebservicesConstants.CREATEJUSPAYORDER, e);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
 			// Error message for All Exceptions
 			if (null != e.getMessage())
 			{
@@ -8433,5 +8443,20 @@ public class UsersController extends BaseCommerceController
 		this.productDetailsHelper = productDetailsHelper;
 	}
 
+	/**
+	 * This method sorts the list of net banking banks.
+	 *
+	 * @param toSortList
+	 * @return List
+	 *
+	 *         This method was developed for TPR-4855
+	 */
+	private List sortedList(final List<NetBankingWsDTO> toSortList)
+	{
+		final Comparator<NetBankingWsDTO> byName = (final NetBankingWsDTO o1, final NetBankingWsDTO o2) -> o1.getBankName()
+				.compareTo(o2.getBankName());
+		Collections.sort(toSortList, byName);
+		return toSortList;
+	}
 
 }

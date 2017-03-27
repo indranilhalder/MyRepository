@@ -29,17 +29,17 @@
 			function openPopup(url,buttontype) {
 				//alert(buttontype);
 				//TPR-674
-				utag.link({link_obj: this, link_text: buttontype , event_type : 'share_button_click' });
+				utag.link({link_obj: this, link_text: buttontype , event_type : 'share_button_click' ,product_id : productIdArray});
 				    window.open(url, 'popup_id','scrollbars,resizable,height='+popUpHeight+',width='+ popUpWidth +',left='+ PopUpLeftPosition +',top='+ PopUpTopPosition);
 			      return false;
 			    }
 			$(document).on('click','.mail.mailproduct',function(){
 			//	alert("yeaaaahhhhh")
-				utag.link({link_obj: this, link_text: 'share_email' , event_type : 'share_button_click' });
+				utag.link({link_obj: this, link_text: 'share_email' , event_type : 'share_button_click',product_id : productIdArray });
 			})
 			$(document).on('click','.g-interactivepost',function(){
 		//alert("g+...")
-		utag.link({link_obj: this, link_text: 'share_googleplus' , event_type : 'share_button_click' });
+		utag.link({link_obj: this, link_text: 'share_googleplus' , event_type : 'share_button_click',product_id : productIdArray });
 			})
 </script>
 

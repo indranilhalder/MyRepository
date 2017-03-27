@@ -49,7 +49,7 @@ tr.d0 td {
    <li class="productInfo"><spring:theme code="cart.product.information"/></li>
    <li class="price"><spring:theme code="cart.price"/></li>
    <li class="quantity"><spring:theme code="order.quantity"/></li>
-   <li class="delivery"><spring:theme code="cart.delivery.options"/></li>
+<li class="delivery"><spring:theme code="cart.delivery.options"/><span id="pincodeforcart"></span></li>
    
    
    </ul>
