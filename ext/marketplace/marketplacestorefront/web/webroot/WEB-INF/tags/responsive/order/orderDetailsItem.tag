@@ -244,6 +244,23 @@
 				</p>
 				<ul class="${entry.mplDeliveryMode.name}">
 					<li class="deliver-type">${entry.mplDeliveryMode.name}</li>
+					
+					<!-- TISSQAEE-275 -->
+					<li class="deliver"><c:choose>
+							<c:when test="${entry.currDelCharge.value=='0.0'}">
+								<%-- <spring:theme code="order.free"  /> --%>
+								<ycommerce:testId code="orderDetails_productTotalPrice_label">
+									<format:price priceData="${entry.currDelCharge}"
+										displayFreeForZero="true" />
+								</ycommerce:testId>
+							</c:when>
+							<c:otherwise>
+								<format:price priceData="${entry.currDelCharge}" />
+							</c:otherwise>
+						</c:choose>
+						</li>
+						<!-- TISSQAEE-275 -->
+						
 					<li class="deliver">${entry.mplDeliveryMode.description}</li>
 				</ul>
 			</li>
