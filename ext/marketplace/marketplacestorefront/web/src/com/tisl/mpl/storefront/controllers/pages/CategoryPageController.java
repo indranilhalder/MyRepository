@@ -212,6 +212,28 @@ public class CategoryPageController extends AbstractCategoryPageController
 		String searchCode = new String(categoryCode);
 		//SEO: New pagination detection TISCR 340
 		pageNo = getPaginatedPageNo(request);
+
+		//CKD:TPR-250 :Start
+		if (null != searchQuery && searchQuery.contains("sellerId:"))
+		{
+			String sellerId = null;
+			String sellerName = null;
+			try
+			{
+				sellerId = searchQuery.split("sellerId:", 2)[1].substring(0, 6);
+				sellerName = mplCategoryFacade.getSellerInformationBySellerID(sellerId);
+			}
+			catch (final Exception ex)
+			{
+				LOG.error("CategoryPage-Problem retrieving microsite SellerId / Sellername for left hand facets >>>>>", ex);
+			}
+			model.addAttribute("msiteSellerId", sellerId);
+			model.addAttribute("mSellerID", sellerId);
+			model.addAttribute("mSellerName", sellerName);
+		}
+		//CKD:TPR-250: End
+
+
 		//applying search filters
 		if (searchQuery != null)
 		{
@@ -613,7 +635,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 				}
 				catch (final Exception ex)
 				{
-					LOG.error("Problem retrieving microsite SellerId / Sellername from seller Sales Hierarchy URL >>>>>", ex);
+					LOG.error(
+							"Category Page-Problem retrieving microsite SellerId / Sellername from seller Sales Hierarchy URL >>>>>", ex);
 				}
 				model.addAttribute("msiteSellerId", sellerId);
 				model.addAttribute("mSellerID", sellerId);
@@ -630,7 +653,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 			catch (final Exception ex)
 			{
-				LOG.error("Problem retrieving microsite SellerId / Sellername from Category Carousel Shop Now link >>>>>", ex);
+				LOG.error(
+						"Category Page-Problem retrieving microsite SellerId / Sellername from Category Carousel Shop Now link >>>>>",
+						ex);
 			}
 			model.addAttribute("msiteSellerId", sellerId);
 			model.addAttribute("mSellerID", sellerId);
