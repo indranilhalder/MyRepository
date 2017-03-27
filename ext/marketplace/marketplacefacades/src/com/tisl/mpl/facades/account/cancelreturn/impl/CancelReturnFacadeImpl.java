@@ -711,6 +711,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				else if (suborderEntry.getAmountAfterAllDisc().getDoubleValue() != null)
 				{
 					amount += suborderEntry.getAmountAfterAllDisc().getDoubleValue().doubleValue();
+					if(suborderEntry.getScheduledDeliveryCharge() != null)
+					{
+						amount += suborderEntry.getScheduledDeliveryCharge().doubleValue();
+					}
 				}
 				else if (suborderEntry.getCurrDelCharge().getDoubleValue() != null)
 				{
@@ -852,7 +856,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						final double amount = (abstractOrderEntryModel.getNetAmountAfterAllDisc() != null ? abstractOrderEntryModel
 								.getNetAmountAfterAllDisc().doubleValue() : 0D)
 								+ (abstractOrderEntryModel.getCurrDelCharge() != null ? abstractOrderEntryModel.getCurrDelCharge()
-										.doubleValue() : 0D);
+										.doubleValue() : 0D)+ (abstractOrderEntryModel.getScheduledDeliveryCharge() != null ? abstractOrderEntryModel.getScheduledDeliveryCharge()
+												.doubleValue() : 0D);
 
 						refundEntryModel.setAmount(NumberUtils.createBigDecimal(Double.toString(amount)));
 					}
@@ -962,7 +967,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						final double amount = (abstractOrderEntryModel.getNetAmountAfterAllDisc() != null ? abstractOrderEntryModel
 								.getNetAmountAfterAllDisc().doubleValue() : 0D)
 								+ (abstractOrderEntryModel.getCurrDelCharge() != null ? abstractOrderEntryModel.getCurrDelCharge()
-										.doubleValue() : 0D);
+										.doubleValue() : 0D)+ (abstractOrderEntryModel.getScheduledDeliveryCharge() != null ? abstractOrderEntryModel.getScheduledDeliveryCharge()
+												.doubleValue() : 0D);
 
 						refundEntryModel.setAmount(NumberUtils.createBigDecimal(Double.toString(amount)));
 					}
@@ -1903,9 +1909,15 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			{
 				deliveryCost = orderEntry.getCurrDelCharge().doubleValue();
 			}
+			
+			double scheduleDeliveryCost = 0D;
+			if (orderEntry.getScheduledDeliveryCharge() != null)
+			{
+				scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge().doubleValue();
+			}
 
 
-			refundAmount = refundAmount + orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost;
+			refundAmount = refundAmount + orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost+scheduleDeliveryCost;
 			refundAmount = mplJusPayRefundService.validateRefundAmount(refundAmount, subOrderModel);
 
 		}
@@ -3395,7 +3407,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						final double amount = (abstractOrderEntryModel.getNetAmountAfterAllDisc() != null ? abstractOrderEntryModel
 								.getNetAmountAfterAllDisc().doubleValue() : 0D)
 								+ (abstractOrderEntryModel.getCurrDelCharge() != null ? abstractOrderEntryModel.getCurrDelCharge()
-										.doubleValue() : 0D);
+										.doubleValue() : 0D)+(abstractOrderEntryModel.getScheduledDeliveryCharge() != null ? abstractOrderEntryModel.getScheduledDeliveryCharge()
+												.doubleValue() : 0D);
 
 						refundEntryModel.setAmount(NumberUtils.createBigDecimal(Double.toString(amount)));
 					}
@@ -3809,7 +3822,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						final double amount = (abstractOrderEntryModel.getNetAmountAfterAllDisc() != null ? abstractOrderEntryModel
 								.getNetAmountAfterAllDisc().doubleValue() : 0D)
 								+ (abstractOrderEntryModel.getCurrDelCharge() != null ? abstractOrderEntryModel.getCurrDelCharge()
-										.doubleValue() : 0D);
+										.doubleValue() : 0D)+(abstractOrderEntryModel.getScheduledDeliveryCharge() != null ? abstractOrderEntryModel.getScheduledDeliveryCharge()
+												.doubleValue() : 0D);
 
 						refundEntryModel.setAmount(NumberUtils.createBigDecimal(Double.toString(amount)));
 					}

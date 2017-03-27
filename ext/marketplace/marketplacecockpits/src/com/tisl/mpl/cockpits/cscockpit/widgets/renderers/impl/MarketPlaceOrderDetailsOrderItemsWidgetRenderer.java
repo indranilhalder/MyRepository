@@ -493,9 +493,9 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		sdChargesRow.appendChild(scheduleDeliveryChargeslabel);
 		
 		Double scheduleDeliveryCost = 0.0D;
-		if(null !=  orderEntry.getScheduledDeliveryCharge()) {
+		if(null !=  orderEntry.getScheduledDeliveryCharge() && orderEntry.getScheduledDeliveryCharge() >0.0D) {
 			scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge();
-		}else {
+		}else if(null != orderEntry.getRefundedScheduleDeliveryChargeAmt() && orderEntry.getRefundedScheduleDeliveryChargeAmt() >=0.0D){
 			scheduleDeliveryCost = orderEntry.getRefundedScheduleDeliveryChargeAmt();
 		}
 		 
