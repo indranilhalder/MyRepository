@@ -12,6 +12,7 @@ import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartModification;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
@@ -222,8 +223,7 @@ public class MplCommerceCartServiceImplTest
 		//final CartModel cartModel = Mockito.mock(CartModel.class);
 		deliveryModeDataList.add(deliveryModeData);
 		deliveryModeDataMap.put("entryNumber", deliveryModeDataList);
-		given(mplCommerceCartServiceImpl.getDeliveryMode(cartDataMock, omsDeliveryResponse)).willReturn(
-				deliveryModeDataMap);
+		given(mplCommerceCartServiceImpl.getDeliveryMode(cartDataMock, omsDeliveryResponse)).willReturn(deliveryModeDataMap);
 	}
 
 
@@ -445,7 +445,7 @@ public class MplCommerceCartServiceImplTest
 	{
 		final ReservationItemWsDTO itemWsDto = Mockito.mock(ReservationItemWsDTO.class);
 		final CartSoftReservationData cartSoftReservationDataMock = Mockito.mock(CartSoftReservationData.class);
-		//final CartData cartDataMock = Mockito.mock(CartData.class);
+		final CartData cartDataMock = Mockito.mock(CartData.class);
 		final CartModel cartModelMock = Mockito.mock(CartModel.class);//TODO :Please enter cart Model
 		final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter pincode
 		final ReservationListWsDTO wsDto = Mockito.mock(ReservationListWsDTO.class);
@@ -474,8 +474,10 @@ public class MplCommerceCartServiceImplTest
 
 		cartdatalistMock.add(cartSoftReservationDataMock);
 
-		//given(mplCommerceCartServiceImpl.populateDataForSoftReservation(cartDataMock,null,null)).willReturn(cartdatalistMock);
-		given(mplCommerceCartServiceImpl.getReservation(cartModelMock, pincode, type,null,null)).willReturn(wsDto);
+		given(mplCommerceCartServiceImpl.populateDataForSoftReservation(cartDataMock)).willReturn(cartdatalistMock);
+		//commented for CAR:127
+		//given(mplCommerceCartServiceImpl.getReservation(cartModelMock, pincode, type)).willReturn(wsDto);
+		given(mplCommerceCartServiceImpl.getReservation(cartDataMock, pincode, type, cartModelMock,null,SalesApplication.WEB)).willReturn(wsDto);
 	}
 
 	@Test
@@ -509,7 +511,7 @@ public class MplCommerceCartServiceImplTest
 		deliveryModeGlobalCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter global code
 		cartSoftReservationDataMock.setDeliveryMode(deliveryModeGlobalCode);
 		cartSoftReservationDataList.add(cartSoftReservationDataMock);
-		//given(mplCommerceCartServiceImpl.populateDataForSoftReservation(cartDataMock)).willReturn(cartSoftReservationDataList);
+		given(mplCommerceCartServiceImpl.populateDataForSoftReservation(cartDataMock)).willReturn(cartSoftReservationDataList);
 	}
 
 
@@ -601,8 +603,9 @@ public class MplCommerceCartServiceImplTest
 		pinCodeEntry.add(pinCodeResponseData);
 		codEligible = Boolean.FALSE;
 
-
-		Mockito.when(Boolean.valueOf(mplCommerceCartServiceImpl.addCartCodEligible(deliveryModeMap, pinCodeEntry, cartModelMock)))
-				.thenReturn(Boolean.valueOf((codEligible.booleanValue())));
+		final CartData cartDataMock = Mockito.mock(CartData.class);
+		Mockito.when(
+				Boolean.valueOf(mplCommerceCartServiceImpl.addCartCodEligible(deliveryModeMap, pinCodeEntry, cartModelMock,
+						cartDataMock))).thenReturn(Boolean.valueOf((codEligible.booleanValue())));
 	}
 }

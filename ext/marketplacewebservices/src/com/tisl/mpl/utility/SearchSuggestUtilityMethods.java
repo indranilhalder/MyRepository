@@ -6,6 +6,7 @@ package com.tisl.mpl.utility;
 import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
@@ -77,7 +78,8 @@ public class SearchSuggestUtilityMethods
 	private MplProductWebService mplProductWebService;
 	//	@Resource(name = "productService")
 	//	private ProductService productService;
-	
+	@Resource(name = "productFacade")
+	private ProductFacade productFacade;
 	//@Resource(name = "productService")
 	//private ProductService productService;
 
@@ -442,7 +444,8 @@ public class SearchSuggestUtilityMethods
 						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
 						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
 						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
-						&& !facate.getCode().equalsIgnoreCase("allPromotions"))
+						&& !facate.getCode().equalsIgnoreCase("allPromotions")
+						&& !facate.getCode().equalsIgnoreCase("categoryNameCodeMapping")) //CAR -245-Luxury
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
 
@@ -497,7 +500,7 @@ public class SearchSuggestUtilityMethods
 								//facetValueWsDTO.setValue(currentFacet.substring((currentFacet.lastIndexOf(":") + 1)));
 								facetValueWsDTO.setValue(values.getCode());
 							}
-							if (null != values.getQuery().getUrl())
+							if (null != values.getQuery() && StringUtils.isNotEmpty(values.getQuery().getUrl())) //CAR -245-Luxury
 							{
 								facetValueWsDTO.setUrl(values.getQuery().getUrl().toString());
 							}
@@ -663,17 +666,12 @@ public class SearchSuggestUtilityMethods
 				}
 
 				//Revert of TPR-796
-				/*try
-				{
-					productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
-							Arrays.asList(ProductOption.GALLERY));
-					galleryImages = productDetailsHelper.getGalleryImagesMobile(productDataImage);
-				}
-				catch (final Exception e)
-				{
-					LOG.error("SERPSEARCH Product Image Error:" + productData.getCode());
-					continue;
-				}*/
+				/*
+				 * try { productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
+				 * Arrays.asList(ProductOption.GALLERY)); galleryImages =
+				 * productDetailsHelper.getGalleryImagesMobile(productDataImage); } catch (final Exception e) {
+				 * LOG.error("SERPSEARCH Product Image Error:" + productData.getCode()); continue; }
+				 */
 
 
 				//TPR-796
@@ -1356,7 +1354,8 @@ public class SearchSuggestUtilityMethods
 						&& !facate.getCode().equalsIgnoreCase("snsCategory")
 						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
 						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
-						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory"))
+						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
+						&& !facate.getCode().equalsIgnoreCase("categoryNameCodeMapping")) //CAR -245-Luxury
 
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
@@ -1414,7 +1413,7 @@ public class SearchSuggestUtilityMethods
 									facetValueWsDTO.setValue(values.getCode());
 								}
 							}
-							if (StringUtils.isNotEmpty(values.getQuery().getUrl()))
+							if (null != values.getQuery() && StringUtils.isNotEmpty(values.getQuery().getUrl())) //CAR -245-Luxury
 							{
 								facetValueWsDTO.setUrl(values.getQuery().getUrl().toString());
 							}

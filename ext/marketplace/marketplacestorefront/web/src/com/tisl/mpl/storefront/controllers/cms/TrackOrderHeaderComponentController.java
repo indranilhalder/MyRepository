@@ -65,15 +65,16 @@ public class TrackOrderHeaderComponentController extends AbstractCMSComponentCon
 
 					if (null != notificationMessagelist && !notificationMessagelist.isEmpty())
 					{
-						int notificationCount = 0;
-						for (final NotificationData single : notificationMessagelist)
-						{
-							if (single.getNotificationRead() != null && !single.getNotificationRead().booleanValue())
-							{
-								notificationCount++;
-							}
-
-						}
+						final int notificationCount = notificationMessagelist.size();
+						//						int notificationCount = 0;
+						//						for (final NotificationData single : notificationMessagelist)
+						//						{
+						//							if (single.getNotificationRead() != null && !single.getNotificationRead().booleanValue())
+						//							{
+						//								notificationCount++;
+						//							}
+						//
+						//						}
 
 						model.addAttribute("notificationCount", notificationCount);
 					}

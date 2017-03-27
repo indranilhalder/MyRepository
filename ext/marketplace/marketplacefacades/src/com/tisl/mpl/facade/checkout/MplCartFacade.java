@@ -5,6 +5,7 @@ package com.tisl.mpl.facade.checkout;
 
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.order.CartFacade;
+import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.CartModificationData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
@@ -267,8 +268,14 @@ public interface MplCartFacade extends CartFacade
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
+	/*
+	 * boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap, final
+	 * List<PinCodeResponseData> pincodeResponseData, CartModel cartModel) throws EtailNonBusinessExceptions;
+	 */
+
 	boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
-			final List<PinCodeResponseData> pincodeResponseData, CartModel cartModel) throws EtailNonBusinessExceptions;
+			final List<PinCodeResponseData> pincodeResponseData, CartModel cartModel, CartData cartData)
+			throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Desc checking max added quantity with store configuration
@@ -297,7 +304,12 @@ public interface MplCartFacade extends CartFacade
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
-	boolean isInventoryReserved(String requestType, AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
+	//commented for CAR:127
+	//boolean isInventoryReserved(String requestType, AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
+	boolean isInventoryReserved(String requestType, AbstractOrderData abstractOrderData, AbstractOrderModel abstractOrderModel)
+			throws EtailNonBusinessExceptions;
+
+
 
 	/*
 	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment For Mobile
@@ -308,8 +320,11 @@ public interface MplCartFacade extends CartFacade
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
+
+
 	public boolean isInventoryReservedMobile(final String requestType, final AbstractOrderModel abstractOrderModel,
 			final String defaultPinCodeId,final InventoryReservListRequestWsDTO item,SalesApplication salesApplication) throws EtailNonBusinessExceptions;
+
 
 	/**
 	 * @param cart
@@ -498,7 +513,9 @@ public interface MplCartFacade extends CartFacade
 	 * @return
 	 * @throws EtailNonBusinessExceptions
 	 */
-	PinCodeResponseData getVlaidDeliveryModesByInventory(PinCodeResponseData pinCodeResponseData, CartData cartData)
+	PinCodeResponseData getVlaidDeliveryModesByInventory(PinCodeResponseData pinCodeResponseData, CartData cartData);
+	
+	public CartData getCartDataFromCartModel(final CartModel cartModel, final boolean recentlyAddedFirst)
 			throws EtailNonBusinessExceptions;
     
     /**

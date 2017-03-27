@@ -345,7 +345,7 @@ public class MplPaymentFacadeImplUnitTest
 		Mockito.when(cartService.getSessionCart()).thenReturn(cartModel);
 		final List<AbstractOrderEntryModel> entryList = Arrays.asList(abstractOrderEntryModel);
 		Mockito.when(cartModel.getEntries()).thenReturn(entryList);
-		Mockito.doNothing().when(mplPaymentService).setPaymentTransactionForCOD(paymentMode, cartModel);
+		Mockito.doNothing().when(mplPaymentService).setPaymentTransactionForCOD(cartModel);
 		Mockito.when(customerModel.getName()).thenReturn("Test Name");
 		final String custName = customerModel.getName();
 		final double cartValue = 999.00;
@@ -586,7 +586,7 @@ public class MplPaymentFacadeImplUnitTest
 		final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 		final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 		Mockito.doNothing().when(mplCommerceCartService)
-		   .saveDeliveryMethForFreebie(abstractOrderModel, freebieModelMap, freebieParentQtyMap);
+				.saveDeliveryMethForFreebie(abstractOrderModel, freebieModelMap, freebieParentQtyMap);
 		Mockito.when(abstractOrderEntryModel.getSelectedUSSID()).thenReturn("1111111111");
 		Mockito.when(abstractOrderEntryModel.getDeliveryPointOfService()).thenReturn(posModel);
 		Mockito.doNothing().when(abstractOrderEntryModel).setDeliveryPointOfService(posModel);

@@ -373,6 +373,8 @@ public interface ControllerConstants
 				public static final String SellerResultsPage = "fragments/product/sellerResultPage";
 
 				public static final String OFFERMESSAGEMAP = "offerMessageMap";
+				//UF-60
+				public static final String AJAXPRODUCTDATA = "fragments/product/productPromotionSection";
 				
 				public static final String ID_ED_SELLER_HANDLING_TIME= "isEDSeller";
 			}

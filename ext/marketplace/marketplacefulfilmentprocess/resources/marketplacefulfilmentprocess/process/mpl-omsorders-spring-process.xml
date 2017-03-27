@@ -130,7 +130,8 @@
 		<property name="productAttributeStrategy" ref="omsProductAttributeStrategy" />
 		<property name="orderEntryNoteStrategy" ref="orderEntryNoteStrategy" />
 		<property name="ondemandTaxCalculationService" ref="ondemandTaxCalculationService" />
-		<property name="mplSellerInformationService" ref="mplSellerInformationService" />		
+		<property name="mplSellerInformationService" ref="mplSellerInformationService" />
+		
 	</bean>
 
 	<alias name="defaultOmsPaymentInfoConverter" alias="omsPaymentInfoConverter" />
@@ -214,10 +215,7 @@
 	</bean>	 -->
 	
 	<alias name="customOmsOrderSyncAdapter" alias="omsOrderSyncAdapter" />
-	<bean id="customOmsOrderSyncAdapter"
-
-
-		class="com.tisl.mpl.integration.oms.adapter.CustomOmsOrderSyncAdapter" parent="defaultOmsOrderSyncAdapter"
+	<bean id="customOmsOrderSyncAdapter" class="com.tisl.mpl.integration.oms.adapter.CustomOmsOrderSyncAdapter" parent="defaultOmsOrderSyncAdapter"
 		scope="tenant">
 		<property name="omsShipmentSyncAdapterCustom" ref="omsShipmentSyncAdapter" />
 		<property name="modelService" ref="modelService" />

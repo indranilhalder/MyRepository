@@ -3,7 +3,9 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
@@ -230,6 +232,24 @@ public interface MplCommerceCartService
 	List<PinCodeResponseData> getAllResponsesForPinCode(final String pin, final List<PincodeServiceData> reqData)
 			throws EtailNonBusinessExceptions, ClientEtailNonBusinessExceptions;
 
+	/*
+	 * @Desc fetching reservation details
+	 * 
+	 * @param cartId
+	 * 
+	 * @param cartData
+	 * 
+	 * @param pincode
+	 * 
+	 * @throws EtailNonBusinessExceptions
+	 */
+	//commented for CAR:127
+	/*
+	 * ReservationListWsDTO getReservation(final AbstractOrderModel cartModel, final String pincode, final String type)
+	 * throws EtailNonBusinessExceptions;
+	 */
+//	ReservationListWsDTO getReservation(final AbstractOrderData cartData, final String pincode, final String type,
+//			AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @DESC MobileWS105 : get top two wish list for mobile web service
@@ -256,8 +276,14 @@ public interface MplCommerceCartService
 	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
+	/*
+	 * boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap, final
+	 * List<PinCodeResponseData> pincodeResponseData, CartModel cartModel) throws EtailNonBusinessExceptions;
+	 */
+
 	boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
-			final List<PinCodeResponseData> pincodeResponseData, CartModel cartModel) throws EtailNonBusinessExceptions;
+			final List<PinCodeResponseData> pincodeResponseData, CartModel cartModel, CartData cartData)
+			throws EtailNonBusinessExceptions;
 
 
 	public PriceData addConvCharge(final CartModel source, final CartData prototype);
@@ -347,8 +373,13 @@ public interface MplCommerceCartService
 	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
-	boolean isInventoryReserved(AbstractOrderModel abstractOrderModel, String requestType, String defaultPinCodeId,final InventoryReservListRequestWsDTO item,SalesApplication salesApplication)
-			throws EtailNonBusinessExceptions;
+	//commented for CAR:127
+	/*
+	 * boolean isInventoryReserved(AbstractOrderModel abstractOrderModel, String requestType, String defaultPinCodeId)
+	 * throws EtailNonBusinessExceptions;
+	 */
+	boolean isInventoryReserved(AbstractOrderData abstractOrderData, String requestType, String defaultPinCodeId,
+			AbstractOrderModel abstractOrderModel,InventoryReservListRequestWsDTO inventoryRequest,SalesApplication salesApplication) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @description: It is responsible to find possible delivery mode of a cart entry
@@ -454,9 +485,7 @@ public interface MplCommerceCartService
 
 	public PinCodeResponseData getVlaidDeliveryModesByInventory(final PinCodeResponseData pinCodeResponseData,
 			final CartData cartData) throws EtailNonBusinessExceptions;
-	
-	public InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(InvReserForDeliverySlotsRequestData cartdata);
-	
+
 	/**
 	 * @param source
 	 * @param prototype
@@ -477,6 +506,16 @@ public interface MplCommerceCartService
 	 */
 	public Map<String, List<MarketplaceDeliveryModeData>> getDeliveryMode(CartData cartData,
 			List<PinCodeResponseData> omsDeliveryResponse) throws CMSItemNotFoundException;
+	/**
+	 * This method was developed for CAR-256
+	 *
+	 * @param guid
+	 * @param site
+	 * @param user
+	 * @return CartModel
+	 * @throws InvalidCartException
+	 */
+	public CartModel fetchLatestCart(final BaseSiteModel site, final UserModel user) throws InvalidCartException;
 
 	/**
 	 * @param abstractOrderModel
@@ -487,9 +526,15 @@ public interface MplCommerceCartService
 	 * @return
 	 * @throws EtailNonBusinessExceptions
 	 */
-	ReservationListWsDTO getReservation(AbstractOrderModel abstractOrderModel, String pincode, String requestType,
-			InventoryReservListRequestWsDTO inventoryRequest,
-			de.hybris.platform.commerceservices.enums.SalesApplication salesApplication) throws EtailNonBusinessExceptions;
+	ReservationListWsDTO getReservation(final AbstractOrderData cartData, final String pincode, final String type,
+			AbstractOrderModel abstractOrderModel,
+			InventoryReservListRequestWsDTO inventoryRequest,SalesApplication salesApplication) throws EtailNonBusinessExceptions;
+
+	/**
+	 * @param cartdata
+	 * @return
+	 */
+	InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(InvReserForDeliverySlotsRequestData cartdata);
 
 
 
