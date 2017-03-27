@@ -1970,7 +1970,8 @@
         </property>
     </bean>
 	<!-- Old Cron Job Deletion Logic ends: -->
-
+   <alias name="defaultmplReturnDao" alias="mplReturnDao"/>
+<bean class="com.tisl.mpl.returns.dao.impl.MplReturnDaoImpl" id="defaultmplReturnDao"></bean>
     <!--bean id="nodeWarmupService" class="com.hybris.yps.nodewarmer.service.NodeWarmupService">
 		<property name="warmerStrategies">
 			<list>
@@ -2000,7 +2001,11 @@
 		<property name="stockLevelProductStrategy" ref="stockLevelProductID"/>
 		<property name="storePickupDao" ref="storePickupDao"/>
 	</bean>
-	
+	<bean id="mplDeliveryAddressServiceImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDeliveryAddressServiceImpl"/>
+<bean id="mplDeliveryAddressDaoImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.impl.MplDeliveryAddressDaoImpl">
+</bean>
   <!--  R2.3 Added 27-02-2017 Start-->
   <bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">

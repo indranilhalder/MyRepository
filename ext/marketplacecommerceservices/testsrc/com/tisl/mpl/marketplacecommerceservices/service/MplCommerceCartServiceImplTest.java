@@ -12,6 +12,7 @@ import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartModification;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
@@ -476,7 +477,7 @@ public class MplCommerceCartServiceImplTest
 		given(mplCommerceCartServiceImpl.populateDataForSoftReservation(cartDataMock)).willReturn(cartdatalistMock);
 		//commented for CAR:127
 		//given(mplCommerceCartServiceImpl.getReservation(cartModelMock, pincode, type)).willReturn(wsDto);
-		given(mplCommerceCartServiceImpl.getReservation(cartDataMock, pincode, type, cartModelMock)).willReturn(wsDto);
+		given(mplCommerceCartServiceImpl.getReservation(cartDataMock, pincode, type, cartModelMock,null,SalesApplication.WEB)).willReturn(wsDto);
 	}
 
 	@Test

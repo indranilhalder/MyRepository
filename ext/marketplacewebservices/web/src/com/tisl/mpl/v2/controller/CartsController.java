@@ -2554,7 +2554,7 @@ public class CartsController extends BaseCommerceController
 				final CartData caData = mplCartFacade.getCartDataFromCartModel(cart, false);
 				//commented for CAR:127
 				//reservationList = mplCommerceCartService.getReservation(cart, pincode, type);			
-				reservationList = mplCommerceCartService.getReservation(cart, pincode, type,item,SalesApplication.MOBILE);
+				reservationList = mplCommerceCartService.getReservation(caData, pincode, type, cart,item,SalesApplication.MOBILE);
 				LOG.debug("******************* Soft reservation Mobile web service response received from OMS ******************"
 						+ cartId);
 			}
@@ -2676,7 +2676,7 @@ public class CartsController extends BaseCommerceController
 					 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING);
 					 */
 					reservationList = mplCommerceCartService.getReservation(caData, pincode,
-							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart);
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart,item,SalesApplication.MOBILE);
 				}
 				else
 				{
@@ -2722,7 +2722,7 @@ public class CartsController extends BaseCommerceController
 					//added for CAR:127
 					orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
 					reservationList = mplCommerceCartService.getReservation(orderData, pincode,
-							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel);
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel,item,SalesApplication.MOBILE);
 				}
 				else
 				{

@@ -170,8 +170,6 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
 	@Resource
 	private MplDiscountUtil mplDiscountUtil;
-	@Resource(name = "addressReversePopulator")
-	private Populator<AddressData, AddressModel> addressReversePopulator;
 	@Resource
 	private UserService userService;
 	@Autowired
@@ -2221,7 +2219,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		final AddressModel addressModel = getModelService().create(AddressModel.class);
 		try
 		{
-			getAddressReversePopulator().populate(addressData, addressModel);
+			addressReversePopulator.populate(addressData, addressModel);
 			if (null != addressData.getState())
 			{
 				addressModel.setDistrict(addressData.getState());
@@ -2714,21 +2712,5 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		this.modelService = modelService;
 	}
 
-	/**
-	 * @return the addressReversePopulator
-	 */
-	public Populator<AddressData, AddressModel> getAddressReversePopulator()
-	{
-		return addressReversePopulator;
-	}
-
-	/**
-	 * @param addressReversePopulator
-	 *           the addressReversePopulator to set
-	 */
-	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
-	{
-		this.addressReversePopulator = addressReversePopulator;
-	}
 
 }

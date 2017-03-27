@@ -6629,7 +6629,7 @@ public class UsersController extends BaseCommerceController
 				//TODO Soft reservation calls already made
 				if (!failFlag
 						&& !mplCartFacade.isInventoryReservedMobile(
-								MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart, pincode))
+								MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart, pincode,item,SalesApplication.MOBILE))
 				{
 					//getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,"TRUE");
 					//getMplCartFacade().recalculate(cart);
@@ -6730,7 +6730,7 @@ public class UsersController extends BaseCommerceController
 
 				if (!failFlag
 						&& !mplCartFacade.isInventoryReservedMobile(
-								MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel, pincode))
+								MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart, pincode,item,SalesApplication.MOBILE))
 				{
 					//getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,"TRUE");
 					getMplCartFacade().recalculateOrder(orderModel);
@@ -8037,7 +8037,7 @@ public class UsersController extends BaseCommerceController
 	 * @param addressReversePopulator
 	 *           the addressReversePopulator to set
 	 */
-	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
+	public void setAddressReversePopulator(final CustomAddressReversePopulator addressReversePopulator)
 	{
 		this.addressReversePopulator = addressReversePopulator;
 	}

@@ -81,6 +81,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.AddressType;
 import com.tisl.mpl.core.model.MplLPHolidaysModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.AddressTypeData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -169,13 +170,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	@Resource(name = "modelService")
 	private ModelService modelService;
-	
+
 	@Autowired
 	private DateUtilHelper dateUtilHelper;
-	
+
 	@Autowired
 	private MplConfigFacade mplConfigFacade;
-	
+
 	@Resource
 	private MplCheckoutFacade mplCheckoutFacade;
 
@@ -321,15 +322,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param currencyIsoCode
-	 * 
+	 *
 	 * @param sellerArticleSKU
-	 * 
+	 *
 	 * @return MplZoneDeliveryModeValueModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -365,13 +366,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description modified from DefaultAcceleratorCheckoutFacade performExpressCheckout : TIS 391
-	 * 
+	 *
 	 * @ Selected Address set for express checkout
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return ExpressCheckoutResult
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions,Exception
 	 */
 	@Override
@@ -401,7 +402,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Desc if express checkout is enabled for the store
-	 * 
+	 *
 	 * @return boolean
 	 */
 
@@ -419,11 +420,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description setting address for express checkout : TIS 391
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions,Exception
 	 */
 	private boolean setDefaultDeliveryAddressForCheckout(final String addressId) throws EtailNonBusinessExceptions
@@ -454,11 +455,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description Re calculating cart delivery cost: TIS 400
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -474,31 +475,44 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		{
 			final Double subTotal = getCartService().getSessionCart().getSubtotal();
 			double finalDeliveryCost = 0.0D;
-			 //Double finalDeliveryCost = Double.valueOf(cartData.getDeliveryCost().getValue().doubleValue());
+			//Double finalDeliveryCost = Double.valueOf(cartData.getDeliveryCost().getValue().doubleValue());
 			final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
-			for(AbstractOrderEntryModel cartEntryModel: cartEntryList){
-			     if(null !=cartEntryModel && cartEntryModel.getFulfillmentMode().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIPCODE)){
-			   	  if (cartEntryModel.getScheduledDeliveryCharge() != null
-			   	        && cartEntryModel.getScheduledDeliveryCharge().doubleValue() > 0.0)
-			   	      {
-			   		    finalDeliveryCost+=0.0D;
-			   	      }
-			   	  cartEntryModel.setCurrDelCharge(Double.valueOf(finalDeliveryCost));
-			     }else{
-			   	  if(cartData.getDeliveryCost().getValue().doubleValue()==0.0){
-			   	  for(OrderEntryData cardEntryData:cartData.getEntries()){
-			   		  if(cardEntryData.getSelectedUssid().equalsIgnoreCase(cartEntryModel.getSelectedUSSID())){
-			   			  if(null !=cardEntryData.getMplDeliveryMode() && null !=cardEntryData.getMplDeliveryMode().getDeliveryCost()){
-			   				  finalDeliveryCost= cardEntryData.getMplDeliveryMode().getDeliveryCost().getDoubleValue().doubleValue();
-			   			  }
-			   		  }
-			   	  }
-			   	  }else{
-			   		  finalDeliveryCost= cartData.getDeliveryCost().getValue().doubleValue(); 
-			   	  }
-			   	 
-			   	  cartEntryModel.setCurrDelCharge(Double.valueOf(finalDeliveryCost));
-			     }
+			for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+			{
+				if (null != cartEntryModel
+						&& cartEntryModel.getFulfillmentMode().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIPCODE))
+				{
+					if (cartEntryModel.getScheduledDeliveryCharge() != null
+							&& cartEntryModel.getScheduledDeliveryCharge().doubleValue() > 0.0)
+					{
+						finalDeliveryCost += 0.0D;
+					}
+					cartEntryModel.setCurrDelCharge(Double.valueOf(finalDeliveryCost));
+				}
+				else
+				{
+					if (cartData.getDeliveryCost().getValue().doubleValue() == 0.0)
+					{
+						for (final OrderEntryData cardEntryData : cartData.getEntries())
+						{
+							if (cardEntryData.getSelectedUssid().equalsIgnoreCase(cartEntryModel.getSelectedUSSID()))
+							{
+								if (null != cardEntryData.getMplDeliveryMode()
+										&& null != cardEntryData.getMplDeliveryMode().getDeliveryCost())
+								{
+									finalDeliveryCost = cardEntryData.getMplDeliveryMode().getDeliveryCost().getDoubleValue()
+											.doubleValue();
+								}
+							}
+						}
+					}
+					else
+					{
+						finalDeliveryCost = cartData.getDeliveryCost().getValue().doubleValue();
+					}
+
+					cartEntryModel.setCurrDelCharge(Double.valueOf(finalDeliveryCost));
+				}
 			}
 			modelService.saveAll(cartEntryList);
 			final Double totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + finalDeliveryCost);
@@ -608,13 +622,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description Storing delivery cost while navigating from Delivery mode to address selection : TIS 400 TISEE-581
-	 * 
+	 *
 	 * @param finalDeliveryCost
-	 * 
+	 *
 	 * @param deliveryCostPromotionMap
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -836,11 +850,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Desc to check pincode inventory for Pay now TIS 414
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -909,11 +923,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @ Desc to check promotion expired or not for Pay now : TIS 414
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -977,9 +991,9 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		 List<PinCodeResponseData> pincoderesponseDataList = null;
 			   pincoderesponseDataList = getSessionService().getAttribute(
 						MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
-		  
+
 		LOG.debug("******responceData******** " + pincoderesponseDataList);
-		
+
 		if (!deliveryModeDataMap.isEmpty() && cartData != null)
 		{
 			String tshipThresholdValue = getConfigurationServiceDetails().getConfiguration().getString(
@@ -1038,7 +1052,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 							marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
 									Double.valueOf(0.0)));
 						}*/
-				//	}
+				  }
 				}
 			}
 		}
@@ -1048,7 +1062,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.checkout.MplCheckoutFacade#placeOrder(java.lang.String)
 	 */
 	@Override
@@ -1240,7 +1254,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCheckoutFacade#triggerEmailAndSmsOnOrderConfirmation(de.hybris.platform.core.model
 	 * .order.OrderModel)
@@ -1252,9 +1266,9 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		final String mobileNumber = orderDetails.getDeliveryAddress().getPhone();
 		final String firstName = orderDetails.getDeliveryAddress().getFirstName();
 		final String orderReferenceNumber = orderDetails.getCode();
-//		String trackingUrl = getConfigurationServiceDetails().getConfiguration().getString(
-//				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-//				+ orderReferenceNumber;
+		//		String trackingUrl = getConfigurationServiceDetails().getConfiguration().getString(
+		//				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+		//				+ orderReferenceNumber;
 		String trackingUrl = getConfigurationServiceDetails().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT);
 		final String shortTrackingUrl = googleShortUrlService.genearateShortURL(order.getParentReference() == null ? order
@@ -1290,7 +1304,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 						MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED
 								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
 								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
-								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, null == shortTrackingUrl ? trackingUrl : shortTrackingUrl), mobileNumber);
+								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO,
+										null == shortTrackingUrl ? trackingUrl : shortTrackingUrl), mobileNumber);
 
 			}
 			catch (final EtailNonBusinessExceptions ex)
@@ -1303,15 +1318,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @desc use to save freebie delivery mode
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @param freebieModelMap
-	 * 
+	 *
 	 * @param freebieParentQtyMap
-	 * 
+	 *
 	 * @return void
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1324,11 +1339,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Description to check coupon expired or not for Pay now
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1899,7 +1914,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 * @param CustomerModel
 	 */
 	@Override
-	public OrderData getOrderDetailsForCockpitUser(String code, CustomerModel customerModel)
+	public OrderData getOrderDetailsForCockpitUser(final String code, final CustomerModel customerModel)
 	{
 		try
 		{
@@ -1908,8 +1923,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			{
 				final BaseStoreModel baseStoreModel = getBaseStoreService().getCurrentBaseStore();
 				final OrderModel orderModel = getCheckoutCustomerStrategy().isAnonymousCheckout() ? getCustomerAccountService()
-						.getOrderDetailsForGUID(code, baseStoreModel) : getCustomerAccountService().getOrderForCode(
-								customerModel, code, baseStoreModel);
+						.getOrderDetailsForGUID(code, baseStoreModel) : getCustomerAccountService().getOrderForCode(customerModel,
+						code, baseStoreModel);
 
 				LOG.info("Step--1 ----- Order Codes For User " + orderModel.getCode());
 
@@ -1936,7 +1951,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
-	
+
 	/**
 	 * @description: This method is common method to set data
 	 * @param orderModel
@@ -1999,9 +2014,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 		return orderData;
 	}
-	
-		/* (non-Javadoc)
-	 * @see com.tisl.mpl.facade.checkout.MplCheckoutFacade#getDateAndTimeslotMapList(java.util.List, java.util.List, java.lang.String, java.lang.String, de.hybris.platform.commercefacades.order.data.OrderEntryData, com.tisl.mpl.core.model.MplLPHolidaysModel)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facade.checkout.MplCheckoutFacade#getDateAndTimeslotMapList(java.util.List, java.util.List,
+	 * java.lang.String, java.lang.String, de.hybris.platform.commercefacades.order.data.OrderEntryData,
+	 * com.tisl.mpl.core.model.MplLPHolidaysModel)
 	 */
 	@Override
 	public Map<String, List<String>> getDateAndTimeslotMapList(final List<MplTimeSlotsModel> modelList,
@@ -2061,9 +2080,9 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				final String nextDate = dateUtilHelper.getNextDete(deteWithOutTime, format);
 				if (cartEntryData.getMplDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
 				{
-					if (null !=mplLPHolidaysModel && null !=mplLPHolidaysModel.getWorkingDays() )
+					if (null != mplLPHolidaysModel && null != mplLPHolidaysModel.getWorkingDays())
 					{
-						calculatedDateList = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(),nextDate, 3);
+						calculatedDateList = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(), nextDate, 3);
 					}
 					else
 					{
@@ -2073,9 +2092,9 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				else if (cartEntryData.getMplDeliveryMode().getCode()
 						.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
 				{
-					if (null !=mplLPHolidaysModel && null !=mplLPHolidaysModel.getWorkingDays() )
+					if (null != mplLPHolidaysModel && null != mplLPHolidaysModel.getWorkingDays())
 					{
-						calculatedDateList = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(),nextDate, 2);
+						calculatedDateList = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(), nextDate, 2);
 					}
 					else
 					{
@@ -2104,8 +2123,14 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 		return dateTimeslotMapList;
 	}
-	/* (non-Javadoc)
-	 * @see com.tisl.mpl.facade.checkout.MplCheckoutFacade#constructDeliverySlotsForEDAndHD(com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData, de.hybris.platform.commercefacades.order.data.OrderEntryData, com.tisl.mpl.core.model.MplLPHolidaysModel)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.facade.checkout.MplCheckoutFacade#constructDeliverySlotsForEDAndHD(com.tisl.mpl.mplcommerceservices
+	 * .service.data.InvReserForDeliverySlotsItemEDDInfoData,
+	 * de.hybris.platform.commercefacades.order.data.OrderEntryData, com.tisl.mpl.core.model.MplLPHolidaysModel)
 	 */
 	@Override
 	public void constructDeliverySlotsForEDAndHD(final InvReserForDeliverySlotsItemEDDInfoData deliverySlotsResponse,
@@ -2131,24 +2156,24 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			cartEntryData.setSelectedDeliveryModeForUssId(MarketplacecommerceservicesConstants.CART_HOME_DELIVERY);
 			modelList = mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
 
-			if (null !=mplLPHolidaysModel && null !=mplLPHolidaysModel.getWorkingDays() )
+			if (null != mplLPHolidaysModel && null != mplLPHolidaysModel.getWorkingDays())
 			{
-				calculatedDateList = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(),deteWithOutTime, 3);
+				calculatedDateList = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(), deteWithOutTime, 3);
 			}
 			else
 			{
 				calculatedDateList = dateUtilHelper.getDeteList(deteWithOutTime, format, 3);
 			}
-			
+
 		}
 		else if (cartEntryData.getMplDeliveryMode().getCode()
 				.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
 		{
 			cartEntryData.setSelectedDeliveryModeForUssId(MarketplacecommerceservicesConstants.CART_EXPRESS_DELIVERY);
 			modelList = mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.ED);
-			if (null !=mplLPHolidaysModel && null !=mplLPHolidaysModel.getWorkingDays() )
+			if (null != mplLPHolidaysModel && null != mplLPHolidaysModel.getWorkingDays())
 			{
-				calculatedDateList = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(),deteWithOutTime, 2);
+				calculatedDateList = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(), deteWithOutTime, 2);
 			}
 			else
 			{
@@ -2176,7 +2201,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				LOG.debug("Sdd Date Saved Successfully...");
 			}
 		}
-		
+
 	}
 
 

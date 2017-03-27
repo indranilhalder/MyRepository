@@ -101,7 +101,6 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	private static final String JAVADOC = "javadoc";
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
-
 	@Autowired
 	private ReturnService returnService;
 
@@ -1255,22 +1254,22 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		this.flexibleSearchService = flexibleSearchService;
 	}
 
-	/**
-	 * @return the returnService
-	 */
-	public ReturnService getReturnService()
-	{
-		return returnService;
-	}
-
-	/**
-	 * @param returnService
-	 *           the returnService to set
-	 */
-	public void setReturnService(final ReturnService returnService)
-	{
-		this.returnService = returnService;
-	}
+//	/**
+//	 * @return the returnService
+//	 */
+//	public ReturnService getReturnService()
+//	{
+//		return returnService;
+//	}
+//
+//	/**
+//	 * @param returnService
+//	 *           the returnService to set
+//	 */
+//	public void setReturnService(final ReturnService returnService)
+//	{
+//		this.returnService = returnService;
+//	}
 
 	/**
 	 * @return the mplSNSMobilePushService

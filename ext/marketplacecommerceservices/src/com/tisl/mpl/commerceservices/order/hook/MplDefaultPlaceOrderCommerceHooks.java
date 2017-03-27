@@ -372,6 +372,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		//orderModel.setType("Parent");
 		if (StringUtils.isNotEmpty(orderModel.getType()) && PARENT.equalsIgnoreCase(orderModel.getType()))
 		{
+			if(null != orderModel.getDeliveryAddress()) {
+				   List<AddressModel> deliveryAddreses = new ArrayList<AddressModel>();
+				   deliveryAddreses.add(orderModel.getDeliveryAddress());
+				   orderModel.setDeliveryAddresses(deliveryAddreses);
+				   getModelService().save(orderModel);
+			   }
 			final List<OrderModel> orderList = getSubOrders(orderModel);
 
 			//TISPRO-249
@@ -701,6 +707,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					else
 					{
 						LOG.debug("Delivery charge for the entry is either NULL or Zero");
+					}
+					if (entryModelList.getScheduledDeliveryCharge() != null
+							&& entryModelList.getScheduledDeliveryCharge().doubleValue() > 0D)
+					{
+						totalDeliveryPrice += entryModelList.getScheduledDeliveryCharge().doubleValue();
 					}
 
 				}
@@ -1676,6 +1687,27 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						deliveryCharge = deliveryCharge.doubleValue() > 0.0 ? Double.valueOf(deliveryCharge.doubleValue()
 								/ abstractOrderEntryModel.getQuantity().intValue()) : deliveryCharge;
 					}
+					
+					/*R2.3 START */
+					if (null != abstractOrderEntryModel.getScheduledDeliveryCharge())
+					{
+						scheduleDeliveryCharge = abstractOrderEntryModel.getScheduledDeliveryCharge();
+					}
+					LOG.debug(">> Order spliting : before apportoning delivery cost " + deliveryCharge);
+					if (null != abstractOrderEntryModel.getIsBOGOapplied()
+							&& abstractOrderEntryModel.getIsBOGOapplied().booleanValue())
+					{
+						scheduleDeliveryCharge = scheduleDeliveryCharge.doubleValue() > 0.0 ? Double.valueOf(scheduleDeliveryCharge.doubleValue()
+								/ abstractOrderEntryModel.getQualifyingCount().doubleValue()) : scheduleDeliveryCharge;
+					}
+					else
+					{
+						scheduleDeliveryCharge = scheduleDeliveryCharge.doubleValue() > 0.0 ? Double.valueOf(scheduleDeliveryCharge.doubleValue()
+								/ abstractOrderEntryModel.getQuantity().intValue()) : scheduleDeliveryCharge;
+					}
+					/*R2.3 END */
+					
+					
 					LOG.debug(">> Order spliting : after apportoning  delivery cost  " + deliveryCharge);
 					//TISEE-5298 -- Prev Delivery Charge
 					prevDelCharge = abstractOrderEntryModel.getPrevDelCharge();
@@ -1763,12 +1795,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 										* abstractOrderEntryModel.getQualifyingCount().intValue();
 								qualifyingCount = qualifyingCount - bogoCount;
 								createOrderLine(abstractOrderEntryModel, bogoCount, clonedSubOrder, cartApportionValue,
-										productApportionvalue, price, true, qualifyingCount, deliveryCharge, cachedSellerInfoMap, 0, 0,
+										productApportionvalue, price, true, qualifyingCount, deliveryCharge,scheduleDeliveryCharge,cachedSellerInfoMap, 0, 0,
 										prevDelCharge, couponApportionValue, 0);
 								productApportionvalue = 0;
 							}
 							createOrderLine(abstractOrderEntryModel, qualifyingCount, clonedSubOrder, cartApportionValue,
-									productApportionvalue, price, false, 0, deliveryCharge, cachedSellerInfoMap, bogoCODPrice,
+									productApportionvalue, price, false, 0, deliveryCharge, scheduleDeliveryCharge,cachedSellerInfoMap, bogoCODPrice,
 									bogoCartApportion, prevDelCharge, couponApportionValue, bogoCouponApportion);
 
 
@@ -1812,13 +1844,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 
 						createOrderLine(abstractOrderEntryModel, quantity, clonedSubOrder, cartApportionValue, 0, price, false, 0,
-								deliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge, couponApportionValue, 0);
+								deliveryCharge,scheduleDeliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge, couponApportionValue, 0);
 
 					}
 					else
 					{
 						createOrderLine(abstractOrderEntryModel, quantity, clonedSubOrder, 0, 0, abstractOrderEntryModel
-								.getTotalPrice().doubleValue() / quantity, false, 0, deliveryCharge, cachedSellerInfoMap, 0, 0,
+								.getTotalPrice().doubleValue() / quantity, false, 0, deliveryCharge,scheduleDeliveryCharge, cachedSellerInfoMap, 0, 0,
 								prevDelCharge, couponApportionValue, 0);
 
 					}
@@ -1889,7 +1921,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	private void createOrderLine(final AbstractOrderEntryModel abstractOrderEntryModel, final int quantity,
 			final OrderModel clonedSubOrder, final double cartApportionValue, final double productApportionvalue,
 			final double price, final boolean isbogo, @SuppressWarnings("unused") final double bogoQualifying,
-			final Double deliveryCharge, final Map<String, SellerInformationModel> cachedSellerInfoMap, final double bogoCODPrice,
+			final Double deliveryCharge,final Double scheduleDeliveryCharge, final Map<String, SellerInformationModel> cachedSellerInfoMap, final double bogoCODPrice,
 			final double bogoCartApportion, final Double prevDelCharge, final double couponApportionValue,
 			final double bogoCouponApportion)
 
@@ -2015,6 +2047,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				//orderEntryModel.setBasePrice(Double.valueOf(0.01));
 				orderEntryModel.setTotalPrice(Double.valueOf(0.01));
 				orderEntryModel.setCurrDelCharge(Double.valueOf(0));
+				/* Added in R2.3 STARt */
+				orderEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
+				/* Added in R2.3 end */
 			}
 			if (!isbogo && CollectionUtils.isNotEmpty(orderEntryModel.getAssociatedItems())
 					&& !orderEntryModel.getGiveAway().booleanValue())
@@ -2112,10 +2147,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						orderEntryModel.setReturnWindow(model.getReturnWindow());
 					}
 
-					if (null != model.getDeliveryFulfillModes() && StringUtils.isNotEmpty(model.getDeliveryFulfillModes().getCode()))
-					{
-						orderEntryModel.setFulfillmentType(model.getDeliveryFulfillModes().getCode());
-					}
+//					if (null != model.getDeliveryFulfillModes() && StringUtils.isNotEmpty(model.getDeliveryFulfillModes().getCode()))
+//					{
+//						orderEntryModel.setFulfillmentType(model.getDeliveryFulfillModes().getCode());
+//					}
+					
 				}
 			}
 		}
