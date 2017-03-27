@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -109,10 +110,22 @@ public class SizeGuideHeaderComparator implements Comparator<String>
 		}
 		else if (value2SizeSystemIndex != -1)
 		{
-			final double modifiedValue1 = Double.parseDouble(value1.replaceAll("\\D+", ""));
-			final double modifiedValue2 = Double.parseDouble(value2.replaceAll("\\D+", ""));
-			//values out of size-systems are placed as last thus so big number.
-			return Double.compare(modifiedValue1, modifiedValue2);
+			// INC144313727
+			String mod_value1 = "";
+			String mod_value2 = "";
+			mod_value1 = value1.replaceAll("\\D+", "");
+			mod_value2 = value2.replaceAll("\\D+", "");
+			if (StringUtils.isNotEmpty(mod_value1) && StringUtils.isNotEmpty(mod_value2))
+			{
+				final double modifiedValue1 = Double.parseDouble(mod_value1);
+				final double modifiedValue2 = Double.parseDouble(mod_value2);
+				//values out of size-systems are placed as last thus so big number.
+				return Double.compare(modifiedValue1, modifiedValue2);
+			}
+			else
+			{
+				return Integer.MAX_VALUE;
+			}
 		}
 		else if (value1SizeSystemIndex == -1 && value2SizeSystemIndex == -1)
 		{
@@ -208,7 +221,7 @@ public class SizeGuideHeaderComparator implements Comparator<String>
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 	 */
 

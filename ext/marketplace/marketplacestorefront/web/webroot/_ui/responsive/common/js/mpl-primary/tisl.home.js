@@ -1953,7 +1953,7 @@ $(document).ready(function()
                $("a.headeruserdetails").attr('href','/my-account');
                
                $("a.tracklinkcls").attr('href','#');
-               if(data.notificationCount != null){
+               if(data.notificationCount != null){            	   
 	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications&nbsp;(<span >'+data.notificationCount+'</span>)');
 	               } else {
 	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications');

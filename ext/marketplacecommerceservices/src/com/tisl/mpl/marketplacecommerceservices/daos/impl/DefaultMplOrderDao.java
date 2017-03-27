@@ -11,6 +11,7 @@ import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.jalo.flexiblesearch.FlexibleSearchException;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -347,6 +348,10 @@ public class DefaultMplOrderDao implements MplOrderDao
 			flexiQuery.addQueryParameter(MarketplacecommerceservicesConstants.TYPE, "Parent");
 			final List<OrderModel> orderModelList = flexibleSearchService.<OrderModel> search(flexiQuery).getResult();
 			return (CollectionUtils.isNotEmpty(orderModelList)) ? orderModelList : null;
+		}
+		catch (final FlexibleSearchException e)
+		{
+			return null;
 		}
 		catch (final Exception e)
 		{

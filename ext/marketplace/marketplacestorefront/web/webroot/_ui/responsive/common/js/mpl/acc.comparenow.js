@@ -11,6 +11,7 @@
         }
 
         var selected = [];
+		var tealiumCompare=[];
         $(document).on('click','.compare input[type=checkbox]',function(){
                     var checkboxId = $(this).attr('id');
                     //Added
@@ -20,6 +21,7 @@
                         var items = 2;
                     }
                     //End
+					
                     if ($(this).prop("checked") == true) {
                         // AJAX CALL
                         $
@@ -80,6 +82,7 @@
 
                                                 comparableProductCode
                                                     .push(v.productCode);
+                                                tealiumCompare=comparableProductCode;
                                             });
                                     // if (compareProductCount <
                                     // selected.length) {
@@ -104,7 +107,10 @@
                                             $('#compareError')
                                                 .html(
                                                     "Sorry! We can only compare similar products.");
-
+											//TPR-4727 | Add to compare | serp
+											if(typeof utag !="undefined"){
+												   utag.link({error_type : 'comparison_error'});
+												}
                                         }
                                     }
 
@@ -133,6 +139,10 @@
                                 },
                                 error: function() {
                                     globalErrorPopup('Sorry we are unable to add your product to compare. Please try after sometime');
+									//TPR-4727 | Add to compare | serp
+									if(typeof utag !="undefined"){
+										   utag.link({error_type : 'comparison_error'});
+										}
                                 }
                             });
                         // END
@@ -148,7 +158,6 @@
                                     checkboxId,
 
                                 success: function(response) {
-
                                     var divId = '#compare-id' +
                                         checkboxId;
                                     $(divId).remove();
@@ -190,6 +199,10 @@
                                 },
                                 error: function() {
                                     globalErrorPopup('Sorry we are unable to add your product to compare. Please try after sometime');
+									//TPR-4727 | Add to compare | serp
+									if(typeof utag !="undefined"){
+										   utag.link({error_type : 'comparison_error'});
+										}
                                 }
                             });
                         // END
@@ -225,8 +238,13 @@
                                             var items = 2;
                                         }
 
-                                        if (selected.length < items)
+                                        if (selected.length < items){
                                             selected.push(productCode);
+                                            //TPR-4727 | add to compare 1st part
+	                       					if(typeof utag !="undefined"){
+	                       						utag.link({ link_text : "add_to_compare_clicked" , event_type : "add_to_compare_clicked" });
+	                       					}
+                                        }	
                                         else {
                                             $('#compareError')
                                                 .html(
@@ -235,8 +253,11 @@
                                             $(this).prop(
                                                 'checked',
                                                 false);
-
-                                        }
+											//TPR-4727 | Add to compare | serp
+											if(typeof utag !="undefined"){
+												   utag.link({error_type : 'comparison_error'});
+												}
+		                                }
                                     }
 
                                 } else {
@@ -322,6 +343,10 @@
             })
         });
         $(document).on('click','.compareBtn',function(){
+        	//TPR-4727 | add to compare 4th part
+			if(typeof utag !="undefined"){
+				utag.link({ link_text : "compare_product_id_final" ,  compare_product_id_final : tealiumCompare });
+			}
 			window.location.href = ACC.config.encodedContextPath + "/compare"
 		})
 		$(document).on('click','.closeLink',function(){
@@ -339,7 +364,11 @@
                 url: ACC.config.encodedContextPath + "/compare/removeAll",
                 success: function(a) {},
                 error: function() {
-                    globalErrorPopup("Sorry we are unable to add your product to compare. Please try after sometime")
+                    globalErrorPopup("Sorry we are unable to add your product to compare. Please try after sometime");
+					//TPR-4727 | Add to compare | serp
+					if(typeof utag !="undefined"){
+						   utag.link({error_type : 'comparison_error'});
+						}
                 }
             })
 		})
@@ -400,6 +429,10 @@
                             },
                             error: function() {
                                 globalErrorPopup('Sorry we are unable to add your product to compare. Please try after sometime');
+								//TPR-4727 | Add to compare | serp
+								if(typeof utag !="undefined"){
+									   utag.link({error_type : 'comparison_error'});
+									}
                             }
                         });
                     // END

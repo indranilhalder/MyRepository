@@ -9,7 +9,6 @@ import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
-import de.hybris.platform.jalo.order.CartEntry;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.product.Unit;
@@ -240,7 +239,7 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 				{
 					if (validProductList != null)
 					{
-						final CartEntry cartEntry = (CartEntry) entry;
+						//final CartEntry cartEntry = (CartEntry) entry;
 						String selectedUSSID = null;
 						try
 						{
@@ -270,13 +269,13 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 							{
 								try
 								{
-									if (null != cartEntry.getAttribute(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT)
-											&& Integer.parseInt(cartEntry.getAttribute(ctx,
-													MarketplacecommerceservicesConstants.QUALIFYINGCOUNT).toString()) > 0)
+									if (null != entry.getAttribute(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT)
+											&& Integer.parseInt(entry
+													.getAttribute(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT).toString()) > 0)
 									{
 										//Sonar fixes
 										//qualifyingCount = Integer.valueOf(cartEntry.getAttribute(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT).toString()).intValue();
-										qualifyingCount = Integer.parseInt(cartEntry.getAttribute(ctx,
+										qualifyingCount = Integer.parseInt(entry.getAttribute(ctx,
 												MarketplacecommerceservicesConstants.QUALIFYINGCOUNT).toString());
 									}
 									else
@@ -306,18 +305,18 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 							{
 								associatedItemsList = productAssociatedItemsMap.get(selectedUSSID);
 							}
-							double lineItemLevelPrice = cartEntry.getTotalPriceAsPrimitive();
-							double productLevelDisc = cartEntry.getProperty(MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC) != null ? ((Double) cartEntry
+							double lineItemLevelPrice = entry.getTotalPriceAsPrimitive();
+							double productLevelDisc = entry.getProperty(MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC) != null ? ((Double) entry
 									.getProperty(MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC)).doubleValue() : 0.00D;
 
 							if (selectedUSSID.equalsIgnoreCase(freebieUSSID) || freeProductUSSIDList.contains(selectedUSSID)) // for free product
 							{
-								lineItemLevelPrice = cartEntry.getBasePriceAsPrimitive() * qualifyingCount;
-								productLevelDisc = (cartEntry.getBasePriceAsPrimitive() - freebieAmt) * qualifyingCount;
+								lineItemLevelPrice = entry.getBasePriceAsPrimitive() * qualifyingCount;
+								productLevelDisc = (entry.getBasePriceAsPrimitive() - freebieAmt) * qualifyingCount;
 							}
 
-							final List<String> prevAssociatedItemList = cartEntry
-									.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null ? (List<String>) cartEntry
+							final List<String> prevAssociatedItemList = entry
+									.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null ? (List<String>) entry
 									.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;
 							if (prevAssociatedItemList != null && !prevAssociatedItemList.isEmpty() && null != entry.isGiveAway()
 									&& !entry.isGiveAway().booleanValue())
@@ -329,9 +328,8 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 								associatedItemsList.addAll(associatedItemsSet);
 							}
 
-							cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, cartEntry.getProduct()
-									.getDescription());
-							cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT,
+							entry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, entry.getProduct().getDescription());
+							entry.setProperty(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT,
 									Integer.valueOf(qualifyingCount));
 
 
@@ -345,40 +343,37 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 								try
 								{
 									//For Associated Data for Freebie Promotion
-									if (null != cartEntry.getAttribute(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS))
+									if (null != entry.getAttribute(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS))
 									{
-										associatedData = (List<String>) cartEntry.getAttribute(ctx,
+										associatedData = (List<String>) entry.getAttribute(ctx,
 												MarketplacecommerceservicesConstants.ASSOCIATEDITEMS);
 										if (CollectionUtils.isEmpty(associatedData))
 										{
-											cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS,
-													associatedItemsList);
+											entry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, associatedItemsList);
 										}
 									}
 									else
 									{
-										cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS,
-												associatedItemsList);
+										entry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, associatedItemsList);
 									}
 
 
 
 									//For Promo Code
-									if (null != cartEntry.getAttribute(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE))
+									if (null != entry.getAttribute(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE))
 									{
-										final String promoData = cartEntry.getAttribute(ctx,
+										final String promoData = entry.getAttribute(ctx,
 												MarketplacecommerceservicesConstants.PRODUCTPROMOCODE).toString();
 										if (StringUtils.isEmpty(promoData))
 										{
 											log.debug("Setting New Promotion Code");
-											cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE,
-													productPromoCode);
+											entry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
 										}
 
 									}
 									else
 									{
-										cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
+										entry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
 									}
 
 								}
@@ -390,26 +385,24 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 							}
 							else
 							{
-								cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, associatedItemsList);
-								cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
+								entry.setProperty(ctx, MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, associatedItemsList);
+								entry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
 							}
 
 
 
 
 
-							cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE,
+							entry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE,
 									Double.valueOf(lineItemLevelPrice));
-							cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC,
+							entry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC,
 									Double.valueOf(productLevelDisc));
 							final double netSellingPrice = lineItemLevelPrice - productLevelDisc;
 							final double cartLevelDisc = 0.00D;
 							final double netAmtAfterDisc = netSellingPrice - cartLevelDisc;
-							cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETSELLINGPRICE,
-									Double.valueOf(netSellingPrice));
-							cartEntry
-									.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELDISC, Double.valueOf(cartLevelDisc));
-							cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC,
+							entry.setProperty(ctx, MarketplacecommerceservicesConstants.NETSELLINGPRICE, Double.valueOf(netSellingPrice));
+							entry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTLEVELDISC, Double.valueOf(cartLevelDisc));
+							entry.setProperty(ctx, MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC,
 									Double.valueOf(netAmtAfterDisc));
 						}
 					}

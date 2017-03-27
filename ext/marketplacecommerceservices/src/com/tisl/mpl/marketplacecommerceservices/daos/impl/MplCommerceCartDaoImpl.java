@@ -4,6 +4,9 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
+import de.hybris.platform.commerceservices.search.flexiblesearch.PagedFlexibleSearchService;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.InvalidCartException;
@@ -20,6 +23,8 @@ import javax.annotation.Resource;
 
 import net.sourceforge.pmd.util.StringUtil;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCommerceCartDao;
 import com.tisl.mpl.model.StateModel;
@@ -34,6 +39,8 @@ public class MplCommerceCartDaoImpl implements MplCommerceCartDao
 
 	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
+	@Resource(name = "pagedFlexibleSearchService")
+	private PagedFlexibleSearchService pagedFlexibleSearchService;
 
 
 	/**
@@ -161,5 +168,35 @@ public class MplCommerceCartDaoImpl implements MplCommerceCartDao
 	public void setFlexibleSearchService(final FlexibleSearchService flexibleSearchService)
 	{
 		this.flexibleSearchService = flexibleSearchService;
+	}
+
+	/**
+	 * This method return the latest cart for a user.
+	 *
+	 * @param site
+	 * @param user
+	 * @return CartModel
+	 * @throws InvalidCartException
+	 *
+	 *            This method was developed for CAR-256
+	 */
+	@Override
+	public CartModel fetchLatestCart(final BaseSiteModel site, final UserModel user) throws InvalidCartException
+	{
+		CartModel cartModel = null;
+		final Map params = new HashMap();
+		//params.put("guid", guid);
+		params.put("site", site);
+		params.put("user", user);
+		final String query = "SELECT {pk} FROM {Cart} WHERE {site} = ?site AND {user} = ?user ORDER BY {modifiedtime} DESC";
+		final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query, params);
+		final PageableData pageableData = new PageableData();
+		pageableData.setPageSize(1);
+		final SearchPageData<CartModel> resultSet = pagedFlexibleSearchService.search(fQuery, pageableData);
+		if (null != resultSet && CollectionUtils.isNotEmpty(resultSet.getResults()))
+		{
+			cartModel = resultSet.getResults().get(0);
+		}
+		return cartModel;
 	}
 }
