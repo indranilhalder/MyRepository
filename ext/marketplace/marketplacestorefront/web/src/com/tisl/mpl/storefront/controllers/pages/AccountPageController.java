@@ -1237,6 +1237,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 					}
 				}
 				addressChangeEligible = mplDeliveryAddressFacade.isDeliveryAddressChangable(orderDetail.getCode());
+				
+				if (addressChangeEligible)
+				{
+					getDefalutAddress(orderDetail);
+				}
 				final AccountAddressForm accountAddressForm = new AccountAddressForm();
 				model.addAttribute("addressForm", accountAddressForm);
 				final List<StateData> stateDataList = getAccountAddressFacade().getStates();
@@ -7706,6 +7711,35 @@ public class AccountPageController extends AbstractMplSearchPageController
 			return finalString;
 		
 	}
+		
+		  /**
+	     * @param deliveryAddressList Bug Id 3841 start
+	     */
+	 private void getDefalutAddress(OrderData orderData)
+	 {
+	  List<AddressData> deliveryAddressList = orderData.getDeliveryAddressList();
+	  try
+	  {
+	   for (AddressData addresData : deliveryAddressList)
+	   {
+	    if (addresData.isDefaultAddress())
+	    {
+	     int currentIndexPosition = deliveryAddressList.indexOf(addresData);
+	     if (currentIndexPosition != 0)
+	     {
+	      Collections.swap(deliveryAddressList, currentIndexPosition, 0);
+	      orderData.setDeliveryAddressList(deliveryAddressList);
+	      break;
+	     }
+	    }
+	   }
+	  }
+	  catch (Exception exception)
+	  {
+	   LOG.error("Excception ouucer while changing index postion");
+	  }
+
+	 }
 	
 
 }

@@ -54985,7 +54985,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
     padding: 15px 25px;
     width: 100%;
     /* R2.3 TISRLREG-2465 Author Tribhuvan Start*/
-    display: none;
+    display: inline-block;
       /* R2.3 TISRLREG-2465 Author Tribhuvan end*/
     background: #fff none repeat scroll 0 0;
     border-top: 1px solid #eaeaeb;
@@ -57171,7 +57171,7 @@ padding:0px;
     padding: 15px 25px !important;
     width: 100% !important;
  /* R2.3 TISRLREG-2465 Author Tribhuvan Start*/
-    display: none;
+    display: inline-block;
       /* R2.3 TISRLREG-2465 Author Tribhuvan end*/
     background: #fff none repeat scroll 0 0;
     border-top: 1px solid #eaeaeb;
