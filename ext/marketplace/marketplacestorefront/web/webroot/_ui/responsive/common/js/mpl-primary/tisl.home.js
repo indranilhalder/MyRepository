@@ -451,7 +451,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
         if (window.localStorage && (html = window.localStorage.getItem(
             "brandContent-" + id)) && html != "") {
             // console.log("Local");
-            $(".home-brands-you-love-carousel").css("margin-bottom", "50px");
+            $(".home-brands-you-love-carousel").css("margin-bottom", "33px");  /*UF-249*/
             //$('#brandsYouLove').append(defaultHtml);
             $('.home-brands-you-love-desc').remove();
             $('#brandsYouLove').append(decodeURI(html));
@@ -477,9 +477,9 @@ function getBrandsYouLoveContentAjaxCall(id) {
                     $('.home-brands-you-love-desc').remove();
                     defaultHtml =
                         "<div class='home-brands-you-love-desc'>";
-                    if (typeof response.text !== "undefined") {
+                   /* if (typeof response.text !== "undefined") {
                         defaultHtml += response.text;
-                    }
+                    }*/ /* UF-249*/
                     if (typeof response.firstProductImageUrl !==
                         "undefined") {
                         defaultHtml +=
@@ -525,12 +525,12 @@ function getBrandsYouLoveContentAjaxCall(id) {
                         "undefined") {
                         defaultHtml +=
                             "<div class='home-brands-you-love-main-image-wrapper'>";
-                        if (typeof response.bannerText !==
+                        /*if (typeof response.bannerText !==
                             "undefined") {
                             defaultHtml +=
                                 "<div class='visit-store-wrapper'>" +
                                 response.bannerText + "</div>";
-                        }
+                        }*/  /*UF-249*/
                         if (typeof response.bannerUrl !== "undefined") {
                         	 defaultHtml += "<a href='"+response.bannerUrl+"'><img src='" + response.bannerImageUrl +
                              "'></img></a></div>";
@@ -538,7 +538,17 @@ function getBrandsYouLoveContentAjaxCall(id) {
                         	 defaultHtml += "<img src='" + response.bannerImageUrl +
                              "'></img></div>";
                         }
-                       
+                        /* UF-249 start*/
+                        if (typeof response.text !== "undefined") {
+                            defaultHtml += response.text;
+                        }
+                        if (typeof response.bannerText !==
+                        "undefined") {
+                        defaultHtml +=
+                            "<div class='visit-store-wrapper'>" +
+                            response.bannerText + "</div>";
+                    }
+                        /* UF-249 end*/
                     }
                     defaultHtml += '</div>';
                     
@@ -568,7 +578,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                     }
                     defaultHtml += "</div>";
                     $(".home-brands-you-love-carousel").css(
-                        "margin-bottom", "50px");
+                        "margin-bottom", "33px");  /* UF-249 */
                     $('#brandsYouLove').append(defaultHtml);
                     window.localStorage.setItem("brandContent-" +
                         id, encodeURI(defaultHtml));
@@ -579,7 +589,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                 error: function() {
                     $('#brandsYouLove .loaderDiv').remove();
                     $(".home-brands-you-love-carousel").css(
-                        "margin-bottom", "50px");
+                        "margin-bottom", "33px");  /* UF-249 */
                     console.log(
                         "Error while getting brands you love content"
                     );
@@ -1115,7 +1125,7 @@ function showStayQued(response){
         linkText = promoText2;
     }
     renderHtml =
-        '<div class="qued-padding"><div class="qued-content"><h2><span class="spriteImg"></span><span class="h1-qued">Stay Qued</span></h2>' +
+    	'<h2><span class="h1-qued">Stay Qued</span></h2><div class="qued-padding"><div class="qued-content">' +      /* UF-249 */
         promoText1 + '<a href="' + bannerUrlLink +
         '" class="button maroon">' + linkText +
         '</a></div><div class="qued-image"><img class="lazy" src="' +
