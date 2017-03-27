@@ -7961,13 +7961,27 @@ function updateMobileNo(){
 }
 /* TISUATSE-84 */
 $(window).on("resize load",function(){
-	
+	adjustHtMargin();
+	}); 
+$(document).ajaxComplete(function(){
+	adjustHtMargin();
+});
+$(document).on("click",".alert.alert-danger.alert-dismissable > button.close",function(){
+	$(".checkout-payment.cart.checkout.wrapper .step-body").css("margin-top","");
+});
+
+function adjustHtMargin(){
+	var htSpanAlert = $(".alert.alert-danger.alert-dismissable").height()+parseInt($(".alert.alert-danger.alert-dismissable").css("margin-bottom"))+7;
 	if($(window).width() > 963)
 		alert_top= $("header").outerHeight() + $(".wrapper .container-address").outerHeight();
 else if($(window).width() <= 773 && $(window).width() > 750)
-alert_top= $("header").outerHeight() + $(".wrapper .container-address").outerHeight() + 10;
-else if($(window).width() <= 750)
-alert_top= $("header").outerHeight() + $(".wrapper .container-address").outerHeight() + 10;
+alert_top= $("header").outerHeight() + $(".wrapper .container-address").height();
+else if($(window).width() <= 750){
+	alert_top= $("header").outerHeight() + $(".wrapper .container-address").outerHeight() + 10;
+	htSpanAlert = $(".alert.alert-danger.alert-dismissable").height()+7;
+}
+else if($(window).width() > 773 && $(window).width() <= 963)
+	alert_top= $("header").height() + $(".wrapper .container-address").outerHeight() + 15;
 	else
 		alert_top= $("header").height() + $(".wrapper .container-address").height();
 	$(".alert-danger").css({
@@ -7980,13 +7994,14 @@ alert_top= $("header").outerHeight() + $(".wrapper .container-address").outerHei
 			$(".alert-danger").css("z-index","101");
 			var ht=$(".alert-danger>span").outerHeight();
 	$(".alert-danger").css("height",ht);
-	var htSpanAlert = $(".alert.alert-danger.alert-dismissable").height()+parseInt($(".alert.alert-danger.alert-dismissable").css("margin-bottom"))+7;
 	$(".checkout-payment.cart.checkout.wrapper .step-body").css("margin-top",htSpanAlert);
-	if($(".alert.alert-danger.alert-dismissable").height() > 32)
-		$(".global-alerts button.close").css("height","100%");
+	if($(".alert.alert-danger.alert-dismissable").height() > 20)
+		$(".global-alerts button.close,#juspayconnErrorDiv button.close").css("height","100%");
 	else
-		$(".global-alerts button.close").css("height","");
-	}); 
+		$(".global-alerts button.close,#juspayconnErrorDiv button.close").css("height","");
+	if($(".alert.alert-danger.alert-dismissable").css("display") === "none")
+		$(".checkout-payment.cart.checkout.wrapper .step-body").css("margin-top","");
+}
 /* TISUATSE-84 */
 
 function submitCODForm(){

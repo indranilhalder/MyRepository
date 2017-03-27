@@ -37580,7 +37580,8 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
 
 .alert-dismissable .close, .alert-dismissible .close {
 	position: relative;
-	top: -6px !important;
+	/* top: -6px !important; */  /* Unit Testing */
+	top: -6px;   /* Unit Testing */
 	right: -21px;
 	color: transparent;
     background-image: url(../images/Delete.png);
@@ -37605,7 +37606,7 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
 @media (max-width:790px) {
 	.alert-dismissable .close, .alert-dismissible .close {
 	float:left;
-	top: -20px;
+	/* top: -20px; */  /* Unit Testing */
 	right: 4px;
 	}
 }
@@ -41234,7 +41235,7 @@ span.sizesAvailableMSD {
 .global-alerts button.close
 {
 	float:left;
-	top: -20px;
+	/* top: -20px; */	/* Unit Testing */
   opacity: 1;
   left: 0px;
   margin-right: 10px;
@@ -41502,7 +41503,7 @@ input#otpMobileNUMField:focus {
 	right: -7px;
 }
 #juspayconnErrorDiv span {
-	margin: 0px 15px;
+	/* margin: 0px 15px; */		/* Unit Testing */
    }
 
 
@@ -55153,7 +55154,12 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 .smk_accordion .accordion_in .acc_content .blocks.net-bank p { color:#a7183e; font-size: 16px;  }
 .smk_accordion .accordion_in .acc_content .blocks .new-card p { padding:29px 0 13px 0; }
 .smk_accordion .accordion_in .acc_content .blocks.net-bank p { padding:0 0 16px 0; }
-.smk_accordion .accordion_in .acc_content .blocks .new-card  .name-card { margin:30px 0; width:100%; }
+.smk_accordion .accordion_in .acc_content .blocks .new-card  .name-card {
+	/* margin:30px 0; */	/* Unit Testing */
+	margin:12px 0;		/* Unit Testing */
+	width:100%;
+	margin-bottom: 0;	/* Unit Testing */
+}
 .smk_accordion .accordion_in .acc_content .blocks .new-card .cardNumber input,
 .smk_accordion .accordion_in .acc_content .blocks.net-bank .cardNumber input { width:21.1%; margin-right:4.5%; }
 .smk_accordion .accordion_in .acc_content .blocks .new-card .cardNumber input.last,
@@ -55545,10 +55551,11 @@ display:block;}
 	margin-bottom:0px;
 }
 #juspayconnErrorDiv{
-	line-height:24px;
+	/* line-height:24px; */  /* Unit Testing */
 }
 #juspayconnErrorDiv button.close{
-	top:0px !important;
+	/* top:0px !important; */  /* Unit Testing */
+	margin-right: 12px;  /* Unit Testing */
 }
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full{
 	padding-left:0px;
@@ -57416,7 +57423,7 @@ div.radio.creditDebitLabelRadio{
 	padding-bottom:5px;
 }
 .smk_accordion .accordion_in .acc_content .blocks .error-message#memberNameError{
-	padding-top	:0px;
+	/* padding-top	:0px; */   /* Unit Testing */
 }
  /* Payment bug fix end*/
  #saveAddressInMyAddressBook{
@@ -61983,8 +61990,9 @@ body .account .right-account .order-history .pagination li{
 .pagination li.prev{
 	padding-right: 0px;
 }
-.checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea{
-	height:125px;	/* TISSQAEE-266 */
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea,
+.cart.wrapper .left-block .payments.tab-view .new-card #billingAddress fieldset .full .full-address{
+	height:125px;	/* TISSQAEE-266 */	/* TISUATSE-85 */
 }
 }
 /* TISSQAEE-244 */
@@ -61995,3 +62003,15 @@ body .account .right-account .order-history .pagination li{
 	display: inline-block;
 }
 /* TISSQAEE-266 */
+
+/* Fixes Unit Testing */
+
+.cart.wrapper .left-block .payments.tab-view .new-card #billingAddress fieldset .full .full-address ~ span#myCounter {
+    margin-bottom: 4px;
+    display: inline-block;
+}
+.cart.wrapper .left-block .payments.tab-view .new-card #billingAddress fieldset .full .full-address ~ span:empty {
+    display: none;
+}
+
+/* Fixes Unit Testing */
