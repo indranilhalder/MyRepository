@@ -17,6 +17,8 @@
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/desktop/nav" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="address" tagdir="/WEB-INF/tags/responsive/address"%>
+<%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
+
 
 <%--  <c:set var = "addressFlag" scope="session" value = "${addressFlag}" />  --%>
 
@@ -99,8 +101,16 @@
 		
 	<div class="right-block shipping">
 			<div class="checkout-order-summary">
-				<multi-checkout:orderTotals cartData="${cartData}"
-					showTaxEstimate="${showTaxEstimate}" showTax="${showTax}"  />
+				<%-- <multi-checkout:orderTotals cartData="${cartData}"
+					showTaxEstimate="${showTaxEstimate}" showTax="${showTax}"  /> --%>
+<ul class="totals outstanding-totalss">
+					<li id="totals" class="outstanding-amounts"><spring:theme
+							code="basket.page.totals.outstanding.amount" /><span class="amt"
+						id="outstanding-amount-mobile"><ycommerce:testId
+								code="cart_totalPrice_label">
+								<format:price priceData="${cartData.totalPrice}" />
+							</ycommerce:testId></span></li>
+							</ul>
 			</div>
 			</div>
 	</div>
