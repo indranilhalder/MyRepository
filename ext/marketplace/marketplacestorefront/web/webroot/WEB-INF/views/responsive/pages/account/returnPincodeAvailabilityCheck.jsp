@@ -48,8 +48,13 @@
 			 	else return eval("document." + objId);
 			 }
 			 /**************End of character count********/
-			myLen=document.getElementsByClassName("Address1")[0].value.length;
-				$("#myCounter").html((120 - myLen));
+			
+			 if(document.getElementsByClassName("Address1")[0].value.length!=null)
+			 {
+				 myLen=document.getElementsByClassName("Address1")[0].value.length;
+				 $("#myCounter").html((120 - myLen));
+			 }
+				
 			//TPR-3402 end
 			
 			var firstname = $(".firstName").val();
@@ -255,13 +260,12 @@
 										<div class="error_text pincodeNoError"></div>
 									</div>
 									
-	<!-- TISUATSE-85 -->			<div class="hide">
+				
 									<div class="col-md-8 inputBoxHeight">
 										<label class="returnLabel">LandMark</label><br>
 										<form:input path="landmark" maxlength="40" placeholder="Enter Your Nearest Land mark" />
 										<div class="error_text landMarkError"></div>
 									</div>
-								</div>
 								</div>
 								
 								<div class="row">
