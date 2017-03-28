@@ -20,6 +20,6 @@ public interface MplMediaService
 
 	List<MediaModel> findMediaForQualifier(MediaContainerModel container, String mediaFormatList);
 
-	MediaModel getMediaForIndexing(ProductModel product, MediaFormatModel mediaFormat, List<MediaContainerModel> galleryImages);
+	MediaModel getMediaForIndexing(ProductModel product, MediaFormatModel mediaFormat, final String productCode);
 
 }

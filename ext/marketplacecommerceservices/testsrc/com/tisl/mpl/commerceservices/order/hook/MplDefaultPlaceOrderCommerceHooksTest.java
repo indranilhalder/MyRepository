@@ -42,7 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
-import com.tisl.mpl.core.model.JuspayEBSResponseModel;
+import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
@@ -101,8 +101,8 @@ public class MplDefaultPlaceOrderCommerceHooksTest
 		orderList.add(orderModel);
 		commerceOrderResult.setOrders(orderList);
 
-		final ArrayList<JuspayEBSResponseModel> riskList = new ArrayList<JuspayEBSResponseModel>();
-		final JuspayEBSResponseModel risk = new JuspayEBSResponseModel();
+		final ArrayList<JuspayEBSResponseDataModel> riskList = new ArrayList<JuspayEBSResponseDataModel>();
+		final JuspayEBSResponseDataModel risk = new JuspayEBSResponseDataModel();
 
 		//TISSEC-50
 		risk.setEbs_bin_country("");//TODO : Please enter ebs bin country
@@ -110,10 +110,10 @@ public class MplDefaultPlaceOrderCommerceHooksTest
 		riskList.add(risk);
 
 		final MplPaymentAuditModel mplAudit = new MplPaymentAuditModel();
-		mplAudit.setRisk(riskList);
+		mplAudit.setRiskData(riskList);
 
 		given(mplOrderDao.getAuditList("")).willReturn(mplAudit);//TODO : Please enter guid
-		riskList.addAll(mplAudit.getRisk());
+		riskList.addAll(mplAudit.getRiskData());
 		mplFraudModelService.updateFraudModel(orderModel, mplAudit);
 	}
 

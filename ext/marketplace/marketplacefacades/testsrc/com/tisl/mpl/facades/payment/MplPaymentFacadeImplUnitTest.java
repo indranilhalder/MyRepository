@@ -345,7 +345,7 @@ public class MplPaymentFacadeImplUnitTest
 		Mockito.when(cartService.getSessionCart()).thenReturn(cartModel);
 		final List<AbstractOrderEntryModel> entryList = Arrays.asList(abstractOrderEntryModel);
 		Mockito.when(cartModel.getEntries()).thenReturn(entryList);
-		Mockito.doNothing().when(mplPaymentService).setPaymentTransactionForCOD(paymentMode, cartModel);
+		Mockito.doNothing().when(mplPaymentService).setPaymentTransactionForCOD(cartModel);
 		Mockito.when(customerModel.getName()).thenReturn("Test Name");
 		final String custName = customerModel.getName();
 		final double cartValue = 999.00;

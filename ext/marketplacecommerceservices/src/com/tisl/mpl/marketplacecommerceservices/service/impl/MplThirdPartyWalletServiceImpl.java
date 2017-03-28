@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
@@ -20,6 +21,7 @@ import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -174,6 +176,10 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	@Resource(name = "mRupeeService")
 	private DefaultMplMrupeePaymentService mRupeeService;
 
+	//For CAR:127 production code changes
+	private Converter<OrderModel, OrderData> orderConverter;
+
+
 	public ConfigurationService getConfigurationService()
 	{
 		return configurationService;
@@ -251,6 +257,9 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 					final Date orderTATForTimeout = getTatTimeOut(new Date(), getmRupeeJobTAT(), order.getCreationtime());
 					final MplPaymentAuditModel auditModelData = mplOrderDao.getAuditList(cartGuid);
 
+					//For CAR:127
+					final OrderData orderData = getOrderConverter().convert(order);
+
 					if (auditModelData != null && !auditModelData.getIsExpired().booleanValue())
 					{
 						final List<MplPaymentAuditEntryModel> entryList = Lists.newArrayList(auditModelData.getAuditEntries());
@@ -260,7 +269,8 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 						{
 							isPayment = true;
 							LOG.debug("###################timeout############" + order.getCode());
-							performProcessingOrder(auditModelData, order, T, isPayment, isReturn);
+							//For CAR:127 production code changes
+							performProcessingOrder(auditModelData, order, T, isPayment, isReturn, orderData);
 							sendNotification(order, T);
 						}
 						else
@@ -366,13 +376,17 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 
 							if (StringUtils.isEmpty(status) && new Date().before(orderTATForTimeout))
 							{
-								performProcessingOrder(auditModelData, order, "", isPayment, isReturn);
+								//For CAR:127 production code changes
+								//								performProcessingOrder(auditModelData, order, "", isPayment, isReturn);
+								performProcessingOrder(auditModelData, order, "", isPayment, isReturn, orderData);
 								sendNotification(order, F);
 							}
 							//getting response other than S
 							if (!(S.equalsIgnoreCase(status)) && new Date().before(orderTATForTimeout))
 							{
-								performProcessingOrder(auditModelData, order, status, isPayment, isReturn);
+								//For CAR:127 production code changes
+								//								performProcessingOrder(auditModelData, order, "", isPayment, isReturn);
+								performProcessingOrder(auditModelData, order, status, isPayment, isReturn, orderData);
 								sendNotification(order, F);
 							}
 						}
@@ -438,7 +452,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	 * @param isPayment
 	 */
 	private void performProcessingOrder(final MplPaymentAuditModel auditModelData, final OrderModel order, final String status,
-			final boolean isPayment, final boolean isReturn)
+			final boolean isPayment, final boolean isReturn, final OrderData orderData)
 	{
 		try
 		{
@@ -446,8 +460,14 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 			{
 				final String defaultPinCode = mplProcessOrderService.getPinCodeForOrder(order);
 				//OMS Deallocation call for failed order
-				mplCommerceCartService.isInventoryReserved(order,
-						MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+				//				mplCommerceCartService.isInventoryReserved(order,
+				//						MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+
+				//New code has been changed From TCS prod Support For CAR:127
+
+				mplCommerceCartService.isInventoryReserved(orderData,
+						MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode, order);
+
 				final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
 				auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
 				auditEntry.setAuditId(auditModelData.getAuditId());
@@ -822,6 +842,25 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 		final String query = "SELECT {ret." + Item.PK + "} FROM { " + "ReturnEntry" + " AS ret} WHERE {" + "orderEntry"
 				+ "} = ?entry ORDER BY {ret." + Item.PK + "} ASC";
 		return this.flexibleSearchService.search(query, params).getResult();
+	}
+
+
+
+	/**
+	 * @return the orderConverter
+	 */
+	public Converter<OrderModel, OrderData> getOrderConverter()
+	{
+		return orderConverter;
+	}
+
+	/**
+	 * @param orderConverter
+	 *           the orderConverter to set
+	 */
+	public void setOrderConverter(final Converter<OrderModel, OrderData> orderConverter)
+	{
+		this.orderConverter = orderConverter;
 	}
 
 }

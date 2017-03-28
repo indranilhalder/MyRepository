@@ -3,20 +3,19 @@
  */
 package com.tisl.mpl.util;
 
-import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
-import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.search.ProductSearchFacade;
 import de.hybris.platform.commercefacades.search.data.SearchQueryData;
 import de.hybris.platform.commercefacades.search.data.SearchStateData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetData;
+import de.hybris.platform.commerceservices.search.facetdata.FacetValueData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
-import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.impl.DefaultProductService;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -51,13 +50,17 @@ public class MplCompetingProductsUtility
 		{
 			ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> competingProductsSearchPageData = null;
 			final PageableData competingProductsPageableData = createPageableData(0, 20, null, ShowMode.Page);
-			final CategoryModel competingProductsCategory = getCompetingProductsCategory(searchPageData);
-			if (competingProductsCategory != null)
+			final String competingProductsCategory = getCompetingProductsCategory(searchPageData); //Changes for CAR-245
+			//Changes for CAR-245
+			if (competingProductsCategory != null && !"".equals(competingProductsCategory.trim())
+					&& competingProductsCategory.contains("|"))
 			{
-				competingProductsSearchPageData = productSearchFacade.categorySearch(competingProductsCategory.getCode(),
-						getCompetingProductsSearchState(competingProductsCategory.getName() + MplConstants.COLON
-								+ MplConstants.RELEVANCE + MplConstants.COLON + MplConstants.INSTOCKFLAG_QUERY_PATTERN),
-						competingProductsPageableData);
+				final String[] competingProductsCategoryArr = competingProductsCategory.split("\\|"); // This contains CategoryCode in [0] position and CategoryName in [1] position
+
+				competingProductsSearchPageData = productSearchFacade.categorySearch(competingProductsCategoryArr[0],
+						getCompetingProductsSearchState(competingProductsCategoryArr[1] + MplConstants.COLON + MplConstants.RELEVANCE
+								+ MplConstants.COLON + MplConstants.INSTOCKFLAG_QUERY_PATTERN), competingProductsPageableData);
+
 				//model.addAttribute("competingProductsSearchPageData", competingProductsSearchPageData);
 				return competingProductsSearchPageData;
 			}
@@ -89,30 +92,55 @@ public class MplCompetingProductsUtility
 		return false;
 	}
 
-	private CategoryModel getCompetingProductsCategory(
+	private String getCompetingProductsCategory(
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
 	{
 		if (searchPageData.getResults() != null && searchPageData.getResults().size() > 0)
 		{
-			final ProductData productData = searchPageData.getResults().get(0);
-			final ProductModel productModel = defaultProductService.getProductForCode(productData.getCode());
-			final Collection<CategoryModel> superCategories = productModel.getSupercategories();
+			final Collection<FacetData<SearchStateData>> facets = searchPageData.getFacets();
 
-			for (final CategoryModel categoryModel : superCategories)
+			for (final FacetData<SearchStateData> facet : facets)
 			{
-				if (categoryModel instanceof ClassificationClassModel)
+				if (facet.getCode().equalsIgnoreCase("categoryNameCodeMapping"))
 				{
-					continue;
-				}
-				else if (categoryModel.getCode().startsWith("MSH") || categoryModel.getCode().startsWith("LSH"))
-				{
-					return categoryModel;
+					final List<FacetValueData<SearchStateData>> facetValueList = facet.getValues();
+					//System.out.println("**** facetValueSize : >>" + facetValueList.size() + "<<");
+
+					int length = 0;
+					String actualCode = "";
+
+					if (null != facetValueList)
+					{
+						for (final FacetValueData<SearchStateData> facetValue : facetValueList)
+						{
+							//System.out.println("**** valueList.getCode() : >>" + facetValue.getCode()
+							//+ "<<searchPageData.getCategoryCode()>>" + searchPageData.getCategoryCode() + "<< facetValue.getName()");
+							if (null != facetValue && null != facetValue.getCode())
+							{
+								final String[] totalValueArr = facetValue.getCode().split("\\|");
+								if (totalValueArr != null && totalValueArr.length >= 2) // This ensures CategoryCode and Name both are present in the array to avoid ArrayIndexOutOfBoundsException
+								{
+									final String categoryCode = totalValueArr[0];
+
+									if ((categoryCode.length() > length)
+											&& (categoryCode.startsWith("MSH") || categoryCode.startsWith("LSH"))) // The Category Code that is the longest will be the immediatecategory for the Product
+									{
+										actualCode = facetValue.getCode();
+										length = totalValueArr[0].length();
+									}
+								}
+							}
+						}
+					}
+					return actualCode;
 				}
 
 			}
 		}
 		return null;
 	}
+
+
 
 	private SearchStateData getCompetingProductsSearchState(final String searchText)
 	{

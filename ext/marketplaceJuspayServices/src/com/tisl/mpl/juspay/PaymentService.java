@@ -262,6 +262,7 @@ public class PaymentService
 	 */
 	public InitOrderResponse initOrder(final InitOrderRequest initOrderRequest) throws AdapterException
 	{
+		LOG.info(initOrderRequest + "  Request");
 		final LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		params.put(MarketplaceJuspayServicesConstants.AMOUNT, String.valueOf(initOrderRequest.getAmount()));
 		params.put(MarketplaceJuspayServicesConstants.CUSTOMERID, initOrderRequest.getCustomerId());
@@ -302,12 +303,15 @@ public class PaymentService
 		final Long statusId = (Long) jsonResponse.get("status_id");
 		final String status = (String) jsonResponse.get(MarketplaceJuspayServicesConstants.STATUS);
 		final String orderId = (String) jsonResponse.get(MarketplaceJuspayServicesConstants.ORDERID);
+		LOG.info(jsonResponse + "  Response");
 
 		final InitOrderResponse initOrderResponse = new InitOrderResponse();
 		initOrderResponse.setStatus(status);
 		initOrderResponse.setOrderId(orderId);
 		initOrderResponse.setStatusId(statusId.longValue());
 		initOrderResponse.setMerchantId(merchantId);
+
+
 
 		return initOrderResponse;
 	}
@@ -379,10 +383,11 @@ public class PaymentService
 			LOG.error("Null response from Juspay");
 		}
 		final JSONObject jsonResponse = (JSONObject) JSONValue.parse(response);
-		
-		if(jsonResponse!=null) {
-			LOG.error("*getOrderStatus::Merchant_Id*"+ jsonResponse.get(MarketplaceJuspayServicesConstants.MERCHANTID));
-			LOG.error("*getOrderStatus::Order_Id*"+ jsonResponse.get(MarketplaceJuspayServicesConstants.ORDERID)); 
+
+		if (jsonResponse != null)
+		{
+			LOG.error("*getOrderStatus::Merchant_Id*" + jsonResponse.get(MarketplaceJuspayServicesConstants.MERCHANTID));
+			LOG.error("*getOrderStatus::Order_Id*" + jsonResponse.get(MarketplaceJuspayServicesConstants.ORDERID));
 		}
 
 
@@ -721,8 +726,8 @@ public class PaymentService
 		if (jsonResponse != null)
 		{
 			LOG.debug("JUSPAY REFUND RESPONSE----------" + jsonResponse.toJSONString());
-			LOG.error("JUSPAY REFUND RESPONSE::Merchant_Id*"+ jsonResponse.get(MarketplaceJuspayServicesConstants.MERCHANTID));
-			LOG.error("JUSPAY REFUND RESPONSE::Order_Id*"+ jsonResponse.get(MarketplaceJuspayServicesConstants.ORDERID)); 
+			LOG.error("JUSPAY REFUND RESPONSE::Merchant_Id*" + jsonResponse.get(MarketplaceJuspayServicesConstants.MERCHANTID));
+			LOG.error("JUSPAY REFUND RESPONSE::Order_Id*" + jsonResponse.get(MarketplaceJuspayServicesConstants.ORDERID));
 		}
 		final RefundResponse refundResponse = (RefundResponse) assembleOrderStatusResponse(jsonResponse, new RefundResponse());
 		refundResponse.setSuccess(true);
@@ -850,10 +855,11 @@ public class PaymentService
 		if (null != response)
 		{
 			LOG.debug("Netbanking response:::" + response);
-			LOG.error("NetBanking Response Received for Juspay order_id-"+jsonResponse.get(MarketplaceJuspayServicesConstants.ORDERID)+
-				 	"::Status::"+jsonResponse.get(MarketplaceJuspayServicesConstants.STATUS));
+			LOG.error("NetBanking Response Received for Juspay order_id-"
+					+ jsonResponse.get(MarketplaceJuspayServicesConstants.ORDERID) + "::Status::"
+					+ jsonResponse.get(MarketplaceJuspayServicesConstants.STATUS));
 
-			
+
 		}
 
 		return response;
