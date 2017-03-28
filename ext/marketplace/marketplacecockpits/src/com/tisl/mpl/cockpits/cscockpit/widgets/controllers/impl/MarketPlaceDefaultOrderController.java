@@ -282,6 +282,155 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 				+ paymentTransactionModel.getCode() + "," + totalRefundAmount;
 		return result;
 	}
+	
+	
+	
+	
+	/*R2.3 Refund schedule delivery charge call to oms */
+	/**
+	 * Refund Schedule delivery Charges  
+	 */
+	
+	@Override
+	public TypedObject createRefundScheduleDeliveryChargesRequest(
+			OrderModel orderModel,
+			Map<AbstractOrderEntryModel, RefundDeliveryData> refundMap) {
+		PaymentTransactionModel paymentTransactionModel = null;
+		Double totalRefundScheduleDeliveryCharges = Double.valueOf(0);
+		
+		if (MapUtils.isNotEmpty(refundMap)) {
+			final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
+			
+			try {
+				for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
+						.entrySet()) {
+					totalRefundScheduleDeliveryCharges = totalRefundScheduleDeliveryCharges
+							+ refundEntry.getKey().getScheduledDeliveryCharge();
+
+					refundEntry.getKey().setRefundedScheduleDeliveryChargeAmt(
+							refundEntry.getKey().getScheduledDeliveryCharge());
+					refundEntry.getKey().setScheduledDeliveryCharge(Double.valueOf(0));
+					modelService.save(refundEntry.getKey());
+
+				}
+				LOG.debug("Total Refund Schedule Delivery Charges :"+totalRefundScheduleDeliveryCharges);
+				paymentTransactionModel = mplJusPayRefundService.doRefund(
+						orderModel, totalRefundScheduleDeliveryCharges,
+						PaymentTransactionType.REFUND_SCHEDULE_DELIVERY_CHARGES,uniqueRequestId);
+				if (null != paymentTransactionModel) {
+					mplJusPayRefundService.attachPaymentTransactionModel(
+							orderModel, paymentTransactionModel);
+					// commented  for BUG ID : TISRLREG-4131 START 
+					
+//					if ("PENDING".equalsIgnoreCase(paymentTransactionModel
+//							.getStatus())) {
+//						RefundTransactionMappingModel refundTransactionMappingModel = getModelService()
+//								.create(RefundTransactionMappingModel.class);
+//						refundTransactionMappingModel
+//								.setRefundedOrderEntry(orderModel.getEntries()
+//										.iterator().next());
+//						refundTransactionMappingModel
+//								.setJuspayRefundId(paymentTransactionModel
+//										.getCode());
+//						refundTransactionMappingModel
+//								.setCreationtime(new Date());
+//						refundTransactionMappingModel
+//								.setRefundType(JuspayRefundType.REFUND_SCHEDULE_DELIVERY_CHARGE);
+//						refundTransactionMappingModel
+//								.setRefundAmount(totalRefundScheduleDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
+//						getModelService().save(refundTransactionMappingModel);
+//					}
+					
+					// commented  for BUG ID : TISRLREG-4131 END
+					
+					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
+							.entrySet()) {
+						 AbstractOrderEntryModel entry = refundEntry.getKey();
+						 if(null != entry) {
+							 entry.setScheduleChargesJuspayRequestId(uniqueRequestId);
+							 modelService.save(entry);
+						 }
+						 
+						 // Added for BUG ID : TISRLREG-4131 START 
+						 Double refundedScheduleDeliveryCharges = entry.getRefundedScheduleDeliveryChargeAmt();
+						 if ("PENDING".equalsIgnoreCase(paymentTransactionModel
+									.getStatus())) {
+							 
+								RefundTransactionMappingModel refundTransactionMappingModel = getModelService()
+										.create(RefundTransactionMappingModel.class);
+								refundTransactionMappingModel
+										.setRefundedOrderEntry(entry);
+								refundTransactionMappingModel
+										.setJuspayRefundId(paymentTransactionModel
+												.getCode());
+								refundTransactionMappingModel
+										.setCreationtime(new Date());
+								refundTransactionMappingModel
+										.setRefundType(JuspayRefundType.REFUND_SCHEDULE_DELIVERY_CHARGE);
+								refundTransactionMappingModel
+										.setRefundAmount(refundedScheduleDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
+								getModelService().save(refundTransactionMappingModel);
+							}
+						 // Added for BUG ID : TISRLREG-4131 END 
+							ConsignmentStatus newStatus = null;
+							 if(null != refundEntry.getKey() && null != refundEntry.getKey().getConsignmentEntries()); {
+								 newStatus = refundEntry.getKey().getConsignmentEntries().iterator().next().getConsignment().getStatus();;
+							 }
+							// sending current order status, as oms is not accepting null value and no status update is required
+						mplJusPayRefundService.makeRefundOMSCall(refundEntry
+								.getKey(), paymentTransactionModel, refundEntry
+								.getKey().getRefundedScheduleDeliveryChargeAmt(), newStatus,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S);  
+					}
+				} else {
+					LOG.error("Refund Schedule Delivery Charges Failed");
+					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
+							.entrySet()) {
+						ConsignmentStatus newStatus = null;
+						if(null != refundEntry.getKey() && null != refundEntry.getKey().getConsignmentEntries()); {
+							 newStatus = refundEntry.getKey().getConsignmentEntries().iterator().next().getConsignment().getStatus();;
+						 }
+						mplJusPayRefundService.makeRefundOMSCall(refundEntry.getKey(),paymentTransactionModel,refundEntry.getKey().getRefundedScheduleDeliveryChargeAmt(),newStatus,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S);
+						}
+					
+					paymentTransactionModel = mplJusPayRefundService
+							.createPaymentTransactionModel(orderModel, "FAILURE", totalRefundScheduleDeliveryCharges,
+									PaymentTransactionType.RETURN, "NO Response FROM PG", uniqueRequestId);
+					mplJusPayRefundService.attachPaymentTransactionModel(orderModel, paymentTransactionModel);
+
+				}
+
+			} catch (Exception e) {
+				LOG.error(e.getMessage(), e);
+				for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
+						.entrySet()) {
+					ConsignmentStatus newStatus = null;
+					 AbstractOrderEntryModel entry = refundEntry.getKey();
+					 if(null != refundEntry.getKey() && null != refundEntry.getKey().getConsignmentEntries()); {
+						 newStatus = refundEntry.getKey().getConsignmentEntries().iterator().next().getConsignment().getStatus();;
+					 }
+					mplJusPayRefundService.makeRefundOMSCall(entry,paymentTransactionModel,entry.getRefundedScheduleDeliveryChargeAmt(),newStatus,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S);
+
+					// Making RTM entry to be picked up by webhook job	
+					RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(RefundTransactionMappingModel.class);
+					refundTransactionMappingModel.setRefundedOrderEntry(entry);
+					refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
+					refundTransactionMappingModel.setCreationtime(new Date());
+					refundTransactionMappingModel.setRefundType(JuspayRefundType.REFUND_SCHEDULE_DELIVERY_CHARGE);
+					refundTransactionMappingModel.setRefundAmount(entry.getRefundedScheduleDeliveryChargeAmt());//TISPRO-216 : Refund amount Set in RTM
+					getModelService().save(refundTransactionMappingModel);
+				}
+				LOG.error(e.getMessage(), e);
+				paymentTransactionModel = mplJusPayRefundService
+						.createPaymentTransactionModel(orderModel, "FAILURE",
+								totalRefundScheduleDeliveryCharges,
+								PaymentTransactionType.REFUND_SCHEDULE_DELIVERY_CHARGES,
+								"FAILURE", uniqueRequestId);
+				mplJusPayRefundService.attachPaymentTransactionModel(
+						orderModel, paymentTransactionModel);
+			}
+		}
+		return getCockpitTypeService().wrapItem(paymentTransactionModel);
+	}
 
 	@Override
 	public TypedObject createRefundDeliveryChargesRequest(
@@ -310,36 +459,59 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 				if (null != paymentTransactionModel) {
 					mplJusPayRefundService.attachPaymentTransactionModel(
 							orderModel, paymentTransactionModel);
-					if ("PENDING".equalsIgnoreCase(paymentTransactionModel
-							.getStatus())) {
-						RefundTransactionMappingModel refundTransactionMappingModel = getModelService()
-								.create(RefundTransactionMappingModel.class);
-						refundTransactionMappingModel
-								.setRefundedOrderEntry(orderModel.getEntries()
-										.iterator().next());
-						refundTransactionMappingModel
-								.setJuspayRefundId(paymentTransactionModel
-										.getCode());
-						refundTransactionMappingModel
-								.setCreationtime(new Date());
-						refundTransactionMappingModel
-								.setRefundType(JuspayRefundType.REFUND_DELIVERY_CHARGE);
-						refundTransactionMappingModel
-								.setRefundAmount(totalRefundDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
-						getModelService().save(refundTransactionMappingModel);
-					}
+					// commented  for BUG ID : TISRLREG-4131 START 
+//					if ("PENDING".equalsIgnoreCase(paymentTransactionModel
+//							.getStatus())) {
+//						RefundTransactionMappingModel refundTransactionMappingModel = getModelService()
+//								.create(RefundTransactionMappingModel.class);
+//						refundTransactionMappingModel
+//								.setRefundedOrderEntry(orderModel.getEntries()
+//										.iterator().next());
+//						refundTransactionMappingModel
+//								.setJuspayRefundId(paymentTransactionModel
+//										.getCode());
+//						refundTransactionMappingModel
+//								.setCreationtime(new Date());
+//						refundTransactionMappingModel
+//								.setRefundType(JuspayRefundType.REFUND_DELIVERY_CHARGE);
+//						refundTransactionMappingModel
+//								.setRefundAmount(totalRefundDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
+//						getModelService().save(refundTransactionMappingModel);
+//					}
+					
+					// commented  for BUG ID : TISRLREG-4131 END 
 					/*made changes in r2.3 start  */
 					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
 							.entrySet()) {
+						 AbstractOrderEntryModel entry = refundEntry.getKey();
+						 Double refundedDeliveryCharges = entry.getRefundedDeliveryChargeAmt();
 						boolean isEDToHD = false;
 						if(null != refundEntry.getKey() && null != refundEntry.getKey().getIsEDtoHD() && refundEntry.getKey().getIsEDtoHD()) {
 							isEDToHD= true;
 						}
-						 AbstractOrderEntryModel entry = refundEntry.getKey();
 						 if(null != entry) {
 							 entry.setDelChargesJuspayRequestId(uniqueRequestId);
 							 modelService.save(entry);
 						 }
+						 if ("PENDING".equalsIgnoreCase(paymentTransactionModel
+									.getStatus())) {
+							 
+								RefundTransactionMappingModel refundTransactionMappingModel = getModelService()
+										.create(RefundTransactionMappingModel.class);
+								refundTransactionMappingModel
+										.setRefundedOrderEntry(entry);
+								refundTransactionMappingModel
+										.setJuspayRefundId(paymentTransactionModel
+												.getCode());
+								refundTransactionMappingModel
+										.setCreationtime(new Date());
+								refundTransactionMappingModel
+										.setRefundType(JuspayRefundType.REFUND_DELIVERY_CHARGE);
+								refundTransactionMappingModel
+										.setRefundAmount(refundedDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
+								getModelService().save(refundTransactionMappingModel);
+							}
+						 
 							ConsignmentStatus newStatus = null;
 							 if(null != refundEntry.getKey() && null != refundEntry.getKey().getConsignmentEntries()); {
 								 newStatus = refundEntry.getKey().getConsignmentEntries().iterator().next().getConsignment().getStatus();;
@@ -353,11 +525,43 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 					}
 					/*made changes in r2.3 end  */
 				} else {
-
 					LOG.error("Refund Delivery Charges Failed");
+					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
+							.entrySet()) {
+						ConsignmentStatus newStatus = null;
+						if(null != refundEntry.getKey() && null != refundEntry.getKey().getConsignmentEntries()); {
+							 newStatus = refundEntry.getKey().getConsignmentEntries().iterator().next().getConsignment().getStatus();;
+						 }
+						mplJusPayRefundService.makeRefundOMSCall(refundEntry.getKey(),paymentTransactionModel,refundEntry.getKey().getRefundedDeliveryChargeAmt(),newStatus,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S);
+						}
+					
+					paymentTransactionModel = mplJusPayRefundService
+							.createPaymentTransactionModel(orderModel, "FAILURE", totalRefundDeliveryCharges,
+									PaymentTransactionType.REFUND_DELIVERY_CHARGES, "NO Response FROM PG", uniqueRequestId);
+					mplJusPayRefundService.attachPaymentTransactionModel(orderModel, paymentTransactionModel);
 				}
 
 			} catch (Exception e) {
+				
+				LOG.error(e.getMessage(), e);
+				for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
+						.entrySet()) {
+					ConsignmentStatus newStatus = null;
+					 AbstractOrderEntryModel entry = refundEntry.getKey();
+					 if(null != refundEntry.getKey() && null != refundEntry.getKey().getConsignmentEntries()); {
+						 newStatus = refundEntry.getKey().getConsignmentEntries().iterator().next().getConsignment().getStatus();;
+					 }
+					mplJusPayRefundService.makeRefundOMSCall(entry,paymentTransactionModel,entry.getRefundedDeliveryChargeAmt(),newStatus,null);
+
+					// Making RTM entry to be picked up by webhook job	
+					RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(RefundTransactionMappingModel.class);
+					refundTransactionMappingModel.setRefundedOrderEntry(entry);
+					refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
+					refundTransactionMappingModel.setCreationtime(new Date());
+					refundTransactionMappingModel.setRefundType(JuspayRefundType.REFUND_DELIVERY_CHARGE);
+					refundTransactionMappingModel.setRefundAmount(entry.getRefundedDeliveryChargeAmt());//TISPRO-216 : Refund amount Set in RTM
+					getModelService().save(refundTransactionMappingModel);
+				}
 				LOG.error(e.getMessage(), e);
 				paymentTransactionModel = mplJusPayRefundService
 						.createPaymentTransactionModel(orderModel, "FAILURE",
@@ -370,94 +574,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 		}
 		return getCockpitTypeService().wrapItem(paymentTransactionModel);
 	}
-	
-	/*R2.3 Refund schedule delivery charge call to oms */
-	/**
-	 * Refund Schedule delivery Charges  
-	 */
-	
-	@Override
-	public TypedObject createRefundScheduleDeliveryChargesRequest(
-			OrderModel orderModel,
-			Map<AbstractOrderEntryModel, RefundDeliveryData> refundMap) {
-		PaymentTransactionModel paymentTransactionModel = null;
-		Double totalRefundScheduleDeliveryCharges = Double.valueOf(0);
-		if (MapUtils.isNotEmpty(refundMap)) {
-			final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
-			
-			try {
-				for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
-						.entrySet()) {
-					totalRefundScheduleDeliveryCharges = totalRefundScheduleDeliveryCharges
-							+ refundEntry.getKey().getScheduledDeliveryCharge();
 
-					refundEntry.getKey().setRefundedScheduleDeliveryChargeAmt(
-							refundEntry.getKey().getScheduledDeliveryCharge());
-					refundEntry.getKey().setScheduledDeliveryCharge(Double.valueOf(0));
-					modelService.save(refundEntry.getKey());
-
-				}
-				LOG.debug("Total Refund Schedule Delivery Charges :"+totalRefundScheduleDeliveryCharges);
-				paymentTransactionModel = mplJusPayRefundService.doRefund(
-						orderModel, totalRefundScheduleDeliveryCharges,
-						PaymentTransactionType.REFUND_SCHEDULE_DELIVERY_CHARGES,uniqueRequestId);
-				if (null != paymentTransactionModel) {
-					mplJusPayRefundService.attachPaymentTransactionModel(
-							orderModel, paymentTransactionModel);
-					if ("PENDING".equalsIgnoreCase(paymentTransactionModel
-							.getStatus())) {
-						RefundTransactionMappingModel refundTransactionMappingModel = getModelService()
-								.create(RefundTransactionMappingModel.class);
-						refundTransactionMappingModel
-								.setRefundedOrderEntry(orderModel.getEntries()
-										.iterator().next());
-						refundTransactionMappingModel
-								.setJuspayRefundId(paymentTransactionModel
-										.getCode());
-						refundTransactionMappingModel
-								.setCreationtime(new Date());
-						refundTransactionMappingModel
-								.setRefundType(JuspayRefundType.REFUND_SCHEDULE_DELIVERY_CHARGE);
-						refundTransactionMappingModel
-								.setRefundAmount(totalRefundScheduleDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
-						getModelService().save(refundTransactionMappingModel);
-					}
-					
-					/*made changes in r2.3 start */
-					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
-							.entrySet()) {
-						 AbstractOrderEntryModel entry = refundEntry.getKey();
-						 if(null != entry) {
-							 entry.setScheduleChargesJuspayRequestId(uniqueRequestId);
-							 modelService.save(entry);
-						 }
-							ConsignmentStatus newStatus = null;
-							 if(null != refundEntry.getKey() && null != refundEntry.getKey().getConsignmentEntries()); {
-								 newStatus = refundEntry.getKey().getConsignmentEntries().iterator().next().getConsignment().getStatus();;
-							 }
-							// sending current order status, as oms is not accepting null value and no status update is required
-						mplJusPayRefundService.makeRefundOMSCall(refundEntry
-								.getKey(), paymentTransactionModel, refundEntry
-								.getKey().getRefundedScheduleDeliveryChargeAmt(), newStatus,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S);  
-					}
-					/*made changes in r2.3 end */
-				} else {
-					LOG.error("Refund Schedule Delivery Charges Failed");
-				}
-
-			} catch (Exception e) {
-				LOG.error(e.getMessage(), e);
-				paymentTransactionModel = mplJusPayRefundService
-						.createPaymentTransactionModel(orderModel, "FAILURE",
-								totalRefundScheduleDeliveryCharges,
-								PaymentTransactionType.REFUND_SCHEDULE_DELIVERY_CHARGES,
-								"FAILURE", uniqueRequestId);
-				mplJusPayRefundService.attachPaymentTransactionModel(
-						orderModel, paymentTransactionModel);
-			}
-		}
-		return getCockpitTypeService().wrapItem(paymentTransactionModel);
-	}
 
 	@Override
 	public TypedObject createOrderHistoryRequest(OrderModel orderModel,
