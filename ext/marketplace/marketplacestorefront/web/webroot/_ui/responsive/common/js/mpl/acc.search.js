@@ -693,6 +693,12 @@ function donotShowAll()
 					$("#add_to_wishlist").attr("disabled",true);
 					$('.add_to_cart_form .out_of_stock #add_to_wishlist').addClass("wishDisabled");
 				}
+				else if(data == false) //UF-60
+				{
+					$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').removeClass("added");
+					$("#add_to_wishlist").attr("disabled",false);
+					$('.add_to_cart_form .out_of_stock #add_to_wishlist').removeClass("wishDisabled");
+				}
 				
 				},
 				error : function(xhr, status, error) {		
@@ -702,21 +708,26 @@ function donotShowAll()
 		}
 
 $(document).on("click",".plp-wishlist",function(e){
+
 	 /*TPR-250 changes*/
 	var ussid=$(this).data("ussid");
 	//addToWishlistForPLP($(this).data("product"),$(this).data("ussid"),this);
 	/*TPR-250 changes*/
 	if ( $( this ).hasClass( "added" ) ) {
 		removeToWishlistForPLP($(this).data("product"),$(this).data("ussid"),this);
+
 	} else {
+
 		addToWishlistForPLP($(this).data("product"),$(this).data("ussid"),this);
 	}
 	return false;
 })
 		/*Changes for INC144313867*/
 
+
 		function removeToWishlistForPLP(productURL,ussid,el) {
 			var loggedIn=$("#loggedIn").val();
+
 			var productCode=urlToProductCode(productURL);
 			var wishName = "";
 			var requiredUrl = ACC.config.encodedContextPath + "/search/"
@@ -732,7 +743,9 @@ $(document).on("click",".plp-wishlist",function(e){
 		    var dataString = 'wish=' + wishName + '&product=' + productCode + '&ussid=' + ussid
 			+ '&sizeSelected=' + sizeSelected;
 			
-			if(loggedIn == 'false') {
+		    //change for INC144314854 
+			//if(loggedIn == 'false') {
+		    if(!headerLoggedinStatus) {
 				$(".wishAddLoginPlp").addClass("active");
 				setTimeout(function(){
 					$(".wishAddLoginPlp").removeClass("active")
@@ -776,9 +789,12 @@ $(document).on("click",".plp-wishlist",function(e){
 		}
 
 
+
 		function addToWishlistForPLP(productURL,ussid,el) {
 			var loggedIn=$("#loggedIn").val();
 			var productCode=urlToProductCode(productURL);
+			var productarray=[];
+			productarray.push(productCode);
 			var wishName = "";
 			var requiredUrl = ACC.config.encodedContextPath + "/search/"
 					+ "addToWishListInPLP";	
@@ -793,7 +809,9 @@ $(document).on("click",".plp-wishlist",function(e){
 		     var dataString = 'wish=' + wishName + '&product=' + productCode + '&ussid=' + ussid
 					+ '&sizeSelected=' + sizeSelected;
 			
-			if(loggedIn == 'false') {
+		    // Change for INC144314854 
+			//if(loggedIn == 'false') {
+		    if(!headerLoggedinStatus) {
 				$(".wishAddLoginPlp").addClass("active");
 				setTimeout(function(){
 					$(".wishAddLoginPlp").removeClass("active")
@@ -820,10 +838,26 @@ $(document).on("click",".plp-wishlist",function(e){
 								$(".wishAlreadyAddedPlp").removeClass("active")
 							},3000)
 						}
+						/*TPR-4723*//*TPR-4708*/
+						if($('#pageType').val() == "productsearch"){
+							if(typeof utag !="undefined"){
+								utag.link({link_text: "add_to_wishlist_serp" , event_type : "add_to_wishlist_serp" ,product_sku_wishlist : productarray});
+								}
+						}
+						
+						if($('#pageType').val() == "category" || $('#pageType').val() == "electronics" ){
+							if(typeof utag !="undefined"){
+								utag.link({link_text: "add_to_wishlist_plp" , event_type : "add_to_wishlist_plp" ,product_sku_wishlist : productarray});
+								}
+						}
+						
 						
 					},
 					error : function(xhr, status, error){
 						alert(error);
+						if(typeof utag !="undefined"){
+							utag.link({error_type : 'wishlist_error'});
+							}
 					}
 				});
 				

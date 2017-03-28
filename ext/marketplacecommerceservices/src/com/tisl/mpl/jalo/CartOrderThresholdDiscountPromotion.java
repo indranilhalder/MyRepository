@@ -713,6 +713,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 			if (null != order)
 			{
 				final List<AbstractOrderEntry> orderEntryList = order.getEntries();
+
 				if (CollectionUtils.isNotEmpty(orderEntryList))
 				{
 					for (final AbstractOrderEntry entry : orderEntryList)

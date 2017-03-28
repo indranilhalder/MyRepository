@@ -116,7 +116,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 #Added for Cart
 
 ;$solrIndexedType; isVariant              ;boolean;            ;    ;    ;    ;    ;    ;mplIsVariantValueProvider;
-;$solrIndexedType; inStockFlagForAddtoCart;boolean;            ;    ;    ;    ;    ;    ;mplProductInStockFlagValueProvider;
+
 
 									
 # Category fields
@@ -511,6 +511,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType						; memory-classification			;double; 							;	 			;							 ;  				   ;  			true	   ; 				    ;MultiSelectOr 	;Alpha 			; 3000		;true;   								  ;     						;mplClassificationPropertyValueProvider;	;							;	;mplMemoryRange;Internal Memory
 #Search POC end
 
+
 ##LW-686
 # Define price range set
 INSERT_UPDATE SolrValueRangeSet;name[unique=true];qualifier;type;solrValueRanges(&rangeValueRefID)
@@ -522,3 +523,8 @@ INSERT_UPDATE SolrValueRange;&rangeValueRefID;solrValueRangeSet(name)[unique=tru
 ;mplLuxuryPriceRangeINR2;mplLuxuryPriceRangeINR;    ₹5001-₹15,000;  		5000.01		; 15000
 ;mplLuxuryPriceRangeINR3;mplLuxuryPriceRangeINR;   	₹15,001-₹30,000; 		15000.01	; 30000
 ;mplLuxuryPriceRangeINR4;mplLuxuryPriceRangeINR;   	₹30,001 and Above; 		30000.01	; 999999
+
+# Added new Index Property for CAR-245
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);localized[default=false];multiValue[default=true];categoryField[default=true];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;facet[default=true]
+;$solrIndexedType; categoryNameCodeMapping     	  ;string   ;true		   ;	;	 ;	  ;			;mplCategoryNameCodeMappingValueProvider;
+

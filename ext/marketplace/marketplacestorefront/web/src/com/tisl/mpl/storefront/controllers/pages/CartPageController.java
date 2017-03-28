@@ -320,12 +320,16 @@ public class CartPageController extends AbstractPageController
 				model.addAttribute(ModelAttributetConstants.WELCOME_BACK_MESSAGE, MessageConstants.WELCOME_BACK_MESSAGE);
 			}
 			//TPR-174
+
 			//TISSQAUATS-522
 			if (null != cartModel)
 			{
 				cartModel.setMerged(false);
 				modelService.save(cartModel);
 			}
+
+			LOG.error("CartPageController : showCart : cartModel setMerged saved");
+
 			final String msdjsURL = getConfigurationService().getConfiguration().getString("msd.js.url");
 			final Boolean isMSDEnabled = Boolean.valueOf(getConfigurationService().getConfiguration().getString("msd.enabled"));
 			model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
@@ -908,10 +912,17 @@ public class CartPageController extends AbstractPageController
 						//TISEE-6376
 						if (entryModel.getProduct() != null)
 						{
+							/*
+							 * ProductData productData = productFacade.getProductForOptions(entryModel.getProduct(),
+							 * Arrays.asList( ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY,
+							 * ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.PROMOTIONS,
+							 * ProductOption.STOCK, ProductOption.REVIEW, ProductOption.DELIVERY_MODE_AVAILABILITY));
+							 */
+
 							ProductData productData = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
-									ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
-									ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
-									ProductOption.DELIVERY_MODE_AVAILABILITY));
+									ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
+									ProductOption.SELLER, ProductOption.VARIANT_FULL));
+
 							if (!entryModel.getSizeSelected().booleanValue())
 							{
 								productData.setSize(StringUtils.EMPTY);
@@ -1318,9 +1329,11 @@ public class CartPageController extends AbstractPageController
 		//TISSEC-11
 		final String regex = "\\d{6}";
 		//final CartModel cart = getCartService().getSessionCart();
+
 		try
 		{
 			String isServicable = MarketplacecommerceservicesConstants.Y;
+
 			if (selectedPincode.matches(regex))
 			{
 				LOG.debug("selectedPincode " + selectedPincode);
@@ -1338,6 +1351,7 @@ public class CartPageController extends AbstractPageController
 				try
 				{
 					final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+
 					if (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries()))
 					{
 						//if ((cartData.getEntries() != null && !cartData.getEntries().isEmpty()))
@@ -1345,6 +1359,8 @@ public class CartPageController extends AbstractPageController
 						if (!StringUtil.isEmpty(selectedPincode))
 						{
 							responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData);
+							getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES, responseData); //CAR-126/128/129
+
 						}
 						if (responseData != null)
 						{

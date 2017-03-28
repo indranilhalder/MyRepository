@@ -22,6 +22,7 @@ import de.hybris.platform.promotions.util.Helper;
 import de.hybris.platform.util.localization.Localization;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -41,6 +42,10 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
 
+/**
+ * This promotion is of type Buy A and get cashback
+ *
+ */
 public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentageDiscountCashback
 {
 	@SuppressWarnings("unused")
@@ -93,14 +98,15 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 		//final List<Category> promotionCategoryList = new ArrayList<>(getCategories());
 
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions()); // Fetching Promotion set Restrictions
-		final List<Product> excludedProductList = new ArrayList<Product>();
-		final List<String> excludeManufactureList = new ArrayList<String>();
-		GenericUtilityMethods.populateExcludedProductManufacturerList(paramSessionContext, evaluationContext, excludedProductList,
-				excludeManufactureList, restrictionList, this);
+		//final List<Product> excludedProductList = new ArrayList<Product>();
+		//final List<String> excludeManufactureList = new ArrayList<String>();
+		//		GenericUtilityMethods.populateExcludedProductManufacturerList(paramSessionContext, evaluationContext, excludedProductList,
+		//				excludeManufactureList, restrictionList, this);
 		// To check whether Promotion already applied on Product
 		//getDefaultPromotionsManager().promotionAlreadyFired(paramSessionContext, order, excludedProductList);
-		final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(paramSessionContext, evaluationContext);
-
+		//final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(paramSessionContext, evaluationContext);
+		final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager().findEligibleProductsInBasket(
+				paramSessionContext, evaluationContext, this, getCategories());
 		try
 		{
 			final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(paramSessionContext,
@@ -126,8 +132,7 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 				//final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 				//getting the valid products
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
-						.getValidProdListForBuyXofA(order, paramSessionContext, allowedProductList, restrictionList,
-								excludedProductList, excludeManufactureList, null, null); // Adding Eligible Products to List
+						.getValidProdListForBuyXofA(order, paramSessionContext, allowedProductList, restrictionList, null, null); // Adding Eligible Products to List
 
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(paramSessionContext, validProductUssidMap))
 				{
@@ -536,6 +541,7 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 	{
 		return Registry.getApplicationContext().getBean("mplPromotionHelper", MplPromotionHelper.class);
 	}
+
 	
 	/**
 	 * @return the stockCount
@@ -553,4 +559,26 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 	{
 		this.stockCount = stockCount;
 	}
+
+
+	/**
+	 * Building the Hash Key for Promotion
+	 *
+	 * @param builder
+	 * @param ctx
+	 */
+	@Override
+	protected void buildDataUniqueKey(final SessionContext ctx, final StringBuilder builder)
+	{
+		builder.append(super.getClass().getSimpleName()).append('|').append(getPromotionGroup(ctx).getIdentifier(ctx)).append('|')
+				.append(getCode(ctx)).append('|').append(getPriority(ctx)).append('|').append(ctx.getLanguage().getIsocode())
+				.append('|');
+
+
+		//final Date modifyDate = ((Date) getProperty(ctx, "modifiedtime"));
+
+		final Date modifyDate = getModificationTime();
+		builder.append(modifyDate);
+	}
 }
+

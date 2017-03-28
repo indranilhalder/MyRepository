@@ -148,7 +148,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 #Added for Cart
 
 ;$solrIndexedType; isVariant              ;boolean;            ;    ;    ;    ;    ;    ;mplIsVariantValueProvider;
-;$solrIndexedType; inStockFlagForAddtoCart;boolean;            ;    ;    ;    ;    ;    ;mplProductInStockFlagValueProvider;
+
 #new changes
 ;$solrIndexedType; displayStock			  ;string ;	  	;	;	 ;true;;;mplProductStockeValueProvider; 
 ;$solrIndexedType; displayPrice    	      ;string ;     ;	;    ;true;;;mplSwatchPriceValueProvider;
@@ -535,6 +535,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter;visible;facet[default=true]
 ;$solrIndexedType;isLuxuryProduct               ;boolean   ;            ;    ;;    ;;    ;luxuryProductValueProvider;;false;true
 
+
 #LW-686
 # Define price range set
 INSERT_UPDATE SolrValueRangeSet;name[unique=true];qualifier;type;solrValueRanges(&rangeValueRefID)
@@ -549,3 +550,8 @@ INSERT_UPDATE SolrValueRange;&rangeValueRefID;solrValueRangeSet(name)[unique=tru
 
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];facet[default=true];facetType(code);facetSort(code);priority;visible;useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;facetDisplayNameProvider;customFacetSortProvider;topValuesProvider;rangeSets(name);facetTopValue
 ;$solrIndexedType; price        		  ;double ; 	;	 ;true ;     ;     ;     ;MultiSelectOr ;Alpha ; 4000;true;     ;     ;mplPriceValueProvider 				;										;							; 	                        ;mplElectronicsPriceRangeINR,mplApparelPriceRangeINR,mplLuxuryPriceRangeINR;
+
+# Added new Index Property for CAR-245
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);localized[default=false];multiValue[default=true];categoryField[default=true];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;facet[default=true]
+;$solrIndexedType; categoryNameCodeMapping     	  ;string   ;true		   ;	;	 ;	  ;			;mplCategoryNameCodeMappingValueProvider;
+

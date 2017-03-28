@@ -37,7 +37,7 @@ import com.tisl.mpl.model.SellerInformationModel;
  *
  */
 
-public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
+public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao 
 {
 
 
@@ -288,8 +288,9 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 				productCode = productCode.replaceAll("\'", "");
 			}
 
-			priceQueryString = "SELECT {bb.PK} FROM {BuyBox AS bb} where {bb.product}= ?product AND ( {bb.delisted}  IS NULL OR {bb.delisted} =0)  and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate})     ORDER BY {bb.product} ASC, {bb.weightage} DESC";
+			//priceQueryString = "SELECT {bb.PK} FROM {BuyBox AS bb} where {bb.product}= ?product AND ( {bb.delisted}  IS NULL OR {bb.delisted} =0)  and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate})     ORDER BY {bb.product} ASC, {bb.weightage} DESC";
 
+			priceQueryString = "SELECT {bb.PK} FROM {BuyBox AS bb} where {bb.product}= ?product AND (sysdate between {bb.sellerstartdate} and {bb.sellerenddate})     ORDER BY {bb.product} ASC, {bb.weightage} DESC";
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(priceQueryString);
 			query.addQueryParameter("product", productCode);
 			final List<BuyBoxModel> buyBoxList = flexibleSearchService.<BuyBoxModel> search(query).getResult();
@@ -336,13 +337,13 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 			if (productType.equalsIgnoreCase("simple"))
 			{
-				inventoryQuery.append(
-						"{bb.product} = ?product AND ( {bb.delisted}  IS NULL or {bb.delisted} =0 )and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate})  ");
+				inventoryQuery
+						.append("{bb.product} = ?product AND ( {bb.delisted}  IS NULL or {bb.delisted} =0 )and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate})  ");
 			}
-			if (productType.equalsIgnoreCase("variant"))
+			if (productType.equalsIgnoreCase("variant")) // Added fix (color condition added) for prod Issue of showing Product even though out of stock  - /*, {PcmProductVariant As pv} where {pprod.colour} = {pv.colour} and {pv.code} = ?product and */
 			{
-				inventoryQuery.append(
-						"{bb.product} IN ({{ select distinct{pprod.code} from {PcmProductVariant As pprod} where {pprod.baseProduct} IN (	{{"
+				inventoryQuery
+						.append("{bb.product} IN ({{ select distinct{pprod.code} from {PcmProductVariant As pprod}, {PcmProductVariant As pv} where {pprod.colour} = {pv.colour} and {pv.code} = ?product and {pprod.baseProduct} IN (	{{"
 
 								+ " 	select distinct{p.baseProduct} from {PcmProductVariant as p} where {p.code} = ?product"
 
@@ -450,10 +451,10 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		{
 			final String queryString = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS
 
-					+ WHERE_CLASS + BuyBoxModel.PRODUCT + "}=?productNoStock" + " AND  ( {bb:" + BuyBoxModel.DELISTED
-					+ "}  IS NULL or {bb:" + BuyBoxModel.DELISTED
-					+ "}=0) and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate}  )   and   {bb:" + BuyBoxModel.PRICE
-					+ "} > 0  ORDER BY {bb:" + BuyBoxModel.WEIGHTAGE + "} DESC,{bb:" + BuyBoxModel.AVAILABLE + "} DESC";
+			+ WHERE_CLASS + BuyBoxModel.PRODUCT + "}=?productNoStock" + " AND  ( {bb:" + BuyBoxModel.DELISTED + "}  IS NULL or {bb:"
+					+ BuyBoxModel.DELISTED + "}=0) and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate}  )   and   {bb:"
+					+ BuyBoxModel.PRICE + "} > 0  ORDER BY {bb:" + BuyBoxModel.WEIGHTAGE + "} DESC,{bb:" + BuyBoxModel.AVAILABLE
+					+ "} DESC";
 
 
 			LOG.debug(QUERY_CLASS + queryString);
@@ -536,8 +537,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		final Set<Map<BuyBoxModel, RichAttributeModel>> buyboxdataset = new LinkedHashSet<Map<BuyBoxModel, RichAttributeModel>>();
 		try
 		{
-			final String queryString = "select {b.pk},{rich.pk} from {" + BuyBoxModel._TYPECODE + " as b JOIN "
-					+ SellerInformationModel._TYPECODE + " as seller ON {b.sellerArticleSKU}={seller.sellerArticleSKU} "
+			final String queryString = "select {b.pk},{rich.pk} from {"
+					+ BuyBoxModel._TYPECODE
+					+ " as b JOIN "
+					+ SellerInformationModel._TYPECODE
+					+ " as seller ON {b.sellerArticleSKU}={seller.sellerArticleSKU} "
 					+ " JOIN CatalogVersion as cat ON {cat.pk}={seller.catalogversion} "
 					+ " JOIN RichAttribute as rich  ON {seller.pk}={rich.sellerInfo} } "
 					+ " where {cat.version}='Online' and {b.product} = ?productCode and( {b.delisted}  IS NULL or {b.delisted}=0 )  and (sysdate between {b.sellerstartdate} and {b.sellerenddate})     order by {b.weightage} desc,{b.available} desc";
@@ -605,7 +609,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 		final String queryString = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS
 
-				+ WHERE_CLASS + BuyBoxModel.SELLERARTICLESKU + "}=?sellerArticleSKU" + " AND {bb:" + BuyBoxModel.PRICE + "} > 0  ";
+		+ WHERE_CLASS + BuyBoxModel.SELLERARTICLESKU + "}=?sellerArticleSKU" + " AND {bb:" + BuyBoxModel.PRICE + "} > 0  ";
 
 		//Blocked for Perfomance Fix : TISPT-167
 		//+ "ORDER BY {bb:" + BuyBoxModel.WEIGHTAGE + "} DESC,{bb:" + BuyBoxModel.AVAILABLE + "} DESC"
@@ -632,7 +636,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		{
 			final String queryString = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS
 
-					+ WHERE_CLASS + BuyBoxModel.SELLERARTICLESKU + "}=?ussid";
+			+ WHERE_CLASS + BuyBoxModel.SELLERARTICLESKU + "}=?ussid";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("ussid", ussid);
@@ -708,7 +712,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 			final String queryStringForSizeGuide = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS
 
-					+ WHERE_CLASS + BuyBoxModel.PRODUCT + "}=?productSizeGuide" + " AND  {bb:" + BuyBoxModel.SELLERID + "}=?sellerid"
+			+ WHERE_CLASS + BuyBoxModel.PRODUCT + "}=?productSizeGuide" + " AND  {bb:" + BuyBoxModel.SELLERID + "}=?sellerid"
 					+ " AND ( {bb:" + BuyBoxModel.DELISTED + "}  IS NULL OR {bb:" + BuyBoxModel.DELISTED
 					+ "}=0) AND (sysdate between  {bb:" + BuyBoxModel.SELLERSTARTDATE + "} and {bb:" + BuyBoxModel.SELLERENDDATE
 					+ "}) AND {bb:" + BuyBoxModel.PRICE + "} > 0";
@@ -751,8 +755,8 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		{
 			final String classAttrquery = "select {clattass.pk} from {ClassAttributeAssignment as clattass} "
 					+ "									 where {clattass.classificationAttribute} " + "	 IN ({{"
-					+ "												select {clattr.pk} from {ClassificationAttribute as clattr}  where {clattr.code} "
-					+ "		IN ('" + code + "')}})";
+					+ "												select {clattr.pk} from {ClassificationAttribute as clattr}  where {clattr.code} " + "		IN ('"
+					+ code + "')}})";
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(classAttrquery);
 			return flexibleSearchService.<ClassAttributeAssignmentModel> search(query).getResult();
 		}

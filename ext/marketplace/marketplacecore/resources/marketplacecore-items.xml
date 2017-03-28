@@ -1147,7 +1147,14 @@
 			<targetElement type="JuspayEBSResponse" cardinality="many"
 				qualifier="risk"></targetElement>
 		</relation>
-
+		<!-- changes for JuspayEBSResponseFIX -->
+		<relation code="MplPaymentAuditJuspayEBSResponseData" localized="false"
+			autocreate="true">
+			<sourceElement type="MplPaymentAudit" cardinality="one"
+				qualifier="audit"></sourceElement>
+			<targetElement type="JuspayEBSResponseData" cardinality="many"
+				qualifier="riskData"></targetElement>
+		</relation>
 		<relation code="MobileCollectionBannerComponentProductRelation"
 			localized="false" autocreate="true">
 			<deployment table="MobileBannerProductTable" typecode="18964" />
@@ -1212,6 +1219,7 @@
 			</targetElement>
 		</relation>
 		
+
 		<!-- TPR-1984 -->
 		<relation code="NPSFeedbackDetailRelation" generate="true"
 			localized="false" autocreate="true">
@@ -1221,8 +1229,10 @@
 				cardinality="many" />
 		</relation>
 		<!-- End TPR-1984 -->
+		
 
-		<!-- <relation code="VoucherStatusNotificationCustomerRelation"
+
+		<relation code="VoucherStatusNotificationCustomerRelation"
 			autocreate="true" generate="true" localized="false">
 			<deployment table="Voucher2CustomerRel" typecode="18900" />
 			<sourceElement qualifier="Users" type="Principal"
@@ -1235,8 +1245,9 @@
 				<modifiers read="true" write="true" search="true"
 					optional="true" />
 			</targetElement>
-		</relation>  -->
-	</relations>
+		</relation>
+
+			</relations>
 
 	<itemtypes>
 		<!-- TPR-628 : Make changes to Banners rendering in MObile Viewports -->
@@ -7777,6 +7788,12 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- changes for JuspayEBSResponseFIX -->
+					<attribute qualifier="ebsResponseData" type="JuspayEBSResponseData"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
 					<attribute qualifier="refunds" autocreate="true"
 						type="JuspayRefundResponseCollection">
 						<description>List of Refunds</description>
@@ -7929,6 +7946,45 @@
 						<key attribute="itemtype" />
 					</index>
 				</indexes>
+			</itemtype>
+			<!-- changes for JuspayEBSResponseFIX -->
+			<itemtype code="JuspayEBSResponseData" autocreate="true"
+				generate="true" jaloclass="com.tisl.mpl.core.jalo.JuspayEBSResponseData">
+				<deployment table="MplJspyEBSRespData" typecode="25092" /> 
+				<attributes>
+					<!-- <attribute qualifier="ebsRiskLevel" type="java.lang.String" autocreate="true" 
+						generate="true"> <modifiers read="true" write="true" search="true" /> <persistence 
+						type="property" /> </attribute> -->
+					<attribute qualifier="oldPK" type="java.lang.Long">
+						<description>PK of the old table for reference</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute autocreate="true" qualifier="ebsRiskLevel"
+						type="EBSRiskLevelEnum">
+						<persistence type="property" />
+						<modifiers read="true" write="true" initial="false" />
+					</attribute>
+					<attribute qualifier="ebsRiskPercentage" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- <attribute qualifier="ebsRiskStatus" type="java.lang.String" autocreate="true" 
+						generate="true"> <modifiers read="true" write="true" search="true" /> <persistence 
+						type="property" /> </attribute> -->
+					<attribute autocreate="true" qualifier="ebsRiskStatus"
+						type="EBSResponseStatus">
+						<persistence type="property" />
+						<modifiers read="true" write="true" initial="false" />
+					</attribute>
+					<attribute qualifier="ebs_bin_country" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
 			</itemtype>
 			<itemtype code="FraudReport" autocreate="false" generate="true">
 				<attributes>

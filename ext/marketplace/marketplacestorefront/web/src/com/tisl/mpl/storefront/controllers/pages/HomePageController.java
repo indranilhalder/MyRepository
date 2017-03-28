@@ -13,6 +13,7 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+import de.hybris.platform.acceleratorcms.model.components.FooterComponentModel;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
@@ -81,6 +82,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
+import com.tisl.mpl.model.cms.components.NeedHelpComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -143,6 +145,7 @@ public class HomePageController extends AbstractPageController
 	@Resource(name = "mplCmsFacade")
 	private MplCmsFacade mplCmsFacade;
 
+
 	/**
 	 * @return the notificationFacade
 	 */
@@ -174,6 +177,9 @@ public class HomePageController extends AbstractPageController
 	//private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
 
 	private static final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.GALLERY);
+
+	//#3 Change in Populator
+	private static final List<ProductOption> PRODUCT_OPTIONS2 = Arrays.asList(ProductOption.HOMEPAGEPRODUCTS);
 
 	private static final String EMPTY_STRING = "";
 
@@ -572,7 +578,7 @@ public class HomePageController extends AbstractPageController
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		final JSONObject newAndExclusiveJson = new JSONObject();
 		final String allowNew = configurationService.getConfiguration().getString("attribute.new.display");
-		Date existDate = null;
+		final Date existDate = null;
 		try
 		{
 			final ContentSlotModel homepageSection4BSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
@@ -594,12 +600,22 @@ public class HomePageController extends AbstractPageController
 					if (component.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(component))
 					{
 						final ProductCarouselComponentModel newAndExclusiveComponent = (ProductCarouselComponentModel) component;
-						String title = EMPTY_STRING;
+						final String title = EMPTY_STRING;
+
 
 						if (StringUtils.isNotEmpty(newAndExclusiveComponent.getTitle()))
 						{
 							title = newAndExclusiveComponent.getTitle();
 						}
+
+					//#1 reduced calls to newAndExclusiveComponent.getProducts() using
+					final List<ProductModel> productList = newAndExclusiveComponent.getProducts();
+
+					if (CollectionUtils.isNotEmpty(productList))
+					{
+						for (final ProductModel newAndExclusiveProducts : productList)
+						{
+						
 
 						newAndExclusiveJson.put(TITLE, title);
 
@@ -642,43 +658,63 @@ public class HomePageController extends AbstractPageController
 								//END :code added for 'NEW' tag on the product image
 
 
-								ProductData product = null;
-								product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS);
-								newAndExclusiveProductJson.put("productImageUrl", getProductPrimaryImageUrl(product));
-								newAndExclusiveProductJson.put("productTitle", product.getProductTitle());
-								newAndExclusiveProductJson.put("productUrl", product.getUrl());
-								String price = null;
-								try
-								{
-									price = getProductPrice(product);
-								}
-								catch (final EtailBusinessExceptions e)
-								{
-									price = EMPTY_STRING;
-									LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
-								}
-								catch (final EtailNonBusinessExceptions e)
-								{
-									price = EMPTY_STRING;
-									LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
-								}
-								catch (final Exception e)
-								{
-									price = EMPTY_STRING;
-									LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
-								}
+
+							ProductData product = null;
+							product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS2);
+							//#4 Image Call
+							if (StringUtils.isBlank(product.getHomepageImageurl()))
+							{
+								newAndExclusiveProductJson.put("productImageUrl", GenericUtilityMethods.getMissingImageUrl());
+							}
+							else
+							{
+								newAndExclusiveProductJson.put("productImageUrl", product.getHomepageImageurl());
+							}
+							newAndExclusiveProductJson.put("productTitle", product.getProductTitle());
+							newAndExclusiveProductJson.put("productUrl", product.getUrl());
+							String price = null;
+							try
+							{
+								price = getProductPrice(product);
+							}
+							catch (final EtailBusinessExceptions e)
+							{
+								price = EMPTY_STRING;
+								LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
+							}
+							catch (final EtailNonBusinessExceptions e)
+							{
+								price = EMPTY_STRING;
+								LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
+							}
+							catch (final Exception e)
+							{
+								price = EMPTY_STRING;
+								LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
+							}
+							//#2 If Price is available then only show Products
+							if (!StringUtils.isEmpty(price))
+							{
 								newAndExclusiveProductJson.put("productPrice", price);
 								newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
-								existDate = null;
+							}
+
+							existDate = null;
+
 
 							}
-							newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
+							//#2 If Price is available then only show Products
+							if (!CollectionUtils.isEmpty(newAndExclusiveJsonArray))
+							{
+								newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
+							}
 						}
+					}
+					}
 					}
 					else
 					{
 						LOG.info("Component visiblity set to false");
-
 					}
 				}
 
@@ -746,21 +782,15 @@ public class HomePageController extends AbstractPageController
 			{
 				if (buyBoxData.getSpecialPrice() != null)
 				{
-					//productPrice = buyBoxData.getSpecialPrice().getFormattedValue();
-					/* TPR-182 */
-					productPrice = buyBoxData.getSpecialPrice().getFormattedValueNoDecimal();
+					productPrice = buyBoxData.getSpecialPrice().getFormattedValue();
 				}
 				else if (buyBoxData.getPrice() != null)
 				{
-					//productPrice = buyBoxData.getPrice().getFormattedValue();
-					/* TPR-182 */
-					productPrice = buyBoxData.getPrice().getFormattedValueNoDecimal();
+					productPrice = buyBoxData.getPrice().getFormattedValue();
 				}
 				else
 				{
-					//productPrice = buyBoxData.getMrp().getFormattedValue();
-					/* TPR-182 */
-					productPrice = buyBoxData.getMrp().getFormattedValueNoDecimal();
+					productPrice = buyBoxData.getMrp().getFormattedValue();
 				}
 			}
 			LOG.info("ProductPrice>>>>>>>" + productPrice);
@@ -1131,18 +1161,14 @@ public class HomePageController extends AbstractPageController
 
 				if (null != notificationMessagelist && !notificationMessagelist.isEmpty())
 				{
-					/* final int notificationCount = notificationMessagelist.size(); */
-					int notificationCount = 0;
-
-					for (final NotificationData single : notificationMessagelist)
-					{
-						if (single.getNotificationRead() != null && !single.getNotificationRead().booleanValue())
-						{
-							notificationCount++;
-						}
-
-					}
-
+					//final int notificationCount = 0;
+					final int notificationCount = notificationMessagelist.size();
+					/*
+					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
+					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
+					 * 
+					 * }
+					 */
 
 					header.put("notificationCount", notificationCount);
 				}
@@ -1226,11 +1252,15 @@ public class HomePageController extends AbstractPageController
 	//Fix for defect TISPT-202
 	@RequestMapping(value = "/getFooterContent", method = RequestMethod.GET)
 	public String getFooterContent(@RequestParam(value = "id") final String slotId, final Model model)
-	{
+	{   
+		//changes in footer for Thread Dumps-code merge issue resolved
+		
 		try
 		{
 
+			
 			final FooterComponentData fData = mplCmsFacade.getContentSlotData(slotId);
+
 
 			model.addAttribute("footerSocialIconList", fData.getFooterSocialIconList());
 			model.addAttribute("footerText", fData.getFooterText());
@@ -1240,6 +1270,7 @@ public class HomePageController extends AbstractPageController
 			model.addAttribute("wrapAfter", fData.getWrapAfter());
 			//			//Need help section
 			model.addAttribute("contactNumber", fData.getContactNumber());
+
 		}
 
 		catch (final EtailBusinessExceptions e)

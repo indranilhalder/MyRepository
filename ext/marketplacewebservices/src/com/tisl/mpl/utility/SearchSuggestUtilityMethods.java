@@ -444,7 +444,8 @@ public class SearchSuggestUtilityMethods
 						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
 						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
 						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
-						&& !facate.getCode().equalsIgnoreCase("allPromotions"))
+						&& !facate.getCode().equalsIgnoreCase("allPromotions")
+						&& !facate.getCode().equalsIgnoreCase("categoryNameCodeMapping")) //CAR -245-Luxury
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
 
@@ -499,7 +500,7 @@ public class SearchSuggestUtilityMethods
 								//facetValueWsDTO.setValue(currentFacet.substring((currentFacet.lastIndexOf(":") + 1)));
 								facetValueWsDTO.setValue(values.getCode());
 							}
-							if (null != values.getQuery().getUrl())
+							if (null != values.getQuery() && StringUtils.isNotEmpty(values.getQuery().getUrl())) //CAR -245-Luxury
 							{
 								facetValueWsDTO.setUrl(values.getQuery().getUrl().toString());
 							}
@@ -669,6 +670,7 @@ public class SearchSuggestUtilityMethods
 
 				//Revert of TPR-796
 
+
 				/*
 				 * try { productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
 				 * Arrays.asList(ProductOption.GALLERY)); galleryImages =
@@ -687,6 +689,8 @@ public class SearchSuggestUtilityMethods
 					ExceptionUtil.getCustomizedExceptionTrace(e);
 					continue;
 				}*/
+
+				
 
 
 
@@ -1370,7 +1374,8 @@ public class SearchSuggestUtilityMethods
 						&& !facate.getCode().equalsIgnoreCase("snsCategory")
 						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
 						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
-						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory"))
+						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
+						&& !facate.getCode().equalsIgnoreCase("categoryNameCodeMapping")) //CAR -245-Luxury
 
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
@@ -1428,7 +1433,7 @@ public class SearchSuggestUtilityMethods
 									facetValueWsDTO.setValue(values.getCode());
 								}
 							}
-							if (StringUtils.isNotEmpty(values.getQuery().getUrl()))
+							if (null != values.getQuery() && StringUtils.isNotEmpty(values.getQuery().getUrl())) //CAR -245-Luxury
 							{
 								facetValueWsDTO.setUrl(values.getQuery().getUrl().toString());
 							}

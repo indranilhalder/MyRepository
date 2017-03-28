@@ -831,7 +831,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		String knowMoreFifth = null;
 		// Added for INC_11931
 		String knowMoreSecLux = null;
-		String knowMoreThLux = null;
+		String knowMoreSecLuxLessThanZero = null; //changes for INC144314533
+		//final String knowMoreThLux = null;
 		final List<KnowMoreDTO> knowMoreList = new ArrayList<KnowMoreDTO>();
 		KnowMoreDTO knowMoreItem = null;
 		final String cliqCareNumber = configurationService.getConfiguration().getString("cliq.care.number");
@@ -864,27 +865,18 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		}
 
 		//Start Code change for INC_11931
-		//		if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX)))
-		//		{
-		//			knowMoreSecLux = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX);
-		//
-		//			if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX)))
-		//			{
-		//				knowMoreThLux = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX);
-		//			}
-		//		}
 		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
 				MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX)))
 		{
 			knowMoreSecLux = configurationService.getConfiguration().getString(
 					MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX);
-
-			if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
-					MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX)))
-			{
-				knowMoreThLux = configurationService.getConfiguration().getString(
-						MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX);
-			}
+		}
+		//changes for INC144314533
+		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
+				MarketplacewebservicesConstants.KNOW_MORE_SECOND_LUX_LESS_THAN_ZERO)))
+		{
+			knowMoreSecLuxLessThanZero = configurationService.getConfiguration().getString(
+					MarketplacewebservicesConstants.KNOW_MORE_SECOND_LUX_LESS_THAN_ZERO);
 		}
 		//End Code change for INC_11931
 		if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_FOURTH)))
@@ -914,41 +906,42 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		{
 
 			//Start Code change for INC_11931
-			//			if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX)))
-			//			{
-			//				knowMoreSecLux = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX);
-			//
-			//				if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX)))
-			//				{
-			//					knowMoreThLux = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX);
-			//				}
-			//			}
 
 			if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
 					MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX)))
 			{
 				knowMoreSecLux = configurationService.getConfiguration().getString(
 						MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX);
-
-				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
-						MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX)))
-				{
-					knowMoreThLux = configurationService.getConfiguration().getString(
-							MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX);
-				}
+			}
+			//changes for INC144314533
+			if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
+					MarketplacewebservicesConstants.KNOW_MORE_SECOND_LUX_LESS_THAN_ZERO)))
+			{
+				knowMoreSecLuxLessThanZero = configurationService.getConfiguration().getString(
+						MarketplacewebservicesConstants.KNOW_MORE_SECOND_LUX_LESS_THAN_ZERO);
 			}
 
 			//End Code change for INC_11931
+
+
+
+			//changes for INC144314533
 
 			if (productModel.getLuxIndicator() != null
 					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(MarketplaceCoreConstants.LUXURY))
 			{
 				if (StringUtils.isNotEmpty(knowMoreSecLux) && StringUtils.isNotEmpty(returnWindow)
-						&& StringUtils.isNotEmpty(knowMoreThLux))
+						&& Integer.parseInt(returnWindow) > 0)
 				{
 					knowMoreItem = new KnowMoreDTO();
-					knowMoreItem.setKnowMoreItem(knowMoreSecLux + MarketplacecommerceservicesConstants.SPACE + returnWindow
-							+ MarketplacecommerceservicesConstants.SPACE + knowMoreThLux);
+					knowMoreItem.setKnowMoreItem(knowMoreSecLux);
+					knowMoreList.add(knowMoreItem);
+				}
+				else if (StringUtils.isNotEmpty(knowMoreSecLuxLessThanZero)
+						&& (StringUtils.isEmpty(returnWindow) || Integer.parseInt(returnWindow) <= 0))
+				{
+					knowMoreItem = new KnowMoreDTO();
+					knowMoreItem.setKnowMoreItem(knowMoreSecLuxLessThanZero);
 					knowMoreList.add(knowMoreItem);
 				}
 			}

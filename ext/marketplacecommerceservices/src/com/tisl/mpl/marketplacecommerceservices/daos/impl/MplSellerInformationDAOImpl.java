@@ -97,11 +97,10 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 			return null;
 
 		}
-
-		catch (final Exception ex)
+		catch (final FlexibleSearchException e)
 		{
-			LOG.debug(MarketplacecclientservicesConstants.EXCEPTION_IS + ex);
-			throw new EtailNonBusinessExceptions(ex);
+			LOG.error("Flexible Search Exception", e);
+			return null;
 		}
 	}
 
@@ -378,7 +377,9 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 	/**
 	 *
 	 * This method is used to get the parent OrderEntryModel
+
 	 * 
+
 	 * @author TECHOUTS
 	 * @param transactionId
 	 * @Return String

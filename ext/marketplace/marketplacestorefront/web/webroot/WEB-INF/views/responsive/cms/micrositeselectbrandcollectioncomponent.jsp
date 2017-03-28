@@ -12,19 +12,17 @@
 <script>
 	
 $(document).ready(function () {
+
 	//TPR-4471
 	var requestParam = window.location.href;
+	var pageLabel = '${cmsPage.label}';
+	var sellerId = '${cmsPage.associatedSeller.id}';
 	var siteName = '${cmsSite.uid}';
-	var sellerName = $('#mSeller_name').val();
-	var lastSegment = "";
-	if(sellerName != undefined) {
-		lastSegment = sellerName;
-	}
-	else
-	{
-		lastSegment = requestParam.split('/').pop();
-	}
-	    var url='/m/fetchSellerSalesHierarchyCategories/'+lastSegment;
+	var lastSegment = pageLabel.split('/').pop();
+		
+	    //var url='/m/fetchSellerSalesHierarchyCategories/'+lastSegment;
+	    var url='/m/fetchSellerSalesHierarchyCategories/'+sellerId;
+
 	      if(lastSegment != ''){  
 	        $.ajax({
 	        	type: 'GET',

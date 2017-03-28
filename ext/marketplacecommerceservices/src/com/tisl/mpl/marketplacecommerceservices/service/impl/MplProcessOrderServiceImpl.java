@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
@@ -97,9 +98,16 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	private MplVoucherService mplVoucherService;
 	@Resource(name = "mplVoucherDao")
 	private MplVoucherDao mplVoucherDao;
+	//For CAR:127
+	private Converter<OrderModel, OrderData> orderConverter;
+	//For CAR:127
 	private static final String ERROR_NOTIF = "Error while sending notifications>>>>>>";
+
 	@Resource(name = "stockPromoCheckService")
 	private ExtStockLevelPromotionCheckService stockPromoCheckService;
+
+	final Double skipPendingOrdersTATStFinal = new Double(10);
+
 
 	/**
 	 * This method processes pending orders
@@ -114,7 +122,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			//PaymentFix2017:- System time minus configured time from property file
 			final String skipPendingOrdersTATSt = getConfigurationService().getConfiguration().getString(
 					MarketplacecommerceservicesConstants.PAYMENTPENDING_SKIPTIME);
-			final Double skipPendingOrdersTAT = Double.valueOf(skipPendingOrdersTATSt);
+			final Double skipPendingOrdersTAT = (null != skipPendingOrdersTATSt ? Double.valueOf(skipPendingOrdersTATSt)
+					: skipPendingOrdersTATStFinal);
 			final Calendar cal = Calendar.getInstance();
 			cal.setTime(new Date());
 			cal.add(Calendar.MINUTE, -skipPendingOrdersTAT.intValue());
@@ -139,6 +148,9 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			{
 				try
 				{
+					//For CAR:127
+					final OrderData orderData = getOrderConverter().convert(orderModel);
+					//For CAR:127
 					final String cartGuid = orderModel.getGuid();
 					MplPaymentAuditModel auditModel = null;
 					if (StringUtils.isNotEmpty(cartGuid)) //IQA for TPR-629
@@ -192,10 +204,13 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 								latestSuccess = postedBeforeTime.get(0);
 								LOG.debug("latest Juspay Event ID:- " + latestSuccess.getEventId() + " Event Neme:- "
 										+ latestSuccess.getEventName());
-								if (StringUtils.equalsIgnoreCase(latestSuccess.getEventName(), "ORDER_SUCCEEDED"))
+								if (!latestSuccess.getIsExpired().booleanValue()
+										&& StringUtils.equalsIgnoreCase(latestSuccess.getEventName(), "ORDER_SUCCEEDED"))
 								{
 									LOG.debug("latest Juspay Event Success");
-									takeActionAgainstOrder(latestSuccess, orderModel, true);
+									//commented for CAR:127
+									//takeActionAgainstOrder(latestSuccess, orderModel, true);
+									takeActionAgainstOrder(latestSuccess, orderModel, true, orderData);
 
 									for (final JuspayWebhookModel jspayPostBefore : postedBeforeTime)
 									{
@@ -203,12 +218,21 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 									}
 									getModelService().saveAll(postedBeforeTime);
 								}
+								else if (latestSuccess.getIsExpired().booleanValue()
+										&& StringUtils.equalsIgnoreCase(latestSuccess.getEventName(), "ORDER_SUCCEEDED"))
+								{
+									LOG.error("For juspay id:- " + latestSuccess.getOrderStatus().getOrderId()
+											+ "  one Parent ID already been processed.  this is duplicate Order ID");
+									LOG.error("Hence , changing the Order to Payment Failed");
+
+									getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
+								}
 								//If ORDER_FAILED event posted with in juspayWebhookRetryTAT time with no ORDER_SUCCEEDED event
 								else if ((new Date()).after(orderTATForTimeout)
 										&& StringUtils.equalsIgnoreCase(latestSuccess.getEventName(), "ORDER_FAILED"))
 								{
 									LOG.debug("latest Juspay Event Failed");
-									takeActionAgainstOrder(latestSuccess, orderModel, false);
+									takeActionAgainstOrder(latestSuccess, orderModel, false, orderData);
 									for (final JuspayWebhookModel jspayPostBefore : postedBeforeTime)
 									{
 										jspayPostBefore.setIsExpired(Boolean.TRUE);
@@ -221,7 +245,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 							if (CollectionUtils.isNotEmpty(postedAfterTime))
 							{
 								LOG.debug("Change the Order to Order Failed for greater then juspayWebhookRetryTAT time ");
-								takeActionAgainstOrder(latestSuccess, orderModel, false);
+								takeActionAgainstOrder(latestSuccess, orderModel, false, orderData);
 
 								for (final JuspayWebhookModel jspayPostAfter : postedAfterTime)
 								{
@@ -237,9 +261,15 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 							final String defaultPinCode = getPinCodeForOrder(orderModel);
 
 							//OMS Deallocation call for failed order
-							getMplCommerceCartService().isInventoryReserved(orderModel,
-									MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+							//commented For CAR:127
+							/*
+							 * getMplCommerceCartService().isInventoryReserved(orderModel,
+							 * MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+							 */
 
+							getMplCommerceCartService().isInventoryReserved(orderData,
+									MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode,
+									orderModel);
 							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
 
 							//TPR-965
@@ -367,8 +397,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	 * @throws VoucherOperationException
 	 */
 	private void takeActionAgainstOrder(final JuspayWebhookModel juspayWebhookModel, final OrderModel orderModel,
-			final boolean positive) throws InvalidCartException, CalculationException, EtailNonBusinessExceptions,
-			VoucherOperationException
+			final boolean positive, final OrderData orderData) throws InvalidCartException, CalculationException,
+			EtailNonBusinessExceptions, VoucherOperationException
 	{
 		//SprintPaymentFixes:- Try catch added to handle Exception and set the Order Status to Payment_Timeout
 		try
@@ -436,8 +466,9 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					}
 
 					//PaymentFix2017: setIsSentToOMS not required
-					orderModel.setIsSentToOMS(Boolean.FALSE);
-					orderModel.setOmsSubmitStatus("");
+					//No Need to change to FALSE
+					//orderModel.setIsSentToOMS(Boolean.FALSE);
+					//orderModel.setOmsSubmitStatus("");
 
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 				}
@@ -447,8 +478,9 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 				{
 					//SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 					//PaymentFix2017: setIsSentToOMS not required
-					orderModel.setIsSentToOMS(Boolean.FALSE);
-					orderModel.setOmsSubmitStatus("");
+					//No Need to change to FALSE
+					//orderModel.setIsSentToOMS(Boolean.FALSE);
+					//orderModel.setOmsSubmitStatus("");
 
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 
@@ -484,8 +516,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					final String defaultPinCode = getPinCodeForOrder(orderModel);
 
 					//OMS Deallocation call for failed order
-					getMplCommerceCartService().isInventoryReserved(orderModel,
-							MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
+					getMplCommerceCartService().isInventoryReserved(orderData,
+							MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode, orderModel);
 
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
 					//limited stock promotion issue starts here
@@ -530,8 +562,9 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 						{
 
 							//PaymentFix2017: setIsSentToOMS not required
-							orderModel.setIsSentToOMS(Boolean.FALSE);
-							orderModel.setOmsSubmitStatus("");
+							//No Need to change to FALSE
+							//orderModel.setIsSentToOMS(Boolean.FALSE);
+							//orderModel.setOmsSubmitStatus("");
 							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 							successFlag = true;
 							break;
@@ -1026,7 +1059,16 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	}
 
 
+	protected Converter<OrderModel, OrderData> getOrderConverter()
+	{
+		return orderConverter;
+	}
 
+	@Required
+	public void setOrderConverter(final Converter<OrderModel, OrderData> orderConverter)
+	{
+		this.orderConverter = orderConverter;
+	}
 
 
 

@@ -97,6 +97,8 @@ tr.d0 td {
  var variantCodesPdp = '${allVariantsString}';
  var msiteBuyBoxSeller = '${msiteBuyBoxSellerId}'; //CKD:TPR-250 
  $( document ).ready(function() {
+	 //Enable CTA's
+	 removedisabled();
 	//AKAMAI Fix
 	 setSizeforAkamai();
 	//AJAX BuyBox call
@@ -335,7 +337,7 @@ display:none;
 	<div class="imageList" style="overflow: hidden;">
 		<ul class="jcarousel-skin imageListCarousel" style="display:none; position: relative; top: 0; width: 100%;"> 
 			<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLength}">
-				<li id="addiImage${varStatus.index}">
+				<li id="addiImage${varStatus.index}" class="thumbailItem${varStatus.index +1}"> <!-- For TPR-4712 -->
 					<span class="thumb ${(varStatus.index==0)? "active":""}">
 						<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
 							<img src="${container.thumbnail.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
@@ -567,13 +569,15 @@ display:none;
 	<span id="dListedErrorMsg" style="display: none"  class="dlist_message prod-dlisted-msg">
 		<spring:theme code="pdp.delisted.message" />
     </span>
-	
+    
+   
+
 	
 	 <!-- TPR-924 -->
 	 
 	<div class="buy-btn-holder clearfix"> 
 		<div id="buyNowQv"> 
-	        <button style="display: block" id="buyNowButton" type="button" class="btn-block js-add-to-cart-qv">
+	        <button style="display: block" id="buyNowButton" type="button"  disabled="disabled" class="btn-block js-add-to-cart-qv">
 				<spring:theme code="buyNow.button.pdp" />
 			</button> 
 			<%-- <button id="buyNowButtonQuick-wrong" type="button" class="btn-block" disabled="disabled"> <spring:theme code="buyNow.button.pdp" /></button> --%>
@@ -600,7 +604,7 @@ display:none;
 		 /> <!-- value="${availablestock}" --> <!-- Convert into AJAX call -->
 		 <input type="hidden" name="sellerSelId" id="sellerSelId" /> 
 		
-		 <button id="addToCartButtonQuick" type="${buttonType}" class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
+		 <button id="addToCartButtonQuick" type="${buttonType}" disabled="disabled" class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
 			<spring:theme code="basket.add.to.basket" />
 		</button>
 		<%-- <span id="dListedErrorMsg" style="display: none"  class="dlist_message">

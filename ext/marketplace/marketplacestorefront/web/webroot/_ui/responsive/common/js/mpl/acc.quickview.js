@@ -36,19 +36,8 @@ ACC.quickview = {
 				ACC.ratingstars.bindRatingStars($(".quick-view-stars"));
 				//UF-24 thumbnail image load
 				//Moved after quickviewGallery in case utag is undefined
-				/*TPR-690*/
-				var productCode = productCodeQuickView;
-				// Product code passed as an array for Web Analytics   INC_11511 
-				var productCodeArray=[];
-				productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
-				utag.link({
-					link_obj: this, 
-					link_text: 'quick_view_click' ,
-					event_type : 'quick_view_click', 
-					product_sku_quick_view : productCodeArray
-				});
 				
-				/*TPR-690 ends*/
+				tealiumBrokenImageQuickview();
 			},
 
 			onClosed: function ()
@@ -66,7 +55,25 @@ ACC.quickview = {
 	
 };
 
+function tealiumBrokenImageQuickview(){
+var brokenImageCount=0;	
+	$('#cboxWrapper img').each(function(){
+		var url = $(this).attr('src');
+		if(url){
+			if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+			      // image is broken
+			    	brokenImageCount++;
+			    }
+		}
 
+	});
+	if(brokenImageCount > 0){
+		var msg = brokenImageCount+" broken_image_found";
+		utag.link({ 
+			error_type : msg
+		});
+	}
+}
 
 function quickviewGallery() {
 	$(document).ready(function(){
@@ -92,15 +99,15 @@ function quickviewGallery() {
 				  });
 				}
 		 	
-		 	$(".productImageGallery img").click(function(e) {
-				/*TPR-643 starts*/
+		 	/*$(".productImageGallery img").click(function(e) {
+				TPR-643 starts
 					utag.link({
 						link_obj: this, 
 						link_text: 'pdp_image_click' , 
 						event_type : 'pdp_image_click' 
 					});
-					/*TPR-643 ends*/
-			});
+					TPR-643 ends
+			});*/
 		}).each(function() {
 	    	  if(this.complete) $(this).load();
 	    });
@@ -118,6 +125,14 @@ function quickviewGallery() {
 }
 
 ////jsp to js move
+//Enable CTA's on page load (UF-88)
+
+function removedisabled()
+{
+	    $("#buyNowButton").removeAttr('disabled');
+	    $("#addToCartButtonQuick").removeAttr('disabled');
+}
+
 
 function setSizeforAkamai()
 {
@@ -147,6 +162,14 @@ function isOOSQuick(){
 function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 {
 	var productCode = productCodeQuickView;//$("#productCodePost").val();
+	var sellerName = '';
+	var sellerId = ''; 
+	var spPrice ='';
+	var mrpPrice = '';
+	var mop = '';
+	var savingsOnProduct= '';
+	var stock='';
+	
 	var variantCodesJson = "";
 	if(typeof(variantCodesPdp)!= 'undefined' && variantCodesPdp!= ""){
 		variantCodes = variantCodesPdp.split(",");
@@ -228,15 +251,17 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 				$("#dListedErrorMsg").hide();	
 				
 				//alert(data['sellerArticleSKU']+".."+data['sellerName']);
-				var spPrice = data['specialPrice'];
-				var mrpPrice = data['mrp'];
-				var mop = data['price'];
-				var savingsOnProduct= data['savingsOnProduct'];
+				spPrice = data['specialPrice'];
+				mrpPrice = data['mrp'];
+				mop = data['price'];
+				savingsOnProduct= data['savingsOnProduct'];
 				
-				$("#ussid_quick").val(data['sellerArticleSKU']);				
-				$("#stock").val(data['availablestock']);					
+				$("#ussid_quick").val(data['sellerArticleSKU']);
+				stock = data['availablestock'];
+				$("#stock").val(stock);					
 				var allStockZero = data['allOOStock'];
-				$("#sellerSelId").val(data['sellerId']); 
+				sellerId = data['sellerId'];
+				$("#sellerSelId").val(sellerId); 
 				
 				
 				//alert("--"+ $(".quickViewSelect").html());
@@ -266,6 +291,13 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 				}
 				else
 					{
+					//UF-88
+					
+					$(document).ready(function() 
+					{
+						removedisabled();
+					});
+					
 					$("#addToCartButtonQuick").show();
 					$('#buyNowButton').show();
 					$("#outOfStockIdQuick").hide();
@@ -277,14 +309,32 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 				}
 				dispQuickViewPrice(mrpPrice, mop, spPrice, savingsOnProduct);
 				
-				
-				var sellerName = data['sellerName'];
-				//alert("seller name"+sellerName);
+				sellerName = data['sellerName'];
 				$("#sellerNameIdQuick").html(sellerName);
 				getRichAttributeQuickView(sellerName);
 				
+			},
+			complete: function() {
+				if($('#pageType').val() != "/compare"){
+					//TPR-4712,4725 | quickview
+					var priceMOP='';
+					var priceMOPvalue='';
+					var priceMRP=mrpPrice.formattedValueNoDecimal;
+					var priceMRPvalue=mrpPrice.value;
+					if(spPrice != '' && typeof(spPrice) != "undefined"){
+						priceMOP = spPrice.formattedValueNoDecimal;
+						priceMOPvalue = spPrice.value;
+					}
+					else{
+						priceMOP = mop.formattedValueNoDecimal;
+						priceMOPvalue = mop.value;
+					}
+					
+					var discount= priceMRPvalue - priceMOPvalue;
+					var discountPercentage = savingsOnProduct+"%";
+					quickViewUtag(productCode,sellerId,sellerName,priceMRP,priceMOP,discount,discountPercentage,stock);
+				}
 			}
-
 		});	
 		
 		$(".size-guide").on("click",function(){
@@ -298,7 +348,40 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 				});
 			}
 		});
-		
+}
+
+function quickViewUtag(productCode,sellerId,sellerName,priceMRP,priceMOP,discount,discountPercentage,stock){
+	var productCodeArray=[];
+	var sellerIdArray=[];
+	productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
+	sellerIdArray.push(sellerId);
+	var sellerName = sellerName.toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	var thumbnailImageCount=0;
+	$(".product-info > .product-image-container > .productImageGallery .imageListCarousel").find("li").each(function(){
+		thumbnailImageCount++;
+	})
+	
+	var sizeVariantCount=0;
+	$(".quickview .product-content .sizeVariantForm").find("#quickViewVariant li").each(function(){
+		if($(this).find('a').attr('href') != "#"){
+			sizeVariantCount++;
+		}
+	})
+	
+	utag.link({
+		link_text: 'quick_view_click' ,
+		event_type : 'quick_view_click',
+		product_sku_quick_view : productCodeArray,
+		seller_id : sellerIdArray,
+		seller_name : sellerName,
+		product_image_count : thumbnailImageCount,
+		product_mrp : priceMRP,
+		product_mop : priceMOP,
+		product_discount : discount,
+		product_discount_percentage : discountPercentage,
+		product_stock_count : stock,
+		size_variant_count : sizeVariantCount
+	});
 }
 
 function getRichAttributeQuickView(sellerName)
@@ -647,7 +730,6 @@ function selectWishlist_quick(i) {
 	});
 }*/
 function openPop_quick(ussidfromSeller){
-
 	
 	var loggedIn=$("#loggedIn").val();
 
@@ -705,9 +787,7 @@ function openPop_quick(ussidfromSeller){
 			data : dataString,
 			dataType : "json",
 			success : function(data) {
-				
 				if (data == true) {
-					
 					//$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
 					//var msg=$('#wishlistSuccess').text();
 					//$('#addedMessage').show();
@@ -758,7 +838,17 @@ function openPop_quick(ussidfromSeller){
 						}	
 					}
 					//End MSD
-					
+					// For TPR-4712,TPR-4725
+					var productCode = $('#cboxLoadedContent #productCode').val();
+					var productarray=[];
+					productarray.push(productCode);
+					if(typeof utag !="undefined"){
+						utag.link({
+							link_text: "add_to_wishlist_quickview" ,
+							event_type : "add_to_wishlist_quickview" ,
+							product_sku_wishlist : productarray
+						});
+					}
 					
 					
 					//openPop(ussidValue);
@@ -770,6 +860,9 @@ function openPop_quick(ussidfromSeller){
 					setTimeout(function(){
 						$(".wishAlreadyAddedQv").removeClass("active")
 					},3000)
+					if(typeof utag !="undefined"){
+						utag.link({error_type : 'wishlist_error'});
+						}
 				}
 			},
 		});
@@ -928,6 +1021,7 @@ $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
 		 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 		 				$("#addToCartFormQuickTitle").show();
 		  				$("#addToCartFormQuickTitle").fadeOut(5000);
+		  				errorAddToBag("size_not_selected"); //Error for tealium analytics
  	    return false;
  }else{			 
 	ACC.product.sendToCartPageQuick("addToCartFormQuick",true);

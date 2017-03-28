@@ -24,7 +24,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.EBSResponseStatus;
 import com.tisl.mpl.core.enums.EBSRiskLevelEnum;
 import com.tisl.mpl.core.model.JuspayCardResponseModel;
-import com.tisl.mpl.core.model.JuspayEBSResponseModel;
+import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
 import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.JuspayPGResponseModel;
 import com.tisl.mpl.core.model.JuspayRefundResponseModel;
@@ -56,7 +56,9 @@ public class JuspayWebhookInsertServiceImpl implements JuspayWebhookInsertServic
 		JuspayOrderStatusModel orderResponse = getModelService().create(JuspayOrderStatusModel.class);
 		JuspayPGResponseModel pgresponse = getModelService().create(JuspayPGResponseModel.class);
 		JuspayCardResponseModel cardResponse = getModelService().create(JuspayCardResponseModel.class);
-		JuspayEBSResponseModel ebsResponse = getModelService().create(JuspayEBSResponseModel.class);
+		//changes for JuspayEBSResponseFIX
+		JuspayEBSResponseDataModel ebsResponse = getModelService().create(JuspayEBSResponseDataModel.class);
+
 
 		try
 		{
@@ -137,7 +139,8 @@ public class JuspayWebhookInsertServiceImpl implements JuspayWebhookInsertServic
 					ebsResponse = validateEbsResponse(ebsResponse, jobjectEBS);
 
 					// Set EBS Response into orderStatusResponseJuspay
-					orderResponse.setEbsResponse(ebsResponse);
+					//changes for JuspayEBSResponseFIX
+					orderResponse.setEbsResponseData(ebsResponse);
 				}
 
 			}
@@ -420,7 +423,8 @@ public class JuspayWebhookInsertServiceImpl implements JuspayWebhookInsertServic
 	 * @param jobjectEBS
 	 * @return
 	 */
-	private JuspayEBSResponseModel validateEbsResponse(final JuspayEBSResponseModel ebsResponse, final JSONObject jobjectEBS)
+	private JuspayEBSResponseDataModel validateEbsResponse(final JuspayEBSResponseDataModel ebsResponse,
+			final JSONObject jobjectEBS)
 	{
 		if (null != jobjectEBS.get(MarketplacecommerceservicesConstants.EBSBINCOUNTRY))
 		{

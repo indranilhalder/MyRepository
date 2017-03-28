@@ -40,6 +40,12 @@ function navigateToPage(queryString,textString)
 <!--  fixed for TISSTRT-615-Fixed -->
 <c:if test="${facetData.code ne 'vouchers'}">
 <!-- End  fixed for TISSTRT-615-Fixed -->
+<!-- Change for CAR-245 -->
+<c:if test="${facetData.code ne 'categoryNameCodeMapping'}">
+<!-- End Change for CAR-245 -->
+
+
+
 
 <c:if test="${not empty facetData.values && facetData.code == 'inStockFlag'}">
 
@@ -253,13 +259,13 @@ function navigateToPage(queryString,textString)
 			</c:if>
 			
 			<ul class="facet-list js-facet-list <c:if test="${not empty facetData.topValues}">facet-list-hidden js-facet-list-hidden</c:if>">
-			
-
-
-
-
-
-				<c:forEach items="${facetData.values}" var="facetValue">					
+				<c:forEach items="${facetData.values}" var="facetValue">		
+				<!-- TPR-4722 -->
+					<c:if test="${facetValue.name== 'Exclude out of stock'}">
+				            <input type="hidden" id="out_of_stock_count" value="${facetValue.count}"/>
+				     	 </c:if>
+				  <!-- TPR-4722 -->   	 
+							
 				  <c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
 <%-- 					<li class="filter-${facetData.code}"> --%>
 
@@ -605,6 +611,7 @@ function navigateToPage(queryString,textString)
 		
 	</li> </c:if> 
 			</ycommerce:testId>
+			</c:if>
 			</c:if>
 			</c:if>
 			</c:if>

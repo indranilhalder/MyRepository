@@ -370,6 +370,7 @@ public interface ControllerConstants
 
 				public static final String OFFERMESSAGEMAP = "offerMessageMap";
 
+
 				public static final String USSID_CODE_PATH_NEW_PATTERN = "/**/p-{ussId:.*}";
 				public static final String USSID = "ussId";
 			}
@@ -379,6 +380,10 @@ public interface ControllerConstants
 				String NPSFeedback = "fragments/NPS_Emailer/npsFeedbackPage";
 				String SubmitSuccess = "fragments/NPS_Emailer/submitSuccess";
 				String NpsFeedbackExists = "fragments/NPS_Emailer/npsFeedbackExists";
+
+				//UF-60
+				public static final String AJAXPRODUCTDATA = "fragments/product/productPromotionSection";
+
 			}
 		}
 	}
