@@ -7944,9 +7944,10 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 })
 function displayThrdPrtyWlt(){
 	$("#make_mrupee_payment_up").show();
+	$("li#MRUPEE").css("display","block");
 	applyPromotion(null,"none","none");
 }
-$("#viewPaymentMRupee").click(function(){
+$("#viewPaymentMRupee,#viewPaymentMRupeeMobile").click(function(){
 	refresh();
 	if($('#radioButton_MRupee').is(':checked')) 
 	{

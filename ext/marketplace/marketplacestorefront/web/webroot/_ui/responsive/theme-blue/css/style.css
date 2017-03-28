@@ -60310,7 +60310,7 @@ body.page-cartPage .cart-total-block ul.checkOutBtnBtm{
 }
 /* UI-UX Fixes for PDP end */
 /*Added for mRupee Changes*/
-.smk_accordion .accordion_in .acc_content#MRUPEE .numbers.creditLabel, .smk_accordion .accordion_in .acc_content#MRUPEE #mRupeeInfo{
+/* .smk_accordion .accordion_in .acc_content#MRUPEE .numbers.creditLabel, .smk_accordion .accordion_in .acc_content#MRUPEE #mRupeeInfo{
   width: 49%;
   float:left;
 }
@@ -60322,6 +60322,20 @@ body.page-cartPage .cart-total-block ul.checkOutBtnBtm{
   width: 39%;
 }
 #MRUPEE.acc_content .radio img{
+	width: 48%;
+} */
+#MRUPEE .product-block.blocks .radio .numbers.creditLabel, .left-block.choose-payment .tabs #MRUPEE #mRupeeInfo{
+  width: 49%;
+  float:left;
+}
+.left-block.choose-payment .tabs #MRUPEE #mRupeeInfo{
+  text-transform: initial;
+  color: red;
+  font-weight: normal;
+  font-size: 13px;
+  width: 47%;
+}
+#MRUPEE .product-block.blocks .radio .numbers.creditLabel img{
 	width: 48%;
 }
 /*mRupee Changes ends*/
