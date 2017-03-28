@@ -499,9 +499,9 @@ function getBrandsYouLoveContentAjaxCall(id) {
                     $('.home-brands-you-love-desc').remove();
                     defaultHtml =
                         "<div class='home-brands-you-love-desc'>";
-                   /* if (typeof response.text !== "undefined") {
+                    if (typeof response.text !== "undefined") {
                         defaultHtml += response.text;
-                    }*/ /* UF-249*/
+                    } /* UF-249*/
                     if (typeof response.firstProductImageUrl !==
                         "undefined") {
                         defaultHtml +=
