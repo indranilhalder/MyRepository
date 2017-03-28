@@ -7006,7 +7006,7 @@ public class UsersController extends BaseCommerceController
 								refNumber);
 
 						//						final OrderData orderData = mplCheckoutFacade.placeOrderByCartId(cartGuid);
-						orderData = mplCheckoutFacade.placeOrderByCartId(cart);
+						orderData = mplCheckoutFacade.placeOrderMobile(cart);
 						if (orderData == null)
 						{
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9321);
