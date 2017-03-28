@@ -2025,6 +2025,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			orderEntryModel.setConvenienceChargeApportion(abstractOrderEntryModel.getConvenienceChargeApportion());
 			orderEntryModel.setCurrDelCharge(deliveryCharge);
 			orderEntryModel.setPrevDelCharge(prevDelCharge);
+			// Added in R2.3 START 
+			orderEntryModel.setScheduledDeliveryCharge(scheduleDeliveryCharge);
+			// Added In R2.3 END
 
 			LOG.debug("Sub Order Saved in DB:- netAmountAfterAllDisc:- " + netAmountAfterAllDisc);
 
