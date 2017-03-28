@@ -32654,7 +32654,7 @@ select#enhancedSearchCategory {
 }
 .qued-content a.button.maroon {
        position: absolute;
-    font-size: 11px !important;
+   /*  font-size: 11px !important; */
         font-weight: bold;
     height: 35px;
     letter-spacing: 1px;
@@ -32835,11 +32835,11 @@ body.page-homepage .trending h1 > span {
     font-size: 20px !important;
 }
 body.page-homepage .trending .button {
-    font-size: 11px !important;
+    /* font-size: 11px !important;
     height: 35px !important;
     letter-spacing: 1px;
     line-height: 32px !important;
-        margin: 0 auto;
+        margin: 0 auto; */
 }
 header > .content .bottom .search form input {
     font-size: 12px;
@@ -63942,9 +63942,15 @@ p.showcase-para{
 	background-color: #000;
 }
 @media(max-width: 790px){
+	#flip-navigation li.selected{
+	border-bottom: 1px solid #000;
+	}
 	#flip-navigation li a {
         padding: 4px 10px 4.5px;
-}
+	}
+	#flip-navigation li.selected a{
+	padding: 4px 10px 3.5px;
+	}
 header > .content .bottom .marketplace.linear-logo .simple-banner-component{
 	text-align: left;
 }
@@ -64101,6 +64107,12 @@ footer .banner {
     -o-transform: rotate(-45deg);
     transform: rotate(-45deg);
 }
+#bestPicks, body.page-homepage .feature-collections{
+	border-bottom: 0px;
+}
+body.page-homepage .trending {
+    padding: 0px;
+}
 	}
 @media (max-width: 790px) and (min-width: 768px)
 {
@@ -64124,6 +64136,37 @@ body.page-homepage #bestPicks.feature-collections h2 {
     line-height:1.5;
     padding: 24px 0 16px;
     margin: 0;
+}
+body.page-homepage .trending {
+    margin-top: 38px;
+    margin-bottom: 48px;
+    border-top: solid 1px #eeeeee;
+}
+body.page-homepage .trending h2 {
+    margin: 25px 0 16px;
+}
+body.page-homepage .trending h2>span {
+    font-size: 24px !important;
+    margin-bottom: 16px;
+    display: inline-block;
+    line-height: 1.5;
+}
+.select-view .select-list {
+    border: 1px solid #bbb;
+    }
+    .select-view .select-list:hover {
+    border-color: #bbb;
+    z-index: 3;
+    }
+    .select-view .select-list > .selected:after {
+    right: 16px;
+}
+.select-view .select-list >.selected {
+	padding-left: 16px;
+    padding-right: 35px;
+}
+body.page-homepage .trending .select-view .select-list {
+    height: 42px;
 }
 #bestPicks .home-best-pick-carousel, #newAndExclusive #new_exclusive {
     padding: 0;
@@ -64201,6 +64244,58 @@ body.page-homepage .feature-collections #stayQued > h2{
     left: -10px;
     
 }
+#bestPicks, body.page-homepage .feature-collections{
+	margin: 0;
+}
+.showcase-heading {
+    background: #fbfbfb none repeat scroll 0 0;
+}
+.showcaseItem > a.showcase-border {
+    border-bottom: 0px;
+}
+#showcase.feature-collections h2{
+	font-size: 24px;
+	line-height: 1.5;
+	padding: 34px 0 4px;
+}
+#showcase a.button.trending-button, #showcase a.button.maroon {
+    font-size: 12px !important;
+    height: 42px !important;
+    letter-spacing: 0.6px;
+    line-height: normal;
+    padding: 12px 0 13px;
+    margin: 8px auto 0 !important;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+.about-one.showcase-section {
+    padding: 0 10% 132px;
+    display: table;
+    width: 100%;
+}
+.showcase-section .desc-section:first-child{
+	display: table-footer-group;
+}
+#showcase a.button.trending-button {
+	bottom: 24px;
+}
+#showcase a.button.maroon {
+	bottom: 74px;
+}
+p.showcase-para {
+    text-align: center;
+    margin: 0;
+    padding-bottom: 11px;
+}
+body.page-homepage #showcase.feature-collections .desc-section h1 {
+    padding: 24px 0 8px;
+    font-size: 16px;
+  	font-weight: normal;
+  	line-height: normal;
+  	letter-spacing: 0.6px;
+  	text-align: center;
+}
 }
 @media (max-width: 479px)
 {
@@ -64211,6 +64306,10 @@ header > .content .bottom .search form input {
 #bestPicks, body.page-homepage .feature-collections {
     border-bottom: 0px;
         margin: 0;
+        top: 0;
+}
+#bestPicks .view-cliq-offers {
+    margin: 24px auto 48px;
 }
 .home-brands-you-love-wrapper p.home-brands-you-love-main-image-heading,
 .home-brands-you-love-wrapper p.home-brands-you-love-main-image-desc{
