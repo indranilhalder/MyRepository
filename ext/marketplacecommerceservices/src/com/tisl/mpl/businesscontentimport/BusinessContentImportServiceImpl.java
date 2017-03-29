@@ -328,7 +328,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			{
 				final ContentPageModel cmodel = (ContentPageModel) getCmsPageService().getPageForIdandCatalogVersion(uid,
 						getCatalogVersion());
-				LOG.debug(cmodel);
+				LOG.debug(cmodel); // To prevent sonar defect
 				componentlist = makeComponents(contentMap, line, writer, true);
 			}
 			catch (final CMSItemNotFoundException e)
