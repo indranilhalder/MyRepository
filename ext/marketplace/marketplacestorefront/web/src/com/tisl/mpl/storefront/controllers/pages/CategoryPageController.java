@@ -624,42 +624,53 @@ public class CategoryPageController extends AbstractCategoryPageController
 		//TPR-4471
 		String sellerName = null;
 		String sellerId = null;
-		if (requestURL.matches(MplConstants.MSITE_SLR_SLS_HIERARCHY_URL_PTRN_RGX))
+		if (requestURL.matches(MplConstants.MSITE_SLR_SLS_HIERARCHY_URL_PTRN_RGX)
+				|| (null != searchQuery && searchQuery.contains("sellerId:")))
 		{
 			{
-				final String[] splittedURL = requestURL.split(MplConstants.MSITE_SLR_SLS_PTRN_PART1, 2);
-				try
+				if (requestURL.matches(MplConstants.MSITE_SLR_SLS_PTRN_PART1))
 				{
-					sellerId = splittedURL[1].substring(0, 6);
+					try
+					{
+						sellerId = requestURL.split(MplConstants.MSITE_SLR_SLS_PTRN_PART1, 2)[1].substring(0, 6);
+					}
+					catch (final StringIndexOutOfBoundsException ex)
+					{
+						LOG.error("SellerId should not be less than 6 characters >>>>>", ex);
+					}
+					catch (final Exception ex)
+					{
+						LOG.error(
+								"Category Page-Problem retrieving microsite SellerId / Sellername from seller Sales Hierarchy URL >>>>>",
+								ex);
+					}
+				}
+				else if (searchQuery.contains("sellerId:"))
+				{
+					try
+					{
+						sellerId = searchQuery.split("sellerId:", 2)[1].substring(0, 6);
+					}
+					catch (final StringIndexOutOfBoundsException ex)
+					{
+						LOG.error("SellerId should not be less than 6 characters >>>>>", ex);
+					}
+					catch (final Exception ex)
+					{
+						LOG.error("Category Page-Problem retrieving microsite SellerId / Sellername from category carousal URL >>>>>",
+								ex);
+					}
+				}
+				if (StringUtils.isNotBlank(sellerId))
+				{
 					sellerName = mplCategoryFacade.getSellerInformationBySellerID(sellerId);
 				}
-				catch (final Exception ex)
-				{
-					LOG.error(
-							"Category Page-Problem retrieving microsite SellerId / Sellername from seller Sales Hierarchy URL >>>>>", ex);
-				}
+
 				model.addAttribute("msiteSellerId", sellerId);
-				model.addAttribute("mSellerID", sellerId);
+				//model.addAttribute("mSellerID", sellerId);
 				model.addAttribute("mSellerName", sellerName);
 
 			}
-		}
-		else if (null != searchQuery && searchQuery.contains("sellerId:"))
-		{
-			try
-			{
-				sellerId = searchQuery.split("sellerId:", 2)[1].substring(0, 6);
-				sellerName = mplCategoryFacade.getSellerInformationBySellerID(sellerId);
-			}
-			catch (final Exception ex)
-			{
-				LOG.error(
-						"Category Page-Problem retrieving microsite SellerId / Sellername from Category Carousel Shop Now link >>>>>",
-						ex);
-			}
-			model.addAttribute("msiteSellerId", sellerId);
-			model.addAttribute("mSellerID", sellerId);
-			model.addAttribute("mSellerName", sellerName);
 		}
 	}
 
