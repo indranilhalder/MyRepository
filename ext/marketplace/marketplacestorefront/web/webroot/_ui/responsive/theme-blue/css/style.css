@@ -30892,11 +30892,15 @@ line-height: normal;
  
    #movedToWishlist_Cart {
  	position: absolute;
-    line-height: 14px;
-    bottom: -10px;
-    width: 180px;
-    left: -10px;
+    line-height: 15px;
+    bottom: -40px;
+    width: 190px;
+    left: 0;
     z-index: 10;
+    background: #fafafa;
+    height: 40px;
+    padding: 5px;
+    
  }
  .cod-link{
  color:#a9143c;

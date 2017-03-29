@@ -554,6 +554,25 @@ public class SearchPageController extends AbstractSearchPageController
 	{
 
 		populateRefineSearchResult(searchQuery, page, showMode, sortCode, searchText, pageSize, request, model);
+		//CKD:TPR-250 :Start
+		if (null != searchQuery && searchQuery.contains("sellerId:"))
+		{
+			String sellerId = null;
+			String sellerName = null;
+			try
+			{
+				sellerId = searchQuery.split("sellerId:", 2)[1].substring(0, 6);
+				sellerName = mplCategoryFacade.getSellerInformationBySellerID(sellerId);
+			}
+			catch (final Exception ex)
+			{
+				LOG.error("Search Page: Search Page:Problem retrieving microsite SellerId / Sellername for facet Search >>>>>", ex);
+			}
+			model.addAttribute("msiteSellerId", sellerId);
+			model.addAttribute("mSellerID", sellerId);
+			model.addAttribute("mSellerName", sellerName);
+		}
+		//CKD:TPR-250: End
 		return ControllerConstants.Views.Pages.Search.FacetResultPanel;
 	}
 
@@ -592,6 +611,23 @@ public class SearchPageController extends AbstractSearchPageController
 		else
 		{
 			model.addAttribute("lazyInterface", Boolean.FALSE);
+		}
+		if (null != searchQuery && searchQuery.contains("sellerId:"))
+		{
+			String sellerId = null;
+			String sellerName = null;
+			try
+			{
+				sellerId = searchQuery.split("sellerId:", 2)[1].substring(0, 6);
+				sellerName = mplCategoryFacade.getSellerInformationBySellerID(sellerId);
+			}
+			catch (final Exception ex)
+			{
+				LOG.error("Search Page:Problem retrieving microsite SellerId / Sellername for Search >>>>>", ex);
+			}
+			model.addAttribute("msiteSellerId", sellerId);
+			model.addAttribute("mSellerID", sellerId);
+			model.addAttribute("mSellerName", sellerName);
 		}
 		return getViewForPage(model);
 	}
@@ -1335,9 +1371,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 * 
+	 *
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 * 
+	 *
 	 * return list; }
 	 */
 
