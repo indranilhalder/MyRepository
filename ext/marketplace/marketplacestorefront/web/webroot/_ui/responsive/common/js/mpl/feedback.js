@@ -3040,3 +3040,10 @@ $("#sameAsShippingEmi").click(function(){
 		$(this).prev('h2').show();
 	}
 	});
+
+$("header .content nav > ul > li > ul > li").on("mouseover",function(){
+	$(this).parent().parent().find(".toggle").addClass("show_arrow");
+});
+$("header .content nav > ul > li > ul > li").on("mouseout",function(){
+	$(this).parent().parent().find(".toggle").removeClass("show_arrow");
+});
