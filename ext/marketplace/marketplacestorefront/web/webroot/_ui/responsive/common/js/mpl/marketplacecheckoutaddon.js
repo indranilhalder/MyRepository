@@ -7496,12 +7496,14 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
 				
 				/*TPR-656*//*TPR-4738*/
+				if(typeof utag !="undefined"){
 					utag.link({
 						link_obj: this, 
 						link_text: 'cart_add_to_wishlist' , 
 						event_type : 'cart_add_to_wishlist', 
 						product_sku_wishlist : productcodearray
 					});
+				}
 				/*TPR-656 Ends*/
 				
 				localStorage.setItem("movedToWishlist_msgFromCart", "Y");
