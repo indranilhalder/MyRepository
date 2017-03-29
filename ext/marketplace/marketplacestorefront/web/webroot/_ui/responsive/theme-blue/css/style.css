@@ -67028,6 +67028,9 @@ header .content .search{
 	float:left;
 	margin-left: 7%;
 }
+header .content .bottom.active .search{
+	margin-left: 0;
+}
 header .content .search .select-list{
 	width: 176px;
 }
@@ -67124,6 +67127,77 @@ header .content .right > ul > li.sign-in .sign-in-info .or{
     line-height: normal;
     top: calc(100% - -24px);
 }
+footer>div>ul>li h3.toggle{
+	font-size:12px;
+	letter-spacing:0.5px;
+	font-weight:normal;
+	padding: 15px 0 15px 30px;
+}
+footer>div>ul>li:first-child h3{
+	    padding: 0 20px;
+}
+footer>div>ul>li ul li{
+	font-size: 11px;
+	letter-spacing: 0.6px;
+	line-height: 16px;
+	padding:0 30px;
+	min-height:25px;
+	height:auto;
+}
+.newsletter h3 {
+    padding: 36px 0 21px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+}
+.newsletter input {
+    width: 48.21%;
+    border-color: #bbb;
+    padding: 0px 16px;
+    height: 42px;
+    line-height: 42px;
+    border-width: 1px;
+    background: #fff;
+      letter-spacing: 0.6px;
+  color: #cccccc;
+}
+.newsletter button {
+    width: 26.32%;
+    background: #444;
+    letter-spacing: 0.6px;
+    height: 42px;
+    font-weight: normal;
+    min-width: 85px;
+}
+.newsletter button:hover {
+    background: #fff;
+    color: #444;
+    border: solid 1px #bbb;
+        border-left: 0;
+}
+.social h3{
+	padding: 20px 0 8px;
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+}
+.app-download.social h3{
+	padding-top:40px;
+}
+footer .banner {
+    font-size: 11px;
+    letter-spacing: 0.6px;
+    color: #999999;
+    padding:0 30px;
+}
+footer .footer-text{
+	border-top: none;
+    letter-spacing: 0.5px;
+    line-height: 16px;
+    font-size: 11px;
+    color: #878787;
+}
 }
 @media (max-width: 990px) and (min-width: 791px){
 header .content .search .select-list {
@@ -67166,7 +67240,15 @@ header .content .bottom.active nav{
 	font-weight: normal;
 	}
 }
-
+@media only screen and (max-width: 1450px){
+.callouts{
+	margin:0;
+    min-height: 100px;
+}	
+.callouts .Padd {
+    padding: 26px 50px;
+}
+}
 .sign-in-info li:first-child{
 	letter-spacing: 0.6px;
 	padding: 0 27px 0 29px;
@@ -67317,7 +67399,11 @@ p.home-brands-you-love-main-image-heading, p.home-brands-you-love-main-image-des
 #stayQued{
 	background-color:#fff;
 	margin:0;
+}
+@media(min-width:791px){
+	#stayQued{
 	margin-bottom:48px;
+}
 }
 .h1-qued{
 	color:#000;
@@ -67350,9 +67436,19 @@ body.page-homepage .trending h2{
 body.page-homepage .trending h2 > span{
 	font-weight: normal;
 }
+
+
+@media (max-width: 1200px) and (min-width: 791px){
+body.page-homepage .trending h2>span {
+    font-size: 24px;
+}}
 body.page-homepage .trending .select-view .select-list{
-	    width: 176px;
-    height: auto;
+	width: 176px;
+    height: 42px;
+    border-color: #bbb;
+}
+body.page-homepage .trending .select-view .select-list:hover ul{
+	border-color: #bbb;
 }
 body.page-homepage .trending .select-view .select-list span,body.page-homepage .select-list ul#ia_category_select li{
 	font-size:12px !important;
@@ -67371,6 +67467,7 @@ body.page-homepage .trending .button{
 /* Inspire me section start */
 #showcase.feature-collections{
 	margin:0px;
+	border: none;
 }
 #showcase.feature-collections h2 {
     padding: 60px 0 4px;
@@ -67393,6 +67490,9 @@ body.page-homepage .trending .button{
 	    padding: 0 0 4px;
 }
 @media(min-width:768px){
+.showcase-heading {
+    padding-bottom: 0px;
+}
 .showcase .showcase-section{
 	overflow: hidden;
     border: solid 1px #dddddd;
@@ -67415,6 +67515,7 @@ body.page-homepage .showcase .desc-section h1{
 	letter-spacing: 0.6px;
 	text-align:left;
 	font-weight: normal;
+	line-height:normal;
 }
 p.showcase-para{
 	    font-size: 12px;
