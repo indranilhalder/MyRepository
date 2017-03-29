@@ -120,8 +120,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	//	@Autowired
 	//	private MplFraudModelService mplFraudModelService;
 
-	private static final String middleDigits = "000";
-	private static final String middlecharacters = "-";
+
+
 
 	@Autowired
 	private CategoryService categoryService;
@@ -903,44 +903,44 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					if (null != entryModelList.getCartLevelDisc() && entryModelList.getCartLevelDisc().doubleValue() > 0D)
 					{
 
-					totalCartLevelDiscount += entryModelList.getCartLevelDisc().doubleValue();
-				}
-				else
-				{
-					LOG.debug("Cart level discount is either NULL or Zero");
-				}
-				LOG.info("Total Cart Level Discount>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + totalCartLevelDiscount);
-				sellerOrderList.setTotalDiscounts(Double.valueOf(totalCartLevelDiscount + totalCouponDiscount));
-				double delCost = 0.0d;
-				if (entryModelList.getCurrDelCharge() != null && entryModelList.getCurrDelCharge().doubleValue() > 0D)
-				{
-					totalDeliveryPrice += entryModelList.getCurrDelCharge().doubleValue();
-				}
-				else
-				{
-					final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(entryModelList
-							.getMplDeliveryMode().getDeliveryMode().getCode(), sellerOrderList.getCurrency().getIsocode(),
-							entryModelList.getSelectedUSSID());
-					if (entryModelList.getGiveAway() != null && !entryModelList.getGiveAway().booleanValue())
-					{
-						delCost = (valueModel.getValue().doubleValue() * entryModelList.getQuantity().intValue());
-						totalDeliveryPrice = delCost;
-						entryModelList.setCurrDelCharge(Double.valueOf(delCost));
+						totalCartLevelDiscount += entryModelList.getCartLevelDisc().doubleValue();
 					}
 					else
 					{
-						delCost = 0.0d;
-						entryModelList.setCurrDelCharge(Double.valueOf(delCost));
-						totalDeliveryPrice = delCost;
-						LOG.warn("skipping deliveryCost for freebee [" + entryModelList.getSelectedUSSID() + "] due to freebee ");
+						LOG.debug("Cart level discount is either NULL or Zero");
 					}
-					modelService.save(entryModelList);
-					modelService.refresh(entryModelList);
-				}
-				if (totalDeliveryPrice <= 0D)
-				{
-					LOG.debug("Delivery charge for the entry is either NULL or Zero");
-				}
+					LOG.info("Total Cart Level Discount>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + totalCartLevelDiscount);
+					sellerOrderList.setTotalDiscounts(Double.valueOf(totalCartLevelDiscount + totalCouponDiscount));
+					double delCost = 0.0d;
+					if (entryModelList.getCurrDelCharge() != null && entryModelList.getCurrDelCharge().doubleValue() > 0D)
+					{
+						totalDeliveryPrice += entryModelList.getCurrDelCharge().doubleValue();
+					}
+					else
+					{
+						final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(entryModelList
+								.getMplDeliveryMode().getDeliveryMode().getCode(), sellerOrderList.getCurrency().getIsocode(),
+								entryModelList.getSelectedUSSID());
+						if (entryModelList.getGiveAway() != null && !entryModelList.getGiveAway().booleanValue())
+						{
+							delCost = (valueModel.getValue().doubleValue() * entryModelList.getQuantity().intValue());
+							totalDeliveryPrice = delCost;
+							entryModelList.setCurrDelCharge(Double.valueOf(delCost));
+						}
+						else
+						{
+							delCost = 0.0d;
+							entryModelList.setCurrDelCharge(Double.valueOf(delCost));
+							totalDeliveryPrice = delCost;
+							LOG.warn("skipping deliveryCost for freebee [" + entryModelList.getSelectedUSSID() + "] due to freebee ");
+						}
+						modelService.save(entryModelList);
+						modelService.refresh(entryModelList);
+					}
+					if (totalDeliveryPrice <= 0D)
+					{
+						LOG.debug("Delivery charge for the entry is either NULL or Zero");
+					}
 
 				}
 				sellerOrderList.setDeliveryCost(Double.valueOf(totalDeliveryPrice));
@@ -975,36 +975,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				//OrderIssues:- refresh added
 				modelService.refresh(sellerOrderList);
 			}
-			sellerOrderList.setDeliveryCost(Double.valueOf(totalDeliveryPrice));
-			//totalPrice = totalPriceForSubTotal + totalConvChargeForCOD + totalDeliveryPrice
-			//		- (totalDeliveryDiscount + totalCartLevelDiscount + totalProductDiscount + totalCouponDiscount);
-			//			totalPrice = BigDecimal.valueOf(totalPriceForSubTotal).add(BigDecimal.valueOf(totalConvChargeForCOD))
-			//					.add(BigDecimal.valueOf(totalDeliveryPrice)).subtract(BigDecimal.valueOf(totalDeliveryDiscount))
-			//					.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
-			//					.subtract(BigDecimal.valueOf(totalCouponDiscount));
 
-			totalPrice = BigDecimal.valueOf(totalPriceForSubTotal)/* .add(BigDecimal.valueOf(totalConvChargeForCOD)) */
-			.add(BigDecimal.valueOf(totalDeliveryPrice))/* .subtract(BigDecimal.valueOf(totalDeliveryDiscount)) */
-			.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
-					.subtract(BigDecimal.valueOf(totalCouponDiscount));
-			totalPriceWithConv = totalPrice.add(BigDecimal.valueOf(totalConvChargeForCOD));
-
-			final DecimalFormat decimalFormat = new DecimalFormat("#.00");
-			totalPrice = totalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-			totalPriceWithConv = totalPriceWithConv.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-
-			//				totalPrice = Double.valueOf(decimalFormat.format(totalPrice)).doubleValue();
-			//				totalConvChargeForCOD = Double.valueOf(decimalFormat.format(totalConvChargeForCOD)).doubleValue();
-			//changed for SONAR fix
-			//totalPrice = Double.parseDouble(decimalFormat.format(totalPrice));
-			totalConvChargeForCOD = Double.parseDouble(decimalFormat.format(totalConvChargeForCOD));
-			sellerOrderList.setTotalPrice(Double.valueOf(totalPrice.doubleValue()));
-			//			sellerOrderList.setTotalPriceWithConv(Double.valueOf(totalPrice.doubleValue()));
-
-			sellerOrderList.setTotalPriceWithConv(Double.valueOf(totalPriceWithConv.doubleValue()));
-			sellerOrderList.setConvenienceCharges(Double.valueOf(totalConvChargeForCOD));
-			modelService.save(sellerOrderList);
 		}
+
 		catch (final ModelSavingException e)
 		{
 			LOG.error(" error occured while calculating subtotal from setSuborderTotalAfterOrderSplitting", e);

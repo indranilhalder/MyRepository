@@ -369,6 +369,8 @@ public interface ControllerConstants
 				public static final String SellerResultsPage = "fragments/product/sellerResultPage";
 
 				public static final String OFFERMESSAGEMAP = "offerMessageMap";
+				//UF-60
+				public static final String AJAXPRODUCTDATA = "fragments/product/productPromotionSection";
 
 
 				public static final String USSID_CODE_PATH_NEW_PATTERN = "/**/p-{ussId:.*}";
@@ -381,8 +383,7 @@ public interface ControllerConstants
 				String SubmitSuccess = "fragments/NPS_Emailer/submitSuccess";
 				String NpsFeedbackExists = "fragments/NPS_Emailer/npsFeedbackExists";
 
-				//UF-60
-				public static final String AJAXPRODUCTDATA = "fragments/product/productPromotionSection";
+
 
 			}
 		}

@@ -43,18 +43,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-
-import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
-
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
-
-import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
-
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
-
+import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
@@ -206,6 +200,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 					//orderModel.setTotalPrice(totalPrice);
 					//orderModel.setTotalPrice(totalPriceWithconv);
+					orderModel.setDeliveryCost(Double.valueOf(getDeliveryCost(orderModel)));
 					orderModel.setTotalPriceWithConv(totalPriceWithconv);
 
 					orderModel.setModeOfOrderPayment(modeOfPayment);
@@ -224,22 +219,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 							+ orderModel.getCode() + "mode of payment :" + modeOfPayment);
 					LOG.error("Error while submit order:" + e.getMessage());
 				}
-				getModelService().refresh(orderModel);
-				getModelService().refresh(customer);
 
-				orderModel.setSubtotal(subTotal);
-				//				if (deliveryCostPromotionApplied)
-				//				{
-				//					orderModel.setTotalPrice(totalPrice);
-				//				}
-				orderModel.setDeliveryCost(Double.valueOf(getDeliveryCost(orderModel)));
-				orderModel.setTotalPrice(totalPrice);
-
-				orderModel.setModeOfOrderPayment(modeOfPayment);
-
-				getModelService().save(orderModel);
-
-				result.setOrder(orderModel);
 				afterPlaceOrder(parameter, result);
 
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
@@ -404,9 +384,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
