@@ -1594,10 +1594,12 @@ $(document).ready(function(){
 			var ua_check = window.navigator.userAgent;
 			var msie_check = ua_check.indexOf("MSIE ");
 			$(".body-Content").css('padding-bottom',footer_height);
+			$("body.page-homepage .body-Content").css('padding-bottom',$('footer').height() + 'px');
 			if(msie_check > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){
 				setTimeout(function () {
 					var footer_height=$('footer').height() + 20 + 'px';
 					$(".body-Content").css('padding-bottom',footer_height);
+					$("body.page-homepage .body-Content").css('padding-bottom',$('footer').height() + 'px');
 				},500);
 				}
 		} 
@@ -1610,6 +1612,7 @@ $(document).ready(function(){
 			if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
 				var footer_height=$('footer').height() + 20 + 'px';
 				$(".body-Content").css('padding-bottom',footer_height);
+				$("body.page-homepage .body-Content").css('padding-bottom',$('footer').height() + 'px');
 			}
 			else{
 				$(".body-Content").css('padding-bottom','0px');
