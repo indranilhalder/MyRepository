@@ -11,6 +11,9 @@ import de.hybris.platform.solrfacetsearch.search.impl.DefaultFacetSearchService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections.MapUtils;
 
 
 public class MplDefaultFacetSearchService extends DefaultFacetSearchService
@@ -24,20 +27,12 @@ public class MplDefaultFacetSearchService extends DefaultFacetSearchService
 		// Customized mpl price range will be taken
 		if (property.getName().equalsIgnoreCase("price"))
 		{
-			valueRangeSet = property.getValueRangeSets().get("INR-ELECTRONICS");
-			if (valueRangeSet != null)
+			if (MapUtils.isNotEmpty(property.getValueRangeSets()))
 			{
-				valueRangesList = valueRangeSet.getValueRanges();
-			}
-			valueRangeSet = property.getValueRangeSets().get("INR-APPAREL");
-			if (valueRangeSet != null)
-			{
-				valueRangesList.addAll(valueRangeSet.getValueRanges());
-			}
-			valueRangeSet = property.getValueRangeSets().get("INR-LUXURY");
-			if (valueRangeSet != null)
-			{
-				valueRangesList.addAll(valueRangeSet.getValueRanges());
+				for (final Map.Entry<String, ValueRangeSet> entry : property.getValueRangeSets().entrySet())
+				{
+					valueRangesList.addAll(entry.getValue().getValueRanges());
+				}
 			}
 			return valueRangesList;
 		}
