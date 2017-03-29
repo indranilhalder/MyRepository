@@ -67260,6 +67260,47 @@ footer .footer-text{
 	border-color: #000;
 	background-color: #000;
 }
+header .content nav>ul>li>.toggle{
+	position: relative;
+}
+header .content nav>ul>li>.toggle:before{
+	content: "";
+    width: 12px;
+    height: 12px;
+    position: absolute;
+    bottom: -2px;
+    left: 20px;
+    z-index: 999999;
+    transform: rotate(45deg);
+    border: solid #eee;
+    border-width: 1px 0px 0 1px;
+    background: #fff;
+    opacity: 0;
+     /* -webkit-transition: opacity 0.1s 0.1s;
+  -moz-transition: opacity 0.1s 0.1s;
+  transition: opacity 0.1s 0.1s; */
+}
+header .content nav>ul>li.hovered>.toggle:before{
+	opacity: 1;
+	-webkit-transition: opacity 0.1s 0.4s;
+  -moz-transition: opacity 0.1s 0.4s;
+  transition: opacity 0.1s 0.4s;
+}
+header .content nav>ul>li>.toggle.show_arrow:before{
+	opacity: 1;
+}
+header .content nav>ul>li>.toggle.shop_dept:before{
+    left: 48px;
+}
+header .content nav > ul > li:first-child > ul, header .content nav > ul > li:first-child + li > ul {
+    border-top: 1px solid #eee;
+}
+header .content  .bottom.active nav > ul > li:first-child > ul, header .content  .bottom.active nav > ul > li:first-child + li > ul {
+    border-top: 0px;
+}
+header .content  .bottom.active nav>ul>li:hover>.toggle:before{
+    bottom: -6px;
+}
 }
 @media (max-width: 990px) and (min-width: 791px){
 header .content .search .select-list {
@@ -67674,6 +67715,8 @@ body.page-homepage .owl-theme .owl-dots .owl-dot span{
 	height: 8px;
 	opacity: 1;
     background: #fff;
+    border-color: #ccc;
+    border-width: 1px;
     margin: 5px;
 }
 body.page-homepage .owl-theme .owl-dots .owl-dot.active span{
