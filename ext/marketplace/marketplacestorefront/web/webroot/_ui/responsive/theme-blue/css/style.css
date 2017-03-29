@@ -63645,5 +63645,8 @@ padding-top:90px;
 .checkout.wrapper .product-block.addresses.new-form li.item fieldset .help-block#address1Error p{
 	margin-top: 7px;	/* TISSQAEE-266 */
 }
+.cart.wrapper .left-block .payments.tab-view .new-card #billingAddress fieldset .full .full-address ~ span#myCounter + .error-message {
+    display: block;		/* TISSQAEE-266 */
+} 
 
 /* Fixes Unit Testing */
