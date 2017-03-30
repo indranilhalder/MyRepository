@@ -1342,7 +1342,7 @@ h2 {
           margin-right: 5px;
           top: 3px;
           position: relative;
-          font-weight: bold; }
+          font-weight: lighter; }
              
         header .content .right > ul > li.wishlist .wishlist-info {
           display: block;
@@ -2136,7 +2136,7 @@ header .content .bottom.active nav>ul>li:first-child+li.hovered > ul {
      font-size:17px; }
       header .content .search button:before {
           content: "";
-    background: url("../images/sprite.svg") no-repeat scroll -135px -5px;
+    background: url("../images/sprite-07.png") no-repeat scroll -300px -207px;
     display: inline-block;
     height: 18px;
     width: 18px;
@@ -29252,13 +29252,13 @@ min-width: 150px;
    -webkit-font-smoothing: antialiased;
    -moz-osx-font-smoothing: grayscale;
    content:"\f0a2";
-    font-size: 13px;
+    font-size: 17px;
     color: #A9143C;
     line-height: 41px;
     height:41px;
     top: 0px;
     position: relative;
-    font-weight: bold;
+    font-weight: lighter;
 }
 
 body .account .right-account .order-history .bottom .pagination.mobile{
@@ -30263,6 +30263,11 @@ li.download-app a:before{
     margin-right: 5px;
     top: 2px;
     position: relative;
+	content: "";
+    background: url(../images/sprite-07.png) no-repeat scroll -296px -175px;
+    display: inline-block;
+    width:23px;height:23px;
+    opacity:0.7;
 } 
 li.store-locator-header a:before{
 	font-family: FontAwesome;
@@ -30272,8 +30277,13 @@ li.store-locator-header a:before{
     font-size: 18px;
     line-height: 18px;
     margin-right: 5px;
-    top: 2px;
+    top: 6px;
     position: relative;
+  content: "";
+    background: url(../images/sprite-07.png) no-repeat scroll -320px -176px;
+    display: inline-block;
+    width:23px;height:23px;
+    opacity:0.7;
 }
 
 #stayQued .qued-content>h1>span.spriteImg{
@@ -30294,8 +30304,14 @@ span.material-icons {
     display: inline-block;
     color: #a9143c;
     vertical-align: middle;
-    margin-top: -2px;
+   /* margin-top: -2px;*/
     margin-right: -2px;
+content: "";
+    background: url(../images/sprite-07.png) no-repeat scroll -352px -176px;
+    display: inline-block;
+    width: 23px;
+    height: 23px;
+    opacity: 0.7;
 }
 
 @media(max-width:790px){
@@ -54881,7 +54897,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 }
 
 .callouts .Padd ul li p:before {
-    background: url("../images/sprite.svg") no-repeat scroll -7px -175px;
+     background: url("../images/sprite-07.png") no-repeat scroll -7px -175px;
     content: "";
     display: inline-block;
     height: 47px;
@@ -54893,13 +54909,13 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 }
 
 .callouts .Padd ul li.omni p:before {
-	background: url("../images/sprite.svg") no-repeat scroll -73px -175px;
+	background: url("../images/sprite-07.png") no-repeat scroll -73px -175px;
 }
 .callouts .Padd ul li.genuine p:before {
-	background: url("../images/sprite.svg") no-repeat scroll -139px -175px;
+	background: url("../images/sprite-07.png") no-repeat scroll -139px -175px;
 }
 .callouts .Padd ul li.returns p:before {
-	background: url("../images/sprite.svg") no-repeat scroll -205px -175px;
+	background: url("../images/sprite-07.png") no-repeat scroll -205px -175px;
 }
 .callouts .Padd ul li:last-child{
 	border:none;
@@ -59201,6 +59217,11 @@ header .content .right > ul > li.bag > a:before {
     top: 3px;
     position: relative;
     font-weight: bold;
+ content: "";
+    background: url(../images/sprite-07.png) no-repeat scroll -378px -173px;
+    display: inline-block;
+    width:23px;height:23px;
+    opacity:0.7;
 } 
 header .content .right ul.loggedIn-flyout li a, header .content .right ul.loggedIn-flyout li{
 	color:#000;
@@ -63369,6 +63390,14 @@ padding-top:90px;
     background-color: #f8f8f8;
     color:#666;
 }
+header .content .right > ul > li > a#socialLogin{
+	position: relative;
+    top: -1px;
+}
+header .content .right > ul > li.wishlist #myWishlistHeader{
+	position: relative;
+    top: 1px;
+}
 @media (min-width:791px){
 header .content .top {
     background: #000;
@@ -63520,8 +63549,8 @@ header .content .search input{
 header .content .right li.store-locator-header:hover a ,header .content .right li.track.trackOrder:hover .bell-icon:after,li.store-locator-header:hover a:before, 
  li.download-app:hover a:before, header .content .right .sign-in-dropdown:hover span.material-icons, .logged_in.dropdown:hover span.material-icons,
  header .content .right > ul > li.wishlist:hover > a:before,  header .content .right > ul > li.bag:hover > a:before,.track.trackOrder:hover>a, li.wishlist:hover a#myWishlistHeader,
-  li.bag:hover a.mini-cart-link.myBag-sticky{
-    background: none;
+  li.bag:hover a.mini-cart-link.myBag-sticky, header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:hover span.material-icons:before{
+  /*  background: none;*/
     color: #fff;
     opacity: 1;
 }
@@ -63531,7 +63560,7 @@ header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:hover{
  background:none;
  }
  .bell-icon:after{
- line-height: 36px;
+ line-height: 33px;
  height: 36px;
  }
  header .content .right > ul > li.sign-in .sign-in-info{
@@ -63896,11 +63925,14 @@ body.page-homepage .owl-prev::after{
     transform: rotate(-225deg);
     -webkit-transform: rotate(-225deg)
 }
-body.page-homepage .home-brands-you-love-wrapper .owl-prev:after{
-	    left: 30px;
+body.page-homepage .home-brands-you-love-wrapper .owl-controls .owl-nav{
+
+	width: 100%;
+    padding: 0 30px;
 }
-body.page-homepage .home-brands-you-love-wrapper .owl-next:after{
-	    right: 30px;
+body.page-homepage .home-brands-you-love-wrapper .owl-controls .owl-nav .owl-next::after{
+
+	left:15px;
 }
 .home-brands-you-love-wrapper p.home-brands-you-love-main-image-heading{
 	margin-top:10px;
@@ -63930,6 +63962,22 @@ p.home-brands-you-love-main-image-heading, p.home-brands-you-love-main-image-des
 	  letter-spacing: 0.6px;
 	  text-align: left;
 	  font-weight:normal;
+}
+.home-brands-you-love-side-image.left{
+	padding: 0;
+    padding-right: 3.91%;
+}
+.home-brands-you-love-side-image.right {
+	padding: 0;
+    padding-left: 3.91%;
+}
+@media (min-width: 479px){
+.home-brands-you-love-side-image.left, .home-brands-you-love-side-image.right {
+    width: 23.6%;
+}
+.home-brands-you-love-main-image {
+    width: 41.88%;
+}
 }
 /* brands you love section end */
 /* Best Picks start */
@@ -63975,6 +64023,7 @@ p.home-brands-you-love-main-image-heading, p.home-brands-you-love-main-image-des
 }
 #new_exclusive.owl-theme .owl-controls .owl-next:after, body.page-homepage .owl-next:after{
 	left: auto;
+
     right: 5px;
     color:#666;
 }
