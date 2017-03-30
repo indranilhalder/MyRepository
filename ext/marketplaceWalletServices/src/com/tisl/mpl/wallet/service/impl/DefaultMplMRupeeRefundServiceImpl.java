@@ -240,8 +240,10 @@ public class DefaultMplMRupeeRefundServiceImpl implements DefaultMplMRupeeRefund
 
 			if (proxyEnableStatus.equalsIgnoreCase("true"))
 			{
+				//				final String proxyName = getConfigurationService().getConfiguration()
+				//						.getString(MarketplaceWalletServicesConstants.GENPROXY);
 				final String proxyName = getConfigurationService().getConfiguration()
-						.getString(MarketplaceWalletServicesConstants.GENPROXY);
+						.getString(MarketplaceWalletServicesConstants.MRUPEEREFUNDPROXY);
 				final int proxyPort = Integer.parseInt(
 						getConfigurationService().getConfiguration().getString(MarketplaceWalletServicesConstants.GENPROXYPORT));
 				final SocketAddress addr = new InetSocketAddress(proxyName, proxyPort);
