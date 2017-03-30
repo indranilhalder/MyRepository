@@ -5871,7 +5871,10 @@
 						<description>for seller end date</description>
 						<persistence type="property" />
 					</attribute>
-
+					<attribute qualifier="oosmodifiedval" type="java.lang.String">
+						<description>OOS- other variants updated by changing the value</description>
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 				<indexes>
 					<index name="BuyBox_IDX">
@@ -5991,6 +5994,10 @@
 
 					<attribute qualifier="sellerEndDate" type="java.util.Date">
 						<description>for seller end date</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="oosmodifiedval" type="java.lang.String">
+						<description>OOS- other variants updated by changing the value</description>
 						<persistence type="property" />
 					</attribute>
 											
@@ -9312,5 +9319,26 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
+		
+		
+		<typegroup name="testExampleGrp">
+			<itemtype code="TestExample" autocreate="true" generate="true">
+				<attributes>
+				  <attribute qualifier="testString" autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>testString</description>
+						<modifiers optional="false" read="true" write="true" unique="true"/>
+						<persistence type="property" />	
+					</attribute>
+					<attribute autocreate="true" qualifier="ListingId" type="Product">
+						<description>product</description>
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							unique="true" optional="true" />
+					</attribute>				        
+			    </attributes>
+			</itemtype>		
+       </typegroup>
+       
 	</itemtypes>
 </items>
