@@ -86,6 +86,7 @@ import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
+import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
@@ -162,6 +163,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
+
+	@Autowired
+	private MplCheckoutFacade mplCheckoutFacade;
 
 
 	@Autowired
@@ -3177,32 +3181,50 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	{
 		try
 		{
+			double deliverySlotCost = 0.0D;
 			for (final MplSelectedEDDForUssID mplEdd : mplSelectedEDDInfo)
 			{
+				
 				for (final AbstractOrderEntryModel entry : cartModel.getEntries())
 				{
 					if (StringUtils.isNotEmpty(mplEdd.getUssId()) && mplEdd.getUssId().equalsIgnoreCase(entry.getSelectedUSSID()))
 					{
 
 						if (StringUtils.isNotBlank(mplEdd.getDeliveryDate()))
-						{
-							final String timeFromTo = mplEdd.getTimeSlot();
-							entry.setTimeSlotFrom(timeFromTo.substring(0, timeFromTo.indexOf("TO") - 1));
-							entry.setTimeSlotTo(timeFromTo.substring(timeFromTo.indexOf("TO") + 3, timeFromTo.length()));
-							entry.setEdScheduledDate(mplEdd.getDeliveryDate());
-							modelService.save(entry);
-						}
-						else
-						{
-							entry.setTimeSlotFrom(null);
-							entry.setTimeSlotTo(null);
-							entry.setEdScheduledDate(null);
-							modelService.save(entry);
-						}
-
+				      {
+				       final String timeFromTo = mplEdd.getTimeSlot();
+				       entry.setTimeSlotFrom(timeFromTo.substring(0, timeFromTo.indexOf("TO") - 1));
+				       entry.setTimeSlotTo(timeFromTo.substring(timeFromTo.indexOf("TO") + 3, timeFromTo.length()));
+				       entry.setEdScheduledDate(mplEdd.getDeliveryDate());
+				       MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
+				       double scheduleDeliverySlotCost = 0.0D;
+				       
+				       if(null != configModel) {
+				      	 scheduleDeliverySlotCost = configModel.getSdCharge();
+				      	 entry.setScheduledDeliveryCharge(Double.valueOf(scheduleDeliverySlotCost));
+				      	 deliverySlotCost+=scheduleDeliverySlotCost;
+				       }
+				       modelService.save(entry);
+				      }
+				      else
+				      {
+				       entry.setTimeSlotFrom(null);
+				       entry.setTimeSlotTo(null);
+				       entry.setEdScheduledDate(null);
+				       entry.setScheduledDeliveryCharge(Double.valueOf(0));
+				       modelService.save(entry);
+				      }
 					}
+					
 				}
 			}
+			cartModel.setDeliveryCost(Double.valueOf(deliverySlotCost));
+			modelService.save(cartModel);
+			LOG.info("  delivery Cost : "+cartModel.getDeliveryCost()+ " total "+cartModel.getTotalPrice());
+			commerceCartService.recalculateCart(cartModel);
+			modelService.save(cartModel);
+			modelService.refresh(cartModel);
+			LOG.info("  delivery Cost : "+cartModel.getDeliveryCost()+ " total "+cartModel.getTotalPrice());
 		}
 		catch (final Exception nullPointerException)
 		{
