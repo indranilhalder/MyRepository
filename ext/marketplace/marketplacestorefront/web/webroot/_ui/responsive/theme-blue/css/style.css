@@ -10425,7 +10425,7 @@ body .account .right-account .order-history .pagination li{
     text-align: center;
       }
       .home-product-you-care-carousel {
-      		    margin: 10px 0px;
+      		    margin: 0;
     text-align: center;
     padding: 0 10px;
       }
@@ -29550,7 +29550,7 @@ footer>div>ul>li>.toggle>img{
     padding-bottom: 60px;
 }
 #newAndExclusive .newExclusiveElement{
-    padding: 0px 7% 0px;}
+    padding: 0px 15px 0px;}
 @media (max-width:790px){
 	#newAndExclusive .newExclusiveElement{
     padding: 0px 5% 0px;}
@@ -29788,7 +29788,7 @@ padding:20px;
     }
     .home-best-pick-carousel .item{
     display: block;
-    margin: 0 10px;
+    margin: 0 3.5px;
     padding: 10px 0;
     }
 #bestPicks .home-best-pick-carousel-img img{
@@ -32367,11 +32367,11 @@ body.page-homepage .trending h1 > span{
     margin: 0 4%;
 }
 #productYouCare .home-product-you-care-carousel-img {
-    margin: 10px 15px 0;
+    margin: 0 13px 0;
     position: relative;
 }
 .home-product-you-care-carousel {
-    padding: 0 40px 40px;
+    padding: 0 20px 77px;
 }
 #productYouCare .short-info {
     position: absolute;
@@ -63695,8 +63695,8 @@ footer .footer-text{
     z-index: 1;
 }
 .homepage-banner .owl-theme .owl-controls .owl-nav{
-	bottom: 0px;
-	top: 0px;
+	/* bottom: 0px; */
+	top: 50%;
     margin: auto;
     position: absolute;
     width: 100%;
@@ -63775,6 +63775,9 @@ header .content  .bottom.active nav > ul > li:first-child > ul, header .content 
 header .content  .bottom.active nav>ul>li:hover>.toggle:before{
     bottom: -6px;
 }
+.qued-content a.button.maroon{
+	margin: 0 !important;
+}
 }
 @media (max-width: 990px) and (min-width: 791px){
 header .content .search .select-list {
@@ -63843,6 +63846,9 @@ body.page-homepage .feature-collections h2, #newAndExclusive h2, #brandsYouLove 
 	font-weight: normal;
 	padding: 64px 0 24px;
 }
+#productYouCare h2{
+	border-top: 0px;
+	}
 .visit-store-wrapper{
 	position:static;
 	padding-top: 24px;
@@ -63934,8 +63940,11 @@ p.home-brands-you-love-main-image-heading, p.home-brands-you-love-main-image-des
 	margin: 0 30px;
 	border-bottom:solid 1px #eee;
 }
-#bestPicks .home-best-pick-carousel , #newAndExclusive #new_exclusive{
-	padding:0 20px;
+#bestPicks .home-best-pick-carousel{
+	padding:0 30px;
+}
+#newAndExclusive #new_exclusive{
+	padding:0 14px;
 }
 #bestPicks .short-info span, #bestPicks .short-info p{
 	font-size: 12px;
@@ -63965,12 +63974,12 @@ p.home-brands-you-love-main-image-heading, p.home-brands-you-love-main-image-des
 	right:0;
 }
 #new_exclusive.owl-theme .owl-controls .owl-next:after, body.page-homepage .owl-next:after{
-	
-    right: 0;
+	left: auto;
+    right: 5px;
     color:#666;
 }
  #new_exclusive.owl-theme .owl-controls .owl-prev:after,body.page-homepage .owl-prev:after{
- 	left: 0;
+ 	left: 5px;
  	color:#666;
  }
 #stayQued{
@@ -64138,6 +64147,16 @@ a.button.trending-button:hover{
 }
 
 /* Inspire me section end */
+body.page-homepage .slider.product .frame .overflow .slide{
+	    padding: 0 3.5px;
+}
+body.page-homepage .slider.product .frame .overflow{
+	    padding: 0 30px;
+}
+body.page-homepage .trending {
+    margin-bottom: 20px;
+    padding: 0 30px;
+}
 /*Homepage responsive start*/
 .home-brands-you-love-wrapper .home-brands-you-love-desc > p.home-brands-you-love-main-image-heading,
  .home-brands-you-love-wrapper .home-brands-you-love-desc > p.home-brands-you-love-main-image-desc{
@@ -64516,6 +64535,9 @@ body.page-homepage #showcase.feature-collections .desc-section h1 {
     max-width: 66.3%;
     margin: 0px auto;
 }
+body.page-homepage .slider.product .frame .overflow {
+    padding: 0;
+}
 }
 @media (max-width: 479px)
 {
@@ -64555,6 +64577,10 @@ body.page-homepage .feature-collections.home-brands-you-love-wrapper {
 }
 .home-brands-you-love-side-image.left, .home-brands-you-love-side-image.right {
     padding: 0 4px;
+}
+.home-brands-you-love-wrapper .owl-carousel .owl-item.active.center {
+    border-bottom: 0px;
+    padding-bottom: 5px;
 }
 }
 @media(max-width: 430px){
