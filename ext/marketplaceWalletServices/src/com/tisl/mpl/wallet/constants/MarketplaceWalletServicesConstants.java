@@ -36,7 +36,6 @@ public final class MarketplaceWalletServicesConstants extends GeneratedMarketpla
 	// implement here constants used by this extension
 
 	public final static String PROXYENABLED = "proxy.enabled";
-	//public final static String GENPROXY = "proxy.address";
 	public final static String GENPROXY = "payment.proxy.value";
 	public final static String GENPROXYPORT = "proxy.port";
 
@@ -44,4 +43,7 @@ public final class MarketplaceWalletServicesConstants extends GeneratedMarketpla
 	public final static String FAILURE = "FAILURE";
 
 	public final static String MRUPEEHOSTNAME = "mRupee.hostname.disableSslVerification";
+
+	public final static String MRUPEEREFUNDPROXY = "mrupee.refund.proxy.value".intern();
+
 }
