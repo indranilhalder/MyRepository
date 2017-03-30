@@ -39,13 +39,13 @@ public class MplMediaDaoImpl implements MplMediaDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tils.mpl.media.MplMediaDao#findMediaSearch(java.lang.String)
-	 * 
+	 *
 	 * @Javadoc Method to Optimize Image load in PDP.Single Db Call to Populate Different Image Format
-	 * 
+	 *
 	 * @param MediaContainerModel container , String mediaFormatList
-	 * 
+	 *
 	 * @return List<MediaModel>
 	 */
 
@@ -58,11 +58,10 @@ public class MplMediaDaoImpl implements MplMediaDao
 		{
 			final StringBuffer queryString = new StringBuffer(500);
 
-			queryString
-					.append("select {media.PK} from {Media as media JOIN "
-							+ "MediaFormat as mf ON {media.MEDIAFORMAT}={mf.PK} JOIN CatalogVersion as cat ON {media.CATALOGVERSION }={cat.PK}}"
-							+ "where {media.MEDIACONTAINER}= ?containerPK " + "and {cat.VERSION } = ?catalogVersion "
-							+ "and {mf.QUALIFIER} in (");
+			queryString.append("select {media.PK} from {Media as media JOIN "
+					+ "MediaFormat as mf ON {media.MEDIAFORMAT}={mf.PK} JOIN CatalogVersion as cat ON {media.CATALOGVERSION }={cat.PK}}"
+					+ "where {media.MEDIACONTAINER}= ?containerPK " + "and {cat.VERSION } = ?catalogVersion "
+					+ "and {mf.QUALIFIER} in (");
 			queryString.append(mediaFormatList);
 			queryString.append(')');
 
@@ -89,9 +88,29 @@ public class MplMediaDaoImpl implements MplMediaDao
 
 
 	@Override
-	public MediaModel getMediaForIndexing(final ProductModel product, final MediaFormatModel mediaFormat, final String productCode)
+	public MediaModel getMediaForIndexing(final ProductModel product, final MediaFormatModel mediaFormat,
+			final List<MediaContainerModel> galleryImages)
 	{
 
+		int count = 1;
+		final StringBuilder galImgPK = new StringBuilder();
+
+		for (final MediaContainerModel mcList : galleryImages)
+		{
+
+			if (galleryImages.size() != count)
+			{
+				//galImgPK.append(mcList.getPk() + ","); Sonar fixes
+
+				galImgPK.append(mcList.getPk());
+				galImgPK.append(',');
+			}
+			else
+			{
+				galImgPK.append(mcList.getPk());
+			}
+			count = count + 1;
+		}
 		try
 		{
 
@@ -99,18 +118,16 @@ public class MplMediaDaoImpl implements MplMediaDao
 					+ MediaContainerModel._TYPECODE + " as container " + " ON {container." + MediaContainerModel.PK + "}={media."
 					+ MediaModel.MEDIACONTAINER + "} JOIN " + CatalogVersionModel._TYPECODE + " as cat ON {media."
 					+ MediaModel.CATALOGVERSION + "}={cat." + CatalogVersionModel.PK + "} JOIN " + MediaFormatModel._TYPECODE
-					+ " as mf ON {media." + MediaModel.MEDIAFORMAT + "}={mf." + MediaFormatModel.PK + "} " 
-					+ "JOIN "+ ProductModel._TYPECODE + " as product on {product."+ ProductModel.GALLERYIMAGES+"} like concat ('%',concat({container." + MediaContainerModel.PK+"},'%'))} "  // CRA-79 This line is newly added for selecting media model on TypeCode of the Product
-					+ "where {media."+ MediaModel.MEDIAPRIORITY + "}=?priority and {cat." + CatalogVersionModel.VERSION + "} =?catalogVersion and {mf."
-					+ MediaFormatModel.QUALIFIER + "}= ?searchMediaFormat " 
-					+ "and {product."+ProductModel.CODE+"}=?productCode";   // New added for CAR-79
+					+ " as mf ON {media." + MediaModel.MEDIAFORMAT + "}={mf." + MediaFormatModel.PK + "}} " + " where {media."
+					+ MediaModel.MEDIAPRIORITY + "}=?priority and {cat." + CatalogVersionModel.VERSION + "} =?catalogVersion and {mf."
+					+ MediaFormatModel.QUALIFIER + "}= ?searchMediaFormat and {container." + MediaContainerModel.PK + "} in ("
+					+ galImgPK + ")";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 
 			query.addQueryParameter("priority", "1");
 			query.addQueryParameter("catalogVersion", product.getCatalogVersion().getVersion());
 			query.addQueryParameter("searchMediaFormat", mediaFormat.getQualifier());
-			query.addQueryParameter("productCode", productCode);     // New added for CAR-79
 
 			final SearchResult<MediaModel> searchResult = flexibleSearchService.search(query);
 
