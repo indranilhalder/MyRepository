@@ -24,10 +24,10 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.util.CollectionUtils;
 
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
@@ -137,25 +137,38 @@ public class MplDisplayPriceValueProvider extends AbstractPropertyFieldValueProv
 
 					double price = 0.0;
 					/* TISPRD-2611 */
+					Double specialPrice = 0.0;
 
-					if (null != priceListForProduct && !CollectionUtils.isEmpty(priceListForProduct))
+					Double pcmPrice = null;
+					//INC144315542_INC144314878_INC_11113
+					if (CollectionUtils.isNotEmpty(priceListForProduct))
 					{
-						final Double specialPrice = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0)
-								.getSpecialPrice();
-						Double pcmPrice = null;
-
-						if (null != specialPrice && specialPrice.doubleValue() > 0.0)
-						{
-							price = specialPrice.doubleValue();
-						}
-						else if (null != (pcmPrice = priceListForProduct.get(0).getPrice()) && pcmPrice.doubleValue() > 0.0)
-						{
-							price = pcmPrice.doubleValue();
-						}
-						final JSONObject sizePriceJson = new JSONObject();
-						sizePriceJson.put(pcmSizeVariantModel.getSize().toUpperCase(), Double.valueOf(price));
-						sizePriceJsonArray.add(sizePriceJson);
+						specialPrice = priceListForProduct.get(0).getSpecialPrice();
 					}
+
+					else
+					{
+						final List<BuyBoxModel> priceList = buyBoxService.getBuyboxPricesForSizeVariant(pcmSizeVariantModel.getCode());
+						if (CollectionUtils.isNotEmpty(priceList))
+						{
+							specialPrice = priceListForProduct.get(0).getSpecialPrice();
+
+						}
+
+					}
+
+					if (null != specialPrice && specialPrice.doubleValue() > 0.0)
+					{
+						price = specialPrice.doubleValue();
+					}
+					else if (null != (pcmPrice = priceListForProduct.get(0).getPrice()) && pcmPrice.doubleValue() > 0.0)
+					{
+						price = pcmPrice.doubleValue();
+					}
+					final JSONObject sizePriceJson = new JSONObject();
+					sizePriceJson.put(pcmSizeVariantModel.getSize().toUpperCase(), Double.valueOf(price));
+					sizePriceJsonArray.add(sizePriceJson);
+
 
 
 
