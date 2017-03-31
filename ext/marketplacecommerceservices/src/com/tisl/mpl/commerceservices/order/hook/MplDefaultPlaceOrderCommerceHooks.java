@@ -1232,6 +1232,20 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 								if (StringUtils.isNotEmpty(parentTransactionId))
 								{
 									subOrderEntryModel.setParentTransactionID(parentTransactionId);
+									//R2.3 Code Chages bug ID TISRLEE-3197
+									try
+									{
+										AbstractOrderEntryModel perentEntry = mplOrderService.getEntryModel(parentTransactionId);
+										if (perentEntry != null)
+										{
+											subOrderEntryModel.setSddDateBetween(perentEntry.getSddDateBetween());
+										}
+									}
+									catch (Exception exception)
+									{
+										LOG.error("MplDefaultPlaceOrderCommerceHooks:::::" + exception.getMessage());
+									}
+									//R2.3 Code Changes bug ID TISRLEE-3197
 									getModelService().save(subOrderEntryModel);
 									for (final String freebieUssid : associatedItemMap.get(parentUssId))
 									{
@@ -1249,6 +1263,20 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 																&& null != subOrderEntryModel.getGiveAway()
 																&& subOrderEntryModel.getGiveAway().booleanValue())
 														{
+															//R2.3 Code Chages bug ID TISRLEE-3197
+															try
+															{
+																AbstractOrderEntryModel perentEntry = mplOrderService.getEntryModel(parentTransactionId);
+																if (perentEntry != null)
+																{
+																	subOrderEntryModel2.setSddDateBetween(perentEntry.getSddDateBetween());
+																}
+															}
+															catch (Exception exception)
+															{
+																LOG.error("MplDefaultPlaceOrderCommerceHooks:::::" + exception.getMessage());
+															}
+															//R2.3 Code Changes bug ID TISRLEE-3197
 															subOrderEntryModel2.setParentTransactionID(parentTransactionId);
 															getModelService().save(subOrderEntryModel2);
 															break;
