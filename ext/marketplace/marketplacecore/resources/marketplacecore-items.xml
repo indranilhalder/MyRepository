@@ -9318,27 +9318,6 @@
 					</attribute>
 				</attributes>
 			</itemtype>
-		</typegroup>
-		
-		
-		<typegroup name="testExampleGrp">
-			<itemtype code="TestExample" autocreate="true" generate="true">
-				<attributes>
-				  <attribute qualifier="testString" autocreate="true" type="java.lang.String"
-						generate="true">
-						<description>testString</description>
-						<modifiers optional="false" read="true" write="true" unique="true"/>
-						<persistence type="property" />	
-					</attribute>
-					<attribute autocreate="true" qualifier="ListingId" type="Product">
-						<description>product</description>
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							unique="true" optional="true" />
-					</attribute>				        
-			    </attributes>
-			</itemtype>		
-       </typegroup>
-       
+		</typegroup>      
 	</itemtypes>
 </items>
