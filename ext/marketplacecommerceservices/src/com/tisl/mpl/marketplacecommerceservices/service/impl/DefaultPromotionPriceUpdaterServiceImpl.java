@@ -291,8 +291,9 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				{
 					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList + CATLIST
 							+ categoryList);
-					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
-							rejectBrandList, promoCode);
+					//					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
+					//							rejectBrandList, promoCode);
+					disablePromotionalPrice(promoCode);
 				}
 				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
 						&& quantity.intValue() > 1) // If Qauntity is increased from 1 to Multiple //Fix for TISPRD-383
@@ -300,8 +301,9 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 
 					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList + CATLIST
 							+ categoryList);
-					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
-							rejectBrandList, promoCode);
+					//					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
+					//							rejectBrandList, promoCode);
+					disablePromotionalPrice(promoCode);
 				}
 			}
 		}
@@ -328,6 +330,32 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 		}
 
 		return errorFlag;
+	}
+
+	/**
+	 * Removes Promotion Content in Price Rows
+	 *
+	 * @param promoCode
+	 */
+	private void disablePromotionalPrice(final String promoCode)
+	{
+		try
+		{
+			clearExistingData(promoCode);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
 	}
 
 	/**
@@ -503,8 +531,9 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				{
 					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList + CATLIST
 							+ categoryList);
-					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
-							rejectBrandList, promoCode);
+					//					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
+					//							rejectBrandList, promoCode);
+					disablePromotionalPrice(promoCode);
 				}
 				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
 						&& quantity.intValue() > 1) // If Qauntity is increased from 1 to Multiple //Fix for TISPRD-383
@@ -512,8 +541,9 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 
 					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList + CATLIST
 							+ categoryList);
-					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
-							rejectBrandList, promoCode);
+					//					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
+					//							rejectBrandList, promoCode);
+					disablePromotionalPrice(promoCode);
 				}
 			}
 		}
