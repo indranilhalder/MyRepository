@@ -155,7 +155,6 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				//Bug Fix
 				//final BuyAPercentageDiscount buyAPerDiscountPromotion = (BuyAPercentageDiscount) buyAPercentageDiscount;
 				promoCode = percentegeDiscount.getCode();
-
 				for (final AbstractPromotionRestrictionModel res : percentegeDiscount.getRestrictions())
 				{
 					if (res instanceof EtailSellerSpecificRestrictionModel)

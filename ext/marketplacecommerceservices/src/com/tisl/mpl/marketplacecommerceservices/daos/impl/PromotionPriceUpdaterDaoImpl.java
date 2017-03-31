@@ -41,10 +41,8 @@ public class PromotionPriceUpdaterDaoImpl implements PromotionPriceUpdaterDao
 	@Override
 	public List<ProductPromotionModel> getRequiredPromotionList(final Date mplConfigDate)
 	{
-
 		LOG.debug("Fetching promotion Details");
 		List<ProductPromotionModel> PromotionResult = new ArrayList<ProductPromotionModel>();
-
 		final String queryString = "SELECT {" + ProductPromotionModel.PK + "} " + MarketplacecommerceservicesConstants.QUERYFROM
 				+ ProductPromotionModel._TYPECODE + " AS pr} " + " WHERE" + "({pr." + ProductPromotionModel.MODIFIEDTIME
 				+ "} >= ?earlierDate  " + ")   ORDER BY {pr:" + ProductPromotionModel.PRIORITY + "} ASC";
