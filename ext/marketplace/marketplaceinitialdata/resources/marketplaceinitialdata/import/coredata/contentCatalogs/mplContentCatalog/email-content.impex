@@ -470,6 +470,9 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;tweet;;$wideContent;
 ;youtube;;$wideContent;
 ;insta;;$wideContent;
+###fine jewellery
+;ForwardSeal;;$wideContent;
+;ReverseSeal;;$wideContent;
 
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderConfirmationRiskEmailTemplate'];validComponentTypes(code)
@@ -509,6 +512,9 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;tweet;;$wideContent;
 ;youtube;;$wideContent;
 ;insta;;$wideContent;
+#fine jewellery
+;ForwardSeal;;$wideContent;
+;ReverseSeal;;$wideContent;
 
 #Shipment out for delivery
 #INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OutForDeliveryEmailTemplate'];validComponentTypes(code)
@@ -604,6 +610,9 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
 ;;EmailsmileyimgDlvrySlot;Default Email Smiley Delivery Slot;true
 ;;EmailfbDlvrySlot;Default Email fb Delivery Slot;true
 ;;EmailgplusDlvrySlot;Default Email Google Plus Delivery Slot;true
+####fine jewellery
+;;ForwardSealDeliverySlot;Default Email Forward Seal Confirmation Slot;true
+;;ReverseSealDeliverySlot;Default Email Reverse Seal Confirmation Slot;true
 
 
 
@@ -622,6 +631,10 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
 ;;EmailsmileyimgHOTCSlot;Default Email Smiley Slot;true
 ;;EmailfbHOTCSlot;Default Facebook Slot;true
 ;;EmailgplusHOTCSlot;Default Google Pluslot;true
+####fine jewellery
+;;ForwardSealDeliverySlot;Default Email Forward Seal Confirmation Slot;true
+;;ReverseSealDeliverySlot;Default Email Reverse Seal Confirmation Slot;true
+
 
 
 #Order Rejected High Risk Content Slots
@@ -933,7 +946,9 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;tweet-OrderDeliveryEmail;tweet;;EmailtweetSlot;true
 ;;youtube-OrderDeliveryEmail;youtube;;EmailYouTubeSlot;true
 ;;insta-OrderDeliveryEmail;insta;;EmailInstaSlot;true
-
+#######finejewellery
+;;ForwardSeal-OrderDeliveryEmail;ForwardSeal;;ForwardSealDeliverySlot;true
+;;ReverseSeal-OrderDeliveryEmail;ReverseSeal;;ReverseSealDeliverySlot;true
 
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderCancelledEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
@@ -1114,6 +1129,9 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;youtube-ShippingConfirmationEmail;youtube;;EmailYouTubeSlot;true
 ;;insta-ShippingConfirmationEmail;insta;;EmailInstaSlot;true
 ;;Tip-ShippingConfirmationEmail;Tip;;EmailTipCUSlot;true
+###finejewellery
+;;ForwardSeal-ShippingConfirmationEmail;ForwardSeal;;ForwardSealHOTCSlot;true
+;;ReverseSeal-ShippingConfirmationEmail;ReverseSeal;;ReverseSealHOTCSlot;true
 
 
 #INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderConfirmationEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
@@ -1197,6 +1215,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 #;;SiteLogo-TakeActionOnHeldOrderEmail;SiteLogo;;EmailSiteLogoSlot;true
 ;;TopContent-TakeActionOnHeldOrderEmail;TopContent;;EmailTopSlot;true
 ;;BottomContent-TakeActionOnHeldOrderEmail;BottomContent;;EmailBottomSlot;true
+
+
 
 # Email Pages
 INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
