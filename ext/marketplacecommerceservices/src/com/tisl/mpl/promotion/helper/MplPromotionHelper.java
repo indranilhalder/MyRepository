@@ -1017,15 +1017,16 @@ public class MplPromotionHelper
 
 		if (CollectionUtils.isNotEmpty(restrictionList) && validateForStockRestriction(restrictionList))
 		{
+			usedUpCount = getStockService().getCummulativeOrderCount(promoCode, orginalUid);
 			count = getStockCustomerRedeemCount(restrictionList);
 			if (count == 0)
 			{
 				data.setActualCustomerCount(0);
-				data.setExhausted(false);
+				data.setExhausted(isExhausted(usedUpCount, promoQualifyingCount, restrictionList));
 			}
 			else if (StringUtils.isNotEmpty(orginalUid) && count > 0)
 			{
-				usedUpCount = getStockService().getCummulativeOrderCount(promoCode, orginalUid);
+
 				if (usedUpCount > 0)
 				{
 					offerCount = usedUpCount / promoQualifyingCount;
@@ -1055,6 +1056,35 @@ public class MplPromotionHelper
 			}
 		}
 		return data;
+	}
+
+	/**
+	 * @param promoQualifyingCount
+	 * @param usedUpCount
+	 * @param restrictionList
+	 * @return flag
+	 */
+	private boolean isExhausted(final int usedUpCount, final int promoQualifyingCount,
+			final List<AbstractPromotionRestriction> restrictionList)
+	{
+		boolean flag = false;
+		try
+		{
+			if (usedUpCount > 0)
+			{
+				final int testCount = usedUpCount / promoQualifyingCount;
+				if (testCount >= getDefaultPromotionsManager().getStockRestrictionVal(restrictionList))
+				{
+					flag = true;
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during data generation|| Limited Offer ");
+		}
+
+		return flag;
 	}
 
 	public int getStockCustomerRedeemCount(final List<AbstractPromotionRestriction> restrictionList)
