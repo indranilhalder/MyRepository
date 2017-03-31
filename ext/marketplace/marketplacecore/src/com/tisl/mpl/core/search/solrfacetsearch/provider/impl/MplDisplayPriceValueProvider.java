@@ -67,7 +67,7 @@ public class MplDisplayPriceValueProvider extends AbstractPropertyFieldValueProv
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -140,10 +140,12 @@ public class MplDisplayPriceValueProvider extends AbstractPropertyFieldValueProv
 					Double specialPrice = 0.0;
 
 					Double pcmPrice = null;
+					Double productPrice = null;
 					//INC144315542_INC144314878_INC_11113
 					if (CollectionUtils.isNotEmpty(priceListForProduct))
 					{
 						specialPrice = priceListForProduct.get(0).getSpecialPrice();
+						productPrice = priceListForProduct.get(0).getPrice();
 					}
 
 					else
@@ -151,7 +153,8 @@ public class MplDisplayPriceValueProvider extends AbstractPropertyFieldValueProv
 						final List<BuyBoxModel> priceList = buyBoxService.getBuyboxPricesForSizeVariant(pcmSizeVariantModel.getCode());
 						if (CollectionUtils.isNotEmpty(priceList))
 						{
-							specialPrice = priceListForProduct.get(0).getSpecialPrice();
+							specialPrice = priceList.get(0).getSpecialPrice();
+							productPrice = priceList.get(0).getPrice();
 
 						}
 
@@ -161,7 +164,7 @@ public class MplDisplayPriceValueProvider extends AbstractPropertyFieldValueProv
 					{
 						price = specialPrice.doubleValue();
 					}
-					else if (null != (pcmPrice = priceListForProduct.get(0).getPrice()) && pcmPrice.doubleValue() > 0.0)
+					else if (null != (pcmPrice = productPrice) && pcmPrice.doubleValue() > 0.0)
 					{
 						price = pcmPrice.doubleValue();
 					}
