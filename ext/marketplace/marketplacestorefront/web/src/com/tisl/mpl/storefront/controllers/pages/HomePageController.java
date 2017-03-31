@@ -73,8 +73,10 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.latestoffers.LatestOffersFacade;
+import com.tisl.mpl.facade.stw.STWWidgetFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.data.LatestOffersData;
+import com.tisl.mpl.facades.data.STWJsonRecomendationData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
@@ -139,6 +141,26 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "notificationFacade")
 	private NotificationFacade notificationFacade;
+
+	@Resource(name = "STWFacade")
+	private STWWidgetFacade stwWidgetFacade;
+
+	/**
+	 * @return the stwWidgetFacade
+	 */
+	public STWWidgetFacade getStwWidgetFacade()
+	{
+		return stwWidgetFacade;
+	}
+
+	/**
+	 * @param stwWidgetFacade
+	 *           the stwWidgetFacade to set
+	 */
+	public void setStwWidgetFacade(final STWWidgetFacade stwWidgetFacade)
+	{
+		this.stwWidgetFacade = stwWidgetFacade;
+	}
 
 	/**
 	 * @return the notificationFacade
@@ -1072,7 +1094,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 *
+					 * 
 					 * }
 					 */
 
@@ -1227,6 +1249,19 @@ public class HomePageController extends AbstractPageController
 			}
 		}
 		return request.getRemoteAddr();
+	}
+
+	/**
+	 * TPR-258
+	 */
+	@RequestMapping(value = "/getStwrecomendations", method = RequestMethod.GET)
+	public JSONObject getStwWidgetDada()
+	{
+		final JSONObject STWJObject = new JSONObject();
+		final List<STWJsonRecomendationData> stwRecData = getStwWidgetFacade().getSTWWidgetFinalData();
+		STWJObject.put("STWElements", stwRecData);
+		LOG.info(stwRecData.size());
+		return STWJObject;
 	}
 
 }
