@@ -106,6 +106,8 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	public boolean poulatePriceRowData(final ProductPromotionModel promo)
 	{
 		boolean isPromoValid = false;
+
+
 		if (promo instanceof BuyABFreePrecentageDiscountModel)
 		{
 			final BuyABFreePrecentageDiscountModel discount = (BuyABFreePrecentageDiscountModel) promo;
@@ -116,6 +118,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 			final BuyAPercentageDiscountModel discount = (BuyAPercentageDiscountModel) promo;
 			isPromoValid = poulatePriceRowDataForBuyAPercentageDiscount(discount);
 		}
+
 		return isPromoValid;
 
 	}
@@ -777,7 +780,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				final List<ProductModel> productList = fetchProductList(categories);//Car-158
 				for (final ProductModel prdct : productList)
 				{
-					if (getBrandsForProduct(prdct, rejectBrandList, brands) && validateCategoryProductData(prdct, priority)
+					if (getBrandsForProduct(prdct, brands, rejectBrandList) && validateCategoryProductData(prdct, priority)
 							&& validateExclusion(exProductList, prdct))
 					{
 						product.add(prdct.getCode());
