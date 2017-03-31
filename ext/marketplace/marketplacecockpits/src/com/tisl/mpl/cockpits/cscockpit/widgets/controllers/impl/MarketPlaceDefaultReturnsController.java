@@ -1003,9 +1003,17 @@ public class MarketPlaceDefaultReturnsController extends
 	@Override
 	public void saveCODReturnsBankDetails(CODSelfShipData codData) {
 		try {
-			//saving bank details failed payment details in commerce 
-			cancelReturnFacade.insertUpdateCustomerBankDetails(codData);	
-			LOG.debug("Failed to post COD return paymnet details to FICO Order No:"+codData.getOrderNo());
+			try {
+				cancelReturnFacade.insertUpdateCustomerBankDetails(codData);	
+			}catch(Exception e) {
+				LOG.error("Exception occurred while saving bank Details"+e.getMessage());
+			}
+			try {
+				cancelReturnFacade.saveCODReturnsBankDetails(codData);
+			}catch(Exception e) {
+				LOG.error("Exception occurred while saving bank Details"+e.getMessage());
+			}
+			
 		} catch(Exception e) {
 			LOG.error("Exception while saving cod bank Details"+e.getMessage());
 		}
