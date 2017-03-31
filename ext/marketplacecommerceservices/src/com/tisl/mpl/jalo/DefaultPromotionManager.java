@@ -57,7 +57,6 @@ import de.hybris.platform.util.localization.Localization;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -74,11 +73,8 @@ import java.util.TreeSet;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
-
 import org.apache.commons.collections.MapUtils;
-
 import org.apache.commons.collections.map.Flat3Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +89,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCategoryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
 import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
+import com.tisl.mpl.model.BuyAGetPrecentageDiscountCashbackModel;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAPercentageDiscountModel;
 import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
@@ -136,7 +133,7 @@ public class DefaultPromotionManager extends PromotionsManager
 
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
-	
+
 	@Resource(name = "mplCategoryServiceImpl")
 	MplCategoryService mplCategoryServiceImpl;
 
@@ -2576,6 +2573,12 @@ public class DefaultPromotionManager extends PromotionsManager
 			{
 				count = ((BuyABFreePrecentageDiscountModel) oModel).getQuantity().intValue();
 			}
+			//TISSQAUAT-476 fix starts here
+			else if (oModel instanceof BuyAGetPrecentageDiscountCashbackModel)
+			{
+				count = ((BuyAGetPrecentageDiscountCashbackModel) oModel).getQuantity().intValue();
+			}
+			//TISSQAUAT-476 fix ends here
 		}
 		catch (final Exception exception)
 		{
