@@ -782,6 +782,9 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				}else{
 					 refundEntryModel.setNotes("Return Initiated by Seller Portal");
 				}
+				refundEntryModel.setStatus(ReturnStatus.RETURN_INITIATED);
+				refundEntryModel.setAction(ReturnAction.IMMEDIATE);
+				refundEntryModel.setNotes("Return Initiated by Seller Portal");
 				refundEntryModel.setExpectedQuantity(orderEntry.getQuantity());//Single line quantity
 				refundEntryModel.setReceivedQuantity(orderEntry.getQuantity());//Single line quantity
 				refundEntryModel.setRefundedDate(new Date());

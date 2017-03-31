@@ -165,11 +165,17 @@ public class MarketplaceRefundConfirmationWidgetRenderer extends
 							"z-msgbox z-msgbox-error");
 				}
 		}else {
+			try {
+			 returnRequest = ((ReturnsController) widget
+						.getWidgetController()).createRefundRequest();
 			Messagebox.show("Return Initiated Successfully");
 			getPopupWidgetHelper().getCurrentPopup().getParent().getChildren().clear();
 			getPopupWidgetHelper().dismissCurrentPopup();
 			((ReturnsController) widget.getWidgetController()).dispatchEvent(
 					null, widget, null);
+			}catch(Exception e) {
+				LOG.error("Exception while deleting RefundOrderPreview"+e.getMessage());
+			}
 		}
 
 	}

@@ -327,6 +327,32 @@ public class MarketPlaceDefaultReturnsController extends
 					.getBoolean(OMS_BYPASS_KEY);
 			Session session = Executions.getCurrent().getDesktop().getSession();
 			String returnType = (String) session.getAttribute("typeofReturn");
+			/*TISRLREG-4130 START */
+			if(returnType.equalsIgnoreCase(TypeofReturn.QUICK_DROP.getCode())) {
+				try{
+					CODSelfShipData codSelfShipData = null;
+					if(null!=orderModel.getUser()){
+						codSelfShipData = getCustomerBankDetailsByCustomerId(orderModel.getUser().getUid());
+					}
+					List<AbstractOrderEntryModel> entries = new ArrayList<AbstractOrderEntryModel>();refundRequest.getReturnEntries();
+					for(ReturnEntryModel entry : refundRequest.getReturnEntries()) {
+						entries.add(entry.getOrderEntry());
+					}
+					getCodPaymentInfoToFICO(codSelfShipData,entries);
+				}catch(EtailNonBusinessExceptions e)
+				{
+					LOG.error("Exception occured in fico call for cod self shipment for order id  :"+orderModel.getCode()+" Actual Stack trace "+e);
+				}
+				try {
+					this.refundDetailsList.clear();
+					this.refundDetailsList = null;
+					deleteRefundOrderPreview();
+				}catch(Exception e) {
+					LOG.error("Exception while deleting RefundOrderPreview"+e.getMessage());
+				}
+				return null;
+			}
+			/*TISRLREG-4130 END */
 			AddressData addressData = null;		
 			String pincode = null;
 			if(null != returnType && returnType.equalsIgnoreCase(TypeofReturn.QUICK_DROP.getCode())){
