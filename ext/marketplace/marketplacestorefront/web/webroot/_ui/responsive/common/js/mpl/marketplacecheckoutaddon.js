@@ -2625,7 +2625,6 @@ $("#otpMobileNUMField").focus(function(){
  }
  /**************End of character count********/
  
-
  function populateBillingAddress(){ 
 	 $("#firstNameError, #lastNameError, #address1Error, #address2Error, #address3Error, #cityError, #stateError, #pinError").text(""); 
 	 var guid=$("#guid").val();
@@ -2659,7 +2658,7 @@ $("#otpMobileNUMField").focus(function(){
 				 $("#country").attr("disabled", false); 
 				 $("#country").val("India"); 
 			 } 
-			 $("#myCounter").html((120));
+			 /*$("#myCounter").html((120));*/
 		 }, 
 		 error : function(resp) { 
 	 } 
@@ -4219,7 +4218,11 @@ function populateAddress(){
 		$("#pincode").val("");
 		$("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", false);
 		$("#country").attr("disabled", false);
-	}
+			if(($("#address1").val())=="")
+		 	{
+			 $("#myCounter").html((120));
+		 	}
+		}
 }
 
 function populateAddressEmi(){
