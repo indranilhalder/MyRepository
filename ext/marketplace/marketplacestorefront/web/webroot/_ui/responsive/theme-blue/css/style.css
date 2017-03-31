@@ -30496,7 +30496,7 @@ content: "";
     line-height: 55px;
 } */
 li.logged_in.dropdown{
-	padding-left: 13px !important;
+	padding-left: 15px !important;
 }
 }
 
@@ -66986,6 +66986,10 @@ header .content .right > ul > li > a{
   letter-spacing: 0.6px;
   color: rgba(255, 255, 255, 0.7);
 }
+header .content .right > ul > li > a.headeruserdetails.account-userTitle{
+  position: relative;
+  top: 1px;
+}
 header .content nav > ul{
 	    padding-top: 18px;
 }
@@ -67219,6 +67223,9 @@ footer>div>ul>li ul li{
       letter-spacing: 0.6px;
   color: #cccccc;
 }
+.newsletter input:focus {
+    border-color: #bbb;
+}
 .newsletter button {
     width: 26.32%;
     background: #444;
@@ -67366,7 +67373,8 @@ header .content  .bottom.active nav>ul>li:hover>.toggle:before{
 	margin: 0 !important;
 }
 header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:after, .logged_in.dropdown:after,
-    header .content .right > ul > li.bag:before{
+header .content .right > ul > li.bag:before,
+header .content .right > ul > li.wishlist:after, header .content .right > ul > li.track.trackOrder:after{
 	content: "";
     width: 0;
     height: 0;
@@ -67375,18 +67383,21 @@ header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:after, .
     border-bottom: 8px solid #fff;
     position: absolute;
     top: 28px;
-    left: 0;
-    right: 0;
-    margin: auto;
+    left: 50%;
     z-index: 11;
     opacity:0;
 }
-header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:hover:after, .logged_in.dropdown:hover:after,
-    header .content .right > ul > li.bag:hover:before{
+header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:hover:after,
+header .content .right > ul > li.bag:hover:before,
+header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:hover:after,
+header .content .right > ul > li.wishlist:hover:after, header .content .right > ul > li.track.trackOrder:hover:after{
     opacity:1;
-    -webkit-transition: opacity 0.15s 0.35s;
-    -moz-transition: opacity 0.15s 0.35s;
-    transition: opacity 0.15s 0.35s;
+    -webkit-transition: opacity 0.15s 0.18s;
+    -moz-transition: opacity 0.15s 0.18s;
+    transition: opacity 0.15s 0.18s;
+}
+.logged_in.dropdown:hover:after{
+    opacity:1;
 }
 header .content .right > ul > li.sign-in .sign-in-info{
 	width: 376px;
@@ -67395,10 +67406,35 @@ header .content .right > ul > li.sign-in .sign-in-info{
 }
 .dropdown-menu.dropdown-hi.loggedIn-flyout.ajaxflyout{
 	width:210px;
+	left: 20px;
 	background-color: #ffffff;
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.35), 0 1px 2px 0 rgba(0, 0, 0, 0.25);
   overflow: hidden;
   padding:12px 0 0 0;
+}
+header .content .right > ul > li.wishlist .wishlist-info{
+	left:auto;
+	right: 10px;
+	background-color: #ffffff;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.35), 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+  padding: 0px 15px;
+}
+.trackorder-dropdown{
+	background-color: #ffffff;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.35), 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+}
+.trackorder-dropdown li{
+	padding: 10px 5px 10px 0px !important;
+    color: #666;
+}
+#DropDownMyWishList li a {
+    font-weight: normal;
+    color: #666;
+    font-size: 13px;
+}
+#DropDownMyWishList li a span{
+    font-weight: normal;
+    font-size: 12px;
 }
 .loggedIn-flyout li:last-child {
     line-height: normal !important;
@@ -67434,6 +67470,9 @@ header .content .right ul.loggedIn-flyout li{
     display: block;
 
 }
+.loggedIn-flyout li:last-child a:hover {
+    color: #a9143c !important;
+}
 .header-myAccount, .header-SignInShare {
     line-height: 1px;
     text-indent: -100%;
@@ -67443,6 +67482,13 @@ header .content .right ul.loggedIn-flyout li{
 	border-top: 1px solid #eee;
 	padding-bottom: 12px !important;
     margin-top: 12px;
+}
+header .content .right > ul > li {
+    padding: 0 13px;
+}
+.my-bag-ul .emptyMiniCart {
+    margin-top: 19px;
+    margin-bottom: -19px;
 }
 }
 @media (max-width: 990px) and (min-width: 791px){
@@ -67492,7 +67538,7 @@ header .content .bottom.active nav{
     min-height: 100px;
 }	
 .callouts .Padd {
-    padding: 26px 50px;
+    padding: 26.5px 50px;
 }
 }
 .sign-in-info li:first-child{
@@ -67740,6 +67786,7 @@ body.page-homepage .trending .button{
 #showcase.feature-collections{
 	margin:0px;
 	border: none;
+	background: #f2f2f2;
 }
 #showcase.feature-collections h2 {
     padding: 60px 0 4px;
@@ -68042,6 +68089,33 @@ header > .content .bottom .mobile-bag.bag a {
 header > .content .bottom .search form button:before {
     background: url(../images/sprite-07.png) no-repeat scroll -300px -207px;
 }
+li.store-locator-header a:before,
+li.download-app a:before,
+span.material-icons{
+	-webkit-filter: invert(100%);
+    filter: invert(100%);
+}
+header > .content .top > div:not(.toggle) li.store-locator-header,
+header > .content .top > div:not(.toggle) li.download-app{
+	padding-left: 8px;
+}
+span.material-icons{
+	margin-right: 2px;
+}
+header .content .right > ul > li.wishlist > a:before{
+	margin-right: 8px;
+}
+.track.trackOrder .trackorder-dropdown {
+    max-height: 500px;
+    z-index: 10;
+}
+ul li #mobile-menu-toggle + ul.trackorder-dropdown{
+	background: transparent;
+}
+ul li #mobile-menu-toggle + ul.loggedIn-flyout {
+    text-indent: 0px;
+    background: transparent;
+}
 }
 @media (max-width: 790px) and (min-width: 768px)
 {
@@ -68157,7 +68231,7 @@ body.page-homepage .feature-collections #stayQued > h2{
     display: table;
 }
 .callouts .Padd {
-    padding: 10px 24px;
+    padding: 10.5px 24px;
 }
 .callouts .Padd ul li p {
     font-size: 12px;
@@ -68286,4 +68360,7 @@ body.page-homepage .feature-collections.home-brands-you-love-wrapper {
 }
 }
 /*Homepage responsive end*/
+.container_store_finder_home{
+	display: none;
+}
 /* Homepage changes end */
