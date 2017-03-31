@@ -116,13 +116,7 @@
                   </strong> </font>
                </p>
             </td>
-			<td align="center" bgcolor="#fbfbfb" style="width: 3%;">
-               <p align="center"><font size="2" color="#000000" ><strong>
-                  JewelleryType<br/>
-				<br/>
-                  </strong> </font>
-               </p>
-            </td>
+			
          </tr>
 		 #set ($totalFineJewelleryPrice=0)		 
 		 #set ($shippingCharge=0)
@@ -173,11 +167,7 @@
                   $entry.convenienceChargeApportion</font>
                </p>
             </td>
-			<td align="left" bgcolor="#fbfbfb">
-               <p align="center"><font size="2" color="#000000" >
-                  $entry.product.productCategoryType </font>
-               </p>
-            </td>
+			
          </tr>	 
 		 
 		 <!--Fine Jewellery changes-->
