@@ -1486,6 +1486,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String HTTP = "http:".intern();
 	public static final String HTTPS = "https:".intern();
 	public static final String STAGED = "Staged".intern();
+	//TISSQAUAT-673 starts
+	public static final String ONLINE = "Online".intern();
+	//TISSQAUAT-673 ends
 
 
 
@@ -1891,7 +1894,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String BUYAGETPERCENTAGEDISCOUNTONB = "BuyAGetPercentageDiscountOnB".intern();
 	//FREEBIE FIX
 	public static final String FREEBIEPRICETHRESHOLD = "freebiePriceThreshold";
-	
+
 	// OrderIssues:- multiple Payment Response from juspay restriction
 	public static final String DUPLICATEJUSPAYRESONSE = "duplicatJuspayResponse";
 
