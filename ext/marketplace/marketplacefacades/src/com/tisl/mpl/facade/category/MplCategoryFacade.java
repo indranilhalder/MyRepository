@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.facade.category;
 
+import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.commercefacades.catalog.CatalogFacade;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 
@@ -43,4 +44,6 @@ public interface MplCategoryFacade extends CatalogFacade
 
 	//TPR-4471
 	public String getSellerInformationBySellerID(String sellerId);
+
+	public ContentPageModel getContentPageBySellerID(String sellerId);
 }

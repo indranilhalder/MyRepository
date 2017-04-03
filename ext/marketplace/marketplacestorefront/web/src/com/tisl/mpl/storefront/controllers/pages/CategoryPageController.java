@@ -622,7 +622,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	{
 		final String requestURL = request.getRequestURL().toString();
 		//TPR-4471
-		String sellerName = null;
+		//		String sellerName = null;
 		String sellerId = null;
 		if (requestURL.matches(MplConstants.MSITE_SLR_SLS_HIERARCHY_URL_PTRN_RGX)
 				|| (null != searchQuery && searchQuery.contains("sellerId:")))
@@ -661,14 +661,14 @@ public class CategoryPageController extends AbstractCategoryPageController
 								ex);
 					}
 				}
-				if (StringUtils.isNotBlank(sellerId))
-				{
-					sellerName = mplCategoryFacade.getSellerInformationBySellerID(sellerId);
-				}
+				//				if (StringUtils.isNotBlank(sellerId))
+				//				{
+				//					sellerName = mplCategoryFacade.getSellerInformationBySellerID(sellerId);
+				//				}
 
 				model.addAttribute("msiteSellerId", sellerId);
-				//model.addAttribute("mSellerID", sellerId);
-				model.addAttribute("mSellerName", sellerName);
+				model.addAttribute("mSellerID", sellerId);
+				//				model.addAttribute("mSellerName", sellerName);
 
 			}
 		}

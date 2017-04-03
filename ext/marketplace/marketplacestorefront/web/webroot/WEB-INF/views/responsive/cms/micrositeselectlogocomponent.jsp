@@ -12,10 +12,10 @@
 <script>
 	
 $(document).ready(function () {
-	var sellerName = $('#mSeller_name').val();
+	var sellerId = $('#mSellerID').val();
 	var lastSegment = "";
-	if(sellerName != undefined) {
-		lastSegment = sellerName;
+	if(sellerId != undefined) {
+		lastSegment = sellerId;
 	}
 	 var url='/m/fetchSellerLogo/'+lastSegment;
 	      if(lastSegment != ''){  

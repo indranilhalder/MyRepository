@@ -17,8 +17,8 @@
 <input type="hidden" id="page_subcategory_name" value="${page_subcategory_name}"/>
 <input type="hidden" id="page_subcategory_name_l3" value="${page_subcategory_name_l3}"/>
 
-<input type="hidden" id="mSeller_name" value="${mSellerName}"> <!-- TPR-4471 -->
-<input type="hidden" id="mSellerID" value="${msiteSellerId}"> <!-- TPR-4471 -->
+<%-- <input type="hidden" id="mSeller_name" value="${mSellerName}"> --%> <!-- TPR-4471 -->
+<input type="hidden" id="mSellerID" value="${mSellerID}"> <!-- TPR-4471 -->
 
 
 <!-- UF-15-16 -->
@@ -43,9 +43,9 @@
 <template:page pageTitle="${pageTitle}">
 <!-- TPR-4471 Starts -->
 
-<c:set value ="${mSellerName}" var="sellerName"></c:set>
+<c:set value ="${mSellerID}" var="sellerId"></c:set>
 
-<c:if test="${not empty sellerName}">
+<c:if test="${not empty sellerId}">
 <div class="productGrid-header-wrapper">
 <div class="productGrid-header">
 <div class="productGrid-menu">

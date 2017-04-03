@@ -15,11 +15,16 @@ $(document).ready(function () {
 
 	//TPR-4471
 	var requestParam = window.location.href;
-	var pageLabel = '${cmsPage.label}';
-	var sellerId = '${cmsPage.associatedSeller.id}';
+	var sellerId = $('#mSellerID').val();
 	var siteName = '${cmsSite.uid}';
-	var lastSegment = pageLabel.split('/').pop();
-		
+	var lastSegment = "";
+	if(requestParam.includes("/m/")) {
+		lastSegment = requestParam.split('/').pop();
+	}
+	else
+	{
+		lastSegment = sellerId;
+	}
 	    //var url='/m/fetchSellerSalesHierarchyCategories/'+lastSegment;
 	    var url='/m/fetchSellerSalesHierarchyCategories/'+sellerId;
 

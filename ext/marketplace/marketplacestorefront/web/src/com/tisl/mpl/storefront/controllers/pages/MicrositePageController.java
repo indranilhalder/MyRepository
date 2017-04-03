@@ -154,17 +154,18 @@ public class MicrositePageController extends AbstractSearchPageController
 	 * @throws CMSItemNotFoundException
 	 * @throws UnsupportedEncodingException
 	 */
-	@RequestMapping(value = "/fetchSellerLogo/{sellerName}", method = RequestMethod.GET)
+	@RequestMapping(value = "/fetchSellerLogo/{sellerId}", method = RequestMethod.GET)
 	@ResponseBody
-	public JSONObject getMicrositeAllLogo(@PathVariable final String sellerName) throws CMSItemNotFoundException,
+	public JSONObject getMicrositeAllLogo(@PathVariable final String sellerId) throws CMSItemNotFoundException,
 			UnsupportedEncodingException
 	{
 		final JSONObject logoJson = new JSONObject();
 		SimpleBannerComponentModel logoComponent = null;
 		try
 		{
-			final String label = "/m/" + sellerName;
-			final ContentPageModel page = getCmsPageService().getPageForLabel(label);
+			//			final String label = "/m/" + sellerName;
+			//			final ContentPageModel page = getCmsPageService().getPageForLabel(label);
+			final ContentPageModel page = mplCategoryFacade.getContentPageBySellerID(sellerId);
 			if (page != null)
 			{
 				for (final ContentSlotForPageModel contentSlotForPage : page.getContentSlots())

@@ -22,8 +22,8 @@
 <input type="hidden" id="page_name" value="${page_name}">
 
 <input type="hidden" id="search_type" value="${searchType}"><!-- For TPR-666 -->
-<input type="hidden" id="mSeller_name" value="${mSellerName}"> <!-- TPR-4471 -->
-<input type="hidden" id="mSellerID" value="${msiteSellerId}"> <!-- TPR-4471 -->
+<%-- <input type="hidden" id="mSeller_name" value="${mSellerName}"> --%> <!-- TPR-4471 -->
+<input type="hidden" id="mSellerID" value="${mSellerID}"> <!-- TPR-4471 -->
 
 
 <%-- <input type="hidden" id="product_category" value="${product_category}"> <!-- For TPR-430 -->

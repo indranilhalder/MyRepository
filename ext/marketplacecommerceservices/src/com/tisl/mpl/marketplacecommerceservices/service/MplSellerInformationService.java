@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 
 import java.util.List;
@@ -34,4 +35,6 @@ public interface MplSellerInformationService
 
 	//TPR-4471
 	public SellerInformationModel getSellerInformationBySellerID(CatalogVersionModel currentCatalogVersion, String sellerId);
+
+	public ContentPageModel getContentPageBySellerID(String sellerId);
 }

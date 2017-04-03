@@ -245,16 +245,9 @@ public class SearchPageController extends AbstractSearchPageController
 		if (StringUtils.isNotBlank(mSellerID))
 		{
 			model.addAttribute("msiteSellerId", mSellerID);
-		}
-		//CKD:TPR-250:End
-		// TPR-4471
-		String sellerName = "";
-		if (null != mSellerID)
-		{
-			sellerName = mplCategoryFacade.getSellerInformationBySellerID(mSellerID);
-			model.addAttribute("mSellerName", sellerName);
 			model.addAttribute("mSellerID", mSellerID);
 		}
+
 		//---------------start--------------
 		String whichSearch = null;
 		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
@@ -1371,9 +1364,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 *
+	 * 
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 *
+	 * 
 	 * return list; }
 	 */
 
