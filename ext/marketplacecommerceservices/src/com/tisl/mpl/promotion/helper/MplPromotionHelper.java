@@ -1145,28 +1145,28 @@ public class MplPromotionHelper
 	 * @param restrictionList
 	 * @return boolean
 	 */
-	public boolean validateCount(final Map<String, Integer> validProductList, final int qualifyingCount,
-			final List<AbstractPromotionRestriction> restrictionList)
-	{
-		int count = 0;
-		if (MapUtils.isNotEmpty(validProductList) && qualifyingCount > 0 && validateForStockRestriction(restrictionList))
-		{
-			for (final Entry<String, Integer> data : validProductList.entrySet())
-			{
-				if (null != data.getValue())
-				{
-					count += data.getValue().intValue();
-				}
-
-			}
-
-			if (!(count % qualifyingCount == 0))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
+	//	public boolean validateCount(final Map<String, Integer> validProductList, final int qualifyingCount,
+	//			final List<AbstractPromotionRestriction> restrictionList)
+	//	{
+	//		int count = 0;
+	//		if (MapUtils.isNotEmpty(validProductList) && qualifyingCount > 0 && validateForStockRestriction(restrictionList))
+	//		{
+	//			for (final Entry<String, Integer> data : validProductList.entrySet())
+	//			{
+	//				if (null != data.getValue())
+	//				{
+	//					count += data.getValue().intValue();
+	//				}
+	//
+	//			}
+	//
+	//			if (!(count % qualifyingCount == 0))
+	//			{
+	//				return false;
+	//			}
+	//		}
+	//		return true;
+	//	}
 
 	/**
 	 *
