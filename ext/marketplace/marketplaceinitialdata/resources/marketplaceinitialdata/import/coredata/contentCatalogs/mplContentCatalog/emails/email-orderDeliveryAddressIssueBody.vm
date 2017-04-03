@@ -75,8 +75,6 @@
         	</table>
         	</td>
     	</tr>
-    	
-    	 
               #if($ctx.cmsSlotContents.Tip)
 			  <tr>
 			  <td height="70" align="left">
