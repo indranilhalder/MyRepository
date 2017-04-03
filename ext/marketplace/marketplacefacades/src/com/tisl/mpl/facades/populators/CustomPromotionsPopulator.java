@@ -32,6 +32,7 @@ import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
 import com.tisl.mpl.model.BuyAandBgetCModel;
 import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
+import com.tisl.mpl.model.MplProductSteppedMultiBuyPromotionModel;
 import com.tisl.mpl.model.SellerMasterModel;
 
 
@@ -142,7 +143,7 @@ public class CustomPromotionsPopulator implements Populator<AbstractPromotionMod
 			 * sellerRestriction.getSellerMasterList(); for (final SellerMasterModel seller : sellerList) {
 			 * allowedSellerList.add(seller.getId()); } //setting allowed seller list
 			 * target.setAllowedSellers(allowedSellerList); }
-			 *
+			 * 
 			 * } }
 			 */
 			//}
