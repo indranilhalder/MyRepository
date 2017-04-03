@@ -184,12 +184,15 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//
 			//			}
 
-			//TPR -965 starts
+
+
+			//TPR -965 + TPR-4579 starts
 			if (null != orderModel && CollectionUtils.isNotEmpty(orderModel.getAllPromotionResults())
 					&& isLimitedStockPromoExists(orderModel.getAllPromotionResults()))
 			{
 				final List<LimitedStockPromoInvalidationModel> orderInvalidationList = new ArrayList<LimitedStockPromoInvalidationModel>();
 				boolean isCategoryLevelPromo = false;
+
 				for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
 				{
 					if (orderEntry.getQualifyingCount().intValue() > 0
@@ -250,7 +253,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				}
 				getModelService().saveAll(orderInvalidationList);
 			}
-			//TPR -965 ends
+
+
+			//TPR -965 + TPR-4579 ends
 
 			if (null != orderModel)
 			{
@@ -545,6 +550,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	}
 
 	/**
+	 * Checks for Promotion set up with Category Details
+	 *
 	 * @param promotion
 	 * @return boolean
 	 */
@@ -552,8 +559,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	{
 		boolean flag = false;
 
-		if (promotion instanceof ProductPromotionModel
-				&& CollectionUtils.isNotEmpty(((ProductPromotionModel) promotion).getCategories()))
+		if (CollectionUtils.isNotEmpty(((ProductPromotionModel) promotion).getCategories()))
 		{
 			flag = true;
 		}
@@ -2843,10 +2849,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	}
 
 	/**
-	 * cheking or stock level restriction
+	 * Checking or stock level restriction
 	 *
 	 * @param allPromotionResults
-	 * @return
+	 * @return isPresent
 	 */
 	private boolean isLimitedStockPromoExists(final Set<PromotionResultModel> allPromotionResults)
 	{
@@ -2867,8 +2873,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				}
 			}
 
-
-			//		return isPresent;
 		}
 		return isPresent;
 
