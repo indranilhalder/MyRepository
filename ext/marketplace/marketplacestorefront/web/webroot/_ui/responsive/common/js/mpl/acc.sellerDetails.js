@@ -298,9 +298,10 @@ function focusOnElement() {
     		    tbodycontent+="<li>"+$('#cashondeliveryid').text()+"</li>";
     		    }
 	    }
-	    tbodycontent+="<li>"; 
-	    tbodycontent+=sellersArray[i]['replacement']+$('#replacementguranteeid').text();
-	    tbodycontent+="</li>";
+	  //UF-250(0 Day replacement guarantee text to be removed.)
+	    //tbodycontent+="<li>"; 
+	   // tbodycontent+=sellersArray[i]['replacement']+$('#replacementguranteeid').text();
+	    	tbodycontent+="</li>";
 	    tbodycontent+="<li><span class='tooltip_wrapper'><a>"+$('#deliveryratesid').text()+"</a>"+"<span class='tooltip_pop'>"+ deliveryMap+"</span></span>"+" & ";
 	 
 	    tbodycontent+="<span class='tooltip_wrapper'><a>"+$('#returnpolicyid').text()+"</a>"+"<span class='tooltip_pop'>"+sellersArray[i]['returnPolicy']+"&nbsp;days</span></span></li>";
