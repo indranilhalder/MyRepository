@@ -1,4 +1,3 @@
-<%@ tag body-content="empty" trimDirectiveWhitespaces="true"%>
 <%@ attribute name="hideHeaderLinks" required="false"%>
 <%@ attribute name="showOnlySiteLogo" required="false"%>
 
@@ -309,6 +308,8 @@
 						data-mini-cart-name="Cart" data-mini-cart-empty-name="Empty Cart"
 						style="position: static;"><spring:theme code="minicart.mybag" />&nbsp;(<span
 						class="js-mini-cart-count-hover"></span>) </a>
+						
+						<div class="mini-bag"></div> <!-- Added for UF-268 -->
 				</c:if>
 			</div>
 			</div>
