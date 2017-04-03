@@ -5455,7 +5455,7 @@ function checkPincodeServiceability(buttonType,el)
 		//$("#pinCodeButtonIds").text("Check");
 		 document.getElementById("pinCodeButtonIds").className = "CheckAvailability"; 	//UF-71
 		 $('#defaultPinCodeIds').focus();
-		 $('#defaultPinCodeIdsBtm').focus();//UF-68
+		 //$('#defaultPinCodeIdsBtm').focus();//UF-68//UF-70 Commenting this line as it takes the focus to bottom of the page
 		$("#pinCodeDispalyDiv .spinner").remove();
 		$("#emptyId").hide();
 		$("#emptyIdBtm").hide();//UF-68
@@ -5500,8 +5500,8 @@ function checkPincodeServiceability(buttonType,el)
 		$(".delivery ul.success_msg").hide();//TPR-1341
 		return false; 
 		// TPR-1055 ends
-	} //CAR-246
-	else if(selectedPincode!==""){
+	} //CAR-246//UF-70
+	else if(selectedPincode!=="" && $("#isPincodeRestrictedPromoPresentId").val()=="true"){
 		$(location).attr('href',ACC.config.encodedContextPath + "/cart?pincode="+selectedPincode);
 	}
 	else
@@ -5536,8 +5536,16 @@ function checkPincodeServiceability(buttonType,el)
  			//"sprint merger issue
  			var responeStr=response['pincodeData'].split("|");
  			//TPR-970 changes
- 			populateCartDetailsafterPincodeCheck(responeStr[1]);
+ 			populateCartDetailsafterPincodeCheck(response);
  			//TPR-970 changes
+ 			//Start:UF-70
+ 			var location=window.location.href;
+ 			if(location.includes("pincode="))
+			{
+ 				var originalUrl=ACC.config.encodedContextPath + "/cart?pincode="+selectedPincode
+ 				changeBrowserUrl(originalUrl);
+			}
+ 			//End:UF-70
  			if(responeStr[0]=="N")
  			{
  				utagCheckPincodeStatus = "cart_pincode_check_failure";
@@ -5562,7 +5570,7 @@ function checkPincodeServiceability(buttonType,el)
  				$("#unserviceablepincodeBtm").show();//UF-68
  				 $(".pincodeServiceError").show();
  				populatePincodeDeliveryMode(response,buttonType);
-					reloadpage(selectedPincode,buttonType);
+					//reloadpage(selectedPincode,buttonType); commenting the code
  	 			$("#isPincodeServicableId").val('N');
  	 			// reloadpage(selectedPincode,buttonType);
  				} 
@@ -5588,7 +5596,7 @@ function checkPincodeServiceability(buttonType,el)
 	 			$("#AvailableMessage").show();
 	 			$("#AvailableMessageBtm").show();//UF-68
  					populatePincodeDeliveryMode(response,buttonType);
- 					reloadpage(selectedPincode,buttonType);
+ 					//reloadpage(selectedPincode,buttonType); commenting the code
  				}
  			
  			// TISPRM-33
@@ -5674,7 +5682,6 @@ function checkPincodeServiceability(buttonType,el)
 
    }
 }
-
 //TPR-970 changes starts
 function populateCartDetailsafterPincodeCheck(responseData){
 	if(null!=responseData['cartData']||""!=responseData['cartData']){
@@ -5713,31 +5720,39 @@ function populateCartDetailsafterPincodeCheck(responseData){
 				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelPercentage']+"%").addClass("priceFormat").append("<span>Off Bag</span>");
 			    $("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
 			}
-			if(cartData[cart]['cartLevelDisc']!=null&&cartData[cart]['productPerDiscDisplay']!=null && cartData[cart]['productLevelDisc']){
-				isOfferPresent=true;
-				$("#ItemAmtofferDisplay_"+entryNumber).show();
-				$("#off-bag-itemDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value+"%").addClass("priceFormat").append("<span>Off Item</span>");
-				 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
+			//Start:<!-- prodLevelPercentage replace with productPerDiscDisplay -->
+			//Start:Below code is for productPerDiscDisplay when cartLevelDisc is not null
+			if(cartData[cart]['productPerDiscDisplay']!=null )
+			{
+				if(cartData[cart]['cartLevelDisc']!=null&&cartData[cart]['productLevelDisc']){
+					isOfferPresent=true;
+					$("#ItemAmtofferDisplay_"+entryNumber).show();
+					$("#off-bag-itemDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off</span>");
+					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
+				}
+				else{
+					isOfferPresent=true;
+					$("#ItemAmtofferDisplay_"+entryNumber).show();
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off</span>");
+					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartValue['totalPrice'].formattedValue).addClass("priceFormat");
+				}
+				//End:Above code is for productPerDiscDisplay when cartLevelDisc is not null
+				//Start:Below code is for productPerDiscDisplay when cartLevelDisc is null
+				if(cartData[cart]['productPerDiscDisplay']!=null && cartData[cart]['productLevelDisc']){
+					isOfferPresent=true;
+					$("#ItemAmtofferDisplay_"+entryNumber).show();
+					$("#off-bag-itemDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off</span>");
+					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
+				}
+				else{
+					isOfferPresent=true;
+					$("#ItemAmtofferDisplay_"+entryNumber).show();
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off</span>");
+					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue).addClass("priceFormat");
+				}
+				//End:Above code is for productPerDiscDisplay when cartLevelDisc is null
+				//End:<!-- prodLevelPercentage replace with productPerDiscDisplay -->
 			}
-			else{
-				isOfferPresent=true;
-				$("#ItemAmtofferDisplay_"+entryNumber).show();
-				$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value+"%").addClass("priceFormat").append("<span>Off Item</span>");
-				 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartValue['totalPrice'].formattedValue).addClass("priceFormat");
-			}
-			if(cartData[cart]['productPerDiscDisplay']!=null && cartData[cart]['productLevelDisc']){
-				isOfferPresent=true;
-				$("#ItemAmtofferDisplay_"+entryNumber).show();
-				$("#off-bag-itemDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value+"%").addClass("priceFormat").append("<span>Off Item</span>");
-				 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
-			}
-			else{
-				isOfferPresent=true;
-				$("#ItemAmtofferDisplay_"+entryNumber).show();
-				$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value+"%").addClass("priceFormat").append("<span>Off Item</span>");
-				 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue).addClass("priceFormat");
-			}
-			
 			if(isOfferPresent==false){
 				$("#totalPrice_"+entryNumber).removeClass("delAction");
 			}
@@ -5750,7 +5765,8 @@ function populateCartDetailsafterPincodeCheck(responseData){
 		$("discount .amt").html("");
 		if(null!=cartValue['totalDiscounts']&&cartValue['totalDiscounts'].value>0){
 		$("#discount").show();
-		$("#discount .amt").html(cartValue['totalDiscounts'].formattedValue);
+		//$("#discount .amt").html(cartValue['totalDiscounts'].formattedValue);
+		$("#discount .amt").html(cartValue['totalDiscounts'].formattedValue+" "+"("+cartValue['discountPercentage']+"%)");
 		}
 		else{
 			$("#discount").hide();
@@ -6125,7 +6141,13 @@ function redirectToCheckout(checkoutUrl)
 	}
 	return false;
 }
-
+//UF-70
+$(document).ready(function(){
+	if($('#pageType').val()=='cart')
+	{
+		checkIsServicable();
+	}
+});
 function checkIsServicable()
 {
 	// TPR-1055

@@ -511,4 +511,12 @@ public interface MplCartFacade extends CartFacade
 	public CartData getCartDataFromCartModel(final CartModel cartModel, final boolean recentlyAddedFirst)
 			throws EtailNonBusinessExceptions;
 
+	/**
+ 	 * This method is used to check if any product in the cart is having pincode restricted promotion configured.
+ 	 * 
+ 	 * @param cart
+ 	 * @return boolean
+ 	 */
+	boolean checkPincodeRestrictedPromoOnCartProduct(CartModel cart);
+
 }

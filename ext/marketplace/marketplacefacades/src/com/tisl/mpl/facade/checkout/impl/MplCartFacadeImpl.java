@@ -4,6 +4,7 @@
 package com.tisl.mpl.facade.checkout.impl;
 
 import de.hybris.platform.acceleratorservices.config.SiteConfigService;
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.catalog.CatalogService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
@@ -35,12 +36,17 @@ import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.product.ProductService;
+import de.hybris.platform.promotions.PromotionsService;
+import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
+import de.hybris.platform.promotions.model.ProductPromotionModel;
+import de.hybris.platform.promotions.model.PromotionGroupModel;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
+import de.hybris.platform.servicelayer.time.TimeService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.site.BaseSiteService;
@@ -55,6 +61,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -66,9 +73,12 @@ import java.util.Map.Entry;
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 
+import net.sourceforge.pmd.util.StringUtil;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
@@ -90,6 +100,11 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
+import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
+import com.tisl.mpl.model.BuyAandBgetCModel;
+import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
+import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
+import com.tisl.mpl.model.EtailPincodeRestrictionModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
@@ -137,6 +152,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	@Autowired
 	private CatalogService catalogService;
+
+	private TimeService timeService;
+
+	private PromotionsService promotionsService;
+
 
 
 	@Resource(name = "pincodeService")
@@ -2842,4 +2862,103 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		this.orderConverter = orderConverter;
 	}
 
+
+	/**
+	 * @return the promotionsService
+	 */
+	public PromotionsService getPromotionsService()
+	{
+		return promotionsService;
+	}
+
+
+	/**
+	 * @param promotionsService
+	 *           the promotionsService to set
+	 */
+	public void setPromotionsService(final PromotionsService promotionsService)
+	{
+		this.promotionsService = promotionsService;
+	}
+
+
+	
+	/**
+	 * @return the timeService
+	 */
+	public TimeService getTimeService()
+	{
+		return timeService;
+	}
+
+
+	/**
+	 * @param timeService
+	 *           the timeService to set
+	 */
+	public void setTimeService(final TimeService timeService)
+	{
+		this.timeService = timeService;
+	}
+
+	/**
+ 	 * This method is used to check if any product in the cart is having pincode restricted promotion configured.
+ 	 * 
+ 	 * @param cart
+ 	 * @return boolean
+ 	 */
+	@Override
+	public boolean checkPincodeRestrictedPromoOnCartProduct(final CartModel cart)
+	{
+
+		boolean isPincodeRestrictedPromotionPresent = false;
+		exitLoop:
+		{
+			final BaseSiteModel baseSiteModel = getBaseSiteService().getCurrentBaseSite();
+			PromotionGroupModel defaultPromotionGroup = null;
+			final Date currentTimeRoundedToMinute = DateUtils.round(getTimeService().getCurrentTime(), Calendar.MINUTE);
+			if (baseSiteModel != null)
+			{
+				defaultPromotionGroup = baseSiteModel.getDefaultPromotionGroup();
+			}
+			if (defaultPromotionGroup == null)
+			{
+				return false;
+			}
+			for (final AbstractOrderEntryModel cartEntry : cart.getEntries())
+			{
+				final ProductModel productModel = cartEntry.getProduct();
+				final List<ProductPromotionModel> promotions = getPromotionsService().getProductPromotions(
+						Collections.singletonList(defaultPromotionGroup), productModel, true, currentTimeRoundedToMinute);
+
+				if (null != promotions)
+				{
+					for (final ProductPromotionModel productPromotion : promotions)
+					{
+						if (null != productPromotion
+								&& productPromotion.getEnabled() == Boolean.TRUE
+								&& (productPromotion instanceof BuyXItemsofproductAgetproductBforfreeModel
+										|| (productPromotion instanceof BuyAandBgetCModel)
+										|| (productPromotion instanceof BuyABFreePrecentageDiscountModel) || (productPromotion instanceof CustomProductBOGOFPromotionModel)))//CustomOrderThresholdFreeGiftPromotionModel
+						{
+
+							for (final AbstractPromotionRestrictionModel restriction : productPromotion.getRestrictions())
+							{
+
+
+								if (restriction instanceof EtailPincodeRestrictionModel)
+								{
+									isPincodeRestrictedPromotionPresent = true;
+									break exitLoop;
+								}
+
+							}
+						}
+					}//end promotion for loop
+				}
+			}
+
+		}
+		return isPincodeRestrictedPromotionPresent;
+	}
 }
