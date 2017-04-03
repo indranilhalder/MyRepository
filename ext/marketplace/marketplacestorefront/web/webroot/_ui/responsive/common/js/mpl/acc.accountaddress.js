@@ -108,7 +108,7 @@ $(document).ready(function(){
  	return true;
  }*/
 
- function taCount(taObj,Cnt) { 
+ function taCountAcc(taObj,Cnt) { 
 	 document.getElementById("erraddressline1").innerHTML = "";
 	 
  	objCnt=createObject(Cnt);
