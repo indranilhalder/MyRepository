@@ -3318,7 +3318,9 @@ function loadDefaultWishListName_SizeGuide() {
 			$.ajax({
 				contentType : "application/json; charset=utf-8",
 				url : requiredUrl,
-				data : {productCode:productCode,variantCode:variantCodesJson},
+				data : {productCode:productCode,variantCode:variantCodesJson,
+					sellerId:msiteBuyBoxSeller //CKD:TPR-250
+					},
 				cache : false,
 				dataType : "json",
 				success:function(data){
@@ -3897,7 +3899,9 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 	return $.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
-		data : {productCode:productCode,variantCode:variantCodesJson},
+		data : {productCode:productCode,variantCode:variantCodesJson,
+			sellerId:msiteBuyBoxSeller //CKD:TPR-250	
+		},
 		cache : false,//added to resolve browser specific the OOS issue
 		dataType : "json",
 		success : function(data) {
