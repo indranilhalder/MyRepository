@@ -334,9 +334,20 @@ public class MarketPlaceDefaultReturnsController extends
 					if(null!=orderModel.getUser()){
 						codSelfShipData = getCustomerBankDetailsByCustomerId(orderModel.getUser().getUid());
 					}
-					List<AbstractOrderEntryModel> entries = new ArrayList<AbstractOrderEntryModel>();refundRequest.getReturnEntries();
-					for(ReturnEntryModel entry : refundRequest.getReturnEntries()) {
-						entries.add(entry.getOrderEntry());
+					List<AbstractOrderEntryModel> entries = new ArrayList<AbstractOrderEntryModel>();
+					if(null !=refundRequest.getReturnEntries() && !refundRequest.getReturnEntries().isEmpty()) {
+						for(ReturnEntryModel entry : refundRequest.getReturnEntries()) {
+							entries.add(entry.getOrderEntry());
+						}
+					}
+					else {
+						for (Map.Entry<Long, RefundDetails> refundDetail : refundDetailsList
+								.entrySet()) {
+							AbstractOrderEntryModel orderEntryModel = getOrderEntryByEntryNumber(
+									refundRequest.getOrder(),
+									refundDetail.getKey());
+							entries.add(orderEntryModel);
+						}
 					}
 					getCodPaymentInfoToFICO(codSelfShipData,entries);
 				}catch(EtailNonBusinessExceptions e)
@@ -400,9 +411,20 @@ public class MarketPlaceDefaultReturnsController extends
 				if(null!=orderModel.getUser()){
 					codSelfShipData = getCustomerBankDetailsByCustomerId(orderModel.getUser().getUid());
 				}
-				List<AbstractOrderEntryModel> entries = new ArrayList<AbstractOrderEntryModel>();refundRequest.getReturnEntries();
-				for(ReturnEntryModel entry : refundRequest.getReturnEntries()) {
-					entries.add(entry.getOrderEntry());
+				List<AbstractOrderEntryModel> entries = new ArrayList<AbstractOrderEntryModel>();
+				if(null !=refundRequest.getReturnEntries() && !refundRequest.getReturnEntries().isEmpty()) {
+					for(ReturnEntryModel entry : refundRequest.getReturnEntries()) {
+						entries.add(entry.getOrderEntry());
+				}
+				}
+				else {
+					for (Map.Entry<Long, RefundDetails> refundDetail : refundDetailsList
+							.entrySet()) {
+						AbstractOrderEntryModel orderEntryModel = getOrderEntryByEntryNumber(
+								refundRequest.getOrder(),
+								refundDetail.getKey());
+						entries.add(orderEntryModel);
+					}
 				}
 				getCodPaymentInfoToFICO(codSelfShipData,entries);
 			}

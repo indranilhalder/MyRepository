@@ -41,6 +41,7 @@ import bsh.ParseException;
 
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceReturnsController;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.TypeofReturn;
 import com.tisl.mpl.core.enums.RefundMode;
@@ -1446,6 +1447,7 @@ ReturnRequestCreateWidgetRenderer {
 			Textbox accHolderNameTextbox, Listbox refundModeListbox,
 			Listbox titleListBox, Textbox bankNameTextbox, Textbox ifscTextbox) throws InterruptedException {
 		try {
+			OrderModel order = (OrderModel) returnEntry.get(0).getOrder();
 		accNoTextbox.setDisabled(true);
 		reEnteAaccNoTextbox.setDisabled(true);
 		accHolderNameTextbox.setDisabled(true);
@@ -1453,22 +1455,30 @@ ReturnRequestCreateWidgetRenderer {
 		ifscTextbox.setDisabled(true);
 		refundModeListbox.setDisabled(true);
 		titleListBox.setDisabled(true);
+		CustomerModel customerModel = null;
+		if(null != order.getUser()) {
+			customerModel = (CustomerModel) order.getUser(); 
+		}
 			CODSelfShipData codData = new CODSelfShipData();
-			codData.setOrderRefNo(returnEntry.get(0).getOrder().getCode());
-			//codData.set
-			codData.setTitle((String) titleListBox.getSelectedItem().getLabel());
+			if(null != customerModel) {
+				codData.setCustomerNumber(customerModel.getUid());
+			}
 			codData.setName(accHolderNameTextbox.getValue().trim());
+			codData.setTitle((String) titleListBox.getSelectedItem().getLabel());
 			codData.setBankAccount(accNoTextbox.getValue().trim());
-			codData.setBankName(bankNameTextbox.getValue().trim());
 			codData.setBankKey(ifscTextbox.getValue().trim());
-			codData.setPaymentMode((String) refundModeListbox.getSelectedItem()
-					.getLabel());
-			codData.setOrderNo(returnEntry.get(0).getOrder().getCode());
+			codData.setBankName(bankNameTextbox.getValue().trim());
+			String paymentMode = (String) refundModeListbox.getSelectedItem()
+					.getLabel();
+			if(paymentMode.equalsIgnoreCase(RefundMode.NEFT.getCode())) {
+				codData.setPaymentMode(MarketplaceCockpitsConstants.RETURN_REFUND_MODE_N);
+			}
+			codData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_POSTPAID);
 		  	((MarketPlaceReturnsController) widget.getWidgetController())
 			.saveCODReturnsBankDetails(codData);
 	
 	}catch(Exception e) {
-		e.printStackTrace();
+		LOG.error("Exception occurred while saving bank Details"+e.getMessage());
 	}
 	}
 	
