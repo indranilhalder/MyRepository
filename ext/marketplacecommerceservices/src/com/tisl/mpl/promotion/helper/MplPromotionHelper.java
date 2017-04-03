@@ -991,6 +991,8 @@ public class MplPromotionHelper
 	}
 
 	/**
+	 * The Method is used to get Limited Offer Information to Offer Classes
+	 *
 	 * @param restrictionList
 	 * @param promoCode
 	 * @param order
@@ -1000,24 +1002,19 @@ public class MplPromotionHelper
 			final String promoCode, final AbstractOrder order, final int promoQualifyingCount)
 	{
 		final MplLimitedOfferData data = new MplLimitedOfferData();
-		int count = 0;
-		int usedUpCount = 0;
-		int offerCount = 0;
-		String orginalUid = MarketplacecommerceservicesConstants.EMPTY;
-
-		final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) modelService.get(order);
-		if (null != abstractOrderModel && null != abstractOrderModel.getUser())
+		try
 		{
-			final CustomerModel customer = (CustomerModel) abstractOrderModel.getUser();
-			if (null != customer && null != customer.getOriginalUid())
-			{
-				orginalUid = customer.getOriginalUid();
-			}
-		}
+			int count = 0;
+			int usedUpCount = 0;
+			int offerCount = 0;
+			String orginalUid = MarketplacecommerceservicesConstants.EMPTY;
 
-		if (CollectionUtils.isNotEmpty(restrictionList) && validateForStockRestriction(restrictionList))
-		{
+			//final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) modelService.get(order);
+
+			orginalUid = getorginalUid((AbstractOrderModel) modelService.get(order));
+
 			usedUpCount = getStockService().getCummulativeOrderCount(promoCode, orginalUid);
+
 			count = getStockCustomerRedeemCount(restrictionList);
 			if (count == 0)
 			{
@@ -1055,7 +1052,32 @@ public class MplPromotionHelper
 				data.setExhausted(false);
 			}
 		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during Limited Offer Data Class Generation");
+		}
 		return data;
+	}
+
+	/**
+	 * The Method Returns Original UID for Limited Offer Evaluation
+	 *
+	 * @param abstractOrderModel
+	 * @return orginalUid
+	 */
+	private String getorginalUid(final AbstractOrderModel abstractOrderModel)
+	{
+		String orginalUid = MarketplacecommerceservicesConstants.EMPTY;
+
+		if (null != abstractOrderModel && null != abstractOrderModel.getUser())
+		{
+			final CustomerModel customer = (CustomerModel) abstractOrderModel.getUser();
+			if (null != customer && null != customer.getOriginalUid())
+			{
+				orginalUid = customer.getOriginalUid();
+			}
+		}
+		return orginalUid;
 	}
 
 	/**
