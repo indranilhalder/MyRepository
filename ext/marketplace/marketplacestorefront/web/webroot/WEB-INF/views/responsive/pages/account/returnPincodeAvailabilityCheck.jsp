@@ -54,11 +54,9 @@
 			 }
 			 /**************End of character count********/
 			
-			 if(document.getElementsByClassName("Address1")[0].value.length!=null)
-			 {
 				 myLen=document.getElementsByClassName("Address1")[0].value.length;
 				 $("#myCounter").html((120 - myLen));
-			 }
+			 
 				
 			//TPR-3402 end
 			
