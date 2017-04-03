@@ -22,14 +22,14 @@ public interface ExtStockLevelPromotionCheckService
 	 * @param codes
 	 * @param promoCode
 	 * @param sellerFlag
-	 * @return
+	 * @return Map<String, Integer>
 	 */
 	public Map<String, Integer> getCumulativeStockMap(final String codes, String promoCode, boolean sellerFlag);
 
 	/**
 	 *
 	 * @param guid
-	 * @return int
+	 * @return List<LimitedStockPromoInvalidationModel>
 	 */
 	public List<LimitedStockPromoInvalidationModel> getPromoInvalidationList(final String guid);
 
@@ -44,7 +44,6 @@ public interface ExtStockLevelPromotionCheckService
 	 *
 	 * @param promoCode
 	 * @param orginalUid
-	 * @return int
 	 */
 	public int getCummulativeOrderCount(String promoCode, String orginalUid);
 
@@ -60,7 +59,6 @@ public interface ExtStockLevelPromotionCheckService
 	 *
 	 * @param promoCode
 	 * @param orginalUid
-	 * @return int
 	 */
 	public int getTotalOfferOrderCount(String promoCode, String orginalUid);
 

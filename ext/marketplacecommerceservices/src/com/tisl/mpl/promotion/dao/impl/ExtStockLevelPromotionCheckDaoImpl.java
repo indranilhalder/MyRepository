@@ -4,6 +4,7 @@
 package com.tisl.mpl.promotion.dao.impl;
 
 import de.hybris.platform.core.model.LimitedStockPromoInvalidationModel;
+import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.internal.dao.AbstractItemDao;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
@@ -101,7 +102,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.promotion.dao.ExtStockLevelPromotionCheckDao#getPromoInvalidationList(java.lang.String)
 	 */
 	@Override
@@ -341,12 +342,13 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 		catch (final FlexibleSearchException e)
 		{
-			LOG.error("error in search query" + e);
+			LOG.error("exception getching the quantity count details aginst product/ussid" + e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
-		catch (final UnknownIdentifierException e)
+		catch (final ModelNotFoundException e)
 		{
-			LOG.error(e);
+			LOG.error("exception getching the quantity count details aginst product/ussid" + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{

@@ -2016,7 +2016,6 @@
  	<!-- TPR-965 STARTS-->
 	 <bean id="stockPromoCheckService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ExtStockLevelPromotionCheckServiceImpl">
-		<!-- <property name="stockPromoCheckDao" ref="stockPromoCheckDao" /> -->
 	</bean>
 	 <bean id="stockPromoCheckDao"
 		class="com.tisl.mpl.promotion.dao.impl.ExtStockLevelPromotionCheckDaoImpl">

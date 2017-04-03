@@ -4,8 +4,6 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.core.model.LimitedStockPromoInvalidationModel;
-import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +13,6 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
 import com.tisl.mpl.promotion.dao.ExtStockLevelPromotionCheckDao;
@@ -29,18 +26,10 @@ public class ExtStockLevelPromotionCheckServiceImpl implements ExtStockLevelProm
 {
 
 	private static final Logger LOG = Logger.getLogger(ExtStockLevelPromotionCheckServiceImpl.class);
-	/*
-	 * (non-Javadoc)
-	 */
+
+
 	@Resource(name = "stockPromoCheckDao")
 	private ExtStockLevelPromotionCheckDao stockPromoCheckDao;
-
-	@Autowired
-	private ModelService modelService;
-
-	@Autowired
-	private FlexibleSearchService flexibleSearchService;
-
 
 
 	@Override
@@ -189,43 +178,6 @@ public class ExtStockLevelPromotionCheckServiceImpl implements ExtStockLevelProm
 	//		return flexibleSearchService.getModelByExample(oModel);
 	//	}
 
-
-	/**
-	 * @return the modelService
-	 */
-	public ModelService getModelService()
-	{
-		return modelService;
-	}
-
-
-	/**
-	 * @param modelService
-	 *           the modelService to set
-	 */
-	public void setModelService(final ModelService modelService)
-	{
-		this.modelService = modelService;
-	}
-
-
-	/**
-	 * @return the flexibleSearchService
-	 */
-	public FlexibleSearchService getFlexibleSearchService()
-	{
-		return flexibleSearchService;
-	}
-
-
-	/**
-	 * @param flexibleSearchService
-	 *           the flexibleSearchService to set
-	 */
-	public void setFlexibleSearchService(final FlexibleSearchService flexibleSearchService)
-	{
-		this.flexibleSearchService = flexibleSearchService;
-	}
 
 
 	/**
