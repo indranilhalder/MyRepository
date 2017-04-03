@@ -3099,13 +3099,21 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				mplEDDInfoForUssIDWsDTO.setIsScheduled(deliverySlotsEDDData.getIsScheduled());
 				if (MarketplaceFacadesConstants.Y.equalsIgnoreCase(deliverySlotsEDDData.getIsScheduled()))
 				{
+					String edd = null;
+					if (null != deliverySlotsEDDData.getEDD())
+					{
+						edd = deliverySlotsEDDData.getEDD();
+					}
+					else if (null != deliverySlotsEDDData.getNextEDD())
+					{
+						edd = deliverySlotsEDDData.getNextEDD();
+					}
 					mplEDDInfoForUssIDWsDTO.setCodEligible(deliverySlotsEDDData.getCodEligible());
 					timeSlotType = getDeliveryMode(cartModel, deliverySlotsEDDData.getUssId());
 					//preparing mobile data
-					if (StringUtils.isNotEmpty(timeSlotType))
+					if (StringUtils.isNotEmpty(timeSlotType) && null != edd)
 					{
-						final Map<String, List<String>> mapData = mplDeliveryAddressFacade.getDateAndTimeMap(timeSlotType,
-								deliverySlotsEDDData.getEDD());
+						final Map<String, List<String>> mapData = mplDeliveryAddressFacade.getDateAndTimeMap(timeSlotType,edd);
 						mplEDDInfoForUssIDWsDTO.setEstimateDeliveryDateList(getEDDList(mapData));
 					}
 				}
