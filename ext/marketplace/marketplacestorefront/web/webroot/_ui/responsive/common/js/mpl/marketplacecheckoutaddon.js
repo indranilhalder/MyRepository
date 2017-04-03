@@ -2607,12 +2607,16 @@ $("#otpMobileNUMField").focus(function(){
  function taCount(taObj,Cnt) { 
 	 						 
  	objCnt=createObject(Cnt);
+ 	console.log("inside objcnt");
  	objVal=taObj.value;
+ 	console.log("inside objVal");
  	if (objVal.length>maxL) objVal=objVal.substring(0,maxL);
  	if (objCnt) {
  		if(bName == "Netscape"){	
- 			objCnt.textContent=maxL-objVal.length;}
- 		else{objCnt.innerText=maxL-objVal.length;}
+ 			objCnt.textContent=maxL-objVal.length;
+ 			console.log("inside textcontent");}
+ 		else{objCnt.innerText=maxL-objVal.length;
+ 		console.log("inside innerText");}
  	}
  
  	return true;
