@@ -546,7 +546,8 @@
         </bean>  
         <!-- Converter for Brand Import --> 
    
-    <bean id="batchBrandConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <!--  CKD:TPR-250: Start: Addition of brand code-->
+           <!--   <bean id="batchBrandConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
        <property name="header">
  	     <value> # Insert Brand
  	     $productCatalog=mplProductCatalog
@@ -559,6 +560,20 @@
             <value>;{+0};{1};{+2}</value>
         </property>
         
+    </bean> -->
+         
+    <bean id="batchBrandConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+       <property name="header">
+ 	     <value> # Insert Brand
+ 	     $productCatalog=mplProductCatalog
+				$classificationCatalog=pcmClassification
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+               INSERT_UPDATE Brand;name[unique=true];description;productSource(code,$catalogVersion)[unique=true];brandCode;$catalogVersion
+            </value>
+        </property>
+         <property name="impexRow">
+	            <value>;{+0};{1};{+2};{3}</value>
+	     </property>
     </bean>
     
      <!-- Converter for SEO Import --> 

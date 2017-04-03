@@ -175,7 +175,7 @@ ACC.refinements = {
 				else{
 					requiredUrl = action;
 				}
-			}
+			}			
 			
 			// TPR-645 Start  INC_11511  fix--h3 tag done
 			filterValue = $(this).parent().find('span.facet-text').text().trim();
@@ -319,6 +319,7 @@ ACC.refinements = {
 					requiredUrl = action;
 				}
 			}
+
 			// TPR-645 Start INC_11511  fix--h3 tag done
 			var filterValue = '';
 			var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
@@ -329,6 +330,7 @@ ACC.refinements = {
 				// console.log($(this).attr('class').text());
 				filterValue = $(this).parent().find('span > span').text();
 			}
+
 			if($(this).attr('checked')){
 				filterChecked = true;
 				//onFilterRemoveAnalytics(filterName,filterValue);
@@ -340,7 +342,7 @@ ACC.refinements = {
 			// TPR-645 End
 			// AJAX call
 			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
-			
+
 		});
 		
 		// TPR-845
@@ -406,6 +408,7 @@ ACC.refinements = {
 			else {
 				requiredUrl = action[0].concat("/getFacetData");
 			}
+
 			
 			//Utag Fire on remove filter or any price start
 			if($(this).attr('class') == "remove_filter"){
@@ -978,7 +981,9 @@ function createSearchQuery(filterMobileQuery){
 	return queryString;
 }
 
-// TPR-645,TPR-4704,TPR-4719
+
+
+//TPR-645,TPR-4704,TPR-4719
 
 function onFilterAddAnalytics(filterName,filterValue){
 	var filter_type = (filterName).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");

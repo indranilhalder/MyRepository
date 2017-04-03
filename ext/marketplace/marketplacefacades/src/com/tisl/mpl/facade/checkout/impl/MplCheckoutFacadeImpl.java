@@ -87,6 +87,7 @@ import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 //import com.tisl.mpl.fulfilmentprocess.events.OrderPlacedEvent;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderPlacedEvent;
+import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCheckoutService;
@@ -177,6 +178,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	private BaseSiteService baseService;
 
 
+	@Resource(name = "stockPromoCheckService")
+	private ExtStockLevelPromotionCheckService stockPromoCheckService;
 	//TISPT-400
 	@Autowired
 	private Converter<CartModel, CartData> mplExtendedPromoCartConverter;
@@ -874,6 +877,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		boolean result = true;
 		if (abstractOrderModel != null)
 		{
+
 			final Set<PromotionResultModel> promotion = abstractOrderModel.getAllPromotionResults();
 			//IQA changes
 			if (CollectionUtils.isNotEmpty(promotion))
@@ -882,6 +886,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				{
 					if (promo.getCertainty().floatValue() == 1.0F)
 					{
+
 						//Changed to handle promotion for both cart and order
 						if (promo.getPromotion() != null && (promo.getPromotion().getEnabled().booleanValue())
 								|| getSellerBasedPromotionService().getPromoDetails(promo.getPromotion().getCode()))
@@ -901,6 +906,23 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 							break;
 						}
 					}
+					//TPR-965 starts
+					//					if (result && promo.getPromotion() instanceof LimitedStockPromotionModel)
+					//					{
+					//						final boolean payRestrictionsPresent = checkIfPaymentRestrictions(promo.getPromotion());
+					//						int numRestrictions = 0;
+					//						if (payRestrictionsPresent)
+					//						{
+					//							numRestrictions = promo.getPromotion().getRestrictions().size();
+					//						}
+					//						if (payRestrictionsPresent && numRestrictions == 1)
+					//						{
+					//							//do nothing
+					//						}
+					//
+					//						//	result = checkIsStockPromoValid(promo.getPromotion(), abstractOrderModel, promo.getConsumedEntries());
+					//					}
+					//TPR-965 ends
 				}
 			}
 		}
@@ -909,8 +931,31 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			//return false;
 			result = false;
 		}
+
 		return result;
 	}
+
+
+	//	/**
+	//	 * @param promotion
+	//	 * @return
+	//	 */
+	//	private boolean checkIfPaymentRestrictions(final AbstractPromotionModel promotion)
+	//	{
+	//		boolean isPresent = false;
+	//		for (final AbstractPromotionRestrictionModel restriction : promotion.getRestrictions())
+	//		{
+	//			if (restriction instanceof PaymentModeSpecificPromotionRestrictionModel)
+	//			{
+	//				isPresent = true;
+	//				break;
+	//			}
+	//
+	//		}
+	//		return isPresent;
+	//	}
+
+
 
 	/**
 	 * @ Override TSHIP : TIS 397
@@ -963,8 +1008,18 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 								&& cartData.getTotalPrice().getValue().doubleValue() > Double.parseDouble(tshipThresholdValue))
 
 						{
-							marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
-									Double.valueOf(0.0)));
+							//******New Code Added for TPR-579 : TSHIP Shipping Charges******************
+							if (validate(fulfillmentType, marketplaceDeliveryModeData.getFulfillmentType()))
+							{
+								marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
+										marketplaceDeliveryModeData.getDeliveryCost().getDoubleValue()));
+							}
+							else
+							{
+								marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
+										Double.valueOf(0.0)));
+							}
+							//******************New Code Added for TPR-579 : TSHIP Shipping Charges ends***********
 						}
 					}
 				}
@@ -973,6 +1028,25 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 		return deliveryModeDataMap;
 	}
+
+	/**
+	 * New Code Added for TPR-579: Matches Fulfillment Modes
+	 *
+	 * @param fulfillmentType
+	 * @param fulfillmentTypeData
+	 * @return flag
+	 */
+	private boolean validate(final String fulfillmentType, final String fulfillmentTypeData)
+	{
+		boolean flag = false;
+		if (fulfillmentType.equalsIgnoreCase(fulfillmentTypeData))
+		{
+			flag = true;
+		}
+		return flag;
+	}
+
+
 
 	/*
 	 * (non-Javadoc)
@@ -1771,8 +1845,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	{
 		this.sellerBasedPromotionService = sellerBasedPromotionService;
 	}
-
-
 
 
 

@@ -216,7 +216,6 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 		return contentSlot;
 	}
 
-
 	/**
 	 * Method added for TPR-798
 	 *

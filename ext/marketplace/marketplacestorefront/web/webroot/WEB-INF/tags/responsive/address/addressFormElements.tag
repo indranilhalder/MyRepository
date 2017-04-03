@@ -205,7 +205,7 @@
 			 <div class="help-block has-error" id="address1Error" style="display: none;">
 			</div>
 			</div>
-			<div class='hide'>
+			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line2" labelKey="Address Line 2"
 			 path="line2" 
@@ -213,7 +213,7 @@
 			 <div class="help-block has-error" id="address2Error" style="display: none;">
 			</div>
 			</div>
-			<div class='hide'>
+			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line3" labelKey="Address Line 3"
 			 path="line3" 

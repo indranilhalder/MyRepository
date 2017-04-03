@@ -47,6 +47,7 @@ $(document).on("click",".deleteWlConfirmation",function(e){
 function deleteWishlist(wishlistName){
 	var requiredUrl = ACC.config.encodedContextPath+"/my-account/deleteWishlist";
 	var dataString = "wishlistName=" +wishlistName;
+	var isLuxury = $("#isLuxury").val();
 	var wishName= wishlistName.replace(/ /g,'').toLowerCase();
 	$.ajax({
 		url: requiredUrl,
@@ -64,7 +65,7 @@ function deleteWishlist(wishlistName){
 			    "wishlist_name" : "" + wishName
 			});
 			/*TPR-646 Ends*/
-			window.location.href = ACC.config.encodedContextPath + "/my-account/wishList";
+			window.location.href = ACC.config.encodedContextPath + "/my-account/wishList?isLux="+isLuxury;
 		},
 		//error : function(data) {
 			//alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");
@@ -291,7 +292,7 @@ $(document).on("click",".removeProductConfirmation",function(e){
 function removeFromWishlist(wishlistName, productCode, ussid,isMSDEnabled,isApparelExist,rootCategoryMSD,catID,price,currency){	
 	var requiredUrl = ACC.config.encodedContextPath+"/my-account/wishList/remove";
 	var dataString = "wishlistName=" +wishlistName+ "&productCodeWl=" +productCode+ "&ussidWl=" +ussid;
-	
+	var isLuxury = $("#isLuxury").val();
 	$.ajax({
 		url: requiredUrl,
 		type: "GET",
@@ -324,7 +325,7 @@ function removeFromWishlist(wishlistName, productCode, ussid,isMSDEnabled,isAppa
 			
 			//END MSD
 //			window.location.href = ACC.config.encodedContextPath + "/my-account/wishList";
-			window.location.href = ACC.config.encodedContextPath + "/my-account/viewParticularWishlist?particularWishlist="+wishlistName;
+			window.location.href = ACC.config.encodedContextPath + "/my-account/viewParticularWishlist?particularWishlist="+wishlistName+"&isLux="+isLuxury;
 		},
 		error: function (xhr, status, error) {
 			if(status == "parsererror"){

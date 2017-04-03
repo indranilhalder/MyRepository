@@ -410,6 +410,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				// TPR-429 END
 				//Getting Payment modes
 				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, orderData);
+
+
+				//TISSQAUAT-536 fixes
+
 				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, orderModel.getGuid());
 
 				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);

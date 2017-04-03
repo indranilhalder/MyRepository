@@ -201,4 +201,5 @@ public final class MessageConstants
 	public static final String GOOGLE_LOGIN = "GOOGLE_LOGIN";
 	public static final String GOOGLEUSER = "google";
 	public static final String USER_LOGIN_TYPE = "userLoginType";
+	public static final String NPSFEEDBACK_SAVE_ERROR = "text.nps.feedback.failure";
 }

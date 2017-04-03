@@ -195,8 +195,17 @@
 		<property name="allVariantsId" type="java.util.List&lt;java.lang.String>"/>
 		<!-- CHANGES FOR TPR-249 -->
 		<property name="displaySizes" type="java.util.List&lt;java.lang.String>"></property>
+
+         <!-- TPR-250 changes -->
+        <property name="ussidList" type="java.util.Map&lt;String,String>"></property>
+        <property name="mrpMap" type="java.util.Map&lt;String,de.hybris.platform.commercefacades.product.data.PriceData>"></property>
+        <property name="priceMap" type="java.util.Map&lt;String,de.hybris.platform.commercefacades.product.data.PriceData>"></property>
+        <property name="savingsMap" type="java.util.Map&lt;String,de.hybris.platform.commercefacades.product.data.PriceData>"></property>
+        <!-- TPR-250 changes -->
+
 <!-- Optimization # 4 -->
 		<property name="homepageImageurl" type="java.lang.String"></property>
+
 	</bean>
 
 	<!-- pdp changes begins -->
@@ -231,11 +240,16 @@
 	<bean class="de.hybris.platform.commercefacades.product.data.BrandData">
 		<property name="brandname" type="String" />
 		<property name="brandtype" type="String" />
+		<!-- CKD:TPR-250 -->
+		<property name="brandCode" type="String" />
+		<property name="brandDescription" type="String" />
+		<!-- CKD:TPR-250 End-->
 
 	</bean>
 
 
 	<!-- PDP changes for Promotion begin -->
+	<!-- termsAndConditions Added for TPR-996 -->
 
 	<bean class="de.hybris.platform.commercefacades.product.data.PromotionData">
 		<property name="giftProduct"
@@ -244,6 +258,9 @@
 		<property name="allowedSellers" type="java.util.List&lt;java.lang.String>"></property>
 		<property name="promourl" type="java.lang.String"></property>
 		<property name="bundlepromolinktext" type="java.lang.String"></property>
+		<property name="termsAndConditions" type="String" />
+
+
 	</bean>
 
 	<!-- PDP changes for Promotion end -->
@@ -485,6 +502,7 @@
 		<property name="sellerArticleSKU" type="String" />
 		<property name="deliveryCost"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="fulfillmentType" type="String" /> 
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.MarketplaceDeliveryModesData">
@@ -934,6 +952,14 @@
 		<property name="sellerData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchSellerData>"></property>
 	</bean>
 	
+	<!-- TPR-978 -->
+	<bean class="de.hybris.platform.commercefacades.product.data.ProductContentData">
+		<property name="section" type="String" />		
+		<property name="textList" type="java.util.List&lt;java.lang.String>"></property>
+		<property name="imageList" type="java.util.List&lt;java.lang.String>"></property>
+		<property name="videoList" type="java.util.List&lt;java.lang.String>"></property>
+	</bean>
+	
 	<!-- TPR-774 -->
 	<bean class="de.hybris.platform.commercefacades.order.data.OrderEntryData">		
 		<property name="mrp" type="de.hybris.platform.commercefacades.product.data.PriceData"/>		
@@ -941,16 +967,8 @@
 		<property name="productPerDiscDisplay" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 	</bean>
 	<!-- TPR-774 -->
-	
-		<!-- TPR-978 -->
-	<bean class="de.hybris.platform.commercefacades.product.data.ProductContentData">
-		<property name="section" type="String" />		
-		<property name="textList" type="java.util.List&lt;java.lang.String>"></property>
-		<property name="imageList" type="java.util.List&lt;java.lang.String>"></property>
-		<property name="videoList" type="java.util.List&lt;java.lang.String>"></property>
-	</bean>
 
-	
+
 	<bean class="com.tisl.mpl.facades.data.BulkCancelStoreData">
 		<property name="subOrderDetails" type="de.hybris.platform.commercefacades.order.data.OrderData"></property>
 		<property name="bulkCancelModelData" type="de.hybris.platform.core.model.BulkCancellationProcessModel"></property>
@@ -959,6 +977,27 @@
 		<property name="consignmentStatus" type="String"></property>
 		<property name="returnStatus" type="java.lang.Boolean"></property>
 	</bean>
+
+	
+	<!-- TPR-1984 -->
+	<bean class="com.tisl.mpl.facades.data.NPSFeedbackQRDetailData">
+		<property name="questionCode" type="String"></property>
+		<property name="questionName" type="String"></property>
+		<property name="rating" type="String"></property>
+		<property name="npsDeliveryModeType" type="String"></property>
+	</bean>
+	<bean class="com.tisl.mpl.facades.data.NPSFeedbackQRData">
+		<property name="originalUid" type="String"></property>
+		<property name="transactionId" type="String"></property>
+		<property name="overAllRating" type="String"></property>
+		<property name="userId" type="String"></property>
+		<property name="npsId" type="String"></property>
+		<property name="npsRating" type="String"></property>
+		<property name="anyOtherFeedback" type="String"></property>
+		<property name="feedbackQRList" type="java.util.List&lt;com.tisl.mpl.facades.data.NPSFeedbackQRDetailData>"></property>
+	</bean>
+	<!--End TPR-1984 -->
+
 	<!-- Thread Dump CMS changes  -->
 	
 	<bean class="de.hybris.platform.commercefacades.component.data.CMSSubbrandData">
@@ -996,6 +1035,7 @@
 		<property name="media" type="de.hybris.platform.commercefacades.product.data.ImageData"></property>
 		<property name="urlLink" type="String"></property>	
 	</bean>
+
 	
 	<bean class="com.tisl.mpl.facades.data.MplAjaxProductData" extends="de.hybris.platform.commercefacades.product.data.ProductData">
 		<property name="productSize" type="String"></property>
@@ -1006,4 +1046,5 @@
 		<property name="Warranty" type="java.util.List&lt;String>"></property>
 		<property name="error" type="String"></property>
 	</bean>
+
 </beans>

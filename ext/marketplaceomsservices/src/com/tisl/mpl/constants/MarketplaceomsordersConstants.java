@@ -101,6 +101,7 @@ public final class MarketplaceomsordersConstants extends GeneratedMarketplaceoms
 
 	public static final String SINGLE_SPACE = " ".intern();
 
+
 	private MarketplaceomsordersConstants()
 	{
 		//empty to avoid instantiating this constant class

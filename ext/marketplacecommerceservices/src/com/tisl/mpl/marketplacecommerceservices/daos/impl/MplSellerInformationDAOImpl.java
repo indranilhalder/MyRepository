@@ -3,7 +3,9 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
+import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.jalo.flexiblesearch.FlexibleSearchException;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
@@ -19,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -40,6 +43,8 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 	private FlexibleSearchService flexibleSearchService;
 	@Autowired
 	private ModelService modelService;
+	@Autowired
+	private CatalogVersionService catalogVersionService;
 
 	private static final Logger LOG = Logger.getLogger(MplSellerInformationDAOImpl.class);
 	private static final String SELECT_CLASS = "SELECT {c:";
@@ -378,6 +383,8 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 	 *
 	 * This method is used to get the parent OrderEntryModel
 	 *
+	 *
+	 *
 	 * @author TECHOUTS
 	 * @param transactionId
 	 * @Return String
@@ -429,6 +436,81 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 			throw new EtailBusinessExceptions(exception.getMessage(), exception);
 		}
 		return parentFulfillmenttype;
+	}
+
+
+	@Override
+	public SellerInformationModel getSellerInformationBySellerID(final CatalogVersionModel catalogVersion, final String sellerID)
+	{
+		SellerInformationModel sellerInformationModel = null;
+		try
+		{
+			//	final StringBuilder query = new StringBuilder("SELECT {sim." + SellerInformationModel.PK + "} ");
+			final StringBuilder query = new StringBuilder();
+			query.append("SELECT {sim." + SellerInformationModel.PK + "} ");
+			query.append(FROM_CLASS + SellerInformationModel._TYPECODE + " AS sim} ");
+			query.append("WHERE UPPER({sim." + SellerInformationModel.SELLERID + "}) = (?" + SellerInformationModel.SELLERID + ")");
+			query.append(" AND {sim." + SellerInformationModel.CATALOGVERSION + "} = (?" + SellerInformationModel.CATALOGVERSION
+					+ ")");
+
+			final Map<String, Object> params = new HashMap<String, Object>();
+			params.put(SellerInformationModel.CATALOGVERSION, catalogVersion);
+			params.put(SellerInformationModel.SELLERID, sellerID.toUpperCase());
+
+			final SearchResult<SellerInformationModel> searchRes = flexibleSearchService.search(query.toString(), params);
+			if (searchRes != null && searchRes.getCount() > 0)
+			{
+				sellerInformationModel = searchRes.getResult().get(0);
+			}
+			return sellerInformationModel;
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.daos.MplSellerInformationDAO#getContentPageBySellerID(de.hybris.platform
+	 * .catalog.model.CatalogVersionModel, java.lang.String)
+	 */
+	@Override
+	public ContentPageModel getContentPageBySellerID(final String id)
+	{
+
+		try
+		{
+			final String queryString = "SELECT {item_t1.pk} FROM {ContentPage as item_t1} WHERE {item_t1.catalogVersion}=?catalogVersion AND {item_t1.associatedseller}=({{SELECT {item_t0.pk} FROM {SellerMaster as item_t0} WHERE  {item_t0.id} =?id}})";
+			final CatalogVersionModel catalogVersion = getCatalogVersion();
+			final Map<String, Object> params = new HashMap<String, Object>();
+			params.put(ContentPageModel.CATALOGVERSION, catalogVersion);
+			params.put("id", id.toUpperCase());
+			System.out.println("query" + queryString);
+			ContentPageModel searchResult = null;
+			final SearchResult<ContentPageModel> searchResList = flexibleSearchService.search(queryString.toString(), params);
+			if (searchResList != null && searchResList.getCount() > 0)
+			{
+				searchResult = searchResList.getResult().get(0);
+			}
+			return searchResult;
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+	}
+
+	private CatalogVersionModel getCatalogVersion()
+	{
+		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(
+				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CONTENT_CATALOG_ID,
+				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
+		return catalogVersionModel;
 	}
 
 }

@@ -28,6 +28,8 @@
 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.cancel.enabled')" var="cancelFlag"/> 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')" var="returnFlag"/> 
+<!-- LW-230 -->
+<input type="hidden" id="isLuxury" value="${isLuxury}"/>
 
 <template:page pageTitle="${pageTitle}">
 	<div class="account" id="anchorHead">

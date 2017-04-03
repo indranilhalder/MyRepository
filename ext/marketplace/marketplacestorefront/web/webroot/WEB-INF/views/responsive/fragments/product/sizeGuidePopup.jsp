@@ -442,7 +442,13 @@ var productCodeSG = '${product.code}';
 								</c:when>							
 								<c:otherwise>
 								<c:set var="imageData" value="${variantOption.image}" />
-								<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>								
+								<%-- Sprint 7 Sanity Issue fixing starts here --%>
+								<span title="${variantOption.colour}" data-target="#popUpModal" data-productcode="${variantOption.colour}" data-producturl="${variantUrl}&sizeSelected=false">
+								<%-- Sprint 7 Sanity Issue fixing ends here --%>
+								<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>
+								<%-- Sprint 7 Sanity Issue fixing starts here --%>
+								</span>
+								<%-- Sprint 7 Sanity Issue fixing ends here --%>								
                                </c:otherwise>
                                </c:choose>
 								<%-- <c:choose>
@@ -753,13 +759,14 @@ $(document).ready(function(){
 	});
 	
 	//Added for TPR-210
-	$(".color-swatch li img").each(function(){
+	//Sprint 7 Sanity Issue fixing starts here
+	/* $(".color-swatch li img").each(function(){
 		var title = $(this).attr("title").toLowerCase();
 		if(currentColour.toLowerCase() == title){
 			$(this).parent().parent().addClass("active");
 		}
-	});	 
-	
+	}); */	 
+	//Sprint 7 Sanity Issue fixing ends here
 	 if($('body').find('input.wishlist#add_to_wishlist-sizeguide').length > 0){
 			$('input.wishlist#add_to_wishlist-sizeguide').popover({ 
 				html : true,

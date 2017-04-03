@@ -243,9 +243,8 @@
 						text="Available Delivery Options:" />
 				</p>
 				<ul class="${entry.mplDeliveryMode.name}">
-					<li class="deliver-type">${entry.mplDeliveryMode.name}</li>
-					
-					<!-- TISSQAEE-275 -->
+					<li class="deliver-type">${entry.mplDeliveryMode.name}</li>					
+					<!-- TISSQAEE-275 --><!--  Modified for TISQAUATS-11  Starts Here -->
 					<li class="deliver"><c:choose>
 							<c:when test="${entry.currDelCharge.value=='0.0'}">
 								<%-- <spring:theme code="order.free"  /> --%>
@@ -257,10 +256,9 @@
 							<c:otherwise>
 								<format:price priceData="${entry.currDelCharge}" />
 							</c:otherwise>
-						</c:choose>
+						</c:choose><!--  Modified for TISQAUATS-11  Ends Here -->
 						</li>
 						<!-- TISSQAEE-275 -->
-						
 					<li class="deliver">${entry.mplDeliveryMode.description}</li>
 				</ul>
 			</li>

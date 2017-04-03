@@ -46,7 +46,6 @@ if (searchCategory_id) {
 		category_id = '';
 	}
 }
-
 if (searchCategory_idFromMicrosite) { // only for microsite search
 	if (searchCategory_idFromMicrosite.indexOf("MBH") > -1) {
 		brand_id = searchCategory_idFromMicrosite;
@@ -1988,3 +1987,4 @@ function updatePage(response, widgetMode) {
 $(document).on('click', ".IAQuickView,.iaAddToCartButton", function(e) {
 	e.preventDefault();
 })
+

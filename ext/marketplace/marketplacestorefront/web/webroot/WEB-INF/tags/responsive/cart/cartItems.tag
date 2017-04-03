@@ -1319,7 +1319,8 @@ tr.d0 td {
             </ycommerce:testId></span></li>
           </ul>
       <!--    As part of improvement TPR-1468 -->
-         <div class="wishlist-banner" id="wishlistBanner" style="display:none">
+       <!-- commented as part of TISPRD-9245, TPR-3691 -->
+        <div class="wishlist-banner" id="wishlistBanner" style="display:none">
 		<h2>
 			<spring:theme code="Treat Yourself" />
 			<span><spring:theme code="mpl.gift.Yourself" /></span>
@@ -1328,7 +1329,8 @@ tr.d0 td {
 	<ul class="product-block wishlist" id="giftYourselfProducts">
 		
 	</ul>
-         
+          
+           <!-- commented as part of TISPRD-9245, TPR-3691 -->
          
 <storepickup:pickupStorePopup />
 

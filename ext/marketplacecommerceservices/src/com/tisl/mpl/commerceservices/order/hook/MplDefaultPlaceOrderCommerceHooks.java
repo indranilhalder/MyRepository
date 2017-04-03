@@ -3,20 +3,26 @@
  */
 package com.tisl.mpl.commerceservices.order.hook;
 
+import de.hybris.platform.category.CategoryService;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook;
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.LimitedStockPromoInvalidationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.AbstractOrderEntryTypeService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.strategies.ordercloning.CloneAbstractOrderStrategy;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
+import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
 import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionOrderEntryConsumedModel;
@@ -60,16 +66,19 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
+import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotifyPaymentGroupMailService;
 import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificationService;
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
+import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.util.OrderStatusSpecifier;
 
@@ -107,6 +116,19 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	@Autowired
 	private MplCommerceCartService mplCommerceCartService;
 
+
+	//	@Autowired
+	//	private MplFraudModelService mplFraudModelService;
+
+
+
+
+	@Autowired
+	private CategoryService categoryService;
+
+
+
+
 	@Autowired
 	private OrderStatusSpecifier orderStatusSpecifier;
 
@@ -124,6 +146,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	@Autowired
 	private MplOrderService mplOrderService;
+	@Autowired
+	private MplDeliveryCostService deliveryCostService;
 
 	//	@Autowired
 	//	private MplFraudModelService mplFraudModelService;
@@ -137,7 +161,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -159,6 +183,80 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//				updateFraudModel(orderModel);
 			//
 			//			}
+
+
+
+			//TPR -965 + TPR-4579 starts
+			if (null != orderModel && CollectionUtils.isNotEmpty(orderModel.getAllPromotionResults())
+					&& isLimitedStockPromoExists(orderModel.getAllPromotionResults()))
+			{
+				final List<LimitedStockPromoInvalidationModel> orderInvalidationList = new ArrayList<LimitedStockPromoInvalidationModel>();
+				boolean isCategoryLevelPromo = false;
+
+				for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
+				{
+					if (orderEntry.getQualifyingCount().intValue() > 0
+							&& (null != orderEntry.getGiveAway() && !orderEntry.getGiveAway().booleanValue()))
+					{
+						isCategoryLevelPromo = validateCategorySetPromo(orderModel.getAllPromotionResults(),
+								orderEntry.getProductPromoCode());
+
+						final LimitedStockPromoInvalidationModel promoInvalidationModel = (LimitedStockPromoInvalidationModel) getModelService()
+								.create(LimitedStockPromoInvalidationModel.class);
+
+						if (isCategoryLevelPromo)
+						{
+							final String categoryCode = getCatgoryCode(orderModel.getAllPromotionResults(),
+									orderEntry.getProductPromoCode(), orderEntry.getProduct());
+
+							promoInvalidationModel.setProductCode(orderEntry.getProduct().getCode());
+							promoInvalidationModel.setUssid(orderEntry.getSelectedUSSID());
+							promoInvalidationModel.setPromoCode(orderEntry.getProductPromoCode());
+							promoInvalidationModel.setGuid(orderModel.getGuid());
+							promoInvalidationModel.setUsedUpCount(Integer.valueOf(orderEntry.getQualifyingCount().intValue()));
+							promoInvalidationModel.setOrder(orderModel);
+							if (StringUtils.isNotEmpty(categoryCode))
+							{
+								promoInvalidationModel.setCategoryCode(categoryCode);
+							}
+
+							if (null != orderModel.getUser()) // Added for TPR-4331: Customer Count Configuration
+							{
+								final CustomerModel customer = (CustomerModel) orderModel.getUser();
+								if (null != customer && null != customer.getOriginalUid())
+								{
+									promoInvalidationModel.setCustomerID(customer.getOriginalUid());
+								}
+							}
+							orderInvalidationList.add(promoInvalidationModel);
+						}
+						else
+						{
+							promoInvalidationModel.setProductCode(orderEntry.getProduct().getCode());
+							promoInvalidationModel.setUssid(orderEntry.getSelectedUSSID());
+							promoInvalidationModel.setPromoCode(orderEntry.getProductPromoCode());
+							promoInvalidationModel.setGuid(orderModel.getGuid());
+							promoInvalidationModel.setUsedUpCount(Integer.valueOf(orderEntry.getQualifyingCount().intValue()));
+							promoInvalidationModel.setOrder(orderModel);
+
+							if (null != orderModel.getUser()) // Added for TPR-4331: Customer Count Configuration
+							{
+								final CustomerModel customer = (CustomerModel) orderModel.getUser();
+								if (null != customer && null != customer.getOriginalUid())
+								{
+									promoInvalidationModel.setCustomerID(customer.getOriginalUid());
+								}
+							}
+							orderInvalidationList.add(promoInvalidationModel);
+						}
+					}
+				}
+				getModelService().saveAll(orderInvalidationList);
+			}
+
+
+			//TPR -965 + TPR-4579 ends
+
 			if (null != orderModel)
 			{
 				//INC144315079
@@ -340,9 +438,138 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	//	}
 
 
+	/**
+	 * @param allPromotionResults
+	 * @param productPromoCode
+	 * @param product
+	 * @return String
+	 */
+	private String getCatgoryCode(final Set<PromotionResultModel> allPromotionResults, final String productPromoCode,
+			final ProductModel product)
+	{
+		String categoryCode = MarketplacecommerceservicesConstants.EMPTY;
+
+		if (CollectionUtils.isNotEmpty(allPromotionResults) && StringUtils.isNotEmpty(productPromoCode))
+		{
+			for (final PromotionResultModel oModel : allPromotionResults)
+			{
+				if (null != oModel.getCertainty() && oModel.getCertainty().floatValue() == 1.00F && null != oModel.getPromotion()
+						&& null != oModel.getPromotion().getCode()
+						&& StringUtils.equalsIgnoreCase(oModel.getPromotion().getCode(), productPromoCode))
+				{
+					if (oModel.getPromotion() instanceof ProductPromotionModel
+							&& CollectionUtils.isNotEmpty(((ProductPromotionModel) oModel.getPromotion()).getCategories()))
+					{
+						categoryCode = getCategoryCode(((ProductPromotionModel) oModel.getPromotion()).getCategories(), product);
+					}
+				}
+			}
+		}
+
+		return categoryCode;
+	}
+
+	/**
+	 * @param categories
+	 * @param product
+	 * @return categoryCode
+	 */
+	private String getCategoryCode(final Collection<CategoryModel> categories, final ProductModel product)
+	{
+		String categoryCode = MarketplacecommerceservicesConstants.EMPTY;
+
+		if (CollectionUtils.isNotEmpty(product.getSupercategories()))
+		{
+			final List<CategoryModel> getCategoryDataList = getSuperCategoryData(product.getSupercategories());
+
+			if (CollectionUtils.isNotEmpty(getCategoryDataList))
+			{
+				for (final CategoryModel productCategory : getCategoryDataList)
+				{
+					for (final CategoryModel promoCategory : categories)
+					{
+						if (StringUtils.equalsIgnoreCase(productCategory.getCode(), promoCategory.getCode()))
+						{
+							categoryCode = productCategory.getCode();
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		return categoryCode;
+	}
+
+
+	/**
+	 * Tree Traversal for Category Promotions
+	 *
+	 * @param supercategories
+	 * @return categoryList
+	 */
+	private List<CategoryModel> getSuperCategoryData(final Collection<CategoryModel> supercategories)
+	{
+		final List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
+		List<CategoryModel> subList = null;
+
+		for (final CategoryModel category : supercategories)
+		{
+			subList = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(category));
+			categoryList.addAll(subList);
+		}
+
+		categoryList.addAll(supercategories);
+
+		return categoryList;
+	}
+
+	/**
+	 * @param allPromotionResults
+	 * @param productPromoCode
+	 * @return boolean
+	 */
+	private boolean validateCategorySetPromo(final Set<PromotionResultModel> allPromotionResults, final String productPromoCode)
+	{
+		boolean flag = false;
+
+		if (CollectionUtils.isNotEmpty(allPromotionResults) && StringUtils.isNotEmpty(productPromoCode))
+		{
+			for (final PromotionResultModel oModel : allPromotionResults)
+			{
+				if (null != oModel.getCertainty() && oModel.getCertainty().floatValue() == 1.00F && null != oModel.getPromotion()
+						&& null != oModel.getPromotion().getCode()
+						&& StringUtils.equalsIgnoreCase(oModel.getPromotion().getCode(), productPromoCode))
+				{
+					flag = checkPromoData(oModel.getPromotion());
+				}
+			}
+		}
+
+		return flag;
+	}
+
+	/**
+	 * Checks for Promotion set up with Category Details
+	 *
+	 * @param promotion
+	 * @return boolean
+	 */
+	private boolean checkPromoData(final AbstractPromotionModel promotion)
+	{
+		boolean flag = false;
+
+		if (CollectionUtils.isNotEmpty(((ProductPromotionModel) promotion).getCategories()))
+		{
+			flag = true;
+		}
+
+		return flag;
+	}
+
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -356,7 +583,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -470,9 +697,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
-	 *
+	 * 
 	 * @param subOrderList
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -572,9 +799,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
-	 *
+	 * 
 	 * @param subOrderList
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -702,13 +929,33 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					}
 					LOG.info("Total Cart Level Discount>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + totalCartLevelDiscount);
 					sellerOrderList.setTotalDiscounts(Double.valueOf(totalCartLevelDiscount + totalCouponDiscount));
-
-
-					if (null != entryModelList.getCurrDelCharge() && entryModelList.getCurrDelCharge().doubleValue() > 0D)
+					double delCost = 0.0d;
+					if (entryModelList.getCurrDelCharge() != null && entryModelList.getCurrDelCharge().doubleValue() > 0D)
 					{
 						totalDeliveryPrice += entryModelList.getCurrDelCharge().doubleValue();
 					}
 					else
+					{
+						final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(entryModelList
+								.getMplDeliveryMode().getDeliveryMode().getCode(), sellerOrderList.getCurrency().getIsocode(),
+								entryModelList.getSelectedUSSID());
+						if (entryModelList.getGiveAway() != null && !entryModelList.getGiveAway().booleanValue())
+						{
+							delCost = (valueModel.getValue().doubleValue() * entryModelList.getQuantity().intValue());
+							totalDeliveryPrice = delCost;
+							entryModelList.setCurrDelCharge(Double.valueOf(delCost));
+						}
+						else
+						{
+							delCost = 0.0d;
+							entryModelList.setCurrDelCharge(Double.valueOf(delCost));
+							totalDeliveryPrice = delCost;
+							LOG.warn("skipping deliveryCost for freebee [" + entryModelList.getSelectedUSSID() + "] due to freebee ");
+						}
+						modelService.save(entryModelList);
+						modelService.refresh(entryModelList);
+					}
+					if (totalDeliveryPrice <= 0D)
 					{
 						LOG.debug("Delivery charge for the entry is either NULL or Zero");
 					}
@@ -746,7 +993,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				//OrderIssues:- refresh added
 				modelService.refresh(sellerOrderList);
 			}
+
 		}
+
 		catch (final ModelSavingException e)
 		{
 			LOG.error(" error occured while calculating subtotal from setSuborderTotalAfterOrderSplitting", e);
@@ -1124,9 +1373,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 *
+	 * 
 	 * @param orderList
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	// OrderIssues:- InvalidCartException exception throws
@@ -2611,6 +2860,35 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		this.rMSVerificationNotificationService = rMSVerificationNotificationService;
 	}
 
+	/**
+	 * Checking or stock level restriction
+	 *
+	 * @param allPromotionResults
+	 * @return isPresent
+	 */
+	private boolean isLimitedStockPromoExists(final Set<PromotionResultModel> allPromotionResults)
+	{
+		boolean isPresent = false;
+		for (final PromotionResultModel promo : allPromotionResults)
+		{
+			for (final AbstractPromotionRestrictionModel restriction : promo.getPromotion().getRestrictions())
+			{
+				if (restriction instanceof EtailLimitedStockRestrictionModel
+						&& null != ((EtailLimitedStockRestrictionModel) restriction).getMaxStock())
+				{
+					final int maxStock = ((EtailLimitedStockRestrictionModel) restriction).getMaxStock().intValue();
+					if (maxStock > 0)
+					{
+						isPresent = true;
+						break;
+					}
+				}
+			}
+
+		}
+		return isPresent;
+
+	}
 
 
 

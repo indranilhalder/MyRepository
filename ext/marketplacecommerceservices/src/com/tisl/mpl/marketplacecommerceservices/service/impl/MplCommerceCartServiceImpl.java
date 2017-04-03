@@ -61,6 +61,7 @@ import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.util.Config;
+import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.wishlist2.Wishlist2Service;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
@@ -580,6 +581,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 									deliveryModeData.setName(checkDataValue(deliveryModel.getDeliveryMode().getName()));
 									deliveryModeData.setSellerArticleSKU(checkDataValue(pincodeRes.getUssid()));
 									deliveryModeData.setDeliveryCost(priceData);
+
+									//New Code Added for TPR-579 : TSHIP Shipping Charges
+									if (null != deliveryModel.getDeliveryFulfillModes()
+											&& StringUtils.isNotEmpty(deliveryModel.getDeliveryFulfillModes().getCode()))
+									{
+										deliveryModeData.setFulfillmentType(deliveryModel.getDeliveryFulfillModes().getCode());
+									}
 								}
 								deliveryModeDataList.add(deliveryModeData);
 							}
@@ -2346,20 +2354,25 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * pincode, final String requestType) throws EtailNonBusinessExceptions
 	 */
 	@Override
+
 	public ReservationListWsDTO getReservation(final AbstractOrderData abstractOrderData, final String pincode,
 			final String requestType, final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions
+
 	{
 		final ReservationListWsDTO wsDto = new ReservationListWsDTO();
 		InventoryReservListResponse inventoryReservListResponse = null;
-		List<ReservationItemWsDTO> reservationData = new ArrayList<ReservationItemWsDTO>();
+		List<ReservationItemWsDTO> reservationDataList = new ArrayList<ReservationItemWsDTO>();
 		final String cartGuid = "";
+		final List<String> failedUSSID = new ArrayList<>();
 		final List<CartSoftReservationData> cartSoftForCncReservationDatalist = new ArrayList<CartSoftReservationData>();
 		try
 		{
+
 			//final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel);
 			final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderData,
 					abstractOrderModel);
 			if (requestType != null && CollectionUtils.isNotEmpty(cartSoftReservationDatalist) && pincode != null)
+
 			{
 				try
 				{
@@ -2408,49 +2421,63 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					}
 				}
 
-				LOG.debug("inventoryReservListResponse " + inventoryReservListResponse);
 				if (inventoryReservListResponse != null)
 				{
-					reservationData = converter(inventoryReservListResponse);
-					if (CollectionUtils.isNotEmpty(reservationData))
+					reservationDataList = converter(inventoryReservListResponse);
+					if (CollectionUtils.isNotEmpty(reservationDataList))
 					{
-						for (int i = 0; i < reservationData.size(); i++)
+						boolean flag = true;
+						for (final ReservationItemWsDTO reservationData : reservationDataList)
 						{
-							if (null != reservationData.get(i)
-									&& null != reservationData.get(i).getReservationStatus()
-									&& reservationData.get(i).getReservationStatus()
-											.equalsIgnoreCase(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SUCCESS))
+							if (null != reservationData && null != reservationData.getReservationStatus())
 							{
-								wsDto.setReservationItem(reservationData);
-								wsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+								if (reservationData.getReservationStatus().equalsIgnoreCase(
+										MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SUCCESS))
+								{
+									flag = true;
+								}
+								else
+								{
+									failedUSSID.add(reservationData.getUSSID());
+									flag = false;
+								}
 							}
-							else
-							{
-								LOG.debug("Inventory reservationData for Mobile from OMS is not success ###### =" + cartGuid);
-								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
-							}
+							/*
+							 * else { LOG.debug("Inventory reservationData for Mobile from OMS is not success ###### =" +
+							 * cartGuid); throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047); }
+							 */
 						}
-					}
-					else
-					{
-						LOG.debug("Inventory reservationData for Mobile from OMS is empty###### =" + cartGuid);
-						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
+						//inserting
+						wsDto.setReservationItem(reservationDataList);
+						if (flag)
+						{
+							wsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+						}
+						else
+						{
+							LOG.debug("Inventory reservationData for Mobile from OMS is not success ###### =" + cartGuid);
+							wsDto.setFailedUSSIDs(failedUSSID);
+							wsDto.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9047));
+							wsDto.setErrorCode(MarketplacecommerceservicesConstants.B9047);
+							wsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+							//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
+						}
 					}
 				}
 				else
 				{
 					LOG.debug("InventoryReservListResponse for mobile is null ##### =" + cartGuid);
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9201);
 				}
 			}
 			else
 			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9161);
 			}
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9047);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return wsDto;
 	}

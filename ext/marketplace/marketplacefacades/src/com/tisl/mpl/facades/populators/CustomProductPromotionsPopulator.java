@@ -9,6 +9,7 @@ import de.hybris.platform.commercefacades.product.converters.populator.AbstractP
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.PromotionData;
 import de.hybris.platform.converters.Converters;
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.promotions.PromotionsService;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
@@ -17,24 +18,44 @@ import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionGroupModel;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
+import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
+import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 import de.hybris.platform.servicelayer.time.TimeService;
 import de.hybris.platform.site.BaseSiteService;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.helper.ProductDetailsHelper;
+import com.tisl.mpl.jalo.DefaultPromotionManager;
+import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
+import com.tisl.mpl.model.BuyAAboveXGetPercentageOrAmountOffModel;
+import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
+import com.tisl.mpl.model.BuyAGetPrecentageDiscountCashbackModel;
+import com.tisl.mpl.model.BuyAPercentageDiscountModel;
 import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
+import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.ExcludeManufacturersRestrictionModel;
 import com.tisl.mpl.model.ManufacturersRestrictionModel;
@@ -59,7 +80,15 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 	private BaseSiteService baseSiteService;
 	@Resource(name = "productDetailsHelper")
 	private ProductDetailsHelper productDetailsHelper;
+	private static final String AS_CLASS = " AS bb}";
+
+	private static final String WHERE_CLASS = " WHERE {bb:";
 	protected static final Logger LOG = Logger.getLogger(CustomImagePopulator.class);
+	@Resource(name = "stockPromoCheckService")
+	private ExtStockLevelPromotionCheckService stockPromoCheckService;
+	private static final String SELECT_CLASS = "SELECT {bb.PK} FROM {";
+	@Autowired
+	private FlexibleSearchService flexibleSearchService;
 
 	protected PromotionsService getPromotionsService()
 	{
@@ -241,7 +270,6 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 										toRemovePromotionList.add(productPromotion);
 									}
 								}
-
 							}
 
 							if (!isSellerRestrPresent && isFreeBee)
@@ -249,9 +277,81 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 								toRemovePromotionList.add(productPromotion);
 								excludePromotion = true;
 							}
+							/* TPR-4107 */
+							for (final AbstractPromotionRestrictionModel restriction : productPromotion.getRestrictions())
+							{
+								if (restriction instanceof EtailLimitedStockRestrictionModel)
+								{
+									final int qualifyingCount = getQualifyingCount(productPromotion);
+									final EtailLimitedStockRestrictionModel stockRestrictrion = (EtailLimitedStockRestrictionModel) restriction;
+									if (productPromotion instanceof BuyAAboveXGetPercentageOrAmountOffModel)
+									{
+										final int totalOfferCount = stockPromoCheckService.getTotalOfferOrderCount(
+												productPromotion.getCode(), MarketplacecommerceservicesConstants.EMPTY);
+										if (totalOfferCount >= stockRestrictrion.getMaxStock().intValue())
+										{
+											toRemovePromotionList.add(productPromotion);
+										}
+									}
+									else if (!getDefaultPromotionsManager().checkForCategoryPromotion(productPromotion.getCode()))
+									{
+										final String productCode = MarketplacecommerceservicesConstants.INVERTED_COMMA
+												+ productModel.getCode() + MarketplacecommerceservicesConstants.INVERTED_COMMA;
+										final Map<String, Integer> stockMap = stockPromoCheckService.getCumulativeStockMap(productCode,
+												productPromotion.getCode(), false);
+										if (!stockMap.isEmpty())
+										{
+											final Integer stockQuantity = stockMap.get(productModel.getCode());
+											final int stockValue = stockQuantity == null ? 0 : stockQuantity.intValue();
+											if (((stockRestrictrion.getMaxStock().intValue() * qualifyingCount) - stockValue) == 0)
+											{
+												toRemovePromotionList.add(productPromotion);
+											}
+										}
+									}
+									else
+									{
+										if (null != productModel && CollectionUtils.isNotEmpty(productModel.getSupercategories()))
+										{
+											final StringBuilder categoryCodes = new StringBuilder();
+											final Map<String, Integer> stockMap = new HashMap<>();
+											final List<CategoryModel> categoryList = getDefaultPromotionsManager().getSuperCategoryData(
+													productModel.getSupercategories());
+											final Map<String, String> dataMap = populateDataMap(categoryList,
+													productPromotion.getCategories(), productModel.getCode());
+											if (MapUtils.isNotEmpty(dataMap))
+											{
+												for (final Map.Entry<String, String> entry : dataMap.entrySet())
+												{
+													categoryCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA
+															+ entry.getValue() + MarketplacecommerceservicesConstants.INVERTED_COMMA);
+													categoryCodes.append(",");
+												}
+
+												stockMap.putAll(stockPromoCheckService.getCumulativeCatLevelStockMap(categoryCodes.toString()
+														.substring(0, categoryCodes.lastIndexOf(",")), productPromotion.getCode(), dataMap));
+												if (MapUtils.isNotEmpty(stockMap))
+												{
+													final Integer stockQuantity = stockMap.get(productModel.getCode());
+													final int stockValue = stockQuantity == null ? 0 : stockQuantity.intValue();
+													if (((stockRestrictrion.getMaxStock().intValue() * qualifyingCount) - stockValue) == 0)
+													{
+														toRemovePromotionList.add(productPromotion);
+													}
+												}
+											}
+
+										}
+									}
+
+								}
+							}
 
 
-						}
+							//TPR-965 changes starts
+
+							//TPR-965 changes ends
+						}//end
 					}//end promotion for loop
 				}
 				if (!toRemovePromotionList.isEmpty())
@@ -270,6 +370,78 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 		}
 	}
 
+	/**
+	 * @param restrictions
+	 * @return
+	 */
+	//	private boolean isLimitedStockRestrictionExists(final Collection<AbstractPromotionRestrictionModel> restrictions)
+	//	{
+	//		boolean isExists = false;
+	//		for (final AbstractPromotionRestrictionModel restriction : restrictions)
+	//		{
+	//			if (restriction instanceof EtailLimitedStockRestrictionModel)
+	//			{
+	//				isExists = true;
+	//				break;
+	//			}
+	//		}
+	//		return isExists;
+	//	}
+
+	/**
+	 * @param oModel
+	 * @return count
+	 */
+	private int getQualifyingCount(final ProductPromotionModel oModel)
+	{
+		int count = 1;
+		if (oModel instanceof BuyAPercentageDiscountModel)
+		{
+			count = ((BuyAPercentageDiscountModel) oModel).getQuantity().intValue();
+		}
+		else if (oModel instanceof BuyXItemsofproductAgetproductBforfreeModel)
+		{
+			count = ((BuyXItemsofproductAgetproductBforfreeModel) oModel).getQualifyingCount().intValue();
+		}
+		else if (oModel instanceof BuyABFreePrecentageDiscountModel)
+		{
+			count = ((BuyABFreePrecentageDiscountModel) oModel).getQuantity().intValue();
+		}
+		else if (oModel instanceof BuyAGetPrecentageDiscountCashbackModel)
+		{
+			count = ((BuyAGetPrecentageDiscountCashbackModel) oModel).getQuantity().intValue();
+		}
+
+		return count;
+	}
+
+	/**
+	 * @param categoryList
+	 * @param promoCategoryList
+	 * @param productCode
+	 * @return dataMap
+	 */
+	private Map<String, String> populateDataMap(final List<CategoryModel> categoryList,
+			final Collection<CategoryModel> promoCategoryList, final String productCode)
+	{
+		final Map<String, String> dataMap = new HashMap<String, String>();
+
+		if (CollectionUtils.isNotEmpty(categoryList))
+		{
+			for (final CategoryModel category : categoryList)
+			{
+				for (final CategoryModel promocategory : promoCategoryList)
+				{
+					if (StringUtils.equalsIgnoreCase(category.getCode(), promocategory.getCode()))
+					{
+						dataMap.put(productCode, promocategory.getCode());
+					}
+				}
+			}
+		}
+
+		return dataMap;
+	}
 
 	/**
 	 * checks for a BOGO promotion present in the product
@@ -286,4 +458,39 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 		}
 		return isFreeBree;
 	}
+
+
+
+	public List<BuyBoxModel> buyBoxModelForSeller(final String sellerID)
+	{
+		try
+		{
+
+			final String queryStringForStock = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS + WHERE_CLASS + BuyBoxModel.SELLERID
+					+ "}=?sellerid";
+
+			final FlexibleSearchQuery flexQuery = new FlexibleSearchQuery(queryStringForStock);
+			flexQuery.addQueryParameter("sellerid", sellerID);
+			return flexibleSearchService.<BuyBoxModel> search(flexQuery).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+
+	protected DefaultPromotionManager getDefaultPromotionsManager()
+	{
+		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
+	}
+
 }

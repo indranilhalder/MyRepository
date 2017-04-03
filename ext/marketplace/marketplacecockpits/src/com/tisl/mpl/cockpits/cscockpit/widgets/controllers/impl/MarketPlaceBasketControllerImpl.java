@@ -183,6 +183,10 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 							}
 						});
 		
+		if(null!=cart.getDeliveryCost()){
+			cart.setTotalPrice(cart.getTotalPrice()-cart.getDeliveryCost());
+			cart.setTotalPriceWithConv(cart.getTotalPriceWithConv()-cart.getDeliveryCost());
+		}
 		modelService.save(cart);
 		
 			try {

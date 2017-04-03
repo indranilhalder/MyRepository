@@ -58,5 +58,10 @@ public interface BuyBoxDao
 	//TPR-3736
 	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions;
 
+	/**
+	 * @param productCode
+	 * @return
+	 */
+	public List<BuyBoxModel> buyboxPriceForMicrosite(String productCode) throws EtailNonBusinessExceptions;
 
 }

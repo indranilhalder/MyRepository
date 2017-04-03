@@ -320,7 +320,14 @@ function focusOnElement() {
 	    //if(stockUssidIds.indexOf(sellersArray[i]['ussid'])==-1){
 	  	 if($("#isPinCodeChecked").val()!="true"){
 	    	 if(stock<=0||sellersArray[i]['deliveryModes']==null){
+	    		
 	    			$("#addToCartButton"+index).hide();
+	    			
+	    			tbodycontent+="<span class='outOfStock"+index+"'>"+$('#otherselleroutofstock').text()+"</span>";
+					tbodycontent+="<div class='btn-buy-now oosOtherSeller'><button id='buyNowButton"+index+"' type='button' class='button add-to-bag btn-block js-add-to-cart buy-now' disabled='disabled'>"+$('#buynowid').text()+"</button>";
+					tbodycontent+="<span id='addToCartButtonIds' class='btn-buy-now-holder'><button id='addToCartButton"+index+"' type='button' class='button add-to-bag btn-block js-add-to-cart add-to-bag-seller' disabled='disabled'>"+$('#addtobagid').text()+"</button></span></div>";
+					
+					
 					//tbodycontent+=$("#hiddenIdForNoStock").html();
 					}else{
 						//TPR-887
@@ -339,8 +346,13 @@ function focusOnElement() {
 			  	}
 	    else{
 	    	if(stockUssidIds.indexOf(sellersArray[i]['ussid'])!=-1){
+	    		 
 	    	$("#addToCartButton"+index).hide();
-		  	}else{
+	    	tbodycontent+="<span class='outOfStock"+index+"'>"+$('#otherselleroutofstock').text()+"</span>";
+	    	tbodycontent+="<div class='btn-buy-now oosOtherSeller'><button id='buyNowButton"+index+"' type='button' class='button add-to-bag btn-block js-add-to-cart buy-now' disabled='disabled'>"+$('#buynowid').text()+"</button>";
+			tbodycontent+="<span id='addToCartButtonId' class='btn-buy-now-holder'><button id='addToCartButton"+index+"' type='button' class='button add-to-bag btn-block js-add-to-cart add-to-bag-seller' disabled='disabled'>"+$('#addtobagid').text()+"</button></span></div>";
+			
+	    	}else{
 		  	//TPR-887
 				tbodycontent+="<div id='buyNowFormIdOthersel"+index+"' class='OSErrorMsg' style='display:none;'></div>";
 				tbodycontent+="<div id='buyNowFormId"+index+"excedeInventory' style='display:none;'>"+$('#buyNowFormexcedeInventory').text()+"</div>";
@@ -368,7 +380,12 @@ function focusOnElement() {
 	  	}	
 	    }
 	  	$("#sellerDetailTbdy").html(tbodycontent);
-	  	var noOfSellers= (sellerDetailsArray.length);
+	  	var noOfSellers= (sellerDetailsArray.length)-$('.oosOtherSeller').length;
+	  	if(noOfSellers ==0){
+	  	
+	  		$('#other-sellers-id .Padd h3').hide();
+	  		
+	  	}
 	  	if(noOfSellers > 1){
 	  		$('#sort').show();
 	  	}
@@ -616,10 +633,12 @@ function focusOnElement() {
 							var messageDet = null;
 							var messageStartDate = null;
 							var messageEndDate = null;		
-							//$(".pdp-promo-title-link").css("display","none");			
-							if($("#promolist").val()!=""||!$.isEmptyObject(offerMessageMap)){
+
+							$(".pdp-promo-title-link").css("display","none");			
+							//TISSQAUAT-472 starts here
+							if($("#promolist").val()=="All" || $("#promolist").val()=="Web" ||!$.isEmptyObject(offerMessageMap)){
 								$("#promolist").val(offerMessageMap);
-								//$(".pdp-promo-title-link").css("display", "block");		
+								$(".pdp-promo-title-link").css("display", "block");		
 							} 
 									
 												

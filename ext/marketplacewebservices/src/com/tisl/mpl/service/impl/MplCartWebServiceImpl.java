@@ -1115,11 +1115,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 								{
 									delivery.setName(deliveryMode.getName());
 								}
-								if (null != gwlp.getFullfillmentType() && !gwlp.getFullfillmentType().isEmpty()
-										&& gwlp.getFullfillmentType().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP))
+								//TPR-4421
+								if (null != deliveryMode.getDeliveryCost() && null != deliveryMode.getDeliveryCost().getValue())
 								{
-									delivery.setDeliveryCost(MarketplacecommerceservicesConstants.ZeroDeliveryCost);
-
+									delivery.setDeliveryCost(String.valueOf(deliveryMode.getDeliveryCost().getValue()
+											.setScale(2, BigDecimal.ROUND_HALF_UP)));
 								}
 								else
 								{
@@ -1186,25 +1186,14 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 									{
 										delivery.setName(deliveryMode.getDeliveryMode().getName());
 									}
-									if (null != gwlp.getFullfillmentType() && !gwlp.getFullfillmentType().isEmpty()
-											&& gwlp.getFullfillmentType().equalsIgnoreCase("tship"))
+									//TPR-4421
+									if (null != abstractOrderEntry.getGiveAway() && !abstractOrderEntry.getGiveAway().booleanValue()
+											&& null != deliveryMode.getValue() && null != abstractOrderEntry.getQuantity())
 									{
-										delivery.setDeliveryCost("0.0");
-									}
-									else
-									{
-										if (LOG.isDebugEnabled())
-										{
-											LOG.debug("************ Mobile webservice Sship product ************* Delivery cost "
-													+ deliveryMode.getValue().toString() + "for" + gwlp.getFullfillmentType());
-										}
-										if (null != abstractOrderEntry.getGiveAway() && !abstractOrderEntry.getGiveAway().booleanValue()
-												&& null != deliveryMode.getValue() && null != abstractOrderEntry.getQuantity())
-										{
-											delivery.setDeliveryCost(deliveryMode.getValue().toString());
+										delivery.setDeliveryCost(deliveryMode.getValue().toString());
 
-										}
 									}
+
 								}
 
 								deliveryList.add(delivery);
@@ -1257,30 +1246,14 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 									{
 										delivery.setName(deliveryMode.getDeliveryMode().getName());
 									}
-									if (null != gwlp.getFullfillmentType() && !gwlp.getFullfillmentType().isEmpty()
-											&& gwlp.getFullfillmentType().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP))
+									//TPR-4421
+									if (null != abstractOrderEntry.getGiveAway() && !abstractOrderEntry.getGiveAway().booleanValue()
+											&& null != deliveryMode.getValue() && null != abstractOrderEntry.getQuantity())
 									{
-										if (LOG.isDebugEnabled())
-										{
-											LOG.debug("************ Mobile webservice Tship product ************* Delivery cost 0"
-													+ gwlp.getFullfillmentType());
-										}
-										delivery.setDeliveryCost(MarketplacecommerceservicesConstants.ZeroDeliveryCost);
-									}
-									else
-									{
-										if (LOG.isDebugEnabled())
-										{
-											LOG.debug("************ Mobile webservice Sship product ************* Delivery cost "
-													+ deliveryMode.getValue().toString() + "for" + gwlp.getFullfillmentType());
-										}
-										if (null != abstractOrderEntry.getGiveAway() && !abstractOrderEntry.getGiveAway().booleanValue()
-												&& null != deliveryMode.getValue() && null != abstractOrderEntry.getQuantity())
-										{
-											delivery.setDeliveryCost(deliveryMode.getValue().toString());
+										delivery.setDeliveryCost(deliveryMode.getValue().toString());
 
-										}
 									}
+
 								}
 								deliveryList.add(delivery);
 
@@ -1339,26 +1312,15 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							}
 
 						}
-						if (null != gwlp.getFullfillmentType() && !gwlp.getFullfillmentType().isEmpty()
-								&& gwlp.getFullfillmentType().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP)
-								&& delivery != null)
+						//TPR-4421
+						if (null != abstractOrderEntry.getCurrDelCharge())
 						{
-							delivery.setDeliveryCost(MarketplacecommerceservicesConstants.ZeroDeliveryCost);
-						}
-						else
-						{
-
-							if (null != abstractOrderEntry.getCurrDelCharge())
+							selectedDelivery.setDeliveryCost(String.valueOf(abstractOrderEntry.getCurrDelCharge()));
+							if (LOG.isDebugEnabled())
 							{
-
-								selectedDelivery.setDeliveryCost(String.valueOf(abstractOrderEntry.getCurrDelCharge()));
-								if (LOG.isDebugEnabled())
-								{
-									LOG.debug("************ Mobile webservice Sship product ************* Delivery cost "
-											+ abstractOrderEntry.getCurrDelCharge() + "for" + gwlp.getFullfillmentType());
-								}
+								LOG.debug("************ Mobile webservice product ************* Delivery cost "
+										+ abstractOrderEntry.getCurrDelCharge() + "for" + gwlp.getFullfillmentType());
 							}
-
 						}
 					}
 					if (null != selectedDelivery)

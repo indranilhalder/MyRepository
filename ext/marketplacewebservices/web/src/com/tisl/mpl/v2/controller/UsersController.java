@@ -144,11 +144,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.tisl.mpl.constants.GeneratedMarketplacecommerceservicesConstants.Enumerations.SellerAssociationStatusEnum;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.YcommercewebservicesConstants;
-import com.tisl.mpl.core.enums.FeedbackArea;
-import com.tisl.mpl.core.enums.Frequency;
+import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.Frequency;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.data.EditWishlistNameData;
@@ -157,7 +157,6 @@ import com.tisl.mpl.data.NotificationData;
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.data.ReturnLogisticsResponseDetails;
 import com.tisl.mpl.data.WishlistData;
-import com.tisl.mpl.enums.SellerAssociationStatusEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
@@ -169,6 +168,7 @@ import com.tisl.mpl.facades.MplCouponWebFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
+import com.tisl.mpl.facades.account.cancelreturn.impl.CancelReturnFacadeImpl;
 import com.tisl.mpl.facades.account.preference.MplPreferenceFacade;
 import com.tisl.mpl.facades.account.register.FriendsInviteFacade;
 import com.tisl.mpl.facades.account.register.MplCustomerProfileFacade;
@@ -397,11 +397,18 @@ public class UsersController extends BaseCommerceController
 	private GigyaFacade gigyaFacade;
 	@Autowired
 	private ExtendedUserService extendedUserService;
+
+
+	@Autowired
+	private CancelReturnFacadeImpl cancelReturnFacadeimpl;
+
+   
 	@Resource(name = "productService")
+
 	private ProductService productService;
+
 	@Autowired
 	private DefaultGetOrderDetailsFacadeImpl getOrderDetailsFacade;
-
 	//@Autowired
 	//private MplPaymentFacadeImpl mplPaymentFacadeImpl;
 	//	@Autowired Critical Sonar fixes Unused private Field
@@ -5176,7 +5183,7 @@ public class UsersController extends BaseCommerceController
 	 */
 	private List<String> getFrequency()
 	{
-		final List<EnumerationValueModel> enumList = mplEnumerationHelper.getEnumerationValuesForCode(Frequency._TYPECODE);
+		final List<EnumerationValueModel> enumList = mplEnumerationHelper.getEnumerationValuesForCode("Frequency");
 		final List<String> frequency = new ArrayList<String>();
 		for (final EnumerationValueModel enumerationValueModel : enumList)
 		{
@@ -5196,7 +5203,7 @@ public class UsersController extends BaseCommerceController
 	 */
 	private List<String> getFeedbackArea()
 	{
-		final List<EnumerationValueModel> enumList = mplEnumerationHelper.getEnumerationValuesForCode(FeedbackArea._TYPECODE);
+		final List<EnumerationValueModel> enumList = mplEnumerationHelper.getEnumerationValuesForCode("FeedbackArea");
 		final List<String> feedbackAreaList = new ArrayList<String>();
 		for (final EnumerationValueModel enumerationValueModel : enumList)
 		{
@@ -5784,7 +5791,6 @@ public class UsersController extends BaseCommerceController
 			{
 				result = MarketplacecommerceservicesConstants.FAILURE_FLAG;
 			}
-
 			output.setStatus(result);
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -7329,10 +7335,6 @@ public class UsersController extends BaseCommerceController
 			}
 
 		}
-
-
-
-
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);

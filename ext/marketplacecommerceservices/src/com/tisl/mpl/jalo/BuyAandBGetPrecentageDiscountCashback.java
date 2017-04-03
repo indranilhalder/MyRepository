@@ -12,7 +12,6 @@ import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.type.ComposedType;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
-import de.hybris.platform.promotions.jalo.PromotionOrderEntryAdjustAction;
 import de.hybris.platform.promotions.jalo.PromotionOrderEntryConsumed;
 import de.hybris.platform.promotions.jalo.PromotionResult;
 import de.hybris.platform.promotions.jalo.PromotionsManager;
@@ -200,6 +199,12 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 						}
 					}
 
+					final Map<String, Integer> qCount = getDefaultPromotionsManager().getQualifyingCountForABPromotion(
+							eligibleProductList, totalCountFactor);
+					paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
+					paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, qCount);
+					paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
+
 					totalCachback = 0.0D;
 					for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 					{
@@ -219,8 +224,10 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 
 							final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext,
 									this, paramPromotionEvaluationContext.getOrder(), 1.0F);
-							final PromotionOrderEntryAdjustAction poeac = PromotionsManager.getInstance()
-									.createPromotionOrderEntryAdjustAction(paramSessionContext, entry, 0.0D);
+							final CustomPromotionOrderEntryAdjustAction poeac = getDefaultPromotionsManager()
+									.createCustomPromotionOrderEntryAdjustAction(paramSessionContext, entry, 0.0D);
+							//							final PromotionOrderEntryAdjustAction poeac = PromotionsManager.getInstance()
+							//									.createPromotionOrderEntryAdjustAction(paramSessionContext, entry, 0.0D);
 							//final List consumed = paramPromotionEvaluationContext.finishLoggingAndGetConsumed(this, true);
 
 							result.setConsumedEntries(paramSessionContext, consumed);
@@ -572,10 +579,10 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 			if (totalFactorCount > 0)
 			{
 				final Set<String> validProdAUssidSet = getDefaultPromotionsManager().populateSortedValidProdUssidMap(
-						validProductAUssidMap, totalFactorCount, paramSessionContext, restrictionList, null);
+						validProductAUssidMap, totalFactorCount, paramSessionContext, restrictionList, null, getCode());
 
 				final Set<String> validProdBUssidSet = getDefaultPromotionsManager().populateSortedValidProdUssidMap(
-						validProductBUssidMap, totalFactorCount, paramSessionContext, restrictionList, null);
+						validProductBUssidMap, totalFactorCount, paramSessionContext, restrictionList, null, getCode());
 
 				validProductListA.retainAll(validProdAUssidSet);
 				validProductListB.retainAll(validProdBUssidSet);
@@ -922,6 +929,7 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 				.append('|');
 
 
+
 		//final Date modifyDate = ((Date) getProperty(ctx, "modifiedtime"));
 
 		final Date modifyDate = getModificationTime();
@@ -930,3 +938,4 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 
 
 }
+

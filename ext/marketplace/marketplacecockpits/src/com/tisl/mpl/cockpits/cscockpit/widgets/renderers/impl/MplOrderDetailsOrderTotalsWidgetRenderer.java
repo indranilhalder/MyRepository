@@ -104,9 +104,12 @@ public class MplOrderDetailsOrderTotalsWidgetRenderer extends
 			
 			for (AbstractOrderEntryModel orderEntry : abstractOrderModel
 					.getEntries()) {
-				if(! mplFindDeliveryFulfillModeStrategy.isTShip(orderEntry.getSelectedUSSID())){
+				/********************************* TPR-4401 Delivery Charge Addition Starts Here ****************************************************/
+				/*if(! mplFindDeliveryFulfillModeStrategy.isTShip(orderEntry.getSelectedUSSID())){
 					totalDeliveryCostDisc += Double.valueOf(orderEntry.getPrevDelCharge().doubleValue() - orderEntry.getCurrDelCharge().doubleValue());
-				}
+				}*/
+				totalDeliveryCostDisc += Double.valueOf(orderEntry.getPrevDelCharge().doubleValue() - orderEntry.getCurrDelCharge().doubleValue());
+				/********************************* TPR-4401 Delivery Charge Addition Ends Here ****************************************************/
 			}
 
 			renderRow(totalDeliveryCostDisc >0 ? totalDeliveryCostDisc : 0d , LabelUtils.getLabel(widget,
@@ -114,15 +117,14 @@ public class MplOrderDetailsOrderTotalsWidgetRenderer extends
 					container);
 
 			Double deliveryCosts = abstractOrderModel.getDeliveryCost();
-			/*Double deliveryCosts = 0D;
-			
+			if(deliveryCosts==0.0){
 			for (AbstractOrderEntryModel orderEntry : abstractOrderModel
 					.getEntries()) {
 				if (null != orderEntry.getMplDeliveryMode()) {
-					deliveryCosts = deliveryCosts
-							+ ( orderEntry.getCurrDelCharge());
+					deliveryCosts =  (orderEntry.getMplDeliveryMode().getValue()-orderEntry.getCurrDelCharge().doubleValue())*orderEntry.getQuantity();
 				}
-			}*/
+			}
+			}
 			
 			
 			renderRow(
@@ -165,7 +167,7 @@ public class MplOrderDetailsOrderTotalsWidgetRenderer extends
 					"convenienceCharges", new Object[0]), currencyInstance,
 					container);
 
-			Double totalPrice = abstractOrderModel.getTotalPriceWithConv();
+			Double totalPrice = subtotal+deliveryCosts+convenienceCharges-cartPromo-couponPromo-promotion;
 			renderRow(totalPrice,
 					LabelUtils.getLabel(widget, "totalPrice", new Object[0]),
 					currencyInstance, container);

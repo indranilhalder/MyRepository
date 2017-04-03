@@ -1,6 +1,7 @@
 package com.tisl.mpl.facade.category.impl;
 
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSSiteService;
 import de.hybris.platform.commercefacades.catalog.impl.DefaultCatalogFacade;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
@@ -203,10 +204,10 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 
 					/*
 					 * secondLevelCategoryData = categoryConverter.convert(secondLevelCategoryModel);
-					 * 
+					 *
 					 * thirdLevelCategorydataList = new ArrayList<CategoryData>();
-					 * 
-					 * 
+					 *
+					 *
 					 * if (!secondLevelCategoryModel.getCategories().isEmpty()) { for (final CategoryModel
 					 * thirdLevelCategoryModel : secondLevelCategoryModel.getCategories()) { thirdLevelCategoryData =
 					 * categoryConverter.convert(thirdLevelCategoryModel); fourthLevelCategorydataList = new
@@ -222,8 +223,8 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 					 * fourthLevelCategorydataList.add(fourthLevelCategoryData); }
 					 * thirdLevelCategoryData.setSubCategories(fourthLevelCategorydataList); }
 					 * thirdLevelCategorydataList.add(thirdLevelCategoryData); }
-					 * 
-					 * 
+					 *
+					 *
 					 * } secondLevelCategoryData.setSubCategories(thirdLevelCategorydataList);
 					 */
 				}
@@ -446,5 +447,25 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 	}
 
 	// ######################### TISLUX-356 END
+	@Override
+	public String getSellerInformationBySellerID(final String sellerId)
+	{
+		String sellerName = null;
+		final SellerInformationModel sellerInformationModel = mplSellerInformationService.getSellerInformationBySellerID(
+				cmsSiteService.getCurrentCatalogVersion(), sellerId);
+		if (null != sellerInformationModel)
+		{
+			sellerName = sellerInformationModel.getSellerName();
+		}
+		return sellerName;
+	}
+
+	@Override
+	public ContentPageModel getContentPageBySellerID(final String sellerId)
+	{
+		return mplSellerInformationService.getContentPageBySellerID(sellerId);
+	}
+
+
 
 }

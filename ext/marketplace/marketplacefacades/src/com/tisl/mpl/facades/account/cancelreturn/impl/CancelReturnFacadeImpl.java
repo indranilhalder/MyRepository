@@ -76,6 +76,7 @@ import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplMWalletRefundService;
 import com.tisl.mpl.model.CRMTicketDetailModel;
@@ -140,6 +141,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 	@Autowired
 	private DefaultMplMWalletRefundService walletRefundService;
+	@Resource(name = "mplProcessOrderService")
+	MplProcessOrderService mplProcessOrderService;
 
 	protected static final Logger LOG = Logger.getLogger(CancelReturnFacadeImpl.class);
 
@@ -342,6 +345,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 			if (omsCancellationStatus)
 			{
+				//TPR-965 : Count not to be reverted
+				//mplProcessOrderService.removePromotionInvalidation(subOrderModel.getParentReference());
+
 				final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(subOrderModel,
 						subOrderEntry.getTransactionId());
 				for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
@@ -509,6 +515,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 			if (omsCancellationStatus)
 			{
+				//TPR-965 Count not to be reverted
+				//mplProcessOrderService.removePromotionInvalidation(subOrderModel.getParentReference());
+
 				final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(subOrderModel,
 						subOrderEntry.getTransactionId());
 				for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
@@ -2150,7 +2159,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		return stage;
 	}
-
 
 	//Mrupee implementation
 

@@ -55,7 +55,12 @@ public interface GetOrderDetailsFacade
 	 */
 	public List<ConsignmentStatus> getPickUpButtonDisableOptions();
 
+
+	
+	public List<OrderProductWsDTO> getOrderdetailsForApp(final String orderCode);
+	
 	public List<OrderProductWsDTO> getOrderdetailsForApp(final String orderCode, final String returnCancelFlag,
 			final String transactionId);
+
 
 }

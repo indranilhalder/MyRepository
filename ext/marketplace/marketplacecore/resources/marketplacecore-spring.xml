@@ -63,6 +63,10 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 			<!-- Added for offer Engine, TPR-589 -->	
 <import resource="classpath:/marketplacecore/integration/hot-folder-marketplace-offer-product-details.xml"/>
 
+	
+	<!-- update the message for Freebie product TPR-1754 -->
+
+<import resource="classpath:/marketplacecore/integration/hot-folder-marketplace-freebie-product-details.xml"/>
 		
 <!-- TPR-1316 -->	
 	<import
@@ -1757,6 +1761,15 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />		
 	</bean>	
+
+		<!-- TPR-1285 Dynamic Sitemap Start -->
+	<bean id="customSiteMapMediaJob"
+ 	      class="com.tisl.mpl.core.sitemap.jobs.CustomSiteMapMediaJob"
+ 	      parent="siteMapMediaJob">
+ 		<property name="mplCategoryDao" ref="mplCategoryDao"/>
+ 		<property name="mplCustomPageSiteMapGenerator" ref="mplCustomPageSiteMapGenerator"/>
+ 	</bean>	
+	<!-- TPR-1285 Dynamic Sitemap Stop -->
 	
 	<!-- for promotion price row updater job -->
  	<bean id="promotionPriceUpdaterJob"
@@ -1766,5 +1779,35 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
   <!--   mrupee changes -->
      <bean id="mplThirdPartyWalletCronJob" parent="abstractJobPerformable" class="com.tisl.mpl.core.payment.cronjob.MplThirdPartyWalletCronJob" autowire="byName">
     </bean>
+ 	
+ 	<!-- TPR-1984 -->
+ 	
+ 	<bean id="NPSEmailEventListener" class="com.tisl.mpl.core.event.NPSEmailEventListener"
+  		parent="abstractSiteEventListener">
+  		<property name="modelService" ref="modelService" />
+  		<property name="businessProcessService" ref="businessProcessService" />
+  	</bean>
+  	
+  	<bean id="generateNPSEmail" parent="abstractGenerateEmailAction">
+  		<property name="frontendTemplateName" value="NpsEmailTemplate" />
+  	</bean>
+  	
+  	<bean id="NPSEmailEventProcessDefinitionResource"
+  		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+  		<property name="resource"
+  			value="classpath:/marketplacecore/processes/npsEmailProcess.xml" />
+  	</bean>
+  	
+	<bean id="npsMailerCronJob"
+ 		class="com.tisl.mpl.core.cronjob.NPSMailer.jobs.NPSMailerCronJob"
+ 		autowire="byName" >
+ 	</bean>
+	   <bean id="productKeywordsValueProvider" class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplKeyWordValueProvider"
+		parent="abstractPropertyFieldValueProvider">
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="commonI18NService" ref="commonI18NService" />
+		<property name="sessionService" ref="sessionService" /> 
+	</bean>
+
 			
 </beans>

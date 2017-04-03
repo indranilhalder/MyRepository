@@ -31,7 +31,11 @@
 								<c:forEach var="channel"
 									items="${product.potentialPromotions[0].channels}">
 									<c:if test="${channel eq 'Web'||channel eq ''||channel==null}">
+									 <!-- TISSQAUAT-472 starts here -->
+									 <input type="hidden" value="${channel}" id="promolist"/>
+									 <!-- TISSQAUAT-472 ends here -->
 									 <li>
+
 									 <div class="offer-modal-heading">OFFER</div>
 									 <div class="offer-outer-wrapper">
 									 <h3 class="product-name highlight mob-promo primary_promo_title">
@@ -87,6 +91,17 @@
 										<p class="bundle-promo"><a href="${request.contextPath}${product.potentialPromotions[0].promourl}">${product.potentialPromotions[0].bundlepromolinktext}</a></p>
 										<!-- TPR-1325 ends-->
 										</div>
+
+										<!-- TISSQAUAT-472 starts here -->
+										</br>
+										<c:if test="${not empty product.potentialPromotions[0].termsAndConditions}">
+											<div class="show-termsConditions">
+											<span class="from">Terms and Conditions:</span>
+											<span class="terms-text"><p>${product.potentialPromotions[0].termsAndConditions}</p></span>
+											</div>											
+										</c:if>
+										<!-- TISSQAUAT-472 ends here -->
+
 										</div>
 									 </li>
 									</c:if>
@@ -95,6 +110,9 @@
 							</c:when>
 							<c:otherwise>
 								<c:if test="${not empty product.potentialPromotions[0]}">
+								<!-- TISSQAUAT-472 starts here -->
+								<input type="hidden" value="All" id="promolist"/>
+								<!-- TISSQAUAT-472 ends here -->
 								 <li>
 								 <div class="offer-modal-heading">OFFER</div>
 								 <div class="offer-outer-wrapper">
@@ -147,11 +165,21 @@
 												value="${product.potentialPromotions[0].endDate}" /></span>
 												</div>
 										</div>										
+
 										</div>
 										<!-- TPR-1325 starts-->
 										<p class="bundle-promo"><a href="${request.contextPath}${product.potentialPromotions[0].promourl}">${product.potentialPromotions[0].bundlepromolinktext}</a></p>
 										<!-- TPR-1325 ends-->
+										<br>
 									</div>
+
+									</br>
+										<c:if test="${not empty product.potentialPromotions[0].termsAndConditions}">
+											<div class="show-termsConditions">
+											<span class="from">Terms and Conditions:</span>
+											<span class="terms-text"><p>${product.potentialPromotions[0].termsAndConditions}</p></span>
+											</div>											
+										</c:if>	
 									</div>
 									</li>
 								</c:if>

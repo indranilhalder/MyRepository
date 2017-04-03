@@ -62,5 +62,11 @@ public interface BuyBoxService
 	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions;
 
 
+	/**
+	 * @param productCode
+	 * @return
+	 */
+	//CKD:TPR-250
+	List<BuyBoxModel> buyboxPriceForMicrosite(String productCode) throws EtailNonBusinessExceptions;
 
 }

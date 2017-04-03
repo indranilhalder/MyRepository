@@ -28,8 +28,8 @@ public class AccountAddressValidator implements Validator
 	private static final int MAX_FIELD_LENGTH = 255;
 	private static final int MAX_POSTCODE_LENGTH = 10;
 	private static final int MAX_FIELD_LENGTH_NEW = 140;
-	//private static final int MAX_FIELD_LENGTH_UPDATED = 40;//TPR-215
-	private static final int MAX_FIELD_LENGTH_UPDATED = 120;//TPR-3402
+	private static final int MAX_FIELD_LENGTH_UPDATED = 40;//TPR-215
+	//private static final int MAX_FIELD_LENGTH_UPDATED = 120;//TPR-3402
 	//private static final int MAX_FIELD_LENGTH_UPDATED = 30; //TISUAT-4696
 	private static final int MAX_FIELD_LENGTH_STATE = 20;
 	private static final int MAX_FIELD_LENGTH_COUNTRY = 15;

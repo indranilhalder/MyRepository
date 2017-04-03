@@ -16,6 +16,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 public interface MplProcessOrderService
 {
 	void processPaymentPedingOrders() throws EtailNonBusinessExceptions;
-
 	public String getPinCodeForOrder(final OrderModel orderModel);
+	void removePromotionInvalidation(final OrderModel orderModel) throws EtailNonBusinessExceptions;
+
 }
