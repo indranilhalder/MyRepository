@@ -63693,9 +63693,30 @@ header .content .right > ul > li.sign-in .sign-in-info .foot a{
 header .content .right > ul > li.sign-in .sign-in-info .or{
 	letter-spacing: 0.6px;
     color: #878787;
-        height: auto;
+    height: auto;
     line-height: normal;
     top: calc(100% - -24px);
+    text-transform: uppercase;
+}
+header .content .right > ul > li.sign-in .sign-in-info .or:before {
+	content:"";
+    display: inline-block;
+    width: 320px;
+    border-top: solid 1px #eeeeee;
+    position: absolute;
+    top: 8px;
+    left: -149px;
+    z-index: -1;
+}
+header .content .right > ul > li.sign-in .sign-in-info .or:after {
+    content: "";
+    width: 39.63px;
+    height: 15px;
+    display: inline-block;
+    position: absolute;
+    background: #fff;
+    left: -10px;
+    z-index: -1;
 }
 footer>div>ul>li h3.toggle{
 	font-size:12px;
@@ -63876,22 +63897,36 @@ header .content  .bottom.active nav>ul>li:hover>.toggle:before{
 	margin: 0 !important;
 }
 header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:after, .logged_in.dropdown:after,
-header .content .bottom .bag .mini-bag:before,
 header .content .right > ul > li.wishlist:after, header .content .right > ul > li.track.trackOrder:after{
 	content: "";
     width: 0;
     height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-bottom: 8px solid #fff;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 9px solid #fff;
     position: absolute;
     top: 28px;
     left: 50%;
-    z-index: 11;
+    z-index: 1001;
     opacity:0;
 }
+header .content .bottom .bag:before{
+	content: "";
+    width: 17px;
+    height: 13px;
+    background-image: url(../images/header-arrow.PNG);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    position: absolute;
+    z-index: 1001;
+    opacity:0;
+	top: 56px;
+    left: auto;
+    right: 85px;
+    }
 header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:hover:after,
-header .content .bottom .bag:hover .mini-bag:before,
+header .content .bottom .bag:hover:before,
 header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:hover:after,
 header .content .right > ul > li.wishlist:hover:after, header .content .right > ul > li.track.trackOrder:hover:after{
     opacity:1;
@@ -63907,9 +63942,13 @@ header .content .right > ul > li.sign-in .sign-in-info{
 	left: auto;
 	right: 0;
 }
+header .content .right > ul .logged_in.dropdown{
+	margin-right: 17px;
+}
 .dropdown-menu.dropdown-hi.loggedIn-flyout.ajaxflyout{
 	width:210px;
-	left: 20px;
+	left: auto;
+	right: -7px;
 	background-color: #ffffff;
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.35), 0 1px 2px 0 rgba(0, 0, 0, 0.25);
   overflow: hidden;
@@ -64887,3 +64926,9 @@ header .content .search {
 }
 /* Homepage changes end */
 
+/*UF-199 start*/
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item .full.country-select .country{
+	font-size: 12px;
+    letter-spacing: 0.6px;
+}
+/*UF-199 end*/

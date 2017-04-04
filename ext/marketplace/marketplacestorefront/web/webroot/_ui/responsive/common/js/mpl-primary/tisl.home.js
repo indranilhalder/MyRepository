@@ -1942,7 +1942,7 @@ $(document).ready(function()
            
            if (!headerLoggedinStatus) {
 
-               $("a.headeruserdetails").html("Sign In");
+               $("a.headeruserdetails").html("Sign In / Sign Up"); /*UF-249 text change*/
              //Akamai caching
                $("a.headeruserdetails").attr('href','/login');
                $('#signIn').attr('class','sign-in-info signin-dropdown-body ajaxflyout');
