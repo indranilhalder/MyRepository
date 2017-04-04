@@ -3412,6 +3412,9 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						$(".reviews").show();
 						$(".fullfilled-by").show();
 						
+						$("a#submit.otherSellersFont").attr("href","/p/"+responseProductCode+"/viewSellers");
+						$("#sellerForm").attr("action","/p/"+responseProductCode+"/viewSellers");
+						
 						//Deselect the previously selected li and highlight the current li
 						$('ul#variant.variant-select li').each(function (index, value) { 
 							if($(this).hasClass("selected"))

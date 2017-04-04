@@ -268,7 +268,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				//Availability counts
 				if (null != arrayToProductList)
 				{
-					if (isSellerPresent && !allOSSForMicro)//TPR-250
+					if (isSellerPresent && isMicroSellerOOS)//TPR-250
 					{
 						productsList = identifyProductsForMicrosite(buyboxModelListAll, pdpProduct, productsList, bBoxSellerId);//getting products having stock
 					}
@@ -937,7 +937,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 * 
+	 *
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
