@@ -567,7 +567,7 @@
  	     <value> # Insert Brand
  	     $productCatalog=mplProductCatalog
 				$classificationCatalog=pcmClassification
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
                INSERT_UPDATE Brand;name[unique=true];description;productSource(code,$catalogVersion)[unique=true];brandCode;$catalogVersion
             </value>
         </property>
