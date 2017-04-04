@@ -302,6 +302,7 @@
 						data-mini-cart-name="Cart" data-mini-cart-empty-name="Empty Cart"
 						style="position: static;"><spring:theme code="minicart.mybag" />&nbsp;(<span
 						class="js-mini-cart-count-hover"></span>) </a> --%>
+						<div class="transient-mini-bag"></div>
 					<a href="/cart" class="mini-cart-link myBag-sticky"
 						data-mini-cart-url="/cart/rollover/MiniCart"
 						data-mini-cart-refresh-url="/cart/miniCart/SUBTOTAL"
