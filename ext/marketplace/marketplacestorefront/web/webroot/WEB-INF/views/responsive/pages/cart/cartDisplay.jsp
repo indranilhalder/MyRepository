@@ -147,10 +147,11 @@
 	</div>
 	</div>
 	<script>
-   				window.onload =	function(){
-   						checkIsServicable();
-   						
-   				}
+				//UF-70 Commenting onload call to checkIsServicable() and making it on ready in marketplacecheckoutaddon.js
+   				//window.onload =	function(){
+   						//checkIsServicable();   						
+   				//}
+
 	</script>
 <!-- TISCR-320 -->
 <%-- <span class="continue-shopping">
@@ -165,3 +166,6 @@
 		<cart:cartGiftYourself/>
 
 </c:if>
+
+<!-- UF-70 -->
+<input type="hidden" name="isPincodeRestrictedPromoPresent" id="isPincodeRestrictedPromoPresentId" value="${isPincodeRestrictedPromoPresent}">
