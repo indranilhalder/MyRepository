@@ -292,7 +292,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 #;;SearchBoxSlot;SearchBox
 #;;HomepageNavLinkSlot;HomepageNavLink
 #;;MiniCartSlot;MiniCart,helpservicesLink,MyWishList,SignInFlyOut,TrackOrder 
-;;MiniCartSlot,helpservicesLink,MyWishList,SignInFlyOut,TrackOrder
+;;MiniCartSlot;helpservicesLink,SignInFlyOut,MyWishList,TrackOrder 
 ;;SideContentSlot;MobileAppBanner
 ;;SiteLogoSlot;SiteLogoComponent
 ;;TopHeaderSlot;ResponsiveSiteLogoComponent
