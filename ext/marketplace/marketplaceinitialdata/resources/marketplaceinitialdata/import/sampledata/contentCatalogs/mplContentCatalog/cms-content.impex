@@ -111,7 +111,7 @@ INSERT_UPDATE NavigationBarComponent;$contentCV[unique=true];uid[unique=true];na
 
 # CMS Mini Cart Component  
 INSERT_UPDATE MiniCartComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;totalDisplay(code);shownProductCount;;
-;;MiniCart;Mini Cart;MiniCart;SUBTOTAL;3;;
+;;MiniCart;Mini Cart;MiniCart;SUBTOTAL;2;;
 
 
 
