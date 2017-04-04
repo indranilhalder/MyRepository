@@ -3427,6 +3427,11 @@ $(document).ready(function(){
     $(".page-cartPage .cart-total-block ul.checkOutBtnBtm > li.checkout-button").css("visibility","visible");
     //$("#pinCodeButtonIdsBtm").addClass("CheckAvailability");
     /*UF-68 UF-69*/
+    
+    /*TISSQAUATS-881*/
+    if($(".product-info .product-detail .other-sellers#otherSellerInfoId .other-sellers-link #otherSellersId").text().length != 0)
+    	$(".product-info .product-detail .other-sellers#otherSellerInfoId").css("display","block");
+    /*TISSQAUATS-881*/
 });
 
 /* UF-68 UF-69 */
@@ -3464,6 +3469,11 @@ $(document).ajaxComplete(function(){
 	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").css("pointer-events","");
 	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").removeAttr("onclick");
 	$("a#checkout-enabled.checkout-disabled").removeAttr("onclick");
+	
+	/*TISSQAUATS-881*/
+	 if($(".product-info .product-detail .other-sellers#otherSellerInfoId .other-sellers-link #otherSellersId").text().length != 0)
+	    	$(".product-info .product-detail .other-sellers#otherSellerInfoId").css("display","block");
+	 /*TISSQAUATS-881*/
 });
 
 /* UF-68 UF-69 */
@@ -3483,3 +3493,4 @@ $("#sameAsShippingEmi").click(function(){
 		$(this).prev('h2').show();
 	}
 	});
+
