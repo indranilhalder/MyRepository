@@ -57908,9 +57908,12 @@ div.radio.creditDebitLabelRadio{
                font-weight: normal;
     }
 /* TPR-791 Start */
-.product-info .product-detail .other-sellers#otherSellerInfoId, .product-info .product-detail #otherSellerLinkId{margin-top:0px;}
+.product-info .product-detail .other-sellers#otherSellerInfoId, .product-info .product-detail #otherSellerLinkId{
+	margin-top:0px;
+}
 .product-info .product-detail .other-sellers#otherSellerInfoId{
 	color: #878787;
+	display:none;  	/* TISSQAUATS-881 */
 }
 .product-info .SoldWrap>div.fullfilled-by{padding-right:0px;/* width:43%; */}
 /* .product-info .SoldWrap>div.seller{width:57%;}

@@ -56,11 +56,10 @@
 					<%-- <a href="${request.contextPath}/p/${product.code}/viewSellers" id="submit" class="otherSellersFont"> --%>
 					<a href="${request.contextPath}/p/${product.code}/viewSellers${msiteSllerId}" id="submit" class="otherSellersFont">
 					<!--  CKD:TPR-250:End-->
-						<p id="otherSellerInfoId" class="other-sellers">
-							&nbsp;&&nbsp;<span class="other-sellers-link"><span id="otherSellersId"></span>&nbsp;<span><spring:theme code="product.othersellers"></spring:theme></span></span><%-- &nbsp;
+						<p id="otherSellerInfoId" class="other-sellers">&&nbsp;<span class="other-sellers-link"><span id="otherSellersId"></span>&nbsp;<span><spring:theme code="product.othersellers"></spring:theme></span></span><%-- &nbsp;
 							<spring:theme code="product.available"></spring:theme>
 							&nbsp;<span id="minPriceId"></span> --%>
-						</p>
+						</p>   	<!-- TISSQAUATS-881 -->
 						<%-- <div id="otherSellerLinkId" style="display: none">
 							<span id="otherSellersId"></span>&nbsp;<span
 								class="other-sellers-info" style="color: #a9143c;"><spring:theme
