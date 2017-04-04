@@ -1240,11 +1240,16 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 										{
 											subOrderEntryModel.setSddDateBetween(perentEntry.getSddDateBetween());
 										}
+										subOrderEntryModel.setFulfillmentType(perentEntry.getFulfillmentType());
+										subOrderEntryModel.setFulfillmentTypeP1(perentEntry.getFulfillmentTypeP1());
+										subOrderEntryModel.setFulfillmentTypeP2(perentEntry.getFulfillmentTypeP2());
+										subOrderEntryModel.setFulfillmentMode(perentEntry.getFulfillmentMode());
 									}
 									catch (Exception exception)
 									{
 										LOG.error("MplDefaultPlaceOrderCommerceHooks:::::" + exception.getMessage());
 									}
+									
 									//R2.3 Code Changes bug ID TISRLEE-3197
 									getModelService().save(subOrderEntryModel);
 									for (final String freebieUssid : associatedItemMap.get(parentUssId))
@@ -1271,6 +1276,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 																{
 																	subOrderEntryModel2.setSddDateBetween(perentEntry.getSddDateBetween());
 																}
+																subOrderEntryModel.setFulfillmentType(perentEntry.getFulfillmentType());
+																subOrderEntryModel.setFulfillmentTypeP1(perentEntry.getFulfillmentTypeP1());
+																subOrderEntryModel.setFulfillmentTypeP2(perentEntry.getFulfillmentTypeP2());
+																subOrderEntryModel.setFulfillmentMode(perentEntry.getFulfillmentMode());
 															}
 															catch (Exception exception)
 															{
