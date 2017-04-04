@@ -2077,10 +2077,10 @@ h2 {
 	}
 	header .content .search {
 		float: right;
-		max-width: 640px;
+		max-width: 660px;
 		min-width: 349px;
-		width: -webkit-calc(100% - 685px);
-		width: calc(100% - 685px);
+		width: -webkit-calc(100% - 690px);
+		width: calc(100% - 690px);
 	}
 	header .content .search::after {
 		clear: both;
@@ -2117,12 +2117,12 @@ header .content .bottom.active nav>ul>li:first-child+li.hovered > ul {
 @media  (min-width: 791px) and (max-width: 920px) {
       header .content .search {
         min-width: 260px;
-        width: -webkit-calc(100% - 556px);
-    	width: calc(100% - 556px); 
+       /*  width: -webkit-calc(100% - 556px);
+    	width: calc(100% - 556px);  */
         }
         header .content .search form {
           margin-right: 0; } }
-           @media  (min-width: 921px) and (max-width: 1024px) {
+           @media  (min-width: 791px) and (max-width: 1024px) {
 			header .content .search {
       width: -webkit-calc(100% - 540px);
     width: calc(100% - 540px); 
@@ -20212,9 +20212,9 @@ color: #ff829a;
   {
   	header .content .bottom.active .search
   	{
-  		min-width:305px;
-  		-webkit-width:calc(100% - 580px);
-  		width:calc(100% - 580px);
+  		/* min-width:305px; */
+  		/* width:-webkit-calc(100% - 515px);
+  		width:calc(100% - 515px); */
   	}
   }      
 .feature-collections ul.collections li.chef h3 span a {
@@ -64003,9 +64003,9 @@ header .content .bottom.active nav > ul > li > ul > li > ul{
 header .content .bottom.active nav > ul > li > ul > li > ul{
 	left:217px !important;
 }
-header .content .bottom.active nav{
+/* header .content .bottom.active nav{
 	margin-left:0px;
-}
+} */
 }
 @media(min-width:768px){
 	.shop-promos .promos li{
@@ -64868,7 +64868,7 @@ header .content nav > ul > li{
 	margin-right:51px;
 }
 header .content .search {
-    margin-left: 7%;
+    margin-left: 85px;
 }
  }
 /*Homepage responsive end*/
