@@ -2156,3 +2156,15 @@ $(document).ready(function()
 					});
 				}	
 			});
+		
+		//UF-162
+		$( document ).ready(function() {
+			var pageType = $('#pageType').val();
+			var isLux = $('#isLuxury').val();
+			if(pageType == "cart" && isLux == 'true') {
+			//$(".luxury-footer").remove();
+				$(".luxury-footer .container > .row:first-child > div").hide(); 
+				$(".luxury-footer .container .row div.footer-text, .luxury-footer .container .row div.footer-bottom-links").hide(); 
+			}
+		});
+		//UF-162 ends

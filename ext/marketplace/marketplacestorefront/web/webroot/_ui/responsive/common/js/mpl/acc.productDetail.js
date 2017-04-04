@@ -2754,6 +2754,18 @@ function loadDefaultWishListName_SizeGuide() {
 			utag.link({"error_type":"size_not_selected"});
 	 	    return false;
 	 }
+		
+		//UF-160
+		var isLargeApplnc = $("#isLargeAppliance").val();
+		if(isLargeApplnc == "true" && pinCodeChecked == false){	
+			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#addToCartLargeAppliance').text() + "</font>");
+			$("#addToCartFormTitle").show().fadeOut(6000);
+			$('#pin').focus();
+			$('#pin').css("border", "1px solid #a5173c");
+			return false;
+		}
+		//UF-160 ends
+		
 		ACC.product.sendAddToBag("addToCartForm",true);
 	});
 
