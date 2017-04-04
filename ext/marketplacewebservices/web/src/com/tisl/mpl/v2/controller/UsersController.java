@@ -6730,7 +6730,7 @@ public class UsersController extends BaseCommerceController
 
 				if (!failFlag
 						&& !mplCartFacade.isInventoryReservedMobile(
-								MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart, pincode,item,SalesApplication.MOBILE))
+								MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel, pincode,item,SalesApplication.MOBILE))
 				{
 					//getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,"TRUE");
 					getMplCartFacade().recalculateOrder(orderModel);
