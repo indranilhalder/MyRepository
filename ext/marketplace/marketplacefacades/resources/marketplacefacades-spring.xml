@@ -1796,4 +1796,11 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<bean id="customProductFacadeImpl" class="com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl" parent="productFacade">
 		<property name="customProductConverter" ref="customAjaxProductConverter"/>
 	</bean>
+	
+	<!-- UF-258 -->
+	
+	<bean id="STWFacade" class="com.tisl.mpl.facade.stw.impl.STWWidgetFacadeImpl">
+		<property name="stwWidgetService" ref="STWService"></property>
+		<property name="buyBoxService" ref="buyBoxService"></property>
+	</bean>
 </beans>
