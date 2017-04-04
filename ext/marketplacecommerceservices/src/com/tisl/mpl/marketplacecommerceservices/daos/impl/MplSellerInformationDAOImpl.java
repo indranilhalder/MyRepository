@@ -71,7 +71,7 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplSellerInformationDAO#getSellerInforationDetails(java.lang.String)
 	 */
@@ -111,7 +111,7 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplSellerInformationDAO#getSellerInforationDetails(java.lang.String)
 	 */
@@ -341,7 +341,7 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplSellerInformationDAO#getSellerInformationWithSellerMaster(java
 	 * .lang.String)
@@ -473,7 +473,7 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplSellerInformationDAO#getContentPageBySellerID(de.hybris.platform
 	 * .catalog.model.CatalogVersionModel, java.lang.String)
@@ -489,7 +489,6 @@ public class MplSellerInformationDAOImpl implements MplSellerInformationDAO
 			final Map<String, Object> params = new HashMap<String, Object>();
 			params.put(ContentPageModel.CATALOGVERSION, catalogVersion);
 			params.put("id", id.toUpperCase());
-			System.out.println("query" + queryString);
 			ContentPageModel searchResult = null;
 			final SearchResult<ContentPageModel> searchResList = flexibleSearchService.search(queryString.toString(), params);
 			if (searchResList != null && searchResList.getCount() > 0)
