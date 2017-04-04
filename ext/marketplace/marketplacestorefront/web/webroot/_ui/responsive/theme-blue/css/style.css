@@ -1258,7 +1258,7 @@ h2 {
             overflow: hidden;
             width: 477px;
             max-height: 0;
-            z-index: 4;
+            z-index: 11;
             background-color: #fff;
             top: -webkit-calc(100% - -64px);
             top: calc(100% - -64px);
@@ -1399,6 +1399,9 @@ h2 {
               -webkit-transition: max-height 0.15s 0.35s;
               -moz-transition: max-height 0.15s 0.35s;
               transition: max-height 0.15s 0.35s; }
+            header .content .bottom.active .bag:hover .mini-bag {
+              max-height:0px;
+              }
          /*    header .content .right > ul > li.bag.clicked .mini-bag {
               max-height: 2000px;
               -webkit-transition: max-height 0.15s;
@@ -2123,7 +2126,7 @@ h2 {
 	}
 	header .content .search {
 		float: right;
-		max-width: 660px;
+		max-width: 675px;
 		min-width: 349px;
 		width: -webkit-calc(100% - 690px);
 		width: calc(100% - 690px);
@@ -19443,12 +19446,16 @@ header.brand-header .content .bottom.active .bag.mobile-bag {
 }
 
 header.brand-header .content .bottom.active .search {
-	margin-right: 100px;
+	/* margin-right: 100px;
 	width: -webkit-calc(100% - 600px);
 	width: calc(100% - 600px);
 	-webkit-transition: margin-right 0.15s, width 0.15s;
 	-moz-transition: margin-right 0.15s, width 0.15s;
-	transition: margin-right 0.15s, width 0.15s
+	transition: margin-right 0.15s, width 0.15s */
+	max-width: 660px;
+    min-width: 349px;
+    width: -webkit-calc(100% - 690px);
+    width: calc(100% - 690px);
 }
 	
 	header .content .compact-toggle.mobile {
@@ -60007,7 +60014,10 @@ body.page-cartPage .cartBottomCheck {
 
 
 /* TISQAEE-24 */
-body.page-multiStepCheckoutSummaryPage #flip-tabs, body.page-checkout-login header .content .top, body.page-checkout-login #flip-tabs, body.page-multiStepCheckoutSummaryPage header .content .top{
+body.page-multiStepCheckoutSummaryPage #flip-tabs, body.page-checkout-login header .content .top, 
+body.page-checkout-login #flip-tabs, body.page-multiStepCheckoutSummaryPage header .content .top,
+body.page-multiStepCheckoutSummaryPage header .content .bottom .bag,
+body.page-checkout-login header .content .bottom .bag{
 display: none;
 }
 
