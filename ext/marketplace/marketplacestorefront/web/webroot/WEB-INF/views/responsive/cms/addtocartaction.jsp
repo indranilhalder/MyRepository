@@ -139,6 +139,8 @@ $(document).ready(function(){
 		<input type="button" id="add_to_wishlist" onClick="addToWishlist();" id="wishlist" class="wishlist" data-toggle="popover" value="<spring:theme code="text.add.to.wishlist"/>"/>
 	</span>
 	<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
+	<!-- UF-160 -->
+	<span id="addToCartLargeAppliance" style="display: none;color:#ff1c47"><spring:theme code="product.addToCart.largeAppliance.error"/></span>
 	<span id="addToCartButtonId">
 		<span id="addToCartFormTitleSuccess"></span>
 		<button style="display: none;"

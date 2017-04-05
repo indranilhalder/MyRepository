@@ -57623,8 +57623,12 @@ div.radio.creditDebitLabelRadio{
   	margin-left: 5px;
   }
   .ItemAmtofferDisplayPrFm{
-  	margin-top: -2px;
-    display: inline-block;
+  /* 	margin-top: -2px; */
+    display: block;
+	line-height:14px;
+  }
+    .ItemAmtofferDisplayPrFm span.priceFormat > span{
+  	margin-top: 5px;
   }
   span.delSeat{
   	margin-bottom: 5px;
@@ -63417,8 +63421,6 @@ padding-top:90px;
     letter-spacing: .5px;
 }
 /* TISSIT-2212 end */
-
-
 
 /* Homepage changes start */
 /*  body{
