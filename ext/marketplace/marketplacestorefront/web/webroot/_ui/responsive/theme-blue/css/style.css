@@ -62161,6 +62161,7 @@ footer .banner{
 	font-size:12px !important;
 	letter-spacing: 0.6px;
 	line-height:1.67;
+	word-wrap: break-word; /* TISUATSE-104 */
 }
 .cart.wrapper.checkout-payment .right-block.billing .block.bottom.order-details.delivery-info>address{
 	line-height:1.67 !important;
