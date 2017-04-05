@@ -245,8 +245,8 @@ $(document).ready(function(){
 		 
 	/*----start of Sticky Bag --------*/
 		 
-			 var x = $(".js-mini-cart-count").text();
-			   $(".js-mini-cart-count-hover").text(parseInt($(".js-mini-cart-count").text()));
+			 /*var x = $(".js-mini-cart-count").text();*/		/*commented as part of UF-249*/
+			 /*$(".js-mini-cart-count-hover").text(parseInt($(".js-mini-cart-count").text()));*/		/*commented as part of UF-249*/
 			   
 				  
 			   $(window).scroll(function () {
@@ -1330,7 +1330,7 @@ $(document).ready(function(){
 		 $(window).on("load resize",function(){
 				if($(".js-mini-cart-count").text() != undefined && $(".js-mini-cart-count").text()!=null)
 					{
-					$(".responsive-bag-count").text($(".js-mini-cart-count").text());
+					$(".responsive-bag-count").text($(".js-mini-cart-count-hover").text());		/*UF-249*/
 					}
 				var $li = $(".page-authenticAndExclusive ul.feature-brands li");
 				if($(window).width() <790) {
