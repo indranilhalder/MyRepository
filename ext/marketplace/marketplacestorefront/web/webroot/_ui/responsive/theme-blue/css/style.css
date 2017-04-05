@@ -792,7 +792,7 @@ input:focus {
       .select-view .select-list > .selected:after {
         position: absolute;
         top: 0px;
-        right: 2px;
+        right: 16px;
         font-weight: lighter;
     	font-size: 20px;
     	content: "\f107";
@@ -7880,6 +7880,9 @@ text-transform: uppercase;}
 	padding: 0 20px;
 	position: relative;
 }
+.newsletter #error_message {
+	padding-top:10px;
+}
 .newsletter:after {
   content: "";
   display: block;
@@ -7938,7 +7941,7 @@ text-transform: uppercase;}
 .newsletter button {
 	width: 30%;
 	padding: 13px 0;
-	float: left;
+	/* float: left; */
 	background: #FBBA21;
     color: #fff;
     opacity: 1;
@@ -18989,7 +18992,7 @@ header.brand-header .content .bottom {
 
 header.brand-header .content .bottom .bag {
 	display: none;
-	position: absolute;
+	/* position: absolute; */
 	right: 0px;
 	opacity: 0;
 	line-height: 40px;
@@ -19234,7 +19237,7 @@ header.brand-header .content .bottom nav>ul>li:hover {
 
 header.brand-header .content .bottom nav>ul>li>ul {
 	background-color: #b9b9b9;
-	top: 70px;
+	top: 64px;
 	left: 280px;
 }
 
@@ -59178,9 +59181,9 @@ li.facet.js-facet.collectionIds{
 	#flip-navigation li a{
   padding: 9px 10px;
   font-size: 11px;
-  width: 120px;}
-  #flip-navigation li{
-  width:120px;}
+  /* width: 120px; */}
+/*   #flip-navigation li{
+  width:120px;} */
 }
 @media (min-width:791px){
 header .content .top{
@@ -64056,6 +64059,9 @@ header .content .right > ul > li {
 header .content .search .select-list {
     width: 75px;
 }
+.select-view .select-list > .selected:after{
+	right:2px;
+}
 header .content .search{
 	margin-left:0px;
 }
@@ -64939,6 +64945,19 @@ header .content .search {
     margin-left: 85px;
 }
  }
+ header.brand-header .content .search { 
+ float:right;
+ margin-left:0px;
+ }
+ header.brand-header .content .search form{
+	margin-right:30px;
+ }
+ header.brand-header .content .bottom.active .search form{
+ margin-right:16px;
+ }
+ header > .content .top ul a[href="/helpservices"] {
+    display: none;
+} 
 /*Homepage responsive end*/
 .container_store_finder_home{
 	display: none;
