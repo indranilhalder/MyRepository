@@ -23,6 +23,7 @@
 		<!-- For TPR-4358 Start -->
 		<span itemprop="price">${product_list_price}</span>
 		<span itemprop="priceCurrency">${currentCurrency.isocode}</span>
+		<meta itemprop="itemCondition" content="http://schema.org/NewCondition" />
 		<c:choose>
  		<c:when test="${product_availability == 'Available online'}">
  			<meta itemprop="availability" content="http://schema.org/InStock"/>${product_availability}</meta>

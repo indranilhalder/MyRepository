@@ -1992,6 +1992,7 @@
    <bean id="mRupeeWalletService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplThirdPartyWalletServiceImpl">
       <property name="configurationService" ref="configurationService" />
       <property name="orderService" ref="orderService" />
+      <property name="orderConverter" ref="orderConverter"/>
    </bean>
    <bean id="mplThirdPartyWalletDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplThirdPartyWalletDaoImpl">
    </bean>

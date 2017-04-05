@@ -189,6 +189,7 @@ tr.d0 td {
 				<!-- CKD:TPR-250-End-->
 				<%-- <a itemprop="url" href="${mainurl}"> --%>		<!-- Commented as part of UF-181 -->
 				<!-- For TPR-4358 -->
+				<span id="url" itemprop="url" style="display: none">${mainurl}</span> <!-- TISSQAEE-301 -->
 				<h1 itemprop="name" class="product-name">${product.productTitle}</h1>
 				<meta itemprop="sku" content="${product_sku}"/>
 				<!-- </a> -->

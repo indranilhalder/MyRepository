@@ -53670,6 +53670,7 @@ body .lookbook_wrapper .listing.wrapper .left-block{
     padding-bottom: 9px;
     line-height: 12px;
     word-break: break-word;
+   	word-wrap: break-word;	/* TISUATSE-105 */
 }
 
 .address-list .address .name {
@@ -63882,6 +63883,7 @@ footer .banner{
 	font-size:12px !important;
 	letter-spacing: 0.6px;
 	line-height:1.67;
+	word-wrap: break-word; /* TISUATSE-104 */
 }
 .cart.wrapper.checkout-payment .right-block.billing .block.bottom.order-details.delivery-info>address{
 	line-height:1.67 !important;
