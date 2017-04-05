@@ -7200,7 +7200,7 @@ $("#couponSubmitButton").click(function(){
 function onSubmitAnalytics(msg){
 	var couponCode = $('#couponFieldId').val().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	utag.link({
-		link_obj: this,
+		/*link_obj: this,*/ /*TISUATSE-102*/
 		link_text: 'apply_coupon_'+msg ,
 		event_type : 'apply_coupon',
 		coupon_code : couponCode
