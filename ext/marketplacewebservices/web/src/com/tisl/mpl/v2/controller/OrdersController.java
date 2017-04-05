@@ -872,6 +872,11 @@ public class OrdersController extends BaseCommerceController
 								{
 									orderProductDTO.setFulfillment(fulfillmentType);
 								}
+								for ( AbstractOrderEntryModel orderEntry : orderModel.getEntries()) {
+									if(entry.getSelectedUssid().equalsIgnoreCase(entry.getSelectedUssid())){
+										orderProductDTO.setFulfillment(orderEntry.getFulfillmentMode());
+									}
+								}
 							}
 
 							if (entry.getMplDeliveryMode() != null)

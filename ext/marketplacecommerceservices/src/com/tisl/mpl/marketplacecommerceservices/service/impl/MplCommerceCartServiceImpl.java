@@ -2457,6 +2457,87 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			//final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel);
 //			final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderData,
 //					abstractOrderModel);
+			/* Added for TISRLUAT-1161 START */
+			try
+			{
+				if(null != abstractOrderModel && null != abstractOrderModel.getEntries() && !abstractOrderModel.getEntries().isEmpty() && null != inventoryRequest && null != inventoryRequest.getItem()) {
+					for ( InventoryReservRequestWsDTO item : inventoryRequest.getItem()) {
+						for ( AbstractOrderEntryModel entry : abstractOrderModel.getEntries()) {
+							   if(item.getUssId().equalsIgnoreCase(entry.getSelectedUSSID())) {
+							   	entry.setFulfillmentMode(item.getFulfillmentType());
+							   	entry.setFulfillmentType(item.getFulfillmentType());
+							   	try
+									{
+							   	final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+							   			entry.getSelectedUSSID());
+									List<RichAttributeModel> richAttributeModel = null;
+									if (sellerInfoModel != null)
+									{
+										richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+									}
+									if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
+											&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
+
+									{
+										final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
+										entry.setFulfillmentTypeP1(fulfilmentType);
+									}
+									}catch (final ClientEtailNonBusinessExceptions e)
+									{
+										LOG.error("Exception occurred while setting fullFillMent Type P1"
+												+ e.getErrorCode());
+									}
+							   	getModelService().save(entry);
+									getModelService().save(entry.getOrder());
+							   }
+						 }
+					 }
+				} else {
+					CartModel cartModel = getCartService().getSessionCart();
+					
+					if(null != cartModel && null != cartModel.getEntries() && !cartModel.getEntries().isEmpty() && null != inventoryRequest && null != inventoryRequest.getItem()) {
+						for ( InventoryReservRequestWsDTO item : inventoryRequest.getItem()) {
+							for ( AbstractOrderEntryModel entry : cartModel.getEntries()) {
+								   if(item.getUssId().equalsIgnoreCase(entry.getSelectedUSSID())) {
+								   	entry.setFulfillmentMode(item.getFulfillmentType());
+								   	entry.setFulfillmentType(item.getFulfillmentType());
+								   	try
+										{
+								   	final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+								   			entry.getSelectedUSSID());
+										List<RichAttributeModel> richAttributeModel = null;
+										if (sellerInfoModel != null)
+										{
+											richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+										}
+										if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
+												&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
+
+										{
+											final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
+											entry.setFulfillmentTypeP1(fulfilmentType);
+										}
+										}catch (final ClientEtailNonBusinessExceptions e)
+										{
+											LOG.error("Exception occurred while setting fullFillMent Type P1"
+													+ e.getErrorCode());
+										}
+								   	getModelService().save(entry);
+								   	getModelService().save(entry.getOrder());
+								   }
+							 }
+						 }
+						 
+					}
+				}
+			}
+			catch (final ClientEtailNonBusinessExceptions e)
+			{
+				LOG.error("Exception occurred while setting fullFillMent Type"
+						+ e.getErrorCode());
+			}
+
+			/* Added for TISRLUAT-1161 end */
 			final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderData,abstractOrderModel,
 					inventoryRequest, salesApplication);
 			if (requestType != null && CollectionUtils.isNotEmpty(cartSoftReservationDatalist) && pincode != null)

@@ -1070,6 +1070,18 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						gwlp.setFullfillmentType(c.getFullfillment());
 					});
 				}
+				if (null != productData.getSeller() && productData.getSeller().size() > 0)
+				{
+					productData.getSeller().stream().filter(pred1.and(pred2)).findFirst().ifPresent(c -> {
+						gwlp.setSellerId(c.getSellerID());
+						gwlp.setSellerName(c.getSellername());
+						gwlp.setFullfillmentType(c.getFullfillment());
+					});
+				}
+				if (null != abstractOrderEntry.getFulfillmentMode())
+				{
+					gwlp.setFullfillmentType(abstractOrderEntry.getFulfillmentMode());
+				}
 				///Delivery mode ///
 				final List<MobdeliveryModeWsDTO> deliveryList = new ArrayList<MobdeliveryModeWsDTO>();
 				MobdeliveryModeWsDTO delivery = null;

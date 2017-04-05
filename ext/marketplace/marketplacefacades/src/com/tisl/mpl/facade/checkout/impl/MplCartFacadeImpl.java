@@ -83,6 +83,7 @@ import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
+import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
@@ -107,6 +108,7 @@ import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
 import com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO;
+import com.tisl.mpl.wsdto.InventoryReservRequestWsDTO;
 import com.tisl.mpl.wsdto.MplEDDInfoForUssIDWsDTO;
 import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
 import com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO;
@@ -1664,12 +1666,81 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			final CartModel cartModel = (CartModel) abstractOrderModel;
 			//final CartData cartData = getCartConverter().convert(cartModel);
 			final CartData cartData = getCartDataFromCartModel(cartModel, false);
+			/* Added for TISRLUAT-1161 START */
+			try
+			{
+					if(null != cartModel.getEntries() && !cartModel.getEntries().isEmpty() && null != inventoryRequest && null != inventoryRequest.getItem()) {
+						for ( InventoryReservRequestWsDTO item : inventoryRequest.getItem()) {
+							for ( AbstractOrderEntryModel entry : cartModel.getEntries()) {
+								   if(item.getUssId().equalsIgnoreCase(entry.getSelectedUSSID())) {
+								   	entry.setFulfillmentMode(item.getFulfillmentType());
+								   	entry.setFulfillmentType(item.getFulfillmentType());
+								   	try
+										{
+								   	final SellerInformationModel sellerInfoModel = getMplCommerceCartService().getSellerDetailsData(
+								   			entry.getSelectedUSSID());
+										List<RichAttributeModel> richAttributeModel = null;
+										if (sellerInfoModel != null)
+										{
+											richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+										}
+										if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
+												&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
+
+										{
+											final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
+											entry.setFulfillmentTypeP1(fulfilmentType);
+										}
+										}catch (final ClientEtailNonBusinessExceptions e)
+										{
+											LOG.error("Exception occurred while setting fullFillMent Type P1"
+													+ e.getErrorCode());
+										}
+								   	getModelService().save(entry);
+								   	getModelService().save(cartModel);
+								   }
+							 }
+						 }
+						 
+					}
+			}
+			catch (final ClientEtailNonBusinessExceptions e)
+			{
+				LOG.error("Exception occurred while setting fullFillMent Type"
+						+ e.getErrorCode());
+			}
+
+			/* Added for TISRLUAT-1161 end */
 			isInventoryReservedMobile = mplCommerceCartService.isInventoryReserved(cartData, requestType, defaultPinCodeId,
 					abstractOrderModel, inventoryRequest, salesApplication);
 		}
 		else if (abstractOrderModel instanceof OrderModel)
 		{
 			final OrderModel orderModel = (OrderModel) abstractOrderModel;
+			/* Added for TISRLUAT-1161 START */
+			try
+			{
+					if(null != orderModel.getEntries() && !orderModel.getEntries().isEmpty() && null != inventoryRequest && null != inventoryRequest.getItem()) {
+						for ( InventoryReservRequestWsDTO item : inventoryRequest.getItem()) {
+							for ( AbstractOrderEntryModel entry : orderModel.getEntries()) {
+								   if(item.getUssId().equalsIgnoreCase(entry.getSelectedUSSID())) {
+								   	entry.setFulfillmentMode(item.getFulfillmentType());
+								   	entry.setFulfillmentType(item.getFulfillmentType());
+								   	getModelService().save(entry);
+								   	getModelService().save(orderModel);
+								   }
+							 }
+						 }
+						 
+					}
+			}
+			catch (final ClientEtailNonBusinessExceptions e)
+			{
+				LOG.error("Exception occurred while setting fullFillMent Type"
+						+ e.getErrorCode());
+			}
+
+			/* Added for TISRLUAT-1161 end */
 			final OrderData orderData = getOrderConverter().convert(orderModel);
 			isInventoryReservedMobile = mplCommerceCartService.isInventoryReserved(orderData, requestType, defaultPinCodeId,
 					abstractOrderModel, inventoryRequest, salesApplication);
