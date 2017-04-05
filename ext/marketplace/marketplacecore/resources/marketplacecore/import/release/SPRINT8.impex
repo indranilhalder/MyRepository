@@ -1,0 +1,21 @@
+#New Job To Process mRupee Order from Payment Successful to Order Refund
+;mplmRupeeCronJob;mplThirdPartyWalletCronJob;false;en
+
+INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
+#% afterEach: impex.getLastImportedItem().setActivationTime(new Date());
+; mplmRupeeCronJob; 0 0/10 * 1/1 * ? *
+
+
+$lang='en'
+
+$jarResource=jar:com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants&/marketplacecockpits/cscockpit
+
+#Global code master entries
+INSERT_UPDATE GLOBALCODEMASTER;enumCode[unique=true];globalCode[unique=true];description[optional=true]
+;MRUPEE;TMR;
+
+INSERT_UPDATE PaymentType;mode[unique=true];isAvailable;baseStore(uid)
+;MRupee;true;mpl
+;TW;true;mpl
+
+
