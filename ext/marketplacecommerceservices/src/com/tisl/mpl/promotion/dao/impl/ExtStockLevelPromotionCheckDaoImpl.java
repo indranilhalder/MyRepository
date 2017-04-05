@@ -200,13 +200,27 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 		int count = 0;
 		Integer totalCount = null;
 		String queryString = "";
+		boolean flag = false;
 		try
 		{
-			queryString = "select SUM({usedUpCount}) from {LimitedStockPromoInvalidation} where {promoCode}=?promoCodeData and {customerID}=?orginalUid";
+			if (StringUtils.isNotEmpty(orginalUid))
+			{
+				queryString = "select SUM({usedUpCount}) from {LimitedStockPromoInvalidation} where {promoCode}=?promoCodeData and {customerID}=?orginalUid";
+				flag = true;
+			}
+			else
+			{
+				queryString = "select SUM({usedUpCount}) from {LimitedStockPromoInvalidation} where {promoCode}=?promoCodeData";
+			}
+
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("promoCodeData", promoCode);
-			query.addQueryParameter("orginalUid", orginalUid);
+			if (flag)
+			{
+				query.addQueryParameter("orginalUid", orginalUid);
+			}
+
 			query.setResultClassList(Arrays.asList(Integer.class));
 
 			final SearchResult<Integer> result = search(query);
