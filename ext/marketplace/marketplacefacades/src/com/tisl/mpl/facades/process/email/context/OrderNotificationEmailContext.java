@@ -177,9 +177,13 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 				deliveryAddr.append(deliveryAddress.getAddressLine3());
 			}
 			//TISUATSE-81 ends
-			deliveryAddr.append(COMMA).append(deliveryAddress.getTown()).append(COMMA).append(deliveryAddress.getDistrict())
-					.append(COMMA).append(deliveryAddress.getPostalcode());
 
+			//TISUATSE-70 starts
+
+			final String city = deliveryAddress.getTown();
+			deliveryAddr.append(city.substring(0, 1).toUpperCase() + city.substring(1)).append(COMMA).append(SPACE)
+					.append(deliveryAddress.getDistrict()).append(SPACE).append(deliveryAddress.getPostalcode());
+			//TISUATSE-70 ends
 			put(DELIVERYADDRESS, deliveryAddr);
 		}
 		String websiteUrl = null;

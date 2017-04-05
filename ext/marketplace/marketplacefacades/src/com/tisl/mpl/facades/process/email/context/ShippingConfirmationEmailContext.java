@@ -69,7 +69,7 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 	public static final String TRACK_ORDER_URL = "trackOrderUrl";
 	private static final String NUMBERTOOL = "numberTool";
 	private static final String COMMA = ",";
-
+	private static final String SPACE = " "; //TISUATSE-80
 	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
 
@@ -146,8 +146,11 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 			deliveryAddr.append(deliveryAddress.getAddressLine3());
 		}
 		//TISUATSE-80 starts
-		deliveryAddr.append(COMMA).append(deliveryAddress.getTown()).append(COMMA).append(deliveryAddress.getDistrict())
-				.append(COMMA).append(deliveryAddress.getPostalcode());
+
+		//TISUATSE-81 starts
+		final String city = deliveryAddress.getTown();
+		deliveryAddr.append(city.substring(0, 1).toUpperCase() + city.substring(1)).append(COMMA).append(SPACE)
+				.append(deliveryAddress.getDistrict()).append(SPACE).append(deliveryAddress.getPostalcode());
 
 		put(DELIVERYADDRESS, deliveryAddr);
 
