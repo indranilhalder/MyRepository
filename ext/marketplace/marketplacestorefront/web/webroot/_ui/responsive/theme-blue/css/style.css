@@ -53407,6 +53407,7 @@ body .lookbook_wrapper .listing.wrapper .left-block{
     padding-bottom: 9px;
     line-height: 12px;
     word-break: break-word;
+   	word-wrap: break-word;	/* TISUATSE-105 */
 }
 
 .address-list .address .name {
