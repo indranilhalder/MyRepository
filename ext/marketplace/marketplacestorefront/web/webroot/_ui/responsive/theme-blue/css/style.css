@@ -63910,29 +63910,48 @@ header .content .right > ul > li.wishlist:after, header .content .right > ul > l
     z-index: 1001;
     opacity:0;
 }
-header .content .bottom .bag:before{
+header .content .bottom:not(.active) .bag:before{
 	content: "";
-    width: 17px;
-    height: 13px;
-    background-image: url(../images/header-arrow.PNG);
-    background-size: 100%;
-    background-repeat: no-repeat;
-    background-color: transparent;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #fff;
     position: absolute;
-    z-index: 1001;
+    z-index: 1002;
     opacity:0;
 	top: 56px;
     left: auto;
     right: 85px;
     }
+header .content .bottom:not(.active) .bag:after{
+	content: "";
+    width: 0;
+    height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 9px solid rgba(0, 0, 0, 0.15);
+    position: absolute;
+    z-index: 1001;
+    opacity:0;
+	top: 55px;
+    left: auto;
+    right: 84px;
+    }
 header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:hover:after,
-header .content .bottom .bag:hover:before,
 header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:hover:after,
 header .content .right > ul > li.wishlist:hover:after, header .content .right > ul > li.track.trackOrder:hover:after{
     opacity:1;
     -webkit-transition: opacity 0.15s 0.18s;
     -moz-transition: opacity 0.15s 0.18s;
     transition: opacity 0.15s 0.18s;
+}
+header .content .bottom:not(.active) .bag:hover:before,
+header .content .bottom:not(.active) .bag:hover:after{
+    opacity:1;
+    -webkit-transition: opacity 0.15s 0.35s;
+    -moz-transition: opacity 0.15s 0.35s;
+    transition: opacity 0.15s 0.35s;
 }
 .logged_in.dropdown:hover:after{
     opacity:1;
