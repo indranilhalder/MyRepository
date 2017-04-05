@@ -102,7 +102,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.promotion.dao.ExtStockLevelPromotionCheckDao#getPromoInvalidationList(java.lang.String)
 	 */
 	@Override
@@ -316,26 +316,54 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 	{
 		int count = 0;
 		String queryString = MarketplacecommerceservicesConstants.EMPTYSPACE;
-		final Map<String, Object> params = new HashMap<String, Object>(1);
+		List<LimitedStockPromoInvalidationModel> dataList = null;
+		//final Map<String, Object> params = new HashMap<String, Object>(1);
+		boolean flag = false;
 		try
 		{
 			if (StringUtils.isNotEmpty(orginalUid))
 			{
 				queryString = "select {pK} from {LimitedStockPromoInvalidation} where {promoCode}=?promoCodeData and {customerID}=?orginalUid";
-				params.put("promoCodeData", promoCode);
-				params.put("orginalUid", orginalUid);
+				//params.put("promoCodeData", promoCode);
+				//params.put("orginalUid", orginalUid);
+				flag = true;
+
 			}
 			else
 			{
 				queryString = "select {pK} from {LimitedStockPromoInvalidation} where {promoCode}=?promoCodeData";
-				params.put("promoCodeData", promoCode);
+				//params.put("promoCodeData", promoCode);
 			}
 
 
-			final SearchResult<LimitedStockPromoInvalidationModel> searchList = flexibleSearchService.search(queryString, params);
-			if (null != searchList && searchList.getCount() > 0)
+			//final SearchResult<LimitedStockPromoInvalidationModel> searchList = flexibleSearchService.search(queryString, params);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("promoCodeData", promoCode);
+			if (flag)
 			{
-				count = searchList.getCount();
+				query.addQueryParameter("orginalUid", orginalUid);
+			}
+
+			dataList = flexibleSearchService.<LimitedStockPromoInvalidationModel> search(query).getResult();
+			if (CollectionUtils.isNotEmpty(dataList))
+			{
+				//For TISSQAUAT-681 + TISSQAUAT-679
+				//count = searchList.getCount();
+				final List<String> orderList = new ArrayList<String>();
+
+				for (final LimitedStockPromoInvalidationModel oModel : dataList)
+				{
+					if (CollectionUtils.isEmpty(orderList))
+					{
+						orderList.add(oModel.getOrder().getCode());
+						count += 1;
+					}
+					else if (!(orderList.contains(oModel.getOrder().getCode())))
+					{
+						orderList.add(oModel.getOrder().getCode());
+						count += 1;
+					}
+				}
 			}
 
 		}
