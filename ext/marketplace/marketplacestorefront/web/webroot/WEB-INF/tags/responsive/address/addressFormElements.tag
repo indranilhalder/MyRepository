@@ -257,7 +257,7 @@
 				</c:forEach>
 				<label class="control-label " for="country"> Country</label>
 				 <!-- Added for UF-199 -->
-				${countyName}<spring:theme code="text.addressBook.CountryServiceable" /> 
+				${countyName} <spring:theme code="text.addressBook.CountryServiceable" /> 
 				<%-- <input type="text" id="country" value='${countyName}'  readonly />  --%>
 			   	<input type="hidden" id="country"  name="countryIso" value="${countryIsoCode}"/>
 			</div>

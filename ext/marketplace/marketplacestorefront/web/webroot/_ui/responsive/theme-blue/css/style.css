@@ -64950,4 +64950,17 @@ header .content .search {
 	font-size: 12px;
     letter-spacing: 0.6px;
 }
+@media(min-width: 1200px){
+.formaddress .checkout-indent #addressform_button_panel.form-actions #newAddressButton{
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+.checkTab .checkout-shipping.addNewAddress .formaddress {
+    padding: 35px 35px 25px 40px;
+}
+.checkTab .address-list {
+    padding: 15px 15px 25px 15px;
+}
+}
 /*UF-199 end*/
