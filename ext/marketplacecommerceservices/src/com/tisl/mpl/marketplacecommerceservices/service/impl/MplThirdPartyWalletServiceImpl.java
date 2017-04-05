@@ -297,14 +297,13 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 									transAmt = Double.valueOf(params1[5]);
 								}
 
-								mplPaymentService
-										.setTPWalletPaymentTransaction(paymentMode, order, auditModelData.getAuditId(), transAmt);
+								mplPaymentService.setTPWalletPaymentTransaction(paymentMode, order, auditModelData.getAuditId(),
+										transAmt);
 								final CustomerModel mplCustomer = (CustomerModel) order.getUser();
 								updateAuditInfoForPayment(auditModelData, entryList, mplCustomer, order);
 								//sending notification mail
-								final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
-										MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-										+ order.getCode();
+								final String trackOrderUrl = getConfigurationService().getConfiguration()
+										.getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + order.getCode();
 
 								LOG.debug("#######################payment processiong in mrupee cronjob" + order.getCode());
 
@@ -321,7 +320,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 							}
 							//refund flow handling
 							if (CollectionUtils.isNotEmpty(entryList) && OrderStatus.REFUND_INITIATED.equals(order.getStatus())
-									&& !auditModelData.getIsExpired().booleanValue() && new Date().before(orderTATForTimeout))
+									&& new Date().before(orderTATForTimeout))
 							{
 
 								isPayment = false;
@@ -361,7 +360,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 											getModelService().save(refundAuditEntry);
 											entryList.add(refundAuditEntry);
 											auditModelData.setAuditEntries(entryList);
-											auditModelData.setIsExpired(Boolean.TRUE);
+											//	auditModelData.setIsExpired(Boolean.TRUE);
 											getModelService().save(auditModelData);
 											//	final PaymentTransactionModel paymentTransactionModel = order.getPaymentTransactions().get(0);
 											mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
@@ -399,7 +398,6 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 		{
 			LOG.error("****************error in connection>>>>>>", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-
 		}
 		catch (final Exception e)
 		{
@@ -419,9 +417,8 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	private void sendNotification(final OrderModel order, final String status)
 	{
 		// YTODO Auto-generated method stub
-		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-				+ order.getCode();
+		final String trackOrderUrl = getConfigurationService().getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + order.getCode();
 		try
 		{
 			if (status.equalsIgnoreCase(T))
@@ -789,8 +786,8 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 			{
 				public boolean verify(final String hostname, final SSLSession session)
 				{
-					final String mRupeehostname = getConfigurationService().getConfiguration().getString(
-							MarketplacecommerceservicesConstants.MRUPEEHOSTNAME);
+					final String mRupeehostname = getConfigurationService().getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.MRUPEEHOSTNAME);
 					//	if (hostname.equals(_14_140_248_13))
 					if (hostname.equals(mRupeehostname))
 					{
