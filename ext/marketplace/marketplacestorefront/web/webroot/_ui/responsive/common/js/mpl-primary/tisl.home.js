@@ -2156,3 +2156,16 @@ $(document).ready(function()
 					});
 				}	
 			});
+		/*Start TISSQAEE-325*/
+		$(document).ajaxComplete(function(){
+			paddingAdjust();
+		});
+		$(window).on("load",function(){
+			paddingAdjust();
+		});
+		
+		function paddingAdjust(){
+			var ht = $(".mainContent-wrapper footer").height();
+			$(".body-Content").css("padding-bottom",ht);
+		}
+		/*End TISSQAEE-325*/
