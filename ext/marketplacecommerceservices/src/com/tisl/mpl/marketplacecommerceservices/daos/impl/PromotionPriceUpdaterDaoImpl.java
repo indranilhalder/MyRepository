@@ -41,24 +41,11 @@ public class PromotionPriceUpdaterDaoImpl implements PromotionPriceUpdaterDao
 	@Override
 	public List<ProductPromotionModel> getRequiredPromotionList(final Date mplConfigDate)
 	{
-
 		LOG.debug("Fetching promotion Details");
 		List<ProductPromotionModel> PromotionResult = new ArrayList<ProductPromotionModel>();
-
-		//		final String queryString = //
-		//		"SELECT {" + BuyAPercentageDiscountModel.PK + "} " + MarketplacecommerceservicesConstants.QUERYFROM
-		//				+ BuyAPercentageDiscountModel._TYPECODE + " AS pr} " + " WHERE SYSDATE BETWEEN {pr:"
-		//				+ BuyAPercentageDiscountModel.STARTDATE + "} AND {pr:" + BuyAPercentageDiscountModel.ENDDATE + "}" + " AND {pr:"
-		//				+ BuyAPercentageDiscountModel.ENABLED + "} = '1' AND " + "({pr." + BuyAPercentageDiscountModel.STARTDATE
-		//				+ "} >= ?earlierDate AND " + "{pr." + BuyAPercentageDiscountModel.STARTDATE + "} <= SYSDATE)   ORDER BY {pr:"
-		//				+ BuyAPercentageDiscountModel.PRIORITY + "} ASC";
-		//CAR-158 changes
-		final String queryString = //
-		"SELECT {" + ProductPromotionModel.PK + "} " + MarketplacecommerceservicesConstants.QUERYFROM
-				+ ProductPromotionModel._TYPECODE + " AS pr} " + " WHERE SYSDATE BETWEEN {pr:" + ProductPromotionModel.STARTDATE
-				+ "} AND {pr:" + ProductPromotionModel.ENDDATE + "}" + " AND {pr:" + ProductPromotionModel.ENABLED + "} = '1' AND "
-				+ "({pr." + ProductPromotionModel.MODIFIEDTIME + "} >= ?earlierDate AND " + "{pr." + ProductPromotionModel.STARTDATE
-				+ "} <= SYSDATE)   ORDER BY {pr:" + ProductPromotionModel.PRIORITY + "} ASC";
+		final String queryString = "SELECT {" + ProductPromotionModel.PK + "} " + MarketplacecommerceservicesConstants.QUERYFROM
+				+ ProductPromotionModel._TYPECODE + " AS pr} " + " WHERE" + "({pr." + ProductPromotionModel.MODIFIEDTIME
+				+ "} >= ?earlierDate  " + ")   ORDER BY {pr:" + ProductPromotionModel.PRIORITY + "} ASC";
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 
 		query.addQueryParameter("earlierDate", mplConfigDate);
