@@ -3411,10 +3411,20 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						$("#dListedErrorMsg").hide();//TISSTRT-1469
 						$(".reviews").show();
 						$(".fullfilled-by").show();
+						//CKD:TPR-250 :Start
+						var msiteSeller = $("#msiteBuyBoxSellerId").val(); 
+						var msiteSellerQueryString = '';
+						if (!$.isEmptyObject(msiteSeller)){
+							msiteSellerQueryString='?sellerId='+msiteSeller;
+						}
 						
-						$("a#submit.otherSellersFont").attr("href","/p/"+responseProductCode+"/viewSellers");
-						$("#sellerForm").attr("action","/p/"+responseProductCode+"/viewSellers");
+						/*$("a#submit.otherSellersFont").attr("href","/p/"+responseProductCode+"/viewSellers");
+						$("#sellerForm").attr("action","/p/"+responseProductCode+"/viewSellers");*/
 						
+						$("a#submit.otherSellersFont").attr("href","/p/"+responseProductCode+"/viewSellers"+msiteSellerQueryString);
+						$("#sellerForm").attr("action","/p/"+responseProductCode+"/viewSellers"+msiteSellerQueryString);
+						
+						//CKD:TPR-250 :End
 						//Deselect the previously selected li and highlight the current li
 						$('ul#variant.variant-select li').each(function (index, value) { 
 							if($(this).hasClass("selected"))
