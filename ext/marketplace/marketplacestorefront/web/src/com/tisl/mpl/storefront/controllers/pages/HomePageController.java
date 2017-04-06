@@ -608,22 +608,20 @@ public class HomePageController extends AbstractPageController
 
 						//#1 reduced calls to newAndExclusiveComponent.getProducts() using
 						final List<ProductModel> productList = newAndExclusiveComponent.getProducts();
+						newAndExclusiveJson.put(TITLE, title);
+
+						// Changes implemented for TPR-1121
+						newAndExclusiveJson.put("autoPlay", newAndExclusiveComponent.getAutoPlayNewIn());
+						newAndExclusiveJson.put("slideBy", newAndExclusiveComponent.getSlideByNewIn());
+						newAndExclusiveJson.put("autoplayTimeout", newAndExclusiveComponent.getAutoplayTimeoutNewIn());
+
+						final JSONArray newAndExclusiveJsonArray = new JSONArray();
 
 						if (CollectionUtils.isNotEmpty(productList))
 						{
+
 							for (final ProductModel newAndExclusiveProducts : productList)
 							{
-								newAndExclusiveJson.put(TITLE, title);
-
-								// Changes implemented for TPR-1121
-								newAndExclusiveJson.put("autoPlay", newAndExclusiveComponent.getAutoPlayNewIn());
-								newAndExclusiveJson.put("slideBy", newAndExclusiveComponent.getSlideByNewIn());
-								newAndExclusiveJson.put("autoplayTimeout", newAndExclusiveComponent.getAutoplayTimeoutNewIn());
-
-								final JSONArray newAndExclusiveJsonArray = new JSONArray();
-
-
-
 								//START :code added for 'NEW' tag on the product image
 								for (final SellerInformationModel seller : newAndExclusiveProducts.getSellerInformationRelator())
 								{
@@ -695,14 +693,11 @@ public class HomePageController extends AbstractPageController
 
 								existDate = null;
 
-
-
-								//#2 If Price is available then only show Products
-								if (!CollectionUtils.isEmpty(newAndExclusiveJsonArray))
-								{
-									newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
-								}
-
+							}
+							//#2 If Price is available then only show Products
+							if (!CollectionUtils.isEmpty(newAndExclusiveJsonArray))
+							{
+								newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
 							}
 						}
 					}
@@ -1160,7 +1155,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 * 
+					 *
 					 * }
 					 */
 

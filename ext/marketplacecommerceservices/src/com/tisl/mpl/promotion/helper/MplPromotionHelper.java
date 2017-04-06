@@ -1041,15 +1041,23 @@ public class MplPromotionHelper
 				}
 				else
 				{
+
+					final int usedUpCountNow = getStockService().getCummulativeOrderCount(promoCode,
+							MarketplacecommerceservicesConstants.EMPTY);
+
 					data.setActualCustomerCount(count);
-					data.setExhausted(false);
+					data.setExhausted(isExhausted(usedUpCountNow, promoQualifyingCount, restrictionList));
 				}
 
 			}
 			else if (StringUtils.isEmpty(orginalUid) && count > 0)
 			{
+
+				final int usedUpCountNow = getStockService().getCummulativeOrderCount(promoCode,
+						MarketplacecommerceservicesConstants.EMPTY);
+
 				data.setActualCustomerCount(count);
-				data.setExhausted(false);
+				data.setExhausted(isExhausted(usedUpCountNow, promoQualifyingCount, restrictionList));
 			}
 		}
 		catch (final Exception exception)
@@ -1058,6 +1066,37 @@ public class MplPromotionHelper
 		}
 		return data;
 	}
+
+	/**
+	 * @param usedUpCount
+	 * @param promoQualifyingCount
+	 * @param restrictionList
+	 * @return flag
+	 */
+	//	private boolean isExhaustedforCus(final int usedUpCount, final int promoQualifyingCount,
+	//			final List<AbstractPromotionRestriction> restrictionList)
+	//	{
+	//
+	//		boolean flag = false;
+	//		try
+	//		{
+	//			if (usedUpCount > 0)
+	//			{
+	//				final int testCount = usedUpCount / promoQualifyingCount;
+	//				if (testCount >= getStockCustomerRedeemCount(restrictionList))
+	//				{
+	//					flag = true;
+	//				}
+	//			}
+	//		}
+	//		catch (final Exception exception)
+	//		{
+	//			LOG.error("Error during data generation|| Limited Offer ");
+	//		}
+	//
+	//		return flag;
+	//
+	//	}
 
 	/**
 	 * The Method Returns Original UID for Limited Offer Evaluation

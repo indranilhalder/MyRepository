@@ -193,8 +193,12 @@ $(document).ready(function() {
         });
    // }
         $(window).on("load resize",function(){
+        $("body.page-productGrid .list_title h1").css("display","block");		/*TPR-250 defect fix No result*/
+        if($("body.page-productGrid .list_title h1").width() > 200 && $("body.page-productGrid .totalResults").length)
+        	$("body.page-productGrid .list_title h1").css("display","block").addClass("shiftDownZero");		/*TPR-250 defect fix No result*/
         if($("body").hasClass("page-productGrid")){
         $("body.page-productGrid .list_title h1").css("margin-left",$(".right-block").offset().left+parseInt($(".right-block").css("padding-left")));
+        $("body.page-productGrid .list_title h1.shiftDownZero").css("margin-left","0");		/*TPR-250 defect fix No result*/
         }
         });
         

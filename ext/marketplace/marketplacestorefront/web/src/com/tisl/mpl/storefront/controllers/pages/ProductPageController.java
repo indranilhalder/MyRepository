@@ -3055,10 +3055,10 @@ public class ProductPageController extends MidPageController
 			model.addAttribute("msiteBrandCode", StringUtils.isNotBlank(productData.getBrand().getBrandCode()) ? productData
 					.getBrand().getBrandCode().toLowerCase() : null);
 			model.addAttribute(
-					"brandInfo",
-					productData.getBrand().getBrandDescription().length() <= MplConstants.BRANDINFO_CHAR_LIMIT ? productData
-							.getBrand().getBrandDescription() : StringUtils.substring(productData.getBrand().getBrandDescription(), 0,
-							MplConstants.BRANDINFO_CHAR_LIMIT));
+						"brandInfo",
+						productData.getBrand().getBrandDescription().length() <= MplConstants.BRANDINFO_CHAR_LIMIT ? productData
+								.getBrand().getBrandDescription() : StringUtils.substring(productData.getBrand().getBrandDescription(), 0,
+								MplConstants.BRANDINFO_CHAR_LIMIT));
 		}
 	}
 

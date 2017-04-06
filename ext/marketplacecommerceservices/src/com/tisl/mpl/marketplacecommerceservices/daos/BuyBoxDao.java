@@ -63,5 +63,8 @@ public interface BuyBoxDao
 	 * @return
 	 */
 	public List<BuyBoxModel> buyboxPriceForMicrosite(String productCode) throws EtailNonBusinessExceptions;
+	//INC144315542_INC144314878_INC_11113
+
+	public List<BuyBoxModel> getBuyboxPricesForSizeVariant(String productCode) throws EtailNonBusinessExceptions;
 
 }

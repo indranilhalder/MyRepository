@@ -478,12 +478,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 						}
 
-						// Changes implemented for TPR-1121
-						productYouCare.put("autoPlay", autoPlay);
-						productYouCare.put("slideBy", slideBy);
-						productYouCare.put("autoplayTimeout", autoplayTimeout);
-						productYouCare.put(TITLE, title);
-						productYouCare.put("categories", subComponentJsonArray);
+
 					}
 				}
 				else
@@ -491,6 +486,12 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 					LOG.info("Component visiblity set to false");
 				}
 			}
+			// Changes implemented for TPR-1121
+			productYouCare.put("autoPlay", autoPlay);
+			productYouCare.put("slideBy", slideBy);
+			productYouCare.put("autoplayTimeout", autoplayTimeout);
+			productYouCare.put(TITLE, title);
+			productYouCare.put("categories", subComponentJsonArray);
 		}
 		return productYouCare;
 	}

@@ -27476,7 +27476,7 @@ div.other-sellers .other-sellers-table tbody tr td>div.sellerAddToBagTitle:after
 	color:#000;
 	font-size: 14px !important;
     margin-top: 5px;
-    display: block;
+    display: block !important;/* TISSQAUAT-688 */
 }
 body .account .right-account .order-history.order-details li.item .status .message.processing-stage-arrow1 {
 	left:-100%;
@@ -58036,9 +58036,12 @@ div.radio.creditDebitLabelRadio{
                font-weight: normal;
     }
 /* TPR-791 Start */
-.product-info .product-detail .other-sellers#otherSellerInfoId, .product-info .product-detail #otherSellerLinkId{margin-top:0px;}
+.product-info .product-detail .other-sellers#otherSellerInfoId, .product-info .product-detail #otherSellerLinkId{
+	margin-top:0px;
+}
 .product-info .product-detail .other-sellers#otherSellerInfoId{
 	color: #878787;
+	display:none;  	/* TISSQAUATS-881 */
 }
 .product-info .SoldWrap>div.fullfilled-by{padding-right:0px;/* width:43%; */}
 /* .product-info .SoldWrap>div.seller{width:57%;}
@@ -61287,7 +61290,6 @@ body.template-pages-layout-footwearCategoryLandingPage .listing-leftmenu .checkb
 	letter-spacing: 0.4px;
 }
 @media(min-width:791px){
-	body.page-productGrid  .listing.wrapper .left-block,
 	body.template-pages-layout-apparelCategoryLandingPage  .listing.wrapper .left-block,
 	body.template-pages-layout-apparelCategoryLandingPageV1  .listing.wrapper .left-block,
 	body.template-pages-layout-electronicsCategoryLandingPage  .listing.wrapper .left-block,
@@ -61296,6 +61298,14 @@ body.template-pages-layout-footwearCategoryLandingPage .listing-leftmenu .checkb
 	body.template-pages-layout-footwearCategoryLandingPage  .listing.wrapper .left-block{
 	margin-top:	83px !important;
 }
+/*TPR-250 defect fix Left Block Alignment*/
+body.page-productGrid  .listing.wrapper .left-block{
+	margin-top: 63px;
+}		
+body.page-productGrid .facet-list.filter-opt ~ .left-block{
+	margin-top: -40px;
+}
+/*TPR-250 defect fix Left Block Alignment*/
 }
 
 /* UF-58 for PLP ends */
@@ -62997,8 +63007,16 @@ body.page-productGrid .list_title h1 {
     margin-left: 292px;
 	position: absolute;
     margin-top: 22px;
-    
 }
+/*TPR-250 defect fix No result*/
+body.page-productGrid .list_title h1.shiftDownZero{
+	top: 30px;
+    width: 100%;
+}
+body.page-productGrid .list_title h1{
+	display:none;
+}
+/*TPR-250 defect fix No result*/
 }
 .list_title .UlContainer {
     float: right;
