@@ -2279,8 +2279,8 @@ header .content .bottom.active nav>ul>li:first-child+li.hovered > ul {
           width: 75px; } }
       @media (min-width: 1023px) and (max-width: 1100px) {
         header .content .search{
-         width: -webkit-calc(100% - 566px);
-    width: calc(100% - 566px);}
+         width: -webkit-calc(100% - 567px);
+    width: calc(100% - 567px);}
     header .content nav > ul > li {
     margin-right: 20px;
 } }
@@ -67433,7 +67433,7 @@ header .content .bottom:not(.active) .bag:before{
     opacity:0;
 	top: 56px;
     left: auto;
-    right: 85px;
+    right: 78px;
     }
 header .content .bottom:not(.active) .bag:after{
 	content: "";
@@ -67447,7 +67447,7 @@ header .content .bottom:not(.active) .bag:after{
     opacity:0;
 	top: 55px;
     left: auto;
-    right: 84px;
+    right: 77px;
     }
 header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:hover:after,
 header .content .right > ul > li.wishlist:hover:after, header .content .right > ul > li.track.trackOrder:hover:after{
@@ -67471,9 +67471,13 @@ header .content .right > ul > li.sign-in .sign-in-info{
 	left: auto;
 	right: 0;
 }
+header .content .right > ul .logged_in.dropdown{
+	margin-right: 10px;
+}
 .dropdown-menu.dropdown-hi.loggedIn-flyout.ajaxflyout{
 	width:210px;
-	left: 20px;
+	left: auto;
+	right: 0px;
 	background-color: #ffffff;
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.35), 0 1px 2px 0 rgba(0, 0, 0, 0.25);
   overflow: hidden;
@@ -68143,9 +68147,6 @@ footer .banner {
 #bestPicks, body.page-homepage .feature-collections{
 	border-bottom: 0px;
 }
-body.page-homepage .trending {
-    padding: 0px;
-}
 header > .content .bottom .mobile-bag.bag {
     top: 3px;
 }
@@ -68379,6 +68380,9 @@ body.page-homepage #showcase.feature-collections .desc-section h1 {
 body.page-homepage .slider.product .frame .overflow {
     padding: 0;
 }
+body.page-homepage .trending {
+    padding: 0px;
+}
 }
 @media (max-width: 479px)
 {
@@ -68447,6 +68451,19 @@ header .content nav > ul > li{
 header .content .search {
     margin-left: 85px;
 }
+header .content .right > ul .logged_in.dropdown{
+	margin-right: 17px;
+}
+.dropdown-menu.dropdown-hi.loggedIn-flyout.ajaxflyout{
+	right: -7px;
+}
+header .content .bottom:not(.active) .bag:before{
+    right: 85px;
+    }
+header .content .bottom:not(.active) .bag:after{
+    right: 84px;
+    }
+
  }
  header.brand-header .content .search { 
  float:right;
