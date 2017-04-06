@@ -84,12 +84,11 @@ public class PromotionPriceUpdaterJob extends AbstractJobPerformable<CronJobMode
 			boolean errorFlag = false;
 
 
-			LOG.debug("Validating Audit and WebHook Table entries");
 			final MplConfigurationModel configModel = promotionPriceUpdaterService.getCronDetails(cronJob.getCode());
 
 			if (null != configModel && null != configModel.getMplConfigDate())
 			{
-				LOG.debug("CRON LAST START DATE" + configModel.getMplConfigDate());
+				LOG.error("CRON LAST START DATE" + configModel.getMplConfigDate());
 				List<ProductPromotionModel> PromotionList = new ArrayList<ProductPromotionModel>();
 				PromotionList = fetchRequiredPromotion(configModel.getMplConfigDate());
 				if (CollectionUtils.isNotEmpty(PromotionList))

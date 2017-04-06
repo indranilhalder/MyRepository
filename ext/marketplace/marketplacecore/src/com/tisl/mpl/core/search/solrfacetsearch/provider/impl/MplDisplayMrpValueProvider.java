@@ -24,10 +24,10 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.util.CollectionUtils;
 
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
@@ -131,13 +131,26 @@ public class MplDisplayMrpValueProvider extends AbstractPropertyFieldValueProvid
 				if (sizeVariantColour != null && pcmVariantColour != null && sizeVariantColour.equalsIgnoreCase(pcmVariantColour)
 						&& pcmSizeVariantModel.getSize() != null)
 				{
-					if (null != priceListForProduct && !CollectionUtils.isEmpty(priceListForProduct))
+					//INC144315542_INC144314878_INC_11113
+					//if (null != priceListForProduct && !CollectionUtils.isEmpty(priceListForProduct))
+					if (CollectionUtils.isNotEmpty(priceListForProduct))
 					{
-
 						final Double price = priceListForProduct.get(0).getMrp();
 						final JSONObject sizePriceJson = new JSONObject();
 						sizePriceJson.put(pcmSizeVariantModel.getSize().toUpperCase(), price);
 						sizePriceJsonArray.add(sizePriceJson);
+					}
+					else
+					{
+
+						final List<BuyBoxModel> priceList = buyBoxService.getBuyboxPricesForSizeVariant(pcmSizeVariantModel.getCode());
+						if (CollectionUtils.isNotEmpty(priceList))
+						{
+							final Double price = priceList.get(0).getMrp();
+							final JSONObject sizePriceJson = new JSONObject();
+							sizePriceJson.put(pcmSizeVariantModel.getSize().toUpperCase(), price);
+							sizePriceJsonArray.add(sizePriceJson);
+						}
 
 					}
 				}
