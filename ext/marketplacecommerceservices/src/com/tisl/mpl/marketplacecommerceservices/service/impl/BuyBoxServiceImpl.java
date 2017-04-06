@@ -221,5 +221,4 @@ public class BuyBoxServiceImpl implements BuyBoxService
 		return buyBoxDao.getBuyboxPricesForSizeVariant(productCode);// INC144314878_INC_11113
 
 	}
-
 }
