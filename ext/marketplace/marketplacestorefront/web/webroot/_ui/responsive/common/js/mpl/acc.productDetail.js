@@ -1431,12 +1431,16 @@ function isOOS(){
 	
 	//if(availibility!=undefined && availibility.length > 0){
 	// availibility.length  was coming undefined even if availability was NOT Undefined
-	if(availibility!=undefined && Object.keys(availibility).length > 0){
+	if(availibility!=undefined && typeof availibility === 'object')/* Change for TISSQAUAT-687 :: IE throws error*/ 
+		/*Object.keys(availibility).length > 0)*/
+	{
+		if(Object.keys(availibility).length > 0){
 		$.each(availibility,function(k,v){
 			if(window.location.pathname.endsWith(k.toLowerCase()) && v == 0){
 				skuOOS = true;
 			}
 		});
+		}
 	}
 	
 	if(totalOptions == disabledOption && totalOptions!=0){
