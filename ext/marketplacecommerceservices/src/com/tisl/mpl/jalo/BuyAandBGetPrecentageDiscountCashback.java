@@ -100,6 +100,7 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 						getCategories(), getSecondCategories(), primaryProductList, secondaryProductList); // Validates Promotion Restrictions
 
 		boolean checkChannelFlag = false;
+		boolean isExhaustedFlag = false;
 
 		try
 		{
@@ -111,11 +112,18 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 
 			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
 
-			//changes end for omni cart fix @atmaram
-			final List<String> eligibleProductList = eligibleForPromotion(cart, paramSessionContext);
-
-			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag)
+			if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
 			{
+				isExhaustedFlag = getMplPromotionHelper().isBuyAandBPromoExhausted(this.getCode(), restrictionList, cart);
+				LOG.debug("Is Buy A and B Discount Offer Exhausted" + isExhaustedFlag);
+			}
+
+			//changes end for omni cart fix @atmaram
+
+			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag && !isExhaustedFlag)
+			{
+				final List<String> eligibleProductList = eligibleForPromotion(cart, paramSessionContext);
+
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(paramSessionContext, validProductUssidMap))
 				{
 					promotionResults = promotionEvaluation(paramSessionContext, paramPromotionEvaluationContext, validProductUssidMap,
@@ -576,6 +584,18 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 
 			totalFactorCount = validProductListA.size() < validProductListB.size() ? validProductListA.size() : validProductListB
 					.size();
+
+			// For TPR-4579
+			if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
+			{
+				final int configuredCusCount = getMplPromotionHelper().getStockCustomerRedeemCount(restrictionList);
+				if (configuredCusCount > 0 && totalFactorCount >= configuredCusCount)
+				{
+					totalFactorCount = configuredCusCount;
+				}
+			}
+
+
 			if (totalFactorCount > 0)
 			{
 				final Set<String> validProdAUssidSet = getDefaultPromotionsManager().populateSortedValidProdUssidMap(
@@ -938,4 +958,3 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 
 
 }
-

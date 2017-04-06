@@ -1277,5 +1277,101 @@ public class MplPromotionHelper
 		return orginalUid;
 	}
 
+	/**
+	 * Buy A and B Discount Promotion Exhausted Check for Limited Offer Restriction With or Without Customer Restriction
+	 *
+	 * @param promoCode
+	 * @param restrictionList
+	 * @param cart
+	 * @return flag
+	 */
+	public boolean isBuyAandBPromoExhausted(final String promoCode, final List<AbstractPromotionRestriction> restrictionList,
+			final AbstractOrder cart)
+	{
+		boolean flag = false;
+		int offerCount = 0;
+		int usedUpCount = 0;
+
+		try
+		{
+			usedUpCount = getStockService().getCummulativeOrderCount(promoCode, MarketplacecommerceservicesConstants.EMPTY);
+			if (usedUpCount > 0)
+			{
+				offerCount = usedUpCount / 2;
+				if (offerCount >= getDefaultPromotionsManager().getStockRestrictionVal(restrictionList))
+				{
+					flag = true;
+					LOG.debug("Offer" + promoCode + "is exhausted");
+				}
+			}
+
+
+			if (!flag)
+			{
+				final String originalUid = getOriginalUID(cart);
+				if (StringUtils.isNotEmpty(originalUid))
+				{
+					final int cusUsedUpCount = getStockService().getCummulativeOrderCount(promoCode, originalUid);
+					if (cusUsedUpCount > 0)
+					{
+						offerCount = cusUsedUpCount / 2;
+						final int perCusCount = getStockCustomerRedeemCount(restrictionList);
+
+						if (perCusCount > 0 && offerCount >= perCusCount)
+						{
+							flag = true;
+							LOG.debug("Offer" + promoCode + "is exhausted");
+						}
+					}
+				}
+			}
+
+
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during Buy A and B Promtion Invalidation Check " + exception);
+		}
+
+
+		return flag;
+	}
+
+	/**
+	 * Buy A and B Discount Promotion Exhausted Check for Limited Offer Restriction
+	 *
+	 * With or Without Customer Restriction
+	 *
+	 * @param restrictionList
+	 * @param cart
+	 * @param promoCode
+	 * @return eligibleCount
+	 */
+	public int getCustomerRedeemCountForBuyABPromo(final List<AbstractPromotionRestriction> restrictionList,
+			final AbstractOrder cart, final String promoCode)
+	{
+		int eligibleCount = 0;
+
+		final int cusConfiguredCount = getStockCustomerRedeemCount(restrictionList);
+
+		if (cusConfiguredCount > 0)
+		{
+			final String originalUid = getOriginalUID(cart);
+
+			if (StringUtils.isNotEmpty(originalUid))
+			{
+				final int cusUsedUpCount = getStockService().getCummulativeOrderCount(promoCode, originalUid);
+
+				if (cusUsedUpCount > 0)
+				{
+					eligibleCount = cusUsedUpCount / 2;
+				}
+			}
+
+		}
+
+		return eligibleCount;
+	}
+
 
 }
