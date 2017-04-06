@@ -25,6 +25,10 @@ public interface BuyBoxService
 
 	List<BuyBoxModel> getBuyboxPricesForSearch(String productCode) throws EtailNonBusinessExceptions;
 
+	//INC144315542_INC144314878_INC_11113
+
+	List<BuyBoxModel> getBuyboxPricesForSizeVariant(String productCode) throws EtailNonBusinessExceptions;
+
 	List<BuyBoxModel> invalidatePkofBuybox(Date currenttime) throws EtailNonBusinessExceptions;
 
 	/**
