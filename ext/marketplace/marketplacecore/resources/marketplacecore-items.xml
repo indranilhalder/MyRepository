@@ -113,6 +113,17 @@
 			elementtype="SignColItemComponent" autocreate="true" generate="true"
 			type="list" />
 		<!-- Luxury SignatureCollection -->
+		
+		<!-- Added in R2.3 START  -->
+		 <collectiontype elementtype="Address" code="addressList"
+  			 autocreate="true" generate="true" type="list" />
+  		 <!-- For Return QuickDrop Email Process -->
+   		<collectiontype elementtype="java.lang.String" code="quickDropStores"
+  			 autocreate="true" generate="true" type="list" />
+   
+  		 <collectiontype elementtype="java.lang.String" code="quickDropStoreNames"
+   				autocreate="true" generate="true" type="list" />
+		<!-- Added in R2.3 END  -->
 
 	</collectiontypes>
 

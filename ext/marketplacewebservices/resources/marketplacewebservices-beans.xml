@@ -2755,6 +2755,7 @@
 		<property name="responseDescription" type="String" />
 		<property name="responseMessage" type="String" />
 		<property name="transactionId" type="String" />
+		<property name="returnFullfillmentType" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.ReturnRequestDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
