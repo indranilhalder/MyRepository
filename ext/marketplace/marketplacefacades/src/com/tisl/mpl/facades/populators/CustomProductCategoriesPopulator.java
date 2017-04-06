@@ -12,7 +12,8 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -29,8 +30,8 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
  * @param <SOURCE>
  * @param <TARGET>
  */
-public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGET extends ProductData>
-		extends ProductCategoriesPopulator<SOURCE, TARGET>
+public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGET extends ProductData> extends
+		ProductCategoriesPopulator<SOURCE, TARGET>
 {
 
 	@Resource
@@ -65,17 +66,26 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public void populate(final SOURCE productModel, final TARGET productData)
-			throws ConversionException, EtailNonBusinessExceptions
+	public void populate(final SOURCE productModel, final TARGET productData) throws ConversionException,
+			EtailNonBusinessExceptions
 	{
 
 		//product super category like electronics,clothing are being populated by interceptor.
 		productData.setRootCategory(productModel.getProductCategoryType());
-		
-		  final Collection<CategoryModel> categories = getCommerceProductService()
-		  .getSuperCategoriesExceptClassificationClassesForProduct(productModel);
-		  productData.setCategories(Converters.convertAll(categories, getCategoryConverter()));
-		 
+
+		//		  final Collection<CategoryModel> categories = getCommerceProductService()
+		//		  .getSuperCategoriesExceptClassificationClassesForProduct(productModel);
+
+		final List<CategoryModel> resultList = new ArrayList<>();
+
+		// For TISSQAUAT-665
+		for (final CategoryModel categoryModel : productModel.getSupercategories())
+		{
+			resultList.add(categoryModel);
+		}
+
+		productData.setCategories(Converters.convertAll(resultList, getCategoryConverter()));
+
 
 	}
 
