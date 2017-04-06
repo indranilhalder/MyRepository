@@ -10,6 +10,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
+import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.returns.model.RefundEntryModel;
@@ -489,7 +490,8 @@ public class SalesOrderReverseXMLUtility
 					LOG.debug("Checking EDToHd for transaction ID "+entry.getTransactionID());
 					LOG.debug("Is EdToHd"+entry.getIsEDtoHD()+"IsSdbSendToFico"+entry.getIsEdToHdSendToFico()+" and getRefundedScheduleDeliveryChargeAmt"+entry.getRefundedDeliveryChargeAmt());
 				}
-				if(null != entry.getIsEDtoHD() && entry.getIsEDtoHD().booleanValue()) {
+				boolean edAmountRefunded = getAmountRefunded(entry,PaymentTransactionType.REFUND_DELIVERY_CHARGES.getCode());
+				if(edAmountRefunded && null != entry.getIsEDtoHD() && entry.getIsEDtoHD().booleanValue()) {
 					edToHdFlag = true;
 					return true;
 				}
@@ -497,7 +499,8 @@ public class SalesOrderReverseXMLUtility
 					LOG.debug("Checking SDB for transaction ID "+entry.getTransactionID());
 					LOG.debug("Is SDb"+entry.getIsSdb()+"IsSdbSendToFico"+entry.getIsSdbSendToFico()+" and getRefundedScheduleDeliveryChargeAmt"+entry.getRefundedScheduleDeliveryChargeAmt());
 				}
-				if(null != entry.getIsSdbSendToFico() && !entry.getIsSdbSendToFico().booleanValue() && null !=entry.getScheduleChargesJuspayRequestId()) {
+				boolean sdAmountRefunded = getAmountRefunded(entry,PaymentTransactionType.REFUND_SCHEDULE_DELIVERY_CHARGES.getCode());
+				if(sdAmountRefunded && null != entry.getIsSdbSendToFico() && !entry.getIsSdbSendToFico().booleanValue() && null !=entry.getScheduleChargesJuspayRequestId()) {
 					sdbFlag = true;
 					return true;
 				}
@@ -940,21 +943,26 @@ public class SalesOrderReverseXMLUtility
 	private boolean checkEdToHdFlag(AbstractOrderEntryModel entry)
 	{
 		boolean isEdToHd = false;
-		if(LOG.isDebugEnabled()) {
-			LOG.debug("Checking SDB for transaction ID "+entry.getTransactionID());
-			LOG.debug("IsEdToHdSendToFico"+entry.getIsEdToHdSendToFico()+" and getRefundedScheduleDeliveryChargeAmt"+entry.getRefundedDeliveryChargeAmt());
-		}
-		if((null != entry && null != entry.getIsEDtoHD() && entry.getIsEDtoHD().booleanValue())
-				&& (null == entry.getIsEdToHdSendToFico() || !entry.getIsEdToHdSendToFico().booleanValue())
-				&& (null != entry.getRefundedDeliveryChargeAmt() && entry.getRefundedDeliveryChargeAmt().doubleValue()!=0.0D)) {
-			
-			isEdToHd = true;
-		}else {
-			isEdToHd = false ;
-			return false;
-		}
-		if(LOG.isDebugEnabled()) {
-			LOG.debug("EdToHd flag for transaction Id :"+isEdToHd);
+		try {
+			if(LOG.isDebugEnabled()) {
+				LOG.debug("Checking SDB for transaction ID "+entry.getTransactionID());
+				LOG.debug("IsEdToHdSendToFico"+entry.getIsEdToHdSendToFico()+" and getRefundedScheduleDeliveryChargeAmt"+entry.getRefundedDeliveryChargeAmt());
+			}
+			boolean isAmountRefunded = getAmountRefunded(entry,PaymentTransactionType.REFUND_DELIVERY_CHARGES.getCode());
+			if(isAmountRefunded && (null != entry && null != entry.getIsEDtoHD() && entry.getIsEDtoHD().booleanValue())
+					&& (null == entry.getIsEdToHdSendToFico() || !entry.getIsEdToHdSendToFico().booleanValue())
+					&& (null != entry.getRefundedDeliveryChargeAmt() && entry.getRefundedDeliveryChargeAmt().doubleValue()!=0.0D)) {
+				
+				isEdToHd = true;
+			}else {
+				isEdToHd = false ;
+				return false;
+			}
+			if(LOG.isDebugEnabled()) {
+				LOG.debug("EdToHd flag for transaction Id :"+isEdToHd);
+			}
+		}catch (Exception e) { 
+			LOG.error("Exception occurred while checking EdToHd Flag"+e.getMessage());
 		}
 		return isEdToHd;
 
@@ -967,11 +975,14 @@ public class SalesOrderReverseXMLUtility
 	private boolean checkSdbFlag(AbstractOrderEntryModel entry)
 	{
 		boolean isSdb = false;
+		try {
 		if(LOG.isDebugEnabled()) {
 			LOG.debug("Checking SDB for transaction ID "+entry.getTransactionID());
 			LOG.debug("IsSdb"+entry.getIsSdb()+"IsSdbSendToFico"+entry.getIsSdbSendToFico()+" and getRefundedScheduleDeliveryChargeAmt"+entry.getRefundedScheduleDeliveryChargeAmt());
 		}
-		if((null == entry.getIsSdbSendToFico() || !entry.getIsSdbSendToFico().booleanValue())
+		boolean sdAmountRefunded = getAmountRefunded(entry,PaymentTransactionType.REFUND_SCHEDULE_DELIVERY_CHARGES.getCode());
+		
+		if(sdAmountRefunded && (null == entry.getIsSdbSendToFico() || !entry.getIsSdbSendToFico().booleanValue())
 				&& (null != entry.getRefundedScheduleDeliveryChargeAmt() && entry.getRefundedScheduleDeliveryChargeAmt().doubleValue()!=0.0D)) {
 			isSdb = true;
 			LOG.debug("SDB is true for transaction ID :"+entry.getTransactionID());
@@ -980,7 +991,46 @@ public class SalesOrderReverseXMLUtility
 			LOG.debug("SDB is false for transaction ID :"+entry.getTransactionID());
 			return false;
 		}
+		}catch (Exception e) { 
+			LOG.error("Exception occurred while checking EdToHd Flag"+e.getMessage());
+		}
 		return isSdb;
+	}
+
+	/**
+	 * @param entry
+	 * @return
+	 */
+	private boolean getAmountRefunded(AbstractOrderEntryModel entry,String type)
+	{
+		   OrderModel order = (OrderModel) entry.getOrder();
+		   boolean isAmountRefunded = false;
+		   if (null != order.getPaymentTransactions())
+			{
+				final List<PaymentTransactionModel> list = order.getPaymentTransactions();
+				if (null != list && !list.isEmpty())
+				{
+					for (final PaymentTransactionModel oModel : list)
+					{
+						// check COD
+						for (final PaymentTransactionEntryModel paymentObj : oModel.getEntries())
+						{
+							if(null !=oModel.getTransactionId() && null != entry.getTransactionID() ) {
+								if(oModel.getTransactionId().equalsIgnoreCase(entry.getTransactionID())) {
+									if(null != paymentObj.getType() && null != paymentObj.getType().getCode() && paymentObj.getType().getCode().equalsIgnoreCase(type))
+									{
+										if(paymentObj.getTransactionStatus().equalsIgnoreCase("SUCCESS")) {
+											isAmountRefunded = true;
+										}
+									}
+								}
+							}
+							
+						}
+					}
+				}
+			}
+		  return isAmountRefunded;
 	}
 
 	protected DefaultPromotionManager getDefaultPromotionsManager()

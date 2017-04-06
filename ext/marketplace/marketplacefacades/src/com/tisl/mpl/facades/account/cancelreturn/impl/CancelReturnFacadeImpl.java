@@ -4188,6 +4188,47 @@ private AbstractOrderEntryModel getOrderEntryModel(OrderModel ordermodel,String 
 							returnLogistics.setTransactionId(eachEntry.getTransactionId());
 						}
 					}
+					
+					// Added in R2.3 START 
+					String returnFulfillmentType=null;
+					String returnFulfillmentByP1=null;
+					//getting the product code
+					final ProductModel productModel = mplOrderFacade.getProductForCode(eachEntry.getProduct().getCode());
+					
+					for (final SellerInformationModel sellerInfo : productModel.getSellerInformationRelator())
+					{
+						if(eachEntry.getSelectedUssid().equalsIgnoreCase(sellerInfo.getUSSID()))
+						{
+							if(CollectionUtils.isNotEmpty(sellerInfo.getRichAttribute()))
+							{
+								for (RichAttributeModel richAttribute : sellerInfo.getRichAttribute())
+								{
+									if(null != richAttribute.getReturnFulfillMode())
+									{
+										LOG.info(richAttribute.getReturnFulfillMode());
+										returnFulfillmentType=richAttribute.getReturnFulfillMode().getCode();
+									}
+
+									if(null != richAttribute.getReturnFulfillModeByP1())
+									{
+										LOG.info(richAttribute.getReturnFulfillModeByP1());
+										returnFulfillmentByP1=richAttribute.getReturnFulfillModeByP1().getCode();
+									}
+								}
+							}
+						}
+					}
+					
+					if (StringUtils.isNotEmpty(returnFulfillmentType))
+					{
+						returnLogistics.setReturnFulfillmentType(returnFulfillmentType.toUpperCase());
+					}
+					if(StringUtils.isNotEmpty(returnFulfillmentByP1))
+					{
+						returnLogistics.setReturnFulfillmentByP1(returnFulfillmentByP1);
+					}
+					
+				// Added in R2.3 END 
 					returnLogisticsList.add(returnLogistics);
 				}
 				final List<OrderLineDataResponse> responseList = new ArrayList<OrderLineDataResponse>();
@@ -4210,6 +4251,11 @@ private AbstractOrderEntryModel getOrderEntryModel(OrderModel ordermodel,String 
 							{
 								returnLogisticsResponseDTO.setTransactionId(orderLine.getTransactionId());
 							}
+							if (null != orderLine.getReturnFulfillmentType())
+							{
+								returnLogisticsResponseDTO.setReturnFullfillmentType(orderLine.getReturnFulfillmentType());
+							}
+							
 							if (null != orderLine.getIsReturnLogisticsAvailable())
 							{
 
