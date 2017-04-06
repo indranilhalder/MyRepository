@@ -65122,3 +65122,24 @@ padding-top:90px;
     letter-spacing: .5px;
 }
 /* TISSIT-2212 end */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+	.product-info>div.wishAddLogin, .product-info>div.wishAddSucess, .product-info>div.wishAddLogin, .product-info>div.wishRemoveSucess, .product-info>div.wishAlreadyAdded, div.wishAlreadyAddedPlp, div.wishAddLoginPlp, div.wishAddSucessPlp, div.wishRemoveSucessPlp, div.wishAddSucessQV, div.wishAddLoginQV, div.wishAlreadyAddedQV {
+    display: inline-block;
+    position: fixed;
+    z-index: 100000;
+    left: calc(50% - 150px);
+    right: auto; 
+    top: -100px;
+    margin: auto;
+    max-width: 300px;
+    text-align: center;
+    opacity: 0;
+    font-size: 14px;
+    padding: 12px 10px;
+    /* color: #212121; */
+    background: #f3f3f3;
+    box-shadow: 0 1px 6px 0 rgba(0,0,0,.1);
+    border: 1px solid rgba(0,0,0,.1);
+    transition: opacity 0.25s, top 0.45s;
+}
+}
