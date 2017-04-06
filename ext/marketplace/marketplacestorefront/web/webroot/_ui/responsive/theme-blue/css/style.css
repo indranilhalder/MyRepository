@@ -27468,7 +27468,7 @@ div.other-sellers .other-sellers-table tbody tr td>div.sellerAddToBagTitle:after
 	color:#000;
 	font-size: 14px !important;
     margin-top: 5px;
-    display: block;
+    display: block !important;/* TISSQAUAT-688 */
 }
 body .account .right-account .order-history.order-details li.item .status .message.processing-stage-arrow1 {
 	left:-100%;
