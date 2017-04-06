@@ -5923,7 +5923,12 @@
 						<description>for seller end date</description>
 						<persistence type="property" />
 					</attribute>
-
+					<!-- Changes PRDI-50 Start -->
+					<attribute qualifier="oosmodifiedval" type="java.lang.String">
+						<description>OOS- other variants updated by changing the value</description>
+						<persistence type="property" />
+					</attribute>
+					<!-- Changes PRDI-50 End -->
 				</attributes>
 				<indexes>
 					<index name="BuyBox_IDX">
@@ -6045,7 +6050,12 @@
 						<description>for seller end date</description>
 						<persistence type="property" />
 					</attribute>
-											
+					<!-- Changes PRDI-50 Start -->
+					<attribute qualifier="oosmodifiedval" type="java.lang.String">
+						<description>OOS- other variants updated by changing the value</description>
+						<persistence type="property" />
+					</attribute>
+										<!-- Changes PRDI-50 End -->		
 				</attributes>
 				<indexes>
 					<index name="BuyBoxCommerce_IDX">
