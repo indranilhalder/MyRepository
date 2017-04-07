@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.service;
 
-import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.io.StringReader;
@@ -80,8 +79,8 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 	 * @return: InventoryReservListResponse
 	 */
 	@Override
-	public InventoryReservListRequest convertDatatoWsdto(final List<CartSoftReservationData> cartdatalist,
-			final AbstractOrderModel cart, final String pincode, final String requestType)
+	public InventoryReservListRequest convertDatatoWsdto(final List<CartSoftReservationData> cartdatalist, final String cartGuid,
+			final String pincode, final String requestType)
 	{
 		final InventoryReservListRequest reqdata = new InventoryReservListRequest();
 		final List<InventoryReservRequest> reqlist = new ArrayList<InventoryReservRequest>();
@@ -266,9 +265,9 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 			}
 			reqlist.addAll(freebieItemslist);
 
-			if (StringUtils.isNotEmpty(cart.getGuid()))
+			if (StringUtils.isNotEmpty(cartGuid))
 			{
-				reqdata.setCartId(cart.getGuid());
+				reqdata.setCartId(cartGuid);
 			}
 			if (StringUtils.isNotEmpty(pincode))
 			{

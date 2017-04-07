@@ -3,8 +3,6 @@
  */
 package com.tisl.mpl.service;
 
-import de.hybris.platform.core.model.order.AbstractOrderModel;
-
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
@@ -38,5 +36,5 @@ public interface InventoryReservationService
 	 * @return
 	 */
 	public InventoryReservListRequest convertDatatoWsdto(List<CartSoftReservationData> cartSoftReservationDatalist,
-			AbstractOrderModel abstractOrderModel, String defaultPinCodeId, String requestType);
+			String cartGuid, String defaultPinCodeId, String requestType);
 }

@@ -380,7 +380,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 					try
 					{	//added for jewellery
 						final InventoryReservListRequest reqestData = inventoryReservationService.convertDatatoWsdto(
-								cartdatalist, cart, pincode, MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART);
+								cartdatalist, cart.getGuid(), pincode, MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART);
 						inventoryReservListResponse = inventoryReservationService.reserveInventoryAtCheckout(reqestData);
 					}
 					catch (final ClientEtailNonBusinessExceptions e)

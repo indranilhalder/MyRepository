@@ -316,13 +316,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							freebieParentQtyMap.put(orderEntry.getSelectedUssid(), orderEntry.getQuantity());
 						}
 						//Added for 3782
-						if (null != abstractOrderEntryModel.getProduct()
-								&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(abstractOrderEntryModel
-										.getProduct().getProductCategoryType()))
-						{
-							final boolean breakupLoad = priceBreakupFacade.createPricebreakupOrder(abstractOrderEntryModel);
+						//if (null != orderEntry.getProduct()
+						//		&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(orderEntry.getProduct()
+						//				.getProductCategoryType()))
+						//{
+						//	final boolean breakupLoad = priceBreakupFacade.createPricebreakupOrder(orderEntry);
 
-						}
+						//}
 						//End of changes for TPR-3782
 					}
 				}
@@ -1054,7 +1054,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				 */
 
 				final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-				 MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cData, cart);
+						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cData, cart);
 
 
 				//TPR3780 STARTS HERE
@@ -1244,8 +1244,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					 */
 
 					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
-							//MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
-					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cData, cart);
+					//MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cData, cart);
 
 
 					//TPR3780 STARTS HERE
@@ -3446,8 +3446,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
 
-							//MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
-                            MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cData, cart);
+					//MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cData, cart);
 
 					//TPR3780 STARTS HERE
 					final CartModel cartModelAfterinventoryCheck = getCartService().getSessionCart();
@@ -3462,7 +3462,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					//TPR3780 ENDS HERE
 
 
- 				if (!inventoryReservationStatus)
+					if (!inventoryReservationStatus)
 					{
 
 						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
@@ -4357,7 +4357,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

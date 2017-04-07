@@ -102,8 +102,8 @@ public class InventoryReservationServiceImplTest
 		}
 
 		//added for jewellery
-		final InventoryReservListRequest req = inventoryReservationServiceImpl.convertDatatoWsdto(cartdatalist, cart, pincode,
-				requestType);
+		final InventoryReservListRequest req = inventoryReservationServiceImpl.convertDatatoWsdto(cartdatalist, cart.getGuid(),
+				pincode, requestType);
 		try
 		{
 			given(inventoryReservationServiceImpl.reserveInventoryAtCheckout(req)).willReturn(response);

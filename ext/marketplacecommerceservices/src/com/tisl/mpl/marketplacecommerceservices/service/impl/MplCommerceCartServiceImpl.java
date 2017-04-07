@@ -2365,8 +2365,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		final String cartGuid = "";
 		final List<CartSoftReservationData> cartSoftForCncReservationDatalist = new ArrayList<CartSoftReservationData>();
 		try
-		{	//commented for CAR:127
-			//final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel);
+		{ //commented for CAR:127
+		  //final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel);
 			final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderData,
 					abstractOrderModel);
 			if (requestType != null && CollectionUtils.isNotEmpty(cartSoftReservationDatalist) && pincode != null)
@@ -2389,7 +2389,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					 * getInventoryReservationService().convertDatatoWsdto(cartSoftReservationDatalist,
 					 * abstractOrderModel.getGuid(), pincode, requestType);
 					 */
-					
+
 				}
 				catch (final ClientEtailNonBusinessExceptions e)
 				{
@@ -3562,7 +3562,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				 * getInventoryReservationService().convertDatatoWsdto(cartSoftReservationDatalist,
 				 * abstractOrderModel.getGuid(), defaultPinCodeId, requestType);
 				 */
-				
+
 			}
 			catch (final ClientEtailNonBusinessExceptions e)
 			{
@@ -3760,7 +3760,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						cartSoftReservationData = new CartSoftReservationData();
 
 						String fulfillmentType = null;
-						
+
 						//commented for CAR:127
 						/*
 						 * if (entryModel.getSelectedUSSID() != null) {
@@ -3950,9 +3950,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							 * final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 							 * entryModel.getSelectedUSSID());
 							 */
-							final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
-										entryModel.getSelectedUssid());
-							
+							SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+									entryModel.getSelectedUssid());
+
 							if (null == sellerInfoModel)
 							{
 								final List<JewelleryInformationModel> jeweleryInfo = jewelleryService.getJewelleryInfoByUssid(entryModel
@@ -4007,7 +4007,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 						cartSoftReservationDataList.add(cartSoftReservationData);
 						populataJewelleryWeight(deliveryModeGlobalCode, cartSoftReservationDataList, fulfillmentType,
-								entryModel.getSelectedUSSID(), cartSoftReservationData.getListingId());
+								entryModel.getSelectedUssid(), cartSoftReservationData.getListingId());
 					}
 				}
 			}
@@ -5507,7 +5507,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				addParameter.setUnit(cartEntry.getProduct().getUnit());
 				addParameter.setUssid(ussid);
 
-				mplCommerceCartService.addToCartWithUSSID(addParameter);
+				//mplCommerceCartService.addToCartWithUSSID(addParameter);
+				getMplDefaultCommerceAddToCartStrategyImpl().addToCart(addParameter); //
 				setDeliveryModeForJewellery(ussid, cartEntry);
 			}
 		}

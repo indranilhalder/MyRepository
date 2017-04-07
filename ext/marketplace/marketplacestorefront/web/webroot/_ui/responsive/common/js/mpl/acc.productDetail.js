@@ -3069,52 +3069,53 @@ function loadDefaultWishListName_SizeGuide() {
 		$('input.wishlist#add_to_wishlist-sizeguide').popover('hide');
 		}, 1500);
 	}
-	$(document).on('click','#buyNow .js-add-to-cart',function(event){
-		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
-		var isShowSize= $("#showSize").val();
+	$(document).on('click', '#buyNow .js-add-to-cart', function(event) {
+	    //var cartReturn = ACC.product.sendAddToBag("addToCartForm");
+	    var isShowSize = $("#showSize").val();
 
-		var productCode=$("#product_id").val();
+	    var productCode = $("#product_id").val();
 
-		
-		if($("#variant li").length > 0){
-		 if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage' && isShowSize=='true') {
-			 $("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 
-		//INC_11511 fix
-		var productCodeArray=[];
-		productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
-		 
-		 if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
-			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+	    if ($("#variant li").length > 0) {
+	        if (!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html()) == 'undefined' && $("#ia_product_rootCategory_type").val() != 'Electronics' && $("#ia_product_rootCategory_type").val() != 'Watches' && $("#ia_product_rootCategory_type").val() != 'TravelAndLuggage' && isShowSize == 'true') {
+	            $("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 
-			$("#addToCartFormTitle").show();
-			//For pdp analytics changes
-			utag.link({"error_type":"size_not_selected"});
-	 	    return false;
+	            //INC_11511 fix
+	            var productCodeArray = [];
+	            productCodeArray.push(productCode); // Product code passed as an array for Web Analytics
 
-		 }
-		}}
-		 //Jewellery Buy Now Button Changes added
-		if( $("#jewelleryvariant option:selected").val() == "#"  && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage' &&  isShowSize=='true' ){
-			// alert("please select size !"+isShowSize);  
-	 		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
-			$("#addToCartFormTitle").show();
-		    return false;
-	 	 }
-		
-		 
-		 //TISQAEE-64
-		 utag.link({
-				link_obj: this,
-				link_text: 'buynow' ,
-				event_type : 'buynow_winner_seller',
-				product_sku : productCodeArray
-			});
+	            if (!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html()) == 'undefined' && $("#ia_product_rootCategory_type").val() != 'Electronics' && $("#ia_product_rootCategory_type").val() != 'Watches' && isShowSize == 'true') {
+	                $("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 
-	 }
+	                $("#addToCartFormTitle").show();
+	                //For pdp analytics changes
+	                utag.link({
+	                    "error_type": "size_not_selected"
+	                });
+	                return false;
 
-		ACC.product.sendAddToBag("addToCartForm",true);
-		 
+	            }
+	        }
+	    }
+	    //Jewellery Buy Now Button Changes added
+	    if ($("#jewelleryvariant option:selected").val() == "#" && typeof($(".variantFormLabel").html()) == 'undefined' && $("#ia_product_rootCategory_type").val() != 'Electronics' && $("#ia_product_rootCategory_type").val() != 'Watches' && $("#ia_product_rootCategory_type").val() != 'TravelAndLuggage' && isShowSize == 'true') {
+	        // alert("please select size !"+isShowSize);  
+	        $("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+	        $("#addToCartFormTitle").show();
+	        return false;
+	    }
+
+
+	    //TISQAEE-64
+	    utag.link({
+	        link_obj: this,
+	        link_text: 'buynow',
+	        event_type: 'buynow_winner_seller',
+	        product_sku: productCodeArray
+	    });
+
+	ACC.product.sendAddToBag("addToCartForm", true);
+
 	});
 	
 	//AKAMAI Fix	
