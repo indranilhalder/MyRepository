@@ -77,8 +77,7 @@ public class STWWidgetFacadeImpl implements STWWidgetFacade
 	@Override
 	public List<STWJsonRecomendationData> getSTWWidgetFinalData()
 	{
-		final String stwjsonAsString = "{\"status\":0,\"statusMessage\":\"Success\",\"recommendations\":[{\"listingId\":\"987654321\",\"productName\":\"Ambrane P-1111 10000 mAh Power Bank (Black)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Ambrane\",\"imageUrl\":\"https://img.tatacliq.com/images/437Wx649H/MP000000000076452_437Wx649H_20160327190811.jpeg\",\"availableSize\":null,\"availableColor\":\"Black\",\"mrp\":1799,\"mop\":629,\"productUrl\":\"https://www.tatacliq.com/ambrane-p-1111-10000-mah-power-bank-black/p-mp000000000076452\"},{\"listingId\":\"987654322\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"https://img.tatacliq.com/images/437Wx649H/MP000000000734559_437Wx649H_20161123185445.jpeg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":18980,\"mop\":16145,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"}]}";
-		//StringBuffer sbs = new StringBuffer();
+		final String stwjsonAsString = "{\"status\":0,\"statusMessage\":\"Success\",\"recommendations\":[{\"listingId\":\"987654321\",\"productName\":\"Ambrane P-1111 10000 mAh Power Bank (Black)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Ambrane\",\"imageUrl\":\"https://assetstmppprd.tataunistore.com/medias/sys_master/images/9234671370270.jpg\",\"availableSize\":null,\"availableColor\":\"Black\",\"mrp\":1799,\"mop\":629,\"productUrl\":\"https://www.tatacliq.com/ambrane-p-1111-10000-mah-power-bank-black/p-mp000000000076452\"},{\"listingId\":\"987654322\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"https://assetstmppprd.tataunistore.com/medias/sys_master/images/9234671337502.jpg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":18980,\"mop\":16145,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"},{\"listingId\":\"987654323\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"//assetstmppprd.tataunistore.com/medias/sys_master/images/9234671304734.jpg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":1880,\"mop\":1645,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"},{\"listingId\":\"987654324\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"https://assetstmppprd.tataunistore.com/medias/sys_master/images/9234671468574.jpg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":1898,\"mop\":1615,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"},{\"listingId\":\"987654321\",\"productName\":\"Ambrane P-1111 10000 mAh Power Bank (Black)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Ambrane\",\"imageUrl\":\"https://assetstmppprd.tataunistore.com/medias/sys_master/images/9234671370270.jpg\",\"availableSize\":null,\"availableColor\":\"Black\",\"mrp\":1799,\"mop\":629,\"productUrl\":\"https://www.tatacliq.com/ambrane-p-1111-10000-mah-power-bank-black/p-mp000000000076452\"},{\"listingId\":\"987654322\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"https://assetstmppprd.tataunistore.com/medias/sys_master/images/9234671337502.jpg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":18980,\"mop\":16145,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"},{\"listingId\":\"987654323\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"//assetstmppprd.tataunistore.com/medias/sys_master/images/9234671304734.jpg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":1880,\"mop\":1645,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"},{\"listingId\":\"987654324\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"https://assetstmppprd.tataunistore.com/medias/sys_master/images/9234671468574.jpg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":1898,\"mop\":1615,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"}]}";
 		//sbs.append('{"status":0,"statusMessage":"Success","recommendations":"');
 
 		//stwWidgetService.callSTWService();
@@ -142,7 +141,14 @@ public class STWWidgetFacadeImpl implements STWWidgetFacade
 			}
 			else
 			{
-				stwRecomendationData.get(index).setMop(buyBoxModel.getSpecialPrice().toString());
+				if (buyBoxModel.getSpecialPrice() != null)
+				{
+					stwRecomendationData.get(index).setMop(buyBoxModel.getSpecialPrice().toString());
+				}
+				else
+				{
+					stwRecomendationData.get(index).setMop(buyBoxModel.getPrice().toString());
+				}
 				stwRecomendationData.get(index).setMrp(buyBoxModel.getMrp().toString());
 			}
 		}
@@ -159,7 +165,7 @@ public class STWWidgetFacadeImpl implements STWWidgetFacade
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 		 */
 		@Override

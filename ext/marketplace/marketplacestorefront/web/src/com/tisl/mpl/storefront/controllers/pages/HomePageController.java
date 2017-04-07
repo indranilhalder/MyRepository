@@ -1094,7 +1094,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 * 
+					 *
 					 * }
 					 */
 
@@ -1254,6 +1254,7 @@ public class HomePageController extends AbstractPageController
 	/**
 	 * TPR-258
 	 */
+	@ResponseBody
 	@RequestMapping(value = "/getStwrecomendations", method = RequestMethod.GET)
 	public JSONObject getStwWidgetDada()
 	{

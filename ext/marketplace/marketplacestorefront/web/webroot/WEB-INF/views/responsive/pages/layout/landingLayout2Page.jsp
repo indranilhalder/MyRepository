@@ -34,6 +34,127 @@
 	<!-- <div class="brands" id="ia_brands_favorites"></div> -->
 	<!-- <div class="feature-categories" id="ia_categories_favorites"></div>
 	<div class="feature-collections" id="ia_collections"></div> -->
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="best_seller stw-list">
+    <div class="yCmsComponent best_seller_section hide_clplist">
+        <div class="content">Best Sellers</div>
+    </div>
+    <!-- <div class="Menu">
+        <div class="mobile selectmenu">SWEATSHIRTS</div>
+        <ul style="display: none;">
+            <li class="">ALL</li>
+            <li class="">MEN</li>
+            <li class="">WOMEN</li>
+            <li class="">ELECTRONICS</li>
+            <li class="">FOOTWEAR</li>
+        </ul>
+    </div> -->
+    <div class="yCmsComponent best_seller_section hide_clplist">
+        <h1>ALL</h1>
+        <div class="carousel-component">
+        
+<div class="trending" id="stw_widget"></div>
+
+        </div>
+    </div>
+    <div class="yCmsComponent best_seller_section hide_clplist">
+        <h1>MEN</h1>
+        <div class="carousel-component">
+        
+<div class="trending" id="stw_widget"></div>
+
+        </div>
+    </div>
+    <div class="yCmsComponent best_seller_section hide_clplist">
+        <h1>WOMEN</h1>
+        <div class="carousel-component">
+        
+<div class="trending" id="stw_widget"></div>
+
+        </div>
+    </div>
+    <div class="yCmsComponent best_seller_section hide_clplist">
+        <h1>ELECTRONICS</h1>
+        <div class="carousel-component">
+<div class="trending" id="stw_widget"></div>
+        </div>
+    </div>
+    <div class="yCmsComponent best_seller_section hide_clplist">
+        <h1>FOOTWEAR</h1>
+        <div class="carousel-component">
+<div class="trending" id="stw_widget"></div>
+        </div>
+    </div>
+    <div class="yCmsComponent best_seller_section hide_clplist">
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
+
+				
+
+				
+
+				
+
+				
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	<div class="trending" id="ia_products_hot"></div>
 	<!-- For Infinite Analytics End -->
 	<div id="showcase" class="showcase feature-collections"></div>
