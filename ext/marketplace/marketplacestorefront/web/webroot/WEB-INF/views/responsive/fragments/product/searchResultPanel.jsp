@@ -5,7 +5,9 @@
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
+<input type="hidden" name="noOfPages" value="${searchPageData.pagination.numberOfPages}"/>
 <c:if test="${searchPageData.pagination.totalNumberOfResults ne 0}">
+
 	<div class="left-block">
 
 		<script>
@@ -45,6 +47,7 @@
 					<form id="categoryPageDeptHierTreeForm" name="categoryPageDeptHierTreeForm" method="get">
 					<p class="filter-name facet_mobile"><spring:theme code="search.nav.facetTitle" arguments="Department"/></p>
 						<input type="hidden" name="q" id="q" value="${searchPageData.currentQuery.query.value}"/>
+						<input type="hidden" name="searchCategory" value="${searchCategory}" />
 						<div id="categoryPageDeptHierTree"></div>
 					</form>
 				</c:when>
@@ -53,7 +56,7 @@
 					<p class="filter-name facet_mobile"><spring:theme code="search.nav.facetTitle" arguments="Department"/></p>
 						<input type="hidden" name="q" id="q" />
 						<input type="hidden" name="text" id="text" value="${searchPageData.freeTextSearch}"/>
-						<input type="hidden" name="searchCategory" id="searchCategoryTree"/>
+						<input type="hidden" name="searchCategory" id="searchCategoryTree" value="${searchCategory}"/>
 						<div id="searchPageDeptHierTree"></div>
 					</form>
 				</c:otherwise>
@@ -75,7 +78,7 @@
 		supportShowAll="${isShowAllAllowed}"
 		searchPageData="${searchPageData}"
 		searchUrl="${searchPageData.currentQuery.url}"
-		numberPagesShown="${numberPagesShown}" />
+		numberPagesShown="${numberPagesShown}" hide="true"/>
 
 	<!-- Hero product pane -->
 	<c:if test="${not empty heroProducts}">
@@ -91,7 +94,7 @@
 
 	<!-- Subtracted normal product pane -->
 
-	<ul class="product-listing product-grid">
+	<ul class="product-listing product-grid lazy-grid-facet">
 		<c:forEach items="${normalProducts}" var="product"
 			varStatus="status">
 			<product:productListerGridItem product="${product}" />
@@ -99,7 +102,7 @@
 	</ul>
 	
 	<c:if test="${not empty otherProducts}">
-	<ul class="product-listing product-grid">
+	<ul class="product-listing product-grid lazy-grid">
 		<c:forEach items="${searchPageData.results}" var="product" varStatus="status">
 			<product:productListerGridItem product="${product}"/>
 		</c:forEach>
@@ -115,12 +118,12 @@
 		</div>
 	</div>
 </div>
-<div class="bottom-pagination">
+<div class="bottom-pagination" style="display: none;">
 	<nav:pagination top="false" supportShowPaged="${isShowPageAllowed}"
 		supportShowAll="${isShowAllAllowed}"
 		searchPageData="${searchPageData}"
 		searchUrl="${searchPageData.currentQuery.url}"
-		numberPagesShown="${numberPagesShown}" />
+		numberPagesShown="${numberPagesShown}"/>
 </div>
 <script>
 	$(document).ready(function(){

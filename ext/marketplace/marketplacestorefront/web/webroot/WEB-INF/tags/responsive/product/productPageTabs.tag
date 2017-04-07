@@ -28,6 +28,7 @@ var buyboxskuId='';
 <!-- Displaying different tabs in PDP page -->
 <!-- About Product, reviewsAndRatings and returnsAndRefunds Tab added for jewellery change  -->
 <c:set var="validTabs" value="${VALID_TABS}" />
+
 <div class="nav-wrapper ${product.rootCategory}">
 	<ul class="nav pdp">
 	    <c:if test="${fn:contains(validTabs, 'aboutproduct')}">
@@ -71,8 +72,50 @@ var buyboxskuId='';
 			</li>
 		</c:if>
 	</ul>
+<%-- 
+<div class="nav-wrapper">
+<ul class="nav pdp">
+<!-- 	TISPRD-7604 fix start -->
+	<c:if test="${fn:contains(validTabs, 'stylenote')}">
+		<li id="tabs_styleNotes" class="active">
+			 <spring:theme code="product.product.styleNotes" />
+		</li>
+	</c:if>
+<!-- 	TISPRD-7604 fix end -->
+	<c:if test="${fn:contains(validTabs, 'details')}">
+		<li id="tabs_details" class="active">
+			 <spring:theme code="product.product.details" />
+		</li>
+	</c:if>
+<!-- 	TISPRD-7604 fix start -->
+	<c:if test="${fn:contains(validTabs, 'stylenote')}">
+		<li id="tabs_styleNotes">
+			 <spring:theme code="product.product.styleNotes" />
+		</li>
+	</c:if>
+<!-- 	TISPRD-7604 fix end -->
+	<c:if test="${fn:contains(validTabs, 'description')}">
+		<li id="tabs_description" class="active">
+			<spring:theme code="product.product.description" />
+		</li>
+	</c:if>
+	<c:if test="${fn:contains(validTabs, 'warranty')}">
+		<li id="tabs_warranty">
+			<spring:theme code="product.product.warranty" />
+		</li>
+	</c:if>
+		<c:if test="${fn:contains(validTabs, 'knowmore')}">
+		<li id="tabs_knowmore">
+			<spring:theme code="product.product.knowmore" />
+		</li>
+	</c:if>
+</ul> --%>
+
+
+
 </div>
 <ul class="tabs pdp">
+
 	<c:if test="${fn:contains(validTabs, 'aboutproduct')}">
 		<li id="about" class="tab-content active">
 			<product:productAboutProductTab product="${product}" />
@@ -93,11 +136,25 @@ var buyboxskuId='';
 			<product:productReturnsAndRefunds product="${product}" />
 		</li>
 	</c:if>
+
+	<!-- INC144313814 fix start -->
+
 	<c:if test="${fn:contains(validTabs, 'details')}">
+
 		<li id="details" class="tab-content">
+
+		<!-- <li class="active"> -->
+
 			<product:productDetailsTab product="${product}" />
 		</li>
 	</c:if>
+	<!-- INC144313814 fix end -->
+	<%-- <c:if test="${fn:contains(validTabs, 'stylenote')}">
+		<li>
+			<product:productStyleNotesTab product="${product}" />
+		</li>
+	</c:if> --%>
+	
 	<c:if test="${fn:contains(validTabs, 'description')}">
 		<li id="description" class="tab-content active">
 			<product:productDescriptionTab product="${product}" />

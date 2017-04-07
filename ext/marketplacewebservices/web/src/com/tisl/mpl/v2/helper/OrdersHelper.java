@@ -39,6 +39,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
+import com.tisl.mpl.v2.controller.BaseController.ShowMode;
 
 
 @Component
@@ -61,6 +62,8 @@ public class OrdersHelper extends AbstractHelper
 	private ConfigurationService configurationService;
 
 	public static final String MAX_PAGE_LIMIT_TOTAL_ORDER_COUNT_DISPLAY = "orderHistory.max.page.limit.count.display";
+
+	public static int MAX_PAGE_LIMIT = 0;
 
 	//Sonar fixes
 	//private static final String PAGINATION_NUMBER_OF_RESULTS_COUNT = "orderHistory.pagination.number.results.count";
@@ -107,13 +110,16 @@ public class OrdersHelper extends AbstractHelper
 	 * dataMapper.map(orderHistoriesData, OrderHistoryListWsDTO.class, fields); return dto; }
 	 */
 
+
+
 	public SearchPageData<OrderHistoryData> getParentOrders(final int currentPage, final int pageSize, final String sort)
 	{
 		//		final OrderHistoriesData orderHistoriesData;
 		//TISEE-6323
 
 		final PageableData pageableData = createPageableData(currentPage, pageSize, sort);
-		//showing all orders
+
+		//		//showing all orders
 		final int MAX_PAGE_LIMIT = Integer
 				.parseInt(configurationService.getConfiguration().getString(MAX_PAGE_LIMIT_TOTAL_ORDER_COUNT_DISPLAY, "500"));
 		pageableData.setPageSize(MAX_PAGE_LIMIT);
@@ -126,6 +132,42 @@ public class OrdersHelper extends AbstractHelper
 
 		return searchPageDataParentOrder;
 
+	}
+
+	//CAR Project performance issue fixed ---Pagination implemented for getOrders of Mobile webservices
+
+	public SearchPageData<OrderHistoryData> getParentOrders(final int currentPage, final int pageSize, final String sort,
+			final ShowMode showMode)
+	{
+
+		final PageableData pageableData = createPageableData(currentPage, pageSize, sort, showMode);
+		final SearchPageData<OrderHistoryData> searchPageDataParentOrder = mplOrderFacade
+				.getPagedFilteredParentOrderHistory(pageableData);
+
+		return searchPageDataParentOrder;
+
+	}
+
+	//CAR Project performance issue fixed ---Pagination implemented for getOrders of Mobile webservices
+
+	protected PageableData createPageableData(final int pageNumber, final int pageSize, final String sortCode,
+			final ShowMode showMode)
+	{
+		final PageableData pageableData = new PageableData();
+		pageableData.setCurrentPage(pageNumber);
+		pageableData.setSort(sortCode);
+
+		if (ShowMode.All == showMode)
+		{
+			pageableData.setPageSize(MAX_PAGE_LIMIT);
+		}
+		else
+		{
+			final int MAX_PAGE_LIMIT = Integer
+					.parseInt(configurationService.getConfiguration().getString(MAX_PAGE_LIMIT_TOTAL_ORDER_COUNT_DISPLAY, "500"));
+			pageableData.setPageSize(MAX_PAGE_LIMIT);
+		}
+		return pageableData;
 	}
 
 	protected Set<OrderStatus> extractOrderStatuses(final String statuses)

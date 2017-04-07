@@ -134,9 +134,10 @@ public class MarketplaceDefaultCsCheckoutService extends
 			
 			CustomerModel customer =  (CustomerModel) cart.getUser();
 		
-		 OTPModel opt = otpGenericService.getLatestOTPModel(((CustomerModel)cart.getUser()).getOriginalUid(), OTPTypeEnum.COD);
-		boolean validateOTP =!( opt!=null && opt.getIsValidated() !=null
-				&& opt.getIsValidated().booleanValue());
+//		 OTPModel opt = otpGenericService.getLatestOTPModel(((CustomerModel)cart.getUser()).getOriginalUid(), OTPTypeEnum.COD);
+//		boolean validateOTP =!( opt!=null && opt.getIsValidated() !=null
+//				&& opt.getIsValidated().booleanValue());
+			boolean validateOTP=false;
 		
 		if(! customer.getOriginalUid().matches(EMAIL_REGEX)  ) {
 			errorMessages.add(new ResourceMessage("placeOrder.validation.invalidEmail"));

@@ -16,6 +16,7 @@ package com.tisl.mpl.checkout.steps.validation.impl;
 import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.validation.AbstractCheckoutStepValidator;
 import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.validation.ValidationResults;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
+import de.hybris.platform.commercefacades.order.data.CartData;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -29,10 +30,46 @@ public class ResponsivePaymentCheckoutStepValidator extends AbstractCheckoutStep
 	@Autowired
 	private MplCustomAddressFacade mplCustomAddressFacade;
 
-	@Override
-	public ValidationResults validateOnEnter(final RedirectAttributes redirectAttributes)
+	/*
+	 * @Override public ValidationResults validateOnEnter(final RedirectAttributes redirectAttributes) { if
+	 * (!getMplCustomAddressFacade().hasValidCart()) { LOG.info("Missing, empty or unsupported cart"); return
+	 * ValidationResults.REDIRECT_TO_CART; }
+	 * 
+	 * //commented getMplCustomAddressFacade().hasNoDeliveryAddress() if condition block as part of Release 2.1 we have
+	 * //one more delivery mode as click and collect which does not require delivery Address.
+	 * 
+	 * if (getMplCustomAddressFacade().hasNoDeliveryAddress()) { GlobalMessages.addFlashMessage(redirectAttributes,
+	 * GlobalMessages.INFO_MESSAGES_HOLDER, "checkout.multi.deliveryAddress.notprovided"); return
+	 * ValidationResults.REDIRECT_TO_DELIVERY_METHOD; }
+	 * 
+	 * 
+	 * if (getMplCustomAddressFacade().hasNoDeliveryMode()) { GlobalMessages.addFlashMessage(redirectAttributes,
+	 * GlobalMessages.INFO_MESSAGES_HOLDER, "checkout.multi.deliveryMethod.notprovided"); return
+	 * ValidationResults.REDIRECT_TO_CART; }
+	 * 
+	 * //Added for TISPRO-639 : Method checks for CNC Orders if (getMplCustomAddressFacade().hasNoDeliveryAddress()) {
+	 * GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
+	 * "checkout.multi.deliveryAddress.notprovided"); return ValidationResults.REDIRECT_TO_CART; }
+	 * 
+	 * // Commented to refer marketplacefacade /* if (!getCheckoutFlowFacade().hasValidCart()) {
+	 * LOG.info("Missing, empty or unsupported cart"); return ValidationResults.REDIRECT_TO_CART; }
+	 * 
+	 * if (getCheckoutFlowFacade().hasNoDeliveryAddress()) { GlobalMessages.addFlashMessage(redirectAttributes,
+	 * GlobalMessages.INFO_MESSAGES_HOLDER, "checkout.multi.deliveryAddress.notprovided"); return
+	 * ValidationResults.REDIRECT_TO_DELIVERY_ADDRESS; }
+	 * 
+	 * if (getCheckoutFlowFacade().hasNoDeliveryMode()) { GlobalMessages.addFlashMessage(redirectAttributes,
+	 * GlobalMessages.INFO_MESSAGES_HOLDER, "checkout.multi.deliveryMethod.notprovided"); return
+	 * ValidationResults.REDIRECT_TO_DELIVERY_METHOD; }
+	 * 
+	 * 
+	 * return ValidationResults.SUCCESS; }
+	 */
+
+
+	public ValidationResults validateOnEnterOptimized(final CartData cart, final RedirectAttributes redirectAttributes)
 	{
-		if (!getMplCustomAddressFacade().hasValidCart())
+		if (!getMplCustomAddressFacade().hasValidCart(cart))
 		{
 			LOG.info("Missing, empty or unsupported cart");
 			return ValidationResults.REDIRECT_TO_CART;
@@ -46,7 +83,7 @@ public class ResponsivePaymentCheckoutStepValidator extends AbstractCheckoutStep
 		 * ValidationResults.REDIRECT_TO_DELIVERY_METHOD; }
 		 */
 
-		if (getMplCustomAddressFacade().hasNoDeliveryMode())
+		if (getMplCustomAddressFacade().hasNoDeliveryMode(cart))
 		{
 			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
 					"checkout.multi.deliveryMethod.notprovided");
@@ -54,7 +91,7 @@ public class ResponsivePaymentCheckoutStepValidator extends AbstractCheckoutStep
 		}
 
 		//Added for TISPRO-639 : Method checks for CNC Orders
-		if (getMplCustomAddressFacade().hasNoDeliveryAddress())
+		if (getMplCustomAddressFacade().hasNoDeliveryAddress(cart))
 		{
 			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
 					"checkout.multi.deliveryAddress.notprovided");
@@ -79,7 +116,6 @@ public class ResponsivePaymentCheckoutStepValidator extends AbstractCheckoutStep
 	}
 
 
-
 	/**
 	 * @return the mplCustomAddressFacade
 	 */
@@ -95,5 +131,19 @@ public class ResponsivePaymentCheckoutStepValidator extends AbstractCheckoutStep
 	public void setMplCustomAddressFacade(final MplCustomAddressFacade mplCustomAddressFacade)
 	{
 		this.mplCustomAddressFacade = mplCustomAddressFacade;
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.validation.AbstractCheckoutStepValidator#
+	 * validateOnEnter(org.springframework.web.servlet.mvc.support.RedirectAttributes)
+	 */
+	@Override
+	public ValidationResults validateOnEnter(final RedirectAttributes redirectAttributes)
+	{
+		// YTODO Auto-generated method stub
+		return null;
 	}
 }

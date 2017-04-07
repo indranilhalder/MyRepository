@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- [y] hybris Platform Copyright (c) 2000-2015 hybris AG All rights reserved. 
+	This software is the confidential and proprietary information of hybris ("Confidential 
+	Information"). You shall not disclose such Confidential Information and shall 
+	use it only in accordance with the terms of the license agreement you entered 
+	into with hybris. -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:cache="http://www.springframework.org/schema/cache" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+	<!-- If you use aspectj autoproxy and annotations use this: -->
+	<!--
+	-->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+	 
+	<!-- When you have to configure your aspect via xml, just uncomment this -->
+	<!-- 
+	<aop:config  proxy-target-class="true">
+		<aop:aspect id="aspectPopulatorCaching" ref="populatorCacheAspect">
+			<aop:pointcut id="pointCutAround"
+				expression="execution(* de.hybris.platform.converters.Populator.populate(..))" />
+			<aop:around method="cachePopulate" pointcut-ref="pointCutAround" />
+		</aop:aspect>
+	</aop:config>
+	 -->
+
+	<bean id="populatorCacheAspect" class="com.hybris.dtocache.populator.PopulatorCacheAspect" />
+
+	<bean id="cacheDescriptorFactory" class="com.hybris.dtocache.cache.CacheDescriptorFactory">
+		<property name="cacheManager" ref="cacheManager" />
+	</bean>
+	
+	<!-- Key Strategies -->
+	
+	<alias name="defaultDtocacheKeyStrategy" alias="dtocacheKeyStrategy" />
+	<bean name="defaultDtocacheKeyStrategy" class="com.hybris.dtocache.cache.key.impl.TimestampKeyStrategy" />
+
+	<alias name="defaultDtocacheInvalidableKeyStrategy" alias="dtocacheInvalidableKeyStrategy" />
+	<bean name="defaultDtocacheInvalidableKeyStrategy" class="com.hybris.dtocache.cache.key.impl.InvalidableKeyStrategy" />
+
+</beans>

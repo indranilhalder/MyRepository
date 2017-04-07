@@ -30,10 +30,13 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
+
 
 public class MplClassificationColourCodeValueProvider extends ClassificationPropertyValueProvider
 {
 	private FieldNameProvider fieldNameProvider;
+
 
 	public static final String COLORFAMILYFOOTWEAR = "colorfamilyfootwear";
 	//For TPR-3955
@@ -43,6 +46,10 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 	// For TPR-1886 | Fine jewellery
 	public static final String COLOR_FINE_JEWELLERY = "colorfinejwlry";
 	public static final String COMMA = ",";
+
+	//public static final String COLORFAMILYFOOTWEAR = "colorfamilyfootwear";
+	//public static final String COLORFAMILYFOOTWEARBLANK = "";
+
 
 	@Autowired
 	private ConfigurationService configurationService;
@@ -148,9 +155,11 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 			{
 				value = ((ClassificationAttributeValue) value).getCode();
 				value = value.toString().toLowerCase();
-				if (value.toString().startsWith(COLORFAMILYFOOTWEAR))
-				{
-					value = value.toString().replaceAll(COLORFAMILYFOOTWEAR, COLORFAMILY_BLANK);
+				if (value.toString().startsWith(MarketplaceCoreConstants.COLORFAMILYFOOTWEAR))
+				               
+				{   value = value.toString().replaceAll(MarketplaceCoreConstants.COLORFAMILYFOOTWEAR,
+						MarketplaceCoreConstants.COLORFAMILYFOOTWEARBLANK);
+					//value = value.toString().replaceAll(COLORFAMILYFOOTWEAR, COLORFAMILY_BLANK);
 				}
 				//For TPR-3955
 				else if (value.toString().startsWith(COLORFAMILYTRLG))
@@ -171,8 +180,17 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 							break;
 						}
 					}
-				}
 
+					
+
+				}
+				// INC_12606 starts
+				else if (value.toString().startsWith(MarketplaceCoreConstants.DIALCOLORELECTRONICS))
+				{
+					value = value.toString().replaceAll(MarketplaceCoreConstants.DIALCOLORELECTRONICS,
+							MarketplaceCoreConstants.DIALCOLORELECTRONICSBLANK);
+				}
+				// INC_12606 ends
 			}
 			final List<String> rangeNameList = getRangeNameList(indexedProperty, value);
 			final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty, (language == null) ? null

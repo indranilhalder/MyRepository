@@ -14,6 +14,7 @@
 package com.tisl.mpl.service;
 
 import de.hybris.bootstrap.annotations.UnitTest;
+import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 
@@ -55,9 +56,10 @@ public class MplCartWebServiceImplTest
 		final boolean isPinCodeCheckRequired = true;
 		final boolean resetRequired = true;
 		final List<GetWishListProductWsDTO> listProducts = new ArrayList<GetWishListProductWsDTO>();
+		final List<PinCodeResponseData> pincodeList = new ArrayList<PinCodeResponseData>();
 
 		Mockito.when(
-				mplCartWebService.productDetails(abstractOrderModel, deliveryModeDataMap, isPinCodeCheckRequired, resetRequired))
-				.thenReturn(listProducts);
+				mplCartWebService.productDetails(abstractOrderModel, deliveryModeDataMap, isPinCodeCheckRequired, resetRequired,
+						pincodeList)).thenReturn(listProducts);
 	}
 }

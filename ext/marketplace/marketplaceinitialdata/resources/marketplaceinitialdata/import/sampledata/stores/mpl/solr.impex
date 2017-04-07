@@ -96,8 +96,6 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType; priceValue             ;double ;            ;true;    ;    ;    ;    ;mplPriceValueProvider;
 ;$solrIndexedType; swatchColor    		  ;string ;            ;	;    ;true;    ;    ;mplSwatchColorValueProvider;
 ;$solrIndexedType; displaySize    		  ;string ;            ;	;    ;true;    ;    ;mplSwatchSizeValueProvider;
-;$solrIndexedType; mplAvgRating    		  ;double ;            ;	;    ;    ;    ;    ;mplAverageRatingValueProvider;
-;$solrIndexedType; ratingCount    		  ;int    ;            ;	;    ;    ;    ;    ;mplRatingCountValueProvider;
 ;$solrIndexedType; productCategoryType    ;string ;            ;    ;    ;    ;    ;    ;mplProductCategoryTypeValueProvider;
 ;$solrIndexedType; mrpPriceValue          ;double ;            ;true;    ;    ;    ;    ;mplMrpPriceValueProvider;
 ;$solrIndexedType; isOffersExisting       ;boolean;            ;    ;    ;    ;	   ;	;mplIsOffersExistingValueProvider;
@@ -118,7 +116,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 #Added for Cart
 
 ;$solrIndexedType; isVariant              ;boolean;            ;    ;    ;    ;    ;    ;mplIsVariantValueProvider;
-;$solrIndexedType; inStockFlagForAddtoCart;boolean;            ;    ;    ;    ;    ;    ;mplProductInStockFlagValueProvider;
+
 
 									
 # Category fields
@@ -145,7 +143,6 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType; allPromotions		  ;string ;false ;	 ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 0   ;true;     ;     ;mplPromotionCodeValueProvider		;mplPromotionFacetDisplayNameProvider	;                         	;
 ;$solrIndexedType; allMobilePromotions	  ;string ; 	;	 ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 0   ;true;     ;     ;mplMobilePromotionCodeValueProvider	;mplPromotionFacetDisplayNameProvider	;                         	;
 #;$solrIndexedType; size               	  ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplSizeFacetValueProvider            ;                						;sizeAttributeSortProvider  ;
-;$solrIndexedType; rating 				  ;double ;  	;    ;     ;true ;     ;true ;MultiSelectOr ;Alpha ; 2000;true;     ;  	  ;mplAverageRatingFacetValueProvider	;										;							;							;mplFacetAvgRating
 ;$solrIndexedType; deptType               ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplProductCategoryTypeValueProvider  ;                						;                           ;
 ;$solrIndexedType; capacity               ;string ;  	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplCapacityFacetValueProvider        ;                						;                           ;
 ;$solrIndexedType; sellerId            	  ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplSellerIdValueProvider             ;                						;                           ;
@@ -512,4 +509,11 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType						; rAM-classification			;double; 							;	 			;							 ;  				   ;  					   ; 				    ;MultiSelectOr 	;Alpha 			; 3000		;true;   								  ;     						;mplClassificationPropertyValueProvider;	;							;	;mplRamFacetRange;RAM
 ;$solrIndexedType						; screenSize-classification		;double; 							;	 			;							 ;  				   ;  					   ; 				    ;MultiSelectOr 	;Alpha 			; 3000		;true;   								  ;     						;mplClassificationPropertyValueProvider;	;							;	;mplScreenSizeRange;Screen Size
 ;$solrIndexedType						; memory-classification			;double; 							;	 			;							 ;  				   ;  			true	   ; 				    ;MultiSelectOr 	;Alpha 			; 3000		;true;   								  ;     						;mplClassificationPropertyValueProvider;	;							;	;mplMemoryRange;Internal Memory
+
 #Search POC end
+
+
+# Added new Index Property for CAR-245
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);localized[default=false];multiValue[default=true];categoryField[default=true];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;facet[default=true]
+;$solrIndexedType; categoryNameCodeMapping     	  ;string   ;true		   ;	;	 ;	  ;			;mplCategoryNameCodeMappingValueProvider;
+

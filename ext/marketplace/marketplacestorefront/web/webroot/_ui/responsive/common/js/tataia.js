@@ -933,7 +933,7 @@ if (searchCategory_id){
 				});
 			    /*Removing duplicate categories*/
 			    categoryFilters = jQuery.unique(categoryFilters);
-			    categoryCodeForFilters = jQuery.unique(categoryCodeForFilters);			    
+			    categoryCodeForFilters = jQuery.unique(categoryCodeForFilters);
 			    /*SortBY dropdown*/
 			    var sortHtml = '<div class="select-view ia_select-view-sort">';
 			    	sortHtml += '<div class="select-list ia_select-list-sort"><span class="selected sortSelected">Sort by: '+sortDropdownselected+'</span><ul id="ia_category_select" style="width: auto;">';
@@ -1063,20 +1063,23 @@ if (searchCategory_id){
 			          params.count = '100';
 			        }
 			        
-			        params.category_id = category_id;
-			        hotDropdownselected = category_name;
 			        
-			        if(category_id === "All Department") {
-			        	category_id = "";
-			        	hotDropdownselected = 'All Department';
+			        
+			        if(category_id === "allCat") {
+			        	hotDropdownselected = category_name;
 			        } 
+			        else {
+			        	params.category_id = category_id;
+				        hotDropdownselected = category_name;
+			        }
+			        
 			        
 			        //params.category = category_id;
 			        var endpoint = '/SocialGenomix/recommendations/products/hot';
 			        //$( ".owl-item" ).css( "display", "none" );
-			        callRecApi(buildParams(params), rootEP + endpoint);
+			        callRecApi(buildParamsHotNow(params), rootEP + endpoint);
 			      });
-			    }
+			    }	
 
 			    /*SortBY dropdown*/
 			    if(widgetMode === "search"){

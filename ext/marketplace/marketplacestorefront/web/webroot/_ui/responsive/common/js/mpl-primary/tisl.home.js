@@ -58,44 +58,44 @@ $(document).on("mouseover touchend", "div.departmenthover", function() {
             }
         }
     }
-//    if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") {
-//        // console.log("Local");
-//        $("ul." + id).html(decodeURI(html));
-//        $('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
-//		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li.short div').removeClass('toggle');
-//        //LazyLoad();
-//    } 
-//    else {
-//        $.ajax({
-//            url: ACC.config.encodedContextPath +
-//                "/departmentCollection",
-//            type: 'GET',
-//            data: "department=" + code,
-//            success: function(html) {
-//                // console.log("Server");
-//                $("ul." + id).html(html);
-//                if (window.localStorage) {
-//                    $.cookie("dept-list", "true", {
-//                        expires: 1,
-//                        path: "/"
+
+//	    if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") {
+//	        // console.log("Local");
+//	        $("ul." + id).html(decodeURI(html));
+//	        $('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
+//			$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li.short div').removeClass('toggle');
+//	        //LazyLoad();
+//	    } else {
+//	        $.ajax({
+//	            url: ACC.config.encodedContextPath +
+//	                "/departmentCollection",
+//	            type: 'GET',
+//	            data: "department=" + code,
+//	            success: function(html) {
+//	                // console.log("Server");
+//	                $("ul." + id).html(html);
+//	                if (window.localStorage) {
+//	                	//TISPRD-8265-- Local Caching reduced to 10hrs from 1day
+//	                	var date = new Date();
+//	                	var minutes = 600;
+//	                	date.setTime(date.getTime() + (minutes * 60 * 1000)); 
+//	                	
+//	                    $.cookie("dept-list", "true", {
+//	                        expires: date,
+//	                        path: "/"
 //
-//                    });
-//                    window.localStorage.setItem(
-//                        "deptmenuhtml-" + code,
-//                        encodeURI(html));
-//
-//                }
-//            },
-//            complete: function(){
-//	        	$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
-//	    		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li.short div').removeClass('toggle');
-//	        	
-//	        } 
-//        });
-//
-//
-//    }
-    
+//	                    });
+//	                    window.localStorage.setItem(
+//	                        "deptmenuhtml-" + code,
+//	                        encodeURI(html));
+//	                }
+//	            },
+//	            complete: function(){
+//		        	$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
+//		    		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li.short div').removeClass('toggle');      	
+//		        } 
+//	        });
+//	    } 
 });
 
 
@@ -349,11 +349,13 @@ function getBrandsYouLoveAjaxCall() {
                             "<div class='home-brands-you-love-carousel-brands item' data-count ="+ count +" id='" +
                             v.compId + "'><img src='" + v.brandLogoUrl +
                             "' alt='"+v.brandLogoAltText+"'></img></div>";
+
                     } else {
                         renderHtml +=
                             "<div class='home-brands-you-love-carousel-brands item' data-count ="+ count +" id='" +
                             v.compId + "'><img src='" + v.brandLogoUrl +
                             "' alt='"+v.brandLogoAltText+"'></img></div>";
+
                         defaultComponentId = v.compId;
                     }
                     count++;
@@ -501,7 +503,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                         }
                         defaultHtml += "</a></div>"
                     }
-                    defaultHtml +=
+                    /*defaultHtml +=
                         "<div class='home-brands-you-love-main-image'>";
                     if (typeof response.bannerImageUrl !==
                         "undefined") {
@@ -515,7 +517,31 @@ function getBrandsYouLoveContentAjaxCall(id) {
                         }
                         defaultHtml += "<img src='" + response.bannerImageUrl +
                             "'></img></div></div>";
+                    }*/
+                    /******* changes for INC_11934 ***/
+                    defaultHtml +=
+                        "<div class='home-brands-you-love-main-image'>";
+                    if (typeof response.bannerImageUrl !==
+                        "undefined") {
+                        defaultHtml +=
+                            "<div class='home-brands-you-love-main-image-wrapper'>";
+                        if (typeof response.bannerText !==
+                            "undefined") {
+                            defaultHtml +=
+                                "<div class='visit-store-wrapper'>" +
+                                response.bannerText + "</div>";
+                        }
+                        if (typeof response.bannerUrl !== "undefined") {
+                        	 defaultHtml += "<a href='"+response.bannerUrl+"'><img src='" + response.bannerImageUrl +
+                             "'></img></a></div>";
+                        } else {
+                        	 defaultHtml += "<img src='" + response.bannerImageUrl +
+                             "'></img></div>";
+                        }
+                       
                     }
+                    defaultHtml += '</div>';
+                    
                     if (typeof response.secondproductImageUrl !==
                         "undefined") {
                         defaultHtml +=
@@ -1211,6 +1237,7 @@ function getShowcaseContentAjaxCall(id) {
                                 "<h2 class='product-name'>" +
                                 response.firstProductTitle +
                                 "</h2>";
+
                         }
                         if (typeof response.firstProductPrice !==
                             "undefined") {
@@ -1479,8 +1506,12 @@ function populateEnhancedSearch(enhancedSearchData)
 			                //$("ul#"+componentUid).html(html);
 			            	$("ul[id='"+componentUid+"']").html(html); 
 			                if (window.localStorage) {
+			                	var date = new Date();
+			                	var minutes = 600;
+			                	date.setTime(date.getTime() + (minutes * 60 * 1000)); 
+			                	
 			                    $.cookie("dept-list", "true", {
-			                        expires: 1,
+			                        expires: date,
 			                        path: "/"
 
 			                    });
@@ -1493,9 +1524,7 @@ function populateEnhancedSearch(enhancedSearchData)
 			            }
 			        });
 		    	
-		    }
-	       
-	    
+		    } 	    
 	});
 	//End
 	
@@ -1503,13 +1532,15 @@ function populateEnhancedSearch(enhancedSearchData)
 	
 	function openNeedHelpSec()
 	{
-		$(this).removeClass("minimize");
-		$("#h").toggle();
+		if(!$('.gwc-chat-embedded-window').hasClass('minimized')){
+			$(this).removeClass("minimize");
+			$("#h").toggle();
+		}
 	}
 	function getFooterOnLoad()
 	{
 		var slotUid = "FooterSlot";
-		
+		var pageName = $('#pageName').val();
 		if (!$.cookie("dept-list") && window.localStorage) {
 	        for (var key in localStorage) {
 	            if (key.indexOf("footerhtml") >= 0) {
@@ -1518,9 +1549,11 @@ function populateEnhancedSearch(enhancedSearchData)
 	        }
 	    }
 		
-		if (window.localStorage && (html = window.localStorage.getItem("footerhtml")) && html != "") {
+		if (window.localStorage && (html = window.localStorage.getItem("footerhtml")) && html != "" && pageName != "Cart Page") {
 			$("#footerByAjaxId").html(decodeURI(html));
 	    } else {
+	    	if(pageName != "Cart Page")
+	    	{
 	        $.ajax({
 	            url: ACC.config.encodedContextPath +
 	                "/getFooterContent",
@@ -1551,6 +1584,7 @@ function populateEnhancedSearch(enhancedSearchData)
 					}
 	            }
 	        });
+	      }  
 	    }	
 	}
 	
@@ -1692,15 +1726,18 @@ function populateEnhancedSearch(enhancedSearchData)
 	        }
 	}
 }
-$(document).ready(function(){
+$(document).ready(function()
+{
 	//start//
-	$('header .content nav > ul > li > div.toggle').on('mouseover touchend',function(){
+	$('header .content nav > ul > li > div.toggle').on('mouseover touchend',function()
+	{
 		$(this).parent().addClass('hovered');
 		
 		//department/////////////////////
-		if($('header .content nav > ul > li:first-child').hasClass('hovered')) {
+		if($('header .content nav > ul > li:first-child').hasClass('hovered')) 
+		{
 			var id = $('header .content nav > ul > li.hovered > ul > li:first-child .departmenthover').attr('id');
-		   // var code = id.substring(4);
+		    var code = id.substring(4);
 
 		    if (!$.cookie("dept-list") && window.localStorage) {
 		        for (var key in localStorage) {
@@ -1711,39 +1748,42 @@ $(document).ready(function(){
 		            }
 		        }
 		    }
-//	    if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") {
-//	         console.log("Local");
+//	    if (window.localStorage && (html = window.localStorage.getItem("deptmenuhtml-" + code)) && html != "") 
+//		{
+//	        // console.log("Local");
 //	        $("ul." + id).html(decodeURI(html));
-//	        LazyLoad();
+//	        //LazyLoad();
 //	        
-//	    }
-		    
-		    
-//	    else {
-//		        $.ajax({
+//	    } else {
+//	        $.ajax({
 //	            url: ACC.config.encodedContextPath +
-//		                "/departmentCollection",
+//	                "/departmentCollection",
 //	            type: 'GET',
-//		            data: "department=" + code,
-//           success: function(html) {
-//		                 console.log("Server");
-//		                $("ul." + id).html(html);
-//		                if (window.localStorage) {
-//		                    $.cookie("dept-list", "true", {
-//		                        expires: 1,
-//		                        path: "/"
+//	            data: "department=" + code,
+//	            success: function(html) {
+//	                // console.log("Server");
+//	                $("ul." + id).html(html);
+//	                if (window.localStorage) {
+//	                	//TISPRD-8265-- Local Caching reduced to 10hrs from 1day
+//	                	var date = new Date();
+//	                	var minutes = 600;
+//	                	date.setTime(date.getTime() + (minutes * 60 * 1000)); 
+//	                	
+//	                    $.cookie("dept-list", "true", {
+//	                        expires: date,
+//	                        path: "/"
 //
-//		                    });
-//		                    window.localStorage.setItem(
-//		                        "deptmenuhtml-" + code,
-//		                        encodeURI(html));
+//	                    });
+//	                    window.localStorage.setItem(
+//	                        "deptmenuhtml-" + code,
+//	                        encodeURI(html));
 //
-//		                }
-//		            }
-//		        });
+//	                }
+//	            }
+//	        });
 //
 //
-//		    }
+//	    }
 		    
 		} else {
 			if($('header .content nav > ul > li.hovered > ul > li:first-child > div').hasClass('brandClass')) {
@@ -1773,8 +1813,12 @@ $(document).ready(function(){
 					                //$("ul#"+componentUid).html(html);
 					            	$("ul[id='"+componentUid+"']").html(html); 
 					                if (window.localStorage) {
+					                	var date = new Date();
+					                	var minutes = 600;
+					                	date.setTime(date.getTime() + (minutes * 60 * 1000)); 
+					                	
 					                    $.cookie("dept-list", "true", {
-					                        expires: 1,
+					                        expires: date,
 					                        path: "/"
 
 					                    });
@@ -1787,11 +1831,10 @@ $(document).ready(function(){
 					            }
 					        });
 				    	
-				    }
-			       
+				    }		       
 				 ////////new brand
 			} else if($('header .content nav > ul > li.hovered > ul > li:first-child > div').hasClass('A-ZBrands')) {
-
+				
 				var componentUid = $("#componentUid").val();
 			    if ($("li#atozbrandsdiplay").length) {
 			        // console.log("Dipslaying A-Z Brands..");
@@ -1801,11 +1844,11 @@ $(document).ready(function(){
 			                if (key.indexOf("atozbrandmenuhtml") >= 0) {
 			                    window.localStorage.removeItem(key);
 			                    // console.log("Deleting.." + key);
-
 			                }
 			            }
 			        }
-			        if (window.localStorage && (html = window.localStorage.getItem("atozbrandmenuhtml")) && html != "") {
+			        
+					if (window.localStorage && (html = window.localStorage.getItem("atozbrandmenuhtml")) && html != "") {
 			            // console.log("Local");
 			            if ($("div#appendedAtoZBrands") == null || $(
 			                "div#appendedAtoZBrands").length == 0) {
@@ -1813,8 +1856,8 @@ $(document).ready(function(){
 			            }
 			        } else {
 			            // console.log("Server");
-
-			            $.ajax({
+			           
+					   $.ajax({
 			                url: ACC.config.encodedContextPath +
 			                    "/atozbrands",
 			                type: 'GET',
@@ -1856,7 +1899,6 @@ $(document).ready(function(){
 	});
 	
 });
-
 
 	function forceUpdateHeader(){
 		$.ajax({
@@ -1911,7 +1953,7 @@ $(document).ready(function(){
                $("a.headeruserdetails").attr('href','/my-account');
                
                $("a.tracklinkcls").attr('href','#');
-               if(data.notificationCount != null){
+               if(data.notificationCount != null){            	   
 	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications&nbsp;(<span >'+data.notificationCount+'</span>)');
 	               } else {
 	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications');
@@ -2095,6 +2137,7 @@ $(document).ready(function(){
 				$(".azWrapper").eq(1).children("#A-E").removeClass("importantDisplay");
 			}
 		});
+
 	
 		 //changes for performance fixof TPR-561 
 		$(document).ready(function() {
@@ -2104,7 +2147,9 @@ $(document).ready(function(){
 					$.ajax({
 						url: ACC.config.encodedContextPath +  "/shopbydepartment",
 						type: 'GET',
-						cache:false,
+						//cache:false,
+						//changes for CAR-224
+						cache:true,
 						success: function(html) {
 							$(".shopByDepartment_ajax").html(html);
 						}

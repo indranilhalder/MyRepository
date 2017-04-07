@@ -30,11 +30,12 @@ import com.tisl.mpl.marketplacecommerceservices.daos.OTPDao;
 @Component(value = "otpDao")
 public class OTPDaoImpl implements OTPDao
 {
+	private static final String EMAILID = "emailId"; //Sonar fix
+	private static final String MOBILENO = "mobileNo";
+	private static final String LATESTQUERY = "LATESTQUERY";
+	private static final String OTPTYPE = "OTPType";
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(OTPDaoImpl.class);
-	private final static String OTPTYPE = "OTPType";
-	private final static String EMAILID = "emailId";
-	private final static String MOBILENO = "mobileNo";
 
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
@@ -180,7 +181,8 @@ public class OTPDaoImpl implements OTPDao
 				queryString = MarketplacecommerceservicesConstants.LATESTOTPEMAILQUERY;
 			}
 
-			LOG.debug("LATESTQUERY1" + queryString);
+			LOG.debug(LATESTQUERY + queryString);
+
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(EMAILID, emailId);
 			if (StringUtils.isNotEmpty(mobileNo))
@@ -195,7 +197,7 @@ public class OTPDaoImpl implements OTPDao
 			if (CollectionUtils.isNotEmpty(otpList))
 			{
 				otpModel = otpList.get(0);
-				LOG.debug("LATESTQUERY2" + otpModel.getOTPNumber());
+				LOG.debug(LATESTQUERY + otpModel.getOTPNumber());
 			}
 
 			return otpModel;
@@ -243,7 +245,7 @@ public class OTPDaoImpl implements OTPDao
 				queryString = MarketplacecommerceservicesConstants.LATESTOTPQUERYINV;
 			}
 
-			LOG.debug("LATESTQUERY3" + queryString);
+			LOG.debug(LATESTQUERY + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(EMAILID, emailId);
 			if (StringUtils.isNotEmpty(mobileNo))
@@ -258,7 +260,7 @@ public class OTPDaoImpl implements OTPDao
 			if (CollectionUtils.isNotEmpty(otpList))
 			{
 				otpModel = otpList.get(0);
-				LOG.debug("LATESTQUERY4" + otpModel.getOTPNumber());
+				LOG.debug(LATESTQUERY + otpModel.getOTPNumber());
 			}
 
 			return otpModel;

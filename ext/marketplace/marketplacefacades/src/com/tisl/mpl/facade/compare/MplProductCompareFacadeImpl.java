@@ -38,10 +38,14 @@ import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
  */
 public class MplProductCompareFacadeImpl implements MplProductCompareFacade
 {
-
+	//commented for CAR-86
+	/*
+	 * private static final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.PRICE,
+	 * ProductOption.VARIANT_FULL, ProductOption.DELIVERY_MODE_AVAILABILITY, ProductOption.CLASSIFICATION,
+	 * ProductOption.CATEGORIES);
+	 */
 	private static final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.PRICE,
-			ProductOption.VARIANT_FULL, ProductOption.DELIVERY_MODE_AVAILABILITY, ProductOption.CLASSIFICATION,
-			ProductOption.CATEGORIES);
+			ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION, ProductOption.CATEGORIES);
 
 	private ProductService productService;
 
@@ -111,11 +115,11 @@ public class MplProductCompareFacadeImpl implements MplProductCompareFacade
 	public ProductCompareData getWebServicesForProductCompare(final String firstProductCode, final String secondProductCode)
 	{
 
-		final ProductData firstProductData = getProductFacade()
-				.getProductForOptions(getProductService().getProductForCode(firstProductCode), PRODUCT_OPTIONS);
+		final ProductData firstProductData = getProductFacade().getProductForOptions(
+				getProductService().getProductForCode(firstProductCode), PRODUCT_OPTIONS);
 
-		final ProductData secondProductData = getProductFacade()
-				.getProductForOptions(getProductService().getProductForCode(secondProductCode), PRODUCT_OPTIONS);
+		final ProductData secondProductData = getProductFacade().getProductForOptions(
+				getProductService().getProductForCode(secondProductCode), PRODUCT_OPTIONS);
 
 		final List<ProductData> compareList = new ArrayList<ProductData>();
 		compareList.add(firstProductData);
@@ -185,8 +189,8 @@ public class MplProductCompareFacadeImpl implements MplProductCompareFacade
 												if (!StringUtils.isEmpty(firstFeatureValue.getValue()))
 												{
 													final StringBuilder builder = new StringBuilder(firstFeatureValue.getValue())
-															.append(firstFeatureData.getFeatureUnit() != null
-																	? firstFeatureData.getFeatureUnit().getSymbol() : "");
+															.append(firstFeatureData.getFeatureUnit() != null ? firstFeatureData
+																	.getFeatureUnit().getSymbol() : "");
 													compareValueData.setProduct1Value(builder.toString());
 													continue;
 												}
@@ -289,8 +293,8 @@ public class MplProductCompareFacadeImpl implements MplProductCompareFacade
 		{
 			basicCompareData = new ProductBasicCompareData();
 			basicCompareData.setProduct1Value(firstProductData.getBrand() != null ? firstProductData.getBrand().getBrandname() : "");
-			basicCompareData
-					.setProduct2Value(secondProductData.getBrand() != null ? secondProductData.getBrand().getBrandname() : "");
+			basicCompareData.setProduct2Value(secondProductData.getBrand() != null ? secondProductData.getBrand().getBrandname()
+					: "");
 			return basicCompareData;
 		}
 		//if (qualifier.equals("Price")) Critical Sonar fixes
@@ -301,10 +305,10 @@ public class MplProductCompareFacadeImpl implements MplProductCompareFacade
 			final BuyBoxData secondBuyboxData = getBuyBoxFacade().buyboxPrice(secondProductData.getCode());
 			final PriceData firstPrice = getPriceForBuyBox(firstBuyboxData);
 			final PriceData secondPrice = getPriceForBuyBox(secondBuyboxData);
-			basicCompareData.setProduct1Value(
-					firstPrice != null ? firstPrice.getFormattedValue() : MarketplacecommerceservicesConstants.PRICE_NOT_AVAILABLE);
-			basicCompareData.setProduct2Value(
-					secondPrice != null ? secondPrice.getFormattedValue() : MarketplacecommerceservicesConstants.PRICE_NOT_AVAILABLE);
+			basicCompareData.setProduct1Value(firstPrice != null ? firstPrice.getFormattedValue()
+					: MarketplacecommerceservicesConstants.PRICE_NOT_AVAILABLE);
+			basicCompareData.setProduct2Value(secondPrice != null ? secondPrice.getFormattedValue()
+					: MarketplacecommerceservicesConstants.PRICE_NOT_AVAILABLE);
 			return basicCompareData;
 		}
 
@@ -315,10 +319,10 @@ public class MplProductCompareFacadeImpl implements MplProductCompareFacade
 			final BuyBoxData secondBuyboxData = getBuyBoxFacade().buyboxPrice(secondProductData.getCode());
 			final PriceData firstPrice = getMrpPriceForBuyBox(firstBuyboxData);
 			final PriceData secondPrice = getMrpPriceForBuyBox(secondBuyboxData);
-			basicCompareData.setProduct1Value(
-					firstPrice != null ? firstPrice.getFormattedValue() : MarketplacecommerceservicesConstants.PRICE_NOT_AVAILABLE);
-			basicCompareData.setProduct2Value(
-					secondPrice != null ? secondPrice.getFormattedValue() : MarketplacecommerceservicesConstants.PRICE_NOT_AVAILABLE);
+			basicCompareData.setProduct1Value(firstPrice != null ? firstPrice.getFormattedValue()
+					: MarketplacecommerceservicesConstants.PRICE_NOT_AVAILABLE);
+			basicCompareData.setProduct2Value(secondPrice != null ? secondPrice.getFormattedValue()
+					: MarketplacecommerceservicesConstants.PRICE_NOT_AVAILABLE);
 			return basicCompareData;
 		}
 		//if (qualifier.equals("Desc")) Critical Sonar fixes
@@ -333,10 +337,10 @@ public class MplProductCompareFacadeImpl implements MplProductCompareFacade
 		if (("Rating").equals(qualifier))
 		{
 			basicCompareData = new ProductBasicCompareData();
-			basicCompareData.setProduct1Value(
-					firstProductData.getAverageRating() != null ? firstProductData.getAverageRating().toString() : "");
-			basicCompareData.setProduct2Value(
-					secondProductData.getAverageRating() != null ? secondProductData.getAverageRating().toString() : "");
+			basicCompareData.setProduct1Value(firstProductData.getAverageRating() != null ? firstProductData.getAverageRating()
+					.toString() : "");
+			basicCompareData.setProduct2Value(secondProductData.getAverageRating() != null ? secondProductData.getAverageRating()
+					.toString() : "");
 			return basicCompareData;
 		}
 
@@ -410,8 +414,8 @@ public class MplProductCompareFacadeImpl implements MplProductCompareFacade
 			{
 				if (!StringUtils.isEmpty(secondFeatureValue.getValue()))
 				{
-					final StringBuilder builder = new StringBuilder(secondFeatureValue.getValue())
-							.append(secondFeatureData.getFeatureUnit() != null ? secondFeatureData.getFeatureUnit().getSymbol() : "");
+					final StringBuilder builder = new StringBuilder(secondFeatureValue.getValue()).append(secondFeatureData
+							.getFeatureUnit() != null ? secondFeatureData.getFeatureUnit().getSymbol() : "");
 					compareValueData.setProduct2Value(builder.toString());
 					continue;
 				}

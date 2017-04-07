@@ -76,6 +76,12 @@
 					}
 					//TPR-1214
 					$("#newAddressButton,#newAddressButtonUp").click(function() {
+
+				     	$("form#addressForm :input[type=text]").each(function(){
+				    		 var input = $(this);    
+				    		 $(this).val($(this).val().trim());    		     		
+				    	});  
+
 						var validate=true;
 						var regPostcode = /^([1-9])([0-9]){5}$/;
 					    var mob = /^[1-9]{1}[0-9]{9}$/;
@@ -222,6 +228,10 @@
 						 		cache: false,
 						 		dataType: "json",
 						 		success : function(response) {
+						 			//TPR-4745
+						 			if(typeof utag !="undefined"){
+								 		 utag.link({ link_text : 'add_new_address_saved' ,event_type : 'add_new_address_saved'});
+								 		 }
 						 		if(response.hasOwnProperty("error")){
 						 			
 						 		}else if(response.hasOwnProperty("redirect_url")){

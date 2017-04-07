@@ -28,6 +28,7 @@ import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplPincodeRestrictionDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
+import com.tisl.mpl.marketplacecommerceservices.services.product.MplProductService;
 import com.tisl.mpl.model.RestrictionsetupModel;
 
 
@@ -58,6 +59,9 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 
 	@Resource(name = "productService")
 	private ProductService productService;
+
+	@Resource(name = "productService")
+	private MplProductService mplProductService;
 
 
 	@Resource(name = "defaultPromotionManager")
@@ -259,20 +263,20 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 
 	/*
 	 * This method will check whether fulfillment type is matching or not.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param reqData
-	 * 
-	 * 
+	 *
+	 *
 	 * @param fullfillmentType
-	 * 
-	 * 
+	 *
+	 *
 	 * @param ussId
-	 * 
-	 * 
+	 *
+	 *
 	 * @param selleId
-	 * 
-	 * 
+	 *
+	 *
 	 * @return flag
 	 */
 	private boolean checkFullfillmentType(final List<PincodeServiceData> reqData, final String fullfillmentType,
@@ -326,15 +330,29 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 	private List<String> getCategoryCodeListCart(final List<String> productCodeList)
 	{
 		final Set<String> categorySet = new HashSet<String>();
-		for (final String listingID : productCodeList)
-		{
-			if (listingID != null)
-			{
-				LOG.debug("Listing ID of the product" + listingID);
 
-				final ProductModel productModel = productService.getProductForCode(
-						catalogVersionService.getCatalogVersion("mplProductCatalog", "Online"), listingID);
+		//	final CatalogVersionModel catalogVersion=catalogVersionService.getCatalogVersion("mplProductCatalog", "Online");
+
+		final List<ProductModel> productModelList = mplProductService.getProductListForCodeList(
+				catalogVersionService.getCatalogVersion("mplProductCatalog", "Online"), productCodeList);
+		LOG.info("*************" + productModelList.size());
+
+
+
+		//for (final String listingID : productCodeList)
+		//{
+		//if (listingID != null)
+		{
+			//	LOG.debug("Listing ID of the product" + listingID);
+
+
+			//	final ProductModel productModel = productService.getProductForCode(
+			//		catalogVersionService.getCatalogVersion("mplProductCatalog", "Online"), listingID);
+
+			for (final ProductModel productModel : productModelList)
+			{
 				//TISEE-6376
+
 				if (productModel != null)
 				{
 					final List<CategoryModel> categoryModelList = defaultPromotionManager.getcategoryData(productModel);
@@ -356,6 +374,7 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 				}
 			}
 		}
+		//}
 		return new ArrayList<String>(categorySet);
 	}
 
@@ -510,14 +529,14 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 				//End - Code additon TISPRO-167
 				/*
 				 * else {
-				 * 
+				 *
 				 * for (final Map.Entry<String, List<String>> entry : restricteddeliveryModeMap.entrySet()) { if
 				 * (entry.getValue().contains(deliveryModeData.getName())) {
 				 * pincodeServiceData.getDeliveryModes().remove(deliveryModeData); break; }
-				 * 
+				 *
 				 * }
-				 * 
-				 * 
+				 *
+				 *
 				 * }
 				 */
 

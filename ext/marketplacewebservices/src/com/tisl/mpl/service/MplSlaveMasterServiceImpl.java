@@ -64,7 +64,7 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 	@Override
 	public String insertUpdate(final SellerSlaveDTO sellerSlaveDto)
 	{
-		LOG.debug("from insertUpdate SlaveMaster ServiceImpl");
+		LOG.debug("from insertUpdate SlaveMaster ServiceImpl:(timestamp)::"+new java.util.Date());
 		String status = MarketplacecommerceservicesConstants.SUCCESSS_RESP;
 		final List<SlaveInfoDTO> list = sellerSlaveDto.getSlaveInfo();
 		CountryModel countryModel = null;
@@ -73,6 +73,9 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 			for (final SlaveInfoDTO slaveInfoDto : list)
 			{
 				final String slaveId = slaveInfoDto.getSlaveid();
+				
+				LOG.debug("insertUpdate SlaveId::"+slaveId);
+				
 				//call dao to check existing slave
 				PointOfServiceModel posModel;
 				try
@@ -86,6 +89,7 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 				}
 				if (posModel != null)
 				{
+					LOG.debug("pointOfService exist for SlaveId::"+slaveId);
 					if (StringUtils.isNotEmpty(slaveInfoDto.getType()))
 					{
 						//update the store
@@ -577,6 +581,7 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 				}
 				else
 				{
+					LOG.debug("pointOfService doesn't exist for SlaveId::"+slaveId);
 					if (StringUtils.isNotEmpty(slaveInfoDto.getType()))
 					{
 						posModel = (PointOfServiceModel) modelService.create(PointOfServiceModel.class);

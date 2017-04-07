@@ -8,6 +8,18 @@
 <template:javaScriptVariables />
 
 <script>
+//Added for TISPRD-8621
+$(document).ready(function(){
+	var location = window.location.href.split('?')[0];
+	var params = window.location.href.split('?')[1];
+	console.log(location);
+	console.log(params);
+	if(!params) {
+		window.history.replaceState("","",location);
+	}
+});
+//Added for TISPRD-8621
+
 var loginStatus = '${sessionScope.loginSuccess}';
 
 $(document).on("click", ".header-myAccountSignOut", function() {
@@ -18,12 +30,34 @@ $(document).on("click", ".header-myAccountSignOut", function() {
 /* $(document).on("click","form .pagination_a_link",function(e){
 	e.preventDefault();
 	var hrefurl = $(this).attr('href');
+	// Added For TISPRD-8621
+	var searchCategory = $("#paginationForm input[name='searchCategory']").val();	
+	var q = $("#paginationForm input[name='q']").val();
+	var pageSize = $("#paginationForm input[name='pageSize']").val();	
+	
+	if (!searchCategory && ( q === ":relevance" || q.indexOf(":relevance:isLuxuryProduct:false") != -1 )) {	
+	$("#paginationForm").find(':input[name="searchCategory"]').attr('disabled', true);	
+	$("#paginationForm").find(':input[name="q"]').attr('disabled', true);
+	$("#paginationForm").find(':input[name="pageSize"]').attr('disabled', true);
+	}
+	// Added For TISPRD-8621
 	$("#paginationForm").attr("action", hrefurl);
 	$(this).closest('form').submit();
  });  
  $(document).on("click","form .pagination_a_link",function(e){
 		e.preventDefault();
 		var hrefurl = $(this).attr('href');
+		// Added For TISPRD-8621
+		var searchCategory = $("#paginationForm input[name='searchCategory']").val();	
+		var q = $("#paginationForm input[name='q']").val();
+		var pageSize = $("#paginationForm input[name='pageSize']").val();
+		
+		if (!searchCategory && ( q === ":relevance" || q.indexOf(":relevance:isLuxuryProduct:false") != -1 )) {	
+		$("#paginationFormBottom").find(':input[name="searchCategory"]').attr('disabled', true);	
+		$("#paginationFormBottom").find(':input[name="q"]').attr('disabled', true);
+		$("#paginationFormBottom").find(':input[name="pageSize"]').attr('disabled', true);
+		}
+		// Added For TISPRD-8621
 		$("#paginationFormBottom").attr("action", hrefurl);
 		$(this).closest('form').submit();
 	 });  */

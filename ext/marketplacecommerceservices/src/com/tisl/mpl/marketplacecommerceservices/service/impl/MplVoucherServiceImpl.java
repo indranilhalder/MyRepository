@@ -10,6 +10,7 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.ConsistencyCheckException;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
@@ -24,6 +25,7 @@ import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.jalo.util.VoucherEntry;
 import de.hybris.platform.voucher.jalo.util.VoucherEntrySet;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
+import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.math.BigDecimal;
@@ -44,6 +46,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.daos.MplVoucherDao;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
@@ -76,6 +79,9 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	private MplCommerceCartCalculationStrategy mplCommerceCartCalculationStrategy;
 	@Resource(name = "discountUtility")
 	private DiscountUtility discountUtility;
+
+	@Resource(name = "mplVoucherDao")
+	private MplVoucherDao mplVoucherDao;
 
 
 
@@ -117,7 +123,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				parameter.setEnableHooks(true);
 				parameter.setCart(cartModel);
 				getMplCommerceCartCalculationStrategy().recalculateCart(parameter);
-				
+
 				//Code for Shipping Promotion & Voucher Integration
 				//TPR-1702
 				if (validateForShippingPromo(cartModel.getAllPromotionResults()))
@@ -127,8 +133,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				//TPR-1702 : Changes Ends
 
 				cartModel.setDeliveryCost(deliveryCost);
-//				cartModel.setTotalPrice(Double.valueOf((null == cartModel.getTotalPrice() ? 0.0d : cartModel.getTotalPrice()
-//						.doubleValue()) + (null == deliveryCost ? 0.0d : deliveryCost.doubleValue())));
+				//				cartModel.setTotalPrice(Double.valueOf((null == cartModel.getTotalPrice() ? 0.0d : cartModel.getTotalPrice()
+				//						.doubleValue()) + (null == deliveryCost ? 0.0d : deliveryCost.doubleValue())));
 				//TPR-1702 : Changes for Shipping + Coupon
 				cartModel.setTotalPrice(Double.valueOf((null == cartModel.getTotalPrice() ? 0.0d : cartModel.getTotalPrice()
 						.doubleValue()) + (null == deliveryCost ? 0.0d : deliveryCost.doubleValue()) - modDeliveryCost.doubleValue()));
@@ -163,7 +169,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				parameter.setEnableHooks(true);
 				parameter.setOrder(orderModel);
 				getMplCommerceCartCalculationStrategy().recalculateCart(parameter);
-				
+
 				//Code for Shipping Promotion & Voucher Integration
 				//TPR-1702
 				if (validateForShippingPromo(orderModel.getAllPromotionResults()))
@@ -177,7 +183,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				orderModel.setTotalPrice(Double.valueOf((null == orderModel.getTotalPrice() ? 0.0d : orderModel.getTotalPrice()
 						.doubleValue()) + (null == deliveryCost ? 0.0d : deliveryCost.doubleValue()) - modDeliveryCost.doubleValue()));
 				//TPR-1702 : Changes for Shipping + Coupon
-				
+
 				// Freebie item changes
 				getMplCommerceCartService().saveDeliveryMethForFreebie(orderModel, freebieModelMap, freebieParentQtyMap);
 
@@ -988,6 +994,21 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			setApportionedValueForVoucher(voucher, cartModel, voucher.getVoucherCode(), applicableOrderEntryList); //Apportioning voucher discount
 		}
 		//setting coupon discount ends
+	}
+
+	/**
+	 * This method returns Invalidation model for a particular voucher-user-order
+	 *
+	 * @param voucher
+	 * @param user
+	 * @param order
+	 * @return VoucherInvalidationModel
+	 */
+	@Override
+	public VoucherInvalidationModel findVoucherInvalidation(final VoucherModel voucher, final UserModel user,
+			final OrderModel order)
+	{
+		return mplVoucherDao.findVoucherInvalidation(voucher, user, order);
 	}
 
 

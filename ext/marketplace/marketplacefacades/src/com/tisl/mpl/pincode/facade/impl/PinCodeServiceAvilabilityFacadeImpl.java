@@ -79,7 +79,7 @@ public class PinCodeServiceAvilabilityFacadeImpl implements PinCodeServiceAvilab
 	public List<PinCodeResponseData> getServiceablePinCodeCart(final String pincode, final List<PincodeServiceData> requestData)
 			throws EtailNonBusinessExceptions, ClientEtailNonBusinessExceptions
 	{
-		final List<PinCodeResponseData> response = mplCommerceCartService.getServiceablePinCodeCart(pincode, requestData);
-		return response;
+		//final List<PinCodeResponseData> response = mplCommerceCartService.getServiceablePinCodeCart(pincode, requestData);
+		return mplCommerceCartService.getServiceablePinCodeCart(pincode, requestData);
 	}
 }

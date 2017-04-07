@@ -162,7 +162,7 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.impl.MplCheckoutFacadeImpl;
 import com.tisl.mpl.facade.mystyleprofile.MyStyleProfileFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
-import com.tisl.mpl.facades.account.address.AccountAddressFacade;
+import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.preference.MplPreferenceFacade;
 import com.tisl.mpl.facades.account.register.FriendsInviteFacade;
@@ -353,7 +353,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@Autowired
 	private WishlistFacade wishlistFacade;
 	@Autowired
-	private AccountAddressFacade accountAddressFacade;
+	private MplAccountAddressFacade accountAddressFacade;
 	@Autowired
 	private FriendsInviteFacade friendsInviteFacade;
 	@Autowired
@@ -2155,6 +2155,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 	{
 		try
 		{
+			//added for car project: Car:80
+			final OrderModel orderModel = orderModelService.getOrder(orderCode);
+			//added for car project ends
 			final SendTicketRequestData sendTicketRequestData = new SendTicketRequestData();
 			final CustomerData customerData = customerFacade.getCurrentCustomer();
 			if (!(StringUtils.isEmpty(action)) && !(StringUtils.isBlank(action)) && !(StringUtils.isEmpty(orderCode))
@@ -2180,7 +2183,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 					invoiceData.setCustomerEmail(customerData.getDisplayUid());
 					invoiceData.setInvoiceUrl(configurationService.getConfiguration().getString(MessageConstants.DEFAULT_INVOICE_URL));
 					invoiceData.setOrdercode(orderCode);
-					registerCustomerFacade.sendInvoice(invoiceData, null);
+					//orderModel added for car project implementation in sendInvoice
+					registerCustomerFacade.sendInvoice(invoiceData, null, orderModel);
 
 					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.CONF_MESSAGES_HOLDER,
 							MessageConstants.TEXT_ACCOUNT_ORDER_INVOICE_SUCCESS, null);
@@ -2291,7 +2295,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 				sendInvoiceData.setOrdercode(orderCode);
 				sendInvoiceData.setTransactionId(transactionId);
 				sendInvoiceData.setLineItemId(lineID);
-				registerCustomerFacade.sendInvoice(sendInvoiceData, null);
+				//orderModel added for car project implementation in sendInvoice
+				registerCustomerFacade.sendInvoice(sendInvoiceData, null, orderModel);
 
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.CONF_MESSAGES_HOLDER,
 						MessageConstants.TEXT_ACCOUNT_ORDER_INVOICE_SUCCESS, null);
@@ -6794,22 +6799,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	}
 
 
-	/**
-	 * @return the accountAddressFacade
-	 */
-	public AccountAddressFacade getAccountAddressFacade()
-	{
-		return accountAddressFacade;
-	}
 
-	/**
-	 * @param accountAddressFacade
-	 *           the accountAddressFacade to set
-	 */
-	public void setAccountAddressFacade(final AccountAddressFacade accountAddressFacade)
-	{
-		this.accountAddressFacade = accountAddressFacade;
-	}
 
 	/**
 	 * @return the mplOrderFacade
@@ -7176,6 +7166,23 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 			}
 		}
+	}
+
+	/**
+	 * @return the accountAddressFacade
+	 */
+	public MplAccountAddressFacade getAccountAddressFacade()
+	{
+		return accountAddressFacade;
+	}
+
+	/**
+	 * @param accountAddressFacade
+	 *           the accountAddressFacade to set
+	 */
+	public void setAccountAddressFacade(final MplAccountAddressFacade accountAddressFacade)
+	{
+		this.accountAddressFacade = accountAddressFacade;
 	}
 
 }

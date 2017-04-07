@@ -31,6 +31,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MplConstants;
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 
 
 public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
@@ -39,7 +40,7 @@ public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldVa
 	/**
 	 *
 	 */
-	private static final String LSH1 = "LSH1";
+	//private static final String LSH1 = "LSH1";
 	private CategorySource categorySource;
 	private FieldNameProvider fieldNameProvider;
 	private CategoryService categoryService;
@@ -133,7 +134,7 @@ public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldVa
 			for (final List categoryPath : pathsForCategory)
 			{
 				if (categoryPath != null && categoryPath.size() > 0 && isLuxury
-						&& ((CategoryModel) categoryPath.get(0)).getCode().contains(LSH1))
+						&& ((CategoryModel) categoryPath.get(0)).getCode().contains(MarketplaceCoreConstants.LSH1))
 				{
 					accumulateCategoryPaths(categoryPath, allPaths);
 				}

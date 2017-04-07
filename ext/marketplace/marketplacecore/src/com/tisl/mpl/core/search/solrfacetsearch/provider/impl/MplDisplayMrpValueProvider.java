@@ -27,7 +27,10 @@ import javax.annotation.Resource;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.util.CollectionUtils;
 
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.util.MplBuyBoxUtility;
@@ -48,7 +51,8 @@ public class MplDisplayMrpValueProvider extends AbstractPropertyFieldValueProvid
 	@Resource
 	private BuyBoxService buyBoxService;
 	private PriceDataFactory priceDataFactory;
-	public static final String INR = "INR";
+
+	//public static final String INR = "INR";
 
 	protected PriceDataFactory getPriceDataFactory()
 	{
@@ -120,15 +124,22 @@ public class MplDisplayMrpValueProvider extends AbstractPropertyFieldValueProvid
 				//Included for Electronics Product
 				final String sizeVariantColour = mplBuyBoxUtility.getVariantColour(pcmSizeVariantModel);
 
+				// Added For INC144314878 - MOP not reflecting in PLP while selecting Size
+				final List<BuyBoxModel> priceListForProduct = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode());
+
 				final String pcmVariantColour = mplBuyBoxUtility.getVariantColour(pcmVariantModel);
 				if (sizeVariantColour != null && pcmVariantColour != null && sizeVariantColour.equalsIgnoreCase(pcmVariantColour)
 						&& pcmSizeVariantModel.getSize() != null)
 				{
+					if (null != priceListForProduct && !CollectionUtils.isEmpty(priceListForProduct))
+					{
 
-					final Double price = buyBoxService.getBuyboxPricesForSearch(pcmSizeVariantModel.getCode()).get(0).getMrp();
-					final JSONObject sizePriceJson = new JSONObject();
-					sizePriceJson.put(pcmSizeVariantModel.getSize().toUpperCase(), price);
-					sizePriceJsonArray.add(sizePriceJson);
+						final Double price = priceListForProduct.get(0).getMrp();
+						final JSONObject sizePriceJson = new JSONObject();
+						sizePriceJson.put(pcmSizeVariantModel.getSize().toUpperCase(), price);
+						sizePriceJsonArray.add(sizePriceJson);
+
+					}
 				}
 
 			}
@@ -196,7 +207,7 @@ public class MplDisplayMrpValueProvider extends AbstractPropertyFieldValueProvid
 	public PriceData formPriceData(final Double price)
 	{
 
-		return priceDataFactory.create(PriceDataType.BUY, new BigDecimal(price.doubleValue()), INR);
+		return priceDataFactory.create(PriceDataType.BUY, new BigDecimal(price.doubleValue()), MarketplaceCoreConstants.INR);
 	}
 
 	/**

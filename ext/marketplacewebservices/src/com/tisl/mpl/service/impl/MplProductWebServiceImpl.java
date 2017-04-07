@@ -132,7 +132,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	private static final String Y = "Y";
 	private static final String N = "N";
-	//private static final String WARRANTY = "Warranty";
+
 	private static final String HTTP = "http";
 	private static final String HTTPS = "https";
 
@@ -275,7 +275,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -306,13 +306,15 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		{
 
 			String sharedText = Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_PRE);
-			productModel = productService.getProductForCode(defaultPromotionManager.catalogData(), productCode);
+			//CAR-86
+			//productModel = productService.getProductForCode(defaultPromotionManager.catalogData(), productCode);
+			productModel = productService.getProductForCode(productCode);
 			if (null != productModel)
 			{
 				productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 						ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL,
-						ProductOption.DELIVERY_MODE_AVAILABILITY, ProductOption.SELLER));
+						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL, ProductOption.SELLER));
+
 				//TISPT-396
 				/*
 				 * productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
@@ -728,7 +730,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @param productData
 	 * @return List<String>
 	 */
-	//	private List<String> getWarrantyOfProduct(final Map<String, String> mapConfigurableAttribute, final ProductData productData)
 	//	{
 	//		final List<String> warrantyList = new ArrayList<String>();
 	//		try
@@ -817,7 +818,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		String knowMoreFifth = null;
 		// Added for INC_11931
 		String knowMoreSecLux = null;
-		String knowMoreThLux = null;
+		String knowMoreSecLuxLessThanZero = null; //changes for INC144314533
+		//final String knowMoreThLux = null;
 		final List<KnowMoreDTO> knowMoreList = new ArrayList<KnowMoreDTO>();
 		KnowMoreDTO knowMoreItem = null;
 		final String cliqCareNumber = configurationService.getConfiguration().getString("cliq.care.number");
@@ -850,27 +852,18 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		}
 
 		//Start Code change for INC_11931
-		//		if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX)))
-		//		{
-		//			knowMoreSecLux = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX);
-		//
-		//			if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX)))
-		//			{
-		//				knowMoreThLux = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX);
-		//			}
-		//		}
 		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
 				MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX)))
 		{
 			knowMoreSecLux = configurationService.getConfiguration().getString(
 					MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX);
-
-			if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
-					MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX)))
-			{
-				knowMoreThLux = configurationService.getConfiguration().getString(
-						MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX);
-			}
+		}
+		//changes for INC144314533
+		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
+				MarketplacewebservicesConstants.KNOW_MORE_SECOND_LUX_LESS_THAN_ZERO)))
+		{
+			knowMoreSecLuxLessThanZero = configurationService.getConfiguration().getString(
+					MarketplacewebservicesConstants.KNOW_MORE_SECOND_LUX_LESS_THAN_ZERO);
 		}
 		//End Code change for INC_11931
 		if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_FOURTH)))
@@ -900,41 +893,42 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		{
 
 			//Start Code change for INC_11931
-			//			if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX)))
-			//			{
-			//				knowMoreSecLux = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX);
-			//
-			//				if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX)))
-			//				{
-			//					knowMoreThLux = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX);
-			//				}
-			//			}
 
 			if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
 					MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX)))
 			{
 				knowMoreSecLux = configurationService.getConfiguration().getString(
 						MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX);
-
-				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
-						MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX)))
-				{
-					knowMoreThLux = configurationService.getConfiguration().getString(
-							MarketplacewebservicesConstants.KNOW_MORE_THIRD_FOR_LUX);
-				}
+			}
+			//changes for INC144314533
+			if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
+					MarketplacewebservicesConstants.KNOW_MORE_SECOND_LUX_LESS_THAN_ZERO)))
+			{
+				knowMoreSecLuxLessThanZero = configurationService.getConfiguration().getString(
+						MarketplacewebservicesConstants.KNOW_MORE_SECOND_LUX_LESS_THAN_ZERO);
 			}
 
 			//End Code change for INC_11931
+
+
+
+			//changes for INC144314533
 
 			if (productModel.getLuxIndicator() != null
 					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(MarketplaceCoreConstants.LUXURY))
 			{
 				if (StringUtils.isNotEmpty(knowMoreSecLux) && StringUtils.isNotEmpty(returnWindow)
-						&& StringUtils.isNotEmpty(knowMoreThLux))
+						&& Integer.parseInt(returnWindow) > 0)
 				{
 					knowMoreItem = new KnowMoreDTO();
-					knowMoreItem.setKnowMoreItem(knowMoreSecLux + MarketplacecommerceservicesConstants.SPACE + returnWindow
-							+ MarketplacecommerceservicesConstants.SPACE + knowMoreThLux);
+					knowMoreItem.setKnowMoreItem(knowMoreSecLux);
+					knowMoreList.add(knowMoreItem);
+				}
+				else if (StringUtils.isNotEmpty(knowMoreSecLuxLessThanZero)
+						&& (StringUtils.isEmpty(returnWindow) || Integer.parseInt(returnWindow) <= 0))
+				{
+					knowMoreItem = new KnowMoreDTO();
+					knowMoreItem.setKnowMoreItem(knowMoreSecLuxLessThanZero);
 					knowMoreList.add(knowMoreItem);
 				}
 			}
@@ -1683,7 +1677,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @param productData
 	 * @return Map<String, String>
 	 */
-	//	private Map<String, String> getSpecificationsOfProduct(final ProductData productData)
+
 	//	{
 	//		final Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
 	//		try

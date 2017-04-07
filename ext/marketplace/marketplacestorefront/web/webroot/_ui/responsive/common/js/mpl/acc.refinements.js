@@ -1,7 +1,13 @@
-
 var updatedsearchQuery = "";
 var dummyForm ;
 var lessBrands = [];
+var facetAjaxUrl = '';
+var productItemArray = [];
+var res;
+var filterValue = "";
+var filterName = "";
+var filterChecked = "";
+
 ACC.refinements = {
 
 	_autoload: [
@@ -126,9 +132,10 @@ ACC.refinements = {
 					}
 				}
 			})
-			
+			//UF-254 later page push is not considered . Putting page 1 for default.
+			var browserUrlLazy = appendPageNo(browserURL[0]);
 			// generating postAjaxURL
-			var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
+			var pageURL = browserUrlLazy +'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
 			var requiredUrl="";
 			var action = $(this).parents("form").attr('action');
 			
@@ -170,13 +177,20 @@ ACC.refinements = {
 				}
 			}
 			
+			// TPR-645 Start  INC_11511  fix--h3 tag done
+			filterValue = $(this).parent().find('span.facet-text').text().trim();
+			filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
+			if($(this).attr('checked')){
+				filterChecked = true;
+				//onFilterRemoveAnalytics(filterName,filterValue);
+			}
+			else{
+				filterChecked = false;
+				//onFilterAddAnalytics(filterName,filterValue);
+			}
+			// TPR-645 End
 			// AJAX call
 			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
-			// TPR-645 Start  INC_11511  fix--h3 tag done
-			var filterValue = $(this).parent().find('span.facet-text').text().trim();
-			var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
-			onFilterClickAnalytics(filterName,filterValue);
-			// TPR-645 End
 		})
 		
 		// TPR-845
@@ -262,9 +276,9 @@ ACC.refinements = {
 					}
 				}
 			})
-			
+			var browserUrlLazy = appendPageNo(browserURL[0]);
 			// generating postAjaxURL
-			var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
+			var pageURL = browserUrlLazy +'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
 			var requiredUrl="";
 			var action = $(this).parents("form").attr('action');
 			
@@ -305,8 +319,6 @@ ACC.refinements = {
 					requiredUrl = action;
 				}
 			}
-			// AJAX call
-			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
 			// TPR-645 Start INC_11511  fix--h3 tag done
 			var filterValue = '';
 			var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
@@ -317,8 +329,18 @@ ACC.refinements = {
 				// console.log($(this).attr('class').text());
 				filterValue = $(this).parent().find('span > span').text();
 			}
-			onFilterClickAnalytics(filterName,filterValue);
+			if($(this).attr('checked')){
+				filterChecked = true;
+				//onFilterRemoveAnalytics(filterName,filterValue);
+			}
+			else{
+				filterChecked = false;
+				//onFilterAddAnalytics(filterName,filterValue);
+			}
 			// TPR-645 End
+			// AJAX call
+			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
+			
 		});
 		
 		// TPR-845
@@ -385,8 +407,24 @@ ACC.refinements = {
 				requiredUrl = action[0].concat("/getFacetData");
 			}
 			
+			//Utag Fire on remove filter or any price start
+			if($(this).attr('class') == "remove_filter"){
+				filterName=$(this).parents('li').children().eq(0).attr('class');
+				filterValue=$(this).parents('li').children().eq(1).attr('value');
+				filterChecked = true;
+				//onFilterRemoveAnalytics(filterName,filterValue);
+			}
+			else{
+				filterName="price"
+				filterValue=$('.facet-list.filter-opt .price').siblings('.applied-color').val();
+				filterChecked = true;
+				//onFilterRemoveAnalytics(filterName,filterValue);
+			}
+			
 			// AJAX call
 			filterDataAjax(requiredUrl,dataString,pageURL);
+			
+			//utag firing on remove filter or any price end
 			return false;
 		});
 		
@@ -416,9 +454,17 @@ ACC.refinements = {
 		
 		$(document).on("click",".js-product-facet .js-more-facet-values-link",function(e){
 			e.preventDefault();
-			$(this).parents(".js-facet").find(".js-facet-top-values").hide();
-			$(this).parents(".js-facet").find(".js-facet-list-hidden").show();
-
+			if($('.brandSearchTxt').val()=="")
+			{
+				$(this).parents(".js-facet").find(".js-facet-top-values").hide();
+				$(this).parents(".js-facet").find(".js-facet-list-hidden").show();
+				
+				$(this).parents(".js-facet").find(".js-facet-list-hidden span.facet-label").show();
+			}
+			else
+			{
+				$('.marked').css("display","block");				
+			}
 			$(this).parents(".js-facet").find(".js-more-facet-values").hide();
 			$(this).parents(".js-facet").find(".js-less-facet-values").show();
 		});
@@ -426,10 +472,15 @@ ACC.refinements = {
 			$(document).on("click",".js-less-facet-values-link",function(e){
 			e.preventDefault();
 			//var brandFacet = [];
-			
-			$(this).parents(".js-facet").find(".js-facet-top-values").show();
-			$(this).parents(".js-facet").find(".js-facet-list-hidden").hide();
-
+			if($('.brandSearchTxt').val()=="")
+			{
+				$(this).parents(".js-facet").find(".js-facet-top-values").show();
+				$(this).parents(".js-facet").find(".js-facet-list-hidden").hide();
+			}
+			else
+			{
+				$('.marked').css("display","none");				
+			}
 			$(this).parents(".js-facet").find(".js-more-facet-values").show();
 			$(this).parents(".js-facet").find(".js-less-facet-values").hide();
 		});
@@ -523,9 +574,9 @@ ACC.refinements = {
 						}
 					}
 				})
-				
+				var browserUrlLazy = appendPageNo(browserURL[0]);
 				// generating postAjaxURL
-				var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/:/g,"%3A");
+				var pageURL = browserUrlLazy +'?'+nonEmptyDataString.replace(/:/g,"%3A");
 				var requiredUrl="";
 				var action = dummyForm.attr('action');
 				
@@ -568,7 +619,8 @@ ACC.refinements = {
 				}
 				// AJAX call
 				// console.log("Controle Came");
-
+				filterValue = "";
+				filterName = "";
 				filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
 				return false;
 			}	
@@ -717,7 +769,7 @@ ACC.refinements = {
 				
 			});
 		});
-		$(document).on("click",".pagination.mobile li a",function(e){
+		/*$(document).on("click",".pagination.mobile li a",function(e){
 				if ($("input[name=customSku]").val()) {			
 					// for pagination ajax call
 					e.preventDefault();
@@ -743,7 +795,7 @@ ACC.refinements = {
 					});
 					return false;
 				}
-		});
+		});*/
 		
 
 		$(document).on("click",".priceBucketExpand, .any_price_mobile",function(e){
@@ -778,6 +830,7 @@ ACC.refinements = {
 
 // function implements AJAX : TPR-198
 function filterDataAjax(requiredUrl,dataString,pageURL){
+	facetAjaxUrl = pageURL;
 	console.log(requiredUrl);
 	console.log(pageURL);
 	if ($("input[name=customSku]").val()) {
@@ -792,21 +845,43 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			// console.log(response);
 			// putting AJAX respons to view
 			if($("#isCategoryPage").val() == 'true' && !$("input[name=customSku]").val()){
-				$("#productGrid").html(response);
+				//$("#productGrid").html(response);
+				lazyPaginationFacet(response);
+
 			}		
 			else{
 				
 				if(requiredUrl.indexOf("offer") > -1 || requiredUrl.indexOf("viewOnlineProducts") > -1 || requiredUrl.indexOf("/s/") > -1){
-					$("#productGrid").html(response);
+					//$("#productGrid").html(response);
+					lazyPaginationFacet(response);
+
 				}
 				else{
 					$("#facetSearchAjaxData").html(response);
+					lazyPaginationFacet(response);
 				}
 			}
 			
 			$("#no-click").remove();
 			$(".spinner").remove();
-			
+			//UF-15
+			if ($(".facet-list.filter-opt").children().length){
+				$("body.page-productGrid .product-listing.product-grid.lazy-grid, body.page-productGrid .product-listing.product-grid.lazy-grid-facet, body.page-productGrid .product-listing.product-grid.lazy-grid-normal").css("padding-top","15px");  //INC144315068
+				$("body.page-productGrid .facet-list.filter-opt").css("padding-top","65px");
+				/* UF-253 start */
+				if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
+				var sort_height ="-" + $(".facet-list.filter-opt").outerHeight() + "px";
+				$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top",sort_height);
+				}
+				else{
+					var sort_height =$(".facet-list.filter-opt").outerHeight() - 12 + "px";
+					$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top",sort_height);	
+				}
+				/* UF-253 end */
+			}
+			else{
+				//$("body.page-productGrid .product-listing.product-grid").css("margin-top","60px");  //INC144315068
+			}
 			// Keeps expansion-closure state of facets
 			$(".facet-name.js-facet-name h3").each(function(){
 				if($(this).hasClass("true")){
@@ -859,6 +934,14 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 				$("#clickToMore").hide();
 				});	
 			// TPR-158 and TPR-413 ends here
+			//TPR-4720 first 5 product display
+			if($('#pageType').val() == "productsearch"){
+				populateFirstFiveProductsSerp();	
+			}
+			
+			if($('#pageType').val() == "category" || $('#pageType').val() == "electronics"){
+				populateFirstFiveProductsPlp();
+			}
 		},
 		error : function(xhr, status, error) {
 			$('#wrongPin,#unsevisablePin,#emptyPin')
@@ -870,6 +953,14 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 		complete: function() {
 			// AJAX changes for custom price filter
 			loadPriceRange();
+			if(filterName != "" && filterValue != ""){
+				if(filterChecked == true){
+					onFilterRemoveAnalytics(filterName,filterValue);
+				}
+				else{
+					onFilterAddAnalytics(filterName,filterValue);
+				}
+			}
 		}
 	});
 	
@@ -896,16 +987,32 @@ function createSearchQuery(filterMobileQuery){
 	return queryString;
 }
 
-// TPR-645
-function onFilterClickAnalytics(filterName,filterValue){
-	var msg = (filterName+"_"+filterValue).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+// TPR-645,TPR-4704,TPR-4719
+
+function onFilterAddAnalytics(filterName,filterValue){
+	var filter_type = (filterName).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	var filter_value = (filterValue).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	
 	utag.link({
-		link_obj: this,
-		link_text: msg ,
-		event_type : 'search_filter_usage',
-		search_filter : msg
+		link_text: 'search_filter_applied' ,
+		event_type : 'search_filter_applied',
+		"filter_type" : filter_type,
+		"filter_value" : filter_value
 	});
 }
+
+function onFilterRemoveAnalytics(filterName,filterValue){
+	var filter_type = (filterName).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	var filter_value = (filterValue).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	
+	utag.link({
+		link_text: 'search_filter_removed' ,
+		event_type : 'search_filter_removed',
+		"filter_type" : filter_type,
+		"filter_value" : filter_value
+	});
+}
+
 
 function loadMobilePriceRange(){
 	var q = updatedsearchQuery;
@@ -955,5 +1062,69 @@ function removeMobilePriceRange(){
 }
 
 
+function isCustomSku(requiredUrl){
+	if (($("input[name=customSku]").length) && ($("input[name=customSku]").val() == "true")) {			
+		// for pagination ajax call
+		var dataString = '';
+		$.ajax({
+			contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			data : dataString,
+			success : function(response) {
+				// putting AJAX respons to view
+				$('#facetSearchAjaxData .right-block, #facetSearchAjaxData .bottom-pagination, #facetSearchAjaxData .facet-list.filter-opt').remove();
+				$('#facetSearchAjaxData .left-block').after(response);
+			},
+			error : function(xhr, status, error) {				
+				console.log("Error >>>>>> " + error);
+			},
+			complete: function() {
+			// AJAX changes for custom price filter
+			}
+		});
+		return false;
+	}
+	return true;
+}
 
+//UF-15
+function lazyPaginationFacet(response){
+	res = response;
+	var ulProduct = $(response).find('ul.product-listing.product-grid,ul.product-list');
+	//Add to bag and quick view ui fixes starts here
+	$(".product-tile .image .item.quickview").each(function(){
+    	if($(this).find(".addtocart-component").length == 1){
+    		$(this).addClass("quick-bag-both");
+    	}
+    });
+	//Add to bag and quick view ui fixes ends here
+	productItemArray = [];
+    $(ulProduct).find('li.product-item').each(function() {
+        productItemArray.push($(this));
+    });
+    console.log(""+productItemArray);
+	$("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list", response));
+	initPageLoad = true;
+    innerLazyLoad({isSerp:true});
+    
+}
 
+//UF-15
+(function($) {
+    $.strRemove = function(theTarget, theString) {
+        return $("<div/>").append(
+            $(theTarget, theString).empty().end()
+        ).html();
+    };
+})(jQuery);
+
+//UF-254
+function appendPageNo(url){
+	var modifiedUrl = null;
+	if(!(/page-[0-9]+/).test(url)){
+		modifiedUrl = url.replace(/[/]$/,"") + '/page-1';
+	}else{
+		modifiedUrl = url;
+	}
+	return modifiedUrl;
+}

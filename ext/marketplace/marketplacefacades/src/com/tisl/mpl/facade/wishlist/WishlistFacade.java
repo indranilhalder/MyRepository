@@ -25,6 +25,9 @@ public interface WishlistFacade
 
 	Wishlist2Model removeProductFromWl(final String productCode, final String wishlistName, String ussid);
 
+
+	Wishlist2Model removeProductFromWl(final String productCode, final String wishlistName); /* Changes for INC144313867 */
+
 	List<Wishlist2Model> getAllWishlists();
 
 	Wishlist2Model createNewWishlist(final UserModel user, final String name, final String description);
@@ -70,4 +73,32 @@ public interface WishlistFacade
 	 * @return
 	 */
 	Wishlist2Model getSingleWishlist(UserModel user);
+
+	//CAR Project performance issue fixed
+
+	/**
+	 * Description -- Method will access single WishlistModel for user with respect to Wishlistname
+	 *
+	 * @return Wishlist2Model
+	 */
+
+	Wishlist2Model findMobileWishlistswithName(UserModel user, String name);
+
+	//CAR Project performance issue fixed
+
+	/**
+	 * Description -- Method will count for user with respect to Wishlistname
+	 *
+	 * @return Wishlist2Model
+	 */
+
+	int findMobileWishlistswithNameCount(UserModel user, String name);
+
+	/**
+	 * Description -- To add product in Wishlistname
+	 *
+	 * @return boolean
+	 */
+	public boolean addProductToWishlistMobile(final Wishlist2Model wishlist, final String productCode, final String ussid,
+			final boolean selectedSize);
 }

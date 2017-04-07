@@ -1,6 +1,7 @@
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>	
+<script type="text/javascript" src="/_ui/responsive/common/js/jquery-2.1.1.min.js"></script>
 <style>
 .error{
 color: #ff1c47;

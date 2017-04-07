@@ -35,7 +35,7 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplDelistingDao#getAllUSSIDforSeller(java.lang.String)
 	 */
 	@Override
@@ -69,7 +69,7 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplDelistingDao#delistSeller(java.util.List, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -82,7 +82,7 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplDelistingDao#delistUSSID(java.util.List, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -95,7 +95,7 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplDelistingDao#getModelforUSSID(java.lang.String)
 	 */
 	@Override
@@ -129,7 +129,7 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * TISEE-5143
 	 */
 	@Override
@@ -137,6 +137,7 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 	{
 		try
 		{
+
 			final String queryString = //
 			SELECT + SellerInformationModel.PK
 					+ "} " //
@@ -152,11 +153,12 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 			query.addQueryParameter(SellerInformationModel.CATALOGVERSION, catalogVersion);
 
 
-			final List<SellerInformationModel> listSellerInformation = flexibleSearchService.<SellerInformationModel> search(query)
-					.getResult();
-			return listSellerInformation;
-		}
+			//			final List<SellerInformationModel> listSellerInformation = flexibleSearchService.<SellerInformationModel> search(query)
+			//					.getResult();
+			//			return listSellerInformation;
+			return flexibleSearchService.<SellerInformationModel> search(query).getResult();
 
+		}
 		catch (final Exception ex)
 		{
 
@@ -166,7 +168,7 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplDelistingDao#FindUnprocessedRecord()
 	 */
 	@Override

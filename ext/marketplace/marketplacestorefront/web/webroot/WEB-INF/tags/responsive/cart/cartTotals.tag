@@ -46,6 +46,31 @@ $(document).ready(function() {
             return false;  
         }
     });
+	//UF-69
+    $("#pinCodeButtonIdsBtm").click(function() {
+    	/* if($("#defaultPinCodeIdsDefault").val() !=null)
+    	{
+    		$("#defaultPinCodeIds").val($("#defaultPinCodeIdsDefault").val());
+    	}
+    	else
+    	{
+    		$("#defaultPinCodeIds").val($("#defaultPinCodeIdsInput").val());
+    	} */
+        var zipcode = $("#defaultPinCodeIdsBtm").val();
+        var regPostcode = /^([1-9])([0-9]){5}$/;
+        if(regPostcode.test(zipcode) == true){
+        	return true;  
+        }
+        else  
+        {  
+        	$("#defaultPinCodeIdsBtm").css("color","#ff1c47");
+        	$('#unsevisablePin').hide();
+            $( "#errorId").show();
+             
+            return false;  
+        }
+    });
+	//UF-69
     
     $("select#addressListSelectId option:first-child").attr("selected","selected");
 });

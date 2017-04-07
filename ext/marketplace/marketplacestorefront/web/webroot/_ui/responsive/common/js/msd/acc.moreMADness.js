@@ -14,7 +14,7 @@ var loadMAD = function(productID, categoryID,msdRESTURL) {
    
         track(['pageView', productID, categoryID]);
     } catch(err) {
-        console.log('Error tracking the Page View: '+err.message);
+        //console.log('Error tracking the Page View: '+err.message);
     }
     try {   
         $("a.tw").click(function() {
@@ -27,14 +27,16 @@ var loadMAD = function(productID, categoryID,msdRESTURL) {
             track(['socialShare', 'google', productID, categoryID]);
         });        
         } catch(err) {
-        console.log('Error Adding trackers for social events: '+err.message);
+       // console.log('Error Adding trackers for social events: '+err.message);
     }
 
     // This loads our uuid, it would have been created if not present by the first track call at page view above
+    var uuid  = '';
+    
     try {
         uuid = readCookie('MADid');
     } catch(err) {
-        console.log('Error reading the MAD cookie: '+err.message);
+        //console.log('Error reading the MAD cookie: '+err.message);
     }
 
     var params = new Object();
@@ -68,7 +70,7 @@ var loadMAD = function(productID, categoryID,msdRESTURL) {
                     jsonData = data;                	
                     if (jsonData['status'] == "success") {
                         products = jsonData['data'];
-                        console.log(products[0]);
+                       // console.log(products[0]);
                         // The Div for the carousel is being constructed below from the JSON response from the MSD server.
                         dS = '';                        
                         dS = dS +    '<div class="trending wrapper">';
@@ -240,12 +242,12 @@ var loadMAD = function(productID, categoryID,msdRESTURL) {
                         
                         
                     } else {
-                        console.log("MAD visually similar items not available");
+                       // console.log("MAD visually similar items not available");
                     }
                 },
                 error: function (xhr, textStatus, errorThrown) {
-                    console.log(xhr);
-                    console.log(errorThrown);
+                   // console.log(xhr);
+                  //  console.log(errorThrown);
                 }
           });
 }

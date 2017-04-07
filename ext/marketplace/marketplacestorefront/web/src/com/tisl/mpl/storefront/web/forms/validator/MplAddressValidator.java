@@ -131,7 +131,8 @@ public class MplAddressValidator
 		{
 			returnStatement = "address.townCity.invalid";
 		}
-		else if (!CommonAsciiValidator.validateAlphaWithoutSpaceNoSpCh(townCity))
+		//else if (!CommonAsciiValidator.validateAlphaWithoutSpaceNoSpCh(townCity))
+		else if (!CommonAsciiValidator.validateAlphaWithSpaceNoSpCh(townCity))
 		{
 			returnStatement = "address.townCity.invalid.alphaAndSpace";
 		}

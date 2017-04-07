@@ -25,6 +25,7 @@ import de.hybris.platform.util.localization.Localization;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -42,6 +43,10 @@ import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 
+/**
+ * This promotion is of type Buy x quantity of A get Percentage/ Amount Off
+ *
+ */
 public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 {
 	@SuppressWarnings("unused")
@@ -91,18 +96,20 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 		//				paramPromotionEvaluationContext);
 
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
-		List<String> excludeManufactureList = null;
-		List<Product> excludedProductList = null;
+		//List<String> excludeManufactureList = null;
+		//List<Product> excludedProductList = null;
 		boolean checkChannelFlag = false;
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
-		excludedProductList = new ArrayList<Product>();
-		excludeManufactureList = new ArrayList<String>();
+		//excludedProductList = new ArrayList<Product>();
+		//excludeManufactureList = new ArrayList<String>();
 
-		final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(paramSessionContext,
-				paramPromotionEvaluationContext);
+		final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager().findEligibleProductsInBasket(
+				paramSessionContext, paramPromotionEvaluationContext, this, getCategories());
+
 		final AbstractOrder order = paramPromotionEvaluationContext.getOrder();
-		GenericUtilityMethods.populateExcludedProductManufacturerList(paramSessionContext, paramPromotionEvaluationContext,
-				excludedProductList, excludeManufactureList, restrictionList, this);
+
+		//		GenericUtilityMethods.populateExcludedProductManufacturerList(paramSessionContext, paramPromotionEvaluationContext,
+		//				excludedProductList, excludeManufactureList, restrictionList, this);
 
 		try
 		{
@@ -119,15 +126,14 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 			//if (checkChannelFlag)
 			{
 				final Map<String, List<String>> productAssociatedItemsFinalMap = new ConcurrentHashMap<String, List<String>>();
-				final Map<String, Integer> validProductFinalList = new ConcurrentHashMap<String, Integer>();
+				//final Map<String, Integer> validProductFinalList = new ConcurrentHashMap<String, Integer>();
 				//final Map<String, AbstractOrderEntry> validProductUssidFinalMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
 
 				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 
 				//getting the valid products
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
-						.getValidProdListForBuyXofA(order, paramSessionContext, allowedProductList, restrictionList,
-								excludedProductList, excludeManufactureList, null, null); // Adding Eligible Products to List
+						.getValidProdListForBuyXofA(order, paramSessionContext, allowedProductList, restrictionList, null, null); // Adding Eligible Products to List
 
 				//				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
 				//						.getValidProdListForBuyXofAPromo(order, paramSessionContext, promotionProductList, promotionCategoryList,
@@ -176,12 +182,13 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 					//}
 
 					promotionResults = promotionEvaluation(paramSessionContext, paramPromotionEvaluationContext, validProductUssidMap,
-							restrictionList, allowedProductList, order, productAssociatedItemsFinalMap, validProductFinalList);
+							restrictionList, allowedProductList, order, productAssociatedItemsFinalMap);//, validProductFinalList);
 				}
 
 				//Setting values
 				//paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidFinalMap);
-				paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductFinalList);
+
+				//paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductFinalList);
 				paramSessionContext
 						.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsFinalMap);
 
@@ -219,7 +226,8 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 			final PromotionEvaluationContext paramPromotionEvaluationContext,
 			final Map<String, AbstractOrderEntry> validProductUssidMap, final List<AbstractPromotionRestriction> restrictionList,
 			final List<Product> allowedProductList, final AbstractOrder order,
-			final Map<String, List<String>> productAssociatedItemsFinalMap, final Map<String, Integer> validProductFinalList)
+			final Map<String, List<String>> productAssociatedItemsFinalMap)
+	//, final Map<String, Integer> validProductFinalList)
 	//			,final Map<String, AbstractOrderEntry> validProductUssidFinalMap)
 	{
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
@@ -279,7 +287,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 					final Map<String, Integer> validProductList = getDefaultPromotionsManager().getSortedValidProdUssidMap(
 							validProductUssidMap, totalCount, eligibleQuantity.longValue(), paramSessionContext, restrictionList);
 
-					validProductFinalList.putAll(validProductList);
+					//validProductFinalList.putAll(validProductList);
 					//validProductUssidFinalMap.putAll(validProductUssidMap);
 
 					if (!isPercentageOrAmount().booleanValue())
@@ -372,7 +380,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 
 								final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
 								consumed.add(getDefaultPromotionsManager().consume(paramSessionContext, this, eligibleCount,
-										eligibleCount, entry));
+										quantityOfOrderEntry, entry));
 
 								tcMapForValidEntries.put(validUssid, Integer.valueOf((int) quantityOfOrderEntry - eligibleCount));
 
@@ -388,7 +396,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 								final PromotionResult result = promotionsManager.createPromotionResult(paramSessionContext, this,
 										paramPromotionEvaluationContext.getOrder(), 1.0F);
 								final CustomPromotionOrderEntryAdjustAction poeac = getDefaultPromotionsManager()
-										.createCustomPromotionOrderEntryAdjustAction(paramSessionContext, entry, quantityOfOrderEntry,
+										.createCustomPromotionOrderEntryAdjustAction(paramSessionContext, entry, eligibleCount,
 												adjustment.doubleValue());
 								//final List consumed = paramPromotionEvaluationContext.finishLoggingAndGetConsumed(this, true);
 								result.setConsumedEntries(paramSessionContext, consumed);
@@ -629,13 +637,32 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
 	}
 
+	//	@Override
+	//	protected void buildDataUniqueKey(final SessionContext ctx, final StringBuilder builder)
+	//	{
+	//		super.buildDataUniqueKey(ctx, builder);
+	//		builder.append(getPercentageDiscount(ctx)).append('|');
+	//	}
+
+	/**
+	 * Building the Hash Key for Promotion
+	 *
+	 * @param builder
+	 * @param ctx
+	 */
 	@Override
 	protected void buildDataUniqueKey(final SessionContext ctx, final StringBuilder builder)
 	{
-		super.buildDataUniqueKey(ctx, builder);
-		builder.append(getPercentageDiscount(ctx)).append('|');
-	}
+		builder.append(super.getClass().getSimpleName()).append('|').append(getPromotionGroup(ctx).getIdentifier(ctx)).append('|')
+				.append(getCode(ctx)).append('|').append(getPriority(ctx)).append('|').append(ctx.getLanguage().getIsocode())
+				.append('|');
 
+
+		//final Date modifyDate = ((Date) getProperty(ctx, "modifiedtime"));
+
+		final Date modifyDate = getModificationTime();
+		builder.append(modifyDate);
+	}
 
 	/**
 	 * @Description: Method Blocked for Performance Fix

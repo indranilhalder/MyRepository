@@ -30,7 +30,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.standardizationfactory.StandardizationService;
+
 
 
 
@@ -44,7 +46,7 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 	@Autowired
 	private StandardizationService sizeStandard;
 
-	private static final String DYNAMICATTRIBUTE = "classification.attirbutes.dynamic.";
+	//private static final String DYNAMICATTRIBUTE = "classification.attirbutes.dynamic.";
 
 	@Override
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
@@ -118,7 +120,9 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 									final List<FieldValue> temp = getFeaturesValues(indexConfig, feature, indexedProperty);
 									//Added for Tata-24 Start :::
 									final String dynCategory = configurationService.getConfiguration().getString(
-											DYNAMICATTRIBUTE + productModel.getProductCategoryType());
+                                            /*DYNAMICATTRIBUTE + productModel.getProductCategoryType());*/
+                                            MarketplaceCoreConstants.DYNAMICATTRIBUTE + productModel.getProductCategoryType());
+
 									if (StringUtils.isNotEmpty(dynCategory))
 									{
 										final String[] dynProperties = dynCategory.split(",");
@@ -293,9 +297,12 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 			{
 				for (final LanguageModel language : indexConfig.getLanguages())
 				{
+
 					final Locale locale = this.i18nService.getCurrentLocale();
 					try
-					{
+					{   //merge issue fixed.
+						this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
+
 						final List<FeatureValue> listFeatureValue = featureValues;
 
 						for (final FeatureValue singleFeatureValue : listFeatureValue)
@@ -313,12 +320,17 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 							listFeatureValue.add(singleFeatureValue);
 						}
 
-						result.addAll(extractFieldValues(indexedProperty, language, listFeatureValue));
+						//result.addAll(extractFieldValues(indexedProperty, language, listFeatureValue));
+						result.addAll(extractFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues()
+								: featureValues));
 					}
 					finally
 					{
 						this.i18nService.setCurrentLocale(locale);
 					}
+
+					
+
 				}
 			} //TPR-3548 End
 			else
@@ -354,7 +366,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 	public void dynGroupFeaturesValues(final String property, final List<FieldValue> list)
 	{
 
-		final String dynGroup = configurationService.getConfiguration().getString(DYNAMICATTRIBUTE + property);
+		final String dynGroup = configurationService.getConfiguration().getString(
+				MarketplaceCoreConstants.DYNAMICATTRIBUTE + property);
 		if (StringUtils.isNotEmpty(dynGroup))
 		{
 			boolean flag = false;
@@ -367,7 +380,9 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 					final String name = groupName.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
 					//classification.attirbutes.dynamic.materialtype.metal=Metal,Alloys,Titanium,Aluminium,Stainless Steel
 					final String dynAttribute = configurationService.getConfiguration().getString(
-							DYNAMICATTRIBUTE + property + "." + name);
+							//DYNAMICATTRIBUTE + property + "." + name);
+							MarketplaceCoreConstants.DYNAMICATTRIBUTE + property + "." + name);
+
 					if (StringUtils.isNotEmpty(dynAttribute))
 					{
 						//dynAttributes=[Metal,Alloys,Titanium,Aluminium,Stainless Steel]
@@ -417,7 +432,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 		final List<FeatureValue> newFeatures = new ArrayList<FeatureValue>();
 
 		//classification.attirbutes.dynamic.materialtype=Canvas,Cotton,Leather,Others,PU,Suede,Fabric,Metal,Plastic
-		final String dynGroup = configurationService.getConfiguration().getString(DYNAMICATTRIBUTE + property);
+		final String dynGroup = configurationService.getConfiguration().getString(
+				MarketplaceCoreConstants.DYNAMICATTRIBUTE + property);
 		if (StringUtils.isNotEmpty(dynGroup))
 		{
 			boolean flag = false;
@@ -430,7 +446,11 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 					final String name = groupName.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
 					//classification.attirbutes.dynamic.materialtype.metal=Metal,Alloys,Titanium,Aluminium,Stainless Steel
 					final String dynAttribute = configurationService.getConfiguration().getString(
-							DYNAMICATTRIBUTE + property + "." + name);
+
+							//DYNAMICATTRIBUTE + property + "." + name);
+
+							MarketplaceCoreConstants.DYNAMICATTRIBUTE + property + "." + name);
+
 					if (StringUtils.isNotEmpty(dynAttribute))
 					{
 						//dynAttributes=[Metal,Alloys,Titanium,Aluminium,Stainless Steel]

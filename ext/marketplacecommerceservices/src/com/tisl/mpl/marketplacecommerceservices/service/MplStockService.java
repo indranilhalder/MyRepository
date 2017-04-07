@@ -6,7 +6,6 @@ package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.ordersplitting.model.StockLevelModel;
 
-import java.util.List;
 import java.util.Map;
 
 
@@ -21,7 +20,7 @@ public interface MplStockService
 	 */
 
 
-	public List<StockLevelModel> getStockLevelDetail(final String articleSKUID);
+	public StockLevelModel getStockLevelDetail(final String articleSKUID);
 
 	Map<String, Integer> getAllStockLevelDetail(String aticleSKUIDs);
 

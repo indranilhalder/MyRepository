@@ -373,6 +373,8 @@ public class MarketplacewebservicesConstants
 	//INC_11931
 	public static final String KNOW_MORE_SECOND_FOR_LUX = "know.more.second.lux";
 	public static final String KNOW_MORE_THIRD_FOR_LUX = "know.more.third.lux";
+	//changes for INC144314533
+	public static final String KNOW_MORE_SECOND_LUX_LESS_THAN_ZERO = "know.more.second.lux.less.than.zero";
 
 	//Consignment Status
 	public static final String ALLOCATED = "ALLOCATED";
@@ -534,6 +536,12 @@ public class MarketplacewebservicesConstants
 	//Added by SAP for Watches & FashionAccessories  :::  END
 	public static final String WARRANTY = "Warranty";
 	public static final String PDP_DESC_TAB = "pdp.desc.tab.".intern();
+
 	public static final String TRAVELANDLUGGAGE = "travelandluggage";
+
+
+	public static final String ORDER_HISTORY_PAGESIZE_WEBSERVICE = "orderHistory.pagesize.defaultValue";
+
+
 
 }

@@ -6,11 +6,9 @@ package com.tisl.mpl.facade.checkout.impl;
 import de.hybris.platform.commercefacades.order.CartFacade;
 import de.hybris.platform.commercefacades.order.data.CCPaymentInfoData;
 import de.hybris.platform.commercefacades.order.data.CartData;
-
-import de.hybris.platform.commercefacades.order.data.OrderData;
-
 import de.hybris.platform.commercefacades.order.data.DeliveryModeData;
-
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.order.impl.DefaultCheckoutFacade;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
@@ -20,9 +18,7 @@ import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
-
 import de.hybris.platform.core.model.order.OrderModel;
-
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
@@ -287,13 +283,13 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	 * @param selectedAddressData
 	 * @return List<? extends AddressData>
 	 */
-	@Override
-	public List<? extends AddressData> getDeliveryAddresses(final AddressData selectedAddressData)
+	//	@Override                                  //CAR-194
+	public List<AddressData> getDeliveryAddresses(final AddressData selectedAddressData, final CartModel cartModel) //CAR-194
 	{
 		List<AddressData> deliveryAddresses = null;
 		if (selectedAddressData != null)
 		{
-			deliveryAddresses = new ArrayList<AddressData>(getSupportedDeliveryAddresses(true));
+			deliveryAddresses = new ArrayList<AddressData>(getSupportedDeliveryAddresses(true, cartModel));
 
 			if (!isAddressOnList(deliveryAddresses, selectedAddressData))
 			{
@@ -309,10 +305,10 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	 * @param visibleAddressesOnly
 	 * @return List<AddressData>
 	 */
-	@Override
-	public List<AddressData> getSupportedDeliveryAddresses(final boolean visibleAddressesOnly)
+	//@Override                                  //CAR-194
+	public List<AddressData> getSupportedDeliveryAddresses(final boolean visibleAddressesOnly, final CartModel cartModel) //CAR-194
 	{
-		final CartModel cartModel = getCart();
+		//final CartModel cartModel = getCart();
 		if (cartModel != null)
 		{
 			final List<AddressModel> addresses = getDeliveryService().getSupportedDeliveryAddressesForOrder(cartModel,
@@ -554,27 +550,29 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	}
 
 	@Override
-	public boolean hasValidCart()
+	public boolean hasValidCart(final CartData cart)
 	{
 		//final boolean validCart = false;
-		final CartData cartData = getCheckoutCart();
+		//final CartData cartData = getCheckoutCart();
 		/*
 		 * if (null != cartData) { validCart = cartData.getEntries() != null && !cartData.getEntries().isEmpty(); } return
 		 * validCart;
 		 */
-		return (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries())) ? true : false;
+		return (cart != null && CollectionUtils.isNotEmpty(cart.getEntries())) ? true : false;
 	}
 
 	@Override
-	public boolean hasNoDeliveryAddress()
+	public boolean hasNoDeliveryAddress(final CartData cartData)
 	{
-		final CartModel cartModel = cartService.getSessionCart();
+		//final CartModel cartModel = cartService.getSessionCart();
+
 		boolean flag = false;
-		if (null != cartModel && cartModel.getDeliveryAddress() == null)
+		if (null != cartData && cartData.getDeliveryAddress() == null)
 		{
-			if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+			final List<OrderEntryData> entryList = cartData.getEntries();
+			if (CollectionUtils.isNotEmpty(entryList))
 			{
-				for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+				for (final OrderEntryData entry : entryList)
 				{
 					if (entry.getDeliveryPointOfService() == null) // Entry having CNC Delivery Mode will always have POS
 					{
@@ -607,17 +605,21 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	 * @return boolean
 	 */
 	@Override
-	public boolean hasNoDeliveryMode()
+	public boolean hasNoDeliveryMode(final CartData cartData)
 	{
-		final CartModel cartModel = cartService.getSessionCart();
+		//final CartModel cartModel = cartService.getSessionCart();
 		//boolean deliveryModeNotSelected = false;
-		if (cartModel != null && cartModel.getEntries() != null)
+		if (cartData != null)
 		{
-			for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+			final List<OrderEntryData> entryList = cartData.getEntries();
+			if (CollectionUtils.isNotEmpty(entryList))
 			{
-				if (cartEntryModel != null && cartEntryModel.getMplDeliveryMode() == null)
+				for (final OrderEntryData cartEntryModel : entryList)
 				{
-					return true;
+					if (cartEntryModel != null && cartEntryModel.getMplDeliveryMode() == null)
+					{
+						return true;
+					}
 				}
 			}
 		}
@@ -913,6 +915,20 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 			}
 		}
 
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.facade.checkout.MplCustomAddressFacade#getDeliveryAddresses(de.hybris.platform.commercefacades.user
+	 * .data.AddressData)
+	 */
+	@Override
+	public List<? extends AddressData> getDeliveryAddresses(final AddressData selectedAddressData)
+	{
+		// YTODO Auto-generated method stub
 		return null;
 	}
 }

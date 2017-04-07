@@ -75,37 +75,23 @@ ACC.minicart = {
 														returnType : "JSON",
 														type : "GET",
 														cache : false,
-														success : function(
-																cartData) {
-															cartData = $
-																	.parseJSON(cartData);
+														success : function(cartData) {
+															cartData = $.parseJSON(cartData);
 															quantity = parseInt(cartData.masterMiniCartCount);
-															$(
-																	"span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count")
-																	.text(
-																			quantity);
+															$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(quantity);
 															if (quantity == 0) {
-																$(
-																		"ul.my-bag-ul")
-																		.remove();
+																$("ul.my-bag-ul").remove();
 															} else {
 																// console.log($(e.target).parents().find("li.item"));
-																var url = window.location.href;
-																$(e.target)
-																		.parents()
-																		.find(
-																				"li.item")
-																		.remove();
-																if (url
-																		.indexOf("cart") != -1) {
-																	window.location
-																			.reload();
-																}
+																
+																$(e.target).parents().find("li.item").remove();
 															}
-															ACC.product
-																	.addToBagFromWl(
-																			entryUssid,
-																			false);
+																var url = window.location.href;
+																if (url.indexOf("cart") != -1) {
+																	window.location.reload();
+																}
+															
+															//ACC.product.addToBagFromWl(entryUssid,false);
 															//ACC.track.trackAddToCart(productCode, quantity, cartResult.cartData);
 														}
 													});

@@ -86,6 +86,7 @@ import com.tisl.mpl.util.ExceptionUtil;
 @RequestMapping(RequestMappingUrlConstants.LINK_OAUTH2_CALLBACK)
 public class Oauth2callbackPageController extends AbstractLoginPageController
 {
+	private static final String UTF_8 = "UTF-8"; //Sonar fix
 	// CMS Pages
 	@Resource(name = ModelAttributetConstants.ACCOUNT_BREADCRUMB_BUILDER)
 	private ResourceBreadcrumbBuilder accountBreadcrumbBuilder;
@@ -108,7 +109,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 	private String gigyaUID;
 	private String signature;
 	private String timestamp;
-	private final String UTF = "UTF-8";
+	
 
 	public GigyaService getGigyaservice()
 	{
@@ -331,19 +332,25 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			if (StringUtils.isNotEmpty(uid))
 			{
 
-				final String decodedUid = java.net.URLDecoder.decode(uid, UTF);
+
+				final String decodedUid = java.net.URLDecoder.decode(uid, UTF_8);
+
 
 				setGigyaUID(decodedUid);
 			}
 			if (StringUtils.isNotEmpty(signature))
 			{
-				final String decodedSignature = java.net.URLDecoder.decode(signature, UTF);
+
+				final String decodedSignature = java.net.URLDecoder.decode(signature, UTF_8);
+
 
 				setSignature(decodedSignature);
 			}
 			if (StringUtils.isNotEmpty(timestamp))
 			{
-				final String decodedTimestamp = java.net.URLDecoder.decode(timestamp, UTF);
+
+				final String decodedTimestamp = java.net.URLDecoder.decode(timestamp, UTF_8);
+
 				setTimestamp(decodedTimestamp);
 			}
 
@@ -537,8 +544,8 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 
 			cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(key));
 
+			encryptedText = Base64.encodeBase64String(cipher.doFinal(encryptionText.getBytes(UTF_8)));
 
-			encryptedText = Base64.encodeBase64String(cipher.doFinal(encryptionText.getBytes(UTF)));
 
 		}
 		catch (final Exception e)
@@ -557,12 +564,16 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 		byte[] key = null;
 		try
 		{
-			key = encryptionKey.getBytes(UTF);
+
+			key = encryptionKey.getBytes(UTF_8);
+
 			sha = MessageDigest.getInstance("SHA-1");
 			key = sha.digest(key);
 			key = Arrays.copyOf(key, 16); // use only first 128 bit
 			LOG.debug("Key Length" + key.length);
-			LOG.debug(new String(key, UTF));
+
+			LOG.debug(new String(key, UTF_8));
+
 
 
 

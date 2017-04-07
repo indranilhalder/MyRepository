@@ -145,7 +145,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 *
 	 */
 	@Override
-	public Map<String, Boolean> getPaymentModes(final String store, final boolean isMobile, final CartData cartDataMobile)
+	public Map<String, Boolean> getPaymentModes(final String store, final boolean isMobile, final CartData cartData)
 			throws EtailNonBusinessExceptions
 	{
 		//Declare variable
@@ -155,16 +155,17 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//Get payment modes
 			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
 			boolean flag = false;
-			CartData cartData = null;
-			if (isMobile)
-			{
-				LOG.debug("Mobile payment modes cart Id................" + cartDataMobile.getCode());
-				cartData = cartDataMobile;
-			}
-			else
-			{
-				cartData = getMplCustomAddressFacade().getCheckoutCart();
-			}
+			// Data Sent from Controller as part of Drop2.1
+			//final CartData cartData = null;
+			//if (isMobile)
+			//			{
+			//				LOG.debug("Mobile payment modes cart Id................" + cartDataMobile.getCode());
+			//				cartData = cartDataMobile;
+			//			}
+			//			else
+			//			{
+			//				cartData = getMplCustomAddressFacade().getCheckoutCart();
+			//			}
 			//IQA changes TPR-629
 			if (cartData != null)
 			{
@@ -1364,18 +1365,22 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge, final AbstractOrderModel abstractOrderModel) //Parameter abstractOrderModel added extra for TPR-629
 			throws EtailNonBusinessExceptions, Exception
 	{
-		//getting the current user
-		final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
-		final Map<String, Double> paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
-		//IQA changes TPR-629 and Refactor
 		if (null != abstractOrderModel)
 		{
+			//getting the current user
+			//OrderIssues:- Customer data is getting from Order in place of session
+			final CustomerModel mplCustomer = (CustomerModel) abstractOrderModel.getUser();
+			//		final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
+			//final Map<String, Double> paymentMode = getSessionService().getAttribute(
+			//		MarketplacecommerceservicesConstants.PAYMENTMODE);
+			//IQA changes TPR-629 and Refactor
+
 			final List<AbstractOrderEntryModel> entries = abstractOrderModel.getEntries();
 
 			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
 			if (abstractOrderModel.getTotalPriceWithConv() != null || abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
 			{
-				getMplPaymentService().setPaymentTransactionForCOD(paymentMode, abstractOrderModel);
+				getMplPaymentService().setPaymentTransactionForCOD(abstractOrderModel);
 			}
 
 			if (null != mplCustomer)
@@ -1394,6 +1399,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					//saving COD PaymentInfo
 					getMplPaymentService().saveCODPaymentInfo(custEmail, cartValue, totalCODCharge, entries, abstractOrderModel);
 				}
+			}// OrderIssues:- else block added to track the log
+			else
+			{
+				LOG.error("Customer data not available");
 			}
 			getMplPaymentService().paymentModeApportion(abstractOrderModel);
 
@@ -1646,11 +1655,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1701,9 +1710,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -2172,39 +2181,40 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			String juspayOrderId) throws EtailBusinessExceptions, EtailNonBusinessExceptions
 	{
 		final PaymentService juspayService = new PaymentService();
-
-		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-		juspayService.withKey(
-				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
-				.withMerchantId(
-						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
-
+		String orderStatus = null;
+		boolean updAuditErrStatus = false;
 		try
 		{
+			juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+			juspayService
+					.withKey(
+							getConfigurationService().getConfiguration().getString(
+									MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)).withMerchantId(
+							getConfigurationService().getConfiguration()
+									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+
 			//For Mobile
 			if (MapUtils.isEmpty(paymentMode))
 			{
 				paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
 			}
 
-			String orderStatus = null;
-			boolean updAuditErrStatus = false;
-
 			//creating OrderStatusRequest
 			final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
-
-			//TISPT-200 implementing fallback for null audit id
 			try
 			{
-				//For Mobile
+				//If from Audit JuspayOrderId is fetched than no need to fetch from Session
+				if (StringUtils.isNotEmpty(orderGuid))
+				{
+					juspayOrderId = getMplPaymentService().getAuditId(orderGuid);
+				}
+
+				//TISPT-200 implementing fallback for null audit id
+				//For Web
 				if (StringUtils.isEmpty(juspayOrderId))
 				{
 					juspayOrderId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID);
-					if (StringUtils.isEmpty(juspayOrderId))
-					{
-						juspayOrderId = getMplPaymentService().getAuditId(orderGuid);
-					}
 				}
 			}
 			catch (final Exception e)
@@ -2244,6 +2254,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					//Logic when transaction is successful i.e. CHARGED
 					if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
 					{
+						// OrderIssues:- Set the value duplicatJuspayResponse in session to true  ones cart GUID executed with success response from juspay
+						final Map<String, Boolean> duplicatJuspayResponseMap = new HashMap<String, Boolean>();
+						duplicatJuspayResponseMap.put(orderGuid, Boolean.TRUE);
+
+						getSessionService().setAttribute(MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE,
+								duplicatJuspayResponseMap);
+
 						//TIS-3168
 						LOG.error("Payment successful with transaction ID::::" + juspayOrderId);
 						//saving card details
@@ -2538,63 +2555,69 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			if (null != abstractOrderModel)
 			{
-				for (final AbstractOrderEntryModel abstractOrderEntryModel : abstractOrderModel.getEntries())
+				final List<AbstractOrderEntryModel> entryList = abstractOrderModel.getEntries();
+
+				if (CollectionUtils.isNotEmpty(entryList))
 				{
-					if (abstractOrderEntryModel != null && abstractOrderEntryModel.getGiveAway().booleanValue()
-							&& CollectionUtils.isNotEmpty(abstractOrderEntryModel.getAssociatedItems()))
+					for (final AbstractOrderEntryModel abstractOrderEntryModel : entryList)
 					{
-						//start populate deliveryPointOfService for freebie
-						if (LOG.isDebugEnabled())
+						if (abstractOrderEntryModel != null && abstractOrderEntryModel.getGiveAway().booleanValue()
+								&& CollectionUtils.isNotEmpty(abstractOrderEntryModel.getAssociatedItems()))
 						{
-							LOG.debug("***Before Populating deliveryPointOfService for freebie product has ussID "
-									+ abstractOrderEntryModel.getSelectedUSSID());
-						}
-						PointOfServiceModel posModel = null;
-						for (final AbstractOrderEntryModel cEntry : abstractOrderModel.getEntries())
-						{
-							if (abstractOrderEntryModel.getAssociatedItems().size() == 1)
+							//start populate deliveryPointOfService for freebie
+							if (LOG.isDebugEnabled())
 							{
-								if (cEntry.getSelectedUSSID().equalsIgnoreCase(abstractOrderEntryModel.getAssociatedItems().get(0)))
+								LOG.debug("***Before Populating deliveryPointOfService for freebie product has ussID "
+										+ abstractOrderEntryModel.getSelectedUSSID());
+							}
+							PointOfServiceModel posModel = null;
+							for (final AbstractOrderEntryModel cEntry : entryList)
+							{
+								if (abstractOrderEntryModel.getAssociatedItems().size() == 1)
 								{
-									if (null != cEntry.getDeliveryPointOfService())
+									if (cEntry.getSelectedUSSID().equalsIgnoreCase(abstractOrderEntryModel.getAssociatedItems().get(0)))
 									{
-										if (LOG.isDebugEnabled())
+										if (null != cEntry.getDeliveryPointOfService())
 										{
-											LOG.debug(ERROR_FRREBIE + abstractOrderEntryModel.getAssociatedItems().get(0));
+											if (LOG.isDebugEnabled())
+											{
+												LOG.debug(ERROR_FRREBIE + abstractOrderEntryModel.getAssociatedItems().get(0));
+											}
+											posModel = cEntry.getDeliveryPointOfService();
 										}
-										posModel = cEntry.getDeliveryPointOfService();
+									}
+								}
+								else
+								{
+									final String parentUssId = findParentUssId(abstractOrderEntryModel, abstractOrderModel);
+									if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
+									{
+										if (null != cEntry.getDeliveryPointOfService())
+										{
+											if (LOG.isDebugEnabled())
+											{
+												LOG.debug(ERROR_FRREBIE + parentUssId);
+											}
+											posModel = cEntry.getDeliveryPointOfService();
+										}
 									}
 								}
 							}
-							else
+							if (null != posModel)
 							{
-								final String parentUssId = findParentUssId(abstractOrderEntryModel, abstractOrderModel);
-								if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
-								{
-									if (null != cEntry.getDeliveryPointOfService())
-									{
-										if (LOG.isDebugEnabled())
-										{
-											LOG.debug(ERROR_FRREBIE + parentUssId);
-										}
-										posModel = cEntry.getDeliveryPointOfService();
-									}
-								}
+								abstractOrderEntryModel.setDeliveryPointOfService(posModel);
+								getModelService().save(abstractOrderEntryModel);
 							}
+							if (LOG.isDebugEnabled())
+							{
+								LOG.debug("After Populating deliveryPointOfService for freebie product has ussID "
+										+ abstractOrderEntryModel.getSelectedUSSID());
+							}
+							//end populate deliveryPointOfService for freebie
 						}
-						if (null != posModel)
-						{
-							abstractOrderEntryModel.setDeliveryPointOfService(posModel);
-							getModelService().save(abstractOrderEntryModel);
-						}
-						if (LOG.isDebugEnabled())
-						{
-							LOG.debug("After Populating deliveryPointOfService for freebie product has ussID "
-									+ abstractOrderEntryModel.getSelectedUSSID());
-						}
-						//end populate deliveryPointOfService for freebie
 					}
 				}
+
 			}
 		}
 		catch (final ModelSavingException e)
@@ -2837,6 +2860,87 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	}
 
+	/**
+	 * This method returns the map of all active Payment modes(eg. Credit Card, Debit Card, COD, etc.) and their
+	 * availability for the specific store and displays them on the payment page of the store
+	 *
+	 * @param store
+	 * @return Map<String, Boolean>
+	 * @throws EtailNonBusinessExceptions
+	 *
+	 */
+	//CAR-111
+	@Override
+	public Map<String, Boolean> getPaymentModes(final String store, final AbstractOrderModel abstractOrderModel)
+			throws EtailNonBusinessExceptions
+	{
+		final Map<String, Boolean> data = new HashMap<String, Boolean>();
+		try
+		{
+			//Get payment modes
+			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
+			boolean flag = false;
+			if (null != abstractOrderModel)
+			{
+				for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
+				{
+					if (entry.getMplDeliveryMode() != null && entry.getMplDeliveryMode().getDeliveryMode() != null)
+					{
+						if (entry.getMplDeliveryMode().getDeliveryMode() != null)
+						{
+							if (null != entry.getMplDeliveryMode().getDeliveryMode().getCode())
+							{
+								if (entry.getMplDeliveryMode().getDeliveryMode().getCode()
+										.equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+								{
+									LOG.info("Any product Content CnC Then break loop and change flag value");
+									flag = true;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(paymentTypes))
+			{
+				//looping through the mode to get payment Types
+				for (final PaymentTypeModel mode : paymentTypes)
+				{
+					//retrieving the data
+					if (flag && mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD))
+					{
+						LOG.debug("Ignoring to add COD payment for CNC Product ");
+					}
+					else
+					{
+						LOG.info("****Print all Payment type ");
+						data.put(mode.getMode(), mode.getIsAvailable());
+					}
+				}
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B6001);
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			LOG.error(MarketplaceFacadesConstants.PAYMENTTYPEERROR, e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error(MarketplaceFacadesConstants.PAYMENTTYPEERROR, e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(MarketplaceFacadesConstants.PAYMENTTYPEERROR, e);
+		}
+
+		//returning data
+		return data;
+	}
 
 
 	/**

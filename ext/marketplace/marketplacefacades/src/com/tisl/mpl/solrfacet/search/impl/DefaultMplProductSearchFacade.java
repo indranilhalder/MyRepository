@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
@@ -747,25 +748,20 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	protected SolrSearchQueryData decodeSearchCategoryState(final SearchStateData searchState, final String categoryCode)
 	{
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
-		final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms();
-		final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
-		if (categoryCode != null)
-		{
-
-			if (categoryCode.startsWith(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
-			{
-				solrSearchQueryTermData.setKey(MarketplaceCoreConstants.CATEGORY);
-			}
-			else if (categoryCode.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX))
-			{
-				solrSearchQueryTermData.setKey(MarketplaceCoreConstants.BRAND);
-			}
-			solrSearchQueryTermData.setValue(categoryCode);
-			filterTerms.add(solrSearchQueryTermData);
-			searchQueryData.setFilterTerms(filterTerms);
-
-
-		}
+		/*
+		 * final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms(); final
+		 * SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData(); if (categoryCode != null) {
+		 * 
+		 * if (categoryCode.startsWith(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX)) {
+		 * solrSearchQueryTermData.setKey(MarketplaceCoreConstants.CATEGORY); } else if
+		 * (categoryCode.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX)) {
+		 * solrSearchQueryTermData.setKey(MarketplaceCoreConstants.BRAND); }
+		 * solrSearchQueryTermData.setValue(categoryCode); filterTerms.add(solrSearchQueryTermData);
+		 * searchQueryData.setFilterTerms(filterTerms);
+		 * 
+		 * 
+		 * }
+		 */
 		populateSolrSearchQueryData(searchState, searchQueryData);
 		return searchQueryData;
 	}
@@ -1148,15 +1144,31 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			return;
 		}
 
-		if (null == searchQueryData.getFilterTerms())
+		if (null == searchQueryData.getFilterTerms() || CollectionUtils.isEmpty(searchQueryData.getFilterTerms()))
 		{
 			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
 		}
 		else
 		{
 			final List<SolrSearchQueryTermData> solrSearchQueryTermDataList = new ArrayList(searchQueryData.getFilterTerms());
-			solrSearchQueryTermDataList.add(solrSearchQueryTermData);
-			searchQueryData.setFilterTerms(solrSearchQueryTermDataList);
+			boolean luxuryAlreadyAdded = false;
+
+			for (final SolrSearchQueryTermData termData : solrSearchQueryTermDataList)
+			{
+				if (termData.getKey().equalsIgnoreCase("isLuxuryProduct"))
+				{
+					luxuryAlreadyAdded = true;
+					break;
+				}
+
+			}
+			if (!luxuryAlreadyAdded)
+			{
+				solrSearchQueryTermDataList.add(solrSearchQueryTermData);
+				searchQueryData.setFilterTerms(solrSearchQueryTermDataList);
+			}
+
 		}
+
 	}
 }

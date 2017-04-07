@@ -38,11 +38,13 @@ import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearc
 import de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.session.Session;
 import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -156,6 +158,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private static final String CATEGORY_FOOTER_TEXT = "categoryFooterTxt";
 	private static final String SPECIAL_CHARACTERS = "[^\\w\\s]";
 	private int pageSiseCount;
+	//UF-15,16
+	private static final Integer PAGE_SIZE = new Integer(24);
 
 	/**
 	 * @return the pageSiseCount
@@ -233,37 +237,39 @@ public class CategoryPageController extends AbstractCategoryPageController
 		}
 		model.addAttribute(ModelAttributetConstants.SEARCH_CODE, searchCode);
 		model.addAttribute(ModelAttributetConstants.IS_CATEGORY_PAGE, Boolean.TRUE);
-		final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
-		//Set the drop down text if the attribute is not empty or null
-		if (dropDownText != null && !dropDownText.isEmpty())
-		//Added For TISPRD-1243
-
+		try
+		//try added for merge
 		{
-
-			if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND))
+			final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
+			//Set the drop down text if the attribute is not empty or null
+			if (dropDownText != null && !dropDownText.isEmpty())
+			//Added For TISPRD-1243
 
 			{
-				final CategoryModel categoryModel = categoryService.getCategoryForCode(dropDownText);
 
-				if (categoryModel != null)
+				if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND))
+
 				{
-					dropDownText = (StringUtils.isNotEmpty(categoryModel.getName())) ? categoryModel.getName() : dropDownText;
+					final CategoryModel categoryModel = categoryService.getCategoryForCode(dropDownText);
 
+					if (categoryModel != null)
+					{
+						dropDownText = (StringUtils.isNotEmpty(categoryModel.getName())) ? categoryModel.getName() : dropDownText;
+
+					}
 				}
-			}
-			//Added For TISPRD-1243
-			model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropDownText);
+				//Added For TISPRD-1243
+				model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropDownText);
 
-		}
-		else
-		{
-			final String categoryName = (category == null) ? "" : category.getName();
-			model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, categoryName);
-		}
-		int count = getSearchPageSize();
-		//Check if there is a landing page for the category
-		try
-		{
+			}
+			else
+			{
+				final String categoryName = (category == null) ? "" : category.getName();
+				model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, categoryName);
+			}
+			int count = getSearchPageSize();
+			//Check if there is a landing page for the category
+			//try{ try commented here to merge
 			final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
 			if (preferencesData != null && preferencesData.getPageSize() != null)
 			{
@@ -301,6 +307,23 @@ public class CategoryPageController extends AbstractCategoryPageController
 				}
 
 			}
+		}
+
+		//TISPRD-5986  MSH category 404 error handling
+		catch (final UnknownIdentifierException ex)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(ex,
+					MarketplacecommerceservicesConstants.E0023));
+			//LOG.error(EXCEPTION_OCCURED + ex + "  Category code: " + categoryCode + " not found!");
+			try
+			{
+				return frontEndErrorHelper.callNonBusinessError(model, ex.getMessage());
+			}
+			catch (final CMSItemNotFoundException e1)
+			{
+				LOG.error(EXCEPTION_OCCURED + e1);
+			}
+
 		}
 
 		catch (final Exception exception)
@@ -344,18 +367,19 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = PAGE, defaultValue = "0") int pageNo,
 			@RequestParam(value = SHOW, defaultValue = PAGEVAl) final ShowMode showMode,
 			@RequestParam(value = SORT, required = false) final String sortCode,
-			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "searchCategory", required = false) String dropDownText,
-			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
+			@RequestParam(value = "resetAll", required = false) final boolean resetAll,
+			@RequestParam(value = "lazyInterface", required = false) final String lazyInterface, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException,
 			CMSItemNotFoundException
 	{
-
+		//UF-15
+		pageSize = PAGE_SIZE;
 		categoryCode = categoryCode.toUpperCase();
 		String returnStatement = null;
 		if (!redirectIfLuxuryCategory(categoryCode, response))
 		{
-
 			String searchCode = new String(categoryCode);
 			//SEO: New pagination detection TISCR 340
 			pageNo = getPaginatedPageNo(request);
@@ -371,12 +395,15 @@ public class CategoryPageController extends AbstractCategoryPageController
 			{
 				searchQuery = RELEVANCE;
 			}
-
 			// Get page facets to include in facet field exclude tag
 			final String pageFacets = request.getParameter(PAGE_FACET_DATA);
-
 			//Storing the user preferred search results count
-			updateUserPreferences(pageSize);
+			final UserPreferencesData preferencesData = updateUserPreferences(pageSize); // CAR-236 and CAR-238(1) the page size is only fetched here and used later Codereview Point # 3 , line # 380 & 450 & 510
+			int count = getSearchPageSize();
+			if (preferencesData != null && preferencesData.getPageSize() != null)
+			{
+				count = preferencesData.getPageSize().intValue();
+			} // End Change for // CAR-236
 
 			//final List<ProductModel> heroProducts = new ArrayList<ProductModel>();
 			if (StringUtils.isNotEmpty(searchCode) && !(searchCode.substring(0, 5).equals(categoryCode))
@@ -386,67 +413,44 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 			model.addAttribute(ModelAttributetConstants.SEARCH_CODE, searchCode);
 			model.addAttribute(ModelAttributetConstants.IS_CATEGORY_PAGE, Boolean.TRUE);
-			final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
-			//SEO
-			this.getSEOContents(category, model);
 
-			//Set the drop down text if the attribute is not empty or null
-			if (dropDownText != null && !dropDownText.isEmpty())
-			//Added For TISPRD-1243
-			{
-				if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND))
-				{
-					final CategoryModel categoryModel = categoryService.getCategoryForCode(dropDownText);
-
-					if (categoryModel != null)
-					{
-						dropDownText = (StringUtils.isNotEmpty(categoryModel.getName())) ? categoryModel.getName() : dropDownText;
-
-					}
-				}
-
-				final ContentPageModel categoryLandingPage = getLandingPageForCategory(category);
-
-				final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
-						categoryCode, searchQuery, pageNo, showMode, sortCode, getSearchPageSize(), resetAll, pageFacets);
-
-				final List<ProductData> normalProductDatas = searchPageData.getResults();
-				//Set department hierarchy
-				//if (normalProductDatas.size() > 0)
-				if (CollectionUtils.isNotEmpty(normalProductDatas))
-				{
-					model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA, searchPageData.getDepartmentHierarchyData());
-					model.addAttribute(ModelAttributetConstants.DEPARTMENTS, searchPageData.getDepartments());
-					model.addAttribute(ModelAttributetConstants.CURRENT_QUERY, searchPageData.getCurrentQuery().getQuery().getValue());
-				}
-
-				final String categoryName = category.getName();
-				//				model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY, categoryName.replaceAll(SPECIAL_CHARACTERS, "")
-				//						.replaceAll(" ", "_").toLowerCase());
-				model.addAttribute(WebConstants.BREADCRUMBS_KEY,
-						getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, categoryName, false));
-				populateModel(model, searchPageData, ShowMode.Page);
-				model.addAttribute(ModelAttributetConstants.NORMAL_PRODUCTS, normalProductDatas);
-				model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
-				// For Category Footer
-				//				if (null != category.getCategoryFooterText())
-				//				{
-				//					model.addAttribute(CATEGORY_FOOTER_TEXT, category.getCategoryFooterText());
-				//				}
-				storeCmsPageInModel(model, categoryLandingPage);
-				//Added For TISPRD-1243
-				model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropDownText);
-			}
-			else
-			{
-				final String categoryName = (category == null) ? "" : category.getName();
-				model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, categoryName);
-			}
-			int count = getSearchPageSize();
-			//Check if there is a landing page for the category
+			CategoryModel category = null;
 			try
 			{
-				final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
+				category = categoryService.getCategoryForCode(categoryCode);
+				final ContentPageModel categoryLandingPage = getLandingPageForCategory(category); // CAR-237 moved here for called only Once rather  line # 409 , 469 & 1053 available Code review pt#4
+				//SEO
+				this.getSEOContents(category, model, categoryLandingPage);
+
+				/* CAR-242 Moved here for calling once */
+				final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
+						categoryCode, searchQuery, pageNo, showMode, sortCode, count, resetAll, pageFacets);
+
+				//Set the drop down text if the attribute is not empty or null
+				if (dropDownText != null && !dropDownText.isEmpty())
+				//Added For TISPRD-1243
+				{
+					if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND))
+					{
+						final CategoryModel categoryModel = categoryService.getCategoryForCode(dropDownText);
+
+						if (categoryModel != null)
+						{
+							dropDownText = (StringUtils.isNotEmpty(categoryModel.getName())) ? categoryModel.getName() : dropDownText;
+						}
+					}
+					//Added For TISPRD-1243
+					model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropDownText);
+				}
+				else
+				{
+					final String categoryName = (category == null) ? "" : category.getName();
+					model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, categoryName);
+				}
+				//int count = getSearchPageSize();  //moved up
+				//Check if there is a landing page for the category
+
+				//final UserPreferencesData preferencesData = updateUserPreferences(pageSize); // CAR-236 redefined at the top line # 380 for review comment Point # 3
 				if (preferencesData != null && preferencesData.getPageSize() != null)
 				{
 					count = preferencesData.getPageSize().intValue();
@@ -454,8 +458,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 				if (category != null)
 				{
-
-
 					final String redirection = checkRequestUrl(request, response, getCategoryModelUrlResolver().resolve(category));
 					if (StringUtils.isNotEmpty(redirection))
 					{
@@ -465,10 +467,18 @@ public class CategoryPageController extends AbstractCategoryPageController
 						return null;
 					}
 
-					final ContentPageModel categoryLandingPage = getLandingPageForCategory(category);
+					//final ContentPageModel categoryLandingPage = getLandingPageForCategory(category); // CAR-237 called above at line 392 once. doing the same logic to throw pt # 4
+					if (categoryLandingPage == null)
+					{
+						throw new CMSItemNotFoundException("Could not find a landing page for the category" + category.getName());
+					}
 
-					final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
-							categoryCode, searchQuery, pageNo, showMode, sortCode, count, resetAll, pageFacets);
+					/*
+					 * CAR-242 moved above to call it only once final ProductCategorySearchPageData<SearchStateData,
+					 * ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData,
+					 * ProductData, CategoryData>) performSearch( categoryCode, searchQuery, pageNo, showMode, sortCode,
+					 * count, resetAll, pageFacets);
+					 */
 
 					final List<ProductData> normalProductDatas = searchPageData.getResults();
 					//Set department hierarchy
@@ -484,7 +494,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 					final String categoryName = category.getName();
 					//TPR-243
-
 					//setUpMetaDataForContentPage(model, categoryLandingPage);
 
 					model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY, categoryName.replaceAll(SPECIAL_CHARACTERS, "")
@@ -499,6 +508,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				returnStatement = getViewForPage(model);
 			}
 			catch (final CMSItemNotFoundException exp)
+
 			{
 				LOG.error("************** category method exception " + exp);
 				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp,
@@ -506,7 +516,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 				try
 				{
-					final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
+					// final UserPreferencesData preferencesData = updateUserPreferences(pageSize); // CAR-236 redefined at the top line # 380 for review comment Point # 3
 					if (preferencesData != null && preferencesData.getPageSize() != null)
 					{
 						count = preferencesData.getPageSize().intValue();
@@ -514,9 +524,17 @@ public class CategoryPageController extends AbstractCategoryPageController
 					}
 
 					final String performSearch = performSearchAndGetResultsPage(categoryCode, searchQuery, pageNo, showMode, sortCode,
-							model, request, response, pageFacets);
+							model, request, response, pageFacets, category);
 
-
+					//UF-15
+					if (null != lazyInterface && lazyInterface.equals("Y"))
+					{
+						model.addAttribute("lazyInterface", Boolean.TRUE);
+					}
+					else
+					{
+						model.addAttribute("lazyInterface", Boolean.FALSE);
+					}
 					return performSearch;
 				}
 				catch (final Exception exception)
@@ -532,7 +550,22 @@ public class CategoryPageController extends AbstractCategoryPageController
 						LOG.error(EXCEPTION_OCCURED + e1);
 					}
 				}
+			}
 
+			//TISPRD-5986  MSH category 404 error handling
+			catch (final UnknownIdentifierException ex)
+			{
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(ex,
+						MarketplacecommerceservicesConstants.E0023));
+				//LOG.error(EXCEPTION_OCCURED + ex + "  Category code: " + categoryCode + " not found!");
+				try
+				{
+					return frontEndErrorHelper.callNonBusinessError(model, ex.getMessage());
+				}
+				catch (final CMSItemNotFoundException e1)
+				{
+					LOG.error(EXCEPTION_OCCURED + e1);
+				}
 			}
 			catch (final Exception exception)
 			{
@@ -549,7 +582,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 		}
 		return returnStatement;
-
 	}
 
 	/**
@@ -622,18 +654,21 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 * @return ContentPageModel
 	 * @throws CMSItemNotFoundException
 	 */
-	private ContentPageModel getLandingPageForCategory(final CategoryModel category) throws CMSItemNotFoundException
+	private ContentPageModel getLandingPageForCategory(final CategoryModel category) //throws CMSItemNotFoundException
 	{
+		// CAR-240 All changes done as per this CAR
+		ContentPageModel landingPage = null;
 
-		final ContentPageModel landingPage = mplCmsPageService.getLandingPageForCategory(category);
-
-		if (landingPage == null)
+		try
 		{
-			throw new CMSItemNotFoundException("Could not find a landing page for the category" + category.getName());
+			landingPage = mplCmsPageService.getLandingPageForCategory(category);
+		}
+		catch (final Exception e) //will catch CMSItemNotFoundException or any other exception
+		{
+			LOG.error("Error in  getLandingPageForCategory() method" + e);
 		}
 
 		return landingPage;
-
 	}
 
 	/**
@@ -883,9 +918,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 	protected String performSearchAndGetResultsPage(final String categoryCode, final String searchQuery, final int pgNumbers,
 			final ShowMode showMode, final String sortCode, final Model model, final HttpServletRequest request,
-			final HttpServletResponse response, final String pageFacets) throws UnsupportedEncodingException
+			final HttpServletResponse response, final String pageFacets, final CategoryModel category)
+			throws UnsupportedEncodingException
 	{
-		final CategoryModel category = getCommerceCategoryService().getCategoryForCode(categoryCode);
+		//final CategoryModel category = getCommerceCategoryService().getCategoryForCode(categoryCode); // commented as its sent as method parameter
 
 		/* Changes made for TISLUX-91 starts */
 
@@ -1035,22 +1071,29 @@ public class CategoryPageController extends AbstractCategoryPageController
 		{
 			count = getPageSiseCount();
 		}
-
+		//return 24;
 		return count;
 	}
 
-	private void getSEOContents(final CategoryModel category, final Model model)
+	private void getSEOContents(final CategoryModel category, final Model model, final ContentPageModel categoryLandingPage)
 	{
 		String metaKeywords = null;
 		String metaDescription = null;
 		String metaTitle = null;
-		ContentPageModel categoryLandingPage;
+		//ContentPageModel categoryLandingPage;
+		Collection<SeoContentModel> seoContentList = null;
 
 		try
 		{
-			categoryLandingPage = getLandingPageForCategory(category);
+			//categoryLandingPage = getLandingPageForCategory(category); // CAR -237 not called as categoryLandingPage is already sent and available Code review pt#4
+			if (categoryLandingPage == null)
+			{
+				throw new CMSItemNotFoundException("Could not find a landing page for the category" + category.getName());
+			}
+
 			//(TPR-243) SEO Meta Tags and Titles for Landing Page *: starts
-			if (CollectionUtils.isEmpty(category.getSeoContents()))
+			seoContentList = category.getSeoContents(); // CAR-235 - added to remove duplicate category.getSeoContents() calls at LIne # 1005 & 1064
+			if (CollectionUtils.isEmpty(seoContentList)) // CAR-235 - changed for CodeReview category.getSeoContents() multiple call
 			{
 				setUpMetaDataForContentPage(model, categoryLandingPage);
 			}
@@ -1059,7 +1102,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			 */
 			else
 			{
-				final List<SeoContentModel> seoContent = new ArrayList<SeoContentModel>(category.getSeoContents());
+				final List<SeoContentModel> seoContent = new ArrayList<SeoContentModel>(seoContentList); // CAR-235 changed for CodeReview category.getSeoContents() multiple call
 				if (seoContent.size() >= 1)
 				{
 					metaKeywords = seoContent.get(seoContent.size() - 1).getSeoMetaKeyword();

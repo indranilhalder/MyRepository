@@ -64,6 +64,13 @@ public class MplDefaultPriceDataFactory extends DefaultPriceDataFactory
 		stb = stb.append(currencySymbol).append(totalPriceFormatted);
 		priceData.setFormattedValue(stb.toString());
 
+		/* TPR-182 */
+
+		final long valueLong = value.setScale(0, BigDecimal.ROUND_FLOOR).longValue();
+		final String totalPriceNoDecimalPntFormatted = Long.toString(valueLong);
+		StringBuilder stbND = new StringBuilder(20);
+		stbND = stbND.append(currencySymbol).append(totalPriceNoDecimalPntFormatted);
+		priceData.setFormattedValueNoDecimal(stbND.toString());
 		return priceData;
 	}
 

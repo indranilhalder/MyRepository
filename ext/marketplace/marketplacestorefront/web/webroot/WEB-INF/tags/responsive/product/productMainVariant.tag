@@ -434,15 +434,15 @@ share mobile -->
 										<c:when test="${(variantOption.code eq product.code)}">
 											<c:choose>
 												<c:when test="${selectedSize eq null}">
-													<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
+													<li><a href="${link}?selectedSize=true" data-productCode="${variantOption.code}">${entry.value}</a></li>
 												</c:when>
 												<c:otherwise>
-														<li class="selected"><a href="${link}?selectedSize=true">${entry.value}</a></li>
+														<li class="selected"><a href="${link}?selectedSize=true"  data-productCode="${variantOption.code}">${entry.value}</a></li>
 												</c:otherwise>
 											</c:choose>
 										</c:when>
 										<c:otherwise>
-											<li data-vcode="${link}"><a href="${link}?selectedSize=true">${entry.value}</a></li>
+											<li data-vcode="${link}"><a href="${link}?selectedSize=true"  data-productCode="${variantOption.code}">${entry.value}</a></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -466,17 +466,21 @@ share mobile -->
 												
 												
 													<c:when test="${selectedSize eq null}">
-														<li><a href="${link}?selectedSize=true">${entry.value}</a></li>
+														<li><a href="${link}?selectedSize=true" data-productCode="${variantOption.code}">${entry.value}</a></li>
 													</c:when>
 													
-													<c:otherwise>
-																<li class="selected"><a href="${link}?selectedSize=true">${entry.value}</a></li>
-													</c:otherwise>
-											    </c:choose>
+
+												<c:otherwise>
+														<li class="selected"><a href="${link}?selectedSize=true" data-productCode="${variantOption.code}">${entry.value}</a></li>
+												</c:otherwise>
+												</c:choose>
+
 											</c:when>	
-											<c:otherwise>
-												     <li data-vcode="${link}"><a href="${link}?selectedSize=true">${entry.value}</a></li>
-											</c:otherwise>												
+
+										<c:otherwise>
+											<li data-vcode="${link}"><a href="${link}?selectedSize=true" data-productCode="${variantOption.code}">${entry.value}</a></li>
+										</c:otherwise>												
+
 												</c:choose>
 											</c:forEach>
 										</c:if>

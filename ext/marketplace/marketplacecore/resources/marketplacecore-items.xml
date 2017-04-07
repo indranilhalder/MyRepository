@@ -1132,7 +1132,14 @@
 			<targetElement type="JuspayEBSResponse" cardinality="many"
 				qualifier="risk"></targetElement>
 		</relation>
-
+		<!-- changes for JuspayEBSResponseFIX -->
+		<relation code="MplPaymentAuditJuspayEBSResponseData" localized="false"
+			autocreate="true">
+			<sourceElement type="MplPaymentAudit" cardinality="one"
+				qualifier="audit"></sourceElement>
+			<targetElement type="JuspayEBSResponseData" cardinality="many"
+				qualifier="riskData"></targetElement>
+		</relation>
 		<relation code="MobileCollectionBannerComponentProductRelation"
 			localized="false" autocreate="true">
 			<deployment table="MobileBannerProductTable" typecode="18964" />
@@ -1173,6 +1180,22 @@
 		
 		<!-- End -->
 		
+		
+		<relation code="VoucherStatusNotificationCustomerRelation"
+			autocreate="true" generate="true" localized="false">
+			<deployment table="Voucher2CustomerRel" typecode="18900" />
+			<sourceElement qualifier="Users" type="Principal"
+				cardinality="many" ordered="false" collectiontype="list">
+				<modifiers read="true" write="true" search="true"
+					optional="true" />
+			</sourceElement>
+			<targetElement qualifier="Voucher" type="VoucherStatusNotification"
+				cardinality="many" collectiontype="list">
+				<modifiers read="true" write="true" search="true"
+					optional="true" />
+			</targetElement>
+		</relation>
+
 	</relations>
 
 		
@@ -1879,6 +1902,11 @@
 						<description>Stores the Promotion Code</description>
 						<persistence type="property" />
 					</attribute>
+					<!-- Price Update -->
+					<attribute qualifier="productCodeString" type="java.lang.String">
+						<description>Product code as String</description>
+						<persistence type="property" />
+					</attribute>
 					
 				</attributes>
 			</itemtype>
@@ -2503,13 +2531,14 @@
 						</attribute> -->
 					<!-- End : New Attribute for identifying Fall Back Orders Plan B -->
 					<!-- Start : New Attribute for identifying Fall Back Orders Plan C -->
+					<!-- PaymentFix2017 -->
 					<attribute autocreate="true" qualifier="isSentToOMS"
 						type="java.lang.Boolean">
 						<persistence type="property" qualifier="isSentToOMS">
 						</persistence>
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<defaultvalue>true</defaultvalue>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
 					</attribute>
 					<!-- End : New Attribute for identifying Fall Back Orders Plan C -->
 					<attribute qualifier="serialNum" autocreate="true"
@@ -6231,11 +6260,11 @@
 					</attribute>
 					<!-- End TISPRO-249 -->
 					<!-- TISPRO-318 -->
-					<attribute qualifier="bogoFreeItmCount" type="java.lang.String">
+					<!-- <attribute qualifier="bogoFreeItmCount" type="java.lang.String">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 						<persistence type="property" />
-					</attribute>
+					</attribute> -->
 					<!-- End TISPRO-318 -->
 					<!-- TISPRD- 2511 -->
 					<attribute qualifier="isSentToFico" autocreate="true"
@@ -7606,6 +7635,12 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- changes for JuspayEBSResponseFIX -->
+					<attribute qualifier="ebsResponseData" type="JuspayEBSResponseData"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
 					<attribute qualifier="refunds" autocreate="true"
 						type="JuspayRefundResponseCollection">
 						<description>List of Refunds</description>
@@ -7758,6 +7793,45 @@
 						<key attribute="itemtype" />
 					</index>
 				</indexes>
+			</itemtype>
+			<!-- changes for JuspayEBSResponseFIX -->
+			<itemtype code="JuspayEBSResponseData" autocreate="true"
+				generate="true" jaloclass="com.tisl.mpl.core.jalo.JuspayEBSResponseData">
+				<deployment table="MplJspyEBSRespData" typecode="25092" /> 
+				<attributes>
+					<!-- <attribute qualifier="ebsRiskLevel" type="java.lang.String" autocreate="true" 
+						generate="true"> <modifiers read="true" write="true" search="true" /> <persistence 
+						type="property" /> </attribute> -->
+					<attribute qualifier="oldPK" type="java.lang.Long">
+						<description>PK of the old table for reference</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute autocreate="true" qualifier="ebsRiskLevel"
+						type="EBSRiskLevelEnum">
+						<persistence type="property" />
+						<modifiers read="true" write="true" initial="false" />
+					</attribute>
+					<attribute qualifier="ebsRiskPercentage" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- <attribute qualifier="ebsRiskStatus" type="java.lang.String" autocreate="true" 
+						generate="true"> <modifiers read="true" write="true" search="true" /> <persistence 
+						type="property" /> </attribute> -->
+					<attribute autocreate="true" qualifier="ebsRiskStatus"
+						type="EBSResponseStatus">
+						<persistence type="property" />
+						<modifiers read="true" write="true" initial="false" />
+					</attribute>
+					<attribute qualifier="ebs_bin_country" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
 			</itemtype>
 			<itemtype code="FraudReport" autocreate="false" generate="true">
 				<attributes>

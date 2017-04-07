@@ -175,19 +175,17 @@ public class ExtDefaultCartValidationStrategy extends DefaultCartValidationStrat
 	@Override
 	public Long getStockLevel(final CartEntryModel cartEntryModel)
 	{
-		//LOG.debug("getStockLevel............ ORDER ID" + cartEntryModel.getOrder().getCode());
+
 		final PointOfServiceModel pointOfService = cartEntryModel.getDeliveryPointOfService();
 
 		if (null != cartEntryModel.getDeliveryPointOfService())
 		{
+
 			LOG.debug("getStockLevel............Before Delete:-  Delivery Point Of Service"
 					+ cartEntryModel.getDeliveryPointOfService());
 			modelService.remove(cartEntryModel.getDeliveryPointOfService().getDisplayName());
-
 			LOG.debug("getStockLevel............After Delete:-  Delivery Point Of Service");
 			modelService.save(cartEntryModel);
-
-			LOG.debug("getStockLevel............After Save:-  PointOfServiceModel");
 
 		}
 

@@ -21,6 +21,13 @@ tr.d0 td {
      po.src = 'https://apis.google.com/js/client:plusone.js';
      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
  });
+ <!-- Change for INC_10528 -->
+ $(document).ready(function(){
+	 $('.gig-rating-readReviewsLink_pdp').css( 'cursor', 'pointer' );
+	 $(".gig-rating-readReviewsLink_pdp").click(function() {
+		    $('html,body').animate({scrollTop: $("#ReviewSecion").offset().top},'slow');
+		});
+ });
  
       $("#sellersSkuListId").val("");
       $("#skuIdForED").val("");
@@ -83,13 +90,16 @@ tr.d0 td {
 <input type="hidden" id="pdpBuyboxWinnerSellerID" value=''/>
 <input type="hidden" id="pdpOtherSellerIDs" value=''/>
 <!-- TPR-429 END-->
+<!-- For Data Layer Schema changes -->
+<input type="hidden" id="product_stock_count" value="${product_stock_count}" />
+<input type="hidden" id="out_of_stock" value="${out_of_stock}" />
+<input type="hidden" id="product_discount" value="${product_discount}" />
+<input type="hidden" id="product_discount_percentage" value="${product_discount_percentage}" />
+
 <!-- End Tealium -->
 
 <!-- TISPRM-56 -->
 <input type="hidden" id="product_allVariantsListingId" value="${allVariantsString}"/>
-
-
-
 
 
 <div itemscope itemtype="http://schema.org/Product" class="pdp">
@@ -105,16 +115,10 @@ tr.d0 td {
 				<%-- <input id="emiCuttOffAmount" type="hidden" value="${emiCuttOffAmount}"/>
 				<!-- EMI section -->
 				<product:emiDetail product="${product}" /> --%>
-			
+			<span id="productPromotionSection"><!-- UF-60 wrapping product:productPromotionSection in a span -->
 			<!-- promotion  section -->
 			<product:productPromotionSection product="${product}" />
-			
-			
-			
-			
-			
-			
-			
+   			</span>
 		</div>
 		<!-- Added for carousel in mobile view -->
 		<div class="product-image-container ${product.rootCategory} device">
@@ -192,11 +196,11 @@ tr.d0 td {
 				
 
 				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name">${product.brand.brandname}</span></h3>
-				<a itemprop="url" href="${mainurl}">
+				<%-- <a itemprop="url" href="${mainurl}"> --%>		<!-- Commented as part of UF-181 -->
 				<!-- For TPR-4358 -->
 				<h1 itemprop="name" class="product-name">${product.productTitle}</h1>
 				<meta itemprop="sku" content="${product_sku}"/>
-				</a>
+				<!-- </a> -->
 				<!-- //TPR-3752 Jewel Heading Added -->
 				<c:choose>
   				<c:when test="${product.rootCategory=='FineJewellery'}">
@@ -254,8 +258,9 @@ tr.d0 td {
 			</div>
 			
 			<!--  Added for displaying offer messages other than promotion, TPR-589 -->
+			<!--INC144313502-->
 				 <div>
-					<a class="pdp-promo-title-link">View more</a>
+					<a class="pdp-promo-title-link" style="display:none">View more</a>
 				</div>	
 				
 			<!-- TISPRM-97 ends -->
@@ -371,6 +376,7 @@ tr.d0 td {
 
 			<div id="fb-root"></div>
 			<div class="Wrap">
+
 				<cms:pageSlot position="PinCodeService" var="component">
 					<cms:component component="${component}" />
 				</cms:pageSlot>
@@ -394,7 +400,6 @@ tr.d0 td {
             <!-- BLOCK MODIFIED FOR JEWELLERY CERTIFICATION STARTS HERE-->
             
 	          	<ul class="wish-share desktop">
-	
 					<%-- <li><!-- <span id="addedMessage" style="display:none"></span> -->
 					<!-- Commented as per PDP CR Change -->
 					<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li> --%>
@@ -418,16 +423,6 @@ tr.d0 td {
 			</c:if> --%>
 			
 
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			
 			<!-- BLOCK MODIFIED FOR JEWELLERY CERTIFICATION ENDS HERE-->
 		</div>
@@ -466,7 +461,8 @@ tr.d0 td {
 		</c:when>
 		<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches || product.rootCategory==travelandluggage}">
 			<div class="trending"  id="ia_products_bought_together"></div>
-			<div class="trending"  id="ia_products_similar"></div>
+			<!-- Change for INC_10849 -->
+			<!-- <div class="trending"  id="ia_products_similar"></div> -->
 		</c:when>
 </c:choose>
 <!-- For Infinite Analytics End -->
@@ -489,6 +485,12 @@ tr.d0 td {
 <c:otherwise>
 </c:otherwise> 
 </c:choose>	
+ <!-- Change for INC_10849 -->
+<c:choose>
+		<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
+			<div class="trending"  id="ia_products_similar"></div>
+		</c:when>
+</c:choose>
 	
 	
 	<!-- Made For Living Section Starts -->
@@ -524,6 +526,8 @@ tr.d0 td {
 
 <%-- Start Gigya Rating & Reviews --%>
 	<c:if test="${isGigyaEnabled=='Y'}">
+<!-- Below line added for UF-60 -->
+	<input type="hidden" value="${isGigyaEnabled}" name="isGigyaEnabled" id="isGigyaEnabled"/>
 	<product:reviewComments/>
 	</c:if>
 	 

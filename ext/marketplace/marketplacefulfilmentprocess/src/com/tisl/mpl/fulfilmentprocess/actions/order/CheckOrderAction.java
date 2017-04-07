@@ -74,7 +74,6 @@ public class CheckOrderAction extends AbstractSimpleDecisionAction<OrderProcessM
 				}
 				else
 				{
-					setOrderStatus(order, OrderStatus.PAYMENT_TIMEOUT);
 					return Transition.NOK;
 				}
 			}

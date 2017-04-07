@@ -4,6 +4,7 @@
 package com.tisl.mpl.facade.cms;
 
 
+import de.hybris.platform.acceleratorcms.model.components.FooterComponentModel;
 import de.hybris.platform.acceleratorcms.model.components.NavigationBarCollectionComponentModel;
 import de.hybris.platform.acceleratorcms.model.components.NavigationBarComponentModel;
 import de.hybris.platform.acceleratorcms.model.components.SimpleBannerComponentModel;
@@ -18,12 +19,11 @@ import de.hybris.platform.cms2.model.navigation.CMSNavigationNodeModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
+import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSContentSlotService;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.cms2lib.model.components.ProductCarouselComponentModel;
 import de.hybris.platform.cms2lib.model.components.RotatingImagesComponentModel;
 import de.hybris.platform.commercefacades.product.ProductFacade;
-import de.hybris.platform.commercefacades.product.ProductOption;
-import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercesearch.model.SolrHeroProductDefinitionModel;
 import de.hybris.platform.commercesearch.searchandizing.heroproduct.HeroProductDefinitionService;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
@@ -39,7 +39,6 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -53,6 +52,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -89,6 +89,8 @@ import com.tisl.mpl.facades.cms.data.ProductListComponentData;
 import com.tisl.mpl.facades.cms.data.PromotionComponentData;
 import com.tisl.mpl.facades.cms.data.SectionData;
 import com.tisl.mpl.facades.cms.data.TextComponentData;
+import com.tisl.mpl.facades.data.FooterComponentData;
+import com.tisl.mpl.facades.data.SimpleBannerComponentData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservice.url.ExtDefaultCategoryModelUrlResolver;
 import com.tisl.mpl.marketplacecommerceservice.url.ExtDefaultProductModelUrlResolver;
@@ -103,6 +105,7 @@ import com.tisl.mpl.model.cms.components.MobileAppHeroComponentModel;
 import com.tisl.mpl.model.cms.components.MobileBannerComponentModel;
 import com.tisl.mpl.model.cms.components.MobileCollectionBannerComponentModel;
 import com.tisl.mpl.model.cms.components.MobileCollectionLinkComponentModel;
+import com.tisl.mpl.model.cms.components.NeedHelpComponentModel;
 import com.tisl.mpl.model.cms.components.PromotionalProductsComponentModel;
 import com.tisl.mpl.model.cms.components.SmallBrandMobileAppComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
@@ -137,7 +140,7 @@ import com.tisl.mpl.wsdto.TextComponentWsDTO;
 
 
 /**
- * @author 584443
+ * @author TCS
  *
  */
 public class MplCmsFacadeImpl implements MplCmsFacade
@@ -154,6 +157,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	private final String SUBBRAND = "Subbrand";
 	private final String SELLER = "Seller";
 	private final String OFFER = "Offer";
+	//private final String SIMPLEBANNERCOMPONENT = "SimpleBannerComponent"; //Sonar fix
 
 	private final String HEROSTATUS = "Success";
 
@@ -182,6 +186,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	private Converter<ProductModel, CollectionProductData> mobileCollectionProductConverter;
 
+	@Resource(name = "mplBannerConverter")
+	private Converter<SimpleBannerComponentModel, SimpleBannerComponentData> mplBannerConverter;
+
 	private HeroProductDefinitionService heroProductDefinitionService;
 
 	private MplSellerMasterService sellerMasterService;
@@ -197,6 +204,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	@Resource(name = "productService")
 	private ProductService productService;
+
+	@Autowired
+	private DefaultCMSContentSlotService contentSlotService;
 
 
 	@Resource(name = "defaultCategoryModelUrlResolver")
@@ -396,8 +406,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getLandingPageForCategory(java.lang.String)
 	 */
 	@Override
-	public PageData getCategoryLandingPageForMobile(final String categoryCode) throws CMSItemNotFoundException,
-			NullPointerException
+	public PageData getCategoryLandingPageForMobile(final String categoryCode)
+			throws CMSItemNotFoundException, NullPointerException
 	{
 		final CategoryModel category = getCategoryService().getCategoryForCode(categoryCode);
 		final ContentPageModel contentPage = getMplCMSPageService().getCategoryLandingPageForMobile(category, CMSChannel.MOBILE);
@@ -440,8 +450,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					{
 						final MobileBannerComponentModel mobileBannerComponent = (MobileBannerComponentModel) abstractCMSComponentModel;
 						final HomePageComponentData homePageData = new HomePageComponentData();
-						homePageData.setImage(mobileBannerComponent.getMedia() != null ? mobileBannerComponent.getMedia().getURL()
-								: null);
+						homePageData
+								.setImage(mobileBannerComponent.getMedia() != null ? mobileBannerComponent.getMedia().getURL() : null);
 						homePageData.setContentId(mobileBannerComponent.getUid());
 						if (mobileBannerComponent.getAssociatedCategory() != null
 								&& !mobileBannerComponent.getAssociatedCategory().isEmpty())
@@ -1467,13 +1477,15 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 						{
 							final ProductListComponentData productComp = new ProductListComponentData();
 							ProductModel productModel = null;
-							ProductData product = null;
+							//final ProductData product = null;
 							BuyBoxData buyboxdata = null;
 							//IQA
 							try
 							{
-								product = productFacade.getProductForCodeAndOptions(productCode,
-										Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.CATEGORIES));
+								//CAR Project performance issue fixed
+
+								//								product = productFacade.getProductForCodeAndOptions(productCode,
+								//										Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.CATEGORIES));
 								buyboxdata = buyBoxFacade.buyboxPrice(productCode);
 								productModel = productService.getProductForCode(productCode);
 								if (null != productModel && null != productModel.getPicture())
@@ -1481,10 +1493,18 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 									productComp.setImage(productModel.getPicture().getUrl2());
 								}
 								//IQA
-								if (StringUtils.isNotEmpty(product.getName()))
+								//								if (StringUtils.isNotEmpty(product.getName()))
+								//								{
+								//									productComp.setName(product.getName());
+								//								}
+
+								//CAR Project performance issue fixed
+
+								if (null != productModel && StringUtils.isNotEmpty(productModel.getName()))
 								{
-									productComp.setName(product.getName());
+									productComp.setName(productModel.getName());
 								}
+
 								if (buyboxdata.getMrp() != null)
 								{
 									productComp.setPrice(buyboxdata.getMrp().getFormattedValue());
@@ -1604,10 +1624,11 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 						final Date today = new Date();
 						if ((null != promotion.getStartDate() && null != promotion.getEndDate()
 								&& promotion.getStartDate().before(today) && promotion.getEndDate().after(today))
-								|| (null == promotion.getStartDate() && null != promotion.getEndDate() && promotion.getEndDate().after(
-										today))
-								|| (null != promotion.getStartDate() && promotion.getStartDate().before(today) && null == promotion
-										.getEndDate()) || null == promotion.getStartDate() && null == promotion.getEndDate())
+								|| (null == promotion.getStartDate() && null != promotion.getEndDate()
+										&& promotion.getEndDate().after(today))
+								|| (null != promotion.getStartDate() && promotion.getStartDate().before(today)
+										&& null == promotion.getEndDate())
+								|| null == promotion.getStartDate() && null == promotion.getEndDate())
 
 						{
 							promotionComponentData.setTitle(promotion.getName());
@@ -1772,8 +1793,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					{
 						collectionSectionData = new CollectionSectionData();
 						final MobileCollectionBannerComponentModel mobileCollectionComponent = (MobileCollectionBannerComponentModel) abstractCMSComponentModel;
-						final CollectionComponentData collectionData = getMobileCollectionComponentConverter().convert(
-								mobileCollectionComponent);
+						final CollectionComponentData collectionData = getMobileCollectionComponentConverter()
+								.convert(mobileCollectionComponent);
 						collectionSectionData.setComponents(collectionData);
 						collectionSectionData.setSequence(contentSlotForPage.getSequenceNumber());
 						collectionSectionDatas.add(collectionSectionData);
@@ -1786,13 +1807,11 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 						final LinkedCollectionsData previousCollectionData = new LinkedCollectionsData();
 						final LinkedCollectionsData nextCollectionData = new LinkedCollectionsData();
 						previousCollectionData.setName(mobileCollectionLinkComponent.getPreviousCollectionName());
-						previousCollectionData
-								.setTargetCollection(mobileCollectionLinkComponent.getPreviousCollection() != null ? mobileCollectionLinkComponent
-										.getPreviousCollection().getCollectionId() : null);
+						previousCollectionData.setTargetCollection(mobileCollectionLinkComponent.getPreviousCollection() != null
+								? mobileCollectionLinkComponent.getPreviousCollection().getCollectionId() : null);
 						nextCollectionData.setName(mobileCollectionLinkComponent.getNextCollectionName());
-						nextCollectionData
-								.setTargetCollection(mobileCollectionLinkComponent.getNextCollection() != null ? mobileCollectionLinkComponent
-										.getNextCollection().getCollectionId() : null);
+						nextCollectionData.setTargetCollection(mobileCollectionLinkComponent.getNextCollection() != null
+								? mobileCollectionLinkComponent.getNextCollection().getCollectionId() : null);
 						collectionPageData.setPreviousCollection(previousCollectionData);
 						collectionPageData.setNextCollection(nextCollectionData);
 
@@ -2005,10 +2024,11 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 						final Date today = new Date();
 						if ((null != promotion.getStartDate() && null != promotion.getEndDate()
 								&& promotion.getStartDate().before(today) && promotion.getEndDate().after(today))
-								|| (null == promotion.getStartDate() && null != promotion.getEndDate() && promotion.getEndDate().after(
-										today))
-								|| (null != promotion.getStartDate() && promotion.getStartDate().before(today) && null == promotion
-										.getEndDate()) || null == promotion.getStartDate() && null == promotion.getEndDate())
+								|| (null == promotion.getStartDate() && null != promotion.getEndDate()
+										&& promotion.getEndDate().after(today))
+								|| (null != promotion.getStartDate() && promotion.getStartDate().before(today)
+										&& null == promotion.getEndDate())
+								|| null == promotion.getStartDate() && null == promotion.getEndDate())
 
 						{
 							promotionComponentData.setTitle(promotion.getName());
@@ -2095,7 +2115,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getlandingForBrand()
 	 */
 	@Override
@@ -2180,7 +2200,10 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					blpComponent = getForHimHerBannerWsDTO(luxuryBannerComponent);
 					componentListForASlot.add(blpComponent);
 				}
+
+
 				if (typecode.equalsIgnoreCase(SIMPLE_BANNER) && position.equalsIgnoreCase("BottomHeaderSlot"))
+
 				{
 					final SimpleBannerComponentModel headerslot = (SimpleBannerComponentModel) abstractCMSComponentModel;
 					blpComponent = getHeaderComponent(headerslot);
@@ -2193,7 +2216,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					blpComponent = getBlpBannerWsDTO(luxBlpBannerComponent);
 					componentListForASlot.add(blpComponent);
 				}
+
 				if (typecode.equalsIgnoreCase(SIMPLE_BANNER) && position.equalsIgnoreCase("Section3"))
+
 				{
 					final SimpleBannerComponentModel springComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
 					final LuxSpringCollectionComponentWsDTO springDto = getSpringWsDTO(springComponent);
@@ -2202,7 +2227,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					luxBlpComponent.setSectionid(section);
 					componentListForASlot.add(luxBlpComponent);
 				}
+
 				if (typecode.equalsIgnoreCase(SIMPLE_BANNER) && position.equalsIgnoreCase("Section4"))
+
 				{
 					final SimpleBannerComponentModel springComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
 					final LuxSpringCollectionComponentWsDTO featuredComponentDto = getSpringWsDTO(springComponent);
@@ -2271,15 +2298,17 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					componentListForASlot.add(blpComponent);
 				}
 
+
 				if (typecode.equalsIgnoreCase(SIMPLE_BANNER) && position.equalsIgnoreCase("Section8"))
+
 				{
 					final SimpleBannerComponentModel luxuryOurMissionComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
 					blpComponent = getOurMissionWsDTO(luxuryOurMissionComponent);
 					componentListForASlot.add(blpComponent);
 				}
 
-				LOG.debug("Adding component" + abstractCMSComponentModel.getUid() + "for section" + section + "for position"
-						+ position);
+				LOG.debug(
+						"Adding component" + abstractCMSComponentModel.getUid() + "for section" + section + "for position" + position);
 
 				blpComponent.setSectionid(section);
 				//	componentListForASlot.add(blpComponent);
@@ -3003,15 +3032,15 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 						else if (null != cmsNav.getLinks().get(0).getCategoryCode())
 						{
-							final CategoryModel categoryL1 = getCategoryService().getCategoryForCode(
-									cmsNav.getLinks().get(0).getCategoryCode());
+							final CategoryModel categoryL1 = getCategoryService()
+									.getCategoryForCode(cmsNav.getLinks().get(0).getCategoryCode());
 							cmsChildNavDto.setDestination(defaultCategoryModelUrlResolver.resolve(categoryL1));
 						}
 
 						else if (null != cmsNav.getLinks().get(0).getCategory())
 						{
-							cmsChildNavDto.setDestination(defaultCategoryModelUrlResolver
-									.resolve(cmsNav.getLinks().get(0).getCategory()));
+							cmsChildNavDto
+									.setDestination(defaultCategoryModelUrlResolver.resolve(cmsNav.getLinks().get(0).getCategory()));
 						}
 					}
 
@@ -3046,14 +3075,14 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 								}
 								else if (null != levelTwoComp.getLinks().get(0).getCategoryCode())
 								{
-									final CategoryModel categoryL2 = getCategoryService().getCategoryForCode(
-											levelTwoComp.getLinks().get(0).getCategoryCode());
+									final CategoryModel categoryL2 = getCategoryService()
+											.getCategoryForCode(levelTwoComp.getLinks().get(0).getCategoryCode());
 									level2Dto.setDestination(defaultCategoryModelUrlResolver.resolve(categoryL2));
 								}
 								else if (null != levelTwoComp.getLinks().get(0).getCategory())
 								{
-									level2Dto.setDestination(defaultCategoryModelUrlResolver.resolve(levelTwoComp.getLinks().get(0)
-											.getCategory()));
+									level2Dto.setDestination(
+											defaultCategoryModelUrlResolver.resolve(levelTwoComp.getLinks().get(0).getCategory()));
 								}
 
 							}
@@ -3129,8 +3158,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 											else if (null != levelFourLink.getCategoryCode())
 											{
-												final CategoryModel categoryL4 = getCategoryService().getCategoryForCode(
-														levelFourLink.getCategoryCode());
+												final CategoryModel categoryL4 = getCategoryService()
+														.getCategoryForCode(levelFourLink.getCategoryCode());
 												level4Dto.setDestination(defaultCategoryModelUrlResolver.resolve(categoryL4));
 											}
 											else if (null != levelFourLink.getCategory())
@@ -3182,6 +3211,63 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	public void setBrandLandingPageSlotMapping(final Map<String, String> brandLandingPageSlotMapping)
 	{
 		this.brandLandingPageSlotMapping = brandLandingPageSlotMapping;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getContentSlotData(java.lang.String)
+	 */
+	@Override
+	public FooterComponentData getContentSlotData(final String slotId)
+	{
+		final FooterComponentData fData = new FooterComponentData();
+		FooterComponentModel footer = null;
+		final FooterComponentData footerData = null;
+		final ContentSlotModel footerSlot = contentSlotService.getContentSlotForId(slotId);
+		final NeedHelpComponentModel needHelpFooter = null;
+
+		if (null != footerSlot && CollectionUtils.isNotEmpty(footerSlot.getCmsComponents()))
+		{
+			for (final AbstractCMSComponentModel cmsComponentModel : footerSlot.getCmsComponents())
+			{
+				if (cmsComponentModel instanceof FooterComponentModel)
+				{
+					footer = (FooterComponentModel) cmsComponentModel;
+				}
+
+			}
+			//footerData = footerDataConverter.convert(footer);
+			final List<SimpleBannerComponentModel> footerAppImageModelList = (List<SimpleBannerComponentModel>) footer
+					.getFooterAppImageList();
+			final List<SimpleBannerComponentData> footerAppImageDataList = new ArrayList<SimpleBannerComponentData>();
+
+			for (final SimpleBannerComponentModel source : footerAppImageModelList)
+			{
+				final SimpleBannerComponentData target = new SimpleBannerComponentData();
+				mplBannerConverter.convert(source, target);
+				footerAppImageDataList.add(target);
+			}
+
+			fData.setFooterAppImageList(footerAppImageDataList);
+		}
+
+		fData.setContactNumber((needHelpFooter == null) ? "" : needHelpFooter.getContactNumber());
+		//fData.setFooterAppImageList(footerData.getFooterAppImageList());
+		//fData.setFooterSocialIconList(footerData.getFooterSocialIconList());
+		fData.setFooterText(footer.getFooterText());
+		fData.setNavigationNodes(footer.getNavigationNodes());
+		fData.setNotice(footer.getNotice());
+		if (null != footer.getWrapAfter())
+		{
+			fData.setWrapAfter(footer.getWrapAfter().toString());
+		}
+		else
+		{
+			fData.setWrapAfter("");
+		}
+
+		return fData;
 	}
 
 }

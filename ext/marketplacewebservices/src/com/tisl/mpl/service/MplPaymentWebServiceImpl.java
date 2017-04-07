@@ -719,7 +719,7 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 
 								//								}
 								// Save payment Transaction Entry
-								getMplPaymentService().setPaymentTransactionForCOD(paymentModeMap, cartModel);
+								getMplPaymentService().setPaymentTransactionForCOD(cartModel);
 								try
 								{
 									// Update COD Payment Info
@@ -1231,7 +1231,7 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 			LOG.debug(String.format("productAndCartpromotion: | orderPromo.getEndDate(): %s   ", endDate));
 
 			// Validate if Promotion is enable and not expired
-			if (orderPromo.getEnabled().booleanValue() && !endDate.before(new Date()))
+			if (orderPromo.getEnabled().booleanValue() && endDate != null && !endDate.before(new Date()))
 			{
 				final List<SalesApplication> salesChannel = orderPromo.getChannel();
 				LOG.debug(String.format("productAndCartpromotion: | orderPromo--salesChannel: %s   ", salesChannel));

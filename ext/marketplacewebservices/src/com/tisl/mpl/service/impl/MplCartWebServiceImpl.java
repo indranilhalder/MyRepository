@@ -107,6 +107,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.service.MplCartWebService;
+import com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.utility.MplDiscountUtil;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
@@ -182,6 +183,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
 
 	private final static Logger LOG = Logger.getLogger(MplCartWebServiceImpl.class);
+
+	@Autowired
+	private MplDefaultCommerceAddToCartStrategyImpl mplDefaultCommerceAddToCartStrategyImpl;
 
 	/**
 	 * Service to create cart
@@ -404,8 +408,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					break;
 				}
 
-				final CommerceCartModification modification = mplCommerceCartService.addToCartWithUSSID(newCartParameter);
-
+				//final CommerceCartModification modification = mplCommerceCartService.addToCartWithUSSID(newCartParameter);
+				final CommerceCartModification modification = mplCommerceCartService.addToCart(newCartParameter);
 				resultCartModificationData = getCartModificationConverter().convert(modification);
 				LOG.debug("resultCartModificationData is not null");
 			}
@@ -562,23 +566,10 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		try
 		{
 
-			if (userFacade.isAnonymousUser())
-			{
-				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
-				if (LOG.isDebugEnabled())
-				{
-					LOG.debug("************ Anonymous cart mobile (addProductToCart) **************" + cartId);
-				}
-			}
-			else
-			{
-				cartModel = mplPaymentWebFacade.findCartValues(cartId);
-				if (LOG.isDebugEnabled())
-				{
-					LOG.debug("************ Logged-in cart mobile (addProductToCart)**************" + cartId);
-				}
-			}
-
+			//changes for CarProject
+			//cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
+			cartModel = cartService.getSessionCart();
+			//changes for CarProject ends
 			if (cartModel == null)
 			{
 				LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartId);
@@ -614,7 +605,10 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 			if (selectedProductModel == null)
 			{
-				selectedProductModel = productService.getProductForCode(defaultPromotionManager.catalogData(), productCode);
+				//changes for CarProject
+				//selectedProductModel = productService.getProductForCode(defaultPromotionManager.catalogData(), productCode);
+				selectedProductModel = productService.getProductForCode(productCode);
+				// changes for CarProject ends
 				if (selectedProductModel == null)
 				{
 					LOG.debug(MarketplacecommerceservicesConstants.INVALID_PRODUCT_CODE + productCode);
@@ -729,23 +723,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		String delistMessage = MarketplacewebservicesConstants.EMPTY;
 		try
 		{
-			if (userFacade.isAnonymousUser())
+			//CAR changes
+			cart = cartService.getSessionCart();
+			if (LOG.isDebugEnabled())
 			{
-
-				cart = mplPaymentWebFacade.findCartAnonymousValues(cartId);
-				if (LOG.isDebugEnabled())
-				{
-					LOG.debug("************ Anonymous cart mobile **************" + cartId);
-				}
-			}
-			else
-			{
-
-				cart = mplPaymentWebFacade.findCartValues(cartId);
-				if (LOG.isDebugEnabled())
-				{
-					LOG.debug("************ Logged-in cart mobile **************" + cartId);
-				}
+				LOG.debug("************ Cart mobile **************" + cartId);
 			}
 			if (cart != null)
 			{
@@ -821,30 +803,26 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 		CartModel cart = null;
 		CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
-		final String delistMessage = MarketplacewebservicesConstants.EMPTY;
+		String delistMessage = MarketplacewebservicesConstants.EMPTY;
 		try
 		{
-			if (userFacade.isAnonymousUser())
-			{
 
-				cart = mplPaymentWebFacade.findCartAnonymousValues(cartId);
-				if (LOG.isDebugEnabled())
-				{
-					LOG.debug("************ Anonymous cart mobile **************" + cartId);
-				}
-			}
-			else
-			{
+			//CAR Project performance issue fixed
+			cart = cartService.getSessionCart();
 
-				cart = mplPaymentWebFacade.findCartValues(cartId);
-				if (LOG.isDebugEnabled())
-				{
-					LOG.debug("************ Logged-in cart mobile **************" + cartId);
-				}
-			}
 			if (cart != null)
 			{
+				final boolean deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cart);
+
+				LOG.debug("Cart Delisted Status " + deListedStatus);
+
 				cartDataDetails = cartDetailsWithPos(cart, addressListDTO, pincode, cartId);
+
+				if (deListedStatus)
+				{
+					delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
+					cartDataDetails.setDelistedMessage(delistMessage);
+				}
 
 				if (null != cart.getPickupPersonName())
 				{
@@ -896,7 +874,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	@Override
 	public List<GetWishListProductWsDTO> productDetails(final AbstractOrderModel abstractOrderModel,
 			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final boolean isPinCodeCheckRequired,
-			final boolean resetRequired) throws EtailBusinessExceptions, EtailNonBusinessExceptions
+			final boolean resetRequired, final List<PinCodeResponseData> pincodeList) throws EtailBusinessExceptions,
+			EtailNonBusinessExceptions
 	{
 
 		String mediaFormat = null;
@@ -1542,7 +1521,50 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				{
 					gwlp.setPrice(new Double(abstractOrderEntry.getBasePrice().doubleValue()));
 				}
+				//CAR-57
+				PinCodeResponseData obj = null;
+				if (null != pincodeList)
+				{
+					for (final PinCodeResponseData pinCodeObj : pincodeList)
+					{
+						if (pinCodeObj.getUssid().equalsIgnoreCase(gwlp.getUSSID()))
+						{
+							obj = new PinCodeResponseData();
+							if (null != pinCodeObj.getCod())
+							{
+								obj.setCod(pinCodeObj.getCod());
+							}
+							if (null != pinCodeObj.getIsCODLimitFailed())
+							{
+								obj.setIsCODLimitFailed(pinCodeObj.getIsCODLimitFailed());
+							}
+							if (null != pinCodeObj.getIsPrepaidEligible())
+							{
+								obj.setIsPrepaidEligible(pinCodeObj.getIsPrepaidEligible());
+							}
+							if (null != pinCodeObj.getIsServicable())
+							{
+								obj.setIsServicable(pinCodeObj.getIsServicable());
+							}
+							if (null != pinCodeObj.getUssid())
+							{
+								obj.setUssid(pinCodeObj.getUssid());
+							}
+							if (null != pinCodeObj.getValidDeliveryModes())
+							{
+								obj.setValidDeliveryModes(pinCodeObj.getValidDeliveryModes());
+							}
+							break;
+						}
+
+					}
+				}
+				if (null != obj)
+				{
+					gwlp.setPinCodeResponse(obj);
+				}
 				gwlpList.add(gwlp);
+
 				//	}
 			}
 			//}
@@ -1808,28 +1830,20 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		/* Product Details */
 		List<GetWishListProductWsDTO> gwlpList = new ArrayList<>();
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<>();
-		boolean deListedStatus = false;
-		String delistMessage = "";
+		//CAR-57
+		List<PinCodeResponseData> pinCodeRes = null;
+
+
 		try
 		{
 			if (cartModel != null)
 			{
-				//cartData = getMplExtendedCartConverter().convert(cartModel);
-				deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cartModel);
-
-				//Delisted
-				if (deListedStatus)
-				{
-					delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
-					cartDataDetails.setDelistedMessage(delistMessage);
-				}
 				mplCouponFacade.releaseVoucherInCheckout(cartModel); //TISPT-104
 				cartDataOrdered = mplCartFacade.getSessionCartWithEntryOrderingMobile(cartModel, true, true, true);
 				//To calculate discount percentage amount for display purpose
 				// TPR-774-- Total MRP calculation and the Product percentage calculation
 				/**** Pincode check Details ***/
 			}
-
 			try
 			{
 				if (StringUtils.isNotEmpty(pincode))
@@ -1839,7 +1853,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					{
 						LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + pincode);
 					}
-					final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(cartDataOrdered, cartModel, pincode);
+					//CAR-57
+					pinCodeRes = checkPinCodeAtCart(cartDataOrdered, cartModel, pincode);
 					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes, cartModel);
 				}
 			}
@@ -1855,11 +1870,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			/* Product Details */
 			if (StringUtils.isNotEmpty(pincode))
 			{
-				gwlpList = productDetails(cartModel, deliveryModeDataMap, true, true);
+				//CAR-57
+				gwlpList = productDetails(cartModel, deliveryModeDataMap, true, true, pinCodeRes);
 			}
 			else
 			{
-				gwlpList = productDetails(cartModel, deliveryModeDataMap, false, true);
+				//CAR-57
+				gwlpList = productDetails(cartModel, deliveryModeDataMap, false, true, pinCodeRes);
 			}
 
 			if (null != gwlpList && !gwlpList.isEmpty())
@@ -1952,23 +1969,16 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		final CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
 		int count = 0;
 		CartData cartDataOrdered = null;
+		//CAR-57
+		List<PinCodeResponseData> pinCodeRes = null;
 		/* Product Details */
 		List<GetWishListProductWsDTO> gwlpList = new ArrayList<>();
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<>();
-		boolean deListedStatus = false;
-		String delistMessage = "";
+
 		try
 		{
 			if (cartModel != null)
 			{
-				//cartData = getMplExtendedCartConverter().convert(cartModel);
-				deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cartModel);
-				//Delisted
-				if (deListedStatus)
-				{
-					delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
-					cartDataDetails.setDelistedMessage(delistMessage);
-				}
 				cartDataOrdered = mplCartFacade.getSessionCartWithEntryOrderingMobile(cartModel, true, false, false);
 				/**** Pincode check Details ***/
 				try
@@ -1980,8 +1990,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						{
 							LOG.debug("************ Mobile webservice Pincode check at OMS Mobile *******" + pincode);
 						}
-
-						final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(cartDataOrdered, cartModel, pincode);
+						//CAR-57
+						pinCodeRes = checkPinCodeAtCart(cartDataOrdered, cartModel, pincode);
 						deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes, cartModel);
 					}
 				}
@@ -1997,11 +2007,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				/* Product Details */
 				if (StringUtils.isNotEmpty(pincode))
 				{
-					gwlpList = productDetails(cartModel, deliveryModeDataMap, true, false);
+					//CAR-57
+					gwlpList = productDetails(cartModel, deliveryModeDataMap, true, false, pinCodeRes);
 				}
 				else
 				{
-					gwlpList = productDetails(cartModel, deliveryModeDataMap, false, false);
+					//CAR-57
+					gwlpList = productDetails(cartModel, deliveryModeDataMap, false, false, pinCodeRes);
 				}
 
 
@@ -2154,7 +2166,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			//TISEE-957 isCodEligible flag update
 			if (null != responseData)
 			{
-				final boolean isCOdEligible = mplCartFacade.addCartCodEligible(deliveryModeDataMap, responseData, cartModel);
+				final boolean isCOdEligible = mplCartFacade
+						.addCartCodEligible(deliveryModeDataMap, responseData, cartModel, cartData);
 				LOG.debug("isCOdEligible " + isCOdEligible);
 			}
 		}
@@ -2229,6 +2242,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		boolean deListedStatus = false;
 		List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
+		//CAR-57
+		List<PinCodeResponseData> pinCodeRes = null;
 		try
 		{
 			deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cartModel);
@@ -2245,7 +2260,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			{
 				if (null != pincode && !pincode.isEmpty())
 				{
-					final List<PinCodeResponseData> pinCodeRes = checkPinCodeAtCart(cartDataOrdered, cartModel, pincode);
+					//CAR-57
+					pinCodeRes = checkPinCodeAtCart(cartDataOrdered, cartModel, pincode);
 					// Changes for Duplicate Cart fix
 					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartDataOrdered, pinCodeRes, cartModel);
 				}
@@ -2258,11 +2274,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			/* Product Details */
 			if (StringUtils.isNotEmpty(pincode))
 			{
-				gwlpList = productDetails(cartModel, deliveryModeDataMap, true, false);
+				//CAR-57
+				gwlpList = productDetails(cartModel, deliveryModeDataMap, true, false, pinCodeRes);
 			}
 			else
 			{
-				gwlpList = productDetails(cartModel, deliveryModeDataMap, false, false);
+				//CAR-57
+				gwlpList = productDetails(cartModel, deliveryModeDataMap, false, false, pinCodeRes);
 			}
 			cartDetailsData.setProducts(gwlpList);
 
@@ -2439,11 +2457,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			/* Product Details */
 			if (StringUtils.isNotEmpty(pincode))
 			{
-				gwlpList = productDetails(orderModel, deliveryModeDataMap, true, false);
+				//CAR-57--TO-DO: For time being, passing null
+				gwlpList = productDetails(orderModel, deliveryModeDataMap, true, false, null);
 			}
 			else
 			{
-				gwlpList = productDetails(orderModel, deliveryModeDataMap, false, false);
+				//CAR-57--TO-DO: For time being, passing null
+				gwlpList = productDetails(orderModel, deliveryModeDataMap, false, false, null);
 			}
 			cartDetailsData.setProducts(gwlpList);
 

@@ -109,8 +109,6 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType; priceValue             ;double ;            ;true;    ;    ;    ;    ;mplPriceValueProvider;
 ;$solrIndexedType; swatchColor    		  ;string ;            ;	;    ;true;    ;    ;mplSwatchColorValueProvider;
 ;$solrIndexedType; displaySize    		  ;string ;            ;	;    ;true;    ;    ;mplSwatchSizeValueProvider;
-;$solrIndexedType; mplAvgRating    		  ;double ;            ;	;    ;    ;    ;    ;mplAverageRatingValueProvider;
-;$solrIndexedType; ratingCount    		  ;int    ;            ;	;    ;    ;    ;    ;mplRatingCountValueProvider;
 ;$solrIndexedType; productCategoryType    ;string ;            ;    ;    ;    ;    ;    ;mplProductCategoryTypeValueProvider;
 ;$solrIndexedType; mrpPriceValue          ;double ;            ;true;    ;    ;    ;    ;mplMrpPriceValueProvider;
 #TISPT-217 Changes
@@ -150,7 +148,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 #Added for Cart
 
 ;$solrIndexedType; isVariant              ;boolean;            ;    ;    ;    ;    ;    ;mplIsVariantValueProvider;
-;$solrIndexedType; inStockFlagForAddtoCart;boolean;            ;    ;    ;    ;    ;    ;mplProductInStockFlagValueProvider;
+
 #new changes
 ;$solrIndexedType; displayStock			  ;string ;	  	;	;	 ;true;;;mplProductStockeValueProvider; 
 ;$solrIndexedType; displayPrice    	      ;string ;     ;	;    ;true;;;mplSwatchPriceValueProvider;
@@ -184,7 +182,6 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType; allPromotions		  ;string ;true ;	 ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 0   ;true;     ;     ;mplNewPromotionCodeValueProvider		;mplPromotionFacetDisplayNameProvider	;                         	;defaultTopValuesProvider   ;                                                   ;8
 ;$solrIndexedType; allMobilePromotions	  ;string ; 	;	 ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 0   ;true;     ;     ;										;mplPromotionFacetDisplayNameProvider	;                         	;defaultTopValuesProvider   ;                                                   ;8
 ;$solrIndexedType; size               	  ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplSizeFacetValueProvider            ;                						;sizeAttributeSortProvider  ;
-;$solrIndexedType; rating 				  ;double ;  	;    ;     ;true ;     ;true ;MultiSelectOr ;Alpha ; 2000;true;     ;  	  ;mplAverageRatingFacetValueProvider	;										;							;						    ;mplFacetAvgRating                                  ;
 ;$solrIndexedType; deptType               ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplProductCategoryTypeValueProvider  ;                						;                           ;defaultTopValuesProvider   ;                                                   ;8
 ;$solrIndexedType; capacity               ;string ;  	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplCapacityFacetValueProvider        ;                						;                           ;defaultTopValuesProvider   ;                                                   ;8
 ;$solrIndexedType; sellerId            	  ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplSellerIdValueProvider             ;                						;                           ;defaultTopValuesProvider   ;                                                   ;8
@@ -540,6 +537,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 
 
 
+
 #Travel And Luggage 
 ####### For normal facets
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true]				;type(code)	;sortableType(code)	;currency[default=false];localized[default=false];isNumeric[default=false]	;isRangeFaceted[default=false]	;isNumericRange[default=false];multiValue[default=true]	;facet[default=false]	;facetType(code);facetSort(code);priority	;visible	;fieldValueProvider      					;customFacetSortProvider;rangeSets(name);$classAttributeAssignment  ;$classificationAttributeAssignments;classificationProductType;topValuesProvider;facetTopValue
@@ -698,3 +696,9 @@ INSERT_UPDATE SolrFacetReconfiguration	;facet(name)[unique=true]				;priority	;v
 										;size        						    ;3000       ;0		;MSH19-FineJewellery,MSH20-FashionJewellery
 										
 #######################  JEWELLERY  END   ###################################			
+
+
+# Added new Index Property for CAR-245
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);localized[default=false];multiValue[default=true];categoryField[default=true];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;facet[default=true]
+;$solrIndexedType; categoryNameCodeMapping     	  ;string   ;true		   ;	;	 ;	  ;			;mplCategoryNameCodeMappingValueProvider;
+

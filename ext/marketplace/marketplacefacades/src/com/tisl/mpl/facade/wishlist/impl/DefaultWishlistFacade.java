@@ -117,6 +117,39 @@ public class DefaultWishlistFacade implements WishlistFacade
 		}
 	}
 
+	/* Changes for INC144313867 */
+
+	/**
+	 * @description this method is called to remove Product From Wishlist
+	 * @return wishlist2Model
+	 */
+	@Override
+	public Wishlist2Model removeProductFromWl(final String productCode, final String wishlistName)
+	{
+		try
+		{
+			final Wishlist2Model wishlist2Model = getWishlistForName(wishlistName);
+			Wishlist2EntryModel wishlist2EntryModel = null;
+			for (final Wishlist2EntryModel entryModel : wishlist2Model.getEntries())
+			{
+				if (null != entryModel.getProduct() && entryModel.getProduct().getCode().equals(productCode))
+				{
+					wishlist2EntryModel = entryModel;
+					wishlistService.removeWishlistEntry(wishlist2Model, wishlist2EntryModel);
+
+					//break;
+				}
+			}
+
+			//wishlistService.removeWishlistEntry(wishlist2Model, wishlist2EntryModel);
+			return wishlist2Model;
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
 	/**
 	 * @description to get all wishlist
 	 * @return List<Wishlist2Model>
@@ -221,6 +254,48 @@ public class DefaultWishlistFacade implements WishlistFacade
 		return add;
 	}
 
+	//CAR Project performance issue fixed
+
+	/**
+	 * @description to add product to Wishlist for mobile
+	 * @return boolean
+	 */
+	@Override
+	public boolean addProductToWishlistMobile(final Wishlist2Model wishlist, final String productCode, final String ussid,
+			final boolean selectedSize)
+	{
+		boolean add = true;
+		try
+		{
+			LOG.debug("addProductToWishlist in Mobile : *****productCode: " + productCode + " **** ussid: " + ussid
+					+ " *** selectedSize: " + selectedSize);
+			List<Wishlist2EntryModel> wishlist2Entry = null;
+
+			wishlist2Entry = mplWishlistService.findWishlistEntryByProductAndUssid(ussid);
+
+			ProductModel product = null;
+			if (CollectionUtils.isEmpty(wishlist2Entry))
+			{
+				product = productService.getProductForCode(productCode);
+				final String comment = MplConstants.MPL_WISHLIST_COMMENT;
+				if (null != ussid && !ussid.isEmpty())
+				{
+					mplWishlistService.addWishlistEntry(wishlist, product, Integer.valueOf(1), Wishlist2EntryPriority.HIGH, comment,
+							ussid, selectedSize);
+				}
+			}
+			else
+			{
+				add = false;
+			}
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+		return add;
+	}
+
 
 	/**
 	 * @description to fetch a particular Wishlist by name
@@ -291,7 +366,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.wishlist.WishlistFacade#getBuyBoxPrice(java.lang.String,
 	 * de.hybris.platform.commercefacades.product.data.ProductData)
 	 */
@@ -329,7 +404,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.wishlist.WishlistFacade#removeProductFromWL(java.lang.String)
 	 */
 	@Override
@@ -440,7 +515,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.wishlist.WishlistFacade#getSingleWishlist(de.hybris.platform.core.model.user.UserModel)
 	 */
 	@Override
@@ -460,4 +535,27 @@ public class DefaultWishlistFacade implements WishlistFacade
 
 
 	}
+
+	/**
+	 * Description -- Method will access single WishlistModel for user with respect to Wishlistname
+	 *
+	 * @return Wishlist2Model
+	 */
+	@Override
+	public Wishlist2Model findMobileWishlistswithName(final UserModel user, final String name)
+	{
+		return mplWishlistService.findMobileWishlistswithName(user, name);
+	}
+
+	/**
+	 * Description -- Method will access single WishlistModel for user with respect to Wishlistname
+	 *
+	 * @return Wishlist2Model
+	 */
+	@Override
+	public int findMobileWishlistswithNameCount(final UserModel user, final String name)
+	{
+		return mplWishlistService.findMobileWishlistswithNameCount(user, name);
+	}
+
 }

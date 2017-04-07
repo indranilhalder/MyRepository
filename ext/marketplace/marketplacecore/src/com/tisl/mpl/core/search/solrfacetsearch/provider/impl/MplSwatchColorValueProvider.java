@@ -17,8 +17,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -26,10 +28,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.PcmProductVariantModel;
+import com.tisl.mpl.util.MplBuyBoxUtility;
 
 
 /**
- * @author 361234
+ * @author TCS
  *
  */
 public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider, Serializable
@@ -39,9 +42,28 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 	@Autowired
 	private ConfigurationService configurationService;
 
+	private MplBuyBoxUtility mplBuyBoxUtility;
+
+	/**
+	 * @return the mplBuyBoxUtility
+	 */
+	public MplBuyBoxUtility getMplBuyBoxUtility()
+	{
+		return mplBuyBoxUtility;
+	}
+
+	/**
+	 * @param mplBuyBoxUtility
+	 *           the mplBuyBoxUtility to set
+	 */
+	public void setMplBuyBoxUtility(final MplBuyBoxUtility mplBuyBoxUtility)
+	{
+		this.mplBuyBoxUtility = mplBuyBoxUtility;
+	}
+
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -65,34 +87,41 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 			//Model should be instance of PcmProductVariantModel
 			final PcmProductVariantModel pcmVariantModel = (PcmProductVariantModel) model;
 
-			final HashSet<String> colours = new HashSet<String>();
+			final Map<String, String> colours = new HashMap<String, String>();
 
 			String variantColor = null;
 			String variantColorHexCode = null;
+			String pcmSwatchVariantColor = null;
+			String pcmVariantColour = null;
+
 			//Fetch colors in all the Variants
 			for (final VariantProductModel pcmProductVariantModel : pcmVariantModel.getBaseProduct().getVariants())
 			{
 
 				final PcmProductVariantModel pcmSwatchVariantModel = (PcmProductVariantModel) pcmProductVariantModel;
 
-				if (pcmSwatchVariantModel.getColour() != null && pcmVariantModel.getColour() != null)
+				pcmSwatchVariantColor = mplBuyBoxUtility.getVariantColour(pcmSwatchVariantModel);
+				pcmVariantColour = mplBuyBoxUtility.getVariantColour(pcmVariantModel);
+
+				if (pcmSwatchVariantColor != null && pcmVariantColour != null)
 				{
 
-					if (!pcmSwatchVariantModel.getColour().equalsIgnoreCase(pcmVariantModel.getColour()))
+					if (!pcmSwatchVariantColor.equalsIgnoreCase(pcmVariantColour))
 					{
 						variantColorHexCode = pcmSwatchVariantModel.getColourHexCode();
 
-						if (pcmSwatchVariantModel.getColourHexCode() == null || pcmSwatchVariantModel.getColourHexCode().isEmpty())
+						//if (pcmSwatchVariantModel.getColourHexCode() == null || pcmSwatchVariantModel.getColourHexCode().isEmpty())
+						if (StringUtils.isBlank(variantColorHexCode))
 						{
-							variantColor = getColorWithHexCode(pcmSwatchVariantModel.getColour().toLowerCase());
+							variantColor = getColorWithHexCode(pcmSwatchVariantColor.toLowerCase());
 						}
 						else
 						{
-							variantColor = StringUtils.capitalize(pcmSwatchVariantModel.getColour()) + "_"
+							variantColor = StringUtils.capitalize(pcmSwatchVariantColor) + "_"
 									+ (variantColorHexCode.contains("#") ? variantColorHexCode.replace("#", "") : variantColorHexCode);
 						}
-
-						colours.add(variantColor);
+						//variantColor = variantColor + "||" + pcmSwatchVariantModel.getCode();
+						colours.put(variantColor, pcmSwatchVariantModel.getCode());
 
 					}
 
@@ -105,7 +134,9 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 
 			{
 				//add field values
-				fieldValues.addAll(createFieldValue(colours, indexedProperty));
+				//New Fix
+				fieldValues.addAll(createFieldValue(hashMaptoSet(colours), indexedProperty));
+				//fieldValues.addAll(createFieldValue(colours, indexedProperty));
 			}
 			//return the field values
 			return fieldValues;
@@ -162,6 +193,17 @@ public class MplSwatchColorValueProvider extends AbstractPropertyFieldValueProvi
 			return colorHexCode.replace("#", "");
 		}
 		return color;
+	}
+
+	private Set<String> hashMaptoSet(final Map<String, String> colours)
+	{
+		final Set<String> colourSet = new HashSet<>();
+		for (final Map.Entry<String, String> entry : colours.entrySet())
+		{
+			colourSet.add(entry.getKey() + "||" + entry.getValue());
+		}
+
+		return colourSet;
 	}
 
 	/**

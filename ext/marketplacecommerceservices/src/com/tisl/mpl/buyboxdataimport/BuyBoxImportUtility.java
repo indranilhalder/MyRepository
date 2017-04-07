@@ -52,9 +52,7 @@ public class BuyBoxImportUtility
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
 
-	/*
-	 * @Resource private ModelService modelService;
-	 */
+
 
 	//@Resource
 	//private DataSource buyBoxDataSource;
@@ -229,7 +227,7 @@ public class BuyBoxImportUtility
 
 
 		String tempexportFileName = null;
-		//final String exportFileName = null;
+
 		final Date date = new Date();
 		//	final SimpleDateFormat ft = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_S");
 		final SimpleDateFormat ft = new SimpleDateFormat("-yyMMddHHmmssSSS");

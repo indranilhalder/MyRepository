@@ -25,6 +25,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
+import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
 import com.tisl.mpl.model.BuyAPercentageDiscountModel;
 import com.tisl.mpl.promotion.service.UpdateSplPriceHelperService;
 
@@ -123,9 +124,12 @@ public class DefaultUpdateSplPriceHelperService implements UpdateSplPriceHelperS
 				{
 					for (final ProductPromotionModel promotion : promotionData)
 					{
-						if (promotion instanceof BuyAPercentageDiscountModel
-								&& null != ((BuyAPercentageDiscountModel) promotion).getQuantity()
-								&& ((BuyAPercentageDiscountModel) promotion).getQuantity().intValue() == 1)
+						if ((promotion instanceof BuyAPercentageDiscountModel
+								&& null != ((BuyAPercentageDiscountModel) promotion).getQuantity() && ((BuyAPercentageDiscountModel) promotion)
+								.getQuantity().intValue() == 1)
+								|| (promotion instanceof BuyABFreePrecentageDiscountModel
+										&& null != ((BuyABFreePrecentageDiscountModel) promotion).getQuantity() && ((BuyABFreePrecentageDiscountModel) promotion)
+										.getQuantity().intValue() == 1))
 						{
 							if (maxPriority < promotion.getPriority().intValue() && BooleanUtils.isTrue(promotion.getEnabled()))
 							{

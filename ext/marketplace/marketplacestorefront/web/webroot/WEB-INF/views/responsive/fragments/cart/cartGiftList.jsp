@@ -35,7 +35,11 @@ $( document ).ready(function() {
 	});
 	
 	$(".addToBagButton").click(function(e){
-		//alert("hi");
+		/* TPR-4741  starts*/
+		 if(typeof utag !="undefined"){
+			utag.link(	{ link_text : 'treat_yourself_add_to_bag'  , event_type : 'treat_yourself_add_to_bag'});
+			} 
+		/*  TPR-4741 ends */
 		var element = $(e.target);
 	//	console.log($(element).closest("form.add_to_cart_form").serialize());
 		var dataString= $(element).closest("form.add_to_cart_form").serialize()

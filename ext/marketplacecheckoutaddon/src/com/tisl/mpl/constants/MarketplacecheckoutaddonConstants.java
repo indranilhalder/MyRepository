@@ -79,6 +79,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String PROCESSCONVCHARGESURL = "/setConvCharge";
 	public static final String GENERATEOTPURL = "/generateOTP";
 	public static final String VALIDATEOTPURL = "/validateOTP/{otpNUMField:.*}";
+	public static final String CONFIRMCODORDER = "/confirmCodOrder";
 	public static final String OTPNUMFIELD = "otpNUMField";
 	public static final String RESETCONVCHARGEURL = "/resetConvCharge";
 	public static final String SETCELLNOURL = "/setCellNo";

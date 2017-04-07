@@ -80,4 +80,32 @@ public final class MarketplaceCoreConstants extends GeneratedMarketplaceCoreCons
 	public static final String Marketplace = "Marketplace";
 
 	// implement here constants used by this extension
+
+	//Price Update
+	public static final String MAX_THREADS = "mpl.price.batch.impex.max-threads";
+	public static final String PRODUCT_CODE = "mpl.priceFallback.productCode";
+	public static final String PRICE_HEADER = "INSERT_UPDATE PriceRow";
+	public static final String PRICE_FALLBACK = "mpl.priceFallback.use";
+	public static final String NEW_LINE = "\n";
+	public static final String SEMICOLON = ";";
+	public static final String PRODUCT = "product";
+	public static final String PRODUCTCODE_STRING = ";productCodeString;";
+	public static final String FOR = "for";
+	public static final String PRICEFALLBACK = ";PRICEFALLBACK";
+	public static final String IMPORTCONFIG_NOTFOUND = "Import config not found. The file %s won't be imported.";
+	public static final String YES = "Y";
+
+
+	//Added for CAR-183
+	public static final String COLORFAMILYFOOTWEAR = "colorfamilyfootwear";
+	public static final String COLORFAMILYFOOTWEARBLANK = "";
+	public static final String DIALCOLORELECTRONICS = "dialcolor"; // for INC_12606
+	public static final String DIALCOLORELECTRONICSBLANK = ""; // for INC_12606
+	public static final String DYNAMICATTRIBUTE = "classification.attirbutes.dynamic.";
+	public static final String LSH1 = "LSH1";
+	public static final String INR = "INR";
+
+	//Added for adhoc.impex
+	public static final String releaseImpex = "marketplacecore.projectdata.release";
+
 }

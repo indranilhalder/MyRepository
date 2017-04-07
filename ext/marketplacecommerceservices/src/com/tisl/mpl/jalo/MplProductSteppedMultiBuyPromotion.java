@@ -1,6 +1,5 @@
 package com.tisl.mpl.jalo;
 
-import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
@@ -26,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -41,7 +41,6 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.promotion.helper.MplBundlePromotionHelper;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.util.ExceptionUtil;
-import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 @SuppressWarnings("deprecation")
@@ -82,8 +81,8 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 		LOG.debug("Inside Multi Step Bundle Promotion");
 
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
-		final List<String> excludeManufactureList = new ArrayList<String>();
-		final List<Product> excludedProductList = new ArrayList<Product>();
+		//final List<String> excludeManufactureList = new ArrayList<String>();
+		//final List<Product> excludedProductList = new ArrayList<Product>();
 
 
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
@@ -93,31 +92,43 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 		final AbstractOrder cart = paramPromotionEvaluationContext.getOrder();
 
 
-		GenericUtilityMethods.populateExcludedProductManufacturerList(paramSessionContext, paramPromotionEvaluationContext,
-				excludedProductList, excludeManufactureList, restrictionList, this);
+		//		GenericUtilityMethods.populateExcludedProductManufacturerList(paramSessionContext, paramPromotionEvaluationContext,
+		//				excludedProductList, excludeManufactureList, restrictionList, this);
 
 		try
 		{
-			final List<Product> promotionProductList = new ArrayList<>(getProducts()); //Adding of Promotion Added Products to List
-			final List<Category> promotionCategoryList = new ArrayList<>(getCategories());//Adding of Promotion Added Categories to List
+			//final List<Product> promotionProductList = new ArrayList<>(getProducts()); //Adding of Promotion Added Products to List
+			//final List<Category> promotionCategoryList = new ArrayList<>(getCategories());//Adding of Promotion Added Categories to List
 			final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(paramSessionContext,
 					MarketplacecommerceservicesConstants.CHANNEL);
 
 			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
-			if (checkChannelFlag)
+			//			final PromotionsManager.RestrictionSetResult rsr = findEligibleProductsInBasket(paramSessionContext,
+			//					paramPromotionEvaluationContext);
+			final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager().findEligibleProductsInBasket(
+					paramSessionContext, paramPromotionEvaluationContext, this, getCategories());
+
+			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag)
 			{
 				//******************** Block Code ****************************************************************************
 				//final Map<String, List<String>> productAssociatedItemsFinalMap = new ConcurrentHashMap<String, List<String>>();
 				//final Map<String, Integer> validProductFinalList = new ConcurrentHashMap<String, Integer>();
 
+				//				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
+				//						.getValidProdListForBuyXofAPromo(cart, paramSessionContext, promotionProductList, promotionCategoryList,
+				//								restrictionList, excludedProductList, excludeManufactureList, null, null);
+
+				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
+
+				//getting the valid products
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
-						.getValidProdListForBuyXofAPromo(cart, paramSessionContext, promotionProductList, promotionCategoryList,
-								restrictionList, excludedProductList, excludeManufactureList, null, null);
+						.getValidProdListForBuyXofA(cart, paramSessionContext, allowedProductList, restrictionList, null, null); // Adding Eligible Products to List
+
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(paramSessionContext, validProductUssidMap)
 						&& MapUtils.isNotEmpty(validProductUssidMap) /* && validProductUssidMap.size() == 1 */) // For One Eligible line for Promotion in cart
 				{
 					promotionResults = promotionEvaluation(paramSessionContext, paramPromotionEvaluationContext, validProductUssidMap,
-							restrictionList, promotionProductList, promotionCategoryList, cart);
+							restrictionList, allowedProductList, cart);
 				}
 			}
 		}
@@ -272,7 +283,7 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 	private List<PromotionResult> promotionEvaluation(final SessionContext paramSessionContext,
 			final PromotionEvaluationContext paramPromotionEvaluationContext,
 			final Map<String, AbstractOrderEntry> validProductUssidMap, final List<AbstractPromotionRestriction> restrictionList,
-			final List<Product> promotionProductList, final List<Category> promotionCategoryList, final AbstractOrder cart)
+			final List<Product> allowedProductList, final AbstractOrder cart)
 	{
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		try
@@ -306,11 +317,11 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 
 				if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction)
 				{
-					final List<Product> eligibleProductList = new ArrayList<Product>();
+					//final List<Product> eligibleProductList = new ArrayList<Product>();
 					for (final AbstractOrderEntry entry : validProductUssidMap.values())
 					{
 						totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
-						eligibleProductList.add(entry.getProduct());
+						//eligibleProductList.add(entry.getProduct());
 						totalPrice += entry.getTotalPrice().doubleValue();
 					}
 					LOG.debug("Total Eligible Count of Products" + totalCount);
@@ -323,7 +334,7 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 
 					LOG.debug("*************Setting Promotion Consumed Data***************************");
 					final PromotionOrderView view = paramPromotionEvaluationContext.createView(paramSessionContext, this,
-							eligibleProductList);
+							allowedProductList);
 
 					final Map<String, Integer> tcMapForValidEntries = new ConcurrentHashMap<String, Integer>();
 					for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
@@ -397,10 +408,10 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 							//							paramSessionContext
 							//									.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
 
-							if (MapUtils.isNotEmpty(validProductList))
-							{
-								paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductList);
-							}
+							//							if (MapUtils.isNotEmpty(validProductList))
+							//							{
+							//								paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductList);
+							//							}
 
 							// Apportioning Code Implementation ends
 
@@ -449,7 +460,7 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 									final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(
 											paramSessionContext, this, paramPromotionEvaluationContext.getOrder(), 1.0F);
 									final CustomPromotionOrderEntryAdjustAction poeac = getDefaultPromotionsManager()
-											.createCustomPromotionOrderEntryAdjustAction(paramSessionContext, entry, quantityOfOrderEntry,
+											.createCustomPromotionOrderEntryAdjustAction(paramSessionContext, entry, eligibleCount,
 													adjustment.doubleValue());
 									result.setConsumedEntries(paramSessionContext, consumed);
 									result.addAction(paramSessionContext, poeac);
@@ -627,6 +638,26 @@ public class MplProductSteppedMultiBuyPromotion extends GeneratedMplProductStepp
 			this.price = price;
 
 		}
+	}
+
+	/**
+	 * Building the Hash Key for Promotion
+	 *
+	 * @param builder
+	 * @param ctx
+	 */
+	@Override
+	protected void buildDataUniqueKey(final SessionContext ctx, final StringBuilder builder)
+	{
+		builder.append(super.getClass().getSimpleName()).append('|').append(getPromotionGroup(ctx).getIdentifier(ctx)).append('|')
+				.append(getCode(ctx)).append('|').append(getPriority(ctx)).append('|').append(ctx.getLanguage().getIsocode())
+				.append('|');
+
+
+		//final Date modifyDate = ((Date) getProperty(ctx, "modifiedtime"));
+
+		final Date modifyDate = getModificationTime();
+		builder.append(modifyDate);
 	}
 
 }

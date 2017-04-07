@@ -23,7 +23,6 @@ import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
  */
 public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 {
-
 	private FlexibleSearchService flexibleSearchService;
 	private ModelService modelService;
 

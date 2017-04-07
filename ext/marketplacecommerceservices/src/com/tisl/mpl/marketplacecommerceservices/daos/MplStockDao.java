@@ -18,7 +18,7 @@ public interface MplStockDao
 	/*
 	 * @Javadoc Methods to Retrieve Stock based on articleSKUID
 	 */
-	List<StockLevelModel> getStockDetail(final String articleSKUID);
+	StockLevelModel getStockDetail(final String articleSKUID);
 
 	/*
 	 * @Javadoc Methods to Retrieve List of Stock based on articleSKUIDs

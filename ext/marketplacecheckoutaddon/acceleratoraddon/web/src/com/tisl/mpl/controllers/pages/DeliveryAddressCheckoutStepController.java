@@ -12,6 +12,8 @@ import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CountryData;
 import de.hybris.platform.commercefacades.user.data.RegionData;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
+import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.order.CartService;
 import de.hybris.platform.util.Config;
 
 import java.util.ArrayList;
@@ -36,7 +38,7 @@ import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
 import com.tisl.mpl.core.enums.AddressType;
 import com.tisl.mpl.data.AddressTypeData;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
-import com.tisl.mpl.facades.account.address.AccountAddressFacade;
+import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.validator.AccountAddressValidator;
@@ -48,7 +50,7 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 {
 	protected static final Logger LOG = Logger.getLogger(DeliveryAddressCheckoutStepController.class);
 	@Autowired
-	private AccountAddressFacade accountAddressFacade;
+	private MplAccountAddressFacade accountAddressFacade;
 	@Autowired
 	private MplEnumerationHelper mplEnumerationHelper;
 	@Resource(name = "accountAddressValidator")
@@ -61,6 +63,9 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 
 	private final String checkoutPageName = "Shipping Address";
 
+	@Autowired
+	private CartService cartService;
+
 	@Override
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	@RequireHardLogIn
@@ -72,14 +77,15 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 
 		//final CartData cartData = getCheckoutFacade().getCheckoutCart();      //DSC_006: Commented for Address state field addition
 		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
-		
-		
+		final CartModel cartModel = getCartService().getSessionCart();
+
 
 		model.addAttribute("cartData", cartData);
 		//model.addAttribute("deliveryAddresses", getDeliveryAddresses(cartData.getDeliveryAddress())); //DSC_006: Commented for Address state field addition
-		if(null != cartData)
+		if (null != cartData)
 		{
-		model.addAttribute("deliveryAddresses", getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress()));
+			model.addAttribute("deliveryAddresses",
+					getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress(), cartModel)); //CAR-194
 		}
 		model.addAttribute("noAddress", Boolean.valueOf(getCheckoutFlowFacade().hasNoDeliveryAddress()));
 		final AccountAddressForm addressForm = new AccountAddressForm();
@@ -122,9 +128,11 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 
 		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 		model.addAttribute("cartData", cartData);
-		
-		if(null != cartData){
-		model.addAttribute("deliveryAddresses", getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress()));
+		final CartModel cartModel = getCartService().getSessionCart();
+		if (null != cartData)
+		{
+			model.addAttribute("deliveryAddresses",
+					getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress(), cartModel)); //CAR-194
 		}
 
 		this.prepareDataForPage(model);
@@ -282,8 +290,9 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 
 		final CartData cartData = getCheckoutFacade().getCheckoutCart();
 		model.addAttribute("cartData", cartData);
-		if(null !=cartData){
-		model.addAttribute("deliveryAddresses", getDeliveryAddresses(cartData.getDeliveryAddress()));
+		if (null != cartData)
+		{
+			model.addAttribute("deliveryAddresses", getDeliveryAddresses(cartData.getDeliveryAddress()));
 		}
 		if (StringUtils.isNotBlank(addressForm.getCountryIso()))
 		{
@@ -423,8 +432,8 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 	{
 
 
-		final Set<String> resolveCountryRegions = org.springframework.util.StringUtils
-				.commaDelimitedListToSet(Config.getParameter("resolve.country.regions"));
+		final Set<String> resolveCountryRegions = org.springframework.util.StringUtils.commaDelimitedListToSet(Config
+				.getParameter("resolve.country.regions"));
 
 		final AddressData selectedAddress = new AddressData();
 		selectedAddress.setId(addressForm.getAddressId());
@@ -578,4 +587,26 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 	{
 		this.mplCustomAddressFacade = mplCustomAddressFacade;
 	}
+
+
+
+	/**
+	 * @return the cartService
+	 */
+	public CartService getCartService()
+	{
+		return cartService;
+	}
+
+
+	/**
+	 * @param cartService
+	 *           the cartService to set
+	 */
+	public void setCartService(final CartService cartService)
+	{
+		this.cartService = cartService;
+	}
+
+
 }

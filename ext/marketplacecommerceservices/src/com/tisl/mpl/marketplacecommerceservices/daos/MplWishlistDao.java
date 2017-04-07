@@ -25,4 +25,23 @@ public interface MplWishlistDao
 	 * @return
 	 */
 	public abstract List<Wishlist2Model> getWishListAgainstUser(UserModel user);
+
+
+	//CAR Project performance issue fixed
+	/**
+	 * Description -- Method will access single WishlistModel for user with respect to Wishlistname
+	 *
+	 * @return Wishlist2Model
+	 */
+	public Wishlist2Model findMobileWishlistswithName(final UserModel user, final String name);
+
+	//CAR Project performance issue fixed
+	/**
+	 * Description -- Method will provide count for user with respect to Wishlistname
+	 *
+	 * @return int
+	 */
+	public int findMobileWishlistswithNameCount(final UserModel user, final String name);
+
+
 }

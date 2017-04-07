@@ -30,6 +30,10 @@
 			<div class="wishAlreadyAddedPlp">
 			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
 			</div>
+			<!-- Changes for INC144313867 -->
+			<div class="wishRemoveSucessPlp">
+			<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
+			</div>
 	<!-- TPR-844 -->
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
@@ -78,12 +82,14 @@
 
 	<div class="content">
 	<!-- Luxury tab	 starts-->
+	<c:if test="${!hideSecureTransaction}">
 						<div id="flip-tabs" >				
 							<ul id="flip-navigation" >  
 					            <li class="selected"><a href="/" id="tab-1" >MARKETPLACE</a></li>
 					            <li><a href="${luxuryHost}" id="tab-2" target="_blank">LUXURY</a></li>  
 					        </ul> 
 					    </div>
+					    </c:if>
 	 <!-- Luxury tab	 ends-->
 		<div class="top">
 			<c:if test="${empty showOnlySiteLogo }">

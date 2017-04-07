@@ -39,13 +39,13 @@ public class MplMediaDaoImpl implements MplMediaDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tils.mpl.media.MplMediaDao#findMediaSearch(java.lang.String)
-	 * 
+	 *
 	 * @Javadoc Method to Optimize Image load in PDP.Single Db Call to Populate Different Image Format
-	 * 
+	 *
 	 * @param MediaContainerModel container , String mediaFormatList
-	 * 
+	 *
 	 * @return List<MediaModel>
 	 */
 
@@ -58,11 +58,10 @@ public class MplMediaDaoImpl implements MplMediaDao
 		{
 			final StringBuffer queryString = new StringBuffer(500);
 
-			queryString
-					.append("select {media.PK} from {Media as media JOIN "
-							+ "MediaFormat as mf ON {media.MEDIAFORMAT}={mf.PK} JOIN CatalogVersion as cat ON {media.CATALOGVERSION }={cat.PK}}"
-							+ "where {media.MEDIACONTAINER}= ?containerPK " + "and {cat.VERSION } = ?catalogVersion "
-							+ "and {mf.QUALIFIER} in (");
+			queryString.append("select {media.PK} from {Media as media JOIN "
+					+ "MediaFormat as mf ON {media.MEDIAFORMAT}={mf.PK} JOIN CatalogVersion as cat ON {media.CATALOGVERSION }={cat.PK}}"
+					+ "where {media.MEDIACONTAINER}= ?containerPK " + "and {cat.VERSION } = ?catalogVersion "
+					+ "and {mf.QUALIFIER} in (");
 			queryString.append(mediaFormatList);
 			queryString.append(')');
 

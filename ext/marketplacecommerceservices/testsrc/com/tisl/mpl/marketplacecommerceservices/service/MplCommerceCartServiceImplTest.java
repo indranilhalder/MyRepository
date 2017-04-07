@@ -219,11 +219,10 @@ public class MplCommerceCartServiceImplTest
 		deliveryModeData.setDeliveryCost(priceData);
 
 		final List<MarketplaceDeliveryModeData> deliveryModeDataList = new ArrayList<MarketplaceDeliveryModeData>();
-		final CartModel cartModel = Mockito.mock(CartModel.class);
+		//final CartModel cartModel = Mockito.mock(CartModel.class);
 		deliveryModeDataList.add(deliveryModeData);
 		deliveryModeDataMap.put("entryNumber", deliveryModeDataList);
-		given(mplCommerceCartServiceImpl.getDeliveryMode(cartDataMock, omsDeliveryResponse, cartModel)).willReturn(
-				deliveryModeDataMap);
+		given(mplCommerceCartServiceImpl.getDeliveryMode(cartDataMock, omsDeliveryResponse)).willReturn(deliveryModeDataMap);
 	}
 
 
@@ -475,7 +474,9 @@ public class MplCommerceCartServiceImplTest
 		cartdatalistMock.add(cartSoftReservationDataMock);
 
 		given(mplCommerceCartServiceImpl.populateDataForSoftReservation(cartDataMock)).willReturn(cartdatalistMock);
-		given(mplCommerceCartServiceImpl.getReservation(cartModelMock, pincode, type)).willReturn(wsDto);
+		//commented for CAR:127
+		//given(mplCommerceCartServiceImpl.getReservation(cartModelMock, pincode, type)).willReturn(wsDto);
+		given(mplCommerceCartServiceImpl.getReservation(cartDataMock, pincode, type, cartModelMock)).willReturn(wsDto);
 	}
 
 	@Test
@@ -601,8 +602,9 @@ public class MplCommerceCartServiceImplTest
 		pinCodeEntry.add(pinCodeResponseData);
 		codEligible = Boolean.FALSE;
 
-
-		Mockito.when(Boolean.valueOf(mplCommerceCartServiceImpl.addCartCodEligible(deliveryModeMap, pinCodeEntry, cartModelMock)))
-				.thenReturn(Boolean.valueOf((codEligible.booleanValue())));
+		final CartData cartDataMock = Mockito.mock(CartData.class);
+		Mockito.when(
+				Boolean.valueOf(mplCommerceCartServiceImpl.addCartCodEligible(deliveryModeMap, pinCodeEntry, cartModelMock,
+						cartDataMock))).thenReturn(Boolean.valueOf((codEligible.booleanValue())));
 	}
 }

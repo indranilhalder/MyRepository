@@ -70,29 +70,29 @@ public class MplStockServiceImpl implements MplStockService
 
 
 	/*
-	 *
-	 *
+	 * 
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplStockService#getPriceRowDetail(de.hybris.platform.
 	 * ordersplitting .model.StockLevelModel)
-	 *
+	 * 
 	 * @Javadoc Method to Retrieve Stock based on articleSKUID
-	 *
+	 * 
 	 * @param articleSKUID
-	 *
+	 * 
 	 * @return stockDetails
 	 */
 	@Override
-	public List<StockLevelModel> getStockLevelDetail(final String articleSKUID)
+	public StockLevelModel getStockLevelDetail(final String articleSKUID)
 	{
-		final List<StockLevelModel> stockDetails = mplStockDao.getStockDetail(articleSKUID);
-		return stockDetails;
+		//final List<StockLevelModel> stockDetails = mplStockDao.getStockDetail(articleSKUID);
+		return mplStockDao.getStockDetail(articleSKUID);
 	}
 
 	/*
 	 * @Javadoc Method to Retrieve Stock based on articleSKUID
-	 *
+	 * 
 	 * @param articleSKUIDs
-	 *
+	 * 
 	 * @return availableStockMap
 	 */
 

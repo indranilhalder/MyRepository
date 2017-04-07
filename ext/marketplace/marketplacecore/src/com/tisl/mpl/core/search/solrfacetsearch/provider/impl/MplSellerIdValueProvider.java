@@ -28,7 +28,6 @@ import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
-import com.tisl.mpl.model.SellerInformationModel;
 
 
 /**
@@ -60,7 +59,7 @@ public class MplSellerIdValueProvider extends AbstractPropertyFieldValueProvider
 		}
 
 		final Set<String> uniqueSellerIdList = new HashSet<String>();
-		final List<SellerInformationModel> sellers = (List<SellerInformationModel>) productModel.getSellerInformationRelator();
+		//	final List<SellerInformationModel> sellers = (List<SellerInformationModel>) productModel.getSellerInformationRelator();
 		Set<Map<BuyBoxModel, RichAttributeModel>> sellerDetailsSet = null;
 		try
 		{
@@ -72,11 +71,12 @@ public class MplSellerIdValueProvider extends AbstractPropertyFieldValueProvider
 					for (final Map.Entry<BuyBoxModel, RichAttributeModel> entry : resultMap.entrySet())
 					{
 						final BuyBoxModel buyBox = entry.getKey();
-						final boolean sellerStatus = checkSellerAvailability(buyBox.getSellerId(), sellers);
-						if (sellerStatus)
-						{
-							uniqueSellerIdList.add(buyBox.getSellerId());
-						}
+						//CAR-190
+						//	final boolean sellerStatus = checkSellerAvailability(buyBox.getSellerId(), sellers);
+						//	if (sellerStatus)
+
+						uniqueSellerIdList.add(buyBox.getSellerId());
+
 					}
 				}
 			}
@@ -105,18 +105,12 @@ public class MplSellerIdValueProvider extends AbstractPropertyFieldValueProvider
 		return Collections.emptyList();
 	}
 
-
-	public boolean checkSellerAvailability(final String buyboxSeller, final List<SellerInformationModel> sellers)
-	{
-		for (final SellerInformationModel sellerInformationModel : sellers)
-		{
-			if (buyboxSeller.equalsIgnoreCase(sellerInformationModel.getSellerID()))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
+	//CAR-190
+	/*
+	 * public boolean checkSellerAvailability(final String buyboxSeller, final List<SellerInformationModel> sellers) {
+	 * for (final SellerInformationModel sellerInformationModel : sellers) { if
+	 * (buyboxSeller.equalsIgnoreCase(sellerInformationModel.getSellerID())) { return true; } } return false; }
+	 */
 
 	/**
 	 * @return fieldValues

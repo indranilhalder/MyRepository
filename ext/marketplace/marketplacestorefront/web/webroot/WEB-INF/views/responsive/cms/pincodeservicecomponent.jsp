@@ -45,7 +45,7 @@
 	   <c:forEach var="entry" items="${deliveryModeMap}">
 		<%-- Key: <c:out value="${entry.key}"/> --%>
 		<c:if test="${entry.key eq 'home-delivery'}">
-		<li class="do" id="homeli"> <p><spring:theme code="text.home.delivery"/></p> 
+		<li class="do selected" id="homeli"> <p><spring:theme code="text.home.delivery"/></p> 
 		 <c:forEach var="homeEntry" items="${entry.value}">
 			 <c:if test="${homeEntry.key eq 'startForHome'}">
 			 <input type="hidden" value="${homeEntry.value}" id="homeStartId"/>
@@ -61,7 +61,7 @@
 		</li>
 		  </c:if>
 		  <c:if test="${entry.key eq 'express-delivery'}">
-			<li class="do" id="expressli"> <p><spring:theme code="text.express.shipping"/></p> 
+			<li class="do selected" id="expressli"> <p><spring:theme code="text.express.shipping"/></p> 
 			 <c:forEach var="expressEntry" items="${entry.value}">
 			 <c:if test="${expressEntry.key eq 'startForExpress'}">
 			 <input type="hidden" value="${expressEntry.value}" id="expressStartId"/>
@@ -77,7 +77,7 @@
 		
 		<c:if test="${entry.key eq 'click-and-collect'}">
 		
-		<li id="collectli" class="do"><p><spring:theme code="text.clickandcollect.shipping"/></p>
+		<li id="collectli" class="do selected"><p><spring:theme code="text.clickandcollect.shipping"/></p>
 		<span style="display: block;">Buy online, collect in-store</span>
 		 <c:forEach var="clickEntry" items="${entry.value}">
 	

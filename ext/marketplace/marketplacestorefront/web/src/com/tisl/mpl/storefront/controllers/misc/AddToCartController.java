@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
+import com.tisl.mpl.helper.AddToCartHelper;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.web.forms.MplAddToCartForm;
 
@@ -51,6 +52,9 @@ public class AddToCartController extends AbstractController
 
 	@Resource(name = "cartFacade")
 	private CartFacade cartFacade;
+
+	@Resource(name = "addToCartHelper")
+	private AddToCartHelper addToCartHelper;
 
 	//@Resource(name = "accProductFacade")
 	//private ProductFacade productFacade;
@@ -76,7 +80,7 @@ public class AddToCartController extends AbstractController
 			 * "storing new wishlist data after login in session"); final List<WishlistData> wishlistDatas = new
 			 * ArrayList<>(); sessionService.setAttribute(ModelAttributetConstants.WISHLISTDATA, wishlistDatas); }
 			 * LOG.info("wishlsit name : " + wishlistName); LOG.info("product code:" + code);
-			 * 
+			 *
 			 * final WishlistData wishlistData = new WishlistData(); wishlistData.setParticularWishlistName(wishlistName);
 			 * wishlistData.setProductCode(code); final Collection<WishlistData> wishlistDatas =
 			 * sessionService.getAttribute(ModelAttributetConstants.WISHLISTDATA); final Iterator<WishlistData> iterator =
@@ -85,6 +89,16 @@ public class AddToCartController extends AbstractController
 			 * sessionService.setAttribute(ModelAttributetConstants.WISHLISTDATA, list); LOG.info(
 			 * "added one data in the session wishlist datas"); }
 			 */
+
+			//INC144313608
+
+			final boolean isProductFreebie = getAddToCartHelper().isProductFreebie(code);
+			if (isProductFreebie) //freebie product or not
+			{
+				return MarketplacecommerceservicesConstants.ERROR_MSG_TYPE_FREEBIE;
+
+			}
+
 			final long qty = form.getQty();
 			final long stock = form.getStock();
 			if (qty <= 0)
@@ -114,6 +128,7 @@ public class AddToCartController extends AbstractController
 					 */
 				}
 				return "cnt:" + cartFacade.getSessionCart().getTotalItems();
+
 			}
 			else
 			{
@@ -140,9 +155,26 @@ public class AddToCartController extends AbstractController
 	 * MarketplacecommerceservicesConstants.QUANTITY_INVALID_BINDING_MESSAGE_KEY); } else {
 	 * model.addAttribute(MarketplacecommerceservicesConstants.ERROR_MSG_TYPE, error.getDefaultMessage()); } } return
 	 * ControllerConstants.Views.Fragments.Cart.AddToCartPopup; }
-	 * 
+	 *
 	 * protected boolean isTypeMismatchError(final ObjectError error) { return
 	 * error.getCode().equals(MarketplacecommerceservicesConstants.TYPE_MISMATCH_ERROR_CODE); }
 	 */
+	/**
+	 * @return the addToCartHelper
+	 */
+	public AddToCartHelper getAddToCartHelper()
+	{
+		return addToCartHelper;
+	}
+
+
+	/**
+	 * @param addToCartHelper
+	 *           the addToCartHelper to set
+	 */
+	public void setAddToCartHelper(final AddToCartHelper addToCartHelper)
+	{
+		this.addToCartHelper = addToCartHelper;
+	}
 
 }

@@ -15,7 +15,7 @@ recEndPoint = rootEP + '/SocialGenomix/recommendations/products';
 
 //******************************************************************************* Populating Dynamic Parameter Values For IA
 var allsizes = ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
-var hotDropdownselected = 'All Department';
+var hotDropdownselected = 'All Departments';
 var sortDropdownselected = "";
 var currentPageURL = window.location.href;  
 ecompany		= $('#ecompanyForIA').val(); 
@@ -138,6 +138,21 @@ if (searchCategory_id){
                                   callTataRec();
                                 }
                         }, 2000);
+                        
+                        
+                        /*
+            			1121425 alternate for jquery unique function 
+            			*/    
+                        
+                        function distinctVal(arr){
+                            var newArray = [];
+                            for(var i=0, j=arr.length; i<j; i++){
+                                if(newArray.indexOf(arr[i]) == -1)
+                                      newArray.push(arr[i]);  
+                            }
+                            return newArray;
+                        }
+                        
 			 
 			/*
 			Check if user has logged into the site
@@ -951,8 +966,9 @@ if (searchCategory_id){
 			    	categoryCodeForFilters.push(val.value);
 				});
 			    /*Removing duplicate categories*/
-			    categoryFilters = jQuery.unique(categoryFilters);
-			    categoryCodeForFilters = jQuery.unique(categoryCodeForFilters);
+			    categoryFilters = distinctVal(categoryFilters);
+			   // categoryCodeForFilters = jQuery.unique(categoryCodeForFilters);
+			    categoryCodeForFilters = distinctVal(categoryCodeForFilters);
 			    /*SortBY dropdown*/
 			    var sortHtml = '<div class="select-view ia_select-view-sort">';
 			    	sortHtml += '<div class="select-list ia_select-list-sort"><span class="selected sortSelected">Sort by: '+sortDropdownselected+'</span><ul id="ia_category_select" style="width: auto;">';
@@ -964,7 +980,7 @@ if (searchCategory_id){
 			 
 			    var catHtml = '<div class="select-view ">'; 
 			    //for release 2 changes in home-page headers-All Departments
-			    catHtml += '<div class="select-list"><span class="selected hotSelected">All Departments</span><ul id="ia_category_select" style="width: auto;">';
+			    catHtml += '<div class="select-list"><span class="selected hotSelected">'+hotDropdownselected+'</span><ul id="ia_category_select" style="width: auto;">';
 			    for (var i=0; i<categoryFilters.length; i++) {
 			    	if(i==0){
 			    		 catHtml += '<li class="category_li" id="allCat">All Departments</li>';
@@ -1082,20 +1098,23 @@ if (searchCategory_id){
 			          params.count = '100';
 			        }
 			        
-			        params.category_id = category_id;
-			        hotDropdownselected = category_name;
 			        
-			        if(category_id === "All Department") {
-			        	category_id = "";
-			        	hotDropdownselected = 'All Department';
+			        
+			        if(category_id === "allCat") {
+			        	hotDropdownselected = category_name;
 			        } 
+			        else {
+			        	params.category_id = category_id;
+				        hotDropdownselected = category_name;
+			        }
+			        
 			        
 			        //params.category = category_id;
 			        var endpoint = '/SocialGenomix/recommendations/products/hot';
 			        //$( ".owl-item" ).css( "display", "none" );
-			        callRecApi(buildParams(params), rootEP + endpoint);
+			        callRecApi(buildParamsHotNow(params), rootEP + endpoint);
 			      });
-			    }
+			    }	
 
 			    /*SortBY dropdown*/
 			    if(widgetMode === "search"){

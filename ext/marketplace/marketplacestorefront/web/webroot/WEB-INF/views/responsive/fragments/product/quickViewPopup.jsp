@@ -99,6 +99,8 @@ tr.d0 td {
 
  
  $( document ).ready(function() {
+	 //Enable CTA's
+	 removedisabled();
 	//AKAMAI Fix
 	 setSizeforAkamai();
 	//AJAX BuyBox call
@@ -241,11 +243,11 @@ tr.d0 td {
  			var count=data.streamInfo.ratingCount;
  			if(count!= 0 && count == 1){
  				//$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEW");
- 				$('.gig-rating-readReviewsLink_quick').text(count+" REVIEW")
+ 				$('.gig-rating-readReviewsLink_quick a').text(count+" REVIEW")			//UF-25
  			}
  			else if(count!= 0){
  				//$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEWS");
- 				$('.gig-rating-readReviewsLink_quick').text(count+" REVIEWS")
+ 				$('.gig-rating-readReviewsLink_quick a').text(count+" REVIEWS")			 //UF-25 
  			}
  			
  			
@@ -321,7 +323,7 @@ display:none;
 	<div class="imageList" style="overflow: hidden;">
 		<ul class="jcarousel-skin imageListCarousel" style="display:none; position: relative; top: 0; width: 100%;"> 
 			<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLength}">
-				<li id="addiImage${varStatus.index}">
+				<li id="addiImage${varStatus.index}" class="thumbailItem${varStatus.index +1}"> <!-- For TPR-4712 -->
 					<span class="thumb ${(varStatus.index==0)? "active":""}">
 						<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
 							<img src="${container.thumbnail.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
@@ -570,13 +572,15 @@ display:none;
 	<span id="dListedErrorMsg" style="display: none"  class="dlist_message prod-dlisted-msg">
 		<spring:theme code="pdp.delisted.message" />
     </span>
-	
+    
+   
+
 	
 	 <!-- TPR-924 -->
 	 
 	<div class="buy-btn-holder clearfix"> 
 		<div id="buyNowQv"> 
-	        <button style="display: block" id="buyNowButton" type="button" class="btn-block js-add-to-cart-qv">
+	        <button style="display: block" id="buyNowButton" type="button"  disabled="disabled" class="btn-block js-add-to-cart-qv">
 				<spring:theme code="buyNow.button.pdp" />
 			</button> 
 			<%-- <button id="buyNowButtonQuick-wrong" type="button" class="btn-block" disabled="disabled"> <spring:theme code="buyNow.button.pdp" /></button> --%>
@@ -603,7 +607,7 @@ display:none;
 		 /> <!-- value="${availablestock}" --> <!-- Convert into AJAX call -->
 		 <input type="hidden" name="sellerSelId" id="sellerSelId" /> 
 		
-		 <button id="addToCartButtonQuick" type="${buttonType}" class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
+		 <button id="addToCartButtonQuick" type="${buttonType}" disabled="disabled" class="btn-block js-add-to-cart tempAddToCartQuickView" style="display:none;">
 			<spring:theme code="basket.add.to.basket" />
 		</button>
 		<%-- <span id="dListedErrorMsg" style="display: none"  class="dlist_message">
@@ -692,7 +696,8 @@ display:none;
 					<span id="gig-rating-readReviewsLink_quick" >  <spring:theme code="rating.reviews"/></span>
 				</c:when>
 				<c:otherwise> --%>
-					<span class="gig-rating-readReviewsLink_quick"> <spring:theme code="rating.noreviews"/></span>
+					<%-- <span class="gig-rating-readReviewsLink_quick"> <spring:theme code="rating.noreviews"/></span> --%>
+					<span class="gig-rating-readReviewsLink_quick"><a href="${productUrl}#ReviewSecion"></a></span>	<!-- UF-25 -->
 				<%-- </c:otherwise>
 			</c:choose> --%>
 			</ul>    

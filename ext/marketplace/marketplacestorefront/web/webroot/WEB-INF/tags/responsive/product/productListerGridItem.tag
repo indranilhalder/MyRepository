@@ -34,11 +34,20 @@
 <input type ="hidden"  id="list" value='${product.displaySize}'/>
 <input type ="hidden"  id="mrpPriceValue" value='${product.displayMrp}'/>
 <input type ="hidden"  id="sizeStockLevel" value='${product.displayStock}'/>
+
 <input type ="hidden"  id="productPromotion" value='${product.displayPromotion}'/>
 <!--TPR-1886 | JEWELLERY  -->
  <input type ="hidden"  id="priceRangeJewellery" value='${product.priceRangeJewellery}'/>
+
+<!-- <input type ="hidden"  id="productPromotion" value='${product.displayPromotion}'/> -->
+
 <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
 <input type="hidden" id="loggedIn" value="false"/> 
+<!-- start change for INC_12953 -->
+<c:set var="singlequote" value="'"/>
+<c:set var="values_promotion" value="${fn:replace(product.displayPromotion, singlequote, '&#39;')}" />
+<input type ="hidden"  id="productPromotion" value='${values_promotion}'/>
+<!-- end change for INC_12953 -->
 </sec:authorize>
 <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
 <input type="hidden" id="loggedIn" value="true"/> 
@@ -50,7 +59,7 @@
 		<div class="product-tile">
 			<div class="image">
 
-				<c:if test="${product.isProductNew eq true}">
+				<c:if test="${product.isProductNew eq true && !product.isOfferExisting}">
 					<div style="z-index: 1;" class="new">
 						<img class="brush-strokes-sprite sprite-New"
 
@@ -66,7 +75,7 @@
 
 				</a>
 				
-				<c:if test="${!product.isOnlineExclusive && product.isOfferExisting}">
+				<c:if test="${product.isOfferExisting}">
 					<%-- <div style="z-index: 2;display: none;" class="on-sale" id="on-sale_${product.code}"> --%>
 						<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}">
 				<%-- 	<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}"> --%>
@@ -75,7 +84,7 @@
 						<span>On<br>Offer</span>
 					</div>
 		         </c:if>
-				<c:if test="${product.isOnlineExclusive}">
+				<c:if test="${!product.isOfferExisting && !product.isProductNew && product.isOnlineExclusive}">
 					<div style="z-index: 1;" class="online-exclusive">
 						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
 							src="//${staticHost}/_ui/responsive/common/images/transparent.png">
@@ -206,16 +215,17 @@
 				<!-- Added for Addtocart -->
 			</div>
 			<div class="details short-info">
-				<!-- Added for colour swatch -->
-
+				<!-- Added for colour swatch -->			
 				<ul class="color-swatch">
 
 					<c:choose>
 						<c:when test="${fn:length(product.swatchColor)>6}">
 							<c:forEach items="${product.swatchColor}" var="swatchColor"
 								begin="1" end="6">
+								<c:set var="swatchUriAry"
+									value="${fn:split(swatchColor, '||')}" />
 								<c:set var="swatchColorAry"
-									value="${fn:split(swatchColor, '_')}" />
+									value="${fn:split(swatchUriAry[0], '_')}" />
 								<c:choose>
 									<c:when
 										test="${fn:startsWith(swatchColorAry[0],'Multi') || fn:startsWith(swatchColorAry[0],'multi')}">
@@ -225,9 +235,15 @@
 									</c:when>
 									<c:otherwise>
 										<c:set var="colorHexCode" value="#${swatchColorAry[1]}" />
-										<li><span
+										<li><%-- <span
 											style="background-color: ${colorHexCode};border: 1px solid rgb(204, 211, 217);"
-											title="${swatchColorAry[0]}"></span></li>
+											title="${swatchColorAry[0]}"></span> --%>
+											<a  href="/p-${swatchUriAry[1]}"> 
+												<span style="background-color: ${colorHexCode};border: 1px solid rgb(204, 211, 217);"
+												title="${swatchColorAry[0]}"></span>
+											</a>
+	
+											</li>
 									</c:otherwise>
 								</c:choose>
 							</c:forEach>
@@ -235,8 +251,10 @@
 						</c:when>
 						<c:otherwise>
 							<c:forEach items="${product.swatchColor}" var="swatchColor">
+								<c:set var="swatchUriAry"
+									value="${fn:split(swatchColor, '||')}" />
 								<c:set var="swatchColorAry"
-									value="${fn:split(swatchColor, '_')}" />
+									value="${fn:split(swatchUriAry[0], '_')}" />
 								<c:choose>
 									<c:when
 										test="${fn:startsWith(swatchColorAry[0],'Multi') || fn:startsWith(swatchColorAry[0],'multi')}">
@@ -246,9 +264,14 @@
 									</c:when>
 									<c:otherwise>
 										<c:set var="colorHexCode" value="#${swatchColorAry[1]}" />
-										<li><span
+										<li><%-- <span
 											style="background-color: ${colorHexCode};border: 1px solid rgb(204, 211, 217);"
-											title="${swatchColorAry[0]}"></span></li>
+											title="${swatchColorAry[0]}"></span> --%>
+											<a  href="/p-${swatchUriAry[1]}"> 
+												<span style="background-color: ${colorHexCode};border: 1px solid rgb(204, 211, 217);"
+												title="${swatchColorAry[0]}"></span>
+											</a>
+	</li>
 									</c:otherwise>
 								</c:choose>
 							</c:forEach>
@@ -304,7 +327,7 @@
 								 <c:choose>
 									<c:when test="${product.productMRP.value > 0}">
 										<span class="priceFormat">
-											<span id="mrpprice_${product.code}"> ${product.productMRP.formattedValue}</span></span>
+											<span id="mrpprice_${product.code}"> ${product.productMRP.formattedValueNoDecimal}</span></span>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${displayFreeForZero}">
@@ -321,7 +344,7 @@
 								<c:choose>
 									<c:when test="${product.price.value > 0}">
 										<span class="priceFormat">
-											<span id="price_${product.code}"> ${product.price.formattedValue}</span></span>
+											<span id="price_${product.code}"> ${product.price.formattedValueNoDecimal}</span></span>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${displayFreeForZero}">
@@ -353,7 +376,7 @@
 							<c:choose>
 									<c:when test="${product.productMRP.value > 0}">
 										<span class="priceFormat">
-										<span id="priceEqual_${product.code}">${product.productMRP.formattedValue}</span></span>
+										<span id="priceEqual_${product.code}">${product.productMRP.formattedValueNoDecimal}</span></span>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${displayFreeForZero}">

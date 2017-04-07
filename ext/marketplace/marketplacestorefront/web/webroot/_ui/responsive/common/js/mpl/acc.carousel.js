@@ -12,11 +12,12 @@ ACC.carousel = {
 	     "shopTheLookCarousel",
 
 	     "ClpTopDealsCarousel",
+	     "blpTopDealsCarousel",		//add for INC_11189
 	     "ClpBestSellerCarousel",
 
 	     "shopByLookCarousel",
 	     "offersCarousel",
-	     "blpTopDealsCarousel",
+	     /*"blpTopDealsCarousel",*/		//commented for INC_11189
 	     "categoryCarousel",
 	     "myStyleCarousel",
 	     "heroProductCarousel",
@@ -487,7 +488,8 @@ ACC.carousel = {
 			itemsMobile : false*/
 		});
 	},
-	blpTopDealsCarousel: function(){
+	/* start change for INC_11189*/
+	/*blpTopDealsCarousel: function(){
 		$(".top_deal_blp #mplAdvancedCategoryCarousel").owlCarousel({
 					items:5,
             		loop: true,
@@ -514,6 +516,56 @@ ACC.carousel = {
             				items:5,
             			}			
             		}	
+			navigation:true,
+			rewindNav: false,
+			navigationText :[],
+			pagination:false,
+			items:4,
+			itemsDesktop : false, 
+			itemsDesktopSmall : false, 
+			itemsTablet: false, 
+			itemsMobile : true
+		itemsDesktop : [5000,4], 
+		itemsDesktopSmall : [1400,4], 
+		itemsTablet: [650,2], 
+		itemsMobile : [480,2],
+			});
+	},*/
+	blpTopDealsCarousel: function(){
+		$(".top_deal_blp .offersCarousel").owlCarousel({
+					items:5,
+            		loop: true,
+            		nav:false,
+            		dots:false,
+            		navText:[],
+            		responsive : {
+            			// breakpoint from 0 up
+            			0 : {
+            				items:1,
+            				stagePadding: 50,
+            				loop: ($(".top_deal_blp .offersCarousel .image").length == 1)?false:true,
+                    		nav: ($(".top_deal_blp .offersCarousel .image").length == 1)?false:true,
+            			},
+            			// breakpoint from 480 up
+            			480 : {
+            				items:2,
+            				stagePadding: 75,
+            				loop: ($(".top_deal_blp .offersCarousel .image").length <= 2)?false:true,
+                    		nav: ($(".top_deal_blp .offersCarousel .image").length <= 2)?false:true,
+            			},
+            			// breakpoint from 700 up
+            			700 : {
+            				items:3,
+            				loop: ($(".top_deal_blp .offersCarousel .image").length <= 3)?false:true,
+                    		nav: ($(".top_deal_blp .offersCarousel .image").length <= 3)?false:true,
+            			},
+            			// breakpoint from 768 up
+            			1000 : {
+            				items:5,
+            				loop: ($(".top_deal_blp .offersCarousel .image").length <= 5)?false:true,
+                    		nav: ($(".top_deal_blp .offersCarousel .image").length <= 5)?false:true,
+            			}			
+            		}	
 			/*navigation:true,
 			rewindNav: false,
 			navigationText :[],
@@ -529,8 +581,7 @@ ACC.carousel = {
 		itemsMobile : [480,2],*/
 			});
 	},
-	
-	
+	/* end change for INC_11189*/	
 
 	ClpTopDealsCarousel: function(){
 		$(".top_deal .offersCarousel").owlCarousel({

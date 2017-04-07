@@ -68,6 +68,7 @@ import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -106,6 +107,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import atg.taglib.json.util.JSONException;
 
+import com.google.gson.Gson;
 import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONObject;
@@ -122,6 +124,8 @@ import com.tisl.mpl.facade.product.MplJewelleryFacade;
 import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
+import com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl;
+import com.tisl.mpl.facades.data.MplAjaxProductData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.RichAttributeData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
@@ -226,6 +230,7 @@ public class ProductPageController extends MidPageController
 	private static final String BOXING = "boxing";
 	private static final String USSID = "ussid";
 
+
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(ProductPageController.class);
 
@@ -294,6 +299,9 @@ public class ProductPageController extends MidPageController
 	//TPR-978
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
+
+	@Resource(name = "customProductFacade")
+	private CustomProductFacadeImpl customProductFacade;
 
 	// Jewellery Changes
 	@Resource(name = "priceBreakupFacade")
@@ -410,10 +418,21 @@ public class ProductPageController extends MidPageController
 				model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
 				model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
 				model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
-				final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-						ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-						//					ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION,
-						ProductOption.VARIANT_FULL));
+
+				//CAR-255
+				/*
+				 * final ProductData productData = productFacade.getProductForOptions(productModel,
+				 * Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+				 * ProductOption.GALLERY, ProductOption.CATEGORIES, // ProductOption.PROMOTIONS,
+				 * ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+				 */
+
+
+
+
+
+
+
 				/*
 				 * final String brandName = productData.getBrand().getBrandname(); final String metaDescription =
 				 * ModelAttributetConstants.Product_Page_Meta_Description
@@ -428,14 +447,16 @@ public class ProductPageController extends MidPageController
 				 * .replace(ModelAttributetConstants.META_VARIABLE_FOUR, productData.getName())
 				 * .replace(ModelAttributetConstants.META_VARIABLE_FIVE, productData.getName());
 				 */
-				final String metaTitle = productData.getSeoMetaTitle();
-				final String pdCode = productData.getCode();
-				final String metaDescription = productData.getSeoMetaDescription();
-				//TISPRD-4977
-				final String metaKeyword = productData.getSeoMetaKeyword();
-				//final String metaKeywords = productData.gets
 
-				setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
+
+				//CAR-255
+				/*
+				 * final String metaTitle = productData.getSeoMetaTitle(); final String pdCode = productData.getCode();
+				 * final String metaDescription = productData.getSeoMetaDescription(); //TISPRD-4977 final String
+				 * metaKeyword = productData.getSeoMetaKeyword(); //final String metaKeywords = productData.gets
+				 *
+				 * setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
+				 */
 				//AKAMAI fix
 				if (productModel instanceof PcmProductVariantModel)
 				{
@@ -508,6 +529,10 @@ public class ProductPageController extends MidPageController
 		String productUnitPrice = null;
 		String productSubCategoryName = null;
 
+		//For Analytics Data Layer schema changes
+		int productStock = 0;
+
+
 		try
 		{
 
@@ -562,14 +587,26 @@ public class ProductPageController extends MidPageController
 							LOG.error("Error in fetching price for tealium for product code : " + productData.getCode());
 						}
 
-						//TPR-4358 | product availibity online
-						if (buyboxdata.getAvailable() != null && buyboxdata.getAvailable().intValue() > 0)
+						if (buyboxdata.getAvailable() != null)
 						{
-							model.addAttribute("product_availability", "Available online");
+							productStock = buyboxdata.getAvailable().intValue();
+							model.addAttribute("product_stock_count", productStock);
+
+						}
+
+						populateOtherPriceDataForTealium(model, productUnitPrice, productPrice);
+
+
+						//TPR-4358 | product availibity online
+						if (productStock > 0)
+						{
+							model.addAttribute("out_of_stock", Boolean.FALSE); //For tealium
+							model.addAttribute("product_availability", "Available online"); //For Schema.org
 						}
 						else
 						{
-							model.addAttribute("product_availability", "Not Available online");
+							model.addAttribute("out_of_stock", Boolean.TRUE); //For Tealium
+							model.addAttribute("product_availability", "Not Available online"); //For Schema.org
 						}
 					}
 					//}
@@ -589,7 +626,7 @@ public class ProductPageController extends MidPageController
 
 
 			}
-			model.addAttribute("product_unit_price", productUnitPrice);
+
 			if (CollectionUtils.isNotEmpty(breadcrumbs))
 			{
 				model.addAttribute("site_section", breadcrumbs.get(0).getName());
@@ -607,7 +644,12 @@ public class ProductPageController extends MidPageController
 				}
 				model.addAttribute("page_name", "Product Details:" + breadcrumbName);
 			}
-			model.addAttribute("product_list_price", productPrice);
+			final DecimalFormat df = new DecimalFormat("0.00");
+			model.addAttribute("product_unit_price", df.format(Double.parseDouble(productUnitPrice)));
+			model.addAttribute("product_list_price", df.format(Double.parseDouble(productPrice)));
+			//model.addAttribute("product_list_price", productPrice);
+
+			//Rounding MOP and MRP upto 2 decimal places
 			model.addAttribute("product_name", productName);
 			model.addAttribute("product_sku", productSku);
 			model.addAttribute("page_category_name", "");
@@ -656,6 +698,25 @@ public class ProductPageController extends MidPageController
 			LOG.error("Exception while populating tealium Data for product" + productData.getCode() + ":::" + ex.getMessage());
 			//throw ex;
 		}
+	}
+
+	/**
+	 * @param model
+	 * @param productUnitPrice
+	 * @param productPrice
+	 */
+	//For Analytics Data layer schema changes
+	private void populateOtherPriceDataForTealium(final Model model, final String productUnitPrice, final String productPrice)
+	{
+		//final double mrp = Integer.parseInt(productUnitPrice);
+		//final double mop = Integer.parseInt(productPrice);
+		final double mrp = Double.parseDouble(productUnitPrice);
+		final double mop = Double.parseDouble(productPrice);
+		final double discount = mrp - mop;
+		final double percentageDiscount = (discount / mrp) * 100;
+		final BigDecimal roundedOffValue = new BigDecimal((int) percentageDiscount);
+		model.addAttribute("product_discount", new BigDecimal((int) discount));
+		model.addAttribute("product_discount_percentage", roundedOffValue);
 	}
 
 	/**
@@ -816,6 +877,7 @@ public class ProductPageController extends MidPageController
 			{
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK,
 						null != buyboxdata.getAvailable() ? buyboxdata.getAvailable() : ModelAttributetConstants.NOVALUE);
+
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, null != buyboxdata.getSpecialPrice()
 						&& null != buyboxdata.getSpecialPrice().getFormattedValue()
 						&& !buyboxdata.getSpecialPrice().getFormattedValue().isEmpty() ? buyboxdata.getSpecialPrice()
@@ -828,6 +890,22 @@ public class ProductPageController extends MidPageController
 						null != buyboxdata.getMrp() && null != buyboxdata.getMrp().getFormattedValue()
 								&& !buyboxdata.getMrp().getFormattedValue().isEmpty() ? buyboxdata.getMrp().getFormattedValue()
 								: ModelAttributetConstants.NOVALUE);
+
+				/*
+				 * buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, null !=
+				 * buyboxdata.getSpecialPrice() && null != buyboxdata.getSpecialPrice().getFormattedValueNoDecimal() &&
+				 * !buyboxdata.getSpecialPrice().getFormattedValueNoDecimal().isEmpty() ? buyboxdata.getSpecialPrice()
+				 * .getFormattedValueNoDecimal() : ModelAttributetConstants.NOVALUE);
+				 * buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, null != buyboxdata.getPrice() && null
+				 * != buyboxdata.getPrice().getFormattedValueNoDecimal() &&
+				 * !buyboxdata.getPrice().getFormattedValueNoDecimal().isEmpty() ? buyboxdata.getPrice()
+				 * .getFormattedValueNoDecimal() : ModelAttributetConstants.NOVALUE);
+				 * buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, null != buyboxdata.getMrp() && null !=
+				 * buyboxdata.getMrp().getFormattedValueNoDecimal() &&
+				 * !buyboxdata.getMrp().getFormattedValueNoDecimal().isEmpty() ? buyboxdata.getMrp()
+				 * .getFormattedValueNoDecimal() : ModelAttributetConstants.NOVALUE);
+				 */
+
 
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
 
@@ -2735,6 +2813,7 @@ public class ProductPageController extends MidPageController
 		List<String> contentList = null;
 		List<String> imageList = null;
 		List<String> videoList = null;
+
 		//Added for status 500 errors INC_11128
 		//Return this view when no Content Page is found for the Product
 		String returnString = "/pages/layout/productContentblank";
@@ -2744,7 +2823,6 @@ public class ProductPageController extends MidPageController
 			contentPage = getContentPageForProduct(productModel);
 			if (null != contentPage)
 			{
-
 				for (final ContentSlotForPageModel contentSlotForPageModel : contentPage.getContentSlots())
 				{
 					final ProductContentData productContentData = new ProductContentData();
@@ -2804,6 +2882,7 @@ public class ProductPageController extends MidPageController
 				storeCmsPageInModel(model, getContentPageForLabelOrId(contentPage.getUid()));
 				returnString = "/pages/" + contentPage.getMasterTemplate().getFrontendTemplateName();
 
+
 			}//final end of if
 			 //INC_11128
 			 //commented as returned inside the if block
@@ -2811,8 +2890,11 @@ public class ProductPageController extends MidPageController
 		}
 		catch (final CMSItemNotFoundException e)
 		{
+
 			LOG.error("CMS Item error while fetching A+ content", e);
+
 		}
+
 
 		//INC_11128
 		//commented as returned inside the if block
@@ -2823,15 +2905,16 @@ public class ProductPageController extends MidPageController
 
 	private ContentPageModel getContentPageForProduct(final ProductModel product) throws CMSItemNotFoundException
 	{
-		//INC_11128
 		//Commented for status 500 errors
 		//		if (productContentPage == null)
 		//		{
 		//			throw new CMSItemNotFoundException("Could not find a product content for the product" + product.getName());
 		//		}
 
+
 		return mplCmsPageService.getContentPageForProduct(product);
 	}
+
 
 	/**
 	 * @description method is to remove products in wishlist in in pdp
@@ -2922,6 +3005,7 @@ public class ProductPageController extends MidPageController
 		}
 	}
 
+
 	/**
 	 * @param productCode
 	 * @return
@@ -2974,3 +3058,123 @@ public class ProductPageController extends MidPageController
 		return displayConfigurableAttributeForPriceBreakup;
 	}
 }
+
+	@SuppressWarnings(BOXING)
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-ajaxProductData", method = RequestMethod.GET)
+	public String getAjaxProductDataForProductCode(
+			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode, final Model model)
+	{
+		String returnStatement = null;
+		MplAjaxProductData mplAjaxProductData = null;
+		final Gson gson = new Gson();
+		try
+		{
+			if (null != productCode)
+			{
+				productCode = productCode.toUpperCase();
+			}
+			LOG.debug("***************************ajaxProductData call for*************" + productCode);
+			final ProductModel productModel = productService.getProductForCode(productCode);
+			mplAjaxProductData = new MplAjaxProductData();
+			final ProductData productData = customProductFacade.getProductForAjaxOptions(productModel,
+					Arrays.asList(ProductOption.PROMOTIONS));
+			mplAjaxProductData.setCode(productData.getCode());
+			mplAjaxProductData.setName(productData.getName());
+			mplAjaxProductData.setUrl(productData.getUrl());
+			mplAjaxProductData.setArticleDescription(productData.getArticleDescription());
+			if (productModel instanceof PcmProductVariantModel)
+			{
+				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
+				mplAjaxProductData.setProductSize(variantProductModel.getSize());
+			}
+			mplAjaxProductData.setPotentialPromotions(productData.getPotentialPromotions());
+			final List<SellerInformationData> sellerInfoList = productData.getSeller();
+			final List<String> sellerList = new ArrayList<String>();
+			for (final SellerInformationData seller : sellerInfoList)
+			{
+				sellerList.add(seller.getSellerID());
+			}
+			mplAjaxProductData.setPdpSellerIDs(sellerList);
+
+			//			final String msdRESTURL = configurationService.getConfiguration().getString("msd.rest.url");
+			//			mplAjaxProductData.setMsdRESTURL(msdRESTURL);
+			model.addAttribute(ModelAttributetConstants.PRODUCT, productData);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			mplAjaxProductData.setError(e.getErrorMessage());
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			mplAjaxProductData.setError(e.getErrorMessage());
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+			mplAjaxProductData.setError(e.getMessage());
+		}
+		finally
+		{
+			model.addAttribute("ajaxData", gson.toJson(mplAjaxProductData));
+			returnStatement = ControllerConstants.Views.Fragments.Product.AJAXPRODUCTDATA;
+		}
+		return returnStatement;
+	}
+
+	@SuppressWarnings(BOXING)
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-productClassAttribs", method = RequestMethod.GET)
+	public @ResponseBody String getAjaxProductClassAttribs(
+			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode, final Model model)
+			throws com.granule.json.JSONException
+	{
+		LOG.debug("***************************productClassAttribs call for*************" + productCode);
+		String returnStatement = null;
+		final Gson gson = new Gson();
+		MplAjaxProductData mplAjaxProductData = null;
+		try
+		{
+			if (null != productCode)
+			{
+				productCode = productCode.toUpperCase();
+			}
+			final ProductModel productModel = productService.getProductForCode(productCode);
+			final ProductData productData = customProductFacade.getProductForAjaxOptions(productModel,
+					Arrays.asList(ProductOption.CATEGORIES, ProductOption.CLASSIFICATION));
+			mplAjaxProductData = new MplAjaxProductData();
+			displayConfigurableAttribute(productData, model);
+			final String validTabs = configurationService.getConfiguration().getString(
+					"mpl.categories." + productData.getRootCategory());
+			mplAjaxProductData.setValidTabs(validTabs);
+			mplAjaxProductData.setMapConfigurableAttribute((Map<String, String>) model.asMap().get(
+					ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE));
+			mplAjaxProductData.setMapConfigurableAttributes((Map<String, Map>) model.asMap().get(
+					ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES));
+			mplAjaxProductData.setWarranty((List<String>) model.asMap().get(ModelAttributetConstants.WARRANTY));
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			mplAjaxProductData.setError(e.getErrorMessage());
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			mplAjaxProductData.setError(e.getErrorMessage());
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+			mplAjaxProductData.setError(e.getMessage());
+		}
+		finally
+		{
+			returnStatement = gson.toJson(mplAjaxProductData);
+		}
+		return returnStatement;
+	}
+}
+

@@ -27,7 +27,7 @@ public class VariantSizeComparator implements Comparator<VariantOptionData>
 	private String pattern;
 	private Pattern regexPattern;
 	private List<List<String>> sizeSystems;
-	private static final Logger LOG = Logger.getLogger(SizeGuideHeaderComparator.class);
+	private static final Logger LOG = Logger.getLogger(VariantSizeComparator.class);
 
 	//this is used to compare the sizes of different variants
 
@@ -46,7 +46,6 @@ public class VariantSizeComparator implements Comparator<VariantOptionData>
 		{
 			value1 = arg1.getSizeLink().get(arg1.getUrl()).replaceAll("\\s+", "").toUpperCase();
 		}
-		//		if (StringUtils.isNotEmpty(value0) || StringUtils.isNotEmpty(value1))
 		//		INC_11681
 		if (StringUtils.isEmpty(value0) || StringUtils.isEmpty(value1))
 		{
@@ -117,11 +116,6 @@ public class VariantSizeComparator implements Comparator<VariantOptionData>
 		}
 		else if (value2SizeSystemIndex != -1)
 		{
-			//			final double modifiedValue1 = Double.parseDouble(value0.replaceAll("\\D+", ""));
-			//			final double modifiedValue2 = Double.parseDouble(value1.replaceAll("\\D+", ""));
-
-			//values out of size-systems are placed as last thus so big number.
-			//			return Double.compare(modifiedValue1, modifiedValue2);
 			//			INC_11681 Start
 			String mod_value0 = "";
 			String mod_value1 = "";

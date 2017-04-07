@@ -119,11 +119,6 @@
 		<p class="filter-name facet_mobile">Availability</p>
 			<ul class="facet-list js-facet-list  ">
 
-
-
-
-
-
 				<li class="filter-inStockFlag">
 					<c:set var="url" value="${requestScope['javax.servlet.forward.request_uri']}"/>
 					<form action="${url}" method="get"> 

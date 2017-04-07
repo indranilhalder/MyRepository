@@ -521,7 +521,7 @@
 	<alias name="mplDefaultCommerceAddToCartStrategyImpl" alias="commerceAddToCartStrategy" />
 	<bean id="mplDefaultCommerceAddToCartStrategyImpl"
 		class="com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl"
-		parent="abstractCommerceAddToCartStrategy">
+		parent="defaultCommerceAddToCartStrategy">
 		<property name="commerceAddToCartMethodHooks" ref="commerceAddToCartMethodHooks" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>
@@ -535,6 +535,8 @@
 			ref="#{configurationService.configuration.getProperty('commerceservices.orderCode.keyGenerator')}" />
 		<property name="mplCommerceCartDao" ref="mplCommerceCartDao" />
 		<property name="cartConverter" ref="cartConverter" />
+		<!-- CAR:127 -->
+		<property name="orderConverter" ref="orderConverter"/>
 		<property name="cartModificationConverter" ref="cartModificationConverter" />
 		<property name="siteConfigService" ref="siteConfigService" />
 		<property name="baseSiteService" ref="baseSiteService" />
@@ -1802,6 +1804,8 @@
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplProcessOrderServiceImpl">
 		<property name="orderService" ref="orderService" />
 		<property name="juspayOrderResponseConverter" ref="juspayOrderResponseConverter" />
+		<!-- CAR:127 -->
+		<property name="orderConverter" ref="orderConverter"></property>
 	</bean>
 	
 	<bean id="mplProcessOrderDao"
@@ -1948,8 +1952,7 @@
 			autowire="byName">
 		<property name="modelService" ref="modelService" />
 	</bean>
-	
-		
+
 	<!-- Old Cron Job Deletion Logic : Added as part of PT FIX-->
 	<alias name="mplcleanupCronJobsPerformable" alias="cleanupCronJobsPerformable" />
 	<bean id="mplcleanupCronJobsPerformable" parent="abstractGenericMaintenanceJobPerformable">
@@ -1978,6 +1981,7 @@
         </property>
     </bean>
 	<!-- Old Cron Job Deletion Logic ends: -->
+
 	
 
 	<!-- Jewellery Changes Start --> 
@@ -2043,6 +2047,37 @@
 	
 	
 	<bean id="mplPancardDao" class="com.tisl.mpl.marketplacecommerceservices.daos.pancard.impl.MplPancardDaoImpl">
+
+
+    <!--bean id="nodeWarmupService" class="com.hybris.yps.nodewarmer.service.NodeWarmupService">
+		<property name="warmerStrategies">
+			<list>
+				<bean class="com.hybris.yps.nodewarmer.warmer.impl.ComposedTypeWarmer" />
+				<bean class="com.hybris.yps.nodewarmer.warmer.impl.EnumerationTypesWarmer" />
+				<bean class="com.hybris.yps.nodewarmer.warmer.impl.PageWarmer">
+					<property name="hostname"
+						value="#{configurationService.configuration.getProperty('nodewarmer.test.http.host')}" />
+					<property name="throwExceptionOnFailure" value="true" />
+					<property name="urls">
+						<list>
+							<value>/</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean -->
+	<!-- Node Warmer Changes: -->
+	
+	
+	<!-- getPointService Thread lock fix -->
+	<alias name="mplPickupAvailabilityStrategy" alias="pickupAvailabilityStrategy"/>
+	<bean id="mplPickupAvailabilityStrategy"
+			class="com.tisl.mpl.marketplacecommerceservices.strategy.impl.ExtDefaultPickupAvailabilityStrategy">
+		<property name="pickupStrategy" ref="pickupStrategy"/>
+		<property name="stockLevelProductStrategy" ref="stockLevelProductID"/>
+		<property name="storePickupDao" ref="storePickupDao"/>
+
 	</bean>
 </beans>
 

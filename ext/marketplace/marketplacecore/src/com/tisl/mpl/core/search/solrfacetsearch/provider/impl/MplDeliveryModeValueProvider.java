@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.core.enums.ClickAndCollectEnum;
 import com.tisl.mpl.core.enums.ExpressDeliveryEnum;
 import com.tisl.mpl.core.enums.HomeDeliveryEnum;
 import com.tisl.mpl.core.model.RichAttributeModel;
@@ -76,11 +77,11 @@ public class MplDeliveryModeValueProvider extends AbstractPropertyFieldValueProv
 					//MR-2 Changes
 					deliveryModes.add("express delivery");
 				}
-				// Click and collect option is commented out for release 1
-				//if (ClickAndCollectEnum.YES.equals(richAttr.getClickAndCollect()))
-				//{
-				//	deliveryModes.add("click-and-collect");
-				//}
+				// Click and collect option is enabled as part of CAR-191
+				if (ClickAndCollectEnum.YES.equals(richAttr.getClickAndCollect()))
+				{
+					deliveryModes.add("click-and-collect");
+				}
 			}
 
 		}

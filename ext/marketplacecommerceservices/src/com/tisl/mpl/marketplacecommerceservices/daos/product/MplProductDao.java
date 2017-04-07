@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.product;
 
+import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.daos.ProductDao;
@@ -35,7 +36,15 @@ public interface MplProductDao extends ProductDao
 	 */
 
 	List<ProductModel> findProductsByCodeHero(final String code);
+
 	//Changes for TISPRD-1631 End
 
 	List<ProductFeatureModel> findProductFeaturesByCodeAndQualifier(final String code, final String qualifier);
+
+	/**
+	 * @param catalogVersion
+	 * @param productCodeList
+	 * @return
+	 */
+	public List<ProductModel> findProductListByCodeList(CatalogVersionModel catalogVersion, List<String> productCodeList);
 }
