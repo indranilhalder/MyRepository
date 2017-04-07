@@ -589,9 +589,18 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 			if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
 			{
 				final int configuredCusCount = getMplPromotionHelper().getStockCustomerRedeemCount(restrictionList);
-				if (configuredCusCount > 0 && totalFactorCount >= configuredCusCount)
+				if (configuredCusCount > 0)
 				{
-					totalFactorCount = configuredCusCount;
+					final int customerRedeemCount = getMplPromotionHelper().getCustomerRedeemCountForBuyABPromo(restrictionList, cart,
+							this.getCode());
+
+					final int finalCount = (configuredCusCount - customerRedeemCount < 0) ? ((-1) * (configuredCusCount - customerRedeemCount))
+							: (configuredCusCount - customerRedeemCount);
+
+					if (finalCount > 0 && totalFactorCount >= finalCount)
+					{
+						totalFactorCount = finalCount;
+					}
 				}
 			}
 
