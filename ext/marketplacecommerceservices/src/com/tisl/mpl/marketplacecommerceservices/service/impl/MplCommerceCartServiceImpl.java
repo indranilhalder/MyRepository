@@ -92,8 +92,6 @@ import javax.annotation.Resource;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
-import net.sourceforge.pmd.util.StringUtil;
-
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -166,6 +164,11 @@ import com.tisl.mpl.wsdto.PinCodeDeliveryModeResponse;
 import com.tisl.mpl.wsdto.ReservationItemWsDTO;
 import com.tisl.mpl.wsdto.ReservationListWsDTO;
 import com.tisl.mpl.wsdto.ServiceableSlavesDTO;
+import com.tisl.mpl.wsdto.StoreLocatorAtsResponse;
+import com.tisl.mpl.wsdto.StoreLocatorAtsResponseObject;
+import com.tisl.mpl.wsdto.StoreLocatorResponseItem;
+
+import net.sourceforge.pmd.util.StringUtil;
 
 
 
@@ -5482,6 +5485,38 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 										atsResponseDataList.add(data);
 									}
+									} else {
+
+										final StoreLocatorAtsResponseObject responseObject = pinCodeDeliveryModeService
+															.prepStoreLocationsToOMS(storeLocationRequestDataList,cartModel);
+										if(null != responseObject && null != responseObject.getItem() && !responseObject.getItem().isEmpty()) {
+											for (final StoreLocationRequestData storeLocationResponse : storeLocationRequestDataList)
+											{
+												for (final StoreLocatorResponseItem item : responseObject.getItem())
+												{
+													if (item.getUssId().equalsIgnoreCase(storeLocationResponse.getUssId()))
+													{
+														for (final StoreLocatorAtsResponse res : item.getATS())
+														{
+															final ATSResponseData data = new ATSResponseData();
+
+														data.setStoreId(res.getStoreId());
+														if(null != res.getQuantity() ) {
+															data.setQuantity(res.getQuantity().intValue());
+														}
+														atsResponseDataList.add(data);
+													}
+													}
+											}
+												responseData.setUssId(pinCodeResponseData.getUssid());
+												responseData.setAts(atsResponseDataList);
+												responseList.add(responseData);
+												
+										}
+											
+										
+									}
+								      return responseList;
 									}
 								}
 							}
