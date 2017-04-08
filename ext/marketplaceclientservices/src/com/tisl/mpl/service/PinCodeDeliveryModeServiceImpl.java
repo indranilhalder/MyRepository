@@ -636,38 +636,40 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 		StoreLocatorAtsResponseObject responsefromOMS = new StoreLocatorAtsResponseObject();
 		try
 		{
-			final String omsstoreServiceability = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_REALCALL).trim();
-			String mockXMLFirstPhase = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_FIRSTPHASE).trim();
-			final String mockXMLSecondPhase = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_SECONDPHASE).trim();
-			final String mockXMLThirdPhase = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_THIRDPHASE).trim();
+			
+			// Comented below code Because no StoreATS Call to OMS
+//			final String omsstoreServiceability = configurationService.getConfiguration()
+//					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_REALCALL).trim();
+//			String mockXMLFirstPhase = configurationService.getConfiguration()
+//					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_FIRSTPHASE).trim();
+//			final String mockXMLSecondPhase = configurationService.getConfiguration()
+//					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_SECONDPHASE).trim();
+//			final String mockXMLThirdPhase = configurationService.getConfiguration()
+//					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_THIRDPHASE).trim();
 
-			if (omsstoreServiceability != null && mockXMLFirstPhase != null && !mockXMLFirstPhase.isEmpty()
-					&& mockXMLSecondPhase != null && !mockXMLSecondPhase.isEmpty() && mockXMLThirdPhase != null
-					&& !mockXMLThirdPhase.isEmpty() && omsstoreServiceability.equalsIgnoreCase("N"))
-			{
-				LOG.debug("Try to prepare non-real time OMS call get some stores and inventories");
-				for (final StoreLocatorItem entry : storeLocatorRequest.getItem())
-				{
-					String mockXMLSecond = configurationService.getConfiguration()
-							.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_SECONDPHASE).trim();
-					mockXMLSecond = mockXMLSecond.replaceAll("<replaceUssid>", entry.getUssId());
-					mockXMLFirstPhase += mockXMLSecond;
-				}
-				final String output = mockXMLFirstPhase + mockXMLThirdPhase;
-				LOG.debug("*********************** StoreLocator  non- real time response xml :" + output);
-				//Commented as a part of TISPT-401
-				//Single Instance Declared for the whole class
-				//final JAXBContext jaxbContext = JAXBContext.newInstance(StoreLocatorAtsResponseObject.class);
-				final Unmarshaller unmarshaller = context.createUnmarshaller();
-				final StringReader reader = new StringReader(output);
-				responsefromOMS = (StoreLocatorAtsResponseObject) unmarshaller.unmarshal(reader);
-			}
-			else
-			{
+//			if (omsstoreServiceability != null && mockXMLFirstPhase != null && !mockXMLFirstPhase.isEmpty()
+//					&& mockXMLSecondPhase != null && !mockXMLSecondPhase.isEmpty() && mockXMLThirdPhase != null
+//					&& !mockXMLThirdPhase.isEmpty() && omsstoreServiceability.equalsIgnoreCase("N"))
+//			{
+//				LOG.debug("Try to prepare non-real time OMS call get some stores and inventories");
+//				for (final StoreLocatorItem entry : storeLocatorRequest.getItem())
+//				{
+//					String mockXMLSecond = configurationService.getConfiguration()
+//							.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_SECONDPHASE).trim();
+//					mockXMLSecond = mockXMLSecond.replaceAll("<replaceUssid>", entry.getUssId());
+//					mockXMLFirstPhase += mockXMLSecond;
+//				}
+//				final String output = mockXMLFirstPhase + mockXMLThirdPhase;
+//				LOG.debug("*********************** StoreLocator  non- real time response xml :" + output);
+//				//Commented as a part of TISPT-401
+//				//Single Instance Declared for the whole class
+//				//final JAXBContext jaxbContext = JAXBContext.newInstance(StoreLocatorAtsResponseObject.class);
+//				final Unmarshaller unmarshaller = context.createUnmarshaller();
+//				final StringReader reader = new StringReader(output);
+//				responsefromOMS = (StoreLocatorAtsResponseObject) unmarshaller.unmarshal(reader);
+//			}
+		//	else
+		//	{
 				ClientResponse response = null;
 				try
 				{ //Commented as a part of TISPT-401
@@ -707,7 +709,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 					{
 						throw new ClientEtailNonBusinessExceptions("O0007");
 					}
-				}
+			}
 				catch (final ClientEtailNonBusinessExceptions ex)
 				{
 					LOG.error("Http Error in calling OMS - " + ex.getMessage());
@@ -729,7 +731,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 				final StringReader reader = new StringReader(output);
 				responsefromOMS = (StoreLocatorAtsResponseObject) unmarshaller.unmarshal(reader);
 			}
-		}
+	//	}
 		catch (final ClientEtailNonBusinessExceptions ex)
 		{
 			LOG.error("Http Error in calling OMS - " + ex.getMessage());
