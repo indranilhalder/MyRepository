@@ -5468,11 +5468,14 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							{
 								if (deliveryDetailsData.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))
 								{
-									atsResponseDataList = new ArrayList<ATSResponseData>();
-									for (final CNCServiceableSlavesData cncServiceableSlavesData : deliveryDetailsData
-											.getCNCServiceableSlavesData())
-									{
-										final ATSResponseData data = new ATSResponseData();
+									atsResponseDataList = new ArrayList<ATSResponseData>(); 
+									if(null !=deliveryDetailsData
+											.getCNCServiceableSlavesData() && !deliveryDetailsData
+											.getCNCServiceableSlavesData().isEmpty()) {
+										for (final CNCServiceableSlavesData cncServiceableSlavesData : deliveryDetailsData
+												.getCNCServiceableSlavesData())
+										{
+											final ATSResponseData data = new ATSResponseData();
 
 										data.setStoreId(cncServiceableSlavesData.getStoreId());
 										data.setQuantity(cncServiceableSlavesData.getQty().intValue());
