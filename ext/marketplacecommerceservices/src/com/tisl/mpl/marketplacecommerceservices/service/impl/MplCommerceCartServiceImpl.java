@@ -5482,6 +5482,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 										atsResponseDataList.add(data);
 									}
+									}
 								}
 							}
 							responseData.setUssId(pinCodeResponseData.getUssid());
