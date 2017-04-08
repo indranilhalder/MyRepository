@@ -3384,7 +3384,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				final RefundEntryModel refundEntryModel = modelService.create(RefundEntryModel.class);
 				refundEntryModel.setOrderEntry(abstractOrderEntryModel);
 				refundEntryModel.setReturnRequest(returnRequestModel);
-				refundEntryModel.setReason(RefundReason.valueOf(getReasonDesc(reasonCode)));
+				if(null !=reasonCode ) {
+					refundEntryModel.setReason(RefundReason.valueOf(getReasonDesc(reasonCode)));
+				}
 				refundEntryModel.setStatus(ReturnStatus.RETURN_INITIATED);
 				refundEntryModel.setAction(ReturnAction.IMMEDIATE);
 				refundEntryModel.setNotes(getReasonDesc(reasonCode));

@@ -7510,6 +7510,7 @@ public class UsersController extends BaseCommerceController
 						returnInfoDataObj.setReasonCode(returnData.getReturnReasonCode());
 						returnInfoDataObj.setUssid(returnData.getUssid());
 						returnInfoDataObj.setReturnMethod(returnData.getReturnMethod());
+						returnInfoDataObj.setReasonCode(returnData.getReturnReasonCode());
 						final boolean cancellationStatusForSelfShip = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry,
 								returnInfoDataObj, customerData, SalesApplication.MOBILE, returnAddrData);
 						if (!cancellationStatusForSelfShip)
