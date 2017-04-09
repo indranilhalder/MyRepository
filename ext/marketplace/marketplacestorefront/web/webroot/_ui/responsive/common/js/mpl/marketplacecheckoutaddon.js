@@ -6245,10 +6245,20 @@ function activateSignInTab()
 {
 	var isSignInActive=$("#isSignInActive").val();
 	if(isSignInActive==='Y'){
-		$("#signIn_link").addClass('active');
-		$("#sign_in_content").addClass('active');
-		$("#SignUp_link").removeClass('active');
-		$("#sign_up_content").removeClass('active');
+		/*start change of INC144314983*/
+		if($("#sign_in_content").hasClass("active")){
+			$("#signIn_link").addClass('active');
+			$("#sign_in_content").addClass('active');
+			$("#SignUp_link").removeClass('active');
+			$("#sign_up_content").removeClass('active');
+		}
+		else{
+			$("#SignUp_link").addClass('active');
+			$("#sign_up_content").addClass('active');
+			$("#signIn_link").removeClass('active');
+			$("#sign_in_content").removeClass('active');
+		}
+		/*end change of INC144314983*/
 	}else{
 		$("#SignUp_link").addClass('active');
 		$("#sign_up_content").addClass('active');
