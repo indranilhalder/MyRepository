@@ -143,7 +143,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 	//CKD:TPR-250:Start : Exactly same method as buyboxPrice only to have a different path till DAO
 	//which uses a query without having clause for availability
 	@Override
-	public List<BuyBoxModel> buyboxPriceForMicrosite(final String productCode)
+	public List<BuyBoxModel> buyboxPriceForMicrosite(final String productCode,String sellerId)
 	{
 		final StringBuilder productCodes = new StringBuilder(100);
 		final Map<String, String> queryParamMap = new HashMap<String, String>();
@@ -177,13 +177,14 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 				productCodes.append("( ");
 				productCodes.append(" {bb.product}=?productParam1");
 				queryParamMap.put("productParam1", productCode);
+				queryParamMap.put("sellerid", sellerId);
 				productCodes.append(" )");
 			}
 
 			final String queryStringForPrice = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS + " Where " + productCodes.toString()
 					+ " AND ( {bb:" + BuyBoxModel.DELISTED + "}  IS NULL OR {bb:" + BuyBoxModel.DELISTED
 					+ "}=0) AND (sysdate between  {bb:" + BuyBoxModel.SELLERSTARTDATE + "} and {bb:" + BuyBoxModel.SELLERENDDATE
-					+ "}) AND {bb:" + BuyBoxModel.PRICE + "} > 0  ORDER BY {bb:" + BuyBoxModel.WEIGHTAGE + "} DESC,{bb:"
+					+ "}) AND {bb:" + BuyBoxModel.SELLERID + "}=?sellerid  ORDER BY {bb:" + BuyBoxModel.WEIGHTAGE + "} DESC,{bb:"
 					+ BuyBoxModel.AVAILABLE + "} DESC";
 
 			LOG.debug("QueryStringFetchingPrice" + queryStringForPrice);
