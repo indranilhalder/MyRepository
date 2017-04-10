@@ -35,7 +35,7 @@ public class PromotionPriceUpdaterDaoImpl implements PromotionPriceUpdaterDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.PromotionPriceUpdaterDao#getRequiredPromotionList()
 	 */
 	@Override
@@ -45,7 +45,10 @@ public class PromotionPriceUpdaterDaoImpl implements PromotionPriceUpdaterDao
 		List<ProductPromotionModel> PromotionResult = new ArrayList<ProductPromotionModel>();
 		final String queryString = "SELECT {" + ProductPromotionModel.PK + "} " + MarketplacecommerceservicesConstants.QUERYFROM
 				+ ProductPromotionModel._TYPECODE + " AS pr} " + " WHERE" + "({pr." + ProductPromotionModel.MODIFIEDTIME
-				+ "} >= ?earlierDate  " + ")   ORDER BY {pr:" + ProductPromotionModel.PRIORITY + "} ASC";
+				+ "} >= ?earlierDate  " + ") AND {pr: " + ProductPromotionModel.IMMUTABLEKEYHASH + "} IS NULL " + " ORDER BY {pr:"
+				+ ProductPromotionModel.PRIORITY + "} ASC";
+
+		LOG.debug("QUERY>>>>>>" + queryString);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 
 		query.addQueryParameter("earlierDate", mplConfigDate);
