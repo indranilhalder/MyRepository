@@ -1859,7 +1859,7 @@ h2 {
               position: absolute;
               top: 0;
               left: 150px;
-              height: 450px;
+              height: 500px;	/* TISSQAEE-323 */
               padding-top: 10px;
               padding-left: 30px;
               padding-right: 10px;
@@ -2049,8 +2049,8 @@ h2 {
 		/*  -webkit-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
             -moz-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
             box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px; */
-		height: 450px;
-		z-index: 10001;
+		height: 500px;		/* TISSQAEE-323 */
+	    z-index: 10001;
 		-webkit-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
 		-moz-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
 		transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
