@@ -177,6 +177,7 @@ tr.d0 td {
 				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name">${product.brand.brandname}</span></h3>
 				<%-- <a itemprop="url" href="${mainurl}"> --%>		<!-- Commented as part of UF-181 -->
 				<!-- For TPR-4358 -->
+				<span id="url" itemprop="url" style="display: none">${mainurl}</span> <!-- TISSQAEE-301 -->
 				<h1 itemprop="name" class="product-name">${product.productTitle}</h1>
 				<meta itemprop="sku" content="${product_sku}"/>
 				<!-- </a> -->

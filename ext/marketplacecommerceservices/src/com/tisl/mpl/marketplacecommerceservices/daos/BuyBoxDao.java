@@ -58,5 +58,8 @@ public interface BuyBoxDao
 	//TPR-3736
 	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions;
 
+	//INC144315542_INC144314878_INC_11113
+
+	public List<BuyBoxModel> getBuyboxPricesForSizeVariant(String productCode) throws EtailNonBusinessExceptions;
 
 }

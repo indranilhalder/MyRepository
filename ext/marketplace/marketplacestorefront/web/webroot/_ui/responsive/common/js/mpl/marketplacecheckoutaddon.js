@@ -6282,10 +6282,20 @@ function activateSignInTab()
 {
 	var isSignInActive=$("#isSignInActive").val();
 	if(isSignInActive==='Y'){
-		$("#signIn_link").addClass('active');
-		$("#sign_in_content").addClass('active');
-		$("#SignUp_link").removeClass('active');
-		$("#sign_up_content").removeClass('active');
+		/*start change of INC144314983*/
+		if($("#sign_in_content").hasClass("active")){
+			$("#signIn_link").addClass('active');
+			$("#sign_in_content").addClass('active');
+			$("#SignUp_link").removeClass('active');
+			$("#sign_up_content").removeClass('active');
+		}
+		else{
+			$("#SignUp_link").addClass('active');
+			$("#sign_up_content").addClass('active');
+			$("#signIn_link").removeClass('active');
+			$("#sign_in_content").removeClass('active');
+		}
+		/*end change of INC144314983*/
 	}else{
 		$("#SignUp_link").addClass('active');
 		$("#sign_up_content").addClass('active');
@@ -7200,7 +7210,7 @@ $("#couponSubmitButton").click(function(){
 function onSubmitAnalytics(msg){
 	var couponCode = $('#couponFieldId').val().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	utag.link({
-		link_obj: this,
+		/*link_obj: this,*/ /*TISUATSE-102*/
 		link_text: 'apply_coupon_'+msg ,
 		event_type : 'apply_coupon',
 		coupon_code : couponCode

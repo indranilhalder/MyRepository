@@ -48022,7 +48022,7 @@ padding:0 40px;	}
     right: 0;
 	top: -100px;
     margin: auto;
-    max-width: 300px;
+    /* max-width: 300px; */		/* TISSQAEE-336 */
     text-align: center;
     opacity: 0;
 	font-size: 14px;
@@ -48032,6 +48032,7 @@ padding:0 40px;	}
     box-shadow: 0 1px 6px 0 rgba(0,0,0,.1);
   	border: 1px solid rgba(0,0,0,.1);
   	transition: opacity 0.25s, top 0.45s;
+  	width: 300px;		/* TISSQAEE-336 */
 }
 
 
@@ -53407,6 +53408,7 @@ body .lookbook_wrapper .listing.wrapper .left-block{
     padding-bottom: 9px;
     line-height: 12px;
     word-break: break-word;
+   	word-wrap: break-word;	/* TISUATSE-105 */
 }
 
 .address-list .address .name {
@@ -54982,8 +54984,11 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
     height: 47px;
     line-height: 47px;
     margin: 0 0 0 -57px;
-    position: absolute;
-    top: 0;
+    /* position: absolute; */	/* TISSQAEE-331 */
+    position:relative;		/* TISSQAEE-331 */
+    /* top: 0; */		/* TISSQAEE-331 */
+    top:16px;		/* TISSQAEE-331 */
+    left:-10px;		/* TISSQAEE-331 */
     width: 47px;
 }
 
@@ -62161,6 +62166,7 @@ footer .banner{
 	font-size:12px !important;
 	letter-spacing: 0.6px;
 	line-height:1.67;
+	word-wrap: break-word; /* TISUATSE-104 */
 }
 .cart.wrapper.checkout-payment .right-block.billing .block.bottom.order-details.delivery-info>address{
 	line-height:1.67 !important;
