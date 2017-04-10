@@ -1899,7 +1899,7 @@ h2 {
               position: absolute;
               top: 0;
               left: 150px;
-              height: 450px;
+              height: 500px;	/* TISSQAEE-323 */
               padding-top: 10px;
               padding-left: 30px;
               padding-right: 10px;
@@ -2089,8 +2089,8 @@ h2 {
 		/*  -webkit-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
             -moz-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
             box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px; */
-		height: 450px;
-		z-index: 10001;
+		height: 500px;		/* TISSQAEE-323 */
+	    z-index: 10001;
 		-webkit-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
 		-moz-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
 		transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
@@ -48217,7 +48217,7 @@ padding:0 40px;	}
     right: 0;
 	top: -100px;
     margin: auto;
-    max-width: 300px;
+    /* max-width: 300px; */		/* TISSQAEE-336 */
     text-align: center;
     opacity: 0;
 	font-size: 14px;
@@ -48227,7 +48227,10 @@ padding:0 40px;	}
     box-shadow: 0 1px 6px 0 rgba(0,0,0,.1);
   	border: 1px solid rgba(0,0,0,.1);
   	transition: opacity 0.25s, top 0.45s;
+  	width: 300px;		/* TISSQAEE-336 */
 }
+
+
 
 .product-info>div.wishAddLogin.active, .product-info>div.wishAddSucess.active,.product-info>div.wishAddLogin.active, .product-info>div.wishRemoveSucess.active, .product-info>div.wishAlreadyAdded.active,div.wishAlreadyAddedPlp.active,div.wishRemoveSucessPlp.active,div.wishAddLoginPlp.active,div.wishAddSucessPlp.active,div.wishAddSucessQV.active,div.wishAddLoginQV.active,div.wishAlreadyAddedQV.active{
 	opacity: 1;

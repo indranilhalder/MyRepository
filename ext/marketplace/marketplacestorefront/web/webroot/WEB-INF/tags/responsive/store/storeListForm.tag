@@ -30,7 +30,7 @@ z-index: 1;
 position :absolute;
 float:right;
 right:10px;
-top:15%;
+top:10.5%;		/* TISSQAEE-335 */
 padding-bottom:5px;
 }
 .googleMapLegends{
