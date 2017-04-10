@@ -3263,8 +3263,12 @@ $(document).click(function (e)
 		    var container = $(".productGrid-header-wrapper .productGrid-header > div #search_form_microsite");
 		    //var containerGlobal = $("header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_form[name='search_form']");
 		    //var containerGlobalIcon = $(".searchButtonGlobal");
+		    /*if ((!container.is(e.target) // if the target of the click isn't the container...
+		        && container.has(e.target).length === 0) && container.find("input[type='text']").val().length === 0) // ... nor a descendant of the container*/		    
+		    //
+		    /* Change for TISSQAUAT-687 :: IE throws error*/
 		    if ((!container.is(e.target) // if the target of the click isn't the container...
-		        && container.has(e.target).length === 0) && container.find("input[type='text']").val().length === 0) // ... nor a descendant of the container
+			        && container.has(e.target).length === 0) && container.find("input[type='text']").length === 0)
 		    {
 		    	$(".productGrid-header-wrapper").removeClass("active_adjust");
 		    	$(".productGrid-header-wrapper .productGrid-header > div input[type='text']").animate({marginLeft: 1000},{duration:200});

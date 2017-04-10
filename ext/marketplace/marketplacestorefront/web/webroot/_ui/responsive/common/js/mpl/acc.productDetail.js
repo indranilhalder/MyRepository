@@ -1432,12 +1432,16 @@ function isOOS(){
 	
 	//if(availibility!=undefined && availibility.length > 0){
 	// availibility.length  was coming undefined even if availability was NOT Undefined
-	if(availibility!=undefined && Object.keys(availibility).length > 0){
+	if(availibility!=undefined && typeof availibility === 'object')/* Change for TISSQAUAT-687 :: IE throws error*/ 
+		/*Object.keys(availibility).length > 0)*/
+	{
+		if(Object.keys(availibility).length > 0){
 		$.each(availibility,function(k,v){
 			if(window.location.pathname.endsWith(k.toLowerCase()) && v == 0){
 				skuOOS = true;
 			}
 		});
+		}
 	}
 	
 	if(totalOptions == disabledOption && totalOptions!=0){
@@ -3412,10 +3416,20 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						$("#dListedErrorMsg").hide();//TISSTRT-1469
 						$(".reviews").show();
 						$(".fullfilled-by").show();
+						//CKD:TPR-250 :Start
+						var msiteSeller = $("#msiteBuyBoxSellerId").val(); 
+						var msiteSellerQueryString = '';
+						if (!$.isEmptyObject(msiteSeller)){
+							msiteSellerQueryString='?sellerId='+msiteSeller;
+						}
 						
-						$("a#submit.otherSellersFont").attr("href","/p/"+responseProductCode+"/viewSellers");
-						$("#sellerForm").attr("action","/p/"+responseProductCode+"/viewSellers");
+						/*$("a#submit.otherSellersFont").attr("href","/p/"+responseProductCode+"/viewSellers");
+						$("#sellerForm").attr("action","/p/"+responseProductCode+"/viewSellers");*/
 						
+						$("a#submit.otherSellersFont").attr("href","/p/"+responseProductCode+"/viewSellers"+msiteSellerQueryString);
+						$("#sellerForm").attr("action","/p/"+responseProductCode+"/viewSellers"+msiteSellerQueryString);
+						
+						//CKD:TPR-250 :End
 						//Deselect the previously selected li and highlight the current li
 						$('ul#variant.variant-select li').each(function (index, value) { 
 							if($(this).hasClass("selected"))

@@ -106,6 +106,8 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 
 		//final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 		boolean checkChannelFlag = false;
+		boolean isExhaustedFlag = false;
+
 		final AbstractOrder cart = evaluationContext.getOrder();
 		try
 		{
@@ -117,8 +119,13 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 
 			//changes end for omni cart fix @atmaram
 
+			if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
+			{
+				isExhaustedFlag = getMplPromotionHelper().isBuyAandBPromoExhausted(this.getCode(), restrictionList, cart);
+				LOG.debug("Is Buy A and B Discount Offer Exhausted" + isExhaustedFlag);
+			}
 
-			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag) // Validates the Restriction :Allows only if Valid and Valid Channel
+			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag && !isExhaustedFlag) // Validates the Restriction :Allows only if Valid and Valid Channel
 			{
 				//final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 				final List<String> eligibleProductList = eligibleForPromotion(cart, ctx); // Gets the Eligible Product List
@@ -146,10 +153,12 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 		return promotionResults;
 	}
 
+
+
 	/**
 	 * @Description : Promotion Evaluation Method
-	 * @param paramSessionContext
-	 * @param paramPromotionEvaluationContext
+	 * @param ctx
+	 * @param evaluationContext
 	 * @param validProductUssidMap
 	 * @return promotionResults
 	 */
@@ -781,6 +790,28 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 
 			totalFactorCount = validProductListA.size() < validProductListB.size() ? validProductListA.size() : validProductListB
 					.size();
+
+			// For TPR-4579
+			if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
+			{
+				final int configuredCusCount = getMplPromotionHelper().getStockCustomerRedeemCount(restrictionList);
+				if (configuredCusCount > 0)
+				{
+					final int customerRedeemCount = getMplPromotionHelper().getCustomerRedeemCountForBuyABPromo(restrictionList, cart,
+							this.getCode());
+
+					final int finalCount = (configuredCusCount - customerRedeemCount < 0) ? ((-1) * (configuredCusCount - customerRedeemCount))
+							: (configuredCusCount - customerRedeemCount);
+
+					if (finalCount > 0 && totalFactorCount >= finalCount)
+					{
+						totalFactorCount = finalCount;
+					}
+				}
+			}
+
+
+
 			if (totalFactorCount > 0)
 			{
 				final Set<String> validProdAUssidSet = getDefaultPromotionsManager().populateSortedValidProdUssidMap(
