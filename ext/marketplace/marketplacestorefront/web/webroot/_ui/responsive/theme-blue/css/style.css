@@ -1386,7 +1386,7 @@ h2 {
             -webkit-transition: z-index 0s, border 0.3s;
             -moz-transition: z-index 0s, border 0.3s;
             transition: z-index 0s, border 0.3s; }
-            header .content .bottom .bag a:hover{
+            header .content .bottom .bag > a:hover{
            color:#fff; }
          /*  header .content .right > ul > li.bag.clicked {
             border-left: 2px solid #f0f4f5;
@@ -29584,7 +29584,7 @@ font-weight:bold;
     font-weight: 100;
     color: #000;
     position: relative;
-    top: 0px;
+    top: 1px;
 }
 
 
@@ -67433,7 +67433,7 @@ header .content .bottom:not(.active) .bag:before{
     opacity:0;
 	top: 56px;
     left: auto;
-    right: 78px;
+    right: 68px;
     }
 header .content .bottom:not(.active) .bag:after{
 	content: "";
@@ -67447,7 +67447,7 @@ header .content .bottom:not(.active) .bag:after{
     opacity:0;
 	top: 55px;
     left: auto;
-    right: 77px;
+    right: 67px;
     }
 header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:hover:after,
 header .content .right > ul > li.wishlist:hover:after, header .content .right > ul > li.track.trackOrder:hover:after{
@@ -68458,10 +68458,10 @@ header .content .right > ul .logged_in.dropdown{
 	right: -7px;
 }
 header .content .bottom:not(.active) .bag:before{
-    right: 85px;
+    right: 75px;
     }
 header .content .bottom:not(.active) .bag:after{
-    right: 84px;
+    right: 74px;
     }
 
  }
