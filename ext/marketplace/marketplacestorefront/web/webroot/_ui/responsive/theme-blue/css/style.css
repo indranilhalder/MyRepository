@@ -55246,8 +55246,11 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
     height: 47px;
     line-height: 47px;
     margin: 0 0 0 -57px;
-    position: absolute;
-    top: 0;
+    /* position: absolute; */	/* TISSQAEE-331 */
+    position:relative;		/* TISSQAEE-331 */
+    /* top: 0; */		/* TISSQAEE-331 */
+    top:16px;		/* TISSQAEE-331 */
+    left:-10px;		/* TISSQAEE-331 */
     width: 47px;
 }
 
