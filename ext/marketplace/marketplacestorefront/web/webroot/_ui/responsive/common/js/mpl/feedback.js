@@ -3447,8 +3447,8 @@ $(document).ready(function(){
     /*UF-68 UF-69*/
     
     /*TISSQAUATS-881*/
-    if($(".product-info .product-detail .other-sellers#otherSellerInfoId .other-sellers-link #otherSellersId").text().length != 0)
-    	$(".product-info .product-detail .other-sellers#otherSellerInfoId").css("display","block");
+   /* if($(".product-info .product-detail .other-sellers#otherSellerInfoId .other-sellers-link #otherSellersId").text().length != 0)
+    	$(".product-info .product-detail .other-sellers#otherSellerInfoId").css("display","block");*/
     /*TISSQAUATS-881*/
 });
 
@@ -3489,8 +3489,8 @@ $(document).ajaxComplete(function(){
 	$("a#checkout-enabled.checkout-disabled").removeAttr("onclick");
 	
 	/*TISSQAUATS-881*/
-	 if($(".product-info .product-detail .other-sellers#otherSellerInfoId .other-sellers-link #otherSellersId").text().length != 0)
-	    	$(".product-info .product-detail .other-sellers#otherSellerInfoId").css("display","block");
+	 /*if($(".product-info .product-detail .other-sellers#otherSellerInfoId .other-sellers-link #otherSellersId").text().length != 0)
+	    	$(".product-info .product-detail .other-sellers#otherSellerInfoId").css("display","block");*/
 	 /*TISSQAUATS-881*/
 });
 

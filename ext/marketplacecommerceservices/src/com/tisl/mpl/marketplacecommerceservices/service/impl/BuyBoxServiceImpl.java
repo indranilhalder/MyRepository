@@ -48,11 +48,11 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	//CKD:TPR-250: Start
 	@Override
-	public List<BuyBoxModel> buyboxPriceForMicrosite(final String productCode) throws EtailNonBusinessExceptions,
-			EtailBusinessExceptions
+	public List<BuyBoxModel> buyboxPriceForMicrosite(final String productCode, final String sellerId)
+			throws EtailNonBusinessExceptions, EtailBusinessExceptions
 	{
 
-		final List<BuyBoxModel> buyBoxList = buyBoxDao.buyboxPriceForMicrosite(productCode);
+		final List<BuyBoxModel> buyBoxList = buyBoxDao.buyboxPriceForMicrosite(productCode, sellerId);
 		return buyBoxList;
 	}
 

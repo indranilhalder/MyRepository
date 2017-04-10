@@ -3559,10 +3559,10 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 							xhrBuyBox.always(function(){
 								//showing/hiding buttons on page change
 								$('#pin').val("");
-								$("#addToCartButton").show();
+								//$("#addToCartButton").show(); // commented for TPR-250 :was overriding
 								$('#addToCartButton-wrong').hide();
 								$('#buyNowButton').attr("disabled",false);
-								$("#buyNowButton").show();
+								//$("#buyNowButton").show();  // commented for TPR-250 :was overriding
 								//Hiding fullfilled by as they will be populated during richAttribute population
 								$('#fulFilledByTship').hide();
 								$('#fulFilledBySship').hide();
@@ -3753,12 +3753,23 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					// var codEnabled = data['isCod'];
 					var sellerName = data['sellerName'];
 					var sellerID = data['sellerId'];
+					var oosMicro=data['isOOsForMicro']; // TPR-250
 					
 					
 					$("#sellerNameId").html(sellerName);
 					$("#sellerSelId").val(sellerID);
 				//	alert(data['othersSellersCount']);
-					if (isOOS() && data['othersSellersCount']>0) {
+					if(data['othersSellersCount']>0 && oosMicro==true){ //TPR-250 change
+						$("#addToCartButton").hide();
+						$('#buyNowButton').hide();
+						$("#outOfStockId").show();
+						$("#allVariantOutOfStock").show();
+						$("#otherSellerInfoId").show();
+						$("#otherSellersId").html(data['othersSellersCount']);
+						$("#otherSellerLinkId").show();
+					}
+					
+					else if (isOOS() && data['othersSellersCount']>0) {
 						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
 						$("#addToCartButton").hide();
 						$("#outOfStockId").show();

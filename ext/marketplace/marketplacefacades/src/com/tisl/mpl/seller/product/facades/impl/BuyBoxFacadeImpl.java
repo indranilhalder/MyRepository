@@ -8,6 +8,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -150,7 +151,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		//TISPRM -56
 		String products[] = null;
 		String pdpProduct = null;
-		List<String> productsList = new ArrayList<String>();
+		final List<String> productsList = new ArrayList<String>();
 
 		final Map<String, Object> returnData = new HashMap<String, Object>();
 		List<BuyBoxModel> buyboxModelList = new ArrayList<BuyBoxModel>();
@@ -179,16 +180,9 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			//TISPRM -56
 			List<BuyBoxModel> buyboxModelListAll = null;
 			//CKD:TPR-250 Start : Manipulating (rearranging) elements of the buy box list for microsite seller
-			if (StringUtils.isNotBlank(bBoxSellerId))
-			{
-				// overridding buyBox for buyboxPrice method for  microsite TPR-250 (TPR-4955) : adding sellers with No stock as well
-				buyboxModelListAll = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPriceForMicrosite(productCode));
-				isSellerPresent = true;
-				rearrangeBuyBoxListElements(bBoxSellerId, buyboxModelListAll);
-			}
-			else
-			{
-				buyboxModelListAll = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPrice(productCode));
+			buyboxModelListAll = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPrice(productCode));
+			if(StringUtils.isNotBlank(bBoxSellerId)){
+				isSellerPresent = rearrangeBuyBoxListElements(bBoxSellerId, buyboxModelListAll, isSellerPresent, pdpProduct);
 			}
 			//CKD:TPR-250 End
 			for (final BuyBoxModel buyBoxModel : buyboxModelListAll)
@@ -210,11 +204,36 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			{
 				LOG.info("************* No Seller with inventory>0 inventory, Fetching buy box rows having price>0 *********");
 				// buyboxData.setAllOOStock(MarketplaceFacadesConstants.Y);// its is valid for electronics product
-				buyboxModelList = buyBoxService.buyBoxPriceNoStock(pdpProduct);
+				buyboxModelList = new ArrayList<BuyBoxModel>(buyBoxService.buyBoxPriceNoStock(pdpProduct));
+				if(StringUtils.isNotBlank(bBoxSellerId)){ //CKD:TPR-250
+					isSellerPresent = rearrangeBuyBoxListElements(bBoxSellerId, buyboxModelList, isSellerPresent, pdpProduct);
+				}
 				if (CollectionUtils.isNotEmpty(buyboxModelList))
 				{
-					//TODO
-					buyBoxMod = buyboxModelList.get(0);
+					//buyBoxMod = buyboxModelList.get(0);
+					//CKD:TPR-250 : Start
+					if (!isSellerPresent && StringUtils.isNotBlank(bBoxSellerId))
+					{
+
+						final List<BuyBoxModel> mSitebuyboxModelList = new ArrayList<BuyBoxModel>(
+								buyBoxService.buyboxPriceForMicrosite(pdpProduct, bBoxSellerId));
+						if (CollectionUtils.isNotEmpty(mSitebuyboxModelList))
+						{
+							buyBoxMod = mSitebuyboxModelList.get(0);
+							Collections.reverse(buyboxModelList);
+							buyboxModelList.add(buyBoxMod);
+							Collections.reverse(buyboxModelList);
+							if (null != buyBoxMod.getAvailable() && buyBoxMod.getAvailable().intValue() <= 0)
+							{
+								isMicroSellerOOS = true;
+							}
+						}
+					}
+					else
+					{
+						buyBoxMod = buyboxModelList.get(0);
+					}
+					//CKD:TPR-250 : End
 				}
 				else
 				{
@@ -234,60 +253,31 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					productsWithNoStock.add(pdpProduct);
 				}
 			}
-			// TPR-250: Start
-			else if (isSellerPresent)
-			{
-
-				buyboxModelList = buyBoxService.buyBoxPriceNoStock(pdpProduct);
-				final int buyBoxCount = buyboxModelList.size();
-				int oosCountForMicroSite = 0;
-				boolean allOSSForMicro = false;
-				for (final BuyBoxModel buybx : buyboxModelList)
-				{
-					if (null != buybx.getAvailable() && buybx.getAvailable().intValue() <= 0)
-					{
-						oosCountForMicroSite++;
-					}
-				}
-				if (oosCountForMicroSite == buyBoxCount)
-				{
-					allOSSForMicro = true;
-				}
-				for (final BuyBoxModel buybx : buyboxModelList)
-				{
-					if (buybx.getSellerId().equals(bBoxSellerId))
-					{
-						buyBoxMod = buybx;
-						if (null != buybx.getAvailable() && buybx.getAvailable().intValue() <= 0)
-						{
-							isMicroSellerOOS = true;
-						}
-						break;
-					}
-				}
-				//Availability counts
-				if (null != arrayToProductList)
-				{
-					if (isSellerPresent && isMicroSellerOOS)//TPR-250
-					{
-						productsList = identifyProductsForMicrosite(buyboxModelListAll, pdpProduct, productsList, bBoxSellerId);//getting products having stock
-					}
-					else
-					{
-						productsList = identifyProductsWithNoStock(buyboxModelListAll, pdpProduct, productsList);//getting products having stock
-					}
-					arrayToProductList.removeAll(productsList);
-					productsWithNoStock = arrayToProductList;
-				}
-			}
-			// TPR-250: End
 			else if (buyboxModelList.size() == 1)
 			{
+
 				onlyBuyBoxHasStock = true;
-				buyboxModelList = buyBoxService.buyBoxPriceNoStock(pdpProduct);
+				
+				buyboxModelList = new ArrayList<BuyBoxModel>(buyBoxService.buyBoxPriceNoStock(pdpProduct));
+				if(StringUtils.isNotBlank(bBoxSellerId)){ //CKD:TPR-250
+					isSellerPresent = rearrangeBuyBoxListElements(bBoxSellerId, buyboxModelList, isSellerPresent, pdpProduct);
+				}
 				for (final BuyBoxModel buybx : buyboxModelList)
 				{
-					if (buybx.getAvailable().doubleValue() > 0)
+					if (isSellerPresent && StringUtils.isNotBlank(bBoxSellerId)) //CKD:TPR-250
+					{
+						if (CollectionUtils.isNotEmpty(buyboxModelList))
+						{
+							buyBoxMod = buyboxModelList.get(0);
+							if (null != buyBoxMod.getAvailable() && buyBoxMod.getAvailable().intValue() <= 0)
+							{
+								isMicroSellerOOS = true;
+								onlyBuyBoxHasStock = false; 
+								break;
+							}
+						}
+					}
+					else if (buybx.getAvailable().doubleValue() > 0)
 					{
 						buyBoxMod = buybx;
 						break;
@@ -300,6 +290,33 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					productsWithNoStock = arrayToProductList;
 				}
 			}
+			
+			// CKD:TPR-250: Start
+				else if (!isSellerPresent && StringUtils.isNotBlank(bBoxSellerId))
+				{
+
+				final List<BuyBoxModel> mSiteBuyboxModelList = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPriceForMicrosite(
+						pdpProduct, bBoxSellerId));
+				
+				buyBoxMod = mSiteBuyboxModelList.get(0);
+				// Adding the msite buybox winner to the front of the buy box list
+				Collections.reverse(buyboxModelList);
+				buyboxModelList.add(buyBoxMod);
+				Collections.reverse(buyboxModelList);
+				if (null != buyBoxMod.getAvailable() && buyBoxMod.getAvailable().intValue() <= 0)
+				{
+					isMicroSellerOOS = true;
+				}
+				//Availability counts
+				if (null != arrayToProductList)
+				{
+					arrayToProductList.removeAll(productsList);
+					productsWithNoStock = arrayToProductList;
+				}
+			
+			}
+			//CKD:TPR-250: End
+			
 			else
 			{
 				buyBoxMod = buyboxModelList.get(0);
@@ -321,8 +338,9 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			{
 				for (final BuyBoxModel buyBoxModel : buyboxModelList)
 				{
-					buyBoxDataList
-							.add(populateBuyBoxData(buyBoxModel, onlyBuyBoxHasStock, buyboxModelList, buyboxData.getAllOOStock()));
+					//buyBoxDataList.add(populateBuyBoxData(buyBoxModel, onlyBuyBoxHasStock, buyboxModelList, buyboxData.getAllOOStock()));
+					//TPR-250
+					buyBoxDataList.add(populateBuyBoxData(buyBoxModel, onlyBuyBoxHasStock, buyboxModelList, buyboxData.getAllOOStock(),isSellerPresent,isMicroSellerOOS));
 				}
 
 			}
@@ -330,7 +348,9 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			//TPR-1375 changes end
 			if (buyboxModelList.size() > 0)
 			{
-				buyboxData = populateBuyBoxData(buyBoxMod, onlyBuyBoxHasStock, buyboxModelList, buyboxData.getAllOOStock());
+				//buyboxData = populateBuyBoxData(buyBoxMod, onlyBuyBoxHasStock, buyboxModelList, buyboxData.getAllOOStock());
+				//TPR-250
+				buyboxData = populateBuyBoxData(buyBoxMod, onlyBuyBoxHasStock, buyboxModelList, buyboxData.getAllOOStock(),isSellerPresent,isMicroSellerOOS);
 				//TPR-1375 changes starts
 				if (CollectionUtils.isEmpty(buyBoxDataList))
 				{
@@ -362,18 +382,6 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		returnData.put("pdp_buy_box", buyboxData);
-		int sellerSize = 0;
-		if (isSellerPresent && CollectionUtils.isNotEmpty(buyboxModelList))
-		{
-			for (final BuyBoxModel bBox : buyboxModelList)
-			{
-				if (bBox.getAvailable().intValue() > 0 && !bBox.getSellerId().equalsIgnoreCase(bBoxSellerId))
-				{
-					sellerSize++;
-				}
-			}
-			buyboxData.setNumberofsellers(Integer.valueOf(sellerSize));
-		}
 		returnData.put("no_stock_p_codes", productsWithNoStock);
 		returnData.put("isOOsForMicro", Boolean.valueOf(isMicroSellerOOS));
 
@@ -387,7 +395,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	 * @param bBoxSellerId
 	 * @return
 	 */
-	private List<String> identifyProductsForMicrosite(final List<BuyBoxModel> buyboxModelListAll, final String pdpProduct,
+	/*private List<String> identifyProductsForMicrosite(final List<BuyBoxModel> buyboxModelListAll, final String pdpProduct,
 			final List<String> productsList, final String bBoxSellerId)
 	{
 		// YTODO Auto-generated method stub
@@ -400,7 +408,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			}
 		}
 		return productsList;
-	}
+	}*/
 
 	/**
 	 * @param buyboxModelListAll
@@ -410,18 +418,18 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	 */
 	//CKD:TPR-250: Start
 	//  to create a productlist to generate availability property in buybox json response similar to non-microsite call in PDP
-	List<String> identifyProductsWithNoStock(final List<BuyBoxModel> buyboxModelListAll, final String pdpProduct,
+	/*List<String> identifyProductsWithNoStock(final List<BuyBoxModel> buyboxModelListAll, final String pdpProduct,
 			final List<String> productsList)
 	{
 		for (final BuyBoxModel bbModel : buyboxModelListAll)
 		{
-			if (bbModel.getAvailable() <= 0)
+			if (bbModel.getAvailable().intValue() <= 0)
 			{
 				productsList.remove(bbModel.getProduct());
 			}
 		}
 		return productsList;
-	}
+	}*/
 
 	//CKD:TPR-250: End
 
@@ -483,8 +491,6 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			}
 			if (buyboxModelList.size() > 0)
 			{
-
-
 				if (null != buyBoxMod.getSpecialPrice() && buyBoxMod.getSpecialPrice().doubleValue() > 0)
 				{
 					final double spPrice = buyBoxMod.getSpecialPrice().doubleValue();
@@ -505,8 +511,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
 
 				//other sellers count
-				final int oosSellerforMsite = getOosSellerCountInBuyBoxModel(buyboxModelList);
-				final int sellerSize = buyboxModelList.size() - 1 - oosSellerforMsite; // CKD:TPR-250:TPR-4495
+				final int oosSellersCount = getOosSellerCount(buyboxModelList);
+				final int sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
 				final Integer noofsellers = Integer.valueOf(sellerSize);
 
 				//TPR-250:Start
@@ -956,7 +962,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	 * @return buyboxData
 	 */
 	private BuyBoxData populateBuyBoxData(final BuyBoxModel buyBoxMod, final boolean onlyBuyBoxHasStock,
-			final List<BuyBoxModel> buyboxModelList, final String outOfStockFlag)
+			final List<BuyBoxModel> buyboxModelList, final String outOfStockFlag,boolean isSellerPresent,boolean isMicroSellerOOS)
 	{
 		final BuyBoxData buyboxData = new BuyBoxData();
 		if (null != buyBoxMod.getSpecialPrice() && buyBoxMod.getSpecialPrice().doubleValue() > 0)
@@ -978,30 +984,36 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		}
 		buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
 		//CKD:TPR-250:Start: checking if list has Buy Box list has OOS seller to be removed from other sellers count when call comes from microsite
-		final int oosSellerforMsite = getOosSellerCountInBuyBoxModel(buyboxModelList);
+		final int oosSellersCount = getOosSellerCount(buyboxModelList);
 		//other sellers count
-		final int sellerSize = buyboxModelList.size() - 1 - oosSellerforMsite;
+		int sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
+		if (isMicroSellerOOS && !isSellerPresent){
+			sellerSize = sellerSize +1;
+		}
+		if(sellerSize<0) {
+			buyboxData.setNumberofsellers(Integer.valueOf(0));
+		}
+		else{
+			buyboxData.setNumberofsellers(Integer.valueOf(sellerSize));
+		}
 		//CKD:TPR-250:End
-		final Integer noofsellers = Integer.valueOf(sellerSize);
-		//TPR-250:Start
-		//		if (onlyBuyBoxHasStock && sellerSize > 0)
-		//		{
-		//			buyboxData.setNumberofsellers(Integer.valueOf(-1));
-		//			//buyboxData.setNumberofsellers(Integer.valueOf(-1));
-		//		}
-		////		else
-		//		{
-		buyboxData.setNumberofsellers(noofsellers);
-		//	}
-		//TPR-250:end
+		
 		//Minimum price for other sellers
 		double minPrice = 0.0d;
 		if (sellerSize > 0)
 		{
-
-			for (int i = 1; i <= sellerSize; i++)
+			/*int start = 1;
+			int end = buyboxModelList.size()-1;
+			if (!isSellerPresent){
+				start=0;
+			}*/
+			int end = buyboxModelList.size()-1;
+			for (int i = 1; i <= end; i++)
+			//for (int i = start; i <= end; i++)
 			{
-				if (null != buyboxModelList.get(i).getSpecialPrice() && buyboxModelList.get(i).getSpecialPrice().doubleValue() > 0)
+				if (null != buyboxModelList.get(i).getSpecialPrice() && buyboxModelList.get(i).getSpecialPrice().doubleValue() > 0
+						&& buyboxModelList.get(i).getAvailable().intValue()>0 // CKD:TPR-250 not considering OOS elements for min price calculation
+						)
 				{
 
 					final double specialPrice = buyboxModelList.get(i).getSpecialPrice().doubleValue();
@@ -1065,51 +1077,58 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	 * @param buyboxModelList
 	 * @return
 	 */
-	private int getOosSellerCountInBuyBoxModel(final List<BuyBoxModel> buyboxModelList)
+	private int getOosSellerCount(final List<BuyBoxModel> buyboxModelList)
 	{
-		int oosSellerforMsite = 0;
+		int oosSellers = 0;
 		for (final BuyBoxModel buyBoxModel : buyboxModelList)
 		{
-			if (buyBoxModel.getAvailable() <= 0)
+			if (buyBoxModel.getAvailable().intValue() <= 0)
 			{
-				oosSellerforMsite = oosSellerforMsite + 1;
+				oosSellers++;
 			}
 		}
-		return oosSellerforMsite;
+		return oosSellers;
 	}
 
 	/**
 	 * @param bBoxSellerId
-	 * @param buyboxModelListAll
+	 * @param buyboxModelList
+	 * @param bBoxSellerIdFound
+	 * @param pdpProduct
 	 */
-	private void rearrangeBuyBoxListElements(final String bBoxSellerId, final List<BuyBoxModel> buyboxModelListAll)
-	{
+	private boolean rearrangeBuyBoxListElements(final String bBoxSellerId, final List<BuyBoxModel> buyboxModelList,
+			boolean bBoxSellerIdFound, final String pdpProduct)
+		{
 		{
 			List<BuyBoxModel> msiteBboxOtherSellerList = null;
 			List<BuyBoxModel> msiteBboxWinningSellerList = null;
 			msiteBboxWinningSellerList = new ArrayList<BuyBoxModel>();
 			msiteBboxOtherSellerList = new ArrayList<BuyBoxModel>();
-			for (final BuyBoxModel buyBoxModel : buyboxModelListAll)
+			for (final BuyBoxModel buyBoxModel : buyboxModelList)
 			{
-				if (bBoxSellerId.equalsIgnoreCase(buyBoxModel.getSellerId()))
+				if (StringUtils.isNotBlank(pdpProduct) && pdpProduct.equalsIgnoreCase(buyBoxModel.getProduct())
+						&& bBoxSellerId.equalsIgnoreCase(buyBoxModel.getSellerId()))
 				{
+					bBoxSellerIdFound = true;
 					msiteBboxWinningSellerList.add(buyBoxModel);
 				}
 				else
 				{
 					// Adding only those as other sellers which are having stock
-					if (buyBoxModel.getAvailable() > 0)
-					{
-						msiteBboxOtherSellerList.add(buyBoxModel);
-					}
+					/*
+					 * if (buyBoxModel.getAvailable().intValue() > 0) {
+					 */
+					msiteBboxOtherSellerList.add(buyBoxModel);
+					//}
 				}
 			}
-			buyboxModelListAll.clear();
-			buyboxModelListAll.addAll(msiteBboxWinningSellerList);
-			buyboxModelListAll.addAll(msiteBboxOtherSellerList);
+			buyboxModelList.clear();
+			buyboxModelList.addAll(msiteBboxWinningSellerList);
+			buyboxModelList.addAll(msiteBboxOtherSellerList);
 			// nullifying the lists as they are no more required
 			msiteBboxWinningSellerList = null;
 			msiteBboxOtherSellerList = null;
 		}
+		return bBoxSellerIdFound;
 	}
-}
+	}

@@ -60,9 +60,10 @@ public interface BuyBoxDao
 
 	/**
 	 * @param productCode
+	 * @param pdpproduct
 	 * @return
 	 */
-	public List<BuyBoxModel> buyboxPriceForMicrosite(String productCode) throws EtailNonBusinessExceptions;
+	public List<BuyBoxModel> buyboxPriceForMicrosite(String productCode, String pdpproduct) throws EtailNonBusinessExceptions;
 
 	//INC144315542_INC144314878_INC_11113
 
