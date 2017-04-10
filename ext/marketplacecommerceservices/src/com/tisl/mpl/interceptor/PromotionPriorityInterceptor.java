@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Required;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
+import com.tisl.mpl.model.MplProductSteppedMultiBuyPromotionModel;
 import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 
@@ -127,6 +128,8 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 
 		final boolean errorflag = checkDescriptionData(object);
 
+		final boolean bundlelinknameflag = checkbundlelinknameData(object);
+
 		if (!errorflag)
 		{
 			//final String errorMsg = Localization.getLocalizedString(MarketplacecommerceservicesConstants.PROMO_ERROR_MESSAGE);
@@ -138,7 +141,11 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 		}
 
 
-
+		if (!bundlelinknameflag)
+		{
+			throw new InterceptorException(Localization.getLocalizedString("promotion.bundlepromolinktext.length.count")
+					+ MarketplacecommerceservicesConstants.SINGLE_SPACE + getPromotionbundlelinknameLength());
+		}
 
 
 
@@ -404,6 +411,26 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	}
 
 	/**
+	 * @param object
+	 * @return boolean
+	 */
+	private boolean checkbundlelinknameData(final Object object)
+	{
+		if (object instanceof MplProductSteppedMultiBuyPromotionModel)
+		{
+			final Integer nameLength = getPromotionbundlelinknameLength();
+			final MplProductSteppedMultiBuyPromotionModel promo = (MplProductSteppedMultiBuyPromotionModel) object;
+			LOG.debug("Checking Name For Bundle Promotion Link::" + promo.getBundlepromolinktext().trim().length());
+			if (StringUtils.isNotEmpty(promo.getBundlepromolinktext())
+					&& promo.getBundlepromolinktext().trim().length() > nameLength.intValue())
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * The Method Returns the Max Possible Promotion Title Length
 	 *
 	 * @return titleLength
@@ -423,6 +450,25 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 		return titleLength;
 	}
 
+	/**
+	 * The Method Returns the Max Length of Name For Bundle Promotion Link
+	 *
+	 * @return nameLength
+	 */
+	private Integer getPromotionbundlelinknameLength()
+	{
+		Integer nameLength = Integer.valueOf(0);
+		final String length = configurationService.getConfiguration().getString("promotion.bundlepromolinktext.length", "185");
+		try
+		{
+			nameLength = Integer.valueOf(length);
+		}
+		catch (final NumberFormatException exception)
+		{
+			nameLength = Integer.valueOf(185);
+		}
+		return nameLength;
+	}
 
 	/**
 	 * Code Change for TISPRD-2637
@@ -444,9 +490,9 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	 * } } else if (promotion instanceof BuyABFreePrecentageDiscountModel) { final BuyABFreePrecentageDiscountModel
 	 * oModel = (BuyABFreePrecentageDiscountModel) promotion; if (CollectionUtils.isNotEmpty(oModel.getGiftProducts())) {
 	 * isValid = checkCatalogVersion(oModel.getGiftProducts()); } }
-	 * 
+	 *
 	 * return isValid;
-	 * 
+	 *
 	 * }
 	 */
 
