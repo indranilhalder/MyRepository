@@ -767,6 +767,8 @@ $(document).ready(function(){
 		}
 	}); */	 
 	//Sprint 7 Sanity Issue fixing ends here
+
+
 	 if($('body').find('input.wishlist#add_to_wishlist-sizeguide').length > 0){
 			$('input.wishlist#add_to_wishlist-sizeguide').popover({ 
 				html : true,

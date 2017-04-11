@@ -12,7 +12,9 @@
 		<rows>
 			<row>
 				<label sclass="prop_label" value="Logistics Id"></label>
-				<textbox id="logisticsId"></textbox>
+				<textbox id="logisticsId" maxlength="15"
+					placeholder="Please Enter Logistics ID">
+				</textbox>
 				<label id="lId"></label>
 			</row>
 
@@ -22,25 +24,32 @@
 
 			<row>
 				<label sclass="prop_label" value="Name"></label>
-				<textbox id="logisticsName" />
+				<textbox id="logisticsName"
+					placeholder="Enter Logistics Name" />
 				<label id="lName"></label>
+			</row>
+			<row>		
+				<checkbox id="isScheduled" label="Is Scheduled"  />
 			</row>
 
 			<row>
-				<label sclass="prop_label" value="Address   "></label>
+				<label sclass="prop_label" value="Address"></label>
 				<textbox id="address" draggable="true" cols="30"
-					rows="5" />
+					placeholder="Enter Logistics Address" rows="5" />
 				<label id="lAddress"></label>
 			</row>
 			<row>
 				<label sclass="prop_label" value="Contact Name"></label>
-				<textbox id="contactName" />
+				<textbox id="contactName"
+					placeholder=" Enter Contact Name" />
 				<label id="lCName"></label>
 			</row>
 			<row>
 				<label sclass="prop_label" value="Contact Phone No">
 				</label>
-				<textbox id="phoneNo" maxlength="11"></textbox>
+				<textbox id="phoneNo" maxlength="11"
+					placeholder=" Enter Phone Number">
+				</textbox>
 				<label id="lPNum"
 					style="color:red;margin-left:-100px;position:absolute">
 				</label>
@@ -49,7 +58,7 @@
 			<row>
 				<label sclass="prop_label" value="Logistics Email">
 				</label>
-				<textbox id="email"></textbox>
+				<textbox id="email" placeholder="Enter Enail ID"></textbox>
 				<label
 					style="color:red;margin-left:-100px;position:absolute"
 					id="lEmail">
@@ -58,7 +67,9 @@
 
 			<row>
 				<label sclass="prop_label" value="Fax No"></label>
-				<textbox id="faxNo" maxlength="11"></textbox>
+				<textbox id="faxNo" maxlength="11"
+					placeholder="Enter Fax Number Name">
+				</textbox>
 				<label
 					style="color:red;margin-left:-100px;position:absolute" id="lFax">
 				</label>
@@ -90,7 +101,11 @@
 				<textbox id="logisticsNameEdit" />
 
 			</row>
-
+			<row>
+				
+				<checkbox id="isScheduledEdit" label="Is Scheduled"  />
+				
+			</row>
 
 			<row>
 				<label sclass="prop_label" value="Address   "></label>
@@ -142,5 +157,4 @@
 	</grid>
 
 </widget>
-
 

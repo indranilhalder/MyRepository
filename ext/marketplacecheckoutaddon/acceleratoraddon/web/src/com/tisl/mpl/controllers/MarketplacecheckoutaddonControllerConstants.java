@@ -42,6 +42,7 @@ public interface MarketplacecheckoutaddonControllerConstants
 				String PAYMENTDETAILSPAGE = ADDON_PREFIX + "pages/checkout/multi/enterPaymentDetailsPage";
 				String ChooseAddNewAddressPage = ADDON_PREFIX + "pages/checkout/multi/addNewAddressPage";
 				String ChooseDeliveryMethodEditPage = ADDON_PREFIX + "pages/checkout/multi/editAddressDetailsPage";
+                String ChooseDeliverySlotPage = ADDON_PREFIX + "pages/checkout/multi/chooseDeliverySlotPage";
 			}
 		}
 

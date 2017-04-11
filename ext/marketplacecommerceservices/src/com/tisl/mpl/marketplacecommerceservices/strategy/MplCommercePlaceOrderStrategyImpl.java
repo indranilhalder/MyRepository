@@ -419,9 +419,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	private Double fetchTotalPrice(final OrderModel orderModel)
 	{
 		Double totalPrice = Double.valueOf(0);
+		final double scheduleDeliveryCharge = 0.0D;
 		//final OrderData orderData = getOrderConverter().convert(orderModel);
 		final Double subtotal = orderModel.getSubtotal();
-
 		Double deliveryCost = orderModel.getDeliveryCost();
 		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
@@ -430,7 +430,10 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			deliveryCost = Double.valueOf(getDeliveryCost(orderModel));
 		}
 		final Double discount = getTotalDiscount(orderModel.getEntries(), false);
-		totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
+
+		totalPrice = Double.valueOf(subtotal.doubleValue() + scheduleDeliveryCharge + deliveryCost.doubleValue()
+				- discount.doubleValue());
+
 		return totalPrice;
 	}
 

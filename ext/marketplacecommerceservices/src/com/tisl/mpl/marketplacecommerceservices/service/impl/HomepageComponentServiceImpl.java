@@ -756,6 +756,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 		return (path.iterator().next());
 	}
 
+
 	//TPR-558 Scheduling of banners
 	@Override
 	public boolean showOnTimeRestriction(final AbstractCMSComponentModel component)
@@ -779,3 +780,4 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 	}
 
 }
+

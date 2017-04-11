@@ -2808,6 +2808,9 @@ if ($(".address-accordion").length) {
 }
 $(".formaddress").hide();
 $("#address-form").click(function() {
+	/*added by sneha R2.3*/
+	$(".editnewAddresPage").empty();
+	/*end of sneha R2.3*/
     $(".add-address").hide();
     $(".formaddress").slideToggle();
 

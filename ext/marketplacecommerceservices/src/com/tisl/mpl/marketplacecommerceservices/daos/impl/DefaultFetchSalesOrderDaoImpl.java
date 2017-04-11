@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -46,12 +47,14 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 {
 
 
+
 	private final static Logger LOG = Logger.getLogger(DefaultFetchSalesOrderDaoImpl.class.getName());
 
 	private final String PARENT = "Parent";
 	private final String SUB = "SubOrder";
 	private static final String SELECT_CLASS = "SELECT {p:";
 	private static final String FROM_CLASS = "FROM {";
+
 
 	private static final String P_CLASS = "{p.";
 	private static final String TYPE_CLASS = "} = ?type";
@@ -194,21 +197,64 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	@Override
 	public List<OrderModel> fetchSpecifiedCancelData(final Date earlierDate, final Date presentDate)
 	{
-		//TISPRO-129 && TISPRD 2511 query modified
-		final List<OrderModel> orderlist = new ArrayList<OrderModel>();
+		
+		/*R2.3  Modified*/ 
+		Set<OrderModel> orders =new HashSet<OrderModel>();
+		
+		List<OrderModel> orderCancellist = new ArrayList<OrderModel>();
+		
+		List<OrderModel> orderEdtoHdSdblist = new ArrayList<OrderModel>();
+		try {
+			orderCancellist = getCancelReturnOrders(earlierDate,presentDate);
+			orders.addAll(orderCancellist);
+		}catch(Exception e) {
+			LOG.debug(e);
+		}
+		try {
+			orderEdtoHdSdblist = populateSdbOrEdtoHddata(earlierDate,presentDate);
+			orders.addAll(orderEdtoHdSdblist);
+		}catch(Exception e) {
+			LOG.debug(e);
+		}
+		List<OrderModel> ordersList = new ArrayList<OrderModel>(orders);
+		return ordersList;
+	}
+
+	/**
+	 * @param earlierDate
+	 * @param presentDate
+	 * @return
+	 */
+	private List<OrderModel> populateSdbOrEdtoHddata(Date earlierDate, Date presentDate)
+	{
 		LOG.debug("********inside dao for selecting specified cancel order data**********");
-		final String query = "SELECT DISTINCT {cur:" + OrderModel.PK + "} " + " FROM {" + OrderModel._TYPECODE + " AS cur "
-				+ "LEFT JOIN " + OrderHistoryEntryModel._TYPECODE + "  AS adr  ON {cur:" + OrderModel.PK + "}={adr:"
-				+ OrderHistoryEntryModel.ORDER + "} " + "} WHERE ({adr:" + OrderHistoryEntryModel.MODIFIEDTIME
+
+
+
+		
+		final String query1 = "SELECT DISTINCT {cur:" + OrderModel.PK + "} " + " FROM {" + OrderModel._TYPECODE + " AS cur "
+				+ "LEFT JOIN " + AbstractOrderEntryModel._TYPECODE + "  AS aoe  ON {cur:" + OrderModel.PK + "}={aoe:"
+				+ AbstractOrderEntryModel.ORDER + "} " + "} WHERE ({aoe:" + AbstractOrderEntryModel.MODIFIEDTIME
 				+ "} BETWEEN ?earlierDate and ?presentDate)" + "and " + "{cur." + OrderModel.TYPE + TYPE_CLASS;
+	
+	
 
 		final Map<String, Object> params = new HashMap<String, Object>(2);
 		params.put("earlierDate", earlierDate);
 		params.put("presentDate", presentDate);
 		params.put(TYPE, SUB);
-		final FlexibleSearchQuery queryString = new FlexibleSearchQuery(query);
-		LOG.debug("********** specified data query" + queryString);
-		final SearchResult<OrderModel> searchRes = flexibleSearchService.search(query, params);// removing toString SONAR Analysis
+
+
+
+		
+		
+		final FlexibleSearchQuery queryString1 = new FlexibleSearchQuery(query1);
+		LOG.debug("********** specified data query" + queryString1);
+		
+	
+		final SearchResult<OrderModel> searchRes = flexibleSearchService.search(query1, params);
+		LOG.debug(searchRes);
+		List<OrderModel> orderlist = new ArrayList<OrderModel>();
 		if (searchRes != null && searchRes.getCount() > 0)
 		{
 			for (final OrderModel orderModel : searchRes.getResult())
@@ -222,7 +268,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		}
 		return orderlist;
 	}
-
+	
 	/**
 	 * TPT-198
 	 *
@@ -308,6 +354,10 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getTransactionIdCount(de.hybris.platform.core
 	 * .model.order.OrderModel)
+
+
+
+
 	 */
 	@Override
 	public Map<String, Integer> getTransactionIdCount()
@@ -432,7 +482,9 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 	@Override
 	public List<Map> getOrderModelTransactionId(final Set<String> parentOrderIds)
+
 	{
+
 
 		LOG.debug("********inside dao for getOrderModelTransactionId**********");
 
@@ -450,8 +502,19 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		while (iter.hasNext())
 		{
 
+
+
+
+
 			orderIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + iter.next()
 					+ MarketplacecommerceservicesConstants.INVERTED_COMMA + MarketplacecommerceservicesConstants.COMMA_DELIMITER);
+
+
+
+
+
+
+
 
 		}
 		orderIdsStr = orderIds.toString();
@@ -467,6 +530,8 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 			//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3000);
 		}
 		else
+
+
 		{
 			for (final List<Object> obj : result.getResult())
 			{
@@ -482,9 +547,12 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 					orderModelMap.put(orderId, order);
 				}
 				else
+
+
 				{
 					transactionIdMap.get(orderId).add(transactionId);
 					orderModelMap.put(orderId, order);
+
 				}
 
 
@@ -533,8 +601,54 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		query.addQueryParameter("code", code);
 		return flexibleSearchService.<CronJobModel> searchUnique(query);
 
+
 	}
 
+	/**
+	 * @param earlierDate
+	 * @param presentDate
+	 * @return
+	 */
+	 
+	 private List<OrderModel> getCancelReturnOrders(Date earlierDate, Date presentDate)
+	{
+
+		//TISPRO-129 && TISPRD 2511 query modified
+		LOG.debug("********inside dao for selecting specified cancel order data**********");
+
+		final String query = "SELECT DISTINCT {cur:" + OrderModel.PK + "} " + " FROM {" + OrderModel._TYPECODE + " AS cur "
+				+ "LEFT JOIN " + OrderHistoryEntryModel._TYPECODE + "  AS adr  ON {cur:" + OrderModel.PK + "}={adr:"
+				+ OrderHistoryEntryModel.ORDER + "} " + "} WHERE ({adr:" + OrderHistoryEntryModel.MODIFIEDTIME
+				+ "} BETWEEN ?earlierDate and ?presentDate)" + "and " + "{cur." + OrderModel.TYPE + TYPE_CLASS;
+
+
+
+		final Map<String, Object> params = new HashMap<String, Object>(2);
+		params.put("earlierDate", earlierDate);
+		params.put("presentDate", presentDate);
+		params.put(TYPE, SUB);
+		final FlexibleSearchQuery queryString = new FlexibleSearchQuery(query);
+		LOG.debug("********** specified data query" + queryString);
+		final SearchResult<OrderModel> searchRes = flexibleSearchService.search(query, params);// removing toString SONAR Analysis
+		List<OrderModel> orderlist = new ArrayList<OrderModel>();
+		if (searchRes != null && searchRes.getCount() > 0)
+		{
+			for (final OrderModel orderModel : searchRes.getResult())
+			{
+
+				//TISPRO-129
+				if (orderModel.getVersionID() == null)
+				{
+
+
+					orderlist.add(orderModel);
+				}
+
+			}
+		}
+
+		return orderlist;
+	}
 
 
 }

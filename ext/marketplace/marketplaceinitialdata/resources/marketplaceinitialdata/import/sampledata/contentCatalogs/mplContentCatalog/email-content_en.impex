@@ -320,6 +320,7 @@ INSERT_UPDATE ContentSlot	;$contentCV[unique=true];uid[unique=true]			;cmsCompon
 
 
 
+
 # Forget Password Email
 INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
 ;;/images/theme/DeliveryPerson.jpg;DeliveryPerson.jpg;$siteResource/images/theme/DeliveryPerson.jpg;;
@@ -641,3 +642,4 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;EmailRankEightNpsSlot;EmailRankEightImage
 ;;EmailRankNineNpsSlot;EmailRankNineImage
 ;;EmailRankTenNpsSlot;EmailRankTenImage
+

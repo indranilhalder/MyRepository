@@ -6,6 +6,7 @@ package com.tisl.mpl.marketplacecommerceservices.daos;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -91,5 +92,12 @@ public interface MplOrderDao
 	 * @throws EtailNonBusinessExceptions
 	 */
 	List<OrderModel> getOrderForGuid(CartModel cartModel) throws EtailNonBusinessExceptions;
+	/**
+	 * To get Short Url for order 
+	 * @param orderCode
+	 * @return
+	 */
+	public String getShortUrl(String orderCode);
 
+	public AbstractOrderEntryModel getEntryModel(String transactionId);
 }

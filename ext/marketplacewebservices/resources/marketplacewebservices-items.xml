@@ -35,6 +35,20 @@
 		</enumtype>
 	</enumtypes>
 	
+	<relations>
+	 	<!-- R2.3 FL04 Changes -->
+  		<relation code="State2PincodeRelation" localized="false"
+			autocreate="true">
+			<sourceElement type="State" cardinality="one"
+				qualifier="state"></sourceElement>
+			<targetElement type="Pincode" cardinality="many"
+				qualifier="city"></targetElement>
+		</relation>
+		<!-- R2.3 FL04 Close -->
+  	</relations>
+	
+	
+	
 	<itemtypes>
 		<itemtype code="ProductExpressUpdateCleanerCronJob" autocreate="true" generate="true" extends="CronJob"
 					 jaloclass="com.tisl.mpl.jalo.expressupdate.cron.ProductExpressUpdateCleanerCronJob">
@@ -240,6 +254,29 @@
 			</attributes>
 	</itemtype>
 
+	<!-- <itemtype code="State" autocreate="true"
+					 generate="true">
+			<attributes>
+					<attribute autocreate="true" qualifier="countrykey"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="region"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="description"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>					
+			</attributes>
+	</itemtype> -->
 
 	<itemtype code="MerchantMasterTable" autocreate="true"
 						 generate="true">

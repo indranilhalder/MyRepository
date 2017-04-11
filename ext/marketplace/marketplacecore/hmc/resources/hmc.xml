@@ -3822,6 +3822,7 @@
 <explorertree>
 		<group name="mpl"  description="group.mplConfig.description">
 			<typeref type="MplConfig"  description="mpl.config.table.description"/>
+            <typeref type="OrderShortUrlInfo"  description="mpl.shorturl.report.description"/>
 		</group>
 	</explorertree>
 	
@@ -4230,11 +4231,58 @@
 									</itemlayout>
 									</referencecollectioneditor>
 		 						 </attribute>
+
 		 					</listlayout>
 		 				</section>
 		 			</tab>
 		 		</editor>
 		 </organizer>
 	</type>
+
+<type name="OrderShortUrlInfo" mode="append">
+	<organizer>
+		<search mode="replace">
+			<condition attribute="orderId" />
+			<condition attribute="shortURL" />
+		</search>
+		<result>
+			<listview mode="replace">
+				<itemlayout>
+					<attribute name="orderId" width="100" />
+					<attribute name="shortURL" width="100" />
+				</itemlayout>
+			</listview>
+			<editview mode="replace">
+				<itemlayout>
+					<attribute name="orderId" width="100" />
+					<attribute name="shortURL" width="100" />
+				</itemlayout>
+			</editview>
+			<treeview mode="replace">
+				<itemlayout>
+					<attribute name="orderId" width="100" />
+					<attribute name="shortURL" width="100" />
+				</itemlayout>
+			</treeview>
+		</result>
+		<editor>
+			<essentials mode="replace">
+				<listlayout>
+					<attribute name="orderId" />
+				</listlayout>
+			</essentials>
+			<tab name="properties">
+				<section name="section.common">
+					<listlayout>
+						<attribute name="shortURL" />
+						<attribute name="longURL" />
+						<attribute name="clicks" />
+						<attribute name="login" />
+					</listlayout>
+				</section>
+			</tab>
+		</editor>
+	</organizer>
+</type>	
 
 </configuration>

@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.wsdto;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -15,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "invReserve", propOrder =
-{ "USSID", "quantity", "parentUSSID", "isAFreebie", "storeId", "fulfillmentType", "deliveryMode" })
+{ "USSID", "quantity", "parentUSSID", "isAFreebie", "storeId", "fulfillmentType", "deliveryMode","transportMode","ServiceableSlaves"})
 public class InventoryReservRequest
 {
 	@XmlElement(name = "ussId")
@@ -32,6 +34,14 @@ public class InventoryReservRequest
 	private String deliveryMode;
 	@XmlElement(name = "quantity")
 	private String quantity;
+	
+	@XmlElement(name = "ServiceableSlaves")
+	private List<ServiceableSlavesDTO> ServiceableSlaves;
+	
+	@XmlElement(name = "transportMode")
+	private String transportMode;
+	
+	
 
 	/**
 	 * @return the uSSID
@@ -159,5 +169,35 @@ public class InventoryReservRequest
 		this.quantity = quantity;
 	}
 
+	/**
+	 * @return the serviceableSlaves
+	 */
+	public List<ServiceableSlavesDTO> getServiceableSlaves()
+	{
+		return ServiceableSlaves;
+	}
 
+	/**
+	 * @param serviceableSlaves the serviceableSlaves to set
+	 */
+	public void setServiceableSlaves(List<ServiceableSlavesDTO> serviceableSlaves)
+	{
+		ServiceableSlaves = serviceableSlaves;
+	}
+
+	/**
+	 * @return the transportMode
+	 */
+	public String getTransportMode()
+	{
+		return transportMode;
+	}
+
+	/**
+	 * @param transportMode the transportMode to set
+	 */
+	public void setTransportMode(String transportMode)
+	{
+		this.transportMode = transportMode;
+	}
 }

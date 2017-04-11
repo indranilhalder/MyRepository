@@ -18,6 +18,7 @@ import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zul.Div;
 
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
+import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MplDeliveryAddressController;
 
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.cockpit.model.meta.TypedObject;
@@ -44,8 +45,9 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 					.getName());
 	@Autowired
 	private ConfigurationService configurationService;
+	@Autowired
+	private MplDeliveryAddressController mplDeliveryAddressController;
 
-	// added
 	private CallContextController callContextController;
 
 	protected CallContextController getCallContextController() {
@@ -58,12 +60,10 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 		this.callContextController = callContextController;
 	}
 
-	public TypedObject getOrder()
-	/*     */{
-		/* 80 */return getCallContextController().getCurrentOrder();
-		/*     */}
+	public TypedObject getOrder() {
+		return getCallContextController().getCurrentOrder();
+	}
 
-	@Override
 	protected HtmlBasedComponent createContentInternal(
 			Widget<DefaultItemWidgetModel, OrderManagementActionsWidgetController> widget,
 			HtmlBasedComponent rootContainer) {
@@ -80,18 +80,20 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 							.getWidgetController().getOrder()));
 		}
 
-		// Added for CNC button
-		if (isUserInRole(configurationService
-				.getConfiguration()
-				.getString(
-						MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_ALTERNATECONTACTCSAGENTGROUP))) {
+		try {
+			if (isUserInRole(configurationService
+					.getConfiguration()
+					.getString(
+							MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_ALTERNATECONTACTCSAGENTGROUP))) {
 
-			log.info("^^^^^^^^^in new button^^^^^^^^^^^^^^^");
-			createButton(widget, (Div) component, "alternateContactDetails",
-					"csAlternateContactDetailsCreateWidgetConfig",
-					"alternateContactDetails-popup", "alternateContactDetails",
-					"alternateContactDetails.request", !isCnCAvailable(widget
-							.getWidgetController().getOrder()));
+				createButton(widget, (Div) component, "alternateContactDetails",
+						"csAlternateContactDetailsCreateWidgetConfig",
+						"alternateContactDetails-popup", "alternateContactDetails",
+						"alternateContactDetails.request", !isCnCAvailable(widget
+								.getWidgetController().getOrder()));
+			}
+		}catch(Exception e) {
+			Log.error("Exception occurred while creating changePickUp Person button for order ");
 		}
 
 		if (isUserInRole(configurationService
@@ -110,6 +112,28 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 					"csRefundDeliveryChargeWidgetConfig",
 					"refundDeliveryCharge-popup", "refundDeliveryCharge",
 					"refunddeliverycharge.request", false);
+		}
+		
+		if (isUserInRole(configurationService.getConfiguration().getString(
+				"cscockpit.user.group.refunddelcsagentgroup"))) {
+
+			createButton(widget, (Div) component, "refundScheduleDeliveryCharge",
+					"csRefundScheduleDeliveryChargeWidgetConfig",
+					"ScheduleDeliveryCharge-popup", "ScheduleDeliveryCharge",
+					"ScheduleDeliveryCharge.request", false);
+		}
+		if (isUserInRole(configurationService
+				.getConfiguration()
+				.getString(
+						MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_CHANGEDELIVERYCSAGENTGROUP))) {
+
+			createButton(widget, (Div) component, "ChangeDeliveryAddress",
+					"csChangeDeliveryAddressWidgetConfig",
+					"ChangeDeliveryAddress-popup", "ChangeDeliveryAddress",
+					"ChangeDeliveryAddress.request",
+					!mplDeliveryAddressController
+							.isDeliveryAddressChangable(widget
+									.getWidgetController().getOrder()));
 		}
 		return component;
 	}
@@ -132,16 +156,16 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 			for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
 				Set<ConsignmentEntryModel> entries = new HashSet<>(
 						entry.getConsignmentEntries());
-				try{
-				if (CollectionUtils.isNotEmpty(entries)
-						&& MarketplaceCockpitsConstants.validInvoiceStatus
-								.contains(entries.iterator().next()
-										.getConsignment().getStatus())) {
-					isInvoiceAvaialble = true;
-					break;
-				}
-				}catch(Exception e) {
-					Log.debug("Entries null"+ e);
+				try {
+					if (CollectionUtils.isNotEmpty(entries)
+							&& MarketplaceCockpitsConstants.validInvoiceStatus
+									.contains(entries.iterator().next()
+											.getConsignment().getStatus())) {
+						isInvoiceAvaialble = true;
+						break;
+					}
+				} catch (Exception e) {
+					Log.debug("Entries null" + e);
 				}
 			}
 			return isInvoiceAvaialble && isAfter;
@@ -159,8 +183,11 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 		for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
 			if (entry.getMplDeliveryMode() != null
 					&& entry.getMplDeliveryMode().getDeliveryMode() != null) {
-
-				String orderStatus = entry.getOrder().getStatus().getCode();
+				String orderStatus = null;
+				if(null != entry && null != entry.getOrder() && null != entry.getOrder().getStatus() && null != entry.getOrder().getStatus().getCode()) {
+					orderStatus = entry.getOrder().getStatus().getCode();
+				}
+				
 				if (entry
 						.getMplDeliveryMode()
 						.getDeliveryMode()
@@ -168,28 +195,28 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 						.equalsIgnoreCase(
 								MarketplaceCockpitsConstants.delNameMap
 										.get("CnC"))) {
-					
-					isCnCAvailable = true;
 
-					orderStatus = orderModel.getStatus().getCode();
+					isCnCAvailable = true;
+                    if(null != orderModel && null != orderModel.getStatus() && null != orderModel.getStatus().getCode()) {
+                    	orderStatus = orderModel.getStatus().getCode();
+                    }
 					if (CollectionUtils.isNotEmpty(entry
 							.getConsignmentEntries())) {
-						try{
-						ConsignmentStatus consignmentStatus = entry
-								.getConsignmentEntries().iterator().next()
-								.getConsignment().getStatus();
-						orderStatus = consignmentStatus.getCode();
-						}catch(Exception e)
-						{
-							Log.debug("Exception "+e);
+						try {
+							ConsignmentStatus consignmentStatus = entry
+									.getConsignmentEntries().iterator().next()
+									.getConsignment().getStatus();
+							orderStatus = consignmentStatus.getCode();
+						} catch (Exception e) {
+							Log.debug("Exception " + e);
 						}
 					}
 
 					List<String> nonChangableOrdeStatus = Arrays.asList(
 							OrderStatus.PAYMENT_FAILED.getCode(),
 							OrderStatus.RETURNINITIATED_BY_RTO.getCode(),
-					OrderStatus.REFUND_INITIATED.getCode(),
-					OrderStatus.RETURN_INITIATED.getCode());
+							OrderStatus.REFUND_INITIATED.getCode(),
+							OrderStatus.RETURN_INITIATED.getCode());
 					List<String> nonChangableOrdeStatusList = Arrays.asList(
 							ConsignmentStatus.CANCELLATION_INITIATED.getCode(),
 							ConsignmentStatus.CANCELLED.getCode(),
@@ -213,14 +240,17 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 							ConsignmentStatus.RETURN_TO_ORIGIN.getCode(),
 							ConsignmentStatus.RETURN_COMPLETED.getCode(),
 							ConsignmentStatus.RETURNINITIATED_BY_RTO.getCode());
-					
-					if (entry.getQuantity() <= 0
-							|| nonChangableOrdeStatus.contains(orderStatus.toUpperCase())
-							|| nonChangableOrdeStatusList.contains(orderStatus.toUpperCase())) {
-						isCnCAvailable = false;
 
+					if(null != orderStatus && null != entry && null != entry.getQuantity()) {
+						if (entry.getQuantity() <= 0
+								|| nonChangableOrdeStatus.contains(orderStatus
+										.toUpperCase())
+								|| nonChangableOrdeStatusList.contains(orderStatus
+										.toUpperCase())) {
+							isCnCAvailable = false;
+
+						}
 					}
-
 					else {
 						return isCnCAvailable;
 					}
@@ -307,15 +337,24 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 			Widget<DefaultItemWidgetModel, OrderManagementActionsWidgetController> widget,
 			Event event, Div container, String springWidgetName,
 			String popupCode, String cssClass, String popupTitleLabelName) {
-
-		getPopupWidgetHelper()
-				.createPopupWidget(
-						container,
-						springWidgetName,
-						popupCode,
-						cssClass,
-						LabelUtils.getLabel(widget, popupTitleLabelName,
-								new Object[0]), 1300);
+		if (springWidgetName
+				.equalsIgnoreCase("csChangeDeliveryAddressWidgetConfig")) {
+			getPopupWidgetHelper().createPopupWidget(
+					container,
+					springWidgetName,
+					popupCode,
+					cssClass,
+					LabelUtils.getLabel(widget, popupTitleLabelName,
+							new Object[0]), 600);
+		} else {
+			getPopupWidgetHelper().createPopupWidget(
+					container,
+					springWidgetName,
+					popupCode,
+					cssClass,
+					LabelUtils.getLabel(widget, popupTitleLabelName,
+							new Object[0]), 1300);
+		}
 	}
 
 	@Override

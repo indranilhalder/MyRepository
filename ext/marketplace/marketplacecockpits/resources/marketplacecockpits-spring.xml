@@ -96,6 +96,9 @@
 	<bean id="refundInitiatedNotificationService"
 		class="com.tisl.mpl.cockpits.cscockpit.services.impl.DefaultRefundInitiatedNotificationService">
 	</bean>
+	<bean id="addressHistoryService"
+		class="com.tisl.mpl.cockpits.cscockpit.services.impl.AddressHistoryServiceimpl">
+	</bean>
 
         
 </beans>

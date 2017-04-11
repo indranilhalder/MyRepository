@@ -38,7 +38,8 @@
 						<a href="#nogo" id="forgotPasswordByEmailAjax" class="js-password-forgotten-new button"><spring:theme
 								code="forgottenPwd.submit" /> </a>
 					</ycommerce:testId>
-					<a class="close" href="" data-dismiss="modal"> <spring:theme
+					<!-- removed class for TISRLEE-1541 -->
+					<a  href="" data-dismiss="modal"> <spring:theme
 							code="text.button.cancel" /></a>
 				</div>
 			</form:form>

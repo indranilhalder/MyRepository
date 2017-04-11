@@ -42,6 +42,8 @@ public class SalesOrderCancelPaymentInfoJob extends AbstractJobPerformable<CronJ
 	{
 		try
 		{
+			LOG.info("SalesOrderCancelPaymentInfoJob started  CronJobModel" + oModel + "  FetchSalesOrderService"
+					+ getFetchSalesOrderService());
 			final MplConfigurationModel configModel = getFetchSalesOrderService().getCronDetails(oModel.getCode());
 			if (null != configModel && null != configModel.getMplConfigDate())
 			{

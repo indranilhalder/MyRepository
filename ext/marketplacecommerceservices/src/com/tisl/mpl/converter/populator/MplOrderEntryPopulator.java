@@ -32,7 +32,6 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
-import com.tisl.mpl.model.SellerInformationModel;
 
 
 /**
@@ -136,11 +135,38 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 			addPromotionValue(source, target);
 			addImeiDetails(source, target);
 			addSellerInformation(source, target);
-
+            addDeliverySlots(source, target);
 
 		}
+		target.setIsRefundable(source.isIsRefundable());
 	}
 
+	/**
+	 * @param source
+	 * @param target
+	 */
+
+	private void addDeliverySlots(AbstractOrderEntryModel source, OrderEntryData target)
+	{
+		if (null != source.getScheduledDeliveryCharge())
+		{
+			target.setScheduledDeliveryCharge(source.getScheduledDeliveryCharge());
+		}
+		if(null != source.getEdScheduledDate()){
+			target.setSelectedDeliverySlotDate(source.getEdScheduledDate());
+		}
+		if(null != source.getTimeSlotFrom()){
+			target.setTimeSlotFrom(source.getTimeSlotFrom());
+		}
+		if(null != source.getTimeSlotTo()){
+			target.setTimeSlotTo(source.getTimeSlotTo());
+		}
+		
+		if (StringUtils.isNotEmpty(source.getSddDateBetween()))
+		{
+			target.setEddDateBetWeen(source.getSddDateBetween());
+		}
+	}
 
 	/**
 	 * @param source

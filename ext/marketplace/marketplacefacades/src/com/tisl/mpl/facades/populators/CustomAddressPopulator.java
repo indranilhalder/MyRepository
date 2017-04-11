@@ -42,7 +42,7 @@ public class CustomAddressPopulator extends AddressPopulator
 		//DSC_006 : Fix for Checkout Address State display issue
 		super.populate(source, target);
 		target.setState(source.getDistrict());
-
+		target.setPhone(source.getCellphone());
 		target.setAddressType(source.getAddressType()); //Added for checkout journey modification
 		target.setDefaultAddress(isDefaultAddress(target)); //Added for checkout journey modification
 		target.setLine3(source.getAddressLine3()); //Added for checkout journey modification

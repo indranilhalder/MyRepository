@@ -23,14 +23,16 @@ public class SendUnCollectedOrderToCRMEvent extends AbstractCommerceUserEvent<Ba
 	private final ConsignmentModel consignmentModel;
 	private final OrderModel orderModel;
 	private final ConsignmentStatus shipmentNewStatus;
+	private final String ticketType;
 	
-	public SendUnCollectedOrderToCRMEvent(final Shipment shipment, final ConsignmentModel consignmentModel, final OrderModel orderModel, final ConsignmentStatus shipmentNewStatus)
+	public SendUnCollectedOrderToCRMEvent(final Shipment shipment, final ConsignmentModel consignmentModel, final OrderModel orderModel, final ConsignmentStatus shipmentNewStatus,final String ticketType)
 	{
 
 		this.shipment = shipment;
 		this.consignmentModel = consignmentModel;
 		this.orderModel = orderModel;
 		this.shipmentNewStatus = shipmentNewStatus;
+		this.ticketType=ticketType;
 	}
 
 	/**
@@ -65,5 +67,12 @@ public class SendUnCollectedOrderToCRMEvent extends AbstractCommerceUserEvent<Ba
 		return shipmentNewStatus;
 	}
 
+	/**
+	 * @return the ticketType
+	 */
+	public String getTicketType()
+	{
+		return ticketType;
+	}
 
 }

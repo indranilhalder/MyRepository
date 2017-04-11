@@ -376,4 +376,12 @@ public class DefaultMplOrderService implements MplOrderService
 		return isApplied;
 	}
 
+	/**
+	 * get AbstractOrderEntryModel based on transactionId
+	 */
+	@Override
+	public AbstractOrderEntryModel getEntryModel(String transactionId){
+		return mplOrderDao.getEntryModel(transactionId);
+	}
+	
 }

@@ -79,7 +79,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder =
-{ "awbResponseInfo", "error" })
+{ "awbResponseInfo", "error"})
 @XmlRootElement(name = "AWBStatusResponse")
 public class AWBStatusResponse implements java.io.Serializable
 {
@@ -88,6 +88,9 @@ public class AWBStatusResponse implements java.io.Serializable
 	private List<AWBStatusResponse.AWBResponseInfo> awbResponseInfo;
 	@XmlElement(name = "Error")
 	private List<AWBStatusResponse.Error> error;
+	
+
+	
 
 	/**
 	 * Gets the value of the awbResponseInfo property.
@@ -189,7 +192,7 @@ public class AWBStatusResponse implements java.io.Serializable
 	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "", propOrder =
-	{ "awbNumber", "shipmentStatus", "responseCode", "statusRecords" })
+	{ "awbNumber", "shipmentStatus","shipmentSecondaryStatus", "responseCode", "statusRecords" })
 	public static class AWBResponseInfo
 	{
 
@@ -201,6 +204,9 @@ public class AWBStatusResponse implements java.io.Serializable
 		private String responseCode;
 		@XmlElement(name = "StatusRecords")
 		private List<AWBStatusResponse.AWBResponseInfo.StatusRecords> statusRecords;
+		@XmlElement(name = "ShipmentSecondaryStatus")
+		private String shipmentSecondaryStatus;
+		
 
 		/**
 		 * Gets the value of the awbNumber property.
@@ -302,6 +308,21 @@ public class AWBStatusResponse implements java.io.Serializable
 			return this.statusRecords;
 		}
 
+		/**
+		 * @return the shipmentSecondaryStatus
+		 */
+		public String getShipmentSecondaryStatus()
+		{
+			return shipmentSecondaryStatus;
+		}
+
+		/**
+		 * @param shipmentSecondaryStatus the shipmentSecondaryStatus to set
+		 */
+		public void setShipmentSecondaryStatus(String shipmentSecondaryStatus)
+		{
+			this.shipmentSecondaryStatus = shipmentSecondaryStatus;
+		}
 
 		/**
 		 * <p>
@@ -343,6 +364,8 @@ public class AWBStatusResponse implements java.io.Serializable
 			private String location;
 			@XmlElement(name = "StatusDescription")
 			private String statusDescription;
+			
+		
 
 			/**
 			 * Gets the value of the date property.
@@ -493,6 +516,7 @@ public class AWBStatusResponse implements java.io.Serializable
 		{
 			this.message = value;
 		}
+		
 
 	}
 

@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.xml.pojo;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -14,12 +16,13 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement(name = "OrderLine")
 @XmlType(propOrder =
-{ "orderId", "transactionId","pinCode" })
+{ "orderId", "transactionId","pinCode","returnFulfilmentType" })
 public class OrderLineData
 {
 	private String orderId;
 	private String transactionId;
 	private String pinCode;
+	private List<String> returnFulfilmentType;
 
 	/**
 	 * @return the orderId
@@ -72,6 +75,23 @@ public class OrderLineData
 	public void setPinCode(String pinCode)
 	{
 		this.pinCode = pinCode;
+	}
+
+	/**
+	 * @return the returnFulfilmentType
+	 */
+	@XmlElement(name = "ReturnFulfilmentType")
+	public List<String> getReturnFulfilmentType()
+	{
+		return returnFulfilmentType;
+	}
+
+	/**
+	 * @param returnFulfilmentType the returnFulfilmentType to set
+	 */
+	public void setReturnFulfilmentType(List<String> returnFulfilmentType)
+	{
+		this.returnFulfilmentType = returnFulfilmentType;
 	}
 
 

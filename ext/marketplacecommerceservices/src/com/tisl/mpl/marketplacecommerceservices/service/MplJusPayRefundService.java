@@ -77,10 +77,11 @@ public interface MplJusPayRefundService
 	 * @param orderEntry
 	 * @param paymentTransactionModel
 	 * @param amount
+	 * @param refundcategoryType 
 	 * @return
 	 */
-	boolean makeRefundOMSCall(final AbstractOrderEntryModel orderEntry, final PaymentTransactionModel paymentTransactionModel,
-			final Double amount, ConsignmentStatus newOrderLineStatus);
+	boolean makeRefundOMSCall(final AbstractOrderEntryModel orderEntry,
+			final PaymentTransactionModel paymentTransactionModel, final Double amount, final ConsignmentStatus newOrderLineStatus,String refundCategoryType);
 
 	/**
 	 *

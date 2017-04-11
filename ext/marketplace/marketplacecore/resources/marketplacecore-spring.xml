@@ -29,7 +29,9 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_import-spring.xml" />
 		
-		
+	<!-- Added for landmarks -->
+	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_landmarks-spring.xml" />
+	
 <import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_buybox-spring.xml" />
 
@@ -62,11 +64,10 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_userGroup-spring.xml"/>
 			<!-- Added for offer Engine, TPR-589 -->	
 <import resource="classpath:/marketplacecore/integration/hot-folder-marketplace-offer-product-details.xml"/>
-
-	
-	<!-- update the message for Freebie product TPR-1754 -->
+<!-- update the message for Freebie product TPR-1754 -->
 
 <import resource="classpath:/marketplacecore/integration/hot-folder-marketplace-freebie-product-details.xml"/>
+
 		
 <!-- TPR-1316 -->	
 	<import
@@ -509,6 +510,11 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="modelService" ref="modelService" />
 		<property name="businessProcessService" ref="businessProcessService" />
 	</bean>
+	<bean id="orderReturnToStoreEventListener" class="com.tisl.mpl.core.event.OrderReturnToStoreEventListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+	</bean>
 	<!-- Shipping Confirmation Email -->
 
 	<bean id="shippingConfirmationEventListener" class="com.tisl.mpl.core.event.ShippingConfirmationEventListener"
@@ -548,9 +554,18 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="businessProcessService" ref="businessProcessService" />
 		<property name="configurationService" ref="configurationService" />
 	</bean> 
-
-
-
+	
+           <!--R2.3  Secondary Status Listener -->
+	<bean id="sendNotificationSecondaryStatusListener"
+		class="com.tisl.mpl.marketplaceomsservices.event.SendNotificationSecondaryStatusListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+		<property name="configurationService" ref="configurationService" />
+	</bean>
+           
+           
+         
 	<bean id="sendOrderToCRMEventListner" class=" com.tisl.mpl.marketplaceomsservices.event.SendOrderToCRMEventListner"
 		parent="abstractSiteEventListener">
  		<property name="orderConverter" ref="omsOrderConverter" />
@@ -669,6 +684,31 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
 		<property name="resource"
 			value="classpath:/marketplacecore/processes/orderConfirmationRiskEmailProcess.xml" />
+	</bean>
+	
+	<!--R2.3 Secondary Email process   -->
+	<bean id="deliveryAddressIssueEmailProcessDefinitionResource"
+		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource"
+			value="classpath:/marketplacecore/processes/deliveryAddressIssueEmailProcess.xml" />
+	</bean>
+	
+	<bean id="orderOutForDeliveryEmailProcessDefinitionResource"
+		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource"
+			value="classpath:/marketplacecore/processes/orderOutForDeliveryEmailProcess.xml"/>
+	</bean>
+	
+	<bean id="orderUnDeliveredEmailProcessDefinitionResource"
+		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource"
+			value="classpath:/marketplacecore/processes/orderUnDeliveredEmailProcess.xml" />
+	</bean>
+	
+	<bean id="orderReturnToStoreEmailProcessDefinitionResource"
+		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource"
+			value="classpath:/marketplacecore/processes/returnToStoreEmailProcess.xml" />
 	</bean>
 	
 
@@ -836,6 +876,25 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<bean id="generateOrderRefundCreditedEmail" parent="abstractGenerateEmailAction">
 		<property name="frontendTemplateName" value="OrderRefundCreditedEmailTemplate" />
 	</bean>
+	
+	  <!--R2.3 secondary Status  Email-->
+	<bean id="generateOrderUnDeliveredEmail" parent="abstractGenerateEmailAction">
+		<property name="frontendTemplateName" value="OrderUnDeliveredEmailTemplate" />
+	</bean>
+	
+	<bean id="generateDeliveryAddressIssueEmail" parent="abstractGenerateEmailAction">
+		<property name="frontendTemplateName" value="DeliveryAddressIssueEmailTemplate" />
+	</bean>
+	
+	<bean id="generateOrderOutForDeliveryEmail" parent="abstractGenerateEmailAction">
+		<property name="frontendTemplateName" value="OrderOutForDeliveryEmailTemplate" />
+	</bean>
+	      <!-- Bug ID TATA_664-->
+	<bean id="generateReturnToStoreEmail" parent="abstractGenerateEmailAction">
+		<property name="frontendTemplateName" value="OrderReturnToStoreEmailTemplate" />
+	</bean>
+	
+	
 
 	<bean id="removeSentEmail"
 		class="de.hybris.platform.acceleratorservices.process.email.actions.RemoveSentEmailAction"
@@ -1776,7 +1835,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
  		class="com.tisl.mpl.core.promotion.job.PromotionPriceUpdaterJob"
  		autowire="byName" >
  	</bean>
- 	
+
  	<!-- TPR-1984 -->
  	
  	<bean id="NPSEmailEventListener" class="com.tisl.mpl.core.event.NPSEmailEventListener"
@@ -1806,5 +1865,18 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="sessionService" ref="sessionService" /> 
 	</bean>
 
+
+	<bean id="dateUtilHelper" class="com.tisl.mpl.core.util.DateUtilHelper"/>
+	
+	<alias name="defaultPrefixableKeyGenerator" alias="prefixableKeyGenerator"/>
+	<!-- Key generator for Ecomm request ID for CRM ticket create -->
+	<bean id="defaultPrefixableKeyGenerator"
+		class="com.tisl.mpl.core.keygenerator.MplPrefixablePersistentKeyGenerator"
+		init-method="init" scope="tenant">
+		<property name="key" value="ecommCode" />
+		<property name="digits" value="9" />
+		<property name="start" value="100000001" />
+		<property name="numeric" value="false" />
+	</bean>
 			
 </beans>
