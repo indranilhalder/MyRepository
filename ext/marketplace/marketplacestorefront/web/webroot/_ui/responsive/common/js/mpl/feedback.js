@@ -1986,7 +1986,7 @@ $(".product-tile .image .item.quickview").each(function(){
 		/*TPR-250*/
 		$(".tabs-block .tabs.pdp.productTabs > li").each(function(){
 			if($(this).find("li").length == 0)
-			$($(this).find("ul").html("We have not updated the description for this Brand yet. We will get this sorted in a while"));
+			$(this).html("We have not updated the description for this Brand yet. We will get this sorted in a while");
 			});
 		/*TPR-250*/
 		
