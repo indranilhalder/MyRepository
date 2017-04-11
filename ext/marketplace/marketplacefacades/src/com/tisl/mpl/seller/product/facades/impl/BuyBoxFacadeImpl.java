@@ -220,9 +220,9 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 						if (CollectionUtils.isNotEmpty(mSitebuyboxModelList))
 						{
 							buyBoxMod = mSitebuyboxModelList.get(0);
-							Collections.reverse(buyboxModelList);
+							/*Collections.reverse(buyboxModelList);
 							buyboxModelList.add(buyBoxMod);
-							Collections.reverse(buyboxModelList);
+							Collections.reverse(buyboxModelList);*/
 							if (null != buyBoxMod.getAvailable() && buyBoxMod.getAvailable().intValue() <= 0)
 							{
 								isMicroSellerOOS = true;
@@ -300,9 +300,9 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				
 				buyBoxMod = mSiteBuyboxModelList.get(0);
 				// Adding the msite buybox winner to the front of the buy box list
-				Collections.reverse(buyboxModelList);
+				/*Collections.reverse(buyboxModelList);
 				buyboxModelList.add(buyBoxMod);
-				Collections.reverse(buyboxModelList);
+				Collections.reverse(buyboxModelList);*/
 				if (null != buyBoxMod.getAvailable() && buyBoxMod.getAvailable().intValue() <= 0)
 				{
 					isMicroSellerOOS = true;
@@ -987,7 +987,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		final int oosSellersCount = getOosSellerCount(buyboxModelList);
 		//other sellers count
 		int sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
-		if (isMicroSellerOOS && !isSellerPresent){
+		if (isMicroSellerOOS){
 			sellerSize = sellerSize +1;
 		}
 		if(sellerSize<0) {
@@ -1002,14 +1002,14 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		double minPrice = 0.0d;
 		if (sellerSize > 0)
 		{
-			/*int start = 1;
+			int start = 1;
 			int end = buyboxModelList.size()-1;
 			if (!isSellerPresent){
 				start=0;
-			}*/
-			int end = buyboxModelList.size()-1;
-			for (int i = 1; i <= end; i++)
-			//for (int i = start; i <= end; i++)
+			}
+			//int end = buyboxModelList.size()-1;
+			//for (int i = 1; i <= end; i++)
+			for (int i = start; i <= end; i++)
 			{
 				if (null != buyboxModelList.get(i).getSpecialPrice() && buyboxModelList.get(i).getSpecialPrice().doubleValue() > 0
 						&& buyboxModelList.get(i).getAvailable().intValue()>0 // CKD:TPR-250 not considering OOS elements for min price calculation
@@ -1018,7 +1018,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 					final double specialPrice = buyboxModelList.get(i).getSpecialPrice().doubleValue();
 
-					if (i == 1)
+					//if (i == 1)
+					if (i == start)
 					{
 						minPrice = specialPrice;
 					}
