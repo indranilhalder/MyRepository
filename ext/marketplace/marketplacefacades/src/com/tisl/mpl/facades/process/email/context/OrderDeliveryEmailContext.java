@@ -140,7 +140,7 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 			deliveryAddr.append(deliveryAddress.getAddressLine3());
 		}
 		//TISUATSE-80 ends
-
+		deliveryAddr.append("\n");
 		//TISUATSE-70 starts
 		final String city = deliveryAddress.getTown();
 		deliveryAddr.append(COMMA).append(city.substring(0, 1).toUpperCase() + city.substring(1)).append(COMMA)
