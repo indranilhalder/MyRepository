@@ -7,7 +7,8 @@ $(document).ready(function(){
         	$.ajax({
         		  url: '/getStwrecomendations',
         		  dataType: "json",
-        		//  data:{pageType:ghg,}
+        		  type:"GET",
+        		  data:{pageType:'Home',widgetType:'STW',siteType:'Marketplace',sendOnlyListingId:'false'},
         		  success: jsonCallback,
         		  fail:function(){
         			  

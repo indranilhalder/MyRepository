@@ -1256,12 +1256,15 @@ public class HomePageController extends AbstractPageController
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getStwrecomendations", method = RequestMethod.GET)
-	public JSONObject getStwWidgetDada()
+	public JSONObject getStwWidgetDada(final HttpServletRequest request)
 	{
+		final Map<String, String[]> stwRequest = request.getParameterMap();
 		final JSONObject STWJObject = new JSONObject();
-		final List<STWJsonRecomendationData> stwRecData = getStwWidgetFacade().getSTWWidgetFinalData();
+		final List<STWJsonRecomendationData> stwRecData = getStwWidgetFacade().getSTWWidgetFinalData(stwRequest);
+		final String stwCategories = configurationService.getConfiguration().getString("stw.categories");
 		STWJObject.put("STWElements", stwRecData);
-		LOG.info(stwRecData.size());
+		STWJObject.put("STWCategories", stwCategories);
+		STWJObject.put("visiterIP", getVisitorIpAddress(request));
 		return STWJObject;
 	}
 

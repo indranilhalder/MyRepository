@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -75,19 +76,19 @@ public class STWWidgetFacadeImpl implements STWWidgetFacade
 	 *
 	 */
 	@Override
-	public List<STWJsonRecomendationData> getSTWWidgetFinalData()
+	public List<STWJsonRecomendationData> getSTWWidgetFinalData(final Map<String, String[]> stwParamsMap)
 	{
 		final String stwjsonAsString = "{\"status\":0,\"statusMessage\":\"Success\",\"recommendations\":[{\"listingId\":\"987654321\",\"productName\":\"Ambrane P-1111 10000 mAh Power Bank (Black)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Ambrane\",\"imageUrl\":\"https://assetstmppprd.tataunistore.com/medias/sys_master/images/9234671370270.jpg\",\"availableSize\":null,\"availableColor\":\"Black\",\"mrp\":1799,\"mop\":629,\"productUrl\":\"https://www.tatacliq.com/ambrane-p-1111-10000-mah-power-bank-black/p-mp000000000076452\"},{\"listingId\":\"987654322\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"https://assetstmppprd.tataunistore.com/medias/sys_master/images/9234671337502.jpg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":18980,\"mop\":16145,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"},{\"listingId\":\"987654323\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"//assetstmppprd.tataunistore.com/medias/sys_master/images/9234671304734.jpg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":1880,\"mop\":1645,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"},{\"listingId\":\"987654324\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"https://assetstmppprd.tataunistore.com/medias/sys_master/images/9234671468574.jpg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":1898,\"mop\":1615,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"},{\"listingId\":\"987654321\",\"productName\":\"Ambrane P-1111 10000 mAh Power Bank (Black)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Ambrane\",\"imageUrl\":\"https://assetstmppprd.tataunistore.com/medias/sys_master/images/9234671370270.jpg\",\"availableSize\":null,\"availableColor\":\"Black\",\"mrp\":1799,\"mop\":629,\"productUrl\":\"https://www.tatacliq.com/ambrane-p-1111-10000-mah-power-bank-black/p-mp000000000076452\"},{\"listingId\":\"987654322\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"https://assetstmppprd.tataunistore.com/medias/sys_master/images/9234671337502.jpg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":18980,\"mop\":16145,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"},{\"listingId\":\"987654323\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"//assetstmppprd.tataunistore.com/medias/sys_master/images/9234671304734.jpg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":1880,\"mop\":1645,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"},{\"listingId\":\"987654324\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"https://assetstmppprd.tataunistore.com/medias/sys_master/images/9234671468574.jpg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":1898,\"mop\":1615,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"}]}";
-		//sbs.append('{"status":0,"statusMessage":"Success","recommendations":"');
-
-		//stwWidgetService.callSTWService();
 		List<STWJsonRecomendationData> stwFinalAfterBuyBox = null;
-		if (null != stwjsonAsString)
+		//
+		try
 		{
-			final ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			try
+			//stwjsonAsString = stwWidgetService.callSTWService(stwParamsMap);
+			if (null != stwjsonAsString)
 			{
+				final ObjectMapper mapper = new ObjectMapper();
+				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
 				final List<String> productCodes = new ArrayList<String>();
 				List<BuyBoxModel> buyBoxModelList = new ArrayList<BuyBoxModel>();
 
@@ -95,7 +96,10 @@ public class STWWidgetFacadeImpl implements STWWidgetFacade
 				final List<STWJsonRecomendationData> stwRecomendationData = sTWJsonData.getRecommendations();
 				for (final STWJsonRecomendationData recData : stwRecomendationData)
 				{
-					productCodes.add(recData.getListingId());
+					if (StringUtils.isNotEmpty(recData.getListingId()))
+					{
+						productCodes.add(recData.getListingId());
+					}
 				}
 				if (CollectionUtils.isNotEmpty(productCodes))
 				{
@@ -107,17 +111,13 @@ public class STWWidgetFacadeImpl implements STWWidgetFacade
 				{
 					stwFinalAfterBuyBox = this.compareStwDataWithBuyBox(stwRecomendationData, buyBoxModelList);
 				}
-				System.out.println(sTWJsonData.getRecommendations().size());
-
-			}
-			catch (final IOException e)
-			{
-				LOG.error("getSTWWidgetFinalData unable to map JSON data on ", e);
 			}
 		}
+		catch (final IOException e)
+		{
+			LOG.error("getSTWWidgetFinalData unable to map JSON data on ", e);
+		}
 		return stwFinalAfterBuyBox;
-
-
 	}
 
 	/**
@@ -134,7 +134,9 @@ public class STWWidgetFacadeImpl implements STWWidgetFacade
 		{
 			final STWJsonRecomendationData stwPojo = new STWJsonRecomendationData();
 			stwPojo.setListingId(buyBoxModel.getProduct());
+
 			final int index = Collections.binarySearch(stwRecomendationData, stwPojo, new StwDataCompatetor());
+
 			if (index < 0)
 			{
 				stwRecomendationData.remove(index);
@@ -171,14 +173,8 @@ public class STWWidgetFacadeImpl implements STWWidgetFacade
 		@Override
 		public int compare(final STWJsonRecomendationData paramT1, final STWJsonRecomendationData paramT2)
 		{
-			// YTODO Auto-generated method stub
-			return 0;
+			return paramT1.getListingId().compareTo(paramT2.getListingId());
 		}
-		/*
-		 * @Override public int compare(final STWJsonRecomendationData o1, final STWJsonRecomendationData o2) { //return
-		 * o1.getLISTING_ID().compareTo(o2.getLISTING_ID()); }
-		 */
-
 	}
 
 }
