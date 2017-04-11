@@ -64998,3 +64998,10 @@ header .content .bottom:not(.active) .bag:after{
 }
 }
 /*UF-199 end*/
+/*UF-14 change start*/
+@media(min-width:1401px){
+	.listing.wrapper .left-block.fix {
+    left: auto;
+}
+}
+/*UF-14 change end*/
