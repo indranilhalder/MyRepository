@@ -36,8 +36,8 @@
 						<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
 										code="header.flyout.review" /></a></li> 
 										
-							<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
-										code="header.flyout.myInterest" /></a></li>
+						<%-- 	<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
+										code="header.flyout.myInterest" /></a></li> --%> <!--  UF-249 link hide -->
 							
 							
 							 <li class="header-SignInShare"><%-- <spring:theme
@@ -90,8 +90,8 @@
 										code="header.flyout.review" /></a></li> 
 
 										
-							<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
-										code="header.flyout.myInterest" /></a></li>
+							<%-- <li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
+										code="header.flyout.myInterest" /></a></li> --%>	<!--  UF-249 link hide -->
 							
 											<li class="header-SignInShare"><%-- <spring:theme
 									code="header.flyout.credits" /> --%></li>				<!-- UF-249 -->

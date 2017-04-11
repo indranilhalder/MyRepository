@@ -42,10 +42,10 @@
 						data-href="account-addresses.php"><spring:theme
 							code="header.flyout.review" />
 		</option>
-		<option value=/store/mpl/en/my-account/myInterest?isLux=${isLuxVal}
+		<%-- <option value=/store/mpl/en/my-account/myInterest?isLux=${isLuxVal}
 			data-href="account-addresses.php"><spring:theme
 				code="header.flyout.recommendations" />
-		</option>
+		</option> --%>		<!--  UF-249 link hide -->
 	</optgroup>
 
 	<optgroup label="Credit">
