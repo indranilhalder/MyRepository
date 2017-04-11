@@ -146,7 +146,7 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 			deliveryAddr.append(deliveryAddress.getAddressLine3());
 		}
 		//TISUATSE-80 starts
-
+		deliveryAddr.append("\n");
 		//TISUATSE-81 starts
 		final String city = deliveryAddress.getTown();
 		deliveryAddr.append(city.substring(0, 1).toUpperCase() + city.substring(1)).append(COMMA).append(SPACE)
