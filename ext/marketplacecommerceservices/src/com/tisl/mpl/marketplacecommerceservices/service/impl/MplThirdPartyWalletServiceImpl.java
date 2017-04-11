@@ -258,7 +258,11 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 					final MplPaymentAuditModel auditModelData = mplOrderDao.getAuditList(cartGuid);
 
 					//For CAR:127
+
+					LOG.debug("###################For CAR:127 Start of Using order Converter############");
 					final OrderData orderData = getOrderConverter().convert(order);
+					LOG.debug(
+							"###################For CAR:127 Using order Converter finished############" + "OrderData is" + orderData);
 
 					if (auditModelData != null && !auditModelData.getIsExpired().booleanValue())
 					{
