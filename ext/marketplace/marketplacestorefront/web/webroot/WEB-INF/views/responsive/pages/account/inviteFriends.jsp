@@ -89,7 +89,7 @@
 			        
 		<div class="right-account">
 		 	<div class="invites">
-				<h2><spring:theme code="text.InviteFriends.SendYourInvite" text="Invite your friends"/></h2>
+				<h2><spring:theme code="text.InviteFriends.SendYourInvite" text="Invite Your Friends"/></h2>		<!--  UF-249 text change -->
 				
 				<p><spring:theme code="text.InviteFriends.SendInvitationEmail" text="Invite your mum, dad, friends, bros, aunties, uncles, next-door neighbors Call everybody here!"/></p>
                 <form>
