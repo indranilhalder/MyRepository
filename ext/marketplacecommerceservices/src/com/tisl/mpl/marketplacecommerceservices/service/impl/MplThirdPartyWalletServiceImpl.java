@@ -254,8 +254,12 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 				if (StringUtils.isNotEmpty(order.getGuid()))
 				{
 					final String cartGuid = order.getGuid();
+					LOG.debug("###################For cartGuid ############" + cartGuid);
+
 					final Date orderTATForTimeout = getTatTimeOut(new Date(), getmRupeeJobTAT(), order.getCreationtime());
 					final MplPaymentAuditModel auditModelData = mplOrderDao.getAuditList(cartGuid);
+
+					LOG.debug("###################auditModelData  ############" + auditModelData);
 
 					//For CAR:127
 
@@ -291,6 +295,8 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 									&& !auditModelData.getIsExpired().booleanValue() && status.equalsIgnoreCase(S)
 									&& new Date().before(orderTATForTimeout))
 							{
+
+								LOG.debug("###################before orderTATForTimeout############" + order.getStatus());
 								//updating audit details
 								final Map<String, Double> paymentMode = sessionService
 										.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
@@ -326,7 +332,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 							if (CollectionUtils.isNotEmpty(entryList) && OrderStatus.REFUND_INITIATED.equals(order.getStatus())
 									&& new Date().before(orderTATForTimeout))
 							{
-
+								LOG.debug("#######################Refund for Mrupee++++++++++" + order.getStatus());
 								isPayment = false;
 								if (CollectionUtils.isNotEmpty(order.getPaymentTransactions()))
 								{
