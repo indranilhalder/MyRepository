@@ -160,7 +160,14 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 			put(WEBSITE_URL, websiteUrl);
 		}
 
-		put(DISPLAY_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
+		if (deliveryAddress != null)
+		{
+			put(CUSTOMER_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
+		}
+		else
+		{
+			put(CUSTOMER_NAME, CUSTOMER);
+		}
 
 
 		LOG.info("All the NPSEmailContext data have been set sucessfully in context file>>>>>>>>>>");
