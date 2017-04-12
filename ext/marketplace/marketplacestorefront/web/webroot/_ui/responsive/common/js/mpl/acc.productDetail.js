@@ -1757,7 +1757,11 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 
 	if(null!= savingsOnProduct && savingsOnProduct != 0){
 		$("#savingsOnProductId").show();
-	} 
+	}
+	else
+	{
+		$("#savingsOnProductId").hide();
+	}
 	
 	//TPR-275 starts
 	if (mrp.value == "") {			
@@ -3215,11 +3219,20 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 			//To get product code from URL
 			//productCode=getProductCodeFromPdpUrl(href);
 			//To get original URL
-			var a = $('<a>', { href:href } )[0];
-			var port= ":"+window.location.port;
+			//var a = $('<a>', { href:href } )[0];
+			if(window.location.port!="")
+			{
+				var port= ":"+window.location.port;
+			}
+			else
+			{
+				var port= "";
+			}
 			var hostName = window.location.hostname;
 			var baseUrl="//"+hostName+port;
-			var originalUrl=baseUrl+a.pathname+"?selectedSize=true";
+			//var originalUrl=baseUrl+a.pathname+"?selectedSize=true";
+			//TISPRDT-781 issue fix
+			var originalUrl=baseUrl+href;
 			$("#addToCartFormTitle").hide(); //Hide 'please select size' on selecting size
 			
 			
@@ -3276,6 +3289,11 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						$("#dListedErrorMsg").hide();//TISSTRT-1469
 						$(".reviews").show();
 						$(".fullfilled-by").show();
+						
+
+						$("a#submit.otherSellersFont").attr("href","/p/"+responseProductCode+"/viewSellers");
+						$("#sellerForm").attr("action","/p/"+responseProductCode+"/viewSellers");
+						
 						
 						//Deselect the previously selected li and highlight the current li
 						$('ul#variant.variant-select li').each(function (index, value) { 
