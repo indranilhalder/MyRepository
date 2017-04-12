@@ -16,6 +16,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.AbstractOrderEntryTypeService;
 import de.hybris.platform.order.InvalidCartException;
@@ -30,7 +31,6 @@ import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
@@ -162,7 +162,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-
+	 * 
 	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
@@ -270,7 +270,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				 * LOG.debug("Order Sequence Generation True"); final String orderIdSequence =
 				 * getMplCommerceCartService().generateOrderId(); LOG.debug("Order Sequence Generated:- " +
 				 * orderIdSequence);
-				 * 
+				 *
 				 * orderModel.setCode(orderIdSequence); } else { LOG.debug("Order Sequence Generation False"); final Random
 				 * rand = new Random(); orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000))); }
 				 */
@@ -571,7 +571,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-
+	 * 
 	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
@@ -586,7 +586,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-
+	 * 
 	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
@@ -601,12 +601,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		//orderModel.setType("Parent");
 		if (StringUtils.isNotEmpty(orderModel.getType()) && PARENT.equalsIgnoreCase(orderModel.getType()))
 		{
-			if(null != orderModel.getDeliveryAddress()) {
-				   List<AddressModel> deliveryAddreses = new ArrayList<AddressModel>();
-				   deliveryAddreses.add(orderModel.getDeliveryAddress());
-				   orderModel.setDeliveryAddresses(deliveryAddreses);
-				   getModelService().save(orderModel);
-			   }
+			if (null != orderModel.getDeliveryAddress())
+			{
+				final List<AddressModel> deliveryAddreses = new ArrayList<AddressModel>();
+				deliveryAddreses.add(orderModel.getDeliveryAddress());
+				orderModel.setDeliveryAddresses(deliveryAddreses);
+				getModelService().save(orderModel);
+			}
 			final List<OrderModel> orderList = getSubOrders(orderModel);
 
 			//TISPRO-249
@@ -695,10 +696,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
-
+	 * 
 	 * 
 	 * @param subOrderList
-
+	 * 
 	 * 
 	 * @throws Exception
 	 */
@@ -799,10 +800,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
-
+	 * 
 	 * 
 	 * @param subOrderList
-
+	 * 
 	 * 
 	 * @throws Exception
 	 */
@@ -1387,10 +1388,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-
+	 * 
 	 * 
 	 * @param orderList
-
+	 * 
 	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
@@ -1499,7 +1500,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 									//R2.3 Code Chages bug ID TISRLEE-3197
 									try
 									{
-										AbstractOrderEntryModel perentEntry = mplOrderService.getEntryModel(parentTransactionId);
+										final AbstractOrderEntryModel perentEntry = mplOrderService.getEntryModel(parentTransactionId);
 										if (perentEntry != null)
 										{
 											subOrderEntryModel.setSddDateBetween(perentEntry.getSddDateBetween());
@@ -1509,11 +1510,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 										subOrderEntryModel.setFulfillmentTypeP2(perentEntry.getFulfillmentTypeP2());
 										subOrderEntryModel.setFulfillmentMode(perentEntry.getFulfillmentMode());
 									}
-									catch (Exception exception)
+									catch (final Exception exception)
 									{
 										LOG.error("MplDefaultPlaceOrderCommerceHooks:::::" + exception.getMessage());
 									}
-									
+
 									//R2.3 Code Changes bug ID TISRLEE-3197
 
 									getModelService().save(subOrderEntryModel);
@@ -1537,7 +1538,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 															//R2.3 Code Chages bug ID TISRLEE-3197
 															try
 															{
-																AbstractOrderEntryModel perentEntry = mplOrderService.getEntryModel(parentTransactionId);
+																final AbstractOrderEntryModel perentEntry = mplOrderService
+																		.getEntryModel(parentTransactionId);
 																if (perentEntry != null)
 																{
 																	subOrderEntryModel2.setSddDateBetween(perentEntry.getSddDateBetween());
@@ -1547,7 +1549,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 																subOrderEntryModel.setFulfillmentTypeP2(perentEntry.getFulfillmentTypeP2());
 																subOrderEntryModel.setFulfillmentMode(perentEntry.getFulfillmentMode());
 															}
-															catch (Exception exception)
+															catch (final Exception exception)
 															{
 																LOG.error("MplDefaultPlaceOrderCommerceHooks:::::" + exception.getMessage());
 															}
@@ -1991,7 +1993,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 								/ abstractOrderEntryModel.getQuantity().intValue()) : deliveryCharge;
 					}
 
-					/*R2.3 START */
+					/* R2.3 START */
 					if (null != abstractOrderEntryModel.getScheduledDeliveryCharge())
 					{
 						scheduleDeliveryCharge = abstractOrderEntryModel.getScheduledDeliveryCharge();
@@ -2000,15 +2002,15 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					if (null != abstractOrderEntryModel.getIsBOGOapplied()
 							&& abstractOrderEntryModel.getIsBOGOapplied().booleanValue())
 					{
-						scheduleDeliveryCharge = scheduleDeliveryCharge.doubleValue() > 0.0 ? Double.valueOf(scheduleDeliveryCharge.doubleValue()
-								/ abstractOrderEntryModel.getQualifyingCount().doubleValue()) : scheduleDeliveryCharge;
+						scheduleDeliveryCharge = scheduleDeliveryCharge.doubleValue() > 0.0 ? Double.valueOf(scheduleDeliveryCharge
+								.doubleValue() / abstractOrderEntryModel.getQualifyingCount().doubleValue()) : scheduleDeliveryCharge;
 					}
 					else
 					{
-						scheduleDeliveryCharge = scheduleDeliveryCharge.doubleValue() > 0.0 ? Double.valueOf(scheduleDeliveryCharge.doubleValue()
-								/ abstractOrderEntryModel.getQuantity().intValue()) : scheduleDeliveryCharge;
+						scheduleDeliveryCharge = scheduleDeliveryCharge.doubleValue() > 0.0 ? Double.valueOf(scheduleDeliveryCharge
+								.doubleValue() / abstractOrderEntryModel.getQuantity().intValue()) : scheduleDeliveryCharge;
 					}
-					/*R2.3 END */
+					/* R2.3 END */
 
 					LOG.debug(">> Order spliting : after apportoning  delivery cost  " + deliveryCharge);
 					//TISEE-5298 -- Prev Delivery Charge
@@ -2097,13 +2099,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 										* abstractOrderEntryModel.getQualifyingCount().intValue();
 								qualifyingCount = qualifyingCount - bogoCount;
 								createOrderLine(abstractOrderEntryModel, bogoCount, clonedSubOrder, cartApportionValue,
-										productApportionvalue, price, true, qualifyingCount, deliveryCharge,scheduleDeliveryCharge,cachedSellerInfoMap, 0, 0,
-										prevDelCharge, couponApportionValue, 0);
+										productApportionvalue, price, true, qualifyingCount, deliveryCharge, scheduleDeliveryCharge,
+										cachedSellerInfoMap, 0, 0, prevDelCharge, couponApportionValue, 0);
 								productApportionvalue = 0;
 							}
 							createOrderLine(abstractOrderEntryModel, qualifyingCount, clonedSubOrder, cartApportionValue,
-									productApportionvalue, price, false, 0, deliveryCharge, scheduleDeliveryCharge,cachedSellerInfoMap, bogoCODPrice,
-									bogoCartApportion, prevDelCharge, couponApportionValue, bogoCouponApportion);
+									productApportionvalue, price, false, 0, deliveryCharge, scheduleDeliveryCharge, cachedSellerInfoMap,
+									bogoCODPrice, bogoCartApportion, prevDelCharge, couponApportionValue, bogoCouponApportion);
 
 
 						}
@@ -2146,14 +2148,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 
 						createOrderLine(abstractOrderEntryModel, quantity, clonedSubOrder, cartApportionValue, 0, price, false, 0,
-								deliveryCharge,scheduleDeliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge, couponApportionValue, 0);
+								deliveryCharge, scheduleDeliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge, couponApportionValue, 0);
 
 					}
 					else
 					{
 						createOrderLine(abstractOrderEntryModel, quantity, clonedSubOrder, 0, 0, abstractOrderEntryModel
-								.getTotalPrice().doubleValue() / quantity, false, 0, deliveryCharge,scheduleDeliveryCharge, cachedSellerInfoMap, 0, 0,
-								prevDelCharge, couponApportionValue, 0);
+								.getTotalPrice().doubleValue() / quantity, false, 0, deliveryCharge, scheduleDeliveryCharge,
+								cachedSellerInfoMap, 0, 0, prevDelCharge, couponApportionValue, 0);
 
 					}
 				}
@@ -2223,7 +2225,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	private void createOrderLine(final AbstractOrderEntryModel abstractOrderEntryModel, final int quantity,
 			final OrderModel clonedSubOrder, final double cartApportionValue, final double productApportionvalue,
 			final double price, final boolean isbogo, @SuppressWarnings("unused") final double bogoQualifying,
-			final Double deliveryCharge,final Double scheduleDeliveryCharge, final Map<String, SellerInformationModel> cachedSellerInfoMap, final double bogoCODPrice,
+			final Double deliveryCharge, final Double scheduleDeliveryCharge,
+			final Map<String, SellerInformationModel> cachedSellerInfoMap, final double bogoCODPrice,
 			final double bogoCartApportion, final Double prevDelCharge, final double couponApportionValue,
 			final double bogoCouponApportion)
 
@@ -2327,7 +2330,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			orderEntryModel.setConvenienceChargeApportion(abstractOrderEntryModel.getConvenienceChargeApportion());
 			orderEntryModel.setCurrDelCharge(deliveryCharge);
 			orderEntryModel.setPrevDelCharge(prevDelCharge);
-			// Added in R2.3 START 
+			// Added in R2.3 START
 			orderEntryModel.setScheduledDeliveryCharge(scheduleDeliveryCharge);
 			// Added In R2.3 END
 
@@ -2413,13 +2416,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			{
 				orderEntryModel.setExpectedDeliveryDate(abstractOrderEntryModel.getExpectedDeliveryDate());
 			}
-			/*Added in R2.3 for TISRLEE-2073 start */
+			/* Added in R2.3 for TISRLEE-2073 start */
 			if (abstractOrderEntryModel.getSddDateBetween() != null)
 			{
 				orderEntryModel.setSddDateBetween(abstractOrderEntryModel.getSddDateBetween());
 			}
-			/*Added in R2.3 for TISRLEE-2073 end */
-		  // End Order line  Code for OrderLine 
+			/* Added in R2.3 for TISRLEE-2073 end */
+			// End Order line  Code for OrderLine
 
 			orderEntryModel = setAdditionalDetails(orderEntryModel);
 

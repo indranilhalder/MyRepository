@@ -15182,7 +15182,7 @@ body .account .right-account form input {
 body .account .right-account form textarea {
     border-color: #DFD1D5;
     height: 100px;
-    line-height: 26px;
+    /*line-height: 26px; */
     width:100%;
 	font-size: 14px;
 	padding-left: 10px;
@@ -66079,3 +66079,33 @@ TISRLUAT-11
 }
 
 /* R2.3:END */
+.forgot-password-container .actions a, .manage-wishlist-container .actions a, .create-new-wishlist-popup-container a.close,
+ .return-requestInvoice .cancellation-request-block .actions a,
+ body .right-account .order-history .cancellation-request-block .return-form .close {
+	border-radius: none;
+	border: 0px !important;
+	width: auto;
+	height: auto;
+	margin-top: 0px !important;
+	margin-right: 0px !important;
+	position: relative;
+	right:0px;
+	top: 0px;
+	}
+body .right-account .order-history .cancellation-request-block .return-form .close {
+    color: #000;
+    display: inline-block;
+    text-decoration: underline;
+    width: auto;
+    height: auto;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-right: 30px !important;
+    letter-spacing: 1px;
+}
+#removeProductConfirmation .modal-dialog{
+    border: 0px solid rgb(204, 204, 204);
+    border-radius: 0px;
+    background: none;
+    padding-top: 0px;
+    }

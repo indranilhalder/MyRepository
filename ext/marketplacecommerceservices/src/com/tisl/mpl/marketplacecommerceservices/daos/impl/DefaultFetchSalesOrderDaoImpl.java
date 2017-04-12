@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -197,26 +198,32 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	@Override
 	public List<OrderModel> fetchSpecifiedCancelData(final Date earlierDate, final Date presentDate)
 	{
-		
-		/*R2.3  Modified*/ 
-		Set<OrderModel> orders =new HashSet<OrderModel>();
-		
+
+		/* R2.3 Modified */
+		final Set<OrderModel> orders = new HashSet<OrderModel>();
+
 		List<OrderModel> orderCancellist = new ArrayList<OrderModel>();
-		
+
 		List<OrderModel> orderEdtoHdSdblist = new ArrayList<OrderModel>();
-		try {
-			orderCancellist = getCancelReturnOrders(earlierDate,presentDate);
+		try
+		{
+			orderCancellist = getCancelReturnOrders(earlierDate, presentDate);
 			orders.addAll(orderCancellist);
-		}catch(Exception e) {
+		}
+		catch (final Exception e)
+		{
 			LOG.debug(e);
 		}
-		try {
-			orderEdtoHdSdblist = populateSdbOrEdtoHddata(earlierDate,presentDate);
+		try
+		{
+			orderEdtoHdSdblist = populateSdbOrEdtoHddata(earlierDate, presentDate);
 			orders.addAll(orderEdtoHdSdblist);
-		}catch(Exception e) {
+		}
+		catch (final Exception e)
+		{
 			LOG.debug(e);
 		}
-		List<OrderModel> ordersList = new ArrayList<OrderModel>(orders);
+		final List<OrderModel> ordersList = new ArrayList<OrderModel>(orders);
 		return ordersList;
 	}
 
@@ -225,19 +232,19 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	 * @param presentDate
 	 * @return
 	 */
-	private List<OrderModel> populateSdbOrEdtoHddata(Date earlierDate, Date presentDate)
+	private List<OrderModel> populateSdbOrEdtoHddata(final Date earlierDate, final Date presentDate)
 	{
 		LOG.debug("********inside dao for selecting specified cancel order data**********");
 
 
 
-		
+
 		final String query1 = "SELECT DISTINCT {cur:" + OrderModel.PK + "} " + " FROM {" + OrderModel._TYPECODE + " AS cur "
 				+ "LEFT JOIN " + AbstractOrderEntryModel._TYPECODE + "  AS aoe  ON {cur:" + OrderModel.PK + "}={aoe:"
 				+ AbstractOrderEntryModel.ORDER + "} " + "} WHERE ({aoe:" + AbstractOrderEntryModel.MODIFIEDTIME
 				+ "} BETWEEN ?earlierDate and ?presentDate)" + "and " + "{cur." + OrderModel.TYPE + TYPE_CLASS;
-	
-	
+
+
 
 		final Map<String, Object> params = new HashMap<String, Object>(2);
 		params.put("earlierDate", earlierDate);
@@ -246,15 +253,15 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 
 
-		
-		
+
+
 		final FlexibleSearchQuery queryString1 = new FlexibleSearchQuery(query1);
 		LOG.debug("********** specified data query" + queryString1);
-		
-	
+
+
 		final SearchResult<OrderModel> searchRes = flexibleSearchService.search(query1, params);
 		LOG.debug(searchRes);
-		List<OrderModel> orderlist = new ArrayList<OrderModel>();
+		final List<OrderModel> orderlist = new ArrayList<OrderModel>();
 		if (searchRes != null && searchRes.getCount() > 0)
 		{
 			for (final OrderModel orderModel : searchRes.getResult())
@@ -268,7 +275,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		}
 		return orderlist;
 	}
-	
+
 	/**
 	 * TPT-198
 	 *
@@ -350,14 +357,10 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getTransactionIdCount(de.hybris.platform.core
 	 * .model.order.OrderModel)
-
-
-
-
 	 */
 	@Override
 	public Map<String, Integer> getTransactionIdCount()
@@ -609,8 +612,8 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	 * @param presentDate
 	 * @return
 	 */
-	 
-	 private List<OrderModel> getCancelReturnOrders(Date earlierDate, Date presentDate)
+
+	private List<OrderModel> getCancelReturnOrders(final Date earlierDate, final Date presentDate)
 	{
 
 		//TISPRO-129 && TISPRD 2511 query modified
@@ -630,7 +633,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		final FlexibleSearchQuery queryString = new FlexibleSearchQuery(query);
 		LOG.debug("********** specified data query" + queryString);
 		final SearchResult<OrderModel> searchRes = flexibleSearchService.search(query, params);// removing toString SONAR Analysis
-		List<OrderModel> orderlist = new ArrayList<OrderModel>();
+		final List<OrderModel> orderlist = new ArrayList<OrderModel>();
 		if (searchRes != null && searchRes.getCount() > 0)
 		{
 			for (final OrderModel orderModel : searchRes.getResult())
