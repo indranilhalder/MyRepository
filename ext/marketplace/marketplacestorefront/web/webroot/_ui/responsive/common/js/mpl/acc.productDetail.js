@@ -3659,6 +3659,11 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 	var isproductPage = $("#isproductPage").val();
 	var msiteBuyBoxSeller = $("#msiteBuyBoxSellerId").val(); //CKD:TPR-250
 	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode+ "/buybox";
+	$("#allVariantOutOfStock").hide();
+	$("#outOfStockId").hide();
+	$("#addToCartButton").show();
+	$("#addToCartButton").show();
+	$('#buyNowButton').show();
 	return $.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
@@ -3678,6 +3683,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 			}
 			//TISPRM-56
 			var stockInfo = data['availibility'];
+		
 			availibility = stockInfo;
 			$.each(stockInfo,function(key,value){
 
