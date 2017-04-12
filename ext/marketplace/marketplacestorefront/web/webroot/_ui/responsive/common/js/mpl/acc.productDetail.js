@@ -3682,7 +3682,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 			}
 			//TISPRM-56
 			var stockInfo = data['availibility'];
-			alert("stock"+data['availablestock']);
+		
 			availibility = stockInfo;
 			$.each(stockInfo,function(key,value){
 
