@@ -796,7 +796,10 @@ display:none;
 				<div id="fb-root"></div>
 				<script>
 				$("#cboxClose").empty();
-				$("#cboxClose").addClass("close");
+				
+				// TISPRDT-831 START
+				//$("#cboxClose").addClass("close");
+				// TISPRDT-831 END
 				
 					(function(d, s, id) {
 						var js, fjs = d.getElementsByTagName(s)[0];
