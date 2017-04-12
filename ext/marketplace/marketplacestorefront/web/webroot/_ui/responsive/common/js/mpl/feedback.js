@@ -3052,3 +3052,11 @@ $("#sameAsShippingEmi").click(function(){
 		$(this).prev('h2').show();
 	}
 	});
+
+
+/*TISSQAEE-335*/
+$(window).on("load resize",function(){
+	var topLegend = $(".store-finder-search").outerHeight() + parseInt($(".store-finder-search").css("margin-bottom")) + $(".gmnoprint.gm-bundled-control .gmnoprint").height() + parseInt($(".gmnoprint.gm-bundled-control").css("margin-top"))  + 10;
+	$(".store-finder-legends").css("top",topLegend);
+});
+/*TISSQAEE-335*/
