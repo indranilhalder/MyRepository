@@ -417,9 +417,11 @@ function focusOnElement() {
 			
         if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='Accessories' && $("#showSize").val()=='true'){
 		  		
-		   		$("#addToCartFormIdOthersel"+index).html($('#selectSizeId').text());
-				$("#addToCartFormIdOthersel"+index).show();
-				 return false;
+		   		/*$("#addToCartFormIdOthersel"+index).html($('#selectSizeId').text());
+				$("#addToCartFormIdOthersel"+index).show();*/
+        		$("#buyNowFormIdOthersel"+index).html($('#selectSizeId').text());
+        		$("#buyNowFormIdOthersel"+index).show();
+				return false;
 		   	 }
         //TISQAEE-64
         var productCode= $('#productCode').val();
@@ -439,9 +441,9 @@ function focusOnElement() {
 		 //$(document).on('click','#addToCartFormId'+index+' #buyNowButton'+index,function(){
 	        if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Accessories' && $("#ia_product_rootCategory_type").val()!='Watches'){
 			  		
-			   		$("#buyNowFormIdOthersel"+index).html($('#selectSizeId').text());
+	        		$("#buyNowFormIdOthersel"+index).html($('#selectSizeId').text());
 					$("#buyNowFormIdOthersel"+index).show();
-					 return false;
+					return false;
 			   	 }
 				ACC.product.sendAddToBag("addToCartFormId"+index,true);
 			});
