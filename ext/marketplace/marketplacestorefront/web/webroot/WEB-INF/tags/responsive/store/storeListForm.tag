@@ -25,13 +25,16 @@
 
 
 .store-finder-legends{
-z-index: 1;
-/* padding-left:20px */
-position :absolute;
-float:right;
-right:10px;
-top:10.5%;		/* TISSQAEE-335 */
-padding-bottom:5px;
+	z-index: 1;
+	/* padding-left:20px */
+	position :absolute;
+	float:right;
+	right:10px;
+	top:10%;		/* TISSQAEE-335 */
+	padding-bottom:5px;
+	text-align: right;		/* TISSQAEE-335 */
+	width: 50%;		/* TISSQAEE-335 */
+	display:none;
 }
 .googleMapLegends{
   /* width:initial; */
@@ -40,7 +43,7 @@ padding-bottom:5px;
 
 @media (max-width: 768px) {
   .store-finder-legends{
-  position:relative;
+  /* position:relative; */		/* TISSQAEE-335 */
   width:100%;
   text-align:right;
   }
