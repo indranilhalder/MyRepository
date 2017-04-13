@@ -134,4 +134,7 @@ public interface MarketplaceCheckoutController extends
 			MplZoneDeliveryModeValueModel deliveryMode);
 
 	void setCODPaymentMode(final CartModel cartModel);	//TPR-3471
+
+	// Soumya, Avijit changes
+	boolean processPayment(CartModel cart, String selectedPaymentMode);
 }

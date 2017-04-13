@@ -110,7 +110,15 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 	private ConfigurationService configurationService;
 	
 	@Resource(name = "mplVoucherService")
-	private MplVoucherService mplVoucherService;	
+	private MplVoucherService mplVoucherService;
+	
+	
+	/*Soumya, Avijit Changes*/
+	protected Listbox paymentModeSelectionListBox = null;
+	
+	private static final String PAYEMENT_MODE_CREDIT = "CREDIT";
+	private static final String PAYEMENT_MODE_DEBIT = "DEBIT";
+	protected String paymentModeSelected = null;
 	
 	/**
 	 * Creates the content internal.
@@ -131,7 +139,7 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 		try {
 				Div paymentModeDropdownContent = new Div();
 				
-				createPaymentModeField(widget,paymentModeDropdownContent);
+				paymentModeSelectionListBox = createPaymentModeField(widget,paymentModeDropdownContent);
 				
 //				Button generateOTP = new Button(LabelUtils.getLabel(
 //						widget, "generateButton"));
@@ -265,6 +273,8 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 					.getWidgetController()).getBasketController().getCart()
 					.getObject());
 			long time=0l;
+			final String selectedPaymentMode= paymentModeSelectionListBox.getSelectedItem().getValue().toString();
+			
 			String userId = ((CustomerModel)cart.getUser()).getOriginalUid();
 			try{
 			time=Long.parseLong(configurationService.getConfiguration().getString("OTP_Valid_Time_milliSeconds"));
@@ -274,7 +284,15 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 			}	
 				if(widget.getWidgetController().needPaymentOption()){
 					try {
-						((MarketplaceCheckoutController)widget.getWidgetController()).processPayment(cart);
+						if(selectedPaymentMode.equalsIgnoreCase("COD")){
+							((MarketplaceCheckoutController)widget.getWidgetController()).processPayment(cart);
+						}
+						else if(selectedPaymentMode.equalsIgnoreCase("CREDIT")){
+							((MarketplaceCheckoutController)widget.getWidgetController()).processPayment(cart,selectedPaymentMode);
+						}
+						else if(selectedPaymentMode.equalsIgnoreCase("DEBIT")){
+							((MarketplaceCheckoutController)widget.getWidgetController()).processPayment(cart,selectedPaymentMode);
+						}
 					} catch (PaymentException e) {
 						Messagebox
 						.show(LabelUtils.getLabel(widget, e.getLocalizedMessage(),
@@ -419,6 +437,16 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 				
 
 		}
+		/*For Credit /Debit Start*/
+		Listitem listItemCredit = listbox.appendItem("CREDIT","CREDIT");
+		listItemCredit.setValue("CREDIT");
+		//listItemCredit.setSelected(true);
+		
+		Listitem listItemDebit = listbox.appendItem("DEBIT","DEBIT");
+		listItemDebit.setValue("DEBIT");
+		//listItemDebit.setSelected(true);
+		
+		/*For Credit /Debit End*/
 		return listbox;
 	}
 
@@ -473,6 +501,7 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 				
 				
 			if ("COD".equalsIgnoreCase(mode)) {
+				paymentModeSelected = "COD";
 				//
 				((MarketplaceCheckoutController) widget.getWidgetController()).canCreatePayments();
 				((MarketplaceCheckoutController) widget.getWidgetController()).processCODPayment();
@@ -499,7 +528,15 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 				Map data = Collections.singletonMap("refresh", Boolean.TRUE);
 				((CheckoutController) widget.getWidgetController()).getBasketController()
 						.dispatchEvent(null, widget.getWidgetController(), data);
-				} else{
+				} 
+			else if(PAYEMENT_MODE_CREDIT.equalsIgnoreCase(mode)){
+				paymentModeSelected = PAYEMENT_MODE_CREDIT;
+			}
+			else if(PAYEMENT_MODE_DEBIT.equalsIgnoreCase(mode)){
+				paymentModeSelected = PAYEMENT_MODE_DEBIT;
+			}
+			else{
+				paymentModeSelected = null;
 					((MarketplaceCheckoutController) widget.getWidgetController()).removeCODPayment();
 					try {
 						getMplVoucherService().checkCartWithVoucher(cart);

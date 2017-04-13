@@ -626,6 +626,40 @@ public class MarketplaceCheckoutControllerImpl extends
 	}
 
 	@Override
+	public boolean processPayment(CartModel cart, String selectedPaymentMode) {
+
+		double unTotal = getCsCheckoutService().getUnauthorizedTotal(cart);
+
+		unTotal = cart.getConvenienceCharges() == null ? unTotal : unTotal+cart
+				.getConvenienceCharges();
+
+		String cusName= null;
+		cODPaymentService.getTransactionModelForCards(cart, unTotal);
+		if (StringUtils.isNotEmpty(cart.getUser().getName()) && !cart.getUser().getName().equalsIgnoreCase(" "))
+		{
+			cusName = cart.getUser().getName();
+
+		}
+		else
+		{
+			cusName = ((CustomerModel)cart.getUser()).getOriginalUid();
+		}
+		if(selectedPaymentMode.equalsIgnoreCase("DEBIT")){
+			//mplPaymentService.saveDebitCard(orderStatusResponse, cart);
+			mplPaymentService.saveCODPaymentInfo(cusName, cart.getSubtotal(), cart.getConvenienceCharges(), cart.getEntries(),cart);
+		}
+		else{
+			
+		}
+		
+		mplPaymentService.saveCODPaymentInfo(cusName, cart.getSubtotal(), cart.getConvenienceCharges(), cart.getEntries(),cart);
+		getModelService().refresh(cart);
+		return (true);
+	
+		
+	}
+	
+	@Override
 	/*     */public boolean processCODPayment()
 	/*     */throws PaymentException, ValidationException
 	/*     */{
@@ -742,6 +776,8 @@ public class MarketplaceCheckoutControllerImpl extends
 		cartModel.setModeOfPayment("COD");
 		getModelService().save(cartModel);
 	}
+
+	
 	
 	
 	
