@@ -5277,11 +5277,48 @@ $(document).ready(function(){
 	    if(event.keyCode == 13){
 	        $("#pinCodeButtonIds").click();
 	    }
+	    //Added for UF-252-II start
+	    else if(event.keyCode == 8 || event.keyCode == 46){
+	    	if ($.trim(this.value) == "") {
+	    		$('#checkout-enabled').addClass("checkout-disabled");
+	            $('#checkout-down-enabled').addClass("checkout-disabled");
+	            $( "#emptyId_tooltip").show();
+	    		$("#emptyId_tooltip_btm").show();
+	    		$(".cartItemBlankPincode").show();
+	    		$(".delivery ul.success_msg").hide();
+	    		$(".pincodeServiceError").hide();
+	    		$("#unserviceablepincode").hide();
+	    		$("#unserviceablepincodeBtm").hide();
+	    		$("#unserviceablepincode_tooltip").hide();
+	    		$("#unserviceablepincode_tooltip_btm").hide();
+	    		
+	        }
+	    }
+	    //Added for UF-252-II ends
+	    
 	});
 	$("#defaultPinCodeIdsBtm").keyup(function(event){		
 	    if(event.keyCode == 13){		
 	        $("#pinCodeButtonIdsBtm").click();		
-	    }		
+	    }
+	  //Added for UF-252-II starts
+	    else if(event.keyCode == 8 || event.keyCode == 46){
+	    	if ($.trim(this.value) == "") {
+	    		$('#checkout-enabled').addClass("checkout-disabled");
+	            $('#checkout-down-enabled').addClass("checkout-disabled");
+	            $( "#emptyId_tooltip").show();
+	    		$("#emptyId_tooltip_btm").show();
+	    		$(".cartItemBlankPincode").show();
+	    		$(".delivery ul.success_msg").hide();
+	    		$(".pincodeServiceError").hide();
+	    		$("#unserviceablepincode").hide();
+	    		$("#unserviceablepincodeBtm").hide();
+	    		$("#unserviceablepincode_tooltip").hide();
+	    		$("#unserviceablepincode_tooltip_btm").hide();
+	        }
+	    }
+	    //Added for UF-252-II ends
+	    
 	});//UF-69
 
 	$("#popUpExpAddress input.address_radio[data-index='0']").attr("checked","checked");	
@@ -5334,6 +5371,7 @@ function checkServiceabilityRequired(buttonType,el){
 function checkPincodeServiceability(buttonType,el)
 {
 
+	
 	/*spinner commented starts*/
 	//$("#pinCodeDispalyDiv").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right:0;bottom:0; left:0; top:0; margin:auto; height: 30px;">');
 	/*spinner commented ends*/
@@ -5344,6 +5382,12 @@ function checkPincodeServiceability(buttonType,el)
 	
 	/*TPR-3446 new ends*/
 	var selectedPincode=$('#defaultPinCodeIds').val();
+	
+	//added for UF-252 Start
+	if ($(el).attr('id') == 'pinCodeButtonIdsBtm') {
+		selectedPincode=$('#defaultPinCodeIdsBtm').val();
+	}
+	//added for UF-252 Ends
 	var regPostcode = /^([1-9])([0-9]){5}$/;
 	$(".deliveryUlClass").remove();//TPR-1341
 	var utagCheckPincodeStatus="";
@@ -5370,7 +5414,7 @@ function checkPincodeServiceability(buttonType,el)
 		//$("#pinCodeButtonIds").text("Change Pincode");
 		 document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
 		 //$("#pinCodeButtonIds").text("Change Pincode");
-		 document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
+		 document.getElementById("pinCodeButtonIdsBtm").className = "ChangePincode"; //UF-71
 		// setTimeout(function(){
 		 $("#unserviceablepincode").hide();// tpr-1341
 		 $("#unserviceablepincodeBtm").hide();// tpr-1341//UF-68
@@ -5572,6 +5616,10 @@ function checkPincodeServiceability(buttonType,el)
  				populatePincodeDeliveryMode(response,buttonType);
 					//reloadpage(selectedPincode,buttonType); commenting the code
  	 			$("#isPincodeServicableId").val('N');
+ 	 			//Added for UF-252 Start
+ 	 			$("#unserviceablepincode_tooltip").show(); 
+ 	 			$("#unserviceablepincode_tooltip_btm").show();
+ 	 		    //Added for UF-252 end
  	 			// reloadpage(selectedPincode,buttonType);
  				} 
  			else
@@ -5597,6 +5645,10 @@ function checkPincodeServiceability(buttonType,el)
 	 			$("#AvailableMessageBtm").show();//UF-68
  					populatePincodeDeliveryMode(response,buttonType);
  					//reloadpage(selectedPincode,buttonType); commenting the code
+ 					//Added for UF-252 Start
+ 					$("#unserviceablepincode_tooltip").hide(); 
+ 	 	 			$("#unserviceablepincode_tooltip_btm").hide(); 
+ 	 	 			//Added for UF-252 End
  				}
  			
  			// TISPRM-33
@@ -5787,10 +5839,12 @@ function populateCartDetailsafterPincodeCheck(responseData){
 
 //TPR-1055
 $("#defaultPinCodeIds").click(function(){
-	$("#unserviceablepincode").hide();
-	$("#unserviceablepincodeBtm").hide();//UF-68
-	$("#unserviceablepincode_tooltip").hide();
-	 $("#unserviceablepincode_tooltip_btm").hide();
+	//Commented for UF-252 Start
+	//$("#unserviceablepincode").hide();
+	//$("#unserviceablepincodeBtm").hide();//UF-68
+	//$("#unserviceablepincode_tooltip").hide();
+	// $("#unserviceablepincode_tooltip_btm").hide();
+	//Commented for UF-252 End
 	$(".deliveryUlClass").remove();//TPR-1341
 	$("#cartPinCodeAvailable").show();
 	$("#cartPinCodeAvailableBtm").show();//UF-68
@@ -5802,10 +5856,12 @@ $("#defaultPinCodeIds").click(function(){
 	 $("#emptyIdBtm").hide();//UF-68
 	 $("#emptyId_tooltip").hide();
 	 $("#emptyId_tooltip_btm").hide();
-	 $(".pincodeServiceError").hide();
+	//Commented for UF-252 Start
+	 //$(".pincodeServiceError").hide();
 	 //TPR-1341
-	 $(".cartItemBlankPincode").show();
-	 $(".delivery ul.success_msg").hide();
+	 /*$(".cartItemBlankPincode").show();
+	 $(".delivery ul.success_msg").hide();*/
+	//Commented for UF-252 End
 	//if($("#pinCodeButtonIds").text() == 'Change Pincode'){
 		//$("#pinCodeButtonIds").text("Check");
 	 if(document.getElementById("pinCodeButtonIds").className == 'ChangePincode'){	//UF-71
@@ -5817,10 +5873,12 @@ $("#defaultPinCodeIds").click(function(){
 });
 //UF-69
 $("#defaultPinCodeIdsBtm").click(function(){
-	$("#unserviceablepincode").hide();
-	$("#unserviceablepincodeBtm").hide();//UF-68
-	$("#unserviceablepincode_tooltip").hide();
-	 $("#unserviceablepincode_tooltip_btm").hide();
+	//Commented for UF-252 Start
+	//$("#unserviceablepincode").hide();
+	//("#unserviceablepincodeBtm").hide();//UF-68
+	//$("#unserviceablepincode_tooltip").hide();
+	// $("#unserviceablepincode_tooltip_btm").hide();
+	//Commented for UF-252 End
 	$(".deliveryUlClass").remove();//TPR-1341
 	$("#cartPinCodeAvailable").show();
 	$("#cartPinCodeAvailableBtm").show();//UF-68
@@ -5832,10 +5890,12 @@ $("#defaultPinCodeIdsBtm").click(function(){
 	 $("#emptyIdBtm").hide();//UF-68
 	 $("#emptyId_tooltip").hide();
 	 $("#emptyId_tooltip_btm").hide();
-	 $(".pincodeServiceError").hide();
-	 //TPR-1341
+	//Commented for UF-252 Start
+	// $(".pincodeServiceError").hide();
+	/* //TPR-1341
 	 $(".cartItemBlankPincode").show();
-	 $(".delivery ul.success_msg").hide();
+	 $(".delivery ul.success_msg").hide();*/
+	 //Commented for UF-252 End
 	/*if($("#pinCodeButtonIdsBtm").text() == 'Change Pincode'){
 		$("#pinCodeButtonIdsBtm").text("Check Availability");*/
 	 if(document.getElementById("pinCodeButtonIdsBtm").className == 'ChangePincode'){	//UF-71
@@ -5879,11 +5939,11 @@ function populatePincodeDeliveryMode(response,buttonType){
 		$('#unsevisablePin').show();
 		
 		$("#checkout-enabled").css("pointer-events","none");
-		$("#checkout-enabled").css("cursor","not-allowed");
+		//$("#checkout-enabled").css("cursor","not-allowed");
 		$("#checkout-enabled").css("opacity","0.5");
 		/*UF-69*/
 		$("#checkout-down-enabled").css("pointer-events","none");
-		$("#checkout-down-enabled").css("cursor","not-allowed");
+		//$("#checkout-down-enabled").css("cursor","not-allowed");
 		$("#checkout-down-enabled").css("opacity","0.5");
 		$("#expressCheckoutButtonId").css("pointer-events","none");
 		$("#expressCheckoutButtonId").css("cursor","default");
@@ -5908,6 +5968,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 		$("#checkout-enabled").css("pointer-events","all");
 		$("#checkout-enabled").css("cursor","cursor");
 		$("#checkout-enabled").css("opacity","1");
+		$("#checkout-enabled").css("cursor","pointer");
 		/*UF-69*/
 		$("#checkout-down-enabled").css("pointer-events","all");
 		$("#checkout-down-enabled").css("cursor","cursor");
@@ -6060,7 +6121,6 @@ function populatePincodeDeliveryMode(response,buttonType){
 	$("#defaultPinCodeIds").val(selectedPincode);	
 	
 	
-	
 	if(isServicable==='Y' && isStockAvailable==='Y')
 	{
 		
@@ -6152,6 +6212,9 @@ function checkIsServicable()
 {
 	// TPR-1055
 	var selectedPincode=$("#defaultPinCodeIds").val();
+	
+	
+	
 	var utagCheckPincodeStatus="";
 	// $("#defaultPinCodeIds").prop('disabled', true);
 	//$("#pinCodeButtonIds").text("Check");// tpr-1334
@@ -6161,6 +6224,8 @@ function checkIsServicable()
 	$("#unserviceablepincodeBtm").hide();
 	$("#unserviceablepincode_tooltip").hide();
 	 $("#unserviceablepincode_tooltip_btm").hide();
+	 
+	
 	// TPR-1055 ends
 	if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){
 	
@@ -6196,9 +6261,9 @@ function checkIsServicable()
 	 				$(".deliveryUlClass").remove();//TPR-1341
 	 				 $(".pincodeServiceError").hide();
 	 				$("#unserviceablepincode").hide();
-	 				$("#unserviceablepincodeBtm").show();//UF-68
+	 				$("#unserviceablepincodeBtm").hide();//UF-68
 	 				$("#unserviceablepincode_tooltip").hide();
-	 				 $("#unserviceablepincode_tooltip_btm").hide();
+	 				$("#unserviceablepincode_tooltip_btm").hide();
 	 				$("#cartPinCodeAvailable").hide();
 	 				$("#AvailableMessage").html("Available delivery options for the pincode " +selectedPincode+ " are");
 	 				$("#AvailableMessage").show();
@@ -6248,6 +6313,16 @@ function checkIsServicable()
 	 		 	 		} 
 
 	 	});
+	}
+    //Added for UF-252-I Start
+	else if (selectedPincode==null || selectedPincode == undefined || selectedPincode ==""){
+			
+		$( "#emptyId_tooltip").show();
+		$("#emptyId_tooltip_btm").show();
+	 	$('#checkout-id #checkout-enabled').addClass('checkout-disabled'); 
+		$('#checkout-id-down #checkout-down-enabled').addClass('checkout-disabled'); 
+	//Added for UF-252-I end
+		
 	}
 	
 }
@@ -7793,10 +7868,10 @@ $("#savedDebitCard").find("input[type=password]").click(function(){
 	//TPR-1055
 	$("#defaultPinCodeIds").click(function(){
 		$(this).css("color","black"); //TPR-1470
-		$("#unserviceablepincode").hide();
-		$("#unserviceablepincodeBtm").hide();
-		$("#unserviceablepincode_tooltip").hide();
-		 $("#unserviceablepincode_tooltip_btm").hide();
+		//$("#unserviceablepincode").hide();
+	//	$("#unserviceablepincodeBtm").hide();
+		//$("#unserviceablepincode_tooltip").hide();
+		// $("#unserviceablepincode_tooltip_btm").hide();
 		$(".deliveryUlClass").remove();//TPR-1341
 		$("#cartPinCodeAvailable").show();
 		 $( "#error-Id").hide();
@@ -7806,10 +7881,10 @@ $("#savedDebitCard").find("input[type=password]").click(function(){
 		 $("#emptyId").hide();
 		 $("#emptyId_tooltip").hide();
 		 $("#emptyId_tooltip_btm").hide();
-		 $(".pincodeServiceError").hide();
+		 //$(".pincodeServiceError").hide();
 		 //TPR-1341
-		 $(".cartItemBlankPincode").show();
-		 $(".delivery ul.success_msg").hide();
+		 /*$(".cartItemBlankPincode").show();
+		 $(".delivery ul.success_msg").hide();*/
 		//if($("#pinCodeButtonIds").text() == 'Change Pincode'){
 			//$("#pinCodeButtonIds").text("Check");
 		 if(document.getElementById("pinCodeButtonIds").className == 'ChangePincode'){	//UF-71
@@ -7822,15 +7897,15 @@ $("#savedDebitCard").find("input[type=password]").click(function(){
 	//UF-69 STARTS
 	$("#defaultPinCodeIdsBtm").click(function(){
 		$(this).css("color","black"); //TPR-1470
-		$("#unserviceablepincodeBtm").hide();
+	//	$("#unserviceablepincodeBtm").hide();
 		$(".deliveryUlClass").remove();//TPR-1341
 		$("#cartPinCodeAvailable").show();
 		 $( "#error-Id").hide();
 		 $("#emptyId").hide();
-		 $(".pincodeServiceError").hide();
-		 //TPR-1341
+	//	 $(".pincodeServiceError").hide();
+		/* //TPR-1341
 		 $(".cartItemBlankPincode").show();
-		 $(".delivery ul.success_msg").hide();
+		 $(".delivery ul.success_msg").hide();*/
 		/*if($("#pinCodeButtonIdsBtm").text() == 'Change Pincode'){
 			$("#pinCodeButtonIdsBtm").text("Check Availability");*/
 		 if(document.getElementById("pinCodeButtonIdsBtm").className == 'ChangePincode'){
@@ -7999,7 +8074,7 @@ $("button[name='pinCodeButtonId']").click(function(){
 	$("input[name='defaultPinCodeIds']").val(pincode).css("color","rgb(255, 28, 71)");
 	
 	//$(".emptyPins").show();
-	checkPincodeServiceability('typeSubmit',this);
+	//checkPincodeServiceability('typeSubmit',this);
 	});
 
 /*UF-68 UF-69*/
