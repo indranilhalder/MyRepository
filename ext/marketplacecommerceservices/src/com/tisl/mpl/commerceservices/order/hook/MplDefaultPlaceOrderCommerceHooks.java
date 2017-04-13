@@ -1731,8 +1731,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 									&& abstractOrderEntryModel.getConvenienceChargeApportion() != null
 									&& abstractOrderEntryModel.getTotalProductLevelDisc() != null)
 							{
-								qualifyingCount = abstractOrderEntryModel.getQualifyingCount().intValue()
-										+ abstractOrderEntryModel.getFreeCount().intValue();
+								//INC144316050
+								//								qualifyingCount = abstractOrderEntryModel.getQualifyingCount().intValue()
+								//										+ abstractOrderEntryModel.getFreeCount().intValue();
+
+								qualifyingCount = abstractOrderEntryModel.getQualifyingCount().intValue();
 
 								bogoCODPrice = abstractOrderEntryModel.getConvenienceChargeApportion().doubleValue()
 										* abstractOrderEntryModel.getQualifyingCount().intValue();
