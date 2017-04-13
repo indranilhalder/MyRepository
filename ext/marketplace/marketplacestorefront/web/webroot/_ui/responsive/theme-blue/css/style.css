@@ -15939,6 +15939,15 @@ body .account .right-account .reviews .review-list div.reactions{
     body .account .right-account .reviews .review-list .wrapper>li .review .stats .account-only a:first-child {
         text-align: left
     }
+    /* TISSQAUAT-446 */
+    body .account .right-account ul.saved-cards>li a{
+    	line-height:1.5;
+    	margin-right: 12px;
+    }
+    body .account .right-account ul.saved-cards>li .actions{
+    	bottom: 2px;
+    }
+    /* TISSQAUAT-446 */
 }
 body .account .right-account .reviews .navigation {
     position: relative
