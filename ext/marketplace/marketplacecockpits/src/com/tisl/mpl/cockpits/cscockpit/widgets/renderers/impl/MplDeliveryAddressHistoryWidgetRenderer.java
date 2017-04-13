@@ -120,7 +120,7 @@ public class MplDeliveryAddressHistoryWidgetRenderer
 							if(size>0) {
 								deliveryAddress=orderModel.getDeliveryAddresses().get(0);
 							}
-							if(null != addressModel && null !=  deliveryAddress && null != addressModel.getPk()&& null != deliveryAddress.getPk()) {
+							if(null != addressModel && null !=  deliveryAddress && null != addressModel.getPk() && null != deliveryAddress.getPk()) {
 								if(!addressModel.getPk().equals(deliveryAddress.getPk())){
 									renderOrderHistory(widget, address, listBox, columns);
 								}
