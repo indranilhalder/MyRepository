@@ -200,7 +200,16 @@
 									</div>
 									<div
 										class="col-md-9 addressTextChange addressSpace changeAddress${status.count}">
-										<b>Residential Address ${addressCount} <c:if test="${orderDeliveryAddressList.defaultAddress}">&nbsp;&nbsp;-Default Address</c:if></b> <br /> 
+										<b><c:choose>
+                                               <c:when test="${orderDeliveryAddressList.addressType eq 'Home'}">
+                                                Residential
+                                               </c:when>    
+                                               <c:otherwise>
+                                               Commercial
+                                               </c:otherwise>
+                                            </c:choose>
+										     Address ${addressCount} <c:if test="${orderDeliveryAddressList.defaultAddress}">&nbsp;&nbsp;-Default Address</c:if></b> <br /> 
+										
 										
 										<span class="firstName addressFont">${orderDeliveryAddressList.firstName}</span>
 										<span class="lastName addressFont">${orderDeliveryAddressList.lastName}</span><br>
