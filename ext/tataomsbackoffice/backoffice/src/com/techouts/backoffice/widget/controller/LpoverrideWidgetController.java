@@ -98,6 +98,10 @@ public class LpoverrideWidgetController
 		final LPAWBSearch lpAwbSearch = new LPAWBSearch();
 		int count = 0;
 		this.errorMessageValue = "";
+		if (modifiedTransactinTrack != null)
+		{
+			modifiedTransactinTrack.clear();
+		}
 		previousLpAndAwbNumberForTrack = new HashMap<String, TransactionInfo>();
 		if (txtOrderId != null && StringUtils.isNotEmpty(txtOrderId))//orderid
 		{
@@ -266,10 +270,23 @@ public class LpoverrideWidgetController
 	 */
 	@Command("onChangeTransactionInfo")
 	@NotifyChange(
-	{ "lpOverrideEnabled" })
+	{ "lpOverrideEnabled", "listOfTransactions" })
 	public void onChangeTransactionInfo(@BindingParam("transaction") final TransactionInfo selectedTransaction)
 	{
-
+		if (selectedTransaction.getOrderStatus().equalsIgnoreCase(TataomsbackofficeConstants.REVERSE_ORDERSTATUS_REVERSEAWB)
+				|| selectedTransaction.getOrderStatus().equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_SCANNED)
+				|| selectedTransaction.getOrderStatus().equalsIgnoreCase(TataomsbackofficeConstants.ORDERSTATUS_HOTCOURI))
+		{
+			if (StringUtils.isEmpty(selectedTransaction.getAwbNumber()))
+			{
+				if (this.listOfTransactions != null && CollectionUtils.isNotEmpty(this.listOfTransactions))
+				{
+					this.listOfTransactions.clear();
+				}
+				Messagebox.show("Awb number is manditory");
+				return;
+			}
+		}
 		modifiedTransactinTrack.put(selectedTransaction.getTransactionId(), selectedTransaction); //if required lp flag then send as bind prarm attribute
 
 	}
