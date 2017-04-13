@@ -1094,7 +1094,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 *
+					 * 
 					 * }
 					 */
 
@@ -1252,20 +1252,25 @@ public class HomePageController extends AbstractPageController
 	}
 
 	/**
-	 * TPR-258
+	 * This is a Sales Traffic Widget with upstream data from the Dew Server
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getStwrecomendations", method = RequestMethod.GET)
 	public JSONObject getStwWidgetDada(final HttpServletRequest request)
 	{
-		final Map<String, String[]> stwRequest = request.getParameterMap();
 		final JSONObject STWJObject = new JSONObject();
-		final List<STWJsonRecomendationData> stwRecData = getStwWidgetFacade().getSTWWidgetFinalData(stwRequest);
-		final String stwCategories = configurationService.getConfiguration().getString("stw.categories");
-		STWJObject.put("STWElements", stwRecData);
-		STWJObject.put("STWCategories", stwCategories);
-		STWJObject.put("visiterIP", getVisitorIpAddress(request));
+		final String stwUse = configurationService.getConfiguration().getString("stw.use");
+		if (stwUse.equalsIgnoreCase("Y"))
+		{
+			final Map<String, String[]> stwRequest = request.getParameterMap();
+			final List<STWJsonRecomendationData> stwRecData = getStwWidgetFacade().getSTWWidgetFinalData(stwRequest);
+			final String stwCategories = configurationService.getConfiguration().getString("stw.categories");
+			final String stwWidgetHeading = configurationService.getConfiguration().getString("stw.heading");
+			STWJObject.put("STWHeading", stwWidgetHeading);
+			STWJObject.put("STWElements", stwRecData);
+			STWJObject.put("STWCategories", stwCategories);
+			STWJObject.put("visiterIP", getVisitorIpAddress(request));
+		}
 		return STWJObject;
 	}
-
 }

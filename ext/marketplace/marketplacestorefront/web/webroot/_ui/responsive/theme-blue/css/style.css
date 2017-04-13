@@ -20238,10 +20238,6 @@ display: inline-block;
 .stw-list .Menu{
 	text-align: center;
 }
-.stw-list .Menu>ul{
-	display: inline-block !important;
-	width: initial;
-}
 .product-tile .short-info .price{
 	font-size: 14px;
 }
@@ -63360,3 +63356,12 @@ padding-top:90px;
     letter-spacing: .5px;
 }
 /* TISSIT-2212 end */
+/* STW changes start */
+#stw_widget {
+min-height:250px;
+position:relative;
+}
+#stw_widget .carousel-component{
+margin:0px;
+}
+/* STW changes end */
