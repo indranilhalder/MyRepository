@@ -1532,7 +1532,9 @@ function displayDeliveryDetails(sellerName) {
 				var posttext=$("#deliveryPosttext").text();
 				var fulFillment = data['fulfillment'];
 				var deliveryModes = data['deliveryModes'];
-				
+				  /*TISPRDT-878 start*/
+				var fulFillmentP1 = data['fulfillmentType1'];
+				/*TISPRDT-878 END*/
 				var leadTime=0;
 				if(null!=data['leadTimeForHomeDelivery']){
 					leadTime=data['leadTimeForHomeDelivery'];
@@ -1545,12 +1547,22 @@ function displayDeliveryDetails(sellerName) {
 				if (data['onlineExclusive']) {
 					$('.online-exclusive').show();
 				}
-				if (null != fulFillment && fulFillment.toLowerCase() == 'tship') {
-					$('#fulFilledByTship').show();
-				} else {
-					$('#fulFilledBySship').show();
-					$('#fulFilledBySship').html(sellerName);
-				}
+				/*TISPRDT-878 Start*/
+				if (null != fulFillment && fulFillment.toLowerCase() == 'both') {
+					   if (null != fulFillmentP1 && fulFillmentP1.toLowerCase() == 'tship') {
+					   $('#fulFilledByTship').show();
+					  }else {
+					   $('#fulFilledBySship').show();
+					   $('#fulFilledBySship').html(sellerName);
+					  }
+					    } else if (null != fulFillment && fulFillment.toLowerCase() == 'tship') {
+					   $('#fulFilledByTship').show();
+					 }else {
+					   $('#fulFilledBySship').show();
+					   $('#fulFilledBySship').html(sellerName);
+					  }
+				/*TISPRDT-878 END*/
+				
 				//INC144314017 start
 				if(!$('#pdpPincodeCheck').data('clicked')) {
 					var start_hd=parseInt($("#homeStartId").val())+leadTime;
