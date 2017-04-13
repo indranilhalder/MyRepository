@@ -105,7 +105,8 @@ function loadPincodeData(parm) {
 		success : function(response) {
 			//var arg1 = false;
 			console.log(response.countryCode+ " response.countryCode");
-			if(response == "" || response == " " || response == "NULL" || response == null) {
+			//	TISPRDT-890
+			if(response == "" || response == " " || response == "NULL" || response == null || response.landMarks == null || response.landMarks == "") {
 				console.log("addresslandmark line 154"+ response+ "##");
 				//alert("in if");
 			/*	if(response.countryCode == undefined){
