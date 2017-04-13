@@ -1,3 +1,4 @@
+<%@ attribute name="cartData" required="true" type="de.hybris.platform.commercefacades.order.data.CartData" %>
 <%@ attribute name="showTax" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="showTaxEstimate" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="subtotalsCssClasses" required="false" type="java.lang.String" %>
@@ -7,7 +8,6 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 <!-- TPR-629 orderData added to tag parameters -->
 <%@ attribute name="isCart" required="false" type="java.lang.Boolean" %>
-<%@ attribute name="cartData" required="true" type="de.hybris.platform.commercefacades.order.data.CartData" %>
 <%@ attribute name="orderData" required="false" type="de.hybris.platform.commercefacades.order.data.OrderData" %>
 
 <c:choose>	
@@ -23,6 +23,7 @@
 			</ycommerce:testId>
 		</span>
 	</li>
+	
 	
 	<c:if test="${cartData.totalDiscounts.value > 0}">
 	<li id="cartPromotionApplied">
@@ -76,7 +77,16 @@
 		<span id="couponValue" style="float: right"> </span>
 		<input type="hidden" id="couponRelContent" value="<spring:theme code="coupon.release.content"/>">
 	</li>
-    
+	
+   <%--  <c:if test="${not empty cartData.deliverySlotCharge}">
+    <li class="total" id="edtotal">
+		<div id="edtotalPriceConvChargeId">
+			Scheduling Charge
+			<span id="edtotalWithConvField" style="float: right"><format:price priceData="${cartData.deliverySlotCharge}"/></span>
+			
+		</div>
+	</li>
+    </c:if>  --%>
     
 	<li class="total" id="total">
 		<div id="totalPriceConvChargeId">

@@ -163,6 +163,11 @@ function editAddress(addressId) {
    				$('#line2').val("");
    				$('#line3').val("");
    				$('#postcode').val(data.postcode);
+   				$('.address_landmarks').val(data.landmark);
+   				$('.address_landmarkOther').val(data.landmark);
+   				loadPincodeData("edit").done(function() {
+   					otherLandMarkTri(data.landmark,"defult");
+   				});
    				$('#townCity').val(data.townCity);
    				$('#mobileNo').val(data.mobileNo);
    				$('#stateListBox').val(data.state);
@@ -1076,7 +1081,10 @@ function editAddress(addressId) {
         var selectedValueState = document.getElementById('stateListBox').selectedIndex;
 //        var regexCharSpace = /^[a-zA-Z ]*$/;
         var regexCharSpace = /^[a-zA-Z]+$/;
-       var regexCharWithSpace = /^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/;
+       /*3bu1 added code, TISRLEE-1648*/
+        var regexCharWithSpace = /^([a-zA-Z]+\s)*[a-zA-Z]+$/;
+        /* TISRLEE-1648*/
+//        var regexCharSpace = /^[a-zA-Z]+(\s[a-zA-Z]+)?$/;
         var regexSpace = /\s/;
         var equalNoCheck = /^\D*(\d)(?:\D*|\1)*$/;
         var flagFn = true; 
@@ -1156,11 +1164,13 @@ function editAddress(addressId) {
         	document.getElementById("erraddressCity").innerHTML = "<font color='#ff1c47' size='2'>Please enter city</font>";
         	flagCity = false;
         }
+        /*added code, TISRLEE-1648*/
         else if (!regexCharWithSpace.test(document.getElementById("townCity").value)) { 
         	$("#errddressCity").css({"display":"block"});
         	document.getElementById("erraddressCity").innerHTML = "<font color='#ff1c47' size='2'>City should contain alphabets only</font>";
         	flagCity = false;
         }
+        /*added code, TISRLEE-1648*/
         if (selectedValueState == 0) {
         	$("#errddressState").css({"display":"block"});
         	document.getElementById("erraddressState").innerHTML = "<font color='#ff1c47' size='2'>Please select state</font>";

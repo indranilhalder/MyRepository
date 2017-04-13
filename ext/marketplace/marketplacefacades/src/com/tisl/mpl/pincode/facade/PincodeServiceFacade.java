@@ -12,6 +12,7 @@ import de.hybris.platform.storelocator.location.Location;
 
 import java.util.List;
 
+import com.tisl.mpl.facades.data.PincodeData;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 
@@ -77,4 +78,23 @@ public interface PincodeServiceFacade
 	 * @return StoreLocationRequestData
 	 */
 	List<StoreLocationRequestData> getStoresFromCommerce(final String pincode, final String sellerUssId);
+
+	/**
+	 * Gets the Details of the given Pincode
+	 * 
+	 * @author Techouts
+	 * @param pincode
+	 * @return PincodeData
+	 */
+	public PincodeData getAutoPopulatePincodeData(final String pincode);
+	
+	/**
+	 * Get all available Stores for Seller to return products at store
+	 *  
+	 * @param pincode
+	 * @param sellerId
+	 * @return List<PointOfServiceData>
+	 */
+	public List<PointOfServiceData> getAllReturnableStores(String pincode,String sellerId);
+
 }

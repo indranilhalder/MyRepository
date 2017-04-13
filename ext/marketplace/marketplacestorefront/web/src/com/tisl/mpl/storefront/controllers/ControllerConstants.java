@@ -191,6 +191,8 @@ public interface ControllerConstants
 				String AccountInviteFriendPage = "pages/account/inviteFriends";
 				String AccountCouponsPage = "pages/account/accountCouponDetailsPage";
 				String AccountOrderReturnPincodeServiceCheck = "pages/account/returnPincodeAvailabilityCheck";
+				String ScheduledDeliveryDate= "pages/account/scheduledDeliveryDate";
+				String OTPPopup= "pages/account/otpPopup";
 			}
 
 
@@ -258,7 +260,10 @@ public interface ControllerConstants
 				String chatPage = "pages/clickToChatCall/clickToChat";
 				String callPage = "pages/clickToChatCall/clickToCall";
 			}
-
+			interface Order
+			{
+				String TrackOrderDetailsPage = "pages/order/trackOrderDetailsPage";
+			}
 			interface Search
 			{
 				// TPR-198
@@ -373,8 +378,10 @@ public interface ControllerConstants
 				public static final String AJAXPRODUCTDATA = "fragments/product/productPromotionSection";
 
 
+
 				public static final String USSID_CODE_PATH_NEW_PATTERN = "/**/p-{ussId:.*}";
 				public static final String USSID = "ussId";
+				public static final String ID_ED_SELLER_HANDLING_TIME= "isEDSeller";
 			}
 
 			interface NPS_Emailer
@@ -383,9 +390,8 @@ public interface ControllerConstants
 				String SubmitSuccess = "fragments/NPS_Emailer/submitSuccess";
 				String NpsFeedbackExists = "fragments/NPS_Emailer/npsFeedbackExists";
 
-
-
 			}
+			
 		}
 	}
 

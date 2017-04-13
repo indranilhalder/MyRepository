@@ -40,6 +40,7 @@ import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 
@@ -77,6 +78,9 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	private MplDeliveryCostService mplDeliveryCostService;
 	@Resource(name = "productDetailsHelper")
 	private ProductDetailsHelper productDetailsHelper;
+	@Autowired
+	private MplSellerInformationService mplSellerInformationService;
+
 
 	private static final String BUYBOX_LIST = "buyboxList";
 
@@ -174,6 +178,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		}
 		boolean isSellerPresent = false;
 		boolean isMicroSellerOOS = false;
+
 		//END
 		try
 		{
@@ -231,6 +236,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					}
 					else
 					{
+
 						buyBoxMod = buyboxModelList.get(0);
 					}
 					//CKD:TPR-250 : End
@@ -253,6 +259,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					productsWithNoStock.add(pdpProduct);
 				}
 			}
+
 			else if (buyboxModelList.size() == 1)
 			{
 
@@ -338,6 +345,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			{
 				for (final BuyBoxModel buyBoxModel : buyboxModelList)
 				{
+
 					//buyBoxDataList.add(populateBuyBoxData(buyBoxModel, onlyBuyBoxHasStock, buyboxModelList, buyboxData.getAllOOStock()));
 					//TPR-250
 					buyBoxDataList.add(populateBuyBoxData(buyBoxModel, onlyBuyBoxHasStock, buyboxModelList, buyboxData.getAllOOStock(),isSellerPresent,isMicroSellerOOS));
@@ -491,6 +499,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			}
 			if (buyboxModelList.size() > 0)
 			{
+
+
 				if (null != buyBoxMod.getSpecialPrice() && buyBoxMod.getSpecialPrice().doubleValue() > 0)
 				{
 					final double spPrice = buyBoxMod.getSpecialPrice().doubleValue();
@@ -518,14 +528,19 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				//TPR-250:Start
 				//				if (onlyBuyBoxHasStock && sellerSize > 0)
 				//				{
+
 				//					buyboxData.setNumberofsellers(Integer.valueOf(-1));
 				//					//buyboxData.setNumberofsellers(Integer.valueOf(-1));
 				//				}
 				//				else
 				//				{
+
+
+
 				buyboxData.setNumberofsellers(noofsellers);
 				//}
 				//TPR-250:End
+
 				//Minimum price for other sellers
 				double minPrice = 0.0d;
 				if (sellerSize > 0)
@@ -729,7 +744,11 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					sellerData.setShippingMode(rich.getShippingModes().getCode());
 				}
 
+				if (null != rich.getDeliveryFulfillModeByP1())
+				{
 
+					sellerData.setDeliveryFulfillModebyP1(rich.getDeliveryFulfillModeByP1().getCode());
+				}
 				if (null != rich.getDeliveryFulfillModes() && rich.getDeliveryFulfillModes().equals(DeliveryFulfillModesEnum.TSHIP))
 				{
 
@@ -753,9 +772,19 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					sellerData.setIsCod(MarketplaceFacadesConstants.N);
 				}
 
+				if (null != rich.getIsFragile())
+				{
+					sellerData.setIsFragile(rich.getIsFragile().getCode());
+				}
+				if (null != rich.getIsPrecious())
+				{
+					sellerData.setIsPrecious(rich.getIsPrecious().getCode());
+				}
+	
 				sellerData.setReturnPolicy(rich.getReturnWindow());
 				sellerData.setReplacement(rich.getReplacementWindow());
 
+				sellerData.setSellerHandlingTime(rich.getSellerHandlingTime());
 				SellerInformationDataList.add(sellerData);
 
 			}
@@ -811,13 +840,23 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 						{
 							richData.setFulfillment(rich.getDeliveryFulfillModes().getCode());
 						}
+						/*Bug ID TATA-815 */
+						if (null != rich.getDeliveryFulfillModeByP1())
+						{
+							richData.setFulfillmentType1(rich.getDeliveryFulfillModeByP1().getCode());
+						}
 						if (HomeDeliveryEnum.YES.equals(rich.getHomeDelivery()))
 						{
 							deliveryModes.append(HD).append(','); // SONAR Fixes
 						}
 						if (ExpressDeliveryEnum.YES.equals(rich.getExpressDelivery()))
 						{
-							deliveryModes.append(ED).append(','); // SONAR Fixes
+							if(StringUtils.isNotEmpty(rich.getSellerHandlingTime().toString())){
+								Integer sellerHandlingTime = rich.getSellerHandlingTime();
+								if(sellerHandlingTime.intValue()>=0 && sellerHandlingTime.intValue()<=24){
+									deliveryModes.append(ED).append(','); // SONAR Fixes
+								}
+							}
 						}
 						if (ClickAndCollectEnum.YES.equals(rich.getClickAndCollect()))
 						{
@@ -944,6 +983,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	/*
 	 * This method is used to get the price of a product by giving the ussid
 	 *
+
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
@@ -978,6 +1018,34 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		buyboxData.setSellerId(buyBoxMod.getSellerId());
 		buyboxData.setSellerArticleSKU(buyBoxMod.getSellerArticleSKU());
 		buyboxData.setAvailable(buyBoxMod.getAvailable());
+		// TISRLEE-1586 03-01-2017
+		SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(buyBoxMod.getSellerArticleSKU());
+		if (CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
+		{
+			List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+			int sellerEDTime = 0;
+			try
+			{
+				if (richAttributeModel.get(0).getSellerHandlingTime() != null)
+				{
+					Integer sellertime = richAttributeModel.get(0).getSellerHandlingTime();
+					sellerEDTime = Integer.parseInt(sellertime.toString());
+				}
+				if (sellerEDTime <= 24)
+				{
+					buyboxData.setIsSellerHandlingTime(true);
+				}
+				else
+				{
+					buyboxData.setIsSellerHandlingTime(false);
+				}
+			}
+			catch (NullPointerException exception)
+			{
+				LOG.error("Null Point Exception : BuyBoxFacadeImpl" + exception.getMessage());
+			}
+		}
+
 		if (null != buyBoxMod.getMrp())
 		{
 			buyboxData.setMrp(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
@@ -985,15 +1053,20 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
 		//CKD:TPR-250:Start: checking if list has Buy Box list has OOS seller to be removed from other sellers count when call comes from microsite
 		final int oosSellersCount = getOosSellerCount(buyboxModelList);
+
 		//other sellers count
 		int sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
 		if (isMicroSellerOOS){
 			sellerSize = sellerSize +1;
 		}
 		if(sellerSize<0) {
+
 			buyboxData.setNumberofsellers(Integer.valueOf(0));
+
 		}
 		else{
+
+
 			buyboxData.setNumberofsellers(Integer.valueOf(sellerSize));
 		}
 		//CKD:TPR-250:End
@@ -1008,12 +1081,14 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				start=0;
 			}
 			//int end = buyboxModelList.size()-1;
+
 			//for (int i = 1; i <= end; i++)
 			for (int i = start; i <= end; i++)
 			{
 				if (null != buyboxModelList.get(i).getSpecialPrice() && buyboxModelList.get(i).getSpecialPrice().doubleValue() > 0
 						&& buyboxModelList.get(i).getAvailable().intValue()>0 // CKD:TPR-250 not considering OOS elements for min price calculation
 						)
+
 				{
 
 					final double specialPrice = buyboxModelList.get(i).getSpecialPrice().doubleValue();

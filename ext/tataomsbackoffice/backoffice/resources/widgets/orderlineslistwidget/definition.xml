@@ -12,5 +12,5 @@
         <!-- keyword tag is used to define a category under which the widget is visible, when adding it to your application in application orchestrator  -->
         <keyword>rderLinesList</keyword>
     </keywords>
-  
+  	<controller class="com.hybris.oms.tata.orders.OrderLinesListController" id="vm" />
 </widget-definition>

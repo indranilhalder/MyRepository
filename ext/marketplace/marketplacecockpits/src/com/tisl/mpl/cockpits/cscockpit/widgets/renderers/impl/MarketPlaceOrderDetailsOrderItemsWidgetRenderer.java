@@ -494,6 +494,28 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		deliveryChargeslabel2.setSclass("asslabel");
 		dataRow3.appendChild(deliveryChargeslabel2);
 		table.appendChild(dataRow3);
+		
+		// schedule Delivery Charges 
+		
+		Hbox sdChargesRow = new Hbox();
+		sdChargesRow.setSclass("dataRowNew");
+		final Label scheduleDeliveryChargeslabel = new Label(LabelUtils.getLabel(
+				widget, "scheduleDeliveryCharges", new Object[0]));
+		scheduleDeliveryChargeslabel.setSclass("asslabel");
+		sdChargesRow.appendChild(scheduleDeliveryChargeslabel);
+		
+		Double scheduleDeliveryCost = 0.0D;
+		if(null !=  orderEntry.getScheduledDeliveryCharge() && orderEntry.getScheduledDeliveryCharge() >0.0D) {
+			scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge();
+		}else if(null != orderEntry.getRefundedScheduleDeliveryChargeAmt() && orderEntry.getRefundedScheduleDeliveryChargeAmt() >=0.0D){
+			scheduleDeliveryCost = orderEntry.getRefundedScheduleDeliveryChargeAmt();
+		}
+		 
+		String scheduleDeliveryChargesString = currencyInstance.format(scheduleDeliveryCost);
+		final Label scheduleDeliveryChargeslabe = new Label(scheduleDeliveryChargesString);
+		scheduleDeliveryChargeslabe.setSclass("asslabel");
+		sdChargesRow.appendChild(scheduleDeliveryChargeslabe);
+		table.appendChild(sdChargesRow);
 
 		Hbox dataRow4 = new Hbox();
 		dataRow4.setSclass("dataRowNew");

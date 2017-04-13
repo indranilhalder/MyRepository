@@ -31,6 +31,12 @@
 				<name>cockpitValidatorClass</name>
 				<value>com.tisl.mpl.cockpits.cscockpit.validators.impl.MinLengthCockpitValidator</value>
 			</parameter>
+		</property> 
+		<property qualifier="Address.landmark" visible="true" editor="csUniqueText">
+			<parameter>
+				<name>cockpitValidatorClass</name>
+				<value>com.tisl.mpl.cockpits.cscockpit.validators.impl.MinLengthCockpitValidator</value>
+			</parameter>
 		</property>
 		<property qualifier="Address.postalcode" visible="true" editor="csUniqueText">
 			<parameter>

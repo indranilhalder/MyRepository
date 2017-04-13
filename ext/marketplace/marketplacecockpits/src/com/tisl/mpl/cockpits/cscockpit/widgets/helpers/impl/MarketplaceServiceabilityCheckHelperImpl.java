@@ -1,12 +1,14 @@
 package com.tisl.mpl.cockpits.cscockpit.widgets.helpers.impl;
 
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
+import de.hybris.platform.commercefacades.product.data.CNCServiceableSlavesData;
 import de.hybris.platform.commercefacades.product.data.DeliveryDetailsData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
+import de.hybris.platform.commercefacades.product.data.ServiceableSlavesData;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -34,8 +36,10 @@ import org.springframework.beans.factory.annotation.Required;
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketplaceSearchCommandControllerImpl;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
+import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -43,13 +47,16 @@ import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.PinCodeDeliveryModeService;
+import com.tisl.mpl.wsdto.CNCServiceableSlavesWsDTO;
 import com.tisl.mpl.wsdto.DeliveryModeResOMSWsDto;
 import com.tisl.mpl.wsdto.PinCodeDeliveryModeListResponse;
 import com.tisl.mpl.wsdto.PinCodeDeliveryModeResponse;
+import com.tisl.mpl.wsdto.ServiceableSlavesDTO;
 
 
 // TODO: Auto-generated Javadoc
@@ -107,6 +114,9 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 
 	@Autowired
 	private MplConfigService mplConfigService;
+	
+	@Autowired
+	 private MplSellerInformationService mplSellerInformationService;
 
 	/**
 	 * Gets the response for pin code.
@@ -125,7 +135,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	 * @description this method checks the restriction list and calls pincode service accordingly
 	 */
 	@Override
-	public List<PinCodeResponseData> getResponseForPinCode(final ProductModel product, final String pin,
+	public List<PinCodeResponseData> getResponseForPinCode(final String cartId,final ProductModel product, final String pin,
 			final String isDeliveryDateRequired, final String ussid) throws EtailNonBusinessExceptions,
 			ClientEtailNonBusinessExceptions
 	{
@@ -160,7 +170,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 				 * final List<PincodeServiceData> requestData = populatePinCodeServiceData(product, isDeliveryDateRequired,
 				 * ussid);
 				 */
-				final List<PincodeServiceData> requestData = populatePinCodeServiceData(product, isDeliveryDateRequired, ussid,
+				final List<PincodeServiceData> requestData = populatePinCodeServiceData(cartId,product, isDeliveryDateRequired, ussid,
 						myLocation.getGPS(), Double.parseDouble(configurableRadius));
 
 				final List<String> ussidList = new ArrayList<String>();
@@ -269,10 +279,8 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 					final List<Integer> stockCount = new ArrayList<Integer>();
 					List<DeliveryDetailsData> deliveryDataList = null;
 					responseData = new PinCodeResponseData();
-
+					//responseData.set
 					responseData.setTransportMode(deliveryModeResponse.getTransportMode());
-					responseData.setFulfilmentType(deliveryModeResponse.getFulfilmentType());
-
 					if (null != deliveryModeResponse.getDeliveryMode())
 					{
 						deliveryDataList = new ArrayList<DeliveryDetailsData>();
@@ -305,6 +313,27 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 							data.setIsPrepaidEligible(deliveryMode.getIsPrepaidEligible().equals(MarketplaceCockpitsConstants.YES) ? true
 									: false);
 							responseData.setIsPrepaidEligible(deliveryMode.getIsPrepaidEligible());// set payment mode
+							data.setFulfilmentType(deliveryMode.getFulfillmentType());
+							if (null != deliveryMode.getServiceableSlaves() && deliveryMode.getServiceableSlaves().size() > 0)
+							{
+								data.setServiceableSlaves(populatePincodeServiceableData(deliveryMode.getServiceableSlaves()));
+							}
+
+							if (null != deliveryMode.getCNCServiceableSlaves() && deliveryMode.getCNCServiceableSlaves().size() > 0)
+							{
+								final List<CNCServiceableSlavesData> cncServiceableSlavesDataList = new ArrayList<CNCServiceableSlavesData>();
+								CNCServiceableSlavesData cncServiceableSlavesData = null;
+								for (final CNCServiceableSlavesWsDTO dto : deliveryMode.getCNCServiceableSlaves())
+								{
+									cncServiceableSlavesData = new CNCServiceableSlavesData();
+									cncServiceableSlavesData.setStoreId(dto.getStoreId());
+									cncServiceableSlavesData.setQty(dto.getQty());
+									cncServiceableSlavesData.setFulfillmentType(dto.getFulfillmentType());
+									cncServiceableSlavesData.setServiceableSlaves(populatePincodeServiceableData(dto.getServiceableSlaves()));
+									cncServiceableSlavesDataList.add(cncServiceableSlavesData);
+								}
+								data.setCNCServiceableSlavesData(cncServiceableSlavesDataList);
+							}
 							deliveryDataList.add(data);
 
 							if (!(stockCount.isEmpty()))
@@ -381,11 +410,15 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 								data.setDeliveryModes(sd.getDeliveryModes());
 								data.setTransportMode(sd.getShippingMode());
 								data.setFullFillmentType(sd.getFullfillment());
+								data.setDeliveryFulfillModeByP1(sd.getDeliveryFulfillModebyP1());
 								data.setSellerId(buybox.getSellerId());
 								data.setUssid(buybox.getSellerArticleSKU());
 								data.setIsDeliveryDateRequired(isDeliveryDateRequired);
 								data.setPrice(buybox.getPrice());
 								data.setMopPrice(formPriceData(buybox.getPrice()));
+								if(null != sd.getSellerHandlingTime()) {
+									data.setSellerHandlingTime(Integer.valueOf(sd.getSellerHandlingTime()));
+								}
 								requestData.add(data);
 							}
 						}
@@ -407,6 +440,9 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 							data.setIsDeliveryDateRequired(isDeliveryDateRequired);
 							data.setPrice(buybox.getPrice());
 							data.setMopPrice(formPriceData(buybox.getPrice()));
+							if(null != sd.getSellerHandlingTime()) {
+								data.setSellerHandlingTime(Integer.valueOf(sd.getSellerHandlingTime()));
+							}
 							requestData.add(data);
 						}
 					}
@@ -437,7 +473,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	 * @return the list
 	 */
 
-	private List<PincodeServiceData> populatePinCodeServiceData(final ProductModel productModel,
+	private List<PincodeServiceData> populatePinCodeServiceData(final String cartId,final ProductModel productModel,
 			final String isDeliveryDateRequired, final String ussid, final GPS gps, final Double configurableRadius)
 	{
 		final List<PincodeServiceData> requestData = new WeakArrayList<>();
@@ -459,14 +495,21 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 								data = new PincodeServiceData();
 								data.setIsCOD(sd.getIsCod());
 								data.setDeliveryModes(sd.getDeliveryModes());
-								data.setTransportMode(sd.getShippingMode());
+								if(null != sd.getShippingMode()) {
+									data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(sd.getShippingMode().toUpperCase()));
+								}
+								data.setDeliveryFulfillModeByP1(sd.getDeliveryFulfillModebyP1());
 								data.setFullFillmentType(sd.getFullfillment());
 								data.setSellerId(buybox.getSellerId());
 								data.setUssid(buybox.getSellerArticleSKU());
 								data.setIsDeliveryDateRequired(isDeliveryDateRequired);
 								data.setPrice(buybox.getPrice());
 								data.setMopPrice(formPriceData(buybox.getPrice()));
-
+								data.setIsFragile(sd.getIsFragile());
+								data.setIsPrecious(sd.getIsPrecious());
+								if(null != cartId) {
+									data.setCartId(cartId);
+								}
 								// Added To get Near By Stores
 								final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius,
 										sd.getSellerID());
@@ -480,7 +523,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 									LOG.debug("locationList:" + locationList.size());
 									data.setStore(locationList);
 								}
-
+								data.setSellerHandlingTime(sd.getSellerHandlingTime());
 								requestData.add(data);
 							}
 						}
@@ -495,14 +538,19 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 							data = new PincodeServiceData();
 							data.setIsCOD(sd.getIsCod());
 							data.setDeliveryModes(sd.getDeliveryModes());
-							data.setTransportMode(sd.getShippingMode());
+							if(null != sd.getShippingMode()) {
+							  data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(sd.getShippingMode().toUpperCase()));
+							}
+							data.setDeliveryFulfillModeByP1(sd.getDeliveryFulfillModebyP1());
 							data.setFullFillmentType(sd.getFullfillment());
 							data.setSellerId(buybox.getSellerId());
 							data.setUssid(buybox.getSellerArticleSKU());
 							data.setIsDeliveryDateRequired(isDeliveryDateRequired);
 							data.setPrice(buybox.getPrice());
 							data.setMopPrice(formPriceData(buybox.getPrice()));
-
+                            if(null != cartId) {
+                            	data.setCartId(cartId);
+                            }
 							// Added To get Near By Stores
 							final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius,
 									sd.getSellerID());
@@ -516,6 +564,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 								LOG.debug("locationList:" + locationList.size());
 								data.setStore(locationList);
 							}
+							data.setSellerHandlingTime(data.getSellerHandlingTime());
 							requestData.add(data);
 						}
 					}
@@ -560,6 +609,24 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 		return pData;
 	}
 
+	
+	private List<ServiceableSlavesData> populatePincodeServiceableData(final List<ServiceableSlavesDTO> serviceableSlavesDTOList)
+	{
+
+		final List<ServiceableSlavesData> serviceableSlavesDataList = new ArrayList<ServiceableSlavesData>();
+		ServiceableSlavesData serviceableSlavesData = null;
+		for (final ServiceableSlavesDTO dto : serviceableSlavesDTOList)
+		{
+			serviceableSlavesData = new ServiceableSlavesData();
+			serviceableSlavesData.setSlaveId(dto.getSlaveId());
+			serviceableSlavesData.setLogisticsID(dto.getLogisticsID());
+			serviceableSlavesData.setPriority(dto.getPriority());
+			serviceableSlavesData.setCodEligible(dto.getCODEligible());
+			serviceableSlavesDataList.add(serviceableSlavesData);
+		}
+		return serviceableSlavesDataList;
+	}
+	
 	/**
 	 * @return the mplCommerceCartService
 	 */

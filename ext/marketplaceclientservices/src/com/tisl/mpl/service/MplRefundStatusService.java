@@ -19,6 +19,7 @@ import com.tisl.mpl.xml.pojo.RefundStatusXMLData;
 public interface MplRefundStatusService
 {
 	/**
+	 * @param categoryType 
 	 * @Description : For Refund Status service,need to receive data from commerce and send to oms
 	 * @param: refundInfolist
 	 * @param: orderRefNo
@@ -27,7 +28,7 @@ public interface MplRefundStatusService
 	 * @return: response from oms
 	 */
 	public RefundInfoResponse refundStatusDatatoWsdto(final List<RefundInfo> refundInfolist, final String orderRefNo,
-			final String transactionId, final String oMSStatusCode);
+			final String transactionId, final String oMSStatusCode, String refundCategoryType);
 
 	/**
 	 * @Description : Method to fetch the response from OMS regarding refund information

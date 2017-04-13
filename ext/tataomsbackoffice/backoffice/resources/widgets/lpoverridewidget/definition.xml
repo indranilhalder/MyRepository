@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ [y] hybris Platform
+  ~
+  ~ Copyright (c) 2000-2015 hybris AG
+  ~ All rights reserved.
+  ~
+  ~ This software is the confidential and proprietary information of hybris
+  ~ ("Confidential Information"). You shall not disclose such Confidential
+  ~ Information and shall use it only in accordance with the terms of the
+  ~ license agreement you entered into with hybris.
+  -->
+
+<widget-definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/widget-definition.xsd"
+	id="com.hybris.cockpitng.lpeditMvvmWidget">
+
+	
+
+	<sockets>
+		<input id="textInput" type="java.lang.String"/>
+		<output id="textOutput" type="java.lang.String"/>
+	</sockets>
+
+	<view src="lpoverrideWidget.zul"/>
+	<controller class="com.techouts.backoffice.widget.controller.LpoverrideWidgetController" id="lpVimo"/>
+	<keywords>
+		<keyword>Examples</keyword>
+	</keywords>
+
+	<settings>
+		<setting key="myTestSetting" default-value="test" />
+	</settings>
+
+</widget-definition>

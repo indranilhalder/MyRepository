@@ -23,11 +23,12 @@ INSERT_UPDATE Language;isocode[unique=true];fallbackLanguages(isocode);active[de
 
 # Currencies
 INSERT_UPDATE Currency;isocode[unique=true];conversion;digits;symbol
-;GBP;1;2;ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£
-;EUR;1;2;ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬
+;GBP;1;2;Ãƒâ€šÃ‚Â£
+;EUR;1;2;ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
 ;USD;1,4;2;$
-;JPY;120;0;ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¥
-;INR;1;2;â‚¹
+
+;JPY;120;0;Ãƒâ€šÃ‚Â¥
+;INR;1;2;₹
 
 # SiteMap Language Currencies
 INSERT_UPDATE SiteMapLanguageCurrency;&siteMapLanguageCurrency;language(isoCode)[unique=true];currency(isocode)[unique=true];
@@ -273,6 +274,7 @@ INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
 ;sellerPriorityCronJob;0 0/15 * 1/1 * ? *
 #; promotionPriceUpdaterCronJob; 0 0/5 * 1/1 * ? *
 ; mplmRupeeCronJob; 0 0/10 * 1/1 * ? *
+
 
 # Validation constraints - Customer
 INSERT_UPDATE AttributeConstraint;id[unique=true];annotation[allownull=true];descriptor(enclosingType(code),qualifier);qualifier;severity(code,itemtype(code));target;type(code);active
@@ -684,5 +686,4 @@ INSERT_UPDATE RendererTemplate;code[unique=true];templatescript[lang=en];
 </urlset>"
 
 ####SiteMap CronJob Ends
-
 

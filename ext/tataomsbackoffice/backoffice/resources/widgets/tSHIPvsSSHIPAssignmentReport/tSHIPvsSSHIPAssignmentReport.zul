@@ -1,0 +1,89 @@
+<widget xmlns="http://www.zkoss.org/2005/zul"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:w="http://www.zkoss.org/2005/zk/client"
+	xmlns:zk="http://www.zkoss.org/2005/zk"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+	height="100%">
+	<tablelayout columns="2">
+		<tablechildren>
+			<panel border="normal" height="500px" width="1500px">
+				<panelchildren>
+					<hbox align="center" pack="center" hflex="1"
+						vflex="1">
+						<vlayout width="400px">
+							<vlayout height="100px">
+								<hlayout hflex="1" vflex="1">
+									<label value="${labels.lbl.p1requests}" />
+								</hlayout>
+								<hlayout hflex="1" vflex="1">
+									<label value="TSHIP -${labels.Pincode.label} "></label>
+									<label value="" id="lblTshipRequests"></label>
+								</hlayout>
+								<hlayout hflex="1" vflex="1">
+									<label value="${labels.lbl.sship}"></label>
+									<label value="" id="lblSshipRequests"></label>
+								</hlayout>
+							</vlayout>
+							<vlayout height="100px">
+								<hlayout hflex="1" vflex="1">
+									<label value="${labels.lbl.assignments}" />
+								</hlayout>
+								<hlayout hflex="1" vflex="1">
+									<label value="${labels.lbl.tship}"></label>
+									<label value="" id="lblTshipAssignments"></label>
+								</hlayout>
+								<hlayout hflex="1" vflex="1">
+									<label value="${labels.lbl.sship}"></label>
+									<label value="" id="lblSshipAssignments"></label>
+								</hlayout>
+							</vlayout>
+							<vlayout height="100px">
+								<hlayout hflex="1" vflex="1">
+									<label value="${labels.lbl.assignments}%" />
+								</hlayout>
+								<hlayout hflex="1" vflex="1">
+									<label value="${labels.lbl.tship}"></label>
+									<label value="" id="lblTshipAssignmentPercent"></label>
+								</hlayout>
+								<hlayout hflex="1" vflex="1">
+									<label value="${labels.lbl.sship}"></label>
+									<label value="" id="lblSshipAssignmentPercent"></label>
+								</hlayout>
+							</vlayout>
+						</vlayout>
+						<vlayout width="300px">
+							<vlayout height="100px">
+								<hlayout hflex="1" vflex="1">
+									<label value="Failures:${labels.lbl.failure}" />
+								</hlayout>
+								<hlayout hflex="1" vflex="1">
+									<label value="${labels.lbl.tship}"></label>
+									<label value="" id="lblTshipFailure"></label>
+								</hlayout>
+								<hlayout hflex="1" vflex="1">
+									<label value="${labels.lbl.sship}"></label>
+									<label value="" id="lblSshipFailure"></label>
+								</hlayout>
+							</vlayout>
+							<vlayout height="100px">
+								<hlayout hflex="1" vflex="1">
+									<label value="${labels.lbl.failure}%" />
+								</hlayout>
+								<hlayout hflex="1" vflex="1">
+									<label value="TSHIP - ${labels.Pincode.label}"></label>
+									<label value="" id="lblTshipFailurePercent"></label>
+								</hlayout>
+								<hlayout hflex="1" vflex="1">
+									<label value="SSHIP -${labels.Pincode.label} "></label>
+									<label value="" id="lblSshipFailurePercent"></label>
+								</hlayout>
+							</vlayout>
+							<vlayout height="100px"></vlayout>
+						</vlayout>
+					</hbox>
+				</panelchildren>
+			</panel>
+		</tablechildren>
+	</tablelayout>
+</widget>

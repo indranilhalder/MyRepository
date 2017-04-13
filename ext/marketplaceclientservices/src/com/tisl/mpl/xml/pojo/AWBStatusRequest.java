@@ -49,13 +49,16 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder =
-{ "tplCode", "awbRequestInfo" })
+{"awbRequestInfo" })
 @XmlRootElement(name = "AWBStatusRequest")
 public class AWBStatusRequest implements java.io.Serializable
 {
 
-	@XmlElement(name = "TPLCode", required = true)
-	private String tplCode;
+ 	 /*Description:  To Maintain uniformity for AWB Tracking Request with CRM,
+	removing TPL Code from the request */
+	/*	@XmlElement(name = "TPLCode", required = true)
+	private String tplCode;*/
+	
 	@XmlElement(name = "AWBRequestInfo", required = true)
 	private AWBStatusRequest.AWBRequestInfo awbRequestInfo;
 
@@ -65,10 +68,11 @@ public class AWBStatusRequest implements java.io.Serializable
 	 * @return possible object is {@link String }
 	 *
 	 */
-	public String getTPLCode()
+	
+	/*public String getTPLCode()
 	{
 		return tplCode;
-	}
+	}*/
 
 	/**
 	 * Sets the value of the tplCode property.
@@ -77,10 +81,10 @@ public class AWBStatusRequest implements java.io.Serializable
 	 *           allowed object is {@link String }
 	 *
 	 */
-	public void setTPLCode(final String value)
+/*	public void setTPLCode(final String value)
 	{
 		this.tplCode = value;
-	}
+	}*/
 
 	/**
 	 * Gets the value of the awbRequestInfo property.

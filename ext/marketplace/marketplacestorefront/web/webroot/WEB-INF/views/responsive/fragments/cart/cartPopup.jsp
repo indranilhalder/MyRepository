@@ -93,9 +93,25 @@
 							<c:if test="${numberItemsInCart -numberShowing == 1}">&nbsp;<spring:theme code="cart.popup.more.item" /></c:if>
 							</div>
 							</c:if>
-							<div class="totalPayable">
+							 <%-- <div class="totalPayable">*** ${(cartData.deliveryCost.formattedValue)}
 								<spring:theme code="cart.popup.totalPayable" /><span class="total-payable-amount">${cartData.totalPriceWithConvCharge.formattedValue}</span> 
-							</div>
+							</div> --%>
+							
+							<c:choose>	
+								<c:when test="${not empty cartData.deliveryCost.formattedValue &&  cartData.deliveryCost.formattedValue gt  '0.0'}">
+		   							 <c:set var="res" value="${(cartData.totalPriceWithConvCharge.value - cartData.deliveryCost.value)}"/>
+									<div class="totalPayable">
+									<spring:theme code="cart.popup.totalPayable" /><span class="total-payable-amount"> &#x20B9; <fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${res}" /></span>
+									</div>
+		        				</c:when>
+		    					<c:otherwise>
+		        					<div class="totalPayable">
+										<spring:theme code="cart.popup.totalPayable" /><span class="total-payable-amount">${cartData.totalPriceWithConvCharge.formattedValue}</span> 
+									</div>
+		   						</c:otherwise>
+							</c:choose> 
+							
+				
 							<a href="${cartUrl}" class="go-to-bag mini-cart-checkout-button">
 							<spring:theme code="mpl.minicart.myBag" /></a>
 							</li>       

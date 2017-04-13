@@ -2721,7 +2721,12 @@ public class ProductPageController extends MidPageController
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.MIN_PRICE, buyboxdata.getMinPrice());
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.ALL_OF_STOCK, buyboxdata.getAllOOStock());
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
+
 		buyboxJson.put("isOOsForMicro", buydata.get("isOOsForMicro"));//TPR-250
+
+		//	 TISRLEE-1586 03-01-2017
+		buyboxJson.put(ControllerConstants.Views.Fragments.Product.ID_ED_SELLER_HANDLING_TIME, buyboxdata.isIsSellerHandlingTime());
+
 		final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
 		final List<String> noStockPCodes = (List<String>) buydata.get("no_stock_p_codes");
 		for (final String pCode : noStockPCodes)
@@ -2865,6 +2870,7 @@ public class ProductPageController extends MidPageController
 
 	private ContentPageModel getContentPageForProduct(final ProductModel product) throws CMSItemNotFoundException
 	{
+		//INC_11128
 		//Commented for status 500 errors
 		//		if (productContentPage == null)
 		//		{

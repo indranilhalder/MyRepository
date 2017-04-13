@@ -11,7 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Datebox;
+import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Messagebox;
 
 import com.hybris.cockpitng.annotations.ViewEvent;
@@ -21,14 +23,19 @@ import com.hybris.cockpitng.util.DefaultWidgetController;
 
 /**
  * @author Nagarjuna
- * 
+ *
  */
 public class PincodeLogisticsDateController extends DefaultWidgetController
 {
 
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
 	private Datebox startdpic;
 	private Datebox enddpic;
-
+	@Wire
+	private Listbox shipmentListBox;
 
 	private static final Logger LOG = LoggerFactory.getLogger(PincodeLogisticsDateController.class);
 	final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -37,7 +44,7 @@ public class PincodeLogisticsDateController extends DefaultWidgetController
 	public void initialize(final Component comp)
 	{
 		final Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.DATE, -1);
+		cal.add(Calendar.DATE, -6);
 		startdpic.setValue(cal.getTime());
 		enddpic.setValue(new Date());
 		super.initialize(comp);
@@ -52,23 +59,16 @@ public class PincodeLogisticsDateController extends DefaultWidgetController
 	@ViewEvent(componentID = "startdpic", eventName = Events.ON_CHANGE)
 	public void getStartdpic()
 	{
-
-
-		if (startdpic.getValue() == null || enddpic.getValue() == null)
+		if (startdpic.getValue().after(enddpic.getValue())) //this kind of comparison ,it will check date along with time sec
 		{
-			return;
-		}
-
-		if (dateFormat.format(startdpic.getValue()).compareTo(dateFormat.format(enddpic.getValue())) > 0)
-		{
-			msgBox("Start date must be less than or equal to End date");
+			msgBox("Start date must be less than End date");
 			return;
 		}
 
 
 		sendOutput("startendDates", dateFormat.format(startdpic.getValue()) + "," + dateFormat.format(enddpic.getValue()));
-		LOG.info("Start date " + startdpic.getValue() + "end date " + dateFormat.format(enddpic.getValue())
-				+ "output socket sended");
+		LOG.info(
+				"Start date " + startdpic.getValue() + "end date " + dateFormat.format(enddpic.getValue()) + "output socket sended");
 
 	}
 
@@ -78,25 +78,15 @@ public class PincodeLogisticsDateController extends DefaultWidgetController
 	@ViewEvent(componentID = "enddpic", eventName = Events.ON_CHANGE)
 	public void getEnddpic()
 	{
-		if (startdpic.getValue() == null)
+		if (enddpic.getValue().before(startdpic.getValue()))
 		{
-			msgBox("Please choose the Start Date");
-			return;
-		}
-		if (enddpic.getValue() == null)
-		{
-			msgBox("Please choose the End Date");
-			return;
-		}
-		if (dateFormat.format(startdpic.getValue()).compareTo(dateFormat.format(enddpic.getValue())) > 0)
-		{
-			msgBox("End date must be greater than or equal to Start date");
+			msgBox("End date must be greater than  Start date");
 			return;
 		}
 
 		sendOutput("startendDates", dateFormat.format(startdpic.getValue()) + "," + dateFormat.format(enddpic.getValue()));
-		LOG.info("Start date " + startdpic.getValue() + "end date " + dateFormat.format(enddpic.getValue())
-				+ "output socket sended");
+		LOG.info(
+				"Start date " + startdpic.getValue() + "end date " + dateFormat.format(enddpic.getValue()) + "output socket sended");
 
 	}
 
@@ -105,5 +95,16 @@ public class PincodeLogisticsDateController extends DefaultWidgetController
 		Messagebox.show(mesg, "Error", Messagebox.OK, Messagebox.ERROR);
 	}
 
+	/**
+	 * This method is to Get the selected date
+	 */
+	@ViewEvent(componentID = "shipmentListBox", eventName = Events.ON_SELECT)
+	public void getShipmentType()
+	{
 
+		sendOutput("selectedShipmentType", shipmentListBox.getSelectedItem().getLabel());
+		LOG.info("selected shipment type" + shipmentListBox.getSelectedItem().getLabel());
+
+
+	}
 }

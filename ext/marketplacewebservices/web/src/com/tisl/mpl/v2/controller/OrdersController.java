@@ -22,6 +22,7 @@ import de.hybris.platform.commercefacades.order.data.OrderHistoriesData;
 import de.hybris.platform.commercefacades.order.data.OrderHistoryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective;
@@ -37,8 +38,10 @@ import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
+import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -47,9 +50,14 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.variants.model.VariantProductModel;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -58,21 +66,34 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
+import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
+import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.core.util.DateUtilHelper;
+import com.tisl.mpl.data.CODSelfShipData;
+import com.tisl.mpl.data.CODSelfShipResponseData;
+import com.tisl.mpl.data.MplPaymentInfoData;
+import com.tisl.mpl.data.OTPResponseData;
+import com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.exceptions.NoCheckoutCartException;
@@ -80,9 +101,15 @@ import com.tisl.mpl.exceptions.PaymentAuthorizationException;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
+import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.account.register.impl.DefaultMplOrderFacade;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.facades.data.AWBResponseData;
+import com.tisl.mpl.facades.data.RescheduleDataList;
+import com.tisl.mpl.facades.data.ScheduledDeliveryData;
+import com.tisl.mpl.facades.data.StatusRecordData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.SendInvoiceData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
@@ -95,16 +122,21 @@ import com.tisl.mpl.strategies.OrderCodeIdentificationStrategy;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.v2.helper.OrdersHelper;
+import com.tisl.mpl.wsdto.BillingAddressWsDTO;
 import com.tisl.mpl.wsdto.GetOrderHistoryListWsDTO;
+import com.tisl.mpl.wsdto.MplDeliveryAddressRequestWsDTO;
+import com.tisl.mpl.wsdto.MplDeliveryAddressResponseWsDTO;
+import com.tisl.mpl.wsdto.MplSDInfoWsDTO;
 import com.tisl.mpl.wsdto.OrderConfirmationWsDTO;
 import com.tisl.mpl.wsdto.OrderDataWsDTO;
 import com.tisl.mpl.wsdto.OrderProductWsDTO;
 import com.tisl.mpl.wsdto.OrderTrackingWsDTO;
 import com.tisl.mpl.wsdto.SelectedDeliveryModeWsDTO;
+import com.tisl.mpl.wsdto.StatusResponseDTO;
+import com.tisl.mpl.wsdto.StatusResponseListDTO;
+import com.tisl.mpl.wsdto.StatusResponseMessageDTO;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
-
-
 /**
  * Web Service Controller for the ORDERS resource. Most methods check orders of the user. Methods require authentication
  * and are restricted to https channel.
@@ -191,6 +223,17 @@ public class OrdersController extends BaseCommerceController
 	private MplSellerInformationService mplSellerInformationService;
 	@Resource(name = "mplDataMapper")
 	protected DataMapper mplDataMapper;
+	
+	@Autowired
+	private MplDeliveryAddressFacade mplDeliveryAddressFacade;
+	
+	@Autowired
+	private MplDeliveryAddressComparator mplDeliveryAddressComparator;
+	@Autowired
+	private CancelReturnFacade cancelReturnFacade;
+	@Autowired
+	private DateUtilHelper dateUtilHelper;
+	
 
 	/**
 	 * @return the mplSellerInformationService
@@ -776,6 +819,16 @@ public class OrdersController extends BaseCommerceController
 								orderProductDTO.setProductColour(product.getColour());
 							}
 							/* capacity */
+						  // R2.3 ChangesStart Bug ID TISRLUAT-1134 Start 17-03-2017
+							if(entry.getSelectedDeliverySlotDate()!=null)
+							{
+								orderProductDTO.setScheduleDeliveryDate(entry.getSelectedDeliverySlotDate());
+								if(StringUtils.isNotEmpty(entry.getTimeSlotFrom()) && StringUtils.isNotEmpty(entry.getTimeSlotFrom())){
+										orderProductDTO.setScheduleDeliveryTime(entry.getTimeSlotFrom().concat(" to ").concat(entry.getTimeSlotTo()));
+								}
+							}
+							//R2.3 Changes End 
+							
 							ProductModel productModel = null;
 							if (null != entry.getProduct() && null != entry.getProduct().getCode())
 							{
@@ -818,6 +871,11 @@ public class OrdersController extends BaseCommerceController
 								if (StringUtils.isNotEmpty(fulfillmentType))
 								{
 									orderProductDTO.setFulfillment(fulfillmentType);
+								}
+								for ( AbstractOrderEntryModel orderEntry : orderModel.getEntries()) {
+									if(entry.getSelectedUssid().equalsIgnoreCase(entry.getSelectedUssid())){
+										orderProductDTO.setFulfillment(orderEntry.getFulfillmentMode());
+									}
 								}
 							}
 
@@ -940,8 +998,187 @@ public class OrdersController extends BaseCommerceController
 		}
 	}
 
+	/*
+	 * @description Setting DeliveryAddress
+	 * 
+	 * @param orderDetail
+	 * 
+	 * @param type (1-Billing, 2-Shipping)
+	 * 
+	 * @return BillingAddressWsDTO
+	 */
+	protected BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
+	{
+		final BillingAddressWsDTO billingAddress = new BillingAddressWsDTO();
+		final String countrycode = "91";
+		if (null != orderDetail.getDeliveryAddress() && null != orderDetail.getDeliveryAddress().getId()
+				&& StringUtils.isNotEmpty(orderDetail.getDeliveryAddress().getId()) && type == 2)
+		{
+			billingAddress.setDefaultAddress(Boolean.valueOf(orderDetail.getDeliveryAddress().isDefaultAddress()));
+			billingAddress.setAddressType(orderDetail.getDeliveryAddress().getAddressType());
+			billingAddress.setFirstName(orderDetail.getDeliveryAddress().getFirstName());
+			billingAddress.setLastName(orderDetail.getDeliveryAddress().getLastName());
+			if (null != orderDetail.getDeliveryAddress().getCountry())
+			{
+				billingAddress.setCountry(orderDetail.getDeliveryAddress().getCountry().getName());
+			}
+			billingAddress.setTown(orderDetail.getDeliveryAddress().getTown());
+			billingAddress.setPostalcode(orderDetail.getDeliveryAddress().getPostalCode());
+			billingAddress.setState(orderDetail.getDeliveryAddress().getState());
+			billingAddress.setAddressLine1(orderDetail.getDeliveryAddress().getLine1());
+			billingAddress.setAddressLine2(orderDetail.getDeliveryAddress().getLine2());
+			billingAddress.setAddressLine3(orderDetail.getDeliveryAddress().getLine3());
+			billingAddress.setLandmark(orderDetail.getDeliveryAddress().getLandmark());
+			billingAddress.setPhone(countrycode + orderDetail.getDeliveryAddress().getPhone());
 
+			billingAddress.setShippingFlag(Boolean.valueOf(orderDetail.getDeliveryAddress().isShippingAddress()));
+			billingAddress.setId(orderDetail.getDeliveryAddress().getId());
+		}
 
+		if (null != orderDetail.getMplPaymentInfo() && null != orderDetail.getMplPaymentInfo().getBillingAddress() && type == 1)
+		{
+			final AddressData billAddress = orderDetail.getMplPaymentInfo().getBillingAddress();
+			billingAddress.setFirstName(billAddress.getFirstName());
+			billingAddress.setLastName(billAddress.getLastName());
+			if (null != billAddress.getCountry())
+			{
+				billingAddress.setCountry(billAddress.getCountry().getName());
+			}
+			billingAddress.setTown(billAddress.getTown());
+			billingAddress.setPostalcode(billAddress.getPostalCode());
+			billingAddress.setState(billAddress.getState());
+			billingAddress.setAddressLine1(billAddress.getLine1());
+			billingAddress.setAddressLine2(billAddress.getLine2());
+			billingAddress.setAddressLine3(billAddress.getLine3());
+			billingAddress.setLandmark(billAddress.getLandmark());
+			billingAddress.setPhone(countrycode + billAddress.getPhone());
+			billingAddress.setShippingFlag(Boolean.valueOf(billAddress.isShippingAddress()));
+			billingAddress.setId(billAddress.getId());
+		}
+
+		return billingAddress;
+
+	}
+
+	/* Checking payment type and then setting payment info */
+	protected void setPaymentInfo(final OrderData orderDetail, final OrderConfirmationWsDTO orderWsDTO)
+	{
+		MplPaymentInfoData paymentInfo = null;
+
+		if (null != orderDetail.getMplPaymentInfo())
+		{
+			paymentInfo = orderDetail.getMplPaymentInfo();
+
+			if (null != paymentInfo.getPaymentOption())
+			{
+				orderWsDTO.setPaymentMethod(paymentInfo.getPaymentOption());
+			}
+			if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.CREDIT))
+			{
+				if (StringUtils.isNotEmpty(paymentInfo.getCardAccountHolderName()))
+				{
+					orderWsDTO.setCardholdername(paymentInfo.getCardAccountHolderName());
+				}
+
+				if (StringUtils.isNotEmpty(paymentInfo.getCardIssueNumber()))
+				{
+					orderWsDTO.setPaymentCardDigit(paymentInfo.getCardIssueNumber());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardCardType()))
+				{
+					orderWsDTO.setPaymentCard(paymentInfo.getCardCardType());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardExpirationMonth().toString())
+						&& StringUtils.isNotEmpty(paymentInfo.getCardExpirationYear().toString()))
+				{
+					orderWsDTO.setPaymentCardExpire(paymentInfo.getCardExpirationMonth() + "/" + paymentInfo.getCardExpirationYear());
+				}
+			}
+
+			else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI))
+			{
+				if (StringUtils.isNotEmpty(paymentInfo.getCardAccountHolderName()))
+				{
+					orderWsDTO.setCardholdername(paymentInfo.getCardAccountHolderName());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardIssueNumber()))
+				{
+					orderWsDTO.setPaymentCardDigit(paymentInfo.getCardIssueNumber());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardCardType()))
+				{
+					orderWsDTO.setPaymentCard(paymentInfo.getCardCardType());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardExpirationMonth().toString())
+						&& StringUtils.isNotEmpty(paymentInfo.getCardExpirationYear().toString()))
+				{
+					orderWsDTO.setPaymentCardExpire(paymentInfo.getCardExpirationMonth() + "/" + paymentInfo.getCardExpirationYear());
+				}
+			}
+			else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.NETBANKING))
+			{
+				if (StringUtils.isNotEmpty(paymentInfo.getCardAccountHolderName()))
+				{
+					orderWsDTO.setCardholdername(paymentInfo.getCardAccountHolderName());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getBank()))
+				{
+					orderWsDTO.setPaymentCardDigit(paymentInfo.getBank());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardCardType()))
+				{
+					orderWsDTO.setPaymentCard(paymentInfo.getCardCardType());
+				}
+
+				orderWsDTO.setPaymentCardExpire(MarketplacecommerceservicesConstants.NA);
+			}
+			else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.DEBIT))
+			{
+				if (StringUtils.isNotEmpty(paymentInfo.getCardAccountHolderName()))
+				{
+					orderWsDTO.setCardholdername(paymentInfo.getCardAccountHolderName());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardIssueNumber()))
+				{
+					orderWsDTO.setPaymentCardDigit(paymentInfo.getCardIssueNumber());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardCardType()))
+				{
+					orderWsDTO.setPaymentCard(paymentInfo.getCardCardType());
+				}
+				if (StringUtils.isNotEmpty(paymentInfo.getCardExpirationMonth().toString())
+						&& StringUtils.isNotEmpty(paymentInfo.getCardExpirationYear().toString()))
+				{
+					orderWsDTO.setPaymentCardExpire(paymentInfo.getCardExpirationMonth() + "/" + paymentInfo.getCardExpirationYear());
+				}
+			}
+			else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
+			{
+				if (StringUtils.isNotEmpty(paymentInfo.getCardAccountHolderName()))
+				{
+					orderWsDTO.setCardholdername(paymentInfo.getCardAccountHolderName());
+				}
+
+			}
+			else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.WALLET))
+			{
+				if (StringUtils.isNotEmpty(paymentInfo.getCardAccountHolderName()))
+				{
+					orderWsDTO.setCardholdername(paymentInfo.getCardAccountHolderName());
+				}
+				orderWsDTO.setPaymentCardDigit(MarketplacecommerceservicesConstants.NA);
+				orderWsDTO.setPaymentCardExpire(MarketplacecommerceservicesConstants.NA);
+			}
+		}
+		else
+		{
+
+			orderWsDTO.setPaymentCard(MarketplacecommerceservicesConstants.NA);
+			orderWsDTO.setPaymentCardDigit(MarketplacecommerceservicesConstants.NA);
+			orderWsDTO.setPaymentCardExpire(MarketplacecommerceservicesConstants.NA);
+			orderWsDTO.setCardholdername(MarketplacecommerceservicesConstants.NA);
+		}
+	}
 
 	/**
 	 * @description method is called to fetch the details of a particular orders for the user
@@ -952,12 +1189,12 @@ public class OrdersController extends BaseCommerceController
 	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	@RequestMapping(value = "/users/{userId}/getSelectedOrder/{orderCode}", method = RequestMethod.GET)
 	@ResponseBody
-	public OrderTrackingWsDTO getOrdertracking(@PathVariable final String orderCode, @PathVariable final String userId)
+	public OrderTrackingWsDTO getOrdertracking(final HttpServletRequest request, @PathVariable final String orderCode, @PathVariable final String userId)
 	{
 		OrderTrackingWsDTO orderTrackingWsDTO = new OrderTrackingWsDTO();
 		try
 		{
-			orderTrackingWsDTO = getOrderDetailsFacade.getOrderDetailsWithTracking(orderCode);
+			orderTrackingWsDTO = getOrderDetailsFacade.getOrderDetailsWithTracking(request,orderCode);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -996,8 +1233,163 @@ public class OrdersController extends BaseCommerceController
 
 	}
 
+	/**
+	 * @param statusResponse
+	 * @param consignment
+	 * @param awbEnabled
+	 * @param reverseawbEnabled
+	 * @return statusMessages
+	 */
+	public List<StatusResponseDTO> setStatusResponse(final List<AWBResponseData> statusResponse,
+			final ConsignmentModel consignment, final boolean awbEnabled, final boolean reverseawbEnabled)
+	{
+		final List<StatusResponseDTO> statusMessages = new ArrayList<StatusResponseDTO>();
+		List<StatusResponseMessageDTO> statusMessageList = null;
+		AWBResponseData responseData = null;
+		for (final AWBResponseData resp : statusResponse)
+		{
+			final StatusResponseDTO statusMessage = new StatusResponseDTO();
+			statusMessageList = new ArrayList<StatusResponseMessageDTO>();
+			statusMessage.setCurrentFlag(true);
+			statusMessage.setResponseCode(resp.getResponseCode());
+			statusMessage.setShipmentStatus(resp.getShipmentStatus());
+			if (resp.getStatusRecords().size() > 0)
+			{
+				for (final StatusRecordData statusResp : resp.getStatusRecords())
+				{
+					final StatusResponseMessageDTO statusRespMessage = new StatusResponseMessageDTO();
+					statusRespMessage.setDate(statusResp.getDate());
+					statusRespMessage.setTime(statusResp.getTime());
+					statusRespMessage.setLocation(statusResp.getLocation());
+					statusRespMessage.setStatusDescription(statusResp.getStatusDescription());
+					statusMessageList.add(statusRespMessage);
+				}
+			}
+			if (null != consignment && null != consignment.getTrackingID() && null != consignment.getCarrier() && awbEnabled)
+			{
+				responseData = mplOrderService.prepAwbStatus(consignment.getTrackingID(), consignment.getCarrier());
+				for (final StatusRecordData statusResp : responseData.getStatusRecords())
+				{
+					final StatusResponseMessageDTO statusRespMessage = new StatusResponseMessageDTO();
+					statusRespMessage.setDate(statusResp.getDate());
+					statusRespMessage.setTime(statusResp.getTime());
+					statusRespMessage.setLocation(statusResp.getLocation());
+					statusRespMessage.setStatusDescription(statusResp.getStatusDescription());
+					statusMessageList.add(statusRespMessage);
+				}
+			}
+			if (null != consignment && null != consignment.getReturnAWBNum() && null != consignment.getReturnCarrier()
+					&& reverseawbEnabled)
+			{
+				responseData = mplOrderService.prepAwbStatus(consignment.getReturnAWBNum(), consignment.getReturnCarrier());
+				for (final StatusRecordData statusResp : responseData.getStatusRecords())
+				{
+					final StatusResponseMessageDTO statusRespMessage = new StatusResponseMessageDTO();
+					statusRespMessage.setDate(statusResp.getDate());
+					statusRespMessage.setTime(statusResp.getTime());
+					statusRespMessage.setLocation(statusResp.getLocation());
+					statusRespMessage.setStatusDescription(statusResp.getStatusDescription());
+					statusMessageList.add(statusRespMessage);
+				}
+			}
+			statusMessage.setStatusMessageList(statusMessageList);
+			statusMessages.add(statusMessage);
 
+		}
+		return statusMessages;
+	}
 
+	/**
+	 * @Description set Mobile end tracking message
+	 * @param returnMap
+	 * @param consignment
+	 * @return responseList
+	 */
+	public Map<String, StatusResponseListDTO> setStatusDisplayMessage(final Map<String, List<AWBResponseData>> returnMap,
+			final ConsignmentModel consignment)
+
+	{
+		StatusResponseListDTO responseList = new StatusResponseListDTO();
+		final Map<String, StatusResponseListDTO> displayMsg = new HashMap<>();
+		List<StatusResponseDTO> statusMessages = null;
+		List<AWBResponseData> statusResponse = null;
+		try
+		{
+			//final boolean flag = false;
+			if (returnMap.get(MarketplaceFacadesConstants.APPROVED) != null)
+			{
+				responseList = new StatusResponseListDTO();
+				statusMessages = new ArrayList<StatusResponseDTO>();
+				statusResponse = returnMap.get(MarketplaceFacadesConstants.APPROVED);
+				statusMessages = setStatusResponse(statusResponse, consignment, false, false);
+				responseList.setStatusList(statusMessages);
+				if (statusMessages.size() > 0)
+				{
+					displayMsg.put(MarketplaceFacadesConstants.APPROVED, responseList);
+				}
+			}
+			if (returnMap.get(MarketplaceFacadesConstants.PROCESSING) != null)
+			{
+				responseList = new StatusResponseListDTO();
+				statusMessages = new ArrayList<StatusResponseDTO>();
+				statusResponse = returnMap.get(MarketplaceFacadesConstants.PROCESSING);
+				statusMessages = setStatusResponse(statusResponse, consignment, false, false);
+				responseList.setStatusList(statusMessages);
+				if (statusMessages.size() > 0)
+				{
+					displayMsg.put(MarketplaceFacadesConstants.PROCESSING, responseList);
+				}
+			}
+			if (returnMap.get(MarketplaceFacadesConstants.SHIPPING) != null)
+			{
+				responseList = new StatusResponseListDTO();
+				statusMessages = new ArrayList<StatusResponseDTO>();
+				statusResponse = returnMap.get(MarketplaceFacadesConstants.SHIPPING);
+				statusMessages = setStatusResponse(statusResponse, consignment, true, false);
+				responseList.setStatusList(statusMessages);
+				if (statusMessages.size() > 0)
+				{
+					displayMsg.put(MarketplaceFacadesConstants.SHIPPING, responseList);
+				}
+			}
+			if (returnMap.get(MarketplaceFacadesConstants.CANCEL) != null)
+			{
+				responseList = new StatusResponseListDTO();
+				statusMessages = new ArrayList<StatusResponseDTO>();
+				statusResponse = returnMap.get(MarketplaceFacadesConstants.CANCEL);
+				statusMessages = setStatusResponse(statusResponse, consignment, false, false);
+				responseList.setStatusList(statusMessages);
+				if (statusMessages.size() > 0)
+				{
+					displayMsg.put(MarketplaceFacadesConstants.CANCEL, responseList);
+				}
+			}
+			if (returnMap.get(MarketplaceFacadesConstants.RETURN) != null)
+			{
+				responseList = new StatusResponseListDTO();
+				statusMessages = new ArrayList<StatusResponseDTO>();
+				statusResponse = returnMap.get(MarketplaceFacadesConstants.RETURN);
+				statusMessages = setStatusResponse(statusResponse, consignment, false, true);
+				responseList.setStatusList(statusMessages);
+				if (statusMessages.size() > 0)
+				{
+					displayMsg.put(MarketplaceFacadesConstants.RETURN, responseList);
+				}
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.debug("----------AWB Serivce Error-----------------");
+			return displayMsg;
+		}
+		catch (final Exception e)
+		{
+			LOG.debug("----------Conversion Error-----------------");
+			return displayMsg;
+		}
+
+		return displayMsg;
+	}
 
 	/**
 	 * @description method is called to fetch the history details of all orders for the user
@@ -1242,4 +1634,451 @@ public class OrdersController extends BaseCommerceController
 
 
 	}
+	
+	//R2.3 FLO1 Added new Controller Method Change Delivery Request
+	@Secured(
+	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	@RequestMapping(value = "/users/{userId}/changeDeliveryAddress/{orderCode}", method = RequestMethod.POST,consumes =
+		{ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	@ResponseBody
+	public MplDeliveryAddressResponseWsDTO changeDeliveryAddress(@PathVariable final String orderCode,
+			@RequestBody AddressData newAddressData) throws WebserviceValidationException
+	{
+		MplDeliveryAddressResponseWsDTO mplDeliveryAddressResponseWsDTO = new MplDeliveryAddressResponseWsDTO();
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("MplDeliveryAddress change request: OrderCode=" + sanitize(orderCode));
+		}
+		try
+		{
+			OrderData orderData = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+			
+			//address
+			boolean isAddressChanged = mplDeliveryAddressComparator.compareAddress(orderData.getDeliveryAddress(), newAddressData);
+			boolean isContactDetails = mplDeliveryAddressComparator.compareContactDetails(orderData.getDeliveryAddress(),
+					newAddressData);
+			if (isAddressChanged || isContactDetails)
+			{
+				//checking pincode changed  
+				if (StringUtils.isNotEmpty(newAddressData.getPostalCode())
+						&& !newAddressData.getPostalCode().equalsIgnoreCase(orderData.getDeliveryAddress().getPostalCode()))
+				{
+					ScheduledDeliveryData scheduledDeliveryData = mplDeliveryAddressFacade.getScheduledDeliveryData(orderCode,
+							newAddressData);
+					if (scheduledDeliveryData != null)
+					{
+						mplDeliveryAddressResponseWsDTO.setIsScheduled(true);
+						mplDeliveryAddressResponseWsDTO.setIsPincodeServiceable(scheduledDeliveryData.getIsPincodeServiceable()
+								.booleanValue());
+						if (scheduledDeliveryData.getIsPincodeServiceable().booleanValue())
+						{
+							List<MplSDInfoWsDTO> mplSDInfoWsDTO = mplDeliveryAddressFacade.getSDDatesMobile(scheduledDeliveryData
+									.getEntries());
+							mplDeliveryAddressResponseWsDTO.setEstimateDeliveryDateInfo(mplSDInfoWsDTO);
+						}
+					}
+					else
+					{
+						boolean isServiceable = mplDeliveryAddressFacade.pincodeServiceableCheck(newAddressData, orderCode);
+						mplDeliveryAddressResponseWsDTO.setIsPincodeServiceable(isServiceable);
+						mplDeliveryAddressResponseWsDTO.setIsScheduled(false);
+					}
+				}
+				else
+				{
+					mplDeliveryAddressFacade.newOTPRequest(orderCode,true,newAddressData.getPhone());
+					mplDeliveryAddressResponseWsDTO.setIsScheduled(false);
+					mplDeliveryAddressResponseWsDTO.setIsPincodeServiceable(true);
+				}
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				mplDeliveryAddressResponseWsDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				mplDeliveryAddressResponseWsDTO.setErrorCode(e.getErrorCode());
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				mplDeliveryAddressResponseWsDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				mplDeliveryAddressResponseWsDTO.setErrorCode(e.getErrorCode());
+			}
+		}
+		catch (final Exception e)
+		{
+			if (null != e.getMessage())
+			{
+				mplDeliveryAddressResponseWsDTO.setError(e.getMessage());
+			}
+		}
+		return mplDeliveryAddressResponseWsDTO;
+	}
+
+
+	
+	//R2.3 FL01 :Changed Delivery Address Saved Request
+	@Secured(
+	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	@RequestMapping(value = "/users/{userId}/validateOTP/{orderCode}", method = RequestMethod.POST,consumes =
+		{ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	@ResponseBody
+	public WebSerResponseWsDTO submitChangeDeliveryAddress(@PathVariable final String orderCode,@RequestBody final MplDeliveryAddressRequestWsDTO newAddressData) throws WebserviceValidationException
+	{
+		
+		WebSerResponseWsDTO webSerResponseWsDTO = new WebSerResponseWsDTO();
+		try
+		{
+			String validateOTPMesg = null;
+
+			if (newAddressData != null && StringUtils.isNotEmpty(newAddressData.getOtpNumber()) && StringUtils.isNotEmpty(orderCode))
+			{
+				final OrderModel orderModel = orderModelService.getParentOrder(orderCode);
+				CustomerModel customerModel = (CustomerModel) orderModel.getUser();
+
+				LOG.debug("OTP Validation Request through Mobile App");
+				OTPResponseData otpResponse = mplDeliveryAddressFacade.validateOTP(customerModel.getUid(),
+						newAddressData.getOtpNumber());
+				if (otpResponse.getOTPValid().booleanValue())
+				{
+					AddressData newAddress = newAddressData.getChangedAddress();
+					List<TransactionSDDto> transactionSDDtoList = null;
+					RescheduleDataList reScheduleMobileData=null;
+					if(CollectionUtils.isNotEmpty(newAddressData.getRescheduleData())){
+						 reScheduleMobileData = new RescheduleDataList();
+						reScheduleMobileData.setRescheduleDataList(newAddressData.getRescheduleData());
+					}
+					RescheduleDataList reScheduleDataList=null;
+					if (CollectionUtils.isNotEmpty(newAddressData.getRescheduleData()))
+					{
+						 reScheduleDataList = new RescheduleDataList();
+						reScheduleDataList.setRescheduleDataList(newAddressData.getRescheduleData());
+						transactionSDDtoList = mplDeliveryAddressFacade.reScheduleddeliveryDate(orderModel, reScheduleDataList);
+					}
+
+					validateOTPMesg = mplDeliveryAddressFacade.submitChangeDeliveryAddress(customerModel.getUid(), orderCode,
+							newAddress, true, transactionSDDtoList,reScheduleDataList);
+				
+				}
+				else
+				{
+					validateOTPMesg = otpResponse.getInvalidErrorMessage();
+				}
+
+				webSerResponseWsDTO.setStatus(validateOTPMesg);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				webSerResponseWsDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				webSerResponseWsDTO.setErrorCode(e.getErrorCode());
+			}
+			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				webSerResponseWsDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				webSerResponseWsDTO.setErrorCode(e.getErrorCode());
+			}
+			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+		}
+		catch (final Exception e)
+		{
+			if (null != e.getMessage())
+			{
+				webSerResponseWsDTO.setError(e.getMessage());
+			}
+			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+		}
+		return webSerResponseWsDTO;
+	}
+	
+	
+   //R2.3 FLO1 New OTP Request
+	@Secured(
+	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	@RequestMapping(value = "/users/{userId}/newOTPRequest/{orderCode}/{mobileNumber}", method = RequestMethod.POST)
+	@ResponseBody
+	public WebSerResponseWsDTO newOTPRequest(@PathVariable final String orderCode,@PathVariable final String mobileNumber) throws WebserviceValidationException
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Change delivery address new OTP requst : OrderCode=" + sanitize(orderCode));
+		}
+		WebSerResponseWsDTO webSerResponseWsDTO = new WebSerResponseWsDTO();
+		try
+		{
+			if (StringUtils.isNotEmpty(orderCode))
+			{
+				mplDeliveryAddressFacade.newOTPRequest(orderCode,true,mobileNumber);
+			   webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+
+			}
+			else
+			{
+			   webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9521);
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				webSerResponseWsDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				webSerResponseWsDTO.setErrorCode(e.getErrorCode());
+			}
+			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+		}
+		catch (final Exception e)
+		{
+			if (null != e.getMessage())
+			{
+				webSerResponseWsDTO.setError(e.getMessage());
+			}
+			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+		}
+		return webSerResponseWsDTO;
+	}
+	
+//R2.3 Changes Developed 27-02-2017 start
+	@Secured(
+	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	@RequestMapping(value = "/users/{userId}/submitSelfCourierRetrunInfo", method = RequestMethod.POST)
+	@ResponseBody
+	public WebSerResponseWsDTO uploadSelfCourierReturnInfo(@RequestParam("file")
+   final MultipartFile multipartFile,@RequestParam("amount")
+   final String amount, @RequestParam("orderId")
+   final String orderId, @RequestParam("lpname")
+   final String lpname, @RequestParam("transactionId")
+   final String transactionId,@RequestParam("awbNumber")
+   final String awbNumber)
+			throws WebserviceValidationException
+	{
+		WebSerResponseWsDTO webSerResponseWsDTO = new WebSerResponseWsDTO();
+		if (multipartFile == null || StringUtils.isEmpty(amount) || StringUtils.isEmpty(orderId)
+				|| StringUtils.isEmpty(lpname) || StringUtils.isEmpty(transactionId) || StringUtils.isEmpty(awbNumber))
+		{
+			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE);
+			return webSerResponseWsDTO;
+		}
+		try
+		{
+		
+		      LOG.debug("***************:"+multipartFile.getOriginalFilename()); 
+		      String fileUploadLocation=null;
+		      String shipmentCharge=null;
+		      //TISRLUAT-50
+				Double configShippingCharge = 0.0d;
+		      if(null!=configurationService){
+		      	fileUploadLocation=configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.FILE_UPLOAD_PATH);
+		      	shipmentCharge=configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.SHIPMENT_CHARGE_AMOUNT);
+		      	if(null !=shipmentCharge && !shipmentCharge.isEmpty()){
+		      		configShippingCharge=Double.parseDouble(shipmentCharge);
+		      	}
+		      	
+		      	 if(null!=fileUploadLocation && !fileUploadLocation.isEmpty()){
+		      		 try{  
+		      	        byte barr[]=multipartFile.getBytes();  
+		      	        BufferedOutputStream bout=new BufferedOutputStream(  
+		      	                 new FileOutputStream(fileUploadLocation+File.separator+multipartFile.getOriginalFilename()));  
+		      	        bout.write(barr);  
+		      	        bout.flush();  
+		      	        bout.close();  
+		      	        LOG.debug("FileUploadLocation   :"+fileUploadLocation);   
+		      	        }catch(Exception e){
+		      	      	  LOG.error("Exception is:"+e);   
+		      	        }  
+		      	 }
+			   }
+		      
+			OrderModel orderModel = orderModelService.getParentOrder(orderId);
+			RTSAndRSSReturnInfoRequestData returnInfoRequestData = new RTSAndRSSReturnInfoRequestData();
+			returnInfoRequestData.setAWBNum(awbNumber);
+			returnInfoRequestData.setLPNameOther(lpname);
+
+			if (null != orderModel.getParentReference() && null != orderModel.getParentReference().getCode())
+			{
+				returnInfoRequestData.setOrderId(orderModel.getParentReference().getCode());
+			}
+			returnInfoRequestData.setOrderId(orderId);
+			returnInfoRequestData.setTransactionId(transactionId);
+			if (amount != null && !amount.isEmpty())
+			{
+				Double enterdShppingCharge = Double.parseDouble(amount);
+				if (enterdShppingCharge.doubleValue() < configShippingCharge.doubleValue())
+				{
+					returnInfoRequestData.setShipmentCharge(amount);
+				}
+				else
+				{
+					returnInfoRequestData.setShipmentCharge(String.valueOf(configShippingCharge));
+				}
+			}
+			returnInfoRequestData.setShipmentProofURL(fileUploadLocation);
+			returnInfoRequestData.setReturnType(MarketplacecommerceservicesConstants.RSS);
+
+
+			cancelReturnFacade.retrunInfoCallToOMS(returnInfoRequestData);
+
+
+			CustomerModel customerModel = (CustomerModel) orderModel.getUser();
+
+			CODSelfShipData codSelfShipData = null;
+			try
+			{
+
+				if (null != customerModel)
+				{
+					codSelfShipData = cancelReturnFacade.getCustomerBankDetailsByCustomerId(customerModel.getUid());
+				}
+			}
+			catch (EtailNonBusinessExceptions e)
+			{
+				LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :" + customerModel.getUid()
+						+ " Actual Stack trace " + e);
+			}
+			try
+			{
+				final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderId);
+
+				CODSelfShipData finalCODSelfShipData = new CODSelfShipData();
+				if (null != codSelfShipData)
+				{
+					finalCODSelfShipData.setTitle(codSelfShipData.getTitle());
+					finalCODSelfShipData.setName(codSelfShipData.getName());
+					finalCODSelfShipData.setBankKey(codSelfShipData.getBankKey());
+					finalCODSelfShipData.setBankName(codSelfShipData.getBankName());
+					finalCODSelfShipData.setBankAccount(codSelfShipData.getBankAccount());
+				}
+				else
+				{
+					finalCODSelfShipData.setTitle(MarketplacecommerceservicesConstants.NA);
+					finalCODSelfShipData.setName(MarketplacecommerceservicesConstants.NA);
+					finalCODSelfShipData.setBankAccount(MarketplacecommerceservicesConstants.ZERO);
+					finalCODSelfShipData.setBankName(MarketplacecommerceservicesConstants.NA);
+					finalCODSelfShipData.setBankKey(MarketplacecommerceservicesConstants.NA);
+				}
+
+				if (subOrderDetails.getMplPaymentInfo().getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
+				{
+					finalCODSelfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_POSTPAID);
+				}
+				else
+				{
+					finalCODSelfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_PREPAID);
+				}
+
+				SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+				finalCODSelfShipData.setAmount(returnInfoRequestData.getShipmentCharge());
+				finalCODSelfShipData.setOrderRefNo(orderId);
+				finalCODSelfShipData
+						.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails.getCreated())));
+				finalCODSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails
+						.getCreated())));
+				finalCODSelfShipData.setTransactionID(transactionId);
+				finalCODSelfShipData.setTransactionType(MarketplacecommerceservicesConstants.INTERFACE_TYPE);
+				if (orderModel.getChildOrders().size() > 0)
+				{
+					for (OrderModel chileOrders : orderModel.getChildOrders())
+					{
+						for (AbstractOrderEntryModel entry : chileOrders.getEntries())
+						{
+							if (entry.getTransactionID().equalsIgnoreCase(transactionId))
+							{
+								finalCODSelfShipData.setOrderNo(chileOrders.getCode());
+							}
+						}
+					}
+
+				}
+				if (null != orderModel.getParentReference() && null != orderModel.getParentReference().getCode())
+				{
+					finalCODSelfShipData.setOrderRefNo(orderModel.getParentReference().getCode());
+				}
+				finalCODSelfShipData.setPaymentMode(codSelfShipData.getPaymentMode());
+				finalCODSelfShipData.setCustomerNumber(codSelfShipData.getCustomerNumber());
+				CODSelfShipResponseData responseData = cancelReturnFacade.codPaymentInfoToFICO(finalCODSelfShipData);
+
+				if (responseData.getSuccess() == null
+						|| !responseData.getSuccess().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+				{
+					//saving bank details failed payment details in commerce 
+					cancelReturnFacade.saveCODReturnsBankDetails(finalCODSelfShipData);
+					LOG.debug("Failed to post COD return paymnet details to FICO Order No:" +orderId);
+				}
+				webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			}
+			catch (final EtailBusinessExceptions e)
+			{
+				ExceptionUtil.etailBusinessExceptionHandler(e, null);
+				if (null != e.getErrorMessage())
+				{
+					webSerResponseWsDTO.setError(e.getErrorMessage());
+				}
+				if (null != e.getErrorCode())
+				{
+					webSerResponseWsDTO.setErrorCode(e.getErrorCode());
+				}
+				webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+			}
+			catch (final Exception e)
+			{
+				if (null != e.getMessage())
+				{
+					webSerResponseWsDTO.setError(e.getMessage());
+				}
+				webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+			}
+		}
+		catch (final Exception e)
+		{
+			if (null != e.getMessage())
+			{
+				webSerResponseWsDTO.setError(e.getMessage());
+			}
+			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		// isRefundalbe disable 
+		LOG.info("REtrun page controller TransactionId::::::::    " + transactionId);
+		cancelReturnFacade.saveRTSAndRSSFInfoflag(transactionId);
+		
+		return webSerResponseWsDTO;
+	}
+	//R2.3 Changes Developed 27-02-2017 END
 }

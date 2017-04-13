@@ -160,6 +160,9 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public final static String PROMOAVAILABLE = "promoAvailable".intern();
 	public final static String BANKAVAILABLE = "bankAvailable".intern();
 
+	//R2.3 FL04
+
+	public static final String LANDMARKS = "/landmarks";
 
 	// Model Attribute
 
@@ -325,4 +328,10 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public final static String MRUPEE_NARRATION_VALUE = "payment.mRupee.narration".intern();
 	public static final String RETURNTOPAYMENTPAGE = "/checkout/multi/payment-method/pay";
 	public static final String REFNUMBER = "refNumber".intern();
+    public static final String DELIVERY_SLOTCOST_FOR_ED = "deliverySlotCostForEd";
+	
+	public static final String UPDATE_DELIVERY_SLOTCOST_FOR_ED = "updateDeliverySlotCostForEd";
+	public static final String MPLDELIVERYSLOTSURL = "/deliverySlotsUrl";
+	
+	public static final String DELIVERY_SLOTS_TO_SESSION = "deliverySlotstoSession";
 }

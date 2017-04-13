@@ -1572,6 +1572,9 @@ $("#otpMobileNUMField").focus(function(){
 	var password = $(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").val();
 	var ebsDownCheck=$("#ebsDownCheck").val();
 	var isDomestic=$(".card_token").parent().parent().parent().find('.card').find('.radio').find('.card_is_domestic').val();
+	  //TISRLEE-3196 Start
+	  $("#cvvError").css("display", "none");
+	  //TISRLEE-3196 END
 	if (password.length < 3 && 	$(".card_brand").val()!="MAESTRO"){
 		$(".card_cvvErrorSavedCard").css("display","block");		
 		return false;
@@ -1834,6 +1837,7 @@ $("#otpMobileNUMField").focus(function(){
 	 $("#country").val("India"); 
 	 }
 	 $("#myCounter").html((120));
+
 	 }, 
 	 error : function(resp) { 
 
@@ -2421,6 +2425,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	var zipcode = document.getElementsByName("postcode")[0].value;
 	var txtMobile = document.getElementsByName("MobileNo")[0].value;
 	var result=firstName.value;
+	$(".otherLandMarkError").hide();
 	 
 	if(result == undefined || result == "" )
 	{	
@@ -2439,7 +2444,20 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	{
 		$("#firstnameError").hide();
 	}
-			
+	
+	result=$("#otherLandmark").val();
+	if(result != null && ! result == ''){
+	   if(result.trim() == ''){
+  	        $(".otherLandMarkError").show();
+	  		$(".otherLandMarkError").text("Other LandMark cannot be allow  space");
+	  	    validate = false;
+  	     }else if(/[^a-zA-Z0-9]/.test(result)){
+  		      $(".otherLandMarkError").show();
+		  	  $(".otherLandMarkError").text("Other LandMark cannot be allow special characters");
+		  	 validate = false;
+  	  }
+    }
+
 	 result=lastName.value;
 	if(result == undefined || result == "")
 	{	
@@ -4525,3 +4543,4 @@ function isSessionActive(){
 function redirectToCheckoutLogin(){
 	window.location=ACC.config.encodedContextPath + "/checkout/multi/checkoutlogin/login";
 }
+

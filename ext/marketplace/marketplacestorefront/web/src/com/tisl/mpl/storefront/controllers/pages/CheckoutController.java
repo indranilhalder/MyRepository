@@ -457,10 +457,12 @@ public class CheckoutController extends AbstractCheckoutController
 	 * storeCmsPageInModel(model, getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE)); setUpMetaDataForContentPage(model,
 	 * getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE));
 	 *
+
 	 * model.addAttribute(WebConstants.MODEL_KEY_ADDITIONAL_BREADCRUMB,
 	 * resourceBreadcrumbBuilder.getBreadcrumbs(MessageConstants.BREADCRUMB_NOT_FOUND));
 	 * GlobalMessages.addErrorMessage(model, messageKey);
 	 *
+
 	 * storeContentPageTitleInModel(model, MessageConstants.NON_BUSINESS_ERROR); }
 	 */
 
@@ -545,6 +547,23 @@ public class CheckoutController extends AbstractCheckoutController
 						}
 					}
 				}
+				//bug TISRLUAT-954 Start
+			/*	Map<String ,String> selectedDateMap=getSessionService().getAttribute(MarketplacecheckoutaddonConstants.DELIVERY_SLOTS_TO_SESSION);
+				for(OrderData data:orderDetails.getSellerOrderList()){
+				      for( DeliveryOrderEntryGroupData orderEntry:data.getDeliveryOrderGroups()){
+				      	 for(OrderEntryData orderEntryData:orderEntry.getEntries()){
+				      		 if(null!=selectedDateMap){
+				      			 for (Entry<String, String> entryForDate :selectedDateMap.entrySet()) {
+				      				 if(entryForDate.getKey().equalsIgnoreCase(orderEntryData.getSelectedUssid())){
+				      					 orderEntryData.setEddDateBetWeen(entryForDate.getValue());
+				      				 }
+				      			 }
+				      		 }
+				      	 }	
+				      }
+				}
+				*/
+				//bug TISRLUAT-954 End 
 				//saving IP of the Customer
 				try
 				{

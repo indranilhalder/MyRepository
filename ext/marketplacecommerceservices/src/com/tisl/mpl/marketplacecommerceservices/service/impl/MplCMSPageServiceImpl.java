@@ -252,3 +252,4 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 	}
 
 }
+

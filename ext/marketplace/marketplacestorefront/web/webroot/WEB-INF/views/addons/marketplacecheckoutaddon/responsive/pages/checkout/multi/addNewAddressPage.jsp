@@ -193,7 +193,7 @@
 							$("#cityError").hide();
 						}
 
-						result=stateValue.options[stateValue.selectedIndex].value;
+						result=stateValue.value;
 						if(result == undefined || result == "")
 						{	
 							$("#stateError").show();

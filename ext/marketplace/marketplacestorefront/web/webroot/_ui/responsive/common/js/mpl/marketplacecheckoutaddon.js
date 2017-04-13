@@ -2109,6 +2109,7 @@ $("#otpMobileNUMField").focus(function(){
   
 
  $("#make_saved_cc_payment,#make_saved_cc_payment_up").click(function(){
+	 $("#cvvError").css("display", "none");
 	var password = $(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").val();
 	var ebsDownCheck=$("#ebsDownCheck").val();
 	var isDomestic=$(".card_token").parent().parent().parent().find('.card').find('.radio').find('.card_is_domestic').val();
@@ -5070,6 +5071,8 @@ $(".edit_address").click(function(){
  		success : function(response) {
  		//	$(this).parents().find(".edit").next(".editnewAddresPage#"+address_id).html(response);
  			$('.editnewAddresPage, .formaddress').slideUp();
+ 			// TISRLEE-1676
+ 			$('.editnewAddresPage, .formaddress').empty();
  			$(".add-address").slideDown();
  			$("#"+address_id_new[1]).html(response);
  		//	$(this).parents().find(".edit").next(".editnewAddresPage").show();
@@ -5078,6 +5081,13 @@ $(".edit_address").click(function(){
  			
  			$("#"+address_id_new[1] + " .checkout-shipping.formaddress").prepend("<div class='heading-form'><h3>Edit This Address</h3><input type='button' value='cancel' class='cancelBtnEdit' id='cancel-"+address_id_new[1]+"'></div>");
  			$("#"+address_id_new[1]).slideDown();
+ 			//TISRLEE-2328 Author Tribhuvan
+ 			 loadPincodeData("edit").done(function() {
+     			console.log("addressform line 394");
+     		 var value = $(".address_landmarkOtherDiv").attr("data-value");
+     		 console.log("addressform line 396 "+value);
+     		 otherLandMarkTri(value,"defult");
+     		});
  		},
  		error : function(resp) {
  		}

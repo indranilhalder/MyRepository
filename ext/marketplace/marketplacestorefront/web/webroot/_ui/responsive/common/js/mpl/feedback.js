@@ -1996,6 +1996,14 @@ $(".product-tile .image .item.quickview").each(function(){
 			}
 		}
 		});
+		
+		/*TPR-250*/
+		$(".tabs-block .tabs.pdp.productTabs > li").each(function(){
+			if($(this).find("li").length == 0)
+			$(this).html("We have not updated the description for this Brand yet. We will get this sorted in a while");
+			});
+		/*TPR-250*/
+		
 });
 
         var screenXs="480px";
@@ -2822,6 +2830,9 @@ if ($(".address-accordion").length) {
 }
 $(".formaddress").hide();
 $("#address-form").click(function() {
+	/*added by sneha R2.3*/
+	$(".editnewAddresPage").empty();
+	/*end of sneha R2.3*/
     $(".add-address").hide();
     $(".formaddress").slideToggle();
 

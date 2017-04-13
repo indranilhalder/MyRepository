@@ -177,6 +177,10 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 				deliveryAddr.append(deliveryAddress.getAddressLine3());
 			}
 			//TISUATSE-81 ends
+			if (!StringUtils.isEmpty(deliveryAddress.getLandmark()))
+			{
+				deliveryAddr.append(COMMA).append(deliveryAddress.getLandmark());
+			}
 
 			//TISUATSE-70 starts
 
