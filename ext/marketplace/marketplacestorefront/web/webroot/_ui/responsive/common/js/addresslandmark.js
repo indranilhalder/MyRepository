@@ -38,6 +38,7 @@ $(document).ready(function(){
 	    $("#deliveryAddressForm #landmark").prop("disabled",false).empty();
 	    $("#deliveryAddressForm #otherLandmark").prop('value','');
 	    $(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").hide();
+	    $(".address_landmarkOtherDiv").attr('data-value','');
 	    $("#deliveryAddressForm #state").prop('value','Select');
 	    $(".dupDisplay").hide();
 	    $(".mainDrop").show();
