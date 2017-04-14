@@ -609,7 +609,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				orderModel.setDeliveryAddresses(deliveryAddreses);
 				getModelService().save(orderModel);
 			}
-			final List<OrderModel> orderList = getSubOrders(orderModel);
+		//	final List<OrderModel> orderList = getSubOrders(orderModel);
 
 			if (MarketplacecommerceservicesConstants.MRUPEE.equalsIgnoreCase(orderModel.getModeOfOrderPayment()))
 			{

@@ -332,6 +332,13 @@ public class MarketPlaceDefaultCancellationController extends
 											.getCurrDelCharge()
 											: NumberUtils.DOUBLE_ZERO;
 									ConsignmentStatus newStatus = null;
+									// Added in R2.3 START  
+									double	scheduleDeliveryCost=orderEntry
+													.getScheduledDeliveryCharge() != null ? orderEntry
+															.getScheduledDeliveryCharge()
+															: NumberUtils.DOUBLE_ZERO;
+											// Added in R2.3 END 
+									
 									// If CosignmentEnteries are present then update
 									// OMS with the state.
 									if (orderEntry != null
@@ -365,10 +372,16 @@ public class MarketPlaceDefaultCancellationController extends
 									orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
 									orderEntry.setCurrDelCharge(0D);
 									
+									orderEntry.setRefundedScheduleDeliveryChargeAmt(scheduleDeliveryCost);
+									orderEntry.setScheduledDeliveryCharge(0D);
 									getModelService().save(orderEntry);
+//									mplJusPayRefundService.makeRefundOMSCall(
+//											orderEntry, paymentTransactionModel,
+//											totalprice + deliveryCost, newStatus);
+									//R2.3 Techout changes
 									mplJusPayRefundService.makeRefundOMSCall(
 											orderEntry, paymentTransactionModel,
-											totalprice + deliveryCost, newStatus);
+											totalprice + deliveryCost+scheduleDeliveryCost, newStatus,null);
 								}
 							}
 						} else {

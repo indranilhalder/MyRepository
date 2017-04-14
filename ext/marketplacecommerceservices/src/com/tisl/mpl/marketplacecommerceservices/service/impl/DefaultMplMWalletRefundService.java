@@ -121,8 +121,8 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 				//pick up base url from local properties
 				//final MRupeeRefundService mRupeeRefundService = new MRupeeRefundService();
 				//mRupeeRefundService.setBaseUrl("https://14.140.248.13/Mwallet/startpaymentgatewayS2S.do");
-				mRupeeRefundService.setBaseUrl(
-						configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.MRUPEERETURNURL));
+				mRupeeRefundService.setBaseUrl(configurationService.getConfiguration().getString(
+						MarketplacecommerceservicesConstants.MRUPEERETURNURL));
 				final MRupeeRefundRequest refundRequest = new MRupeeRefundRequest();
 				double adjustedRefundAmt = 0.0;
 				if (order.getType().equalsIgnoreCase("PARENT"))
@@ -137,11 +137,11 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 				}
 				refundRequest.setPurchaseRefNo(mplPaymentAuditModel.getAuditId());
 				refundRequest.setRefNo(uniqueRequestId);
-				refundRequest.setmCode(getConfigurationService().getConfiguration()
-						.getString(MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE));
+				refundRequest.setmCode(getConfigurationService().getConfiguration().getString(
+						MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE));
 
-				refundRequest.setNarration(getConfigurationService().getConfiguration()
-						.getString(MarketplacecommerceservicesConstants.MRUPEE_NARRATION_VALUE));
+				refundRequest.setNarration(getConfigurationService().getConfiguration().getString(
+						MarketplacecommerceservicesConstants.MRUPEE_NARRATION_VALUE));
 
 				refundRequest.setTxnType("R");
 
@@ -175,9 +175,9 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 						default:
 							createAuditEntryForRefund(MplPaymentAuditStatusEnum.REFUND_UNSUCCESSFUL, mplPaymentAuditModel);
 					}
-					paymentTransactionModel = mplMrueeRefundService.createPaymentTransactionModel(order,
-							refundResponse.getStatus().toUpperCase(), Double.valueOf(adjustedRefundAmt), paymentTransactionType,
-							refundResponse.getStatus(), uniqueRequestId);
+					paymentTransactionModel = mplMrueeRefundService.createPaymentTransactionModel(order, refundResponse.getStatus()
+							.toUpperCase(), Double.valueOf(adjustedRefundAmt), paymentTransactionType, refundResponse.getStatus(),
+							uniqueRequestId);
 				}
 				//				else
 				//				{
@@ -269,7 +269,7 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 			{
 				if ("success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())
 						|| "ACCEPTED".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())
-								&& validPaymentType.contains(paymentTransactionEntry.getType()))
+						&& validPaymentType.contains(paymentTransactionEntry.getType()))
 				{
 					return paymentTransactionEntry.getPaymentMode();
 				}
@@ -283,13 +283,13 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 
 	/*
 	 * @Desc used in web and cscockpit for in case no response received from mRupee while cancellation refund
-	 *
+	 * 
 	 * @param orderRequestRecord
-	 *
+	 * 
 	 * @param paymentTransactionType
-	 *
+	 * 
 	 * @param uniqueRequestId
-	 *
+	 * 
 	 * @return void
 	 */
 	@Override
@@ -313,8 +313,11 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
 				modelService.save(orderEntry);
 
+				//				mplMrueeRefundService.makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount),
+				//						ConsignmentStatus.REFUND_IN_PROGRESS);
+
 				mplMrueeRefundService.makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount),
-						ConsignmentStatus.REFUND_IN_PROGRESS);
+						ConsignmentStatus.REFUND_IN_PROGRESS, null);
 
 			}
 		}
@@ -328,13 +331,13 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 
 	/*
 	 * @Desc used in web and cscockpit for handling network exception while cancellation
-	 *
+	 * 
 	 * @param orderRequestRecord
-	 *
+	 * 
 	 * @param paymentTransactionType
-	 *
+	 * 
 	 * @param uniqueRequestId
-	 *
+	 * 
 	 * @return void
 	 */
 	@Override
@@ -357,8 +360,11 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
 				modelService.save(orderEntry);
 
+				//				mplMrueeRefundService.makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount),
+				//						ConsignmentStatus.REFUND_INITIATED);
+
 				mplMrueeRefundService.makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount),
-						ConsignmentStatus.REFUND_INITIATED);
+						ConsignmentStatus.REFUND_INITIATED, null);
 
 			}
 		}

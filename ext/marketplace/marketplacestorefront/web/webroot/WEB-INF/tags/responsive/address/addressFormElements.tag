@@ -253,10 +253,7 @@ display: none;}
 			</div>
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
-		<formElement:formTextArea idKey="address.line1"   labelKey="Address Line 1*" path="line1" areaCSS="textarea" mandatory="true" maxLength="40" />
-
-
-
+		<formElement:formTextArea idKey="address.line1"   labelKey="address.line1" path="line1" areaCSS="textarea" mandatory="true" />
 
 			 <div class="help-block has-error" id="address1Error" style="display: none;">
 			</div>

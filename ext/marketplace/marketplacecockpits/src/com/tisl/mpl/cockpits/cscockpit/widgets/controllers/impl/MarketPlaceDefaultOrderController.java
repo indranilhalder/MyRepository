@@ -320,10 +320,15 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 								newStatus = ConsignmentStatus.REFUND_INITIATED;
 							}
 							// getModelService().save(consignmentModel);
+//							mplJusPayRefundService.makeRefundOMSCall(orderEntry,
+//									paymentTransactionModel,
+//									orderEntry.getNetAmountAfterAllDisc(),
+//									newStatus);
+							//R2.3
 							mplJusPayRefundService.makeRefundOMSCall(orderEntry,
 									paymentTransactionModel,
 									orderEntry.getNetAmountAfterAllDisc(),
-									newStatus);
+									newStatus,null);
 							if(newStatus.equals(ConsignmentStatus.RETURN_COMPLETED)){
 								//orderEntry.setJuspayRequestId(uniqueRequestId);
 								getModelService().save(orderEntry);
@@ -333,7 +338,9 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 				} else {
 					LOG.error("Manual Refund Failed");
 					for (OrderEntryModel orderEntry : orderEntryModel) {
-						mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_IN_PROGRESS);
+						//mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_IN_PROGRESS);
+					//R2.3
+						mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_IN_PROGRESS,null);
 					}				
 					paymentTransactionModel = mplJusPayRefundService
 							.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(), "FAILURE", totalRefundAmount,
@@ -343,7 +350,9 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 			} catch (Exception e) {
 				LOG.error(e.getMessage(), e);
 				for (OrderEntryModel orderEntry : orderEntryModel) {
-					mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_INITIATED);
+					//mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_INITIATED);
+				//R2.3
+					mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_INITIATED,null);
 				}
 				paymentTransactionModel = mplJusPayRefundService
 						.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(), "FAILURE", totalRefundAmount,
@@ -642,9 +651,13 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 					
 					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
 							.entrySet()) {
-						mplJusPayRefundService.makeRefundOMSCall(refundEntry
-								.getKey(), paymentTransactionModel, refundEntry
-								.getKey().getRefundedDeliveryChargeAmt(), null);
+//						mplJusPayRefundService.makeRefundOMSCall(refundEntry
+//								.getKey(), paymentTransactionModel, refundEntry
+//								.getKey().getRefundedDeliveryChargeAmt(), null);
+						//R2.3
+//						mplJusPayRefundService.makeRefundOMSCall(refundEntry
+//								.getKey(), paymentTransactionModel, refundEntry
+//								.getKey().getRefundedDeliveryChargeAmt(), newStatus,isEDToHD?MarketplacecommerceservicesConstants.REFUND_CATEGORY_E:null);	
 					}
 				} else {
 				LOG.error("Refund Delivery Charges Failed");
