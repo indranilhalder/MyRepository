@@ -66392,3 +66392,39 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
     background: none;
     padding-top: 0px;
     }
+ /* changes for payment page click and collect start */
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .order-details.block.delivery-info .method{
+	border: solid 1px #dddddd;
+    font-size: 12px;
+    padding: 8px 23px;
+    letter-spacing: normal;
+    margin-top: 16px;
+    line-height: normal;
+}
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .order-details.block.delivery-info .method h3{
+	    color: #666;
+    letter-spacing: 0.6px;
+    margin-bottom: 8px;
+}
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .order-details.block.delivery-info .method h3 + p.delivery-method-description{
+    text-transform: none;
+    letter-spacing: 0.4px;
+    line-height: 18px;
+    padding-left: 21px;
+    position: relative;
+}
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .order-details.block.delivery-info .method h3 + p.delivery-method-description:before{
+	background: url(../images/sprite.svg) no-repeat scroll -255px -174px;
+    content: "";
+    display: inline-block;
+    height: 15px;
+    position: absolute;
+    top: 0;
+    width: 15px;
+    left: -1px;
+}
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .order-details.block.delivery-info .cncOrderInfo + li{
+	list-style: none;
+    clear: both;
+}
+/* changes for payment page click and collect end */
