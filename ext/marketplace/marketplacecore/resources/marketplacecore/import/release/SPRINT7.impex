@@ -902,3 +902,42 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;c
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;WomenV1;Women's Category Landing Page;ApparelCategoryLandingPageTemplateV1;WomenV1;MSH10
 ###################################### Updated-CLP.txt ends ##############################################
+
+###################################### sitemap impex starts ##############################################
+
+####SiteMap CronJob
+$storePrefix=mpl
+$siteUid=$storePrefix
+$siteMapUrlLimitPerFile=10000
+$baseUrl=https://www.tatacliq.com/
+ 
+
+INSERT_UPDATE SiteMapMediaCronJob;code[unique=true];job(code);sessionLanguage(isocode);updatetype(code);contentsite(uid);siteMapUrlLimitPerFile
+;customSiteMapMediaJob;customSiteMapMediaJob;en;ALL;$siteUid;$siteMapUrlLimitPerFile
+
+INSERT_UPDATE SiteMapPage;code(code)[unique=true];frequency(code);priority;active
+;Homepage;daily;1;true
+;Product;daily;0.7;true
+;Category;daily;0.8;true
+;CategoryLanding;daily;0.8;true
+;Store;weekly;0.5;true
+;Content;weekly;0.5;true
+;Custom;weekly;0.5;true
+
+
+INSERT_UPDATE Trigger;cronJob(code)[unique=true];active;activationTime[dateformat=yyyy-mm-dd HH:mm:ss];year;month;day;hour;minute;second;relative;weekInterval;daysOfWeek(code)
+;customSiteMapMediaJob;true;;-1;-1;-1;24;0;0;false;1;SUNDAY
+
+
+INSERT_UPDATE RendererTemplate;code[unique=true];templatescript[lang=en];
+;mpl-siteMapTemplate;"<?xml version=""1.0"" encoding=""UTF-8""?>
+<urlset xmlns=""http://www.sitemaps.org/schemas/sitemap/0.9"" xmlns:image=""http://www.google.com/schemas/sitemap-image/1.1"">
+	#foreach( $siteMapUrl in $ctx.siteMapData )
+		<url>
+			<loc>$baseUrl${siteMapUrl.loc}</loc>
+
+		</url>
+	#end
+</urlset>"
+
+###################################### sitemap impex ends ##############################################

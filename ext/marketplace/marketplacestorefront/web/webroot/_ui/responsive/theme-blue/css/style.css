@@ -15946,6 +15946,15 @@ body .account .right-account .reviews .review-list div.reactions{
     body .account .right-account .reviews .review-list .wrapper>li .review .stats .account-only a:first-child {
         text-align: left
     }
+    /* TISSQAUAT-446 */
+    body .account .right-account ul.saved-cards>li a{
+    	line-height:1.5;
+    	margin-right: 12px;
+    }
+    body .account .right-account ul.saved-cards>li .actions{
+    	bottom: 2px;
+    }
+    /* TISSQAUAT-446 */
 }
 body .account .right-account .reviews .navigation {
     position: relative
@@ -48219,7 +48228,7 @@ padding:0 40px;	}
     right: 0;
 	top: -100px;
     margin: auto;
-    /* max-width: 300px; */		/* TISSQAEE-336 */
+    /* max-width: 300px; */		/* TISSQAUAT-690 */
     text-align: center;
     opacity: 0;
 	font-size: 14px;
@@ -48229,7 +48238,7 @@ padding:0 40px;	}
     box-shadow: 0 1px 6px 0 rgba(0,0,0,.1);
   	border: 1px solid rgba(0,0,0,.1);
   	transition: opacity 0.25s, top 0.45s;
-  	width: 300px;		/* TISSQAEE-336 */
+  	width:300px;	/* TISSQAUAT-690 */	
 }
 
 

@@ -114,7 +114,7 @@
 		<extension name="marketplaceBinDb" />
 		<extension name="marketplaceclientservices" />
 		<extension name="marketplacecaptchaaddon" />
-		<!-- extension name="marketplaceatssync" /-->
+		<!--extension name="marketplaceatssync" --/>
 
 
 		<extension name="ondemandcommon" />
