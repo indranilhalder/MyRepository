@@ -15466,11 +15466,21 @@ body .account .right-account ul.saved-cards>li a.delete  {
 	margin-right: 10px;
 	font-weight:bold;
 }
-body .account .right-account ul.saved-cards>li a.delete-add,
-body .account .right-account ul.saved-cards>li a.edit {
+/* body .account .right-account ul.saved-cards>li a.edit, */	/* commented for INC144313779 */
+body .account .right-account ul.saved-cards>li a.delete-add {
     display: block;
     line-height: 1.5
 }
+/* start change for INC144313779 */
+body .account .right-account ul.saved-cards>li .actions a:first-child {
+	display: inline-block;
+   	margin-bottom: 4px;
+}
+body .account .right-account ul.saved-cards>li a.edit {
+    display: block;
+    margin-left: 4px;
+}
+/* end change for INC144313779 */
 body .account .right-account ul.saved-cards>li .actions {
     position: absolute;
     bottom: 10px;

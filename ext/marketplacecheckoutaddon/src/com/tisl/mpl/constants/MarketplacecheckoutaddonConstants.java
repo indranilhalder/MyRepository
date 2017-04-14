@@ -334,4 +334,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String MPLDELIVERYSLOTSURL = "/deliverySlotsUrl";
 	
 	public static final String DELIVERY_SLOTS_TO_SESSION = "deliverySlotstoSession";
+
+	//INC144315475
+	public static final String CARTTOORDERCONVERT = "cartToOrderConvert";
 }

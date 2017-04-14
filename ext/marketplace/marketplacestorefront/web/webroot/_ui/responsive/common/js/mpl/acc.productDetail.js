@@ -1769,7 +1769,11 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 
 	if(null!= savingsOnProduct && savingsOnProduct != 0){
 		$("#savingsOnProductId").show();
-	} 
+	}
+	else
+	{
+		$("#savingsOnProductId").hide();
+	}
 	
 	//TPR-275 starts
 	if (mrp.value == "") {			

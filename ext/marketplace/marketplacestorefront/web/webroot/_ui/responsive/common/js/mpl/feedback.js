@@ -3523,3 +3523,30 @@ $("#sameAsShippingEmi").click(function(){
 		$(this).prev('h2').show();
 	}
 	});
+
+
+/*TISSQAEE-335*/
+$(window).on("load resize",function(){
+	topLeftLocator();
+});
+$(document).ajaxComplete(function(){
+	topLeftLocator();
+});
+window.onload = function (){
+	$(".store-finder-legends").css("display","block");
+}
+
+function topLeftLocator(){
+var topLegend = $(".store-finder-search").outerHeight() + parseInt($(".store-finder-search").css("margin-bottom")) + $(".gmnoprint.gm-bundled-control .gmnoprint").height() + parseInt($(".gmnoprint.gm-bundled-control").css("margin-top"))  + 10;
+$(".store-finder-legends").css("top",topLegend);
+var leftLegend = $(".store-finder-map.js-store-finder-map").outerWidth() + parseInt($(".store-finder-map.js-store-finder-map").parent(".js-store-finder").css("margin-left")) - $(".store-finder-legends").width() - parseInt($(".gmnoprint.gm-bundled-control").css("margin-right")) - 15;
+$(".store-finder-legends").css("left",leftLegend);
+/*$(".store-finder-legends").css("display","block");*/
+if($(window).width() < 751){
+	$(".store-finder-legends").css("top","");
+	$(".store-finder-legends").parents(".body-Content").css("padding-bottom","");
+}
+if($(window).width() < 313)
+	$(".store-finder-legends").css("left","");
+}
+/*TISSQAEE-335*/
