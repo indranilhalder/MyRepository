@@ -77,7 +77,13 @@ public class MplDeliveryAddressHistoryWidgetRenderer
 			DefaultListboxWidget<AddressHistoryListWidgetModel, OrderManagementActionsWidgetController> widget,
 			HtmlBasedComponent rootContainer) {
 		TypedObject order = getOrder();
-		OrderModel orderModel = (OrderModel) order.getObject();
+		OrderModel subOrderModel = (OrderModel) order.getObject();
+		OrderModel orderModel = null;
+		if(null != subOrderModel.getParentReference()) {
+			orderModel=subOrderModel.getParentReference();
+		}else {
+			orderModel = subOrderModel;
+		}
 			Listhead header = new Listhead();
 			header.setParent(listBox);
 			List<ColumnConfiguration> columns = getColumnConfigurations();
