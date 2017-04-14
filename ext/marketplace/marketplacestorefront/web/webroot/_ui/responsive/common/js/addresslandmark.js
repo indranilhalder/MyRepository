@@ -509,6 +509,7 @@ $(document).ready(function() {
 		$("#pincode").val($("."+className+" .postalCode").text());
 	
 		loadPincodeData("edit").done(function() {
+			$("#new-address-option-1").val($("."+className+" .addressType").text());
 			$("#firstName").val($("."+className+" .firstName").text());
 			$("#lastName").val($("."+className+" .lastName").text());
 			$("#addressLine1").val($("."+className+" .addressLine1").text());

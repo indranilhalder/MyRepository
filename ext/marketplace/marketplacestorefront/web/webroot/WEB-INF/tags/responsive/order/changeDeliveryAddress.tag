@@ -183,8 +183,9 @@
 
 					<form:input type="hidden" path="addressId"
 						value="${orderDetails.deliveryAddress.id}" id="id" />
+						
 					<form:input type="hidden" path="addressType" name="addressType"
-						id="new-address-option-1" value="Home" />
+						id="new-address-option-1" value="${orderDetails.deliveryAddress.addressType}" />
 					<div class="col-md-5 addressListPop">
 
 						<!-- varStatus="i" -->
@@ -209,8 +210,8 @@
                                                </c:otherwise>
                                             </c:choose>
 										     Address ${addressCount} <c:if test="${orderDeliveryAddressList.defaultAddress}">&nbsp;&nbsp;-Default Address</c:if></b> <br /> 
-										
-										
+									
+										<span class="addressType addressFont">${orderDeliveryAddressList.addressType}</span>
 										<span class="firstName addressFont">${orderDeliveryAddressList.firstName}</span>
 										<span class="lastName addressFont">${orderDeliveryAddressList.lastName}</span><br>
 										<c:if test="${not empty orderDeliveryAddressList.line1}">
