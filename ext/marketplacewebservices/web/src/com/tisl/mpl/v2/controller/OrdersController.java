@@ -1956,13 +1956,15 @@ public class OrdersController extends BaseCommerceController
 			returnInfoRequestData.setShipmentProofURL(fileUploadLocation);
 			returnInfoRequestData.setReturnType(MarketplacecommerceservicesConstants.RSS);
  
+			//TISPRDT-984. Adding Try catch to handle Exception. 
 			try
 			{
 				cancelReturnFacade.retrunInfoCallToOMS(returnInfoRequestData);
 			}
 			catch (EtailNonBusinessExceptions e)
 			{
-				LOG.error("Exception occured for   retrunInfoCallToOMS ");
+				LOG.error("Exception occurred for retrunInfoCallToOMS. OrderID: + " + orderId + "; Error = " + e);
+				throw e;
 			}
 
 			CustomerModel customerModel = (CustomerModel) orderModel.getUser();
@@ -2041,6 +2043,7 @@ public class OrdersController extends BaseCommerceController
 				}
 				finalCODSelfShipData.setPaymentMode(codSelfShipData.getPaymentMode());
 				finalCODSelfShipData.setCustomerNumber(codSelfShipData.getCustomerNumber());
+				//TISPRDT-984. Adding try catch.
 				try
 				{
 					CODSelfShipResponseData responseData = cancelReturnFacade.codPaymentInfoToFICO(finalCODSelfShipData);
@@ -2049,21 +2052,24 @@ public class OrdersController extends BaseCommerceController
 							|| !responseData.getSuccess().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 					{
 						//saving bank details failed payment details in commerce 
+						//TISPRDT-984. Adding try catch.
 						try
 						{
 							cancelReturnFacade.saveCODReturnsBankDetails(finalCODSelfShipData);
 						}
 						catch (Exception excpetio)
 						{
-							LOG.error("Exception occured for fecting  CUstomer Bank details for customer ID :" + customerModel.getUid()
-									+ " Actual Stack trace");
+							LOG.error("Exception occurred for while saving Customer Bank details for customer ID :" + customerModel.getUid()
+									+ "; Order ID = " + orderId + "; Error = " + excpetio );
+							throw excpetio;
 						}
 					}
 				}
 				catch (Exception exception)
 				{
-					LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :" + customerModel.getUid()
-							+ " Actual Stack trace");
+					LOG.error("Exception occurred for while sending COD Payment info to FICO. Customer ID :" + customerModel.getUid()
+							+ "; Order ID = " + orderId + ";Error = " + exception);
+					throw exception;
 				}
 
 				webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
