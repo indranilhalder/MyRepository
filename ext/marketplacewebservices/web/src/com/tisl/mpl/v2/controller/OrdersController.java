@@ -2057,19 +2057,17 @@ public class OrdersController extends BaseCommerceController
 						{
 							cancelReturnFacade.saveCODReturnsBankDetails(finalCODSelfShipData);
 						}
-						catch (Exception excpetio)
+						catch (Exception excpetion)
 						{
-							LOG.error("Exception occurred for while saving Customer Bank details for customer ID :" + customerModel.getUid()
-									+ "; Order ID = " + orderId + "; Error = " + excpetio );
-							throw excpetio;
+							LOG.warn("Warning   for while saving Customer Bank details for customer ID : it mo" + customerModel.getUid()
+									+ "; Order ID = " + orderId + "; Error = " + excpetion);
 						}
 					}
 				}
 				catch (Exception exception)
 				{
-					LOG.error("Exception occurred for while sending COD Payment info to FICO. Customer ID :" + customerModel.getUid()
+					LOG.warn("Warning while sending COD Payment info to FICO. Customer ID :" + customerModel.getUid()
 							+ "; Order ID = " + orderId + ";Error = " + exception);
-					throw exception;
 				}
 
 				webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
