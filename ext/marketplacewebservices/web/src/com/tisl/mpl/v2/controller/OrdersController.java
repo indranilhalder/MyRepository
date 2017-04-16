@@ -2055,7 +2055,7 @@ public class OrdersController extends BaseCommerceController
 						}
 						catch (Exception excpetio)
 						{
-							LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :" + customerModel.getUid()
+							LOG.error("Exception occured for fecting  CUstomer Bank details for customer ID :" + customerModel.getUid()
 									+ " Actual Stack trace");
 						}
 					}
