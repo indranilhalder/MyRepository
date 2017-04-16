@@ -1955,10 +1955,15 @@ public class OrdersController extends BaseCommerceController
 			}
 			returnInfoRequestData.setShipmentProofURL(fileUploadLocation);
 			returnInfoRequestData.setReturnType(MarketplacecommerceservicesConstants.RSS);
-
-
-			cancelReturnFacade.retrunInfoCallToOMS(returnInfoRequestData);
-
+ 
+			try
+			{
+				cancelReturnFacade.retrunInfoCallToOMS(returnInfoRequestData);
+			}
+			catch (EtailNonBusinessExceptions e)
+			{
+				LOG.error("Exception occured for   retrunInfoCallToOMS ");
+			}
 
 			CustomerModel customerModel = (CustomerModel) orderModel.getUser();
 
@@ -2036,15 +2041,31 @@ public class OrdersController extends BaseCommerceController
 				}
 				finalCODSelfShipData.setPaymentMode(codSelfShipData.getPaymentMode());
 				finalCODSelfShipData.setCustomerNumber(codSelfShipData.getCustomerNumber());
-				CODSelfShipResponseData responseData = cancelReturnFacade.codPaymentInfoToFICO(finalCODSelfShipData);
-
-				if (responseData.getSuccess() == null
-						|| !responseData.getSuccess().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+				try
 				{
-					//saving bank details failed payment details in commerce 
-					cancelReturnFacade.saveCODReturnsBankDetails(finalCODSelfShipData);
-					LOG.debug("Failed to post COD return paymnet details to FICO Order No:" +orderId);
+					CODSelfShipResponseData responseData = cancelReturnFacade.codPaymentInfoToFICO(finalCODSelfShipData);
+
+					if (responseData.getSuccess() == null
+							|| !responseData.getSuccess().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+					{
+						//saving bank details failed payment details in commerce 
+						try
+						{
+							cancelReturnFacade.saveCODReturnsBankDetails(finalCODSelfShipData);
+						}
+						catch (Exception excpetio)
+						{
+							LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :" + customerModel.getUid()
+									+ " Actual Stack trace");
+						}
+					}
 				}
+				catch (Exception exception)
+				{
+					LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :" + customerModel.getUid()
+							+ " Actual Stack trace");
+				}
+
 				webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 			   // isRefundalbe disable 
 				LOG.info("REtrun page controller TransactionId::::::::    " + transactionId);
