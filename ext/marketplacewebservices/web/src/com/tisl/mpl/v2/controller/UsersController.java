@@ -7279,8 +7279,9 @@ public class UsersController extends BaseCommerceController
 				final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
 				try
 				{
-					final CustomerData customerData = customerFacade.getCurrentCustomer();
+					
 					final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+					final CustomerData customerData = subOrderDetails.getCustomerData();
 					OrderEntryData subOrderEntry = new OrderEntryData();
 					final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
 
