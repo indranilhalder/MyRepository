@@ -755,7 +755,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 
 					final AbstractOrderEntryModel orderEntryModel = rtmModel.getRefundedOrderEntry();
 
-					orderEntryModel.setJuspayRequestId(uniqueRequestId);
+					orderEntryModel.setDelChargesJuspayRequestId(uniqueRequestId);
 					getModelService().save(orderEntryModel);
 
 					//TO update the status to OMS
@@ -831,7 +831,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 
 					final AbstractOrderEntryModel orderEntryModel = rtmModel.getRefundedOrderEntry();
 
-						orderEntryModel.setJuspayRequestId(uniqueRequestId);
+						orderEntryModel.setScheduleChargesJuspayRequestId(uniqueRequestId);
 						getModelService().save(orderEntryModel);
 
 					//TO update the status to OMS

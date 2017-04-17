@@ -1,4 +1,4 @@
-	
+
 	ACC.productDetail = {
 
 	_autoload : [ "initPageEvents", "bindVariantOptions" ],
@@ -1435,6 +1435,7 @@ function isOOS(){
 		/*Object.keys(availibility).length > 0)*/
 	{
 		if(Object.keys(availibility).length > 0){
+
 		$.each(availibility,function(k,v){
 			if(window.location.pathname.endsWith(k.toLowerCase()) && v == 0){
 				skuOOS = true;
@@ -1488,6 +1489,7 @@ $( document ).ready(function() {
 	//var dataString = 'productCode=' + productCode;
 
 	/*var data =*/ getBuyBoxDataAjax(productCode,variantCodesJson);//Moving buybox call on load in a method so that it can be reused.UF-60
+
 
 //}
 	$(".size-guide").click(function(){
@@ -1545,6 +1547,10 @@ function displayDeliveryDetails(sellerName) {
 				var fulFillment = data['fulfillment'];
 				var deliveryModes = data['deliveryModes'];
 				
+				 /*TISPRDT-878 start*/
+				var fulFillmentP1 = data['fulfillmentType1'];
+				/*TISPRDT-878 END*/
+
 				var leadTime=0;
 				if(null!=data['leadTimeForHomeDelivery']){
 					leadTime=data['leadTimeForHomeDelivery'];
@@ -1557,12 +1563,28 @@ function displayDeliveryDetails(sellerName) {
 				if (data['onlineExclusive']) {
 					$('.online-exclusive').show();
 				}
-				if (null != fulFillment && fulFillment.toLowerCase() == 'tship') {
+				/*if (null != fulFillment && fulFillment.toLowerCase() == 'tship') {
 					$('#fulFilledByTship').show();
 				} else {
 					$('#fulFilledBySship').show();
 					$('#fulFilledBySship').html(sellerName);
-				}
+				}*/
+				/*TISPRDT-878 Start*/
+				if (null != fulFillment && fulFillment.toLowerCase() == 'both') {
+					   if (null != fulFillmentP1 && fulFillmentP1.toLowerCase() == 'tship') {
+					   $('#fulFilledByTship').show();
+					  }else {
+					   $('#fulFilledBySship').show();
+					   $('#fulFilledBySship').html(sellerName);
+					  }
+					    } else if (null != fulFillment && fulFillment.toLowerCase() == 'tship') {
+					   $('#fulFilledByTship').show();
+					 }else {
+					   $('#fulFilledBySship').show();
+					   $('#fulFilledBySship').html(sellerName);
+					  }
+				/*TISPRDT-878 END*/
+
 				//INC144314017 start
 				if(!$('#pdpPincodeCheck').data('clicked')) {
 					var start_hd=parseInt($("#homeStartId").val())+leadTime;
@@ -1846,6 +1868,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				 
 				//update the message for Freebie product TPR-1754
 				 var freebieproductMsg =populateFreebieMsg(prodCode);			 
+				// var freebieproductMsg =populateFreebieMsg(ussId);			 
 				 if($.isEmptyObject(freebieproductMsg)){	
 					 
 					 $("#freebieProductMsgId").show();			 
@@ -3151,6 +3174,13 @@ function getProductContents() {
 						itemsDesktopSmall : [1400,4], 
 						itemsTablet: [650,2], 
 						itemsMobile : [480,2],*/
+
+
+
+
+
+
+
 					});
 				 }
 				//TPR-4701 | utag event for A+ products
@@ -3161,6 +3191,12 @@ function getProductContents() {
 					"event_type": "a_plus_product",
 					"a_plus_product_id":productId
 				});
+
+
+
+
+
+
 			}
 				 
 		},
@@ -3175,6 +3211,7 @@ function lazyLoadProductContents(){
 		if(!$('#productContentDivId').attr('loaded')) {
 		    //not in ajax.success due to multiple sroll events
 		    $('#productContentDivId').attr('loaded', true);
+
 		
 		    //ajax goes here
 		    //by theory, this code still may be called several times
@@ -3232,6 +3269,11 @@ if (width > winWidth){
         });	
 }
 
+
+
+
+
+
 });
 $(window).on("resize", function() {
 	var width=0;
@@ -3241,6 +3283,12 @@ $(window).on("resize", function() {
 			function() {
 				width = width + $(this).width();
 			});
+
+
+
+
+
+
 	}
 	else{
 	$(".SpecWrap .Padd .tabs-block .nav > li").each(
@@ -3272,6 +3320,14 @@ if (width > winWidth){
         });	
 }
 });
+
+
+
+
+
+
+
+
 
 
 
@@ -3560,9 +3616,11 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 								//showing/hiding buttons on page change
 								$('#pin').val("");
 								//$("#addToCartButton").show(); // commented for TPR-250 :was overriding
+
 								$('#addToCartButton-wrong').hide();
 								$('#buyNowButton').attr("disabled",false);
 								//$("#buyNowButton").show();  // commented for TPR-250 :was overriding
+
 								//Hiding fullfilled by as they will be populated during richAttribute population
 								$('#fulFilledByTship').hide();
 								$('#fulFilledBySship').hide();
@@ -3670,6 +3728,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 		data : {productCode:productCode,variantCode:variantCodesJson
 			,sellerId:msiteBuyBoxSeller //CKD:TPR-250	
 		},
+
 		cache : false,//added to resolve browser specific the OOS issue
 		dataType : "json",
 		success : function(data) {

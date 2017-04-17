@@ -77,7 +77,13 @@ public class MplDeliveryAddressHistoryWidgetRenderer
 			DefaultListboxWidget<AddressHistoryListWidgetModel, OrderManagementActionsWidgetController> widget,
 			HtmlBasedComponent rootContainer) {
 		TypedObject order = getOrder();
-		OrderModel orderModel = (OrderModel) order.getObject();
+		OrderModel subOrderModel = (OrderModel) order.getObject();
+		OrderModel orderModel = null;
+		if(null != subOrderModel.getParentReference()) {
+			orderModel=subOrderModel.getParentReference();
+		}else {
+			orderModel = subOrderModel;
+		}
 			Listhead header = new Listhead();
 			header.setParent(listBox);
 			List<ColumnConfiguration> columns = getColumnConfigurations();
@@ -111,9 +117,22 @@ public class MplDeliveryAddressHistoryWidgetRenderer
 						int totalRequests = mplDeliveryAddressInfoModel.getChangeDeliveryTotalRequests();
 						if(totalRequests != 0 && totalRequests != rejectsCount) {
 							TypedObject address = UISessionUtils.getCurrentSession().getTypeService().wrapItem(bollingAddress);
-							if(null !=address ) {
-								renderOrderHistory(widget, address, listBox, columns);
+							/*TISPRDT-889 START*/ 
+							AddressModel addressModel = (AddressModel) address.getObject();
+							if(null != orderModel.getDeliveryAddresses() ) {
+								size = orderModel.getDeliveryAddresses().size();
 							}
+							AddressModel deliveryAddress = null;
+							if(size>0) {
+								deliveryAddress=orderModel.getDeliveryAddresses().get(0);
+							}
+							if(null != addressModel && null !=  deliveryAddress && null != addressModel.getPk() && null != deliveryAddress.getPk()) {
+								if(!addressModel.getPk().equals(deliveryAddress.getPk())){
+									renderOrderHistory(widget, address, listBox, columns);
+								}
+							}
+							/*TISPRDT-889 END*/
+							
 						}
 					}
 				}catch(Exception e) {
