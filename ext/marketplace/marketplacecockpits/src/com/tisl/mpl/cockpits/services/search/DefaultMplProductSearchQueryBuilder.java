@@ -21,10 +21,6 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 	
 	query.append("FROM {Product AS p JOIN Catalogversion as cv ON {p.catalogversion}={cv.pk}} ");
 	query.append(" WHERE ");
-	/*if (searchProductText) {
-		query.append("({p.name} LIKE ?productNameText OR {p.code} = ?productCodeText)");
-		query.append(" "+"AND"+" ");
-	}*/
 	
 	query.append("{p.code} in");
 	query.append(" (");
@@ -50,7 +46,7 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 						query.append(" "+"AND"+" ");
 						query.append("({p.name} LIKE ?productNameText OR {p.code} = ?productCodeText)");
 					}
-					query.append("}}) ");
+				query.append("}}) ");
 		
 		query.append("}}");
 	
@@ -107,7 +103,11 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 						+ "where pk in ({{"
 							+ "select {si.productsource} "
 							+ "from {SellerInformation as si JOIN Catalogversion as cv ON {si.catalogversion}={cv.pk}} "
-							+ "where {cv.version} = 'Online' AND {SellerSKU} = ?SKUText AND {si.productsource} in ({{"
+							+ "where {cv.version} = 'Online' ");
+							if (searchProductText) {
+								query.append("AND {SellerSKU} = ?SKUText ");
+							}
+					query.append("AND {si.productsource} in ({{"
 								+ "select {target} "
 								+ "from {CategoryProductRelation} where {source} in ({{"
 									+ "select {c.pk} "
