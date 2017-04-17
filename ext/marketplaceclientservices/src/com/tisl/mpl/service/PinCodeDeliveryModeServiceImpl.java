@@ -250,7 +250,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 									{
 										//configure the seller handling time
 										final int sellerHandlingTimeForConfig = configSellerHandlingTime == null ? 0 : Integer.parseInt(configSellerHandlingTime);
-										if (reqData.get(i).getSellerHandlingTime().intValue() >= sellerHandlingTimeForConfig
+										if (reqData.get(i).getSellerHandlingTime().intValue() >= 0
 												&& reqData.get(i).getSellerHandlingTime().intValue() <= sellerHandlingTimeForConfig)
 										{
 											deliveryModes.add(ED);

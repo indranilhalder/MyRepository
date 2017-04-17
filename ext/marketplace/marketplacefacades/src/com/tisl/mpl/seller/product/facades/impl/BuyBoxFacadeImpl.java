@@ -713,7 +713,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 								final int sellerHandlingTimeForConfig = configSellerHandlingTime == null ? 0 : Integer.parseInt(configSellerHandlingTime);
 								
 								Integer sellerHandlingTime = rich.getSellerHandlingTime();
-								if(sellerHandlingTime.intValue()>=sellerHandlingTimeForConfig && sellerHandlingTime.intValue()<=sellerHandlingTimeForConfig){
+								if(sellerHandlingTime.intValue()>=0 && sellerHandlingTime.intValue()<=sellerHandlingTimeForConfig){
 									deliveryModes.append(ED).append(','); // SONAR Fixes
 								}
 							}
