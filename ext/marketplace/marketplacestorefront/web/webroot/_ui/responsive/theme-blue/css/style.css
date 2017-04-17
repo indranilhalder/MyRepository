@@ -66128,6 +66128,8 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
     border-radius: 0px;
     border: none !important;
     margin: 0px !important;
+    right: 0px !important;
+    top: 0px !important;
 }    
     
  /* changes for payment page click and collect start */
