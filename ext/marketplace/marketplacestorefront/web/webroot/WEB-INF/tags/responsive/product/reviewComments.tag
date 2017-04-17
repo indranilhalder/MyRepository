@@ -8,9 +8,9 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!-- TPR 4389 STARTS HERE -->
+<c:if test="${averageRating != null && averageRating > 0.0}">
 <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" style="display: none;">
-<meta itemprop="worstRating" content="0" />
-    <meta itemprop="bestRating" content="5" />
+
 	<span id="ratingvalue" itemprop="ratingValue">${averageRating}</span> based on <span id="reviewcount" itemprop="reviewCount">${commentCount}</span> reviews 
 </div>
 <div id="ReviewSecion" class="reviews">
