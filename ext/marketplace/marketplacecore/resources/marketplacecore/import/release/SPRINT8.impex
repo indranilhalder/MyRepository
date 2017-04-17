@@ -1,3 +1,4 @@
+INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
 #New Job To Process mRupee Order from Payment Successful to Order Refund
 ;mplmRupeeCronJob;mplThirdPartyWalletCronJob;false;en
 
