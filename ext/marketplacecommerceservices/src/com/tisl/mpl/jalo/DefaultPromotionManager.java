@@ -734,6 +734,12 @@ public class DefaultPromotionManager extends PromotionsManager
 		final Map parameters = new HashMap();
 		parameters.put(MarketplacecommerceservicesConstants.GUID, makeActionGUID());
 		parameters.put(MarketplacecommerceservicesConstants.AMOUNT, Double.valueOf(totalAdjustment));
+
+		if (isCachingAllowed(ctx).booleanValue())
+		{
+			return createCachedCustomPromotionOrderAdjustTotalAction(ctx, parameters);
+		}
+
 		return createCustomPromotionOrderAdjustTotalAction(ctx, parameters);
 	}
 
@@ -765,7 +771,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	/**
 	 * @Description: For Promotion apportioned Promotion Price
 	 * @param ctx
-	 * @param totalAdjustment
+	 * @param adjustment
 	 * @return CustomPromotionOrderEntryAdjustAction
 	 */
 
@@ -778,13 +784,19 @@ public class DefaultPromotionManager extends PromotionsManager
 		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_PRODUCT, entry.getProduct(ctx));
 		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_NUMBER, entry.getEntryNumber());
 		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_QUANTITY, Long.valueOf(quantity));
+
+		if (isCachingAllowed(ctx).booleanValue())
+		{
+			return createCachedCustomPromotionOrderEntryAdjustAction(ctx, parameters);
+		}
+
 		return createCustomPromotionOrderEntryAdjustAction(ctx, parameters);
 	}
 
 	/**
 	 * @Description: For Promotion apportioned Promotion Price
 	 * @param ctx
-	 * @param totalAdjustment
+	 * @param adjustment
 	 * @return CustomPromotionOrderEntryAdjustAction
 	 */
 
@@ -797,6 +809,12 @@ public class DefaultPromotionManager extends PromotionsManager
 		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_PRODUCT, entry.getProduct(ctx));
 		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_NUMBER, entry.getEntryNumber());
 		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_QUANTITY, entry.getQuantity(ctx));
+
+		if (isCachingAllowed(ctx).booleanValue())
+		{
+			return createCachedCustomPromotionOrderEntryAdjustAction(ctx, parameters);
+		}
+
 		return createCustomPromotionOrderEntryAdjustAction(ctx, parameters);
 	}
 
@@ -1526,7 +1544,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	/**
 	 * @Description: For Promotion apportioned Promotion Price BOGO
 	 * @param ctx
-	 * @param totalAdjustment
+	 * @param adjustment
 	 * @return CustomBOGOPromoOrderEntryAdjustAction
 	 */
 
@@ -1540,6 +1558,12 @@ public class DefaultPromotionManager extends PromotionsManager
 		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_NUMBER, entry.getEntryNumber());
 		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_QUANTITY, Long.valueOf(quantity));
 		//parameters.put(MarketplacecommerceservicesConstants.NONFREE_CONSUMED_ENTRIES, nonFreeConsumed);
+
+		if (isCachingAllowed(ctx).booleanValue())
+		{
+			return createCachedCustomBOGOPromoOrderEntryAdjustAction(ctx, parameters);
+		}
+
 		return createCustomBOGOPromoOrderEntryAdjustAction(ctx, parameters);
 	}
 
@@ -2209,7 +2233,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	/**
 	 * @Description: For Promotion apportioned Promotion Price
 	 * @param ctx
-	 * @param totalAdjustment
+	 * @param adjustment
 	 * @return CustomShippingChargesPromotionAdjustAction
 	 */
 
@@ -2222,13 +2246,19 @@ public class DefaultPromotionManager extends PromotionsManager
 		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_PRODUCT, entry.getProduct(ctx));
 		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_NUMBER, entry.getEntryNumber());
 		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_QUANTITY, Long.valueOf(quantity));
+
+		if (isCachingAllowed(ctx).booleanValue())
+		{
+			return createCachedCustomShippingChargesPromotionAdjustAction(ctx, parameters);
+		}
+
 		return createCustomShippingChargesPromotionAdjustAction(ctx, parameters);
 	}
 
 	/**
 	 * @Description: For Promotion apportioned Promotion Price
 	 * @param ctx
-	 * @param totalAdjustment
+	 * @param adjustment
 	 * @return CustomShippingChargesPromotionAdjustAction
 	 */
 
@@ -2241,6 +2271,13 @@ public class DefaultPromotionManager extends PromotionsManager
 		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_PRODUCT, entry.getProduct(ctx));
 		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_NUMBER, entry.getEntryNumber());
 		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_QUANTITY, entry.getQuantity(ctx));
+
+
+		if (isCachingAllowed(ctx).booleanValue())
+		{
+			return createCachedCustomShippingChargesPromotionAdjustAction(ctx, parameters);
+		}
+
 		return createCustomShippingChargesPromotionAdjustAction(ctx, parameters);
 	}
 
@@ -3430,6 +3467,12 @@ public class DefaultPromotionManager extends PromotionsManager
 		parameters.put(MarketplacecommerceservicesConstants.PRODUCT_SKUID, ussid);
 		parameters.put(MarketplacecommerceservicesConstants.PROMOTIONRESULT, result);
 		parameters.put(MarketplacecommerceservicesConstants.GIFT_QUANTITY, quantity);
+
+		if (isCachingAllowed(ctx).booleanValue())
+		{
+			return createCachedCustomPromotionOrderAddFreeGiftAction(ctx, parameters);
+		}
+
 		return createCustomPromotionOrderAddFreeGiftAction(ctx, parameters);
 	}
 
@@ -4089,6 +4132,12 @@ public class DefaultPromotionManager extends PromotionsManager
 		parameters.put(MarketplacecommerceservicesConstants.PROMOTIONRESULT, result);
 		parameters.put(MarketplacecommerceservicesConstants.GIFT_QUANTITY, quantity);
 		parameters.put(MarketplacecommerceservicesConstants.ISBUYAGETPROMO, Boolean.TRUE);
+
+		if (isCachingAllowed(ctx).booleanValue())
+		{
+			return createCachedCustomPromotionOrderAddFreeGiftAction(ctx, parameters);
+		}
+
 		return createCustomPromotionOrderAddFreeGiftAction(ctx, parameters);
 	}
 
@@ -5773,5 +5822,150 @@ public class DefaultPromotionManager extends PromotionsManager
 	public void setMplCategoryServiceImpl(final MplCategoryService mplCategoryServiceImpl)
 	{
 		this.mplCategoryServiceImpl = mplCategoryServiceImpl;
+	}
+
+
+	/**
+	 *
+	 * Caching action Class
+	 *
+	 * @param ctx
+	 * @param attributeValues
+	 * @return CachedCustomPromotionOrderEntryAdjustAction
+	 */
+	public CachedCustomPromotionOrderEntryAdjustAction createCachedCustomPromotionOrderEntryAdjustAction(final SessionContext ctx,
+			final Map attributeValues)
+	{
+		try
+		{
+			final ComposedType type = getTenant().getJaloConnection().getTypeManager()
+					.getComposedType("CachedCustomPromotionOrderEntryAdjustAction");
+			return ((CachedCustomPromotionOrderEntryAdjustAction) type.newInstance(ctx, attributeValues));
+		}
+		catch (final JaloGenericCreationException e)
+		{
+			final Throwable cause = e.getCause();
+			throw new JaloSystemException(cause, cause.getMessage(), e.getErrorCode());
+		}
+		catch (final JaloBusinessException e)
+		{
+			throw new JaloSystemException(e, "error creating CustomPromotionOrderEntryAdjustAction : " + e.getMessage(), 0);
+		}
+	}
+
+	/**
+	 * Caching action Class
+	 *
+	 * @param ctx
+	 * @param attributeValues
+	 * @return CachedCustomBOGOPromoOrderEntryAdjustAction
+	 */
+	public CachedCustomBOGOPromoOrderEntryAdjustAction createCachedCustomBOGOPromoOrderEntryAdjustAction(final SessionContext ctx,
+			final Map attributeValues)
+	{
+		try
+		{
+			final ComposedType type = getTenant().getJaloConnection().getTypeManager()
+					.getComposedType("CachedCustomBOGOPromoOrderEntryAdjustAction");
+			return ((CachedCustomBOGOPromoOrderEntryAdjustAction) type.newInstance(ctx, attributeValues));
+		}
+		catch (final JaloGenericCreationException e)
+		{
+			final Throwable cause = e.getCause();
+			throw new JaloSystemException(cause, cause.getMessage(), e.getErrorCode());
+		}
+		catch (final JaloBusinessException e)
+		{
+			throw new JaloSystemException(e, "error creating CachedCustomBOGOPromoOrderEntryAdjustAction : " + e.getMessage(), 0);
+		}
+	}
+
+	/**
+	 * Caching action Class
+	 *
+	 * @param ctx
+	 * @param attributeValues
+	 * @return CachedCustomPromotionOrderAddFreeGiftAction
+	 */
+	public CachedCustomPromotionOrderAddFreeGiftAction createCachedCustomPromotionOrderAddFreeGiftAction(final SessionContext ctx,
+			final Map attributeValues)
+	{
+		try
+		{
+			final ComposedType type = getTenant().getJaloConnection().getTypeManager()
+					.getComposedType("CachedCustomPromotionOrderAddFreeGiftAction");
+			return ((CachedCustomPromotionOrderAddFreeGiftAction) type.newInstance(ctx, attributeValues));
+		}
+		catch (final JaloGenericCreationException e)
+		{
+			final Throwable cause = e.getCause();
+			throw new JaloSystemException(cause, cause.getMessage(), e.getErrorCode());
+		}
+		catch (final JaloBusinessException e)
+		{
+			throw new JaloSystemException(e, "error creating CachedCustomPromotionOrderAddFreeGiftAction : " + e.getMessage(), 0);
+		}
+	}
+
+	/**
+	 * Caching action Class
+	 *
+	 * @param ctx
+	 * @param attributeValues
+	 * @return CachedCustomPromotionOrderAdjustTotalAction
+	 */
+	private CachedCustomPromotionOrderAdjustTotalAction createCachedCustomPromotionOrderAdjustTotalAction(
+			final SessionContext ctx, final Map attributeValues)
+	{
+		try
+		{
+			final ComposedType type = getTenant().getJaloConnection().getTypeManager()
+					.getComposedType("CachedCustomPromotionOrderAdjustTotalAction");
+			return ((CachedCustomPromotionOrderAdjustTotalAction) type.newInstance(ctx, attributeValues));
+		}
+		catch (final JaloGenericCreationException e)
+		{
+			final Throwable cause = e.getCause();
+			throw new JaloSystemException(cause, cause.getMessage(), e.getErrorCode());
+		}
+		catch (final JaloBusinessException e)
+		{
+			throw new JaloSystemException(e, "error creating CachedCustomPromotionOrderAdjustTotalAction : " + e.getMessage(), 0);
+		}
+	}
+
+	/**
+	 *
+	 * Caching action Class
+	 *
+	 * @param ctx
+	 * @param attributeValues
+	 * @return CachedCustomShippingChargesPromotionAdjustAction
+	 */
+	public CachedCustomShippingChargesPromotionAdjustAction createCachedCustomShippingChargesPromotionAdjustAction(
+			final SessionContext ctx, final Map attributeValues)
+	{
+		try
+		{
+			final ComposedType type = getTenant().getJaloConnection().getTypeManager()
+					.getComposedType("CachedCustomShippingChargesPromotionAdjustAction");
+			return ((CachedCustomShippingChargesPromotionAdjustAction) type.newInstance(ctx, attributeValues));
+		}
+		catch (final JaloGenericCreationException e)
+		{
+			final Throwable cause = e.getCause();
+			throw new JaloSystemException(cause, cause.getMessage(), e.getErrorCode());
+		}
+		catch (final JaloBusinessException e)
+		{
+			throw new JaloSystemException(e, "error creating CachedCustomShippingChargesPromotionAdjustAction : " + e.getMessage(),
+					0);
+		}
+	}
+
+	private Boolean isCachingAllowed(final SessionContext ctx)
+	{
+		final Boolean allowed = (Boolean) ctx.getAttribute("de.hybris.platform.promotions.jalo.cachingAllowed");
+		return (((allowed == null) || (allowed == Boolean.FALSE)) ? Boolean.FALSE : Boolean.TRUE);
 	}
 }
