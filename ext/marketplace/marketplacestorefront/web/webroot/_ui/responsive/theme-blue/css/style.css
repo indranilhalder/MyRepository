@@ -66180,7 +66180,9 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
 	right: auto !important;
 	top: auto !important;
 	position: static !important;
+	border-radius: 0px !important;
+	border: 0px !important;
 }
-.global-alerts button.close{
+/* .global-alerts button.close{
 	top: 6px !important;
-}
+} */
