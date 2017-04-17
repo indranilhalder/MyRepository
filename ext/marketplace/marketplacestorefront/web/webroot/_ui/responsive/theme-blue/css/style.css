@@ -66166,3 +66166,8 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
     clear: both;
 }
 /* changes for payment page click and collect end */
+
+
+.alert-dismissable.alert-info .close, .alert-dismissible.alert-info .close{
+	margin-right: 10px !important;
+}
