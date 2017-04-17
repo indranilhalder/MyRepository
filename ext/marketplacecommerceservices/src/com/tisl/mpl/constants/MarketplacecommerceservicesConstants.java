@@ -1,3 +1,4 @@
+
 /*
 
  *
@@ -113,6 +114,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String PROMO_ERROR_MESSAGE = "Cannot exceed 25 characters.".intern();
 	//public static final String PROMO_ERROR_MESSAGE = "Title cannot exceed 25 characters.".intern();
+
 
 
 
@@ -1840,6 +1842,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PRODUCTOFFERDETMSGQUERY = "SELECT {prodOffrDet.sellerId},{offerDet.message},{offerDet.messageDet},{prodOffrDet.startDate},{prodOffrDet.endDate} FROM {OfferDetail as offerDet}, {ProductOfferDetail as  prodOffrDet} WHERE {prodOffrDet.productId}= ?productId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <= ?sysdate AND {prodOffrDet.endDate} >= ?sysdate"
 			.intern();
 
+
+
 	public static final String OFFERPRODUCTID = "productId".intern();
 
 	public static final String MESSAGE = "message".intern();
@@ -1963,6 +1967,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//FREEBIE FIX
 	public static final String FREEBIEPRICETHRESHOLD = "freebiePriceThreshold";
 
+
 	// OrderIssues:- multiple Payment Response from juspay restriction
 	public static final String DUPLICATEJUSPAYRESONSE = "duplicatJuspayResponse";
 
@@ -1986,5 +1991,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SHIPMENT_CHARGE_AMOUNT = "return.shipmentcharge";
 	public static final String RSS = "RSS";
 	public static final String RETURN_TRANSACTON_TYPE_01 = "01";
+	public static final String ADDRESS_NOT_CHANGED ="ADDRESS_NOT_CHANGED";
 
 }

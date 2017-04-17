@@ -1003,34 +1003,47 @@ public class SalesOrderReverseXMLUtility
 	 */
 	private boolean getAmountRefunded(AbstractOrderEntryModel entry,String type)
 	{
-		   OrderModel order = (OrderModel) entry.getOrder();
-		   boolean isAmountRefunded = false;
-		   if (null != order.getPaymentTransactions())
+		OrderModel order = (OrderModel) entry.getOrder();
+		boolean isAmountRefunded = false;
+		if (null != order.getPaymentTransactions())
+		{
+			final List<PaymentTransactionModel> list = order.getPaymentTransactions();
+			if (null != list && !list.isEmpty())
 			{
-				final List<PaymentTransactionModel> list = order.getPaymentTransactions();
-				if (null != list && !list.isEmpty())
+				for (final PaymentTransactionModel oModel : list)
 				{
-					for (final PaymentTransactionModel oModel : list)
+					for (final PaymentTransactionEntryModel paymentObj : oModel.getEntries())
 					{
-						// check COD
-						for (final PaymentTransactionEntryModel paymentObj : oModel.getEntries())
-						{
-							if(null !=oModel.getTransactionId() && null != entry.getTransactionID() ) {
-								if(oModel.getTransactionId().equalsIgnoreCase(entry.getTransactionID())) {
-									if(null != paymentObj.getType() && null != paymentObj.getType().getCode() && paymentObj.getType().getCode().equalsIgnoreCase(type))
-									{
-										if(paymentObj.getTransactionStatus().equalsIgnoreCase("SUCCESS")) {
+						if(type.equalsIgnoreCase(PaymentTransactionType.REFUND_DELIVERY_CHARGES.getCode())) {
+							if(null != paymentObj.getType() && null != paymentObj.getType().getCode() && paymentObj.getType().getCode().equalsIgnoreCase(type))
+							{
+								if(null !=paymentObj.getRequestId() && null != entry.getDelChargesJuspayRequestId() ) {
+									if(paymentObj.getRequestId().equalsIgnoreCase(entry.getDelChargesJuspayRequestId())) {
+										if(null != paymentObj.getTransactionStatus() && paymentObj.getTransactionStatus().equalsIgnoreCase("SUCCESS")) {
 											isAmountRefunded = true;
+											return true;
 										}
 									}
 								}
 							}
-							
-						}
+						}else if (type.equalsIgnoreCase(PaymentTransactionType.REFUND_SCHEDULE_DELIVERY_CHARGES.getCode())) {
+							if(null != paymentObj.getType() && null != paymentObj.getType().getCode() && paymentObj.getType().getCode().equalsIgnoreCase(type))
+							{
+								if(null !=paymentObj.getRequestId() && null != entry.getScheduleChargesJuspayRequestId() ) {
+									if(paymentObj.getRequestId().equalsIgnoreCase(entry.getScheduleChargesJuspayRequestId())) {
+										if(null != paymentObj.getTransactionStatus() && paymentObj.getTransactionStatus().equalsIgnoreCase("SUCCESS")) {
+											isAmountRefunded = true;
+											return true;
+										}
+									}
+								}
+							}
+						}	
 					}
 				}
 			}
-		  return isAmountRefunded;
+		}
+		return isAmountRefunded;
 	}
 
 	protected DefaultPromotionManager getDefaultPromotionsManager()

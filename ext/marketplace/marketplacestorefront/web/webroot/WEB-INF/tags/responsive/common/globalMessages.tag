@@ -27,7 +27,7 @@
 		</c:if>
 
 		<%-- Error messages (includes spring validation messages) 
-		TISRLUAT-841 --%>
+		TISRLUAT-841  TISPRDT-882 --%>
 		<c:if test="${not empty accErrorMsgs}">
 			<c:forEach items="${accErrorMsgs}" var="msg">
 				<div class="alert alert-danger alert-dismissable">

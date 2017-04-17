@@ -324,6 +324,7 @@
 								<c:set var="subOrderLine3" value="${fn:trim(subOrder.deliveryAddress.line3)}"/>
 								<div class="col-md-8 col-sm-6">
 								<address>
+									<span data-tribhuvan="addressType" style="display:none; ">${fn:escapeXml(subOrder.deliveryAddress.addressType)}</span>
 									<span data-tribhuvan="firstName">${fn:escapeXml(subOrder.deliveryAddress.firstName)}</span>&nbsp;
 									<span data-tribhuvan="lastName">${fn:escapeXml(subOrder.deliveryAddress.lastName)}</span><br>
 									<span data-tribhuvan="addressLine1">${fn:escapeXml(subOrder.deliveryAddress.line1)}</span>,&nbsp;
@@ -2941,6 +2942,7 @@ $(function() {
 			  $(".wrapBG").css("height",height);
 			  $("#changeAddressPopup").css("z-index","999999");
 			  $("#deliveryAddressForm #pincode").val($("address span[data-tribhuvan='pincode']").text());
+			  $("#deliveryAddressForm #new-address-option-1").val($("address span[data-tribhuvan='addressType']").text());
 			  loadPincodeData('edit').done(function() {
 					
 					

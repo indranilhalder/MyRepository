@@ -44,7 +44,10 @@
 				</div>
 			</form:form>
 		</div>
-		<button class="close" data-dismiss="modal"></button>
+		
+		<!-- TISPRDT-943 START -->
+		<button class="close" data-dismiss="modal" style="border: 0px !important; margin: 0px !important;"></button>
+		<!-- TISPRDT-943 END -->
 	</div>
 	<div class="overlay" data-dismiss="modal"></div>
 </div>
@@ -60,7 +63,7 @@
 				text="It's okay. Happens to the best of us. We've sent you an email with the instructions to resetting the password. If you can't see it in your inbox, check the junk folder. Still can't find it? Our Tata CLiQ Care folks are here to help.  " />
 			</div>
 		</div>
-		<button class="close" data-dismiss="modal"></button>
+		<button class="close" data-dismiss="modal"  style="border: 0px !important; margin: 0px !important;"></button>
 	</div>
 	<div class="overlay" data-dismiss="modal"></div>
 </div>
