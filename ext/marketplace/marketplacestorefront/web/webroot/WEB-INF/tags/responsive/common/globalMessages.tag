@@ -31,7 +31,7 @@
 		<c:if test="${not empty accErrorMsgs}">
 			<c:forEach items="${accErrorMsgs}" var="msg">
 				<div class="alert alert-danger alert-dismissable">
-					<button class="close" aria-hidden="true" data-dismiss="alert" type="button" style="border:0px !important; top: -20px !important;">&times;</button>
+					<button class="close" aria-hidden="true" data-dismiss="alert" type="button" style="border:0px !important;">&times;</button>
 					<span style="margin-left: 23px;"><spring:theme code="${msg.code}" arguments="${msg.attributes}"/></span>
 				</div>
 			</c:forEach>

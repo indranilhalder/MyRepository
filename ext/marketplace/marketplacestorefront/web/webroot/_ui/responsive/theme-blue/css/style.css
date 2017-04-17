@@ -66171,3 +66171,14 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
 .alert-dismissable.alert-info .close, .alert-dismissible.alert-info .close{
 	margin-right: 10px !important;
 }
+
+.alert.alert-danger a.close{
+	margin-right: 10px !important;
+	margin-top: -6px !important;
+	right: auto !important;
+	top: auto !important;
+	position: static !important;
+}
+.global-alerts button.close{
+	top: 6px !important;
+}
