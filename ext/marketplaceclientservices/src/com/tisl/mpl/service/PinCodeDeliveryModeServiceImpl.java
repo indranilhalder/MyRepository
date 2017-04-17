@@ -165,7 +165,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	public PinCodeDeliveryModeListResponse prepPinCodeDeliveryModetoOMS(final String pin, final List<PincodeServiceData> reqData)
 	{
 		PinCodeDeliveryModeListResponse pincodeResfromOMS = null;
-
+		final String configSellerHandlingTime = configurationService.getConfiguration().getString("buybox.sellerhandling.time");
 		try
 		{
 
@@ -248,9 +248,10 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 								{
 									if (null != reqData.get(i) && null != reqData.get(i).getSellerHandlingTime())
 									{
-
-										if (reqData.get(i).getSellerHandlingTime().intValue() >= 0
-												&& reqData.get(i).getSellerHandlingTime().intValue() <= 24)
+										//configure the seller handling time
+										final int sellerHandlingTimeForConfig = configSellerHandlingTime == null ? 0 : Integer.parseInt(configSellerHandlingTime);
+										if (reqData.get(i).getSellerHandlingTime().intValue() >= sellerHandlingTimeForConfig
+												&& reqData.get(i).getSellerHandlingTime().intValue() <= sellerHandlingTimeForConfig)
 										{
 											deliveryModes.add(ED);
 										}

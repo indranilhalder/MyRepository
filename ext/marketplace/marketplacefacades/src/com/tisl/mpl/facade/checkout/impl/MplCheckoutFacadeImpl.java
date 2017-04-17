@@ -479,6 +479,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
 			for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 			{
+				double entryLevelDeliveryCost=0.0D;
 				if (null != cartEntryModel
 						&& cartEntryModel.getFulfillmentMode().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIPCODE))
 				{
@@ -486,13 +487,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 							&& cartEntryModel.getScheduledDeliveryCharge().doubleValue() > 0.0)
 					{
 						finalDeliveryCost += 0.0D;
+						entryLevelDeliveryCost = 0.0D;
 					}
-					cartEntryModel.setCurrDelCharge(Double.valueOf(finalDeliveryCost));
+					cartEntryModel.setCurrDelCharge(Double.valueOf(entryLevelDeliveryCost));
 				}
 				else
 				{
-					if (cartData.getDeliveryCost().getValue().doubleValue() == 0.0)
-					{
+					// bug fix for TISPRDT-990
+					/*if (cartData.getDeliveryCost().getValue().doubleValue() == 0.0)
+					{*/
 						for (final OrderEntryData cardEntryData : cartData.getEntries())
 						{
 							if (cardEntryData.getSelectedUssid().equalsIgnoreCase(cartEntryModel.getSelectedUSSID()))
@@ -502,16 +505,19 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 								{
 									finalDeliveryCost = cardEntryData.getMplDeliveryMode().getDeliveryCost().getDoubleValue()
 											.doubleValue();
+									entryLevelDeliveryCost=cardEntryData.getMplDeliveryMode().getDeliveryCost().getDoubleValue()
+											.doubleValue();
 								}
 							}
 						}
-					}
+					/*}
 					else
 					{
 						finalDeliveryCost = cartData.getDeliveryCost().getValue().doubleValue();
-					}
+						entryLevelDeliveryCost=cartData.getDeliveryCost().getValue().doubleValue();
+					}*/
 
-					cartEntryModel.setCurrDelCharge(Double.valueOf(finalDeliveryCost));
+					cartEntryModel.setCurrDelCharge(Double.valueOf(entryLevelDeliveryCost));
 				}
 			}
 			modelService.saveAll(cartEntryList);
