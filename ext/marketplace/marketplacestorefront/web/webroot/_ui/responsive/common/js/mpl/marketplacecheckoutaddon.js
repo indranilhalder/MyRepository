@@ -1498,6 +1498,9 @@ $("#otpMobileNUMField").focus(function(){
 			$("#convChargeFieldId, #convChargeField").css("display","none");
 			document.getElementById("convChargeField").innerHTML=convCharge;
 			document.getElementById("totalWithConvField").innerHTML=totalPrice;
+			//INC144316021
+			document.getElementById("outstanding-amount").innerHTML=totalPrice;
+			document.getElementById("outstanding-amount-mobile").innerHTML=totalPrice;
  			isCodSet = false;
  			if(paymentMode!=null){
  				applyPromotion(null,"none","none");
@@ -5017,6 +5020,9 @@ function calculateDeliveryCost(radioId,deliveryCode)
 		 		}
 	 			
 	 			document.getElementById("totalWithConvField").innerHTML=currency+totalPrice;
+	 			//INC144316021
+	 			document.getElementById("outstanding-amount").innerHTML=currency+totalPrice;
+				document.getElementById("outstanding-amount-mobile").innerHTML=currency+totalPrice;
 	 			isCodSet = false;
 	 		},
 	 		error : function(resp) {
@@ -7102,6 +7108,9 @@ $("#couponSubmitButton").click(function(){
 	 			console.log(response.redeemErrorMsg);
 	 			$("#no-click,.spinner").remove(); //add for INC_11738
 	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+	 			//INC144316021
+                document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
 	 			$("#codAmount").text(response.totalPrice.formattedValue);
 	 			if(response.redeemErrorMsg!=null){
 	 				if(response.redeemErrorMsg=="Price_exceeded")
@@ -7238,6 +7247,9 @@ $(".remove-coupon-button").click(function(){
  		data: { 'couponCode' : couponCode , 'guid' : guid},
  		success : function(response) {
  			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+ 			//INC144316021
+            document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+			document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
  			$("#codAmount").text(response.totalPrice.formattedValue);
  			// alert(response.totalPrice.formattedValue);
  			if(response.couponReleased==true){
