@@ -1732,7 +1732,7 @@
 					<key attribute="sellerArticleSKU"/>
 				</index>
 				<!-- CAR-274 -->
- 				<index name="MPL_MPLSELINFO_SLRNCVTPK" unique="true">
+ 				<index name="MPL_MPLSELINFO_SLRNCVTPK" unique="false">
  					<key attribute="catalogVersion" />
  					<key attribute="itemtype" />
  					<key attribute="sellerName" lower="false"/>
