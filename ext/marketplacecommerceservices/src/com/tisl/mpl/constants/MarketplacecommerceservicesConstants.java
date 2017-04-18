@@ -117,6 +117,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 
 
+
 	//For Bulk Orders Return Initiation
 	public static final String COMMA_DELIMITER = ",";
 	//	public static final String TICKETTYPECODE = "R";
@@ -1603,6 +1604,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CHANNEL_RESTRICTION_MOBILE = "ChannelMobile".intern();
 	public static final String CHANNEL_RESTRICTION_WEB = "ChannelWeb".intern();
 	public static final String CHANNEL_RESTRICTION = "Channel Restriction for coupons".intern();
+
 	public static final String FIND_USER_BY_UID = "SELECT {u.pk} FROM {User as u} WHERE ({u.UID} = ?uid )";
 	//Added for constants for clickandcollect and active.
 	public static final String CLICK_N_COLLECT = "Y";
@@ -1849,6 +1851,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PRODUCTOFFERDETMSGQUERY = "SELECT {prodOffrDet.sellerId},{offerDet.message},{offerDet.messageDet},{prodOffrDet.startDate},{prodOffrDet.endDate} FROM {OfferDetail as offerDet}, {ProductOfferDetail as  prodOffrDet} WHERE {prodOffrDet.productId}= ?productId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <= ?sysdate AND {prodOffrDet.endDate} >= ?sysdate"
 			.intern();
 
+
+
 	public static final String OFFERPRODUCTID = "productId".intern();
 
 	public static final String MESSAGE = "message".intern();
@@ -1995,6 +1999,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//FREEBIE FIX
 	public static final String FREEBIEPRICETHRESHOLD = "freebiePriceThreshold";
 
+
 	// OrderIssues:- multiple Payment Response from juspay restriction
 	public static final String DUPLICATEJUSPAYRESONSE = "duplicatJuspayResponse";
 
@@ -2018,5 +2023,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SHIPMENT_CHARGE_AMOUNT = "return.shipmentcharge";
 	public static final String RSS = "RSS";
 	public static final String RETURN_TRANSACTON_TYPE_01 = "01";
+	public static final String ADDRESS_NOT_CHANGED ="ADDRESS_NOT_CHANGED";
 
 }

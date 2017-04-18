@@ -137,8 +137,10 @@
 								<format:price priceData="${entry.currDelCharge}" />
 							</c:otherwise>
 						</c:choose>
-					<li class="deliver deliver-desc">${entry.mplDeliveryMode.description}</li>
-					<c:choose>
+						<%--${entry.eddDateBetWeen}  ${entry.mplDeliveryMode.description}--%>
+					<%-- <li class="deliver deliver-desc"> Your Order Will Be Delivered Between ${entry.eddDateBetWeen}</li> --%>
+					</li>  
+					  <c:choose>
                        <c:when test="${not empty entry.timeSlotFrom  && entry.timeSlotFrom !=null }">
                          
                         <li class="deliver deliver-desc">Your Order Will Be Delivered on ${entry.selectedDeliverySlotDate} -  ${entry.timeSlotFrom} TO ${entry.timeSlotTo}</li>
@@ -146,11 +148,9 @@
                        </c:when>
                        <c:otherwise>
                        <li class="deliver deliver-desc"> Your Order Will Be Delivered ${entry.eddDateBetWeen}</li>
-                       
                        </c:otherwise>
-                  
                   </c:choose>
-
+					<%-- <li class="deliver deliver-desc">${entry.mplDeliveryMode.description}</li> --%>
 				</ul>
 			</li>
 			<%-- <td headers="header5">
@@ -273,14 +273,14 @@
 						</li>
 						<!-- TISSQAEE-275 -->
 					<c:choose>
-						<c:when test="${not empty entry.timeSlotFrom  && entry.timeSlotFrom !=null }">
-                        <li class="deliver">Your Order Will Be Delivered on ${entry.selectedDeliverySlotDate} -  ${entry.timeSlotFrom} TO ${entry.timeSlotTo}</li>
-                        </c:when>
+                       <c:when test="${not empty entry.timeSlotFrom  && entry.timeSlotFrom !=null }">
+                        	<li class="deliver">Your Order Will Be Delivered on ${entry.selectedDeliverySlotDate} -  ${entry.timeSlotFrom} TO ${entry.timeSlotTo}</li>
+                       </c:when>
                        <c:otherwise>
-                       <li class="deliver"> Your Order Will Be Delivered ${entry.eddDateBetWeen}</li>
-                      </c:otherwise>
-					</c:choose>
-					<li class="deliver">${entry.mplDeliveryMode.description}</li>
+                       		<li class="deliver"> Your Order Will Be Delivered ${entry.eddDateBetWeen}</li>
+                       </c:otherwise>
+                  	</c:choose>
+					<%-- <li class="deliver">${entry.mplDeliveryMode.description}</li> --%>
 				</ul>
 			</li>
 		</ul>

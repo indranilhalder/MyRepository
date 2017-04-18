@@ -2365,25 +2365,29 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						}
 					}
 				}
-				if (deliveryModelList.size() > 0)
-				{
-					LOG.debug("****************:" + MarketplacecommerceservicesConstants.REDIRECT
-							+ MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
-							+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL);
-//					return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
-//							+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL;
-					jsonObj.put("redirect_url", MarketplacecommerceservicesConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
-						+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL);
-				}else if (redirectURL.trim().length() > 0)
+				//Start the Buf Fix TATA-862
+				if ("" != redirectURL && null != redirectURL&& redirectURL.trim().length() > 0)
 				{
 					jsonObj.put("redirect_url", redirectURL);
 					//return redirectURL;
 				}
 				else
 				{
-					jsonObj.put("redirect_url", getCheckoutStep().nextStep());
+					if (deliveryModelList.size() > 0)
+					{
+						LOG.debug("****************:" + MarketplacecommerceservicesConstants.REDIRECT
+								+ MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
+								+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL);
+//						return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
+//								+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL;
+						jsonObj.put("redirect_url", MarketplacecommerceservicesConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
+							+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL);
+					}else{
+						jsonObj.put("redirect_url", getCheckoutStep().nextStep());
+					}
+					
 				}
-
+            // End for Bug Fix - TATA-862
 				//Recalculating Cart Model
 				LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
 				getMplCheckoutFacade().reCalculateCart(cartData);

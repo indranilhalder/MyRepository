@@ -38,6 +38,7 @@ $(document).ready(function(){
 	    $("#deliveryAddressForm #landmark").prop("disabled",false).empty();
 	    $("#deliveryAddressForm #otherLandmark").prop('value','');
 	    $(".address_landmarkOtherDiv, .address_landmarkOtherDiv label, .address_landmarkOther").hide();
+	    $(".address_landmarkOtherDiv").attr('data-value','');
 	    $("#deliveryAddressForm #state").prop('value','Select');
 	    $(".dupDisplay").hide();
 	    $(".mainDrop").show();
@@ -105,7 +106,8 @@ function loadPincodeData(parm) {
 		success : function(response) {
 			//var arg1 = false;
 			console.log(response.countryCode+ " response.countryCode");
-			if(response == "" || response == " " || response == "NULL" || response == null) {
+			//	TISPRDT-890
+			if(response == "" || response == " " || response == "NULL" || response == null || response.landMarks == null || response.landMarks == "") {
 				console.log("addresslandmark line 154"+ response+ "##");
 				//alert("in if");
 			/*	if(response.countryCode == undefined){
@@ -507,6 +509,7 @@ $(document).ready(function() {
 		$("#pincode").val($("."+className+" .postalCode").text());
 	
 		loadPincodeData("edit").done(function() {
+			$("#new-address-option-1").val($("."+className+" .addressType").text());
 			$("#firstName").val($("."+className+" .firstName").text());
 			$("#lastName").val($("."+className+" .lastName").text());
 			$("#addressLine1").val($("."+className+" .addressLine1").text());

@@ -38007,7 +38007,7 @@ button.close {
 	right: 0;
 	bottom: 0;
 	left: 0;
-	z-index: 10001;
+	z-index: 10002;
 	-webkit-overflow-scrolling: touch;
 	outline: 0;
 }
@@ -66402,6 +66402,17 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
     background: none;
     padding-top: 0px;
     }
+ #colorbox #cboxClose{
+    border: 0px !important;
+    margin-right: 0px !important;
+    margin-top: 0px !important;
+}
+.modal .content > .close{
+    border-radius: 0px;
+    border: none !important;
+    margin: 0px !important;
+}    
+    
  /* changes for payment page click and collect start */
 .cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .order-details.block.delivery-info .method{
 	border: solid 1px #dddddd;
@@ -66438,3 +66449,23 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
     clear: both;
 }
 /* changes for payment page click and collect end */
+
+
+.alert-dismissable.alert-info .close, .alert-dismissible.alert-info .close{
+	margin-right: 10px !important;
+}
+
+.alert.alert-danger a.close{
+	margin-right: 10px !important;
+	margin-top: -6px !important;
+	right: auto !important;
+	top: auto !important;
+	position: static !important;
+	border-radius: 0px !important;
+	border: 0px !important;
+}
+#redirectsToPDP .modal-content.content > .close {
+	right: 5px !important;
+    top: 5px !important;
+	
+}

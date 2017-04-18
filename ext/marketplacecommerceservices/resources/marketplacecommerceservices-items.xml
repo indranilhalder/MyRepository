@@ -3076,6 +3076,64 @@
 		</typegroup>
 		
 		<!-- TPR-970 changes end -->
+		
+		<typegroup name="CachedPromotionAction">
+		<itemtype code="CachedCustomPromotionOrderEntryAdjustAction"
+                  extends="CustomPromotionOrderEntryAdjustAction"
+                  jaloclass="com.tisl.mpl.jalo.CachedCustomPromotionOrderEntryAdjustAction"
+                  jaloonly="true"
+                  autocreate="true"
+                  generate="true">
+            <attributes>
+            </attributes>
+        </itemtype>
+        
+        <itemtype code="CachedCustomBOGOPromoOrderEntryAdjustAction"
+                  extends="CustomBOGOPromoOrderEntryAdjustAction"
+                  jaloclass="com.tisl.mpl.jalo.CachedCustomBOGOPromoOrderEntryAdjustAction"
+                  jaloonly="true"
+                  autocreate="true"
+                  generate="true">
+            <attributes>
+            </attributes>
+        </itemtype>
+        
+        <itemtype code="CachedCustomPromotionOrderAddFreeGiftAction"
+                  extends="CustomPromotionOrderAddFreeGiftAction"
+                  jaloclass="com.tisl.mpl.jalo.CachedCustomPromotionOrderAddFreeGiftAction"
+                  jaloonly="true"
+                  autocreate="true"
+                  generate="true">
+            <attributes>
+            </attributes>
+        </itemtype>
+        
+        
+        <itemtype code="CachedCustomPromotionOrderAdjustTotalAction"
+                  extends="CustomPromotionOrderAdjustTotalAction"
+                  jaloclass="com.tisl.mpl.jalo.CachedCustomPromotionOrderAdjustTotalAction"
+                  jaloonly="true"
+                  autocreate="true"
+                  generate="true">
+            <attributes>
+           </attributes>
+        </itemtype>
+        
+        
+        <itemtype code="CachedCustomShippingChargesPromotionAdjustAction"
+                  extends="CustomShippingChargesPromotionAdjustAction"
+                  jaloclass="com.tisl.mpl.jalo.CachedCustomShippingChargesPromotionAdjustAction"
+                  jaloonly="true"
+                  autocreate="true"
+                  generate="true">
+            <attributes>
+           </attributes>
+        </itemtype>
+		
+		</typegroup>
+		
+		
+		
 	</itemtypes>
 	
 </items>
