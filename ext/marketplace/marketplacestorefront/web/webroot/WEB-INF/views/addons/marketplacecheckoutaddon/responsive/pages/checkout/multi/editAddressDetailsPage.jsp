@@ -22,7 +22,7 @@
 					
 					maxL=120;
 					 var bName = navigator.appName;
-					/*  function taLimit(taObj) {
+					 /* function taLimit(taObj) {
 					 	if (taObj.value.length==maxL) return false;
 					 	return true;
 					 } */
@@ -146,7 +146,7 @@
 						if(result == undefined || result == "")
 						{	
 							$("#address1Error").show();
-							$("#address1Error").html("<p>Address Line cannot be blank</p>");
+							$("#address1Error").html("<p>Address Line cannot be blank</p>");	
 							validate= false;
 						}
 						else

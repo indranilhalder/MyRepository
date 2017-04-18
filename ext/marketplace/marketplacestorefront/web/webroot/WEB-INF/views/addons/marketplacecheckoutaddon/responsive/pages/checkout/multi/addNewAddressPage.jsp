@@ -21,7 +21,7 @@
 					<script>
 				 	maxL=120;
 					 var bName = navigator.appName;
-					 /* function taLimit(taObj) {
+					/*  function taLimit(taObj) {
 					 	if (taObj.value.length==maxL) return false;
 					 	return true;
 					 } */
@@ -108,7 +108,9 @@
 				     	$("form#addressForm :input[type=text]").each(function(){
 				    		 var input = $(this);    
 				    		 $(this).val($(this).val().trim());    		     		
-				    	});
+				    	});  
+				     	
+				     
 
 						var validate=true;
 						var regPostcode = /^([1-9])([0-9]){5}$/;
@@ -118,6 +120,7 @@
 					    var firstName = document.getElementById("address.firstName");
 						var lastName = document.getElementById("address.surname");
 						var address1 = document.getElementById("address.line1");
+					 		   			
     		   			var regAddress = /^[0-9a-zA-Z\-\/\,\s]+$/;
 						//var address2 = document.getElementById("address.line2");
 						//var address3 = document.getElementById("address.line3");
@@ -168,7 +171,7 @@
 						if(result == undefined || result == "")
 						{	
 							$("#address1Error").show();
-							$("#address1Error").html("<p>Address Line 1 cannot be blank</p>");	
+							$("#address1Error").html("<p>Address Line cannot be blank</p>");	
 							validate= false;
 						}
 						else
