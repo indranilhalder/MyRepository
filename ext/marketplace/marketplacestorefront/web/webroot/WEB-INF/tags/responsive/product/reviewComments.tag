@@ -13,6 +13,7 @@
 
 	<span id="ratingvalue" itemprop="ratingValue">${averageRating}</span> based on <span id="reviewcount" itemprop="reviewCount">${commentCount}</span> reviews 
 </div>
+</c:if>	
 <div id="ReviewSecion" class="reviews">
 <div class="header">
       <h3>Ratings and Reviews</h3>		<!-- UF-57 -->
