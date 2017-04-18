@@ -2,6 +2,7 @@ package com.tisl.mpl.cockpits.services.search;
 
 import de.hybris.platform.cscockpit.services.search.generic.query.AbstractCsFlexibleSearchQueryBuilder;
 import de.hybris.platform.cscockpit.services.search.impl.DefaultCsTextFacetSearchCommand;
+import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 
 import org.apache.commons.lang.StringUtils;
@@ -15,8 +16,11 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 	String productText = command.getText();
 	boolean searchProductText = StringUtils.isNotEmpty(productText);
 	//String brand ="'MBH11A00184','MBH13F00003'";
-	String sellerID = "'500112'";
+	//String sellerID = "'500112'";
 	StringBuilder query = new StringBuilder(500);
+	
+	//getiing seller id from session in case csr agent for store order
+	final String sellerID = "'"+(String) JaloSession.getCurrentSession().getAttribute("sellerId")+"'";
 	
 	query.append("SELECT {p.pk}, {p.name}, {p.code} , {si.ussid}"
 	+"from {product as p JOIN Catalogversion as cv ON {p.catalogversion}={cv.pk} join SellerInformation as si on {si.productsource}={p.pk}}" 
