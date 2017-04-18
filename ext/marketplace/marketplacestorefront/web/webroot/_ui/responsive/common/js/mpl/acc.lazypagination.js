@@ -82,6 +82,13 @@ function getProductSetData() {
 
     var pathName = window.location.pathname;
     var query = window.location.search;
+    
+    //INC144316143
+    if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
+        window.localStorage.setItem('lastUrlpathName',encodeURI(pathName));
+        window.localStorage.setItem('lastUrlquery',encodeURI(query));
+    }
+    
     if (pageNoPagination <= totalNoOfPages) {
 
         //url with page no occourance found.
@@ -137,7 +144,18 @@ $(document).ready(function() {
     totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
     var lazyfrompdp = window.localStorage.getItem("lazyfrompdp");
     
-    if (window.localStorage &&  (html = window.localStorage.getItem('productlazyarray')) && html != '' && lazyfrompdp != '' && lazyfrompdp == 'true' && ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category')) {
+    //INC144316143
+    var pathName = window.location.pathname;
+    var query    = window.location.search;
+    var searchResultStorageData = "true";
+    var lastUrlpathName = window.localStorage.getItem('lastUrlpathName');
+    var lastUrlquery    = window.localStorage.getItem('lastUrlquery');
+    
+    if( (lastUrlpathName != undefined  && encodeURI(pathName) != lastUrlpathName) || (lastUrlquery != undefined && encodeURI(query) != lastUrlquery)) {
+    	searchResultStorageData = "false"; // not same with last search url
+    } 
+    
+    if (window.localStorage &&  (html = window.localStorage.getItem('productlazyarray')) && searchResultStorageData == 'true' && html != '' && lazyfrompdp != '' && lazyfrompdp == 'true' && ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category')) {
     	
     		$('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list').html(decodeURI(html));
         	
@@ -218,11 +236,15 @@ $(document).ready(function() {
         	  if ( event.which == 13 ) {
         		window.localStorage.removeItem('lazyfrompdp');
           		window.localStorage.removeItem('productlazyarray');
+          		window.localStorage.removeItem('lastUrlpathName');
+          		window.localStorage.removeItem('lastUrlquery');
         	  }
         });
         $(document).on('click','.words,.departmenthover,.searchButton',function(){
         	window.localStorage.removeItem('lazyfrompdp');
       		window.localStorage.removeItem('productlazyarray');
+      		window.localStorage.removeItem('lastUrlpathName');
+      		window.localStorage.removeItem('lastUrlquery');
         });
 });
 
