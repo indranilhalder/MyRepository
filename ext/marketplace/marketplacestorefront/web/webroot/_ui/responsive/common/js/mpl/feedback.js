@@ -2306,9 +2306,17 @@ function toggleFilter(){
 		spanCount_colour = spanCount_colour + $(".facet_mobile .filter-colour.selected-multi-colour").length;
 		//TISQAUATS-12 ends
 		if(spanCount_colour>0)
-			{
-				$(".facet_mobile .filter-colour.selected-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCount_colour);
-			}
+		{
+				//TISSQAUAT-723 starts
+				//$(".facet_mobile .filter-colour.selected-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCount_colour);
+				if ($(".facet_mobile .filter-colour.selected-colour").length) {
+					$(".facet_mobile .filter-colour.selected-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCount_colour);
+				}
+				else {
+					$(".facet_mobile .filter-colour.selected-multi-colour").parents(".facet.js-facet").find(".category-icons span").text(spanCount_colour);
+				}
+				//TISSQAUAT-723 ends
+		}
 	// Fixing error of facet starts	
 	}
 	// Fixing error of facet ends	
