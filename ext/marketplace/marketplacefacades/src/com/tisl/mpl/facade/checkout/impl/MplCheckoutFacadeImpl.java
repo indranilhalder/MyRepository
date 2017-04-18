@@ -494,8 +494,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				else
 				{
 					// bug fix for TISPRDT-990
-					/*if (cartData.getDeliveryCost().getValue().doubleValue() == 0.0)
-					{*/
+					if (cartData.getDeliveryCost().getValue().doubleValue() >= 0.0)
+					{
 						for (final OrderEntryData cardEntryData : cartData.getEntries())
 						{
 							if (cardEntryData.getSelectedUssid().equalsIgnoreCase(cartEntryModel.getSelectedUSSID()))
@@ -503,18 +503,18 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 								if (null != cardEntryData.getMplDeliveryMode()
 										&& null != cardEntryData.getMplDeliveryMode().getDeliveryCost())
 								{
-									finalDeliveryCost = cardEntryData.getMplDeliveryMode().getDeliveryCost().getDoubleValue()
+									finalDeliveryCost += cardEntryData.getMplDeliveryMode().getDeliveryCost().getDoubleValue()
 											.doubleValue();
 									entryLevelDeliveryCost=cardEntryData.getMplDeliveryMode().getDeliveryCost().getDoubleValue()
 											.doubleValue();
 								}
 							}
 						}
-					/*}
-					else
+					}
+					/*else
 					{
-						finalDeliveryCost = cartData.getDeliveryCost().getValue().doubleValue();
-						entryLevelDeliveryCost=cartData.getDeliveryCost().getValue().doubleValue();
+						//finalDeliveryCost = cartData.getDeliveryCost().getValue().doubleValue();
+						//entryLevelDeliveryCost=cartData.getDeliveryCost().getValue().doubleValue();
 					}*/
 
 					cartEntryModel.setCurrDelCharge(Double.valueOf(entryLevelDeliveryCost));
