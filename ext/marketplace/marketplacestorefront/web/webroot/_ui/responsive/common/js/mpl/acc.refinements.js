@@ -827,6 +827,12 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 	facetAjaxUrl = pageURL;
 	console.log(requiredUrl);
 	console.log(pageURL);
+	//INC144316143
+	if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
+		   window.localStorage.setItem('lastUrlpathName',encodeURI(pathName));
+		   window.localStorage.setItem('lastUrlquery',encodeURI(query));
+	 }
+	
 	if ($("input[name=customSku]").val()) {
 		dataString = dataString + "&sort=" + $("select[name=sort]").val() + "&pageSize=" + $("select[name=pageSize]").val(); 
 	}
