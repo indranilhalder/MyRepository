@@ -20,7 +20,7 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 	
 	query.append("SELECT {p.pk}, {p.name}, {p.code} , {si.ussid}"
 	+"from {product as p JOIN Catalogversion as cv ON {p.catalogversion}={cv.pk} join SellerInformation as si on {si.productsource}={p.pk}}" 
-	+"where {si.SellerID} = "+sellerID+" AND {p.pk} in ({{"
+	+"where {p.pk} in ({{"
 		+"select {p.pk}" 
 		+"from {PcmProductVariant as p} "
 		+"where {p.baseproduct} in ({{"
@@ -32,7 +32,7 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 			}
 		query.append("}})"
 	+"}})"
-	+"OR {si.SellerID} = "+sellerID+" AND {p.pk} in ({{"
+	+"OR {p.pk} in ({{"
 		+"SELECT {p.pk}" 
 		+"from {product as p JOIN Catalogversion as cv ON {p.catalogversion}={cv.pk}} "
 		+"where {cv.version} = 'Online'");
