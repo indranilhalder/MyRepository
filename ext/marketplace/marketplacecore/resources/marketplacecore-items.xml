@@ -5807,6 +5807,13 @@
 		                		 <persistence type="property" />
 	                 		</attribute>
 				</attributes>
+				<!-- CAR-274 -->
+				<indexes>
+					<index name="MPL_Order_PTYPE">
+						<key attribute="type" ></key>	
+						<key attribute="itemType"></key>	
+					</index>	
+				</indexes>	
 			</itemtype>
 
 			<!-- modifying Wishlist Entry Model with additional attribute "ussid" -->
@@ -7281,6 +7288,14 @@
 					<!--End  Added new Attributes for Order Update  -->
 
 				</attributes>
+				
+				<!-- CAR-274 -->
+				<indexes>
+					<index name="MPL_CON_CODE" unique="true">
+						<key attribute="code" />
+					</index>
+				</indexes>
+				
 			</itemtype>
 			<itemtype code="OrderHistoryEntry" autocreate="false"
 				generate="false">
@@ -7295,6 +7310,10 @@
 				<indexes>
 					<index name="IDX_ORDERHISTORY_LINEID">
 						<key attribute="lineId" />
+					</index>
+					<!-- CAR-274 -->
+					<index name="MPL_ORDERHISTORY_MODIFIEDDTS">
+						<key attribute="modifiedtime" />
 					</index>
 				</indexes>
 			</itemtype>
@@ -10751,7 +10770,7 @@
 		</typegroup>
 	
 		<!-- CAR-274 -->
- 		<typegroup name="CurrencyISO">
+ 		<typegroup name="MPL_CORE">
  			<itemtype code="Currency" autocreate="false" generate="false">
  				<indexes>
  					<index name="MPL_CURS_ISOTPK">
@@ -10761,6 +10780,15 @@
  				</indexes>
  	
  			</itemtype>
+ 			<itemtype code="Task" autocreate="false" generate="false">
+ 				<indexes>
+ 					<index name="MPL_TASK_FAILED">
+ 						<key attribute="failed" />
+ 					</index>
+ 				</indexes>
+ 	
+ 			</itemtype>
   		</typegroup> 
+  		<!-- End CAR-274 -->
 	</itemtypes>
 </items>
