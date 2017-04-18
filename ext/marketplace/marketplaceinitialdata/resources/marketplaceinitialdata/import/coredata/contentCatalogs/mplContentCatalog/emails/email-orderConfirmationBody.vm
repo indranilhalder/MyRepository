@@ -260,7 +260,7 @@
 		 <td colspan="1">&nbsp;</td>
 		 
 		 
-		 <td colspan="2" style="vertical-align: top; padding-top: 10px;">
+		 <td width="15" colspan="2" style="vertical-align: top; padding-top: 10px;">
 		 <table>
          <tr>
 			#if($ctx.deliveryAddress)
