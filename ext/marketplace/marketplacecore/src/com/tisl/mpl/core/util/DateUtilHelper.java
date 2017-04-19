@@ -16,12 +16,9 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hybris.oms.tata.model.MplTimeSlotsModel;
-import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
-import com.tisl.mpl.core.model.MplLPHolidaysModel;
-import com.tisl.mpl.core.mplconfig.dao.MplConfigDao;
+
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
 
 
