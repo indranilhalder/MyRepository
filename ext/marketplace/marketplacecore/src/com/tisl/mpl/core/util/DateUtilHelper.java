@@ -270,8 +270,18 @@ public class DateUtilHelper
 						Date date2 = null;
 						try
 						{
-							date1 = sdf.parse(eddObj.getEDD());
-							date2 = sdf.parse(exisEddObj.getEDD());
+							// Start Bug Fix for TISPRDT-1038
+							if(null != eddObj.getEDD() ){
+								date1 = sdf.parse(eddObj.getEDD());
+							}else if (null != eddObj.getNextEDD()){
+								date1 = sdf.parse(eddObj.getNextEDD());
+							}
+							if(null != exisEddObj.getEDD()){
+								date2 = sdf.parse(exisEddObj.getEDD());
+							}else if(null != exisEddObj.getNextEDD()){
+								date2 = sdf.parse(exisEddObj.getNextEDD());
+							}
+						// End Bug Fix for TISPRDT-1038
 						}
 						catch (final ParseException e)
 						{
