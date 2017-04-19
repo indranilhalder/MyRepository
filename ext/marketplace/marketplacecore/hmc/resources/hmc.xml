@@ -3860,8 +3860,10 @@
 							</attribute>
 							<text name="text.promotion.excludedproductcodeslist" />
 							<attribute name="excludedProductCodeList" />
+							<!-- TPR-1325 : Item HMC structure Declaration Bundle Promotion Link start-->
 							<attribute name="promourl" />
 							<attribute name="bundlepromolinktext" />
+							<!-- TPR-1325 : Item HMC structure Declaration Bundle Promotion Link end-->
 							</listlayout>
 							<listlayout>
 							<text name="text.productpromotion.discountPrices" />
