@@ -415,7 +415,7 @@ public class DateUtilHelper
 
 	public String removeLeadingZeros(String str)
 	{
-		while (str.indexOf("0") == 0)
+		while (str.indexOf('0') == 0)
 		{
 			str = str.substring(1);
 		}
