@@ -101,6 +101,9 @@ tr.d0 td {
 <!-- TISPRM-56 -->
 <input type="hidden" id="product_allVariantsListingId" value="${allVariantsString}"/>
 
+<!-- UF-160 -->
+<input type="hidden" id="isLargeAppliance" value="${isLargeAppliance}" />
+
 
 <div itemscope itemtype="http://schema.org/Product" class="pdp">
 	<div class="product-info wrapper">

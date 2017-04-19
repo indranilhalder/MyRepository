@@ -3013,9 +3013,12 @@ $(document).on("click","button[name='pinCodeButtonId']",function(){
 }); 
 
 $(document).ajaxComplete(function(){
+	
+    //Modified for  UF-68 UF-69 UF-252
 	//$("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").addClass("CheckAvailability");
+	$("body.page-cartPage a[class='checkoutButton checkout button red']").attr("onclick","return checkServiceabilityRequired('typeCheckout',this);");
 	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").css("pointer-events","");
-	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").removeAttr("onclick");
+	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").attr("onclick","");
 	$("a#checkout-enabled.checkout-disabled").removeAttr("onclick");
 });
 

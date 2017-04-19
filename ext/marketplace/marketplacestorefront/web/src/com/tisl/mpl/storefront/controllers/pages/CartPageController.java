@@ -208,19 +208,27 @@ public class CartPageController extends AbstractPageController
 				//TISEE-3676 & TISEE-4013
 				//final boolean deListedStatus = getMplCartFacade().isCartEntryDelisted(serviceCart); Moved to facade layer //TISPT-104
 				//LOG.debug("Cart Delisted Status " + deListedStatus);
-				//CAR-246
-				if (StringUtils.isNotEmpty(pinCode))
+
+
+				final boolean isUserAnym = getUserFacade().isAnonymousUser();//UF-70
+				model.addAttribute("isUserAnym", isUserAnym);//UF-70
+
+				//TISEE-432//UF-70
+				final String selectedPinCode = StringUtil.isNotEmpty(pinCode) ? pinCode : fetchPincode(isUserAnym);//UF-70
+				//CAR-246//UF-70
+				if (StringUtils.isNotEmpty(selectedPinCode))
 				{
-					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pinCode);
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPinCode);
+					mplCartFacade.populatePinCodeData(cartModel, selectedPinCode);
 				}
 
-				final Object sessionPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
-				if (null != sessionPincode)
-				{
-					//TPR-970 changes
-					mplCartFacade.populatePinCodeData(cartModel, sessionPincode.toString());
-					//	getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
-				}
+				//final Object sessionPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+				//				if (null != sessionPincode)
+				//				{
+				//					//TPR-970 changes
+				//					mplCartFacade.populatePinCodeData(cartModel, sessionPincode.toString());
+				//					//	getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+				//				}
 				getMplCouponFacade().releaseVoucherInCheckout(cartModel); //TISPT-104
 				cartModel = getMplCartFacade().getCalculatedCart(cartModel); /// Cart recalculation method invoked inside this method
 				//final CartModel cart = mplCartFacade.removeDeliveryMode(serviceCart); // Contains recalculate cart TISPT-104
@@ -236,8 +244,7 @@ public class CartPageController extends AbstractPageController
 
 
 				final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-				final boolean isUserAnym = getUserFacade().isAnonymousUser();
-				model.addAttribute("isUserAnym", isUserAnym);
+
 
 				// TPR-429
 				String cartLevelSellerID = null;
@@ -256,8 +263,7 @@ public class CartPageController extends AbstractPageController
 				}
 				model.addAttribute(ModelAttributetConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
 
-				//TISEE-432
-				final String selectedPinCode = fetchPincode(isUserAnym);
+
 
 				checkCartDataChange(cartModel, cartDataOnLoad, cartData, model);
 				showPincode(model, selectedPinCode, cartData);
@@ -301,6 +307,10 @@ public class CartPageController extends AbstractPageController
 
 				cartDataOnLoad = cartData;
 				prepareDataForPage(model, cartDataOnLoad);
+
+
+				model.addAttribute("isPincodeRestrictedPromoPresent",
+						mplCartFacade.checkPincodeRestrictedPromoOnCartProduct(cartModel));
 			}
 			else if (isLux)
 			{
@@ -1322,7 +1332,7 @@ public class CartPageController extends AbstractPageController
 		//TISSEC-11
 		final String regex = "\\d{6}";
 		//final CartModel cart = getCartService().getSessionCart();
-
+		CartData cartData = null;
 		try
 		{
 			String isServicable = MarketplacecommerceservicesConstants.Y;
@@ -1337,13 +1347,11 @@ public class CartPageController extends AbstractPageController
 
 				if (StringUtil.isNotEmpty(selectedPincode))
 				{
-					//TPR-970 changes
-					//mplCartFacade.populatePinCodeData(cart, selectedPincode);
 					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
 				}
 				try
 				{
-					final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+					cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 
 					if (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries()))
 					{
@@ -1391,20 +1399,28 @@ public class CartPageController extends AbstractPageController
 						{
 							isServicable = MarketplacecommerceservicesConstants.N;
 						}
-						//							if (isServicable.equals(MarketplacecommerceservicesConstants.Y))
-						//							{
-						//								final CartModel cart = getCartService().getSessionCart();
-						//								getMplCartFacade().getCalculatedCart(cart);
-						//								cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-						//								jsonObject.put("cartData", cartData);
-						//								jsonObject.put("cartEntries", cartData.getEntries());
-						//
-						//								//								getMplCartFacade().getCalculatedCart().getEntries()
-						//								//								final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-						//								//								cartData.get
-						//								//
-						//								//								getMplCartFacade().setCartSubTotal();
-						//							}
+						if (isServicable.equals(MarketplacecommerceservicesConstants.Y))
+						{
+							//TPR-970 changes
+							CartModel cart = getCartService().getSessionCart();
+							mplCartFacade.populatePinCodeData(cart, selectedPincode);
+							cart = getMplCartFacade().getCalculatedCart(cart);
+
+							getMplCartFacade().setCartSubTotal(cart);
+
+							//To calculate discount percentage amount for display purpose
+							// TPR-774-- Total MRP calculation and the Product percentage calculation
+							getMplCartFacade().totalMrpCal(cart);
+							cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+							jsonObject.put("cartData", cartData);
+							jsonObject.put("cartEntries", cartData.getEntries());
+
+							//								getMplCartFacade().getCalculatedCart().getEntries()
+							//								final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+							//								cartData.get
+							//
+							//								getMplCartFacade().setCartSubTotal();
+						}
 						final ObjectMapper objectMapper = new ObjectMapper();
 						jsonResponse = objectMapper.writeValueAsString(responseData);
 						//}
