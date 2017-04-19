@@ -6,7 +6,6 @@ package com.tisl.mpl.utility;
 import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
-import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
@@ -78,8 +77,7 @@ public class SearchSuggestUtilityMethods
 	private MplProductWebService mplProductWebService;
 	//	@Resource(name = "productService")
 	//	private ProductService productService;
-	@Resource(name = "productFacade")
-	private ProductFacade productFacade;
+
 	//@Resource(name = "productService")
 	//private ProductService productService;
 

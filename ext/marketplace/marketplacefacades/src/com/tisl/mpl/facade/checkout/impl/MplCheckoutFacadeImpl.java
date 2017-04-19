@@ -192,9 +192,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	@Resource(name = "sellerBasedPromotionService")
 	private SellerBasedPromotionService sellerBasedPromotionService;
 
-	/*@Autowired  Sonar Issue
-	private BaseSiteService baseService;*/
-
 	@Autowired
 	private ShortUrlService googleShortUrlService;
 

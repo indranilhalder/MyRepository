@@ -195,8 +195,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	private Map<String, String> brandLandingPageSlotMapping;
 
 	private static final Logger LOG = Logger.getLogger(MplCmsFacadeImpl.class);
-	/*@Resource(name = "productFacade") sonar Issue
-	private ProductFacade productFacade;*/
+
 
 	@Resource(name = "buyBoxFacade")
 	private BuyBoxFacade buyBoxFacade;

@@ -233,8 +233,7 @@ public class CartsController extends BaseCommerceController
 	private UserService userService;
 	@Resource(name = "mplCheckoutFacade")
 	private MplCheckoutFacade mplCheckoutFacade;
-	/*@Resource sonar Issue
-	private MplCustomerProfileService mplCustomerProfileService;*/
+	
 	@Resource
 	private CommerceCartService commerceCartService;
 	@Resource

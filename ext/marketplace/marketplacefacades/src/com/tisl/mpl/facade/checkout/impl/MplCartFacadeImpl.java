@@ -149,10 +149,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Autowired
 	private MplDelistingService mplDelistingService;
 
-	/*@Autowired Sonar Issue
-	private CatalogService catalogService;
-*/
-
 	@Resource(name = "pincodeService")
 	private PincodeService pincodeService;
 
@@ -163,10 +159,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
-
-	/*@Autowired Sonar Fix
-	private MplCheckoutFacade mplCheckoutFacade;*/
-
 
 	@Autowired
 	private MplConfigService mplConfigService;

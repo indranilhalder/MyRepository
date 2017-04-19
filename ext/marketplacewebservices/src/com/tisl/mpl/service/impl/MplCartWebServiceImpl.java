@@ -137,8 +137,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	protected DataMapper mplDataMapper;
 	@Resource(name = "mplDeliveryCostService")
 	private MplDeliveryCostService mplDeliveryCostService;
-	/*@Resource(name = "defaultPromotionManager")  Sonar Issue
-	private DefaultPromotionManager defaultPromotionManager;*/
+
 	@Resource
 	private ExtendedUserService extendedUserService;
 	@Resource
@@ -155,10 +154,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	private DiscountUtility discountUtility;
 	@Resource
 	private MplProductWebServiceImpl mplProductWebService;
-	/*@Resource  sonar Issue
-	private CommerceCartService commerceCartService;
-	@Resource 
-	private MplPaymentWebFacade mplPaymentWebFacade;*/
+
 	@Resource
 	private SiteConfigService siteConfigService;
 	@Resource
@@ -179,9 +175,6 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
 
 	private final static Logger LOG = Logger.getLogger(MplCartWebServiceImpl.class);
-
-	/*@Autowired sonar Issue
-	private MplDefaultCommerceAddToCartStrategyImpl mplDefaultCommerceAddToCartStrategyImpl;*/
 
 	/**
 	 * Service to create cart
@@ -1571,12 +1564,15 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				{
 					gwlp.setPinCodeResponse(obj);
 				}
-				/*Added in R2.3  TISRLUAT-812 start */
-				if(null != abstractOrderEntry.getEdScheduledDate()) {
+				/* Added in R2.3 TISRLUAT-812 start */
+				if (null != abstractOrderEntry.getEdScheduledDate())
+				{
 					gwlp.setScheduleDeliveryDate(abstractOrderEntry.getEdScheduledDate());
 				}
-				if(null != abstractOrderEntry.getTimeSlotTo() && null != abstractOrderEntry.getTimeSlotFrom()){
-					gwlp.setScheduleDeliveryTime(abstractOrderEntry.getTimeSlotFrom().concat(" "+MarketplacewebservicesConstants.TO+" ").concat(abstractOrderEntry.getTimeSlotTo()));
+				if (null != abstractOrderEntry.getTimeSlotTo() && null != abstractOrderEntry.getTimeSlotFrom())
+				{
+					gwlp.setScheduleDeliveryTime(abstractOrderEntry.getTimeSlotFrom()
+							.concat(" " + MarketplacewebservicesConstants.TO + " ").concat(abstractOrderEntry.getTimeSlotTo()));
 				}
 				gwlpList.add(gwlp);
 
@@ -2428,7 +2424,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			shippingAddress.setLandmark(address.getLandmark());
 		}
 		/* Added in R2.3 for TISRLUAT-904 end */
-		
+
 		//shippingAddress.setDefaultAddress(new Boolean(checkDefaultAddress(address))); Avoid instantiating Boolean objects; reference Boolean.TRUE or Boolean.FALSE or call Boolean.valueOf() instead.
 		shippingAddress.setDefaultAddress(Boolean.valueOf(checkDefaultAddress(address)));
 		return shippingAddress;
