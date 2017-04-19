@@ -32,7 +32,7 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 			+"from {PcmProductVariant as p JOIN Catalogversion as cv ON {p.catalogversion}={cv.pk}} "
 			+"where {cv.version} = 'Online'");
 			if (searchProductText) {
-				query.append(" AND {p.code} =?productCodeText");
+				query.append(" AND ({p.name} LIKE ?productNameText OR {p.code} = ?productCodeText)");
 			}
 		query.append("}})"
 	+"}})"
@@ -41,7 +41,7 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 		+"from {product as p JOIN Catalogversion as cv ON {p.catalogversion}={cv.pk}} "
 		+"where {cv.version} = 'Online'");
 		if (searchProductText) {
-			query.append(" AND {p.code} =?productCodeText");
+			query.append(" AND ({p.name} LIKE ?productNameText OR {p.code} = ?productCodeText)");
 		}
 	query.append("}})"
 	+"OR {p.pk} in ({{"
@@ -60,8 +60,8 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 			query.toString());
 	
 	if (searchProductText) {
-		/*searchQuery.addQueryParameter("productNameText",
-				"%" + productText.trim() + "%");*/
+		searchQuery.addQueryParameter("productNameText",
+				"%" + productText.trim() + "%");
 		searchQuery.addQueryParameter("productCodeText",
 				productText.trim());
 		searchQuery.addQueryParameter("SKUText",
