@@ -13,7 +13,6 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -76,24 +75,13 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 
 		//		  final Collection<CategoryModel> categories = getCommerceProductService()
 		//		  .getSuperCategoriesExceptClassificationClassesForProduct(productModel);
-
 		final List<CategoryModel> resultList = new ArrayList<>();
-
 		// For TISSQAUAT-665
 		for (final CategoryModel categoryModel : productModel.getSupercategories())
 		{
 			resultList.add(categoryModel);
 		}
-
 		productData.setCategories(Converters.convertAll(resultList, getCategoryConverter()));
-
-
-
-		final Collection<CategoryModel> categories = getCommerceProductService()
-				.getSuperCategoriesExceptClassificationClassesForProduct(productModel);
-		productData.setCategories(Converters.convertAll(categories, getCategoryConverter()));
-
-
 
 	}
 
