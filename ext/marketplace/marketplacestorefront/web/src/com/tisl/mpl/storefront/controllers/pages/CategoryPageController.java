@@ -59,6 +59,8 @@ import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
@@ -74,9 +76,11 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
+import com.tisl.mpl.core.model.PriorityBrandsModel;
 import com.tisl.mpl.core.model.SeoContentModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
+import com.tisl.mpl.marketplacecommerceservices.service.brand.impl.DefaultBrandService;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
@@ -118,6 +122,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 	//Added for TISLUX-91 s
 	@Autowired
 	private ConfigurationService configurationService;
+
+
+	@Resource(name = "brandService")
+	private DefaultBrandService brandService;
 
 	//Below Lines Commented as Sonar Fix
 	//Start
@@ -425,7 +433,17 @@ public class CategoryPageController extends AbstractCategoryPageController
 				/* CAR-242 Moved here for calling once */
 				final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
 						categoryCode, searchQuery, pageNo, showMode, sortCode, count, resetAll, pageFacets);
+				final JSONArray priorityBrandsJsonArray = new JSONArray();
+				final JSONObject priorityBrand = new JSONObject();
+				final List<PriorityBrandsModel> priorityBrands = brandService.priorityBrands(categoryCode);
+				for (final PriorityBrandsModel priorityBrandsModel : priorityBrands)
+				{
+					priorityBrandsJsonArray.add(priorityBrandsModel.getBrandId());
+				}
 
+				priorityBrand.put("priorityBrands", priorityBrandsJsonArray);
+
+				model.addAttribute("PriorityBrandArray", priorityBrand.toJSONString());
 				//Set the drop down text if the attribute is not empty or null
 				if (dropDownText != null && !dropDownText.isEmpty())
 				//Added For TISPRD-1243

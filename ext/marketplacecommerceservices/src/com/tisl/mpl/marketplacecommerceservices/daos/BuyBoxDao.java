@@ -54,4 +54,8 @@ public interface BuyBoxDao
 
 	List<ClassAttributeAssignmentModel> getClassAttrAssignmentsForCode(String code) throws EtailNonBusinessExceptions;
 
+	//INC144315542_INC144314878_INC_11113
+
+	public List<BuyBoxModel> getBuyboxPricesForSizeVariant(String productCode) throws EtailNonBusinessExceptions;
+
 }

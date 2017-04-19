@@ -664,15 +664,19 @@ function focusOnElement() {
 									{
 										$(".pdp-offer").html(message);						
 									}
+									
+									//INC144316032
+									$("#message").html(message);
+									$("#offerDetailId").html(message);
+									$("#messageDet").html(messageDet);
+									
 //									$("#message").html(message);	
-//									$("#offerDetailId").html(messageDet);
-//									
+//									$("#offerDetailId").html(messageDet);								
 //									$("#messageDet").html(messageDet);
 									
-									$("#message").html(messageDet);	
-									$("#offerDetailId").html(message);
-									
-									$("#messageDet").html(message);
+									//$("#message").html(messageDet);	
+									//$("#offerDetailId").html(message);									
+									//$("#messageDet").html(message);
 									
 									var dateSplit = messageStartDate.split(" ");
 				                   var firstpart = dateSplit[0];

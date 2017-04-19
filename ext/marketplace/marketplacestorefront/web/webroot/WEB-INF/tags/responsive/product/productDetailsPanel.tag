@@ -366,7 +366,11 @@ tr.d0 td {
 	<c:set var="accessories"><spring:theme code='product.fashionAccessories'/></c:set>
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" value="${productCategoryType}" id="categoryType"/>
-	<div id="productContentDivId"></div>
+	<!-- changes for UF-238 -->
+	
+	<div id="productContentDivId">
+	<c:if test="${not empty aplusHTML}">${aplusHTML}</c:if>
+	</div>
 <c:choose>
 		<c:when test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories}">  <!-- Added for TISPRO-271 -->
 			<div class="trending"  id="ia_products_complements"></div>

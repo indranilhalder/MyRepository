@@ -180,4 +180,19 @@ public class BuyBoxServiceImpl implements BuyBoxService
 		return buyBoxDao.getClassAttrAssignmentsForCode(code);
 	}
 
+	//INC144315542_INC144314878_INC_11113
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#getBuyboxPricesForSizeVariant(java.lang.String)
+	 */
+	@Override
+	public List<BuyBoxModel> getBuyboxPricesForSizeVariant(final String productCode) throws EtailNonBusinessExceptions
+	{
+		// YTODO Auto-generated method stub
+		return buyBoxDao.getBuyboxPricesForSizeVariant(productCode);// INC144314878_INC_11113
+
+	}
+
 }

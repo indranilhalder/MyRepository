@@ -65,8 +65,16 @@ import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.SocketAddress;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,6 +95,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.URIUtil;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,6 +120,7 @@ import com.granule.json.JSONArray;
 import com.granule.json.JSONObject;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants.USER;
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.core.model.VideoComponentModel;
 import com.tisl.mpl.data.EMITermRateData;
@@ -315,6 +325,18 @@ public class ProductPageController extends MidPageController
 		this.mplProductFacade = mplProductFacade;
 	}
 
+	@Autowired
+	private ConfigurationService configService;
+
+	/**
+	 * @return the configService
+	 */
+	@Autowired
+	public ConfigurationService getConfigService()
+	{
+		return configService;
+	}
+
 	/**
 	 *
 	 * @param productCode
@@ -336,6 +358,8 @@ public class ProductPageController extends MidPageController
 	{
 
 		String returnStatement = null;
+		final String userAgent = request.getHeader("user-agent");
+
 		try
 		{
 			if (null != productCode)
@@ -343,6 +367,24 @@ public class ProductPageController extends MidPageController
 				productCode = productCode.toUpperCase();
 			}
 			LOG.debug("**************************************opening pdp for*************" + productCode);
+			//Changes for UF-238
+			if (!StringUtils.isEmpty(userAgent) && userAgent.toLowerCase().contains("googlebot"))
+			{
+
+				final String aPlusContent = crawlerDetect(productCode, model, request);
+				if (aPlusContent != null)
+				{
+					model.addAttribute("aplusHTML", aPlusContent);
+				}
+				else
+				{
+					model.addAttribute("aplusHTML", "");
+				}
+			}
+			else
+			{
+				model.addAttribute("aplusHTML", "");
+			}
 			final ProductModel productModel = productService.getProductForCode(productCode);
 
 			if (productModel.getLuxIndicator() != null
@@ -463,6 +505,68 @@ public class ProductPageController extends MidPageController
 
 
 		return returnStatement;
+	}
+
+	//Changes for UF-238
+	@SuppressWarnings("unused")
+	private String crawlerDetect(final String productCode, final Model model, final HttpServletRequest request)
+	{
+
+		String ApluscontentResponse = null;
+		final StringBuilder content = new StringBuilder();
+		BufferedReader bufferedReader = null;
+
+		try
+		{
+			final String proxyPort = configService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.RATING_PROXY_PORT);
+			final String proxySet = configService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.RATING_PROXY_ENABLED);
+			final String proxyHost = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY);
+			final int proxyPortInt = Integer.parseInt(proxyPort);
+			final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
+			final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+			final String domain = request.getRequestURL().toString();
+
+			//URL Object
+			final URL aplushtml = new URL(domain + "/p-fetchPageContents?productCode=" + productCode);
+
+			//URL Connection object
+			final HttpURLConnection pdpConnection = (HttpURLConnection) aplushtml.openConnection();
+			pdpConnection.connect();
+			bufferedReader = new BufferedReader(new InputStreamReader(pdpConnection.getInputStream()));
+
+			String line;
+			while ((line = bufferedReader.readLine()) != null)
+			{
+				content.append(line + "\n");
+			}
+		}
+		catch (final IOException e)
+		{
+			System.err.println("An IOException was caught :" + e.getMessage());
+		}
+		finally
+		{
+
+			try
+			{
+
+				if (null != content.toString())
+				{
+					ApluscontentResponse = StringEscapeUtils.unescapeHtml(content.toString());
+					LOG.debug("Click to call web service return " + ApluscontentResponse);
+				}
+				bufferedReader.close();
+			}
+			catch (final Exception ex)
+			{
+				ex.printStackTrace();
+			}
+
+
+		}
+		return ApluscontentResponse;
 	}
 
 	/**
