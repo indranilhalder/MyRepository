@@ -3912,7 +3912,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				}
 				else
 				{
-					storeName.append(MarketplacecommerceservicesConstants.COMMA+store);
+					storeName.append(MarketplacecommerceservicesConstants.COMMA);
+					storeName.append(store);
 					storeAddress = storeAddress(pointOfSerivce.getAddress(), pointOfSerivce.getDisplayName(), storeAddress);
 					storeAddress.append(geoCodeUrl);
 				}
