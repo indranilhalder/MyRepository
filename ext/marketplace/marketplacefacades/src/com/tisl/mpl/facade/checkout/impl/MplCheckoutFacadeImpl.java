@@ -1018,10 +1018,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
 							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
 									.getCode())
-					{/* sonar Issue 
-						final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-								.getDeliveryFulfillModes().getCode();*/
-
+					{
+						
 						//	if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE))
 						//	{
 						//		marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
