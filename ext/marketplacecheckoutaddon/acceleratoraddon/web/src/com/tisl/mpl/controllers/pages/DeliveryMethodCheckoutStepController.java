@@ -135,6 +135,7 @@ import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
+
 @Controller
 @RequestMapping(value = "/checkout/multi/delivery-method")
 public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepController
@@ -234,8 +235,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 	@Autowired
 	private DateUtilHelper dateUtilHelper;
-	
-	@Autowired ProductService productService;
+
+	@Autowired
+	ProductService productService;
 
 	private static final Logger LOG = Logger.getLogger(DeliveryMethodCheckoutStepController.class);
 
@@ -500,7 +502,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 			//CAR:127
 			//final CartData caData = getMplCartFacade().getCartDataFromCartModel(cartModel, false);
-			 CartData cartUssidData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+			CartData cartUssidData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 			//TISST-13012
 
 			final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
@@ -554,7 +556,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 
 			//CAR-130
-			 final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(); 
+			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 			cartUssidData = getMplCustomAddressFacade().getCheckoutCart();
 			List<AddressData> deliveryAddress = null;
 
@@ -1842,14 +1844,14 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				final InvReserForDeliverySlotsRequestData deliverySlotsRequestData = new InvReserForDeliverySlotsRequestData();
 				deliverySlotsRequestData.setCartId(cartDataSupport.getGuid());
 				final InvReserForDeliverySlotsResponseData deliverySlotsResponseData = getMplCartFacade()
-						.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData,cartModel);
+						.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData, cartModel);
 				final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
 				final MplLPHolidaysModel mplLPHolidaysModel = mplConfigFacade
 						.getMplLPHolidays(MarketplacecommerceservicesConstants.CAMPAIGN_URL_ALL);
 				final Map<String, List<String>> dateTimeslotMapList = new HashMap<String, List<String>>();
 
 
-				
+
 				final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
 				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 				{
@@ -1865,14 +1867,18 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					}
 				}
 				modelService.saveAll(cartEntryList);
-				
+
 				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 				{
 					if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
 					{
-						if(null != deliverySlotsResponseData){
-							for(InvReserForDeliverySlotsItemEDDInfoData responseData:deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()){
-								if(responseData.getUssId().equalsIgnoreCase(cartEntryModel.getSelectedUSSID())){
+						if (null != deliverySlotsResponseData)
+						{
+							for (final InvReserForDeliverySlotsItemEDDInfoData responseData : deliverySlotsResponseData
+									.getInvReserForDeliverySlotsItemEDDInfoData())
+							{
+								if (responseData.getUssId().equalsIgnoreCase(cartEntryModel.getSelectedUSSID()))
+								{
 									String estDeliveryDateAndTime = null;
 									if (responseData.getEDD() != null && StringUtils.isNotEmpty(responseData.getEDD()))
 									{
@@ -1882,9 +1888,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 									{
 										estDeliveryDateAndTime = responseData.getNextEDD();
 									}
-									if(null != estDeliveryDateAndTime && StringUtils.isNotEmpty(estDeliveryDateAndTime)){
-										SimpleDateFormat parseFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
-										Date dateForEDD = parseFormat.parse(estDeliveryDateAndTime);
+									if (null != estDeliveryDateAndTime && StringUtils.isNotEmpty(estDeliveryDateAndTime))
+									{
+										final SimpleDateFormat parseFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+										final Date dateForEDD = parseFormat.parse(estDeliveryDateAndTime);
 										cartEntryModel.setExpectedDeliveryDate(dateForEDD);
 									}
 								}
@@ -2077,13 +2084,13 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						cartEntryModel.setTimeSlotTo(timeSlots[1].trim());
 						if (null != deliverySlotCost && !deliverySlotCost.isEmpty() && !deliverySlotCost.matches("0"))
 						{
-							cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(deliverySlotCost));						
+							cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(deliverySlotCost));
 							if (cartModel.getTotalPriceWithConv() != null && StringUtils.isNotEmpty(deliverySlotCost))
 							{
 								cartModel.setTotalPriceWithConv(new Double(cartModel.getTotalPriceWithConv().doubleValue()
 										+ Double.valueOf(deliverySlotCost).doubleValue()));
 							}
-							
+
 						}
 					}
 				}
@@ -2133,7 +2140,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					cartEntryModel.setTimeSlotFrom("");
 					cartEntryModel.setTimeSlotTo("");
 					cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
-					
+
 				}
 			}
 		}
@@ -2157,9 +2164,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 							- Double.valueOf(deliverySlotCost).doubleValue()));
 				}
 			}
-			catch (Exception exception)
+			catch (final Exception exception)
 			{
-				LOG.error("Exception rasing while Convert prise amount  "+exception.getMessage());
+				LOG.error("Exception rasing while Convert prise amount  " + exception.getMessage());
 			}
 			modelService.save(cartModel);
 			modelService.refresh(cartModel);
@@ -2248,7 +2255,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				newAddress.setLine3(addressForm.getLine3());
 				newAddress.setLocality(addressForm.getLocality());
 				// R2.3 changes
-				if(StringUtils.isNotBlank(addressForm.getLandmark())&& !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
+				if (StringUtils.isNotBlank(addressForm.getLandmark())
+						&& !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
 				{
 					newAddress.setLandmark(addressForm.getLandmark());
 				}
@@ -2289,7 +2297,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				getMplCustomAddressFacade().setDeliveryAddress(newAddress);
 				//TISUTO-12 , TISUTO-11
 				final String redirectURL = getMplCartFacade().checkPincodeAndInventory(addressForm.getPostcode());
-				
+
 				//Added the code for Delivery Method slots
 				final CartData cartDataSupport = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 				final List<String> deliveryModelList = new ArrayList<String>();
@@ -2310,7 +2318,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					}
 				}
 				//Start the Buf Fix TATA-862
-				if ("" != redirectURL && null != redirectURL&& redirectURL.trim().length() > 0)
+				if ("" != redirectURL && null != redirectURL && redirectURL.trim().length() > 0)
 				{
 					jsonObj.put("redirect_url", redirectURL);
 					//return redirectURL;
@@ -2322,16 +2330,19 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						LOG.debug("****************:" + MarketplacecommerceservicesConstants.REDIRECT
 								+ MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
 								+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL);
-//						return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
-//								+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL;
-						jsonObj.put("redirect_url", MarketplacecommerceservicesConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
-							+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL);
-					}else{
+						//						return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
+						//								+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL;
+						jsonObj.put("redirect_url", MarketplacecommerceservicesConstants.REDIRECT
+								+ MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
+								+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL);
+					}
+					else
+					{
 						jsonObj.put("redirect_url", getCheckoutStep().nextStep());
 					}
-					
+
 				}
-            // End for Bug Fix - TATA-862
+				// End for Bug Fix - TATA-862
 				//Recalculating Cart Model
 				LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
 				getMplCheckoutFacade().reCalculateCart(cartData);
@@ -2437,11 +2448,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
 			newAddress.setState(addressForm.getState());
-			if(StringUtils.isNotBlank(addressForm.getLandmark()) && !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
+			if (StringUtils.isNotBlank(addressForm.getLandmark())
+					&& !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
 			{
 				newAddress.setLandmark(addressForm.getLandmark());
 			}
-			else if(StringUtils.isNotBlank(addressForm.getOtherLandmark()))
+			else if (StringUtils.isNotBlank(addressForm.getOtherLandmark()))
 			{
 				newAddress.setLandmark(addressForm.getOtherLandmark());
 			}
@@ -2509,8 +2521,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			if (null != cartEntryData && null != cartEntryData.getMplDeliveryMode())
 			{
 				if (cartEntryData.getMplDeliveryMode().getCode()
-						.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY) || cartEntryData.getMplDeliveryMode().getCode()
-						.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+						.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
+						|| cartEntryData.getMplDeliveryMode().getCode()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
 				{
 					deliveryModelList.add(cartEntryData.getMplDeliveryMode().getCode());
 				}
@@ -2913,19 +2926,19 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode, final GPS gps, final Double
 	 * configurableRadius) {
-	 *
+	 * 
 	 * final List<PincodeServiceData> requestData = new ArrayList<PincodeServiceData>(); PincodeServiceData data = null;
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
 	 * productService.getProductForCode(productCode); final ProductData productData =
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 *
+	 * 
 	 * if (productData != null)
-	 *
+	 * 
 	 * { for (final SellerInformationData seller : productData.getSeller())
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * { final List<MarketplaceDeliveryModeData> deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data =
 	 * new PincodeServiceData(); if ((null != seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for
 	 * (final MarketplaceDeliveryModeData deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
@@ -2943,10 +2956,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else { LOG.debug("No price avaiable for seller :" +
 	 * seller.getSellerID()); continue; } if (null != seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) {
 	 * data.setIsCOD(seller.getIsCod()); }
-	 *
-	 *
+	 * 
+	 * 
 	 * LOG.debug("Current locations for Seller Id**********" + seller.getSellerID());
-	 *
+	 * 
 	 * @SuppressWarnings("boxing") final List<Location> storeList = pincodeServiceFacade.getSortedLocationsNearby(gps,
 	 * configurableRadius.doubleValue(), seller.getSellerID()); // Code optimized as part of performance fix TISPT-104
 	 * LOG.debug("StoreList size is :" + storeList.size()); if (CollectionUtils.isNotEmpty(storeList)) { final
@@ -2956,20 +2969,20 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	 * seller.getSellerID()); LOG.debug("seller.getUssid():" + seller.getUssid()); LOG.debug("seller.getUssid():" +
 	 * seller.getUssid()); data.setUssid(seller.getUssid());
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data);
-	 *
-	 *
+	 * 
+	 * 
 	 * }
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * } } catch (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 *
+	 * 
 	 * catch (final Exception e) {
-	 *
+	 * 
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 
@@ -2983,7 +2996,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());

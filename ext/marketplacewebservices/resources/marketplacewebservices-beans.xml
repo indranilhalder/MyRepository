@@ -2750,13 +2750,13 @@
 		<property name="transactionId" type="String" />
 		<property name="returnFullfillmentType" type="String" />
 	</bean>
-
-	<bean class="com.tisl.mpl.wsdto.ReturnRequestDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+   <!-- Commented the duplicate code  -->
+<!-- 	<bean class="com.tisl.mpl.wsdto.ReturnRequestDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="orderProductWsDTO"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.OrderProductWsDTO>" />
 		<property name="returnReasonDetailsWsDTO"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ReturnReasonDTO>" />
-	</bean>
+	</bean> -->
 
 	<bean class="com.tisl.mpl.wsdto.ReturnReasonDTO">
 		<property name="reasonDescription" type="String" />
@@ -2898,7 +2898,7 @@
 	</bean>
 		<!-- Added for mobile inventory Reservation START  END  -->
 		
-	<bean class="com.tisl.mpl.wsdto.ReturnRequestDTO">
+	<bean class="com.tisl.mpl.wsdto.ReturnRequestDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="returnReasonCode" type="java.lang.String"/>
 		<property name="refundType" type="java.lang.String"/>
 		<property name="accountNumber" type="java.lang.String"/>
@@ -2938,6 +2938,12 @@
 		<property name="ticketSubType" type="java.lang.String"/>
 		<property name="flag" type="java.lang.String"/>
 		<property name="storeCreditNo" type="java.lang.String"/>
+		<!-- Added the bean config properties -->
+		<property name="orderProductWsDTO"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.OrderProductWsDTO>" />
+		<property name="returnReasonDetailsWsDTO"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.ReturnReasonDTO>" />
+			
 		<!--  R2.3 CRM to Commerce end-->
 	</bean>
 	<!-- For Return Web Services Change Pincode QuickDrop Stores -->

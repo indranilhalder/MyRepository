@@ -813,7 +813,9 @@
 																id="entryNumber" value="${entry.entryNumber}" />
 														</div>
 														<div class="buttons">
-															<a class="close" data-dismiss="modal">Close</a>
+															<!-- TISPRDT - 995 -->
+																	<!-- <a class="close" data-dismiss="modal" >Close</a> -->
+																<!-- TISPRDT - 995 -->
 															<button type="button"
 																class="light-red cancel-confirm-detail" id="myaccount"
 																data-dismiss="modal">Confirm Cancellation</button>
@@ -1950,7 +1952,9 @@
 																id="entryNumber" value="${entry.entryNumber}" />
 														</div>
 														<div class="buttons">
-															<a class="close" data-dismiss="modal">Close</a>
+															<!-- TISPRDT - 995 -->
+																	<!-- <a class="close" data-dismiss="modal" >Close</a> -->
+																<!-- TISPRDT - 995 -->
 															<button type="button"
 																class="light-red cancel-confirm-detail" id="myaccount"
 																data-dismiss="modal">Confirm Cancellation</button>

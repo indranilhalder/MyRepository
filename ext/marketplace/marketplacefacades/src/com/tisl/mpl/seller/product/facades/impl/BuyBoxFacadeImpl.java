@@ -809,6 +809,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		boolean onlineExclusive = false;
 		Date existDate = null;
 		final String allowNew = configurationService.getConfiguration().getString("attribute.new.display");
+		final String configSellerHandlingTime = configurationService.getConfiguration().getString("buybox.sellerhandling.time");
 		for (final SellerInformationModel seller : productModel.getSellerInformationRelator())
 		{
 			if ((seller.getSellerAssociationStatus() == null || seller.getSellerAssociationStatus().equals(
@@ -850,9 +851,12 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 						}
 						if (ExpressDeliveryEnum.YES.equals(rich.getExpressDelivery()))
 						{
-							if(StringUtils.isNotEmpty(rich.getSellerHandlingTime().toString())){
+							if(null != rich.getSellerHandlingTime() && StringUtils.isNotEmpty(rich.getSellerHandlingTime().toString())){
+								//configure the seller handling time 
+								final int sellerHandlingTimeForConfig = configSellerHandlingTime == null ? 0 : Integer.parseInt(configSellerHandlingTime);
+								
 								Integer sellerHandlingTime = rich.getSellerHandlingTime();
-								if(sellerHandlingTime.intValue()>=0 && sellerHandlingTime.intValue()<=24){
+								if(sellerHandlingTime.intValue()>=0 && sellerHandlingTime.intValue()<=sellerHandlingTimeForConfig){
 									deliveryModes.append(ED).append(','); // SONAR Fixes
 								}
 							}

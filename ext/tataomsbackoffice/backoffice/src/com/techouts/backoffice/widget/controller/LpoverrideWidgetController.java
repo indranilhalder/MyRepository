@@ -301,12 +301,11 @@ public class LpoverrideWidgetController
 	public void saveAllTransactions(@BindingParam("lpOverride") final Boolean lpOverride)
 	{
 		LOG.info("in side lp override and servicable" + lpOverride);
-
+		displayPopup = Boolean.FALSE;
 		final List<OrderLineInfo> listOfOrderLineInfo = new ArrayList<OrderLineInfo>();
 		if (modifiedTransactinTrack != null && modifiedTransactinTrack.isEmpty())
 		{
 			Messagebox.show("No Changes Found ");
-			displayPopup = Boolean.FALSE;
 			return;
 		}
 
@@ -329,7 +328,7 @@ public class LpoverrideWidgetController
 				{
 					Messagebox.show(
 							"Changes could not processed. AWB number should be changed along with LP name when order status is SCANNED/HOTC/REVRSAWB");
-					displayPopup = Boolean.FALSE;
+					//	displayPopup = Boolean.FALSE;
 					if (modifiedTransactinTrack != null)
 					{
 						modifiedTransactinTrack.clear();
@@ -349,7 +348,7 @@ public class LpoverrideWidgetController
 				{
 					Messagebox.show(
 							"Changes could not processed. AWB number should be changed along with LP name when order status is SCANNED/HOTC/REVRSAWB");
-					displayPopup = Boolean.FALSE;
+					//	displayPopup = Boolean.FALSE;
 					if (modifiedTransactinTrack != null)
 					{
 						modifiedTransactinTrack.clear();
@@ -416,10 +415,10 @@ public class LpoverrideWidgetController
 	public void nextLpSaveTransaction()
 	{
 		LOG.info("inside nextLp");
+		displayPopup = Boolean.FALSE;
 		final List<OrderLineInfo> listOfOrderLineInfo = new ArrayList<OrderLineInfo>();
 		if (CollectionUtils.isEmpty(selectedEntities))
 		{
-			displayPopup = Boolean.FALSE;
 			Messagebox.show("Please Select  List Item");
 			return;
 		}

@@ -63474,9 +63474,11 @@ span.default input[type="radio"]+label:before {
 .checkTab .checkout-shipping.addNewAddress .formaddress h3 {
     padding-top: 0px;
 }
+/* start of TISPRDT-952 */
 .checkTab .checkout-shipping.addNewAddress .formaddress {
-    padding: 12px 12px 12px 40px;
+    padding: 12px 12px 12px 12px;
 }
+/* end of TISPRDT-952 */
 }
 .checkTab .address-list{
 	margin-right: 12px;
