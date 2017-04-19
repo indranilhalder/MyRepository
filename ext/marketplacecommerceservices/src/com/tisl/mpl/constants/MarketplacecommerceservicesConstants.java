@@ -958,6 +958,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9300 = "B9300";
 	public static final String B9301 = "B9301";
 
+	//Added for TPR-4460
+	public static final String B9302 = "B9302";
+	public static final String B9303 = "B9303";
+	public static final String B9304 = "B9304";
 	//TISPRD-5986  MSH category 404 error handling
 	public static final String E0023 = "E0023";
 
@@ -1891,7 +1895,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String BUYAGETPERCENTAGEDISCOUNTONB = "BuyAGetPercentageDiscountOnB".intern();
 	//FREEBIE FIX
 	public static final String FREEBIEPRICETHRESHOLD = "freebiePriceThreshold";
-	
+
 	// OrderIssues:- multiple Payment Response from juspay restriction
 	public static final String DUPLICATEJUSPAYRESONSE = "duplicatJuspayResponse";
 
