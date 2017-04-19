@@ -63364,4 +63364,12 @@ position:relative;
 #stw_widget .carousel-component{
 margin:0px;
 }
+#stw_widget .carousel .item.quickview{
+margin:0px;
+padding:0px;
+}
+#stw_widget .owl-theme .owl-controls{
+	top:38%;
+}
+
 /* STW changes end */

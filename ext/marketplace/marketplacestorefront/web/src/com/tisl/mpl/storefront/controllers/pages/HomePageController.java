@@ -1252,8 +1252,9 @@ public class HomePageController extends AbstractPageController
 	}
 
 	/**
-	 * This is a Sales Traffic Widget with upstream data from the Dew Server
+	 * UF-258 This is a Sales Traffic Widget with upstream data from the Dew Server
 	 */
+
 	@ResponseBody
 	@RequestMapping(value = "/getStwrecomendations", method = RequestMethod.GET)
 	public JSONObject getStwWidgetDada(final HttpServletRequest request)

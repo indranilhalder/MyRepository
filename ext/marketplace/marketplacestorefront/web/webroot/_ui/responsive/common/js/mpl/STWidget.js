@@ -1,4 +1,5 @@
 var stwHtml = "";
+var product="";
 $(document).ready(function(){
 	stWidget('#stw_widget','');
 	
@@ -98,13 +99,24 @@ function formStwWidgetProducts(STWJObject){
 	stwWidgetProducts='<div class="carousel-component">';
 	stwWidgetProducts +='<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference stw-widget-owl">';
 	    $.each(STWJObject.STWElements, function( index, value ) {
+	    	var productId=value.listingId;
+	    	var product=productId.toUpperCase();
+	    	//console.log("productID"+product);
+	    //	var productQVUrl=value.productUrl+"/quickView";
+	    	if(null!=value.mrp && null!=value.mop){
+	    	var	savingPriceCal=(value.mrp-value.mop);
+			var savingPriceCalPer=(savingPriceCal/value.mrp)*100;
+			var	savingsOnProduct=Math.round((savingPriceCalPer*100)/100);
+			}
 	    	stwWidgetProducts += '<div class="item slide">';
-	    	stwWidgetProducts +='<div class="product-tile"><div class="image"><a href="'+value.productUrl+'" class="product-tile"> <img src="'+value.imageUrl+'"></a></div>';
+	    	stwWidgetProducts +='<div class="product-tile"><li onmouseover="showQuickview(this)" onmouseout="hideQuickView(this)" class="look slide product-tile stw_widget_list_elements productParentList" style="display: inline-block;position: relative;"><div class="image"><a href="'+value.productUrl+'" class="product-tile"> <img src="'+value.imageUrl+'"></a>';
+	    	stwWidgetProducts += '<div onclick=popupwindow("'+product+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 118px; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;font-size:12px;"><span>Quick View</span></div>';
 	    	stwWidgetProducts +=' <div class="short-info"><ul class="color-swatch"><li><span  style="background-color: '+value.availableColor+';border: 1px solid rgb(204, 211, 217);" title="'+value.availableColor+'"></span></li></ul>';
 	    	stwWidgetProducts += '<div class="brand">'+value.productBrand+'</div>';
 	    	stwWidgetProducts += ' <a href="'+value.productUrl+'" class="item"><h3 class="product-name">'+value.productName+'</h3>';
 	    	stwWidgetProducts += '<div class="price"><span class="stw-mrp">&#8377;'+value.mrp+' </span><span class="stw-mop"> &#8377;'+value.mop+'</span>';
-	    	stwWidgetProducts += '</div></a></div></div></div>'; 
+	    	stwWidgetProducts += '<p class="savings pdp-savings"> <span>(-'+savingsOnProduct+'%)</span></p>';
+	    	stwWidgetProducts += '</div></a></div></div></li></div></div>'; 
 	    });
 	stwWidgetProducts+='</div></div>'; 
 	$("#widget").html(stwWidgetProducts);  
