@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.spy.memcached.AddrUtil;
 import net.spy.memcached.MemcachedClient;
 
 import org.apache.log4j.Logger;
@@ -29,11 +28,18 @@ public class MplDefaultCachingStrategy implements CachingStrategy
 	String memCacheEnabled;
 	boolean isMemCachedEnabled;
 
-	MemcachedClient cacheClient;
-	int ttl = 3600;
-
 	@Autowired
 	private ConfigurationService configurationService;
+
+	@Autowired
+	private MplMemcachedClientHelper mplMemcachedClientHelper;
+
+
+
+	//final String ip = configurationService.getConfiguration().getString("promotion.memcache.env.ip");
+	int ttl = 3600;
+
+
 
 	private final static Logger LOG = Logger.getLogger(MplDefaultCachingStrategy.class.getName());
 
@@ -50,20 +56,29 @@ public class MplDefaultCachingStrategy implements CachingStrategy
 		{
 			try
 			{
-				final String ip = configurationService.getConfiguration().getString("promotion.memcache.env.ip");
+
 				ttl = Integer.parseInt(configurationService.getConfiguration().getString("promotion.memcache.ttl"));
 
-				cacheClient = new MemcachedClient(AddrUtil.getAddresses(ip));
+
+				LOG.debug("ttl for Memcache" + ttl);
+
+				LOG.debug("Putting the value for CART GUID : " + code + "Value : " + results);
+
+				final MemcachedClient cacheClient = getMplMemcachedClientHelper().getCacheClient();
 				cacheClient.set(code, ttl, results);
+
+				LOG.debug("Able to Put the value for CART GUID : " + code + "Value : " + results);
 			}
 			catch (final Exception exception)
 			{
-				LOG.error("Error during cacheClient creation for Promtion Mem cache Impl");
+				LOG.error("Error during cacheClient creation for Promtion Mem cache Impl : Method : PUT");
+				exception.printStackTrace();
 			}
 
 		}
 
 	}
+
 
 	@Override
 	public List<PromotionResult> get(final String code)
@@ -77,11 +92,14 @@ public class MplDefaultCachingStrategy implements CachingStrategy
 		{
 			try
 			{
+				LOG.debug("Returning value for Code: " + code);
+				final MemcachedClient cacheClient = getMplMemcachedClientHelper().getCacheClient();
 				return ((List) cacheClient.get(code));
 			}
 			catch (final Exception exception)
 			{
-				LOG.error("Error during cacheClient creation for Promtion Mem cache Impl");
+				LOG.error("Error during cacheClient creation for Promtion Mem cache Impl : Method : get");
+				exception.printStackTrace();
 			}
 
 		}
@@ -102,11 +120,14 @@ public class MplDefaultCachingStrategy implements CachingStrategy
 		{
 			try
 			{
+				LOG.debug("Deleting value for the code : " + code);
+				final MemcachedClient cacheClient = getMplMemcachedClientHelper().getCacheClient();
 				cacheClient.delete(code);
 			}
 			catch (final Exception exception)
 			{
-				LOG.error("Error during cacheClient creation for Promtion Mem cache Impl");
+				LOG.error("Error during cacheClient creation for Promtion Mem cache Impl : Method : remove");
+				exception.printStackTrace();
 			}
 
 		}
@@ -147,5 +168,24 @@ public class MplDefaultCachingStrategy implements CachingStrategy
 	public void setConfigurationService(final ConfigurationService configurationService)
 	{
 		this.configurationService = configurationService;
+	}
+
+
+	/**
+	 * @return the mplMemcachedClientHelper
+	 */
+	public MplMemcachedClientHelper getMplMemcachedClientHelper()
+	{
+		return mplMemcachedClientHelper;
+	}
+
+
+	/**
+	 * @param mplMemcachedClientHelper
+	 *           the mplMemcachedClientHelper to set
+	 */
+	public void setMplMemcachedClientHelper(final MplMemcachedClientHelper mplMemcachedClientHelper)
+	{
+		this.mplMemcachedClientHelper = mplMemcachedClientHelper;
 	}
 }
