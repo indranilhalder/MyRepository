@@ -140,10 +140,8 @@ import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
-import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.helper.AddToCartHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
-import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
@@ -235,8 +233,8 @@ public class CartsController extends BaseCommerceController
 	private UserService userService;
 	@Resource(name = "mplCheckoutFacade")
 	private MplCheckoutFacade mplCheckoutFacade;
-	@Resource
-	private MplCustomerProfileService mplCustomerProfileService;
+	/*@Resource sonar Issue
+	private MplCustomerProfileService mplCustomerProfileService;*/
 	@Resource
 	private CommerceCartService commerceCartService;
 	@Resource
