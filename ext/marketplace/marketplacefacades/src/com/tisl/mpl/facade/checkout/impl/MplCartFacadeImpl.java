@@ -4,7 +4,6 @@
 package com.tisl.mpl.facade.checkout.impl;
 
 import de.hybris.platform.acceleratorservices.config.SiteConfigService;
-import de.hybris.platform.catalog.CatalogService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
@@ -87,7 +86,6 @@ import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
-import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
@@ -151,9 +149,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Autowired
 	private MplDelistingService mplDelistingService;
 
-	@Autowired
+	/*@Autowired Sonar Issue
 	private CatalogService catalogService;
-
+*/
 
 	@Resource(name = "pincodeService")
 	private PincodeService pincodeService;
@@ -166,8 +164,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
 
-	@Autowired
-	private MplCheckoutFacade mplCheckoutFacade;
+	/*@Autowired Sonar Fix
+	private MplCheckoutFacade mplCheckoutFacade;*/
 
 
 	@Autowired
