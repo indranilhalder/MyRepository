@@ -397,6 +397,9 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 
 				}
 				LOG.debug("Total Refund Schedule Delivery Charges :"+totalRefundScheduleDeliveryCharges);
+//				Mrupee implementation 
+				if((null !=orderModel.getIsWallet() &&  WalletEnum.NONWALLET.toString().equalsIgnoreCase(orderModel.getIsWallet().getCode()))||null ==orderModel.getIsWallet())
+				{
 				paymentTransactionModel = mplJusPayRefundService.doRefund(
 						orderModel, totalRefundScheduleDeliveryCharges,
 						PaymentTransactionType.REFUND_SCHEDULE_DELIVERY_CHARGES,uniqueRequestId);
@@ -488,10 +491,66 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 
 					mplJusPayRefundService.attachPaymentTransactionModel(orderModel, paymentTransactionModel);
 				}
+				}
+//				Mrupee payment mode implementation 
+				else if(null !=orderModel.getIsWallet() &&  WalletEnum.MRUPEE.toString().equalsIgnoreCase(orderModel.getIsWallet().getCode())){
+					
+					LOG.debug("%%%%%%%%%  Mrupee Refund Schedule Delivery Charges Started ^^^^^^^^^^^^^^" +orderModel.getIsWallet() + orderModel.getIsWallet().getCode());
+					
+					paymentTransactionModel = mplMWalletRefundService.doRefund(
+							orderModel, totalRefundScheduleDeliveryCharges,
+							PaymentTransactionType.REFUND_SCHEDULE_DELIVERY_CHARGES,uniqueRequestId);
+					if (null != paymentTransactionModel) {
+						mplJusPayRefundService.attachPaymentTransactionModel(
+								orderModel, paymentTransactionModel);
+						
+						/*made changes in r2.3 start  */
+						for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
+								.entrySet()) {
+							 AbstractOrderEntryModel entry = refundEntry.getKey();
+							 if(null != entry) {
+								 entry.setScheduleChargesJuspayRequestId(uniqueRequestId);
+								 modelService.save(entry);
+							 }
+							 
+							 // Added for BUG ID : TISRLREG-4131 END 
+								ConsignmentStatus newStatus = null;
+								 if(null != refundEntry.getKey() && null != refundEntry.getKey().getConsignmentEntries()); {
+									 newStatus = refundEntry.getKey().getConsignmentEntries().iterator().next().getConsignment().getStatus();;
+								 }
+								// sending current order status, as oms is not accepting null value and no status update is required
+								 
+									LOG.debug(" Before OMS call  Mrupee Refund Schedule Delivery Charges Started ^^^^^^^^^^^^^^" );
+							mplJusPayRefundService.makeRefundOMSCall(refundEntry
+									.getKey(), paymentTransactionModel, refundEntry
+									.getKey().getRefundedScheduleDeliveryChargeAmt(), newStatus,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S);  
+							
+							LOG.debug(" After OMS call  Mrupee Refund Schedule Delivery Charges Started ^^^^^^^^^^^^^^" );
+						}
+						/*made changes in r2.3 end  */
+					} 
+					else {
+						LOG.error("@@@@@@  @@@@@  @@@  @@@@ Mrupee Refund Schedule Delivery Charges Failed +++++++++ +++++++++");
 
+						for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
+								.entrySet()) {
+							ConsignmentStatus newStatus = null;
+							if(null != refundEntry.getKey() && null != refundEntry.getKey().getConsignmentEntries()); {
+								 newStatus = refundEntry.getKey().getConsignmentEntries().iterator().next().getConsignment().getStatus();;
+							 }
+							mplJusPayRefundService.makeRefundOMSCall(refundEntry.getKey(),paymentTransactionModel,refundEntry.getKey().getRefundedScheduleDeliveryChargeAmt(),newStatus,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S);
+
+							}
+						paymentTransactionModel = mplJusPayRefundService
+								.createPaymentTransactionModel(orderModel, "FAILURE", totalRefundScheduleDeliveryCharges,
+										PaymentTransactionType.RETURN, "NO Response FROM PG", uniqueRequestId);
+						mplJusPayRefundService.attachPaymentTransactionModel(orderModel, paymentTransactionModel);
+					}
+				}
 			} catch (Exception e) {
 				LOG.error(e.getMessage(), e);
 
+				if((null !=orderModel.getIsWallet() &&  WalletEnum.NONWALLET.toString().equalsIgnoreCase(orderModel.getIsWallet().getCode()))||null ==orderModel.getIsWallet()){
 				for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
 						.entrySet()) {
 					ConsignmentStatus newStatus = null;
@@ -509,6 +568,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 					refundTransactionMappingModel.setRefundType(JuspayRefundType.REFUND_SCHEDULE_DELIVERY_CHARGE);
 					refundTransactionMappingModel.setRefundAmount(entry.getRefundedScheduleDeliveryChargeAmt());//TISPRO-216 : Refund amount Set in RTM
 					getModelService().save(refundTransactionMappingModel);
+				}
 				}
 				LOG.error(e.getMessage(), e);
 				paymentTransactionModel = mplJusPayRefundService
@@ -530,7 +590,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 		PaymentTransactionModel paymentTransactionModel = null;
 		Double totalRefundDeliveryCharges = Double.valueOf(0);
 		if (MapUtils.isNotEmpty(refundMap)) {
-			final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
+		final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
 			
 			try {
 				for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
@@ -642,6 +702,8 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 			} 
 			else if(null !=orderModel.getIsWallet() &&  WalletEnum.MRUPEE.toString().equalsIgnoreCase(orderModel.getIsWallet().getCode())){
 				
+				LOG.debug(" ************** Mrupee Refund Delivery Charges Started ^^^^^^^^^^^^^^" );
+				
 				paymentTransactionModel = mplMWalletRefundService.doRefund(
 						orderModel, totalRefundDeliveryCharges,
 						PaymentTransactionType.REFUND_DELIVERY_CHARGES,uniqueRequestId);
@@ -649,18 +711,39 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 					mplJusPayRefundService.attachPaymentTransactionModel(
 							orderModel, paymentTransactionModel);
 					
-					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
-							.entrySet()) {
-//						mplJusPayRefundService.makeRefundOMSCall(refundEntry
-//								.getKey(), paymentTransactionModel, refundEntry
-//								.getKey().getRefundedDeliveryChargeAmt(), null);
-						//R2.3
-//						mplJusPayRefundService.makeRefundOMSCall(refundEntry
-//								.getKey(), paymentTransactionModel, refundEntry
-//								.getKey().getRefundedDeliveryChargeAmt(), newStatus,isEDToHD?MarketplacecommerceservicesConstants.REFUND_CATEGORY_E:null);	
-					}
-				} else {
-				LOG.error("Refund Delivery Charges Failed");
+						/*made changes in r2.3 start  */
+						for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
+								.entrySet()) {
+							 AbstractOrderEntryModel entry = refundEntry.getKey();
+							// Double refundedDeliveryCharges = entry.getRefundedDeliveryChargeAmt();
+							boolean isEDToHD = false;
+							if(null != refundEntry.getKey() && null != refundEntry.getKey().getIsEDtoHD() && refundEntry.getKey().getIsEDtoHD()) {
+								isEDToHD= true;
+							}
+							 if(null != entry) {
+								 entry.setDelChargesJuspayRequestId(uniqueRequestId);
+								 modelService.save(entry);
+							 }
+							 
+								ConsignmentStatus newStatus = null;
+								 if(null != refundEntry.getKey() && null != refundEntry.getKey().getConsignmentEntries()); {
+									 newStatus = refundEntry.getKey().getConsignmentEntries().iterator().next().getConsignment().getStatus();;
+								 }
+								
+								 
+								 // sending current order status, as oms is not accepting null value and no status update is required
+								 
+								 LOG.debug(" ************** Before OMS Mrupee Refund Delivery Charges Call ^^^^^^^^^^^^^^" );
+							mplJusPayRefundService.makeRefundOMSCall(refundEntry
+									.getKey(), paymentTransactionModel, refundEntry
+									.getKey().getRefundedDeliveryChargeAmt(), newStatus,isEDToHD?MarketplacecommerceservicesConstants.REFUND_CATEGORY_E:null);
+							// required.
+							 LOG.debug(" ************** After OMS Mrupee Refund Delivery Charges Call ^^^^^^^^^^^^^^" );
+						}
+						/*made changes in r2.3 end  */
+						}
+				else {
+				LOG.error("********Mrupee Refund Delivery Charges Failed &&&&&&&&&&");
 					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
 							.entrySet()) {
 						ConsignmentStatus newStatus = null;
@@ -679,7 +762,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 			catch (Exception e) {		
 			LOG.error(e.getMessage(), e);
 
-
+			if((null !=orderModel.getIsWallet() &&  WalletEnum.NONWALLET.toString().equalsIgnoreCase(orderModel.getIsWallet().getCode()))||null ==orderModel.getIsWallet()){
 				for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
 						.entrySet()) {
 					ConsignmentStatus newStatus = null;
@@ -698,6 +781,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 					refundTransactionMappingModel.setRefundAmount(entry.getRefundedDeliveryChargeAmt());//TISPRO-216 : Refund amount Set in RTM
 					getModelService().save(refundTransactionMappingModel);
 				}
+			}
 				LOG.error(e.getMessage(), e);
 				paymentTransactionModel = mplJusPayRefundService
 						.createPaymentTransactionModel(orderModel, "FAILURE",
