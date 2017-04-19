@@ -93,9 +93,12 @@
 				<bean class="de.hybris.platform.cscockpit.services.search.meta.processor.ProductPromotionsProcessor">
 					<property name="csPromotionService" ref="csPromotionService"/>
 				</bean>
-				<bean class="de.hybris.platform.cscockpit.services.search.meta.processor.ProductPriceProcessor">
-					<property name="commercePriceService" ref="commercePriceService"/>
+				<bean class="com.tisl.mpl.cockpits.cscockpit.services.search.meta.processor.MplProductPriceProcessor">
+					<property name="buyBoxFacade" ref="buyBoxFacade" />
 				</bean>
+				<!-- <bean class="de.hybris.platform.cscockpit.services.search.meta.processor.ProductPriceProcessor">
+					<property name="commercePriceService" ref="commercePriceService"/>
+				</bean> -->
 			</list>
 		</property>
 	</bean>
