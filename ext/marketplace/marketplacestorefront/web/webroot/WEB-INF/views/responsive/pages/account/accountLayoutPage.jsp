@@ -45,7 +45,7 @@
 			<!----- Left Navigation ENDS --------->
 			<!----- RIGHT Navigation Starts --------->
 			<div class="right-account">
-				<h2>Overview</h2>
+				<h2>My Account</h2>			<!--  UF-249 text change -->
 				
 				<ul class="menu">
 				<cms:pageSlot position="BodyContent" var="feature">

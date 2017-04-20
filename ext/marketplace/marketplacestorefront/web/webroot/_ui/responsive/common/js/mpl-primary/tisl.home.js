@@ -451,7 +451,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
         if (window.localStorage && (html = window.localStorage.getItem(
             "brandContent-" + id)) && html != "") {
             // console.log("Local");
-            $(".home-brands-you-love-carousel").css("margin-bottom", "50px");
+            $(".home-brands-you-love-carousel").css("margin-bottom", "33px");  /*UF-249*/
             //$('#brandsYouLove').append(defaultHtml);
             $('.home-brands-you-love-desc').remove();
             $('#brandsYouLove').append(decodeURI(html));
@@ -465,7 +465,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                     $(".home-brands-you-love-carousel").css(
                         "margin-bottom", "120px");
                     $("#brandsYouLove").append(
-                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 200px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='"+staticHost+"/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
+                        "<div class='loaderDiv' style='z-index: 100000;position: absolute; top: 200px;left: 50%;margin-left: -50px;'><img src='"+staticHost+"/_ui/responsive/common/images/red_loader.gif'/></div>"
                     );
                 },
                 url: ACC.config.encodedContextPath +
@@ -479,7 +479,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                         "<div class='home-brands-you-love-desc'>";
                     if (typeof response.text !== "undefined") {
                         defaultHtml += response.text;
-                    }
+                    } /* UF-249*/
                     if (typeof response.firstProductImageUrl !==
                         "undefined") {
                         defaultHtml +=
@@ -525,12 +525,12 @@ function getBrandsYouLoveContentAjaxCall(id) {
                         "undefined") {
                         defaultHtml +=
                             "<div class='home-brands-you-love-main-image-wrapper'>";
-                        if (typeof response.bannerText !==
+                        /*if (typeof response.bannerText !==
                             "undefined") {
                             defaultHtml +=
                                 "<div class='visit-store-wrapper'>" +
                                 response.bannerText + "</div>";
-                        }
+                        }*/  /*UF-249*/
                         if (typeof response.bannerUrl !== "undefined") {
                         	 defaultHtml += "<a href='"+response.bannerUrl+"'><img src='" + response.bannerImageUrl +
                              "'></img></a></div>";
@@ -538,7 +538,17 @@ function getBrandsYouLoveContentAjaxCall(id) {
                         	 defaultHtml += "<img src='" + response.bannerImageUrl +
                              "'></img></div>";
                         }
-                       
+                        /* UF-249 start*/
+                        if (typeof response.text !== "undefined") {
+                            defaultHtml += response.text;
+                        }
+                        if (typeof response.bannerText !==
+                        "undefined") {
+                        defaultHtml +=
+                            "<div class='visit-store-wrapper'>" +
+                            response.bannerText + "</div>";
+                    }
+                        /* UF-249 end*/
                     }
                     defaultHtml += '</div>';
                     
@@ -568,7 +578,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                     }
                     defaultHtml += "</div>";
                     $(".home-brands-you-love-carousel").css(
-                        "margin-bottom", "50px");
+                        "margin-bottom", "33px");  /* UF-249 */
                     $('#brandsYouLove').append(defaultHtml);
                     window.localStorage.setItem("brandContent-" +
                         id, encodeURI(defaultHtml));
@@ -579,7 +589,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                 error: function() {
                     $('#brandsYouLove .loaderDiv').remove();
                     $(".home-brands-you-love-carousel").css(
-                        "margin-bottom", "50px");
+                        "margin-bottom", "33px");  /* UF-249 */
                     console.log(
                         "Error while getting brands you love content"
                     );
@@ -1115,7 +1125,7 @@ function showStayQued(response){
         linkText = promoText2;
     }
     renderHtml =
-        '<div class="qued-padding"><div class="qued-content"><h2><span class="spriteImg"></span><span class="h1-qued">Stay Qued</span></h2>' +
+    	'<h2><span class="h1-qued">Stay Qued</span></h2><div class="qued-padding"><div class="qued-content">' +      /* UF-249 */
         promoText1 + '<a href="' + bannerUrlLink +
         '" class="button maroon">' + linkText +
         '</a></div><div class="qued-image"><img class="lazy" src="' +
@@ -1189,7 +1199,7 @@ function getShowcaseContentAjaxCall(id) {
                     $(".showcase-switch").css("margin-bottom",
                         "80px");
                     $("#showcase").append(
-                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='"+staticHost+"/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
+                        "<div class='loaderDiv' style='z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;'><img src='"+staticHost+"/_ui/responsive/common/images/red_loader.gif'/></div>"
                     );
                 },
                 url: ACC.config.encodedContextPath +
@@ -1932,7 +1942,7 @@ $(document).ready(function()
            
            if (!headerLoggedinStatus) {
 
-               $("a.headeruserdetails").html("Sign In");
+               $("a.headeruserdetails").html("Sign In / Sign Up"); /*UF-249 text change*/
              //Akamai caching
                $("a.headeruserdetails").attr('href','/login');
                $('#signIn').attr('class','sign-in-info signin-dropdown-body ajaxflyout');
@@ -2162,9 +2172,21 @@ $(document).ready(function()
 			var pageType = $('#pageType').val();
 			var isLux = $('#isLuxury').val();
 			if(pageType == "cart" && isLux == 'true') {
-			//$(".luxury-footer").remove();
-				$(".luxury-footer .container > .row:first-child > div").hide(); 
-				$(".luxury-footer .container .row div.footer-text, .luxury-footer .container .row div.footer-bottom-links").hide(); 
+				if ($('.luxury-footer').length > 0){ 
+					$(".luxury-footer .container > .row:first-child > div").hide(); 
+					$(".luxury-footer .container .row div.footer-text, .luxury-footer .container .row div.footer-bottom-links").hide();
+				}
 			}
+			setTimeout(function() {
+				var pageType = $('#pageType').val();
+				var isLux = $('#isLuxury').val();
+				if(pageType == "cart" && isLux == 'true') {
+					if ($('.luxury-footer').length > 0){ 
+						$(".luxury-footer .container > .row:first-child > div").hide(); 
+						$(".luxury-footer .container .row div.footer-text, .luxury-footer .container .row div.footer-bottom-links").hide();
+					}
+				}
+			}, 5000);
+			
 		});
 		//UF-162 ends
