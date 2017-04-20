@@ -1760,7 +1760,7 @@ $(document).ready(function(){
 		$(window).on("load resize", function() {
 			var filter_height = 0;
 			if ($(".searchSpellingSuggestionPrompt").is(":visible")) {
-				filter_height=$(".searchSpellingSuggestionPrompt").outerHeight() + 72;
+				filter_height=$(".searchSpellingSuggestionPrompt").outerHeight() + 96; /* PRDI-69 */
 			 /*else {
 				filter_height=$(".facet-list.filter-opt").height() + 32;
 			}*/
@@ -1823,7 +1823,7 @@ $(document).ready(function(){
 		var sort_top=parseInt($(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top"));
 		$(window).on("load resize", function() {
 			if($(window).width() <= 773){
-				$('.listing.wrapper .left-block').css('margin-top','20px');
+				/*$('.listing.wrapper .left-block').css('margin-top','20px');*/ /* PRDI-69 */
 				var search_text_height = $(".listing.wrapper .search-result h2").height();
 				var search_spelling_height = $(".searchSpellingSuggestionPrompt").height();
 				
@@ -1843,7 +1843,7 @@ $(document).ready(function(){
 					$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top+"px");
 				}
 				if($(".searchSpellingSuggestionPrompt").height()>0){
-					var left_block_top_margin= $(".searchSpellingSuggestionPrompt").height() + 40;
+					var left_block_top_margin= $(".searchSpellingSuggestionPrompt").height() + 96; /* PRDI-69 */
 					$('.listing.wrapper .left-block').css('margin-top',left_block_top_margin+'px');
 				}
 			}
@@ -3424,6 +3424,8 @@ $(window).on("load resize",function(){
 if ($(".facet-list.filter-opt").children().length){
 	$("body.page-productGrid .product-listing.product-grid.lazy-grid, body.page-productGrid .product-listing.product-grid.lazy-grid-facet, body.page-productGrid .product-listing.product-grid.lazy-grid-normal").css("padding-top","15px");  //INC144315068
 	$("body.page-productGrid .facet-list.filter-opt").css("padding-top","65px");
+	var filter_height = $(".facet-list.filter-opt").height() - 8;   /* PRDI-69 */
+	$("body.page-productGrid .listing.wrapper .left-block").css("margin-top",filter_height + "px");
 	/* UF-253 start */
 	if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
 	var sort_height ="-" + $(".facet-list.filter-opt").outerHeight() + "px";

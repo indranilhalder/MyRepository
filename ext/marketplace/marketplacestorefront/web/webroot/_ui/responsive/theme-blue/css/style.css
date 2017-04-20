@@ -34924,7 +34924,7 @@ body.template-pages-category-productGridPage .trending h1,body.template-pages-se
 .listing.wrapper .left-block {
     width: 19.83%;
     padding: 0 20px 0 18px;
-    margin-top: 31px;
+    margin-top: 57px; /* PRDI-69 */
 }
 .listing.wrapper .right-block {
     width: 80.16%;
@@ -61342,7 +61342,7 @@ body.template-pages-layout-footwearCategoryLandingPage .listing-leftmenu .checkb
 	body.template-pages-layout-BrandLayoutPage  .listing.wrapper .left-block,
 	body.template-pages-layout-ShoeBrandLandingLayoutPage  .listing.wrapper .left-block,
 	body.template-pages-layout-footwearCategoryLandingPage  .listing.wrapper .left-block{
-	margin-top:	83px !important;
+	margin-top:	65px;  /* PRDI-69 */
 }
 /*TPR-250 defect fix Left Block Alignment*/
 body.page-productGrid  .listing.wrapper .left-block{
