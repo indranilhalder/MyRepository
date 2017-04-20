@@ -263,7 +263,7 @@ function editAddress(addressId) {
         			type: "GET",
         			beforeSend:function() {
         				var staticHost=$('#staticHost').val();
-        				$("body").append("<div id='no-click' style='opacity:0.40; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div><img src='"+staticHost+"/_ui/responsive/common/images/spinner.gif' class='spinner' style=' z-index: 10001;position: fixed;top: 50%;left:50%;height: 30px;'>");
+        				$("body").append("<div id='no-click' style='opacity:0.40; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div><div class='loaderDiv' style=' z-index: 10001;position: fixed;top: 50%;left:50%;'><img src='"+staticHost+"/_ui/responsive/common/images/red_loader.gif' class='spinner'><div>");
         			},
         			data: { 'orderCode' : orderCode, 'transactionId' : transactionId, 'reasonCode' : reasonCode, 'ticketTypeCode' : ticketTypeCode, 'ussid' : ussid },
         			cache: false,
@@ -280,7 +280,7 @@ function editAddress(addressId) {
         					$(".reason").css("display","block");
         					$(".reason #reasonTitle").text("Reason for Cancellation:");
         					$(".reason #reasonDesc").text(reasonDesc);
-        					$("body .spinner,body #no-click").remove();
+        					$("body .loaderDiv,body #no-click").remove();
         					//TPR-4752 | for order cancellation reason
          					if(typeof utag !="undefined"){
    			 				   utag.link({
@@ -293,7 +293,7 @@ function editAddress(addressId) {
         					$(".cancellation-request-block #resultTitle").text("Failure!");
         					$(".cancellation-request-block #resultDesc").text(bogoreason);
         					$(".reason").css("display","none");
-        					$("body .spinner,body #no-click").remove();
+        					$("body .loaderDiv,body #no-click").remove();
         					if(typeof utag !="undefined"){
         					   utag.link({error_type : 'cancel_confirmation_error'});
         					}
@@ -306,14 +306,14 @@ function editAddress(addressId) {
         				$("#cancelSuccess"+orderCode+ussid).show();
         			},
         			complete:function() {
-        				$("body .spinner,body #no-click").remove();
+        				$("body .loaderDiv,body #no-click").remove();
         			},
         			error : function(resp) {
         				alert("Error");
         				if(typeof utag !="undefined"){
         				   utag.link({error_type : 'cancel_confirmation_error'});
         				}
-        				$("body .spinner,body #no-click").remove();
+        				$("body .loaderDiv,body #no-click").remove();
         			}
         		});
         	}

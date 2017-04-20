@@ -4,12 +4,14 @@
 package com.tisl.mpl.facade.stw.impl;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.beanutils.BeanToPropertyValueTransformer;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -33,6 +35,7 @@ public class STWWidgetFacadeImpl implements STWWidgetFacade
 {
 
 	Logger LOG = Logger.getLogger(this.getClass().getName());
+	private static String ZERO = "0";
 
 	private STWWidgetService stwWidgetService;
 	private BuyBoxService buyBoxService;
@@ -75,20 +78,18 @@ public class STWWidgetFacadeImpl implements STWWidgetFacade
 	 *
 	 */
 	@Override
-	public List<STWJsonRecomendationData> getSTWWidgetFinalData()
+	public List<STWJsonRecomendationData> getSTWWidgetFinalData(final Map<String, String[]> stwParamsMap)
 	{
-		final String stwjsonAsString = "{\"status\":0,\"statusMessage\":\"Success\",\"recommendations\":[{\"listingId\":\"987654321\",\"productName\":\"Ambrane P-1111 10000 mAh Power Bank (Black)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Ambrane\",\"imageUrl\":\"https://img.tatacliq.com/images/437Wx649H/MP000000000076452_437Wx649H_20160327190811.jpeg\",\"availableSize\":null,\"availableColor\":\"Black\",\"mrp\":1799,\"mop\":629,\"productUrl\":\"https://www.tatacliq.com/ambrane-p-1111-10000-mah-power-bank-black/p-mp000000000076452\"},{\"listingId\":\"987654322\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"https://img.tatacliq.com/images/437Wx649H/MP000000000734559_437Wx649H_20161123185445.jpeg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":18980,\"mop\":16145,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"}]}";
-		//StringBuffer sbs = new StringBuffer();
-		//sbs.append('{"status":0,"statusMessage":"Success","recommendations":"');
-
-		//stwWidgetService.callSTWService();
-		List<STWJsonRecomendationData> stwFinalAfterBuyBox = null;
-		if (null != stwjsonAsString)
+		String stwjsonAsString = null;//"{\"status\":0,\"statusMessage\":\"Success\",\"recommendations\":[{\"listingId\":\"987654321\",\"productName\":\"Ambrane P-1111 10000 mAh Power Bank (Black)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Ambrane\",\"imageUrl\":\"https://assetstmppprd.tataunistore.com/medias/sys_master/images/9234671370270.jpg\",\"availableSize\":null,\"availableColor\":\"Black\",\"mrp\":1799,\"mop\":629,\"productUrl\":\"https://www.tatacliq.com/ambrane-p-1111-10000-mah-power-bank-black/p-mp000000000076452\"},{\"listingId\":\"987654322\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"https://assetstmppprd.tataunistore.com/medias/sys_master/images/9234671337502.jpg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":18980,\"mop\":16145,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"},{\"listingId\":\"987654323\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"//assetstmppprd.tataunistore.com/medias/sys_master/images/9234671304734.jpg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":1880,\"mop\":1645,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"},{\"listingId\":\"987654324\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"https://assetstmppprd.tataunistore.com/medias/sys_master/images/9234671468574.jpg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":1898,\"mop\":1615,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"},{\"listingId\":\"987654321\",\"productName\":\"Ambrane P-1111 10000 mAh Power Bank (Black)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Ambrane\",\"imageUrl\":\"https://assetstmppprd.tataunistore.com/medias/sys_master/images/9234671370270.jpg\",\"availableSize\":null,\"availableColor\":\"Black\",\"mrp\":1799,\"mop\":629,\"productUrl\":\"https://www.tatacliq.com/ambrane-p-1111-10000-mah-power-bank-black/p-mp000000000076452\"},{\"listingId\":\"987654322\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"https://assetstmppprd.tataunistore.com/medias/sys_master/images/9234671337502.jpg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":18980,\"mop\":16145,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"},{\"listingId\":\"987654323\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"//assetstmppprd.tataunistore.com/medias/sys_master/images/9234671304734.jpg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":1880,\"mop\":1645,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"},{\"listingId\":\"987654324\",\"productName\":\"Vivo V5 4G Dual Sim 32GB (Gold)\",\"categoryL1\":\"Electronics\",\"productBrand\":\"Vivo\",\"imageUrl\":\"https://assetstmppprd.tataunistore.com/medias/sys_master/images/9234671468574.jpg\",\"availableSize\":null,\"availableColor\":\"Gold\",\"mrp\":1898,\"mop\":1615,\"productUrl\":\"https://www.tatacliq.com/vivo-v5-4g-dual-sim-32gb-gold/p-mp000000000734559\"}]}";
+		List<STWJsonRecomendationData> stwFinalAfterBuyBox = new ArrayList<STWJsonRecomendationData>();
+		try
 		{
-			final ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			try
+			stwjsonAsString = stwWidgetService.callSTWService(stwParamsMap);
+			if (null != stwjsonAsString)
 			{
+				final ObjectMapper mapper = new ObjectMapper();
+				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
 				final List<String> productCodes = new ArrayList<String>();
 				List<BuyBoxModel> buyBoxModelList = new ArrayList<BuyBoxModel>();
 
@@ -96,7 +97,10 @@ public class STWWidgetFacadeImpl implements STWWidgetFacade
 				final List<STWJsonRecomendationData> stwRecomendationData = sTWJsonData.getRecommendations();
 				for (final STWJsonRecomendationData recData : stwRecomendationData)
 				{
-					productCodes.add(recData.getListingId());
+					if (StringUtils.isNotEmpty(recData.getListingId()))
+					{
+						productCodes.add(recData.getListingId().toUpperCase());
+					}
 				}
 				if (CollectionUtils.isNotEmpty(productCodes))
 				{
@@ -108,17 +112,13 @@ public class STWWidgetFacadeImpl implements STWWidgetFacade
 				{
 					stwFinalAfterBuyBox = this.compareStwDataWithBuyBox(stwRecomendationData, buyBoxModelList);
 				}
-				System.out.println(sTWJsonData.getRecommendations().size());
-
-			}
-			catch (final IOException e)
-			{
-				LOG.error("getSTWWidgetFinalData unable to map JSON data on ", e);
 			}
 		}
+		catch (final IOException | ClassCastException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
+		{
+			LOG.error("getSTWWidgetFinalData Exception occoured  ", e);
+		}
 		return stwFinalAfterBuyBox;
-
-
 	}
 
 	/**
@@ -127,52 +127,45 @@ public class STWWidgetFacadeImpl implements STWWidgetFacade
 	 * @param buyBoxModelList
 	 * @throws ArrayIndexOutOfBoundsException
 	 * @throws ClassCastException
+	 * @throws NoSuchMethodException
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
 	 */
 	public List<STWJsonRecomendationData> compareStwDataWithBuyBox(final List<STWJsonRecomendationData> stwRecomendationData,
-			final List<BuyBoxModel> buyBoxModelList) throws ArrayIndexOutOfBoundsException, ClassCastException
+			final List<BuyBoxModel> buyBoxModelList) throws ArrayIndexOutOfBoundsException, ClassCastException,
+			IllegalAccessException, InvocationTargetException, NoSuchMethodException
 	{
+		final List<STWJsonRecomendationData> finalStwRecomendationData = new ArrayList<STWJsonRecomendationData>();
+		STWJsonRecomendationData stwPojo = null;
+		final List<String> listingIds = (List<String>) CollectionUtils.collect(stwRecomendationData,
+				new BeanToPropertyValueTransformer("listingId"));
+
 		for (final BuyBoxModel buyBoxModel : buyBoxModelList)
 		{
-			final STWJsonRecomendationData stwPojo = new STWJsonRecomendationData();
-			stwPojo.setListingId(buyBoxModel.getProduct());
-			final int index = Collections.binarySearch(stwRecomendationData, stwPojo, new StwDataCompatetor());
-			if (index < 0)
+			final String buyBoxListingIdLwrCase = buyBoxModel.getProduct().toLowerCase();
+			if (listingIds.contains(buyBoxListingIdLwrCase))
 			{
-				stwRecomendationData.remove(index);
-			}
-			else
-			{
-				stwRecomendationData.get(index).setMop(buyBoxModel.getSpecialPrice().toString());
-				stwRecomendationData.get(index).setMrp(buyBoxModel.getMrp().toString());
+				stwPojo = (STWJsonRecomendationData) CollectionUtils.find(stwRecomendationData, new Predicate()
+				{
+					@Override
+					public boolean evaluate(final Object obj)
+					{
+						final STWJsonRecomendationData finder = (STWJsonRecomendationData) obj;
+						return finder.getListingId().equals(buyBoxListingIdLwrCase);
+					}
+				});
+				if (buyBoxModel.getSpecialPrice() != null && !buyBoxModel.getSpecialPrice().equals(ZERO))
+				{
+					stwPojo.setMop(buyBoxModel.getSpecialPrice().toString());
+				}
+				else
+				{
+					stwPojo.setMop(buyBoxModel.getPrice().toString());
+				}
+				stwPojo.setMrp(buyBoxModel.getMrp().toString());
+				finalStwRecomendationData.add(stwPojo);
 			}
 		}
-		return stwRecomendationData;
+		return finalStwRecomendationData;
 	}
-
-	/**
-	 *
-	 * @author TCS
-	 *
-	 */
-	public class StwDataCompatetor implements Comparator<STWJsonRecomendationData>
-	{
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-		 */
-		@Override
-		public int compare(final STWJsonRecomendationData paramT1, final STWJsonRecomendationData paramT2)
-		{
-			// YTODO Auto-generated method stub
-			return 0;
-		}
-		/*
-		 * @Override public int compare(final STWJsonRecomendationData o1, final STWJsonRecomendationData o2) { //return
-		 * o1.getLISTING_ID().compareTo(o2.getLISTING_ID()); }
-		 */
-
-	}
-
 }

@@ -25,6 +25,7 @@ public interface MplMediaDao
 	 * @param mediaFormat
 	 * @return
 	 */
-	public MediaModel getMediaForIndexing(final ProductModel product, final MediaFormatModel mediaFormat, final String productCode);
+	public MediaModel getMediaForIndexing(final ProductModel product, final MediaFormatModel mediaFormat,
+			final List<MediaContainerModel> galleryImages);
 
 }

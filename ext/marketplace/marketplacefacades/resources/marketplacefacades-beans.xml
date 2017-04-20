@@ -1011,8 +1011,8 @@
 		<property name="categoryL1" type="String"></property>
 		<property name="productBrand" type="String"></property>
 		<property name="imageUrl" type="String"></property>
-		<property name="availableSize" type="String"></property>
-		<property name="availableColor" type="String"></property>
+		<property name="availableSizes" type="String"></property>
+		<property name="availableColors" type="String"></property>
 		<property name="mrp" type="String"></property>
 		<property name="mop" type="String"></property>
 		<property name="productUrl" type="String"></property>

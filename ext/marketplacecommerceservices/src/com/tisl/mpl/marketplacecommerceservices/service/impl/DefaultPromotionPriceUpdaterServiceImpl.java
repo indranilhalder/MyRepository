@@ -106,6 +106,8 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	public boolean poulatePriceRowData(final ProductPromotionModel promo)
 	{
 		boolean isPromoValid = false;
+
+
 		if (promo instanceof BuyABFreePrecentageDiscountModel)
 		{
 			final BuyABFreePrecentageDiscountModel discount = (BuyABFreePrecentageDiscountModel) promo;
@@ -116,6 +118,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 			final BuyAPercentageDiscountModel discount = (BuyAPercentageDiscountModel) promo;
 			isPromoValid = poulatePriceRowDataForBuyAPercentageDiscount(discount);
 		}
+
 		return isPromoValid;
 
 	}
@@ -152,7 +155,6 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				//Bug Fix
 				//final BuyAPercentageDiscount buyAPerDiscountPromotion = (BuyAPercentageDiscount) buyAPercentageDiscount;
 				promoCode = percentegeDiscount.getCode();
-
 				for (final AbstractPromotionRestrictionModel res : percentegeDiscount.getRestrictions())
 				{
 					if (res instanceof EtailSellerSpecificRestrictionModel)
@@ -289,8 +291,9 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				{
 					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList + CATLIST
 							+ categoryList);
-					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
-							rejectBrandList, promoCode);
+					//					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
+					//							rejectBrandList, promoCode);
+					disablePromotionalPrice(promoCode);
 				}
 				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
 						&& quantity.intValue() > 1) // If Qauntity is increased from 1 to Multiple //Fix for TISPRD-383
@@ -298,8 +301,9 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 
 					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList + CATLIST
 							+ categoryList);
-					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
-							rejectBrandList, promoCode);
+					//					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
+					//							rejectBrandList, promoCode);
+					disablePromotionalPrice(promoCode);
 				}
 			}
 		}
@@ -326,6 +330,32 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 		}
 
 		return errorFlag;
+	}
+
+	/**
+	 * Removes Promotion Content in Price Rows
+	 *
+	 * @param promoCode
+	 */
+	private void disablePromotionalPrice(final String promoCode)
+	{
+		try
+		{
+			clearExistingData(promoCode);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
 	}
 
 	/**
@@ -501,8 +531,9 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				{
 					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList + CATLIST
 							+ categoryList);
-					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
-							rejectBrandList, promoCode);
+					//					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
+					//							rejectBrandList, promoCode);
+					disablePromotionalPrice(promoCode);
 				}
 				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
 						&& quantity.intValue() > 1) // If Qauntity is increased from 1 to Multiple //Fix for TISPRD-383
@@ -510,8 +541,9 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 
 					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList + CATLIST
 							+ categoryList);
-					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
-							rejectBrandList, promoCode);
+					//					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
+					//							rejectBrandList, promoCode);
+					disablePromotionalPrice(promoCode);
 				}
 			}
 		}
@@ -777,7 +809,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				final List<ProductModel> productList = fetchProductList(categories);//Car-158
 				for (final ProductModel prdct : productList)
 				{
-					if (getBrandsForProduct(prdct, rejectBrandList, brands) && validateCategoryProductData(prdct, priority)
+					if (getBrandsForProduct(prdct, brands, rejectBrandList) && validateCategoryProductData(prdct, priority)
 							&& validateExclusion(exProductList, prdct))
 					{
 						product.add(prdct.getCode());

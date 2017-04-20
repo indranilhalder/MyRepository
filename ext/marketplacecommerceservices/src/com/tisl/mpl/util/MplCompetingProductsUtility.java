@@ -57,9 +57,11 @@ public class MplCompetingProductsUtility
 			{
 				final String[] competingProductsCategoryArr = competingProductsCategory.split("\\|"); // This contains CategoryCode in [0] position and CategoryName in [1] position
 
-				competingProductsSearchPageData = productSearchFacade.categorySearch(competingProductsCategoryArr[0],
-						getCompetingProductsSearchState(competingProductsCategoryArr[1] + MplConstants.COLON + MplConstants.RELEVANCE
-								+ MplConstants.COLON + MplConstants.INSTOCKFLAG_QUERY_PATTERN), competingProductsPageableData);
+				competingProductsSearchPageData = productSearchFacade
+						.categorySearch(competingProductsCategoryArr[0],
+								getCompetingProductsSearchState(competingProductsCategoryArr[1] + MplConstants.COLON
+										+ MplConstants.RELEVANCE + MplConstants.COLON + MplConstants.INSTOCKFLAG_QUERY_PATTERN),
+								competingProductsPageableData);
 
 				//model.addAttribute("competingProductsSearchPageData", competingProductsSearchPageData);
 				return competingProductsSearchPageData;
@@ -139,7 +141,6 @@ public class MplCompetingProductsUtility
 		}
 		return null;
 	}
-
 
 
 	private SearchStateData getCompetingProductsSearchState(final String searchText)

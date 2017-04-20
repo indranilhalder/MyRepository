@@ -20285,13 +20285,18 @@ display: inline-block;
  }
 .product-tile .short-info .company, .product-tile .short-info .price {
   font-size: 14px;
-
   font-family: "Montserrat";
   line-height: normal;
   float: left;
   font-weight: 500;
   width:100%;
   text-align:left;
+}
+.stw-widget-owl .product-tile .short-info .price{
+   text-align: center;
+}
+.stw-list .Menu{
+	text-align: center;
 }
 .product-tile .short-info .price{
 	font-size: 14px;
@@ -20300,6 +20305,15 @@ display: inline-block;
   font-weight: 600;
   text-transform: none;
   word-break: break-word;
+}
+.stw-mrp{
+	text-decoration: line-through;
+}
+.stw-mop{
+	padding-left: 10px;
+}
+.owl-theme .stw-widget-owl .owl-controls{
+	top: 40%;
 }
 .feature-collections ul.collections li.chef.sub.Nuon .left-img {
   position: relative;
@@ -32058,6 +32072,7 @@ span.material-icons{
 } } */
 
 body.page-homepage .feature-collections{
+	padding-bottom: 30px;
 	z-index:9;
 }
 .topConcierge {
@@ -52492,8 +52507,10 @@ overflow: hidden;
 	margin:0;
 }
 .best_seller .best_seller_section .product-tile .details.short-info .brand,
-	.best_seller .best_seller_section .product-tile .short-info .product-name
-	{
+.stw-widget-owl .product-tile .short-info .brand,
+.best_seller .best_seller_section .product-tile .short-info .product-name,
+.stw-widget-owl .product-tile .short-info .product-name
+{
 	font-size: 14px;
 	color: #000;
 	width: 100%;
@@ -52506,7 +52523,8 @@ overflow: hidden;
 	float: none;
 }
 
-.best_seller .best_seller_section .product-tile .short-info .product-name
+.best_seller .best_seller_section .product-tile .short-info .product-name,
+.stw-widget-owl .product-tile .short-info .product-name
 	{
 	margin-top: 0px;
 }
@@ -53050,8 +53068,10 @@ word-break: break-word;
 		font-size: 10px;
 	}
 	.best_seller .best_seller_section .product-tile .details.short-info .brand,
-		.best_seller .best_seller_section .product-tile .short-info .product-name
-		{
+	.stw-widget-owl .product-tile .short-info .brand,
+	.best_seller .best_seller_section .product-tile .short-info .product-name,
+	.stw-widget-owl .product-tile .short-info .product-name
+	{
 		font-size: 12px;
 		line-height: 16px;
 	}
@@ -53135,6 +53155,10 @@ word-break: break-word;
 		display: block !important;
 		height: auto !important;
 		overflow: hidden;
+	}
+	.stw-list .Menu>ul{
+		display: inline-block !important;
+		width: initial;
 	}
 }
 @media(max-width:480px){
@@ -63421,7 +63445,6 @@ padding-top:90px;
     letter-spacing: .5px;
 }
 /* TISSIT-2212 end */
-
 /* Homepage changes start */
 /*  body{
     max-width: 1280px;
@@ -65005,3 +65028,40 @@ header .content .bottom:not(.active) .bag:after{
 }
 }
 /*UF-14 change end*/
+/* STW changes start */
+#stw_widget {
+min-height:250px;
+position:relative;
+}
+#stw_widget .carousel-component{
+margin:0px;
+}
+#stw_widget .carousel .item.quickview{
+margin:0px;
+padding:0px;
+}
+#stw_widget .owl-theme .owl-controls{
+	top:38%;
+}
+
+/* STW changes end */
+/* UF-263 start */
+.loaderDiv{
+	width:60px;
+	height:60px;
+	background:#fff;
+	border-radius:50%;
+	display:inline-block;
+	z-index: 1000001 !important;
+}
+.loaderDiv img{
+	width:50px;
+	height:50px;
+	position:relative;
+	left:5px;
+	top:5px;
+}
+#no-click{
+ 	background:#fff !important;
+ }
+/* UF-263 End */

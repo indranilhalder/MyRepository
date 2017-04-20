@@ -34,6 +34,8 @@
 	<!-- <div class="brands" id="ia_brands_favorites"></div> -->
 	<!-- <div class="feature-categories" id="ia_categories_favorites"></div>
 	<div class="feature-collections" id="ia_collections"></div> -->
+	
+	<div id="stw_widget"></div>
 	<div class="trending" id="ia_products_hot"></div>
 	<!-- For Infinite Analytics End -->
 	<div id="showcase" class="showcase feature-collections"></div>

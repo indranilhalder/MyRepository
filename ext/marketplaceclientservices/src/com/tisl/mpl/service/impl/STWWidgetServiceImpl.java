@@ -11,6 +11,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
 import java.net.URL;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -23,7 +24,6 @@ import com.tisl.mpl.service.STWWidgetService;
  */
 public class STWWidgetServiceImpl implements STWWidgetService
 {
-
 	Logger LOG = Logger.getLogger(this.getClass().getName());
 	private String use;
 	private String domain;
@@ -31,6 +31,10 @@ public class STWWidgetServiceImpl implements STWWidgetService
 	private String proxyPort;
 	private String proxyEnabled;
 	private String proxyAddress;
+	private static final String EQUALS = "=";
+	private static final String AMPERSAND = "&";
+	private static final String QUESTION = "?";
+	private static final String SLASH = "/";
 
 	SocketAddress addr = null;
 	Proxy proxy = null;
@@ -45,7 +49,7 @@ public class STWWidgetServiceImpl implements STWWidgetService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.STWWidgetService#callSTWService()
 	 */
 
@@ -173,23 +177,32 @@ public class STWWidgetServiceImpl implements STWWidgetService
 	}
 
 
-
+	/**
+	 *
+	 */
 	@Override
-	public String callSTWService()
+	public String callSTWService(final Map<String, String[]> stwParamsMap)
 	{
-
 		HttpURLConnection urlConnection = null;
 		BufferedReader br = null;
 
 		try
 		{
+			//creating Key value for request
+			final StringBuilder stwRequest = new StringBuilder();
+			for (final Map.Entry<String, String[]> entry : stwParamsMap.entrySet())
+			{
+				final String key = entry.getKey();
+				final String value = entry.getValue()[0];
+				stwRequest.append(key);
+				stwRequest.append(EQUALS);
+				stwRequest.append(value);
+				stwRequest.append(AMPERSAND);
+			}
 			setProxy();
-			final String stwUrl = getDomain() + "/" + getMethod()
-					+ "?pageType=Home&widgetType=STW&siteType=Marketplace&sendOnlyListingId=false";
+			final String stwUrl = getDomain() + SLASH + getMethod() + QUESTION + stwRequest.toString();
 			final URL url = new URL(stwUrl);
-			//	final HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection(proxy);
 			urlConnection = (HttpURLConnection) url.openConnection(proxy);
-
 			urlConnection.setConnectTimeout(15000);//15 secs
 			urlConnection.setRequestMethod("GET");
 			urlConnection.setRequestProperty("Content-length", "0");

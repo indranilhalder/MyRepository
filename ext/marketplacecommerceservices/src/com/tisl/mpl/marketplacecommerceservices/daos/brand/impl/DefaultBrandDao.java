@@ -12,6 +12,7 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import java.util.List;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.PriorityBrandsModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.brand.BrandDao;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
@@ -166,4 +167,25 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 		//return true;
 		return null;
 	}
+
+	@Override
+	public List<PriorityBrandsModel> priorityBrands(final String categoryCode)
+	{
+		final String queryString = //
+		"SELECT {" + PriorityBrandsModel.PK
+				+ "}" //
+				+ "FROM {" + PriorityBrandsModel._TYPECODE
+				+ "} "//
+				+ "WHERE" + "{" + PriorityBrandsModel.CATEGORYID + "}=?categoryCode" + " ORDER BY {" + PriorityBrandsModel.PRIORITY
+				+ "} DESC";
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("categoryCode", categoryCode);
+		final List<PriorityBrandsModel> listOfData = flexibleSearchService.<PriorityBrandsModel> search(query).getResult();
+
+		return listOfData;
+
+	}
+
+
 }
