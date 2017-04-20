@@ -59005,7 +59005,10 @@ header > .content .top.header_fix .toggle{
 		width: 50%;
 	}
 	.Manufacturer.Temp07 .owl-item.cloned:last-child{
-		display: none;
+		/* start change of INC144314102 */
+		/* display: none; */
+		display: block;
+		/* end change of INC144314102 */
 	}
 }
 
@@ -59459,7 +59462,10 @@ header > .content .top.header_fix .toggle{
 		width: 100%;
 	}
 	.Manufacturer.Temp07 .owl-item.cloned:last-child,.Manufacturer.Temp07 .owl-item.cloned:nth-child(2){
-		display: none;
+		/* start change of INC144314102 */
+		/* display: none; */
+		display: block;
+		/* end change of INC144314102 */
 	}
 	
 	/* pdp-v4-temp template3 smaller mobile ends */
