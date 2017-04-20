@@ -5807,6 +5807,13 @@
 		                		 <persistence type="property" />
 	                 		</attribute>
 				</attributes>
+				<!-- CAR-274 -->
+				<indexes>
+					<index name="MPL_Order_PTYPE">
+						<key attribute="type" ></key>	
+						<key attribute="itemType"></key>	
+					</index>	
+				</indexes>	
 			</itemtype>
 
 			<!-- modifying Wishlist Entry Model with additional attribute "ussid" -->
@@ -6706,6 +6713,13 @@
 					</attribute>
 					<!-- Added in R2.3 END  -->
 				</attributes>
+				<!-- CAR-274 -->
+ 				<indexes>
+ 					<index name="MPL_ORDENTRIES_TRANSTYPEPKSTR">
+ 						<key attribute="transactionID" lower="true"/>
+ 						<key attribute="itemtype" />
+ 					</index>
+ 				</indexes>
 			</itemtype>
 
 
@@ -7274,6 +7288,14 @@
 					<!--End  Added new Attributes for Order Update  -->
 
 				</attributes>
+				
+				<!-- CAR-274 -->
+				<indexes>
+					<index name="MPL_CON_CODE">
+						<key attribute="code" />
+					</index>
+				</indexes>
+				
 			</itemtype>
 			<itemtype code="OrderHistoryEntry" autocreate="false"
 				generate="false">
@@ -7288,6 +7310,10 @@
 				<indexes>
 					<index name="IDX_ORDERHISTORY_LINEID">
 						<key attribute="lineId" />
+					</index>
+					<!-- CAR-274 -->
+					<index name="MPL_ORDERHISTORY_MODIFIEDDTS">
+						<key attribute="modifiedtime" />
 					</index>
 				</indexes>
 			</itemtype>
@@ -8452,7 +8478,7 @@
 				<deployment table="MplNotifctnTable" typecode="15791" />
 				<attributes>
 					<attribute qualifier='CustomerUID' type="java.lang.String">
-						<description>Order Number</description>
+						<description>Customer UID</description>
 						<modifiers read="true" write="true" optional="true"
 							unique="false" />
 						<persistence type="property" />
@@ -8476,7 +8502,7 @@
 						<persistence type="property"></persistence>
 					</attribute>
 					<attribute type="java.lang.String" qualifier="OrderDetails">
-						<description>Order Status</description>
+						<description>Order Details</description>
 						<modifiers read="true" write="true" optional="true"
 							unique="false" />
 						<persistence type="property"></persistence>
@@ -8498,6 +8524,13 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<!-- CAR-274 -->
+ 				<indexes>
+ 					<index name="MPL_NOTF_CUSTTPK" unique="false">
+ 						<key attribute="CustomerUID"/>
+ 						<key attribute="itemtype"/>
+ 					</index>
+ 				</indexes>
 			</itemtype>
 		</typegroup>
 		<!-- Order Tracking Start -->
@@ -10735,6 +10768,27 @@
 				</attributes>	
 			</itemtype>
 		</typegroup>
-
+	
+		<!-- CAR-274 -->
+ 		<typegroup name="MPL_CORE">
+ 			<itemtype code="Currency" autocreate="false" generate="false">
+ 				<indexes>
+ 					<index name="MPL_CURS_ISOTPK">
+ 						<key attribute="isocode" lower="false" />
+ 						<key attribute="itemtype" />
+ 					</index>
+ 				</indexes>
+ 	
+ 			</itemtype>
+ 			<itemtype code="Task" autocreate="false" generate="false">
+ 				<indexes>
+ 					<index name="MPL_TASK_FAILED">
+ 						<key attribute="failed" />
+ 					</index>
+ 				</indexes>
+ 	
+ 			</itemtype>
+  		</typegroup> 
+  		<!-- End CAR-274 -->
 	</itemtypes>
 </items>

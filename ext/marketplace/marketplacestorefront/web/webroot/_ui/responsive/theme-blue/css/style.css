@@ -47772,7 +47772,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 .OtherSellers .Padd .Title > p:nth-child(4){width:25%;}
 .OtherSellers .Padd .InfoWrap > li{   border-bottom: 1px solid #eaeaea;    clear: both;    display: inline-block;    margin: 10px 0;    padding: 0 0 20px;    width: 100%;}
 .OtherSellers .Padd .InfoWrap > li:last-child{ margin:0; padding:0; border:0;}
-.OtherSellers .Padd .InfoWrap > li:first-child{ margin:15px 0;}
+/* .OtherSellers .Padd .InfoWrap > li:first-child{ margin:15px 0;} */
 .OtherSellers .Padd .InfoWrap .Content > div{ float:left;}
 .OtherSellers .Padd .InfoWrap .Content > div.Seller{width:20%;}
 .OtherSellers .Padd .InfoWrap .Content > div.Price{ width:20%;}
@@ -55018,9 +55018,9 @@ body .lookbook_wrapper .listing.wrapper .left-block{
     margin-bottom: 0;
     height: 48px;
   }
-.checkout.wrapper .product-block.addresses.new-form li.item fieldset div.half:nth-child(even){
-	float:right;
-}
+ .checkout.wrapper .product-block.addresses.new-form li.item fieldset div.half:nth-child(even){
+	 float:right; 
+} 
 
 .checkout.wrapper .product-block.addresses.new-form input::-webkit-input-placeholder {
 	color:#a5a5a5;
@@ -58058,6 +58058,7 @@ header > .content .top.header_fix .toggle{
 	margin-bottom: 1px;
     background: #f5f5f5;	/* TISQAUAT-694 revert*/
     float: left;
+    width: 100%;
 }
 .Manufacturer.Temp03 .media-content{
 	width: 66.85%;
@@ -62895,7 +62896,7 @@ body.page-productGrid .facet-list.filter-opt {
 	.sort_by_wrapper{
 	display: inline-block;
     float: right;
-    top: 33px;
+    top: 34px;
     position: absolute;
     right: 0;
     }
@@ -62982,7 +62983,7 @@ body.page-productGrid .facet-list.filter-opt {
 	.sort_by_wrapper.pagination-bar.listing-menu.bottom{
 	display:none;}
 }
-@media(max-width:424px){
+@media(max-width:408px){
 	.list_title_sort select{
 	float: left !important;
     left: -15px;
@@ -63473,9 +63474,11 @@ span.default input[type="radio"]+label:before {
 .checkTab .checkout-shipping.addNewAddress .formaddress h3 {
     padding-top: 0px;
 }
+/* start of TISPRDT-952 */
 .checkTab .checkout-shipping.addNewAddress .formaddress {
-    padding: 12px 12px 12px 40px;
+    padding: 12px 12px 12px 12px;
 }
+/* end of TISPRDT-952 */
 }
 .checkTab .address-list{
 	margin-right: 12px;
@@ -66185,4 +66188,25 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
 	right: 5px !important;
     top: 5px !important;
 	
+}
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item .half{
+	width: 50%;
+    display: inline-block;
+    padding-right: 4.6%;
+    margin-right: -3px;
+    vertical-align: top;
+    float: none;
+}
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item .full{
+	padding-right: 4.6%;
+}
+.checkout.wrapper .formaddress .product-block.addresses.new-form fieldset {
+    padding-top: 24px;
+    width: 104.6%;
+} 
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item input{
+	width: 100%;
+}
+.checkout.wrapper .product-block.addresses.new-form li.item fieldset div.half:nth-child(even){
+	float: none;
 }

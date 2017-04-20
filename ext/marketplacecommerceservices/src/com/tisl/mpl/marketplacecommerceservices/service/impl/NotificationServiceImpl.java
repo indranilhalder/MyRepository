@@ -51,6 +51,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao;
 import com.tisl.mpl.marketplacecommerceservices.event.InventoryReservationFailedEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderPlacedEvent;
+import com.tisl.mpl.marketplacecommerceservices.event.PaymentFailedEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.PaymentPendingEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.PaymentTimeoutEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.CouponRestrictionService;
@@ -230,7 +231,7 @@ public class NotificationServiceImpl implements NotificationService
 
 
 			//final List<VoucherStatusNotificationModel> voucherNotificationListModifiable = new ArrayList<VoucherStatusNotificationModel>();
-			//final VoucherStatusNotificationModel voucherNotificationTobeRemoved = null;			
+			//final VoucherStatusNotificationModel voucherNotificationTobeRemoved = null;
 			//VoucherStatusNotificationModel voucherNotificationTobeRemoved = null;
 
 			/*
@@ -243,20 +244,20 @@ public class NotificationServiceImpl implements NotificationService
 			 * else { //voucherNotificationListModifiable.add(vsn); }
 			 */
 
-//			for (final VoucherStatusNotificationModel vsn : voucherNotificationList)
-//			{
-//				if (vsn.getVoucherCode().equalsIgnoreCase(orderNo))
-//				{
-//					continue;
-//					//voucherNotificationTobeRemoved = vsn;
-//					//break;
-//				}
-//				else
-//				{
-//					voucherNotificationListModifiable.add(vsn);
-//				}
-//
-//			}
+			//			for (final VoucherStatusNotificationModel vsn : voucherNotificationList)
+			//			{
+			//				if (vsn.getVoucherCode().equalsIgnoreCase(orderNo))
+			//				{
+			//					continue;
+			//					//voucherNotificationTobeRemoved = vsn;
+			//					//break;
+			//				}
+			//				else
+			//				{
+			//					voucherNotificationListModifiable.add(vsn);
+			//				}
+			//
+			//			}
 			//Removing the voucher notification from customers voucher notification List
 			//			if (voucherNotificationTobeRemoved != null)
 			//			{
@@ -265,7 +266,7 @@ public class NotificationServiceImpl implements NotificationService
 			//set the updated voucherNotification Data against user
 			//user.setVoucher(voucherNotificationListModifiable);
 			//save the user
-//			modelService.save(user);
+			//			modelService.save(user);
 
 		}
 		catch (final ModelSavingException e)
@@ -336,7 +337,7 @@ public class NotificationServiceImpl implements NotificationService
 			final OrderProcessModel orderProcessModel = new OrderProcessModel();
 			orderProcessModel.setOrder(orderDetails);
 			orderProcessModel.setOrderTrackUrl(trackorderurl);
-			final PaymentTimeoutEvent paymentFailedEvent = new PaymentTimeoutEvent(orderProcessModel);
+			final PaymentFailedEvent paymentFailedEvent = new PaymentFailedEvent(orderProcessModel);
 			try
 			{
 				eventService.publishEvent(paymentFailedEvent);

@@ -158,11 +158,11 @@
 					</attribute>
 				</attributes>
 			</itemtype>
-<!-- Priority -->
-<itemtype code="restrictionsetup" autocreate="true"
+			<!-- Priority -->
+			<itemtype code="restrictionsetup" autocreate="true"		
 					 generate="true">
-	    <deployment table="MplRestnSetup" typecode="25082" /> 			 	
-		<attributes>
+	    		<deployment table="MplRestnSetup" typecode="25082" /> 			 	
+				<attributes>
 					<attribute autocreate="true" qualifier="pincode"
 						type="java.lang.String">
 						<persistence type="property">
@@ -225,15 +225,17 @@
 							optional="false" />
 					</attribute>
 			</attributes>
-			<indexes><index name="MPLRESTRCSTP_IDX">
-						<key attribute="pincode" />
-						<key attribute="sellerId" />
-						<key attribute="USSID" />
-						<key attribute="listingID" />
-						<key attribute="primaryCatID" />
-					</index>
+			<indexes>
+				<index name="MPL_mplrestnsetup_PINSELLER">
+					<key attribute="pincode" />
+					<key attribute="sellerId" />
+					<key attribute="USSID" />
+					<key attribute="listingID" />
+					<key attribute="primaryCatID" />
+					<key attribute="itemtype" />
+				</index>
 			</indexes>	
-		</itemtype>
+	</itemtype>
  
  	<itemtype code="SellerTypeGlobalCodes" autocreate="true"
 					 generate="true">
