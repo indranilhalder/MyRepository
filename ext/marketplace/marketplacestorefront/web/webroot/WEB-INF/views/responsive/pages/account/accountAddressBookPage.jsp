@@ -66,7 +66,7 @@
 						 <li id="prev"></li></ul>
 						</c:if>
 						<spring:theme code="text.account.addressBook.savedAddress"
-							text="My Address" />
+							text="My Addresses" />		<!--  UF-249 text change -->
 							<span><spring:theme code="text.account.addressBook.savedAddress.details"
 							text="Where in the world are you located? Edit, delete or change your address here." /></span>
 					</h2>

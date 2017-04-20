@@ -31,8 +31,8 @@
 					code="header.flyout.address" /></a></li>
 		<li id="lnReview"><a href="<c:url value="/my-account/reviews?isLux=${isLuxVal}"/>"><spring:theme
 						code="header.flyout.review" /></a></li>
-		<li id="lnMyInterest"><a href="<c:url value="/my-account/myInterest?isLux=${isLuxVal}"/>"><spring:theme
-					code="header.flyout.recommendations" /></a></li>
+		<%-- <li id="lnMyInterest"><a href="<c:url value="/my-account/myInterest?isLux=${isLuxVal}"/>"><spring:theme
+					code="header.flyout.recommendations" /></a></li> --%>	<!--  UF-249 link hide -->
 		<%-- <li id="lnCoupons"><a href="<c:url value="/my-account/coupons"/>"><spring:theme
 					code="header.flyout.coupons" /></a></li> --%>
 	</ul>
