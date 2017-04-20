@@ -36013,7 +36013,11 @@ body.template-pages-category-productGridPage header,body.template-pages-search-s
 display:none;
 }
 .mob-filter-wrapper{
-display: block !important;
+	display: block !important;
+	width: 19.83%;		/* TISSQAUAT-1825 */
+    padding: 0 20px 0 18px;		/* TISSQAUAT-1825 */
+    margin-top: 31px;		/* TISSQAUAT-1825 */
+    float: left;		/* TISSQAUAT-1825 */
 }
 .listing-leftmenu > div.apply-clear{
 	display:none !important;
