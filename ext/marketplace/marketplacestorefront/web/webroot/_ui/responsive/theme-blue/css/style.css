@@ -30069,7 +30069,7 @@ p.showcase-para {
 .showcaseItem > a{
 	color:#000;
 	 word-break: break-word;
-	 line-height: 22px;
+	 line-height: 29px; /*PRDI-31 */
 	 font-size:14px;
 	 font-weight:normal;
 }
@@ -65180,11 +65180,15 @@ a.cvvHelp#cvvHelp + div.popover{
 .checkout.wrapper .product-block.emi li.item{
 	margin-top: 0px;
 }
-.cart.wrapper.checkout-payment .right-block.billing .block.subtotals.summary-info,
+/* .cart.wrapper.checkout-payment .right-block.billing .block.subtotals.summary-info, */ /* PRDI-51*/
 .checkout-payment h2.payment-delivery-details,
 .cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .order-details.block.delivery-info{
 	display: none;
 }
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .block{ /* PRDI-51*/
+  	padding-left:0px;
+  	padding-right:0px;
+  }
 .cart.wrapper .right-block.billing.checkout-list-right{
 	background: #f8f8f8;
 	padding: 16px !important;
@@ -65205,8 +65209,8 @@ a.cvvHelp#cvvHelp + div.popover{
 .cart.wrapper.checkout-payment .right-block.billing .block.coupon button{
 	height: 41px !important;
 }
-.left-block.choose-payment{
-	margin-bottom: 24px;
+.left-block.choose-payment{ /* PRDI-51*/
+	margin-bottom: 0px;
 }
 .cart.wrapper.checkout-payment .blocks.netbankingPanel{
 	padding: 8.5px 20px 36px 20px !important;
@@ -65407,7 +65411,7 @@ margin-top:0px;
 
 @media(max-width:790px){
 .wrapper .container-address.nav{
-padding-top:90px;
+/* padding-top:90px; */ /*TISPRDT-668*/
 }	
 }
 .checkout-content.cart.checkout.wrapper.shipCartWrapper .continue_btn_anchor{
