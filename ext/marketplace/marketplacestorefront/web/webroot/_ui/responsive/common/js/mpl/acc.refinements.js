@@ -828,6 +828,8 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 	console.log(requiredUrl);
 	console.log(pageURL);
 	//INC144316143
+	var pathName = window.location.pathname;
+    	var query = window.location.search;
 	if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
 		   window.localStorage.setItem('lastUrlpathName',encodeURI(pathName));
 		   window.localStorage.setItem('lastUrlquery',encodeURI(query));

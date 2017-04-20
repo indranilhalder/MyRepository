@@ -204,6 +204,20 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 			{
 				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9332);
 			}
+			//TPR-4460 Changes
+			else if (e.getMessage().contains(MarketplacecouponConstants.CHANNELRESTVIOLATION_MOBILE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9303);
+			}
+			else if (e.getMessage().contains(MarketplacecouponConstants.CHANNELRESTVIOLATION_WEB))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9302);
+			}
+			else if (e.getMessage().contains(MarketplacecouponConstants.CHANNELRESTVIOLATION_CALLCENTRE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9304);
+			}
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
