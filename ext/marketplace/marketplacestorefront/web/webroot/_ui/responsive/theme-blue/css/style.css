@@ -30924,7 +30924,7 @@ line-height: normal;
    margin-bottom: 15px;
  } */
  
-   #movedToWishlist_Cart {
+   #movedToWishlist_Cart { /* TISPRDT-768 */
  	position: absolute;
     line-height: 15px;
     bottom: -40px;
@@ -56956,7 +56956,7 @@ input[type="radio"] + label:before, input[type="checkbox"] + label:before{
 	    padding: 0 20px 10px;
 	}
 	.cart.wrapper .checkout-shipping.left-block .product-block li.item > ul > li.delivery li{
-	margin:0;}
+	margin:26px 0;}  /* PRDI-48 */
 	.checkout.wrapper .checkout-shipping.left-block .product-block li.item > ul li.delivery li label.deliveryModeLabel{
 	    font-size: 12px;
     	font-weight: 600;
@@ -66480,3 +66480,6 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
     top: 5px !important;
 	
 }
+.modal.size-guide .sizes .details #sellerSelName{
+	display:none; /* PRDI-46 */
+} 
