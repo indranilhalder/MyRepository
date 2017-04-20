@@ -76,6 +76,12 @@
 					}
 					//TPR-1214
 					$("#newAddressButton,#newAddressButtonUp").click(function() {
+
+				     	$("form#addressForm :input[type=text]").each(function(){
+				    		 var input = $(this);    
+				    		 $(this).val($(this).val().trim());    		     		
+				    	});  
+
 						var validate=true;
 						var regPostcode = /^([1-9])([0-9]){5}$/;
 					    var mob = /^[1-9]{1}[0-9]{9}$/;
@@ -85,8 +91,8 @@
 						var lastName = document.getElementById("address.surname");
 						var address1 = document.getElementById("address.line1");
 						var regAddress = /^[0-9a-zA-Z\-\/\,\s]+$/;
-					//	var address2 = document.getElementById("address.line2");
-					//	var address3 = document.getElementById("address.line3");
+						var address2 = document.getElementById("address.line2");
+						var address3 = document.getElementById("address.line3");
 						var city= document.getElementById("address.townCity");
 						var stateValue = document.getElementById("address.states");
 						var zipcode = document.getElementsByName("postcode")[0].value;
@@ -222,6 +228,10 @@
 						 		cache: false,
 						 		dataType: "json",
 						 		success : function(response) {
+						 			//TPR-4745
+						 			if(typeof utag !="undefined"){
+								 		 utag.link({ link_text : 'add_new_address_saved' ,event_type : 'add_new_address_saved'});
+								 		 }
 						 		if(response.hasOwnProperty("error")){
 						 			
 						 		}else if(response.hasOwnProperty("redirect_url")){

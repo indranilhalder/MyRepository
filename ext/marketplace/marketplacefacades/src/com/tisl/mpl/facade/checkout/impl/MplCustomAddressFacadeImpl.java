@@ -14,6 +14,7 @@ import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.converters.Converters;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -34,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +49,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 
@@ -72,8 +76,11 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
-
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
 	private static final Logger LOG = Logger.getLogger(MplCustomAddressFacadeImpl.class);
+
+	private static final String FINEJEWELLERY = "FineJewellery";
 
 	/**
 	 * @return the cartFacade
@@ -729,20 +736,51 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 							deliveryCode, MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
 
 					//TISEE-289
-					final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(sellerArticleSKU);
-					if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
-							&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+
+					//for fine jewellery
+					if (entry.getProduct().getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
 					{
-						fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-								.getDeliveryFulfillModes().getCode();
-
-						// For Release 1 , TShip delivery cost will always be zero . Hence , commenting the below code which check configuration from HAC
-						if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE)
-								&& entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue))
-
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+								.getJewelleryInfoByUssid(sellerArticleSKU);
+						final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+								jewelleryInfo.get(0).getPCMUSSID());
+						if (sellerInfoModel != null
+								&& sellerInfoModel.getRichAttribute() != null
+								&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
 						{
-							mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0));
+							fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
+									.getDeliveryFulfillModes().getCode();
+
+							// For Release 1 , TShip delivery cost will always be zero . Hence , commenting the below code which check configuration from HAC
+							if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE)
+									&& entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue))
+
+							{
+								mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0));
+							}
 						}
+
+					}
+					else
+					{
+						final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+								sellerArticleSKU);
+						if (sellerInfoModel != null
+								&& sellerInfoModel.getRichAttribute() != null
+								&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+						{
+							fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
+									.getDeliveryFulfillModes().getCode();
+
+							// For Release 1 , TShip delivery cost will always be zero . Hence , commenting the below code which check configuration from HAC
+							if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE)
+									&& entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue))
+
+							{
+								mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0));
+							}
+						}
+
 					}
 
 					entry.setMplDeliveryMode(mplZoneDeliveryModeValueModel);

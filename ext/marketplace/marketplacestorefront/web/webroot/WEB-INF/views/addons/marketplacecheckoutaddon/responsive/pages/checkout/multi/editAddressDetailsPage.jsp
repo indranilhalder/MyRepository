@@ -55,7 +55,6 @@
 					      startTimer();
 					}
 					
-										
 					//TPR-1214
 					$("#newAddressButton,#newAddressButtonUp").click(function() {
 						var validate=true;
