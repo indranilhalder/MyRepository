@@ -52881,7 +52881,7 @@ word-break: break-word;
 		width: 31%;
 	}
 	.clp_top_brands  .top_brands_section>a {
-		display: none;
+		/* display: none; */		/* TISSQAUAT-1823 */
 	}
 	.blog_container {
 		padding: 0 50px 150px;
