@@ -126,7 +126,7 @@ ACC.product = {
 				$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#addToCartLargeAppliance').text() + "</font>");
 				$("#addToCartFormTitle").show().fadeOut(6000);
 				$('#pin').focus();
-				$('#pin').css("border", "1px solid #a5173c");
+				$('#pin').css("border", "1px solid #000");
 				return false;
 			}
 			//UF-160 ends

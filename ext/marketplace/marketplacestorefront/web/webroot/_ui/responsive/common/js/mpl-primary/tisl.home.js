@@ -2162,9 +2162,21 @@ $(document).ready(function()
 			var pageType = $('#pageType').val();
 			var isLux = $('#isLuxury').val();
 			if(pageType == "cart" && isLux == 'true') {
-			//$(".luxury-footer").remove();
-				$(".luxury-footer .container > .row:first-child > div").hide(); 
-				$(".luxury-footer .container .row div.footer-text, .luxury-footer .container .row div.footer-bottom-links").hide(); 
+				if ($('.luxury-footer').length > 0){ 
+					$(".luxury-footer .container > .row:first-child > div").hide(); 
+					$(".luxury-footer .container .row div.footer-text, .luxury-footer .container .row div.footer-bottom-links").hide();
+				}
 			}
+			setTimeout(function() {
+				var pageType = $('#pageType').val();
+				var isLux = $('#isLuxury').val();
+				if(pageType == "cart" && isLux == 'true') {
+					if ($('.luxury-footer').length > 0){ 
+						$(".luxury-footer .container > .row:first-child > div").hide(); 
+						$(".luxury-footer .container .row div.footer-text, .luxury-footer .container .row div.footer-bottom-links").hide();
+					}
+				}
+			}, 5000);
+			
 		});
 		//UF-162 ends
