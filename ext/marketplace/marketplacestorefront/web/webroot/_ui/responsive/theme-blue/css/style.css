@@ -18819,6 +18819,11 @@ font-weight: 600;
 .bottom-pagination .listing-menu.bottom  div{
 	width:100%;
 }
+/* start code add of INC144315044 */
+.bottom-pagination .listing-menu.bottom .list_title .UlContainer{
+	display:none;
+}
+/* end code add of INC144315044 */
 .listing-menu.bottom  ul.pagination{
   margin: auto;
   float: none;
