@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.impl;
+package com.tisl.mpl.marketplacecommerceservices.daos.changedeliveryaddress.impl;
 
 //import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.core.model.MplDeliveryAddressInfoModel;
-import com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.MplDeliveryAddressDao;
+import com.tisl.mpl.marketplacecommerceservices.daos.changedeliveryaddress.MplDeliveryAddressDao;
 
 
 

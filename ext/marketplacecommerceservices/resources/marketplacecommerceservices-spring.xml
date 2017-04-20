@@ -2004,7 +2004,7 @@
 	<bean id="mplDeliveryAddressServiceImpl"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDeliveryAddressServiceImpl"/>
 <bean id="mplDeliveryAddressDaoImpl"
-		class="com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.impl.MplDeliveryAddressDaoImpl">
+		class="com.tisl.mpl.marketplacecommerceservices.daos.changedeliveryaddress.impl.MplDeliveryAddressDaoImpl">
 </bean>
   <!--  R2.3 Added 27-02-2017 Start-->
   <bean id="multipartResolver"

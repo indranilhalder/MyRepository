@@ -31,7 +31,7 @@ import com.tisl.mpl.core.model.MplDeliveryAddressInfoModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 /*import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;*/
-import com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.MplDeliveryAddressDao;
+import com.tisl.mpl.marketplacecommerceservices.daos.changedeliveryaddress.MplDeliveryAddressDao;
 //import com.tis.mpl.facade.changedelivery.Impl.ChangeDeliveryAddressFacadeImpl;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryAddressService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;

@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress;
+package com.tisl.mpl.marketplacecommerceservices.daos.changedeliveryaddress;
 
 
 
