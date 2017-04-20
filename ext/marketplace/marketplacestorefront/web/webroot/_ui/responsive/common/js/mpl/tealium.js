@@ -1263,6 +1263,20 @@ function tealiumCallOnPageLoad()
 					+ $("#product_id").val() + ',';
 				tealiumData += '"product_brand":'
 					+ $("#product_brand").val() + ',';
+				//L1 L2 L3 For cart  TPR-4831
+				if($("#page_subcategory_L1").val() !=undefined || $("#page_subcategory_L1").val() !=null){ 
+					tealiumData += '"page_subcategory_L1":'
+						+ getListValue("page_subcategory_L1") + ',';           
+					}
+				if($("#page_subcategory_L2").val() !=undefined || $("#page_subcategory_L2").val() !=null){ 
+					tealiumData += '"page_subcategory_L2":'
+						+ getListValue("page_subcategory_L2") + ',';            
+					}
+				if($("#page_subcategory_l3").val() !=undefined || $("#page_subcategory_l3").val() !=null){ 
+					tealiumData += '"page_subcategory_l3":'
+						+ getListValue("page_subcategory_l3") + ',';            
+					}
+				//L1 L2 L3 cart ends
 				//TPR-430 Start
 				if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
 				tealiumData += '"product_category":'
@@ -1341,7 +1355,20 @@ function tealiumCallOnPageLoad()
 						+ $('#product_name').val() + ',';
 				 tealiumData += '"order_shipping_modes":'
 						+ $('#order_shipping_modes').val() + ',';
-				 
+				//L1 L2 L3 For cart  TPR-4831
+				if($("#page_subcategory_L1").val() !=undefined || $("#page_subcategory_L1").val() !=null){ 
+						tealiumData += '"page_subcategory_L1":'
+							+ getListValue("page_subcategory_L1") + ',';           
+						}
+				if($("#page_subcategory_L2").val() !=undefined || $("#page_subcategory_L2").val() !=null){ 
+						tealiumData += '"page_subcategory_L2":'
+							+ getListValue("page_subcategory_L2") + ',';            
+						}
+				if($("#page_subcategory_l3").val() !=undefined || $("#page_subcategory_l3").val() !=null){ 
+						tealiumData += '"page_subcategory_l3":'
+							+ getListValue("page_subcategory_l3") + ',';            
+						}
+					//L1 L2 L3 cart ends 
 				//TPR-430 Start
 				 if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
 				tealiumData += '"product_category":'
