@@ -41,6 +41,10 @@ import com.tisl.mpl.shorturl.report.dao.OrderShortUrlDao;
 public class ShortUrlServiceGoogleImpl implements ShortUrlService
 {
 
+	/**
+	 * 
+	 */
+	private static final String LONG_URL = "longUrl";
 	private static final Logger LOG = Logger.getLogger(ShortUrlServiceGoogleImpl.class);
 	private static boolean FORCE_DEBUG_LOG = true; //Added temporarily for debugging. Can be removed later. 
 	//No harm in leaving it here. Just change the value to false for PROD, and other higher envs.
@@ -82,7 +86,7 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 			String url = String.valueOf(sb); 
 			
 			final LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
-			params.put("longUrl", String.valueOf(longUrl));
+			params.put(LONG_URL.intern(), String.valueOf(longUrl));
 			final String response = getShortUrl(url, jsonString(params));
 
 			final JSONObject jsonResponse = (JSONObject) JSONValue.parse(response);
@@ -228,13 +232,13 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 	
 	public static String jsonString(LinkedHashMap<String, String> params) {
         JSONObject longUrl = new JSONObject();
-        longUrl.put("longUrl", params.get("longUrl"));
+        longUrl.put(LONG_URL.intern(), params.get(LONG_URL.intern()));
         return longUrl.toJSONString();
     }
 	
 	public String prepareLongUrlJSONString(String longURL) {
 	      JSONObject longUrlJSONObj = new JSONObject();
-	      longUrlJSONObj.put("longUrl", longURL);
+	      longUrlJSONObj.put(LONG_URL.intern(), longURL);
 	      return longUrlJSONObj.toJSONString();
 	  }
 	
