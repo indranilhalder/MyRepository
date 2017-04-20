@@ -42,7 +42,7 @@
 			</c:choose>--%>
 		</div>
 		<div class="wrapper">
-			<a class="return-order-history" href="order-history.php">Back to
+			<a class="return-order-history" href="/my-account/orders">Back to
 				Order History</a>
 			<form class="return-form success" method="post">
 				<div class="return-container">
