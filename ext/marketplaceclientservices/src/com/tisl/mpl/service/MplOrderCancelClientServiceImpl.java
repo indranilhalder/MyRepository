@@ -41,6 +41,31 @@ import com.tisl.mpl.xml.pojo.RTSAndRSSReturnInfoResponse;
 public class MplOrderCancelClientServiceImpl implements MplOrderCancelClientService
 {
 
+	/**
+	 * 
+	 */
+	private static final String LOG_MSG_XML_RESPONSE = "xml response<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
+
+	/**
+	 * 
+	 */
+	private static final String X_TENANT_ID = "x-tenantId";
+
+	/**
+	 * 
+	 */
+	private static final String SINGLE = "single";
+
+	/**
+	 * 
+	 */
+	private static final String APPLICATION_XML = "application/xml";
+
+	/**
+	 * 
+	 */
+	private static final String LOG_MSG_POSTING_TO = "Posting to >>>>>>>>>>>>>>>>>>>>";
+
 	@Autowired
 	private ConfigurationService configurationService;
 
@@ -89,14 +114,14 @@ public class MplOrderCancelClientServiceImpl implements MplOrderCancelClientServ
 				}
 				xmlString = stringWriter.toString();
 				LOG.debug(xmlString);
-				LOG.debug("Posting to >>>>>>>>>>>>>>>>>>>>" + webResource.getURI());
-				response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml").header("x-tenantId", "single")
+				LOG.debug(LOG_MSG_POSTING_TO + webResource.getURI());
+				response = webResource.type(MediaType.APPLICATION_XML.intern()).accept(APPLICATION_XML.intern()).header(X_TENANT_ID.intern(), SINGLE.intern())
 						.entity(xmlString).post(ClientResponse.class);
 			}
 			if (null != response)
 			{
 				final String output = response.getEntity(String.class);
-				LOG.debug("xml response<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + output);
+				LOG.debug(LOG_MSG_XML_RESPONSE + output);
 				final JAXBContext jaxbContext = JAXBContext.newInstance(MplOrderIsCancellableResponse.class);
 				Unmarshaller unmarshaller = null;
 				if (null != jaxbContext)
@@ -181,14 +206,14 @@ public class MplOrderCancelClientServiceImpl implements MplOrderCancelClientServ
 				}
 				xmlString = stringWriter.toString();
 				LOG.debug(xmlString);
-				LOG.debug("Posting to >>>>>>>>>>>>>>>>>>>>" + webResource.getURI());
-				response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml").header("x-tenantId", "single")
+				LOG.debug(LOG_MSG_POSTING_TO + webResource.getURI());
+				response = webResource.type(MediaType.APPLICATION_XML.intern()).accept(APPLICATION_XML.intern()).header(X_TENANT_ID.intern(), SINGLE.intern())
 						.entity(xmlString).post(ClientResponse.class);
 			}
 			if (null != response)
 			{
 				final String output = response.getEntity(String.class);
-				LOG.debug("xml response<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + output);
+				LOG.debug(LOG_MSG_XML_RESPONSE + output);
 				final JAXBContext jaxbContext = JAXBContext.newInstance(MplOrderIsCancellableResponse.class);
 				Unmarshaller unmarshaller = null;
 				if (null != jaxbContext)
@@ -279,8 +304,8 @@ public class MplOrderCancelClientServiceImpl implements MplOrderCancelClientServ
 				}
 				xmlString = stringWriter.toString();
 				LOG.debug(xmlString);
-				LOG.debug("Posting to >>>>>>>>>>>>>>>>>>>>" + webResource.getURI());
-				response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml").header("x-tenantId", "single")
+				LOG.debug(LOG_MSG_POSTING_TO + webResource.getURI());
+				response = webResource.type(MediaType.APPLICATION_XML.intern()).accept(APPLICATION_XML.intern()).header(X_TENANT_ID.intern(), SINGLE.intern())
 						.entity(xmlString).post(ClientResponse.class);
 			}
 			if (null != response)
@@ -292,7 +317,7 @@ public class MplOrderCancelClientServiceImpl implements MplOrderCancelClientServ
 					return responsefromFICO;
 				}
 				final String output = response.getEntity(String.class);
-				LOG.debug("xml response<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + output);
+				LOG.debug(LOG_MSG_XML_RESPONSE + output);
 				final JAXBContext jaxbContext = JAXBContext.newInstance(MplOrderIsCancellableResponse.class);
 				Unmarshaller unmarshaller = null;
 				if (null != jaxbContext)
@@ -362,14 +387,14 @@ public class MplOrderCancelClientServiceImpl implements MplOrderCancelClientServ
 				}
 				xmlString = stringWriter.toString();
 				LOG.debug(xmlString);
-				LOG.debug("Posting to >>>>>>>>>>>>>>>>>>>>" + webResource.getURI());
-				response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml").header("x-tenantId", "single")
+				LOG.debug(LOG_MSG_POSTING_TO + webResource.getURI());
+				response = webResource.type(MediaType.APPLICATION_XML.intern()).accept(APPLICATION_XML.intern()).header(X_TENANT_ID.intern(), SINGLE.intern())
 						.entity(xmlString).post(ClientResponse.class);
 			}
 			if (null != response)
 			{
 				final String output = response.getEntity(String.class);
-				LOG.debug("xml response<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + output);
+				LOG.debug(LOG_MSG_XML_RESPONSE + output);
 				final JAXBContext jaxbContext = JAXBContext.newInstance(TicketUpdateResponseXML.class);
 				Unmarshaller unmarshaller = null;
 				if (null != jaxbContext)
