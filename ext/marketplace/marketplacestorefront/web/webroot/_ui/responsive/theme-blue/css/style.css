@@ -65061,7 +65061,7 @@ padding:0px;
 	left:5px;
 	top:5px;
 }
-#no-click{
+#no-click, #bag-clickSpin{
  	background:#fff !important;
  }
 /* UF-263 End */

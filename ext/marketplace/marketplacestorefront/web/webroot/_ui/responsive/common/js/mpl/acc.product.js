@@ -430,7 +430,7 @@ sendAddToBag : function(formId, isBuyNow) {
 	$('.js-add-to-cart').attr("disabled", "disabled");
 	
 	var staticHost=$('#staticHost').val();
-	$("body").append("<div id='bag-clickSpin' style='opacity:0.15; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append("<div id='bag-clickSpin' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="bagspinner"></div>');  
 	
 	var input_name = "qty";
