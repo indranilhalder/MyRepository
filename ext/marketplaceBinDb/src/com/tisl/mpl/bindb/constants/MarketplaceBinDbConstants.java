@@ -1,4 +1,4 @@
-package com.tisl.mpl.binDb.constants;
+package com.tisl.mpl.bindb.constants;
 
 @SuppressWarnings("PMD")
 public class MarketplaceBinDbConstants extends GeneratedMarketplaceBinDbConstants

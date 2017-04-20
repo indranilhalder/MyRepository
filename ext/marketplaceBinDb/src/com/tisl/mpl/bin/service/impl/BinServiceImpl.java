@@ -25,7 +25,7 @@ import com.tisl.mpl.bin.constants.MarketplaceBinDbConstants;
 import com.tisl.mpl.bin.dao.BinDao;
 import com.tisl.mpl.bin.pojo.BankDataPojo;
 import com.tisl.mpl.bin.service.BinService;
-import com.tisl.mpl.binDb.model.BinModel;
+import com.tisl.mpl.bindb.model.BinModel;
 import com.tisl.mpl.core.enums.TypeOfError;
 import com.tisl.mpl.core.model.BinErrorModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;

@@ -54,7 +54,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.tisl.mpl.bin.service.BinService;
-import com.tisl.mpl.binDb.model.BinModel;
+import com.tisl.mpl.bindb.model.BinModel;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;

@@ -1,4 +1,4 @@
-package com.tisl.mpl.binDb.jalo;
+package com.tisl.mpl.bindb.jalo;
 
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;

@@ -3,7 +3,7 @@
  */
 package com.tisl.mpl.bin.service;
 
-import com.tisl.mpl.binDb.model.BinModel;
+import com.tisl.mpl.bindb.model.BinModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 
 
