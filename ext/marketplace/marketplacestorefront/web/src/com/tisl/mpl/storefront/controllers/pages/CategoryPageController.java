@@ -435,15 +435,19 @@ public class CategoryPageController extends AbstractCategoryPageController
 						categoryCode, searchQuery, pageNo, showMode, sortCode, count, resetAll, pageFacets);
 				final JSONArray priorityBrandsJsonArray = new JSONArray();
 				final JSONObject priorityBrand = new JSONObject();
-				final List<PriorityBrandsModel> priorityBrands = brandService.priorityBrands(categoryCode);
-				for (final PriorityBrandsModel priorityBrandsModel : priorityBrands)
+				if (null != categoryCode)
 				{
-					priorityBrandsJsonArray.add(priorityBrandsModel.getBrandId());
+					LOG.info("*****category code******" + categoryCode);
+					final List<PriorityBrandsModel> priorityBrands = brandService.priorityBrands(categoryCode);
+					for (final PriorityBrandsModel priorityBrandsModel : priorityBrands)
+					{
+						priorityBrandsJsonArray.add(priorityBrandsModel.getBrandId());
+					}
+
+					priorityBrand.put("priorityBrands", priorityBrandsJsonArray);
+
+					model.addAttribute("PriorityBrandArray", priorityBrand.toJSONString());
 				}
-
-				priorityBrand.put("priorityBrands", priorityBrandsJsonArray);
-
-				model.addAttribute("PriorityBrandArray", priorityBrand.toJSONString());
 				//Set the drop down text if the attribute is not empty or null
 				if (dropDownText != null && !dropDownText.isEmpty())
 				//Added For TISPRD-1243
