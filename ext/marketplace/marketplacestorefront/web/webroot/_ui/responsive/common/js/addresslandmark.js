@@ -105,9 +105,9 @@ function loadPincodeData(parm) {
 		type: "GET",	
 		success : function(response) {
 			//var arg1 = false;
-			console.log(response.countryCode+ " response.countryCode");
+			console.log(response.cityName+ " response.cityName");
 			//	TISPRDT-890
-			if(response == "" || response == " " || response == "NULL" || response == null || response.landMarks == null || response.landMarks == "") {
+			if(response == "" || response == " " || response == "NULL" || response == null && (response.landMarks == null || response.landMarks == "" || response.cityName == "" || response.cityName == null)) {
 				console.log("addresslandmark line 154"+ response+ "##");
 				//alert("in if");
 			/*	if(response.countryCode == undefined){
@@ -170,7 +170,7 @@ function loadPincodeData(parm) {
 				//}	
 			} else {
 				
-				if(response.landMarks != null && response.landMarks != "") {
+				if((response.cityName != "" && response.cityName != null)) {
 				console.log("addresslandmark line 186 "+ response);
 				//$(".saveBlockData,#newAddressButton,#saveAddress").css({'opacity':'1'}).prop("disabled",false);
 			//	$(".pincodeNoError,#pincodeError,#erraddressPost,#addAddressForm #pincode + .errorText").hide();
@@ -193,6 +193,7 @@ function loadPincodeData(parm) {
     			$(".address_landmarkOther").val("");
     			$('.otherOption').attr("value", "Other");
         		$(".address_townCity").val(response['cityName']).prop("readonly", true);
+if(response.landMarks != null && response.landMarks != ""){
         		$('.address_landmarks').empty();
         		 $('.address_landmarks').html($("<option></option>").attr("selected","selected").text("Select a Landmark").attr("value", "NA"));
         		//then fill it with data from json post
@@ -220,7 +221,7 @@ function loadPincodeData(parm) {
         			
         			
         		}
-        		 
+				} 
         		 // $(".address_states").val(response.state.name).attr("readonly", "true").data("stateValue",response.state.name);
         		 // arg1 = true;
 			}
@@ -235,7 +236,6 @@ function loadPincodeData(parm) {
     
    
 }
-
 $(".errland1, .errland2").hide();
 
 $(".optionsLandmark .errorMessage").css("padding-bottom", "5px");
