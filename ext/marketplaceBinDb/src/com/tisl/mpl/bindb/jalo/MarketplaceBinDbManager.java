@@ -1,6 +1,6 @@
-package com.tisl.mpl.binDb.jalo;
+package com.tisl.mpl.bindb.jalo;
 
-import com.tisl.mpl.binDb.constants.MarketplaceBinDbConstants;
+import com.tisl.mpl.bindb.constants.MarketplaceBinDbConstants;
 import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.jalo.extension.ExtensionManager;
 import org.apache.log4j.Logger;
