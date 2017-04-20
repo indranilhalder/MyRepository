@@ -9119,6 +9119,27 @@
 					</index>
 				</indexes>
 			</itemtype>
+			
+			<itemtype code="PriorityBrands" autocreate="true" generate="true">
+				<deployment table="priorityBrand" typecode="18013" />
+				<attributes>
+					<attribute autocreate="true" qualifier="brandId" type="java.lang.String" generate="true">
+					    <description>Brand Id for priority</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+						<attribute autocreate="true" qualifier="categoryId" type="java.lang.String" generate="true">
+					    <description>category Id for priority</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="priority" type="java.lang.String" generate="true">
+					    <description>priroty for brands</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>					
+				</attributes>
+			</itemtype>
 			<itemtype code="ProductOfferDetail" autocreate="true" generate="true">
 				<deployment table="ProductOfferDetail" typecode="16999" />
 				<attributes>

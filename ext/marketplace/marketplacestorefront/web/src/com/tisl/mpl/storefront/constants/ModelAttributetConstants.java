@@ -805,4 +805,7 @@ public final class ModelAttributetConstants
 	public static final String SHOP_BY_LOOK = "shopbylook".intern();
 	//LW-230
 	public static final String IS_LUXURY = "isLuxury";
+
+	//UF-160
+	public static final String IS_LARGE_APPLIANCE = "isLargeAppliance";
 }

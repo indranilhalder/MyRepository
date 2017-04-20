@@ -7,6 +7,7 @@ import de.hybris.platform.catalog.model.CatalogVersionModel;
 
 import java.util.List;
 
+import com.tisl.mpl.core.model.PriorityBrandsModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 
 
@@ -24,4 +25,7 @@ public interface BrandDao
 	public List<MplNewsLetterSubscriptionModel> checkEmailIdForluxury(final String emailId);
 
 	public List<MplNewsLetterSubscriptionModel> checkEmailIdForMarketplace(final String emailId);
+
+	public List<PriorityBrandsModel> priorityBrands(final String categoryCode);
+
 }

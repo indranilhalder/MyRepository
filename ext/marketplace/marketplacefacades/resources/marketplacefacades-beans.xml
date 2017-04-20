@@ -1004,4 +1004,22 @@
 		<property name="Warranty" type="java.util.List&lt;String>"></property>
 		<property name="error" type="String"></property>
 	</bean>
+	<!-- TPR-258 -->
+	<bean class="com.tisl.mpl.facades.data.STWJsonRecomendationData">
+		<property name="listingId" type="String"></property>
+		<property name="productName" type="String"></property>
+		<property name="categoryL1" type="String"></property>
+		<property name="productBrand" type="String"></property>
+		<property name="imageUrl" type="String"></property>
+		<property name="availableSizes" type="String"></property>
+		<property name="availableColors" type="String"></property>
+		<property name="mrp" type="String"></property>
+		<property name="mop" type="String"></property>
+		<property name="productUrl" type="String"></property>
+	</bean>
+	<bean class="com.tisl.mpl.facades.data.STWJsonData">
+		<property name="status" type="java.lang.Integer"></property>
+		<property name="statusMessage" type="String"></property>
+		<property name="recommendations" type="java.util.List&lt;com.tisl.mpl.facades.data.STWJsonRecomendationData>"></property>
+	</bean>
 </beans>
