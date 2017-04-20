@@ -5384,6 +5384,10 @@ function checkServiceabilityRequired(buttonType,el){
 			);
 		}*/
 	}
+	if(selectedPin == null || selectedPin.length === 0)
+	{	
+	   $('#defaultPinCodeIdsBtm').val("");
+	}
 	if(sessionPin != selectedPin){
 		checkPincodeServiceability(buttonType,el);
 	}
