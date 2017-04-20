@@ -157,6 +157,35 @@ import com.tisl.mpl.xml.pojo.ReturnLogisticsResponse;
  */
 public class CancelReturnFacadeImpl implements CancelReturnFacade
 {
+	/**
+	 * 
+	 */
+	private static final String LOG_MSG_REVERSE_LOGISTICS_AVAILABILTY_RESPONSE_ORDERLINE_IS_NULL = "*****Reverse logistics availabilty  Response orderline is null*********";
+	/**
+	 * 
+	 */
+	private static final String DD_MM_YYYY = "dd-MM-yyyy";
+	/**
+	 * 
+	 */
+	private static final String RETURN_CATEGORY_RSP = "RSP";
+	/**
+	 * 
+	 */
+	private static final String RETURN_CATEGORY_RSS ="RSS";
+	/**
+	 * 
+	 */
+	private static final String LOG_MSG_RMA_NUMBER = "*************** RMA number:";
+	/**
+	 * 
+	 */
+	private static final String LOG_MSG_CREATE_REFUND_SETTING_TYPE_OF_RETURN = ">> createRefund >>  Setting Type of Return ";
+	/**
+	 *
+	 */
+	private static final String COD = "COD";
+
 	@Resource
 	private MplOrderService mplOrderService;
 	@Resource
@@ -704,7 +733,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				final PaymentTransactionEntryModel paymentTransEntry = tranactions.iterator().next().getEntries().iterator().next();
 
 				if (paymentTransEntry.getPaymentMode() != null && paymentTransEntry.getPaymentMode().getMode() != null
-						&& "COD".equalsIgnoreCase(paymentTransEntry.getPaymentMode().getMode()))
+						&& COD.equalsIgnoreCase(paymentTransEntry.getPaymentMode().getMode()))
 				{
 					amount = 0d;
 				}
@@ -809,7 +838,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			{
 				returnLogisticsCheck = false;
 			}
-			LOG.info(">> createRefund >>  Setting Type of Return " + returnLogisticsCheck);
+			LOG.info(LOG_MSG_CREATE_REFUND_SETTING_TYPE_OF_RETURN + returnLogisticsCheck);
 			
 			if (returnLogisticsCheck)
 			{
@@ -847,7 +876,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 							.next();
 
 					if (paymentTransEntry.getPaymentMode() != null && paymentTransEntry.getPaymentMode().getMode() != null
-							&& "COD".equalsIgnoreCase(paymentTransEntry.getPaymentMode().getMode()))
+							&& COD.equalsIgnoreCase(paymentTransEntry.getPaymentMode().getMode()))
 					{
 						refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
 					}
@@ -869,7 +898,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			modelService.saveAll(refundList);
 			modelService.save(returnRequestModel);
 
-			LOG.debug("*************** RMA number:" + returnRequestModel.getRMA());
+			LOG.debug(LOG_MSG_RMA_NUMBER + returnRequestModel.getRMA());
 			returnReqCreated = true;
 		}
 		catch (final Exception e)
@@ -921,7 +950,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			{
 				returnLogisticsCheck = false;
 			}
-			LOG.info(">> createRefund >>  Setting Type of Return " + returnLogisticsCheck);
+			LOG.info(LOG_MSG_CREATE_REFUND_SETTING_TYPE_OF_RETURN + returnLogisticsCheck);
 			if (returnLogisticsCheck)
 			{
 				//LOG.info(">> createRefund >> if >> Setting Type of Return " + returnLogisticsCheck);
@@ -958,7 +987,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 							.next();
 
 					if (paymentTransEntry.getPaymentMode() != null && paymentTransEntry.getPaymentMode().getMode() != null
-							&& "COD".equalsIgnoreCase(paymentTransEntry.getPaymentMode().getMode()))
+							&& COD.equalsIgnoreCase(paymentTransEntry.getPaymentMode().getMode()))
 					{
 						refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
 					}
@@ -978,7 +1007,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 			modelService.save(returnRequestModel);
 
-			LOG.debug("*************** RMA number:" + returnRequestModel.getRMA());
+			LOG.debug(LOG_MSG_RMA_NUMBER + returnRequestModel.getRMA());
 			returnReqCreated = true;
 		}
 		catch (final Exception e)
@@ -1083,7 +1112,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				//				{
 				//					sendTicketLineItemData.setReturnReasonCode(reasonCode);
 				//					sendTicketRequestData.setRefundType(refundType);
-				//					sendTicketRequestData.setReturnCategory("RSP");
+				//					sendTicketRequestData.setReturnCategory(RETURN_CATEGORY_RSP);
 				//				}
 				//				lineItemDataList.add(sendTicketLineItemData);
 				else
@@ -1094,12 +1123,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					if (returnLogisticsCheck)
 					{
 						//LOG.info("Setting Type of Return::::::" + returnLogisticsCheck);
-						sendTicketRequestData.setReturnCategory("RSP");
+						sendTicketRequestData.setReturnCategory(RETURN_CATEGORY_RSP);
 					}
 					else
 					{
 						//LOG.info("Setting Type of Return::::::" + returnLogisticsCheck);
-						sendTicketRequestData.setReturnCategory("RSS");
+						sendTicketRequestData.setReturnCategory(RETURN_CATEGORY_RSS);
 					}
 
 					//lineItemDataList.add(sendTicketLineItemData);
@@ -1137,7 +1166,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			//				{
 			//					sendTicketLineItemData.setReturnReasonCode(reasonCode);
 			//					sendTicketRequestData.setRefundType(refundType);
-			//					sendTicketRequestData.setReturnCategory("RSP");
+			//					sendTicketRequestData.setReturnCategory(RETURN_CATEGORY_RSP);
 			//				}
 			//				lineItemDataList.add(sendTicketLineItemData);
 			//			}
@@ -1163,7 +1192,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			//					{
 			//						sendTicketLineItemData.setReturnReasonCode(reasonCode);
 			//						sendTicketRequestData.setRefundType(refundType);
-			//						sendTicketRequestData.setReturnCategory("RSP");
+			//						sendTicketRequestData.setReturnCategory(RETURN_CATEGORY_RSP);
 			//					}
 			//					lineItemDataList.add(sendTicketLineItemData);
 			//				}
@@ -1298,7 +1327,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				lineItemDataList.add(sendTicketLineItemData);
 			}
 			if(StringUtils.isNotEmpty(sendTicketRequestData.getTicketSubType())){
-			if (!((sendTicketRequestData.getTicketSubType()).equals("RSS")))
+			if (!((sendTicketRequestData.getTicketSubType()).equals(RETURN_CATEGORY_RSS)))
 			{
 				addressInfo.setShippingFirstName(returnAddress.getFirstName());
 				addressInfo.setShippingLastName(returnAddress.getLastName());
@@ -1324,7 +1353,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					String returnPickUpdate = returnInfoData.getReturnPickupDate();
 					returnPickUpdate=returnPickUpdate.concat("00:00:00");
 					final SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMddhh:mm:ss");
-					final SimpleDateFormat format2 = new SimpleDateFormat("dd-MM-yyyy");
+					final SimpleDateFormat format2 = new SimpleDateFormat(DD_MM_YYYY);
 					Date da = format1.parse(returnPickUpdate);
 					String date =format2.format(da);
 					if(LOG.isDebugEnabled()) {
@@ -1341,7 +1370,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					String timeslot = returnInfoData.getReturnPickupDate();
 					String strDate = timeslot.concat("00:00:00");
 					final SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMddhh:mm:ss");
-					final SimpleDateFormat format2 = new SimpleDateFormat("dd-MM-yyyy");
+					final SimpleDateFormat format2 = new SimpleDateFormat(DD_MM_YYYY);
 					Date da = format1.parse(strDate);
 					String date =format2.format(da);
 					System.out.println("date"+date);
@@ -1363,7 +1392,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					String timeslot = returnInfoData.getReturnPickupDate();
 					String strDate = timeslot.concat("00:00:00");
 					final SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMddhh:mm:ss");
-					final SimpleDateFormat format2 = new SimpleDateFormat("dd-MM-yyyy");
+					final SimpleDateFormat format2 = new SimpleDateFormat(DD_MM_YYYY);
 					Date da = format1.parse(strDate);
 					String date =format2.format(da);
 					System.out.println("date"+date);
@@ -1471,12 +1500,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					if (returnLogisticsCheck)
 					{
 						//LOG.info("Setting Type of Return::::::" + returnLogisticsCheck);
-						sendTicketRequestData.setTicketSubType("RSP");
+						sendTicketRequestData.setTicketSubType(RETURN_CATEGORY_RSP);
 					}
 					else
 					{
 						//LOG.info("Setting Type of Return::::::" +returnLogisticsCheck);
-						sendTicketRequestData.setTicketSubType("RSS");
+						sendTicketRequestData.setTicketSubType(RETURN_CATEGORY_RSS);
 					}
 
 					//lineItemDataList.add(sendTicketLineItemData);
@@ -1485,7 +1514,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 				lineItemDataList.add(sendTicketLineItemData);
 			}
-			if (!((sendTicketRequestData.getTicketSubType()).equals("RSS")))
+			if (!((sendTicketRequestData.getTicketSubType()).equals(RETURN_CATEGORY_RSS)))
 			{
 				addressInfo.setShippingFirstName(returnAddress.getFirstName());
 				addressInfo.setShippingLastName(returnAddress.getLastName());
@@ -2218,7 +2247,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				else
 				{
 					//TISEE-5357
-					LOG.debug("*****Reverse logistics availabilty  Response orderline is null*********");
+					LOG.debug(LOG_MSG_REVERSE_LOGISTICS_AVAILABILTY_RESPONSE_ORDERLINE_IS_NULL);
 					final ReturnLogisticsResponseData returnLogRespData = new ReturnLogisticsResponseData();
 					returnLogRespData.setIsReturnLogisticsAvailable("N");
 					if (null != orderDetails.getCode())
@@ -2382,7 +2411,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				else
 				{
 					//TISEE-5357
-					LOG.debug("*****Reverse logistics availabilty  Response orderline is null*********");
+					LOG.debug(LOG_MSG_REVERSE_LOGISTICS_AVAILABILTY_RESPONSE_ORDERLINE_IS_NULL);
 					final ReturnLogisticsResponseData returnLogRespData = new ReturnLogisticsResponseData();
 					returnLogRespData.setIsReturnLogisticsAvailable("N");
 					if (null != orderDetails.getCode())
@@ -2756,7 +2785,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(consignmentModel.getDeliveryDate(),
 				currentDate);
 		final int actualReturnWindow = Integer.parseInt(richAttributeModel.get(0).getReturnWindow());
-		DateTimeFormatter dtfOut = DateTimeFormat.forPattern("dd-MM-yyyy");
+		DateTimeFormatter dtfOut = DateTimeFormat.forPattern(DD_MM_YYYY);
 		final MplLPHolidaysModel mplLPHolidaysModel = mplConfigFacade.getMplLPHolidays(MarketplacecommerceservicesConstants.CAMPAIGN_URL_ALL);
 		if(actualReturnWindow>=returnWindow)
 		{
@@ -3361,7 +3390,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			{
 				returnLogisticsCheck = false;
 			}
-			LOG.info(">> createRefund >>  Setting Type of Return " + returnLogisticsCheck);
+			LOG.info(LOG_MSG_CREATE_REFUND_SETTING_TYPE_OF_RETURN + returnLogisticsCheck);
 			if (returnLogisticsCheck)
 			{
 				//LOG.info(">> createRefund >> if >> Setting Type of Return " + returnLogisticsCheck);
@@ -3400,7 +3429,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 							.next();
 
 					if (paymentTransEntry.getPaymentMode() != null && paymentTransEntry.getPaymentMode().getMode() != null
-							&& "COD".equalsIgnoreCase(paymentTransEntry.getPaymentMode().getMode()))
+							&& COD.equalsIgnoreCase(paymentTransEntry.getPaymentMode().getMode()))
 					{
 						refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
 					}
@@ -3420,7 +3449,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 			modelService.save(returnRequestModel);
 
-			LOG.debug("*************** RMA number:" + returnRequestModel.getRMA());
+			LOG.debug(LOG_MSG_RMA_NUMBER + returnRequestModel.getRMA());
 			returnReqCreated = true;
 		}
 		catch (final Exception e)
@@ -3571,7 +3600,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				else
 				{
 					//TISEE-5357
-					LOG.debug("*****Reverse logistics availabilty  Response orderline is null*********");
+					LOG.debug(LOG_MSG_REVERSE_LOGISTICS_AVAILABILTY_RESPONSE_ORDERLINE_IS_NULL);
 					final ReturnLogisticsResponseData returnLogRespData = new ReturnLogisticsResponseData();
 					returnLogRespData.setIsReturnLogisticsAvailable("N");
 					if (null != orderDetails.getCode())
@@ -3789,7 +3818,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		{
 			final ReturnRequestModel returnRequestModel = returnService.createReturnRequest(subOrderModel);
 			returnRequestModel.setRMA(returnService.createRMA(returnRequestModel));
-			LOG.info(">> createRefund >>  Setting Type of Return " + returnLogisticsCheck);
+			LOG.info(LOG_MSG_CREATE_REFUND_SETTING_TYPE_OF_RETURN + returnLogisticsCheck);
 			returnRequestModel.setTypeofreturn(TypeofReturn.REVERSE_PICKUP);
 			if (salesApplication != null)
 			{
@@ -3815,7 +3844,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 							.next();
 
 					if (paymentTransEntry.getPaymentMode() != null && paymentTransEntry.getPaymentMode().getMode() != null
-							&& "COD".equalsIgnoreCase(paymentTransEntry.getPaymentMode().getMode()))
+							&& COD.equalsIgnoreCase(paymentTransEntry.getPaymentMode().getMode()))
 					{
 						refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
 					}
@@ -3835,7 +3864,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			modelService.save(returnRequestModel);
 			if(LOG.isDebugEnabled())
 			{
-				LOG.debug("*************** RMA number:" + returnRequestModel.getRMA());	
+				LOG.debug(LOG_MSG_RMA_NUMBER + returnRequestModel.getRMA());	
 			}
 			returnReqCreated = true;
 		}
@@ -4072,7 +4101,7 @@ private AbstractOrderEntryModel getOrderEntryModel(OrderModel ordermodel,String 
 		daysRemaining = refundWindow - totalDaysPassed;
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DATE, daysRemaining);
-		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		DateFormat dateFormat = new SimpleDateFormat(DD_MM_YYYY);
 		return dateFormat.format(calendar.getTime());
 	}
 	
@@ -4301,7 +4330,7 @@ private AbstractOrderEntryModel getOrderEntryModel(OrderModel ordermodel,String 
 					else
 					{
 						//TISEE-5357
-						LOG.debug("*****Reverse logistics availabilty  Response orderline is null*********");
+						LOG.debug(LOG_MSG_REVERSE_LOGISTICS_AVAILABILTY_RESPONSE_ORDERLINE_IS_NULL);
 						//final ReturnLogisticsResponseData returnLogRespData = new ReturnLogisticsResponseData();
 						final ReturnLogisticsResponseDTO returnLogRespDTO = new ReturnLogisticsResponseDTO();
 						//returnLogRespData.setIsReturnLogisticsAvailable("N");

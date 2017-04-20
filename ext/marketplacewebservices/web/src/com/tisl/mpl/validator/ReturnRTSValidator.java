@@ -20,6 +20,12 @@ import com.tisl.mpl.wsdto.ReturnInitiateRequestDTO;
 public class ReturnRTSValidator implements Validator
 {
 	
+	/**
+	 * 
+	 */
+	private static final String VALIDATION_ORDER_LINES = "orderLines[";
+
+
 	@Override
 	public boolean supports(final Class clazz)
 	{
@@ -38,27 +44,27 @@ public class ReturnRTSValidator implements Validator
 			{
 				if(StringUtils.isEmpty(data.getOrderLines().get(i).getOrderId()))
 				{
-					ValidationUtils.rejectIfEmptyOrWhitespace(errors, "orderLines["+ i +"].orderId", MarketplacewebservicesConstants.FIELD_REQD);
+					ValidationUtils.rejectIfEmptyOrWhitespace(errors, VALIDATION_ORDER_LINES+ i +"].orderId", MarketplacewebservicesConstants.FIELD_REQD);
 				}
 				if(StringUtils.isEmpty(data.getOrderLines().get(i).getTransactionId()))
 				{
-					ValidationUtils.rejectIfEmptyOrWhitespace(errors, "orderLines["+ i +"].transactionId", MarketplacewebservicesConstants.FIELD_REQD);
+					ValidationUtils.rejectIfEmptyOrWhitespace(errors, VALIDATION_ORDER_LINES+ i +"].transactionId", MarketplacewebservicesConstants.FIELD_REQD);
 				}
 				if(StringUtils.isEmpty(data.getOrderLines().get(i).getInterfaceType()))
 				{
-					ValidationUtils.rejectIfEmptyOrWhitespace(errors, "orderLines["+ i +"].interfaceType", MarketplacewebservicesConstants.FIELD_REQD);
+					ValidationUtils.rejectIfEmptyOrWhitespace(errors, VALIDATION_ORDER_LINES+ i +"].interfaceType", MarketplacewebservicesConstants.FIELD_REQD);
 				}
 				if(StringUtils.isEmpty(data.getOrderLines().get(i).getReasonCode()))
 				{
-					ValidationUtils.rejectIfEmptyOrWhitespace(errors, "orderLines["+ i +"].reasonCode", MarketplacewebservicesConstants.FIELD_REQD);
+					ValidationUtils.rejectIfEmptyOrWhitespace(errors, VALIDATION_ORDER_LINES+ i +"].reasonCode", MarketplacewebservicesConstants.FIELD_REQD);
 				}
 				if(StringUtils.isEmpty(data.getOrderLines().get(i).getRefundMode()))
 				{
-					ValidationUtils.rejectIfEmptyOrWhitespace(errors, "orderLines["+ i +"].refundMode", MarketplacewebservicesConstants.FIELD_REQD);
+					ValidationUtils.rejectIfEmptyOrWhitespace(errors, VALIDATION_ORDER_LINES+ i +"].refundMode", MarketplacewebservicesConstants.FIELD_REQD);
 				}
 				if(StringUtils.isEmpty(data.getOrderLines().get(i).getReturnStoreId()))
 				{
-					ValidationUtils.rejectIfEmptyOrWhitespace(errors, "orderLines["+ i +"].returnStoreId", MarketplacewebservicesConstants.FIELD_REQD);
+					ValidationUtils.rejectIfEmptyOrWhitespace(errors, VALIDATION_ORDER_LINES+ i +"].returnStoreId", MarketplacewebservicesConstants.FIELD_REQD);
 				}	
 			}
 		}
