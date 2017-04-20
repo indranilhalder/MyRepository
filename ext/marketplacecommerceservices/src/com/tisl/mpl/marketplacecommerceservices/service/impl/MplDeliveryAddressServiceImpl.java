@@ -48,6 +48,11 @@ import com.tisl.mpl.model.SellerMasterModel;
 public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 {
 
+	/**
+	 * 
+	 */
+	private static final String LOG_ERROR_MSG_MODEL_SAVING_EXCEPTION_WHILE_SETTING_STATUS = "ModelSavingException while setting status ";
+
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
 
@@ -350,7 +355,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("ModelSavingException while setting status " + e.getMessage());
+			LOG.error(LOG_ERROR_MSG_MODEL_SAVING_EXCEPTION_WHILE_SETTING_STATUS + e.getMessage());
 		}
 		catch (final NullPointerException nullPointerException)
 		{
@@ -450,7 +455,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("ModelSavingException while setting status " + e.getMessage());
+			LOG.error(LOG_ERROR_MSG_MODEL_SAVING_EXCEPTION_WHILE_SETTING_STATUS + e.getMessage());
 		}
 		catch (final NullPointerException nullPointerException)
 		{
@@ -478,7 +483,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("ModelSavingException while setting status " + e.getMessage());
+			LOG.error(LOG_ERROR_MSG_MODEL_SAVING_EXCEPTION_WHILE_SETTING_STATUS + e.getMessage());
 		}
 		catch (final NullPointerException nullPointerException)
 		{
@@ -548,7 +553,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("ModelSavingException while setting status " + e.getMessage());
+			LOG.error(LOG_ERROR_MSG_MODEL_SAVING_EXCEPTION_WHILE_SETTING_STATUS + e.getMessage());
 		}
 		catch (final NullPointerException nullPointerException)
 		{
