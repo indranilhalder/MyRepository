@@ -59,7 +59,6 @@ public class MplDefaultCachingStrategy implements CachingStrategy
 
 				ttl = Integer.parseInt(configurationService.getConfiguration().getString("promotion.memcache.ttl"));
 
-
 				LOG.debug("ttl for Memcache" + ttl);
 
 				LOG.debug("Putting the value for CART GUID : " + code + "Value : " + results);
@@ -72,6 +71,11 @@ public class MplDefaultCachingStrategy implements CachingStrategy
 			catch (final Exception exception)
 			{
 				LOG.error("Error during cacheClient creation for Promtion Mem cache Impl : Method : PUT");
+
+				//Added for Fall Back Mechanism
+				LOG.error(">>>>>>>>>>>>>>>>Reverting to Hybris Cache >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+				this.cache.put(code, results);
+				LOG.error(">>>>>>>>>>>>>>>>Added to Hybris Cache >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 				exception.printStackTrace();
 			}
 
@@ -99,6 +103,16 @@ public class MplDefaultCachingStrategy implements CachingStrategy
 			catch (final Exception exception)
 			{
 				LOG.error("Error during cacheClient creation for Promtion Mem cache Impl : Method : get");
+
+				LOG.error(">>>>>>>>>>>>>>>>Fetching from Hybris Cache >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+				//Added for Fall Back Mechanism
+				if (this.cache.containsKey(code))
+				{
+					LOG.error(">>>>>>>>>>>>>>>>Sending Data from Hybris Cache  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+					return (this.cache.get(code));
+				}
+
 				exception.printStackTrace();
 			}
 
@@ -127,6 +141,14 @@ public class MplDefaultCachingStrategy implements CachingStrategy
 			catch (final Exception exception)
 			{
 				LOG.error("Error during cacheClient creation for Promtion Mem cache Impl : Method : remove");
+
+				//Added for Fall Back Mechanism
+				if (this.cache.containsKey(code))
+				{
+					LOG.error(">>>>>>>>>>>>>>>>Removing Data from Hybris Cache  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+					this.cache.remove(code);
+				}
+
 				exception.printStackTrace();
 			}
 
