@@ -2246,7 +2246,8 @@ $(document).ready(function()
 	
 	function forceSetHeader(){
 	 var pageType = $("#pageType").val();
-	 if(pageType == 'cart' || pageType == 'orderconfirmation' || pageType == 'update-profile'){
+	 //Fix for INC144315287 & INC144315355
+	 if(pageType == 'cart' || pageType == 'orderconfirmation' || pageType == 'update-profile' || pageType == 'homepage'){
 		 return true;
 	 }
 	}
