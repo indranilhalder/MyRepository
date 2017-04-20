@@ -22,8 +22,8 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 	//getiing seller id from session in case csr agent for store order
 	final String sellerID = "'"+(String) JaloSession.getCurrentSession().getAttribute("sellerId")+"'";
 	
-	query.append("SELECT {p.pk}, {p.name}, {p.code} "
-	+"from {product as p JOIN Catalogversion as cv ON {p.catalogversion}={cv.pk}}" 
+	query.append("SELECT DISTINCT {p.pk}, {p.name}, {p.code} "
+	+"from {product as p JOIN Catalogversion as cv ON {p.catalogversion}={cv.pk} JOIN Buybox as bb ON {p.code}={bb.product}}" 
 	+"where {p.pk} in ({{"
 		+"select {p.pk}" 
 		+"from {PcmProductVariant as p} "
