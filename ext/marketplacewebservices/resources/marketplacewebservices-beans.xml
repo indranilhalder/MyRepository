@@ -921,6 +921,8 @@
 		<property name="endDate" type="String" />
 		<property name="eligibleUSSIDList" type="java.util.List&lt;String>"></property>
 		<property name="giftProduct" type="com.tisl.mpl.wsdto.GiftProductMobileData" />
+		<property name="bundlepromolinkname" type="String" />
+		<property name="bundlepromolink" type="String" />
 
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.ClassificationMobileWsData">

@@ -275,7 +275,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -1527,6 +1527,14 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			if (null != highestPrmotion && null != highestPrmotion.getDescription())
 			{
 				promoMobiledata.setDescription(highestPrmotion.getDescription());
+			}
+			if (null != highestPrmotion && null != highestPrmotion.getBundlepromolinktext())
+			{
+				promoMobiledata.setBundlepromolinkname(highestPrmotion.getBundlepromolinktext());
+			}
+			if (null != highestPrmotion && null != highestPrmotion.getPromourl())
+			{
+				promoMobiledata.setBundlepromolink(highestPrmotion.getPromourl());
 			}
 			List<String> allowedSellers = null;
 			final List<String> totalUssidListOfProduct = new ArrayList<String>();
