@@ -3330,6 +3330,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//binData = getBinFacade().binCheck(binNumber);
 				//Added For TPR-1035
 				binData = getBinFacade().binCheck(binNumber, cardType, mplCustomerID, true);
+				//Added for TPR-4461 starts here for voucher
+				setBankNameUserPaymentMode(binData.getBankName());
+				//TPR-4461 ends here
 			}
 
 		}
