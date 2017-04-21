@@ -3,6 +3,26 @@ $(document).ready(
 		
 
 		function() {
+			//TPR-4731 changes start
+			if($('body').hasClass('pageType-ContentPage') && $('#ia_category_code').val() != '' && $('#ia_category_code').val().toLowerCase().indexOf('mbh') != -1){
+ 				var pageName = $('#pageName').val();
+ 				var brandName='';
+ 				if(typeof pageName != undefined && pageName != ''){
+ 					pageName=pageName.split('BrandStore-');
+ 					brandName = pageName[1].trim().toLowerCase();
+ 					if(typeof(Storage) !== "undefined") {
+ 						localStorage.setItem("brandName", brandName);
+ 					}
+ 				}
+ 			}
+ 			else if($('#pageType').val() != "category"){
+ 				if(typeof(Storage) !== "undefined") {
+ 					if(localStorage.getItem("brandName") != null){
+ 						localStorage.removeItem("brandName");
+ 					}
+ 				}
+ 			}
+			//TPR-4731 changes end
 			tealiumCallOnPageLoad();//Moving tealium on-load call to function so that it can be re-used.
 });
 
@@ -945,7 +965,93 @@ if(typeof utag !="undefined"){
 
 /*TPR-4754|invite friends end*/
 /*Order History page changes End*/
-
+/*TPR-4731 | Brand page changes | Start*/
+ $(document).on('click','.call-to-action-link',function(){
+ 	if($('body').hasClass('pageType-ContentPage') && $('#ia_category_code').val() != '' && $('#ia_category_code').val().toLowerCase().indexOf('mbh') != -1){
+ 		var pageName = $('#pageName').val();
+ 		var brandName='';
+ 		if(typeof pageName != undefined && pageName != ''){
+ 			pageName=pageName.split('BrandStore-');
+ 			brandName = pageName[1].trim();
+ 		}
+ 		var linkName = $(this).text().trim();
+ 		var linkText = $(this).parents('.call-to-action-parent').find('.call-to-action-name').text().trim();
+ 		var msg = '';
+ 		if(brandName != undefined && brandName != ''){
+ 			msg = brandName +"_";
+ 		}
+ 		if(linkText != undefined && linkText != ''){
+ 			msg = msg+"_"+linkText + "_";
+ 		}
+ 		if(linkName != undefined && linkName != ''){
+ 			msg = msg + linkName + "_clicked";
+ 		}
+ 		msg = msg.toLowerCase().replace(/ +$/, "").replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+ 		if(msg != undefined && msg != '' && typeof utag != undefined){
+ 			utag.link({
+ 				link_text: msg,
+ 				event_type : msg
+ 			});
+ 		}
+ 	}
+ })
+ 
+ 
+ $(document).on('click','.call-to-action-banner',function(){
+ 	if($('body').hasClass('pageType-ContentPage') && $('#ia_category_code').val() != '' && $('#ia_category_code').val().toLowerCase().indexOf('mbh') != -1){
+ 		var pageName = $('#pageName').val();
+ 		var brandName='';
+ 		if(typeof pageName != undefined && pageName != ''){
+ 			pageName=pageName.split('BrandStore-');
+ 			brandName = pageName[1].trim();
+ 		}
+ 		var bannerName = $(this).attr('alt').trim();
+ 		
+ 		var msg = '';
+ 		if(brandName != undefined && brandName != ''){
+ 			msg = brandName + "_";
+ 		}
+ 		if(bannerName != undefined && bannerName != ''){
+ 			msg = msg + bannerName + "_clicked";
+ 		}
+ 		msg = msg.toLowerCase().replace(/ +$/, "").replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+ 		if(msg != undefined && msg != '' && typeof utag != undefined){
+ 			utag.link({
+ 				link_text: msg,
+ 				event_type : "brand_banner_clicked"
+ 			});
+ 		}
+ 	}
+ })
+ 
+ 
+ function brandSubCategoryPageCheck(){
+ 	var brandName='';
+ 	var subCategoryName = '';
+ 	if(typeof(Storage) !== "undefined") {
+ 		if(localStorage.getItem("brandName") != null){
+ 			brandName = localStorage.getItem("brandName");
+ 			localStorage.removeItem("brandName");
+ 		}
+ 	}
+ 	if($(".facet-list.filter-opt").find('.Brand') && $(".facet-list.filter-opt").find('.Brand').next().val()){
+ 		if($(".facet-list.filter-opt").find('.Brand').next().val().toLowerCase() == brandName){
+ 			if(typeof brandName != undefined && brandName!= ''){
+ 				if($('#product_category').val() != undefined && $('#product_category').val() != ''){
+ 					subCategoryName = brandName +"_"+$('#product_category').val().trim();
+ 				}
+ 				if($('#page_subcategory_name').val() != undefined && $('#page_subcategory_name').val() != ''){
+ 					subCategoryName = subCategoryName +"_"+$('#page_subcategory_name').val().trim();
+ 				}
+ 				if($('#page_subcategory_name_l3').val() != undefined && $('#page_subcategory_name_l3').val() != ''){
+ 					subCategoryName = subCategoryName +"_"+$('#page_subcategory_name_l3').val().trim();
+ 				}
+ 			}
+ 		}
+ 	}
+ 	return subCategoryName;
+ }
+ /*TPR-4731 | Brand page changes | End*/ 
 
 /* Data Layer Schema Changes Ends*/
 
@@ -1276,6 +1382,11 @@ function tealiumCallOnPageLoad()
 							tealiumData += '"onlineExclusive_product_count":"'		// TPR-4726
 								+ onlineExclusive + '",';
 							}
+						var brand_sub_category = brandSubCategoryPageCheck();
+ 						if(brand_sub_category != undefined && brand_sub_category != null && brand_sub_category != ''){ 
+ 							tealiumData += '"brand_sub_category":"'
+ 								+ brand_sub_category + '",';
+ 							}
 						/*TPR-430 Start*/
 						if($("#product_category").val() != undefined && $("#product_category").val() != null && $("#product_category").val() != ''){ 
 						tealiumData += '"product_category":'
