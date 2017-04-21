@@ -23,6 +23,8 @@
 		<span class="error-message" id="notReservableCouponError"><spring:theme code="checkout.multi.coupons.notReservable"/></span>
 		<span class="error-message" id="freebieCouponError"><spring:theme code="checkout.multi.coupons.freebie"/></span>
 		<span class="error-message" id="userInvalidCouponError"><spring:theme code="checkout.multi.coupons.userInvalid"/></span>
+<!-- changes for  [ TPR-4461]-->		
+		<span class="error-message" id="couponPaymentRestrictionMessage"></span>
 <!-- changes for  [ TPR-1075]-->
 	   <span class="error-message" id="firstPurchaseOfferError"><spring:theme code="checkout.multi.coupons.firstPurchaseInvalid"/></span>
 <!-- changes for  [ TPR-4460]-->

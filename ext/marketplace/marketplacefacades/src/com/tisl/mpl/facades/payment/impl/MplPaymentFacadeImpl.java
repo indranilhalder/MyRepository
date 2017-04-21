@@ -38,6 +38,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -85,6 +86,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.BlacklistService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
+import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -2988,7 +2990,38 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 
 
+	//TPR-4461 BANK RESTRICTION CHECK STARTS HERE
+	/**
+	 * TPR-4461
+	 *
+	 * @param banklist
+	 * @param bank
+	 * @return boolean
+	 *
+	 */
 
+	@Override
+	public boolean validateBank(final List<BankModel> bankList, final String bank)
+	{
+		final Iterator it = bankList.iterator();
+		if (StringUtils.isNotEmpty(bank))
+		{
+			while (it.hasNext())
+			{
+
+				final BankModel bankData = (BankModel) it.next();
+				if (StringUtils.equalsIgnoreCase(bankData.getBankName(), bank))
+				{
+					return true;
+
+				}
+			}
+		}
+
+		return false;
+	}
+
+	//TPR-4464 BANK RESTRICTION CHECK ENDS HERE
 
 
 

@@ -107,6 +107,14 @@ public class BinFacadeImpl implements BinFacade
 					(null != bin && StringUtils.isNotEmpty(bin.getBankName())) ? bin.getBankName() : null);
 
 
+			/////////////////TPR-4464///////////////////
+
+			//getSessionService().setAttribute(MarketplacecommerceservicesConstants.BANKFROMBINFORPROMOTION,
+			//	(null != bin && StringUtils.isNotEmpty(bin.getBankName())) ? bin.getBankName() : null);//Card's Bank List
+
+			/////////////////TPR-4464///////////////////
+
+
 			LOG.debug("From session=====Bank:::::::"
 					+ getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN));
 

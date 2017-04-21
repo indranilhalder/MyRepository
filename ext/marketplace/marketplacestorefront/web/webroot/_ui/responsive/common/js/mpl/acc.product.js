@@ -1338,10 +1338,11 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 	{
 		if($(window).width() > 773) {
 			$("#cboxClose").click();
+		} /*added as part of PRDI-90*/
 			$('body.modal-open').css('overflow-y','hidden');
 			$(".modal").modal('hide');
 			$('body').css('overflow-y','auto');
-		} 
+		//} /*commented as part of PRDI-90*/
 		
 	}
 };

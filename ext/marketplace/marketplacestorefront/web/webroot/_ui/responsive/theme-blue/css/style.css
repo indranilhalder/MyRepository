@@ -44085,9 +44085,14 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 }
 
 /* piczoomer css end */
-.smartbanner-show {
+.smartbanner-show body {
 	margin-top: 80px;
 }
+.smartbanner-show body.page-multiStepCheckoutSummaryPage,
+ .smartbanner-show body.page-checkout-login,
+ .smartbanner-show body.page-cartPage{
+ 	margin-top:0px;
+ }
 .smartbanner-show body.template-pages-search-searchGridPage .smartbanner-container,
 .smartbanner-show body.template-pages-category-productGridPage .smartbanner-container,
 .smartbanner-show body.template-pages-my-account-accountMarketPreference .smartbanner-container,
@@ -44854,7 +44859,7 @@ bottom:35px;
 	font-size: 28px;
     font-weight: 500;
 }
-.trending h2,.trending h3{
+.trending > h2,.trending > h3{
 	position: relative;
     z-index: 2;
     left: 50%;
@@ -44866,7 +44871,7 @@ bottom:35px;
     -o-transform: translateX(-50%);
     transform: translateX(-50%);
 }
-.trending h2 span,.trending h3 span{
+.trending > h2 span,.trending > h3 span{
 	font-size: 28px;
     line-height: 45px;
     vertical-align: middle;
@@ -44892,7 +44897,7 @@ bottom:35px;
 		padding: 40px 0 55px;
     	font-weight: 500;
 	}
-	.trending h2{
+	.trending > h2, .trending > h3{
 		display: block;
     	left: auto;
     	-webkit-transform: none;
@@ -45795,6 +45800,10 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 	font-weight: bold;
 	margin: 50px 0;
 }
+.page-productDetails .trending > h3{
+ 	margin: 30px 0;
+ 	height: 50px;
+ }
 .page-productDetails .trending h2 span {
 	font-weight: bold;
 }
@@ -45912,6 +45921,9 @@ body .right-account .order-history .cancellation-request-block>h2{
 	.trending h2 span {
 		font-size: 24px;
 	}
+	.trending > h3, .trending > h3 span{
+ 		font-size: 24px;
+ 	}
 }
 @media(max-width:1200px) and (min-width:791px){
 	body.page-homepage .trending h2>span{
@@ -49861,7 +49873,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     top: 11px;
 }
 .top.checkout-top .content {
-    margin: 65px 0 0;
+    margin: 64px 0 0;
 }
 .marketplace-checkout .tab-logo .simple-banner-component img {
     margin-top: 0px;
@@ -50233,6 +50245,7 @@ width:25px; height:25px;
 .progress-barcheck .step1 {  width: 8%;}
 .progress-barcheck .step3 {    width: 90%;}
 .progress-barcheck .step-3.finalstep span {    right: 6%;}
+.checkout-content.checkout-payment.cart.checkout.wrapper .container-address {margin-top: -22px;}
 .wrapper .container-address {margin-top: -10px;}
 .wrapper .container-address { padding: 14px 0 0;}
 .progress-barcheck div a {font-size: 11px;}
@@ -63053,6 +63066,9 @@ body.page-productGrid .list_title h1 {
     margin-left: 292px;
 	position: absolute;
     margin-top: 22px;
+    text-align: left;    /* TPR-1283*/
+    width: 50%;          /* TPR-1283*/
+    line-height: 25px;   /* TPR-1283*/
 }
 /*TPR-250 defect fix No result*/
 body.page-productGrid .list_title h1.shiftDownZero{

@@ -153,21 +153,19 @@ $(document).ready(function(){
 	/*------------Start of SNS auto complete----------*/
 			
 			var style = null ;
-			
-			var getUrlParameter = function getUrlParameter(sParam) {
-			    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-			        sURLVariables = sPageURL.split('&'),
-			        sParameterName,
-			        i;
-
-			    for (i = 0; i < sURLVariables.length; i++) {
-			        sParameterName = sURLVariables[i].split('=');
-
-			        if (sParameterName[0] === sParam) {
-			            return sParameterName[1] === undefined ? true : sParameterName[1];
-			        }
-			    }
-			};
+			// For INC144315410
+			var findGetParameter = function findGetParameter(parameterName) {
+ 			    var result = null,
+ 		        tmp = [];
+ 			    location.search
+ 			    .substr(1)
+ 		        .split("&")
+ 		        .forEach(function (item) {
+ 		        tmp = item.split("=");
+ 		        if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+ 		    });
+ 		    return result;
+			}
 
 			var isLux = getUrlParameter('isLux');
 			console.log("isLux"+ isLux);
@@ -3450,9 +3448,9 @@ $(window).on("load resize", function() {
 			}
 	}	
 	/* UF-257 start */
-	if($('.smartbanner-show .smartbanner').css('display') == 'none'){
+	/*if($('.smartbanner-show .smartbanner').css('display') == 'none'){
 		$(".smartbanner-show").css("margin-top","0px");
-	}
+	}*/
 	/* UF-257 end */
 });
 /* UF-253 end */
@@ -3570,3 +3568,13 @@ if($(window).width() < 313)
 	$(".store-finder-legends").css("left","");
 }
 /*TISSQAEE-335*/
+/*TPR-1283-code added for change heading height for brand filtered PLP--Starts*/
+$(window).on("load resize",function(){
+	var htH1 = $("body.page-productGrid .list_title h1").height();
+	var lineHtH1 = parseInt($("body.page-productGrid .list_title h1").css("line-height"));
+	var htH1Multiple = htH1/lineHtH1;
+	var paddingOrigin = parseInt($("body.page-productGrid .facet-list.filter-opt").css("padding-top"));
+	paddingOrigin = paddingOrigin + (lineHtH1 * (htH1Multiple-1));
+	$("body.page-productGrid .facet-list.filter-opt").css("padding-top",paddingOrigin);
+});
+/*TPR-1283-code added for change heading height for brand filtered PLP--Ends*/
