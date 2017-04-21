@@ -705,7 +705,210 @@ $(document).on('click','.home-rotatingImage .owl-item img',function(){
 		});
 	}
 })
-/*Homepage changes Ends*/
+
+
+ /*TPR-4805 | Inspire me changes start*/
+ $(document).on('click','#showcase .button.maroon.btn-red',function(){
+ 	var header = $(this).parents('#showcase').children('h2').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+ 	if(typeof utag !="undefined"){
+ 		utag.link({ 
+ 			link_text : header+"_read_story_clicked", 
+ 			event_type : header+"_read_story_clicked"
+ 		});
+ 	}
+ })
+ 
+ $(document).on('click','#showcase .button.trending-button.btn-trans',function(){
+ 	var header = $(this).parents('#showcase').children('h2').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+ 	if(typeof utag !="undefined"){
+ 		utag.link({ 
+ 			link_text : header+"_read_more_clicked", 
+ 			event_type : header+"_read_more_clicked"
+ 		});
+ 	}
+ })
+ /*TPR-4805 | Inspire me changes end*/
+ 
+ /*TPR-4800 | What to buy now changes start*/
+ $(document).on('click','.home-product-you-care-carousel .owl-item a',function(){
+ 	var categoryName = $(this).find('.product-name > span').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+ 	var header = $(this).parents('#productYouCare').children('h2').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+ 	if(typeof utag !="undefined"){
+ 		utag.link({ 
+ 			link_text : header+"_"+categoryName+"_clicked", 
+ 			event_type : header+"_"+categoryName+"_clicked"
+ 		});
+ 	}
+ })
+ /*TPR-4800 | What to buy now changes end*/
+ 
+ 
+ /*TPR-4796 | Homepage banner carousel start*/
+ $(document).on('click', '.home-rotatingImage .owl-dot', function(){
+ 	if(typeof utag !="undefined"){
+ 		utag.link({ 
+ 			link_text : 'home_carousel_clicked', 
+ 			event_type : 'home_carousel_clicked'
+ 		});
+ 	}
+ })
+ /*TPR-4796 | Homepage banner carousel end*/
+ 
+ /*	TPR-4802|stay qued|homepage*/
+ $(document).on('click','.qued-content a',function(){
+ 
+ 	if(typeof utag !="undefined"){
+ 		 utag.link({ link_text : 'read_the_story_clicked' , event_type : 'read_the_story_clicked'});
+ 	 }
+ })
+ 
+ /*	TPR-4801 | new in| homepage start*/
+ $(document).on('click','.new_exclusive_viewAll', function(){
+ 	if(typeof utag !="undefined"){
+ 		 utag.link({ link_text : 'new_in_view_all_clicked' , event_type : 'new_in_view_all_clicked'});
+ 	 }	
+ })
+ 
+ $(document).on('click','#new_exclusive .newExclusiveElement a', function(){
+ 	var productName = $(this).find('.New_Exclusive_title').text();
+ 	if(typeof utag !="undefined"){
+ 		 utag.link({ link_text : productName , event_type : 'new_in_clicked' });
+ 	 }	
+ 	
+ })
+ /*	TPR-4801 | new in| homepage ends*/
+ 
+ /*TPR-5062 Start*/
+ $(document).on("click",".download-app",function(){
+ 	if(typeof utag !="undefined"){
+ 	utag.link({
+ 		"link_text": "download_app", "event_type" : "download_app_clicked"});
+ 	}
+ });
+ 
+ $(document).on("click",".store-locator-header",function(){
+ 	if(typeof utag !="undefined"){
+ 	utag.link({
+ 		"link_text": "our_stores", "event_type" : "our_stores_clicked"});
+ 	}
+ });
+ 
+ $(document).on("click",".tracklinkcls",function(){
+ 	if(typeof utag !="undefined"){
+ 	utag.link({
+ 		"link_text": "user_notifications", "event_type" : "user_notifications_clicked"});
+ }
+ });
+ 
+ $(document).on("click",".logged_in.dropdown.ajaxloginhi",function(){
+ if(typeof utag !="undefined"){
+ utag.link({
+ 	"link_text": "my_account", "event_type" : "my_account_clicked"});
+ }
+ });
+ 
+ $(document).on("click",".wishlist",function(){
+ if(typeof utag !="undefined"){
+ utag.link({
+ 	"link_text": "my_wishlists", "event_type" : "my_wishlists_clicked"});
+ }
+ });
+ 
+ $(document).on("click",".bag",function(){
+ if(typeof utag !="undefined"){
+ utag.link({
+ 	"link_text": "my_bag", "event_type" : "my_bag_clicked"});
+ }
+ });
+ /*TPR-5062 End*/
+ 
+ /*TPR-4799 | offers page changes | Start*/
+ /*Top Brands|Offer page*/
+ $(document).on('click','.clp_top_brands .top_brands_section a',function(){
+ 	var sectionName = $(this).parents('.top_brands').find('span > span').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+ 	if(typeof utag !="undefined"){
+ 		 utag.link({ link_text : 'offers_'+sectionName+'_clicked' , event_type : 'offers_'+sectionName+'_clicked' });
+ 	 }	
+ })
+ /*Top offers|Offer page*/
+ $(document).on('click','.top_categories',function(){
+ 	var sectionName = $(this).find('span > span').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+ 	if(typeof utag !="undefined"){
+ 		 utag.link({ link_text : 'offers_'+sectionName+'_clicked' , event_type : 'offers_'+sectionName+'_clicked' });
+ 	 }	
+ })
+ /*Half price Store|Offer page*/
+ $(document).on('click','.clp_winter_launch_wrapper',function(){
+ 	var sectionName = $(this).parents('.winter_launch').find('.winter_launch_section .content').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+ 	if(typeof utag !="undefined"){
+ 		 utag.link({ link_text : 'offers_'+sectionName+'_clicked' , event_type : 'offers_'+sectionName+'_clicked' });
+ 	 }
+ })
+ /*under 999 store|Offer page*/
+ $(document).on('click','.shop_for',function(){
+ 	var sectionName = $(this).find('.yCmsComponent.shop_for_component .content p').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+ 	if(typeof utag !="undefined"){
+ 		 utag.link({ link_text : 'offers_'+sectionName+'_clicked' , event_type : 'offers_'+sectionName+'_clicked' });
+ 	 }
+ })
+ 
+ 
+ /*Top Deals changes*/
+ $(document).on('click','.top_deal',function(){
+ 	var header = $(this).find('.feature-collections > h2').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+ 	if(typeof utag !="undefined"){
+ 		utag.link({ 
+ 			link_text : "offers_"+header+"_clicked", 
+ 			event_type : "offers_"+header+"_clicked"
+ 		});
+ 	}
+})
+
+//Best Seller changes start
+$(document).on('mousedown','.best_seller .owl-prev,.owl-next',function(e){
+	var direction='';
+	if($(e.currentTarget).hasClass('owl-next')){
+		direction="Next";
+	}
+	else{
+		direction="Previous";
+	}
+	direction = direction.toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	var title=$(this).parents('.best_seller').find('.content > p').text().trim().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	if(typeof utag !="undefined"){
+		utag.link({ 
+			link_text : title+'_'+direction, 
+			event_type : title+'_navigation_click'
+		});
+	}
+})
+ 
+ $(document).on("click", ".best_seller .Menu li", function() {
+ 	var text = $(this).text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+ 	var title=$(this).parents('.best_seller').find('.content > p').text().trim().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+ 	if(typeof utag !="undefined"){
+ 		utag.link({ 
+ 			link_text : text, 
+ 			event_type : title+'_menu_clicked'
+ 		});
+ 	}
+ })
+ 
+ $(document).on('click','.best_seller .js-owl-carousel .owl-item a',function(){
+ 	var productName=$(this).find('img').attr('title').toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+ 	var title=$(this).parents('.best_seller').find('.content > p').text().trim().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+ 	if(typeof utag !="undefined"){
+ 		utag.link({ 
+ 			link_text : productName, 
+ 			event_type : title+'_product_clicked', 
+ 		});
+ 	} 
+ })
+ 
+ //Best Seller changes end
+ /*TPR-4799 | offers page changes | End*/ 
+  /*Homepage changes Ends*/
+  
 
 /*Order History page changes Start*/
 /*TPR-4751 & 4753 | Order history and track order changes*/
