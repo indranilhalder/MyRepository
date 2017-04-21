@@ -29,13 +29,11 @@ import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
-import de.hybris.platform.voucher.model.VoucherModel;
-import com.tisl.mpl.core.enums.WalletEnum;
+
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -64,6 +62,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
@@ -80,6 +79,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificat
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
 import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.OrderStatusSpecifier;
 
 
@@ -96,40 +96,34 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	private static final Logger LOG = Logger.getLogger(MplDefaultPlaceOrderCommerceHooks.class);
 	private CloneAbstractOrderStrategy cloneAbstractOrderStrategy;
 
-	@Autowired
+	@Resource
 	private MplSellerInformationService mplSellerInformationService;
 
-	@Autowired
+	@Resource
 	private AbstractOrderEntryTypeService abstractOrderEntryTypeService;
-	@Autowired
+	@Resource
 	private OrderService orderService;
-	@Autowired
+	@Resource
 	private ModelService modelService;
 	//@Autowired
 	//private EventService eventService;
-	@Autowired
+	@Resource
 	private MplOrderDao mplOrderDao;
 
-	@Autowired
+	@Resource
 	private ConfigurationService configurationService;
 
-	@Autowired
+	@Resource
 	private MplCommerceCartService mplCommerceCartService;
 
 
 	//	@Autowired
 	//	private MplFraudModelService mplFraudModelService;
 
-
-
-
-	@Autowired
+	@Resource
 	private CategoryService categoryService;
 
-
-
-
-	@Autowired
+	@Resource
 	private OrderStatusSpecifier orderStatusSpecifier;
 
 	@Autowired
@@ -144,9 +138,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
 
-	@Autowired
+	@Resource
 	private MplOrderService mplOrderService;
-	@Autowired
+	@Resource(name = "mplDeliveryCostService")
 	private MplDeliveryCostService deliveryCostService;
 
 	//	@Autowired
@@ -158,12 +152,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;
+	@Resource(name = "discountUtility")
+	private DiscountUtility discountUtility;
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * 
-
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -270,15 +266,18 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				 * LOG.debug("Order Sequence Generation True"); final String orderIdSequence =
 				 * getMplCommerceCartService().generateOrderId(); LOG.debug("Order Sequence Generated:- " +
 				 * orderIdSequence);
-				 *
-
+				 * 
+				 * 
 				 * orderModel.setCode(orderIdSequence); } else { LOG.debug("Order Sequence Generation False"); final Random
 				 * rand = new Random(); orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000))); }
 				 */
-				orderModel.setType("Parent");
+				// Removed from Hooks added in PlaceOrderStrategy
+				//orderModel.setType("Parent");
 				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
 				{
-					LOG.debug("Payment Info COD");
+					LOG.debug("Payment Info and Status saving COD");
+					orderModel.setModeOfOrderPayment(MarketplacecommerceservicesConstants.COD);
+					getModelService().save(orderModel);
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 				}
 				else
@@ -304,16 +303,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				//				}
 				if (CollectionUtils.isNotEmpty(voucherList))
 				{
-					VoucherModel appliedVoucher = null;
-
 					try
 					{
 						final DiscountModel discount = voucherList.get(0);
-
 						if (discount instanceof PromotionVoucherModel)
 						{
 							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
-							appliedVoucher = promotionVoucherModel;
 							final VoucherInvalidationModel voucherInvalidationModel = getVoucherModelService()
 									.createVoucherInvalidation(promotionVoucherModel,
 											null != promotionVoucherModel.getVoucherCode() ? promotionVoucherModel.getVoucherCode() : "",
@@ -343,59 +338,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 							//							getModelService().save(voucherInvalidationModel);
 						}
 					}
+
 					catch (final Exception e)
 					{
-						final ArrayList<DiscountModel> parentOrderVoucherList = new ArrayList<DiscountModel>(getVoucherService()
-								.getAppliedVouchers(orderModel));
-
-						final VoucherInvalidationModel voucherInvalidation = mplVoucherService.findVoucherInvalidation(appliedVoucher,
-								orderModel.getUser(), orderModel);
-
-						if (CollectionUtils.isEmpty(parentOrderVoucherList) && voucherInvalidation != null) //voucher is NOT attached with order but invalidation exists
-						{
-							LOG.error(
-									"Initially the voucher was applied in "
-											+ orderModel.getCode()
-											+ " , now due to exception it has been removed internally. Hence removing the invalidation. The exception is: ",
-									e);
-
-							getModelService().remove(voucherInvalidation);
-							//getModelService().refresh(voucherInvalidation);
-
-						}
-						else if (CollectionUtils.isNotEmpty(parentOrderVoucherList) && voucherInvalidation == null) //voucher is attached with order but invalidation does not exist
-						{
-							final DiscountModel orderVoucherDisc = parentOrderVoucherList.get(0);
-
-							if (orderVoucherDisc instanceof PromotionVoucherModel)
-							{
-								final PromotionVoucherModel promotionVoucher = (PromotionVoucherModel) orderVoucherDisc;
-								try
-								{
-									LOG.info("Trying to create invalidation again...");
-									//trying to create invalidation again
-									final VoucherInvalidationModel voucherInvalidationModel = getVoucherModelService()
-											.createVoucherInvalidation(promotionVoucher,
-													null != promotionVoucher.getVoucherCode() ? promotionVoucher.getVoucherCode() : "",
-													orderModel);
-									if (StringUtils.isNotEmpty(promotionVoucher.getCode()))
-									{
-										voucherInvalidationModel.setSavedAmount(promotionVoucher.getValue());
-									}
-									getModelService().save(voucherInvalidationModel);
-								}
-								catch (final Exception ex)
-								{
-									LOG.error("Error while creating invalidation when voucher is attached with order for id: "
-											+ orderModel.getCode() + ", hence releasing the voucher from order", ex);
-									//releasing voucher from order if exception occurs
-									getVoucherService().releaseVoucher(promotionVoucher.getVoucherCode(), orderModel);
-									orderModel.setGlobalDiscountValuesInternal(null);
-									getModelService().save(orderModel);
-									getModelService().refresh(orderModel);
-								}
-							}
-						}
+						discountUtility.releaseVoucherAndInvalidation(orderModel);
+						throw e;
 					}
 				}
 			}
@@ -574,7 +521,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * (non-Javadoc)
 	 * 
 	 * 
-
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -590,7 +537,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * (non-Javadoc)
 	 * 
 	 * 
-
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -622,9 +569,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			{
 				orderModel.setIsWallet(WalletEnum.NONWALLET);
 			}
-			
+
 			final List<OrderModel> orderList = getSubOrders(orderModel);
-			
+
 			//TISPRO-249
 			//OrderIssues:-  re factoring done
 			if (CollectionUtils.isNotEmpty(orderList))
@@ -643,7 +590,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			}
 			else
 			{
-				throw new InvalidCartException("Exception while creating Suborder for Parent Order:-  " + orderModel.getCode());
+				throw new InvalidCartException("Exception while creating Suborder for Parent Order:-  Suborder not created"
+						+ orderModel.getCode());
 			}
 
 			//Commented as ordercode creation is handled earlier for TPR-629
@@ -713,11 +661,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
 	 * 
 	 * 
-
+	 * 
 	 * @param subOrderList
 	 * 
 	 * 
-
+	 * 
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -819,11 +767,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
 	 * 
 	 * 
-
+	 * 
 	 * @param subOrderList
 	 * 
 	 * 
-
+	 * 
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -1410,11 +1358,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
 	 * 
 	 * 
-
+	 * 
 	 * @param orderList
 	 * 
 	 * 
-
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	// OrderIssues:- InvalidCartException exception throws
@@ -1971,7 +1919,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		LOG.debug("Sub Order Clone:- Suborder ID:- " + null != clonedSubOrder.getCode() ? clonedSubOrder.getCode()
 				: "Sub Order code is empty");
 		//save once only
-		clonedSubOrder.setType("SubOrder");
+		clonedSubOrder.setType(MarketplacecommerceservicesConstants.SUBORDER);
 		clonedSubOrder.setParentReference(orderModel);
 		getModelService().save(clonedSubOrder);
 
@@ -2028,13 +1976,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					{
 						scheduleDeliveryCharge = scheduleDeliveryCharge.doubleValue() > 0.0 ? Double.valueOf(scheduleDeliveryCharge
 
-								.doubleValue() / abstractOrderEntryModel.getQualifyingCount().doubleValue()) : scheduleDeliveryCharge;
+						.doubleValue() / abstractOrderEntryModel.getQualifyingCount().doubleValue()) : scheduleDeliveryCharge;
 					}
 					else
 					{
 						scheduleDeliveryCharge = scheduleDeliveryCharge.doubleValue() > 0.0 ? Double.valueOf(scheduleDeliveryCharge
 
-								.doubleValue() / abstractOrderEntryModel.getQuantity().intValue()) : scheduleDeliveryCharge;
+						.doubleValue() / abstractOrderEntryModel.getQuantity().intValue()) : scheduleDeliveryCharge;
 					}
 					/* R2.3 END */
 
