@@ -36014,10 +36014,10 @@ display:none;
 }
 .mob-filter-wrapper{
 	display: block !important;
-	width: 19.83%;		/* TISSQAUAT-1825 */
-    padding: 0 20px 0 18px;		/* TISSQAUAT-1825 */
-    margin-top: 31px;		/* TISSQAUAT-1825 */
-    float: left;		/* TISSQAUAT-1825 */
+	/* width: 19.83%;		TISSQAUAT-1825
+    padding: 0 20px 0 18px;		TISSQAUAT-1825
+    margin-top: 31px;		TISSQAUAT-1825
+    float: left;		TISSQAUAT-1825 */
 }
 .listing-leftmenu > div.apply-clear{
 	display:none !important;
