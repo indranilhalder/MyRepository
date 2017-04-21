@@ -166,8 +166,10 @@ public class MplOrderDetailsOrderTotalsWidgetRenderer extends
 			renderRow(convenienceCharges, LabelUtils.getLabel(widget,
 					"convenienceCharges", new Object[0]), currencyInstance,
 					container);
-
-			Double totalPrice = subtotal+deliveryCosts+convenienceCharges-cartPromo-couponPromo-promotion;
+			//TISSQAUAT-1539 starts
+			//Double totalPrice = subtotal+deliveryCosts+convenienceCharges-cartPromo-couponPromo-promotion;
+			Double totalPrice = subtotal+deliveryCosts+convenienceCharges-cartPromo-couponPromo-promotion-totalDeliveryCostDisc;
+			//TISSQAUAT-1539 ends
 			renderRow(totalPrice,
 					LabelUtils.getLabel(widget, "totalPrice", new Object[0]),
 					currencyInstance, container);
