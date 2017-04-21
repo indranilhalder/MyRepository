@@ -19,6 +19,7 @@
 <c:set var="hasShippedItems" value="${order.deliveryItemsQuantity > 0}" />
 <c:set var="myline2" value="${fn:trim(order.deliveryAddress.line2)}"/>
 <c:set var="myline3" value="${fn:trim(order.deliveryAddress.line3)}"/>
+<c:set var="landmark" value="${fn:trim(order.deliveryAddress.landmark)}"/>
 <h1 style="margin-left: 15px"><spring:theme code="text.deliveryAddress" text="Delivery Details"/></h1>
 <div class="orderBox address orderBoxalignment">
 	<h4>Shipping Address</h4>
@@ -27,7 +28,7 @@
 	</c:if>
 	<c:if test="${hasShippedItems}">
 	
-	<c:if test="${empty myline2  && empty myline3}">
+	<c:if test="${empty myline2  && empty myline3 && empty landmark}">
 	<address>
 	
 			${fn:escapeXml(order.deliveryAddress.title)}${fn:escapeXml(order.deliveryAddress.firstName)}&nbsp;${fn:escapeXml(order.deliveryAddress.lastName)}<br>
@@ -41,7 +42,24 @@
 	
 	</c:if>
 	
-	<c:if test="${not empty myline2  && empty myline3}">
+	<c:if test="${empty myline2  && empty myline3 && not empty landmark}">
+	<address>
+	
+			${fn:escapeXml(order.deliveryAddress.title)}${fn:escapeXml(order.deliveryAddress.firstName)}&nbsp;${fn:escapeXml(order.deliveryAddress.lastName)}<br>
+			${fn:escapeXml(order.deliveryAddress.line1)},&nbsp;${fn:escapeXml(order.deliveryAddress.landmark)},<br>
+			${fn:escapeXml(order.deliveryAddress.town)},&nbsp;${fn:escapeXml(order.deliveryAddress.region.name)}${fn:escapeXml(order.deliveryAddress.state)},&nbsp;
+			${fn:escapeXml(order.deliveryAddress.postalCode)}&nbsp;
+			${fn:escapeXml(order.deliveryAddress.country.isocode)}<br>
+			<spring:theme code="checkout.phone.no" text="91"/>	&nbsp;${fn:escapeXml(order.deliveryAddress.phone)}
+			
+			</address>
+	
+	</c:if>
+	
+	
+	
+	
+	<c:if test="${not empty myline2  && empty myline3 && empty landmark}">
 	
 	<address>
 	
@@ -56,7 +74,25 @@
 	
 	</c:if>
 	
-	<c:if test="${ empty myline2  && not empty myline3}">
+	<c:if test="${not empty myline2  && empty myline3 && not empty landmark}">
+	
+	<address>
+	
+			${fn:escapeXml(order.deliveryAddress.title)}${fn:escapeXml(order.deliveryAddress.firstName)}&nbsp;${fn:escapeXml(order.deliveryAddress.lastName)}<br>
+<!-- TISUATSE-69 -->${fn:escapeXml(order.deliveryAddress.line1)}${fn:escapeXml(order.deliveryAddress.line2)},&nbsp;${fn:escapeXml(order.deliveryAddress.landmark)},<br>
+			${fn:escapeXml(order.deliveryAddress.town)},&nbsp;${fn:escapeXml(order.deliveryAddress.region.name)}${fn:escapeXml(order.deliveryAddress.state)},&nbsp;
+			${fn:escapeXml(order.deliveryAddress.postalCode)}&nbsp;
+			${fn:escapeXml(order.deliveryAddress.country.isocode)}<br>
+			<spring:theme code="checkout.phone.no" text="91"/>	&nbsp;${fn:escapeXml(order.deliveryAddress.phone)}
+			
+			</address>
+	
+	</c:if>
+	
+	
+	
+	
+	<c:if test="${ empty myline2  && not empty myline3 && empty landmark}">
 	
 	<address>
 	
@@ -71,18 +107,51 @@
 	
 	</c:if>
 	
-	 <c:if test="${not empty myline2  && not empty myline3}">
+	<c:if test="${ empty myline2  && not empty myline3 && not empty landmark}">
+	
 	<address>
+	
 			${fn:escapeXml(order.deliveryAddress.title)}${fn:escapeXml(order.deliveryAddress.firstName)}&nbsp;${fn:escapeXml(order.deliveryAddress.lastName)}<br>
-<!-- TISUATSE-69 -->${fn:escapeXml(order.deliveryAddress.line1)},&nbsp;${fn:escapeXml(order.deliveryAddress.line2)},&nbsp;${fn:escapeXml(order.deliveryAddress.line3)},&nbsp;${fn:escapeXml(order.deliveryAddress.landmark)},<br>
-			${fn:escapeXml(order.deliveryAddress.line1)},&nbsp;${fn:escapeXml(order.deliveryAddress.line2)},&nbsp;${fn:escapeXml(order.deliveryAddress.line3)},&nbsp;${fn:escapeXml(order.deliveryAddress.landmark)},<br>
+<!-- TISUATSE-69 -->${fn:escapeXml(order.deliveryAddress.line1)}${fn:escapeXml(order.deliveryAddress.line3)},&nbsp;${fn:escapeXml(order.deliveryAddress.landmark)},<br>
 		${fn:escapeXml(order.deliveryAddress.town)},&nbsp;${fn:escapeXml(order.deliveryAddress.region.name)}${fn:escapeXml(order.deliveryAddress.state)},&nbsp;
 			${fn:escapeXml(order.deliveryAddress.postalCode)}&nbsp;
 			${fn:escapeXml(order.deliveryAddress.country.isocode)}<br>
 			<spring:theme code="checkout.phone.no" text="91"/>	&nbsp;${fn:escapeXml(order.deliveryAddress.phone)}
 			
 			</address>
+	
+	</c:if>
+	
+	
+	
+	
+	 <c:if test="${not empty myline2  && not empty myline3 && empty landmark}">
+	<address>
+			${fn:escapeXml(order.deliveryAddress.title)}${fn:escapeXml(order.deliveryAddress.firstName)}&nbsp;${fn:escapeXml(order.deliveryAddress.lastName)}<br>
+<!-- TISUATSE-69 -->${fn:escapeXml(order.deliveryAddress.line1)}${fn:escapeXml(order.deliveryAddress.line2)}${fn:escapeXml(order.deliveryAddress.line3)},<br>
+			${fn:escapeXml(order.deliveryAddress.town)},&nbsp;${fn:escapeXml(order.deliveryAddress.region.name)}${fn:escapeXml(order.deliveryAddress.state)},&nbsp;
+			${fn:escapeXml(order.deliveryAddress.postalCode)}&nbsp;
+			${fn:escapeXml(order.deliveryAddress.country.isocode)}<br>
+			<spring:theme code="checkout.phone.no" text="91"/>	&nbsp;${fn:escapeXml(order.deliveryAddress.phone)}
+			
+			</address>
 			</c:if>
+			
+			<c:if test="${not empty myline2  && not empty myline3 && not empty landmark}">
+	<address>
+			${fn:escapeXml(order.deliveryAddress.title)}${fn:escapeXml(order.deliveryAddress.firstName)}&nbsp;${fn:escapeXml(order.deliveryAddress.lastName)}<br>
+<!-- TISUATSE-69 -->${fn:escapeXml(order.deliveryAddress.line1)}${fn:escapeXml(order.deliveryAddress.line2)}${fn:escapeXml(order.deliveryAddress.line3)},&nbsp;${fn:escapeXml(order.deliveryAddress.landmark)},<br>
+			${fn:escapeXml(order.deliveryAddress.town)},&nbsp;${fn:escapeXml(order.deliveryAddress.region.name)}${fn:escapeXml(order.deliveryAddress.state)},&nbsp;
+			${fn:escapeXml(order.deliveryAddress.postalCode)}&nbsp;
+			${fn:escapeXml(order.deliveryAddress.country.isocode)}<br>
+			<spring:theme code="checkout.phone.no" text="91"/>	&nbsp;${fn:escapeXml(order.deliveryAddress.phone)}
+			
+			</address>
+			</c:if>
+			
+			
+			
+			
 	</c:if>
 	<c:if test="${totalCount > 1}"><p>${totalCount}&nbsp;<spring:theme code="confirmation.message.items" /></p></c:if>
     <c:if test="${totalCount == 1}"><p>${totalCount}&nbsp;<spring:theme code="confirmation.message.item" /></p></c:if> 

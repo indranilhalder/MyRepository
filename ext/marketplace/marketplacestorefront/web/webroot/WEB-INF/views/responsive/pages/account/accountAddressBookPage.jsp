@@ -115,7 +115,10 @@
 																</c:if>	
 																<c:set var="myline2" value="${fn:trim(address.line2)}"/>
 																<c:set var="myline3" value="${fn:trim(address.line3)}"/>
-																<c:if test="${empty myline2  && empty myline3}">
+										<!-- TISSTRT-1506 starts -->					
+																<c:set var="landmark" value="${fn:trim(address.landmark)}"/>
+																
+																<c:if test="${empty myline2  && empty myline3 && empty landmark}">
 																
 																<address>
 																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
@@ -128,7 +131,23 @@
 																</address>
 																</c:if>
 																
-																<c:if test="${not empty myline2  && empty myline3}">
+																<c:if test="${empty myline2  && empty myline3 && not empty landmark}">
+																
+																<address>
+																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
+						<!-- TISUATSE-63 -->						${fn:escapeXml(address.line1)},&nbsp;${fn:escapeXml(address.landmark)},
+																	<br>
+
+																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
+																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
+																	 91&nbsp;${fn:escapeXml(address.phone)} <br>
+																</address>
+																</c:if>
+																
+																				
+																
+																
+																<c:if test="${not empty myline2  && empty myline3 && empty landmark}">
 																
 																<address>
 																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
@@ -141,7 +160,36 @@
 																</address>
 																</c:if>
 																
-																<c:if test="${ empty myline2  && not empty myline3}">
+																<c:if test="${not empty myline2  && empty myline3 && not empty landmark}">
+																
+																<address>
+																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
+						<!-- TISUATSE-63 -->					    ${fn:escapeXml(address.line1)}${fn:escapeXml(address.line2)},&nbsp;${fn:escapeXml(address.landmark)},
+																	<br>
+
+																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
+																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
+																	 91&nbsp;${fn:escapeXml(address.phone)} <br>
+																</address>
+																</c:if>
+																
+																
+																
+																
+																
+																<c:if test="${ empty myline2  && not empty myline3 && empty landmark}">
+																
+																<address>
+																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
+									<!-- TISUATSE-63 -->			${fn:escapeXml(address.line1)}
+																	${fn:escapeXml(address.line3)},<br>
+																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
+																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
+																	 91&nbsp;${fn:escapeXml(address.phone)} <br>
+																</address>
+																</c:if>
+																
+																<c:if test="${ empty myline2  && not empty myline3 && not empty landmark}">
 																
 																<address>
 																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
@@ -152,8 +200,21 @@
 																	 91&nbsp;${fn:escapeXml(address.phone)} <br>
 																</address>
 																</c:if>
+																
+																
+																
                                                                
-                                                               <c:if test="${not empty myline2  && not empty myline3}">
+                                                               <c:if test="${not empty myline2  && not empty myline3 && empty landmark}">
+																<address>
+																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
+									<!-- TISUATSE-63 -->			${fn:escapeXml(address.line1)}${fn:escapeXml(address.line2)}
+																	${fn:escapeXml(address.line3)},<br>
+																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
+																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
+																	 91&nbsp;${fn:escapeXml(address.phone)} <br>
+																</address></c:if>
+																
+																<c:if test="${not empty myline2  && not empty myline3 && not empty landmark}">
 																<address>
 																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
 									<!-- TISUATSE-63 -->			${fn:escapeXml(address.line1)}${fn:escapeXml(address.line2)}
@@ -161,7 +222,12 @@
 																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
 																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
 																	 91&nbsp;${fn:escapeXml(address.phone)} <br>
-																</address></c:if></li>
+																</address></c:if>
+																
+										
+													<!-- TISSTRT-1506 ends -->			
+																
+														</li>
 															<li><ycommerce:testId
 																	code="addressBook_addressOptions_label">
 																	<c:if test="${not address.defaultAddress}">
