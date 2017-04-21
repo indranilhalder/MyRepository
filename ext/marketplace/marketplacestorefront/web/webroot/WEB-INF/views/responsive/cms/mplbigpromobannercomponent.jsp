@@ -14,7 +14,7 @@
 		<c:when test="${not empty component.urlLink}">
 			<a class="homebanner_${component.sequenceNumber}" href="${bannerUrl}"><div class="homebanner_${component.sequenceNumber} hero icid">
 					<div class="image">
-						<img src="${component.bannerImage.URL}">
+						<img src="${component.bannerImage.URL}" alt="${component.bannerImage.altText}" class="call-to-action-banner">
 					</div>
 					<c:if test="${not empty component.majorPromoText}">
 						<ul class="major-promos">
@@ -37,7 +37,7 @@
 		<c:otherwise>
 			<div class="homebanner_${component.sequenceNumber} hero icid">
 				<div class="image">
-					<img src="${component.bannerImage.URL}">
+					<img src="${component.bannerImage.URL}"  alt="${component.bannerImage.altText}" class="call-to-action-banner" >
 				</div>
 				<c:if test="${not empty component.majorPromoText}">
 					<ul class="major-promos">

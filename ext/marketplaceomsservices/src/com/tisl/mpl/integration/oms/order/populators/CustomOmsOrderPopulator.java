@@ -175,7 +175,8 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 				{
 					if (paymentInfoSource != null)
 					{
-						if (paymentInfoSource.getBillingAddress() != null)
+						//INC144315579: cloning deliveryAddress to billingAddress
+						if (paymentInfoSource.getBillingAddress() != null && paymentInfoSource.getBillingAddress().getCountry() != null)
 						{
 							billingAddress = getAddressConverter().convert(paymentInfoSource.getBillingAddress());
 

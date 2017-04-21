@@ -1782,10 +1782,27 @@
 
 									<div class="order">
 										<c:url value="${entry.product.url}" var="productUrl" />
-										<div class="image">
+										<!-- <div class="image">
 											<a href="${productUrl}"> <product:productPrimaryImage
 													product="${entry.product}" format="thumbnail" />
 											</a>
+										</div>-->
+										<!-- INC144315335 -->
+										<div class="image">
+											<c:choose>
+												<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+														<a href="${productUrl}"> <product:productPrimaryImage
+															product="${entry.product}" format="luxuryCartIcon" />
+													</a>
+							
+												</c:when>
+												<c:otherwise>
+														<a href="${productUrl}"> <product:productPrimaryImage
+															product="${entry.product}" format="thumbnail" />
+													</a>
+														
+												</c:otherwise>
+											</c:choose>
 										</div>
 										<div class="details">
 											<p>${entry.brandName}</p>
@@ -1890,11 +1907,29 @@
 																	<li class="item look">
 																		<ul class="product-info">
 																			<li>
-																				<div class="product-img">
+																				<!-- <div class="product-img">
 																					<a href="${productUrl}"> <product:productPrimaryImage
 																							product="${entryCancel.product}"
 																							format="thumbnail" />
 																					</a>
+																				</div> -->
+																				
+																				<!-- INC144315335-->
+																				<div class="product-img">
+																					<c:choose>
+																						<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+																								<a href="${productUrl}"> <product:productPrimaryImage
+																									product="${entry.product}" format="luxuryCartIcon" />
+																							</a>
+																	
+																						</c:when>
+																						<c:otherwise>
+																								<a href="${productUrl}"> <product:productPrimaryImage
+																									product="${entry.product}" format="thumbnail" />
+																							</a>
+																								
+																						</c:otherwise>
+																					</c:choose>
 																				</div>
 																				<div class="product">
 																					<!-- <p class="company">Nike</p> -->
@@ -2014,11 +2049,28 @@
 																	<li class="item look">
 																		<ul class="product-info">
 																			<li>
-																				<div class="product-img">
+																				<!--  <div class="product-img">
 																					<a href="${productUrl}"> <product:productPrimaryImage
 																							product="${entryCancel.product}"
 																							format="thumbnail" />
 																					</a>
+																				</div>-->
+																				<!-- INC144315335 -->
+																				<div class="product-img">
+																					<c:choose>
+																						<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+																								<a href="${productUrl}"> <product:productPrimaryImage
+																									product="${entry.product}" format="luxuryCartIcon" />
+																							</a>
+																	
+																						</c:when>
+																						<c:otherwise>
+																								<a href="${productUrl}"> <product:productPrimaryImage
+																									product="${entry.product}" format="thumbnail" />
+																							</a>
+																								
+																						</c:otherwise>
+																					</c:choose>
 																				</div>
 																				<div class="product">
 																					<!-- <p class="company">Nike</p> -->
