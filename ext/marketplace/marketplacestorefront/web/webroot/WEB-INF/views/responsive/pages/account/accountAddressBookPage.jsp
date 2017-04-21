@@ -309,8 +309,9 @@
 																	</c:if>
 																	
 																 <!-- TPR-3402 -->
-																 
+															<c:if test="${ not empty address.landmark}">	 
 																<li>${fn:escapeXml(address.landmark)},</li>
+																</c:if>
 																<li>${fn:escapeXml(address.town)},
 																	&nbsp;${fn:escapeXml(address.state)},
 																	&nbsp;${fn:escapeXml(address.postalCode)} &emsp;IN</li>
