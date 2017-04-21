@@ -35,6 +35,14 @@ import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 { "PMD", "deprecation" })
 public final class MarketplacecommerceservicesConstants extends GeneratedMarketplacecommerceservicesConstants
 {
+
+	//TPR-4461 starts here
+	//public static final String RESTRICTIONBANK = "restrictionbank".intern();
+	//public static final String RESTRICTIONPAYMENTMODE = "restrictionpaymentmode".intern();
+	//public final static String BANKFROMBINFORPROMOTION = "bankForPromotion".intern();
+	//public static final String PAYMENTMODECOUPON = "paymentmodecoupon".intern();
+	// TPR-4464 ends here
+
 	public static final String EXTENSIONNAME = "marketplacecommerceservices";
 
 	public static final String EMPTYSPACE = "";
@@ -2023,6 +2031,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SHIPMENT_CHARGE_AMOUNT = "return.shipmentcharge";
 	public static final String RSS = "RSS";
 	public static final String RETURN_TRANSACTON_TYPE_01 = "01";
-	public static final String ADDRESS_NOT_CHANGED ="ADDRESS_NOT_CHANGED";
+	public static final String ADDRESS_NOT_CHANGED = "ADDRESS_NOT_CHANGED";
 
 }

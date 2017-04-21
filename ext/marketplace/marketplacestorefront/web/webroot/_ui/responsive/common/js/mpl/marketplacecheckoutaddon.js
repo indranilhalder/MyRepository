@@ -1961,6 +1961,15 @@ $("#otpMobileNUMField").focus(function(){
 				else if(response=='redirect_with_details'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
 				}
+				//TPR-4461 STARTS HERE
+				else if(response=='redirect_with_coupon'){
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+					$("#juspayconnErrorDiv").css("display","block");
+					$(".pay button, #make_cc_payment_up").prop("disabled",false);
+					$(".pay button, #make_cc_payment_up").css("opacity","1");
+									    
+				}
+				//TPR-4461 ENDS HERE
 				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){	
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
@@ -2009,6 +2018,51 @@ $("#otpMobileNUMField").focus(function(){
 			}
 		});		
 	}
+  
+  
+  //TPR-4461 explicit link for coupon release for PAYMENT MODE AND BANK SPECIFIC RESTRICTION for Coupon starts here
+  function explicit_coupon_release_function(){
+	    var couponCode=$("#couponFieldId").val();
+		var guid=$("#guid").val();
+		$.ajax({
+	 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/release",
+	 		type: "GET",
+	 		cache: false,
+	 		data: { 'couponCode' : couponCode , 'guid' : guid},
+	 		success : function(response) {
+	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+	 			$("#codAmount").text(response.totalPrice.formattedValue);
+	 			// alert(response.totalPrice.formattedValue);
+	 			if(response.couponReleased==true){
+	 				couponApplied=true;
+	 			}
+	 			if(couponApplied==true){
+	 				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
+	 						" #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError").css("display","none");
+	 				document.getElementById("couponValue").innerHTML=response.couponDiscount.formattedValue;
+	 				// $("#couponFieldId").attr('disabled','enabled');
+	 				//TPR-4461 starts here
+						$('#couponPaymentRestrictionMessage').hide();
+					//TPR-4461 ends here
+	 				
+	 				$('#couponFieldId').attr('readonly', false);
+	 				var selection = $("#voucherDisplaySelection").val();
+	 				$("#couponFieldId").val(selection);
+	 				// $("#couponFieldId").val("");
+	 				$("#couponMessage").html("Coupon <b>"+couponCode+"</b> has been removed");
+	 				$('#couponMessage').show();
+	 				$('#couponMessage').delay(2000).fadeOut('slow');
+	 				setTimeout(function(){ $("#couponMessage").html(""); }, 2500); 			}
+	 			
+	 				$("#couponSubmitButton").prop('disabled', false);
+	 				$("#couponSubmitButton").css("opacity","1");
+	 		},
+	 		error : function(resp) {
+	 		}
+	 	});  
+ }
+ //TPR-4461 explicit link for coupon release for PAYMENT MODE AND BANK SPECIFIC RESTRICTION for Coupon ends here
+  
   
   function createJuspayOrderForNewCardEmi(){
 	    var staticHost=$('#staticHost').val();  
@@ -4815,9 +4869,18 @@ function applyPromotion(bankName,binValue,formSubmit)
 function submitNBForm(){
 	$("#netbankingIssueError").css("display","none");
 	var selectedValue=$('input[class=NBBankCode]:checked').val();
+	//TPR-4461 set for setting the bank name for NetBanking starts here
+	//var selectedHiddenValue=$('input[name=NBBankName]').val();
+	var selectedHiddenValue=$('input[class=NBBankCode]:checked').parent().find('input[type="hidden"]').val();
+	//alert("This is radio bankname" + selectedHiddenValue);
+	//TPR-4461 set for setting the bank name for NetBanking ends here
 	if(selectedValue==undefined)
 	{
 		selectedValue=$('select[id="bankCodeSelection"]').val();
+		//TPR-4461 set for setting the bank name for NetBanking starts here
+		selectedHiddenValue=$('select[id=bankCodeSelection] option:selected').text();
+		//alert(" this is dropdown bankname" + selectedHiddenValue );
+		//TPR-4461 set for setting the bank name for NetBanking ends here
 	}
 	if(selectedValue=="select")
 	{
@@ -4842,11 +4905,17 @@ function submitNBForm(){
 		$("#netbankingError").css("display","none");
 		var firstName=selectedValue;
 		var lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
+		
+		//TPR-4461 set for setting the bank name for NetBanking starts here
+		var netBankName=selectedHiddenValue;
+		//TPR-4461 set for setting the bank name for NetBanking ends here.bank name for netbanking is sent to create juspay order method of payment method checkout step controller 'netBankName' : netBankName
+		
+		
 		var cardSaved=false;
 		var guid=$("#guid").val();
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'guid' : guid},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'guid' : guid},
 			type: "GET",
 			cache: false,
 			success : function(response) {
@@ -7202,6 +7271,13 @@ $("#couponSubmitButton").click(function(){
 		 			if(couponApplied==true){
 		 				if(response.couponDiscount.doubleValue>0)
 			 			{
+		 					//TPR-4461 starts here
+		 					if(response.couponMessageInfo != null)
+		 					{
+		 					$('#couponPaymentRestrictionMessage').html("<b>"+response.couponMessageInfo+"<b>");
+		 					$('#couponPaymentRestrictionMessage').show();
+		 					}
+		 					//TPR-4461 ends here
 			 				$("#couponApplied").css("display","block");
 			 				document.getElementById("couponValue").innerHTML=response.couponDiscount.formattedValue;
 			 				//$("#couponFieldId").attr('disabled','disabled');
@@ -7282,6 +7358,9 @@ $(".remove-coupon-button").click(function(){
  						" #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display","none");
  				document.getElementById("couponValue").innerHTML=response.couponDiscount.formattedValue;
  				// $("#couponFieldId").attr('disabled','enabled');
+ 				//TPR-4461 starts here
+				$('#couponPaymentRestrictionMessage').hide();
+			    //TPR-4461 ends here
  				$('#couponFieldId').attr('readonly', false);
  				var selection = $("#voucherDisplaySelection").val();
  				$("#couponFieldId").val(selection);
@@ -8142,6 +8221,19 @@ function submitCODForm(){
 				else if(response=='redirect_to_payment'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TPR-629
 				}
+				//TPR-4461 STARTS HERE
+				else if(response=='redirect_with_coupon'){
+					// $(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid);
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+					$("#juspayconnErrorDiv").css("display","block");
+					$(".pay .payment-button,.cod_payment_button_top").prop("disabled",false);
+					$(".pay .payment-button,.cod_payment_button_top").css("opacity","1");
+					//$(".pay button, #make_cc_payment_up").prop("disabled",false);
+					//$(".pay button, #make_cc_payment_up").css("opacity","1");
+					// alert("Sorry!!! Voucher is not applicable for the payment mode/bank you have selected.Click OK to be back to the payment page and proceed further.");
+				    
+				}
+				//TPR-4461 ENDS HERE
 				else{
 					$("#emptyOTPMessage").css("display","none");
 					if(response!=null)

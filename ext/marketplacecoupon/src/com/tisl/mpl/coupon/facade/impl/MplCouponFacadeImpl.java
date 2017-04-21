@@ -42,6 +42,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -58,7 +59,10 @@ import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.ChannelRestrictionModel;
+import com.tisl.mpl.model.PaymentModeRestrictionModel;
+import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.model.UnregisteredUserRestrictionModel;
 
 
@@ -971,6 +975,81 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		return vouchersData;
 
 	}
+
+
+
+	//TPR-4461 MESSAGE FOR PAYMENT MODE RESTRICTION FOR COUPON starts here
+
+	/**
+	 * This method returns coupon message based on voucherCode for TPR-4461
+	 *
+	 * @param orderModel
+	 * @return String
+	 */
+
+	@Override
+	public String getCouponMessageInfo(final AbstractOrderModel orderModel)
+	{
+		String couponMessageInformation = null;
+		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
+				.getAppliedVouchers(orderModel));
+
+		if (CollectionUtils.isNotEmpty(voucherList))
+		{
+			VoucherModel appliedVoucher = null;
+
+			final DiscountModel discount = voucherList.get(0);
+
+			if (discount instanceof PromotionVoucherModel)
+			{
+				final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+				appliedVoucher = promotionVoucherModel;
+
+				final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
+				for (final RestrictionModel restriction : restrictions)
+				{
+					if (restriction instanceof PaymentModeRestrictionModel)
+					{
+						final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction).getPaymentTypeData(); //Voucher Payment mode
+						final List<BankModel> bankLists = ((PaymentModeRestrictionModel) restriction).getBanks(); //Voucher Bank Restriction List
+						final StringBuilder sb = new StringBuilder();
+
+
+						if (CollectionUtils.isNotEmpty(paymentTypeList))
+						{
+							final String messagePaymentMode = "The coupon is valid for ";
+							sb.append(messagePaymentMode);
+							for (final PaymentTypeModel paymentType : paymentTypeList)
+							{
+								sb.append(paymentType.getMode()).append(",");
+								sb.deleteCharAt(sb.lastIndexOf(","));
+								sb.append(".");
+							}
+						}
+
+						if (CollectionUtils.isNotEmpty(bankLists))
+						{
+							final String messageVoucherBank = " The valid bank/s is/are ";
+							sb.append(messageVoucherBank);
+							for (final BankModel bank : bankLists)
+							{
+								sb.append(bank.getBankName()).append(",");
+								sb.deleteCharAt(sb.lastIndexOf(","));
+								sb.append(".");
+							}
+						}
+
+						couponMessageInformation = sb.toString();
+					}
+				}
+			}
+		}
+
+		return couponMessageInformation;
+	}
+
+
+	//TPR-4461 MESSAGE FOR PAYMENT MODE RESTRICTION FOR COUPON ends here
 
 
 
