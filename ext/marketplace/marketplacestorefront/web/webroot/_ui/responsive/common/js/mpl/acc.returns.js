@@ -880,8 +880,10 @@
 									}
 									
 									$(".update"+temp+" li span.postalCode").text($("#addAddressForm #pincode").val());
-									$(".update"+temp+" li span.city").text($("#addAddressForm #city").val());
-									$(".update"+temp+" li span.stateListBox").text($("#addAddressForm #stateListBox").val());
+									/*TISPRDT-1071 Start*/
+									$(".update"+temp+" li span.addressTown").text($("#addAddressForm #city").val());
+									$(".update"+temp+" li span.state").text($("#addAddressForm #stateListBox").val());
+									/*TISPRDT-1071 End*/
 									$(".update"+temp+" li span.country").text($("#addAddressForm #country").val());
 									$(".update"+temp+" li span.phoneNumber").text($("#addAddressForm #mobileNo").val());
 									
