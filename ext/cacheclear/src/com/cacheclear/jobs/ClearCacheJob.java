@@ -16,6 +16,8 @@ import java.text.SimpleDateFormat;
 import org.apache.log4j.Logger;
 
 import com.cacheclear.event.CacheClearEvent;
+import com.cacheclear.model.CacheClearCronJobModel;
+import com.cacheclear.model.CacheClearingStatusModel;
 
 
 /**
