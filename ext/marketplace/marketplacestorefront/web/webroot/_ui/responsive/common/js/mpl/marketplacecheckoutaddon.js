@@ -440,6 +440,8 @@ function displayCODForm()
 				$("#otpSentMessage").css("display","none");
 				// $("#no-click").remove();
 				$(".terms.cod").remove();
+				$("#paymentButtonId").css("display","none");//INC144315258 
+				$('#paymentFormButton').attr('style', 'display: none !important');//INC144315258 
 				applyPromotion(null,"none","none");
 			}
 			else if(codEligible=="NOT_TSHIP")
@@ -451,6 +453,8 @@ function displayCODForm()
 				$("#otpSentMessage").css("display","none");
 				// $("#no-click").remove();
 				$(".terms.cod").remove();
+				$("#paymentButtonId").css("display","none");//INC144315258 
+				$('#paymentFormButton').attr('style', 'display: none !important');//INC144315258 
 				applyPromotion(null,"none","none");
 			}
 			else if(codEligible=="ITEMS_NOT_ELIGIBLE")
@@ -462,6 +466,8 @@ function displayCODForm()
 				$("#otpSentMessage").css("display","none");
 				// $("#no-click").remove();
 				$(".terms.cod").remove();
+				$("#paymentButtonId").css("display","none");//INC144315258 
+				$('#paymentFormButton').attr('style', 'display: none !important');//INC144315258 
 				applyPromotion(null,"none","none");
 			}
 			else if(codEligible=="NOT_PINCODE_SERVICEABLE")
@@ -473,6 +479,8 @@ function displayCODForm()
 				$("#otpSentMessage").css("display","none");
 				// $("#no-click").remove();
 				$(".terms.cod").remove();
+				$("#paymentButtonId").css("display","none");//INC144315258 
+				$('#paymentFormButton').attr('style', 'display: none !important');//INC144315258 
 				applyPromotion(null,"none","none");
 			}
 			else{
@@ -5452,6 +5460,10 @@ function checkServiceabilityRequired(buttonType,el){
 			{"link_text": "cart_checkout_clicked" , "event_type" : "cart_checkout_clicked"}
 			);
 		}*/
+	}
+	if(selectedPin == null || selectedPin.length === 0)
+	{	
+	   $('#defaultPinCodeIdsBtm').val("");
 	}
 	if(sessionPin != selectedPin){
 		checkPincodeServiceability(buttonType,el);

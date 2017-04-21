@@ -153,21 +153,19 @@ $(document).ready(function(){
 	/*------------Start of SNS auto complete----------*/
 			
 			var style = null ;
-			
-			var getUrlParameter = function getUrlParameter(sParam) {
-			    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-			        sURLVariables = sPageURL.split('&'),
-			        sParameterName,
-			        i;
-
-			    for (i = 0; i < sURLVariables.length; i++) {
-			        sParameterName = sURLVariables[i].split('=');
-
-			        if (sParameterName[0] === sParam) {
-			            return sParameterName[1] === undefined ? true : sParameterName[1];
-			        }
-			    }
-			};
+			// For INC144315410
+			var findGetParameter = function findGetParameter(parameterName) {
+ 			    var result = null,
+ 		        tmp = [];
+ 			    location.search
+ 			    .substr(1)
+ 		        .split("&")
+ 		        .forEach(function (item) {
+ 		        tmp = item.split("=");
+ 		        if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+ 		    });
+ 		    return result;
+			}
 
 			var isLux = getUrlParameter('isLux');
 			console.log("isLux"+ isLux);
@@ -1760,7 +1758,7 @@ $(document).ready(function(){
 		$(window).on("load resize", function() {
 			var filter_height = 0;
 			if ($(".searchSpellingSuggestionPrompt").is(":visible")) {
-				filter_height=$(".searchSpellingSuggestionPrompt").outerHeight() + 72;
+				filter_height=$(".searchSpellingSuggestionPrompt").outerHeight() + 96; /* PRDI-69 */
 			 /*else {
 				filter_height=$(".facet-list.filter-opt").height() + 32;
 			}*/
@@ -1823,7 +1821,7 @@ $(document).ready(function(){
 		var sort_top=parseInt($(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top"));
 		$(window).on("load resize", function() {
 			if($(window).width() <= 773){
-				$('.listing.wrapper .left-block').css('margin-top','20px');
+				/*$('.listing.wrapper .left-block').css('margin-top','20px');*/ /* PRDI-69 */
 				var search_text_height = $(".listing.wrapper .search-result h2").height();
 				var search_spelling_height = $(".searchSpellingSuggestionPrompt").height();
 				
@@ -1843,7 +1841,7 @@ $(document).ready(function(){
 					$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top+"px");
 				}
 				if($(".searchSpellingSuggestionPrompt").height()>0){
-					var left_block_top_margin= $(".searchSpellingSuggestionPrompt").height() + 40;
+					var left_block_top_margin= $(".searchSpellingSuggestionPrompt").height() + 96; /* PRDI-69 */
 					$('.listing.wrapper .left-block').css('margin-top',left_block_top_margin+'px');
 				}
 			}
@@ -3424,6 +3422,8 @@ $(window).on("load resize",function(){
 if ($(".facet-list.filter-opt").children().length){
 	$("body.page-productGrid .product-listing.product-grid.lazy-grid, body.page-productGrid .product-listing.product-grid.lazy-grid-facet, body.page-productGrid .product-listing.product-grid.lazy-grid-normal").css("padding-top","15px");  //INC144315068
 	$("body.page-productGrid .facet-list.filter-opt").css("padding-top","65px");
+	var filter_height = $(".facet-list.filter-opt").height() - 8;   /* PRDI-69 */
+	$("body.page-productGrid .listing.wrapper .left-block").css("margin-top",filter_height + "px");
 	/* UF-253 start */
 	if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
 	var sort_height ="-" + $(".facet-list.filter-opt").outerHeight() + "px";
@@ -3448,9 +3448,9 @@ $(window).on("load resize", function() {
 			}
 	}	
 	/* UF-257 start */
-	if($('.smartbanner-show .smartbanner').css('display') == 'none'){
+	/*if($('.smartbanner-show .smartbanner').css('display') == 'none'){
 		$(".smartbanner-show").css("margin-top","0px");
-	}
+	}*/
 	/* UF-257 end */
 });
 /* UF-253 end */
@@ -3568,3 +3568,13 @@ if($(window).width() < 313)
 	$(".store-finder-legends").css("left","");
 }
 /*TISSQAEE-335*/
+/*TPR-1283-code added for change heading height for brand filtered PLP--Starts*/
+$(window).on("load resize",function(){
+	var htH1 = $("body.page-productGrid .list_title h1").height();
+	var lineHtH1 = parseInt($("body.page-productGrid .list_title h1").css("line-height"));
+	var htH1Multiple = htH1/lineHtH1;
+	var paddingOrigin = parseInt($("body.page-productGrid .facet-list.filter-opt").css("padding-top"));
+	paddingOrigin = paddingOrigin + (lineHtH1 * (htH1Multiple-1));
+	$("body.page-productGrid .facet-list.filter-opt").css("padding-top",paddingOrigin);
+});
+/*TPR-1283-code added for change heading height for brand filtered PLP--Ends*/

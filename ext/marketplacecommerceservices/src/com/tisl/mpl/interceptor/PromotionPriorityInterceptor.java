@@ -18,6 +18,7 @@ import de.hybris.platform.util.localization.Localization;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.MplProductSteppedMultiBuyPromotionModel;
 import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
+import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
 
 
 public class PromotionPriorityInterceptor implements ValidateInterceptor
@@ -36,16 +38,32 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	@Autowired
 	private ProductService productService;
 	private ModelService modelService;
+	/**
+	 *
+	 */
+	private static final String DUPLICATE_PROMO = "Duplicate Promotion Code:";
+	/**
+	 *
+	 */
+	private static final String ERROR_SAME_SELLER = "One Promotion already exist with the added Priority with same seller. Please change the seller. Promotion Details:";
+	/**
+	 *
+	 */
+	private static final String ERROR_MESSAGE_PRODUCT = "One Promotion already exist with the added Priority. Promotion Details:";
+
 	private static final Logger LOG = Logger.getLogger(PromotionPriorityInterceptor.class);
 	private static final String MODIFY_MESSAGE = "promotion.priorityIntercepter.modifyData.message";
 	private static final String ERROR_MESSAGE = "promotion.priority.product.sameSeller.errormessage";
 	private static final String PRODUCT_ERROR_MESSAGE = "promotion.priority.product.errormessage";
+
 	@Autowired
 	private MplPromotionHelper mplPromotionHelper;
 
 	@Autowired
 	private ConfigurationService configurationService;
 
+	@Autowired
+	private SellerBasedPromotionService sellerBasedPromotionService;
 
 	public ModelService getModelService()
 	{
@@ -148,12 +166,30 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 		}
 
 
-
+		String errorMsg = null;
 
 		if (object instanceof ProductPromotionModel)
 		{
 			//@Description :To check if an Enabled Promotions exists with the Product and same priority
 			final ProductPromotionModel promotion = (ProductPromotionModel) object;
+			if (null != promotion.getIsBulk() && promotion.getIsBulk().booleanValue()
+					&& StringUtils.isEmpty(promotion.getImmutableKeyHash())) //TPR-4065,if promotion is getting created through bulk load
+			{
+				final List<AbstractPromotionModel> promoList = sellerBasedPromotionService.fetchPromotionDetails(promotion.getCode());
+				if (CollectionUtils.isNotEmpty(promoList))
+				{
+					errorMsg = DUPLICATE_PROMO;
+					throw new InterceptorException(errorMsg + MarketplacecommerceservicesConstants.SINGLE_SPACE
+							+ MarketplacecommerceservicesConstants.PROMOCODE + promotion.getCode()
+							+ MarketplacecommerceservicesConstants.SINGLE_SPACE + MarketplacecommerceservicesConstants.PROMOPRIORITY
+							+ promotion.getPriority());
+				}
+				else
+				{
+					promotion.setIsBulk(Boolean.FALSE);
+					//	modelService.save(promotion);
+				}
+			}
 			populatePromotionGroup(promotion);
 			if (promotion.getProducts() != null && !promotion.getProducts().isEmpty())
 			{
@@ -175,20 +211,39 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 							if (productPromotion.getEnabled().booleanValue()
 									&& productPromotion.getPriority().equals(promotion.getPriority()))
 							{
-								final List<AbstractPromotionRestrictionModel> promotionRestrictionList = new ArrayList<AbstractPromotionRestrictionModel>(
-										promotion.getRestrictions());
-								final List<AbstractPromotionRestrictionModel> singleProdRestrictionList = new ArrayList<AbstractPromotionRestrictionModel>(
-										productPromotion.getRestrictions());
-								String errorMsg = null;
+								List<AbstractPromotionRestrictionModel> promotionRestrictionList = new ArrayList<AbstractPromotionRestrictionModel>();
+								List<AbstractPromotionRestrictionModel> singleProdRestrictionList = new ArrayList<AbstractPromotionRestrictionModel>();
+
+								if (CollectionUtils.isNotEmpty(promotion.getRestrictions()))
+								{
+									promotionRestrictionList = new ArrayList<AbstractPromotionRestrictionModel>(
+											promotion.getRestrictions());
+								}
+								if (CollectionUtils.isNotEmpty(promotion.getRestrictions()))
+								{
+									promotionRestrictionList = new ArrayList<AbstractPromotionRestrictionModel>(
+											promotion.getRestrictions());
+									singleProdRestrictionList = new ArrayList<AbstractPromotionRestrictionModel>(
+											promotion.getRestrictions());
+								}
+								//	String errorMsg = null;
 
 								if (!isSellerRestrExistsForModel(promotionRestrictionList)
 										|| !isSellerRestrExistsForModel(singleProdRestrictionList))
 								{
 									errorMsg = Localization.getLocalizedString(PRODUCT_ERROR_MESSAGE);
+									if (errorMsg.equalsIgnoreCase(PRODUCT_ERROR_MESSAGE))
+									{
+										errorMsg = ERROR_MESSAGE_PRODUCT;
+									}
 								}
 								else if (checkIfSetforSameSeller(singleProdRestrictionList, promotionRestrictionList))
 								{
 									errorMsg = Localization.getLocalizedString(ERROR_MESSAGE);
+									if (errorMsg.equalsIgnoreCase(ERROR_MESSAGE))
+									{
+										errorMsg = ERROR_SAME_SELLER;
+									}
 								}
 								else
 								{
@@ -231,16 +286,24 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 												promotion.getRestrictions());
 										final List<AbstractPromotionRestrictionModel> singleProdRestrictionList = new ArrayList<AbstractPromotionRestrictionModel>(
 												promo.getRestrictions());
-										String errorMsg = null;
+										//	String errorMsg = null;
 
 										if (!isSellerRestrExistsForModel(promotionRestrictionList)
 												|| !isSellerRestrExistsForModel(singleProdRestrictionList))
 										{
 											errorMsg = Localization.getLocalizedString(PRODUCT_ERROR_MESSAGE);
+											if (errorMsg.equalsIgnoreCase(PRODUCT_ERROR_MESSAGE))
+											{
+												errorMsg = ERROR_MESSAGE_PRODUCT;
+											}
 										}
 										else if (checkIfSetforSameSeller(singleProdRestrictionList, promotionRestrictionList))
 										{
 											errorMsg = Localization.getLocalizedString(ERROR_MESSAGE);
+											if (errorMsg.equalsIgnoreCase(ERROR_MESSAGE))
+											{
+												errorMsg = ERROR_SAME_SELLER;
+											}
 										}
 										else
 										{
@@ -285,16 +348,24 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 										promotion.getRestrictions());
 								final List<AbstractPromotionRestrictionModel> singleProdRestrictionList = new ArrayList<AbstractPromotionRestrictionModel>(
 										categoryPromotion.getRestrictions());
-								String errorMsg = null;
+								//	String errorMsg = null;
 
 								if (!isSellerRestrExistsForModel(promotionRestrictionList)
 										|| !isSellerRestrExistsForModel(singleProdRestrictionList))
 								{
 									errorMsg = Localization.getLocalizedString(PRODUCT_ERROR_MESSAGE);
+									if (errorMsg.equalsIgnoreCase(PRODUCT_ERROR_MESSAGE))
+									{
+										errorMsg = ERROR_MESSAGE_PRODUCT;
+									}
 								}
 								else if (checkIfSetforSameSeller(singleProdRestrictionList, promotionRestrictionList))
 								{
 									errorMsg = Localization.getLocalizedString(ERROR_MESSAGE);
+									if (errorMsg.equalsIgnoreCase(ERROR_MESSAGE))
+									{
+										errorMsg = ERROR_SAME_SELLER;
+									}
 								}
 								else
 								{
@@ -334,16 +405,24 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 												promotion.getRestrictions());
 										final List<AbstractPromotionRestrictionModel> singleProdRestrictionList = new ArrayList<AbstractPromotionRestrictionModel>(
 												promo.getRestrictions());
-										String errorMsg = null;
+										//	String errorMsg = null;
 
 										if (!isSellerRestrExistsForModel(promotionRestrictionList)
 												|| !isSellerRestrExistsForModel(singleProdRestrictionList))
 										{
 											errorMsg = Localization.getLocalizedString(PRODUCT_ERROR_MESSAGE);
+											if (errorMsg.equalsIgnoreCase(PRODUCT_ERROR_MESSAGE))
+											{
+												errorMsg = ERROR_MESSAGE_PRODUCT;
+											}
 										}
 										else if (checkIfSetforSameSeller(singleProdRestrictionList, promotionRestrictionList))
 										{
 											errorMsg = Localization.getLocalizedString(ERROR_MESSAGE);
+											if (errorMsg.equalsIgnoreCase(ERROR_MESSAGE))
+											{
+												errorMsg = ERROR_SAME_SELLER;
+											}
 										}
 										else
 										{
@@ -382,7 +461,7 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 			final String promoCode = checkCartPromoPriority(promotion);
 			if (StringUtils.isNotEmpty(promoCode))
 			{
-				final String errorMsg = Localization.getLocalizedString(PRODUCT_ERROR_MESSAGE);
+				errorMsg = Localization.getLocalizedString(PRODUCT_ERROR_MESSAGE);
 				throw new InterceptorException(errorMsg + MarketplacecommerceservicesConstants.SINGLE_SPACE
 						+ MarketplacecommerceservicesConstants.PROMOCODE + promoCode
 						+ MarketplacecommerceservicesConstants.SINGLE_SPACE + MarketplacecommerceservicesConstants.PROMOPRIORITY
@@ -412,7 +491,7 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 
 	/**
 	 * For TPR-1325
-	 * 
+	 *
 	 * @param object
 	 * @return boolean
 	 */
@@ -492,9 +571,9 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	 * } } else if (promotion instanceof BuyABFreePrecentageDiscountModel) { final BuyABFreePrecentageDiscountModel
 	 * oModel = (BuyABFreePrecentageDiscountModel) promotion; if (CollectionUtils.isNotEmpty(oModel.getGiftProducts())) {
 	 * isValid = checkCatalogVersion(oModel.getGiftProducts()); } }
-	 * 
+	 *
 	 * return isValid;
-	 * 
+	 *
 	 * }
 	 */
 

@@ -40,6 +40,12 @@ function navigateToPage(queryString,textString)
 <!--  fixed for TISSTRT-615-Fixed -->
 <c:if test="${facetData.code ne 'vouchers'}">
 <!-- End  fixed for TISSTRT-615-Fixed -->
+<!--  TPR-1283 CHANGES Starts-->
+ <c:set var="isCatPage" value="false" />
+<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'], '/c')}">
+  <c:set var="isCatPage" value="true" />
+</c:if>
+<!--  TPR-1283 CHANGES Ends-->
 <!-- Change for CAR-245 -->
 <c:if test="${facetData.code ne 'categoryNameCodeMapping'}">
 <!-- End Change for CAR-245 -->
@@ -405,14 +411,33 @@ function navigateToPage(queryString,textString)
 										<c:if test="${not empty facetValue.name}">
 												<span class="facet-mark"></span>
 											</c:if>	
-											<div class="facet-text">
+											<!--  TPR-1283 CHANGE Starts-->
+										  <div class="facet-text">
+											<span class="facet-text">
+											  <c:set var="brandCode" value="${facetValue.code}"/>
+											  <c:set var="urls" value=" "/>
+											  <c:set var="brandName" value="${fn:replace(facetValue.name, ' ', '-')}" />
+											  <c:set var="urls" value="/${catName}-${fn:toLowerCase(brandName)}/c-${catCode}/b-"/>
+											   <c:choose>
+											   <c:when test="${isCatPage=='true' && fn:length(catCode) > 5}">
+											   <a class="brandFacetRequire" href="${urls}${fn:toLowerCase(brandCode)}">
+											   ${facetValue.name}</a>	
+											   </c:when >
+											   <c:otherwise>
+											   ${facetValue.name}
+											   </c:otherwise>
+											   </c:choose>   											 
+										  </span>
+										  <!--  TPR-1283 CHANGES Ends-->
+											<%-- <div class="facet-text">
 												<span class="facet-text">
 												${facetValue.name}&nbsp;
 												   
-												</span>
+												</span> --%>
 												<ycommerce:testId code="facetNav_count">
 													<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
 												</ycommerce:testId>
+											<!-- </div> -->
 											</div>
 										</span>									
 								</label>
@@ -478,15 +503,33 @@ function navigateToPage(queryString,textString)
 										<c:if test="${not empty facetValue.name}">
 											<span class="facet-mark"></span>
 										</c:if>	
-										<div class="facet-text">
+										<!--  TPR-1283 CHANGES Starts-->
+										 <div class="facet-text">
+											<span class="facet-text">
+											  <c:set var="brandCode" value="${facetValue.code}"/>
+											  <c:set var="urls" value=" "/>
+											  <c:set var="brandName" value="${fn:replace(facetValue.name, ' ', '-')}" />
+											  <c:set var="urls" value="/${catName}-${fn:toLowerCase(brandName)}/c-${catCode}/b-"/>
+											   <c:choose>
+											   <c:when test="${isCatPage=='true' && fn:length(catCode) > 5}">
+											   <a href="${urls}${fn:toLowerCase(brandCode)}">
+											   ${facetValue.name}</a>	
+											   </c:when>
+											   <c:otherwise>
+											   ${facetValue.name}
+											   </c:otherwise>
+											   </c:choose>   											 
+										  </span> 
+										  <!--  TPR-1283 CHANGES Ends-->
+										<%-- <div class="facet-text">
 											<span class="facet-text">
 												${facetValue.name}												 
-												</span>
+												</span> --%>
 												<ycommerce:testId code="facetNav_count">
 													<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
 												</ycommerce:testId>												
+										<!-- 	</div> -->
 											</div>
-											
 										</span>
 									</c:if>
 								</label>

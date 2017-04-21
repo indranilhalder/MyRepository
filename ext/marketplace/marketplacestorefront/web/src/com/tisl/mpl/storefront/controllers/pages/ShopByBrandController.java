@@ -9,6 +9,8 @@ import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tisl.mpl.core.model.BrandComponentModel;
+import com.tisl.mpl.data.ShopByBrandData;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.util.GenericUtilityMethods;
@@ -61,11 +64,23 @@ public class ShopByBrandController
 
 		if (null != brandComponent.getLayout())
 		{
-			model.addAttribute("masterBrandUrl", brandComponent.getMasterBrandURL());
-			model.addAttribute("masterBrandName", brandComponent.getMasterBrandName());
-			model.addAttribute("subBrandList", brandComponent.getSubBrandList());
-			model.addAttribute("subBrands", brandComponent.getSubBrands());
-			model.addAttribute("layout", brandComponent.getLayout());
+			// TPR-1072 START
+			final ShopByBrandData shopByBrandData = new ShopByBrandData();
+			final List<ShopByBrandData> shopByBrandDataList = new ArrayList<ShopByBrandData>();
+			shopByBrandData.setLayout(brandComponent.getLayout());
+			shopByBrandData.setMasterBrandName(brandComponent.getMasterBrandName());
+			shopByBrandData.setMasterBrandUrl(brandComponent.getMasterBrandURL());
+			shopByBrandData.setSubBrandList(brandComponent.getSubBrandList());
+			shopByBrandData.setSubBrands(brandComponent.getSubBrands());
+			shopByBrandDataList.add(shopByBrandData);
+			model.addAttribute("shopByBrandDataList", shopByBrandDataList);
+			// TPR-1072 END
+
+			//			model.addAttribute("masterBrandUrl", brandComponent.getMasterBrandURL());
+			//			model.addAttribute("masterBrandName", brandComponent.getMasterBrandName());
+			//			model.addAttribute("subBrandList", brandComponent.getSubBrandList());
+			//			model.addAttribute("subBrands", brandComponent.getSubBrands());
+			//			model.addAttribute("layout", brandComponent.getLayout());
 		}
 
 		for (final CategoryModel category : brandComponent.getSubBrands())
