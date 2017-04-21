@@ -868,6 +868,8 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			if ($(".facet-list.filter-opt").children().length){
 				$("body.page-productGrid .product-listing.product-grid.lazy-grid, body.page-productGrid .product-listing.product-grid.lazy-grid-facet, body.page-productGrid .product-listing.product-grid.lazy-grid-normal").css("padding-top","15px");  //INC144315068
 				$("body.page-productGrid .facet-list.filter-opt").css("padding-top","65px");
+				var filter_height = $(".facet-list.filter-opt").height() - 8;   /* PRDI-69 */
+				$("body.page-productGrid .listing.wrapper .left-block").css("margin-top",filter_height + "px");
 				/* UF-253 start */
 				if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
 				var sort_height ="-" + $(".facet-list.filter-opt").outerHeight() + "px";
@@ -881,6 +883,7 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			}
 			else{
 				//$("body.page-productGrid .product-listing.product-grid").css("margin-top","60px");  //INC144315068
+				$("body.page-productGrid .listing.wrapper .left-block").css("margin-top","65px"); /* PRDI-69 */
 			}
 			// Keeps expansion-closure state of facets
 			$(".facet-name.js-facet-name h3").each(function(){

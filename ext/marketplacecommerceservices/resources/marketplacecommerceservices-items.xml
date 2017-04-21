@@ -619,6 +619,14 @@
 					<modifiers read="true" write="true" search="false"
 						optional="true" />
 				</attribute>
+					<!-- TPR-4065,if promotion is getting created through bulk load -->
+					<attribute qualifier="isBulk" autocreate="true" 
+					type="java.lang.Boolean">
+					<description>Flag to indicate that the promotion is for bulk promo or not</description>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="true" />
+				</attribute>
 				<!-- Added For TPR-996 -->
  				 <attribute qualifier="termsAndCondition" type="localized:java.lang.String">
  				<description>The message to show configurable text in Offer Section</description>

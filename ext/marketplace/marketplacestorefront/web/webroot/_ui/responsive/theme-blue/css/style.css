@@ -18819,6 +18819,11 @@ font-weight: 600;
 .bottom-pagination .listing-menu.bottom  div{
 	width:100%;
 }
+/* start code add of INC144315044 */
+.bottom-pagination .listing-menu.bottom .list_title .UlContainer{
+	display:none;
+}
+/* end code add of INC144315044 */
 .listing-menu.bottom  ul.pagination{
   margin: auto;
   float: none;
@@ -30064,7 +30069,7 @@ p.showcase-para {
 .showcaseItem > a{
 	color:#000;
 	 word-break: break-word;
-	 line-height: 22px;
+	 line-height: 29px; /*PRDI-31 */
 	 font-size:14px;
 	 font-weight:normal;
 }
@@ -30919,7 +30924,7 @@ line-height: normal;
    margin-bottom: 15px;
  } */
  
-   #movedToWishlist_Cart {
+   #movedToWishlist_Cart { /* TISPRDT-768 */
  	position: absolute;
     line-height: 15px;
     bottom: -40px;
@@ -34919,7 +34924,7 @@ body.template-pages-category-productGridPage .trending h1,body.template-pages-se
 .listing.wrapper .left-block {
     width: 19.83%;
     padding: 0 20px 0 18px;
-    margin-top: 31px;
+    margin-top: 57px; /* PRDI-69 */
 }
 .listing.wrapper .right-block {
     width: 80.16%;
@@ -44080,9 +44085,14 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 }
 
 /* piczoomer css end */
-.smartbanner-show {
+.smartbanner-show body {
 	margin-top: 80px;
 }
+.smartbanner-show body.page-multiStepCheckoutSummaryPage,
+ .smartbanner-show body.page-checkout-login,
+ .smartbanner-show body.page-cartPage{
+ 	margin-top:0px;
+ }
 .smartbanner-show body.template-pages-search-searchGridPage .smartbanner-container,
 .smartbanner-show body.template-pages-category-productGridPage .smartbanner-container,
 .smartbanner-show body.template-pages-my-account-accountMarketPreference .smartbanner-container,
@@ -44849,7 +44859,7 @@ bottom:35px;
 	font-size: 28px;
     font-weight: 500;
 }
-.trending h2,.trending h3{
+.trending > h2,.trending > h3{
 	position: relative;
     z-index: 2;
     left: 50%;
@@ -44861,7 +44871,7 @@ bottom:35px;
     -o-transform: translateX(-50%);
     transform: translateX(-50%);
 }
-.trending h2 span,.trending h3 span{
+.trending > h2 span,.trending > h3 span{
 	font-size: 28px;
     line-height: 45px;
     vertical-align: middle;
@@ -44887,7 +44897,7 @@ bottom:35px;
 		padding: 40px 0 55px;
     	font-weight: 500;
 	}
-	.trending h2{
+	.trending > h2, .trending > h3{
 		display: block;
     	left: auto;
     	-webkit-transform: none;
@@ -45790,6 +45800,10 @@ body.pageLabel-Footwear .feature-collections ul.collections li.chef .feature-col
 	font-weight: bold;
 	margin: 50px 0;
 }
+.page-productDetails .trending > h3{
+ 	margin: 30px 0;
+ 	height: 50px;
+ }
 .page-productDetails .trending h2 span {
 	font-weight: bold;
 }
@@ -45907,6 +45921,9 @@ body .right-account .order-history .cancellation-request-block>h2{
 	.trending h2 span {
 		font-size: 24px;
 	}
+	.trending > h3, .trending > h3 span{
+ 		font-size: 24px;
+ 	}
 }
 @media(max-width:1200px) and (min-width:791px){
 	body.page-homepage .trending h2>span{
@@ -49856,7 +49873,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     top: 11px;
 }
 .top.checkout-top .content {
-    margin: 65px 0 0;
+    margin: 64px 0 0;
 }
 .marketplace-checkout .tab-logo .simple-banner-component img {
     margin-top: 0px;
@@ -50228,6 +50245,7 @@ width:25px; height:25px;
 .progress-barcheck .step1 {  width: 8%;}
 .progress-barcheck .step3 {    width: 90%;}
 .progress-barcheck .step-3.finalstep span {    right: 6%;}
+.checkout-content.checkout-payment.cart.checkout.wrapper .container-address {margin-top: -22px;}
 .wrapper .container-address {margin-top: -10px;}
 .wrapper .container-address { padding: 14px 0 0;}
 .progress-barcheck div a {font-size: 11px;}
@@ -56951,7 +56969,7 @@ input[type="radio"] + label:before, input[type="checkbox"] + label:before{
 	    padding: 0 20px 10px;
 	}
 	.cart.wrapper .checkout-shipping.left-block .product-block li.item > ul > li.delivery li{
-	margin:0;}
+	margin:26px 0;}  /* PRDI-48 */
 	.checkout.wrapper .checkout-shipping.left-block .product-block li.item > ul li.delivery li label.deliveryModeLabel{
 	    font-size: 12px;
     	font-weight: 600;
@@ -59000,7 +59018,10 @@ header > .content .top.header_fix .toggle{
 		width: 50%;
 	}
 	.Manufacturer.Temp07 .owl-item.cloned:last-child{
-		display: none;
+		/* start change of INC144314102 */
+		/* display: none; */
+		display: block;
+		/* end change of INC144314102 */
 	}
 }
 
@@ -59454,7 +59475,10 @@ header > .content .top.header_fix .toggle{
 		width: 100%;
 	}
 	.Manufacturer.Temp07 .owl-item.cloned:last-child,.Manufacturer.Temp07 .owl-item.cloned:nth-child(2){
-		display: none;
+		/* start change of INC144314102 */
+		/* display: none; */
+		display: block;
+		/* end change of INC144314102 */
 	}
 	
 	/* pdp-v4-temp template3 smaller mobile ends */
@@ -61331,7 +61355,7 @@ body.template-pages-layout-footwearCategoryLandingPage .listing-leftmenu .checkb
 	body.template-pages-layout-BrandLayoutPage  .listing.wrapper .left-block,
 	body.template-pages-layout-ShoeBrandLandingLayoutPage  .listing.wrapper .left-block,
 	body.template-pages-layout-footwearCategoryLandingPage  .listing.wrapper .left-block{
-	margin-top:	83px !important;
+	margin-top:	65px;  /* PRDI-69 */
 }
 /*TPR-250 defect fix Left Block Alignment*/
 body.page-productGrid  .listing.wrapper .left-block{
@@ -65169,11 +65193,15 @@ a.cvvHelp#cvvHelp + div.popover{
 .checkout.wrapper .product-block.emi li.item{
 	margin-top: 0px;
 }
-.cart.wrapper.checkout-payment .right-block.billing .block.subtotals.summary-info,
+/* .cart.wrapper.checkout-payment .right-block.billing .block.subtotals.summary-info, */ /* PRDI-51*/
 .checkout-payment h2.payment-delivery-details,
 .cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .order-details.block.delivery-info{
 	display: none;
 }
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .block{ /* PRDI-51*/
+  	padding-left:0px;
+  	padding-right:0px;
+  }
 .cart.wrapper .right-block.billing.checkout-list-right{
 	background: #f8f8f8;
 	padding: 16px !important;
@@ -65194,8 +65222,8 @@ a.cvvHelp#cvvHelp + div.popover{
 .cart.wrapper.checkout-payment .right-block.billing .block.coupon button{
 	height: 41px !important;
 }
-.left-block.choose-payment{
-	margin-bottom: 24px;
+.left-block.choose-payment{ /* PRDI-51*/
+	margin-bottom: 0px;
 }
 .cart.wrapper.checkout-payment .blocks.netbankingPanel{
 	padding: 8.5px 20px 36px 20px !important;
@@ -65396,7 +65424,7 @@ margin-top:0px;
 
 @media(max-width:790px){
 .wrapper .container-address.nav{
-padding-top:90px;
+/* padding-top:90px; */ /*TISPRDT-668*/
 }	
 }
 .checkout-content.cart.checkout.wrapper.shipCartWrapper .continue_btn_anchor{
@@ -66469,3 +66497,6 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
     top: 5px !important;
 	
 }
+.modal.size-guide .sizes .details #sellerSelName{
+	display:none; /* PRDI-46 */
+} 
