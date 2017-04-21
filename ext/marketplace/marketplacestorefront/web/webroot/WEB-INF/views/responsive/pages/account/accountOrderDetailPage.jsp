@@ -3215,6 +3215,11 @@ body .account .right-account .order-history.order-details li.item .item-header{m
     font-weight: 100 !important;
     margin-bottom: 25px !important;
 }
+@media (max-width: 620px){
+#awbNumberPopup h4 {
+    width: 85%;
+}
+}
 #awbNumberPopup .awsTextinput{
 	width: 100%;
 }
