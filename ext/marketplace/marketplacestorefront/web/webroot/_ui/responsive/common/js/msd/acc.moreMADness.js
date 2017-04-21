@@ -8,26 +8,28 @@ function callMSD(productID,catIdMSD,msdRESTURL)
 
 //Given by MAD
 var loadMAD = function(productID, categoryID,msdRESTURL) {
-
-   	
+	//tpr-5251 console error fix
     try {
-   
-        track(['pageView', productID, categoryID]);
+    	if(typeof track !="undefined"){
+            track(['pageView', productID, categoryID]);
+        	}
     } catch(err) {
         //console.log('Error tracking the Page View: '+err.message);
     }
     try {   
-        $("a.tw").click(function() {
-            track(['socialShare', 'twitter', productID, categoryID]);
-        });
-        $("a.fb").click(function() {
-            track(['socialShare', 'facebook', productID, categoryID]);
-        });        
-        $("a.gp").click(function() {
-            track(['socialShare', 'google', productID, categoryID]);
-        });        
-        } catch(err) {
-       // console.log('Error Adding trackers for social events: '+err.message);
+    	if(typeof track !="undefined"){
+            $("a.tw").click(function() {
+                track(['socialShare', 'twitter', productID, categoryID]);
+            });
+            $("a.fb").click(function() {
+                track(['socialShare', 'facebook', productID, categoryID]);
+            });        
+            $("a.gp").click(function() {
+                track(['socialShare', 'google', productID, categoryID]);
+            });       
+        	}
+            } catch(err) {
+           // console.log('Error Adding trackers for social events: '+err.message);
     }
 
     // This loads our uuid, it would have been created if not present by the first track call at page view above

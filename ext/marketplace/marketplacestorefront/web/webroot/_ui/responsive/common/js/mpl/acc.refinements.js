@@ -7,6 +7,7 @@ var res;
 var filterValue = "";
 var filterName = "";
 var filterChecked = "";
+var countBrand=1;
 
 ACC.refinements = {
 
@@ -132,6 +133,14 @@ ACC.refinements = {
 					}
 				}
 			})
+			/*TPR-1283 CHANGES--Starts*/
+			   if(browserURL[0].includes("/b")){
+					var indx1=browserURL[0].indexOf("/b");
+					var res = browserURL[0].substring(0, indx1);
+					browserURL[0]=res;
+					//window.location.href=browserURL[0];
+				}
+			/*TPR-1283 CHANGES--Ends*/
 			//UF-254 later page push is not considered . Putting page 1 for default.
 			var browserUrlLazy = appendPageNo(browserURL[0]);
 			// generating postAjaxURL
@@ -825,8 +834,16 @@ ACC.refinements = {
 // function implements AJAX : TPR-198
 function filterDataAjax(requiredUrl,dataString,pageURL){
 	facetAjaxUrl = pageURL;
-	console.log(requiredUrl);
-	console.log(pageURL);
+	//console.log(requiredUrl);
+	//console.log(pageURL);
+	var pathName = window.location.pathname;
+    var query = window.location.search;
+	/*TPR-1283 CHANGES--Starts*/
+	if($("#flagVal").val()=='true'){
+		var category=$("div.list_title > h1").text($("#catName").val()).text();
+		$("div.list_title > h1").text(category);
+	}
+	/*TPR-1283 CHANGES--Ends*/
 	//INC144316143
 	if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
 		   window.localStorage.setItem('lastUrlpathName',encodeURI(pathName));
@@ -1133,3 +1150,116 @@ function appendPageNo(url){
 	}
 	return modifiedUrl;
 }
+
+/*code added for TPR-1283--Starts*/
+$(document).on("click",".brandFacetRequire",function(){
+	var browserURL = window.location.href.split('?');
+	if($(".brandFacetRequire").parents("label").children("input.facet-checkbox.js-facet-checkbox.sr-only:checked").length != 0)
+		countBrand = $(".brandFacetRequire").parents("label").children("input.facet-checkbox.js-facet-checkbox.sr-only:checked").length+1;
+	else{
+		countBrand = 1;
+		}
+	if(countBrand<2){
+		var pageURL=$(this).attr("href");
+		window.location.href=pageURL;
+	}
+	else{
+		event.preventDefault();
+		/*refer to the AJAX for checkbox code--from line no.111--Starts*/
+		var staticHost=$('#staticHost').val();
+		$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+		
+		var dataString = null;
+		var nonEmptyDataString= null;
+		
+		// generating datastring and postAjaxURL
+		$(this).parents("form").find('input[type="hidden"]').each(function(){
+			if(dataString == null){
+				dataString = $(this).attr('name')+"="+$(this).val();
+			}
+			else{
+				dataString = dataString + ("&"+$(this).attr('name')+"="+$(this).val());
+			}
+			
+			if($(this).val().length >0){
+				if(nonEmptyDataString == null){
+					nonEmptyDataString = $(this).attr('name')+"="+$(this).val();
+				}
+				else{
+					nonEmptyDataString = nonEmptyDataString + ("&"+$(this).attr('name')+"="+$(this).val());
+				}
+			}
+		})
+		
+		/*TPR-1283 CHANGES--Starts*/
+	   if(browserURL[0].includes("/b")){
+			var indx1=browserURL[0].indexOf("/b");
+			var res = browserURL[0].substring(0, indx1);
+			browserURL[0]=res;
+			//window.location.href=browserURL[0];
+		}
+		/*TPR-1283 CHANGES--Ends*/
+		//UF-254 later page push is not considered . Putting page 1 for default.
+		var browserUrlLazy = appendPageNo(browserURL[0]);
+		// generating postAjaxURL
+		var pageURL = browserUrlLazy +'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
+		var requiredUrl="";
+		var action = $(this).parents("form").attr('action');
+		
+		// generating request mapping URL
+		if($("#isCategoryPage").val() == 'true'){
+			if ($("input[name=customSku]").val()) {
+				var collectionId = $("input[name=customSkuCollectionId]").val();
+				requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
+			}
+			else {
+				action = action.split('/c-');
+				action = action[1].split('/');
+				requiredUrl = "/c-"+action[0];
+				requiredUrl += "/getFacetData";
+			}
+		} else {
+			if(action.indexOf("/getFacetData") == -1){
+				if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1) {
+					requiredUrl = action.concat("/getFacetData");
+				}
+				else if ($("input[name=customSku]").val()) {
+					var collectionId = $("input[name=customSkuCollectionId]").val();
+					requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
+				}
+				else{
+					//requiredUrl = action.concat("getFacetData");
+					// INC_11277 start
+					if ((/.*\/$/g).test(action)) {
+						requiredUrl = action.concat("getFacetData");
+					}
+					else{
+						requiredUrl = action.concat("/getFacetData");
+					}
+					// INC_11277 end
+				}
+			}
+			else{
+				requiredUrl = action;
+			}
+		}
+		
+		// TPR-645 Start  INC_11511  fix--h3 tag done
+		filterValue = $(this).parent().find('span.facet-text').text().trim();
+		filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
+		if($(this).attr('checked')){
+			filterChecked = true;
+			//onFilterRemoveAnalytics(filterName,filterValue);
+		}
+		else{
+			filterChecked = false;
+			//onFilterAddAnalytics(filterName,filterValue);
+		}
+		// TPR-645 End
+		// AJAX call
+		filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
+	}
+	/*refer to the AJAX for checkbox code--from line no.111--Ends*/
+});
+/*code added for TPR-1283--Ends*/

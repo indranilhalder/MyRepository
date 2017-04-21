@@ -3011,16 +3011,40 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		final AddressModel billingAddress = getModelService().create(AddressModel.class);
 
-		//setting mandatory fields
-		billingAddress.setOwner(cart.getUser());
-		billingAddress.setShippingAddress(Boolean.FALSE);
-		billingAddress.setUnloadingAddress(Boolean.FALSE);
-		billingAddress.setBillingAddress(Boolean.TRUE);
-		billingAddress.setContactAddress(Boolean.FALSE);
-		billingAddress.setVisibleInAddressBook(Boolean.FALSE);
-		billingAddress.setDuplicate(Boolean.FALSE);
-		billingAddress.setStreetname("DUMMY_STREET_NAME");
-		billingAddress.setStreetnumber("DUMMY_STREET_NO");
+		//INC144315579: cloning deliveryAddress to billingAddress
+		if (null != cart.getDeliveryAddress())
+		{
+			final AddressModel deliveryAddress = cart.getDeliveryAddress();
+			billingAddress.setOwner(cart.getUser());
+			billingAddress.setShippingAddress(Boolean.FALSE);
+			billingAddress.setUnloadingAddress(Boolean.FALSE);
+			billingAddress.setBillingAddress(Boolean.TRUE);
+			billingAddress.setContactAddress(Boolean.FALSE);
+			billingAddress.setVisibleInAddressBook(Boolean.FALSE);
+			billingAddress.setDuplicate(Boolean.FALSE);
+			billingAddress.setFirstname(deliveryAddress.getFirstname());
+			billingAddress.setLastname(deliveryAddress.getLastname());
+			billingAddress.setLine1(deliveryAddress.getLine1());
+			billingAddress.setLine2(deliveryAddress.getLine2());
+			billingAddress.setAddressLine3(deliveryAddress.getAddressLine3());
+			billingAddress.setTown(deliveryAddress.getTown());
+			billingAddress.setPostalcode(deliveryAddress.getPostalcode());
+			billingAddress.setDistrict(deliveryAddress.getDistrict());
+			billingAddress.setCountry(deliveryAddress.getCountry());
+		}
+		else
+		{
+			//setting mandatory fields
+			billingAddress.setOwner(cart.getUser());
+			billingAddress.setShippingAddress(Boolean.FALSE);
+			billingAddress.setUnloadingAddress(Boolean.FALSE);
+			billingAddress.setBillingAddress(Boolean.TRUE);
+			billingAddress.setContactAddress(Boolean.FALSE);
+			billingAddress.setVisibleInAddressBook(Boolean.FALSE);
+			billingAddress.setDuplicate(Boolean.FALSE);
+			billingAddress.setStreetname("DUMMY_STREET_NAME");
+			billingAddress.setStreetnumber("DUMMY_STREET_NO");
+		}
 
 		return billingAddress;
 	}

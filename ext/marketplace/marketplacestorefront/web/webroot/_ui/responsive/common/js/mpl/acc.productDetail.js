@@ -3575,15 +3575,15 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 								var mop = typeof(data['price'])!='undefined'?data['price']:null;
 								if(mrpPrice!=null)
 								{
-									$('#product_unit_price').val(mrpPrice.doubleValue);
+									$('#product_unit_price').val(mrpPrice.doubleValue.toFixed(2));
 								}
 								if (spPrice != null)
 								{
-									$('#product_list_price').val(spPrice.doubleValue);
+									$('#product_list_price').val(spPrice.doubleValue.toFixed(2));
 								}
 								else if (null != mop)
 								{
-									$('#product_list_price').val(mop.doubleValue);
+									$('#product_list_price').val(mop.doubleValue.toFixed(2));
 								}
 								if(typeof(data['availablestock'])!='undefined')
 								{
@@ -3659,8 +3659,11 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 									attachOnScrollEventForPdpOnSizeSelect();
 								}
 								
-								//Calling Tealium after 500 milisec
-								setTimeout(function(){tealiumCallOnPageLoad();}, 500);
+								//Calling Tealium after 500 milisec //TPR-5251
+								setTimeout(function(){
+	 								//tealiumCallOnPageLoad();
+	 								populateSizeSelectUtagObject();
+	 							}, 500)
 								
 								//Calling MSD if MSD is enabled
 //								if(typeof($('input[name=isMSDEnabled]').val())!='undefined' && $('input[name=isMSDEnabled]').val()=="true")
