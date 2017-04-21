@@ -63066,6 +63066,9 @@ body.page-productGrid .list_title h1 {
     margin-left: 292px;
 	position: absolute;
     margin-top: 22px;
+    text-align: left;    /* TPR-1283*/
+    width: 50%;          /* TPR-1283*/
+    line-height: 25px;   /* TPR-1283*/
 }
 /*TPR-250 defect fix No result*/
 body.page-productGrid .list_title h1.shiftDownZero{
