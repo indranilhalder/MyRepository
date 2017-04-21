@@ -1,7 +1,5 @@
-/**
- *
- */
 package com.tisl.mpl.commerceservices.order.hook;
+
 
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
@@ -31,6 +29,7 @@ import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
@@ -164,6 +163,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * (non-Javadoc)
 	 * 
 	 * 
+
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -271,6 +271,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				 * getMplCommerceCartService().generateOrderId(); LOG.debug("Order Sequence Generated:- " +
 				 * orderIdSequence);
 				 *
+
 				 * orderModel.setCode(orderIdSequence); } else { LOG.debug("Order Sequence Generation False"); final Random
 				 * rand = new Random(); orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000))); }
 				 */
@@ -573,6 +574,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * (non-Javadoc)
 	 * 
 	 * 
+
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -588,6 +590,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * (non-Javadoc)
 	 * 
 	 * 
+
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -609,7 +612,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				orderModel.setDeliveryAddresses(deliveryAddreses);
 				getModelService().save(orderModel);
 			}
-		//	final List<OrderModel> orderList = getSubOrders(orderModel);
 
 			if (MarketplacecommerceservicesConstants.MRUPEE.equalsIgnoreCase(orderModel.getModeOfOrderPayment()))
 			{
@@ -711,9 +713,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
 	 * 
 	 * 
+
 	 * @param subOrderList
 	 * 
 	 * 
+
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -815,9 +819,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
 	 * 
 	 * 
+
 	 * @param subOrderList
 	 * 
 	 * 
+
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -973,6 +979,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						}
 						modelService.save(entryModelList);
 						modelService.refresh(entryModelList);
+
 					}
 					if (entryModelList.getScheduledDeliveryCharge() != null
 							&& entryModelList.getScheduledDeliveryCharge().doubleValue() > 0D)
@@ -1403,9 +1410,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
 	 * 
 	 * 
+
 	 * @param orderList
 	 * 
 	 * 
+
 	 * @throws EtailNonBusinessExceptions
 	 */
 	// OrderIssues:- InvalidCartException exception throws
@@ -1527,6 +1536,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 									{
 										LOG.error("MplDefaultPlaceOrderCommerceHooks:::::" + exception.getMessage());
 									}
+
 
 									//R2.3 Code Changes bug ID TISRLEE-3197
 
@@ -2006,6 +2016,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 								/ abstractOrderEntryModel.getQuantity().intValue()) : deliveryCharge;
 					}
 
+
 					/* R2.3 START */
 					if (null != abstractOrderEntryModel.getScheduledDeliveryCharge())
 					{
@@ -2016,14 +2027,18 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 							&& abstractOrderEntryModel.getIsBOGOapplied().booleanValue())
 					{
 						scheduleDeliveryCharge = scheduleDeliveryCharge.doubleValue() > 0.0 ? Double.valueOf(scheduleDeliveryCharge
+
 								.doubleValue() / abstractOrderEntryModel.getQualifyingCount().doubleValue()) : scheduleDeliveryCharge;
 					}
 					else
 					{
 						scheduleDeliveryCharge = scheduleDeliveryCharge.doubleValue() > 0.0 ? Double.valueOf(scheduleDeliveryCharge
+
 								.doubleValue() / abstractOrderEntryModel.getQuantity().intValue()) : scheduleDeliveryCharge;
 					}
 					/* R2.3 END */
+
+
 
 					LOG.debug(">> Order spliting : after apportoning  delivery cost  " + deliveryCharge);
 					//TISEE-5298 -- Prev Delivery Charge
@@ -2083,8 +2098,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 									&& abstractOrderEntryModel.getConvenienceChargeApportion() != null
 									&& abstractOrderEntryModel.getTotalProductLevelDisc() != null)
 							{
-								qualifyingCount = abstractOrderEntryModel.getQualifyingCount().intValue()
-										+ abstractOrderEntryModel.getFreeCount().intValue();
+
+								//INC144316050
+								//								qualifyingCount = abstractOrderEntryModel.getQualifyingCount().intValue()
+								//										+ abstractOrderEntryModel.getFreeCount().intValue();
+
+								qualifyingCount = abstractOrderEntryModel.getQualifyingCount().intValue();
 
 								bogoCODPrice = abstractOrderEntryModel.getConvenienceChargeApportion().doubleValue()
 										* abstractOrderEntryModel.getQualifyingCount().intValue();
@@ -2476,6 +2495,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 
 					}
+
+
+
+
+
 				}
 			}
 		}
@@ -3043,6 +3067,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		return isPresent;
 
 	}
+
 
 
 

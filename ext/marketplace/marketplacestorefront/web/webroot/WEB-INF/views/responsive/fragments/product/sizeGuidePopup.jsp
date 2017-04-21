@@ -13,8 +13,10 @@
 <script>
 var productCodeSG = '${product.code}'; 
  </script>
-<button type="button" class="close pull-right" data-dismiss="modal" aria-hidden="true"></button>
-
+ 
+ <!-- made changes for TISPRDT-890 START -->
+<button type="button" class="close pull-right" data-dismiss="modal" aria-hidden="true" style="border: 0px !important; margin: 0px !important;" ></button>
+ <!-- made changes for TISPRDT-890 END -->
 <input type="hidden"  id="categoryType"  value="${product.rootCategory}"/>
 <input type="hidden"  name= "noseller" id="nosellerVal"  value=" "/>
 <input type="hidden" name="pcode" id="productCodeSizeGuid" value="${product.code}"/>

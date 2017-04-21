@@ -45,7 +45,7 @@ public class MplDefaultFindDeliveryFulfillModeStrategy implements MplFindDeliver
 
 	@Override
 	public boolean getIsShipCODEligible(String ussid) {
-		boolean codEligible = true;
+		boolean codEligible = false;
 		LOG.info("Checking SSHIP cod eligible or not for USSID "+ussid);
 		try {
 			RichAttributeModel richAttribute = findDeliveryCostStrategy.findDeliveryFulfillMode(ussid);
@@ -57,13 +57,9 @@ public class MplDefaultFindDeliveryFulfillModeStrategy implements MplFindDeliver
 						LOG.info("sShipcodEligibe for USSID "+ussid+" "+sShipcodEligibe);
 					}
 					if(null != sShipcodEligibe) {
-						if(sShipcodEligibe.equalsIgnoreCase(MarketplacecommerceservicesConstants.NO) || sShipcodEligibe.equalsIgnoreCase(MarketplacecommerceservicesConstants.FALSE) ){
-							codEligible = false;
+						if(sShipcodEligibe.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE) ){
+							codEligible = true;
 						}
-					}
-				}else {
-					if(LOG.isDebugEnabled()){
-						LOG.info("sShipcodEligibe for USSID "+ussid+" empty");
 					}
 				}
 			}

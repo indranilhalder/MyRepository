@@ -331,6 +331,7 @@ public class MarketPlaceDefaultCancellationController extends
 											.getCurrDelCharge() != null ? orderEntry
 											.getCurrDelCharge()
 											: NumberUtils.DOUBLE_ZERO;
+											
 									ConsignmentStatus newStatus = null;
 									// Added in R2.3 START  
 									double	scheduleDeliveryCost=orderEntry
@@ -341,16 +342,7 @@ public class MarketPlaceDefaultCancellationController extends
 									
 									// If CosignmentEnteries are present then update
 									// OMS with the state.
-									if (orderEntry != null
-											/*&& CollectionUtils
-													.isNotEmpty(orderEntry
-															.getConsignmentEntries())*/) {
-										/*
-										 * ConsignmentModel consignmentModel =
-										 * orderEntry
-										 * .getConsignmentEntries().iterator()
-										 * .next().getConsignment();
-										 */
+									if (orderEntry != null) {
 										if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
 												MarketplacecommerceservicesConstants.SUCCESS))
 										{

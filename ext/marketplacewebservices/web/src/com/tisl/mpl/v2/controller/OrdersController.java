@@ -1690,6 +1690,9 @@ public class OrdersController extends BaseCommerceController
 					mplDeliveryAddressResponseWsDTO.setIsScheduled(false);
 					mplDeliveryAddressResponseWsDTO.setIsPincodeServiceable(true);
 				}
+				mplDeliveryAddressResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}else{
+				mplDeliveryAddressResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ADDRESS_NOT_CHANGED);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -1702,7 +1705,8 @@ public class OrdersController extends BaseCommerceController
 			if (null != e.getErrorCode())
 			{
 				mplDeliveryAddressResponseWsDTO.setErrorCode(e.getErrorCode());
-			}
+	 		}
+          mplDeliveryAddressResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -1715,6 +1719,7 @@ public class OrdersController extends BaseCommerceController
 			{
 				mplDeliveryAddressResponseWsDTO.setErrorCode(e.getErrorCode());
 			}
+			mplDeliveryAddressResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final Exception e)
 		{
@@ -1722,6 +1727,7 @@ public class OrdersController extends BaseCommerceController
 			{
 				mplDeliveryAddressResponseWsDTO.setError(e.getMessage());
 			}
+			mplDeliveryAddressResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return mplDeliveryAddressResponseWsDTO;
 	}
@@ -2040,6 +2046,10 @@ public class OrdersController extends BaseCommerceController
 					LOG.debug("Failed to post COD return paymnet details to FICO Order No:" +orderId);
 				}
 				webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			   // isRefundalbe disable 
+				LOG.info("REtrun page controller TransactionId::::::::    " + transactionId);
+				cancelReturnFacade.saveRTSAndRSSFInfoflag(transactionId);
+				
 			}
 			catch (final EtailBusinessExceptions e)
 			{
@@ -2074,10 +2084,6 @@ public class OrdersController extends BaseCommerceController
 			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 
-		// isRefundalbe disable 
-		LOG.info("REtrun page controller TransactionId::::::::    " + transactionId);
-		cancelReturnFacade.saveRTSAndRSSFInfoflag(transactionId);
-		
 		return webSerResponseWsDTO;
 	}
 	//R2.3 Changes Developed 27-02-2017 END

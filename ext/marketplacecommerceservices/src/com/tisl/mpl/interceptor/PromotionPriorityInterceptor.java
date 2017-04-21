@@ -128,7 +128,7 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 
 		final boolean errorflag = checkDescriptionData(object);
 
-		final boolean bundlelinknameflag = checkbundlelinknameData(object);
+		final boolean bundlelinknameflag = checkbundlelinknameData(object); //added for TPR-1325 link name character
 
 		if (!errorflag)
 		{
@@ -140,7 +140,7 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 					+ MarketplacecommerceservicesConstants.SINGLE_SPACE + getPromotionTitleLength());
 		}
 
-
+		//added for TPR-1325 link name character
 		if (!bundlelinknameflag)
 		{
 			throw new InterceptorException(Localization.getLocalizedString("promotion.bundlepromolinktext.length.count")
@@ -411,6 +411,8 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	}
 
 	/**
+	 * For TPR-1325
+	 * 
 	 * @param object
 	 * @return boolean
 	 */
@@ -451,7 +453,7 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	}
 
 	/**
-	 * The Method Returns the Max Length of Name For Bundle Promotion Link
+	 * The Method Returns the Max Length of Name For Bundle Promotion Link for TPR-1325
 	 *
 	 * @return nameLength
 	 */
@@ -490,9 +492,9 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	 * } } else if (promotion instanceof BuyABFreePrecentageDiscountModel) { final BuyABFreePrecentageDiscountModel
 	 * oModel = (BuyABFreePrecentageDiscountModel) promotion; if (CollectionUtils.isNotEmpty(oModel.getGiftProducts())) {
 	 * isValid = checkCatalogVersion(oModel.getGiftProducts()); } }
-	 *
+	 * 
 	 * return isValid;
-	 *
+	 * 
 	 * }
 	 */
 

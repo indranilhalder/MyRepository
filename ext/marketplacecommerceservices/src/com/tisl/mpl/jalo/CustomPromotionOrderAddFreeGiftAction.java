@@ -22,6 +22,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -552,6 +553,8 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 				if (checkCount == validateCount)
 				{
 					final PromotionResult pr = getPromotionResult(ctx);
+					final List<PromotionOrderEntryConsumed> consumeList = new ArrayList<PromotionOrderEntryConsumed>();
+
 					if (log.isDebugEnabled())
 					{
 						log.debug("PromotionResult in UNDO: " + pr);
@@ -569,7 +572,18 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 						}
 						if (poec.getCode(ctx) != null && poec.getCode(ctx).equals(getGuid(ctx)))
 						{
-							pr.removeConsumedEntry(ctx, poec);
+							consumeList.add(poec);
+							//pr.removeConsumedEntry(ctx, poec);
+						}
+					}
+
+					if (CollectionUtils.isNotEmpty(consumeList))
+					{
+						final Iterator iter = consumeList.iterator();
+
+						while (iter.hasNext())
+						{
+							pr.removeConsumedEntry(ctx, (PromotionOrderEntryConsumed) iter.next());
 						}
 					}
 				}

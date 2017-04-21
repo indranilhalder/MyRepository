@@ -1728,12 +1728,20 @@
 				<index name="sellerIDIDX" unique="false">
 					<key attribute="sellerID" />
 				</index>
-				<index name="sellerNameIDX" unique="false">
-					<key attribute="sellerName" />
-				</index>
 				<index name="SLINFO_ARTICLESKU_IDX" unique="false">
 					<key attribute="sellerArticleSKU"/>
 				</index>
+				<!-- CAR-274 -->
+ 				<index name="MPL_MPLSELINFO_SLRNCVTPK" unique="false">
+ 					<key attribute="catalogVersion" />
+ 					<key attribute="itemtype" />
+ 					<key attribute="sellerName" lower="false"/>
+ 				</index>
+ 				<index name="MPL_SELLERINFO_STENDDATE" unique="false">
+					<key attribute="startDate"/>
+					<key attribute="endDate"/>
+				</index>
+ 				
 			</indexes>
 		</itemtype>
 
@@ -3076,6 +3084,64 @@
 		</typegroup>
 		
 		<!-- TPR-970 changes end -->
+		
+		<typegroup name="CachedPromotionAction">
+		<itemtype code="CachedCustomPromotionOrderEntryAdjustAction"
+                  extends="CustomPromotionOrderEntryAdjustAction"
+                  jaloclass="com.tisl.mpl.jalo.CachedCustomPromotionOrderEntryAdjustAction"
+                  jaloonly="true"
+                  autocreate="true"
+                  generate="true">
+            <attributes>
+            </attributes>
+        </itemtype>
+        
+        <itemtype code="CachedCustomBOGOPromoOrderEntryAdjustAction"
+                  extends="CustomBOGOPromoOrderEntryAdjustAction"
+                  jaloclass="com.tisl.mpl.jalo.CachedCustomBOGOPromoOrderEntryAdjustAction"
+                  jaloonly="true"
+                  autocreate="true"
+                  generate="true">
+            <attributes>
+            </attributes>
+        </itemtype>
+        
+        <itemtype code="CachedCustomPromotionOrderAddFreeGiftAction"
+                  extends="CustomPromotionOrderAddFreeGiftAction"
+                  jaloclass="com.tisl.mpl.jalo.CachedCustomPromotionOrderAddFreeGiftAction"
+                  jaloonly="true"
+                  autocreate="true"
+                  generate="true">
+            <attributes>
+            </attributes>
+        </itemtype>
+        
+        
+        <itemtype code="CachedCustomPromotionOrderAdjustTotalAction"
+                  extends="CustomPromotionOrderAdjustTotalAction"
+                  jaloclass="com.tisl.mpl.jalo.CachedCustomPromotionOrderAdjustTotalAction"
+                  jaloonly="true"
+                  autocreate="true"
+                  generate="true">
+            <attributes>
+           </attributes>
+        </itemtype>
+        
+        
+        <itemtype code="CachedCustomShippingChargesPromotionAdjustAction"
+                  extends="CustomShippingChargesPromotionAdjustAction"
+                  jaloclass="com.tisl.mpl.jalo.CachedCustomShippingChargesPromotionAdjustAction"
+                  jaloonly="true"
+                  autocreate="true"
+                  generate="true">
+            <attributes>
+           </attributes>
+        </itemtype>
+		
+		</typegroup>
+		
+		
+		
 	</itemtypes>
 	
 </items>
