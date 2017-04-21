@@ -4243,6 +4243,42 @@
 		 </organizer>
 	</type>
 
+
+
+<!-- Added for TPR-4461 -->
+ 
+<type name="PaymentModeRestriction" mode="append">
+		 <organizer>
+		 		<editor mode="append">
+		 			<tab name="properties">
+		 				<section name="section.restrictions" mode="replace" position="0">
+		 					<listlayout>
+		 						 <attribute name="paymentModeRestriction" labelwidth="100">
+		 						 	<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="identifier" width="274" />
+										<attribute name="name" width="274" />
+										<attribute name="icon" width="274" />
+									</itemlayout>
+									</referencecollectioneditor>
+		 						 </attribute>
+		 					</listlayout>
+		 				</section>
+		 			</tab>
+		 		</editor>
+		 </organizer>
+	</type> 
+ 
+ <!-- Added for TPR-4461 -->
+
+
+
+
+
+
+
 <type name="OrderShortUrlInfo" mode="append">
 	<organizer>
 		<search mode="replace">
