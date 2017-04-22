@@ -29,7 +29,7 @@
     
 	<!--  Configure the class to use for jalo session creation -->
 	<!-- <bean id="jalosession"   class="de.hybris.platform.jalo.JaloSessionFactory">
-		<property name="targetClassName" value="com.tisl.mpl.bindb.jalo.MarketplaceBinDbJaloSession"/>
+		<property name="targetClassName" value="com.tisl.mpl.binDb.jalo.MarketplaceBinDbJaloSession"/>
 	</bean>-->
 
 	<!-- Spring managed FilterChain for hybris Filter stack -->

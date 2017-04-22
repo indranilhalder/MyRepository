@@ -20,7 +20,7 @@
       
 		<requires-extension name="marketplacecommerceservices"/>
 		 
-      <coremodule generated="true" manager="com.tisl.mpl.bindb.jalo.MarketplaceBinDbManager" packageroot="com.tisl.mpl.bindb"/>
+      <coremodule generated="true" manager="com.tisl.mpl.binDb.jalo.MarketplaceBinDbManager" packageroot="com.tisl.mpl.binDb"/>
 
       <webmodule jspcompile="false" webroot="/marketplaceBinDb"/>
 					

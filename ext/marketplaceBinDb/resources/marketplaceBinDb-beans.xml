@@ -20,7 +20,7 @@
 	<!--
 		Example Data POJO
 	
-	<bean class="com.tisl.mpl.bindb.data.MyPojo">
+	<bean class="com.tisl.mpl.binDb.data.MyPojo">
 		<property name="id" type="String"/>
 		<property name="flag" type="boolean"/>
 	</bean>
