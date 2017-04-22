@@ -19985,7 +19985,7 @@ div.other-sellers .navigation button.next:after {
 }
 @media (max-width: 650px) {
     div.other-sellers .sort-by {
-        display: none;
+        display: none !important;
         background-color: transparent;
         border: none;
         position: relative
