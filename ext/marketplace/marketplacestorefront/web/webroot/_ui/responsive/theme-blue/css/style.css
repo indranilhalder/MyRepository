@@ -66228,3 +66228,11 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
 	text-align: left;
 	}
 }
+@media (max-width: 767px){
+.cart.wrapper .checkout-shipping.left-block{
+	border-top: 1px solid #eee;
+}
+.checkout-content.delivery .checkout-shipping.left-block .product-block li.item:not(:last-of-type){
+	border-top: 0px;
+}
+}
