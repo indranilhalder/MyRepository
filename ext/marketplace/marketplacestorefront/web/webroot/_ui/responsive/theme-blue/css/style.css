@@ -66214,3 +66214,9 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
 .checkout.wrapper .product-block.addresses.new-form li.item fieldset div.half:nth-child(even){
 	float: none;
 }
+.product-detail .Emi .modal-content .Close{
+	border-radius: 0px;
+	border: none !important;
+	margin-right: 0px !important;
+    margin-top: 0px !important;
+}
