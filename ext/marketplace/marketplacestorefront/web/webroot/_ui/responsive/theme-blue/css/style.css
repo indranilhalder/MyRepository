@@ -56538,7 +56538,7 @@ left: -5px;
 #wrapper.delivery{margin: 0 0 35px;}
 #wrapper.delivery .Product-item-info .Product-name{ margin:0;}
 #wrapper.delivery .Product-detail .Product-img{margin-right: 15px;}
-.delivery .checkout-headers{ display:none;}
+.delivery .checkout-headers{ /*display:none; */ padding-left: 11px;}
 .mybag-items.checkout-items .mybag-item .dev{padding: 0 20px 10px;}
 .mybag-items.checkout-items .mybag-item .dev li{ margin:0;}
 .delivery .checkout__text-header{ font-size:12px;}
@@ -64910,7 +64910,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     top: -4px !important;
 }
 #selectDeliveryMethodForm{
-	padding-top:50px;
+	padding-top:35px;
 	padding-bottom: 31px;
 }
 .cart.wrapper #selectDeliveryMethodForm .checkout-shipping .checkout-shipping-items ul li.header{
@@ -66219,4 +66219,12 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
 	border: none !important;
 	margin-right: 0px !important;
     margin-top: 0px !important;
+}
+@media (max-width: 651px){
+	.delivery .checkout-headers{
+	float: left;
+	}
+	.cart.wrapper .left-block h1{
+	text-align: left;
+	}
 }
