@@ -48373,7 +48373,8 @@ padding:0 40px;	}
 	transition: all 0.3s;
 }
 .product-info .color-swatch li.active{
-	box-shadow: 0 0 0px 1px #a9143c;
+	/* box-shadow: 0 0 0px 1px #a9143c; */		/* TISSQAUAT-3434 */
+	outline: 1px solid #a9143c;			/* TISSQAUAT-3434 */
 }
 
 #allVariantOutOfStock {
