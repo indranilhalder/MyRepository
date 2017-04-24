@@ -126,7 +126,7 @@ ACC.product = {
 				$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#addToCartLargeAppliance').text() + "</font>");
 				$("#addToCartFormTitle").show().fadeOut(6000);
 				$('#pin').focus();
-				$('#pin').css("border", "1px solid #a5173c");
+				$('#pin').css("border", "1px solid #000");
 				return false;
 			}
 			//UF-160 ends
@@ -430,8 +430,8 @@ sendAddToBag : function(formId, isBuyNow) {
 	$('.js-add-to-cart').attr("disabled", "disabled");
 	
 	var staticHost=$('#staticHost').val();
-	$("body").append("<div id='bag-clickSpin' style='opacity:0.15; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="bagspinner" style="position: fixed; left: 45%;top:45%; height: 30px;">'); 
+	$("body").append("<div id='bag-clickSpin' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="bagspinner"></div>');  
 	
 	var input_name = "qty";
 	var stock_id = "stock";
@@ -601,16 +601,16 @@ sendAddToBag : function(formId, isBuyNow) {
 							}
 						}
 						
-						$("#bag-clickSpin,.bagspinner").remove();			
+						$("#bag-clickSpin,.loaderDiv").remove();			
 					},
 					complete : function() {
 						$('#ajax-loader').hide();
 						forceUpdateHeader();
-						$("#bag-clickSpin,.bagspinner").remove();
+						$("#bag-clickSpin,.loaderDiv").remove();
 						$('.js-add-to-cart').removeAttr("disabled");//For TISPRD-4631
 					},
 					error : function(resp) {
-						$("#bag-clickSpin,.bagspinner").remove();
+						$("#bag-clickSpin,.loaderDiv").remove();
 						$('.js-add-to-cart').removeAttr("disabled");//For TISPRD-4631
 					}
 				});
@@ -1493,7 +1493,7 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						var browserURL = window.location.href.split('?');
 						var staticHost=$('#staticHost').val();
 						$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-						$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+						$("body").append('<div class="loaderDiv" style="position: fixed; left: 50%;top: 50%;"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 						
 						//TPR-645 start  -- INC_11511  fix--h3 tag done
 						filterValue = (minPriceSearchTxt+"-"+maxPriceSearchTxt).replace(/,/g,"");

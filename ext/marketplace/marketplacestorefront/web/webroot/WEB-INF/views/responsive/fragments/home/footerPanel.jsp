@@ -17,7 +17,7 @@
 			<spring:theme code="text.newsletter.placeholder" text="Enter your email to Sign up for our newsletter" var="newsletterPlaceholder" />
 			<input type="text" name="email"  id="mailtext"  placeholder="${newsletterPlaceholder}" />
 			<button id ="submit" type="submit" onclick="return emailvalidate();"><spring:theme code="footer.submit"/></button>
-			<div>&emsp;</div>
+			<!-- <div>&emsp;</div> --> <!-- commented as part of UF-249 -->
 			<div id="error_message" style="display:block;font-size:12px;"></div>
 	</div>
 	

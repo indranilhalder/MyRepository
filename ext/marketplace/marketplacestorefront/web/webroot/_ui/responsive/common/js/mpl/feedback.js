@@ -231,8 +231,8 @@ $(document).ready(function(){
 		 
 	/*----start of Sticky Bag --------*/
 		 
-			 var x = $(".js-mini-cart-count").text();
-			   $(".js-mini-cart-count-hover").text(parseInt($(".js-mini-cart-count").text()));
+			 /*var x = $(".js-mini-cart-count").text();*/		/*commented as part of UF-249*/
+			 /*$(".js-mini-cart-count-hover").text(parseInt($(".js-mini-cart-count").text()));*/		/*commented as part of UF-249*/
 			   
 				  
 			   $(window).scroll(function () {
@@ -1286,7 +1286,7 @@ $(document).ready(function(){
 		 $(window).on("load resize",function(){
 				if($(".js-mini-cart-count").text() != undefined && $(".js-mini-cart-count").text()!=null)
 					{
-					$(".responsive-bag-count").text($(".js-mini-cart-count").text());
+					$(".responsive-bag-count").text($(".js-mini-cart-count-hover").text());		/*UF-249*/
 					}
 				var $li = $(".page-authenticAndExclusive ul.feature-brands li");
 				if($(window).width() <790) {
@@ -1594,10 +1594,12 @@ $(document).ready(function(){
 			var ua_check = window.navigator.userAgent;
 			var msie_check = ua_check.indexOf("MSIE ");
 			$(".body-Content").css('padding-bottom',footer_height);
+			$("body.page-homepage .body-Content").css('padding-bottom',$('footer').height() + 'px');
 			if(msie_check > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){
 				setTimeout(function () {
 					var footer_height=$('footer').height() + 20 + 'px';
 					$(".body-Content").css('padding-bottom',footer_height);
+					$("body.page-homepage .body-Content").css('padding-bottom',$('footer').height() + 'px');
 				},500);
 				}
 		} 
@@ -1610,6 +1612,7 @@ $(document).ready(function(){
 			if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
 				var footer_height=$('footer').height() + 20 + 'px';
 				$(".body-Content").css('padding-bottom',footer_height);
+				$("body.page-homepage .body-Content").css('padding-bottom',$('footer').height() + 'px');
 			}
 			else{
 				$(".body-Content").css('padding-bottom','0px');
@@ -2445,7 +2448,7 @@ function sortByFilterResult(top){
 	
 	if($("input[name=customSku]").length > 0){
 		$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+		$("body").append('<div class="loaderDiv" style="position: fixed; left: 50%;top: 50%;"><img src="/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 		var pageNo = 1;
 		if ($("#paginationFormBottom .pagination.mobile li.active span").length) {
 			pageNo = $("#paginationFormBottom .pagination.mobile li.active span").text();
@@ -2471,7 +2474,7 @@ function sortByFilterResult(top){
 			complete: function() {
 				// AJAX changes for custom price filter
 				$("#no-click").remove();
-				$(".spinner").remove();
+				$(".loaderDiv").remove();
 				
 			}
 		});
@@ -2492,7 +2495,7 @@ function viewByFilterResult(top){
 
 	if($("input[name=customSku]").length > 0){
 		$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+		$("body").append('<div class="loaderDiv"  style="position: fixed; left: 50%;top: 50%;"><img src="/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 		var pageNo = 1;
 		if ($("#paginationFormBottom .pagination.mobile li.active span").length) {
 			pageNo = $("#paginationFormBottom .pagination.mobile li.active span").text();
@@ -2518,7 +2521,7 @@ function viewByFilterResult(top){
 			complete: function() {
 				// AJAX changes for custom price filter
 				$("#no-click").remove();
-				$(".spinner").remove();
+				$(".loaderDiv").remove();
 			}
 		});
 		
@@ -3040,3 +3043,10 @@ $("#sameAsShippingEmi").click(function(){
 		$(this).prev('h2').show();
 	}
 	});
+
+$("header .content nav > ul > li > ul > li").on("mouseover",function(){
+	$(this).parent().parent().find(".toggle").addClass("show_arrow");
+});
+$("header .content nav > ul > li > ul > li").on("mouseout",function(){
+	$(this).parent().parent().find(".toggle").removeClass("show_arrow");
+});

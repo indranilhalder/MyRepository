@@ -18,7 +18,8 @@ AS
       v_inv_weightage              NUMBER;
       v_catalogversion_buybox      NUMBER;
       v_mergecount                 NUMBER;
-	    v_pricefallbackpk            NUMBER;
+	  --Change DUE TO PRICE CATALOG UNAWARE
+	    v_pricefallbackpk          VARCHAR2(50);
    -- TYPE t_buyboxussid IS TABLE OF MplBuyBoxProcTable.P_SELLERARTICLESKU%TYPE;
 
 
@@ -77,7 +78,8 @@ AS
              AND c.pk = CV.p_catalog
              AND CV.p_version = 'Online';
 			 -- assign the pricefallbackpk value into local variable
-	  SELECT pk
+			  --Change DUE TO PRICE CATALOG UNAWARE
+	  SELECT PRODUCTS.P_CODE
 	     INTO v_pricefallbackpk
 		 FROM PRODUCTS
 		 WHERE PRODUCTS.P_CODE='PRICEFALLBACK' and PRODUCTS.p_catalogversion = v_catalogversion_buybox;
@@ -99,9 +101,9 @@ AS
        WHERE     P.p_sellerarticlesku = I.p_sellerarticlesku
              AND P.p_sellerarticlesku = SI.p_sellerarticlesku
              AND PLD.p_ussid(+) = SI.p_sellerarticlesku
-             AND P.p_product = PR.PK
-			 AND P.p_product<>v_pricefallbackpk
-             AND P.p_catalogversion = v_catalogversion_buybox
+             AND P.p_productid =  PR.P_CODE --Change DUE TO PRICE CATALOG UNAWARE
+			 AND P.p_productid<>v_pricefallbackpk --Change DUE TO PRICE CATALOG UNAWARE
+            -- AND P.p_catalogversion = v_catalogversion_buybox --Change DUE TO PRICE CATALOG UNAWARE
              AND SI.p_catalogversion = v_catalogversion_buybox
              AND (   I.modifiedts > v_last_run_weightage
                   OR P.modifiedts > v_last_run_weightage
@@ -189,14 +191,13 @@ AS
 									enumerationvalues EV--Changes for Delisting 27_02_17
                               WHERE     P.p_sellerarticlesku =
                                            I.p_sellerarticlesku
-									AND P.p_product<>v_pricefallbackpk
+									AND P.p_productid<>v_pricefallbackpk --Change DUE TO PRICE CATALOG UNAWARE
                                     AND P.p_sellerarticlesku =
                                            SI.p_sellerarticlesku
                                     AND PLD.p_ussid(+) =
                                            SI.p_sellerarticlesku
-                                    AND P.p_product = PR.PK
-                                    AND P.p_catalogversion =
-                                           v_catalogversion_buybox
+                                    AND P.p_productid = PR.P_CODE --Change DUE TO PRICE CATALOG UNAWARE
+                                    --AND P.p_catalogversion =v_catalogversion_buybox --Change DUE TO PRICE CATALOG UNAWARE
                                     AND SI.p_catalogversion =
                                            v_catalogversion_buybox
 									AND SI.P_SELLERASSOCIATIONSTATUS = EV.pk --Changes for Delisting 27_02_17
@@ -379,7 +380,7 @@ AS
         INTO v_mergepromostdtcount
         FROM pricerows P, stocklevels I, mplpriorityleveldetails PLD
        WHERE     P.p_sellerarticlesku = I.p_sellerarticlesku
-             AND P.p_catalogversion = v_catalogversion_buybox
+             --AND P.p_catalogversion = v_catalogversion_buybox --Change DUE TO PRICE CATALOG UNAWARE
              AND PLD.p_ussid(+) = I.p_sellerarticlesku
              AND P.p_promotionstartdate BETWEEN v_last_run_price_update
                                             AND v_prc_start_time_price_update;
@@ -390,7 +391,7 @@ AS
         INTO v_mergepromoenddtcount
         FROM pricerows P, stocklevels I, mplpriorityleveldetails PLD
        WHERE     P.p_sellerarticlesku = I.p_sellerarticlesku
-             AND P.p_catalogversion = v_catalogversion_buybox
+             --AND P.p_catalogversion = v_catalogversion_buybox --Change DUE TO PRICE CATALOG UNAWARE
              AND PLD.p_ussid(+) = I.p_sellerarticlesku
              AND P.p_promotionenddate BETWEEN v_last_run_price_update
                                           AND v_prc_start_time_price_update;
@@ -401,7 +402,7 @@ AS
       THEN
          MERGE INTO MplBuyBoxProcTable B
               USING (SELECT P.p_sellerarticlesku,
-                            P.p_product,
+                            P.p_productid, --Change DUE TO PRICE CATALOG UNAWARE
                             P.p_specialprice,
                             I.p_available,
                               NVL (GREATEST (PLD.P_L1PRIORITY,
@@ -416,7 +417,7 @@ AS
                             stocklevels I,
                             mplpriorityleveldetails PLD
                       WHERE     P.p_sellerarticlesku = I.p_sellerarticlesku
-                            AND P.p_catalogversion = v_catalogversion_buybox
+                            --AND P.p_catalogversion = v_catalogversion_buybox --Change DUE TO PRICE CATALOG UNAWARE
                             AND PLD.p_ussid(+) = I.p_sellerarticlesku
                             AND P.p_promotionstartdate BETWEEN v_last_run_price_update
                             AND v_prc_start_time_price_update)
@@ -436,7 +437,7 @@ AS
       THEN
          MERGE INTO MplBuyBoxProcTable B
               USING (SELECT P.p_sellerarticlesku,
-                            P.p_product,
+                            P.p_productid, --Change DUE TO PRICE CATALOG UNAWARE
                             P.p_price,
                             I.p_available,
                               NVL (GREATEST (PLD.P_L1PRIORITY,
@@ -451,7 +452,7 @@ AS
                             stocklevels I,
                             mplpriorityleveldetails PLD
                       WHERE     P.p_sellerarticlesku = I.p_sellerarticlesku
-                            AND P.p_catalogversion = v_catalogversion_buybox
+                            --AND P.p_catalogversion = v_catalogversion_buybox --Change DUE TO PRICE CATALOG UNAWARE
                             AND PLD.p_ussid(+) = I.p_sellerarticlesku
                             AND P.p_promotionenddate BETWEEN v_last_run_price_update
                             AND v_prc_start_time_price_update)
