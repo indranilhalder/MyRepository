@@ -28,8 +28,8 @@
 							numberPagesShown="${numberPagesShown}" />
 							
 							
-
-						<ul class="product-listing product-grid">
+						<!-- INC144315462 and INC144315104  -->
+						<ul class="product-listing product-grid custom-sku">
 							<c:forEach items="${searchPageData.results}" var="product"
 								varStatus="status">
 								<product:productListerGridItem product="${product}" />
@@ -45,6 +45,8 @@
 							searchUrl="${searchPageData.currentQuery.url}"
 							numberPagesShown="${numberPagesShown}" />
 					</div>
+					<!-- INC144315462 and INC144315104  -->
+					<input type="hidden" name="customSkuUrl" value="/CustomSkuCollection/${component.labelOrId}/page-1?q="/>
 					<input type="hidden" name="customSku" value="true"/>
-					<input type="hidden" name="customSkuCollectionId" value="${component.labelOrId}"/>
+					<input type="hidden" name="customSkuCollectionId" value="${component.labelOrId}"/>					
 				</div>
