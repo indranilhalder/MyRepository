@@ -244,7 +244,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 		}
 		else
 		{
-			request.getServletPath().replaceAll("\\s", "").toLowerCase();
+			request.getServletPath().replaceAll("\\s", "-").toLowerCase();
 		}
 		categoryCode = categoryCode.toUpperCase();
 		brandCode = brandCode.toUpperCase();
@@ -760,7 +760,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 					}
 					else
 					{
-						brandName = URLDecoder.decode(brand, "UTF-8").replaceAll("\\s", "");
+						brandName = URLDecoder.decode(brand, "UTF-8").replaceAll("\\s", "-");
 					}
 
 					response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
