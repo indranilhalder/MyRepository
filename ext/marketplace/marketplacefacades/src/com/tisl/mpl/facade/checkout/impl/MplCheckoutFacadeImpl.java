@@ -43,7 +43,6 @@ import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
-import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.jalo.PromotionVoucher;
@@ -193,9 +192,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	@Resource(name = "sellerBasedPromotionService")
 	private SellerBasedPromotionService sellerBasedPromotionService;
-
-	@Autowired
-	private BaseSiteService baseService;
 
 	@Autowired
 	private ShortUrlService googleShortUrlService;
@@ -1047,9 +1043,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
 									.getCode())
 					{
-						final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-								.getDeliveryFulfillModes().getCode();
-
+						
 						//	if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE))
 						//	{
 						//		marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),

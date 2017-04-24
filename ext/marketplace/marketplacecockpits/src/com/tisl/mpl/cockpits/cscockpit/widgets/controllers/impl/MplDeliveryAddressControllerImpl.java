@@ -21,7 +21,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.data.PincodeData;
-import com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.MplDeliveryAddressDao;
+import com.tisl.mpl.marketplacecommerceservices.daos.changedeliveryaddress.MplDeliveryAddressDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryAddressService;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 

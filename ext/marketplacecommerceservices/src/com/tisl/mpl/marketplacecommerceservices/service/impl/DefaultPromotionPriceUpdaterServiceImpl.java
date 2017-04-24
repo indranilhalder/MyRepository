@@ -13,11 +13,9 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.cronjob.model.CronJobModel;
 import de.hybris.platform.europe1.model.PriceRowModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
-import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionPriceRowModel;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
@@ -78,12 +76,6 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	@Resource(name = "mplUpdatePromotionPriceDao")
 	private UpdatePromotionalPriceDaoImpl updatePromotionalPriceDao;
 
-	@Autowired
-	private ProductService productService;
-	@Autowired
-	private CatalogVersionService catalogVersionService;
-	@Autowired
-	private ConfigurationService configurationService;
 
 	//private UpdateSplPriceHelperService updateSplPriceHelperService;
 	@Autowired

@@ -24,6 +24,10 @@ import org.springframework.util.Assert;
  */
 public class AdressDtoToModelPopulator implements Populator<AddressData,AddressModel>
 {
+	/**
+	 * 
+	 */
+	private static final String FOUND = " found.";
 	private CommonI18NService commonI18NService;
 	private static final Logger LOG = Logger.getLogger(AdressDtoToModelPopulator.class);
 	@Override
@@ -62,11 +66,11 @@ public class AdressDtoToModelPopulator implements Populator<AddressData,AddressM
 			}
 			catch (final UnknownIdentifierException e)
 			{
-				LOG.error("No country with the code " + isocode + " found."+e.getMessage());
+				LOG.error("No country with the code " + isocode + FOUND+e.getMessage());
 			}
 			catch (final AmbiguousIdentifierException e)
 			{
-				LOG.error("More than one country with the code " + isocode + " found."+e.getMessage());
+				LOG.error("More than one country with the code " + isocode + FOUND+e.getMessage());
 			}
 		}
 
@@ -82,11 +86,11 @@ public class AdressDtoToModelPopulator implements Populator<AddressData,AddressM
 			}
 			catch (final UnknownIdentifierException e)
 			{
-				LOG.error("No region with the code " + isocode + " found."+e.getMessage());
+				LOG.error("No region with the code " + isocode + FOUND+e.getMessage());
 			}
 			catch (final AmbiguousIdentifierException e)
 			{
-				LOG.error("More than one region with the code " + isocode + " found."+e.getMessage());
+				LOG.error("More than one region with the code " + isocode + FOUND+e.getMessage());
 			}
 		}
 	}

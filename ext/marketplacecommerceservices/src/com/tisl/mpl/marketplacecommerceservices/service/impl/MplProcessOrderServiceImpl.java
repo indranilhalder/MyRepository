@@ -571,7 +571,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 							break;
 						}
 					}
-					if (successFlag == false)
+					if (!successFlag)
 					{
 						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
 						//limited stock promotion issue starts here

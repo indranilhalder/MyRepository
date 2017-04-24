@@ -6547,7 +6547,7 @@ public class UsersController extends BaseCommerceController
 	 * @return OrderCreateInJusPayWsDto
 	 */
 	@Secured(
-	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = MarketplacewebservicesConstants.CREATEJUSPAYORDER, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public OrderCreateInJusPayWsDto createJuspayOrder(@RequestParam final String firstName, @RequestParam final String lastName,
@@ -6944,7 +6944,7 @@ public class UsersController extends BaseCommerceController
 
 
 	@Secured(
-	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/{userId}/returnPincode", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public ReturnPincodeDTO returnPincodeServiceability(@RequestParam final String pincode, @RequestParam final String orderCode,
@@ -7046,7 +7046,7 @@ public class UsersController extends BaseCommerceController
 	 * TPR-1630 Display product details at time of return
 	 */
 	@Secured(
-	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/{userId}/returnProductDetails", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public ReturnRequestDTO returnProductDetails(@RequestParam final String orderCode, @RequestParam final String transactionId,

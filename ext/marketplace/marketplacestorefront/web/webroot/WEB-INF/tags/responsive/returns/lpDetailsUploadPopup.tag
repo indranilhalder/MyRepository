@@ -43,7 +43,7 @@
 											<%-- <form:input name="dispatchProof" path="dispatchProof" data-show-preview="false"/> --%>
 											
 											<%-- <form:input name="dispatchProof" path="dispatchProof" id="uploadFile" type="file" class="file awsTextinput awsUpload" style="opacity: 0;z-index:999999; position: absolute;top: 0px;left: 0px;cursor: pointer;" data-show-preview="false"/> --%>
-											<div class="uploadDiv" style="position: absolute;top: 0px;left: 0px;z-index:999998;">
+											<div class="uploadDiv">
 											<div class="col-md-7 textFile">No file Chosen</div>
 											<div class="col-md-5 uploadButton">CHOOSE FILE</div>
 											</div>

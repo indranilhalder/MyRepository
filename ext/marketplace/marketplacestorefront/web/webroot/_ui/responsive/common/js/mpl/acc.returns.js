@@ -839,6 +839,57 @@
 								showPickupTimeDate(temp);
 								$(".scheduledPickupArea #spaAddress").remove();
 								$(".scheduledPickupArea").prepend("<p id='spaAddress' style='color:#a9143c;'>Address Updated Successfully</p>");
+							
+							
+								//alert("saving Address");
+								  console.log($("#addAddressForm #firstName").val());
+								  console.log($("#addAddressForm #lastName").val());
+								  
+									$("#hiddenFields #firstName").val($("#addAddressForm #firstName").val());
+									$("#hiddenFields #lastName").val($("#addAddressForm #lastName").val());
+								    $("#hiddenFields #addressLine1").val($("#addAddressForm #addressLine1").val());
+									$("#hiddenFields #addressLine2").val($("#addAddressForm #addressLine2").val());
+									$("#hiddenFields #addressLine3").val($("#addAddressForm #addressLine3").val());
+									
+									if($("#addAddressForm #landmark").val()!="Other"){
+										$("#hiddenFields #landmark").val($("#addAddressForm #landmark").val());
+									}else{
+										$("#hiddenFields #landmark").val($("#addAddressForm #otherLandmark").val());
+									}
+									
+									
+									$("#hiddenFields #pincode").val($("#addAddressForm #pincode").val());
+									$("#hiddenFields #city").val($("#addAddressForm #city").val());
+									$("#hiddenFields #stateListBoxForm").val($("#addAddressForm #stateListBox").val());
+									$("#hiddenFields #country").val($("#addAddressForm #country").val());
+									$("#hiddenFields #phoneNumber").val($("#addAddressForm #mobileNo").val());
+									$("#hiddenFields #addressType").val($("#addAddressForm input[name='addressRadioType']:checked").val());
+									
+									temp = $("#temp").val();
+									
+									$(".update"+temp+" li span.firstName").text($("#addAddressForm #firstName").val());
+									$(".update"+temp+" li span.lastName").text($("#addAddressForm #lastName").val());
+									$(".update"+temp+" li span.addressLine1").text($("#addAddressForm #addressLine1").val());
+									$(".update"+temp+" li span.addressLine2").text($("#addAddressForm #addressLine2").val());
+									$(".update"+temp+" li span.addressLine3").text($("#addAddressForm #addressLine3").val());
+									$(".update"+temp+" li span.otherLandmark").text($("#addAddressForm #otherLandmark").val());
+									if($("#addAddressForm #landmark").val()!="Other"){
+										$(".update"+temp+" li span.landmark").text($("#addAddressForm #landmark").val());
+									}else{
+										$(".update"+temp+" li span.landmark").text($("#addAddressForm #otherLandmark").val());
+									}
+									
+									$(".update"+temp+" li span.postalCode").text($("#addAddressForm #pincode").val());
+									/*TISPRDT-1071 Start*/
+									$(".update"+temp+" li span.addressTown").text($("#addAddressForm #city").val());
+									$(".update"+temp+" li span.state").text($("#addAddressForm #stateListBox").val());
+									/*TISPRDT-1071 End*/
+									$(".update"+temp+" li span.country").text($("#addAddressForm #country").val());
+									$(".update"+temp+" li span.phoneNumber").text($("#addAddressForm #mobileNo").val());
+									
+									$(".update"+temp).prev().find("input").prop("checked", "checked");
+									//alert($(".update"+temp+" li span.landmark").text()+" li span.landmark");
+									showPickupTimeDate(temp);
 							}
 						  else
 							{
@@ -849,6 +900,8 @@
 							
 							//$("#changeAddressPopup, .wrapBG").fadeOut(300);
 					  
+					  
+				  
 					  },
 					  error:function(data){
 						  
@@ -856,54 +909,6 @@
 						  
 					  }
 				  });
-				  //alert("saving Address");
-				  console.log($("#addAddressForm #firstName").val());
-				  console.log($("#addAddressForm #lastName").val());
-				  
-					$("#hiddenFields #firstName").val($("#addAddressForm #firstName").val());
-					$("#hiddenFields #lastName").val($("#addAddressForm #lastName").val());
-				    $("#hiddenFields #addressLine1").val($("#addAddressForm #addressLine1").val());
-					$("#hiddenFields #addressLine2").val($("#addAddressForm #addressLine2").val());
-					$("#hiddenFields #addressLine3").val($("#addAddressForm #addressLine3").val());
-					
-					if($("#addAddressForm #landmark").val()!="Other"){
-						$("#hiddenFields #landmark").val($("#addAddressForm #landmark").val());
-					}else{
-						$("#hiddenFields #landmark").val($("#addAddressForm #otherLandmark").val());
-					}
-					
-					
-					$("#hiddenFields #pincode").val($("#addAddressForm #pincode").val());
-					$("#hiddenFields #city").val($("#addAddressForm #city").val());
-					$("#hiddenFields #stateListBoxForm").val($("#addAddressForm #stateListBox").val());
-					$("#hiddenFields #country").val($("#addAddressForm #country").val());
-					$("#hiddenFields #phoneNumber").val($("#addAddressForm #mobileNo").val());
-					$("#hiddenFields #addressType").val($("#addAddressForm input[name='addressRadioType']:checked").val());
-					
-					temp = $("#temp").val();
-					
-					$(".update"+temp+" li span.firstName").text($("#addAddressForm #firstName").val());
-					$(".update"+temp+" li span.lastName").text($("#addAddressForm #lastName").val());
-					$(".update"+temp+" li span.addressLine1").text($("#addAddressForm #addressLine1").val());
-					$(".update"+temp+" li span.addressLine2").text($("#addAddressForm #addressLine2").val());
-					$(".update"+temp+" li span.addressLine3").text($("#addAddressForm #addressLine3").val());
-					$(".update"+temp+" li span.otherLandmark").text($("#addAddressForm #otherLandmark").val());
-					if($("#addAddressForm #landmark").val()!="Other"){
-						$(".update"+temp+" li span.landmark").text($("#addAddressForm #landmark").val());
-					}else{
-						$(".update"+temp+" li span.landmark").text($("#addAddressForm #otherLandmark").val());
-					}
-					
-					$(".update"+temp+" li span.postalCode").text($("#addAddressForm #pincode").val());
-					$(".update"+temp+" li span.city").text($("#addAddressForm #city").val());
-					$(".update"+temp+" li span.stateListBox").text($("#addAddressForm #stateListBox").val());
-					$(".update"+temp+" li span.country").text($("#addAddressForm #country").val());
-					$(".update"+temp+" li span.phoneNumber").text($("#addAddressForm #mobileNo").val());
-					
-					$(".update"+temp).prev().find("input").prop("checked", "checked");
-					//alert($(".update"+temp+" li span.landmark").text()+" li span.landmark");
-					showPickupTimeDate(temp);
-					
 					//$("#changeAddressPopup, .wrapBG").fadeOut(300);
 			  }
 		  }

@@ -35,6 +35,34 @@ import com.tisl.mpl.model.CRMTicketDetailModel;
 public class MplReturnDaoImpl implements MplReturnsDao
 {
 
+	/**
+	 * 
+	 */
+	private static final String FLEXIBLE_SEARCH_EXCEPTION = "Flexible search Exception";
+	/**
+	 * 
+	 */
+	private static final String CODE = "}=?code ";
+	/**
+	 * 
+	 */
+	private static final String SRM = "{srm:";
+	/**
+	 * 
+	 */
+	private static final String AS_SRM = " AS srm} ";
+	/**
+	 * 
+	 */
+	private static final String WHERE = "WHERE ";
+	/**
+	 * 
+	 */
+	private static final String FROM = " FROM {";
+	/**
+	 * 
+	 */
+	private static final String SELECT_SRM = "SELECT {srm:";
 	private static final Logger LOG = Logger.getLogger(MplReturnDaoImpl.class);
 	public static final String CUSTOMER_BANKDETAILS_QUERY = "select {pk} from {MplCustomerBankAccountDetails} where {customerid}=?customerid";
 	public static final String CUSTOMER_BANKDETAILS_KEY ="customerid";
@@ -42,13 +70,13 @@ public class MplReturnDaoImpl implements MplReturnsDao
 	public static final String RETURN_REQUEST_QUERY = "select {rr:pk} from {ReturnRequest as rr join Order as o on {o:pk}={rr:order} } where {o:code}=?orderid";
 	public static final String RETURN_REQUEST_KEY ="orderid";
 	
-	private static final String RETURN_REPORT_QUERY_BETWEEN_TWO_DATES = "SELECT {srm:" + MplReturnPickUpAddressInfoModel.PK + "}"
-			+ " FROM {" + MplReturnPickUpAddressInfoModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:"
+	private static final String RETURN_REPORT_QUERY_BETWEEN_TWO_DATES = SELECT_SRM.intern() + MplReturnPickUpAddressInfoModel.PK + "}"
+			+ FROM.intern() + MplReturnPickUpAddressInfoModel._TYPECODE + AS_SRM.intern() + WHERE.intern() + SRM.intern()
 			+ MplReturnPickUpAddressInfoModel.CREATIONTIME + "} between ?fromDate and ?toDate ";
 
-	private static final String CRM_TICKET_MODEL_QUERY_BY_TRANSACTIONID = "SELECT {srm:" + CRMTicketDetailModel.PK + "}"
-			+ " FROM {" + CRMTicketDetailModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:" + CRMTicketDetailModel.TRANSACTIONID
-			+ "}=?code " + " AND ({srm:" + CRMTicketDetailModel.TICKETID + "}) IS NOT NULL" + " ORDER BY {srm:"
+	private static final String CRM_TICKET_MODEL_QUERY_BY_TRANSACTIONID = SELECT_SRM.intern() + CRMTicketDetailModel.PK + "}"
+			+ FROM.intern() + CRMTicketDetailModel._TYPECODE + AS_SRM.intern() + WHERE.intern() + SRM.intern() + CRMTicketDetailModel.TRANSACTIONID
+			+ CODE.intern() + " AND ({srm:" + CRMTicketDetailModel.TICKETID + "}) IS NOT NULL" + " ORDER BY {srm:"
 			+ CRMTicketDetailModel.CREATIONTIME + "} DESC";
 
 
@@ -68,8 +96,8 @@ public class MplReturnDaoImpl implements MplReturnsDao
 
 		ServicesUtil.validateParameterNotNull(customerId, "Id must not be null");
 		final Map queryParams = new HashMap();
-		final String query = CUSTOMER_BANKDETAILS_QUERY;
-		queryParams.put(CUSTOMER_BANKDETAILS_KEY, customerId);
+		final String query = CUSTOMER_BANKDETAILS_QUERY.intern();
+		queryParams.put(CUSTOMER_BANKDETAILS_KEY.intern(), customerId);
 		final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query);
 		fQuery.addQueryParameters(queryParams);
 		try
@@ -91,8 +119,8 @@ public class MplReturnDaoImpl implements MplReturnsDao
 		}
 		catch(FlexibleSearchException e)
 		{
-			LOG.error("Flexible search Exception"+e);
-			throw new EtailNonBusinessExceptions(e,"Flexible search Exception");
+			LOG.error(FLEXIBLE_SEARCH_EXCEPTION.intern()+e);
+			throw new EtailNonBusinessExceptions(e,FLEXIBLE_SEARCH_EXCEPTION.intern());
 		}
 		catch (Exception e) {
 			LOG.error("Exception occured during fetching customer Bank account details with custmer Id :"+customerId+ "Error Trace:" +e);
@@ -107,8 +135,8 @@ public class MplReturnDaoImpl implements MplReturnsDao
 
 		ServicesUtil.validateParameterNotNull(orderId, "Id must not be null");
 		final Map queryParams = new HashMap();
-		final String query = RETURN_REQUEST_QUERY;
-		queryParams.put(RETURN_REQUEST_KEY, orderId);
+		final String query = RETURN_REQUEST_QUERY.intern();
+		queryParams.put(RETURN_REQUEST_KEY.intern(), orderId);
 		final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query);
 		fQuery.addQueryParameters(queryParams);
 		try
@@ -130,8 +158,8 @@ public class MplReturnDaoImpl implements MplReturnsDao
 		}
 		catch(FlexibleSearchException e)
 		{
-			LOG.error("Flexible search Exception"+e);
-			throw new EtailNonBusinessExceptions(e,"Flexible search Exception");
+			LOG.error(FLEXIBLE_SEARCH_EXCEPTION.intern()+e);
+			throw new EtailNonBusinessExceptions(e,FLEXIBLE_SEARCH_EXCEPTION.intern());
 		}
 		catch (Exception e) {
 			LOG.error("Exception occured during fetching customer Bank account details with custmer Id :"+orderId+ "Error Trace:" +e);
@@ -160,8 +188,8 @@ public class MplReturnDaoImpl implements MplReturnsDao
 		}
 		catch (final FlexibleSearchException e)
 		{
-			LOG.error("Flexible search Exception" + e);
-			throw new EtailNonBusinessExceptions(e, "Flexible search Exception");
+			LOG.error(FLEXIBLE_SEARCH_EXCEPTION.intern() + e);
+			throw new EtailNonBusinessExceptions(e, FLEXIBLE_SEARCH_EXCEPTION.intern());
 		}
 		catch (final Exception e)
 		{
@@ -180,7 +208,7 @@ public class MplReturnDaoImpl implements MplReturnsDao
 			{
 				LOG.debug("In getPickUpAddressReturn - fromDate: =" + fromDate + "todate :=" + toDate);
 			}
-			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(RETURN_REPORT_QUERY_BETWEEN_TWO_DATES);
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(RETURN_REPORT_QUERY_BETWEEN_TWO_DATES.intern());
 			fQuery.addQueryParameter("fromDate", fromDate);
 			fQuery.addQueryParameter("toDate", toDate);
 			return flexibleSearchService.<MplReturnPickUpAddressInfoModel> search(fQuery).getResult();
@@ -202,23 +230,23 @@ public class MplReturnDaoImpl implements MplReturnsDao
 		String queryPram = null;
 		if (orderID != null&&StringUtils.isNotBlank(orderID)&&StringUtils.isNotEmpty(orderID))
 		{
-			queryString = "SELECT {srm:" + MplReturnPickUpAddressInfoModel.PK + "}" + " FROM {"
-					+ MplReturnPickUpAddressInfoModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:"
-					+ MplReturnPickUpAddressInfoModel.ORDERID + "}=?code ";
+			queryString = SELECT_SRM.intern() + MplReturnPickUpAddressInfoModel.PK + "}" + FROM
+					+ MplReturnPickUpAddressInfoModel._TYPECODE + AS_SRM.intern() + WHERE.intern() + SRM.intern()
+					+ MplReturnPickUpAddressInfoModel.ORDERID + CODE.intern();
 			queryPram = orderID;
 		}
 		else if (customerId != null&&StringUtils.isNotBlank(customerId)&&StringUtils.isNotEmpty(customerId))
 		{
-			queryString = "SELECT {srm:" + MplReturnPickUpAddressInfoModel.PK + "}" + " FROM {"
-					+ MplReturnPickUpAddressInfoModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:"
-					+ MplReturnPickUpAddressInfoModel.CUSTOMERID + "}=?code ";
+			queryString = SELECT_SRM.intern() + MplReturnPickUpAddressInfoModel.PK + "}" + FROM.intern()
+					+ MplReturnPickUpAddressInfoModel._TYPECODE + AS_SRM.intern() + WHERE.intern() + SRM.intern()
+					+ MplReturnPickUpAddressInfoModel.CUSTOMERID + CODE.intern();
 			queryPram = customerId;
 		}
 		else
 		{
-			queryString = "SELECT {srm:" + MplReturnPickUpAddressInfoModel.PK + "}" + " FROM {"
-					+ MplReturnPickUpAddressInfoModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:"
-					+ MplReturnPickUpAddressInfoModel.PINCODE + "}=?code ";
+			queryString = SELECT_SRM.intern() + MplReturnPickUpAddressInfoModel.PK + "}" + FROM.intern()
+					+ MplReturnPickUpAddressInfoModel._TYPECODE + AS_SRM.intern() + WHERE.intern() + SRM.intern()
+					+ MplReturnPickUpAddressInfoModel.PINCODE + CODE.intern();
 			queryPram = pincode;
 		}
 		try
@@ -245,7 +273,7 @@ public class MplReturnDaoImpl implements MplReturnsDao
 			{
 				LOG.debug("In getCRMTicketDetail - orderCode ***" + transactionId);
 			}
-			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(CRM_TICKET_MODEL_QUERY_BY_TRANSACTIONID);
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(CRM_TICKET_MODEL_QUERY_BY_TRANSACTIONID.intern());
 			fQuery.addQueryParameter("code", transactionId);
 
 			final List<CRMTicketDetailModel> listOfData = flexibleSearchService.<CRMTicketDetailModel> search(fQuery).getResult();
