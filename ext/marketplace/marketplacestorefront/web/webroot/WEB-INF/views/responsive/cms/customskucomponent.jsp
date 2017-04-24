@@ -50,3 +50,4 @@
 					<input type="hidden" name="customSku" value="true"/>
 					<input type="hidden" name="customSkuCollectionId" value="${component.labelOrId}"/>					
 				</div>
+				
