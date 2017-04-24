@@ -167,7 +167,7 @@ $(document).ready(function(){
  		    return result;
 			}
 
-			var isLux = getUrlParameter('isLux');
+			var isLux = findGetParameter('isLux');
 			console.log("isLux"+ isLux);
 			var isLuxury = $("#isLuxury").val();
 			console.log("isLuxury"+ isLuxury);

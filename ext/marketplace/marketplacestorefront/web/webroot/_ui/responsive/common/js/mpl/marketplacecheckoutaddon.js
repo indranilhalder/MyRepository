@@ -5461,6 +5461,7 @@ function checkServiceabilityRequired(buttonType,el){
 			);
 		}*/
 	}
+	//TISPRDT-680
 	if(selectedPin == null || selectedPin.length === 0)
 	{	
 	   $('#defaultPinCodeIdsBtm').val("");
