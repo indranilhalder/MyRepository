@@ -19985,7 +19985,7 @@ div.other-sellers .navigation button.next:after {
 }
 @media (max-width: 650px) {
     div.other-sellers .sort-by {
-        display: none;
+        display: none !important;
         background-color: transparent;
         border: none;
         position: relative
@@ -36013,7 +36013,11 @@ body.template-pages-category-productGridPage header,body.template-pages-search-s
 display:none;
 }
 .mob-filter-wrapper{
-display: block !important;
+	display: block !important;
+	/* width: 19.83%;		TISSQAUAT-1825
+    padding: 0 20px 0 18px;		TISSQAUAT-1825
+    margin-top: 31px;		TISSQAUAT-1825
+    float: left;		TISSQAUAT-1825 */
 }
 .listing-leftmenu > div.apply-clear{
 	display:none !important;
@@ -48369,7 +48373,8 @@ padding:0 40px;	}
 	transition: all 0.3s;
 }
 .product-info .color-swatch li.active{
-	box-shadow: 0 0 0px 1px #a9143c;
+	/* box-shadow: 0 0 0px 1px #a9143c; */		/* TISSQAUAT-3434 */
+	outline: 1px solid #a9143c;			/* TISSQAUAT-3434 */
 }
 
 #allVariantOutOfStock {
@@ -52881,7 +52886,7 @@ word-break: break-word;
 		width: 31%;
 	}
 	.clp_top_brands  .top_brands_section>a {
-		display: none;
+		/* display: none; */		/* TISSQAUAT-1823 */
 	}
 	.blog_container {
 		padding: 0 50px 150px;
@@ -56534,7 +56539,7 @@ left: -5px;
 #wrapper.delivery{margin: 0 0 35px;}
 #wrapper.delivery .Product-item-info .Product-name{ margin:0;}
 #wrapper.delivery .Product-detail .Product-img{margin-right: 15px;}
-.delivery .checkout-headers{ display:none;}
+.delivery .checkout-headers{ /*display:none; */ padding-left: 11px;}
 .mybag-items.checkout-items .mybag-item .dev{padding: 0 20px 10px;}
 .mybag-items.checkout-items .mybag-item .dev li{ margin:0;}
 .delivery .checkout__text-header{ font-size:12px;}
@@ -64906,7 +64911,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     top: -4px !important;
 }
 #selectDeliveryMethodForm{
-	padding-top:50px;
+	padding-top:35px;
 	padding-bottom: 31px;
 }
 .cart.wrapper #selectDeliveryMethodForm .checkout-shipping .checkout-shipping-items ul li.header{
@@ -66209,4 +66214,26 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
 }
 .checkout.wrapper .product-block.addresses.new-form li.item fieldset div.half:nth-child(even){
 	float: none;
+}
+.product-detail .Emi .modal-content .Close{
+	border-radius: 0px;
+	border: none !important;
+	margin-right: 0px !important;
+    margin-top: 0px !important;
+}
+@media (max-width: 651px){
+	.delivery .checkout-headers{
+	float: left;
+	}
+	.cart.wrapper .left-block h1{
+	text-align: left;
+	}
+}
+@media (max-width: 767px){
+.cart.wrapper .checkout-shipping.left-block{
+	border-top: 1px solid #eee;
+}
+.checkout-content.delivery .checkout-shipping.left-block .product-block li.item:not(:last-of-type){
+	border-top: 0px;
+}
 }
