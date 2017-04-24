@@ -169,6 +169,7 @@ ACC.product = {
 			 if ($('#variant.size-g li').hasClass('selected'))
 			 {
 				ACC.product.sendAddToBagSizeGuide("addToCartSizeGuide");
+				$(".modal").modal('hide');	 //INC144315891
 			 
 			}else{
 					$("#sizeSelectedSizeGuide").html("<font color='#ff1c47'>" + $('#sizeSelectedSizeGuide').text() + "</font>");

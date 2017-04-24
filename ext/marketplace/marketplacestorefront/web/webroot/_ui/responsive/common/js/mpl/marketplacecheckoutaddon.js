@@ -5461,6 +5461,7 @@ function checkServiceabilityRequired(buttonType,el){
 			);
 		}*/
 	}
+	//TISPRDT-680
 	if(selectedPin == null || selectedPin.length === 0)
 	{	
 	   $('#defaultPinCodeIdsBtm').val("");
@@ -8056,6 +8057,15 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 					else if(response=="" || response==null){
 						console.log("Response for mRupee is null");
 					}
+					//TPR-4461 STARTS HERE
+					else if(response=='redirect_with_coupon'){
+						document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+						$("#juspayconnErrorDiv").css("display","block");
+						$(".pay button, #make_mrupee_payment_up").prop("disabled",false);
+						$(".pay button, #make_mrupee_payment_up").css("opacity","1");
+										    
+					}
+					//TPR-4461 ENDS HERE
 					else{	
 						window.sessionStorage.removeItem("header");
 						setTimeout(function(){ 			 

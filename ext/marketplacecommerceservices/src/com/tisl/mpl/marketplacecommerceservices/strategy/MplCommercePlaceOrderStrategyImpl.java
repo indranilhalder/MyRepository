@@ -135,7 +135,8 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			{
 				try
 				{
-					result.setOrder(orderModel);
+					//It is moved below //PRDI-70
+					//result.setOrder(orderModel);
 					// OrderIssues:- 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved here
 					//				afterPlaceOrder(parameter, result);
 					//INC144315079
@@ -219,9 +220,11 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					{
 						orderModel.setIsWallet(WalletEnum.NONWALLET);
 					}
-
+					//PRDI-70
+					orderModel.setType(MarketplacecommerceservicesConstants.PARENTORDER);
 					getModelService().save(orderModel);
-
+					//PRDI-70
+					result.setOrder(orderModel);
 					/*
 					 * result.setOrder(orderModel); // OrderIssues:- 9 digit Order Id getting populated after Order Split and
 					 * Submit order process for cod, hence moved here afterPlaceOrder(parameter, result);
@@ -400,9 +403,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -447,7 +450,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		}
 		final Double discount = getTotalDiscount(orderModel.getEntries(), false);
 		totalPrice = Double.valueOf(subtotal.doubleValue() + scheduleDeliveryCharge + deliveryCost.doubleValue()
-		- discount.doubleValue());
+				- discount.doubleValue());
 		LOG.info("totalPrice for order entry in fetchTotalPrice is = " + totalPrice);
 
 		return totalPrice;

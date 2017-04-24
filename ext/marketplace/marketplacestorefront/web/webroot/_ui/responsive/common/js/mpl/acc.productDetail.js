@@ -1576,14 +1576,18 @@ function displayDeliveryDetails(sellerName) {
 				/*TISPRDT-878 Start*/
 				if (null != fulFillment && fulFillment.toLowerCase() == 'both') {
 					   if (null != fulFillmentP1 && fulFillmentP1.toLowerCase() == 'tship') {
+					   $('#fulFilledBySship').hide();  //INC_12055
 					   $('#fulFilledByTship').show();
 					  }else {
+					   $('#fulFilledByTship').hide();  //INC_12055
 					   $('#fulFilledBySship').show();
 					   $('#fulFilledBySship').html(sellerName);
 					  }
 					    } else if (null != fulFillment && fulFillment.toLowerCase() == 'tship') {
+					   $('#fulFilledBySship').hide();  //INC_12055
 					   $('#fulFilledByTship').show();
 					 }else {
+					   $('#fulFilledByTship').hide();  //INC_12055
 					   $('#fulFilledBySship').show();
 					   $('#fulFilledBySship').html(sellerName);
 					  }

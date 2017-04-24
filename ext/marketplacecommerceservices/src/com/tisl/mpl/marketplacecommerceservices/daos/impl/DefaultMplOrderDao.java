@@ -12,7 +12,6 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.jalo.flexiblesearch.FlexibleSearchException;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -43,8 +42,7 @@ import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
  */
 public class DefaultMplOrderDao implements MplOrderDao
 {
-	private static final Logger LOG = Logger
-			.getLogger(DefaultMplOrderDao.class);
+	private static final Logger LOG = Logger.getLogger(DefaultMplOrderDao.class);
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
 	@Autowired
@@ -347,7 +345,8 @@ public class DefaultMplOrderDao implements MplOrderDao
 	{
 		try
 		{
-			final String query = "SELECT {om:pk} FROM {Order as om} WHERE {guid} = ?guid and {type} = ?type";
+			//
+			final String query = "SELECT {om:pk} FROM {Order as om} WHERE {guid} = ?guid and ( {type} = ?type OR {type} IS NULL ) ";
 			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
 			flexiQuery.addQueryParameter("guid", cartModel.getGuid());
 			flexiQuery.addQueryParameter(MarketplacecommerceservicesConstants.TYPE, "Parent");
@@ -359,26 +358,30 @@ public class DefaultMplOrderDao implements MplOrderDao
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
-/**
- * 
- * To get short-url for order
- */
+
+	/**
+	 *
+	 * To get short-url for order
+	 */
 	@Override
-	public String getShortUrl(String orderCode)
+	public String getShortUrl(final String orderCode)
 	{
-		LOG.info("getting short URL for order:"+orderCode);
-		String shortUrl = null;	
+		LOG.info("getting short URL for order:" + orderCode);
+		String shortUrl = null;
 		try
 		{
 			final String query = "SELECT {osu:pk} FROM {OrderShortUrlInfo as osu} WHERE {orderId} = ?orderId";
 			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
 			flexiQuery.addQueryParameter("orderId", orderCode);
-			final List<OrderShortUrlInfoModel> orderModelList = flexibleSearchService.<OrderShortUrlInfoModel> search(flexiQuery).getResult();
-			if(null != orderModelList && orderModelList.size()>0) {
+			final List<OrderShortUrlInfoModel> orderModelList = flexibleSearchService.<OrderShortUrlInfoModel> search(flexiQuery)
+					.getResult();
+			if (null != orderModelList && orderModelList.size() > 0)
+			{
 				shortUrl = orderModelList.get(0).getShortURL();
 			}
-			if(LOG.isDebugEnabled()) {
-				LOG.debug("short Url for order:"+orderCode+" is "+shortUrl);
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("short Url for order:" + orderCode + " is " + shortUrl);
 			}
 		}
 		catch (final Exception e)
@@ -387,35 +390,38 @@ public class DefaultMplOrderDao implements MplOrderDao
 		}
 		return shortUrl;
 	}
-	
-	/**
-	 * 
-	 * To get AbstractOrderEntryModel 
-	 * Beased on transactionId
-	 */
-		@Override
-	public AbstractOrderEntryModel getEntryModel(String transactionId){
-			try
-			{
-				 final String queryString= "SELECT {srm:" + AbstractOrderEntryModel.PK + "}" + " FROM {"
-						+ AbstractOrderEntryModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:" + AbstractOrderEntryModel.TRANSACTIONID + "}=?code ";
-				if(LOG.isDebugEnabled()){
-					LOG.debug("In getEntryModel - transactionId ***"+transactionId);
-				}
-				final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
-				fQuery.addQueryParameter("code", transactionId);
 
-				final List<AbstractOrderEntryModel> listOfData = flexibleSearchService.<AbstractOrderEntryModel> search(fQuery).getResult();
-				return !listOfData.isEmpty() ? listOfData.get(0) : null;
-			}
-			catch (final Exception e)
+	/**
+	 *
+	 * To get AbstractOrderEntryModel Beased on transactionId
+	 */
+	@Override
+	public AbstractOrderEntryModel getEntryModel(final String transactionId)
+	{
+		try
+		{
+			final String queryString = "SELECT {srm:" + AbstractOrderEntryModel.PK + "}" + " FROM {"
+					+ AbstractOrderEntryModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:" + AbstractOrderEntryModel.TRANSACTIONID
+					+ "}=?code ";
+			if (LOG.isDebugEnabled())
 			{
-				LOG.error("Error while searching  AbstractOrderEntryModel model by transactionId  " + transactionId);
+				LOG.debug("In getEntryModel - transactionId ***" + transactionId);
 			}
-			return null;
-		
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
+			fQuery.addQueryParameter("code", transactionId);
+
+			final List<AbstractOrderEntryModel> listOfData = flexibleSearchService.<AbstractOrderEntryModel> search(fQuery)
+					.getResult();
+			return !listOfData.isEmpty() ? listOfData.get(0) : null;
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error while searching  AbstractOrderEntryModel model by transactionId  " + transactionId);
+		}
+		return null;
+
 	}
-	
+
 	/**
 	 * @return the flexibleSearchService
 	 */
