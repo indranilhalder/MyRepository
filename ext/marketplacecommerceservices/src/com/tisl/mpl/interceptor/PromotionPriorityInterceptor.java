@@ -1,5 +1,7 @@
 package com.tisl.mpl.interceptor;
 
+import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
+import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -16,6 +18,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.util.localization.Localization;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -70,6 +73,8 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 		return modelService;
 	}
 
+	@Autowired
+	private CategoryService categoryService;
 
 	@Required
 	public void setModelService(final ModelService modelService)
@@ -383,7 +388,72 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 					}
 
 					//@Description :To check if an Enabled Promotions exists with the Product under the set Category  and same priority
-					final List<ProductModel> productData = productService.getProductsForCategory(category);
+					//					final List<ProductModel> productData = productService.getProductsForCategory(category);
+					//					if (null != productData && !productData.isEmpty())
+					//					{
+					//						for (final ProductModel promoProduct : productData)
+					//						{
+					//							if (null != promoProduct.getPromotions() && !promoProduct.getPromotions().isEmpty())
+					//							{
+					//								for (final ProductPromotionModel promo : promoProduct.getPromotions())
+					//								{
+					//									if (promo.getCode().equalsIgnoreCase(promotion.getCode())
+					//											&& promo.getPromotionType().equals(promotion.getPromotionType()))
+					//									{
+					//										LOG.debug(Localization.getLocalizedString(MODIFY_MESSAGE));
+					//										continue;
+					//									}
+					//
+					//									if (promo.getEnabled().booleanValue() && promo.getPriority().equals(promotion.getPriority()))
+					//									{
+					//										final List<AbstractPromotionRestrictionModel> promotionRestrictionList = new ArrayList<AbstractPromotionRestrictionModel>(
+					//												promotion.getRestrictions());
+					//										final List<AbstractPromotionRestrictionModel> singleProdRestrictionList = new ArrayList<AbstractPromotionRestrictionModel>(
+					//												promo.getRestrictions());
+					//										//	String errorMsg = null;
+					//
+					//										if (!isSellerRestrExistsForModel(promotionRestrictionList)
+					//												|| !isSellerRestrExistsForModel(singleProdRestrictionList))
+					//										{
+					//											errorMsg = Localization.getLocalizedString(PRODUCT_ERROR_MESSAGE);
+					//											if (errorMsg.equalsIgnoreCase(PRODUCT_ERROR_MESSAGE))
+					//											{
+					//												errorMsg = ERROR_MESSAGE_PRODUCT;
+					//											}
+					//										}
+					//										else if (checkIfSetforSameSeller(singleProdRestrictionList, promotionRestrictionList))
+					//										{
+					//											errorMsg = Localization.getLocalizedString(ERROR_MESSAGE);
+					//											if (errorMsg.equalsIgnoreCase(ERROR_MESSAGE))
+					//											{
+					//												errorMsg = ERROR_SAME_SELLER;
+					//											}
+					//										}
+					//										else
+					//										{
+					//											break;
+					//										}
+					//										throw new InterceptorException(errorMsg + MarketplacecommerceservicesConstants.SINGLE_SPACE
+					//												+ MarketplacecommerceservicesConstants.PROMOCODE + promo.getCode()
+					//												+ MarketplacecommerceservicesConstants.SINGLE_SPACE
+					//												+ MarketplacecommerceservicesConstants.PROMOPRODUCT + promoProduct.getCode() + "("
+					//												+ promoProduct.getName() + ")" + MarketplacecommerceservicesConstants.SINGLE_SPACE
+					//												+ MarketplacecommerceservicesConstants.PRESENT_CATEGORY + category.getName()
+					//												+ MarketplacecommerceservicesConstants.SINGLE_SPACE
+					//												+ MarketplacecommerceservicesConstants.PROMOPRIORITY + promo.getPriority());
+					//									}
+					//								}
+					//							}
+					//						}
+					//
+					//					}
+				}
+
+				final List<CategoryModel> categoryList = new ArrayList<CategoryModel>(promotion.getCategories());
+				if (CollectionUtils.isNotEmpty(categoryList))
+				{
+					//TISPRO-352 : Fix
+					final List<ProductModel> productData = fetchProductList(categoryList);//Car-158
 					if (null != productData && !productData.isEmpty())
 					{
 						for (final ProductModel promoProduct : productData)
@@ -405,7 +475,7 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 												promotion.getRestrictions());
 										final List<AbstractPromotionRestrictionModel> singleProdRestrictionList = new ArrayList<AbstractPromotionRestrictionModel>(
 												promo.getRestrictions());
-										//	String errorMsg = null;
+										//String errorMsg = null;
 
 										if (!isSellerRestrExistsForModel(promotionRestrictionList)
 												|| !isSellerRestrExistsForModel(singleProdRestrictionList))
@@ -433,7 +503,7 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 												+ MarketplacecommerceservicesConstants.SINGLE_SPACE
 												+ MarketplacecommerceservicesConstants.PROMOPRODUCT + promoProduct.getCode() + "("
 												+ promoProduct.getName() + ")" + MarketplacecommerceservicesConstants.SINGLE_SPACE
-												+ MarketplacecommerceservicesConstants.PRESENT_CATEGORY + category.getName()
+												/* + MarketplacecommerceservicesConstants.PRESENT_CATEGORY + category.getName() */
 												+ MarketplacecommerceservicesConstants.SINGLE_SPACE
 												+ MarketplacecommerceservicesConstants.PROMOPRIORITY + promo.getPriority());
 									}
@@ -443,6 +513,11 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 
 					}
 				}
+
+
+
+
+
 			}
 
 			// Code Change for TISPRD-2637   commenting below section of code to remove staged product catalog from system
@@ -487,6 +562,71 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 			}
 		}
 		return true;
+	}
+
+	/**
+	 *
+	 * @param categories
+	 * @return productList
+	 */
+	private List<ProductModel> fetchProductList(final List<CategoryModel> categories)
+	{
+		final List<CategoryModel> categoryList = getAllCategories(categories);
+		final List<ProductModel> productList = new ArrayList<ProductModel>();
+		if (CollectionUtils.isNotEmpty(categoryList))
+		{
+			LOG.debug("Populating eligible products in List" + "Category List:" + categoryList);
+			for (final CategoryModel catModel : categoryList)
+			{
+				if (CollectionUtils.isNotEmpty(catModel.getProducts()))
+				{
+					productList.addAll(catModel.getProducts());
+				}
+			}
+
+		}
+		return productList;
+	}
+
+	private List<CategoryModel> getAllCategories(final List<CategoryModel> categories)
+	{
+		final List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
+		try
+		{
+			for (final CategoryModel category : categories)
+			{
+				//				final CategoryModel oModel = categoryService.getCategoryForCode(getDefaultPromotionsManager().catalogData(),
+				//						category.getCode());Car-158
+				if (null != category)
+				{
+					categoryList.add(category);
+					final Collection<CategoryModel> subCategoryList = categoryService.getAllSubcategoriesForCategory(category);
+					if (CollectionUtils.isNotEmpty(subCategoryList))
+					{
+						categoryList.addAll(populateSubCategoryData(subCategoryList));
+					}
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error(exception.getMessage());
+		}
+		return categoryList;
+	}
+
+	private List<CategoryModel> populateSubCategoryData(final Collection<CategoryModel> subCategoryList)
+	{
+		final List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
+		for (final CategoryModel category : subCategoryList)
+		{
+			if (!(category instanceof ClassificationClassModel))
+			{
+				categoryList.add(category);
+			}
+		}
+
+		return categoryList;
 	}
 
 	/**
@@ -571,9 +711,9 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	 * } } else if (promotion instanceof BuyABFreePrecentageDiscountModel) { final BuyABFreePrecentageDiscountModel
 	 * oModel = (BuyABFreePrecentageDiscountModel) promotion; if (CollectionUtils.isNotEmpty(oModel.getGiftProducts())) {
 	 * isValid = checkCatalogVersion(oModel.getGiftProducts()); } }
-	 *
+	 * 
 	 * return isValid;
-	 *
+	 * 
 	 * }
 	 */
 

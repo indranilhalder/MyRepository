@@ -62,6 +62,11 @@ public class OrderStatusSpecifier
 		{
 			flag = addOrderHistory(1, order, orderStatus, order.getEntries(), order, flag);
 		}
+		else
+		{
+			//setting the ORDEr Status if its not matched with status
+			flag = addOrderHistory(1, order, orderStatus, order.getEntries(), order, flag);
+		}
 		//if (flag || orderStatus.equals(OrderStatus.PAYMENT_PENDING)) //flag == true
 		//{
 		if (flag)
