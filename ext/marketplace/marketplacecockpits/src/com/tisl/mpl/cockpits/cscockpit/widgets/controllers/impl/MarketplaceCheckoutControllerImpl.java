@@ -1,5 +1,10 @@
 package com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -7,12 +12,16 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jfree.util.Log;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Messagebox;
@@ -26,6 +35,7 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceability
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
@@ -57,7 +67,9 @@ import de.hybris.platform.cscockpit.widgets.controllers.CheckoutController;
 import de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultCheckoutController;
 import de.hybris.platform.cscockpit.widgets.models.impl.CheckoutCartWidgetModel;
 import de.hybris.platform.cscockpit.widgets.models.impl.CheckoutPaymentWidgetModel;
+import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.util.WeakArrayList;
@@ -67,6 +79,24 @@ public class MarketplaceCheckoutControllerImpl extends
 
 	/** The Constant OMS_MODES_NOT_CONFIGURED. */
 	private static final String OMS_MODES_NOT_CONFIGURED = "omsModesNotConfigured";
+
+	
+	private static final String PAYMENTURL = "/checkout/multi/payment-method/cardPayment";
+	
+	private static final String PORTNO = "9001";
+	
+	private static final String JUSPAYPAYMENTPAGEURL = "https://sandbox.juspay.in/merchant/pay/";
+	
+	private static final String ORDERPAYMENTSTATUSURL = "https://sandbox.juspay.in/orders/";
+	
+	private static final String MERCHANTID = "tul_ebs";
+	
+	private static final String MERCHANTKEY = "merchantId=";
+	
+	private static final String JUSPAYPAYMENTVERSION = "2017-03-16";
+	
+	private int connectionTimeout = 5 * 10000;
+	private int readTimeout = 5 * 1000;
 
 	/** The Constant LOG. */
 	private static final Logger LOG = Logger
@@ -79,6 +109,20 @@ public class MarketplaceCheckoutControllerImpl extends
 	private static final int _15 = 15;
 
 	private static final String NO_DELIVERY_MODE_FOR_USSID = "noDeliveryForUssid";
+
+	
+	@Resource(name = "mplPaymentFacade")
+	private MplPaymentFacade mplPaymentFacade;
+
+	
+	public MplPaymentFacade getMplPaymentFacade() {
+		return mplPaymentFacade;
+	}
+
+	public void setMplPaymentFacade(MplPaymentFacade mplPaymentFacade) {
+		this.mplPaymentFacade = mplPaymentFacade;
+	}
+
 
 	/** The mpl pincode restriction service. */
 	@Resource(name = "mplPincodeRestrictionService")
@@ -625,39 +669,7 @@ public class MarketplaceCheckoutControllerImpl extends
 		return (true);
 	}
 
-	@Override
-	public boolean processPayment(CartModel cart, String selectedPaymentMode) {
-
-		double unTotal = getCsCheckoutService().getUnauthorizedTotal(cart);
-
-		unTotal = cart.getConvenienceCharges() == null ? unTotal : unTotal+cart
-				.getConvenienceCharges();
-
-		String cusName= null;
-		cODPaymentService.getTransactionModelForCards(cart, unTotal);
-		if (StringUtils.isNotEmpty(cart.getUser().getName()) && !cart.getUser().getName().equalsIgnoreCase(" "))
-		{
-			cusName = cart.getUser().getName();
-
-		}
-		else
-		{
-			cusName = ((CustomerModel)cart.getUser()).getOriginalUid();
-		}
-		if(selectedPaymentMode.equalsIgnoreCase("DEBIT")){
-			//mplPaymentService.saveDebitCard(orderStatusResponse, cart);
-			mplPaymentService.saveCODPaymentInfo(cusName, cart.getSubtotal(), cart.getConvenienceCharges(), cart.getEntries(),cart);
-		}
-		else{
-			
-		}
-		
-		mplPaymentService.saveCODPaymentInfo(cusName, cart.getSubtotal(), cart.getConvenienceCharges(), cart.getEntries(),cart);
-		getModelService().refresh(cart);
-		return (true);
 	
-		
-	}
 	
 	@Override
 	/*     */public boolean processCODPayment()
@@ -777,10 +789,121 @@ public class MarketplaceCheckoutControllerImpl extends
 		getModelService().save(cartModel);
 	}
 
+	/**
+	 * juspay payment integration from cscockpit
+	 */
+	@Override
+	public void processJuspayPayment(final CartModel cart, final CustomerModel customer)
+	{
+		String orderId = null;
+		
+		final String firstName = customer.getFirstName();
+		final String lastName = customer.getLastName();
+		final String paymentAddressLine1 = cart.getPaymentAddress().getStreetnumber();
+		final String paymentAddressLine2 = cart.getPaymentAddress().getStreetname();
+		final String paymentAddressLine3 = cart.getPaymentAddress().getCity();
+		final String country = cart.getPaymentAddress().getCountry().getName();
+		final String state = cart.getPaymentAddress().getState();
+		final String city = cart.getPaymentAddress().getCity();
+		final String pincode = "700050";
+		final boolean cardSaved = false;
+		final boolean sameAsShipping = false;
+		final String guid = cart.getGuid();
+		final String uid = customer.getUid();
+		String ip = null;
+		final StringBuilder returnUrlBuilder = new StringBuilder();
+		
+		LOG.info("guid ::: "+ guid);
+		LOG.info("first name :: "+firstName+" "+"last name ::"+lastName
+				+" "+"pincode :: "+pincode);
+		try {
+			ip = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		returnUrlBuilder
+		.append("http://"+ip+":"+PORTNO)
+		.append(PAYMENTURL);
+		if (StringUtils.isNotEmpty(guid))
+		{
+			returnUrlBuilder.append("/").append(guid);
+		}
+		LOG.info("created URL ::: "+returnUrlBuilder);
+		
+		orderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
+				paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
+				cardSaved + "|" + sameAsShipping, returnUrlBuilder.toString(),
+				uid, "WEB");
+		//LOG.info("juspay order id ::: "+orderId);
+		
+		final String jsuPayCreatedOrderId = (String) JaloSession.getCurrentSession().getAttribute("jusPayEndOrderId");
+		LOG.info("juspay order id ::: "+jsuPayCreatedOrderId);
+		if(jsuPayCreatedOrderId != null)
+		{
+			String absoluteJusPayPaymentURL = JUSPAYPAYMENTPAGEURL + jsuPayCreatedOrderId;
+			LOG.info("juspaymnet page url  :: "+absoluteJusPayPaymentURL);
+			
+			Clients.evalJavaScript("window.open('" + absoluteJusPayPaymentURL + "')");
+		}
+	}
+
+	@Override
+	public String juspayPaymentValidation(final String commerEndOrderId)
+	{
+		final String url = ORDERPAYMENTSTATUSURL+commerEndOrderId+"?"+MERCHANTKEY+MERCHANTID;
+		final String paymentStatusresponse = makeGetPaymentStatusCall(url);
+		
+		final JSONObject jsonResponse = (JSONObject) JSONValue.parse(paymentStatusresponse);
+		final String merchantId = (String) jsonResponse.get("status");
+		
+		return merchantId;
+	}
 	
-	
-	
-	
-	
+	public String makeGetPaymentStatusCall(String endPointURL)
+	{
+		HttpsURLConnection connection = null;
+		final StringBuilder response = new StringBuilder();
+		String responseFromJuspay = null;
+		
+		try
+		{
+			final URL url = new URL(endPointURL);
+			connection = (HttpsURLConnection) url.openConnection();
+			connection.setConnectTimeout(connectionTimeout);
+			connection.setReadTimeout(readTimeout);
+			connection.setRequestMethod("GET");
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			connection.setRequestProperty("Content-Language", "en-US");
+			connection.setRequestProperty("charset", "utf-8");
+			connection.setRequestProperty("version",JUSPAYPAYMENTVERSION);
+			connection.setUseCaches(false);
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			
+			int responseCode = connection.getResponseCode();
+			LOG.info(" get request :: "+endPointURL);
+			LOG.info("response code ::: "+responseCode);
+			
+			BufferedReader in = new BufferedReader(
+			        new InputStreamReader(connection.getInputStream()));
+			String inputLine;
+			
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			
+			responseFromJuspay = response.toString();
+			LOG.info("response  :: "+responseFromJuspay);
+			
+		}
+		catch (final Exception e)
+		{
+			throw new AdapterException("Error with connection", e);
+		}
+		
+		return responseFromJuspay;
+	}
+
 
 }

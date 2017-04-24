@@ -16,6 +16,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.cscockpit.exceptions.PaymentException;
 import de.hybris.platform.cscockpit.exceptions.ValidationException;
 import de.hybris.platform.cscockpit.widgets.controllers.CheckoutController;
@@ -136,5 +137,8 @@ public interface MarketplaceCheckoutController extends
 	void setCODPaymentMode(final CartModel cartModel);	//TPR-3471
 
 	// Soumya, Avijit changes
-	boolean processPayment(CartModel cart, String selectedPaymentMode);
+	
+	void processJuspayPayment(final CartModel cart, final CustomerModel customer);
+	
+	String juspayPaymentValidation(String commerceOrderId);
 }

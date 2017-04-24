@@ -1,6 +1,7 @@
 package com.tisl.mpl.juspay;
 
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
@@ -9,9 +10,6 @@ import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.SocketAddress;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.ParseException;
@@ -191,30 +189,27 @@ public class PaymentService
 	private String makeServiceCall(final String endPoint, final String encodedParams)
 	{
 
-		final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(
-				MarketplaceJuspayServicesConstants.PROXYENABLED);
+		/*
+		 * final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(
+		 * MarketplaceJuspayServicesConstants.PROXYENABLED);
+		 */
 		HttpsURLConnection connection = null;
 		final StringBuilder buffer = new StringBuilder();
 
 		try
 		{
-			if (proxyEnableStatus.equalsIgnoreCase("true"))
-			{
-				final String proxyName = getConfigurationService().getConfiguration().getString(
-						MarketplaceJuspayServicesConstants.GENPROXY);
-				final int proxyPort = Integer.parseInt(getConfigurationService().getConfiguration().getString(
-						MarketplaceJuspayServicesConstants.GENPROXYPORT));
-				final SocketAddress addr = new InetSocketAddress(proxyName, proxyPort);
-				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
-				final URL url = new URL(endPoint);
-				connection = (HttpsURLConnection) url.openConnection(proxy);
-			}
-			else
-			{
-				final URL url = new URL(endPoint);
-				connection = (HttpsURLConnection) url.openConnection();
-			}
-
+			/*
+			 * if (proxyEnableStatus.equalsIgnoreCase("true")) { final String proxyName =
+			 * getConfigurationService().getConfiguration().getString( MarketplaceJuspayServicesConstants.GENPROXY); final
+			 * int proxyPort = Integer.parseInt(getConfigurationService().getConfiguration().getString(
+			 * MarketplaceJuspayServicesConstants.GENPROXYPORT)); final SocketAddress addr = new
+			 * InetSocketAddress(proxyName, proxyPort); final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr); final URL url
+			 * = new URL(endPoint); connection = (HttpsURLConnection) url.openConnection(proxy); final String msg =
+			 * connection.getResponseMessage(); LOG.info("conection msg :: " + msg); } else { final URL url = new
+			 * URL(endPoint); connection = (HttpsURLConnection) url.openConnection(); }
+			 */
+			final URL url = new URL(endPoint);
+			connection = (HttpsURLConnection) url.openConnection();
 			String encodedKey = new String(Base64.encodeBase64(this.key.getBytes()));
 			encodedKey = encodedKey.replaceAll("\n", "");
 			connection.setRequestProperty("Authorization", "Basic " + encodedKey);
@@ -285,8 +280,10 @@ public class PaymentService
 		params.put("udf9", initOrderRequest.getUdf9() == null ? "" : initOrderRequest.getUdf9());
 		params.put("udf10", initOrderRequest.getUdf10() == null ? "" : initOrderRequest.getUdf10());
 		params.put("return_url", initOrderRequest.getReturnUrl() == null ? "" : initOrderRequest.getReturnUrl());
+
+
 		final String serializedParams = serializeParams(params);
-		final String url = baseUrl + "/init_order";
+		final String url = baseUrl + "/orders";
 
 		//log.info("Sending init_order to " + url);
 		//log.debug("Payload (init_order): " + serializedParams);
@@ -303,6 +300,10 @@ public class PaymentService
 		final Long statusId = (Long) jsonResponse.get("status_id");
 		final String status = (String) jsonResponse.get(MarketplaceJuspayServicesConstants.STATUS);
 		final String orderId = (String) jsonResponse.get(MarketplaceJuspayServicesConstants.ORDERID);
+		final String orderCreatedJaspayEnd = (String) jsonResponse.get("id");
+		LOG.info("jaspay order id created  ::: " + orderCreatedJaspayEnd);
+		JaloSession.getCurrentSession().setAttribute("jusPayEndOrderId", orderCreatedJaspayEnd);
+		JaloSession.getCurrentSession().setAttribute("commerceEndOrderId", orderId);
 		LOG.info(jsonResponse + "  Response");
 
 		final InitOrderResponse initOrderResponse = new InitOrderResponse();
@@ -310,11 +311,11 @@ public class PaymentService
 		initOrderResponse.setOrderId(orderId);
 		initOrderResponse.setStatusId(statusId.longValue());
 		initOrderResponse.setMerchantId(merchantId);
-
-
+		initOrderResponse.setJuspayOrderID(orderCreatedJaspayEnd);
 
 		return initOrderResponse;
 	}
+
 
 	/**
 	 * Returns the card details associated with a token. The token information is encapsulated in the GetCardRequest
