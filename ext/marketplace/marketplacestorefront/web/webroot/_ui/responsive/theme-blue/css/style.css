@@ -16366,6 +16366,7 @@ body .account .right-account .order-history.order-details li.header div.delivery
 }
 body .account .right-account .order-history.order-details li.header div.delivery-address address{
 	    font-size: 12px;
+	    word-wrap: break-word; /* TISSTRT-1507 */
 }
 body .account .right-account .order-history.order-details li.header div h3,
 body .account .right-account .order-history.order-details li.header div .grand-total {
