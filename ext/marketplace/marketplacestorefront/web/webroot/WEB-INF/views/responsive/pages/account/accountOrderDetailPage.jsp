@@ -186,7 +186,7 @@
 								<c:otherwise>
 								<c:set var="paymentError" value="false"/>
 									<div class="payment-method">
-									<!-- Checked for mRupee order -->
+							<!-- Checked for mRupee order -->
 									 <c:choose>
   										<c:when test="${not empty subOrder.mplPaymentInfo.paymentOption && fn:toLowerCase(subOrder.mplPaymentInfo.paymentOption) eq 'mrupee'}">	
   											<h2>Payment Method: <spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
@@ -334,7 +334,8 @@
 								</c:if>
 								<c:set var="subOrderLine2" value="${fn:trim(subOrder.deliveryAddress.line2)}"/>
 								<c:set var="subOrderLine3" value="${fn:trim(subOrder.deliveryAddress.line3)}"/>
-	<!-- TISUATSE-69 starts -->
+								<div class="col-md-8 col-sm-6">
+								<!-- TISUATSE-69 starts -->
 
 								<address>
 									<span data-tribhuvan="addressType" style="display:none; ">${fn:escapeXml(subOrder.deliveryAddress.addressType)}</span>
@@ -627,7 +628,7 @@
 
 										</div>
 										<div class="actions">
-											<div class="col-md-6"> <!-- R2.3: START >
+										<div class="col-md-6"> <!-- R2.3: START >
 											<c:if
 												test="${entry.itemCancellationStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false and cancelFlag}">
 												<c:set var="bogoCheck"
@@ -641,12 +642,13 @@
 												<spring:theme code="trackOrder.cancellableBefore.msg" />
 												
 											</c:if>
-											
-											<%-- R2.3: START:Commented: <c:if
-												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false and returnFlag}">
-												<a
+
+											 <%-- R2.3: START:Commented: <c:if
+												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
 
 
+
+											 	<a
 													href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
 													<spring:theme code="text.account.returnReplace"
 														text="Return Item" />
@@ -672,8 +674,9 @@
 												  	</c:otherwise>
 												</c:choose>
 												<!-- R2.3: END: -->
-									
 
+
+												
 											<c:if test="${entry.showInvoiceStatus eq 'true'}">
 												<a
 													href="${request.contextPath}/my-account/order/requestInvoice?orderCode=${sellerOrder.code}&transactionId=${entry.transactionId}"
@@ -686,6 +689,7 @@
 												<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
 											</c:if>  --%>
 
+											
 											<%--  <c:choose>
 														 	 <c:when test="${entry.itemReturnStatus eq 'true'  and entry.giveAway eq false and entry.isBOGOapplied eq false}">
 																	<a href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${subOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}" onClick="openReturnPage('${bogoCheck}',${entry.transactionId})">
@@ -716,6 +720,7 @@
 												</c:if>
 											</div>
 
+											
 										</div>
 
 										<!-- R2.3 : END -->
@@ -835,7 +840,9 @@
 																id="entryNumber" value="${entry.entryNumber}" />
 														</div>
 														<div class="buttons">
-															<a class="close" data-dismiss="modal">Close</a>
+															<!-- TISPRDT - 995 -->
+																	<!-- <a class="close" data-dismiss="modal" >Close</a> -->
+																<!-- TISPRDT - 995 -->
 															<button type="button"
 																class="light-red cancel-confirm-detail" id="myaccount"
 																data-dismiss="modal">Confirm Cancellation</button>
@@ -1972,7 +1979,9 @@
 																id="entryNumber" value="${entry.entryNumber}" />
 														</div>
 														<div class="buttons">
-															<a class="close" data-dismiss="modal">Close</a>
+															<!-- TISPRDT - 995 -->
+																	<!-- <a class="close" data-dismiss="modal" >Close</a> -->
+																<!-- TISPRDT - 995 -->
 															<button type="button"
 																class="light-red cancel-confirm-detail" id="myaccount"
 																data-dismiss="modal">Confirm Cancellation</button>
@@ -2774,6 +2783,7 @@ $(function() {
 
 	function showCancelDiv(orderLineId) {
 
+		
 		var divId='cancellation' + orderLineId;
 		showDiv(divId);
 
@@ -2991,6 +3001,8 @@ $(function() {
 		});
 
 
+		
+		
 		    var length = $(".returnStatus .dot").length;
 		    if(length >=3) {
 			    var percent = 100/parseInt(length);
@@ -3177,6 +3189,31 @@ body .account .right-account .order-history.order-details li.item .item-header{m
 	.submitButton {
 		margin: 60px auto;
 	}
+	/*TISPRDT-1049 Start  */
+	.textFile {
+    display: inline-block;
+    padding: 0px 4px;
+    color: #8c8c8c;
+    height: 32px;
+    line-height: 32px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 57%;
+}
+.uploadButton {
+    background: #00cfe6;
+    color: #fff;
+    display: inline-block;
+    padding: 0px 8px !important;
+    font-size: 14px;
+    height: 33px;
+    line-height: 33px;
+    margin: 0px 2px;
+    vertical-align: top;
+    width: 40%;
+}
+/*TISPRDT-1049 End  */
 }
 #awbNumberPopup {
 	display: none;
@@ -3222,6 +3259,11 @@ body .account .right-account .order-history.order-details li.item .item-header{m
     font-size: 22px !important;
     font-weight: 100 !important;
     margin-bottom: 25px !important;
+}
+@media (max-width: 620px){
+#awbNumberPopup h4 {
+    width: 85%;
+}
 }
 #awbNumberPopup .awsTextinput{
 	width: 100%;
