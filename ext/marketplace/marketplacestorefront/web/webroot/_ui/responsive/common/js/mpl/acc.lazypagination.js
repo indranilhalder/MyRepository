@@ -206,7 +206,9 @@ $(document).ready(function() {
             //end added for load more
             window.localStorage.setItem('lazyfrompdp','false');
     }else{
-    	getProductSetData();
+    	//TISSQAUAT-3429 starts
+    	//getProductSetData();
+    	//TISSQAUAT-3429 ends
     	if($('input[name=customSku]').length == 1){
     		  	getProductSetDataCustomSku();
     		   	}else{
