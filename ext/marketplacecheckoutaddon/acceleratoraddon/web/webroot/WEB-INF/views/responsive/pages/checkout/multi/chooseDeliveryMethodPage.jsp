@@ -228,21 +228,31 @@ display: none;
 																
         <div class="address-list ${showItem}" id="${singleAddress}">
         	<c:choose>
-			<c:when test="${deliveryAddress.defaultAddress}">
-          <input type="radio" class="radio1" name="selectedAddressCode"
-																		value="${deliveryAddress.id}"
-																		id="radio_${deliveryAddress.id}" checked="checked" />
-          <label for="radio_${deliveryAddress.id}"></label>
-           </c:when>
-           <c:otherwise>
-           	<input type="radio" class="radio1"
-																		name="selectedAddressCode"
-																		value="${deliveryAddress.id}"
-																		id="radio_${deliveryAddress.id}" />
-          	<label for="radio_${deliveryAddress.id}"></label>
-           </c:otherwise>
-           
-           </c:choose>
+	        	<c:when test="${empty deliveryAddressID}">
+	        		<c:choose>
+						<c:when test="${deliveryAddress.defaultAddress}">
+							<input type="radio" class="radio1" name="selectedAddressCode" value="${deliveryAddress.id}" id="radio_${deliveryAddress.id}" checked="checked" />
+							<label for="radio_${deliveryAddress.id}"></label>
+						</c:when>
+						<c:otherwise>
+							<input type="radio" class="radio1" name="selectedAddressCode" value="${deliveryAddress.id}" id="radio_${deliveryAddress.id}" />
+							<label for="radio_${deliveryAddress.id}"></label>
+						</c:otherwise>
+					</c:choose>
+	        	</c:when>
+	        	<c:otherwise>
+		        	<c:choose>
+						<c:when test="${deliveryAddress.id eq deliveryAddressID}">
+							<input type="radio" class="radio1" name="selectedAddressCode" value="${deliveryAddress.id}" id="radio_${deliveryAddress.id}" checked="checked" />
+							<label for="radio_${deliveryAddress.id}"></label>
+						</c:when>
+						<c:otherwise>
+							<input type="radio" class="radio1" name="selectedAddressCode" value="${deliveryAddress.id}" id="radio_${deliveryAddress.id}" />
+							<label for="radio_${deliveryAddress.id}"></label>
+						</c:otherwise>
+					</c:choose>
+	        	</c:otherwise>
+	        </c:choose>
            
           
           <p class="address"> 

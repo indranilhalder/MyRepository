@@ -186,6 +186,8 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String TIMEOUT = "timeout";
 	//TPR-429
 	public static final String CHECKOUT_SELLER_IDS = "checkoutSellerIDs";
+	//PRDI-36/INC144315559
+	public static final String DELIVERYADDRESSID = "deliveryAddressID";
 
 	// Request Mapping URL
 
