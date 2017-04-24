@@ -187,7 +187,7 @@ function getProductSetDataCustomSku() {
 	   			ajaxPLPLoad(ajaxUrl);
 	           }
 	       }
-	     
+}
 $(document).ready(function() {
     //set the total no of pages 
     totalNoOfPages = $('input[name=noOfPages]').val();
@@ -217,7 +217,7 @@ $(document).ready(function() {
             	  //recordsLoadedCount = $('.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet,.product-listing.product-grid.lazy-grid-normal').find('li.product-item').length;
             	  recordsLoadedCount = $('.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet,.product-listing.product-grid.lazy-grid-normal,.product-listing.product-grid.custom-sku').find('li.product-item').length;
             }
-            }
+            
             if (recordsLoadedCount!=0 && (recordsLoadedCount % loadMoreCount) == 0) {            	
                 $('.loadMorePageButton').remove();
                 // INC144315462 and INC144315104  
@@ -226,7 +226,7 @@ $(document).ready(function() {
             }
             //end added for load more
             window.localStorage.setItem('lazyfrompdp','false');
-    }else{
+    } else{
     	//getProductSetData();
     	// INC144315462 and INC144315104  
     	if($('input[name=customSku]').length == 1){
@@ -604,7 +604,6 @@ function sortCustomSku(this_data,drop_down){
 		break;
 	}
 }
-
 
 function lazyPushInitalPage(){
 	
