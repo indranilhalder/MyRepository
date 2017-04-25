@@ -1071,7 +1071,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 
 					refundEntry.getKey().setRefundedScheduleDeliveryChargeAmt(
 							refundEntry.getKey().getScheduledDeliveryCharge());
-					refundEntry.getKey().setCurrDelCharge(Double.valueOf(0));
+					refundEntry.getKey().setScheduledDeliveryCharge(Double.valueOf(0));
 					modelService.save(refundEntry.getKey());
 				}
 			}

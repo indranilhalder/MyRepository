@@ -2137,7 +2137,10 @@
     <bean id="promotions.manager" class="de.hybris.platform.promotions.jalo.CachingPromotionsManager" init-method="init" destroy-method="destroy" scope="tenant" >
     	  <property name="cache" ref="promotionsCachingStrategy"/>
 	</bean>
-	 
+	
+	<bean id="mplMemcachedClientHelper" class="com.tisl.mpl.cache.strategy.MplMemcachedClientHelper" >
+	<constructor-arg value = "${promotion.memcache.env.ip}"/>
+	 </bean>
 	 <alias alias="promotionsCachingStrategy" name="defaultPromotionsCachingStrategy"/>
 		<bean id="defaultPromotionsCachingStrategy" class="com.tisl.mpl.cache.strategy.MplDefaultCachingStrategy" scope="tenant"> 
 		<property name="memCacheEnabled" value="${promotion.memcache.enabled}"/>

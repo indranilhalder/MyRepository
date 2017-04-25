@@ -9,6 +9,7 @@ import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
+import de.hybris.platform.jalo.order.Cart;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.product.Unit;
@@ -93,7 +94,12 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 
 		if (order != null)
 		{
-			final Map<String, Product> freeBieInfoMap = new ConcurrentHashMap<String, Product>(getAllFreeGiftInfoMap(ctx)); //Added for TISPT-154
+			Map<String, Product> freeBieInfoMap = null;
+			if (MapUtils.isNotEmpty(getAllFreeGiftInfoMap(ctx)))
+			{
+				freeBieInfoMap = new ConcurrentHashMap<String, Product>(getAllFreeGiftInfoMap(ctx)); //Added for TISPT-154
+			}
+
 			final Product product = getFreeProduct(ctx);
 			//For Single Freebie
 			if (null != product)
@@ -133,6 +139,7 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 				final PromotionResult pr = getPromotionResult(ctx);
 				//			final PromotionOrderEntryConsumed consumed = PromotionsManager.getInstance().createPromotionOrderEntryConsumed(ctx,
 				//					getGuid(ctx), orderEntry, 1L);
+				setCachingAllowed(ctx, order);
 				final PromotionOrderEntryConsumed consumed = PromotionsManager.getInstance().createPromotionOrderEntryConsumed(ctx,
 						getGuid(ctx), orderEntry, freeGiftQuantity);
 				consumed.setAdjustedUnitPrice(ctx, 0.01D);
@@ -159,6 +166,8 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 					orderEntry.setProperty(ctx, "totalPrice", new Double(freebieAmt));
 
 					final PromotionResult pr = getPromotionResult(ctx);
+					setCachingAllowed(ctx, order);
+
 					final PromotionOrderEntryConsumed consumed = PromotionsManager.getInstance().createPromotionOrderEntryConsumed(
 							ctx, getGuid(ctx), orderEntry, freeGiftQuantity);
 					consumed.setAdjustedUnitPrice(ctx, 0.01D);
@@ -413,6 +422,12 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 		return true;
 	}
 
+	private void setCachingAllowed(final SessionContext ctx, final AbstractOrder order)
+	{
+		final Boolean allowed = (order instanceof Cart) ? Boolean.TRUE : Boolean.FALSE;
+		ctx.setAttribute("de.hybris.platform.promotions.jalo.cachingAllowed", allowed);
+	}
+
 	/**
 	 * Populate Free Gift Data
 	 *
@@ -439,6 +454,7 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 	{
 
 		final AbstractOrder order = getPromotionResult(ctx).getOrder(ctx);
+		setCachingAllowed(ctx, order);
 
 		if (log.isDebugEnabled())
 		{
@@ -448,7 +464,13 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 
 		for (final AbstractOrderEntry aoe : order.getEntries())
 		{
-			final Map<String, Product> freeBieInfoMap = new ConcurrentHashMap<String, Product>(getAllFreeGiftInfoMap(ctx));
+			Map<String, Product> freeBieInfoMap = null;
+			if (MapUtils.isNotEmpty(getAllFreeGiftInfoMap(ctx)))
+			{
+				freeBieInfoMap = new ConcurrentHashMap<String, Product>(getAllFreeGiftInfoMap(ctx)); //Added for TISPT-154
+			}
+			//final Map<String, Product> freeBieInfoMap = new ConcurrentHashMap<String, Product>(getAllFreeGiftInfoMap(ctx));
+
 			if (null != getFreeProduct(ctx))
 			{
 				if ((!(aoe.isGiveAway(ctx).booleanValue())) || (!(aoe.getProduct(ctx).equals(getFreeProduct(ctx))))
@@ -494,6 +516,7 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 					log.debug("PromotionResult Consumed Entries in UNDO: " + pr.getConsumedEntries(ctx));
 				}
 
+				final List<PromotionOrderEntryConsumed> consumeList = new ArrayList<PromotionOrderEntryConsumed>();
 				for (final PromotionOrderEntryConsumed poec : (Collection<PromotionOrderEntryConsumed>) pr.getConsumedEntries(ctx))
 				{
 					if (log.isDebugEnabled())
@@ -505,9 +528,20 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 					}
 					if (poec.getCode(ctx) != null && poec.getCode(ctx).equals(getGuid(ctx)))
 					{
-						pr.removeConsumedEntry(ctx, poec);
+						consumeList.add(poec);
+						//pr.removeConsumedEntry(ctx, poec);
 					}
 
+				}
+
+				if (CollectionUtils.isNotEmpty(consumeList))
+				{
+					final Iterator iter = consumeList.iterator();
+
+					while (iter.hasNext())
+					{
+						pr.removeConsumedEntry(ctx, (PromotionOrderEntryConsumed) iter.next());
+					}
 				}
 
 				break;
