@@ -64,8 +64,9 @@
 						${fn:escapeXml(deliveryAddress.line1)}${fn:escapeXml(deliveryAddress.line2)}${fn:escapeXml(deliveryAddress.line3)},
 					</c:if>
 					<!-- TISUATSE-69 ends -->
-					<br>
+					<!-- <br> -->
 					<c:if test="${ not empty deliveryAddress.landmark && deliveryAddress.landmark != 'NA'}">
+						<br>
 						${fn:escapeXml(deliveryAddress.landmark)},
 					</c:if>
 					<br>
