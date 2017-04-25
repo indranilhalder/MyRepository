@@ -528,9 +528,12 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		final Double deliveryCostDisc = Double.valueOf(orderEntry
 				.getPrevDelCharge().doubleValue()
 				- orderEntry.getCurrDelCharge().doubleValue());
-		deliveryDiscountString = deliveryDiscountString
-				+ (mplFindDeliveryFulfillModeStrategy.isTShip(orderEntry
-						.getSelectedUSSID()) ? 0d : deliveryCostDisc);
+		deliveryDiscountString = deliveryDiscountString+deliveryCostDisc;
+//				+ (mplFindDeliveryFulfillModeStrategy.isTShip(orderEntry
+//						.getSelectedUSSID()) ? 0d : deliveryCostDisc);
+//		deliveryDiscountString = deliveryDiscountString
+//				+ (mplFindDeliveryFulfillModeStrategy.isTShip(orderEntry
+//						.getSelectedUSSID()) ? 0d : deliveryCostDisc);
 		final Label deliveryDiscountlabel2 = new Label(
 				currencyInstance
 						.format(deliveryDiscountString > 0 ? deliveryDiscountString

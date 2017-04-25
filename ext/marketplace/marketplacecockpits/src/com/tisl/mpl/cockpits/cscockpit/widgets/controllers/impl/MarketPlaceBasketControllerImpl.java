@@ -736,7 +736,14 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 
 	private void setDeliveryCost(CartModel cartModel) {
 		Double scheduleDelCharges = 0.0D;
+		Double cartDeliveryCost = 0.0D;
 		for (AbstractOrderEntryModel cartEntry : cartModel.getEntries()) {
+			if(cartEntry.getPrevDelCharge()>0)
+			{
+				cartDeliveryCost+=cartEntry.getPrevDelCharge();
+			}else{
+				cartDeliveryCost+=cartEntry.getMplDeliveryMode().getValue();
+			}
 			if(null != cartEntry.getScheduledDeliveryCharge() && cartEntry.getScheduledDeliveryCharge()>0.0D) {
 				scheduleDelCharges+=cartEntry.getScheduledDeliveryCharge();
 				cartEntry.setScheduledDeliveryCharge(0.0D);
@@ -746,6 +753,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 				getModelService().save(cartEntry);
 			}
 		}
+		cartModel.setDeliveryCost(cartDeliveryCost);
+		getModelService().save(cartModel);
 	}
 
 	@Override
