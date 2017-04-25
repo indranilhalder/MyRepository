@@ -167,7 +167,7 @@ $(document).ready(function(){
  		    return result;
 			}
 
-			var isLux = getUrlParameter('isLux');
+			var isLux = findGetParameter('isLux');
 			console.log("isLux"+ isLux);
 			var isLuxury = $("#isLuxury").val();
 			console.log("isLuxury"+ isLuxury);
@@ -3568,3 +3568,13 @@ if($(window).width() < 313)
 	$(".store-finder-legends").css("left","");
 }
 /*TISSQAEE-335*/
+/*TPR-1283-code added for change heading height for brand filtered PLP--Starts*/
+$(window).on("load resize",function(){
+	var htH1 = $("body.page-productGrid .list_title h1").height();
+	var lineHtH1 = parseInt($("body.page-productGrid .list_title h1").css("line-height"));
+	var htH1Multiple = htH1/lineHtH1;
+	var paddingOrigin = parseInt($("body.page-productGrid .facet-list.filter-opt").css("padding-top"));
+	paddingOrigin = paddingOrigin + (lineHtH1 * (htH1Multiple-1));
+	$("body.page-productGrid .facet-list.filter-opt").css("padding-top",paddingOrigin);
+});
+/*TPR-1283-code added for change heading height for brand filtered PLP--Ends*/

@@ -7,17 +7,26 @@ import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
+import de.hybris.platform.jalo.ConsistencyCheckException;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
 import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionPriceRowModel;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.util.localization.Localization;
+import de.hybris.platform.voucher.VoucherModelService;
+import de.hybris.platform.voucher.VoucherService;
+import de.hybris.platform.voucher.model.PromotionVoucherModel;
+import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -28,6 +37,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.data.FiredPromoData;
 import com.tisl.mpl.data.MplPromotionData;
 import com.tisl.mpl.data.PotentialPromoData;
+import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.model.BuyAAboveXGetPercentageOrAmountOffModel;
 import com.tisl.mpl.model.BuyAGetPrecentageDiscountCashbackModel;
 import com.tisl.mpl.model.BuyAPercentageDiscountModel;
@@ -47,6 +57,14 @@ public class DiscountUtility
 
 	@Autowired
 	private PriceDataFactory priceDataFactory;
+	@Resource
+	private ModelService modelService;
+	@Resource(name = "voucherModelService")
+	private VoucherModelService voucherModelService;
+	@Resource(name = "voucherService")
+	private VoucherService voucherService;
+	@Resource(name = "mplVoucherService")
+	private MplVoucherService mplVoucherService;
 
 	/**
 	 * @Description : For Filtering Product Promotions
@@ -713,7 +731,93 @@ public class DiscountUtility
 		return flag;
 	}
 
+	/**
+	 * @param orderModel
+	 */
+	public void releaseVoucherAndInvalidation(final OrderModel orderModel)
+	{
+		PromotionVoucherModel appliedVoucher = null;
+		VoucherInvalidationModel voucherInvalidation = null;
+		final ArrayList<DiscountModel> parentOrderVoucherList = new ArrayList<DiscountModel>(
+				voucherService.getAppliedVouchers(orderModel));
+		if (CollectionUtils.isNotEmpty(parentOrderVoucherList))
+		{ //voucher is NOT attached with order but invalidation exists
 
+			if (parentOrderVoucherList.get(0) instanceof PromotionVoucherModel)
+			{
+				appliedVoucher = (PromotionVoucherModel) parentOrderVoucherList.get(0);
+			}
+
+			voucherInvalidation = mplVoucherService.findVoucherInvalidation(appliedVoucher, orderModel.getUser(), orderModel);
+		}
+
+		if (CollectionUtils.isEmpty(parentOrderVoucherList) && voucherInvalidation != null) //voucher is NOT attached with order but invalidation exists
+		{
+			LOG.error("Initially the voucher was applied in " + orderModel.getCode()
+					+ " , now due to exception it has been removed internally. Hence removing the invalidation. The exception is: ");
+
+			modelService.remove(voucherInvalidation);
+			//getModelService().refresh(voucherInvalidation);
+
+		}
+		else if (CollectionUtils.isNotEmpty(parentOrderVoucherList) && voucherInvalidation == null) //voucher is attached with order but invalidation does not exist
+		{
+			final DiscountModel orderVoucherDisc = parentOrderVoucherList.get(0);
+
+			if (orderVoucherDisc instanceof PromotionVoucherModel)
+			{
+				final PromotionVoucherModel promotionVoucher = (PromotionVoucherModel) orderVoucherDisc;
+				try
+				{
+					LOG.info("Trying to create invalidation again...");
+					//trying to create invalidation again
+					final VoucherInvalidationModel voucherInvalidationModel = voucherModelService.createVoucherInvalidation(
+							promotionVoucher, null != promotionVoucher.getVoucherCode() ? promotionVoucher.getVoucherCode() : "",
+							orderModel);
+					if (StringUtils.isNotEmpty(promotionVoucher.getCode()))
+					{
+						voucherInvalidationModel.setSavedAmount(promotionVoucher.getValue());
+					}
+					modelService.save(voucherInvalidationModel);
+				}
+				catch (final Exception ex)
+				{
+					LOG.error("Error while creating invalidation when voucher is attached with order for id: " + orderModel.getCode()
+							+ ", hence releasing the voucher from order", ex);
+					//releasing voucher from order if exception occurs
+					try
+					{
+						voucherService.releaseVoucher(promotionVoucher.getVoucherCode(), orderModel);
+					}
+					catch (final ConsistencyCheckException e)
+					{
+						e.printStackTrace();
+					}
+					orderModel.setGlobalDiscountValuesInternal(null);
+					modelService.save(orderModel);
+					modelService.refresh(orderModel);
+				}
+			}
+		}
+		else if (CollectionUtils.isNotEmpty(parentOrderVoucherList) && voucherInvalidation != null && appliedVoucher != null) //voucher is attached with order but invalidation does not exist
+		{
+			//releasing voucher from order if exception occurs
+			try
+			{
+				voucherService.releaseVoucher(appliedVoucher.getVoucherCode(), orderModel);
+			}
+			catch (final ConsistencyCheckException e)
+			{
+				e.printStackTrace();
+			}
+			orderModel.setGlobalDiscountValuesInternal(null);
+			modelService.save(orderModel);
+			modelService.refresh(orderModel);
+			// removing invalidation also
+			modelService.remove(voucherInvalidation);
+		}
+
+	}
 
 	/**
 	 * @return the priceDataFactory

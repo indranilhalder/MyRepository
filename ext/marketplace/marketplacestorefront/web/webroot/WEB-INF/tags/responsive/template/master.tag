@@ -20,18 +20,22 @@
 <!DOCTYPE html>
 <html lang="${currentLanguage.isocode}">
 <head>
-	<title>
-
+	<%-- Moved this Block for For INC_11638 --%>
 	<%-- TISPRD-8030 and INC_100385--%>	
 		<c:choose>
-		<c:when test="${isCategoryPage}">
-		
-		 ${not empty metaPageTitle ?metaPageTitle:not empty pageTitle ? pageTitle : 'Tata'}
-		</c:when>
-		<c:otherwise>
-			 ${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
-		</c:otherwise>
-	   </c:choose>	
+			<c:when test="${isCategoryPage}">
+			
+			<c:set var="titleSocialTags" value="${not empty metaPageTitle ?metaPageTitle:not empty pageTitle ? pageTitle : 'Tata'}"/>
+			 
+			</c:when>
+			<c:otherwise>
+			<c:set var="titleSocialTags" value="${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}"/>
+				 
+			</c:otherwise>
+		   </c:choose>	
+		<title>
+			<c:out value="${titleSocialTags}"/>
+			
    </title>
 	<%-- Meta Content --%>
 	<meta name="apple-itunes-app" content="app-id=1101619385">
@@ -152,7 +156,7 @@
 	
 	<!-- Markup for Google+ -->	
 	<!-- Code Added For INC_11638 - Start -->
-	 <meta itemprop="name" content="${metaTitle}">
+	 <meta itemprop="name" content="${titleSocialTags}">
 	<!-- Code Added For INC_11638 - End -->	
 	<meta itemprop="description" content="${metaDescription}">
 	<%-- <meta itemprop="image" content="${protocolString[0]}://${mediaHost}${seoMediaURL}"> --%>
@@ -176,7 +180,7 @@
 	<%-- twitter-card added for INC_10384 --%>
 	<!-- Code Added For INC_11638 - Start -->
 	<meta name="twitter:card" content="summary_large_image">	
-	<meta name="twitter:title" content="${metaTitle}">
+	<meta name="twitter:title" content="${titleSocialTags}">
 	<!-- Code Added For INC_11638 - End -->		
 	<meta name="twitter:site" content="${twitterHandle}">	
 	<meta name="twitter:description" content="${metaDescription}">
@@ -197,7 +201,7 @@
 	
 	<!-- FB Open Graph data -->	
 	<!-- Code Added For INC_11638 - Start -->
-	<meta property="og:title" content="${metaTitle}" />
+	<meta property="og:title" content="${titleSocialTags}" />
 	<!-- Code Added For INC_11638 - End -->
 	<meta property="og:url" content="${canonical}" />
 	

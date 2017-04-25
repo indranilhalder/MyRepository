@@ -430,6 +430,27 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			//INC144313695
 			final HttpSession session = request.getSession();
 			deliveryMethodForm = (DeliveryMethodForm) session.getAttribute("deliveryMethodForm");
+			
+			//prdi-36/INC144315559
+			String deliveryCode = null;
+			if (deliveryMethodForm.getDeliveryMethodEntry() != null && !deliveryMethodForm.getDeliveryMethodEntry().isEmpty())
+			{
+				for (final DeliveryMethodEntry deliveryEntry : deliveryMethodForm.getDeliveryMethodEntry())
+				{
+					deliveryCode = deliveryEntry.getDeliveryCode();
+
+					if (StringUtils.isNotEmpty(deliveryCode)
+							&& deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT)) // Code optimized as part of performance fix TISPT-104
+					{
+
+						return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method"
+								+ MarketplacecheckoutaddonConstants.MPLDELIVERYCHOOSEURL;
+					}
+
+
+				}
+			}
+			// end prdi-36/INC144315559
 
 			if (deliveryMethodForm.getDeliveryMethodEntry() == null)
 			{
@@ -598,7 +619,11 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					}
 					else
 					{
-						return getCheckoutStep().nextStep();
+						//return getCheckoutStep().nextStep();
+						/**** PRDI-36/INC144315559 *******/
+						model.addAttribute(MarketplacecheckoutaddonConstants.DELIVERYADDRESSID, cartUssidData.getDeliveryAddress().getId());
+
+						//return getCheckoutStep().nextStep();
 					}
 
 				}
