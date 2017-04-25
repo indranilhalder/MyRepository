@@ -2417,7 +2417,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				savedCreditCards = (Map<Date, SavedCardData>) storedSavedCards.getFirst();
 				savedDebitCards = (Map<Date, SavedCardData>) storedSavedCards.getSecond();
-
 				LOG.debug("Credit Card" + savedCreditCards);
 				LOG.debug("Debit Card" + savedDebitCards);
 				LOG.debug("*********************************************************************");
@@ -2542,8 +2541,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		setupMplMessages(model);
 	}
-
-
 
 
 	/**
@@ -3451,7 +3448,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			final String guid) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
 			throws EtailNonBusinessExceptions
 	{
-		//TPR-4461 parameter netBankName added starts here added only for netbanking bankname
+		//TPR-4461 parameter netBankName added starts here added only for getting bank name for netbanking/saved credit card/saved debit card
 		LOG.debug("The bank name for netbanking is" + netBankName);
 		if (StringUtils.isNotEmpty(netBankName) && netBankName != null)
 		{
@@ -4636,7 +4633,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
