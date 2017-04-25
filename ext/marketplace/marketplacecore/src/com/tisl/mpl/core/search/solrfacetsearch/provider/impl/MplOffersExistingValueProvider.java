@@ -46,7 +46,8 @@ import com.tisl.mpl.model.SellerMasterModel;
  * @author 361234
  *
  */
-public class MplOffersExistingValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider, Serializable
+public class MplOffersExistingValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
+		Serializable
 {
 	private FieldNameProvider fieldNameProvider;
 	private PromotionsService promotionService;
@@ -79,7 +80,8 @@ public class MplOffersExistingValueProvider extends AbstractPropertyFieldValuePr
 	{
 		try
 		{
-			if (model instanceof PcmProductVariantModel)
+			//INC144314274
+			if (model instanceof ProductModel)
 			{
 				final PcmProductVariantModel product = (PcmProductVariantModel) model;
 
@@ -89,6 +91,16 @@ public class MplOffersExistingValueProvider extends AbstractPropertyFieldValuePr
 
 				return fieldValues;
 			}
+
+			else if (model instanceof ProductModel)//INC144314274
+			{
+				final ProductModel product = (ProductModel) model;
+
+				final Collection fieldValues = new ArrayList();
+				fieldValues.addAll(createFieldValue(product, indexConfig, indexedProperty));
+				return fieldValues;
+			}//INC144314274
+
 			else
 			{
 				return Collections.emptyList();
@@ -97,8 +109,8 @@ public class MplOffersExistingValueProvider extends AbstractPropertyFieldValuePr
 		}
 		catch (final Exception e) /* added part of value provider go through */
 		{
-			throw new FieldValueProviderException(
-					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
+			throw new FieldValueProviderException("Cannot evaluate " + indexedProperty.getName() + " using "
+					+ super.getClass().getName() + "exception" + e, e);
 		}
 
 	}
@@ -153,25 +165,25 @@ public class MplOffersExistingValueProvider extends AbstractPropertyFieldValuePr
 	 * ArrayList(); final BaseSiteModel baseSiteModel = indexConfig.getBaseSite(); if ((baseSiteModel != null) &&
 	 * (baseSiteModel.getDefaultPromotionGroup() != null)) { final Date currentTimeRoundedToMinute =
 	 * DateUtils.round(getTimeService().getCurrentTime(), Calendar.MINUTE);
-	 *
+	 * 
 	 * final List<ProductPromotionModel> productPromotions = getPromotionsService().getProductPromotions(
 	 * Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product, true, currentTimeRoundedToMinute);
-	 *
+	 * 
 	 * final List<ProductPromotionModel> promotions = new ArrayList<ProductPromotionModel>(); final
 	 * List<ProductPromotionModel> restrictedPromotions = validatePromotionRestrictions(productPromotions, product);
-	 *
+	 * 
 	 * for (final ProductPromotionModel promotion : restrictedPromotions) { if
 	 * (promotion.getChannel().contains(SalesApplication.WEB) || promotion.getChannel().isEmpty()) {
 	 * promotions.add(promotion); } }
-	 *
-	 *
+	 * 
+	 * 
 	 * if (promotions.size() > 0 && !promotions.isEmpty())
-	 *
+	 * 
 	 * { offerExists = true; System.out.println("Promotion exists for product ::::" + product.getCode() + "::::");
 	 * addFieldValues(fieldValues, indexedProperty, null, offerExists); }
-	 *
+	 * 
 	 * }
-	 *
+	 * 
 	 * return fieldValues; }
 	 */
 
