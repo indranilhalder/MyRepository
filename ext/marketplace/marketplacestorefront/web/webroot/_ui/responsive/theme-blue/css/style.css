@@ -66522,3 +66522,17 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
 	border-top: 0px;
 }
 }
+/* TISSQAEE-376 */
+.product-detail .Emi .modal-content .Close{
+    border-radius: 0;
+    border: 0px solid #ccc !important;
+    width: 0px;
+    height: 0px;
+    margin-top: 0px !important;
+    margin-right: 0px !important;
+    position: absolute;
+    right: 20px;
+    top: 5px;
+
+}
+/* End TISSQAEE-376 */
