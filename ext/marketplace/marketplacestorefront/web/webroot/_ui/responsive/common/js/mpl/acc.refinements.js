@@ -850,9 +850,16 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 		   window.localStorage.setItem('lastUrlquery',encodeURI(query));
 	 }
 	
+	// INC144315462 and INC144315104 
+	
 	if ($("input[name=customSku]").val()) {
-		dataString = dataString + "&sort=" + $("select[name=sort]").val() + "&pageSize=" + $("select[name=pageSize]").val(); 
+		//dataString = dataString + "&sort=" + $("select[name=sort]").val() + "&pageSize=" + $("select[name=pageSize]").val(); 
+		dataString = dataString + "&pageSize=24"; 
 	}
+	if($( "span.sort[style*='color']" ).length == 1){
+		  		var sortData = $( "span.sort[style*='color']" ).attr('data-name');
+		  		dataString = dataString + getSortCode(sortData); 
+		}
 	
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
@@ -986,6 +993,30 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 	
 }
 
+// INC144315462 and INC144315104  
+function getSortCode(item){
+	  	var code = '';
+	  	switch (item) {
+	  	case 'relevance':
+	  		code = '&sort=relevance';
+	  		break;
+	  	case 'new':
+	  		code = '&sort=isProductNew';
+	  		break;
+	  	case 'discount':
+	  		code = '&sort=isDiscountedPrice';
+	  		break;
+	  	case 'low':
+	  		code = '&sort=price-asc';
+	  		break;
+	  	case 'high':
+	  		code = '&sort=price-desc';
+	  		break;
+	  	default:
+	  		break;
+	  	}
+	  	return code;
+	  }
 /*
  * $("#paginationForm .pagination.mobile li a").click(function(e){
  * 
