@@ -1,7 +1,9 @@
 var stwHtml = "";
+var stwHtml1 ="";
 var product="";
 $(document).ready(function(){
 	stWidget('#stw_widget','');
+	stwidgetBlp('#stw_widget_Blp');
 	
 });
  function stWidget(divElement,category) {  
@@ -72,6 +74,8 @@ $(document).ready(function(){
         		})
         }
  
+ 
+ 
  function jsonCallback(STWJObject) {
 	var tabsFormationHtml ="";
 	tabsFormationHtml+= '<div class="best_seller stw-list">'
@@ -96,9 +100,9 @@ $(document).ready(function(){
 
 function formStwWidgetProducts(STWJObject){
 	var stwWidgetProducts = "";
-	stwWidgetProducts='<div class="carousel-component">';
-	stwWidgetProducts +='<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference stw-widget-owl">';
-	    $.each(STWJObject.STWElements, function( index, value ) {
+			stwWidgetProducts='<div class="carousel-component">';
+			stwWidgetProducts +='<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference stw-widget-owl">';
+			$.each(STWJObject.STWElements, function( index, value ) {
 	    	var productId=value.listingId;
 	    	var product=productId.toUpperCase();
 	    	//console.log("productID"+product);
@@ -110,13 +114,13 @@ function formStwWidgetProducts(STWJObject){
 			}
 	    	stwWidgetProducts += '<div class="item slide">';
 	    	stwWidgetProducts +='<div class="product-tile"><li onmouseover="showQuickview(this)" onmouseout="hideQuickView(this)" class="look slide product-tile stw_widget_list_elements productParentList" style="display: inline-block;position: relative;"><div class="image"><a href="'+value.productUrl+'" class="product-tile"> <img src="'+value.imageUrl+'"></a>';
-	    	stwWidgetProducts += '<div onclick=popupwindow("'+product+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 118px; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;font-size:12px;"><span>Quick View</span></div>';
+	    	stwWidgetProducts += '<div onclick=popupwindow("'+product+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;font-size:12px;"><span>Quick View</span></div></div>';
 	    	stwWidgetProducts +=' <div class="short-info"><ul class="color-swatch"><li><span  style="background-color: '+value.availableColor+';border: 1px solid rgb(204, 211, 217);" title="'+value.availableColor+'"></span></li></ul>';
 	    	stwWidgetProducts += '<div class="brand">'+value.productBrand+'</div>';
 	    	stwWidgetProducts += ' <a href="'+value.productUrl+'" class="item"><h3 class="product-name">'+value.productName+'</h3>';
 	    	stwWidgetProducts += '<div class="price"><span class="stw-mrp">&#8377;'+value.mrp+' </span><span class="stw-mop"> &#8377;'+value.mop+'</span>';
 	    	stwWidgetProducts += '<p class="savings pdp-savings"> <span>(-'+savingsOnProduct+'%)</span></p>';
-	    	stwWidgetProducts += '</div></a></div></div></li></div></div>'; 
+	    	stwWidgetProducts += '</div></a></div></li></div></div>';  
 	    });
 	stwWidgetProducts+='</div></div>'; 
 	$("#widget").html(stwWidgetProducts);  
@@ -171,3 +175,80 @@ $(document).on('click',".best_seller .Menu ul li",function(){
 		  }
 		});
 }); 
+
+function stwidgetBlp(divElement){
+	 var url=window.location.href;
+	 var hashes=url.split('/');
+	 var category=hashes[3];
+//	var category = $(this).text() == 'ALL' ? '':$(this).text();
+	 $.ajax({
+		  url: '/getStwrecomendations',
+		  dataType: "json",
+		  type:"GET",
+		  data:{pageType:'Home',widgetType:'STW',siteType:'Marketplace',sendOnlyListingId:'false',category:category},
+		  success: formStwWidgetProductsBlp,
+		  fail:function(){
+			  console.log('STW failed to load --'+error);
+		  },
+		  complete:function(){
+			  $(divElement).html(stwHtml1);
+			  $(".stw-widget-owl").owlCarousel({
+					items:5,
+					loop: true,
+					nav:true,
+					dots:false,
+					navText:[],
+					lazyLoad: true,
+					responsive: {
+		                0: {
+		                    items: 1,
+		    				stagePadding: 50
+		                },
+		                480: {
+		                    items: 2,
+		    				stagePadding: 75
+		                },
+		                700: {
+		                    items: 3
+		                },
+		                1000: {
+		                    items: 5
+		                }
+		            }
+				});
+		  }
+	 });
+}
+function formStwWidgetProductsBlp(STWJObject){
+	var stwWidgetProducts = "";
+	stwWidgetProducts+= '<div class="best_seller stw-list">'
+	stwWidgetProducts+= '<div class="best_seller_section hide_clplist">';
+	stwWidgetProducts+= '<div class="content">'+STWJObject.STWHeading+'</div>';
+	stwWidgetProducts+='</div></div>';
+	stwWidgetProducts+='<div class="carousel-component">';
+	stwWidgetProducts +='<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference stw-widget-owl">';
+	    $.each(STWJObject.STWElements, function( index, value ) {
+	    	var productId=value.listingId;
+	    	var product=productId.toUpperCase();
+	    	//console.log("productID"+product);
+	    //	var productQVUrl=value.productUrl+"/quickView";
+	    	if(null!=value.mrp && null!=value.mop){
+	    	var	savingPriceCal=(value.mrp-value.mop);
+			var savingPriceCalPer=(savingPriceCal/value.mrp)*100;
+			var	savingsOnProduct=Math.round((savingPriceCalPer*100)/100);
+			}
+	    	stwWidgetProducts += '<div class="item slide">';
+	    	stwWidgetProducts +='<div class="product-tile"><li onmouseover="showQuickview(this)" onmouseout="hideQuickView(this)" class="look slide product-tile stw_widget_list_elements productParentList" style="display: inline-block;position: relative;"><div class="image"><a href="'+value.productUrl+'" class="product-tile"> <img src="'+value.imageUrl+'"></a>';
+	    	stwWidgetProducts += '<div onclick=popupwindow("'+product+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;font-size:12px;"><span>Quick View</span></div></div>';
+	    	stwWidgetProducts +=' <div class="short-info"><ul class="color-swatch"><li><span  style="background-color: '+value.availableColor+';border: 1px solid rgb(204, 211, 217);" title="'+value.availableColor+'"></span></li></ul>';
+	    	stwWidgetProducts += '<div class="brand">'+value.productBrand+'</div>';
+	    	stwWidgetProducts += ' <a href="'+value.productUrl+'" class="item"><h3 class="product-name">'+value.productName+'</h3>';
+	    	stwWidgetProducts += '<div class="price"><span class="stw-mrp">&#8377;'+value.mrp+' </span><span class="stw-mop"> &#8377;'+value.mop+'</span>';
+	    	stwWidgetProducts += '<p class="savings pdp-savings"> <span>(-'+savingsOnProduct+'%)</span></p>';
+	    	stwWidgetProducts += '</div></a></div></li></div></div>'; 
+	    });
+	stwWidgetProducts+='</div></div>';
+	stwHtml1=stwWidgetProducts;
+//	$("#widget").html(stwWidgetProducts);  
+	return stwWidgetProducts;
+}

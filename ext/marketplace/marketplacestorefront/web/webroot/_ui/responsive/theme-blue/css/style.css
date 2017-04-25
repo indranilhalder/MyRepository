@@ -65040,7 +65040,7 @@ margin:0px;
 margin:0px;
 padding:0px;
 }
-#stw_widget .owl-theme .owl-controls{
+#stw_widget .owl-theme .owl-controls, #stw_widget_Blp .owl-theme .owl-controls{
 	top:38%;
 }
 
