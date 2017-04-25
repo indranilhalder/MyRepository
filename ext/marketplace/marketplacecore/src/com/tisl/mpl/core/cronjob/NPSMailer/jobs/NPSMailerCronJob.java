@@ -14,7 +14,6 @@ import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.user.UserService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,8 +45,9 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 	@Autowired
 	private ModelService modelService;
 
-	@Autowired
-	private UserService userService;
+	/*
+	 * @Autowired private UserService userService;
+	 */
 
 	@Autowired
 	private NotificationService notificationService;
@@ -56,7 +56,7 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 
 	/*
 	 * TPR-1984 This cron job is triggered as configured to run at 12 PM and 4 PM
-	 * 
+	 *
 	 * )
 	 */
 	@Override

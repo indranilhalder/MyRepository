@@ -35,7 +35,6 @@ import org.springframework.stereotype.Component;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.NPSMailerModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao;
-import com.tisl.mpl.marketplacecommerceservices.service.FetchSalesOrderService;
 import com.tisl.mpl.model.MplConfigurationModel;
 
 
@@ -49,12 +48,12 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 
 	/**
-	 * 
+	 *
 	 */
 	private static final String PRESENT_DATE = "presentDate";
 
 	/**
-	 * 
+	 *
 	 */
 	private static final String EARLIER_DATE = "earlierDate";
 
@@ -83,8 +82,11 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
-	@Autowired
-	private FetchSalesOrderService fetchSalesOrderService;
+
+	/* SONAR FIX */
+	/*
+	 * @Autowired private FetchSalesOrderService fetchSalesOrderService;
+	 */
 
 
 
@@ -367,7 +369,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getTransactionIdCount(de.hybris.platform.core
 	 * .model.order.OrderModel)
@@ -383,12 +385,13 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.setResultClassList(Arrays.asList(OrderModel.class, Integer.class));
 		final SearchResult<List<Object>> result = flexibleSearchService.search(query);
-		if (result.getResult().isEmpty())
+		/* SONAR FIX */
+		if (!result.getResult().isEmpty())
 		{
 			//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3000);
-		}
-		else
-		{
+			/*
+			 * } else {
+			 */
 
 			for (final List<Object> obj : result.getResult())
 			{
@@ -419,12 +422,13 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.setResultClassList(Arrays.asList(String.class, NPSMailerModel.class));
 		final SearchResult<List<Object>> result = flexibleSearchService.search(query);
-		if (result.getResult().isEmpty())
+		/* SONAR FIX */
+		if (!result.getResult().isEmpty())
 		{
 			//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3000);
-		}
-		else
-		{
+			/*
+			 * } else {
+			 */
 			for (final List<Object> obj : result.getResult())
 			{
 
@@ -471,12 +475,13 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.setResultClassList(Arrays.asList(String.class, Integer.class));
 		final SearchResult<List<Object>> result = flexibleSearchService.search(query);
-		if (result.getResult().isEmpty())
+		/* SONAR FIX */
+		if (!result.getResult().isEmpty())
 		{
 			//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3000);
-		}
-		else
-		{
+			/*
+			 * } else {
+			 */
 			for (final List<Object> obj : result.getResult())
 			{
 
@@ -538,14 +543,16 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.setResultClassList(Arrays.asList(OrderModel.class, String.class));
 		final SearchResult<List<Object>> result = flexibleSearchService.search(query);
+		/* SONAR FIX */
 		if (result.getResult().isEmpty())
 		{
 			//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3000);
-		}
-		else
-
-
-		{
+			/*
+			 * } else
+			 *
+			 *
+			 * {
+			 */
 			for (final List<Object> obj : result.getResult())
 			{
 				final OrderModel order = (OrderModel) obj.get(0);

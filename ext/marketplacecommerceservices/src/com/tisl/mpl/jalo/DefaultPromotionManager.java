@@ -4459,11 +4459,13 @@ public class DefaultPromotionManager extends PromotionsManager
 			{
 				productCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getProduct().getCode()
 						+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
-				productCodes.append(",");
+				/* * SONAR FIX */
+				productCodes.append(MarketplacecommerceservicesConstants.COMMA_DELIMITER);
 				ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA
 						+ entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString()
 						+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
-				ussidIds.append(",");
+				/* * SONAR FIX */
+				ussidIds.append(MarketplacecommerceservicesConstants.COMMA_DELIMITER);
 			}
 		}
 
@@ -4641,10 +4643,12 @@ public class DefaultPromotionManager extends PromotionsManager
 		{
 			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getKey()
 					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
-			ussidIds.append(",");
+			/* * SONAR FIX */
+			ussidIds.append(MarketplacecommerceservicesConstants.COMMA_DELIMITER);
 			productCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getValue().getProduct().getCode()
 					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
-			productCodes.append(",");
+			/* * SONAR FIX */
+			productCodes.append(MarketplacecommerceservicesConstants.COMMA_DELIMITER);
 			//mapQuantCount.put(entry.getKey(), Integer.valueOf(entry.getValue().getQuantity().intValue()));
 		}
 
@@ -4680,7 +4684,8 @@ public class DefaultPromotionManager extends PromotionsManager
 				{
 					categoryCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getValue()
 							+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
-					categoryCodes.append(",");
+					/* * SONAR FIX */
+					categoryCodes.append(MarketplacecommerceservicesConstants.COMMA_DELIMITER);
 				}
 
 				stockCountMap.putAll(stockPromoCheckService.getCumulativeCatLevelStockMap(
@@ -4881,10 +4886,12 @@ public class DefaultPromotionManager extends PromotionsManager
 		{
 			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getKey()
 					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
-			ussidIds.append(",");
+			/* * SONAR FIX */
+			ussidIds.append(MarketplacecommerceservicesConstants.COMMA_DELIMITER);
 			productCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getValue().getProduct().getCode()
 					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
-			productCodes.append(",");
+			/* * SONAR FIX */
+			productCodes.append(MarketplacecommerceservicesConstants.COMMA_DELIMITER);
 			mapQuantCount.put(entry.getKey(), Integer.valueOf(entry.getValue().getQuantity().intValue()));
 		}
 		final boolean sellerFlag = getSellerRestrictionVal(restrictionList);
@@ -5377,9 +5384,9 @@ public class DefaultPromotionManager extends PromotionsManager
 	private List<String> fetchSecProdsExcludedProdsForPromotion(final Flat3Map params, final SessionContext ctx,
 			final String promotionType)
 	{
-
-		final StringBuilder promQuery = new StringBuilder(
-				"SELECT {promo.secondProducts} as secondProducts, {promo.excludedProducts} as excludedProducts  ");
+		/* SONAR FIX */
+		final StringBuilder promQuery = new StringBuilder(200);
+		promQuery.append("SELECT {promo.secondProducts} as secondProducts, {promo.excludedProducts} as excludedProducts  ");
 		promQuery.append("FROM  {").append(promotionType).append(" AS promo} ");
 		promQuery.append(" WHERE {promo.secondProducts} IS NOT NULL AND {promo:pk} = ?promo ");
 
@@ -5399,7 +5406,8 @@ public class DefaultPromotionManager extends PromotionsManager
 	private void populateSecondaryListForCategory(final Collection<Category> secondCategories,
 			final List<Product> secondaryProductList, final Flat3Map params, final SessionContext ctx)
 	{
-		final StringBuilder promQuery = new StringBuilder();
+		/* SONAR FIX */
+		final StringBuilder promQuery = new StringBuilder(60);
 		final Set promotionCategories = new HashSet();
 		for (final Category cat : secondCategories)
 		{
@@ -5622,7 +5630,9 @@ public class DefaultPromotionManager extends PromotionsManager
 	 */
 	private Collection<String> fetchExcludedProductsForPromotion(final Flat3Map params, final SessionContext ctx)
 	{
-		final StringBuilder promQuery = new StringBuilder("SELECT {promotion.excludedProducts} as excludedProducts  ");
+		/* * SONAR FIX */
+		final StringBuilder promQuery = new StringBuilder(160);
+		promQuery.append("SELECT {promotion.excludedProducts} as excludedProducts");
 		promQuery.append("FROM  {").append(MarketplacecommerceservicesConstants.PRODUCT_PROMO).append(" AS promotion} ");
 		promQuery.append("WHERE {promotion.excludedProducts} IS NOT NULL AND {promotion:pk} = ?promo ");
 
@@ -5643,7 +5653,9 @@ public class DefaultPromotionManager extends PromotionsManager
 	 */
 	private Collection<String> fetchBrandsForPromotion(final Flat3Map params, final SessionContext ctx, final String PromotionType)
 	{
-		final StringBuilder promQuery = new StringBuilder("SELECT {brand.manufacturers} as brands  ");
+		/* * SONAR FIX */
+		final StringBuilder promQuery = new StringBuilder(150);
+		promQuery.append("SELECT {brand.manufacturers} as brands");
 		promQuery.append("FROM  {").append(PromotionType).append(" AS brand} ");
 		promQuery.append("WHERE {brand.manufacturers} IS NOT NULL AND {brand.promotion} = ?promo ");
 
