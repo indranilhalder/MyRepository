@@ -9,6 +9,7 @@ import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
+import de.hybris.platform.jalo.order.Cart;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.product.Unit;
@@ -138,6 +139,7 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 				final PromotionResult pr = getPromotionResult(ctx);
 				//			final PromotionOrderEntryConsumed consumed = PromotionsManager.getInstance().createPromotionOrderEntryConsumed(ctx,
 				//					getGuid(ctx), orderEntry, 1L);
+				setCachingAllowed(ctx, order);
 				final PromotionOrderEntryConsumed consumed = PromotionsManager.getInstance().createPromotionOrderEntryConsumed(ctx,
 						getGuid(ctx), orderEntry, freeGiftQuantity);
 				consumed.setAdjustedUnitPrice(ctx, 0.01D);
@@ -164,6 +166,8 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 					orderEntry.setProperty(ctx, "totalPrice", new Double(freebieAmt));
 
 					final PromotionResult pr = getPromotionResult(ctx);
+					setCachingAllowed(ctx, order);
+
 					final PromotionOrderEntryConsumed consumed = PromotionsManager.getInstance().createPromotionOrderEntryConsumed(
 							ctx, getGuid(ctx), orderEntry, freeGiftQuantity);
 					consumed.setAdjustedUnitPrice(ctx, 0.01D);
@@ -418,6 +422,12 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 		return true;
 	}
 
+	private void setCachingAllowed(final SessionContext ctx, final AbstractOrder order)
+	{
+		final Boolean allowed = (order instanceof Cart) ? Boolean.TRUE : Boolean.FALSE;
+		ctx.setAttribute("de.hybris.platform.promotions.jalo.cachingAllowed", allowed);
+	}
+
 	/**
 	 * Populate Free Gift Data
 	 *
@@ -444,6 +454,7 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 	{
 
 		final AbstractOrder order = getPromotionResult(ctx).getOrder(ctx);
+		setCachingAllowed(ctx, order);
 
 		if (log.isDebugEnabled())
 		{
