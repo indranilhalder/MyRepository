@@ -1718,7 +1718,16 @@ $("#otpMobileNUMField").focus(function(){
 				else if(response=='redirect_to_payment'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TPR-629
 				}
-				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
+				/*//TPR-4461 STARTS HERE
+				else if(response=='redirect_with_coupon'){
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+					$("#juspayconnErrorDiv").css("display","block");
+					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
+					$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
+									    
+				}
+				//TPR-4461 ENDS HERE
+*/				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
 //					}
@@ -1832,7 +1841,16 @@ $("#otpMobileNUMField").focus(function(){
 				}else if(response=='redirect_with_details'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
 				}
-				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
+				/*//TPR-4461 STARTS HERE
+				else if(response=='redirect_with_coupon'){
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+					$("#juspayconnErrorDiv").css("display","block");
+					$(".pay button, #make_saved_dc_payment_up").prop("disabled",false);
+					$(".pay button, #make_saved_dc_payment_up").css("opacity","1");
+									    
+				}
+				//TPR-4461 ENDS HERE
+*/				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
 //					}
@@ -2132,6 +2150,15 @@ $("#otpMobileNUMField").focus(function(){
 				else if(response=='redirect_with_details'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
 				}
+				//TPR-4461 STARTS HERE
+				else if(response=='redirect_with_coupon'){
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+					$("#juspayconnErrorDiv").css("display","block");
+					$(".pay button, #make_emi_payment_up").prop("disabled",false);
+					$(".pay button, #make_emi_payment_up").css("opacity","1");
+									    
+				}
+				//TPR-4461 ENDS HERE
 				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
 					/*TPR-4776*/
 					paymentErrorTrack("juspay_unavailable");
@@ -4937,7 +4964,14 @@ function submitNBForm(){
 				else if(response=='redirect_with_details'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
 				}
-
+				//TPR-4461 STARTS HERE
+				else if(response=='redirect_with_coupon'){
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+					$("#juspayconnErrorDiv").css("display","block");
+					$(".pay button, .make_payment_top_nb").prop("disabled",false);
+					$(".pay button, .make_payment_top_nb").css("opacity","1");							    
+				}
+				//TPR-4461 ENDS HERE
 				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
 					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The system is down, please try again";
 					$("#juspayconnErrorDiv").css("display","block");
