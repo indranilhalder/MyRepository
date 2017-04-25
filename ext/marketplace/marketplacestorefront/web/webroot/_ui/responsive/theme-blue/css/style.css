@@ -66536,3 +66536,26 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
 
 }
 /* End TISSQAEE-376 */
+/* Start TISSQAEE-380 */
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item .half{
+	width: 50%;
+    display: inline-block;
+    padding-right: 4.6%;
+    margin-right: -3px;
+    vertical-align: top;
+    float: none;
+}
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item .full{
+	padding-right: 4.6%;
+}
+.checkout.wrapper .formaddress .product-block.addresses.new-form fieldset {
+    padding-top: 24px;
+    width: 104.6%;
+} 
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item input{
+	width: 100%;
+}
+.checkout.wrapper .product-block.addresses.new-form li.item fieldset div.half:nth-child(even){
+	float: none;
+}
+/* End TISSQAEE-380 */
