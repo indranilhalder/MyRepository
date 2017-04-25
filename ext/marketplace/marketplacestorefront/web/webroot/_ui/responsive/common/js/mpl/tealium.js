@@ -2035,8 +2035,13 @@ $(document).on('click',".color-swatch > li", function(){
  })
  /*TPR-4728 | add to compare page |2nd part*/
  $(document).on('click','.shop-now',function(){
+	 var url = $(this).parents().find(".product-tile.cboxElement").attr('href').split("/")[2];
+		var productIDlist = url.split("p-");
+		var productID = productIDlist[1];
+		var productArray=[];
+		productArray.push(productID[1]);
 	 if(typeof utag !="undefined"){
-		 utag.link({ link_text : 'shop_now_clicked' , event_type :'shop_now_clicked' });
+		 utag.link({ link_text : 'shop_now_clicked' , event_type :'shop_now_clicked',product_id : productArray });
 	 }
  })
 
