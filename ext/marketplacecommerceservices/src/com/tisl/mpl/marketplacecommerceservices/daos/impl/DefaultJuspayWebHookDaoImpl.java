@@ -201,7 +201,7 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 	@Override
 	public List<MplPaymentAuditModel> fetchAUDITonEBS(final String ebsStatusReview)
 	{
-		final String queryString = "select {a.pk} from {JuspayEBSResponse as e}, {MplPaymentAudit as a}, {EBSResponseStatus as r}"
+		final String queryString = "select {a.pk} from {JuspayEBSResponseData as e}, {MplPaymentAudit as a}, {EBSResponseStatus as r}"
 				+ "where {e.audit}={a.pk} and {e.ebsRiskStatus}={r.pk} and {r.code}=?status and {a.isExpired}=?expiredData";
 
 		LOG.debug("status" + ebsStatusReview);
@@ -263,7 +263,7 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 	@Override
 	public List<MplPaymentAuditModel> fetchAuditForEmptyRisk(final String ebsRiskPercentage)
 	{
-		final String queryString = "select {a.pk} from {JuspayEBSResponse as e}, {MplPaymentAudit as a}"
+		final String queryString = "select {a.pk} from {JuspayEBSResponseData as e}, {MplPaymentAudit as a}"
 				+ "where {e.audit}={a.pk} and {e.ebsRiskPercentage}=?ebsRiskPercentage and {a.isExpired}=?expiredData";
 
 		LOG.debug("ebsRiskPercentage" + ebsRiskPercentage);
