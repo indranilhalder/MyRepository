@@ -1993,7 +1993,8 @@ $("#otpMobileNUMField").focus(function(){
 					$("#juspayconnErrorDiv").css("display","block");
 					$(".pay button, #make_cc_payment_up").prop("disabled",false);
 					$(".pay button, #make_cc_payment_up").css("opacity","1");
-									    
+					$(".pay .spinner").remove();
+					$("#no-click,.spinner").remove();									    
 				}
 				//TPR-4461 ENDS HERE
 				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){	
@@ -2156,6 +2157,8 @@ $("#otpMobileNUMField").focus(function(){
 					$("#juspayconnErrorDiv").css("display","block");
 					$(".pay button, #make_emi_payment_up").prop("disabled",false);
 					$(".pay button, #make_emi_payment_up").css("opacity","1");
+					$(".pay .spinner").remove();
+					$("#no-click,.spinner").remove();
 									    
 				}
 				//TPR-4461 ENDS HERE
@@ -4969,7 +4972,9 @@ function submitNBForm(){
 					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
 					$("#juspayconnErrorDiv").css("display","block");
 					$(".pay button, .make_payment_top_nb").prop("disabled",false);
-					$(".pay button, .make_payment_top_nb").css("opacity","1");							    
+					$(".pay button, .make_payment_top_nb").css("opacity","1");	
+					$(".pay .spinner").remove();
+					$("#no-click,.spinner").remove();
 				}
 				//TPR-4461 ENDS HERE
 				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
@@ -8097,6 +8102,8 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 						$("#juspayconnErrorDiv").css("display","block");
 						$(".pay button, #make_mrupee_payment_up").prop("disabled",false);
 						$(".pay button, #make_mrupee_payment_up").css("opacity","1");
+						$(".pay .spinner").remove();
+						$("#no-click,.spinner").remove();
 										    
 					}
 					//TPR-4461 ENDS HERE
