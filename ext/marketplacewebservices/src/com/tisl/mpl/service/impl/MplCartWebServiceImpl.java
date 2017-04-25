@@ -1,4 +1,3 @@
-
 /**
  *
  */
@@ -38,6 +37,7 @@ import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsD
 import de.hybris.platform.commercewebservicescommons.dto.user.AddressListWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.CartException;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
+import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -98,7 +98,6 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
-import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
@@ -172,7 +171,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	private PriceDataFactory priceDataFactory;
 	@Autowired
 	private MplCouponFacade mplCouponFacade;
-    
+
 
 
 	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
@@ -1061,7 +1060,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						gwlp.setFullfillmentType(c.getFullfillment());
 					});
 				}
-                if (null != productData.getSeller() && productData.getSeller().size() > 0)
+				if (null != productData.getSeller() && productData.getSeller().size() > 0)
 				{
 					productData.getSeller().stream().filter(pred1.and(pred2)).findFirst().ifPresent(c -> {
 						gwlp.setSellerId(c.getSellerID());
@@ -1194,7 +1193,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 									{
 										delivery.setName(deliveryMode.getDeliveryMode().getName());
 									}
-                                    
+
 
 									//TPR-4421
 									if (null != gwlp.getFullfillmentType() && !gwlp.getFullfillmentType().isEmpty()
@@ -2444,7 +2443,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		{
 			shippingAddress.setId(address.getPk().toString());
 		}
-         /* Added in R2.3 for TISRLUAT-904 start */
+		/* Added in R2.3 for TISRLUAT-904 start */
 		if (null != address.getLandmark())
 		{
 			shippingAddress.setLandmark(address.getLandmark());
