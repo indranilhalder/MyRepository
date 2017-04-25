@@ -1677,7 +1677,7 @@ $("#otpMobileNUMField").focus(function(){
   
   
  
- 
+ //Parameter added for TPR-4461 netBankName FOR getting bank name of saved credit card
   function createJuspayOrderForSavedCard(){
 	  	var staticHost=$('#staticHost').val();
 		$(".pay button, #make_saved_cc_payment_up").prop("disabled",true);
@@ -1697,6 +1697,9 @@ $("#otpMobileNUMField").focus(function(){
 		sendTealiumData();
 		var firstName=lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=sameAsShipping=false;
+		
+		var netBankName=bankNameSelected;//Added for TPR-4461
+		
 		var guid=$("#guid").val();
         //TISPRO-313	
 		//if($(".redirect").val()=="false"){
@@ -1704,7 +1707,7 @@ $("#otpMobileNUMField").focus(function(){
 		//}
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping , 'guid' : guid},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping , 'guid' : guid},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -1718,16 +1721,18 @@ $("#otpMobileNUMField").focus(function(){
 				else if(response=='redirect_to_payment'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TPR-629
 				}
-				/*//TPR-4461 STARTS HERE
+				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
 					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
 					$("#juspayconnErrorDiv").css("display","block");
 					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
 					$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
+					$(".pay .spinner").remove();
+					$("#no-click,.spinner").remove();
 									    
 				}
 				//TPR-4461 ENDS HERE
-*/				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
+			    else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
 //					}
@@ -1799,6 +1804,7 @@ $("#otpMobileNUMField").focus(function(){
 		});		
 	}
   
+  //Parameter netBankName added for TPR-4461 FOR getting bank name for saved debit card
   function createJuspayOrderForSavedDebitCard(){
 	  
 	  	var staticHost=$('#staticHost').val();
@@ -1818,6 +1824,8 @@ $("#otpMobileNUMField").focus(function(){
 
 		var firstName=lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=sameAsShipping=false;
+		
+		var netBankName=bankNameSelected;//Added for TPR-4461
       //TISPRO-313	
 		//if($(".redirect").val()=="false"){
 			//Juspay.startSecondFactor();
@@ -1826,7 +1834,7 @@ $("#otpMobileNUMField").focus(function(){
 		var guid=$("#guid").val();
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -1841,16 +1849,17 @@ $("#otpMobileNUMField").focus(function(){
 				}else if(response=='redirect_with_details'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
 				}
-				/*//TPR-4461 STARTS HERE
+				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
 					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
 					$("#juspayconnErrorDiv").css("display","block");
 					$(".pay button, #make_saved_dc_payment_up").prop("disabled",false);
 					$(".pay button, #make_saved_dc_payment_up").css("opacity","1");
-									    
+					$(".pay .spinner").remove();
+					$("#no-click,.spinner").remove();									    
 				}
 				//TPR-4461 ENDS HERE
-*/				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
+				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
 //					}
