@@ -66237,3 +66237,39 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
 	border-top: 0px;
 }
 }
+@media (max-width: 1024px){
+.col-md-2{
+    display: inline-block;
+    width: 25px;
+	}
+   .col-md-9{
+      display: inline-block;
+    vertical-align: top;
+	}
+	.col-md-12.error_text.pincodeNoError
+{
+margin-top: -10px;
+}
+.error_text.stateError{
+margin-top: -10px;
+}
+}
+@media (max-width: 480px){
+	.col-md-2{
+	display: inline-block;
+    padding: 0px;
+    width: 10px;
+	}
+	.col-md-9{
+	width: 94%;
+	}
+}
+@media (min-width: 1024px){
+	.col-md-12.error_text.pincodeNoError{
+	text-align: left;
+	margin-top: -10px;
+	}
+	.error_text.stateError{
+margin-top: -10px;
+}
+}
