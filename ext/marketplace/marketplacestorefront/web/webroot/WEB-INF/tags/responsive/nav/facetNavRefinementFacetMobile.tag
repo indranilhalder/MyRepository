@@ -164,8 +164,7 @@ function navigateToPage(queryString,textString)
 										</span>
 									</label>
 								</form>
-								</c:otherwise>
-								</c:choose>
+								
 							</c:if>
 							<c:if test="${not facetData.multiSelect}">
 								<c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
@@ -190,7 +189,8 @@ function navigateToPage(queryString,textString)
 							</c:if>
 							</li>
 						<%-- 						</li> --%>
-						
+						</c:otherwise>
+					  </c:choose>
 					</c:forEach>
 				</ul>
 			</c:if>
