@@ -81,7 +81,7 @@
 	margin-bottom: 10px;
 	color: #333;
 	font-size: 14px;
-	margin-left: 10px;
+	margin-left: 0px;
 }
 
 .deliverySlotOptions .deliverySlotRadio .col-md-4 {
@@ -157,7 +157,7 @@ li.deliverySlotRadio .reset{margin: 3px 0px !important;    height: 30px !importa
 	    width: 31%;
 	    /* padding: 20px 0 0; */
 	    float: right;
-	    text-align:center;
+	    text-align: left;
 }
  /* R2.3 TISRLREG-2465 Author Tribhuvan Start*/
 @media (max-width: 767px){
