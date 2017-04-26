@@ -17,7 +17,7 @@ import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.services.AddressHistoryService;
 import com.tisl.mpl.cockpits.cscockpit.widgets.models.impl.AddressHistoryListWidgetModel;
 import com.tisl.mpl.core.model.MplDeliveryAddressInfoModel;
-import com.tisl.mpl.marketplacecommerceservices.daos.changeDeliveryAddress.MplDeliveryAddressDao;
+import com.tisl.mpl.marketplacecommerceservices.daos.changedeliveryaddress.MplDeliveryAddressDao;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.services.config.ColumnConfiguration;

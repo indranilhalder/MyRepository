@@ -268,7 +268,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		model.addAttribute(ModelAttributetConstants.REFUNDTYPE,returnForm.getRefundType());
 		model.addAttribute(ModelAttributetConstants.RETURN_PRODUCT_MAP, returnProductMap);
 		model.addAttribute(ModelAttributetConstants.SUBORDER_ENTRY, subOrderEntry);
-		
+		model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataListNew);
 		 //get available time slots for return pickup
 		 List<String> timeSlots = mplConfigFacade.getDeliveryTimeSlots(ModelAttributetConstants.RETURN_SLOT_TYPE);
 

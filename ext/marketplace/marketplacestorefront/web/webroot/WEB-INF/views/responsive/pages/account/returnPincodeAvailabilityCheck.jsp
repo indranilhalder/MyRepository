@@ -31,7 +31,7 @@
 
 	<div class="account">
 		<div class="wrapper">
-			<a class="return-order-history" href="order-history.php"><spring:theme
+			<a class="return-order-history" href="/my-account/orders"><spring:theme
 					code="text.returRequest.backtoHistory" text="Back to Order History" /></a>
 
 			<div class="returnItemForm">

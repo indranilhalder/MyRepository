@@ -17,7 +17,6 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.fulfilmentprocess.CheckOrderService;
@@ -26,7 +25,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 
 public class DefaultCheckOrderService implements CheckOrderService
 {
-	private static final Logger LOG = Logger.getLogger(DefaultCheckOrderService.class);
+	
 
 	@Autowired
 	private MplPaymentService mplPaymentService;

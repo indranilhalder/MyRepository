@@ -3158,6 +3158,31 @@ body .account .right-account .order-history.order-details li.item .item-header{m
 	.submitButton {
 		margin: 60px auto;
 	}
+	/*TISPRDT-1049 Start  */
+	.textFile {
+    display: inline-block;
+    padding: 0px 4px;
+    color: #8c8c8c;
+    height: 32px;
+    line-height: 32px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 57%;
+}
+.uploadButton {
+    background: #00cfe6;
+    color: #fff;
+    display: inline-block;
+    padding: 0px 8px !important;
+    font-size: 14px;
+    height: 33px;
+    line-height: 33px;
+    margin: 0px 2px;
+    vertical-align: top;
+    width: 40%;
+}
+/*TISPRDT-1049 End  */
 }
 #awbNumberPopup {
 	display: none;
@@ -3203,6 +3228,11 @@ body .account .right-account .order-history.order-details li.item .item-header{m
     font-size: 22px !important;
     font-weight: 100 !important;
     margin-bottom: 25px !important;
+}
+@media (max-width: 620px){
+#awbNumberPopup h4 {
+    width: 85%;
+}
 }
 #awbNumberPopup .awsTextinput{
 	width: 100%;

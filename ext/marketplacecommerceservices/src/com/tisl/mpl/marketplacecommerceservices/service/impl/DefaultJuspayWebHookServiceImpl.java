@@ -66,6 +66,21 @@ import com.tisl.mpl.util.OrderStatusSpecifier;
 public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 {
 
+	/**
+	 * 
+	 */
+	private static final String LOG_MSG_FOR_ORDER_LINE_ID = " for order line id : ";
+
+	/**
+	 * 
+	 */
+	private static final String LOG_MSG_FOR_REFUND_AMOUNT = " for refund amount ";
+
+	/**
+	 * 
+	 */
+	private static final String LOG_MSG_CALLING_OMS_WITH_STATUS = " >> Calling OMS with  status :";
+
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(DefaultJuspayWebHookServiceImpl.class.getName());
 
@@ -607,8 +622,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 					}
 					//End TISPRD-871
 
-					LOG.info(" >> Calling OMS with  status :" + newStatus + " for refund amount " + refund.getAmount()
-							+ " for order line id : " + orderEntryModel.getOrderLineId());
+					LOG.info(LOG_MSG_CALLING_OMS_WITH_STATUS + newStatus + LOG_MSG_FOR_REFUND_AMOUNT + refund.getAmount()
+							+ LOG_MSG_FOR_ORDER_LINE_ID + orderEntryModel.getOrderLineId());
 					mplJusPayRefundService.makeRefundOMSCall(orderEntryModel, paymentTransactionModel, refund.getAmount(), newStatus,null);
 
 					//Update in Audit table with new status
@@ -682,8 +697,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 					}
 					//End TISPRD-871
 					//TO update the status to OMS
-					LOG.debug(" >> Calling OMS with  status :" + newStatus + " for refund amount " + refund.getAmount()
-							+ " for order line id : " + orderEntryModel.getOrderLineId());
+					LOG.debug(LOG_MSG_CALLING_OMS_WITH_STATUS + newStatus + LOG_MSG_FOR_REFUND_AMOUNT + refund.getAmount()
+							+ LOG_MSG_FOR_ORDER_LINE_ID + orderEntryModel.getOrderLineId());
 
 					mplJusPayRefundService.makeRefundOMSCall(orderEntryModel, paymentTransactionModel, refund.getAmount(), newStatus,null);
 
@@ -759,8 +774,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 					getModelService().save(orderEntryModel);
 
 					//TO update the status to OMS
-					LOG.debug(" >> Calling OMS with  status :" + newStatus + " for refund amount " + refund.getAmount()
-							+ " for order line id : " + orderEntryModel.getOrderLineId());
+					LOG.debug(LOG_MSG_CALLING_OMS_WITH_STATUS + newStatus + LOG_MSG_FOR_REFUND_AMOUNT + refund.getAmount()
+							+ LOG_MSG_FOR_ORDER_LINE_ID + orderEntryModel.getOrderLineId());
 
 					mplJusPayRefundService.makeRefundOMSCall(orderEntryModel, paymentTransactionModel, refund.getAmount(), newStatus,null);
 
@@ -835,8 +850,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 						getModelService().save(orderEntryModel);
 
 					//TO update the status to OMS
-					LOG.debug(" >> Calling OMS with  status :" + newStatus + " for refund amount " + refund.getAmount()
-							+ " for order line id : " + orderEntryModel.getOrderLineId());
+					LOG.debug(LOG_MSG_CALLING_OMS_WITH_STATUS + newStatus + LOG_MSG_FOR_REFUND_AMOUNT + refund.getAmount()
+							+ LOG_MSG_FOR_ORDER_LINE_ID + orderEntryModel.getOrderLineId());
 
 					mplJusPayRefundService.makeRefundOMSCall(orderEntryModel, paymentTransactionModel, refund.getAmount(), newStatus,null);
 

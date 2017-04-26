@@ -16,12 +16,9 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hybris.oms.tata.model.MplTimeSlotsModel;
-import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
-import com.tisl.mpl.core.model.MplLPHolidaysModel;
-import com.tisl.mpl.core.mplconfig.dao.MplConfigDao;
+
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
 
 
@@ -31,6 +28,15 @@ import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsIte
  */
 public class DateUtilHelper
 {
+	/**
+	 * 
+	 */
+	private static final String LOG_MSG_TIME_FORMATER = "Time Formater ********:";
+
+	/**
+	 *
+	 */
+	private static final String DD_MM_YYYY = "dd-MM-yyyy";
 	private static final Logger LOG = Logger.getLogger(DateUtilHelper.class);
 	
 	public static final String SUNDAY = "Sunday";
@@ -52,13 +58,13 @@ public class DateUtilHelper
 		{
 			myDate = format.parse(selectedDate);
 			final DateTime today = new DateTime(myDate);
-			final DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
+			final DateTimeFormatter formatter = DateTimeFormat.forPattern(DD_MM_YYYY.intern());
 			dateWithOutTime = formatter.print(today);
 			LOG.debug(formatter.print(today));
 		}
 		catch (final ParseException e)
 		{
-			LOG.error("Time Formater ********:" + e.getMessage());
+			LOG.error(LOG_MSG_TIME_FORMATER + e.getMessage());
 		}
 
 		return dateWithOutTime;
@@ -80,7 +86,7 @@ public class DateUtilHelper
 		}
 		catch (final ParseException e)
 		{
-			LOG.error("Time Formater ********:" + e.getMessage());
+			LOG.error(LOG_MSG_TIME_FORMATER + e.getMessage());
 		}
 
 		return timeWithOutDate;
@@ -151,7 +157,7 @@ public class DateUtilHelper
 		{
 			myDate = format.parse(estDate);
 			final DateTime today = new DateTime(myDate);
-			final DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
+			final DateTimeFormatter formatter = DateTimeFormat.forPattern(DD_MM_YYYY.intern());
 			dateList = new ArrayList<String>();
 
 			for (int i = 0; i < numOfDays; i++)
@@ -163,7 +169,7 @@ public class DateUtilHelper
 		}
 		catch (final ParseException e)
 		{
-			LOG.error("Time Formater ********:" + e.getMessage());
+			LOG.error(LOG_MSG_TIME_FORMATER + e.getMessage());
 		}
 		LOG.debug("Calculated Dates is:" + dateList);
 		return dateList;
@@ -178,7 +184,7 @@ public class DateUtilHelper
 		final List<String> monthList = new ArrayList<String>();
 		for (final String monthformat : dateList)
 		{
-			final SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+			final SimpleDateFormat format = new SimpleDateFormat(DD_MM_YYYY.intern());
 			Date myDate = null;
 			try
 			{
@@ -186,7 +192,7 @@ public class DateUtilHelper
 			}
 			catch (final ParseException e)
 			{
-				LOG.error("Time Formater ********:" + e.getMessage());
+				LOG.error(LOG_MSG_TIME_FORMATER + e.getMessage());
 			}
 			final DateTime today = new DateTime(myDate);
 			final DateTimeFormatter formatter = DateTimeFormat.forPattern("MMM dd");
@@ -217,7 +223,7 @@ public class DateUtilHelper
 			}
 			catch (final Exception e)
 			{
-				LOG.error("Time Formater ********:" + e.getMessage());
+				LOG.error(LOG_MSG_TIME_FORMATER + e.getMessage());
 			}
 
 		}
@@ -232,12 +238,12 @@ public class DateUtilHelper
 		{
 			myDate = format.parse(estDate);
 			final DateTime today = new DateTime(myDate);
-			final DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
+			final DateTimeFormatter formatter = DateTimeFormat.forPattern(DD_MM_YYYY.intern());
 			dd = formatter.print(today.plusDays(1));
 		}
 		catch (final ParseException e)
 		{
-			LOG.error("Time Formater ********:" + e.getMessage());
+			LOG.error(LOG_MSG_TIME_FORMATER + e.getMessage());
 		}
 		return dd;
 	}
@@ -270,12 +276,22 @@ public class DateUtilHelper
 						Date date2 = null;
 						try
 						{
-							date1 = sdf.parse(eddObj.getEDD());
-							date2 = sdf.parse(exisEddObj.getEDD());
+							// Start Bug Fix for TISPRDT-1038
+							if(null != eddObj.getEDD() ){
+								date1 = sdf.parse(eddObj.getEDD());
+							}else if (null != eddObj.getNextEDD()){
+								date1 = sdf.parse(eddObj.getNextEDD());
+							}
+							if(null != exisEddObj.getEDD()){
+								date2 = sdf.parse(exisEddObj.getEDD());
+							}else if(null != exisEddObj.getNextEDD()){
+								date2 = sdf.parse(exisEddObj.getNextEDD());
+							}
+						// End Bug Fix for TISPRDT-1038
 						}
 						catch (final ParseException e)
 						{
-							LOG.error("Time Formater ********:" + e.getMessage());
+							LOG.error(LOG_MSG_TIME_FORMATER + e.getMessage());
 						}
 						if (date1.compareTo(date2) > 0)
 						{
@@ -314,7 +330,7 @@ public class DateUtilHelper
 			}
 				if(null !=workingDays && !workingDays.isEmpty() ){
 					String[] workingDaysList =  workingDays.split(",");
-					DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
+					DateTimeFormatter formatter = DateTimeFormat.forPattern(DD_MM_YYYY.intern());
 					DateTime dt = formatter.parseDateTime(date);
 					int numberOfWorkingDays = workingDaysList.length;
 					if(LOG.isDebugEnabled()) {
@@ -361,7 +377,7 @@ public class DateUtilHelper
 		//		final List<String> finalDateSet = new ArrayList<String>();
 		//		for (int i = 0; i < numOfDays; i++)
 		//		{
-		//			final DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
+		//			final DateTimeFormatter formatter = DateTimeFormat.forPattern(DD_MM_YYYY.intern());
 		//			final DateTime dt = formatter.parseDateTime(date);
 		//			if (dt.plusDays(i).dayOfWeek().getAsText().equalsIgnoreCase("Sunday"))
 		//			{
@@ -408,7 +424,7 @@ public class DateUtilHelper
 
 	public String removeLeadingZeros(String str)
 	{
-		while (str.indexOf("0") == 0)
+		while (str.indexOf('0') == 0)
 		{
 			str = str.substring(1);
 		}
@@ -426,7 +442,7 @@ public class DateUtilHelper
 		}
 		catch (final ParseException e)
 		{
-			LOG.error("Time Formater ********:" + e.getMessage());
+			LOG.error(LOG_MSG_TIME_FORMATER + e.getMessage());
 		}
 		final DateFormat f2 = new SimpleDateFormat("HHmmss");
 		final String formatedTime = f2.format(d); // "23:00"
@@ -436,7 +452,7 @@ public class DateUtilHelper
 	public String convertDateWithFormat(final String sourceDate)
 	{
 
-		final SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+		final SimpleDateFormat format = new SimpleDateFormat(DD_MM_YYYY.intern());
 		Date myDate = null;
 		try
 		{

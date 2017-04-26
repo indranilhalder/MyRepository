@@ -48,7 +48,17 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 {
 
 
+	/**
+	 * 
+	 */
+	private static final String PRESENT_DATE = "presentDate";
 
+	/**
+	 * 
+	 */
+	private static final String EARLIER_DATE = "earlierDate";
+
+	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(DefaultFetchSalesOrderDaoImpl.class.getName());
 
 	private final String PARENT = "Parent";
@@ -182,11 +192,11 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 				+ FROM_CLASS + OrderModel._TYPECODE + " AS p} where " + P_CLASS + OrderModel.CREATIONTIME
 				+ "} BETWEEN ?earlierDate and ?presentDate and " + P_CLASS + OrderModel.TYPE + TYPE_CLASS;
 		LOG.debug("db call fetch  specified details success");
-		LOG.debug("earlierDate" + startTime);
-		LOG.debug("presentDate" + endTime);
+		LOG.debug(EARLIER_DATE.intern() + startTime);
+		LOG.debug(PRESENT_DATE.intern() + endTime);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("earlierDate", startTime);
-		query.addQueryParameter("presentDate", endTime);
+		query.addQueryParameter(EARLIER_DATE.intern(), startTime);
+		query.addQueryParameter(PRESENT_DATE.intern(), endTime);
 		query.addQueryParameter(TYPE, PARENT);
 		LOG.debug("********** specified data query" + query);
 		return flexibleSearchService.<OrderModel> search(query).getResult();
@@ -247,8 +257,8 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 
 		final Map<String, Object> params = new HashMap<String, Object>(2);
-		params.put("earlierDate", earlierDate);
-		params.put("presentDate", presentDate);
+		params.put(EARLIER_DATE.intern(), earlierDate);
+		params.put(PRESENT_DATE.intern(), presentDate);
 		params.put(TYPE, SUB);
 
 
@@ -627,8 +637,8 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 
 		final Map<String, Object> params = new HashMap<String, Object>(2);
-		params.put("earlierDate", earlierDate);
-		params.put("presentDate", presentDate);
+		params.put(EARLIER_DATE.intern(), earlierDate);
+		params.put(PRESENT_DATE.intern(), presentDate);
 		params.put(TYPE, SUB);
 		final FlexibleSearchQuery queryString = new FlexibleSearchQuery(query);
 		LOG.debug("********** specified data query" + queryString);
