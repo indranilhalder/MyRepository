@@ -2,7 +2,7 @@
  *@author Techouts
  *
  */
-package com.tis.mpl.facade.changedelivery.Impl;
+package com.tis.mpl.facade.changedelivery.impl;
 
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
