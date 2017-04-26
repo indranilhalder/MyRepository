@@ -66559,3 +66559,15 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
 	float: none;
 }
 /* End TISSQAEE-380 */
+/* start TISSQAEE-375 */
+.alert.alert-danger a.close{
+	margin-right: 10px !important;
+	margin-top: -6px !important;
+	right: auto !important;
+	top: auto !important;
+	position: static !important;
+}
+.global-alerts button.close{
+	top: 6px !important;
+  } 
+  /* End TISSQAEE-375 */
