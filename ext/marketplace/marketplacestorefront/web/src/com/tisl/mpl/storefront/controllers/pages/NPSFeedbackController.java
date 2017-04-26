@@ -5,7 +5,6 @@ package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
-import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -30,7 +29,6 @@ import com.tisl.mpl.facade.nps.NPSFeedbackQuestionFacade;
 import com.tisl.mpl.facades.data.NPSFeedbackQRData;
 import com.tisl.mpl.facades.data.NPSFeedbackQRDetailData;
 import com.tisl.mpl.storefront.constants.MessageConstants;
-import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.web.forms.NPSFeedbackQRForm;
@@ -50,8 +48,10 @@ public class NPSFeedbackController
 
 	@Resource
 	private NPSFeedbackQuestionFacade npsFeedbackQuestionFacade;
-	@Resource(name = ModelAttributetConstants.SESSION_SERVICE)
-	private SessionService sessionService;
+	//sonar fix
+	/*
+	 * @Resource(name = ModelAttributetConstants.SESSION_SERVICE) private SessionService sessionService;
+	 */
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
 
