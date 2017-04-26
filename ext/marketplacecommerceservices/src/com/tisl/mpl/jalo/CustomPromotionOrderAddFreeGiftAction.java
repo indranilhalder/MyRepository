@@ -74,10 +74,10 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 	{
 		//System.out.println("Custom free gift action........................");
 
-		if (isCachingAllowed(ctx).booleanValue())
-		{
-			undo(ctx);
-		}
+		//		if (isCachingAllowed(ctx).booleanValue())
+		//		{
+		undo(ctx);
+		//}
 
 		final double freebieAmt = 0.01D;
 		final AbstractOrder order = getPromotionResult(ctx).getOrder(ctx);
