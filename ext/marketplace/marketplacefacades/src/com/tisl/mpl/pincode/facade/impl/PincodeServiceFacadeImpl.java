@@ -35,7 +35,6 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
@@ -76,20 +75,20 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	private ProductDetailsHelper productDetailsHelper;
 	private MplCartFacade mplCartFacade;
 	private PincodeService pincodeService;
-	@Autowired
-	private MplConfigService mplConfigService;
 
 	private Converters converters;
 
 	@Resource(name = "pointOfServiceConverter")
 	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
 
-	@Autowired
+	@Resource(name = "mplSellerInformationService")
 	private MplSellerInformationService mplSellerInformationService;
 
 	@Resource(name = "mplPincodeConverter")
 	private Converter<PincodeModel, PincodeData> mplPincodeConverter;
 
+	@Resource(name = "mplConfigService")
+	private MplConfigService mplConfigService;
 
 	/**
 	 * This method is used to check pincode is serviceable are not

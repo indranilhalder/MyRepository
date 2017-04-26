@@ -601,7 +601,7 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 		try {
 			((MarketplaceSearchCommandController) widget
 					.getWidgetController()).setCurrentSite();
-
+			boolean isPinCodeServicable =false;
 			//TISUAT-4526 no sship in cod
 			// commenting below line ,since from R2.3 SSHIP COD IS eligible  if seller Allows
 //			if(!mplFindDeliveryCostStrategy.isTShip(ussid)){
@@ -612,12 +612,13 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 			List<PinCodeResponseData> pinCodeResponses = ((MarketplaceSearchCommandController) widget
 					.getWidgetController()).getResponseForPinCode(product,
 					String.valueOf(pincode), isDeliveryDateRequired, ussid);
-			boolean isPinCodeServicable = sessionService.getAttribute("isPincodeServicable");
+			
 			if(CollectionUtils.isNotEmpty(pinCodeResponses)) {
 				LOG.info("pinCodeResponse:" + pinCodeResponses.size());
 
 				boolean isAddtoCartRequired = checkServiceAbility(widget, item, quantityToAdd, pincode, product,
 						pinCodeResponses);
+				isPinCodeServicable = sessionService.getAttribute("isPincodeServicable");
 				if(isAddtoCartRequired){
 					((MarketplaceSearchCommandController) widget
 							.getWidgetController()).setCurrentSite();
@@ -670,9 +671,11 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 							+ product.getCode());
 					LOG.info("Quantity added:" + quantityToAdd);
 					isAddtoCartRequired=true;
+					sessionService.setAttribute("isPincodeServicable", true);
 				} else if (!StringUtils.equals(
 						pinCodeResponse.getIsServicable(), YES)) {
 					LOG.info("Not serviceable at " + pincode);
+					sessionService.setAttribute("isPincodeServicable", false);
 					popupMessage(widget, NOT_SERVICE_ABLE);
 				} else if (pinCodeResponse.getStockCount() > 0) {
 					LOG.info("There is no sufficient inventory available for this product. Total Inventory available:"

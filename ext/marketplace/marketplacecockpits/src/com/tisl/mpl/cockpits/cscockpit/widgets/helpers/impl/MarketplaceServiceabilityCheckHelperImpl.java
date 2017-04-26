@@ -1,12 +1,15 @@
 package com.tisl.mpl.cockpits.cscockpit.widgets.helpers.impl;
 
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
+import de.hybris.platform.commercefacades.product.ProductFacade;
+import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.CNCServiceableSlavesData;
 import de.hybris.platform.commercefacades.product.data.DeliveryDetailsData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
+import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.ServiceableSlavesData;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
@@ -21,6 +24,7 @@ import de.hybris.platform.util.WeakArrayList;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -34,12 +38,20 @@ import org.apache.log4j.Logger;
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketplaceSearchCommandControllerImpl;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
+import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
@@ -85,15 +97,15 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	@Resource
 	private PriceDataFactory priceDataFactory;
 
-	@Resource
+	@Resource(name = "buyBoxService")
 	private BuyBoxService buyBoxService;
-	@Resource
+	@Resource(name = "buyBoxFacade")
 	private BuyBoxFacade buyBoxFacade;
 
 	@Resource(name = "mplCommerceCartService")
 	private MplCommerceCartService mplCommerceCartService;
 
-	@Resource
+	@Resource(name = "pincodeService")
 	private PincodeService pincodeService;
 	
 	@Resource(name = "pinCodeFacade")
@@ -102,15 +114,20 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	@Resource(name = "pincodeServiceFacade")
 	private PincodeServiceFacade pincodeServiceFacade;
 
-	@Resource
+	@Resource(name = "sessionService")
 	private SessionService sessionService;
 
-	@Resource
+	@Resource(name = "mplConfigService")
 	private MplConfigService mplConfigService;
 	
-	@Resource
+	@Resource(name = "mplSellerInformationService")
 	private MplSellerInformationService mplSellerInformationService;
-
+	@Resource(name = "mplCheckoutFacade")
+	private MplCheckoutFacade mplCheckoutFacade;
+	@Resource(name = "productDetailsHelper")
+	private ProductDetailsHelper productDetailsHelper;
+	@Resource(name = "productFacade")
+	private ProductFacade productFacade;
 	/**
 	 * Gets the response for pin code.
 	 *
@@ -135,7 +152,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 		List<PinCodeResponseData> response = null;
 		final LocationDTO dto = new LocationDTO();
 		Location myLocation = null;
-		final boolean isPincodeServicable = Boolean.TRUE;
+		final boolean isPincodeServicable = Boolean.FALSE;
 		//TISSEC-11
 		final String regex = "\\d{6}";
 		try
@@ -160,14 +177,19 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 					LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
 					LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
 					sessionService.setAttribute(MarketplaceCockpitsConstants.PIN_CODE, pin);
+					final String configRadius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
+					final double configurableRadius = Double.parseDouble(configRadius);
+					LOG.debug("**********configrableRadius:" + configurableRadius);
 					response = pinCodeFacade.getResonseForPinCode(product.getCode() , pin,
-							pincodeServiceFacade.populatePinCodeServiceData(product.getCode() , myLocation.getGPS()));
+							populatePinCodeServiceData(cartId,product,
+									isDeliveryDateRequired, ussid, myLocation.getGPS(), configurableRadius));
 
 					return response;
 				}
 				catch (final Exception e)
 				{
 					LOG.debug("configurableRadius values is empty please add radius property in properties file ");
+					ExceptionUtil.getCustomizedExceptionTrace(e);
 				}
 			}
 
@@ -437,6 +459,26 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	}
 
 
+	/**
+	 *
+	 * @param deliveryMode
+	 * @param ussid
+	 * @return
+	 */
+	private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid)
+	{
+		final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
+		final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
+				.populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
+
+		final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
+		deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
+		deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
+		deliveryModeData.setName(mplZoneDeliveryModeValueModel.getDeliveryMode().getName());
+		deliveryModeData.setSellerArticleSKU(ussid);
+		deliveryModeData.setDeliveryCost(priceData);
+		return deliveryModeData;
+	}
 
 
 	// overriding method to get stores and radius For entered pincode
@@ -456,105 +498,125 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	{
 		final List<PincodeServiceData> requestData = new WeakArrayList<>();
 		PincodeServiceData data = null;
-		final List<SellerInformationData> sellers = buyBoxFacade.getsellersDetails(productModel.getCode());
+		MarketplaceDeliveryModeData deliveryModeData = null;
 		try
 		{
-			final List<BuyBoxModel> lst = buyBoxService.getBuyboxPricesForSearch(productModel.getCode());
-			for (final BuyBoxModel buybox : lst)
+			final ProductData productData = productFacade.getProductForOptions(productModel,
+					Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
+
+			for (final SellerInformationData seller : productData.getSeller())
 			{
-				if (StringUtils.isNotEmpty(ussid))
+				final List<MarketplaceDeliveryModeData> deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>();
+				data = new PincodeServiceData();
+				if ((null != seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty()))
 				{
-					if (buybox.getSellerArticleSKU().equalsIgnoreCase(ussid))
+					for (final MarketplaceDeliveryModeData deliveryMode : seller.getDeliveryModes())
 					{
-						for (final SellerInformationData sd : sellers)
-						{
-							if (sd.getSellerID().equalsIgnoreCase(buybox.getSellerId()))
-							{
-								data = new PincodeServiceData();
-								data.setIsCOD(sd.getIsCod());
-								data.setDeliveryModes(sd.getDeliveryModes());
-								if(null != sd.getShippingMode()) {
-									data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(sd.getShippingMode().toUpperCase()));
-								}
-								data.setDeliveryFulfillModeByP1(sd.getDeliveryFulfillModebyP1());
-								data.setFullFillmentType(sd.getFullfillment());
-								data.setSellerId(buybox.getSellerId());
-								data.setUssid(buybox.getSellerArticleSKU());
-								data.setIsDeliveryDateRequired(isDeliveryDateRequired);
-								data.setPrice(buybox.getPrice());
-								data.setMopPrice(formPriceData(buybox.getPrice()));
-								data.setIsFragile(sd.getIsFragile());
-								data.setIsPrecious(sd.getIsPrecious());
-								if(null != cartId) {
-									data.setCartId(cartId);
-								}
-								// Added To get Near By Stores
-								final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius,
-										sd.getSellerID());
-								if (null != storeList && storeList.size() > 0)
-								{
-									final List<String> locationList = new ArrayList<String>();
-									for (final Location location : storeList)
-									{
-										locationList.add(location.getName());
-									}
-									LOG.debug("locationList:" + locationList.size());
-									data.setStore(locationList);
-								}
-								data.setSellerHandlingTime(sd.getSellerHandlingTime());
-								requestData.add(data);
-							}
-						}
+						deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
+						deliveryModeList.add(deliveryModeData);
 					}
+					data.setDeliveryModes(deliveryModeList);
+				}
+				if (null != seller.getFullfillment() && StringUtils.isNotEmpty(seller.getFullfillment()))
+				{
+					data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase()));
+				}
+				LOG.debug("seller.getFullfillment() :" + seller.getFullfillment());
+				LOG.debug("seller.getDeliveryFulfillModebyP1():" + seller.getDeliveryFulfillModebyP1());
+
+				if (null != seller.getDeliveryFulfillModebyP1() && StringUtils.isNotEmpty(seller.getDeliveryFulfillModebyP1()))
+				{
+					data.setDeliveryFulfillModeByP1(seller.getDeliveryFulfillModebyP1().toUpperCase());
+				}
+				LOG.debug("seller.getDeliveryFulfillModebyP1()******:" + seller.getDeliveryFulfillModebyP1());
+				LOG.debug("seller.getIsFragile()******:" + seller.getIsFragile());
+				if (null != seller.getIsFragile() && StringUtils.isNotEmpty(seller.getIsFragile()))
+				{
+					data.setIsFragile(seller.getIsFragile().toUpperCase());
+				}
+				LOG.debug("seller.getIsPrecious()******:" + seller.getIsPrecious());
+				if (null != seller.getIsPrecious() && StringUtils.isNotEmpty(seller.getIsPrecious()))
+				{
+					data.setIsPrecious(seller.getIsPrecious().toUpperCase());
+				}
+
+
+				if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode())))
+				{
+					data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase()));
+				}
+				if (null != seller.getSpPrice() && !(seller.getSpPrice().equals("")))
+				{
+					data.setPrice(new Double(seller.getSpPrice().getValue().doubleValue()));
+				}
+				else if (null != seller.getMopPrice() && !(seller.getMopPrice().equals("")))
+				{
+					data.setPrice(new Double(seller.getMopPrice().getValue().doubleValue()));
+				}
+				else if (null != seller.getMrpPrice() && !(seller.getMrpPrice().equals("")))
+				{
+					data.setPrice(new Double(seller.getMrpPrice().getValue().doubleValue()));
 				}
 				else
 				{
-					for (final SellerInformationData sd : sellers)
-					{
-						if (sd.getSellerID().equalsIgnoreCase(buybox.getSellerId()))
-						{
-							data = new PincodeServiceData();
-							data.setIsCOD(sd.getIsCod());
-							data.setDeliveryModes(sd.getDeliveryModes());
-							if(null != sd.getShippingMode()) {
-							  data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(sd.getShippingMode().toUpperCase()));
-							}
-							data.setDeliveryFulfillModeByP1(sd.getDeliveryFulfillModebyP1());
-							data.setFullFillmentType(sd.getFullfillment());
-							data.setSellerId(buybox.getSellerId());
-							data.setUssid(buybox.getSellerArticleSKU());
-							data.setIsDeliveryDateRequired(isDeliveryDateRequired);
-							data.setPrice(buybox.getPrice());
-							data.setMopPrice(formPriceData(buybox.getPrice()));
-                            if(null != cartId) {
-                            	data.setCartId(cartId);
-                            }
-							// Added To get Near By Stores
-							final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius,
-									sd.getSellerID());
-							if (null != storeList && storeList.size() > 0)
-							{
-								final List<String> locationList = new ArrayList<String>();
-								for (final Location location : storeList)
-								{
-									locationList.add(location.getName());
-								}
-								LOG.debug("locationList:" + locationList.size());
-								data.setStore(locationList);
-							}
-							data.setSellerHandlingTime(data.getSellerHandlingTime());
-							requestData.add(data);
-						}
-					}
+					LOG.debug("No price avaiable for seller :" + seller.getSellerID());
+					continue;
 				}
+				if (null != seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod()))
+				{
+					data.setIsCOD(seller.getIsCod());
+				}
+				final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius,seller.getSellerID());
+				if (CollectionUtils.isNotEmpty(storeList))
+				{
+					final List<String> locationList = new ArrayList<String>();
+					for (final Location location : storeList)
+					{
+						locationList.add(location.getName());
+					}
+					LOG.debug("locationList:" + locationList.size());
+					data.setStore(locationList);
+				}
+
+				final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(seller.getUssid());
+				List<RichAttributeModel> sellerRichAttributeModel = null;
+				int sellerHandlingTime = 0;
+				String sellerRichAttrForHandlingTime = null;
+				if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+				{
+					sellerRichAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+					if (CollectionUtils.isNotEmpty(sellerRichAttributeModel)
+							&& sellerRichAttributeModel.get(0).getSellerHandlingTime() != null)
+					{
+						sellerRichAttrForHandlingTime = sellerRichAttributeModel.get(0).getSellerHandlingTime().toString();
+						if (StringUtils.isNotEmpty(sellerRichAttrForHandlingTime))
+						{
+							sellerHandlingTime = Integer.parseInt(sellerRichAttrForHandlingTime);
+						}
+
+					}
+					data.setSellerHandlingTime(Integer.valueOf(sellerHandlingTime));
+				}
+
+				data.setSellerId(seller.getSellerID());
+				data.setUssid(seller.getUssid());
+				data.setIsDeliveryDateRequired("N");
+				if(null != cartId) {
+                	data.setCartId(cartId);
+                }
+				requestData.add(data);
 			}
 		}
-		catch (final Exception e)
+		catch (final EtailBusinessExceptions e)
 		{
-			LOG.error("Exception in populatePinCodeServiceData", e);
-			throw new EtailNonBusinessExceptions(e);
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 		}
 
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 		return requestData;
 	}
 
