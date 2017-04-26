@@ -46,7 +46,7 @@ public class APlusContentPrepareInterceptor implements PrepareInterceptor
 	private ConfigurationService configurationService;
 	@Resource
 	BusinessContentImportUtility businessContentImportUtil;
-	Logger LOG = Logger.getLogger(this.getClass().getName());
+	private final Logger LOG = Logger.getLogger(this.getClass().getName()); //SONAR FIX
 	@Autowired
 	MediaService mediaService;
 
