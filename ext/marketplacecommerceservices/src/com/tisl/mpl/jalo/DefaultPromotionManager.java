@@ -5433,9 +5433,9 @@ public class DefaultPromotionManager extends PromotionsManager
 	private List<String> fetchSecProdsExcludedProdsForPromotion(final Flat3Map params, final SessionContext ctx,
 			final String promotionType)
 	{
-		/* SONAR FIX */
-		final StringBuilder promQuery = new StringBuilder(200);
-		promQuery.append("SELECT {promo.secondProducts} as secondProducts, {promo.excludedProducts} as excludedProducts  ");
+
+		final StringBuilder promQuery = new StringBuilder(
+				"SELECT {promo.secondProducts} as secondProducts, {promo.excludedProducts} as excludedProducts  ");
 		promQuery.append("FROM  {").append(promotionType).append(" AS promo} ");
 		promQuery.append(" WHERE {promo.secondProducts} IS NOT NULL AND {promo:pk} = ?promo ");
 
@@ -5455,8 +5455,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	private void populateSecondaryListForCategory(final Collection<Category> secondCategories,
 			final List<Product> secondaryProductList, final Flat3Map params, final SessionContext ctx)
 	{
-		/* SONAR FIX */
-		final StringBuilder promQuery = new StringBuilder(60);
+		final StringBuilder promQuery = new StringBuilder();
 		final Set promotionCategories = new HashSet();
 		for (final Category cat : secondCategories)
 		{
@@ -5679,9 +5678,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	 */
 	private Collection<String> fetchExcludedProductsForPromotion(final Flat3Map params, final SessionContext ctx)
 	{
-		/* * SONAR FIX */
-		final StringBuilder promQuery = new StringBuilder(160);
-		promQuery.append("SELECT {promotion.excludedProducts} as excludedProducts");
+		final StringBuilder promQuery = new StringBuilder("SELECT {promotion.excludedProducts} as excludedProducts  ");
 		promQuery.append("FROM  {").append(MarketplacecommerceservicesConstants.PRODUCT_PROMO).append(" AS promotion} ");
 		promQuery.append("WHERE {promotion.excludedProducts} IS NOT NULL AND {promotion:pk} = ?promo ");
 
@@ -5702,9 +5699,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	 */
 	private Collection<String> fetchBrandsForPromotion(final Flat3Map params, final SessionContext ctx, final String PromotionType)
 	{
-		/* * SONAR FIX */
-		final StringBuilder promQuery = new StringBuilder(150);
-		promQuery.append("SELECT {brand.manufacturers} as brands");
+		final StringBuilder promQuery = new StringBuilder("SELECT {brand.manufacturers} as brands  ");
 		promQuery.append("FROM  {").append(PromotionType).append(" AS brand} ");
 		promQuery.append("WHERE {brand.manufacturers} IS NOT NULL AND {brand.promotion} = ?promo ");
 
