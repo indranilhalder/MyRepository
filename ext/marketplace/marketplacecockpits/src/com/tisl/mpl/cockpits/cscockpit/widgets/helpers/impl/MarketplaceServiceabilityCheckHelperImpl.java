@@ -30,8 +30,6 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketplaceSearchCommandControllerImpl;
@@ -39,19 +37,20 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceability
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
-import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
+import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.PinCodeDeliveryModeService;
+import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.CNCServiceableSlavesWsDTO;
 import com.tisl.mpl.wsdto.DeliveryModeResOMSWsDto;
 import com.tisl.mpl.wsdto.PinCodeDeliveryModeListResponse;
@@ -83,40 +82,34 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	private PinCodeDeliveryModeService pinCodeDeliveryModeService;
 
 	/** The price data factory. */
-	@Autowired
+	@Resource
 	private PriceDataFactory priceDataFactory;
 
-	@Autowired
+	@Resource
 	private BuyBoxService buyBoxService;
-	@Autowired
+	@Resource
 	private BuyBoxFacade buyBoxFacade;
 
 	@Resource(name = "mplCommerceCartService")
 	private MplCommerceCartService mplCommerceCartService;
 
-
-	@Autowired
+	@Resource
 	private PincodeService pincodeService;
+	
+	@Resource(name = "pinCodeFacade")
+	private PinCodeServiceAvilabilityFacade pinCodeFacade;
+	
+	@Resource(name = "pincodeServiceFacade")
+	private PincodeServiceFacade pincodeServiceFacade;
 
-	public BuyBoxService getBuyBoxService()
-	{
-		return buyBoxService;
-	}
-
-	@Autowired
+	@Resource
 	private SessionService sessionService;
 
-	@Required
-	public void setBuyBoxService(final BuyBoxService buyBoxService)
-	{
-		this.buyBoxService = buyBoxService;
-	}
-
-	@Autowired
+	@Resource
 	private MplConfigService mplConfigService;
 	
-	@Autowired
-	 private MplSellerInformationService mplSellerInformationService;
+	@Resource
+	private MplSellerInformationService mplSellerInformationService;
 
 	/**
 	 * Gets the response for pin code.
@@ -140,66 +133,51 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 			ClientEtailNonBusinessExceptions
 	{
 		List<PinCodeResponseData> response = null;
-		LOG.debug("productCode:" + product.getCode() + "pinCode:" + pin);
-		final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pin);
 		final LocationDTO dto = new LocationDTO();
 		Location myLocation = null;
 		final boolean isPincodeServicable = Boolean.TRUE;
-		sessionService.setAttribute("isPincodeServicable", isPincodeServicable);
-		if (null == pinCodeModelObj)
+		//TISSEC-11
+		final String regex = "\\d{6}";
+		try
 		{
-
-			sessionService.setAttribute("isPincodeServicable", false);
-		}
-
-		if (null != pinCodeModelObj)
+		if (pin.matches(regex))
 		{
-			try
+			LOG.debug("productCode:" + product.getCode()  + "pinCode:" + pin);
+			final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pin);
+			if (null == pinCodeModelObj)
 			{
-				//	final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
-				final String configurableRadius = mplConfigService
-						.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
-				LOG.debug("configurableRadius is:" + configurableRadius);
-				dto.setLongitude(pinCodeModelObj.getLongitude().toString());
-				dto.setLatitude(pinCodeModelObj.getLatitude().toString());
-				myLocation = new LocationDtoWrapper(dto);
-				LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
-				LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
-
-				/*
-				 * final List<PincodeServiceData> requestData = populatePinCodeServiceData(product, isDeliveryDateRequired,
-				 * ussid);
-				 */
-				final List<PincodeServiceData> requestData = populatePinCodeServiceData(cartId,product, isDeliveryDateRequired, ussid,
-						myLocation.getGPS(), Double.parseDouble(configurableRadius));
-
-				final List<String> ussidList = new ArrayList<String>();
-				final List<String> sellerIdList = new ArrayList<String>();
-				for (final PincodeServiceData reqData : requestData)
+				sessionService.setAttribute("isPincodeServicable", false);
+			}
+			else
+			{
+				try
 				{
-					ussidList.add(reqData.getUssid());
-					sellerIdList.add(reqData.getSellerId());
-				}
+					sessionService.setAttribute("isPincodeServicable", isPincodeServicable);
+					
+					dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+					dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+					myLocation = new LocationDtoWrapper(dto);
+					LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
+					LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
+					sessionService.setAttribute(MarketplaceCockpitsConstants.PIN_CODE, pin);
+					response = pinCodeFacade.getResonseForPinCode(product.getCode() , pin,
+							pincodeServiceFacade.populatePinCodeServiceData(product.getCode() , myLocation.getGPS()));
 
-				//checing if any restricted pincodes are present
-				final List<PincodeServiceData> validReqData = mplPincodeRestrictionService.getRestrictedPincode(ussidList,
-						sellerIdList, product.getCode(), pin, requestData);
-				/* List<PinCodeResponseData> response = null; */
-				if ((null != validReqData))
+					return response;
+				}
+				catch (final Exception e)
 				{
-
-					response = getAllResponsesForPinCode(pin, validReqData);
-
+					LOG.debug("configurableRadius values is empty please add radius property in properties file ");
 				}
-
-				return response;
 			}
 
-			catch (final Exception e)
-			{
-				LOG.error("configurableRadius values is empty please add radius property in properties file ");
-			}
 		}
+
+	}
+	catch (final EtailNonBusinessExceptions e)
+	{
+		ExceptionUtil.etailNonBusinessExceptionHandler(e);
+	}
 		return response;
 	}
 
@@ -244,7 +222,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	 *            the client etail non business exceptions
 	 * @description this method gets all the responses about servicable pincodes from OMS
 	 */
-
+	@Deprecated
 	private List<PinCodeResponseData> getAllResponsesForPinCode(final String pin, final List<PincodeServiceData> reqData)
 			throws EtailNonBusinessExceptions, ClientEtailNonBusinessExceptions
 	{
@@ -394,7 +372,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 		final List<SellerInformationData> sellers = buyBoxFacade.getsellersDetails(productModel.getCode());
 		try
 		{
-			final List<BuyBoxModel> lst = getBuyBoxService().getBuyboxPricesForSearch(productModel.getCode());
+			final List<BuyBoxModel> lst = buyBoxService.getBuyboxPricesForSearch(productModel.getCode());
 			for (final BuyBoxModel buybox : lst)
 			{
 				if (StringUtils.isNotEmpty(ussid))
@@ -481,7 +459,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 		final List<SellerInformationData> sellers = buyBoxFacade.getsellersDetails(productModel.getCode());
 		try
 		{
-			final List<BuyBoxModel> lst = getBuyBoxService().getBuyboxPricesForSearch(productModel.getCode());
+			final List<BuyBoxModel> lst = buyBoxService.getBuyboxPricesForSearch(productModel.getCode());
 			for (final BuyBoxModel buybox : lst)
 			{
 				if (StringUtils.isNotEmpty(ussid))

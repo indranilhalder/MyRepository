@@ -44,7 +44,6 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
-import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
@@ -285,34 +284,34 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	private double getDeliveryCost(final OrderModel orderModel)
 	{
 		// YTODO Auto-generated method stub
-		Double delCost = Double.valueOf(orderModel.getDeliveryCost().doubleValue());
-		for (final AbstractOrderEntryModel entry : orderModel.getEntries())
-		{
-			final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(entry.getMplDeliveryMode()
-					.getDeliveryMode().getCode(), orderModel.getCurrency().getIsocode(), entry.getSelectedUSSID());
-
-			if (delCost.doubleValue() <= 0)
-			{
-				if (entry.getGiveAway() != null && !entry.getGiveAway().booleanValue() && !entry.getIsBOGOapplied().booleanValue())
-				{
-					delCost = Double.valueOf((valueModel.getValue().doubleValue() * entry.getQuantity().intValue()));
-					entry.setCurrDelCharge(delCost);
-				}
-				if (entry.getGiveAway() != null && !entry.getGiveAway().booleanValue() && entry.getIsBOGOapplied().booleanValue())
-				{
-					delCost = Double.valueOf((valueModel.getValue().doubleValue() * (entry.getQuantity().intValue() - entry
-							.getQualifyingCount().intValue())));
-					entry.setCurrDelCharge(delCost);
-				}
-				if (entry.getGiveAway() != null && entry.getGiveAway().booleanValue())
-				{
-					final Double deliveryCost = Double.valueOf(0.0D);
-					entry.setCurrDelCharge(deliveryCost);
-					LOG.warn("skipping deliveryCost for freebee [" + entry.getSelectedUSSID() + "] due toeb freebee ");
-				}
-			}
-
-		}
+		final Double delCost = Double.valueOf(orderModel.getDeliveryCost().doubleValue());
+		//		for (final AbstractOrderEntryModel entry : orderModel.getEntries())
+		//		{
+		//			final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(entry.getMplDeliveryMode()
+		//					.getDeliveryMode().getCode(), orderModel.getCurrency().getIsocode(), entry.getSelectedUSSID());
+		//
+		//			if (delCost.doubleValue() <= 0)
+		//			{
+		//				if (entry.getGiveAway() != null && !entry.getGiveAway().booleanValue() && !entry.getIsBOGOapplied().booleanValue())
+		//				{
+		//					delCost = Double.valueOf((valueModel.getValue().doubleValue() * entry.getQuantity().intValue()));
+		//					entry.setCurrDelCharge(delCost);
+		//				}
+		//				if (entry.getGiveAway() != null && !entry.getGiveAway().booleanValue() && entry.getIsBOGOapplied().booleanValue())
+		//				{
+		//					delCost = Double.valueOf((valueModel.getValue().doubleValue() * (entry.getQuantity().intValue() - entry
+		//							.getQualifyingCount().intValue())));
+		//					entry.setCurrDelCharge(delCost);
+		//				}
+		//				if (entry.getGiveAway() != null && entry.getGiveAway().booleanValue())
+		//				{
+		//					final Double deliveryCost = Double.valueOf(0.0D);
+		//					entry.setCurrDelCharge(deliveryCost);
+		//					LOG.warn("skipping deliveryCost for freebee [" + entry.getSelectedUSSID() + "] due toeb freebee ");
+		//				}
+		//			}
+		//
+		//		}
 		return delCost.doubleValue();
 	}
 
@@ -384,9 +383,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -437,30 +436,22 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		return totalPrice;
 	}
 
+	//SONAR FIX
 
-	private Double getTotalDiscountForTotalPrice(final List<AbstractOrderEntryModel> entries)
-	{
-		Double discount = Double.valueOf(0);
-
-		double promoDiscount = 0.0D;
-		double couponDiscount = 0.0D;
-
-		if (CollectionUtils.isNotEmpty(entries))
-		{
-			for (final AbstractOrderEntryModel oModel : entries)
-			{
-				if (null != oModel && !oModel.getGiveAway().booleanValue())
-				{
-					couponDiscount += (null == oModel.getCouponValue() ? 0.0d : oModel.getCouponValue().doubleValue());
-					promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d : oModel.getTotalProductLevelDisc()
-							.doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d : oModel.getCartLevelDisc().doubleValue());
-				}
-			}
-
-			discount = Double.valueOf(couponDiscount + promoDiscount);
-		}
-		return discount;
-	}
+	/*
+	 * private Double getTotalDiscountForTotalPrice(final List<AbstractOrderEntryModel> entries) { Double discount =
+	 * Double.valueOf(0);
+	 *
+	 * double promoDiscount = 0.0D; double couponDiscount = 0.0D;
+	 *
+	 * if (CollectionUtils.isNotEmpty(entries)) { for (final AbstractOrderEntryModel oModel : entries) { if (null !=
+	 * oModel && !oModel.getGiveAway().booleanValue()) { couponDiscount += (null == oModel.getCouponValue() ? 0.0d :
+	 * oModel.getCouponValue().doubleValue()); promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d :
+	 * oModel.getTotalProductLevelDisc() .doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d :
+	 * oModel.getCartLevelDisc().doubleValue()); } }
+	 *
+	 * discount = Double.valueOf(couponDiscount + promoDiscount); } return discount; }
+	 */
 
 
 	private Double getTotalDiscount(final List<AbstractOrderEntryModel> entries, final boolean deliveryFlag)

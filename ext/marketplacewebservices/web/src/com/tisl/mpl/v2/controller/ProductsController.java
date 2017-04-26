@@ -151,8 +151,8 @@ public class ProductsController extends BaseController
 	private static final Logger LOG = Logger.getLogger(ProductsController.class);
 	private static final String DROPDOWN_BRAND = "MBH";
 	private static final String DROPDOWN_CATEGORY = "MSH";
-
-	private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
+	/* SONAR FIX */
+	//private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
 
 	private static String PRODUCT_OPTIONS = "";
 	@Resource(name = "storeFinderStockFacade")

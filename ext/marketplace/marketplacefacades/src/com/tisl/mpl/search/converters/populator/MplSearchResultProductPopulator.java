@@ -342,10 +342,10 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 			final String mrp = value[1];
 			final String price = value[2];
 			target.setUssID(ussid);
-			final PriceData mrpPrice = getPriceDataFactory().create(PriceDataType.BUY,
-					BigDecimal.valueOf(Double.valueOf(mrp).doubleValue()), getCommonI18NService().getCurrentCurrency());
+			final PriceData mrpPrice = getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf(Double.parseDouble(mrp)),
+					getCommonI18NService().getCurrentCurrency());//SONAR FIX
 			final PriceData mopPrice = getPriceDataFactory().create(PriceDataType.BUY,
-					BigDecimal.valueOf(Double.valueOf(price).doubleValue()), getCommonI18NService().getCurrentCurrency());
+					BigDecimal.valueOf(Double.parseDouble(price)), getCommonI18NService().getCurrentCurrency());//SONAR FIX
 			final PriceData savings = getSavingsValue(Double.valueOf(mrp), Double.valueOf(price));
 			priceMap.put(ussid.substring(0, 6), mrpPrice);
 			mrpMap.put(ussid.substring(0, 6), mopPrice);
@@ -361,10 +361,10 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 				final String ussidVal = value[0];
 				final String mrp = value[1];
 				final String price = value[2];
-				final PriceData mrpVal = getPriceDataFactory().create(PriceDataType.BUY,
-						BigDecimal.valueOf(Double.valueOf(mrp).doubleValue()), getCommonI18NService().getCurrentCurrency());
+				final PriceData mrpVal = getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf(Double.parseDouble(mrp)),
+						getCommonI18NService().getCurrentCurrency());//SONAR FIX
 				final PriceData mopVal = getPriceDataFactory().create(PriceDataType.BUY,
-						BigDecimal.valueOf(Double.valueOf(price).doubleValue()), getCommonI18NService().getCurrentCurrency());
+						BigDecimal.valueOf(Double.parseDouble(price)), getCommonI18NService().getCurrentCurrency());//SONAR FIX
 				final PriceData savVal = getSavingsValue(Double.valueOf(mrp), Double.valueOf(price));
 				ussidMap.put(ussidVal.substring(0, 6), ussidVal);
 				priceMap.put(ussid.substring(0, 6), mrpVal);

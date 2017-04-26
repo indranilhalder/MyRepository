@@ -321,7 +321,7 @@
 
 	
 		</li>
-		<li>
+		<%-- <li>
 		    <div class="method item-mthd">
                    <h3> <spring:theme code="checkout.multi.shipmentMethod"/></h3>
                    <p class="delivery-method-description">
@@ -333,7 +333,7 @@
                    </p>
                   <p class="delivery-method-description delivery-method-description-time">
                   
-                 <%--  <c:out value="${entry.mplDeliveryMode.description}"></c:out> --%>
+                  <c:out value="${entry.mplDeliveryMode.description}"></c:out>
                   </p>
                    <c:choose>
                        <c:when test="${not empty entry.timeSlotFrom  && entry.timeSlotFrom !=null }">
@@ -350,7 +350,7 @@
                   
                   </c:choose>
                   </div>
-		</li>
+		</li> --%>
 	</c:if>
 </c:forEach>
 </ul>
