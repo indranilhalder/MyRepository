@@ -86,10 +86,10 @@ function getProductSetData() {
     var query = window.location.search;
     
     //INC144316143
-    if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
+    /*if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
         window.localStorage.setItem('lastUrlpathName',encodeURI(pathName));
         window.localStorage.setItem('lastUrlquery',encodeURI(query));
-    }
+    }*/
     
     if (pageNoPagination <= totalNoOfPages) {
 

@@ -828,10 +828,10 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 	console.log(requiredUrl);
 	console.log(pageURL);
 	//INC144316143
-	if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
+	/*if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
 		   window.localStorage.setItem('lastUrlpathName',encodeURI(pathName));
 		   window.localStorage.setItem('lastUrlquery',encodeURI(query));
-	 }
+	 }*/
 	
 	//TISSQAUAT-3418 starts
 	// Added For INC144315104 and INC144315462
