@@ -436,30 +436,22 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		return totalPrice;
 	}
 
+	//SONAR FIX
 
-	private Double getTotalDiscountForTotalPrice(final List<AbstractOrderEntryModel> entries)
-	{
-		Double discount = Double.valueOf(0);
-
-		double promoDiscount = 0.0D;
-		double couponDiscount = 0.0D;
-
-		if (CollectionUtils.isNotEmpty(entries))
-		{
-			for (final AbstractOrderEntryModel oModel : entries)
-			{
-				if (null != oModel && !oModel.getGiveAway().booleanValue())
-				{
-					couponDiscount += (null == oModel.getCouponValue() ? 0.0d : oModel.getCouponValue().doubleValue());
-					promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d : oModel.getTotalProductLevelDisc()
-							.doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d : oModel.getCartLevelDisc().doubleValue());
-				}
-			}
-
-			discount = Double.valueOf(couponDiscount + promoDiscount);
-		}
-		return discount;
-	}
+	/*
+	 * private Double getTotalDiscountForTotalPrice(final List<AbstractOrderEntryModel> entries) { Double discount =
+	 * Double.valueOf(0);
+	 *
+	 * double promoDiscount = 0.0D; double couponDiscount = 0.0D;
+	 *
+	 * if (CollectionUtils.isNotEmpty(entries)) { for (final AbstractOrderEntryModel oModel : entries) { if (null !=
+	 * oModel && !oModel.getGiveAway().booleanValue()) { couponDiscount += (null == oModel.getCouponValue() ? 0.0d :
+	 * oModel.getCouponValue().doubleValue()); promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d :
+	 * oModel.getTotalProductLevelDisc() .doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d :
+	 * oModel.getCartLevelDisc().doubleValue()); } }
+	 *
+	 * discount = Double.valueOf(couponDiscount + promoDiscount); } return discount; }
+	 */
 
 
 	private Double getTotalDiscount(final List<AbstractOrderEntryModel> entries, final boolean deliveryFlag)
