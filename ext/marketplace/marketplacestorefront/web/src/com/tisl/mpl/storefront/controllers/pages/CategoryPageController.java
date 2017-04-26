@@ -162,7 +162,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private static final String SPECIAL_CHARACTERS = "[^\\w\\s]";
 	private int pageSiseCount;
 	//UF-15,16
-	private static final Integer PAGE_SIZE = new Integer(24);
+	//sonar fix
+	//private static final Integer PAGE_SIZE = new Integer(24);
+
+	private static final Integer PAGE_SIZE = Integer.valueOf(24);
 
 	/**
 	 * @return the pageSiseCount

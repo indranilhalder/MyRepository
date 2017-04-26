@@ -12,7 +12,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
 import com.tisl.mpl.promotion.dao.ExtStockLevelPromotionCheckDao;
@@ -24,8 +23,8 @@ import com.tisl.mpl.promotion.dao.ExtStockLevelPromotionCheckDao;
  */
 public class ExtStockLevelPromotionCheckServiceImpl implements ExtStockLevelPromotionCheckService
 {
-
-	private static final Logger LOG = Logger.getLogger(ExtStockLevelPromotionCheckServiceImpl.class);
+	//SONAR FIX
+	//private static final Logger LOG = Logger.getLogger(ExtStockLevelPromotionCheckServiceImpl.class);
 
 
 	@Resource(name = "stockPromoCheckDao")

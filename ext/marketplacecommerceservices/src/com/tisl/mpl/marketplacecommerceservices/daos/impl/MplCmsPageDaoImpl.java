@@ -333,8 +333,10 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		this.pagedFlexibleSearchService = pagedFlexibleSearchService;
 	}
 
-	@Autowired
-	private CatalogVersionService catalogversionservice;
+	/* SONAR FIX */
+	/*
+	 * @Autowired private CatalogVersionService catalogversionservice;
+	 */
 
 	@Autowired
 	private ConfigurationService configurationService;

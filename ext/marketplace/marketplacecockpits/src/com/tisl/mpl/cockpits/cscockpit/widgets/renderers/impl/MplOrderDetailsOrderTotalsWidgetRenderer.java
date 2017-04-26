@@ -117,14 +117,14 @@ public class MplOrderDetailsOrderTotalsWidgetRenderer extends
 					container);
 
 			Double deliveryCosts = abstractOrderModel.getDeliveryCost();
-			if(deliveryCosts==0.0){
-			for (AbstractOrderEntryModel orderEntry : abstractOrderModel
-					.getEntries()) {
-				if (null != orderEntry.getMplDeliveryMode()) {
-					deliveryCosts =  (orderEntry.getMplDeliveryMode().getValue()-orderEntry.getCurrDelCharge().doubleValue())*orderEntry.getQuantity();
-				}
-			}
-			}
+//			if(deliveryCosts==0.0){
+//			for (AbstractOrderEntryModel orderEntry : abstractOrderModel
+//					.getEntries()) {
+//				if (null != orderEntry.getMplDeliveryMode()) {
+//					deliveryCosts =  (orderEntry.getMplDeliveryMode().getValue()-orderEntry.getCurrDelCharge().doubleValue())*orderEntry.getQuantity();
+//				}
+//			}
+//			}
 			
 			
 			renderRow(
