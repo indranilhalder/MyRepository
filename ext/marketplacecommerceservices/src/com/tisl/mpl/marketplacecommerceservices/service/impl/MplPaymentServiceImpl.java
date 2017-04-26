@@ -594,7 +594,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
 			paymentTransactionEntry.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
-			if (abstractOrderModel.getTotalPriceWithConv() != null || abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+			//SONAR FIX
+			if (abstractOrderModel.getTotalPriceWithConv() != null && abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
 			{
 				paymentTransactionEntry.setAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPriceWithConv().doubleValue()));
 			}
@@ -633,7 +634,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			paymentTransactionModel.setOrder(abstractOrderModel);
 
 			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
-			if (abstractOrderModel.getTotalPriceWithConv() != null || abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+			//SONAR FIX
+			if (abstractOrderModel.getTotalPriceWithConv() != null && abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
 			{
 				paymentTransactionModel
 						.setPlannedAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPriceWithConv().doubleValue()));
@@ -3713,7 +3715,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
 			paymentTransactionEntry.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
-			if (orderModel.getTotalPriceWithConv() != null || orderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+			//SONAR FIX
+			if (orderModel.getTotalPriceWithConv() != null && orderModel.getTotalPriceWithConv().doubleValue() > 0.0)
 			{
 				paymentTransactionEntry.setAmount(BigDecimal.valueOf(orderModel.getTotalPriceWithConv().doubleValue()));
 			}
@@ -3745,7 +3748,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			paymentTransactionModel.setOrder(orderModel);
 
 			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
-			if (orderModel.getTotalPriceWithConv() != null || orderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+			//SONAR FIX
+			if (orderModel.getTotalPriceWithConv() != null && orderModel.getTotalPriceWithConv().doubleValue() > 0.0)
 			{
 				paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(orderModel.getTotalPriceWithConv().doubleValue()));
 			}

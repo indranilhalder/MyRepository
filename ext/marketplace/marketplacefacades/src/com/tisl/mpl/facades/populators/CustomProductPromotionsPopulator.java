@@ -336,7 +336,7 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 												{
 													categoryCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA
 															+ entry.getValue() + MarketplacecommerceservicesConstants.INVERTED_COMMA);
-													categoryCodes.append(",");
+													categoryCodes.append(MarketplacecommerceservicesConstants.COMMA_DELIMITER); //SONAR FIX
 												}
 
 												stockMap.putAll(stockPromoCheckService.getCumulativeCatLevelStockMap(categoryCodes.toString()

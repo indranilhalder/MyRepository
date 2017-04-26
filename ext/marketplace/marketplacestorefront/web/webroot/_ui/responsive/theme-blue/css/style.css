@@ -66536,29 +66536,6 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
 
 }
 /* End TISSQAEE-376 */
-/* Start TISSQAEE-380 */
-.checkout.wrapper .formaddress .product-block.addresses.new-form li.item .half{
-	width: 50%;
-    display: inline-block;
-    padding-right: 4.6%;
-    margin-right: -3px;
-    vertical-align: top;
-    float: none;
-}
-.checkout.wrapper .formaddress .product-block.addresses.new-form li.item .full{
-	padding-right: 4.6%;
-}
-.checkout.wrapper .formaddress .product-block.addresses.new-form fieldset {
-    padding-top: 24px;
-    width: 104.6%;
-} 
-.checkout.wrapper .formaddress .product-block.addresses.new-form li.item input{
-	width: 100%;
-}
-.checkout.wrapper .product-block.addresses.new-form li.item fieldset div.half:nth-child(even){
-	float: none;
-}
-/* End TISSQAEE-380 */
 /* start TISSQAEE-375 */
 .alert.alert-danger a.close{
 	margin-right: 10px !important;
@@ -66571,3 +66548,39 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
 	top: 6px !important;
   } 
   /* End TISSQAEE-375 */
+@media (max-width: 1024px){
+.col-md-2{
+    display: inline-block;
+    width: 25px;
+	}
+   .col-md-9{
+      display: inline-block;
+    vertical-align: top;
+	}
+	.col-md-12.error_text.pincodeNoError
+{
+margin-top: -10px;
+}
+.error_text.stateError{
+margin-top: -10px;
+}
+}
+@media (max-width: 480px){
+	.col-md-2{
+	display: inline-block;
+    padding: 0px;
+    width: 10px;
+	}
+	.col-md-9{
+	width: 94%;
+	}
+}
+@media (min-width: 1024px){
+	.col-md-12.error_text.pincodeNoError{
+	text-align: left;
+	margin-top: -10px;
+	}
+	.error_text.stateError{
+margin-top: -10px;
+}
+}

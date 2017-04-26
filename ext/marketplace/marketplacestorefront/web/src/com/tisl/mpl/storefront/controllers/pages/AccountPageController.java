@@ -173,7 +173,6 @@ import com.tisl.mpl.facade.checkout.impl.MplCheckoutFacadeImpl;
 import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facade.mystyleprofile.MyStyleProfileFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
-import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.preference.MplPreferenceFacade;
@@ -188,7 +187,6 @@ import com.tisl.mpl.facades.data.MplPreferencePopulationData;
 import com.tisl.mpl.facades.data.RescheduleDataList;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.data.ScheduledDeliveryData;
-//import com.tisl.mpl.facades.payment.MplPaymentFacade; sonar issue
 import com.tisl.mpl.facades.payment.impl.MplPaymentFacadeImpl;
 import com.tisl.mpl.facades.product.data.CategoryData;
 import com.tisl.mpl.facades.product.data.DayData;

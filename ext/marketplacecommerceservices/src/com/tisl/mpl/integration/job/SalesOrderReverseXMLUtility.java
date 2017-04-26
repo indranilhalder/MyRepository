@@ -66,6 +66,10 @@ import com.tisl.mpl.util.ExceptionUtil;
  */
 public class SalesOrderReverseXMLUtility
 {
+	/**
+	 * 
+	 */
+	private static final String LOG_MSG_AND_GET_REFUNDED_SCHEDULE_DELIVERY_CHARGE_AMT = " and getRefundedScheduleDeliveryChargeAmt";
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(SalesOrderReverseXMLUtility.class.getName());
 	@Autowired
@@ -500,7 +504,7 @@ public class SalesOrderReverseXMLUtility
 			for (AbstractOrderEntryModel entry : childOrders.getEntries()) {
 				if(LOG.isDebugEnabled()) {
 					LOG.debug("Checking EDToHd for transaction ID "+entry.getTransactionID());
-					LOG.debug("Is EdToHd"+entry.getIsEDtoHD()+"IsSdbSendToFico"+entry.getIsEdToHdSendToFico()+" and getRefundedScheduleDeliveryChargeAmt"+entry.getRefundedDeliveryChargeAmt());
+					LOG.debug("Is EdToHd"+entry.getIsEDtoHD()+"IsSdbSendToFico"+entry.getIsEdToHdSendToFico()+LOG_MSG_AND_GET_REFUNDED_SCHEDULE_DELIVERY_CHARGE_AMT+entry.getRefundedDeliveryChargeAmt());
 				}
 				boolean edAmountRefunded = getAmountRefunded(entry,PaymentTransactionType.REFUND_DELIVERY_CHARGES.getCode());
 				if(edAmountRefunded && null != entry.getIsEDtoHD() && entry.getIsEDtoHD().booleanValue()) {
@@ -509,7 +513,7 @@ public class SalesOrderReverseXMLUtility
 				}
 				if(LOG.isDebugEnabled()) {
 					LOG.debug("Checking SDB for transaction ID "+entry.getTransactionID());
-					LOG.debug("Is SDb"+entry.getIsSdb()+"IsSdbSendToFico"+entry.getIsSdbSendToFico()+" and getRefundedScheduleDeliveryChargeAmt"+entry.getRefundedScheduleDeliveryChargeAmt());
+					LOG.debug("Is SDb"+entry.getIsSdb()+"IsSdbSendToFico"+entry.getIsSdbSendToFico()+LOG_MSG_AND_GET_REFUNDED_SCHEDULE_DELIVERY_CHARGE_AMT+entry.getRefundedScheduleDeliveryChargeAmt());
 				}
 				boolean sdAmountRefunded = getAmountRefunded(entry,PaymentTransactionType.REFUND_SCHEDULE_DELIVERY_CHARGES.getCode());
 				if(sdAmountRefunded && null != entry.getIsSdbSendToFico() && !entry.getIsSdbSendToFico().booleanValue() && null !=entry.getScheduleChargesJuspayRequestId()) {
@@ -958,7 +962,7 @@ public class SalesOrderReverseXMLUtility
 		try {
 			if(LOG.isDebugEnabled()) {
 				LOG.debug("Checking SDB for transaction ID "+entry.getTransactionID());
-				LOG.debug("IsEdToHdSendToFico"+entry.getIsEdToHdSendToFico()+" and getRefundedScheduleDeliveryChargeAmt"+entry.getRefundedDeliveryChargeAmt());
+				LOG.debug("IsEdToHdSendToFico"+entry.getIsEdToHdSendToFico()+LOG_MSG_AND_GET_REFUNDED_SCHEDULE_DELIVERY_CHARGE_AMT+entry.getRefundedDeliveryChargeAmt());
 			}
 			boolean isAmountRefunded = getAmountRefunded(entry,PaymentTransactionType.REFUND_DELIVERY_CHARGES.getCode());
 			if(isAmountRefunded && (null != entry && null != entry.getIsEDtoHD() && entry.getIsEDtoHD().booleanValue())
@@ -990,7 +994,7 @@ public class SalesOrderReverseXMLUtility
 		try {
 		if(LOG.isDebugEnabled()) {
 			LOG.debug("Checking SDB for transaction ID "+entry.getTransactionID());
-			LOG.debug("IsSdb"+entry.getIsSdb()+"IsSdbSendToFico"+entry.getIsSdbSendToFico()+" and getRefundedScheduleDeliveryChargeAmt"+entry.getRefundedScheduleDeliveryChargeAmt());
+			LOG.debug("IsSdb"+entry.getIsSdb()+"IsSdbSendToFico"+entry.getIsSdbSendToFico()+LOG_MSG_AND_GET_REFUNDED_SCHEDULE_DELIVERY_CHARGE_AMT+entry.getRefundedScheduleDeliveryChargeAmt());
 		}
 		boolean sdAmountRefunded = getAmountRefunded(entry,PaymentTransactionType.REFUND_SCHEDULE_DELIVERY_CHARGES.getCode());
 		
