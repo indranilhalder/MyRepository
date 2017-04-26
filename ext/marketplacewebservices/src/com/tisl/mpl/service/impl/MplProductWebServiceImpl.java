@@ -146,8 +146,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
-	@Resource(name = "mplProductWebService")
-	private MplProductWebServiceImpl mplProductWebServiceImpl;
+	
+	//sonar fix
+	/*@Resource(name = "mplProductWebService")
+	private MplProductWebServiceImpl mplProductWebServiceImpl;*/
 
 	/**
 	 * @throws CMSItemNotFoundException

@@ -166,7 +166,8 @@ public class MplCustomPageSiteMapGenerator extends AbstractSiteMapGenerator<Cust
 	private List<CustomPageData> categoryPageSiteMap(final CMSSiteModel siteModel, final List<CustomPageData> mainSiteMapUrlList,
 			final SiteMapPageModel siteMapPage)
 	{
-		final StringBuilder queryBuilder = new StringBuilder();
+		//sonar fix
+		final StringBuilder queryBuilder = new StringBuilder(350);
 		queryBuilder.append("SELECT {c.pk} FROM {Category AS c JOIN CatalogVersion AS cv ON {c.catalogVersion}={cv.pk} ")
 				.append(" JOIN Catalog AS cat ON {cv.pk}={cat.activeCatalogVersion} ")
 				.append(" JOIN CMSSite AS site ON {cat.pk}={site.defaultCatalog}}  WHERE {site.pk} = ?site ")
@@ -208,8 +209,8 @@ public class MplCustomPageSiteMapGenerator extends AbstractSiteMapGenerator<Cust
 	private List<CustomPageData> contentPageSiteMap(final List<CustomPageData> mainSiteMapUrlList,
 			final SiteMapPageModel siteMapPage)
 	{
-
-		final StringBuilder queryBuilder = new StringBuilder();
+		//sonar fix
+		final StringBuilder queryBuilder = new StringBuilder(250);
 
 		queryBuilder.append("select {cp.pk} from {ContentPage as cp},{CmsApprovalStatus as cas},{catalogversion as cat} ")
 				.append("where {cp.approvalstatus}={cas.pk} and {cas.code}='approved' ")

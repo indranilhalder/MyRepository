@@ -873,10 +873,12 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 	 */
 	public void errorLogger(final String errorColumn, final String errorMessage, final String productCode)
 	{
+		//sonar fix
 		sbError.append("COLUMN_NAME,").append("ERROR_MESSAGE ,").append("PRODUCT_ID");
-		sbError.append("\n");
-		sbError.append(errorColumn).append(",").append(errorMessage).append(",").append(productCode);
-		sbError.append("\n");
+		sbError.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_NEW_LINE_SEPARATOR);
+		sbError.append(errorColumn).append(MarketplacecommerceservicesConstants.COMMA).append(errorMessage)
+				.append(MarketplacecommerceservicesConstants.COMMA).append(productCode);
+		sbError.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_NEW_LINE_SEPARATOR);
 	}
 
 
