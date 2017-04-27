@@ -4508,11 +4508,13 @@ public class DefaultPromotionManager extends PromotionsManager
 			{
 				productCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getProduct().getCode()
 						+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
-				productCodes.append(",");
+				/* * SONAR FIX */
+				productCodes.append(MarketplacecommerceservicesConstants.COMMA_DELIMITER);
 				ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA
 						+ entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString()
 						+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
-				ussidIds.append(",");
+				/* * SONAR FIX */
+				ussidIds.append(MarketplacecommerceservicesConstants.COMMA_DELIMITER);
 			}
 		}
 
@@ -4690,10 +4692,12 @@ public class DefaultPromotionManager extends PromotionsManager
 		{
 			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getKey()
 					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
-			ussidIds.append(",");
+			/* * SONAR FIX */
+			ussidIds.append(MarketplacecommerceservicesConstants.COMMA_DELIMITER);
 			productCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getValue().getProduct().getCode()
 					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
-			productCodes.append(",");
+			/* * SONAR FIX */
+			productCodes.append(MarketplacecommerceservicesConstants.COMMA_DELIMITER);
 			//mapQuantCount.put(entry.getKey(), Integer.valueOf(entry.getValue().getQuantity().intValue()));
 		}
 
@@ -4729,7 +4733,8 @@ public class DefaultPromotionManager extends PromotionsManager
 				{
 					categoryCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getValue()
 							+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
-					categoryCodes.append(",");
+					/* * SONAR FIX */
+					categoryCodes.append(MarketplacecommerceservicesConstants.COMMA_DELIMITER);
 				}
 
 				stockCountMap.putAll(stockPromoCheckService.getCumulativeCatLevelStockMap(
@@ -4930,10 +4935,12 @@ public class DefaultPromotionManager extends PromotionsManager
 		{
 			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getKey()
 					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
-			ussidIds.append(",");
+			/* * SONAR FIX */
+			ussidIds.append(MarketplacecommerceservicesConstants.COMMA_DELIMITER);
 			productCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getValue().getProduct().getCode()
 					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
-			productCodes.append(",");
+			/* * SONAR FIX */
+			productCodes.append(MarketplacecommerceservicesConstants.COMMA_DELIMITER);
 			mapQuantCount.put(entry.getKey(), Integer.valueOf(entry.getValue().getQuantity().intValue()));
 		}
 		final boolean sellerFlag = getSellerRestrictionVal(restrictionList);

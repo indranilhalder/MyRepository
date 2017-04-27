@@ -3,7 +3,6 @@ package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commerceservices.search.solrfacetsearch.provider.CategorySource;
 import de.hybris.platform.core.model.c2l.LanguageModel;
-import de.hybris.platform.product.impl.DefaultProductService;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.solrfacetsearch.config.IndexConfig;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
@@ -20,8 +19,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Required;
 
 
@@ -33,8 +30,7 @@ public class MplCategoryNameCodeMappingValueProvider extends AbstractPropertyFie
 	//private String categoriesQualifier;
 	private FieldNameProvider fieldNameProvider;
 	private CommonI18NService commonI18NService;
-	@Resource(name = "defaultProductService")
-	private DefaultProductService defaultProductService;
+
 	private CategorySource categorySource;
 
 

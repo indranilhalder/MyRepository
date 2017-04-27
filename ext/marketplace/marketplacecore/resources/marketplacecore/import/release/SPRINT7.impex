@@ -6,7 +6,7 @@ $storePrefix=mpl
 $contentCatalog=$storePrefixContentCatalog
 $productCatalog=mplProductCatalog
 $contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
 # Import modulegen config properties into impex macros
 UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
 $jarResourceCms=$config-jarResourceCmsValue
@@ -62,7 +62,7 @@ $productCatalog=mplProductCatalog
 $productCatalogName=Marketplace Product Catalog
 
 $contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 $picture=media(code, $contentCV);
 $image=image(code, $contentCV);
 $media=media(code, $contentCV);
@@ -113,7 +113,7 @@ $storePrefix=mpl
 $contentCatalog=$storePrefixContentCatalog
 $productCatalog=mplProductCatalog
 $contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
 # Import modulegen config properties into impex macros
 #UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
 $jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
@@ -163,7 +163,7 @@ $storePrefix=mpl
 $contentCatalog=$storePrefixContentCatalog
 $productCatalog=mplProductCatalog
 $contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
 # Import modulegen config properties into impex macros
 UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
 $jarResourceCms=$config-jarResourceCmsValue
@@ -227,7 +227,7 @@ $contentCatalog=mplContentCatalog
 $contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged] 
 $productCatalog=mplProductCatalog 
 $productCatalogName=MarketPlace Product Catalog
-$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged] 
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online] 
 $picture=media(code, $contentCV);
 $siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/contentCatalogs/$contentCatalog
 $jarResourceCms=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/cockpits/cmscockpit
@@ -419,7 +419,7 @@ $storePrefix=mpl
 $contentCatalog=$storePrefixContentCatalog
 $productCatalog=mplProductCatalog
 $contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
 $jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
 
 # Create PageTemplates
@@ -490,7 +490,7 @@ $storePrefix=mpl
 $contentCatalog=$storePrefixContentCatalog
 $productCatalog=mplProductCatalog
 $contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
 # Import modulegen config properties into impex macros
 #UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
 #$jarResourceCms=$config-jarResourceCmsValue
@@ -544,7 +544,7 @@ $storePrefix=mpl
 $contentCatalog=$storePrefixContentCatalog
 $productCatalog=mplProductCatalog
 $contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
 # Import modulegen config properties into impex macros
 #UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
 #$jarResourceCms=$config-jarResourceCmsValue
@@ -599,7 +599,7 @@ $storePrefix=mpl
 $contentCatalog=$storePrefixContentCatalog
 $productCatalog=mplProductCatalog
 $contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
 # Import modulegen config properties into impex macros
 #UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
 #$jarResourceCms=$config-jarResourceCmsValue
@@ -652,7 +652,7 @@ $storePrefix=mpl
 $contentCatalog=$storePrefixContentCatalog
 $productCatalog=mplProductCatalog
 $contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
 $jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
 
 
@@ -783,7 +783,7 @@ $storePrefix=mpl
 $contentCatalog=$storePrefixContentCatalog
 $productCatalog=mplProductCatalog
 $contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
 $jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
 
 # Import modulegen config properties into impex macros

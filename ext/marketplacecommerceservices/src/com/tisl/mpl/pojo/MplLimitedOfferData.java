@@ -10,24 +10,27 @@ package com.tisl.mpl.pojo;
 public class MplLimitedOfferData
 {
 
-	private boolean isExhausted;
+
+
+	private boolean exhausted;//SONAR FIX
 	private int actualCustomerCount;
 
+
 	/**
-	 * @return the isExhausted
+	 * @return the exhausted
 	 */
 	public boolean isExhausted()
 	{
-		return isExhausted;
+		return exhausted;
 	}
 
 	/**
-	 * @param isExhausted
-	 *           the isExhausted to set
+	 * @param exhausted
+	 *           the exhausted to set
 	 */
-	public void setExhausted(final boolean isExhausted)
+	public void setExhausted(final boolean exhausted)
 	{
-		this.isExhausted = isExhausted;
+		this.exhausted = exhausted;
 	}
 
 	/**
@@ -46,5 +49,6 @@ public class MplLimitedOfferData
 	{
 		this.actualCustomerCount = actualCustomerCount;
 	}
+
 
 }

@@ -1575,30 +1575,42 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		//mRupee configuration ends
 
-		
-		for (final OrderEntryData cartEntryData : cartData.getEntries())
-		{	
-			final CartModel cartModel = getCartService().getSessionCart();
-			final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
-			for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+
+		if (null != cartData)
+		{
+			if (null != cartData.getEntries())
 			{
-				if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
+				//TISSTRT-1501 ends
+				for (final OrderEntryData cartEntryData : cartData.getEntries())
 				{
-					if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(cartEntryData.getSelectedUssid()))
+					final CartModel cartModel = getCartService().getSessionCart();
+					final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+					for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 					{
-						cartEntryData.setEddDateBetWeen(cartEntryModel.getSddDateBetween());
+						if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
+						{
+							if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(cartEntryData.getSelectedUssid()))
+							{
+								cartEntryData.setEddDateBetWeen(cartEntryModel.getSddDateBetween());
+							}
+						}
+					}
+
+					if (null != cartEntryData && cartEntryData.getScheduledDeliveryCharge() != null)
+					{
+						if (cartEntryData.getScheduledDeliveryCharge().doubleValue() > 0)
+						{
+							// final CartModel cartModel = getCartService().getSessionCart();
+							final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
+							cartData.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel,
+									Double.valueOf(configModel.getSdCharge())));
+						}
 					}
 				}
+				//TISSTRT-1501 starts
 			}
-			
-		    if(null !=cartEntryData && cartEntryData.getScheduledDeliveryCharge()!= null){
-   		   	 if(cartEntryData.getScheduledDeliveryCharge().doubleValue()>0){
-         		   	// final CartModel cartModel = getCartService().getSessionCart();
-         		   	 final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
-         		   	 cartData.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel, Double.valueOf(configModel.getSdCharge())));
-   		   	 }
-		    }
 		}
+		//TISSTRT-1501 ends
 		model.addAttribute(MarketplacecheckoutaddonConstants.JUSPAYJSNAME,
 				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYJSNAMEVALUE));
 		model.addAttribute(MarketplacecheckoutaddonConstants.SOPFORM, new PaymentDetailsForm());
@@ -2392,7 +2404,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				model.addAttribute(MarketplacecheckoutaddonConstants.CREDITCARDS, savedCreditCards);
 			}
 			//TISRLUAT-03 starts
-			else if(MapUtils.isNotEmpty(savedDebitCards))
+			else if (MapUtils.isNotEmpty(savedDebitCards))
 			{
 				model.addAttribute(MarketplacecheckoutaddonConstants.CREDITCARDS, savedDebitCards);
 			}
@@ -4097,26 +4109,33 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						if (richAttributeModel != null && richAttributeModel.get(0) != null
 								&& richAttributeModel.get(0).getDeliveryFulfillModes() != null)
 						{
-							    String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
-							/* Added in R2.3 for START*/
-							if(DeliveryFulfillModesEnum.BOTH.toString().equalsIgnoreCase(fulfillmentType)) {
-								if(null != entry.getFulfillmentType()) {
+							String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+							/* Added in R2.3 for START */
+							if (DeliveryFulfillModesEnum.BOTH.toString().equalsIgnoreCase(fulfillmentType))
+							{
+								if (null != entry.getFulfillmentType())
+								{
 									fulfillmentType = entry.getFulfillmentType();
-								}else if(null != entry.getFulfillmentTypeP1()){
+								}
+								else if (null != entry.getFulfillmentTypeP1())
+								{
 									fulfillmentType = entry.getFulfillmentTypeP1();
-								}else if(null != richAttributeModel.get(0).getDeliveryFulfillModeByP1() && null != richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode()){
-									fulfillmentType=richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode();
+								}
+								else if (null != richAttributeModel.get(0).getDeliveryFulfillModeByP1()
+										&& null != richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode())
+								{
+									fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode();
 								}
 							}
-							/* Added in R2.3 END*/
+							/* Added in R2.3 END */
 							if (DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(fulfillmentType))
 							{
 								LOG.debug("Entry is TSHIP");
-									final boolean returnFlag = paymentModecheckForCOD(richAttributeModel, abstractOrder, model);
-									if (!returnFlag)
-									{
-										break;
-									}
+								final boolean returnFlag = paymentModecheckForCOD(richAttributeModel, abstractOrder, model);
+								if (!returnFlag)
+								{
+									break;
+								}
 							}
 							else
 							{
@@ -4147,9 +4166,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							}
 						}
 					}
+				}
 			}
 		}
-	}
 
 	}
 
@@ -4411,7 +4430,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

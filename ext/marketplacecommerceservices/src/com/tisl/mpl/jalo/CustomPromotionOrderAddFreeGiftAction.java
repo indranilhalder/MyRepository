@@ -9,6 +9,7 @@ import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
+import de.hybris.platform.jalo.order.Cart;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.product.Unit;
@@ -72,6 +73,12 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 	public boolean apply(final SessionContext ctx)
 	{
 		//System.out.println("Custom free gift action........................");
+
+		//		if (isCachingAllowed(ctx).booleanValue())
+		//		{
+		undo(ctx);
+		//}
+
 		final double freebieAmt = 0.01D;
 		final AbstractOrder order = getPromotionResult(ctx).getOrder(ctx);
 		String freeUSSIDData = MarketplacecommerceservicesConstants.EMPTY;
@@ -93,7 +100,12 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 
 		if (order != null)
 		{
-			final Map<String, Product> freeBieInfoMap = new ConcurrentHashMap<String, Product>(getAllFreeGiftInfoMap(ctx)); //Added for TISPT-154
+			Map<String, Product> freeBieInfoMap = null;
+			if (MapUtils.isNotEmpty(getAllFreeGiftInfoMap(ctx)))
+			{
+				freeBieInfoMap = new ConcurrentHashMap<String, Product>(getAllFreeGiftInfoMap(ctx)); //Added for TISPT-154
+			}
+
 			final Product product = getFreeProduct(ctx);
 			//For Single Freebie
 			if (null != product)
@@ -133,6 +145,7 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 				final PromotionResult pr = getPromotionResult(ctx);
 				//			final PromotionOrderEntryConsumed consumed = PromotionsManager.getInstance().createPromotionOrderEntryConsumed(ctx,
 				//					getGuid(ctx), orderEntry, 1L);
+				setCachingAllowed(ctx, order);
 				final PromotionOrderEntryConsumed consumed = PromotionsManager.getInstance().createPromotionOrderEntryConsumed(ctx,
 						getGuid(ctx), orderEntry, freeGiftQuantity);
 				consumed.setAdjustedUnitPrice(ctx, 0.01D);
@@ -159,6 +172,8 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 					orderEntry.setProperty(ctx, "totalPrice", new Double(freebieAmt));
 
 					final PromotionResult pr = getPromotionResult(ctx);
+					setCachingAllowed(ctx, order);
+
 					final PromotionOrderEntryConsumed consumed = PromotionsManager.getInstance().createPromotionOrderEntryConsumed(
 							ctx, getGuid(ctx), orderEntry, freeGiftQuantity);
 					consumed.setAdjustedUnitPrice(ctx, 0.01D);
@@ -413,6 +428,18 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 		return true;
 	}
 
+	private void setCachingAllowed(final SessionContext ctx, final AbstractOrder order)
+	{
+		final Boolean allowed = (order instanceof Cart) ? Boolean.TRUE : Boolean.FALSE;
+		ctx.setAttribute("de.hybris.platform.promotions.jalo.cachingAllowed", allowed);
+	}
+
+	private Boolean isCachingAllowed(final SessionContext ctx)
+	{
+		final Boolean allowed = (Boolean) ctx.getAttribute("de.hybris.platform.promotions.jalo.cachingAllowed");
+		return (((allowed == null) || (allowed == Boolean.FALSE)) ? Boolean.FALSE : Boolean.TRUE);
+	}
+
 	/**
 	 * Populate Free Gift Data
 	 *
@@ -437,90 +464,29 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 	@Override
 	public boolean undo(final SessionContext ctx)
 	{
-
-		final AbstractOrder order = getPromotionResult(ctx).getOrder(ctx);
-
-		if (log.isDebugEnabled())
+		try
 		{
-			log.debug("(" + getPK() + ") undo: Undoing add free gift from order with " + order.getAllEntries().size()
-					+ " order entries");
-		}
+			final AbstractOrder order = getPromotionResult(ctx).getOrder(ctx);
+			setCachingAllowed(ctx, order);
 
-		for (final AbstractOrderEntry aoe : order.getEntries())
-		{
-			final Map<String, Product> freeBieInfoMap = new ConcurrentHashMap<String, Product>(getAllFreeGiftInfoMap(ctx));
-			if (null != getFreeProduct(ctx))
+			if (log.isDebugEnabled())
 			{
-				if ((!(aoe.isGiveAway(ctx).booleanValue())) || (!(aoe.getProduct(ctx).equals(getFreeProduct(ctx))))
-						|| (aoe.getQuantity(ctx).longValue() < 1L))
-				{
-					continue;
-				}
-				final long remainingQuantityAfterUndo = aoe.getQuantity(ctx).longValue();
-				if (remainingQuantityAfterUndo >= 1L)
-				{
-					if (log.isDebugEnabled())
-					{
-						log.debug("(" + getPK()
-								+ ") undo: Line item has the same or less quantity than the offer.  Removing whole order entry.");
-					}
-					order.removeEntry(aoe);
-				}
-				else
-				{
-					if (log.isDebugEnabled())
-					{
-						log.debug("("
-								+ getPK()
-								+ ") undo: Line item has a greater quantity than the offer.  Removing the offer quantity and resetting giveaway flag.");
-					}
-					aoe.setQuantity(ctx, remainingQuantityAfterUndo);
-					aoe.setGiveAway(ctx, false);
-					try
-					{
-						aoe.recalculate();
-					}
-					catch (final JaloPriceFactoryException jpe)
-					{
-						log.error("unable to calculate the entry: " + jpe.getMessage());
-					}
-
-				}
-
-				final PromotionResult pr = getPromotionResult(ctx);
-				if (log.isDebugEnabled())
-				{
-					log.debug("PromotionResult in UNDO: " + pr);
-					log.debug("PromotionResult Consumed Entries in UNDO: " + pr.getConsumedEntries(ctx));
-				}
-
-				for (final PromotionOrderEntryConsumed poec : (Collection<PromotionOrderEntryConsumed>) pr.getConsumedEntries(ctx))
-				{
-					if (log.isDebugEnabled())
-					{
-						log.debug("PromotionOrderEntryConsumed in UNDO: " + poec);
-						log.debug("PromotionOrderEntryConsumed code in UNDO: " + poec.getCode(ctx));
-						log.debug("code for: " + poec.getCode(ctx));
-						log.debug("");
-					}
-					if (poec.getCode(ctx) != null && poec.getCode(ctx).equals(getGuid(ctx)))
-					{
-						pr.removeConsumedEntry(ctx, poec);
-					}
-
-				}
-
-				break;
+				log.debug("(" + getPK() + ") undo: Undoing add free gift from order with " + order.getAllEntries().size()
+						+ " order entries");
 			}
-			//For Multiple Freebie Implementation
-			else if (MapUtils.isNotEmpty(freeBieInfoMap))
-			{
-				final int checkCount = freeBieInfoMap.size();
-				int validateCount = 0;
-				for (final Map.Entry<String, Product> entry : freeBieInfoMap.entrySet())
-				{
 
-					if ((!(aoe.isGiveAway(ctx).booleanValue())) || (!(aoe.getProduct(ctx).equals(entry.getValue())))
+			for (final AbstractOrderEntry aoe : order.getEntries())
+			{
+				Map<String, Product> freeBieInfoMap = null;
+				if (MapUtils.isNotEmpty(getAllFreeGiftInfoMap(ctx)))
+				{
+					freeBieInfoMap = new ConcurrentHashMap<String, Product>(getAllFreeGiftInfoMap(ctx)); //Added for TISPT-154
+				}
+				//final Map<String, Product> freeBieInfoMap = new ConcurrentHashMap<String, Product>(getAllFreeGiftInfoMap(ctx));
+
+				if (null != getFreeProduct(ctx))
+				{
+					if ((!(aoe.isGiveAway(ctx).booleanValue())) || (!(aoe.getProduct(ctx).equals(getFreeProduct(ctx))))
 							|| (aoe.getQuantity(ctx).longValue() < 1L))
 					{
 						continue;
@@ -528,12 +494,21 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 					final long remainingQuantityAfterUndo = aoe.getQuantity(ctx).longValue();
 					if (remainingQuantityAfterUndo >= 1L)
 					{
-						validateCount = validateCount + 1;
+						if (log.isDebugEnabled())
+						{
+							log.debug("(" + getPK()
+									+ ") undo: Line item has the same or less quantity than the offer.  Removing whole order entry.");
+						}
 						order.removeEntry(aoe);
 					}
 					else
 					{
-						validateCount = validateCount + 1;
+						if (log.isDebugEnabled())
+						{
+							log.debug("("
+									+ getPK()
+									+ ") undo: Line item has a greater quantity than the offer.  Removing the offer quantity and resetting giveaway flag.");
+						}
 						aoe.setQuantity(ctx, remainingQuantityAfterUndo);
 						aoe.setGiveAway(ctx, false);
 						try
@@ -544,23 +519,17 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 						{
 							log.error("unable to calculate the entry: " + jpe.getMessage());
 						}
+
 					}
-					break;
-				}
 
-
-				//Newly Added Code
-				if (checkCount == validateCount)
-				{
 					final PromotionResult pr = getPromotionResult(ctx);
-					final List<PromotionOrderEntryConsumed> consumeList = new ArrayList<PromotionOrderEntryConsumed>();
-
 					if (log.isDebugEnabled())
 					{
 						log.debug("PromotionResult in UNDO: " + pr);
 						log.debug("PromotionResult Consumed Entries in UNDO: " + pr.getConsumedEntries(ctx));
 					}
 
+					final List<PromotionOrderEntryConsumed> consumeList = new ArrayList<PromotionOrderEntryConsumed>();
 					for (final PromotionOrderEntryConsumed poec : (Collection<PromotionOrderEntryConsumed>) pr.getConsumedEntries(ctx))
 					{
 						if (log.isDebugEnabled())
@@ -575,6 +544,7 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 							consumeList.add(poec);
 							//pr.removeConsumedEntry(ctx, poec);
 						}
+
 					}
 
 					if (CollectionUtils.isNotEmpty(consumeList))
@@ -586,19 +556,103 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 							pr.removeConsumedEntry(ctx, (PromotionOrderEntryConsumed) iter.next());
 						}
 					}
+
+					break;
 				}
+				//For Multiple Freebie Implementation
+				else if (MapUtils.isNotEmpty(freeBieInfoMap))
+				{
+					final int checkCount = freeBieInfoMap.size();
+					int validateCount = 0;
+					for (final Map.Entry<String, Product> entry : freeBieInfoMap.entrySet())
+					{
+
+						if ((!(aoe.isGiveAway(ctx).booleanValue())) || (!(aoe.getProduct(ctx).equals(entry.getValue())))
+								|| (aoe.getQuantity(ctx).longValue() < 1L))
+						{
+							continue;
+						}
+						final long remainingQuantityAfterUndo = aoe.getQuantity(ctx).longValue();
+						if (remainingQuantityAfterUndo >= 1L)
+						{
+							validateCount = validateCount + 1;
+							order.removeEntry(aoe);
+						}
+						else
+						{
+							validateCount = validateCount + 1;
+							aoe.setQuantity(ctx, remainingQuantityAfterUndo);
+							aoe.setGiveAway(ctx, false);
+							try
+							{
+								aoe.recalculate();
+							}
+							catch (final JaloPriceFactoryException jpe)
+							{
+								log.error("unable to calculate the entry: " + jpe.getMessage());
+							}
+						}
+						break;
+					}
 
 
+					//Newly Added Code
+					if (checkCount == validateCount)
+					{
+						final PromotionResult pr = getPromotionResult(ctx);
+						final List<PromotionOrderEntryConsumed> consumeList = new ArrayList<PromotionOrderEntryConsumed>();
+
+						if (log.isDebugEnabled())
+						{
+							log.debug("PromotionResult in UNDO: " + pr);
+							log.debug("PromotionResult Consumed Entries in UNDO: " + pr.getConsumedEntries(ctx));
+						}
+
+						for (final PromotionOrderEntryConsumed poec : (Collection<PromotionOrderEntryConsumed>) pr
+								.getConsumedEntries(ctx))
+						{
+							if (log.isDebugEnabled())
+							{
+								log.debug("PromotionOrderEntryConsumed in UNDO: " + poec);
+								log.debug("PromotionOrderEntryConsumed code in UNDO: " + poec.getCode(ctx));
+								log.debug("code for: " + poec.getCode(ctx));
+								log.debug("");
+							}
+							if (poec.getCode(ctx) != null && poec.getCode(ctx).equals(getGuid(ctx)))
+							{
+								consumeList.add(poec);
+								//pr.removeConsumedEntry(ctx, poec);
+							}
+						}
+
+						if (CollectionUtils.isNotEmpty(consumeList))
+						{
+							final Iterator iter = consumeList.iterator();
+
+							while (iter.hasNext())
+							{
+								pr.removeConsumedEntry(ctx, (PromotionOrderEntryConsumed) iter.next());
+							}
+						}
+					}
+
+
+				}
+			}
+
+			setMarkedApplied(ctx, false);
+
+			if (log.isDebugEnabled())
+			{
+				log.debug("(" + getPK() + ") undo: Free gift removed from order which now has " + order.getAllEntries().size()
+						+ " order entries");
 			}
 		}
-
-		setMarkedApplied(ctx, false);
-
-		if (log.isDebugEnabled())
+		catch (final Exception exception)
 		{
-			log.debug("(" + getPK() + ") undo: Free gift removed from order which now has " + order.getAllEntries().size()
-					+ " order entries");
+			log.error("Error during undo:" + exception);
 		}
+
 		return true;
 	}
 

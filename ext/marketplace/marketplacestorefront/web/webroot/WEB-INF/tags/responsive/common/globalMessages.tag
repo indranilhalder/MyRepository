@@ -11,7 +11,7 @@
 			<c:forEach items="${accConfMsgs}" var="msg">
 				<div class="alert alert-info alert-dismissable">
 					<button class="close" aria-hidden="true" data-dismiss="alert" type="button">&times;</button>
-					<span style="margin-left: 23px;"><spring:theme code="${msg.code}" arguments="${msg.attributes}"/></span>
+					<span><spring:theme code="${msg.code}" arguments="${msg.attributes}"/></span>
 				</div>
 			</c:forEach>
 		</c:if>
@@ -31,8 +31,9 @@
 		<c:if test="${not empty accErrorMsgs}">
 			<c:forEach items="${accErrorMsgs}" var="msg">
 				<div class="alert alert-danger alert-dismissable">
-					<button class="close" aria-hidden="true" data-dismiss="alert" type="button" style="border:0px !important; top: -20px !important;">&times;</button>
-					<span style="margin-left: 23px;"><spring:theme code="${msg.code}" arguments="${msg.attributes}"/></span>	<!-- TISUATSE-84 -->
+
+					<button class="close" aria-hidden="true" data-dismiss="alert" type="button" style="border:0px !important;margin-top: -10px !important;">&times;</button>
+					<span style="margin-left: 23px;"><spring:theme code="${msg.code}" arguments="${msg.attributes}"/></span>
 				</div>
 			</c:forEach>
 		</c:if>

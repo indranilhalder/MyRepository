@@ -1955,10 +1955,17 @@ public class OrdersController extends BaseCommerceController
 			}
 			returnInfoRequestData.setShipmentProofURL(fileUploadLocation);
 			returnInfoRequestData.setReturnType(MarketplacecommerceservicesConstants.RSS);
-
-
-			cancelReturnFacade.retrunInfoCallToOMS(returnInfoRequestData);
-
+ 
+			//TISPRDT-984. Adding Try catch to handle Exception. 
+			try
+			{
+				cancelReturnFacade.retrunInfoCallToOMS(returnInfoRequestData);
+			}
+			catch (EtailNonBusinessExceptions e)
+			{
+				LOG.error("Exception occurred for retrunInfoCallToOMS. OrderID: + " + orderId + "; Error = " + e);
+				throw e;
+			}
 
 			CustomerModel customerModel = (CustomerModel) orderModel.getUser();
 
@@ -2036,15 +2043,33 @@ public class OrdersController extends BaseCommerceController
 				}
 				finalCODSelfShipData.setPaymentMode(codSelfShipData.getPaymentMode());
 				finalCODSelfShipData.setCustomerNumber(codSelfShipData.getCustomerNumber());
-				CODSelfShipResponseData responseData = cancelReturnFacade.codPaymentInfoToFICO(finalCODSelfShipData);
-
-				if (responseData.getSuccess() == null
-						|| !responseData.getSuccess().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+				//TISPRDT-984. Adding try catch.
+				try
 				{
-					//saving bank details failed payment details in commerce 
-					cancelReturnFacade.saveCODReturnsBankDetails(finalCODSelfShipData);
-					LOG.debug("Failed to post COD return paymnet details to FICO Order No:" +orderId);
+					CODSelfShipResponseData responseData = cancelReturnFacade.codPaymentInfoToFICO(finalCODSelfShipData);
+
+					if (responseData.getSuccess() == null
+							|| !responseData.getSuccess().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+					{
+						//saving bank details failed payment details in commerce 
+						//TISPRDT-984. Adding try catch.
+						try
+						{
+							cancelReturnFacade.saveCODReturnsBankDetails(finalCODSelfShipData);
+						}
+						catch (Exception excpetion)
+						{
+							LOG.warn("Warning   for while saving Customer Bank details for customer ID : it mo" + customerModel.getUid()
+									+ "; Order ID = " + orderId + "; Error = " + excpetion);
+						}
+					}
 				}
+				catch (Exception exception)
+				{
+					LOG.warn("Warning while sending COD Payment info to FICO. Customer ID :" + customerModel.getUid()
+							+ "; Order ID = " + orderId + ";Error = " + exception);
+				}
+
 				webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 			   // isRefundalbe disable 
 				LOG.info("REtrun page controller TransactionId::::::::    " + transactionId);

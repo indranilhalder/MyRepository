@@ -828,16 +828,22 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 	console.log(requiredUrl);
 	console.log(pageURL);
 	//INC144316143
-	var pathName = window.location.pathname;
-    	var query = window.location.search;
-	if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
+	/*if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
 		   window.localStorage.setItem('lastUrlpathName',encodeURI(pathName));
 		   window.localStorage.setItem('lastUrlquery',encodeURI(query));
-	 }
+	 }*/
 	
+	//TISSQAUAT-3418 starts
+	// Added For INC144315104 and INC144315462
 	if ($("input[name=customSku]").val()) {
-		dataString = dataString + "&sort=" + $("select[name=sort]").val() + "&pageSize=" + $("select[name=pageSize]").val(); 
+		//dataString = dataString + "&sort=" + $("select[name=sort]").val() + "&pageSize=" + $("select[name=pageSize]").val(); 
+		dataString = dataString + "&pageSize=24"; 
 	}
+	if($( "span.sort[style*='color']" ).length == 1){
+ 		var sortData = $( "span.sort[style*='color']" ).attr('data-name');
+ 		dataString = dataString + getSortCode(sortData); 
+  	}
+	//TISSQAUAT-3418 ends
 	
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
@@ -870,6 +876,10 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			if ($(".facet-list.filter-opt").children().length){
 				$("body.page-productGrid .product-listing.product-grid.lazy-grid, body.page-productGrid .product-listing.product-grid.lazy-grid-facet, body.page-productGrid .product-listing.product-grid.lazy-grid-normal").css("padding-top","15px");  //INC144315068
 				$("body.page-productGrid .facet-list.filter-opt").css("padding-top","65px");
+				//TISSQAUAT-3418 starts
+				var filter_height = $(".facet-list.filter-opt").height() - 8;   /* PRDI-69 */
+				$("body.page-productGrid .listing.wrapper .left-block").css("margin-top",filter_height + "px");
+				//TISSQAUAT-3418 ends
 				/* UF-253 start */
 				if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
 				var sort_height ="-" + $(".facet-list.filter-opt").outerHeight() + "px";
@@ -882,7 +892,10 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 				/* UF-253 end */
 			}
 			else{
+				//TISSQAUAT-3418 starts
 				//$("body.page-productGrid .product-listing.product-grid").css("margin-top","60px");  //INC144315068
+				$("body.page-productGrid .listing.wrapper .left-block").css("margin-top","65px");
+				//TISSQAUAT-3418 ends
 			}
 			// Keeps expansion-closure state of facets
 			$(".facet-name.js-facet-name h3").each(function(){
@@ -967,7 +980,32 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 	});
 	
 }
-
+//TISSQAUAT-3418 starts
+//Added For INC144315104 and INC144315462
+function getSortCode(item){
+ 	var code = '';
+ 	switch (item) {
+ 	case 'relevance':
+ 		code = '&sort=relevance';
+ 		break;
+ 	case 'new':
+ 		code = '&sort=isProductNew';
+ 		break;
+ 	case 'discount':
+ 		code = '&sort=isDiscountedPrice';
+ 		break;
+ 	case 'low':
+ 		code = '&sort=price-asc';
+ 		break;
+ 	case 'high':
+ 		code = '&sort=price-desc';
+ 		break;
+ 	default:
+ 		break;
+ 	}
+ 	return code;
+ }
+//TISSQAUAT-3418 ends
 /*
  * $("#paginationForm .pagination.mobile li a").click(function(e){
  * 
