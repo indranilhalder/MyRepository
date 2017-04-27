@@ -28,7 +28,6 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
@@ -316,11 +315,11 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				final String connectionTimeout = configurationService
 						.getConfiguration()
 						.getString(MarketplacecclientservicesConstants.OMS_INVETNORY_SOFTRESERV_CON_TIMEOUT,
-								MarketplacecommerceservicesConstants.OMSTIMEOUT).trim();
+								MarketplacecclientservicesConstants.OMSTIMEOUT).trim();
 				final String readTimeout = configurationService
 						.getConfiguration()
 						.getString(MarketplacecclientservicesConstants.OMS_INVETNORY_SOFTRESERV_READ_TIMEOUT,
-								MarketplacecommerceservicesConstants.OMSTIMEOUT).trim();
+								MarketplacecclientservicesConstants.OMSTIMEOUT).trim();
 				final String httpErrorCode = configurationService.getConfiguration()
 						.getString(MarketplacecclientservicesConstants.OMS_HTTP_ERROR_CODE, "404,503").trim();
 				client.setConnectTimeout(Integer.valueOf(connectionTimeout));
@@ -502,11 +501,11 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				final String connectionTimeout = configurationService
 						.getConfiguration()
 						.getString(MarketplacecclientservicesConstants.OMS_DELIVERY_SLOT_CON_TIMEOUT,
-								MarketplacecommerceservicesConstants.OMSTIMEOUT).trim();
+								MarketplacecclientservicesConstants.OMSTIMEOUT).trim();
 				final String readTimeout = configurationService
 						.getConfiguration()
 						.getString(MarketplacecclientservicesConstants.OMS_DELIVERY_SLOT_READ_TIMEOUT,
-								MarketplacecommerceservicesConstants.OMSTIMEOUT).trim();
+								MarketplacecclientservicesConstants.OMSTIMEOUT).trim();
 				final String httpErrorCode = configurationService.getConfiguration()
 						.getString(MarketplacecclientservicesConstants.OMS_HTTP_ERROR_CODE, "404,503").trim();
 				client.setConnectTimeout(Integer.valueOf(connectionTimeout));
