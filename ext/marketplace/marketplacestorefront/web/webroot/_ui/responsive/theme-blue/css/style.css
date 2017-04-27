@@ -19679,7 +19679,9 @@ header.brand-header .content {
   background-color: #000;
 }
 header > .content .bottom {
-  overflow: hidden;
+  /*start change of INC144313747*/
+  /* overflow: hidden; */
+  /*end change of INC144313747*/
   -webkit-transition: max-height 0.3s;
   -moz-transition: max-height 0.3s;
   transition: max-height 0.3s;
