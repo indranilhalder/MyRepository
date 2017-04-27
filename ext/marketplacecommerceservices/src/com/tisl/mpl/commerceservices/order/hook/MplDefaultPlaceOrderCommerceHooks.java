@@ -784,8 +784,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						}
 						else
 						{
-							LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
-							throw new InvalidCartException("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+							LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
+							throw new InvalidCartException(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG
+									+ subOrderModel.getCode());
 						}
 					}
 				}
@@ -858,8 +859,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			}
 			else
 			{
-				LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
-				throw new InvalidCartException("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+				LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
+				throw new InvalidCartException(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
 			}
 		}
 		return freebieParentMap;
@@ -1144,8 +1145,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						}
 						else
 						{
-							LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
-							throw new InvalidCartException("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+							LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
+							throw new InvalidCartException(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG
+									+ subOrderModel.getCode());
 						}
 					}
 				}
@@ -1385,8 +1387,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			}
 			else
 			{
-				LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
-				throw new InvalidCartException("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+				LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
+				throw new InvalidCartException(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
 			}
 		}
 		return innerList;
@@ -1468,8 +1470,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				}
 				else
 				{
-					LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
-					throw new InvalidCartException("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+					LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
+					throw new InvalidCartException(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
 				}
 			}
 
@@ -1600,8 +1602,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				}
 				else
 				{
-					LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
-					throw new InvalidCartException("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+					LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
+					throw new InvalidCartException(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
 				}
 			}
 		}
@@ -1710,7 +1712,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			}
 			else
 			{
-				LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+				LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
 				throw new InvalidCartException("No  Entries available for parent Order ID:- " + subOrderModel.getCode());
 			}
 		}
@@ -1773,7 +1775,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				}
 				else
 				{
-					LOG.error("No  Entries available for Suborder ID:- " + orderModel.getCode());
+					LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + orderModel.getCode());
 					throw new InvalidCartException("No  Entries available for parent Order ID:- " + orderModel.getCode());
 				}
 			}
