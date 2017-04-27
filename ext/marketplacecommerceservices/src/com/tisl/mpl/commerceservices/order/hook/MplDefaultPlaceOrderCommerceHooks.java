@@ -941,11 +941,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					LOG.info("Total Cart Level Discount>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + totalCartLevelDiscount);
 					sellerOrderList.setTotalDiscounts(Double.valueOf(totalCartLevelDiscount + totalCouponDiscount));
 
-
 					double delCost = 0.0d;
-					if (entryModelList.getCurrDelCharge() != null && entryModelList.getCurrDelCharge().doubleValue() > 0D)
+					if (entryModelList.getPrevDelCharge() != null && entryModelList.getPrevDelCharge().doubleValue() > 0D)
 					{
-						totalDeliveryPrice += entryModelList.getCurrDelCharge().doubleValue();
+						totalDeliveryPrice += entryModelList.getPrevDelCharge().doubleValue();
 					}
 					else
 					{

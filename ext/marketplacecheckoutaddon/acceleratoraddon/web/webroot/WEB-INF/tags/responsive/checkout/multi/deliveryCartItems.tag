@@ -271,9 +271,9 @@
 			
 			
 			
-			
-				</div>
-			
+			<!-- TISSQAUAT-4062 starts --> 
+				<!-- </div> -->
+			<!-- TISSQAUAT-4062 ends -->
 			<%-- <div class="price"><format:price priceData="${entry.basePrice}" displayFreeForZero="true"/></div>
 			<div class="details">
 				<div class="name"><a href="${productUrl}">${entry.product.name}</a></div>
@@ -319,8 +319,9 @@
 			</div> --%>
 			<!--  <div class="stock-status">Item In Stock</div> -->
 
-	
-		</li>
+		<!-- TISSQAUAT-4062 starts -->
+		<!-- </li> -->
+		<!-- TISSQAUAT-4062 ends -->
 		<%-- <li>
 		    <div class="method item-mthd">
                    <h3> <spring:theme code="checkout.multi.shipmentMethod"/></h3>

@@ -66294,11 +66294,11 @@ margin-top: -10px;
 .checkout.wrapper .product-block li.header > ul li.delivery{
 	text-align: left;
 }
-.checkout.wrapper .product-block li.header > ul li.delivery#header4:nth-child(1){
+.checkout.wrapper .product-block li.header > ul li.delivery:not(.dev)#header4:nth-child(1){
 	width: 20%;
     margin-left: 0;
 }
-.checkout.wrapper .product-block li.header > ul li.delivery#header4,
+.checkout.wrapper .product-block li.header > ul li.delivery:not(.dev)#header4,
 .checkout.wrapper .product-block li.header > ul li#header2.delivery{
 	width: 40%;
     margin-left: 0;

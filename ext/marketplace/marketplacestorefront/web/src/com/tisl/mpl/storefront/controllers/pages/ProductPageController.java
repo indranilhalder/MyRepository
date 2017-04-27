@@ -2996,11 +2996,16 @@ public class ProductPageController extends MidPageController
 					.getBrand().getBrandname().toLowerCase() : null);
 			model.addAttribute("msiteBrandCode", StringUtils.isNotBlank(productData.getBrand().getBrandCode()) ? productData
 					.getBrand().getBrandCode().toLowerCase() : null);
-			model.addAttribute(
-					"brandInfo",
-					productData.getBrand().getBrandDescription().length() <= MplConstants.BRANDINFO_CHAR_LIMIT ? productData
-							.getBrand().getBrandDescription() : StringUtils.substring(productData.getBrand().getBrandDescription(), 0,
-							MplConstants.BRANDINFO_CHAR_LIMIT));
+
+			if (null != productData.getBrand().getBrandDescription())
+			{
+				model.addAttribute(
+						"brandInfo",
+						productData.getBrand().getBrandDescription().length() <= MplConstants.BRANDINFO_CHAR_LIMIT ? productData
+								.getBrand().getBrandDescription() : StringUtils.substring(productData.getBrand().getBrandDescription(),
+								0, MplConstants.BRANDINFO_CHAR_LIMIT));
+			}
+
 		}
 	}
 
