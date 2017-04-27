@@ -165,6 +165,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String DEBIT = "Debit Card".intern();
 	public static final String CREDIT = "Credit Card".intern();
 	public static final String COD = "COD".intern();
+	public static final String JUSPAY = "JUSPAY".intern();
 	public static final String NETBANKING = "Netbanking".intern();
 	public final static String PAYMENTMODE = "paymentMode".intern();
 	public final static String PAYMENTMODEFORPROMOTION = "paymentModeForPromotion".intern();
@@ -1859,7 +1860,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String BUYAGETPERCENTAGEDISCOUNTONB = "BuyAGetPercentageDiscountOnB".intern();
 	//FREEBIE FIX
 	public static final String FREEBIEPRICETHRESHOLD = "freebiePriceThreshold";
-	
+
 	// OrderIssues:- multiple Payment Response from juspay restriction
 	public static final String DUPLICATEJUSPAYRESONSE = "duplicatJuspayResponse";
 

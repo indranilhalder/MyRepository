@@ -37,6 +37,7 @@ import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService;
+import com.tisl.mpl.marketplacecommerceservices.service.JuspayPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
@@ -149,6 +150,9 @@ public class MarketplaceCheckoutControllerImpl extends
 	@Autowired
 	/** The c od payment service. */
 	private CODPaymentService cODPaymentService;
+	
+	@Autowired
+	private JuspayPaymentService jusPayPaymentService;
 
 	@Autowired
 	private MplDeliveryCostService deliveryCostService;
@@ -669,7 +673,61 @@ public class MarketplaceCheckoutControllerImpl extends
 		return (true);
 	}
 
-	
+	@Override
+	public boolean jusPayprocessPaymentTxn(CartModel cart) throws PaymentException,
+			ValidationException ,Exception{
+
+		double unTotal = getCsCheckoutService().getUnauthorizedTotal(cart);
+
+		unTotal = cart.getConvenienceCharges() == null ? unTotal : unTotal+cart
+				.getConvenienceCharges();
+
+		String cusName= null;
+		jusPayPaymentService.getTransactionModel(cart, unTotal);
+		if (StringUtils.isNotEmpty(cart.getUser().getName()) && !cart.getUser().getName().equalsIgnoreCase(" "))
+		{
+			cusName = cart.getUser().getName();
+
+		}
+		else
+		{
+			cusName = ((CustomerModel)cart.getUser()).getOriginalUid();
+		}
+		mplPaymentService.saveJusPayPaymentInfo(cusName, cart.getSubtotal(), cart.getConvenienceCharges(), cart.getEntries(),cart);
+		getModelService().refresh(cart);
+		return (true);
+	}
+
+	@Override
+	public boolean processJusPayPaymentOnSelect() throws PaymentException, ValidationException
+	{
+		jusPayPaymentService.createJusPayPaymentInfo(getCartModel());
+						 CommerceCartParameter cartParameter = new CommerceCartParameter();
+							cartParameter.setCart(getCartModel());			
+							ImpersonationContext context = createImpersonationContext(getCartModel());
+							getImpersonationService()
+									.executeInContext(
+											context,
+											new ImpersonationService.Executor<CartModel, ImpersonationService.Nothing>() {
+												@Override
+												public CartModel execute() {
+													try {
+														CommerceCartParameter cartParameter = new CommerceCartParameter();
+														cartParameter.setCart(getCartModel());
+														getCommerceCartService()
+																.recalculateCart(
+																		cartParameter);
+														
+													} catch (CalculationException e) {
+														LOG.error("Exception calculating cart ["
+																+ getCartModel() + "]", e);
+														throw new ClientEtailNonBusinessExceptions(e);
+													}
+													return null;
+												}
+											});
+				return (true);
+			}
 	
 	@Override
 	/*     */public boolean processCODPayment()
@@ -786,6 +844,13 @@ public class MarketplaceCheckoutControllerImpl extends
 	public void setCODPaymentMode(final CartModel cartModel)
 	{
 		cartModel.setModeOfPayment("COD");
+		getModelService().save(cartModel);
+	}
+	
+	@Override
+	public void setJusPayPaymentModeOnSelect(final CartModel cartModel)
+	{
+		cartModel.setModeOfPayment("JusPay");
 		getModelService().save(cartModel);
 	}
 

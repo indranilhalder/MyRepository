@@ -470,6 +470,13 @@
 		<property name="modelService" ref="modelService" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>
+	
+	<alias alias="jusPayPaymentService" name="jusPayPaymentServiceImpl" />
+	<bean id="jusPayPaymentServiceImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.JuspayPaymentServiceImpl">
+		<property name="modelService" ref="modelService" />
+		<property name="configurationService" ref="configurationService" />
+	</bean>
 
 	<alias name="defaultCommerceSolrSearchResponseConverter" alias="commerceSolrSearchResponseConverter" />
 	<bean id="defaultCommerceSolrSearchResponseConverter" parent="abstractPopulatingConverter">

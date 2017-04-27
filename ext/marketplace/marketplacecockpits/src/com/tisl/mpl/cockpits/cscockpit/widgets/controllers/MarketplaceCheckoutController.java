@@ -141,4 +141,11 @@ public interface MarketplaceCheckoutController extends
 	void processJuspayPayment(final CartModel cart, final CustomerModel customer);
 	
 	String juspayPaymentValidation(String commerceOrderId);
+	
+	boolean jusPayprocessPaymentTxn(CartModel cart) throws PaymentException, 
+					ValidationException, Exception;
+	
+	boolean processJusPayPaymentOnSelect() throws PaymentException, ValidationException;
+	
+	void setJusPayPaymentModeOnSelect(final CartModel cartModel);
 }

@@ -21,6 +21,7 @@ import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.EMIPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.JusPayPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
@@ -1367,6 +1368,151 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		}
 		//returning the cart
 		return cart;
+	}
+
+	/**
+	 * This method helps to save juspay Payment info into database
+	 *
+	 * @param custName
+	 * @param cartValue
+	 * @param totalCharge
+	 * @param entries
+	 * @throws EtailNonBusinessExceptions
+	 *
+	 */
+
+	@Override
+	public void saveJusPayPaymentInfo(final String custName, final Double cartValue, final Double totalCharge,
+			final List<AbstractOrderEntryModel> entries, final AbstractOrderModel abstractOrderModel)
+			throws EtailNonBusinessExceptions
+	{
+
+		if (null != entries)
+		{
+			double totalPrice = 0;
+			for (final AbstractOrderEntryModel entry : entries)
+			{
+				if (!getDiscountUtility().isFreebieOrBOGOApplied(entry))
+				{
+					if (entry.getNetAmountAfterAllDisc().doubleValue() > 0)
+					{
+						totalPrice += entry.getNetAmountAfterAllDisc().doubleValue();
+					}
+					else
+					{
+						totalPrice += entry.getTotalPrice().doubleValue();
+					}
+
+					totalPrice -= 0.01 * (null != entry.getFreeCount() ? entry.getFreeCount().intValue() : 0);
+				}
+			}
+			LOG.debug("Total cart price is>>>>>>>>>" + totalPrice);
+
+			//amtTobeDeductedAtlineItemLevel is a variable to check total apportioned COD charge is equal to total convenience charge
+
+			for (final AbstractOrderEntryModel entry : entries)
+			{
+				if (!getDiscountUtility().isFreebieOrBOGOApplied(entry))
+				{
+					double entryTotals = 0;
+					if (entry.getNetAmountAfterAllDisc().doubleValue() > 0)
+					{
+						entryTotals = entry.getNetAmountAfterAllDisc().doubleValue();
+					}
+
+					else
+					{
+
+						entryTotals = entry.getTotalPrice().doubleValue();
+					}
+					entryTotals -= (null == entry.getFreeCount() ? 0 : 0.01 * entry.getFreeCount().intValue());
+					final double quantity = (entry.getQualifyingCount().intValue() > 0) ? entry.getQualifyingCount().doubleValue()
+							: entry.getQuantity().doubleValue();
+
+					LOG.debug("Entry totals is>>>>>" + entryTotals + "<<<<<<&& quantity is>>>>>" + quantity);
+
+					//calculating ratio of convenience charge for cart entry
+					final Double jusPayChargePercent = Double.valueOf(entryTotals / totalPrice);
+					final Double jusPayChargePerEntry = Double.valueOf(totalCharge.doubleValue() * jusPayChargePercent.doubleValue());
+					final Double formattedJusPayCharge = Double.valueOf(String.format(MarketplacecommerceservicesConstants.FORMAT,
+							jusPayChargePerEntry));
+					double appJusPayChargeForEachItem = 0.00D;
+					if (quantity > 0)
+					{
+						appJusPayChargeForEachItem = formattedJusPayCharge.doubleValue() / quantity;
+					}
+					LOG.debug("Entry level Conv charge is>>>>>>>" + appJusPayChargeForEachItem);
+					entry.setConvenienceChargeApportion(Double.valueOf(appJusPayChargeForEachItem));
+
+					try
+					{
+						getModelService().save(entry);
+					}
+					catch (final ModelSavingException e)
+					{
+						LOG.error("Exception while saving abstract order entry model with " + e);
+						throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E9051);
+					}
+				}
+
+			}
+		}
+
+
+		final JusPayPaymentInfoModel jusPayPaymentInfoModel = getModelService().create(JusPayPaymentInfoModel.class);
+
+
+		jusPayPaymentInfoModel.setCashOwner(custName);
+		jusPayPaymentInfoModel.setCode(MarketplacecommerceservicesConstants.JUSPAY + "_" + abstractOrderModel.getCode());
+		jusPayPaymentInfoModel.setUser(getUserService().getCurrentUser());
+		if (null == abstractOrderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(abstractOrderModel.getStatus()))
+		{
+			try
+			{
+				getModelService().save(jusPayPaymentInfoModel);
+			}
+			catch (final ModelSavingException e)
+			{
+				//LOG.error("Exception while saving cod payment info with " + e);
+				LOG.error("juspay Payment juspayPaymentInfoModel set for cart with GUID" + abstractOrderModel.getGuid());
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E9051);
+
+			}
+
+			//setting juspayPaymentInfoModel in cartmodel
+			abstractOrderModel.setPaymentInfo(jusPayPaymentInfoModel);
+			abstractOrderModel.setPaymentAddress(abstractOrderModel.getDeliveryAddress());
+			try
+			{
+				//saving the cartmodel
+				getModelService().save(abstractOrderModel);
+				if (null != abstractOrderModel.getGuid())
+				{
+					LOG.error("juspay Payment abstractOrderModel set for cart with GUID" + abstractOrderModel.getGuid());
+				}
+
+			}
+			catch (final ModelSavingException e)
+			{
+				if (null != abstractOrderModel.getGuid())
+				{
+					LOG.error("Exception while saving cart for" + abstractOrderModel.getGuid());
+				}
+
+				LOG.error("Exception while saving cart with ", e);
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E9051);
+			}
+		}
+		else if (null != abstractOrderModel.getPaymentInfo())
+		{
+			LOG.error("Order already has payment info -- not saving juspayPaymentInfoModel and not attaching to abstractOrderModel>>>"
+					+ abstractOrderModel.getPaymentInfo().getCode());
+		}
+		else
+		{
+			LOG.error(ERROR_PAYMENT + abstractOrderModel.getCode());
+		}
+
 	}
 
 	/**
@@ -3035,11 +3181,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3051,9 +3197,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3430,7 +3576,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for non-COD from OMS Submit Order Job de.hybris.platform.core.model.order.OrderModel)
 	 */
@@ -3580,7 +3726,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @desc getPaymentModeFrompayInfo
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 	 */
 	@Override
@@ -3621,7 +3767,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for pre paid from OMS Submit Order Job
 	 */
@@ -3685,7 +3831,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @desc SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for COD from OMS Submit Order Job
 	 */

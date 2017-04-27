@@ -111,6 +111,8 @@ public interface MplPaymentService
 	void saveCODPaymentInfo(String custName, Double cartValue, Double totalCODCharge, List<AbstractOrderEntryModel> entries,
 			AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
+	void saveJusPayPaymentInfo(String custName, Double cartValue, Double totalCharge, List<AbstractOrderEntryModel> entries,
+			AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 	/**
 	 * This method is setting paymentTransactionModel and the paymentTransactionEntryModel against the cart for non-COD
@@ -259,20 +261,20 @@ public interface MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions;
@@ -347,5 +349,6 @@ public interface MplPaymentService
 	 */
 	void setPaymentTransactionForCODFromSubmitProcess(Map<String, Double> paymentMode, OrderModel orderModel)
 			throws EtailNonBusinessExceptions;
+
 
 }

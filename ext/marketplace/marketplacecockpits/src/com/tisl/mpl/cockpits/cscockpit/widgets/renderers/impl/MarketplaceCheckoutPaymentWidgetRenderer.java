@@ -117,6 +117,8 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 	
 	private String jsuPayCreatedOrderId = null;
 	
+	private boolean juspayOrderCreationFlag = false;
+	
 	/**
 	 * Creates the content internal.
 	 *
@@ -184,7 +186,7 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 				Div otparea = new Div();
 				otparea.setVisible(authorize);				
 				
-				if(!buttonLabelChangeFlag && jsuPayCreatedOrderId == null)
+				if(!buttonLabelChangeFlag && !juspayOrderCreationFlag)
 				{
 					authorizeButton = new Button(LabelUtils.getLabel(
 							widget, "authorizeButton"));
@@ -192,7 +194,7 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 							Events.ON_CLICK,
 							createAuthorizeEventListener(widget));
 				}
-				else if(buttonLabelChangeFlag && jsuPayCreatedOrderId == null)
+				else if(buttonLabelChangeFlag && !juspayOrderCreationFlag)
 				{
 					authorizeButton = new Button(LabelUtils.getLabel(
 							widget, "payNow"));
@@ -281,9 +283,13 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 				try 
 				{
 					jsuPayCreatedOrderId = (String) JaloSession.getCurrentSession().getAttribute("jusPayEndOrderId");
+					if(!jsuPayCreatedOrderId.isEmpty())
+					{
+						juspayOrderCreationFlag = true;
+					}
 					String commerEndOrderId = (String) JaloSession.getCurrentSession().getAttribute("commerceEndOrderId");
 					LOG.info("juspay order id ::: "+jsuPayCreatedOrderId);
-					if(jsuPayCreatedOrderId != null && commerEndOrderId!= null)
+					if(juspayOrderCreationFlag && commerEndOrderId!= null)
 					{
 						final String orderPaymentStatus = ((MarketplaceCheckoutController)widget.getWidgetController()).
 								juspayPaymentValidation(commerEndOrderId);
@@ -291,16 +297,21 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 						if(orderPaymentStatus.equalsIgnoreCase("CHARGED") &&
 								widget.getWidgetController().needPaymentOption())
 						{
-							((MarketplaceCheckoutController)widget.getWidgetController()).processPayment(cart);
+							Messagebox.show("Payment Successsful",INFO, Messagebox.OK,
+									Messagebox.INFORMATION);
+							((MarketplaceCheckoutController)widget.getWidgetController()).jusPayprocessPaymentTxn(cart);
+							juspayOrderCreationFlag = false;
+							buttonLabelChangeFlag = false;
 						}
 						
 						else
 						{
 							Messagebox.show("Please try again",INFO, Messagebox.OK,
 									Messagebox.ERROR);
+							juspayOrderCreationFlag = false;
+							buttonLabelChangeFlag = true;
 						}
-						//if payment status success or failed logic
-						buttonLabelChangeFlag = true;
+						
 						createContentInternal(widget,rootContainer);
 						Map data = Collections.singletonMap("refresh", Boolean.TRUE);
 						((CheckoutController) widget.getWidgetController()).getBasketController()
@@ -358,8 +369,12 @@ protected class JuspayPaymentEventListener implements EventListener
 			{
 				((MarketplaceCheckoutController)widget.getWidgetController()).processJuspayPayment(cart, customer);
 				jsuPayCreatedOrderId = (String) JaloSession.getCurrentSession().getAttribute("jusPayEndOrderId");
+				if(!jsuPayCreatedOrderId.isEmpty())
+				{
+					juspayOrderCreationFlag = true;
+				}
 				LOG.info("juspay order id ::: "+jsuPayCreatedOrderId);
-				if(jsuPayCreatedOrderId != null)
+				if(juspayOrderCreationFlag)
 				{
 					buttonLabelChangeFlag = true;
 					createContentInternal(widget,rootContainer);
@@ -590,16 +605,17 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 		}
 		Listitem listItem1 = listbox.appendItem("Pay Now","paynow");
 		listItem1.setValue("paynow");
-		if(buttonLabelChangeFlag && jsuPayCreatedOrderId == null)
+		if(buttonLabelChangeFlag && !juspayOrderCreationFlag)
 		{
 			listItem1.setSelected(true);
 		}
 		
-		if(buttonLabelChangeFlag && jsuPayCreatedOrderId != null)
+		if(buttonLabelChangeFlag && juspayOrderCreationFlag)
 		{
 			listItem1.setSelected(true);
 			listbox.setDisabled(true);
 		}
+		
 		return listbox;
 	}
 
@@ -687,6 +703,28 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 						} 
 						else if(mode.equalsIgnoreCase("paynow"))
 						{
+							((MarketplaceCheckoutController) widget.getWidgetController()).canCreatePayments();
+							((MarketplaceCheckoutController) widget.getWidgetController()).processJusPayPaymentOnSelect();
+							((MarketplaceCheckoutController) widget.getWidgetController()).setJusPayPaymentModeOnSelect(cart);
+							try {
+								
+								getMplVoucherService().checkCartWithVoucher(cart);
+							} catch (EtailNonBusinessExceptions e) {
+								LOG.error("Exception calculating cart ["
+										+ cart + "]", e);
+								ExceptionUtil.etailNonBusinessExceptionHandler(e);
+							}
+							catch(VoucherOperationException e)
+							{
+								LOG.error("Exception calculating cart ["
+										+ cart + "]", e);
+							}
+							catch(Exception e)
+							{
+								LOG.error("Exception calculating cart ["
+										+ cart + "]", e);
+								ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+							}
 							buttonLabelChangeFlag = true;
 							createContentInternal(widget,rootContainer);
 							Map data = Collections.singletonMap("refresh", Boolean.TRUE);

@@ -2861,6 +2861,23 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+			
+			<itemtype code="JusPayPaymentInfo" extends="PaymentInfo"
+				autocreate="true" generate="false">
+				<attributes>
+					<attribute qualifier="cashOwner" autocreate="true"
+						type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type="property" />
+						<custom-properties>
+							<property name="hmcIndexField">
+								<value>"thefield"</value>
+							</property>
+						</custom-properties>
+					</attribute>
+				</attributes>
+			</itemtype>
 
 			<itemtype code="NetbankingPaymentInfo" extends="PaymentInfo"
 				autocreate="true" generate="false">

@@ -217,7 +217,8 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				afterPlaceOrder(parameter, result);
 
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
-						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
+						&& (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD") || 
+								orderModel.getModeOfOrderPayment().equalsIgnoreCase("JusPay") ))
 				{
 					//Order splitting and order fulfilment process will only be triggered for COD orders from here - TPR-629
 					try
