@@ -259,7 +259,7 @@ public class HomePageController extends AbstractPageController
 					}
 					else
 					{
-						LOG.info("Component visiblity set to false");
+						LOG.info(MarketplacecommerceservicesConstants.HOMEPAGELOGINFO);
 					}
 				}
 			}
@@ -342,7 +342,7 @@ public class HomePageController extends AbstractPageController
 				}
 				else
 				{
-					LOG.info("Component visiblity set to false");
+					LOG.info(MarketplacecommerceservicesConstants.HOMEPAGELOGINFO);
 				}
 			}
 		}
@@ -703,7 +703,7 @@ public class HomePageController extends AbstractPageController
 					}
 					else
 					{
-						LOG.info("Component visiblity set to false");
+						LOG.info(MarketplacecommerceservicesConstants.HOMEPAGELOGINFO);
 					}
 				}
 
@@ -903,7 +903,7 @@ public class HomePageController extends AbstractPageController
 					}
 					else
 					{
-						LOG.info("Component visiblity set to false");
+						LOG.info(MarketplacecommerceservicesConstants.HOMEPAGELOGINFO);
 					}
 				}
 			}
@@ -1155,7 +1155,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 *
+					 * 
 					 * }
 					 */
 

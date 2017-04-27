@@ -2005,6 +2005,27 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SPECIALPRICEPROMOTIONERROR = "******** Special price check disabling promotion, productlist error:";
 	public static final String PROMOTIONCODE = "PROMOTION CODE:";
 	public static final String COMPONENTMESSAGE = "Component visiblity set to false";
+	public static final String SELLERIDSEARCH = "sellerId:";
+	public static final String SELLERIDPARAM = "sellerId";
+	public static final String HOMEPAGELOGINFO = "Component visiblity set to false";
+	public static final String QUERYWHEREPROMO = " where {b.promoCode}=?promoCode ";
+	public static final String QUERYERROR = "error in search query";
+	public static final String QUANTITYCOUNTEXCEPTIONLOG = "exception getching the quantity count details aginst product/ussid";
+	public static final String EXCEPTIONCAUSELOG = " Exception cause :";
+	public static final String CARTNOTFOUNDEXCEPTION = "Cart not found.";
+	public static final String PROMOTIONDEBUGLOG = "Fetching Promotion Details";
+	public static final String QUERYJOIN = "JOIN ";
+	public static final String USERPARAM = "user";
+	public static final String NOENTRYSUBORDERLOG = "No  Entries available for Suborder ID:- ";
+	public static final String OMSTIMEOUT = "5000";
+
+
+
+
+
+
+
+
 
 
 
