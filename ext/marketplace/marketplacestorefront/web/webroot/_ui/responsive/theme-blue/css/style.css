@@ -66273,3 +66273,82 @@ margin-top: -10px;
 margin-top: -10px;
 }
 }
+.checkout.wrapper .product-block li.item:last-of-type{
+	border-bottom: 1px solid #eee;
+}
+.checkout.wrapper .product-block li.item{
+	margin: 0;
+}
+.checkout-content .checkout-shipping.left-block div.product .product-brand-name{
+	font-size: 14px;
+    text-transform: none;
+}
+.checkout-content .checkout-shipping.left-block .product-block li.item>ul>li:first-child div.product .product-name{
+	font-size: 12px;
+    text-transform: none;
+    line-height: 15px;
+}
+.cart.wrapper .product-block li.header ul{
+	overflow: hidden;
+}
+.checkout.wrapper .product-block li.header > ul li.delivery{
+	text-align: left;
+}
+.checkout.wrapper .product-block li.header > ul li.delivery:not(.dev)#header4:nth-child(1){
+	width: 20%;
+    margin-left: 0;
+}
+.checkout.wrapper .product-block li.header > ul li.delivery:not(.dev)#header4,
+.checkout.wrapper .product-block li.header > ul li#header2.delivery{
+	width: 40%;
+    margin-left: 0;
+}
+.cart.wrapper .left-block .button{
+	background-color: #a5173c;
+	font-weight: normal !important;
+    line-height: 40px !important;
+    font-size: 12px !important;
+    padding: 0;
+}
+.cart.wrapper .left-block .button.w100:hover{
+	background-color: #a5173c !important;
+}
+.checkout.wrapper .product-block li.header > ul li#header2.delivery{
+	padding-left: 5px;
+}
+@media (max-width: 1024px){
+	.checkout-headers .desk-view {
+	  margin: 0 0 15px;
+	}
+}
+@media (max-width: 1024px) and (min-width: 768px){
+	.checkout.wrapper .product-block li.item > ul li.delivery.deliverySlotType{
+	margin-top: 14px;
+	}
+}
+@media (max-width: 850px) and (min-width: 791px){
+	.checkout.wrapper .product-block li.item > ul > li.delivery.deliverySlotType{
+	   padding-left: 0px;
+	 }
+}
+@media (max-width: 767px){
+	.checkout-headers {
+    padding-left: 11px;
+}
+.checkout.wrapper .product-block li.item > ul li.delivery.deliverySlotType{
+	margin-top: 0px;
+}
+}
+@media (min-width: 768px){
+	.checkout-content .checkout-shipping.left-block .product-block li.item>ul>li:first-child{
+	padding: 15px 0 15px 0;
+	}
+}
+@media (max-width: 651px){
+	.checkout-headers{
+	float: left;
+	}
+	.deliverySlotOptions .deliverySlotRadio .heading{
+	margin-left: 10px !important;
+	}
+}

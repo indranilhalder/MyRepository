@@ -271,8 +271,8 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				if ((null != productList && !productList.isEmpty()) && null != startDate && null != endDate && isEnabled
 						&& quantity.intValue() == 1)
 				{
-					LOG.debug("******** Special price check for product list:" + productList + " *** percentage discount:"
-							+ isPercentage);
+					LOG.debug("******** Special price check for product list:" + productList
+							+ MarketplacecommerceservicesConstants.PDISCOUNT + isPercentage);
 
 					if (isPercentage)
 					{
@@ -289,8 +289,8 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				else if ((null != categoryList && !categoryList.isEmpty()) && null != startDate && null != endDate && isEnabled
 						&& quantity.intValue() == 1)
 				{
-					LOG.debug("******** Special price check for product list in category:" + productList + " *** percentage discount:"
-							+ isPercentage);
+					LOG.debug("******** Special price check for product list in category:" + productList
+							+ MarketplacecommerceservicesConstants.PDISCOUNT + isPercentage);
 					if (isPercentage)
 					{
 						updatePromotionalPrice(null, categoryList, price, startDate, endDate, true, priority, sellerList, brandList,
@@ -305,8 +305,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
 						&& !isEnabled && quantity.intValue() == 1)
 				{
-					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList + CATLIST
-							+ categoryList);
+					LOG.debug(MarketplacecommerceservicesConstants.SPECIALPRICEPROMOTION + productList + CATLIST + categoryList);
 					//					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
 					//							rejectBrandList, promoCode);
 					disablePromotionalPrice(promoCode);
@@ -315,8 +314,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 						&& quantity.intValue() > 1) // If Qauntity is increased from 1 to Multiple //Fix for TISPRD-383
 				{
 
-					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList + CATLIST
-							+ categoryList);
+					LOG.debug(MarketplacecommerceservicesConstants.SPECIALPRICEPROMOTION + productList + CATLIST + categoryList);
 					//					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
 					//							rejectBrandList, promoCode);
 					disablePromotionalPrice(promoCode);
@@ -325,22 +323,22 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			LOG.error("******** Special price check disabling promotion, productlist error:" + productList + CATLIST + categoryList
-					+ "PROMOTION CODE:" + promoCode);
+			LOG.error(MarketplacecommerceservicesConstants.SPECIALPRICEPROMOTIONERROR + productList + CATLIST + categoryList
+					+ MarketplacecommerceservicesConstants.PROMOTIONCODE + promoCode);
 			errorFlag = true;
 			throw e;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error("******** Special price check disabling promotion, productlist error:" + productList + CATLIST + categoryList
-					+ "PROMOTION CODE:" + promoCode);
+			LOG.error(MarketplacecommerceservicesConstants.SPECIALPRICEPROMOTIONERROR + productList + CATLIST + categoryList
+					+ MarketplacecommerceservicesConstants.PROMOTIONCODE + promoCode);
 			errorFlag = true;
 			throw e;
 		}
 		catch (final Exception e)
 		{
-			LOG.error("******** Special price check disabling promotion, productlist error:" + productList + CATLIST + categoryList
-					+ "PROMOTION CODE:" + promoCode);
+			LOG.error(MarketplacecommerceservicesConstants.SPECIALPRICEPROMOTIONERROR + productList + CATLIST + categoryList
+					+ MarketplacecommerceservicesConstants.PROMOTIONCODE + promoCode);
 			errorFlag = true;
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
@@ -524,8 +522,8 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				if ((null != productList && !productList.isEmpty()) && null != startDate && null != endDate && isEnabled
 						&& quantity.intValue() == 1)
 				{
-					LOG.debug("******** Special price check for product list:" + productList + " *** percentage discount:"
-							+ isPercentage);
+					LOG.debug("******** Special price check for product list:" + productList
+							+ MarketplacecommerceservicesConstants.PDISCOUNT + isPercentage);
 
 					if (isPercentage)
 					{
@@ -542,8 +540,8 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				else if ((null != categoryList && !categoryList.isEmpty()) && null != startDate && null != endDate && isEnabled
 						&& quantity.intValue() == 1)
 				{
-					LOG.debug("******** Special price check for product list in category:" + productList + " *** percentage discount:"
-							+ isPercentage);
+					LOG.debug("******** Special price check for product list in category:" + productList
+							+ MarketplacecommerceservicesConstants.PDISCOUNT + isPercentage);
 					if (isPercentage)
 					{
 						updatePromotionalPrice(null, categoryList, price, startDate, endDate, true, priority, sellerList, brandList,
@@ -558,8 +556,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
 						&& !isEnabled && quantity.intValue() == 1)
 				{
-					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList + CATLIST
-							+ categoryList);
+					LOG.debug(MarketplacecommerceservicesConstants.SPECIALPRICEPROMOTION + productList + CATLIST + categoryList);
 					//					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
 					//							rejectBrandList, promoCode);
 					disablePromotionalPrice(promoCode);
@@ -568,8 +565,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 						&& quantity.intValue() > 1) // If Qauntity is increased from 1 to Multiple //Fix for TISPRD-383
 				{
 
-					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList + CATLIST
-							+ categoryList);
+					LOG.debug(MarketplacecommerceservicesConstants.SPECIALPRICEPROMOTION + productList + CATLIST + categoryList);
 					//					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
 					//							rejectBrandList, promoCode);
 					disablePromotionalPrice(promoCode);
@@ -578,22 +574,22 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			LOG.error("******** Special price check disabling promotion, productlist error:" + productList + CATLIST + categoryList
-					+ "PROMOTION CODE:" + promoCode);
+			LOG.error(MarketplacecommerceservicesConstants.SPECIALPRICEPROMOTIONERROR + productList + CATLIST + categoryList
+					+ MarketplacecommerceservicesConstants.PROMOTIONCODE + promoCode);
 			errorFlag = true;
 			throw e;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error("******** Special price check disabling promotion, productlist error:" + productList + CATLIST + categoryList
-					+ "PROMOTION CODE:" + promoCode);
+			LOG.error(MarketplacecommerceservicesConstants.SPECIALPRICEPROMOTIONERROR + productList + CATLIST + categoryList
+					+ MarketplacecommerceservicesConstants.PROMOTIONCODE + promoCode);
 			errorFlag = true;
 			throw e;
 		}
 		catch (final Exception e)
 		{
-			LOG.error("******** Special price check disabling promotion, productlist error:" + productList + CATLIST + categoryList
-					+ "PROMOTION CODE:" + promoCode);
+			LOG.error(MarketplacecommerceservicesConstants.SPECIALPRICEPROMOTIONERROR + productList + CATLIST + categoryList
+					+ MarketplacecommerceservicesConstants.PROMOTIONCODE + promoCode);
 			errorFlag = true;
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
@@ -1193,33 +1189,33 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	 * clearExistingData(promoCode); final List<String> product = new ArrayList<String>(); //List<String>
 	 * stagedProductList = new ArrayList<String>();//why? // final List<String> promoproductList = new
 	 * ArrayList<String>();//Car-153 final List<PriceRowModel> priceList = new ArrayList<PriceRowModel>();
-	 *
+	 * 
 	 * if (CollectionUtils.isNotEmpty(products)) { for (final ProductModel itrProduct : products) { if
 	 * (getBrandsForProduct(itrProduct, brands, rejectBrandList) && validateProductData(itrProduct, priority)) {
 	 * product.add(itrProduct.getPk().toString()); //promoproductList.add(itrProduct.getCode());//Car-158 } } }
-	 *
+	 * 
 	 * if (CollectionUtils.isNotEmpty(categories)) { //TISPRO-352 : Fix final List<ProductModel> productList =
 	 * fetchProductList(categories); if (CollectionUtils.isNotEmpty(productList)) { for (final ProductModel itrProduct :
 	 * productList) { if (getBrandsForProduct(itrProduct, brands, rejectBrandList) && validateProductData(itrProduct,
 	 * priority)) { product.add(itrProduct.getPk().toString()); //promoproductList.add(itrProduct.getCode());//CAR-158 }
 	 * } }
-	 *
-	 *
+	 * 
+	 * 
 	 * //Car-158 // final ConcurrentHashMap<List<String>, List<String>> categoryDetailsMap =
 	 * getEligibleProductList(brands, // rejectBrandList, priority, categories); // if
 	 * (MapUtils.isNotEmpty(categoryDetailsMap)) // { // for (final ConcurrentHashMap.Entry<List<String>, List<String>>
 	 * entry : categoryDetailsMap.entrySet()) // { // product.addAll(entry.getKey()); // //
 	 * promoproductList.addAll(entry.getValue());//Car-158 // LOG.debug("Key = " + entry.getKey() + ", Value = " +
 	 * entry.getValue()); // } // } }
-	 *
-	 *
+	 * 
+	 * 
 	 * LOG.debug("******** Special Price - Disable Promotion Applicable product List:" + product);
-	 *
-	 *
+	 * 
+	 * 
 	 * if (!product.isEmpty()) { //Car-158 // stagedProductList = getStagedProductDetails(promoproductList); // For
 	 * adding the staged catalog price Row for Product // if (CollectionUtils.isNotEmpty(stagedProductList)) // { //
 	 * product.addAll(stagedProductList); // }
-	 *
+	 * 
 	 * final List<PriceRowModel> priceRow = updatePromotionalPriceDao.fetchPricedData(product); for (final PriceRowModel
 	 * price : priceRow) { if (!isEnabled) { price.setPromotionStartDate(null); price.setPromotionEndDate(null);
 	 * price.setIsPercentage(null); price.setPromotionValue(null);
@@ -1228,11 +1224,11 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	 * price.setPromotionStartDate(null); price.setPromotionEndDate(null); price.setIsPercentage(null);
 	 * price.setPromotionValue(null); price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
 	 * price.setMaxDiscount(null); } priceList.add(price); }
-	 *
+	 * 
 	 * if (CollectionUtils.isNotEmpty(priceList)) { modelService.saveAll(priceList); //NEED CHANGE }
-	 *
+	 * 
 	 * } }
-	 *
+	 * 
 	 * catch (final EtailBusinessExceptions e) { throw e; } catch (final EtailNonBusinessExceptions e) { throw e; } catch
 	 * (final Exception e) { throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } }
 	 */

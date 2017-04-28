@@ -160,9 +160,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -269,8 +269,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				 * LOG.debug("Order Sequence Generation True"); final String orderIdSequence =
 				 * getMplCommerceCartService().generateOrderId(); LOG.debug("Order Sequence Generated:- " +
 				 * orderIdSequence);
-				 *
-				 *
+				 * 
+				 * 
 				 * orderModel.setCode(orderIdSequence); } else { LOG.debug("Order Sequence Generation False"); final Random
 				 * rand = new Random(); orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000))); }
 				 */
@@ -571,9 +571,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -587,9 +587,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -699,13 +699,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @param subOrderList
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -784,8 +784,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						}
 						else
 						{
-							LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
-							throw new InvalidCartException("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+							LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
+							throw new InvalidCartException(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG
+									+ subOrderModel.getCode());
 						}
 					}
 				}
@@ -805,13 +806,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @param subOrderList
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -858,8 +859,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			}
 			else
 			{
-				LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
-				throw new InvalidCartException("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+				LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
+				throw new InvalidCartException(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
 			}
 		}
 		return freebieParentMap;
@@ -940,11 +941,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					LOG.info("Total Cart Level Discount>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + totalCartLevelDiscount);
 					sellerOrderList.setTotalDiscounts(Double.valueOf(totalCartLevelDiscount + totalCouponDiscount));
 
-
 					double delCost = 0.0d;
-					if (entryModelList.getCurrDelCharge() != null && entryModelList.getCurrDelCharge().doubleValue() > 0D)
+					if (entryModelList.getPrevDelCharge() != null && entryModelList.getPrevDelCharge().doubleValue() > 0D)
 					{
-						totalDeliveryPrice += entryModelList.getCurrDelCharge().doubleValue();
+						totalDeliveryPrice += entryModelList.getPrevDelCharge().doubleValue();
 					}
 					else
 					{
@@ -1145,8 +1145,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						}
 						else
 						{
-							LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
-							throw new InvalidCartException("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+							LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
+							throw new InvalidCartException(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG
+									+ subOrderModel.getCode());
 						}
 					}
 				}
@@ -1386,8 +1387,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			}
 			else
 			{
-				LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
-				throw new InvalidCartException("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+				LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
+				throw new InvalidCartException(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
 			}
 		}
 		return innerList;
@@ -1396,13 +1397,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @param orderList
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	// OrderIssues:- InvalidCartException exception throws
@@ -1469,8 +1470,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				}
 				else
 				{
-					LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
-					throw new InvalidCartException("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+					LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
+					throw new InvalidCartException(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
 				}
 			}
 
@@ -1601,8 +1602,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				}
 				else
 				{
-					LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
-					throw new InvalidCartException("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+					LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
+					throw new InvalidCartException(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
 				}
 			}
 		}
@@ -1711,7 +1712,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			}
 			else
 			{
-				LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+				LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
 				throw new InvalidCartException("No  Entries available for parent Order ID:- " + subOrderModel.getCode());
 			}
 		}
@@ -1774,7 +1775,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				}
 				else
 				{
-					LOG.error("No  Entries available for Suborder ID:- " + orderModel.getCode());
+					LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + orderModel.getCode());
 					throw new InvalidCartException("No  Entries available for parent Order ID:- " + orderModel.getCode());
 				}
 			}

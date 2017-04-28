@@ -35,6 +35,7 @@ import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.strategy.MplFindDeliveryCostStrategy;
+import com.tisl.mpl.util.ExceptionUtil;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.widgets.ListboxWidget;
@@ -329,7 +330,8 @@ public class MarketPlaceCheckoutCartWidgetRenderer extends
 	           //changed = ((CheckoutController)widget.getWidgetController()).getBasketController().setCartEntryDeliveryMode(item, selectedDeliveryMode);
 	         }
 	         }catch(Exception e) {
-	        	 LOG.debug("Exception "+e);
+	        	 LOG.debug("Exception handleCartEntryDeliveryModeChangeEvent:"+e);
+	        	 ExceptionUtil.getCustomizedExceptionTrace(e);
 	         }
 	         }
 	         else{
