@@ -6764,7 +6764,7 @@
 				</attributes>
 				<!-- CAR-274 -->
  				<indexes>
- 					<index name="MPL_ORDENTRIES_TRANSTYPEPKSTR" unique="true">
+ 					<index name="MPL_ORDENTRIES_TRANSTYPEPKSTR">
  						<key attribute="transactionID" lower="true"/>
  						<key attribute="itemtype" />
  					</index>
@@ -7340,7 +7340,7 @@
 				
 				<!-- CAR-274 -->
 				<indexes>
-					<index name="MPL_CON_CODE" unique="true">
+					<index name="MPL_CON_CODE">
 						<key attribute="code" />
 					</index>
 				</indexes>
