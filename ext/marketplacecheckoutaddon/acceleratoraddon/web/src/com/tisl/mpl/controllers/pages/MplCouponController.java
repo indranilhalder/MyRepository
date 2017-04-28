@@ -68,7 +68,8 @@ public class MplCouponController
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
 	 */
-	@RequestMapping(value = MarketplacecouponConstants.COUPONREDEEM, method = RequestMethod.GET)
+	//@RequestMapping(value = MarketplacecouponConstants.COUPONREDEEM, method = RequestMethod.GET)
+	@RequestMapping(value = MarketplacecouponConstants.COUPONREDEEM, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public @ResponseBody VoucherDiscountData redeemCoupon(final String couponCode, final String paymentMode,
 			final String bankNameSelected, final String guid) //Added guid to handle orderModel for TPR-629
@@ -324,7 +325,8 @@ public class MplCouponController
 	 * @throws EtailNonBusinessExceptions
 	 *
 	 */
-	@RequestMapping(value = MarketplacecouponConstants.COUPONRELEASE, method = RequestMethod.GET)
+	//@RequestMapping(value = MarketplacecouponConstants.COUPONRELEASE, method = RequestMethod.GET)
+	@RequestMapping(value = MarketplacecouponConstants.COUPONRELEASE, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public @ResponseBody VoucherDiscountData releaseCoupon(final String couponCode, final String guid) //Added guid to handle orderModel for TPR-629
 	{

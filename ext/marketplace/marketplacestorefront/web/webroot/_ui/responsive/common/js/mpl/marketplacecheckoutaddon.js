@@ -2062,7 +2062,7 @@ $("#otpMobileNUMField").focus(function(){
 		var guid=$("#guid").val();
 		$.ajax({
 	 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/release",
-	 		type: "GET",
+	 		type: "POST",
 	 		cache: false,
 	 		data: { 'couponCode' : couponCode , 'guid' : guid},
 	 		success : function(response) {
@@ -7248,7 +7248,7 @@ $("#couponSubmitButton").click(function(){
 		/*end changes for INC_11738*/
 		$.ajax({
 	 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/redeem",
-	 		type: "GET",
+	 		type: "POST",
 	 		cache: false,
 	 		data: { 'couponCode' : couponCode , 'paymentMode' : paymentMode , 'bankNameSelected' : bankNameSelected , 'guid' : guid},
 	 		success : function(response) {
@@ -7396,7 +7396,7 @@ $(".remove-coupon-button").click(function(){
 	var guid=$("#guid").val();
 	$.ajax({
  		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/release",
- 		type: "GET",
+ 		type: "POST",
  		cache: false,
  		data: { 'couponCode' : couponCode , 'guid' : guid},
  		success : function(response) {
