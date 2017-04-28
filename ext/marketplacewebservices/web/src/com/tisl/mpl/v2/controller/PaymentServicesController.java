@@ -22,6 +22,7 @@ import de.hybris.platform.util.localization.Localization;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -29,7 +30,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.security.access.annotation.Secured;
@@ -281,9 +281,9 @@ public class PaymentServicesController extends BaseController
 							&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
 									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
 									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
-									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI) || paymentMode
-										.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE)
-						 || paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
+									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)
+									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE) || paymentMode
+										.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
 					{
 						if (!paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
 						{
@@ -325,8 +325,8 @@ public class PaymentServicesController extends BaseController
 						&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
 								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
 								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
-								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI) || paymentMode
-									.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE) || paymentMode
+								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)
+								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE) || paymentMode
 									.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
 
 				{
@@ -699,6 +699,21 @@ public class PaymentServicesController extends BaseController
 				}
 				else
 				{
+					boolean alreadyProcessed = false;
+					final List<PaymentTransactionModel> paymentTransactionList = orderModel.getPaymentTransactions();
+
+					if (CollectionUtils.isNotEmpty(paymentTransactionList))
+					{
+						for (final PaymentTransactionModel payTranModel : paymentTransactionList)
+						{
+							if (payTranModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+							{
+								alreadyProcessed = true;
+								break;
+							}
+						}
+					}
+
 					final Double orderValue = orderModel.getSubtotal();
 					final Double totalCODCharge = orderModel.getConvenienceCharges();
 
@@ -712,33 +727,32 @@ public class PaymentServicesController extends BaseController
 						failErrorCode = MarketplacecommerceservicesConstants.B9075;
 					}
 
-					//TISUTO-12 , TISUTO-11
-					/*
-					 * if (!failFlag && !mplCartFacade .isInventoryReservedMobile(
-					 * MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel, pincode)) {
-					 * //getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID
-					 * ,"TRUE"); //getMplCartFacade().recalculate(cart); failFlag = true; failErrorCode =
-					 * MarketplacecommerceservicesConstants.B9047; }
-					 */
+					if (!alreadyProcessed)
+					{
+						//TISUTO-12 , TISUTO-11
+						/*
+						 * if (!failFlag && !mplCartFacade .isInventoryReservedMobile(
+						 * MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel, pincode))
+						 * {
+						 * //getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID
+						 * ,"TRUE"); //getMplCartFacade().recalculate(cart); failFlag = true; failErrorCode =
+						 * MarketplacecommerceservicesConstants.B9047; }
+						 */
 
-					if (!failFlag && !getMplCheckoutFacade().isCouponValid(orderModel))
-					{
-						//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
-						failFlag = true;
-						failErrorCode = MarketplacecommerceservicesConstants.B9509;
-					}
-
-					if (failFlag)
-					{
-						throw new EtailBusinessExceptions(failErrorCode);
-					}
-					else
-					{
-						final Map<String, String> duplicateJuspayResMap = getSessionService().getAttribute(
-								MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE);
-						// OrderIssues:-  multiple Payment Response from juspay restriction
-						if (MapUtils.isNotEmpty(duplicateJuspayResMap) && duplicateJuspayResMap.get(cartGuid).equalsIgnoreCase("False"))
+						if (!failFlag && !getMplCheckoutFacade().isCouponValid(orderModel))
 						{
+							//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
+							failFlag = true;
+							failErrorCode = MarketplacecommerceservicesConstants.B9509;
+						}
+
+						if (failFlag)
+						{
+							throw new EtailBusinessExceptions(failErrorCode);
+						}
+						else
+						{
+							// OrderIssues:-  multiple Payment Response from juspay restriction
 							//adding Payment id to model
 							if (mplPaymentWebFacade.updateOrder(orderModel))
 							{
@@ -753,6 +767,63 @@ public class PaymentServicesController extends BaseController
 						}
 					}
 				}
+
+				//				else
+				//				{
+				//					final Double orderValue = orderModel.getSubtotal();
+				//					final Double totalCODCharge = orderModel.getConvenienceCharges();
+				//
+				//					//saving COD Payment related info
+				//					getMplPaymentFacade().saveCODPaymentInfo(orderValue, totalCODCharge, orderModel);
+				//
+				//					//Mandatory checks agains order
+				//					if (!getMplCheckoutFacade().isPromotionValid(orderModel))
+				//					{
+				//						failFlag = true;
+				//						failErrorCode = MarketplacecommerceservicesConstants.B9075;
+				//					}
+				//
+				//					//TISUTO-12 , TISUTO-11
+				//					/*
+				//					 * if (!failFlag && !mplCartFacade .isInventoryReservedMobile(
+				//					 * MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel, pincode)) {
+				//					 * //getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID
+				//					 * ,"TRUE"); //getMplCartFacade().recalculate(cart); failFlag = true; failErrorCode =
+				//					 * MarketplacecommerceservicesConstants.B9047; }
+				//					 */
+				//
+				//					if (!failFlag && !getMplCheckoutFacade().isCouponValid(orderModel))
+				//					{
+				//						//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
+				//						failFlag = true;
+				//						failErrorCode = MarketplacecommerceservicesConstants.B9509;
+				//					}
+				//
+				//					if (failFlag)
+				//					{
+				//						throw new EtailBusinessExceptions(failErrorCode);
+				//					}
+				//					else
+				//					{
+				//						final Map<String, String> duplicateJuspayResMap = getSessionService().getAttribute(
+				//								MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE);
+				//						// OrderIssues:-  multiple Payment Response from juspay restriction
+				//						if (MapUtils.isNotEmpty(duplicateJuspayResMap) && duplicateJuspayResMap.get(cartGuid).equalsIgnoreCase("False"))
+				//						{
+				//							//adding Payment id to model
+				//							if (mplPaymentWebFacade.updateOrder(orderModel))
+				//							{
+				//								updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				//								updateTransactionDtls.setOrderId(orderModel.getCode());
+				//							}
+				//							else
+				//							{
+				//								updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				//								updateTransactionDtls.setError(MarketplacecommerceservicesConstants.INVALIDORDERID);
+				//							}
+				//						}
+				//					}
+				//				}
 
 				updateTransactionDtls.setOtpStatus(MarketplacecommerceservicesConstants.OTP_SENT);
 			}
