@@ -2018,6 +2018,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String USERPARAM = "user";
 	public static final String NOENTRYSUBORDERLOG = "No  Entries available for Suborder ID:- ";
 
+	public static final String SECONDPRODUCT = "secondProduct";
+
 
 
 

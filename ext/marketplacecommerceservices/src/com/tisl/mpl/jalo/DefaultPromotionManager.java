@@ -5182,7 +5182,7 @@ public class DefaultPromotionManager extends PromotionsManager
 
 			//			final Flat3Map params = new Flat3Map();
 			//			params.put("promo", promotion);
-			params.put("product", products);
+			params.put(MarketplacecommerceservicesConstants.PRODUCT_IMAGE, products);
 
 			final StringBuilder promQuery = new StringBuilder("SELECT DISTINCT pprom.pk FROM (");
 			promQuery.append(" {{ SELECT {p2p:").append(MarketplacecommerceservicesConstants.QUERYSOURCE)
@@ -5360,7 +5360,7 @@ public class DefaultPromotionManager extends PromotionsManager
 
 		if (CollectionUtils.isNotEmpty(secondCategories))
 		{
-			params.put("product", products);
+			params.put(MarketplacecommerceservicesConstants.PRODUCT_IMAGE, products);
 			populateSecondaryListForCategory(secondCategories, secondaryProductList, params, ctx);
 			products.removeAll(secondaryProductList);
 		}
@@ -5423,7 +5423,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	//			final SessionContext ctx)
 	private void checkBrandForSecProd(final List<Product> secondProductList, final Flat3Map params, final SessionContext ctx)
 	{
-		params.put("secondProduct", secondProductList);
+		params.put(MarketplacecommerceservicesConstants.SECONDPRODUCT, secondProductList);
 		//critical sonar fix
 		final StringBuilder promQuery = evaluateBrandRestriction(params,
 				(AbstractPromotion) params.get(MarketplacecommerceservicesConstants.PROMO), ctx);
@@ -5431,7 +5431,7 @@ public class DefaultPromotionManager extends PromotionsManager
 		{
 			final List<Product> cartSecondProducts = getSession().getFlexibleSearch()
 					.search(ctx, promQuery.toString(), params, Product.class).getResult();
-			params.remove("secondProduct");
+			params.remove(MarketplacecommerceservicesConstants.SECONDPRODUCT);
 			secondProductList.retainAll(cartSecondProducts);
 			//return cartSecondProducts;
 		}
@@ -5579,7 +5579,7 @@ public class DefaultPromotionManager extends PromotionsManager
 
 			//			final Flat3Map params = new Flat3Map();
 			//			params.put("promo", promotion);
-			params.put("product", products);
+			params.put(MarketplacecommerceservicesConstants.PRODUCT_IMAGE, products);
 
 			final StringBuilder promQuery = new StringBuilder("SELECT DISTINCT pprom.pk FROM (");
 			promQuery.append(" {{ SELECT {p2p:").append(MarketplacecommerceservicesConstants.QUERYSOURCE)
@@ -5760,7 +5760,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	{
 		final StringBuilder promQuery = new StringBuilder();
 
-		if ((params.get("secondProduct") != null))
+		if ((params.get(MarketplacecommerceservicesConstants.SECONDPRODUCT) != null))
 		{
 			if (StringUtils.isNotEmpty(PromotionType)
 					&& PromotionType.equalsIgnoreCase(MarketplacecommerceservicesConstants.BRANDRESTRICTION)
@@ -5849,7 +5849,7 @@ public class DefaultPromotionManager extends PromotionsManager
 
 		if (CollectionUtils.isNotEmpty(brandList))
 		{
-			params.put("brands", brandList);
+			params.put(MarketplacecommerceservicesConstants.BRANDSLIST, brandList);
 			stringBuilder = constructBrandQuery(brandList, PromotionType, params);
 		}
 		return stringBuilder;
