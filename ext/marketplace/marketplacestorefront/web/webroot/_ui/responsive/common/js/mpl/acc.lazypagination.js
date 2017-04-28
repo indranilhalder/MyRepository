@@ -77,7 +77,8 @@ function deleteArraySet(productItemArray) {
         	  recordsLoadedCount = $('.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet,.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').find('li.product-item').length;
         }
     }
-    console.log('Availabe blocks ' + productItemArray.length + ' Record count == ' + recordsLoadedCount);
+
+    
 }
 
 function getProductSetData() {
@@ -86,10 +87,12 @@ function getProductSetData() {
     var query = window.location.search;
     
     //INC144316143
-    /*if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
+    if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
+
         window.localStorage.setItem('lastUrlpathName',encodeURI(pathName));
         window.localStorage.setItem('lastUrlquery',encodeURI(query));
-    }*/
+
+    }
     
     if (pageNoPagination <= totalNoOfPages) {
 
@@ -201,6 +204,8 @@ $(document).ready(function() {
     var lastUrlpathName = window.localStorage.getItem('lastUrlpathName');
     var lastUrlquery    = window.localStorage.getItem('lastUrlquery');
     
+
+
     if( (lastUrlpathName != undefined  && encodeURI(pathName) != lastUrlpathName) || (lastUrlquery != undefined && encodeURI(query) != lastUrlquery)) {
     	searchResultStorageData = "false"; // not same with last search url
     } 
@@ -223,7 +228,9 @@ $(document).ready(function() {
             }
             //end added for load more
             window.localStorage.setItem('lazyfrompdp','false');
+
     }else{
+
     	//TISSQAUAT-3429 starts
     	//getProductSetData();
     	//TISSQAUAT-3429 ends
@@ -244,8 +251,8 @@ $(document).ready(function() {
                     wH = $(window).height(),
                     wS = $(this).scrollTop();
                 if (wS > (hT + hH - wH)) {
-				console.log("Lazy Reached");
-                    $('.product-item').removeClass('lazy-reached');
+
+				  $('.product-item').removeClass('lazy-reached');
 					//$('li').removeClass('lazy-reached');
                     if (recordsLoadedCount!=0 && (recordsLoadedCount % loadMoreCount) == 0) {
                         $('.loadMorePageButton').remove();
@@ -394,6 +401,7 @@ function ajaxPLPLoad(ajaxUrl){
             //for serp
             if($('ul.product-listing.product-grid').length==0){
             	 ulProduct = $(filtered).find('ul.product-list');
+
             }
             else if($('input[name=customSku]').length == 1){
            	// ulProduct = $(filtered).find('ul.product-listing.product-grid.custom-sku');
@@ -439,7 +447,7 @@ function sortReplaceState(url){
 
 //Added for custom sku
 function sortReplaceStateCustomSku(url){
-	console.log(url);
+	
 	var customSkuCollectionId = $('input[name=customSkuCollectionId]').val();
 	url = url.replace(customSkuCollectionId,customSkuCollectionId+'/page-1')
 	$('input[name=customSkuUrl]').val(url);
@@ -523,7 +531,7 @@ function sort(this_data,drop_down){
 
 //Added for custom sku 
 function sortCustomSku(this_data,drop_down){
-	console.log(typeof(this_data));
+	
 	var item = $(this_data).attr('data-name');
 	$('.sort').removeAttr('style');
 	if(!drop_down){
