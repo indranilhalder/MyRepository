@@ -18,8 +18,11 @@ import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.PaymentService;
 import de.hybris.platform.promotions.PromotionsService;
+import de.hybris.platform.promotions.jalo.PromotionsManager.AutoApplyMode;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
+import de.hybris.platform.promotions.model.PromotionGroupModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
+import de.hybris.platform.promotions.util.Helper;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
@@ -28,6 +31,7 @@ import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.services.BaseStoreService;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -165,7 +169,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					 * getModelService().save(orderModel.getPaymentInfo()); } getModelService().save(orderModel);
 					 */
 
-					getPromotionsService().transferPromotionsToOrder(cartModel, orderModel, false);
+					//getPromotionsService().transferPromotionsToOrder(cartModel, orderModel, false);
 					final Double subTotal = orderModel.getSubtotal();
 					LOG.info("order subTotal is -- " + subTotal);
 					final boolean deliveryCostPromotionApplied = isDeliveryCostPromotionApplied(orderModel);
@@ -230,6 +234,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					 * Submit order process for cod, hence moved here afterPlaceOrder(parameter, result);
 					 */
 					LOG.info("Mode of Order Payment in placeOrder is -- " + orderModel.getModeOfOrderPayment());
+
+					//Changes for CAR-262 + INC_10922, Update order for Promotion & Coupon
+					updateOrderForPromotion(cartModel, orderModel);
 				}
 				catch (final Exception e)
 				{
@@ -636,6 +643,111 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			final Random rand = new Random();
 			orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000)));
 		}
+	}
+
+
+	/**
+	 * This method updates order for promotion, Changes for CAR-262 + INC_10922
+	 *
+	 * @param cartModel
+	 * @param orderModel
+	 *
+	 */
+	private void updateOrderForPromotion(final CartModel cartModel, final OrderModel orderModel)
+	{
+		orderModel.setAllPromotionResults(Collections.<PromotionResultModel> emptySet());
+
+		boolean applyPromo = false;
+
+		if (CollectionUtils.isNotEmpty(cartModel.getAllPromotionResults()))
+		{
+			try
+			{
+				getPromotionsService().transferPromotionsToOrder(cartModel, orderModel, false);
+				resetCustomFields(orderModel);
+			}
+			catch (final Exception exception)
+			{
+				resetCustomFields(orderModel);
+			}
+		}
+		else
+		{
+			for (final AbstractOrderEntryModel aoe : cartModel.getEntries())
+			{
+				if (aoe.getNetAmountAfterAllDisc().doubleValue() > 0D || StringUtils.isNotEmpty(aoe.getProductPromoCode())
+						|| StringUtils.isNotEmpty(aoe.getCartPromoCode()))
+				{
+					applyPromo = true;
+					break;
+				}
+			}
+
+			if (applyPromo)
+			{
+				LOG.error("Promotion Result not present----Recalculating the Cart");
+				//				resetCustomData(cartModel);
+				//				final PromotionGroupModel pg = getPromotionsService().getPromotionGroup(
+				//						MarketplacecommerceservicesConstants.PROMOGROUP);
+				//				getPromotionsService().updatePromotions(Collections.singletonList(pg), cartModel, true, AutoApplyMode.APPLY_ALL,
+				//						AutoApplyMode.APPLY_ALL, Helper.getDateNowRoundedToMinute());
+				resetCustomFields(cartModel);
+				getPromotionsService().transferPromotionsToOrder(cartModel, orderModel, false);
+			}
+		}
+	}
+
+	/**
+	 * Resetting Custom Fields
+	 *
+	 * @param orderModel
+	 */
+	private void resetCustomFields(final AbstractOrderModel orderModel)
+	{
+		if (CollectionUtils.isEmpty(orderModel.getAllPromotionResults()))
+		{
+			resetCustomData(orderModel);
+			LOG.error("Promotion Result not present---- Resetting the Custom Fields");
+			final PromotionGroupModel pg = getPromotionsService().getPromotionGroup(MarketplacecommerceservicesConstants.PROMOGROUP);
+			getPromotionsService().updatePromotions(Collections.singletonList(pg), orderModel, true, AutoApplyMode.APPLY_ALL,
+					AutoApplyMode.APPLY_ALL, Helper.getDateNowRoundedToMinute());
+		}
+	}
+
+	/**
+	 * @param oModel
+	 */
+	private void resetCustomData(final AbstractOrderModel oModel)
+	{
+		final List<AbstractOrderEntryModel> cartEntryList = new ArrayList<AbstractOrderEntryModel>();
+
+		for (final AbstractOrderEntryModel cartEntry : oModel.getEntries())
+		{
+			cartEntry.setQualifyingCount(Integer.valueOf(0));
+			cartEntry.setFreeCount(Integer.valueOf(0));
+			cartEntry.setAssociatedItems(Collections.<String> emptyList());
+			cartEntry.setCartLevelDisc(Double.valueOf(0.00D));
+			cartEntry.setTotalSalePrice(Double.valueOf(0.00D));
+			cartEntry.setNetSellingPrice(Double.valueOf(0.00D));
+			cartEntry.setIsBOGOapplied(Boolean.FALSE);
+			cartEntry.setProdLevelPercentageDisc(Double.valueOf(0.00D));
+			cartEntry.setCartLevelPercentageDisc(Double.valueOf(0.00D));
+			cartEntry.setNetAmountAfterAllDisc(Double.valueOf(0.00D));
+			cartEntry.setProductPromoCode(MarketplacecommerceservicesConstants.EMPTY);
+			cartEntry.setCartPromoCode(MarketplacecommerceservicesConstants.EMPTY);
+			cartEntry.setIsPercentageDisc(Boolean.FALSE);
+			cartEntry.setTotalProductLevelDisc(Double.valueOf(0.00D));
+
+			cartEntryList.add(cartEntry);
+		}
+
+		if (CollectionUtils.isNotEmpty(cartEntryList))
+		{
+			modelService.saveAll(cartEntryList);
+		}
+
+		modelService.refresh(oModel);
+		modelService.save(oModel);
 	}
 
 	protected ModelService getModelService()
