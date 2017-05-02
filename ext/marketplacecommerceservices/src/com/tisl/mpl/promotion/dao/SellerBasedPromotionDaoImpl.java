@@ -95,7 +95,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 	@Override
 	public List<AbstractPromotionModel> fetchPromotionDetails(final String code)
 	{
-		LOG.debug("Fetching Promotion Details");
+		LOG.debug(MarketplacecommerceservicesConstants.PROMOTIONDEBUGLOG);
 		try
 		{
 			final String queryString = //
@@ -110,7 +110,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 		}
 		catch (final FlexibleSearchException e)
 		{
-			LOG.error("Fetching Promotion Details", e);
+			LOG.error(MarketplacecommerceservicesConstants.PROMOTIONDEBUGLOG, e);
 			return null;
 		}
 	}
@@ -121,7 +121,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 	@Override
 	public List<AbstractPromotionModel> getPromoDetails()
 	{
-		LOG.debug("Fetching Promotion Details");
+		LOG.debug(MarketplacecommerceservicesConstants.PROMOTIONDEBUGLOG);
 		final String queryString = //
 		"SELECT {apm:" + AbstractPromotionModel.PK
 				+ "} "//
@@ -150,7 +150,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 		boolean result = false;
 		try
 		{
-			LOG.debug("Fetching Promotion Details");
+			LOG.debug(MarketplacecommerceservicesConstants.PROMOTIONDEBUGLOG);
 			final String queryString = //
 			"SELECT {apm:" + AbstractPromotionModel.PK
 					+ "} "//

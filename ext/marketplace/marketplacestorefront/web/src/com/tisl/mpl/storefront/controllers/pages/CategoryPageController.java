@@ -217,13 +217,13 @@ public class CategoryPageController extends AbstractCategoryPageController
 		pageNo = getPaginatedPageNo(request);
 
 		//CKD:TPR-250 :Start
-		if (null != searchQuery && searchQuery.contains("sellerId:"))
+		if (null != searchQuery && searchQuery.contains(MarketplacecommerceservicesConstants.SELLERIDSEARCH))
 		{
 			String sellerId = null;
 			String sellerName = null;
 			try
 			{
-				sellerId = searchQuery.split("sellerId:", 2)[1].substring(0, 6);
+				sellerId = searchQuery.split(MarketplacecommerceservicesConstants.SELLERIDSEARCH, 2)[1].substring(0, 6);
 				sellerName = mplCategoryFacade.getSellerInformationBySellerID(sellerId);
 			}
 			catch (final Exception ex)
@@ -643,11 +643,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 						ex);
 			}
 		}
-		else if (null != searchQuery && searchQuery.contains("sellerId:"))
+		else if (null != searchQuery && searchQuery.contains(MarketplacecommerceservicesConstants.SELLERIDSEARCH))
 		{
 			try
 			{
-				sellerId = searchQuery.split("sellerId:", 2)[1].substring(0, 6);
+				sellerId = searchQuery.split(MarketplacecommerceservicesConstants.SELLERIDSEARCH, 2)[1].substring(0, 6);
 			}
 			catch (final StringIndexOutOfBoundsException ex)
 			{

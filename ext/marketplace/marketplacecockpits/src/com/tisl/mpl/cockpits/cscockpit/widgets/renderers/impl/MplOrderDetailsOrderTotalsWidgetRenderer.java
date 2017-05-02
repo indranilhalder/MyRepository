@@ -117,6 +117,7 @@ public class MplOrderDetailsOrderTotalsWidgetRenderer extends
 					container);
 
 			Double deliveryCosts = abstractOrderModel.getDeliveryCost();
+			
 //			if(deliveryCosts==0.0){
 //			for (AbstractOrderEntryModel orderEntry : abstractOrderModel
 //					.getEntries()) {

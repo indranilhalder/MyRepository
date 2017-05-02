@@ -276,6 +276,9 @@
 			
 			
 			
+			<!-- TISSQAUAT-4062 starts --> 
+				<!-- </div> -->
+			<!-- TISSQAUAT-4062 ends -->
 			
 				<!-- </div> -->
 			
@@ -323,6 +326,10 @@
 				</div>
 			</div> --%>
 			<!--  <div class="stock-status">Item In Stock</div> -->
+
+		<!-- TISSQAUAT-4062 starts -->
+		<!-- </li> -->
+		<!-- TISSQAUAT-4062 ends -->
 
 	
 		<!-- </li> -->

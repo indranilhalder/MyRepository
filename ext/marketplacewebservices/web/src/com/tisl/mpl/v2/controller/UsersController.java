@@ -570,6 +570,7 @@ public class UsersController extends BaseCommerceController
 	public MplUserResultWsDto loginUser(@PathVariable final String emailId, @RequestParam final String newCustomer,
 			@RequestParam final String password)
 					throws RequestParameterException, WebserviceValidationException, MalformedURLException
+
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
 		GigyaWsDTO gigyaWsDTO = new GigyaWsDTO();
@@ -1725,7 +1726,9 @@ public class UsersController extends BaseCommerceController
 		final CCPaymentInfoData paymentInfoData = getPaymentInfo(paymentDetailsId);
 		final boolean isAlreadyDefaultPaymentInfo = paymentInfoData.isDefaultPaymentInfo();
 
+
 		dataMapper.map(paymentDetails, paymentInfoData,
+
 				"accountHolderName,cardNumber,cardType,issueNumber,startMonth,expiryMonth,startYear,expiryYear,subscriptionId,defaultPaymentInfo,saved,billingAddress(firstName,lastName,titleCode,line1,line2,town,postalCode,region(isocode),country(isocode),defaultAddress)",
 				false);
 		validate(paymentInfoData, PAYMENT_DETAILS, ccPaymentInfoValidator);
@@ -1850,7 +1853,9 @@ public class UsersController extends BaseCommerceController
 		final boolean isAlreadyDefaultPaymentInfo = paymentInfoData.isDefaultPaymentInfo();
 
 		validate(paymentDetails, PAYMENT_DETAILS, paymentDetailsDTOValidator);
+
 		dataMapper.map(paymentDetails, paymentInfoData,
+
 				"accountHolderName,cardNumber,cardType,issueNumber,startMonth,expiryMonth,startYear,expiryYear,subscriptionId,defaultPaymentInfo,saved,billingAddress(firstName,lastName,titleCode,line1,line2,town,postalCode,region(isocode),country(isocode),defaultAddress)",
 				true);
 
@@ -2482,6 +2487,8 @@ public class UsersController extends BaseCommerceController
 			@RequestParam final String line3, @RequestParam(required = false) final String landmark, @RequestParam final String town,
 			@RequestParam final String state, @RequestParam final String countryIso, @RequestParam final String postalCode,
 			@RequestParam final String phone, @RequestParam final String addressType, @RequestParam final boolean defaultFlag)
+
+
 					throws RequestParameterException
 	{
 
@@ -2748,6 +2755,9 @@ public class UsersController extends BaseCommerceController
 			@RequestParam(required = false) final String landmark, @RequestParam final String town, @RequestParam final String state,
 			@RequestParam final String countryIso, @RequestParam final String postalCode, @RequestParam final String phone,
 			@RequestParam final String addressType, @RequestParam final boolean defaultFlag) throws RequestParameterException
+
+
+
 	{
 
 		String errorMsg = null;
@@ -3089,6 +3099,7 @@ public class UsersController extends BaseCommerceController
 	@ResponseBody
 	public GetWishListWsDTO getAllWishlistAndProduct(final HttpServletRequest request)
 			throws RequestParameterException, MalformedURLException
+
 	{
 		final GetWishListWsDTO wlDTO = new GetWishListWsDTO();
 		GetWishListDataWsDTO wldDTO = new GetWishListDataWsDTO();
@@ -3262,6 +3273,8 @@ public class UsersController extends BaseCommerceController
 												final PriceData priceDataSP = productDetailsHelper
 														.formPriceData(new Double(buyboxmodel.getSpecialPrice().doubleValue()));
 
+
+
 												wldpDTO.setSpecialPrice(priceDataSP);
 											}
 											if (null != buyboxmodel.getPrice() && buyboxmodel.getPrice().doubleValue() > 0.0)
@@ -3269,12 +3282,16 @@ public class UsersController extends BaseCommerceController
 												final PriceData priceDataMop = productDetailsHelper
 														.formPriceData(new Double(buyboxmodel.getPrice().doubleValue()));
 
+
+
 												wldpDTO.setMop(priceDataMop);
 											}
 											if (null != buyboxmodel.getMrp() && buyboxmodel.getMrp().doubleValue() > 0.0)
 											{
 												final PriceData priceDataMrp = productDetailsHelper
 														.formPriceData(new Double(buyboxmodel.getMrp().doubleValue()));
+
+
 												wldpDTO.setMrp(priceDataMrp);
 											}
 											break;
@@ -3702,6 +3719,7 @@ public class UsersController extends BaseCommerceController
 			// Get the data before editing
 			final String channel = MarketplacecommerceservicesConstants.UPDATE_CHANNEL_MOBILE;
 			final Map<String, String> preSavedDetailMap = mplCustomerProfileFacade.setPreviousDataToMap(customerData.getDisplayUid(),
+
 					channel);
 			if (null == customerToSave)
 			{
@@ -3930,6 +3948,7 @@ public class UsersController extends BaseCommerceController
 				catch (final DuplicateUidException e)
 				{
 					ExceptionUtil.etailNonBusinessExceptionHandler(
+
 							new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B0001));
 				}
 				catch (final EtailNonBusinessExceptions e)
@@ -4065,6 +4084,7 @@ public class UsersController extends BaseCommerceController
 
 					LOG.debug(
 							"************** Mobile web service Validate OTP for COD  RESPONSE SUCCESSSSS ******************" + emailid);
+
 
 					if (validationMsg.equalsIgnoreCase(MarketplacecommerceservicesConstants.OTPVALIDITY))
 					{
@@ -4218,7 +4238,7 @@ public class UsersController extends BaseCommerceController
 	 *
 	 * @param old
 	 * @param new
-	 *           password
+	 * password
 	 * @returnUserResultWsDto
 	 */
 
@@ -5083,11 +5103,15 @@ public class UsersController extends BaseCommerceController
 							{
 								orderNotificationDto
 										.setOrderNotificationPassDate(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + " Days");
+
+
 							}
 							else
 							{
 								orderNotificationDto
 										.setOrderNotificationPassDate(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + " Day");
+
+
 							}
 						}
 						if (notifyData.getCouponCode() != null) // coupon
@@ -5097,11 +5121,15 @@ public class UsersController extends BaseCommerceController
 							{
 								orderNotificationDto
 										.setCouponNotificationPassDate(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + " Days");
+
+
 							}
 							else
 							{
 								orderNotificationDto
 										.setCouponNotificationPassDate(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + " Day");
+
+
 							}
 						}
 						mplOrderNotificationWsDtos.add(orderNotificationDto);
@@ -5167,6 +5195,7 @@ public class UsersController extends BaseCommerceController
 		{
 			notificationFacade.markNotificationReadForOriginalUid(emailId, orderID, consignmentId, orderDetailStatus);
 			final List<NotificationData> notificationMessagelist = notificationFacade.getNotificationDetailForEmailID(emailId,
+
 					false);
 			if (null != emailId)
 			{
@@ -5949,6 +5978,7 @@ public class UsersController extends BaseCommerceController
 	public MplAllFavouritePreferenceWsDTO getFavCategoriesBrands(@PathVariable final String emailId, final String fields,
 			@RequestParam(required = false) final String deviceId)
 					throws RequestParameterException, WebserviceValidationException, MalformedURLException
+
 	{
 		final MplAllFavouritePreferenceWsDTO mplAllFavouritePreferenceWsDTO = new MplAllFavouritePreferenceWsDTO();
 		final List<MplFavBrandCategoryWsDTO> favBrandCategoryDtoForCategory = new ArrayList<MplFavBrandCategoryWsDTO>();
@@ -6608,6 +6638,7 @@ public class UsersController extends BaseCommerceController
 							? getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
 							: "No juspayMerchantKey is defined in local properties";
 			juspayReturnUrl = !getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL)
+
 					.isEmpty() ? getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL)
 							: "No juspayReturnUrl is defined in local properties";
 
@@ -6639,6 +6670,7 @@ public class UsersController extends BaseCommerceController
 				}
 				//TISUTO-12 , TISUTO-11
 				//TODO Soft reservation calls already made
+
 				if (!failFlag && !mplCartFacade.isInventoryReservedMobile(
 						MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart, pincode, item,
 						SalesApplication.MOBILE))
@@ -6673,6 +6705,8 @@ public class UsersController extends BaseCommerceController
 								addressLine3, country, state, city, pincode,
 								cardSaved + MarketplacewebservicesConstants.STRINGSEPARATOR + sameAsShipping, juspayReturnUrl,
 								customerModel.getUid(), MarketplacewebservicesConstants.CHANNEL_MOBILE);
+
+
 						LOG.debug("********* Created juspay Order mobile web service *************" + juspayOrderId);
 
 						orderCreateInJusPayWsDto.setJuspayMerchantId(juspayMerchantId);
@@ -6741,6 +6775,7 @@ public class UsersController extends BaseCommerceController
 					failErrorCode = MarketplacecommerceservicesConstants.B9075;
 				}
 				//Soft reservation calls already made
+
 
 				if (!failFlag && !mplCartFacade.isInventoryReservedMobile(
 						MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel, pincode, item,
@@ -6865,6 +6900,8 @@ public class UsersController extends BaseCommerceController
 		{
 			ExceptionUtil
 					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0016));
+
+
 			return MarketplacecommerceservicesConstants.FAILURE;
 		}
 		return profileUpdateUrl;
@@ -6951,6 +6988,8 @@ public class UsersController extends BaseCommerceController
 		{
 			ExceptionUtil
 					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0016));
+
+
 			return MarketplacecommerceservicesConstants.FAILURE;
 		}
 		return profileUpdateUrl;
@@ -6977,7 +7016,7 @@ public class UsersController extends BaseCommerceController
 			boolean returnLogisticsCheck = true;
 			for (final ConsignmentData consignmentData : orderDetails.getConsignments())
 			{
-				if (consignmentData.getStatus() != null && consignmentData.getStatus().getCode() == "DELIVERED")
+				if (consignmentData.getStatus() != null && consignmentData.getStatus().getCode().equalsIgnoreCase("DELIVERED"))
 				{
 
 					returnPincodeAvailDTO = cancelReturnFacade.checkReturnLogisticsForApp(orderDetails, pincode, transactionId);
@@ -7252,14 +7291,17 @@ public class UsersController extends BaseCommerceController
 			{
 				LOG.error(
 						"Exception occured for fecting CUstomer Bank details for customer ID :" + userId + " Actual Stack trace " + e);
+
 			}
 			catch (final Exception e)
 			{
 				LOG.error(
 						"Exception occured for fecting CUstomer Bank details for customer ID :" + userId + " Actual Stack trace " + e);
+
 			}
 			final List<AddressData> addressList = mplCheckoutFacadeImpl
 					.rePopulateDeliveryAddress(getAccountAddressFacade().getAddressBook());
+
 			if (codSelfShipData != null)
 			{
 				returnDeatails.setCodSelfShipData(codSelfShipData);
@@ -7352,6 +7394,7 @@ public class UsersController extends BaseCommerceController
 				boolean returnLogisticsCheck = true;
 				String returnFulfillmentType = null;
 				final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade
+
 						.checkReturnLogistics(subOrderDetails, pinCode, transactionId);
 				for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 				{
@@ -7482,12 +7525,13 @@ public class UsersController extends BaseCommerceController
 				catch (final EtailNonBusinessExceptions e)
 				{
 					LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
-							+ " Exception cause :" + e);
+							+ MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
 				}
 				catch (final Exception e)
 				{
 					LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
-							+ " Exception cause :" + e);
+							+ MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
+
 				}
 
 				try
@@ -7526,11 +7570,13 @@ public class UsersController extends BaseCommerceController
 				}
 				catch (final EtailNonBusinessExceptions e)
 				{
-					LOG.error("Exception Occured while sending bank details to Fico  :  " + orderCode + " Exception cause :" + e);
+					LOG.error("Exception Occured while sending bank details to Fico  :  " + orderCode
+							+ MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
 				}
 				catch (final Exception e)
 				{
-					LOG.error("Exception Occured while sending bank details to Fico  :  " + orderCode + " Exception cause :" + e);
+					LOG.error("Exception Occured while sending bank details to Fico  :  " + orderCode
+							+ MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
 				}
 			}
 			//for self Courier
@@ -8312,6 +8358,7 @@ public class UsersController extends BaseCommerceController
 	 */
 	public void setHttpRequestAddressDataPopulator(
 			final Populator<HttpServletRequest, AddressData> httpRequestAddressDataPopulator)
+
 	{
 		this.httpRequestAddressDataPopulator = httpRequestAddressDataPopulator;
 	}
@@ -9055,6 +9102,4 @@ public class UsersController extends BaseCommerceController
 		Collections.sort(toSortList, byName);
 		return toSortList;
 	}
-
-
 }

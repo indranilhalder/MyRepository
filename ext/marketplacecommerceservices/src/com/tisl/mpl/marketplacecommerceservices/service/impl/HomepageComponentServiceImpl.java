@@ -157,7 +157,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 								}
 								else
 								{
-									LOG.info("Component visiblity set to false");
+									LOG.info(MarketplacecommerceservicesConstants.COMPONENTMESSAGE);
 								}
 
 							}
@@ -176,7 +176,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 				}
 				else
 				{
-					LOG.info("Component visiblity set to false");
+					LOG.info(MarketplacecommerceservicesConstants.COMPONENTMESSAGE);
 				}
 
 			}
@@ -280,7 +280,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 								}
 								else
 								{
-									LOG.info("Component visiblity set to false");
+									LOG.info(MarketplacecommerceservicesConstants.COMPONENTMESSAGE);
 								}
 								subComponentJsonArray.add(bestOfferItemJson);
 
@@ -302,7 +302,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 				}
 				else
 				{
-					LOG.info("Component visiblity set to false");
+					LOG.info(MarketplacecommerceservicesConstants.COMPONENTMESSAGE);
 				}
 			}
 		}
@@ -382,7 +382,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 				}
 				else
 				{
-					LOG.info("Component visiblity set to false");
+					LOG.info(MarketplacecommerceservicesConstants.COMPONENTMESSAGE);
 				}
 			}
 			//Forming JSON is the component is of MplAdvancedCategoryCarouselComponentModel type for overriding PCM provided Category Images
@@ -473,7 +473,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 							}
 							else
 							{
-								LOG.info("Component visiblity set to false");
+								LOG.info(MarketplacecommerceservicesConstants.COMPONENTMESSAGE);
 							}
 
 						}
@@ -483,7 +483,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 				}
 				else
 				{
-					LOG.info("Component visiblity set to false");
+					LOG.info(MarketplacecommerceservicesConstants.COMPONENTMESSAGE);
 				}
 			}
 			// Changes implemented for TPR-1121
@@ -621,7 +621,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 							}
 							else
 							{
-								LOG.info("Component visiblity set to false");
+								LOG.info(MarketplacecommerceservicesConstants.COMPONENTMESSAGE);
 							}
 						}
 
@@ -655,7 +655,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 							}
 							else
 							{
-								LOG.info("Component visiblity set to false");
+								LOG.info(MarketplacecommerceservicesConstants.COMPONENTMESSAGE);
 							}
 						}
 					}
@@ -663,7 +663,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 				}
 				else
 				{
-					LOG.info("Component visiblity set to false");
+					LOG.info(MarketplacecommerceservicesConstants.COMPONENTMESSAGE);
 				}
 			}
 		}
@@ -780,4 +780,3 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 	}
 
 }
-
