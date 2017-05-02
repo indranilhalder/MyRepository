@@ -50,7 +50,7 @@ public class MplBrandCollectionPopulator implements Populator<BrandComponentMode
 		}
 		target.setMasterBrandName(source.getMasterBrandName());
 		target.setMasterBrandURL(source.getMasterBrandURL());
-		if (CollectionUtils.isNotEmpty(source.getSubBrandList()))
+		/*if (CollectionUtils.isNotEmpty(source.getSubBrandList()))
 		{
 			final List<CMSSubbrandData> subBrandDataList = new ArrayList<CMSSubbrandData>();
 			for (final CMSSubbrandModel subBrandModel : source.getSubBrandList())
@@ -68,7 +68,7 @@ public class MplBrandCollectionPopulator implements Populator<BrandComponentMode
 				categorydata.add(categoryConverter.convert(categoryModel));
 			}
 			target.setSubBrands(categorydata);
-		}
+		}*/
 
 	}
 

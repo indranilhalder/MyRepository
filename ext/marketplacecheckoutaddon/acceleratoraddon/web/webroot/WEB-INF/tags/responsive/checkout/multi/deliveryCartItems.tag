@@ -276,9 +276,9 @@
 			
 			
 			
-			
-				</div>
-			
+			<!-- TISSQAUAT-4062 starts --> 
+				<!-- </div> -->
+			<!-- TISSQAUAT-4062 ends -->
 			<%-- <div class="price"><format:price priceData="${entry.basePrice}" displayFreeForZero="true"/></div>
 			<div class="details">
 				<div class="name"><a href="${productUrl}">${entry.product.name}</a></div>
@@ -324,9 +324,10 @@
 			</div> --%>
 			<!--  <div class="stock-status">Item In Stock</div> -->
 
-	
-		</li>
-		<li>
+		<!-- TISSQAUAT-4062 starts -->
+		<!-- </li> -->
+		<!-- TISSQAUAT-4062 ends -->
+		<%-- <li>
 		    <div class="method item-mthd">
                    <h3> <spring:theme code="checkout.multi.shipmentMethod"/></h3>
                    <p class="delivery-method-description">
@@ -338,7 +339,7 @@
                    </p>
                   <p class="delivery-method-description delivery-method-description-time">
                   
-                 <%--  <c:out value="${entry.mplDeliveryMode.description}"></c:out> --%>
+                  <c:out value="${entry.mplDeliveryMode.description}"></c:out>
                   </p>
                    <c:choose>
                        <c:when test="${not empty entry.timeSlotFrom  && entry.timeSlotFrom !=null }">
@@ -355,7 +356,7 @@
                   
                   </c:choose>
                   </div>
-		</li>
+		</li> --%>
 	</c:if>
 </c:forEach>
 </ul>
