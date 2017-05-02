@@ -303,9 +303,9 @@ public class ProductPageController extends MidPageController
 	 * @SuppressWarnings("unused") private BrowserType bType;
 	 */
 
-
-	@Autowired
-	private ConfigurationService configService;
+	//Sonar fix
+	//@Autowired
+	//private ConfigurationService configService;
 	@Resource(name = "customProductFacade")
 	private CustomProductFacadeImpl customProductFacade;
 
@@ -2988,9 +2988,10 @@ public class ProductPageController extends MidPageController
 		final StringBuilder ussidIds = new StringBuilder();
 		for (int i = 0; i < ussidList.length; i++)
 		{
-			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + ussidList[i]
-					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
-			ussidIds.append(",");
+			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA);
+			ussidIds.append(ussidList[i]);
+			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA);
+			ussidIds.append(',');//Sonar fix
 		}
 		final JSONObject buyboxJson = new JSONObject();
 		final Map<String, List<Double>> dataMap = buyBoxFacade.getBuyBoxDataForUssids(ussidIds.toString().substring(0,
@@ -2998,6 +2999,7 @@ public class ProductPageController extends MidPageController
 		LOG.debug("##################Data Map for IA" + dataMap);
 		return buyboxJson.put("iaResponse", dataMap);
 	}
+
 	/**
 	 * @Description Added for displaying freebie messages other than default freebie message
 	 * @param ussId

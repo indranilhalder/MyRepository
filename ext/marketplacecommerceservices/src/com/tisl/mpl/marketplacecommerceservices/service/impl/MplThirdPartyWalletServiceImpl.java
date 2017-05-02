@@ -107,7 +107,7 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 	/**
 	 *
 	 */
-	private static final String _14_140_248_13 = "14.140.248.13";
+	//private static final String _14_140_248_13 = "14.140.248.13";
 
 	/**
 	 *
@@ -843,24 +843,12 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 		}
 	}
 
-	/**
-	 * @param entries
-	 * @return
+	//Sonar fix
+	/*
+	 * private boolean ifRefundInitiated(final List<AbstractOrderEntryModel> entries) { boolean isRefund = false; for
+	 * (final AbstractOrderEntryModel entry : entries) { final List<ReturnEntryModel> data = getReturnEntry(entry); if
+	 * (CollectionUtils.isNotEmpty(data)) { isRefund = true; break; } } return isRefund; }
 	 */
-	private boolean ifRefundInitiated(final List<AbstractOrderEntryModel> entries)
-	{
-		boolean isRefund = false;
-		for (final AbstractOrderEntryModel entry : entries)
-		{
-			final List<ReturnEntryModel> data = getReturnEntry(entry);
-			if (CollectionUtils.isNotEmpty(data))
-			{
-				isRefund = true;
-				break;
-			}
-		}
-		return isRefund;
-	}
 
 	protected List<ReturnEntryModel> getReturnEntry(final AbstractOrderEntryModel entry)
 	{

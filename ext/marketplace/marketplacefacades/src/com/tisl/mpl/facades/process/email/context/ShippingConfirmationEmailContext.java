@@ -78,8 +78,8 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 	@Autowired
 	private ConfigurationService configurationService;
 	@Autowired
-	private  ShortUrlService shortUrlService;
-	
+	private ShortUrlService shortUrlService;
+
 	@Override
 	public void init(final OrderUpdateProcessModel orderUpdateProcessModel, final EmailPageModel emailPageModel)
 	{
@@ -122,12 +122,12 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
 				+ pOrderCode;
-		/*Added in R2.3  for shortUrl START*/ 
-		String shortUrl = shortUrlService.genearateShortURL(pOrderCode);
+		/* Added in R2.3 for shortUrl START */
+		final String shortUrl = shortUrlService.genearateShortURL(pOrderCode);
 		put(TRACK_ORDER_URL, null != shortUrl ? shortUrl : trackOrderUrl);
 
-		
-		/*R2.3  shortUrl END*/
+
+		/* R2.3 shortUrl END */
 		put(P_ORDER_CODE, pOrderCode);
 		put(ORDER_CODE, orderCode);
 		put(CHILDORDERS, childOrders);
@@ -155,7 +155,7 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 		}
 		//TISUATSE-80 starts
 
-		deliveryAddr.append("\n");
+		deliveryAddr.append('\n');//Sonar fix
 		//TISUATSE-81 starts
 		final String city = deliveryAddress.getTown();
 		deliveryAddr.append(city.substring(0, 1).toUpperCase() + city.substring(1)).append(COMMA).append(SPACE)

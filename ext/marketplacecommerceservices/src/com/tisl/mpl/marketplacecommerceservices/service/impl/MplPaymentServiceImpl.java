@@ -22,8 +22,8 @@ import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.EMIPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
-import de.hybris.platform.core.model.order.payment.ThirdPartyWalletInfoModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.ThirdPartyWalletInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -4252,7 +4252,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				getModelService().save(auditEntry);
 				auditEntryList.add(auditEntry);
 				auditModel.setAuditEntries(auditEntryList);
-				auditModel.setIsExpired(Boolean.valueOf(true));
+				auditModel.setIsExpired(Boolean.TRUE); //Sonar fix
 				getModelService().save(auditModel);
 				LOG.info("Saved existing Audit Model with ref no>>>" + refNo);
 			}
