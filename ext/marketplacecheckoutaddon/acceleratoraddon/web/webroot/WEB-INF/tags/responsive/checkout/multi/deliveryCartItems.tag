@@ -279,6 +279,9 @@
 			<!-- TISSQAUAT-4062 starts --> 
 				<!-- </div> -->
 			<!-- TISSQAUAT-4062 ends -->
+			
+				<!-- </div> -->
+			
 			<%-- <div class="price"><format:price priceData="${entry.basePrice}" displayFreeForZero="true"/></div>
 			<div class="details">
 				<div class="name"><a href="${productUrl}">${entry.product.name}</a></div>
@@ -327,6 +330,10 @@
 		<!-- TISSQAUAT-4062 starts -->
 		<!-- </li> -->
 		<!-- TISSQAUAT-4062 ends -->
+
+	
+		<!-- </li> -->
+		<!-- TISUATSE-121 start -->
 		<%-- <li>
 		    <div class="method item-mthd">
                    <h3> <spring:theme code="checkout.multi.shipmentMethod"/></h3>
@@ -357,6 +364,7 @@
                   </c:choose>
                   </div>
 		</li> --%>
+		<!-- TISUATSE-121 end -->
 	</c:if>
 </c:forEach>
 </ul>
