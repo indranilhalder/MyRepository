@@ -15,6 +15,8 @@ import de.hybris.platform.commercefacades.product.data.ServiceableSlavesData;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.cscockpit.exceptions.ResourceMessage;
+import de.hybris.platform.cscockpit.exceptions.ValidationException;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.storelocator.GPS;
 import de.hybris.platform.storelocator.location.Location;
@@ -78,7 +80,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 {
 
 	/** The Constant LOG. */
-	private static final Logger LOG = Logger.getLogger(MarketplaceSearchCommandControllerImpl.class);
+	private static final Logger LOG = Logger.getLogger(MarketplaceServiceabilityCheckHelperImpl.class);
 
 	/** The Constant ZERO. */
 	// private static final String ZERO = "0";
@@ -153,6 +155,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 		final LocationDTO dto = new LocationDTO();
 		Location myLocation = null;
 		final boolean isPincodeServicable = Boolean.FALSE;
+		List<ResourceMessage> errorMessages = new ArrayList<ResourceMessage>();
 		//TISSEC-11
 		final String regex = "\\d{6}";
 		try
@@ -180,7 +183,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 					final String configRadius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
 					final double configurableRadius = Double.parseDouble(configRadius);
 					LOG.debug("**********configrableRadius:" + configurableRadius);
-					response = pinCodeFacade.getResonseForPinCode(product.getCode() , pin,
+					response = getAllResponsesForPinCode(product.getCode() , pin,
 							populatePinCodeServiceData(cartId,product,
 									isDeliveryDateRequired, ussid, myLocation.getGPS(), configurableRadius));
 
@@ -195,11 +198,11 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 
 		}
 
-	}
-	catch (final EtailNonBusinessExceptions e)
-	{
-		ExceptionUtil.etailNonBusinessExceptionHandler(e);
-	}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
 		return response;
 	}
 
@@ -244,123 +247,138 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	 *            the client etail non business exceptions
 	 * @description this method gets all the responses about servicable pincodes from OMS
 	 */
-	@Deprecated
-	private List<PinCodeResponseData> getAllResponsesForPinCode(final String pin, final List<PincodeServiceData> reqData)
+	
+	private List<PinCodeResponseData> getAllResponsesForPinCode(final String productCode, final String pin, final List<PincodeServiceData> requestData)
 			throws EtailNonBusinessExceptions, ClientEtailNonBusinessExceptions
 	{
 
 		List<PinCodeResponseData> responseList = new ArrayList<PinCodeResponseData>();
+		//fetching response   from oms  against the pincode
+		PinCodeDeliveryModeListResponse response = null;
 		try
 		{
-			//fetching response   from oms  against the pincode
-			PinCodeDeliveryModeListResponse response = null;
-			try
+			final List<String> ussidList = new ArrayList<String>();
+			final List<String> sellerIdList = new ArrayList<String>();
+			for (final PincodeServiceData reqData : requestData)
 			{
-				response = pinCodeDeliveryModeService.prepPinCodeDeliveryModetoOMS(pin, reqData);
+				ussidList.add(reqData.getUssid());
+				sellerIdList.add(reqData.getSellerId());
 			}
-			catch (final ClientEtailNonBusinessExceptions e)
+
+			//checing if any restricted pincodes are present
+			final List<PincodeServiceData> validReqData = mplPincodeRestrictionService.getRestrictedPincode(ussidList, sellerIdList,
+					productCode, pin, requestData);
+			
+			if (CollectionUtils.isNotEmpty(validReqData))
 			{
-				LOG.error("::::::Exception in calling OMS Pincode service::CSCOCKPIT:::::::" + e.getErrorCode());
-				if (null != e.getErrorCode()
-						&& (MarketplacecclientservicesConstants.O0001_EXCEP.equalsIgnoreCase(e.getErrorCode())
-								|| MarketplacecclientservicesConstants.O0002_EXCEP.equalsIgnoreCase(e.getErrorCode()) || MarketplacecclientservicesConstants.O0007_EXCEP
-									.equalsIgnoreCase(e.getErrorCode())))
+				try
 				{
-					response = getMplCommerceCartService().callPincodeServiceabilityCommerce(pin, reqData);
+					response = pinCodeDeliveryModeService.prepPinCodeDeliveryModetoOMS(pin, requestData);
 				}
-			}
-
-			if (null != response.getItem())
-			{
-				PinCodeResponseData responseData = null;
-				for (final PinCodeDeliveryModeResponse deliveryModeResponse : response.getItem())
+				catch (final ClientEtailNonBusinessExceptions e)
 				{
-					boolean servicable = false;
-					final List<Integer> stockCount = new ArrayList<Integer>();
-					List<DeliveryDetailsData> deliveryDataList = null;
-					responseData = new PinCodeResponseData();
-					//responseData.set
-					responseData.setTransportMode(deliveryModeResponse.getTransportMode());
-					if (null != deliveryModeResponse.getDeliveryMode())
+					LOG.error("::::::Exception in calling OMS Pincode service::CSCOCKPIT:::::::" + e.getErrorCode());
+					if (null != e.getErrorCode()
+							&& (MarketplacecclientservicesConstants.O0001_EXCEP.equalsIgnoreCase(e.getErrorCode())
+									|| MarketplacecclientservicesConstants.O0002_EXCEP.equalsIgnoreCase(e.getErrorCode()) || MarketplacecclientservicesConstants.O0007_EXCEP
+										.equalsIgnoreCase(e.getErrorCode())))
 					{
-						deliveryDataList = new ArrayList<DeliveryDetailsData>();
-						for (final DeliveryModeResOMSWsDto deliveryMode : deliveryModeResponse.getDeliveryMode())
+						response = getMplCommerceCartService().callPincodeServiceabilityCommerce(pin, requestData);
+					}
+				}
+	
+				if (null != response.getItem())
+				{
+					PinCodeResponseData responseData = null;
+					for (final PinCodeDeliveryModeResponse deliveryModeResponse : response.getItem())
+					{
+						boolean servicable = false;
+						final List<Integer> stockCount = new ArrayList<Integer>();
+						List<DeliveryDetailsData> deliveryDataList = null;
+						responseData = new PinCodeResponseData();
+						//responseData.set
+						responseData.setTransportMode(deliveryModeResponse.getTransportMode());
+						if (null != deliveryModeResponse.getDeliveryMode())
 						{
-							if (deliveryMode.getIsPincodeServiceable().equalsIgnoreCase(MarketplaceCockpitsConstants.YES))
+							deliveryDataList = new ArrayList<DeliveryDetailsData>();
+							for (final DeliveryModeResOMSWsDto deliveryMode : deliveryModeResponse.getDeliveryMode())
 							{
-								servicable = true;
-							}
-
-							if (deliveryMode.getIsCOD().equalsIgnoreCase(MarketplaceCockpitsConstants.YES))
-							{
-								responseData.setCod(deliveryMode.getIsCOD());
-							}
-
-							final DeliveryDetailsData data = new DeliveryDetailsData();
-							stockCount.add(Integer.valueOf(Integer.parseInt(deliveryMode.getInventory())));
-
-							// Added By Prasad
-							if (deliveryMode.getIsPincodeServiceable().equalsIgnoreCase(MarketplaceCockpitsConstants.YES))
-							{
-								data.setType(deliveryMode.getType());
-							}
-							data.setInventory(deliveryMode.getInventory());
-							data.setIsCODLimitFailed((MarketplaceCockpitsConstants.YES).equals(deliveryMode.getIsCODLimitFailed()) ? true
-									: false);
-							data.setIsCOD((MarketplaceCockpitsConstants.YES).equals(deliveryMode.getIsCOD()) ? true : false);
-							data.setIsPincodeServiceable((MarketplaceCockpitsConstants.YES).equals(deliveryMode
-									.getIsPincodeServiceable()) ? true : false);
-							data.setIsPrepaidEligible(deliveryMode.getIsPrepaidEligible().equals(MarketplaceCockpitsConstants.YES) ? true
-									: false);
-							responseData.setIsPrepaidEligible(deliveryMode.getIsPrepaidEligible());// set payment mode
-							data.setFulfilmentType(deliveryMode.getFulfillmentType());
-							if (null != deliveryMode.getServiceableSlaves() && deliveryMode.getServiceableSlaves().size() > 0)
-							{
-								data.setServiceableSlaves(populatePincodeServiceableData(deliveryMode.getServiceableSlaves()));
-							}
-
-							if (null != deliveryMode.getCNCServiceableSlaves() && deliveryMode.getCNCServiceableSlaves().size() > 0)
-							{
-								final List<CNCServiceableSlavesData> cncServiceableSlavesDataList = new ArrayList<CNCServiceableSlavesData>();
-								CNCServiceableSlavesData cncServiceableSlavesData = null;
-								for (final CNCServiceableSlavesWsDTO dto : deliveryMode.getCNCServiceableSlaves())
+								if (deliveryMode.getIsPincodeServiceable().equalsIgnoreCase(MarketplaceCockpitsConstants.YES))
 								{
-									cncServiceableSlavesData = new CNCServiceableSlavesData();
-									cncServiceableSlavesData.setStoreId(dto.getStoreId());
-									cncServiceableSlavesData.setQty(dto.getQty());
-									cncServiceableSlavesData.setFulfillmentType(dto.getFulfillmentType());
-									cncServiceableSlavesData.setServiceableSlaves(populatePincodeServiceableData(dto.getServiceableSlaves()));
-									cncServiceableSlavesDataList.add(cncServiceableSlavesData);
+									servicable = true;
 								}
-								data.setCNCServiceableSlavesData(cncServiceableSlavesDataList);
+	
+								if (deliveryMode.getIsCOD().equalsIgnoreCase(MarketplaceCockpitsConstants.YES))
+								{
+									responseData.setCod(deliveryMode.getIsCOD());
+								}
+	
+								final DeliveryDetailsData data = new DeliveryDetailsData();
+								stockCount.add(Integer.valueOf(Integer.parseInt(deliveryMode.getInventory())));
+	
+								// Added By Prasad
+								if (deliveryMode.getIsPincodeServiceable().equalsIgnoreCase(MarketplaceCockpitsConstants.YES))
+								{
+									data.setType(deliveryMode.getType());
+								}
+								data.setInventory(deliveryMode.getInventory());
+								data.setIsCODLimitFailed((MarketplaceCockpitsConstants.YES).equals(deliveryMode.getIsCODLimitFailed()) ? true
+										: false);
+								data.setIsCOD((MarketplaceCockpitsConstants.YES).equals(deliveryMode.getIsCOD()) ? true : false);
+								data.setIsPincodeServiceable((MarketplaceCockpitsConstants.YES).equals(deliveryMode
+										.getIsPincodeServiceable()) ? true : false);
+								data.setIsPrepaidEligible(deliveryMode.getIsPrepaidEligible().equals(MarketplaceCockpitsConstants.YES) ? true
+										: false);
+								responseData.setIsPrepaidEligible(deliveryMode.getIsPrepaidEligible());// set payment mode
+								data.setFulfilmentType(deliveryMode.getFulfillmentType());
+								if (null != deliveryMode.getServiceableSlaves() && deliveryMode.getServiceableSlaves().size() > 0)
+								{
+									data.setServiceableSlaves(populatePincodeServiceableData(deliveryMode.getServiceableSlaves()));
+								}
+	
+								if (null != deliveryMode.getCNCServiceableSlaves() && deliveryMode.getCNCServiceableSlaves().size() > 0)
+								{
+									final List<CNCServiceableSlavesData> cncServiceableSlavesDataList = new ArrayList<CNCServiceableSlavesData>();
+									CNCServiceableSlavesData cncServiceableSlavesData = null;
+									for (final CNCServiceableSlavesWsDTO dto : deliveryMode.getCNCServiceableSlaves())
+									{
+										cncServiceableSlavesData = new CNCServiceableSlavesData();
+										cncServiceableSlavesData.setStoreId(dto.getStoreId());
+										cncServiceableSlavesData.setQty(dto.getQty());
+										cncServiceableSlavesData.setFulfillmentType(dto.getFulfillmentType());
+										cncServiceableSlavesData.setServiceableSlaves(populatePincodeServiceableData(dto.getServiceableSlaves()));
+										cncServiceableSlavesDataList.add(cncServiceableSlavesData);
+									}
+									data.setCNCServiceableSlavesData(cncServiceableSlavesDataList);
+								}
+								deliveryDataList.add(data);
+	
+								if (!(stockCount.isEmpty()))
+								{
+									responseData.setStockCount(Collections.max(stockCount));
+								}
+								else
+								{
+									responseData.setStockCount(Integer.valueOf(0));
+								}
+								if (servicable)
+								{
+									responseData.setIsServicable(MarketplaceCockpitsConstants.YES);
+								}
+								responseData.setUssid(deliveryModeResponse.getUSSID());
+								responseData.setValidDeliveryModes(deliveryDataList);
+	
 							}
-							deliveryDataList.add(data);
-
-							if (!(stockCount.isEmpty()))
-							{
-								responseData.setStockCount(Collections.max(stockCount));
-							}
-							else
-							{
-								responseData.setStockCount(Integer.valueOf(0));
-							}
-							if (servicable)
-							{
-								responseData.setIsServicable(MarketplaceCockpitsConstants.YES);
-							}
-							responseData.setUssid(deliveryModeResponse.getUSSID());
-							responseData.setValidDeliveryModes(deliveryDataList);
-
 						}
+						if (!servicable)
+						{
+							// responseData = new PinCodeResponseData();
+							responseData.setIsServicable(MarketplaceCockpitsConstants.NO);
+						}
+						// responseData.setUssid(deliveryModeResponse.getUSSID());
+						responseList.add(responseData);
+	
 					}
-					if (!servicable)
-					{
-						// responseData = new PinCodeResponseData();
-						responseData.setIsServicable(MarketplaceCockpitsConstants.NO);
-					}
-					// responseData.setUssid(deliveryModeResponse.getUSSID());
-					responseList.add(responseData);
-
 				}
 			}
 		}
