@@ -614,16 +614,15 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						LOG.debug("****************:" + MarketplacecommerceservicesConstants.REDIRECT
 								+ MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
 								+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL);
-						return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
-								+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL;
-					}
-					else
-					{
-						//return getCheckoutStep().nextStep();
+						/*return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
+								+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL;*/
 						/**** PRDI-36/INC144315559 *******/
 						model.addAttribute(MarketplacecheckoutaddonConstants.DELIVERYADDRESSID, cartUssidData.getDeliveryAddress().getId());
 
-						//return getCheckoutStep().nextStep();
+					}
+					else
+					{
+						return getCheckoutStep().nextStep();
 					}
 
 				}
