@@ -5462,6 +5462,11 @@
 						<modifiers optional="true" read="true" write="true" />
 						<persistence type="property" />
 					</attribute>	<!-- TPR-629 -->
+					<!-- Adding attribute to identify Place order agents-->
+					<attribute qualifier="agentId" type="java.lang.String">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 

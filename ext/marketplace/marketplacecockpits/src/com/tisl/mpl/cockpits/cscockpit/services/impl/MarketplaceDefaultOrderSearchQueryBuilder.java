@@ -5,14 +5,20 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
+
+import de.hybris.platform.cockpit.session.UISessionUtils;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.security.PrincipalGroupModel;
 import de.hybris.platform.cscockpit.services.search.generic.query.AbstractCsFlexibleSearchQueryBuilder;
 import de.hybris.platform.cscockpit.services.search.impl.DefaultCsTextSearchCommand;
+import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 
@@ -91,6 +97,12 @@ public class MarketplaceDefaultOrderSearchQueryBuilder extends
 		final boolean searchMobileNumer = StringUtils.isNotEmpty(mobileNumber);
 		final boolean searchEmailId = StringUtils.isNotEmpty(emailId);
 		final boolean searchThreshold = thresholddays != 0;
+		String agentId = null;
+		if (isUserInRole(configurationService
+				.getConfiguration()
+				.getString(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP))) {
+			agentId = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
+		}
 		StringBuilder query = new StringBuilder();
 		StringBuilder query2=new StringBuilder();
 		
@@ -190,6 +202,11 @@ public class MarketplaceDefaultOrderSearchQueryBuilder extends
 				query.append(" AND {o:creationtime} >=?thresholdDays");
 				query2.append(" AND {o:creationtime} >=?thresholdDays");
 			}
+			//Condition based on agent ID
+			if (agentId != null) {
+				query.append(" AND {o:agentId} >=?agentId");
+				query2.append(" AND {o:agentId} >=?agentId");
+			}
 
 			query.append(" }}");
 			
@@ -261,10 +278,26 @@ public class MarketplaceDefaultOrderSearchQueryBuilder extends
 				searchQuery.addQueryParameter("thresholdDays",
 						currentDate.getTime());
 			}
+			//Condition based on agent ID
+			if (agentId != null) {
+				searchQuery.addQueryParameter("agentId", agentId.trim().toLowerCase());
+			}
 			LOG.debug("Query for Order Search " + searchQuery.getQuery());
 			return searchQuery;
 		}
 		return null;
+	}
+
+	private boolean isUserInRole(String groupName) {
+		Set<PrincipalGroupModel> userGroups = UISessionUtils
+				.getCurrentSession().getUser().getAllGroups();
+
+		for (PrincipalGroupModel ug : userGroups) {
+			if (ug.getUid().equalsIgnoreCase(groupName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public Map<String, String> getChannelCodeMap() {
