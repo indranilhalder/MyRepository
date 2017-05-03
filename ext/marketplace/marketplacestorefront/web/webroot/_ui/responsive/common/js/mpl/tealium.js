@@ -2039,7 +2039,7 @@ $(document).on('click',".color-swatch > li", function(){
 		var productIDlist = url.split("p-");
 		var productID = productIDlist[1];
 		var productArray=[];
-		productArray.push(productID[1]);
+		productArray.push(productID);
 	 if(typeof utag !="undefined"){
 		 utag.link({ link_text : 'shop_now_clicked' , event_type :'shop_now_clicked',product_id : productArray });
 	 }
