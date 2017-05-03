@@ -102,6 +102,7 @@ var stwRender = {
         stwWidgetHeading += '<div class="content">' + STWJObject.STWBlpHeading + '</div>';
         stwWidgetHeading += '</div>';
         return stwWidgetHeading;
+        
     },
     tabs: function(STWJObject) {
         var tabsFormationHtml = "";
