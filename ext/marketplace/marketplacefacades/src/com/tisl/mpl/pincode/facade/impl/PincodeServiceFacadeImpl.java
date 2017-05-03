@@ -245,7 +245,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
 			{
 				richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
-				if (richAttributeModel != null && richAttributeModel.get(0) != null
+				if (richAttributeModel != null && !(richAttributeModel.isEmpty()) && richAttributeModel.get(0) != null
 						&& richAttributeModel.get(0).getDeliveryFulfillModes() != null
 						&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
 				{
