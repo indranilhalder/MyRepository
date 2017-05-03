@@ -1094,7 +1094,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 * 
+					 *
 					 * }
 					 */
 
@@ -1267,6 +1267,8 @@ public class HomePageController extends AbstractPageController
 			final List<STWJsonRecomendationData> stwRecData = getStwWidgetFacade().getSTWWidgetFinalData(stwRequest);
 			final String stwCategories = configurationService.getConfiguration().getString("stw.categories");
 			final String stwWidgetHeading = configurationService.getConfiguration().getString("stw.heading");
+			final String stwWidgetBlpHeading = configurationService.getConfiguration().getString("stw.blpheading");
+			STWJObject.put("STWBlpHeading", stwWidgetBlpHeading);
 			STWJObject.put("STWHeading", stwWidgetHeading);
 			STWJObject.put("STWElements", stwRecData);
 			STWJObject.put("STWCategories", stwCategories);

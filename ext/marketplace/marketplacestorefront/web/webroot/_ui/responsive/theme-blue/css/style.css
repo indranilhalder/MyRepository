@@ -20292,9 +20292,6 @@ display: inline-block;
   width:100%;
   text-align:left;
 }
-.stw-widget-owl .product-tile .short-info .price{
-   text-align: center;
-}
 .stw-list .Menu{
 	text-align: center;
 }
@@ -20308,9 +20305,11 @@ display: inline-block;
 }
 .stw-mrp{
 	text-decoration: line-through;
+	color:#969696;
 }
 .stw-mop{
 	padding-left: 10px;
+	color:#a91f3d;
 }
 .owl-theme .stw-widget-owl .owl-controls{
 	top: 40%;
@@ -65042,6 +65041,12 @@ padding:0px;
 }
 #stw_widget .owl-theme .owl-controls, #stw_widget_Blp .owl-theme .owl-controls{
 	top:38%;
+}
+.stw-widget-owl .product-tile .short-info .brand,.stw-widget-owl .product-tile .short-info .product-name{
+	text-align:left;
+}
+.stw-widget-owl .product-tile .short-info a.item{
+	padding:0;
 }
 
 /* STW changes end */

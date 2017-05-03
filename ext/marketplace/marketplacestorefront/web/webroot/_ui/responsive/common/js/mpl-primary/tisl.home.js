@@ -1173,7 +1173,7 @@ function getShowCaseAjaxCall() {
                 renderHtml += "</div></div>";
                 $('#showcase').html(renderHtml);
                 getShowcaseContentAjaxCall(defaultComponentId);
-                $('.selectmenu').text($(".showcaseItem .showcase-border").text());
+                $('.MenuWrap .selectmenu').text($(".showcaseItem .showcase-border").text());
             },
             error: function() {
                 // globalErrorPopup('Failure!!!');
