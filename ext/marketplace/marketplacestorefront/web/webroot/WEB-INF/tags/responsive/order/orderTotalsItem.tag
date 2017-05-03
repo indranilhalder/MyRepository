@@ -18,12 +18,15 @@
 	
 		<li class="subtotalthanks">
 			<spring:theme code="text.account.order.subtotal" text="Subtotal"/>
-			<span class="amt"><format:price priceData="${order.subTotal}"/></span>
+			<!-- UF-260 -->
+			<%-- <format:price priceData="${order.subTotal}"/> --%><format:price priceData="${cartTotalMrp}"/></span></span>
 		</li>
-		<c:if test="${order.totalDiscounts.value > 0}">
+		<c:if test="${order.totalDiscounts.value > 0 || totalDiscount.value > 0}">
 			<li id="cartPromotionAppliedthanks">
 				<spring:theme code="text.account.order.savings" text="Discount"/>
-				<span class="amt"> <format:price priceData="${order.totalDiscounts}"/></span>
+				<!-- UF-260 -->
+				<%-- <format:price priceData="${order.totalDiscounts}"/> --%>
+				<format:price priceData="${totalDiscount}"/></span>
 			</li>
 		</c:if>
 		

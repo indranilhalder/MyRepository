@@ -340,6 +340,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 
+				//UF-260
+				GenericUtilityMethods.getCartPriceDetails(model, cartModel, null);
+
 			}
 			//TPR-629 --- based on orderModel
 			else
@@ -354,6 +357,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, orderModel.getGuid());
 
 				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
+				//UF-260
+				GenericUtilityMethods.getCartPriceDetails(model, orderModel, null);
 			}
 
 			//creating new Payment Form
@@ -2975,6 +2980,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 					final ObjectMapper objectMapper = new ObjectMapper();
 					jsonResponse = objectMapper.writeValueAsString(ussidPricemap);
+
+					//UF-260
+					GenericUtilityMethods.getCartPriceDetails(null, cart, responseData);
 				}
 
 			}
@@ -3077,6 +3085,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				}
 				final ObjectMapper objectMapper = new ObjectMapper();
 				jsonResponse = objectMapper.writeValueAsString(ussidPricemap);
+
+				//UF-260
+				GenericUtilityMethods.getCartPriceDetails(null, orderModel, responseData);
 			}
 			//}
 		}
@@ -4269,7 +4280,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
