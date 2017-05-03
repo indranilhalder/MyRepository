@@ -65035,6 +65035,14 @@ position:relative;
 #stw_widget .carousel-component{
 margin:0px;
 }
+@media(min-width:768px){
+#stw_widget .carousel-component{
+margin:0px 30px;
+}
+#stw_widget .carousel-component .stw-widget-owl{
+padding:0px 30px;
+}
+}
 #stw_widget .carousel .item.quickview{
 margin:0px;
 padding:0px;
@@ -65044,11 +65052,15 @@ padding:0px;
 }
 .stw-widget-owl .product-tile .short-info .brand,.stw-widget-owl .product-tile .short-info .product-name{
 	text-align:left;
+	margin:0;
 }
 .stw-widget-owl .product-tile .short-info a.item{
 	padding:0;
+	margin:0;
 }
-
+.stw-widget-owl .product-tile .short-info a.item .product-name:hover{
+	color: #a9143c;
+}
 /* STW changes end */
 /* UF-263 start */
 .loaderDiv{
