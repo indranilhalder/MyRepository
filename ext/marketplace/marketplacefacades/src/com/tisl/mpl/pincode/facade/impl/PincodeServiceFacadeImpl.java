@@ -245,7 +245,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
 			{
 				richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
-				if (richAttributeModel != null && !(richAttributeModel.isEmpty()) && richAttributeModel.get(0) != null
+				if (richAttributeModel != null && CollectionUtils.isNotEmpty(richAttributeModel) && richAttributeModel.get(0) != null
 						&& richAttributeModel.get(0).getDeliveryFulfillModes() != null
 						&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
 				{
@@ -257,7 +257,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 					LOG.debug("storeLocationRequestData :  Fulfillment type not received for the SellerId"
 							+ sellerInfoModel.getSellerArticleSKU());
 				}
-				if (richAttributeModel != null && richAttributeModel.get(0) != null
+				if (richAttributeModel != null && CollectionUtils.isNotEmpty(richAttributeModel) && richAttributeModel.get(0) != null
 						&& richAttributeModel.get(0).getShippingModes() != null
 						&& richAttributeModel.get(0).getShippingModes().getCode() != null)
 				{
