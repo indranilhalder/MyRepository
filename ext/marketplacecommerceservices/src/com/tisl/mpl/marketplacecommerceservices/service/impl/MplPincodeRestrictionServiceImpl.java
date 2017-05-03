@@ -5,7 +5,6 @@ import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
 import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
@@ -56,9 +55,6 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 
 	@Autowired
 	private CatalogVersionService catalogVersionService;
-
-	@Resource(name = "productService")
-	private ProductService productService;
 
 	@Resource(name = "productService")
 	private MplProductService mplProductService;

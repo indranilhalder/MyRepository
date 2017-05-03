@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
@@ -87,8 +86,10 @@ public class SiteMapController extends AbstractPageController
 	//TPR-1285 Dynamic sitemap Changes Start
 	@Resource(name = "mediaService")
 	private MediaService mediaService;
-	@Autowired
-	private HttpServletRequest request;
+	//sonar fix
+	/*
+	 * @Autowired private HttpServletRequest request;
+	 */
 
 
 	private final static String SITEMAPURLPATTERN = "/{sitemapName:.+sitemap+.*}.xml";

@@ -15,7 +15,6 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -292,16 +291,13 @@ public class NotificationFacadeImpl implements NotificationFacade
 	 *
 	 * @return List<VoucherStatusNotificationModel>
 	 */
-	private List<VoucherStatusNotificationModel> getAllCoupons() throws EtailNonBusinessExceptions
-	{
-		final List<VoucherStatusNotificationModel> voucherList = new ArrayList<VoucherStatusNotificationModel>();
-		final List<VoucherStatusNotificationModel> voucherColl = getNotificationService().getVoucher();
-		if (CollectionUtils.isNotEmpty(voucherColl))
-		{
-			voucherList.addAll(voucherColl);
-		}
-		return voucherList;
-	}
+	/* SONAR FIX */
+	/*
+	 * private List<VoucherStatusNotificationModel> getAllCoupons() throws EtailNonBusinessExceptions { final
+	 * List<VoucherStatusNotificationModel> voucherList = new ArrayList<VoucherStatusNotificationModel>(); final
+	 * List<VoucherStatusNotificationModel> voucherColl = getNotificationService().getVoucher(); if
+	 * (CollectionUtils.isNotEmpty(voucherColl)) { voucherList.addAll(voucherColl); } return voucherList; }
+	 */
 
 
 

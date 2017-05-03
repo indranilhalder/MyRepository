@@ -115,13 +115,17 @@
 																</c:if>	
 																<c:set var="myline2" value="${fn:trim(address.line2)}"/>
 																<c:set var="myline3" value="${fn:trim(address.line3)}"/>
+										<!-- TISSTRT-1506 starts -->
+																<c:set var="landmark" value="${fn:trim(address.landmark)}"/>
 																<c:if test="${empty myline2  && empty myline3}">
 																
 																<address>
 																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
-						<!-- TISUATSE-63 -->						${fn:escapeXml(address.line1)},
+																	${fn:escapeXml(address.line1)},
+																	<c:if test="${not empty landmark}">
+																	&nbsp;${fn:escapeXml(address.landmark)},
+																	</c:if>
 																	<br>
-
 																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
 																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
 																	 91&nbsp;${fn:escapeXml(address.phone)} <br>
@@ -132,9 +136,11 @@
 																
 																<address>
 																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
-						<!-- TISUATSE-63 -->					    ${fn:escapeXml(address.line1)}${fn:escapeXml(address.line2)},
+																	${fn:escapeXml(address.line1)}${fn:escapeXml(address.line2)},
+																	<c:if test="${not empty landmark}">
+																	&nbsp;${fn:escapeXml(address.landmark)},
+																	</c:if>
 																	<br>
-
 																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
 																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
 																	 91&nbsp;${fn:escapeXml(address.phone)} <br>
@@ -145,8 +151,11 @@
 																
 																<address>
 																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
-									<!-- TISUATSE-63 -->			${fn:escapeXml(address.line1)}
-																	${fn:escapeXml(address.line3)},&nbsp;${fn:escapeXml(address.landmark)},<br>
+																	${fn:escapeXml(address.line1)}${fn:escapeXml(address.line3)},
+																	<c:if test="${not empty landmark}">
+																	&nbsp;${fn:escapeXml(address.landmark)},
+																	</c:if>
+																	<br>
 																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
 																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
 																	 91&nbsp;${fn:escapeXml(address.phone)} <br>
@@ -156,12 +165,16 @@
                                                                <c:if test="${not empty myline2  && not empty myline3}">
 																<address>
 																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
-									<!-- TISUATSE-63 -->			${fn:escapeXml(address.line1)}${fn:escapeXml(address.line2)}
-																	${fn:escapeXml(address.line3)},&nbsp;${fn:escapeXml(address.landmark)},<br>
+																	${fn:escapeXml(address.line1)}${fn:escapeXml(address.line2)}${fn:escapeXml(address.line3)},
+																	<c:if test="${not empty landmark}">
+																	&nbsp;${fn:escapeXml(address.landmark)},
+																	</c:if>
+																	<br>
 																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
 																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
 																	 91&nbsp;${fn:escapeXml(address.phone)} <br>
 																</address></c:if></li>
+											<!-- TISSTRT-1506 ends -->
 															<li><ycommerce:testId
 																	code="addressBook_addressOptions_label">
 																	<c:if test="${not address.defaultAddress}">
@@ -226,8 +239,9 @@
 																
 																<li>${fn:escapeXml(address.firstName)}
 																	&nbsp;${fn:escapeXml(address.lastName)}</li>
-																
-																<!-- TPR-3402 -->	
+
+
+															<!-- TPR-3402 -->	
 																
 																 <c:if test="${ empty address.line2  && empty address.line3}">
 																		<li>${fn:escapeXml(address.line1)},</li>
@@ -243,8 +257,9 @@
 																	</c:if>
 																	
 																 <!-- TPR-3402 -->
-																 
+															<c:if test="${ not empty address.landmark}">	 
 																<li>${fn:escapeXml(address.landmark)},</li>
+																</c:if>
 																<li>${fn:escapeXml(address.town)},
 																	&nbsp;${fn:escapeXml(address.state)},
 																	&nbsp;${fn:escapeXml(address.postalCode)} &emsp;IN</li>
@@ -400,6 +415,8 @@
 											onkeyup="kpressaddressln()" maxlength="40" />
 										<div class="errorMessage"><div id="erraddressln"></div></div>
 									</div>
+
+									
 									<div class="half" style="clear:both;">
 									<label><spring:theme code="text.addressBook.PinCode" text="PinCode *" /></label>
 										<form:input path="postcode" id="postcode" class="address_postcode"
@@ -412,15 +429,12 @@
 									<label><spring:theme code="text.addressBook.addressline1" text="Address Line 1 *" /></label>
 									<form:textarea rows="2" cols="60" path="line1" id="line1"  onKeyUp="return taCountAcc(this,'myCounter')"  maxlength="120" />
 										<br><br>Remaining characters :<span id='myCounter'>120</span>
-
-
 											<div class="errorMessage"><div id="erraddressline1"></div></div>
 									</div>
 									
 
 									<!-- TISUAT-4696  /TPR-215-->
-			<!-- TPR-3402 -->		<div class="hide">
-
+		<!-- TPR-3402 -->		<div class="hide">
 									<label><spring:theme code="text.addressBook.addressline2" text="Address Line 2 " /></label>
 										<form:input path="line2" id="line2" onkeyup="kpressaddressln2()"
 											maxlength="40" />
@@ -430,7 +444,6 @@
 
 									<!-- TISUAT-4696  /TPR-215-->
 			<!-- TPR-3402 -->		<div class="hide">
-
 									<label><spring:theme code="text.addressBook.landmark" text="Landmark " /></label>
 										<form:input path="line3" id="line3" onkeyup="kpressaddressln3()"
 											maxlength="40" />
@@ -454,6 +467,8 @@
 										</div>
 									</div>
 
+
+						
 									<!-- TISUAT-4696  /TPR-215-->
 									<div class="half" style="clear: both">
 									<label><spring:theme code="text.addressBook.City" text="City *" /></label>

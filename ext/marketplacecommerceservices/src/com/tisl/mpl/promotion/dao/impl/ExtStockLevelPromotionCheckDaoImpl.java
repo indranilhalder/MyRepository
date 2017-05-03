@@ -51,13 +51,15 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 			{
 				queryString = //
 				"select {b.ussid},SUM({b.usedUpCount}) from {" + LimitedStockPromoInvalidationModel._TYPECODE + " as b } "
-						+ " where {b.promoCode}=?promoCode " + "  AND {b.ussid} in (" + codes + ") group by {b.ussid}";
+						+ MarketplacecommerceservicesConstants.QUERYWHEREPROMO + "  AND {b.ussid} in (" + codes
+						+ ") group by {b.ussid}";
 			}
 			else
 			{
 				queryString = //
 				"select {b.productCode},SUM({b.usedUpCount}) from {" + LimitedStockPromoInvalidationModel._TYPECODE + " as b } "
-						+ " where {b.promoCode}=?promoCode " + " AND {b.productCode} in (" + codes + ") group by {b.productCode}";
+						+ MarketplacecommerceservicesConstants.QUERYWHEREPROMO + " AND {b.productCode} in (" + codes
+						+ ") group by {b.productCode}";
 			}
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("promoCode", promoCode);
@@ -78,7 +80,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 		catch (final FlexibleSearchException e)
 		{
-			LOG.error("error in search query" + e);
+			LOG.error(MarketplacecommerceservicesConstants.QUERYERROR + e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final UnknownIdentifierException e)
@@ -87,7 +89,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error("exception getching the quantity count details aginst product/ussid" + e);
+			LOG.error(MarketplacecommerceservicesConstants.QUANTITYCOUNTEXCEPTIONLOG + e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final Exception e)
@@ -102,7 +104,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.promotion.dao.ExtStockLevelPromotionCheckDao#getPromoInvalidationList(java.lang.String)
 	 */
 	@Override
@@ -148,7 +150,8 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 			queryString = //
 			"select  {b.ussid}  from {" + LimitedStockPromoInvalidationModel._TYPECODE + " as b }"
-					+ " where {b.promoCode}=?promoCode " + "group by {b.promoCode},{b.ussid}  having SUM({b.usedUpCount})=?maxStock";
+					+ MarketplacecommerceservicesConstants.QUERYWHEREPROMO
+					+ "group by {b.promoCode},{b.ussid}  having SUM({b.usedUpCount})=?maxStock";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("promoCode", promoCode);
@@ -168,7 +171,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 		catch (final FlexibleSearchException e)
 		{
-			LOG.error("error in search query" + e);
+			LOG.error(MarketplacecommerceservicesConstants.QUERYERROR + e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final UnknownIdentifierException e)
@@ -177,7 +180,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error("exception getching the quantity count details aginst product/ussid" + e);
+			LOG.error(MarketplacecommerceservicesConstants.QUANTITYCOUNTEXCEPTIONLOG + e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final Exception e)
@@ -243,7 +246,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 		catch (final FlexibleSearchException e)
 		{
-			LOG.error("error in search query" + e);
+			LOG.error(MarketplacecommerceservicesConstants.QUERYERROR + e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final UnknownIdentifierException e)
@@ -252,7 +255,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error("exception getching the quantity count details aginst product/ussid" + e);
+			LOG.error(MarketplacecommerceservicesConstants.QUANTITYCOUNTEXCEPTIONLOG + e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final Exception e)
@@ -276,7 +279,8 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 			queryString = //
 			"select {b.categoryCode},SUM({b.usedUpCount}) from {" + LimitedStockPromoInvalidationModel._TYPECODE + " as b } "
-					+ " where {b.promoCode}=?promoCode " + " AND {b.categoryCode} in (" + substring + ") group by {b.categoryCode}";
+					+ MarketplacecommerceservicesConstants.QUERYWHEREPROMO + " AND {b.categoryCode} in (" + substring
+					+ ") group by {b.categoryCode}";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("promoCode", code);
@@ -297,7 +301,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 		catch (final FlexibleSearchException e)
 		{
-			LOG.error("error in search query" + e);
+			LOG.error(MarketplacecommerceservicesConstants.QUERYERROR + e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final UnknownIdentifierException e)
@@ -306,7 +310,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error("exception getching the quantity count details aginst product/ussid" + e);
+			LOG.error(MarketplacecommerceservicesConstants.QUANTITYCOUNTEXCEPTIONLOG + e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final Exception e)
@@ -384,17 +388,17 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 		catch (final FlexibleSearchException e)
 		{
-			LOG.error("exception getching the quantity count details aginst product/ussid" + e);
+			LOG.error(MarketplacecommerceservicesConstants.QUANTITYCOUNTEXCEPTIONLOG + e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final ModelNotFoundException e)
 		{
-			LOG.error("exception getching the quantity count details aginst product/ussid" + e);
+			LOG.error(MarketplacecommerceservicesConstants.QUANTITYCOUNTEXCEPTIONLOG + e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error("exception getching the quantity count details aginst product/ussid" + e);
+			LOG.error(MarketplacecommerceservicesConstants.QUANTITYCOUNTEXCEPTIONLOG + e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final Exception e)

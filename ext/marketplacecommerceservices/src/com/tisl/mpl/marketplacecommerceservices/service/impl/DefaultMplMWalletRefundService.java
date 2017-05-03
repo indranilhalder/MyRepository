@@ -80,7 +80,6 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 	 * @param paymentTransactionType
 	 * @param uniqueRequestId
 	 */
-
 	@Override
 	public PaymentTransactionModel doRefund(final OrderModel order, final double refundAmount,
 			final PaymentTransactionType paymentTransactionType, final String uniqueRequestId)
@@ -283,13 +282,13 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 
 	/*
 	 * @Desc used in web and cscockpit for in case no response received from mRupee while cancellation refund
-	 * 
+	 *
 	 * @param orderRequestRecord
-	 * 
+	 *
 	 * @param paymentTransactionType
-	 * 
+	 *
 	 * @param uniqueRequestId
-	 * 
+	 *
 	 * @return void
 	 */
 	@Override
@@ -302,20 +301,28 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 			final OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
 			if (orderEntry != null)
 			{
+				//R2.3 changes
+				//				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue()
+				//						+ orderEntry.getCurrDelCharge().doubleValue();
 				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue()
-						+ orderEntry.getCurrDelCharge().doubleValue();
+						+ orderEntry.getCurrDelCharge().doubleValue() + orderEntry.getScheduledDeliveryCharge().doubleValue();
 
 
 				final double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge().doubleValue()
 						: NumberUtils.DOUBLE_ZERO.doubleValue();
+				final double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry
+						.getScheduledDeliveryCharge().doubleValue() : NumberUtils.DOUBLE_ZERO.doubleValue();
 
 				orderEntry.setRefundedDeliveryChargeAmt(Double.valueOf(deliveryCost));
 				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
+				// Added in R2.3 START
+				orderEntry.setRefundedScheduleDeliveryChargeAmt(Double.valueOf(scheduleDeliveryCost));
+				orderEntry.setScheduledDeliveryCharge(NumberUtils.DOUBLE_ZERO);
+				// Added in R2.3 END
 				modelService.save(orderEntry);
 
 				//				mplMrueeRefundService.makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount),
 				//						ConsignmentStatus.REFUND_IN_PROGRESS);
-
 				mplMrueeRefundService.makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount),
 						ConsignmentStatus.REFUND_IN_PROGRESS, null);
 
@@ -331,13 +338,13 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 
 	/*
 	 * @Desc used in web and cscockpit for handling network exception while cancellation
-	 * 
+	 *
 	 * @param orderRequestRecord
-	 * 
+	 *
 	 * @param paymentTransactionType
-	 * 
+	 *
 	 * @param uniqueRequestId
-	 * 
+	 *
 	 * @return void
 	 */
 	@Override
@@ -354,10 +361,18 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 				final double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge().doubleValue()
 						: NumberUtils.DOUBLE_ZERO.doubleValue();
 
-				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost;
+				// Added in R2.3 START
+				final double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry
+						.getScheduledDeliveryCharge().doubleValue() : NumberUtils.DOUBLE_ZERO.doubleValue();
+				// Added in R2.3 END
+				//	final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost;
+				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost
+						+ scheduleDeliveryCost;
 
 				orderEntry.setRefundedDeliveryChargeAmt(Double.valueOf(deliveryCost));
 				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
+				orderEntry.setRefundedScheduleDeliveryChargeAmt(Double.valueOf(scheduleDeliveryCost));
+				orderEntry.setScheduledDeliveryCharge(NumberUtils.DOUBLE_ZERO);
 				modelService.save(orderEntry);
 
 				//				mplMrueeRefundService.makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount),

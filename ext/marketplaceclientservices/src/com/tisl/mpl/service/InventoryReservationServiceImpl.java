@@ -122,13 +122,13 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				{
 					reqObj.setQuantity(cartObj.getQuantity().toString());
 				}
-				
+
 				if (cartObj.getTransportMode() != null)
 				{
 					reqObj.setTransportMode(cartObj.getTransportMode().toString());
 				}
-				
-				
+
+
 				// Added code for Inventory Reservation Request change
 				if ((null != cartObj.getServiceableSlaves() && cartObj.getServiceableSlaves().size() > 0))
 				{
@@ -142,8 +142,9 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 						List<ServiceableSlavesDTO> serviceableSlavesDTOList = new ArrayList<ServiceableSlavesDTO>();
 						for (final CNCServiceableSlavesData data : cartObj.getCncServiceableSlaves())
 						{
-							if(cartObj.getStoreId().equalsIgnoreCase(data.getStoreId())){
-							serviceableSlavesDTOList = populateServiceableSlaves(data.getServiceableSlaves());
+							if (cartObj.getStoreId().equalsIgnoreCase(data.getStoreId()))
+							{
+								serviceableSlavesDTOList = populateServiceableSlaves(data.getServiceableSlaves());
 							}
 						}
 						reqObj.setServiceableSlaves(serviceableSlavesDTOList);
@@ -161,11 +162,13 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 
 			}
 			reqlist.addAll(freebieItemslist);
-			
-			if (freebieItemslist.size()>0)
+
+			if (freebieItemslist.size() > 0)
 			{
 				reqdata.setIsFreebieCart(Boolean.TRUE);
-			}else{
+			}
+			else
+			{
 				reqdata.setIsFreebieCart(Boolean.FALSE);
 			}
 
@@ -201,26 +204,38 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 		}
 		return response;
 	}
-	
-	private List<ServiceableSlavesDTO> populateServiceableSlaves(List<ServiceableSlavesData> serviceableSlavesDataList ){
-		
-		List<ServiceableSlavesDTO> serviceableSlavesDTOList=new ArrayList<ServiceableSlavesDTO>();
-		ServiceableSlavesDTO dto=null;
-		for(ServiceableSlavesData data:serviceableSlavesDataList){
-			dto=new ServiceableSlavesDTO();
+
+	private List<ServiceableSlavesDTO> populateServiceableSlaves(final List<ServiceableSlavesData> serviceableSlavesDataList)
+	{
+
+		final List<ServiceableSlavesDTO> serviceableSlavesDTOList = new ArrayList<ServiceableSlavesDTO>();
+		ServiceableSlavesDTO dto = null;
+		for (final ServiceableSlavesData data : serviceableSlavesDataList)
+		{
+			dto = new ServiceableSlavesDTO();
 			if (StringUtils.isNotEmpty(data.getSlaveId()))
-			dto.setSlaveId(data.getSlaveId());
+			{
+				dto.setSlaveId(data.getSlaveId());
+			}
 			if (StringUtils.isNotEmpty(data.getLogisticsID()))
-			dto.setLogisticsID(data.getLogisticsID());
+			{
+				dto.setLogisticsID(data.getLogisticsID());
+			}
 			if (StringUtils.isNotEmpty(data.getPriority()))
-			dto.setPriority(data.getPriority());
+			{
+				dto.setPriority(data.getPriority());
+			}
 			if (StringUtils.isNotEmpty(data.getCodEligible()))
-			dto.setCODEligible(data.getCodEligible());
+			{
+				dto.setCODEligible(data.getCodEligible());
+			}
 			if (StringUtils.isNotEmpty(data.getTransactionType()))
-			dto.setTransactionType(data.getTransactionType());
+			{
+				dto.setTransactionType(data.getTransactionType());
+			}
 			serviceableSlavesDTOList.add(dto);
 		}
-	return serviceableSlavesDTOList;		
+		return serviceableSlavesDTOList;
 	}
 
 	/**
@@ -297,10 +312,14 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				final Client client = Client.create();
 
 				//Start : Code added for OMS fallback cases
-				final String connectionTimeout = configurationService.getConfiguration()
-						.getString(MarketplacecclientservicesConstants.OMS_INVETNORY_SOFTRESERV_CON_TIMEOUT, "5000").trim();
-				final String readTimeout = configurationService.getConfiguration()
-						.getString(MarketplacecclientservicesConstants.OMS_INVETNORY_SOFTRESERV_READ_TIMEOUT, "5000").trim();
+				final String connectionTimeout = configurationService
+						.getConfiguration()
+						.getString(MarketplacecclientservicesConstants.OMS_INVETNORY_SOFTRESERV_CON_TIMEOUT,
+								MarketplacecclientservicesConstants.OMSTIMEOUT).trim();
+				final String readTimeout = configurationService
+						.getConfiguration()
+						.getString(MarketplacecclientservicesConstants.OMS_INVETNORY_SOFTRESERV_READ_TIMEOUT,
+								MarketplacecclientservicesConstants.OMSTIMEOUT).trim();
 				final String httpErrorCode = configurationService.getConfiguration()
 						.getString(MarketplacecclientservicesConstants.OMS_HTTP_ERROR_CODE, "404,503").trim();
 				client.setConnectTimeout(Integer.valueOf(connectionTimeout));
@@ -425,7 +444,7 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 		return responsefromOMS;
 	}
 
-	
+
 	@Override
 	public EDDResponseWsDTO convertDeliverySlotsDatatoWsdto(final InvReserForDeliverySlotsRequestData cartdata)
 	{
@@ -434,13 +453,15 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 		try
 		{
 
-				LOG.debug("inside reservation delivery slot  data list");
-				if (null!= cartdata)
+			LOG.debug("inside reservation delivery slot  data list");
+			if (null != cartdata)
+			{
 				reqObj = new EDDRequestWsDTO();
-				if (StringUtils.isNotEmpty(cartdata.getCartId()))
-				{
-					reqObj.setCartId(cartdata.getCartId());
-				}
+			}
+			if (StringUtils.isNotEmpty(cartdata.getCartId()))
+			{
+				reqObj.setCartId(cartdata.getCartId());
+			}
 			response = getInventoryReservationForDeliverySlots(reqObj);
 		}
 		catch (final ClientEtailNonBusinessExceptions e)
@@ -459,8 +480,8 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 		}
 		return response;
 	}
-	
-	
+
+
 	@Override
 	public EDDResponseWsDTO getInventoryReservationForDeliverySlots(final EDDRequestWsDTO request) throws JAXBException
 	{
@@ -477,10 +498,14 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				final Client client = Client.create();
 
 				//Start : Code added for OMS fallback cases
-				final String connectionTimeout = configurationService.getConfiguration()
-						.getString(MarketplacecclientservicesConstants.OMS_DELIVERY_SLOT_CON_TIMEOUT, "5000").trim();
-				final String readTimeout = configurationService.getConfiguration()
-						.getString(MarketplacecclientservicesConstants.OMS_DELIVERY_SLOT_READ_TIMEOUT, "5000").trim();
+				final String connectionTimeout = configurationService
+						.getConfiguration()
+						.getString(MarketplacecclientservicesConstants.OMS_DELIVERY_SLOT_CON_TIMEOUT,
+								MarketplacecclientservicesConstants.OMSTIMEOUT).trim();
+				final String readTimeout = configurationService
+						.getConfiguration()
+						.getString(MarketplacecclientservicesConstants.OMS_DELIVERY_SLOT_READ_TIMEOUT,
+								MarketplacecclientservicesConstants.OMSTIMEOUT).trim();
 				final String httpErrorCode = configurationService.getConfiguration()
 						.getString(MarketplacecclientservicesConstants.OMS_HTTP_ERROR_CODE, "404,503").trim();
 				client.setConnectTimeout(Integer.valueOf(connectionTimeout));
@@ -495,9 +520,10 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 						&& null != configurationService.getConfiguration().getString(
 								MarketplacecclientservicesConstants.OMS_DELIVERY_SLOT_URL))
 				{
-					webResource = client.resource(UriBuilder.fromUri(
-							configurationService.getConfiguration().getString(
-									MarketplacecclientservicesConstants.OMS_DELIVERY_SLOT_URL)).build());
+					webResource = client.resource(UriBuilder
+							.fromUri(
+									configurationService.getConfiguration().getString(
+											MarketplacecclientservicesConstants.OMS_DELIVERY_SLOT_URL)).build());
 				}
 				final JAXBContext context = JAXBContext.newInstance(EDDRequestWsDTO.class);
 				final Marshaller marshaller = context.createMarshaller(); //for pretty-print XML in JAXB
@@ -569,10 +595,10 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 		}
 		else
 		{
-			
-			String mockXmlFirstPhase = configurationService.getConfiguration().getString(
+
+			final String mockXmlFirstPhase = configurationService.getConfiguration().getString(
 					MarketplacecclientservicesConstants.URL_FOR_DELIVERYSLOT_FIRSTPHASE);
-			String mockXmlSecondPhase = configurationService.getConfiguration().getString(
+			final String mockXmlSecondPhase = configurationService.getConfiguration().getString(
 					MarketplacecclientservicesConstants.URL_FOR_DELIVERYSLOT_SECONDPHASE);
 			final String mockXmlThirdPhase = configurationService.getConfiguration().getString(
 					MarketplacecclientservicesConstants.URL_FOR_DELIVERYSLOT_THIRDPHASE);
@@ -582,16 +608,17 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 					&& StringUtils.isNotEmpty(mockXmlThirdPhase))
 			{
 				String outputXml = null;
-					if (null != request.getCartId() && !request.getCartId().isEmpty())
-					{
-						outputXml = mockXmlFirstPhase.replaceAll("<replaceCartId>", request.getCartId());
-						outputXml += mockXmlSecondPhase;
-					}
-				
+				if (null != request.getCartId() && !request.getCartId().isEmpty())
+				{
+					outputXml = mockXmlFirstPhase.replaceAll("<replaceCartId>", request.getCartId());
+					outputXml += mockXmlSecondPhase;
+				}
+
 				final JAXBContext jaxbContext = JAXBContext.newInstance(EDDResponseWsDTO.class);
 				final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 				final String output = outputXml + mockXmlThirdPhase;
-				System.out.println("*********************** Inventory Reservation With Delivery Slots response xml (Mock) :" + output);
+				System.out
+						.println("*********************** Inventory Reservation With Delivery Slots response xml (Mock) :" + output);
 				LOG.debug("*********************** Inventory Reservation With Delivery Slots response xml (Mock) :" + output);
 				//final StringReader reader = new StringReader(output.toString());
 				final StringReader reader = new StringReader(output);
@@ -604,11 +631,11 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 		}
 		return responsefromOMS;
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 
 	/**
 	 * @return the pinCodeDeliveryModeService

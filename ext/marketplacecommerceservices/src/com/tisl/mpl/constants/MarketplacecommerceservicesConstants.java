@@ -132,6 +132,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//	public static final String REFUNDTYPE = "S";
 	//	public static final String REASONCODE = "03"; // Hard coded value -- I'm not happy with the product quality
 
+
+
+
 	//Bulk Cancellation
 	public static final String initiate_cancel_job_cancellation_count = "initiate.cancel.job.cancellation.count";
 
@@ -591,6 +594,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_MESSAGE_DELIVERED = "Good news, everyone!  Your {0} {1}, was successfully delivered. We had tons of fun serving you. Hope you're happy with your CAMEL as well";
 	public static final String SMS_MESSAGE_RTO_INITIATED = "We are  initiated RTO for your shipment. If you want delivery then let us know within 24 hr";
 	public static final String SMS_MESSAGE_MIS_ROUTE = "Hi! Your order of {0}  in order no. {1} has been delay due to mis route. We deeply regret the inconvenience. ";
+
+
 	public static final int MAX_PAGE_LIMIT = 100;
 
 	public static final String SNS_CATEGORY = "snsCategory";
@@ -998,6 +1003,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9161 = "B9161";
 
 
+	//Added for TPR-4460
+	public static final String B9302 = "B9302";
+	public static final String B9303 = "B9303";
+	public static final String B9304 = "B9304";
 	//TISPRD-5986  MSH category 404 error handling
 	public static final String E0023 = "E0023";
 
@@ -1410,6 +1419,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SDB_FLAG = "RRS";
 	public static final String EDTOHD_FLAG = "RRE";
 	/* Added in R2.3 END */
+
 	public static final String CASH_ON_DELIVERY = "COD";
 
 	// Added for delivery mode estimated description default time
@@ -1993,6 +2003,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//PaymentFix2017:-
 	public static final String PAYMENTPENDING_SKIPTIME = "marketplace.PaymentPending.skipTime".intern();
 	public static final String OTHER = "Other";
+
 	public static final String COUNTRYCODE = "91".intern();
 	//Promotion Related
 	//public static final String BUYAANDBGETPROMOTIONONSHIPPINGCHARGES = "BuyAandBGetPromotionOnShippingCharges".intern();
@@ -2033,4 +2044,33 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String RETURN_TRANSACTON_TYPE_01 = "01";
 	public static final String ADDRESS_NOT_CHANGED = "ADDRESS_NOT_CHANGED";
 
+	public static final String PROMO = "promo";
+	public static final String QUERYSOURCE = "source";
+	public static final String QUERYTARGET = "target";
+	public static final String QUERYPRODUCT = "} in (?product) }} ";
+	public static final String QUERYUNION = " UNION ";
+	public static final String QUERYSELECT = "{{ SELECT {cat2prod:";
+	public static final String QUERYAS = " AS cat2prod} ";
+	public static final String QUERYWHERECAT = " WHERE {cat2prod:";
+	public static final String QUERYPK = "} as pk ";
+	public static final String PDISCOUNT = " *** percentage discount:";
+	public static final String SPECIALPRICEPROMOTION = "******** Special price check disabling promotion, productlist impacted:";
+	public static final String SPECIALPRICEPROMOTIONERROR = "******** Special price check disabling promotion, productlist error:";
+	public static final String PROMOTIONCODE = "PROMOTION CODE:";
+	public static final String COMPONENTMESSAGE = "Component visiblity set to false";
+	public static final String SELLERIDSEARCH = "sellerId:";
+	public static final String SELLERIDPARAM = "sellerId";
+	public static final String HOMEPAGELOGINFO = "Component visiblity set to false";
+	public static final String QUERYWHEREPROMO = " where {b.promoCode}=?promoCode ";
+	public static final String QUERYERROR = "error in search query";
+	public static final String QUANTITYCOUNTEXCEPTIONLOG = "exception getching the quantity count details aginst product/ussid";
+	public static final String EXCEPTIONCAUSELOG = " Exception cause :";
+	public static final String CARTNOTFOUNDEXCEPTION = "Cart not found.";
+	public static final String PROMOTIONDEBUGLOG = "Fetching Promotion Details";
+	public static final String QUERYJOIN = "JOIN ";
+	public static final String USERPARAM = "user";
+	public static final String NOENTRYSUBORDERLOG = "No  Entries available for Suborder ID:- ";
+
+
+	public static final String SECONDPRODUCT = "secondProduct";
 }

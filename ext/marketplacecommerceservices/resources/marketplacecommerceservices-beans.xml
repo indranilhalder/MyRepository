@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
  [y] hybris Platform
@@ -826,5 +827,4 @@
  		<property name="layout" type="com.tisl.mpl.core.enums.LayoutStructure" />
  	</bean>
 	<!-- TPR-1072 END -->
-	
 </beans>

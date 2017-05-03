@@ -25,8 +25,8 @@ public class ReturnRssRequestDTO implements java.io.Serializable
 	private String lineItemId;
 	private String ticketType;
 	private String ticketSubType;
-	private String canc_Ret_Reas;
-	private String refund_Type;
+	private String cancelReturnReason;
+	private String refundType;
 	private String remarks;
 	private String firstName;
 	private String lastName;
@@ -110,21 +110,23 @@ public class ReturnRssRequestDTO implements java.io.Serializable
 	{
 		return ticketSubType;
 	}
+	
 	/**
-	 * @return the canc_Ret_Reas
+	 * @return the cancelReturnReason
 	 */
 	@XmlElement(name = "Canc_Ret_Reas")
-	public String getCanc_Ret_Reas()
+	public String getCancelReturnReason()
 	{
-		return canc_Ret_Reas;
+		return cancelReturnReason;
 	}
+	
 	/**
-	 * @return the refund_Type
+	 * @return the refundType
 	 */
-	@XmlElement(name = "Refund_Type")
-	public String getRefund_Type()
+	@XmlElement(name = "Refund_Type")	
+	public String getRefundType()
 	{
-		return refund_Type;
+		return refundType;
 	}
 	/**
 	 * @return the remarks
@@ -335,18 +337,18 @@ public class ReturnRssRequestDTO implements java.io.Serializable
 		this.ticketSubType = ticketSubType;
 	}
 	/**
-	 * @param canc_Ret_Reas the canc_Ret_Reas to set
+	 * @param cancelReturnReason the cancelReturnReason to set
 	 */
-	public void setCanc_Ret_Reas(String canc_Ret_Reas)
+	public void setCancelReturnReason(String cancelReturnReason)
 	{
-		this.canc_Ret_Reas = canc_Ret_Reas;
+		this.cancelReturnReason = cancelReturnReason;
 	}
 	/**
-	 * @param refund_Type the refund_Type to set
+	 * @param refundType the refundType to set
 	 */
-	public void setRefund_Type(String refund_Type)
+	public void setRefundType(String refundType)
 	{
-		this.refund_Type = refund_Type;
+		this.refundType = refundType;
 	}
 	/**
 	 * @param remarks the remarks to set

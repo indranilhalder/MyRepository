@@ -10956,7 +10956,13 @@
  						<key attribute="failed" />
  					</index>
  				</indexes>
- 	
+ 			</itemtype>
+ 			<itemtype code="PromotionVoucher" autocreate="false" generate="false">
+ 				<indexes>
+ 					<index name="MPL_VOUCHER_CODE">
+ 						<key attribute="voucherCode" />
+ 					</index>
+ 				</indexes>
  			</itemtype>
   		</typegroup> 
   		<!-- End CAR-274 -->

@@ -39,6 +39,30 @@ public class PincodeDaoImpl implements PincodeDao
 {
 
 
+	/**
+	 * 
+	 */
+	private static final String ACTIVE = "active";
+
+
+
+
+	/**
+	 * 
+	 */
+	private static final String WHERE = "} WHERE {";
+
+
+
+
+	/**
+	 * 
+	 */
+	private static final String SELECT_PK_FROM = "SELECT {PK} FROM {";
+
+
+
+
 	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
 
@@ -101,7 +125,7 @@ public class PincodeDaoImpl implements PincodeDao
 		try
 		{
 			final StringBuilder query = new StringBuilder(50);
-			query.append("SELECT {PK} FROM {").append(PincodeModel._TYPECODE).append("} WHERE {").append("pincode")
+			query.append(SELECT_PK_FROM.intern()).append(PincodeModel._TYPECODE).append(WHERE.intern()).append("pincode")
 					.append("} = ?pincode");
 			LOG.debug(" Query for Pincode Service:" + query.toString());
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query.toString());
@@ -140,7 +164,7 @@ public class PincodeDaoImpl implements PincodeDao
 			final Double latMin = Double.valueOf(((GPS) corners.get(0)).getDecimalLatitude());
 			final Double lonMin = Double.valueOf(((GPS) corners.get(0)).getDecimalLongitude());
 			final StringBuilder query = new StringBuilder(280);
-			query.append("SELECT {PK} FROM {").append(GeneratedBasecommerceConstants.TC.POINTOFSERVICE).append("} WHERE {")
+			query.append(SELECT_PK_FROM.intern()).append(GeneratedBasecommerceConstants.TC.POINTOFSERVICE).append(WHERE.intern())
 					.append(LATITUDE).append(IS_NOT_NULL).append(LONGITUDE).append(IS_NOT_NULL).append(LATITUDE)
 					.append("} >= ?latMin AND {").append(LATITUDE).append("} <= ?latMax AND {").append(LONGITUDE)
 					.append("} >= ?lonMin AND {").append(LONGITUDE).append("} <= ?lonMax ").append(" AND {sellerid")
@@ -155,7 +179,7 @@ public class PincodeDaoImpl implements PincodeDao
 			fQuery.addQueryParameter("lonMin", lonMin);
 			fQuery.addQueryParameter("sellerId", sellerId);
 			fQuery.addQueryParameter("clicknCollect", MarketplacecommerceservicesConstants.CLICK_N_COLLECT);
-			fQuery.addQueryParameter("active", MarketplacecommerceservicesConstants.ACTIVE);
+			fQuery.addQueryParameter(ACTIVE.intern(), MarketplacecommerceservicesConstants.ACTIVE);
 			return fQuery;
 		}
 		catch (final GeoLocatorException e)
@@ -183,7 +207,7 @@ public class PincodeDaoImpl implements PincodeDao
 			final Double latMin = Double.valueOf(((GPS) corners.get(0)).getDecimalLatitude());
 			final Double lonMin = Double.valueOf(((GPS) corners.get(0)).getDecimalLongitude());
 			final StringBuilder query = new StringBuilder(200);
-			query.append("SELECT {PK} FROM {").append(GeneratedBasecommerceConstants.TC.POINTOFSERVICE).append("} WHERE {")
+			query.append(SELECT_PK_FROM.intern()).append(GeneratedBasecommerceConstants.TC.POINTOFSERVICE).append(WHERE.intern())
 					.append(LATITUDE).append(IS_NOT_NULL).append(LONGITUDE).append(IS_NOT_NULL)
 					.append(LATITUDE).append("} >= ?latMin AND {").append(LATITUDE).append("} <= ?latMax AND {")
 					.append(LONGITUDE).append("} >= ?lonMin AND {").append(LONGITUDE).append("} <= ?lonMax ");
@@ -217,7 +241,7 @@ public class PincodeDaoImpl implements PincodeDao
 					+ PincodeModel.PINCODE + "}=?pincode AND {" + PincodeModel.ACTIVE + "}" + "=?active";
 			final FlexibleSearchQuery flexQuery = new FlexibleSearchQuery(query);
 			flexQuery.addQueryParameter("pincode", pincode);
-			flexQuery.addQueryParameter("active", "Y");
+			flexQuery.addQueryParameter(ACTIVE.intern(), "Y");
 			if(LOG.isDebugEnabled())
 			{
 				LOG.debug("Pincode Query String ::::::::: " + query);
@@ -263,11 +287,11 @@ public class PincodeDaoImpl implements PincodeDao
 			final Double latMin = Double.valueOf(((GPS) corners.get(0)).getDecimalLatitude());
 			final Double lonMin = Double.valueOf(((GPS) corners.get(0)).getDecimalLongitude());
 			final StringBuilder query = new StringBuilder(280);
-			query.append("SELECT {PK} FROM {").append(GeneratedBasecommerceConstants.TC.POINTOFSERVICE).append("} WHERE {")
+			query.append(SELECT_PK_FROM.intern()).append(GeneratedBasecommerceConstants.TC.POINTOFSERVICE).append(WHERE.intern())
 			.append(LATITUDE).append(IS_NOT_NULL).append(LONGITUDE).append(IS_NOT_NULL).append(LATITUDE)
 			.append("} >= ?latMin AND {").append(LATITUDE).append("} <= ?latMax AND {").append(LONGITUDE)
 			.append("} >= ?lonMin AND {").append(LONGITUDE).append("} <= ?lonMax ").append(" AND {sellerid")
-			.append("} = ?sellerId AND {").append("active").append("} = ?active AND {isReturnable}=?isReturnToStoreAllowed");
+			.append("} = ?sellerId AND {").append(ACTIVE.intern()).append("} = ?active AND {isReturnable}=?isReturnToStoreAllowed");
 			//
 			LOG.debug("Query for get SlaveIds from PointofService :" + query.toString());
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query.toString());
@@ -278,7 +302,7 @@ public class PincodeDaoImpl implements PincodeDao
 			fQuery.addQueryParameter("sellerId", sellerId);
 			fQuery.addQueryParameter("isReturnToStoreAllowed", MarketplacecommerceservicesConstants.RETURNABLE);
 			/*fQuery.addQueryParameter("clicknCollect", MarketplacecommerceservicesConstants.CLICK_N_COLLECT);*/
-			fQuery.addQueryParameter("active", MarketplacecommerceservicesConstants.ACTIVE);
+			fQuery.addQueryParameter(ACTIVE.intern(), MarketplacecommerceservicesConstants.ACTIVE);
 			return fQuery;
 		}
 		catch (final GeoLocatorException e)

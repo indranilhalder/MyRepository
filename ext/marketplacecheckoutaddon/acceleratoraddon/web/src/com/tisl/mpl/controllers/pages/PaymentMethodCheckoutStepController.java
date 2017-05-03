@@ -1627,32 +1627,61 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//mRupee configuration ends
 
 
-		for (final OrderEntryData cartEntryData : cartData.getEntries())
+
+		//		for (final OrderEntryData cartEntryData : cartData.getEntries())
+		//		{
+		//			final CartModel cartModel = getCartService().getSessionCart();
+		//			final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+		//			for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+		//			{
+		if (null != cartData)
 		{
-			final CartModel cartModel = getCartService().getSessionCart();
-			final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
-			for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+			if (null != cartData.getEntries())
 			{
-				if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
+				//TISSTRT-1501 ends
+				for (final OrderEntryData cartEntryData : cartData.getEntries())
 				{
-					if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(cartEntryData.getSelectedUssid()))
+					final CartModel cartModel = getCartService().getSessionCart();
+					final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+					for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 					{
-						cartEntryData.setEddDateBetWeen(cartEntryModel.getSddDateBetween());
+						if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
+						{
+							if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(cartEntryData.getSelectedUssid()))
+							{
+								cartEntryData.setEddDateBetWeen(cartEntryModel.getSddDateBetween());
+							}
+						}
+					}
+
+					if (null != cartEntryData && cartEntryData.getScheduledDeliveryCharge() != null)
+					{
+						if (cartEntryData.getScheduledDeliveryCharge().doubleValue() > 0)
+						{
+							// final CartModel cartModel = getCartService().getSessionCart();
+							final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
+							cartData.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel,
+									Double.valueOf(configModel.getSdCharge())));
+						}
 					}
 				}
+				//TISSTRT-1501 starts
 			}
 
-			if (null != cartEntryData && cartEntryData.getScheduledDeliveryCharge() != null)
-			{
-				if (cartEntryData.getScheduledDeliveryCharge().doubleValue() > 0)
-				{
-					// final CartModel cartModel = getCartService().getSessionCart();
-					final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
-					cartData
-							.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel, Double.valueOf(configModel.getSdCharge())));
-				}
-			}
+			//			if (null != cartEntryData && cartEntryData.getScheduledDeliveryCharge() != null)
+			//			{
+			//				if (cartEntryData.getScheduledDeliveryCharge().doubleValue() > 0)
+			//				{
+			//					// final CartModel cartModel = getCartService().getSessionCart();
+			//					final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
+			//					cartData
+			//							.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel, Double.valueOf(configModel.getSdCharge())));
+			//				}
+			//			}
+
 		}
+		//			}
+		//TISSTRT-1501 ends
 		model.addAttribute(MarketplacecheckoutaddonConstants.JUSPAYJSNAME,
 				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYJSNAMEVALUE));
 		model.addAttribute(MarketplacecheckoutaddonConstants.SOPFORM, new PaymentDetailsForm());
@@ -1661,7 +1690,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.TNCLINKVALUE));
 
 	}
-
 
 	//COde commented as not used
 	//	/**

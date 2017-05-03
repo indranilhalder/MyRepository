@@ -81,6 +81,14 @@ import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter implements
 		CustomOmsSyncAdapter<OrderWrapper, ConsignmentModel>
 {
+	/**
+	 * 
+	 */
+	private static final String LOG_MSG_STRING = " ::";
+	/**
+	 * 
+	 */
+	private static final String COD = "COD";
 	@Autowired
 	private MplSendSMSService sendSMSService;
 	@Autowired
@@ -498,7 +506,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 								}
 								catch(final Exception e)
 								{
-									LOG.error("Exception during CRM Ticket for Cancel Initiated Order Id >> " + orderModel.getCode()+" ::" + e.getMessage());	
+									LOG.error("Exception during CRM Ticket for Cancel Initiated Order Id >> " + orderModel.getCode()+LOG_MSG_STRING + e.getMessage());	
 								}
 								try
 								{
@@ -508,7 +516,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 								}
 								catch(final Exception e)
 								{
-									LOG.error("Exception during Refund Initiation  for Un-Collected Orders >> "+ orderModel.getCode()+" ::" + e.getMessage());	
+									LOG.error("Exception during Refund Initiation  for Un-Collected Orders >> "+ orderModel.getCode()+LOG_MSG_STRING + e.getMessage());	
 								}
 							
 			      }
@@ -526,7 +534,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				}
 				catch (final Exception e1)
 				{
-					LOG.error("Exception during sending mail or SMS for Order Id:  >> " + orderModel.getCode()+" ::" + e1.getMessage());
+					LOG.error("Exception during sending mail or SMS for Order Id:  >> " + orderModel.getCode()+LOG_MSG_STRING + e1.getMessage());
 				}
 				
 			}
@@ -799,7 +807,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					
 					 if(isEDtoHDCheck.booleanValue() ){
    						if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null
-   								&& "COD".equalsIgnoreCase(entry.getPaymentMode().getMode()))
+   								&& COD.intern().equalsIgnoreCase(entry.getPaymentMode().getMode()))
    						{
    							refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
    						}
@@ -813,7 +821,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					 }else if(isSDBCheck.booleanValue()){
 						 
 						 if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null
- 								&& "COD".equalsIgnoreCase(entry.getPaymentMode().getMode()))
+ 								&& COD.intern().equalsIgnoreCase(entry.getPaymentMode().getMode()))
  						{
  							refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
  						}
@@ -825,7 +833,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
  						}
 					 }else {
 						 if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null
- 								&& "COD".equalsIgnoreCase(entry.getPaymentMode().getMode()))
+ 								&& COD.intern().equalsIgnoreCase(entry.getPaymentMode().getMode()))
  						{
  							refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
  						}
@@ -908,7 +916,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 							}
 							catch(final Exception e)
 							{
-								LOG.error("Exception during Create CRM Ticket for EDtoHD Order Cancel Initiated Id  >> " + orderModel.getCode()+" ::" + e.getMessage());	
+								LOG.error("Exception during Create CRM Ticket for EDtoHD Order Cancel Initiated Id  >> " + orderModel.getCode()+LOG_MSG_STRING + e.getMessage());	
 							}
          			  
          			  AbstractOrderEntryModel entry= consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
@@ -994,7 +1002,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 							}
 							catch(final Exception e)
 							{
-								LOG.error("Exception during Create CRM Ticket for SDB Order Cancel Initiated Id  >> " + orderModel.getCode()+" ::" + e.getMessage());	
+								LOG.error("Exception during Create CRM Ticket for SDB Order Cancel Initiated Id  >> " + orderModel.getCode()+LOG_MSG_STRING + e.getMessage());	
 							}
          			  isSDBCheck=Boolean.FALSE;
          		}
@@ -1013,7 +1021,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 							}
 							catch(final Exception e)
 							{
-								LOG.error("Exception during Create CRM Ticket for SSB Order Cancel Initiated Id  >> " + orderModel.getCode()+" ::" + e.getMessage());	
+								LOG.error("Exception during Create CRM Ticket for SSB Order Cancel Initiated Id  >> " + orderModel.getCode()+LOG_MSG_STRING + e.getMessage());	
 							}
 							try
 							{
@@ -1022,7 +1030,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 							}
 							catch(final Exception e)
 							{
-								LOG.error("Exception during Refund Initiation  SSB Order Cancel Initiated  >> "+ orderModel.getCode()+" ::" + e.getMessage());	
+								LOG.error("Exception during Refund Initiation  SSB Order Cancel Initiated  >> "+ orderModel.getCode()+LOG_MSG_STRING + e.getMessage());	
 							}
 		   		  }
 		   		  
@@ -1106,7 +1114,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 						if (entry.getPaymentMode() != null
 								&& entry.getPaymentMode().getMode() != null
 								&& entry.getPaymentMode().getMode()
-										.equalsIgnoreCase("COD")) {
+										.equalsIgnoreCase(COD.intern())) {
 							flag = true;
 							break;
 						}

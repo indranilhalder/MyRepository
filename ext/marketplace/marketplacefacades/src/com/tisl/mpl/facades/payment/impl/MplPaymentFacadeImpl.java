@@ -1385,7 +1385,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			final List<AbstractOrderEntryModel> entries = abstractOrderModel.getEntries();
 
 			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
-			if (abstractOrderModel.getTotalPriceWithConv() != null || abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+			//SONAR FIX
+			if (abstractOrderModel.getTotalPriceWithConv() != null && abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
 			{
 				getMplPaymentService().setPaymentTransactionForCOD(abstractOrderModel);
 			}
@@ -1662,11 +1663,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1717,9 +1718,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
