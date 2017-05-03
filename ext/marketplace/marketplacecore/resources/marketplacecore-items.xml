@@ -3978,6 +3978,13 @@
 						<persistence type="property" />
 						<description>Attribute that stores the url of the media of the paragraph.</description>
 					</attribute>
+					<!-- TPR-5168 --> 
+					<attribute qualifier="icid2" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This is used for analytics tracking for mobile app</description>
+					</attribute>
+					<!-- TPR-5168 ends -->
 				</attributes>
 			</itemtype>
 
@@ -4326,6 +4333,13 @@
 						<persistence type="property" />
 						<description>This is a description of the banner that might be shown below the banner</description>
 					</attribute>
+					<!-- TPR-5168 -->
+					<attribute qualifier="icid2" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This is used for analytics tracking for mobile app</description>
+					</attribute>
+					<!-- TPR-5168 ends -->
 				</attributes>
 			</itemtype>
 
