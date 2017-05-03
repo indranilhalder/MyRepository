@@ -7717,12 +7717,12 @@ public class UsersController extends BaseCommerceController
 		boolean failFlag = false;
 		String failErrorCode = "";
 		String refNumber = null;
-		String checksum = null;
+		//String checksum = null;
 		ThirdPartyWalletWsDTO thirdPartyWalletWsDTO = null;
 		String orderData = null;
 		try
 		{
-			final StringBuilder returnUrlBuilder = new StringBuilder();
+			final StringBuilder returnUrlBuilder = new StringBuilder(150);
 			returnUrlBuilder.append(request.getRequestURL().substring(0, request.getRequestURL().indexOf("/", 8)))
 					.append(request.getContextPath()).append("/v2/mpl/users/").append(userId).append("/walletPayment");
 
@@ -7798,7 +7798,7 @@ public class UsersController extends BaseCommerceController
 					if (CollectionUtils.isNotEmpty(orderId))
 					{
 						refNumber = orderId.get(0);
-						checksum = orderId.get(1);
+						//checksum = orderId.get(1);
 					}
 					final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
 					if (isValidCart)
@@ -7889,7 +7889,7 @@ public class UsersController extends BaseCommerceController
 						if (CollectionUtils.isNotEmpty(orderId))
 						{
 							refNumber = orderId.get(0);
-							checksum = orderId.get(1);
+							//checksum = orderId.get(1);
 						}
 						getMplPaymentFacade().entryInTPWaltAudit(null, MarketplacewebservicesConstants.CHANNEL_MOBILE, cartGuid,
 								refNumber);
