@@ -4584,9 +4584,14 @@ function applyPromotion(bankName,binValue,formSubmit)
 					}
 					
 					// TISEE-352
-					if(response.totalDiscount.value != 0){
+					/*if(response.totalDiscount.value != 0){
 						$("#promotionApplied").css("display","block");
 						document.getElementById("promotion").innerHTML=response.totalDiscount.formattedValue;				
+					}*/
+					//UF-260
+					if(response.totalDiscntIncMrp.value != 0){
+						$("#promotionApplied").css("display","block");
+						document.getElementById("promotion").innerHTML=response.totalDiscntIncMrp.formattedValue;
 					}
 					
 					// TISST-7955
@@ -5739,6 +5744,8 @@ function populateCartDetailsafterPincodeCheck(responseData){
 	if(null!=responseData['cartData']||""!=responseData['cartData']){
 		var cartValue=responseData['cartData'];
 		var cartData=responseData['cartEntries'];
+		//UF-260
+		var cartTotalMrp = 0.00;
 		for(var cart in cartData){
 			var entryNumber=parseInt(cartData[cart]['entryNumber']);
 			$("#off-cartLevelDiscAmt_"+entryNumber).html("");
@@ -5769,8 +5776,10 @@ function populateCartDetailsafterPincodeCheck(responseData){
 			if(cartData[cart]['cartLevelPercentage']!=null){
 				isOfferPresent=true;
 				$("#CartofferDisplay_"+entryNumber).show();
-				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelPercentage']+"%").addClass("priceFormat").append("<span>Off Bag</span>");
-			    $("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
+				//$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelPercentage']+"%").addClass("priceFormat").append("<span>Off Bag</span>");
+				//UF-260
+				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off Bag</span>");
+				$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
 			}
 			//Start:<!-- prodLevelPercentage replace with productPerDiscDisplay -->
 			//Start:Below code is for productPerDiscDisplay when cartLevelDisc is not null
@@ -5808,17 +5817,25 @@ function populateCartDetailsafterPincodeCheck(responseData){
 			if(isOfferPresent==false){
 				$("#totalPrice_"+entryNumber).removeClass("delAction");
 			}
+			
+			//UF-260
+			cartTotalMrp = cartTotalMrp + cartData[cart]['totalMrp'].doubleValue;
 		}
 		if(cartValue!=null){
-		$("#subtotal_Value").show();
-		$("#subtotal").hide();
+		//UF-260 Commenting the line as Total MRP is to be shown.
+		//$("#subtotal_Value").show();
+		//$("#subtotal").hide();
 		$("#subtotalValue").html(cartValue['subTotal'].formattedValue).addClass("priceFormat");
 		$("#discount").show();
 		$("discount .amt").html("");
-		if(null!=cartValue['totalDiscounts']&&cartValue['totalDiscounts'].value>0){
+		//UF-260
+		if((null!=cartValue['totalDiscounts']&&cartValue['totalDiscounts'].value>0) || (null!=cartValue['totalDiscounts'] && cartTotalMrp > cartValue['totalPrice'].value)){
+		var discountIncMrp = cartTotalMrp - cartValue['totalPrice'].doubleValue;
 		$("#discount").show();
 		//$("#discount .amt").html(cartValue['totalDiscounts'].formattedValue);
-		$("#discount .amt").html(cartValue['totalDiscounts'].formattedValue+" "+"("+cartValue['discountPercentage']+"%)");
+		//$("#discount .amt").html(cartValue['totalDiscounts'].formattedValue+" "+"("+cartValue['discountPercentage']+"%)");
+		//UF-260
+		$("#discount .amt").html(cartValue.currencySymbol+discountIncMrp.toFixed(2));
 		}
 		else{
 			$("#discount").hide();
