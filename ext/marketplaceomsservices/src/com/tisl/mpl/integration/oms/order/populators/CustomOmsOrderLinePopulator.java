@@ -113,7 +113,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			{
 				isReturnToStoreEligible = MarketplaceomsservicesConstants.YES;
 			}
-			if(null != productReturnToStoreEligibility) {
+			if(null != isReturnToStoreEligible) {
 				
 				target.setIsReturnToStoreEligible(isReturnToStoreEligible);
 			}
