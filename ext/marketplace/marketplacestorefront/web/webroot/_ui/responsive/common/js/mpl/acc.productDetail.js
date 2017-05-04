@@ -1,3 +1,4 @@
+
 	
 
 	ACC.productDetail = {
@@ -4191,4 +4192,5 @@ function getProductCodeFromPdpUrl(url)
 	//console.log("ProductCode="+productCode);
 	return productCode;
 }
+
 //End of UF-60 changes

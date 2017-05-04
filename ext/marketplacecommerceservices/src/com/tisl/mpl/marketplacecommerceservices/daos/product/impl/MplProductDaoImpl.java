@@ -62,8 +62,9 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 		final StringBuilder stringBuilder = new StringBuilder(70);
 
 		stringBuilder.append(SELECT_STRING).append(ProductModel.PK).append("} ").append(FROM_STRING).append(ProductModel._TYPECODE)
-				.append(" AS p ").append("JOIN ").append(SellerInformationModel._TYPECODE).append(" AS s ").append("ON {s:")
-				.append(SellerInformationModel.PRODUCTSOURCE).append("}={p:").append(ProductModel.PK).append("} ").append("JOIN ")
+				.append(" AS p ").append(MarketplacecommerceservicesConstants.QUERYJOIN).append(SellerInformationModel._TYPECODE)
+				.append(" AS s ").append("ON {s:").append(SellerInformationModel.PRODUCTSOURCE).append("}={p:")
+				.append(ProductModel.PK).append("} ").append(MarketplacecommerceservicesConstants.QUERYJOIN)
 				.append(CatalogVersionModel._TYPECODE).append(" AS cat ").append("ON {p:").append(ProductModel.CATALOGVERSION)
 				.append("}={cat:").append(CatalogVersionModel.PK).append("} }");
 
@@ -92,7 +93,8 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 
 		stringBuilder.append(SELECT_STRING).append(ProductModel.PK).append("} ");
 		stringBuilder.append(FROM_STRING).append(ProductModel._TYPECODE).append(" AS p ");
-		stringBuilder.append("JOIN ").append(SellerInformationModel._TYPECODE).append(" AS s ");
+		stringBuilder.append(MarketplacecommerceservicesConstants.QUERYJOIN).append(SellerInformationModel._TYPECODE)
+				.append(" AS s ");
 		stringBuilder.append("ON {s:").append(SellerInformationModel.PRODUCTSOURCE).append("}={p:").append(ProductModel.PK)
 				.append("} } ");
 		final String inPart = "{p:" + ProductModel.CODE + CODE_STRING + ProductModel.CATALOGVERSION + "} = ?catalogVersion";
@@ -151,7 +153,8 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 		final StringBuilder stringBuilder = new StringBuilder(70);
 		stringBuilder.append(SELECT_STRING).append(ProductModel.PK).append("} ");
 		stringBuilder.append(FROM_STRING).append(ProductModel._TYPECODE).append(" AS p ");
-		stringBuilder.append("JOIN ").append(SellerInformationModel._TYPECODE).append(" AS s ");
+		stringBuilder.append(MarketplacecommerceservicesConstants.QUERYJOIN).append(SellerInformationModel._TYPECODE)
+				.append(" AS s ");
 		stringBuilder.append("ON {s:").append(SellerInformationModel.PRODUCTSOURCE).append("}={p:").append(ProductModel.PK)
 				.append("} } ");
 		final String inPart = "{p:" + ProductModel.CODE + CODE_STRING + ProductModel.CATALOGVERSION
@@ -172,7 +175,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.product.MplProductDao#findProductFeaturesByCodeAndQualifier(java
 	 * .lang.String, java.lang.String)
@@ -203,7 +206,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.product.MplProductDao#findProductListByCodeList(de.hybris.platform
 	 * .catalog.model.CatalogVersionModel, java.util.List)

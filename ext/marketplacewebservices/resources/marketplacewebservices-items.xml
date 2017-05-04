@@ -383,5 +383,13 @@
 			</attributes>
 	</itemtype>
 	
+	<!-- CAR-274 -->
+ 	<itemtype code="OAuthAccessToken" autocreate="false" generate="false">
+ 			<indexes>
+ 				<index name="MPL_TOKEN_USERNAME">
+ 					<key attribute="userName" />
+ 				</index>
+ 			</indexes>
+ 	</itemtype>
 	</itemtypes>
 </items>

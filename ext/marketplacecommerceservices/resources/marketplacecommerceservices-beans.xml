@@ -826,5 +826,4 @@
  		<property name="layout" type="com.tisl.mpl.core.enums.LayoutStructure" />
  	</bean>
 	<!-- TPR-1072 END -->
-	
 </beans>

@@ -1627,32 +1627,61 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//mRupee configuration ends
 
 
-		for (final OrderEntryData cartEntryData : cartData.getEntries())
+
+		//		for (final OrderEntryData cartEntryData : cartData.getEntries())
+		//		{
+		//			final CartModel cartModel = getCartService().getSessionCart();
+		//			final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+		//			for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+		//			{
+		if (null != cartData)
 		{
-			final CartModel cartModel = getCartService().getSessionCart();
-			final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
-			for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+			if (null != cartData.getEntries())
 			{
-				if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
+				//TISSTRT-1501 ends
+				for (final OrderEntryData cartEntryData : cartData.getEntries())
 				{
-					if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(cartEntryData.getSelectedUssid()))
+					final CartModel cartModel = getCartService().getSessionCart();
+					final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+					for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 					{
-						cartEntryData.setEddDateBetWeen(cartEntryModel.getSddDateBetween());
+						if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
+						{
+							if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(cartEntryData.getSelectedUssid()))
+							{
+								cartEntryData.setEddDateBetWeen(cartEntryModel.getSddDateBetween());
+							}
+						}
+					}
+
+					if (null != cartEntryData && cartEntryData.getScheduledDeliveryCharge() != null)
+					{
+						if (cartEntryData.getScheduledDeliveryCharge().doubleValue() > 0)
+						{
+							// final CartModel cartModel = getCartService().getSessionCart();
+							final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
+							cartData.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel,
+									Double.valueOf(configModel.getSdCharge())));
+						}
 					}
 				}
+				//TISSTRT-1501 starts
 			}
 
-			if (null != cartEntryData && cartEntryData.getScheduledDeliveryCharge() != null)
-			{
-				if (cartEntryData.getScheduledDeliveryCharge().doubleValue() > 0)
-				{
-					// final CartModel cartModel = getCartService().getSessionCart();
-					final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
-					cartData
-							.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel, Double.valueOf(configModel.getSdCharge())));
-				}
-			}
+			//			if (null != cartEntryData && cartEntryData.getScheduledDeliveryCharge() != null)
+			//			{
+			//				if (cartEntryData.getScheduledDeliveryCharge().doubleValue() > 0)
+			//				{
+			//					// final CartModel cartModel = getCartService().getSessionCart();
+			//					final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
+			//					cartData
+			//							.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel, Double.valueOf(configModel.getSdCharge())));
+			//				}
+			//			}
+
 		}
+		//			}
+		//TISSTRT-1501 ends
 		model.addAttribute(MarketplacecheckoutaddonConstants.JUSPAYJSNAME,
 				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYJSNAMEVALUE));
 		model.addAttribute(MarketplacecheckoutaddonConstants.SOPFORM, new PaymentDetailsForm());
@@ -1661,7 +1690,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.TNCLINKVALUE));
 
 	}
-
 
 	//COde commented as not used
 	//	/**
@@ -3328,6 +3356,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//Added For TPR-1035
 				binData = getBinFacade().binCheck(binNumber, cardType, mplCustomerID, true);
 				//Added for TPR-4461 starts here for voucher
+				LOG.debug("Inside bincheck::::::The bank name to be set while selecting the card for payment is "
+						+ binData.getBankName());
 				setBankNameUserPaymentMode(binData.getBankName());
 				//TPR-4461 ends here
 			}
@@ -3539,8 +3569,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
 										.getPaymentTypeData(); //Voucher Payment mode
 								final List<BankModel> bankLists = ((PaymentModeRestrictionModel) restriction).getBanks(); //Voucher Bank Restriction List
+								LOG.debug("Inside createjuspay order method ::cart model:: TISSTRT-1526-1  : the banklist set in voucher is: "
+										+ bankLists);
 
 								final String banknameforUserPaymentMode = getBankNameUserPaymentMode(); // Bank of User's Payment Mode
+
+								LOG.debug("Inside createjuspay order method ::cart model:: TISSTRT-1526-2  : the bank selected while paying through card is: "
+										+ banknameforUserPaymentMode);
 
 								if (CollectionUtils.isNotEmpty(paymentTypeList))
 								{
@@ -3556,6 +3591,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 												}
 												else
 												{
+													LOG.debug("Inside createjuspay order method ::cart model::before sending for bin validation:: TISSTRT-1526-3  : the parameters passed for bank validation are: "
+															+ " banklist set in voucher: "
+															+ bankLists
+															+ " card bank: "
+															+ banknameforUserPaymentMode);
 													willApply = getMplPaymentFacade().validateBank(bankLists, banknameforUserPaymentMode);
 												}
 											}
@@ -4633,7 +4673,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

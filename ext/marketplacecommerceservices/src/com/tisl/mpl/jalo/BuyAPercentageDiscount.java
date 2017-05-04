@@ -31,7 +31,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -520,19 +519,16 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 	 * @param validProductUssidMap
 	 * @return totalCount
 	 */
-	private int populateTotalProductCount(final Map<String, AbstractOrderEntry> validProductUssidMap)
-	{
-		int totalCount = 0;
-		if (MapUtils.isNotEmpty(validProductUssidMap))
-		{
-			for (final AbstractOrderEntry entry : validProductUssidMap.values())
-			{
-				totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
-			}
-		}
 
-		return totalCount;
-	}
+	/* SONAR FIX */
+	/*
+	 * private int populateTotalProductCount(final Map<String, AbstractOrderEntry> validProductUssidMap) { int totalCount
+	 * = 0; if (MapUtils.isNotEmpty(validProductUssidMap)) { for (final AbstractOrderEntry entry :
+	 * validProductUssidMap.values()) { totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid
+	 * Products } }
+	 *
+	 * return totalCount; }
+	 */
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message

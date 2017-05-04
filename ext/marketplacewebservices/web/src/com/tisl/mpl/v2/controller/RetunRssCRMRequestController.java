@@ -70,13 +70,13 @@ public class RetunRssCRMRequestController
 			{
 				returnRequestDTO.setTicketSubType(returnRequest.getTicketSubType());
 			}
-			if (StringUtils.isNotEmpty(returnRequest.getCanc_Ret_Reas()))
+			if (StringUtils.isNotEmpty(returnRequest.getCancelReturnReason()))
 			{
-				returnRequestDTO.setReturnReasonCode(returnRequest.getCanc_Ret_Reas());
+				returnRequestDTO.setReturnReasonCode(returnRequest.getCancelReturnReason());
 			}
-			if (StringUtils.isNotEmpty(returnRequest.getRefund_Type()))
+			if (StringUtils.isNotEmpty(returnRequest.getRefundType()))
 			{
-				returnRequestDTO.setRefundType(returnRequest.getRefund_Type());
+				returnRequestDTO.setRefundType(returnRequest.getRefundType());
 			}
 			
 			if (StringUtils.isNotEmpty(returnRequest.getFlag()))

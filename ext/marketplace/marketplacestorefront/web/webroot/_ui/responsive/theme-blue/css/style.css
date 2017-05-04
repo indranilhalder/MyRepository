@@ -16366,6 +16366,7 @@ body .account .right-account .order-history.order-details li.header div.delivery
 }
 body .account .right-account .order-history.order-details li.header div.delivery-address address{
 	    font-size: 12px;
+	    word-wrap: break-word; /* TISSTRT-1507 */
 }
 body .account .right-account .order-history.order-details li.header div h3,
 body .account .right-account .order-history.order-details li.header div .grand-total {
@@ -19683,7 +19684,9 @@ header.brand-header .content {
   background-color: #000;
 }
 header > .content .bottom {
-  overflow: hidden;
+  /*start change of INC144313747*/
+  /* overflow: hidden; */
+  /*end change of INC144313747*/
   -webkit-transition: max-height 0.3s;
   -moz-transition: max-height 0.3s;
   transition: max-height 0.3s;
@@ -20008,7 +20011,7 @@ div.other-sellers .navigation button.next:after {
 }
 @media (max-width: 650px) {
     div.other-sellers .sort-by {
-        display: none;
+         display: none !important;/* TISSQAEE-377 */
         background-color: transparent;
         border: none;
         position: relative
@@ -36046,7 +36049,11 @@ body.template-pages-category-productGridPage header,body.template-pages-search-s
 display:none;
 }
 .mob-filter-wrapper{
-display: block !important;
+	display: block !important;
+	/* width: 19.83%;		TISSQAUAT-1825
+    padding: 0 20px 0 18px;		TISSQAUAT-1825
+    margin-top: 31px;		TISSQAUAT-1825
+    float: left;		TISSQAUAT-1825 */
 }
 .listing-leftmenu > div.apply-clear{
 	display:none !important;
@@ -47819,7 +47826,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 .OtherSellers .Padd .Title > p:nth-child(4){width:25%;}
 .OtherSellers .Padd .InfoWrap > li{   border-bottom: 1px solid #eaeaea;    clear: both;    display: inline-block;    margin: 10px 0;    padding: 0 0 20px;    width: 100%;}
 .OtherSellers .Padd .InfoWrap > li:last-child{ margin:0; padding:0; border:0;}
-.OtherSellers .Padd .InfoWrap > li:first-child{ margin:15px 0;}
+/* .OtherSellers .Padd .InfoWrap > li:first-child{ margin:15px 0;} */
 .OtherSellers .Padd .InfoWrap .Content > div{ float:left;}
 .OtherSellers .Padd .InfoWrap .Content > div.Seller{width:20%;}
 .OtherSellers .Padd .InfoWrap .Content > div.Price{ width:20%;}
@@ -48418,7 +48425,8 @@ padding:0 40px;	}
 	transition: all 0.3s;
 }
 .product-info .color-swatch li.active{
-	box-shadow: 0 0 0px 1px #a9143c;
+	/* box-shadow: 0 0 0px 1px #a9143c; */		/* TISSQAUAT-3434 */
+	outline: 1px solid #a9143c;			/* TISSQAUAT-3434 */
 }
 
 #allVariantOutOfStock {
@@ -52953,7 +52961,7 @@ word-break: break-word;
 		width: 31%;
 	}
 	.clp_top_brands  .top_brands_section>a {
-		display: none;
+		/* display: none; */		/* TISSQAUAT-1823 */
 	}
 	.blog_container {
 		padding: 0 50px 150px;
@@ -55093,9 +55101,9 @@ body .lookbook_wrapper .listing.wrapper .left-block{
     margin-bottom: 0;
     height: 48px;
   }
-.checkout.wrapper .product-block.addresses.new-form li.item fieldset div.half:nth-child(even){
-	float:right;
-}
+ .checkout.wrapper .product-block.addresses.new-form li.item fieldset div.half:nth-child(even){
+	 float:right; 
+} 
 
 .checkout.wrapper .product-block.addresses.new-form input::-webkit-input-placeholder {
 	color:#a5a5a5;
@@ -56688,7 +56696,7 @@ left: -5px;
 #wrapper.delivery{margin: 0 0 35px;}
 #wrapper.delivery .Product-item-info .Product-name{ margin:0;}
 #wrapper.delivery .Product-detail .Product-img{margin-right: 15px;}
-.delivery .checkout-headers{ display:none;}
+.delivery .checkout-headers{ /*display:none; */ padding-left: 11px;}
 .mybag-items.checkout-items .mybag-item .dev{padding: 0 20px 10px;}
 .mybag-items.checkout-items .mybag-item .dev li{ margin:0;}
 .delivery .checkout__text-header{ font-size:12px;}
@@ -58218,6 +58226,7 @@ header > .content .top.header_fix .toggle{
 	margin-bottom: 1px;
     background: #f5f5f5;	/* TISQAUAT-694 revert*/
     float: left;
+    width: 100%;
 }
 .Manufacturer.Temp03 .media-content{
 	width: 66.85%;
@@ -63235,7 +63244,7 @@ body.page-productGrid .facet-list.filter-opt {
 	.sort_by_wrapper.pagination-bar.listing-menu.bottom{
 	display:none;}
 }
-@media(max-width:424px){
+@media(max-width:408px){
 	.list_title_sort select{
 	float: left !important;
     left: -15px;
@@ -63726,12 +63735,14 @@ span.default input[type="radio"]+label:before {
 .checkTab .checkout-shipping.addNewAddress .formaddress h3 {
     padding-top: 0px;
 }
+/* start of TISPRDT-952 */
 .checkTab .checkout-shipping.addNewAddress .formaddress {
-    padding: 12px 12px 12px 40px;
+    padding: 12px 12px 12px 12px;
 }
+/* end of TISPRDT-952 */
 .checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea.textarea.form-control ~ span{
 	margin-bottom: 0;	/* TISSQAEE-266 */
-}		
+}
 }
 .checkTab .address-list{
 	margin-right: 12px;
@@ -65160,7 +65171,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     top: -4px !important;
 }
 #selectDeliveryMethodForm{
-	padding-top:50px;
+	padding-top:35px;
 	padding-bottom: 31px;
 }
 .cart.wrapper #selectDeliveryMethodForm .checkout-shipping .checkout-shipping-items ul li.header{
@@ -66498,8 +66509,205 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
 #redirectsToPDP .modal-content.content > .close {
 	right: 5px !important;
     top: 5px !important;
-	
 }
 .modal.size-guide .sizes .details #sellerSelName{
 	display:none; /* PRDI-46 */
 } 
+
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item .half{
+	width: 50%;
+    display: inline-block;
+    padding-right: 4.6%;
+    margin-right: -3px;
+    vertical-align: top;
+    float: none;
+}
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item .full{
+	padding-right: 4.6%;
+}
+.checkout.wrapper .formaddress .product-block.addresses.new-form fieldset {
+    padding-top: 24px;
+    width: 104.6%;
+} 
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item input{
+	width: 100%;
+}
+.checkout.wrapper .product-block.addresses.new-form li.item fieldset div.half:nth-child(even){
+	float: none;
+}
+.product-detail .Emi .modal-content .Close{
+	border-radius: 0px;
+	border: none !important;
+	margin-right: 0px !important;
+    margin-top: 0px !important;
+}
+@media (max-width: 651px){
+	.delivery .checkout-headers{
+	float: left;
+	}
+	.cart.wrapper .left-block h1{
+	text-align: left;
+	}
+}
+@media (max-width: 767px){
+.cart.wrapper .checkout-shipping.left-block{
+	border-top: 1px solid #eee;
+}
+.checkout-content.delivery .checkout-shipping.left-block .product-block li.item:not(:last-of-type){
+	border-top: 0px;
+}
+}
+/* TISSQAEE-376 */
+.product-detail .Emi .modal-content .Close{
+    border-radius: 0;
+    border: 0px solid #ccc !important;
+    width: 0px;
+    height: 0px;
+    margin-top: 0px !important;
+    margin-right: 0px !important;
+    position: absolute;
+    right: 20px;
+    top: 5px;
+
+}
+/* End TISSQAEE-376 */
+/* start TISSQAEE-375 */
+.alert.alert-danger a.close{
+	margin-right: 10px !important;
+	margin-top: -6px !important;
+	right: auto !important;
+	top: auto !important;
+	position: static !important;
+}
+.global-alerts button.close{
+	top: 6px !important;
+  } 
+  /* End TISSQAEE-375 */
+@media (max-width: 1024px){
+.col-md-2{
+    display: inline-block;
+    width: 25px;
+	}
+   .col-md-9{
+      display: inline-block;
+    vertical-align: top;
+	}
+	.col-md-12.error_text.pincodeNoError
+{
+margin-top: -10px;
+}
+.error_text.stateError{
+margin-top: -10px;
+}
+}
+@media (max-width: 480px){
+	.col-md-2{
+	display: inline-block;
+    padding: 0px;
+    width: 10px;
+	}
+	.col-md-9{
+	width: 94%;
+	}
+}
+@media (min-width: 1024px){
+	.col-md-12.error_text.pincodeNoError{
+	text-align: left;
+	margin-top: -10px;
+	}
+	.error_text.stateError{
+margin-top: -10px;
+}
+}
+.checkout.wrapper .product-block li.item:last-of-type{
+	border-bottom: 1px solid #eee;
+}
+.checkout.wrapper .product-block li.item{
+	margin: 0;
+}
+.checkout-content .checkout-shipping.left-block div.product .product-brand-name{
+	font-size: 14px;
+    text-transform: none;
+}
+.checkout-content .checkout-shipping.left-block .product-block li.item>ul>li:first-child div.product .product-name{
+	font-size: 12px;
+    text-transform: none;
+    line-height: 15px;
+}
+.cart.wrapper .product-block li.header ul{
+	overflow: hidden;
+}
+.checkout.wrapper .product-block li.header > ul li.delivery{
+	text-align: left;
+}
+.checkout.wrapper .product-block li.header > ul li.delivery:not(.dev)#header4:nth-child(1){
+	width: 20%;
+    margin-left: 0;
+}
+.checkout.wrapper .product-block li.header > ul li.delivery:not(.dev)#header4,
+.checkout.wrapper .product-block li.header > ul li#header2.delivery{
+	width: 40%;
+    margin-left: 0;
+}
+.cart.wrapper .left-block .button{
+	background-color: #a5173c;
+	font-weight: normal !important;
+    line-height: 40px !important;
+    font-size: 12px !important;
+    padding: 0;
+}
+.cart.wrapper .left-block .button.w100:hover{
+	background-color: #a5173c !important;
+}
+.checkout.wrapper .product-block li.header > ul li#header2.delivery{
+	padding-left: 5px;
+}
+@media (max-width: 1024px){
+	.checkout-headers .desk-view {
+	  margin: 0 0 15px;
+	}
+}
+@media (max-width: 1024px) and (min-width: 768px){
+	.checkout.wrapper .product-block li.item > ul li.delivery.deliverySlotType{
+	margin-top: 14px;
+	}
+}
+@media (max-width: 850px) and (min-width: 791px){
+	.checkout.wrapper .product-block li.item > ul > li.delivery.deliverySlotType{
+	   padding-left: 0px;
+	 }
+}
+@media (max-width: 767px){
+	.checkout-headers {
+    padding-left: 11px;
+}
+.checkout.wrapper .product-block li.item > ul li.delivery.deliverySlotType{
+	margin-top: 0px;
+}
+}
+@media (min-width: 768px){
+	.checkout-content .checkout-shipping.left-block .product-block li.item>ul>li:first-child{
+	padding: 15px 0 15px 0;
+	}
+}
+@media (max-width: 651px){
+	.checkout-headers{
+	float: left;
+	}
+	.deliverySlotOptions .deliverySlotRadio .heading{
+	margin-left: 10px !important;
+	}
+}
+
+/* TISSTRT-1521 */
+span#juspayErrorMsg {
+    margin-left: 30px;
+    line-height: normal;
+}
+/* TISSTRT-1521 */
+
+/* TISSTRT-1523 */
+.error-message.correctMessageCoupon {
+    color: green;
+}
+/* TISSTRT-1523 */

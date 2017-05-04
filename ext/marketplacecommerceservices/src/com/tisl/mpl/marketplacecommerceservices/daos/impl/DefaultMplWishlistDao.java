@@ -35,7 +35,7 @@ public class DefaultMplWishlistDao implements MplWishlistDao
 		final String queryString = //
 		"SELECT {pk} FROM {Wishlist2} WHERE {user} = ?user ORDER BY {creationtime} desc";
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("user", user);
+		query.addQueryParameter(MarketplacecommerceservicesConstants.USERPARAM, user);
 		return flexibleSearchService.<Wishlist2Model> search(query).getResult();
 	}
 
@@ -43,14 +43,14 @@ public class DefaultMplWishlistDao implements MplWishlistDao
 	public List<Wishlist2EntryModel> findWishlistByUserAndUssid(final UserModel user, final String ussid)
 	{
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(MarketplacecommerceservicesConstants.WISHLIST_BY_USSID);
-		query.addQueryParameter("user", user);
+		query.addQueryParameter(MarketplacecommerceservicesConstants.USERPARAM, user);
 		query.addQueryParameter("ussid", ussid);
 		return flexibleSearchService.<Wishlist2EntryModel> search(query).getResult();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplWishlistDao#getWishListAgainstUser(de.hybris.platform.core.model
 	 * .user.UserModel)
@@ -62,7 +62,7 @@ public class DefaultMplWishlistDao implements MplWishlistDao
 		final String queryString = //
 		"SELECT {pk} FROM {Wishlist2} WHERE {user} = ?user ORDER BY {modifiedtime} desc";
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("user", user);
+		query.addQueryParameter(MarketplacecommerceservicesConstants.USERPARAM, user);
 		return flexibleSearchService.<Wishlist2Model> search(query).getResult();
 	}
 
@@ -75,7 +75,7 @@ public class DefaultMplWishlistDao implements MplWishlistDao
 		final String queryString = //
 		"SELECT {pk} FROM {Wishlist2 as wish} WHERE {wish.user} = ?user AND {wish.name}=?name";
 		final Map<String, Object> params = new HashMap<String, Object>(1);
-		params.put("user", user);
+		params.put(MarketplacecommerceservicesConstants.USERPARAM, user);
 		params.put("name", name);
 
 		final SearchResult<Wishlist2Model> searchRes = flexibleSearchService.search(queryString, params);
@@ -100,7 +100,7 @@ public class DefaultMplWishlistDao implements MplWishlistDao
 		final String queryString = "SELECT {pk} FROM {Wishlist2 as wish} WHERE {wish.user} = ?user AND {wish.name} like '%" + name
 				+ "%' ";
 		final Map<String, Object> params = new HashMap<String, Object>(1);
-		params.put("user", user);
+		params.put(MarketplacecommerceservicesConstants.USERPARAM, user);
 		//params.put("name", name);
 
 		final SearchResult<Wishlist2Model> searchRes = flexibleSearchService.search(queryString, params);

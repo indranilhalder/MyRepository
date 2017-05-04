@@ -353,77 +353,73 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				{
 					LOG.debug("Step 2:::No voucher is applied to cart");
 
-					//Checks if voucherCode is valid
-					validateVoucherCodeParameter(voucherCode);
-					if (!isVoucherCodeValid(voucherCode))
-					{
-						throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
-					}
-					LOG.debug("Step 3:::Voucher Code is valid");
+					boolean isVoucherRedeemable = false;
+					VoucherModel voucher = null;
 
-					//Finds voucherModel for the code and checks whether it is null or voucher discount value is less than 0
-					final VoucherModel voucher = getVoucherService().getVoucher(voucherCode);
-					if (voucher == null || (null != voucher.getValue() && voucher.getValue().doubleValue() <= 0))
+					synchronized (cartModel)
 					{
-						throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
-					}
-					LOG.debug("Step 4:::Voucher is present and value is not negative");
-					if (!checkVoucherIsApplicable(voucher, voucherCode, cartModel)) //Checks whether voucher is applicable
-					{
-						LOG.debug("Step 5:::Voucher is not applicable");
-						final String error = checkViolatedRestrictions(voucher, cartModel);
-						if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.DATE))
+						//Checks if voucherCode is valid
+						validateVoucherCodeParameter(voucherCode);
+						if (!isVoucherCodeValid(voucherCode))
 						{
-							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTREDEEMABLE + voucherCode);
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
 						}
-						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.USER))
+						LOG.debug("Step 3:::Voucher Code is valid");
+
+						//Finds voucherModel for the code and checks whether it is null or voucher discount value is less than 0
+						//						final VoucherModel voucher = getVoucherService().getVoucher(voucherCode);
+						voucher = getVoucherService().getVoucher(voucherCode);
+						if (voucher == null || (null != voucher.getValue() && voucher.getValue().doubleValue() <= 0))
 						{
-							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
 						}
-						/* TPR-1075 Changes Start */
-						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.NEWCUSTOMER))
+						LOG.debug("Step 4:::Voucher is present and value is not negative");
+						if (!checkVoucherIsApplicable(voucher, voucherCode, cartModel)) //Checks whether voucher is applicable
 						{
-							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDNEWCUST + voucherCode);
+							LOG.debug("Step 5:::Voucher is not applicable");
+							final String error = checkViolatedRestrictions(voucher, cartModel);
+							if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.DATE))
+							{
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTREDEEMABLE
+										+ voucherCode);
+							}
+							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.USER))
+							{
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
+							}
+							/* TPR-1075 Changes Start */
+							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.NEWCUSTOMER))
+							{
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDNEWCUST
+										+ voucherCode);
+							}
+							/* TPR-1075 Changes End */
+							else
+							{
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE
+										+ voucherCode);
+							}
 						}
-						/* TPR-1075 Changes End */
-						//TPR-4460 Changes
-						else if (null != error
-								&& error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_MOBILE))
+
+						else if (!checkVoucherIsReservable(voucher, voucherCode, cartModel)) //Checks whether voucher is reservable
 						{
-							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_MOBILE
-									+ voucherCode);
-						}
-						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_WEB))
-						{
-							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_WEB
-									+ voucherCode);
-						}
-						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER))
-						{
-							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_CALLCENTRE
-									+ voucherCode);
+							LOG.debug("Step 6:::Voucher is not reservable");
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTRESERVABLE + voucherCode);
 						}
 
 						else
 						{
-							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE + voucherCode);
+							LOG.debug("Step 7:::Voucher can be redeemed");
+							isVoucherRedeemable = getVoucherService().redeemVoucher(voucherCode, cartModel);
+							if (!isVoucherRedeemable)
+							{
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.ERRORAPPLYVOUCHER + voucherCode);
+							}
 						}
 					}
 
-					else if (!checkVoucherIsReservable(voucher, voucherCode, cartModel)) //Checks whether voucher is reservable
+					if (isVoucherRedeemable)
 					{
-						LOG.debug("Step 6:::Voucher is not reservable");
-						throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTRESERVABLE + voucherCode);
-					}
-
-					else
-					{
-						LOG.debug("Step 7:::Voucher can be redeemed");
-						if (!getVoucherService().redeemVoucher(voucherCode, cartModel))
-						{
-							throw new VoucherOperationException(MarketplacecommerceservicesConstants.ERRORAPPLYVOUCHER + voucherCode);
-						}
-
 						recalculateCartForCoupon(cartModel, null); //Recalculates cart after applying voucher
 
 						final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(voucher,
@@ -445,76 +441,74 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				{
 					LOG.debug("Step 2:::No voucher is applied to cart");
 
-					//Checks if voucherCode is valid
-					validateVoucherCodeParameter(voucherCode);
-					if (!isVoucherCodeValid(voucherCode))
-					{
-						throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
-					}
-					LOG.debug("Step 3:::Voucher Code is valid");
+					boolean isVoucherRedeemable = false;
+					VoucherModel voucher = null;
+					VoucherInvalidationModel voucherInvalidationModel = null;
 
-					//Finds voucherModel for the code and checks whether it is null or voucher discount value is less than 0
-					final VoucherModel voucher = getVoucherService().getVoucher(voucherCode);
-					if (voucher == null || (null != voucher.getValue() && voucher.getValue().doubleValue() <= 0))
+					synchronized (orderModel)
 					{
-						throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
-					}
+						//Checks if voucherCode is valid
+						validateVoucherCodeParameter(voucherCode);
+						if (!isVoucherCodeValid(voucherCode))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
+						}
+						LOG.debug("Step 3:::Voucher Code is valid");
 
-					LOG.debug("Step 4:::Voucher is present and value is not negative");
-					if (!checkVoucherIsApplicable(voucher, voucherCode, orderModel)) //Checks whether voucher is applicable
-					{
-						LOG.debug("Step 5:::Voucher is not applicable");
-						final String error = checkViolatedRestrictions(voucher, orderModel);
-						if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.DATE))
+						//Finds voucherModel for the code and checks whether it is null or voucher discount value is less than 0
+						//						final VoucherModel voucher = getVoucherService().getVoucher(voucherCode);
+						voucher = getVoucherService().getVoucher(voucherCode);
+						if (voucher == null || (null != voucher.getValue() && voucher.getValue().doubleValue() <= 0))
 						{
-							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTREDEEMABLE + voucherCode);
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
 						}
-						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.USER))
+
+						LOG.debug("Step 4:::Voucher is present and value is not negative");
+						if (!checkVoucherIsApplicable(voucher, voucherCode, orderModel)) //Checks whether voucher is applicable
 						{
-							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
+							LOG.debug("Step 5:::Voucher is not applicable");
+							final String error = checkViolatedRestrictions(voucher, orderModel);
+							if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.DATE))
+							{
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTREDEEMABLE
+										+ voucherCode);
+							}
+							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.USER))
+							{
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
+							}
+							else
+							{
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE
+										+ voucherCode);
+							}
 						}
-						//TPR-4460 Changes
-						else if (null != error
-								&& error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_MOBILE))
+
+						else if (!checkVoucherIsReservable(voucher, voucherCode, orderModel)) //Checks whether voucher is reservable
 						{
-							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_MOBILE
-									+ voucherCode);
-						}
-						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_WEB))
-						{
-							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_WEB
-									+ voucherCode);
-						}
-						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER))
-						{
-							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_CALLCENTRE
-									+ voucherCode);
+							LOG.debug("Step 6:::Voucher is not reservable");
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTRESERVABLE + voucherCode);
 						}
 
 						else
 						{
-							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE + voucherCode);
+							LOG.debug("Step 7:::Voucher can be redeemed");
+							//							final VoucherInvalidationModel voucherInvalidationModel = getVoucherService().redeemVoucher(voucherCode,
+							//									orderModel);
+							voucherInvalidationModel = getVoucherService().redeemVoucher(voucherCode, orderModel);
+							if (null != voucherInvalidationModel)
+							{
+								isVoucherRedeemable = true;
+							}
+							else
+							{
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.ERRORAPPLYVOUCHER + voucherCode);
+							}
+
 						}
-
-
 					}
-
-					else if (!checkVoucherIsReservable(voucher, voucherCode, orderModel)) //Checks whether voucher is reservable
+					if (isVoucherRedeemable)
 					{
-						LOG.debug("Step 6:::Voucher is not reservable");
-						throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTRESERVABLE + voucherCode);
-					}
-
-					else
-					{
-						LOG.debug("Step 7:::Voucher can be redeemed");
-						final VoucherInvalidationModel voucherInvalidationModel = getVoucherService().redeemVoucher(voucherCode,
-								orderModel);
-						if (null == voucherInvalidationModel)
-						{
-							throw new VoucherOperationException(MarketplacecommerceservicesConstants.ERRORAPPLYVOUCHER + voucherCode);
-						}
-
 						recalculateCartForCoupon(null, orderModel); //Recalculates cart after applying voucher
 
 						final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(voucher,
@@ -535,6 +529,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 						checkFlag = true;
 					}
 				}
+
 			}
 		}
 		catch (final ModelSavingException e)

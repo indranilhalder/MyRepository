@@ -54,7 +54,6 @@ import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 import de.hybris.platform.converters.Populator;
-import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.i18n.I18NService;
 import de.hybris.platform.util.localization.Localization;
 
@@ -151,8 +150,8 @@ public class ProductsController extends BaseController
 	private static final Logger LOG = Logger.getLogger(ProductsController.class);
 	private static final String DROPDOWN_BRAND = "MBH";
 	private static final String DROPDOWN_CATEGORY = "MSH";
-
-	private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
+	/* SONAR FIX */
+	//private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
 
 	private static String PRODUCT_OPTIONS = "";
 	@Resource(name = "storeFinderStockFacade")
@@ -185,8 +184,6 @@ public class ProductsController extends BaseController
 	private MplProductWebService mplProductWebService;
 	@Resource(name = "sizeGuideFacade")
 	private SizeGuideFacade sizeGuideFacade;
-	//	@Resource(name = "productService")
-	//	private ProductService productService;
 	@Resource(name = "mplProductCompareFacade")
 	private MplProductCompareFacade mplProductCompareFacade;
 	@Resource(name = "fieldSetBuilder")
@@ -202,11 +199,7 @@ public class ProductsController extends BaseController
 
 	@Resource
 	private SearchSuggestUtilityMethods searchSuggestUtilityMethods;
-	@Resource(name = "productService")
-	private ProductService productService;
-
-	//	@Autowired
-	//	private ConfigurationService configurationService;
+	//critical sonar fix
 	@Resource(name = "categoryService")
 	private CategoryService categoryService;
 

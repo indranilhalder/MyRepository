@@ -1519,7 +1519,9 @@ $(document).ready(function(){
 	  $(window).scroll(function () {
 		  if($(".ui-autocomplete").is(":visible") && marketplaceHeader){
 			  $("#js-site-search-input").parents('form#search_form').next('.ui-autocomplete.ui-front.links.ui-menu').css({
-				  left : $('#js-site-search-input').offset().left,
+				  /*start change of INC144313747*/
+				  /*left : $('#js-site-search-input').offset().left,*/
+				  /*end change of INC144313747*/
 				  width: $('#js-site-search-input').outerWidth()
 			  });
 		  }
@@ -1527,7 +1529,9 @@ $(document).ready(function(){
 	  });
 	  $('#js-site-search-input').keydown(function () {
 		  $("#js-site-search-input").parents('form#search_form').next('.ui-autocomplete.ui-front.links.ui-menu').css({
-				  left : $('#js-site-search-input').offset().left,
+			      /*start change of INC144313747*/  
+			  	  /*left : $('#js-site-search-input').offset().left,*/
+			  	  /*end change of INC144313747*/
 				  width: $('#js-site-search-input').outerWidth()
 			  });
 	  });

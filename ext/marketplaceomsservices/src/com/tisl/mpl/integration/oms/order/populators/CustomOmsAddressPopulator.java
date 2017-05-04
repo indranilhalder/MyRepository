@@ -29,6 +29,8 @@ import com.tisl.mpl.model.StateModel;
  */
 public class CustomOmsAddressPopulator implements Populator<AddressModel, Address>
 {
+	//SONAR FIX
+	//private static final Logger LOG = Logger.getLogger(CustomOmsAddressPopulator.class);
 	private CustomerNameStrategy customerNameStrategy;
 
 	@Autowired

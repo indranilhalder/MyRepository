@@ -435,10 +435,18 @@ public class SalesOrderXMLUtility
 						}
 						LOG.debug("after price set");
 					}
-					//TISPRD-901
+					//TISPRD-901 // TISSQAUAT-4104
 					if (StringUtils.isNotEmpty(entry.getFulfillmentType()) && xmlToFico)
 					{
-						xmlData.setFulfillmentType(entry.getFulfillmentType().toUpperCase());
+						if (StringUtils.isNotEmpty(entry.getFulfillmentTypeP1()) && entry.getFulfillmentType().equalsIgnoreCase("Both"))
+						{
+							xmlData.setFulfillmentType(entry.getFulfillmentTypeP1().toUpperCase());
+						}
+						else
+						{
+							xmlData.setFulfillmentType(entry.getFulfillmentType().toUpperCase());
+						}
+
 						LOG.debug("set fulfilment mode");
 					}
 
@@ -459,7 +467,7 @@ public class SalesOrderXMLUtility
 								xmlData.setExpressdeliveryCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 							}
 							LOG.debug("set express del charge from curr del charge" + entry.getCurrDelCharge().doubleValue());// zoneDelivery.getValue().doubleValue()
-							
+
 							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
 							{
 								xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
@@ -468,7 +476,7 @@ public class SalesOrderXMLUtility
 							{
 								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
 							}
-							
+
 						}
 						else if (null != zoneDelivery && null != zoneDelivery.getDeliveryMode() && entry.getCurrDelCharge() != null
 								&& entry.getRefundedDeliveryChargeAmt() != null && null != zoneDelivery.getDeliveryMode().getCode()
@@ -482,7 +490,7 @@ public class SalesOrderXMLUtility
 							{
 								xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 							}
-							
+
 							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
 							{
 								xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());

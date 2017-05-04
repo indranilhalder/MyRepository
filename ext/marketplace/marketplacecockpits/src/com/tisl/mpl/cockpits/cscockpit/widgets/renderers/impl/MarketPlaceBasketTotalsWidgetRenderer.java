@@ -102,6 +102,14 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 				 if(scheduleDeliveryCosts>=0.0D) {
 		        	deliveryCosts+=scheduleDeliveryCosts;
 		        }
+				/* if(deliveryCosts<=0.0){
+				 for (AbstractOrderEntryModel orderEntry : abstractOrderModel
+							.getEntries()) {
+						if (null != orderEntry.getMplDeliveryMode()) {
+							deliveryCosts =  (orderEntry.getMplDeliveryMode().getValue())*orderEntry.getQuantity();
+						}
+					}
+				 }*/
 				//if(deliveryCosts==0.0){
 
 
@@ -130,7 +138,7 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 				for (AbstractOrderEntryModel orderEntry : abstractOrderModel
 						.getEntries()) {
 					//if(! mplFindDeliveryFulfillModeStrategy.isTShip(orderEntry.getSelectedUSSID())){
-						totalDeliveryCostDisc =+ Double.valueOf(orderEntry.getPrevDelCharge().doubleValue() - orderEntry.getCurrDelCharge().doubleValue());
+						totalDeliveryCostDisc += Double.valueOf(orderEntry.getPrevDelCharge().doubleValue() - orderEntry.getCurrDelCharge().doubleValue());
 					//}
 
 				}

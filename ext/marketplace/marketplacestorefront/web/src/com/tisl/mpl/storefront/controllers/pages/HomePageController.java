@@ -214,99 +214,96 @@ public class HomePageController extends AbstractPageController
 		try
 		{
 			// TPR-1072 START
-			final boolean crawlingFlag = configurationService.getConfiguration().getBoolean("crawling.enabled");
-			final String userAgent = request.getHeader("user-agent");
-			final String slotUid = "FooterSlot";
-			System.out.println("User Agent : " + userAgent);
-			if (crawlingFlag && !StringUtils.isEmpty(userAgent))
+			final boolean crawlingFlag = configurationService.getConfiguration().getBoolean(ModelAttributetConstants.CRAWLINGFLAG);
+			final String userAgent = request.getHeader(ModelAttributetConstants.USERAGENT);
+			final String slotUid = ModelAttributetConstants.FOOTERSLOT;
+			if (crawlingFlag && !StringUtils.isEmpty(userAgent) && userAgent.toLowerCase().contains("chrome"))
 			{
-				if (userAgent.toLowerCase().contains("chrome"))
+				//Footer content
+				getFooterContent(slotUid, model);
+				//Shop by navigation
+				final ContentSlotModel contentSlotModel = contentSlotService
+						.getContentSlotForId(ModelAttributetConstants.NAVIGATIONBARSLOT);
+				final List<AbstractCMSComponentModel> componentLists = contentSlotModel.getCmsComponents();
+				for (final AbstractCMSComponentModel cmsmodel : componentLists)
 				{
-					getFooterContent(slotUid, model);
-
-					final ContentSlotModel contentSlotModel = contentSlotService.getContentSlotForId("NavigationBarSlot");
-					final List<AbstractCMSComponentModel> componentLists = contentSlotModel.getCmsComponents();
-					for (final AbstractCMSComponentModel cmsmodel : componentLists)
+					if (cmsmodel instanceof NavigationBarCollectionComponentModel)
 					{
-						if (cmsmodel instanceof NavigationBarCollectionComponentModel)
-						{
-							final NavigationBarCollectionComponentModel deptModel = (NavigationBarCollectionComponentModel) cmsmodel;
+						final NavigationBarCollectionComponentModel deptModel = (NavigationBarCollectionComponentModel) cmsmodel;
 
-							model.addAttribute("component", deptModel);
-
-						}
+						model.addAttribute(ModelAttributetConstants.COMPONENT, deptModel);
 
 					}
 
-					final List<BrandComponentModel> brands = cmsPageService.getBrandsForShopByBrand();
-					//				{ "AToZBrandsComponent", "MultiBrandStoresComponent", "MensBrandComponent", "WomensBrandComponent",
-					//						"ElectronicsBrandComponent", "FootwearBrandComponent" };
-					final List<ShopByBrandData> shopByBrandDataList = new ArrayList<ShopByBrandData>();
-					BrandComponentModel brandComponent = null;
-					for (final BrandComponentModel brand : brands)
-					{
-						final String component = brand.getUid();
-						//AtoZ brands starts
-						if (component.equals("AToZBrandsComponent"))
-						{
-							Map<Character, List<CategoryModel>> sortedMap = null;
-
-							sortedMap = brandFacade.getAllBrandsFromCmsCockpit(component);
-
-							Map<Character, List<CategoryModel>> GroupBrandsAToE = new TreeMap<Character, List<CategoryModel>>();
-							Map<Character, List<CategoryModel>> GroupBrandsFToJ = new TreeMap<Character, List<CategoryModel>>();
-							Map<Character, List<CategoryModel>> GroupBrandsKToO = new TreeMap<Character, List<CategoryModel>>();
-							Map<Character, List<CategoryModel>> GroupBrandsPToT = new TreeMap<Character, List<CategoryModel>>();
-							Map<Character, List<CategoryModel>> GroupBrandsUToZ = new TreeMap<Character, List<CategoryModel>>();
-
-							GroupBrandsAToE = getBrandsForRange('A', 'E', sortedMap);
-							GroupBrandsFToJ = getBrandsForRange('F', 'J', sortedMap);
-							GroupBrandsKToO = getBrandsForRange('K', 'O', sortedMap);
-							GroupBrandsPToT = getBrandsForRange('P', 'T', sortedMap);
-							GroupBrandsUToZ = getBrandsForRange('U', 'Z', sortedMap);
-
-
-							model.addAttribute(ModelAttributetConstants.A_E_Brands, GroupBrandsAToE);
-							model.addAttribute(ModelAttributetConstants.F_J_Brands, GroupBrandsFToJ);
-							model.addAttribute(ModelAttributetConstants.K_O_Brands, GroupBrandsKToO);
-							model.addAttribute(ModelAttributetConstants.P_T_Brands, GroupBrandsPToT);
-							model.addAttribute(ModelAttributetConstants.U_Z_Brands, GroupBrandsUToZ);
-						}
-						//AtoZ brands ends
-
-						final ShopByBrandData shopByBrandData = new ShopByBrandData();
-						if (StringUtils.isNotEmpty(component))
-						{
-							brandComponent = (BrandComponentModel) cmsComponentService.getSimpleCMSComponent(component);
-						}
-						shopByBrandData.setLayout(brandComponent.getLayout());
-						shopByBrandData.setMasterBrandName(brandComponent.getMasterBrandName());
-						shopByBrandData.setMasterBrandUrl(brandComponent.getMasterBrandURL());
-						shopByBrandData.setSubBrandList(brandComponent.getSubBrandList());
-						shopByBrandData.setSubBrands(brandComponent.getSubBrands());
-						shopByBrandDataList.add(shopByBrandData);
-						model.addAttribute("shopByBrandDataList", shopByBrandDataList);
-						for (final CategoryModel category : brandComponent.getSubBrands())
-						{
-							String categoryPath = GenericUtilityMethods.urlSafe(category.getName());
-							if (StringUtils.isNotEmpty(categoryPath))
-							{
-								try
-								{
-									categoryPath = URLDecoder.decode(categoryPath, "UTF-8");
-								}
-								catch (final UnsupportedEncodingException e)
-								{
-									LOG.error(e.getMessage());
-								}
-								categoryPath = categoryPath.toLowerCase();
-								categoryPath = GenericUtilityMethods.changeUrl(categoryPath);
-							}
-							category.setName(category.getName() + "||" + categoryPath);
-						}
-					}
-					model.addAttribute("googlebot", "googlebot");
 				}
+				//Shop by brand
+				final List<BrandComponentModel> brands = cmsPageService.getBrandsForShopByBrand();
+				final List<ShopByBrandData> shopByBrandDataList = new ArrayList<ShopByBrandData>();
+				BrandComponentModel brandComponent = null;
+				for (final BrandComponentModel brand : brands)
+				{
+					final String component = brand.getUid();
+					//AtoZ brands starts
+					if (component.equals(ModelAttributetConstants.ATOZBRANDSCOMPONENT))
+					{
+						Map<Character, List<CategoryModel>> sortedMap = null;
+
+						sortedMap = brandFacade.getAllBrandsFromCmsCockpit(component);
+
+						Map<Character, List<CategoryModel>> GroupBrandsAToE = new TreeMap<Character, List<CategoryModel>>();
+						Map<Character, List<CategoryModel>> GroupBrandsFToJ = new TreeMap<Character, List<CategoryModel>>();
+						Map<Character, List<CategoryModel>> GroupBrandsKToO = new TreeMap<Character, List<CategoryModel>>();
+						Map<Character, List<CategoryModel>> GroupBrandsPToT = new TreeMap<Character, List<CategoryModel>>();
+						Map<Character, List<CategoryModel>> GroupBrandsUToZ = new TreeMap<Character, List<CategoryModel>>();
+
+						GroupBrandsAToE = getBrandsForRange('A', 'E', sortedMap);
+						GroupBrandsFToJ = getBrandsForRange('F', 'J', sortedMap);
+						GroupBrandsKToO = getBrandsForRange('K', 'O', sortedMap);
+						GroupBrandsPToT = getBrandsForRange('P', 'T', sortedMap);
+						GroupBrandsUToZ = getBrandsForRange('U', 'Z', sortedMap);
+
+
+						model.addAttribute(ModelAttributetConstants.A_E_Brands, GroupBrandsAToE);
+						model.addAttribute(ModelAttributetConstants.F_J_Brands, GroupBrandsFToJ);
+						model.addAttribute(ModelAttributetConstants.K_O_Brands, GroupBrandsKToO);
+						model.addAttribute(ModelAttributetConstants.P_T_Brands, GroupBrandsPToT);
+						model.addAttribute(ModelAttributetConstants.U_Z_Brands, GroupBrandsUToZ);
+					}
+					//AtoZ brands ends
+
+					final ShopByBrandData shopByBrandData = new ShopByBrandData();
+					if (StringUtils.isNotEmpty(component))
+					{
+						brandComponent = (BrandComponentModel) cmsComponentService.getSimpleCMSComponent(component);
+					}
+					shopByBrandData.setLayout(brandComponent.getLayout());
+					shopByBrandData.setMasterBrandName(brandComponent.getMasterBrandName());
+					shopByBrandData.setMasterBrandUrl(brandComponent.getMasterBrandURL());
+					shopByBrandData.setSubBrandList(brandComponent.getSubBrandList());
+					shopByBrandData.setSubBrands(brandComponent.getSubBrands());
+					shopByBrandDataList.add(shopByBrandData);
+					model.addAttribute(ModelAttributetConstants.SHOPBYBRANDDATALIST, shopByBrandDataList);
+					for (final CategoryModel category : brandComponent.getSubBrands())
+					{
+						String categoryPath = GenericUtilityMethods.urlSafe(category.getName());
+						if (StringUtils.isNotEmpty(categoryPath))
+						{
+							try
+							{
+								categoryPath = URLDecoder.decode(categoryPath, "UTF-8");
+							}
+							catch (final UnsupportedEncodingException e)
+							{
+								LOG.error(e.getMessage());
+							}
+							categoryPath = categoryPath.toLowerCase();
+							categoryPath = GenericUtilityMethods.changeUrl(categoryPath);
+						}
+						category.setName(category.getName() + "||" + categoryPath);
+					}
+				}
+				model.addAttribute(ModelAttributetConstants.GOOGLEBOT, ModelAttributetConstants.GOOGLEBOT);
+				//				}
 			}
 			// TPR-1072 END
 			if (logout)
@@ -416,7 +413,7 @@ public class HomePageController extends AbstractPageController
 					}
 					else
 					{
-						LOG.info("Component visiblity set to false");
+						LOG.info(MarketplacecommerceservicesConstants.HOMEPAGELOGINFO);
 					}
 				}
 			}
@@ -499,7 +496,7 @@ public class HomePageController extends AbstractPageController
 				}
 				else
 				{
-					LOG.info("Component visiblity set to false");
+					LOG.info(MarketplacecommerceservicesConstants.HOMEPAGELOGINFO);
 				}
 			}
 		}
@@ -860,7 +857,7 @@ public class HomePageController extends AbstractPageController
 					}
 					else
 					{
-						LOG.info("Component visiblity set to false");
+						LOG.info(MarketplacecommerceservicesConstants.HOMEPAGELOGINFO);
 					}
 				}
 
@@ -928,15 +925,15 @@ public class HomePageController extends AbstractPageController
 			{
 				if (buyBoxData.getSpecialPrice() != null)
 				{
-					productPrice = buyBoxData.getSpecialPrice().getFormattedValue();
+					productPrice = buyBoxData.getSpecialPrice().getFormattedValueNoDecimal();
 				}
 				else if (buyBoxData.getPrice() != null)
 				{
-					productPrice = buyBoxData.getPrice().getFormattedValue();
+					productPrice = buyBoxData.getPrice().getFormattedValueNoDecimal();
 				}
 				else
 				{
-					productPrice = buyBoxData.getMrp().getFormattedValue();
+					productPrice = buyBoxData.getMrp().getFormattedValueNoDecimal();
 				}
 			}
 			LOG.info("ProductPrice>>>>>>>" + productPrice);
@@ -1060,7 +1057,7 @@ public class HomePageController extends AbstractPageController
 					}
 					else
 					{
-						LOG.info("Component visiblity set to false");
+						LOG.info(MarketplacecommerceservicesConstants.HOMEPAGELOGINFO);
 					}
 				}
 			}
@@ -1395,12 +1392,10 @@ public class HomePageController extends AbstractPageController
 		return ControllerConstants.Views.Fragments.Home.LatestOffers;
 	}
 
-	//Fix for defect TISPT-202
+	//TPR-1072
 	@RequestMapping(value = "/getFooterContent", method = RequestMethod.GET)
 	public String getFooterContent(@RequestParam(value = "id") final String slotId, final Model model)
 	{
-		//changes in footer for Thread Dumps-code merge issue resolved
-
 		try
 		{
 

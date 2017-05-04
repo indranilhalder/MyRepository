@@ -4,7 +4,6 @@
 package com.tisl.mpl.facade.nps;
 
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.order.OrderService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.text.SimpleDateFormat;
@@ -19,7 +18,6 @@ import net.sourceforge.pmd.util.StringUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.core.model.NPSFeedbackDetailModel;
 import com.tisl.mpl.core.model.NPSFeedbackModel;
@@ -43,8 +41,11 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 	private ExtendedUserService extendedUserService;
 	@Resource
 	private ModelService modelService;
-	@Autowired
-	private OrderService orderService;
+
+	//sonar fix
+	/*
+	 * @Autowired private OrderService orderService;
+	 */
 
 	@Override
 	public NPSFeedbackQRData getFeedbackQuestionFacade()
@@ -107,7 +108,10 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 			}
 			final Random rnd = new Random();
 			final int responseId = 100000 + rnd.nextInt(90000000);
-			final Integer responseIdInt = new Integer(responseId);
+			//sonar fix
+			//final Integer responseIdInt = new Integer(responseId);
+
+			final Integer responseIdInt = Integer.valueOf(responseId);
 			npsFeedbackModel.setNpsId(npsFeedbackQuestionService.getNPSId());
 			npsFeedbackModel.setResponseId(responseIdInt.toString());
 			final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");

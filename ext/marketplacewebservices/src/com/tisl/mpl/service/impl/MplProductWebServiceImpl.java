@@ -146,8 +146,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
-	@Resource(name = "mplProductWebService")
-	private MplProductWebServiceImpl mplProductWebServiceImpl;
+	
+	//sonar fix
+	/*@Resource(name = "mplProductWebService")
+	private MplProductWebServiceImpl mplProductWebServiceImpl;*/
 
 	/**
 	 * @throws CMSItemNotFoundException
@@ -280,7 +282,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -1540,6 +1542,14 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			if (null != highestPrmotion && null != highestPrmotion.getDescription())
 			{
 				promoMobiledata.setDescription(highestPrmotion.getDescription());
+			}
+			if (null != highestPrmotion && null != highestPrmotion.getBundlepromolinktext())
+			{
+				promoMobiledata.setBundlepromolinkname(highestPrmotion.getBundlepromolinktext());
+			}
+			if (null != highestPrmotion && null != highestPrmotion.getPromourl())
+			{
+				promoMobiledata.setBundlepromolink(highestPrmotion.getPromourl());
 			}
 			List<String> allowedSellers = null;
 			final List<String> totalUssidListOfProduct = new ArrayList<String>();

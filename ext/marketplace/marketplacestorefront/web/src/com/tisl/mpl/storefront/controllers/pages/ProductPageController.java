@@ -352,7 +352,7 @@ public class ProductPageController extends MidPageController
 	public String productDetail(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@RequestParam(value = "searchCategory", required = false, defaultValue = " ") final String dropDownText,
 			@RequestParam(value = ModelAttributetConstants.SELECTED_SIZE, required = false) final String selectedSize,
-			@RequestParam(value = "sellerId", required = false) final String sellerId, //CKD:TPR-250
+			@RequestParam(value = MarketplacecommerceservicesConstants.SELLERIDPARAM, required = false) final String sellerId, //CKD:TPR-250
 			final Model model, final HttpServletRequest request, final HttpServletResponse response)
 			throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
@@ -942,7 +942,9 @@ public class ProductPageController extends MidPageController
 								- buyboxdata.getSpecialPrice().getDoubleValue();
 						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
 						//Critical Sonar Fix
-						final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						//fix for INC144314955
+						//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
 						final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 
 						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
@@ -952,7 +954,9 @@ public class ProductPageController extends MidPageController
 						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue() - buyboxdata.getPrice().getDoubleValue();
 						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
 						//Critical Sonar Fix
-						final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						//fix for INC144314955
+						//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
 						final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
 					}
@@ -1194,6 +1198,7 @@ public class ProductPageController extends MidPageController
 					}
 					catch (final Exception e)
 					{
+						ExceptionUtil.getCustomizedExceptionTrace(e);
 						LOG.debug("configurableRadius values is empty please add radius property in properties file ");
 					}
 				}
@@ -1253,7 +1258,7 @@ public class ProductPageController extends MidPageController
 	{ RequestMethod.POST, RequestMethod.GET })
 	public String viewSellers(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@RequestParam(value = ModelAttributetConstants.SELECTED_SIZE, required = false) final String selectedSize,
-			@RequestParam(value = "sellerId", required = false) final String sellerId, //CKD:TPR-250
+			@RequestParam(value = MarketplacecommerceservicesConstants.SELLERIDPARAM, required = false) final String sellerId, //CKD:TPR-250
 			final Model model, @Valid final SellerInformationDetailsForm form, final HttpServletRequest request)
 			throws CMSItemNotFoundException
 	{
@@ -1431,7 +1436,7 @@ public class ProductPageController extends MidPageController
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/quickView", method = RequestMethod.GET)
 	public String showQuickView(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@RequestParam(value = ModelAttributetConstants.SELECTED_SIZE, required = false) final String selectedSize,
-			@RequestParam(value = "sellerId", required = false) final String sellerId, //CKD:TPR-250
+			@RequestParam(value = MarketplacecommerceservicesConstants.SELLERIDPARAM, required = false) final String sellerId, //CKD:TPR-250
 			final Model model, final HttpServletRequest request) throws CMSItemNotFoundException
 	{
 		if (null != productCode)
@@ -2204,7 +2209,7 @@ public class ProductPageController extends MidPageController
 	public @ResponseBody JSONObject getBuyboxPrice(
 			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@RequestParam("variantCode") String variantCode,
-			@RequestParam(value = "sellerId", required = false) final String sellerId //CKD:TPR-250
+			@RequestParam(value = MarketplacecommerceservicesConstants.SELLERIDPARAM, required = false) final String sellerId //CKD:TPR-250
 	) throws JSONException, CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
 	{
 		JSONObject buyboxJson = new JSONObject();
@@ -2743,7 +2748,9 @@ public class ProductPageController extends MidPageController
 						- buyboxdata.getSpecialPrice().getDoubleValue().doubleValue();
 				final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue().doubleValue()) * 100;
 				//Critical Sonar Fix
-				final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+				//fix for INC144314955
+				//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+				final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
 				final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
@@ -2754,7 +2761,9 @@ public class ProductPageController extends MidPageController
 						- buyboxdata.getPrice().getDoubleValue().doubleValue();
 				final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue().doubleValue()) * 100;
 				//Critical Sonar Fix
-				final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+				//fix for INC144314955
+				//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+				final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
 				final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
 			}
@@ -2998,6 +3007,7 @@ public class ProductPageController extends MidPageController
 		LOG.debug("##################Data Map for IA" + dataMap);
 		return buyboxJson.put("iaResponse", dataMap);
 	}
+
 	/**
 	 * @Description Added for displaying freebie messages other than default freebie message
 	 * @param ussId
@@ -3060,11 +3070,16 @@ public class ProductPageController extends MidPageController
 					.getBrand().getBrandname().toLowerCase() : null);
 			model.addAttribute("msiteBrandCode", StringUtils.isNotBlank(productData.getBrand().getBrandCode()) ? productData
 					.getBrand().getBrandCode().toLowerCase() : null);
-			model.addAttribute(
+
+			if (null != productData.getBrand().getBrandDescription())
+			{
+				model.addAttribute(
 						"brandInfo",
 						productData.getBrand().getBrandDescription().length() <= MplConstants.BRANDINFO_CHAR_LIMIT ? productData
-								.getBrand().getBrandDescription() : StringUtils.substring(productData.getBrand().getBrandDescription(), 0,
-								MplConstants.BRANDINFO_CHAR_LIMIT));
+								.getBrand().getBrandDescription() : StringUtils.substring(productData.getBrand().getBrandDescription(),
+								0, MplConstants.BRANDINFO_CHAR_LIMIT));
+			}
+
 		}
 	}
 

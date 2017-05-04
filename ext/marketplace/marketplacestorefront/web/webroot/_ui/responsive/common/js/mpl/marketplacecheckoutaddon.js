@@ -2062,7 +2062,7 @@ $("#otpMobileNUMField").focus(function(){
 		var guid=$("#guid").val();
 		$.ajax({
 	 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/release",
-	 		type: "GET",
+	 		type: "POST",
 	 		cache: false,
 	 		data: { 'couponCode' : couponCode , 'guid' : guid},
 	 		success : function(response) {
@@ -4868,7 +4868,7 @@ function applyPromotion(bankName,binValue,formSubmit)
 									/*TPR-641 starts*/
 									emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, '').toLowerCase();
 									utag.link({
-										link_obj: this, 
+										link_obj: this,
 										link_text: emiBankSelectedTealium , 
 										event_type : 'emi_option_selected'
 									});
@@ -7248,7 +7248,7 @@ $("#couponSubmitButton").click(function(){
 		/*end changes for INC_11738*/
 		$.ajax({
 	 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/redeem",
-	 		type: "GET",
+	 		type: "POST",
 	 		cache: false,
 	 		data: { 'couponCode' : couponCode , 'paymentMode' : paymentMode , 'bankNameSelected' : bankNameSelected , 'guid' : guid},
 	 		success : function(response) {
@@ -7396,7 +7396,7 @@ $(".remove-coupon-button").click(function(){
 	var guid=$("#guid").val();
 	$.ajax({
  		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/release",
- 		type: "GET",
+ 		type: "POST",
  		cache: false,
  		data: { 'couponCode' : couponCode , 'guid' : guid},
  		success : function(response) {
@@ -8223,13 +8223,13 @@ else if($(window).width() > 773 && $(window).width() <= 963)
 		if($(window).width() <= 980 && $(window).width() > 750)
 			alert_top= $("header").outerHeight() + $(".checkout-content.checkout-payment.cart.checkout.wrapper .top.checkout-top").outerHeight();
 	$(".alert-danger").css({
-				  position : "fixed",
-				  width: "100%",
-				  margin:"0px",
-				  top: alert_top
+				 /* position : "fixed",
+				  /*width: "100%",
+				  /*margin:"0px",
+				  /*top: alert_top*/ /*TISSQAEE-395*/
 			});
 
-			$(".alert-danger").css("z-index","101");
+			/*$(".alert-danger").css("z-index","101");*/ /*TISSQAEE-395*/
 			var ht=$(".alert-danger>span").outerHeight();
 	$(".alert-danger").css("height",ht);
 	$(".checkout-payment.cart.checkout.wrapper .step-body").css("margin-top",htSpanAlert);

@@ -293,6 +293,17 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 											toRemovePromotionList.add(productPromotion);
 										}
 									}
+									//TISSQAUAT-1902 FIX starts here
+									else if (productPromotion instanceof BuyAGetPrecentageDiscountCashbackModel)
+									{
+										final int totalOfferCount = stockPromoCheckService.getTotalOfferOrderCount(
+												productPromotion.getCode(), MarketplacecommerceservicesConstants.EMPTY);
+										if (totalOfferCount >= stockRestrictrion.getMaxStock().intValue())
+										{
+											toRemovePromotionList.add(productPromotion);
+										}
+									}
+									//TISSQAUAT-1902 FIX ends here
 									else if (!getDefaultPromotionsManager().checkForCategoryPromotion(productPromotion.getCode()))
 									{
 										final String productCode = MarketplacecommerceservicesConstants.INVERTED_COMMA
@@ -325,7 +336,7 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 												{
 													categoryCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA
 															+ entry.getValue() + MarketplacecommerceservicesConstants.INVERTED_COMMA);
-													categoryCodes.append(",");
+													categoryCodes.append(MarketplacecommerceservicesConstants.COMMA_DELIMITER); //SONAR FIX
 												}
 
 												stockMap.putAll(stockPromoCheckService.getCumulativeCatLevelStockMap(categoryCodes.toString()

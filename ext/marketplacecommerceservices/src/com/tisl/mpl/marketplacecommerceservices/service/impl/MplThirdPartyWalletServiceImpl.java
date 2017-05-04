@@ -262,15 +262,21 @@ public class MplThirdPartyWalletServiceImpl implements MplThirdPartyWalletServic
 
 					LOG.debug("###################auditModelData  ############" + auditModelData);
 
-					//For CAR:127
 
-					LOG.debug("###################For CAR:127 Start of Using order Converter############");
-					final OrderData orderData = getOrderConverter().convert(order);
-					LOG.debug(
-							"###################For CAR:127 Using order Converter finished############" + "OrderData is" + orderData);
 
-					if (auditModelData != null && !auditModelData.getIsExpired().booleanValue())
+					if (auditModelData != null)
 					{
+
+						//For CAR:127
+
+						LOG.debug("###################For CAR:127 Start of Using order Converter############");
+						final OrderData orderData = getOrderConverter().convert(order);
+						if (null != orderData && null != orderData.getCode())
+						{
+							LOG.debug("###################For CAR:127 Using order Converter finished############" + "OrderData is"
+									+ orderData.getCode());
+						}
+
 						final List<MplPaymentAuditEntryModel> entryList = Lists.newArrayList(auditModelData.getAuditEntries());
 						String status = "";
 						if (CollectionUtils.isNotEmpty(entryList) && OrderStatus.PAYMENT_PENDING.equals(order.getStatus())
