@@ -66705,3 +66705,9 @@ span#juspayErrorMsg {
     line-height: normal;
 }
 /* TISSTRT-1521 */
+
+/* TISSTRT-1523 */
+.error-message.correctMessageCoupon {
+    color: green;
+}
+/* TISSTRT-1523 */
