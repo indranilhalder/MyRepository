@@ -72,6 +72,7 @@ var stwService = {
     }
 }
 
+
 var stwRender = {
     wigetLoaderOnIp: function(ip) {
         var flag = true;
