@@ -18,7 +18,6 @@ var stwService = {
             url: '/getStwrecomendations',
             dataType: "json",
             type: "GET",
-            //  async: !1,
             data: {
                 pageType: 'Home',
                 widgetType: 'STW',
@@ -36,7 +35,9 @@ var stwService = {
                 );
             },
             success: function(json) {
-                if ($("#pageType").val() == "homepage") {
+                var vistingIp = stwRender.visitingIpAddress(json);
+                var isIpAvialable = stwRender.wigetLoaderOnIp(vistingIp);
+                if (($("#pageType").val() == "homepage") && (isIpAvialable == true)) {
                     var stw_block = null;
                     if (tabsLoaded) {
                         var carousel = stwRender.carousel(json);
@@ -72,23 +73,25 @@ var stwService = {
 }
 
 
-
-function wigetLoaderOnIp(ip) {
-    var lastIpPart = ip.split(".")[3];
-    if (typeof(lastIpPart) != 'undefined') {
-    	alert("1");
-        if (lastIpPart % 2 == 0) { // if even then load STW and delete HOT NOW
-            delete productWidget[4];
-            return true;
-        } else {
-        	alert("2");
-           // return false;
-        	return true; // TODO: change the return value
-        }
-    }
-}
-
 var stwRender = {
+    wigetLoaderOnIp: function(ip) {
+        var flag = true;
+        var lastIpPart = ip.split(".")[3];
+        if (typeof(lastIpPart) != 'undefined') {
+            if (lastIpPart % 2 == 0) {
+                delete productWidget[4]; // if even then load STW and delete HOT NOW
+                return flag;
+            } else {
+                return !flag;
+
+            }
+        }
+    },
+
+    visitingIpAddress: function(STWJOBJECT) {
+        var visitingIp = STWJOBJECT.visiterIP;
+        return visitingIp;
+    },
     header: function(STWJObject) {
         var stwWidgetHeading = "";
         stwWidgetHeading += '<div class="best_seller_section hide_clplist">';
@@ -102,7 +105,7 @@ var stwRender = {
         stwWidgetHeading += '<div class="content">' + STWJObject.STWBlpHeading + '</div>';
         stwWidgetHeading += '</div>';
         return stwWidgetHeading;
-        
+
     },
     tabs: function(STWJObject) {
         var tabsFormationHtml = "";
@@ -171,9 +174,7 @@ var stwRender = {
                 }
             }
         });
-
     }
-
 }
 $(document).ready(function() {
     if ($("#pageType").val() == "homepage" && $('#stw_widget').length == 1) {
