@@ -36,23 +36,31 @@
 				 	<!-- For Infinite Analytics End -->
 	
   <!-- Competing Products Section -->
-<c:if test="${not empty competingProductsSearchPageData && not empty competingProductsSearchPageData.results}">
-<div class="similar-products">
-  <h2><span><spring:theme code="text.competing.products"/></span></h2>
-  	<ul class="product-list">
-		<c:forEach items="${competingProductsSearchPageData.results}" var="product" varStatus="status">
-			<product:productListerGridItem product="${product}"/>
-		</c:forEach>
-	</ul>
-	</div>
-</c:if>
-  
-	<ul class="product-list">
-	
-		<c:forEach items="${searchPageData.results}" var="product" varStatus="status">
-			<product:productListerGridItem product="${product}"/>
-		</c:forEach>
-	</ul>
+	<!--   INC144315908 starts -->
+	<c:choose>
+		<c:when test="${not empty competingProductsSearchPageData && not empty competingProductsSearchPageData.results}">
+		<div class="similar-products">
+		  <h2><span><spring:theme code="text.competing.products"/></span></h2>
+		  	<ul class="product-list">
+				<c:forEach items="${competingProductsSearchPageData.results}" var="product" varStatus="status">
+					<product:productListerGridItem product="${product}"/>
+				</c:forEach>
+				<c:forEach items="${searchPageData.results}" var="product" varStatus="status">
+					<product:productListerGridItem product="${product}"/>
+				</c:forEach>
+			</ul>
+			</div>
+		</c:when>
+		<c:otherwise>
+		  
+			<ul class="product-list">
+				<c:forEach items="${searchPageData.results}" var="product" varStatus="status">
+					<product:productListerGridItem product="${product}"/>
+				</c:forEach>
+			</ul>
+		</c:otherwise>
+	</c:choose>
+	<!-- INC144315908 ends -->
 	<div id="addToCartTitle" style="display:none">
 		<div class="add-to-cart-header">
 			<div class="headline">
