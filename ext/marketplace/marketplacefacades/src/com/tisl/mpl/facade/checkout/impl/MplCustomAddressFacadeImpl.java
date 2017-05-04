@@ -8,6 +8,7 @@ import de.hybris.platform.commercefacades.order.data.CCPaymentInfoData;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.DeliveryModeData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.order.impl.DefaultCheckoutFacade;
 import de.hybris.platform.commercefacades.product.data.DeliveryDetailsData;
@@ -265,7 +266,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	 * @return AddressData
 	 */
 	@Override
-	protected AddressData getDeliveryAddress()
+	public AddressData getDeliveryAddress()
 	{
 		final CartModel cart = getCart();
 		if (cart != null)
@@ -413,7 +414,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.checkout.MplCustomAddressFacade#populateDeliveryMethodData(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -504,9 +505,9 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * Set delivery mode using USSID
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param sellerArticleSKUID
 	 */
 	@Override

@@ -536,6 +536,12 @@ public interface MplCommerceCartService
 	 */
 	InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(InvReserForDeliverySlotsRequestData cartdata);
 
+	/**
+	 * @param cartData
+	 * @return
+	 * @throws CMSItemNotFoundException
+	 */
+	Map<String, MarketplaceDeliveryModeData> getDeliveryModeMapForReviewOrder(CartData cartData) throws CMSItemNotFoundException;
 
 
 }

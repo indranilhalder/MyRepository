@@ -32,9 +32,9 @@
 	<ul class="checkout-types">
 			
 			<!-- TISBOX-879 -->
-			<li id="checkout-id" class="checkout-button">
+			<li id="checkout-id" class="checkout-button" style="cursor: not-allowed;">
 				<!-- TISEE-6257 -->
-				<a  id="checkout-enabled" class="checkoutButton checkout button red"  onclick="return checkServiceabilityRequired('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
+				<a  id="checkout-enabled" class="checkoutButton checkout button red checkout-disabled" style="pointer-events: none; cursor: not-allowed; opacity: 0.5;"  onclick="return checkServiceabilityRequired('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
 				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
 				
 				<!-- error message position change as part of UF-61 -->

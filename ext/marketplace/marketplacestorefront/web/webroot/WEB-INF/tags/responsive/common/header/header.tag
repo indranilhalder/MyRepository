@@ -220,7 +220,7 @@
 					</div>
 					</div>
 					
-					<span>CHECKOUT</span>
+					<span>Safe & Secure Checkout</span>		<!-- UF-281 text change -->
 					
 					
 					<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" style="display:none;">Proceed to Payment</button>

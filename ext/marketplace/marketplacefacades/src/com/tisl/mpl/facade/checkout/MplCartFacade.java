@@ -323,7 +323,8 @@ public interface MplCartFacade extends CartFacade
 
 
 	public boolean isInventoryReservedMobile(final String requestType, final AbstractOrderModel abstractOrderModel,
-			final String defaultPinCodeId,final InventoryReservListRequestWsDTO item,SalesApplication salesApplication) throws EtailNonBusinessExceptions;
+			final String defaultPinCodeId, final InventoryReservListRequestWsDTO item, SalesApplication salesApplication)
+			throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -514,24 +515,45 @@ public interface MplCartFacade extends CartFacade
 	 * @throws EtailNonBusinessExceptions
 	 */
 	PinCodeResponseData getVlaidDeliveryModesByInventory(PinCodeResponseData pinCodeResponseData, CartData cartData);
-	
+
 	public CartData getCartDataFromCartModel(final CartModel cartModel, final boolean recentlyAddedFirst)
 			throws EtailNonBusinessExceptions;
-    
-    /**
+
+	/**
 	 * get EDD INFormation for Ussid
+	 *
 	 * @param cartModel
 	 * @param invReserForDeliverySlotsItemEDDInfoData
 	 * @return MplEDDInfoWsDTO
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
-	public MplEDDInfoWsDTO getEDDInfo(CartModel cartModel,List<InvReserForDeliverySlotsItemEDDInfoData> invReserForDeliverySlotsItemEDDInfoData) throws ParseException;
+	public MplEDDInfoWsDTO getEDDInfo(CartModel cartModel,
+			List<InvReserForDeliverySlotsItemEDDInfoData> invReserForDeliverySlotsItemEDDInfoData) throws ParseException;
 
 
 	/**
+	 * @param selectedPincode
+	 * @param sessionPincode
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 * @throws CMSItemNotFoundException
+	 */
+	String singlePagecheckPincode(String selectedPincode, String sessionPincode) throws EtailNonBusinessExceptions,
+			CMSItemNotFoundException;
+
+	/**
+	 * @param cartData
+	 * @return
+	 * @throws CMSItemNotFoundException
+	 */
+	Map<String, MarketplaceDeliveryModeData> getDeliveryModeMapForReviewOrder(CartData cartData) throws CMSItemNotFoundException;
+
+	/* *
 	 * 
 	 * @param cartModel
+	 * 
 	 * @param mplSelectedEDDInfo
+	 * 
 	 * @return boolean
 	 */
 	public boolean addSelectedEDD(CartModel cartModel, List<MplSelectedEDDForUssID> mplSelectedEDDInfo);
@@ -540,7 +562,8 @@ public interface MplCartFacade extends CartFacade
 	 * @param cartdata
 	 * @return
 	 */
-	InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(InvReserForDeliverySlotsRequestData cartdata,CartModel cart);
+	InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(InvReserForDeliverySlotsRequestData cartdata,
+			CartModel cart);
 
 
 }

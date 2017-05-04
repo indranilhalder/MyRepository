@@ -4523,6 +4523,7 @@ function applyPromotion(bankName,binValue,formSubmit)
 				$("#promotionMessage").empty();
 				var total=response.totalPrice.formattedValue;
 				document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+				if(document.getElementById("outstanding-amount")!=null)
 				document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
 				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
 				$("#cartPromotionApplied").css("display","none");
@@ -5900,11 +5901,11 @@ function populatePincodeDeliveryMode(response,buttonType){
 		$('#unsevisablePin').hide();
 		$(".pincodeServiceError").hide();
 		$("#checkout-enabled").css("pointer-events","all");
-		$("#checkout-enabled").css("cursor","cursor");
+		$("#checkout-enabled").css("cursor","pointer");
 		$("#checkout-enabled").css("opacity","1");
 		/*UF-69*/
 		$("#checkout-down-enabled").css("pointer-events","all");
-		$("#checkout-down-enabled").css("cursor","cursor");
+		$("#checkout-down-enabled").css("cursor","pointer");
 		$("#checkout-down-enabled").css("opacity","1");
 		$("#expressCheckoutButtonId").css("pointer-events","all");
 		$("#expressCheckoutButtonId").css("cursor","cursor");
@@ -7155,12 +7156,14 @@ $("#couponSubmitButton").click(function(){
 //TPR-658 START
 function onSubmitAnalytics(msg){
 	var couponCode = $('#couponFieldId').val().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
-	utag.link({
-		link_obj: this,
-		link_text: 'apply_coupon_'+msg ,
-		event_type : 'apply_coupon',
-		coupon_code : couponCode
-	});
+	if(typeof utag !="undefined"){
+		utag.link({
+			link_obj: this,
+			link_text: 'apply_coupon_'+msg ,
+			event_type : 'apply_coupon',
+			coupon_code : couponCode
+		});
+	}
 }
 // TPR-658 END
 
@@ -7372,7 +7375,14 @@ function openPopFromCart(entry,productCode,ussid) {
 			}
 			else
 			{
-				LoadWishListsFromCart(data, productCode,ussid);	
+				var clickedFrom=$("#pageType").val();
+				if(clickedFrom=="multistepcheckoutsummary")
+				{
+					LoadWishListsFromCartForReviewOrder(data, productCode,ussid);
+				}
+				else{
+					LoadWishListsFromCart(data, productCode,ussid);
+				}
 			}	
 			
 		},
@@ -7382,6 +7392,64 @@ function openPopFromCart(entry,productCode,ussid) {
 		}
 	});
 }
+
+function LoadWishListsFromCartForReviewOrder(data, productCode,ussid) {
+    
+	// modified for ussid
+	
+	// var ussid = $("#ussid").val()
+	var addedWlList_cart = [];
+	var wishListContent = "";
+	var wishName = "";
+	$this = this;
+	$("#wishListNonLoggedInId").hide();
+	$("#wishListDetailsId").show();
+
+	for ( var i in data) {
+		var index = -1;
+		var checkExistingUssidInWishList = false;
+		var wishList = data[i];
+		wishName = wishList['particularWishlistName'];
+		wishListList[i] = wishName;
+		var entries = wishList['ussidEntries'];
+		for ( var j in entries) {
+			var entry = entries[j];
+			if (entry == ussid) {
+				
+				checkExistingUssidInWishList = true;
+				break;
+
+			}
+		}
+		if (checkExistingUssidInWishList) {
+			index++;
+            
+			wishListContent = wishListContent
+					+ "<tr class='d0'><td ><input type='radio' name='wishlistradio' id='reviewRadio_"
+					+ i
+					+ "' style='display: none' onclick='selectWishlist("
+					+ i + ")' disabled><label for='reviewRadio_"
+					+ i + "'>"+wishName+"</label></td></tr>";
+			addedWlList_cart.push(wishName);
+		} else {
+			index++;
+		  
+			wishListContent = wishListContent
+					+ "<tr><td><input type='radio' name='wishlistradio' id='reviewRadio_"
+					+ i
+					+ "' style='display: none' onclick='selectWishlist("
+					+ i + ")'><label for='reviewRadio_"
+					+ i + "'>"+wishName+"</label></td></tr>";
+		}
+		$("#alreadyAddedWlName_cart").val(JSON.stringify(addedWlList_cart));
+	}
+
+	$("#wishlistTbodyId").html(wishListContent);
+	$('#selectedProductCode').attr('value',productCode);
+	$('#proUssid').attr('value',ussid);
+
+}
+
 
 function loadDefaultWishLstForCart(productCode,ussid) {
 		

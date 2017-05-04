@@ -187,8 +187,10 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String MPLDELIVERYCHOOSEURL = "/choose";
 	public static final String MPLDELIVERYSELECTURL = "/select";
 	public static final String MPLDELIVERYCHECKURL = "/check";
+	public static final String GETCNCSTRORES = "/cncStores";
 	public static final String MPLDELIVERYCNCINVRESV = "/invReservation";
 	public static final String MPLDELIVERYNEWADDRESSURL = "/new-address";
+	public static final String MPLSHOWMESSAGE = "/message";
 	public static final String MPLDELIVERYSELECTADDRESSURL = "/select-address";
 	public static final String ADDRESS_CODE_PATH_VARIABLE_PATTERN = "{addressCode:.*}";
 	public static final String CALCULATEDELIVERYCOST = "/calculateDeliveryCost/{deliveryCost:.*}";
