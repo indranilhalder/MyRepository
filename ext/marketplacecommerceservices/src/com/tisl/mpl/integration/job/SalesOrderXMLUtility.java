@@ -458,22 +458,27 @@ public class SalesOrderXMLUtility
 								&& entry.getRefundedDeliveryChargeAmt() != null && null != zoneDelivery.getDeliveryMode().getCode()
 								&& zoneDelivery.getDeliveryMode().getCode().equalsIgnoreCase("express-delivery"))
 						{
+							LOG.debug("inside express del");
 							if (entry.getCurrDelCharge().doubleValue() > 0)
 							{
+								LOG.debug("setting current delivery charge...");
 								xmlData.setExpressdeliveryCharge(entry.getCurrDelCharge().doubleValue());
 							}
 							else
 							{
+								LOG.debug("setting refunded delivery charge..."+entry.getRefundedDeliveryChargeAmt());
 								xmlData.setExpressdeliveryCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 							}
 							LOG.debug("set express del charge from curr del charge" + entry.getCurrDelCharge().doubleValue());// zoneDelivery.getValue().doubleValue()
 
 							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
 							{
+								LOG.debug("setting schedule delivery charge..."+entry.getScheduledDeliveryCharge());
 								xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
 							}
 							else
 							{
+								LOG.debug("setting refunded delivery charge..."+entry.getRefundedScheduleDeliveryChargeAmt());
 								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
 							}
 
@@ -482,21 +487,27 @@ public class SalesOrderXMLUtility
 								&& entry.getRefundedDeliveryChargeAmt() != null && null != zoneDelivery.getDeliveryMode().getCode()
 								&& zoneDelivery.getDeliveryMode().getCode().equalsIgnoreCase("home-delivery"))
 						{
+							
+							LOG.debug("inside home del");
 							if (entry.getCurrDelCharge().doubleValue() > 0)
 							{
+								LOG.debug("setting current delivery charge...");
 								xmlData.setShipmentCharge(entry.getCurrDelCharge().doubleValue());
 							}
 							else
 							{
+								LOG.debug("setting refunded delivery charge..."+entry.getRefundedDeliveryChargeAmt());
 								xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 							}
 
 							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
 							{
+								LOG.debug("setting schedule delivery charge..."+entry.getScheduledDeliveryCharge());
 								xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
 							}
 							else
 							{
+								LOG.debug("setting refunded delivery charge..."+entry.getRefundedScheduleDeliveryChargeAmt());
 								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
 							}
 							LOG.debug("set del charge");

@@ -5470,7 +5470,7 @@ public class DefaultPromotionManager extends PromotionsManager
 	private void populateSecondaryListForCategory(final Collection<Category> secondCategories,
 			final List<Product> secondaryProductList, final Flat3Map params, final SessionContext ctx)
 	{
-		final StringBuilder promQuery = new StringBuilder();
+		final StringBuilder promQuery = new StringBuilder(150);
 		final Set promotionCategories = new HashSet();
 		for (final Category cat : secondCategories)
 		{

@@ -57624,6 +57624,15 @@ padding:0px;
  .cart.wrapper .payments.tab-view .product-block li.item#savedCard + li + .terms{
  padding-bottom: 20px;
  }
+ /* TISSQAEE-397 */
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth ul li span.text_in
+	 {
+	    padding-left: 0;
+	    text-align: center;
+	    width: 8px;
+	    padding-top: 0px;
+	 }
+/* TISSQAEE-397 */
  }
 @media (max-width:400px){
 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth .delivered li{
@@ -66121,6 +66130,15 @@ body .account .track{
 	 	.accordtionTataCliq .scheduledPickupArea {
 	 		width: 118%;
 	 	}
+	 	/* TISSQAEE-397 */
+	 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth ul li span.text_in
+	 	{
+	 	    padding-left: 0px;
+		    text-align: center;
+		    width: 17px;
+		    padding-top: 0px;
+	 	}
+	 	/* TISSQAEE-397 */
 	}
 	
 	@media (max-width: 1020px) {

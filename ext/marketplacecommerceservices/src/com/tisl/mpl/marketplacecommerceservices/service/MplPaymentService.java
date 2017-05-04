@@ -20,9 +20,8 @@ import java.util.Map;
 
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
-import com.tisl.mpl.core.model.JuspayEBSResponseModel;
-import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
+import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -261,20 +260,20 @@ public interface MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions;
@@ -351,8 +350,9 @@ public interface MplPaymentService
 	 * @return
 	 */
 	MplPaymentAuditModel getWalletAuditEntries(String refNo);
-	/** 
-	* SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel against
+
+	/**
+	 * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel against
 	 * the cart for non-COD from OMS Submit Order Job
 	 *
 	 * @param orderStatusResponse

@@ -300,6 +300,6 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 
 			}
 		}
-		return true;
+		return keepLoginAlive; //Sonar fix
 	}
 }
