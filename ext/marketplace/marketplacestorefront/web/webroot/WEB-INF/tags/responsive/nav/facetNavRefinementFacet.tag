@@ -413,9 +413,9 @@ function navigateToPage(queryString,textString)
 											</c:if>	
 											<!--  TPR-1283 CHANGE Starts-->
 										  <div class="facet-text">
-											<span class="facet-text">
+											<span class="facet-text">==${isCatPage}==${catCode}
 											  <c:set var="brandCode" value="${facetValue.code}"/>
-											  <c:set var="urls" value=" "/>
+											  <%-- <c:set var="urls" value=" "/> --%>
 											  <c:set var="brandName" value="${fn:replace(facetValue.name, ' ', '-')}" />
 											  <c:set var="urls" value="/${catName}-${fn:toLowerCase(brandName)}/c-${catCode}/b-"/>
 											   <c:choose>
@@ -503,32 +503,13 @@ function navigateToPage(queryString,textString)
 										<c:if test="${not empty facetValue.name}">
 											<span class="facet-mark"></span>
 										</c:if>	
-										<!--  TPR-1283 CHANGES Starts-->
-										 <div class="facet-text">
-											<span class="facet-text">
-											  <c:set var="brandCode" value="${facetValue.code}"/>
-											  <c:set var="urls" value=" "/>
-											  <c:set var="brandName" value="${fn:replace(facetValue.name, ' ', '-')}" />
-											  <c:set var="urls" value="/${catName}-${fn:toLowerCase(brandName)}/c-${catCode}/b-"/>
-											   <c:choose>
-											   <c:when test="${isCatPage=='true' && fn:length(catCode) > 5}">
-											   <a href="${urls}${fn:toLowerCase(brandCode)}">
-											   ${facetValue.name}</a>	
-											   </c:when>
-											   <c:otherwise>
-											   ${facetValue.name}
-											   </c:otherwise>
-											   </c:choose>   											 
-										  </span> 
-										  <!--  TPR-1283 CHANGES Ends-->
-										<%-- <div class="facet-text">
+										<div class="facet-text">
 											<span class="facet-text">
 												${facetValue.name}												 
-												</span> --%>
+												</span>
 												<ycommerce:testId code="facetNav_count">
 													<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
 												</ycommerce:testId>												
-										<!-- 	</div> -->
 											</div>
 										</span>
 									</c:if>
