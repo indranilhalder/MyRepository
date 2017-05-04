@@ -66698,3 +66698,10 @@ margin-top: -10px;
 	margin-left: 10px !important;
 	}
 }
+
+/* TISSTRT-1521 */
+span#juspayErrorMsg {
+    margin-left: 30px;
+    line-height: normal;
+}
+/* TISSTRT-1521 */
