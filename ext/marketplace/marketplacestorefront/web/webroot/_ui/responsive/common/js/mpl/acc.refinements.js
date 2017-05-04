@@ -489,7 +489,14 @@ ACC.refinements = {
 		$(document).on("click",".filter-apply",function(e){
 			// TPR-1507
 			var filterCount=0;
+			var url= window.location.href;	//INC144316162
 			$(".facet_mobile .facet.js-facet").each(function(){
+				//INC144316162 fix start
+				if (url.indexOf("isFacet") >= 0)
+				{
+					filterCount++;
+				}
+				//INC144316162 fix ends
 				filterCount+=$(this).find(".facet-list.js-facet-list li").find("input[type=checkbox]:checked").length;
 				filterCount+=$(".facet_mobile .filter-colour.selected-colour").length;
 				//TISQAUATS-12 starts 
