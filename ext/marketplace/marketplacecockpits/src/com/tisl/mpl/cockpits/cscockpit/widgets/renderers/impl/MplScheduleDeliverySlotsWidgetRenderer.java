@@ -115,7 +115,7 @@ extends AbstractCsWidgetRenderer<Widget<OrderItemWidgetModel, OrderController>> 
 			Listitem row) {
 
 		// Product Name 
-		String productName = entry.getProduct().getArticleDescription();
+		String productName = entry.getProduct().getDescription();
 		Listcell productNameCell = new Listcell(productName);
 		productNameCell.setParent(row);
 
