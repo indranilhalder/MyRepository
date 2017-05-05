@@ -3,6 +3,7 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 import de.hybris.platform.core.model.BulkCancellationProcessModel;
 import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -210,6 +211,18 @@ public class OrderModelServiceImpl implements OrderModelService
 	public List<BulkCancellationProcessModel> getBulkCancelData()
 	{
 		return getOrderModelDao().getAllBulkCancelData();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.OrderModelService#getOrderByAgent(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public List<OrderModel> getOrderByAgent(final CustomerModel customer, final String agentId)
+	{
+		return getOrderModelDao().getOrderByAgent(customer, agentId);
 	}
 
 }

@@ -6,6 +6,7 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 import de.hybris.platform.core.model.BulkCancellationProcessModel;
 import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
@@ -348,6 +349,31 @@ public class OrderModelDaoImpl implements OrderModelDao
 
 			final List<BulkCancellationProcessModel> listOfData = flexibleSearchService.<BulkCancellationProcessModel> search(query)
 					.getResult();
+			return listOfData;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao#getOrderByAgent(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public List<OrderModel> getOrderByAgent(final CustomerModel customer, final String agentId)
+	{
+		try
+		{
+			final String queryString = MarketplacecommerceservicesConstants.ORDER_BY_AGENT;
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.USER, customer);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.AGENT_ID, agentId);
+			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(query).getResult();
 			return listOfData;
 		}
 		catch (final Exception e)
