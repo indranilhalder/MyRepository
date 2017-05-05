@@ -77,14 +77,15 @@
 							<div class="col-md-12 form-group">
 								<label for="addressLine1"><spring:theme code="text.order.returns.addressline1"/></label>
 
-								<form:input path="line1"
+								<form:textarea path="line1"
 									class="form-control textInputChangeAddress" id="addressLine1"
-									value="${orderDetails.deliveryAddress.line1}" placeholder="Address Line 1" />
+									value="${orderDetails.deliveryAddress.line1}" placeholder="Address Line" />
 								<div class="error_text address1Error"></div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-md-12 form-group">
+						<!-- <div class="row"> -->
+							<!-- <div class="col-md-12 form-group"> -->
+							 <div class="hide">
 								<label for="addressLine2"><spring:theme code="text.order.returns.addressline2"/></label>
 								<form:input path="line2"
 									value="${orderDetails.deliveryAddress.line2}" placeholder="Address Line 2"
@@ -92,8 +93,9 @@
 								<div class="error_text address2Error"></div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-md-12 form-group">
+						<!-- <div class="row"> -->
+							<!-- <div class="col-md-12 form-group"> -->
+							<div class="hide">
 								<label for="addressLine2"><spring:theme code="text.order.returns.addressline3"/></label>
 								<form:input path="line3" id="addressLine3"
 									class="form-control textInputChangeAddress"

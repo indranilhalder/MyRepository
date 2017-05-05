@@ -212,28 +212,28 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		//TISPRO-607
 		if (null != hook.getOrderStatus())
 		{
-			final OrderModel order = getMplPaymentService().fetchOrderOnGUID(hook.getOrderStatus().getOrderId());
-			if ((null != order.getIsWallet() && WalletEnum.NONWALLET.toString().equals(order.getIsWallet().getCode()))
-					|| order.getIsWallet() == null)
+			//			final OrderModel order = getMplPaymentService().fetchOrderOnGUID(hook.getOrderStatus().getOrderId());
+			//			if ((null != order.getIsWallet() && WalletEnum.NONWALLET.toString().equals(order.getIsWallet().getCode()))
+			//					|| order.getIsWallet() == null)
+			//			{**********Commented for mRupee
+			if (CollectionUtils.isEmpty(hook.getOrderStatus().getRefunds()))
 			{
-				if (CollectionUtils.isEmpty(hook.getOrderStatus().getRefunds()))
-				{
-					//For Positive Flow
-					//				final OrderModel order = getMplPaymentService().fetchOrderOnGUID(hook.getOrderStatus().getOrderId());
-					//				if (order.getIsWallet().getCode().equals(WalletEnum.NONWALLET.toString()))
-					//				{
-					getResponseBasedOnStatus(hook, hook.getOrderStatus().getOrderId(), hook.getOrderStatus().getStatus());
-					//}
-				}
-				//For Refund Flow
-				else
-				{
-					//Action for refund scenarios
-					performActionForRefund(webHookDetailList);
-					//Processed in Webhook
-					updateWebHookExpired(hook);
-				}
+				//For Positive Flow
+				//				final OrderModel order = getMplPaymentService().fetchOrderOnGUID(hook.getOrderStatus().getOrderId());
+				//				if (order.getIsWallet().getCode().equals(WalletEnum.NONWALLET.toString()))
+				//				{
+				getResponseBasedOnStatus(hook, hook.getOrderStatus().getOrderId(), hook.getOrderStatus().getStatus());
+				//}
 			}
+			//For Refund Flow
+			else
+			{
+				//Action for refund scenarios
+				performActionForRefund(webHookDetailList);
+				//Processed in Webhook
+				updateWebHookExpired(hook);
+			}
+			//	}
 		}
 	}
 
