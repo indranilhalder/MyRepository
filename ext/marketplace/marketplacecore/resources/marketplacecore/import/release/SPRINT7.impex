@@ -771,8 +771,8 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;c
 ;;ShopForLookLeftColSlot-WomenV1;true;Best Seller Carousel slot;
 ;;ShopForLookRightColSlot-WomenV1;true;Best Seller View More slot;
 
-INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
-;;Brand1;New Brand Landing Page;NewBrandLandingPageTemplate;Brand1;MBH12E00005;
+#INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+#;;Brand1;New Brand Landing Page;NewBrandLandingPageTemplate;Brand1;MBH12E00005;
 ###################################### Updated-BLP.txt ends ##############################################
 
 ###################################### Updated-CLP.txt starts ##############################################
@@ -899,8 +899,8 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;c
 ;;ShopForLookRightColSlot-WomenV1;true;Best Seller View More slot;
 
 
-INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
-;;WomenV1;Women's Category Landing Page;ApparelCategoryLandingPageTemplateV1;WomenV1;MSH10
+#INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+#;;WomenV1;Women's Category Landing Page;ApparelCategoryLandingPageTemplateV1;WomenV1;MSH10
 ###################################### Updated-CLP.txt ends ##############################################
 
 ###################################### sitemap impex starts ##############################################
@@ -957,3 +957,8 @@ $lang=en
 UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
 ;mpl_Email_Order_Confirmation_Body;"Order Confirmation Email Body";$emailResource/email-orderConfirmationBody.vm
 ###################################### OrderConfirmationBody impex ends ##############################################
+
+###################################### Aplus Cronjob Disable Starts #############################################
+INSERT_UPDATE CronJob; code[unique=true];active
+;businessContentImportJob;0
+###################################### Aplus Cronjob Disable Ends #############################################
