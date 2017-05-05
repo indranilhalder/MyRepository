@@ -94,7 +94,8 @@ if(loginStatus){
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/new-address') or
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/edit-address') or
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method') or
-		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
+		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')or
+		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/single')}">
 	<script type="text/javascript" src="${commonResourcePath}/js/addresslandmark.js"></script><!-- R2.3: One line -->
 </c:if>
 <!-- R2.3: END FL04 -->

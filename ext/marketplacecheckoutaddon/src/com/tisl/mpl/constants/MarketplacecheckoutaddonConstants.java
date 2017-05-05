@@ -184,10 +184,12 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	// Request Mapping URL
 
 	public static final String MPLDELIVERYMETHODURL = "/checkout/multi/delivery-method";
+	public static final String MPLSINGLEPAGEURL = "/checkout/single";
 	public static final String MPLDELIVERYCHOOSEURL = "/choose";
 	public static final String MPLDELIVERYSELECTURL = "/select";
 	public static final String MPLDELIVERYCHECKURL = "/check";
 	public static final String GETCNCSTRORES = "/cncStores";
+	public static final String GETREVIEWORDER = "/reviewOrder";
 	public static final String MPLDELIVERYCNCINVRESV = "/invReservation";
 	public static final String MPLDELIVERYNEWADDRESSURL = "/new-address";
 	public static final String MPLSHOWMESSAGE = "/message";
@@ -312,10 +314,11 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public final static String SOCIALLOGIN = "/socialLogin";
 	public static final String CHECKSESSIONACTIVE = "/checkSessionActive";
 	public static final String RETURNTOPAYMENTPAGE = "/checkout/multi/payment-method/pay";
-    public static final String DELIVERY_SLOTCOST_FOR_ED = "deliverySlotCostForEd";
-	
+	public static final String DELIVERY_SLOTCOST_FOR_ED = "deliverySlotCostForEd";
+
 	public static final String UPDATE_DELIVERY_SLOTCOST_FOR_ED = "updateDeliverySlotCostForEd";
 	public static final String MPLDELIVERYSLOTSURL = "/deliverySlotsUrl";
-	
+
 	public static final String DELIVERY_SLOTS_TO_SESSION = "deliverySlotstoSession";
+	public static final String VALIDATION_FAILURE_MESSAGE = "Sorry, your address validation failed";
 }

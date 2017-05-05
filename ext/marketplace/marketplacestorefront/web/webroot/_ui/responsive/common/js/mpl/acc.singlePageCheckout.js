@@ -219,7 +219,6 @@ ACC.singlePageCheckout = {
 		}
 		else
 		{	
-			ACC.singlePageCheckout.showAjaxLoader();
 			//validate here
 			var entryNumbers=entryNumbersId.split("#");
 			for(var i=0;i<entryNumbers.length-1;i++)
@@ -244,6 +243,7 @@ ACC.singlePageCheckout = {
 	        	}
 			}
 		}
+		ACC.singlePageCheckout.showAjaxLoader();
 		var url=ACC.config.encodedContextPath + $("#selectDeliveryMethodForm").prop("action");
 		var data=$("#selectDeliveryMethodForm").serialize();
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
@@ -254,46 +254,52 @@ ACC.singlePageCheckout = {
         
         xhrResponse.done(function(data, textStatus, jqXHR) {
             if (jqXHR.responseJSON) {
-            	if(data.type!="response")
+            	if(data.type!="response" && data.type!="ajaxRedirect")
                 {
                 	ACC.singlePageCheckout.processError("#selecteDeliveryModeMessage",data);
                 }
+            	else if(data.type=="ajaxRedirect" && data.redirectString=="redirectToReviewOrder")
+        		{
+            		ACC.singlePageCheckout.getReviewOrder();
+            		ACC.singlePageCheckout.getSelectedDeliveryModes();
+        		}
             } else {
             	ACC.singlePageCheckout.getSelectedDeliveryModes();
-            	$("#reviewOrder").html(data);
-            	//START:Code to show strike off price
-        		$("#off-bag").show();
-
-        		$("li.price").each(function(){
-        				if($(this).find(".off-bag").css("display") === "block"){
-        					$(this).find("span.delSeat").addClass("delAction");
-        				}
-        				else{
-        					$(this).find("span.delSeat").removeClass("delAction");
-        				}
-        			});
-        		//END:Code to show strike off price
-            	if($('body').find('a.cart_move_wishlist').length > 0){
-            	$('a.cart_move_wishlist').popover({ 
-            		html : true,
-            		content: function() {
-            			return $('.add-to-wishlist-container').html();
-            		}
-            	});
-            	}
+            	$("#choosedeliveryMode").html(data);
+//            	$("#reviewOrder").html(data);
+//            	//START:Code to show strike off price
+//        		$("#off-bag").show();
+//
+//        		$("li.price").each(function(){
+//        				if($(this).find(".off-bag").css("display") === "block"){
+//        					$(this).find("span.delSeat").addClass("delAction");
+//        				}
+//        				else{
+//        					$(this).find("span.delSeat").removeClass("delAction");
+//        				}
+//        			});
+//        		//END:Code to show strike off price
+//            	if($('body').find('a.cart_move_wishlist').length > 0){
+//            	$('a.cart_move_wishlist').popover({ 
+//            		html : true,
+//            		content: function() {
+//            			return $('.add-to-wishlist-container').html();
+//            		}
+//            	});
+//            	}
             	
             	if(isCncPresent=="true" && cncSelected=="true")
             	{
             		$("#singlePagePickupPersonPopup").modal('show');
             	}
-            	else
-            	{
-            		ACC.singlePageCheckout.showAccordion("#reviewOrder");
-            	}
-            	ACC.singlePageCheckout.ReviewPriceAlignment();
-            	$(window).on("resize", function() {
-            		ACC.singlePageCheckout.ReviewPriceAlignment();
-            	});
+//            	else
+//            	{
+//            		ACC.singlePageCheckout.showAccordion("#reviewOrder");
+//            	}
+//            	ACC.singlePageCheckout.ReviewPriceAlignment();
+//            	$(window).on("resize", function() {
+//            		ACC.singlePageCheckout.ReviewPriceAlignment();
+//            	});
             	
             }
         });
@@ -984,7 +990,57 @@ ACC.singlePageCheckout = {
 	            return false;
 	        }
     },
-	
+    getReviewOrder:function(){
+    	ACC.singlePageCheckout.showAjaxLoader();
+		var url=ACC.config.encodedContextPath + "/checkout/single/reviewOrder";
+		var data="";
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+        
+        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+        
+        xhrResponse.done(function(data, textStatus, jqXHR) {
+            if (jqXHR.responseJSON) {
+            	if(data.type!="response")
+                {
+                	ACC.singlePageCheckout.processError("#selecteDeliveryModeMessage",data);
+                }
+         } else {
+        	$("#reviewOrder").html(data);
+        	//START:Code to show strike off price
+    		$("#off-bag").show();
+
+    		$("li.price").each(function(){
+    				if($(this).find(".off-bag").css("display") === "block"){
+    					$(this).find("span.delSeat").addClass("delAction");
+    				}
+    				else{
+    					$(this).find("span.delSeat").removeClass("delAction");
+    				}
+    			});
+    		//END:Code to show strike off price
+        	if($('body').find('a.cart_move_wishlist').length > 0){
+        	$('a.cart_move_wishlist').popover({ 
+        		html : true,
+        		content: function() {
+        			return $('.add-to-wishlist-container').html();
+        		}
+        	});
+        	}
+			ACC.singlePageCheckout.showAccordion("#reviewOrder");
+			ACC.singlePageCheckout.ReviewPriceAlignment();
+        	$(window).on("resize", function() {
+        		ACC.singlePageCheckout.ReviewPriceAlignment();
+        	});
+			
+         }
+        });
+				
+		xhrResponse.always(function() {
+        	ACC.singlePageCheckout.hideAjaxLoader();
+        });
+    },
 	processError: function(showElementId,jsonResponse){
 		if(jsonResponse.type=="error")
 		{
