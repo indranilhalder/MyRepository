@@ -195,11 +195,31 @@ function navigateToPage(queryString,textString)
 									<label>
 										<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''}  class="facet-checkbox js-facet-checkbox sr-only" />
 										<span class="facet-label">
+										<c:if test="${not empty facetValue.name}">
 											<span class="facet-mark"></span>
-											<div class="facet-text">
+											</c:if>
+											<!--  TPR-1283 CHANGE Starts--><!-- TISSTRT-1519 fix starts-->
+										  <div class="facet-text">
+											<span class="facet-text">
+											  <c:set var="brandCode" value="${facetValue.code}"/>
+											  <c:set var="urls" value=" "/>
+											  <c:set var="brandName" value="${fn:replace(facetValue.name, ' ', '-')}" />
+											  <c:set var="urls" value="/${catName}-${fn:toLowerCase(brandName)}/c-${catCode}/b-"/>
+											   <c:choose>
+											   <c:when test="${isCatPage=='true' && fn:length(catCode) > 5}">
+											   <a class="brandFacetRequire" href="${urls}${fn:toLowerCase(brandCode)}">
+											   ${facetValue.name}</a>	
+											   </c:when >
+											   <c:otherwise>
+											   ${facetValue.name}
+											   </c:otherwise>
+											   </c:choose>   											 
+										  </span>
+										  <!--  TPR-1283 CHANGES Ends--><!-- TISSTRT-1519 fix ends-->
+											<%-- <div class="facet-text">
 											<span class="facet-text">
 												${facetValue.name}												 
-											</span>
+											</span> --%>
 											 <ycommerce:testId code="facetNav_count">
 													<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
 												</ycommerce:testId>
@@ -413,9 +433,9 @@ function navigateToPage(queryString,textString)
 											</c:if>	
 											<!--  TPR-1283 CHANGE Starts-->
 										  <div class="facet-text">
-											<span class="facet-text">==${isCatPage}==${catCode}
+											<span class="facet-text">
 											  <c:set var="brandCode" value="${facetValue.code}"/>
-											  <%-- <c:set var="urls" value=" "/> --%>
+											  <c:set var="urls" value=" "/>
 											  <c:set var="brandName" value="${fn:replace(facetValue.name, ' ', '-')}" />
 											  <c:set var="urls" value="/${catName}-${fn:toLowerCase(brandName)}/c-${catCode}/b-"/>
 											   <c:choose>
