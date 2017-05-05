@@ -213,7 +213,7 @@
 										value="${subOrder.mplPaymentInfo.billingAddress}" />
 								</c:if>
 								<!--  TISBOX-1182 -->
-								<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
+								<%-- <p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p> --%><!-- sanity issue -->
 								<c:if
 									test="${subOrder.mplPaymentInfo.paymentOption eq 'Credit Card' or 'EMI' or 'Debit Card'}">
 									<p>${subOrder.mplPaymentInfo.cardCardType} ending in
