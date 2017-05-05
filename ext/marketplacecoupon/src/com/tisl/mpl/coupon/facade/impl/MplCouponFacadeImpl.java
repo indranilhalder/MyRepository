@@ -995,7 +995,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 			final DiscountModel discount = voucherList.get(0);
 
-			if (discount instanceof PromotionVoucherModel)
+			if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
 			{
 				final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 				appliedVoucher = promotionVoucherModel;
@@ -1017,9 +1017,9 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							for (final PaymentTypeModel paymentType : paymentTypeList)
 							{
 								sb.append(paymentType.getMode()).append(",");
-								sb.deleteCharAt(sb.lastIndexOf(","));
-								sb.append(".");
 							}
+							sb.deleteCharAt(sb.lastIndexOf(","));
+							sb.append(".");
 						}
 
 						if (CollectionUtils.isNotEmpty(bankLists))
@@ -1029,9 +1029,9 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							for (final BankModel bank : bankLists)
 							{
 								sb.append(bank.getBankName()).append(",");
-								sb.deleteCharAt(sb.lastIndexOf(","));
-								sb.append(".");
 							}
+							sb.deleteCharAt(sb.lastIndexOf(","));
+							sb.append(".");
 						}
 
 						couponMessageInformation = sb.toString();
