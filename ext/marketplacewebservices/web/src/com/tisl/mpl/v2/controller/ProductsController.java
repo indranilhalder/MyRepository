@@ -1429,7 +1429,17 @@ public class ProductsController extends BaseController
 			}
 			for (final String productCodeRef : productCodeList)
 			{
-				productWSData = mplProductWebService.getProductInfoForProductCode(productCodeRef, baseUrl);
+				try
+				{
+					productWSData = mplProductWebService.getProductInfoForProductCode(productCodeRef, baseUrl);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("ProductInfo not available for" + productCodeRef);
+					ExceptionUtil.getCustomizedExceptionTrace(e);
+					continue;
+				}
+
 				if (productWSData != null)
 				{
 					productWSDataList.add(productWSData);
@@ -1439,6 +1449,12 @@ public class ProductsController extends BaseController
 			{
 				productDTOList.setResults(productWSDataList);
 				productDTOList.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			else
+			{
+				productDTOList.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E9048));
+				productDTOList.setErrorCode(MarketplacecommerceservicesConstants.E9048);
+				productDTOList.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
