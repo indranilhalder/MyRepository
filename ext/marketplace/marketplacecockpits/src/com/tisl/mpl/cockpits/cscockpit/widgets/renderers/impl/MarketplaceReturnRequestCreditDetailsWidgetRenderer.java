@@ -122,7 +122,7 @@ ReturnRequestCreateWidgetRenderer {
 	private static final String FAILED_TO_VALIDATE_PINCODE_FEILD = "FailedToValidatePinCode";
 	private static final String ENTER_VALUES_IN_ALLFIELDS = "enterValuesInAllFields";
 	private static final String PIN_REGEX = "^[1-9][0-9]{5}";
-	private static final String IFSC_REGEX="^[A-Za-z][A-Za-z]{3}[0-0][0-9]{6}";
+	private static final String IFSC_REGEX="^[A-Za-z][A-Za-z]{3}[0-0][A-Za-z0-9]{6}";
 	
 	private static final String INFO = "info";
 	protected static final String NO_STORE_AVAILABLE = "noStoresAvailable";
@@ -410,7 +410,7 @@ ReturnRequestCreateWidgetRenderer {
 		 payment = orderModel.getPaymentTransactions()
 				.get(0);
 		}
-		if (orderModel.getPaymentInfo() instanceof CreditCardPaymentInfoModel) {
+		if (/*orderModel.getPaymentInfo() instanceof CreditCardPaymentInfoModel*/false) {
 			cCard = (CreditCardPaymentInfoModel) orderModel.getPaymentInfo();
 			final Div retunDetails = new Div();
 			retunDetails.setParent(prepaidOrdeDetials);
@@ -483,7 +483,7 @@ ReturnRequestCreateWidgetRenderer {
 											entry,orderModel));
 						}
 					});
-		}else  if(orderModel.getPaymentInfo() instanceof DebitCardPaymentInfoModel){
+		}else  if(/*orderModel.getPaymentInfo() instanceof DebitCardPaymentInfoModel*/false){
 
 			dCart = (DebitCardPaymentInfoModel) orderModel.getPaymentInfo();
 			final Div retunDetails = new Div();
@@ -561,6 +561,11 @@ ReturnRequestCreateWidgetRenderer {
 		}
 		 // PRDI-133 START 
 		else {
+			LOG.debug("return Store Map  : " );
+			LOG.debug("return Store Map  : " );
+			LOG.debug("return Store Map  : " );
+			LOG.debug("return Store Map  : " );
+			LOG.debug("return Store Map  : " );
 			final Div retunDetails = new Div();
 			retunDetails.setParent(prepaidOrdeDetials);
 			retunDetails.setClass("detailsClasss");
@@ -570,6 +575,10 @@ ReturnRequestCreateWidgetRenderer {
 			returnHead.setClass(BOLD_TEXT);
 			final Div Div1 = new Div();
 			Div1.setParent(retunDetails);
+			LOG.debug("return Store Map  : " );
+			LOG.debug("return Store Map  : " );
+			LOG.debug("return Store Map  : " );
+			LOG.debug("return Store Map  : " );
 			final Label returnDescription = new Label(LabelUtils.getLabel(widget,
 					"return_Description",
 					new Object[] {
@@ -584,6 +593,10 @@ ReturnRequestCreateWidgetRenderer {
 			final Div prepaidButtonDiv = new Div();
 			prepaidButtonDiv.setParent(prepaidOrdeDetials);
 			prepaidButtonDiv.setClass(BOLD_TEXT);
+			LOG.debug("return Store Map  : " );
+			LOG.debug("return Store Map  : " );
+			LOG.debug("return Store Map  : " );
+			LOG.debug("return Store Map  : " );
 			final Button processButton = new Button(LabelUtils.getLabel(widget,
 					CONTINUE));
 			processButton.setParent(prepaidButtonDiv);
@@ -901,7 +914,7 @@ ReturnRequestCreateWidgetRenderer {
 			@Override
 			public void onEvent(Event arg0) throws Exception {
 					if(null != storesMap && !storesMap.isEmpty()) {
-						LOG.debug("return Store Map  : "+storesMap.entrySet());
+						LOG.debug("return Store Map  : " );
 						Long pincodeValue = pincodeLongbox.getValue();
 						String pinCode= pincodeValue.toString();
 						Session session = Executions.getCurrent().getDesktop().getSession();
