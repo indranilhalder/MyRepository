@@ -357,7 +357,7 @@ function checkPopupDataOrderHistory() {
 				  	}   
 				     if(al1 == null || al1.trim() == '' ){
 			  			$(".address1Error").show();
-			  			$(".address1Error").text("Address Line 1 cannot be blank");
+			  			$(".address1Error").text("Address Line cannot be blank");
 			  			validate = false;
 				  	} if(al2 != null && ! al2 == ''){
 				    	  if(al2.trim() == ''){
