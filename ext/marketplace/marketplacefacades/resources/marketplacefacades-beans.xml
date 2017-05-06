@@ -229,6 +229,11 @@
 		<property name="displaySizes" type="java.util.List&lt;java.lang.String>"></property>
 <!-- Optimization # 4 -->
 		<property name="homepageImageurl" type="java.lang.String"></property>
+		
+		<!-- TPR-1083 Addition for Exchange Start-->
+ <property name="level3CategoryCode" type="String"></property>
+ <property name="level3CategoryName" type="String"></property>
+ 		<!-- TPR-1083 Addition for Exchange End -->
 	</bean>
 
 	<!-- pdp changes begins -->
@@ -1115,4 +1120,14 @@
 		<property name="storeAddress" type="String"></property>
 		<property name="date" type="String"></property>
 	</bean>
+	
+	<!-- TPR-1083 Exchange Start -->
+		
+	<bean class="com.tisl.mpl.facades.product.data.ExchangeGuideData">
+		<property name="l3category" type="String" />
+		<property name="l4category" type="String" />
+		<property name="isWorking" type="String" />
+		<property name="price" type="String" />
+	</bean>
+	<!-- TPR-1083 Exchange Ends -->
 </beans>

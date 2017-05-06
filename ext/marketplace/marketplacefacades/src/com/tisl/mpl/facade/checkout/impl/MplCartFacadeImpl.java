@@ -87,6 +87,7 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.config.MplConfigFacade;
+import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
@@ -176,6 +177,10 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
+
+	//Exchange Changes
+	@Resource(name = "exchangeGuideFacade")
+	private ExchangeGuideFacade exchangeGuideFacade;
 
 	public MplCommerceCartCalculationStrategy getMplDefaultCommerceCartCalculationStrategy()
 	{
@@ -501,6 +506,63 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		final CommerceCartModification modification = getCommerceCartService().addToCart(parameter);
 		return getCartModificationConverter().convert(modification);
 	}
+
+	//TPR-1083 Start
+	@Override
+	/**
+	 * TPR-1083 Add to Cart Exchange Method for adding a product to cart.
+	 *
+	 * @param code
+	 *           code of product to add
+	 * @param quantity
+	 *           the quantity of the product
+	 * @param ussid
+	 *           the ussid to be added to cart
+	 * @param exchangeParam
+	 *           the exchange parameter for adding product with exchange to cart
+	 * @return the cart modification data that includes a statusCode and the actual quantity added to the cart
+	 * @throws CommerceCartModificationException
+	 *            if the cart cannot be modified
+	 */
+	public CartModificationData addToCartwithExchange(final String code, final long quantity, final String ussid,
+			final String exchangeParam) throws CommerceCartModificationException//final Double mrpEntryPrice
+	{
+		final ProductModel product = getProductService().getProductForCode(code);
+		final CartModel cartModel = getCartService().getSessionCart();
+		final CommerceCartParameter parameter = new CommerceCartParameter();
+		for (final AbstractOrderEntryModel orderEntry : cartModel.getEntries())
+		{
+			if (orderEntry != null && orderEntry.getSelectedUSSID() != null && orderEntry.getSelectedUSSID().equalsIgnoreCase(ussid))
+			{
+				parameter.setCreateNewEntry(false);
+				break;
+			}
+			else
+			{
+				parameter.setCreateNewEntry(true);
+			}
+		}
+
+		parameter.setEnableHooks(true);
+		parameter.setCart(cartModel);
+		parameter.setProduct(product);
+		parameter.setQuantity(quantity);
+		parameter.setUnit(product.getUnit());
+		parameter.setUssid(ussid);
+		//set Exchange Parameter
+
+
+		final String tempId = exchangeGuideFacade.getTemporaryExchangeId(exchangeParam, cartModel.getGuid(), code, ussid);
+		if (StringUtils.isNotEmpty(tempId))
+		{
+			parameter.setExchangeParam(tempId);
+		}
+		final CommerceCartModification modification = getCommerceCartService().addToCart(parameter);
+
+		return getCartModificationConverter().convert(modification);
+	}
+
+	//TPR-1083 Ends
 
 	/*
 	 * @Desc fetching seller info

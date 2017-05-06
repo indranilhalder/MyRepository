@@ -191,8 +191,8 @@ public interface ControllerConstants
 				String AccountInviteFriendPage = "pages/account/inviteFriends";
 				String AccountCouponsPage = "pages/account/accountCouponDetailsPage";
 				String AccountOrderReturnPincodeServiceCheck = "pages/account/returnPincodeAvailabilityCheck";
-				String ScheduledDeliveryDate= "pages/account/scheduledDeliveryDate";
-				String OTPPopup= "pages/account/otpPopup";
+				String ScheduledDeliveryDate = "pages/account/scheduledDeliveryDate";
+				String OTPPopup = "pages/account/otpPopup";
 			}
 
 
@@ -259,10 +259,12 @@ public interface ControllerConstants
 				String chatPage = "pages/clickToChatCall/clickToChat";
 				String callPage = "pages/clickToChatCall/clickToCall";
 			}
+
 			interface Order
 			{
 				String TrackOrderDetailsPage = "pages/order/trackOrderDetailsPage";
 			}
+
 			interface Search
 			{
 				// TPR-198
@@ -375,8 +377,22 @@ public interface ControllerConstants
 				public static final String OFFERMESSAGEMAP = "offerMessageMap";
 				//UF-60
 				public static final String AJAXPRODUCTDATA = "fragments/product/productPromotionSection";
-				
-				public static final String ID_ED_SELLER_HANDLING_TIME= "isEDSeller";
+
+				public static final String ID_ED_SELLER_HANDLING_TIME = "isEDSeller";
+
+				//Addition for Exchange Start
+				String ExchangeGuidePopup = "fragments/product/exchangeGuidePopup";
+				public static final String EXCHANGE = "-exchange";
+				public static final String L3CATEGORY = "l3code";
+				public static final String L3CATEGORYNAME = "l3name";
+				public static final String GENARATEEXCHANGEID = "-generateExchangeId";
+				public static final String PINCODE = "pincode";
+				public static final String L4NAME = "l4name";
+				public static final String BRAND = "brand";
+				public static final String ISWORKING = "isWorking";
+				public static final String COUPONVALUE = "couponValue";
+				public static final String CHECK_REVERSE_PINCODE = "-checkReversePincode";
+				//Addition for Exchange Ends
 			}
 		}
 	}

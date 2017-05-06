@@ -10108,5 +10108,219 @@
 				</attributes>	
 			</itemtype>
 		</typegroup>
+	
+	<!-- Addition for Exchange Module  Starts-->
+		<typegroup name="ExchangeModule">
+			<!-- Tata Etail Seller Information -->
+		<itemtype code="ExchangeCouponValue" autocreate="true"
+			generate="true">
+			<deployment table="MplExchangeCouponValue" typecode="18965" />
+			
+			<attributes>
+				<attribute type="Category" qualifier="thirdLevelCategory">
+				<description>Third level Category</description>
+					<modifiers read="true" write="true" optional="false" />
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="l4categoryCode">
+					<description>Fourth Level Category</description>
+					<modifiers read="true" write="true" optional="false"/>
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="l4categoryName">
+					<description>Fourth Level Category Name</description>
+					<modifiers read="true" write="true" optional="false"/>
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				<attribute type="boolean" qualifier="isWorking">
+				<description>Is the value Active</description>
+					<modifiers read="true" write="true" optional="false"/>
+					<persistence type='property'>
+						</persistence>
+				</attribute>
+				<attribute type="java.lang.Double" qualifier="couponValue">
+				<description>Coupon Value for the L3 and L4</description>
+					<modifiers read="true" write="true" optional="false"/>
+					<persistence type='property'>
+						</persistence>
+				</attribute>
+				
+			</attributes>
+			</itemtype>
+		
+		
+		<itemtype code="ExchangePincode" autocreate="true"
+			generate="true">
+			<deployment table="MplExchangePincode" typecode="18966" />
+			
+			<attributes>
+				<attribute type="java.lang.String" qualifier="pincode">
+				<description>Pincode</description>
+					<modifiers read="true" write="true" optional="false" unique="true"/>
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				<attribute type="boolean" qualifier="isServicable">
+				<description>Wether it is servicable</description>
+					<modifiers read="true" write="true" optional="false"/>
+					<persistence type='property'>
+						</persistence>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="city">
+				<description>City</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="state">
+				<description>State</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type='property'>
+					</persistence>
+				</attribute>			
+			</attributes>
+			</itemtype>
+		
+		
+		<itemtype code="ExchangeTransaction" autocreate="true"
+			generate="true">
+			<deployment table="MplExchangeTransaction" typecode="18967" />
+			
+			<attributes>
+				<attribute type="java.lang.String" qualifier="Pincode">
+				<description>Pincode</description>
+					<modifiers read="true" write="true" optional="false" />
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				<attribute type="ExchangeCouponValue" qualifier="ExchangeValue">
+				<description>Exchange Matrix</description>
+					<modifiers read="true" write="true" optional="false" />
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+								
+				<attribute type="java.lang.String" qualifier="brandName">
+					<description>Brand Name</description>
+					<modifiers read="true" write="true" optional="true"/>
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="productId">
+				<description>Product Id</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				
+				<attribute type="java.lang.String" qualifier="ussid">
+				<description>USSId</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="ExchangeId">
+				<description>ExchangeId</description>
+					<modifiers read="true" write="true" optional="false" unique="true"/>
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="cartguid">
+				<description>Cart Guid</description>
+					<modifiers read="true" write="true" optional="false" unique="true"/>
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				</attributes>
+				</itemtype>
+				
+				
+				
+				<itemtype code="Exchange" autocreate="true"
+			generate="true">
+			<deployment table="MplExchange" typecode="18968" />
+			
+			<attributes>
+				<attribute type="java.lang.String" qualifier="Pincode">
+				<description>Pincode</description>
+					<modifiers read="true" write="true" optional="false" />
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				<attribute type="ExchangeCouponValue" qualifier="ExchangeValue">
+				<description>Exchange Price Matrix</description>
+					<modifiers read="true" write="true" optional="false" />
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+								
+				<attribute type="java.lang.String" qualifier="brandName">
+					<description>Brand Name</description>
+					<modifiers read="true" write="true" optional="true"/>
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="productId">
+				<description>Product Id</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				
+				<attribute type="java.lang.String" qualifier="ussid">
+				<description>USSId</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				
+				<attribute type="java.lang.String" qualifier="ExchangeRequestId">
+				<description>Exchange Request Id</description>
+					<modifiers read="true" write="true" optional="false" unique="true"/>
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="OrderID">
+				<description>Order Id</description>
+					<modifiers read="true" write="true" optional="false" unique="true"/>
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="SellerOrderID">
+				<description>Seller Order ID</description>
+					<modifiers read="true" write="true" optional="false" unique="true"/>
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="TransactiondId">
+				<description>Transactiond id</description>
+					<modifiers read="true" write="true" optional="false" unique="true"/>
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+			</attributes>
+			
+		</itemtype>
+		  <!--Attribute for Exchange -->
+			<itemtype code="AbstractOrderEntry" autocreate="false"
+				generate="false">
+
+				<attributes>
+					<attribute autocreate="true" qualifier="exchangeTempId"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						</attribute>
+				</attributes>
+			</itemtype>
+		
+       </typegroup>
+       
+     
+		
 	</itemtypes>
 </items>

@@ -2895,6 +2895,68 @@ function loadDefaultWishListName_SizeGuide() {
 		 $("#sellerForm").submit();
 						 
 			});
+		 
+		 $("#pinExc").focus(function(){
+				//$("#pdpPincodeCheck").text("Check")
+				document.getElementById("pdpPincodeCheckExchnage").className = "Check";//UF-71
+			});
+		 
+		 
+		 $(".pdp .Exchange > p").on("click",function(e){
+				e.stopPropagation();
+				if(!$(this).hasClass("active") && $(window).width() > 1024)
+				{
+					$(this).addClass("active");
+					//openPopForBankEMI();
+				}
+			});
+			$(".pdp .Exchange .modal-content .Close").on("click",function(e){
+				e.stopPropagation();
+				$(".Exchange > p").removeClass("active mobile");
+				$(".Exchange-overlay").remove();
+				});
+			$(".pdp .Exchange > #Exchangemodal-content").on("click",function(e){
+				e.stopPropagation();
+				if($(window).width() > 1024){
+					$(".pdp .Exchange > p").addClass("active")
+				}
+			});
+			/*$(".Emi > #EMImodal-content").on("click",".Emi .modal-content .Close",function(){
+				$(".Emi > p").removeClass("active")
+				});*/
+//			$(".pdp").on("click", function(e){
+//				//console.log($(e.currentTarget).attr('class'))
+//				if(!$(e.currentTarget).parents(".Exchange").hasClass("Exchange_wrapper")) {
+//					$(".pdp .Exchange > p").removeClass("active")
+//				} else {
+//					$(".pdp .Exchange > p").addClass("active")
+//				}
+//			});
+			
+			$(".pdp .Exchange > p").on("click",function(){
+				if($(window).width() <= 1024){
+					$(this).addClass("active mobile");
+					$("body").append("<div class='Exchange-overlay' style='opacity:0.65; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'>hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii</div>");
+					//openPopForBankEMI();
+					$("body").addClass("no-scroll");
+					
+				}
+			});
+			$(document).on("click",".pdp .Exchange-overlay,.pdp .Exchange .modal-content .Close",function(){
+				$(".pdp .Exchange > p").removeClass("active mobile");
+				$(".Exchange-overlay").remove();
+				$("body").removeClass("no-scroll");
+			});
+			
+			$(window).resize(function(){
+				if($(window).width() > 1024){
+					$(".pdp .Exchange > p").removeClass("active mobile");
+					$(".pdp .Exchange-overlay").remove();
+					/*$(".Emi > p").removeClass("active mobile");
+					$(".emi-overlay").remove();*/
+					$("body").removeClass("no-scroll");
+				}
+			});
 	});
 	/*Wishlist In PDP changes*/
 	function getLastModifiedWishlist(ussidValue) {

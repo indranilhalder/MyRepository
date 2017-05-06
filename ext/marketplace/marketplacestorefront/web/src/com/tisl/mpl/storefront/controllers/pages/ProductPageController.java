@@ -73,9 +73,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.annotation.Resource;
@@ -118,6 +120,7 @@ import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
+import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl;
@@ -125,6 +128,8 @@ import com.tisl.mpl.facades.data.MplAjaxProductData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.RichAttributeData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
+import com.tisl.mpl.facades.product.data.ExchangeGuideData;
+import com.tisl.mpl.facades.product.data.ExchangeGuideDropdownData;
 import com.tisl.mpl.facades.product.data.SizeGuideData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
@@ -287,6 +292,11 @@ public class ProductPageController extends MidPageController
 
 	@Resource(name = "customProductFacade")
 	private CustomProductFacadeImpl customProductFacade;
+
+
+	//Exchange Changes
+	@Resource(name = "exchangeGuideFacade")
+	private ExchangeGuideFacade exchangeGuideFacade;
 
 	/**
 	 * @param buyBoxFacade
@@ -3023,4 +3033,56 @@ public class ProductPageController extends MidPageController
 		}
 		return returnStatement;
 	}
+
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.EXCHANGE, method = RequestMethod.GET)
+	public @ResponseBody ExchangeGuideDropdownData viewExchangeOption(
+			@RequestParam(value = ControllerConstants.Views.Fragments.Product.L3CATEGORY) final String l3code,
+			@RequestParam(value = ControllerConstants.Views.Fragments.Product.L3CATEGORYNAME) final String l3name,
+			@RequestParam(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
+			final Model model) throws CMSItemNotFoundException
+	{
+		ExchangeGuideDropdownData exDropData = null;
+		try
+		{
+			final Set<String> l4list = new HashSet<>();
+			final Set<String> activelist = new HashSet<>();
+			final Set<String> pricelist = new HashSet<>();
+
+
+			for (final ExchangeGuideData ex : exchangeGuideFacade.getExchangeGuide(l3code, l3name))
+			{
+				l4list.add(ex.getL4category());
+				activelist.add(ex.getL4category() + "|" + ex.getIsWorking());
+				pricelist.add(ex.getL4category() + "|" + ex.getIsWorking() + "-" + ex.getPrice());
+			}
+			exDropData = new ExchangeGuideDropdownData();
+			exDropData.setL4categorylist(l4list);
+			exDropData.setIsWorkinglist(activelist);
+			exDropData.setPriceList(pricelist);
+		}
+		catch (final Exception e)
+		{
+			LOG.debug("Error");
+		}
+
+		//		catch (final EtailNonBusinessExceptions e)
+		//		{
+		//			if (MarketplacecommerceservicesConstants.E0018.equalsIgnoreCase(e.getErrorCode()))
+		//			{
+		//				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, null);
+		//			}
+		//			else
+		//			{
+		//				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, "dataissue");
+		//			}
+		//
+		//			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		//
+		//		}
+		//		return ControllerConstants.Views.Fragments.Product.ExchangeGuidePopup;
+
+		return exDropData;
+
+	}
+
 }

@@ -191,6 +191,12 @@ tr.d0 td {
 			
 			<product:emiDetail product="${product}" />
 			
+			<!-- TPR-1083 Exchange Start -->
+			<input id="l3category" type="hidden" value="${product.level3CategoryCode}"/>
+ 			<!-- Exchange section -->
+ 		
+ 			<product:exchangeDetails product="${product}" />
+			<!-- TPR-1083 Exchange Ends -->
 			<!-- TISPRM-97 starts -->
 				<!-- TPR-772 starts -->
 			<div class="pdp-promo-block promo-block" style="display:none">

@@ -2013,5 +2013,38 @@
 		<property name="defaultEncoding" value="utf8" />
 	 </bean>
 	 <!--  R2.3 Added 27-02-2017 END-->
+	 
+	 <!-- Addition for Exchange Start  -->
+<bean id="exchangeGuideService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ExchangeGuideServiceImpl">
+		<property name="exchangeGuideDao" ref="exchangeGuideDao"></property>
+		<property name="modelService" ref="modelService" />
+	</bean>
+	
+	<bean id="exchangeGuideDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.ExchangeGuideDaoImpl">
+	</bean>
+	
+	
+		
+	<bean id="temporaryExchangeId"
+		class="de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator"
+		init-method="init" scope="tenant">
+		<property name="key" value="tempExchangeId" />
+		<property name="digits" value="8" />
+		<property name="start" value="10000001" />
+		<property name="numeric" value="false" />
+	</bean>
+	
+	<bean id="EXCHANGEREQUESTID"
+		class="de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator"
+		init-method="init" scope="tenant">
+		<property name="key" value="tempExchangeId" />
+		<property name="digits" value="8" />
+		<property name="start" value="10000001" />
+		<property name="numeric" value="false" />
+	</bean>
+	
+	<!-- Addition for Exchange End 	-->
 </beans>
 
