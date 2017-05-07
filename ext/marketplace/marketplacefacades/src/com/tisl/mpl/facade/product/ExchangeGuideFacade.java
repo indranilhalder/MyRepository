@@ -21,9 +21,9 @@ public interface ExchangeGuideFacade
 {
 	/*
 	 * @Javadoc
-	 *
+	 * 
 	 * @returns All L4 for which Exchange is Applicable
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.product.ExchangeGuideFacade#getDistinctL4()
 	 */
 	public boolean isExchangable(String categoryCode);
@@ -31,11 +31,10 @@ public interface ExchangeGuideFacade
 	/**
 	 *
 	 * @param productCode
-	 * @param categoryType
 	 * @return List<ExchangeGuideData>
 	 * @throws CMSItemNotFoundException
 	 */
-	public List<ExchangeGuideData> getExchangeGuide(final String productCode, String categoryType) throws CMSItemNotFoundException;
+	public List<ExchangeGuideData> getExchangeGuide(final String productCode) throws CMSItemNotFoundException;
 
 	/**
 	 *

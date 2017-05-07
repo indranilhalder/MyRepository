@@ -3036,10 +3036,8 @@ public class ProductPageController extends MidPageController
 
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.EXCHANGE, method = RequestMethod.GET)
 	public @ResponseBody ExchangeGuideDropdownData viewExchangeOption(
-			@RequestParam(value = ControllerConstants.Views.Fragments.Product.L3CATEGORY) final String l3code,
-			@RequestParam(value = ControllerConstants.Views.Fragments.Product.L3CATEGORYNAME) final String l3name,
-			@RequestParam(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
-			final Model model) throws CMSItemNotFoundException
+			@RequestParam(value = ControllerConstants.Views.Fragments.Product.L3CATEGORY) final String l3code)
+			throws CMSItemNotFoundException
 	{
 		ExchangeGuideDropdownData exDropData = null;
 		try
@@ -3049,7 +3047,7 @@ public class ProductPageController extends MidPageController
 			final Set<String> pricelist = new HashSet<>();
 
 
-			for (final ExchangeGuideData ex : exchangeGuideFacade.getExchangeGuide(l3code, l3name))
+			for (final ExchangeGuideData ex : exchangeGuideFacade.getExchangeGuide(l3code))
 			{
 				l4list.add(ex.getL4category());
 				activelist.add(ex.getL4category() + "|" + ex.getIsWorking());
@@ -3065,23 +3063,46 @@ public class ProductPageController extends MidPageController
 			LOG.debug("Error");
 		}
 
-		//		catch (final EtailNonBusinessExceptions e)
-		//		{
-		//			if (MarketplacecommerceservicesConstants.E0018.equalsIgnoreCase(e.getErrorCode()))
-		//			{
-		//				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, null);
-		//			}
-		//			else
-		//			{
-		//				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, "dataissue");
-		//			}
-		//
-		//			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-		//
-		//		}
-		//		return ControllerConstants.Views.Fragments.Product.ExchangeGuidePopup;
-
 		return exDropData;
+
+	}
+
+	/**
+	 * this method checks the servicability of a pincode and fetches list of servicable sellers/skuids from oms
+	 *
+	 * @param pin
+	 * @param productCode
+	 * @param seller
+	 * @param model
+	 * @return String
+	 * @throws CMSItemNotFoundException
+	 * @throws NullPointerException
+	 */
+	@ResponseBody
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.CHECK_REVERSE_PINCODE, method = RequestMethod.GET)
+	public boolean getReversePincodeServicabilityDetails(@RequestParam(value = "pin") final String pin, final Model model)
+			throws CMSItemNotFoundException
+	{
+		boolean isServiceable = false;
+
+		try
+		{
+
+			final String regex = "\\d{6}";
+
+			if (pin.matches(regex))
+			{
+				isServiceable = exchangeGuideFacade.isBackwardServiceble(pin);
+			}
+
+
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		return isServiceable;
 
 	}
 

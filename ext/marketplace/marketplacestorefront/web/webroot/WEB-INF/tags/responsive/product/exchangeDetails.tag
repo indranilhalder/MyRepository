@@ -246,9 +246,8 @@
 		   $("#exStock").val($("#stock").val());
 		
 		var l3code = $('#l3code').val();
-		 var l3name = $('#l3name').val();
 		 var prodCode = $('#productcode').val();
-		var dataString = 'l3code=' + l3code +'&l3name='+l3name +'&productCode='+prodCode;
+		var dataString = 'l3code=' + l3code;
 		var reversecheck=false;
 	    var pinExc = $('#pinExc').val();
 		var productCode =  $('#product_id').val();
@@ -284,8 +283,8 @@
 				}
 															
 			},
-			error : function(resp) {
-				alert("error")
+			error : function(resp,error) {
+				alert("error:" + error);
 			}
 		});
 	}

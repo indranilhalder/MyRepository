@@ -2901,6 +2901,7 @@ function loadDefaultWishListName_SizeGuide() {
 				document.getElementById("pdpPincodeCheckExchnage").className = "Check";//UF-71
 			});
 		 
+		 $('#pinExc').val( $('#pdpPincodeCheck').val());
 		 
 		 $(".pdp .Exchange > p").on("click",function(e){
 				e.stopPropagation();

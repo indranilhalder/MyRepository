@@ -808,6 +808,7 @@
 		<property name="l4categorylist" type="java.util.Set&lt;String>" />
 		<property name="isWorkinglist" type="java.util.Set&lt;String>" />
 		<property name="priceList" type="java.util.Set&lt;String>" />
+		<property name="pincodeExc" type="String"/>
 	</bean>
 	<!-- TPR-1083 Exchange Ends -->
 </beans>

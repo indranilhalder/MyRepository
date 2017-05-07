@@ -117,9 +117,9 @@ public class ExchangeGuideFacadeImpl implements ExchangeGuideFacade
 
 	/*
 	 * @Javadoc
-	 * 
+	 *
 	 * @returns All L4 for which Exchange is Applicable
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.product.ExchangeGuideFacade#getDistinctL4()
 	 */
 	@Override
@@ -131,12 +131,11 @@ public class ExchangeGuideFacadeImpl implements ExchangeGuideFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.product.ExchangeGuideFacade#getExchangeGuide(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public List<ExchangeGuideData> getExchangeGuide(final String categoryCode, final String categoryType)
-			throws CMSItemNotFoundException
+	public List<ExchangeGuideData> getExchangeGuide(final String categoryCode) throws CMSItemNotFoundException
 	{
 		final List<ExchangeCouponValueModel> exchangeGuideModels = exchangeGuideService.getExchangeGuideList(categoryCode);
 
@@ -449,7 +448,7 @@ public class ExchangeGuideFacadeImpl implements ExchangeGuideFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.product.ExchangeGuideFacade#changePincode(java.lang.String)
 	 */
 	@Override
@@ -460,7 +459,7 @@ public class ExchangeGuideFacadeImpl implements ExchangeGuideFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.product.ExchangeGuideFacade#removeFromTransactionTable(java.lang.String)
 	 */
 	@Override
@@ -471,7 +470,7 @@ public class ExchangeGuideFacadeImpl implements ExchangeGuideFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.product.ExchangeGuideFacade#getTeporaryExchangeModelforId(com.tisl.mpl.core.model.
 	 * ExchangeTransactionModel)
 	 */
@@ -484,7 +483,7 @@ public class ExchangeGuideFacadeImpl implements ExchangeGuideFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.facade.product.ExchangeGuideFacade#addToExchangeTable(com.tisl.mpl.core.model.ExchangeTransactionModel
 	 * )
@@ -498,7 +497,7 @@ public class ExchangeGuideFacadeImpl implements ExchangeGuideFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.product.ExchangeGuideFacade#getExchangeRequestID(java.util.List)
 	 */
 	@Override
