@@ -3414,6 +3414,10 @@ $(window).on("load resize",function(){
 	else
 		$(".tabs-block .nav.pdp.productNav>li").css("width","");
 	/*TPR-5061*/
+	
+	$(".showcaseItem > a").removeClass("showcase-border");		/*TISSTRT-1525*/	
+	$(".showcaseItem").eq(1).find("a").addClass("showcase-border");		/*TISSTRT-1525*/
+	
 });
 
 
