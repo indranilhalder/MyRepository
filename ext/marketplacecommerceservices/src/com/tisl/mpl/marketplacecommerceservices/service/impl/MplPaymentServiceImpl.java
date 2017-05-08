@@ -22,8 +22,8 @@ import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.EMIPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
-import de.hybris.platform.core.model.order.payment.ThirdPartyWalletInfoModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.ThirdPartyWalletInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -675,7 +675,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("Exception while saving cart with ", e);
+			LOG.error("Inside setPaymentTransactionForCOD::Exception while saving cart with ", e); //Sonar fix
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9214);
 		}
 		catch (final Exception ex)
@@ -1507,7 +1507,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					LOG.error("Exception while saving cart for" + abstractOrderModel.getGuid());
 				}
 
-				LOG.error("Exception while saving cart with ", e);
+				LOG.error("Inside saveCODPaymentInfo::Exception while saving cart with ", e); //Sonar fix
 				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E9051);
 			}
 		}
@@ -3066,11 +3066,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3082,9 +3082,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3461,7 +3461,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for non-COD from OMS Submit Order Job de.hybris.platform.core.model.order.OrderModel)
 	 */
@@ -3611,7 +3611,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @desc getPaymentModeFrompayInfo
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 	 */
 	@Override
@@ -3652,7 +3652,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for pre paid from OMS Submit Order Job
 	 */
@@ -3716,7 +3716,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @desc SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for COD from OMS Submit Order Job
 	 */
@@ -3797,7 +3797,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("Exception while saving cart with ", e);
+			LOG.error("Inside setPaymentTransactionForCODFromSubmitProcess::Exception while saving cart with ", e); //Sonar fix
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9214);
 		}
 		catch (final Exception ex)
@@ -4276,7 +4276,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				getModelService().save(auditEntry);
 				auditEntryList.add(auditEntry);
 				auditModel.setAuditEntries(auditEntryList);
-				auditModel.setIsExpired(Boolean.valueOf(true));
+				auditModel.setIsExpired(Boolean.TRUE); //Sonar fix
 				getModelService().save(auditModel);
 				LOG.info("Saved existing Audit Model with ref no>>>" + refNo);
 			}
@@ -4494,7 +4494,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("Exception while saving cart with ", e);
+			LOG.error("Inside setTPWalletPaymentTransaction::Exception while saving cart with ", e); //Sonar fix
 			throw new EtailNonBusinessExceptions(e, ": Exception while setPaymentTransactionFor Third Party Wallet");
 		}
 		catch (final Exception ex)

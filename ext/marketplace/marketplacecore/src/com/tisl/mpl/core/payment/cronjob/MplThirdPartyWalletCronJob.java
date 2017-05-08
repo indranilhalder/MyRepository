@@ -9,13 +9,10 @@ import de.hybris.platform.cronjob.model.CronJobModel;
 import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
 
-import javax.annotation.Resource;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.marketplacecommerceservices.daos.MplProcessOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplThirdPartyWalletService;
 import com.tisl.mpl.util.ExceptionUtil;
 
@@ -32,8 +29,11 @@ public class MplThirdPartyWalletCronJob extends AbstractJobPerformable<CronJobMo
 
 	@Autowired
 	private MplThirdPartyWalletService mRupeeWalletService;
-	@Resource(name = "mplProcessOrderDao")
-	private MplProcessOrderDao mplProcessOrderDao;
+
+	//Sonar fix
+	/*
+	 * @Resource(name = "mplProcessOrderDao") private MplProcessOrderDao mplProcessOrderDao;
+	 */
 
 
 	@Override

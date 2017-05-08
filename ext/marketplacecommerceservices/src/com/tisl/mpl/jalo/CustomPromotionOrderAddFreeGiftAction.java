@@ -434,12 +434,12 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 		ctx.setAttribute("de.hybris.platform.promotions.jalo.cachingAllowed", allowed);
 	}
 
-	private Boolean isCachingAllowed(final SessionContext ctx)
-	{
-		final Boolean allowed = (Boolean) ctx.getAttribute("de.hybris.platform.promotions.jalo.cachingAllowed");
-		return (((allowed == null) || (allowed == Boolean.FALSE)) ? Boolean.FALSE : Boolean.TRUE);
-	}
-
+	//Sonar fix
+	/*
+	 * private Boolean isCachingAllowed(final SessionContext ctx) { final Boolean allowed = (Boolean)
+	 * ctx.getAttribute("de.hybris.platform.promotions.jalo.cachingAllowed"); return (((allowed == null) || (allowed ==
+	 * Boolean.FALSE)) ? Boolean.FALSE : Boolean.TRUE); }
+	 */
 	/**
 	 * Populate Free Gift Data
 	 *

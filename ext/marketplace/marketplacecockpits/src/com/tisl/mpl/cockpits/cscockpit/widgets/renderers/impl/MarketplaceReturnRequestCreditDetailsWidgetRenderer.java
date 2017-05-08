@@ -73,6 +73,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.ThirdPartyWalletInfoModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
@@ -122,7 +123,7 @@ ReturnRequestCreateWidgetRenderer {
 	private static final String FAILED_TO_VALIDATE_PINCODE_FEILD = "FailedToValidatePinCode";
 	private static final String ENTER_VALUES_IN_ALLFIELDS = "enterValuesInAllFields";
 	private static final String PIN_REGEX = "^[1-9][0-9]{5}";
-	private static final String IFSC_REGEX="^[A-Za-z][A-Za-z]{3}[0-0][0-9]{6}";
+	private static final String IFSC_REGEX="^[A-Za-z][A-Za-z]{3}[0-0][A-Za-z0-9]{6}";
 	
 	private static final String INFO = "info";
 	protected static final String NO_STORE_AVAILABLE = "noStoresAvailable";
@@ -404,6 +405,7 @@ ReturnRequestCreateWidgetRenderer {
 			Div bankDetailsArea, final List<AbstractOrderEntryModel> entry) {
 		final Div prepaidOrdeDetials = new Div();
 		CreditCardPaymentInfoModel cCard = null;
+		ThirdPartyWalletInfoModel mRupeeCart=null;
 		DebitCardPaymentInfoModel dCart = null;
 		PaymentTransactionModel payment=null;
 		if(null != orderModel.getPaymentTransactions() && null != orderModel.getPaymentTransactions().get(0)) {
@@ -559,6 +561,71 @@ ReturnRequestCreateWidgetRenderer {
 					});
 		
 		}
+		//Mrupee changes Sprint 8 started
+		
+		else  if(orderModel.getPaymentInfo() instanceof ThirdPartyWalletInfoModel){
+
+			mRupeeCart = (ThirdPartyWalletInfoModel) orderModel.getPaymentInfo();
+		 // PRDI-133 START
+
+			final Div retunDetails = new Div();
+			retunDetails.setParent(prepaidOrdeDetials);
+			retunDetails.setClass("detailsClasss");
+			final Label returnHead = new Label(LabelUtils.getLabel(widget,
+					"returnDetails"));
+			returnHead.setParent(retunDetails);
+			returnHead.setClass(BOLD_TEXT);
+			final Div Div1 = new Div();
+			Div1.setParent(retunDetails);
+			final Label returnDescription = new Label(LabelUtils.getLabel(widget,
+					"return_Description",
+					new Object[] {
+							payment.getEntries().get(0)
+							.getPaymentMode().getMode()}));
+
+			returnDescription.setParent(retunDetails);
+		   final Div cardDetailsldiv = new Div();
+			cardDetailsldiv.setParent(prepaidOrdeDetials);
+			cardDetailsldiv.setClass("cardDetailsClass");
+			final Label cardDetails = new Label(LabelUtils.getLabel(widget,
+					"card_Details",
+					new Object[] {
+							mRupeeCart.getProviderName()}));
+			
+			cardDetails.setParent(cardDetailsldiv);
+			cardDetails.setClass(BOLD_TEXT);
+			
+			final Div Div2 = new Div();
+			Div2.setParent(cardDetailsldiv);
+			final Label nameOnCart = new Label(LabelUtils.getLabel(widget,
+				"nameOnCart",
+				new Object[] {
+						mRupeeCart.getWalletOwner() }));
+		    nameOnCart.setParent(cardDetailsldiv);
+
+		    final Div Div5 = new Div();
+			Div5.setParent(prepaidOrdeDetials);
+			
+			final Div prepaidButtonDiv = new Div();
+			prepaidButtonDiv.setParent(prepaidOrdeDetials);
+			prepaidButtonDiv.setClass(BOLD_TEXT);
+			final Button processButton = new Button(LabelUtils.getLabel(widget,
+					CONTINUE));
+			processButton.setParent(prepaidButtonDiv);
+			processButton.addEventListener(Events.ON_CLICK,
+					new EventListener() {
+						@Override
+						public void onEvent(Event arg0) throws Exception {
+							processButton.setDisabled(true);
+							prepaidOrdeDetials
+									.appendChild(getReturnModeDetails(widget,
+											entry,orderModel));
+						}
+					});	
+
+		}
+		//Mrupee changes Sprint 8 end
+		// PRDI-133 END 
 		return prepaidOrdeDetials;
 	}
 

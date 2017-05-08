@@ -213,7 +213,7 @@
 										value="${subOrder.mplPaymentInfo.billingAddress}" />
 								</c:if>
 								<!--  TISBOX-1182 -->
-								<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
+								<%-- <p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p> --%><!-- sanity issue -->
 								<c:if
 									test="${subOrder.mplPaymentInfo.paymentOption eq 'Credit Card' or 'EMI' or 'Debit Card'}">
 									<p>${subOrder.mplPaymentInfo.cardCardType} ending in
@@ -3034,10 +3034,22 @@ $(function() {
 			      console.log($("#deliveryAddressForm #firstName").attr("value")); 
 			      $("#deliveryAddressForm #firstName").val($("#deliveryAddressForm #firstName").attr("value"));
 			      $("#deliveryAddressForm #lastName").val($("#deliveryAddressForm #lastName").attr("value"));
-			      
-			      $("#deliveryAddressForm #addressLine1").val($("#deliveryAddressForm #addressLine1").attr("value"));
-			      $("#deliveryAddressForm #addressLine2").val($("#deliveryAddressForm #addressLine2").attr("value")); 
-			      $("#deliveryAddressForm #addressLine3").val($("#deliveryAddressForm #addressLine3").attr("value")); 
+			    //TISUATSE-128 start
+					var addressLine1 = ($("#deliveryAddressForm #addressLine1").attr("value"));
+					if(($("#deliveryAddressForm #addressLine2").attr("value")))
+					{
+					var addressLine2 = ($("#deliveryAddressForm #addressLine2").attr("value"));
+					addressLine1 = addressLine1 + addressLine2;
+					}
+					if(($("#deliveryAddressForm #addressLine3").attr("value")))
+					{
+					var addressLine3 = ($("#deliveryAddressForm #addressLine3").attr("value"));
+					addressLine1 = addressLine1 + addressLine3;
+					}
+			      $("#deliveryAddressForm #addressLine1").val(addressLine1);
+			    //TISUATSE-128 end
+			      //$("#deliveryAddressForm #addressLine2").val($("#deliveryAddressForm #addressLine2").attr("value")); 
+			      //$("#deliveryAddressForm #addressLine3").val($("#deliveryAddressForm #addressLine3").attr("value")); 
 			 	
 			      console.log("blur line 394");
 					 var value = $(".address_landmarkOtherDiv").attr("data-value");
