@@ -33,8 +33,13 @@
 			labelKey="" path="j_password" inputCSS="form-control"
 			mandatory="true" />
 			<div class="help-block has-error" id="signinPasswordDiv" style="display: none;"></div>
-			
-			
+			<c:if test="${'Y'.equalsIgnoreCase(rememberMeEnabled)}">
+				<div id="checkBox">
+					<input type="checkbox" id="j_RememberMe" name="j_RememberMe" checked="checked" value="true">
+					<label for="j_RememberMe">Remember Me !</label><p>
+				</div><br>
+			</c:if>
+			<!-- End UF-93 -->				
 	<div class="forgotten-password forgotten-password_checkout">
 			<a href="<c:url value='/login/pw/request'/>" class="js-password-forgotten"> <spring:theme code="login.link.forgottenPwd" /></a>
 			<input type="hidden" name="Mobileno" id="Mobileno"
@@ -105,6 +110,9 @@
 		src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 
 	<script type="text/javascript">
+	<c:if test="${'Y'.equalsIgnoreCase(rememberMeEnabled)}">
+		$('#j_username').val('${lastLoggedInUser}'); // added for UF-93 for showing last loggedinUSer if saved.
+	</c:if>
 		(function() {
 			var po = document.createElement('script');
 			po.type = 'text/javascript';
