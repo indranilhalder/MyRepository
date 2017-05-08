@@ -46,9 +46,10 @@
 						<div class="row">
 							<div class="col-md-6 form-group">
 								<label for="firstName"><spring:theme code="text.order.returns.firstname"/></label>
+								<!-- PRDI-124 start-->
 								<form:input path="firstName" onkeypress="return ValidateAlpha(event)"
 									class="form-control textInputChangeAddress" id="firstName"
-									value="${orderDetails.deliveryAddress.firstName}" placeholder="First Name" />
+									value="${orderDetails.deliveryAddress.firstName}" placeholder="First Name" maxlength="140"/>
 								<div class="error_text firstNameError"></div>
 							</div>
 							<div class="col-md-6 form-group">
@@ -56,7 +57,7 @@
 
 								<form:input path="lastName" onkeypress="return ValidateAlpha(event)"
 									class="form-control textInputChangeAddress" id="lastName"
-									value="${orderDetails.deliveryAddress.lastName}" placeholder="Last Name" />
+									value="${orderDetails.deliveryAddress.lastName}" placeholder="Last Name" maxlength="140"/>
 								<div class="error_text lastNameError"></div>
 							</div>
 						</div>
@@ -133,7 +134,8 @@
 								<div class="form-group">
 									<label for="city"><spring:theme code="text.order.returns.city"/></label>
 									<form:input path="townCity" class="address_townCity" id="city"
-										value="${orderDetails.deliveryAddress.town}" placeholder="City" />
+										value="${orderDetails.deliveryAddress.town}" placeholder="City" maxlength="40"/>
+										<!-- PRDI-124 END-->
 									<div class="error_text cityError"></div>
 
 								</div>
