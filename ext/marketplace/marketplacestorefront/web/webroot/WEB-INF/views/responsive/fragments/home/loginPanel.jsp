@@ -13,6 +13,10 @@
 								<!-- TISSIT-1703 -->
 								<form:form action="/" method="post" name='flyOutloginForm'>
 									<script type="text/javascript">
+										<!-- added for UF-93 for showing last loggedinUSer if saved. -->
+										<c:if test="${'Y'.equalsIgnoreCase(rememberMeEnabled)}">
+											$('#j_username').val('${lastLoggedInUser}');
+										</c:if>
 										(function() {
 											var po = document
 													.createElement('script');
@@ -42,7 +46,14 @@
 										<input type="password" class="form-control" name="j_password" id="j_password" placeholder="Password" required>
 									</div>
 									<span id="errorHolder" style="color: red;"></span>	
-								
+							<!-- Added for UF-93 -->
+							<c:if test="${'Y'.equalsIgnoreCase(rememberMeEnabled)}">
+								<div id="checkBox">
+									<input type="checkbox" id="j_RememberMe" name="j_RememberMe" checked="checked" value="true">
+									<label for="j_RememberMe">Remember Me !</label><p>
+								</div>
+							</c:if>
+							<!-- End -->
 						<div class="form-actions clearfix">
 							<div class="form-actions clearfix">
 									<ycommerce:testId code="login_Login_button">
@@ -111,7 +122,10 @@
 
 											
 <script type="text/javascript">
-
+	<!-- added for UF-93 for showing last loggedinUSer if saved. -->
+	<c:if test="${'Y'.equalsIgnoreCase(rememberMeEnabled)}">
+		$('#j_username').val('${lastLoggedInUser}');
+	</c:if>
 	$.ajax({
 		url:ACC.config.encodedContextPath + "/login/sociallogin",
 		type:'GET',
