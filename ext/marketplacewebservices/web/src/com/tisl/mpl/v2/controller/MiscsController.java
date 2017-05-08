@@ -57,6 +57,7 @@ import de.hybris.platform.enumeration.EnumerationService;
 import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.location.Location;
@@ -120,6 +121,7 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
+import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
@@ -163,6 +165,7 @@ import com.tisl.mpl.wsdto.PaymentInfoWsDTO;
 import com.tisl.mpl.wsdto.PinWsDto;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
 import com.tisl.mpl.wsdto.RestrictionPins;
+import com.tisl.mpl.wsdto.ReversePincodeExchangeData;
 import com.tisl.mpl.wsdto.SearchDropdownWsDTO;
 import com.tisl.mpl.wsdto.SellerMasterWsDTO;
 import com.tisl.mpl.wsdto.SellerSlaveDTO;
@@ -174,7 +177,7 @@ import com.tisl.mpl.wsdto.VersionListResponseData;
 import com.tisl.mpl.wsdto.VersionListResponseWsDTO;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 import com.tisl.mpl.wsdto.WthhldTAXWsDTO;
-import de.hybris.platform.servicelayer.session.SessionService;
+
 
 /**
  * @author TCS
@@ -256,7 +259,9 @@ public class MiscsController extends BaseController
 	@Resource(name = "categoryService")
 	private CategoryService categoryService;
 
-
+	//Exchange Changes
+	@Resource(name = "exchangeGuideFacade")
+	private ExchangeGuideFacade exchangeGuideFacade;
 
 
 
@@ -1746,8 +1751,8 @@ public class MiscsController extends BaseController
 					for (final MplNewsLetterSubscriptionModel mplNewsLetterSubscriptionModel : newsLetterSubscriptionList)
 					{
 						if ((mplNewsLetterSubscriptionModel.getEmailId().equalsIgnoreCase(emailId))
-								&& (!(mplNewsLetterSubscriptionModel.getIsLuxury().booleanValue())
-										|| mplNewsLetterSubscriptionModel.getIsLuxury() == null))
+								&& (!(mplNewsLetterSubscriptionModel.getIsLuxury().booleanValue()) || mplNewsLetterSubscriptionModel
+										.getIsLuxury() == null))
 						{
 							mplNewsLetterSubscriptionModel.setIsLuxury(Boolean.TRUE);
 							modelService.save(mplNewsLetterSubscriptionModel);
@@ -1771,4 +1776,33 @@ public class MiscsController extends BaseController
 		final Matcher matcher = pattern.matcher(email);
 		return matcher.matches();
 	}//LW-176 ends
+
+
+
+	/**
+	 * Is Pincode Exchange Serviceable
+	 *
+	 * @param pincode
+	 * @param l3code
+	 * @return reverseCheckdata
+	 * @throws CMSItemNotFoundException
+	 */
+
+	@RequestMapping(value = "/{baseSiteId}/reversePincodeCheck/{pincode}", method = RequestMethod.POST)
+	@ResponseBody
+	public ReversePincodeExchangeData reversePincodeCheck(@PathVariable final String pincode,
+			@RequestParam(required = false) final String l3code) throws CMSItemNotFoundException
+	{
+
+		final ReversePincodeExchangeData reverseCheckdata = new ReversePincodeExchangeData();
+		final boolean isServicable = exchangeGuideFacade.isBackwardServiceble(pincode);
+		reverseCheckdata.setPincodeResponse(exchangeGuideFacade.isBackwardServiceble(pincode));
+		if (isServicable && StringUtils.isNotEmpty(l3code))
+		{
+			reverseCheckdata.setPriceMatrix(exchangeGuideFacade.getExchangeGuide(l3code));
+		}
+
+
+		return reverseCheckdata;
+	}
 }

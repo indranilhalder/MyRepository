@@ -989,6 +989,10 @@
 
 		<!-- Added for luxury products -->
 		<property name="luxIndicator" type="String" />
+		
+		<!-- Added for Exchange TPR-1083 -->
+		 <property name="l3code" type="String"></property>
+ 		<property name="l3name" type="String"></property>
 
 	</bean>
 	<!-- 		Added for OfferDetail of  a product TPR-TPR-1299 -->
@@ -2950,5 +2954,12 @@
 		<property name="returnStoreDetailsList"
 			type="java.util.List&lt;de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData>" />
 	</bean>
+
+<!-- TPR 1083 Start -->
+
+<bean class="com.tisl.mpl.wsdto.ReversePincodeExchangeData">
+<property name="pincodeResponse" type="boolean"/>
+<property name="priceMatrix" type="java.util.List&lt;com.tisl.mpl.facades.product.data.ExchangeGuideData>"/>
+</bean>
 
 </beans>

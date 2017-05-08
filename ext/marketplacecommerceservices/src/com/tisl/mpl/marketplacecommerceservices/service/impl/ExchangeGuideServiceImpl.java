@@ -104,9 +104,9 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * @Javadoc
-	 * 
+	 *
 	 * @returns All L4 for which Exchange is Applicable
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getDistinctL4()
 	 */
 	@Override
@@ -118,11 +118,11 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * @Javadoc
-	 * 
+	 *
 	 * @param String categoryCode
-	 * 
+	 *
 	 * @param ExchangeCouponValueModel pricematrix
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getExchangeGuideList(java.lang.String)
 	 */
 	@Override
@@ -273,7 +273,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#changePincode(java.lang.String)
 	 */
 	@Override
@@ -292,7 +292,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#removeFromTransactionTable(java.lang.String)
 	 */
@@ -307,7 +307,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getTeporaryExchangeModelforId(java.lang.
 	 * String)
@@ -341,9 +341,9 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 			final List<AbstractOrderEntryModel> entryDetails = child.getEntries();
 			for (final AbstractOrderEntryModel entry : entryDetails)
 			{
-				if (entry != null && StringUtils.isNotEmpty(entry.getExchangeTempId()))
+				if (entry != null && StringUtils.isNotEmpty(entry.getExchangeId()))
 				{
-					final ExchangeTransactionModel exTrax = getTeporaryExchangeModelforId(entry.getExchangeTempId());
+					final ExchangeTransactionModel exTrax = getTeporaryExchangeModelforId(entry.getExchangeId());
 					if (exTrax != null)
 					{
 						final ExchangeModel exMod = new ExchangeModel();
@@ -359,7 +359,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 						exMod.setUssid(exTrax.getUssid());
 						exModList.add(exMod);
 						exTraxRemovList.add(exTrax);
-						entry.setExchangeTempId(exReqId);
+						entry.setExchangeId(exReqId);
 						changeInChild = true;
 
 					}
@@ -380,7 +380,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#addToExchangeTable(com.tisl.mpl.core.model
 	 * .ExchangeTransactionModel)

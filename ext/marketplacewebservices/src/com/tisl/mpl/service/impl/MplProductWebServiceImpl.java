@@ -275,7 +275,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -694,6 +694,14 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					productDetailMobile.setLuxIndicator(MarketplaceCoreConstants.LUXURY);
 					//TISPRD-9238
 					productDetailMobile.setKnowMoreEmail(configurationService.getConfiguration().getString("luxury.care.mail"));
+				}
+
+				//Added for TPR-1083 Exchange
+				if (StringUtils.isNotEmpty(productData.getLevel3CategoryCode())
+						&& StringUtils.isNotEmpty(productData.getLevel3CategoryName()))
+				{
+					productDetailMobile.setL3code(productData.getLevel3CategoryCode());
+					productDetailMobile.setL3name(productData.getLevel3CategoryName());
 				}
 
 			}
