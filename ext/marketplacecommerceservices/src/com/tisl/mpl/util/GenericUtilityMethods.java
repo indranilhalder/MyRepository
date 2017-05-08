@@ -1611,5 +1611,28 @@ public class GenericUtilityMethods
 			responseData.setTotalDiscntIncMrp(totalDiscountVal);
 		}
 	}
+	
+	/**
+	 * For UF-93
+	 *
+	 * @doc This Generic method is written for retrieving cookie from request for a given Cookie Name
+	 * @param HttpServletRequest
+	 *           , String
+	 * @return Cookie
+	 */
+	public static Cookie getCookieByName(final HttpServletRequest request, final String cookieName)
+	{
+		if (request != null && request.getCookies() != null && cookieName != null)
+		{
+			for (final Cookie cookie : request.getCookies())
+			{
+				if (cookieName.equals(cookie.getName()))
+				{
+					return cookie;
+				}
+			}
+		}
+		return null;
+	}
 
 }
