@@ -27,56 +27,56 @@
 	<!-- Accordions -->
 <div id="singlePageAccordion" class="checkout-accordion-wrapper">
     <div class="checkout-accordion <c:if test="${openTab eq 'deliveryAddresses'}">accordion-open</c:if>">
-    <div class="checkout-mobile-heading">Delivery Address</div>
         <div class="checkout-accordion-heading">
+        <div class="checkout-mobile-heading">Delivery Address</div>
             <div><h4><span>1</span> Delivery Address</h4></div>
             <div style="display:none" id="selectedAddressDivId"><span id="selectedAddressHighlight"></span><span>CHANGE ADDRESS</span></div>
-            <p class="change-mobile">Change</p>
-            <p class="cancel-mobile">Cancel</p>
         </div>
         <div class="checkout-accordion-body">
+         <div class="change-cancel-wrapper"><p class="change-mobile">Change</p>
+            <p class="cancel-mobile">Cancel</p></div>
             <div id="chooseDeliveryAddress">
                 <single-checkout:showDeliveryAddressDetails deliveryAddresses="${deliveryAddresses}"/>
             </div>
         </div>
     </div>
     <div class="checkout-accordion <c:if test="${openTab eq 'deliveryMethod'}">accordion-open</c:if>">
-    <div class="checkout-mobile-heading">Delivery Method</div>
         <div class="checkout-accordion-heading">
+        <div class="checkout-mobile-heading">Delivery Method</div>
             <div><h4><span>2</span> Delivery Method</h4></div>
             <div style="display:none" id="selectedDeliveryOptionsDivId"><span id="selectedDeliveryOptionsHighlight"></span><span>CHANGE DELIVERY OPTION</span></div>
-            <p class="change-mobile">Change</p>
-            <p class="cancel-mobile">Cancel</p>
         </div>
         <div class="checkout-accordion-body">
+        <div class="change-cancel-wrapper"><p class="change-mobile">Change</p>
+            <p class="cancel-mobile">Cancel</p></div>
             <div id="choosedeliveryMode" class="cart wrapper">
                 <p>Bootstrap is a powerful front-end framework for faster and easier web development. It is a collection of CSS and HTML conventions. <a href="http://www.tutorialrepublic.com/twitter-bootstrap-tutorial/" target="_blank">Learn more.</a></p>
             </div>
         </div>
     </div>
     <div class="checkout-accordion <c:if test="${openTab eq 'reviewOrder'}">accordion-open</c:if>">
-    <div class="checkout-mobile-heading">Review Order</div>
         <div class="checkout-accordion-heading">
+        <div class="checkout-mobile-heading">Review Order</div>
             <div><h4><span>3</span> Review Order</h4></div>
             <div style="display:none" id="selectedReviewOrderDivId"><span id="selectedReviewOrderHighlight"></span><span>REVIEW ORDER</span></div>
-            <p class="change-mobile">Change</p>
-            <p class="cancel-mobile">Cancel</p>
         </div>
         <div class="checkout-accordion-body">
+        <div class="change-cancel-wrapper"><p class="change-mobile">Change</p>
+            <p class="cancel-mobile">Cancel</p></div>
             <div id="reviewOrder" class="cart wrapper">
                 <p>CSS stands for Cascading Style Sheet. CSS allows you to specify various style properties for a given HTML element such as colors, backgrounds, fonts etc. <a href="http://www.tutorialrepublic.com/css-tutorial/" target="_blank">Learn more.</a></p>
             </div>
         </div>
     </div>
     <div class="checkout-accordion <c:if test="${openTab eq 'payment'}">accordion-open</c:if>">
-    <div class="checkout-mobile-heading">Payment</div>
         <div class="checkout-accordion-heading">
+          <div class="checkout-mobile-heading">Payment</div>
             <div><h4><span>4</span> Payment</h4></div>
             <div style="display:none"><span></span><span></span></div>
-            <p class="change-mobile">Change</p>
-            <p class="cancel-mobile">Cancel</p>
         </div>
         <div class="checkout-accordion-body">
+         <div class="change-cancel-wrapper"><p class="change-mobile">Change</p>
+            <p class="cancel-mobile">Cancel</p></div>
             <div id="makePayment">
                 <c:if test="${prePopulateTab eq 'payment'}" >
                 	<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodPage.jsp"%> 

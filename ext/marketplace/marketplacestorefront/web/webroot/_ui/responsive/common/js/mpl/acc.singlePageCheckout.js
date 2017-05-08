@@ -1,6 +1,7 @@
 ACC.singlePageCheckout = {
 
 	_autoload: [
+	    "mobileAccordion"
 	],
 	
 	getDeliveryAddresses:function(element){
@@ -906,10 +907,18 @@ ACC.singlePageCheckout = {
 	},
 	
 	modalPopup: function(elementId,data){
+		if($(".checkout-mobile-heading").css("display") == "none"){
 		var selector="#"+elementId+" #modalBody"
 			$(selector).html(data);
 			//$("body").append('<div class="modal fade" id="singlePageAddressPopup"><div class="content" style="padding: 40px;max-width: 650px;">'+data+'<button class="close" data-dismiss="modal"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
 			$("#"+elementId).modal('show');
+			$(".new-address-form-mobile").html('');
+		}
+		else{
+			$(".mobile_add_address").addClass("form_open");
+			$(".new-address-form-mobile").html(data);
+			$("#"+elementId+" #modalBody").html('');
+		}
 	},
 	
 	showAccordion: function(showElementId){
@@ -1259,5 +1268,17 @@ ACC.singlePageCheckout = {
 					$(this).find("ul.desktop>li.qty").css("top","auto");
 				}
 			});
+	},
+	mobileAccordion:function(){
+		$(".change-mobile").on("click", function(){
+			$(this).parents(".checkout-accordion").find(".mobileNotDefaultDelAddress").show();
+			$(this).parents(".checkout-accordion").find(".cancel-mobile").show();
+			$(this).hide();
+		});
+		$(".cancel-mobile").on("click", function(){
+			$(this).parents(".checkout-accordion").find(".mobileNotDefaultDelAddress").hide();
+			$(this).parents(".checkout-accordion").find(".change-mobile").show();
+			$(this).hide();
+		});
 	}
 }

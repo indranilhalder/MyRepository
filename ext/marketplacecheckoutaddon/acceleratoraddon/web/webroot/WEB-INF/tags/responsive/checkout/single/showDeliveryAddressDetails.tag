@@ -522,6 +522,11 @@
 									</a>
 								</p>
 							</div>
+							<div class="mobile_add_address mobileNotDefaultDelAddress" onclick="ACC.singlePageCheckout.getAddAddress();">
+							<span class="mobile_add_address_radio"></span>
+							<spring:theme code="checkout.multi.deliveryAddress.useNewAddress.mobile" text="Use New Address"></spring:theme>
+							</div>
+							<div class="new-address-form-mobile"></div>
 						</div>
 
 
@@ -549,6 +554,11 @@
 						text="Use New Address"></spring:theme>
 				</a>
 			</p>
+			<div class="mobile_add_address" onclick="ACC.singlePageCheckout.getAddAddress();">
+			<span class="mobile_add_address_radio"></span>
+			<spring:theme code="checkout.multi.deliveryAddress.useNewAddress.mobile" text="Use New Address"></spring:theme>
+			</div>
+			<div class="new-address-form-mobile"></div>
 		</div>
 	</c:if>
 
