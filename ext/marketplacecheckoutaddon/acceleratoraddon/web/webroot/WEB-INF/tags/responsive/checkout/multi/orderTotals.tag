@@ -19,7 +19,9 @@
 		<span class="subTotalSpan"><spring:theme code="basket.page.totals.subtotal"/> </span>
 		<span class="amt">
 			<ycommerce:testId code="Order_Totals_Subtotal">
-				<format:price priceData="${cartData.subTotal}"/>
+				<%-- <format:price priceData="${cartData.subTotal}"/> --%>
+				<!-- UF-260 -->
+				<format:price priceData="${cartTotalMrp}"/>
 			</ycommerce:testId>
 		</span>
 	</li>
@@ -113,7 +115,9 @@
 		<span class="subTotalSpan"><spring:theme code="basket.page.totals.subtotal"/> </span>
 		<span class="amt">
 			<ycommerce:testId code="Order_Totals_Subtotal">
-				<format:price priceData="${orderData.subTotal}"/>
+				<%-- <format:price priceData="${orderData.subTotal}"/> --%>
+				<!-- UF-260 -->
+				<format:price priceData="${cartTotalMrp}"/>
 			</ycommerce:testId>
 		</span>
 	</li>

@@ -599,6 +599,7 @@
     	<property name="deliveryCost" type="de.hybris.platform.commercefacades.product.data.PriceData" />
     	<property name="voucherDiscount" type="com.tisl.mpl.data.VoucherDiscountData" />
     	<property name="promoExpiryMsg" type="String" />		<!-- TPR-629 -->
+    	<property name="totalDiscntIncMrp" type="de.hybris.platform.commercefacades.product.data.PriceData" />		<!-- UF-260 -->
     </bean> 
 	
 	<!-- Data class for Payment Specific Promotions Ends-->

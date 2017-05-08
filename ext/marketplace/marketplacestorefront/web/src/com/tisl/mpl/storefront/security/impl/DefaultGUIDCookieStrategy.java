@@ -39,8 +39,10 @@ import org.springframework.web.util.CookieGenerator;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.storefront.interceptors.beforecontroller.RequireHardLoginBeforeControllerHandler;
 import com.tisl.mpl.storefront.security.cookie.KeepAliveCookieGenerator;
+import com.tisl.mpl.storefront.security.cookie.LastUserLoggedInCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.LuxuryEmailCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.LuxuryUserCookieGenerator;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -60,6 +62,26 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 	private LuxuryEmailCookieGenerator luxuryEmailCookieGenerator;
 
 	private ExtendedUserService userService;
+	
+	//Added for UF-93
+	private LastUserLoggedInCookieGenerator lastUserLoggedInCookieGenerator;
+
+	/**
+	 * @return the lastUserLoggedInCookieGenerator
+	 */
+	public LastUserLoggedInCookieGenerator getLastUserLoggedInCookieGenerator()
+	{
+		return lastUserLoggedInCookieGenerator;
+	}
+
+	/**
+	 * @param lastUserLoggedInCookieGenerator
+	 *           the lastUserLoggedInCookieGenerator to set
+	 */
+	public void setLastUserLoggedInCookieGenerator(final LastUserLoggedInCookieGenerator lastUserLoggedInCookieGenerator)
+	{
+		this.lastUserLoggedInCookieGenerator = lastUserLoggedInCookieGenerator;
+	}
 
 	/**
 	 * @return the userService
@@ -165,7 +187,23 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 				getLuxuryEmailCookieGenerator().addCookie(response, encrypt(customer.getOriginalUid()));
 				//Commenting this as this is not required
 				//getLuxuryUserCookieGenerator().addCookie(response, userService.getAccessTokenForUser(customer.getOriginalUid()));
-
+				/** Added for UF-93 **/
+				if ("true".equalsIgnoreCase(request.getParameter("j_RememberMe")))
+				{
+					lastUserLoggedInCookieGenerator.addCookie(response,
+							new String(Base64.encodeBase64String(customer.getOriginalUid().getBytes())));
+					LOG.error("DefaultGUIDCookieStrategy.setCookie() 'RememberMe':: "
+							+ request.getSession().getAttribute("j_RememberMe"));
+				}
+				else
+				{
+					final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "LastUserLogedIn");
+					if (null != cookie)
+					{
+						lastUserLoggedInCookieGenerator.removeCookie(response); // Remove the Cookie if Remember Me not Seleceted. Thi sis not to be displayed next time.
+					}
+				}
+				/** Ends for UF-93 **/
 			}
 		}
 

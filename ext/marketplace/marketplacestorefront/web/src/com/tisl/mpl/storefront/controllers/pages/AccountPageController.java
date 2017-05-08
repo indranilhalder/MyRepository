@@ -1200,6 +1200,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				model.addAttribute(ModelAttributetConstants.BREADCRUMBS, breadcrumbs);
 
+				//UF-260
+				GenericUtilityMethods.getCartPriceDetails(model, orderModel, null);
+
 			}
 		}
 		catch (final IllegalArgumentException e)
