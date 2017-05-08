@@ -3552,7 +3552,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					final DiscountModel discount = voucherList.get(0);
 
-					if (discount instanceof PromotionVoucherModel)
+					if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
 					{
 						final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 						appliedVoucher = promotionVoucherModel;
@@ -3774,7 +3774,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					final DiscountModel discount = voucherList.get(0);
 
-					if (discount instanceof PromotionVoucherModel)
+					if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
 					{
 						final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 						appliedVoucher = promotionVoucherModel;
@@ -4673,7 +4673,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
@@ -4769,7 +4769,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					final DiscountModel discount = voucherList.get(0);
 
-					if (discount instanceof PromotionVoucherModel)
+					if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
 					{
 						final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 						appliedVoucher = promotionVoucherModel;
@@ -4907,7 +4907,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					final DiscountModel discount = voucherList.get(0);
 
-					if (discount instanceof PromotionVoucherModel)
+					if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
 					{
 						final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 						appliedVoucher = promotionVoucherModel;
@@ -5067,7 +5067,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 						final DiscountModel discount = voucherList.get(0);
 
-						if (discount instanceof PromotionVoucherModel)
+						if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
 						{
 							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 							appliedVoucher = promotionVoucherModel;
@@ -5256,7 +5256,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					final DiscountModel discount = voucherList.get(0);
 
-					if (discount instanceof PromotionVoucherModel)
+					if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
 					{
 						final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 						appliedVoucher = promotionVoucherModel;

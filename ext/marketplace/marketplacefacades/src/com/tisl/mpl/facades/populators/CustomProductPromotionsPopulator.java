@@ -263,7 +263,10 @@ public class CustomProductPromotionsPopulator<SOURCE extends ProductModel, TARGE
 										}
 
 									}
-
+									if (CollectionUtils.isEmpty(brandRestrictions))
+									{
+										brandRestrictionPresent = true;
+									}
 									if (!brandRestrictionPresent)
 									{
 										LOG.debug("*******Product not applicable for brand restriction:" + productModel.getCode());
