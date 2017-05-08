@@ -641,7 +641,7 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 		{
 			final Integer nameLength = getPromotionbundlelinknameLength();
 			final MplProductSteppedMultiBuyPromotionModel promo = (MplProductSteppedMultiBuyPromotionModel) object;
-			LOG.debug("Checking Name For Bundle Promotion Link::" + promo.getBundlepromolinktext().trim().length());
+			//LOG.debug("Checking Name For Bundle Promotion Link::" + promo.getBundlepromolinktext().trim().length()); TISUATSE-126 fixed
 			if (StringUtils.isNotEmpty(promo.getBundlepromolinktext())
 					&& promo.getBundlepromolinktext().trim().length() > nameLength.intValue())
 			{
@@ -711,9 +711,9 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 	 * } } else if (promotion instanceof BuyABFreePrecentageDiscountModel) { final BuyABFreePrecentageDiscountModel
 	 * oModel = (BuyABFreePrecentageDiscountModel) promotion; if (CollectionUtils.isNotEmpty(oModel.getGiftProducts())) {
 	 * isValid = checkCatalogVersion(oModel.getGiftProducts()); } }
-	 * 
+	 *
 	 * return isValid;
-	 * 
+	 *
 	 * }
 	 */
 

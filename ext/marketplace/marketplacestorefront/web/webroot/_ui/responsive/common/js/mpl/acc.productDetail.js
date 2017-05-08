@@ -3784,9 +3784,14 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 
 					return false;
 				} else {
+					var channelTypeWeb = $("#promolist").val();//added for TISTE-143
 					var promorestrictedSellers = $("#promotedSellerId").val();
 					var promoindentifier = $("#product_applied_promotion_code").val();
-					if (promorestrictedSellers == null
+					
+					//added for TISTE-143
+					if(channelTypeWeb != undefined)
+					{
+					 if (promorestrictedSellers == null
 							|| promorestrictedSellers == undefined
 							|| promorestrictedSellers == "") {
 						//TPR-772
@@ -3795,7 +3800,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 							  $(".pdp-promo-title-link").show();
 						} 
 
-					} else {
+					 } else {
 						if (promorestrictedSellers.length > 0
 								&& !(promorestrictedSellers
 										.indexOf(data['sellerId']) == -1))
@@ -3816,7 +3821,8 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 								
 							}
 
-					}
+					 }
+					}//added for TISTE-143
 					var allStockZero = data['allOOStock'];
 					// var codEnabled = data['isCod'];
 					var sellerName = data['sellerName'];

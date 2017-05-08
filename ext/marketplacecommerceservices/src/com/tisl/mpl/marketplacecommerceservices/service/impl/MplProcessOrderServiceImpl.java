@@ -25,7 +25,7 @@ import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
-import com.tisl.mpl.core.enums.WalletEnum;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -45,6 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.JuspayWebhookModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
@@ -132,6 +133,11 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 			//PaymentFix2017:- queryTAT added
 			orders = getMplProcessOrderDao().getPaymentPedingOrders(OrderStatus.PAYMENT_PENDING.toString(), queryTAT);
+
+			LOG.debug("Skip Time configured in the job::" + skipPendingOrdersTATSt);
+
+			LOG.debug("Number of Orders fetched by the job::" + orders.size());
+
 		}
 		catch (final EtailNonBusinessExceptions e) //IQA for TPR-629
 		{
@@ -160,11 +166,17 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 						LOG.debug("Latest Audit ID:- " + auditModel + "for respective GUID:- " + cartGuid);
 					}
 
-					if (null != auditModel && StringUtils.isNotEmpty(auditModel.getAuditId())
-							&& ((null != orderModel.getIsWallet()
-									&& WalletEnum.NONWALLET.toString().equals(orderModel.getIsWallet().getCode()))
-									|| orderModel.getIsWallet() == null))
+
+					LOG.debug("Wallet details of orderModel:- " + orderModel.getIsWallet().getCode());
+
+
+					if (null != auditModel && StringUtils.isNotEmpty(auditModel.getAuditId()))
 					{
+						//					if (null != auditModel && StringUtils.isNotEmpty(auditModel.getAuditId())
+						//							&& ((null != orderModel.getIsWallet()
+						//									&& WalletEnum.NONWALLET.toString().equals(orderModel.getIsWallet().getCode()))
+						//									|| orderModel.getIsWallet() == null))
+						//					{**********Commented for mRupee****
 						//to check webhook entry status at Juspay corresponding to Payment Pending orders
 						final List<JuspayWebhookModel> hooks = checkstatusAtJuspay(auditModel.getAuditId());
 
@@ -179,6 +191,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 							cal.add(Calendar.MINUTE, +juspayWebhookRetryTAT.intValue());
 							orderTATForTimeout = cal.getTime();
 						}
+
+						LOG.debug("***orderTATForTimeout--->" + orderTATForTimeout);
 						//PaymentFix2017:- Logic to execute the webhook posted events
 						if (CollectionUtils.isNotEmpty(hooks))
 						{
@@ -415,6 +429,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			{
 				if (null == orderModel.getPaymentInfo())
 				{
+					LOG.debug("Inside processing order-->No PaymentInfo");
 					updateOrder(orderModel, juspayWebhookModel);
 
 					//Re-trigger submit order process from Payment_Pending to Payment_Successful
@@ -456,6 +471,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 				else if (null != orderModel.getPaymentInfo() && CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions())
 						&& CollectionUtils.isEmpty(orderModel.getChildOrders()))
 				{
+					LOG.debug("Inside processing order-->With PaymentInfo");
 					//Re-trigger submit order process from Payment_Pending to Payment_Successful
 					final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
 					parameter.setEnableHooks(true);
@@ -481,6 +497,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 				else if (null != orderModel.getPaymentInfo() && CollectionUtils.isNotEmpty(orderModel.getChildOrders())
 						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
 				{
+					LOG.debug("Inside payment successful order-->With PaymentInfo");
 					//SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 					//PaymentFix2017: setIsSentToOMS not required
 					//No Need to change to FALSE
@@ -499,6 +516,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 						&& null != orderModel.getPaymentInfo() && CollectionUtils.isNotEmpty(orderModel.getChildOrders())
 						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
 				{
+					LOG.debug("Inside COD-->payment Successful");
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 				}
 
@@ -509,6 +527,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 				//Added for failure transactions
 				if (null == orderModel.getPaymentInfo())
 				{
+					LOG.debug("Inside payment failed scenario");
 					updateOrder(orderModel, juspayWebhookModel);
 
 					//SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
@@ -561,6 +580,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 				else if (null != orderModel.getPaymentInfo() && CollectionUtils.isNotEmpty(orderModel.getChildOrders())
 						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
 				{
+
+					LOG.debug("Inside With payment Info-->payment Successful");
 					boolean successFlag = false;
 					for (final PaymentTransactionModel paymentTransaction : orderModel.getPaymentTransactions())
 					{
@@ -593,6 +614,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 				if (null != orderModel.getModeOfOrderPayment() && orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD")
 						&& CollectionUtils.isEmpty(orderModel.getChildOrders()))
 				{
+					LOG.debug("Inside With payment Info-->payment failed");
+
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
 					//limited stock promotion issue starts here
 					removePromotionInvalidation(orderModel);
