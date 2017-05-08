@@ -217,7 +217,9 @@ public class HomePageController extends AbstractPageController
 			final boolean crawlingFlag = configurationService.getConfiguration().getBoolean(ModelAttributetConstants.CRAWLINGFLAG);
 			final String userAgent = request.getHeader(ModelAttributetConstants.USERAGENT);
 			final String slotUid = ModelAttributetConstants.FOOTERSLOT;
-			if (crawlingFlag && !StringUtils.isEmpty(userAgent) && userAgent.toLowerCase().contains("chrome"))
+			//change for TISSTRT-1527
+			if (crawlingFlag && !StringUtils.isEmpty(userAgent)
+					&& userAgent.toLowerCase().contains(ModelAttributetConstants.GOOGLEBOT))
 			{
 				//Footer content
 				getFooterContent(slotUid, model);
@@ -1309,7 +1311,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 *
+					 * 
 					 * }
 					 */
 
