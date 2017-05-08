@@ -1077,7 +1077,10 @@ $(function() {
 							if (pin == "") {
 								$('#unsevisablePin,#unableprocessPin,#wrongPin,#serviceablePin')
 										.hide();
+								$('#unsevisablePinExc,#unableprocessPinExc,#wrongPinExc,#serviceablePinExc')
+								.hide();
 								$("#emptyPin").show();
+								$("#emptyPinExc").show();
 								$("#pdpPinCodeAvailable").hide();
 								
 								$('#addToCartButton').show();
@@ -1088,9 +1091,12 @@ $(function() {
 								return false;
 							} else if (!regExp.test(pin)) {
 								$('#unsevisablePin,#unableprocessPin,#emptyPin').hide();
+								$('#unsevisablePinExc,#unableprocessPinExc,#emptyPinExc').hide();
 								$("#wrongPin").show();
+								$("#wrongPinExc").show();
 								$("#pdpPinCodeAvailable").hide();
 								$("#serviceablePin").hide();
+								$("#serviceablePinExc").hide();
 							//	$("#pdpPinCodeAvailable").hide();
 								$('#addToCartButton').show();
 								$('#buyNowButton').attr("disabled",false);
@@ -1126,10 +1132,12 @@ $(function() {
 												$("#collectli").removeClass("selected");
 
 												$('#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin').hide();
+												$('#wrongPinExc,#unableprocessPinExc,#emptyPinExc,#serviceablePinExc').hide();
 												$('#addToCartFormTitle').hide();
 												$('#addToCartButton-wrong').show();
 												$('#addToCartButton').hide();
 												$('#unsevisablePin').show();
+												$('#unsevisablePinExc').show();
 												$("#pdpPinCodeAvailable").hide();
 												
 												$('#buyNowButton').attr("disabled",true);
@@ -1197,7 +1205,9 @@ $(function() {
 														if (pincodedata['isServicable'] == 'Y') {
 															
 															 $('#serviceablePin').show();  //TISPRM-20::PDP show pincode serviceability msg  
-															checkBuyBoxIdPresent = true;
+															 $('#serviceablePinExc').show();
+															 $('#wrongPinExc,#unsevisablePinExc,#unableprocessPinExc').hide();
+															 checkBuyBoxIdPresent = true;
 															deliveryModes = pincodedata['validDeliveryModes'];
 															var home = false;
 															var exp = false;
@@ -1323,6 +1333,8 @@ $(function() {
 															$("#collectli").removeClass("selected");
 															$('#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin')
 																	.hide();
+															$('#wrongPinExc,#unableprocessPinExc,#emptyPinExc,#serviceablePinExc')
+															.hide();
 															$('#addToCartFormTitle')
 																	.hide();
 															if ($("#stock").val() > 0) {
@@ -1334,6 +1346,7 @@ $(function() {
 															}
 															$('#addToCartButton').hide();
 															$('#unsevisablePin').show();
+															$('#unsevisablePinExc').show();
 															
 															/*TPR-642 & 640 */
 															utag.link({
@@ -1362,6 +1375,9 @@ $(function() {
 													$(
 															'#wrongPin,#unableprocessPin,#emptyPin')
 															.hide();
+													$(
+													'#wrongPinExc,#unableprocessPinExc,#emptyPinExc')
+													.hide();
 													$('#addToCartFormTitle').hide();
 													if ($("#stock").val() > 0) {
 														$('#addToCartButton-wrong').show();
@@ -1373,6 +1389,7 @@ $(function() {
 													// $('#addToCartButton-wrong').show();
 													$('#addToCartButton').hide();
 													$('#unsevisablePin').show();
+													$('#unsevisablePinExc').show();
 													$('#pdpPinCodeAvailable').hide();
 												}
 												
@@ -1386,8 +1403,10 @@ $(function() {
 
 											$('#wrongPin,#unsevisablePin,#emptyPin')
 													.hide();
+											$('#wrongPinExc,#unsevisablePinExc,#emptyPinExc')
+											.hide();
 											$('#unableprocessPin').show();
-											
+											$('#unableprocessPinExc').show();
 											//TPR-794
 											$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
 											var error =$('#unableprocessPin').val();
@@ -2922,17 +2941,6 @@ function loadDefaultWishListName_SizeGuide() {
 					$(".pdp .Exchange > p").addClass("active")
 				}
 			});
-			/*$(".Emi > #EMImodal-content").on("click",".Emi .modal-content .Close",function(){
-				$(".Emi > p").removeClass("active")
-				});*/
-//			$(".pdp").on("click", function(e){
-//				//console.log($(e.currentTarget).attr('class'))
-//				if(!$(e.currentTarget).parents(".Exchange").hasClass("Exchange_wrapper")) {
-//					$(".pdp .Exchange > p").removeClass("active")
-//				} else {
-//					$(".pdp .Exchange > p").addClass("active")
-//				}
-//			});
 			
 			$(".pdp .Exchange > p").on("click",function(){
 				if($(window).width() <= 1024){

@@ -487,6 +487,9 @@
 		<property name="qualifyingCount" type="Integer"/>
 		<property name="isCancellationMissed" type="boolean"/>
 		<property name="eddDateBetWeen" type="String"/>
+		<!-- TPR-1083 Exchange Start -->
+		<property name="exchangeApplied" type="String" />
+		<!-- TPR-1083 Exchange End -->
 	</bean>
 	<!-- Attribute to handle the order cancel status for My Account ends -->
 	
@@ -808,7 +811,6 @@
 		<property name="l4categorylist" type="java.util.Set&lt;String>" />
 		<property name="isWorkinglist" type="java.util.Set&lt;String>" />
 		<property name="priceList" type="java.util.Set&lt;String>" />
-		<property name="pincodeExc" type="String"/>
 	</bean>
 	<!-- TPR-1083 Exchange Ends -->
 </beans>

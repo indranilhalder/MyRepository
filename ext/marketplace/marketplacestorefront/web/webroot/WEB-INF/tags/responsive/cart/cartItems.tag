@@ -169,6 +169,15 @@ tr.d0 td {
 		                  		<li> 
 			              			<a class="remove-entry-button" id="removeEntry_${entry.entryNumber}_${entry.selectedSellerInformation.ussid}"><span><spring:theme code="cart.remove"/></span></a>
 			              		</li>
+			              		<li>
+			              		<c:set var="exchangeId" value="${entry.exchangeApplied}"/>
+   								<c:set var="isExchangeavailable" value="true"/>
+   								<c:if test="${empty exchangeId}">
+									<c:set var="isExchangeavailable" value="false"/>
+								</c:if>
+   		
+   									${isExchangeavailable}
+			              		</li>
 			              		<li><form:form name="addToCartForm" method="post" action="#" class="mybag-undo-form">
 								<input type="hidden" name="qty" value="${entry.quantity}" />
 								<input type="hidden" name=pinCodeChecked value="true" />

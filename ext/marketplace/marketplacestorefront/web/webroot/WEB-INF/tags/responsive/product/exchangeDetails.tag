@@ -207,7 +207,7 @@
 			}
 		});
 	$.when(req1).done(function(data1){
-	    if(data1 && !$('#buyNowButton').prop('disabled'))
+	    if(data1 && !$('#buyNowButton').prop('disabled') && $('#serviceablePinExc').is(':visible') )
 	    {
 	    	   	populateExchangeDetails();
 	    	if(typeof utag !="undefined"){
@@ -293,7 +293,6 @@
 	
 	function changeWorking(value) {
 		  $("#l4Exchange").val(value);
-		  alert(activelist);
 		    if (value.length == 0) document.getElementById("activeselect").innerHTML = "<option></option>";
 	    else {
 	    	
@@ -374,7 +373,6 @@
 		
 		<button class="gray submitDList" id="pdpPincodeCheckDListExchange" style="display:none;"><spring:theme code="text.submit"/></button>
 		    <div>
-    	<span id="unsevisablePin" style="display:none;color:#ff1c47"><spring:theme code="pincode.unsevisable"/></span>
 		<span class="pincodeErrorMsg">
 			<span id="emptyPinExc" style="display:none;color:#ff1c47"><spring:theme code="product.empty.pincode"/></span>
 			<span id="wrongPinExc" style="display:none;color:#ff1c47"><spring:theme code="pincode.invalid"/></span>
