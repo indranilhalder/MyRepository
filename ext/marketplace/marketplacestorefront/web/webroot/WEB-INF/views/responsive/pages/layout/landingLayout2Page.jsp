@@ -12,7 +12,7 @@
 
 <!-- TPR-1072 START -->
 <c:if test="${not empty googlebot}">
-<%-- <div style="display:none;"><%@include file="/WEB-INF/views/responsive/fragments/home/atozBrandPanel.jsp"%></div> --%>
+<div style="display:none;"><%@include file="/WEB-INF/views/responsive/fragments/home/atozBrandPanel.jsp"%></div>
 <div style="display:none;"><%@include file="/WEB-INF/views/responsive/fragments/home/shopByBrandImagesPanel.jsp"%></div>
 <div style="display:none;"><%@include file="/WEB-INF/views/responsive/fragments/home/footerPanel.jsp"%></div>
 <div style="display:none;"><%@include file="/WEB-INF/views/responsive/cms/navigationbarcollectioncomponent.jsp"%></div>
