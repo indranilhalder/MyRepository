@@ -181,8 +181,8 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 			{
 				deliveryAddr.append(COMMA).append(deliveryAddress.getLandmark());
 			}
-
 			//TISUATSE-70 starts
+			deliveryAddr.append("<br/>");
 
 			final String city = deliveryAddress.getTown();
 			deliveryAddr.append(city.substring(0, 1).toUpperCase() + city.substring(1)).append(COMMA).append(SPACE)

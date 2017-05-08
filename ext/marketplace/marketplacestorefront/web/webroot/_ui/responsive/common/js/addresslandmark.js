@@ -512,9 +512,23 @@ $(document).ready(function() {
 			$("#new-address-option-1").val($("."+className+" .addressType").text());
 			$("#firstName").val($("."+className+" .firstName").text());
 			$("#lastName").val($("."+className+" .lastName").text());
-			$("#addressLine1").val($("."+className+" .addressLine1").text());
-			$("#addressLine2").val($("."+className+" .addressLine2").text());
-			$("#addressLine3").val($("."+className+" .addressLine3").text());
+			
+			//TISUATSE-135 start
+			var addressLine1 = ($("."+className+" .addressline1").text());
+			if(($("."+className+" .addressline2").text()))
+			{
+			var addressLine2 = ($("."+className+" .addressline2").text());
+			addressLine1 = addressLine1 + addressLine2;
+			}
+			if(($("."+className+" .addressline3").text()))
+			{
+			var addressLine3 = ($("."+className+" .addressline3").text());
+			addressLine1 = addressLine1 + addressLine3;
+			}
+			$("#addressLine1").val(addressLine1);
+			//TISUATSE-135 end
+			//$("#addressLine2").val($("."+className+" .addressLine2").text());
+			//$("#addressLine3").val($("."+className+" .addressLine3").text());
 			$(".address_townCity").val($("."+className+" .town").text());
 			$("#mobileNo").val($("."+className+" .phone").text());
 			var value = $("."+className+" .landmark").text();
