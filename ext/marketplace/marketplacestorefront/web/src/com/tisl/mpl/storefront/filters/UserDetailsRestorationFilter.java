@@ -240,7 +240,24 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 	{
 		LOG.info("For any request coming we should update the Keep Alive cookie if present");
 		final String sessionTimeout = getConfigurationService().getConfiguration().getString("default.session.timeout");
-		final int sessionTimeoutvalue = (Integer.valueOf(sessionTimeout)).intValue();
+		/** Added for UF-93 **/
+		int sessionTimeoutvalue;
+		String rememberMe = "";
+		if (request != null && request.getSession() != null)
+		{
+			rememberMe = (String) request.getSession().getAttribute("rememberMe");
+		}
+		if ("true".equalsIgnoreCase(rememberMe))
+		{
+			final String rememberMesessionTimeout = getConfigurationService().getConfiguration().getString(
+					"rememberMe.session.timeout");
+			sessionTimeoutvalue = (Integer.valueOf(rememberMesessionTimeout)).intValue();
+		}
+		else
+		{
+			sessionTimeoutvalue = (Integer.valueOf(sessionTimeout)).intValue();
+		}
+		/** End for UF-93 **/
 		final Cookie[] cookies = request.getCookies();
 		if (cookies != null)
 		{
@@ -253,6 +270,11 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 					cookie.setMaxAge(sessionTimeoutvalue);
 					cookie.setPath("/");
 					response.addCookie(cookie);
+					request.getSession().setMaxInactiveInterval(sessionTimeoutvalue); // UF-93 Added to set the session to same interval as KeepAlive Cookie
+					LOG.error("UserDetailsRestorationFilterRemember.updateKeepAliveCookie() - RememberMe is : "
+							+ request.getSession().getAttribute("rememberMe") + " Keepalive : " + sessionTimeoutvalue / 60
+							+ "min cookie.getMaxAge(): " + cookie.getMaxAge() + " SessionId: " + request.getSession().getId()
+							+ " SessionTimeout : " + request.getSession().getMaxInactiveInterval() / 60 + "min");					
 				}
 			}
 		}
