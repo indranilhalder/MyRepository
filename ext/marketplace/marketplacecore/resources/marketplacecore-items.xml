@@ -6716,7 +6716,7 @@
 				<!-- CAR-274 -->
  				<indexes>
  					<index name="MPL_ORDENTRIES_TRANSTYPEPKSTR">
- 						<key attribute="transactionID" lower="true"/>
+ 						<key attribute="transactionID" />
  						<key attribute="itemtype" />
  					</index>
  				</indexes>

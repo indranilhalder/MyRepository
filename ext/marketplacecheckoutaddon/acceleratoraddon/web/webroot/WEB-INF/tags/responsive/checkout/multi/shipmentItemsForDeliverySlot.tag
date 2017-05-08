@@ -295,12 +295,26 @@ li.deliverySlotRadio .reset{margin: 3px 0px !important;    height: 30px !importa
 								<ul>
 									<li class="deliverySlotProduct">
 										<div >
-											<div class="thumb product-img">
+										
+										<!-- TISPRDT-1094 START --> 
+											<%-- <div class="thumb product-img">
 												<a href="${productUrl}"><product:productPrimaryImage
 														product="${entry.product}" format="thumbnail" /></a>
-											</div>
-													   
-													   
+											</div> --%>
+											<div class="thumb product-img">
+												<c:choose>
+													<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+															<a href="${productUrl}"><product:productPrimaryImage
+																	product="${entry.product}" format="luxuryCartIcon" /></a>
+													</c:when>
+													<c:otherwise>
+															<a href="${productUrl}"><product:productPrimaryImage
+																	product="${entry.product}" format="thumbnail" /></a>
+															
+													</c:otherwise>
+												</c:choose>
+											</div>		   
+													 <!-- TISPRDT-1094 END -->   
 											<div class="details product" >
 												<h3 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h3>
 												<ycommerce:testId code="cart_product_name">

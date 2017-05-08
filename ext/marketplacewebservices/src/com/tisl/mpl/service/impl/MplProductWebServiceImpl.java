@@ -146,10 +146,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
-	
+
 	//sonar fix
-	/*@Resource(name = "mplProductWebService")
-	private MplProductWebServiceImpl mplProductWebServiceImpl;*/
+	/*
+	 * @Resource(name = "mplProductWebService") private MplProductWebServiceImpl mplProductWebServiceImpl;
+	 */
 
 	/**
 	 * @throws CMSItemNotFoundException
@@ -2281,12 +2282,13 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		try
 		{
 			String sharedText = Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_PRE);
-			productModel = productService.getProductForCode(defaultPromotionManager.catalogData(), productCode);
+			productModel = productService.getProductForCode(productCode);
 			if (null != productModel)
 			{
-				productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-						ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL, ProductOption.SELLER));
+				productData = productFacade.getProductForOptions(productModel,
+						Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY));
+				//ProductOption.CATEGORIES,ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, 
+				//ProductOption.VARIANT_FULL, ProductOption.SELLER));
 			}
 			else
 			{

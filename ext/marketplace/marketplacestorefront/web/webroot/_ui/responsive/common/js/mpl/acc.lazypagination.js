@@ -59,6 +59,7 @@ function innerLazyStorageLoad(productItemArrayStore) {
     $.each(productItemArrayStore, function(index, element) {
                 gridHTML += '<li class="product-item">' + $(element).html() + '</li>';
     });
+ // INC144315462 and INC144315104
     $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').html(gridHTML).hide().fadeIn(500);
 }
 
@@ -72,18 +73,22 @@ function deleteArraySet(productItemArray) {
         if($('ul.product-listing.product-grid').length==0){
         	recordsLoadedCount = $('.product-list').find('li.product-item').length;
         }else{
-        	
+        	// INC144315462 and INC144315104  
         	//recordsLoadedCount = $('.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet,.product-listing.product-grid.lazy-grid-normal').find('li.product-item').length;
         	  recordsLoadedCount = $('.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet,.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').find('li.product-item').length;
         }
     }
-    console.log('Availabe blocks ' + productItemArray.length + ' Record count == ' + recordsLoadedCount);
 }
 
 function getProductSetData() {
 
     var pathName = window.location.pathname;
     var query = window.location.search;
+    //INC144316143
+    if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
+        window.localStorage.setItem('lastUrlpathName',encodeURI(pathName));
+        window.localStorage.setItem('lastUrlquery',encodeURI(query));
+    }
     if (pageNoPagination <= totalNoOfPages) {
 
         //url with page no occourance found.
@@ -133,6 +138,7 @@ function getProductSetData() {
     }
 }
 
+//INC144315462 and INC144315104
 function getProductSetDataCustomSku() {
 	 
  	var pathName = $('input[name=customSkuUrl]').val();
@@ -187,7 +193,18 @@ $(document).ready(function() {
     totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
     var lazyfrompdp = window.localStorage.getItem("lazyfrompdp");
     
-    if (window.localStorage &&  (html = window.localStorage.getItem('productlazyarray')) && html != '' && lazyfrompdp != '' && lazyfrompdp == 'true' && ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category')) {
+    //INC144316143
+    var pathName = window.location.pathname;
+    var query    = window.location.search;
+    var searchResultStorageData = "true";
+    var lastUrlpathName = window.localStorage.getItem('lastUrlpathName');
+    var lastUrlquery    = window.localStorage.getItem('lastUrlquery');
+    
+    if( (lastUrlpathName != undefined  && encodeURI(pathName) != lastUrlpathName) || (lastUrlquery != undefined && encodeURI(query) != lastUrlquery)) {
+    	searchResultStorageData = "false"; // not same with last search url
+    } 
+    
+    if (window.localStorage &&  (html = window.localStorage.getItem('productlazyarray')) && searchResultStorageData == 'true' && html != '' && lazyfrompdp != '' && lazyfrompdp == 'true' && ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category')) {
     	
     		$('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list').html(decodeURI(html));
         	
@@ -195,6 +212,7 @@ $(document).ready(function() {
             if($('ul.product-listing.product-grid').length==0){
             	recordsLoadedCount = $('.product-list').find('li.product-item').length;
             }else{
+          	  // INC144315462 and INC144315104  
             	//recordsLoadedCount = $('.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet,.product-listing.product-grid.lazy-grid-normal').find('li.product-item').length;
             	 recordsLoadedCount = $('.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet,.product-listing.product-grid.lazy-grid-normal,.product-listing.product-grid.custom-sku').find('li.product-item').length;
             }
@@ -208,6 +226,7 @@ $(document).ready(function() {
     }else{
     	//TISSQAUAT-3429 starts
     	//getProductSetData();
+    	// INC144315462 and INC144315104
     	//TISSQAUAT-3429 ends
     	if($('input[name=customSku]').length == 1){
     		  	getProductSetDataCustomSku();
@@ -226,11 +245,11 @@ $(document).ready(function() {
                     wH = $(window).height(),
                     wS = $(this).scrollTop();
                 if (wS > (hT + hH - wH)) {
-				console.log("Lazy Reached");
                     $('.product-item').removeClass('lazy-reached');
 					//$('li').removeClass('lazy-reached');
                     if (recordsLoadedCount!=0 && (recordsLoadedCount % loadMoreCount) == 0) {
                         $('.loadMorePageButton').remove();
+                     // INC144315462 and INC144315104  
                         //$('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,.product-listing.product-grid.lazy-grid-normal').after('<button class="loadMorePageButton" style="background: #a9143c;color: #fff;margin: 5px auto;font-size: 12px;height: 40px;padding: 9px 18px;width: 250px;">Load More</button>');
                           $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,.product-listing.product-grid.lazy-grid-normal,.product-listing.product-grid.custom-sku').after('<button class="loadMorePageButton" style="background: #a9143c;color: #fff;margin: 5px auto;font-size: 12px;height: 40px;padding: 9px 18px;width: 250px;">Load More</button>');
                     } else {
@@ -241,6 +260,7 @@ $(document).ready(function() {
                         		getProductSetDataCustomSku();
                         		}else{
                         	 	//getProductSetData();
+                        			// INC144315462 and INC144315104  
                         			if($('input[name=customSku]').length == 1){
                         				getProductSetDataCustomSku();
                         				  	}else{
@@ -259,6 +279,7 @@ $(document).ready(function() {
         // listner for load more
         $(document).on('click', '.loadMorePageButton', function() {
           //  getProductSetData();
+        	// INC144315462 and INC144315104  
         	if($('input[name=customSku]').length == 1){
         		getProductSetDataCustomSku();
         			}else{
@@ -279,6 +300,7 @@ $(document).ready(function() {
         
         $(document).on('click','.sort',function(){
         	//sort($(this),false);
+        	// INC144315462 and INC144315104 
         	if($('input[name=customSku]').length){
         		 		sortCustomSku($(this),false);
         		 	}else{
@@ -288,6 +310,7 @@ $(document).ready(function() {
         
         $('.responsiveSort').change(function(){
         	//sort($(this).find(':selected'),true);
+        	// INC144315462 and INC144315104  
         	if($('input[name=customSku]')){
         		sortCustomSku($(this).find(':selected'),true);
         		}else{
@@ -308,11 +331,15 @@ $(document).ready(function() {
         	  if ( event.which == 13 ) {
         		window.localStorage.removeItem('lazyfrompdp');
           		window.localStorage.removeItem('productlazyarray');
+          		window.localStorage.removeItem('lastUrlpathName');
+          		window.localStorage.removeItem('lastUrlquery');
         	  }
         });
         $(document).on('click','.words,.departmenthover,.searchButton',function(){
         	window.localStorage.removeItem('lazyfrompdp');
       		window.localStorage.removeItem('productlazyarray');
+      		window.localStorage.removeItem('lastUrlpathName');
+      		window.localStorage.removeItem('lastUrlquery');
         });
 });
 
@@ -420,6 +447,7 @@ function sortReplaceState(url){
 
 
 //Added for custom sku
+//INC144315462 and INC144315104 
 function sortReplaceStateCustomSku(url){
 	console.log(url);
 	var customSkuCollectionId = $('input[name=customSkuCollectionId]').val();
@@ -503,7 +531,8 @@ function sort(this_data,drop_down){
 	}
 }
 
-//Added for custom sku 
+//Added for custom sku
+//INC144315462 and INC144315104
 function sortCustomSku(this_data,drop_down){
 	console.log(typeof(this_data));
 	var item = $(this_data).attr('data-name');
@@ -553,9 +582,9 @@ function sortCustomSku(this_data,drop_down){
 		if($('input[name=customSku]').length == 1){
 			var lookId = $('input[name=customSkuCollectionId]').val();
 			if($('#searchPageDeptHierTreeForm').serialize()!=""){
- 				url = '/CustomSkuCollection/'+lookId+'?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=isDiscountedPrice';
+ 				url = '/CustomSkuCollection/'+lookId+'?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=price-asc';
  			}else{
- 				url = '/CustomSkuCollection/'+lookId+'?q='+$('#js-site-search-input').val()+'&sort=isDiscountedPrice';
+ 				url = '/CustomSkuCollection/'+lookId+'?q='+$('#js-site-search-input').val()+'&sort=price-asc';
  			}
 			ajaxPLPLoad(url);
 		}
@@ -565,9 +594,9 @@ function sortCustomSku(this_data,drop_down){
 		if($('input[name=customSku]').length == 1){
 			var lookId = $('input[name=customSkuCollectionId]').val();
 			if($('#searchPageDeptHierTreeForm').serialize()!=""){
- 				url = '/CustomSkuCollection/'+lookId+'?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=isDiscountedPrice';
+ 				url = '/CustomSkuCollection/'+lookId+'?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=price-desc';
  			}else{
- 				url = '/CustomSkuCollection/'+lookId+'?q='+$('#js-site-search-input').val()+'&sort=isDiscountedPrice';
+ 				url = '/CustomSkuCollection/'+lookId+'?q='+$('#js-site-search-input').val()+'&sort=price-desc';
  			}
 			ajaxPLPLoad(url);
 		}
