@@ -213,7 +213,9 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				}
 
 				//Added For Electronics INC_11278
-				else if (buyBoxMod.getProduct().equalsIgnoreCase(pdpProduct))
+				// Code fix for INC144316285
+				//else if (buyBoxMod.getProduct().equalsIgnoreCase(pdpProduct))
+				else if (null != buyBoxMod && buyBoxMod.getProduct().equalsIgnoreCase(pdpProduct))
 				{
 					productsWithNoStock.add(pdpProduct);
 				}
