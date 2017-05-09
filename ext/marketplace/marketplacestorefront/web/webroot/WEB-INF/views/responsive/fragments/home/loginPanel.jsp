@@ -13,7 +13,6 @@
 								<!-- TISSIT-1703 -->
 								<form:form action="/" method="post" name='flyOutloginForm'>
 									<script type="text/javascript">
-										<!-- added for UF-93 for showing last loggedinUSer if saved. -->
 										<c:if test="${'Y'.equalsIgnoreCase(rememberMeEnabled)}">
 											$('#j_username').val('${lastLoggedInUser}');
 										</c:if>
@@ -122,7 +121,6 @@
 
 											
 <script type="text/javascript">
-	<!-- added for UF-93 for showing last loggedinUSer if saved. -->
 	<c:if test="${'Y'.equalsIgnoreCase(rememberMeEnabled)}">
 		$('#j_username').val('${lastLoggedInUser}');
 	</c:if>
