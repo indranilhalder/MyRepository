@@ -59,7 +59,7 @@ function innerLazyStorageLoad(productItemArrayStore) {
     $.each(productItemArrayStore, function(index, element) {
                 gridHTML += '<li class="product-item">' + $(element).html() + '</li>';
     });
-    // INC144315462 and INC144315104  
+ // INC144315462 and INC144315104
     $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').html(gridHTML).hide().fadeIn(500);
 }
 
@@ -76,6 +76,7 @@ function deleteArraySet(productItemArray) {
 
         	// INC144315462 and INC144315104  
         	
+        	// INC144315462 and INC144315104
         	//recordsLoadedCount = $('.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet,.product-listing.product-grid.lazy-grid-normal').find('li.product-item').length;
         	  recordsLoadedCount = $('.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet,.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').find('li.product-item').length;
         }
@@ -146,8 +147,7 @@ function getProductSetData() {
     }
 }
 
-
-//INC144315462 and INC144315104  
+//INC144315462 and INC144315104
 function getProductSetDataCustomSku() {
 	 	 
 	  	var pathName = $('input[name=customSkuUrl]').val();
@@ -223,9 +223,9 @@ $(document).ready(function() {
             if($('ul.product-listing.product-grid').length==0){
             	recordsLoadedCount = $('.product-list').find('li.product-item').length;
             }else{
-            	  // INC144315462 and INC144315104  
-            	  //recordsLoadedCount = $('.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet,.product-listing.product-grid.lazy-grid-normal').find('li.product-item').length;
-            	  recordsLoadedCount = $('.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet,.product-listing.product-grid.lazy-grid-normal,.product-listing.product-grid.custom-sku').find('li.product-item').length;
+          	  // INC144315462 and INC144315104
+            	//recordsLoadedCount = $('.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet,.product-listing.product-grid.lazy-grid-normal').find('li.product-item').length;
+            	 recordsLoadedCount = $('.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet,.product-listing.product-grid.lazy-grid-normal,.product-listing.product-grid.custom-sku').find('li.product-item').length;
             }
             
             if (recordsLoadedCount!=0 && (recordsLoadedCount % loadMoreCount) == 0) {            	
@@ -267,26 +267,25 @@ $(document).ready(function() {
 					//$('li').removeClass('lazy-reached');
                     if (recordsLoadedCount!=0 && (recordsLoadedCount % loadMoreCount) == 0) {
                         $('.loadMorePageButton').remove();
-                        // INC144315462 and INC144315104  
-                        $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,.product-listing.product-grid.lazy-grid-normal,.product-listing.product-grid.custom-sku').after('<button class="loadMorePageButton" style="background: #a9143c;color: #fff;margin: 5px auto;font-size: 12px;height: 40px;padding: 9px 18px;width: 250px;">Load More</button>');
-
+                     // INC144315462 and INC144315104
+                        //$('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,.product-listing.product-grid.lazy-grid-normal').after('<button class="loadMorePageButton" style="background: #a9143c;color: #fff;margin: 5px auto;font-size: 12px;height: 40px;padding: 9px 18px;width: 250px;">Load More</button>');
+                          $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,.product-listing.product-grid.lazy-grid-normal,.product-listing.product-grid.custom-sku').after('<button class="loadMorePageButton" style="background: #a9143c;color: #fff;margin: 5px auto;font-size: 12px;height: 40px;padding: 9px 18px;width: 250px;">Load More</button>');
                     } else {
                         if (productItemArray.length == 0) { //TODO: check if category page 
                             //window.history.replaceState({},"",ajaxUrl);
                            // getProductSetData();
 
-                        	// INC144315462 and INC144315104  
-if($('input[name=customSku]').length == 1){
-	getProductSetDataCustomSku();
-}else{
-	//getProductSetData();
-	if($('input[name=customSku]').length == 1){
-		getProductSetDataCustomSku();
-	}else{
-		getProductSetData();
-	}
-}
-
+                        	if($('input[name=customSku]').length == 1){
+                        		getProductSetDataCustomSku();
+                        		}else{
+                        	 	//getProductSetData();
+                        			// INC144315462 and INC144315104
+                        			if($('input[name=customSku]').length == 1){
+                        				getProductSetDataCustomSku();
+                        				  	}else{
+                        		 		getProductSetData();
+                        				}
+                        	 	}
                         } else {
                             innerLazyLoad({
                                 effect: true
@@ -298,9 +297,8 @@ if($('input[name=customSku]').length == 1){
         });
         // listner for load more
         $(document).on('click', '.loadMorePageButton', function() {
-
-            //getProductSetData();
-        	// INC144315462 and INC144315104  
+          //  getProductSetData();
+        	// INC144315462 and INC144315104
         	if($('input[name=customSku]').length == 1){
         	 		getProductSetDataCustomSku();
         				}else{
@@ -311,19 +309,20 @@ if($('input[name=customSku]').length == 1){
         });
    // }
         $(window).on("load resize",function(){
-        $("body.page-productGrid .list_title h1").css("display","block");		/*TPR-250 defect fix No result*/	/*TISSTRT-1520*/
-        if($("body.page-productGrid .list_title h1").width() > 200 && $("body.page-productGrid .totalResults").length)
-        	$("body.page-productGrid .list_title h1").css("display","block").addClass("shiftDownZero");		/*TPR-250 defect fix No result*/	/*TISSTRT-1520*/
+        	$("body.page-productGrid .list_title h1").css("display","block");		/*TPR-250 defect fix No result*/	/*TISSTRT-1520*/	/*TISSQAEE-458*/
+            if($("body.page-productGrid .list_title h1").width() > 200 && $("body.page-productGrid .totalResults").length)
+            	$("body.page-productGrid .list_title h1").css("display","block").addClass("shiftDownZero");		/*TPR-250 defect fix No result*/	/*TISSTRT-1520*/	/*TISSQAEE-458*/
         if($("body").hasClass("page-productGrid")){
-        	$("body.page-productGrid .list_title h1").css("margin-left",$(".right-block").offset().left+parseInt($(".right-block").css("padding-left")));
-        	$("body.page-productGrid .list_title h1.shiftDownZero").css("margin-left","0");		/*TPR-250 defect fix No result*/	/*TISSTRT-1520*/
+        $("body.page-productGrid .list_title h1").css("margin-left",$(".right-block").offset().left+parseInt($(".right-block").css("padding-left")));
+        $("body.page-productGrid .list_title h1.shiftDownZero").css("margin-left","0");		/*TPR-250 defect fix No result*/	/*TISSTRT-1520*/	/*TISSQAEE-458*/
         }
+
         });
         
         $(document).on('click','.sort',function(){
         	//sort($(this),false);
 
-        	// INC144315462 and INC144315104  
+        	// INC144315462 and INC144315104
         	if($('input[name=customSku]').length){
         		sortCustomSku($(this),false);
         		}else{
@@ -334,7 +333,7 @@ if($('input[name=customSku]').length == 1){
         
         $('.responsiveSort').change(function(){
         	//sort($(this).find(':selected'),true);
-        	// INC144315462 and INC144315104  
+        	// INC144315462 and INC144315104
         	if($('input[name=customSku]')){
         		sortCustomSku($(this).find(':selected'),true);
         		}else{
@@ -472,8 +471,10 @@ function sortReplaceState(url){
 
 
 //Added for custom sku
+//INC144315462 and INC144315104
 function sortReplaceStateCustomSku(url){
 	
+	console.log(url);
 	var customSkuCollectionId = $('input[name=customSkuCollectionId]').val();
 	url = url.replace(customSkuCollectionId,customSkuCollectionId+'/page-1')
 	$('input[name=customSkuUrl]').val(url);
@@ -564,8 +565,8 @@ function sort(this_data,drop_down){
 }
 
 
-//Added for custom sku 
-//INC144315462 and INC144315104  
+//Added for custom sku
+//INC144315462 and INC144315104
 function sortCustomSku(this_data,drop_down){
 	console.log(typeof(this_data));
 	var item = $(this_data).attr('data-name');
@@ -615,9 +616,9 @@ function sortCustomSku(this_data,drop_down){
 		if($('input[name=customSku]').length == 1){
 			var lookId = $('input[name=customSkuCollectionId]').val();
 			if($('#searchPageDeptHierTreeForm').serialize()!=""){
- 				url = '/CustomSkuCollection/'+lookId+'?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=isDiscountedPrice';
+ 				url = '/CustomSkuCollection/'+lookId+'?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=price-asc';
  			}else{
- 				url = '/CustomSkuCollection/'+lookId+'?q='+$('#js-site-search-input').val()+'&sort=isDiscountedPrice';
+ 				url = '/CustomSkuCollection/'+lookId+'?q='+$('#js-site-search-input').val()+'&sort=price-asc';
  			}
 			ajaxPLPLoad(url);
 		}
@@ -627,9 +628,9 @@ function sortCustomSku(this_data,drop_down){
 		if($('input[name=customSku]').length == 1){
 			var lookId = $('input[name=customSkuCollectionId]').val();
 			if($('#searchPageDeptHierTreeForm').serialize()!=""){
- 				url = '/CustomSkuCollection/'+lookId+'?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=isDiscountedPrice';
+ 				url = '/CustomSkuCollection/'+lookId+'?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=price-desc';
  			}else{
- 				url = '/CustomSkuCollection/'+lookId+'?q='+$('#js-site-search-input').val()+'&sort=isDiscountedPrice';
+ 				url = '/CustomSkuCollection/'+lookId+'?q='+$('#js-site-search-input').val()+'&sort=price-desc';
  			}
 			ajaxPLPLoad(url);
 		}

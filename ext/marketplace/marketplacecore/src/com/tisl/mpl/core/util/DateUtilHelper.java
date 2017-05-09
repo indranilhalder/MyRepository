@@ -328,8 +328,8 @@ public class DateUtilHelper
 			if(LOG.isInfoEnabled()) {
 				LOG.info("Calculating next "+requiredNumberOfDays+" days with LP Holidays for the given date"+date);
 			}
-				if(null !=workingDays && !workingDays.isEmpty() ){
-					String[] workingDaysList =  workingDays.split(",");
+				//if(null !=workingDays && !workingDays.isEmpty() ){ -- Not needed now. getWorkingDaysList.
+					String[] workingDaysList =  getWorkingDaysList(workingDays);
 					DateTimeFormatter formatter = DateTimeFormat.forPattern(DD_MM_YYYY.intern());
 					DateTime dt = formatter.parseDateTime(date);
 					int numberOfWorkingDays = workingDaysList.length;
@@ -337,9 +337,10 @@ public class DateUtilHelper
 						LOG.debug(" number LP WorkingDays="+numberOfWorkingDays);
 					}
 					int count=0;
+					
 					String startingDay = getStartingDay(dt);
 					int starTDay = Integer.valueOf(startingDay);
-					for (int i=starTDay,j=0; ;i++,j++) {
+					for (int i=starTDay,j=0; count <= requiredNumberOfDays ;i++,j++) {   //30-Apr-2017, fix infinite loop issue.
 						String day = String.valueOf(i);
 						if( ArrayUtils.contains( workingDaysList,day ) )   {
 							if(LOG.isDebugEnabled()) {
@@ -363,7 +364,7 @@ public class DateUtilHelper
 							i--;
 						}
 					}
-				}
+				//} -- This if else is not needed now as validation is happening in getWorkingDaysList
 				if(LOG.isDebugEnabled()) {
 					LOG.debug("final dates with LP holidays for the given date"+date+" are"+calculatedDates);
 				}
@@ -395,6 +396,60 @@ public class DateUtilHelper
 		//		return finalDateSet;
 	}
 
+	/**
+	 * Validate the list of Working Days. In case list is invalid use the default and log an 
+	 * error.
+	 * @param workingDays
+	 * @return String[] list of LP working days as 0,1,2,3,4,5,6
+	 */
+	private static String[] getWorkingDaysList(String workingDays){
+		//Validate Working Days List: It can have maximum 7 elements each between 0 and 6.
+		String defaultValue = "1,2,3,4,5,6"; //Use this default in case value passed in invalid
+		String[] workingDaysList =  null;
+
+		if(null !=workingDays && !workingDays.isEmpty() ){
+			boolean inValid = false; 
+			workingDaysList =  workingDays.split(",");
+
+			if (workingDaysList.length == 0) {
+				inValid = true; 
+			}
+			for(String workingDay:workingDaysList){
+				if (LOG.isDebugEnabled()){
+					LOG.debug("working day = " + workingDay);
+				}
+				if (workingDay.isEmpty()) {
+					inValid = true; 
+					break;
+				}
+				try {
+					int wd = Integer.parseInt(workingDay);
+					if ((wd < 0) || (6 < wd)){
+						inValid = true; 
+						break;
+					}
+				}catch (Exception e){
+					if (LOG.isDebugEnabled()){
+						LOG.debug(" Invalid value for Working Days: " + workingDay);
+					}
+					inValid = true;
+					break;
+				}
+			}
+			if (inValid){
+				LOG.error("ERROR: LP Working days List not Set properly. Value obtained = " + workingDays  + " :: Using Default Mon to Sat as working days=1,2,3,4,5,6");
+				workingDaysList =  defaultValue.split(",");
+			}
+			
+		}else {
+			LOG.error("ERROR: LP Working days List not Set properly. Value obtained is null or empty. :: Using Default Mon to Sat as working days=1,2,3,4,5,6");
+			workingDaysList =  defaultValue.split(",");
+		}
+		//Validate Working Days List: END
+		return workingDaysList;
+	}
+	
+	
 	/**
 	 * @param dt
 	 * @return

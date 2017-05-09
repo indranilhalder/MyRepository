@@ -1180,7 +1180,7 @@ function updatePage(response, widgetMode) {
 		 */
 		//Srart tpr-3736
 		var arrayList = response['data']['recommendations'];
-		console.log("***The response is*** " + JSON.stringify(arrayList));
+		//console.log("***The response is*** " + JSON.stringify(arrayList));
 		var usidList = [];
 		var arrIndx = -1;
 		for ( var i in arrayList) {

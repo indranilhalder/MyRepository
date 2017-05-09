@@ -46,9 +46,10 @@
 						<div class="row">
 							<div class="col-md-6 form-group">
 								<label for="firstName"><spring:theme code="text.order.returns.firstname"/></label>
+								<!-- PRDI-124 start-->
 								<form:input path="firstName" onkeypress="return ValidateAlpha(event)"
 									class="form-control textInputChangeAddress" id="firstName"
-									value="${orderDetails.deliveryAddress.firstName}" placeholder="First Name" />
+									value="${orderDetails.deliveryAddress.firstName}" placeholder="First Name" maxlength="140"/>
 								<div class="error_text firstNameError"></div>
 							</div>
 							<div class="col-md-6 form-group">
@@ -56,7 +57,7 @@
 
 								<form:input path="lastName" onkeypress="return ValidateAlpha(event)"
 									class="form-control textInputChangeAddress" id="lastName"
-									value="${orderDetails.deliveryAddress.lastName}" placeholder="Last Name" />
+									value="${orderDetails.deliveryAddress.lastName}" placeholder="Last Name" maxlength="140"/>
 								<div class="error_text lastNameError"></div>
 							</div>
 						</div>
@@ -77,14 +78,15 @@
 							<div class="col-md-12 form-group">
 								<label for="addressLine1"><spring:theme code="text.order.returns.addressline1"/></label>
 
-								<form:input path="line1"
+								<form:textarea path="line1"
 									class="form-control textInputChangeAddress" id="addressLine1"
-									value="${orderDetails.deliveryAddress.line1}" placeholder="Address Line 1" />
+									value="${orderDetails.deliveryAddress.line1}" placeholder="Address Line" />
 								<div class="error_text address1Error"></div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-md-12 form-group">
+						<!-- <div class="row"> -->
+							<!-- <div class="col-md-12 form-group"> -->
+							 <div class="hide">
 								<label for="addressLine2"><spring:theme code="text.order.returns.addressline2"/></label>
 								<form:input path="line2"
 									value="${orderDetails.deliveryAddress.line2}" placeholder="Address Line 2"
@@ -92,8 +94,9 @@
 								<div class="error_text address2Error"></div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-md-12 form-group">
+						<!-- <div class="row"> -->
+							<!-- <div class="col-md-12 form-group"> -->
+							<div class="hide">
 								<label for="addressLine2"><spring:theme code="text.order.returns.addressline3"/></label>
 								<form:input path="line3" id="addressLine3"
 									class="form-control textInputChangeAddress"
@@ -131,7 +134,8 @@
 								<div class="form-group">
 									<label for="city"><spring:theme code="text.order.returns.city"/></label>
 									<form:input path="townCity" class="address_townCity" id="city"
-										value="${orderDetails.deliveryAddress.town}" placeholder="City" />
+										value="${orderDetails.deliveryAddress.town}" placeholder="City" maxlength="40"/>
+										<!-- PRDI-124 END-->
 									<div class="error_text cityError"></div>
 
 								</div>
