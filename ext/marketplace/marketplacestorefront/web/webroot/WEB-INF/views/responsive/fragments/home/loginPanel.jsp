@@ -124,6 +124,7 @@
 	<c:if test="${'Y'.equalsIgnoreCase(rememberMeEnabled)}">
 		$('#j_username').val('${lastLoggedInUser}');
 	</c:if>
+	
 	$.ajax({
 		url:ACC.config.encodedContextPath + "/login/sociallogin",
 		type:'GET',
