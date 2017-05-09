@@ -80,30 +80,29 @@
 
 								<form:textarea path="line1"
 									class="form-control textInputChangeAddress" id="addressLine1"
-									value="${orderDetails.deliveryAddress.line1}" placeholder="Address Line" />
+									value="${orderDetails.deliveryAddress.line1}" placeholder="Address Line" maxlength="120"/>
 								<div class="error_text address1Error"></div>
 							</div>
 						</div>
-						<!-- <div class="row"> -->
-							<!-- <div class="col-md-12 form-group"> -->
-							 <div class="hide">
+						
+						<%-- <div class="row">
+							<div class="col-md-12 form-group">
 								<label for="addressLine2"><spring:theme code="text.order.returns.addressline2"/></label>
 								<form:input path="line2"
 									value="${orderDetails.deliveryAddress.line2}" placeholder="Address Line 2"
-									class="form-control textInputChangeAddress" id="addressLine2" />
+									class="form-control textInputChangeAddress" id="addressLine2" maxlength="40"/>
 								<div class="error_text address2Error"></div>
 							</div>
-						</div>
-						<!-- <div class="row"> -->
-							<!-- <div class="col-md-12 form-group"> -->
-							<div class="hide">
+						</div> --%>
+						<%-- <div class="row">
+							<div class="col-md-12 form-group">
 								<label for="addressLine2"><spring:theme code="text.order.returns.addressline3"/></label>
 								<form:input path="line3" id="addressLine3"
 									class="form-control textInputChangeAddress"
-									value="${orderDetails.deliveryAddress.line3}" placeholder="Address Line 3" />
+									value="${orderDetails.deliveryAddress.line3}" placeholder="Address Line 3" maxlength="40"/>
 								<div class="error_text address3Error"></div>
 							</div>
-						</div>
+						</div> --%>
 						
 						
 				
