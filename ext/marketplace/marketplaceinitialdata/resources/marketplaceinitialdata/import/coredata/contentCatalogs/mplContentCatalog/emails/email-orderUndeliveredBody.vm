@@ -80,10 +80,20 @@
       	      <tr>
                 <td>&nbsp;</td>
               </tr>
-			  #if($ctx.cmsSlotContents.Tip)
+
 			  <tr>
-			   <td valign="middle" align="right">${ctx.cmsSlotContents.Tip}</td>
+			  <td>
+			  <table width="598" border="0" cellspacing="0" cellpadding="0">
+  #if($ctx.cmsSlotContents.Tip)
+			  <tr>
+			
+        	 <td valign="middle" align="right">${ctx.cmsSlotContents.Tip}</td>
 			   <td valign="middle" align="left" style="font-weight:bold;color:#000">HERE'S A TIP</td>
+			   </tr>
+			   #end
+        	</table>
+			  </td>
+			  
 			   </tr>
 			   #end
              

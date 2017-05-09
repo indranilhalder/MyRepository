@@ -92,20 +92,21 @@
 									</div>
 								</div>
 
-<div class="clearfix"></div>
+							<div class="clearfix"></div>
 								<div class="row">
 									<div class="col-md-12 form-group">
 										<label for="addressLine1"><spring:theme
 												code="text.order.returns.addressline1" /></label>
-										<form:input path="line1" maxlength="40"
+										<form:textarea path="line1" maxlength="120"
 											class="form-control textInputChangeAddress" id="addressLine1"
-											placeholder="Address Line 1"
+											placeholder="Address Line"
 											onkeyup="this.value=this.value.replace(/\s\s+/g,'');" />
 											<div class="errorText"></div>
 									</div>
 								</div>
-								<div class="clearfix"></div>
-								<div class="row">
+								<!-- <div class="clearfix"></div> -->
+								<div class="hide">
+								<!-- <div class="row"> -->
 									<div class="col-md-12 form-group">
 										<label for="addressLine2"><spring:theme
 												code="text.order.returns.addressline2" /></label>
@@ -116,8 +117,9 @@
 											<div class="errorText"></div>
 									</div>
 								</div>
-								<div class="clearfix"></div>
-								<div class="row">
+								<!-- <div class="clearfix"></div> -->
+								<!-- <div class="row"> -->
+								<div class="hide">
 									<div class="col-md-12 form-group">
 										<label for="addressLine3"><spring:theme
 												code="text.order.returns.addressline3" /></label>

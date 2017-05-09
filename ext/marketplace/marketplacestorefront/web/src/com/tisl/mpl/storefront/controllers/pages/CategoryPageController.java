@@ -858,7 +858,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 					//final ContentPageModel categoryLandingPage = getLandingPageForCategory(category); // CAR-237 called above at line 392 once. doing the same logic to throw pt # 4
 					if (categoryLandingPage == null)
 					{
-						throw new CMSItemNotFoundException("Could not find a landing page for the category" + category.getName());
+						//throw new CMSItemNotFoundException("Could not find a landing page for the category" + category.getName());
+						//changes for CAR-280
+						throw new CMSItemNotFoundException("Category Landing page is not configured for PLP" + category.getName());
 					}
 
 					/*
@@ -898,9 +900,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 			catch (final CMSItemNotFoundException exp)
 
 			{
-				LOG.error("************** category method exception " + exp);
-				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp,
-						MarketplacecommerceservicesConstants.E0000));
+				LOG.error("************** category method exception " + exp.getMessage());
+				//ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp,
+				//MarketplacecommerceservicesConstants.E0000));
 
 				try
 				{
@@ -1530,10 +1532,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 		try
 		{
 			//categoryLandingPage = getLandingPageForCategory(category); // CAR -237 not called as categoryLandingPage is already sent and available Code review pt#4
-			if (categoryLandingPage == null)
-			{
-				throw new CMSItemNotFoundException("Could not find a landing page for the category" + category.getName());
-			}
+			//changes for CAR-280
+			//if (categoryLandingPage == null)
+			//{
+			//throw new CMSItemNotFoundException("Could not find a landing page for the category" + category.getName());
+			//}
 
 			//(TPR-243) SEO Meta Tags and Titles for Landing Page *: starts
 			seoContentList = category.getSeoContents(); // CAR-235 - added to remove duplicate category.getSeoContents() calls at LIne # 1005 & 1064
@@ -1559,9 +1562,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 			//setUpMetaDataForContentPage(model, categoryLandingPage);
 		}
-		catch (final CMSItemNotFoundException e)
+		//changes for CAR-280
+		catch (final Exception e)
 		{
-			LOG.error("SEO meta content error ---" + e.getMessage());
+			LOG.debug("SEO meta content error ---" + e.getMessage());
 		}
 	}
 

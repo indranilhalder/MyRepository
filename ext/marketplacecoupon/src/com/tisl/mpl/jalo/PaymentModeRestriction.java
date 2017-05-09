@@ -1,6 +1,5 @@
 package com.tisl.mpl.jalo;
 
-import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
@@ -56,28 +55,41 @@ public class PaymentModeRestriction extends GeneratedPaymentModeRestriction
 		//TPR-4461 starts here for CALL CENTER COD CHECK
 		Object cartChannel = null;
 		final String codmode = "COD";
+		final String callcenter = "callcenter";
 		final List<PaymentType> paymentTypeList = new ArrayList<PaymentType>(getPaymentTypeData());
 
 		if (cart instanceof Cart)
 		{
 			try
 			{
+
 				cartChannel = cart.getAttribute(CartModel.CHANNEL);
+
 				LOG.debug("CartChannel for Cart" + cartChannel);
-				if (cartChannel.equals(SalesApplication.CALLCENTER))
+
+				if (StringUtils.containsIgnoreCase(cartChannel.toString(), callcenter))
 				{
+					boolean codflag = false;
+					LOG.debug("SUCCESS");
+
 					for (final PaymentType paymentType : paymentTypeList)
 					{
 						LOG.debug("Inside isFulfilledInternal: coupon's payment mode: " + paymentType.getMode());
-						if (!StringUtils.equalsIgnoreCase(paymentType.getMode(), codmode))
+						if (StringUtils.equalsIgnoreCase(paymentType.getMode(), codmode))
 						{
-							return false;
+							codflag = true;
 						}
 					}
 
+					if (codflag == false)
+					{
+						return false;
+					}
 
 				}
+
 			}
+
 			catch (final JaloInvalidParameterException e)
 			{
 				// YTODO Auto-generated catch block

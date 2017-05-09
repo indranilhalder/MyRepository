@@ -2475,9 +2475,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				if (null != abstractOrderModel && null != abstractOrderModel.getEntries()
 						&& !abstractOrderModel.getEntries().isEmpty() && null != inventoryRequest && null != inventoryRequest.getItem())
 				{
-					for (final InventoryReservRequestWsDTO item : inventoryRequest.getItem())
+					for ( InventoryReservRequestWsDTO item : inventoryRequest.getItem())
 					{
-						for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
+						for ( AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
 						{
 							if (item.getUssId().equalsIgnoreCase(entry.getSelectedUSSID()))
 							{
@@ -2485,6 +2485,15 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								entry.setFulfillmentType(item.getFulfillmentType());
 								try
 								{
+							   		//  INC144316545 START 
+							   		if(null != salesApplication && salesApplication.equals(SalesApplication.MOBILE)){
+							   			   if(null!=item.getFulfillmentType()){
+							   			   	    if(MarketplacecommerceservicesConstants.TSHIP.equalsIgnoreCase(item.getFulfillmentType())){
+							   			   	   	 entry.setCurrDelCharge(Double.valueOf(0.0));
+							   			   	    }
+							   			   }
+							   		}
+							      	//  INC144316545 END
 									final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 											entry.getSelectedUSSID());
 									List<RichAttributeModel> richAttributeModel = null;
