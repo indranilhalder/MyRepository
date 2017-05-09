@@ -64316,6 +64316,9 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 	.new-address-form-mobile, .mobile_add_address{
 		display: none;
 	}
+	.change-mobile, .cancel-mobile{
+	display: none !important;
+	}
 }
 @media (min-width: 981px){
 #makePayment .cart.wrapper.checkout-payment .left-block {
@@ -64346,13 +64349,21 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 	    padding-right: 0px;
 	}
 }
-.addressList_wrapper.mobile_list{
-	display: none;
-}
-.change-mobile, .cancel-mobile, .checkout-mobile-heading{
+.checkout-mobile-heading, .addressList_wrapper.mobile_list, .change-mobile, .cancel-mobile{
 	display: none;
 	}
-	
+	.address-list .default input[type="radio"] + label::before {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #979797;
+    border-radius: 2px;
+    box-shadow: none;
+	}
+.address-list .default input[type="radio"] + label.radio-checked:before {
+    background-image: url(../images/address-tick.png);
+    background-size: 100%;
+    border: none;
+	}
 @media (max-width: 1024px){
 #reviewOrder.cart.wrapper .product-block li.header{
 display:none;
@@ -64732,6 +64743,9 @@ background:#f8f8f8;
 	}
 	.new-address-form-mobile .product-block.addresses.new-form .full > .half{
 	padding-right: 0;
+	}
+	#singlePageAccordion .new-address {
+    text-align: left;
 	}
  }
 /*tab mobile checkout header end*/
