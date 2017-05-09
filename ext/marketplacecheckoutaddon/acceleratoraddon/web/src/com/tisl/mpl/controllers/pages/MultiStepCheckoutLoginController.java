@@ -32,10 +32,12 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import java.util.Collections;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -62,6 +64,7 @@ import com.tisl.mpl.storefront.controllers.helpers.GoogleAuthHelper;
 import com.tisl.mpl.storefront.web.forms.ExtRegisterForm;
 import com.tisl.mpl.storefront.web.forms.validator.RegisterPageValidator;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
