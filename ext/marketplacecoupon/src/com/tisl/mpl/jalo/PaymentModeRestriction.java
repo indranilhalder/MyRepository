@@ -69,17 +69,25 @@ public class PaymentModeRestriction extends GeneratedPaymentModeRestriction
 
 				if (StringUtils.containsIgnoreCase(cartChannel.toString(), callcenter))
 				{
+					boolean codflag = false;
 					LOG.debug("SUCCESS");
 
 					for (final PaymentType paymentType : paymentTypeList)
 					{
 						LOG.debug("Inside isFulfilledInternal: coupon's payment mode: " + paymentType.getMode());
-						if (!StringUtils.equalsIgnoreCase(paymentType.getMode(), codmode))
+						if (StringUtils.equalsIgnoreCase(paymentType.getMode(), codmode))
 						{
-							return false;
+							codflag = true;
 						}
 					}
+
+					if (codflag == false)
+					{
+						return false;
+					}
+
 				}
+
 			}
 
 			catch (final JaloInvalidParameterException e)
