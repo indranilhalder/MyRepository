@@ -1869,4 +1869,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//Query for fetching invalidation of a particular order-voucher-user
 	public static final String VOUCHERINVALIDATIONQUERY = "select {pk} from {voucherinvalidation} where {order}=?order and {user}=?user and {voucher}=?voucher ";
+	// Agent specific order search query
+	public static final String ORDER_BY_AGENT = "select {pk} from {Order} where {user}=?user and {agentId}=?agentId ";
+	// Agent who placed order from cscockpit
+	public static final String AGENT_ID = "agentId";
 }
