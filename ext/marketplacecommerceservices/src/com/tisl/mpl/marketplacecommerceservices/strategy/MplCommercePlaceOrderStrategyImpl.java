@@ -1,6 +1,7 @@
 /*** Eclipse Class Decompiler plugin, copyright (c) 2012 Chao Chen (cnfree2000@hotmail.com) ***/
 package com.tisl.mpl.marketplacecommerceservices.strategy;
 
+
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commerceservices.delivery.DeliveryService;
 import de.hybris.platform.commerceservices.externaltax.ExternalTaxesService;
@@ -11,7 +12,10 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.security.PrincipalGroupModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.order.CalculationService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
@@ -24,6 +28,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.services.BaseStoreService;
@@ -80,6 +85,10 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	//INC144315079
 	@Autowired
 	private MplCommerceCartService mplCommerceCartService;
+
+	@Autowired
+	private UserService userService;
+
 
 	@Override
 	public CommerceOrderResult placeOrder(final CommerceCheckoutParameter parameter) throws InvalidCartException,
@@ -200,6 +209,15 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 					orderModel.setModeOfOrderPayment(modeOfPayment);
 
+					//storing agent id in the order model in case of store manager login in cscockpit
+
+					final String agentId = getAgentIdForStore(configurationService.getConfiguration().getString(
+							MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP));
+					if (agentId != null && StringUtils.isNotEmpty(agentId))
+					{
+						orderModel.setAgentId(agentId);
+					}
+
 					getModelService().save(orderModel);
 
 					/*
@@ -217,8 +235,8 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				afterPlaceOrder(parameter, result);
 
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
-						&& (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD") || 
-								orderModel.getModeOfOrderPayment().equalsIgnoreCase("JusPay") ))
+						&& (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD") || orderModel.getModeOfOrderPayment()
+								.equalsIgnoreCase("JusPay")))
 				{
 					//Order splitting and order fulfilment process will only be triggered for COD orders from here - TPR-629
 					try
@@ -271,6 +289,22 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		{
 			getExternalTaxesService().clearSessionTaxDocument();
 		}
+	}
+
+	private String getAgentIdForStore(final String groupName)
+	{
+		final String agentId = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
+		final UserModel user = userService.getUserForUID(agentId);
+		final Set<PrincipalGroupModel> userGroups = user.getAllGroups();
+
+		for (final PrincipalGroupModel ug : userGroups)
+		{
+			if (ug.getUid().equalsIgnoreCase(groupName))
+			{
+				return agentId;
+			}
+		}
+		return StringUtils.EMPTY;
 	}
 
 	private boolean checkOrder(final OrderModel order)

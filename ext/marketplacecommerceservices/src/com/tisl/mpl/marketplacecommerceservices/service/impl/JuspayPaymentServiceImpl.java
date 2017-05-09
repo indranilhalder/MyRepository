@@ -27,8 +27,8 @@ import java.util.UUID;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.constants.GeneratedMarketplacecommerceservicesConstants.Enumerations.OISPaymentTypeEnum;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.marketplacecommerceservices.daos.impl.MplPaymentDaoImpl;
 import com.tisl.mpl.marketplacecommerceservices.service.JuspayPaymentService;
 
@@ -128,6 +128,7 @@ public class JuspayPaymentServiceImpl implements JuspayPaymentService
 		getModelService().save(cartModel);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void getPaymentTransactionEntryModel(final PaymentTransactionModel paymentTransactionModel, final CartModel cart,
 			final Double amount)
@@ -146,9 +147,23 @@ public class JuspayPaymentServiceImpl implements JuspayPaymentService
 				"payment.transactionStatusDetails"));
 		paymentTransactionEntryModel.setTime(new Date());
 		paymentTransactionEntryModel.setType(PaymentTransactionType.AUTHORIZATION);
-		paymentTransactionEntryModel.setPaymentMode(mplPaymentDaoImpl.getPaymentMode(OTPTypeEnum.JUSPAY.toString()));
+		final String paymentMode = (String) JaloSession.getCurrentSession().getAttribute("oisPaymentType");
+		//paymentTransactionEntryModel.setPaymentMode(mplPaymentDaoImpl.getPaymentMode(OTPTypeEnum.JUSPAY.toString()));
+		if (paymentMode.equalsIgnoreCase("credit"))
+		{
+			final String actualOISPaymentMode = OISPaymentTypeEnum.CREDIT.toString() + " " + "Card";
+			paymentTransactionEntryModel.setPaymentMode(mplPaymentDaoImpl.getPaymentMode(actualOISPaymentMode));
+		}
+		else if (paymentMode.equalsIgnoreCase("debit"))
+		{
+			final String actualOISPaymentMode = OISPaymentTypeEnum.DEBIT.toString() + " " + "Card";
+			paymentTransactionEntryModel.setPaymentMode(mplPaymentDaoImpl.getPaymentMode(actualOISPaymentMode));
+		}
+		else
+		{
+			paymentTransactionEntryModel.setPaymentMode(mplPaymentDaoImpl.getPaymentMode(paymentMode));
+		}
 		getModelService().save(paymentTransactionEntryModel);
-
 	}
 
 	@Override

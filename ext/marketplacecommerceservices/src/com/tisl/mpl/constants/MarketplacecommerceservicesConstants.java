@@ -1864,6 +1864,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	// OrderIssues:- multiple Payment Response from juspay restriction
 	public static final String DUPLICATEJUSPAYRESONSE = "duplicatJuspayResponse";
 
+	// OIS store manager agent group
+	public static final String CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP = "cscockpit.user.group.storemanageragentgroup";
+
 	//Query for fetching invalidation of a particular order-voucher-user
 	public static final String VOUCHERINVALIDATIONQUERY = "select {pk} from {voucherinvalidation} where {order}=?order and {user}=?user and {voucher}=?voucher ";
 }

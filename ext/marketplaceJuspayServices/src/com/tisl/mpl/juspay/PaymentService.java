@@ -10,6 +10,9 @@ import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.SocketAddress;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.ParseException;
@@ -190,10 +193,11 @@ public class PaymentService
 	private String makeServiceCall(final String endPoint, final String encodedParams)
 	{
 
-		/*
-		 * final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(
-		 * MarketplaceJuspayServicesConstants.PROXYENABLED);
-		 */
+		final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(
+				MarketplaceJuspayServicesConstants.PROXYENABLED);
+
+
+
 		HttpsURLConnection connection = null;
 		final StringBuilder buffer = new StringBuilder();
 
@@ -209,8 +213,22 @@ public class PaymentService
 			 * connection.getResponseMessage(); LOG.info("conection msg :: " + msg); } else { final URL url = new
 			 * URL(endPoint); connection = (HttpsURLConnection) url.openConnection(); }
 			 */
-			final URL url = new URL(endPoint);
-			connection = (HttpsURLConnection) url.openConnection();
+			if (proxyEnableStatus.equalsIgnoreCase("true"))
+			{
+				final String proxyName = getConfigurationService().getConfiguration().getString(
+						MarketplaceJuspayServicesConstants.GENPROXY);
+				final int proxyPort = Integer.parseInt(getConfigurationService().getConfiguration().getString(
+						MarketplaceJuspayServicesConstants.GENPROXYPORT));
+				final SocketAddress addr = new InetSocketAddress(proxyName, proxyPort);
+				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+				final URL url = new URL(endPoint);
+				connection = (HttpsURLConnection) url.openConnection(proxy);
+			}
+			else
+			{
+				final URL url = new URL(endPoint);
+				connection = (HttpsURLConnection) url.openConnection();
+			}
 			String encodedKey = new String(Base64.encodeBase64(this.key.getBytes()));
 			encodedKey = encodedKey.replaceAll("\n", "");
 			connection.setRequestProperty("Authorization", "Basic " + encodedKey);
@@ -231,6 +249,7 @@ public class PaymentService
 			wr.writeBytes(encodedParams);
 			wr.flush();
 			wr.close();
+
 
 			// Read the response
 			final InputStream inputStream = connection.getInputStream();
@@ -285,6 +304,7 @@ public class PaymentService
 
 		final String serializedParams = serializeParams(params);
 		final String url = baseUrl + "/orders";
+		//final String url = baseUrl + "/init_order";
 
 		//log.info("Sending init_order to " + url);
 		//log.debug("Payload (init_order): " + serializedParams);

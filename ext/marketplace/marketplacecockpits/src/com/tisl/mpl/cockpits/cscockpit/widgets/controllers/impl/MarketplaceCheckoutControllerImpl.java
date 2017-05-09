@@ -3,6 +3,9 @@ package com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.SocketAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -14,6 +17,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.net.ssl.HttpsURLConnection;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -32,10 +36,12 @@ import com.tisl.mpl.cockpits.cscockpit.strategies.MplFindDeliveryFulfillModeStra
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
+import com.tisl.mpl.juspay.constants.MarketplaceJuspayServicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.JuspayPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
@@ -96,8 +102,14 @@ public class MarketplaceCheckoutControllerImpl extends
 	
 	private static final String JUSPAYPAYMENTVERSION = "2017-03-16";
 	
+	private static final String PAYMENT_METHOD_TYPE= "CARD";
+	
+	private static final String OIS_NETBANKING = "Netbanking";
+	
 	private int connectionTimeout = 5 * 10000;
 	private int readTimeout = 5 * 1000;
+	
+	private String paymentType = StringUtils.EMPTY;
 
 	/** The Constant LOG. */
 	private static final Logger LOG = Logger
@@ -915,25 +927,60 @@ public class MarketplaceCheckoutControllerImpl extends
 	@Override
 	public String juspayPaymentValidation(final String commerEndOrderId)
 	{
-		final String url = ORDERPAYMENTSTATUSURL+commerEndOrderId+"?"+MERCHANTKEY+MERCHANTID;
+		//final String url = ORDERPAYMENTSTATUSURL+commerEndOrderId+"?"+MERCHANTKEY+MERCHANTID;
+		final String url = ORDERPAYMENTSTATUSURL+commerEndOrderId;
 		final String paymentStatusresponse = makeGetPaymentStatusCall(url);
 		
 		final JSONObject jsonResponse = (JSONObject) JSONValue.parse(paymentStatusresponse);
 		final String merchantId = (String) jsonResponse.get("status");
-		
+		final String paymentMethodType = (String)jsonResponse.get("payment_method_type");
+		if(paymentMethodType.equalsIgnoreCase(PAYMENT_METHOD_TYPE))
+		{
+			final JSONObject structure = (JSONObject) jsonResponse.get("card");
+			paymentType = (String)structure.get("card_type");
+		}
+		else
+		{
+			paymentType = OIS_NETBANKING;
+		}
+		JaloSession.getCurrentSession().setAttribute("oisPaymentType", paymentType);
 		return merchantId;
 	}
 	
 	public String makeGetPaymentStatusCall(String endPointURL)
 	{
+		final String proxyEnableStatus = configurationService.getConfiguration().getString(
+				MarketplaceJuspayServicesConstants.PROXYENABLED);
+		
 		HttpsURLConnection connection = null;
 		final StringBuilder response = new StringBuilder();
 		String responseFromJuspay = null;
 		
 		try
 		{
-			final URL url = new URL(endPointURL);
-			connection = (HttpsURLConnection) url.openConnection();
+			if (proxyEnableStatus.equalsIgnoreCase("true"))
+			{
+				final String proxyName = configurationService.getConfiguration().getString(
+						MarketplaceJuspayServicesConstants.GENPROXY);
+				final int proxyPort = Integer.parseInt(configurationService.getConfiguration().getString(
+						MarketplaceJuspayServicesConstants.GENPROXYPORT));
+				final SocketAddress addr = new InetSocketAddress(proxyName, proxyPort);
+				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+				final URL url = new URL(endPointURL);
+				connection = (HttpsURLConnection) url.openConnection(proxy);
+			}
+			else
+			{
+				final URL url = new URL(endPointURL);
+				connection = (HttpsURLConnection) url.openConnection();
+			}
+			
+			final String key = configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY) ;
+			String encodedKey = new String(Base64.encodeBase64(key.getBytes()));
+			encodedKey = encodedKey.replaceAll("\n", "");
+			connection.setRequestProperty("Authorization", "Basic " + encodedKey);
+			
 			connection.setConnectTimeout(connectionTimeout);
 			connection.setReadTimeout(readTimeout);
 			connection.setRequestMethod("GET");

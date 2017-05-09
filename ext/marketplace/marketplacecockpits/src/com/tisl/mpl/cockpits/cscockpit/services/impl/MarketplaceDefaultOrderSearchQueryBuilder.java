@@ -204,8 +204,8 @@ public class MarketplaceDefaultOrderSearchQueryBuilder extends
 			}
 			//Condition based on agent ID
 			if (agentId != null) {
-				query.append(" AND {o:agentId} >=?agentId");
-				query2.append(" AND {o:agentId} >=?agentId");
+				query.append(" AND {o:agentId} =?agentId");
+				query2.append(" AND {o:agentId} =?agentId");
 			}
 
 			query.append(" }}");
