@@ -3598,8 +3598,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 															+ banknameforUserPaymentMode);
 													willApply = getMplPaymentFacade().validateBank(bankLists, banknameforUserPaymentMode);
 												}
+												break;
+
 											}
-											break;
 
 										}
 									}
@@ -3812,8 +3813,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 													willApply = getMplPaymentFacade().validateBank(bankLists, banknameforUserPaymentMode);
 
 												}
+												break;
 											}
-											break;
+
 
 										}
 									}
@@ -4798,8 +4800,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 											if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
 											{
 												willApply = true;
+												break;
 											}
-											break;
+
 										}
 									}
 									else
@@ -4933,8 +4936,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 											if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
 											{
 												willApply = true;
+												break;
 											}
-											break;
+
 										}
 									}
 									else
@@ -5096,8 +5100,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 												if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
 												{
 													willApply = true;
+													break;
 												}
-												break;
+
 											}
 										}
 										else
@@ -5282,8 +5287,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 											if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
 											{
 												willApply = true;
+												break;
 											}
-											break;
+
 										}
 									}
 									else
