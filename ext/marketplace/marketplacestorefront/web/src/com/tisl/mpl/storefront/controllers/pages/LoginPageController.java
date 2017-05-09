@@ -28,6 +28,7 @@ import java.io.PrintWriter;
 import java.util.Collections;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -289,7 +290,7 @@ public class LoginPageController extends AbstractLoginPageController
 			{
 				model.addAttribute(ModelAttributetConstants.IS_SIGN_IN_ACTIVE, ModelAttributetConstants.Y_CAPS_VAL);
 			}
-			
+
 			/** Added for UF-93 to show the last logged in user in log in field for the remembered Users **/
 			final String rememberMeEnabled = configurationService.getConfiguration().getString("rememberMe.enabled");
 			model.addAttribute("rememberMeEnabled", rememberMeEnabled);
@@ -306,7 +307,7 @@ public class LoginPageController extends AbstractLoginPageController
 					LOG.error("Last user set into model: " + model.asMap().get("lastLoggedInUser"));
 				}
 			}
-			/** End UF-93 **/			
+			/** End UF-93 **/
 			returnPage = getDefaultLoginPage(false, session, model);
 		}
 		catch (final EtailBusinessExceptions e)
