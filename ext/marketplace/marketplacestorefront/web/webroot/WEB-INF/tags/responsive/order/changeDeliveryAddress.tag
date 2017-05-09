@@ -85,16 +85,22 @@
 							</div>
 						</div>
 						
-						<%-- <div class="row">
+						
+						<div class="hide">
+						
+						<div class="row">
 							<div class="col-md-12 form-group">
 								<label for="addressLine2"><spring:theme code="text.order.returns.addressline2"/></label>
 								<form:input path="line2"
 									value="${orderDetails.deliveryAddress.line2}" placeholder="Address Line 2"
 									class="form-control textInputChangeAddress" id="addressLine2" maxlength="40"/>
 								<div class="error_text address2Error"></div>
+								</div>
 							</div>
-						</div> --%>
-						<%-- <div class="row">
+						</div>
+						
+						<div class="hide">
+						<div class="row">
 							<div class="col-md-12 form-group">
 								<label for="addressLine2"><spring:theme code="text.order.returns.addressline3"/></label>
 								<form:input path="line3" id="addressLine3"
@@ -102,7 +108,8 @@
 									value="${orderDetails.deliveryAddress.line3}" placeholder="Address Line 3" maxlength="40"/>
 								<div class="error_text address3Error"></div>
 							</div>
-						</div> --%>
+						</div>
+						</div>
 						
 						
 				
@@ -217,7 +224,25 @@
 										<span class="addressType addressFont">${orderDeliveryAddressList.addressType}</span>
 										<span class="firstName addressFont">${orderDeliveryAddressList.firstName}</span>
 										<span class="lastName addressFont">${orderDeliveryAddressList.lastName}</span><br>
-										<c:if test="${not empty orderDeliveryAddressList.line1}">
+										<!-- TISUATSE-135 start -->
+										<c:if test="${not empty orderDeliveryAddressList.line1 && empty orderDeliveryAddressList.line2 && empty orderDeliveryAddressList.line3}">
+											<span class="addressLine1 addressFont">${orderDeliveryAddressList.line1}</span>,&nbsp;
+										</c:if>
+										<c:if test="${empty orderDeliveryAddressList.line2 && not empty orderDeliveryAddressList.line3}">
+											<span class="addressLine1 addressFont">${orderDeliveryAddressList.line1}${orderDeliveryAddressList.line3}</span>,&nbsp;
+										</c:if>
+										<c:if test="${not empty orderDeliveryAddressList.line2 && empty orderDeliveryAddressList.line3}">
+											<span class="addressLine1 addressFont">${orderDeliveryAddressList.line1}${orderDeliveryAddressList.line2}</span>,&nbsp;
+										</c:if>
+										<c:if test="${not empty orderDeliveryAddressList.line2 && not empty orderDeliveryAddressList.line3}">
+											<span class="addressLine1 addressFont">${orderDeliveryAddressList.line1}${orderDeliveryAddressList.line2}${orderDeliveryAddressList.line3}</span>,&nbsp;
+										</c:if>
+										<c:if test="${not empty orderDeliveryAddressList.landmark}">
+												<span class="landmark addressFont">${orderDeliveryAddressList.landmark}</span>,&nbsp;
+										</c:if>
+										<br>
+										<!-- TISUATSE-135 end -->
+										<%-- <c:if test="${not empty orderDeliveryAddressList.line1}">
 											<span class="addressLine1 addressFont">${orderDeliveryAddressList.line1}</span>,&nbsp;
 									    </c:if>
 										<c:if test="${not empty orderDeliveryAddressList.line2}">
@@ -228,8 +253,8 @@
 										</c:if>
 										<c:if test="${not empty orderDeliveryAddressList.landmark}">
 												&nbsp;<span class="landmark addressFont">${orderDeliveryAddressList.landmark}</span>,
-										</c:if>
-										<br>
+										</c:if> --%>
+										
 										<c:if test="${not empty orderDeliveryAddressList.town}">
 											<span class="town addressFont">${orderDeliveryAddressList.town}</span>&nbsp;
 									    </c:if>
