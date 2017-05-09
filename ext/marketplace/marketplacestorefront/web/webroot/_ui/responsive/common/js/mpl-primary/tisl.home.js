@@ -1405,7 +1405,7 @@ function getShowCaseAjaxCall() {
 	                        renderHtml +=
 	                            "<div class='showcaseItem'><a id='" +
 	                            v.compId +
-	                            "' class='showcase-border'>" +
+	                            "' class=''>" +
 	                            v.headerText + "</a></div>";
 	                        defaultComponentId = v.compId;
 	                    }
