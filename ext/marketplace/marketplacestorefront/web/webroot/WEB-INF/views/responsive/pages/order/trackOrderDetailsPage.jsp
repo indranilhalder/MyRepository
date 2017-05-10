@@ -83,7 +83,8 @@
 									<li><spring:theme code="text.account.order.subtotal"/>  
 										<format:price priceData="${subOrder.subTotal}" />
 									</li>
-									<li><spring:theme code="text.account.order.delivery" text="Delivery" /><span class="amt">
+									<li><%-- <spring:theme code="text.account.order.delivery" text="Delivery" /> --%>
+									<span><spring:theme code="text.account.order.delivery1" text="Schedule Delivery and Shipping Charges"/></span><span class="amt">
 											 <format:price	priceData="${subOrder.deliveryCost}" displayFreeForZero="true" />
 									</span></li>
 <!-- 									TISEE-2672 -->

@@ -719,7 +719,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 				//TISSQAUAT-468 and TISSQAUATS-752 code ends here for promotion offercount revert back logic
 				//SONAR FIX
-				if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()) || !isLimitedStockRestrictionAppliedflag)//TISSQAUAT-468 and TISSQAUATS-752  flag condition added for limited stock promotion check(promotion offercount revert back logic)
+				if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()) || isLimitedStockRestrictionAppliedflag)//TISSQAUAT-468 and TISSQAUATS-752  flag condition added for limited stock promotion check(promotion offercount revert back logic)
 				{
 					final List<LimitedStockPromoInvalidationModel> invalidationList = new ArrayList<LimitedStockPromoInvalidationModel>(
 							stockPromoCheckService.getPromoInvalidationList(orderModel.getGuid()));
