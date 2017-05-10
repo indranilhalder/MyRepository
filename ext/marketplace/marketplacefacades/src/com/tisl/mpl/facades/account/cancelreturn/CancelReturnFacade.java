@@ -7,6 +7,7 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
 
@@ -80,14 +81,15 @@ public interface CancelReturnFacade
 	 * @param ussid
 	 * @param customerData
 	 * @param subOrderModel
-
+	 *
 	 * @param returnAddress
 	 * @param returnInfoData
 	 * @return CRMTicketStatus
 	 */
 	public boolean createTicketInCRM(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
 			final String ticketTypeCode, final String reasonCode, final String refundType, final String ussid,
-			final CustomerData customerData, final OrderModel subOrderModel, ReturnItemAddressData returnAddress,ReturnInfoData returnInfoData);
+			final CustomerData customerData, final OrderModel subOrderModel, ReturnItemAddressData returnAddress,
+			ReturnInfoData returnInfoData);
 
 
 	/**
@@ -113,26 +115,26 @@ public interface CancelReturnFacade
 	 * @param salesApplication
 	 * @return Return Item Status
 	 */
-	public boolean implementReturnItem(OrderData subOrderDetails, OrderEntryData subOrderEntry, ReturnInfoData returnData,CustomerData customerData,
-			SalesApplication salesApplication, ReturnItemAddressData returnAddress);
+	public boolean implementReturnItem(OrderData subOrderDetails, OrderEntryData subOrderEntry, ReturnInfoData returnData,
+			CustomerData customerData, SalesApplication salesApplication, ReturnItemAddressData returnAddress);
 
 
 	/**
-	 * 
+	 *
 	 * @param returnRequestData
 	 * @return RTSAndRSSReturnInfoRequestData
 	 */
 	public RTSAndRSSReturnInfoResponseData retrunInfoCallToOMS(final RTSAndRSSReturnInfoRequestData returnRequestData);
 
 	/**
-	 * 
+	 *
 	 * @param codSelfShipData
 	 * @return RTSAndRSSReturnInfoRequestData
 	 */
 	public CODSelfShipResponseData codPaymentInfoToFICO(final CODSelfShipData codSelfShipData);
 
 	/**
-	 * 
+	 *
 	 * @param updateTicketData
 	 * @return CRMTicketUpdateResponseData
 	 */
@@ -148,7 +150,7 @@ public interface CancelReturnFacade
 
 
 	/**
-	 * 
+	 *
 	 * @param ussid
 	 * @return List<String>
 	 */
@@ -223,7 +225,7 @@ public interface CancelReturnFacade
 	public List<OrderLineData> returnInitiationForRTS(List<OrderLineData> orerLines);
 
 	public void saveRTSAndRSSFInfoflag(String transactionId);
-	
+
 	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByDates(Date fromDate, Date toDate);
 
 	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByParams(String orderID, String customerId, String pincode);
@@ -238,8 +240,57 @@ public interface CancelReturnFacade
 	boolean orderCancellationFromBackoffice(String orderCode, String transactionId) throws Exception;
 
 	public void returnRssCRMRequest(ReturnRequestDTO returnRequestDTO);
-	
+
 	public ReturnPincodeDTO checkReturnLogisticsForApp(final OrderData orderDetails, final String pincode,
 			final String returntransactionId);
- 
+
+	//TPR-1345:One touch cancel return--START
+	/**
+	 * Method: for cancellation part of one touch CRM--TPR-1345
+	 *
+	 * @param subOrderDetails
+	 * @param orderEntry
+	 * @param reasonCode
+	 * @param ussid
+	 * @param ticketTypeCode
+	 * @param refundType
+	 * @param isReturn
+	 * @param salesApplication
+	 * @return OMS cancellation status
+	 */
+	public boolean oneTouchCancel(OrderModel subOrderModel, OrderData subOrderDetails, OrderEntryData orderEntry,
+			String reasonCode, String ussid, String ticketTypeCode, String refundType, boolean isReturn,
+			SalesApplication salesApplication, List<AbstractOrderEntryModel> abstractOrderEntryModel);
+
+	/**
+	 * Method: for Return part of one touch CRM--TPR-1345
+	 *
+	 * @param subOrderDetails
+	 * @param orderEntry
+	 * @param reasonCode
+	 * @param ticketTypeCode
+	 * @param isReturn
+	 * @param salesApplication
+	 * @param returnPincode
+	 * @return OMS cancellation status
+	 */
+	public boolean oneTouchReturn(OrderData subOrderDetails, OrderEntryData orderEntry, String reasonCode, String ticketTypeCode,
+			SalesApplication salesApplication, String returnPincode, List<AbstractOrderEntryModel> orderEntriesModel,
+			OrderModel subOrderModel, CODSelfShipData codSelfShipData);
+
+	/**
+	 * Method: for pincode serviceability part of one touch CRM--TPR-1345
+	 *
+	 * @param subOrderDetails
+	 * @param returnPincode
+	 * @param txnId
+	 * @return true, if serviceable
+	 * @throws Exception
+	 */
+	public boolean oneTouchPincodeCheck(OrderData subOrderDetails, String returnPincode, String txnId) throws Exception;
+
+	public List<AbstractOrderEntryModel> associatedEntries(final OrderModel subOrderDetails, final String transactionId)
+			throws Exception;
+	//TPR-1345:One touch cancel return--END
+
 }

@@ -19,6 +19,8 @@ import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.CheckoutFacade;
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
@@ -36,6 +38,7 @@ import de.hybris.platform.commercefacades.user.data.CountryData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
@@ -51,12 +54,16 @@ import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.enumeration.EnumerationService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.location.Location;
@@ -78,6 +85,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -97,6 +105,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -116,17 +125,21 @@ import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.enums.FeedbackCategory;
 import com.tisl.mpl.core.model.MplEnhancedSearchBoxComponentModel;
+import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
+import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
+import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.marketplacecommerceservices.event.LuxuryPdpQuestionEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
+import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.order.data.CardTypeDataList;
@@ -159,6 +172,9 @@ import com.tisl.mpl.wsdto.HomescreenListData;
 import com.tisl.mpl.wsdto.ListPinCodeServiceData;
 import com.tisl.mpl.wsdto.MplAutoCompleteResultWsData;
 import com.tisl.mpl.wsdto.NewsletterWsDTO;
+import com.tisl.mpl.wsdto.OneTouchCancelReturnCrmRequestDTO;
+import com.tisl.mpl.wsdto.OneTouchCancelReturnCrmRequestList;
+import com.tisl.mpl.wsdto.OneTouchCancelReturnDTO;
 import com.tisl.mpl.wsdto.PaymentInfoWsDTO;
 import com.tisl.mpl.wsdto.PinWsDto;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
@@ -169,12 +185,13 @@ import com.tisl.mpl.wsdto.SellerSlaveDTO;
 import com.tisl.mpl.wsdto.SlaveInfoDTO;
 import com.tisl.mpl.wsdto.StateListWsDto;
 import com.tisl.mpl.wsdto.StateWsDto;
+import com.tisl.mpl.wsdto.TicketMaster;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.VersionListResponseData;
 import com.tisl.mpl.wsdto.VersionListResponseWsDTO;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 import com.tisl.mpl.wsdto.WthhldTAXWsDTO;
-import de.hybris.platform.servicelayer.session.SessionService;
+
 
 /**
  * @author TCS
@@ -201,13 +218,13 @@ public class MiscsController extends BaseController
 	private CustomerFacade customerFacade;
 	/*
 	 * @Resource private ModelService modelService;
-	 * 
+	 *
 	 * @Autowired private ForgetPasswordFacade forgetPasswordFacade;
-	 * 
+	 *
 	 * @Autowired private ExtendedUserServiceImpl userexService;
-	 * 
+	 *
 	 * @Autowired private WishlistFacade wishlistFacade;
-	 * 
+	 *
 	 * @Autowired private MplSellerMasterService mplSellerInformationService;
 	 */
 	@Autowired
@@ -234,7 +251,7 @@ public class MiscsController extends BaseController
 	private FieldSetBuilder fieldSetBuilder;
 	/*
 	 * @Resource(name = "i18NFacade") private I18NFacade i18NFacade;
-	 * 
+	 *
 	 * @Autowired private MplCommerceCartServiceImpl mplCommerceCartService;
 	 */
 	@Autowired
@@ -306,6 +323,15 @@ public class MiscsController extends BaseController
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 	@Autowired
 	private SessionService sessionService;
+
+	//Newly added for TPR-1345:One touch CRM
+	@Resource(name = "orderModelService")
+	private OrderModelService orderModelService;
+	@Resource(name = "orderConverter")
+	private Converter<OrderModel, OrderData> orderConverter;
+	@Resource(name = "cancelReturnFacade")
+	private CancelReturnFacade cancelReturnFacade;
+
 
 	/*
 	 * private static final String DROPDOWN_BRAND = "MBH"; private static final String DROPDOWN_CATEGORY = "MSH";
@@ -675,9 +701,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 * 
+	 *
 	 * @param restrictionXML
-	 * 
+	 *
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1385,7 +1411,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1398,11 +1424,11 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 *
+	 * 
 	 * } return deliveryModeData; } =======
-	 *
+	 * 
 	 * @param code
-	 *
+	 * 
 	 * @return >>>>>>> origin/GOLDEN_PROD_SUPPORT_07122016
 	 */
 	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)
@@ -1746,8 +1772,8 @@ public class MiscsController extends BaseController
 					for (final MplNewsLetterSubscriptionModel mplNewsLetterSubscriptionModel : newsLetterSubscriptionList)
 					{
 						if ((mplNewsLetterSubscriptionModel.getEmailId().equalsIgnoreCase(emailId))
-								&& (!(mplNewsLetterSubscriptionModel.getIsLuxury().booleanValue())
-										|| mplNewsLetterSubscriptionModel.getIsLuxury() == null))
+								&& (!(mplNewsLetterSubscriptionModel.getIsLuxury().booleanValue()) || mplNewsLetterSubscriptionModel
+										.getIsLuxury() == null))
 						{
 							mplNewsLetterSubscriptionModel.setIsLuxury(Boolean.TRUE);
 							modelService.save(mplNewsLetterSubscriptionModel);
@@ -1771,4 +1797,306 @@ public class MiscsController extends BaseController
 		final Matcher matcher = pattern.matcher(email);
 		return matcher.matches();
 	}//LW-176 ends
+
+	/**
+	 * Method: One touch Cancel and return--TPR-1345
+	 *
+	 * @param crmRequestXML
+	 *           the input XML request from CRM
+	 * @return XML , the output XML response to CRM
+	 */
+	@RequestMapping(value = "/{baseSiteId}/oneTouch", method = RequestMethod.POST, consumes =
+	{ MediaType.APPLICATION_XML_VALUE }, produces =
+	{ MediaType.APPLICATION_XML_VALUE })
+	@ResponseBody
+	public Object oneTouchCancelReturn(final InputStream crmRequestXML)
+	{
+		LOG.info("==========Inside oneTouchCancelReturn controller==========");
+		//instances & variables
+		OneTouchCancelReturnDTO output = null;
+		final Set<OneTouchCancelReturnDTO> outputList = new HashSet<OneTouchCancelReturnDTO>();
+		final TicketMaster oneTouchReturnDTOList = new TicketMaster();
+		boolean serviceabilty = true;
+		boolean resultFlag = false;
+		final String ussid = null;
+		OrderEntryData orderEntry = new OrderEntryData();
+		OneTouchCancelReturnCrmRequestList crmReqObj = null;
+		String consignmentStatus = null;
+		String transactionId = null;
+		CODSelfShipData codSelfShipData = null;
+		try
+		{
+			//Converting XML to JAVA Object
+			final JAXBContext jaxbContext = JAXBContext.newInstance(OneTouchCancelReturnCrmRequestList.class);
+			final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			crmReqObj = (OneTouchCancelReturnCrmRequestList) jaxbUnmarshaller.unmarshal(crmRequestXML);
+			//Iterating over each object
+			outer: for (final OneTouchCancelReturnCrmRequestDTO oneTouchCrmObj : crmReqObj.getOneTouchCancelReturnRequestDTOlist())
+			{
+				codSelfShipData = null;
+				//loopFlag = "N";
+				consignmentStatus = null;
+				output = new OneTouchCancelReturnDTO();
+				//Mandatory fields validation
+				if (StringUtils.isNotEmpty(oneTouchCrmObj.getOrderRefNum())
+						&& StringUtils.isNotEmpty(oneTouchCrmObj.getSubOrderNum()) && StringUtils.isNotEmpty(oneTouchCrmObj.getUSSID())
+						&& StringUtils.isNotEmpty(oneTouchCrmObj.getTicketType())
+						&& StringUtils.isNotEmpty(oneTouchCrmObj.getTransactionId()))
+				{
+					transactionId = oneTouchCrmObj.getTransactionId();
+					if (LOG.isDebugEnabled())
+					{
+						LOG.debug("===========transaction id:==========" + oneTouchCrmObj.getTransactionId());
+						LOG.debug("===========sub order id:============" + oneTouchCrmObj.getSubOrderNum());
+					}
+					//output.setTransactionId(oneTouchCrmObj.getTransactionId());
+
+					try
+					{
+						LOG.debug("=======Fetching sub order details for sub order number======" + oneTouchCrmObj.getSubOrderNum());
+						final OrderModel subOrderModel = orderModelService.getOrder(oneTouchCrmObj.getSubOrderNum());
+						final OrderData orderData = getOrderConverter().convert(subOrderModel);
+						if (subOrderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
+						{
+							codSelfShipData = new CODSelfShipData();
+							codSelfShipData.setBankName(oneTouchCrmObj.getBankName());
+							codSelfShipData.setBankBranch(oneTouchCrmObj.getBranch());
+							codSelfShipData.setName(oneTouchCrmObj.getAccHolderName());
+							codSelfShipData.setBankKey(oneTouchCrmObj.getIFSC());
+							codSelfShipData.setBankAccount(oneTouchCrmObj.getAccNum());
+							codSelfShipData.setTransactionID(oneTouchCrmObj.getTransactionId());
+						}
+						LOG.debug("========Fetching order entry details for transaction id========" + oneTouchCrmObj.getTransactionId());
+						for (final OrderEntryData entry : orderData.getEntries())
+						{
+							if (null != entry.getTransactionId())
+							{
+								if (entry.getTransactionId().equalsIgnoreCase(transactionId))
+								{
+									orderEntry = entry;
+									if (orderEntry.isGiveAway() == true || orderEntry.isIsBOGOapplied() == true)
+									{
+										continue outer;
+									}
+									break;
+								}
+							}
+							else
+							{
+								output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
+								output.setRemarks(MarketplacewebservicesConstants.BLANK_TRANSACTION_ID);
+								outputList.add(output);
+								oneTouchReturnDTOList.setOneTouchList(new ArrayList<OneTouchCancelReturnDTO>(outputList));
+								return oneTouchReturnDTOList;
+							}
+						}
+						LOG.debug("========Fetching consignment details for order entry=========" + oneTouchCrmObj.getTransactionId());
+						//FETCHING ORDER CONSIGNMENT STATUS
+						if (null != orderEntry.getConsignment() && null != orderEntry.getConsignment().getStatus())
+						{
+							consignmentStatus = orderEntry.getConsignment().getStatus().getCode();
+						}
+						else
+						{
+							consignmentStatus = MarketplacewebservicesConstants.NO_CONSIGNMENT_FOUND;
+							output.setTransactionId(oneTouchCrmObj.getTransactionId());
+							output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
+							output.setRemarks(consignmentStatus);
+							outputList.add(output);
+							continue;
+						}
+						final List<AbstractOrderEntryModel> orderEntriesModel = cancelReturnFacade.associatedEntries(subOrderModel,
+								orderEntry.getTransactionId());
+						//For cancel
+						if (oneTouchCrmObj.getTicketType().equalsIgnoreCase(MarketplacewebservicesConstants.CANCEL_TICKET))
+						{
+							LOG.debug("========Initiating cancellation of consignment=========");
+							//----------IF CONSIGNMENT IS ALREADY CANCELLED---------
+							if (!getMplOrderFacade().checkCancelStatus(consignmentStatus,
+									MarketplacewebservicesConstants.CANCEL_ORDER_STATUS))
+							{
+								resultFlag = cancelReturnFacade.oneTouchCancel(subOrderModel, orderData, orderEntry,
+										oneTouchCrmObj.getCancelReasonCode(), ussid, oneTouchCrmObj.getTicketType(),
+										oneTouchCrmObj.getRefundType(), false, SalesApplication.CALLCENTER, orderEntriesModel);
+								for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
+								{
+									output = new OneTouchCancelReturnDTO();
+									//Successful cancellation
+									if (resultFlag)
+									{
+										output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+										output.setTransactionId(abstractOrderEntryModel.getTransactionID());
+										output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_S);
+										outputList.add(output);
+									}
+									//Failed cancellation
+									else
+									{
+										output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+										output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
+										output.setRemarks(MarketplacewebservicesConstants.ERROR_IN_OMS);
+										outputList.add(output);
+									}
+								}
+							}
+							//---------IF CONSIGNMENT IS ALREADY CANCELLED-----------
+							else
+							{
+								for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
+								{
+									output = new OneTouchCancelReturnDTO();
+									output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+									output.setTransactionId(abstractOrderEntryModel.getTransactionID());
+									output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_S);
+									output.setRemarks(MarketplacewebservicesConstants.ORDER_ALREAY_CANCELLED);
+									outputList.add(output);
+								}
+							}
+						}
+						//For Return
+						else if (oneTouchCrmObj.getTicketType().equalsIgnoreCase(MarketplacewebservicesConstants.RETURN_TICKET))
+						{
+							//-----------IF CONSIGNMENT IS ALREADY RETURNED--------
+							if (!getMplOrderFacade().checkCancelStatus(consignmentStatus,
+									MarketplacewebservicesConstants.RETURN_ORDER_STATUS))
+							{
+								//Pincode serviceablity check for RSP tickets
+								if (oneTouchCrmObj.getTicketSubType().equalsIgnoreCase(MarketplacewebservicesConstants.TICKET_TYPE_RSP))
+								{
+									serviceabilty = cancelReturnFacade.oneTouchPincodeCheck(orderData, oneTouchCrmObj.getPincode(),
+											oneTouchCrmObj.getTransactionId());
+									LOG.debug("========Pincode serviceablity check result is=========" + serviceabilty);
+								}
+								//******INITITATING RETURN********
+
+								if (serviceabilty)
+								{
+									LOG.debug("========Initiating Return of consignment=========");
+									resultFlag = cancelReturnFacade.oneTouchReturn(orderData, orderEntry,
+											oneTouchCrmObj.getReturnReasonCode(), oneTouchCrmObj.getTicketType(),
+											SalesApplication.CALLCENTER, oneTouchCrmObj.getPincode(), orderEntriesModel, subOrderModel,
+											codSelfShipData);
+									//Return is successfull
+									for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
+									{
+										output = new OneTouchCancelReturnDTO();
+										if (resultFlag)
+										{
+											output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+											output.setTransactionId(abstractOrderEntryModel.getTransactionID());
+											output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_S);
+											output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_S);
+											outputList.add(output);
+										}
+										//Return is failure
+										else
+										{
+											output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+											output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
+											output.setRemarks(MarketplacewebservicesConstants.ERROR_IN_OMS);
+											outputList.add(output);
+										}
+									}
+								}
+								//Pincode is not serviceable
+								else
+								{
+									for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
+									{
+										output = new OneTouchCancelReturnDTO();
+										output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+										output.setTransactionId(abstractOrderEntryModel.getTransactionID());
+										output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
+										output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_F);
+										output.setRemarks(MarketplacewebservicesConstants.PINCODE_NOT_SERVICEABLE);
+										outputList.add(output);
+									}
+								}
+							}
+							//---------IF CONSIGNMENT IS ALREADY RETURNED--------
+							else
+							{
+								for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
+								{
+									output = new OneTouchCancelReturnDTO();
+									output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+									output.setTransactionId(abstractOrderEntryModel.getTransactionID());
+									output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_S);
+									output.setRemarks(MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED);
+									outputList.add(output);
+								}
+							}
+						}
+					}
+					catch (final Exception e)
+					{
+						LOG.error(e.getMessage());
+						//Failure response
+						output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+						output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
+						output.setRemarks(e.getMessage());
+						outputList.add(output);
+					}
+				}
+				else
+				{
+					output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+					output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
+					output.setRemarks(MarketplacewebservicesConstants.MISSING_MANDATORY_FIELDS);
+					outputList.add(output);
+				}
+			}
+			LOG.debug("========Sending response in XML format=========");
+			//Automatic conversion of JAVA object to XML
+			oneTouchReturnDTOList.setOneTouchList(new ArrayList<OneTouchCancelReturnDTO>(outputList));
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e.getMessage());
+			//output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+			output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
+			output.setRemarks(MarketplacewebservicesConstants.FORMAT_MISMATCH);
+			outputList.add(output);
+		}
+		LOG.info("==========Finished executing oneTouchCancelReturn controller==========");
+		return oneTouchReturnDTOList;
+	}
+
+	/**
+	 * @return the orderConverter
+	 */
+	public Converter<OrderModel, OrderData> getOrderConverter()
+	{
+		return orderConverter;
+	}
+
+	/**
+	 * @param orderConverter
+	 *           the orderConverter to set
+	 */
+	public void setOrderConverter(final Converter<OrderModel, OrderData> orderConverter)
+	{
+		this.orderConverter = orderConverter;
+	}
+
+	/**
+	 * @return the mplOrderFacade
+	 */
+	public MplOrderFacade getMplOrderFacade()
+	{
+		return mplOrderFacade;
+	}
+
+	/**
+	 * @param mplOrderFacade
+	 *           the mplOrderFacade to set
+	 */
+	public void setMplOrderFacade(final MplOrderFacade mplOrderFacade)
+	{
+		this.mplOrderFacade = mplOrderFacade;
+	}
+
+	@Resource(name = "mplOrderFacade")
+	private MplOrderFacade mplOrderFacade;
+
 }
