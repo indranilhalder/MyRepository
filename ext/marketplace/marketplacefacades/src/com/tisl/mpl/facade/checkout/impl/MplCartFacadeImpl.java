@@ -3375,11 +3375,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			if ((cartData.getEntries() != null && !cartData.getEntries().isEmpty()))
 			{
 				responseDataList = getOMSPincodeResponseData(selectedPincode, cartData);
-				if (null != responseDataList)
-				{
-					getSessionService().setAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION,
-							responseDataList);
-				}
 				if (null != responseDataList && responseDataList.size() > 0 && cartModel != null && cartModel.getEntries() != null
 						&& cartModel.getEntries().size() > 0)
 				{
@@ -3477,9 +3472,17 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 
 			}
-			if (sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE) != null)
+			if (isServicable.equalsIgnoreCase(MarketplacecclientservicesConstants.Y))
 			{
-				sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+				if (sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE) != null)
+				{
+					sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+				}
+				if (null != responseDataList)
+				{
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION,
+							responseDataList);
+				}
 			}
 
 			if (isServicable.equalsIgnoreCase(MarketplacecclientservicesConstants.N) || responseDataList == null)

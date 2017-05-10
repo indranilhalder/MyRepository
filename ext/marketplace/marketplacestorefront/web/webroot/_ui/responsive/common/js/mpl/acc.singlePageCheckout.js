@@ -3,6 +3,31 @@ ACC.singlePageCheckout = {
 	_autoload: [
 	    "mobileAccordion"
 	],
+	ajaxErrorMessages:function(code){
+		var message="";
+		switch(code){
+			case "address.error.formentry.invalid": message="Errors were found with the address you provided. Please check the errors below and re-submit your address.";
+													break;
+			case "address.state.invalid" : message="Please enter state"; break;
+			case "address.firstName.invalid" : message="Please enter first name"; break;
+			case "address.firstName.invalid.new" : message="Please enter a valid first name"; break;
+			case "address.lastName.invalid" : message="Please enter last name"; break;
+			case "address.lastName.invalid.new" : message="Please enter a valid last name"; break;
+			case "address.line1.invalid" : message="Please enter address Line 1"; break;
+			case "address.line1.invalid.length" : message="Address line 1 should be of maximum 40 characters"; break;
+			case "address.line2.invalid.length" : message="Address line 2 should be of maximum 40 characters"; break;
+			case "address.line3.invalid.length" : message="Address line 3 should be of maximum 40 characters"; break;
+			case "address.townCity.invalid"  : message="Please enter a Town/City"; break;
+			case "address.state.invalid" : message="Please enter state"; break;
+			case "address.mobileNumber.invalid" : message="Please enter a Mobile Number"; break;
+			case "address.mobileNumber.invalid.numeric.length" : message="Mobile number should be of 10 digit numeric only"; break;
+			case "address.postcode.invalid" : message="Please enter post code"; break;
+			case "address.postcode.invalid.numeric.length" : message="Post code should be of 6 digit numeric only"; break;
+			case "address.addressType.select" : message="Please select an address Type"; break;
+			default:message="No message specified"; 
+		}
+		return message;
+	},
 	
 	getDeliveryAddresses:function(element){
 		
@@ -1055,10 +1080,16 @@ ACC.singlePageCheckout = {
 		{
 			//$(showElementId).closest(".checkout-accordion").addClass("accordion-open");
 			$(showElementId).html("<span class='alert alert-danger alert-dismissable' style='padding:10px;'>"+jsonResponse.displaymessage+"</span>");
+			$(showElementId).show();
+		}
+		if(jsonResponse.type=="errorCode")
+		{
+			$(showElementId).html("<span class='alert alert-danger alert-dismissable' style='padding:10px;'>"+ACC.singlePageCheckout.ajaxErrorMessages(jsonResponse.displaymessage)+"</span>");
+			$(showElementId).show();
 		}
 		if(jsonResponse.type=="redirect")
 		{
-			window.location.href=jsonResponse.url;
+			window.location.href=ACC.config.encodedContextPath+jsonResponse.url;
 		}
 	},
 	

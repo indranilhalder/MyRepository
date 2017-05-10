@@ -13,6 +13,7 @@
  */
 package com.tisl.mpl.controllers.pages;
 
+import de.hybris.platform.acceleratorstorefrontcommons.annotations.PreValidateCheckoutStep;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.validation.ValidationResults;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCheckoutController;
@@ -174,7 +175,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	@SuppressWarnings("unused")
 	protected static final Logger LOG = Logger.getLogger(MplSingleStepCheckoutController.class);
 
-	private static final String SINGLE_STEP_CHECKOUT_SUMMARY_CMS_PAGE = "singleStepCheckoutSummaryPage";
 	protected static final String MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL = "multiStepCheckoutSummary";
 
 	@Resource(name = ModelAttributetConstants.ACCELERATOR_CHECKOUT_FACADE)
@@ -322,16 +322,41 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		this.cartService = cartService;
 	}
 
-	// Landing page for Single Page Journey
 
+	/**
+	 * Landing page for Single Page Journey This is the entry point of SinglePageCheckout, This method will return the
+	 * Main page and will display the delivery address carousel by default on page load. On Ajax call i.e isAjax=true
+	 * this method will only return the delivery addresses page. This is required as the delivery address carousel needs
+	 * to be refreshed once a new address is added or an existing address is edited.
+	 *
+	 * Using @PreValidateCheckoutStep(checkoutStep = MarketplacecheckoutaddonConstants.DELIVERY_METHOD) as this only
+	 * checks if the cart is valid
+	 *
+	 * @param model
+	 * @param isAjax
+	 * @return String - Jsp page
+	 */
 	@RequestMapping(method = RequestMethod.GET)
 	@RequireHardLogIn
-	public String checkoutPage(final Model model, @RequestParam(required = false, defaultValue = "false") final boolean isAjax)
+	@PreValidateCheckoutStep(checkoutStep = MarketplacecheckoutaddonConstants.DELIVERY_METHOD)
+	public String checkoutPage(final Model model, final RedirectAttributes redirectAttributes,
+			@RequestParam(required = false, defaultValue = "false") final boolean isAjax)
 	{
 		try
 		{
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Inside checkoutPage Method...");
+			}
 			if (getUserFacade().isAnonymousUser())
 			{
+				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+			}
+			final String isServicable = getSessionService().getAttribute("isCartPincodeServiceable");
+			if (isServicable.equalsIgnoreCase("N"))
+			{
+				getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_MSG_SESSION_ID,
+						MarketplacecommerceservicesConstants.TRUE_UPPER);
 				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 			}
 			final CartModel cartModel = getCartService().getSessionCart();
@@ -353,24 +378,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					LOG.debug("Express checkout selected for address id : " + cartUssidData.getDeliveryAddress().getId());
 					//return getCheckoutStep().nextStep();
 				}
-
-
 				deliveryAddress = getMplCustomAddressFacade().getDeliveryAddresses(cartUssidData.getDeliveryAddress(), cartModel); //CAR-194
-
 			}
-
-
-
-
 			deliveryAddress = (deliveryAddress == null || deliveryAddress.isEmpty()) ? accountAddressFacade.getAddressBook()
 					: deliveryAddress;
-			//			deliveryAddress = getMplCheckoutFacade().rePopulateDeliveryAddress(deliveryAddress);
-
-			//TISST-7473
-			/*
-			 * if (deliveryAddress == null || deliveryAddress.isEmpty()) { return
-			 * MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.NEWADDRESSLINK; }
-			 */
 
 			//TISPT-400
 			deliveryAddress = getMplCheckoutFacade().rePopulateDeliveryAddress(deliveryAddress);
@@ -399,41 +410,61 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			model.addAttribute("prePopulateTab", "payment");
 			prepareModelForPayment(model, cartUssidData);
 		}
-		catch (final CMSItemNotFoundException e)
+		catch (final EtailBusinessExceptions e)
 		{
-			// YTODO Auto-generated catch block
-			e.printStackTrace();
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("EtailBusinessExceptions in checkoutPage method ", e);
+			return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("EtailNonBusinessExceptions in checkoutPage method ", e);
+			return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 		}
 		catch (final Exception e)
 		{
-			// YTODO Auto-generated catch block
-			e.printStackTrace();
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+			LOG.error("EtailBusinessExceptions in checkoutPage method ", e);
+			return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 		}
 		if (isAjax)
 		{
 			final String selectedAddress = getSessionService().getAttribute("selectedAddress");
 			model.addAttribute("selectedAddress", selectedAddress);
-			return "addon:/marketplacecheckoutaddon/pages/checkout/single/showDeliveryAddressDetailsPage";
+			return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.DeliveryAddressCarousel;
 		}
-		return "addon:/marketplacecheckoutaddon/pages/checkout/single/singlePageCheckout";
+		return MarketplacecheckoutaddonControllerConstants.Views.Pages.SingleStepCheckout.SinglePageCheckoutPage;
 	}
 
-	// Address Section
-
+	/**
+	 * This method will return a pre-populated address form as a JSP.
+	 *
+	 * @param addressCode
+	 * @param model
+	 * @return String - Edit address JSP
+	 * @throws CMSItemNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_EDIT_ADDRESS
 			+ MarketplacecheckoutaddonConstants.ADDRESS_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
 	public String editAddress(@PathVariable(ModelAttributetConstants.ADDRESS_CODE) final String addressCode, final Model model)
-			throws CMSItemNotFoundException
+			throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
 
 		List<StateData> stateDataList = new ArrayList<StateData>();
 		final AccountAddressForm addressForm = new AccountAddressForm();
 		try
 		{
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Inside editAddress Method...");
+			}
 			if (getUserFacade().isAnonymousUser())
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", "UTF-8");
+						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
@@ -443,7 +474,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			model.addAttribute(ModelAttributetConstants.TITLE_DATA, userFacade.getTitles());
 			model.addAttribute(ModelAttributetConstants.ADDRESS_FORM, addressForm);
 			model.addAttribute(ModelAttributetConstants.ADDRESS_BOOK_EMPTY, Boolean.valueOf(userFacade.isAddressBookEmpty()));
-			//timeOutSet(model);
 			stateDataList = accountAddressFacade.getStates();
 			model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataList);
 
@@ -488,50 +518,29 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					break;
 				}
 			}
-
-			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWDELIVERYMETHOD, Boolean.FALSE);
-			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDRESS, Boolean.FALSE);
-			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWEDITADDRESS, Boolean.TRUE);
-			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDADDRESS, Boolean.FALSE);
-			model.addAttribute(ModelAttributetConstants.EDIT, Boolean.FALSE);
-			model.addAttribute(MarketplacecheckoutaddonConstants.NOADDRESS, Boolean.TRUE);
 			model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE);
 
 			this.prepareDataForPage(model);
-			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-			//			model.addAttribute(
-			//					WebConstants.BREADCRUMBS_KEY,
-			//					getResourceBreadcrumbBuilder().getBreadcrumbs(
-			//							MarketplacecheckoutaddonConstants.CHECKOUT_MULTI_DELIVERYMETHOD_BREADCRUMB));
 			model.addAttribute("metaRobots", "noindex,nofollow");
-			//		setCheckoutStepLinksForModel(model, getCheckoutStep());
-
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("EtailBusinessExceptions  while editing address ", e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("EtailNonBusinessExceptions  while editing address ", e);
 		}
 		catch (final Exception e)
 		{
-			//		this.prepareDataForPage(model);
-			model.addAttribute("addressForm", addressForm);
-			model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSTYPE, getMplCheckoutFacade().getAddressType());
-			model.addAttribute(MarketplacecheckoutaddonConstants.NOADDRESS,
-					Boolean.valueOf(getCheckoutFlowFacade().hasNoDeliveryAddress()));
-			model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataList);
-			GlobalMessages.addErrorMessage(model, "address.error.formentry.invalid");
-			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-			//			model.addAttribute(
-			//					WebConstants.BREADCRUMBS_KEY,
-			//					getResourceBreadcrumbBuilder().getBreadcrumbs(
-			//							MarketplacecheckoutaddonConstants.CHECKOUT_MULTI_DELIVERYMETHOD_BREADCRUMB));
-			//			setCheckoutStepLinksForModel(model, getCheckoutStep());
-			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWDELIVERYMETHOD, Boolean.FALSE);
-			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDRESS, Boolean.FALSE);
-			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWEDITADDRESS, Boolean.TRUE);
-			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDADDRESS, Boolean.FALSE);
-			return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "address.error.formentry.invalid" + "&type=errorCode",
+					UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		model.addAttribute("checkoutPageName", checkoutPageName1);
-		return "addon:/marketplacecheckoutaddon/pages/checkout/single/showEditAddressDetails";
+		return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.EditAddressForm;
 	}
 
 	/**
@@ -550,10 +559,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	{
 		try
 		{
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Inside edit Method...");
+			}
 			if (getUserFacade().isAnonymousUser())
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", "UTF-8");
+						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			//TISST-13012
@@ -563,7 +576,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
 						MarketplacecommerceservicesConstants.TRUE_UPPER);
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", "UTF-8");
+						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 
@@ -574,9 +587,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			if ((!StringUtils.isEmpty(errorMsg) && !errorMsg.equalsIgnoreCase(ModelAttributetConstants.SUCCESS))
 					|| bindingResult.hasErrors())
 			{
-				//TODO
 				final String requestQueryParam = UriUtils.encodeQuery("?msg="
-						+ MarketplacecheckoutaddonConstants.VALIDATION_FAILURE_MESSAGE + "&type=error", "UTF-8");
+						+ MarketplacecheckoutaddonConstants.VALIDATION_FAILURE_MESSAGE + "&type=error", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 
@@ -641,7 +653,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			if (StringUtils.isEmpty(sessionPincode))
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecommerceservicesConstants.CART
-						+ "&type=redirect", "UTF-8");
+						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			//TISUTO-12 , TISUTO-11 ,TISUTO 106
@@ -649,7 +661,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			if (redirectURL.trim().length() > 0)
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?msg="
-						+ MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_FAILURE_MESSAGE + "&type=error", "UTF-8");
+						+ MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_FAILURE_MESSAGE + "&type=error", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 
@@ -685,10 +697,15 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	}
 
+
 	/**
-	 * @param pincodeServicable
-	 * @param displayMessage
+	 * Method will return JSON response, This method is used to pass error messages to ajax request
 	 *
+	 * @param msg
+	 * @param type
+	 * @param url
+	 * @param redirectString
+	 * @return JSON Object
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLSHOWMESSAGE, method =
 	{ RequestMethod.POST, RequestMethod.GET })
@@ -696,21 +713,35 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			@RequestParam(required = true) final String type, @RequestParam(required = false) final String url,
 			@RequestParam(required = false) final String redirectString)
 	{
-		// YTODO Auto-generated method stub
 		final JSONObject jsonObj = new JSONObject();
 
 		try
 		{
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Inside displayMessage Method...");
+				LOG.debug("DisplayMessage Parameters=>msg:" + msg + "; type:" + type + "; url:" + url + "; redirectString:"
+						+ redirectString + ";");
+			}
+			//Used for exceptions messages and error messages
 			if (type.equals("error"))
 			{
 				jsonObj.put("displaymessage", msg);
 				jsonObj.put("type", type);
 			}
+			//Used for exceptions messages and error messages with an error code. Error code is equivalent to code present in base_en.properties.
+			if (type.equals("errorCode"))
+			{
+				jsonObj.put("displaymessage", msg);
+				jsonObj.put("type", type);
+			}
+			//Used to redirect to the specified URL in case the user is unable to continue due to some exceptions
 			if (type.equals("redirect"))
 			{
 				jsonObj.put("url", url);
 				jsonObj.put("type", type);
 			}
+			//Used to redirect to a step in checkout journey
 			if (type.equals("ajaxRedirect"))
 			{
 				jsonObj.put("redirectString", redirectString);
@@ -719,10 +750,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		catch (final JSONException e)
 		{
-			// YTODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.debug("JSONException occured in displayMessage:" + e);
 		}
-
+		catch (final Exception e)
+		{
+			LOG.debug("Exception occured in displayMessage:" + e);
+		}
 		return jsonObj;
 	}
 
@@ -739,10 +772,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		List<AddressData> deliveryAddress = null;
 		try
 		{
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Inside addNewAddress Method...");
+			}
 			if (getUserFacade().isAnonymousUser())
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", "UTF-8");
+						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
@@ -762,12 +799,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 			//final CartModel cartModel = getCartService().getSessionCart();
 			if (cartModel != null)
-
-
 			{
 				for (final AddressModel userAddress : cartModel.getUser().getAddresses())
-
-
 				{
 					if (userAddress != null && userAddress.getVisibleInAddressBook() != null
 							&& userAddress.getVisibleInAddressBook().booleanValue() == true)
@@ -778,33 +811,15 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 
 			model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSFLAG, addressFlag);
-
 			model.addAttribute(MarketplacecheckoutaddonConstants.DELIVERYADDRESSES, deliveryAddress);
 			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
 			model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataList);
 			model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSFORM, addressForm);
 			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWSAVEDTOADDRESSBOOK, Boolean.TRUE);
 			model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSTYPE, getMplCheckoutFacade().getAddressType());
-			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWDELIVERYMETHOD, Boolean.FALSE);
-			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDRESS, Boolean.FALSE);
-			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWEDITADDRESS, Boolean.FALSE);
-			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDADDRESS, Boolean.TRUE);
-			model.addAttribute(ModelAttributetConstants.EDIT, Boolean.FALSE);
-			model.addAttribute(MarketplacecheckoutaddonConstants.NOADDRESS, Boolean.TRUE);
-			model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE); //TPR-629
-			//timeOutSet(model);
+			model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE);
 			this.prepareDataForPage(model);
-			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-			//			model.addAttribute(
-			//					WebConstants.BREADCRUMBS_KEY,
-			//					getResourceBreadcrumbBuilder().getBreadcrumbs(
-			//							MarketplacecheckoutaddonConstants.CHECKOUT_MULTI_DELIVERYMETHOD_BREADCRUMB));
 			model.addAttribute("metaRobots", "noindex,nofollow");
-			//	setCheckoutStepLinksForModel(model, getCheckoutStep());
-			//GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
-			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
-
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -821,8 +836,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			LOG.error("Exception occured while adding new address:", ex);
 		}
 		model.addAttribute("checkoutPageName", checkoutPageName1);
-		//return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
-		return "addon:/marketplacecheckoutaddon/pages/checkout/single/showAddAddressDetails";
+		return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.AddAddressForm;
 	}
 
 	/**
@@ -832,15 +846,19 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @return String
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYSELECTADDRESSURL, method = RequestMethod.GET)
-	public String selectAddress(@RequestParam("selectedAddressCode") final String selectedAddressCode, final Model model)
+	public String selectAddress(@RequestParam("selectedAddressCode") final String selectedAddressCode)
 			throws CMSItemNotFoundException
 	{
 		try
 		{
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Inside selectAddress Method...");
+			}
 			if (getUserFacade().isAnonymousUser())
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", "UTF-8");
+						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			//TISST-13012
@@ -850,7 +868,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
 						MarketplacecommerceservicesConstants.TRUE_UPPER);
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", "UTF-8");
+						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				// ** to be uncommented		return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 			}
@@ -877,17 +895,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				if (StringUtils.isEmpty(sessionPincode))
 				{
 					final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecommerceservicesConstants.CART
-							+ "&type=redirect", "UTF-8");
+							+ "&type=redirect", UTF);
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
-				//getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
-				//TISUTO-12 , TISUTO-11 singlePagecheckPincode
-				//		final String redirectURL = mplCartFacade.checkPincodeAndInventory(selectedPincode);
 				final String redirectURL = mplCartFacade.singlePagecheckPincode(selectedPincode, sessionPincode);
 				if (redirectURL.trim().length() > 0)
 				{
 					final String requestQueryParam = UriUtils.encodeQuery("?msg="
-							+ MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_FAILURE_MESSAGE + "&type=error", "UTF-8");
+							+ MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_FAILURE_MESSAGE + "&type=error", UTF);
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
 
@@ -899,12 +914,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 			else
 			{
-				final String requestQueryParam = UriUtils.encodeQuery("?msg=Provide valid pincode&type=error", "UTF-8");
+				final String requestQueryParam = UriUtils.encodeQuery("?msg=Provide valid pincode&type=error", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
-
-
-
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -921,8 +933,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			LOG.error("Exception occured while selecting  address:" + e);
 		}
 		return FORWARD_PREFIX + "/checkout/single/choose";
-
-		//	return getCheckoutStep().nextStep();
 	}
 
 	/**
@@ -935,8 +945,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 */
 
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYNEWADDRESSURL, method = RequestMethod.POST)
-	public String add(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model,
-			final HttpServletRequest request) throws CMSItemNotFoundException
+	public String add(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model)
+			throws CMSItemNotFoundException
 	{
 		final CartModel oModel = getCartService().getSessionCart();
 		try
@@ -944,39 +954,16 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			if (getUserFacade().isAnonymousUser())
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", "UTF-8");
+						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			final String errorMsg = mplAddressValidator.validate(addressForm);
-			final List<StateData> stateDataList = accountAddressFacade.getStates();
+			//final List<StateData> stateDataList = accountAddressFacade.getStates();
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 			if ((!StringUtils.isEmpty(errorMsg) && !errorMsg.equalsIgnoreCase(ModelAttributetConstants.SUCCESS))
 					|| bindingResult.hasErrors())
 			{
-
-				this.prepareDataForPage(model);
-				model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSFORM, addressForm);
-				model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
-				model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSTYPE, getMplCheckoutFacade().getAddressType());
-				model.addAttribute(MarketplacecheckoutaddonConstants.NOADDRESS,
-						Boolean.valueOf(getCheckoutFlowFacade().hasNoDeliveryAddress()));
-				model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataList);
-				GlobalMessages.addErrorMessage(model, errorMsg);
-				storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-				setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-				//				model.addAttribute(
-				//						WebConstants.BREADCRUMBS_KEY,
-				//						getResourceBreadcrumbBuilder().getBreadcrumbs(
-				//								MarketplacecheckoutaddonConstants.CHECKOUT_MULTI_DELIVERYMETHOD_BREADCRUMB));
-				//				setCheckoutStepLinksForModel(model, getCheckoutStep());
-				//model.addAttribute(MarketplacecheckoutaddonConstants.SHOWDELIVERYMETHOD, Boolean.FALSE);
-				//model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDRESS, Boolean.FALSE);
-				//model.addAttribute(MarketplacecheckoutaddonConstants.SHOWEDITADDRESS, Boolean.FALSE);
-				//model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDADDRESS, Boolean.TRUE);
-				//timeOutSet(model);
-				//return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseAddNewAddressPage;
-
-				final String requestQueryParam = UriUtils.encodeQuery("?msg=" + errorMsg, "UTF-8");
+				final String requestQueryParam = UriUtils.encodeQuery("?msg=" + errorMsg + "&type=errorCode", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			else
@@ -1050,7 +1037,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				if (StringUtils.isEmpty(sessionPincode))
 				{
 					final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecommerceservicesConstants.CART
-							+ "&type=redirect", "UTF-8");
+							+ "&type=redirect", UTF);
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
 				//TISUTO-12 , TISUTO-11
@@ -1058,7 +1045,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				if (redirectURL.trim().length() > 0)
 				{
 					final String requestQueryParam = UriUtils.encodeQuery("?msg="
-							+ MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_FAILURE_MESSAGE + "&type=error", "UTF-8");
+							+ MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_FAILURE_MESSAGE + "&type=error", UTF);
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
 				//Setting selected address id in session
@@ -1082,14 +1069,21 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			LOG.error("Exception occured while saving new address :", e);
 		}
-		//return getCheckoutStep().nextStep();
 		return REDIRECT_PREFIX + "/checkout/single/choose";
 	}
 
-	// DELIVERY METHOD SECTION
 
+	/**
+	 * DELIVERY METHOD SECTION:This will return a JSP page where in a user can select delivery mmodes
+	 *
+	 * @param model
+	 * @param redirectAttributes
+	 * @return String - delivery method selection JSP page
+	 * @throws UnsupportedEncodingException
+	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHOOSEVALUE, method = RequestMethod.GET)
 	public String enterDeliveryModeStep(final Model model, final RedirectAttributes redirectAttributes)
+			throws UnsupportedEncodingException
 	{
 		Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
@@ -1097,10 +1091,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		String returnPage = MarketplacecommerceservicesConstants.EMPTY;
 		try
 		{
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Inside enterDeliveryModeStep Method...");
+			}
 			if (getUserFacade().isAnonymousUser())
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", "UTF-8");
+						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			final CartModel serviceCart = getCartService().getSessionCart();
@@ -1113,22 +1111,17 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
 						MarketplacecommerceservicesConstants.TRUE_UPPER);
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", "UTF-8");
+						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-				//return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 			}
 
-			//TISBOX-1618
-			//final CartModel cartModel = getCartService().getSessionCart();
 			mplCouponFacade.releaseVoucherInCheckout(serviceCart);
 			mplCartFacade.removeDeliveryMode(serviceCart); //TISPT-104 // Cart recalculation method invoked inside this method
-			//applyPromotions();
 
 
 			final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
 			final String defaultPinCodeId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 
-			//timeOutSet(model);
 			if (StringUtils.isNotEmpty(defaultPinCodeId) && (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries())))
 			{
 				//CAR-126/128/129
@@ -1188,57 +1181,52 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					model.addAttribute(MarketplacecheckoutaddonConstants.CART_EXPRESS_CHECKOUT_SELECTED, isExpressCheckoutSelected);
 
 					//	this.prepareDataForPage(model);
-					storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-					setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-					//				model.addAttribute(
-					//						WebConstants.BREADCRUMBS_KEY,
-					//						getResourceBreadcrumbBuilder().getBreadcrumbs(
-					//								MarketplacecheckoutaddonConstants.CHECKOUT_MULTI_DELIVERYMETHOD_BREADCRUMB));
 					model.addAttribute("metaRobots", "noindex,nofollow");
-					//		setCheckoutStepLinksForModel(model, getCheckoutStep());
-					//GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
-
-					GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 					model.addAttribute("checkoutPageName", checkoutPageName);
 					model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE); //TPR-629
-					model.addAttribute("progressBarClass", "choosePage");
 				}
 				else
 				{
 					final String requestQueryParam = UriUtils.encodeQuery("?msg="
-							+ MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_FAILURE_MESSAGE + "&type=error", "UTF-8");
+							+ MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_FAILURE_MESSAGE + "&type=error", UTF);
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
 			}
 			else
 			{
-				final String requestQueryParam = UriUtils.encodeQuery("?url=" + "/cart" + "&type=redirect", "UTF-8");
+				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecommerceservicesConstants.CART
+						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 
-			//returnPage = MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
-			returnPage = "addon:/marketplacecheckoutaddon/pages/checkout/single/showDeliveryModesDetails";
+			returnPage = MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.DeliveyModesSelectionPanel;
 		}
 
 		catch (final CMSItemNotFoundException e)
 		{
 			LOG.error(" CMSItemNotFoundException while  delivery mode show enter step ", e);
 			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
-			returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+			final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecommerceservicesConstants.CART
+					+ "&type=redirect", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			LOG.error("EtailBusinessExceptions  while  delivery mode show enter step ", e);
 			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
-			returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+			final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecommerceservicesConstants.CART
+					+ "&type=redirect", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			LOG.error("EtailNonBusinessExceptions  while  delivery mode show enter step ", e);
 			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
-			returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+			final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecommerceservicesConstants.CART
+					+ "&type=redirect", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		catch (final Exception e)
 		{
@@ -1246,11 +1234,21 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					MarketplacecommerceservicesConstants.E0000));
 			LOG.error("Exceptions  while  delivery mode show enter step ", e);
 			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
-			returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+			final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecommerceservicesConstants.CART
+					+ "&type=redirect", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		return returnPage;
 	}
 
+	/**
+	 * Method will return page for delivery mode selection
+	 *
+	 * @param model
+	 * @return String - delivery slot selection JSP page
+	 * @throws CMSItemNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL, method = RequestMethod.GET)
 	public String selectDeleverySlots(final Model model) throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
@@ -1260,7 +1258,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			if (getUserFacade().isAnonymousUser())
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", "UTF-8");
+						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			final CartData cartDataSupport = mplCartFacade.getSessionCartWithEntryOrdering(true);
@@ -1519,7 +1517,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				if (!isScheduleServiceble)
 				{
 					final String requestQueryParam = UriUtils.encodeQuery("?redirectString=" + "redirectToReviewOrder"
-							+ "&type=ajaxRedirect", "UTF-8");
+							+ "&type=ajaxRedirect", UTF);
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 					//return getCheckoutStep().nextStep();
 				}
@@ -1569,7 +1567,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			LOG.error("Exception occured while selecting  address:" + e);
 		}
 		final String requestQueryParam = UriUtils.encodeQuery("?redirectString=" + "redirectToReviewOrder" + "&type=ajaxRedirect",
-				"UTF-8");
+				UTF);
 		return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 	}
 
@@ -1577,8 +1575,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @author TECH This method first checks the delivery modes if it has only home or express then it forwards to
 	 *         doSelectDeliveryMode method and if it contains all the modes then first process cnc mode and then at jsp
 	 *         level using continue link forward to doSelectDeliveryMode method.
-	 * @param deliveryMethodForm
-	 * @param bindingResult
 	 * @param model
 	 * @param redirectAttributes
 	 * @param request
@@ -1593,20 +1589,18 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final HttpServletResponse response1, final HttpSession session) throws CMSItemNotFoundException,
 			UnsupportedEncodingException
 	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("from doFindCncStores method in Controller");
+		}
 		if (getUserFacade().isAnonymousUser())
 		{
 			final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-					+ "&type=redirect", "UTF-8");
+					+ "&type=redirect", UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-		}
-		if (LOG.isDebugEnabled())
-		{
-			LOG.debug("from doFindDeliveryMode method in Controller");
 		}
 		List<PinCodeResponseData> responseData = null;
 		//TISPT-400
-
-
 		if (getCartService().hasSessionCart())
 		{
 			final CartModel cartModel = getCartService().getSessionCart();
@@ -1622,7 +1616,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
 							MarketplacecommerceservicesConstants.TRUE_UPPER);
 					final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-							+ "&type=redirect", "UTF-8");
+							+ "&type=redirect", UTF);
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 					//return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 				}
@@ -1817,8 +1811,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 				}
 
-				storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-				setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
+				//storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
+				//setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 				//		/TPR-1803
 				//	setCheckoutStepLinksForModel(model, getCheckoutStep());
 				//		model.addAttribute("checkoutPageName", checkoutPageName);
@@ -1827,26 +1821,17 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 			else
 			{
-				String requestQueryParam;
-				try
-				{
-					requestQueryParam = UriUtils.encodeQuery("?msg=" + "USSID not CNC serviceable" + "&type=error", "UTF-8");
-					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-				}
-				catch (final UnsupportedEncodingException e)
-				{
-					// YTODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
+				final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "USSID not CNC serviceable" + "&type=error", UTF);
+				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 		}
 		else
 		{
-			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+			final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+					+ "&type=redirect", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
-		//return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChoosePickupLocationPage;
-		return "addon:/marketplacecheckoutaddon/pages/checkout/single/showPickupLocation";
+		return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.PickupLocationSelectionPanel;
 	}
 
 	/**
@@ -1861,8 +1846,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYSELECTURL)
 	public String doSelectDeliveryMode(@ModelAttribute("deliveryMethodForm") final DeliveryMethodForm deliveryMethodForm,
-			final BindingResult bindingResult, final Model model, final HttpServletRequest request, final HttpSession session)
-			throws CMSItemNotFoundException
+			final BindingResult bindingResult, final Model model, final HttpSession session) throws CMSItemNotFoundException
 	{
 		String returnPage = MarketplacecommerceservicesConstants.EMPTY;
 		try
@@ -1870,7 +1854,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			if (getUserFacade().isAnonymousUser())
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", "UTF-8");
+						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			final CartModel cartModel = getCartService().getSessionCart();
@@ -1882,7 +1866,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
 						MarketplacecommerceservicesConstants.TRUE_UPPER);
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", "UTF-8");
+						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			//TISPT-400 ends
@@ -1934,7 +1918,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			if (!inventoryReservationStatus)
 			{
 				getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
-				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+						+ "&type=redirect", UTF);
+				return REDIRECT_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			/*** Inventory Soft Reservation Start ***/
 
@@ -2080,9 +2066,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			else
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?redirectString=" + "redirectToReviewOrder"
-						+ "&type=ajaxRedirect", "UTF-8");
+						+ "&type=ajaxRedirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-				//returnPage = "addon:/marketplacecheckoutaddon/pages/checkout/single/showReviewOrder";
 			}
 		}
 		catch (final CMSItemNotFoundException e)
@@ -2133,11 +2118,11 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			e.printStackTrace();
 		}
-		return "addon:/marketplacecheckoutaddon/pages/checkout/single/showReviewOrder";
+		return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.ReviewOrder;
 	}
 
 	@RequestMapping(value = "/deliveryAddress", method = RequestMethod.GET)
-	public @ResponseBody JSONObject getDeliveryAddress(final Model model)
+	public @ResponseBody JSONObject getDeliveryAddress()
 	{
 		final JSONObject jsonObject = new JSONObject();
 		String addressLine = null;
@@ -2179,14 +2164,17 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		catch (final JSONException e)
 		{
-			// YTODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("JSONException  while fetching selected delivery address ", e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception  while fetching selected delivery address ", e);
 		}
 		return jsonObject;
 	}
 
 	@RequestMapping(value = "/deliveryModesSelected", method = RequestMethod.GET)
-	public @ResponseBody JSONObject deliveryModesSelected(final Model model)
+	public @ResponseBody JSONObject deliveryModesSelected()
 	{
 		final JSONObject jsonObject = new JSONObject();
 		int homeDelivery = 0;
@@ -2223,8 +2211,11 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		catch (final JSONException e)
 		{
-			// YTODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("JSONException  while fetching selected delivery address ", e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception  while fetching selected delivery address ", e);
 		}
 		return jsonObject;
 	}
@@ -2246,7 +2237,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	}
 
 	@RequestMapping(value = "/validatePayment", method = RequestMethod.GET)
-	public @ResponseBody JSONObject validatePaymentDetails(final Model model, final RedirectAttributes redirectAttributes)
+	public @ResponseBody JSONObject validatePaymentDetails(final RedirectAttributes redirectAttributes)
 			throws UnsupportedEncodingException
 	{
 		final JSONObject jsonObj = new JSONObject();
@@ -2268,7 +2259,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				return jsonObj;
 			}
 
-			final boolean selectPickupDetails = false;
+			//final boolean selectPickupDetails = false;
 			//code to restrict user to continue the checkout if he has not selected pickup person name and mobile number.
 			//this is only when cart entry contains cnc delivery mode.
 			// TPR-429 START
@@ -2328,7 +2319,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			if (getUserFacade().isAnonymousUser())
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", "UTF-8");
+						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
@@ -2340,7 +2331,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", "UTF-8");
+						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 
@@ -2407,7 +2398,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
 							MarketplacecommerceservicesConstants.TRUE_UPPER);
 					final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-							+ "&type=redirect", "UTF-8");
+							+ "&type=redirect", UTF);
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
 
@@ -2472,9 +2463,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
 			//GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,MarketplacecheckoutaddonConstants.ERRORMSG);
 
-			final String requestQueryParam = UriUtils
-					.encodeQuery("?msg=" + "An error occurred contacting the payment provider.  Wait a few minutes and try again."
-							+ "&type=error", "UTF-8");
+			final String requestQueryParam = UriUtils.encodeQuery("?msg="
+					+ "An error occurred contacting the payment provider.  Wait a few minutes and try again." + "&type=error", UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			//return getCheckoutStep().previousStep();
 		}
@@ -2485,9 +2475,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 			//					MarketplacecheckoutaddonConstants.ERRORMSG);
 
-			final String requestQueryParam = UriUtils
-					.encodeQuery("?msg=" + "An error occurred contacting the payment provider.  Wait a few minutes and try again."
-							+ "&type=error", "UTF-8");
+			final String requestQueryParam = UriUtils.encodeQuery("?msg="
+					+ "An error occurred contacting the payment provider.  Wait a few minutes and try again." + "&type=error", UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			//return getCheckoutStep().previousStep();
 		}
@@ -2500,9 +2489,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 			//					MarketplacecheckoutaddonConstants.ERRORMSG);
 
-			final String requestQueryParam = UriUtils
-					.encodeQuery("?msg=" + "An error occurred contacting the payment provider.  Wait a few minutes and try again."
-							+ "&type=error", "UTF-8");
+			final String requestQueryParam = UriUtils.encodeQuery("?msg="
+					+ "An error occurred contacting the payment provider.  Wait a few minutes and try again." + "&type=error", UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			//return getCheckoutStep().previousStep();
 		}
@@ -2515,9 +2503,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 			//					MarketplacecheckoutaddonConstants.ERRORMSG);
 
-			final String requestQueryParam = UriUtils
-					.encodeQuery("?msg=" + "An error occurred contacting the payment provider.  Wait a few minutes and try again."
-							+ "&type=error", "UTF-8");
+			final String requestQueryParam = UriUtils.encodeQuery("?msg="
+					+ "An error occurred contacting the payment provider.  Wait a few minutes and try again." + "&type=error", UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			//return getCheckoutStep().previousStep();
 		}
@@ -2528,20 +2515,18 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 			//					MarketplacecheckoutaddonConstants.ERRORMSG);
 
-			final String requestQueryParam = UriUtils
-					.encodeQuery("?msg=" + "An error occurred contacting the payment provider.  Wait a few minutes and try again."
-							+ "&type=error", "UTF-8");
+			final String requestQueryParam = UriUtils.encodeQuery("?msg="
+					+ "An error occurred contacting the payment provider.  Wait a few minutes and try again." + "&type=error", UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			//return getCheckoutStep().previousStep();
 		}
-
-		return "addon:/marketplacecheckoutaddon/pages/checkout/single/showAddPaymentMethodPage";
+		return MarketplacecheckoutaddonControllerConstants.Views.Pages.SingleStepCheckout.AddPaymentMethodPage;
 	}
 
 	@RequestMapping(value = "/pickupPerson/popup", method = RequestMethod.GET)
-	public String getPickUpPersonPopUp(final Model model)
+	public String getPickUpPersonPopUp()
 	{
-		return "addon:/marketplacecheckoutaddon/pages/checkout/single/showPickupPersonDetails";
+		return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.PickupPersonForm;
 	}
 
 
@@ -2939,13 +2924,13 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 */
 	private void timeOutSet(final Model model)
 	{
-		// YTODO Auto-generated method stub
 		final double deliveryMode = Double.parseDouble(configurationService.getConfiguration().getString(
 				"checkout.deliverymode.timeout"));
 		final String timeOut = Double.toString(deliveryMode * 60 * 1000);
 		model.addAttribute(MarketplacecheckoutaddonConstants.TIMEOUT, timeOut);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void applyPromotions()
 	{
 		final CartModel cart = getCartService().getSessionCart();
@@ -3062,7 +3047,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	{
 		CartModel cartModel = null;
 		final String entryNumberString = request.getParameter("entryNumber");
-		final String returnPage = "addon:/marketplacecheckoutaddon/pages/checkout/single/showReviewOrder";
+		final String returnPage = MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.ReviewOrder;
 		try
 		{
 			final long entryNumber = Long.parseLong(entryNumberString);
@@ -3096,7 +3081,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					if (!mplCartFacade.hasEntries())
 					{
 						final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-								+ "&type=redirect", "UTF-8");
+								+ "&type=redirect", UTF);
 						return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 					}
 					else
@@ -3132,7 +3117,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				else
 				{
 					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "Could not remove item from cart" + "&type=error",
-							"UTF-8");
+							UTF);
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
 			}
