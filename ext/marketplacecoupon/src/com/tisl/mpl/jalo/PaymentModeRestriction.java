@@ -81,7 +81,7 @@ public class PaymentModeRestriction extends GeneratedPaymentModeRestriction
 						}
 					}
 
-					if (codflag == false)
+					if (!codflag)//Sonar Fix
 					{
 						return false;
 					}
