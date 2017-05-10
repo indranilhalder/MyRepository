@@ -63458,9 +63458,15 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     clear: both;
     margin: 0px auto;
     padding: 24px;
+    height: 100%;
+}
+.checkTab .address-list > div{
+	height: 100%;
 }
 .checkTab .address-list .address{
 	float: none;
+	height: calc(100% - 95px);
+	height: -webkit-calc(100% - 95px);
 }
 .address-list .edit>a:before {
     color: #000;
@@ -63889,7 +63895,8 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 	float: right;
 	height: 28px;
   	border: solid 1px #eeeeee;
-  	padding: 0 10px;
+  	padding: 0 8px 0 10px;
+    min-width: 329px;
 }
 .cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .cnc_title_search .cnc_search_wrapper input,
 .cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .cnc_title_search .cnc_search_wrapper button{
@@ -63900,6 +63907,8 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
     font-size: 11px;
     color: #878787;
     letter-spacing: 0.6px;
+    width: calc(100% - 22px);
+    width: -webkit-calc(100% - 22px);
 }
 .cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .cnc_title_search .cnc_search_wrapper button{
 	position: relative;
@@ -63908,7 +63917,8 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 }
 .cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .cnc_title_search .cnc_search_wrapper button:before{
 	content: "";
-    background: url(../images/sprite.svg) no-repeat scroll -135px -5px;
+    background: url(../images/sprite-07.png) no-repeat scroll -300px -208px;
+    opacity: 0.2;
     display: inline-block;
     height: 16px;
     width: 18px;
@@ -63973,7 +63983,8 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
   	font-size: 12px;
   	line-height: 1.5;
   	letter-spacing: 0.6px;
-  	color: #666666; 	
+  	color: #666666; 
+  	height: 100%;	
 }
 #cnc_carousel.owl-carousel .owl-item > li span, #cnc_carousel.owl-carousel .owl-item > li label{
   	font-size: 12px;
