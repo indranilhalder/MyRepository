@@ -1235,7 +1235,7 @@ ACC.singlePageCheckout = {
 			//$('a.wishlist#wishlist').popover('hide');
 	},
 	
-	proceedOnReviewDone:function(element){
+	proceedToPayment:function(element){
 		ACC.singlePageCheckout.showAjaxLoader();
 		var url = ACC.config.encodedContextPath + "/checkout/single/validatePayment";
 		var data = "";			
@@ -1258,6 +1258,10 @@ ACC.singlePageCheckout = {
     	        	
     				$("#selectedReviewOrderDivId").show();
     	        	ACC.singlePageCheckout.showAccordion("#makePayment");
+    	        	
+    	        	//Calling the below methods to populate the latest shipping address(These methods are in marketplacecheckoutaddon.js)
+    	        	populateAddress();
+    	        	populateAddressEmi();
     			}
         		else
     			{
