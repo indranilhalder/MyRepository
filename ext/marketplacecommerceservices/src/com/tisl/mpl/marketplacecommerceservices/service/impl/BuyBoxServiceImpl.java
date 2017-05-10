@@ -12,7 +12,6 @@ import de.hybris.platform.servicelayer.user.UserService;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -60,9 +59,9 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * This service method will return buybox prices for product code
-	 * 
+	 *
 	 * @param - productCode
-	 * 
+	 *
 	 * @return- buyBoxList
 	 */
 	@Override
@@ -78,10 +77,9 @@ public class BuyBoxServiceImpl implements BuyBoxService
 		{
 			final List<BuyBoxModel> buyBoxListForAgent = new ArrayList<BuyBoxModel>();
 			final List<BuyBoxModel> buyBoxListForNonAgent = new ArrayList<BuyBoxModel>();
-			final Iterator<BuyBoxModel> itAgent = buyBoxList.iterator();
-			while (itAgent.hasNext())
+
+			for (final BuyBoxModel buyBoxModel : buyBoxList)
 			{
-				final BuyBoxModel buyBoxModel = itAgent.next();
 				if (buyBoxModel.getSellerId().equalsIgnoreCase(sellerId))
 				{
 					buyBoxListForAgent.add(buyBoxModel);
@@ -95,10 +93,9 @@ public class BuyBoxServiceImpl implements BuyBoxService
 			{
 				if (buyBoxListForNonAgent.size() > 0)
 				{
-					final Iterator<BuyBoxModel> itAgentHelper = buyBoxListForNonAgent.iterator();
-					while (itAgentHelper.hasNext())
+					for (final BuyBoxModel buyBoxModelForNonAgent : buyBoxListForNonAgent)
 					{
-						buyBoxListForAgent.add(itAgentHelper.next());
+						buyBoxListForAgent.add(buyBoxModelForNonAgent);
 					}
 				}
 
@@ -134,9 +131,9 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * This service method will return buybox prices for product code
-	 * 
+	 *
 	 * @param - productCode
-	 * 
+	 *
 	 * @return- List<BuyBoxModel>
 	 */
 
@@ -149,7 +146,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * This service method will return buybox inventory for product code
-	 * 
+	 *
 	 * @param - productCode
 	 */
 	@Override
@@ -161,7 +158,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * This service method will inavalidating pks of the buyboxbox sellers
-	 * 
+	 *
 	 * @param - productCode buyBoxDao.invalidatePkofBuybox(currenttime)
 	 */
 	@Override
@@ -180,7 +177,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#buyBoxPriceNoStock(java.lang.String)
 	 */
 	@Override
@@ -193,10 +190,8 @@ public class BuyBoxServiceImpl implements BuyBoxService
 		if (sellerId != null && StringUtils.isNotEmpty(sellerId))
 		{
 			final List<BuyBoxModel> buyBoxListForAgent = new ArrayList<BuyBoxModel>();
-			final Iterator<BuyBoxModel> itAgent = buyBoxList.iterator();
-			while (itAgent.hasNext())
+			for (final BuyBoxModel buyBoxModel : buyBoxList)
 			{
-				final BuyBoxModel buyBoxModel = itAgent.next();
 				if (buyBoxModel.getSellerId().equalsIgnoreCase(sellerId))
 				{
 					buyBoxListForAgent.add(buyBoxModel);
@@ -220,7 +215,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#getRichAttributeData(java.lang.String)
 	 */
 	@Override
@@ -239,7 +234,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#getpriceForUssid(java.lang.String)
 	 */
 	@Override
@@ -271,7 +266,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#buyBoxStockForSeller(java.lang.String)
 	 */
 	@Override
@@ -283,7 +278,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#getClassAttrAssignmentsForCode(java.lang.String)
 	 */
@@ -297,7 +292,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	//INC144315542_INC144314878_INC_11113
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#getBuyboxPricesForSizeVariant(java.lang.String)
 	 */

@@ -3,6 +3,7 @@ package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -28,6 +29,7 @@ import com.tisl.mpl.cockpits.cscockpit.services.search.meta.processor.MplMetaPro
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceSearchCommandController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.models.impl.MarketplaceSearchResultWidgetModel;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
@@ -42,6 +44,8 @@ import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.security.PrincipalGroupModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.cscockpit.model.data.DataObject;
 import de.hybris.platform.cscockpit.services.search.CsFacetSearchCommand;
 import de.hybris.platform.cscockpit.utils.CssUtils;
@@ -50,8 +54,10 @@ import de.hybris.platform.cscockpit.utils.SafeUnbox;
 import de.hybris.platform.cscockpit.widgets.controllers.search.SearchCommandController;
 import de.hybris.platform.cscockpit.widgets.models.impl.SearchResultWidgetModel;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.BasketResultWidgetRenderer;
+import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
+import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.PriceValue;
 
 // TODO: Auto-generated Javadoc
@@ -103,6 +109,8 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 	@Autowired
 	private MplFindDeliveryCostStrategy mplFindDeliveryCostStrategy;
 	
+	@Autowired
+	private UserService userService;
 	
 	@Autowired
 	private PincodeService pincodeService;
@@ -581,7 +589,22 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 		widget.getWidgetController().dispatchEvent(null, null, data);
 	}
 	}
+	
+	private String getAgentIdForStore(final String groupName)
+	{
+		final String agentId = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
+		final UserModel user = userService.getUserForUID(agentId);
+		final Set<PrincipalGroupModel> userGroups = user.getAllGroups();
 
+		for (final PrincipalGroupModel ug : userGroups)
+		{
+			if (ug.getUid().equalsIgnoreCase(groupName))
+			{
+				return agentId;
+			}
+		}
+		return StringUtils.EMPTY;
+	}
 	/**
 	 * Process pin code serviceability.
 	 *
@@ -600,9 +623,14 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 		try {
 			((MarketplaceSearchCommandController) widget
 					.getWidgetController()).setCurrentSite();
-
+			
+			final String agentId = getAgentIdForStore(configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP));
+			
 			//TISUAT-4526 no sship in cod
-			if(!mplFindDeliveryCostStrategy.isTShip(ussid)){
+			if((!mplFindDeliveryCostStrategy.isTShip(ussid)) 
+					&&
+					!(agentId != null && StringUtils.isNotEmpty(agentId))){
 				popupMessage(widget,"noSellerCOD");
 				return;
 			}
