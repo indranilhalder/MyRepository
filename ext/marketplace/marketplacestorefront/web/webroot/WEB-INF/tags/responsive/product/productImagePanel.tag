@@ -49,7 +49,7 @@
 		}
 		/*TPR-643*/
 		utag.link({
-			link_obj: this, 
+			/* link_obj: this,  */
 			link_text: 'pdp_image_zoomed' , 
 			event_type : 'pdp_image_zoomed' 
 		});
