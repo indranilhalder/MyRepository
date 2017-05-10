@@ -133,7 +133,6 @@ ACC.singlePageCheckout = {
 	},
 	
 	postEditAddress:function(element){
-		ACC.singlePageCheckout.showAjaxLoader();
 		var form=$(element).closest("form");
 		var validationResult=ACC.singlePageCheckout.validateAddressForm(form);
 		if(validationResult!=false)
@@ -141,6 +140,7 @@ ACC.singlePageCheckout = {
 			var addressId=$(form).find(" #addressId").val();
 			var url=ACC.config.encodedContextPath + "/checkout/single/edit-address/"+addressId;
 			var data=$(form).serialize().replace(/\+/g,'%20');
+			ACC.singlePageCheckout.showAjaxLoader();
 			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
 	        
 	        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
@@ -360,112 +360,112 @@ ACC.singlePageCheckout = {
 		 
 		if(result == undefined || result == "" )
 		{	
-			$("#firstnameError").show();
-			$("#firstnameError").html("<p>First Name cannot be Blank</p>");
+			$("#addressfirstNameError").show();
+			$("#addressfirstNameError").html("<p>First Name cannot be Blank</p>");
 			validate= false;
 		}
 		else if(letters.test(result) == false)  
 		{ 
-			$("#firstnameError").show();
+			$("#addressfirstNameError").show();
 			/*Error message changed TISPRD-427*/
-			$("#firstnameError").html("<p>First name should not contain any special characters or space</p>");
+			$("#addressfirstNameError").html("<p>First name should not contain any special characters or space</p>");
 			validate= false;
 		}  
 		else
 		{
-			$("#firstnameError").hide();
+			$("#addressfirstNameError").hide();
 		}
 				
 		 result=lastName.value;
 		if(result == undefined || result == "")
 		{	
-			$("#lastnameError").show();
-			$("#lastnameError").html("<p>Last Name cannot be Blank</p>");
+			$("#addresssurnameError").show();
+			$("#addresssurnameError").html("<p>Last Name cannot be Blank</p>");
 			validate= false;
 		}
 		else if(letters.test(result) == false)  
 		{ 
-			$("#lastnameError").show();
+			$("#addresssurnameError").show();
 			/*Error message changed TISPRD-427*/
-			$("#lastnameError").html("<p>Last name should not contain any special characters or space</p>");
+			$("#addresssurnameError").html("<p>Last name should not contain any special characters or space</p>");
 			validate= false;
 		} 
 		else
 		{
-			$("#lastnameError").hide();
+			$("#addresssurnameError").hide();
 		}
 		
 		result=address1.value;
 		if(result == undefined || result == "")
-		{	
-			$("#address1Error").show();
-			$("#address1Error").html("<p>Address Line 1 cannot be blank</p>");	
+		{
+			$("#addressline1Error").show();
+			$("#addressline1Error").html("<p>Address Line 1 cannot be blank</p>");
 			validate= false;
 		}
 		else
 		{
-			$("#address1Error").hide();
+			$("#addressline1Error").hide();
 		}	
 		  result=city.value;
 		if(result == undefined || result == "")
 		{	
-			$("#cityError").show();
-			$("#cityError").html("<p>City cannot be blank</p>");
+			$("#addresstownCityError").show();
+			$("#addresstownCityError").html("<p>City cannot be blank</p>");
 			 validate=false;
 		}
 		else if(cityPattern.test(result) == false)  
 		{ 
-			$("#cityError").show();
-			$("#cityError").html("<p>City must be alphabet only</p>");
+			$("#addresstownCityError").show();
+			$("#addresstownCityError").html("<p>City must be alphabet only</p>");
 			validate= false;
 		}
 		else
 		{
-			$("#cityError").hide();
+			$("#addresstownCityError").hide();
 		}
 
 		result=stateValue.options[stateValue.selectedIndex].value;
 		if(result == undefined || result == "")
 		{	
-			$("#stateError").show();
-			$("#stateError").html("<p>Please choose a state</p>");
+			$("#addressstatesError").show();
+			$("#addressstatesError").html("<p>Please choose a state</p>");
 			 validate = false;
 		}
 		else
 		{
-			$("#stateError").hide();
+			$("#addressstatesError").hide();
 		}
 		
 	   if(zipcode == undefined || zipcode == "")
 		{	
-			$("#pincodeError").show();
-			$("#pincodeError").html("<p>Please enter a pincode</p>");
+			$("#addresspostcodeError").show();
+			$("#addresspostcodeError").html("<p>Please enter a pincode</p>");
 			validate = false;
 		}
 	    else if(regPostcode.test(zipcode) == false){
-	        $("#pincodeError").show();
-	        $("#pincodeError").html("<p>Please enter a valid pincode</p>");
+	        $("#addresspostcodeError").show();
+	        $("#addresspostcodeError").html("<p>Please enter a valid pincode</p>");
 			validate= false;  
 		}
 	    else
 		{
-			$("#pincodeError").hide();
+			$("#addresspostcodeError").hide();
 		}
 	 
 	   if(txtMobile  == undefined || txtMobile == "")
 		{	
-			$("#mobileError").show();
-			$("#mobileError").html("<p>Please enter mobile no.</p>");
+			$("#addressmobileError").show();
+			$("#addressmobileError").html("<p>Please enter mobile no.</p>");
 	        validate = false;
 		}
 	    else if (mob.test(txtMobile) == false) {
-			$("#mobileError").show();
-			$("#mobileError").html("<p> Please enter correct mobile no.</p>");
+			$("#addressmobileError").show();
+			$("#addressmobileError").html("<p> Please enter correct mobile no.</p>");
 			 validate=false;   
 	    }
 	       else
 		{
-			$("#mobileError").hide();
+			$("#addressmobileError").hide();
 		}
 	   
 	   

@@ -210,14 +210,14 @@ display: none;}
 		<formElement:formInputBox idKey="address.firstName" labelKey="First Name*"
 			 path="firstName" 
 			mandatory="true" maxLength="40"/>
-			<div class="help-block has-error" id="firstnameError" style="display: none;">		
+			<div class="help-block has-error" id="addressfirstNameError" style="display: none;">		
 			</div>	
 			</div>
 			<div class='half'>
 		<formElement:formInputBox idKey="address.surname"  labelKey="Last Name*"
 			 path="lastName" 
 			mandatory="true" maxLength="40"/>
-			<div class="help-block has-error" id="lastnameError" style="display: none;">		
+			<div class="help-block has-error" id="addresssurnameError" style="display: none;">		
 			</div>
 			</div>
 			<!-- <div class='half'> -->
@@ -233,7 +233,7 @@ display: none;}
 	 	<form:input type="text" idKey="address.mobile" 
 			 path="MobileNo" inputCSS="form-control"
 			mandatory="true" maxLength="10" /> 
-			<div class="help-block has-error" id="mobileError" style="display: none;">		
+			<div class="help-block has-error" id="addressmobileError" style="display: none;">		
 			</div>	 
 		</div>	
 		</div>
@@ -243,7 +243,7 @@ display: none;}
 			mandatory="true" maxLength="6" inputCSS="address_postcode"/>
 		<div class="help-block has-error" id="addressPincodeServicableDiv"
 			style="display: none;"></div>
-			<div class="help-block has-error" id="pincodeError" style="display: none;">
+			<div class="help-block has-error" id="addresspostcodeError" style="display: none;">
 			</div>
 			</div>
 			<div class='full'>
@@ -251,7 +251,7 @@ display: none;}
 		<formElement:formInputBox idKey="address.line1"
 			 path="line1" labelKey="Address Line 1*"
 			mandatory="true" maxLength="40"  />
-			 <div class="help-block has-error" id="address1Error" style="display: none;">
+			 <div class="help-block has-error" id="addressline1Error" style="display: none;">
 			</div>
 			</div>
 			<div class='full'>
@@ -259,7 +259,7 @@ display: none;}
 		<formElement:formInputBox idKey="address.line2"
 			 path="line2"  labelKey="Address Line 2"
 			mandatory="true" maxLength="40" />
-			 <div class="help-block has-error" id="address2Error" style="display: none;">
+			 <div class="help-block has-error" id="addressline2Error" style="display: none;">
 			</div>
 			</div>
 			<div class='full'>
@@ -267,7 +267,7 @@ display: none;}
 		<formElement:formInputBox idKey="address.line3"
 			 path="line3"  labelKey="Address Line 3"
 			mandatory="true" maxLength="40" />
-			 <div class="help-block has-error" id="address3Error" style="display: none;">
+			 <div class="help-block has-error" id="addressline3Error" style="display: none;">
 			</div>
 			</div>
 			<!-- R2.3: START -->
@@ -298,7 +298,7 @@ display: none;}
 		<formElement:formInputBox idKey="address.townCity" inputCSS="address_townCity"
 			labelKey="address.townCity" path="townCity" 
 			mandatory="true" maxLength="40" />
-			<div class="help-block has-error" id="cityError" style="display: none;">
+			<div class="help-block has-error" id="addresstownCityError" style="display: none;">
 			</div>
 			</div>
 			<!-- <div class="half address-select"> -->
@@ -321,7 +321,7 @@ display: none;}
 					skipBlankMessageKey="${addressForm.state}"
 					items="${stateDataList}"
 					itemValue="name" />
-				<div class="help-block has-error" id="stateError"
+				<div class="help-block has-error" id="addressstatesError"
 					style="display: none;"></div>
 				</div>
 				
