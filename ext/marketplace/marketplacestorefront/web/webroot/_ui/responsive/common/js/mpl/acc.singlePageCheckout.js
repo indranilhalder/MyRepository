@@ -94,7 +94,13 @@ ACC.singlePageCheckout = {
             			1280 : {
             				items:3,
             			}			
-            		}
+            		},
+            		onRefresh: function () {
+            			$("#address_carousel").find('div.owl-item').height('');
+                    },
+                    onRefreshed: function () {
+                    	$("#address_carousel").find('div.owl-item').height($("#address_carousel").height());
+                    }
 	              });
         	
 		});
@@ -759,7 +765,13 @@ ACC.singlePageCheckout = {
             			1280 : {
             				items:3,
             			}			
-            		}
+            		},
+            		onRefresh: function () {
+            			$(".cnc_carousel").find('div.owl-item').height('');
+                    },
+                    onRefreshed: function () {
+                    	$(".cnc_carousel").find('div.owl-item').height($(".cnc_carousel").height());
+                    }
         		});
             	
         		$( '.cnc_carousel input.radio_btn' ).on( 'click change', function(event) {

@@ -903,7 +903,13 @@ ACC.carousel = {
             			1280 : {
             				items:3,
             			}			
-            		}
+            		},
+            		onRefresh: function () {
+            			$("#address_carousel").find('div.owl-item').height('');
+                    },
+                    onRefreshed: function () {
+                    	$("#address_carousel").find('div.owl-item').height($("#address_carousel").height());
+                    }
 	              });
 	},
 	
