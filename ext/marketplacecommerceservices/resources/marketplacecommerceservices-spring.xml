@@ -662,6 +662,7 @@
 	<bean id="buyBoxService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.BuyBoxServiceImpl">
 		<property name="buyBoxDao" ref="buyBoxDao" />
+		<property name="configurationService" ref="configurationService" />
 	</bean>
 
 	<bean id="buyBoxDao"
