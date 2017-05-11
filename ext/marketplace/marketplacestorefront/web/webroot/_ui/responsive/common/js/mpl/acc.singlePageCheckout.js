@@ -1267,6 +1267,7 @@ ACC.singlePageCheckout = {
     			{
         			//$("#orderDetailsSectionId").html(data);
         			$("#totalWithConvField").html(data.totalPrice);
+        			$("#oredrTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice);
     	        	
     				$("#selectedReviewOrderDivId").show();
     	        	ACC.singlePageCheckout.showAccordion("#makePayment");

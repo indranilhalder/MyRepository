@@ -2320,6 +2320,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
 			jsonObj.put("validation", "success");
 			jsonObj.put("totalPrice", cartData.getTotalPriceWithConvCharge().getFormattedValueNoDecimal());
+			jsonObj.put("subTotalPrice", cartData.getSubTotal().getFormattedValueNoDecimal());
 			jsonObj.put("type", "response");
 		}
 		catch (final Exception e)
@@ -3162,7 +3163,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -3219,7 +3220,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
