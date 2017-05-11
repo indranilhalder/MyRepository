@@ -47,7 +47,7 @@
 		<c:if test="${'Y'.equalsIgnoreCase(rememberMeEnabled)}">
 			<div id="checkBox">
 				<input type="checkbox" id="j_RememberMe" name="j_RememberMe" checked="checked" value="true">
-				<label for="j_RememberMe">Remember Me !cc</label><p>
+				<label for="j_RememberMe">Remember Me !</label><p>
 			</div>
 		</c:if>
 		<!-- End UF-93 -->
