@@ -68,12 +68,11 @@
 											<div class="delivery-details">		   
 											<div class="details product" >
 											<p class="delivery_title">Select your preferred delivery option</p>
-												<p class="product_name">for 
-												<%-- <h3 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h3> --%>
+												<p class="product_name"><span class="desk_prod">for "</span><%-- <h3 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h3> --%>
 												<ycommerce:testId code="cart_product_name">
 													<%-- <a href="${productUrl}"><div class="name product-name">${entry.product.name}</div></a> --%>
-													<span class="name product-name">"${entry.product.name}"</span>
-												</ycommerce:testId>
+													<span class="name product-name">${entry.product.name}</span></ycommerce:testId>
+												<span class="desk_prod">"</span>
 												</p>
 												<!-- start TISEE-4631 TISUAT-4229 -->
 												

@@ -63860,7 +63860,7 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
     cursor: pointer;
     pointer-events: all;
 } 
-.checkTab .address-list .address + button{
+.checkTab .address-list .address ~ button{
 	width: 100%;
     background: transparent;
     height: 42px;
@@ -64370,6 +64370,9 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
     border-radius: 2px;
     box-shadow: none;
 	}
+	.address-list .default input[type="radio"] + label:before {
+    background-color: transparent;
+	}
 .address-list .default input[type="radio"] + label.radio-checked:before {
     background-image: url(../images/address-tick.png);
     background-size: 100%;
@@ -64757,6 +64760,9 @@ background:#f8f8f8;
 	}
 	#singlePageAccordion .new-address {
     text-align: left;
+	}
+	.desk_prod{
+	display: none;
 	}
  }
 /*tab mobile checkout header end*/
