@@ -200,13 +200,14 @@ ACC.singlePageCheckout = {
 	},
 	
 	postAddAddress:function(element){
-		ACC.singlePageCheckout.showAjaxLoader();
 		var form=$(element).closest("form");
 		var validationResult=ACC.singlePageCheckout.validateAddressForm(form);
 		if(validationResult!=false)
 		{
 			var url=ACC.config.encodedContextPath + "/checkout/single/new-address";
 			var data=$(form).serialize().replace(/\+/g,'%20');
+			
+			ACC.singlePageCheckout.showAjaxLoader();
 			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
 	        
 	        xhrResponse.fail(function(xhr, textStatus, errorThrown) {

@@ -5,149 +5,6 @@
 <%@ attribute name="product" required="true" type="de.hybris.platform.commercefacades.product.data.ProductData" %>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 
-
-<!-- CSS to be added to style.css starts here 27/04/2017  -->
-
-<style >
-/*Exchange*/
- .Exchange .SelectWrap,
-.Exchange p:after,
-.select-wrapper:after,
-.Star .overall .Bottom > ul > li.active:after{font-family: "FontAwesome";}
- 
-.product-detail .Exchange {
-	position: relative;
-	margin: -15px 0 0;
-}
-
-.product-detail .Exchange p {
-	font-size: 14px;
-	letter-spacing: 1px;
-	left: -10px;
-	color: #a9143c;
-	position: relative;
-	display: inline-block;
-	text-decoration: underline;
-	cursor: pointer;
-	padding: 12px 25px 12px 12px;
-}
-
-.product-detail .Exchange p:before {
-	background: #fff;
-	bottom: 0;
-	content: "";
-	height: 12px;
-	position: absolute;
-	right: 0;
-	width: 145px;
-	z-index: 9999;
-}
-
-.product-detail .Exchange p.active {
-	-webkit-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
-	-moz-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
-	box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
-}
-
-.product-detail .Exchange p:after {
-	color: #a9183c;
-	content: "\f107";
-	display: inline-block;
-	font-size: 18px;
-	position: absolute;
-	right: 8px;
-	top: 10px;
-}
-
-.product-detail .Exchange p+.modal-content {
-	display: none;
-	position: absolute;
-	left: -10px;
-	top: 38px;
-	width: 575px;
-	background: #fff;
-	z-index: 10;
-	text-align: center;
-	-webkit-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
-	-moz-box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
-	box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
-}
-
-.product-detail .Exchange p.active+.modal-content {
-	display: block;
-}
-
-.product-detail .Exchange-tableTitle {
-	font-size: 18px;
-	font-weight: bold;
-	text-transform: uppercase;
-}
-
-.product-detail .Exchange-subTitle {
-	font-size: 13px;
-	letter-spacing: 0.5px;
-	margin: 0;
-}
-
-.modal-header {
-	padding: 15px 15px 5px;
-}
-
-.product-detail .Exchange .SelectWrap {
-	display: inline-block;
-	position: relative;
-}
-
-/* .Exchange .SelectWrap:after {
-	color: #000;
-	content: "\f107";
-	display: inline-block;
-	font-size: 25px;
-	position: absolute;
-	right: 8px;
-	top: 3px;
-} */
-
-.product-detail #bankNameForEMI {
-	width: 250px;
-	border: 2px solid #f5f5f5;
-}
-
-.product-detail .Exchange p.active.mobile {
-	box-shadow: none;
-}
-
-.product-detail .Exchange p.active.mobile+.modal-content {
-	position: fixed;
-    width: 90%;
-    left: 5%;
-    top: 50px;
-     z-index: 100001;
-}
-
-.product-detail .Exchange .modal-content .Close{
-    position: absolute;
-    right: 10px;
-    top: 5px;
-    transform: rotate(45deg);
-    font-size: 26px;
-    font-family: inherit;
-    font-weight: 100;
-    cursor: pointer;
-    display: inline-block;
-}
-
-@media (min-width:791px){
-	/* .Exchange .modal-content .Close {
-		display: none;
-	} */
-}
-</style>
-
-
-<!-- CSS to be added to style.css ends here 27/04/2017  -->
-
-
 <script>
 
 	$(document).ready(function(){
@@ -155,7 +12,6 @@
 		jQuery('#brandExchange').on('input', function() {
 			 $("#brandExchangeParam").val($("#brandExchange").val());
 		});
-		
 		
 	
 		var pdppin = document.getElementById("pin");
@@ -207,7 +63,9 @@
 			}
 		});
 	$.when(req1).done(function(data1){
-	    if(data1 && !$('#buyNowButton').prop('disabled') && $('#serviceablePinExc').is(':visible') )
+		
+		//!$('#buyNowButton').prop('disabled') && $('#serviceablePinExc').is(':visible') 
+	    if(data1)
 	    {
 	    	   	populateExchangeDetails();
 	    	if(typeof utag !="undefined"){
@@ -292,6 +150,8 @@
 	
 	
 	function changeWorking(value) {
+		document.getElementById('submit&Condition').style.display = "block";
+		 document.getElementById('couponValue').style.display = "none";
 		  $("#l4Exchange").val(value);
 		    if (value.length == 0) document.getElementById("activeselect").innerHTML = "<option></option>";
 	    else {
@@ -309,6 +169,8 @@
 	}
 
 	function changePrice(value) {
+		document.getElementById('submit&Condition').style.display = "block";
+		 document.getElementById('couponValue').style.display = "none";
 		 $("#isWorkingExchange").val(value);
 		    var catOptions = "";
 	        for (i = 0; i < pricelist.length; i++)
@@ -317,13 +179,19 @@
 	        	
 	        	 if(value===price[0].trim())
 	       	   	{
-	        		 document.getElementById('couponValue').style.display = "block";
+	        		 
 	        		 document.getElementById('priceselect').innerHTML =  price[1];
 	        		
 	       	   	}
 	        	
 	       }
 	     
+	}
+	
+	function onSubmitExc()
+	{
+		document.getElementById('couponValue').style.display = "block";
+		document.getElementById('submit&Condition').style.display = "none";
 	}
 	
 
@@ -345,61 +213,86 @@
 		<input id="l3name" type="hidden" value="${l3name}" />
 		<input id="productcode" type="hidden" value="${product.code}"/>
 </p>
+
 <div id="ExchangeModal-content" class="modal-content">
 <span class="Close"></span>
   <div class="modal-header">   
     <h3 class="modal-title" id="myModalLabel"> 
     	<span class="Exchange-tableTitle">Exchange Offer</span>
+    
     	<br>    
-    	<span class="Exchange-subTitle">Let's check your pincode if your area is serviceable for this offer</span>	
+    	<span class="Exchange-subTitle">Let's check your pincode if your area is serviceable for this offer.</span>	
     </h3>  	<!-- UF-48 -->	 
   </div>
   
   
    
   <div class="modal-body" id="modelId">
-	
+
 	<div class="inline-form">
+	
 		 <c:choose>
 		 	<c:when test="${not empty pincode}">
 			<input id="pinExc" type="text" value="${pincode}" maxlength="6" onkeypress="return isNum(event)"/>
 		    </c:when>
 		    <c:otherwise>
-		    	<input id="pinExc" type="text" placeholder="Pincode" maxlength="6" onkeypress="return isNum(event)"/>
+		    	<input id="pinExc" type="text" placeholder="Enter pincode" maxlength="6" onkeypress="return isNum(event)"/>
 		    </c:otherwise>
 		 </c:choose>
 	   <!-- TISEE-6552 fix  -->
 		<button class="orange submit" id="pdpPincodeCheckExchnage"><spring:theme code="text.submit"/></button>
 		
 		<button class="gray submitDList" id="pdpPincodeCheckDListExchange" style="display:none;"><spring:theme code="text.submit"/></button>
-		    <div>
-		<span class="pincodeErrorMsg">
+		    <div class="pincodeErrorMsg">
+		<!-- <span class="pincodeErrorMsg"> -->
 			<span id="emptyPinExc" style="display:none;color:#ff1c47"><spring:theme code="product.empty.pincode"/></span>
 			<span id="wrongPinExc" style="display:none;color:#ff1c47"><spring:theme code="pincode.invalid"/></span>
 			<span id="unsevisablePinExc" style="display:none;color:#ff1c47"><spring:theme code="pincode.unsevisable"/></span>
-			<span id="serviceablePinExc" style="display:none;color:#00994d"><spring:theme code="pincode.serviceable"/></span> <!-- Changes for TISPRM-20,65 -->
+			<span id="serviceablePinExc" style="display:none;color:#339933"><spring:theme code="pincode.serviceable"/></span> <!-- Changes for TISPRM-20,65 -->
 			<span id="unableprocessPinExc" style="display:none;color:#ff1c47"><spring:theme code="pincode.unableprocess"/></span>
-		</span>
+		<!-- </span> -->
 	</div>
 	</div>
         
 <div id="exchangeDetails" style="display:none">
+  <div class="half">
+  <label for="l3">Product Category</label>
   <input type="text" id="l3" value="${l3name}">
- <input type="text" id="brandExchange" placeholder="Brand Name">
-<br>
-<br>
+  </div>
+   <div class="half">
+   <label for="brandExchange">Brand</label>
+ <input type="text" id="brandExchange">
+	</div>
+	 <div class="half">
+	 <label for="l4select">Type</label>
  <select name="l4select" id="l4select" onchange="changeWorking(this.value);">
  <option value="" disabled selected>Select</option>
  </select>
+ </div>
+  <div class="half">
+  <label for="activeselect">Working Condition</label>
  <select name="activeselect" id="activeselect" onchange="changePrice(this.value);">
   <option value="" disabled selected>Select</option>
 </select>
-<br>
 </div>
+
+<div id="submit&Condition">
+<input type="checkbox" name="terms&condition" id="exchange_tc" value="Bike">
+<label for="exchange_tc"><span>I agree to the <span>terms and conditions</span></span></label>
+	<cms:pageSlot position="Section2" var="component">
+				<cms:component component="${component}" />
+			</cms:pageSlot>	
+			<br>
+			<input type="button" id="submitExchange" onClick="onSubmitExc();" value="Submit">
+</div>
+</div>
+
 <div id="couponValue" style="display:none">
+<div class="couponMsg">
 You are eligible for coupon against your successful exchange 
 <br>
  Coupons Worth INR <span id="priceselect"></span>
+ </div>
 <!--   <input type="button" value="Add to Bag" onclick="generateExchnangId()"> -->
  
 <form:form method="post" id="addToCartExchange" class="add_to_cart_form" action="#">
@@ -455,7 +348,7 @@ You are eligible for coupon against your successful exchange
 	<button style="display: block;"
 			id="addToCartButtonExc" type="button"
 			class="btn-block js-add-to-cart">
-		<spring:theme code="basket.add.to.basket" />
+		<spring:theme code="basket.add.to.basket.exchange" />
 	</button>
 	</span>
 	<span id="addToCartSizeGuideTitleSuccess"></span>

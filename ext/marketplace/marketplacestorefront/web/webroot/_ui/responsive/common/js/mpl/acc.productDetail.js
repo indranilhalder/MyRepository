@@ -2934,6 +2934,7 @@ function loadDefaultWishListName_SizeGuide() {
 				e.stopPropagation();
 				$(".Exchange > p").removeClass("active mobile");
 				$(".Exchange-overlay").remove();
+				$("body").removeClass("no-scroll");
 				});
 			$(".pdp .Exchange > #Exchangemodal-content").on("click",function(e){
 				e.stopPropagation();
@@ -2945,13 +2946,13 @@ function loadDefaultWishListName_SizeGuide() {
 			$(".pdp .Exchange > p").on("click",function(){
 				if($(window).width() <= 1024){
 					$(this).addClass("active mobile");
-					$("body").append("<div class='Exchange-overlay' style='opacity:0.65; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'>hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii</div>");
+					$("body").append("<div class='Exchange-overlay' style='opacity:0.65; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 					//openPopForBankEMI();
 					$("body").addClass("no-scroll");
 					
 				}
 			});
-			$(document).on("click",".pdp .Exchange-overlay,.pdp .Exchange .modal-content .Close",function(){
+			$(document).on("click",".Exchange-overlay,.pdp .Exchange .modal-content .Close",function(){
 				$(".pdp .Exchange > p").removeClass("active mobile");
 				$(".Exchange-overlay").remove();
 				$("body").removeClass("no-scroll");
