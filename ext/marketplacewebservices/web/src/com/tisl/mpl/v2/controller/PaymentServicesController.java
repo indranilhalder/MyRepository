@@ -61,7 +61,6 @@ import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
-import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -702,7 +701,8 @@ public class PaymentServicesController extends BaseController
 											}
 										}
 
-										if (willApply == false)
+										//if (willApply == false)
+										if (!willApply)//SonarFix
 										{
 											updateTransactionDtls.setErrorMessage(MarketplacecommerceservicesConstants.COUPONFAILUREMESSAGE);
 											failFlag = true;
@@ -860,7 +860,8 @@ public class PaymentServicesController extends BaseController
 										}
 									}
 
-									if (willApply == false)
+									//if (willApply == false)//SonarFix
+									if (!willApply)
 									{
 										updateTransactionDtls.setErrorMessage(MarketplacecommerceservicesConstants.COUPONFAILUREMESSAGE);
 										failFlag = true;

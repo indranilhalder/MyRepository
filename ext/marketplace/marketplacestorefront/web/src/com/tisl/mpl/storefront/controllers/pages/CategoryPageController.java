@@ -155,12 +155,17 @@ public class CategoryPageController extends AbstractCategoryPageController
 	//Added for TPR-198
 	private static final String RELEVANCE = ":relevance";
 	private static final String EXCEPTION_OCCURED = ">> Exception occured ";
-	private static final String LOCATION = "Location";
+	private static final String LOCATION = "Location";//SonarFix
 	private static final String PAGE_FACET_DATA = "pageFacetData";
 
 	//TPR_1282
 	private static final String CATEGORY_FOOTER_TEXT = "categoryFooterTxt";
 	private static final String SPECIAL_CHARACTERS = "[^\\w\\s]";
+
+	//SonarFix
+	private static final String BRANDNAME = "brand";
+	private static final String SPACE_CHARACTERS = "\\s";
+
 	private int pageSiseCount;
 
 	/* TPR-1283--Starts */
@@ -243,11 +248,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 		final boolean isBrand = true;
 		if (request.getServletPath().contains("&"))
 		{
-			request.getServletPath().replace("&", "-").replaceAll("\\s", "").toLowerCase();
+			request.getServletPath().replace("&", "-").replaceAll(SPACE_CHARACTERS, "").toLowerCase();
 		}
 		else
 		{
-			request.getServletPath().replaceAll("\\s", "-").toLowerCase();
+			request.getServletPath().replaceAll(SPACE_CHARACTERS, "-").toLowerCase();
 		}
 		categoryCode = categoryCode.toUpperCase();
 		brandCode = brandCode.toUpperCase();
@@ -378,7 +383,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 				final String newcatName = catName.substring(1, catName.lastIndexOf('/'));
 				model.addAttribute("catName", newcatName);
 				model.addAttribute("catCode", categoryCode.toLowerCase());
-				model.addAttribute("brand", Boolean.valueOf(true));
+				//model.addAttribute("brand", Boolean.valueOf(true));//SonarFix
+				model.addAttribute(BRANDNAME, Boolean.TRUE);
 				/* Added for TPR-1283 --Ends */
 
 				//update seo details
@@ -412,20 +418,20 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 				/*
 				 * if (CollectionUtils.isNotEmpty(seoContent)) {
-				 *
+				 * 
 				 * metaKeywords = seoContent.get(seoContent.size() - 1).getSeoMetaKeyword(); metaDescription =
 				 * seoContent.get(seoContent.size() - 1).getSeoMetaDescription(); metaTitle =
 				 * seoContent.get(seoContent.size() - 1).getSeoMetaTitle();
-				 *
-				 *
+				 * 
+				 * 
 				 * setUpMetaDataForSeo(model, metaKeywords,metaDescription, metaTitle); updatePageTitle(model, metaTitle); }
 				 * else {
-				 *
+				 * 
 				 * metaKeywords = MetaSanitizerUtil.sanitizeKeywords(brandModel.getKeywords()); metaDescription =
 				 * MetaSanitizerUtil.sanitizeDescription(brandModel.getDescription());
 				 * updatePageTitle(brandModel,searchPageData.getBreadcrumbs(), model); setUpMetaData(model, metaKeywords,
 				 * metaDescription);
-				 *
+				 * 
 				 * }
 				 */
 
@@ -438,7 +444,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 				if (categoryCode != supercatcode)
 				{
 					final String header = brandName + " " + cateName;
-					model.addAttribute("flag", Boolean.valueOf(true));
+					//model.addAttribute("flag", Boolean.valueOf(true));//SonarFix
+					model.addAttribute("flag", Boolean.TRUE);
 					model.addAttribute("modified_header", header);
 					model.addAttribute("cateName", cateName);
 				}
@@ -447,7 +454,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				{
 					response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
 					final String categName = category.getName();
-					response.setHeader("Location", "/" + categName + "/c-" + categoryCode.toLowerCase());
+					response.setHeader(LOCATION, "/" + categName + "/c-" + categoryCode.toLowerCase());
 				}
 				//set empty for TPR-1283
 				model.addAttribute("otherProducts", "");
@@ -732,10 +739,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 				model.addAttribute(ModelAttributetConstants.SEARCH_QUERY_VALUE, searchQuery);
 			}
 			/* TPR-1283 changes --Starts */
-			if (StringUtils.isNotEmpty(searchQuery) && searchQuery.contains("brand"))
+			if (StringUtils.isNotEmpty(searchQuery) && searchQuery.contains(BRANDNAME))
 			{
 				final Iterable<String> splitStr = Splitter.on(':').split(searchQuery);
-				final int count = Integer.valueOf(Iterables.frequency(splitStr, "brand")).intValue();
+				//final int count = Integer.valueOf(Iterables.frequency(splitStr, "brand")).intValue();//SonarFix
+				final int count = Iterables.frequency(splitStr, BRANDNAME);
 				if (count == 1)
 				{
 					String brandCode = "";
@@ -748,7 +756,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 							brandCode = token;
 							break;
 						}
-						if (token.equals("brand"))
+						if (token.equals(BRANDNAME))
 						{
 							cnt = 1;
 						}
@@ -759,16 +767,16 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 					if (brand.contains("&"))
 					{
-						brandName = URLDecoder.decode(brand, "UTF-8").replace("&", "-").replaceAll("\\s", "");
+						brandName = URLDecoder.decode(brand, "UTF-8").replace("&", "-").replaceAll(SPACE_CHARACTERS, "");
 					}
 					else
 					{
-						brandName = URLDecoder.decode(brand, "UTF-8").replaceAll("\\s", "-");
+						brandName = URLDecoder.decode(brand, "UTF-8").replaceAll(SPACE_CHARACTERS, "-");
 					}
 
 					response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
 					final String appenedName = resolvedcatName + ("-") + brandName;
-					response.setHeader("Location",
+					response.setHeader(LOCATION,
 							"/" + appenedName + "/c-" + categoryCode.toLowerCase() + "/b-" + brandCode.toLowerCase());
 					return null;
 				}
@@ -1043,7 +1051,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			final String luxuryCategoryUrl = luxuryHost + "/c-" + categoryCode.toLowerCase();
 			LOG.debug("Redirecting to ::::::" + luxuryCategoryUrl);
 			response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-			response.setHeader("Location", luxuryCategoryUrl);
+			response.setHeader(LOCATION, luxuryCategoryUrl);
 		}
 		return redirect;
 	}
