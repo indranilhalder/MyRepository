@@ -30,7 +30,7 @@ import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 public class PinCodeServiceAvilabilityFacadeImpl implements PinCodeServiceAvilabilityFacade
 {
 
-	private static final Logger LOG = Logger.getLogger(PinCodeServiceAvilabilityFacadeImpl.class);
+	//private static final Logger LOG = Logger.getLogger(PinCodeServiceAvilabilityFacadeImpl.class);//Sonar Fix
 
 	@Resource(name = "mplPincodeRestrictionService")
 	private MplPincodeRestrictionService mplPincodeRestrictionService;

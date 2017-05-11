@@ -9,6 +9,7 @@ import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
@@ -19,11 +20,17 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.localization.Localization;
+import de.hybris.platform.voucher.VoucherService;
+import de.hybris.platform.voucher.model.PromotionVoucherModel;
+import de.hybris.platform.voucher.model.RestrictionModel;
+import de.hybris.platform.voucher.model.VoucherModel;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.annotation.Resource;
@@ -54,6 +61,8 @@ import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
+import com.tisl.mpl.model.PaymentModeRestrictionModel;
+import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.MplSavedCardDTO;
@@ -114,6 +123,26 @@ public class PaymentServicesController extends BaseController
 
 	@Resource(name = "cartService")
 	protected CartService cartService;
+
+	@Resource(name = "voucherService")
+	private VoucherService voucherService;
+
+	/**
+	 * @return the voucherService
+	 */
+	public VoucherService getVoucherService()
+	{
+		return voucherService;
+	}
+
+	/**
+	 * @param voucherService
+	 *           the voucherService to set
+	 */
+	public void setVoucherService(final VoucherService voucherService)
+	{
+		this.voucherService = voucherService;
+	}
 
 	//  COD Eligible Check
 	/**
@@ -623,6 +652,74 @@ public class PaymentServicesController extends BaseController
 					//Logic when Payment mode is COD
 					if (null != cart)
 					{
+
+						//TPR-4461 COUPON FOR COD WHEN ORDER MODEL IS NULL STARTS HERE
+						final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
+								.getAppliedVouchers(cart));
+
+						if (CollectionUtils.isNotEmpty(voucherList))
+						{
+							VoucherModel appliedVoucher = null;
+
+							final DiscountModel discount = voucherList.get(0);
+
+							if (discount instanceof PromotionVoucherModel)
+							{
+								final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+								appliedVoucher = promotionVoucherModel;
+
+								final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
+								for (final RestrictionModel restriction : restrictions)
+								{
+									if (restriction instanceof PaymentModeRestrictionModel)
+									{
+										boolean willApply = false;
+
+
+										final String paymentModeCard = cart.getModeOfPayment();//Card Payment Mode
+
+
+										final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
+												.getPaymentTypeData(); //Voucher Payment mode
+
+
+										if (CollectionUtils.isNotEmpty(paymentTypeList))
+										{
+											if (StringUtils.isNotEmpty(paymentModeCard))
+											{
+												for (final PaymentTypeModel paymentType : paymentTypeList)
+												{
+													if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
+													{
+														willApply = true;
+													}
+													break;
+												}
+											}
+											else
+											{
+												willApply = true;
+											}
+										}
+
+										//if (willApply == false)
+										if (!willApply)//SonarFix
+										{
+											updateTransactionDtls.setErrorMessage(MarketplacecommerceservicesConstants.COUPONFAILUREMESSAGE);
+											failFlag = true;
+											failErrorCode = MarketplacecommerceservicesConstants.B9078;
+										}
+									}
+
+								}
+							}
+						}
+
+						//TPR-4461 COUPON FOR COD END WHEN ORDER MODEL IS NULL ENDS HERE
+
+
+
+
 						//Adding cartdata into model
 						final Double cartValue = cart.getSubtotal();
 						final Double totalCODCharge = cart.getConvenienceCharges();
@@ -699,6 +796,7 @@ public class PaymentServicesController extends BaseController
 				}
 				else
 				{
+					//INC144315486
 					boolean alreadyProcessed = false;
 					final List<PaymentTransactionModel> paymentTransactionList = orderModel.getPaymentTransactions();
 
@@ -714,6 +812,71 @@ public class PaymentServicesController extends BaseController
 						}
 					}
 
+
+					//TPR-4461 COUPON FOR COD WHEN ORDER MODEL IS NOT NULL STARTS HERE
+					final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService().getAppliedVouchers(
+							orderModel));
+
+					if (CollectionUtils.isNotEmpty(voucherList))
+					{
+						VoucherModel appliedVoucher = null;
+
+						final DiscountModel discount = voucherList.get(0);
+
+						if (discount instanceof PromotionVoucherModel)
+						{
+							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+							appliedVoucher = promotionVoucherModel;
+
+							final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
+							for (final RestrictionModel restriction : restrictions)
+							{
+								if (restriction instanceof PaymentModeRestrictionModel)
+								{
+									boolean willApply = false;
+
+
+									final String paymentModeCard = orderModel.getModeOfOrderPayment();//Card Payment Mode
+
+
+									final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
+											.getPaymentTypeData(); //Voucher Payment mode
+
+
+									if (CollectionUtils.isNotEmpty(paymentTypeList))
+									{
+										if (StringUtils.isNotEmpty(paymentModeCard))
+										{
+											for (final PaymentTypeModel paymentType : paymentTypeList)
+											{
+												if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
+												{
+													willApply = true;
+												}
+												break;
+											}
+										}
+										else
+										{
+											willApply = true;
+										}
+									}
+
+									//if (willApply == false)//SonarFix
+									if (!willApply)
+									{
+										updateTransactionDtls.setErrorMessage(MarketplacecommerceservicesConstants.COUPONFAILUREMESSAGE);
+										failFlag = true;
+										failErrorCode = MarketplacecommerceservicesConstants.B9078;
+									}
+								}
+
+							}
+						}
+					}
+
+					//INC144315486
+					// TPR-4461 WHEN ORDER MODEL IS NOT NULL ENDS HERE
 					final Double orderValue = orderModel.getSubtotal();
 					final Double totalCODCharge = orderModel.getConvenienceCharges();
 

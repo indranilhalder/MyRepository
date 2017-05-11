@@ -150,8 +150,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	private static final String middlecharacters = "-";
 	private static final String PARENT = "Parent";
 
-	@Resource(name = "mplVoucherService")
-	private MplVoucherService mplVoucherService;
+//	@Resource(name = "mplVoucherService")
+//	private MplVoucherService mplVoucherService;//Sonar Fix
 	@Resource(name = "discountUtility")
 	private DiscountUtility discountUtility;
 

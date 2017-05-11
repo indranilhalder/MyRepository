@@ -88,9 +88,13 @@ display: none;
 				</script>
 				<ycommerce:testId code="checkoutStepTwo">
 				
-				<form:form id="selectDeliveryMethodForm"
+				<!-- INC144315801 starts-->
+				<%-- <form:form id="selectDeliveryMethodForm"
 							action="${request.contextPath}/checkout/multi/delivery-method/check"
-							method="post" commandName="deliveryMethodForm">
+							method="post" commandName="deliveryMethodForm"> --%>
+				<form:form id="selectDeliveryMethodForm"
+							action="${request.contextPath}/checkout/multi/delivery-method/check" commandName="deliveryMethodForm">
+				<!-- INC144315801 ends-->			
 				<!-- TISCR-305 starts -->
 				<!-- TISPRO-625 starts -->
 				<input type="hidden" id="isExpressCheckoutSelected"
