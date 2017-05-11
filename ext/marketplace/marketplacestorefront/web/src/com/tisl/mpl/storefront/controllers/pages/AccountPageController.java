@@ -13,7 +13,22 @@ update * [y] hybris Platform
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
+import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.Breadcrumb;
+import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
+import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
+import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
+import de.hybris.platform.acceleratorstorefrontcommons.forms.ReviewForm;
+import de.hybris.platform.acceleratorstorefrontcommons.forms.UpdateEmailForm;
+import de.hybris.platform.acceleratorstorefrontcommons.forms.UpdatePasswordForm;
+import de.hybris.platform.acceleratorstorefrontcommons.forms.UpdateQuantityForm;
+import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.EmailValidator;
+import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.PasswordValidator;
+import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.ProfileValidator;
+import de.hybris.platform.acceleratorstorefrontcommons.forms.verification.AddressVerificationResultHandler;
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
 import de.hybris.platform.commercefacades.address.AddressVerificationFacade;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.i18n.I18NFacade;
@@ -57,7 +72,6 @@ import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
-import de.hybris.platform.solrfacetsearch.search.Breadcrumb;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.util.Config;
@@ -113,7 +127,6 @@ import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
-import com.hybris.commons.lang.PasswordValidator;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.AddressType;
