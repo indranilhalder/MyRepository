@@ -378,7 +378,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 			if (productType.equalsIgnoreCase("simple"))
 			{
 				inventoryQuery
-						.append("{bb.product} = ?product AND ( {bb.delisted}  IS NULL or {bb.delisted} =0 )and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate})  ");
+						.append("{bb.product} = ?product AND ( {bb.delisted}  IS NULL or {bb.delisted} =0 )and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate})  AND {bb.available} >=0 "); //  INC144316749 AND {bb.available} >=0 is added to exclude negative stock while taking sum
 			}
 			if (productType.equalsIgnoreCase("variant")) // Added fix (color condition added) for prod Issue of showing Product even though out of stock  - /*, {PcmProductVariant As pv} where {pprod.colour} = {pv.colour} and {pv.code} = ?product and */
 			{
@@ -387,7 +387,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 								+ " 	select distinct{p.baseProduct} from {PcmProductVariant as p} where {p.code} = ?product"
 
-								+ " 	}})}})");
+								+ " 	}})}})" + "AND {bb.available} >=0"); // INC144316749  AND {bb.available} >=0 is added to exclude negative stock while taking sum
 			}
 
 			final FlexibleSearchQuery instockQuery = new FlexibleSearchQuery(inventoryQuery.toString());
