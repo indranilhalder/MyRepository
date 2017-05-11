@@ -742,7 +742,9 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			{
 				cartDeliveryCost+=cartEntry.getPrevDelCharge();
 			}else{
+			       if(null != cartEntry.getMplDeliveryMode()){//Null check for TISSQAEE-441
 				cartDeliveryCost+=cartEntry.getMplDeliveryMode().getValue();
+			          }	
 			}
 			if(null != cartEntry.getScheduledDeliveryCharge() && cartEntry.getScheduledDeliveryCharge()>0.0D) {
 				scheduleDelCharges+=cartEntry.getScheduledDeliveryCharge();
