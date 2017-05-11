@@ -1,15 +1,24 @@
-###################################### cms-content_coredata.impex starts ##############################################
-#
-# Import the CMS content for the site
-#
+# Import the CMS content for the site emails
 $storePrefix=mpl
 $contentCatalog=$storePrefixContentCatalog
-$productCatalog=mplProductCatalog
 $contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
-# Import modulegen config properties into impex macros
-UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
-$jarResourceCms=$config-jarResourceCmsValue
+$wideContent=CMSImageComponent,BannerComponent
+$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+$productCatalog=mplProductCatalog 
+$productCatalogName=MarketPlace Product Catalog
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online] 
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$jarResourceCms=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/cockpits/cmscockpit
+$medias=medias(code, $contentCV);
+$lang=en
+$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
+
+#Language
+$lang=en   
+
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+$emailPackageName=com.tisl.mpl.facades.process.email.context
 
 
 # Add Velocity templates that are in the CMS Cockpit. These give a better layout for editing pages
@@ -18,76 +27,14 @@ UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[tr
 ;;CartPageTemplate 		    ;$jarResourceCms/structure-view/structure_cartPageTemplate.vm
 
 
-
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='CartPageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;EmptyCartMiddleContent;;CMSParagraphComponent
 ;EmptyCartSignIn;;CMSParagraphComponent
-###################################### cms-content_coredata.impex ends ##############################################
-
-###################################### cms-content_en_sampledata.impex starts ##############################################
-# ImpEx for Importing CMS Content
-# English Localisation
-
-# Macros / Replacement Parameter definitions
-$storePrefix=mpl
-$contentCatalog=$storePrefixContentCatalog
-
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$picture=media(code, $contentCV);
-$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/contentCatalogs/$contentCatalog
-
-# Language
-$lang=en
-
-
-# CMS Paragraph Components
-#UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
-#;;EmptyCartParagraphComponent;"Your bag's empty - let's fill it up shall we?"
-#;;EmptyCartSignInParagraphComponent;"Your bag's empty - let's fill it up shall we?</br>Hey there. You will need to <a href='https://www.tatacliq.com/login'>Sign #In</a> to see what's in your cart. No account? No problem. <a href='https://www.tatacliq.com/login?isSignInActive=N'>Sign Up</a> here."
-
-# CMS Paragraph Components
-UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content[lang=$lang]
-;;EmptyCartParagraphComponent;EmptyCartParagraphComponent;EmptyCartParagraphComponent;"Your bag's empty - let's fill it up shall we?"
-;;EmptyCartSignInParagraphComponent;EmptyCartSignInParagraphComponent;EmptyCartSignInParagraphComponent;"Your bag's empty - let's fill it up shall we?</br>Hey there. You will need to <a href='https://www.tatacliq.com/login'>Sign In</a> to see what's in your cart. No account? No problem. <a href='https://www.tatacliq.com/login?isSignInActive=N'>Sign Up</a> here."
-###################################### cms-content_en_sampledata.impex ends ##############################################
-
-###################################### cms-content_sampledata.impex starts ##############################################
-# ImpEx for Importing CMS Content
-
-# Macros / Replacement Parameter definitions
-$storePrefix=mpl
-$contentCatalog=$storePrefixContentCatalog
-$contentCatalogName=Marketplace Content Catalog
-$productCatalog=mplProductCatalog
-$productCatalogName=Marketplace Product Catalog
-
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
-$picture=media(code, $contentCV);
-$image=image(code, $contentCV);
-$media=media(code, $contentCV);
-$page=page(uid, $contentCV);
-$category=category(code, $productCV)
-$product=product(code, $productCV)
-$contentPage=contentPage(uid, $contentCV);
-$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/contentCatalogs/$contentCatalog
-$productResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/productCatalogs/$productCatalog
-$jarResourceCms=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/cockpits/cmscockpit
-
-# Load the storefront context root config param
-$storefrontContextRoot=$config-storefrontContextRoot
-
-# Language
-$lang=en
 
 # CMSParagraphComponent 
 INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
 ;;EmptyCartParagraphComponent;Empty Cart Paragraph Component;EmptyCartParagraphComponent;;;;
 ;;EmptyCartSignInParagraphComponent;Empty Cart Sign In Paragraph Component;EmptyCartSignInParagraphComponent;;;;
-
-
-
-
 
 # ContentSlot 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
@@ -96,99 +43,21 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;EmptyCartSignIn-cartPage;Sign In Slot for Cart Page;true;EmptyCartSignInParagraphComponent
 
 
-
 # ContentSlotForPage 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='cartPage'];contentSlot(uid,$contentCV)[unique=true]
 ;;EmptyCartMiddleForCartPage;EmptyCartMiddleContent;;EmptyCartMiddleContent-cartPage
 
 ;;EmptyCartSignInForCartPage;EmptyCartSignIn;;EmptyCartSignIn-cartPage
 
-###################################### cms-content_sampledata.impex ends ##############################################
 
-###################################### HomePage_What_to_buy_now.impex starts ##############################################
-#
-# Import the CMS content for the site
-#
-$storePrefix=mpl
-$contentCatalog=$storePrefixContentCatalog
-$productCatalog=mplProductCatalog
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
-# Import modulegen config properties into impex macros
-#UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
-$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+# CMS Paragraph Components
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content[lang=$lang]
+;;EmptyCartParagraphComponent;EmptyCartParagraphComponent;EmptyCartParagraphComponent;"Your bag's empty - let's fill it up shall we?"
+;;EmptyCartSignInParagraphComponent;EmptyCartSignInParagraphComponent;EmptyCartSignInParagraphComponent;"Your bag's empty - let's fill it up shall we?</br>Hey there. You will need to <a href='https://www.tatacliq.com/login'>Sign In</a> to see what's in your cart. No account? No problem. <a href='https://www.tatacliq.com/login?isSignInActive=N'>Sign Up</a> here."
 
-INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='LandingPage2Template'];validComponentTypes(code);compTypeGroup(code)
-;Section4D;;MplCategoryCarouselComponent,MplAdvancedCategoryCarouselComponent;
-###################################### HomePage_What_to_buy_now.impex ends ##############################################
+############################ changes for Cart Page ends######################################################################
 
-###################################### LW-686_sprint7_impex.txt starts ##############################################
-# 
-# Import the Solr configuration for the store 
-# 
-$prefix=mpl 
-$productCatalog=$prefixProductCatalog 
-$catalogVersions=catalogVersions(catalog(id),version); 
-$serverConfigName=$prefixSolrServerConfig 
-$indexConfigName=$prefixSolrIndexConfig 
-$searchConfigName=$prefixPageSize 
-$facetSearchConfigName=$prefixIndex 
-$facetSearchConfigDescription=Marketplace Solr Index 
-$searchIndexNamePrefix=$prefix 
-$solrIndexedType=$prefixProductType 
-$indexBaseSite=$prefix 
-$indexLanguages=en 
-$indexCurrencies=INR 
-$priceRangeINR=$prefixPriceRangeINR 
-$classAttributeAssignment=classAttributeAssignment(classificationAttribute(code),classificationClass(code)) 
-$classificationAttributeAssignments=classificationAttributeAssignments(classificationAttribute(code),classificationClass(code)) 
-
-# Define price range set 
-INSERT_UPDATE SolrValueRangeSet;name[unique=true];qualifier;type;solrValueRanges(&rangeValueRefID) 
-;mplLuxuryPriceRangeINR;INR-LUXURY;double;mplLuxuryPriceRangeINR1,mplLuxuryPriceRangeINR2,mplLuxuryPriceRangeINR3,mplLuxuryPriceRangeINR4 
-
-# Define price ranges 
-INSERT_UPDATE SolrValueRange;&rangeValueRefID;solrValueRangeSet(name)[unique=true];name[unique=true];from;to 
-;mplLuxuryPriceRangeINR1;mplLuxuryPriceRangeINR;        ₹0-₹5000;                           0                        ; 5000 
-;mplLuxuryPriceRangeINR2;mplLuxuryPriceRangeINR;    ₹5001-₹15,000;                  5000.01                ; 15000 
-;mplLuxuryPriceRangeINR3;mplLuxuryPriceRangeINR;           ₹15,001-₹30,000;                 15000.01        ; 30000 
-;mplLuxuryPriceRangeINR4;mplLuxuryPriceRangeINR;           ₹30,001 and Above;                 30000.01        ; 999999 
-###################################### LW-686_sprint7_impex.txt ends ##############################################
-
-###################################### modifiedhomepage.txt starts ##############################################
-#
-# Import the CMS content for the site
-# 
-$storePrefix=mpl
-$contentCatalog=$storePrefixContentCatalog
-$productCatalog=mplProductCatalog
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
-# Import modulegen config properties into impex macros
-UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
-$jarResourceCms=$config-jarResourceCmsValue
-
-# 
-# Necessary headers for Responsive Tata marketplace Site CMS Content 
-# 
-# 
-$productCatalogName=MarketPlace Product Catalog 
-$picture=media(code, $contentCV) ;
-$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/contentCatalogs/$contentCatalog
-
-
-# 
-# Necessary headers for Responsive_en Tata Marketplace Site CMS Content 
-# 
-$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/contentCatalogs/$contentCatalog
-$medias=medias(code, $contentCV);
-$lang=en
-$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
-
-# Load the storefront context root config param
-$storefrontContextRoot=$config-storefrontContextRoot
-
-###############CORE DATA############################################
+###################################### Homepage changes Best offer Section ##################################
 
 # Add Velocity templates that are in the CMS Cockpit. These give a better layout for editing pages
 # The FileLoaderValueTranslator loads a File into a String property. The templates could also be inserted in-line in this file.
@@ -205,222 +74,14 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;c
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;BestOffersSectionSlot-Homepage;BestOffersSection;;BestOffersSectionSlot-Homepage;;;
 
+############################################################################################################
 
-###################################### modifiedhomepage.txt ends ##############################################
+###################################### Aplus Cronjob Disable Starts #############################################
+INSERT_UPDATE CronJob; code[unique=true];active
+;businessContentImportJob;0
+###################################### Aplus Cronjob Disable Ends #############################################
 
-###################################### NpscronjobTrigger.txt starts ##############################################
-INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
-;NpsMailerJob;npsMailerCronJob;false;en
-
-INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
-; NpsMailerJob; 0 0 12,16 * * ?
-
-INSERT_UPDATE MplConfiguration;mplConfigCode[unique=true];mplConfigVal;mplConfigDate
-;NpsMailerJob;;	Feb 7, 2017 4:00:00 PM
-###################################### NpscronjobTrigger.txt ends ##############################################
-
-###################################### nps-emai-content_en2.txt starts ##############################################
-# 
-# ImpEx for Responsive Tata Marketplace Site CMS Content 
-# 
-$contentCatalog=mplContentCatalog 
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged] 
-$productCatalog=mplProductCatalog 
-$productCatalogName=MarketPlace Product Catalog
-$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online] 
-$picture=media(code, $contentCV);
-$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/contentCatalogs/$contentCatalog
-$jarResourceCms=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/cockpits/cmscockpit
-$medias=medias(code, $contentCV);
-$lang=en
-$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
-
-# Load the storefront context root config param
-$storefrontContextRoot=$config-storefrontContextRoot
-
-#Nps Email 
-INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
-
-;;/images/theme/header4.jpg;header4.jpg;$siteResource/images/theme/header4.jpg;;
-;;/images/theme/rank00.jpg;rank00.jpg;$siteResource/images/theme/rank00.jpg;;
-;;/images/theme/rank01.jpg;rank01.jpg;$siteResource/images/theme/rank01.jpg;;
-;;/images/theme/rank02.jpg;rank02.jpg;$siteResource/images/theme/rank02.jpg;;
-;;/images/theme/rank03.jpg;rank03.jpg;$siteResource/images/theme/rank03.jpg;;
-;;/images/theme/rank04.jpg;rank04.jpg;$siteResource/images/theme/rank04.jpg;;
-;;/images/theme/rank05.jpg;rank05.jpg;$siteResource/images/theme/rank05.jpg;;
-;;/images/theme/rank06.jpg;rank06.jpg;$siteResource/images/theme/rank06.jpg;;
-;;/images/theme/rank07.jpg;rank07.jpg;$siteResource/images/theme/rank07.jpg;;
-;;/images/theme/rank08.jpg;rank08.jpg;$siteResource/images/theme/rank08.jpg;;
-;;/images/theme/rank09.jpg;rank09.jpg;$siteResource/images/theme/rank09.jpg;;
-;;/images/theme/rank10.jpg;rank10.jpg;$siteResource/images/theme/rank10.jpg;;
-
-# CMS Image Components for Nps Emailer  
-INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
-;;NpsLogoImage;/images/theme/header4.jpg;
-;;EmailRankZeroImage;/images/theme/rank00.jpg;
-;;EmailRankOneImage;/images/theme/rank01.jpg;
-;;EmailRankTwoImage;/images/theme/rank02.jpg;
-;;EmailRankThreeImage;/images/theme/rank03.jpg;
-;;EmailRankFourImage;/images/theme/rank04.jpg;
-;;EmailRankFiveImage;/images/theme/rank05.jpg;
-;;EmailRankSixImage;/images/theme/rank06.jpg;
-;;EmailRankSevenImage;/images/theme/rank07.jpg;
-;;EmailRankEightImage;/images/theme/rank08.jpg;
-;;EmailRankNineImage;/images/theme/rank09.jpg;
-;;EmailRankTenImage;/images/theme/rank10.jpg;
-
-
-# Nps Content Slots
-INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
-;;EmailSiteLogoConfSlot;NpsLogoImage
-;;EmailRankZeroNpsSlot;EmailRankZeroImage
-;;EmailRankOneNpsSlot;EmailRankOneImage
-;;EmailRankTwoNpsSlot;EmailRankTwoImage
-;;EmailRankThreeNpsSlot;EmailRankThreeImage
-;;EmailRankFourNpsSlot;EmailRankFourImage
-;;EmailRankFiveNpsSlot;EmailRankFiveImage
-;;EmailRankSixNpsSlot;EmailRankSixImage
-;;EmailRankSevenNpsSlot;EmailRankSevenImage
-;;EmailRankEightNpsSlot;EmailRankEightImage
-;;EmailRankNineNpsSlot;EmailRankNineImage
-;;EmailRankTenNpsSlot;EmailRankTenImage
-###################################### nps-emai-content_en2.txt ends ##############################################
-
-###################################### nps-email-content.txt starts ##############################################
-#
-# Import the CMS content for the site emails
-#
-$storePrefix=mpl
-$contentCatalog=$storePrefixContentCatalog
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$wideContent=CMSImageComponent,BannerComponent
-
-# Import config properties into impex macros
-
-$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
-
-$emailPackageName=com.tisl.mpl.facades.process.email.context
-
-# Templates for CMS Cockpit Page Edit
-INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
-
-###NPS Email
-;;NpsEmailTemplate;$jarResourceCms/structure-view/structure_npsEmailTemplate.vm
-
-# Email page Template
-INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
-
-;;NpsEmailTemplate;Nps Email Template;true;npsEmail;mpl_Email_Nps_Emailer_Subject;mpl_Email_Nps_Emailer_Body;EmailPage
-
-
-# Create Content Slots
-INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
-
-##Nps Emailer content slot
-;;EmailRankZeroNpsSlot;Default Email Rank Zero Slot;true
-;;EmailRankOneNpsSlot;Default Email Rank One Slot;true
-;;EmailRankTwoNpsSlot;Default Email Rank Two Slot;true
-;;EmailRankThreeNpsSlot;Default Email Rank Three Slot;true
-;;EmailRankFourNpsSlot;Default Email Rank Four Slot;true
-;;EmailRankFiveNpsSlot;Default Email Rank Five Slot;true
-;;EmailRankSixNpsSlot;Default Email Rank Six Slot;true
-;;EmailRankSevenNpsSlot;Default Email Rank Seven Slot;true
-;;EmailRankEightNpsSlot;Default Email Rank Eight Slot;true
-;;EmailRankNineNpsSlot;Default Email Rank Nine Slot;true
-;;EmailRankTenNpsSlot;Default Email Rank Ten Slot;true
-
-
-###########Nps Email
-INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='NpsEmailTemplate'];validComponentTypes(code)
-;SiteLogo;;;logo
-;TopContent;;$wideContent;
-;BottomContent;;$wideContent;
-;Rank0;;$wideContent;
-;Rank1;;$wideContent;
-;Rank2;;$wideContent;
-;Rank3;;$wideContent;
-;Rank4;;$wideContent;
-;Rank5;;$wideContent;
-;Rank6;;$wideContent;
-;Rank7;;$wideContent;
-;Rank8;;$wideContent;
-;Rank9;;$wideContent;
-;Rank10;;$wideContent;
-
-INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='NpsEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-;;SiteLogo-NpsEmail;SiteLogo;;EmailSiteLogoConfSlot;true
-;;TopContent-NpsEmail;TopContent;;EmailTopConfSlot;true
-;;BottomContent-NpsEmail;BottomContent;;EmailBottomConfSlot;true
-;;Rank0-NpsEmail;Rank0;;EmailRankZeroNpsSlot;true
-;;Rank1-NpsEmail;Rank1;;EmailRankOneNpsSlot;true
-;;Rank2-NpsEmail;Rank2;;EmailRankTwoNpsSlot;true
-;;Rank3-NpsEmail;Rank3;;EmailRankThreeNpsSlot;true
-;;Rank4-NpsEmail;Rank4;;EmailRankFourNpsSlot;true
-;;Rank5-NpsEmail;Rank5;;EmailRankFiveNpsSlot;true
-;;Rank6-NpsEmail;Rank6;;EmailRankSixNpsSlot;true
-;;Rank7-NpsEmail;Rank7;;EmailRankSevenNpsSlot;true
-;;Rank8-NpsEmail;Rank8;;EmailRankEightNpsSlot;true
-;;Rank9-NpsEmail;Rank9;;EmailRankNineNpsSlot;true
-;;Rank10-NpsEmail;Rank10;;EmailRankTenNpsSlot;true
-
-# Email velocity templates
-INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
-;mpl_Email_Nps_Emailer_Body;$emailPackageName.NPSEmailContext
-;mpl_Email_Nps_Emailer_Subject;$emailPackageName.NPSEmailContext
-
-# Email Pages
-INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
-;;NpsEmail;Nps Email;NpsEmailTemplate;true;
-
-# CMS components velocity templates
-INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
-;mpl-CMSImageComponent-template;java.util.Map
-;mpl-BannerComponent-template;java.util.Map
-;mpl-SimpleBannerComponent-template;java.util.Map
-;mpl-CMSLinkComponent-template;java.util.Map
-;mpl-CMSParagraphComponent-template;java.util.Map
-
-# Preview Image for use in the CMS Cockpit
-INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true]
-;;EmailPageModel_preview;text/gif;EmailPageModel_preview.gif;$jarResourceCms/preview-images/EmailPageModel_preview.gif
-
-UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];previewImage(code, $contentCV)
-;;NpsEmail;EmailPageModel_preview
-###################################### nps-email-content.txt ends ##############################################
-
-###################################### nps-email-content_en1.txt starts ##############################################
-# Import the CMS content for the site emails
-#
-$storePrefix=mpl
-$contentCatalog=$storePrefixContentCatalog
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
-
-# Language
-$lang=en   
-
-# CMS components and Email velocity templates
-
-UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
-
-;mpl_Email_Nps_Emailer_Body;"Nps Email Body";$emailResource/email-npsEmailerBody.vm
-;mpl_Email_Nps_Emailer_Subject;"Nps Email Subject";$emailResource/email-npsEmailerSubject.vm
-
-# Email Pages
-UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];fromName[lang=$lang]
-;;NpsEmail;"customercare@tatacliq.com";"TataCLiQ Care"
-###################################### nps-email-content_en1.txt ends ##############################################
-
-###################################### productcontenttemplateseven.impex starts ##############################################
-#
-# Import the CMS content for the site
-#
-$storePrefix=mpl
-$contentCatalog=$storePrefixContentCatalog
-$productCatalog=mplProductCatalog
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
-$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+##################################################################productcontenttemplateseven.impex ends ###################################################
 
 # Create PageTemplates
 # These define the layout for pages
@@ -457,45 +118,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section7C;;VideoComponent;
 ###################################### productcontenttemplateseven.impex ends ##############################################
 
-###################################### TPR-250.impex starts ##############################################
-
-#
-# Import the Solr configuration for the store
-#
-$prefix=mpl
-$productCatalog=$prefixProductCatalog
-$catalogVersions=catalogVersions(catalog(id),version);
-$serverConfigName=$prefixSolrServerConfig
-$indexConfigName=$prefixSolrIndexConfig
-$searchConfigName=$prefixPageSize
-$facetSearchConfigName=$prefixIndex
-$facetSearchConfigDescription=Marketplace Solr Index
-$searchIndexNamePrefix=$prefix
-$solrIndexedType=$prefixProductType
-$indexBaseSite=$prefix
-
-
-
-INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter
-
-;$solrIndexedType; ussID  		 		  ;string ;            ;	;    ;true	  ;    ;    ;mplUssIDValueProvider;
-
-###################################### TPR-250.impex ends ##############################################
-
 ###################################### TPR-4471_NoSerp_Impex.txt starts ##############################################
-#
-# Import the CMS content for the site
-#
-$storePrefix=mpl
-$contentCatalog=$storePrefixContentCatalog
-$productCatalog=mplProductCatalog
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
-# Import modulegen config properties into impex macros
-#UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
-#$jarResourceCms=$config-jarResourceCmsValue
-$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
-
 INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
 ;;SearchResultsEmptyPageTemplate;Search Results Empty Page Template;search/searchEmptyPage;ContentPage
 
@@ -537,18 +160,6 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ###################################### TPR-4471_NoSerp_Impex.txt ends ##############################################
 
 ###################################### TPR-4471_plp_Impex.txt starts ##############################################
-#
-# Import the CMS content for the site
-#
-$storePrefix=mpl
-$contentCatalog=$storePrefixContentCatalog
-$productCatalog=mplProductCatalog
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
-# Import modulegen config properties into impex macros
-#UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
-#$jarResourceCms=$config-jarResourceCmsValue
-$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
 
 INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
 ;;ProductGridPageTemplate;Product Grid Page Template;category/productGridPage;CategoryPage
@@ -592,19 +203,6 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ###################################### TPR-4471_plp_Impex.txt ends ##############################################
 
 ###################################### TPR-4471_serp_Impex.txt starts ##############################################
-#
-# Import the CMS content for the site
-#
-$storePrefix=mpl
-$contentCatalog=$storePrefixContentCatalog
-$productCatalog=mplProductCatalog
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
-# Import modulegen config properties into impex macros
-#UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
-#$jarResourceCms=$config-jarResourceCmsValue
-$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
-
 INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
 ;;SearchResultsGridPageTemplate;Search Results Grid Page Template;search/searchGridPage;ContentPage
 
@@ -644,20 +242,14 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;MicrositeLogoSlotSerpForTemplate;ProductGridLogo;;MicroSiteSelLogoSlot;true
 ###################################### TPR-4471_serp_Impex.txt ends ##############################################
 
-###################################### Updated-BLP.txt starts ##############################################
-#
-# Import the CMS content for the site
-#
-$storePrefix=mpl
-$contentCatalog=$storePrefixContentCatalog
-$productCatalog=mplProductCatalog
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
-$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+###################################### OrderConfirmationBody impex starts ##############################################
+# CMS components and Email velocity templates
+UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;mpl_Email_Order_Confirmation_Body;"Order Confirmation Email Body";$emailResource/email-orderConfirmationBody.vm
+###################################### OrderConfirmationBody impex ends ##############################################
 
 
-
-
+######################################################### Updated BLP#########################################################
 # Import modulegen config properties into impex macros
 
 INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
@@ -771,21 +363,9 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;c
 ;;ShopForLookLeftColSlot-WomenV1;true;Best Seller Carousel slot;
 ;;ShopForLookRightColSlot-WomenV1;true;Best Seller View More slot;
 
-#INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
-#;;Brand1;New Brand Landing Page;NewBrandLandingPageTemplate;Brand1;MBH12E00005;
-###################################### Updated-BLP.txt ends ##############################################
+############################################################### Updated BLP#####################################################
 
-###################################### Updated-CLP.txt starts ##############################################
-#
-# Import the CMS content for the site
-#
-$storePrefix=mpl
-$contentCatalog=$storePrefixContentCatalog
-$productCatalog=mplProductCatalog
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
-$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
-
+####################################################################Updated CLP ####################################################
 # Import modulegen config properties into impex macros
 
 INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
@@ -898,10 +478,61 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;c
 ;;ShopForLookLeftColSlot-WomenV1;true;Best Seller Carousel slot;
 ;;ShopForLookRightColSlot-WomenV1;true;Best Seller View More slot;
 
+##############################################################Updated CLP ##########################################################
 
-#INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
-#;;WomenV1;Women's Category Landing Page;ApparelCategoryLandingPageTemplateV1;WomenV1;MSH10
-###################################### Updated-CLP.txt ends ##############################################
+###################################### HomePage_What_to_buy_now.impex starts ##############################################
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='LandingPage2Template'];validComponentTypes(code);compTypeGroup(code)
+;Section4D;;MplCategoryCarouselComponent,MplAdvancedCategoryCarouselComponent;
+###################################### HomePage_What_to_buy_now.impex ends ##############################################
+
+
+# 
+# Import the Solr configuration for the store 
+# 
+$prefix=mpl 
+$productCatalog=$prefixProductCatalog 
+$catalogVersions=catalogVersions(catalog(id),version); 
+$serverConfigName=$prefixSolrServerConfig 
+$indexConfigName=$prefixSolrIndexConfig 
+$searchConfigName=$prefixPageSize 
+$facetSearchConfigName=$prefixIndex 
+$facetSearchConfigDescription=Marketplace Solr Index 
+$searchIndexNamePrefix=$prefix 
+$solrIndexedType=$prefixProductType 
+$indexBaseSite=$prefix 
+$indexLanguages=en 
+$indexCurrencies=INR 
+$priceRangeINR=$prefixPriceRangeINR 
+$classAttributeAssignment=classAttributeAssignment(classificationAttribute(code),classificationClass(code)) 
+$classificationAttributeAssignments=classificationAttributeAssignments(classificationAttribute(code),classificationClass(code)) 
+
+###################################### LW-686_sprint7_impex.txt starts ##############################################
+
+# Define price ranges 
+INSERT_UPDATE SolrValueRange;&rangeValueRefID;solrValueRangeSet(name)[unique=true];name[unique=true];from;to 
+;mplLuxuryPriceRangeINR1;mplLuxuryPriceRangeINR;        ₹0-₹5000;                           0                        ; 5000 
+;mplLuxuryPriceRangeINR2;mplLuxuryPriceRangeINR;    ₹5001-₹15,000;                  5000.01                ; 15000 
+;mplLuxuryPriceRangeINR3;mplLuxuryPriceRangeINR;           ₹15,001-₹30,000;                 15000.01        ; 30000 
+;mplLuxuryPriceRangeINR4;mplLuxuryPriceRangeINR;           ₹30,001 and Above;                 30000.01        ; 999999 
+
+
+# Define price range set 
+INSERT_UPDATE SolrValueRangeSet;name[unique=true];qualifier;type;solrValueRanges(&rangeValueRefID) 
+;mplLuxuryPriceRangeINR;INR-LUXURY;double;mplLuxuryPriceRangeINR1,mplLuxuryPriceRangeINR2,mplLuxuryPriceRangeINR3,mplLuxuryPriceRangeINR4 
+
+
+###################################### LW-686_sprint7_impex.txt ends ##############################################
+
+
+###################################### TPR-250.impex starts ##############################################
+
+
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter
+
+;$solrIndexedType; ussID  		 		  ;string ;            ;	;    ;true	  ;    ;    ;mplUssIDValueProvider;
+
+###################################### TPR-250.impex ends ##############################################
+
 
 ###################################### sitemap impex starts ##############################################
 
@@ -942,23 +573,173 @@ INSERT_UPDATE RendererTemplate;code[unique=true];templatescript[lang=en];
 
 ###################################### sitemap impex ends ##############################################
 
-###################################### OrderConfirmationBody impex starts ##############################################
-# Import the CMS content for the site emails
-#
-$storePrefix=mpl
-$contentCatalog=$storePrefixContentCatalog
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+#####################NPS Cron Job###########################################################
 
-# Language
-$lang=en   
+INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+;NpsMailerJob;npsMailerCronJob;false;en
+
+INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
+; NpsMailerJob; 0 0 12,16 * * ?
+
+INSERT_UPDATE MplConfiguration;mplConfigCode[unique=true];mplConfigVal;mplConfigDate
+;NpsMailerJob;;	May 11, 2017 4:00:00 PM
+
+#Templates for CMS Cockpit Page Edit
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+###NPS Email
+;;NpsEmailTemplate;$jarResourceCms/structure-view/structure_npsEmailTemplate.vm
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;NpsEmailTemplate;Nps Email Template;true;npsEmail;mpl_Email_Nps_Emailer_Subject;mpl_Email_Nps_Emailer_Body;EmailPage
+
+
+# Create Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+
+##Nps Emailer content slot
+;;EmailRankZeroNpsSlot;Default Email Rank Zero Slot;true
+;;EmailRankOneNpsSlot;Default Email Rank One Slot;true
+;;EmailRankTwoNpsSlot;Default Email Rank Two Slot;true
+;;EmailRankThreeNpsSlot;Default Email Rank Three Slot;true
+;;EmailRankFourNpsSlot;Default Email Rank Four Slot;true
+;;EmailRankFiveNpsSlot;Default Email Rank Five Slot;true
+;;EmailRankSixNpsSlot;Default Email Rank Six Slot;true
+;;EmailRankSevenNpsSlot;Default Email Rank Seven Slot;true
+;;EmailRankEightNpsSlot;Default Email Rank Eight Slot;true
+;;EmailRankNineNpsSlot;Default Email Rank Nine Slot;true
+;;EmailRankTenNpsSlot;Default Email Rank Ten Slot;true
+
+
+###########Nps Email
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='NpsEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;Rank0;;$wideContent;
+;Rank1;;$wideContent;
+;Rank2;;$wideContent;
+;Rank3;;$wideContent;
+;Rank4;;$wideContent;
+;Rank5;;$wideContent;
+;Rank6;;$wideContent;
+;Rank7;;$wideContent;
+;Rank8;;$wideContent;
+;Rank9;;$wideContent;
+;Rank10;;$wideContent;
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='NpsEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-NpsEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+;;TopContent-NpsEmail;TopContent;;EmailTopConfSlot;true
+;;BottomContent-NpsEmail;BottomContent;;EmailBottomConfSlot;true
+;;Rank0-NpsEmail;Rank0;;EmailRankZeroNpsSlot;true
+;;Rank1-NpsEmail;Rank1;;EmailRankOneNpsSlot;true
+;;Rank2-NpsEmail;Rank2;;EmailRankTwoNpsSlot;true
+;;Rank3-NpsEmail;Rank3;;EmailRankThreeNpsSlot;true
+;;Rank4-NpsEmail;Rank4;;EmailRankFourNpsSlot;true
+;;Rank5-NpsEmail;Rank5;;EmailRankFiveNpsSlot;true
+;;Rank6-NpsEmail;Rank6;;EmailRankSixNpsSlot;true
+;;Rank7-NpsEmail;Rank7;;EmailRankSevenNpsSlot;true
+;;Rank8-NpsEmail;Rank8;;EmailRankEightNpsSlot;true
+;;Rank9-NpsEmail;Rank9;;EmailRankNineNpsSlot;true
+;;Rank10-NpsEmail;Rank10;;EmailRankTenNpsSlot;true
+
+# Email velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;mpl_Email_Nps_Emailer_Body;$emailPackageName.NPSEmailContext
+;mpl_Email_Nps_Emailer_Subject;$emailPackageName.NPSEmailContext
+
+# Email Pages
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;NpsEmail;Nps Email;NpsEmailTemplate;true;
+
+# Preview Image for use in the CMS Cockpit
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true]
+;;EmailPageModel_preview;text/gif;EmailPageModel_preview.gif;$jarResourceCms/preview-images/EmailPageModel_preview.gif
+
+UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];previewImage(code, $contentCV)
+;;NpsEmail;EmailPageModel_preview
+###################################### nps-email-content.txt ends ##############################################
+
+
 
 # CMS components and Email velocity templates
-UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
-;mpl_Email_Order_Confirmation_Body;"Order Confirmation Email Body";$emailResource/email-orderConfirmationBody.vm
-###################################### OrderConfirmationBody impex ends ##############################################
 
-###################################### Aplus Cronjob Disable Starts #############################################
-INSERT_UPDATE CronJob; code[unique=true];active
-;businessContentImportJob;0
-###################################### Aplus Cronjob Disable Ends #############################################
+UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+
+;mpl_Email_Nps_Emailer_Body;"Nps Email Body";$emailResource/email-npsEmailerBody.vm
+;mpl_Email_Nps_Emailer_Subject;"Nps Email Subject";$emailResource/email-npsEmailerSubject.vm
+
+# Email Pages
+UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];fromName[lang=$lang]
+;;NpsEmail;"customercare@tatacliq.com";"TataCLiQ Care"
+###################################### nps-email-content_en1.txt ends ##############################################
+
+
+
+###################################### nps-emai-content_en2.txt starts ##############################################
+# 
+# ImpEx for Responsive Tata Marketplace Site CMS Content 
+# 
+$contentCatalog=mplContentCatalog 
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged] 
+$productCatalog=mplProductCatalog 
+$productCatalogName=MarketPlace Product Catalog
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online] 
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$jarResourceCms=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/cockpits/cmscockpit
+$medias=medias(code, $contentCV);
+$lang=en
+$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
+
+# Load the storefront context root config param
+$storefrontContextRoot=$config-storefrontContextRoot
+
+#Nps Email 
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+
+;;/images/theme/header4.jpg;header4.jpg;$siteResource/images/theme/header4.jpg;;
+;;/images/theme/rank00.jpg;rank00.jpg;$siteResource/images/theme/rank00.jpg;;
+;;/images/theme/rank01.jpg;rank01.jpg;$siteResource/images/theme/rank01.jpg;;
+;;/images/theme/rank02.jpg;rank02.jpg;$siteResource/images/theme/rank02.jpg;;
+;;/images/theme/rank03.jpg;rank03.jpg;$siteResource/images/theme/rank03.jpg;;
+;;/images/theme/rank04.jpg;rank04.jpg;$siteResource/images/theme/rank04.jpg;;
+;;/images/theme/rank05.jpg;rank05.jpg;$siteResource/images/theme/rank05.jpg;;
+;;/images/theme/rank06.jpg;rank06.jpg;$siteResource/images/theme/rank06.jpg;;
+;;/images/theme/rank07.jpg;rank07.jpg;$siteResource/images/theme/rank07.jpg;;
+;;/images/theme/rank08.jpg;rank08.jpg;$siteResource/images/theme/rank08.jpg;;
+;;/images/theme/rank09.jpg;rank09.jpg;$siteResource/images/theme/rank09.jpg;;
+;;/images/theme/rank10.jpg;rank10.jpg;$siteResource/images/theme/rank10.jpg;;
+
+# CMS Image Components for Nps Emailer  
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;NpsLogoImage;/images/theme/header4.jpg;
+;;EmailRankZeroImage;/images/theme/rank00.jpg;
+;;EmailRankOneImage;/images/theme/rank01.jpg;
+;;EmailRankTwoImage;/images/theme/rank02.jpg;
+;;EmailRankThreeImage;/images/theme/rank03.jpg;
+;;EmailRankFourImage;/images/theme/rank04.jpg;
+;;EmailRankFiveImage;/images/theme/rank05.jpg;
+;;EmailRankSixImage;/images/theme/rank06.jpg;
+;;EmailRankSevenImage;/images/theme/rank07.jpg;
+;;EmailRankEightImage;/images/theme/rank08.jpg;
+;;EmailRankNineImage;/images/theme/rank09.jpg;
+;;EmailRankTenImage;/images/theme/rank10.jpg;
+
+
+# Nps Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoConfSlot;NpsLogoImage
+;;EmailRankZeroNpsSlot;EmailRankZeroImage
+;;EmailRankOneNpsSlot;EmailRankOneImage
+;;EmailRankTwoNpsSlot;EmailRankTwoImage
+;;EmailRankThreeNpsSlot;EmailRankThreeImage
+;;EmailRankFourNpsSlot;EmailRankFourImage
+;;EmailRankFiveNpsSlot;EmailRankFiveImage
+;;EmailRankSixNpsSlot;EmailRankSixImage
+;;EmailRankSevenNpsSlot;EmailRankSevenImage
+;;EmailRankEightNpsSlot;EmailRankEightImage
+;;EmailRankNineNpsSlot;EmailRankNineImage
+;;EmailRankTenNpsSlot;EmailRankTenImage
+###################################### nps-emai-content_en2.txt ends ##############################################
