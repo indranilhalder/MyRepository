@@ -26,9 +26,12 @@ import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.CartModificationData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
+import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commercefacades.user.UserFacade;
@@ -64,6 +67,7 @@ import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -136,6 +140,7 @@ import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.ATSResponseData;
 import com.tisl.mpl.facades.data.FreebieProduct;
 import com.tisl.mpl.facades.data.ProudctWithPointOfServicesData;
@@ -203,6 +208,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	@Autowired
 	ProductService productService;
+
+	@Autowired
+	private PriceDataFactory priceDataFactory;
 
 	@Autowired
 	private WishlistFacade wishlistFacade;
@@ -2113,6 +2121,27 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final String defaultPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 			model.addAttribute("defaultPincode", defaultPincode);
 			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
+
+			final Map<String, PriceData> mrpPriceMap = new HashMap<String, PriceData>();
+
+			for (final OrderEntryData entryLatest : cartData.getEntries())
+			{
+				final long priceForStrikeOff = ((entryLatest.getMrp().getValue().longValue()) * entryLatest.getQuantity().longValue());
+				final BigDecimal strikeOffPrice = new BigDecimal(priceForStrikeOff);
+				final PriceData strikeoffprice = priceDataFactory.create(PriceDataType.BUY, strikeOffPrice,
+						MarketplaceFacadesConstants.INR);
+
+
+				model.addAttribute("strikeoffprice", strikeoffprice);
+
+				//TPR-774
+				final BigDecimal mrptotal = new BigDecimal(entryLatest.getMrp().getValue().doubleValue()
+						* entryLatest.getQuantity().doubleValue());
+				final PriceData mrpTotalPrice = priceDataFactory.create(PriceDataType.BUY, mrptotal, MarketplaceFacadesConstants.INR);
+				mrpPriceMap.put(entryLatest.getEntryNumber().toString(), mrpTotalPrice);
+				//TPR-774
+			}
+			model.addAttribute(ModelAttributetConstants.MRPPRICEMAP, mrpPriceMap);
 		}
 		catch (final Exception e)
 		{
@@ -2320,7 +2349,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
 			jsonObj.put("validation", "success");
 			jsonObj.put("totalPrice", cartData.getTotalPriceWithConvCharge().getFormattedValueNoDecimal());
-			jsonObj.put("subTotalPrice", cartData.getSubTotal().getFormattedValueNoDecimal());
 			jsonObj.put("type", "response");
 		}
 		catch (final Exception e)
@@ -3070,7 +3098,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	{
 		CartModel cartModel = null;
 		final String entryNumberString = request.getParameter("entryNumber");
-		final String returnPage = MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.ReviewOrder;
+		final String returnPage = REDIRECT_PREFIX + MarketplacecheckoutaddonConstants.MPLSINGLEPAGEURL
+				+ MarketplacecheckoutaddonConstants.GETREVIEWORDER;
 		try
 		{
 			final long entryNumber = Long.parseLong(entryNumberString);
