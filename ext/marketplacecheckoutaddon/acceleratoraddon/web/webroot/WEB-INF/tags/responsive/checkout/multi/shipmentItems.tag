@@ -76,8 +76,8 @@
 												
 												<!-- start TISEE-4631 TISUAT-4229 -->
 												
-												 <c:if test="${fn:toUpperCase(entry.product.rootCategory) != 'ELECTRONICS'}">
-												 	
+												 <!--<c:if test="${fn:toUpperCase(entry.product.rootCategory) != 'ELECTRONICS'}"> -->
+												<c:if test="${not empty entry.product.size}">
 												 	<ycommerce:testId code="cart_product_size">
 														<div class="size"><spring:theme code="text.size"/>${entry.product.size}</div>
 													</ycommerce:testId>
