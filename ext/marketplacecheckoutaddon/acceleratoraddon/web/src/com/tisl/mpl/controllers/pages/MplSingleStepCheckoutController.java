@@ -2292,6 +2292,28 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					}
 				}
 			}
+			final CartModel cartModel = getCartService().getSessionCart();
+			//Moved to single method in facade TPR-629
+			getMplPaymentFacade().populateDeliveryPointOfServ(cartModel);
+
+			//TISST-13012
+			//final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart()); TISPT-169
+			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cartModel); //Changed to cartModel as it is already assigned from session(reduce session call)
+
+			if (cartItemDelistedStatus)
+			{
+				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
+						MarketplacecommerceservicesConstants.TRUE_UPPER);
+				jsonObj.put("url", "/cart");
+				jsonObj.put("type", "redirect");
+				return jsonObj;
+			}
+
+			// OrderIssues:- Set the value duplicatJuspayResponse in session to false  ones cart GUID available in session
+			final Map<String, Boolean> duplicatJuspayResponseMap = new HashMap<String, Boolean>();
+			duplicatJuspayResponseMap.put(cartData.getGuid(), Boolean.FALSE);
+
+			getSessionService().setAttribute(MarketplacecommerceservicesConstants.DUPLICATEJUSPAYRESONSE, duplicatJuspayResponseMap);
 
 			//model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE); //TPR-629
 
@@ -3140,7 +3162,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -3197,7 +3219,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
