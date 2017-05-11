@@ -96,6 +96,7 @@ import de.hybris.platform.voucher.model.VoucherModel;
 import de.hybris.platform.wishlist2.Wishlist2Service;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
+import com.tisl.mpl.model.PaymentModeRestrictionModel;
 
 import java.net.MalformedURLException;
 import java.net.URL;
