@@ -19352,6 +19352,9 @@ header.brand-header .content .search form button, header.brand-header .content .
 header.brand-header .content .bottom {
 	 position: relative;
 	}
+header.brand-header .content .bottom.active {
+    position: fixed;
+}		/* TISSQAUATS-948 */
 header.brand-header .content .bottom {
 	padding-top: 10px;
 	max-height: 80px
