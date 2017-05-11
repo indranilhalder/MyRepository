@@ -61,6 +61,7 @@ import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
+import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -795,6 +796,7 @@ public class PaymentServicesController extends BaseController
 				}
 				else
 				{
+					//INC144315486
 					boolean alreadyProcessed = false;
 					final List<PaymentTransactionModel> paymentTransactionList = orderModel.getPaymentTransactions();
 
@@ -873,6 +875,7 @@ public class PaymentServicesController extends BaseController
 						}
 					}
 
+					//INC144315486
 					// TPR-4461 WHEN ORDER MODEL IS NOT NULL ENDS HERE
 					final Double orderValue = orderModel.getSubtotal();
 					final Double totalCODCharge = orderModel.getConvenienceCharges();
