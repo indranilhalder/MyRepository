@@ -204,7 +204,8 @@ display: none;}
 		<input type="radio" id="new-address-option-2" value="Work" name="addressType" />
 		<label class="commercial" for="new-address-option-2"><spring:theme code="text.addressBook.commercialaddress" text="Commercial Address" /></label>
 		</div></div>
-		<fieldset> 
+		<fieldset>
+		<div id="addressMessage" class='full' style=""></div>
 		<div class='half'>
 		
 		<formElement:formInputBox idKey="address.firstName" labelKey="First Name*"
