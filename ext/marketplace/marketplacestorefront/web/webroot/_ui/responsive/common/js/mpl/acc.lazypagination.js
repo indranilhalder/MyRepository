@@ -202,8 +202,12 @@ $(document).ready(function() {
         	sort($(this),false);
         });
         
-        $('.responsiveSort').change(function(){
-        	sort($(this).find(':selected'),true);
+      //  $('.responsiveSort').change(function(){
+       // 	sort($(this).find(':selected'),true);
+      //  });
+        
+        $(document).on('change','.responsiveSort',function(){        	
+        	sort($(this).find(':selected'),true);  
         });
         
         $(document).on('click','.product-item',function(){
