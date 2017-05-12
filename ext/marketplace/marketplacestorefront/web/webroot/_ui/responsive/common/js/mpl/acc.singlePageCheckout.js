@@ -163,7 +163,7 @@ ACC.singlePageCheckout = {
 	            	ACC.singlePageCheckout.getSelectedAddress();
 	                $("#choosedeliveryMode").html(data);
 	                ACC.singlePageCheckout.showAccordion("#choosedeliveryMode");
-		        	selectDefaultDeliveryMethod();
+		        	//selectDefaultDeliveryMethod();
 		        	$(".click-and-collect").addClass("click-collect");
 		        	$("#singlePageAddressPopup").modal('hide');
 		        	ACC.singlePageCheckout.getDeliveryAddresses();
@@ -224,7 +224,7 @@ ACC.singlePageCheckout = {
 					ACC.singlePageCheckout.getSelectedAddress();
 					$("#choosedeliveryMode").html(data);
 		        	ACC.singlePageCheckout.showAccordion("#choosedeliveryMode");
-		        	selectDefaultDeliveryMethod();
+		        	//selectDefaultDeliveryMethod();
 		        	$(".click-and-collect").addClass("click-collect");
 		        	$("#singlePageAddressPopup").modal('hide');
 		        	ACC.singlePageCheckout.getDeliveryAddresses();
@@ -529,7 +529,7 @@ ACC.singlePageCheckout = {
             	ACC.singlePageCheckout.getSelectedAddress();
 	        	$("#choosedeliveryMode").html(data);
 	        	ACC.singlePageCheckout.showAccordion("#choosedeliveryMode");
-	        	selectDefaultDeliveryMethod();
+	        	//selectDefaultDeliveryMethod();
 	        	$(".click-and-collect").addClass("click-collect");
 	        	$("#selectedAddressMessage").hide();
 	        	
