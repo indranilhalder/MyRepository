@@ -35399,11 +35399,11 @@ position:static !important;
 }
 .pagination-bar.listing-menu.bottom .pagination li.next {
     right: 0;
-    position: absolute;
+    /* position: absolute; */	/* comment it for INC144316100 */
 }
 .pagination-bar.listing-menu.bottom .pagination li.prev {
     left: 0;
-    position: absolute;
+    /* position: absolute; */ 	/* comment it for INC144316100 */
 }
 .pagination .prev .anglelft:before, .pagination .next .anglerght:after{
 	line-height:18px;
@@ -35834,8 +35834,10 @@ left:0;
     letter-spacing: 0;
 }
 .pagination-bar.listing-menu.bottom {
-    border-bottom: 1px #e5e5e5 solid;
-    padding-bottom: 25px;
+	/* start change of INC144316100 */
+    /* border-bottom: 1px #e5e5e5 solid;
+    padding-bottom: 25px; */
+    /* end change of INC144316100 */
     width: 90%;
     margin: 0 auto;
 }
