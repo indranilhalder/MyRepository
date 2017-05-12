@@ -2177,17 +2177,26 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			jsonObject.put("pickupPersonName", pickupPerson.toString());
 			jsonObject.put("pickupPersonMobileNo", pickUpPersonMobile);
 			final String Line1 = addressData.getLine1().concat(comma);
-			if (null != addressData.getLine2())
+			if (StringUtils.isNotEmpty(addressData.getLine2()))
 			{
 				addressLine = Line1.concat(emptySpace).concat(addressData.getLine2()).concat(comma);
 			}
-			if (null != addressData.getLine3())
+			if (StringUtils.isNotEmpty(addressData.getLine3()))
 			{
 				addressLine = addressLine.concat(emptySpace).concat(addressData.getLine3()).concat(comma);
 			}
-			addressLine = addressLine.concat(emptySpace).concat(addressData.getTown()).concat(comma).concat(emptySpace)
-					.concat(addressData.getState()).concat(comma).concat(emptySpace).concat(addressData.getPostalCode())
-					.concat(emptySpace);
+			if (StringUtils.isNotEmpty(addressLine))
+			{
+				addressLine = addressLine.concat(emptySpace).concat(addressData.getTown()).concat(comma).concat(emptySpace)
+						.concat(addressData.getState()).concat(comma).concat(emptySpace).concat(addressData.getPostalCode())
+						.concat(emptySpace);
+			}
+			else
+			{
+				addressLine = Line1.concat(emptySpace).concat(addressData.getTown()).concat(comma).concat(emptySpace)
+						.concat(addressData.getState()).concat(comma).concat(emptySpace).concat(addressData.getPostalCode())
+						.concat(emptySpace);
+			}
 			final String countryAndPhone = countrycode.concat(emptySpace).concat(phoneCode).concat(emptySpace)
 					.concat(addressData.getPhone());
 			addressLine = addressLine.concat(countryAndPhone);
@@ -3196,7 +3205,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -3253,7 +3262,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
