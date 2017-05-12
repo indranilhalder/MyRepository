@@ -2112,9 +2112,11 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.GETREVIEWORDER, method = RequestMethod.GET)
 	public String viewReviewOrder(final Model model)
 	{
+		Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
 		try
 		{
 			final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
+
 			final Map<String, MarketplaceDeliveryModeData> delModeDataPopulateMap = mplCartFacade
 					.getDeliveryModeMapForReviewOrder(cartData);
 			model.addAttribute("deliveryModeData", delModeDataPopulateMap);
@@ -2141,6 +2143,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				mrpPriceMap.put(entryLatest.getEntryNumber().toString(), mrpTotalPrice);
 				//TPR-774
 			}
+			fullfillmentDataMap = mplCartFacade.getFullfillmentMode(cartData);
+			model.addAttribute(ModelAttributetConstants.CART_FULFILMENTDATA, fullfillmentDataMap);
 			model.addAttribute(ModelAttributetConstants.MRPPRICEMAP, mrpPriceMap);
 		}
 		catch (final Exception e)
