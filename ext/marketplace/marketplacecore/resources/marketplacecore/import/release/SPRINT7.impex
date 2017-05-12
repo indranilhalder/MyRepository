@@ -542,7 +542,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 $storePrefix=mpl
 $siteUid=$storePrefix
 $siteMapUrlLimitPerFile=10000
-$baseUrl=https://www.tatacliq.com/
+$baseUrl=https://www.tatacliq.com
  
 
 INSERT_UPDATE SiteMapMediaCronJob;code[unique=true];job(code);sessionLanguage(isocode);updatetype(code);contentsite(uid);siteMapUrlLimitPerFile
