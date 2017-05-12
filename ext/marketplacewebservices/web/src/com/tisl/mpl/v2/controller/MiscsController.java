@@ -218,13 +218,13 @@ public class MiscsController extends BaseController
 	private CustomerFacade customerFacade;
 	/*
 	 * @Resource private ModelService modelService;
-	 *
+	 * 
 	 * @Autowired private ForgetPasswordFacade forgetPasswordFacade;
-	 *
+	 * 
 	 * @Autowired private ExtendedUserServiceImpl userexService;
-	 *
+	 * 
 	 * @Autowired private WishlistFacade wishlistFacade;
-	 *
+	 * 
 	 * @Autowired private MplSellerMasterService mplSellerInformationService;
 	 */
 	@Autowired
@@ -251,7 +251,7 @@ public class MiscsController extends BaseController
 	private FieldSetBuilder fieldSetBuilder;
 	/*
 	 * @Resource(name = "i18NFacade") private I18NFacade i18NFacade;
-	 *
+	 * 
 	 * @Autowired private MplCommerceCartServiceImpl mplCommerceCartService;
 	 */
 	@Autowired
@@ -701,9 +701,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 *
+	 * 
 	 * @param restrictionXML
-	 *
+	 * 
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1411,7 +1411,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1424,11 +1424,11 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 * 
+	 *
 	 * } return deliveryModeData; } =======
-	 * 
+	 *
 	 * @param code
-	 * 
+	 *
 	 * @return >>>>>>> origin/GOLDEN_PROD_SUPPORT_07122016
 	 */
 	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)
@@ -1855,6 +1855,11 @@ public class MiscsController extends BaseController
 					{
 						LOG.debug("=======Fetching sub order details for sub order number======" + oneTouchCrmObj.getSubOrderNum());
 						final OrderModel subOrderModel = orderModelService.getOrder(oneTouchCrmObj.getSubOrderNum());
+						if (null != subOrderModel.getUser())
+						{
+							System.out.println("user=========================" + subOrderModel.getUser());
+						}
+
 						final OrderData orderData = getOrderConverter().convert(subOrderModel);
 						if (subOrderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
 						{
@@ -1865,6 +1870,8 @@ public class MiscsController extends BaseController
 							codSelfShipData.setBankKey(oneTouchCrmObj.getIFSC());
 							codSelfShipData.setBankAccount(oneTouchCrmObj.getAccNum());
 							codSelfShipData.setTransactionID(oneTouchCrmObj.getTransactionId());
+							codSelfShipData.setTransactionType(subOrderModel.getModeOfOrderPayment());
+							codSelfShipData.setOrderTag(MarketplacewebservicesConstants.ORDERTAG_TYPE_POSTPAID);
 						}
 						LOG.debug("========Fetching order entry details for transaction id========" + oneTouchCrmObj.getTransactionId());
 						for (final OrderEntryData entry : orderData.getEntries())

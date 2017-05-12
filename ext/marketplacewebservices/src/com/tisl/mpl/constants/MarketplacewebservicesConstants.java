@@ -563,5 +563,6 @@ public class MarketplacewebservicesConstants
 	public static final String NO_CONSIGNMENT_FOUND = "NO CONSIGNMENT FOUND";
 	public static final String ORDER_ALREAY_CANCELLED = "ORDER IS ALREADY CANCELLED";
 	public static final String RETURN_ALREADY_INITIATED = "RETURN ALREADY INITIATED";
+	public static final String ORDERTAG_TYPE_POSTPAID = "POSTPAIDRRF";
 
 }

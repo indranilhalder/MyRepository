@@ -2047,9 +2047,18 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private void requestOrderCancel(final OrderData subOrderDetails, final OrderModel subOrderModel,
 			final MplOrderCancelRequest orderCancelRequest) throws OrderCancelException
 	{
+		//CODE COMMENTED AFTER R2.3 FOR ONE TOUCH CANCELLATION/RETURN FEATURE----START
 		//cancel Order
+		//final OrderCancelRecordEntryModel orderRequestRecord = orderCancelService.requestOrderCancel(orderCancelRequest,
+		//		userService.getCurrentUser());
+		//CODE COMMENTED AFTER R2.3 FOR ONE TOUCH CANCELLATION/RETURN FEATURE----END
+
+
+
+		//TRP-1345: START
 		final OrderCancelRecordEntryModel orderRequestRecord = orderCancelService.requestOrderCancel(orderCancelRequest,
-				userService.getCurrentUser());
+				subOrderModel.getUser());
+		//TRP-1345: END
 
 		if (OrderCancelEntryStatus.DENIED.equals(orderRequestRecord.getCancelResult()))
 		{
