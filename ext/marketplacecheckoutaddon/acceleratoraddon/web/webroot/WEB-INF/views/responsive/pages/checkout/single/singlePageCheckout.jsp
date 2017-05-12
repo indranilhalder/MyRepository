@@ -143,6 +143,17 @@ $(".checkout-accordion-wrapper .checkout-accordion .checkout-accordion-heading")
 					function goActive() {
 					      startTimer();
 					}
+					
+					$(document).ready(function(){
+						//Preventing form submission on key press.
+						$(document).on('keypress','input,select,textarea', function(e) {
+							var code = e.keyCode || e.which;
+							if(code == 13)
+						        return false;
+
+						});
+					})
+					
 	</script>
 </c:if>
 </template:page>
