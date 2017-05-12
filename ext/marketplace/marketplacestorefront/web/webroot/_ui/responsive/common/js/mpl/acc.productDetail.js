@@ -3761,6 +3761,14 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 				 $("#pin").attr("disabled",true);
 				 $("#pdpPincodeCheckDList").show();
 				 $("#buyNowButton").attr("disabled",true);
+				 //INC144316346
+				 if($.isEmptyObject(data['availibility'])){
+					 $("#variant li a").removeAttr("href");
+					 $("#variant li a").removeAttr("title");
+					 $("#variant li a").attr("disabled", true);
+					 $("#variant li a").parent().addClass("strike");
+				 }
+				 //INC144316346
 			}
 		},
 		// For buybox seller and other seller in PDP
