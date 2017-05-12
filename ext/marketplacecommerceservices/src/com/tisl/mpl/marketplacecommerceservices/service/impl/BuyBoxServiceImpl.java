@@ -60,9 +60,9 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * This service method will return buybox prices for product code
-	 * 
+	 *
 	 * @param - productCode
-	 * 
+	 *
 	 * @return- buyBoxList
 	 */
 	@Override
@@ -119,14 +119,17 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	private String isUserInRole(final String agentGroup)
 	{
 		final String userId = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
-		final UserModel user = userService.getUserForUID(userId);
-		final Set<PrincipalGroupModel> userGroups = user.getAllGroups();
-
-		for (final PrincipalGroupModel ug : userGroups)
+		if (userId != null && StringUtils.isNotEmpty(userId))
 		{
-			if (ug.getUid().equalsIgnoreCase(agentGroup))
+			final UserModel user = userService.getUserForUID(userId);
+			final Set<PrincipalGroupModel> userGroups = user.getAllGroups();
+
+			for (final PrincipalGroupModel ug : userGroups)
 			{
-				return userId;
+				if (ug.getUid().equalsIgnoreCase(agentGroup))
+				{
+					return userId;
+				}
 			}
 		}
 		return StringUtils.EMPTY;
@@ -134,9 +137,9 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * This service method will return buybox prices for product code
-	 * 
+	 *
 	 * @param - productCode
-	 * 
+	 *
 	 * @return- List<BuyBoxModel>
 	 */
 
@@ -149,7 +152,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * This service method will return buybox inventory for product code
-	 * 
+	 *
 	 * @param - productCode
 	 */
 	@Override
@@ -161,7 +164,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * This service method will inavalidating pks of the buyboxbox sellers
-	 * 
+	 *
 	 * @param - productCode buyBoxDao.invalidatePkofBuybox(currenttime)
 	 */
 	@Override
@@ -180,7 +183,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#buyBoxPriceNoStock(java.lang.String)
 	 */
 	@Override
@@ -220,7 +223,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#getRichAttributeData(java.lang.String)
 	 */
 	@Override
@@ -239,7 +242,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#getpriceForUssid(java.lang.String)
 	 */
 	@Override
@@ -271,7 +274,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#buyBoxStockForSeller(java.lang.String)
 	 */
 	@Override
@@ -283,7 +286,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#getClassAttrAssignmentsForCode(java.lang.String)
 	 */
@@ -297,7 +300,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	//INC144315542_INC144314878_INC_11113
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#getBuyboxPricesForSizeVariant(java.lang.String)
 	 */
