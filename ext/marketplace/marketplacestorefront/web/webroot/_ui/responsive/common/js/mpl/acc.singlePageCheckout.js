@@ -168,6 +168,7 @@ ACC.singlePageCheckout = {
 		        	$("#singlePageAddressPopup").modal('hide');
 		        	ACC.singlePageCheckout.getDeliveryAddresses();
 		        	$("#selectedAddressMessage").hide();
+		        	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
 	            }
 	        });
 	        
@@ -229,6 +230,7 @@ ACC.singlePageCheckout = {
 		        	$("#singlePageAddressPopup").modal('hide');
 		        	ACC.singlePageCheckout.getDeliveryAddresses();
 		        	$("#selectedAddressMessage").hide();
+		        	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
 		        	if(typeof utag !="undefined"){
 						utag.link({ link_text : 'add_new_address_saved' ,event_type : 'add_new_address_saved'});
 					}
