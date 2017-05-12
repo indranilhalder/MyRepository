@@ -808,14 +808,17 @@ ACC.singlePageCheckout = {
 			if(searchText!="" && $(".showStoreAddress").length>0)
 			{				
 				$allListElements.closest("li").hide();
+				$allListElements.closest("li").parent("div.owl-item").hide();
 				$allListElements.closest("li").parent("div.owl-item").removeClass("owl-item");
 				$(".showStoreAddress").parent("div").addClass("owl-item");
+				$(".showStoreAddress").parent("div").show();
 				$(".showStoreAddress").show();
 			}else if(searchText=="")
 			{
 				$allListElements.closest("li").show();
 				$allListElements.closest("li").removeClass("showStoreAddress");
 				$allListElements.closest("li").parent("div").addClass("owl-item");
+				$allListElements.closest("li").parent("div.owl-item").show();
 			}
 			
 		
