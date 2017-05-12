@@ -24,7 +24,19 @@ public interface BuyBoxFacade
 {
 	public BuyBoxData buyboxPrice(String ProductCode) throws EtailNonBusinessExceptions;
 
-	public Map<String, Object> buyboxPricePDP(String ProductCode) throws EtailNonBusinessExceptions;
+
+	//CKD:TPR-250 Start
+	//public Map<String, Object> buyboxPricePDP(String ProductCode) throws EtailNonBusinessExceptions;
+	/**
+	 * @param productCode
+	 * @param bBoxSellerId
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 */
+	Map<String, Object> buyboxPricePDP(String productCode, String bBoxSellerId) throws EtailNonBusinessExceptions;
+
+	//CKD:TPR-250 End
+
 
 	public List<SellerInformationData> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
 
@@ -40,5 +52,10 @@ public interface BuyBoxFacade
 
 	public boolean isCatLingerie(final List<CategoryModel> categoryList, final String configLingerieCategoris)
 			throws EtailNonBusinessExceptions;
+
+
+	//TPR-3736
+	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions;
+
 
 }

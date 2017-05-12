@@ -11,6 +11,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -216,7 +217,15 @@ public class SalesOrderXMLUtility
 											&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 									{
 										LOG.debug("Inside Parent order: Pyment Transaction model");
-										salesXMLData.setMerchantCode(oModel.getPaymentProvider());
+										if (MarketplacecommerceservicesConstants.MRUPEE_CODE.equalsIgnoreCase(oModel.getPaymentProvider()))
+										{
+											salesXMLData.setMerchantCode(getConfigurationService().getConfiguration().getString(
+													MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE));
+										}
+										else
+										{
+											salesXMLData.setMerchantCode(oModel.getPaymentProvider());
+										}
 										if (null != oModel.getCode())
 										{
 											payemntrefid = oModel.getCode();
@@ -337,15 +346,18 @@ public class SalesOrderXMLUtility
 					if (null != entry.getMplDeliveryMode() && xmlToFico)
 					{
 						LOG.debug("DeliveryMode Setting into childOrderDataforXml");
-						if (entry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+						if (entry.getMplDeliveryMode().getDeliveryMode().getCode()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
 						{
 							xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.CnC);
 						}
-						if (entry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+						if (entry.getMplDeliveryMode().getDeliveryMode().getCode()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
 						{
 							xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.HD);
 						}
-						if (entry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+						if (entry.getMplDeliveryMode().getDeliveryMode().getCode()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
 						{
 							xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.ED);
 						}
@@ -423,10 +435,18 @@ public class SalesOrderXMLUtility
 						}
 						LOG.debug("after price set");
 					}
-					//TISPRD-901
+					//TISPRD-901 // TISSQAUAT-4104
 					if (StringUtils.isNotEmpty(entry.getFulfillmentType()) && xmlToFico)
 					{
-						xmlData.setFulfillmentType(entry.getFulfillmentType().toUpperCase());
+						if (StringUtils.isNotEmpty(entry.getFulfillmentTypeP1()) && entry.getFulfillmentType().equalsIgnoreCase("Both"))
+						{
+							xmlData.setFulfillmentType(entry.getFulfillmentTypeP1().toUpperCase());
+						}
+						else
+						{
+							xmlData.setFulfillmentType(entry.getFulfillmentType().toUpperCase());
+						}
+
 						LOG.debug("set fulfilment mode");
 					}
 
@@ -438,28 +458,68 @@ public class SalesOrderXMLUtility
 								&& entry.getRefundedDeliveryChargeAmt() != null && null != zoneDelivery.getDeliveryMode().getCode()
 								&& zoneDelivery.getDeliveryMode().getCode().equalsIgnoreCase("express-delivery"))
 						{
+							LOG.debug("inside express del");
 							if (entry.getCurrDelCharge().doubleValue() > 0)
 							{
+								LOG.debug("setting current delivery charge...");
 								xmlData.setExpressdeliveryCharge(entry.getCurrDelCharge().doubleValue());
 							}
 							else
 							{
+								LOG.debug("setting refunded delivery charge..."+entry.getRefundedDeliveryChargeAmt());
 								xmlData.setExpressdeliveryCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 							}
 							LOG.debug("set express del charge from curr del charge" + entry.getCurrDelCharge().doubleValue());// zoneDelivery.getValue().doubleValue()
+
+							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
+							{
+								LOG.debug("setting schedule delivery charge..."+entry.getScheduledDeliveryCharge());
+								xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
+							}							
+							else if (null != entry.getRefundedScheduleDeliveryChargeAmt()
+									&& entry.getRefundedScheduleDeliveryChargeAmt().doubleValue() > 0)// INC144316465 STARTS
+							{
+								LOG.debug("setting refunded delivery charge..."+entry.getRefundedScheduleDeliveryChargeAmt());
+								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
+							}
+							else {
+								xmlData.setScheduleDelCharge(0.00);
+							}
+					   	   // INC144316465 end
 						}
 						else if (null != zoneDelivery && null != zoneDelivery.getDeliveryMode() && entry.getCurrDelCharge() != null
 								&& entry.getRefundedDeliveryChargeAmt() != null && null != zoneDelivery.getDeliveryMode().getCode()
 								&& zoneDelivery.getDeliveryMode().getCode().equalsIgnoreCase("home-delivery"))
 						{
+							
+							LOG.debug("inside home del");
 							if (entry.getCurrDelCharge().doubleValue() > 0)
 							{
+								LOG.debug("setting current delivery charge...");
 								xmlData.setShipmentCharge(entry.getCurrDelCharge().doubleValue());
 							}
 							else
 							{
+								LOG.debug("setting refunded delivery charge..."+entry.getRefundedDeliveryChargeAmt());
 								xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 							}
+
+							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
+							{
+								LOG.debug("setting schedule delivery charge..."+entry.getScheduledDeliveryCharge());
+								xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
+							}
+							// INC144316465 STARTS
+							else if (null != entry.getRefundedScheduleDeliveryChargeAmt()
+									&& entry.getRefundedScheduleDeliveryChargeAmt().doubleValue() > 0)
+							{
+								LOG.debug("setting refunded delivery charge..."+entry.getRefundedScheduleDeliveryChargeAmt());
+								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
+							}
+							else {
+								xmlData.setScheduleDelCharge(0.00);
+							}
+						// INC144316465 end
 							LOG.debug("set del charge");
 						}
 					}
@@ -542,6 +602,14 @@ public class SalesOrderXMLUtility
 	protected SellerBasedPromotionService getSellerBasedPromotionService()
 	{
 		return Registry.getApplicationContext().getBean("sellerBasedPromotionService", SellerBasedPromotionService.class);
+	}
+
+	/**
+	 * @return the configurationService
+	 */
+	protected ConfigurationService getConfigurationService()
+	{
+		return Registry.getApplicationContext().getBean("configurationService", ConfigurationService.class);
 	}
 
 }

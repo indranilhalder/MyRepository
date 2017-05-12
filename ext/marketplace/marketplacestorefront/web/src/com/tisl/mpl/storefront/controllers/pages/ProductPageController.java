@@ -59,6 +59,7 @@ import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.storelocator.location.Location;
@@ -119,6 +120,7 @@ import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONObject;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.constants.MplConstants.USER;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
@@ -143,6 +145,7 @@ import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.seller.product.facades.ProductOfferDetailFacade;
+import com.tisl.mpl.service.MplGigyaReviewCommentServiceImpl;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -163,6 +166,9 @@ import com.tisl.mpl.util.ExceptionUtil;
 //@RequestMapping(value = "/**/p")
 public class ProductPageController extends MidPageController
 {
+	/**
+	 *
+	 */
 	private static final String PRODUCT_SIZE_TYPE = "productSizeType";
 	/**
 	 *
@@ -224,6 +230,9 @@ public class ProductPageController extends MidPageController
 	private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
 	private static final String BOXING = "boxing";
 	private static final String USSID = "ussid";
+	//TPR-3736
+	private static final String IA_USS_IDS = "iaUssIds";
+
 
 
 	@SuppressWarnings("unused")
@@ -295,6 +304,18 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
 
+	@Autowired
+	private MplGigyaReviewCommentServiceImpl mplGigyaReviewService;
+
+
+	//TPR-4389
+	/*
+	 * @SuppressWarnings("unused") private BrowserType bType;
+	 */
+
+	//Sonar fix
+	//@Autowired
+	//private ConfigurationService configService;
 	@Resource(name = "customProductFacade")
 	private CustomProductFacadeImpl customProductFacade;
 
@@ -353,12 +374,19 @@ public class ProductPageController extends MidPageController
 	public String productDetail(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@RequestParam(value = "searchCategory", required = false, defaultValue = " ") final String dropDownText,
 			@RequestParam(value = ModelAttributetConstants.SELECTED_SIZE, required = false) final String selectedSize,
+			@RequestParam(value = MarketplacecommerceservicesConstants.SELLERIDPARAM, required = false) final String sellerId, //CKD:TPR-250
 			final Model model, final HttpServletRequest request, final HttpServletResponse response)
 			throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
-
+		//final was written here
 		String returnStatement = null;
+
 		final String userAgent = request.getHeader("user-agent");
+
+		//	final Boolean isProductPage = true;
+		//CKD:TPR-250:Start
+		model.addAttribute("msiteBuyBoxSellerId", StringUtils.isNotBlank(sellerId) ? sellerId : null);
+		//CKD:TPR-250:End
 
 		try
 		{
@@ -366,7 +394,9 @@ public class ProductPageController extends MidPageController
 			{
 				productCode = productCode.toUpperCase();
 			}
+
 			LOG.debug("**************************************opening pdp for*************" + productCode);
+
 			//Changes for UF-238
 			if (!StringUtils.isEmpty(userAgent) && userAgent.toLowerCase().contains("googlebot"))
 			{
@@ -385,7 +415,26 @@ public class ProductPageController extends MidPageController
 			{
 				model.addAttribute("aplusHTML", "");
 			}
+
+
+			// TPR- 4389 STARTS FROM HERE
+
 			final ProductModel productModel = productService.getProductForCode(productCode);
+			final Map<String, String> reviewAndRating = mplGigyaReviewService.getReviewsAndRatingByCategoryId(
+					productModel.getProductCategoryType(), productCode);
+
+			if (reviewAndRating != null)
+			{
+				for (final Map.Entry<String, String> entry : reviewAndRating.entrySet())
+				{
+					final String commentCount = entry.getKey();
+					final String ratingCount = entry.getValue();
+					model.addAttribute("commentCount", commentCount);
+					model.addAttribute("averageRating", ratingCount);
+
+				}
+			}
+			//   TPR-4389 ENDS HERE
 
 			if (productModel.getLuxIndicator() != null
 					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
@@ -468,7 +517,7 @@ public class ProductPageController extends MidPageController
 				 * final String metaTitle = productData.getSeoMetaTitle(); final String pdCode = productData.getCode();
 				 * final String metaDescription = productData.getSeoMetaDescription(); //TISPRD-4977 final String
 				 * metaKeyword = productData.getSeoMetaKeyword(); //final String metaKeywords = productData.gets
-				 *
+				 * 
 				 * setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
 				 */
 				//AKAMAI fix
@@ -1002,7 +1051,9 @@ public class ProductPageController extends MidPageController
 								- buyboxdata.getSpecialPrice().getDoubleValue();
 						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
 						//Critical Sonar Fix
-						final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						//fix for INC144314955
+						//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
 						final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 
 						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
@@ -1012,7 +1063,9 @@ public class ProductPageController extends MidPageController
 						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue() - buyboxdata.getPrice().getDoubleValue();
 						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
 						//Critical Sonar Fix
-						final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						//fix for INC144314955
+						//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
 						final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
 					}
@@ -1254,6 +1307,7 @@ public class ProductPageController extends MidPageController
 					}
 					catch (final Exception e)
 					{
+						ExceptionUtil.getCustomizedExceptionTrace(e);
 						LOG.debug("configurableRadius values is empty please add radius property in properties file ");
 					}
 				}
@@ -1313,11 +1367,15 @@ public class ProductPageController extends MidPageController
 	{ RequestMethod.POST, RequestMethod.GET })
 	public String viewSellers(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@RequestParam(value = ModelAttributetConstants.SELECTED_SIZE, required = false) final String selectedSize,
+			@RequestParam(value = MarketplacecommerceservicesConstants.SELLERIDPARAM, required = false) final String sellerId, //CKD:TPR-250
 			final Model model, @Valid final SellerInformationDetailsForm form, final HttpServletRequest request)
 			throws CMSItemNotFoundException
 	{
 		final StringBuilder allVariants = new StringBuilder();
 		String returnStatement = null;
+		//CKD:TPR-250:Start
+		model.addAttribute("msiteBuyBoxSellerId", StringUtils.isNotBlank(sellerId) ? sellerId : null);
+		//CKD:TPR-250:End
 		try
 		{
 			if (null != productCode)
@@ -1334,6 +1392,9 @@ public class ProductPageController extends MidPageController
 					ProductOption.VARIANT_FULL));
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			populateProductData(productData, model);
+			//CKD:TPR-250:Start
+			prepareBrandInfoData(model, productData);
+			//CKD:TPR-250:End
 			final List<String> deliveryInfoList = new ArrayList<String>();
 
 			deliveryInfoList.add(ModelAttributetConstants.EXPRESS_DELIVERY);
@@ -1485,6 +1546,7 @@ public class ProductPageController extends MidPageController
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/quickView", method = RequestMethod.GET)
 	public String showQuickView(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@RequestParam(value = ModelAttributetConstants.SELECTED_SIZE, required = false) final String selectedSize,
+			@RequestParam(value = MarketplacecommerceservicesConstants.SELLERIDPARAM, required = false) final String sellerId, //CKD:TPR-250
 			final Model model, final HttpServletRequest request) throws CMSItemNotFoundException
 	{
 		if (null != productCode)
@@ -1498,6 +1560,10 @@ public class ProductPageController extends MidPageController
 				//ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
 				ProductOption.GALLERY, ProductOption.VARIANT_FULL));//Fix for TISPT-150
 		//final String returnStatement = null;
+		//CKD:TPR-250:Start
+		model.addAttribute("msiteBuyBoxSellerId", StringUtils.isNotBlank(sellerId) ? sellerId : null);
+		prepareBrandInfoData(model, productData);
+		//CKD:TPR-250:End
 		try
 		{
 			populateProductData(productData, model);
@@ -1776,6 +1842,9 @@ public class ProductPageController extends MidPageController
 			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
 					ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+			//CKD:TPR-250:Start
+			prepareBrandInfoData(model, productData);
+			//CKD:TPR-250:End
 			updatePageTitle(productData, model);
 			final StringBuilder allVariants = new StringBuilder();
 			//		sortVariantOptionData(productData);
@@ -1937,8 +2006,6 @@ public class ProductPageController extends MidPageController
 	}
 
 	//TODO
-
-
 	protected void setUpMetaData(final Model model, final String metaDescription, final String metaTitle,
 			final String productCode, final String metaKeywords)
 	{
@@ -2259,8 +2326,9 @@ public class ProductPageController extends MidPageController
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/buybox", method = RequestMethod.GET)
 	public @ResponseBody JSONObject getBuyboxPrice(
 			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
-			@RequestParam("variantCode") String variantCode) throws JSONException, CMSItemNotFoundException,
-			UnsupportedEncodingException, com.granule.json.JSONException
+			@RequestParam("variantCode") String variantCode,
+			@RequestParam(value = MarketplacecommerceservicesConstants.SELLERIDPARAM, required = false) final String sellerId //CKD:TPR-250
+	) throws JSONException, CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
 	{
 		JSONObject buyboxJson = new JSONObject();
 		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
@@ -2276,7 +2344,10 @@ public class ProductPageController extends MidPageController
 				}
 				productCode = productCode.toUpperCase();
 			}
-			final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(productCode);
+			//CKD:TPR-250:Start : passing microsite seller Id
+			//final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(productCode);
+			final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(productCode, sellerId);
+			//CKD:TPR-250:End
 			//changes for tpr-1375,getting entire list of buybox data
 			if (buydata != null)
 
@@ -2773,6 +2844,12 @@ public class ProductPageController extends MidPageController
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.MIN_PRICE, buyboxdata.getMinPrice());
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.ALL_OF_STOCK, buyboxdata.getAllOOStock());
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
+
+		buyboxJson.put("isOOsForMicro", buydata.get("isOOsForMicro"));//TPR-250
+
+		//	 TISRLEE-1586 03-01-2017
+		buyboxJson.put(ControllerConstants.Views.Fragments.Product.ID_ED_SELLER_HANDLING_TIME, buyboxdata.isIsSellerHandlingTime());
+
 		final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
 		final List<String> noStockPCodes = (List<String>) buydata.get("no_stock_p_codes");
 		for (final String pCode : noStockPCodes)
@@ -2789,7 +2866,9 @@ public class ProductPageController extends MidPageController
 						- buyboxdata.getSpecialPrice().getDoubleValue().doubleValue();
 				final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue().doubleValue()) * 100;
 				//Critical Sonar Fix
-				final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+				//fix for INC144314955
+				//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+				final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
 				final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
@@ -2800,7 +2879,9 @@ public class ProductPageController extends MidPageController
 						- buyboxdata.getPrice().getDoubleValue().doubleValue();
 				final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue().doubleValue()) * 100;
 				//Critical Sonar Fix
-				final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+				//fix for INC144314955
+				//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+				final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
 				final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
 			}
@@ -2916,6 +2997,7 @@ public class ProductPageController extends MidPageController
 
 	private ContentPageModel getContentPageForProduct(final ProductModel product) throws CMSItemNotFoundException
 	{
+		//INC_11128
 		//Commented for status 500 errors
 		//		if (productContentPage == null)
 		//		{
@@ -3015,6 +3097,112 @@ public class ProductPageController extends MidPageController
 
 		}
 	}
+
+
+	//TPR-3736
+	/**
+	 * @param ussids
+	 * @return dataMap
+	 * @throws JSONException
+	 * @throws com.granule.json.JSONException
+	 */
+	@SuppressWarnings(BOXING)
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-getIAResponse", method = RequestMethod.GET)
+	public @ResponseBody JSONObject getIAResponse(@RequestParam(IA_USS_IDS) final String ussids) throws JSONException,
+			com.granule.json.JSONException
+	{
+		final String ussidList[] = ussids.split(",");
+		final StringBuilder ussidIds = new StringBuilder();
+		for (int i = 0; i < ussidList.length; i++)
+		{
+			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA);
+			ussidIds.append(ussidList[i]);
+			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA);
+			ussidIds.append(',');//Sonar fix
+		}
+		final JSONObject buyboxJson = new JSONObject();
+		final Map<String, List<Double>> dataMap = buyBoxFacade.getBuyBoxDataForUssids(ussidIds.toString().substring(0,
+				ussidIds.lastIndexOf(",")));
+		LOG.debug("##################Data Map for IA" + dataMap);
+		return buyboxJson.put("iaResponse", dataMap);
+	}
+
+	/**
+	 * @Description Added for displaying freebie messages other than default freebie message
+	 * @param ussId
+	 * @return populateFreebieMessage
+	 * @throws com.granule.json.JSONException
+	 */
+
+	//update the message for Freebie product TPR-1754
+
+	@ResponseBody
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.USSID_CODE_PATH_NEW_PATTERN + "/getFreebieMessage", method = RequestMethod.GET)
+	public JSONObject populateFreebieMessage(@RequestParam(ControllerConstants.Views.Fragments.Product.USSID) final String ussId)
+			throws com.granule.json.JSONException, EtailNonBusinessExceptions, FlexibleSearchException, UnknownIdentifierException
+	{
+		final JSONObject buyboxJson = new JSONObject();
+		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
+		try
+		{
+			if (StringUtils.isNotEmpty(ussId))
+			{
+				//				final Map<String, Map<String, String>> offerMessageMap = prodOfferDetFacade.showFreebieMessage(ussId);
+
+				final Map<String, String> offerMessageMap = prodOfferDetFacade.showFreebieMessage(ussId);
+
+
+				// populate json with offer message
+				if (MapUtils.isNotEmpty(offerMessageMap))
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.OFFERMESSAGEMAP, offerMessageMap);
+
+				}
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.ERROR_OCCURED);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.ERROR_OCCURED);
+		}
+		return buyboxJson;
+	}
+
+	/**
+	 * @param model
+	 * @param productData
+	 */
+	//CKD:TPR-250: Start
+
+	private void prepareBrandInfoData(final Model model, final ProductData productData)
+	{
+		if (null != productData.getBrand())
+		{
+			model.addAttribute("msiteBrandName", StringUtils.isNotBlank(productData.getBrand().getBrandname()) ? productData
+					.getBrand().getBrandname().toLowerCase() : null);
+			model.addAttribute("msiteBrandCode", StringUtils.isNotBlank(productData.getBrand().getBrandCode()) ? productData
+					.getBrand().getBrandCode().toLowerCase() : null);
+
+			if (null != productData.getBrand().getBrandDescription())
+			{
+				model.addAttribute(
+						"brandInfo",
+						productData.getBrand().getBrandDescription().length() <= MplConstants.BRANDINFO_CHAR_LIMIT ? productData
+								.getBrand().getBrandDescription() : StringUtils.substring(productData.getBrand().getBrandDescription(),
+								0, MplConstants.BRANDINFO_CHAR_LIMIT));
+			}
+
+		}
+	}
+
+	//CKD:TPR-250: End
 
 	@SuppressWarnings(BOXING)
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-ajaxProductData", method = RequestMethod.GET)
@@ -3134,6 +3322,7 @@ public class ProductPageController extends MidPageController
 		return returnStatement;
 	}
 
+
 	/**
 	 * This is used to check if the product is a Large Appliance for UF-160
 	 *
@@ -3160,5 +3349,6 @@ public class ProductPageController extends MidPageController
 		return isLargeAppliance;
 
 	}
+
 
 }

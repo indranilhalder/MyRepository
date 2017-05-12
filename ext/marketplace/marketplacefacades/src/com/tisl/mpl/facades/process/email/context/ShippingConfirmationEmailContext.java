@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.OrderUpdateProcessModel;
+import com.tisl.mpl.shorturl.service.ShortUrlService;
 
 
 
@@ -69,12 +70,15 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 	public static final String TRACK_ORDER_URL = "trackOrderUrl";
 	private static final String NUMBERTOOL = "numberTool";
 	private static final String COMMA = ",";
+	private static final String SPACE = " "; //TISUATSE-80
 
 	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
 
 	@Autowired
 	private ConfigurationService configurationService;
+	@Autowired
+	private ShortUrlService shortUrlService;
 
 	@Override
 	public void init(final OrderUpdateProcessModel orderUpdateProcessModel, final EmailPageModel emailPageModel)
@@ -116,10 +120,14 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 		}
 
 		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
 				+ pOrderCode;
-		put(TRACK_ORDER_URL, trackOrderUrl);
+		/* Added in R2.3 for shortUrl START */
+		final String shortUrl = shortUrlService.genearateShortURL(pOrderCode);
+		put(TRACK_ORDER_URL, null != shortUrl ? shortUrl : trackOrderUrl);
 
+
+		/* R2.3 shortUrl END */
 		put(P_ORDER_CODE, pOrderCode);
 		put(ORDER_CODE, orderCode);
 		put(CHILDORDERS, childOrders);
@@ -138,15 +146,20 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 		deliveryAddr.append(deliveryAddress.getStreetname());
 		if (!StringUtils.isEmpty(deliveryAddress.getStreetnumber()))
 		{
-			deliveryAddr.append(COMMA).append(deliveryAddress.getStreetnumber());
+			//TISUATSE-80 starts
+			deliveryAddr.append(deliveryAddress.getStreetnumber());
 		}
 		if (!StringUtils.isEmpty(deliveryAddress.getAddressLine3()))
 		{
-			deliveryAddr.append(COMMA).append(deliveryAddress.getAddressLine3());
+			deliveryAddr.append(deliveryAddress.getAddressLine3());
 		}
+		//TISUATSE-80 starts
 
-		deliveryAddr.append(COMMA).append(deliveryAddress.getTown()).append(COMMA).append(deliveryAddress.getDistrict())
-				.append(COMMA).append(deliveryAddress.getPostalcode());
+		deliveryAddr.append('\n');//Sonar fix
+		//TISUATSE-81 starts
+		final String city = deliveryAddress.getTown();
+		deliveryAddr.append(city.substring(0, 1).toUpperCase() + city.substring(1)).append(COMMA).append(SPACE)
+				.append(deliveryAddress.getDistrict()).append(SPACE).append(deliveryAddress.getPostalcode());
 
 		put(DELIVERYADDRESS, deliveryAddr);
 

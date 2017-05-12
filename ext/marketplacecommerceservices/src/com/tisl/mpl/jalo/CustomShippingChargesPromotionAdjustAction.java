@@ -44,7 +44,7 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotionAction#apply(de.hybris.platform.jalo.SessionContext)
 	 */
 	@Override
@@ -111,7 +111,9 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 							.doubleValue();
 				}
 
-				final double lineItemLevelPrice = orderEntry.getTotalPriceAsPrimitive();//TODO
+				//Modified for INC144315231
+				//final double lineItemLevelPrice = orderEntry.getTotalPriceAsPrimitive();//TODO
+				final double lineItemLevelPrice = orderEntry.getBasePriceAsPrimitive() * orderEntry.getQuantityAsPrimitive();
 				final double totalProdLevelDisc = 0.00D;
 				final double netSellingPrice = lineItemLevelPrice - totalProdLevelDisc;
 				final double totalCartLevelDisc = 0.00D;
@@ -192,6 +194,18 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 			{
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PREVDELIVERYCHARGE, Double.valueOf(0.00D));
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE, Double.valueOf(0.00D));
+
+
+				calculate = true;
+
+				//				prodPrevCurrDelChargeMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP) != null ? (Map<String, Map<String, Double>>) ctx
+				//						.getAttributes().get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP) : null;
+				//				if (null != prodPrevCurrDelChargeMap && !prodPrevCurrDelChargeMap.isEmpty())
+				//				{
+				//					getDefaultPromotionsManager().undoDeliveryCharges(order, prodPrevCurrDelChargeMap, ctx);
+				//					calculate = true;
+				//				}
+
 
 				calculate = true;
 			}

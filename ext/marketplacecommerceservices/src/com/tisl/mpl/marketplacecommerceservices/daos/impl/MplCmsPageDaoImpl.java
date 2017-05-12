@@ -25,9 +25,11 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.CMSChannel;
+import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao;
 import com.tisl.mpl.model.SellerMasterModel;
@@ -46,13 +48,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	private FlexibleSearchService flexibleSearchService;
 
 	@Resource
-	private ConfigurationService configurationService;
-
-	@Resource
 	private CatalogVersionService catalogVersionService;
 
-	@Resource
-	private PagedFlexibleSearchService pagedFlexibleSearchService;
 
 	private static final String SELECT_CLASS = "Select {";
 
@@ -153,7 +150,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao#getHomePageForMobile()
 	 */
 	@Override
@@ -315,6 +312,57 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		return null;
 	}
 
+	@Resource
+	private PagedFlexibleSearchService pagedFlexibleSearchService;
+
+
+
+	/**
+	 * @return the pagedFlexibleSearchService
+	 */
+	public PagedFlexibleSearchService getPagedFlexibleSearchService()
+	{
+		return pagedFlexibleSearchService;
+	}
+
+	/**
+	 * @param pagedFlexibleSearchService
+	 *           the pagedFlexibleSearchService to set
+	 */
+	public void setPagedFlexibleSearchService(final PagedFlexibleSearchService pagedFlexibleSearchService)
+	{
+		this.pagedFlexibleSearchService = pagedFlexibleSearchService;
+	}
+
+	/* SONAR FIX */
+	/*
+	 * @Autowired private CatalogVersionService catalogversionservice;
+	 */
+
+	@Autowired
+	private ConfigurationService configurationService;
+
+	/*
+	 * @Override public SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(final String pageUid, final
+	 * PageableData pageableData) {
+	 *
+	 * final CatalogVersionModel catalogmodel =
+	 * catalogversionservice.getCatalogVersion(configurationService.getConfiguration()
+	 * .getString("internal.campaign.catelog"),
+	 * configurationService.getConfiguration().getString("internal.campaign.catalogVersionName"));
+	 *
+	 * final Map params = new HashMap(); params.put("uid", pageUid); params.put("version", catalogmodel);
+	 *
+	 * final String query =
+	 * "Select {CSP.pk} From {ContentSlotForPage AS CSP JOIN ContentPage as CP ON {CSP.page}={CP.pk}} where {CP.uid} = ?uid and {CSP.catalogVersion}=?version"
+	 * ;
+	 *
+	 * return getPagedFlexibleSearchService().search(query, params, pageableData);
+	 *
+	 *
+	 * }
+	 */
+
 	/**
 	 * Method added for TPR-798
 	 *
@@ -385,5 +433,24 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 				.append(" as cm ON {cp.channel} = {cm.pk}} ");
 
 		return queryString;
+	}
+
+	/*
+	 * TPR-1072 to fetch all the brands UID
+	 */
+	@Override
+	public List<BrandComponentModel> getBrandsForShopByBrand()
+	{
+		final CatalogVersionModel catalogmodel = catalogVersionService.getCatalogVersion(configurationService.getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.MPLCATELOG),
+				configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.MPLCATALOGNNAME));
+
+		final String queryString = "Select {" + BrandComponentModel.PK + "} from {" + BrandComponentModel._TYPECODE + "} where {"
+				+ BrandComponentModel.LAYOUT + "} is not null AND {" + BrandComponentModel.CATALOGVERSION + "}=?catVersion";
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("catVersion", catalogmodel);
+		//		query.addQueryParameter("catVersion", catalogVersion);
+		return flexibleSearchService.<BrandComponentModel> search(query).getResult();
 	}
 }

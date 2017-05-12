@@ -79,15 +79,13 @@
  	  
 		<bean id="batchMplpincodeConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
-            <value> ImpEx for Importing Prices into $CATALOG$
-                $catalog=$CATALOG$
-                $catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
-                #% impex.setLocale(Locale.ENGLISH);
-				INSERT_UPDATE Pincode;pincode[unique=true];latitude;longitude;State(region);City(cityName)  
+            <value> 
+            	# Pincode Latitude , Longitude , cityName , active and stateCode Relation 
+				INSERT_UPDATE Pincode;pincode[unique=true];latitude;longitude;State(region);City(cityName);active[default=Y]
        		</value>
         </property>
         <property name="impexRow">
-            <value>;{+0};{+1};{+2};{3};{4}</value>
+            <value>;{+0};{+1};{+2};{3};{4};{5}</value>
         </property>
         </bean>
         

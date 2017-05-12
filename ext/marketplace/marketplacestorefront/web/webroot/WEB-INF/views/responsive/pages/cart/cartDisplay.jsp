@@ -147,10 +147,17 @@
 	</div>
 	</div>
 	<script>
+
 				//UF-70 Commenting onload call to checkIsServicable() and making it on ready in marketplacecheckoutaddon.js
    				//window.onload =	function(){
    						//checkIsServicable();   						
    				//}
+
+
+                             /*   $(window).on('load',function(){ 
+   						checkIsServicable();
+   						
+   				}); */
 
 	</script>
 <!-- TISCR-320 -->

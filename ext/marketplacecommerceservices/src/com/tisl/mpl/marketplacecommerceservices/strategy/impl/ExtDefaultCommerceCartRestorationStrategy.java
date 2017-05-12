@@ -144,26 +144,29 @@ public class ExtDefaultCommerceCartRestorationStrategy extends DefaultCommerceCa
 
 		for (final AbstractOrderEntryModel entry : fromCartModel.getEntries())
 		{
-			final CommerceCartParameter newCartParameter = new CommerceCartParameter();
-			parameter.setEnableHooks(true);
-			newCartParameter.setCart(toCartModel);
-			newCartParameter.setProduct(entry.getProduct());
-			newCartParameter.setPointOfService(entry.getDeliveryPointOfService());
-			newCartParameter.setQuantity((entry.getQuantity() == null) ? 0L : entry.getQuantity().longValue());
-			newCartParameter.setUssid((null != entry.getSelectedUSSID()) ? entry.getSelectedUSSID() : "");
-			newCartParameter.setUnit(entry.getUnit());
-			newCartParameter.setCreateNewEntry(false);
-			CommerceCartModification modification = mplCommerceAddToCartStrategy.addToCart(newCartParameter);
-
-			if (modification.getQuantityAdded() == 0L)
+			if (null != entry.getGiveAway() && !entry.getGiveAway().booleanValue())
 			{
-				parameter.setPointOfService(null);
+				final CommerceCartParameter newCartParameter = new CommerceCartParameter();
+				parameter.setEnableHooks(true);
+				newCartParameter.setCart(toCartModel);
+				newCartParameter.setProduct(entry.getProduct());
+				newCartParameter.setPointOfService(entry.getDeliveryPointOfService());
+				newCartParameter.setQuantity((entry.getQuantity() == null) ? 0L : entry.getQuantity().longValue());
+				newCartParameter.setUssid((null != entry.getSelectedUSSID()) ? entry.getSelectedUSSID() : "");
+				newCartParameter.setUnit(entry.getUnit());
+				newCartParameter.setCreateNewEntry(false);
+				CommerceCartModification modification = mplCommerceAddToCartStrategy.addToCart(newCartParameter);
 
-				modification = mplCommerceAddToCartStrategy.addToCart(newCartParameter);
-				modification.setDeliveryModeChanged(Boolean.TRUE);
+				if (modification.getQuantityAdded() == 0L)
+				{
+					parameter.setPointOfService(null);
+
+					modification = mplCommerceAddToCartStrategy.addToCart(newCartParameter);
+					modification.setDeliveryModeChanged(Boolean.TRUE);
+				}
+
+				modifications.add(modification);
 			}
-
-			modifications.add(modification);
 		}
 
 	}

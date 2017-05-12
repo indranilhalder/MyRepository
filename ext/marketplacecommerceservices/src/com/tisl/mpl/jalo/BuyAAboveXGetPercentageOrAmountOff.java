@@ -36,6 +36,7 @@ import org.apache.log4j.Logger;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.pojo.MplLimitedOfferData;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.util.ExceptionUtil;
 
@@ -56,10 +57,10 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 
 	/**
 	 * @Description : This method is for creating item type
-	 * @param : ctx
-	 * @param : type
-	 * @param : allAttributes
-	 * @return : item
+	 * @param ctx
+	 * @param type
+	 * @param allAttributes
+	 * @return item
 	 */
 	@Override
 	protected Item createItem(final SessionContext ctx, final ComposedType type, final ItemAttributeMap allAttributes)
@@ -75,9 +76,9 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 
 	/**
 	 * @Description : Buy A Above X and get y percentage/amount off - this is for seller brand threshold promotion
-	 * @param : ctx
-	 * @param : evaluationContext
-	 * @return : List<PromotionResult> promotionResults
+	 * @param ctx
+	 * @param evaluationContext
+	 * @return List<PromotionResult> promotionResults
 	 */
 	@Override
 	public List<PromotionResult> evaluate(final SessionContext ctx, final PromotionEvaluationContext evaluationContext)
@@ -181,6 +182,9 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 
 		boolean flagForDeliveryModeRestrEval = false;
 		boolean flagForPaymentModeRestrEval = false;
+		boolean isExhausted = false;
+
+
 
 
 		//double percentageDiscount = Double.valueOf(0.0D).doubleValue();	SONAR Fix
@@ -210,8 +214,17 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 		flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList, ctx);
 		final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList,
 				cart);
+
+		if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
+		{
+			final MplLimitedOfferData data = getMplPromotionHelper().checkCustomerOfferCount(restrictionList, this.getCode(), cart);
+			isExhausted = data.isExhausted();
+		}
+
+
+
 		if (null != thresholdVal && totalEligibleProductPrice.doubleValue() >= thresholdVal.doubleValue()
-				&& flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction)
+				&& flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction && !isExhausted)
 		{
 			boolean isPercentageDisc = false;
 			if (isPercentageOrAmount().booleanValue() && null != getPercentageDiscount())
@@ -309,7 +322,7 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 		}
 		else
 		{
-			if (getNoOfProducts() > 0 && flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval)
+			if (getNoOfProducts() > 0 && flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && !isExhausted)
 			{
 				final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
 						evaluationContext.getOrder(), 0.00F);
@@ -448,10 +461,10 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
-	 * @param : ctx
-	 * @param : result
-	 * @param : locale
-	 * @return : String
+	 * @param ctx
+	 * @param result
+	 * @param locale
+	 * @return String
 	 */
 	@Override
 	public String getResultDescription(final SessionContext ctx, final PromotionResult result, final Locale locale)
@@ -684,4 +697,7 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 		builder.append(modifyDate);
 	}
 
+
 }
+
+

@@ -52,11 +52,15 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 	//private List<String> excludeManufactureList = null;
 	private List<Product> primaryProductList = null;
 	private List<Product> secondaryProductList = null;
+	//private Map<String, AbstractOrderEntry> validProductUssidMap = null;
+	//private Map<String, AbstractOrderEntry> allValidProductUssidMap = null;
+	//private int totalFactorCount = 0;
+	private int primaryListSize = 0;
+	private int secondaryListSize = 0;
 	private Map<String, AbstractOrderEntry> validProductUssidMap = null;
 	//private Map<String, AbstractOrderEntry> allValidProductUssidMap = null;
 	private int totalFactorCount = 0;
-	private int primaryListSize = 0;
-	private int secondaryListSize = 0;
+
 
 	/**
 	 * @Description : This method is for creating item type
@@ -102,6 +106,8 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 
 		//final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 		boolean checkChannelFlag = false;
+		boolean isExhaustedFlag = false;
+
 		final AbstractOrder cart = evaluationContext.getOrder();
 		try
 		{
@@ -113,8 +119,13 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 
 			//changes end for omni cart fix @atmaram
 
+			if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
+			{
+				isExhaustedFlag = getMplPromotionHelper().isBuyAandBPromoExhausted(this.getCode(), restrictionList, cart);
+				LOG.debug("Is Buy A and B Discount Offer Exhausted" + isExhaustedFlag);
+			}
 
-			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag) // Validates the Restriction :Allows only if Valid and Valid Channel
+			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag && !isExhaustedFlag) // Validates the Restriction :Allows only if Valid and Valid Channel
 			{
 				//final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 				final List<String> eligibleProductList = eligibleForPromotion(cart, ctx); // Gets the Eligible Product List
@@ -142,10 +153,12 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 		return promotionResults;
 	}
 
+
+
 	/**
 	 * @Description : Promotion Evaluation Method
-	 * @param paramSessionContext
-	 * @param paramPromotionEvaluationContext
+	 * @param ctx
+	 * @param evaluationContext
 	 * @param validProductUssidMap
 	 * @return promotionResults
 	 */
@@ -177,6 +190,9 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 
 			//final List<Product> validProductList = new ArrayList<Product>();
 			final Map<String, Integer> tcMapForValidEntries = new HashMap<String, Integer>();
+
+
+			//for (final Map.Entry<String, AbstractOrderEntry> mapEntry : allValidProductUssidMap.entrySet())
 
 			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
 			{
@@ -703,6 +719,10 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());
 		final List<String> validProductListFinal = new ArrayList<String>();
 		validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
+
+		//allValidProductUssidMap = new HashMap<String, AbstractOrderEntry>();
+
+
 		final Map<String, AbstractOrderEntry> validProductAUssidMap = new HashMap<String, AbstractOrderEntry>();
 		final Map<String, AbstractOrderEntry> validProductBUssidMap = new HashMap<String, AbstractOrderEntry>();
 		final List<String> validProductListA = new ArrayList<String>();
@@ -747,6 +767,9 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 
 			for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductAUssidMap.entrySet())
 			{
+
+				//				allValidProductUssidMap.putAll(validProductAUssidMap);
+				//				allValidProductUssidMap.putAll(validProductBUssidMap);
 				final AbstractOrderEntry entry = mapEntry.getValue();
 				final String valiProdAUssid = mapEntry.getKey();
 				for (int i = 1; i <= entry.getQuantity().longValue(); i++)
@@ -767,13 +790,35 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 
 			totalFactorCount = validProductListA.size() < validProductListB.size() ? validProductListA.size() : validProductListB
 					.size();
+
+			// For TPR-4579
+			if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
+			{
+				final int configuredCusCount = getMplPromotionHelper().getStockCustomerRedeemCount(restrictionList);
+				if (configuredCusCount > 0)
+				{
+					final int customerRedeemCount = getMplPromotionHelper().getCustomerRedeemCountForBuyABPromo(restrictionList, cart,
+							this.getCode());
+
+					final int finalCount = (configuredCusCount - customerRedeemCount < 0) ? ((-1) * (configuredCusCount - customerRedeemCount))
+							: (configuredCusCount - customerRedeemCount);
+
+					if (finalCount > 0 && totalFactorCount >= finalCount)
+					{
+						totalFactorCount = finalCount;
+					}
+				}
+			}
+
+
+
 			if (totalFactorCount > 0)
 			{
 				final Set<String> validProdAUssidSet = getDefaultPromotionsManager().populateSortedValidProdUssidMap(
-						validProductAUssidMap, totalFactorCount, paramSessionContext, restrictionList, null);
+						validProductAUssidMap, totalFactorCount, paramSessionContext, restrictionList, null, getCode());
 
 				final Set<String> validProdBUssidSet = getDefaultPromotionsManager().populateSortedValidProdUssidMap(
-						validProductBUssidMap, totalFactorCount, paramSessionContext, restrictionList, null);
+						validProductBUssidMap, totalFactorCount, paramSessionContext, restrictionList, null, getCode());
 
 				validProductListA.retainAll(validProdAUssidSet);
 				validProductListB.retainAll(validProdBUssidSet);
@@ -786,6 +831,9 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 
 				validProductListFinal.addAll(validProductListA);
 				validProductListFinal.addAll(validProductListB);
+
+				//				allValidProductUssidMap.putAll(validProductAUssidMap);
+				//				allValidProductUssidMap.putAll(validProductBUssidMap);
 
 				if (validProductListA.size() > 0)
 				{
@@ -1057,6 +1105,7 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 	{
 		return Registry.getApplicationContext().getBean("mplPromotionHelper", MplPromotionHelper.class);
 	}
+
 
 	/**
 	 * Building the Hash Key for Promotion

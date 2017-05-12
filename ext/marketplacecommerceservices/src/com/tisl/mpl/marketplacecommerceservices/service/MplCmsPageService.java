@@ -16,8 +16,10 @@ import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.model.product.ProductModel;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.tisl.mpl.core.enums.CMSChannel;
+import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.model.SellerMasterModel;
 
 
@@ -55,6 +57,7 @@ public interface MplCmsPageService extends CMSPageService
 	 */
 	ContentPageModel getPageForAppById(String pageUid);
 
+
 	//Added for TPR-798
 	public SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(final String pageUid, final PageableData pageableData);
 
@@ -63,4 +66,8 @@ public interface MplCmsPageService extends CMSPageService
 
 	public AbstractPageModel getPageForIdandCatalogVersion(final String id, final CatalogVersionModel cv)
 			throws CMSItemNotFoundException;
+
+	//TPR-1072
+	public List<BrandComponentModel> getBrandsForShopByBrand();
+
 }

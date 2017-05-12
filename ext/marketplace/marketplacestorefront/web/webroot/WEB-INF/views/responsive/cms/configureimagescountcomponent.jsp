@@ -22,14 +22,26 @@ $(document).ready(function(){
 	$(".imageList ul li img").css("height", thumbnailImageHeight);
 	$("#previousImage").css("opacity","0.5");
 	$("#nextImage").css("opacity","1");
-	var listHeight = $(".imageList li").height();
+	/* var listHeight = $(".imageList li").height(); */ /*commented as part of PRDI-68*/
+	 var listHeight = thumbnailImageHeight + 13.6;		/*added as part of PRDI-68*/
 	if($("#previousImage").length){
 		$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
 		$(".productImageGallery").css("max-height",(mainImageHeight - buttonHeight)+"px");
 	}
 	$(".imageListCarousel").show();
 });
-
+/*start of PRDI-68*/
+$(window).on("load resize", function() {
+		var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
+		var thumbnailImageHeight = (mainImageHeight / 5);
+		var buttonHeight = $(".productImageGallery #previousImage").outerHeight();
+		var listHeight = thumbnailImageHeight + 13.6;
+		if($("#previousImage").length){
+			$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
+			$(".productImageGallery").css("max-height",(mainImageHeight - buttonHeight)+"px");
+		}
+});
+/*end of PRDI-68*/
 </script>
 <c:set var="increment" value="0"/>
 <c:set var="thumbNailImageLength" value="${fn:length(galleryImages)}" />

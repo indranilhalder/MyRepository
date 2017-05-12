@@ -4,6 +4,7 @@
 package com.tisl.mpl.facades.account.register.impl;
 
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
@@ -14,7 +15,6 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -247,10 +247,12 @@ public class NotificationFacadeImpl implements NotificationFacade
 			final String shopperStatus) throws EtailNonBusinessExceptions
 	{
 
-		final UserModel user = extendedUserService.getUserForOriginalUid(emailId);
+		//final UserModel user = extendedUserService.getUserForOriginalUid(emailId);
+		final CustomerModel user = extendedUserService.getUserForOriginalUid(emailId);
 		if (user != null)
 		{
-			markNotificationRead(user.getUid(), orderNo, consignmentNo, shopperStatus);
+			//markNotificationRead(user.getUid(), orderNo, consignmentNo, shopperStatus);
+			markNotificationRead(user.getOriginalUid(), orderNo, consignmentNo, shopperStatus);
 		}
 	}
 
@@ -289,16 +291,13 @@ public class NotificationFacadeImpl implements NotificationFacade
 	 *
 	 * @return List<VoucherStatusNotificationModel>
 	 */
-	private List<VoucherStatusNotificationModel> getAllCoupons() throws EtailNonBusinessExceptions
-	{
-		final List<VoucherStatusNotificationModel> voucherList = new ArrayList<VoucherStatusNotificationModel>();
-		final List<VoucherStatusNotificationModel> voucherColl = getNotificationService().getVoucher();
-		if (CollectionUtils.isNotEmpty(voucherColl))
-		{
-			voucherList.addAll(voucherColl);
-		}
-		return voucherList;
-	}
+	/* SONAR FIX */
+	/*
+	 * private List<VoucherStatusNotificationModel> getAllCoupons() throws EtailNonBusinessExceptions { final
+	 * List<VoucherStatusNotificationModel> voucherList = new ArrayList<VoucherStatusNotificationModel>(); final
+	 * List<VoucherStatusNotificationModel> voucherColl = getNotificationService().getVoucher(); if
+	 * (CollectionUtils.isNotEmpty(voucherColl)) { voucherList.addAll(voucherColl); } return voucherList; }
+	 */
 
 
 

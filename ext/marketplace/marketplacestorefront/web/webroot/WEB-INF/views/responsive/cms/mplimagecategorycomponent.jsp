@@ -74,6 +74,23 @@
 				</c:otherwise>
 			</c:choose>
 		</c:otherwise>
-	</c:choose> <span>${category.name}</span> <a class="shop_link"
-	href="${categoryUrl}"><spring:theme
+	</c:choose>
+	<c:choose>
+	<c:when test="${empty  component.imageTitle}">
+		<c:set var="categoryName" value="${category.name}"></c:set>
+	</c:when>
+	<c:otherwise>
+		<c:set var="categoryName" value="${component.imageTitle}"></c:set>
+	</c:otherwise>
+	</c:choose>	
+	<c:choose>
+	<c:when test="${empty  component.imageURL}">
+		<c:set var="imageURL" value="${categoryUrl}"></c:set>
+	</c:when>
+	<c:otherwise>
+		<c:set var="imageURL" value="${component.imageURL}"></c:set>
+	</c:otherwise>
+	</c:choose>	
+	<span>${categoryName}</span> <a class="shop_link"
+	href="${imageURL}"><spring:theme
 				code="category.carousel.shopNow" /></a></li>

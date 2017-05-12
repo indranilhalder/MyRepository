@@ -4,10 +4,8 @@ import de.hybris.platform.core.Registry;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
 import de.hybris.platform.jalo.SessionContext;
-import de.hybris.platform.jalo.enumeration.EnumerationValue;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
-import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.type.ComposedType;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
@@ -33,8 +31,8 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
-
-
+import de.hybris.platform.jalo.product.Product;
+import de.hybris.platform.jalo.enumeration.EnumerationValue;
 /**
  * This promotion is of type Buy A and B discount on shipping charges
  *
@@ -45,7 +43,6 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 	private final static Logger LOG = Logger.getLogger(BuyAandBGetPromotionOnShippingCharges.class.getName());
 
 	private List<Product> excludedProductList = null;
-	private List<String> excludeManufactureList = null;
 	private int primaryListSize = 0;
 	private int secondaryListSize = 0;
 	private Map<String, AbstractOrderEntry> validProductUssidMap = null;
@@ -82,7 +79,6 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
 
 		excludedProductList = new ArrayList<Product>();
-		excludeManufactureList = new ArrayList<String>();
 		primaryProductList = new ArrayList<Product>();
 		secondaryProductList = new ArrayList<Product>();
 		// To filter out the Products on which Promotion is already applied
@@ -218,11 +214,16 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 				}
 
 				//Setting values
+
+				ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
+
 				//arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
+
 				ctx.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, qCount);
 				ctx.setAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, String.valueOf(this.getCode()));
 				ctx.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS, productAssociatedItemsMap);
 				ctx.setAttribute(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP, finalDelChrgMap);
+
 			}
 
 		}
@@ -568,10 +569,10 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 			if (totalFactorCount > 0)
 			{
 				final Set<String> validProdAUssidSet = getDefaultPromotionsManager().populateSortedValidProdUssidMap(
-						validProductAUssidMap, totalFactorCount, paramSessionContext, restrictionList, null);
+						validProductAUssidMap, totalFactorCount, paramSessionContext, restrictionList, null, getCode());
 
 				final Set<String> validProdBUssidSet = getDefaultPromotionsManager().populateSortedValidProdUssidMap(
-						validProductBUssidMap, totalFactorCount, paramSessionContext, restrictionList, null);
+						validProductBUssidMap, totalFactorCount, paramSessionContext, restrictionList, null, getCode());
 
 				validProductListA.retainAll(validProdAUssidSet);
 				validProductListB.retainAll(validProdBUssidSet);
@@ -772,6 +773,7 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 	{
 		return Registry.getApplicationContext().getBean("mplPromotionHelper", MplPromotionHelper.class);
 	}
+
 
 	/**
 	 * Building the Hash Key for Promotion

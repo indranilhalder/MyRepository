@@ -50,6 +50,7 @@ import de.hybris.platform.cscockpit.utils.SafeUnbox;
 import de.hybris.platform.cscockpit.widgets.controllers.search.SearchCommandController;
 import de.hybris.platform.cscockpit.widgets.models.impl.SearchResultWidgetModel;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.BasketResultWidgetRenderer;
+import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.util.PriceValue;
@@ -601,21 +602,25 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 			((MarketplaceSearchCommandController) widget
 					.getWidgetController()).setCurrentSite();
 
+			boolean isPinCodeServicable =false;
 			//TISUAT-4526 no sship in cod
-			if(!mplFindDeliveryCostStrategy.isTShip(ussid)){
-				popupMessage(widget,"noSellerCOD");
-				return;
-			}
+			// commenting below line ,since from R2.3 SSHIP COD IS eligible  if seller Allows
+//			if(!mplFindDeliveryCostStrategy.isTShip(ussid)){
+//				popupMessage(widget,"noSellerCOD");
+//				return;
+//			}
 				
 			List<PinCodeResponseData> pinCodeResponses = ((MarketplaceSearchCommandController) widget
 					.getWidgetController()).getResponseForPinCode(product,
 					String.valueOf(pincode), isDeliveryDateRequired, ussid);
-			boolean isPinCodeServicable = sessionService.getAttribute("isPincodeServicable");
+			//boolean isPinCodeServicable = sessionService.getAttribute("isPincodeServicable");
+
 			if(CollectionUtils.isNotEmpty(pinCodeResponses)) {
 				LOG.info("pinCodeResponse:" + pinCodeResponses.size());
 
 				boolean isAddtoCartRequired = checkServiceAbility(widget, item, quantityToAdd, pincode, product,
 						pinCodeResponses);
+				isPinCodeServicable = sessionService.getAttribute("isPincodeServicable");
 				if(isAddtoCartRequired){
 					((MarketplaceSearchCommandController) widget
 							.getWidgetController()).setCurrentSite();
@@ -668,9 +673,11 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 							+ product.getCode());
 					LOG.info("Quantity added:" + quantityToAdd);
 					isAddtoCartRequired=true;
+					sessionService.setAttribute("isPincodeServicable", true);
 				} else if (!StringUtils.equals(
 						pinCodeResponse.getIsServicable(), YES)) {
 					LOG.info("Not serviceable at " + pincode);
+					sessionService.setAttribute("isPincodeServicable", false);
 					popupMessage(widget, NOT_SERVICE_ABLE);
 				} else if (pinCodeResponse.getStockCount() > 0) {
 					LOG.info("There is no sufficient inventory available for this product. Total Inventory available:"

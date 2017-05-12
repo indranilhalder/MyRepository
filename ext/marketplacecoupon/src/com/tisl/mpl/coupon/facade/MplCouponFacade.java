@@ -165,4 +165,14 @@ public interface MplCouponFacade
 	SearchPageData<CouponHistoryData> getVoucherHistoryTransactions(final CustomerModel customer, final PageableData pageableData)
 			throws VoucherOperationException;
 
+
+	/**
+	 * Added for TPR-4461
+	 * 
+	 * @param orderModel
+	 * @return String
+	 */
+	public String getCouponMessageInfo(final AbstractOrderModel orderModel);
+
+
 }

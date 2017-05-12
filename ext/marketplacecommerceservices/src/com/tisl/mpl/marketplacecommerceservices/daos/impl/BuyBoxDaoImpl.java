@@ -42,7 +42,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 
 
-	private static final Logger log = Logger.getLogger(BuyBoxDaoImpl.class.getName());
+	private static final Logger LOG = Logger.getLogger(BuyBoxDaoImpl.class.getName());
 
 
 	@Autowired
@@ -115,7 +115,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 					+ BuyBoxModel.SELLERENDDATE + "}) AND {bb:" + BuyBoxModel.PRICE + "} > 0  ORDER BY {bb:" + BuyBoxModel.WEIGHTAGE
 					+ "} DESC,{bb:" + BuyBoxModel.AVAILABLE + "} DESC";
 
-			log.debug("QueryStringFetchingPrice" + queryStringForPrice);
+			LOG.debug("QueryStringFetchingPrice" + queryStringForPrice);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryStringForPrice);
 
 			for (final Map.Entry<String, String> entry : queryParamMap.entrySet())
@@ -139,6 +139,80 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
+
+	//CKD:TPR-250:Start : Exactly same method as buyboxPrice only to have a different path till DAO
+	//which uses a query without having clause for availability
+	@Override
+	public List<BuyBoxModel> buyboxPriceForMicrosite(final String productCode, final String sellerId)
+	{
+		final StringBuilder productCodes = new StringBuilder(100);
+		final Map<String, String> queryParamMap = new HashMap<String, String>();
+		try
+		{
+			//TISPRM-56
+			if (productCode.indexOf(MarketplacecommerceservicesConstants.COMMA) != -1)//if multiple products
+			{
+
+				final String[] codes = productCode.split(MarketplacecommerceservicesConstants.COMMA);
+				int cnt = 0;
+				productCodes.append("( ");
+				for (final String id : codes)
+				{
+					cnt = cnt + 1;
+					if (cnt == 1)
+					{
+						productCodes.append(PRODUCT_PARAM + (cnt));
+					}
+					else
+					{
+						productCodes.append(" OR " + PRODUCT_PARAM + (cnt));
+					}
+					queryParamMap.put("productParam" + (cnt), id);
+				}
+				productCodes.append(" )");
+			}
+			else
+			//if no variant
+			{
+				productCodes.append("( ");
+				productCodes.append(" {bb.product}=?productParam1");
+				queryParamMap.put("productParam1", productCode);
+				queryParamMap.put("sellerid", sellerId);
+				productCodes.append(" )");
+			}
+
+			final String queryStringForPrice = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS + " Where " + productCodes.toString()
+					+ " AND ( {bb:" + BuyBoxModel.DELISTED + "}  IS NULL OR {bb:" + BuyBoxModel.DELISTED
+					+ "}=0) AND (sysdate between  {bb:" + BuyBoxModel.SELLERSTARTDATE + "} and {bb:" + BuyBoxModel.SELLERENDDATE
+					+ "}) AND {bb:" + BuyBoxModel.SELLERID + "}=?sellerid  ORDER BY {bb:" + BuyBoxModel.WEIGHTAGE + "} DESC,{bb:"
+					+ BuyBoxModel.AVAILABLE + "} DESC";
+
+			LOG.debug("QueryStringFetchingPrice" + queryStringForPrice);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryStringForPrice);
+
+			for (final Map.Entry<String, String> entry : queryParamMap.entrySet())
+			{
+				query.addQueryParameter(entry.getKey(), entry.getValue());
+			}
+
+			final List<BuyBoxModel> retList = flexibleSearchService.<BuyBoxModel> search(query).getResult();
+			return retList;
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	//CKD:TPR-250:End
 
 	//	@Override
 	//	public List<BuyBoxModel> buyBoxPrice(String productCode)
@@ -299,18 +373,18 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 			//Integer available = new Integer(0);
 			Integer available = Integer.valueOf(0);
-			final StringBuffer inventoryQuery = new StringBuffer(500);
+			final StringBuffer inventoryQuery = new StringBuffer(700);
 			inventoryQuery.append("SELECT SUM({bb.available}) FROM {BuyBox AS bb} where ");
 
 			if (productType.equalsIgnoreCase("simple"))
 			{
 				inventoryQuery
-						.append("{bb.product} = ?product AND ( {bb.delisted}  IS NULL or {bb.delisted} =0 )and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate})  ");
+						.append("{bb.product} = ?product AND ( {bb.delisted}  IS NULL or {bb.delisted} =0 ) and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate})  ");
 			}
-			if (productType.equalsIgnoreCase("variant")) // Added fix (color condition added) for prod Issue of showing Product even though out of stock  - /*, {PcmProductVariant As pv} where {pprod.colour} = {pv.colour} and {pv.code} = ?product and */
+			if (productType.equalsIgnoreCase("variant")) // INC144315893  Added fix (color condition added) for prod Issue of showing Product even though out of stock  - /*, {PcmProductVariant As pv} where {pprod.colour} = {pv.colour} and {pv.code} = ?product and */
 			{
 				inventoryQuery
-						.append("{bb.product} IN ({{ select distinct{pprod.code} from {PcmProductVariant As pprod}, {PcmProductVariant As pv} where {pprod.colour} = {pv.colour} and {pv.code} = ?product and {pprod.baseProduct} IN (	{{"
+						.append("( {bb.delisted}  IS NULL or {bb.delisted} =0 ) AND {bb.product} IN ({{ select distinct{pprod.code} from {PcmProductVariant As pprod}, {PcmProductVariant As pv} where {pprod.colour} = {pv.colour} and {pv.code} = ?product and {pprod.baseProduct} IN (	{{"
 
 								+ " 	select distinct{p.baseProduct} from {PcmProductVariant as p} where {p.code} = ?product"
 
@@ -369,14 +443,14 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("currenttime", currenttime);
 
-			log.debug("Query" + queryString);
+			LOG.debug("Query" + queryString);
 
 			final List<BuyBoxModel> buyBoxList = flexibleSearchService.<BuyBoxModel> search(query).getResult();
 
 
 			if (null != buyBoxList && !buyBoxList.isEmpty())
 			{
-				log.debug("buyBoxList pks size" + buyBoxList.size());
+				LOG.debug("buyBoxList pks size" + buyBoxList.size());
 
 				return buyBoxList;
 			}
@@ -424,7 +498,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 					+ "} DESC";
 
 
-			log.debug(QUERY_CLASS + queryString);
+			LOG.debug(QUERY_CLASS + queryString);
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("productNoStock", productCode);
@@ -467,7 +541,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 					+ SellerInformationModel.SELLERARTICLESKU + "}=?sellerArticleSKU and {cat." + CatalogVersionModel.VERSION
 					+ "} = ?catalogVersion ";
 
-			log.debug(QUERY_CLASS + queryString);
+			LOG.debug(QUERY_CLASS + queryString);
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("sellerArticleSKU", ussid);
@@ -513,7 +587,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 					+ " JOIN RichAttribute as rich  ON {seller.pk}={rich.sellerInfo} } "
 					+ " where {cat.version}='Online' and {b.product} = ?productCode and( {b.delisted}  IS NULL or {b.delisted}=0 )  and (sysdate between {b.sellerstartdate} and {b.sellerenddate})     order by {b.weightage} desc,{b.available} desc";
 
-			log.debug(QUERY_CLASS + queryString);
+			LOG.debug(QUERY_CLASS + queryString);
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("productCode", productCode);
@@ -582,7 +656,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		//+ "ORDER BY {bb:" + BuyBoxModel.WEIGHTAGE + "} DESC,{bb:" + BuyBoxModel.AVAILABLE + "} DESC"
 
 
-		log.debug(QUERY_CLASS + queryString);
+		LOG.debug(QUERY_CLASS + queryString);
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("sellerArticleSKU", ussid);
@@ -644,7 +718,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 			final String queryStringForStock = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS + WHERE_CLASS + BuyBoxModel.SELLERID
 					+ "}=?sellerid" + " AND  {bb:" + BuyBoxModel.AVAILABLE + "}  > 0";
 
-			log.debug("QueryFetchingStock" + queryStringForStock);
+			LOG.debug("QueryFetchingStock" + queryStringForStock);
 			final FlexibleSearchQuery flexQuery = new FlexibleSearchQuery(queryStringForStock);
 			flexQuery.addQueryParameter("sellerid", sellerID);
 			return flexibleSearchService.<BuyBoxModel> search(flexQuery).getResult();
@@ -683,7 +757,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 					+ " AND ( {bb:" + BuyBoxModel.DELISTED + "}  IS NULL OR {bb:" + BuyBoxModel.DELISTED
 					+ "}=0) AND (sysdate between  {bb:" + BuyBoxModel.SELLERSTARTDATE + "} and {bb:" + BuyBoxModel.SELLERENDDATE
 					+ "}) AND {bb:" + BuyBoxModel.PRICE + "} > 0";
-			log.debug(String.format("buyboxForSizeGuide : Query fetching SizeGuide:  %s ", queryStringForSizeGuide));
+			LOG.debug(String.format("buyboxForSizeGuide : Query fetching SizeGuide:  %s ", queryStringForSizeGuide));
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryStringForSizeGuide);
 			query.addQueryParameter("productSizeGuide", productCode);
@@ -745,5 +819,64 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		}
 	}
 
+
+
+	/*
+	 * Get Buybox data in respect of ussid (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#getBuyBoxDataForUssids(java.util.List)
+	 */
+	//TPR-3736
+	@Override
+	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions
+	{
+		final Map<String, List<Double>> buyBoxData = new HashMap<String, List<Double>>();
+
+		try
+		{
+
+			final String queryString = //
+			"select {b.pk} from {" + BuyBoxModel._TYPECODE + " as b } " + " where {b.available}>0 and {b.mrp}>0"
+					+ "  AND {b.sellerArticleSKU} in (" + ussidList + ")";
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+
+			final List<BuyBoxModel> buyBoxList = flexibleSearchService.<BuyBoxModel> search(query).getResult();
+			if (CollectionUtils.isNotEmpty(buyBoxList))
+			{
+				for (final BuyBoxModel buyBox : buyBoxList)
+				{
+					final List<Double> priceList = new ArrayList<Double>();
+					priceList.add(buyBox.getMrp());
+					priceList.add(buyBox.getPrice() == null ? Double.valueOf(0.0D) : buyBox.getPrice());
+					priceList.add(buyBox.getPrice() == null ? Double.valueOf(0.0D) : buyBox.getSpecialPrice());
+					buyBoxData.put(buyBox.getSellerArticleSKU(), priceList);
+					LOG.debug("#####################skuList" + buyBox.getSellerArticleSKU() + priceList);
+				}
+			}
+			return buyBoxData;
+
+		}
+
+
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+
+	}
 
 }

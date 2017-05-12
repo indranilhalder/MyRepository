@@ -30,7 +30,7 @@ public interface MarketplaceServiceabilityCheckHelper {
 	 * @throws EtailNonBusinessExceptions the etail non business exceptions
 	 * @throws ClientEtailNonBusinessExceptions the client etail non business exceptions
 	 */
-	List<PinCodeResponseData> getResponseForPinCode(final ProductModel product,
+	List<PinCodeResponseData> getResponseForPinCode(final String cartId,final ProductModel product,
 			final String pin, final String isDeliveryDateRequired, String ussid) 
 					throws EtailNonBusinessExceptions, ClientEtailNonBusinessExceptions;
 

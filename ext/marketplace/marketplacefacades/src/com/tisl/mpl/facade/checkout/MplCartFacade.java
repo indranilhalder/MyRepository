@@ -12,6 +12,7 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -33,7 +34,13 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
+import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
+import com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO;
+import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
+import com.tisl.mpl.wsdto.MplSelectedEDDForUssID;
 
 
 /**
@@ -316,7 +323,7 @@ public interface MplCartFacade extends CartFacade
 
 
 	public boolean isInventoryReservedMobile(final String requestType, final AbstractOrderModel abstractOrderModel,
-			final String defaultPinCodeId) throws EtailNonBusinessExceptions;
+			final String defaultPinCodeId,final InventoryReservListRequestWsDTO item,SalesApplication salesApplication) throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -510,6 +517,31 @@ public interface MplCartFacade extends CartFacade
 	
 	public CartData getCartDataFromCartModel(final CartModel cartModel, final boolean recentlyAddedFirst)
 			throws EtailNonBusinessExceptions;
+    
+    /**
+	 * get EDD INFormation for Ussid
+	 * @param cartModel
+	 * @param invReserForDeliverySlotsItemEDDInfoData
+	 * @return MplEDDInfoWsDTO
+	 * @throws ParseException 
+	 */
+	public MplEDDInfoWsDTO getEDDInfo(CartModel cartModel,List<InvReserForDeliverySlotsItemEDDInfoData> invReserForDeliverySlotsItemEDDInfoData) throws ParseException;
+
+
+	/**
+	 * 
+	 * @param cartModel
+	 * @param mplSelectedEDDInfo
+	 * @return boolean
+	 */
+	public boolean addSelectedEDD(CartModel cartModel, List<MplSelectedEDDForUssID> mplSelectedEDDInfo);
+
+	/**
+	 * @param cartdata
+	 * @return
+	 */
+	InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(InvReserForDeliverySlotsRequestData cartdata,CartModel cart);
+
 
 	/**
  	 * This method is used to check if any product in the cart is having pincode restricted promotion configured.

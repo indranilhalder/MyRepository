@@ -29,6 +29,7 @@ import de.hybris.platform.promotions.result.PromotionEvaluationContext;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
@@ -47,6 +48,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.ui.Model;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -99,6 +103,11 @@ public class GenericUtilityMethods
 		}
 		return status;
 	}
+	public static Object jsonToObject(final Class<?> classType, final String stringJson) throws JsonParseException, JsonMappingException, IOException
+	  {
+	   ObjectMapper mapper = new ObjectMapper();
+	  return  mapper.readValue(stringJson, classType);
+	  }
 
 	/**
 	 * @Description: Sends the year from Date
@@ -802,6 +811,12 @@ public class GenericUtilityMethods
 					billingAddress.setAddressType(address.getAddressType());
 				}
 			}
+			/* Added in R2.3 for TISRLUAT-904 start */
+			if (StringUtils.isNotEmpty(address.getLandmark()))
+			{
+				billingAddress.setLandmark(address.getLandmark());
+			}
+			/* Added in R2.3 for TISRLUAT-904 end */
 		}
 		return billingAddress;
 
@@ -1519,6 +1534,26 @@ public class GenericUtilityMethods
 		model.addAttribute("checkout_seller_ids", sellerIds);
 		model.addAttribute("order_shipping_modes", deliveryModes);
 	}
+
+
+	//TPR-1285
+	/**
+	 * Return the Prefix
+	 * 
+	 * @param prefix
+	 * @return prefix
+	 */
+	public static String changePrefix(String prefix)
+	{
+		prefix = prefix.replaceAll("[^\\w/-]", "-");
+		//TISSTRT-1297
+		if (prefix.contains("--"))
+		{
+			prefix = prefix.replaceAll("--", "-");
+		}
+		return prefix;
+	}
+
 
 
 	/**

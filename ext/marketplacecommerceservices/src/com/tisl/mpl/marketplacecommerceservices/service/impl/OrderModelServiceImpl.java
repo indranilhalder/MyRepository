@@ -3,6 +3,7 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 import de.hybris.platform.core.model.BulkCancellationProcessModel;
 import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -89,23 +90,6 @@ public class OrderModelServiceImpl implements OrderModelService
 		return getOrderModelDao().getOrder(code);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.marketplacecommerceservices.service.OrderModelService#getOrder(java.lang.String)
-	 */
-	@Override
-	public OrderModel getParentOrder(final String code)
-	{
-		return getOrderModelDao().getOrderModel(code);
-	}
-
-
-	@Override
-	public List<BulkReturnProcessModel> getBulkReturnData()
-	{
-		return getOrderModelDao().getAllBulkReturnData();
-	}
 
 	/*
 	 * @Override public void updateLoadStatus()
@@ -201,8 +185,13 @@ public class OrderModelServiceImpl implements OrderModelService
 		return orderModelDao.updatePickUpDetailsDao(orderId, name, mobile);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.OrderModelService#getOrder(java.lang.String)
+	 */
 	@Override
-	public OrderModel getOrderModel(final String code)
+	public OrderModel getParentOrder(final String code)
 	{
 		return getOrderModelDao().getOrderModel(code);
 	}
@@ -210,6 +199,22 @@ public class OrderModelServiceImpl implements OrderModelService
 	public List<BulkCancellationProcessModel> getBulkCancelData()
 	{
 		return getOrderModelDao().getAllBulkCancelData();
+	}
+
+	@Override
+	public List<BulkReturnProcessModel> getBulkReturnData()
+	{
+		return getOrderModelDao().getAllBulkReturnData();
+	}
+
+	@Override
+	public PointOfServiceModel getPointOfService(String storeId){
+		return getOrderModelDao().getPointOfService(storeId);
+	}
+		@Override
+	public OrderModel getOrderModel(final String code)
+	{
+		return getOrderModelDao().getOrderModel(code);
 	}
 
 }

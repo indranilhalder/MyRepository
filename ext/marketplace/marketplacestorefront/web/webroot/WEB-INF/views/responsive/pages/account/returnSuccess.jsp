@@ -20,17 +20,15 @@
 <spring:url value="/my-account/orders" var="ordersUrl" />
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
 
-
 	<template:page pageTitle="${pageTitle}">
 	<div class="account">
 		<div class="page-header">
 			<c:choose>
-			<c:when test="${returnLogisticsCheck eq 'true'}">
+			<c:when test="${quickdrop eq 'true'}">
 			<h2><spring:message code="return.success"></spring:message></h2>
-			<span><spring:message code="return.success.message"></spring:message></span>
+			<h2><spring:message code="return.success.reverse"></spring:message></h2>
 			</c:when>
 			<c:otherwise>
-			<h2><spring:message code="return.success.reverse"></spring:message></h2>
 			<span><spring:message code="return.success.message"></spring:message></span>
 			</c:otherwise>
 			</c:choose>
@@ -43,9 +41,8 @@
 			<%-- </c:otherwise> 
 			</c:choose>--%>
 		</div>
-
 		<div class="wrapper">
-			<a class="return-order-history" href="order-history.php">Back to
+			<a class="return-order-history" href="/my-account/orders">Back to
 				Order History</a>
 			<form class="return-form success" method="post">
 				<div class="return-container">
@@ -54,7 +51,7 @@
 
 							<li class="item look">
 								<ul class="product-info">
-									<c:forEach items="${returnProductMap[orderEntry.transactionId]}" var="entryReturn" >
+									<c:forEach items="${returnProductMap[subOrderEntry.transactionId]}" var="entryReturn" >
 									<li>
 										<div class="product-img">
 											<c:choose>
@@ -90,7 +87,7 @@
 												<span class="price">
 													<ycommerce:testId
 														code="orderDetails_productTotalPrice_label">
-														<format:price priceData="${entryReturn.totalPrice}"
+														Price :<format:price priceData="${entryReturn.totalPrice}"
 															displayFreeForZero="true" />
 													</ycommerce:testId></span>
 												<c:forEach items="${entryReturn.product.seller}" var="seller">
@@ -101,7 +98,7 @@
 												<!-- TISEE-5457 -->
 												<!--  <span>Seller ID: ${sellerId} </span> -->
 												
-												 <span><spring:message code="seller.order.code"> </spring:message>&nbsp;${suborder.code} </span>
+												 <span><spring:message code="seller.order.code"> </spring:message>&nbsp;${subOrder.code} </span>
 											</p>
 										</div>
 										<ul class="item-details">
@@ -120,22 +117,26 @@
 					</div>
 					<div class="method">
 					
-					<c:if test="${refundType eq 'E'}">
 					<label>Refund Method:</label>
+					<h3>Return and Refund</h3> 
+					<c:if test="${quickdrop ne 'true'}">
+					
+					<c:if test="${refundType eq 'E'}">
+					
 					<label for="return-method-0">
-							<h3>Return and Replace</h3> <span>Estimated replaced
+							<span>Estimated refund
 								timing: item will be shipped 1 day after we have received the
 								item.</span>
 						</label> 
 					</c:if>
 					<c:if test="${refundType eq 'R'}">
-					<label>Refund Method:</label>
+					<!-- <label>Refund Method:</label> -->
 					 <label for="return-method-1">
-							<h3>Return and Refund</h3> <span>Estimated refund timing:
+							<!-- <h3>Return and Refund</h3>  --><span>Estimated refund timing:
 								2-3 days after we have received the item. This product was paid
-								for via ${suborder.mplPaymentInfo.paymentOption} 
+								for via ${subOrder.mplPaymentInfo.paymentOption} 
 								<c:choose>
-								 	 <c:when test="${suborder.mplPaymentInfo.paymentOption =='COD'}">
+								 	 <c:when test="${subOrder.mplPaymentInfo.paymentOption =='COD'}">
 											 so you will receive the refund via cheque/NEFT. 	 
 								  	</c:when>
 								  	<c:otherwise>
@@ -144,6 +145,8 @@
 								</c:choose>
 								</span>
 						</label>
+					</c:if>
+					
 					</c:if>
 					</div>
 				</div>

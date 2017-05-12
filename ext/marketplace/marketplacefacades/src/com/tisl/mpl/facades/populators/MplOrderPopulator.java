@@ -9,6 +9,7 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
+import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -18,12 +19,16 @@ import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.EMIPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.ThirdPartyWalletInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.util.DiscountValue;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -68,6 +73,7 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 		addConvinienceCharges(source, target);
 		addVoucherDiscount(source, target);
 		addPickupPersonDetails(source, target);
+		addDeliverryAddressList(source, target);
 
 		if (CollectionUtils.isNotEmpty(source.getAllPromotionResults()))
 		{
@@ -82,7 +88,8 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 
 					if (promotionResultModel.getCertainty().floatValue() == 1.0F
 							&& (promotion instanceof BuyAGetPromotionOnShippingChargesModel
-									|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel || promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
+									|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel
+									|| promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
 					{
 						isShippingPromoApplied = true;
 						break;
@@ -226,6 +233,21 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 			mplPaymentInfo.setPaymentOption("COD");
 			target.setMplPaymentInfo(mplPaymentInfo);
 		}
+
+		//Added for third Party Wallet
+
+		if (source.getPaymentInfo() instanceof ThirdPartyWalletInfoModel)
+		{
+			final ThirdPartyWalletInfoModel tpWalletPaymentInfoModel = (ThirdPartyWalletInfoModel) source.getPaymentInfo();
+			mplPaymentInfo.setCardAccountHolderName(tpWalletPaymentInfoModel.getWalletOwner());
+
+			//To change the name of payment option later
+			mplPaymentInfo.setPaymentOption(tpWalletPaymentInfoModel.getProviderName());
+			//mplPaymentInfo.setBillingAddress(getAddressConverter().convert(tpWalletPaymentInfoModel.getBillingAddress()));
+			target.setMplPaymentInfo(mplPaymentInfo);
+		}
+		//Ended here for third party wallet
+
 		//}
 	}
 
@@ -279,7 +301,7 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 				//if (CollectionUtils.isNotEmpty(voucherList) && !discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
 				//Changed for TISSTRT-194
 				if (CollectionUtils.isEmpty(voucherList) || CollectionUtils.isNotEmpty(voucherList)
-						&& !discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))//if no voucher is applied
+						&& !discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode())) //if no voucher is applied
 				{
 					final double value = discount.getAppliedValue();
 					if (value > 0.0d)
@@ -326,4 +348,22 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 		target.setPickupPhoneNumber(source.getPickupPersonMobile());
 	}
 
+	private void addDeliverryAddressList(OrderModel source, OrderData target)
+	{
+		Assert.notNull(source, MarketplacecommerceservicesConstants.SOURCENOTNULL);
+		Assert.notNull(target, MarketplacecommerceservicesConstants.TARGETNOTNULL);
+
+		List<AddressData> addressDataList = new ArrayList<AddressData>();
+	
+		Collection<AddressModel> addressModelListsource = 	source.getUser().getAddresses();
+		if (addressModelListsource != null)
+		{
+			for (AddressModel addressModel : addressModelListsource)
+			{
+				AddressData addressData = getAddressConverter().convert(addressModel);
+				addressDataList.add(addressData);
+			}
+		}
+		target.setDeliveryAddressList(addressDataList);
+	}
 }

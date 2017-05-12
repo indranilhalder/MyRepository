@@ -25,7 +25,7 @@
 
 <template:page pageTitle="${pageTitle}">
 	<!-- LW-230 -->
-	<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+	<input type="hidden" id="isLuxury" name="isLuxury" value="${isLuxury}"/>
 	
 	<body class="wishlist" onload="readyFunction();">
 
@@ -238,17 +238,25 @@
 								<c:set value="${wpproduct.sellerInfoData}" var="seller" />
 								<c:set value="${product.ussID}" var="entry_ussid" />
 								<c:url value="${product.url}" var="productUrl" />
+
+								
 								<li>
 									<div class="product-info">
                                           
-										 <c:if test="${fn:toLowerCase(product.luxIndicator)=='marketplace' or empty product.luxIndicator}">
+										<c:if test="${fn:toLowerCase(product.luxIndicator)=='marketplace' or empty product.luxIndicator}">
 										<a href="${productUrl}"> <product:productPrimaryImage
 														product="${product}" format="thumbnail" /></a>
-														</c:if>
+										<!--  TISPRD-9318  -->
+										<c:set value="${ycommerce:productImage(product, 'cartIcon')}" var="cartImage"/>
+														
+										</c:if>
 										<c:if test="${fn:toLowerCase(product.luxIndicator)=='luxury' and not empty product.luxIndicator}">
 										<a href="${productUrl}"> <product:productPrimaryImage
 														product="${product}" format="luxuryCartPage" /></a>
-														</c:if>
+										<!--  TISPRD-9318  -->				
+										<c:set value="${ycommerce:productImage(product, 'luxuryCartIcon')}" var="cartImage"/>
+														
+										</c:if>
 										
 										<div>
 											<ul>
@@ -364,11 +372,18 @@
 												<input type="hidden" name="ussid" value="${seller.ussid}" />
 												<input type="hidden" name="productCodePost"
 													value="${product.code}" />
-													<!-- For Infinite Analytics Start-->
-													<input type="hidden" name="productArrayForIA" value="${product.code}"/>
-													<!-- For Infinite Analytics End-->
+												<!-- For Infinite Analytics Start-->
+												<input type="hidden" name="productArrayForIA" value="${product.code}"/>
+												<!-- For Infinite Analytics End-->
 												<input type="hidden" name="wishlistNamePost"
 													value="${particularWishlistName}" />
+													
+												<!--  TISPRD-9318  -->
+												<c:if test="${not empty cartImage  && not empty cartImage.url }" >
+												<input type="hidden" id="cart_icon_wishlist_${product.ussID}" name="cartIconWishlist" value="${cartImage.url}"/>
+												</c:if>
+												<input type="hidden" name="productName" value="${product.name}" />	
+												<!--  End TISPRD-9318  -->
 												<c:choose>
 													<c:when test="${not empty wpproduct.isOutOfStock && wpproduct.isOutOfStock eq 'Y'}">
 	<!-- TISPRO-588 -->													<span id="outOfStockIdwl">                                                      
@@ -602,11 +617,11 @@
 						<spring:theme code="wishlist.save" />
 					</button>
 					<!-- TPR-646 Changes added class -->
-					<a class="close manageWishlistClose" href="" data-dismiss="modal"><spring:theme code="text.button.cancel" /></a>
+					<a class="manageWishlistClose" href="" data-dismiss="modal"><%-- <spring:theme code="text.button.cancel" /> --%></a>
 					
 					</div>
 					</div>
-					<button class="close" data-dismiss="modal"></button>
+					<button class="close" data-dismiss="modal" style="margin: 0px !important;border:0px !important;"></button>
 				</div>
 				<div class="overlay" data-dismiss="modal"></div>
 			</div>
@@ -643,7 +658,7 @@
  		<div class="overlay" data-dismiss="modal"></div>
 			
 			<div class="modal-content content" style="width:35%">
-			<button type="button" class="close pull-right" aria-hidden="true" data-dismiss="modal"></button>
+			<button type="button" class="close pull-right" aria-hidden="true" data-dismiss="modal" style="margin: 0 !important; border: 0 !important;"></button>
 				<!-- Dynamically Insert Content Here -->
 				<div class="modal-header">
 				<h2 class="modal-title">
@@ -673,8 +688,9 @@
 				<label class="product-deletion-confirmation"><spring:theme
 							code="wishlist.removeProductConfirmation.message" /></label>
 				</div>
+				<!-- changed for TISRLEE-1544 -->
 				<button class="removeProductConfirmation" type="submit"><spring:theme code="text.wishlist.yes" /></button>
-					<a class="close removeProductConfirmationNo" href="" data-dismiss="modal"><spring:theme code="text.wishlist.no" /></a>
+					<a class="removeProductConfirmationNo" href="" data-dismiss="modal"><spring:theme code="text.wishlist.no" /></a>
 				</div>
 				<!-- <button class="close " data-dismiss="modal"></button> -->
 			</div>

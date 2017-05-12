@@ -747,6 +747,22 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 					masterModel.setType(description);
 				}
 			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getClicknCollect()))
+			{
+				masterModel.setClicknCollect(sellerMasterWsDTO.getClicknCollect());
+			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getIsRTSAllowed()))
+			{
+				masterModel.setIsRTSAllowed(sellerMasterWsDTO.getIsRTSAllowed());
+			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getisCDAllowed()))
+			{
+				masterModel.setIsCDAllowed(sellerMasterWsDTO.getisCDAllowed());
+			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getIsLPAWBEdit()))
+			{
+				masterModel.setIsLPAWBEdit(sellerMasterWsDTO.getIsLPAWBEdit());
+			}
 			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getMidname()))
 			{
 				masterModel.setMidname(sellerMasterWsDTO.getMidname());
@@ -1120,8 +1136,24 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 					masterModelUpdate.setType(description);
 				}
 			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getClicknCollect()))
+			{
+				masterModelUpdate.setClicknCollect(sellerMasterWsDTO.getClicknCollect());
+			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getIsRTSAllowed()))
+			{
+				masterModelUpdate.setIsRTSAllowed(sellerMasterWsDTO.getIsRTSAllowed());
+			}
 
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getisCDAllowed()))
+			{
+				masterModelUpdate.setIsCDAllowed(sellerMasterWsDTO.getisCDAllowed());
+			}
 
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getIsLPAWBEdit()))
+			{
+				masterModelUpdate.setIsLPAWBEdit(sellerMasterWsDTO.getIsLPAWBEdit());
+			}
 			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getMidname()))
 			{
 				masterModelUpdate.setMidname(sellerMasterWsDTO.getMidname());

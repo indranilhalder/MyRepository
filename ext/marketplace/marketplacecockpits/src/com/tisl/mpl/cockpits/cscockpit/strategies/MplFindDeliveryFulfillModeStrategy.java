@@ -7,4 +7,6 @@ public interface MplFindDeliveryFulfillModeStrategy {
 	String findDeliveryFulfillMode(String selectedUssid);
 	
 	boolean isTShip(String selectedUssid);
+
+	boolean getIsShipCODEligible(String selectedUSSID);
 }

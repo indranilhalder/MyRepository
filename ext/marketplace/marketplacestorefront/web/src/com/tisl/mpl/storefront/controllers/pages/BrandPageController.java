@@ -16,16 +16,12 @@ package com.tisl.mpl.storefront.controllers.pages;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.Breadcrumb;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractSearchPageController;
-import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.SimpleCMSComponentModel;
-import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
-import de.hybris.platform.enumeration.EnumerationService;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,7 +35,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -48,16 +43,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.tisl.mpl.core.enums.SearchDropDownBrand;
-import com.tisl.mpl.core.enums.SearchDropDownSeller;
 import com.tisl.mpl.core.model.BrandCollectionComponentModel;
 import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
-import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
@@ -80,8 +71,8 @@ public class BrandPageController extends AbstractSearchPageController
 	//	@Resource(name = "productSearchFacade")
 	//	private ProductSearchFacade<ProductData> productSearchFacade;
 
-	@Resource(name = "enumerationService")
-	private EnumerationService enumerationService;
+	//@Resource(name = "enumerationService")
+	//private EnumerationService enumerationService;
 
 
 
@@ -103,7 +94,7 @@ public class BrandPageController extends AbstractSearchPageController
 
 
 
-	private static final String ERROR_CMS_PAGE = "notFound";
+	//private static final String ERROR_CMS_PAGE = "notFound";
 
 	/**
 	 * This method find the appropriate page for a brand and redirects accordingly
@@ -114,86 +105,67 @@ public class BrandPageController extends AbstractSearchPageController
 	 * @return String
 	 * @throws UnsupportedEncodingException
 	 * @throws CMSItemNotFoundException
+	 *
+	 *            TPR-1287
 	 */
-	@RequestMapping(method = RequestMethod.GET)
-	public String getPageForBrand(@RequestParam("brandName") final String brandName, final Model model,
-			final HttpServletRequest request) throws UnsupportedEncodingException, CMSItemNotFoundException
-	{
-
-
-
-		//Setting the brand name in search dropdown
-		final List<SearchDropDownBrand> brandList = enumerationService.getEnumerationValues(SearchDropDownBrand.class);
-		final List<SearchDropDownSeller> sellerList = enumerationService.getEnumerationValues(SearchDropDownSeller.class);
-
-
-
-		//Populating Seller in search dropdown
-		for (int index = 0; index < sellerList.size(); index++)
-		{
-			if (sellerList.get(index).getCode().equalsIgnoreCase(brandName))
-			{
-				for (final SearchDropDownSeller dropdownSeller : sellerList)
-				{
-
-					if (dropdownSeller.getCode().equalsIgnoreCase(brandName))
-					{
-						model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropdownSeller.getCode());
-					}
-				}
-
-			}
-		}
-
-		//Populating brand in search dropdown
-		for (final SearchDropDownBrand dropdownBrand : brandList)
-		{
-
-			if (dropdownBrand.getCode().equalsIgnoreCase(brandName))
-			{
-				model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropdownBrand.getCode());
-			}
-		}
-		//Perform the brand search for products
-		boolean showFacets = true;
-		showFacets = true;
-		/*
-		 * final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData =
-		 * performBrandSearch(brandName); if (searchPageData != null && searchPageData.getResults() != null) { showFacets
-		 * = true; }
-		 */
-		//populateModel(model, searchPageData, ShowMode.Page);
-		model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
-
-		//Check if there is a landing page for the brand with the brandName
-		try
-		{
-			final ContentPageModel brandPageLandingPage = getContentPageForLabelOrId(brandName);
-			storeCmsPageInModel(model, brandPageLandingPage);
-			model.addAttribute(ModelAttributetConstants.SHOW_FACETS, showFacets);
-			model.addAttribute(WebConstants.BREADCRUMBS_KEY,
-					Collections.singletonList(new Breadcrumb(HASH, brandName, LAST_LINK_CLASS)));
-			setUpMetaDataForContentPage(model, brandPageLandingPage);
-		}
-		catch (final CMSItemNotFoundException e)
-		{
-
-			//storeCmsPageInModel(model, getCmsPageService().getDefaultCategoryPage());
-
-
-			storeCmsPageInModel(model, getContentPageForLabelOrId(ERROR_CMS_PAGE));
-			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ERROR_CMS_PAGE));
-			GlobalMessages.addErrorMessage(model, "system.error.page.not.found");
-			return ControllerConstants.Views.Pages.Error.ErrorNotFoundPage;
-
-		}
-
-
-
-		return getViewForPage(model);
-
-
-	}
+	/*
+	 * @RequestMapping(method = RequestMethod.GET) public String getPageForBrand(@RequestParam("brandName") final String
+	 * brandName, final Model model, final HttpServletRequest request) throws UnsupportedEncodingException,
+	 * CMSItemNotFoundException {
+	 *
+	 *
+	 *
+	 * //Setting the brand name in search dropdown final List<SearchDropDownBrand> brandList =
+	 * enumerationService.getEnumerationValues(SearchDropDownBrand.class); final List<SearchDropDownSeller> sellerList =
+	 * enumerationService.getEnumerationValues(SearchDropDownSeller.class);
+	 *
+	 *
+	 *
+	 * //Populating Seller in search dropdown for (int index = 0; index < sellerList.size(); index++) { if
+	 * (sellerList.get(index).getCode().equalsIgnoreCase(brandName)) { for (final SearchDropDownSeller dropdownSeller :
+	 * sellerList) {
+	 *
+	 * if (dropdownSeller.getCode().equalsIgnoreCase(brandName)) {
+	 * model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropdownSeller.getCode()); } }
+	 *
+	 * } }
+	 *
+	 * //Populating brand in search dropdown for (final SearchDropDownBrand dropdownBrand : brandList) {
+	 *
+	 * if (dropdownBrand.getCode().equalsIgnoreCase(brandName)) {
+	 * model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropdownBrand.getCode()); } } //Perform the brand
+	 * search for products boolean showFacets = true; showFacets = true;
+	 *
+	 * final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData =
+	 * performBrandSearch(brandName); if (searchPageData != null && searchPageData.getResults() != null) { showFacets =
+	 * true; }
+	 *
+	 * //populateModel(model, searchPageData, ShowMode.Page);
+	 * model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
+	 *
+	 * //Check if there is a landing page for the brand with the brandName try { final ContentPageModel
+	 * brandPageLandingPage = getContentPageForLabelOrId(brandName); storeCmsPageInModel(model, brandPageLandingPage);
+	 * model.addAttribute(ModelAttributetConstants.SHOW_FACETS, showFacets);
+	 * model.addAttribute(WebConstants.BREADCRUMBS_KEY, Collections.singletonList(new Breadcrumb(HASH, brandName,
+	 * LAST_LINK_CLASS))); setUpMetaDataForContentPage(model, brandPageLandingPage); } catch (final
+	 * CMSItemNotFoundException e) {
+	 *
+	 * //storeCmsPageInModel(model, getCmsPageService().getDefaultCategoryPage());
+	 *
+	 *
+	 * storeCmsPageInModel(model, getContentPageForLabelOrId(ERROR_CMS_PAGE)); setUpMetaDataForContentPage(model,
+	 * getContentPageForLabelOrId(ERROR_CMS_PAGE)); GlobalMessages.addErrorMessage(model, "system.error.page.not.found");
+	 * return ControllerConstants.Views.Pages.Error.ErrorNotFoundPage;
+	 *
+	 * }
+	 *
+	 *
+	 *
+	 * return getViewForPage(model);
+	 *
+	 *
+	 * }
+	 */
 
 
 
@@ -216,9 +188,13 @@ public class BrandPageController extends AbstractSearchPageController
 	 * @param model
 	 *
 	 * @return view page of model for label id 'brandlist'
+	 *
+	 *
+	 *         TPR-1287 Start
 	 */
 
-	@RequestMapping(value = "/brandlist", method = RequestMethod.GET)
+	//@RequestMapping(value = "/brandlist", method = RequestMethod.GET)
+	@RequestMapping(value = "/**", method = RequestMethod.GET)
 	public String getListOfBrandsCategory(final Model model) throws CMSItemNotFoundException
 	{
 		try
@@ -353,6 +329,7 @@ public class BrandPageController extends AbstractSearchPageController
 		return getViewForPage(model);
 	}
 
+	//TPR-1287 End
 
 	/**
 	 * This method segregates the brands in alphabetical order like A having Addidas,Allensolly

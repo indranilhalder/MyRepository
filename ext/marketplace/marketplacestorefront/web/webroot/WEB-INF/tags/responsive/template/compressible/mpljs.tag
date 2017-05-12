@@ -41,6 +41,8 @@
 	src="${commonResourcePath}/js/plugins/smk-accordion.js"></script>
 <script type="text/javascript"
 	src="${commonResourcePath}/js/plugins/jquery.elevatezoom.js"></script>
+	<script type="text/javascript"
+	src="${commonResourcePath}/js/plugins/jquery.visible.js"></script>
 <%-- Custom ACC JS --%>
 
 <%-- <script type="text/javascript"
@@ -274,6 +276,14 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 <!-- TISPT-202  -->
 <c:if test="fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method/check')}">
 	<script src="https://maps.googleapis.com/maps/api/js?v=3&amp;"></script>
-</c:if> 
+
 <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/marketplacecheckoutaddon.js"></script>	
+</c:if> 
+
+<!--Track order PopUp and Detail page   -->
+<script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.trackorder.js"></script>
+
+<!--Returns Page   -->
+<script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/acc.returns.js"></script>

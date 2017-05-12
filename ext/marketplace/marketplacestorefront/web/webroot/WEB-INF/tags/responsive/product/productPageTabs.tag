@@ -29,19 +29,27 @@ var buyboxskuId='';
 
 <c:set var="validTabs" value="${VALID_TABS}" />
 <div class="nav-wrapper">
-<ul class="nav pdp">
-<!-- 	TISPRD-7604 fix start -->
-<%-- 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
+<ul class="nav pdp productNav">
+<!-- INC144315154 start -->
+	<c:if test="${fn:contains(validTabs, 'stylenote')}">
 		<li id="tabs_styleNotes" class="active">
 			 <spring:theme code="product.product.styleNotes" />
 		</li>
+
 	</c:if> --%>
 <!-- 	TISPRD-7604 fix end -->
 <!-- commented as part of PRDI-96 start -->
 	<%-- <c:if test="${fn:contains(validTabs, 'details')}">
 		<li id="tabs_details" class="active">
+
+	</c:if>
+<!-- INC144315154 end -->
+	<c:if test="${fn:contains(validTabs, 'details')}">
+		<li id="tabs_details">
+
 			 <spring:theme code="product.product.details" />
 		</li>
+
 	</c:if> --%>
 	<!-- commented as part of PRDI-96 end -->
 <!-- 	TISPRD-7604 fix start -->
@@ -59,6 +67,9 @@ var buyboxskuId='';
 	</c:if>
 <!-- moved as part of PRDI-96 end -->
 
+
+	
+
 	<c:if test="${fn:contains(validTabs, 'description')}">
 		<li id="tabs_description" class="active">
 			<spring:theme code="product.product.description" />
@@ -74,10 +85,17 @@ var buyboxskuId='';
 			<spring:theme code="product.product.knowmore" />
 		</li>
 	</c:if>
+		<!--CKD:TPR-250:Start -->
+	<c:if test="${fn:contains(validTabs, 'brandInfo')}">
+		<li id="tabs_brandInfo"><spring:theme
+				code="product.product.brandInfo" /></li>
+	</c:if>
+	<!--CKD:TPR-250:End -->
 </ul>
 </div>
-<ul class="tabs pdp">
+<ul class="tabs pdp productTabs">
 	<!-- INC144313814 fix start -->
+<<<<<<< HEAD
 	<!-- commented as part of PRDI-96 start -->
 	<%-- <c:if test="${fn:contains(validTabs, 'details')}">
 		<li class="active">
@@ -86,11 +104,18 @@ var buyboxskuId='';
 	</c:if> --%>
 	<!-- commented as part of PRDI-96 end -->
 	<!-- INC144313814 fix end -->
+=======
+>>>>>>> refs/remotes/origin/Sprint_6_7_8_9
 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
+<<<<<<< HEAD
 		<li  class="active">				<!-- added class 'active' PRDI-96 -->
+=======
+		<li class="active">
+>>>>>>> refs/remotes/origin/Sprint_6_7_8_9
 			<product:productStyleNotesTab product="${product}" />
 		</li>
 	</c:if>
+<<<<<<< HEAD
 	<!-- moved as part of PRDI-96 start -->
 	<c:if test="${fn:contains(validTabs, 'details')}">
 		<li>
@@ -98,6 +123,14 @@ var buyboxskuId='';
 		</li>
 	</c:if>
 	<!-- moved as part of PRDI-96 end -->
+=======
+	<!-- INC144313814 fix end -->
+	<c:if test="${fn:contains(validTabs, 'details')}">
+		<li>
+			<product:productDetailsTab product="${product}" />
+		</li>
+	</c:if>
+>>>>>>> refs/remotes/origin/Sprint_6_7_8_9
 	<c:if test="${fn:contains(validTabs, 'description')}">
 		<li class="active">
 			<product:productDescriptionTab product="${product}" />
@@ -113,6 +146,13 @@ var buyboxskuId='';
 			<product:productTataPromiseTab product="${product}" />
 		</li>
 	</c:if>
+	<!--CKD:TPR-250:Start -->
+	<c:if test="${fn:contains(validTabs, 'brandInfo')}">
+		<li >
+			<product:brandInfoTab product="${product}" />
+		</li>
+	</c:if>
+	<!--CKD:TPR-250:End -->
 </ul>
 
  <div id="servicableUssid"></div>

@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
@@ -28,6 +29,9 @@ import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 
 public class PinCodeServiceAvilabilityFacadeImpl implements PinCodeServiceAvilabilityFacade
 {
+
+	private static final Logger LOG = Logger.getLogger(PinCodeServiceAvilabilityFacadeImpl.class);
+
 	@Resource(name = "mplPincodeRestrictionService")
 	private MplPincodeRestrictionService mplPincodeRestrictionService;
 

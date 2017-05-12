@@ -7,6 +7,8 @@ var res;
 var filterValue = "";
 var filterName = "";
 var filterChecked = "";
+var countBrand=1;
+
 
 ACC.refinements = {
 
@@ -132,6 +134,14 @@ ACC.refinements = {
 					}
 				}
 			})
+			/*TPR-1283 CHANGES--Starts*/
+			   if(browserURL[0].includes("/b")){
+					var indx1=browserURL[0].indexOf("/b");
+					var res = browserURL[0].substring(0, indx1);
+					browserURL[0]=res;
+					//window.location.href=browserURL[0];
+				}
+			/*TPR-1283 CHANGES--Ends*/
 			//UF-254 later page push is not considered . Putting page 1 for default.
 			var browserUrlLazy = appendPageNo(browserURL[0]);
 			// generating postAjaxURL
@@ -175,7 +185,8 @@ ACC.refinements = {
 				else{
 					requiredUrl = action;
 				}
-			}
+			}			
+
 			
 			// TPR-645 Start  INC_11511  fix--h3 tag done
 			filterValue = $(this).parent().find('span.facet-text').text().trim();
@@ -214,7 +225,6 @@ ACC.refinements = {
 					updatedsearchQuery+=newFilter;
 				}
 			}
-			//console.log("Full View: updatedsearchQuery 4: "+updatedsearchQuery);			
 		});
 		
 		$(document).on("change",".facet_mobile .js-facet-checkbox-price",function(){
@@ -319,6 +329,7 @@ ACC.refinements = {
 					requiredUrl = action;
 				}
 			}
+
 			// TPR-645 Start INC_11511  fix--h3 tag done
 			var filterValue = '';
 			var filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
@@ -329,6 +340,7 @@ ACC.refinements = {
 				// console.log($(this).attr('class').text());
 				filterValue = $(this).parent().find('span > span').text();
 			}
+
 			if($(this).attr('checked')){
 				filterChecked = true;
 				//onFilterRemoveAnalytics(filterName,filterValue);
@@ -340,7 +352,7 @@ ACC.refinements = {
 			// TPR-645 End
 			// AJAX call
 			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
-			
+
 		});
 		
 		// TPR-845
@@ -406,6 +418,7 @@ ACC.refinements = {
 			else {
 				requiredUrl = action[0].concat("/getFacetData");
 			}
+
 			
 			//Utag Fire on remove filter or any price start
 			if($(this).attr('class') == "remove_filter"){
@@ -829,11 +842,36 @@ ACC.refinements = {
 // function implements AJAX : TPR-198
 function filterDataAjax(requiredUrl,dataString,pageURL){
 	facetAjaxUrl = pageURL;
-	console.log(requiredUrl);
-	console.log(pageURL);
-	if ($("input[name=customSku]").val()) {
-		dataString = dataString + "&sort=" + $("select[name=sort]").val() + "&pageSize=" + $("select[name=pageSize]").val(); 
+	//console.log(requiredUrl);
+	//console.log(pageURL);
+	var pathName = window.location.pathname;
+    var query = window.location.search;
+	/*TPR-1283 CHANGES--Starts*/
+	if($("#flagVal").val()=='true'){
+		var category=$("div.list_title > h1").text($("#catName").val()).text();
+		$("div.list_title > h1").text(category);
 	}
+	/*TPR-1283 CHANGES--Ends*/
+	//INC144316143
+	if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
+		   window.localStorage.setItem('lastUrlpathName',encodeURI(pathName));
+		   window.localStorage.setItem('lastUrlquery',encodeURI(query));
+	 }
+	
+	// INC144315462 and INC144315104 
+	
+	//TISSQAUAT-3418 starts
+	// Added For INC144315104 and INC144315462
+
+	if ($("input[name=customSku]").val()) {
+		//dataString = dataString + "&sort=" + $("select[name=sort]").val() + "&pageSize=" + $("select[name=pageSize]").val(); 
+		dataString = dataString + "&pageSize=24"; 
+	}
+	if($( "span.sort[style*='color']" ).length == 1){
+ 		var sortData = $( "span.sort[style*='color']" ).attr('data-name');
+ 		dataString = dataString + getSortCode(sortData); 
+  	}
+	//TISSQAUAT-3418 ends
 	
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
@@ -866,6 +904,11 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			if ($(".facet-list.filter-opt").children().length){
 				$("body.page-productGrid .product-listing.product-grid.lazy-grid, body.page-productGrid .product-listing.product-grid.lazy-grid-facet, body.page-productGrid .product-listing.product-grid.lazy-grid-normal").css("padding-top","15px");  //INC144315068
 				$("body.page-productGrid .facet-list.filter-opt").css("padding-top","65px");
+				//TISSQAUAT-3418 starts
+				var filter_height = $(".facet-list.filter-opt").height() - 8;   /* PRDI-69 */
+				$("body.page-productGrid .listing.wrapper .left-block").css("margin-top",filter_height + "px");
+				//TISSQAUAT-3418 ends
+
 				/* UF-253 start */
 				if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
 				var sort_height ="-" + $(".facet-list.filter-opt").outerHeight() + "px";
@@ -878,7 +921,13 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 				/* UF-253 end */
 			}
 			else{
+				//TISSQAUAT-3418 starts
 				//$("body.page-productGrid .product-listing.product-grid").css("margin-top","60px");  //INC144315068
+
+				$("body.page-productGrid .listing.wrapper .left-block").css("margin-top","65px"); /* PRDI-69 */
+
+				//TISSQAUAT-3418 ends
+
 			}
 			// Keeps expansion-closure state of facets
 			$(".facet-name.js-facet-name h3").each(function(){
@@ -913,6 +962,14 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 				
 				// Re-write URL after ajax
 				window.history.replaceState(response,"",pageURL);
+				//INC144316143
+				var pathName = window.location.pathname;
+			    var query = window.location.search;
+				
+				if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
+				       window.localStorage.setItem('lastUrlpathName',encodeURI(pathName));
+					   window.localStorage.setItem('lastUrlquery',encodeURI(query));
+				 }
 			}		
 			// TPR-158 and TPR-413 starts here
 			
@@ -962,8 +1019,60 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 		}
 	});
 	
-}
 
+
+}
+//TISSQAUAT-3418 starts
+//Added For INC144315104 and INC144315462
+function getSortCode(item){
+ 	var code = '';
+ 	switch (item) {
+ 	case 'relevance':
+ 		code = '&sort=relevance';
+ 		break;
+ 	case 'new':
+ 		code = '&sort=isProductNew';
+ 		break;
+ 	case 'discount':
+ 		code = '&sort=isDiscountedPrice';
+ 		break;
+ 	case 'low':
+ 		code = '&sort=price-asc';
+ 		break;
+ 	case 'high':
+ 		code = '&sort=price-desc';
+ 		break;
+ 	default:
+ 		break;
+ 	}
+ 	return code;
+ }
+//TISSQAUAT-3418 ends
+
+// INC144315462 and INC144315104  
+function getSortCode(item){
+	  	var code = '';
+	  	switch (item) {
+	  	case 'relevance':
+	  		code = '&sort=relevance';
+	  		break;
+	  	case 'new':
+	  		code = '&sort=isProductNew';
+	  		break;
+	  	case 'discount':
+	  		code = '&sort=isDiscountedPrice';
+	  		break;
+	  	case 'low':
+	  		code = '&sort=price-asc';
+	  		break;
+	  	case 'high':
+	  		code = '&sort=price-desc';
+	  		break;
+	  	default:
+	  		break;
+	  	}
+	  	return code;
+	  }
 /*
  * $("#paginationForm .pagination.mobile li a").click(function(e){
  * 
@@ -985,7 +1094,9 @@ function createSearchQuery(filterMobileQuery){
 	return queryString;
 }
 
-// TPR-645,TPR-4704,TPR-4719
+
+
+//TPR-645,TPR-4704,TPR-4719
 
 function onFilterAddAnalytics(filterName,filterValue){
 	var filter_type = (filterName).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
@@ -1126,3 +1237,116 @@ function appendPageNo(url){
 	}
 	return modifiedUrl;
 }
+
+/*code added for TPR-1283--Starts*/
+$(document).on("click",".brandFacetRequire",function(){
+	var browserURL = window.location.href.split('?');
+	if($(".brandFacetRequire").parents("label").children("input.facet-checkbox.js-facet-checkbox.sr-only:checked").length != 0)
+		countBrand = $(".brandFacetRequire").parents("label").children("input.facet-checkbox.js-facet-checkbox.sr-only:checked").length+1;
+	else{
+		countBrand = 1;
+		}
+	if(countBrand<2){
+		var pageURL=$(this).attr("href");
+		window.location.href=pageURL;
+	}
+	else{
+		event.preventDefault();
+		/*refer to the AJAX for checkbox code--from line no.111--Starts*/
+		var staticHost=$('#staticHost').val();
+		$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+		
+		var dataString = null;
+		var nonEmptyDataString= null;
+		
+		// generating datastring and postAjaxURL
+		$(this).parents("form").find('input[type="hidden"]').each(function(){
+			if(dataString == null){
+				dataString = $(this).attr('name')+"="+$(this).val();
+			}
+			else{
+				dataString = dataString + ("&"+$(this).attr('name')+"="+$(this).val());
+			}
+			
+			if($(this).val().length >0){
+				if(nonEmptyDataString == null){
+					nonEmptyDataString = $(this).attr('name')+"="+$(this).val();
+				}
+				else{
+					nonEmptyDataString = nonEmptyDataString + ("&"+$(this).attr('name')+"="+$(this).val());
+				}
+			}
+		})
+		
+		/*TPR-1283 CHANGES--Starts*/
+	   if(browserURL[0].includes("/b")){
+			var indx1=browserURL[0].indexOf("/b");
+			var res = browserURL[0].substring(0, indx1);
+			browserURL[0]=res;
+			//window.location.href=browserURL[0];
+		}
+		/*TPR-1283 CHANGES--Ends*/
+		//UF-254 later page push is not considered . Putting page 1 for default.
+		var browserUrlLazy = appendPageNo(browserURL[0]);
+		// generating postAjaxURL
+		var pageURL = browserUrlLazy +'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
+		var requiredUrl="";
+		var action = $(this).parents("form").attr('action');
+		
+		// generating request mapping URL
+		if($("#isCategoryPage").val() == 'true'){
+			if ($("input[name=customSku]").val()) {
+				var collectionId = $("input[name=customSkuCollectionId]").val();
+				requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
+			}
+			else {
+				action = action.split('/c-');
+				action = action[1].split('/');
+				requiredUrl = "/c-"+action[0];
+				requiredUrl += "/getFacetData";
+			}
+		} else {
+			if(action.indexOf("/getFacetData") == -1){
+				if(action.indexOf("offer") > -1 || action.indexOf("viewOnlineProducts") > -1 || action.indexOf('/s/') > -1) {
+					requiredUrl = action.concat("/getFacetData");
+				}
+				else if ($("input[name=customSku]").val()) {
+					var collectionId = $("input[name=customSkuCollectionId]").val();
+					requiredUrl = '/CustomSkuCollection/'+collectionId+'/getFacetData';
+				}
+				else{
+					//requiredUrl = action.concat("getFacetData");
+					// INC_11277 start
+					if ((/.*\/$/g).test(action)) {
+						requiredUrl = action.concat("getFacetData");
+					}
+					else{
+						requiredUrl = action.concat("/getFacetData");
+					}
+					// INC_11277 end
+				}
+			}
+			else{
+				requiredUrl = action;
+			}
+		}
+		
+		// TPR-645 Start  INC_11511  fix--h3 tag done
+		filterValue = $(this).parent().find('span.facet-text').text().trim();
+		filterName = $(this).parents('li.facet.js-facet').find('div.facet-name.js-facet-name h3').text().trim();
+		if($(this).attr('checked')){
+			filterChecked = true;
+			//onFilterRemoveAnalytics(filterName,filterValue);
+		}
+		else{
+			filterChecked = false;
+			//onFilterAddAnalytics(filterName,filterValue);
+		}
+		// TPR-645 End
+		// AJAX call
+		filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
+	}
+	/*refer to the AJAX for checkbox code--from line no.111--Ends*/
+});
+/*code added for TPR-1283--Ends*/

@@ -15,6 +15,7 @@ public class ReturnPincodeCheckForm
 	private String mobileNo;
 	private String addressLane1;
 	private String addressLane2;
+	private String addressLane3;
 	private String pincode;
 	private String landmark;
 	private String city;
@@ -235,6 +236,20 @@ public class ReturnPincodeCheckForm
 	public void setTransactionId(String transactionId)
 	{
 		this.transactionId = transactionId;
+	}
+	/**
+	 * @return the addressLane3
+	 */
+	public String getAddressLane3()
+	{
+		return addressLane3;
+	}
+	/**
+	 * @param addressLane3 the addressLane3 to set
+	 */
+	public void setAddressLane3(String addressLane3)
+	{
+		this.addressLane3 = addressLane3;
 	}
 
 

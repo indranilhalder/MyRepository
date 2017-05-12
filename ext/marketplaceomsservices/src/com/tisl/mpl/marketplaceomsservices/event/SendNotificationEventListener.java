@@ -44,6 +44,7 @@ import com.tisl.mpl.core.model.OrderUpdateSmsProcessModel;
 import com.tisl.mpl.data.SendSMSRequestData;
 import com.tisl.mpl.marketplaceomsservices.daos.EmailAndSmsNotification;
 import com.tisl.mpl.model.PaymentTypeModel;
+import com.tisl.mpl.shorturl.service.ShortUrlService;
 import com.tisl.mpl.sms.MplSendSMSService;
 import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 import com.tisl.mpl.wsdto.PushNotificationData;
@@ -69,6 +70,9 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 
 	@Resource(name = "emailAndSmsNotification")
 	private EmailAndSmsNotification emailAndSmsNotification;
+
+	@Resource(name = "googleShortUrlService")
+	private ShortUrlService googleShortUrlService;
 
 	/**
 	 * @return the configurationService
@@ -262,14 +266,18 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 				LOG.info("******************** Sending notification for OUT FOR DELIVERY");
 				sendNotificationOutForDelivery(consignmentModel, orderModel, orderNumber, mobileNumber, codAmount, appDwldUrl);
 			}
-
 			// Notifications: HOTC : Email & SMS
-			if (shipmentNewStatus.toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_STATUS_HOTC))
+			//Bug Id TISRLUAT-986 20-02-2017 Start
+			if (shipment.getInScan() != null)
 			{
-				LOG.info("******************** Sending notification for HOTC");
-				sendNotificationForHotc(orderModel, orderNumber, mobileNumber, trackingUrl, logisticPartner);
+				if (shipment.getInScan().booleanValue())
+				{
+					LOG.info("******************** Sending notification for HOTC");
+					sendNotificationForHotc(orderModel, orderNumber, mobileNumber, trackingUrl, logisticPartner,shipmentNewStatus);
+				}
 			}
-
+			//Bug Id TISRLUAT-986 20-02-2017 End
+			
 			// Notifications: DELIVERED : Email & SMS
 			if (shipmentNewStatus.toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_STATUS_DELIVERED))
 			{
@@ -280,8 +288,16 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 			// Notifications: UNDELIVERED : SMS
 			if (shipmentNewStatus.toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_STATUS_UNDELIVERED))
 			{
+				boolean flag = true;
+				if (MarketplacecommerceservicesConstants.ADDRESS_ISSUE.equalsIgnoreCase(shipment.getAwbSecondaryStatus()))
+				{
+					flag = false;
+				}
 				LOG.info("******************** Sending notification for UNDELIVERED");
-				sendNotificationForUndelivered(orderModel, orderNumber, mobileNumber, contactNumber, firstName);
+				if (flag)
+				{
+					sendNotificationForUndelivered(orderModel, orderNumber, mobileNumber, contactNumber, firstName);
+				}
 			}
 
 			// Notifications: ORDERCOLLETED : SMS
@@ -622,25 +638,36 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	 */
 
 	private void sendSMSHotc(final List<AbstractOrderEntryModel> childOrders, final String orderNumber, final String mobileNumber,
-			String trackingUrl, final String logisticPartner, final String awbNumber, final OrderModel orderModel)
+			String trackingUrl, final String logisticPartner, final String awbNumber, final OrderModel orderModel,ConsignmentStatus newStatus)
 	{
 		try
 		{
 			LOG.info("******Inside sendSMSHotc******");
+			trackingUrl = (getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT));
 			final SendSMSRequestData smsRequestDataHOTC = new SendSMSRequestData();
+
+			//call google short url service to generate short url for an order code
+			final String shortTrackingUrl = googleShortUrlService
+					.genearateShortURL(orderModel.getParentReference() == null ? orderModel.getCode() : orderModel
+							.getParentReference().getCode());
 
 			//print parent order number in the url
 			trackingUrl = orderModel.getParentReference() == null ? (getConfigurationService().getConfiguration().getString(
-					MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderModel.getCode()) : getConfigurationService()
-					.getConfiguration().getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-					+ orderModel.getParentReference().getCode();
+					MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)+"/"+orderModel.getCode()) : getConfigurationService()
+					.getConfiguration().getString(MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
+					+"/"+orderModel.getParentReference().getCode();
 
 			smsRequestDataHOTC.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
-			smsRequestDataHOTC.setContent(MarketplacecommerceservicesConstants.SMS_MESSAGE_HOTC
+			
+			final String smsContent = MarketplacecommerceservicesConstants.SMS_MESSAGE_HOTC
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, String.valueOf(childOrders.size()))
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderNumber)
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, logisticPartner)
-					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_THREE, trackingUrl));//Add Order tracking URL
+					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_THREE,
+							null == shortTrackingUrl ? trackingUrl : shortTrackingUrl);
+
+			smsRequestDataHOTC.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
+			smsRequestDataHOTC.setContent(smsContent);//Add Order tracking URL
 			smsRequestDataHOTC.setRecipientPhoneNumber(mobileNumber);
 			LOG.info("******Befor check SMS Sent******");
 			final List<OrderUpdateSmsProcessModel> orderUpdateSmsModelList = checkSmsSent(awbNumber, ConsignmentStatus.HOTC);
@@ -654,7 +681,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 				//totalEntries = entryList.size();
 			}
 			LOG.info("*******Before checking isToSendNotification for HOTC SMS********");
-			final boolean flag = isToSendNotification(awbNumber, orderModel, ConsignmentStatus.HOTC);
+			final boolean flag = isToSendNotification(awbNumber, orderModel,newStatus);
 			LOG.info("*******After checking isToSendNotification for HOTC SMS******** SMS sent ? " + flag);
 			if (numOfRows == 0 && flag)
 			{
@@ -670,7 +697,8 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, String.valueOf(childOrders.size()))
 						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderNumber)
 						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, logisticPartner)
-						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_THREE, trackingUrl));
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_THREE,
+								null == shortTrackingUrl ? trackingUrl : shortTrackingUrl));
 				orderUpdateSmsProcessModel.setRecipientPhoneNumber(mobileNumber);
 				final List<String> entryNumber = new ArrayList<String>();
 				for (final AbstractOrderEntryModel child : childOrders)
@@ -738,7 +766,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	 * @param childOrders
 	 * @param awbNumber
 	 */
-	private void sendEmailHotc(final OrderModel orderModel, final List<AbstractOrderEntryModel> childOrders, final String awbNumber)
+	private void sendEmailHotc(final OrderModel orderModel, final List<AbstractOrderEntryModel> childOrders, final String awbNumber,ConsignmentStatus newStatus)
 	{
 		final List<OrderUpdateProcessModel> orderUpdateModelList = checkEmailSent(awbNumber, ConsignmentStatus.HOTC);
 		int numOfRows = 0;
@@ -752,7 +780,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 
 
 		LOG.info("*******Before checking isToSendNotification for HOTC Email********");
-		final boolean flag = isToSendNotification(awbNumber, orderModel, ConsignmentStatus.HOTC);
+		final boolean flag = isToSendNotification(awbNumber, orderModel, newStatus);
 		LOG.info("*******After checking isToSendNotification for HOTC Email********");
 		LOG.info("No of Rows:::::sendEmailHotc" + numOfRows);
 		if (numOfRows == 0 && flag)
@@ -788,14 +816,15 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	 *
 	 */
 	private void sendNotificationForHotc(final OrderModel orderModel, final String orderNumber, final String mobileNumber,
-			final String trackingUrl, final String logisticPartner)
+			final String trackingUrl, final String logisticPartner,ConsignmentStatus newStatus)
 	{
-
-		LOG.debug(UPDATE_CONSIGNMENT + MarketplacecommerceservicesConstants.ORDER_STATUS_HOTC);
+		if(LOG.isDebugEnabled()){
+			LOG.debug(UPDATE_CONSIGNMENT + MarketplacecommerceservicesConstants.ORDER_STATUS_HOTC);
+		}
 		String awbNumber = "";
 		try
 		{
-			final Map<String, List<AbstractOrderEntryModel>> mapAWB = updateAWBNumber(orderModel, ConsignmentStatus.HOTC);
+			final Map<String, List<AbstractOrderEntryModel>> mapAWB = updateAWBNumber(orderModel,newStatus);
 			for (final Map.Entry<String, List<AbstractOrderEntryModel>> entry : mapAWB.entrySet())
 			{
 				awbNumber = entry.getKey();
@@ -803,11 +832,11 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 
 				//sending SMS
 				LOG.info("********* Sending SMS for HOTC ");
-				sendSMSHotc(childOrders, orderNumber, mobileNumber, trackingUrl, logisticPartner, awbNumber, orderModel);
+				sendSMSHotc(childOrders, orderNumber, mobileNumber, trackingUrl, logisticPartner, awbNumber, orderModel,newStatus);
 				LOG.info("******************* SMS sent");
 				//sending Email
 				LOG.info("********* Sending Email for HOTC ");
-				sendEmailHotc(orderModel, childOrders, awbNumber);
+				sendEmailHotc(orderModel, childOrders, awbNumber,newStatus);
 
 			}
 		}
@@ -1082,6 +1111,10 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 				//sending SMS
 				LOG.info("****************************Sending SMS for Order Delivered ");
 				sendSMSUnDelivered(childOrders, orderNumber, mobileNumber, contactNumber, firstName, orderModel, awbNumber);
+				
+				//sending Email R2.3 New EMAIL
+				LOG.info("****************************Sending Email for Order UnDelivered ");
+				sendEmailUnDelivered(orderModel, childOrders, awbNumber);
 			}
 		}
 		catch (final Exception e)
@@ -1090,6 +1123,52 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 		}
 
 	}
+	
+	
+	/**
+	 * Added R2.3 new  Email
+	 * @description Method for sending UnDelivered Email Notification
+	 * @param orderModel
+	 * @param childOrders
+	 * @param awbNumber
+	 */
+	private void sendEmailUnDelivered(final OrderModel orderModel, final List<AbstractOrderEntryModel> childOrders,
+			final String awbNumber)
+	{
+		// Checking of SMS Notification previously sent or not
+		final List<OrderUpdateProcessModel> orderUpdateModelList = checkEmailSent(awbNumber, ConsignmentStatus.UNDELIVERED);
+		int numOfRows = 0;
+		if (null != orderUpdateModelList && !orderUpdateModelList.isEmpty())
+		{
+			numOfRows = orderUpdateModelList.size();
+			
+		}
+		LOG.info("*******Before checking isToSendNotification for UNDELIVERED EMAIL********");
+		final boolean flag = isToSendNotification(awbNumber, orderModel, ConsignmentStatus.UNDELIVERED);
+		LOG.info("*******After checking isToSendNotification for UNDELIVERED EMAIL********");
+		LOG.info("No of Rows:::::sendEmailUnDelivered" + numOfRows);
+		if (numOfRows == 0 && flag)
+		{
+			final OrderUpdateProcessModel orderUpdateProcessModel = (OrderUpdateProcessModel) getBusinessProcessService()
+					.createProcess("orderUnDeliveredEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(),
+							"orderUnDeliveredEmailProcess");
+			orderUpdateProcessModel.setOrder(orderModel);
+			orderUpdateProcessModel.setAwbNumber(awbNumber);
+			orderUpdateProcessModel.setShipmentStatus(ConsignmentStatus.UNDELIVERED);
+
+			final List<String> entryNumber = new ArrayList<String>();
+			for (final AbstractOrderEntryModel child : childOrders)
+			{
+				entryNumber.add(child.getEntryNumber().toString());
+			}
+
+			orderUpdateProcessModel.setEntryNumber(entryNumber);
+			modelService.save(orderUpdateProcessModel);
+			businessProcessService.startProcess(orderUpdateProcessModel);
+		}
+
+	}
+
 
 	private Map<String, List<AbstractOrderEntryModel>> updateAWBNumber(final OrderModel orderModel,
 			final ConsignmentStatus shipmentStatus)

@@ -34,5 +34,7 @@
 		<property name="transactionId" type="String"/>
 		<property name="isReturnLogisticsAvailable" type="String"/>
 		<property name="pinCode" type="String"></property>
+		<property name="returnFulfillmentType" type="String"/>
+		<property name="returnFulfillmentByP1" type="String"/>
 	</bean>
 </beans>

@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "item", propOrder =
 { "uSSID", "sellerID", "price", "isCOD", "fulfilmentType", "transportMode", "isDeliveryDateRequired", "deliveryMode",
-		"deliveryDate", "store" })
+		"deliveryDate", "store", "deliveryFulfillMode", "deliveryFulfillModeByP1", "isFragile", "isPrecious" })
 public class PinCodeDeliveryModeRequest implements Serializable
 {
 	@XmlElement(name = "USSID")
@@ -27,8 +27,8 @@ public class PinCodeDeliveryModeRequest implements Serializable
 	private double price;
 	@XmlElement(name = "isCOD")
 	private String isCOD;
-	@XmlElement(name = "FulfilmentType")
-	private String fulfilmentType;
+	@XmlElement(name = "FulfilmentType")//private String fulfilmentType;
+	private List<String> fulfilmentType;
 	@XmlElement(name = "TransportMode")
 	private String transportMode;
 	@XmlElement(name = "isDeliveryDateRequired")
@@ -41,6 +41,19 @@ public class PinCodeDeliveryModeRequest implements Serializable
 
 	@XmlElement(name = "Store")
 	private List<String> store;
+
+
+	@XmlElement(name = "deliveryFulfillMode")
+	private String deliveryFulfillMode;
+
+	@XmlElement(name = "deliveryFulfillModeByP1")
+	private String deliveryFulfillModeByP1;
+
+	@XmlElement(name = "isFragile")
+	private String isFragile;
+
+	@XmlElement(name = "isPrecious")
+	private String isPrecious;
 
 	/**
 	 * @return the uSSID
@@ -113,7 +126,7 @@ public class PinCodeDeliveryModeRequest implements Serializable
 	/**
 	 * @return the fulfilmentType
 	 */
-	public String getFulfilmentType()
+	public List<String> getFulfilmentType()
 	{
 		return fulfilmentType;
 	}
@@ -122,7 +135,7 @@ public class PinCodeDeliveryModeRequest implements Serializable
 	 * @param fulfilmentType
 	 *           the fulfilmentType to set
 	 */
-	public void setFulfilmentType(final String _fulfilmentType)
+	public void setFulfilmentType(final List<String> _fulfilmentType)
 	{
 		fulfilmentType = _fulfilmentType;
 	}
@@ -213,6 +226,72 @@ public class PinCodeDeliveryModeRequest implements Serializable
 		this.store = store;
 	}
 
+	/**
+	 * @return the deliveryFulfillMode
+	 */
+	public String getDeliveryFulfillMode()
+	{
+		return deliveryFulfillMode;
+	}
 
+	/**
+	 * @param deliveryFulfillMode
+	 *           the deliveryFulfillMode to set
+	 */
+	public void setDeliveryFulfillMode(final String deliveryFulfillMode)
+	{
+		this.deliveryFulfillMode = deliveryFulfillMode;
+	}
+
+	/**
+	 * @return the deliveryFulfillModeByP1
+	 */
+	public String getDeliveryFulfillModeByP1()
+	{
+		return deliveryFulfillModeByP1;
+	}
+
+	/**
+	 * @param deliveryFulfillModeByP1
+	 *           the deliveryFulfillModeByP1 to set
+	 */
+	public void setDeliveryFulfillModeByP1(final String deliveryFulfillModeByP1)
+	{
+		this.deliveryFulfillModeByP1 = deliveryFulfillModeByP1;
+	}
+
+	/**
+	 * @return the isFragile
+	 */
+	public String getIsFragile()
+	{
+		return isFragile;
+	}
+
+	/**
+	 * @param isFragile
+	 *           the isFragile to set
+	 */
+	public void setIsFragile(final String isFragile)
+	{
+		this.isFragile = isFragile;
+	}
+
+	/**
+	 * @return the isPrecious
+	 */
+	public String getIsPrecious()
+	{
+		return isPrecious;
+	}
+
+	/**
+	 * @param isPrecious
+	 *           the isPrecious to set
+	 */
+	public void setIsPrecious(final String isPrecious)
+	{
+		this.isPrecious = isPrecious;
+	}
 
 }

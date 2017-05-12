@@ -10,6 +10,12 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav"%>
 
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+
+<!-- R2.3 for track order Start -->
+<%@ taglib prefix="trackOrder" tagdir="/WEB-INF/tags/responsive/common/header"%> 
+<!-- R2.3 for track order END -->
+
 <%-- <cms:pageSlot position="TopHeaderSlot" var="component" element="div"
 	class="container">
 	<cms:component component="${component}" />
@@ -36,7 +42,8 @@
 	<!-- TPR-844 -->
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
-<header>	
+
+<header class="marketplace-header">	
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" id="ia_site_id" name="ia_site_id" value="${cmsSite.uid}"> 
 	<input type="hidden" id="ia_site_page_id" name="ia_site_page_id" value="${cmsPage.uid}"> 
@@ -58,7 +65,24 @@
 	<input type="hidden" id="pageName" name="pageName" value="${cmsPage.name}">
 	<!-- Static resource host -->
 	<input type="hidden" id="staticHost" name="staticHost" value="//${staticHost}">
+	
 	<!-- End -->
+	<%--<!-- geolocation start-->
+	
+	<input type="hidden" id="latlng" value="">
+    <input type="hidden" id="location" value="">
+    
+    <!-- geolocation End--> --%>
+
+	
+	
+	
+    
+   
+	
+	
+	
+	
 	<div class="row header-row"></div>
 	<c:choose>
 		<c:when test="${empty showOnlySiteLogo }">
@@ -77,8 +101,6 @@
 			</c:if>
 		</c:otherwise>
 	</c:choose>
-
-
 	<div class="content">
 	<!-- Luxury tab	 starts-->
 	<c:if test="${!hideSecureTransaction}">
@@ -124,6 +146,7 @@
 					
 					</c:if>
 				</div>
+				<c:set var="userLoggedIn" value="${true}"  />
 				<div class="right">
 
 					<ul>
@@ -136,16 +159,29 @@
 								<cms:pageSlot position="MiniCart" var="component">
 									<cms:component component="${component}" />
 								</cms:pageSlot>
+								<!-- R2.3 for track order Start -->
+								 <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+						     	<c:set var="userLoggedIn" value="${false}"  />
+									<li class="track_order_header"><a href="#" onclick="openTrackOrder()">
+										<spring:theme code="trackorder.header.text" text="Track Order"/></a>
+										
+									</li>
+								</sec:authorize> 
+								<c:if test="${userLoggedIn eq 'true'}">
+						     <c:if test="${empty showOnlySiteLogo }">
+									<li class="track"><a href="<c:url value="/my-account/orders"/>"><spring:theme
+												code="header.trackorder" /></a></li>
+								</c:if> 
+					         </c:if>
+								<!-- R2.3 for track order END -->
 								<li class="store-locator-header"><a href="${request.contextPath}/store-finder">Our Stores</a></li>
 								<li class="download-app"><a href="${request.contextPath}/apps">Download App</a></li>
 							</c:if>
 						</c:if>
 						<!--Using this tag for Track Order Link in header navigation pane and it will navigate to 'My Order page'  -->
-
-						<%-- <c:if test="${empty showOnlySiteLogo }">
-									<li class="track"><a href="<c:url value="/my-account/orders"/>"><spring:theme
-												code="header.trackorder" /></a></li>
-								</c:if> --%>
+					<!-- R2.3 for track order Start -->
+					
+				  <!-- R2.3 for track order END -->
 
 					</ul>
 
@@ -176,6 +212,7 @@
 						<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
 							<cms:component component="${logo}"/>
 						</cms:pageSlot>
+						<button class="searchButtonGlobal"></button>
 						<div class="mobile-bag bag">
 						<!-- TISPRD-32-fix -->
 							<!-- <a href="/store/mpl/en/cart">(<span class="responsive-bag-count"></span>)</a> -->
@@ -285,9 +322,15 @@
 <img class="image" alt="" src="${param.blpLogo}">
 </div>
 </c:if>
+<!-- R2.3 for track order Start -->
+<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+		<trackOrder:trackOrder />
+	</sec:authorize> 
+	<!-- R2.3 for track order END -->
 	<a id="skiptonavigation"></a>
 	<nav:topNavigation />
 </header>
+
 
 <c:if test="${empty showOnlySiteLogo }">
 	<cms:pageSlot position="BottomHeaderSlot" var="component" element="div"

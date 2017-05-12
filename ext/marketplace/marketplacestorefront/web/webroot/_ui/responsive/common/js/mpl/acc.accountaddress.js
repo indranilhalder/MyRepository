@@ -101,7 +101,38 @@ $(document).ready(function(){
  });
  /*-----------End of Left Nav script -----------------*/
  
+ maxL=120;
+ var bName = navigator.appName;
+/* function taLimit(taObj) {
+ 	if (taObj.value.length==maxL) return false;
+ 	return true;
+ }*/
+
+ function taCountAcc(taObj,Cnt) { 
+	 document.getElementById("erraddressline1").innerHTML = "";
+	 
+ 	objCnt=createObject(Cnt);
+ 	objVal=taObj.value;
+ 	if (objVal.length>maxL) objVal=objVal.substring(0,maxL);
+ 	if (objCnt) {
+ 		if(bName == "Netscape"){	
+ 			objCnt.textContent=maxL-objVal.length;}
+ 		else{objCnt.innerText=maxL-objVal.length;}
+ 	}
+ 
+ 	return true;
+ }
+ function createObject(objId) {
+ 	if (document.getElementById) return document.getElementById(objId);
+ 	else if (document.layers) return eval("document." + objId);
+ 	else if (document.all) return eval("document.all." + objId);
+ 	else return eval("document." + objId);
+ }
+ /**************End of character count********/
+ 
 function editAddress(addressId) {
+	
+	
        var requiredUrl = ACC.config.encodedContextPath+"/my-account/populateAddressDetail";
        var dataString = "&addressId="+addressId;
  
@@ -113,13 +144,30 @@ function editAddress(addressId) {
     	   cache: false,
     	   contentType : "application/json; charset=utf-8",
     	   success : function(data) {
-   				$('#addressId').val(addressId);
+    		   //TPR-4795 changes
+    		  		var fullAddress=data.line1;
+    		   			if (data.line2) {
+    		   				console.log("Inside line2 checking***");
+ 		     			   fullAddress = fullAddress + data.line2;
+    		   			}
+    		   			if (data.line3) {
+    		   				console.log("Inside line3 checking***");
+ 		     			   fullAddress = fullAddress + data.line3;
+    		   			}
+    		   			var len = fullAddress.length;
+        		   			
+       	 	   $('#addressId').val(addressId);
    				$('#firstName').val(data.firstName);
    				$('#lastName').val(data.lastName);
-   				$('#line1').val(data.line1);
-   				$('#line2').val(data.line2);
-   				$('#line3').val(data.line3);
+   				$('#line1').val(fullAddress);
+   				$('#line2').val("");
+   				$('#line3').val("");
    				$('#postcode').val(data.postcode);
+   				$('.address_landmarks').val(data.landmark);
+   				$('.address_landmarkOther').val(data.landmark);
+   				loadPincodeData("edit").done(function() {
+   					otherLandMarkTri(data.landmark,"defult");
+   				});
    				$('#townCity').val(data.townCity);
    				$('#mobileNo').val(data.mobileNo);
    				$('#stateListBox').val(data.state);
@@ -137,12 +185,17 @@ function editAddress(addressId) {
    				
    				$("#addNewAddress").css("display","none");
    				$("#edit").css("display","block");
+   				
+   				
+   				myLen=document.getElementById("line1").value.length;
+   				$("#myCounter").html((120 - myLen));
     	   },
     	   error : function(data) {
     		   	console.log(data.responseText) 
     	   }
        });
-    } 
+       
+       } 
     
     $(document).ready(function(){    	
     	$("#addNewAddress").css("display","block");
@@ -1028,7 +1081,10 @@ function editAddress(addressId) {
         var selectedValueState = document.getElementById('stateListBox').selectedIndex;
 //        var regexCharSpace = /^[a-zA-Z ]*$/;
         var regexCharSpace = /^[a-zA-Z]+$/;
-       var regexCharWithSpace = /^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/;
+       /*3bu1 added code, TISRLEE-1648*/
+        var regexCharWithSpace = /^([a-zA-Z]+\s)*[a-zA-Z]+$/;
+        /* TISRLEE-1648*/
+//        var regexCharSpace = /^[a-zA-Z]+(\s[a-zA-Z]+)?$/;
         var regexSpace = /\s/;
         var equalNoCheck = /^\D*(\d)(?:\D*|\1)*$/;
         var flagFn = true; 
@@ -1071,7 +1127,7 @@ function editAddress(addressId) {
         }
         if (addressForm.line1.value == null || addressForm.line1.value == "") {
         	$("#errddressline1").css({"display":"block"});
-        	document.getElementById("erraddressline1").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 1</font>";
+        	document.getElementById("erraddressline1").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line</font>";
         	flagAd1 = false;
         }
        /* if (addressForm.line2.value == null || addressForm.line2.value == "") {
@@ -1108,11 +1164,13 @@ function editAddress(addressId) {
         	document.getElementById("erraddressCity").innerHTML = "<font color='#ff1c47' size='2'>Please enter city</font>";
         	flagCity = false;
         }
+        /*added code, TISRLEE-1648*/
         else if (!regexCharWithSpace.test(document.getElementById("townCity").value)) { 
         	$("#errddressCity").css({"display":"block"});
         	document.getElementById("erraddressCity").innerHTML = "<font color='#ff1c47' size='2'>City should contain alphabets only</font>";
         	flagCity = false;
         }
+        /*added code, TISRLEE-1648*/
         if (selectedValueState == 0) {
         	$("#errddressState").css({"display":"block"});
         	document.getElementById("erraddressState").innerHTML = "<font color='#ff1c47' size='2'>Please select state</font>";

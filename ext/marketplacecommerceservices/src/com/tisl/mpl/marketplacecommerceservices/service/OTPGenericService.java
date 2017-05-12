@@ -108,8 +108,8 @@ public interface OTPGenericService
 	 * @return boolean
 	 *
 	 */
-	//public OTPResponseData validateOTP(String customerPKorEmail, String mobileNo, String enteredOTPNumber, OTPTypeEnum OTPType,
-	//		long expiryTime);
+	public OTPResponseData validateOTP(String customerPKorEmail, String mobileNo, String enteredOTPNumber, OTPTypeEnum OTPType,
+		long expiryTime);
 
 	/**
 	 * This method returns the latest OTP against a customer

@@ -29,7 +29,9 @@
 							
 							
 
-						<ul class="product-listing product-grid">
+						<!-- INC144315462 and INC144315104 and TISSQAUAT-4105 -->
+
+						<ul class="product-listing product-grid custom-sku">
 							<c:forEach items="${searchPageData.results}" var="product"
 								varStatus="status">
 								<product:productListerGridItem product="${product}" />
@@ -37,7 +39,7 @@
 						</ul>
 					</div>
 					
-					<div class="bottom-pagination">
+					<div class="bottom-pagination" style="display:none;">
 						<nav:pagination top="false"
 							supportShowPaged="${isShowPageAllowed}"
 							supportShowAll="${isShowAllAllowed}"
@@ -45,6 +47,11 @@
 							searchUrl="${searchPageData.currentQuery.url}"
 							numberPagesShown="${numberPagesShown}" />
 					</div>
+
+					<!-- INC144315462 and INC144315104 and TISSQAUAT-4105 -->
+
+					<input type="hidden" name="customSkuUrl" value="/CustomSkuCollection/${component.labelOrId}/page-1?q="/>
 					<input type="hidden" name="customSku" value="true"/>
-					<input type="hidden" name="customSkuCollectionId" value="${component.labelOrId}"/>
+					<input type="hidden" name="customSkuCollectionId" value="${component.labelOrId}"/>					
 				</div>
+				

@@ -23,6 +23,7 @@
 			<listheader width="200px" label="Actual HOTC TAT"></listheader>
 			<listheader width="200px" label="Configured SHIPMENT TAT"></listheader>
 			<listheader width="200px" label="Actual SHIPMENT TAT"></listheader>
+		    <listheader width="200px" label="PromisedTime"></listheader>
 		</listhead>
 	</listbox>
 

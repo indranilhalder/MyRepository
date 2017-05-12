@@ -107,5 +107,5 @@ public final class MarketplaceCoreConstants extends GeneratedMarketplaceCoreCons
 
 	//Added for adhoc.impex
 	public static final String releaseImpex = "marketplacecore.projectdata.release";
-
+	public static final String ALL = "all";
 }

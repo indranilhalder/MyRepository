@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.daos;
 
 import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.cms2.model.pages.ContentPageModel;
 
 import java.util.List;
 
@@ -28,5 +29,11 @@ public interface MplSellerInformationDAO
 			final String sellerName);
 
 	public SellerSalesCategoryModel getActiveSellerRootCategoryBySellerId(final String sellerId);
+
 	public String getparentFulfillmenttype(String transactionId);
+
+	//TPR-4471
+	public SellerInformationModel getSellerInformationBySellerID(CatalogVersionModel catalogVersion, String sellerID);
+
+	public ContentPageModel getContentPageBySellerID(String sellerID);
 }

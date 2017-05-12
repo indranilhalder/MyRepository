@@ -48,7 +48,7 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotionAction#apply(de.hybris.platform.jalo.SessionContext)
 	 */
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -231,7 +231,9 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 
 	private void setPrices(final AbstractOrderEntry entry, final double amtTobeDeductedAtlineItemLevel, final SessionContext ctx)
 	{
-		final double lineItemLevelPrice = entry.getTotalPriceAsPrimitive();
+		//Modified for INC144315231
+		//final double lineItemLevelPrice = entry.getTotalPriceAsPrimitive();
+		final double lineItemLevelPrice = entry.getBasePriceAsPrimitive() * entry.getQuantityAsPrimitive();
 		final double aportionedItemValue = lineItemLevelPrice - amtTobeDeductedAtlineItemLevel;
 		final double cartLevelDiscount = 0.00D;
 		final double netAmountAfterAllDisc = aportionedItemValue - cartLevelDiscount;

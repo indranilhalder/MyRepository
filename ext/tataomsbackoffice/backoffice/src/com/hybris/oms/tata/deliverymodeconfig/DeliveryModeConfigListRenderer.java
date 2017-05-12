@@ -10,8 +10,8 @@ import com.hybris.oms.domain.deliverymode.dto.DeliveryModeConfig;
 
 /**
  * @author Saood
- * 
- * 
+ *
+ *
  */
 public class DeliveryModeConfigListRenderer implements ListitemRenderer
 {
@@ -32,10 +32,23 @@ public class DeliveryModeConfigListRenderer implements ListitemRenderer
 		addListcell(listitem, deliveryModeConfig.getCutofftime());
 		addListcell(listitem, customDateFormat(deliveryModeConfig.getDfmtat()));
 		addListcell(listitem, customDateFormat(deliveryModeConfig.getSellerresponsetat()));
+		addListcell(listitem, customDateFormat(deliveryModeConfig.getOrderprocessingtat()));
+		addListcell(listitem, deliveryModeConfig.getLphandovertime());
 		addListcell(listitem, customDateFormat(deliveryModeConfig.getHotctat()));
 		addListcell(listitem, customDateFormat(deliveryModeConfig.getShiptat()));
-
-
+		//R2.3 cr code
+		addListcell(listitem, "" + deliveryModeConfig.getOrderAcceptanceTATEDAir());
+		addListcell(listitem, "" + deliveryModeConfig.getOrderAcceptanceTATHDAir());
+		addListcell(listitem, "" + deliveryModeConfig.getOrderAcceptanceTATEDSur());
+		addListcell(listitem, "" + deliveryModeConfig.getOrderAcceptanceTATHDSur());
+		addListcell(listitem, "" + deliveryModeConfig.getOrderProcessingTATEDAir());
+		addListcell(listitem, "" + deliveryModeConfig.getOrderProcessingTATHDAir());
+		addListcell(listitem, "" + deliveryModeConfig.getOrderProcessingTATEDSurface());
+		addListcell(listitem, "" + deliveryModeConfig.getOrderProcessingTATHDSurface());
+		addListcell(listitem, deliveryModeConfig.getLphandoverTimeEDAir());
+		addListcell(listitem, deliveryModeConfig.getLphandovertimeHDAir());
+		addListcell(listitem, deliveryModeConfig.getLphandoverTimeEDSurface());
+		addListcell(listitem, deliveryModeConfig.getLphandoverTimeHDSurface());
 	}
 
 	private void addListcell(final Listitem listitem, final String value)

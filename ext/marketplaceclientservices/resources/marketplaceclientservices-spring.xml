@@ -120,6 +120,7 @@
 	<bean id="mplSNSMobilePushDao" class="com.tisl.mpl.sns.push.dao.impl.MplSNSMobilePushDaoImpl" />
 	<!-- SNS Mobile Push Notification -->
 	<!-- payment info reversal -->
+
 	<bean id="paymentInfoRevWebService" class="com.tisl.mpl.service.PaymentInfoRevWebServiceImpl" />
 	<bean id="paymentInfoCancelService" class="com.tisl.mpl.service.PaymentInfoCancelReversalImpl" />
 
@@ -147,6 +148,30 @@
 		<property name="proxyAddress"
 			value="#{configurationService.configuration.getProperty('proxy.address')}" />
 	</bean>
+
+
+	<bean id="paymentInfoRevWebService"
+			class="com.tisl.mpl.service.PaymentInfoRevWebServiceImpl"/>
+	<bean id="paymentInfoCancelService"
+			class="com.tisl.mpl.service.PaymentInfoCancelReversalImpl"/>		
+				
+		<bean id="ordercreation"
+			class="com.tisl.mpl.service.MplSendOrderFromCommerceToCRMImpl"/>
+			 
+		<bean id="cancellableService"
+			class="com.tisl.mpl.service.CancellableServiceImpl"/>		
+		<bean id="returnLogistics"
+			class="com.tisl.mpl.service.ReturnLogisticsServiceImpl"/>
+		<bean id="mplClickToCallService" class="com.tisl.mpl.service.MplClickToCallWebServiceImpl" />		
+		<bean id="gigyaCommentService" class="com.tisl.mpl.service.MplGigyaReviewCommentServiceImpl"/>
+		<bean id="mplGigyaReviewCommentDao" class="com.tisl.mpl.review.daos.impl.MplGigyaReviewCommentDaoImpl"/>
+		
+		<bean id="googleShortUrlService"
+		class="com.tisl.mpl.shorturl.service.ShortUrlServiceGoogleImpl"/>
+		
+		<bean id="shortUrlReportDaoImpl"
+		class="com.tisl.mpl.shorturl.report.dao.OrderShortUrlDaoImpl"/>
+		
 
 </beans>
 

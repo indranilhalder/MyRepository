@@ -76,6 +76,7 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
+import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -162,6 +163,10 @@ public class CheckoutController extends AbstractCheckoutController
 
 	@Autowired
 	private MplOrderFacade mplOrderFacade;//TISPT-175
+
+	@Resource(name = "mplPaymentFacade")
+	//TISSQAEE-242
+	private MplPaymentFacade mplPaymentFacade;
 
 	/**
 	 * @return the modelService
@@ -287,7 +292,19 @@ public class CheckoutController extends AbstractCheckoutController
 		OrderData orderDetails = null;
 		try
 		{
-			orderModel = mplOrderFacade.getOrder(orderCode); //TISPT-175 --- order model changes : reduce same call from two places
+
+			if (getCheckoutCustomerStrategy().isAnonymousCheckout())
+			{
+				LOG.debug("Inside Anonymous Checkout::" + orderCode);
+				orderModel = getMplPaymentFacade().getOrderByGuid(orderCode);//TISSQAEE-242
+			}
+			else
+			{
+				LOG.debug("Inside Normal Checkout::" + orderCode);
+				orderModel = mplOrderFacade.getOrder(orderCode); //TISPT-175 --- order model changes : reduce same call from two places
+			}
+
+
 			orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderModel); //TISPT-175 --- order details : reduce same call from two places
 			//wishlistFacade.removeProductFromWL(orderCode);
 			wishlistFacade.remProdFromWLForConf(orderDetails, orderModel.getUser()); //TISPT-175 --- removing products from wishlist : passing order data as it was fetching order data based on code again inside the method
@@ -532,6 +549,23 @@ public class CheckoutController extends AbstractCheckoutController
 						}
 					}
 				}
+				//bug TISRLUAT-954 Start
+			/*	Map<String ,String> selectedDateMap=getSessionService().getAttribute(MarketplacecheckoutaddonConstants.DELIVERY_SLOTS_TO_SESSION);
+				for(OrderData data:orderDetails.getSellerOrderList()){
+				      for( DeliveryOrderEntryGroupData orderEntry:data.getDeliveryOrderGroups()){
+				      	 for(OrderEntryData orderEntryData:orderEntry.getEntries()){
+				      		 if(null!=selectedDateMap){
+				      			 for (Entry<String, String> entryForDate :selectedDateMap.entrySet()) {
+				      				 if(entryForDate.getKey().equalsIgnoreCase(orderEntryData.getSelectedUssid())){
+				      					 orderEntryData.setEddDateBetWeen(entryForDate.getValue());
+				      				 }
+				      			 }
+				      		 }
+				      	 }	
+				      }
+				}
+				*/
+				//bug TISRLUAT-954 End 
 				//saving IP of the Customer
 				try
 				{
@@ -715,6 +749,23 @@ public class CheckoutController extends AbstractCheckoutController
 	public void setMplCustomAddressFacade(final MplCustomAddressFacade mplCustomAddressFacade)
 	{
 		this.mplCustomAddressFacade = mplCustomAddressFacade;
+	}
+
+	/**
+	 * @return the mplPaymentFacade
+	 */
+	public MplPaymentFacade getMplPaymentFacade()
+	{
+		return mplPaymentFacade;
+	}
+
+	/**
+	 * @param mplPaymentFacade
+	 *           the mplPaymentFacade to set
+	 */
+	public void setMplPaymentFacade(final MplPaymentFacade mplPaymentFacade)
+	{
+		this.mplPaymentFacade = mplPaymentFacade;
 	}
 
 	/**

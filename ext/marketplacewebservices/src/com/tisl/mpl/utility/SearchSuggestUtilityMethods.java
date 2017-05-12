@@ -6,7 +6,6 @@ package com.tisl.mpl.utility;
 import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
-import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
@@ -78,8 +77,7 @@ public class SearchSuggestUtilityMethods
 	private MplProductWebService mplProductWebService;
 	//	@Resource(name = "productService")
 	//	private ProductService productService;
-	@Resource(name = "productFacade")
-	private ProductFacade productFacade;
+
 	//@Resource(name = "productService")
 	//private ProductService productService;
 
@@ -651,7 +649,10 @@ public class SearchSuggestUtilityMethods
 		final List<SellingItemDetailWsDto> searchProductDTOList = new ArrayList<>();
 		final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 		List<GalleryImageData> galleryImages = null;
+
+
 		//ProductData productDataImage = null;
+
 		for (final ProductData productData : searchPageData.getResults())
 		{
 
@@ -666,12 +667,29 @@ public class SearchSuggestUtilityMethods
 				}
 
 				//Revert of TPR-796
+
+
 				/*
 				 * try { productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
 				 * Arrays.asList(ProductOption.GALLERY)); galleryImages =
 				 * productDetailsHelper.getGalleryImagesMobile(productDataImage); } catch (final Exception e) {
 				 * LOG.error("SERPSEARCH Product Image Error:" + productData.getCode()); continue; }
 				 */
+
+				//TPR-796
+				/*try
+				{
+					galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("SERPSEARCH ProductError:" + productData.getCode());
+					ExceptionUtil.getCustomizedExceptionTrace(e);
+					continue;
+				}*/
+
+				
+
 
 
 				//TPR-796
@@ -685,6 +703,7 @@ public class SearchSuggestUtilityMethods
 					ExceptionUtil.getCustomizedExceptionTrace(e);
 					continue;
 				}
+
 
 
 				if (CollectionUtils.isNotEmpty(galleryImages))
@@ -741,12 +760,10 @@ public class SearchSuggestUtilityMethods
 					sellingItemDetail.setLeastSizeProduct(productData.getLeastSizeProduct());
 				}
 
-				final ImageData imgData = getPrimaryImageForProductAndFormat(productData, "searchPage");
-				final ImageData imgDataLuxury = getPrimaryImageForProductAndFormat(productData, "luxurySearchPage");
-
 				if (productData.getLuxIndicator() != null
 						&& productData.getLuxIndicator().equalsIgnoreCase(LuxIndicatorEnum.LUXURY.getCode()))
 				{
+					final ImageData imgDataLuxury = getPrimaryImageForProductAndFormat(productData, "luxurySearchPage");
 					if (imgDataLuxury != null && imgDataLuxury.getUrl() != null)
 					{
 						sellingItemDetail.setImageURL(imgDataLuxury.getUrl());
@@ -754,6 +771,7 @@ public class SearchSuggestUtilityMethods
 				}
 				else
 				{
+					final ImageData imgData = getPrimaryImageForProductAndFormat(productData, "searchPage");
 					if (imgData != null && imgData.getUrl() != null)
 					{
 						sellingItemDetail.setImageURL(imgData.getUrl());

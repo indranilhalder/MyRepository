@@ -99,5 +99,7 @@ public interface MplOrderService
 	 * @throws Exception
 	 */
 	boolean checkIfBuyABGetCApplied(final AbstractOrderEntryModel orderEntryModel) throws Exception;
+	
+	public AbstractOrderEntryModel getEntryModel(String transactionId);
 
 }

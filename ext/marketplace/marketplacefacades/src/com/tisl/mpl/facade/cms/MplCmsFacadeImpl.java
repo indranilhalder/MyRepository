@@ -23,7 +23,6 @@ import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSContentSlotS
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.cms2lib.model.components.ProductCarouselComponentModel;
 import de.hybris.platform.cms2lib.model.components.RotatingImagesComponentModel;
-import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercesearch.model.SolrHeroProductDefinitionModel;
 import de.hybris.platform.commercesearch.searchandizing.heroproduct.HeroProductDefinitionService;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
@@ -196,8 +195,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	private Map<String, String> brandLandingPageSlotMapping;
 
 	private static final Logger LOG = Logger.getLogger(MplCmsFacadeImpl.class);
-	@Resource(name = "productFacade")
-	private ProductFacade productFacade;
+
 
 	@Resource(name = "buyBoxFacade")
 	private BuyBoxFacade buyBoxFacade;
@@ -3233,8 +3231,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	{
 		final FooterComponentData fData = new FooterComponentData();
 		FooterComponentModel footer = null;
-		final FooterComponentData footerData = null;
-		final ContentSlotModel footerSlot = contentSlotService.getContentSlotForId(slotId);
+     	final ContentSlotModel footerSlot = contentSlotService.getContentSlotForId(slotId);
 		final NeedHelpComponentModel needHelpFooter = null;
 
 		if (null != footerSlot && CollectionUtils.isNotEmpty(footerSlot.getCmsComponents()))

@@ -338,6 +338,7 @@ function registerUserGigya(eventObject)
     		            ,cid:''
     		            ,enabledProviders : 'facebook,google'
     		            });
+
     		}
  
     

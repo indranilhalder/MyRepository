@@ -22,9 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.utilities.CodeMasterUtility;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceCancellationController;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
+import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplMWalletRefundService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.ordercancel.MplOrderCancelRequest;
 import com.tisl.mpl.service.MplOrderCancelClientService;
@@ -84,6 +87,10 @@ public class MarketPlaceDefaultCancellationController extends
 
 	@Autowired
 	private TypeService typeService;
+	
+
+	@Autowired
+	private MplMWalletRefundService mplMWalletRefundService;
 
 	private static final String OMS_BYPASS_KEY = "cscockpit.oms.serviceability.check.bypass";
 
@@ -142,6 +149,10 @@ public class MarketPlaceDefaultCancellationController extends
 					// Returning delivery cost in case of cancellation.
 					double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry
 							.getCurrDelCharge() : NumberUtils.DOUBLE_ZERO;
+						//  Added in R2.3 Returning Schedule Delivery delivery cost in case of cancellation 	START
+							deliveryCost+=	orderEntry.getScheduledDeliveryCharge() != null ? orderEntry
+									.getScheduledDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
+						//  Added in R2.3 Returning Schedule Delivery delivery cost in case of cancellation 	END
 					double totalprice = orderEntry.getNetAmountAfterAllDisc();
 					long cancelledQuantitiy = orderCancelEntry
 							.getCancelQuantity();
@@ -175,7 +186,12 @@ public class MarketPlaceDefaultCancellationController extends
 			if (orderCancelRecord.getRefundableAmount() != null
 					&& orderCancelRecord.getRefundableAmount() > NumberUtils.DOUBLE_ZERO) {
 
-				final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
+//				Mrupee implementation 
+				final OrderModel order=orderCancelRecord.getOriginalVersion().getOrder();
+				
+				if((null !=order.getIsWallet() &&  WalletEnum.NONWALLET.toString().equalsIgnoreCase(order.getIsWallet().getCode()))||null ==order.getIsWallet()){
+				
+					final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
 				
 				try {
 					paymentTransactionModel = mplJusPayRefundService.doRefund(
@@ -197,6 +213,12 @@ public class MarketPlaceDefaultCancellationController extends
 										.getCurrDelCharge() != null ? orderEntry
 										.getCurrDelCharge()
 										: NumberUtils.DOUBLE_ZERO;
+										// Added in R2.3 START  
+								double	scheduleDeliveryCost=orderEntry
+												.getScheduledDeliveryCharge() != null ? orderEntry
+														.getScheduledDeliveryCharge()
+														: NumberUtils.DOUBLE_ZERO;
+										// Added in R2.3 END 
 								ConsignmentStatus newStatus = null;
 								// If CosignmentEnteries are present then update
 								// OMS with the state.
@@ -235,7 +257,7 @@ public class MarketPlaceDefaultCancellationController extends
 												.setRefundType(JuspayRefundType.CANCELLED);
 										refundTransactionMappingModel
 												.setRefundAmount(orderEntry.getNetAmountAfterAllDisc()
-														+deliveryCost);//TISPRO-216 : Refund amount Set in RTM
+														+deliveryCost+scheduleDeliveryCost);//TISPRO-216 : Refund amount Set in RTM
 										getModelService().save(
 												refundTransactionMappingModel);
 									} else {
@@ -255,6 +277,8 @@ public class MarketPlaceDefaultCancellationController extends
 								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
 								orderEntry.setCurrDelCharge(0D);
 								
+								orderEntry.setRefundedScheduleDeliveryChargeAmt(scheduleDeliveryCost);
+								orderEntry.setScheduledDeliveryCharge(0D);
 								//Start TISPRD-871
 								if(newStatus.equals(ConsignmentStatus.ORDER_CANCELLED)){
 									orderEntry.setJuspayRequestId(uniqueRequestId);
@@ -264,7 +288,7 @@ public class MarketPlaceDefaultCancellationController extends
 								getModelService().save(orderEntry);
 								mplJusPayRefundService.makeRefundOMSCall(
 										orderEntry, paymentTransactionModel,
-										totalprice + deliveryCost, newStatus);
+										totalprice + deliveryCost+scheduleDeliveryCost, newStatus,null);
 
 							}
 						}
@@ -283,8 +307,83 @@ public class MarketPlaceDefaultCancellationController extends
 					
 					mplJusPayRefundService.createCancelRefundExceptionEntry(orderCancelRecord, PaymentTransactionType.CANCEL,
 							JuspayRefundType.CANCELLED, uniqueRequestId);
-					
+				}
+			}
+				else if(null !=order.getIsWallet() &&  WalletEnum.MRUPEE.toString().equalsIgnoreCase(order.getIsWallet().getCode())){
+					final String uniqueRequestId = mplMWalletRefundService.getRefundUniqueRequestId();
+					try {
+						paymentTransactionModel = mplMWalletRefundService.doRefund(
+								orderCancelRecord.getOriginalVersion().getOrder(),
+								orderCancelRecord.getRefundableAmount(),
+								PaymentTransactionType.CANCEL,uniqueRequestId);
+						if (null != paymentTransactionModel) {
+							mplJusPayRefundService.attachPaymentTransactionModel(
+									orderCancelRecord.getOriginalVersion()
+											.getOrder(), paymentTransactionModel);
+							if (CollectionUtils.isNotEmpty(orderCancelRecord
+									.getOrderEntriesModificationEntries())) {
 
+								for (OrderEntryModificationRecordEntryModel modificationEntry : orderCancelRecord
+										.getOrderEntriesModificationEntries()) {
+									OrderEntryModel orderEntry = modificationEntry
+											.getOrderEntry();
+									double deliveryCost = orderEntry
+											.getCurrDelCharge() != null ? orderEntry
+											.getCurrDelCharge()
+											: NumberUtils.DOUBLE_ZERO;
+											
+									ConsignmentStatus newStatus = null;
+									// Added in R2.3 START  
+									double	scheduleDeliveryCost=orderEntry
+													.getScheduledDeliveryCharge() != null ? orderEntry
+															.getScheduledDeliveryCharge()
+															: NumberUtils.DOUBLE_ZERO;
+											// Added in R2.3 END 
+									
+									// If CosignmentEnteries are present then update
+									// OMS with the state.
+									if (orderEntry != null) {
+										if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
+												MarketplacecommerceservicesConstants.SUCCESS))
+										{
+											newStatus = ConsignmentStatus.ORDER_CANCELLED;
+										}
+										else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
+												MarketplacecommerceservicesConstants.FAILURE))
+										{
+											newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
+										}
+										else
+										{
+											newStatus = ConsignmentStatus.REFUND_INITIATED;
+										}
+									}
+
+
+									double totalprice = orderEntry.getNetAmountAfterAllDisc();
+									orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
+									orderEntry.setCurrDelCharge(0D);
+									
+									orderEntry.setRefundedScheduleDeliveryChargeAmt(scheduleDeliveryCost);
+									orderEntry.setScheduledDeliveryCharge(0D);
+									getModelService().save(orderEntry);
+//									mplJusPayRefundService.makeRefundOMSCall(
+//											orderEntry, paymentTransactionModel,
+//											totalprice + deliveryCost, newStatus);
+									//R2.3 Techout changes
+									mplJusPayRefundService.makeRefundOMSCall(
+											orderEntry, paymentTransactionModel,
+											totalprice + deliveryCost+scheduleDeliveryCost, newStatus,null);
+								}
+							}
+						} else {
+							LOG.error("Refund Failed");
+							mplMWalletRefundService.createCancelRefundPgErrorEntry(orderCancelRecord, PaymentTransactionType.CANCEL, uniqueRequestId);
+						}
+					} catch (Exception e) {
+						LOG.error(e.getMessage(), e);
+						mplMWalletRefundService.createCancelRefundExceptionEntry(orderCancelRecord, PaymentTransactionType.CANCEL, uniqueRequestId);
+					}
 				}
 
 			} else {// Case of COD.
@@ -294,7 +393,7 @@ public class MarketPlaceDefaultCancellationController extends
 					OrderEntryModel orderEntry = modificationEntry
 							.getOrderEntry();
 					refundedAmount += orderEntry.getNetAmountAfterAllDisc()
-							+ orderEntry.getCurrDelCharge()+orderEntry.getConvenienceChargeApportion();
+							+ orderEntry.getCurrDelCharge()+orderEntry.getScheduledDeliveryCharge()+orderEntry.getConvenienceChargeApportion();
 					// If CosignmentEnteries are present then update OMS with
 					// the state.
 					if (orderEntry != null
