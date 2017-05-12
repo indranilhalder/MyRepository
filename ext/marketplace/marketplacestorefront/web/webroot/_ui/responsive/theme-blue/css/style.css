@@ -61294,6 +61294,15 @@ body.page-productGrid .facet-list.filter-opt {
 	}
 }
 
+/* start change of INC144316176 */
+@media (max-width: 424px) and (min-width: 408px){
+	.list_title_sort select{
+		left: -76px;
+		margin-top: 14px;
+	}
+}
+/* end change of INC144316176 */
+
 .listing.wrapper .right-block .listing-menu>div.list_title{
 float:right;
 margin-right: 15px;}  
