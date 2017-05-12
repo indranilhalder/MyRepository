@@ -15,6 +15,7 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.SelectEvent;
+import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Hbox;
@@ -449,6 +450,7 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 					.getWidgetController()).getBasketController().getCart()
 					.getObject());
 			long time=0l;
+			boolean authPaaymentsttatus = false;
 			String userId = ((CustomerModel)cart.getUser()).getOriginalUid();
 			try{
 			time=Long.parseLong(configurationService.getConfiguration().getString("OTP_Valid_Time_milliSeconds"));
@@ -458,7 +460,14 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 			}	
 				if(widget.getWidgetController().needPaymentOption()){
 					try {
-						((MarketplaceCheckoutController)widget.getWidgetController()).processPayment(cart);
+						authPaaymentsttatus = ((MarketplaceCheckoutController)widget.getWidgetController()).processPayment(cart);
+						if(!authPaaymentsttatus)
+						{
+							Messagebox.show(
+									LabelUtils.getLabel(widget, "noSellerCOD", new Object[0]),
+									INFO, Messagebox.OK, Messagebox.ERROR);
+							return;
+						}
 					} catch (PaymentException e) {
 						Messagebox
 						.show(LabelUtils.getLabel(widget, e.getLocalizedMessage(),

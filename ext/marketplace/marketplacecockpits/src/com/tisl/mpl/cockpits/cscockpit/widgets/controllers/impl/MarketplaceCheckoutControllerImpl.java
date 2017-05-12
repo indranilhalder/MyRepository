@@ -10,9 +10,11 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.net.ssl.HttpsURLConnection;
@@ -37,7 +39,9 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketCont
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
@@ -48,6 +52,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.service.PinCodeDeliveryModeService;
 
 import de.hybris.platform.catalog.impl.DefaultCatalogVersionService;
@@ -65,7 +70,9 @@ import de.hybris.platform.core.model.order.CartEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.security.PrincipalGroupModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.cscockpit.exceptions.PaymentException;
 import de.hybris.platform.cscockpit.exceptions.ResourceMessage;
 import de.hybris.platform.cscockpit.exceptions.ValidationException;
@@ -79,6 +86,7 @@ import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.WeakArrayList;
 
 public class MarketplaceCheckoutControllerImpl extends
@@ -178,6 +186,9 @@ public class MarketplaceCheckoutControllerImpl extends
 	
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;	
+	
+	@Autowired
+	private UserService userService;
 	
 	/**
 	 * Gets the product value.
@@ -659,11 +670,66 @@ public class MarketplaceCheckoutControllerImpl extends
 		}
 		return isCODLimitAvailable;
 	}
+	
+	private String getAgentIdForStore(final String groupName)
+	{
+		final String agentId = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
+		final UserModel user = userService.getUserForUID(agentId);
+		final Set<PrincipalGroupModel> userGroups = user.getAllGroups();
+
+		for (final PrincipalGroupModel ug : userGroups)
+		{
+			if (ug.getUid().equalsIgnoreCase(groupName))
+			{
+				return agentId;
+			}
+		}
+		return StringUtils.EMPTY;
+	}
+	
+	protected boolean isNonCodProductExistForAgent(final CartModel cart, final String agentId)
+	{
+		boolean nonCodProduct = false;
+		
+		final List<AbstractOrderEntryModel> orderEntry = cart.getEntries();
+		for(final AbstractOrderEntryModel entry : orderEntry)
+		{
+			final Collection<SellerInformationModel> listOfSeller = entry.getProduct().getSellerInformationRelator();
+			
+			for(final SellerInformationModel seller : listOfSeller)
+			{
+				if(seller.getSellerID().equalsIgnoreCase(agentId))
+				{
+					final RichAttributeModel richAttribute = seller.getRichAttribute().iterator().next();
+					if (!((DeliveryFulfillModesEnum.TSHIP.getCode().
+							equalsIgnoreCase(richAttribute.getDeliveryFulfillModes().getCode()))
+							|| (null != richAttribute.getIsSshipCodEligible()
+									&& richAttribute.getIsSshipCodEligible().getCode().equalsIgnoreCase("true"))))
+					{
+						nonCodProduct = true;
+						return nonCodProduct;
+					}
+				}
+			}
+		}
+		return nonCodProduct;
+	}
 
 	@Override
 	public boolean processPayment(CartModel cart) throws PaymentException,
 			ValidationException ,Exception{
-
+		
+		final String agentId = getAgentIdForStore(configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP));
+		if (agentId != null && StringUtils.isNotEmpty(agentId))
+		{
+			final boolean ifNonCod = isNonCodProductExistForAgent(cart, agentId);
+			
+			if(ifNonCod)
+			{
+				return false;
+			}
+		}
 		double unTotal = getCsCheckoutService().getUnauthorizedTotal(cart);
 
 		unTotal = cart.getConvenienceCharges() == null ? unTotal : unTotal+cart

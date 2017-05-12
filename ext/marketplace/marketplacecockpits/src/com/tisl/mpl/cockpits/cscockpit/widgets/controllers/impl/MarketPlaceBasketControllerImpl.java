@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 
 import javax.annotation.Resource;
@@ -58,7 +59,9 @@ import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParamete
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.security.PrincipalGroupModel;
 import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.cscockpit.exceptions.PaymentException;
 import de.hybris.platform.cscockpit.exceptions.ResourceMessage;
 import de.hybris.platform.cscockpit.exceptions.ValidationException;
@@ -72,6 +75,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.WeakArrayList;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
@@ -139,6 +143,9 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	
 	@Autowired
 	private MplDefaultCommerceAddToCartStrategyImpl mplDefaultCommerceAddToCartStrategyImpl;
+	
+	@Autowired
+	private UserService userService;
 
 	/**
 	 * Adds the to market place cart.
@@ -274,6 +281,23 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 
 		return responseData;
 	}
+	
+	private String getAgentIdForStore(final String groupName)
+	{
+		final String agentId = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
+		final UserModel user = userService.getUserForUID(agentId);
+		final Set<PrincipalGroupModel> userGroups = user.getAllGroups();
+
+		for (final PrincipalGroupModel ug : userGroups)
+		{
+			if (ug.getUid().equalsIgnoreCase(groupName))
+			{
+				return agentId;
+			}
+		}
+		return StringUtils.EMPTY;
+	}
+	
 
 	/**
 	 * Reserve cart.
@@ -306,8 +330,13 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	        errorMessages.add(new ResourceMessage("placeOrder.validation.noPaymentAddress"));
 	      }
 	      
+	      // if store agent is logged in
+	      final String agentId = getAgentIdForStore(configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP));
+	      
 			for(AbstractOrderEntryModel entry : cart.getEntries()){
-				if(!mplFindDeliveryFulfillModeStrategy.isTShip(entry.getSelectedUSSID())){						
+				if((!mplFindDeliveryFulfillModeStrategy.isTShip(entry.getSelectedUSSID()))
+						&& !(agentId != null && StringUtils.isNotEmpty(agentId))){						
 					errorMessages.add(new ResourceMessage("placeOrder.validation.sship",Arrays.asList(entry.getInfo())));
 					break;
 				} 

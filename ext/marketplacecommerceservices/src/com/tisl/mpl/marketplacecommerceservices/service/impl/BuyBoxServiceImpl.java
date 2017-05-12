@@ -12,7 +12,6 @@ import de.hybris.platform.servicelayer.user.UserService;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -78,10 +77,9 @@ public class BuyBoxServiceImpl implements BuyBoxService
 		{
 			final List<BuyBoxModel> buyBoxListForAgent = new ArrayList<BuyBoxModel>();
 			final List<BuyBoxModel> buyBoxListForNonAgent = new ArrayList<BuyBoxModel>();
-			final Iterator<BuyBoxModel> itAgent = buyBoxList.iterator();
-			while (itAgent.hasNext())
+
+			for (final BuyBoxModel buyBoxModel : buyBoxList)
 			{
-				final BuyBoxModel buyBoxModel = itAgent.next();
 				if (buyBoxModel.getSellerId().equalsIgnoreCase(sellerId))
 				{
 					buyBoxListForAgent.add(buyBoxModel);
@@ -95,10 +93,9 @@ public class BuyBoxServiceImpl implements BuyBoxService
 			{
 				if (buyBoxListForNonAgent.size() > 0)
 				{
-					final Iterator<BuyBoxModel> itAgentHelper = buyBoxListForNonAgent.iterator();
-					while (itAgentHelper.hasNext())
+					for (final BuyBoxModel buyBoxModelForNonAgent : buyBoxListForNonAgent)
 					{
-						buyBoxListForAgent.add(itAgentHelper.next());
+						buyBoxListForAgent.add(buyBoxModelForNonAgent);
 					}
 				}
 
@@ -196,10 +193,8 @@ public class BuyBoxServiceImpl implements BuyBoxService
 		if (sellerId != null && StringUtils.isNotEmpty(sellerId))
 		{
 			final List<BuyBoxModel> buyBoxListForAgent = new ArrayList<BuyBoxModel>();
-			final Iterator<BuyBoxModel> itAgent = buyBoxList.iterator();
-			while (itAgent.hasNext())
+			for (final BuyBoxModel buyBoxModel : buyBoxList)
 			{
-				final BuyBoxModel buyBoxModel = itAgent.next();
 				if (buyBoxModel.getSellerId().equalsIgnoreCase(sellerId))
 				{
 					buyBoxListForAgent.add(buyBoxModel);
