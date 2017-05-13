@@ -12,6 +12,7 @@
 		<property qualifier="ProductCarouselComponent.title"/>
 		<property qualifier="ProductCarouselComponent.products"/>
 		<property qualifier="ProductCarouselComponent.categories"/>
+		<property qualifier="SimpleCMSComponent.componentType" />
 	</group>
 
 	<group qualifier="visibility" visible="true" initially-opened="false">
