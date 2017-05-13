@@ -66511,3 +66511,7 @@ body .account .right-account .order-history .product-block li.item .attributes p
  	  padding: 0 15px;
  	}
   }
+  
+  body.page-search .listing.wrapper .right-block .listing-menu{
+  	display:none;
+  }		/*TISPRDT-1179*/

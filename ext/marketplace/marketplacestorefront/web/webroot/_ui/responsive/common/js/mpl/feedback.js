@@ -1925,12 +1925,19 @@ $(document).ready(function(){
 					else{
 						var pagination_top= sort_top - 16;
 					}
+					
+					/*TISPRDT-1179*/
+					if($("body").hasClass("page-search")){
 					if($(".listing.wrapper .right-block .listing-menu > div.list_title_sort").css("display") == "block"){
 					$(".listing.wrapper .right-block .sort_by_wrapper.listing-menu").css("top",sort_top+"px");
 					}
 					else{
 						$(".listing.wrapper .right-block .sort_by_wrapper.listing-menu").css("top","auto");
 					}
+					}
+					$("body.page-search .listing.wrapper .right-block .listing-menu").css("display","block");
+					/*TISPRDT-1179*/
+					
 					$(".listing.wrapper .right-block .listing-menu > div .pagination.mobile.tablet-pagination").css("top",pagination_top+"px");
 				}
 			}
