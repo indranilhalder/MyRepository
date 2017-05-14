@@ -112,8 +112,8 @@
 
 	<c:if test="${not empty deliveryAddresses}">
 	
-	<div id="confirmOverlay">
-    <div id="confirmBox">
+	<div id="confirmOverlay" style="display:none">
+    <div id="confirmBox" style="display:none">
 
          <h1>OOPss Exchange Is not Serviceable</h1>
         <p>Do you want to continue without Exchange?</p>
@@ -132,7 +132,7 @@
 			<c:set var='countHome' value='1' />
 			<c:set var='countWorkMobile' value='1' />
 			<c:set var='countHomeMobile' value='1' />
-
+<input type="hidden" id="contExchnage" name="contExchnage" value="">
 			<!-- change here for modified checkout page starts -->
 						<!-- Div to display ajax failure messages -->
 						<div id="selectedAddressMessage" style=""></div>
