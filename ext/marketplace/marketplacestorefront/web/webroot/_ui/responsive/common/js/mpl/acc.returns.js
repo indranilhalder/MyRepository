@@ -118,7 +118,7 @@
 					return validate;
 				}
 				function checkIFSCValidat(){
-					var ifscregEx = /[A-Z|a-z]{4}[0][\d]{6}$/;
+					var ifscregEx = /[A-Z|a-z]{4}[0][A-Za-z0-9_]{6}$/;
 					var validate = true;
 					 if($(".slectionRefund #iFSCCode").val().length < 11 || !ifscregEx.test($(".slectionRefund #iFSCCode").val()) == true) {
 							//Please Enter Valid IFSC Code.
