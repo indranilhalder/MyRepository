@@ -870,7 +870,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			 * { deliveryModeModel =
 			 * (DeliveryModeModel)deliveryMode.getObject(); }
 			 */
-
+                        LOG.debug("PincodeResponse---cscockpit"+pinCodeResponses);
 			if (pinCodeResponses == null || pinCodeResponses.isEmpty()) {
 				errorMessages.add(new ResourceMessage(
 						"placeOrder.validation.noomsreponse"));
