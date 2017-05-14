@@ -137,6 +137,7 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facade.checkout.storelocator.MplStoreLocatorFacade;
 import com.tisl.mpl.facade.config.MplConfigFacade;
+import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
@@ -277,6 +278,11 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	private final String RECEIVED_INR = "Received INR ";
 	private final String DISCOUNT_MSSG = " discount on purchase of Promoted Product";
 	private static final String UTF = "UTF-8";
+
+
+	//Exchange Changes
+	@Resource(name = "exchangeGuideFacade")
+	private ExchangeGuideFacade exchangeGuideFacade;
 
 	/**
 	 * @return the mplCheckoutFacade
@@ -755,6 +761,11 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				jsonObj.put("redirectString", redirectString);
 				jsonObj.put("type", type);
 			}
+			if (type.equals("confirm"))
+			{
+				jsonObj.put("displaymessage", msg);
+				jsonObj.put("type", type);
+			}
 		}
 		catch (final JSONException e)
 		{
@@ -854,8 +865,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @return String
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYSELECTADDRESSURL, method = RequestMethod.GET)
-	public String selectAddress(@RequestParam("selectedAddressCode") final String selectedAddressCode)
-			throws CMSItemNotFoundException
+	public String selectAddress(@RequestParam("selectedAddressCode") final String selectedAddressCode,
+			@RequestParam(value = "contExchnage", required = false) final String exchangeEnabled) throws CMSItemNotFoundException
 	{
 		try
 		{
@@ -870,7 +881,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			//TISST-13012
-			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(getCartService().getSessionCart());
+			final CartModel cart = getCartService().getSessionCart();
+			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cart);
 			if (cartItemDelistedStatus)
 			{
 				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
@@ -879,6 +891,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				// ** to be uncommented		return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+			}
+
+			boolean exchangeAppliedCart = false;
+			if (StringUtils.isEmpty(exchangeEnabled) && !cartItemDelistedStatus)
+			{
+				exchangeAppliedCart = mplCartFacade.isExchangeApplicableProductInCart(cart);
 			}
 
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
@@ -920,7 +938,20 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
 				getMplCheckoutFacade().reCalculateCart(cartData);
 			}
-			else
+			if (exchangeAppliedCart && selectedPincode.matches(regex) && StringUtils.isEmpty(exchangeEnabled)
+					&& !cartItemDelistedStatus)
+			{
+				if (!exchangeGuideFacade.isBackwardServiceble(selectedPincode))
+				{
+					final String requestQueryParam = UriUtils.encodeQuery("?msg=Exchange Not Servicable&type=confirm", UTF);
+					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+				}
+			}
+			if (StringUtils.isNotEmpty(exchangeEnabled))
+			{
+				exchangeGuideFacade.removeExchangefromCart(cart);
+			}
+			else if (!selectedPincode.matches(regex))
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?msg=Provide valid pincode&type=error", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
@@ -3205,7 +3236,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -3262,7 +3293,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody

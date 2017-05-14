@@ -522,7 +522,11 @@ ACC.singlePageCheckout = {
         
         xhrResponse.done(function(data, textStatus, jqXHR) {
         	if (jqXHR.responseJSON) {
-        		if(data.type!="response")
+        		if(data.type=="confirm")
+                {
+        			ACC.singlePageCheckout.processConfirm("#selectedAddressMessage",data,element,addressId);
+                }
+        		if(data.type!="confirm")
                 {
         			ACC.singlePageCheckout.processError("#selectedAddressMessage",data);
                 }
@@ -1109,6 +1113,32 @@ ACC.singlePageCheckout = {
 		{
 			window.location.href=ACC.config.encodedContextPath+jsonResponse.url;
 		}
+	},
+	processConfirm: function(showElementId,jsonResponse,element,addressId){
+		if(jsonResponse.type=="confirm")
+		{
+			document.getElementById('confirmOverlay').style.display = "block";
+			 document.getElementById('confirmBox').style.display = "block";
+			 $( "#exConfirmYes" ).click(function() {
+				 $("#contExchnage").val("disableExchange");
+				 ACC.singlePageCheckout.proceedOnAddressSelection(element,addressId);
+				 document.getElementById('confirmOverlay').style.display = "none";
+				 document.getElementById('confirmBox').style.display = "none";
+				});
+			 
+			 $( "#exConfirmNo" ).click(function() {
+				 $("#contExchnage").val("");
+				$(showElementId).html("<span class='alert alert-danger alert-dismissable' style='padding:10px;'>"+jsonResponse.displaymessage+"</span>");
+					$(showElementId).show();
+				 document.getElementById('confirmOverlay').style.display = "none";
+				 document.getElementById('confirmBox').style.display = "none";
+				 
+				});
+			 
+			//$(showElementId).closest(".checkout-accordion").addClass("accordion-open");
+			
+		}
+		
 	},
 	
 	removeCartItem : function(element,clickFrom) {			

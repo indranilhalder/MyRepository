@@ -3503,4 +3503,42 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	{
 		return mplCommerceCartService.getDeliveryModeMapForReviewOrder(cartData);
 	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.facade.checkout.MplCartFacade#isExchangeApplicableProductInCart(de.hybris.platform.core.model.order
+	 * .CartModel)
+	 */
+	@Override
+	public boolean isExchangeApplicableProductInCart(final CartModel cartModel)
+	{
+		boolean exchangeApplied = false;
+
+		try
+		{
+			if (cartModel != null)
+			{
+				for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+				{
+
+
+					if (StringUtils.isNotEmpty(cartEntryModel.getExchangeId()))
+					{
+						exchangeApplied = true;
+					}
+
+				}
+			}
+
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		return exchangeApplied;
+
+	}
 }

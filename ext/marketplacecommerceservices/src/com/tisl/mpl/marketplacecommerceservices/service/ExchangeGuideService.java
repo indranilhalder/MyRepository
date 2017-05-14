@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
+import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 
@@ -81,7 +82,7 @@ public interface ExchangeGuideService
 
 	public boolean removeFromTransactionTable(final String exchangeId);
 
-	public ExchangeTransactionModel getTeporaryExchangeModelforId(final String exId);
+	public List<ExchangeTransactionModel> getTeporaryExchangeModelforId(final String exId);
 
 	public boolean addToExchangeTable(final ExchangeTransactionModel ex);
 
@@ -91,5 +92,6 @@ public interface ExchangeGuideService
 	 */
 	String getExchangeRequestID(List<OrderModel> childOrders);
 
+	public void removeExchangefromCart(final CartModel cart);
 
 }

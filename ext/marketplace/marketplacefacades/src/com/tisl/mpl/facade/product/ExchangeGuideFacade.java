@@ -4,13 +4,13 @@
 package com.tisl.mpl.facade.product;
 
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 
 import java.util.List;
 
 import com.tisl.mpl.core.model.ExchangeTransactionModel;
 import com.tisl.mpl.facades.product.data.ExchangeGuideData;
-import com.tisl.mpl.wsdto.SizeGuideWsDTO;
 
 
 /**
@@ -54,7 +54,7 @@ public interface ExchangeGuideFacade
 
 	public boolean removeFromTransactionTable(final String exchangeId);
 
-	public ExchangeTransactionModel getTeporaryExchangeModelforId(final String exId);
+	public List<ExchangeTransactionModel> getTeporaryExchangeModelforId(final String exId);
 
 	/**
 	 * @param childOrders
@@ -64,5 +64,6 @@ public interface ExchangeGuideFacade
 
 	public boolean addToExchangeTable(final ExchangeTransactionModel ex);
 
-	public SizeGuideWsDTO getWSProductSizeguide(final String productCode) throws CMSItemNotFoundException;
+	public void removeExchangefromCart(CartModel cart);
+
 }

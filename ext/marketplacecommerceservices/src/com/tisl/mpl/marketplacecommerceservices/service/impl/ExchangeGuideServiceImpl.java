@@ -4,13 +4,9 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.classification.ClassificationService;
-import de.hybris.platform.classification.features.Feature;
-import de.hybris.platform.classification.features.FeatureList;
-import de.hybris.platform.classification.features.FeatureValue;
-import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
@@ -27,12 +23,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.ExchangeCouponValueModel;
 import com.tisl.mpl.core.model.ExchangeModel;
 import com.tisl.mpl.core.model.ExchangeTransactionModel;
-import com.tisl.mpl.core.model.SizeGuideModel;
-import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.ExchangeGuideDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.SizeGuideDao;
 import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
@@ -179,91 +172,6 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 		return exchangeGuideDao.getPriceMatrix(l3code, l4, isWorking);
 	}
 
-	/**
-	 * @description It will take the customer id from the customer model
-	 * @param productCode
-	 * @return List<SizeGuideModel>
-	 *
-	 */
-	public List<SizeGuideModel> getProductSizeGuideList(final String productCode) throws CMSItemNotFoundException
-	{
-		List<SizeGuideModel> sizeModels = null;
-		try
-		{
-			final ProductModel productModel = productService.getProductForCode(productCode);
-			final String sizeGuideCode = sizeChartCode(productModel);
-			LOG.info("**********product code: " + productModel.getCode() + " sizeGuideCode:" + sizeGuideCode);
-
-			sizeModels = sizeGuideDao.getsizeGuideByCode(sizeGuideCode);
-			//sizeModels = new ArrayList(productModel.getSizeGuide());
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0018);//MarketplacecommerceservicesConstants.E0000);
-		}
-		return sizeModels;
-	}
-
-	private String sizeChartCode(final ProductModel product)
-	{
-		String sizeGuideCode = null;
-		//get size chart feature
-		final FeatureList featureList = getClassificationService().getFeatures(product);
-		try
-		{
-			for (final Feature feature : featureList)
-			{
-				final String featureName = feature.getName().replaceAll("\\s+", "");
-
-				final String sizeChart = configurationService.getConfiguration().getString("product.sizechart.value")
-						.replaceAll("\\s+", "");
-				if (featureName.equalsIgnoreCase(sizeChart))
-				{
-					if (null != feature.getValue())
-					{
-						final FeatureValue sizeGuidefeatureVal = feature.getValue();
-						sizeGuideCode = String.valueOf(sizeGuidefeatureVal.getValue());
-						break;
-					}
-				}
-			}
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-
-		return sizeGuideCode;
-	}
-
-
-
-
-
-	/**
-	 * @return the classificationService
-	 */
-	public ClassificationService getClassificationService()
-	{
-		return classificationService;
-	}
-
-
-
-
-
-	/**
-	 * @param classificationService
-	 *           the classificationService to set
-	 */
-	public void setClassificationService(final ClassificationService classificationService)
-	{
-		this.classificationService = classificationService;
-	}
-
-
-
-
 
 	@Override
 	public boolean isBackwardServiceble(final String pincode)
@@ -280,11 +188,14 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 	public boolean changePincode(final String pincode, final String exchangeId)
 	{
 		boolean isSaved = false;
-		final ExchangeTransactionModel ex = getTeporaryExchangeModelforId(exchangeId);
-
-		ex.setPincode(pincode);
-
-		modelService.save(ex);
+		final List<ExchangeTransactionModel> exList = getTeporaryExchangeModelforId(exchangeId);
+		final List<ExchangeTransactionModel> exListToSave = new ArrayList<>();
+		for (final ExchangeTransactionModel ex : exList)
+		{
+			ex.setPincode(pincode);
+			exListToSave.add(ex);
+		}
+		modelService.saveAll(exListToSave);
 		isSaved = true;
 		// YTODO Auto-generated method stub
 		return isSaved;
@@ -300,8 +211,8 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 	public boolean removeFromTransactionTable(final String exchangeId)
 	{
 		final boolean isSaved = false;
-		final ExchangeTransactionModel ex = getTeporaryExchangeModelforId(exchangeId);
-		modelService.remove(ex);
+		final List<ExchangeTransactionModel> exList = getTeporaryExchangeModelforId(exchangeId);
+		modelService.removeAll(exList);
 		return false;
 	}
 
@@ -313,9 +224,9 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 	 * String)
 	 */
 	@Override
-	public ExchangeTransactionModel getTeporaryExchangeModelforId(final String exId)
+	public List<ExchangeTransactionModel> getTeporaryExchangeModelforId(final String exId)
 	{
-		// YTODO Auto-generated method stub
+
 		return exchangeGuideDao.getTeporaryExchangeModelforId(exId);
 	}
 
@@ -343,8 +254,8 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 			{
 				if (entry != null && StringUtils.isNotEmpty(entry.getExchangeId()))
 				{
-					final ExchangeTransactionModel exTrax = getTeporaryExchangeModelforId(entry.getExchangeId());
-					if (exTrax != null)
+					final List<ExchangeTransactionModel> exTraxList = getTeporaryExchangeModelforId(entry.getExchangeId());
+					for (final ExchangeTransactionModel exTrax : exTraxList)
 					{
 						final ExchangeModel exMod = new ExchangeModel();
 						exReqId = getEXCHANGEREQUESTID().generate().toString();
@@ -376,6 +287,34 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 		modelService.removeAll(exTraxRemovList);
 
 		return exReqId;
+	}
+
+
+	@Override
+	public void removeExchangefromCart(final CartModel cartModel)
+	{
+		String removeExchangeIdList = null;
+		final List<AbstractOrderEntryModel> entryUpdate = new ArrayList();
+		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+		{
+			if (StringUtils.isEmpty(removeExchangeIdList) && StringUtils.isNotEmpty(entry.getExchangeId()))
+			{
+				removeExchangeIdList = "'" + entry.getExchangeId() + "'";
+				entry.setExchangeId("");
+				entryUpdate.add(entry);
+			}
+			else if (StringUtils.isNotEmpty(removeExchangeIdList) && StringUtils.isNotEmpty(entry.getExchangeId()))
+			{
+				removeExchangeIdList += ",'" + entry.getExchangeId() + "'";
+				entry.setExchangeId("");
+				entryUpdate.add(entry);
+			}
+
+		}
+		System.out.println(removeExchangeIdList);
+		modelService.saveAll(entryUpdate);
+		removeFromTransactionTable(removeExchangeIdList);
+
 	}
 
 	/*

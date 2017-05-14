@@ -11,6 +11,8 @@
 		
 		jQuery('#brandExchange').on('input', function() {
 			 $("#brandExchangeParam").val($("#brandExchange").val());
+			 $("#lbrand").text("Brand");
+				document.getElementById('lbrand').style.color = "#999999";
 		});
 		
 	
@@ -123,7 +125,7 @@
 					 var catOptions = "<option value= disabled selected>Select</option>";
 					   
 				        for (i = 0; i < data.l4categorylist.length; i++) {
-				           	      	           catOptions += "<option value='"+data.l4categorylist+"'>" + data.l4categorylist + "</option>";
+				        	    	           catOptions += "<option value='"+data.l4categorylist[i]+"'>" + data.l4categorylist[i] + "</option>";
 				        }
 				        document.getElementById("l4select").innerHTML = catOptions;
 				        
@@ -153,16 +155,15 @@
 		document.getElementById('submit&Condition').style.display = "block";
 		 document.getElementById('couponValue').style.display = "none";
 		  $("#l4Exchange").val(value);
+		  $("#ll4select").text("Type");
+			document.getElementById('ll4select').style.color = "#999999";
 		    if (value.length == 0) document.getElementById("activeselect").innerHTML = "<option></option>";
 	    else {
 	    	
 	        var catOptions = "<option value= disabled selected>Select</option>";
 	   
 	        for (i = 0; i < activelist.length; i++) {
-	           	var res = activelist[i].split("|");
-	           	
-	           //	alert(res)
-	        	           catOptions += "<option value='"+res[0].trim()+"|"+res[1].trim()+"'>" + res[1].trim() + "</option>";
+	           	          catOptions += "<option value='"+activelist[i].trim()+"'>" +activelist[i].trim()+ "</option>";
 	        }
 	        document.getElementById("activeselect").innerHTML = catOptions;
 	    }
@@ -171,13 +172,18 @@
 	function changePrice(value) {
 		document.getElementById('submit&Condition').style.display = "block";
 		 document.getElementById('couponValue').style.display = "none";
-		 $("#isWorkingExchange").val(value);
+		 $("#lactiveselect").text("Working Condition");
+			document.getElementById('lactiveselect').style.color = "#999999";
+		
+		l4val=$('#l4select').val();
+		l4wokinval=l4val+"|"+value;
+		 $("#isWorkingExchange").val(l4wokinval);
 		    var catOptions = "";
 	        for (i = 0; i < pricelist.length; i++)
 	        {
 	        	var price=pricelist[i].split("-");
 	        	
-	        	 if(value===price[0].trim())
+	        	 if(l4wokinval===price[0].trim())
 	       	   	{
 	        		 
 	        		 document.getElementById('priceselect').innerHTML =  price[1];
@@ -190,8 +196,34 @@
 	
 	function onSubmitExc()
 	{
+		var brand= $("#brandExchangeParam").val();
+		var l4select=$('#l4select').val();
+		var isError=false;
+		var isWorking=$('#activeselect').val();
+			if(!brand)
+				{
+				$("#lbrand").text("Please Enter Brand");
+				document.getElementById('lbrand').style.color = "red";
+				isError=true;
+				}
+			if(l4select==='disabled' ||!l4select )
+				{
+				$("#ll4select").text("Please Select Type");
+				document.getElementById('ll4select').style.color = "red";
+				isError=true;
+				}
+			if(isWorking==='disabled' ||!isWorking)
+				{
+				$("#lactiveselect").text("Please Select Working/Non Working");
+				document.getElementById('lactiveselect').style.color = "red";
+				isError=true;
+				}
+			if(!isError)
+				{
 		document.getElementById('couponValue').style.display = "block";
 		document.getElementById('submit&Condition').style.display = "none";
+				}
+		
 	}
 	
 
@@ -260,17 +292,17 @@
   <input type="text" id="l3" value="${l3name}">
   </div>
    <div class="half">
-   <label for="brandExchange">Brand</label>
+   <label id="lbrand" for="brandExchange">Brand</label>
  <input type="text" id="brandExchange">
 	</div>
 	 <div class="half">
-	 <label for="l4select">Type</label>
+	 <label id="ll4select" for="l4select">Type</label>
  <select name="l4select" id="l4select" onchange="changeWorking(this.value);">
  <option value="" disabled selected>Select</option>
  </select>
  </div>
   <div class="half">
-  <label for="activeselect">Working Condition</label>
+  <label id="lactiveselect" for="activeselect">Working Condition</label>
  <select name="activeselect" id="activeselect" onchange="changePrice(this.value);">
   <option value="" disabled selected>Select</option>
 </select>

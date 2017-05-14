@@ -141,7 +141,14 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 
 			final List<ExchangePincodeModel> serviceableResultList = flexibleSearchService.<ExchangePincodeModel> search(query)
 					.getResult();
-			return serviceableResultList.get(0).isIsServicable();
+			if (CollectionUtils.isNotEmpty(serviceableResultList))
+			{
+				return serviceableResultList.get(0).isIsServicable();
+			}
+			else
+			{
+				return false;
+			}
 		}
 		catch (final FlexibleSearchException e)
 		{
@@ -210,17 +217,21 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 	 */
 
 	@Override
-	public ExchangeTransactionModel getTeporaryExchangeModelforId(final String exId)
+	public List<ExchangeTransactionModel> getTeporaryExchangeModelforId(final String exId)
 	{
+		final StringBuilder queryString = new StringBuilder(500);
+
 		try
 		{
-			final String queryString = "SELECT {exchange." + ExchangeTransactionModel.PK + "} " + "FROM {"
-					+ ExchangeTransactionModel._TYPECODE + " AS exchange }" + " where {exchange.exchangeid} =?exId";
 
+			queryString.append("SELECT {exchange." + ExchangeTransactionModel.PK + "} " + "FROM {"
+					+ ExchangeTransactionModel._TYPECODE + " AS exchange }" + " where {exchange.exchangeid} in (");
+			queryString.append(exId);
+			queryString.append(")");
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			query.addQueryParameter("exId", exId);
 
-			return flexibleSearchService.<ExchangeTransactionModel> search(query).getResult().get(0);
+
+			return flexibleSearchService.<ExchangeTransactionModel> search(query).getResult();
 
 
 		}

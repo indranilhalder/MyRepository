@@ -161,9 +161,10 @@ tr.d0 td {
 		              <ul class="item-edit-details">
 		              			<li class="cart_exchange">
 			              		<c:set var="exchangeId" value="${entry.exchangeApplied}"/>
-   								<c:set var="isExchangeavailable" value="true"/>
+   								<!-- //to do spring theme for exchange -->
+   								<c:set var="isExchangeavailable" value="Exchange Applied"/>
    								<c:if test="${empty exchangeId}">
-									<c:set var="isExchangeavailable" value="false"/>
+									<c:set var="isExchangeavailable" value=" "/>
 								</c:if>
    		
    									${isExchangeavailable}

@@ -477,7 +477,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 			{
 				double entryLevelDeliveryCost = 0.0D;
-				if (null != cartEntryModel
+				if (null != cartEntryModel && StringUtils.isNotEmpty(cartEntryModel.getFulfillmentMode())
 						&& cartEntryModel.getFulfillmentMode().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIPCODE))
 				{
 					if (cartEntryModel.getScheduledDeliveryCharge() != null

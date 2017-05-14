@@ -17,9 +17,9 @@ public interface ExchangeGuideDao
 {
 	/*
 	 * @Javadoc
-	 * 
+	 *
 	 * @returns All L4 for which Exchange is Applicable
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.ExchangeGuideDao#getDistinctL4()
 	 */
 	public boolean isExchangable(final String categoryCode);
@@ -55,7 +55,7 @@ public interface ExchangeGuideDao
 	 * @return ExchangeTransactionModel
 	 * @description Gets Exchange Transaction Model for Id
 	 */
-	public ExchangeTransactionModel getTeporaryExchangeModelforId(final String exId);
+	public List<ExchangeTransactionModel> getTeporaryExchangeModelforId(final String exId);
 
 	public boolean addToExchangeTable(final ExchangeTransactionModel ex);
 
