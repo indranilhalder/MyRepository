@@ -872,7 +872,7 @@
 			<value code="cnc" /> <!-- CNC => only for click and collect -->
 			<value code="od" /> <!-- OD => only for home and express delivery -->
 		</enumtype>
-		<enumtype code="ComponentTypeEnum" autocreate="true"
+		<!-- <enumtype code="ComponentTypeEnum" autocreate="true"
 			generate="true" dynamic="true">
 			<description>Component Type For Components</description>
 			<value code="BannerCarousel" />
@@ -885,10 +885,10 @@
 			<value code="SingleBanner" />
 			<value code="Banners3TypeReverse" />
 			<value code="Banner3Type" />
-			<!-- TPR-1316 -->
+			TPR-1316
 			<value code="ProductSliderType" />
 			<value code="ProductListType" />
-		</enumtype>
+		</enumtype> -->
 	</enumtypes>
 	<!-- Product Feature Enum Ends -->
 
@@ -3816,11 +3816,11 @@
 						<persistence type='property' />
 						<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
 					</attribute>
-					<attribute type="ComponentTypeEnum" qualifier="componentType" 
+					<!-- <attribute type="ComponentTypeEnum" qualifier="componentType" 
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" optional="true" />
 						<persistence type="property" />
-					</attribute>
+					</attribute> -->
 				</attributes>
 			</itemtype>
 

@@ -16,7 +16,7 @@
 		<collectiontype elementtype="BaseSite" code="BaseSiteCollection" autocreate="true"/>
 	</collectiontypes>
 	
-	<!--<enumtypes>
+<enumtypes>
 		 <enumtype code="ComponentTypeEnum" autocreate="true" generate="true" dynamic="true">
 		<description>Component Type For Components</description>
 			<value code="BannerCarousel"/>
@@ -29,11 +29,11 @@
 			<value code="SingleBanner"/>
 			<value code="Banners3TypeReverse"/>	
 			<value code="Banner3Type"/>
-			 TPR-1316
+			<!-- TPR-1316  --> 
 			<value code="ProductSliderType"/>
 			<value code="ProductListType"/>
 		</enumtype> 
-	</enumtypes>-->
+	</enumtypes>
 	
 	<relations>
 	 	<!-- R2.3 FL04 Changes -->
@@ -372,16 +372,16 @@
 					</attribute>				
 			</attributes>
 	</itemtype>
-	
-	 <!-- <itemtype code="SimpleCMSComponent" generate="false" autocreate="false">
-			<attributes>
-				..... other declarations...
-				<attribute qualifier="componentType" type="ComponentTypeEnum">
-					<persistence type="property" />
-					<modifiers read="true" write="true" optional="true" />
-				</attribute>
-			</attributes>
-	</itemtype> -->
+	 <itemtype code="SimpleCMSComponent" generate="true" autocreate="false">
+  			<attributes>
+ 				<!--..... other declarations...-->
+  				<attribute qualifier="componentType" type="ComponentTypeEnum">
+  					<persistence type="property" />
+  					<modifiers read="true" write="true" optional="true" />
+  				</attribute>
+  			</attributes>
+ 	</itemtype>
+
 	<!-- CAR-274 -->
  	<itemtype code="OAuthAccessToken" autocreate="false" generate="false">
  			<indexes>
