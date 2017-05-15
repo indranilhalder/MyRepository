@@ -1,0 +1,33 @@
+# ImpEx for Importing Products Stock Levels and Warehouses
+
+# Macros / Replacement Parameter definitions
+$productCatalog=luxProductCatalog
+$productCatalogName=Luxury Product Catalog
+$vendor=TATA
+$warehouse=lux_warehouse
+
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+
+
+INSERT_UPDATE Vendor;code[unique=true]
+;$vendor
+
+INSERT_UPDATE Warehouse;code[unique=true];vendor(code);default[default=true]
+;lux_warehouse;$vendor
+
+# Set product approval status to Approved only for those products that have prices.
+$approved=approvalstatus(code)[default='approved']
+
+
+INSERT_UPDATE StockLevel;available;warehouse(code)[unique=true];inStockStatus(code);maxPreOrder;maxStockLevelHistoryCount;overSelling;preOrder;productCode[unique=false];reserved;sellerArticleSKU[unique=true]
+;110;lux_warehouse;forceInStock;0;0;0;0;100001300658676002;0;100001300658676002
+;110;lux_warehouse;forceInStock;0;0;0;0;100001300658676001;0;100001300658676001
+;110;lux_warehouse;forceInStock;0;0;0;0;100001300658676007;0;100001300658676007
+;110;lux_warehouse;forceInStock;0;0;0;0;100001300658676010;0;100001300658676010
+;110;lux_warehouse;forceInStock;0;0;0;0;100001300658676005;0;100001300658676005
+;110;lux_warehouse;forceInStock;0;0;0;0;100001300658676008;0;100001300658676008
+;110;lux_warehouse;forceInStock;0;0;0;0;100001300658676003;0;100001300658676003
+;110;lux_warehouse;forceInStock;0;0;0;0;100001300658676006;0;100001300658676006
+;110;lux_warehouse;forceInStock;0;0;0;0;100001300658676009;0;100001300658676009
+;110;lux_warehouse;forceInStock;0;0;0;0;100001300658676004;0;100001300658676004
+

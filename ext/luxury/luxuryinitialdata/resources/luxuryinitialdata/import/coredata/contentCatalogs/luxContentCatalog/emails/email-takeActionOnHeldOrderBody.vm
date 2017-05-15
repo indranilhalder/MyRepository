@@ -1,0 +1,70 @@
+<!DOCTYPE>
+<html>
+   <head>
+      <meta http-equiv='Content-Type' content='text/html;charset=ISO-8859-1' />
+      <title>mpl Email Template</title>
+   </head>
+   <body style=" background-color:#ffffff; font-family:Arial, Helvetica, sans-serif; font-size:12px;">
+      <table width="600" border="6" align="center" cellpadding="0" cellspacing="0" bordercolor="#CED8F6">
+         <tr>
+            <td>
+               <table align="center" width="600" border="0" cellspacing="0" cellpadding="0" style="background-color:#ffffff;">
+                  <tr>
+                     <td align="left" valign="top">
+                        <br><p style="padding: 0px 40px 0px 40px;" >Hey, <b></b></p>
+                        <br />
+                       
+                     </td>
+                  </tr>
+                  <tr>
+                 <td valign="top">
+               <p style="font-size: 13px; padding-left: 40px; padding-right: 40px; ">
+               
+                EBS reference ID <b>$ctx.juspayOrderId</b> has been put on hold as some risk was sensed. It has been on hold for long, please take an action ASAP from the EBS console  as there is only <b>$ctx.tatRemaining</b> minutes left for the TAT to expire.
+	
+               </p>
+            </td>
+                </tr>
+                  <tr>
+                     <td>
+                        <table width="600" border="0" cellspacing="0" cellpadding="0">
+                           <tr>
+                              <td>
+                                 <p style="padding: 0px 40px 30px 40px;font-size: 15px;">
+                                 	<br/>
+                                    Thanks,<br />
+                                    TATA CliQ team 
+                                 </p>
+                              </td>
+                             </tr>
+				
+							<tr>
+								<td><p style="font-size: 13px; padding-left: 40px; padding-right: 40px; ">Tata CliQ.... The Joy of Shopping<p></td>
+							</tr>
+							<tr>
+								<td><p style="font-size: 13px; padding-left: 40px; padding-right: 40px; "><b><a href="mailto:hello@tatacliq.com" style="color: #11309F;">www.tataCliQ.com</a></b><p></font>
+								</td>	
+							</tr>
+							
+							<tr>
+								<br>
+								<td>
+									<br>
+									<p style="padding-left: 40px; padding-right: 40px;"><font color="#848484" size="2" face="Arial, Helvetica, sans-serif">This email can't receive replies. For more information, visit Tata CliQ's<a href="mailto:hello@tatacliq.com" style="color: #11309F;">hello@tatacliq.com</a> or write to us at	<a href="mailto:hello@tatacliq.com" style="color: #11309F;">hello@tatacliq.com</a>.</font></p>
+								</td>
+							</tr>
+							<tr>
+								<td><br>
+								</td>
+							</tr>
+                        </table>
+                     </td>
+                  </tr>
+               </table>
+            </td>
+         </tr>
+         
+
+      </table>
+   </body>
+</html>

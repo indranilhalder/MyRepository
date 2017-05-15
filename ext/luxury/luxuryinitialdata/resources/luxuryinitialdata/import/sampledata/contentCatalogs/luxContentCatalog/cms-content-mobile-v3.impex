@@ -1,0 +1,86 @@
+
+#
+# Import the CMS content for the site
+#
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=luxProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$picture=media(code, $contentCV);
+
+# Create PageTemplates
+# These define the layout for pages
+# "FrontendTemplateName" is used to define the JSP that should be used to render the page for pages with multiple possible layouts.
+# "RestrictedPageTypes" is used to restrict templates to page types
+
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;MobileAppGenericPageTemplate;Mobile App Generic Page Template;;ContentPage;true;
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;MobileAppGenericPageTemplate;$jarResourceCms/structure-view/structure_mobileGenericPageTemplate.vm
+
+# New Discover Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='MobileAppGenericPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;Section1;;CMSParagraphComponent,SimpleBannerComponent,ImageCarouselComponent,CMSMediaParagraphComponent,ProductCarouselComponent,MplProductCollectionComponent
+;Section2;;CMSParagraphComponent,SimpleBannerComponent,ImageCarouselComponent,CMSMediaParagraphComponent,ProductCarouselComponent,MplProductCollectionComponent
+;Section3;;CMSParagraphComponent,SimpleBannerComponent,ImageCarouselComponent,CMSMediaParagraphComponent,ProductCarouselComponent,MplProductCollectionComponent
+;Section4;;CMSParagraphComponent,SimpleBannerComponent,ImageCarouselComponent,CMSMediaParagraphComponent,ProductCarouselComponent,MplProductCollectionComponent
+;Section5;;CMSParagraphComponent,SimpleBannerComponent,ImageCarouselComponent,CMSMediaParagraphComponent,ProductCarouselComponent,MplProductCollectionComponent
+;Section6;;CMSParagraphComponent,SimpleBannerComponent,ImageCarouselComponent,CMSMediaParagraphComponent,ProductCarouselComponent,MplProductCollectionComponent
+;Section7;;CMSParagraphComponent,SimpleBannerComponent,ImageCarouselComponent,CMSMediaParagraphComponent,ProductCarouselComponent,MplProductCollectionComponent
+;Section8;;CMSParagraphComponent,SimpleBannerComponent,ImageCarouselComponent,CMSMediaParagraphComponent,ProductCarouselComponent,MplProductCollectionComponent
+;Section9;;CMSParagraphComponent,SimpleBannerComponent,ImageCarouselComponent,CMSMediaParagraphComponent,ProductCarouselComponent,MplProductCollectionComponent
+;Section10;;CMSParagraphComponent,SimpleBannerComponent,ImageCarouselComponent,CMSMediaParagraphComponent,ProductCarouselComponent,MplProductCollectionComponent
+;Section11;;CMSParagraphComponent,SimpleBannerComponent,ImageCarouselComponent,CMSMediaParagraphComponent,ProductCarouselComponent,MplProductCollectionComponent
+;Section12;;CMSParagraphComponent,SimpleBannerComponent,ImageCarouselComponent,CMSMediaParagraphComponent,ProductCarouselComponent,MplProductCollectionComponent
+;Section13;;CMSParagraphComponent,SimpleBannerComponent,ImageCarouselComponent,CMSMediaParagraphComponent,ProductCarouselComponent,MplProductCollectionComponent
+;Section14;;CMSParagraphComponent,SimpleBannerComponent,ImageCarouselComponent,CMSMediaParagraphComponent,ProductCarouselComponent,MplProductCollectionComponent
+;Section15;;CMSParagraphComponent,SimpleBannerComponent,ImageCarouselComponent,CMSMediaParagraphComponent,ProductCarouselComponent,MplProductCollectionComponent
+;Section16;;CMSParagraphComponent,SimpleBannerComponent,ImageCarouselComponent,CMSMediaParagraphComponent,ProductCarouselComponent,MplProductCollectionComponent
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;Section1Slot;Default Slot;true
+;;Section2Slot;Default Slot;true
+;;Section3Slot;Default Slot;true
+;;Section4Slot;Default Slot;true
+;;Section5Slot;Default Slot;true
+;;Section6Slot;Default Slot;true
+;;Section7Slot;Default Slot;true
+;;Section8Slot;Default Slot;true
+;;Section9Slot;Default Slot;true
+;;Section10Slot;Default Slot;true
+;;Section11Slot;Default Slot;true
+;;Section12Slot;Default Slot;true
+;;Section13Slot;Default Slot;true
+;;Section14Slot;Default Slot;true
+;;Section15Slot;Default Slot;true
+;;Section15Slot;Default Slot;true
+;;Section16Slot;Default Slot;true
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ProductDetailsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;Section1-GenericPage;Section1;;Section1Slot;true
+;;Section2-GenericPage;Section2;;Section2Slot;true
+;;Section3-GenericPage;Section3;;Section3Slot;true
+;;Section4-GenericPage;Section4;;Section4Slot;true
+;;Section5-GenericPage;Section5;;Section5Slot;true
+;;Section6-GenericPage;Section6;;Section6Slot;true
+;;Section7-GenericPage;Section7;;Section7Slot;true
+;;Section8-GenericPage;Section8;;Section8Slot;true
+;;Section9-GenericPage;Section9;;Section9Slot;true
+;;Section10-GenericPage;Section10;;Section10Slot;true
+;;Section11-GenericPage;Section11;;Section11Slot;true
+;;Section12-GenericPage;Section12;;Section12Slot;true
+;;Section13-GenericPage;Section13;;Section13Slot;true
+;;Section14-GenericPage;Section14;;Section14Slot;true
+;;Section15-GenericPage;Section15;;Section15Slot;true
+;;Section16-GenericPage;Section16;;Section16Slot;true
+
+
+
