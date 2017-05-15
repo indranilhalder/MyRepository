@@ -2041,7 +2041,7 @@ $(document).on('click',".color-swatch > li", function(){
 		var productArray=[];
 		productArray.push(productID);
 	 if(typeof utag !="undefined"){
-		 utag.link({ link_text : 'shop_now_clicked' , event_type :'shop_now_clicked',product_id : productArray });
+		 utag.link({ link_text : 'shop_now_clicked' , event_type :'shop_now_clicked',product_id : productArray ,shop_now_product_id : productArray });
 	 }
  })
 
