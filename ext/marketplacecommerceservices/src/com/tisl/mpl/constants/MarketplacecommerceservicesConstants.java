@@ -709,6 +709,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String WISHLIST_DISPLAY_QUANTITY = "mpl.cart.wishlist.display.quantity";
 	public static final String OUT_OF_INVENTORY = "outofinventory";
 	public static final String INVENTORY_WIIL_EXCEDE = "willexceedeinventory";
+	public static final String MAX_QUANTITY_ADDED_FOR_EXCHANGE = "maxqtyexchange";
 
 	//For SellerPriority Report
 	public static final String CSVFILEHEADER_SELLERPRIORITY = "Modified Time, User ID, Seller ID, Seller Name, Category ID, Product ID, Start Date, End Date, Active?, Newly_Created?, Modified Swllwe ID, Modified Seller Name, Modified Start Date, Modified End Date, Modified Active Flag";
@@ -1927,7 +1928,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String BUYAGETPERCENTAGEDISCOUNTONB = "BuyAGetPercentageDiscountOnB".intern();
 	//FREEBIE FIX
 	public static final String FREEBIEPRICETHRESHOLD = "freebiePriceThreshold";
-	
+
 	// OrderIssues:- multiple Payment Response from juspay restriction
 	public static final String DUPLICATEJUSPAYRESONSE = "duplicatJuspayResponse";
 
@@ -1950,6 +1951,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SHIPMENT_CHARGE_AMOUNT = "return.shipmentcharge";
 	public static final String RSS = "RSS";
 	public static final String RETURN_TRANSACTON_TYPE_01 = "01";
-	
-	public static final String ADDRESS_NOT_CHANGED ="ADDRESS_NOT_CHANGED";
+
+	public static final String ADDRESS_NOT_CHANGED = "ADDRESS_NOT_CHANGED";
 }

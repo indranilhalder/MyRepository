@@ -1058,10 +1058,14 @@ sendAddToBagQuick:function(formId){
 				//ACC.product.displayAddToCart(data,formId,false);
 				$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 				}
+				else if(data=="maxqtyexchange")
+				{
+					$("#"+formId+"Titlebagtofull").html("<br/><font color='#ff1c47'>"+$('#addToCartExchangeExceededmaxqtyExc').html()+"</font>");
+					$("#"+formId+"Titlebagtofull").show().fadeOut(5000);
+				}
 				else if(data=="reachedMaxLimit") {
 					//$("#"+formId+"Title").html("");
-					$("#"+formId+"Titlebagtofull").html("<br/><font color='#ff1c47'>"+$('#addToCartExchnageTitlebagtofull').html()+"</font>");
-					$("#"+formId+"Titlebagtofull").show().fadeOut(5000);
+					
 				}
 				else if(data=="crossedMaxLimit"){
 					//alert("bagfull:  "+ formId+"Titlebagfull");
@@ -1081,10 +1085,13 @@ sendAddToBagQuick:function(formId){
 					 $("#"+formId+"excedeInventorySize").show().fadeOut(6000);
 			   		 return false;
 				}
+				
+				
 				else{
 					$("#"+formId+"Titleaddtobagerror").html("");
 					$("#"+formId+"Titleaddtobagerror").html("<br/><font color='#ff1c47'>"+$('#addToCartExchangeTitleaddtobagerror').text()+"</font>");
 					$("#"+formId+"Titleaddtobagerror").show().fadeOut(5000);
+					
 				}
 			
 				//For MSD

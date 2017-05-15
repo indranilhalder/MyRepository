@@ -344,37 +344,40 @@ You are eligible for coupon against your successful exchange
 	<input type="hidden" maxlength="50" size=""  name="brandParam" id="brandExchangeParam" value="" />
 	<input type="hidden" maxlength="6" size=""  name="pinParam" id="pincodeExchangeParam" value="" />
 	
-   		<span id="addToCartExchangenoInventorySize" style="display: none" class="no_inventory sizeGuide-message"><p class="inventory">
+   		<span id="addToCartExchangeExceededmaxqtyExc" style="display: none" class="exchange-message">
+   		<spring:theme code="product.addtocart.exchange.qty.error"/>
+		</span>
+   		<span id="addToCartExchangenoInventorySize" style="display: none" class="no_inventory exchange-message"><p class="inventory">
 			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
 		</p></span>
-		<span id="addToCartExchangeexcedeInventorySize" style="display: none" class="sizeGuide-message"><p class="inventory">
+		<span id="addToCartExchangeexcedeInventorySize" style="display: none" class="exchange-message"><p class="inventory">
 			<font color="#ff1c47">Please decrease the quantity</font>
 		</p></span>
 		
-		<span id="addToCartExchangeTitleaddtobag" style="display: none" class="sizeGuide-message"><p class="inventory">
+		<span id="addToCartExchangeTitleaddtobag" style="display: none" class="exchange-message"><p class="inventory">
 			<spring:theme code="product.addtocart.success"/>
 		</p></span>
-		<span id="addToCartExchangeTitleaddtobagerror" style="display: none" class="sizeGuide-message"><p class="inventory">
+		<span id="addToCartExchangeTitleaddtobagerror" style="display: none" class="exchange-message"><p class="inventory">
 			<spring:theme code="product.error"/>
 		</p></span>
-		<span id="addToCartExchangeTitlebagtofull" style="display: none" class="sizeGuide-message"><p class="inventory">
+		<span id="addToCartExchangeTitlebagtofull" style="display: none" class="exchange-message"><p class="inventory">
 			<spring:theme code="product.addtocart.aboutfull"/>
 		</p></span>
-		<span id="addToCartExchangeTitlebagfull" style="display: none" class="sizeGuide-message"><p class="inventory">
+		<span id="addToCartExchangeTitlebagfull" style="display: none" class="exchange-message"><p class="inventory">
 			<spring:theme code="product.bag"/>
 		</p></span>
-		<span id="pinNotServicableExchange" style="display: none" class="sizeGuide-message">
+		<span id="pinNotServicableExchange" style="display: none" class="exchange-message">
 			<font color="#ff1c47">We're sorry. We don't service this pin code currently. Would you like to try entering another pin code that also works for you?</font>
 		</span>
 		<span id="addToCartExchangeTitleoutOfStockId" style="display: none"><p class="inventory">
-			<span id="outOfStockText" class="sizeGuide-message">
+			<span id="outOfStockText" class="exchange-message">
 			<spring:theme code="product.product.outOfStock" />
 			</span>
 		<input type="button" onClick="openPop_SizeGuide();" id="add_to_wishlist-sizeguide" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
 			<!-- <font color="#ff1c47">Product is out of stock for the selected size</font> -->
 		</p></span>
 			
-	<span id="sizeSelectedSizeGuide"   class="sizeGuide-message" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
+	<span id="sizeSelectedSizeGuide"   class="exchange-message" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
 	<span id="addToCartButtonIdExc">
 	<!-- <span id="addToCartFormSizeTitleSuccess"></span> -->
 	<button style="display: block;"

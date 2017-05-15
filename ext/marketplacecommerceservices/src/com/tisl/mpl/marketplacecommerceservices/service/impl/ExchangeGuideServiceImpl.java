@@ -210,10 +210,14 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 	@Override
 	public boolean removeFromTransactionTable(final String exchangeId)
 	{
-		final boolean isSaved = false;
+		boolean isSaved = false;
 		final List<ExchangeTransactionModel> exList = getTeporaryExchangeModelforId(exchangeId);
-		modelService.removeAll(exList);
-		return false;
+		final String id = getExchangeRequestID(exList, true);
+		if (StringUtils.isNotBlank(id))
+		{
+			isSaved = true;
+		}
+		return isSaved;
 	}
 
 	/*
@@ -289,6 +293,35 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 		return exReqId;
 	}
 
+	public String getExchangeRequestID(final List<ExchangeTransactionModel> exTraxList, final boolean isInternal)
+	{
+		final List<ExchangeModel> exModList = new ArrayList<>();
+		final List<ExchangeTransactionModel> exTraxRemovList = new ArrayList();
+		String exReqId = "";
+		for (final ExchangeTransactionModel exTrax : exTraxList)
+		{
+			final ExchangeModel exMod = new ExchangeModel();
+			exReqId = getEXCHANGEREQUESTID().generate().toString();
+			exMod.setBrandName(exTrax.getBrandName());
+			exMod.setExchangeRequestId(exReqId);
+			exMod.setExchangeValue(exTrax.getExchangeValue());
+			exMod.setOrderID(exTrax.getCartguid());
+			exMod.setPincode(exTrax.getPincode());
+			exMod.setProductId(exTrax.getProductId());
+			exMod.setSellerOrderID(exTrax.getCartguid());
+			exMod.setTransactiondId(exTrax.getCartguid());
+			exMod.setUssid(exTrax.getUssid());
+			exMod.setExchangeRemovalReason("Exchange Removed from Cart/Delivery Page due to Pincode Servicability");
+			exModList.add(exMod);
+			exTraxRemovList.add(exTrax);
+
+		}
+
+		modelService.saveAll(exModList);
+		modelService.removeAll(exTraxRemovList);
+
+		return exReqId;
+	}
 
 	@Override
 	public void removeExchangefromCart(final CartModel cartModel)
