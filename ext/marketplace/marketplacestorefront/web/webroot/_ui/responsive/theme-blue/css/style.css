@@ -64090,6 +64090,14 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 #reviewOrder.cart.wrapper .product-block li.item>ul>li:first-child div.product .product-name a {
   color: #888888;
 }
+#reviewOrder.cart.wrapper .product-block li.item>ul>li:first-child div.product .name{
+  font-size: 12px;
+  line-height: 1.33;
+  letter-spacing: 0.6px;
+  color: #888888;
+  text-transform: none;
+  margin-top: 3px;
+}
 #reviewOrder.cart.wrapper .product-block li.item ul .item-edit-details{
 	position: static;
 }
@@ -64152,7 +64160,7 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 }
 #reviewOrder.cart.wrapper .product-block li.header ul li.productInfo,
 #reviewOrder.cart.wrapper .product-block li.item>ul.desktop>li.productItemInfo{
-	width: 42% !important;
+	width: 41% !important;
 	margin: 0;
 }
 #reviewOrder.cart.wrapper .product-block li.header ul li.price,
