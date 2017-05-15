@@ -1999,6 +1999,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//final String ip = getBlacklistByIPStatus(); TISPT-204 Point No 2
 			final String ip = getMplPaymentFacade().getBlacklistByIPStatus(request);
 			LOG.debug("The ip of the system is::::::::::::::::::::::::" + ip);
+			
+			//INC144316663
+
+			final Long codUpperLimit = getBaseStoreService().getCurrentBaseStore().getCodUpperLimit();
+			final Long codLowerLimit = getBaseStoreService().getCurrentBaseStore().getCodLowerLimit();
+
 
 			if (null == orderModel)
 			{
@@ -2014,9 +2020,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				if (null != cart && !mplCustomerIsBlackListed)
 				{
-					//adding blacklist status to model
-					model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.NOT_BLACKLISTED.toString());
-
+					
 					//Commented for TISPT-400
 					//to check items are seller fulfilled or not
 					//final List<String> fulfillmentDataList = new ArrayList<String>();
@@ -2091,7 +2095,22 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					//							}
 					//						}
 					//					}
-					addDataForCODToModel(model, cart); //moved to single code for reuse
+					
+					
+					//INC144316663
+
+					final boolean isCodLimitFailed = (cart.getTotalPrice().longValue() <= codUpperLimit.longValue()) ? false : true;
+					final boolean isCodEligible = (isCodLimitFailed || !cart.getIsCODEligible().booleanValue()) ? false : true;
+
+					if (isCodEligible)
+					{
+						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.NOT_BLACKLISTED.toString());
+						addDataForCODToModel(model, cart); //moved to single code for reuse
+					}
+					else
+					{
+						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.BLACKLISTED.toString());
+					}
 				}
 				else
 				{
@@ -2232,8 +2251,22 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				if (!mplCustomerIsBlackListed)
 				{
 					//adding blacklist status to model
-					model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.NOT_BLACKLISTED.toString());
-					addDataForCODToModel(model, orderModel);
+					//INC144316663
+
+					//model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.NOT_BLACKLISTED.toString());
+					final boolean isCodLimitFailed = (orderModel.getTotalPrice().longValue() <= codUpperLimit.longValue()) ? false
+							: true;
+					final boolean isCodEligible = (isCodLimitFailed || !orderModel.getIsCODEligible().booleanValue()) ? false : true;
+
+					if (isCodEligible)
+					{
+						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.NOT_BLACKLISTED.toString());
+						addDataForCODToModel(model, orderModel);
+					}
+					else
+					{
+						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.BLACKLISTED.toString());
+					}
 				}
 				else
 				{
