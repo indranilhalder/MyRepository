@@ -63342,6 +63342,11 @@ div.radio.creditDebitLabelRadio{
 .progress-barcheck .step-1 span, .progress-barcheck .step-2 span, .progress-barcheck .step-3 span{
 	top:0px !important;
 }
+/* start change of INC144313766 */
+.progress-barcheck .step-2 span{
+	left:50%;
+}
+/* end change of INC144313766 */
 .progress-barcheck .step-1.step-done span.paymentStepDone:after,
  .progress-barcheck .step-2.step-done span.paymentStepDone:after,
   .progress-barcheck .step-3.step-done span.paymentStepDone:after{
