@@ -772,7 +772,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	      if ((deliveryMode != null) && (deliveryMode.getObject() instanceof MplZoneDeliveryModeValueModel))
 	      {
 	        deliveryModeModel = (MplZoneDeliveryModeValueModel)deliveryMode.getObject();
-	      }
+	      
 	      try {
 	      ((CartModel)entry.getOrder()).setCartReservationDate(null);  
 	      ((MarketplaceCheckoutControllerImpl) getCheckoutController()).removeCODPayment();
@@ -804,8 +804,9 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			}
 			catch(final Exception e)
 			{
-				ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+				 ExceptionUtil.getCustomizedExceptionTrace(e);
 			}
+	      }
 			
 	    }
 	    return changed;
@@ -871,7 +872,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			 * { deliveryModeModel =
 			 * (DeliveryModeModel)deliveryMode.getObject(); }
 			 */
-
+                        LOG.debug("PincodeResponse---cscockpit"+pinCodeResponses);
 			if (pinCodeResponses == null || pinCodeResponses.isEmpty()) {
 				errorMessages.add(new ResourceMessage(
 						"placeOrder.validation.noomsreponse"));

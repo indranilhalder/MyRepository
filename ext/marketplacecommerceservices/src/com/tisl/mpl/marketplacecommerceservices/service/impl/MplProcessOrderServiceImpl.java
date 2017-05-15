@@ -8,6 +8,7 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.LimitedStockPromoInvalidationModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -735,9 +736,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			{
 				//final EtailLimitedStockRestriction limitedStockRestriction = new EtailLimitedStockRestriction();
 				final PromotionResultModel model2 = iter2.next();
-				if ((model2.getCertainty().floatValue() == 1f)
-						&& (CollectionUtils.isNotEmpty(model2.getPromotion().getRestrictions()) && checkForLimitedStockPromo(model2
-								.getPromotion().getRestrictions())))
+				if (CollectionUtils.isNotEmpty(model2.getPromotion().getRestrictions())
+						&& checkForLimitedStockPromo(model2.getPromotion().getRestrictions()))//TISSQAUATS-941
 
 				{
 					isLimitedStockRestrictionAppliedflag = true;
@@ -746,7 +746,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 				//TISSQAUAT-468 and TISSQAUATS-752 code ends here for promotion offercount revert back logic
 				//SONAR FIX
-				if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()) || !isLimitedStockRestrictionAppliedflag)//TISSQAUAT-468 and TISSQAUATS-752  flag condition added for limited stock promotion check(promotion offercount revert back logic)
+				if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()) || isLimitedStockRestrictionAppliedflag)//TISSQAUAT-468 and TISSQAUATS-752  flag condition added for limited stock promotion check(promotion offercount revert back logic)
 				{
 					final List<LimitedStockPromoInvalidationModel> invalidationList = new ArrayList<LimitedStockPromoInvalidationModel>(
 							stockPromoCheckService.getPromoInvalidationList(orderModel.getGuid()));
