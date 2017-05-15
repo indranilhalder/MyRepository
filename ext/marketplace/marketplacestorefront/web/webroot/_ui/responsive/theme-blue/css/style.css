@@ -8104,7 +8104,7 @@ div.wishlist-content .pagination {
   right: 0; }
   @media (max-width: 650px) {
     div.wishlist-content .pagination {
-      bottom: 30px; } }
+      /* bottom: 30px; */	/* comment for INC144315727 */ } }
   div.wishlist-content .pagination a.active {
     text-decoration: underline;
     color: #A9143C; }
