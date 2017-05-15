@@ -6714,12 +6714,14 @@ $(".card_exp_year").blur(function(){
 		validateExpYY();
 	}
 });
-$(".security_code").blur(function(){
+/*start change of INC144315894*/
+/*$(".security_code").blur(function(){
 	if(this.value!="")
 	{
 		validateCVV();
 	}
-});
+});*/
+/*end change of INC144315894*/
 $("#cardNo").keyup(function() {
     if (!this.value) {
     	document.getElementById("cardNoError").innerHTML="";
