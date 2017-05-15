@@ -30,7 +30,10 @@ z-index: 1;
 position :absolute;
 float:right;
 right:10px;
-top:15%;
+/* start change of INC144315966 */
+/* top:15%; */
+top:11%;
+/* end change of INC144315966 */
 padding-bottom:5px;
 }
 .googleMapLegends{
