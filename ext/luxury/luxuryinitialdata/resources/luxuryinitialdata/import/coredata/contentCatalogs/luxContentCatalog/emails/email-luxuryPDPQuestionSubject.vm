@@ -1,1 +1,0 @@
-Query about product>${ctx.fromEmail}>${ctx.productCode}
