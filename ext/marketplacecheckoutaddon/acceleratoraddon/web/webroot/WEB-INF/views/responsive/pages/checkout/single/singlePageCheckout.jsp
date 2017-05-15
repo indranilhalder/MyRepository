@@ -101,6 +101,14 @@
 	<div class="overlay" data-dismiss="modal">
 	</div>
 </div>
+<div class="modal fade" id="singlePageChooseSlotDeliveryPopup">
+	<div class="content" style="padding: 40px;">
+		<span id="modalBody" data-htmlPopulated="NO"></span>
+		<!-- <button class="close" data-dismiss="modal"></button> -->
+	</div>
+	<div class="overlay" data-dismiss="modal">
+	</div>
+</div>
 <script>
 $(".checkout-accordion-wrapper .checkout-accordion .checkout-accordion-heading").on("click", function(){
 	//$(this).parent().find(".checkout-accordion-body").slideToggle();

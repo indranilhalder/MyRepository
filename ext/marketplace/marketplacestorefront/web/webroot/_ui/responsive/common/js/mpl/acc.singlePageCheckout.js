@@ -300,7 +300,9 @@ ACC.singlePageCheckout = {
         		}
             } else {
             	ACC.singlePageCheckout.getSelectedDeliveryModes();
-            	$("#choosedeliveryMode").html(data);
+            	//$("#choosedeliveryMode").html(data);
+            	var elementId="singlePageChooseSlotDeliveryPopup";
+            	ACC.singlePageCheckout.modalPopup(elementId,data);
 //            	$("#reviewOrder").html(data);
 //            	//START:Code to show strike off price
 //        		$("#off-bag").show();

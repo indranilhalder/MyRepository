@@ -25,7 +25,6 @@
 <%-- <%@ attribute name="cartData" required="true"
 	type="java.util.List"%> --%>
 
-<c:if test="${showDeliveryMethod eq true}">
 	<script>
 		//window.onload =	function(){
 		//resetConvChargeElsewhere(); Commented for TIS 400
@@ -105,8 +104,7 @@
 		</div>
 
 	</form:form>
-
-</c:if>
+	
 <div class="right-block shipping">
 		<div class="checkout-order-summary">
 			<%-- <multi-checkout:orderTotals cartData="${cartData}"

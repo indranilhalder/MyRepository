@@ -1147,6 +1147,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(serviceCart); //TISPT-104
 			if (cartItemDelistedStatus)
 			{
+				LOG.debug("enterDeliveryModeStep:Cart Item is delisted, Hence redirecting to cart.");
 				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
 						MarketplacecommerceservicesConstants.TRUE_UPPER);
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
@@ -1172,8 +1173,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				if (CollectionUtils.isNotEmpty(responseData))
 				{
 					// TPR-429 START
-					final String cartLevelSellerID = populateCheckoutSellers(cartData);
-					model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
+					//final String cartLevelSellerID = populateCheckoutSellers(cartData);
+					//model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
 					// TPR-429 END
 
 					//  TISPRD-1951  START //
@@ -1207,21 +1208,20 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					model.addAttribute("deliveryMethodForm", new DeliveryMethodForm());
 					model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
 					model.addAttribute(MarketplacecheckoutaddonConstants.FULFILLMENTDATA, fullfillmentDataMap);
-					model.addAttribute(MarketplacecheckoutaddonConstants.SHOWDELIVERYMETHOD, Boolean.TRUE);
-					model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDRESS, Boolean.FALSE);
-					model.addAttribute(MarketplacecheckoutaddonConstants.SHOWEDITADDRESS, Boolean.FALSE);
-					model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDADDRESS, Boolean.FALSE);
+					//model.addAttribute(MarketplacecheckoutaddonConstants.SHOWDELIVERYMETHOD, Boolean.TRUE);
+					//model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDRESS, Boolean.FALSE);
+					//model.addAttribute(MarketplacecheckoutaddonConstants.SHOWEDITADDRESS, Boolean.FALSE);
+					//model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDADDRESS, Boolean.FALSE);
 					model.addAttribute("defaultPincode", defaultPinCodeId);
 
 					//TISPRO-625
 
-					final Boolean isExpressCheckoutSelected = (serviceCart != null && serviceCart.getDeliveryAddress() != null) ? Boolean.TRUE
-							: Boolean.FALSE;
-					model.addAttribute(MarketplacecheckoutaddonConstants.CART_EXPRESS_CHECKOUT_SELECTED, isExpressCheckoutSelected);
+					//final Boolean isExpressCheckoutSelected = (serviceCart != null && serviceCart.getDeliveryAddress() != null) ? Boolean.TRUE: Boolean.FALSE;
+					//model.addAttribute(MarketplacecheckoutaddonConstants.CART_EXPRESS_CHECKOUT_SELECTED, isExpressCheckoutSelected);
 
 					//	this.prepareDataForPage(model);
 					model.addAttribute("metaRobots", "noindex,nofollow");
-					model.addAttribute("checkoutPageName", checkoutPageName);
+					//model.addAttribute("checkoutPageName", checkoutPageName);
 					model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE); //TPR-629
 				}
 				else
@@ -1589,7 +1589,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				//return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliverySlotPage;
 				return "addon:/marketplacecheckoutaddon/pages/checkout/single/showChooseDeliverySlotPage";
 			}
-
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -1883,7 +1882,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @param bindingResult
 	 * @return - a URL to the page to load.
 	 */
-	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYSELECTURL)
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYSELECTURL, method = RequestMethod.POST)
 	public String doSelectDeliveryMode(@ModelAttribute("deliveryMethodForm") final DeliveryMethodForm deliveryMethodForm,
 			final BindingResult bindingResult, final Model model, final HttpSession session) throws CMSItemNotFoundException
 	{
@@ -1894,7 +1893,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
 						+ "&type=redirect", UTF);
-				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+				return REDIRECT_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			final CartModel cartModel = getCartService().getSessionCart();
 
@@ -1902,11 +1901,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart());
 			if (cartItemDelistedStatus)
 			{
+				LOG.debug("doSelectDeliveryMode:Cart Item is delisted, Hence redirecting to cart");
 				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
 						MarketplacecommerceservicesConstants.TRUE_UPPER);
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
 						+ "&type=redirect", UTF);
-				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+				return REDIRECT_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			//TISPT-400 ends
 
@@ -1947,7 +1947,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 			//CAR:127
 			//final CartData caData = getMplCartFacade().getCartDataFromCartModel(cartModel, false);
-			CartData cartUssidData = mplCartFacade.getSessionCartWithEntryOrdering(true);
+			final CartData cartUssidData = mplCartFacade.getSessionCartWithEntryOrdering(true);
 			//TISST-13012
 
 			final boolean inventoryReservationStatus = mplCartFacade.isInventoryReserved(
@@ -1992,42 +1992,40 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 			}
 
-			LOG.debug(">>>>>>>>>>  Step 5:  Cod status setting done  ");
 
 			// TPR-429 START
-			final String cartLevelSellerID = populateCheckoutSellers(cartUssidData);
+			//final String cartLevelSellerID = populateCheckoutSellers(cartUssidData);
 
-			model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
+			//model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
 			// TPR-429 END
 
 
 
 			//CAR-130
 			/* final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(); */
-			cartUssidData = getMplCustomAddressFacade().getCheckoutCart();
-			List<AddressData> deliveryAddress = null;
+			//cartUssidData = getMplCustomAddressFacade().getCheckoutCart();
+			//List<AddressData> deliveryAddress = null;
 
 			//TIS 391:  In case of normal checkout , delivery address will be null and for express checkout delivery address will be ore selected from the cart page
 			// In case of express checkout it will redirect to the payment page from delivery mode selection
 
-			if (cartUssidData != null)
-			{
-				if (cartUssidData.getDeliveryAddress() != null)
-				{
-					LOG.debug("Express checkout selected for address id : " + cartUssidData.getDeliveryAddress().getId());
-					//return getCheckoutStep().nextStep();
-				}
+			//			if (cartUssidData != null)
+			//			{
+			//				if (cartUssidData.getDeliveryAddress() != null)
+			//				{
+			//					LOG.debug("Express checkout selected for address id : " + cartUssidData.getDeliveryAddress().getId());
+			//					//return getCheckoutStep().nextStep();
+			//				}
+			//
+			//
+			//				deliveryAddress = getMplCustomAddressFacade().getDeliveryAddresses(cartUssidData.getDeliveryAddress(), cartModel); //CAR-194
+			//
+			//			}
 
 
-				deliveryAddress = getMplCustomAddressFacade().getDeliveryAddresses(cartUssidData.getDeliveryAddress(), cartModel); //CAR-194
-
-			}
 
 
-
-
-			deliveryAddress = (deliveryAddress == null || deliveryAddress.isEmpty()) ? accountAddressFacade.getAddressBook()
-					: deliveryAddress;
+			//deliveryAddress = (deliveryAddress == null || deliveryAddress.isEmpty()) ? accountAddressFacade.getAddressBook():deliveryAddress;
 			//			deliveryAddress = getMplCheckoutFacade().rePopulateDeliveryAddress(deliveryAddress);
 
 			//TISST-7473
@@ -2037,10 +2035,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			 */
 
 			//TISPT-400
-			deliveryAddress = getMplCheckoutFacade().rePopulateDeliveryAddress(deliveryAddress);
+			//deliveryAddress = getMplCheckoutFacade().rePopulateDeliveryAddress(deliveryAddress);
 
 
-			LOG.debug("Before final model attribute level set ");
+			//LOG.debug("Before final model attribute level set ");
 
 			//final List<StateData> stateDataList = accountAddressFacade.getStates();
 			//final AccountAddressForm addressForm = new AccountAddressForm();
@@ -2048,7 +2046,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 			//model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE); //TPR-629
 
-			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, mplCartFacade.getSessionCartWithEntryOrdering(true));
+			//model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, mplCartFacade.getSessionCartWithEntryOrdering(true));
 			//model.addAttribute(MarketplacecheckoutaddonConstants.DELIVERYADDRESSES, deliveryAddress);
 			//model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataList);
 			//model.addAttribute(MarketplacecheckoutaddonConstants.NOADDRESS,Boolean.valueOf(getCheckoutFlowFacade().hasNoDeliveryAddress()));
@@ -2058,28 +2056,27 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDRESS, Boolean.TRUE);
 			//			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWEDITADDRESS, Boolean.FALSE);
 			//			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDADDRESS, Boolean.FALSE);
-			this.prepareDataForPage(model);
-			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
+			//this.prepareDataForPage(model);
+			//storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
+			//setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 			//			model.addAttribute(
 			//					WebConstants.BREADCRUMBS_KEY,
 			//					getResourceBreadcrumbBuilder().getBreadcrumbs(
 			//							MarketplacecheckoutaddonConstants.CHECKOUT_MULTI_DELIVERYMETHOD_BREADCRUMB));
-			model.addAttribute("metaRobots", "noindex,nofollow");
+			//model.addAttribute("metaRobots", "noindex,nofollow");
 			//GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
-			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartUssidData);
+			//GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartUssidData);
 			//		model.addAttribute("checkoutPageName", selectAddress);
 			//		setCheckoutStepLinksForModel(model, getCheckoutStep());
 			//model.addAttribute("progressBarClass", "selectPage");
 			//returnPage = MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
 
 			//deliveryModeData = new HashMap<String, List<MarketplaceDeliveryModeData>>();
-			final Map<String, MarketplaceDeliveryModeData> delModeDataPopulateMap = mplCartFacade
-					.getDeliveryModeMapForReviewOrder(cartUssidData);
-			model.addAttribute("deliveryModeData", delModeDataPopulateMap);
+			//final Map<String, MarketplaceDeliveryModeData> delModeDataPopulateMap = mplCartFacade.getDeliveryModeMapForReviewOrder(cartUssidData);
+			//	model.addAttribute("deliveryModeData", delModeDataPopulateMap);
 
-			final String defaultPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
-			model.addAttribute("defaultPincode", defaultPincode);
+			//final String defaultPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+			//model.addAttribute("defaultPincode", defaultPincode);
 			final CartData cartDataSupport = mplCartFacade.getSessionCartWithEntryOrdering(true);
 			final List<String> deliveryModelList = new ArrayList<String>();
 			for (final OrderEntryData cartEntryData : cartDataSupport.getEntries())
@@ -3236,7 +3233,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -3293,7 +3290,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
