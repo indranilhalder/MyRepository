@@ -359,7 +359,7 @@ public class CartPageController extends AbstractPageController
 	 * private void setExpressCheckout(final CartModel serviceCart) {
 	 * serviceCart.setIsExpressCheckoutSelected(Boolean.FALSE); if (serviceCart.getDeliveryAddress() != null) {
 	 * serviceCart.setDeliveryAddress(null); modelService.save(serviceCart); }
-	 *
+	 * 
 	 * }
 	 */
 
@@ -640,7 +640,7 @@ public class CartPageController extends AbstractPageController
 	/*
 	 * @description This controller method is used to allow the site to force the visitor through a specified checkout
 	 * flow. If you only have a static configured checkout flow then you can remove this method.
-	 *
+	 * 
 	 * @param model ,redirectModel
 	 */
 
@@ -726,6 +726,21 @@ public class CartPageController extends AbstractPageController
 			final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 			//TPR-1083
 			boolean isExchangeEntry = false;
+			//else if block for Exchange
+			if (cartData != null && cartData.getEntries() != null)
+			{
+				for (final OrderEntryData od : cartData.getEntries())
+				{
+					if (od.getEntryNumber().longValue() == entryNumber)
+					{
+						if (StringUtils.isNotBlank(od.getExchangeApplied()))
+						{
+							isExchangeEntry = true;
+							break;
+						}
+					}
+				}
+			}
 			if (bindingResult.hasErrors())
 			{
 				for (final ObjectError error : bindingResult.getAllErrors())
@@ -737,21 +752,6 @@ public class CartPageController extends AbstractPageController
 					else
 					{
 						GlobalMessages.addErrorMessage(model, error.getDefaultMessage());
-					}
-				}
-			}
-			//else if block for Exchange
-			else if (cartData != null && cartData.getEntries() != null)
-			{
-				for (final OrderEntryData od : cartData.getEntries())
-				{
-					if (od.getEntryNumber().longValue() == entryNumber)
-					{
-						if (StringUtils.isNotBlank(od.getExchangeApplied()))
-						{
-							isExchangeEntry = true;
-							break;
-						}
 					}
 				}
 			}
@@ -1500,7 +1500,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -1557,7 +1557,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
