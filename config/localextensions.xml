@@ -112,7 +112,9 @@
 		<extension name="marketplacecaptchaaddon" />
 		<!-- extension name="marketplaceatssync" /-->
 
-
+		<!--Luxury packages -->
+		<extension name="luxuryinitialdata" />
+		
 		<extension name="ondemandcommon" />
 
 		<extension name="corepluscommons" />
