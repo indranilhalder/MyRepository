@@ -272,7 +272,7 @@ display: none;}
 			</div>
 			</div>
 			<!-- R2.3: START -->
-			<div class='full'>
+			<!-- <div class='full'> -->
 			<div class='half'>
 				<div class="optionsLandmark">
 					<formElement:formSelectBox  idKey="address.landmarks" selectCSSClass="address_landmarks"
@@ -284,14 +284,14 @@ display: none;}
 			</div>
 			<div class='half'>
 			
-				<div class='half address_landmarkOtherDiv' data-value="${addressForm.landmark}" style="display: none;">
+				<div class='address_landmarkOtherDiv' data-value="${addressForm.landmark}" style="display: none;">
 						<formElement:formInputBox inputCSS="address_landmarkOther" idKey="otherLandmark"
 							labelKey="Nearest Landmark" path="otherLandmark"
 							maxLength="30" />
 							<div class="error_text otherLandMarkError"></div>
 				</div>
 			</div>
-			</div>
+			<!-- </div> -->
 			<!-- R2.3: END -->
 		<%-- <formElement:formInputBox idKey="address.locality" labelKey="address.locality" path="locality" inputCSS="form-control" mandatory="true"/> --%>
 		<div class='full'>

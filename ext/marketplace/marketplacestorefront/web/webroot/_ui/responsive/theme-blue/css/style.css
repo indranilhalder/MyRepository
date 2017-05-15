@@ -63883,7 +63883,7 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
   	margin: 0;
     display: inline-block;
     width: auto;
-    padding-top: 7px;
+    /* padding-top: 7px; */
 }
 .cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .cnc_title_search{
 	margin:24px 0px;
@@ -64310,6 +64310,9 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 }
 #makePayment .cart.wrapper.checkout-payment h2.coupon,
 #makePayment .cart.wrapper.checkout-payment .coupon_title_mobile{
+	display: none;
+}
+.checkout-shipping.addNewAddress .form-additionals{
 	display: none;
 }
 @media(min-width: 768px){
