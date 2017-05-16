@@ -326,6 +326,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			List<BuyBoxModel> buyboxModelList = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPrice(productCode));
 			buyboxData.setAllOOStock(MarketplaceFacadesConstants.N);
 
+
+
 			//If all the sellers has stock zero, then display any product having non zero price
 			if (buyboxModelList.isEmpty())
 			{
@@ -361,6 +363,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			{
 				buyBoxMod = buyboxModelList.get(0);
 			}
+
 			if (buyboxModelList.size() > 0)
 			{
 

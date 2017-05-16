@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.GeneratedMarketplacecommerceservicesConstants.Enumerations.OISPaymentTypeEnum;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.juspay.constants.MarketplaceJuspayServicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.daos.impl.MplPaymentDaoImpl;
 import com.tisl.mpl.marketplacecommerceservices.service.JuspayPaymentService;
 
@@ -100,32 +101,37 @@ public class JuspayPaymentServiceImpl implements JuspayPaymentService
 		final CartModel cartModel;
 		cartModel = cart;
 		final String jusPayCreatedOrderId = (String) JaloSession.getCurrentSession().getAttribute("jusPayEndOrderId");
-		final String[] juspayPrefix_reqId = jusPayCreatedOrderId.split("_");
-		final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
-		paymentTransactionModel.setOrder(cart);
-
-		if (!cartModel.getPaymentTransactions().isEmpty())
+		if (jusPayCreatedOrderId != null && StringUtils.isNotEmpty(jusPayCreatedOrderId))
 		{
-			paymentTransactionModelList = new ArrayList<PaymentTransactionModel>(cartModel.getPaymentTransactions());
-		}
-		else
-		{
-			paymentTransactionModelList = new ArrayList<PaymentTransactionModel>();
-		}
+			final String[] juspayPrefix_reqId = jusPayCreatedOrderId.split("_");
+			final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
+			paymentTransactionModel.setOrder(cart);
 
-		final String codCode = getCodCodeGenerator().generate().toString();
-		paymentTransactionModel.setCode(MarketplacecommerceservicesConstants.JUSPAY + codCode + "-" + System.currentTimeMillis());
+			if (!cartModel.getPaymentTransactions().isEmpty())
+			{
+				paymentTransactionModelList = new ArrayList<PaymentTransactionModel>(cartModel.getPaymentTransactions());
+			}
+			else
+			{
+				paymentTransactionModelList = new ArrayList<PaymentTransactionModel>();
+			}
 
-		paymentTransactionModel.setCurrency(cart.getCurrency());
-		paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
-		paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(cart.getTotalPriceWithConv().doubleValue()));
-		paymentTransactionModel.setPaymentProvider(getConfigurationService().getConfiguration().getString("payment.juspay"));
-		paymentTransactionModel.setRequestId(juspayPrefix_reqId[1]);
-		paymentTransactionModelList.add(paymentTransactionModel);
-		cartModel.setPaymentTransactions(paymentTransactionModelList);
-		getModelService().save(paymentTransactionModel);
-		getPaymentTransactionEntryModel(paymentTransactionModel, cart, amount);
-		getModelService().save(cartModel);
+			final String juspayCode = getCodCodeGenerator().generate().toString();
+			paymentTransactionModel.setCode(MarketplacecommerceservicesConstants.JUSPAY + juspayCode + "-"
+					+ System.currentTimeMillis());
+
+			paymentTransactionModel.setCurrency(cart.getCurrency());
+			paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(cart.getTotalPriceWithConv().doubleValue()));
+			paymentTransactionModel.setPaymentProvider(getConfigurationService().getConfiguration().getString(
+					MarketplaceJuspayServicesConstants.JUSPAY_PAYMENTPROVIDER));
+			paymentTransactionModel.setRequestId(juspayPrefix_reqId[1]);
+			paymentTransactionModelList.add(paymentTransactionModel);
+			cartModel.setPaymentTransactions(paymentTransactionModelList);
+			getModelService().save(paymentTransactionModel);
+			getPaymentTransactionEntryModel(paymentTransactionModel, cart, amount);
+			getModelService().save(cartModel);
+		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -135,7 +141,6 @@ public class JuspayPaymentServiceImpl implements JuspayPaymentService
 	{
 		final PaymentTransactionEntryModel paymentTransactionEntryModel = getModelService().create(
 				PaymentTransactionEntryModel.class);
-		//Reverting BACK TISPRO-192 as Order was not getting placed from CSCOCKPIT
 		paymentTransactionEntryModel.setPaymentTransaction(paymentTransactionModel);
 		paymentTransactionEntryModel.setCurrency(cart.getCurrency());
 		paymentTransactionEntryModel.setTransactionStatus(getConfigurationService().getConfiguration().getString(
@@ -148,15 +153,17 @@ public class JuspayPaymentServiceImpl implements JuspayPaymentService
 		paymentTransactionEntryModel.setTime(new Date());
 		paymentTransactionEntryModel.setType(PaymentTransactionType.AUTHORIZATION);
 		final String paymentMode = (String) JaloSession.getCurrentSession().getAttribute("oisPaymentType");
-		//paymentTransactionEntryModel.setPaymentMode(mplPaymentDaoImpl.getPaymentMode(OTPTypeEnum.JUSPAY.toString()));
+
 		if (paymentMode.equalsIgnoreCase("credit"))
 		{
-			final String actualOISPaymentMode = OISPaymentTypeEnum.CREDIT.toString() + " " + "Card";
+			final String actualOISPaymentMode = OISPaymentTypeEnum.CREDIT.toString() + " "
+					+ MarketplaceJuspayServicesConstants.JUSPAY_PAYMENTMODE_CARD_STRING;
 			paymentTransactionEntryModel.setPaymentMode(mplPaymentDaoImpl.getPaymentMode(actualOISPaymentMode));
 		}
 		else if (paymentMode.equalsIgnoreCase("debit"))
 		{
-			final String actualOISPaymentMode = OISPaymentTypeEnum.DEBIT.toString() + " " + "Card";
+			final String actualOISPaymentMode = OISPaymentTypeEnum.DEBIT.toString() + " "
+					+ MarketplaceJuspayServicesConstants.JUSPAY_PAYMENTMODE_CARD_STRING;
 			paymentTransactionEntryModel.setPaymentMode(mplPaymentDaoImpl.getPaymentMode(actualOISPaymentMode));
 		}
 		else
@@ -177,12 +184,12 @@ public class JuspayPaymentServiceImpl implements JuspayPaymentService
 		cart.setPaymentInfo(jusPayPaymentInfoModel);
 		cart.setConvenienceCharges(Double
 				.valueOf(null != baseStoreService.getCurrentBaseStore().getConvenienceChargeForCOD() ? baseStoreService
-						.getCurrentBaseStore().getConvenienceChargeForCOD().longValue() : 0.0)); //NullPointerException handled
+						.getCurrentBaseStore().getConvenienceChargeForCOD().longValue() : 0.0));
 		//setting the payment modes and the amount against it in session to be used later
 		final Map<String, Double> paymentInfo = new HashMap<String, Double>();
-		paymentInfo.put("JusPay", cart.getConvenienceCharges());
+		paymentInfo.put(MarketplaceJuspayServicesConstants.JUSPAY_KEY, cart.getConvenienceCharges());
 		sessionService.setAttribute("paymentModes", paymentInfo);
-		sessionService.setAttribute("paymentModeForPromotion", "JusPay");
+		sessionService.setAttribute("paymentModeForPromotion", MarketplaceJuspayServicesConstants.JUSPAY_KEY);
 		getModelService().save(jusPayPaymentInfoModel);
 		getModelService().save(cart);
 		getModelService().refresh(cart);

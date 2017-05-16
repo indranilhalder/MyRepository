@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
+import com.tisl.mpl.cockpits.cscockpit.services.StoreAgentUserRole;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 
 import de.hybris.platform.cockpit.session.UISessionUtils;
@@ -30,6 +31,9 @@ public class MplDefaultCustomerOrdersStrategy extends
 	
 	@Resource
 	private OrderModelService orderModelService;
+	
+	@Autowired
+	StoreAgentUserRole storeAgentUserRole;
 	
 	@Override
 	public Collection<OrderModel> getCustomerOrders(CustomerModel customer) {
@@ -55,9 +59,9 @@ public class MplDefaultCustomerOrdersStrategy extends
 	  if (customer != null)
 	  {
 		List<OrderModel> orderList = null;
-		if (isUserInRole(configurationService
+		if (storeAgentUserRole.isUserInRole((configurationService
 				.getConfiguration()
-				.getString(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP))) {
+				.getString(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)))) {
 			final String agentId = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
 			orderList = orderModelService.getOrderByAgent(customer, agentId);
 		}
@@ -75,15 +79,4 @@ public class MplDefaultCustomerOrdersStrategy extends
 	  return orders;
 	}
 
-	private boolean isUserInRole(String groupName) {
-		Set<PrincipalGroupModel> userGroups = UISessionUtils
-				.getCurrentSession().getUser().getAllGroups();
-
-		for (PrincipalGroupModel ug : userGroups) {
-			if (ug.getUid().equalsIgnoreCase(groupName)) {
-				return true;
-			}
-		}
-		return false;
-	}
 }

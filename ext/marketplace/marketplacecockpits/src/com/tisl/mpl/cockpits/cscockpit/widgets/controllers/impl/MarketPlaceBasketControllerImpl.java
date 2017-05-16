@@ -31,6 +31,7 @@ import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
+import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.model.UnregisteredUserRestrictionModel;
@@ -145,7 +146,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	private MplDefaultCommerceAddToCartStrategyImpl mplDefaultCommerceAddToCartStrategyImpl;
 	
 	@Autowired
-	private UserService userService;
+	private AgentIdForStore agentIdForStore;
 
 	/**
 	 * Adds the to market place cart.
@@ -282,23 +283,6 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		return responseData;
 	}
 	
-	private String getAgentIdForStore(final String groupName)
-	{
-		final String agentId = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
-		final UserModel user = userService.getUserForUID(agentId);
-		final Set<PrincipalGroupModel> userGroups = user.getAllGroups();
-
-		for (final PrincipalGroupModel ug : userGroups)
-		{
-			if (ug.getUid().equalsIgnoreCase(groupName))
-			{
-				return agentId;
-			}
-		}
-		return StringUtils.EMPTY;
-	}
-	
-
 	/**
 	 * Reserve cart.
 	 *
@@ -331,8 +315,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	      }
 	      
 	      // if store agent is logged in
-	      final String agentId = getAgentIdForStore(configurationService.getConfiguration().getString(
-					MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP));
+	      final String agentId = agentIdForStore.getAgentIdForStore((configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)));
 	      
 			for(AbstractOrderEntryModel entry : cart.getEntries()){
 				if((!mplFindDeliveryFulfillModeStrategy.isTShip(entry.getSelectedUSSID()))

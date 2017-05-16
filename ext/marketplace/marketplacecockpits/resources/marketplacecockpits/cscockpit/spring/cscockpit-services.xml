@@ -45,6 +45,13 @@
         <property name="commonI18NService" ref="commonI18NService"/>
     </bean>
     
+    <!-- bean definition for store agent specific user role -->
+    <alias name="defaultStoreAgentUserRoleService" alias="storeAgentUserRole"/>
+    <bean id="defaultStoreAgentUserRoleService"
+          class="com.tisl.mpl.cockpits.cscockpit.services.impl.StoreAgentUserRoleService">
+     
+    </bean>
+    
     <bean id="marketplaceServiceabilityCheckHelper"	
     	class="com.tisl.mpl.cockpits.cscockpit.widgets.helpers.impl.MarketplaceServiceabilityCheckHelperImpl">
 	</bean>

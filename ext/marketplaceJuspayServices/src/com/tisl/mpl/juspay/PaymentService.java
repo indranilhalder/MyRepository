@@ -74,7 +74,6 @@ public class PaymentService
 	private Environment environment;
 	private String environmentSet;
 
-	public static final String CSCOCKPITRETURN_URL = "http://localhost:9001/cscockpit";
 
 	/**
 	 * @return the baseUrl
@@ -196,23 +195,11 @@ public class PaymentService
 		final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(
 				MarketplaceJuspayServicesConstants.PROXYENABLED);
 
-
-
 		HttpsURLConnection connection = null;
 		final StringBuilder buffer = new StringBuilder();
 
 		try
 		{
-			/*
-			 * if (proxyEnableStatus.equalsIgnoreCase("true")) { final String proxyName =
-			 * getConfigurationService().getConfiguration().getString( MarketplaceJuspayServicesConstants.GENPROXY); final
-			 * int proxyPort = Integer.parseInt(getConfigurationService().getConfiguration().getString(
-			 * MarketplaceJuspayServicesConstants.GENPROXYPORT)); final SocketAddress addr = new
-			 * InetSocketAddress(proxyName, proxyPort); final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr); final URL url
-			 * = new URL(endPoint); connection = (HttpsURLConnection) url.openConnection(proxy); final String msg =
-			 * connection.getResponseMessage(); LOG.info("conection msg :: " + msg); } else { final URL url = new
-			 * URL(endPoint); connection = (HttpsURLConnection) url.openConnection(); }
-			 */
 			if (proxyEnableStatus.equalsIgnoreCase("true"))
 			{
 				final String proxyName = getConfigurationService().getConfiguration().getString(
@@ -299,8 +286,8 @@ public class PaymentService
 		params.put("udf8", initOrderRequest.getUdf8() == null ? "" : initOrderRequest.getUdf8());
 		params.put("udf9", initOrderRequest.getUdf9() == null ? "" : initOrderRequest.getUdf9());
 		params.put("udf10", initOrderRequest.getUdf10() == null ? "" : initOrderRequest.getUdf10());
-		//params.put("return_url", initOrderRequest.getReturnUrl() == null ? "" : initOrderRequest.getReturnUrl());
-		params.put("return_url", CSCOCKPITRETURN_URL);
+		params.put("return_url", initOrderRequest.getReturnUrl() == null ? "" : initOrderRequest.getReturnUrl());
+
 
 		final String serializedParams = serializeParams(params);
 		final String url = baseUrl + "/orders";

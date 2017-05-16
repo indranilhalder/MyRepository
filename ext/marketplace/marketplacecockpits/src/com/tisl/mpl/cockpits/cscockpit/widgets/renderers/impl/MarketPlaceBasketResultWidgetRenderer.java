@@ -32,6 +32,7 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.models.impl.MarketplaceSearchResu
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.marketplacecommerceservices.strategy.MplFindDeliveryCostStrategy;
 
@@ -110,7 +111,7 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 	private MplFindDeliveryCostStrategy mplFindDeliveryCostStrategy;
 	
 	@Autowired
-	private UserService userService;
+	private AgentIdForStore agentIdForStore;
 	
 	@Autowired
 	private PincodeService pincodeService;
@@ -590,21 +591,7 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 	}
 	}
 	
-	private String getAgentIdForStore(final String groupName)
-	{
-		final String agentId = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
-		final UserModel user = userService.getUserForUID(agentId);
-		final Set<PrincipalGroupModel> userGroups = user.getAllGroups();
-
-		for (final PrincipalGroupModel ug : userGroups)
-		{
-			if (ug.getUid().equalsIgnoreCase(groupName))
-			{
-				return agentId;
-			}
-		}
-		return StringUtils.EMPTY;
-	}
+	
 	/**
 	 * Process pin code serviceability.
 	 *
@@ -624,8 +611,8 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 			((MarketplaceSearchCommandController) widget
 					.getWidgetController()).setCurrentSite();
 			
-			final String agentId = getAgentIdForStore(configurationService.getConfiguration().getString(
-					MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP));
+			final String agentId = agentIdForStore.getAgentIdForStore((configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)));
 			
 			//TISUAT-4526 no sship in cod
 			if((!mplFindDeliveryCostStrategy.isTShip(ussid)) 

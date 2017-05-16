@@ -176,4 +176,27 @@ public final class MarketplaceCockpitsConstants extends
 	
 	public static final String SOURCE="CSCockpit";
 	
+	public static final String CSCOCKPITRETURN_URL = "juspay.cscockpit.returnUrl".intern();
+	
+	public static final String JUSPAYPAYMENTPAGEURL = "juspay.paymentpage.url".intern();
+	
+	public static final String ORDERPAYMENTSTATUSURL = "juspay.paymentstatus.url".intern();
+	
+	public static final String PAYMENT_METHOD_TYPE= "CARD";
+	
+	public static final String OIS_NETBANKING = "Netbanking";
+	
+	public static final String JUSPAY_RESPONSE_CARD_KEY = "card";
+	
+	public static final String JUSPAY_RESPONSE_CARTTYPE_KEY = "card_type";
+	
+	public static final String JUSPAY_ORDER_STATUS = "CHARGED";
+	
+	public static final String PAYMENT_SUCCESSFUL = "Payment Successsful";
+	
+	public static final String PAYMENT_UNSUCCESSFUL = "Please try again";
+	
+	public static final String NONCOD_PRODUCT_EXIST = "Non COD Product Exist, Please Check again OR Contact with Site Administrator";
+	
+	public static final String JUSPAY_PAYMENT = "paynow";
 }

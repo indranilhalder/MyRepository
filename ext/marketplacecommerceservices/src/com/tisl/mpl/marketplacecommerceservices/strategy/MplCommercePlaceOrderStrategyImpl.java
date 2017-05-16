@@ -12,10 +12,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.security.PrincipalGroupModel;
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.core.model.user.UserModel;
-import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.order.CalculationService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
@@ -28,7 +25,6 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.services.BaseStoreService;
@@ -51,6 +47,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
+import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
@@ -87,7 +84,8 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	private MplCommerceCartService mplCommerceCartService;
 
 	@Autowired
-	private UserService userService;
+	private AgentIdForStore agentIdForStore;
+
 
 
 	@Override
@@ -211,8 +209,8 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 					//storing agent id in the order model in case of store manager login in cscockpit
 
-					final String agentId = getAgentIdForStore(configurationService.getConfiguration().getString(
-							MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP));
+					final String agentId = agentIdForStore.getAgentIdForStore((configurationService.getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)));
 					if (agentId != null && StringUtils.isNotEmpty(agentId))
 					{
 						orderModel.setAgentId(agentId);
@@ -289,22 +287,6 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		{
 			getExternalTaxesService().clearSessionTaxDocument();
 		}
-	}
-
-	private String getAgentIdForStore(final String groupName)
-	{
-		final String agentId = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
-		final UserModel user = userService.getUserForUID(agentId);
-		final Set<PrincipalGroupModel> userGroups = user.getAllGroups();
-
-		for (final PrincipalGroupModel ug : userGroups)
-		{
-			if (ug.getUid().equalsIgnoreCase(groupName))
-			{
-				return agentId;
-			}
-		}
-		return StringUtils.EMPTY;
 	}
 
 	private boolean checkOrder(final OrderModel order)

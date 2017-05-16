@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
@@ -284,21 +285,21 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 				try 
 				{
 					jsuPayCreatedOrderId = (String) JaloSession.getCurrentSession().getAttribute("jusPayEndOrderId");
-					if(!jsuPayCreatedOrderId.isEmpty())
+					if(jsuPayCreatedOrderId != null && StringUtils.isNotEmpty(jsuPayCreatedOrderId))
 					{
 						juspayOrderCreationFlag = true;
 					}
 					String commerEndOrderId = (String) JaloSession.getCurrentSession().getAttribute("commerceEndOrderId");
 					LOG.info("juspay order id ::: "+jsuPayCreatedOrderId);
-					if(juspayOrderCreationFlag && commerEndOrderId!= null)
+					if(juspayOrderCreationFlag && commerEndOrderId!= null && StringUtils.isNotEmpty(commerEndOrderId))
 					{
 						final String orderPaymentStatus = ((MarketplaceCheckoutController)widget.getWidgetController()).
 								juspayPaymentValidation(commerEndOrderId);
 						
-						if(orderPaymentStatus.equalsIgnoreCase("CHARGED") &&
+						if(orderPaymentStatus.equalsIgnoreCase(MarketplaceCockpitsConstants.JUSPAY_ORDER_STATUS) &&
 								widget.getWidgetController().needPaymentOption())
 						{
-							Messagebox.show("Payment Successsful",INFO, Messagebox.OK,
+							Messagebox.show(MarketplaceCockpitsConstants.PAYMENT_SUCCESSFUL,INFO, Messagebox.OK,
 									Messagebox.INFORMATION);
 							((MarketplaceCheckoutController)widget.getWidgetController()).jusPayprocessPaymentTxn(cart);
 							juspayOrderCreationFlag = false;
@@ -307,7 +308,7 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 						
 						else
 						{
-							Messagebox.show("Please try again",INFO, Messagebox.OK,
+							Messagebox.show(MarketplaceCockpitsConstants.PAYMENT_UNSUCCESSFUL,INFO, Messagebox.OK,
 									Messagebox.ERROR);
 							juspayOrderCreationFlag = false;
 							buttonLabelChangeFlag = true;
@@ -370,7 +371,7 @@ protected class JuspayPaymentEventListener implements EventListener
 			{
 				((MarketplaceCheckoutController)widget.getWidgetController()).processJuspayPayment(cart, customer);
 				jsuPayCreatedOrderId = (String) JaloSession.getCurrentSession().getAttribute("jusPayEndOrderId");
-				if(!jsuPayCreatedOrderId.isEmpty())
+				if(jsuPayCreatedOrderId != null && StringUtils.isNotEmpty(jsuPayCreatedOrderId))
 				{
 					juspayOrderCreationFlag = true;
 				}
@@ -464,7 +465,7 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 						if(!authPaaymentsttatus)
 						{
 							Messagebox.show(
-									LabelUtils.getLabel(widget, "noSellerCOD", new Object[0]),
+									LabelUtils.getLabel(widget,MarketplaceCockpitsConstants.NONCOD_PRODUCT_EXIST, new Object[0]),
 									INFO, Messagebox.OK, Messagebox.ERROR);
 							return;
 						}
@@ -710,7 +711,7 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 						((CheckoutController) widget.getWidgetController()).getBasketController()
 								.dispatchEvent(null, widget.getWidgetController(), data);
 						} 
-						else if(mode.equalsIgnoreCase("paynow"))
+						else if(mode.equalsIgnoreCase(MarketplaceCockpitsConstants.JUSPAY_PAYMENT))
 						{
 							((MarketplaceCheckoutController) widget.getWidgetController()).canCreatePayments();
 							((MarketplaceCheckoutController) widget.getWidgetController()).processJusPayPaymentOnSelect();

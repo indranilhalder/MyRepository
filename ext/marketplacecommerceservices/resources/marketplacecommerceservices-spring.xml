@@ -550,6 +550,12 @@
 		<property name="cartService" ref="cartService" />
 		<property name="commerceUpdateCartEntryStrategy" ref="commerceUpdateCartEntryStrategy" />
 	</bean>
+	
+	<!-- agent id for store service -->
+	<alias name="defaultAgentIdForStoreService" alias="agentIdForStore" />
+	<bean id="defaultAgentIdForStoreService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.AgentIdForStoreImpl">
+	</bean>
 
 	<!-- MplCommerceCartDao start -->
 	<alias name="mplCommerceCartDao" alias="mplCommerceCartDao" />

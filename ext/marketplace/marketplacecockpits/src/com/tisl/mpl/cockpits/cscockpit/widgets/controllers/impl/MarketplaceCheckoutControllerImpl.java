@@ -46,6 +46,7 @@ import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.juspay.constants.MarketplaceJuspayServicesConstants;
+import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
 import com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.JuspayPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
@@ -95,25 +96,6 @@ public class MarketplaceCheckoutControllerImpl extends
 	/** The Constant OMS_MODES_NOT_CONFIGURED. */
 	private static final String OMS_MODES_NOT_CONFIGURED = "omsModesNotConfigured";
 
-	
-	private static final String PAYMENTURL = "/checkout/multi/payment-method/cardPayment";
-	
-	private static final String PORTNO = "9001";
-	
-	private static final String JUSPAYPAYMENTPAGEURL = "https://sandbox.juspay.in/merchant/pay/";
-	
-	private static final String ORDERPAYMENTSTATUSURL = "https://sandbox.juspay.in/orders/";
-	
-	private static final String MERCHANTID = "tul_ebs";
-	
-	private static final String MERCHANTKEY = "merchantId=";
-	
-	private static final String JUSPAYPAYMENTVERSION = "2017-03-16";
-	
-	private static final String PAYMENT_METHOD_TYPE= "CARD";
-	
-	private static final String OIS_NETBANKING = "Netbanking";
-	
 	private int connectionTimeout = 5 * 10000;
 	private int readTimeout = 5 * 1000;
 	
@@ -188,7 +170,7 @@ public class MarketplaceCheckoutControllerImpl extends
 	private MplVoucherService mplVoucherService;	
 	
 	@Autowired
-	private UserService userService;
+	private AgentIdForStore agentIdForStore;
 	
 	/**
 	 * Gets the product value.
@@ -671,22 +653,6 @@ public class MarketplaceCheckoutControllerImpl extends
 		return isCODLimitAvailable;
 	}
 	
-	private String getAgentIdForStore(final String groupName)
-	{
-		final String agentId = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
-		final UserModel user = userService.getUserForUID(agentId);
-		final Set<PrincipalGroupModel> userGroups = user.getAllGroups();
-
-		for (final PrincipalGroupModel ug : userGroups)
-		{
-			if (ug.getUid().equalsIgnoreCase(groupName))
-			{
-				return agentId;
-			}
-		}
-		return StringUtils.EMPTY;
-	}
-	
 	protected boolean isNonCodProductExistForAgent(final CartModel cart, final String agentId)
 	{
 		boolean nonCodProduct = false;
@@ -719,13 +685,11 @@ public class MarketplaceCheckoutControllerImpl extends
 	public boolean processPayment(CartModel cart) throws PaymentException,
 			ValidationException ,Exception{
 		
-		final String agentId = getAgentIdForStore(configurationService.getConfiguration().getString(
-				MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP));
+		final String agentId = agentIdForStore.getAgentIdForStore((configurationService.getConfiguration().
+				getString(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)));
 		if (agentId != null && StringUtils.isNotEmpty(agentId))
 		{
-			final boolean ifNonCod = isNonCodProductExistForAgent(cart, agentId);
-			
-			if(ifNonCod)
+			if(isNonCodProductExistForAgent(cart, agentId))
 			{
 				return false;
 			}
@@ -948,42 +912,30 @@ public class MarketplaceCheckoutControllerImpl extends
 		final String country = cart.getPaymentAddress().getCountry().getName();
 		final String state = cart.getPaymentAddress().getState();
 		final String city = cart.getPaymentAddress().getCity();
-		final String pincode = "700050";
+		final String pincode = cart.getPaymentAddress().getPostalcode();
 		final boolean cardSaved = false;
 		final boolean sameAsShipping = false;
-		final String guid = cart.getGuid();
 		final String uid = customer.getUid();
-		String ip = null;
 		final StringBuilder returnUrlBuilder = new StringBuilder();
 		
-		LOG.info("guid ::: "+ guid);
 		LOG.info("first name :: "+firstName+" "+"last name ::"+lastName
 				+" "+"pincode :: "+pincode);
-		try {
-			ip = InetAddress.getLocalHost().getHostAddress();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
+		
 		returnUrlBuilder
-		.append("http://"+ip+":"+PORTNO)
-		.append(PAYMENTURL);
-		if (StringUtils.isNotEmpty(guid))
-		{
-			returnUrlBuilder.append("/").append(guid);
-		}
+		.append(configurationService.getConfiguration().getString(MarketplaceCockpitsConstants.CSCOCKPITRETURN_URL));
 		LOG.info("created URL ::: "+returnUrlBuilder);
 		
 		orderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
 				paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 				cardSaved + "|" + sameAsShipping, returnUrlBuilder.toString(),
 				uid, "WEB");
-		//LOG.info("juspay order id ::: "+orderId);
-		
+		LOG.info("order id ::: "+orderId);
 		final String jsuPayCreatedOrderId = (String) JaloSession.getCurrentSession().getAttribute("jusPayEndOrderId");
 		LOG.info("juspay order id ::: "+jsuPayCreatedOrderId);
-		if(jsuPayCreatedOrderId != null)
+		if(jsuPayCreatedOrderId != null && StringUtils.isNotEmpty(jsuPayCreatedOrderId))
 		{
-			String absoluteJusPayPaymentURL = JUSPAYPAYMENTPAGEURL + jsuPayCreatedOrderId;
+			String absoluteJusPayPaymentURL = configurationService.getConfiguration().getString(MarketplaceCockpitsConstants.JUSPAYPAYMENTPAGEURL)
+					+ jsuPayCreatedOrderId;
 			LOG.info("juspaymnet page url  :: "+absoluteJusPayPaymentURL);
 			
 			Clients.evalJavaScript("window.open('" + absoluteJusPayPaymentURL + "')");
@@ -994,20 +946,21 @@ public class MarketplaceCheckoutControllerImpl extends
 	public String juspayPaymentValidation(final String commerEndOrderId)
 	{
 		//final String url = ORDERPAYMENTSTATUSURL+commerEndOrderId+"?"+MERCHANTKEY+MERCHANTID;
-		final String url = ORDERPAYMENTSTATUSURL+commerEndOrderId;
+		final String url = configurationService.getConfiguration().getString(MarketplaceCockpitsConstants.ORDERPAYMENTSTATUSURL)
+				+commerEndOrderId;
 		final String paymentStatusresponse = makeGetPaymentStatusCall(url);
 		
 		final JSONObject jsonResponse = (JSONObject) JSONValue.parse(paymentStatusresponse);
 		final String merchantId = (String) jsonResponse.get("status");
 		final String paymentMethodType = (String)jsonResponse.get("payment_method_type");
-		if(paymentMethodType.equalsIgnoreCase(PAYMENT_METHOD_TYPE))
+		if(paymentMethodType.equalsIgnoreCase(MarketplaceCockpitsConstants.PAYMENT_METHOD_TYPE))
 		{
-			final JSONObject structure = (JSONObject) jsonResponse.get("card");
-			paymentType = (String)structure.get("card_type");
+			final JSONObject structure = (JSONObject) jsonResponse.get(MarketplaceCockpitsConstants.JUSPAY_RESPONSE_CARD_KEY);
+			paymentType = (String)structure.get(MarketplaceCockpitsConstants.JUSPAY_RESPONSE_CARTTYPE_KEY);
 		}
 		else
 		{
-			paymentType = OIS_NETBANKING;
+			paymentType = MarketplaceCockpitsConstants.OIS_NETBANKING;
 		}
 		JaloSession.getCurrentSession().setAttribute("oisPaymentType", paymentType);
 		return merchantId;
@@ -1053,7 +1006,8 @@ public class MarketplaceCheckoutControllerImpl extends
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 			connection.setRequestProperty("Content-Language", "en-US");
 			connection.setRequestProperty("charset", "utf-8");
-			connection.setRequestProperty("version",JUSPAYPAYMENTVERSION);
+			connection.setRequestProperty("version",
+					configurationService.getConfiguration().getString(MarketplaceJuspayServicesConstants.VERSION));
 			connection.setUseCaches(false);
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
@@ -1082,6 +1036,4 @@ public class MarketplaceCheckoutControllerImpl extends
 		
 		return responseFromJuspay;
 	}
-
-
 }

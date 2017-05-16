@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
+import com.tisl.mpl.cockpits.cscockpit.services.StoreAgentUserRole;
 
 import de.hybris.platform.cockpit.session.UISessionUtils;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -34,6 +35,9 @@ public class MarketplaceDefaultOrderSearchQueryBuilder extends
 
 	@Autowired
 	private ConfigurationService configurationService;
+	
+	@Autowired
+	StoreAgentUserRole storeAgentUserRole;
 
 	private static final String JOIN_CUSTOMER_TABLE_PART_QUERY = " LEFT JOIN Customer AS c ON {c:pk} = {o:user}";
 
@@ -98,9 +102,9 @@ public class MarketplaceDefaultOrderSearchQueryBuilder extends
 		final boolean searchEmailId = StringUtils.isNotEmpty(emailId);
 		final boolean searchThreshold = thresholddays != 0;
 		String agentId = null;
-		if (isUserInRole(configurationService
+		if (storeAgentUserRole.isUserInRole((configurationService
 				.getConfiguration()
-				.getString(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP))) {
+				.getString(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)))) {
 			agentId = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
 		}
 		StringBuilder query = new StringBuilder();
@@ -288,17 +292,7 @@ public class MarketplaceDefaultOrderSearchQueryBuilder extends
 		return null;
 	}
 
-	private boolean isUserInRole(String groupName) {
-		Set<PrincipalGroupModel> userGroups = UISessionUtils
-				.getCurrentSession().getUser().getAllGroups();
-
-		for (PrincipalGroupModel ug : userGroups) {
-			if (ug.getUid().equalsIgnoreCase(groupName)) {
-				return true;
-			}
-		}
-		return false;
-	}
+	
 
 	public Map<String, String> getChannelCodeMap() {
 		return channelCodeMap;

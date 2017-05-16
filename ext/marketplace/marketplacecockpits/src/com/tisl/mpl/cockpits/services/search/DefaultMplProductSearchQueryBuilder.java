@@ -14,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
+import com.tisl.mpl.cockpits.cscockpit.services.StoreAgentUserRole;
 
 
 public class DefaultMplProductSearchQueryBuilder extends
@@ -21,6 +22,9 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 {
 	@Autowired
 	private ConfigurationService configurationService;
+	
+	@Autowired
+	StoreAgentUserRole storeAgentUserRole;
 	
 	protected FlexibleSearchQuery buildFlexibleSearchQuery(
 		DefaultCsTextFacetSearchCommand command) {
@@ -35,15 +39,15 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 	
 	query.append("SELECT DISTINCT {p.pk}, {p.name}, {p.code} "
 	+"from {product as p JOIN Catalogversion as cv ON {p.catalogversion}={cv.pk} JOIN Buybox as bb ON {p.code}={bb.product}");
-	if (isUserInRole(configurationService
+	if (storeAgentUserRole.isUserInRole((configurationService
 			.getConfiguration()
-			.getString(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP))) {
+			.getString(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)))) {
 		query.append(" join SellerInformation as si on {si.productsource}={p.pk}");
 	}
 	query.append("} where");
-	if (isUserInRole(configurationService
+	if (storeAgentUserRole.isUserInRole((configurationService
 			.getConfiguration()
-			.getString(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP))) {
+			.getString(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)))) {
 		query.append(" {si.SellerID} = "+sellerID+" AND ");
 	}
 	query.append(" {p.pk} in ({{"
@@ -59,9 +63,9 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 		query.append("}})"
 	+"}})"
 	+"OR");
-		if (isUserInRole(configurationService
+		if (storeAgentUserRole.isUserInRole((configurationService
 				.getConfiguration()
-				.getString(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP))) {
+				.getString(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)))) {
 			query.append(" {si.SellerID} = "+sellerID+" AND ");
 		}
 		query.append( " {p.pk} in ({{"
@@ -100,15 +104,5 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 	return searchQuery;
 	}
 
-	private boolean isUserInRole(String groupName) {
-		Set<PrincipalGroupModel> userGroups = UISessionUtils
-				.getCurrentSession().getUser().getAllGroups();
-
-		for (PrincipalGroupModel ug : userGroups) {
-			if (ug.getUid().equalsIgnoreCase(groupName)) {
-				return true;
-			}
-		}
-		return false;
-	}
+	
 }
