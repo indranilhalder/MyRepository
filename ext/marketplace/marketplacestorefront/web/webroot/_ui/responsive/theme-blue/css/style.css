@@ -16887,20 +16887,21 @@ body .compare>.wrapper {
       .stats-table tr td:nth-child(odd) {
         text-transform: capitalize;
         font-weight: 500;
-        width: 15%; }
+        width: 15%;
+         }
 
 .stats-table.mobile {		
     display: none		
 }		
 @media (max-width: 650px) {		
-    .stats-table {		
+   /*  .stats-table {		
         display: none;		
-    }		
-    .stats-table.mobile {		
+    } */		
+    .stats-table{		
         display: table;		
         border: 2px solid #f0f4f5;		
     }		
-    .stats-table.mobile tr td {		
+    .stats-table tr td {		
         width: 50%;		
     }		
 }
@@ -66510,3 +66511,7 @@ body .account .right-account .order-history .product-block li.item .attributes p
  	  padding: 0 15px;
  	}
   }
+  
+  body.page-search .listing.wrapper .right-block .listing-menu{
+  	display:none;
+  }		/*TISPRDT-1179*/

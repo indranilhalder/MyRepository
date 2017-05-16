@@ -20,6 +20,12 @@ $(document).ready(function () {
 	var lastSegment = "";
 	if(requestParam.includes("/m/")) {
 		lastSegment = requestParam.split('/').pop();
+		//TISPRDT-1189 starts here
+		if (lastSegment.indexOf("?") > -1){
+			var lastSegmentArr = lastSegment.split('?');
+			lastSegment = lastSegmentArr[0];
+		}
+		//TISPRDT-1189 ends here
 	}
 	else
 	{

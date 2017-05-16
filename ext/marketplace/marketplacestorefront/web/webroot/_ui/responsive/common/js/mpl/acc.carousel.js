@@ -232,6 +232,16 @@ ACC.carousel = {
 				autoHeight : true,
 				autoplayTimeout: timeout
 			});
+		       // TISPRDT-1159
+		       $(".style_edit_blp .home-rotatingImage").owlCarousel({
+				items:1,
+				nav:false,
+				dots:($(".style_edit_blp .home-rotatingImage img").length == 1)?false:true,
+				loop: ($(".style_edit_blp .home-rotatingImage img").length == 1)?false:true,
+				autoplay: true,
+				autoHeight : true,
+				autoplayTimeout: timeout
+			});
 		
 	},
 	

@@ -171,7 +171,7 @@ public class MplCustomPageSiteMapGenerator extends AbstractSiteMapGenerator<Cust
 		queryBuilder.append("SELECT {c.pk} FROM {Category AS c JOIN CatalogVersion AS cv ON {c.catalogVersion}={cv.pk} ")
 				.append(" JOIN Catalog AS cat ON {cv.pk}={cat.activeCatalogVersion} ")
 				.append(" JOIN CMSSite AS site ON {cat.pk}={site.defaultCatalog}}  WHERE {site.pk} = ?site ")
-				.append(" AND NOT exists ({{select {cr.pk} from {CategoriesForRestriction as cr} where {cr.target} = {c.pk} }})");
+				.append(" AND NOT exists ({{select {cr.pk} from {CategoriesForRestriction as cr} where {cr.target} = {c.pk} and {c.code} like 'MSH%' or {c.code} like 'MBH%' }})");
 		final String query = queryBuilder.toString();
 
 		final Map<String, Object> params = new HashMap<String, Object>();
