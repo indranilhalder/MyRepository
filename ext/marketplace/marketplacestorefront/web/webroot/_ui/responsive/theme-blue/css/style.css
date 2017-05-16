@@ -8161,7 +8161,7 @@ div.wishlist-content .pagination {
   right: 0; }
   @media (max-width: 650px) {
     div.wishlist-content .pagination {
-      bottom: 30px; } }
+      /* bottom: 30px; */	/* comment for INC144315727 */ } }
   div.wishlist-content .pagination a.active {
     text-decoration: underline;
     color: #A9143C; }
@@ -40845,6 +40845,10 @@ fieldset#cardDate .form-group .control-label, fieldset#startDate .form-group .co
 
 .container {
 	padding: 0px !important;
+	/* start change of INC144314904 */
+	max-width: 1400px;
+	margin: 0 auto;
+	/* end change of INC144314904 */
 }
 
 
@@ -55187,6 +55191,7 @@ body .lookbook_wrapper .listing.wrapper .left-block{
   }
   .checkout.wrapper .formaddress .product-block.addresses.new-form li.item .half{
       width: 47.7%;
+      float: left;	/* add for INC144314904 */
   }
   .formaddress .saveBtn{
   border: 1px solid #dbdbdb;
@@ -55368,6 +55373,10 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
  .callouts {
     background: #f9f9f9;
     margin: 50px 0 0;
+    /* start change of INC144314904 */
+	max-width: 1400px;
+	margin: 0 auto;
+	/* end change of INC144314904 */
 }
 
 
@@ -63202,7 +63211,7 @@ body.page-productGrid .listing.wrapper .right-block .listing-menu {
 @media(min-width:791px){
 body.page-productGrid .list_title h1 {
     float: left;
-    margin-left: 292px;
+    margin-left: 292px !important;	/* add important for INC144314904 */
 	position: absolute;
     margin-top: 22px;
     text-align: left;    /* TPR-1283*/
@@ -65429,6 +65438,11 @@ div.radio.creditDebitLabelRadio{
 .progress-barcheck .step-1 span, .progress-barcheck .step-2 span, .progress-barcheck .step-3 span{
 	top:0px !important;
 }
+/* start change of INC144313766 */
+.progress-barcheck .step-2 span{
+	left:50%;
+}
+/* end change of INC144313766 */
 .progress-barcheck .step-1.step-done span.paymentStepDone:after,
  .progress-barcheck .step-2.step-done span.paymentStepDone:after,
   .progress-barcheck .step-3.step-done span.paymentStepDone:after{
