@@ -17,9 +17,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.PcmProductVariantModel;
+import com.tisl.mpl.standardizationfactory.StandardizationService;
 
 
 /**
@@ -31,6 +34,11 @@ public class MplSizeFacetValueProvider extends AbstractPropertyFieldValueProvide
 {
 	private FieldNameProvider fieldNameProvider;
 
+	//For TPR:4847: size facet clubbing for kidswear
+	@Autowired
+	private StandardizationService sizeStandard;
+
+	//For TPR:4847: size facet clubbing for kidswear
 
 	//	@Autowired
 	//	private ConfigurationService configurationService;
@@ -58,7 +66,8 @@ public class MplSizeFacetValueProvider extends AbstractPropertyFieldValueProvide
 			//Model should be instance of PcmProductVariantModel
 			final PcmProductVariantModel pcmColorModel = (PcmProductVariantModel) model;
 			//Get size for a product
-			final String size = pcmColorModel.getSize();
+			String size = pcmColorModel.getSize();
+			String kidswearSize = "";
 
 			/**
 			 * This logic used to fix issue: TISREL-654 ('Size' facet shouldn't get displayed in the PLP of Belts category)
@@ -67,11 +76,20 @@ public class MplSizeFacetValueProvider extends AbstractPropertyFieldValueProvide
 			{
 				return Collections.emptyList();
 			}
+			//For TPR:4847: size facet clubbing
+			if ("Kidswear".equalsIgnoreCase(pcmColorModel.getProductCategoryTypeL2()))
+			{
+				kidswearSize = sizeStandard.getStandardValueNonNumeric(size, "KidswearSize", "0.0");
 
+				if (null != kidswearSize && StringUtils.isNotEmpty(kidswearSize))
+				{
+					size = kidswearSize;
+				}
+			}
+			//For TPR:4847: size facet clubbing
 			/**
 			 * Fix issue : TISREL-654 End
 			 */
-
 			//If size is not empty
 			if (size != null && !size.isEmpty())
 			{
