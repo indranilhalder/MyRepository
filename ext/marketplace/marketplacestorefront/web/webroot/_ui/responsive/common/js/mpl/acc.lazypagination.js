@@ -330,8 +330,9 @@ $(document).ready(function() {
         	 	}
 
         });
-        
-        $('.responsiveSort').change(function(){
+      //Added for PRDI-109 
+        $(document).on('change','.responsiveSort',function(){ 
+      //  $('.responsiveSort').change(function(){
         	//sort($(this).find(':selected'),true);
         	// INC144315462 and INC144315104
         	if($('input[name=customSku]')){
@@ -339,7 +340,8 @@ $(document).ready(function() {
         		}else{
         		sort($(this).find(':selected'),true);
         			}
-        });
+        });        
+       
         
         $(document).on('click','.product-item',function(){
         	if(window.localStorage){
