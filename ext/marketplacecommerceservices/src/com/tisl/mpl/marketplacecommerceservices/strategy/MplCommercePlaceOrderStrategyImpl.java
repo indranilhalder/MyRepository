@@ -46,6 +46,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
+import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
@@ -80,6 +81,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	//INC144315079
 	@Autowired
 	private MplCommerceCartService mplCommerceCartService;
+
+	@Autowired
+	private ExchangeGuideService exchangeGuideService;
 
 	@Override
 	public CommerceOrderResult placeOrder(final CommerceCheckoutParameter parameter) throws InvalidCartException,
@@ -228,6 +232,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					{
 						LOG.error("Error while submit order", e);
 					}
+					exchangeGuideService.getExchangeRequestID(orderModel.getChildOrders());
 					getOrderService().submitOrder(orderModel);
 				}
 
@@ -372,7 +377,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	private Double fetchTotalPrice(final OrderModel orderModel)
 	{
 		Double totalPrice = Double.valueOf(0);
-		double scheduleDeliveryCharge=0.0D;
+		final double scheduleDeliveryCharge = 0.0D;
 		//final OrderData orderData = getOrderConverter().convert(orderModel);
 		final Double subtotal = orderModel.getSubtotal();
 		final Double deliveryCost = orderModel.getDeliveryCost();
@@ -382,14 +387,15 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 		final Double discount = getTotalDiscount(orderModel.getEntries(), false);
 		//Start  Add schedule delivery charges for COD order TISRLUAT-1097
-		/*for(AbstractOrderEntryModel entry :orderModel.getEntries()){
-			if(entry.getScheduledDeliveryCharge()!=null && entry.getScheduledDeliveryCharge().doubleValue()>0 ){
-				scheduleDeliveryCharge+=entry.getScheduledDeliveryCharge().doubleValue();
-			}
-		}*/
+		/*
+		 * for(AbstractOrderEntryModel entry :orderModel.getEntries()){ if(entry.getScheduledDeliveryCharge()!=null &&
+		 * entry.getScheduledDeliveryCharge().doubleValue()>0 ){
+		 * scheduleDeliveryCharge+=entry.getScheduledDeliveryCharge().doubleValue(); } }
+		 */
 		//End  Add schedule delivery charges for COD order TISRLUAT-1097
-		
-		totalPrice = Double.valueOf(subtotal.doubleValue() + scheduleDeliveryCharge +deliveryCost.doubleValue()  - discount.doubleValue());
+
+		totalPrice = Double.valueOf(subtotal.doubleValue() + scheduleDeliveryCharge + deliveryCost.doubleValue()
+				- discount.doubleValue());
 		return totalPrice;
 	}
 

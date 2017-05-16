@@ -500,7 +500,13 @@ sendAddToBag : function(formId, isBuyNow) {
 							
 							// ACC.product.displayAddToCart(data,formId,false);
 							$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
-						} else if (data == "reachedMaxLimit") {
+						} 
+						else if(data=="maxqtyexchange")
+						{
+							$("#"+formId+"Title").html("<br/><font color='#ff1c47'>"+$('#exchangeRestriction').html()+"</font>");
+							$("#"+formId+"Title").show().fadeOut(5000);
+						}
+						else if (data == "reachedMaxLimit") {
 							$("#" + formId + "Title").html("");
 							$("#" + formId + "Title").html(
 									"<br/><font color='#ff1c47'>"

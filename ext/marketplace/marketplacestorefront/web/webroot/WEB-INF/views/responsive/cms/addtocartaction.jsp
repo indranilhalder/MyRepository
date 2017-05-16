@@ -98,6 +98,7 @@ $(document).ready(function(){
 <span id="addtobagerror" style="display:none"><spring:theme code="product.wishlist.outOfStock"/></span>
 <span id="bagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
 <span id="bagfull" style="display:none"><spring:theme code="product.bag"/></span>
+<span id="exchangeRestriction" style="display:none"><spring:theme code="product.addtocart.exchange.qty.error"/></span>
 <form:form method="post" name="addToCartFormId" id="addToCartForm" class="add_to_cart_form"
 	action="#">
 	<%-- <c:if test="${product.purchasable}"> --%>
