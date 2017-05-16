@@ -3573,7 +3573,7 @@ function validateCardNo(formSubmit) {
 							errorHandle.innerHTML = "Please enter a valid Credit Card number";
 						}
 					}
-					else if(document.getElementById("paymentMode").value=='Credit Card'){
+					/*else if(document.getElementById("paymentMode").value=='Credit Card'){
 						if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
 						{
 							binStatus=true;
@@ -3591,7 +3591,14 @@ function validateCardNo(formSubmit) {
 							}
 							errorHandle.innerHTML = "Please enter a valid Credit Card number";
 						}
+					}*/
+					else{
+						binStatus=true;
+						applyPromotion(null,binStatus,formSubmit);
+						errorHandle.innerHTML = "";
+						return true;
 					}
+					
 				}
 			}
 		},

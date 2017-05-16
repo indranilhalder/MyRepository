@@ -35586,11 +35586,11 @@ position:static !important;
 /* Start TISSQAEE-244 */
 .pagination-bar.listing-menu.bottom .pagination li.next {
     right: 0;
-    /* position: absolute; */ /* Commented for TISSQAUAT-478 */
+    /* position: absolute; */	/* comment it for INC144316100 and TISSQAUAT-478 */
 }
 .pagination-bar.listing-menu.bottom .pagination li.prev {
     left: 0;
-    /* position: absolute; */ /* Commented for TISSQAUAT-478 */
+    /* position: absolute; */ 	/* comment it for INC144316100 and TISSQAUAT-478 */
 }
 /* End TISSQAEE-244 */
 
@@ -36033,8 +36033,10 @@ left:0;
     letter-spacing: 0;
 }
 .pagination-bar.listing-menu.bottom {
-    border-bottom: 1px #e5e5e5 solid;
-    padding-bottom: 25px;
+	/* start change of INC144316100 */
+    /* border-bottom: 1px #e5e5e5 solid;
+    padding-bottom: 25px; */
+    /* end change of INC144316100 */
     width: 90%;
     margin: 0 auto;
 }
@@ -63379,6 +63381,15 @@ body.page-productGrid .facet-list.filter-opt {
     margin-top: -7px;
 	}
 }
+
+/* start change of INC144316176 */
+@media (max-width: 424px) and (min-width: 408px){
+	.list_title_sort select{
+		left: -76px;
+		margin-top: 14px;
+	}
+}
+/* end change of INC144316176 */
 
 .listing.wrapper .right-block .listing-menu>div.list_title{
 float:right;

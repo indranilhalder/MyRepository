@@ -119,8 +119,6 @@ import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
-
-import net.sourceforge.pmd.util.StringUtil;
 import com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO;
 import com.tisl.mpl.wsdto.InventoryReservRequestWsDTO;
 import com.tisl.mpl.wsdto.MplEDDInfoForUssIDWsDTO;
@@ -202,7 +200,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
-	
+
 	public MplCommerceCartCalculationStrategy getMplDefaultCommerceCartCalculationStrategy()
 	{
 		return mplDefaultCommerceCartCalculationStrategy;
@@ -222,28 +220,28 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param recentlyAddedFirst
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @return CartData
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -272,10 +270,10 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	/*
 	 * @Desc fetching cartdata with selected ussid in Mobile
 	 *
-
+	 *
 	 * @param recentlyAddedFirst
 	 *
-
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -385,7 +383,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	/*
 	 * @Desc fetching cartdata using session cart
 	 *
-
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	// Commented For OOTB Call.
@@ -465,10 +463,10 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @return List<CartData>
 	 */
 	@Override
@@ -485,46 +483,46 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param code
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param quantity
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param ussid
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @return CartModificationData
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @throws CommerceCartModificationException
 	 */
 
@@ -578,37 +576,37 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param cartData
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param ussid
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @return Map<String, String>
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @throws CMSItemNotFoundException
 	 */
 	@Override
@@ -623,28 +621,28 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param addressData
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @return Map<String, String>
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @throws CMSItemNotFoundException
 	 */
 	@Override
@@ -659,28 +657,28 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param cartData
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @return Map<String, String>
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @throws CMSItemNotFoundException
 	 */
 	@Override
@@ -695,28 +693,28 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param cartData
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @return Map<String, String>
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @throws CMSItemNotFoundException
 	 */
 	@Override
@@ -731,37 +729,37 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param cartData
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param omsDeliveryResponse
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @return Map<String, List<MarketplaceDeliveryModeData>>
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @throws CMSItemNotFoundException
 	 */
 	@Override
@@ -778,28 +776,28 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param addressData
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @return String
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @throws CMSItemNotFoundException
 	 */
 	@Override
@@ -815,28 +813,28 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param ussid
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @return Collection<CartModel>
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @throws InvalidCartException
 	 */
 	@Override
@@ -882,8 +880,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * @throws CommerceCartModificationException
 	 */
 	@Override
-	public CartModel createCart(final String emailId, final String baseSiteId)
-			throws InvalidCartException, CommerceCartModificationException
+	public CartModel createCart(final String emailId, final String baseSiteId) throws InvalidCartException,
+			CommerceCartModificationException
 	{
 		return mplCommerceCartService.createCart(emailId, baseSiteId);
 	}
@@ -920,10 +918,10 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1032,37 +1030,37 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param pincode
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param cartData
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @return List<PinCodeResponseData>
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1242,8 +1240,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						pincodeServiceData.setPrice(new Double(sellerData.getSpPrice().getValue().doubleValue()));
 					}
 
-					else
-						if (sellerData.getMopPrice() != null && StringUtils.isNotEmpty(sellerData.getMopPrice().getValue().toString()))
+					else if (sellerData.getMopPrice() != null
+							&& StringUtils.isNotEmpty(sellerData.getMopPrice().getValue().toString()))
 					{
 						pincodeServiceData.setPrice(new Double(sellerData.getMopPrice().getValue().doubleValue()));
 					}
@@ -1357,8 +1355,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 				if (StringUtils.isNotEmpty(sellerData.getShippingMode()))
 				{
-					final String globalCodeShippingMode = MplGlobalCodeConstants.GLOBALCONSTANTSMAP
-							.get(sellerData.getShippingMode().toUpperCase());
+					final String globalCodeShippingMode = MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(sellerData.getShippingMode()
+							.toUpperCase());
 
 					if (StringUtils.isNotEmpty(globalCodeShippingMode))
 					{
@@ -1483,37 +1481,37 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param userModel
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param pincode
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @return GetWishListWsDTO
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1537,45 +1535,45 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param deliveryModeMap
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param pincodeResponseData
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @return boolean
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	/*
 	 * @Override public boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
 	 * final List<PinCodeResponseData> pincodeResponseData, final CartModel cartModel) throws EtailNonBusinessExceptions
 	 * {
-	 * 
-
+	 *
+	 *
 	 * ServicesUtil.validateParameterNotNull(deliveryModeMap, "deliveryModeMap cannot be null");
 	 * ServicesUtil.validateParameterNotNull(pincodeResponseData, "pincodeResponseData cannot be null"); return
 	 * mplCommerceCartService.addCartCodEligible(deliveryModeMap, pincodeResponseData, cartModel); }
@@ -1599,46 +1597,46 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param cartData
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param omsDeliveryResponse
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @return void
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @throws CMSItemNotFoundException
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @throws ParseException
 	 */
 	@Override
@@ -1654,37 +1652,37 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param productCode
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @param qty
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @return String
 	 *
 	 *
 	 *
 	 *
-
-
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @throws CommerceCartModificationException
 	 */
 	@Override
@@ -1784,8 +1782,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			throws CommerceCartModificationException
 	{
 		final CartModel cartModel = getCartService().getSessionCart();
-		final PointOfServiceModel pointOfServiceModel = StringUtil.isEmpty(storeId) ? null
-				: getPointOfServiceService().getPointOfServiceForName(storeId);
+		final PointOfServiceModel pointOfServiceModel = StringUtil.isEmpty(storeId) ? null : getPointOfServiceService()
+				.getPointOfServiceForName(storeId);
 		if (pointOfServiceModel == null)
 		{
 			final CommerceCartParameter parameter = new CommerceCartParameter();
@@ -1822,8 +1820,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			throws CommerceCartModificationException
 	{
 		// Changes for Duplicate Cart fix
-		final PointOfServiceModel pointOfServiceModel = StringUtil.isEmpty(storeId) ? null
-				: getPointOfServiceService().getPointOfServiceForName(storeId);
+		final PointOfServiceModel pointOfServiceModel = StringUtil.isEmpty(storeId) ? null : getPointOfServiceService()
+				.getPointOfServiceForName(storeId);
 		if (pointOfServiceModel == null)
 		{
 			final CommerceCartParameter parameter = new CommerceCartParameter();
@@ -1848,16 +1846,16 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	/*
 	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment
 	 *
-
+	 *
 	 * @param requestType
 	 *
-
+	 *
 	 * @param abstractOrderModel
 	 *
-
+	 *
 	 * @return boolean
 	 *
-
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1887,19 +1885,19 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	/*
 	 * @Desc used for inventory soft reservation from Mobile Checkout and Payment ---TPR-629
 	 *
-
+	 *
 	 * @param requestType
 	 *
-
+	 *
 	 * @param abstractOrderModel
 	 *
-
+	 *
 	 * @param defaultPinCodeId
 	 *
-
+	 *
 	 * @return boolean
 	 *
-
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1907,7 +1905,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Override
 	public boolean isInventoryReservedMobile(final String requestType, final AbstractOrderModel abstractOrderModel,
 			final String defaultPinCodeId, final InventoryReservListRequestWsDTO inventoryRequest,
-			final String defaultPinCodeId) throws EtailNonBusinessExceptions
+			final SalesApplication salesApplication) throws EtailNonBusinessExceptions
 	{
 		//added for CAR:127
 		boolean isInventoryReservedMobile = false;
@@ -1920,45 +1918,51 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			/* Added for TISRLUAT-1161 START */
 			try
 			{
-					if(null != cartModel.getEntries() && !cartModel.getEntries().isEmpty() && null != inventoryRequest && null != inventoryRequest.getItem()) {
-						for ( InventoryReservRequestWsDTO item : inventoryRequest.getItem()) {
-							for ( AbstractOrderEntryModel entry : cartModel.getEntries()) {
-								   if(item.getUssId().equalsIgnoreCase(entry.getSelectedUSSID())) {
-								   	entry.setFulfillmentMode(item.getFulfillmentType());
-								   	entry.setFulfillmentType(item.getFulfillmentType());
-								   	try
-										{
-								   	final SellerInformationModel sellerInfoModel = getMplCommerceCartService().getSellerDetailsData(
-								   			entry.getSelectedUSSID());
-										List<RichAttributeModel> richAttributeModel = null;
-										if (sellerInfoModel != null)
-										{
-											richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
-										}
-										if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
-												&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
+				if (null != cartModel.getEntries() && !cartModel.getEntries().isEmpty() && null != inventoryRequest
+						&& null != inventoryRequest.getItem())
+				{
 
-										{
-											final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
-											entry.setFulfillmentTypeP1(fulfilmentType);
-										}
-										}catch (final ClientEtailNonBusinessExceptions e)
-										{
-											LOG.error("Exception occurred while setting fullFillMent Type P1"
-													+ e.getErrorCode());
-										}
-								   	getModelService().save(entry);
-								   	getModelService().save(cartModel);
-								   }
-							 }
-						 }
-						 
+					for (final InventoryReservRequestWsDTO item : inventoryRequest.getItem())
+					{
+						for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+						{
+							if (item.getUssId().equalsIgnoreCase(entry.getSelectedUSSID()))
+							{
+								entry.setFulfillmentMode(item.getFulfillmentType());
+								entry.setFulfillmentType(item.getFulfillmentType());
+								try
+								{
+									final SellerInformationModel sellerInfoModel = getMplCommerceCartService().getSellerDetailsData(
+											entry.getSelectedUSSID());
+									List<RichAttributeModel> richAttributeModel = null;
+									if (sellerInfoModel != null)
+									{
+										richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+									}
+									if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
+											&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
+
+									{
+										final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode()
+												.toUpperCase();
+										entry.setFulfillmentTypeP1(fulfilmentType);
+									}
+								}
+								catch (final ClientEtailNonBusinessExceptions e)
+								{
+									LOG.error("Exception occurred while setting fullFillMent Type P1" + e.getErrorCode());
+								}
+								getModelService().save(entry);
+								getModelService().save(cartModel);
+							}
+						}
 					}
+
+				}
 			}
 			catch (final ClientEtailNonBusinessExceptions e)
 			{
-				LOG.error("Exception occurred while setting fullFillMent Type"
-						+ e.getErrorCode());
+				LOG.error("Exception occurred while setting fullFillMent Type" + e.getErrorCode());
 			}
 
 			/* Added for TISRLUAT-1161 end */
@@ -1971,24 +1975,28 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			/* Added for TISRLUAT-1161 START */
 			try
 			{
-					if(null != orderModel.getEntries() && !orderModel.getEntries().isEmpty() && null != inventoryRequest && null != inventoryRequest.getItem()) {
-						for ( InventoryReservRequestWsDTO item : inventoryRequest.getItem()) {
-							for ( AbstractOrderEntryModel entry : orderModel.getEntries()) {
-								   if(item.getUssId().equalsIgnoreCase(entry.getSelectedUSSID())) {
-								   	entry.setFulfillmentMode(item.getFulfillmentType());
-								   	entry.setFulfillmentType(item.getFulfillmentType());
-								   	getModelService().save(entry);
-								   	getModelService().save(orderModel);
-								   }
-							 }
-						 }
-						 
+				if (null != orderModel.getEntries() && !orderModel.getEntries().isEmpty() && null != inventoryRequest
+						&& null != inventoryRequest.getItem())
+				{
+					for (final InventoryReservRequestWsDTO item : inventoryRequest.getItem())
+					{
+						for (final AbstractOrderEntryModel entry : orderModel.getEntries())
+						{
+							if (item.getUssId().equalsIgnoreCase(entry.getSelectedUSSID()))
+							{
+								entry.setFulfillmentMode(item.getFulfillmentType());
+								entry.setFulfillmentType(item.getFulfillmentType());
+								getModelService().save(entry);
+								getModelService().save(orderModel);
+							}
+						}
 					}
+
+				}
 			}
 			catch (final ClientEtailNonBusinessExceptions e)
 			{
-				LOG.error("Exception occurred while setting fullFillMent Type"
-						+ e.getErrorCode());
+				LOG.error("Exception occurred while setting fullFillMent Type" + e.getErrorCode());
 			}
 
 			/* Added for TISRLUAT-1161 end */
@@ -2002,12 +2010,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		//end CAR:127
 	}
 
-
 	/**
 	 * @return the productService
 	 */
 	@Override
-	public ProductService getProductService()
+	public final ProductService getProductService()
 	{
 		return productService;
 	}
@@ -2027,7 +2034,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * @return the cartService
 	 */
 	@Override
-	public CartService getCartService()
+	public final CartService getCartService()
 	{
 		return cartService;
 	}
@@ -2046,7 +2053,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	/**
 	 * @return the mplCommerceCartService
 	 */
-	public MplCommerceCartService getMplCommerceCartService()
+	public final MplCommerceCartService getMplCommerceCartService()
 	{
 		return mplCommerceCartService;
 	}
@@ -2064,7 +2071,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	/**
 	 * @return the modelService
 	 */
-	public ModelService getModelService()
+	public final ModelService getModelService()
 	{
 		return modelService;
 	}
@@ -2081,7 +2088,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	/**
 	 * @return the mplExtendedCartConverter
 	 */
-	public Converter<CartModel, CartData> getMplExtendedCartConverter()
+	public final Converter<CartModel, CartData> getMplExtendedCartConverter()
 	{
 		return mplExtendedCartConverter;
 	}
@@ -2098,19 +2105,19 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
-	 *
-	 *
-
-
-
-
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @see com.tisl.mpl.facade.checkout.MplCartFacade#removeDeliveryandPaymentMode(de.hybris.platform.core.model.order.
 	 * CartModel )
 	 */
 	//	@Override
-	public CartModel removeDeliveryMode(final CartModel cart)
+	public final CartModel removeDeliveryMode(final CartModel cart)
 	{
 		boolean reCalculationRequired = false;
 		boolean deliverypointOfService = false;
@@ -2157,7 +2164,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	}
 
 	@Override
-	public boolean removeDeliveryMode2(final AbstractOrderModel cart)
+	public final boolean removeDeliveryMode2(final AbstractOrderModel cart)
 	{
 		boolean hasDeliveryMode = false;
 		try
@@ -2188,37 +2195,37 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	/*
 	 * @Desc used for In case pincode is changed in delivery address selection page then this method will be called to
 	 * check pincode serviceabilty //TISUTO-106
-	 *
-	 *
-	 *
-	 *
-
-
-
-
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @param selectedPincode
-	 *
-	 *
-	 *
-	 *
-
-
-
-
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @return String
-	 *
-	 *
-	 *
-	 *
-
-
-
-
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public String checkPincodeAndInventory(final String selectedPincode)
-			throws EtailNonBusinessExceptions, CMSItemNotFoundException
+	public final String checkPincodeAndInventory(final String selectedPincode) throws EtailNonBusinessExceptions,
+			CMSItemNotFoundException
 
 	{
 		final String sessionPincode = sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
@@ -2273,14 +2280,13 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 								// Checking if selected delivery mode is present in response
 								for (final DeliveryDetailsData deliveryDetailsData : pinCodeEntry.getValidDeliveryModes())
 								{
-									if (((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
-											&& deliveryDetailsData.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.HD))
-											|| (selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
-													&& deliveryDetailsData
+									if (((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY) && deliveryDetailsData
+											.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.HD)) || (selectedDeliveryMode
+											.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY) && deliveryDetailsData
 
-									.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.ED))) || ((selectedDeliveryMode
-											.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
-											&& deliveryDetailsData.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))))
+									.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.ED)))
+											|| ((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT) && deliveryDetailsData
+													.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))))
 									{
 										deliveryModeAvaiableInResponse = true;
 									}
@@ -2292,16 +2298,16 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 									{
 										// Checking for selected delivery mode inventory is available
 
-										if (((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
-												&& deliveryDetailsData.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.HD))
+										if (((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY) && deliveryDetailsData
+												.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.HD))
 
 
-										|| (selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
-												&& deliveryDetailsData
+												|| (selectedDeliveryMode
+														.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY) && deliveryDetailsData
 
-										.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.ED)) || ((selectedDeliveryMode
-												.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
-												&& deliveryDetailsData.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))))
+												.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.ED)) || ((selectedDeliveryMode
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT) && deliveryDetailsData
+												.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))))
 												&& StringUtils.isNotEmpty(deliveryDetailsData.getInventory())
 												&& cartEntry.getQuantity().longValue() > Long.parseLong(deliveryDetailsData.getInventory()))
 										{
@@ -2373,8 +2379,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public boolean isCartEntryDelisted(final CartModel cartModel)
-			throws CommerceCartModificationException, EtailNonBusinessExceptions
+	public final boolean isCartEntryDelisted(final CartModel cartModel) throws CommerceCartModificationException,
+			EtailNonBusinessExceptions
 
 	{
 		boolean delistedStatus = false;
@@ -2408,22 +2414,22 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						final Date sysDate = new Date();
 						final String ussid = cartEntryModel.getSelectedUSSID();
 						//TISEE-5143
-						final List<SellerInformationModel> sellerInformationModelList = getMplDelistingService().getModelforUSSID(ussid,
+						final List<SellerInformationModel> sellerInformationModelList = getMplDelistingService().getModelforUSSID(
+								ussid,
 
 								onlineCatalog);
-						if (CollectionUtils.isNotEmpty(sellerInformationModelList) && sellerInformationModelList.get(0) != null
+						if (CollectionUtils.isNotEmpty(sellerInformationModelList)
+								&& sellerInformationModelList.get(0) != null
 
-								&& ((sellerInformationModelList.get(0).getSellerAssociationStatus() != null
-										&& sellerInformationModelList.get(0).getSellerAssociationStatus().getCode()
-												.equalsIgnoreCase(MarketplacecommerceservicesConstants.NO))
-										|| (sellerInformationModelList.get(0)
+								&& ((sellerInformationModelList.get(0).getSellerAssociationStatus() != null && sellerInformationModelList
+										.get(0).getSellerAssociationStatus().getCode()
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.NO)) || (sellerInformationModelList.get(0)
 
-						.getEndDate() != null && sysDate.after(sellerInformationModelList.get(0).getEndDate()))))
+								.getEndDate() != null && sysDate.after(sellerInformationModelList.get(0).getEndDate()))))
 
 						{
 							LOG.debug(">> Removing Cart entry for delisted ussid for " + cartEntryModel.getSelectedUSSID());
-							final CartModificationData cartModification = updateCartEntry(cartEntryModel.getEntryNumber().longValue(),
-									0);
+							final CartModificationData cartModification = updateCartEntry(cartEntryModel.getEntryNumber().longValue(), 0);
 
 							if (cartModification.getQuantity() == 0)
 							{
@@ -2463,8 +2469,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
-	public boolean isCartEntryDelistedMobile(final CartModel cartModel)
-			throws CommerceCartModificationException, EtailNonBusinessExceptions
+	public final boolean isCartEntryDelistedMobile(final CartModel cartModel) throws CommerceCartModificationException,
+			EtailNonBusinessExceptions
 
 	{
 		boolean delistedStatus = false;
@@ -2485,8 +2491,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 				if (cartEntryModel != null && cartEntryModel.getProduct() == null)
 				{
-					final CartModificationData cartModification = updateCartEntryMobile(cartEntryModel.getEntryNumber().longValue(), 0,
-							cartModel);
+					final CartModificationData cartModification = updateCartEntryMobile(cartEntryModel.getEntryNumber().longValue(),
+							0, cartModel);
 
 					if (cartModification.getQuantity() == 0)
 					{
@@ -2511,17 +2517,18 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 							cartEntryModel.getProduct().getCatalogVersion());
 
 
-					if (CollectionUtils.isNotEmpty(sellerInformationModelList) && sellerInformationModelList.get(0) != null
+					if (CollectionUtils.isNotEmpty(sellerInformationModelList)
+							&& sellerInformationModelList.get(0) != null
 
-							&& ((sellerInformationModelList.get(0).getSellerAssociationStatus() != null
-									&& sellerInformationModelList.get(0).getSellerAssociationStatus().getCode()
-											.equalsIgnoreCase(MarketplacecommerceservicesConstants.NO))
-									|| (sellerInformationModelList.get(0)
+							&& ((sellerInformationModelList.get(0).getSellerAssociationStatus() != null && sellerInformationModelList
+									.get(0).getSellerAssociationStatus().getCode()
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.NO)) || (sellerInformationModelList.get(0)
 
-					.getEndDate() != null && sysDate.after(sellerInformationModelList.get(0).getEndDate()))))
+							.getEndDate() != null && sysDate.after(sellerInformationModelList.get(0).getEndDate()))))
 					{
 						LOG.debug(">> Removing Cart entry for delisted ussid for " + cartEntryModel.getSelectedUSSID());
-						final CartModificationData cartModification = updateCartEntryMobile(cartEntryModel.getEntryNumber().longValue(),
+						final CartModificationData cartModification = updateCartEntryMobile(
+								cartEntryModel.getEntryNumber().longValue(),
 
 								0, cartModel);
 
@@ -2533,8 +2540,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						}
 						else
 						{
-							LOG.debug(
-									">> Delisted item Could not removed item from cart for " + ussid + " trying for hard reset ...... ");
+							LOG.debug(">> Delisted item Could not removed item from cart for " + ussid
+									+ " trying for hard reset ...... ");
 
 						}
 						cartEntryModelList.add(cartEntryModel);
@@ -2570,45 +2577,45 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	/*
 	 * @Desc fetching delivery mode
-	 *
-	 *
-	 *
-	 *
-
-
-
-
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @param cartData
-	 *
-	 *
-	 *
-	 *
-
-
-
-
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @param omsDeliveryResponse
-	 *
-	 *
-	 *
-	 *
-
-
-
-
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @return Map<String, List<MarketplaceDeliveryModeData>>
-	 *
-	 *
-	 *
-	 *
-
-
-
-
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @throws CMSItemNotFoundException
 	 */
 	@Override
-	public Map<String, List<MarketplaceDeliveryModeData>> getDeliveryMode(final CartData cartData,
+	public final Map<String, List<MarketplaceDeliveryModeData>> getDeliveryMode(final CartData cartData,
 			final OrderEntryData cartEntryData, final List<PinCodeResponseData> omsDeliveryResponse) throws CMSItemNotFoundException
 	{
 		final CartModel cartModel = getCartService().getSessionCart();
@@ -2617,14 +2624,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	/*
 	 * @Desc used to display quantity in cart page
-	 *
-	 *
-	 *
-	 *
-
-
-
-
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @return ArrayList<Integer>
 	 */
 	@Override
@@ -2795,32 +2802,32 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	/*
 	 * @Desc checking wishlist entry is valid or not , delisted , end date , online from TISEE-5185
-	 *
-	 *
-	 *
-	 *
-
-
-
-
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @param wishlistEntryModel
-	 *
-	 *
-	 *
-	 *
-
-
-
-
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @return boolean
-	 *
-	 *
-	 *
-	 *
-
-
-
-
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -2876,8 +2883,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		{
 			if (wishModel.getUssid() != null)
 			{
-				final SellerInformationModel sellerInfoForWishlist = getMplCommerceCartService()
-						.getSellerDetailsData(wishModel.getUssid());
+				final SellerInformationModel sellerInfoForWishlist = getMplCommerceCartService().getSellerDetailsData(
+						wishModel.getUssid());
 				if (null != sellerInfoForWishlist)
 				{
 					giftYourselfDeliveryModeDataMap = populategiftYourselfData(wishModel, sellerInfoForWishlist);
@@ -3058,16 +3065,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						BigDecimal totMrp = BigDecimal.valueOf(0);
 
 						// Total MRP
-						totMrp = BigDecimal
-								.valueOf((null != cartEntryModel.getMrp()
-										? Double
-												.valueOf((cartEntryModel.getMrp().doubleValue() * cartEntryModel.getQuantity().doubleValue()))
-										: totMrp).doubleValue());
+						totMrp = BigDecimal.valueOf((null != cartEntryModel.getMrp() ? Double.valueOf((cartEntryModel.getMrp()
+								.doubleValue() * cartEntryModel.getQuantity().doubleValue())) : totMrp).doubleValue());
 
 						cartEntryModel.setTotalMrp(Double.valueOf(totMrp.doubleValue()));
 
 
-						if (null != cartEntryModel.getNetSellingPrice() && cartEntryModel.getNetSellingPrice().doubleValue() > 0.0
+						if (null != cartEntryModel.getNetSellingPrice()
+								&& cartEntryModel.getNetSellingPrice().doubleValue() > 0.0
 								&& cartEntryModel.getNetSellingPrice().doubleValue() != totMrp.doubleValue()
 								&& (cartEntryModel.getNetSellingPrice().doubleValue() < cartEntryModel.getBasePrice().doubleValue()
 										* cartEntryModel.getQuantity().doubleValue()))
@@ -3357,8 +3362,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	/*
 	 * (non-Javadoc)
-	 *
-
+	 * 
+	 * 
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCartFacade#notifyEmailAndSmsOnInventoryFail(de.hybris.platform.core.model.order
 	 * .OrderModel)
@@ -3368,8 +3373,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	{
 		boolean flag = false;
 		//Email and sms for Payment_Timeout
-		final String trackOrderUrl = configurationService.getConfiguration()
-				.getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderModel.getCode();
+		final String trackOrderUrl = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+				+ orderModel.getCode();
 
 		try
 		{
@@ -3391,7 +3397,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	/*
 	 * (non-Javadoc)
 	 * 
-
+	 * 
 	 * @see com.tisl.mpl.facade.checkout.MplCartFacade#getLuxCart()
 	 */
 	@Override
@@ -3420,8 +3426,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	/*
 	 * (non-Javadoc)
-	 *
-
+	 * 
+	 * 
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCartFacade#getCartDataFromCartModel(de.hybris.platform.core.model.order.CartModel)
 	 */
@@ -3470,6 +3476,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	{
 		return promotionsService;
 	}
+
 	/**
 	 * @param promotionsService
 	 *           the promotionsService to set
@@ -3478,6 +3485,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	{
 		this.promotionsService = promotionsService;
 	}
+
 	/**
 	 * @return the timeService
 	 */
@@ -3485,6 +3493,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	{
 		return timeService;
 	}
+
 	/**
 	 * @param timeService
 	 *           the timeService to set
@@ -3495,11 +3504,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	}
 
 	/**
- 	 * This method is used to check if any product in the cart is having pincode restricted promotion configured.
- 	 * 
- 	 * @param cart
- 	 * @return boolean
- 	 */
+	 * This method is used to check if any product in the cart is having pincode restricted promotion configured.
+	 *
+	 * @param cart
+	 * @return boolean
+	 */
 	@Override
 	public boolean checkPincodeRestrictedPromoOnCartProduct(final CartModel cart)
 	{
@@ -3559,9 +3568,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		}
 		return isPincodeRestrictedPromotionPresent;
 	}
-	
-	/**
 
+	/**
+	 *
 	 * get EDD INFormation for Ussid
 	 *
 	 * @param cartModel
@@ -3603,7 +3612,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 					//preparing mobile data
 					if (StringUtils.isNotEmpty(timeSlotType) && null != edd)
 					{
-						final Map<String, List<String>> mapData = mplDeliveryAddressFacade.getDateAndTimeMap(timeSlotType,edd);
+						final Map<String, List<String>> mapData = mplDeliveryAddressFacade.getDateAndTimeMap(timeSlotType, edd);
 						mplEDDInfoForUssIDWsDTO.setEstimateDeliveryDateList(getEDDList(mapData));
 					}
 				}
@@ -3625,6 +3634,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 		return mplEDDInfoWsDTO;
 	}
+
 	//getting EstimateDeliveryDateData
 	private List<MplEstimateDeliveryDateWsDTO> getEDDList(final Map<String, List<String>> mapData)
 	{
@@ -3640,6 +3650,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		}
 		return mplEDDList;
 	}
+
 	//Getting Delivery Mode
 	private String getDeliveryMode(final CartModel cartModel, final String ussID)
 	{
@@ -3687,40 +3698,41 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 					if (StringUtils.isNotEmpty(mplEdd.getUssId()) && mplEdd.getUssId().equalsIgnoreCase(entry.getSelectedUSSID()))
 					{
 						if (StringUtils.isNotBlank(mplEdd.getDeliveryDate()))
-				      {
-				       final String timeFromTo = mplEdd.getTimeSlot();
-				       entry.setTimeSlotFrom(timeFromTo.substring(0, timeFromTo.indexOf("TO") - 1));
-				       entry.setTimeSlotTo(timeFromTo.substring(timeFromTo.indexOf("TO") + 3, timeFromTo.length()));
-				       entry.setEdScheduledDate(mplEdd.getDeliveryDate());
-				       MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
-				       double scheduleDeliverySlotCost = 0.0D;
-				       
-				       if(null != configModel) {
-				      	 scheduleDeliverySlotCost = configModel.getSdCharge();
-				      	 entry.setScheduledDeliveryCharge(Double.valueOf(scheduleDeliverySlotCost));
-				      	 deliverySlotCost+=scheduleDeliverySlotCost;
-				       }
-				       modelService.save(entry);
-				      }
-				      else
-				      {
-				       entry.setTimeSlotFrom(null);
-				       entry.setTimeSlotTo(null);
-				       entry.setEdScheduledDate(null);
-				       entry.setScheduledDeliveryCharge(Double.valueOf(0));
-				       modelService.save(entry);
-				      }
+						{
+							final String timeFromTo = mplEdd.getTimeSlot();
+							entry.setTimeSlotFrom(timeFromTo.substring(0, timeFromTo.indexOf("TO") - 1));
+							entry.setTimeSlotTo(timeFromTo.substring(timeFromTo.indexOf("TO") + 3, timeFromTo.length()));
+							entry.setEdScheduledDate(mplEdd.getDeliveryDate());
+							final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
+							double scheduleDeliverySlotCost = 0.0D;
+
+							if (null != configModel)
+							{
+								scheduleDeliverySlotCost = configModel.getSdCharge();
+								entry.setScheduledDeliveryCharge(Double.valueOf(scheduleDeliverySlotCost));
+								deliverySlotCost += scheduleDeliverySlotCost;
+							}
+							modelService.save(entry);
+						}
+						else
+						{
+							entry.setTimeSlotFrom(null);
+							entry.setTimeSlotTo(null);
+							entry.setEdScheduledDate(null);
+							entry.setScheduledDeliveryCharge(Double.valueOf(0));
+							modelService.save(entry);
+						}
 					}
-					
+
 				}
 			}
 			cartModel.setDeliveryCost(Double.valueOf(deliverySlotCost));
 			modelService.save(cartModel);
-			LOG.info("  delivery Cost : "+cartModel.getDeliveryCost()+ " total "+cartModel.getTotalPrice());
+			LOG.info("  delivery Cost : " + cartModel.getDeliveryCost() + " total " + cartModel.getTotalPrice());
 			commerceCartService.recalculateCart(cartModel);
 			modelService.save(cartModel);
 			modelService.refresh(cartModel);
-			LOG.info("  delivery Cost : "+cartModel.getDeliveryCost()+ " total "+cartModel.getTotalPrice());
+			LOG.info("  delivery Cost : " + cartModel.getDeliveryCost() + " total " + cartModel.getTotalPrice());
 		}
 
 		catch (final Exception nullPointerException)
@@ -3729,5 +3741,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			return false;
 		}
 		return true;
-	}	
+	}
+
+
+
 }

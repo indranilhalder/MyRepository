@@ -2870,7 +2870,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			}
 		}
-		if (null != request.getParameterMap() && request.getParameterMap().containsKey(isLux))
+		if (null != request.getParameterMap() && request.getParameterMap().containsValue(isLux))
 		{
 			returnAction = returnAction + "?" + isLux + "=true";
 		}

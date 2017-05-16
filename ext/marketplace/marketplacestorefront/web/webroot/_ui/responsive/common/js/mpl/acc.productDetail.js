@@ -1,4 +1,4 @@
-	ACC.productDetail = {
+ACC.productDetail = {
 
 	_autoload : [ "initPageEvents", "bindVariantOptions" ],
 
@@ -153,6 +153,7 @@
 			{
 			/*$('#removeFromCart_Cart').show();*/
 			$('#removeFromCart_Cart').css("display","inline-block"); /*TISSQAEE-245*/
+
 			setTimeout(function() {
 				  $("#removeFromCart_Cart").fadeOut().empty();
 				}, 1500);
@@ -186,10 +187,10 @@
 		});
 		//End
 		//added for Size guide Variant select
-		//Sprint 7 Sanity Issue fixing starts here
-		//$(document).on("click", '.variant-select li span',
-		  $(document).on("click", '.variant-select li span, .color-swatch li span',
-		//Sprint 7 Sanity Issue fixing ends here
+
+
+	 $(document).on("click", '.variant-select li span, .color-swatch li span',
+
 				function() {
 				  var target = $(this).attr('data-producturl');
 				//   console.log(target);
@@ -814,7 +815,7 @@ function setValidPrice(sellersArray, index) {
 			 $("#savingsOnProductId").hide();
 			 //$("#dListedErrorMsg").show(); //Need to Change	
 			// $("#freebieProductMsgId").show();
-			 var prodCode=$("#productCodePost").val();
+
 			 var ussId=  $("#ussid").val();
 			 
 			//update the message for Freebie product TPR-1754
@@ -1431,11 +1432,12 @@ function isOOS(){
 	//totalOptions = totalOptions -1; // UI got changed from select option to li strike off 
 	var disabledOption = $("#variant li.strike").length;
 	
-	//if(availibility!=undefined && availibility.length > 0){
-	// availibility.length  was coming undefined even if availability was NOT Undefined
+
+    // availibility.length  was coming undefined even if availability was NOT Undefined
 	if(availibility!=undefined && typeof availibility === 'object')/* Change for TISSQAUAT-687 :: IE throws error*/ 
-		/*Object.keys(availibility).length > 0)*/
-	{
+
+
+{
 		if(Object.keys(availibility).length > 0){
 
 		$.each(availibility,function(k,v){
@@ -1475,7 +1477,7 @@ $( document ).ready(function() {
 	var productCode = $("#product").val();
 	var variantCodes = $("#product_allVariantsListingId").val();
 	var variantCodesJson = "";
-	var msiteBuyBoxSeller = $("#msiteBuyBoxSellerId").val(); //CKD:TPR-250
+    var msiteBuyBoxSeller = $("#msiteBuyBoxSellerId").val(); //CKD:TPR-250
 	if(typeof(variantCodes)!= 'undefined' && variantCodes!= ""){
 		variantCodes = variantCodes.split(",");
 		variantCodesJson = JSON.stringify(variantCodes);
@@ -1550,10 +1552,10 @@ function displayDeliveryDetails(sellerName) {
 				var fulFillment = data['fulfillment'];
 				var deliveryModes = data['deliveryModes'];
 				
-				 /*TISPRDT-878 start*/
+				/*TISPRDT-878 start*/
 				var fulFillmentP1 = data['fulfillmentType1'];
 				/*TISPRDT-878 END*/
-
+				
 				var leadTime=0;
 				if(null!=data['leadTimeForHomeDelivery']){
 					leadTime=data['leadTimeForHomeDelivery'];
@@ -1571,9 +1573,9 @@ function displayDeliveryDetails(sellerName) {
 				} else {
 					$('#fulFilledBySship').show();
 					$('#fulFilledBySship').html(sellerName);
-
 				}*/
-				/*TISPRDT-878 Start*/
+
+/*TISPRDT-878 Start*/
 				if (null != fulFillment && fulFillment.toLowerCase() == 'both') {
 					   if (null != fulFillmentP1 && fulFillmentP1.toLowerCase() == 'tship') {
 					   $('#fulFilledBySship').hide();  //INC_12055
@@ -1592,8 +1594,7 @@ function displayDeliveryDetails(sellerName) {
 					   $('#fulFilledBySship').html(sellerName);
 					  }
 				/*TISPRDT-878 END*/
-
-				//INC144314017 start
+					//INC144314017 start
 				if(!$('#pdpPincodeCheck').data('clicked')) {
 					var start_hd=parseInt($("#homeStartId").val())+leadTime;
 					var end_hd=parseInt($("#homeEndId").val())+leadTime;
@@ -1873,8 +1874,8 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				 $("#spPriceId").hide();//UF-60
 				 //$("#dListedErrorMsg").show();	//Need to Change
 				// $("#freebieProductMsgId").show();
-				 var prodCode=$("#productCodePost").val();
-				var ussId=  $("#ussid").val();
+				var prodCode=$("#productCodePost").val();
+			var ussId=  $("#ussid").val();
 				
 			//	$("#ussid").val(data['sellerArticleSKU']);
 				 
@@ -2446,7 +2447,6 @@ function isOOSSizeGuide(){
 	//totalOptions = totalOptions -1; // UI got changed from select option to li strike off 
 	var disabledOption = $(".variant-select-sizeGuidePopUp li.strike").length;
 	
-	//if(availibility!=undefined && availibility.length > 0){
 	// availibility.length  was coming undefined even if availability was NOT Undefined
 	if(availibility!=undefined && Object.keys(availibility).length > 0){
 		$.each(availibility,function(k,v){
@@ -3076,7 +3076,7 @@ function loadDefaultWishListName_SizeGuide() {
 	
 	/*Offer popup*/
 	function offerPopup(comp) {
-/*		$("body").append('<div class="modal fade" id="offerPopup"><div class="content offer-content" style="padding: 40px;max-width: 650px;">'+comp+'<button class="close" data-dismiss="modal"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
+		/*		$("body").append('<div class="modal fade" id="offerPopup"><div class="content offer-content" style="padding: 40px;max-width: 650px;">'+comp+'<button class="close" data-dismiss="modal"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
 */		$("body").append('<div class="modal fade" id="offerPopup"><div class="content offer-content" style="padding: 40px;min-width: 45%;">'+comp+'<button class="close" data-dismiss="modal" style="border:0px !important;margin: 0px !important;"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
 		/*if($("#OfferWrap .Inner .Left").children().length == 0) {
 			$("#OfferWrap .Inner .Left").remove();
@@ -3151,88 +3151,74 @@ function loadDefaultWishListName_SizeGuide() {
 		
 	}
 
-//TPR-978
+	//TPR-978
 function getProductContents() {
 		
-	var requiredUrl = ACC.config.encodedContextPath + "/p"
-			+ "-fetchPageContents";
-	var dataString = 'productCode=' + productCode;
-	var renderHtml = "";
-	$.ajax({
-		url : requiredUrl,
-		data : dataString,
-		success : function(data) {
-			if(data){ 
-				$('#productContentDivId').html(data);
-
-
-
-
-
-
-
-				 if (data.indexOf('class="Manufacturer Temp07"') > -1 ) {
-					 $(".every-scene-carousel").owlCarousel({
-							items:3,
-							loop: true,
-							nav:true,
-							dots:false,
-							navText:[],
-							responsive : {
-								// breakpoint from 0 up
-								0 : {
-									items:1,
-								},	
-								// breakpoint from 767 up
-								768 : {
-									items:2,
-								},
-								// breakpoint from 1122 up
-								1123 : {
-									items:3,
-								}			
-							}	
-							/*navigation:true,
-							rewindNav: false,
-							navigationText :[],
-							pagination:false,
-							items:4,
-							itemsDesktop : false, 
-							itemsDesktopSmall : false, 
-							itemsTablet: false, 
-							itemsMobile : true
-						itemsDesktop : [5000,4], 
-						itemsDesktopSmall : [1400,4], 
-						itemsTablet: [650,2], 
-						itemsMobile : [480,2],*/
+		var requiredUrl = ACC.config.encodedContextPath + "/p"
+				+ "-fetchPageContents";
+		var dataString = 'productCode=' + productCode;
+		var renderHtml = "";
+		$.ajax({
+			url : requiredUrl,
+			data : dataString,
+			success : function(data) {
+				if(data){
+					$('#productContentDivId').html(data);
+					if (data.indexOf('class="Manufacturer Temp07"') > -1 ) {
+						 $(".every-scene-carousel").owlCarousel({
+								items:3,
+								loop: true,
+								nav:true,
+								dots:false,
+								navText:[],
+								responsive : {
+									// breakpoint from 0 up
+									0 : {
+										items:1,
+									},	
+									// breakpoint from 767 up
+									768 : {
+										items:2,
+									},
+									// breakpoint from 1122 up
+									1123 : {
+										items:3,
+									}			
+								}	
+								/*navigation:true,
+								rewindNav: false,
+								navigationText :[],
+								pagination:false,
+								items:4,
+								itemsDesktop : false, 
+								itemsDesktopSmall : false, 
+								itemsTablet: false, 
+								itemsMobile : true
+							itemsDesktop : [5000,4], 
+							itemsDesktopSmall : [1400,4], 
+							itemsTablet: [650,2], 
+							itemsMobile : [480,2],*/
+						});
+					}	
+					
+					//TPR-4701 | utag event for A+ products
+					var productId=[];
+					productId.push($('#product_id').val());
+					utag.link({
+						"link_text": "a_plus_product",
+						"event_type": "a_plus_product",
+						"a_plus_product_id":productId
 					});
-
-
-
-
-
-
-				 }
-				//TPR-4701 | utag event for A+ products
-				var productId=[];
-				productId.push($('#product_id').val());
-				utag.link({
-					"link_text": "a_plus_product",
-					"event_type": "a_plus_product",
-					"a_plus_product_id":productId
-				});
+				}
+			},
+			error : function(xhr, status, error) {
+				
 			}
+		});
+	
+		
+	}
 
-
-
-
-				 
-		},
-		error : function(xhr, status, error) {
-			
-		}
-	});
-}
 
 	function lazyLoadProductContents(){
 		if ($(window).scrollTop() + $(window).height() >= $('#productContentDivId').offset().top) {
@@ -3258,10 +3244,8 @@ function getProductContents() {
 		$(window).on('scroll load',function() {
 		lazyLoadProductContents();
 		});
+		
 	}
-
-
-
 
 //PDP Specifications arrow
 $(document).ready(function(){
@@ -3355,6 +3339,24 @@ if (width > winWidth){
         });	
 }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	//update the message for Freebie product TPR-1754
 	function  populateFreebieMsg(ussId){
 		var requiredUrl = ACC.config.encodedContextPath + "/p-" + ussId
@@ -3416,6 +3418,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 			var staticHost = $('#staticHost').val();
 			//Below 2 lines for adding spinner
 			$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+			//$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 			$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 			
 			if($('#promolist').val()!='')
@@ -3749,13 +3752,13 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 	$("#addToCartButton").show();
 	$("#addToCartButton").show();
 	$('#buyNowButton').show();
+
 	return $.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
 		data : {productCode:productCode,variantCode:variantCodesJson
 			,sellerId:msiteBuyBoxSeller //CKD:TPR-250	
 		},
-
 
 		cache : false,//added to resolve browser specific the OOS issue
 		dataType : "json",
@@ -3812,11 +3815,13 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					var channelTypeWeb = $("#promolist").val();//added for TISTE-143
 					var promorestrictedSellers = $("#promotedSellerId").val();
 					var promoindentifier = $("#product_applied_promotion_code").val();
-					
 					//added for TISTE-143
 					if(channelTypeWeb != undefined)
 					{
-					 if (promorestrictedSellers == null
+
+
+
+					if (promorestrictedSellers == null
 							|| promorestrictedSellers == undefined
 							|| promorestrictedSellers == "") {
 						//TPR-772
@@ -3846,8 +3851,8 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 								
 							}
 
+					}
 
-					 }
 					}//added for TISTE-143
 					var allStockZero = data['allOOStock'];
 					// var codEnabled = data['isCod'];
@@ -3868,7 +3873,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 						$("#otherSellersId").html(data['othersSellersCount']);
 						$("#otherSellerLinkId").show();
 					}
-					
+
 					else if (isOOS() && data['othersSellersCount']>0) {
 						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
 						$("#addToCartButton").hide();
@@ -4017,6 +4022,14 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 				 $("#pin").attr("disabled",true);
 				 $("#pdpPincodeCheckDList").show();
 				 $("#buyNowButton").attr("disabled",true);
+				 //INC144316346
+				 if($.isEmptyObject(data['availibility'])){
+					 $("#variant li a").removeAttr("href");
+					 $("#variant li a").removeAttr("title");
+					 $("#variant li a").attr("disabled", true);
+					 $("#variant li a").parent().addClass("strike");
+				 }
+				 //INC144316346
 			}
 		},
 		// For buybox seller and other seller in PDP

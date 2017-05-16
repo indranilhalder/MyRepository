@@ -121,17 +121,17 @@
 	<!-- SNS Mobile Push Notification -->
 	<!-- payment info reversal -->
 
-	<bean id="paymentInfoRevWebService" class="com.tisl.mpl.service.PaymentInfoRevWebServiceImpl" />
-	<bean id="paymentInfoCancelService" class="com.tisl.mpl.service.PaymentInfoCancelReversalImpl" />
+<!-- 	<bean id="paymentInfoRevWebService" class="com.tisl.mpl.service.PaymentInfoRevWebServiceImpl" />
+	<bean id="paymentInfoCancelService" class="com.tisl.mpl.service.PaymentInfoCancelReversalImpl" /> -->
 
-	<bean id="ordercreation" class="com.tisl.mpl.service.MplSendOrderFromCommerceToCRMImpl" />
+	<!-- <bean id="ordercreation" class="com.tisl.mpl.service.MplSendOrderFromCommerceToCRMImpl" /> -->
 
-	<bean id="cancellableService" class="com.tisl.mpl.service.CancellableServiceImpl" />
+<!-- 	<bean id="cancellableService" class="com.tisl.mpl.service.CancellableServiceImpl" />
 	<bean id="returnLogistics" class="com.tisl.mpl.service.ReturnLogisticsServiceImpl" />
 	<bean id="mplClickToCallService" class="com.tisl.mpl.service.MplClickToCallWebServiceImpl" />
 	<bean id="gigyaCommentService" class="com.tisl.mpl.service.MplGigyaReviewCommentServiceImpl" />
 	<bean id="mplGigyaReviewCommentDao"
-		class="com.tisl.mpl.review.daos.impl.MplGigyaReviewCommentDaoImpl" />
+		class="com.tisl.mpl.review.daos.impl.MplGigyaReviewCommentDaoImpl" /> -->
 		
 	<!-- UF-258 -->
 	<bean id="STWService" class="com.tisl.mpl.service.impl.STWWidgetServiceImpl">
