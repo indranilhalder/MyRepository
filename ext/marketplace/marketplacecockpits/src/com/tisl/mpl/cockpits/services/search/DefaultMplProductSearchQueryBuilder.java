@@ -38,19 +38,13 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 	final String sellerID = "'"+(String) JaloSession.getCurrentSession().getAttribute("sellerId")+"'";
 	
 	query.append("SELECT DISTINCT {p.pk}, {p.name}, {p.code} "
-	+"from {product as p JOIN Catalogversion as cv ON {p.catalogversion}={cv.pk} JOIN Buybox as bb ON {p.code}={bb.product}");
+	+"from {product as p JOIN Catalogversion as cv ON {p.catalogversion}={cv.pk} JOIN Buybox as bb ON {p.code}={bb.product}} where");
 	if (storeAgentUserRole.isUserInRole((configurationService
 			.getConfiguration()
 			.getString(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)))) {
-		query.append(" join SellerInformation as si on {si.productsource}={p.pk}");
+		query.append(" {bb.SellerID} = "+sellerID+" AND ");
 	}
-	query.append("} where");
-	if (storeAgentUserRole.isUserInRole((configurationService
-			.getConfiguration()
-			.getString(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)))) {
-		query.append(" {si.SellerID} = "+sellerID+" AND ");
-	}
-	query.append(" {p.pk} in ({{"
+	query.append("{bb.available} > 0 AND {p.pk} in ({{"
 		+"select {p.pk}" 
 		+"from {PcmProductVariant as p} "
 		+"where {p.baseproduct} in ({{"
@@ -66,9 +60,9 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 		if (storeAgentUserRole.isUserInRole((configurationService
 				.getConfiguration()
 				.getString(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)))) {
-			query.append(" {si.SellerID} = "+sellerID+" AND ");
+			query.append(" {bb.SellerID} = "+sellerID+" AND ");
 		}
-		query.append( " {p.pk} in ({{"
+		query.append( "{bb.available} > 0 AND {p.pk} in ({{"
 		+"SELECT {p.pk}" 
 		+"from {product as p JOIN Catalogversion as cv ON {p.catalogversion}={cv.pk}} "
 		+"where {cv.version} = 'Online'");
@@ -76,7 +70,7 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 			query.append(" AND ({p.name} LIKE ?productNameText OR {p.code} = ?productCodeText)");
 		}
 	query.append("}})"
-	+"OR {p.pk} in ({{"
+	+"OR {bb.available} > 0 AND {p.pk} in ({{"
 		+"select {si.productsource}" 
 		+"from {SellerInformation as si JOIN Catalogversion as cv ON {si.catalogversion}={cv.pk}}"
 		+"where {cv.version} = 'Online'");
