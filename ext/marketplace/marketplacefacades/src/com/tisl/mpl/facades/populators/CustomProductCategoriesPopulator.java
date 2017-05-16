@@ -16,6 +16,7 @@ import java.util.Collection;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -29,8 +30,8 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
  * @param <SOURCE>
  * @param <TARGET>
  */
-public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGET extends ProductData>
-		extends ProductCategoriesPopulator<SOURCE, TARGET>
+public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGET extends ProductData> extends
+		ProductCategoriesPopulator<SOURCE, TARGET>
 {
 
 	@Resource
@@ -65,17 +66,22 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public void populate(final SOURCE productModel, final TARGET productData)
-			throws ConversionException, EtailNonBusinessExceptions
+	public void populate(final SOURCE productModel, final TARGET productData) throws ConversionException,
+			EtailNonBusinessExceptions
 	{
 
 		//product super category like electronics,clothing are being populated by interceptor.
 		productData.setRootCategory(productModel.getProductCategoryType());
-		
-		  final Collection<CategoryModel> categories = getCommerceProductService()
-		  .getSuperCategoriesExceptClassificationClassesForProduct(productModel);
-		  productData.setCategories(Converters.convertAll(categories, getCategoryConverter()));
-		 
+		//For TPR:4847: size facet clubbing for kidswear
+		if (StringUtils.isNotEmpty(productModel.getProductCategoryTypeL2()))
+		{
+			productData.setRootCategoryL2((productModel.getProductCategoryTypeL2()));
+		}
+		//For TPR:4847: size facet clubbing for kidswear end
+		final Collection<CategoryModel> categories = getCommerceProductService()
+				.getSuperCategoriesExceptClassificationClassesForProduct(productModel);
+		productData.setCategories(Converters.convertAll(categories, getCategoryConverter()));
+
 
 	}
 

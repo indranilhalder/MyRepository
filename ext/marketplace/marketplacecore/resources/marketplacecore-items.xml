@@ -1626,8 +1626,18 @@
 						<description>This is the value reference of the banner's deeplink reference</description>
 					</attribute>
 					<!-- Added for Deep Linking in Mobile apps - End -->
-
-
+					<!-- Added for KidsWear -->
+					<attribute qualifier="productCategoryTypeL2" type="java.lang.String">
+						<description>Represent the product's master Category</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property">
+							<columntype database='oracle'>
+								<value>VARCHAR2(100)</value>
+							</columntype>
+						</persistence>
+					</attribute>
+					<!-- Added for KidsWear Ends-->
 				</attributes>
 			</itemtype>
 

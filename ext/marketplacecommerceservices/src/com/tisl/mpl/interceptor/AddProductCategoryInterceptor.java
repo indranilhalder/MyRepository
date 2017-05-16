@@ -70,7 +70,7 @@ public class AddProductCategoryInterceptor implements PrepareInterceptor
 
 					if (product.getSupercategories() != null)
 					{
-						product.setProductCategoryType(setCategory(product.getSupercategories(), categoryMap));
+						setCategory(product.getSupercategories(), categoryMap, product);
 					}
 
 					else
@@ -96,26 +96,27 @@ public class AddProductCategoryInterceptor implements PrepareInterceptor
 
 	}
 
-	public String setCategory(final Collection<CategoryModel> categoryList, final Map<String, String> categoryMap)
+	public void setCategory(final Collection<CategoryModel> categoryList, final Map<String, String> categoryMap,
+			final ProductModel product)
 	{
 
-		String mastercategory = "";
 		for (final CategoryModel category : categoryList)
 		{
 
 			for (final Map.Entry<String, String> entry : categoryMap.entrySet())
 			{
-
-				if (category.getCode().startsWith(entry.getKey()))
+				//change For TPR:4847: size facet clubbing for kidswear
+				if (category.getCode().startsWith(entry.getKey()) && entry.getKey().length() <= 5)
 				{
-					mastercategory = entry.getValue();
+					product.setProductCategoryType(entry.getValue());
 				}
-
+				else if (category.getCode().startsWith(entry.getKey()) && entry.getKey().length() > 5)
+				{
+					product.setProductCategoryTypeL2(entry.getValue());
+				}
+				//change For TPR:4847: size facet clubbing for kidswear end
 			}
 		}
-
-		return mastercategory;
-
 	}
 
 }
