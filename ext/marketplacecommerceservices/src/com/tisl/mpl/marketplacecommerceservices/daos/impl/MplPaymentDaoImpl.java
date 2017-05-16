@@ -757,4 +757,44 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 	{
 		this.flexibleSearchService = flexibleSearchService;
 	}
+
+
+	/**
+	 * This method fetches audit model corresponding to a reference number
+	 *
+	 * @param auditId
+	 * @return MplPaymentAuditModel
+	 *
+	 */
+	@Override
+	public MplPaymentAuditModel getWalletAuditEntries(final String auditId)
+	{
+
+		try
+		{
+			final String queryString = MarketplacecommerceservicesConstants.TPWALLETAUDITQUERY;
+
+			//forming the flexible search query
+			final FlexibleSearchQuery auditQuery = new FlexibleSearchQuery(queryString);
+			auditQuery.addQueryParameter("auditId", auditId);
+
+			//fetching audit entries from DB using flexible search query
+			final List<MplPaymentAuditModel> auditList = flexibleSearchService.<MplPaymentAuditModel> search(auditQuery).getResult();
+			if (null != auditList && !auditList.isEmpty())
+			{
+				//fetching the audit entries
+				final MplPaymentAuditModel audit = auditList.get(0);
+				return audit;
+			}
+			else
+			{
+				return null;
+			}
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex);
+		}
+
+	}
 }

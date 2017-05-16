@@ -1555,7 +1555,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	}
 
 
-
 	/**
 	 * This method submits the order - ie. initiates the order fulfilment process TPR-629
 	 *

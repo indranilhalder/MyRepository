@@ -602,7 +602,7 @@ $(document).ready(function(){
 	/*----END of  SHop by brand A_E hover functionality  -----*/
 			 
 	/*---Start of Checkout Payment tab switching  ----*/
-			 var paymentModes =  $("#viewPaymentCredit, #viewPaymentDebit, #viewPaymentNetbanking, #viewPaymentCOD, #viewPaymentEMI,#viewPaymentCreditMobile, #viewPaymentDebitMobile, #viewPaymentNetbankingMobile, #viewPaymentCODMobile, #viewPaymentEMIMobile");
+			 var paymentModes =  $("#viewPaymentCredit, #viewPaymentDebit, #viewPaymentNetbanking, #viewPaymentCOD, #viewPaymentEMI,#viewPaymentCreditMobile, #viewPaymentDebitMobile, #viewPaymentNetbankingMobile, #viewPaymentCODMobile, #viewPaymentEMIMobile,#viewPaymentMRupee, #viewPaymentMRupeeMobile");
 			 $(window).on('load resize',function(){	
 			 paymentModes.on("click",function(e) {
 				 $('.cart.wrapper .left-block .payments.tab-view ul.tabs').show(200);
@@ -893,20 +893,30 @@ $(document).ready(function(){
 	$(".brands-page .list_custom li").hide();
 		$(".brands-page .list_custom li span.letter.a-g-set").parent().show();
 				
-		
+		 // TPR-1287 Start
 	    $(".brandCategory").click(function(){
 	    	
 	    	var elementId =$(this).attr('id') ;
-	    	window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
+	    	var brandCatName = $(this).text().toLowerCase().trim() + "-brands";
+	    		    	
+	    	//window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
+	    	window.history.pushState('obj', 'newtitle', '/brands/' + brandCatName +'/b-'+elementId.toLowerCase());
+	    	
+	    	
 	    });
 	    
 	    
 	    $(".cmsManagedBrands").click(function(){
 	    	
 	    	var elementId =$(this).attr('id') ;
-	    	window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
+	    	
+	    	var brandCatName = $(this).text().toLowerCase().trim().replace(/\s/g, "-") + "-brands";
+	    	
+	    	//window.history.pushState('obj', 'newtitle', '/brands/brandlist?cat='+elementId);
+	    	window.history.pushState('obj', 'newtitle', '/brands/' + brandCatName +'/b-'+elementId);
+	    	
 	    });
-	    
+	  // TPR-1287 end
 	
 	    
 	    $(".brands-page .desktop ul.nav > li").click(function() {
@@ -974,6 +984,10 @@ $(document).ready(function(){
 		}
 		
 	/*---END of Mobile view left nav --*/	
+		
+		
+		
+		
 		
 	/*----Start of Wishlist Codes---------*/
 		
@@ -1507,7 +1521,9 @@ $(document).ready(function(){
 	  $(window).scroll(function () {
 		  if($(".ui-autocomplete").is(":visible") && marketplaceHeader){
 			  $("#js-site-search-input").parents('form#search_form').next('.ui-autocomplete.ui-front.links.ui-menu').css({
-				  left : $('#js-site-search-input').offset().left,
+				  /*start change of INC144313747*/
+				  /*left : $('#js-site-search-input').offset().left,*/
+				  /*end change of INC144313747*/
 				  width: $('#js-site-search-input').outerWidth()
 			  });
 		  }
@@ -1515,7 +1531,9 @@ $(document).ready(function(){
 	  });
 	  $('#js-site-search-input').keydown(function () {
 		  $("#js-site-search-input").parents('form#search_form').next('.ui-autocomplete.ui-front.links.ui-menu').css({
-				  left : $('#js-site-search-input').offset().left,
+			      /*start change of INC144313747*/  
+			  	  /*left : $('#js-site-search-input').offset().left,*/
+			  	  /*end change of INC144313747*/
 				  width: $('#js-site-search-input').outerWidth()
 			  });
 	  });
@@ -1925,12 +1943,19 @@ $(document).ready(function(){
 					else{
 						var pagination_top= sort_top - 16;
 					}
+					
+					/*TISPRDT-1179*/
+					if($("body").hasClass("page-search")){
 					if($(".listing.wrapper .right-block .listing-menu > div.list_title_sort").css("display") == "block"){
 					$(".listing.wrapper .right-block .sort_by_wrapper.listing-menu").css("top",sort_top+"px");
 					}
 					else{
 						$(".listing.wrapper .right-block .sort_by_wrapper.listing-menu").css("top","auto");
 					}
+					}
+					$("body.page-search .listing.wrapper .right-block .listing-menu").css("display","block");
+					/*TISPRDT-1179*/
+					
 					$(".listing.wrapper .right-block .listing-menu > div .pagination.mobile.tablet-pagination").css("top",pagination_top+"px");
 				}
 			}
@@ -1982,12 +2007,18 @@ $(".product-tile .image .item.quickview").each(function(){
 				else{
 					var pagination_top= sort_top - 16;
 				}
+				
+				/*TISPRDT-1179*/
+				if($("body").hasClass("page-search")){
 				if($(".listing.wrapper .right-block .listing-menu > div.list_title_sort").css("display") == "block"){
 				$(".listing.wrapper .right-block .sort_by_wrapper.listing-menu").css("top",sort_top+"px");
 				}
 				else{
 					$(".listing.wrapper .right-block .sort_by_wrapper.listing-menu").css("top","auto");
 				}
+				}
+				/*TISPRDT-1179*/
+				
 				$(".listing.wrapper .right-block .listing-menu > div .pagination.mobile.tablet-pagination").css("top",pagination_top+"px");
 			}
 		}
@@ -3511,6 +3542,7 @@ $(document).ajaxComplete(function(){
 
 /* UF-68 UF-69 */
 
+
 if($("#sameAsShippingEmi").is(":checked")){
 	$("#sameAsShippingEmi").prev('h2').hide();
 }
@@ -3527,3 +3559,29 @@ $("#sameAsShippingEmi").click(function(){
 	}
 	});
 
+
+/*TISSQAEE-335*/
+$(window).on("load resize",function(){
+	topLeftLocator();
+});
+$(document).ajaxComplete(function(){
+	topLeftLocator();
+});
+window.onload = function (){
+	$(".store-finder-legends").css("display","block");
+}
+
+function topLeftLocator(){
+var topLegend = $(".store-finder-search").outerHeight() + parseInt($(".store-finder-search").css("margin-bottom")) + $(".gmnoprint.gm-bundled-control .gmnoprint").height() + parseInt($(".gmnoprint.gm-bundled-control").css("margin-top"))  + 10;
+$(".store-finder-legends").css("top",topLegend);
+var leftLegend = $(".store-finder-map.js-store-finder-map").outerWidth() + parseInt($(".store-finder-map.js-store-finder-map").parent(".js-store-finder").css("margin-left")) - $(".store-finder-legends").width() - parseInt($(".gmnoprint.gm-bundled-control").css("margin-right")) - 15;
+$(".store-finder-legends").css("left",leftLegend);
+/*$(".store-finder-legends").css("display","block");*/
+if($(window).width() < 751){
+	$(".store-finder-legends").css("top","");
+	$(".store-finder-legends").parents(".body-Content").css("padding-bottom","");
+}
+if($(window).width() < 313)
+	$(".store-finder-legends").css("left","");
+}
+/*TISSQAEE-335*/

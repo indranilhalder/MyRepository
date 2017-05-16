@@ -42,7 +42,7 @@
 </c:if>
 
 <c:if test="${hasShippedItems}">
-	
+
 		<c:choose>
 			<c:when test="${showDeliveryAddress and not empty deliveryAddress}">
 			<!-- <h2>Delivery Details</h2> -->
@@ -50,18 +50,23 @@
 				<address>
 				<span>
 					<b>${fn:escapeXml(deliveryAddress.title)}${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</b>
-					<c:if test="${ not empty deliveryAddress.line1 }">
-						${fn:escapeXml(deliveryAddress.line1)},&nbsp;
+					<!-- TISUATSE-69 starts -->
+					<c:if test="${ empty deliveryAddressLine2  && empty deliveryAddressLine3}">
+						${fn:escapeXml(deliveryAddress.line1)},
 					</c:if>
-					<c:if test="${ not empty deliveryAddressLine2 }">
-					
-						${fn:escapeXml(deliveryAddress.line2)},
+					<c:if test="${ not empty deliveryAddressLine2 && empty deliveryAddressLine3}">
+						${fn:escapeXml(deliveryAddress.line1)}${fn:escapeXml(deliveryAddress.line2)},
 					</c:if>
-					<c:if test="${ not empty deliveryAddressLine3 }">
-					
-						${fn:escapeXml(deliveryAddress.line3)},
+					<c:if test="${empty deliveryAddressLine2 && not empty deliveryAddressLine3 }">
+						${fn:escapeXml(deliveryAddress.line1)}${fn:escapeXml(deliveryAddress.line3)},
 					</c:if>
+					<c:if test="${not empty deliveryAddressLine2 && not empty deliveryAddressLine3 }">
+						${fn:escapeXml(deliveryAddress.line1)}${fn:escapeXml(deliveryAddress.line2)}${fn:escapeXml(deliveryAddress.line3)},
+					</c:if>
+					<!-- TISUATSE-69 ends -->
+					<!-- <br> -->
 					<c:if test="${ not empty deliveryAddress.landmark && deliveryAddress.landmark != 'NA'}">
+						<br>
 						${fn:escapeXml(deliveryAddress.landmark)},
 					</c:if>
 					<br>
@@ -274,6 +279,9 @@
 			<!-- TISSQAUAT-4062 starts --> 
 				<!-- </div> -->
 			<!-- TISSQAUAT-4062 ends -->
+			
+				<!-- </div> -->
+			
 			<%-- <div class="price"><format:price priceData="${entry.basePrice}" displayFreeForZero="true"/></div>
 			<div class="details">
 				<div class="name"><a href="${productUrl}">${entry.product.name}</a></div>
@@ -322,6 +330,10 @@
 		<!-- TISSQAUAT-4062 starts -->
 		<!-- </li> -->
 		<!-- TISSQAUAT-4062 ends -->
+
+	
+		<!-- </li> -->
+		<!-- TISUATSE-121 start -->
 		<%-- <li>
 		    <div class="method item-mthd">
                    <h3> <spring:theme code="checkout.multi.shipmentMethod"/></h3>
@@ -352,6 +364,7 @@
                   </c:choose>
                   </div>
 		</li> --%>
+		<!-- TISUATSE-121 end -->
 	</c:if>
 </c:forEach>
 </ul>

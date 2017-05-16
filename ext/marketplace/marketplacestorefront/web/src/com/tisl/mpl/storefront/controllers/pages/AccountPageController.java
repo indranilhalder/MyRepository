@@ -1805,14 +1805,31 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 				returnPincodeCheckForm.setFirstName(address.getFirstName());
 				returnPincodeCheckForm.setLastName(address.getLastName());
-				returnPincodeCheckForm.setAddressLane1(address.getLine1());
-				returnPincodeCheckForm.setAddressLane2(address.getLine2());
+
+				//TISUATSE-85 starts//
+				StringBuilder fullAddress = new StringBuilder(120);
+				if (StringUtils.isNotEmpty(address.getLine1()))
+				{
+					fullAddress = fullAddress.append(address.getLine1());
+				}
+				if (StringUtils.isNotEmpty(address.getLine2()))
+				{
+					fullAddress = fullAddress.append(address.getLine2());
+				}
+				if (StringUtils.isNotEmpty(address.getLine3()))
+				{
+					fullAddress = fullAddress.append(address.getLine3());
+				}
+				returnPincodeCheckForm.setAddressLane1(fullAddress.toString());
+				//returnPincodeCheckForm.setAddressLane2(address.getLine2());
 				returnPincodeCheckForm.setMobileNo(address.getPhone());
+
+				//TISUATSE-85 ends//
 				returnPincodeCheckForm.setPincode(address.getPostalCode());
 				returnPincodeCheckForm.setCity(address.getTown());
 				returnPincodeCheckForm.setState(address.getState());
 				returnPincodeCheckForm.setCountry(address.getCountry().getName());
-				returnPincodeCheckForm.setLandmark(address.getLine3());
+				//returnPincodeCheckForm.setLandmark(address.getLine3());
 			}
 			model.addAttribute(ModelAttributetConstants.RETURN_PINCODE_FORM, returnPincodeCheckForm);
 
@@ -1900,9 +1917,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 		returnAddrData.setLastName(returnAddress.getLastName());
 		returnAddrData.setMobileNo(returnAddress.getMobileNo());
 		returnAddrData.setAddressLane1(returnAddress.getAddressLane1());
-		returnAddrData.setAddressLane2(returnAddress.getAddressLane2());
+		//returnAddrData.setAddressLane2(returnAddress.getAddressLane2());
 		returnAddrData.setPincode(returnAddress.getPincode());
-		returnAddrData.setLandmark(returnAddress.getLandmark());
+		//returnAddrData.setLandmark(returnAddress.getLandmark());
 		returnAddrData.setCity(returnAddress.getCity());
 		returnAddrData.setState(returnAddress.getState());
 		returnAddrData.setCountry(returnAddress.getCountry());
@@ -3806,8 +3823,39 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddress.setTitleCode(addressForm.getTitleCode());
 			newAddress.setFirstName(addressForm.getFirstName());
 			newAddress.setLastName(addressForm.getLastName());
-			newAddress.setLine1(addressForm.getLine1());
-			newAddress.setLine2(addressForm.getLine2());
+
+			final String fullAddress = addressForm.getLine1();
+
+			String addressLine1 = "";
+			String addressLine2 = "";
+			String addressLine3 = "";
+
+			if (fullAddress.length() <= 40)
+			{
+				addressLine1 = fullAddress.substring(0, fullAddress.length());
+			}
+			else if (fullAddress.length() <= 80 && fullAddress.length() > 40)
+			{
+				addressLine1 = fullAddress.substring(0, 40);
+				addressLine2 = fullAddress.substring(40, fullAddress.length());
+			}
+			else if (fullAddress.length() > 80 && fullAddress.length() <= 120)
+			{
+				addressLine1 = fullAddress.substring(0, 40);
+				addressLine2 = fullAddress.substring(40, 80);
+				addressLine3 = fullAddress.substring(80, fullAddress.length());
+			}
+			newAddress.setTitleCode(addressForm.getTitleCode());
+			newAddress.setFirstName(addressForm.getFirstName());
+			newAddress.setLastName(addressForm.getLastName());
+			/*
+			 * newAddress.setLine1(addressLine1); newAddress.setLine2(addressLine2); newAddress.setLine3(addressLine3);
+			 */
+
+			newAddress.setLine1(addressLine1);
+			newAddress.setLine2(addressLine2);
+			newAddress.setLine3(addressLine3);
+
 			newAddress.setTown(addressForm.getTownCity());
 			newAddress.setPostalCode(addressForm.getPostcode());
 			newAddress.setBillingAddress(false);
@@ -3817,7 +3865,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddress.setPhone(addressForm.getMobileNo());
 			newAddress.setState(addressForm.getState());
 			newAddress.setCountry(getI18NFacade().getCountryForIsocode(ModelAttributetConstants.INDIA_ISO_CODE));
-			newAddress.setLine3(addressForm.getLine3());
+			//newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
 			if(StringUtils.isNotBlank(addressForm.getLandmark()) && !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
 			{
@@ -3865,7 +3913,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 	}
-
 
 
 	/**
@@ -3925,8 +3972,41 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddress.setId(addressForm.getAddressId());
 			newAddress.setFirstName(addressForm.getFirstName());
 			newAddress.setLastName(addressForm.getLastName());
-			newAddress.setLine1(addressForm.getLine1());
-			newAddress.setLine2(addressForm.getLine2());
+
+			final String fullAddress = addressForm.getLine1();
+
+			String addressLine1 = "";
+			String addressLine2 = "";
+			String addressLine3 = "";
+
+			if (fullAddress.length() <= 40)
+			{
+				addressLine1 = fullAddress.substring(0, fullAddress.length());
+			}
+			else if (fullAddress.length() <= 80 && fullAddress.length() > 40)
+			{
+				addressLine1 = fullAddress.substring(0, 40);
+				addressLine2 = fullAddress.substring(40, fullAddress.length());
+			}
+			else if (fullAddress.length() > 80 && fullAddress.length() <= 120)
+			{
+				addressLine1 = fullAddress.substring(0, 40);
+				addressLine2 = fullAddress.substring(40, 80);
+				addressLine3 = fullAddress.substring(80, fullAddress.length());
+			}
+
+			/*
+			 * newAddress.setLine1(addressLine1); newAddress.setLine2(addressLine2); newAddress.setLine3(addressLine3);
+			 */
+
+			newAddress.setLine1(addressLine1);
+			newAddress.setLine2(addressLine2);
+			newAddress.setLine3(addressLine3);
+
+
+
+			//newAddress.setLine1(addressForm.getLine1());
+			//newAddress.setLine2(addressForm.getLine2());
 			newAddress.setTown(addressForm.getTownCity());
 			newAddress.setPostalCode(addressForm.getPostcode());
 			newAddress.setBillingAddress(false);
@@ -3936,7 +4016,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddress.setAddressType(addressForm.getAddressType());
 			newAddress.setPhone(addressForm.getMobileNo());
 			newAddress.setState(addressForm.getState());
-			newAddress.setLine3(addressForm.getLine3());
+			//newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
 			if (StringUtils.isNotBlank(addressForm.getLandmark()) && !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
 			{

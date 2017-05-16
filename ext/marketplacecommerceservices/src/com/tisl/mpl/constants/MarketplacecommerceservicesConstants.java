@@ -124,6 +124,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//	public static final String REFUNDTYPE = "S";
 	//	public static final String REASONCODE = "03"; // Hard coded value -- I'm not happy with the product quality
 
+
+
+
 	//Bulk Cancellation
 	public static final String initiate_cancel_job_cancellation_count = "initiate.cancel.job.cancellation.count";
 
@@ -583,6 +586,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_MESSAGE_DELIVERED = "Good news, everyone!  Your {0} {1}, was successfully delivered. We had tons of fun serving you. Hope you're happy with your CAMEL as well";
 	public static final String SMS_MESSAGE_RTO_INITIATED = "We are  initiated RTO for your shipment. If you want delivery then let us know within 24 hr";
 	public static final String SMS_MESSAGE_MIS_ROUTE = "Hi! Your order of {0}  in order no. {1} has been delay due to mis route. We deeply regret the inconvenience. ";
+
+
 	public static final int MAX_PAGE_LIMIT = 100;
 
 	public static final String SNS_CATEGORY = "snsCategory";
@@ -910,6 +915,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	// Added for TPR-1290
 	public static final String B9332 = "B9332";
 	public static final String B9328 = "B9328";
+	public static final String B9700 = "B9700";
+
+	public static final String B9710 = "B9710";
 	// Added in R2.3 start
 	// Auto populating pincode details Error Codes   Start
 	public static final String B9351 = "B9351";
@@ -987,6 +995,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9161 = "B9161";
 
 
+	//Added for TPR-4460
+	public static final String B9302 = "B9302";
+	public static final String B9303 = "B9303";
+	public static final String B9304 = "B9304";
 	//TISPRD-5986  MSH category 404 error handling
 	public static final String E0023 = "E0023";
 
@@ -1399,6 +1411,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SDB_FLAG = "RRS";
 	public static final String EDTOHD_FLAG = "RRE";
 	/* Added in R2.3 END */
+
 	public static final String CASH_ON_DELIVERY = "COD";
 
 	// Added for delivery mode estimated description default time
@@ -1594,6 +1607,13 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String VOUCHERCODE = "voucherCode".intern();
 	public static final String SYSDATE = "sysdate".intern();
 	public static final String VOUCHERIDENTIFIER = "voucherIndentifier".intern();
+	//TPR-4460
+	public static final String CHANNELRESTVIOLATION_WEB = "Voucher Not applicable for Web Channel".intern();
+	public static final String CHANNELRESTVIOLATION_MOBILE = "Voucher Not applicable for Mobile Channel".intern();
+	public static final String CHANNELRESTVIOLATION_CALLCENTRE = "Voucher Not applicable for CallCentre Channel".intern();
+	public static final String CHANNEL_RESTRICTION_MOBILE = "ChannelMobile".intern();
+	public static final String CHANNEL_RESTRICTION_WEB = "ChannelWeb".intern();
+	public static final String CHANNEL_RESTRICTION = "Channel Restriction for coupons".intern();
 
 	public static final String FIND_USER_BY_UID = "SELECT {u.pk} FROM {User as u} WHERE ({u.UID} = ?uid )";
 	//Added for constants for clickandcollect and active.
@@ -1777,6 +1797,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status"
 			.intern();
 
+	//	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os},{WalletEnum as w} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status" 
+	//			+"and {w.code}!='mRupee' ".intern(); //Query to include mRupee
+
+
 	public static final String PAYMENTPENDINGSTATUS = "status".intern();
 	//PaymentFix2017:- queryTAT added
 	public static final String PAYMENTPENDINGSKIPTIME = "queryTAT".intern();
@@ -1943,6 +1967,29 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String CANCEL_ENABLE = "order.cancel.enabled".intern();
 	public static final String PRODUCT_IMAGE = "product";
 
+	public static final String WALLETORDERID = "wallertOrderId";
+	public static final String CHECKSUMKEY = "checksumKey";
+	public static final String MRUPEE = "MRUPEE";
+	public static final String MRUPEE_CODE = "MRupee";
+	public static final String TPWALLETAUDITQUERY = "select {a:pk} from {MplPaymentAudit As a} where {a.auditId}=?auditId"
+			.intern();
+	public final static String MRUPEERETURNMETHOD = "payment.mRupee.returnMethod".intern();
+	public static final String THIRDPARTYWALLET_ENTRY_EXPIRED = "0".intern();
+
+	//mrupee
+	//mrupee
+	public static final String PAYMENTPENDING = "SELECT {o.pk}  FROM {order as o},{OrderStatus as os},{WalletEnum as w} WHERE SYSDATE - 10/1440 >  {creationtime} and {o.status}={os.pk} and  {o.iswallet}={w.pk} and ({os.code}=?status1 or {os.code}=?status2) and {w.code}='mRupee' "
+			.intern();
+	public static final String STATUS1 = "status1".intern();
+	public static final String STATUS2 = "status2".intern();
+
+	public final static String THIRDPARTYWALLET = "ThirdPartyWallet";
+	public final static String MRUPEERETURNURL = "payment.mRupee.returnUrl".intern();
+
+	public final static String MRUPEE_NARRATION_VALUE = "payment.mRupee.narration".intern();
+	public final static String MRUPEE_MERCHANT_CODE = "payment.mRupee.merchantID".intern();
+	public static final String MRUPEE_OPTION = "mRupee";
+	public final static String MRUPEEHOSTNAME = "mRupee.hostname.disableSslVerification";
 	public static final String TICKETTYPECODE = "R";
 	public static final String REFUNDTYPE = "S";
 	public static final String REASONCODE = "03"; // Hard coded value -- I'm not happy with the product quality
@@ -1952,6 +1999,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//PaymentFix2017:-
 	public static final String PAYMENTPENDING_SKIPTIME = "marketplace.PaymentPending.skipTime".intern();
 	public static final String OTHER = "Other";
+
 	public static final String COUNTRYCODE = "91".intern();
 	//Promotion Related
 	//public static final String BUYAANDBGETPROMOTIONONSHIPPINGCHARGES = "BuyAandBGetPromotionOnShippingCharges".intern();
@@ -2018,20 +2066,5 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String USERPARAM = "user";
 	public static final String NOENTRYSUBORDERLOG = "No  Entries available for Suborder ID:- ";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	public static final String SECONDPRODUCT = "secondProduct";
 }

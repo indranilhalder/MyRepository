@@ -601,6 +601,7 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 		try {
 			((MarketplaceSearchCommandController) widget
 					.getWidgetController()).setCurrentSite();
+
 			boolean isPinCodeServicable =false;
 			//TISUAT-4526 no sship in cod
 			// commenting below line ,since from R2.3 SSHIP COD IS eligible  if seller Allows
@@ -612,7 +613,8 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 			List<PinCodeResponseData> pinCodeResponses = ((MarketplaceSearchCommandController) widget
 					.getWidgetController()).getResponseForPinCode(product,
 					String.valueOf(pincode), isDeliveryDateRequired, ussid);
-			
+			//boolean isPinCodeServicable = sessionService.getAttribute("isPincodeServicable");
+
 			if(CollectionUtils.isNotEmpty(pinCodeResponses)) {
 				LOG.info("pinCodeResponse:" + pinCodeResponses.size());
 

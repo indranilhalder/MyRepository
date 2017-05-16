@@ -363,7 +363,16 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 										}
 										data.setCNCServiceableSlavesData(cncServiceableSlavesDataList);
 									}
-
+									//
+									data.setIsPincodeServiceable(Boolean.TRUE);
+									if (deliveryMode.getFulfillmentType() != null && deliveryMode.getIsCODLimitFailed().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+									{	
+										data.setIsCODLimitFailed(Boolean.TRUE); 
+									}else{
+										data.setIsCODLimitFailed(Boolean.FALSE); 
+									}
+									
+									
 									deliveryDataList.add(data);
 									//	}
 									responseData.setValidDeliveryModes(deliveryDataList);

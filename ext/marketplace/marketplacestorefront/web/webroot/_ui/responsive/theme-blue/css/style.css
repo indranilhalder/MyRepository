@@ -636,7 +636,13 @@ body.page-shopTheStyle .timeout-slider .owl-controls .owl-dots {
 	border-radius: 0;
 }
 /* ADDED TISLUX-1407 ENDS HERE */ 
-
+.full-address{
+	font-size: 12px;
+	padding-left: 18px;
+	border: 1px solid #dbdbdb;
+    height: 100px;
+    width: 100%;
+}
 /* ADDED TISQAUATS-9 STARTS HERE */ 
 .terms-text p{
 	text-align: center !important;
@@ -1893,7 +1899,7 @@ h2 {
               position: absolute;
               top: 0;
               left: 150px;
-              height: 450px;
+              height: 500px;	/* TISSQAEE-323 */
               padding-top: 10px;
               padding-left: 30px;
               padding-right: 10px;
@@ -2083,8 +2089,8 @@ h2 {
 		/*  -webkit-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
             -moz-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
             box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px; */
-		height: 450px;
-		z-index: 10001;
+		height: 500px;		/* TISSQAEE-323 */
+	    z-index: 10001;
 		-webkit-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
 		-moz-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
 		transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
@@ -15424,7 +15430,8 @@ body .account .right-account ul.saved-cards>li:last-child {
 }
 body .account .right-account ul.saved-cards>li address {
     line-height: 1.5;
-    font-size: 14px
+    font-size: 14px;
+    word-wrap: break-word;
 }
 body .account .right-account ul.saved-cards>li a {
     text-decoration: underline;
@@ -15459,11 +15466,21 @@ body .account .right-account ul.saved-cards>li a.delete  {
 	margin-right: 10px;
 	font-weight:bold;
 }
-body .account .right-account ul.saved-cards>li a.delete-add,
-body .account .right-account ul.saved-cards>li a.edit {
+/* body .account .right-account ul.saved-cards>li a.edit, */	/* commented for INC144313779 */
+body .account .right-account ul.saved-cards>li a.delete-add {
     display: block;
     line-height: 1.5
 }
+/* start change for INC144313779 */
+body .account .right-account ul.saved-cards>li .actions a:first-child {
+	display: inline-block;
+   	margin-bottom: 4px;
+}
+body .account .right-account ul.saved-cards>li a.edit {
+    display: block;
+    margin-left: 4px;
+}
+/* end change for INC144313779 */
 body .account .right-account ul.saved-cards>li .actions {
     position: absolute;
     bottom: 10px;
@@ -16349,6 +16366,7 @@ body .account .right-account .order-history.order-details li.header div.delivery
 }
 body .account .right-account .order-history.order-details li.header div.delivery-address address{
 	    font-size: 12px;
+	    word-wrap: break-word; /* TISSTRT-1507 */
 }
 body .account .right-account .order-history.order-details li.header div h3,
 body .account .right-account .order-history.order-details li.header div .grand-total {
@@ -16443,7 +16461,8 @@ body .account .right-account .order-history.order-details li.item .item-header p
 body .account .right-account .order-history.order-details li.item .item-header address {
     font-size: 12px;
     padding: 20px;
-    line-height: 1.5
+    line-height: 1.5;
+    word-wrap: break-word;
 }
 body .account .right-account .order-history.order-details li.item .item-fulfillment {
     margin-left: 20px;
@@ -19664,7 +19683,9 @@ header.brand-header .content {
   background-color: #000;
 }
 header > .content .bottom {
-  overflow: hidden;
+  /*start change of INC144313747*/
+  /* overflow: hidden; */
+  /*end change of INC144313747*/
   -webkit-transition: max-height 0.3s;
   -moz-transition: max-height 0.3s;
   transition: max-height 0.3s;
@@ -19989,7 +20010,7 @@ div.other-sellers .navigation button.next:after {
 }
 @media (max-width: 650px) {
     div.other-sellers .sort-by {
-        display: none !important;
+         display: none !important;/* TISSQAEE-377 */
         background-color: transparent;
         border: none;
         position: relative
@@ -29396,7 +29417,9 @@ body .account .right-account .order-history .bottom .pagination.mobile{
         margin-right:5px;  }
         #displayPaginationCountUp, #displayPaginationCountDown{
         margin: 10px 0;
-        display:inline-block;}
+        display:inline-block;
+        margin-top: 20px; /* TISSQAEE-244 */
+        }
 }
 .trackorder-dropdown li[data-read="true"] a {
 	color: #555;
@@ -35465,6 +35488,7 @@ position:static !important;
 	padding-left:10px;
     display: inline-block;
 }
+/* Start TISSQAEE-244 */
 .pagination-bar.listing-menu.bottom .pagination li.next {
     right: 0;
     /* position: absolute; */ /* Commented for TISSQAUAT-478 */
@@ -35473,6 +35497,13 @@ position:static !important;
     left: 0;
     /* position: absolute; */ /* Commented for TISSQAUAT-478 */
 }
+/* End TISSQAEE-244 */
+
+/* Start TISSQAEE-246 */
+.product-info .color-swatch li img{
+	vertical-align: bottom;
+}
+/* End TISSQAEE-246 */
 .pagination .prev .anglelft:before, .pagination .next .anglerght:after{
 	line-height:18px;
 }
@@ -37730,6 +37761,7 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
     background-image: url(../images/Delete.png);
     height: 24px;
     width: 24px;
+    background-repeat: no-repeat; /* TISUATSE-84 */
 }
 .alert-dismissable.alert-info .close, .alert-dismissible.alert-info .close{
 	position: relative;
@@ -37750,7 +37782,7 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
 @media (max-width:790px) {
 	.alert-dismissable .close, .alert-dismissible .close {
 	float:left;
-	top: -20px;
+	/* top: -20px; */  /* Unit Testing */
 	right: 4px;
 	}
 }
@@ -41379,7 +41411,7 @@ span.sizesAvailableMSD {
 .global-alerts button.close
 {
 	float:left;
-	top: -20px;
+	/* top: -20px; */	/* Unit Testing */
   opacity: 1;
   left: 0px;
   margin-right: 10px;
@@ -41418,6 +41450,7 @@ button#expressCheckoutButtonId.express-checkout-disabled:hover {
 	padding: 8px 12px !important;
 }
 /* TPR-1075 firstPurchaseOfferError id added*/
+/*TPR-4460  invalidChannelError id added*/
 #netbanking, #submitButtons, #paymentDetails, #radioForEMI, #otpNUM,
 	#codMessage, #otpValidationMessage, #form-actions,
 	#wrongOtpValidationMessage, #expiredOtpValidationMessage,
@@ -41426,7 +41459,7 @@ button#expressCheckoutButtonId.express-checkout-disabled:hover {
 	#mobileNoError,.saved-card-button, #netbankingError, #ebsErrorSavedCard, #juspayconnErrorDiv,
 	#netbankingIssueError, #cvvErrorSavedCard, #maestroMessage, #newMaestroMessage, #invalidCouponError, 
 	#couponApplied, #expiredCouponError, #issueCouponError, #priceCouponError, #appliedCouponError, #emptyCouponError,
-	#notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, .nbAjaxError {
+	#notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError, .nbAjaxError {
 	display: none;
 }
 
@@ -41646,7 +41679,7 @@ input#otpMobileNUMField:focus {
 	right: -7px;
 }
 #juspayconnErrorDiv span {
-	margin: 0px 15px;
+	/* margin: 0px 15px; */		/* Unit Testing */
    }
 
 
@@ -48230,6 +48263,7 @@ padding:0 40px;	}
 }
 
 
+
 .product-info>div.wishAddLogin.active, .product-info>div.wishAddSucess.active,.product-info>div.wishAddLogin.active, .product-info>div.wishRemoveSucess.active, .product-info>div.wishAlreadyAdded.active,div.wishAlreadyAddedPlp.active,div.wishRemoveSucessPlp.active,div.wishAddLoginPlp.active,div.wishAddSucessPlp.active,div.wishAddSucessQV.active,div.wishAddLoginQV.active,div.wishAlreadyAddedQV.active{
 	opacity: 1;
 	top: 90px;
@@ -48247,6 +48281,7 @@ padding:0 40px;	}
 	margin-left: 30px;
 	    line-height: 20px;
 }
+
 .product-info>div.wishAddSucess,.product-info>div.wishRemoveSucess,div.wishAddSucessPlp,div.wishRemoveSucessPlp,div.wishAddSucessQV{
 	color:green;
 
@@ -50096,8 +50131,20 @@ body:not(.page-checkout-login) .checkout-header.login{
 
 .progress-barcheck .step-1.step-done span,.progress-barcheck .step-2.step-done span,.progress-barcheck .step-3.step-done span{ border: 1px solid #a7183e; position:absolute; display:inline-block; background:#ffffff; left:7.2%; }
 .progress-barcheck .step-2.step-done span{ left:49%;}
-.progress-barcheck .step-1.step-done span:after,.progress-barcheck .step-2.step-done span:after,.progress-barcheck .step-3.step-done span:after{	content: "";    width: 19px;    height: 19px;    background: #a7183e;    border-radius: 25px;    position: relative;    display: inline-block;  top: 6px; }
-/* .progress-barcheck.paymentPage .step-1.step-done span:after, .progress-barcheck.paymentPage .step-2.step-done span:after, .progress-barcheck.paymentPage .step-3.step-done span:after{ top: 0px;} *//*UF-257*/
+.progress-barcheck .step-1.step-done span:after,.progress-barcheck .step-2.step-done span:after,.progress-barcheck .step-3.step-done span:after{	
+	content: "";    
+	width: 19px;   
+	height: 19px;   
+	background: #a7183e;    
+	border-radius: 25px;    
+	position: relative;    
+	display: inline-block; 
+	/* top: 6px; */ /* TISSQAEE-267 */
+	}
+.progress-barcheck.paymentPage .step-1.step-done span:after, .progress-barcheck.paymentPage .step-2.step-done span:after, .progress-barcheck.paymentPage .step-3.step-done span:after{
+	/* top: 5px; */ /* TISSQAEE-267 */
+	}
+
 
 .progress-barcheck .step-1.finalstep span,.progress-barcheck .step-2.finalstep span,.progress-barcheck .step-3.finalstep span{ border: 1px solid #efefef; right:8.5%; width:25px; height:25px; top:24px; }
 .progress-barcheck .step-2.finalstep span{ left:49%; }
@@ -50120,7 +50167,9 @@ body:not(.page-checkout-login) .checkout-header.login{
 .progress-barcheck .step-1.step-done a{
 	    padding-left: 15%;
 }
-.progress-barcheck .step-1.step-done span.paymentStepDone:after, .progress-barcheck .step-2.step-done span.paymentStepDone:after, .progress-barcheck .step-3.step-done span.paymentStepDone:after{ top:6px;}
+.progress-barcheck .step-1.step-done span.paymentStepDone:after, .progress-barcheck .step-2.step-done span.paymentStepDone:after, .progress-barcheck .step-3.step-done span.paymentStepDone:after{
+	/* top:6px; */ /* TISSQAEE-267 */
+	}
  @media only screen and (max-width:1450px){
 	.progress-barcheck div a{  font-size: 13px;}
 	}
@@ -50149,9 +50198,17 @@ width:25px; height:25px;
 .progress-barcheck div.step-1.active a, .progress-barcheck div.step-2.active a, .progress-barcheck div.step-3.active a{ font-size:12px; }
 .progress-barcheck .step-1.finalstep span, .progress-barcheck .step-2.finalstep span, .progress-barcheck .step-3.finalstep span,
 .progress-barcheck .step-1 span, .progress-barcheck .step-2 span, .progress-barcheck .step-3 span{ width:18px; height:18px;}
-.progress-barcheck .step-1.step-done span:after, .progress-barcheck .step-2.step-done span:after, .progress-barcheck .step-3.step-done span:after{ width:10px; height:10px; top:3px;}
-/* .progress-barcheck.paymentPage .step-1.step-done span:after, .progress-barcheck.paymentPage .step-2.step-done span:after, .progress-barcheck.paymentPage .step-3.step-done span:after{ top:0px;} */ /*UF-257*/
-.progress-barcheck .step-1.step-done span.paymentStepDone:after, .progress-barcheck .step-2.step-done span.paymentStepDone:after, .progress-barcheck .step-3.step-done span.paymentStepDone:after{ top:3px;}
+.progress-barcheck .step-1.step-done span:after, .progress-barcheck .step-2.step-done span:after, .progress-barcheck .step-3.step-done span:after{
+		width:10px;
+	 	height:10px;
+	 	/* top:3px; */ /* TISSQAEE-267 */
+	}
+.progress-barcheck.paymentPage .step-1.step-done span:after, .progress-barcheck.paymentPage .step-2.step-done span:after, .progress-barcheck.paymentPage .step-3.step-done span:after{
+	/* top:-7px; */ /* TISSQAEE-267 */
+	}
+.progress-barcheck .step-1.step-done span.paymentStepDone:after, .progress-barcheck .step-2.step-done span.paymentStepDone:after, .progress-barcheck .step-3.step-done span.paymentStepDone:after{ 
+	/* top:3px; */ /* TISSQAEE-267 */
+}
 .progress-barcheck .step-1.active span, .progress-barcheck .step-2.active span, .progress-barcheck .step-3.active span{ border:3px solid #a7183e;}
 .progress-barcheck .step1, .progress-barcheck .step2, .progress-barcheck .step3{ height:7px; margin:0; }
 .progress-barcheck .step-1.step-done a{ padding-left:29px;}
@@ -53649,6 +53706,7 @@ body .lookbook_wrapper .listing.wrapper .left-block{
     padding-bottom: 9px;
     line-height: 12px;
     word-break: break-word;
+   	word-wrap: break-word;	/* TISUATSE-105 */
 }
 
 .address-list .address .name {
@@ -54942,12 +55000,14 @@ body .lookbook_wrapper .listing.wrapper .left-block{
     color: #a5a5a5 !important;
   }
   .checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea{
-  margin-bottom: 20px;
-    font-size: 14px;
+	 /*  margin-bottom: 20px; */ /* TISSQAEE-266 */
+ 	margin-bottom: 12px; /* TISSQAEE-266 */
+   	font-size: 14px;
     border: 1px solid #dbdbdb;
     height: 100px;
     width:100%;
     padding-left: 17px;
+    resize:none; /* TISSQAEE-266 */
   }
   
   .checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea::-webkit-input-placeholder {
@@ -55224,8 +55284,11 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
     height: 47px;
     line-height: 47px;
     margin: 0 0 0 -57px;
-    position: absolute;
-    top: 0;
+    /* position: absolute; */	/* TISSQAEE-331 */
+    position:relative;		/* TISSQAEE-331 */
+    /* top: 0; */		/* TISSQAEE-331 */
+    top:16px;		/* TISSQAEE-331 */
+    left:-10px;		/* TISSQAEE-331 */
     width: 47px;
 }
 
@@ -55431,6 +55494,81 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 .cart.wrapper.checkout-payment .blocks .cash .cont-del .otp	{ color:#60a119; display:block; text-transform:capitalize; font-size:13px; font-weight:normal; }
 .cart.wrapper.checkout-payment .blocks .cash .cont-del button.confirm { width:273px; height:47px !important;font-size: 13px !important;background:#f8f8f8 !important; }
 .cart.wrapper.checkout-payment .blocks .cash .cont-del button.confirm:hover {background:inherit !important; }
+
+.checkout-list .acc_head{ letter-spacing:0.5px; }
+.choose-payment .smk_accordion{ padding:0;}
+.smk_accordion { position: relative; margin: 0; padding: 0; list-style: none; margin-bottom: 20px; /* padding: 120px 0 0; */}
+.smk_accordion .accordion_in { background: #fff url(../images/down-arrow.png) 96% 36px no-repeat; border: 1px solid #e4e4e4; cursor:pointer; position: relative; margin-bottom: 9px; overflow: hidden; z-index: 10; }
+.smk_accordion .accordion_in.acc_active { background: url(../images/up-arrow.png) 96% 36px no-repeat; }
+.smk_accordion .accordion_in .acc_head { position: relative; font-size: 24px; font-weight:bold; display: block; cursor: pointer; text-transform:uppercase;     letter-spacing: 0.5px;}
+.smk_accordion .accordion_in .acc_head span{ padding: 28px 0 25px 30px; display:block;}
+.smk_accordion .accordion_in .acc_content, #COD{ background-color:#f8f8f8; margin:0 145px 30px 30px; cursor:text; }
+.smk_accordion .accordion_in .acc_content .blocks { font-weight:bold; padding:46px 66px 30px 66px; text-transform:uppercase; }
+.smk_accordion .accordion_in .acc_content .blocks.netbankingPanel {  padding-bottom:0px;}
+.smk_accordion .accordion_in .acc_content .blocks h3 { font-size: 16px; padding-bottom :15px; letter-spacing:.8px; font-weight:500;}
+.smk_accordion .accordion_in .acc_content .blocks .mycards { color:#a7183e; display:block; font-size:16px; padding-bottom:15px; }
+.smk_accordion .accordion_in .acc_content .blocks .card-sec {border:1px solid #dbdbdb; background-color:#fff; font-weight:normal; padding:8px 15px 13px 14px; margin-top:10px; }
+.smk_accordion .accordion_in .acc_content .blocks .card-sec:first-child {margin-top:0px; }
+.smk_accordion .accordion_in .acc_content .card-sec .card-num .visa { margin-right:12px; }
+.smk_accordion .accordion_in .acc_content .card-sec .card-num .card_image { float:left;     margin-bottom: 30px;}
+.smk_accordion .accordion_in .acc_content .card-sec .card-num .saved{ color:#a5a5a5; display:block; font-size:13px;padding:0 0 10px 20px; text-transform:capitalize; }
+.smk_accordion .accordion_in .acc_content .card-sec .card-num .numbers { font-size:14px; line-height:18px; font-weight: normal;}
+.smk_accordion .accordion_in .acc_content .card-sec .digits { padding-left:54px; }
+.smk_accordion .accordion_in .acc_content .card-sec .digits label { font-size:13px; padding-bottom:8px; text-transform:capitalize; }
+.smk_accordion .accordion_in .acc_content .card-sec .digits .select-box { display:block;  }
+.smk_accordion .accordion_in .acc_content .card-sec .digits .select-box input { background-color:#fff; border:1px solid #dbdbdb; height:38px; width:90px; }
+.smk_accordion .accordion_in .acc_content .card-sec .digits .select-box .tick { padding-left:10px; }
+
+.smk_accordion .accordion_in .acc_content .blocks .new-card {   }
+.smk_accordion .accordion_in .acc_content .blocks .new-card input,
+.smk_accordion .accordion_in .acc_content .blocks.net-bank input { border:1px solid #dbdbdb; height:45px; width:100%}
+.smk_accordion .accordion_in .acc_content .blocks .new-card p,
+.smk_accordion .accordion_in .acc_content .blocks.net-bank p { color:#a7183e; font-size: 16px;  }
+.smk_accordion .accordion_in .acc_content .blocks .new-card p { padding:29px 0 13px 0; }
+.smk_accordion .accordion_in .acc_content .blocks.net-bank p { padding:0 0 16px 0; }
+.smk_accordion .accordion_in .acc_content .blocks .new-card  .name-card {
+	/* margin:30px 0; */	/* Unit Testing */
+	margin:12px 0;		/* Unit Testing */
+	width:100%;
+	margin-bottom: 0;	/* Unit Testing */
+}
+.smk_accordion .accordion_in .acc_content .blocks .new-card .cardNumber input,
+.smk_accordion .accordion_in .acc_content .blocks.net-bank .cardNumber input { width:21.1%; margin-right:4.5%; }
+.smk_accordion .accordion_in .acc_content .blocks .new-card .cardNumber input.last,
+.smk_accordion .accordion_in .acc_content .blocks.net-bank .cardNumber input.last { float:right; margin-right:0; }
+.smk_accordion .accordion_in .acc_content .blocks .new-card .cardExpiration { padding-bottom:28px; }
+.smk_accordion .accordion_in .acc_content .blocks .new-card .expires { color:#a5a5a5; display:block; font-size:14px; font-weight:normal; text-transform:capitalize; padding-bottom:12px; width:100%;margin-bottom:0px; }
+.smk_accordion .accordion_in .acc_content .blocks .new-card .card_exp_month,.smk_accordion .accordion_in .acc_content .blocks .new-card .card_exp_year { margin-right:8.5%; width:40.77%; height:45px; }
+.smk_accordion .accordion_in .acc_content .blocks .new-card .cardExpiration .csc { float:right; width:47%; background:url(../images/xxx.png) right 6px no-repeat #fff; }
+.smk_accordion .accordion_in .acc_content .blocks .new-card .remember { display:block; width:100%; }
+.smk_accordion .accordion_in .acc_content .blocks .new-card .remember input[type="checkbox"] { visibility:hidden;  }
+.smk_accordion .accordion_in .acc_content .blocks .new-card .remember input[type="checkbox"] + label{ color:#999999; font-size:14px; font-weight:normal; padding:0; line-height:26px; width:96%; letter-spacing:0.5px;    text-transform: uppercase; }
+.smk_accordion .accordion_in .acc_content .blocks .new-card .remember input[type="checkbox"] + label:before{ transition: none 0s ease 0s ;background: url("../images/payment-checbox.png") no-repeat scroll left top;    border: 0 none;    box-shadow: none;    height: 18px;    outline: medium none;    width: 18px;}
+.smk_accordion .accordion_in .acc_content .blocks .new-card .remember input[type="checkbox"]:checked + label:before{background: url("../images/payment-checbox.png") no-repeat scroll left bottom;}
+.smk_accordion .accordion_in .acc_content .terms .redirect { padding:16px 0 30px 30px;   text-transform: none; width:100%; font-weight:normal; font-size:14px; color:#333; }
+.smk_accordion .accordion_in .acc_content .blocks .new-card button,
+.smk_accordion .accordion_in .acc_content .blocks.net-bank button { background:#a7183e; color:#fff; font-size:14px; font-weight:normal; height:47px; text-align:center; width:204px; padding:0; }
+
+.smk_accordion .accordion_in .acc_content .blocks.net-bank .cardNumber input { margin-bottom:20px; }
+.smk_accordion .accordion_in .acc_content .blocks.net-bank .trigger,
+.smk_accordion .accordion_in .acc_content .blocks.net-bank .activetrigger { font-size:14px; width:97%; padding:14px 10px; font-weight:normal; letter-spacing:1px; color:#000; }
+.smk_accordion .accordion_in .acc_content .blocks.net-bank .dropcontainer ul { width:93.3%; font-weight:normal; padding:0; }
+.smk_accordion .accordion_in .acc_content .blocks.net-bank .dropcontainer li { padding:10px; }
+.smk_accordion .accordion_in .acc_content .terms .redirect { font-size:14px; font-weight:normal; padding: 16px 0 30px 30px; text-transform: none;width: 100%;}
+.smk_accordion .accordion_in .acc_content .terms .redirect{ padding-left:0px;}
+.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del .terms p { color:#000;font-size:13px;text-transform:none;    line-height: inherit;}
+
+.smk_accordion .accordion_in .acc_content .blocks .cash { font-size:14px; }
+.smk_accordion .accordion_in .acc_content .blocks .cash p { color:#a7183e; line-height:26px; }
+.smk_accordion .accordion_in .acc_content .blocks .cash h4  { padding:8px 0 30px 0; text-transform:none; font-weight:normal; }
+.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del p { padding:0; }
+.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input { height:45px; margin:7px 0 10px 0; width: 85%; }
+.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del input#otpNUMField { width:93.3%; }
+.smk_accordion .accordion_in .acc_content .blocks .cash #otpNUM p.process, .smk_accordion .accordion_in .acc_content .blocks .cash .cont-del .cod-link { font-size:13px; font-weight:normal; text-transform:capitalize;    color: #000;line-height: 13px; }
+.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del button { color:#a7183e;line-height:20px; font-weight:normal; margin:15px 0 36px 0; background:none; border:1px solid #a7183e; height:47px !important;font-size: 13px !important;    letter-spacing: 1px;    padding: 13px 18px; width:204px; }
+.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del .otp	{ color:#60a119; display:block; text-transform:capitalize; font-size:13px; font-weight:normal; }
+.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del button.confirm { width:273px; height:47px !important;font-size: 13px !important;background:#f8f8f8 !important; }
+.smk_accordion .accordion_in .acc_content .blocks .cash .cont-del button.confirm:hover {background:inherit !important; }
 .cart-mobile, .head-mobile { display:none; }
 
 /* One radio button per line */
@@ -55781,10 +55919,11 @@ display:block;}
 	margin-bottom:0px;
 }
 #juspayconnErrorDiv{
-	line-height:24px;
+	/* line-height:24px; */  /* Unit Testing */
 }
 #juspayconnErrorDiv button.close{
-	top:0px !important;
+	/* top:0px !important; */  /* Unit Testing */
+	margin-right: 12px;  /* Unit Testing */
 }
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full{
 	padding-left:0px;
@@ -57489,6 +57628,15 @@ padding:0px;
  .cart.wrapper .payments.tab-view .product-block li.item#savedCard + li + .terms{
  padding-bottom: 20px;
  }
+ /* TISSQAEE-397 */
+ .cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth ul li span.text_in
+	 {
+	    padding-left: 0;
+	    text-align: center;
+	    width: 8px;
+	    padding-top: 0px;
+	 }
+/* TISSQAEE-397 */
  }
 @media (max-width:400px){
 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth .delivered li{
@@ -57660,6 +57808,12 @@ div.radio.creditDebitLabelRadio{
 }
 .cart.wrapper.checkout-payment .blocks .error-message#memberNameError{
 	padding-top	:0px;
+}
+.smk_accordion .accordion_in .acc_content .blocks .error-message{
+	padding-bottom:5px;
+}
+.smk_accordion .accordion_in .acc_content .blocks .error-message#memberNameError{
+	/* padding-top	:0px; */   /* Unit Testing */
 }
  /* Payment bug fix end*/
  #saveAddressInMyAddressBook{
@@ -60688,7 +60842,6 @@ body.template-pages-layout-footwearCategoryLandingPage .product-tile .image .qui
 	body.template-pages-layout-footwearCategoryLandingPage .product-tile .image .new,body.template-pages-layout-footwearCategoryLandingPage .newExclusiveElement .new{
 	    left: 0px !important;			/* UF-12 */
 }
-
 }
 
 
@@ -60974,6 +61127,37 @@ body.page-cartPage .cart-total-block ul.checkOutBtnBtm{
 	}
 }
 /* UI-UX Fixes for PDP end */
+/*Added for mRupee Changes*/
+/* .smk_accordion .accordion_in .acc_content#MRUPEE .numbers.creditLabel, .smk_accordion .accordion_in .acc_content#MRUPEE #mRupeeInfo{
+  width: 49%;
+  float:left;
+}
+.smk_accordion .accordion_in .acc_content#MRUPEE #mRupeeInfo{
+  text-transform: initial;
+  color: red;
+  font-weight: normal;
+  font-size: 13px;
+  width: 39%;
+}
+#MRUPEE.acc_content .radio img{
+	width: 48%;
+} */
+#MRUPEE .product-block.blocks .radio .numbers.creditLabel, .left-block.choose-payment .tabs #MRUPEE #mRupeeInfo{
+  width: 49%;
+  float:left;
+}
+.left-block.choose-payment .tabs #MRUPEE #mRupeeInfo{
+  text-transform: initial;
+  color: red;
+  font-weight: normal;
+  font-size: 13px;
+  width: 47%;
+}
+#MRUPEE .product-block.blocks .radio .numbers.creditLabel img{
+	width: 48%;
+}
+/*mRupee Changes ends*/
+/* UI-UX Fixes for PDP end */
 
 /* UF-59 for PDP, OTHER SELLERS, QUICK VIEW starts */
 
@@ -61188,7 +61372,8 @@ body.page-productGrid .facet-list.filter-opt ~ .left-block{
 /* .priceFormat , .price p, .price, .product-facet .facet .facet-list .filter-price span.facet-text,
 .total-payable-amount, .cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info .prd-info p.delivery-price, .Price span, span#minPrice, span.amt{
 	font-family:"MontserratGoogleReg";
-}  */
+} 
+
 
 /* UF-64 start */
 body.page-cartPage footer .footer-text{
@@ -61780,6 +61965,59 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds,
 }
 /* UF-61 Cart Page end */
 
+/* TPR-1325 start */
+.bundle-promo{
+	padding-top:15px;
+}
+#OfferWrap .Inner .bundle-promo > a{
+    font-size:13px;
+    text-decoration:none;
+}
+/* TPR-1325 end */
+
+
+/* TISUATSE-85 */
+
+body.page-returnSubmit form#returnPincodeCheckForm textarea#addressLane1 {
+    width: 100%;
+    height: 58px;
+    margin-bottom: 7px;
+}
+body.page-returnSubmit #returnPincodeCheckForm .col-md-12.inputBoxHeight{
+	height: auto !important;
+}
+body.page-returnSubmit #returnPincodeCheckForm .error_text.address1Error{
+	margin-top: 7px;
+}
+.cart.wrapper .left-block .payments.tab-view .new-card #billingAddress fieldset .full .full-address{
+	resize:none;
+}
+@media (max-width:700px){
+	body.page-returnSubmit form#returnPincodeCheckForm textarea#addressLane1{
+		height: 70px;
+	}
+}
+@media(max-width:550px){
+	body.page-returnSubmit form#returnPincodeCheckForm textarea#addressLane1{
+		height: 106px;
+	}
+}
+
+/* TISUATSE-85 */
+
+/* TISUATSE-84 */
+
+.alert.alert-danger.alert-dismissable{
+	padding: 0;
+	margin-bottom: 17px !important;
+}
+@media(max-width:650px){
+.global-alerts button.close{
+		/* height: 100%; */
+}
+}
+
+/* TISUATSE-84 */
 /*TPR-4471 starts*/
 .productGrid-header-wrapper{
 	background: #000;
@@ -63122,7 +63360,7 @@ padding-bottom: 5px;
 	height:20px;
 }
 .progress-barcheck .step-1.step-done span.paymentStepDone:after, .progress-barcheck .step-2.step-done span.paymentStepDone:after, .progress-barcheck .step-3.step-done span.paymentStepDone:after {
-    top: 1px;
+    /* top: 1px; */ /* TISSQAEE-267 */
     width: 20px;
     height: 20px;
 }
@@ -63132,7 +63370,7 @@ padding-bottom: 5px;
 .progress-barcheck .step-1.step-done span:after, .progress-barcheck .step-2.step-done span:after, .progress-barcheck .step-3.step-done span:after {
     width: 20px;
     height: 20px;
-    top: 1px;
+    /* top: 1px; */ /* TISSQAEE-267 */
 }
 .wrapper .container-address {
     max-width: 100%;
@@ -63488,6 +63726,9 @@ span.default input[type="radio"]+label:before {
     padding: 12px 12px 12px 12px;
 }
 /* end of TISPRDT-952 */
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea.textarea.form-control ~ span{
+	margin-bottom: 0;	/* TISSQAEE-266 */
+}
 }
 .checkTab .address-list{
 	margin-right: 12px;
@@ -63719,6 +63960,7 @@ footer .banner{
 	font-size:12px !important;
 	letter-spacing: 0.6px;
 	line-height:1.67;
+	word-wrap: break-word; /* TISUATSE-104 */
 }
 .cart.wrapper.checkout-payment .right-block.billing .block.bottom.order-details.delivery-info>address{
 	line-height:1.67 !important;
@@ -65125,6 +65367,41 @@ body:not(.page-checkout-login) .step-body .checkout-shipping.left-block{
 	display: none;
 } */
 
+/* TISSQAEE-244 */
+@media(max-width:400px){
+body .account .right-account .order-history .bottom .pagination.mobile{
+	padding: 0;
+	right: 16px;
+}
+.pagination-bar.listing-menu.bottom{
+	margin-left: 0;
+}
+body .account .right-account .order-history .top .pagination.mobile{
+	padding: 0;
+	right: 16px;
+}
+body .account .right-account .order-history .pagination li{
+	margin: auto 1px;
+}
+.pagination li.next{
+	padding-left: 0px;
+}
+.pagination li.prev{
+	padding-right: 0px;
+}
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea,
+.cart.wrapper .left-block .payments.tab-view .new-card #billingAddress fieldset .full .full-address{
+	height:125px;	/* TISSQAEE-266 */	/* TISUATSE-85 */
+}
+}
+/* TISSQAEE-244 */
+
+/* TISSQAEE-266 */
+.checkout.wrapper .formaddress .product-block.addresses.new-form li.item textarea ~ span{
+	margin-bottom: 12px;
+	display: inline-block;
+}
+/* TISSQAEE-266 */
 /* TISSIT-2212 start */
 @media(min-width:768px){
 .cart.wrapper .checkout-shipping-items.left-block.left-block-width+.right-block.shipping.right-block-width{
@@ -65155,6 +65432,24 @@ padding-top:90px;
     letter-spacing: .5px;
 }
 /* TISSIT-2212 end */
+
+/* Fixes Unit Testing */
+
+.cart.wrapper .left-block .payments.tab-view .new-card #billingAddress fieldset .full .full-address ~ span#myCounter {
+    margin-bottom: 4px;
+    display: inline-block;
+}
+.cart.wrapper .left-block .payments.tab-view .new-card #billingAddress fieldset .full .full-address ~ span:empty {
+    display: none;
+}
+.checkout.wrapper .product-block.addresses.new-form li.item fieldset .help-block#address1Error p{
+	margin-top: 7px;	/* TISSQAEE-266 */
+}
+.cart.wrapper .left-block .payments.tab-view .new-card #billingAddress fieldset .full .full-address ~ span#myCounter + .error-message {
+    display: block;		/* TISSQAEE-266 */
+} 
+
+/* Fixes Unit Testing */
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
 	.product-info>div.wishAddLogin, .product-info>div.wishAddSucess, .product-info>div.wishAddLogin, .product-info>div.wishRemoveSucess, .product-info>div.wishAlreadyAdded, div.wishAlreadyAddedPlp, div.wishAddLoginPlp, div.wishAddSucessPlp, div.wishRemoveSucessPlp, div.wishAddSucessQV, div.wishAddLoginQV, div.wishAlreadyAddedQV {
     display: inline-block;
@@ -65839,6 +66134,15 @@ body .account .track{
 	 	.accordtionTataCliq .scheduledPickupArea {
 	 		width: 118%;
 	 	}
+	 	/* TISSQAEE-397 */
+	 	.cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth ul li span.text_in
+	 	{
+	 	    padding-left: 0px;
+		    text-align: center;
+		    width: 17px;
+		    padding-top: 0px;
+	 	}
+	 	/* TISSQAEE-397 */
 	}
 	
 	@media (max-width: 1020px) {
@@ -66197,6 +66501,7 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
 	right: 5px !important;
     top: 5px !important;
 	
+
 }
 .checkout.wrapper .formaddress .product-block.addresses.new-form li.item .half{
 	width: 50%;
@@ -66241,6 +66546,32 @@ body .right-account .order-history .cancellation-request-block .return-form .clo
 	border-top: 0px;
 }
 }
+/* TISSQAEE-376 */
+.product-detail .Emi .modal-content .Close{
+    border-radius: 0;
+    border: 0px solid #ccc !important;
+    width: 0px;
+    height: 0px;
+    margin-top: 0px !important;
+    margin-right: 0px !important;
+    position: absolute;
+    right: 20px;
+    top: 5px;
+
+}
+/* End TISSQAEE-376 */
+/* start TISSQAEE-375 */
+.alert.alert-danger a.close{
+	margin-right: 10px !important;
+	margin-top: -6px !important;
+	right: auto !important;
+	top: auto !important;
+	position: static !important;
+}
+.global-alerts button.close{
+	top: 6px !important;
+  } 
+  /* End TISSQAEE-375 */
 @media (max-width: 1024px){
 .col-md-2{
     display: inline-block;
@@ -66511,3 +66842,7 @@ body .account .right-account .order-history .product-block li.item .attributes p
  	  padding: 0 15px;
  	}
   }
+  
+  body.page-search .listing.wrapper .right-block .listing-menu{
+  	display:none;
+  }		/*TISPRDT-1179*/

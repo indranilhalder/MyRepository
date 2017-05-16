@@ -135,6 +135,7 @@ import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.seller.product.facades.ProductOfferDetailFacade;
+import com.tisl.mpl.service.MplGigyaReviewCommentServiceImpl;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -155,6 +156,9 @@ import com.tisl.mpl.util.ExceptionUtil;
 //@RequestMapping(value = "/**/p")
 public class ProductPageController extends MidPageController
 {
+	/**
+	 *
+	 */
 	private static final String PRODUCT_SIZE_TYPE = "productSizeType";
 	/**
 	 *
@@ -216,6 +220,9 @@ public class ProductPageController extends MidPageController
 	private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
 	private static final String BOXING = "boxing";
 	private static final String USSID = "ussid";
+	//TPR-3736
+	private static final String IA_USS_IDS = "iaUssIds";
+
 
 
 	@SuppressWarnings("unused")
@@ -287,6 +294,18 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
 
+	@Autowired
+	private MplGigyaReviewCommentServiceImpl mplGigyaReviewService;
+
+
+	//TPR-4389
+	/*
+	 * @SuppressWarnings("unused") private BrowserType bType;
+	 */
+
+	//Sonar fix
+	//@Autowired
+	//private ConfigurationService configService;
 	@Resource(name = "customProductFacade")
 	private CustomProductFacadeImpl customProductFacade;
 
@@ -337,8 +356,9 @@ public class ProductPageController extends MidPageController
 			final Model model, final HttpServletRequest request, final HttpServletResponse response)
 			throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
-
+		//final was written here
 		String returnStatement = null;
+		//	final Boolean isProductPage = true;
 		//CKD:TPR-250:Start
 		model.addAttribute("msiteBuyBoxSellerId", StringUtils.isNotBlank(sellerId) ? sellerId : null);
 		//CKD:TPR-250:End
@@ -348,8 +368,26 @@ public class ProductPageController extends MidPageController
 			{
 				productCode = productCode.toUpperCase();
 			}
+
 			LOG.debug("**************************************opening pdp for*************" + productCode);
+
+			// TPR- 4389 STARTS FROM HERE
 			final ProductModel productModel = productService.getProductForCode(productCode);
+			final Map<String, String> reviewAndRating = mplGigyaReviewService.getReviewsAndRatingByCategoryId(
+					productModel.getProductCategoryType(), productCode);
+
+			if (reviewAndRating != null)
+			{
+				for (final Map.Entry<String, String> entry : reviewAndRating.entrySet())
+				{
+					final String commentCount = entry.getKey();
+					final String ratingCount = entry.getValue();
+					model.addAttribute("commentCount", commentCount);
+					model.addAttribute("averageRating", ratingCount);
+
+				}
+			}
+			//   TPR-4389 ENDS HERE
 
 			if (productModel.getLuxIndicator() != null
 					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
@@ -2933,6 +2971,34 @@ public class ProductPageController extends MidPageController
 		}
 	}
 
+
+	//TPR-3736
+	/**
+	 * @param ussids
+	 * @return dataMap
+	 * @throws JSONException
+	 * @throws com.granule.json.JSONException
+	 */
+	@SuppressWarnings(BOXING)
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-getIAResponse", method = RequestMethod.GET)
+	public @ResponseBody JSONObject getIAResponse(@RequestParam(IA_USS_IDS) final String ussids) throws JSONException,
+			com.granule.json.JSONException
+	{
+		final String ussidList[] = ussids.split(",");
+		final StringBuilder ussidIds = new StringBuilder();
+		for (int i = 0; i < ussidList.length; i++)
+		{
+			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA);
+			ussidIds.append(ussidList[i]);
+			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA);
+			ussidIds.append(',');//Sonar fix
+		}
+		final JSONObject buyboxJson = new JSONObject();
+		final Map<String, List<Double>> dataMap = buyBoxFacade.getBuyBoxDataForUssids(ussidIds.toString().substring(0,
+				ussidIds.lastIndexOf(",")));
+		LOG.debug("##################Data Map for IA" + dataMap);
+		return buyboxJson.put("iaResponse", dataMap);
+	}
 
 	/**
 	 * @Description Added for displaying freebie messages other than default freebie message

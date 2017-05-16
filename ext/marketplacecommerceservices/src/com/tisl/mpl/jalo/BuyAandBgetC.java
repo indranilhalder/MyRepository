@@ -218,14 +218,14 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 				}
 				promotionResults.add(result);
 
-				float certainty = 1.00F;
+				//float certainty = 1.00F;
 				if (primaryListSize != secondaryListSize)
 				{// For Message Localization
-					certainty = 0.00F;
+					final PromotionResult result1 = PromotionsManager.getInstance().createPromotionResult(ctx, this, arg1.getOrder(),
+							0.00F);
+					promotionResults.add(result1);
 				}
-				final PromotionResult result1 = PromotionsManager.getInstance().createPromotionResult(ctx, this, arg1.getOrder(),
-						certainty);
-				promotionResults.add(result1);
+
 			}
 			else
 			{
@@ -844,4 +844,3 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 	}
 
 }
-

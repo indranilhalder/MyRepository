@@ -577,8 +577,8 @@ INSERT_UPDATE RendererTemplate;code[unique=true];templatescript[lang=en];
 
 #####################NPS Cron Job###########################################################
 
-INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
-;NpsMailerJob;npsMailerCronJob;false;en
+INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode);active
+;NpsMailerJob;npsMailerCronJob;false;en;0
 
 INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
 ; NpsMailerJob; 0 0 12,16 * * ?
