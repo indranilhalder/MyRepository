@@ -18,12 +18,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.PcmProductVariantModel;
-import com.tisl.mpl.interceptor.AddProductCategoryInterceptor;
 import com.tisl.mpl.standardizationfactory.StandardizationService;
 
 
@@ -40,8 +38,6 @@ public class MplSizeFacetValueProvider extends AbstractPropertyFieldValueProvide
 	@Autowired
 	private StandardizationService sizeStandard;
 
-	private static final Logger LOG = Logger.getLogger(AddProductCategoryInterceptor.class);
-
 	//For TPR:4847: size facet clubbing for kidswear
 
 	//	@Autowired
@@ -49,7 +45,7 @@ public class MplSizeFacetValueProvider extends AbstractPropertyFieldValueProvide
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
