@@ -613,16 +613,16 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 						listItem.setSelected(true);
 				}
 		}
-		Listitem listItem1 = listbox.appendItem("Pay Now","paynow");
-		listItem1.setValue("paynow");
+		Listitem listItemPayNow = listbox.appendItem(MarketplaceCockpitsConstants.JUSPAY_PAYMENT_VALUE,MarketplaceCockpitsConstants.JUSPAY_PAYMENT);
+		listItemPayNow.setValue(MarketplaceCockpitsConstants.JUSPAY_PAYMENT);
 		if(buttonLabelChangeFlag && !juspayOrderCreationFlag)
 		{
-			listItem1.setSelected(true);
+			listItemPayNow.setSelected(true);
 		}
 		
 		if(buttonLabelChangeFlag && juspayOrderCreationFlag)
 		{
-			listItem1.setSelected(true);
+			listItemPayNow.setSelected(true);
 			listbox.setDisabled(true);
 		}
 		
