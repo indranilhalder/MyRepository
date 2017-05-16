@@ -872,7 +872,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			 * { deliveryModeModel =
 			 * (DeliveryModeModel)deliveryMode.getObject(); }
 			 */
-                        LOG.debug("PincodeResponse---cscockpit"+pinCodeResponses);
+			LOG.debug("PincodeResponse---cscockpit"+pinCodeResponses);
+
 			if (pinCodeResponses == null || pinCodeResponses.isEmpty()) {
 				errorMessages.add(new ResourceMessage(
 						"placeOrder.validation.noomsreponse"));
@@ -898,7 +899,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 					 * ResourceMessage("placeOrder.validation.codlimitFailed"
 					 * ,Arrays.asList(pinData.getUssid()))); }
 					 */
-
+					
 					if (pinData.getValidDeliveryModes() == null
 							|| pinData.getValidDeliveryModes().isEmpty()) {
 						errorMessages.add(new ResourceMessage(
