@@ -106,4 +106,11 @@
 							</ul>
 			</div>
 			</div>
+			
+		<div>
+			<button type="button" onclick="$('#singlePageChooseSlotDeliveryPopup').modal.('hide');ACC.singlePageCheckout.getReviewOrder();">Continue</button>
+		</div>
+		<div>
+			<button type="button" onclick="$('#singlePageChooseSlotDeliveryPopup').modal.('hide');ACC.singlePageCheckout.getReviewOrder();">Skip</button>
+		</div>
 	</div>

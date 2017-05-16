@@ -295,14 +295,25 @@ ACC.singlePageCheckout = {
                 }
             	else if(data.type=="ajaxRedirect" && data.redirectString=="redirectToReviewOrder")
         		{
-            		ACC.singlePageCheckout.getReviewOrder();
+                	if(isCncPresent=="true" && cncSelected=="true")
+                	{
+                		$("#singlePagePickupPersonPopup").modal('show');
+                	}
+                	else
+                	{
+                		ACC.singlePageCheckout.getReviewOrder();
+                	}
             		ACC.singlePageCheckout.getSelectedDeliveryModes();
         		}
             } else {
             	ACC.singlePageCheckout.getSelectedDeliveryModes();
-            	//$("#choosedeliveryMode").html(data);
-            	var elementId="singlePageChooseSlotDeliveryPopup";
-            	ACC.singlePageCheckout.modalPopup(elementId,data);
+            	
+            	//else
+            	{
+            		//$("#choosedeliveryMode").html(data);
+            		var elementId="singlePageChooseSlotDeliveryPopup";
+            		ACC.singlePageCheckout.modalPopup(elementId,data);
+            	}
 //            	$("#reviewOrder").html(data);
 //            	//START:Code to show strike off price
 //        		$("#off-bag").show();
@@ -325,10 +336,6 @@ ACC.singlePageCheckout = {
 //            	});
 //            	}
             	
-            	if(isCncPresent=="true" && cncSelected=="true")
-            	{
-            		$("#singlePagePickupPersonPopup").modal('show');
-            	}
 //            	else
 //            	{
 //            		ACC.singlePageCheckout.showAccordion("#reviewOrder");
@@ -867,7 +874,8 @@ ACC.singlePageCheckout = {
 			//$("#pickupPersonSubmit").text("1");
 			
 			$("#singlePagePickupPersonPopup").modal('hide');
-    		ACC.singlePageCheckout.showAccordion("#reviewOrder");
+			ACC.singlePageCheckout.getReviewOrder();
+    		//ACC.singlePageCheckout.showAccordion("#reviewOrder");
 			
 			if(typeof(utag)!="undefined")
 			{

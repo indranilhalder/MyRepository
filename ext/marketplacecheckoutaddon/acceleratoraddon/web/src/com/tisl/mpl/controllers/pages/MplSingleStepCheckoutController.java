@@ -2103,7 +2103,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?redirectString=" + "redirectToReviewOrder"
 						+ "&type=ajaxRedirect", UTF);
-				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+				return REDIRECT_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 		}
 		catch (final CMSItemNotFoundException e)
@@ -3233,7 +3233,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -3290,7 +3290,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
