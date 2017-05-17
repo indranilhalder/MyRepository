@@ -34,6 +34,7 @@ import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
 import com.tisl.mpl.marketplacecommerceservices.service.BlacklistService;
 import com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
@@ -115,6 +116,9 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;	
 	
+	@Autowired
+	private AgentIdForStore agentIdForStore;
+	
 	private boolean buttonLabelChangeFlag = false;
 	
 	private String jsuPayCreatedOrderId = null;
@@ -186,7 +190,9 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 				
 				boolean authorize=true;
 				Div otparea = new Div();
-				otparea.setVisible(authorize);				
+				otparea.setVisible(authorize);	
+				final String agentId = agentIdForStore.getAgentIdForStore((configurationService.getConfiguration().
+						getString(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)));
 				
 				if(!buttonLabelChangeFlag && !juspayOrderCreationFlag)
 				{
@@ -196,7 +202,8 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 							Events.ON_CLICK,
 							createAuthorizeEventListener(widget));
 				}
-				else if(buttonLabelChangeFlag && !juspayOrderCreationFlag)
+				else if(buttonLabelChangeFlag && !juspayOrderCreationFlag &&
+						(agentId != null && StringUtils.isNotEmpty(agentId)))
 				{
 					authorizeButton = new Button(LabelUtils.getLabel(
 							widget, "payNow"));
@@ -278,8 +285,6 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 					.getObject());
 			
 			final CustomerModel customer = (CustomerModel)cart.getUser();
-			String userId = ((CustomerModel)cart.getUser()).getOriginalUid();
-			
 			if(cart != null && customer != null)
 			{
 				try 
@@ -363,8 +368,6 @@ protected class JuspayPaymentEventListener implements EventListener
 				.getObject());
 		
 		final CustomerModel customer = (CustomerModel)cart.getUser();
-		String userId = ((CustomerModel)cart.getUser()).getOriginalUid();
-		
 		if(cart != null && customer != null)
 		{
 			try 
@@ -465,7 +468,7 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 						if(!authPaaymentsttatus)
 						{
 							Messagebox.show(
-									LabelUtils.getLabel(widget,MarketplaceCockpitsConstants.NONCOD_PRODUCT_EXIST, new Object[0]),
+									LabelUtils.getLabel("Error",MarketplaceCockpitsConstants.NONCOD_PRODUCT_EXIST, new Object[0]),
 									INFO, Messagebox.OK, Messagebox.ERROR);
 							return;
 						}
@@ -613,17 +616,23 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 						listItem.setSelected(true);
 				}
 		}
-		Listitem listItemPayNow = listbox.appendItem(MarketplaceCockpitsConstants.JUSPAY_PAYMENT_VALUE,MarketplaceCockpitsConstants.JUSPAY_PAYMENT);
-		listItemPayNow.setValue(MarketplaceCockpitsConstants.JUSPAY_PAYMENT);
-		if(buttonLabelChangeFlag && !juspayOrderCreationFlag)
-		{
-			listItemPayNow.setSelected(true);
-		}
 		
-		if(buttonLabelChangeFlag && juspayOrderCreationFlag)
+		final String agentId = agentIdForStore.getAgentIdForStore((configurationService.getConfiguration().
+				getString(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)));
+		if(agentId != null && StringUtils.isNotEmpty(agentId))
 		{
-			listItemPayNow.setSelected(true);
-			listbox.setDisabled(true);
+			Listitem listItemPayNow = listbox.appendItem(MarketplaceCockpitsConstants.JUSPAY_PAYMENT_VALUE,MarketplaceCockpitsConstants.JUSPAY_PAYMENT);
+			listItemPayNow.setValue(MarketplaceCockpitsConstants.JUSPAY_PAYMENT);
+			if(buttonLabelChangeFlag && !juspayOrderCreationFlag)
+			{
+				listItemPayNow.setSelected(true);
+			}
+			
+			if(buttonLabelChangeFlag && juspayOrderCreationFlag)
+			{
+				listItemPayNow.setSelected(true);
+				listbox.setDisabled(true);
+			}
 		}
 		
 		return listbox;
