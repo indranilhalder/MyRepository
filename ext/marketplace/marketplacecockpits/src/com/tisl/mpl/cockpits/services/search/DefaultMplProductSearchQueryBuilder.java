@@ -70,7 +70,13 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 			query.append(" AND ({p.name} LIKE ?productNameText OR {p.code} = ?productCodeText)");
 		}
 	query.append("}})"
-	+"OR {bb.available} > 0 AND {p.pk} in ({{"
+			+"OR");
+	if (storeAgentUserRole.isUserInRole((configurationService
+			.getConfiguration()
+			.getString(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)))) {
+		query.append(" {bb.SellerID} = "+sellerID+" AND ");
+	}
+	query.append( "{bb.available} > 0 AND {p.pk} in ({{"
 		+"select {si.productsource}" 
 		+"from {SellerInformation as si JOIN Catalogversion as cv ON {si.catalogversion}={cv.pk}}"
 		+"where {cv.version} = 'Online'");
