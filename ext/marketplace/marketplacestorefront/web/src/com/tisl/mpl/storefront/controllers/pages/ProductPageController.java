@@ -2994,8 +2994,10 @@ public class ProductPageController extends MidPageController
 		{
 			model.addAttribute("msiteBrandName", StringUtils.isNotBlank(productData.getBrand().getBrandname()) ? productData
 					.getBrand().getBrandname().toLowerCase() : null);
-			model.addAttribute("msiteBrandCode", StringUtils.isNotBlank(productData.getBrand().getBrandCode()) ? productData
+		/*	model.addAttribute("msiteBrandCode", StringUtils.isNotBlank(productData.getBrand().getBrandCode()) ? productData
 					.getBrand().getBrandCode().toLowerCase() : null);
+					*/
+			model.addAttribute("msiteBrandCode", getBrandCodeFromSuperCategories(productData.getBrand().getBrandCode()));
 
 			if (null != productData.getBrand().getBrandDescription())
 			{
@@ -3007,6 +3009,30 @@ public class ProductPageController extends MidPageController
 			}
 
 		}
+	}
+	
+/**
+ * PCM will send hierarchies together in brandcode field of the brand feed, this method will extract the brand hierarchy code alone
+ * @param superCategories
+ * @return brandCode
+ */
+	private String getBrandCodeFromSuperCategories(final String superCategories)
+	{
+		String[] superCatArray = null;
+		String brandCode = null;
+		if (StringUtils.isNotBlank(superCategories))
+		{
+			superCatArray = superCategories.split(MplConstants.COMMA);
+		}
+		for (final String superCat : superCatArray)
+		{
+			if (superCat.toUpperCase().startsWith(MplConstants.BRAND_HIERARCHY_ROOT_CATEGORY_CODE))
+			{
+				brandCode = superCat;
+				break;
+			}
+		}
+		return brandCode;
 	}
 
 	//CKD:TPR-250: End
