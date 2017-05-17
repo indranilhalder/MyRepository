@@ -114,6 +114,7 @@
 
 		<!--Luxury packages -->
 		<extension name="luxuryinitialdata" />
+		<extension name="luxurystoreaddon" />
 		
 		<extension name="ondemandcommon" />
 
