@@ -81,7 +81,7 @@
 	margin-bottom: 10px;
 	color: #333;
 	font-size: 14px;
-	margin-left: 10px;
+	margin-left: 0px;
 }
 
 .deliverySlotOptions .deliverySlotRadio .col-md-4 {
@@ -157,7 +157,7 @@ li.deliverySlotRadio .reset{margin: 3px 0px !important;    height: 30px !importa
 	    width: 31%;
 	    /* padding: 20px 0 0; */
 	    float: right;
-	    text-align:center;
+	    text-align: left;
 }
  /* R2.3 TISRLREG-2465 Author Tribhuvan Start*/
 @media (max-width: 767px){
@@ -267,18 +267,16 @@ li.deliverySlotRadio .reset{margin: 3px 0px !important;    height: 30px !importa
 	});
 </script>
 	<div class="checkout-shipping-items">
-		<h1>
-			
+	<div class="checkout-headers">
+		<h1 class="title-name">
 			<spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption"></spring:theme></br>
-			
-			 
 		</h1>
-		<p><spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption.showPincode" text="Showing delivery options for pincode "></spring:theme>&nbsp;<span>${defaultPinCode}</span></p>
-		<span></span>
-		
-		<ul id="deliveryradioul" class="checkout-table product-block">
+		<p class="desk-view"><spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption.showPincode" text="Showing delivery options for pincode "></spring:theme><span>${defaultPinCode}</span></p>
+		<span style="display:none"></span>
+		</div>
+		<ul id="deliveryradioul" class="checkout-table product-block mybag-items checkout-items">
 				<li class="header">
-					<ul class="headline">
+					<ul class="headline mybag-item-head">
 					
 						<li class="delivery" id="header4"><spring:theme code="text.delivery.modes"/></li>
 						<li class="delivery" id="header4">Delivery Slots</li>

@@ -944,6 +944,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 		List<OrderEntryData> cancelProduct = new ArrayList<>();
 		OrderModel subOrderModel = null;
 		OrderModel orderModel = null;
+		boolean luxFlag = false;
 		boolean addressChangeEligible = false;
 		try
 		{
@@ -988,7 +989,16 @@ public class AccountPageController extends AbstractMplSearchPageController
 								break;
 							}
 						}
-
+						//LW-225,230 start
+						if (null != orderEntry.getProduct())
+						{
+							if (orderEntry.getProduct().getLuxIndicator() != null
+									&& orderEntry.getProduct().getLuxIndicator()
+											.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+							{
+								luxFlag = true; //Setting true if at least one luxury product found
+							}
+						}
 						trackStatusMap.put(orderDetail.getCode() + orderEntry.getEntryNumber(), statusTrackMap);
 						currentStatusMap.put(orderDetail.getCode() + orderEntry.getEntryNumber(), consignmentStatus);
 					}
@@ -1203,6 +1213,16 @@ public class AccountPageController extends AbstractMplSearchPageController
 							cancelProduct = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(subOrder.getCode()),
 									orderEntry.getOrderLineId());
 							currentProductMap.put(orderEntry.getOrderLineId(), cancelProduct);
+							//LW-225,230 start
+							if (null != orderEntry.getProduct())
+							{
+								if (orderEntry.getProduct().getLuxIndicator() != null
+										&& orderEntry.getProduct().getLuxIndicator()
+												.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+								{
+									luxFlag = true; //Setting true if at least one luxury product found
+								}
+							}
 							
 							final List<ReturnRequestModel> returnRequestModelList = cancelReturnFacade.getListOfReturnRequest(subOrder
 									.getCode());
@@ -1234,6 +1254,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 						}
 					}
 				}
+
+				// LW-225,230
+				model.addAttribute(ModelAttributetConstants.IS_LUXURY, luxFlag);
+
 				addressChangeEligible = mplDeliveryAddressFacade.isDeliveryAddressChangable(orderDetail.getCode());
 				
 				if (addressChangeEligible)
@@ -3012,6 +3036,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws CMSItemNotFoundException
 	 * @throws ParseException
 	 */
+	@SuppressWarnings("boxing")
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_UPDATE_PARSONAL_DETAIL, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public String updateProfile(final MplCustomerProfileForm mplCustomerProfileForm, final BindingResult bindingResult,
@@ -3173,7 +3198,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
 					accountBreadcrumbBuilder.getBreadcrumbs(MessageConstants.TEXT_ACCOUNT_PROFILE));
 			model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
-			if (null != request.getParameterMap() && request.getParameterMap().containsKey(isLux))
+			//LW-697 Changes
+			if (null != request.getParameterMap() && request.getParameterMap().containsKey(isLux)
+					&& request.getParameter("isLux").toString().equalsIgnoreCase("true"))
 			{
 				returnAction = returnAction + "?" + isLux + "=true";
 			}
@@ -4972,15 +4999,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 							{
 								if (null != buyboxmodel.getSpecialPrice() && buyboxmodel.getSpecialPrice().doubleValue() > 0.0)
 								{
-									price = buyboxmodel.getSpecialPrice().doubleValue();
+									price = Math.floor(buyboxmodel.getSpecialPrice().doubleValue());
 								}
 								else if (null != buyboxmodel.getPrice() && buyboxmodel.getPrice().doubleValue() > 0.0)
 								{
-									price = buyboxmodel.getPrice().doubleValue();
+									price = Math.floor(buyboxmodel.getPrice().doubleValue());
 								}
 								else
 								{
-									price = buyboxmodel.getMrp().doubleValue();
+									price = Math.floor(buyboxmodel.getMrp().doubleValue());
 								}
 								final PriceData priceData = productDetailsHelper.formPriceData(new Double(price));
 								wishlistProductData.setPrice(priceData);
@@ -7467,6 +7494,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 		}
 	}
+
 
 	/**
 	 * @return the accountAddressFacade

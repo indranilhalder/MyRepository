@@ -1,23 +1,27 @@
-/**
- *
- */
 package com.tisl.mpl.commerceservices.order.hook;
 
+
+import de.hybris.platform.category.CategoryService;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook;
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.LimitedStockPromoInvalidationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.AbstractOrderEntryTypeService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.strategies.ordercloning.CloneAbstractOrderStrategy;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
+import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
 import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionOrderEntryConsumedModel;
@@ -61,16 +65,19 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
+import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotifyPaymentGroupMailService;
 import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificationService;
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
+import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.util.OrderStatusSpecifier;
 
@@ -108,6 +115,19 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	@Autowired
 	private MplCommerceCartService mplCommerceCartService;
 
+
+	//	@Autowired
+	//	private MplFraudModelService mplFraudModelService;
+
+
+
+
+	@Autowired
+	private CategoryService categoryService;
+
+
+
+
 	@Autowired
 	private OrderStatusSpecifier orderStatusSpecifier;
 
@@ -125,6 +145,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	@Autowired
 	private MplOrderService mplOrderService;
+	@Autowired
+	private MplDeliveryCostService deliveryCostService;
 
 	//	@Autowired
 	//	private MplFraudModelService mplFraudModelService;
@@ -138,7 +160,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
+	 * 
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -160,6 +184,80 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//				updateFraudModel(orderModel);
 			//
 			//			}
+
+
+
+			//TPR -965 + TPR-4579 starts
+			if (null != orderModel && CollectionUtils.isNotEmpty(orderModel.getAllPromotionResults())
+					&& isLimitedStockPromoExists(orderModel.getAllPromotionResults()))
+			{
+				final List<LimitedStockPromoInvalidationModel> orderInvalidationList = new ArrayList<LimitedStockPromoInvalidationModel>();
+				boolean isCategoryLevelPromo = false;
+
+				for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
+				{
+					if (orderEntry.getQualifyingCount().intValue() > 0
+							&& (null != orderEntry.getGiveAway() && !orderEntry.getGiveAway().booleanValue()))
+					{
+						isCategoryLevelPromo = validateCategorySetPromo(orderModel.getAllPromotionResults(),
+								orderEntry.getProductPromoCode());
+
+						final LimitedStockPromoInvalidationModel promoInvalidationModel = (LimitedStockPromoInvalidationModel) getModelService()
+								.create(LimitedStockPromoInvalidationModel.class);
+
+						if (isCategoryLevelPromo)
+						{
+							final String categoryCode = getCatgoryCode(orderModel.getAllPromotionResults(),
+									orderEntry.getProductPromoCode(), orderEntry.getProduct());
+
+							promoInvalidationModel.setProductCode(orderEntry.getProduct().getCode());
+							promoInvalidationModel.setUssid(orderEntry.getSelectedUSSID());
+							promoInvalidationModel.setPromoCode(orderEntry.getProductPromoCode());
+							promoInvalidationModel.setGuid(orderModel.getGuid());
+							promoInvalidationModel.setUsedUpCount(Integer.valueOf(orderEntry.getQualifyingCount().intValue()));
+							promoInvalidationModel.setOrder(orderModel);
+							if (StringUtils.isNotEmpty(categoryCode))
+							{
+								promoInvalidationModel.setCategoryCode(categoryCode);
+							}
+
+							if (null != orderModel.getUser()) // Added for TPR-4331: Customer Count Configuration
+							{
+								final CustomerModel customer = (CustomerModel) orderModel.getUser();
+								if (null != customer && null != customer.getOriginalUid())
+								{
+									promoInvalidationModel.setCustomerID(customer.getOriginalUid());
+								}
+							}
+							orderInvalidationList.add(promoInvalidationModel);
+						}
+						else
+						{
+							promoInvalidationModel.setProductCode(orderEntry.getProduct().getCode());
+							promoInvalidationModel.setUssid(orderEntry.getSelectedUSSID());
+							promoInvalidationModel.setPromoCode(orderEntry.getProductPromoCode());
+							promoInvalidationModel.setGuid(orderModel.getGuid());
+							promoInvalidationModel.setUsedUpCount(Integer.valueOf(orderEntry.getQualifyingCount().intValue()));
+							promoInvalidationModel.setOrder(orderModel);
+
+							if (null != orderModel.getUser()) // Added for TPR-4331: Customer Count Configuration
+							{
+								final CustomerModel customer = (CustomerModel) orderModel.getUser();
+								if (null != customer && null != customer.getOriginalUid())
+								{
+									promoInvalidationModel.setCustomerID(customer.getOriginalUid());
+								}
+							}
+							orderInvalidationList.add(promoInvalidationModel);
+						}
+					}
+				}
+				getModelService().saveAll(orderInvalidationList);
+			}
+
+
+			//TPR -965 + TPR-4579 ends
+
 			if (null != orderModel)
 			{
 				//INC144315079
@@ -171,6 +269,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				 * LOG.debug("Order Sequence Generation True"); final String orderIdSequence =
 				 * getMplCommerceCartService().generateOrderId(); LOG.debug("Order Sequence Generated:- " +
 				 * orderIdSequence);
+				 * 
 				 * 
 				 * orderModel.setCode(orderIdSequence); } else { LOG.debug("Order Sequence Generation False"); final Random
 				 * rand = new Random(); orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000))); }
@@ -341,9 +440,140 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	//	}
 
 
+	/**
+	 * @param allPromotionResults
+	 * @param productPromoCode
+	 * @param product
+	 * @return String
+	 */
+	private String getCatgoryCode(final Set<PromotionResultModel> allPromotionResults, final String productPromoCode,
+			final ProductModel product)
+	{
+		String categoryCode = MarketplacecommerceservicesConstants.EMPTY;
+
+		if (CollectionUtils.isNotEmpty(allPromotionResults) && StringUtils.isNotEmpty(productPromoCode))
+		{
+			for (final PromotionResultModel oModel : allPromotionResults)
+			{
+				if (null != oModel.getCertainty() && oModel.getCertainty().floatValue() == 1.00F && null != oModel.getPromotion()
+						&& null != oModel.getPromotion().getCode()
+						&& StringUtils.equalsIgnoreCase(oModel.getPromotion().getCode(), productPromoCode))
+				{
+					if (oModel.getPromotion() instanceof ProductPromotionModel
+							&& CollectionUtils.isNotEmpty(((ProductPromotionModel) oModel.getPromotion()).getCategories()))
+					{
+						categoryCode = getCategoryCode(((ProductPromotionModel) oModel.getPromotion()).getCategories(), product);
+					}
+				}
+			}
+		}
+
+		return categoryCode;
+	}
+
+	/**
+	 * @param categories
+	 * @param product
+	 * @return categoryCode
+	 */
+	private String getCategoryCode(final Collection<CategoryModel> categories, final ProductModel product)
+	{
+		String categoryCode = MarketplacecommerceservicesConstants.EMPTY;
+
+		if (CollectionUtils.isNotEmpty(product.getSupercategories()))
+		{
+			final List<CategoryModel> getCategoryDataList = getSuperCategoryData(product.getSupercategories());
+
+			if (CollectionUtils.isNotEmpty(getCategoryDataList))
+			{
+				for (final CategoryModel productCategory : getCategoryDataList)
+				{
+					for (final CategoryModel promoCategory : categories)
+					{
+						if (StringUtils.equalsIgnoreCase(productCategory.getCode(), promoCategory.getCode()))
+						{
+							categoryCode = productCategory.getCode();
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		return categoryCode;
+	}
+
+
+	/**
+	 * Tree Traversal for Category Promotions
+	 *
+	 * @param supercategories
+	 * @return categoryList
+	 */
+	private List<CategoryModel> getSuperCategoryData(final Collection<CategoryModel> supercategories)
+	{
+		final List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
+		List<CategoryModel> subList = null;
+
+		for (final CategoryModel category : supercategories)
+		{
+			subList = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(category));
+			categoryList.addAll(subList);
+		}
+
+		categoryList.addAll(supercategories);
+
+		return categoryList;
+	}
+
+	/**
+	 * @param allPromotionResults
+	 * @param productPromoCode
+	 * @return boolean
+	 */
+	private boolean validateCategorySetPromo(final Set<PromotionResultModel> allPromotionResults, final String productPromoCode)
+	{
+		boolean flag = false;
+
+		if (CollectionUtils.isNotEmpty(allPromotionResults) && StringUtils.isNotEmpty(productPromoCode))
+		{
+			for (final PromotionResultModel oModel : allPromotionResults)
+			{
+				if (null != oModel.getCertainty() && oModel.getCertainty().floatValue() == 1.00F && null != oModel.getPromotion()
+						&& null != oModel.getPromotion().getCode()
+						&& StringUtils.equalsIgnoreCase(oModel.getPromotion().getCode(), productPromoCode))
+				{
+					flag = checkPromoData(oModel.getPromotion());
+				}
+			}
+		}
+
+		return flag;
+	}
+
+	/**
+	 * Checks for Promotion set up with Category Details
+	 *
+	 * @param promotion
+	 * @return boolean
+	 */
+	private boolean checkPromoData(final AbstractPromotionModel promotion)
+	{
+		boolean flag = false;
+
+		if (CollectionUtils.isNotEmpty(((ProductPromotionModel) promotion).getCategories()))
+		{
+			flag = true;
+		}
+
+		return flag;
+	}
+
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
+	 * 
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -357,7 +587,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
+	 * 
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -371,12 +603,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		//orderModel.setType("Parent");
 		if (StringUtils.isNotEmpty(orderModel.getType()) && PARENT.equalsIgnoreCase(orderModel.getType()))
 		{
-			if(null != orderModel.getDeliveryAddress()) {
-				   List<AddressModel> deliveryAddreses = new ArrayList<AddressModel>();
-				   deliveryAddreses.add(orderModel.getDeliveryAddress());
-				   orderModel.setDeliveryAddresses(deliveryAddreses);
-				   getModelService().save(orderModel);
-			   }
+			if (null != orderModel.getDeliveryAddress())
+			{
+				final List<AddressModel> deliveryAddreses = new ArrayList<AddressModel>();
+				deliveryAddreses.add(orderModel.getDeliveryAddress());
+				orderModel.setDeliveryAddresses(deliveryAddreses);
+				getModelService().save(orderModel);
+			}
+
 			final List<OrderModel> orderList = getSubOrders(orderModel);
 
 			//TISPRO-249
@@ -465,9 +699,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
-	 *
+	 * 
+	 * 
+	 * 
 	 * @param subOrderList
-	 *
+	 * 
+	 * 
+	 * 
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -546,8 +784,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						}
 						else
 						{
-							LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
-							throw new InvalidCartException("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+							LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
+							throw new InvalidCartException(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG
+									+ subOrderModel.getCode());
 						}
 					}
 				}
@@ -567,9 +806,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
-	 *
+	 * 
+	 * 
+	 * 
 	 * @param subOrderList
-	 *
+	 * 
+	 * 
+	 * 
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -616,8 +859,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			}
 			else
 			{
-				LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
-				throw new InvalidCartException("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+				LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
+				throw new InvalidCartException(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
 			}
 		}
 		return freebieParentMap;
@@ -698,19 +941,46 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					LOG.info("Total Cart Level Discount>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + totalCartLevelDiscount);
 					sellerOrderList.setTotalDiscounts(Double.valueOf(totalCartLevelDiscount + totalCouponDiscount));
 
-
-					if (null != entryModelList.getCurrDelCharge() && entryModelList.getCurrDelCharge().doubleValue() > 0D)
+					double delCost = 0.0d;
+					if (entryModelList.getPrevDelCharge() != null && entryModelList.getPrevDelCharge().doubleValue() > 0D)
 					{
-						totalDeliveryPrice += entryModelList.getCurrDelCharge().doubleValue();
+						totalDeliveryPrice += entryModelList.getPrevDelCharge().doubleValue();
 					}
 					else
 					{
-						LOG.debug("Delivery charge for the entry is either NULL or Zero");
+
+						final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(entryModelList
+								.getMplDeliveryMode().getDeliveryMode().getCode(), sellerOrderList.getCurrency().getIsocode(),
+								entryModelList.getSelectedUSSID());
+						if (entryModelList.getGiveAway() != null && !entryModelList.getGiveAway().booleanValue())
+						{
+							delCost = (valueModel.getValue().doubleValue() * entryModelList.getQuantity().intValue());
+							totalDeliveryPrice = delCost;
+							entryModelList.setCurrDelCharge(Double.valueOf(delCost));
+						}
+						else
+						{
+							delCost = 0.0d;
+							entryModelList.setCurrDelCharge(Double.valueOf(delCost));
+							totalDeliveryPrice = delCost;
+							LOG.warn("skipping deliveryCost for freebee [" + entryModelList.getSelectedUSSID() + "] due to freebee ");
+						}
+						modelService.save(entryModelList);
+						modelService.refresh(entryModelList);
+
 					}
 					if (entryModelList.getScheduledDeliveryCharge() != null
 							&& entryModelList.getScheduledDeliveryCharge().doubleValue() > 0D)
+
 					{
 						totalDeliveryPrice += entryModelList.getScheduledDeliveryCharge().doubleValue();
+
+					}
+
+					if (totalDeliveryPrice <= 0D)
+					{
+
+						LOG.debug("Delivery charge for the entry is either NULL or Zero");
 					}
 
 				}
@@ -746,7 +1016,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				//OrderIssues:- refresh added
 				modelService.refresh(sellerOrderList);
 			}
+
 		}
+
 		catch (final ModelSavingException e)
 		{
 			LOG.error(" error occured while calculating subtotal from setSuborderTotalAfterOrderSplitting", e);
@@ -873,8 +1145,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						}
 						else
 						{
-							LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
-							throw new InvalidCartException("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+							LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
+							throw new InvalidCartException(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG
+									+ subOrderModel.getCode());
 						}
 					}
 				}
@@ -952,9 +1225,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						final CustomProductBOGOFPromotionModel bogoPromotion = (CustomProductBOGOFPromotionModel) executingPromotion;
 						//OrderIssues:- null check added
 						final Integer promotionQualifingCount = null != bogoPromotion.getQualifyingCount() ? bogoPromotion
-								.getQualifyingCount() : new Integer(0);
+								.getQualifyingCount() : Integer.valueOf(0); //SONAR FIX
 						final Integer promotionFreeCount = null != bogoPromotion.getFreeCount() ? bogoPromotion.getFreeCount()
-								: new Integer(0);
+								: Integer.valueOf(0); //SONAR FIX
 						//OrderIssues:-
 						if ((promotionQualifingCount.intValue() - promotionFreeCount.intValue()) > 0)
 						{
@@ -1114,8 +1387,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			}
 			else
 			{
-				LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
-				throw new InvalidCartException("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+				LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
+				throw new InvalidCartException(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
 			}
 		}
 		return innerList;
@@ -1124,9 +1397,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 *
+	 * 
+	 * 
+	 * 
 	 * @param orderList
-	 *
+	 * 
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	// OrderIssues:- InvalidCartException exception throws
@@ -1193,8 +1470,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				}
 				else
 				{
-					LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
-					throw new InvalidCartException("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+					LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
+					throw new InvalidCartException(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
 				}
 			}
 
@@ -1234,7 +1511,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 									//R2.3 Code Chages bug ID TISRLEE-3197
 									try
 									{
-										AbstractOrderEntryModel perentEntry = mplOrderService.getEntryModel(parentTransactionId);
+										final AbstractOrderEntryModel perentEntry = mplOrderService.getEntryModel(parentTransactionId);
 										if (perentEntry != null)
 										{
 											subOrderEntryModel.setSddDateBetween(perentEntry.getSddDateBetween());
@@ -1244,12 +1521,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 										subOrderEntryModel.setFulfillmentTypeP2(perentEntry.getFulfillmentTypeP2());
 										subOrderEntryModel.setFulfillmentMode(perentEntry.getFulfillmentMode());
 									}
-									catch (Exception exception)
+									catch (final Exception exception)
 									{
 										LOG.error("MplDefaultPlaceOrderCommerceHooks:::::" + exception.getMessage());
 									}
-									
+
+
 									//R2.3 Code Changes bug ID TISRLEE-3197
+
 									getModelService().save(subOrderEntryModel);
 									for (final String freebieUssid : associatedItemMap.get(parentUssId))
 									{
@@ -1267,10 +1546,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 																&& null != subOrderEntryModel.getGiveAway()
 																&& subOrderEntryModel.getGiveAway().booleanValue())
 														{
+
 															//R2.3 Code Chages bug ID TISRLEE-3197
 															try
 															{
-																AbstractOrderEntryModel perentEntry = mplOrderService.getEntryModel(parentTransactionId);
+																final AbstractOrderEntryModel perentEntry = mplOrderService
+																		.getEntryModel(parentTransactionId);
 																if (perentEntry != null)
 																{
 																	subOrderEntryModel2.setSddDateBetween(perentEntry.getSddDateBetween());
@@ -1280,7 +1561,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 																subOrderEntryModel.setFulfillmentTypeP2(perentEntry.getFulfillmentTypeP2());
 																subOrderEntryModel.setFulfillmentMode(perentEntry.getFulfillmentMode());
 															}
-															catch (Exception exception)
+															catch (final Exception exception)
 															{
 																LOG.error("MplDefaultPlaceOrderCommerceHooks:::::" + exception.getMessage());
 															}
@@ -1321,8 +1602,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				}
 				else
 				{
-					LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
-					throw new InvalidCartException("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+					LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
+					throw new InvalidCartException(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
 				}
 			}
 		}
@@ -1431,7 +1712,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			}
 			else
 			{
-				LOG.error("No  Entries available for Suborder ID:- " + subOrderModel.getCode());
+				LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + subOrderModel.getCode());
 				throw new InvalidCartException("No  Entries available for parent Order ID:- " + subOrderModel.getCode());
 			}
 		}
@@ -1456,8 +1737,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		String parentUssid = StringUtils.EMPTY;
 		String ussIdA = StringUtils.EMPTY;
 		//OrderIssues:- Long initialization changed from Null to new Long(0);
-		Long ussIdAQty = new Long(0);
-		Long ussIdBQty = new Long(0);
+		Long ussIdAQty = Long.valueOf(0); //SONAR FIX
+		Long ussIdBQty = Long.valueOf(0); //SONAR FIX
 		String ussIdB = StringUtils.EMPTY;
 		String ussIdADelMod = StringUtils.EMPTY;
 		String ussIdBDelMod = StringUtils.EMPTY;
@@ -1494,7 +1775,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				}
 				else
 				{
-					LOG.error("No  Entries available for Suborder ID:- " + orderModel.getCode());
+					LOG.error(MarketplacecommerceservicesConstants.NOENTRYSUBORDERLOG + orderModel.getCode());
 					throw new InvalidCartException("No  Entries available for parent Order ID:- " + orderModel.getCode());
 				}
 			}
@@ -1723,8 +2004,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						deliveryCharge = deliveryCharge.doubleValue() > 0.0 ? Double.valueOf(deliveryCharge.doubleValue()
 								/ abstractOrderEntryModel.getQuantity().intValue()) : deliveryCharge;
 					}
-					
-					/*R2.3 START */
+
+
+					/* R2.3 START */
 					if (null != abstractOrderEntryModel.getScheduledDeliveryCharge())
 					{
 						scheduleDeliveryCharge = abstractOrderEntryModel.getScheduledDeliveryCharge();
@@ -1733,17 +2015,20 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					if (null != abstractOrderEntryModel.getIsBOGOapplied()
 							&& abstractOrderEntryModel.getIsBOGOapplied().booleanValue())
 					{
-						scheduleDeliveryCharge = scheduleDeliveryCharge.doubleValue() > 0.0 ? Double.valueOf(scheduleDeliveryCharge.doubleValue()
-								/ abstractOrderEntryModel.getQualifyingCount().doubleValue()) : scheduleDeliveryCharge;
+						scheduleDeliveryCharge = scheduleDeliveryCharge.doubleValue() > 0.0 ? Double.valueOf(scheduleDeliveryCharge
+
+						.doubleValue() / abstractOrderEntryModel.getQualifyingCount().doubleValue()) : scheduleDeliveryCharge;
 					}
 					else
 					{
-						scheduleDeliveryCharge = scheduleDeliveryCharge.doubleValue() > 0.0 ? Double.valueOf(scheduleDeliveryCharge.doubleValue()
-								/ abstractOrderEntryModel.getQuantity().intValue()) : scheduleDeliveryCharge;
+						scheduleDeliveryCharge = scheduleDeliveryCharge.doubleValue() > 0.0 ? Double.valueOf(scheduleDeliveryCharge
+
+						.doubleValue() / abstractOrderEntryModel.getQuantity().intValue()) : scheduleDeliveryCharge;
 					}
-					/*R2.3 END */
-					
-					
+					/* R2.3 END */
+
+
+
 					LOG.debug(">> Order spliting : after apportoning  delivery cost  " + deliveryCharge);
 					//TISEE-5298 -- Prev Delivery Charge
 					prevDelCharge = abstractOrderEntryModel.getPrevDelCharge();
@@ -1802,6 +2087,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 									&& abstractOrderEntryModel.getConvenienceChargeApportion() != null
 									&& abstractOrderEntryModel.getTotalProductLevelDisc() != null)
 							{
+
 								//INC144316050
 								//								qualifyingCount = abstractOrderEntryModel.getQualifyingCount().intValue()
 								//										+ abstractOrderEntryModel.getFreeCount().intValue();
@@ -1834,13 +2120,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 										* abstractOrderEntryModel.getQualifyingCount().intValue();
 								qualifyingCount = qualifyingCount - bogoCount;
 								createOrderLine(abstractOrderEntryModel, bogoCount, clonedSubOrder, cartApportionValue,
-										productApportionvalue, price, true, qualifyingCount, deliveryCharge,scheduleDeliveryCharge,cachedSellerInfoMap, 0, 0,
-										prevDelCharge, couponApportionValue, 0);
+										productApportionvalue, price, true, qualifyingCount, deliveryCharge, scheduleDeliveryCharge,
+										cachedSellerInfoMap, 0, 0, prevDelCharge, couponApportionValue, 0);
 								productApportionvalue = 0;
 							}
 							createOrderLine(abstractOrderEntryModel, qualifyingCount, clonedSubOrder, cartApportionValue,
-									productApportionvalue, price, false, 0, deliveryCharge, scheduleDeliveryCharge,cachedSellerInfoMap, bogoCODPrice,
-									bogoCartApportion, prevDelCharge, couponApportionValue, bogoCouponApportion);
+									productApportionvalue, price, false, 0, deliveryCharge, scheduleDeliveryCharge, cachedSellerInfoMap,
+									bogoCODPrice, bogoCartApportion, prevDelCharge, couponApportionValue, bogoCouponApportion);
 
 
 						}
@@ -1883,14 +2169,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 
 						createOrderLine(abstractOrderEntryModel, quantity, clonedSubOrder, cartApportionValue, 0, price, false, 0,
-								deliveryCharge,scheduleDeliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge, couponApportionValue, 0);
+								deliveryCharge, scheduleDeliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge, couponApportionValue, 0);
 
 					}
 					else
 					{
 						createOrderLine(abstractOrderEntryModel, quantity, clonedSubOrder, 0, 0, abstractOrderEntryModel
-								.getTotalPrice().doubleValue() / quantity, false, 0, deliveryCharge,scheduleDeliveryCharge, cachedSellerInfoMap, 0, 0,
-								prevDelCharge, couponApportionValue, 0);
+								.getTotalPrice().doubleValue() / quantity, false, 0, deliveryCharge, scheduleDeliveryCharge,
+								cachedSellerInfoMap, 0, 0, prevDelCharge, couponApportionValue, 0);
 
 					}
 				}
@@ -1960,7 +2246,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	private void createOrderLine(final AbstractOrderEntryModel abstractOrderEntryModel, final int quantity,
 			final OrderModel clonedSubOrder, final double cartApportionValue, final double productApportionvalue,
 			final double price, final boolean isbogo, @SuppressWarnings("unused") final double bogoQualifying,
-			final Double deliveryCharge,final Double scheduleDeliveryCharge, final Map<String, SellerInformationModel> cachedSellerInfoMap, final double bogoCODPrice,
+			final Double deliveryCharge, final Double scheduleDeliveryCharge,
+			final Map<String, SellerInformationModel> cachedSellerInfoMap, final double bogoCODPrice,
 			final double bogoCartApportion, final Double prevDelCharge, final double couponApportionValue,
 			final double bogoCouponApportion)
 
@@ -2064,7 +2351,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			orderEntryModel.setConvenienceChargeApportion(abstractOrderEntryModel.getConvenienceChargeApportion());
 			orderEntryModel.setCurrDelCharge(deliveryCharge);
 			orderEntryModel.setPrevDelCharge(prevDelCharge);
-			// Added in R2.3 START 
+			// Added in R2.3 START
 			orderEntryModel.setScheduledDeliveryCharge(scheduleDeliveryCharge);
 			// Added In R2.3 END
 
@@ -2150,13 +2437,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			{
 				orderEntryModel.setExpectedDeliveryDate(abstractOrderEntryModel.getExpectedDeliveryDate());
 			}
-			/*Added in R2.3 for TISRLEE-2073 start */
+			/* Added in R2.3 for TISRLEE-2073 start */
 			if (abstractOrderEntryModel.getSddDateBetween() != null)
 			{
 				orderEntryModel.setSddDateBetween(abstractOrderEntryModel.getSddDateBetween());
 			}
-			/*Added in R2.3 for TISRLEE-2073 end */
-		  // End Order line  Code for OrderLine 
+			/* Added in R2.3 for TISRLEE-2073 end */
+			// End Order line  Code for OrderLine
+
 			orderEntryModel = setAdditionalDetails(orderEntryModel);
 
 		}
@@ -2189,11 +2477,18 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						orderEntryModel.setReturnWindow(model.getReturnWindow());
 					}
 
-//					if (null != model.getDeliveryFulfillModes() && StringUtils.isNotEmpty(model.getDeliveryFulfillModes().getCode()))
-//					{
-//						orderEntryModel.setFulfillmentType(model.getDeliveryFulfillModes().getCode());
-//					}
-					
+					if (null != model.getDeliveryFulfillModes() && StringUtils.isNotEmpty(model.getDeliveryFulfillModes().getCode()))
+
+					{
+						orderEntryModel.setFulfillmentType(model.getDeliveryFulfillModes().getCode());
+
+
+					}
+
+
+
+
+
 				}
 			}
 		}
@@ -2732,6 +3027,35 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		this.rMSVerificationNotificationService = rMSVerificationNotificationService;
 	}
 
+	/**
+	 * Checking or stock level restriction
+	 *
+	 * @param allPromotionResults
+	 * @return isPresent
+	 */
+	private boolean isLimitedStockPromoExists(final Set<PromotionResultModel> allPromotionResults)
+	{
+		boolean isPresent = false;
+		for (final PromotionResultModel promo : allPromotionResults)
+		{
+			for (final AbstractPromotionRestrictionModel restriction : promo.getPromotion().getRestrictions())
+			{
+				if (restriction instanceof EtailLimitedStockRestrictionModel
+						&& null != ((EtailLimitedStockRestrictionModel) restriction).getMaxStock())
+				{
+					final int maxStock = ((EtailLimitedStockRestrictionModel) restriction).getMaxStock().intValue();
+					if (maxStock > 0)
+					{
+						isPresent = true;
+						break;
+					}
+				}
+			}
+
+		}
+		return isPresent;
+
+	}
 
 
 

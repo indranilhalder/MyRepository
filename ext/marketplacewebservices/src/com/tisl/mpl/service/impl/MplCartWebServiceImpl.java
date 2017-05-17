@@ -37,6 +37,7 @@ import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsD
 import de.hybris.platform.commercewebservicescommons.dto.user.AddressListWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.CartException;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
+import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -97,7 +98,6 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
-import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
@@ -161,6 +161,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
 	@Resource
 	private MplDiscountUtil mplDiscountUtil;
+	@Resource(name = "addressReversePopulator")
+	private Populator<AddressData, AddressModel> addressReversePopulator;
 	@Resource
 	private UserService userService;
 	@Autowired
@@ -169,8 +171,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	private PriceDataFactory priceDataFactory;
 	@Autowired
 	private MplCouponFacade mplCouponFacade;
-	@Autowired
-	private CustomAddressReversePopulator addressReversePopulator;
+
+
 
 	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
 
@@ -1116,11 +1118,15 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 								{
 									delivery.setName(deliveryMode.getName());
 								}
-								if (null != gwlp.getFullfillmentType() && !gwlp.getFullfillmentType().isEmpty()
-										&& gwlp.getFullfillmentType().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP))
-								{
-									delivery.setDeliveryCost(MarketplacecommerceservicesConstants.ZeroDeliveryCost);
 
+
+								//TPR-4421
+								if (null != deliveryMode.getDeliveryCost() && null != deliveryMode.getDeliveryCost().getValue())
+								{
+
+
+									delivery.setDeliveryCost(String.valueOf(deliveryMode.getDeliveryCost().getValue()
+											.setScale(2, BigDecimal.ROUND_HALF_UP)));
 								}
 								else
 								{
@@ -1187,12 +1193,18 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 									{
 										delivery.setName(deliveryMode.getDeliveryMode().getName());
 									}
+
+
+									//TPR-4421
 									if (null != gwlp.getFullfillmentType() && !gwlp.getFullfillmentType().isEmpty()
 											&& gwlp.getFullfillmentType().equalsIgnoreCase("tship"))
 									{
 										delivery.setDeliveryCost("0.0");
 									}
 									else
+
+
+
 									{
 										if (LOG.isDebugEnabled())
 										{
@@ -1206,6 +1218,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 										}
 									}
+
 								}
 
 								deliveryList.add(delivery);
@@ -1258,6 +1271,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 									{
 										delivery.setName(deliveryMode.getDeliveryMode().getName());
 									}
+
+									//TPR-4421
 									if (null != gwlp.getFullfillmentType() && !gwlp.getFullfillmentType().isEmpty()
 											&& gwlp.getFullfillmentType().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP))
 									{
@@ -1269,6 +1284,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 										delivery.setDeliveryCost(MarketplacecommerceservicesConstants.ZeroDeliveryCost);
 									}
 									else
+
+
+
 									{
 										if (LOG.isDebugEnabled())
 										{
@@ -1282,6 +1300,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 										}
 									}
+
 								}
 								deliveryList.add(delivery);
 
@@ -1340,6 +1359,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							}
 
 						}
+
+						//TPR-4421
 						if (null != gwlp.getFullfillmentType() && !gwlp.getFullfillmentType().isEmpty()
 								&& gwlp.getFullfillmentType().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP)
 								&& delivery != null)
@@ -1347,9 +1368,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							delivery.setDeliveryCost(MarketplacecommerceservicesConstants.ZeroDeliveryCost);
 						}
 						else
+
+
 						{
 
 							if (null != abstractOrderEntry.getCurrDelCharge())
+
 							{
 
 								selectedDelivery.setDeliveryCost(String.valueOf(abstractOrderEntry.getCurrDelCharge()));
@@ -1564,6 +1588,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				{
 					gwlp.setPinCodeResponse(obj);
 				}
+
 				/* Added in R2.3 TISRLUAT-812 start */
 				if (null != abstractOrderEntry.getEdScheduledDate())
 				{
@@ -2222,7 +2247,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		final AddressModel addressModel = getModelService().create(AddressModel.class);
 		try
 		{
-			addressReversePopulator.populate(addressData, addressModel);
+			getAddressReversePopulator().populate(addressData, addressModel);
 			if (null != addressData.getState())
 			{
 				addressModel.setDistrict(addressData.getState());
@@ -2715,5 +2740,21 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		this.modelService = modelService;
 	}
 
+	/**
+	 * @return the addressReversePopulator
+	 */
+	public Populator<AddressData, AddressModel> getAddressReversePopulator()
+	{
+		return addressReversePopulator;
+	}
+
+	/**
+	 * @param addressReversePopulator
+	 *           the addressReversePopulator to set
+	 */
+	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
+	{
+		this.addressReversePopulator = addressReversePopulator;
+	}
 
 }

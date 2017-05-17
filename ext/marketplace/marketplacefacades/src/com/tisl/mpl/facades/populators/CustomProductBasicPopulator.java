@@ -225,6 +225,8 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 				{
 					brandData.setBrandname(brands.get(0).getName());
 					brandData.setBrandtype(brands.get(0).getTypeDescription());
+					brandData.setBrandDescription(brands.get(0).getDescription()); // CKD:TPR-250
+					brandData.setBrandCode((brands.get(0).getBrandCode())); // CKD:TPR-250
 				}
 			}
 		}
