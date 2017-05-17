@@ -39763,6 +39763,9 @@ a.product-listing .promo:hover {
 		height: 46px;
 		width: 46px;
 	}
+	#deliveryAddressForm .addressSpace {
+    width: 90%; /* TISPRDT-1206 */
+	}
 }
 
 .cart-list .product-item:nth-child(2n) {
