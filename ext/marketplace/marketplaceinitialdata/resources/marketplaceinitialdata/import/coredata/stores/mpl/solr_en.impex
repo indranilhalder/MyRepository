@@ -190,21 +190,20 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  
 ##########  Impex for kidswear start  ##########
  					 
+					 
 # Language
 # Solr Indexed Property
 UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true]	;displayName[lang=$lang]
-;$solrIndexedType	;Colour-family-apparel-kidswear   	    ;"Colour family"
-;$solrIndexedType	;Occasion-kidswear						;"Occasion"
-;$solrIndexedType	;Garment-Length-kidswear	  			;"Garment Length"
-;$solrIndexedType	;Fabric-family-kidswear		  			;"Fabric Family"
-;$solrIndexedType	;Sleeve-kidswear			       	    ;"Sleeve"
-;$solrIndexedType	;Gender-kidswear			  			;"Gender"
-;$solrIndexedType	;Character-kidswear			  			;"Character"
-;$solrIndexedType	;Clothing-accessories-type-kidswear	    ;"Clothing Accessories Type"
-;$solrIndexedType	;Clothing-sets-kidswear				    ;"Clothing Sets"
-;$solrIndexedType   ;Innerwear-type-kidswear				;"Innerwear Type"		
-;$solrIndexedType   ;Rainwear-type-kidswear				    ;"Rainwear Type"	
-;$solrIndexedType   ;Swimming-accessories-typekidswear	    ;"Swimming Accessories Type"	
-;$solrIndexedType   ;Category-type-kidswear					;"Categories"	
+							;$solrIndexedType	;Garment-Length-kidswear	  			;"Garment Length"
+							;$solrIndexedType	;Fabric-family-kidswear		  			;"Fabric Family"
+						    ;$solrIndexedType	;Character-kidswear			  			;"Character"
+							;$solrIndexedType	;Clothing-accessories-type-kidswear	    ;"Clothing Accessories Type"
+							;$solrIndexedType	;Clothing-sets-kidswear				    ;"Clothing Sets"
+                            ;$solrIndexedType   ;Innerwear-type-kidswear				;"Innerwear Type"		
+						    ;$solrIndexedType   ;Rainwear-type-kidswear				    ;"Rainwear Type"	
+							;$solrIndexedType   ;Swimming-accessories-typekidswear	    ;"Swimming Accessories Type"	
+						    ;$solrIndexedType   ;Category-type-kidswear					;"Categories"	
+						
+
 ##########  Impex for kidswear end  ##########								 
 						
