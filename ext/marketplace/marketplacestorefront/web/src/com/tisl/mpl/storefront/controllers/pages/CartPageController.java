@@ -192,12 +192,12 @@ public class CartPageController extends AbstractPageController
 		String returnPage = ControllerConstants.Views.Pages.Cart.CartPage;
 		try
 		{
-			 CartModel cartModel = getCartService().getSessionCart();
+			CartModel cartModel = getCartService().getSessionCart();
 			//TISST-13012
 			//if (StringUtils.isNotEmpty(cartDataOnLoad.getGuid())) //TISPT-104
 			if (getCartService().hasSessionCart())
 			{
-				
+
 				CartData cartDataOnLoad = mplCartFacade.getSessionCartWithEntryOrdering(true);
 
 				//setExpressCheckout(serviceCart); //TISPT-104
@@ -366,7 +366,7 @@ public class CartPageController extends AbstractPageController
 	 * private void setExpressCheckout(final CartModel serviceCart) {
 	 * serviceCart.setIsExpressCheckoutSelected(Boolean.FALSE); if (serviceCart.getDeliveryAddress() != null) {
 	 * serviceCart.setDeliveryAddress(null); modelService.save(serviceCart); }
-	 *
+	 * 
 	 * }
 	 */
 
@@ -647,7 +647,7 @@ public class CartPageController extends AbstractPageController
 	/*
 	 * @description This controller method is used to allow the site to force the visitor through a specified checkout
 	 * flow. If you only have a static configured checkout flow then you can remove this method.
-	 *
+	 * 
 	 * @param model ,redirectModel
 	 */
 
@@ -1358,13 +1358,14 @@ public class CartPageController extends AbstractPageController
 						//{
 						if (!StringUtil.isEmpty(selectedPincode))
 						{
-							responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData);
+							responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData, null);
 							getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES, responseData); //CAR-126/128/129
 
 						}
 						if (null != responseData)
 						{
-							getSessionService().setAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION, responseData);
+							getSessionService().setAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION,
+									responseData);
 						}
 						if (responseData != null)
 						{
@@ -1482,7 +1483,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -1539,7 +1540,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
@@ -1700,7 +1701,7 @@ public class CartPageController extends AbstractPageController
 			{
 				if (StringUtil.isNotEmpty(selectedPincode))
 				{
-					responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData);
+					responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData, null);
 				}
 
 				for (PinCodeResponseData pinCodeResponseData : responseData)

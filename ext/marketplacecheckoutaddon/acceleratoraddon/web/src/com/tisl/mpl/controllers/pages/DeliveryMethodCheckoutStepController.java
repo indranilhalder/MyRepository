@@ -14,7 +14,6 @@
 package com.tisl.mpl.controllers.pages;
 
 
-
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.PreValidateCheckoutStep;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.CheckoutStep;
@@ -38,6 +37,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
@@ -86,7 +86,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-
 import com.granule.json.JSONObject;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.tisl.mpl.checkout.form.DeliveryMethodEntry;
@@ -134,8 +133,6 @@ import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
-import com.granule.json.JSONObject;
-import de.hybris.platform.core.model.user.AddressModel;
 
 
 @Controller
@@ -286,7 +283,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				responseData = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES);
 				if (CollectionUtils.isEmpty(responseData))
 				{
-					responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartData);
+					responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartData, serviceCart);
 				}
 				// TPR-429 START
 				final String cartLevelSellerID = populateCheckoutSellers(cartData);
@@ -535,7 +532,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				responseData = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES);
 				if (CollectionUtils.isEmpty(responseData))
 				{
-					responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartUssidData);
+					responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartUssidData, cartModel);
 				}
 				deliveryModeDataMap = getMplCartFacade().getDeliveryMode(cartUssidData, responseData, cartModel);
 
