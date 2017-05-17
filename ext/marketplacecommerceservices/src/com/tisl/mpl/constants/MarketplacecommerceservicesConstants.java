@@ -1797,7 +1797,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status"
 			.intern();
 
-	//	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os},{WalletEnum as w} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status" 
+	//	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os},{WalletEnum as w} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status"
 	//			+"and {w.code}!='mRupee' ".intern(); //Query to include mRupee
 
 
@@ -1903,7 +1903,13 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			.intern();
 	public static final String SITEMAP_FILE_LOCATION_CUSTOM = "mpl.sitemap.customFileLocation".intern();
 	public static final String SITEMAP_FILE_LOCATION_PRODUCT = "mpl.sitemap.productFileLocation".intern();
+	public static final String SITEMAP_CATEGORY_QUERY = "mpl.sitemap.categoryQuery".intern();
+	public static final String DEFAULT_SITEMAP_CATEGORY_QUERY = "SELECT {c.pk} FROM {Category AS c JOIN CatalogVersion AS cv ON {c.catalogVersion}={cv.pk} JOIN Catalog AS cat ON {cv.pk}={cat.activeCatalogVersion} JOIN CMSSite AS site ON {cat.pk}={site.defaultCatalog}}  WHERE {site.pk} = ?site AND ({c.code} like 'MSH%' or {c.code} like 'MBH%' ) AND NOT exists ({{select {cr.pk} from {CategoriesForRestriction as cr} where {cr.target} = {c.pk} }})"
+			.intern();
 
+	public static final String SITEMAP_CONTENT_QUERY = "mpl.sitemap.contentQuery".intern();
+	public static final String DEFAULT_SITEMAP_CONTENT_QUERY = "select {cp.pk} from {ContentPage as cp},{CmsApprovalStatus as cas},{catalogversion as cat} where {cp.approvalstatus}={cas.pk} and {cas.code}='approved' and {cp.catalogversion}={cat.pk} and {cat.version}='Online'"
+			.intern();
 	//update the message for Freebie product TPR-1754
 	//	public static final String PRODUCTFREEBIEDETMSGQUERY = "SELECT {prodOffrDet.ussId},{offerDet.freebieMsg},{prodOffrDet.startDate},{prodOffrDet.endDate}  FROM {FreebieDetail as offerDet}, {ProductFreebieDetail as  prodOffrDet} WHERE {prodOffrDet.ussId}= ?ussId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <=sysdate AND {prodOffrDet.endDate} >=sysdate"
 	//			.intern();
