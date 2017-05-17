@@ -95,11 +95,13 @@ public class GenericUtilityMethods
 		}
 		return status;
 	}
-	public static Object jsonToObject(final Class<?> classType, final String stringJson) throws JsonParseException, JsonMappingException, IOException
-	  {
-	   ObjectMapper mapper = new ObjectMapper();
-	  return  mapper.readValue(stringJson, classType);
-	  }
+
+	public static Object jsonToObject(final Class<?> classType, final String stringJson) throws JsonParseException,
+			JsonMappingException, IOException
+	{
+		final ObjectMapper mapper = new ObjectMapper();
+		return mapper.readValue(stringJson, classType);
+	}
 
 	/**
 	 * @Description: Sends the year from Date
@@ -216,7 +218,11 @@ public class GenericUtilityMethods
 				dateBefore = date1;
 				dateAfter = date1;
 			}
-			noOfDays = (int) ((dateAfter.getTime() - dateBefore.getTime()) / (1000 * 60 * 60 * 24));
+			// Change regarding INC144316821
+			double result;
+			result = ((dateAfter.getTime() - dateBefore.getTime()) / (1000.0 * 60.0 * 60.0 * 24.0));
+			noOfDays = (int) Math.ceil(result);
+			//	noOfDays = (int) ((dateAfter.getTime() - dateBefore.getTime()) / (1000 * 60 * 60 * 24));
 		}
 		return noOfDays;
 	}
@@ -1531,7 +1537,7 @@ public class GenericUtilityMethods
 	//TPR-1285
 	/**
 	 * Return the Prefix
-	 * 
+	 *
 	 * @param prefix
 	 * @return prefix
 	 */
