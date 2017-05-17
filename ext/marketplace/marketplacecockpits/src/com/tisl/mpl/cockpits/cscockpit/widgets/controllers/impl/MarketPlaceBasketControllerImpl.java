@@ -732,6 +732,13 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		cartParameter.setIsDeliveryAddress(true);
 		getCommerceCheckoutService().setDeliveryAddress(cartParameter);
 		setDeliveryCost(cartModel);
+		// INC-144316545- Delivery Charge Issue START
+		try {
+			getCommerceCartService().recalculateCart(cartModel);
+		} catch (CalculationException e) {
+			LOG.error("Exception occurred while recalculating cart"+e.getMessage());
+		}
+		// INC-144316545- Delivery Charge Issue START
 	}
 
 	private void setDeliveryCost(CartModel cartModel) {
