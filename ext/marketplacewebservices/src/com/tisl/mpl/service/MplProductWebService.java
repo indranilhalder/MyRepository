@@ -22,6 +22,8 @@ public interface MplProductWebService
 {
 	public ProductDetailMobileWsData getProductdetailsForProductCode(String productCode, String baseUrl, String channel);
 
+	public ProductDetailMobileWsData getProductInfoForProductCode(final String productCode, String baseUrl);
+
 	public String getCategoryCodeOfProduct(final ProductData productData);
 
 	public List<GalleryImageData> getGalleryImages(final ProductData productData);
@@ -30,4 +32,5 @@ public interface MplProductWebService
 
 	public ProductAPlusWsData getAPluscontentForProductCode(String productCode) throws EtailNonBusinessExceptions,
 			CMSItemNotFoundException;
+
 }

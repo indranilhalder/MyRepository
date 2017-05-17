@@ -16,4 +16,7 @@ import java.util.List;
 public interface ProductOfferDetailDao
 {
 	public SearchResult<List<Object>> showOfferMessage(String productCode);
+
+	//update the message for Freebie product TPR-1754
+	public SearchResult<List<Object>> showFreebieMessage(String ussId);
 }

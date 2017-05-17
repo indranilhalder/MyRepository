@@ -100,7 +100,8 @@ tr.d0 td {
 
 <!-- TISPRM-56 -->
 <input type="hidden" id="product_allVariantsListingId" value="${allVariantsString}"/>
-
+<!-- CKD:TPR-250 -->
+<input type="hidden" id="msiteBuyBoxSellerId" value="${msiteBuyBoxSellerId}"/> 
 
 <div itemscope itemtype="http://schema.org/Product" class="pdp">
 	<div class="product-info wrapper">
@@ -173,7 +174,20 @@ tr.d0 td {
   			</c:choose>
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
+				<!-- CKD:TPR-250-Start-->
+				<c:set var="clickableBrandname" value="${msiteBrandName}"/>
+				<c:set var="clickableBrandCode" value="${msiteBrandCode}"/>
+				<!-- forcibly making brand non-clickable for time bieng -->
+				<c:set var="clickableBrandCode" value=""/>
+				<c:choose>
+					<c:when test="${not empty clickableBrandname && not empty clickableBrandCode}">
+				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name"><a href="/${clickableBrandname}/c-${clickableBrandCode}">${product.brand.brandname}</a></span></h3>
+				</c:when>
+					<c:otherwise>
 				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name">${product.brand.brandname}</span></h3>
+					</c:otherwise>
+				</c:choose>
+				<!-- CKD:TPR-250-End-->
 				<%-- <a itemprop="url" href="${mainurl}"> --%>		<!-- Commented as part of UF-181 -->
 				<!-- For TPR-4358 -->
 				<h1 itemprop="name" class="product-name">${product.productTitle}</h1>
@@ -241,10 +255,16 @@ tr.d0 td {
 					<cms:component component="${component}" />
 				</cms:pageSlot>
 			<div class="SoldWrap">
-				<ycommerce:testId
+				<%-- <ycommerce:testId
 					code="productDetails_productNamePrice_label_${product.code}">
 					<div class="seller">Sold by <span id="sellerNameId"></span></div>
-				</ycommerce:testId>
+				</ycommerce:testId> --%>
+				<div class="seller">
+					<ycommerce:testId code="productDetails_productNamePrice_label_${product.code}">
+						<span class="seller-details"><span>Sold by <span id="sellerNameId"></span><product:sellerInfoDetailsSection /></span></span>
+					</ycommerce:testId>
+					
+				</div>
 				<div class="fullfilled-by">
 				<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
 				<span id="fulFilledBySship"  style="display:none;"></span>
@@ -281,9 +301,9 @@ tr.d0 td {
 		
 			
 			<!-- seller information section  -->
-			<div class="seller-details">
+			<%-- <div class="seller-details">
 			<product:sellerInfoDetailsSection/>
-			</div>
+			</div> --%>
 
 			
 
@@ -353,6 +373,8 @@ tr.d0 td {
 			</div>
 	</div>
 	
+	
+	
 	<c:set var="electronics"><spring:theme code='product.electronics'/></c:set>
 	<c:set var="clothing"><spring:theme code='product.clothing'/></c:set>
 	<!-- TISPRO-271 Changes -->
@@ -361,6 +383,16 @@ tr.d0 td {
 	<!-- Added for TATAUNISTORE-15 Start -->
 	<c:set var="watches"><spring:theme code='product.watches'/></c:set>
 	<c:set var="accessories"><spring:theme code='product.fashionAccessories'/></c:set>
+	
+		
+<c:choose>
+<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
+<product:productDetailsClassifications product="${product}"/>
+</c:when>
+<c:otherwise>
+</c:otherwise> 
+</c:choose>
+	
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" value="${productCategoryType}" id="categoryType"/>
 	<div id="productContentDivId"></div>
@@ -389,13 +421,13 @@ tr.d0 td {
 </c:choose>	
 <!--- END:MSD ---> 
 	
-<c:choose>
+<%-- <c:choose>
 <c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
 <product:productDetailsClassifications product="${product}"/>
 </c:when>
 <c:otherwise>
 </c:otherwise> 
-</c:choose>	
+</c:choose>	 --%>
  <!-- Change for INC_10849 -->
 <c:choose>
 		<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
@@ -493,5 +525,3 @@ tr.d0 td {
 </div>
 </div>
 </div>
-
-

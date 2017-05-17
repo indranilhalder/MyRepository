@@ -6,7 +6,9 @@ package com.tisl.mpl.promotion.helper;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.enumeration.EnumerationValue;
@@ -20,15 +22,18 @@ import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
 import de.hybris.platform.promotions.model.PromotionGroupModel;
+import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +42,13 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
+import com.tisl.mpl.jalo.EtailLimitedStockRestriction;
 import com.tisl.mpl.jalo.EtailSellerSpecificRestriction;
 import com.tisl.mpl.jalo.SellerMaster;
 import com.tisl.mpl.marketplacecommerceservices.daos.BulkPromotionCreationDao;
+import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtStockLevelPromotionCheckServiceImpl;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.pojo.MplLimitedOfferData;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
@@ -779,5 +787,591 @@ public class MplPromotionHelper
 
 		return deliveryChargeForEntry;
 	}
+
+	/**
+	 *
+	 * @param restrictionList
+	 * @return boolean
+	 */
+	public boolean validateForStockRestriction(final List<AbstractPromotionRestriction> restrictionList)
+	{
+		for (final AbstractPromotionRestriction restriction : restrictionList)
+		{
+			if (restriction instanceof EtailLimitedStockRestriction)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param key
+	 * @param count
+	 * @param validProductList
+	 * @return int
+	 */
+	public int getFreeGiftCount(final String key, final int count, final Map<String, Integer> validProductList)
+	{
+
+		LOG.debug("ValidProductList" + validProductList);
+		int giftCount = 0;
+		int quantity = 0;
+		List<SellerInformationModel> productSellerData = null;
+		List<SellerInformationModel> validSellerData = null;
+		try
+		{
+			if (null != key && MapUtils.isNotEmpty(validProductList) && count > 0)
+			{
+				final CatalogVersionModel oModel = getDefaultPromotionsManager().catalogData();
+				productSellerData = getSellerBasedPromotionService().fetchSellerInformation(key, oModel);
+
+				if (null != productSellerData && !productSellerData.isEmpty())
+				{
+					for (final SellerInformationModel sellerData : productSellerData)
+					{
+						for (final Map.Entry<String, Integer> entry : validProductList.entrySet())
+						{
+							validSellerData = getSellerBasedPromotionService().fetchSellerInformation(entry.getKey(), oModel);
+							for (final SellerInformationModel data : validSellerData)
+							{
+								if (sellerData.getSellerID().equalsIgnoreCase(data.getSellerID()))
+								{
+									quantity = quantity + (entry.getValue().intValue());
+								}
+							}
+
+						}
+					}
+				}
+
+				//Newly Added Code
+				if (quantity > 0)
+				{
+					giftCount = quantity / count;
+				}
+			}
+
+		}
+		catch (final ModelNotFoundException exception)
+		{
+			giftCount = 0;
+			LOG.error(exception.getMessage());
+		}
+		catch (final Exception exception)
+		{
+			giftCount = 0;
+			LOG.error(exception.getMessage());
+		}
+
+		return giftCount;
+
+	}
+
+	/**
+	 * For Limited Stock Restriction
+	 *
+	 * @param validProductUssidMap
+	 * @param restrictionList
+	 * @param promoCode
+	 * @return isExhausted
+	 */
+	public boolean isPromoStockExhausted(final Map<String, AbstractOrderEntry> validProductUssidMap,
+			final List<AbstractPromotionRestriction> restrictionList, final String promoCode)
+	{
+		boolean isExhausted = false;
+		boolean sellerFlag = false;
+
+		sellerFlag = getDefaultPromotionsManager().isSellerRestrExists(restrictionList);
+
+		if (sellerFlag)
+		{
+			isExhausted = checkStockData(validProductUssidMap, true, promoCode, restrictionList);
+		}
+		else
+		{
+			isExhausted = checkStockData(validProductUssidMap, false, promoCode, restrictionList);
+		}
+
+		return isExhausted;
+	}
+
+	/**
+	 * For Limited Stock Restriction
+	 *
+	 * @param validProductUssidMap
+	 * @param flag
+	 * @param promoCode
+	 * @param restrictionList
+	 * @return isExhausted
+	 */
+	private boolean checkStockData(final Map<String, AbstractOrderEntry> validProductUssidMap, final boolean flag,
+			final String promoCode, final List<AbstractPromotionRestriction> restrictionList)
+	{
+		boolean isExhausted = true;
+		final StringBuilder ussidIds = new StringBuilder();
+		final StringBuilder productCodes = new StringBuilder();
+		Map<String, Integer> stockCountMap = new HashMap<String, Integer>();
+		//boolean stockFlag = true;
+
+		final Map<String, Boolean> dataMap = new HashMap<String, Boolean>();
+
+		final int restrictedCount = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList);
+
+		for (final Map.Entry<String, AbstractOrderEntry> entry : validProductUssidMap.entrySet())
+		{
+			ussidIds.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getKey()
+					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
+			ussidIds.append(",");
+			productCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA + entry.getValue().getProduct().getCode()
+					+ MarketplacecommerceservicesConstants.INVERTED_COMMA);
+			productCodes.append(",");
+		}
+
+		if (flag)
+		{
+			stockCountMap = getStockService().getCumulativeStockMap(ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")),
+					promoCode, true);
+			for (final Map.Entry<String, AbstractOrderEntry> entry : validProductUssidMap.entrySet())
+			{
+				if (MapUtils.isNotEmpty(stockCountMap) && null != stockCountMap.get(entry.getKey())
+						&& stockCountMap.get(entry.getKey()).intValue() >= restrictedCount)
+				{
+					dataMap.put(entry.getKey(), Boolean.FALSE);
+				}
+				else
+				{
+					dataMap.put(entry.getKey(), Boolean.TRUE);
+				}
+			}
+		}
+		else
+		{
+			stockCountMap = getStockService().getCumulativeStockMap(
+					productCodes.toString().substring(0, productCodes.lastIndexOf(",")), promoCode, false);
+			for (final Map.Entry<String, AbstractOrderEntry> entry : validProductUssidMap.entrySet())
+			{
+				if (MapUtils.isNotEmpty(stockCountMap) && null != entry.getValue()
+						&& StringUtils.isNotEmpty(entry.getValue().getProduct().getCode())
+						&& null != stockCountMap.get(entry.getValue().getProduct().getCode())
+						&& stockCountMap.get(entry.getValue().getProduct().getCode()).intValue() >= restrictedCount)
+				{
+					dataMap.put(entry.getKey(), Boolean.FALSE);
+				}
+				else
+				{
+					dataMap.put(entry.getKey(), Boolean.TRUE);
+				}
+			}
+		}
+
+
+
+		if (MapUtils.isEmpty(dataMap))
+		{
+			isExhausted = false;
+		}
+		else
+		{
+			for (final Entry<String, Boolean> data : dataMap.entrySet())
+			{
+				if (data.getValue().booleanValue())
+				{
+					isExhausted = false;
+				}
+			}
+		}
+
+		return isExhausted;
+	}
+
+	protected ExtStockLevelPromotionCheckServiceImpl getStockService()
+	{
+		return Registry.getApplicationContext().getBean("stockPromoCheckService", ExtStockLevelPromotionCheckServiceImpl.class);
+	}
+
+	/**
+	 * The Method is used to get Limited Offer Information to Offer Classes
+	 *
+	 * @param restrictionList
+	 * @param promoCode
+	 * @param order
+	 * @return boolean
+	 */
+	public MplLimitedOfferData checkCustomerRedeemCount(final List<AbstractPromotionRestriction> restrictionList,
+			final String promoCode, final AbstractOrder order, final int promoQualifyingCount)
+	{
+		final MplLimitedOfferData data = new MplLimitedOfferData();
+		try
+		{
+			int count = 0;
+			int usedUpCount = 0;
+			int offerCount = 0;
+			String orginalUid = MarketplacecommerceservicesConstants.EMPTY;
+
+			//final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) modelService.get(order);
+
+			orginalUid = getorginalUid((AbstractOrderModel) modelService.get(order));
+
+			usedUpCount = getStockService().getCummulativeOrderCount(promoCode, orginalUid);
+
+			count = getStockCustomerRedeemCount(restrictionList);
+			if (count == 0)
+			{
+				data.setActualCustomerCount(0);
+				data.setExhausted(isExhausted(usedUpCount, promoQualifyingCount, restrictionList));
+			}
+			else if (StringUtils.isNotEmpty(orginalUid) && count > 0)
+			{
+
+				if (usedUpCount > 0)
+				{
+					offerCount = usedUpCount / promoQualifyingCount;
+					if (offerCount >= count)
+					{
+						data.setActualCustomerCount(0);
+						data.setExhausted(true);
+					}
+					else
+					{
+						final int countData = (offerCount - count) < 0 ? ((offerCount - count) * (-1)) : (offerCount - count);
+						data.setActualCustomerCount(countData);
+						data.setExhausted(false);
+					}
+				}
+				else
+				{
+
+					final int usedUpCountNow = getStockService().getCummulativeOrderCount(promoCode,
+							MarketplacecommerceservicesConstants.EMPTY);
+
+					data.setActualCustomerCount(count);
+					data.setExhausted(isExhausted(usedUpCountNow, promoQualifyingCount, restrictionList));
+				}
+
+			}
+			else if (StringUtils.isEmpty(orginalUid) && count > 0)
+			{
+
+				final int usedUpCountNow = getStockService().getCummulativeOrderCount(promoCode,
+						MarketplacecommerceservicesConstants.EMPTY);
+
+				data.setActualCustomerCount(count);
+				data.setExhausted(isExhausted(usedUpCountNow, promoQualifyingCount, restrictionList));
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during Limited Offer Data Class Generation");
+		}
+		return data;
+	}
+
+	/**
+	 * @param usedUpCount
+	 * @param promoQualifyingCount
+	 * @param restrictionList
+	 * @return flag
+	 */
+	//	private boolean isExhaustedforCus(final int usedUpCount, final int promoQualifyingCount,
+	//			final List<AbstractPromotionRestriction> restrictionList)
+	//	{
+	//
+	//		boolean flag = false;
+	//		try
+	//		{
+	//			if (usedUpCount > 0)
+	//			{
+	//				final int testCount = usedUpCount / promoQualifyingCount;
+	//				if (testCount >= getStockCustomerRedeemCount(restrictionList))
+	//				{
+	//					flag = true;
+	//				}
+	//			}
+	//		}
+	//		catch (final Exception exception)
+	//		{
+	//			LOG.error("Error during data generation|| Limited Offer ");
+	//		}
+	//
+	//		return flag;
+	//
+	//	}
+
+	/**
+	 * The Method Returns Original UID for Limited Offer Evaluation
+	 *
+	 * @param abstractOrderModel
+	 * @return orginalUid
+	 */
+	private String getorginalUid(final AbstractOrderModel abstractOrderModel)
+	{
+		String orginalUid = MarketplacecommerceservicesConstants.EMPTY;
+
+		if (null != abstractOrderModel && null != abstractOrderModel.getUser())
+		{
+			final CustomerModel customer = (CustomerModel) abstractOrderModel.getUser();
+			if (null != customer && null != customer.getOriginalUid())
+			{
+				orginalUid = customer.getOriginalUid();
+			}
+		}
+		return orginalUid;
+	}
+
+	/**
+	 * @param promoQualifyingCount
+	 * @param usedUpCount
+	 * @param restrictionList
+	 * @return flag
+	 */
+	private boolean isExhausted(final int usedUpCount, final int promoQualifyingCount,
+			final List<AbstractPromotionRestriction> restrictionList)
+	{
+		boolean flag = false;
+		try
+		{
+			if (usedUpCount > 0)
+			{
+				final int testCount = usedUpCount / promoQualifyingCount;
+				if (testCount >= getDefaultPromotionsManager().getStockRestrictionVal(restrictionList))
+				{
+					flag = true;
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during data generation|| Limited Offer ");
+		}
+
+		return flag;
+	}
+
+	public int getStockCustomerRedeemCount(final List<AbstractPromotionRestriction> restrictionList)
+	{
+		int count = 0;
+		for (final AbstractPromotionRestriction restriction : restrictionList)
+		{
+			if (restriction instanceof EtailLimitedStockRestriction)
+			{
+				final EtailLimitedStockRestriction data = (EtailLimitedStockRestriction) restriction;
+				if (StringUtils.isNotEmpty(data.getCusRedeemCount()))
+				{
+					try
+					{
+						count = Integer.parseInt(data.getCusRedeemCount()); // For TPR-4925
+					}
+					catch (final Exception exception)
+					{
+						count = 0;
+					}
+
+				}
+				else
+				{
+					count = 0;
+				}
+
+			}
+		}
+		return count;
+	}
+
+	/**
+	 * @param validProductList
+	 * @param qualifyingCount
+	 * @param restrictionList
+	 * @return boolean
+	 */
+	//	public boolean validateCount(final Map<String, Integer> validProductList, final int qualifyingCount,
+	//			final List<AbstractPromotionRestriction> restrictionList)
+	//	{
+	//		int count = 0;
+	//		if (MapUtils.isNotEmpty(validProductList) && qualifyingCount > 0 && validateForStockRestriction(restrictionList))
+	//		{
+	//			for (final Entry<String, Integer> data : validProductList.entrySet())
+	//			{
+	//				if (null != data.getValue())
+	//				{
+	//					count += data.getValue().intValue();
+	//				}
+	//
+	//			}
+	//
+	//			if (!(count % qualifyingCount == 0))
+	//			{
+	//				return false;
+	//			}
+	//		}
+	//		return true;
+	//	}
+
+	/**
+	 *
+	 * Get Offer Total Order Count for Buy A Above Promotion
+	 *
+	 * @param restrictionList
+	 * @param promoCode
+	 * @param order
+	 * @return data
+	 */
+	public MplLimitedOfferData checkCustomerOfferCount(final List<AbstractPromotionRestriction> restrictionList,
+			final String promoCode, final AbstractOrder order)
+	{
+		final MplLimitedOfferData data = new MplLimitedOfferData();
+		String orginalUid = MarketplacecommerceservicesConstants.EMPTY;
+
+		final int totalOrderPlaced = getStockService().getTotalOfferOrderCount(promoCode,
+				MarketplacecommerceservicesConstants.EMPTY);
+		final int totalOfferCount = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList);
+		final int maxCustomerOfferCount = getStockCustomerRedeemCount(restrictionList);
+
+		if (totalOrderPlaced < totalOfferCount)
+		{
+			orginalUid = getOriginalUID(order);
+			if (StringUtils.isNotEmpty(orginalUid))
+			{
+				final int offerReceiveCount = getStockService().getTotalOfferOrderCount(promoCode, orginalUid);
+				if (offerReceiveCount == 0)
+				{
+					data.setExhausted(false);
+				}
+				else if (maxCustomerOfferCount > 0 && offerReceiveCount >= maxCustomerOfferCount)
+				{
+					data.setExhausted(true);
+				}
+			}
+			else
+			{
+				data.setExhausted(false);
+			}
+		}
+		else
+		{
+			data.setExhausted(true);
+		}
+		return data;
+	}
+
+	/**
+	 * Get Original UID Details
+	 *
+	 * @param order
+	 * @return orginalUid
+	 */
+	private String getOriginalUID(final AbstractOrder order)
+	{
+		String orginalUid = MarketplacecommerceservicesConstants.EMPTY;
+
+		final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) modelService.get(order);
+		if (null != abstractOrderModel && null != abstractOrderModel.getUser())
+		{
+			final CustomerModel customer = (CustomerModel) abstractOrderModel.getUser();
+			if (null != customer && null != customer.getOriginalUid())
+			{
+				orginalUid = customer.getOriginalUid();
+			}
+		}
+
+		return orginalUid;
+	}
+
+	/**
+	 * Buy A and B Discount Promotion Exhausted Check for Limited Offer Restriction With or Without Customer Restriction
+	 *
+	 * @param promoCode
+	 * @param restrictionList
+	 * @param cart
+	 * @return flag
+	 */
+	public boolean isBuyAandBPromoExhausted(final String promoCode, final List<AbstractPromotionRestriction> restrictionList,
+			final AbstractOrder cart)
+	{
+		boolean flag = false;
+		int offerCount = 0;
+		int usedUpCount = 0;
+
+		try
+		{
+			usedUpCount = getStockService().getCummulativeOrderCount(promoCode, MarketplacecommerceservicesConstants.EMPTY);
+			if (usedUpCount > 0)
+			{
+				offerCount = usedUpCount / 2;
+				if (offerCount >= getDefaultPromotionsManager().getStockRestrictionVal(restrictionList))
+				{
+					flag = true;
+					LOG.debug("Offer" + promoCode + "is exhausted");
+				}
+			}
+
+
+			if (!flag)
+			{
+				final String originalUid = getOriginalUID(cart);
+				if (StringUtils.isNotEmpty(originalUid))
+				{
+					final int cusUsedUpCount = getStockService().getCummulativeOrderCount(promoCode, originalUid);
+					if (cusUsedUpCount > 0)
+					{
+						offerCount = cusUsedUpCount / 2;
+						final int perCusCount = getStockCustomerRedeemCount(restrictionList);
+
+						if (perCusCount > 0 && offerCount >= perCusCount)
+						{
+							flag = true;
+							LOG.debug("Offer" + promoCode + "is exhausted");
+						}
+					}
+				}
+			}
+
+
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during Buy A and B Promtion Invalidation Check " + exception);
+		}
+
+
+		return flag;
+	}
+
+	/**
+	 * Buy A and B Discount Promotion Exhausted Check for Limited Offer Restriction
+	 *
+	 * With or Without Customer Restriction
+	 *
+	 * @param restrictionList
+	 * @param cart
+	 * @param promoCode
+	 * @return eligibleCount
+	 */
+	public int getCustomerRedeemCountForBuyABPromo(final List<AbstractPromotionRestriction> restrictionList,
+			final AbstractOrder cart, final String promoCode)
+	{
+		int eligibleCount = 0;
+
+		final int cusConfiguredCount = getStockCustomerRedeemCount(restrictionList);
+
+		if (cusConfiguredCount > 0)
+		{
+			final String originalUid = getOriginalUID(cart);
+
+			if (StringUtils.isNotEmpty(originalUid))
+			{
+				final int cusUsedUpCount = getStockService().getCummulativeOrderCount(promoCode, originalUid);
+
+				if (cusUsedUpCount > 0)
+				{
+					eligibleCount = cusUsedUpCount / 2;
+				}
+			}
+
+		}
+
+		return eligibleCount;
+	}
+
 
 }

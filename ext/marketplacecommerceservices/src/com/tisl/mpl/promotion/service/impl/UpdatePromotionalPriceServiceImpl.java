@@ -440,7 +440,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 
 				if (CollectionUtils.isNotEmpty(priceList))
 				{
-					modelService.save(priceList);
+					modelService.saveAll(priceList);
 				}
 
 			}

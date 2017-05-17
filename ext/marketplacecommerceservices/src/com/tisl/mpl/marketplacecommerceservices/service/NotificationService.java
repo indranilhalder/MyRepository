@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
@@ -61,4 +62,13 @@ public interface NotificationService
 
 	void saveToVoucherStatusNotification(VoucherModel voucher);
 
+	//TPR-1984
+	//de.hybris.platform.processengine.enums.ProcessState triggerNpsEmail(OrderModel orderEntry) throws JAXBException;
+
+
+	/**
+	 * @param value
+	 * @return
+	 */
+	String triggerNpsEmail(AbstractOrderEntryModel value, OrderModel order);
 }

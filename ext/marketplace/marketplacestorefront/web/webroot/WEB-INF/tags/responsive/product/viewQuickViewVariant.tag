@@ -60,7 +60,14 @@
 <c:set var="clothing"><spring:theme code='product.clothing'/></c:set>
 <span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
 <c:url var="sizeGuideUrl" value="/p-sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}"  scope="request"></c:url>
-
+<!--CKD:TPR-250 Start -->
+<c:choose>
+	<c:when test="${not empty msiteBuyBoxSellerId}">
+		<c:set var="msiteSellerId" value="${msiteBuyBoxSellerId}" />
+		<c:set var="msiteSellerForSize" value="&sellerId=${msiteSellerId}" />
+	</c:when>
+</c:choose>
+<!--CKD:TPR-250 End -->
 <div class="color-swatch-container">
 
  <c:choose>
@@ -80,8 +87,21 @@
     <c:when test="${not empty product.variantOptions}">
 	<c:forEach items="${product.variantOptions}" var="variantOption">
 		<c:if test="${not empty variantOption.defaultUrl}">
-			<c:url value="${variantOption.defaultUrl}/quickView" var="variantUrl" />
-			<li>
+			<!--CKD:TPR-250:start  -->
+						<c:choose>
+							<c:when test="${not empty msiteBuyBoxSellerId}">
+								<c:url
+									value="${variantOption.defaultUrl}/quickView?sellerId=${msiteBuyBoxSellerId}"
+									var="variantUrl" />
+							</c:when>
+							<c:otherwise>
+								<c:url value="${variantOption.defaultUrl}/quickView"
+									var="variantUrl" />
+							</c:otherwise>
+						</c:choose>
+						<%-- <c:url value="${variantOption.defaultUrl}/quickView" var="variantUrl" /> --%>
+						<!--CKD:TPR-250:end  -->
+						<li>
 			<a href="${variantUrl}" class="js-reference-item cboxElement"
 				data-quickview-title="<spring:theme code="popup.quick.view.select"/>">
 				<%-- <c:forEach items="${variantOption.colourCode}" var="color">
@@ -231,15 +251,18 @@
 										<c:when test="${(variantOption.code eq product.code)}">
 											<c:choose>
 												<c:when test="${selectedSize eq null}">
-													<li><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
+												<!--CKD:TPR-250:  -->
+													<li><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
 												</c:when>
 												<c:otherwise>
-														<li class="selected"><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
+												<!--CKD:TPR-250:  -->
+														<li class="selected"><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
 												</c:otherwise>
 											</c:choose>
 										</c:when>
 										<c:otherwise>
-											<li data-vcode="${link}"><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
+										<!--CKD:TPR-250:  -->
+											<li data-vcode="${link}"><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -266,16 +289,19 @@
 												
 												
 													<c:when test="${selectedSize eq null}">
-														<li><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
+													<!--CKD:TPR-250:  -->
+														<li><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
 													</c:when>
 													
 												<c:otherwise>
-														<li class="selected"><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
+												<!--CKD:TPR-250:  -->
+														<li class="selected"><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
 												</c:otherwise>
 												</c:choose>
 											</c:when>	
 										<c:otherwise>
-											<li data-vcode="${link}"><a href="${variantUrl}?selectedSize=true" class="js-reference-item cboxElement">${entry.value}</a></li>
+										<!--CKD:TPR-250:  -->
+											<li data-vcode="${link}"><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
 										</c:otherwise>												
 												</c:choose>
 											</c:forEach>

@@ -10,13 +10,13 @@
 <c:set var="buildNumber" value= "100000"/>
 </c:if>
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/fonts.min.css?v=${buildNumber}"/>
-<c:choose>
+ <c:choose>
 	<c:when test="${isMinificationEnabled}">
 		<compressible:mplmincss/>
 	</c:when>
-	<c:otherwise>
+	<c:otherwise>  
 		<compressible:mplcss/>
-	</c:otherwise>
+	 </c:otherwise>
 </c:choose>
 
 <%--  AddOn Theme CSS files --%>

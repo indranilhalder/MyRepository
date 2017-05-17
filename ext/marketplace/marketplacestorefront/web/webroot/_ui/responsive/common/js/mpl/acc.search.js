@@ -17,7 +17,7 @@ function constructDepartmentHierarchy(inputArray) {
 					var categoryName = categoryDetails[1];
 					var facetCount = 0;
 					
-					if(categoryDetails[2] == "L3")
+					if(categoryDetails[2] == "L3" || categoryDetails[2] == "L4")
 					{
 						//categoryName += "  (" +categoryDetails[5] + ")";
 						facetCount = "  (" +categoryDetails[5] + ")";
@@ -708,19 +708,26 @@ function donotShowAll()
 		}
 
 $(document).on("click",".plp-wishlist",function(e){
-	//addToWishlistForPLP($(this).data("product"),this);
-	
-	if ($(this).hasClass("added")){
-		 removeToWishlistForPLP($(this).data("product"),this);
+
+	 /*TPR-250 changes*/
+	var ussid=$(this).data("ussid");
+	//addToWishlistForPLP($(this).data("product"),$(this).data("ussid"),this);
+	/*TPR-250 changes*/
+	if ( $( this ).hasClass( "added" ) ) {
+		removeToWishlistForPLP($(this).data("product"),$(this).data("ussid"),this);
+
 	} else {
-		 addToWishlistForPLP($(this).data("product"),this);
+
+		addToWishlistForPLP($(this).data("product"),$(this).data("ussid"),this);
 	}
 	return false;
 })
 		/*Changes for INC144313867*/
 
-		function removeToWishlistForPLP(productURL,el) {
-			//var loggedIn=$("#loggedIn").val();
+
+		function removeToWishlistForPLP(productURL,ussid,el) {
+			var loggedIn=$("#loggedIn").val();
+
 			var productCode=urlToProductCode(productURL);
 			var wishName = "";
 			var requiredUrl = ACC.config.encodedContextPath + "/search/"
@@ -733,8 +740,8 @@ $(document).on("click",".plp-wishlist",function(e){
 		    if( $("#variant,#sizevariant option:selected").val()=="#"){
 		    	sizeSelected=false;
 		    }
-		    var dataString = 'wish=' + wishName + '&product=' + productCode
-					+ '&sizeSelected=' + sizeSelected;
+		    var dataString = 'wish=' + wishName + '&product=' + productCode + '&ussid=' + ussid
+			+ '&sizeSelected=' + sizeSelected;
 			
 		    //change for INC144314854 
 			//if(loggedIn == 'false') {
@@ -782,8 +789,9 @@ $(document).on("click",".plp-wishlist",function(e){
 		}
 
 
-		function addToWishlistForPLP(productURL,el) {
-			//var loggedIn=$("#loggedIn").val();
+
+		function addToWishlistForPLP(productURL,ussid,el) {
+			var loggedIn=$("#loggedIn").val();
 			var productCode=urlToProductCode(productURL);
 			var productarray=[];
 			productarray.push(productCode);
@@ -798,7 +806,7 @@ $(document).on("click",".plp-wishlist",function(e){
 		    if( $("#variant,#sizevariant option:selected").val()=="#"){
 		    	sizeSelected=false;
 		    }
-		    var dataString = 'wish=' + wishName + '&product=' + productCode
+		     var dataString = 'wish=' + wishName + '&product=' + productCode + '&ussid=' + ussid
 					+ '&sizeSelected=' + sizeSelected;
 			
 		    // Change for INC144314854 
@@ -865,6 +873,12 @@ $(document).on("click",".plp-wishlist",function(e){
 		function urlToProductCode(productURL) {
 			var n = productURL.lastIndexOf("-");
 			var productCode=productURL.substring(n+1, productURL.length);
+			//CKD:TPR-250:Start : to discard msiteSellerId from URL when adding to Wishlist
+			var ind = productCode.indexOf("?");
+			if (ind != -1){
+				productCode=productCode.substring(0,ind);
+			}
+			//CKD:TPR-250:End
 		    return productCode.toUpperCase();
 			
 		}

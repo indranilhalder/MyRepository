@@ -138,7 +138,10 @@ public class BulkContentCreationDaoImpl implements BulkContentCreationDao
 	private CatalogVersionModel getProductCatalogVersion()
 	{
 		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(
-				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID, MarketplacecommerceservicesConstants.STAGED);
+		//TISSQAUAT-673 starts
+		//MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID, MarketplacecommerceservicesConstants.STAGED);
+				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID, MarketplacecommerceservicesConstants.ONLINE);
+		//TISSQAUAT-673 ends
 		return catalogVersionModel;
 	}
 

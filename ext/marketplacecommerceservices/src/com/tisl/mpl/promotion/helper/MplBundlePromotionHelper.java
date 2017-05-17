@@ -93,14 +93,14 @@ public class MplBundlePromotionHelper
 	 */
 	public Map<String, Integer> getSortedValidProdUssidMap(final Map<String, AbstractOrderEntry> validProductUssidMap,
 			final List<Long> stepQuantityList, final SessionContext paramSessionContext, final int totalCount,
-			final List<AbstractPromotionRestriction> restrictionList)
+			final List<AbstractPromotionRestriction> restrictionList, final String promoCode)
 	{
 		final Map<String, Integer> validUssidList = new HashMap<String, Integer>();
 		final long totalEligibleCount = getEligibleQualifyingCount(totalCount, stepQuantityList);
 
 		validProductUssidMap.keySet().retainAll(
 				getDefaultPromotionsManager().populateSortedValidProdUssidMap(validProductUssidMap, (int) totalEligibleCount,
-						paramSessionContext, restrictionList, validUssidList));
+						paramSessionContext, restrictionList, validUssidList, promoCode));
 		return validUssidList;
 	}
 

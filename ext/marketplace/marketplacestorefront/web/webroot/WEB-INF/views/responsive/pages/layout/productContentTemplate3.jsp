@@ -22,11 +22,22 @@ function iframe_resize(){
 $('.Manufacturer.Temp07 .bkg-img').on("load", function() {
 	iframe_resize();
 });	
+$(document).ready(function(){
+	if($(".Temp07 .Padd .twocolumn .onecolumn img").length == 0){
+		$(".Temp07 .Padd .twocolumn").css ("display","none");
+	}
+	if (($(".Temp07 .Padd .every-scene li .media").children().length == 0) && ($(".Temp07 .Padd .every-scene li .media-content").children().length == 0)){
+		$(".Temp07 .Padd .every-scene").css("display","none");
+	}
+	if($(".Temp07 .Padd h2:first-child span").is(':empty')){
+		$(".Temp07 .Padd h2").first().hide();
+	}
+});
 
 </script>
 <div class="Manufacturer Temp07">
   <div class="Padd">
-   <h2><span>From the Manufacturer</span></h2>
+   <h2><span>${cmsPage.title}</span></h2>
    <div class="twocolumn">
       <div class="onecolumn">
          <div class="media">
@@ -58,58 +69,51 @@ $('.Manufacturer.Temp07 .bkg-img').on("load", function() {
       </div>
    </div>
    
+   <%-- code changes for carousel start --%>
    <div class="every-scene">
 		<cms:pageSlot position="Section3A" var="feature">
 			<cms:component component="${feature}" element="div" class="" />
 		</cms:pageSlot>
-		<ul class="owl-carousel owl-theme owl-loaded">		
-        <div class="owl-stage-outer">
-	        <div class="owl-item cloned">
-				<li>
-					<div class="media">
-						<cms:pageSlot position="Section4A" var="feature">
-							<img src="${feature.urlLink }"/>
-						</cms:pageSlot>
-					</div>
-					<div class="media-content">
-						<cms:pageSlot position="Section5A" var="feature">
-							<cms:component component="${feature}" element="div" class="" />
-						</cms:pageSlot>
-					</div>
-				</li>
-	        </div>
-	        <div class="owl-item cloned">
-				<li>
-					<div class="media">
-						<cms:pageSlot position="Section4B" var="feature">
-							<img src="${feature.urlLink }"/>
-						</cms:pageSlot>
-					</div>
-					<div class="media-content">
-						<cms:pageSlot position="Section5B" var="feature">
-							<cms:component component="${feature}" element="div" class="" />
-						</cms:pageSlot>
-					</div>
-				</li>
-	        </div>
-	        <div class="owl-item cloned">
-				<li>
-					<div class="media">
-						<cms:pageSlot position="Section4C" var="feature">
-							<img src="${feature.urlLink }"/>
-						</cms:pageSlot>
-					</div>
-					<div class="media-content">
-						<cms:pageSlot position="Section5C" var="feature">
-							<cms:component component="${feature}" element="div" class="" />
-						</cms:pageSlot>
-					</div>
-				</li>
-	        </div>
-        </div>         
-        <!-- <div class="owl-controls"><div class="owl-nav"><div class="owl-prev" style=""></div><div class="owl-next" style=""></div></div><div class="owl-dots" style="display: none;"></div></div> -->
+		<ul class="every-scene-carousel">	
+		<li>
+			<div class="media">
+				<cms:pageSlot position="Section4A" var="feature">
+					<img src="${feature.urlLink }"/>
+				</cms:pageSlot>
+			</div>
+			<div class="media-content">
+				<cms:pageSlot position="Section5A" var="feature">
+					<cms:component component="${feature}" element="div" class="" />
+				</cms:pageSlot>
+			</div>
+		</li>
+		<li>
+			<div class="media">
+				<cms:pageSlot position="Section4B" var="feature">
+					<img src="${feature.urlLink }"/>
+				</cms:pageSlot>
+			</div>
+			<div class="media-content">
+				<cms:pageSlot position="Section5B" var="feature">
+					<cms:component component="${feature}" element="div" class="" />
+				</cms:pageSlot>
+			</div>
+		</li>
+		<li>
+			<div class="media">
+				<cms:pageSlot position="Section4C" var="feature">
+					<img src="${feature.urlLink }"/>
+				</cms:pageSlot>
+			</div>
+			<div class="media-content">
+				<cms:pageSlot position="Section5C" var="feature">
+					<cms:component component="${feature}" element="div" class="" />
+				</cms:pageSlot>
+			</div>
+		</li>
         </ul>
-   </div>
+   </div>	
+       <%-- code changes for carousel end --%>
    <div class="related-video">
 	<cms:pageSlot position="Section6A" var="feature">
 		<cms:component component="${feature}" element="div" class="" />
