@@ -6723,6 +6723,14 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a Last name.";
         return false;
 	}
+	if(name=="" && identifier=="firstNameEmi"){
+		errorHandle.innerHTML = "Please enter a First name.";
+        return false;
+	}
+	if(name=="" && identifier=="lastNameEmi"){
+		errorHandle.innerHTML = "Please enter a Last name.";
+        return false;
+	}
 	else if (!regex.test(name)) {
 		errorHandle.innerHTML = "Only alphabets and spaces allowed.";
         return false;
