@@ -54494,7 +54494,7 @@ body .lookbook_wrapper .listing.wrapper .left-block{
         right: 9%;
     }
     
-    #bestPicks{top: 22px;}  /* add for INC144313767 & INC144313553  */
+    /*#bestPicks{top: 22px;}   add for INC144313767 & INC144313553 , commented as part of defect id:PRDI-171 */
 }
    
    
@@ -58222,7 +58222,7 @@ header > .content .top.header_fix .toggle{
 }
 .Manufacturer.Temp03 ul li{
 	margin-bottom: 1px;
-    background: #f5f5f5;	/* TISQAUAT-694 revert*/
+    /* background: #f5f5f5; */
     float: left;
     width: 100%;
 }
@@ -66849,3 +66849,8 @@ body .account .right-account .order-history .product-block li.item .attributes p
   body.page-search .listing.wrapper .right-block .listing-menu{
   	display:none;
   }		/*TISPRDT-1179*/
+ /*  start of PRDI-177 */
+#OfferWrap .Inner .show-termsConditions p {
+	text-align: left !important;
+	}
+	/* End of PRDI-177 */

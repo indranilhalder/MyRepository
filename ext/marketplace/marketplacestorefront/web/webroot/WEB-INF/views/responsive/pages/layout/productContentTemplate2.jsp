@@ -9,6 +9,9 @@ $(document).ready(function(){
 		$('.Manufacturer.Temp03 a.show-more').remove();
 		$('.Manufacturer.Temp03 .Padd').after(showMoreLink);
 	}
+	if($(".Temp03 .Padd h2:first-child").is(':empty')){
+		$(".Temp03 .Padd h2").first().hide();
+	}
 });
 </script>
 <div class="Manufacturer Temp03">
