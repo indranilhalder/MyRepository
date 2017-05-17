@@ -29,7 +29,7 @@ var buyboxskuId='';
 
 <c:set var="validTabs" value="${VALID_TABS}" />
 <div class="nav-wrapper">
-<ul class="nav pdp">
+<ul class="nav pdp productNav">
 <!-- 	TISPRD-7604 fix start -->
 <%-- 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
 		<li id="tabs_styleNotes" class="active">
@@ -64,9 +64,15 @@ var buyboxskuId='';
 			<spring:theme code="product.product.knowmore" />
 		</li>
 	</c:if>
+		<!--CKD:TPR-250:Start -->
+	<c:if test="${fn:contains(validTabs, 'brandInfo')}">
+		<li id="tabs_brandInfo"><spring:theme
+				code="product.product.brandInfo" /></li>
+	</c:if>
+	<!--CKD:TPR-250:End -->
 </ul>
 </div>
-<ul class="tabs pdp">
+<ul class="tabs pdp productTabs">
 	<!-- INC144313814 fix start -->
 	<c:if test="${fn:contains(validTabs, 'details')}">
 		<li class="active">
@@ -95,6 +101,13 @@ var buyboxskuId='';
 			<product:productTataPromiseTab product="${product}" />
 		</li>
 	</c:if>
+	<!--CKD:TPR-250:Start -->
+	<c:if test="${fn:contains(validTabs, 'brandInfo')}">
+		<li >
+			<product:brandInfoTab product="${product}" />
+		</li>
+	</c:if>
+	<!--CKD:TPR-250:End -->
 </ul>
 
  <div id="servicableUssid"></div>

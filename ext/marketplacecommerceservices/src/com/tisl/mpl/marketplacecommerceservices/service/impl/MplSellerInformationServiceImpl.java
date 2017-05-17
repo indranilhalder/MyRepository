@@ -5,6 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.catalog.CatalogService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getSellerDetail(java.lang.String)
 	 */
@@ -59,7 +60,7 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getSellerDetail(java.lang.String)
 	 */
@@ -128,7 +129,7 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 
 	/**
 	 * get Fulfillment type for FreeBie Parent Transaction
-	 * 
+	 *
 	 * @author TECHOUTS
 	 * @param orderEntry
 	 * @return String
@@ -161,4 +162,28 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 			throw new EtailBusinessExceptions(e.getMessage(), e);
 		}
 	}
+
+	@Override
+	public SellerInformationModel getSellerInformationBySellerID(final CatalogVersionModel catalogVersion, final String sellerID)
+	{
+		if (sellerID != null)
+		{
+			return getMplSellerInformationDAO().getSellerInformationBySellerID(catalogVersion, sellerID);
+		}
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getContentPageBySellerID(de.hybris
+	 * .platform.catalog.model.CatalogVersionModel, java.lang.String)
+	 */
+	@Override
+	public ContentPageModel getContentPageBySellerID(final String sellerId)
+	{
+		return getMplSellerInformationDAO().getContentPageBySellerID(sellerId);
+	}
+
 }

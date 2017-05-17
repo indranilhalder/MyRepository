@@ -38,6 +38,18 @@
 			</ul>
 </c:if> --%>
 <div class="Cta">
+
+<!-- TPR-4966 -->
+
+	<span id="addToCartFormnoInventory" style="display: none" class="no_inventory"><p class="inventory">
+			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
+		</p></span>
+	<span id="addToCartFormexcedeInventory" style="display: none"><p class="inventory">
+			<font color="#ff1c47">Please decrease the quantity</font>
+		</p></span>
+		
+		<!-- TPR-4966 -->
+		
 	<span id="dListedErrorMsg" style="display: none"  class="dlist_message prod-dlisted-msg">
 		<spring:theme code="pdp.delisted.message" />
 	</span>

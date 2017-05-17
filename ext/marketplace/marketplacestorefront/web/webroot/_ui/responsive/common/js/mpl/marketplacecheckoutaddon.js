@@ -5321,7 +5321,7 @@ function checkServiceabilityRequired(buttonType,el){
 	if(buttonType == "typeCheckout" )
 	{
 		
-		if(typeof utag == "undefined"){
+		/*if(typeof utag == "undefined"){
 			console.log("Utag is undefined")
 		}
 		else{
@@ -5329,7 +5329,7 @@ function checkServiceabilityRequired(buttonType,el){
 			utag.link(
 			{"link_text": "cart_checkout_clicked" , "event_type" : "cart_checkout_clicked"}
 			);
-		}
+		}*/
 	}
 	if(sessionPin != selectedPin){
 		checkPincodeServiceability(buttonType,el);
@@ -5555,7 +5555,7 @@ function checkPincodeServiceability(buttonType,el)
  				{
 	 				//TPR-4736 | DataLAyerSchema changes | cart
  					utag.link({
-		 				"link_obj": this,
+		 				//"link_obj": this,
 		 				"link_text": "cart_pincode_check_failure", 
 		 				"event_type" : "cart_pincode_check_failure",
 		 				"cart_pin_non_servicable" : selectedPincode
@@ -5575,15 +5575,16 @@ function checkPincodeServiceability(buttonType,el)
 					reloadpage(selectedPincode,buttonType);
  	 			$("#isPincodeServicableId").val('N');
  	 			// reloadpage(selectedPincode,buttonType);
- 				} 
+ 			} 
  			else
+
  				{
  				utagCheckPincodeStatus = "cart_pincode_check_success";
  				/*if(typeof utag !="undefined")
  				{
  					//TPR-4736 | DataLAyerSchema changes | cart
  					utag.link({
-		 				"link_obj": this,
+		 				//"link_obj": this,
 		 				"link_text": "cart_pincode_check_success", 
 		 				"event_type" : "cart_pincode_check_success",
 		 				"cart_pin_servicable" : selectedPincode
@@ -5599,7 +5600,7 @@ function checkPincodeServiceability(buttonType,el)
 	 			$("#AvailableMessageBtm").show();//UF-68
  					populatePincodeDeliveryMode(response,buttonType);
  					reloadpage(selectedPincode,buttonType);
- 				}
+ 			}
  			
  			// TISPRM-33
 	 			$("#defaultPinDiv").show();
@@ -5635,7 +5636,7 @@ function checkPincodeServiceability(buttonType,el)
  			/*if(typeof utag !="undefined"){
  				//TPR-4736 | DataLAyerSchema changes | cart
 	 			utag.link({
-	 				"link_obj": this,
+	 				//"link_obj": this,
 	 				"link_text": "cart_pincode_check_failure", 
 	 				"event_type" : "cart_pincode_check_failure",
 	 				"cart_pin_non_servicable" : selectedPincode
@@ -5659,6 +5660,7 @@ function checkPincodeServiceability(buttonType,el)
  	 		// },500);
  		},
  		complete : function(resp){
+
  					//TPR-4736 | DataLAyerSchema changes | cart
 	  					if(utagCheckPincodeStatus == "cart_pincode_check_failure"){
 	  						if(typeof utag !="undefined"){
@@ -5679,6 +5681,7 @@ function checkPincodeServiceability(buttonType,el)
 	 			  			}
 	  					}
  			   		}
+
  	});
 	
 
@@ -6163,6 +6166,7 @@ function checkIsServicable()
 	 			//Sprint merge issue
 	 			var responeStr=response['pincodeData'].split("|");
 	 			if(responeStr[0]=="N"){
+
 	 			$("#cartPinCodeAvailable").hide();
 	 			$("#AvailableMessage").hide();
 	 			$("#AvailableMessageBtm").hide();//UF-68
@@ -6182,11 +6186,11 @@ function checkIsServicable()
 	 			}
 	 			else{
 	 				$(".deliveryUlClass").remove();//TPR-1341
-	 				 $(".pincodeServiceError").hide();
+	 				$(".pincodeServiceError").hide();
 	 				$("#unserviceablepincode").hide();
 	 				$("#unserviceablepincodeBtm").show();//UF-68
 	 				$("#unserviceablepincode_tooltip").hide();
-	 				 $("#unserviceablepincode_tooltip_btm").hide();
+	 				$("#unserviceablepincode_tooltip_btm").hide();
 	 				$("#cartPinCodeAvailable").hide();
 	 				$("#AvailableMessage").html("Available delivery options for the pincode " +selectedPincode+ " are");
 	 				$("#AvailableMessage").show();
@@ -6226,14 +6230,17 @@ function checkIsServicable()
  	 				});
  	 			}
 	 		},
-	 		complete : function(resp){
-	 		 	 			if(utagCheckPincodeStatus == true){
-	 		 	 				pincodeServicabilitySuccess(selectedPincode);
-	 		 	 			}
-	 		 	 			else{
-	 		 	 				pincodeServicabilityFailure(selectedPincode);
-	 		 	 			}
-	 		 	 		} 
+
+			complete : function(resp){
+				if(utagCheckPincodeStatus == true){
+					pincodeServicabilitySuccess(selectedPincode);
+				}
+				else{
+					pincodeServicabilityFailure(selectedPincode);
+				}
+			} 
+
+	 		
 
 	 	});
 	}

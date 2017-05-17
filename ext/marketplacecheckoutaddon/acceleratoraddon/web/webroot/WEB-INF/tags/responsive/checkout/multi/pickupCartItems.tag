@@ -141,6 +141,10 @@
 							</c:if>
 						</c:forEach>
 					</div>
+					</div>
+					</div>
+					</li>
+					<li>
 					<div class="method">
 	                   <h3> <spring:theme code="checkout.multi.shipmentMethod"/></h3>
 	                   <p class="delivery-method-description"><c:out value="${entry.mplDeliveryMode.name}"></c:out>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>

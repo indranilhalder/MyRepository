@@ -115,12 +115,16 @@
 																</c:if>	
 																<c:set var="myline2" value="${fn:trim(address.line2)}"/>
 																<c:set var="myline3" value="${fn:trim(address.line3)}"/>
+																<c:set var="landmark" value="${fn:trim(address.landmark)}"/>
 																<c:if test="${empty myline2  && empty myline3}">
 																
 																<address>
 																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
 																	${fn:escapeXml(address.line1)},
-																	&nbsp;<br>
+																	<c:if test="${not empty landmark}">
+																	${fn:escapeXml(address.landmark)},
+																	</c:if>
+																	<br>
 																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
 																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
 																	 91&nbsp;${fn:escapeXml(address.phone)} <br>
@@ -132,7 +136,10 @@
 																<address>
 																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
 																	${fn:escapeXml(address.line1)},&nbsp;${fn:escapeXml(address.line2)},
-																	&nbsp;<br>
+																	<c:if test="${not empty landmark}">
+																	${fn:escapeXml(address.landmark)},
+																	</c:if>
+																	<br>
 																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
 																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
 																	 91&nbsp;${fn:escapeXml(address.phone)} <br>
@@ -395,7 +402,7 @@
 									<div class="half" style="clear:both;">
 									<label><spring:theme code="text.addressBook.addressline1" text="Address Line 1 *" /></label>
 										<form:input path="line1" id="line1" onkeyup="kpressaddressln1()"
-											maxlength="40" />
+ 											maxlength="40" />
 											<div class="errorMessage"><div id="erraddressline1"></div></div>
 									</div>
 									
@@ -433,12 +440,12 @@
 												<div class="errorMessage errland2"></div>
 										</div>
 									</div>
-									
+						
 									<!-- TISUAT-4696  /TPR-215-->
 									<div class="half" style="clear: both">
 									<label><spring:theme code="text.addressBook.City" text="City *" /></label>
-										<form:input path="townCity" id="townCity" class="address_townCity"
-											onkeyup="kpressaddresscity()" maxlength="30" />
+										<form:input path="townCity" id="townCity"
+											onkeyup="kpressaddresscity()" maxlength="30" class="address_townCity" />
 											<div class="errorMessage"><div id="erraddressCity">  </div></div>
 									</div>
 									
@@ -446,22 +453,21 @@
 
 									<div class="half no-display">
 										<div class="mainDrop">
-											<label><spring:theme code="text.addressBook.State"
-													text="State *" /></label>
-											<form:select name="stateList" id="stateListBox" path="state"
-												class="address_states" onChange="onAddressSelectValidate()">
-												<c:forEach items="${stateDataList}" var="state"
-													varStatus="stateStatus">
-													<option value="${state.name}">${state.name}</option>
-												</c:forEach>
-											</form:select>
-											<div class="errorMessage">
-												<div id="erraddressState"></div>
-											</div>
+										<label><spring:theme code="text.addressBook.State" text="State *" /></label>
+
+										<form:select name="stateList" id="stateListBox" path="state"
+											class="address_states"  onChange="onAddressSelectValidate()">
+											<c:forEach items="${stateDataList}" var="state"
+												varStatus="stateStatus">
+												<option value="${state.name}">${state.name}</option>
+											</c:forEach>
+										</form:select>
+
+										<div class="errorMessage"><div id="erraddressState"></div></div> 
 										</div>
 
-										
-											<div class="dupDisplay">
+
+										<div class="dupDisplay">
 												<label>State *</label>
 												<div class="stateInput"></div>
 													<div class="help-block has-error" id="stateError"
@@ -485,6 +491,13 @@
 										<input type="text" name="CountryList" value="India" disabled="">
 										
 									</div>
+									
+									<%-- <div class="half" style="clear:both;">
+									<label><spring:theme code="text.addressBook.PinCode" text="PinCode *" /></label>
+										<form:input path="postcode" id="postcode"
+											onkeyup="kpressaddresspost()" maxlength="6" />
+											<div class="errorMessage"><div id="erraddressPost">   </div></div> 
+									</div> --%>
 									
 									<div class="half phone">
 										<label><spring:theme code="text.addressBook.Phone"

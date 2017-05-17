@@ -31,6 +31,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.access.AccessDeniedException;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+
 
 /**
  * Strategy that loads cart into the session
@@ -102,7 +104,8 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 			}
 			else if (!isBaseSiteValid(cart))
 			{
-				throw new CartException("Cart not found.", CartException.NOT_FOUND, requestedCartID);
+				throw new CartException(MarketplacecommerceservicesConstants.CARTNOTFOUNDEXCEPTION, CartException.NOT_FOUND,
+						requestedCartID);
 			}
 			requestedCartID = cart.getCode();
 			//commerceCartService.restoreCart(cart);
@@ -114,7 +117,8 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 			cart = commerceCartService.getCartForCodeAndUser(requestedCartID, userService.getCurrentUser());
 			if (cart == null || !isBaseSiteValid(cart))
 			{
-				throw new CartException("Cart not found.", CartException.NOT_FOUND, requestedCartID);
+				throw new CartException(MarketplacecommerceservicesConstants.CARTNOTFOUNDEXCEPTION, CartException.NOT_FOUND,
+						requestedCartID);
 			}
 			//commerceCartService.restoreCart(cart);
 			cartService.setSessionCart(cart);
@@ -148,7 +152,8 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 					{
 						if (!isBaseSiteValid(cart))
 						{
-							throw new CartException("Cart not found.", CartException.NOT_FOUND, cartID);
+							throw new CartException(MarketplacecommerceservicesConstants.CARTNOTFOUNDEXCEPTION, CartException.NOT_FOUND,
+									cartID);
 						}
 						//commerceCartService.restoreCart(cart);
 						cartService.setSessionCart(cart);
@@ -157,12 +162,14 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 					else
 					{
 						// 'access denied' presented as 'not found' for security reasons
-						throw new CartException("Cart not found.", CartException.NOT_FOUND, cartID);
+						throw new CartException(MarketplacecommerceservicesConstants.CARTNOTFOUNDEXCEPTION, CartException.NOT_FOUND,
+								cartID);
 					}
 				}
 				else
 				{
-					throw new CartException("Cart not found.", CartException.NOT_FOUND, cartID);
+					throw new CartException(MarketplacecommerceservicesConstants.CARTNOTFOUNDEXCEPTION, CartException.NOT_FOUND,
+							cartID);
 				}
 			}
 			/*
