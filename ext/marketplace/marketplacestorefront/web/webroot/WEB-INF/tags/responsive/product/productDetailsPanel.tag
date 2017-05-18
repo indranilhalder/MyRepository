@@ -78,6 +78,8 @@ tr.d0 td {
 <input type="hidden" id="product_id" value="${product_id}" />
 <input type="hidden" id="page_subcategory_name" value="${page_subcategory_name}" />
 <input type="hidden" id="page_subcategory_name_l3" value="${page_subcategory_name_l3}" />
+<!-- For KIDSWEAR L4 is being added if present -->
+<input type="hidden" id="page_subcategory_name_l4" value="${page_subcategory_name_l4}" />
 <input type="hidden" id="product_brand" value="${product_brand}" />
 <input type="hidden" id="site_section_detail" value="${site_section_detail}" />
 <input type="hidden" id="product_category" value="${product_category}" />

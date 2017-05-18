@@ -10,6 +10,7 @@ import de.hybris.platform.converters.Converters;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import java.util.Collection;
+import java.util.TreeMap;
 
 
 /**
@@ -46,7 +47,13 @@ public class MplCategoryPopulator extends CategoryPopulator
 	 */
 	private void populateSuperCategories(final Collection<CategoryModel> allSupercategories, final CategoryData target)
 	{
-		target.setSuperCategories(Converters.convertAll(allSupercategories, getMplSubSuperCategoryConverter()));
+		//target.setSuperCategories(Converters.convertAll(allSupercategories, getMplSubSuperCategoryConverter()));
+		final TreeMap<Integer, CategoryModel> treeMap = new TreeMap<Integer, CategoryModel>();
+		for (final CategoryModel superCategory : allSupercategories)
+		{
+			treeMap.put(Integer.valueOf(superCategory.getCode().length()), superCategory);
+		}
+		target.setSuperCategories(Converters.convertAll(treeMap.descendingMap().values(), getMplSubSuperCategoryConverter()));
 	}
 
 	/**
