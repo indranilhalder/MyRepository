@@ -58,7 +58,7 @@ public class LoginHiHeaderController
 
 			//LOG.error("LoginHiHeaderController: Last user set into model: " + model.asMap().get("lastLoggedInUser"));
 		}
-		/** End UF-93 **/		
+		/** End UF-93 **/ 		
 		if (!userService.isAnonymousUser(currentCustomer))
 		{
 			return ControllerConstants.Views.Fragments.Home.MyAccountPanel;
