@@ -35,7 +35,8 @@
 		</c:if>
 		
 		<li class="shippingthanks">
-			<spring:theme code="text.account.order.delivery" text="Delivery"/>
+			<%-- <spring:theme code="text.account.order.delivery" text="Delivery"/> --%>
+			<span><spring:theme code="text.account.order.delivery1" text="Schedule Delivery and Shipping Charges"/></span> <!--  TISSUATS-919 -->
 			<span class="amt"><format:price priceData="${order.deliveryCost}" displayFreeForZero="true"/></span>
 		</li>
 		<!-- TISBOX-1417 Displaying COD related Information-->

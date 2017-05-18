@@ -118,7 +118,11 @@ import com.tisl.mpl.marketplacecommerceservices.service.MPLRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLReturnService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
+
+import com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService;
+
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.CRMTicketDetailModel;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -237,6 +241,14 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private MPLReturnService mplReturnService;
 
 	private OrderCancelRecordsHandler orderCancelRecordsHandler;
+
+
+
+	@Resource(name = "mplProcessOrderService")
+	MplProcessOrderService mplProcessOrderService;
+
+
+	
 
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
@@ -481,6 +493,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 			if (omsCancellationStatus)
 			{
+				//TPR-965 : Count not to be reverted
+				//mplProcessOrderService.removePromotionInvalidation(subOrderModel.getParentReference());
+
 				final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(subOrderModel,
 						subOrderEntry.getTransactionId());
 				for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
@@ -646,6 +661,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 			if (omsCancellationStatus)
 			{
+				//TPR-965 Count not to be reverted
+				//mplProcessOrderService.removePromotionInvalidation(subOrderModel.getParentReference());
+
 				final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(subOrderModel,
 						subOrderEntry.getTransactionId());
 				for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
@@ -2812,6 +2830,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * @return List<String>
 	 *
 	 */
+
 	@Override
 	public List<String> getReturnableDates(final OrderEntryData orderEntryData)
 	{

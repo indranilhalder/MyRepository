@@ -13,7 +13,6 @@
  */
 package com.tisl.mpl.v2.controller;
 
-
 import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.basecommerce.enums.StockLevelStatus;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
@@ -2541,10 +2540,8 @@ public class CartsController extends BaseCommerceController
 		{
 			LOG.debug("******************* Soft reservation Mobile web service ******************" + cartId + pincode);
 			//	cart = mplPaymentWebFacade.findCartValues(cartId);
-
 			//CAR Project performance issue fixed
 			cart = cartService.getSessionCart();
-
 			if (setFreebieDeliverMode(cart))
 			{
 				//added for CAR:127
@@ -2586,6 +2583,13 @@ public class CartsController extends BaseCommerceController
 			}
 			reservationList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			reservationList.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			reservationList.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			reservationList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
 
 		return reservationList;
 	}
@@ -2611,7 +2615,6 @@ public class CartsController extends BaseCommerceController
 		boolean deListedStatus = false;
 		boolean delvieryModeset = false;
 		String delistMessage = MarketplacecommerceservicesConstants.EMPTY;
-		//List<PinCodeResponseData> pinCodeResponse = null;
 		try
 		{
 			//getSessionService().setAttribute(MarketplacewebservicesConstants.PAYMENTMODEFORPROMOTION, paymentMode);
@@ -2626,7 +2629,6 @@ public class CartsController extends BaseCommerceController
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
-
 			if (StringUtils.isNotEmpty(cartGuid))
 			{
 				orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
@@ -2645,13 +2647,11 @@ public class CartsController extends BaseCommerceController
 					//bin = getBinService().checkBin(binNo, paymentMode, null, false);
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
 				}
-				LOG.debug("************ Logged-in cart mobile promotion is valid **************" + cartGuid);
 				try
 				{
-					LOG.debug("************ Logged-in cart mobile delisting **************" + cartGuid);
 					//duplicate cart fix for mobile
 					deListedStatus = mplCartFacade.isCartEntryDelistedMobile(cart);
-					LOG.debug(MarketplacecommerceservicesConstants.CART_DELISTED_STATUS + deListedStatus);
+					LOG.debug(MarketplacecommerceservicesConstants.CART_DELISTED_STATUS + deListedStatus + "::::" + cartGuid);
 				}
 				catch (final Exception ex)
 				{

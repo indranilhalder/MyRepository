@@ -18,6 +18,7 @@
 <%@ taglib prefix="return" tagdir="/WEB-INF/tags/responsive/returns"%> 
 <!-- R2.3: Added above one line. responsive/returns -->
 
+
 <spring:url value="/my-account/profile" var="profileUrl" />
 <spring:url value="/my-account/update-profile" var="updateProfileUrl" />
 <spring:url value="/my-account/update-password" var="updatePasswordUrl" />
@@ -30,6 +31,8 @@
 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.cancel.enabled')" var="cancelFlag"/> 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')" var="returnFlag"/> 
+<!-- LW-230 -->
+<input type="hidden" id="isLuxury" value="${isLuxury}"/>
 
 <template:page pageTitle="${pageTitle}">
 	<div class="account" id="anchorHead">
@@ -123,8 +126,9 @@
 											/>  <format:price
 												priceData="${subOrder.subTotal}" />
 									</li>
-									<li><spring:theme code="text.account.order.delivery"
-											text="Delivery" /><span class="amt"> <format:price
+									<li class="shipping-li"><span class="shipping-text"><spring:theme code="text.account.order.delivery1" text="Schedule Delivery and Shipping Charges"/></span>
+									<%-- <spring:theme code="text.account.order.delivery"
+											text="Delivery" /> --%><span class="amt"> <format:price
 												priceData="${subOrder.deliveryCost}"
 												displayFreeForZero="true" />
 									</span></li>
@@ -342,9 +346,9 @@
 									<br>
 									<span data-tribhuvan="mobileNo">91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)}</span> <br>
 								</address>
-								</div>
-								</div>
-									<!-- R2.3: START -->
+							</div>
+							</div>
+							<!-- R2.3: START -->
 									<div class="col-md-4 col-sm-6">
 										<div class="editIconCSS">
 										<c:if test="${addressChangeEligible eq true}">
@@ -442,7 +446,10 @@
 											<span>${sellerOrder.code}</span>
 										</p>
 										</c:if>
-								  <!--R2.3 TISRLEE-1615- Start   -->
+										
+											
+											
+									<!--R2.3 TISRLEE-1615- Start   -->
 									     <c:choose>
 												   <c:when test="${not empty entry.selectedDeliverySlotDate}">
 													   <p>
@@ -602,7 +609,7 @@
 
 										</div>
 										<div class="actions">
-											<div class="col-md-6"> <!-- R2.3: START >
+										<div class="col-md-6"> <!-- R2.3: START >
 											<c:if
 												test="${entry.itemCancellationStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false and cancelFlag}">
 												<c:set var="bogoCheck"
@@ -618,6 +625,7 @@
 											</c:if>
 											 <%-- R2.3: START:Commented: <c:if
 												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+
 											 	<a
 													href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
 													<spring:theme code="text.account.returnReplace"
@@ -644,7 +652,7 @@
 												  	</c:otherwise>
 												</c:choose>
 												<!-- R2.3: END: -->
-
+												
 											<c:if test="${entry.showInvoiceStatus eq 'true'}">
 												<a
 													href="${request.contextPath}/my-account/order/requestInvoice?orderCode=${sellerOrder.code}&transactionId=${entry.transactionId}"
@@ -688,6 +696,7 @@
 											</div>
 											
 										</div>
+
 										<!-- R2.3 : END -->
 										<div class="modal cancellation-request fade"
 											id="cancelOrder${sellerOrder.code}${entry.mplDeliveryMode.sellerArticleSKU}${entryStatus.index}">
@@ -1512,6 +1521,7 @@
 
                                   
                                    </c:if>
+                                 
 								</c:forEach>
 															
 							</c:if> 
@@ -1630,7 +1640,10 @@
 											<spring:message code="text.orderHistory.seller.order.number"></spring:message>
 											<span>${sellerOrder.code}</span>
 										</p>
-								   <!--R2.3 TISRLEE-1615- Start   -->
+										
+											
+											
+									<!--R2.3 TISRLEE-1615- Start   -->
 								   <c:if test="${entry.mplDeliveryMode.code ne 'click-and-collect'}">
 								             <c:choose>
 												   <c:when test="${not empty entry.selectedDeliverySlotDate}">
@@ -1650,7 +1663,7 @@
 								 <!--R2.3 TISRLEE-1615- END   -->
 											<!--  Edit button and input box for  pickup Person details -->
 											
-											  <div id="pickNo" style="font-size: 12px;padding-top: 5px; display:none;"> ${sellerOrder.pickupPhoneNumber}<br> </div> 
+														<div id="pickNo" style="font-size: 12px;padding-top: 5px; display:none;"> ${sellerOrder.pickupPhoneNumber}<br> </div> 
 														&nbsp; &nbsp;
 														<c:if test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
 														<c:set var="editButton" value="enable" />  
@@ -1781,8 +1794,8 @@
 											</c:if>
 
 										</div>
-										
-											
+
+
 										<div class="actions">
 										<div class="col-md-6 col-sm-6">
 											<c:if
@@ -2570,7 +2583,7 @@
 
 
                                    </c:if>
-                                    <!-- R2.3: One line -->
+								 <!-- R2.3: One line -->
 								</c:forEach>
 								 </c:forEach> 
 							
@@ -2590,7 +2603,7 @@
 		</div>
 		
 	</div>
-	<!-- R2.3: START -->
+		<!-- R2.3: START -->
 			<div class="removeModalAfterLoad" id="changeAddressPopup">
 			  <order:changeDeliveryAddress orderDetails="${subOrder}" />
             </div>
@@ -2743,6 +2756,7 @@ $(function() {
 });
 
 	function showCancelDiv(orderLineId) {
+		
 		var divId='cancellation' + orderLineId;
 		showDiv(divId);
 
@@ -2923,7 +2937,7 @@ $(function() {
 	}	 
 	$(document).ready(function(){
 		console.log($('.item-fulfillment').length);
-		<!-- R2.3: START -->
+<!-- R2.3: START -->
 		 $("#changeAddressLink").click(function(){
 			  $(".error_text").hide();
 			  $(".addressListPop input[type='radio']").prop('checked',false);
@@ -2977,8 +2991,8 @@ $(function() {
 			// $(".pickupeditbtn").css("display","block");
 			 
 		 });
-		 
-		$("#saveBlockData").click(function(){
+
+$("#saveBlockData").click(function(){
 				$("#changeAddressPopup").hide();
 				$("#showOrderDetails").show();
 				$("#showOrderDetails").css("z-index","999999");
@@ -3141,6 +3155,7 @@ body .account .right-account .order-history.order-details li.item .item-header{m
 		left:0 !important;
 	}
 	
+
 	.submitButton {
 		margin: 60px auto;
 	}

@@ -605,10 +605,10 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 				if (totalFactorCount > 0)
 				{
 					final Set<String> validProdAUssidSet = getDefaultPromotionsManager().populateSortedValidProdUssidMap(
-							validProductAUssidMap, totalFactorCount, paramSessionContext, restrictionList, null);
+							validProductAUssidMap, totalFactorCount, paramSessionContext, restrictionList, null, getCode());
 
 					final Set<String> validProdBUssidSet = getDefaultPromotionsManager().populateSortedValidProdUssidMap(
-							validProductBUssidMap, totalFactorCount, paramSessionContext, restrictionList, null);
+							validProductBUssidMap, totalFactorCount, paramSessionContext, restrictionList, null, getCode());
 
 					validProductListA.retainAll(validProdAUssidSet);
 					validProductListB.retainAll(validProdBUssidSet);
@@ -822,6 +822,7 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 		return Registry.getApplicationContext().getBean("mplPromotionHelper", MplPromotionHelper.class);
 	}
 
+
 	/**
 	 * Building the Hash Key for Promotion
 	 *
@@ -843,3 +844,4 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 	}
 
 }
+

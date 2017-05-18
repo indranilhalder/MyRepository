@@ -58,6 +58,7 @@ public class MplDefaultPriceDataFactory extends DefaultPriceDataFactory
 
 		final String currencySymbol = currency.getSymbol();
 
+
 		final DecimalFormat df = new DecimalFormat(decimalFormat);
 		final String totalPriceFormatted = df.format(value);
 		StringBuilder stb = new StringBuilder(20);
@@ -76,7 +77,7 @@ public class MplDefaultPriceDataFactory extends DefaultPriceDataFactory
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commercefacades.product.PriceDataFactory#create(de.hybris.platform.commercefacades.product.
 	 * data.PriceDataType, java.math.BigDecimal, java.lang.String)

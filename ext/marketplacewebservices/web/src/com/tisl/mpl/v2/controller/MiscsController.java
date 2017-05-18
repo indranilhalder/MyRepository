@@ -273,21 +273,23 @@ public class MiscsController extends BaseController
 	@Resource(name = "categoryService")
 	private CategoryService categoryService;
 
-
-
-
-
-	/**
-	 * =======
+	//	private static final String APPLICATION_TYPE = "application/json";
+	//	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
+	/*
+	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
+	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
+	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 	 *
-	 * @Resource(name = "categoryService") private CategoryService categoryService; /*
+	 * /**
+	 *
+	 * /*
+	 *
 	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
 	 *                APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
 	 *                "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 	 *
 	 *                /**
 	 *
-	 *                >>>>>>> origin/GOLDEN_PROD_SUPPORT_07122016
 	 * @return the configurationService
 	 */
 	@Autowired
@@ -314,7 +316,6 @@ public class MiscsController extends BaseController
 	private PinCodeServiceAvilabilityFacade pinCodeFacade;
 	@Autowired
 	private PriceDataFactory priceDataFactory;
-
 	@Autowired
 	private BaseSiteService baseSiteService;
 	@Autowired

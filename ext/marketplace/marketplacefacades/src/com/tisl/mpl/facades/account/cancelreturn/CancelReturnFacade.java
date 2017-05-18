@@ -29,6 +29,7 @@ import com.tisl.mpl.wsdto.ReturnPincodeDTO;
 import com.tisl.mpl.wsdto.ReturnRequestDTO;
 
 
+
 /**
  * @author TCS
  *
@@ -81,7 +82,6 @@ public interface CancelReturnFacade
 	 * @param ussid
 	 * @param customerData
 	 * @param subOrderModel
-	 *
 	 * @param returnAddress
 	 * @param returnInfoData
 	 * @return CRMTicketStatus
@@ -95,6 +95,7 @@ public interface CancelReturnFacade
 	/**
 	 * @param order
 	 * @param orderLineId
+	 * @return
 	 * @throws Exception
 	 */
 	public List<OrderEntryData> associatedEntriesData(OrderModel order, String orderLineId) throws Exception;
@@ -174,6 +175,7 @@ public interface CancelReturnFacade
 
 	public List<ReturnRequestModel> getListOfReturnRequest(String orderId);
 
+
 	/**
 	 * @author Techouts
 	 * @param subOrderDetails
@@ -199,6 +201,7 @@ public interface CancelReturnFacade
 	 * @param transId
 	 * @return
 	 */
+
 	List<ReturnLogisticsResponseData> checkReturnLogistics(OrderData orderDetails, String pincode, String transId);
 
 
@@ -243,6 +246,7 @@ public interface CancelReturnFacade
 
 	public ReturnPincodeDTO checkReturnLogisticsForApp(final OrderData orderDetails, final String pincode,
 			final String returntransactionId);
+
 
 	//TPR-1345:One touch cancel return--START
 	/**
@@ -294,3 +298,7 @@ public interface CancelReturnFacade
 	//TPR-1345:One touch cancel return--END
 
 }
+
+
+
+

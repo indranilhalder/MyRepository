@@ -16,8 +16,7 @@
 			<ycommerce:testId code="productDetails_promotion_label">
 			
 					<c:choose>
-					<c:when test="${not empty product.potentialPromotions}"> 
-								<input type="hidden" value='${product.potentialPromotions}' id="promolist"/>
+					<c:when test="${not empty product.potentialPromotions}">								
 			<%-- 	<c:if test="${not empty product.potentialPromotions}"> --%>
 					<%-- <c:choose>
 				<c:when test="${not empty product.potentialPromotions[0].couldFireMessages}">
@@ -30,8 +29,14 @@
 								test="${not empty product.potentialPromotions[0].channels}">
 								<c:forEach var="channel"
 									items="${product.potentialPromotions[0].channels}">
+									
+									
 									<c:if test="${channel eq 'Web'||channel eq ''||channel==null}">
+									 <!-- TISSQAUAT-472 starts here -->
+									 <input type="hidden" value="${channel}" id="promolist"/>
+									 <!-- TISSQAUAT-472 ends here -->
 									 <li>
+									 
 									 <div class="offer-modal-heading">OFFER</div>
 									 <div class="offer-outer-wrapper">
 									 <h3 class="product-name highlight mob-promo primary_promo_title">
@@ -84,6 +89,17 @@
 												</div>
 											</div>
 										</div>
+										
+										<!-- TISSQAUAT-472 starts here -->
+										</br>
+										<c:if test="${not empty product.potentialPromotions[0].termsAndConditions}">
+											<div class="show-termsConditions">
+											<span class="from">Terms and Conditions:</span>
+											<span class="terms-text"><p>${product.potentialPromotions[0].termsAndConditions}</p></span>
+											</div>											
+										</c:if>
+										<!-- TISSQAUAT-472 ends here -->
+										
 										</div>
 									 </li>
 									</c:if>
@@ -92,6 +108,9 @@
 							</c:when>
 							<c:otherwise>
 								<c:if test="${not empty product.potentialPromotions[0]}">
+								<!-- TISSQAUAT-472 starts here -->
+								<input type="hidden" value="All" id="promolist"/>
+								<!-- TISSQAUAT-472 ends here -->
 								 <li>
 								 <div class="offer-modal-heading">OFFER</div>
 								 <div class="offer-outer-wrapper">
@@ -129,23 +148,32 @@
 										<div class="show-date">
 											<p>${product.potentialPromotions[0].description}</p>
 											<div class="offer-date">
-											<div class="from-date">
-											<span class="from">From:</span>
-											<span class="date-time"><fmt:formatDate pattern="dd/MM/yyyy"
-												value="${product.potentialPromotions[0].startDate}" /></span>
-												<span class="date-time"><fmt:formatDate pattern="h:mm:ss a"
-												value="${product.potentialPromotions[0].startDate}" /></span>
+												<div class="from-date">
+													<span class="from">From:</span>
+													<span class="date-time"><fmt:formatDate pattern="dd/MM/yyyy"
+													value="${product.potentialPromotions[0].startDate}" /></span>
+													<span class="date-time"><fmt:formatDate pattern="h:mm:ss a"
+													value="${product.potentialPromotions[0].startDate}" /></span>
 												</div>
 												<div class="to-date">
-											<span class="to">To:</span>
-											<span class="date-time"><fmt:formatDate pattern="dd/MM/yyyy"
-												value="${product.potentialPromotions[0].endDate}" /></span>
-											<span class="date-time"><fmt:formatDate pattern="h:mm:ss a"
-												value="${product.potentialPromotions[0].endDate}" /></span>
+													<span class="to">To:</span>
+													<span class="date-time"><fmt:formatDate pattern="dd/MM/yyyy"
+													value="${product.potentialPromotions[0].endDate}" /></span>
+													<span class="date-time"><fmt:formatDate pattern="h:mm:ss a"
+													value="${product.potentialPromotions[0].endDate}" /></span>
 												</div>
+											</div>
 										</div>
-										</div>
+										<br>
 									</div>
+
+									</br>
+										<c:if test="${not empty product.potentialPromotions[0].termsAndConditions}">
+											<div class="show-termsConditions">
+											<span class="from">Terms and Conditions:</span>
+											<span class="terms-text"><p>${product.potentialPromotions[0].termsAndConditions}</p></span>
+											</div>											
+										</c:if>	
 									</div>
 									</li>
 								</c:if>
