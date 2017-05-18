@@ -834,4 +834,6 @@ public final class ModelAttributetConstants
 	public static final String RETURN_SCHEDULE_INFO ="ScheduleDatesEmpty";
 	
 	public static final String TSHIP ="TSHIP";
+	public static final String NO ="no";
+	
 }

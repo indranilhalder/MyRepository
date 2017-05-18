@@ -1777,7 +1777,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					if (productModel != null && productModel.getRichAttribute() != null)
 					{
 						productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
-						if (productRichAttributeModel != null && productRichAttributeModel.get(0).getScheduledDelivery() != null)
+						if (productRichAttributeModel != null && !productRichAttributeModel.isEmpty() && productRichAttributeModel.get(0).getScheduledDelivery() != null)
 						{
 							productRichAttr = productRichAttributeModel.get(0).getScheduledDelivery().toString();
 						}
