@@ -29,11 +29,11 @@
 			<%-- <c:forEach items="${component.footerImageList}" var="banner">
 					<a href="${banner.urlLink}" ><span class="spriteImg"></span></a>
 			</c:forEach> --%>
-			<a href="https://plus.google.com/107413929814020009505" class="gplus"><span class="spriteImg"></span></a>
-			<a href="https://www.facebook.com/TataCLiQ/" class="facebook"><span class="spriteImg"></span></a>
-			<a href="https://twitter.com/tatacliq" class="twitter"><span class="spriteImg"></span></a>
-			<a href="https://www.instagram.com/tatacliq/" class="insta"><span class="spriteImg"></span></a>
-			<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" class="youtube"><span class="spriteImg"></span></a>
+			<a href="https://plus.google.com/107413929814020009505" class="gplus" target="_blank"><span class="spriteImg"></span></a>
+			<a href="https://www.facebook.com/TataCLiQ/" class="facebook" target="_blank"><span class="spriteImg"></span></a>
+			<a href="https://twitter.com/tatacliq" class="twitter" target="_blank"><span class="spriteImg"></span></a>
+			<a href="https://www.instagram.com/tatacliq/" class="insta" target="_blank"><span class="spriteImg"></span></a>
+			<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" class="youtube" target="_blank"><span class="spriteImg"></span></a>
 		</div>
 	</div>
 	
