@@ -386,9 +386,15 @@ protected class JuspayPaymentEventListener implements EventListener
 					Map data = Collections.singletonMap("refresh", Boolean.TRUE);
 					((CheckoutController) widget.getWidgetController()).getBasketController()
 					.dispatchEvent(null, widget.getWidgetController(), data);
+					
+					String absoluteJusPayPaymentURL = configurationService.getConfiguration().getString(MarketplaceCockpitsConstants.JUSPAYPAYMENTPAGEURL)
+							+ jsuPayCreatedOrderId;
+					LOG.info("juspaymnet page url  :: "+absoluteJusPayPaymentURL);
+					
+					//Clients.evalJavaScript("window.open('" + absoluteJusPayPaymentURL + "')");
+					Clients.evalJavaScript("window.location.href = '"+ absoluteJusPayPaymentURL +"'");
 				}
 			} 
-			
 			catch (Exception e) 
 			{
 				Messagebox.show(LabelUtils.getLabel(widget, e.getLocalizedMessage(),

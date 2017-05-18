@@ -680,7 +680,7 @@ public class MarketplaceCheckoutControllerImpl extends
 		}
 		return nonCodProduct;
 	}
-
+	
 	@Override
 	public boolean processPayment(CartModel cart) throws PaymentException,
 			ValidationException ,Exception{
@@ -930,16 +930,6 @@ public class MarketplaceCheckoutControllerImpl extends
 				cardSaved + "|" + sameAsShipping, returnUrlBuilder.toString(),
 				uid, "WEB");
 		LOG.info("order id ::: "+orderId);
-		final String jsuPayCreatedOrderId = (String) JaloSession.getCurrentSession().getAttribute("jusPayEndOrderId");
-		LOG.info("juspay order id ::: "+jsuPayCreatedOrderId);
-		if(jsuPayCreatedOrderId != null && StringUtils.isNotEmpty(jsuPayCreatedOrderId))
-		{
-			String absoluteJusPayPaymentURL = configurationService.getConfiguration().getString(MarketplaceCockpitsConstants.JUSPAYPAYMENTPAGEURL)
-					+ jsuPayCreatedOrderId;
-			LOG.info("juspaymnet page url  :: "+absoluteJusPayPaymentURL);
-			
-			Clients.evalJavaScript("window.open('" + absoluteJusPayPaymentURL + "')");
-		}
 	}
 
 	@Override
