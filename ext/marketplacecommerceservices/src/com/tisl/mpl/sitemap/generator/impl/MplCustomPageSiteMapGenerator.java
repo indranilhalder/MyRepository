@@ -75,6 +75,8 @@ public class MplCustomPageSiteMapGenerator extends AbstractSiteMapGenerator<Cust
 
 
 
+
+
 	/**
 	 * This method returns custom data for all categry, category landing, custom and home pages for TPR-1285 Dynamic
 	 * sitemap
@@ -124,6 +126,10 @@ public class MplCustomPageSiteMapGenerator extends AbstractSiteMapGenerator<Cust
 		}
 		final List<CustomPageData> removeUrlBlankList = new ArrayList<CustomPageData>();
 		final List<CustomPageData> addfrontSlashList = new ArrayList<CustomPageData>();
+		final String[] excludedKeywordsStartswith = configurationService.getConfiguration()
+				.getString("mpl.sitemap.excludeKeywords.startsWith").split(",");
+		final String[] excludedKeywordsEqual = configurationService.getConfiguration()
+				.getString("mpl.sitemap.excludeKeywords.equals").split(",");
 		if (CollectionUtils.isNotEmpty(mainSiteMapUrlList))
 		{
 
@@ -145,6 +151,27 @@ public class MplCustomPageSiteMapGenerator extends AbstractSiteMapGenerator<Cust
 
 					addfrontSlashList.add(cpd);
 				}
+				//check for excluded keywords that starts with
+				for (final String keyword : excludedKeywordsStartswith)
+				{
+
+					if (pageData.getUrl().toUpperCase().startsWith(keyword.toUpperCase()))
+					{
+						removeUrlBlankList.add(pageData);
+
+					}
+				}
+				//check for excluded equal keywords
+				for (final String keyword : excludedKeywordsEqual)
+				{
+
+					if (pageData.getUrl().equalsIgnoreCase(keyword))
+					{
+						removeUrlBlankList.add(pageData);
+
+					}
+				}
+
 			}
 		}
 		mainSiteMapUrlList.removeAll(removeUrlBlankList);
