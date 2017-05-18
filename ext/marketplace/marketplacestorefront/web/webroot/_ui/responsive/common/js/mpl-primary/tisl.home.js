@@ -412,7 +412,7 @@ function getBrandsYouLoveAjaxCall() {
 	            				stagePadding: 90,
 	            			},
 	            			// breakpoint from 768 up
-	            			1280 : {
+	            			1080 : {
 	            				items:7,
 	            			}			
 	            		}		
@@ -966,7 +966,7 @@ function getBestPicksAjaxCall() {
 	            				items:3,
 	            			},
 	            			// breakpoint from 768 up
-	            			1280 : {
+	            			1080 : {
 	            				items:5,
 	            			}			
 	            		}		
@@ -1095,7 +1095,7 @@ function getProductsYouCareAjaxCall() {
 									items : 3,
 								},
 								// breakpoint from 768 up
-								1280 : {
+								1080 : {
 									items : 4,
 								}
 
@@ -1672,6 +1672,7 @@ $(window).on('resize', function() {
 		   $(this).removeAttr("data-src");
 	   });
    }); 
+   showMobileShowCase();
 });
 
 
@@ -2452,3 +2453,86 @@ $(document).ready(function()
 			$(".body-Content").css("padding-bottom",ht);
 		}
 		/*End TISSQAEE-325*/
+
+		
+		function showMobileShowCase(){
+			var env = $("#previewVersion").val();
+				if (env == "true") {
+					var dataString = 'version=Staged';
+				} else {
+					var dataString = 'version=Online';
+				}
+				if (window.localStorage && (html = window.localStorage.getItem("showcaseContentMobile")) && html != "") {
+					$('#showcaseMobile').html(decodeURI(html));
+				}else{
+				$.ajax({
+			            type: "GET",
+			            dataType: "json",
+			            url: ACC.config.encodedContextPath +
+			                "/getCollectionShowcase",
+			            data: dataString,
+			            success: function(response) {
+						var showCaseMobile = '<h2>'+response.title+'</h2>';
+						showCaseMobile+= '<div class="owl-carousel showcase-carousel">';
+							$.each(response.subComponents, function(k, v) {	
+								  showCaseMobile+= getShowcaseMobileContentAjaxCall(v.compId);
+								 
+							});
+							showCaseMobile+= '</div>';
+							$('#showcaseMobile').html(showCaseMobile);
+							window.localStorage.setItem("showcaseContentMobile",encodeURI(showCaseMobile));
+			             },
+						complete:function(){
+						$(".showcase-carousel").owlCarousel({
+						items:1,
+			    		loop: $(".showcase-carousel img").length == 1 ? false : true,
+			    		navText:[],
+			    		nav:true,
+			    		dots:false
+					});
+						},
+			            error: function() {
+			                console.log("Error while getting showcase");
+			            }
+			        });
+				}
+			}
+
+
+			function getShowcaseMobileContentAjaxCall(id){
+			var showCaseMobile = '';
+			            $.ajax({
+			                type: "GET",
+			                dataType: "json",
+							async:false,
+			                beforeSend: function() {
+			                	var staticHost=$('#staticHost').val();
+			                    /*$(".showcase-switch").css("margin-bottom",
+			                        "80px");
+			                    $("#showcase").append(
+			                        "<div class='loaderDiv' style='z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;'><img src='"+staticHost+"/_ui/responsive/common/images/red_loader.gif'/></div>"
+			                    );*/
+			                },
+			                url: ACC.config.encodedContextPath +
+			                    "/getShowcaseContent",
+			                data: {
+			                    "id": id
+			                },
+			                success: function(response) {
+			                 
+			                showCaseMobile+= '<div class="item showcase-section">';
+							showCaseMobile+= '<div class="desc-section">'+response.text;
+							showCaseMobile+= '<img class="lazy" src="'+response.bannerImageUrl+'">'
+							showCaseMobile+= '</div>'
+							showCaseMobile+= '</div>';               
+			                },
+			                error: function() {
+			                    console.log(
+			                        "Error while getting showcase content");
+			                    //$('#showcase .loaderDiv').remove();
+			                    //$(".showcase-switch").css("margin-bottom",
+			                       // "0px");
+			                }
+			            });
+			return showCaseMobile;
+			}		
