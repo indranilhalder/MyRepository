@@ -297,20 +297,59 @@
 					  
 				<c:choose>
 					<c:when test="${isMinificationEnabled}">
+					<!-- UF-95 Starts below:This is to bring the gigya call up in the call stack for login/checkout login page -->
+						<script type="text/javascript">
+						var gigyasocialloginurl='${gigyasocialloginurl}';
+						var gigyaApiKey='${gigyaAPIKey}';
+						var commonResource='${commonResourcePath}';
+						var buildNumber='${buildNumber}'; 
+						$.ajax({
+					        type: "GET",
+					        url:gigyasocialloginurl+'?apikey='+gigyaApiKey,
+					        success: function() {
+					        	 $.ajax({
+					 		        type: "GET",
+					 		        url: commonResource+'/js/minified/acc.gigya.min.js?v='+buildNumber,
+					 		        success: function() {
+					 		        	 $(document).ready(function () {
+					 		        		loadGigya();
+					 		        	});
+					 		        },
+					 		        dataType: "script",
+					 		        cache: true
+					 		    });
+					        },
+					        dataType: "script",
+					        cache: true
+					    });	
+						</script>
+					</c:when>
+					<c:otherwise>
 						<script type="text/javascript">
 						var gigyasocialloginurl='${gigyasocialloginurl}';
 						var gigyaApiKey='${gigyaAPIKey}';
 						var commonResource='${commonResourcePath}';
 						var buildNumber='${buildNumber}'; 
 						$(document).ready(function(){
-							callGigya();
-						});
-						</script>
-					</c:when>
-					<c:otherwise>
-						<script type="text/javascript">
-						$(document).ready(function(){
-							callGigyaWhenNotMinified();
+							$.ajax({
+						        type: "GET",
+						        url:gigyasocialloginurl+'?apikey='+gigyaApiKey,
+						        success: function() {
+						        	 $.ajax({
+						 		        type: "GET",
+						 		        url: commonResource+'/js/minified/acc.gigya.js?v='+buildNumber,
+						 		        success: function() {
+						 		        	$(document).ready(function () {
+						 		        		loadGigya();
+						 		        	});
+						 		        },
+						 		        dataType: "script",
+						 		        cache: true
+						 		    });
+						        },
+						        dataType: "script",
+						        cache: true
+						    });
 						});
 						</script>
 					</c:otherwise>
@@ -378,7 +417,6 @@
 	
 	<%-- Inject any additional JavaScript required by the page --%>
 	<jsp:invoke fragment="pageScripts"/>	
-
 	
 </body>
 
