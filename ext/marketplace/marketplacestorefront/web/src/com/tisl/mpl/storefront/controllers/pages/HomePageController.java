@@ -85,6 +85,7 @@ import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
+import com.tisl.mpl.storefront.controllers.helpers.UAgentInfo;
 import com.tisl.mpl.storefront.util.CSRFTokenManager;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
@@ -143,7 +144,6 @@ public class HomePageController extends AbstractPageController
 	@Resource(name = "mplCmsFacade")
 	private MplCmsFacade mplCmsFacade;
 
-
 	/**
 	 * @return the notificationFacade
 	 */
@@ -197,17 +197,20 @@ public class HomePageController extends AbstractPageController
 	 * @return getViewForPage
 	 * @throws CMSItemNotFoundException
 	 */
+	@SuppressWarnings("boxing")
 	@RequestMapping(method = RequestMethod.GET)
 	public String home(
 			@RequestParam(value = ModelAttributetConstants.LOGOUT, defaultValue = ModelAttributetConstants.FALSE) final boolean logout,
-			final Model model, final RedirectAttributes redirectModel) throws CMSItemNotFoundException
+			final Model model, final RedirectAttributes redirectModel, final HttpServletRequest request)
+			throws CMSItemNotFoundException
 	{
 		if (logout)
 		{
 			//GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.INFO_MESSAGES_HOLDER, "account.confirmation.signout.title");
 			return REDIRECT_PREFIX + ROOT;
 		}
-
+		final UAgentInfo agentInfo = new UAgentInfo(request.getHeader("User-Agent"), null);
+		model.addAttribute("isMobile", agentInfo.detectMobileLong());
 		storeCmsPageInModel(model, getContentPageForLabelOrId(null));
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(null));
 		updatePageTitle(model, getContentPageForLabelOrId(null));
@@ -1155,7 +1158,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 *
+					 * 
 					 * }
 					 */
 
