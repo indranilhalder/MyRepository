@@ -359,7 +359,7 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 
 	/**
 	 * @param cookieGenerator
-	 *           the cookieGenerator to set
+	 *           the cookieGenerator to set 
 	 */
 	@Required
 	public void setCookieGenerator(final CookieGenerator cookieGenerator)
