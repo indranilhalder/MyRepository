@@ -447,8 +447,6 @@ display:none;
    <!-- CKD:TPR-250-Start-->
 				<c:set var="clickableBrandname" value="${msiteBrandName}"/>
 				<c:set var="clickableBrandCode" value="${msiteBrandCode}"/>
-				<!-- forcibly making brand non-clickable for time bieng -->
-				<c:set var="clickableBrandCode" value=""/>
 				<c:choose>
 					<c:when test="${not empty clickableBrandname && not empty clickableBrandCode}">
 						<h2 class="company">

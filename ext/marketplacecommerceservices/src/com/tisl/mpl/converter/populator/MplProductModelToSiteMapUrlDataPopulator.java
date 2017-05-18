@@ -73,11 +73,7 @@ public class MplProductModelToSiteMapUrlDataPopulator extends ProductModelToSite
 	@Override
 	public void populate(final ProductModel productModel, final SiteMapUrlData siteMapUrlData) throws ConversionException
 	{
-		LOG.info("Inside MplProductModelToSiteMapUrlDataPopulator");
-
-		// set the catalog version for the current session
-
-
+		
 
 		final String relUrl = StringEscapeUtils.escapeXml(getUrlResolver().resolve(productModel));
 
