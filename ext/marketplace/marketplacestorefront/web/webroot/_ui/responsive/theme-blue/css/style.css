@@ -33336,7 +33336,7 @@ header > .content .bottom .search form input {
 	    z-index: 999;
 	}
 	header > .content .top .right > ul:first-child > li > div.bgred {
-	    background: #000 none repeat scroll 0 0;
+	    background: #a9133d none repeat scroll 0 0;
 	    color: #fff;
 	}
 	header > .content .top .right > ul:first-child > li > div.bgred + #mobile-menu-toggle:after {
@@ -55328,7 +55328,8 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
  /*confidence callout start*/
  .callouts {
     background: #f9f9f9;
-    margin: 50px 0 0;
+    margin: 50px auto 0;
+    max-width: 1400px; /* UF-290 */
 }
 
 
@@ -61015,6 +61016,9 @@ body.template-pages-layout-footwearCategoryLandingPage #categoryPageDeptHierTree
 	font-size: 11px;    
 	padding-top: 10px; 
 	color: #535353;
+	max-width: 1400px; /*UF-290*/
+    margin-left: auto !important; /*UF-290*/
+    margin-right: auto !important; /*UF-290*/
 }
 .breadcrumbs li {
 	color: #535353; 
@@ -66995,7 +66999,7 @@ header .content .right > ul > li.wishlist #myWishlistHeader{
 }
 @media (min-width:791px){
 header .content .top {
-    background: #000;
+    background: #a9133d;
     min-height: 36px;
 }
 header .content .bottom{
@@ -68518,3 +68522,10 @@ header .content .bottom:not(.active) .bag:after{
 	display: none;
 }
 /* Homepage changes end */
+/*UF-290 change start*/
+ @media(min-width:1401px){
+ 	.listing.wrapper .left-block.fix {
+     left: auto;
+ }
+ }
+ /*UF-290 change end*/ 
