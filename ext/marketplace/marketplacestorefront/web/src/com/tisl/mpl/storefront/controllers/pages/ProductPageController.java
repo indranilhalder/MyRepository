@@ -3088,8 +3088,7 @@ public class ProductPageController extends MidPageController
 		String brandCode = null;
 		if (StringUtils.isNotBlank(superCategories))
 		{
-			superCatArray = superCategories.split(MplConstants.COMMA);
-		}
+			superCatArray = superCategories.split(MplConstants.COMMA);	
 		for (final String superCat : superCatArray)
 		{
 			if (superCat.toUpperCase().startsWith(MplConstants.BRAND_HIERARCHY_ROOT_CATEGORY_CODE))
@@ -3097,6 +3096,7 @@ public class ProductPageController extends MidPageController
 				brandCode = superCat;
 				break;
 			}
+		    }
 		}
 		return brandCode;
 	}
