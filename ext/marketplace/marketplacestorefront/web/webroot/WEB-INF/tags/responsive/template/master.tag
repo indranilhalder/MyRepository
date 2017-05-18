@@ -292,6 +292,31 @@
 		<c:choose>
 			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method/') or 
 					  fn:contains(requestScope['javax.servlet.forward.request_uri'],'/payment-method/')}"></c:when>
+			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/checkoutlogin/login') or 
+					  fn:contains(requestScope['javax.servlet.forward.request_uri'],'/login')}">
+					  
+				<c:choose>
+					<c:when test="${isMinificationEnabled}">
+						<script type="text/javascript">
+						var gigyasocialloginurl='${gigyasocialloginurl}';
+						var gigyaApiKey='${gigyaAPIKey}';
+						var commonResource='${commonResourcePath}';
+						var buildNumber='${buildNumber}'; 
+						$(document).ready(function(){
+							callGigya();
+						});
+						</script>
+					</c:when>
+					<c:otherwise>
+						<script type="text/javascript">
+						$(document).ready(function(){
+							callGigyaWhenNotMinified();
+						});
+						</script>
+					</c:otherwise>
+				</c:choose>
+			
+			</c:when>
 		<c:otherwise>
 		<c:choose>
  		<c:when test="${isMinificationEnabled}">
