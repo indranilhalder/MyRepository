@@ -525,45 +525,9 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 				
 				CartModel cartModel = (CartModel) orderEntry.getOrder();
 				orderEntry.setScheduledDeliveryCharge(0.0D);
-				// INC-144316545- Delivery Charge Issue START
-				Double totalDeliverycost=0.0D;
-				Double deliveryCost = 0.0D;
-				Double scheduleDelCharges = 0.0D;
 				modelService.save(orderEntry);
-				modelService.save(cartModel);
-				modelService.refresh(orderEntry);
-				if(null !=cartModel && null !=cartModel.getEntries() ) {
-					for (AbstractOrderEntryModel cartEntry : cartModel.getEntries()) {
-						if(null != cartEntry.getMplDeliveryMode() && null !=cartEntry.getMplDeliveryMode().getValue()) {
-							deliveryCost+=cartEntry.getMplDeliveryMode().getValue();
-						}
-						if(null != cartEntry.getScheduledDeliveryCharge() && cartEntry.getScheduledDeliveryCharge()>0.0D) {
-							scheduleDelCharges+=cartEntry.getScheduledDeliveryCharge();
-							modelService.save(cartEntry);
-						}
-					}
-				}
-//				for (AbstractOrderEntryModel cartEntry : cartModel.getEntries()) {
-//					deliveryCost+=cartEntry.getMplDeliveryMode().getValue();
-//					if(null != cartEntry.getScheduledDeliveryCharge() && cartEntry.getScheduledDeliveryCharge()>0.0D) {
-//						scheduleDelCharges+=cartEntry.getScheduledDeliveryCharge();
-//						modelService.save(cartEntry);
-//					}
-//				}
-				if(null != deliveryCost && deliveryCost >0.0) {
-					totalDeliverycost+=deliveryCost;
-				}
-				if(null != scheduleDelCharges && scheduleDelCharges >0.0) {
-					totalDeliverycost+=scheduleDelCharges;
-				}
-				cartModel.setDeliveryCost(totalDeliverycost);
-				try {
-					modelService.save(cartModel);
-					commerceCartService.recalculateCart(cartModel);
-					((BasketController)widget.getWidgetController().getBasketController()).dispatchEvent(null, widget, null);
-				}catch(Exception e) {
-					e.printStackTrace();
-				}
+				// INC-144316545- Delivery Charge Issue START
+				  recalculateCart(widget,cartModel);
 				// INC-144316545- Delivery Charge Issue END
 			}catch(ModelSavingException e) {
 				LOG.error("Exception while saving the date and tme"+e.getMessage());
@@ -637,51 +601,46 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 			ScheduleDeliveryCharges = ((MarketplaceCheckoutController) widget.getWidgetController()).getScheduleDeliveryCharges();
 			orderEntry.setScheduledDeliveryCharge(ScheduleDeliveryCharges);
 			modelService.save(orderEntry);
-			modelService.save(cartModel);
-			modelService.refresh(cartModel);
 			// INC-144316545- Delivery Charge Issue START
-			Double totalDeliverycost=0.0D;
-			Double deliveryCost = 0.0D;
-			Double scheduleDelCharges = 0.0D;
-			if(null !=cartModel && null !=cartModel.getEntries() ) {
-				for (AbstractOrderEntryModel cartEntry : cartModel.getEntries()) {
-					if(null != cartEntry.getMplDeliveryMode() && null !=cartEntry.getMplDeliveryMode().getValue()) {
-						deliveryCost+=cartEntry.getMplDeliveryMode().getValue();
-					}
-					if(null != cartEntry.getScheduledDeliveryCharge() && cartEntry.getScheduledDeliveryCharge()>0.0D) {
-						scheduleDelCharges+=cartEntry.getScheduledDeliveryCharge();
-						modelService.save(cartEntry);
-					}
-					}
-			}
-			
-			if(null != deliveryCost && deliveryCost >0.0) {
-				totalDeliverycost+=deliveryCost;
-			}
-			if(null != scheduleDelCharges && scheduleDelCharges >0.0) {
-				totalDeliverycost+=scheduleDelCharges;
-			}
-			cartModel.setDeliveryCost(totalDeliverycost);
-			modelService.save(cartModel);
-			try {
-				commerceCartService.recalculateCart(cartModel);
-			} catch (CalculationException e) {
-				LOG.error("Exception occurred while recalculating cart"+e.getMessage());
-			}
-			//modelService.save(cartModel);
-		//	modelService.refresh(cartModel);
+			recalculateCart(widget,cartModel);
 			// INC-144316545- Delivery Charge Issue END
-			try {
-				((BasketController)widget.getWidgetController().getBasketController()).dispatchEvent(null, widget, null);
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-
 		}catch(Exception e) {
 			LOG.error("Exception occurred While Saving Order Entry"+e.getMessage());
 		}
 	}
 
+	// Recalculating order After Selecting/Re-Setting Delivery Slot
+	private void recalculateCart(ListboxWidget<CheckoutCartWidgetModel, CheckoutController> widget, CartModel cartModel) {
+		Double totalDeliverycost=0.0D;
+		Double deliveryCost = 0.0D;
+		Double scheduleDelCharges = 0.0D;
+		if(null !=cartModel && null !=cartModel.getEntries() ) {
+			for (AbstractOrderEntryModel cartEntry : cartModel.getEntries()) {
+				if(null != cartEntry.getMplDeliveryMode() && null !=cartEntry.getMplDeliveryMode().getValue()) {
+					deliveryCost+=cartEntry.getMplDeliveryMode().getValue();
+				}
+				if(null != cartEntry.getScheduledDeliveryCharge() && cartEntry.getScheduledDeliveryCharge()>0.0D) {
+					scheduleDelCharges+=cartEntry.getScheduledDeliveryCharge();
+				}
+			}
+		}
+		if(null != deliveryCost && deliveryCost >0.0) {
+			totalDeliverycost+=deliveryCost;
+		}
+		if(null != scheduleDelCharges && scheduleDelCharges >0.0) {
+			totalDeliverycost+=scheduleDelCharges;
+		}
+		cartModel.setDeliveryCost(totalDeliverycost);
+		modelService.save(cartModel);
+		try {
+			commerceCartService.recalculateCart(cartModel);
+		} catch (CalculationException e) {
+			LOG.error("Exception occurred while recalculating cart"+e.getMessage());
+		}
+		((BasketController)widget.getWidgetController().getBasketController()).dispatchEvent(null, widget, null);
+	}
+	
+	
 	private Map<String, List<String>> getDateAndTimeMap(String timeSlotType,
 			String edd) throws java.text.ParseException {
 		return mplDeliveryAddressController.getDateAndTimeMap(timeSlotType,edd); 
