@@ -20,9 +20,12 @@ import de.hybris.platform.ordercancel.model.OrderCancelRecordEntryModel;
 import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReplacementEntryModel;
 import de.hybris.platform.returns.model.ReturnOrderModel;
+
 import java.util.Date;
+
 import com.tisl.mpl.core.model.FreebieDetailModel;
 import com.tisl.mpl.core.model.ProductFreebieDetailModel;
+
 
 /**
  * Global class for all Marketplacecommerceservices constants. You can add global constants for your extension into this
@@ -1422,7 +1425,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String DEFAULT_START_TIME = "1";
 	public static final String DEFAULT_END_TIME = "2";
 	public static final String DELIVERYMODE_DESC_PREFIX = "Delivered in ";
-	public static final String DELIVERYMODE_DESC_SUFFIX = " business days";
+	public static final String DELIVERYMODE_DESC_SUFFIX = " days";
 
 	public static final String ORDER_HISTORY_DURATION_DAYS = "order.history.duration.days";
 	public static final String ORDER_HISTORY_DEFAULT_DURATION_DAYS = "180";
