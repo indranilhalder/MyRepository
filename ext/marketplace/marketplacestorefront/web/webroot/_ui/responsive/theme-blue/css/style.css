@@ -68578,7 +68578,8 @@ header .content .bottom:not(.active) .bag:after{
 	header .content .left,
 	header .content .right>ul>li.download-app,
 	header .content .right>ul>li.store-locator-header,
-	header .content .right>ul>li.track:not(.trackOrder){
+	header .content .right>ul>li.track:not(.trackOrder),
+	header .content .right>ul>li.track_order_header{
 	display: none;
 	}
 }
