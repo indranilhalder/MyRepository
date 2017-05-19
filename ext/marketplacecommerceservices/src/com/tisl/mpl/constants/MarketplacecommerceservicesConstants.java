@@ -1867,6 +1867,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	// OIS store manager agent group
 	public static final String CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP = "cscockpit.user.group.storemanageragentgroup";
 
+	public static final String CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP = "storemanageragentgroup";
+
 	//Query for fetching invalidation of a particular order-voucher-user
 	public static final String VOUCHERINVALIDATIONQUERY = "select {pk} from {voucherinvalidation} where {order}=?order and {user}=?user and {voucher}=?voucher ";
 	// Agent specific order search query
