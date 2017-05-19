@@ -141,7 +141,7 @@ public class MplCustomPageSiteMapGenerator extends AbstractSiteMapGenerator<Cust
 					removeUrlBlankList.add(pageData);
 				}
 				//check if / is present
-				if (!pageData.getUrl().startsWith("/"))
+				else if (!pageData.getUrl().startsWith("/"))
 				{
 					removeUrlBlankList.add(pageData);
 					final CustomPageData cpd = new CustomPageData();

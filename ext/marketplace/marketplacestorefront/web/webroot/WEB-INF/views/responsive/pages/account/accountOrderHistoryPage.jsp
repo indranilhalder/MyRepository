@@ -87,7 +87,7 @@
 				<div class="order-history">
 					<div class="navigation" id=order_pagination>
 						<h2>
-							<spring:theme text="Order History" />
+							<spring:theme text="My Orders" />		<!--  UF-249 text change -->
 						</h2>
 						<c:if test="${not empty searchPageData.results}">
 						<!-- TISPRO-48 ---- Set values in hidden filed for lazy loading pagination -->

@@ -412,7 +412,7 @@ function getBrandsYouLoveAjaxCall() {
 	            				stagePadding: 90,
 	            			},
 	            			// breakpoint from 768 up
-	            			1280 : {
+	            			1080 : {
 	            				items:7,
 	            			}			
 	            		}		
@@ -473,7 +473,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
         if (window.localStorage && (html = window.localStorage.getItem(
             "brandContent-" + id)) && html != "") {
             // console.log("Local");
-            $(".home-brands-you-love-carousel").css("margin-bottom", "50px");
+            $(".home-brands-you-love-carousel").css("margin-bottom", "33px");  /*UF-249*/
             //$('#brandsYouLove').append(defaultHtml);
             $('.home-brands-you-love-desc').remove();
             $('#brandsYouLove').append(decodeURI(html));
@@ -501,7 +501,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                         "<div class='home-brands-you-love-desc'>";
                     if (typeof response.text !== "undefined") {
                         defaultHtml += response.text;
-                    }
+                    } /* UF-249*/
                     if (typeof response.firstProductImageUrl !==
                         "undefined") {
                         defaultHtml +=
@@ -547,12 +547,12 @@ function getBrandsYouLoveContentAjaxCall(id) {
                         "undefined") {
                         defaultHtml +=
                             "<div class='home-brands-you-love-main-image-wrapper'>";
-                        if (typeof response.bannerText !==
+                        /*if (typeof response.bannerText !==
                             "undefined") {
                             defaultHtml +=
                                 "<div class='visit-store-wrapper'>" +
                                 response.bannerText + "</div>";
-                        }
+                        }*/  /*UF-249*/
                         if (typeof response.bannerUrl !== "undefined") {
                         	 defaultHtml += "<a href='"+response.bannerUrl+"'><img src='" + response.bannerImageUrl +
                              "'></img></a></div>";
@@ -560,7 +560,17 @@ function getBrandsYouLoveContentAjaxCall(id) {
                         	 defaultHtml += "<img src='" + response.bannerImageUrl +
                              "'></img></div>";
                         }
-                       
+                        /* UF-249 start*/
+                        if (typeof response.text !== "undefined") {
+                            defaultHtml += response.text;
+                        }
+                        if (typeof response.bannerText !==
+                        "undefined") {
+                        defaultHtml +=
+                            "<div class='visit-store-wrapper'>" +
+                            response.bannerText + "</div>";
+                    }
+                        /* UF-249 end*/
                     }
                     defaultHtml += '</div>';
                     
@@ -590,7 +600,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                     }
                     defaultHtml += "</div>";
                     $(".home-brands-you-love-carousel").css(
-                        "margin-bottom", "50px");
+                        "margin-bottom", "33px");  /* UF-249 */
                     $('#brandsYouLove').append(defaultHtml);
                     window.localStorage.setItem("brandContent-" +
                         id, encodeURI(defaultHtml));
@@ -601,7 +611,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                 error: function() {
                     $('#brandsYouLove .loaderDiv').remove();
                     $(".home-brands-you-love-carousel").css(
-                        "margin-bottom", "50px");
+                        "margin-bottom", "33px");  /* UF-249 */
                     console.log(
                         "Error while getting brands you love content"
                     );
@@ -956,7 +966,7 @@ function getBestPicksAjaxCall() {
 	            				items:3,
 	            			},
 	            			// breakpoint from 768 up
-	            			1280 : {
+	            			1080 : {
 	            				items:5,
 	            			}			
 	            		}		
@@ -1085,7 +1095,7 @@ function getProductsYouCareAjaxCall() {
 									items : 3,
 								},
 								// breakpoint from 768 up
-								1280 : {
+								1080 : {
 									items : 4,
 								}
 
@@ -1363,7 +1373,7 @@ function showStayQued(response){
         linkText = promoText2;
     }
     renderHtml =
-        '<div class="qued-padding"><div class="qued-content"><h2><span class="spriteImg"></span><span class="h1-qued">Stay Qued</span></h2>' +
+    	'<h2><span class="h1-qued">Stay Qued</span></h2><div class="qued-padding"><div class="qued-content">' +      /* UF-249 */
         promoText1 + '<a href="' + bannerUrlLink +
         '" class="button maroon">' + linkText +
         '</a></div><div class="qued-image"><img class="lazy" src="' +
@@ -1662,6 +1672,7 @@ $(window).on('resize', function() {
 		   $(this).removeAttr("data-src");
 	   });
    }); 
+   showMobileShowCase();
 });
 
 
@@ -2205,7 +2216,7 @@ $(document).ready(function()
            
            if (!headerLoggedinStatus) {
 
-               $("a.headeruserdetails").html("Sign In");
+        	   $("a.headeruserdetails").html("Sign In / Sign Up"); /*UF-249 text change*/
              //Akamai caching
                $("a.headeruserdetails").attr('href','/login');
                $('#signIn').attr('class','sign-in-info signin-dropdown-body ajaxflyout');
@@ -2442,3 +2453,86 @@ $(document).ready(function()
 			$(".body-Content").css("padding-bottom",ht);
 		}
 		/*End TISSQAEE-325*/
+
+		
+		function showMobileShowCase(){
+			var env = $("#previewVersion").val();
+				if (env == "true") {
+					var dataString = 'version=Staged';
+				} else {
+					var dataString = 'version=Online';
+				}
+				if (window.localStorage && (html = window.localStorage.getItem("showcaseContentMobile")) && html != "") {
+					$('#showcaseMobile').html(decodeURI(html));
+				}else{
+				$.ajax({
+			            type: "GET",
+			            dataType: "json",
+			            url: ACC.config.encodedContextPath +
+			                "/getCollectionShowcase",
+			            data: dataString,
+			            success: function(response) {
+						var showCaseMobile = '<h2>'+response.title+'</h2>';
+						showCaseMobile+= '<div class="owl-carousel showcase-carousel">';
+							$.each(response.subComponents, function(k, v) {	
+								  showCaseMobile+= getShowcaseMobileContentAjaxCall(v.compId);
+								 
+							});
+							showCaseMobile+= '</div>';
+							$('#showcaseMobile').html(showCaseMobile);
+							window.localStorage.setItem("showcaseContentMobile",encodeURI(showCaseMobile));
+			             },
+						complete:function(){
+						$(".showcase-carousel").owlCarousel({
+						items:1,
+			    		loop: $(".showcase-carousel img").length == 1 ? false : true,
+			    		navText:[],
+			    		nav:true,
+			    		dots:false
+					});
+						},
+			            error: function() {
+			                console.log("Error while getting showcase");
+			            }
+			        });
+				}
+			}
+
+
+			function getShowcaseMobileContentAjaxCall(id){
+			var showCaseMobile = '';
+			            $.ajax({
+			                type: "GET",
+			                dataType: "json",
+							async:false,
+			                beforeSend: function() {
+			                	var staticHost=$('#staticHost').val();
+			                    /*$(".showcase-switch").css("margin-bottom",
+			                        "80px");
+			                    $("#showcase").append(
+			                        "<div class='loaderDiv' style='z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;'><img src='"+staticHost+"/_ui/responsive/common/images/red_loader.gif'/></div>"
+			                    );*/
+			                },
+			                url: ACC.config.encodedContextPath +
+			                    "/getShowcaseContent",
+			                data: {
+			                    "id": id
+			                },
+			                success: function(response) {
+			                 
+			                showCaseMobile+= '<div class="item showcase-section">';
+							showCaseMobile+= '<div class="desc-section">'+response.text;
+							showCaseMobile+= '<img class="lazy" src="'+response.bannerImageUrl+'">'
+							showCaseMobile+= '</div>'
+							showCaseMobile+= '</div>';               
+			                },
+			                error: function() {
+			                    console.log(
+			                        "Error while getting showcase content");
+			                    //$('#showcase .loaderDiv').remove();
+			                    //$(".showcase-switch").css("margin-bottom",
+			                       // "0px");
+			                }
+			            });
+			return showCaseMobile;
+			}		
