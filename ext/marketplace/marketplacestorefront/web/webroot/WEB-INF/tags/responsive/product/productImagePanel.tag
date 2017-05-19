@@ -57,8 +57,10 @@
 	}
 
 	function closing() {
-		$("#zoomModal, #videoModal").modal('hide');
-		$("#zoomModal, #videoModal").removeClass("active");
+		/* start change for INC144314454 */
+		$("#zoomModal, #videoModal, #videoModal1").modal('hide');
+		$("#zoomModal, #videoModal, videoModal1").removeClass("active");
+		/* end change for INC144314454 */
 		var x = $("#player").attr('src');
 		var z = $("#player").attr('src', x+"&autoplay=0");
 	}

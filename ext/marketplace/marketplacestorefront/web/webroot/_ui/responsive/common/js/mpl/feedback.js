@@ -2716,9 +2716,26 @@ $(document).ready(function() {
 	});
 	$(document).on('click','.zoomLens',function(){hit();})
 	$(document).on('click','.product-image-container.device img',function(){
-		hit({
-			windowWidth : $(window).width()
-		});
+		if($(this).attr("data-type")=='image'){		/*add if for INC144314454*/
+			hit({
+				windowWidth : $(window).width()
+			});
+		/*start change for INC144314454*/
+		}else{
+			var url = $(this).attr("data-videosrc");
+			/*$("#player").show();
+			$("#player").attr("src",url);*/
+			$("#videoModal1 #player").attr("src",url).show();
+			$("#videoModal1").modal();
+			$("#videoModal1").addClass("active");
+			//$(".productImagePrimary .picZoomer-pic-wp img").hide();
+			/*$(".zoomContainer").remove();
+			$('.picZoomer-pic').removeData('zoom-image');*/
+			if ($(window).width() < 1025) {
+				$(".product-info .product-image-container.device").show();
+			}
+		}
+		/*end change for INC144314454*/
 	});
 	var pdpStyle;
 		 $(window).on('load resize',function(){	
