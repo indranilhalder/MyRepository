@@ -32,6 +32,14 @@
 									</div>
 									<div class="form-group">
 										<label for="exampleInputPassword1"><spring:theme code="header.flyout.password"/></label> 
+										  <!-- UF-249 start -->	
+										  <div class="forgot-password">		
+									<a href="<c:url value='/login/pw/request'/>"
+						 class="js-password-forgotten" data-cbox-title="<spring:theme code="forgottenPwd.title"/>">
+											<spring:theme code="login.link.forgottenPwd" />
+									</a>
+										</div> 
+										<!-- UF-249 end -->	
 										<input type="password" class="form-control" name="j_password" id="j_password" placeholder="Password" required>
 									</div>
 									<span id="errorHolder" style="color: red;"></span>	
@@ -44,13 +52,15 @@
 										</button>
 									</ycommerce:testId>
 												
-							</div>				
-									  <div class="forgot-password">		
+							</div>		
+							<!-- UF-249 start -->		
+									<%--   <div class="forgot-password">		
 									<a href="<c:url value='/login/pw/request'/>"
 						 class="js-password-forgotten" data-cbox-title="<spring:theme code="forgottenPwd.title"/>">
 											<spring:theme code="login.link.forgottenPwd" />
 									</a>
-										</div> 
+										</div>  --%>
+									<!-- UF-249 end -->	
 									</div>
 							 <div class='or'><spring:theme code="text.or" /></div>
 									</form:form>								
@@ -88,10 +98,10 @@
 	<!-- End  Gigya and API Social Login -->
 								
 								<li><div class="foot">
-									<spring:theme code="header.flyout.member"/><ycommerce:testId
+								<ycommerce:testId
 													code="header_Register_link">
 													 <a class="register_link" href="<c:url value="/login?isSignInActive=N"/>"> 
-													<spring:theme
+									<spring:theme code="header.flyout.member"/>&nbsp;<spring:theme
 															code="header.link.register" />
 													</a>
 												</ycommerce:testId>

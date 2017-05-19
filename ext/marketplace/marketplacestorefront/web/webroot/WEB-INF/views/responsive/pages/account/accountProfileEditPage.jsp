@@ -53,7 +53,7 @@
 			
 			<div class="right-account">
 				<div class="info">
-					<h2><spring:theme code="profile.heading.text" text="Personal Information"/></h2>
+					<h2><spring:theme code="profile.heading.text" text="My Profile"/></h2>		<!--  UF-249 text change -->
 					<p><spring:theme code="profile.heading.deatils" text="Change your name, email, phone number here. "/></p>
 					<%-- <form> --%>
 					<fieldset>
