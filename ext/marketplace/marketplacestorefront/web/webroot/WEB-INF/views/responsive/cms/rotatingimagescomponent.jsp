@@ -186,8 +186,6 @@ var homePageBannerTimeout='${timeout}';
 	</div>
 	</c:when>
 	<c:otherwise>
-	<c:set var="browser" value="${header['User-Agent']}" />
-	${browser}
 	<div class="timeout-slider">
 	<div
 		class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference home-rotatingImage"
