@@ -1198,7 +1198,7 @@ public class GenericUtilityMethods
 								pageSubcategoryNameL3List.add(page_subcategory_name_L3);
 
 								//For kidswear L4 needs to be populated
-								page_subcategory_name_L4 = MarketplacecommerceservicesConstants.NA.toLowerCase();
+								page_subcategory_name_L4 = "\" \"";
 								pageSubcategoryNameL4List.add(page_subcategory_name_L4);
 							}
 						}
@@ -1276,17 +1276,8 @@ public class GenericUtilityMethods
 					productCatL3 = StringUtils.join(pageSubcategoryNameL3List, ',');
 
 				}
-
-				if (CollectionUtils.isNotEmpty(pageSubcategoryNameL4List))
-				{
-					productCatL4 = StringUtils.join(pageSubcategoryNameL4List, ',');
-
-				}
 				//For kidswear L4 needs to be populated
-				else
-				{
-					productCatL4 = MarketplacecommerceservicesConstants.NA;
-				}
+				productCatL4 = StringUtils.join(pageSubcategoryNameL4List, ',');
 
 				model.addAttribute("pageSubCategories", productCatL1);
 				model.addAttribute("productCategoryList", productCatL2);
