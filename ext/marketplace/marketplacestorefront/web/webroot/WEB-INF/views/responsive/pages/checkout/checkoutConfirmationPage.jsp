@@ -38,6 +38,15 @@
 <input type="hidden" id="product_category" value='${productCategoryList}'/>
 <input type="hidden" id="page_subcategory_name" value='${pageSubCategories}'/>
 <input type="hidden" id="page_subcategory_name_l3" value='${page_subcategory_name_L3}'/>
+<!-- added for kidswear:L4 needs to be populated -->
+<input type="hidden" id="page_subcategory_name_l4" value='${page_subcategory_name_L4}'/>
+
+<!-- kidswear -->
+<input type="hidden" id="page_subcategory_L1" value='${productCategoryList}'/>
+<input type="hidden" id="page_subcategory_L2" value='${pageSubCategories}'/>
+<input type="hidden" id="page_subcategory_l3" value='${page_subcategory_name_L3}'/>
+<!-- added for kidswear:L4 needs to be populated -->
+<input type="hidden" id="page_subcategory_l4" value='${page_subcategory_name_L4}'/>
 	
 <input type="hidden" id="orderIDString" value="${orderData.code}">
 <input type="hidden" id="orderSubTotal" value="${orderData.subTotal.value}">

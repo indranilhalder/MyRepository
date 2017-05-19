@@ -803,15 +803,17 @@ public final class ModelAttributetConstants
 	public static final String PAGE_SUBCATEGORY_NAME = "page_subcategory_name";
 	public static final String PAGE_SUBCATEGORY_NAME_L3 = "page_subcategory_name_l3";
 	public static final String SHOP_BY_LOOK = "shopbylook".intern();
+	//For KIDSWEAR tealium data
+	public static final String PAGE_SUBCATEGORY_NAME_L4 = "page_subcategory_name_l4";
 	//LW-230
 	public static final String IS_LUXURY = "isLuxury";
 
 	public static final String PHONE_NUMBER = "phoneNumber";
 	public static final String ADDRESS_CHANGE_ELIGIBLE = "addressChangeEligible";
-	public static final String STRINGMEAASGE="stringMessage";
-	public static final String ORDERDETAIL="orderDetail";
-	public static final String TXNSCHEDULEDATA="txnScheduleData";
-	
+	public static final String STRINGMEAASGE = "stringMessage";
+	public static final String ORDERDETAIL = "orderDetail";
+	public static final String TXNSCHEDULEDATA = "txnScheduleData";
+
 
 	public static final String SCHEDULE_TIMESLOTS = "timeSlots";
 	public static final String RETURNABLE_SLAVES = "returnableSlaves";
@@ -823,15 +825,15 @@ public final class ModelAttributetConstants
 	public static final String LPNOTAVAILABLE_ERRORMSG = " Sorry! Pick up is not available for your area. You can still return the item by dropping in store or by self shipping the product.";
 	public static final String MPL_RETURN_INFO_FORM = "mplReturnInfoForm";
 	public static final String RETURN_METHOD = "returnMethod";
-	
+
 	public static final String QUCK_DROP_PROD_LEVEL = "productRichAttrOfQuickDrop";
 	public static final String QUCK_DROP_SELLER_LEVEL = "sellerRichAttrOfQuickDrop";
-	public static final String IS_ED_ORDER ="isEDOrder";
-	
-	public static final String RETURN_FILE_UPLOAD_FILE_PATH_WEB_INF ="WEB-INF";
-	public static final String RETURN_FILE_UPLOAD_FILE_PATH_DOC ="doc";
-	public static final String RETURN_FILE_UPLOAD_FILE_NAME ="ReturnAndRefund.pdf";
-	public static final String RETURN_SCHEDULE_INFO ="ScheduleDatesEmpty";
-	
-	public static final String TSHIP ="TSHIP";
+	public static final String IS_ED_ORDER = "isEDOrder";
+
+	public static final String RETURN_FILE_UPLOAD_FILE_PATH_WEB_INF = "WEB-INF";
+	public static final String RETURN_FILE_UPLOAD_FILE_PATH_DOC = "doc";
+	public static final String RETURN_FILE_UPLOAD_FILE_NAME = "ReturnAndRefund.pdf";
+	public static final String RETURN_SCHEDULE_INFO = "ScheduleDatesEmpty";
+
+	public static final String TSHIP = "TSHIP";
 }
