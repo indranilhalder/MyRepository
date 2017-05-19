@@ -18,6 +18,14 @@
 
 <items 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 			xsi:noNamespaceSchemaLocation="items.xsd">
+			
+	<collectiontypes>
+		<collectiontype code="ShopOnLuxuryElementCollection" 
+			elementtype="ShopOnLuxuryElement" autocreate="true" generate="true" type="list"/>
+		
+		<collectiontype code="WeeklySpecialBannerCollection" 
+			elementtype="WeeklySpecialBanner" autocreate="true" generate="true" type="list"/>
+	</collectiontypes>
 
 	<itemtypes>
 <!--
@@ -46,5 +54,88 @@
 			</attributes>
 		</itemtype>
 -->
+
+		<itemtype code="LuxuryNavigationBarCollectionComponent" extends="SimpleCMSComponent" jaloclass="com.tisl.mpl.jalo.components.LuxuryNavigationBarCollectionComponent" generate="true" autocreate="true">
+				<attributes>
+					<attribute generate="true" autocreate="true" qualifier="components" type="navigationBarComponentList">
+						<persistence type="property" qualifier=""/>
+						<modifiers read="true" write="true" search="true" encrypted="false" optional="true" removable="true" initial="false" unique="false" private="false" partof="false"/>
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="LuxuryNavigationBarComponent" extends="NavigationBarComponent"
+					autocreate="true" generate="true">
+					<description>Luxury Navigation Bar Component</description>
+			</itemtype>
+			
+			<itemtype code="WeeklySpecialBanner" extends="SimpleCMSComponent" 
+				jaloclass="com.tisl.mpl.jalo.components.WeeklySpecialBanner" autocreate="true" generate="true">
+				<attributes>
+					<attribute qualifier="svglogo" type="Media">
+						<persistence type="property"/>
+					</attribute>
+					<attribute qualifier="image" type="Media">
+						<persistence type="property"/>
+					</attribute>
+					
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="WeeklySpecial" extends="SimpleCMSComponent" 
+				jaloclass="com.tisl.mpl.jalo.components.WeeklySpecial" autocreate="true" generate="true">
+				<attributes>
+					<attribute qualifier="title" type="java.lang.String">
+						<persistence type="property"/>
+					</attribute>
+					<attribute qualifier="weeklySpecialBanners" type="WeeklySpecialBannerCollection">
+	                    <modifiers read="true" write="true" search="true" optional="true"/>
+	                    <persistence type="property"/>
+	                </attribute>
+					
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="ShopOnLuxuryElement" extends="SimpleCMSComponent" 
+				jaloclass="com.tisl.mpl.jalo.components.ShopOnLuxuryElement" autocreate="true" generate="true">
+				<attributes>
+					<attribute qualifier="title" type="java.lang.String">
+						<persistence type="property"/>
+					</attribute>
+					<attribute qualifier="image" type="Media">
+						<persistence type="property"/>
+					</attribute>
+					<attribute qualifier="description" type="java.lang.String">
+						<persistence type="property"/>
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="ShopOnLuxury" extends="SimpleCMSComponent" 
+				jaloclass="com.tisl.mpl.jalo.components.ShopOnLuxury" autocreate="true" generate="true">
+				<attributes>
+	                <attribute qualifier="shopOnLuxuryTitle" type="java.lang.String">
+	                    <modifiers read="true" write="true" search="true" optional="true"/>
+	                    <persistence type="property"/>
+	                    </attribute>
+						<attribute qualifier="shopOnLuxuryElements" type="ShopOnLuxuryElementCollection">
+	                    <modifiers read="true" write="true" search="true" optional="true"/>
+	                    <persistence type="property"/>
+	                </attribute>
+              </attributes>
+			</itemtype>
+			
+			<itemtype code="LuxuryFooterComponent" extends="FooterComponent" autocreate="true" generate="true">
+				<attributes>
+					<attribute qualifier="footerAppTitle" type="java.lang.String">
+						<persistence type="property"/>
+					</attribute>
+	                <attribute qualifier="footerAppText" type="java.lang.String">
+						<persistence type="property"/>
+					</attribute>
+					<attribute qualifier="footerSocialTitle" type="java.lang.String">
+						<persistence type="property"/>
+					</attribute>
+              	</attributes>
+			</itemtype>
 	</itemtypes>
 </items>

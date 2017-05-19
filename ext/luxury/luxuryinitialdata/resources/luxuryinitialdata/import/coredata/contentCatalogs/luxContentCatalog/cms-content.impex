@@ -81,6 +81,10 @@ INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;fronten
 ;;MultiStepCheckoutSummaryPageTemplate;Multi Step Checkout Summary Page Template;;ContentPage;false;
 ;;OrderConfirmationPageTemplate;Order Confirmation Page Template;;ContentPage;false;
 
+##Luxury Homepage
+;;luxuryHomePageTemplate;Luxury Home Page Template;layout/luxuryHomePage;ContentPage;true                
+
+
 
 
 
@@ -140,6 +144,10 @@ UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[tr
 ;;ViewSellerPageTemplate      ;$jarResourceCms/structure-view/structure_viewSellerPageTemplate.vm
 #Shop The Style Page
 ;;ShopTheStylePageTemplate;$jarResourceCms/structure-view/structure_shopTheStylePageTemplate.vm
+
+##Luxury Homepage
+;;luxuryHomePageTemplate;$jarResourceCms/structure-view/structure_luxuryHomePage.vm                                           
+
 
 
 
@@ -1480,6 +1488,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 # Site-wide Homepage
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='true']
 ;;homepage;Homepage;LandingPage2Template;homepage
+;;luxuryHomePage;Luxury Home Page;luxuryHomePageTemplate;luxuryHomePage
+
 
 # Preview Image for use in the CMS Cockpit for special ContentPages
 INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true]
@@ -1752,6 +1762,26 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;BottomHeaderSlot-ShopTheStylePageTemplate;BottomHeaderSlot;;BottomHeaderSlot;true
 ;;PlaceholderContentSlot-ShopTheStylePageTemplate;PlaceholderContentSlot;;PlaceholderContentSlot;true
 
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='luxuryHomePageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;TopHeaderSlot;TopHeaderSlot;;TopHeaderSlot;true          
+;;MiddleHeaderHelpLink;MiddleHeader;;MiddleHeader;true          
+;;SiteLogo;SiteLogo;;SiteLogoSlot;true          
+;;HeaderLinks;HeaderLinks;;HeaderLinksSlot;true          
+;;SearchBox;SearchBox;;SearchBoxSlot;true          
+;;MiniCart;MiniCart;;MiniCartSlot;true          
+;;NavigationBar;NavigationBar;;NavigationBarSlot;true          
+;;HomeTopBannerMen;TopBannerMen;;HomeTopHeroBannerLeft;true          
+;;HomeTopBannerWomen;TopBannerWomen;;HomeTopHeroBannerRight;true          
+;;Categorybanner1;Categorybanner1;;Categorybanner1Slot;true          
+;;Categorybanner2;Categorybanner2;;Categorybanner2Slot;true          
+;;Categorybanner3;Categorybanner3;;Categorybanner3Slot;true          
+;;Categorybanner4;Categorybanner4;;Categorybanner4Slot;true          
+;;LeftContentSlot;LeftContentSlot;;LeftContentSlot;true          
+;;RightContentSlot;RightContentSlot;;RightContentSlot;true          
+;;HomePageCurosel;HomePageCurosel;;HomePageCurosel;true          
+;;WhyShopOnLuxury;WhyShopOnLuxury;;WhyShopOnLuxury;true          
+;;Footer;Footer;;FooterSlot;true     
+
 
 ### Category Landing Page V1#########
 
@@ -1780,6 +1810,23 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;BreadcrumbComponent
 ;PlaceholderContentSlot;;;
+
+ #Slot for Offers Page Template
+INSERT_UPDATE ContentSlotName;name[uniquRightContentSlote=true];template(uid,$contentCV)[unique=true][default='luxuryHomePageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;TopHeaderSlot;;;wide               
+;MiddleHeader;;;wide               
+;SiteLogo;;;logo               
+;HeaderLinks;;;headerlinks        
+;SearchBox;;;searchbox          
+;MiniCart;;;wide               
+;NavigationBar;;;navigation         
+;TopBannerMen;;;wide               
+;TopBannerWomen;;;wide               
+;LeftContentSlot;;RotatingImagesComponent;        
+;RightContentSlot;;MplOfferImageCarouselComponent;        
+;HomePageCurosel;;;wide               
+;WhyShopOnLuxury;;;wide               
+;Footer;;;footer  
 
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ApparelCategoryLandingPageTemplateV1'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
