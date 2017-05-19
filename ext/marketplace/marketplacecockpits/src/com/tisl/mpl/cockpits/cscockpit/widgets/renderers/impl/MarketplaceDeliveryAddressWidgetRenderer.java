@@ -229,7 +229,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 		addresslabel.setParent(addressDiv);
 		final Textbox address1Field = createTextbox(addressDiv);
 		address1Field.setSclass("address1ForAddressField");
-		address1Field.setMaxlength(40);
+		address1Field.setMaxlength(40);//changing for TISPRDT-1264
 
 		// Creates Address Line2 field
 		final Br br4 = new Br();
