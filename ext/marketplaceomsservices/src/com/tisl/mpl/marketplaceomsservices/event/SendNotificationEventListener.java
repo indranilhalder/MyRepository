@@ -286,7 +286,9 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 			}
 
 			// Notifications: UNDELIVERED : SMS
-			if (shipmentNewStatus.toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_STATUS_UNDELIVERED))
+			// No need to trigger the email and SMS for order status is UNDELIVERED PRDI-209
+			
+			/*if (shipmentNewStatus.toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_STATUS_UNDELIVERED))
 			{
 				boolean flag = true;
 				if (MarketplacecommerceservicesConstants.ADDRESS_ISSUE.equalsIgnoreCase(shipment.getAwbSecondaryStatus()))
@@ -298,7 +300,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 				{
 					sendNotificationForUndelivered(orderModel, orderNumber, mobileNumber, contactNumber, firstName);
 				}
-			}
+			}*/
 
 			// Notifications: ORDERCOLLETED : SMS
 			if (shipmentNewStatus.toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED))
