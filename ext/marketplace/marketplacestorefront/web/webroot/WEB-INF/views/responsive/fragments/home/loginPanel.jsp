@@ -13,6 +13,7 @@
 								<!-- TISSIT-1703 -->
 								<form:form action="/" method="post" name='flyOutloginForm'>
 									<script type="text/javascript">
+										$('#j_username').val('${lastLoggedInUser}');
 										(function() {
 											var po = document
 													.createElement('script');
@@ -111,7 +112,7 @@
 
 											
 <script type="text/javascript">
-
+	$('#j_username').val('${lastLoggedInUser}');
 	$.ajax({
 		url:ACC.config.encodedContextPath + "/login/sociallogin",
 		type:'GET',

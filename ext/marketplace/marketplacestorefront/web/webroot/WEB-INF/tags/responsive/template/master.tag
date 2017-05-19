@@ -48,13 +48,13 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host')" var="productMediadnsHost"/>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host1')" var="productMediadnsHost1"/>
 
-<link rel="stylesheet" type="text/css" media="all" href="//${mediaHost}/preload.css"/>
-<link rel="stylesheet" type="text/css" media="all" href="//${staticResourceHost}/preload.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="//${mediaHost}/preload.css?${rand}"/>
+<link rel="stylesheet" type="text/css" media="all" href="//${staticResourceHost}/preload.css?${rand}"/>
 <c:if test="${not empty productMediadnsHost}">
-<link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost}/preload.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost}/preload.css?${rand}"/>
 </c:if>
 <c:if test="${not empty productMediadnsHost1}">
-<link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost1}/preload.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost1}/preload.css?${rand}"/>
 </c:if>
 
 <!-- TISPT-325 ENDS -->
@@ -292,6 +292,70 @@
 		<c:choose>
 			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method/') or 
 					  fn:contains(requestScope['javax.servlet.forward.request_uri'],'/payment-method/')}"></c:when>
+			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/checkoutlogin/login') or 
+					  fn:contains(requestScope['javax.servlet.forward.request_uri'],'/login')}">
+					  
+				<c:choose>
+					<c:when test="${isMinificationEnabled}">
+					<!-- UF-95 Starts below:This is to bring the gigya call up in the call stack for login/checkout login page -->
+						<script type="text/javascript">
+						var gigyasocialloginurl='${gigyasocialloginurl}';
+						var gigyaApiKey='${gigyaAPIKey}';
+						var commonResource='${commonResourcePath}';
+						var buildNumber='${buildNumber}'; 
+						$.ajax({
+					        type: "GET",
+					        url:gigyasocialloginurl+'?apikey='+gigyaApiKey,
+					        success: function() {
+					        	 $.ajax({
+					 		        type: "GET",
+					 		        url: commonResource+'/js/minified/acc.gigya.min.js?v='+buildNumber,
+					 		        success: function() {
+					 		        	 $(document).ready(function () {
+					 		        		loadGigya();
+					 		        	});
+					 		        },
+					 		        dataType: "script",
+					 		        cache: true
+					 		    });
+					        },
+					        dataType: "script",
+					        cache: true
+					    });	
+						</script>
+					</c:when>
+					<c:otherwise>
+						<script type="text/javascript">
+						var gigyasocialloginurl='${gigyasocialloginurl}';
+						var gigyaApiKey='${gigyaAPIKey}';
+						var commonResource='${commonResourcePath}';
+						var buildNumber='${buildNumber}'; 
+						$(document).ready(function(){
+							$.ajax({
+						        type: "GET",
+						        url:gigyasocialloginurl+'?apikey='+gigyaApiKey,
+						        success: function() {
+						        	 $.ajax({
+						 		        type: "GET",
+						 		        url: commonResource+'/js/minified/acc.gigya.js?v='+buildNumber,
+						 		        success: function() {
+						 		        	$(document).ready(function () {
+						 		        		loadGigya();
+						 		        	});
+						 		        },
+						 		        dataType: "script",
+						 		        cache: true
+						 		    });
+						        },
+						        dataType: "script",
+						        cache: true
+						    });
+						});
+						</script>
+					</c:otherwise>
+				</c:choose>
+			
+			</c:when>
 		<c:otherwise>
 		<c:choose>
  		<c:when test="${isMinificationEnabled}">
@@ -353,7 +417,6 @@
 	
 	<%-- Inject any additional JavaScript required by the page --%>
 	<jsp:invoke fragment="pageScripts"/>	
-
 	
 </body>
 
