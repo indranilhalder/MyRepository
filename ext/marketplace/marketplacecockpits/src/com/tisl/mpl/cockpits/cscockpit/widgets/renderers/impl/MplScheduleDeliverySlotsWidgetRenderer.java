@@ -39,33 +39,27 @@ extends AbstractCsWidgetRenderer<Widget<OrderItemWidgetModel, OrderController>> 
 		TypedObject typedObject = widget.getWidgetModel().getOrder();
 		OrderModel order = (OrderModel) typedObject.getObject();
 		try {
-			/*PRDI-115 START */
-			content.setSclass("csOrderHistory");
-			Listbox listBox = new Listbox();
-			listBox.setParent(content);
-			listBox.setSclass("csWidgetListbox");
-			boolean orderHasDeliverySlots = false;
-			if(null != order && null != order.getType() && order.getType().equalsIgnoreCase("PARENT")) {
-				Listitem row = new Listitem();
-				row.setParent(listBox);
-				Listcell cell = new Listcell(LabelUtils.getLabel(widget,
-						"noEntries", new Object[0]));
-				cell.setParent(row);
-				return content;
+			OrderModel parentorder = modelService.create(OrderModel.class);
+			if (null != order.getParentReference()) {
+				parentorder = order.getParentReference();
 			} else {
-				if (null != order.getEntries()) {
-					for (AbstractOrderEntryModel entry : order.getEntries()) {
-						if (null != entry.getEdScheduledDate() || null != entry.getSddDateBetween()) {
-							orderHasDeliverySlots = true;
-							break;
-						}
+				parentorder = order;
+			}
+			boolean orderHasDeliverySlots = false;
+			if (null != parentorder.getEntries()) {
+				for (AbstractOrderEntryModel entry : parentorder.getEntries()) {
+					if (null != entry.getEdScheduledDate() || null != entry.getSddDateBetween()) {
+						orderHasDeliverySlots = true;
+						break;
 					}
 				}
 			}
 			LOG.debug("Order " + order.getCode()
 					+ " has schedule Delviery slots " + orderHasDeliverySlots);
-			/*PRDI-115 END */
-			
+			content.setSclass("csOrderHistory");
+			Listbox listBox = new Listbox();
+			listBox.setParent(content);
+			listBox.setSclass("csWidgetListbox");
 			if (orderHasDeliverySlots) {
 				renderListbox(listBox, widget, rootContainer);
 			} else {
@@ -92,35 +86,39 @@ extends AbstractCsWidgetRenderer<Widget<OrderItemWidgetModel, OrderController>> 
 			HtmlBasedComponent rootContainer) {
 		TypedObject order = widget.getWidgetModel().getOrder();
 		OrderModel orderModel = (OrderModel) order.getObject();
-
+		OrderModel parentOrder = modelService.create(OrderModel.class);
+		if(null !=orderModel.getParentReference()) {
+			parentOrder = orderModel.getParentReference();
+		}else {
+			parentOrder= orderModel;
+		}
 		Listhead header = new Listhead();
 		header.setParent(listBox);
 		populateHeaderRow(widget, header);
-		if(null !=orderModel && null !=orderModel.getEntries()) {
+		if(null !=parentOrder && null !=parentOrder.getEntries()) {
+			for (AbstractOrderEntryModel entry : parentOrder.getEntries()) {
 				for(AbstractOrderEntryModel suborderEntry: orderModel.getEntries() ) {
-						if(null != suborderEntry.getEdScheduledDate() || null != suborderEntry.getSddDateBetween()) {
+					if(suborderEntry.getSelectedUSSID().equalsIgnoreCase(entry.getSelectedUSSID())) {
+						if(null != entry.getEdScheduledDate() || null != entry.getSddDateBetween()) {
 							Listitem row = new Listitem();
 							row.setParent(listBox);
-							populateDataRow(widget, suborderEntry, row);
+							populateDataRow(widget, entry, row);
 						}
+						break;
+					}
 				}
+			}
 		}
 	}
 
 	protected void populateDataRow(Widget<OrderItemWidgetModel, OrderController> widget, AbstractOrderEntryModel entry,
 			Listitem row) {
-		/*PRDI-115 START */
-		// Entry Number
-		String entryNumber = String.valueOf(entry.getEntryNumber());
-		Listcell entryNumberCell = new Listcell(entryNumber);
-		entryNumberCell.setParent(row);
 
-		// Transaction ID
-		String transactionId = entry.getTransactionID();
-		Listcell transactionIdCell = new Listcell(transactionId);
-		transactionIdCell.setParent(row);
-		/*PRDI-115 END */
-		
+		// Product Name 
+		String productName = entry.getProduct().getName();
+		Listcell productNameCell = new Listcell(productName);
+		productNameCell.setParent(row);
+
 		// USSID
 		String Ussid = entry.getSelectedUSSID();
 		Listcell ussidCell = new Listcell(Ussid);
@@ -149,26 +147,26 @@ extends AbstractCsWidgetRenderer<Widget<OrderItemWidgetModel, OrderController>> 
 
 	protected void populateHeaderRow(Widget<OrderItemWidgetModel, OrderController> widget, Listhead listHeader) {
 
-		/*PRDI-115 START */
-		Listheader entryNumberHeader= new Listheader("");
-		entryNumberHeader.setWidth("2px");
-		listHeader.appendChild(entryNumberHeader);
 		
-		Listheader listHeaderTransactionId= new Listheader("Transaction Id");
-		listHeaderTransactionId.setWidth("130px");
-		listHeader.appendChild(listHeaderTransactionId);
-		/*PRDI-115 END */
-		
+		Listheader listHeaderProduct = new Listheader("Product");
+		listHeaderProduct.setWidth("250px");
+		listHeader.appendChild(listHeaderProduct);
+
 		Listheader listHeaderUssid = new Listheader("USSID");
 		listHeaderUssid.setWidth("120px");
 		listHeader.appendChild(listHeaderUssid);
 
 		Listheader listHeaderDate = new Listheader("Schedule/Expected Delivery Date");
-		listHeaderDate.setWidth("150px");
+		listHeaderDate.setWidth("100px");
 		listHeader.appendChild(listHeaderDate);
 
 		Listheader listHeaderTime = new Listheader("Schedule/Expected Delivery Time");
-		listHeaderTime.setWidth("150px");
+		listHeaderTime.setWidth("120px");
 		listHeader.appendChild(listHeaderTime);
+
 	}
+
+	
+
+
 }
