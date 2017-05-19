@@ -66684,6 +66684,14 @@ margin-top: -10px;
 	.checkout-headers .desk-view {
 	  margin: 0 0 15px;
 	}
+	/* start change of INC144315690 */
+	body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.qty{
+		width: 68% !important;
+	}
+	body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.delivery {
+		margin-top: 25px !important;
+	}
+	/* end change of INC144315690 */
 }
 @media (max-width: 1024px) and (min-width: 768px){
 	.checkout.wrapper .product-block li.item > ul li.delivery.deliverySlotType{
