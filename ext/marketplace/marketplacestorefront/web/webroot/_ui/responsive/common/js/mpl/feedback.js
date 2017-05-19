@@ -2702,6 +2702,7 @@ function viewByFilterResult(top){
 	}	
 }
 /*Filter scroll changes start*/
+var fix_width= $(".listing.wrapper .left-block").width() + 38;	/*UF-290*/
 $(window).on("scroll",function(){
 	if($(window).width() > 790 && $('.listing.wrapper .right-block').height() > $('.listing.wrapper .left-block').height() && $('.listing.wrapper .left-block').length > 0) {
 		
@@ -2718,6 +2719,7 @@ $(window).on("scroll",function(){
 		if($(window).scrollTop() >  $('.listing.wrapper .right-block').height() - $(window).height() + $('.listing.wrapper .right-block').offset().top ){
 			$('.listing.wrapper .left-block').removeClass("fix").addClass("bottom");
 		}
+		$(".listing.wrapper .left-block.fix").css("width",fix_width+"px");	/*UF-290*/
 	} else {
 		$('.listing.wrapper .left-block').removeClass("fix bottom");
 	}

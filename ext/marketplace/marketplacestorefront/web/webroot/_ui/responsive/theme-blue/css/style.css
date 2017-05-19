@@ -62840,7 +62840,7 @@ header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_
     display: inline-block;
     height: 18px;
     width: 18px;
-    margin-top: 12px;
+    margin-top: 26px;
     /* position: absolute;
     top: 18px; */
     /* right: 109px; */
@@ -67636,7 +67636,7 @@ header .content .bottom.active nav > ul > li > ul > li > ul{
     min-height: 100px;
 }	
 .callouts .Padd {
-    padding: 26.5px 50px;
+    padding: 17px 50px;
 }
 }
 .sign-in-info li:first-child{
@@ -68343,6 +68343,7 @@ body.page-homepage .feature-collections #stayQued > h2{
     bottom: 0;
     margin: auto;
     left: -10px;
+    vertical-align: middle;
     
 }
 #bestPicks, body.page-homepage .feature-collections{
@@ -68558,6 +68559,11 @@ header .content .bottom:not(.active) .bag:after{
  @media(min-width:1401px){
  	.listing.wrapper .left-block.fix {
      left: auto;
+ }
+ }
+ @media(min-width: 791px){
+ .listing.wrapper .left-block:not(.fix){
+ 	width: 19.83% !important;
  }
  }
  /*UF-290 change end*/ 
