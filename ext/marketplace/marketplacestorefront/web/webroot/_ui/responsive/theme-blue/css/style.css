@@ -59831,7 +59831,7 @@ li.facet.js-facet.collectionIds{
 	}
 @media (max-width: 991px){
 	#flip-navigation li a{
-  padding: 9px 10px;
+  padding: 11px 10px;
   font-size: 11px;
   /* width: 120px; */}
 /*   #flip-navigation li{
@@ -67109,6 +67109,10 @@ header .content nav > ul > li > ul > li > ul > li .toggle{
 .words li.long .toggle a{
 	letter-spacing: 0.6px;
   	color: #777777;
+  	display: block;
+}
+.words li.long .toggle a:hover{
+  	color: #a9143c;
 }
 header .content   .bottom.active nav > ul > li:first-child  > ul:hover{
 	padding-top:0px;
@@ -67645,6 +67649,7 @@ header .content .bottom.active nav > ul > li > ul > li > ul{
 }
 #loginDivsiginflyout{
 	margin-top:37px;
+	min-height: 100px;
 }
 /* brands you love section start */
 body.page-homepage .feature-collections.home-brands-you-love-wrapper{
@@ -67819,6 +67824,12 @@ p.home-brands-you-love-main-image-heading, p.home-brands-you-love-main-image-des
 @media(min-width:791px){
 	#stayQued{
 	margin-bottom:48px;
+}
+header .content .bottom.active nav>ul>li>ul{
+	left:0 !important;
+}
+header .content nav > ul > li > ul > li > ul.words, header .content nav > ul > li > ul > li > ul {
+    border-bottom: 1px solid #eee;
 }
 }
 .h1-qued{
@@ -68038,6 +68049,12 @@ header > .content .bottom .search form input,
 header > .content .bottom .search form select{
 	height: 42px;
 }
+header > .content .bottom.active .search{
+	margin-bottom: 10px;
+}
+header > .content .top.header_fix .toggle {
+    margin-top: 12px;
+}
 body.page-homepage .owl-theme .owl-dots .owl-dot span{
 	width: 8px;
 	height: 8px;
@@ -68213,6 +68230,9 @@ ul li #mobile-menu-toggle + ul.trackorder-dropdown{
 ul li #mobile-menu-toggle + ul.loggedIn-flyout {
     text-indent: 0px;
     background: transparent;
+}
+.body-Content{
+	padding-bottom: 0 !important;
 }
 }
 @media (max-width: 790px) and (min-width: 768px)
@@ -68553,6 +68573,30 @@ header .content .bottom:not(.active) .bag:after{
 /*Homepage responsive end*/
 .container_store_finder_home{
 	display: none;
+}
+@media(max-width: 1140px) and (min-width: 791px){
+	header .content .left,
+	header .content .right>ul>li.download-app,
+	header .content .right>ul>li.store-locator-header,
+	header .content .right>ul>li.track:not(.trackOrder){
+	display: none;
+	}
+}
+/* @media(max-width: 1024px) and (min-width: 791px){
+	header .content .search .select-list{
+	display: none;
+	}
+	header .content .search{
+	width: -webkit-calc(100% - 716px);
+    width: calc(100% - 716px);
+	}
+} */
+header .content .search .links li.product.ui-menu-item{
+	display: none;
+}
+
+#newAndExclusive .New_Exclusive_title, #newAndExclusive .New_Exclusive_price {
+    text-align: left;
 }
 /* Homepage changes end */
 /*UF-290 change start*/

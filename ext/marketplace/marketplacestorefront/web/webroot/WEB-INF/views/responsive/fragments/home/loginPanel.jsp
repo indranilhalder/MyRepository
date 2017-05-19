@@ -97,10 +97,10 @@
 	<!-- End  Gigya and API Social Login -->
 								
 								<li><div class="foot">
-									<spring:theme code="header.flyout.member"/><ycommerce:testId
+								<ycommerce:testId
 													code="header_Register_link">
 													 <a class="register_link" href="<c:url value="/login?isSignInActive=N"/>"> 
-													<spring:theme
+									<spring:theme code="header.flyout.member"/>&nbsp;<spring:theme
 															code="header.link.register" />
 													</a>
 												</ycommerce:testId>

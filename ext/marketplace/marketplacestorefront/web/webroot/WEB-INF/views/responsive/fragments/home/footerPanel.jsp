@@ -45,7 +45,7 @@
 		<h3><spring:theme code="text.download.app"/></h3>
 		<div class="links">
 			<c:forEach items="${footerAppImageList}" var="banner">
-					<a href="${banner.urlLink}" class="appios"><span class="spriteImg"></span></a>
+					<a href="${banner.urlLink}" class="appios" target="_blank"><span class="spriteImg"></span></a>
 			</c:forEach>
 		</div>
 	</div>
