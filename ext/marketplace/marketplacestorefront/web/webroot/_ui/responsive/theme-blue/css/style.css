@@ -43448,13 +43448,25 @@ Samsung Galaxy S5 -----------
 	}
 	
 	.text_in {
-		margin-top: 5px !important;
-	    margin-left: 0px !important;
+		/* start change of INC144316787 */
+		/* margin-top: 5px !important; */
+		margin-top: 2px !important;
+	    /* margin-left: 0px !important; */
+	    margin-left: -2px !important;
+	    /* end change of INC144316787 */
 	    font-size: 10px !important;
 	    text-align: center;
 	}							
 }
-
+/* start change of INC144316787 */
+@media (max-width: 1023px) and (min-width: 651px){
+	.text_in {
+		font-size: 10px !important;
+		margin-top: 2px !important;
+		margin-left: -2px !important;
+	}
+}
+/* end change of INC144316787 */
 @media (min-width: 1024px) {
 	.text_in {
 		font-size: 10px !important;
