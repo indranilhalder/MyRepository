@@ -1902,10 +1902,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SITEMAP_CATEGORY_QUERY = "mpl.sitemap.categoryQuery".intern();
 	public static final String DEFAULT_SITEMAP_CATEGORY_QUERY = "SELECT {c.pk} FROM {Category AS c JOIN CatalogVersion AS cv ON {c.catalogVersion}={cv.pk} JOIN Catalog AS cat ON {cv.pk}={cat.activeCatalogVersion} JOIN CMSSite AS site ON {cat.pk}={site.defaultCatalog}}  WHERE {site.pk} = ?site AND ({c.code} like 'MSH%' or {c.code} like 'MBH%' ) AND NOT exists ({{select {cr.pk} from {CategoriesForRestriction as cr} where {cr.target} = {c.pk} }})"
 			.intern();
-
+	public static final String SITEMAP_PRODUCT_QUERY_DEFAULT = "select {p:pk} from {Product as p join CategoryProductRelation as prodrel on {p:pk}={prodrel:target} join BuyBox as bb on {bb.product}={p.code}} where {p.catalogversion}= ?catalogVersion and {bb.delisted}='0'and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate}) and {prodrel:source} in( {{select distinct{cat.pk} from {Category as cat} where {cat.pk} in ( {{select {rel:target} from {Category as c Join CategoryCategoryRelation as rel 	ON {c:PK} = {rel:source}} where {c.code}=?l2code and {c.catalogversion}= ?catalogVersion }}) }} ) "
+			.intern();
+	public static final String SITEMAP_PRODUCT_QUERY = "mpl.sitemap.productQuery".intern();
 	public static final String SITEMAP_CONTENT_QUERY = "mpl.sitemap.contentQuery".intern();
 	public static final String DEFAULT_SITEMAP_CONTENT_QUERY = "select {cp.pk} from {ContentPage as cp},{CmsApprovalStatus as cas},{catalogversion as cat} where {cp.approvalstatus}={cas.pk} and {cas.code}='approved' and {cp.catalogversion}={cat.pk} and {cat.version}='Online'"
 			.intern();
+	public static final String SITEMAP_HIERARCHY = "mpl.sitemap.hierarchy".intern();
+	public static final String SITEMAP_HIERARCHY_DEFAULT = "MSH1";
 	//update the message for Freebie product TPR-1754
 	//	public static final String PRODUCTFREEBIEDETMSGQUERY = "SELECT {prodOffrDet.ussId},{offerDet.freebieMsg},{prodOffrDet.startDate},{prodOffrDet.endDate}  FROM {FreebieDetail as offerDet}, {ProductFreebieDetail as  prodOffrDet} WHERE {prodOffrDet.ussId}= ?ussId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <=sysdate AND {prodOffrDet.endDate} >=sysdate"
 	//			.intern();
