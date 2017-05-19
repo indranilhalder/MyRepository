@@ -1013,7 +1013,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 						for (final OrderEntryData orderEntry : subOrder.getEntries())
 						{
 							getEDDeliveryDate(orderEntry);
-							//TISRLEE-1615- END 
+							//TISRLEE-1615- END
 
 							//getting the product code
 							final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
@@ -7641,9 +7641,38 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddressData.setPhone(addressForm.getMobileNo());
 			newAddressData.setFirstName(addressForm.getFirstName());
 			newAddressData.setLastName(addressForm.getLastName());
-			newAddressData.setLine1(addressForm.getLine1());
+
+			//TISPRDT-1238 starts
+			final String fullAddress = addressForm.getLine1();
+
+			String addressLine1 = "";
+			String addressLine2 = "";
+			String addressLine3 = "";
+
+			if (fullAddress.length() <= 40)
+			{
+				addressLine1 = fullAddress.substring(0, fullAddress.length());
+			}
+			else if (fullAddress.length() <= 80 && fullAddress.length() > 40)
+			{
+				addressLine1 = fullAddress.substring(0, 40);
+				addressLine2 = fullAddress.substring(40, fullAddress.length());
+			}
+			else if (fullAddress.length() > 80 && fullAddress.length() <= 120)
+			{
+				addressLine1 = fullAddress.substring(0, 40);
+				addressLine2 = fullAddress.substring(40, 80);
+				addressLine3 = fullAddress.substring(80, fullAddress.length());
+			}
+
+			//newAddressData.setLine1(addressForm.getLine1());
 			//newAddressData.setLine2(addressForm.getLine2());
 			//newAddressData.setLine3(addressForm.getLine3());
+			newAddressData.setLine1(addressLine1);
+			newAddressData.setLine2(addressLine2);
+			newAddressData.setLine3(addressLine3);
+			//TISPRDT-1238 ends
+
 			newAddressData.setTown(addressForm.getTownCity());
 			newAddressData.setCity(addressForm.getTownCity());
 			newAddressData.setPostalCode(addressForm.getPostcode());
@@ -7839,7 +7868,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 		return ControllerConstants.Views.Pages.Account.OTPPopup;
 	}
 
-	//Date Converting  Method BUG ID TISRLEE-1615- Start 
+	//Date Converting  Method BUG ID TISRLEE-1615- Start
 	private String getSelectedDate(final String date)
 	{
 		String finalString = null;
