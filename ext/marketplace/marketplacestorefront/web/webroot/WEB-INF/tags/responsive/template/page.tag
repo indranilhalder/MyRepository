@@ -5,11 +5,14 @@
 <%@ attribute name="hideHeaderLinks" required="false"%>
 <%@ attribute name="showOnlySiteLogo" required="false"%>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="header"
 	tagdir="/WEB-INF/tags/responsive/common/header"%>
 <%@ taglib prefix="footer"
 	tagdir="/WEB-INF/tags/responsive/common/footer"%>
+<%@ taglib prefix="luxuryHeader" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/common/header" %>
+<%@ taglib prefix="luxuryFooter" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/common/footer" %>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/responsive/common"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
@@ -31,16 +34,22 @@
 	</jsp:attribute>
 
 	<jsp:body>
-		<main data-currency-iso-code="${currentCurrency.isocode}">
-		
+	
+		<main data-currency-iso-code="${currentCurrency.isocode}">	
 		 <%-- <spring:theme code="text.skipToContent" var="skipToContent" />
 			<a href="#skip-to-content" class="skiptocontent" data-role="none">${skipToContent}</a>
 			<spring:theme code="text.skipToNavigation" var="skipToNavigation" />
 			<a href="#skiptonavigation" class="skiptonavigation" data-role="none">${skipToNavigation}</a> --%>
 
+			<c:choose>
+				<c:when test="${siteId eq 'lux'}">
+					<luxuryHeader:luxuryHeader hideHeaderLinks="${hideHeaderLinks}" />
+				</c:when>
+				<c:otherwise>
+					<header:header hideHeaderLinks="${hideHeaderLinks}" showOnlySiteLogo="${showOnlySiteLogo}" />
+				</c:otherwise>
+			</c:choose>
 
-			<header:header hideHeaderLinks="${hideHeaderLinks}"
-			showOnlySiteLogo="${showOnlySiteLogo}" />
 
 
 			<div class="mainContent-wrapper">
@@ -54,7 +63,14 @@
 			</div>
 			<c:choose>
             <c:when test="${empty showOnlySiteLogo }">
-				<footer:footer />
+				<c:choose>
+					<c:when test="${siteId eq 'lux'}">
+						<luxuryFooter:luxuryFooter/>
+					</c:when>
+					<c:otherwise>
+						<footer:footer/>
+					</c:otherwise>
+				</c:choose>			
 			</c:when>
 			<c:otherwise>
 			<c:if test="${empty hideAllFooter}">

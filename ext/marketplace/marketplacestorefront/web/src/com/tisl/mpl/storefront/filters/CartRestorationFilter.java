@@ -14,6 +14,7 @@
 package com.tisl.mpl.storefront.filters;
 
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commercefacades.order.CartFacade;
 import de.hybris.platform.commerceservices.order.CommerceCartRestorationException;
 import de.hybris.platform.order.CartService;
@@ -28,6 +29,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
@@ -131,6 +133,11 @@ public class CartRestorationFilter extends OncePerRequestFilter
 				}
 			}
 		}
+		final HttpSession session = request.getSession();
+		final BaseSiteModel site = getBaseSiteService().getCurrentBaseSite();
+		final String siteId = site != null ? site.getUid() : "";
+		session.setAttribute("siteId", siteId);
+
 		filterChain.doFilter(request, response);
 	}
 

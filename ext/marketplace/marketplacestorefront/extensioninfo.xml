@@ -17,6 +17,7 @@
 		
 
 		
+<requires-extension name="luxurycheckoutaddon"/>
 <requires-extension name="luxurystoreaddon"/>
 <requires-extension name="tealiumIQ"/>
 <requires-extension name="marketplacecaptchaaddon"/>
