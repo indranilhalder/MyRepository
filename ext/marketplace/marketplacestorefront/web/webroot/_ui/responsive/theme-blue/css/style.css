@@ -1943,17 +1943,29 @@ h2 {
                  }
                  }
                   @media (min-width: 791px) { 
+             /* UF-90 starts */
               header .content nav > ul > li > ul > li > ul.words {
-                -webkit-columns: 5;
+            /*     -webkit-columns: 5;
                 -moz-columns: 5;
                 columns: 5;
                 -webkit-column-width: 80px;
                 -moz-column-width: 80px;
-                column-width: 80px;
+                column-width: 80px;  */
                 background: #f5f5f5;
+                padding-bottom:10px;
                }
-              header .content nav > ul > li > ul > li > ul > li {
-                line-height: 26px; }
+              header .content nav > ul > li > ul > li > ul > li.l2_wrapper {
+                line-height: 26px;
+                display:inline-block;
+                margin-right:10px;
+                vertical-align:top; }
+                header .content nav > ul > li > ul > li > ul > li > ul > li.long .toggle{
+                font-weight:normal;
+                }
+                li.l2_wrapper{
+	            height: 430px;
+                 }
+               /*  UF-90 ends */
                 header .content nav > ul > li > ul > li > ul > li.short {
                   break-inside: avoid-column;
                   -webkit-column-break-inside: avoid;
