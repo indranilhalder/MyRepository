@@ -2008,8 +2008,8 @@ $(".product-tile .image .item.quickview").each(function(){
 					var pagination_top= sort_top - 16;
 				}
 				
-				/*TISPRDT-1179*/
-				if($("body").hasClass("page-search")){
+				/*TISPRDT-1179*/		/*TISPRDT-1222*/
+				if(!$("body").hasClass("page-productGrid")){
 				if($(".listing.wrapper .right-block .listing-menu > div.list_title_sort").css("display") == "block"){
 				$(".listing.wrapper .right-block .sort_by_wrapper.listing-menu").css("top",sort_top+"px");
 				}
@@ -2017,7 +2017,7 @@ $(".product-tile .image .item.quickview").each(function(){
 					$(".listing.wrapper .right-block .sort_by_wrapper.listing-menu").css("top","auto");
 				}
 				}
-				/*TISPRDT-1179*/
+				/*TISPRDT-1179*/		/*TISPRDT-1222*/
 				
 				$(".listing.wrapper .right-block .listing-menu > div .pagination.mobile.tablet-pagination").css("top",pagination_top+"px");
 			}

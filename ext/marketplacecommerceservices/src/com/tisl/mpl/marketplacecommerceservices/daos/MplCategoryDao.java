@@ -5,6 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.daos;
 
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.core.model.product.ProductModel;
 
 import java.util.Collection;
 import java.util.List;
@@ -24,4 +25,6 @@ public interface MplCategoryDao
 
 	//TPR-1285
 	List<CategoryModel> getLowestPrimaryCategories();
+
+	List<ProductModel> getProductForL2code(CatalogVersionModel catalogVersion, String l2CategoryCode);
 }

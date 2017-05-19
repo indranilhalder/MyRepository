@@ -14,11 +14,13 @@ import de.hybris.platform.acceleratorservices.sitemap.generator.SiteMapGenerator
 import de.hybris.platform.acceleratorservices.sitemap.generator.impl.CustomPageSiteMapGenerator;
 import de.hybris.platform.acceleratorservices.sitemap.generator.impl.ProductPageSiteMapGenerator;
 import de.hybris.platform.catalog.model.CatalogUnawareMediaModel;
+import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.model.site.CMSSiteModel;
 import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.cronjob.enums.CronJobResult;
 import de.hybris.platform.cronjob.enums.CronJobStatus;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
 
 import java.io.File;
@@ -29,10 +31,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -56,7 +61,10 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 	private CustomMediaService mediaService;
 	private MplCategoryDao mplCategoryDao;
 	private MplCustomPageSiteMapGenerator mplCustomPageSiteMapGenerator;
-
+	@Resource(name = "configurationService")
+	private ConfigurationService configurationService;
+	@Autowired
+	private CategoryService categoryService;
 
 	/**
 	 * This method performs the sitemap job for TPR-1285 Dynamic sitemap
@@ -90,39 +98,82 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 				if (generator instanceof ProductPageSiteMapGenerator
 						&& (updateType.equals(SiteMapUpdateModeEnum.PRODUCT) || updateType.equals(SiteMapUpdateModeEnum.ALL)))
 				{
-					final List<CategoryModel> categoryList = getMplCategoryDao().getLowestPrimaryCategories();
-					for (final CategoryModel categoryModel : categoryList)
+					//to do read from local properties
+					final CategoryModel L0Category = categoryService.getCategoryForCode(contentSite.getDefaultCatalog()
+							.getActiveCatalogVersion(), getHierarchy());
+
+					final List<CategoryModel> L1Category = L0Category.getCategories();
+
+					for (final CategoryModel category : L1Category)
 					{
-						final int count = 4;
-						final CategoryModel l2Cat = findCategoryLevel(categoryModel, count);
-						final CategoryModel l1Cat = findL2CategoryLevel(categoryModel, count);
-						String categoryName = l2Cat.getName();
-						if (StringUtils.isNotEmpty(l1Cat.getName()))
+						final List<CategoryModel> L2Category = category.getCategories();
+						for (final CategoryModel categoryl2 : L2Category)
 						{
-							categoryName = l1Cat.getName() + " " + l2Cat.getName();
-						}
-						final List models = categoryModel.getProducts();
-						if (CollectionUtils.isNotEmpty(models))
-						{
-							//Logic for splitting files based on model size
-							final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
-							if (models.size() > MAX_SITEMAP_LIMIT.intValue())
+							String categoryName = category.getName();
+							if (StringUtils.isNotEmpty(categoryl2.getName()))
 							{
-								final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
-								for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
-								{
-									generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, modelsList.get(modelIndex),
-											pageType, Integer.valueOf(modelIndex), categoryName);
-								}
+								categoryName = category.getName() + " " + categoryl2.getName();
 							}
-							else
+
+							final List models = getMplCategoryDao().getProductForL2code(
+									contentSite.getDefaultCatalog().getActiveCatalogVersion(), categoryl2.getCode());
+							if (CollectionUtils.isNotEmpty(models))
 							{
-								generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, models, pageType, null,
-										categoryName);
+								//Logic for splitting files based on model size
+								final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
+								if (models.size() > MAX_SITEMAP_LIMIT.intValue())
+								{
+									final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
+									for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+									{
+										generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig,
+												modelsList.get(modelIndex), pageType, Integer.valueOf(modelIndex), categoryName);
+									}
+								}
+								else
+								{
+									generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, models, pageType, null,
+											categoryName);
+								}
 							}
 						}
 					}
+
 				}
+				//					final List<CategoryModel> categoryList = getMplCategoryDao().getLowestPrimaryCategories();
+				//
+				//					for (final CategoryModel categoryModel : categoryList)
+				//					{
+				//						final int count = 4;
+				//						final CategoryModel l2Cat = findCategoryLevel(categoryModel, count);
+				//						final CategoryModel l1Cat = findL2CategoryLevel(categoryModel, count);
+				//						String categoryName = l2Cat.getName();
+				//						if (StringUtils.isNotEmpty(l1Cat.getName()))
+				//						{
+				//							categoryName = l1Cat.getName() + " " + l2Cat.getName();
+				//						}
+				//						final List models = categoryModel.getProducts();
+				//						if (CollectionUtils.isNotEmpty(models))
+				//						{
+				//							//Logic for splitting files based on model size
+				//							final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
+				//							if (models.size() > MAX_SITEMAP_LIMIT.intValue())
+				//							{
+				//								final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
+				//								for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+				//								{
+				//									generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, modelsList.get(modelIndex),
+				//											pageType, Integer.valueOf(modelIndex), categoryName);
+				//								}
+				//							}
+				//							else
+				//							{
+				//								generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, models, pageType, null,
+				//										categoryName);
+				//							}
+				//						}
+				//					}
+				//				}
 				//Logic for MplCustomPageSiteMapGenerator
 				else if (generator instanceof CustomPageSiteMapGenerator
 						&& (updateType.equals(SiteMapUpdateModeEnum.CUSTOM) || updateType.equals(SiteMapUpdateModeEnum.ALL)))
@@ -386,7 +437,14 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 
 
 
+	public String getHierarchy()
+	{
+		final String query = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SITEMAP_HIERARCHY,
+				MarketplacecommerceservicesConstants.SITEMAP_HIERARCHY_DEFAULT);
 
+		return query;
+	}
 
 
 }
