@@ -20,7 +20,8 @@
 	<c:set var="lowercasecharacter" value="${fn:toLowerCase(withoutspecial)}"/>
 	<input type="hidden" id="for_ia_hot_dropdown_name" value="${main}||${fn:replace(lowercasecharacter,' ', '-')}">
 	<input type="hidden" id="for_ia_hot_dropdown_code" value="${component.link.category.code}">
-	  
+	
+
 	<c:choose>
 	<c:when test="${not empty component.navigationNode.children}">
 			<span id="mobile-menu-toggle" class=""></span>		<!-- TPR-561 -->
@@ -28,11 +29,14 @@
 			<!-- <a class="sm-back js-enquire-sub-close" href="#">Back</a> -->
 			<ul class="words depts${component.link.category.code}"> <!-- TPR-561 -->
 				<li></li>		<!-- TPR-561 -->
-				<c:forEach items="${component.navigationNode.children}" var="child">
+				<c:forEach items="${component.navigationNode.children}" var="child1">
+				<li class="l2_wrapper"><ul>
+				<c:forEach items="${child1.children}" var="child">
+				
 					<c:if test="${child.visible}">
 		
 					
-						
+			
 					<c:set value="${fn:length(child.links)/component.wrapAfter}" var="columns"/>
 
 						<c:choose>
@@ -68,6 +72,7 @@
 								</div>
 								<span id="mobile-menu-toggle" class=""></span>		<!-- TPR-561 -->
 								</li>  <!-- TPR-561 -->
+								<li><a href="${component.navigationNode.children}" var="secondchild"></a></li>
 							</c:if>
 							
 							<c:if test="${columns > 1}">
@@ -76,7 +81,7 @@
 							
 								<c:forEach items="${child.links}" step="${component.wrapAfter}" var="childlink" varStatus="i">
 									<c:if test="${columns > 1}">
-										<%-- <div class=" sub-navigation-section-column ${columnClass} "> --%>
+										<div class=" sub-navigation-section-column ${columnClass} ">
 									</c:if>
 
 								
@@ -100,6 +105,9 @@
 							
 							
 					</c:if>
+					
+				</c:forEach>
+				</ul></li>
 				</c:forEach>
 				</ul>		<!-- TPR-561 -->
 				
