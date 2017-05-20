@@ -31,7 +31,8 @@ $freebiePriceThreshold=$config-freebiePriceThreshold
 
 # Create the solr server configuration
 INSERT_UPDATE SolrServerConfig;name[unique=true];mode(code);embeddedMaster;useMasterNodeExclusivelyForIndexing[default=false];maxTotalConnections;maxTotalConnectionsPerHostConfig
-;$serverConfigName;standalone;true;true;300;100
+;$serverConfigName;embedded;true;true;300;100
+
 
 # Create the solr indexer configuration
 INSERT_UPDATE SolrIndexConfig;name[unique=true];batchSize;numberOfThreads;indexMode(code);optimizeMode(code);ignoreErrors[default=false]
@@ -46,8 +47,22 @@ INSERT_UPDATE SolrSearchConfig;description[unique=true];pageSize
 #
 
 # Declare the indexed type Product
-INSERT_UPDATE SolrIndexedType;identifier[unique=true];identityProvider;type(code);variant;sorts(&sortRefID)
-;$solrIndexedType;Product;itemIdentityProvider;false;sortRef1,sortRef3,sortRef4,sortRef5,sortRef6,sortRef7,sortRef8,sortRef9
+INSERT_UPDATE SolrIndexedType;identifier[unique=true];identityProvider;type(code);variant
+;$solrIndexedType;itemIdentityProvider;Product;false
+
+# Define the available sorts
+INSERT_UPDATE SolrSort;&sortRefID;indexedType(identifier)[unique=true];code[unique=true];useBoost;name
+;sortRef1;$solrIndexedType;relevance;true;
+;sortRef3;$solrIndexedType;name-asc;false;
+;sortRef4;$solrIndexedType;name-desc;false;
+;sortRef5;$solrIndexedType;price-asc;false;
+;sortRef6;$solrIndexedType;price-desc;false;
+;sortRef7;$solrIndexedType;isDiscountedPrice;false;
+;sortRef8;$solrIndexedType;isProductNew;false;Newest
+;sortRef9;$solrIndexedType;promotedpriority-asc;false;
+
+INSERT_UPDATE SolrIndexedType;identifier[unique=true];sorts(&sortRefID)
+;$solrIndexedType;sortRef1,sortRef3,sortRef4,sortRef5,sortRef6,sortRef7,sortRef8,sortRef9
 
 INSERT_UPDATE SolrFacetSearchConfig;name[unique=true];description;indexNamePrefix;languages(isocode);currencies(isocode);solrServerConfig(name);solrSearchConfig(description);solrIndexConfig(name);solrIndexedTypes(identifier);enabledLanguageFallbackMechanism;$catalogVersions
 ;$facetSearchConfigName;$facetSearchConfigDescription;$searchIndexNamePrefix;$indexLanguages;$indexCurrencies;$serverConfigName;$searchConfigName;$indexConfigName;$solrIndexedType;true;$productCatalog:Online,$productCatalog:Staged
@@ -60,11 +75,11 @@ UPDATE BaseStore;uid[unique=true];solrFacetSearchConfiguration(name)
 
 
 # Define price range set
-INSERT_UPDATE SolrValueRangeSet;name[unique=true];qualifier;type;solrValueRanges(&rangeValueRefID)
-;luxElectronicsPriceRangeINR;INR-ELECTRONICS;double;luxRangeRefElectronicsINR1,luxRangeRefElectronicsINR2,luxRangeRefElectronicsINR3,luxRangeRefElectronicsINR4,luxRangeRefElectronicsINR5,luxRangeRefElectronicsINR6,luxRangeRefElectronicsINR7,luxRangeRefElectronicsINR8,luxRangeRefElectronicsINR9
-;luxApparelPriceRangeINR;INR-APPAREL;double;luxRangeRefApparelINR1,luxRangeRefApparelINR2,luxRangeRefApparelINR3,luxRangeRefApparelINR4,luxRangeRefApparelINR5,luxRangeRefApparelINR6,luxRangeRefApparelINR7
-;luxFacetAvgRating;;double;avgRatingRef1,avgRatingRef2,avgRatingRef3,avgRatingRef4,avgRatingRef5
-;luxDiscountRange;DISCOUNT;double;discountRangeRef1,discountRangeRef2,discountRangeRef3,discountRangeRef4,discountRangeRef5
+INSERT_UPDATE SolrValueRangeSet;name[unique=true];qualifier;type
+;luxElectronicsPriceRangeINR;INR-ELECTRONICS;double
+;luxApparelPriceRangeINR;INR-APPAREL;double
+;luxFacetAvgRating;;double
+;luxDiscountRange;DISCOUNT;double
 
 
 # Define price ranges
@@ -98,6 +113,12 @@ INSERT_UPDATE SolrValueRange;&rangeValueRefID;solrValueRangeSet(name)[unique=tru
 ;discountRangeRef3;luxDiscountRange;	30% - 50%;		30.01;	50
 ;discountRangeRef4;luxDiscountRange;	50% - 70%;		50.01;	70
 ;discountRangeRef5;luxDiscountRange;	70% and more;	70.01;	100
+
+INSERT_UPDATE SolrValueRangeSet;name[unique=true];solrValueRanges(&rangeValueRefID)
+;luxElectronicsPriceRangeINR;luxRangeRefElectronicsINR1,luxRangeRefElectronicsINR2,luxRangeRefElectronicsINR3,luxRangeRefElectronicsINR4,luxRangeRefElectronicsINR5,luxRangeRefElectronicsINR6,luxRangeRefElectronicsINR7,luxRangeRefElectronicsINR8,luxRangeRefElectronicsINR9
+;luxApparelPriceRangeINR;luxRangeRefApparelINR1,luxRangeRefApparelINR2,luxRangeRefApparelINR3,luxRangeRefApparelINR4,luxRangeRefApparelINR5,luxRangeRefApparelINR6,luxRangeRefApparelINR7
+;luxFacetAvgRating;avgRatingRef1,avgRatingRef2,avgRatingRef3,avgRatingRef4,avgRatingRef5
+;luxDiscountRange;discountRangeRef1,discountRangeRef2,discountRangeRef3,discountRangeRef4,discountRangeRef5
 
 # Non-facet properties
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter
@@ -208,17 +229,6 @@ SELECT distinct pk,code from ({{SELECT {p.PK} as pk , {p:code} AS code FROM {Pro
 ";anonymous
 ;$solrIndexedType;$searchIndexNamePrefix-deleteQuery;delete;;;;"SELECT distinct{p.PK} FROM {Product AS p} 						WHERE {p.code} IN ( 										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 													WHERE 	{bbox:modifiedtime} + 15/1440>= ?lastIndexTime 													AND ({bbox.product}={p.code} 													AND ({bbox.delisted} = 1 														OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate})))													AND {bbox.product} NOT IN (													{{														SELECT distinct{bbox.product} FROM {BuyBox AS bbox} 															WHERE {bbox.delisted} != 1 															AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})													}})										}} 									) 						AND {p.varianttype} IS NULL
 ";anonymous
-
-# Define the available sorts
-INSERT_UPDATE SolrSort;&sortRefID;indexedType(identifier)[unique=true];code[unique=true];useBoost;name
-;sortRef1;$solrIndexedType;relevance;true;
-;sortRef3;$solrIndexedType;name-asc;false;
-;sortRef4;$solrIndexedType;name-desc;false;
-;sortRef5;$solrIndexedType;price-asc;false;
-;sortRef6;$solrIndexedType;price-desc;false;
-;sortRef7;$solrIndexedType;isDiscountedPrice;false;
-;sortRef8;$solrIndexedType;isProductNew;false;Newest
-;sortRef9;$solrIndexedType;promotedpriority-asc;false;
 
 # Define the sort fields
 INSERT_UPDATE SolrSortField;sort(indexedType(identifier),code)[unique=true];fieldName[unique=true];ascending[unique=true];sortpos
@@ -472,14 +482,14 @@ INSERT_UPDATE  SolrIndexedProperty;solrIndexedType(identifier);name[unique=true]
 ;$solrIndexedType;capacityLitreCC-classification;double;true;true;litre
 ;$solrIndexedType;operatingSystem-classification;string;true;false;
 
-INSERT_UPDATE SolrValueRangeSet;name[unique=true];qualifier;type;solrValueRanges(&rangeValueRefID)
-;luxPrimaryCameraRange;;double;luxPrimaryCameraRange1,luxPrimaryCameraRange2,luxPrimaryCameraRange3,luxPrimaryCameraRange4,luxPrimaryCameraRange5
-;luxProcessorRange;;double;luxProcessorRange1,luxProcessorRange2,luxProcessorRange3,luxProcessorRange4
-;luxRamFacetRange;;double;luxRamRange1,luxRamRange2,luxRamRange3,luxRamRange4
-;luxScreenSizeRange;;double;luxScreenSize1,luxScreenSize2,luxScreenSize3,luxScreenSize4,luxScreenSize5
-;luxMemoryRange;;double;luxMemoryRange1,luxMemoryRange2,luxMemoryRange3,luxMemoryRange4,luxMemoryRange5,luxMemoryRange6,luxMemoryRange7,luxMemoryRange8,luxMemoryRange9
-;luxWeightCapacityRange;;double;luxWeightCapacityRange1,luxWeightCapacityRange2,luxWeightCapacityRange3,luxWeightCapacityRange4
-;luxVolumeCapacityRange;;double;luxVolumeCapacityRange1,luxVolumeCapacityRange2,luxVolumeCapacityRange3,luxVolumeCapacityRange4,luxVolumeCapacityRange5,luxVolumeCapacityRange6
+INSERT_UPDATE SolrValueRangeSet;name[unique=true];qualifier;type
+;luxPrimaryCameraRange;;double
+;luxProcessorRange;;double
+;luxRamFacetRange;;double
+;luxScreenSizeRange;;double
+;luxMemoryRange;;double
+;luxWeightCapacityRange;;double
+;luxVolumeCapacityRange;;double
 
 
 INSERT_UPDATE SolrValueRange;&rangeValueRefID;solrValueRangeSet(name);name[unique=true];from;to
@@ -522,6 +532,14 @@ INSERT_UPDATE SolrValueRange;&rangeValueRefID;solrValueRangeSet(name);name[uniqu
 ;luxVolumeCapacityRange6;luxVolumeCapacityRange;    350 L and above; 	350.0 ;1000.0
 
 
+INSERT_UPDATE SolrValueRangeSet;solrValueRanges(&rangeValueRefID)
+;luxPrimaryCameraRange;luxPrimaryCameraRange1,luxPrimaryCameraRange2,luxPrimaryCameraRange3,luxPrimaryCameraRange4,luxPrimaryCameraRange5
+;luxProcessorRange;luxProcessorRange1,luxProcessorRange2,luxProcessorRange3,luxProcessorRange4
+;luxRamFacetRange;luxRamRange1,luxRamRange2,luxRamRange3,luxRamRange4
+;luxScreenSizeRange;luxScreenSize1,luxScreenSize2,luxScreenSize3,luxScreenSize4,luxScreenSize5
+;luxMemoryRange;luxMemoryRange1,luxMemoryRange2,luxMemoryRange3,luxMemoryRange4,luxMemoryRange5,luxMemoryRange6,luxMemoryRange7,luxMemoryRange8,luxMemoryRange9
+;luxWeightCapacityRange;luxWeightCapacityRange1,luxWeightCapacityRange2,luxWeightCapacityRange3,luxWeightCapacityRange4
+;luxVolumeCapacityRange;luxVolumeCapacityRange1,luxVolumeCapacityRange2,luxVolumeCapacityRange3,luxVolumeCapacityRange4,luxVolumeCapacityRange5,luxVolumeCapacityRange6
 
 
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];sortableType(code);currency[default=false];localized[default=true];multiValue[default=false];facet[default=true];facetType(code);facetSort(code);priority;visible;useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;facetDisplayNameProvider;customFacetSortProvider;topValuesProvider;rangeSets(name);displayname
