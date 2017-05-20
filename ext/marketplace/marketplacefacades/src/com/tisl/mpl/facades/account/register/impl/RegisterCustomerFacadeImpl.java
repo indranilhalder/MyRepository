@@ -306,12 +306,12 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 					newCustomer.setFirstName(registerData.getFirstName());
 					newCustomer.setLastName(registerData.getLastName());
 					if (registerData.getGender() != null && !"".equals(registerData.getGender())
-							&& "MALE".equals(registerData.getGender()))
+							&& MplConstants.MALE.equals(registerData.getGender()))
 					{
 						newCustomer.setGender(Gender.MALE);
 					}
 					if (registerData.getGender() != null && !"".equals(registerData.getGender())
-							&& "FEMALE".equals(registerData.getGender()))
+							&& MplConstants.FEMALE.equals(registerData.getGender()))
 					{
 						newCustomer.setGender(Gender.FEMALE);
 					}
