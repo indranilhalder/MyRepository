@@ -2359,17 +2359,7 @@ $("#otpMobileNUMField").focus(function(){
 		/*$(".new-card input#sameAsShippingEmi:checked + label + fieldset").css("display","block");*/
 		$("input#sameAsShippingEmi:checked + label + fieldset").css("display","block");
 		$('#sameAsShippingEmi').attr('checked', false); 
-}
-
-
- function openShippingFrmOpenEMI(){
-		$("#firstNameEmi, #lastNameEmi, #address1Emi, #address2Emi, #address3Emi, #stateEmi, #cityEmi, #pincodeEmi").attr("readonly", false);
-		$("#countryEmi").attr("disabled", false);
-		/*$(".new-card input#sameAsShippingEmi:checked + label + fieldset").css("display","block");*/
-		$("input#sameAsShippingEmi:checked + label + fieldset").css("display","block");
-		$('#sameAsShippingEmi').attr('checked', false); 
-}
- 
+} 
 // function dopaymentDc(bin_current_status){
 //	 var name = validateNameDc();
 //	 if(bin_current_status==true){
