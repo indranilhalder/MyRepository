@@ -26,6 +26,7 @@ import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.io.PrintWriter;
 import java.util.Collections;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -49,12 +50,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tisl.lux.facade.LuxurySiteFacade;
 import com.tisl.mpl.data.FriendsInviteData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.FriendsInviteFacade;
+import com.tisl.mpl.facades.account.register.MplCustomerProfileFacade;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.product.data.ExtRegisterData;
+import com.tisl.mpl.facades.product.data.GenderData;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -91,7 +95,11 @@ public class LoginPageController extends AbstractLoginPageController
 	private static final Logger LOG = Logger.getLogger(LoginPageController.class);
 
 	private static final String LOGIN_SUCCESS = "loginSuccess";
+	@Autowired
+	private MplCustomerProfileFacade mplCustomerProfileFacade;
 
+	@Autowired
+	private LuxurySiteFacade luxurySiteFacade;
 
 	/**
 	 * @return the registerPageValidator
@@ -159,8 +167,9 @@ public class LoginPageController extends AbstractLoginPageController
 			setUpMetaDataForContentPage(model, (ContentPageModel) getCmsPage());
 			model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.INDEX_NOFOLLOW);
 
-			final Breadcrumb loginBreadcrumbEntry = new Breadcrumb(ModelAttributetConstants.HASH_VAL, getMessageSource().getMessage(
-					MessageConstants.HEADER_LINK_LOGIN, null, getI18nService().getCurrentLocale()), null);
+			final Breadcrumb loginBreadcrumbEntry = new Breadcrumb(ModelAttributetConstants.HASH_VAL,
+					getMessageSource().getMessage(MessageConstants.HEADER_LINK_LOGIN, null, getI18nService().getCurrentLocale()),
+					null);
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS, Collections.singletonList(loginBreadcrumbEntry));
 
 			if (null != sessionService.getAttribute(ModelAttributetConstants.ERROR_ATTEPT))
@@ -185,7 +194,16 @@ public class LoginPageController extends AbstractLoginPageController
 				model.addAttribute(ModelAttributetConstants.COUNT, sessionService.getAttribute(ModelAttributetConstants.COUNT));
 			}
 			storeContentPageTitleInModel(model, MessageConstants.LOGIN_PAGE_TITLE);
-			returnPage = getView();
+
+
+			if (luxurySiteFacade.isLuxurySite())
+			{
+				return ControllerConstants.Views.Fragments.Home.ChangePasswordFragment;
+			}
+			else
+			{
+				returnPage = getView();
+			}
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -255,7 +273,8 @@ public class LoginPageController extends AbstractLoginPageController
 		String returnPage = null;
 		try
 		{
-
+			final List<GenderData> genderList = mplCustomerProfileFacade.getGenders();
+			model.addAttribute(ModelAttributetConstants.GENDER_DATA, genderList);
 			if (!StringUtils.isBlank(affiliateId))
 			{
 				final ExtRegisterForm form = new ExtRegisterForm();
@@ -312,8 +331,8 @@ public class LoginPageController extends AbstractLoginPageController
 	 */
 	private String getCaptchaKey()
 	{
-		final String recaptchaKey = configurationService.getConfiguration().getString(
-				ModelAttributetConstants.RECAPTCHA_PUBLIC_KEY_PROPERTY);
+		final String recaptchaKey = configurationService.getConfiguration()
+				.getString(ModelAttributetConstants.RECAPTCHA_PUBLIC_KEY_PROPERTY);
 
 		return recaptchaKey;
 	}
@@ -360,7 +379,7 @@ public class LoginPageController extends AbstractLoginPageController
 			form.setPwd(password);
 			form.setCheckPwd(rePassword);
 
-			getRegisterPageValidator().validate(form, bindingResult);
+			getRegisterPageValidator().validate(form, bindingResult);//validation for mobile, fname, lname, gender pending
 			//return processRegisterUserRequestNew(referer, form, bindingResult, model, request, response, redirectModel);
 			returnPage = processRegisterUserRequestNew(form, bindingResult, model, request, response, redirectModel);
 		}
@@ -421,7 +440,10 @@ public class LoginPageController extends AbstractLoginPageController
 			data.setLogin(form.getEmail().toLowerCase());
 			data.setPassword(form.getPwd());
 			data.setAffiliateId(form.getAffiliateId());
-
+			data.setGender(form.getGender());
+			data.setFirstName(form.getFirstName());
+			data.setLastName(form.getLastName());
+			data.setMobilenumber(form.getMobileNumber());
 			//implementation for TISCR-278 :start
 
 			if (null != request.getParameter(ModelAttributetConstants.CHECK_MY_REWARDS)
