@@ -8,7 +8,7 @@ import de.hybris.platform.site.BaseSiteService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tisl.lux.facade.LuxurySiteFacade;
+import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 
 
@@ -16,7 +16,7 @@ import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
  * @author vishal.parmar
  *
  */
-public class DefaultLuxurySiteFacade implements LuxurySiteFacade
+public class CommonUtilsImpl implements CommonUtils
 {
 	@Autowired
 	private BaseSiteService baseSiteService;

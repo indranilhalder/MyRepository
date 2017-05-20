@@ -56,7 +56,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.tisl.lux.facade.LuxurySiteFacade;
+import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -132,7 +132,7 @@ public class PasswordResetPageController extends AbstractPageController
 
 
 	@Autowired
-	private LuxurySiteFacade luxurySiteFacade;
+	private CommonUtils commonUtils;
 
 	/**
 	 * @description method is called to get PasswordRequest
@@ -170,7 +170,7 @@ public class PasswordResetPageController extends AbstractPageController
 			}
 
 
-			if (luxurySiteFacade.isLuxurySite())
+			if (commonUtils.isLuxurySite())
 			{
 				System.out.println("returning forgottenpwdfragment");
 				return ControllerConstants.Views.Fragments.Password.ForgottenPwdFragment;

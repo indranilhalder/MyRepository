@@ -1944,5 +1944,5 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<!-- close R2.3 Changes -->
 	
 	
-	 <bean id="luxurySiteFacade" class="com.tisl.lux.facade.impl.DefaultLuxurySiteFacade"/>
+	 <bean id="commonUtils" class="com.tisl.lux.facade.impl.CommonUtilsImpl"/>
 </beans>
