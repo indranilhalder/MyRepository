@@ -54,7 +54,7 @@
 			<div class="right-account">
 				<div class="info">
 					<h2><spring:theme code="profile.heading.text" text="My Profile"/></h2>		<!--  UF-249 text change -->
-					<p><spring:theme code="profile.heading.deatils" text="Change your name, email, phone number here. "/></p>
+					<p><spring:theme code="profile.heading.deatils" text="Manage your account details including your name, contact number and password"/></p>
 					<%-- <form> --%>
 					<fieldset>
 						<form:form action="update-parsonal-detail" method="post" commandName="mplCustomerProfileForm" name="mplCustomerProfileForm" onSubmit="return validateForm();">

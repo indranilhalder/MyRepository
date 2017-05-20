@@ -91,7 +91,7 @@
 		 	<div class="invites">
 				<h2><spring:theme code="text.InviteFriends.SendYourInvite" text="Invite Your Friends"/></h2>		<!--  UF-249 text change -->
 				
-				<p><spring:theme code="text.InviteFriends.SendInvitationEmail" text="Invite your mum, dad, friends, bros, aunties, uncles, next-door neighbors Call everybody here!"/></p>
+				<p><spring:theme code="text.InviteFriends.SendInvitationEmail" text="Recommed us to your friends and family. Send them an invite!"/></p>
                 <form>
 						<c:if test="${not empty textMessage}">
 							<c:set var="textMessage" value="Hey, I was blown away by the incredible shopping experience at Tata CLiQ. I highly recommend that you register as a member as well"></c:set>
