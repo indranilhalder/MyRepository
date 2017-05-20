@@ -198,7 +198,8 @@ public class LoginPageController extends AbstractLoginPageController
 
 			if (luxurySiteFacade.isLuxurySite())
 			{
-				return ControllerConstants.Views.Fragments.Home.ChangePasswordFragment;
+				System.out.println("returning ChangePasswordFragment");
+				return ControllerConstants.Views.Fragments.Home.RegisterFragment;
 			}
 			else
 			{
@@ -378,7 +379,8 @@ public class LoginPageController extends AbstractLoginPageController
 			final String rePassword = java.net.URLDecoder.decode(request.getParameter("checkPwd"), "UTF-8");
 			form.setPwd(password);
 			form.setCheckPwd(rePassword);
-
+			LOG.info("inside doRegister");
+			System.out.println("inside doRegister");
 			getRegisterPageValidator().validate(form, bindingResult);//validation for mobile, fname, lname, gender pending
 			//return processRegisterUserRequestNew(referer, form, bindingResult, model, request, response, redirectModel);
 			returnPage = processRegisterUserRequestNew(form, bindingResult, model, request, response, redirectModel);
