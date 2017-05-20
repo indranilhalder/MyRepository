@@ -13,7 +13,6 @@ import de.hybris.platform.commercefacades.user.data.RegisterData;
 import de.hybris.platform.commercefacades.user.exceptions.PasswordMismatchException;
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
 import de.hybris.platform.commerceservices.enums.CustomerType;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.enums.Gender;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -25,9 +24,7 @@ import de.hybris.platform.servicelayer.keygenerator.KeyGenerator;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.services.BaseStoreService;
-import de.hybris.platform.workflow.EmailService;
 
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -97,10 +94,9 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	ConfigurationService configurationService;
 
 
-
-	@Resource(name = "defaultEmailService")
-	private EmailService emailService;
-
+	/*
+	 * @Resource(name = "defaultEmailService") private EmailService emailService;
+	 */
 
 	/**
 	 * @return the userUniqueIdGenerator
@@ -693,8 +689,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 			try
 			{
 				input = new FileInputStream(invoiceFile);
-				emailAttachment = emailService.createEmailAttachment(new DataInputStream(input), invoiceFileName,
-						"application/octet-stream");
+				//emailAttachment = emailService.createEmailAttachment(new DataInputStream(input), invoiceFileName,
+				//	"application/octet-stream");
 
 				LOG.info("******Invoice Email Attachment Created Successfully!!!******" + emailAttachment.getCode());
 
