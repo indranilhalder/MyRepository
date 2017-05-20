@@ -291,7 +291,7 @@ public interface ControllerConstants
 				String LatestOffers = "fragments/home/latestOffersPanel";
 				String ShopByBrandImagesPanel = "fragments/home/shopByBrandImagesPanel";
 				String FooterPanel = "fragments/home/footerPanel";
-				String ChangePasswordFragment = ADDONPREFIX + "/fragments/home/luxRegister";
+				String RegisterFragment = ADDONPREFIX + "/fragments/home/luxRegister";
 			}
 
 			interface Cart

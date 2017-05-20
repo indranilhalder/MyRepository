@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.routines.DomainValidator;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -40,6 +41,7 @@ public class RegisterPageValidator implements Validator
 	//"((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%*&.]).{8,16})";
 	@Autowired
 	private LuxurySiteFacade luxurySiteFacade;
+	private static final Logger LOG = Logger.getLogger(RegisterPageValidator.class);
 
 	@Override
 	public boolean supports(final Class<?> aClass)
@@ -59,7 +61,20 @@ public class RegisterPageValidator implements Validator
 		final String lastName = registerForm.getLastName();
 		final String mobileNumber = registerForm.getMobileNumber();
 		final String gender = registerForm.getGender();
+		LOG.info("inside validate");
+		System.out.println("firstName:::" + firstName);
+		System.out.println("lastName:::" + lastName);
+		System.out.println("mobileNumber:::" + mobileNumber);
+		System.out.println("gender:::" + gender);
 
+		System.out.println("email" + email);
+		System.out.println("checkPwd" + checkPwd);
+
+
+		LOG.info("firstName" + firstName);
+		LOG.info("lastName" + lastName);
+		LOG.info("mobileNumber" + mobileNumber);
+		LOG.info("gender" + gender);
 
 		if (StringUtils.isEmpty(email))
 		{
@@ -108,9 +123,12 @@ public class RegisterPageValidator implements Validator
 				errors.rejectValue("checkPwd", "register.checkPwd.invalid");
 			}
 		}
+		LOG.info("isLuxury:::" + luxurySiteFacade.isLuxurySite());
 
 		if (luxurySiteFacade.isLuxurySite())
 		{
+
+
 			if (!StringUtils.isEmpty(firstName) && !CommonAsciiValidator.validateAlphaWithSpaceNoSpCh(firstName)
 					|| StringUtils.length(firstName) > MAX_FIELD_LENGTH_40)
 			{
