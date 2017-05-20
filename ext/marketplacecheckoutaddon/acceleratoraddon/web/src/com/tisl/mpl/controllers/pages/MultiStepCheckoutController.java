@@ -58,8 +58,8 @@ public class MultiStepCheckoutController extends AbstractCheckoutStepController
 	@Override
 	@RequestMapping(method = RequestMethod.GET)
 	@PreValidateCheckoutStep(checkoutStep = MULTI)
-	public String enterStep(final Model model, final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException,
-			CommerceCartModificationException
+	public String enterStep(final Model model, final RedirectAttributes redirectAttributes)
+			throws CMSItemNotFoundException, CommerceCartModificationException
 	{
 		// In case of Normal checkout delivery address will be removed while moving to checkout page
 		//TIS-391
@@ -76,6 +76,10 @@ public class MultiStepCheckoutController extends AbstractCheckoutStepController
 		storeCmsPageInModel(model, pageForRequest);
 		setUpMetaDataForContentPage(model, pageForRequest);
 		model.addAttribute(WebConstants.BREADCRUMBS_KEY, getContentPageBreadcrumbBuilder().getBreadcrumbs(pageForRequest));
+		if (isLuxurySite())
+		{
+			return MarketplacecheckoutaddonControllerConstants.Views.Fragments.LuxuryCheckout.TermsAndConditionsPopup;
+		}
 		return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.TermsAndConditionsPopup;
 	}
 
@@ -83,7 +87,7 @@ public class MultiStepCheckoutController extends AbstractCheckoutStepController
 	@RequireHardLogIn
 	public String performExpressCheckout(final Model model, final RedirectAttributes redirectModel,
 			@RequestParam("expressCheckoutAddressSelector") final String expressCheckoutAddressSelector)
-			throws CMSItemNotFoundException, CommerceCartModificationException
+					throws CMSItemNotFoundException, CommerceCartModificationException
 	{
 		try
 		{
