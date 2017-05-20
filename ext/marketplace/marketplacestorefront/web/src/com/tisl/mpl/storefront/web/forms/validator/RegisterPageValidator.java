@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.tisl.lux.facade.LuxurySiteFacade;
+import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.storefront.businessvalidator.CommonAsciiValidator;
 import com.tisl.mpl.storefront.web.forms.ExtRegisterForm;
@@ -40,7 +40,7 @@ public class RegisterPageValidator implements Validator
 	private static final int MAX_FIELD_LENGTH_40 = 40;
 	//"((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%*&.]).{8,16})";
 	@Autowired
-	private LuxurySiteFacade luxurySiteFacade;
+	private CommonUtils commonUtils;
 	private static final Logger LOG = Logger.getLogger(RegisterPageValidator.class);
 
 	@Override
@@ -123,9 +123,9 @@ public class RegisterPageValidator implements Validator
 				errors.rejectValue("checkPwd", "register.checkPwd.invalid");
 			}
 		}
-		LOG.info("isLuxury:::" + luxurySiteFacade.isLuxurySite());
+		LOG.info("isLuxury:::" + commonUtils.isLuxurySite());
 
-		if (luxurySiteFacade.isLuxurySite())
+		if (commonUtils.isLuxurySite())
 		{
 
 

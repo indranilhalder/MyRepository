@@ -50,7 +50,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.tisl.lux.facade.LuxurySiteFacade;
+import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.data.FriendsInviteData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -99,7 +99,7 @@ public class LoginPageController extends AbstractLoginPageController
 	private MplCustomerProfileFacade mplCustomerProfileFacade;
 
 	@Autowired
-	private LuxurySiteFacade luxurySiteFacade;
+	private CommonUtils commonUtils;
 
 	/**
 	 * @return the registerPageValidator
@@ -196,7 +196,7 @@ public class LoginPageController extends AbstractLoginPageController
 			storeContentPageTitleInModel(model, MessageConstants.LOGIN_PAGE_TITLE);
 
 
-			if (luxurySiteFacade.isLuxurySite())
+			if (commonUtils.isLuxurySite())
 			{
 				System.out.println("returning ChangePasswordFragment");
 				return ControllerConstants.Views.Fragments.Home.RegisterFragment;
