@@ -9,6 +9,7 @@ $productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCata
 # Import modulegen config properties into impex macros
 UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
 $jarResourceCms=$config-jarResourceCmsValue
+$luxuryStoreAddonPrefix=addon:/luxurystoreaddon
 
 # Create PageTemplates
 # These define the layout for pages
@@ -82,7 +83,7 @@ INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;fronten
 ;;OrderConfirmationPageTemplate;Order Confirmation Page Template;;ContentPage;false;
 
 ##Luxury Homepage
-;;luxuryHomePageTemplate;Luxury Home Page Template;layout/luxuryHomePage;ContentPage;true                
+;;luxuryHomePageTemplate;Luxury Home Page Template;$luxuryStoreAddonPrefix/pages/layout/luxuryHomePage;ContentPage;true                
 
 
 
@@ -1487,8 +1488,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 
 # Site-wide Homepage
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='true']
-;;homepage;Homepage;LandingPage2Template;homepage
-;;luxuryHomePage;Luxury Home Page;luxuryHomePageTemplate;luxuryHomePage
+;;homepage;Homepage;luxuryHomePageTemplate;homepage
 
 
 # Preview Image for use in the CMS Cockpit for special ContentPages
@@ -1762,6 +1762,18 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;BottomHeaderSlot-ShopTheStylePageTemplate;BottomHeaderSlot;;BottomHeaderSlot;true
 ;;PlaceholderContentSlot-ShopTheStylePageTemplate;PlaceholderContentSlot;;PlaceholderContentSlot;true
 
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;MiddleHeader;helpLink;true               
+;;HomeTopHeroBannerLeft;Left Top Hero Banner Home page;true              
+;;HomeTopHeroBannerRight;Right Top Hero Banner Home page;true             
+;;LeftContentSlot;Middle Left Banner;true          
+;;RightContentSlot;Middle Right Banner;true        
+;;HomePageCurosel;Home Page Curosel;true 
+;;WhyShopOnLuxury;Why Shop On Luxury;true                
+;;TopHeaderSlot;Top header slot;true       
+;;Footer;Footer;true        
+;;NavigationBarSlot;Navigation Bar Slot;true
+
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='luxuryHomePageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
 ;;TopHeaderSlot;TopHeaderSlot;;TopHeaderSlot;true          
 ;;MiddleHeaderHelpLink;MiddleHeader;;MiddleHeader;true          
@@ -1771,11 +1783,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;MiniCart;MiniCart;;MiniCartSlot;true          
 ;;NavigationBar;NavigationBar;;NavigationBarSlot;true          
 ;;HomeTopBannerMen;TopBannerMen;;HomeTopHeroBannerLeft;true          
-;;HomeTopBannerWomen;TopBannerWomen;;HomeTopHeroBannerRight;true          
-;;Categorybanner1;Categorybanner1;;Categorybanner1Slot;true          
-;;Categorybanner2;Categorybanner2;;Categorybanner2Slot;true          
-;;Categorybanner3;Categorybanner3;;Categorybanner3Slot;true          
-;;Categorybanner4;Categorybanner4;;Categorybanner4Slot;true          
+;;HomeTopBannerWomen;TopBannerWomen;;HomeTopHeroBannerRight;true                   
 ;;LeftContentSlot;LeftContentSlot;;LeftContentSlot;true          
 ;;RightContentSlot;RightContentSlot;;RightContentSlot;true          
 ;;HomePageCurosel;HomePageCurosel;;HomePageCurosel;true          

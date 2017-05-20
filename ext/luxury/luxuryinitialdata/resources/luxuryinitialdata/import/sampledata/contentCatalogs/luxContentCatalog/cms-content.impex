@@ -22,6 +22,7 @@ $jarResourceCms=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata
 
 # Load the storefront context root config param
 $storefrontContextRoot=$config-storefrontContextRoot
+$lang=en
 
 # Site Logo Component
 INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink
@@ -51,6 +52,8 @@ INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url
 ;;AccountMyStyleProfileLink;AccountMyStyleProfileLink;/my-account/myStyleProfile;;;;;;
 ;;AccountInviteFriendsLink;AccountInviteFriendsLink;/my-account/friendsInvite;;;;;;
 
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]  
+;;HomepageNavLink;HomepageNavLink;/;HomepageNavLink;HomepageNavLink;;;;
 ;;NewArrivalsCategoryLink;New Arrivals Category Link;/;NewArrivalsCategoryLink;NewArrivalsCategoryLink;;;;                  
 ;;WomenCategoryLink;Women Category Link;/;WomenCategoryLink;WomenCategoryLink;;;;                  
 ;;MenCategoryLink;Men Category Link;/;MenCategoryLink;MenCategoryLink;;;;                  
@@ -89,10 +92,23 @@ INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;pa
 ;AccountInviteFriendsNavNode;;Invite Friends;SiteRootNode;;AccountInviteFriendsLink;AccountInviteFriendsNavNode
 
 ###Footer changes for Non Product Pages
-;NPPageTataMarketplaceNavNode;;Tata Marketplace Pages;SiteRootNode;;AboutUsLink,CareersLink,SellWithUSLink,StoreLocatorLink;NPPageTataMarketplaceNavNode
-;NPPageCustomerServiceNavNode;;Customer Service Pages;;;ContactUsLink,FrequentlyAskedQuestionsLink,TrackOrdersLink,ShippingLink,CancellationLink,ReturnsLink;NPPageCustomerServiceNavNode;
-;PaymentServiceNode;; Terms and condition payment page;SiteRootNode;;AboutUsLink,CareersLink,SellWithUSLink,PaymentLink;PaymentServiceNode;
+#;NPPageTataMarketplaceNavNode;;Tata Marketplace Pages;SiteRootNode;;AboutUsLink,CareersLink,SellWithUSLink,StoreLocatorLink;NPPageTataMarketplaceNavNode
+#;NPPageCustomerServiceNavNode;;Customer Service Pages;;;ContactUsLink,FrequentlyAskedQuestionsLink,TrackOrdersLink,ShippingLink,CancellationLink,ReturnsLink;NPPageCustomerServiceNavNode;
+#;PaymentServiceNode;; Terms and condition payment page;SiteRootNode;;AboutUsLink,CareersLink,SellWithUSLink,PaymentLink;PaymentServiceNode;
 
+
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef);&nodeRef          
+;LuxuryNavNode;;Luxury Site;SiteRootNode;HomepageNavLink;LuxuryNavNode     
+;NewArrivalsNavNode;;New Arrivals Category;LuxuryNavNode;NewArrivalsCategoryLink;NewArrivalsNavNode
+;WomenNavNode;;Women Category;LuxuryNavNode;WomenCategoryLink;WomenNavNode      
+;MenNavNode;;Men Category;LuxuryNavNode;MenCategoryLink;MenNavNode        
+;LifestyleNavNode;;Lifestyle Category;LuxuryNavNode;LifestyleCategoryLink;LifestyleNavNode  
+;BeautyNavNode;;Beauty Category;LuxuryNavNode;BeautyCategoryLink;BeautyNavNode     
+;DesignersNavNode;;Designers Category;LuxuryNavNode;DesignersCategoryLink;DesignersNavNode  
+;OnSaleNavNode;;OnSale Category;LuxuryNavNode;OnSaleCategoryLink;OnSaleNavNode 
+
+
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;title[lang=en];parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef 
 ;OnlineShoppingNavNode;;Online Shopping;ONLINE SHOPPING;;;MenCategoryLink,WomenCategoryLink,KidsCategoryLink,BeautyCategoryLink,SaleCategoryLink;OnlineShoppingNavNode
 ;UsefulLinksNavNode;;Useful Links;USEFUL LINKS;;;ContactUsLink,FrequentlyAskedQuestionsLink,TermsAndConditions,TrackOrdersLink,ShippingLink,CancellationLink,ReturnsLink,BlogLink;UsefulLinksNavNode;
 
@@ -1282,11 +1298,11 @@ INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url
 ;;MyTataRewardsLink;My Tata Rewards Link;/mytatarewards;;;;
 ;;TncMyTataRewardsLink;Tnc My Tata Rewards Link;/tncmytatarewards;;;;
 
-INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef
-;TataMarketplaceNavNode;;Tata Marketplace Pages;;;AboutUsLink,CareersLink,SellWithUSLink,StoreLocatorLink;TataMarketplaceNavNode
-;CustomerServiceNavNode;;Customer Service Pages;;;ContactUsLink,FrequentlyAskedQuestionsLink,TrackOrdersLink,ShippingLink,CancellationLink,ReturnsLink;CustomerServiceNavNode;
-;MyMarketplaceNavNode;;My Marketplace Pages;;;MyAccountLink,MyOrdersLink,MyShoppingBagLink,MyWishlistLink;MyMarketplaceNavNode;
-;ApparelUKNavNode;;Apparel UK Site;SiteRootNode;;HomepageNavLink;ApparelUKNavNode;
+#INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef
+#;TataMarketplaceNavNode;;Tata Marketplace Pages;;;AboutUsLink,CareersLink,SellWithUSLink,StoreLocatorLink;TataMarketplaceNavNode
+#;CustomerServiceNavNode;;Customer Service Pages;;;ContactUsLink,FrequentlyAskedQuestionsLink,TrackOrdersLink,ShippingLink,CancellationLink,ReturnsLink;CustomerServiceNavNode;
+#;MyMarketplaceNavNode;;My Marketplace Pages;;;MyAccountLink,MyOrdersLink,MyShoppingBagLink,MyWishlistLink;MyMarketplaceNavNode;
+#;ApparelUKNavNode;;Apparel UK Site;SiteRootNode;;HomepageNavLink;ApparelUKNavNode;
 #;NodeForCareers;;Careers Page;;;CareersLink;NodeForCareers;
 #;NodeForSellWithUs;;Sell With US Page ;;;SellWithUSLink;NodeForSellWithUs;
 

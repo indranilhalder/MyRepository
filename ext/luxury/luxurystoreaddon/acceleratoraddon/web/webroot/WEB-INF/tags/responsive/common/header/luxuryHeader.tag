@@ -43,7 +43,7 @@
 			</div>
 			<div class="header-right">
 				<ul class="list-unstyled">
-					<li><a href="/luxurylogin/signin">Sign In</a></li>
+					<li><a href="#">Sign In</a></li>
 					<li><a href="#" id="header-search-menu" class="search"><%-- <cms:pageSlot position="SearchBox" var="component" element="div" class="headerContent secondRow">
 		<cms:component component="${component}" element="div" />
 	</cms:pageSlot> --%> </a></li>

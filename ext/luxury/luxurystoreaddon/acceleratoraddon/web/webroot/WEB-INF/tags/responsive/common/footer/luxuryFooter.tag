@@ -6,21 +6,11 @@
 	<footer>
 		
 		<div class="container footer-top text-center">
-			<h1>Why shop on Luxury</h1>
-			<div class="shop-on-luxuy">
-				<div class="shop-box col-sm-4">
-					<h2>1,500+ amazing brands</h2>
-					<p>Authenticity & quality of the product is gauranteed. The products sold come with all the original</p>
-				</div>
-				<div class="shop-box col-sm-4">
-					<h2>1,500+ amazing brands</h2>
-					<p>Authenticity & quality of the product is gauranteed. The products sold come with all the original</p>
-				</div>
-				<div class="shop-box col-sm-4">
-					<h2>1,500+ amazing brands</h2>
-					<p>Authenticity & quality of the product is gauranteed. The products sold come with all the original</p>
-				</div>
-			</div>
+			<cms:pageSlot position="WhyShopOnLuxury" var="feature"
+					element="div" class="span-24 section5 cms_disp-img_slot">
+				<cms:component component="${feature}" />
+			</cms:pageSlot>
+			
 		</div>
 		
 		<div class="container-fluid footer-middle">
@@ -40,31 +30,11 @@
 			</div>
 		</div>
 	
-		
-		</div>
+		<cms:pageSlot position="Footer" var="feature"
+					element="div" class="span-24 section5 cms_disp-img_slot">
+				<cms:component component="${feature}" />
+			</cms:pageSlot>
+		<!-- <script type="text/javascript" src="/_ui/responsive/common/js/uicombined-min.js"></script> -->
 	</footer>
 </section>
-<!-- <footer id="footerByAjaxId"> -->
-<%-- <footer>
-<c:if test="${!fn:containsIgnoreCase(cmsPage.name, 'Cart Page')}">
-<div class="callouts">
-					  <div class="Padd">
-						<ul>
-						  <li> <p>TATA Promise</p> </li>
-						  <li class="omni"> <p>Omni Channel</p> </li>
-						  <li class="genuine"> <p>Genuine Brands</p> </li>
-						  <li class="returns"> <p>30 Day Returns</p> </li>
-						</ul>
-					  </div>
-					</div>
-					</c:if>
 
-	<div id="footerByAjaxId"></div>
-	<!-- <footer> -->
-		<cms:pageSlot position="Footer" var="feature">
-		<cms:component component="${feature}"/>
-	</cms:pageSlot>
-	<cms:pageSlot position="Footer" var="feature">
-		<cms:component component="${feature}" />
-	</cms:pageSlot>
-</footer> --%>

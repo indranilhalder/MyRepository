@@ -51,6 +51,25 @@ UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$
 ;;MyTataRewardsLink;"My Tata Rewards"
 ;;TncMyTataRewardsLink;"Tnc My Tata Rewards"
 
+;;MenCategoryLink;"Men"                  
+;;WomenCategoryLink;"Women"                  
+;;KidsCategoryLink;"Kids"                  
+;;BeautyCategoryLink;"Beauty"                 
+;;SaleCategoryLink;"Sale"                   
+;;TermsAndConditions;"T&C"                   
+;;TermsOfUse;"Terms of Use"                   
+;;BlogLink;"Blog"  
+
+# CMS Navigation Nodes
+UPDATE CMSNavigationNode;$contentCV[unique=true];uid[unique=true];title[lang=$lang]              
+;;NewArrivalsNavNode;"New Arrivals"                  
+;;WomenNavNode;"Women"                  
+;;MenNavNode;"Men"                  
+;;LifestyleNavNode;"Lifestyle"                 
+;;BeautyNavNode;"Beauty"                   
+;;DesignersNavNode;"Designers"                
+;;OnSaleNavNode;"On Sale"  
+
 # Lightbox Banner for Mini Cart (banner is not localizable so we must create a separate banner per language)
 INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];&imageRef;folder(qualifier)[default='images'];altText
 
