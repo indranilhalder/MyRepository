@@ -464,7 +464,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String INSERT = "I".intern();
 	public static final String UPDATE = "U".intern();
 
-	public static final String DEFAULT_IMPORT_CATALOG_ID = "mplProductCatalog";
+	public static final String DEFAULT_IMPORT_CATALOG_ID = "luxProductCatalog";
 	public static final String DEFAULT_IMPORT_CATALOG_VERSION = "Online";
 	public static final String HMAC_SHA1 = "HmacSHA1";
 	public static final String RAW = "RAW";
@@ -1927,7 +1927,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String BUYAGETPERCENTAGEDISCOUNTONB = "BuyAGetPercentageDiscountOnB".intern();
 	//FREEBIE FIX
 	public static final String FREEBIEPRICETHRESHOLD = "freebiePriceThreshold";
-	
+
 	// OrderIssues:- multiple Payment Response from juspay restriction
 	public static final String DUPLICATEJUSPAYRESONSE = "duplicatJuspayResponse";
 
@@ -1950,6 +1950,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SHIPMENT_CHARGE_AMOUNT = "return.shipmentcharge";
 	public static final String RSS = "RSS";
 	public static final String RETURN_TRANSACTON_TYPE_01 = "01";
-	
-	public static final String ADDRESS_NOT_CHANGED ="ADDRESS_NOT_CHANGED";
+
+	public static final String ADDRESS_NOT_CHANGED = "ADDRESS_NOT_CHANGED";
 }
