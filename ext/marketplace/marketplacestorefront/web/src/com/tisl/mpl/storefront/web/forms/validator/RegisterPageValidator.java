@@ -16,11 +16,14 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.routines.DomainValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import com.tisl.lux.facade.LuxurySiteFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.storefront.businessvalidator.CommonAsciiValidator;
 import com.tisl.mpl.storefront.web.forms.ExtRegisterForm;
 
 
@@ -32,8 +35,11 @@ public class RegisterPageValidator implements Validator
 {
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 	private static final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?:.*[!@#$%*^&.()+].*).{8,16})";
-
+	public static final String MOBILE_REGEX = "^[0-9]*$";
+	private static final int MAX_FIELD_LENGTH_40 = 40;
 	//"((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%*&.]).{8,16})";
+	@Autowired
+	private LuxurySiteFacade luxurySiteFacade;
 
 	@Override
 	public boolean supports(final Class<?> aClass)
@@ -48,6 +54,11 @@ public class RegisterPageValidator implements Validator
 		final String email = registerForm.getEmail();
 		final String pwd = registerForm.getPwd();
 		final String checkPwd = registerForm.getCheckPwd();
+
+		final String firstName = registerForm.getFirstName();
+		final String lastName = registerForm.getLastName();
+		final String mobileNumber = registerForm.getMobileNumber();
+		final String gender = registerForm.getGender();
 
 
 		if (StringUtils.isEmpty(email))
@@ -98,6 +109,29 @@ public class RegisterPageValidator implements Validator
 			}
 		}
 
+		if (luxurySiteFacade.isLuxurySite())
+		{
+			if (!StringUtils.isEmpty(firstName) && !CommonAsciiValidator.validateAlphaWithSpaceNoSpCh(firstName)
+					|| StringUtils.length(firstName) > MAX_FIELD_LENGTH_40)
+			{
+				errors.rejectValue("firstName", "profile.firstName.invalid");
+			}
+			else if (!StringUtils.isEmpty(lastName) && !CommonAsciiValidator.validateAlphaWithSpaceNoSpCh(lastName)
+					|| StringUtils.length(lastName) > MAX_FIELD_LENGTH_40)
+			{
+				errors.rejectValue("lastName", "profile.lastName.invalid");
+			}
+
+			else if (null != mobileNumber && !(MarketplacecommerceservicesConstants.EMPTY).equals(mobileNumber)
+					&& !mobileNumber.matches(MOBILE_REGEX))
+			{
+				errors.rejectValue("mobileNumber", "profile.mobileNumber.invalid");
+			}
+			else if (StringUtils.isEmpty(gender))
+			{
+				errors.rejectValue("gender", "profile.select.gender");
+			}
+		}
 	}
 
 	public boolean validateEmailAddress(final String email)

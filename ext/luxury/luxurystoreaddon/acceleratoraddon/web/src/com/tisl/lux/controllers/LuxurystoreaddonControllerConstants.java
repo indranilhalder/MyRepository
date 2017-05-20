@@ -17,5 +17,19 @@ package com.tisl.lux.controllers;
  */
 public interface LuxurystoreaddonControllerConstants
 {
+	String ADDON_PREFIX = "addon:/luxurystoreaddon";
+	public static final String LAST_USERNAME_WITH_ERROR_ATTEMPT = "lastUnameErrorAttempt";
+
 	// implement here controller constants used by this extension
+	interface Views
+	{
+		interface Fragments
+		{
+			interface Home
+			{
+				String LoginPanelFragment = ADDON_PREFIX + "/fragments/home/luxLoginPanel";
+				String ForgotPasswordPanel = ADDON_PREFIX + "/fragments/home/forgottenPwd";
+			}
+		}
+	}
 }

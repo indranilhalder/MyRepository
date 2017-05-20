@@ -21,6 +21,7 @@ public class ExtRegisterForm extends RegisterForm
 
 	private String affiliateId;
 	private boolean checkMyRewards;
+	private String gender;
 
 	/**
 	 * @return the affiliateId
@@ -58,6 +59,22 @@ public class ExtRegisterForm extends RegisterForm
 
 
 
+	/**
+	 * @return the gender
+	 */
+	public String getGender()
+	{
+		return gender;
+	}
+
+	/**
+	 * @param gender
+	 *           the gender to set
+	 */
+	public void setGender(final String gender)
+	{
+		this.gender = gender;
+	}
 
 
 

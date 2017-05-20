@@ -5,7 +5,6 @@ package com.tisl.mpl.facades.account.register.impl;
 
 import static de.hybris.platform.servicelayer.util.ServicesUtil.validateParameterNotNullStandardMessage;
 
-import de.hybris.platform.acceleratorservices.email.EmailService;
 import de.hybris.platform.acceleratorservices.model.email.EmailAttachmentModel;
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
@@ -14,6 +13,8 @@ import de.hybris.platform.commercefacades.user.data.RegisterData;
 import de.hybris.platform.commercefacades.user.exceptions.PasswordMismatchException;
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
 import de.hybris.platform.commerceservices.enums.CustomerType;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
+import de.hybris.platform.core.enums.Gender;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.processengine.BusinessProcessService;
@@ -24,6 +25,7 @@ import de.hybris.platform.servicelayer.keygenerator.KeyGenerator;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.services.BaseStoreService;
+import de.hybris.platform.workflow.EmailService;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -95,8 +97,10 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	ConfigurationService configurationService;
 
 
+
 	@Resource(name = "defaultEmailService")
 	private EmailService emailService;
+
 
 	/**
 	 * @return the userUniqueIdGenerator
@@ -300,6 +304,24 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				setUidForRegister(registerData, newCustomer);
 				newCustomer.setSessionLanguage(getCommonI18NService().getCurrentLanguage());
 				newCustomer.setSessionCurrency(getCommonI18NService().getCurrentCurrency());
+				final boolean flag = true;
+				if (flag)
+				{
+					newCustomer.setFirstName(registerData.getFirstName());
+					newCustomer.setLastName(registerData.getLastName());
+					if (registerData.getGender() != null && !"".equals(registerData.getGender())
+							&& "MALE".equals(registerData.getGender()))
+					{
+						newCustomer.setGender(Gender.MALE);
+					}
+					if (registerData.getGender() != null && !"".equals(registerData.getGender())
+							&& "FEMALE".equals(registerData.getGender()))
+					{
+						newCustomer.setGender(Gender.FEMALE);
+					}
+
+					newCustomer.setMobileNumber(registerData.getMobilenumber());
+				}
 				extDefaultCustomerService.registerUser(newCustomer, registerData.getPassword(), registerData.getAffiliateId());
 				/*
 				 * mplCustomerWebService.customerModeltoWsData(newCustomer,
@@ -406,8 +428,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 					LOG.debug("Method  registerSocial SITE UID " + registerData.getUid());
 					LOG.debug("Method  registerSocial FIRST_NAME " + registerData.getFirstName());
 					LOG.debug("Method  registerSocial LAST_NAME " + registerData.getLastName());
-					final String gigyaMethod = configurationService.getConfiguration().getString(
-							MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
+					final String gigyaMethod = configurationService.getConfiguration()
+							.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
 					LOG.debug("GIGYA METHOD" + gigyaMethod);
 					//gigya code change for removing duplicate UID Start
 					final int errorcode = gigyaservice.checkGigyaUID(newCustomer.getUid());
@@ -422,10 +444,11 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 						LOG.debug("UID already existing in Gigya for this  New Customer :new customer uid " + newCustomer.getUid());
 						LOG.debug("UID already existing in Gigya for this  New Customer :new customer email "
 								+ newCustomer.getOriginalUid());
-						LOG.debug("UID already existing in Gigya for this  New Customer :existing uid in Gigya" + registerData.getUid());
+						LOG.debug(
+								"UID already existing in Gigya for this  New Customer :existing uid in Gigya" + registerData.getUid());
 
-						LOG.debug("UID already existing in Gigya for this  New Customer :existing uid in Gigya"
-								+ registerData.getLogin());
+						LOG.debug(
+								"UID already existing in Gigya for this  New Customer :existing uid in Gigya" + registerData.getLogin());
 					}
 					//gigya code change for removing duplicate UID end
 
@@ -480,8 +503,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				registerData.setPassword(password);
 				registerData.setSocialLogin(true);
 				LOG.debug(MplConstants.USER_ALREADY_REGISTERED + " via site login");
-				final String gigyaMethod = configurationService.getConfiguration().getString(
-						MarketplacecclientservicesConstants.GIGYA_METHOD_LINK_ACCOUNTS);
+				final String gigyaMethod = configurationService.getConfiguration()
+						.getString(MarketplacecclientservicesConstants.GIGYA_METHOD_LINK_ACCOUNTS);
 				LOG.debug("GIGYA METHOD" + gigyaMethod);
 
 
@@ -510,8 +533,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 					final int errorcode3 = gigyaservice.checkGigyaUID(customerModel.getUid());
 					if (errorcode3 == 403005)
 					{
-						final String gigyaMethodNotify = configurationService.getConfiguration().getString(
-								MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
+						final String gigyaMethodNotify = configurationService.getConfiguration()
+								.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
 						LOG.debug("GIGYA METHOD" + gigyaMethodNotify);
 						gigyaservice.notifyGigya(customerModel.getUid(), registerData.getUid(), registerData.getFirstName(),
 								registerData.getLastName(), registerData.getLogin(), gigyaMethodNotify);
@@ -551,8 +574,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	}
 
 	@Override
-	public void changeUid(final String newUid, final String currentPassword) throws DuplicateUidException,
-			PasswordMismatchException
+	public void changeUid(final String newUid, final String currentPassword)
+			throws DuplicateUidException, PasswordMismatchException
 	{
 		try
 		{
@@ -617,11 +640,11 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 			//Added
 			if (!StringUtils.isEmpty(sendInvoiceData.getInvoiceUrl()) && !StringUtils.isEmpty(sendInvoiceData.getTransactionId()))
 			{
-				if (!StringUtils.isEmpty(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(),
-						sendInvoiceData.getTransactionId())))
+				if (!StringUtils
+						.isEmpty(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(), sendInvoiceData.getTransactionId())))
 				{
-					sendInvoiceProcessModel.setInvoiceUrl(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(),
-							sendInvoiceData.getTransactionId()));
+					sendInvoiceProcessModel.setInvoiceUrl(
+							createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(), sendInvoiceData.getTransactionId()));
 				}
 			}
 			//End
@@ -653,7 +676,7 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	{
 		final File invoiceFile = new File(invoiceUrl);
 		FileInputStream input = null;
-		EmailAttachmentModel emailAttachment = null;
+		final EmailAttachmentModel emailAttachment = null;
 		if (invoiceFile.exists())
 		{
 			String invoiceFileName = null;

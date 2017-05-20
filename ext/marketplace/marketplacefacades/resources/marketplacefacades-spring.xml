@@ -1939,5 +1939,10 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		parent="abstractEmailContext" scope="prototype">
 		<property name="orderConverter" ref="orderConverter" />
 	</bean>
+	
+	
 	<!-- close R2.3 Changes -->
+	
+	
+	 <bean id="luxurySiteFacade" class="com.tisl.lux.facade.impl.DefaultLuxurySiteFacade"/>
 </beans>
