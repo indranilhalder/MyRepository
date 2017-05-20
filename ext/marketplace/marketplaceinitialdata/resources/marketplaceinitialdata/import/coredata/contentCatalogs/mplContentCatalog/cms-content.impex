@@ -1760,7 +1760,7 @@ INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;fronten
 
 
 UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
-;;ApparelCategoryLandingPageTemplateV1      ;$jarResourceCms/structure-view/structure_ApparelCategoryLandingPageTemplateV1.vm
+;;ApparelCategoryLandingPageTemplateV1      ;$jarResourceCms/structure-view/structure_apparelCategoryLandingPageTemplate.vm
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ApparelCategoryLandingPageTemplateV1'];validComponentTypes(code);compTypeGroup(code)
 ;SiteLogo;;;logo
