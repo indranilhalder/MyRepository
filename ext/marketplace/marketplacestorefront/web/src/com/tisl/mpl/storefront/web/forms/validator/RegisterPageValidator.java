@@ -38,6 +38,7 @@ public class RegisterPageValidator implements Validator
 	private static final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?:.*[!@#$%*^&.()+].*).{8,16})";
 	public static final String MOBILE_REGEX = "^[0-9]*$";
 	private static final int MAX_FIELD_LENGTH_40 = 40;
+	private static final int MAX_MOBILE_FIELD_LENGTH_10 = 10;
 	//"((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%*&.]).{8,16})";
 	@Autowired
 	private CommonUtils commonUtils;
@@ -127,25 +128,39 @@ public class RegisterPageValidator implements Validator
 
 		if (commonUtils.isLuxurySite())
 		{
-
-
-			if (!StringUtils.isEmpty(firstName) && !CommonAsciiValidator.validateAlphaWithSpaceNoSpCh(firstName)
-					|| StringUtils.length(firstName) > MAX_FIELD_LENGTH_40)
+			if (StringUtils.isEmpty(firstName))
 			{
 				errors.rejectValue("firstName", "profile.firstName.invalid");
+			}
+
+			else if (!StringUtils.isEmpty(firstName) && !CommonAsciiValidator.validateAlphaWithSpaceNoSpCh(firstName)
+					|| StringUtils.length(firstName) > MAX_FIELD_LENGTH_40)
+			{
+				errors.rejectValue("firstName", "profile.firstName.invalidlength");
+			}
+			if (StringUtils.isEmpty(lastName))
+			{
+				errors.rejectValue("lastName", "profile.lastName.invalid");
 			}
 			else if (!StringUtils.isEmpty(lastName) && !CommonAsciiValidator.validateAlphaWithSpaceNoSpCh(lastName)
 					|| StringUtils.length(lastName) > MAX_FIELD_LENGTH_40)
 			{
-				errors.rejectValue("lastName", "profile.lastName.invalid");
+				errors.rejectValue("lastName", "profile.lastName.invalidlength");
 			}
-
+			if (StringUtils.isEmpty(mobileNumber))
+			{
+				errors.rejectValue("mobileNumber", "profile.mobileNumber.invalid.empty");
+			}
+			else if (!StringUtils.isEmpty(mobileNumber) && StringUtils.length(mobileNumber) > MAX_MOBILE_FIELD_LENGTH_10)
+			{
+				errors.rejectValue("mobileNumber", "profile.mobileNumber.invalidlength");
+			}
 			else if (null != mobileNumber && !(MarketplacecommerceservicesConstants.EMPTY).equals(mobileNumber)
 					&& !mobileNumber.matches(MOBILE_REGEX))
 			{
 				errors.rejectValue("mobileNumber", "profile.mobileNumber.invalid");
 			}
-			else if (StringUtils.isEmpty(gender))
+			if (StringUtils.isEmpty(gender))
 			{
 				errors.rejectValue("gender", "profile.select.gender");
 			}

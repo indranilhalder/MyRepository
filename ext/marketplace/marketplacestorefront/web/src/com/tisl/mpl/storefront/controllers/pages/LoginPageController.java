@@ -50,6 +50,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tisl.lux.controllers.LuxurystoreaddonControllerConstants;
 import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.data.FriendsInviteData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -198,8 +199,17 @@ public class LoginPageController extends AbstractLoginPageController
 
 			if (commonUtils.isLuxurySite())
 			{
-				System.out.println("returning ChangePasswordFragment");
-				return ControllerConstants.Views.Fragments.Home.RegisterFragment;
+				if (loginError)
+				{
+					model.addAttribute(ModelAttributetConstants.MESSAGE, ModelAttributetConstants.EMAILORPASSINVALID);
+					System.out.println("returning LoginPanelFragment");
+					return LuxurystoreaddonControllerConstants.Views.Fragments.Home.LoginPanelFragment;
+				}
+				else
+				{
+					System.out.println("returning RegisterFragment");
+					return ControllerConstants.Views.Fragments.Home.RegisterFragment;
+				}
 			}
 			else
 			{
@@ -381,9 +391,22 @@ public class LoginPageController extends AbstractLoginPageController
 			form.setCheckPwd(rePassword);
 			LOG.info("inside doRegister");
 			System.out.println("inside doRegister");
-			getRegisterPageValidator().validate(form, bindingResult);//validation for mobile, fname, lname, gender pending
+			getRegisterPageValidator().validate(form, bindingResult);
 			//return processRegisterUserRequestNew(referer, form, bindingResult, model, request, response, redirectModel);
 			returnPage = processRegisterUserRequestNew(form, bindingResult, model, request, response, redirectModel);
+
+			if (commonUtils.isLuxurySite())
+			{
+
+				if (bindingResult.hasErrors())
+				{
+					final List<GenderData> genderList = mplCustomerProfileFacade.getGenders();
+					model.addAttribute(ModelAttributetConstants.GENDER_DATA, genderList);
+					returnPage = ControllerConstants.Views.Fragments.Home.RegisterFragment;
+				}
+
+			}
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{

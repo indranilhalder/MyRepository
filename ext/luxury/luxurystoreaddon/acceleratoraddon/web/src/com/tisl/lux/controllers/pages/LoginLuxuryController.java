@@ -13,10 +13,12 @@
  */
 package com.tisl.lux.controllers.pages;
 
+import de.hybris.platform.acceleratorstorefrontcommons.forms.LoginForm;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -42,12 +44,17 @@ public class LoginLuxuryController
 	@Autowired
 	private SessionService sessionService;
 	protected static final String SPRING_SECURITY_LAST_USERNAME = "SPRING_SECURITY_LAST_USERNAME";
+	private static final Logger LOG = Logger.getLogger(LoginLuxuryController.class);
+
 
 	@RequestMapping(method = RequestMethod.GET, value = "/signin")
-	public String getLoginFragment(final Model model)
+	public String getLoginFragment(final Model model, final LoginForm form)
 	{
+		LOG.info("inside getLoginFragment");
+		System.out.println("inside getLoginFragment");
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 		model.addAttribute("userName", currentCustomer.getFirstName());
+
 		return LuxurystoreaddonControllerConstants.Views.Fragments.Home.LoginPanelFragment;
 	}
 
