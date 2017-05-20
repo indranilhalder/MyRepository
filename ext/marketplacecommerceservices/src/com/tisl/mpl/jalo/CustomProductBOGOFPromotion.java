@@ -489,6 +489,7 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 		boolean flagForPaymentModeRestrEval = false;
 		final int qualifyingCount = getQualifyingCount(paramSessionContext).intValue(); // Get the Promotion set Qualifying count
 		//final Map<AbstractOrderEntry, Double> customBogoPromoDataMap = new HashMap<>();
+		final PromotionsManager promotionsManager = PromotionsManager.getInstance();
 
 		LOG.debug("Qualifying Count for Promotion" + qualifyingCount);
 		try
@@ -655,7 +656,10 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 								consumedItemsFromTail);
 						totalConsumedItems.addAll(freeItems);
 
-						final PromotionResult result = getDefaultPromotionsManager().createPromotionResult(paramSessionContext, this,
+						//						final PromotionResult result = getDefaultPromotionsManager().createPromotionResult(paramSessionContext, this,
+						//								paramPromotionEvaluationContext.getOrder(), 1.0F);
+
+						final PromotionResult result = promotionsManager.createPromotionResult(paramSessionContext, this,
 								paramPromotionEvaluationContext.getOrder(), 1.0F);
 
 						result.setActions(paramSessionContext, actions);
@@ -751,4 +755,3 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 	}
 
 }
-

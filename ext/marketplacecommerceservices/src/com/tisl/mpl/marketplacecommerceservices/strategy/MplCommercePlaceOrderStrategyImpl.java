@@ -44,6 +44,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
@@ -164,6 +165,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 					getPromotionsService().transferPromotionsToOrder(cartModel, orderModel, false);
 					final Double subTotal = orderModel.getSubtotal();
+					LOG.info("order subTotal is -- " + subTotal);
 					final boolean deliveryCostPromotionApplied = isDeliveryCostPromotionApplied(orderModel);
 					Double totalPrice = Double.valueOf(0.0);
 
@@ -204,12 +206,26 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 					orderModel.setModeOfOrderPayment(modeOfPayment);
 
+
+					LOG.info("Mode of Payment in placeOrder is -- " + modeOfPayment);
+
+					if (MarketplacecommerceservicesConstants.MRUPEE.equalsIgnoreCase(modeOfPayment))
+					{
+						orderModel.setIsWallet(WalletEnum.MRUPEE);
+					}
+
+					else
+					{
+						orderModel.setIsWallet(WalletEnum.NONWALLET);
+					}
+
 					getModelService().save(orderModel);
 
 					/*
 					 * result.setOrder(orderModel); // OrderIssues:- 9 digit Order Id getting populated after Order Split and
 					 * Submit order process for cod, hence moved here afterPlaceOrder(parameter, result);
 					 */
+					LOG.info("Mode of Order Payment in placeOrder is -- " + orderModel.getModeOfOrderPayment());
 				}
 				catch (final Exception e)
 				{
@@ -383,9 +399,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -429,9 +445,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			deliveryCost = Double.valueOf(getDeliveryCost(orderModel));
 		}
 		final Double discount = getTotalDiscount(orderModel.getEntries(), false);
-
 		totalPrice = Double.valueOf(subtotal.doubleValue() + scheduleDeliveryCharge + deliveryCost.doubleValue()
 				- discount.doubleValue());
+		LOG.info("totalPrice for order entry in fetchTotalPrice is = " + totalPrice);
 
 		return totalPrice;
 	}
@@ -441,15 +457,15 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	/*
 	 * private Double getTotalDiscountForTotalPrice(final List<AbstractOrderEntryModel> entries) { Double discount =
 	 * Double.valueOf(0);
-	 * 
+	 *
 	 * double promoDiscount = 0.0D; double couponDiscount = 0.0D;
-	 * 
+	 *
 	 * if (CollectionUtils.isNotEmpty(entries)) { for (final AbstractOrderEntryModel oModel : entries) { if (null !=
 	 * oModel && !oModel.getGiveAway().booleanValue()) { couponDiscount += (null == oModel.getCouponValue() ? 0.0d :
 	 * oModel.getCouponValue().doubleValue()); promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d :
 	 * oModel.getTotalProductLevelDisc() .doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d :
 	 * oModel.getCartLevelDisc().doubleValue()); } }
-	 * 
+	 *
 	 * discount = Double.valueOf(couponDiscount + promoDiscount); } return discount; }
 	 */
 
@@ -480,8 +496,11 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 							.doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d : oModel.getCartLevelDisc().doubleValue());
 				}
 			}
-
+			LOG.info("deliveryCost for order entry in getTotalDiscount is = " + deliveryCost);
+			LOG.info("promoDiscount for order entry in getTotalDiscount is = " + promoDiscount);
+			LOG.info("couponDiscount for order entry in getTotalDiscount is = " + couponDiscount);
 			discount = Double.valueOf(deliveryCost + couponDiscount + promoDiscount);
+			LOG.info("discount for order entry in getTotalDiscount is = " + discount);
 		}
 		return discount;
 	}

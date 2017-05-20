@@ -34,7 +34,7 @@ import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
-
+import com.tisl.mpl.core.enums.WalletEnum;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -603,6 +603,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		//orderModel.setType("Parent");
 		if (StringUtils.isNotEmpty(orderModel.getType()) && PARENT.equalsIgnoreCase(orderModel.getType()))
 		{
+			//Added for third party wallet in case 1st tym order is not placed and tried with a different mode of payment
 			if (null != orderModel.getDeliveryAddress())
 			{
 				final List<AddressModel> deliveryAddreses = new ArrayList<AddressModel>();
@@ -611,8 +612,18 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				getModelService().save(orderModel);
 			}
 
-			final List<OrderModel> orderList = getSubOrders(orderModel);
+			if (MarketplacecommerceservicesConstants.MRUPEE.equalsIgnoreCase(orderModel.getModeOfOrderPayment()))
+			{
+				orderModel.setIsWallet(WalletEnum.MRUPEE);
+			}
 
+			else
+			{
+				orderModel.setIsWallet(WalletEnum.NONWALLET);
+			}
+			
+			final List<OrderModel> orderList = getSubOrders(orderModel);
+			
 			//TISPRO-249
 			//OrderIssues:-  re factoring done
 			if (CollectionUtils.isNotEmpty(orderList))
@@ -658,7 +669,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//OrderIssues:-  Code moved to upward
 			//		orderModel.setChildOrders(orderList);
 			//getModelService().save(orderModel);
-			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel || WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
 			{
 				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 			}
@@ -3056,6 +3067,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		return isPresent;
 
 	}
+
 
 
 

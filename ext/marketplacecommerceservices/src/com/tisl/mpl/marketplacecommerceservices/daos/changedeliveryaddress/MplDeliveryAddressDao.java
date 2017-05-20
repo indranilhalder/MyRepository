@@ -20,13 +20,15 @@ import com.tisl.mpl.core.model.MplDeliveryAddressInfoModel;
 public interface MplDeliveryAddressDao
 {
 
-   /**
-    * Change deliveryAddressReport
-    * @param fromDate
-    * @param toDate
-    * @return
-    */
-	public List<MplDeliveryAddressInfoModel> getMplDeliveryAddressReportModels(Date fromDate,Date toDate);
-	
+	/**
+	 * Change deliveryAddressReport
+	 *
+	 * @param fromDate
+	 * @param toDate
+	 * @return
+	 */
+	public List<MplDeliveryAddressInfoModel> getMplDeliveryAddressReportModels(Date fromDate, Date toDate);
+
 	public MplDeliveryAddressInfoModel getMplDeliveryAddressReportModelByOrderId(final String orderCode);
+
 }

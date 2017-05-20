@@ -36,6 +36,7 @@ import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.data.PincodeData;
 import com.tisl.mpl.facades.populators.CustomAddressPopulator;
 import com.tisl.mpl.facades.product.data.StateData;
+import com.tisl.mpl.marketplacecommerceservices.daos.AccountAddressDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
@@ -57,6 +58,7 @@ import de.hybris.platform.cscockpit.widgets.controllers.CustomerController;
 import de.hybris.platform.cscockpit.widgets.models.impl.DefaultMasterDetailListWidgetModel;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.AddressCreateWidgetRenderer;
 import de.hybris.platform.cscockpit.widgets.renderers.utils.PopupWidgetHelper;
+import de.hybris.platform.enumeration.EnumerationService;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.i18n.impl.DefaultCommonI18NService;
@@ -227,7 +229,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 		addresslabel.setParent(addressDiv);
 		final Textbox address1Field = createTextbox(addressDiv);
 		address1Field.setSclass("address1ForAddressField");
-		address1Field.setMaxlength(30);
+		address1Field.setMaxlength(40);//changing for TISPRDT-1264
 
 		// Creates Address Line2 field
 		final Br br4 = new Br();
@@ -240,7 +242,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 		address2label.setParent(address2Div);
 		final Textbox address2Field = createTextbox(address2Div);
 		address2Field.setSclass("address2ForAddressField");
-		address2Field.setMaxlength(30);
+		address2Field.setMaxlength(40);//changing for TISPRDT-1264
 
 		// Creates Address Line3 field
 		final Br br5 = new Br();
@@ -253,7 +255,7 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 		address3label.setParent(address3Div);
 		final Textbox address3Field = createTextbox(address3Div);
 		address3Field.setSclass("address2ForAddressField");
-		address3Field.setMaxlength(30);
+		address3Field.setMaxlength(40);//changing for TISPRDT-1264
 
 		// Creates LandMark field
 		final Br br12 = new Br();

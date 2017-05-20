@@ -15,6 +15,7 @@ import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.EMIPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.ThirdPartyWalletInfoModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.integration.commons.services.OndemandTaxCalculationService;
@@ -186,9 +187,9 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 								billingAddress = getAddressConverter().convert(address);
 							}
 						}
-						if(billingAddress != null)
+						if (billingAddress != null)
 						{
-						  paymentInfo.setBillingAddress(billingAddress);
+							paymentInfo.setBillingAddress(billingAddress);
 						}
 						else
 						{
@@ -202,9 +203,9 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 					{
 						billingAddress = getAddressConverter().convert(address);
 					}
-					if(billingAddress != null)
+					if (billingAddress != null)
 					{
-					    paymentInfo.setBillingAddress(billingAddress);
+						paymentInfo.setBillingAddress(billingAddress);
 					}
 					else
 					{
@@ -259,19 +260,19 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 		}
 		else
 		{
-			if(source.getUser() != null && StringUtils.isNotBlank(((CustomerModel)source.getUser()).getFirstName()))
+			if (source.getUser() != null && StringUtils.isNotBlank(((CustomerModel) source.getUser()).getFirstName()))
 			{
-				firstName=((CustomerModel)source.getUser()).getFirstName();
-				lastName=((CustomerModel)source.getUser()).getLastName();
+				firstName = ((CustomerModel) source.getUser()).getFirstName();
+				lastName = ((CustomerModel) source.getUser()).getLastName();
 			}
 			else
 			{
-			final String[] names = getCustomerNameStrategy().splitName(source.getUser().getName());
-			if (names != null)
-			{
-				firstName = names[0];
-				lastName = names[1];
-			}
+				final String[] names = getCustomerNameStrategy().splitName(source.getUser().getName());
+				if (names != null)
+				{
+					firstName = names[0];
+					lastName = names[1];
+				}
 			}
 		}
 
@@ -365,6 +366,14 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 				//return MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(MarketplaceomsordersConstants.PAYMENTMETHOD_EMI.toUpperCase());
 				return MplCodeMasterUtility.getglobalCode(MarketplaceomsordersConstants.PAYMENTMETHOD_EMI);
 			}
+
+			//Added for third party wallet
+			else if (paymentInfoModel instanceof ThirdPartyWalletInfoModel)
+			{
+				//return MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(MarketplaceomsordersConstants.PAYMENTMETHOD_EMI.toUpperCase());
+				return MplCodeMasterUtility.getglobalCode(MarketplaceomsordersConstants.PAYMENTMETHOD_MRUPEE);
+			}
+
 			else
 			{
 				return "CC";

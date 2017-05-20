@@ -1,3 +1,4 @@
+	
 
 	ACC.productDetail = {
 
@@ -152,7 +153,8 @@
 		 
 			if(localStorage.getItem("removeFromCart_msgFromCart")=="Y")
 			{
-			$('#removeFromCart_Cart').css("display","inline-block");
+			/*$('#removeFromCart_Cart').show();*/
+			$('#removeFromCart_Cart').css("display","inline-block"); /*TISSQAEE-245*/
 			setTimeout(function() {
 				  $("#removeFromCart_Cart").fadeOut().empty();
 				}, 1500);
@@ -160,7 +162,8 @@
 			 localStorage.removeItem('removeFromCart_msgFromCart');
 			 
 // added in merging.....
-	
+			 
+
 	// SizeGuide
 		
 		// Sise Guide Select Color
@@ -1568,6 +1571,7 @@ function displayDeliveryDetails(sellerName) {
 				} else {
 					$('#fulFilledBySship').show();
 					$('#fulFilledBySship').html(sellerName);
+
 				}*/
 				/*TISPRDT-878 Start*/
 				if (null != fulFillment && fulFillment.toLowerCase() == 'both') {
@@ -1790,7 +1794,11 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 
 	if(null!= savingsOnProduct && savingsOnProduct != 0){
 		$("#savingsOnProductId").show();
-	} 
+	}
+	/*else
+	{
+		$("#savingsOnProductId").hide();
+	}*/
 	
 	//TPR-275 starts
 	if (mrp.value == "") {			
@@ -1868,7 +1876,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				 
 				//update the message for Freebie product TPR-1754
 				 var freebieproductMsg =populateFreebieMsg(prodCode);			 
-				// var freebieproductMsg =populateFreebieMsg(ussId);			 
+
 				 if($.isEmptyObject(freebieproductMsg)){	
 					 
 					 $("#freebieProductMsgId").show();			 
@@ -3174,13 +3182,6 @@ function getProductContents() {
 						itemsDesktopSmall : [1400,4], 
 						itemsTablet: [650,2], 
 						itemsMobile : [480,2],*/
-
-
-
-
-
-
-
 					});
 				 }
 				//TPR-4701 | utag event for A+ products
@@ -3191,12 +3192,6 @@ function getProductContents() {
 					"event_type": "a_plus_product",
 					"a_plus_product_id":productId
 				});
-
-
-
-
-
-
 			}
 				 
 		},

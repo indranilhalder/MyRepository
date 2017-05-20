@@ -116,9 +116,9 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 	@Autowired
 	private SendSMSFacade sendSMSFacade;
-	
+
 	@Autowired
-	private AccountAddressFacade  accountAddressFacade;
+	private AccountAddressFacade accountAddressFacade;
 
 
 	private static final Logger LOG = Logger.getLogger(MplDeliveryAddressFacadeImpl.class);
@@ -213,7 +213,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					{
 						requestData.setAddress2(newDeliveryAddress.getLine2());
 					}
-					
+
 					if (null != newDeliveryAddress.getStreetname())
 					{
 						requestData.setAddress1(newDeliveryAddress.getStreetname());
@@ -281,33 +281,33 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	}
 
 	// Added in R2.3 TISRLUAT-926
-	 private List<TransactionSDDto> getConvertedTimeSlot(List<TransactionSDDto> transactionSDDtos)
-	 {
+	private List<TransactionSDDto> getConvertedTimeSlot(final List<TransactionSDDto> transactionSDDtos)
+	{
 
-	  SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-	  SimpleDateFormat format2 = new SimpleDateFormat("dd-MM-yyyy:HH:mm:ss");
-	  String timeFromWithDate = null;
-	  String timeToWithDate = null;
+		final SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		final SimpleDateFormat format2 = new SimpleDateFormat("dd-MM-yyyy:HH:mm:ss");
+		String timeFromWithDate = null;
+		String timeToWithDate = null;
 
 
-	  for (TransactionSDDto sdDto : transactionSDDtos)
-	  {
-	   timeFromWithDate = sdDto.getPickupDate().concat(" " + sdDto.getTimeSlotFrom());
-	   timeToWithDate = sdDto.getPickupDate().concat(" " + sdDto.getTimeSlotTo());
-	   try
-	   {
-	    sdDto.setTimeSlotFrom(String.valueOf(format2.format(format1.parse(timeFromWithDate))));
-	    sdDto.setTimeSlotTo(String.valueOf(format2.format(format1.parse(timeToWithDate))));
-	   }
-	   catch (ParseException parseException)
-	   {
-	    LOG.error("Parse Exception MplDeliveryAddressFacadeImpl::::::" + parseException.getMessage());
-	   }
+		for (final TransactionSDDto sdDto : transactionSDDtos)
+		{
+			timeFromWithDate = sdDto.getPickupDate().concat(" " + sdDto.getTimeSlotFrom());
+			timeToWithDate = sdDto.getPickupDate().concat(" " + sdDto.getTimeSlotTo());
+			try
+			{
+				sdDto.setTimeSlotFrom(String.valueOf(format2.format(format1.parse(timeFromWithDate))));
+				sdDto.setTimeSlotTo(String.valueOf(format2.format(format1.parse(timeToWithDate))));
+			}
+			catch (final ParseException parseException)
+			{
+				LOG.error("Parse Exception MplDeliveryAddressFacadeImpl::::::" + parseException.getMessage());
+			}
 
-	  }
+		}
 
-	  return transactionSDDtos;
-	 }
+		return transactionSDDtos;
+	}
 
 
 	/**
@@ -319,7 +319,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 */
 	@Override
 	public void createcrmTicketForChangeDeliveryAddress(final OrderModel Order, final String costomerId, final String source,
-			final String ticketType ,boolean isEdSchedule)
+			final String ticketType, final boolean isEdSchedule)
 	{
 		final List<SendTicketLineItemData> lineItemDataList = new ArrayList<SendTicketLineItemData>();
 		final SendTicketRequestData sendTicketRequestData = new SendTicketRequestData();
@@ -342,39 +342,40 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 								sendTicketLineItemData.setLineItemId(entry.getTransactionID());
 
 							}
-							if(isEdSchedule){
-								SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
-								SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-						/*	if (StringUtils.isNotEmpty(entry.getEdScheduledDate()))
+							if (isEdSchedule)
 							{
-								sendTicketLineItemData.setReturnPickupDate(entry.getEdScheduledDate());
-							}*/
-							if (StringUtils.isNotEmpty(entry.getTimeSlotFrom()))
-							{
-								String timeSlotFrom=entry.getEdScheduledDate().concat(" "+entry.getTimeSlotFrom());
-								format2.setTimeZone(TimeZone.getTimeZone("GMT"));
-								try
+								final SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+								final SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+								/*
+								 * if (StringUtils.isNotEmpty(entry.getEdScheduledDate())) {
+								 * sendTicketLineItemData.setReturnPickupDate(entry.getEdScheduledDate()); }
+								 */
+								if (StringUtils.isNotEmpty(entry.getTimeSlotFrom()))
 								{
-									sendTicketLineItemData.setTimeSlotFrom(String.valueOf(format2.format(format.parse(timeSlotFrom))));
+									final String timeSlotFrom = entry.getEdScheduledDate().concat(" " + entry.getTimeSlotFrom());
+									format2.setTimeZone(TimeZone.getTimeZone("GMT"));
+									try
+									{
+										sendTicketLineItemData.setTimeSlotFrom(String.valueOf(format2.format(format.parse(timeSlotFrom))));
+									}
+									catch (final ParseException parseException)
+									{
+										LOG.error("MplDeliveryAddressFacadeImpl:::::::Error" + parseException.getMessage());
+									}
 								}
-								catch (ParseException parseException)
+								if (StringUtils.isNotEmpty(entry.getTimeSlotTo()))
 								{
-									LOG.error("MplDeliveryAddressFacadeImpl:::::::Error"+parseException.getMessage());
+									final String timeSlotTo = entry.getEdScheduledDate().concat(" " + entry.getTimeSlotTo());
+									format2.setTimeZone(TimeZone.getTimeZone("GMT"));
+									try
+									{
+										sendTicketLineItemData.setTimeSlotTo(String.valueOf(format2.format(format.parse(timeSlotTo))));
+									}
+									catch (final ParseException parseException)
+									{
+										LOG.error("MplDeliveryAddressFacadeImpl:::::::Error" + parseException.getMessage());
+									}
 								}
-							}
-							if (StringUtils.isNotEmpty(entry.getTimeSlotTo()))
-							{
-								String timeSlotTo=entry.getEdScheduledDate().concat(" "+entry.getTimeSlotTo());
-								format2.setTimeZone(TimeZone.getTimeZone("GMT"));
-								try
-								{
-									sendTicketLineItemData.setTimeSlotTo(String.valueOf(format2.format(format.parse(timeSlotTo))));
-								}
-								catch (ParseException parseException)
-								{
-									LOG.error("MplDeliveryAddressFacadeImpl:::::::Error"+parseException.getMessage());
-								}
-							}
 							}
 						}
 						lineItemDataList.add(sendTicketLineItemData);
@@ -384,57 +385,58 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		}
 		final ReturnAddressInfo addressinfo = new ReturnAddressInfo();
 		final AddressModel changeDeliveryAddress = Order.getDeliveryAddress();
-			if (null != changeDeliveryAddress.getFirstname())
+		if (null != changeDeliveryAddress.getFirstname())
+		{
+			addressinfo.setShippingFirstName(changeDeliveryAddress.getFirstname());
+		}
+		if (null != changeDeliveryAddress.getLastname())
+		{
+			addressinfo.setShippingLastName(changeDeliveryAddress.getLastname());
+		}
+		if (null != changeDeliveryAddress.getPhone1())
+		{
+			addressinfo.setPhoneNo(changeDeliveryAddress.getPhone1());
+		}
+		if (MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_CDA.equalsIgnoreCase(ticketType))
+		{
+			if (null != changeDeliveryAddress.getLine1())
 			{
-				addressinfo.setShippingFirstName(changeDeliveryAddress.getFirstname());
+				addressinfo.setAddress1(changeDeliveryAddress.getLine1());
 			}
-			if (null != changeDeliveryAddress.getLastname())
+			if (null != changeDeliveryAddress.getLine2())
 			{
-				addressinfo.setShippingLastName(changeDeliveryAddress.getLastname());
+				addressinfo.setAddress2(changeDeliveryAddress.getLine2());
 			}
-			if (null != changeDeliveryAddress.getPhone1())
+			//BUG ID 1623
+			if (null != changeDeliveryAddress.getAddressLine3())
 			{
-				addressinfo.setPhoneNo(changeDeliveryAddress.getPhone1());
+				addressinfo.setAddress3(changeDeliveryAddress.getAddressLine3());
 			}
-		if(MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_CDA.equalsIgnoreCase(ticketType)){
-		if (null != changeDeliveryAddress.getLine1())
-		{
-			addressinfo.setAddress1(changeDeliveryAddress.getLine1());
+
+			if (null != changeDeliveryAddress.getState())
+			{
+				addressinfo.setState(getStateCode(changeDeliveryAddress.getState()));
+			}
+			if (null != changeDeliveryAddress.getCity())
+			{
+				addressinfo.setCity(changeDeliveryAddress.getCity());
+			}
+			if (null != changeDeliveryAddress.getLandmark())
+			{
+				addressinfo.setLandmark(changeDeliveryAddress.getLandmark());
+			}
+			if (null != changeDeliveryAddress.getCountry())
+			{
+				addressinfo.setCountry(changeDeliveryAddress.getCountry().getName());
+			}
+			if (null != changeDeliveryAddress.getPostalcode())
+			{
+				addressinfo.setPincode(changeDeliveryAddress.getPostalcode());
+			}
 		}
-		if (null != changeDeliveryAddress.getLine2())
-		{
-			addressinfo.setAddress2(changeDeliveryAddress.getLine2());
-		}
-		//BUG ID 1623
-		if (null != changeDeliveryAddress.getAddressLine3())
-		{
-			addressinfo.setAddress3(changeDeliveryAddress.getAddressLine3());
-		}
-		
-		if (null != changeDeliveryAddress.getState())
-		{
-			addressinfo.setState(getStateCode(changeDeliveryAddress.getState()));
-		}
-		if (null != changeDeliveryAddress.getCity())
-		{
-			addressinfo.setCity(changeDeliveryAddress.getCity());
-		}
-		if (null != changeDeliveryAddress.getLandmark())
-		{
-			addressinfo.setLandmark(changeDeliveryAddress.getLandmark());
-		}
-		if (null != changeDeliveryAddress.getCountry())
-		{
-			addressinfo.setCountry(changeDeliveryAddress.getCountry().getName());
-		}
-		if (null != changeDeliveryAddress.getPostalcode())
-		{
-			addressinfo.setPincode(changeDeliveryAddress.getPostalcode());
-		}
-		}
-	
+
 		sendTicketRequestData.setAddressInfo(addressinfo);
-	
+
 		sendTicketRequestData.setCustomerID(Order.getUser().getUid());
 		sendTicketRequestData.setLineItemDataList(lineItemDataList);
 		sendTicketRequestData.setOrderId(Order.getCode());
@@ -514,7 +516,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		try
 		{
 			final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
-			
+
 			final CustomerModel customer = (CustomerModel) orderModel.getUser();
 			final AddressModel newDeliveryAddress = tempAddressReverseConverter.convert(addressData);
 			if (newDeliveryAddress != null)
@@ -542,7 +544,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						mplDeliveryAddressService.deliveryAddressFailureRequest(orderModel);
 						scheduledDeliveryData.setIsActive(Boolean.TRUE);
 						scheduledDeliveryData.setIsPincodeServiceable(Boolean.FALSE);
-						
+
 					}
 
 				}
@@ -596,19 +598,20 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					newDeliveryAddress.setEmail(customer.getOriginalUid());
 					// set the Address in a session
 					sessionService.setAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS, addressData);
-					String mobileNumber=null;
-		         if (orderModel.getDeliveryAddress() != null)
+					String mobileNumber = null;
+					if (orderModel.getDeliveryAddress() != null)
 					{
 
-						mobileNumber = StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()) ? orderModel.getDeliveryAddress()
-								.getPhone1() : (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone2()) ? orderModel
-								.getDeliveryAddress().getPhone2() : orderModel.getDeliveryAddress().getCellphone());
+						mobileNumber = StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()) ? orderModel
+								.getDeliveryAddress().getPhone1()
+								: (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone2()) ? orderModel.getDeliveryAddress()
+										.getPhone2() : orderModel.getDeliveryAddress().getCellphone());
 					}
 					if (StringUtils.isNotEmpty(mobileNumber))
 					{
 						try
 						{
-							generateOTP(customer, mobileNumber,true,addressData.getPhone());
+							generateOTP(customer, mobileNumber, true, addressData.getPhone());
 						}
 						catch (final InvalidKeyException excption)
 						{
@@ -642,7 +645,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 * @throws InvalidKeyException
 	 * @throws NoSuchAlgorithmException
 	 */
-	String generateOTP(final CustomerModel customerModel, final String mobileNumber, boolean isMobile, String newNumber)
+	String generateOTP(final CustomerModel customerModel, final String mobileNumber, final boolean isMobile, String newNumber)
 			throws InvalidKeyException, NoSuchAlgorithmException
 	{
 		String otp = null;
@@ -651,7 +654,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			otp = otpGenericService.generateOTP(customerModel.getUid(), OTPTypeEnum.CDA.getCode(), mobileNumber);
 			if (!isMobile)
 			{
-				AddressData newDeliveryAddressData = sessionService
+				final AddressData newDeliveryAddressData = sessionService
 						.getAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
 				newNumber = newDeliveryAddressData.getPhone();
 
@@ -666,7 +669,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 				sendPushNotificationForCDA(customerModel, otp, newNumber);
 			}
 		}
-		catch (Exception exception)
+		catch (final Exception exception)
 		{
 			LOG.error("MplDeliveryAddressFacadeImpl:::::OTP Genrate" + exception.getMessage());
 		}
@@ -685,7 +688,8 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	@Override
 	public OTPResponseData validateOTP(final String customerID, final String enteredOTPNumber)
 	{
-		final OTPResponseData otpResponse = otpGenericService.validateLatestOTP(customerID, null, enteredOTPNumber, OTPTypeEnum.CDA,
+		final OTPResponseData otpResponse = otpGenericService.validateLatestOTP(customerID, null, enteredOTPNumber,
+				OTPTypeEnum.CDA,
 				Long.parseLong(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
 		return otpResponse;
 	}
@@ -700,7 +704,8 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 */
 	@Override
 	public String submitChangeDeliveryAddress(final String customerID, final String orderCode,
-			final AddressData newDeliveryAddressData, final boolean isMobile, List<TransactionSDDto> transactionSDDtoList,RescheduleDataList mobileData)
+			final AddressData newDeliveryAddressData, final boolean isMobile, List<TransactionSDDto> transactionSDDtoList,
+			final RescheduleDataList mobileData)
 	{
 		String valditionMsg = null;
 		boolean isEDScheduled = false;
@@ -741,32 +746,32 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 								}
 							}
 						}
-							
+
 						//OMS realTime Call
-						valditionMsg=changeDeliveryRequestCallToOMS(orderCode, newDeliveryAddressModel, MarketplaceFacadesConstants.CA,
-								transactionSDDtoList);
+						valditionMsg = changeDeliveryRequestCallToOMS(orderCode, newDeliveryAddressModel,
+								MarketplaceFacadesConstants.CA, transactionSDDtoList);
 						if (MarketplaceFacadesConstants.SUCCESS.equalsIgnoreCase(valditionMsg))
 						{
-							 //save changed address  
-							mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel, orderModel,false);
-							
-							if (isEligibleScheduledDelivery && transactionSDDtoList!=null && !isMobile)
+							//save changed address
+							mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel, orderModel, false);
+
+							if (isEligibleScheduledDelivery && transactionSDDtoList != null && !isMobile)
 							{
 								//save selected Date and time
 								transactionSDDtoList = changeScheduleddeliveryTimeFormate(orderModel, rescheduleDataList);
 								sessionService.removeAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
 								mplDeliveryAddressService.saveSelectedDateAndTime(orderModel, transactionSDDtoList);
 							}
-							
+
 							if (isMobile && isEligibleScheduledDelivery && mobileData != null)
 							{
 								try
 								{
-									List<TransactionSDDto> mobileDataList=new ArrayList<TransactionSDDto>();
+									List<TransactionSDDto> mobileDataList = new ArrayList<TransactionSDDto>();
 									mobileDataList = changeScheduleddeliveryTimeFormate(orderModel, mobileData);
 									mplDeliveryAddressService.saveSelectedDateAndTime(orderModel, mobileDataList);
 								}
-								catch (Exception exception)
+								catch (final Exception exception)
 								{
 									LOG.error("Exception :::" + exception.getMessage());
 								}
@@ -774,13 +779,13 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 
 							//CRM call
 							createcrmTicketForChangeDeliveryAddress(orderModel, customerID, MarketplacecommerceservicesConstants.SOURCE,
-									MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_CDA,isEDScheduled);
+									MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_CDA, isEDScheduled);
 						}
 						else
 						{
 							return MarketplacecommerceservicesConstants.IS_NOT_CHANABLE;
 						}
-						
+
 					}
 					catch (final Exception e)
 					{
@@ -797,17 +802,18 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 					try
 					{
 						//OMS realTime Call
-						valditionMsg=changeDeliveryRequestCallToOMS(orderCode, newDeliveryAddressModel, MarketplaceFacadesConstants.CU, null);
-						
+						valditionMsg = changeDeliveryRequestCallToOMS(orderCode, newDeliveryAddressModel,
+								MarketplaceFacadesConstants.CU, null);
+
 						if (MarketplaceFacadesConstants.SUCCESS.equalsIgnoreCase(valditionMsg))
 						{
 							try
 							{
-							 	 mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel, orderModel, false);
-									createcrmTicketForChangeDeliveryAddress(orderModel, customerID,
-											MarketplacecommerceservicesConstants.SOURCE,
-											MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DMC,isEDScheduled);
-								
+								mplDeliveryAddressService.saveDeliveryAddress(newDeliveryAddressModel, orderModel, false);
+								createcrmTicketForChangeDeliveryAddress(orderModel, customerID,
+										MarketplacecommerceservicesConstants.SOURCE,
+										MarketplacecommerceservicesConstants.TICKET_SUB_TYPE_DMC, isEDScheduled);
+
 							}
 							catch (final Exception e)
 							{
@@ -840,16 +846,16 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 * new OTP Request For CDA Based On orderCode
 	 */
 	@Override
-	public boolean newOTPRequest(final String orderCode,boolean isMobile,String newNumber)
+	public boolean newOTPRequest(final String orderCode, final boolean isMobile, final String newNumber)
 	{
 		boolean isGenerated = false;
 		final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
 		if (orderModel != null)
 		{
 			final CustomerModel customer = (CustomerModel) orderModel.getUser();
-         
-			String mobileNumber=null;
-         if (orderModel.getDeliveryAddress() != null)
+
+			String mobileNumber = null;
+			if (orderModel.getDeliveryAddress() != null)
 			{
 
 				mobileNumber = StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPhone1()) ? orderModel.getDeliveryAddress()
@@ -860,7 +866,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			{
 				if (StringUtils.isNotEmpty(mobileNumber))
 				{
-					generateOTP(customer, mobileNumber,isMobile,newNumber);
+					generateOTP(customer, mobileNumber, isMobile, newNumber);
 				}
 				isGenerated = true;
 			}
@@ -1036,7 +1042,7 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 			for (final Entry<String, TransactionEddDto> key : mapTransactionEddDto.entrySet())
 			{
 				final TransactionEddDto transactionEddDto = key.getValue();
-			   timeSlotType = MarketplacecommerceservicesConstants.INTERFACE_TYPE_SD;
+				timeSlotType = MarketplacecommerceservicesConstants.INTERFACE_TYPE_SD;
 				ServicesUtil.validateParameterNotNull(timeSlotType, "timeSlotType must not be null");
 				if (LOG.isDebugEnabled())
 				{
@@ -1111,79 +1117,102 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	 */
 	@Override
 	public Map<String, List<String>> getDateAndTimeMap(final String timeSlotType, final String edd)
-			throws java.text.ParseException {
+			throws java.text.ParseException
+	{
 
-		DateUtilHelper dateUtilHelper = new DateUtilHelper();
-		String estDeliveryDateAndTime= edd;
-		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-		String  deteWithOutTIme=dateUtilHelper.getDateFromat(estDeliveryDateAndTime,format);
-		String timeWithOutDate=dateUtilHelper.getTimeFromat(estDeliveryDateAndTime);
-		List<String>   calculatedDateList=new ArrayList<String>();
-		List<MplTimeSlotsModel> modelList=null;
-		
-		if(timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD)){
+		final DateUtilHelper dateUtilHelper = new DateUtilHelper();
+		final String estDeliveryDateAndTime = edd;
+		final SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+		String deteWithOutTIme = dateUtilHelper.getDateFromat(estDeliveryDateAndTime, format);
+		final String timeWithOutDate = dateUtilHelper.getTimeFromat(estDeliveryDateAndTime);
+		List<String> calculatedDateList = new ArrayList<String>();
+		List<MplTimeSlotsModel> modelList = null;
+
+		if (timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD))
+		{
 			LOG.debug("Getting HD delivery time slots ");
-			modelList=mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
-		}else if (timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED)){
+			modelList = mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD);
+		}
+		else if (timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED))
+		{
 			LOG.debug("Getting ED delivery time slots ");
-			modelList=mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED);
+			modelList = mplConfigFacade.getDeliveryTimeSlotByKey(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED);
 		}
 
 		boolean slotsAvailableOnGivenDate = false;
-		if(null != modelList) {
-			for (MplTimeSlotsModel model : modelList) {
+		if (null != modelList)
+		{
+			for (final MplTimeSlotsModel model : modelList)
+			{
 				Date endTime = null;
-				SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-				endTime=sdf.parse(model.getFromTime());
-				Date givenTime = sdf.parse(timeWithOutDate);
-				if(endTime.compareTo(givenTime) > 0) {
+				final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+				endTime = sdf.parse(model.getFromTime());
+				final Date givenTime = sdf.parse(timeWithOutDate);
+				if (endTime.compareTo(givenTime) > 0)
+				{
 					slotsAvailableOnGivenDate = true;
 					break;
 				}
 			}
 		}
-		if(!slotsAvailableOnGivenDate) {
-			LOG.debug("Delivery slots not available for given Date"+edd);
+		if (!slotsAvailableOnGivenDate)
+		{
+			LOG.debug("Delivery slots not available for given Date" + edd);
 			deteWithOutTIme = dateUtilHelper.getNextDete(deteWithOutTIme, format);
 		}
-		List<MplTimeSlotsModel> timeList=new ArrayList<MplTimeSlotsModel>();
-		if(slotsAvailableOnGivenDate) {
-			for (MplTimeSlotsModel model : modelList) {
+		final List<MplTimeSlotsModel> timeList = new ArrayList<MplTimeSlotsModel>();
+		if (slotsAvailableOnGivenDate)
+		{
+			for (final MplTimeSlotsModel model : modelList)
+			{
 				Date endTime = null;
-				SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-				endTime=sdf.parse(model.getFromTime());
-				Date givenTime = sdf.parse(timeWithOutDate);
-				if(endTime.compareTo(givenTime) > 0) {
+				final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+				endTime = sdf.parse(model.getFromTime());
+				final Date givenTime = sdf.parse(timeWithOutDate);
+				if (endTime.compareTo(givenTime) > 0)
+				{
 					timeList.add(model);
 				}
 			}
 		}
-		if(null!= modelList){
+		if (null != modelList)
+		{
 			final MplLPHolidaysModel mplLPHolidaysModel = mplConfigFacade
 					.getMplLPHolidays(MarketplacecommerceservicesConstants.CAMPAIGN_URL_ALL);
-			if(timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD)) {
+			if (timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_SD))
+			{
 				if (null != mplLPHolidaysModel && null != mplLPHolidaysModel.getWorkingDays())
 				{
-					calculatedDateList = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(),deteWithOutTIme, 3);
-				}else {
-					calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,3);
+					calculatedDateList = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(), deteWithOutTIme, 3);
+				}
+				else
+				{
+					calculatedDateList = dateUtilHelper.getDeteList(deteWithOutTIme, format, 3);
 				}
 
-			}else if(timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED)) {
+			}
+			else if (timeSlotType.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERY_MODE_ED))
+			{
 				if (null != mplLPHolidaysModel && null != mplLPHolidaysModel.getWorkingDays())
 				{
-					calculatedDateList = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(),deteWithOutTIme,2);
-				}else {
-					calculatedDateList=dateUtilHelper.getDeteList(deteWithOutTIme,format,2);
+					calculatedDateList = dateUtilHelper.calculatedLpHolidays(mplLPHolidaysModel.getWorkingDays(), deteWithOutTIme, 2);
+				}
+				else
+				{
+					calculatedDateList = dateUtilHelper.getDeteList(deteWithOutTIme, format, 2);
 				}
 			}
-			List<String> finalTimeSlotList=null;
-			Map<String, List<String>> dateTimeslotMapList=new LinkedHashMap<String, List<String>>();
-			for(String selectedDate: calculatedDateList){
-				if(selectedDate.equalsIgnoreCase(deteWithOutTIme) && slotsAvailableOnGivenDate){
-					finalTimeSlotList= dateUtilHelper.convertFromAndToTimeSlots(timeList);
-				}else{
-					finalTimeSlotList= dateUtilHelper.convertFromAndToTimeSlots(modelList);
+			List<String> finalTimeSlotList = null;
+			final Map<String, List<String>> dateTimeslotMapList = new LinkedHashMap<String, List<String>>();
+			for (final String selectedDate : calculatedDateList)
+			{
+				if (selectedDate.equalsIgnoreCase(deteWithOutTIme) && slotsAvailableOnGivenDate)
+				{
+					finalTimeSlotList = dateUtilHelper.convertFromAndToTimeSlots(timeList);
+				}
+				else
+				{
+					finalTimeSlotList = dateUtilHelper.convertFromAndToTimeSlots(modelList);
 				}
 				dateTimeslotMapList.put(selectedDate, finalTimeSlotList);
 			}
@@ -1253,8 +1282,8 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 	public List<TransactionSDDto> reScheduleddeliveryDate(final OrderModel orderModel,
 			final RescheduleDataList rescheduleDataListDto)
 	{
-		SimpleDateFormat format1 = new SimpleDateFormat("hh:mm a");
-		SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:ss");
+		final SimpleDateFormat format1 = new SimpleDateFormat("hh:mm a");
+		final SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:ss");
 		String timeSlotFrom = null;
 		String timeSlotTo = null;
 		final List<TransactionSDDto> transactionSDDtoList = new ArrayList<TransactionSDDto>();
@@ -1279,13 +1308,13 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 								timeSlotTo = timeFromTo.substring(timeFromTo.indexOf("TO") + 3, timeFromTo.length());
 								try
 								{
-								transactionSDDto.setTimeSlotFrom(String.valueOf(format2.format(format1.parse(timeSlotFrom))));
-								transactionSDDto.setTimeSlotTo(String.valueOf(format2.format(format1.parse(timeSlotTo))));
-								abstractOrderEntryModel.setEdScheduledDate(rescheduleData.getDate());
+									transactionSDDto.setTimeSlotFrom(String.valueOf(format2.format(format1.parse(timeSlotFrom))));
+									transactionSDDto.setTimeSlotTo(String.valueOf(format2.format(format1.parse(timeSlotTo))));
+									abstractOrderEntryModel.setEdScheduledDate(rescheduleData.getDate());
 								}
-								catch (ParseException e)
+								catch (final ParseException e)
 								{
-									LOG.error("unable to parse timeslots "+ e.getMessage());
+									LOG.error("unable to parse timeslots " + e.getMessage());
 								}
 							}
 							transactionSDDtoList.add(transactionSDDto);
@@ -1459,31 +1488,31 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, contactNumber), mobileNumber);
 
 	}
-	
-	    //Get State code
-		private String getStateCode(String stateName)
-		{
-			for (final StateData state : accountAddressFacade.getStates())
-			{
-				if (state.getName().equalsIgnoreCase(stateName))
-				{
-					return state.getCode();
-				}
-			}
-			return null;
-		}
 
-		
-		/**
-		 * This method will check  ED Transaction 
-		 */
+	//Get State code
+	private String getStateCode(final String stateName)
+	{
+		for (final StateData state : accountAddressFacade.getStates())
+		{
+			if (state.getName().equalsIgnoreCase(stateName))
+			{
+				return state.getCode();
+			}
+		}
+		return null;
+	}
+
+
+	/**
+	 * This method will check ED Transaction
+	 */
 	@Override
-	public boolean isEDOrder(OrderData orderData)
+	public boolean isEDOrder(final OrderData orderData)
 	{
 		boolean isEDEntry = false;
-		for (OrderData subOrder : orderData.getSellerOrderList())
+		for (final OrderData subOrder : orderData.getSellerOrderList())
 		{
-			for (OrderEntryData entry : subOrder.getEntries())
+			for (final OrderEntryData entry : subOrder.getEntries())
 			{
 				if (MarketplaceFacadesConstants.EXPRESS_DELIVERY.equalsIgnoreCase(entry.getMplDeliveryMode().getCode()))
 				{
@@ -1494,8 +1523,8 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 		}
 		return isEDEntry;
 	}
-	
-	
+
+
 	private List<TransactionSDDto> changeScheduleddeliveryTimeFormate(final OrderModel orderModel,
 			final RescheduleDataList rescheduleDataListDto)
 	{
@@ -1523,13 +1552,13 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 								timeSlotTo = timeFromTo.substring(timeFromTo.indexOf("TO") + 3, timeFromTo.length());
 								try
 								{
-								transactionSDDto.setTimeSlotFrom(timeSlotFrom);
-								transactionSDDto.setTimeSlotTo(timeSlotTo);
-								abstractOrderEntryModel.setEdScheduledDate(rescheduleData.getDate());
+									transactionSDDto.setTimeSlotFrom(timeSlotFrom);
+									transactionSDDto.setTimeSlotTo(timeSlotTo);
+									abstractOrderEntryModel.setEdScheduledDate(rescheduleData.getDate());
 								}
-								catch (Exception e)
+								catch (final Exception e)
 								{
-									LOG.error("unable to parse timeslots "+ e.getMessage());
+									LOG.error("unable to parse timeslots " + e.getMessage());
 								}
 							}
 							transactionSDDtoList.add(transactionSDDto);

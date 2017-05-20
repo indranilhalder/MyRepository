@@ -26,23 +26,27 @@ public class MplDeliveryAddressDaoImpl implements MplDeliveryAddressDao
 {
 
 	private static final Logger LOG = Logger.getLogger(MplDeliveryAddressDaoImpl.class);
-	
-	private static final String MPL_DELIVERY_ADDRESS_REPORT_QUERY_BY_ORDERID = "SELECT {srm:" + MplDeliveryAddressInfoModel.PK + "}" + " FROM {"
-			+ MplDeliveryAddressInfoModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:" + MplDeliveryAddressInfoModel.ORDERID + "}=?code ";
 
- 
-	private static final String MPL_DELIVERY_ADDRESS_REPORT_QUERY_BETWEEN_TWO_DATES= "SELECT {srm:" + MplDeliveryAddressInfoModel.PK + "}" + " FROM {"
-			+ MplDeliveryAddressInfoModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:" + MplDeliveryAddressInfoModel.CREATIONTIME + "} between ?fromDate and ?toDate ";
+	private static final String MPL_DELIVERY_ADDRESS_REPORT_QUERY_BY_ORDERID = "SELECT {srm:" + MplDeliveryAddressInfoModel.PK
+			+ "}" + " FROM {" + MplDeliveryAddressInfoModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:"
+			+ MplDeliveryAddressInfoModel.ORDERID + "}=?code ";
 
-	
+
+	private static final String MPL_DELIVERY_ADDRESS_REPORT_QUERY_BETWEEN_TWO_DATES = "SELECT {srm:"
+			+ MplDeliveryAddressInfoModel.PK + "}" + " FROM {" + MplDeliveryAddressInfoModel._TYPECODE + " AS srm} " + "WHERE "
+			+ "{srm:" + MplDeliveryAddressInfoModel.CREATIONTIME + "} between ?fromDate and ?toDate ";
+
+
 
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
-	/*@Autowired
-	private ModelService modelService;*/
 
-	
-	
+	/*
+	 * @Autowired private ModelService modelService;
+	 */
+
+
+
 	/**
 	 * @Description Get the report model by order id
 	 * @param orderCode
@@ -53,28 +57,25 @@ public class MplDeliveryAddressDaoImpl implements MplDeliveryAddressDao
 	{
 		try
 		{
-			if(LOG.isDebugEnabled()){
-				LOG.debug("In getMplDeliveryAddressReportModelByOrderId - orderCode ***"+orderCode);
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("In getMplDeliveryAddressReportModelByOrderId - orderCode ***" + orderCode);
 			}
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(MPL_DELIVERY_ADDRESS_REPORT_QUERY_BY_ORDERID);
 			fQuery.addQueryParameter("code", orderCode);
 
-			final List<MplDeliveryAddressInfoModel> listOfData = flexibleSearchService.<MplDeliveryAddressInfoModel> search(fQuery).getResult();
+			final List<MplDeliveryAddressInfoModel> listOfData = flexibleSearchService.<MplDeliveryAddressInfoModel> search(fQuery)
+					.getResult();
 			return !listOfData.isEmpty() ? listOfData.get(0) : null;
 		}
 		catch (final Exception e)
 		{
-			LOG.error("�rror while searching for MplDeliveryAddress  Report model for order  id" + orderCode);
+			LOG.error("Error while searching for MplDeliveryAddress  Report model for order  id" + orderCode);
 		}
 		return null;
 	}
 
-	
-	
-	
-	
-	
-	
+
 	/**
 	 * @Description Get the report models between two dates
 	 * @param fromDate
@@ -82,23 +83,25 @@ public class MplDeliveryAddressDaoImpl implements MplDeliveryAddressDao
 	 * @return MplDeliveryAddressInfoModel
 	 */
 	@Override
-	public List<MplDeliveryAddressInfoModel> getMplDeliveryAddressReportModels(Date fromDate,Date toDate)
+	public List<MplDeliveryAddressInfoModel> getMplDeliveryAddressReportModels(final Date fromDate, final Date toDate)
 	{
 		try
 		{
-			if(LOG.isDebugEnabled()){
-				LOG.debug("In getMplDeliveryAddressReportModels - fromDate: ="+fromDate +"todate :="+toDate);
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("In getMplDeliveryAddressReportModels - fromDate: =" + fromDate + "todate :=" + toDate);
 			}
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(MPL_DELIVERY_ADDRESS_REPORT_QUERY_BETWEEN_TWO_DATES);
 			fQuery.addQueryParameter("fromDate", fromDate);
 			fQuery.addQueryParameter("toDate", toDate);
-			return  flexibleSearchService.<MplDeliveryAddressInfoModel> search(fQuery).getResult();
+			return flexibleSearchService.<MplDeliveryAddressInfoModel> search(fQuery).getResult();
 		}
 		catch (final Exception e)
 		{
-			LOG.error("�rror while searching for MplDeliveryAddress Report models between From Date:"+fromDate +"toDate:"+toDate);
+			LOG.error("Error while searching for MplDeliveryAddress Report models between From Date:" + fromDate + "toDate:"
+					+ toDate);
 		}
 		return null;
 	}
-	
+
 }

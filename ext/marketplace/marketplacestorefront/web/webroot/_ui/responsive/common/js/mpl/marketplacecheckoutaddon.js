@@ -163,8 +163,8 @@ $('#pincode').on('paste', function () {
 
 
 function refresh(){
-	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top").prop("disabled",false);
-	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top").css("opacity","1");
+	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top , .make_mrupee_payment_up").prop("disabled",false);
+	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top , .make_mrupee_payment_up").css("opacity","1");
 	$(".pay .spinner").remove();
 	$("#no-click,.spinner").remove();
 	// $(".checkout-content.checkout-payment
@@ -1495,6 +1495,9 @@ $("#otpMobileNUMField").focus(function(){
 			$("#convChargeFieldId, #convChargeField").css("display","none");
 			document.getElementById("convChargeField").innerHTML=convCharge;
 			document.getElementById("totalWithConvField").innerHTML=totalPrice;
+			//INC144316021
+			document.getElementById("outstanding-amount").innerHTML=totalPrice;
+			document.getElementById("outstanding-amount-mobile").innerHTML=totalPrice;
  			isCodSet = false;
  			if(paymentMode!=null){
  				applyPromotion(null,"none","none");
@@ -2341,7 +2344,6 @@ $("#otpMobileNUMField").focus(function(){
 	 }
  }
  
- 
  // INC144316811
  function openShippingFrmOpen(){
 	 	$("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", false); 
@@ -2359,6 +2361,15 @@ $("#otpMobileNUMField").focus(function(){
 		$('#sameAsShippingEmi').attr('checked', false); 
 }
 
+
+ function openShippingFrmOpenEMI(){
+		$("#firstNameEmi, #lastNameEmi, #address1Emi, #address2Emi, #address3Emi, #stateEmi, #cityEmi, #pincodeEmi").attr("readonly", false);
+		$("#countryEmi").attr("disabled", false);
+		/*$(".new-card input#sameAsShippingEmi:checked + label + fieldset").css("display","block");*/
+		$("input#sameAsShippingEmi:checked + label + fieldset").css("display","block");
+		$('#sameAsShippingEmi').attr('checked', false); 
+}
+ 
 // function dopaymentDc(bin_current_status){
 //	 var name = validateNameDc();
 //	 if(bin_current_status==true){
@@ -2617,9 +2628,41 @@ $("#otpMobileNUMField").focus(function(){
 	$('.security_code').prop('disabled', false); 
 }
  
-
+//TPR-3402
  
+ 
+ maxL=120;
+ var bName = navigator.appName;
+// function taLimit(taObj) {
+// 	if (taObj.value.length==maxL) return false;
+// 	return true;
+// }
 
+ function taCount(taObj,Cnt) { 
+	 						 
+ 	objCnt=createObject(Cnt);
+ 	console.log("inside objcnt");
+ 	objVal=taObj.value;
+ 	console.log("inside objVal");
+ 	if (objVal.length>maxL) objVal=objVal.substring(0,maxL);
+ 	if (objCnt) {
+ 		if(bName == "Netscape"){	
+ 			objCnt.textContent=maxL-objVal.length;
+ 			console.log("inside textcontent");}
+ 		else{objCnt.innerText=maxL-objVal.length;
+ 		console.log("inside innerText");}
+ 	}
+ 
+ 	return true;
+ }
+ function createObject(objId) {
+ 	if (document.getElementById) return document.getElementById(objId);
+ 	else if (document.layers) return eval("document." + objId);
+ 	else if (document.all) return eval("document.all." + objId);
+ 	else return eval("document." + objId);
+ }
+ /**************End of character count********/
+ 
  function populateBillingAddress(){ 
 	 $("#firstNameError, #lastNameError, #address1Error, #address2Error, #address3Error, #cityError, #stateError, #pinError").text(""); 
 	 var guid=$("#guid").val();
@@ -2653,6 +2696,7 @@ $("#otpMobileNUMField").focus(function(){
 				 $("#country").attr("disabled", false); 
 				 $("#country").val("India"); 
 			 } 
+			 /*$("#myCounter").html((120));*/
 		 }, 
 		 error : function(resp) { 
 	 } 
@@ -4212,7 +4256,11 @@ function populateAddress(){
 		$("#pincode").val("");
 		$("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", false);
 		$("#country").attr("disabled", false);
-	}
+			if(($("#address1").val())=="")
+		 	{
+			 $("#myCounter").html((120));
+		 	}
+		}
 }
 
 function populateAddressEmi(){
@@ -4558,8 +4606,9 @@ function applyPromotion(bankName,binValue,formSubmit)
 				{
 					if(response.voucherDiscount.couponDiscount.doubleValue<=0)
 					{
+						//TPR-4460 changes -- invalidChannelError id added
 		 				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
-		 						" #expiredCouponError, #issueCouponError, #freebieCouponError").css("display","none");
+		 						" #expiredCouponError, #issueCouponError, #freebieCouponError ,#invalidChannelError").css("display","none");
 		 				document.getElementById("couponValue").innerHTML=response.voucherDiscount.couponDiscount.formattedValue;
 		 				$('#couponFieldId').attr('readonly', false);
 		 				var selection = $("#voucherDisplaySelection").val();
@@ -4632,6 +4681,12 @@ function applyPromotion(bankName,binValue,formSubmit)
 					isCodSet = false;
 				}
 				var cartTotal=response.totalPrice.value;
+				
+				/*Added for mRupee wallet*/
+				if(cartTotal >= 20000){
+					$("#mRupeeInfo").css("display","block");			
+				}
+				//Ends here
 				
 				if(null!=response.promoExpiryMsg && response.promoExpiryMsg=="redirect_to_payment")
 				{
@@ -4742,7 +4797,7 @@ function applyPromotion(bankName,binValue,formSubmit)
 									/*TPR-641 starts*/
 									emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, '').toLowerCase();
 									utag.link({
-										link_obj: this, 
+										link_obj: this,
 										link_text: emiBankSelectedTealium , 
 										event_type : 'emi_option_selected'
 									});
@@ -4996,6 +5051,9 @@ function calculateDeliveryCost(radioId,deliveryCode)
 		 		}
 	 			
 	 			document.getElementById("totalWithConvField").innerHTML=currency+totalPrice;
+	 			//INC144316021
+	 			document.getElementById("outstanding-amount").innerHTML=currency+totalPrice;
+				document.getElementById("outstanding-amount-mobile").innerHTML=currency+totalPrice;
 	 			isCodSet = false;
 	 		},
 	 		error : function(resp) {
@@ -6777,7 +6835,7 @@ $("#lastName").focus(function(){
 
 function validateAddressLine1(addressLine, errorHandle){
 	if(addressLine==""){
-		errorHandle.innerHTML = "Please enter an Address line 1.";
+		errorHandle.innerHTML = "Please enter Address line.";
         return false;
 	}
 	errorHandle.innerHTML = "";
@@ -7059,6 +7117,7 @@ function clearDisable()
 
 // Coupon
 $("#couponSubmitButton").click(function(){
+	
 	if(!isSessionActive()){
 		redirectToCheckoutLogin();
 	}else{
@@ -7066,7 +7125,7 @@ $("#couponSubmitButton").click(function(){
 	$(this).css("opacity","0.5");
 	$("#priceCouponError, #emptyCouponError, #appliedCouponError, " +
 			"#invalidCouponError, #expiredCouponError, #issueCouponError, " +
-			"#notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError").css("display","none");
+			"#notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display","none");
 	if($("#couponFieldId").val()==""){
 		$("#emptyCouponError").css("display","block");	
 		// document.getElementById("couponError").innerHTML="Please enter a
@@ -7101,8 +7160,12 @@ $("#couponSubmitButton").click(function(){
 	 		cache: false,
 	 		data: { 'couponCode' : couponCode , 'paymentMode' : paymentMode , 'bankNameSelected' : bankNameSelected , 'guid' : guid},
 	 		success : function(response) {
+	 			console.log(response.redeemErrorMsg);
 	 			$("#no-click,.spinner").remove(); //add for INC_11738
 	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+	 			//INC144316021
+                document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
 	 			$("#codAmount").text(response.totalPrice.formattedValue);
 	 			if(response.redeemErrorMsg!=null){
 	 				if(response.redeemErrorMsg=="Price_exceeded")
@@ -7141,6 +7204,21 @@ $("#couponSubmitButton").click(function(){
 	 				else if(response.redeemErrorMsg=="First_Purchase_User_Invalid")
 	 				{
 	 					$("#firstPurchaseOfferError").css("display","block");
+	 				}
+	 				//TPR-4460
+	 				else if(response.redeemErrorMsg=="Channel_Not_Applicable_Web")
+	 				{
+	 					$("#invalidChannelError").html("Oh snap! This coupon is valid only on our website");
+	 					$("#invalidChannelError").css("display","block");
+	 				}
+	 				else if(response.redeemErrorMsg=="Channel_Not_Applicable_Mobile")
+	 				{
+	 					$("#invalidChannelError").html("Oh snap! This coupon is valid only on our app");
+	 					$("#invalidChannelError").css("display","block");
+	 				}
+	 				else if(response.redeemErrorMsg=="Channel_Not_Applicable_CallCentre")
+	 				{
+	 					$("#notApplicableCouponError").css("display","block");
 	 				}
 	 				//TPR-658
 	 				onSubmitAnalytics("invalid_coupon");
@@ -7196,7 +7274,7 @@ $("#couponSubmitButton").click(function(){
 function onSubmitAnalytics(msg){
 	var couponCode = $('#couponFieldId').val().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	utag.link({
-		link_obj: this,
+		/*link_obj: this,*/ /*TISUATSE-102*/
 		link_text: 'apply_coupon_'+msg ,
 		event_type : 'apply_coupon',
 		coupon_code : couponCode
@@ -7207,9 +7285,10 @@ function onSubmitAnalytics(msg){
 
 $("#couponFieldId").focus(function(){
 	// $("#couponError").css("display","none");
+	//TPR-4460 changes -- invalidChannelError id added
 	$("#priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
 			" #expiredCouponError, #issueCouponError, #notApplicableCouponError," +
-			" #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError").css("display","none");
+			" #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display","none");
 });
 
 
@@ -7223,14 +7302,18 @@ $(".remove-coupon-button").click(function(){
  		data: { 'couponCode' : couponCode , 'guid' : guid},
  		success : function(response) {
  			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+ 			//INC144316021
+            document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+			document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
  			$("#codAmount").text(response.totalPrice.formattedValue);
  			// alert(response.totalPrice.formattedValue);
  			if(response.couponReleased==true){
  				couponApplied=true;
  			}
  			if(couponApplied==true){
+ 				//TPR-4460 changes -- invalidChannelError id added
  				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
- 						" #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError").css("display","none");
+ 						" #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display","none");
  				document.getElementById("couponValue").innerHTML=response.couponDiscount.formattedValue;
  				// $("#couponFieldId").attr('disabled','enabled');
  				$('#couponFieldId').attr('readonly', false);
@@ -7497,12 +7580,14 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
 				
 				/*TPR-656*//*TPR-4738*/
+				if(typeof utag !="undefined"){
 					utag.link({
 						link_obj: this, 
 						link_text: 'cart_add_to_wishlist' , 
 						event_type : 'cart_add_to_wishlist', 
 						product_sku_wishlist : productcodearray
 					});
+				}
 				/*TPR-656 Ends*/
 				
 				localStorage.setItem("movedToWishlist_msgFromCart", "Y");
@@ -7884,10 +7969,165 @@ function teliumTrack(){
 	{"link_text": "pay_terms_conditions_click" , "event_type" : "terms_conditions_click"}
 	);
 }
+//Third Party Wallet mRupee
+$("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
+	 if(isSessionActive()==false){
+		 redirectToCheckoutLogin();
+		}
+		else{
+			var staticHost=$('#staticHost').val();
+			$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+			$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+			
+			$(".pay button, #make_mrupee_payment").prop("disabled",true);
+			$(".pay button, #make_mrupee_payment").css("opacity","0.5");
+			
+			var paymentMode=$("#paymentMode").val();
+			var guid=$("#guid").val();
+			var walletName = $("#radioButton_MRupee").val();
+			var dataString = 'walletName=' + walletName +'&cartGuid=' + guid ;
+			console.log("Calling createWalletOrder");
+			$.ajax({
+				url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createWalletorder",
+				type: "GET",
+				cache: false,
+				async:false,
+				data : dataString,
+				success: function(response){
+					if(response=='redirect'){
+						
+						$(location).attr('href',ACC.config.encodedContextPath+"/cart");
+						
+					}
+					
+					else if(response=="" || response==null){
+						console.log("Response for mRupee is null");
+					}
+					else{	
+						window.sessionStorage.removeItem("header");
+						setTimeout(function(){ 			 
+							 var values=response.split("|"); 
+							 console.log("Response for mRupee is " + response);
+							 	// To do later
+								  $("#REFNO").val(values[0]);
+								  $("#CHECKSUM").val(values[1]);
+								  $("#AMT").val(values[3]);
+								  $("#RETURL").val(values[4]);
+								  submitWalletForm(values);	
+						 }, 1000);
+				
+					}
+					$(".pay button, #make_mrupee_payment_up").prop("disabled",false);
+					$(".pay button, #make_mrupee_payment_up").css("opacity","1");
+					$(".pay .spinner").remove();
+					$("#no-click,.spinner").remove();
+				},
+				error:function(response){
+					console.log("Error occured");
+					}
+				});
+		}
+})
+function displayThrdPrtyWlt(){
+	$("#make_mrupee_payment_up").show();
+	$("li#MRUPEE").css("display","block");
+	applyPromotion(null,"none","none");
+}
+$("#viewPaymentMRupee,#viewPaymentMRupeeMobile").click(function(){
+	refresh();
+	if($('#radioButton_MRupee').is(':checked')) 
+	{
+		$("#paymentMode").val("MRUPEE");
+		$("#paymentModeValue").val("MRUPEE");
+		displayThrdPrtyWlt();
+	}
+})
+
+/*$("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
+	
+	var staticHost=$('#staticHost').val();
+	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+	
+	$(".pay button, #make_mrupee_payment").prop("disabled",true);
+	$(".pay button, #make_mrupee_payment").css("opacity","0.5");
+	
+	$("#tpWallt_payment_form").submit() ;
+});*/
+
+function submitWalletForm(values) {
+	var checkNull = true;
+	if(values!=undefined){
+		for (i=0; i<values.length; i++){
+			if(null == values[i] || values[i] == undefined || values[i] == ""){
+				checkNull = false;
+				break;
+			}
+		}
+	}
+	if(checkNull){
+		var staticHost=$('#staticHost').val();
+		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+		
+		$(".pay button, #make_mrupee_payment").prop("disabled",true);
+		$(".pay button, #make_mrupee_payment").css("opacity","0.5");
+		$("#tpWallt_payment_form").submit() ;
+	}
+	else {
+		window.location.reload();
+	}
+}
 function updateMobileNo(){
 	$("#otpMobileNUMField").val('');
 	$("#otpMobileNUMField").focus();    
 }
+/* TISUATSE-84 */
+$(window).on("resize load",function(){
+	adjustHtMargin();
+	}); 
+$(document).ajaxComplete(function(){
+	adjustHtMargin();
+});
+$(document).on("click",".alert.alert-danger.alert-dismissable > button.close",function(){
+	$(".checkout-payment.cart.checkout.wrapper .step-body").css("margin-top","");
+});
+
+function adjustHtMargin(){
+	var htSpanAlert = $(".alert.alert-danger.alert-dismissable").height()+parseInt($(".alert.alert-danger.alert-dismissable").css("margin-bottom"));
+	/*if($(window).width() > 963)
+		alert_top= $("header").outerHeight() + $(".wrapper .container-address").outerHeight();
+else if($(window).width() <= 773 && $(window).width() > 750)
+alert_top= $("header").outerHeight() + $(".wrapper .container-address").height();
+else if($(window).width() <= 750){
+	alert_top= $("header").outerHeight() + $(".wrapper .container-address").outerHeight() + 10;
+	htSpanAlert = $(".alert.alert-danger.alert-dismissable").height()+7;
+}
+else if($(window).width() > 773 && $(window).width() <= 963)
+	alert_top= $("header").height() + $(".wrapper .container-address").outerHeight() + 15;
+	else*/
+		alert_top= $("header").outerHeight() + $(".checkout-content.checkout-payment.cart.checkout.wrapper .top.checkout-top").outerHeight()+10;
+		if($(window).width() <= 980 && $(window).width() > 750)
+			alert_top= $("header").outerHeight() + $(".checkout-content.checkout-payment.cart.checkout.wrapper .top.checkout-top").outerHeight();
+	$(".alert-danger").css({
+				 /* position : "fixed",
+				  /*width: "100%",
+				  /*margin:"0px",
+				  /*top: alert_top*/ /*TISSQAEE-395*/
+			});
+
+			/*$(".alert-danger").css("z-index","101");*/ /*TISSQAEE-395*/
+			var ht=$(".alert-danger>span").outerHeight();
+	$(".alert-danger").css("height",ht);
+	$(".checkout-payment.cart.checkout.wrapper .step-body").css("margin-top",htSpanAlert);
+	if($(".alert.alert-danger.alert-dismissable").height() > 20)
+		$(".global-alerts button.close,#juspayconnErrorDiv button.close").css("height","100%");
+	else
+		$(".global-alerts button.close,#juspayconnErrorDiv button.close").css("height","");
+	if($(".alert.alert-danger.alert-dismissable").css("display") === "none")
+		$(".checkout-payment.cart.checkout.wrapper .step-body").css("margin-top","");
+}
+/* TISUATSE-84 */
 
 function submitCODForm(){
 	if($("#paymentMode").val()=="Netbanking")

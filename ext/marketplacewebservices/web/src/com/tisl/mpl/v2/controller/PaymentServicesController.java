@@ -282,7 +282,8 @@ public class PaymentServicesController extends BaseController
 									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
 									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
 									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI) || paymentMode
-										.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
+										.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE)
+						 || paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
 					{
 						if (!paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
 						{
@@ -325,7 +326,9 @@ public class PaymentServicesController extends BaseController
 								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
 								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
 								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI) || paymentMode
+									.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE) || paymentMode
 									.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
+
 				{
 					if (!paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
 					{

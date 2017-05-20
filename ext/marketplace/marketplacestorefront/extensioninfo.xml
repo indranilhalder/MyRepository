@@ -29,6 +29,9 @@
         <requires-extension name="marketplaceclientservices"/>	
         <requires-extension name="commercesearch"/>	
          <requires-extension name="marketplacecoupon"/>	
+         <!--Added for third party wallet -->
+		<requires-extension name="marketplaceWalletServices" />
+		<!--Added for third party wallet -->
 		<webmodule jspcompile="false" webroot="/marketplacestorefront"/>
 			
 		

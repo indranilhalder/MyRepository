@@ -767,6 +767,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				{
 					sellerData.setIsCod(MarketplaceFacadesConstants.N);
 				}
+
 				if (null != rich.getIsFragile())
 				{
 					sellerData.setIsFragile(rich.getIsFragile().getCode());
@@ -775,7 +776,6 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				{
 					sellerData.setIsPrecious(rich.getIsPrecious().getCode());
 				}
-
 				sellerData.setReturnPolicy(rich.getReturnWindow());
 				sellerData.setReplacement(rich.getReplacementWindow());
 
@@ -1140,6 +1140,20 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		buyboxData.setAllOOStock(outOfStockFlag);
 		return buyboxData;
 
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getBuyBoxDataForUssids(java.util.List, java.lang.String)
+	 */
+	//TPR-3736
+	@Override
+	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions
+	{
+		// YTODO Auto-generated method stub
+		return buyBoxService.getBuyBoxDataForUssids(ussidList);
 	}
 
 	/**

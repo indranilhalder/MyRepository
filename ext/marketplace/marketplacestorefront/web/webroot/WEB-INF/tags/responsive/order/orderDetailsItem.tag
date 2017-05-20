@@ -257,16 +257,24 @@
 				</p>
 				<ul class="${entry.mplDeliveryMode.name}">
 					<li class="deliver-type">${entry.mplDeliveryMode.name} &nbsp;&nbsp;</li>
-					
+					<!-- TISSQAEE-275 --><!--  Modified for TISQAUATS-11  Starts Here -->
+				 <li class="deliver">
+
 					<c:choose>
 							<c:when test="${entry.currDelCharge.value=='0.0'}">
-										<%-- <spring:theme code="order.free"  /> --%>
-										<ycommerce:testId code="orderDetails_productTotalPrice_label"><format:price priceData="${entry.currDelCharge}" displayFreeForZero="true"/></ycommerce:testId>
+								<%-- <spring:theme code="order.free"  /> --%>
+								<ycommerce:testId code="orderDetails_productTotalPrice_label">
+									<format:price priceData="${entry.currDelCharge}"
+										displayFreeForZero="true" />
+								</ycommerce:testId>
 							</c:when>
-						 	<c:otherwise>
-									<format:price priceData="${entry.currDelCharge}"/>
+							<c:otherwise>
+								<format:price priceData="${entry.currDelCharge}" />
 							</c:otherwise>
-						</c:choose>
+						</c:choose><!--  Modified for TISQAUATS-11  Ends Here -->
+				  </li> 
+						<!-- TISSQAEE-275 -->
+
 					<c:choose>
                        <c:when test="${not empty entry.timeSlotFrom  && entry.timeSlotFrom !=null }">
                         	<li class="deliver">Your Order Will Be Delivered on ${entry.selectedDeliverySlotDate} -  ${entry.timeSlotFrom} TO ${entry.timeSlotTo}</li>

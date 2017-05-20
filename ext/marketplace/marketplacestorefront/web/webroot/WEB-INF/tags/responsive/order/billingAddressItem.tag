@@ -20,7 +20,7 @@
                 ${fn:escapeXml(order.paymentInfo.billingAddress.title)}&nbsp;<br>
             </c:if>
             ${fn:escapeXml(order.paymentInfo.billingAddress.firstName)}&nbsp;${fn:escapeXml(order.paymentInfo.billingAddress.lastName)}<br>      
-       ${fn:escapeXml(order.paymentInfo.billingAddress.line1)},<br>
+       ${fn:escapeXml(order.paymentInfo.billingAddress.line1)},<br>  <!-- TISUATSE-69 -->
         ${fn:escapeXml(order.paymentInfo.billingAddress.region.name)} ${fn:escapeXml(order.paymentInfo.billingAddress.town)},&nbsp;${fn:escapeXml(order.paymentInfo.billingAddress.state)},&nbsp;${fn:escapeXml(order.paymentInfo.billingAddress.postalCode)}&nbsp; 
         ${fn:escapeXml(order.paymentInfo.billingAddress.country.isocode)}   <br>
 </address>
@@ -33,7 +33,7 @@
                 ${fn:escapeXml(order.paymentInfo.billingAddress.title)}&nbsp;<br>
             </c:if>
             ${fn:escapeXml(order.paymentInfo.billingAddress.firstName)}&nbsp;${fn:escapeXml(order.paymentInfo.billingAddress.lastName)}<br>      
-       ${fn:escapeXml(order.paymentInfo.billingAddress.line1)},&nbsp;${fn:escapeXml(order.paymentInfo.billingAddress.line2)},<br>
+       ${fn:escapeXml(order.paymentInfo.billingAddress.line1)}${fn:escapeXml(order.paymentInfo.billingAddress.line2)},<br> <!-- TISUATSE-69 -->
         ${fn:escapeXml(order.paymentInfo.billingAddress.region.name)} ${fn:escapeXml(order.paymentInfo.billingAddress.town)},&nbsp;${fn:escapeXml(order.paymentInfo.billingAddress.state)},&nbsp;${fn:escapeXml(order.paymentInfo.billingAddress.postalCode)}&nbsp; 
         ${fn:escapeXml(order.paymentInfo.billingAddress.country.isocode)}   <br>
 </address>
@@ -46,7 +46,7 @@
                 ${fn:escapeXml(order.paymentInfo.billingAddress.title)}&nbsp;<br>
             </c:if>
             ${fn:escapeXml(order.paymentInfo.billingAddress.firstName)}&nbsp;${fn:escapeXml(order.paymentInfo.billingAddress.lastName)}<br>      
-       ${fn:escapeXml(order.paymentInfo.billingAddress.line1)},&nbsp;${fn:escapeXml(order.paymentInfo.billingAddress.line3)},<br>
+       ${fn:escapeXml(order.paymentInfo.billingAddress.line1)}${fn:escapeXml(order.paymentInfo.billingAddress.line3)},<br> <!-- TISUATSE-69 -->
         ${fn:escapeXml(order.paymentInfo.billingAddress.region.name)} ${fn:escapeXml(order.paymentInfo.billingAddress.town)},&nbsp;${fn:escapeXml(order.paymentInfo.billingAddress.state)},&nbsp;${fn:escapeXml(order.paymentInfo.billingAddress.postalCode)}&nbsp; 
         ${fn:escapeXml(order.paymentInfo.billingAddress.country.isocode)}   <br>
 </address>
@@ -59,7 +59,7 @@
                 ${fn:escapeXml(order.paymentInfo.billingAddress.title)}&nbsp;<br>
             </c:if>
             ${fn:escapeXml(order.paymentInfo.billingAddress.firstName)}&nbsp;${fn:escapeXml(order.paymentInfo.billingAddress.lastName)}<br>      
-       ${fn:escapeXml(order.paymentInfo.billingAddress.line1)},&nbsp;${fn:escapeXml(order.paymentInfo.billingAddress.line2)},&nbsp;${fn:escapeXml(order.paymentInfo.billingAddress.line3)},<br>
+       ${fn:escapeXml(order.paymentInfo.billingAddress.line1)}${fn:escapeXml(order.paymentInfo.billingAddress.line2)}${fn:escapeXml(order.paymentInfo.billingAddress.line3)},<br> <!-- TISUATSE-69 -->
         ${fn:escapeXml(order.paymentInfo.billingAddress.region.name)} ${fn:escapeXml(order.paymentInfo.billingAddress.town)},&nbsp;${fn:escapeXml(order.paymentInfo.billingAddress.state)},&nbsp;${fn:escapeXml(order.paymentInfo.billingAddress.postalCode)}&nbsp; 
         ${fn:escapeXml(order.paymentInfo.billingAddress.country.isocode)}   <br>
 </address>
