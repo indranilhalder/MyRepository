@@ -67054,7 +67054,7 @@ header .content .left, header .content .right {
 }
 header .content .right > ul > li > a{
   letter-spacing: 0.6px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.75);
 }
 header .content .right > ul > li > a.headeruserdetails.account-userTitle{
   position: relative;
@@ -68712,5 +68712,13 @@ header.brand-header .content nav>ul>li>.toggle:before{
 }
 header .content .right > ul > li.sign-in .sign-in-info{
 	cursor: default;
+}
+header .content .right>ul>li.track_order_header, header .content .right>ul>li.track{
+	line-height: 37px;
+}
+header .content .right>ul>li.track_order_header:hover a,
+header .content .right>ul>li.track:hover a{
+	opacity: 1;
+	color: #fff;
 }
 }
