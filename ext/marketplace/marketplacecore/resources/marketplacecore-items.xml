@@ -124,7 +124,14 @@
   		 <collectiontype elementtype="java.lang.String" code="quickDropStoreNames"
    				autocreate="true" generate="true" type="list" />
 		<!-- Added in R2.3 END  -->
-
+		<collectiontype code="luxuryCategoryCollection"
+			elementtype="Category" autocreate="true" generate="true" type="list" />
+		<collectiontype code="luxuryProductCollection"
+			elementtype="product" autocreate="true" generate="true" type="list" />
+		<collectiontype elementtype="BannerComponent"
+			code="bannerImageCollection" autocreate="true" generate="true" type="list" />	
+			<collectiontype elementtype="ShowCaseCollectionComponent"
+			code="ShowCaseCollection" autocreate="true" generate="true" type="list" />	
 	</collectiontypes>
 
 
@@ -855,6 +862,11 @@
  			<value code="no" />
  		</enumtype>
  		<!-- added by i324321 end -->
+ 		<enumtype code="imagePosition"       autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="left" />
+ 			<value code="right" />
+ 		</enumtype>
 	</enumtypes>
 		<!-- Product Feature Enum Ends -->
 
@@ -1238,6 +1250,256 @@
 
 		
 	<itemtypes>
+	
+
+		
+	
+	<itemtype code="LuxProductCarouselComponent"
+				autocreate="true" generate="true" extends="ProductCarouselComponent"
+				jaloclass="com.tisl.mpl.core.jalo.LuxProductCarouselComponent">
+				<deployment table="Voucher2CustomerRel" typecode="16161" />
+	</itemtype>
+			
+			
+			
+	<itemtype code="ShopByCategory" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.ShopByCategory">
+		<deployment table="ShopByCategory" typecode="17171" />	
+		<attributes>
+			<attribute type="bannerImageCollection" qualifier="relatedImage"
+						autocreate="true" generate="true">
+						<description>Related Images</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<description>Title</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+		</attributes>
+	</itemtype>	
+
+
+<itemtype code="ShowCaseCollectionComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.ShowCaseCollectionComponent">
+<deployment table="ShowCaseCollectionComponent" typecode="18181" />	
+		<attributes>
+		<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<description>title</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="description"
+						autocreate="true" generate="true">
+						<description>description</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+			<attribute type="CMSMediaParagraphComponent" qualifier="bannerImage"
+						autocreate="true" generate="true">
+						<description>Related Images</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+					<attribute type="imagePosition" qualifier="relatedImagePosition"
+						autocreate="true" generate="true">
+						<description>Related Images Position</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<defaultvalue>
+						em().getEnumerationValue("relatedImagePosition","left")
+					</defaultvalue>	
+						<persistence type='property' />
+				</attribute>
+				<attribute type="CMSMediaParagraphComponent" qualifier="productImage"
+						autocreate="true" generate="true">
+						<description>productImage</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="shopNowName"
+						autocreate="true" generate="true">
+						<description>shop Now Name</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="shopNowLink"
+						autocreate="true" generate="true">
+						<description>shop Now link</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+		</attributes>
+	</itemtype>
+	
+
+<itemtype code="ImageShowCaseComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.ImageShowCaseComponent">
+<deployment table="Voucher2CustomerRel" typecode="19191" />	
+		<attributes>
+			<attribute type="ShowCaseCollection" qualifier="showCaseBanner"
+						autocreate="true" generate="true">
+						<description>Show Case Banner</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<description>Title</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+		</attributes>
+	</itemtype>
+	
+	
+	
+	 <!-- test MNPGridImageComponent -->
+	<itemtype code="MNPGridImageComponent" extends="SimpleCMSComponent"
+    autocreate="true" generate="true" jaloclass="com.mnp.core.jalo.MNPGridImageComponent">
+    <attributes>
+     <attribute autocreate="true" qualifier="imagesCount"
+      type="java.lang.Integer" generate="true">
+      <defaultvalue>Integer.valueOf(1)</defaultvalue>
+      <persistence type="property" />
+      <modifiers read="true" write="true" search="true"
+       optional="false" />
+     </attribute>
+     <attribute autocreate="true" qualifier="videoUrl" type="java.lang.String"
+      generate="true">
+      <persistence type="property" />
+      <modifiers read="true" write="true" search="true"
+       optional="true" />
+     </attribute>
+     <attribute autocreate="true" qualifier="description"
+      type="java.lang.String" generate="true">
+      <persistence type="property" />
+      <modifiers read="true" write="true" search="true"
+       optional="true" />
+     </attribute>
+     <attribute autocreate="true" qualifier="width" type="java.lang.String"
+      generate="true">
+      <persistence type="property" />
+      <modifiers read="true" write="true" search="true"
+       optional="true" />
+     </attribute>
+     <attribute autocreate="true" qualifier="image" type="Media"
+      generate="true">
+      <persistence type="property" />
+      <modifiers read="true" write="true" search="true"
+       optional="true" />
+     </attribute>
+     <attribute autocreate="true" qualifier="url" type="java.lang.String"
+      generate="true">
+      <persistence type="property" />
+      <modifiers read="true" write="true" search="true"
+       optional="true" />
+     </attribute>
+     <attribute autocreate="true" qualifier="heading" type="java.lang.String"
+      generate="true">
+      <persistence type="property" />
+      <modifiers read="true" write="true" search="true"
+       optional="true" />
+     </attribute>
+     <attribute type="java.lang.Boolean" qualifier="isArrow">
+      <defaultvalue>Boolean.FALSE</defaultvalue>
+      <persistence type="property" />
+      <modifiers optional="false" />
+     </attribute>
+     <attribute type="java.lang.Boolean" qualifier="isGrey">
+      <defaultvalue>Boolean.FALSE</defaultvalue>
+      <persistence type="property" />
+      <modifiers optional="false" />
+     </attribute>
+    </attributes>	
+   </itemtype>
+	
+	<!-- Category landing page Product ShowCase component   -->
+	 <itemtype code="productShowCaseComponent" autocreate="true"
+				generate="true">
+				<deployment table="productShowCaseComponent" typecode="15666" />
+				<attributes>
+				<attribute type="luxuryProductCollection" qualifier="product"
+						autocreate="true" generate="true">
+						<description>Collection of product</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="Media" qualifier="relatedImage"
+						autocreate="true" generate="true">
+						<description>Related Images</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="relatedImageUrl"
+						autocreate="true" generate="true">
+						<description>Related Images</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<description>title</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="description"
+						autocreate="true" generate="true">
+						<description>title</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="shopNowLink"
+						autocreate="true" generate="true">
+						<description>shop now button link</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="shopNowName"
+						autocreate="true" generate="true">
+						<description>shop now button name</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="imagePosition" qualifier="relatedImagePosition"
+						autocreate="true" generate="true">
+						<description>Related Images Position</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<defaultvalue>
+						em().getEnumerationValue("relatedImagePosition","left")
+					</defaultvalue>	
+						<persistence type='property' />
+				</attribute>					
+				</attributes>	
+	</itemtype>			 
+
+		
+		
+	
 	<!-- TPR-628 : Make changes to Banners rendering in MObile Viewports		 -->
 	
 			<itemtype code="BannerComponent" autocreate="false"
@@ -4455,7 +4717,29 @@
 				
 				</attributes>
 			</itemtype>
-
+			<!-- Start of Luxury Category collection Component -->
+			<itemtype code="LuxuryCategoryCollectionComponent"
+				autocreate="true" generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.core.jalo.LuxuryCategoryCollectionComponent">
+				<attributes>
+				
+				<attribute type="luxuryCategoryCollection" qualifier="categories"
+						autocreate="true" generate="true">
+						<description>Collection of Categories</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<description>Title to be displayed above the component</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+				
+				</attributes>
+				</itemtype>
+			<!-- End of Luxury Category collection Component -->
 			<itemtype code="MplImageCategoryComponent" autocreate="true"
 				generate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.core.jalo.MplImageCategoryComponent">
