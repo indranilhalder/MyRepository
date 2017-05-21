@@ -43,11 +43,25 @@
 			</div>
 			<div class="header-right">
 				<ul class="list-unstyled">
+				<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
 					<li><a href="luxurylogin/signin">Sign In</a></li>
-					<li><a href="#" id="header-search-menu" class="search"><%-- <cms:pageSlot position="SearchBox" var="component" element="div" class="headerContent secondRow">
+				</sec:authorize>
+				<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+					<li><a href="/logout">Sign Out</a></li>
+				</sec:authorize>
+				<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+					<li class="logged_in">${user.firstName}
+					<ycommerce:testId code="header_LoggedUser">
+						<spring:theme code="header.welcome" arguments="${user.firstName},${user.lastName}" htmlEscape="true" />
+					</ycommerce:testId>
+					</li>
+				</sec:authorize>
+			<li><a href="#" id="header-search-menu" class="search"><%-- <cms:pageSlot position="SearchBox" var="component" element="div" class="headerContent secondRow">
 		<cms:component component="${component}" element="div" />
 	</cms:pageSlot> --%> </a></li>
-					<li><a href="#" class="wishlist">Wishlist</a></li>
+					<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+						<li><a href="#" class="wishlist">Wishlist</a></li>
+					</sec:authorize>
 					<li><a href="#" class="bag"><%-- <cms:pageSlot position="MiniCart" var="cart" limit="1">
 				<cms:component component="${cart}" element="li"/>
 			</cms:pageSlot> --%></a></li>
