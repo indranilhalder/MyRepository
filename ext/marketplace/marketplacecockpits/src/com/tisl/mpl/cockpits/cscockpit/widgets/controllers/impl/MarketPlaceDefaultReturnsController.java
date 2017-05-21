@@ -349,8 +349,13 @@ public class MarketPlaceDefaultReturnsController extends
 							entries.add(orderEntryModel);
 						}
 					}
-					getCodPaymentInfoToFICO(codSelfShipData,entries);
-				}catch(EtailNonBusinessExceptions e)
+					// PRDI-133 START 
+                     if(null != codSelfShipData && null!=entries && !entries.isEmpty()) {
+                    	 getCodPaymentInfoToFICO(codSelfShipData,entries);
+                     }
+                   // PRDI-133 START 
+					
+				}catch(Exception e)
 				{
 					LOG.error("Exception occured in fico call for cod self shipment for order id  :"+orderModel.getCode()+" Actual Stack trace "+e);
 				}
@@ -426,9 +431,13 @@ public class MarketPlaceDefaultReturnsController extends
 						entries.add(orderEntryModel);
 					}
 				}
-				getCodPaymentInfoToFICO(codSelfShipData,entries);
-			}
-			catch(EtailNonBusinessExceptions e)
+				// PRDI-133 START 
+				if(null != codSelfShipData && null!=entries && !entries.isEmpty()) {
+					getCodPaymentInfoToFICO(codSelfShipData,entries);
+				}
+				// PRDI-133 END 
+			    }
+			catch(Exception e)
 			{
 				LOG.error("Exception occured in fico call for cod self shipment for order id  :"+orderModel.getCode()+" Actual Stack trace "+e);
 			}

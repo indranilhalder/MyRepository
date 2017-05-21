@@ -2004,23 +2004,29 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		{
 			//fetching response   from oms  against the pincode
 			PinCodeDeliveryModeListResponse response = null;
-
-			for (final PincodeServiceData dataObj : reqData)
-			{
+			//R2.3 - This method is used from different places. For call with Mobile Web Service,
+            //check if the Session contains cart or not. If cart does not exist, then this loop is not 
+			//required and hence can be safely skipped.
+            //Avoid creating unnecessary empty cart. 09-May-2017
+			// INC-144316545 Start
+			if (cartService. hasSessionCart()) {
 				final CartModel cartModel = getCartService().getSessionCart();
-				cartEntryList = cartModel.getEntries();
-				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+				for (final PincodeServiceData dataObj : reqData)
 				{
-					if (null != cartEntryModel)
+					cartEntryList = cartModel.getEntries();
+					for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 					{
-						if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(dataObj.getUssid()))
+						if (null != cartEntryModel)
 						{
-							cartEntryModel.setIsPrecious(dataObj.getIsPrecious());
-							cartEntryModel.setIsFragile(dataObj.getIsFragile());
+							if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(dataObj.getUssid()))
+							{
+								cartEntryModel.setIsPrecious(dataObj.getIsPrecious());
+								cartEntryModel.setIsFragile(dataObj.getIsFragile());
+							}
 						}
 					}
 				}
-			}
+			}//R2.3. One line. 2017-May-10
 			LOG.debug("::::::Try to save cart Entry to :::::::::");
 			if (null != cartEntryList && cartEntryList.size() > 0)
 			{
@@ -2485,6 +2491,15 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								entry.setFulfillmentType(item.getFulfillmentType());
 								try
 								{
+							   		//  INC144316545 START 
+							   		if(null != salesApplication && salesApplication.equals(SalesApplication.MOBILE)){
+							   			   if(null!=item.getFulfillmentType()){
+							   			   	    if(MarketplacecommerceservicesConstants.TSHIP.equalsIgnoreCase(item.getFulfillmentType())){
+							   			   	   	 entry.setCurrDelCharge(Double.valueOf(0.0));
+							   			   	    }
+							   			   }
+							   		}
+							      	//  INC144316545 END
 									final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 											entry.getSelectedUSSID());
 									List<RichAttributeModel> richAttributeModel = null;
@@ -2513,7 +2528,15 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				}
 				else
 				{
-					final CartModel cartModel = getCartService().getSessionCart();
+					CartModel cartModel = null;
+					//R2.3 - This method is used from different places. For call with Mobile Web Service,
+					//check if the Session contains cart or not. If cart does not exist, then this loop is not 
+					//required and hence can be safely skipped.
+					//Avoid creating unnecessary empty cart. 09-May-2017
+					// INC-144316545 Start
+					if (cartService.hasSessionCart()) {
+						cartModel = getCartService().getSessionCart();
+					}
 
 					if (null != cartModel && null != cartModel.getEntries() && !cartModel.getEntries().isEmpty()
 							&& null != inventoryRequest && null != inventoryRequest.getItem())
@@ -3724,24 +3747,31 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		if (requestType != null && !cartSoftReservationDatalist.isEmpty() && defaultPinCodeId != null)
 		{
 
-			for (final CartSoftReservationData dataObj : cartSoftReservationDatalist)
-			{
+			//R2.3 - This method is used from different places. For call with Mobile Web Service,
+			//check if the Session contains cart or not. If cart does not exist, then this loop is not 
+			//required and hence can be safely skipped.
+			//Avoid creating unnecessary empty cart. 09-May-2017
+			// INC-144316545 Start
+			if (cartService.hasSessionCart()) {
 				final CartModel cartModel = getCartService().getSessionCart();
-				cartEntryList = cartModel.getEntries();
-				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+				for (final CartSoftReservationData dataObj : cartSoftReservationDatalist)
 				{
-					if (null != cartEntryModel)
+					cartEntryList = cartModel.getEntries();
+					for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 					{
-						if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(dataObj.getUSSID()))
+						if (null != cartEntryModel)
 						{
-							cartEntryModel.setFulfillmentMode(dataObj.getFulfillmentType());
-							cartEntryModel.setFulfillmentType(dataObj.getFulfillmentType());
-							cartEntryModel.setFulfillmentTypeP1(dataObj.getFulfillmentType());
-							//	cartEntryModel.setFulfillmentTypeP2(dataObj.getFulfillmentType());
+							if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(dataObj.getUSSID()))
+							{
+								cartEntryModel.setFulfillmentMode(dataObj.getFulfillmentType());
+								cartEntryModel.setFulfillmentType(dataObj.getFulfillmentType());
+								cartEntryModel.setFulfillmentTypeP1(dataObj.getFulfillmentType());
+								//	cartEntryModel.setFulfillmentTypeP2(dataObj.getFulfillmentType());
+							}
 						}
 					}
 				}
-			}
+			}//R2.3
 			LOG.debug("::::::Try to save cart Entry to :::::::::");
 			if (null != cartEntryList && cartEntryList.size() > 0)
 			{
