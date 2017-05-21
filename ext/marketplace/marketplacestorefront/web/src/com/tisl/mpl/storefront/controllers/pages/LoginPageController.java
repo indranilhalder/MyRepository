@@ -21,6 +21,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.LoginForm;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
 
@@ -50,7 +51,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.tisl.lux.controllers.LuxurystoreaddonControllerConstants;
 import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.data.FriendsInviteData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -203,12 +203,12 @@ public class LoginPageController extends AbstractLoginPageController
 				{
 					model.addAttribute(ModelAttributetConstants.MESSAGE, ModelAttributetConstants.EMAILORPASSINVALID);
 					System.out.println("returning LoginPanelFragment");
-					return LuxurystoreaddonControllerConstants.Views.Fragments.Home.LoginPanelFragment;
+					return ControllerConstants.Views.Fragments.LuxuryHome.LoginFragment;
 				}
 				else
 				{
 					System.out.println("returning RegisterFragment");
-					return ControllerConstants.Views.Fragments.Home.RegisterFragment;
+					return ControllerConstants.Views.Fragments.LuxuryHome.RegisterFragment;
 				}
 			}
 			else
@@ -279,7 +279,7 @@ public class LoginPageController extends AbstractLoginPageController
 			@RequestParam(value = ModelAttributetConstants.AFFILIATEID, required = false) final String affiliateId,
 			@RequestParam(value = ModelAttributetConstants.IS_SIGN_IN_ACTIVE, required = false) final String isSignInActive,
 			final Model model, final HttpServletRequest request, final HttpServletResponse response, final HttpSession session)
-			throws CMSItemNotFoundException
+					throws CMSItemNotFoundException
 	{
 		String returnPage = null;
 		try
@@ -402,7 +402,7 @@ public class LoginPageController extends AbstractLoginPageController
 				{
 					final List<GenderData> genderList = mplCustomerProfileFacade.getGenders();
 					model.addAttribute(ModelAttributetConstants.GENDER_DATA, genderList);
-					returnPage = ControllerConstants.Views.Fragments.Home.RegisterFragment;
+					returnPage = ControllerConstants.Views.Fragments.LuxuryHome.RegisterFragment;
 				}
 
 			}
@@ -446,7 +446,7 @@ public class LoginPageController extends AbstractLoginPageController
 	@SuppressWarnings(ModelAttributetConstants.BOXING)
 	private String processRegisterUserRequestNew(final ExtRegisterForm form, final BindingResult bindingResult, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response, final RedirectAttributes redirectModel)
-			throws CMSItemNotFoundException
+					throws CMSItemNotFoundException
 	{
 		String returnPage = null;
 		if (bindingResult.hasErrors())
