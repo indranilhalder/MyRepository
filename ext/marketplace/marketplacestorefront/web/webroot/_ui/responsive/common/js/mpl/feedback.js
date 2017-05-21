@@ -1786,6 +1786,8 @@ $(document).ready(function(){
 		$('header .content .container > .right ul:first-child > li div').removeClass('toggle');
 		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
 		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li').removeClass('toggle');
+		$("ul li #mobile-menu-toggle+ul li ul.words li.long").unwrap("ul"); //TISPRDT-1296, TISPRDT-1300
+		$("ul li #mobile-menu-toggle+ul li ul.words li.long").unwrap(".l2_wrapper"); //TISPRDT-1296, TISPRDT-1300
 		setTimeout(function () {
   		  navhtmlMicrosite = $(".brand-header nav ul li").html();
   		 $('header .content .container > .right > ul:first-child').prepend('<li id="shopMicrositeSeller"></li>');

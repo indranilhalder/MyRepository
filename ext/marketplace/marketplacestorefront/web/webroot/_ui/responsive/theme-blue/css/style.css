@@ -1954,6 +1954,18 @@ h2 {
                 background: #f5f5f5;
                 padding-bottom:10px;
                }
+               /*TISPRDT-1293 start*/
+              header.brand-header .content nav > ul > li > ul > li > ul.words {
+                -webkit-columns: 5;
+                -moz-columns: 5;
+                columns: 5;
+                -webkit-column-width: 80px;
+                -moz-column-width: 80px;
+                column-width: 80px;  
+                background: #f5f5f5;
+                padding-bottom:10px;
+               }
+               /*TISPRDT-1293 end*/
               header .content nav > ul > li > ul > li > ul > li.l2_wrapper {
                 line-height: 26px;
                 display:inline-block;
@@ -26277,7 +26289,7 @@ body .account .right-account form .full.span input#currentPassword{
 }
  @media (min-width:791px) {
 .zoomContainer {
-	z-index: 9999;
+	z-index: 100000; //TISPRDT-1284
 }
 
 }
@@ -38109,7 +38121,7 @@ button.close {
 	right: 0;
 	bottom: 0;
 	left: 0;
-	z-index: 10002;
+	z-index: 100002; //TISPRDT-1284
 	-webkit-overflow-scrolling: touch;
 	outline: 0;
 }
@@ -40363,7 +40375,7 @@ fieldset#cardDate .form-group .control-label, fieldset#startDate .form-group .co
 	position: absolute;
 	top: 0;
 	left: 0;
-	z-index: 9999;
+	z-index: 100000; //TISPRDT-1284
 	overflow: hidden;
 }
 
@@ -44219,7 +44231,7 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 	line-height: 80px;
 	font-family: 'Helvetica Neue', sans-serif;
 	background: #f4f4f4;
-	z-index: 9998;
+	z-index: 99998; //TISPRDT-1298
 	-webkit-font-smoothing: antialiased;
 	overflow: hidden;
 	-webkit-text-size-adjust: none;
@@ -60039,7 +60051,7 @@ display: none;
 }
 
 header.marketplace-header{
-	visibility:hidden;
+	visibility: visible;
 }
 .cart.wrapper .emptyCart-mobile .content{
 	    margin: 0 20px;
@@ -68627,4 +68639,68 @@ header .content .search .links li.product.ui-menu-item{
  /*UF-290 change end*/ 
  .offer-outer-wrapper .show-termsConditions .terms-text p{
 text-align: justify !important;
+}
+
+/*TISPRDT-1278, TISPRDT-1295, TISPRDT-1279, TISPRDT-1284, TISPRDT-1283, TISPRDT-1289, TISPRDT-1293, TISPRDT-1307 fix start*/
+@media(max-width: 790px){
+header>.content .top.header_fix.active .toggle {
+    margin-top: 0;
+}
+header>.content .top.header_fix.active ~ .bottom.active {
+   height: 50px;
+}
+header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_form[name='search_form']{
+	display:block;
+}
+.searchButtonGlobal{
+	display: none;
+}
+ul li#shopMicrositeSeller #mobile-menu-toggle+ul {
+    width: auto !important;
+}
+ul li #mobile-menu-toggle + ul li ul.words li.long.words.only-link{
+	height: 0px;
+	border: 0px;
+}
+.wrapper .container-address.nav {
+    padding-top: 20px;
+}
+}
+@media(max-width: 767px){
+	.callouts .Padd ul li p:before{
+	position: absolute;
+	}
+	.callouts .Padd ul li p {
+    padding: 0 0 0 45px;
+	}
+}
+@media(min-width: 791px){
+	header .content nav>ul>li>ul>li>ul.words{
+	white-space: nowrap;
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+header .content nav>ul>li>ul>li>ul>li.l2_wrapper {
+    width: 16.5%;
+}
+header .content nav > ul > li.ShopByBrand > ul > li > ul > li {
+    line-height: 26px; }
+.desc-section img{
+	width: 100%;
+}
+header .content .search .select-list{
+	z-index: 10;
+}
+header.brand-header .content .bottom nav>ul>li>ul:before {
+    background-image: linear-gradient(to bottom,#000,#000);
+}
+header.brand-header .content .bottom nav>ul>li>ul{
+	left: 280px !important;
+}
+header.brand-header .content nav>ul>li>.toggle:before{
+	display: none;
+}
+header .content .right > ul > li.sign-in .sign-in-info{
+	cursor: default;
+}
 }
