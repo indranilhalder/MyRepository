@@ -249,7 +249,7 @@
 															</p>
 															<p>
 																<%-- <spring:theme text="Delivery Charges:" /> --%>
-																<span>	<spring:theme code="text.account.order.delivery2" text="Schedule Delivery and Shipping Charges:"/>
+																<span>	<spring:theme code="text.account.order.delivery2" text="Scheduled Delivery and Shipping Charges:"/>
 																&nbsp;</span>
 															<c:choose>
 																<c:when test="${entry.currDelCharge.value=='0.0'}">
