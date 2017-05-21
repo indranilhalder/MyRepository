@@ -68167,7 +68167,7 @@ padding: 0 24px;
 footer .footer-text {
     border-top: 0px;
     width: 100%;
-    padding: 20px 24px 16px;
+    padding: 20px 26px 16px;
 }
 footer .footer-text p:last-child {
     margin: 0;
@@ -68179,7 +68179,7 @@ footer .banner {
 		color: #999999;
 		height: auto;
 		line-height: normal;
-		padding-left: 24px;
+		padding-left: 26px;
 		padding-bottom: 33px;
 		text-align: left;
 	}
@@ -68664,6 +68664,16 @@ ul li #mobile-menu-toggle + ul li ul.words li.long.words.only-link{
 }
 .wrapper .container-address.nav {
     padding-top: 20px;
+}
+.l2_wrapper{
+	border:0 !important;
+}
+.social{
+	padding-left: 26px;
+	padding-right: 26px;
+}
+footer>div>ul>li:first-child h3, footer>div>ul>li h3{
+	padding: 0 26px;
 }
 }
 @media(max-width: 767px){
