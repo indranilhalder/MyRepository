@@ -429,7 +429,9 @@ tr.d0 td {
 				<input type="hidden" name="entryNumber"		value="${entry.entryNumber}" />
 				<input type="hidden" name="productCode"		value="${entry.product.code}" />
 				<input type="hidden" name="initialQuantity" value="${entry.quantity}" />
-				
+				<c:if test="${param.cartGuid ne null}">		<!-- For TPR-5666 -->
+					<input type="hidden" name="cartGuid" value="${param.cartGuid}" />
+				</c:if>
 				<ycommerce:testId code="cart_product_quantity">
 					<c:set var="priceBase" value="${entry.basePrice.formattedValue}" />
 					<c:set var="subPrice" value="${entry.basePrice.value}" />

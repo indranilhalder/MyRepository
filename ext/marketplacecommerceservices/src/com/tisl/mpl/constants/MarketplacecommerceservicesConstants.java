@@ -543,6 +543,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_MESSAGE_FORGOT_PWD = "Dear Customer, One Time Password for your request is {0}. Please enter the same to submit the request. Regards, Team Tata Unistore.";
 	/* 1.Anniversary Changes */
 	public static final String SMS_MESSAGE_ORDER_PLACED = "Hi {0}, your order no ({1}) is confirmed. While we will keep you posted, track your order at {2}. Hope you enjoyed shopping with us.";
+
 	public static final String SMS_MESSAGE_ORDER_SHIPPED = "Hey! we have shipped {0} item(s) of your order #{1} via {2}.Give it 2-3 working days to reach you. Can't control the excitement? Track your order here {3} .Thanks!";
 	public static final String SMS_MESSAGE_ORDER_OUTFORDELIVERY_PREPAID = "Awesome news! {0} item(s) of your order  # {1} will reach you today. High five for shopping with us. Don't forget to download our app at {2} .";
 	/* 3.Anniversary Changes */
@@ -554,6 +555,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_MESSAGE_PAYMENT_FAILED = "Uh oh. Looks like your order was declined for some reason. Please try again.";
 	public static final String SMS_MESSAGE_PAYMENT_TIMEOUT = "Oh no! Your order couldn't go through due to techincal issues. Please try again.";
 	public static final String SMS_MESSAGE_INVENTORY_RESERVATION_FAILED = "Uh oh! Looks like what you wanted isn't available right now, but it could come back soon. Please try again later";
+
 	public static final String PUSH_MESSAGE_ORDER_PLACED = "Awesome! We think your bag looks great. Track your order {0} in the Order History section of your account.";
 	public static final String PUSH_MESSAGE_ORDER_OFD_PREPAID = "Hi! Your order {0} of {1} item(s) will reach you today. To know more, check out the Order History section of the app.";
 	public static final String PUSH_MESSAGE_ORDER_OFD_COD = "Hi! Your order {0} of {1} item(s) will reach you today. Please keep INR {2} cash handy. To know more, check out the Order History section of the app.";
@@ -580,6 +582,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	/* 4.Anniversary Changes */
 	public static final String SMS_MESSAGE_ORDER_UNDELIVERED = "Hi {0}! We tried delivering your order {1} with {2} item(s) but missed you. We will try again. Have a question? Call on {3}.";
 	/* 7.Anniversary Changes */
+
 	public static final String SMS_MESSAGE_ORDER_RISK = "We're sorry! Your Tata CLiQ order no.{0} has been put on hold for some checks. You might get a call from Tata CLiQ Care.";
 	/* 8. Anniversary Changes */
 	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "Hi, your order no. {0} is now confirmed. While we’ll keep you posted, track your order at {1}. Hope you enjoyed shopping with us.";
@@ -1307,6 +1310,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//added for getcartdetails
 	public static final String INVALID_CART = "Invalid Cart";
+	//For TPR-5666
+	public static final String INVALID_CART_URL = "/cart/error-invalidCart";
 	public static final String COULD_NOT_COVERT_CART = "Could not covert cart";
 
 	public static final String PROMOTION_GROUP_DEFAULT = "default";
@@ -2084,4 +2089,5 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NOENTRYSUBORDERLOG = "No  Entries available for Suborder ID:- ";
 
 	public static final String SECONDPRODUCT = "secondProduct";
+
 }
