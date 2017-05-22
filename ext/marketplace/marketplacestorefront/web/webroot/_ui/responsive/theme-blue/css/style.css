@@ -55410,10 +55410,10 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 	background: url("../images/sprite-07.png") no-repeat scroll -73px -175px;
 }
 .callouts .Padd ul li.genuine p:before {
-	background: url("../images/sprite-07.png") no-repeat scroll -139px -175px;
+	background: url("../images/sprite-07.png") no-repeat scroll -205px -175px;
 }
 .callouts .Padd ul li.returns p:before {
-	background: url("../images/sprite-07.png") no-repeat scroll -205px -175px;
+	background: url("../images/sprite-07.png") no-repeat scroll -139px -175px;
 }
 .callouts .Padd ul li:last-child{
 	border:none;
@@ -68731,6 +68731,13 @@ header .content .right>ul>li.track_order_header:hover a,
 header .content .right>ul>li.track:hover a{
 	opacity: 1;
 	color: #fff;
+}
+.callouts .Padd ul li p:before{
+	top: auto;
+	vertical-align: middle;
+}
+.callouts .Padd {
+    padding: 26px 50px;
 }
 }
 /*TISPRDT-1333 start*/
