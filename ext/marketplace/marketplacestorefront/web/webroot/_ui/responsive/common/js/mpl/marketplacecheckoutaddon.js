@@ -2236,6 +2236,8 @@ $("#otpMobileNUMField").focus(function(){
 				 createJuspayOrderForNewCard(false);
 			 }
 			 else{
+				//INC144316811
+				 openShippingFrmOpen();
 				 return false;
 			 }
 		 }
@@ -2248,6 +2250,8 @@ $("#otpMobileNUMField").focus(function(){
 				 createJuspayOrderForNewCard(false);
 			 }
 			 else{
+				//INC144316811
+				 openShippingFrmOpen();
 				 return false;
 			 }
 		 }
@@ -2315,6 +2319,8 @@ $("#otpMobileNUMField").focus(function(){
 				createJuspayOrderForNewCardEmi();
 			 }
 			 else{
+				//INC144316811
+				 openShippingFrmOpenEMI();
 				 return false;
 			 }
 		 }
@@ -2327,12 +2333,31 @@ $("#otpMobileNUMField").focus(function(){
 				 createJuspayOrderForNewCardEmi();
 			 }
 			 else{
+				//INC144316811
+				 openShippingFrmOpenEMI();
 				 return false;
 			 }
 		 }
 	 }
  }
  
+ 
+ // INC144316811
+ function openShippingFrmOpen(){
+	 	$("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", false); 
+	 	$("#country").attr("disabled", false);
+		/*$(".new-card input#sameAsShipping:checked + label + fieldset").css("display","block");*/
+		$("input#sameAsShipping:checked + label + fieldset").css("display","block");
+		$('#sameAsShipping').attr('checked', false); 
+}
+
+ function openShippingFrmOpenEMI(){
+		$("#firstNameEmi, #lastNameEmi, #address1Emi, #address2Emi, #address3Emi, #stateEmi, #cityEmi, #pincodeEmi").attr("readonly", false);
+		$("#countryEmi").attr("disabled", false);
+		/*$(".new-card input#sameAsShippingEmi:checked + label + fieldset").css("display","block");*/
+		$("input#sameAsShippingEmi:checked + label + fieldset").css("display","block");
+		$('#sameAsShippingEmi').attr('checked', false); 
+}
 
 // function dopaymentDc(bin_current_status){
 //	 var name = validateNameDc();
@@ -6695,6 +6720,14 @@ function validateNameOnAddress(name, errorHandle, identifier) {
         return false;
 	}
 	if(name=="" && identifier=="lastName"){
+		errorHandle.innerHTML = "Please enter a Last name.";
+        return false;
+	}
+	if(name=="" && identifier=="firstNameEmi"){
+		errorHandle.innerHTML = "Please enter a First name.";
+        return false;
+	}
+	if(name=="" && identifier=="lastNameEmi"){
 		errorHandle.innerHTML = "Please enter a Last name.";
         return false;
 	}
