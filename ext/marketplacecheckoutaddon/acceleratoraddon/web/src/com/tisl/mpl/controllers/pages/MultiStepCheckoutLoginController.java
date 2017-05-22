@@ -61,6 +61,7 @@ import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FBConnection;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.controllers.helpers.GoogleAuthHelper;
+import com.tisl.mpl.storefront.security.cookie.LastUserLoggedInCookieGenerator;
 import com.tisl.mpl.storefront.web.forms.ExtRegisterForm;
 import com.tisl.mpl.storefront.web.forms.validator.RegisterPageValidator;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -114,6 +115,29 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 	{
 		this.resourceBreadcrumbBuilder = resourceBreadcrumbBuilder;
 	}
+
+	//Added for UF-93
+	@Autowired
+	private LastUserLoggedInCookieGenerator lastUserLoggedInCookieGenerator;
+
+	/**
+	 * @return the lastUserLoggedInCookieGenerator
+	 */
+	public LastUserLoggedInCookieGenerator getLastUserLoggedInCookieGenerator()
+	{
+		return lastUserLoggedInCookieGenerator;
+	}
+
+	/**
+	 * @param lastUserLoggedInCookieGenerator
+	 *           the lastUserLoggedInCookieGenerator to set
+	 */
+	public void setLastUserLoggedInCookieGenerator(final LastUserLoggedInCookieGenerator lastUserLoggedInCookieGenerator)
+	{
+		this.lastUserLoggedInCookieGenerator = lastUserLoggedInCookieGenerator;
+	}
+
+	//Added for UF-93
 
 	private static final String BZ_ERROR_CMS_PAGE = "businessErrorFound";
 	private static final String NBZ_ERROR_CMS_PAGE = "nonBusinessErrorFound";
@@ -224,6 +248,16 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 			form.setCheckPwd(rePassword);
 
 			getRegisterPageValidator().validate(form, bindingResult);
+			/** Added for UF-93 **/
+			if (StringUtils.isNotEmpty(request.getParameter("email")))
+			{
+				lastUserLoggedInCookieGenerator.addCookie(response,
+						new String(Base64.encodeBase64String(request.getParameter("email").getBytes())));
+				//LOG.error("DefaultGUIDCookieStrategy.setCookie() 'customer.getOriginalUid().getBytes()':: "
+				//+ customer.getOriginalUid().getBytes());
+			}
+			/** Ends for UF-93 **/
+
 			return processRegisterUserRequestNew(null, form, bindingResult, model, request, response, redirectModel);
 		}
 		catch (final EtailBusinessExceptions e)
