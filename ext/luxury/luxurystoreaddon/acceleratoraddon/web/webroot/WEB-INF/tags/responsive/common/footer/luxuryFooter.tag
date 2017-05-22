@@ -34,7 +34,6 @@
 					element="div" class="span-24 section5 cms_disp-img_slot">
 				<cms:component component="${feature}" />
 			</cms:pageSlot>
-		<!-- <script type="text/javascript" src="/_ui/responsive/common/js/uicombined-min.js"></script> -->
 	</footer>
 </section>
 

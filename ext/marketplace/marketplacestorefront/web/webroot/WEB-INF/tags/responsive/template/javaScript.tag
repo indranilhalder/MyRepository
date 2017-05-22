@@ -18,6 +18,5 @@
 		<compressible:js/>
 	</c:otherwise>
 </c:choose>
- <script type="text/javascript"  href="${themeResourcePath}/js/uicombined-min.js"/></script>
 
 <cms:previewJS cmsPageRequestContextData="${cmsPageRequestContextData}" />

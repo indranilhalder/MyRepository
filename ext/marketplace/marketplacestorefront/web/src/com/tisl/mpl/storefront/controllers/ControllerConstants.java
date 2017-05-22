@@ -272,6 +272,7 @@ public interface ControllerConstants
 			{
 				// TPR-198
 				String FacetResultPanel = "pages/search/facetResultPanel";
+				String LuxuryFacetResultPanel = "pages/search/luxuryFacetResultPanel";
 
 			}
 

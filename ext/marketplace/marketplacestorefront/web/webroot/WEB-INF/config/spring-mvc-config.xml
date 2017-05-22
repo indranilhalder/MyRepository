@@ -199,6 +199,8 @@
 					value="${commerceservices.default.desktop.ui.experience:desktop}/" />
 				<entry key="MOBILE"
 					value="${commerceservices.default.desktop.ui.experience:desktop}/" />
+				<entry key="RESPONSIVE"
+					value="${commerceservices.default.desktop.ui.experience:responsive}/" />
 			</map>
 		</property>
 		<property name="unknownUiExperiencePrefix"
