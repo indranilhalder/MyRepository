@@ -9,6 +9,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.Abstrac
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSContentSlotService;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.List;
 
@@ -47,10 +48,12 @@ public class NavigationBarCollectionComponentController extends AbstractPageCont
 	@Autowired
 	private DefaultCMSContentSlotService contentSlotService;
 
+	@Autowired
+	private ConfigurationService configurationService;
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.storefront.controllers.cms.AbstractCMSComponentController#fillModel(javax.servlet.http.HttpServletRequest
 	 * , org.springframework.ui.Model, de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel)
@@ -64,12 +67,14 @@ public class NavigationBarCollectionComponentController extends AbstractPageCont
 			//final Map<String, String> nodeUrlTitle = new LinkedHashMap<String, String>();
 
 			//final ArrayList<CategoryModel> departments = new ArrayList<CategoryModel>();
+			final String shopByDeptid = configurationService.getConfiguration().getString(
+					"marketplace.mplcatalog.shopbydept.component.web.id");
 
 			final ContentSlotModel contentSlotModel = contentSlotService.getContentSlotForId("NavigationBarSlot");
 			final List<AbstractCMSComponentModel> componentLists = contentSlotModel.getCmsComponents();
 			for (final AbstractCMSComponentModel cmsmodel : componentLists)
 			{
-				if (cmsmodel instanceof NavigationBarCollectionComponentModel)
+				if (cmsmodel instanceof NavigationBarCollectionComponentModel && cmsmodel.getUid().equalsIgnoreCase(shopByDeptid))
 				{
 					final NavigationBarCollectionComponentModel deptModel = (NavigationBarCollectionComponentModel) cmsmodel;
 
