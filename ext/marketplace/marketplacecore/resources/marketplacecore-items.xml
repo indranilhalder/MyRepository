@@ -1257,7 +1257,6 @@
 	<itemtype code="LuxProductCarouselComponent"
 				autocreate="true" generate="true" extends="ProductCarouselComponent"
 				jaloclass="com.tisl.mpl.core.jalo.LuxProductCarouselComponent">
-				<deployment table="LuxProductCarouselComponent" typecode="16161" />
 	</itemtype>
 			
 			
@@ -1265,7 +1264,6 @@
 	<itemtype code="ShopByCategory" autocreate="true"
 				generate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.jalo.cms.components.ShopByCategory">
-		<deployment table="ShopByCategory" typecode="17171" />	
 		<attributes>
 			<attribute type="bannerImageCollection" qualifier="relatedImage"
 						autocreate="true" generate="true">
@@ -1287,8 +1285,7 @@
 
 <itemtype code="ShowCaseCollectionComponent" autocreate="true"
 				generate="true" extends="SimpleCMSComponent"
-				jaloclass="com.tisl.mpl.jalo.cms.components.ShowCaseCollectionComponent">
-<deployment table="ShowCaseCollectionComponent" typecode="18181" />	
+				jaloclass="com.tisl.mpl.jalo.cms.components.ShowCaseCollectionComponent">	
 		<attributes>
 		<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
@@ -1349,7 +1346,6 @@
 <itemtype code="ImageShowCaseComponent" autocreate="true"
 				generate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.jalo.cms.components.ImageShowCaseComponent">
-<deployment table="ImageShowCaseComponent" typecode="19191" />	
 		<attributes>
 			<attribute type="ShowCaseCollection" qualifier="showCaseBanner"
 						autocreate="true" generate="true">
@@ -1433,7 +1429,6 @@
 	<!-- Category landing page Product ShowCase component   -->
 	 <itemtype code="productShowCaseComponent" autocreate="true"
 				generate="true">
-				<deployment table="productShowCaseComponent" typecode="15666" />
 				<attributes>
 				<attribute type="luxuryProductCollection" qualifier="product"
 						autocreate="true" generate="true">
