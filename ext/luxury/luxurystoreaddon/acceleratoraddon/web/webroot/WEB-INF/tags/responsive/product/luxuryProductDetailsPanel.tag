@@ -159,6 +159,7 @@ tr.d0 td {
 		</div>
 		
 		<div class="product-detail">
+			
 			<c:set var="req" value="${pageContext.request}" />
   			<c:set var="baseURL" value="${fn:replace(req.requestURL, req.requestURI, '')}" />
   			<c:set var="params" value="${requestScope['javax.servlet.forward.query_string']}"/>
@@ -173,7 +174,7 @@ tr.d0 td {
   			</c:choose>
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
-				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name">${product.brand.brandname}</span></h3>
+				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name"> test	test	test	test	${product.brand.brandname}</span></h3>
 				<%-- <a itemprop="url" href="${mainurl}"> --%>		<!-- Commented as part of UF-181 -->
 				<!-- For TPR-4358 -->
 				<h1 itemprop="name" class="product-name">${product.productTitle}</h1>

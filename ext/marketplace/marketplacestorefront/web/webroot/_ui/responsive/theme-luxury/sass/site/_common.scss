@@ -1,0 +1,272 @@
+html {
+	font-size: 1rem;
+}
+body {
+	font-size: 0.875rem;
+	@include transition(padding-top 0.3s ease-in-out);
+	padding-top: 107px;
+	@include media-breakpoint-up(md) {
+		padding-top: 149px;
+	}
+}
+@include media-breakpoint-up(md) {
+	.colmn {
+		float: left;
+	}
+}
+.btn {
+	text-transform: uppercase;
+}
+.btn-fb {
+	&, &:focus, &:focus, &:hover {
+		color: $white; 
+	}
+	background-color: #4460a0;
+}
+button, input, optgroup, select, textarea {
+	outline: 0;
+}
+.form-control {
+	&, &:focus {
+		@include box-shadow(none);
+	}
+}
+.section-title {
+	margin-bottom: 20px;
+	margin-top: 0;
+	letter-spacing: 2px;   
+}
+.text-gold {
+	color: $gold-dark;
+}
+img {
+	max-width: 100%;
+}
+
+.mt-10 {
+	margin-top: 10px;
+}
+.mb-10 {
+	margin-bottom: 10px;
+}
+
+.mb-20 {
+	margin-bottom: 20px;
+}
+.mt-20 {
+	margin-top: 20px;
+}
+ 
+.mb-30 {
+	margin-bottom: 30px;
+}
+.mt-30 {
+	margin-top: 30px;
+}
+
+.mb-40 {
+	margin-bottom: 40px;
+}
+.mt-40 {
+	margin-top: 40px;
+}
+
+.slick-slider {
+	.slick-dots {
+		margin-bottom: 0;
+		padding-left: 0;
+		list-style: none;
+		li {
+			display: inline-block;
+			width: auto;
+		}
+	}
+	
+	&.circle-pager .slick-dots { 
+		margin-top: 20px;
+		height: 10px;
+		position: absolute;
+		bottom: -30px;
+		left: 0;
+		right: 0;
+		text-align: center;
+		li {
+			margin: 0 5px;
+		}
+		button {
+			background-color: $white;
+			border-radius: 50%;
+			border: 1px solid $gray-darker;
+			text-indent: -90000px;
+			width: 10px;
+			height: 10px;
+			padding: 0; 
+		}
+		.slick-active {
+			button {
+				background-color: $gray-darker;
+			}
+		}
+	}
+	.slick-slide {
+	    outline: 0;
+	}
+	
+	.slick-arrow {
+		position: absolute;
+		top: 50%;
+		z-index: 1;
+		background: $Sprite no-repeat;
+		width: 44px;
+		height: 45px;
+		display: block;
+		text-indent: -9999px;
+		overflow: hidden;
+		border: 0px;
+		outline: none;
+		padding: 0;
+		margin-top: -22px;
+	}
+	.slick-prev {
+		background-position: -116px 0px;
+		
+		@include media-breakpoint-up(xs) {
+			left: 0px;
+		}
+		@include media-breakpoint-up(sm) {
+			left: -15px;
+		}
+	}
+	.slick-next {		
+		
+		@include media-breakpoint-up(xs) {
+			right: 0px;
+		}
+		@include media-breakpoint-up(sm) {
+			right: -15px;
+		}
+		
+		background-position: -161px 0px;	
+	}
+}
+
+.leftbar-btn{
+	margin: 0 auto 25px;
+	font-size: 12px;
+	border-width: 2px;
+	line-height: 26px;
+	color: #cacaca;
+	height:42px;
+}
+.remove-filter{
+	color:#000;
+	font-weight:600;
+	height:42px;
+}
+
+.le-radio input[type=radio] {
+	 margin: 0;
+	 opacity: 0;
+	 cursor: pointer;
+	 width: 15px;
+	 height: 15px;
+	 z-index: 10;
+	 position: absolute;
+}
+.le-checkbox{
+	position:relative;
+	.avail-count{
+		position:absolute;
+		right:0px;
+		color:#b3b3b3;
+	}
+}
+.le-checkbox label, .le-radio label {
+	 padding-left: 30px;
+	 line-height: 140%;
+	 font-weight: 300;
+	 display: inline-block;
+	 position: relative;
+	 cursor:pointer;
+}
+.le-radio label { 
+	line-height: 25px; 
+}
+.le-checkbox input[type="checkbox"], .le-radio input[type="radio"]{
+	 width:28px !important;
+	 height:28px !important;
+}
+
+.le-radio input[type=radio] ~ label::before {
+	 content: "";
+	 position: absolute;
+	 width: 20px;
+	 height: 20px;
+	 left: 0;
+	 border: 1px solid #d9d7d9;
+	 background: #d5d4d3;
+	 border-radius: 50%;
+} 
+.le-radio input[type=radio]:checked ~ label::before{
+	 background-color:#000;
+	 /*box-shadow: inset 0 0 0 2px #fff;
+	 border: 7px solid #1cadcc;*/
+}
+.le-checkbox input[type=checkbox]{
+	display: none;
+}
+.le-checkbox label {
+	padding-left: 27px;
+}
+.le-checkbox input[type=checkbox] ~ label::before {
+	content: "";
+	width: 20px;
+	height: 20px;
+	border-radius: $border-radius-small;
+	background: #fff;
+	border: 1px solid #c8c7cc;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	margin: auto;
+}
+.le-checkbox input[type=checkbox]:checked ~ label::before {
+	color: #fff;
+	background: #b99d6b url('../images/tick.png') no-repeat;
+	background-position: 3px 1px;
+	border-color:#b99d6b;
+	text-align: center;
+	line-height: 16px;
+}
+
+input, button, textarea, select, a {
+	outline: none!important;
+}
+
+textarea {
+	border-radius: $btn-border-radius-base;
+	border: 1px solid $light-gray;
+	box-shadow: 0 0 4px 2px $light-gray inset;
+	resize: none;
+	min-height: 50px;
+	padding: 6px 10px;
+}
+.nopadding{
+	padding:0px;
+}
+.close{
+	background:none;
+	border:0px;
+	font-size:32px;
+	top:0px;
+	right:5px;
+	position:absolute;
+	color:#a5a5a5;
+}
+.box-design{
+	background: $white;
+	border: 1px solid $mlight-gray;
+	padding: 10px;
+	border-radius: 10px;
+}

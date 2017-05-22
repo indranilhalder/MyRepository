@@ -1,0 +1,40 @@
+.brand-slider-wrapper {
+	max-width: 1092px;
+    margin: 0 auto 70px;
+	.slick-slide img {
+		display: inline-block;
+	}
+	a{
+		cursor: pointer;
+	}
+	.brand-img{
+		position: relative;
+		width: 348px;
+		margin: auto;
+		
+		.brand-bg{
+			&:after{
+				content: '';
+				background: rgba(0,0,0,.5);
+				position: absolute;
+				top: 0px;
+				bottom: 0px;
+				left: 0px;
+				width: 100%;
+				border-radius: 10px;
+			}
+
+		}
+		
+		.brand-logo{
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: auto;
+			
+
+		}
+		
+	}
+	
+}
