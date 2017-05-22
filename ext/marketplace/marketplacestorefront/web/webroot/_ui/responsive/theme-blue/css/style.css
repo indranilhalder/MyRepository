@@ -26289,7 +26289,11 @@ body .account .right-account form .full.span input#currentPassword{
 }
  @media (min-width:791px) {
 .zoomContainer {
-	z-index: 100000; //TISPRDT-1284
+	z-index: 100000; /* TISPRDT-1284 */
+}
+body.page-productDetails .zoomContainer ,
+body.page-viewSellers .zoomContainer {
+	z-index: 10000;
 }
 
 }
@@ -67416,8 +67420,8 @@ header .content nav>ul>li>.toggle{
 }
 header .content nav>ul>li>.toggle:before{
 	content: "";
-    width: 17px;
-    height: 13px;
+    width: 20px;
+    height: 15px;
     position: absolute;
     bottom: -2px;
     left: 16px;
@@ -68704,8 +68708,12 @@ header .content .search .select-list{
 header.brand-header .content .bottom nav>ul>li>ul:before {
     background-image: linear-gradient(to bottom,#000,#000);
 }
+header.brand-header{
+	border-bottom: 0; /* TISPRDT-1335 */
+}
 header.brand-header .content .bottom nav>ul>li>ul{
 	left: 280px !important;
+	border-top: 0; /* TISPRDT-1335 */
 }
 header.brand-header .content nav>ul>li>.toggle:before{
 	display: none;
