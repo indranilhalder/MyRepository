@@ -643,6 +643,15 @@ body.page-shopTheStyle .timeout-slider .owl-controls .owl-dots {
     height: 100px;
     width: 100%;
 }
+/* ADDED INC144316941 STARTS HERE */ 
+.pdp .product-info.wrapper .tabs-block .tabs.pdp li ul.item-desc{
+	padding: 0;
+}
+.tab-details .item-desc li{
+	list-style-type: none;
+	width: 100%;
+}
+/* ADDED INC144316941 ENDS HERE */
 /* ADDED TISQAUATS-9 STARTS HERE */ 
 .terms-text p{
 	text-align: center !important;
@@ -1446,7 +1455,7 @@ h2 {
             padding: 20px 0;
             line-height: 30px; }
             header .content .right > ul > li.wishlist .wishlist-info .foot a {
-              text-transform: uppercase;
+              text-transform: capitalize;
               text-decoration: underline;
               color: #A9143C;
               font-weight: 600;
@@ -24519,7 +24528,7 @@ body #account-invite .right-account>div form .mytextarea {
     resize: none;
     margin-bottom: 20px;
     padding: 5px 10px;
-    color: #60A119;
+    color: #000;
 }
 .feedBack-block .feed-back-categories,.feedBack-block .feed-back-form{
 	margin:0 auto;
@@ -26289,7 +26298,11 @@ body .account .right-account form .full.span input#currentPassword{
 }
  @media (min-width:791px) {
 .zoomContainer {
-	z-index: 100000; //TISPRDT-1284
+	z-index: 100000; /* TISPRDT-1284 */
+}
+body.page-productDetails .zoomContainer ,
+body.page-viewSellers .zoomContainer {
+	z-index: 9999;
 }
 
 }
@@ -32679,7 +32692,7 @@ body.page-homepage .trending h1 > span{
     font-size: 14px;
     line-height: 20px;
     margin: 20px;
-    text-align: center;
+    text-align: left;
 }
 .qued-content a.button.maroon {
     bottom: 0;
@@ -48352,7 +48365,7 @@ padding:0 40px;	}
 .product-info>div.wishAddLogin, .product-info>div.wishAddSucess,.product-info>div.wishAddLogin, .product-info>div.wishRemoveSucess, .product-info>div.wishAlreadyAdded,div.wishAlreadyAddedPlp,div.wishAddLoginPlp,div.wishAddSucessPlp,div.wishRemoveSucessPlp,div.wishAddSucessQV,div.wishAddLoginQV,div.wishAlreadyAddedQV {
 	display: inline-block;
     position: fixed;
-   	z-index: 100000;
+   	z-index: 100099;
     left: 0;
     right: 0;
 	top: -100px;
@@ -55406,10 +55419,10 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 	background: url("../images/sprite-07.png") no-repeat scroll -73px -175px;
 }
 .callouts .Padd ul li.genuine p:before {
-	background: url("../images/sprite-07.png") no-repeat scroll -139px -175px;
+	background: url("../images/sprite-07.png") no-repeat scroll -205px -175px;
 }
 .callouts .Padd ul li.returns p:before {
-	background: url("../images/sprite-07.png") no-repeat scroll -205px -175px;
+	background: url("../images/sprite-07.png") no-repeat scroll -139px -175px;
 }
 .callouts .Padd ul li:last-child{
 	border:none;
@@ -65575,7 +65588,7 @@ padding-top:90px;
 	.product-info>div.wishAddLogin, .product-info>div.wishAddSucess, .product-info>div.wishAddLogin, .product-info>div.wishRemoveSucess, .product-info>div.wishAlreadyAdded, div.wishAlreadyAddedPlp, div.wishAddLoginPlp, div.wishAddSucessPlp, div.wishRemoveSucessPlp, div.wishAddSucessQV, div.wishAddLoginQV, div.wishAlreadyAddedQV {
     display: inline-block;
     position: fixed;
-    z-index: 100000;
+    z-index: 100099;
     left: calc(50% - 150px);
     right: auto; 
     top: -100px;
@@ -67416,8 +67429,8 @@ header .content nav>ul>li>.toggle{
 }
 header .content nav>ul>li>.toggle:before{
 	content: "";
-    width: 17px;
-    height: 13px;
+    width: 20px;
+    height: 15px;
     position: absolute;
     bottom: -2px;
     left: 16px;
@@ -67877,7 +67890,7 @@ header .content nav > ul > li > ul > li > ul.words, header .content nav > ul > l
 }
 .qued-content p{
 	margin: 36px 0;
-    text-align: center;
+    text-align: left;
     font-size: 12px;
     letter-spacing: 0.6px;
     color: #535353;
@@ -68354,7 +68367,7 @@ body.page-homepage .feature-collections #stayQued > h2{
 }
 .qued-content p {
     margin: 8px 0 24px;
-    text-align: center;
+    text-align: left;
     font-size: 12px;
     letter-spacing: 0.6px;
 }
@@ -68675,6 +68688,9 @@ ul li #mobile-menu-toggle + ul li ul.words li.long.words.only-link{
 footer>div>ul>li:first-child h3, footer>div>ul>li h3{
 	padding: 0 26px;
 }
+ul li #mobile-menu-toggle + ul.trackorder-dropdown {
+    overflow: hidden; /*TISPRDT-1333*/
+}
 }
 @media(max-width: 767px){
 	.callouts .Padd ul li p:before{
@@ -68706,6 +68722,7 @@ header.brand-header .content .bottom nav>ul>li>ul:before {
 }
 header.brand-header .content .bottom nav>ul>li>ul{
 	left: 280px !important;
+	border-top: 0; /* TISPRDT-1335 */
 }
 header.brand-header .content nav>ul>li>.toggle:before{
 	display: none;
@@ -68721,4 +68738,20 @@ header .content .right>ul>li.track:hover a{
 	opacity: 1;
 	color: #fff;
 }
+.callouts .Padd ul li p:before{
+	top: auto;
+	vertical-align: middle;
 }
+.callouts .Padd {
+    padding: 26px 50px;
+}
+}
+/*TISPRDT-1333 start*/
+.trackorder-dropdown li * {
+    color: #666 !important;
+    font-size: 12px !important;
+}
+.trackorder-dropdown li[data-read="false"] a{
+	font-weight: normal;
+}
+/*TISPRDT-1333 end*/

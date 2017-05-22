@@ -484,11 +484,11 @@ function getBrandsYouLoveContentAjaxCall(id) {
                 dataType: "json",
                 beforeSend: function() {
                 	var staticHost=$('#staticHost').val();
-                    $(".home-brands-you-love-carousel").css(
+                    /*$(".home-brands-you-love-carousel").css(
                         "margin-bottom", "120px");
                     $("#brandsYouLove").append(
                         "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 200px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='"+staticHost+"/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
-                    );
+                    );*/
                 },
                 url: ACC.config.encodedContextPath +
                     "/getBrandsYouLoveContent",
@@ -606,12 +606,12 @@ function getBrandsYouLoveContentAjaxCall(id) {
                         id, encodeURI(defaultHtml));
                 },
                 complete: function() {
-                   $('#brandsYouLove .loaderDiv').remove();
+                   /*$('#brandsYouLove .loaderDiv').remove();*/
                 },
                 error: function() {
-                    $('#brandsYouLove .loaderDiv').remove();
-                    $(".home-brands-you-love-carousel").css(
-                        "margin-bottom", "33px");  /* UF-249 */
+                    /*$('#brandsYouLove .loaderDiv').remove();*/
+                    /*$(".home-brands-you-love-carousel").css(
+                        "margin-bottom", "33px");*/  /* UF-249 */
                     console.log(
                         "Error while getting brands you love content"
                     );
@@ -1453,11 +1453,11 @@ function getShowcaseContentAjaxCall(id) {
                 dataType: "json",
                 beforeSend: function() {
                 	var staticHost=$('#staticHost').val();
-                    $(".showcase-switch").css("margin-bottom",
+                    /*$(".showcase-switch").css("margin-bottom",
                         "80px");
                     $("#showcase").append(
                         "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='"+staticHost+"/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
-                    );
+                    );*/
                 },
                 url: ACC.config.encodedContextPath +
                     "/getShowcaseContent",
@@ -1516,9 +1516,9 @@ function getShowcaseContentAjaxCall(id) {
                         defaultHtml += "</a></div>";
                     }
                     defaultHtml += "</div>";
-                    $('#showcase .loaderDiv').remove();
+                    /*$('#showcase .loaderDiv').remove();
                     $(".showcase-switch").css("margin-bottom",
-                        "0px");
+                        "0px");*/
                     $('#showcase').append(defaultHtml);
                     window.localStorage.setItem("showcaseContent-" +
                         id, encodeURI(defaultHtml));
@@ -1526,9 +1526,9 @@ function getShowcaseContentAjaxCall(id) {
                 error: function() {
                     console.log(
                         "Error while getting showcase content");
-                    $('#showcase .loaderDiv').remove();
+                    /*$('#showcase .loaderDiv').remove();
                     $(".showcase-switch").css("margin-bottom",
-                        "0px");
+                        "0px");*/
                 }
             });
         }

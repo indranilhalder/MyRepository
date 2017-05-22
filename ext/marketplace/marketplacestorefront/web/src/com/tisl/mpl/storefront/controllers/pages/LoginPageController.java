@@ -64,6 +64,7 @@ import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FBConnection;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.controllers.helpers.GoogleAuthHelper;
+import com.tisl.mpl.storefront.security.cookie.LastUserLoggedInCookieGenerator;
 import com.tisl.mpl.storefront.web.forms.ExtRegisterForm;
 import com.tisl.mpl.storefront.web.forms.validator.RegisterPageValidator;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -95,7 +96,28 @@ public class LoginPageController extends AbstractLoginPageController
 
 	private static final String LOGIN_SUCCESS = "loginSuccess";
 
+	//Added for UF-93
+	@Autowired
+	private LastUserLoggedInCookieGenerator lastUserLoggedInCookieGenerator;
 
+	/**
+	 * @return the lastUserLoggedInCookieGenerator
+	 */
+	public LastUserLoggedInCookieGenerator getLastUserLoggedInCookieGenerator()
+	{
+		return lastUserLoggedInCookieGenerator;
+	}
+
+	/**
+	 * @param lastUserLoggedInCookieGenerator
+	 *           the lastUserLoggedInCookieGenerator to set
+	 */
+	public void setLastUserLoggedInCookieGenerator(final LastUserLoggedInCookieGenerator lastUserLoggedInCookieGenerator)
+	{
+		this.lastUserLoggedInCookieGenerator = lastUserLoggedInCookieGenerator;
+	}
+
+	//Added for UF-93
 	/**
 	 * @return the registerPageValidator
 	 */
@@ -379,6 +401,15 @@ public class LoginPageController extends AbstractLoginPageController
 
 			getRegisterPageValidator().validate(form, bindingResult);
 			//return processRegisterUserRequestNew(referer, form, bindingResult, model, request, response, redirectModel);
+			/** Added for UF-93 **/
+			if (StringUtils.isNotEmpty(request.getParameter("email")))
+			{
+				lastUserLoggedInCookieGenerator.addCookie(response,
+						new String(Base64.encodeBase64String(request.getParameter("email").getBytes())));
+				//LOG.error("DefaultGUIDCookieStrategy.setCookie() 'customer.getOriginalUid().getBytes()':: "
+				//+ customer.getOriginalUid().getBytes());
+			}
+			/** Ends for UF-93 **/
 			returnPage = processRegisterUserRequestNew(form, bindingResult, model, request, response, redirectModel);
 		}
 		catch (final EtailBusinessExceptions e)
