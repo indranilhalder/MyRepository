@@ -82,11 +82,9 @@ INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;fronten
 ;;MultiStepCheckoutSummaryPageTemplate;Multi Step Checkout Summary Page Template;;ContentPage;false;
 ;;OrderConfirmationPageTemplate;Order Confirmation Page Template;;ContentPage;false;
 
-##Luxury Homepage
+##Luxury Templates
 ;;luxuryHomePageTemplate;Luxury Home Page Template;$luxuryStoreAddonPrefix/pages/layout/luxuryHomePage;ContentPage;true                
-
-
-
+;;LuxuryProductDetailsPageTemplate;Luxury Product Details Page Template;$luxuryStoreAddonPrefix/pages/product/luxuryProductLayoutPage;ProductPage
 
 
 # Add Velocity templates that are in the CMS Cockpit. These give a better layout for editing pages
@@ -146,9 +144,9 @@ UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[tr
 #Shop The Style Page
 ;;ShopTheStylePageTemplate;$jarResourceCms/structure-view/structure_shopTheStylePageTemplate.vm
 
-##Luxury Homepage
+##Luxury templets
 ;;luxuryHomePageTemplate;$jarResourceCms/structure-view/structure_luxuryHomePage.vm                                           
-
+;;LuxuryProductDetailsPageTemplate;$jarResourceCms/structure-view/structure_LuxuryProductDetailsPageTemplate.vm
 
 
 
@@ -904,6 +902,34 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;BottomHeaderSlot;;BreadcrumbComponent
 ;PlaceholderContentSlot;;;
 
+########### Content Sloat Name for Luxury ##########################
+# Product Details Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='LuxuryProductDetailsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
+;NavigationBar;;;navigation
+;Section1;;;wide
+;Section2;;;wide
+;Section3;;;wide
+;Section4;;;wide
+;VariantSelector;;ProductVariantSelectorComponent;narrow
+;AddToCart;;ProductAddToCartComponent;narrow
+;CrossSelling;;ProductReferencesComponent;narrow
+;UpSelling;;ProductReferencesComponent;narrow
+;Footer;;;footer
+;Tabs;;CMSTabParagraphContainer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;BreadcrumbComponent
+;PlaceholderContentSlot;;;
+#pdp changes for configuring number of images to be shown in pdp
+;ConfigureImagesCountSlot;;ConfigureImagesCountComponent
+#pdp changes for configuring number of products to be shown in pdp
+;ConfigureProductsCountSlot;;ConfigureProductsCountComponent
+#pin code
+;PinCodeServiceSlot;;PincodeServiceComponent
+
 # Create Content Slots
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
 ;;SiteLogoSlot;Default Site Logo Slot;true
@@ -1483,6 +1509,32 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;PlaceholderContentSlot-MicrositePageElectronics;PlaceholderContentSlot;;PlaceholderContentSlot;true
 ########## For Microsite ::::   ContentSlotForTemplate END
 
+############################### Luxury Content slot for page template
+
+# Bind Content Slots to Page Templates
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxuryProductDetailsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-LuxuryProductDetails;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-LuxuryProductDetails;HomepageNavLink;;HomepageNavLinkSlot;true
+;;MiniCart-LuxuryProductDetails;MiniCart;;MiniCartSlot;true
+;;NavigationBar-LuxuryProductDetails;NavigationBar;;NavigationBarSlot;true
+;;Tabs-LuxuryProductDetails;Tabs;;TabsSlot;true
+;;Footer-LuxuryProductDetails;Footer;;FooterSlot;true
+;;HeaderLinks-LuxuryProductDetails;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-LuxuryProductDetails;SearchBox;;SearchBoxSlot;true
+;;VariantSelector-LuxuryProductDetails;VariantSelector;;VariantSelectorSlot;true
+;;AddToCart-LuxuryProductDetails;AddToCart;;AddToCartSlot;true
+;;UpSelling-LuxuryProductDetails;UpSelling;;UpSellingSlot;true
+;;CrossSelling-LuxuryProductDetails;CrossSelling;;CrossSellingSlot;true
+;;TopHeaderSlot-LuxuryProductDetails;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-LuxuryProductDetails;BottomHeaderSlot;;BottomHeaderSlot;true
+;;PlaceholderContentSlot-LuxuryProductDetails;PlaceholderContentSlot;;PlaceholderContentSlot;true
+#pdp changes for configuring number of images to be shown in pdp
+;;ConfigureImagesCount-LuxuryProductDetails;ConfigureImagesCount;;ConfigureImagesCountSlot;true
+#pdp changes for configuring number of products to be shown in pdp
+;;ConfigureProductsCount-LuxuryProductDetails;ConfigureProductsCount;;ConfigureProductsCountSlot;true
+#pincode
+;;PinCodeService-LuxuryProductDetails;PinCodeService;;PinCodeServiceSlot;true
+
 
 # Create Content Pages
 
@@ -1641,7 +1693,7 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 
 # Product Details Page
 INSERT_UPDATE ProductPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
-;;productDetails;Product Details;ProductDetailsPageTemplate;true;
+;;productDetails;Luxury Product Details;LuxuryProductDetailsPageTemplate;true;
 
 
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
@@ -1798,7 +1850,7 @@ INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;fronten
 
 
 UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
-;;ApparelCategoryLandingPageTemplateV1      ;$jarResourceCms/structure-view/structure_ApparelCategoryLandingPageTemplateV1.vm
+;;ApparelCategoryLandingPageTemplateV1      ;$jarResourceCms/structure-view/structure_ApparelCategoryLandingPageTemplate.vm
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ApparelCategoryLandingPageTemplateV1'];validComponentTypes(code);compTypeGroup(code)
 ;SiteLogo;;;logo
@@ -1853,3 +1905,4 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;WomenV1;Women's Category Landing Page;ApparelCategoryLandingPageTemplateV1;WomenV1;MSH10
 ### Category Landing Page V1#########
+
