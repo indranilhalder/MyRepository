@@ -18,7 +18,6 @@
 		<!-- you should add all required extensions to this list, except platform extensions which are automatically required -->         
 		<requires-extension name="hmc"/>
 		<requires-extension name="addonsupport"/>
-
 		<coremodule generated="true" manager="com.tisl.lux.jalo.LuxurystoreaddonManager" packageroot="com.tisl.lux"/>
 
 		<hmcmodule extensionclassname="com.tisl.lux.hmc.LuxurystoreaddonHMCExtension"/>

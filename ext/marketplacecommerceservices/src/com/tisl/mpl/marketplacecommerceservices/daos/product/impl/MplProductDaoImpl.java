@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.product.impl;
 
 import de.hybris.platform.catalog.CatalogVersionService;
+import de.hybris.platform.catalog.model.CatalogModel;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -12,12 +13,14 @@ import de.hybris.platform.search.restriction.SearchRestrictionService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.SearchResult;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
+import de.hybris.platform.site.BaseSiteService;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -38,6 +41,9 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 
 	@Autowired
 	private SearchRestrictionService searchRestrictionService;
+
+	@Autowired
+	BaseSiteService baseSiteService;
 
 	protected static final Logger LOG = Logger.getLogger(MplProductDaoImpl.class);
 
@@ -137,8 +143,17 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 	//Get Session Catalog Version
 	private CatalogVersionModel getCatalogVersionSession()
 	{
-		final CatalogVersionModel catalogVersionModel = catalogVersionService
-				.getSessionCatalogVersionForCatalog(MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID);
+		CatalogVersionModel catalogVersionModel = null;
+		final List<CatalogModel> productCatalogs = baseSiteService.getProductCatalogs(baseSiteService.getCurrentBaseSite());
+		if (CollectionUtils.isNotEmpty(productCatalogs))
+		{
+			catalogVersionModel = catalogVersionService.getSessionCatalogVersionForCatalog(productCatalogs.get(0).getId());
+		}
+		else
+		{
+			catalogVersionModel = catalogVersionService
+					.getSessionCatalogVersionForCatalog(MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID);
+		}
 		return catalogVersionModel;
 	}
 
@@ -147,6 +162,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 	public List<ProductModel> findProductsByCodeHero(final String code)
 	{
 		LOG.debug("findProductsByCode: code********** " + code);
+		//		Changed to support the luxProductCatalog
 		final CatalogVersionModel catalogVersion = getCatalogVersionSession();
 		final StringBuilder stringBuilder = new StringBuilder(70);
 		stringBuilder.append(SELECT_STRING).append(ProductModel.PK).append("} ");
@@ -154,12 +170,17 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 		stringBuilder.append("JOIN ").append(SellerInformationModel._TYPECODE).append(" AS s ");
 		stringBuilder.append("ON {s:").append(SellerInformationModel.PRODUCTSOURCE).append("}={p:").append(ProductModel.PK)
 				.append("} } ");
+		//Changed to support the luxProductCatalog
+		// No need to add the catalog version as Search restriction will add automatically into where clause
 		final String inPart = "{p:" + ProductModel.CODE + CODE_STRING + ProductModel.CATALOGVERSION
 				+ "} = ?catalogVersion and  sysdate between {s.startdate} and {s.enddate} ";
+		//		final String inPart = "{p:" + ProductModel.CODE + CODE_STRING + " and  sysdate between {s.startdate} and {s.enddate} ";
+
 		stringBuilder.append("WHERE ").append(inPart);
 		LOG.debug("findProductsByCode: stringBuilder******* " + stringBuilder);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(stringBuilder.toString());
 		query.addQueryParameter(CODE, code);
+		//		Changed to support the luxProductCatalog
 		query.addQueryParameter("catalogVersion", catalogVersion);
 		query.setResultClassList(Collections.singletonList(ProductModel.class));
 		final SearchResult<ProductModel> searchResult = getFlexibleSearchService().search(query);
@@ -172,7 +193,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.product.MplProductDao#findProductFeaturesByCodeAndQualifier(java
 	 * .lang.String, java.lang.String)
@@ -203,7 +224,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.product.MplProductDao#findProductListByCodeList(de.hybris.platform
 	 * .catalog.model.CatalogVersionModel, java.util.List)

@@ -464,7 +464,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String INSERT = "I".intern();
 	public static final String UPDATE = "U".intern();
 
-	public static final String DEFAULT_IMPORT_CATALOG_ID = "luxProductCatalog";
+	public static final String DEFAULT_IMPORT_CATALOG_ID = "mplProductCatalog";
 	public static final String DEFAULT_IMPORT_CATALOG_VERSION = "Online";
 	public static final String HMAC_SHA1 = "HmacSHA1";
 	public static final String RAW = "RAW";

@@ -60,7 +60,7 @@ public interface ControllerConstants
 	/**
 	 * Class with action name constants
 	 */
-	String ADDONPREFIX = "addon:/luxurystoreaddon";
+	String LUXURY_STORE_ADDON_PREFIX = "addon:/luxurystoreaddon";
 
 	interface Actions
 	{
@@ -291,7 +291,14 @@ public interface ControllerConstants
 				String LatestOffers = "fragments/home/latestOffersPanel";
 				String ShopByBrandImagesPanel = "fragments/home/shopByBrandImagesPanel";
 				String FooterPanel = "fragments/home/footerPanel";
-				String RegisterFragment = ADDONPREFIX + "/fragments/home/luxRegister";
+			}
+
+			interface LuxuryHome
+			{
+				String RegisterFragment = LUXURY_STORE_ADDON_PREFIX + "/fragments/home/luxRegister";
+				String LoginFragment = LUXURY_STORE_ADDON_PREFIX + "/fragments/home/luxLoginPanel";
+				String ForgotPasswordPanel = LUXURY_STORE_ADDON_PREFIX + "/fragments/home/forgottenPwd";
+
 			}
 
 			interface Cart
@@ -323,7 +330,6 @@ public interface ControllerConstants
 			{
 				String PasswordResetRequestPopup = "fragments/password/passwordResetRequestPopup";
 				String ForgotPasswordValidationMessage = "fragments/password/forgotPasswordValidationMessage";
-				String ForgottenPwdFragment = ADDONPREFIX + "/fragments/home/forgottenPwd";
 			}
 
 			interface Product

@@ -24,6 +24,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.AddressV
 import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.PaymentDetailsValidator;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.verification.AddressVerificationResultHandler;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.cms2.model.site.CMSSiteModel;
 import de.hybris.platform.commercefacades.order.CartFacade;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.user.data.CountryData;
@@ -188,6 +189,11 @@ public abstract class AbstractCheckoutStepController extends AbstractCheckoutCon
 		{
 			return stepNumber;
 		}
+	}
+	protected boolean isLuxurySite()
+	{
+		final CMSSiteModel site = getCmsSiteService().getCurrentSite();
+		return null != site && StringUtils.isNotBlank(site.getUid()) && "lux".equals(site.getUid()) ? true : false;
 	}
 
 	@Override

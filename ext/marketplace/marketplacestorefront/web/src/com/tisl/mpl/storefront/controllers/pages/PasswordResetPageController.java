@@ -173,7 +173,7 @@ public class PasswordResetPageController extends AbstractPageController
 			if (commonUtils.isLuxurySite())
 			{
 				System.out.println("returning forgottenpwdfragment");
-				return ControllerConstants.Views.Fragments.Password.ForgottenPwdFragment;
+				return ControllerConstants.Views.Fragments.LuxuryHome.ForgotPasswordPanel;
 			}
 			else
 			{

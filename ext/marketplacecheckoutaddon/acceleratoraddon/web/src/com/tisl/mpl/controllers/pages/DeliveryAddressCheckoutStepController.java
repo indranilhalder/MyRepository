@@ -106,6 +106,10 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 		model.addAttribute("addressType", getAddressType());
 		//pratik
 		model.addAttribute("checkoutPageName", checkoutPageName);
+		if (isLuxurySite())
+		{
+			return MarketplacecheckoutaddonControllerConstants.Views.Pages.LuxuryMultiStepCheckout.AddEditDeliveryAddressPage;
+		}
 		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.AddEditDeliveryAddressPage;
 	}
 
@@ -152,6 +156,10 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 			setCheckoutStepLinksForModel(model, getCheckoutStep());
+			if (isLuxurySite())
+			{
+				return MarketplacecheckoutaddonControllerConstants.Views.Pages.LuxuryMultiStepCheckout.AddEditDeliveryAddressPage;
+			}
 			return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.AddEditDeliveryAddressPage;
 		}
 		final AddressData newAddress = new AddressData();
@@ -314,6 +322,10 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 		setCheckoutStepLinksForModel(model, getCheckoutStep());
 
 		model.addAttribute("checkoutPageName", checkoutPageName);
+		if (isLuxurySite())
+		{
+			return MarketplacecheckoutaddonControllerConstants.Views.Pages.LuxuryMultiStepCheckout.AddEditDeliveryAddressPage;
+		}
 		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.AddEditDeliveryAddressPage;
 	}
 
@@ -340,6 +352,10 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 			GlobalMessages.addErrorMessage(model, "address.error.formentry.invalid");
 			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
+			if (isLuxurySite())
+			{
+				return MarketplacecheckoutaddonControllerConstants.Views.Pages.LuxuryMultiStepCheckout.AddEditDeliveryAddressPage;
+			}
 			return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.AddEditDeliveryAddressPage;
 		}
 
