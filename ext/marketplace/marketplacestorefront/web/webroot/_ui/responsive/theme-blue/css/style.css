@@ -1446,7 +1446,7 @@ h2 {
             padding: 20px 0;
             line-height: 30px; }
             header .content .right > ul > li.wishlist .wishlist-info .foot a {
-              text-transform: uppercase;
+              text-transform: capitalize;
               text-decoration: underline;
               color: #A9143C;
               font-weight: 600;
@@ -32683,7 +32683,7 @@ body.page-homepage .trending h1 > span{
     font-size: 14px;
     line-height: 20px;
     margin: 20px;
-    text-align: center;
+    text-align: left;
 }
 .qued-content a.button.maroon {
     bottom: 0;
@@ -67881,7 +67881,7 @@ header .content nav > ul > li > ul > li > ul.words, header .content nav > ul > l
 }
 .qued-content p{
 	margin: 36px 0;
-    text-align: center;
+    text-align: left;
     font-size: 12px;
     letter-spacing: 0.6px;
     color: #535353;
@@ -68358,7 +68358,7 @@ body.page-homepage .feature-collections #stayQued > h2{
 }
 .qued-content p {
     margin: 8px 0 24px;
-    text-align: center;
+    text-align: left;
     font-size: 12px;
     letter-spacing: 0.6px;
 }
