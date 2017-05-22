@@ -3596,9 +3596,9 @@ if($(window).width() < 313)
 	$(".store-finder-legends").css("left","");
 }
 /*TISSQAEE-335*/
-$("header .content nav > ul > li > ul > li").on("mouseover",function(){
+$(document).on("mouseover","header .content nav > ul > li > ul > li",function(){
 	$(this).parent().parent().find(".toggle").addClass("show_arrow");
 });
-$("header .content nav > ul > li > ul > li").on("mouseout",function(){
+$(document).on("mouseout","header .content nav > ul > li > ul > li",function(){
 	$(this).parent().parent().find(".toggle").removeClass("show_arrow");
 });

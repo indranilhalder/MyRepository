@@ -1455,7 +1455,7 @@ h2 {
             padding: 20px 0;
             line-height: 30px; }
             header .content .right > ul > li.wishlist .wishlist-info .foot a {
-              text-transform: uppercase;
+              text-transform: capitalize;
               text-decoration: underline;
               color: #A9143C;
               font-weight: 600;
@@ -24528,7 +24528,7 @@ body #account-invite .right-account>div form .mytextarea {
     resize: none;
     margin-bottom: 20px;
     padding: 5px 10px;
-    color: #60A119;
+    color: #000;
 }
 .feedBack-block .feed-back-categories,.feedBack-block .feed-back-form{
 	margin:0 auto;
@@ -32692,7 +32692,7 @@ body.page-homepage .trending h1 > span{
     font-size: 14px;
     line-height: 20px;
     margin: 20px;
-    text-align: center;
+    text-align: left;
 }
 .qued-content a.button.maroon {
     bottom: 0;
@@ -55419,10 +55419,10 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 	background: url("../images/sprite-07.png") no-repeat scroll -73px -175px;
 }
 .callouts .Padd ul li.genuine p:before {
-	background: url("../images/sprite-07.png") no-repeat scroll -139px -175px;
+	background: url("../images/sprite-07.png") no-repeat scroll -205px -175px;
 }
 .callouts .Padd ul li.returns p:before {
-	background: url("../images/sprite-07.png") no-repeat scroll -205px -175px;
+	background: url("../images/sprite-07.png") no-repeat scroll -139px -175px;
 }
 .callouts .Padd ul li:last-child{
 	border:none;
@@ -67890,7 +67890,7 @@ header .content nav > ul > li > ul > li > ul.words, header .content nav > ul > l
 }
 .qued-content p{
 	margin: 36px 0;
-    text-align: center;
+    text-align: left;
     font-size: 12px;
     letter-spacing: 0.6px;
     color: #535353;
@@ -68367,7 +68367,7 @@ body.page-homepage .feature-collections #stayQued > h2{
 }
 .qued-content p {
     margin: 8px 0 24px;
-    text-align: center;
+    text-align: left;
     font-size: 12px;
     letter-spacing: 0.6px;
 }
@@ -68688,6 +68688,9 @@ ul li #mobile-menu-toggle + ul li ul.words li.long.words.only-link{
 footer>div>ul>li:first-child h3, footer>div>ul>li h3{
 	padding: 0 26px;
 }
+ul li #mobile-menu-toggle + ul.trackorder-dropdown {
+    overflow: hidden; /*TISPRDT-1333*/
+}
 }
 @media(max-width: 767px){
 	.callouts .Padd ul li p:before{
@@ -68738,4 +68741,20 @@ header .content .right>ul>li.track:hover a{
 	opacity: 1;
 	color: #fff;
 }
+.callouts .Padd ul li p:before{
+	top: auto;
+	vertical-align: middle;
 }
+.callouts .Padd {
+    padding: 26px 50px;
+}
+}
+/*TISPRDT-1333 start*/
+.trackorder-dropdown li * {
+    color: #666 !important;
+    font-size: 12px !important;
+}
+.trackorder-dropdown li[data-read="false"] a{
+	font-weight: normal;
+}
+/*TISPRDT-1333 end*/
