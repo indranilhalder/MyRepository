@@ -18,6 +18,7 @@ import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.util.localization.Localization;
 
 import java.util.Date;
@@ -115,6 +116,9 @@ public class PaymentServicesController extends BaseController
 	@Resource(name = "cartService")
 	protected CartService cartService;
 
+	@Resource(name = "baseStoreService")
+	private BaseStoreService baseStoreService;
+
 	//  COD Eligible Check
 	/**
 	 * @Description COD Eligibility check for all the items in the cart (check Bleack list Consumer Sailor Fulfillment
@@ -136,6 +140,10 @@ public class PaymentServicesController extends BaseController
 		PaymentServiceWsDTO codCheckDTO = new PaymentServiceWsDTO();
 		CustomerModel customer = null;
 		LOG.debug(String.format("getCODEligibility : cartGuid:  %s | userId : %s ", cartGuid, userId));
+		//INC144316663
+		final Long codUpperLimit = getBaseStoreService().getCurrentBaseStore().getCodUpperLimit();
+		final Long codLowerLimit = getBaseStoreService().getCurrentBaseStore().getCodLowerLimit();
+
 		try
 		{
 			//COD form handled for both cart and order
@@ -163,12 +171,25 @@ public class PaymentServicesController extends BaseController
 				if (null != cart)
 				{
 					final boolean mplCustomerIsBlackListed = null != customer ? getMplPaymentFacade().isBlackListed(ip, cart) : true;
-					//To check if the customer is a black listed customer
-					if (!mplCustomerIsBlackListed)
+
+					//INC144316663
+
+					final boolean isCodLimitFailed = ((cart.getTotalPrice().longValue() <= codUpperLimit.longValue()) && (cart
+							.getTotalPrice().longValue() >= codLowerLimit.longValue())) ? false : true;
+
+					final boolean isCodEligible = (isCodLimitFailed || !cart.getIsCODEligible().booleanValue()) ? false : true;
+
+					//To check if the customer is a black listed customer and cod upper/lower limit checking
+					if (!mplCustomerIsBlackListed && isCodEligible)
 					{
 						//Getting COD details
 						codCheck = getMplPaymentWebFacade().getCODDetails(cart, customer.getUid());
 						//codCheck.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					}
+					else if (!isCodEligible && !mplCustomerIsBlackListed) //COD LIMIT CHECKING
+					{
+						//Message to display COD not eligible
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9202);
 					}
 					else
 					{
@@ -281,9 +302,9 @@ public class PaymentServicesController extends BaseController
 							&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
 									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
 									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
-									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI) || paymentMode
-										.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE)
-						 || paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
+									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)
+									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE) || paymentMode
+										.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
 					{
 						if (!paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
 						{
@@ -325,8 +346,8 @@ public class PaymentServicesController extends BaseController
 						&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
 								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
 								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
-								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI) || paymentMode
-									.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE) || paymentMode
+								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)
+								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE) || paymentMode
 									.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
 
 				{
@@ -1299,6 +1320,23 @@ public class PaymentServicesController extends BaseController
 	public void setMplExtendedCartConverter(final Converter<CartModel, CartData> mplExtendedCartConverter)
 	{
 		this.mplExtendedCartConverter = mplExtendedCartConverter;
+	}
+
+	/**
+	 * @return the baseStoreService
+	 */
+	public BaseStoreService getBaseStoreService()
+	{
+		return baseStoreService;
+	}
+
+	/**
+	 * @param baseStoreService
+	 *           the baseStoreService to set
+	 */
+	public void setBaseStoreService(final BaseStoreService baseStoreService)
+	{
+		this.baseStoreService = baseStoreService;
 	}
 
 }
