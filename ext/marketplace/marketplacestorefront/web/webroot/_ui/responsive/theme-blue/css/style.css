@@ -68679,6 +68679,9 @@ ul li #mobile-menu-toggle + ul li ul.words li.long.words.only-link{
 footer>div>ul>li:first-child h3, footer>div>ul>li h3{
 	padding: 0 26px;
 }
+ul li #mobile-menu-toggle + ul.trackorder-dropdown {
+    overflow: hidden; /*TISPRDT-1333*/
+}
 }
 @media(max-width: 767px){
 	.callouts .Padd ul li p:before{
@@ -68730,3 +68733,12 @@ header .content .right>ul>li.track:hover a{
 	color: #fff;
 }
 }
+/*TISPRDT-1333 start*/
+.trackorder-dropdown li * {
+    color: #666 !important;
+    font-size: 12px !important;
+}
+.trackorder-dropdown li[data-read="false"] a{
+	font-weight: normal;
+}
+/*TISPRDT-1333 end*/
