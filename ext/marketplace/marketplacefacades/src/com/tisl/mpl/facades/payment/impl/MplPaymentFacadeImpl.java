@@ -1385,8 +1385,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			final List<AbstractOrderEntryModel> entries = abstractOrderModel.getEntries();
 
 			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
-			//SONAR FIX
-			if (abstractOrderModel.getTotalPriceWithConv() != null && abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+			//SONAR FIX updated
+			if (abstractOrderModel.getTotalPriceWithConv() != null || abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
 			{
 				getMplPaymentService().setPaymentTransactionForCOD(abstractOrderModel);
 			}

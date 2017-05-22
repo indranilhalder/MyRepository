@@ -286,98 +286,133 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 						response = getMplCommerceCartService().callPincodeServiceabilityCommerce(pin, requestData);
 					}
 				}
-	
-				if (null != response.getItem())
+				//TISPRDT-1177
+				boolean isCod = false;
+				if (CollectionUtils.isNotEmpty(response.getItem()))
 				{
-					PinCodeResponseData responseData = null;
 					for (final PinCodeDeliveryModeResponse deliveryModeResponse : response.getItem())
 					{
-						boolean servicable = false;
 						final List<Integer> stockCount = new ArrayList<Integer>();
 						List<DeliveryDetailsData> deliveryDataList = null;
-						responseData = new PinCodeResponseData();
-						//responseData.set
-						responseData.setTransportMode(deliveryModeResponse.getTransportMode());
+						PinCodeResponseData responseData = null;
+						boolean servicable = false;
+
 						if (null != deliveryModeResponse.getDeliveryMode())
 						{
 							deliveryDataList = new ArrayList<DeliveryDetailsData>();
 							for (final DeliveryModeResOMSWsDto deliveryMode : deliveryModeResponse.getDeliveryMode())
 							{
-								if (deliveryMode.getIsPincodeServiceable().equalsIgnoreCase(MarketplaceCockpitsConstants.YES))
+
+								if (null != deliveryMode.getIsPincodeServiceable()
+										&& deliveryMode.getIsPincodeServiceable().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
 								{
+
 									servicable = true;
-								}
-	
-								if (deliveryMode.getIsCOD().equalsIgnoreCase(MarketplaceCockpitsConstants.YES))
-								{
-									responseData.setCod(deliveryMode.getIsCOD());
-								}
-	
-								final DeliveryDetailsData data = new DeliveryDetailsData();
-								stockCount.add(Integer.valueOf(Integer.parseInt(deliveryMode.getInventory())));
-	
-								// Added By Prasad
-								if (deliveryMode.getIsPincodeServiceable().equalsIgnoreCase(MarketplaceCockpitsConstants.YES))
-								{
-									data.setType(deliveryMode.getType());
-								}
-								data.setInventory(deliveryMode.getInventory());
-								data.setIsCODLimitFailed((MarketplaceCockpitsConstants.YES).equals(deliveryMode.getIsCODLimitFailed()) ? true
-										: false);
-								data.setIsCOD((MarketplaceCockpitsConstants.YES).equals(deliveryMode.getIsCOD()) ? true : false);
-								data.setIsPincodeServiceable((MarketplaceCockpitsConstants.YES).equals(deliveryMode
-										.getIsPincodeServiceable()) ? true : false);
-								data.setIsPrepaidEligible(deliveryMode.getIsPrepaidEligible().equals(MarketplaceCockpitsConstants.YES) ? true
-										: false);
-								responseData.setIsPrepaidEligible(deliveryMode.getIsPrepaidEligible());// set payment mode
-								data.setFulfilmentType(deliveryMode.getFulfillmentType());
-								if (null != deliveryMode.getServiceableSlaves() && deliveryMode.getServiceableSlaves().size() > 0)
-								{
-									data.setServiceableSlaves(populatePincodeServiceableData(deliveryMode.getServiceableSlaves()));
-								}
-	
-								if (null != deliveryMode.getCNCServiceableSlaves() && deliveryMode.getCNCServiceableSlaves().size() > 0)
-								{
-									final List<CNCServiceableSlavesData> cncServiceableSlavesDataList = new ArrayList<CNCServiceableSlavesData>();
-									CNCServiceableSlavesData cncServiceableSlavesData = null;
-									for (final CNCServiceableSlavesWsDTO dto : deliveryMode.getCNCServiceableSlaves())
+									responseData = new PinCodeResponseData();
+									responseData.setIsPrepaidEligible(deliveryMode.getIsPrepaidEligible());
+									responseData.setIsCODLimitFailed(deliveryMode.getIsCODLimitFailed());
+
+									if ((deliveryMode.getIsCOD() != null)
+											&& (deliveryMode.getIsCOD().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y)))
 									{
-										cncServiceableSlavesData = new CNCServiceableSlavesData();
-										cncServiceableSlavesData.setStoreId(dto.getStoreId());
-										cncServiceableSlavesData.setQty(dto.getQty());
-										cncServiceableSlavesData.setFulfillmentType(dto.getFulfillmentType());
-										cncServiceableSlavesData.setServiceableSlaves(populatePincodeServiceableData(dto.getServiceableSlaves()));
-										cncServiceableSlavesDataList.add(cncServiceableSlavesData);
+										isCod = true;
 									}
-									data.setCNCServiceableSlavesData(cncServiceableSlavesDataList);
+
+									/*
+									 * if (!(deliveryMode.getInventory().equals(MarketplacecommerceservicesConstants.ZERO))) {
+									 */
+									final DeliveryDetailsData data = new DeliveryDetailsData();
+									stockCount.add(Integer.valueOf(deliveryMode.getInventory()));
+									data.setType(deliveryMode.getType());
+									data.setInventory(deliveryMode.getInventory());
+
+									if (deliveryMode.getIsCOD() != null
+											&& deliveryMode.getIsCOD().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+									{
+										data.setIsCOD(Boolean.TRUE);
+									}
+									else if (deliveryMode.getIsCOD() != null
+											&& deliveryMode.getIsCOD().equalsIgnoreCase(MarketplacecommerceservicesConstants.N))
+									{
+										data.setIsCOD(Boolean.FALSE);
+									}
+
+									if (deliveryMode.getFulfillmentType() != null)
+									{
+										data.setFulfilmentType(deliveryMode.getFulfillmentType());
+									}
+
+									if (null != deliveryMode.getServiceableSlaves() && deliveryMode.getServiceableSlaves().size() > 0)
+									{
+										data.setServiceableSlaves(populatePincodeServiceableData(deliveryMode.getServiceableSlaves()));
+									}
+
+									if (null != deliveryMode.getCNCServiceableSlaves() && deliveryMode.getCNCServiceableSlaves().size() > 0)
+									{
+										final List<CNCServiceableSlavesData> cncServiceableSlavesDataList = new ArrayList<CNCServiceableSlavesData>();
+										CNCServiceableSlavesData cncServiceableSlavesData = null;
+										for (final CNCServiceableSlavesWsDTO dto : deliveryMode.getCNCServiceableSlaves())
+										{
+											cncServiceableSlavesData = new CNCServiceableSlavesData();
+											cncServiceableSlavesData.setStoreId(dto.getStoreId());
+											cncServiceableSlavesData.setQty(dto.getQty());
+											cncServiceableSlavesData.setFulfillmentType(dto.getFulfillmentType());
+											cncServiceableSlavesData.setServiceableSlaves(populatePincodeServiceableData(dto
+													.getServiceableSlaves()));
+											cncServiceableSlavesDataList.add(cncServiceableSlavesData);
+										}
+										data.setCNCServiceableSlavesData(cncServiceableSlavesDataList);
+									}
+									//
+									data.setIsPincodeServiceable(Boolean.TRUE);
+									if (deliveryMode.getFulfillmentType() != null && deliveryMode.getIsCODLimitFailed().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+									{	
+										data.setIsCODLimitFailed(Boolean.TRUE); 
+									}else{
+										data.setIsCODLimitFailed(Boolean.FALSE); 
+									}
+									
+									
+									deliveryDataList.add(data);
+									//	}
+									responseData.setValidDeliveryModes(deliveryDataList);
+									if (!(stockCount.isEmpty()))
+									{
+										responseData.setStockCount(Collections.max(stockCount));
+									}
+									/*
+									 * else { responseData.setStockCount(Integer.valueOf(0)); }
+									 */
+									responseData.setIsServicable(MarketplacecommerceservicesConstants.Y);
+									responseData.setUssid(deliveryModeResponse.getUSSID());
+									LOG.debug(new StringBuffer().append("********************servicable ussids for pincode*******")
+											.append(pin).append("are:").append(deliveryModeResponse.getUSSID()).toString());
+									if (deliveryMode.getDeliveryDate() != null && !deliveryMode.getDeliveryDate().isEmpty())
+									{
+										responseData.setDeliveryDate(deliveryMode.getDeliveryDate());
+									}
+									if (isCod)
+									{
+										responseData.setCod(MarketplacecommerceservicesConstants.Y);
+									}
+									else
+									{
+										responseData.setCod(MarketplacecommerceservicesConstants.N);
+									}
 								}
-								deliveryDataList.add(data);
-	
-								if (!(stockCount.isEmpty()))
-								{
-									responseData.setStockCount(Collections.max(stockCount));
-								}
-								else
-								{
-									responseData.setStockCount(Integer.valueOf(0));
-								}
-								if (servicable)
-								{
-									responseData.setIsServicable(MarketplaceCockpitsConstants.YES);
-								}
-								responseData.setUssid(deliveryModeResponse.getUSSID());
-								responseData.setValidDeliveryModes(deliveryDataList);
-	
+
 							}
 						}
 						if (!servicable)
 						{
-							// responseData = new PinCodeResponseData();
-							responseData.setIsServicable(MarketplaceCockpitsConstants.NO);
+							responseData = new PinCodeResponseData();
+							responseData.setIsServicable(MarketplacecommerceservicesConstants.N);
+							responseData.setUssid(deliveryModeResponse.getUSSID());
 						}
-						// responseData.setUssid(deliveryModeResponse.getUSSID());
-						responseList.add(responseData);
-	
+						if (responseData != null)
+						{
+							responseList.add(responseData);
+						}
 					}
 				}
 			}

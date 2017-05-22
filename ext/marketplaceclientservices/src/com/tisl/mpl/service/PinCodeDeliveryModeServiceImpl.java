@@ -176,10 +176,10 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 
 				final List<PinCodeDeliveryModeRequest> pincodeList = new ArrayList<PinCodeDeliveryModeRequest>();
 
-				for (int i = 0; i < reqData.size(); i++)
+				for (final PincodeServiceData pincodeServiceData : reqData)
 				{
 					final PinCodeDeliveryModeRequest pincodereqObj = new PinCodeDeliveryModeRequest();
-					if (null != reqData.get(i))
+					if (null != pincodeServiceData)
 					{
 						final List<String> fulfilmentTypeList = new ArrayList<String>();
 						/*
@@ -187,11 +187,11 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 						 * fulfilmentTypeList.add(reqData.get(i).getDeliveryFulfillModeByP1().toUpperCase());
 						 * //pincodereqObj.setFulfilmentType(reqData.get(i).getFullFillmentType().toUpperCase()); }
 						 */
-						if (null != reqData.get(i).getFullFillmentType())
+						if (null != pincodeServiceData.getFullFillmentType())
 						{
-							if (reqData.get(i).getFullFillmentType().equalsIgnoreCase(BOTH))
+							if (pincodeServiceData.getFullFillmentType().equalsIgnoreCase(BOTH))
 							{
-								if (reqData.get(i).getDeliveryFulfillModeByP1().equalsIgnoreCase(TSHIP))
+								if (pincodeServiceData.getDeliveryFulfillModeByP1().equalsIgnoreCase(TSHIP))
 								{
 									fulfilmentTypeList.add(TSHIP);
 									fulfilmentTypeList.add(SSHIP);
@@ -204,37 +204,37 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 							}
 							else
 							{
-								fulfilmentTypeList.add(reqData.get(i).getFullFillmentType().toUpperCase());
+								fulfilmentTypeList.add(pincodeServiceData.getFullFillmentType().toUpperCase());
 							}
 						}
 						if (fulfilmentTypeList.size() > 0)
 						{
 							pincodereqObj.setFulfilmentType(fulfilmentTypeList);
 						}
-						if (null != reqData.get(i).getIsCOD())
+						if (null != pincodeServiceData.getIsCOD())
 						{
-							pincodereqObj.setIsCOD(reqData.get(i).getIsCOD());
+							pincodereqObj.setIsCOD(pincodeServiceData.getIsCOD());
 						}
-						if (null != reqData.get(i).getPrice())
+						if (null != pincodeServiceData.getPrice())
 						{
-							pincodereqObj.setPrice(reqData.get(i).getPrice().doubleValue());
+							pincodereqObj.setPrice(pincodeServiceData.getPrice().doubleValue());
 						}
-						if (null != reqData.get(i).getSellerId())
+						if (null != pincodeServiceData.getSellerId())
 						{
-							pincodereqObj.setSellerID(reqData.get(i).getSellerId());
+							pincodereqObj.setSellerID(pincodeServiceData.getSellerId());
 						}
-						if (null != reqData.get(i).getUssid())
+						if (null != pincodeServiceData.getUssid())
 						{
-							pincodereqObj.setUSSID(reqData.get(i).getUssid());
+							pincodereqObj.setUSSID(pincodeServiceData.getUssid());
 						}
-						if (null != reqData.get(i).getTransportMode())
+						if (null != pincodeServiceData.getTransportMode())
 						{
-							pincodereqObj.setTransportMode(reqData.get(i).getTransportMode().toUpperCase());
+							pincodereqObj.setTransportMode(pincodeServiceData.getTransportMode().toUpperCase());
 						}
 
-						if (null != reqData.get(i).getDeliveryModes())
+						if (null != pincodeServiceData.getDeliveryModes())
 						{
-							final List<MarketplaceDeliveryModeData> marketplaceDeliveryModes = reqData.get(i).getDeliveryModes();
+							final List<MarketplaceDeliveryModeData> marketplaceDeliveryModes = pincodeServiceData.getDeliveryModes();
 							final List<String> deliveryModes = new ArrayList<String>();
 							String deliveryMode = null;
 							for (final MarketplaceDeliveryModeData marketplaceDeliveryModeData : marketplaceDeliveryModes)
@@ -246,12 +246,13 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 								}
 								if (deliveryMode.equalsIgnoreCase(EXPRESS_DELIVERY))
 								{
-									if (null != reqData.get(i) && null != reqData.get(i).getSellerHandlingTime())
+									if (null != pincodeServiceData && null != pincodeServiceData.getSellerHandlingTime())
 									{
 										//configure the seller handling time
-										final int sellerHandlingTimeForConfig = configSellerHandlingTime == null ? 0 : Integer.parseInt(configSellerHandlingTime);
-										if (reqData.get(i).getSellerHandlingTime().intValue() >= 0
-												&& reqData.get(i).getSellerHandlingTime().intValue() <= sellerHandlingTimeForConfig)
+										final int sellerHandlingTimeForConfig = configSellerHandlingTime == null ? 0 : Integer
+												.parseInt(configSellerHandlingTime);
+										if (pincodeServiceData.getSellerHandlingTime().intValue() >= 0
+												&& pincodeServiceData.getSellerHandlingTime().intValue() <= sellerHandlingTimeForConfig)
 										{
 											deliveryModes.add(ED);
 										}
@@ -262,10 +263,10 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 								{
 									deliveryModes.add(CNC);
 
-									if (null != reqData.get(i).getStore())
+									if (null != pincodeServiceData.getStore())
 									{
 										final List<String> reqStreNames = new ArrayList<String>();
-										for (final String storeName : reqData.get(i).getStore())
+										for (final String storeName : pincodeServiceData.getStore())
 										{
 											reqStreNames.add(storeName);
 										}
@@ -276,16 +277,16 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 							}
 							pincodereqObj.setDeliveryMode(deliveryModes);
 						}
-						if (null != reqData.get(i).getIsDeliveryDateRequired())
+						if (null != pincodeServiceData.getIsDeliveryDateRequired())
 						{
-							pincodereqObj.setIsDeliveryDateRequired(reqData.get(i).getIsDeliveryDateRequired());
+							pincodereqObj.setIsDeliveryDateRequired(pincodeServiceData.getIsDeliveryDateRequired());
 						}
 
 
-						if (null != reqData.get(i).getIsFragile() || StringUtils.isNotEmpty(reqData.get(i).getIsFragile()))
+						if (null != pincodeServiceData.getIsFragile() || StringUtils.isNotEmpty(pincodeServiceData.getIsFragile()))
 						{
-							if (reqData.get(i).getIsFragile().equalsIgnoreCase(MarketplacecclientservicesConstants.YES)
-									|| reqData.get(i).getIsFragile().equalsIgnoreCase(MarketplacecclientservicesConstants.Y))
+							if (pincodeServiceData.getIsFragile().equalsIgnoreCase(MarketplacecclientservicesConstants.YES)
+									|| pincodeServiceData.getIsFragile().equalsIgnoreCase(MarketplacecclientservicesConstants.Y))
 							{
 								pincodereqObj.setIsFragile(MarketplacecclientservicesConstants.Y);
 							}
@@ -299,10 +300,10 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 							pincodereqObj.setIsFragile(MarketplacecclientservicesConstants.N);
 						}
 
-						if (null != reqData.get(i).getIsPrecious() || StringUtils.isNotEmpty(reqData.get(i).getIsPrecious()))
+						if (null != pincodeServiceData.getIsPrecious() || StringUtils.isNotEmpty(pincodeServiceData.getIsPrecious()))
 						{
-							if (reqData.get(i).getIsPrecious().equalsIgnoreCase(MarketplacecclientservicesConstants.YES)
-									|| reqData.get(i).getIsPrecious().equalsIgnoreCase(MarketplacecclientservicesConstants.Y))
+							if (pincodeServiceData.getIsPrecious().equalsIgnoreCase(MarketplacecclientservicesConstants.YES)
+									|| pincodeServiceData.getIsPrecious().equalsIgnoreCase(MarketplacecclientservicesConstants.Y))
 							{
 								pincodereqObj.setIsPrecious(MarketplacecclientservicesConstants.Y);
 							}
@@ -317,7 +318,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 						}
 						pincodeList.add(pincodereqObj);
 					}
-					
+
 				}
 				if (null != pin)
 				{
@@ -485,13 +486,13 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	/*
 	 * @desc used for validate connect timeout and read time out exceptions from oms rest call for pincode serviceabilty
 	 * and inventory reservation
-	 * 
+	 *
 	 * @param ex
-	 * 
+	 *
 	 * @param exceptionType
-	 * 
+	 *
 	 * @return void
-	 * 
+	 *
 	 * @throws ClientEtailNonBusinessExceptions
 	 */
 	@Override
@@ -637,102 +638,102 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 		StoreLocatorAtsResponseObject responsefromOMS = new StoreLocatorAtsResponseObject();
 		try
 		{
-			
+
 			// Comented below code Because no StoreATS Call to OMS
-//			final String omsstoreServiceability = configurationService.getConfiguration()
-//					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_REALCALL).trim();
-//			String mockXMLFirstPhase = configurationService.getConfiguration()
-//					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_FIRSTPHASE).trim();
-//			final String mockXMLSecondPhase = configurationService.getConfiguration()
-//					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_SECONDPHASE).trim();
-//			final String mockXMLThirdPhase = configurationService.getConfiguration()
-//					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_THIRDPHASE).trim();
+			//			final String omsstoreServiceability = configurationService.getConfiguration()
+			//					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_REALCALL).trim();
+			//			String mockXMLFirstPhase = configurationService.getConfiguration()
+			//					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_FIRSTPHASE).trim();
+			//			final String mockXMLSecondPhase = configurationService.getConfiguration()
+			//					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_SECONDPHASE).trim();
+			//			final String mockXMLThirdPhase = configurationService.getConfiguration()
+			//					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_THIRDPHASE).trim();
 
-//			if (omsstoreServiceability != null && mockXMLFirstPhase != null && !mockXMLFirstPhase.isEmpty()
-//					&& mockXMLSecondPhase != null && !mockXMLSecondPhase.isEmpty() && mockXMLThirdPhase != null
-//					&& !mockXMLThirdPhase.isEmpty() && omsstoreServiceability.equalsIgnoreCase("N"))
-//			{
-//				LOG.debug("Try to prepare non-real time OMS call get some stores and inventories");
-//				for (final StoreLocatorItem entry : storeLocatorRequest.getItem())
-//				{
-//					String mockXMLSecond = configurationService.getConfiguration()
-//							.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_SECONDPHASE).trim();
-//					mockXMLSecond = mockXMLSecond.replaceAll("<replaceUssid>", entry.getUssId());
-//					mockXMLFirstPhase += mockXMLSecond;
-//				}
-//				final String output = mockXMLFirstPhase + mockXMLThirdPhase;
-//				LOG.debug("*********************** StoreLocator  non- real time response xml :" + output);
-//				//Commented as a part of TISPT-401
-//				//Single Instance Declared for the whole class
-//				//final JAXBContext jaxbContext = JAXBContext.newInstance(StoreLocatorAtsResponseObject.class);
-//				final Unmarshaller unmarshaller = context.createUnmarshaller();
-//				final StringReader reader = new StringReader(output);
-//				responsefromOMS = (StoreLocatorAtsResponseObject) unmarshaller.unmarshal(reader);
-//			}
-		//	else
-		//	{
-				ClientResponse response = null;
-				try
-				{ //Commented as a part of TISPT-401
-				  //Single Instance Declared for the whole class
-				  //final Client client = Client.create();
+			//			if (omsstoreServiceability != null && mockXMLFirstPhase != null && !mockXMLFirstPhase.isEmpty()
+			//					&& mockXMLSecondPhase != null && !mockXMLSecondPhase.isEmpty() && mockXMLThirdPhase != null
+			//					&& !mockXMLThirdPhase.isEmpty() && omsstoreServiceability.equalsIgnoreCase("N"))
+			//			{
+			//				LOG.debug("Try to prepare non-real time OMS call get some stores and inventories");
+			//				for (final StoreLocatorItem entry : storeLocatorRequest.getItem())
+			//				{
+			//					String mockXMLSecond = configurationService.getConfiguration()
+			//							.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_SECONDPHASE).trim();
+			//					mockXMLSecond = mockXMLSecond.replaceAll("<replaceUssid>", entry.getUssId());
+			//					mockXMLFirstPhase += mockXMLSecond;
+			//				}
+			//				final String output = mockXMLFirstPhase + mockXMLThirdPhase;
+			//				LOG.debug("*********************** StoreLocator  non- real time response xml :" + output);
+			//				//Commented as a part of TISPT-401
+			//				//Single Instance Declared for the whole class
+			//				//final JAXBContext jaxbContext = JAXBContext.newInstance(StoreLocatorAtsResponseObject.class);
+			//				final Unmarshaller unmarshaller = context.createUnmarshaller();
+			//				final StringReader reader = new StringReader(output);
+			//				responsefromOMS = (StoreLocatorAtsResponseObject) unmarshaller.unmarshal(reader);
+			//			}
+			//	else
+			//	{
+			ClientResponse response = null;
+			try
+			{ //Commented as a part of TISPT-401
+			  //Single Instance Declared for the whole class
+			  //final Client client = Client.create();
 
-					//Start : Code added for OMS fallback cases
-					final String connectionTimeout = configurationService.getConfiguration()
-							.getString(MarketplacecclientservicesConstants.OMS_PINCODESERVICEABILITY_CON_TIMEOUT, "5000").trim();
-					final String readTimeout = configurationService.getConfiguration()
-							.getString(MarketplacecclientservicesConstants.OMS_PINCODESERVICEABILITY_READ_TIMEOUT, "5000").trim();
-					final String httpErrorCode = configurationService.getConfiguration()
-							.getString(MarketplacecclientservicesConstants.OMS_HTTP_ERROR_CODE, "404,503").trim();
+				//Start : Code added for OMS fallback cases
+				final String connectionTimeout = configurationService.getConfiguration()
+						.getString(MarketplacecclientservicesConstants.OMS_PINCODESERVICEABILITY_CON_TIMEOUT, "5000").trim();
+				final String readTimeout = configurationService.getConfiguration()
+						.getString(MarketplacecclientservicesConstants.OMS_PINCODESERVICEABILITY_READ_TIMEOUT, "5000").trim();
+				final String httpErrorCode = configurationService.getConfiguration()
+						.getString(MarketplacecclientservicesConstants.OMS_HTTP_ERROR_CODE, "404,503").trim();
 
-					client.setConnectTimeout(Integer.valueOf(connectionTimeout));
-					client.setReadTimeout(Integer.valueOf(readTimeout));
-					//End : Code added for OMS fallback cases
+				client.setConnectTimeout(Integer.valueOf(connectionTimeout));
+				client.setReadTimeout(Integer.valueOf(readTimeout));
+				//End : Code added for OMS fallback cases
 
-					final WebResource webResource = client.resource(UriBuilder.fromUri(
-							configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_URL))
-							.build());
-					//Commented as a part of TISPT-401
-					//Single Instance Declared for the whole class
-					//final JAXBContext context = JAXBContext.newInstance(StoreLocatorATS.class);
-					final Marshaller m = context.createMarshaller();
-					m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-					final StringWriter sw = new StringWriter();
-					m.marshal(storeLocatorRequest, sw);
-					final String xmlString = sw.toString();
-
-					LOG.debug("*********************** StoreLocator Real Time Serviceability request xml :" + xmlString);
-					response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml").header("X-tenantId", "single")
-							.entity(xmlString).post(ClientResponse.class);
-
-					LOG.info("*****StoreATS response status code :" + response.getStatus());
-					if (httpErrorCode.contains(String.valueOf(response.getStatus())))
-					{
-						throw new ClientEtailNonBusinessExceptions("O0007");
-					}
-			}
-				catch (final ClientEtailNonBusinessExceptions ex)
-				{
-					LOG.error("Http Error in calling OMS - " + ex.getMessage());
-					throw ex;
-				}
-				catch (final Exception ex)
-				{
-					LOG.error("Error in calling OMS - " + ex.getMessage());
-					throw ex;
-				}
-
-				final String output = response.getEntity(String.class);
-				LOG.debug("*********************** StoreLocator Real Time Serviceability response xml :" + output);
+				final WebResource webResource = client.resource(UriBuilder.fromUri(
+						configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_URL))
+						.build());
 				//Commented as a part of TISPT-401
 				//Single Instance Declared for the whole class
-				//final JAXBContext jaxbContext = JAXBContext.newInstance(StoreLocatorAtsResponseObject.class);
-				final Unmarshaller unmarshaller = context.createUnmarshaller();
+				//final JAXBContext context = JAXBContext.newInstance(StoreLocatorATS.class);
+				final Marshaller m = context.createMarshaller();
+				m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+				final StringWriter sw = new StringWriter();
+				m.marshal(storeLocatorRequest, sw);
+				final String xmlString = sw.toString();
 
-				final StringReader reader = new StringReader(output);
-				responsefromOMS = (StoreLocatorAtsResponseObject) unmarshaller.unmarshal(reader);
+				LOG.debug("*********************** StoreLocator Real Time Serviceability request xml :" + xmlString);
+				response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml").header("X-tenantId", "single")
+						.entity(xmlString).post(ClientResponse.class);
+
+				LOG.info("*****StoreATS response status code :" + response.getStatus());
+				if (httpErrorCode.contains(String.valueOf(response.getStatus())))
+				{
+					throw new ClientEtailNonBusinessExceptions("O0007");
+				}
 			}
-	//	}
+			catch (final ClientEtailNonBusinessExceptions ex)
+			{
+				LOG.error("Http Error in calling OMS - " + ex.getMessage());
+				throw ex;
+			}
+			catch (final Exception ex)
+			{
+				LOG.error("Error in calling OMS - " + ex.getMessage());
+				throw ex;
+			}
+
+			final String output = response.getEntity(String.class);
+			LOG.debug("*********************** StoreLocator Real Time Serviceability response xml :" + output);
+			//Commented as a part of TISPT-401
+			//Single Instance Declared for the whole class
+			//final JAXBContext jaxbContext = JAXBContext.newInstance(StoreLocatorAtsResponseObject.class);
+			final Unmarshaller unmarshaller = context.createUnmarshaller();
+
+			final StringReader reader = new StringReader(output);
+			responsefromOMS = (StoreLocatorAtsResponseObject) unmarshaller.unmarshal(reader);
+		}
+		//	}
 		catch (final ClientEtailNonBusinessExceptions ex)
 		{
 			LOG.error("Http Error in calling OMS - " + ex.getMessage());

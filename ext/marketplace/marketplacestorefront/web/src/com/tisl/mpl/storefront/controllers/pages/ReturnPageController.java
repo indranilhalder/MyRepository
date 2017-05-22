@@ -201,7 +201,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			//TATA-823 Start
 			final List<StateData> stateDataList = getAccountAddressFacade().getStates();
 			final List<StateData> stateDataListNew = getFinalStateList(stateDataList);
-			//TATA-823 end  
+			//TATA-823 end
 			for (final OrderEntryData entry : subOrderEntries)
 			{
 				if (entry.getTransactionId().equalsIgnoreCase(transactionId))
@@ -265,7 +265,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			}
 
 			model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
-			//if logistic partner not available for the given pin code 
+			//if logistic partner not available for the given pin code
 			model.addAttribute(ModelAttributetConstants.PINCODE_NOT_SERVICEABLE,
 					MarketplacecommerceservicesConstants.REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE);
 			model.addAttribute(ModelAttributetConstants.RETURN_FORM, returnForm);
@@ -508,7 +508,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				infoRequestData.setRTSStore(stores);
 				infoRequestData.setTransactionId(transactionId);
 				infoRequestData.setReturnType(MarketplacecommerceservicesConstants.RETURN_TYPE_RTS);
-				//return info call to OMS 
+				//return info call to OMS
 				cancelReturnFacade.retrunInfoCallToOMS(infoRequestData);
 				model.addAttribute(MarketplacecommerceservicesConstants.RETURN_METHOD_QUICKDROP, quickdrop);
 			}
@@ -614,7 +614,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	{
 		try
 		{
-			//to DO Implementeation 
+			//to DO Implementeation
 			final MultipartFile filename = mplReturnInfoForm.getDispatchProof();
 			LOG.debug("***************:" + filename.getOriginalFilename());
 			String fileUploadLocation = null;
@@ -806,7 +806,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		{
 			LOG.error("Exception Oucer While sending value " + exp.getMessage());
 		}
-		// isRefundalbe disable 
+		// isRefundalbe disable
 		LOG.info("REtrun page controller TransactionId::::::::    " + mplReturnInfoForm.getTransactionId());
 		cancelReturnFacade.saveRTSAndRSSFInfoflag(mplReturnInfoForm.getTransactionId());
 		return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + mplReturnInfoForm.getOrderId();
@@ -917,7 +917,36 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			newAddress.setTitleCode(addressForm.getTitleCode());
 			newAddress.setFirstName(addressForm.getFirstName());
 			newAddress.setLastName(addressForm.getLastName());
-			newAddress.setLine1(addressForm.getLine1());
+
+			//TISPRDT-1238 starts
+			final String fullAddress = addressForm.getLine1();
+
+			String addressLine1 = "";
+			String addressLine2 = "";
+			String addressLine3 = "";
+
+			if (fullAddress.length() <= 40)
+			{
+				addressLine1 = fullAddress.substring(0, fullAddress.length());
+			}
+			else if (fullAddress.length() <= 80 && fullAddress.length() > 40)
+			{
+				addressLine1 = fullAddress.substring(0, 40);
+				addressLine2 = fullAddress.substring(40, fullAddress.length());
+			}
+			else if (fullAddress.length() > 80 && fullAddress.length() <= 120)
+			{
+				addressLine1 = fullAddress.substring(0, 40);
+				addressLine2 = fullAddress.substring(40, 80);
+				addressLine3 = fullAddress.substring(80, fullAddress.length());
+			}
+
+			newAddress.setLine1(addressLine1);
+			newAddress.setLine2(addressLine2);
+			newAddress.setLine3(addressLine3);
+			//TISPRDT-1238 ends
+
+			//newAddress.setLine1(addressForm.getLine1());
 			//TISUATSE-125
 			//newAddress.setLine2(addressForm.getLine2());
 			//newAddress.setLine3(addressForm.getLine3());

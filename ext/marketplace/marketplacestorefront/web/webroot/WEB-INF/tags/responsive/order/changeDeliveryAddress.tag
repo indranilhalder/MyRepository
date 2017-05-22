@@ -63,6 +63,13 @@
 						</div>
 						
 						<div class="row" style="clear: both">
+<%-- 							<div class="col-md-6 form-group">
+								<label for="phonenumber"><spring:theme code="text.order.returns.phonenumber"/></label>
+								<form:input path="mobileNo" onkeypress="return isNumber(event)"
+									class="form-control textInputChangeAddress" id="mobileNo" maxlength="10"
+									value="${orderDetails.deliveryAddress.phone}" placeholder="Mobile Number" />
+								<div class="error_text mobileNumberError"></div>
+							</div>		<!-- TISPRDT-1213 reverting back --> --%>
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="pincode"><spring:theme code="text.order.returns.pincode"/></label>
@@ -178,7 +185,8 @@
 									value="${orderDetails.deliveryAddress.country.isocode}" />
 							</div>
 						</div>
-
+						
+					<!-- 	<div class="hide"> -->
 						<div class="row">
 							<div class="col-md-8 form-group">
 								<label for="phonenumber"><spring:theme code="text.order.returns.phonenumber"/></label>
@@ -188,6 +196,7 @@
 								<div class="error_text mobileNumberError"></div>
 							</div>
 						</div>
+					<!-- 	</div>	 --><!-- TISPRDT-1213 reverting back -->
 					</div>
 
 
