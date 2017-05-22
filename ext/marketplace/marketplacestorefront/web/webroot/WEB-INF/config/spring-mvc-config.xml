@@ -86,6 +86,9 @@
 		<bean
 			class="com.tisl.mpl.storefront.interceptors.beforecontroller.DeviceDetectionBeforeControllerHandler" >
 			<property name="uiExperienceService" ref="uiExperienceService" />
+			<property name="baseSiteService" ref="baseSiteService" />
+			<property name="configurationService" ref="configurationService"></property>
+			
 		</bean>
 		<bean
 			class="com.tisl.mpl.storefront.interceptors.beforecontroller.SetLanguageBeforeControllerHandler" />

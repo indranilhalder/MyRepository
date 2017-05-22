@@ -8,9 +8,9 @@
 
 
 <div class="shop-box col-sm-4">
-	<img src="${component.image.url}"/>
-	<h2>${component.title}</h2>
-	<p>${component.description}</p>
+	<img src="${image.url}"/>
+	<h2>${title}</h2>
+	<p>${description}</p>
 </div>
 	
 

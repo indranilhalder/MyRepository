@@ -15,6 +15,8 @@ package com.tisl.mpl.storefront.interceptors.beforecontroller;
 
 import de.hybris.platform.acceleratorservices.uiexperience.UiExperienceService;
 import de.hybris.platform.commerceservices.enums.UiExperienceLevel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.site.BaseSiteService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,20 +37,30 @@ public class DeviceDetectionBeforeControllerHandler implements BeforeControllerH
 
 	private UiExperienceService uiExperienceService;
 
+	private BaseSiteService baseSiteService;
+
+	private ConfigurationService configurationService;
+
 	@Override
 	public boolean beforeController(final HttpServletRequest request, final HttpServletResponse response,
 			final HandlerMethod handler)
 	{
 		if (getUiExperienceService().getDetectedUiExperienceLevel() == null)
 		{
-			getUiExperienceService().setDetectedUiExperienceLevel(UiExperienceLevel.DESKTOP);
+			if (getBaseSiteService().getCurrentBaseSite().getUid()
+					.equals(configurationService.getConfiguration().getProperty("luxury.site.id")))
+			{
+				getUiExperienceService().setDetectedUiExperienceLevel(UiExperienceLevel.RESPONSIVE);
+			}
+			else
+			{
+				getUiExperienceService().setDetectedUiExperienceLevel(UiExperienceLevel.DESKTOP);
+			}
 		}
 		// Detect the device information for the current request
 		//deviceDetectionFacade.initializeRequest(request);
 		return true;
 	}
-
-
 
 	protected UiExperienceService getUiExperienceService()
 	{
@@ -59,5 +71,39 @@ public class DeviceDetectionBeforeControllerHandler implements BeforeControllerH
 	public void setUiExperienceService(final UiExperienceService uiExperienceService)
 	{
 		this.uiExperienceService = uiExperienceService;
+	}
+
+	/**
+	 * @return the baseSiteService
+	 */
+	public BaseSiteService getBaseSiteService()
+	{
+		return baseSiteService;
+	}
+
+	/**
+	 * @param baseSiteService
+	 *           the baseSiteService to set
+	 */
+	public void setBaseSiteService(final BaseSiteService baseSiteService)
+	{
+		this.baseSiteService = baseSiteService;
+	}
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
 	}
 }

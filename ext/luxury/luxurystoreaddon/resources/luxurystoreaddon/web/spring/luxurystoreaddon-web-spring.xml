@@ -42,5 +42,36 @@
 	<bean id="LuxurystoreaddonBeforeViewHandlerListMergeDirective" depends-on="beforeViewHandlersList" parent="listMergeDirective">
 		<property name="add" ref="getLuxurystoreaddonBeforeViewHandler"/>
 	</bean>
+	
+	
+	<bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxuryNavigationBarCollectionComponent" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxuryNavigationBarComponent" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="WeeklySpecialBanner" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="WeeklySpecial" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="ShopOnLuxuryElement" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="ShopOnLuxury" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
 
 </beans>

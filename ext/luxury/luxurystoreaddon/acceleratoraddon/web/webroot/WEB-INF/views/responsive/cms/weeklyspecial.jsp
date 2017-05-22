@@ -5,9 +5,9 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 
-<h3 class="section-title">${component.title}</h3>
+<h3 class="section-title">${title}</h3>
 <div class="brand-slider circle-pager">
-<c:forEach items="${component.weeklySpecialBanners}" var="component">
+<c:forEach items="${weeklySpecialBanners}" var="component">
 		<cms:component component="${component}" evaluateRestriction="true"
 			navigationType="offcanvas" />
 </c:forEach>
