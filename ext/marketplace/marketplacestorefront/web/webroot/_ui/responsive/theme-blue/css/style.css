@@ -643,6 +643,15 @@ body.page-shopTheStyle .timeout-slider .owl-controls .owl-dots {
     height: 100px;
     width: 100%;
 }
+/* ADDED INC144316941 STARTS HERE */ 
+.pdp .product-info.wrapper .tabs-block .tabs.pdp li ul.item-desc{
+	padding: 0;
+}
+.tab-details .item-desc li{
+	list-style-type: none;
+	width: 100%;
+}
+/* ADDED INC144316941 ENDS HERE */
 /* ADDED TISQAUATS-9 STARTS HERE */ 
 .terms-text p{
 	text-align: center !important;
