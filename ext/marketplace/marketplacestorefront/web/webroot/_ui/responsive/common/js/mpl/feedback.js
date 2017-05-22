@@ -1330,7 +1330,11 @@ $(document).ready(function(){
 		 $(window).on("load resize",function(){
 				if($(".js-mini-cart-count").text() != undefined && $(".js-mini-cart-count").text()!=null)
 					{
-					$(".responsive-bag-count").text($(".js-mini-cart-count-hover").text());		/*UF-249*/
+					if($(".js-mini-cart-count-hover").text().length > 1){
+						$(".responsive-bag-count").text($($(".js-mini-cart-count-hover")[0]).text());		/*UF-249*/
+					}else{
+						$(".responsive-bag-count").text($(".js-mini-cart-count-hover").text());		/*UF-249*/
+					}
 					}
 				var $li = $(".page-authenticAndExclusive ul.feature-brands li");
 				if($(window).width() <790) {
