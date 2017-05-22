@@ -3317,7 +3317,7 @@ $(".productGrid-header-wrapper .productGrid-header > div button#micrositesearchB
 });
 $(document).click(function (e)
 		{
-		    var container = $(".productGrid-header-wrapper .productGrid-header > div #search_form_microsite");
+		    var container = $(".productGrid-header-wrapper .productGrid-header > div.ui-front #search_form_microsite");
 		    //var containerGlobal = $("header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_form[name='search_form']");
 		    //var containerGlobalIcon = $(".searchButtonGlobal");
 		    /*if ((!container.is(e.target) // if the target of the click isn't the container...
