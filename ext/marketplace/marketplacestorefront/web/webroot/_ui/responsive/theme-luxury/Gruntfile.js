@@ -19,11 +19,12 @@ grunt.initConfig({
 	},
 	sass: {
 		options: {
-			sourcemap: 'none'
+			sourcemap: 'none',
+			noCache: true
 		},
 		compile: {
 			files: {
-				'css/main-style.css': 'sass/main.scss'
+				'css/styles.css': 'sass/main.scss'
 			}
 		}, 
 		updateTrue: {
@@ -41,7 +42,7 @@ grunt.initConfig({
             files: [{
                 src: [
 					'css/jquery.selectBoxIt.css',
-					'css/main-style.css',	 									
+					'css/styles.css',										
                 ].map(absolutePath),
                 dest: 'css/uistyles-min.css'
             }]

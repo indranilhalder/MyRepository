@@ -5,10 +5,14 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 
-<div class="brand-img">
-     <div class="brand-bg"><img src="${image.url}" alt="brand logo"></div>
-     <div class="brand-logo"><img src="${svglogo.url}" alt="brand logo"></div>
-    </div>
+<div>
+	<a href="#">
+		<div class="brand-img">
+			<div class="brand-bg"><img src="${image.url}" alt="brand logo"></div>
+			<div class="brand-logo"><img src="${svglogo.url}" alt="brand logo"></div>
+		</div>
+	</a>
+</div>
 
 	
 

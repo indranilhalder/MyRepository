@@ -9,6 +9,12 @@ body {
 		padding-top: 149px;
 	}
 }
+
+.layout-fluid{
+	max-width: 1288px;
+	margin: 0 auto;
+}
+
 @include media-breakpoint-up(md) {
 	.colmn {
 		float: left;

@@ -36,8 +36,7 @@
 	<section class="seastion-sec mb-40">
 	<ul class="clearfix list-unstyled">
 		<li>
-			<cms:pageSlot position="LeftContentSlot" var="feature"
-				element="div" class="span-24 section5 cms_disp-img_slot">
+			<cms:pageSlot position="LeftContentSlot" var="feature" element="div" class="span-24 section5 cms_disp-img_slot">
 				<cms:component component="${feature}" />
 			</cms:pageSlot>
 			
@@ -52,8 +51,7 @@
 	</ul>
 </section>
 <section class="brand-slider-wrapper text-center">
-	<cms:pageSlot position="HomePageCurosel" var="feature"
-				element="div" class="span-24 section5 cms_disp-img_slot">
+	<cms:pageSlot position="HomePageCurosel" var="feature" class="span-24 section5 cms_disp-img_slot">
 				<cms:component component="${feature}" />
 	</cms:pageSlot>
 </section>

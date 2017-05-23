@@ -7,10 +7,10 @@
 
 <h3 class="section-title">${title}</h3>
 <div class="brand-slider circle-pager">
-<c:forEach items="${weeklySpecialBanners}" var="component">
-		<cms:component component="${component}" evaluateRestriction="true"
-			navigationType="offcanvas" />
-</c:forEach>
+	<c:forEach items="${weeklySpecialBanners}" var="component">
+			<cms:component component="${component}" evaluateRestriction="true"
+				navigationType="offcanvas" />
+	</c:forEach>
 </div>
 		
 	
