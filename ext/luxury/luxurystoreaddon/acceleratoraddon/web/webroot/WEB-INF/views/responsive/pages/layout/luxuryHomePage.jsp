@@ -1,7 +1,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
-<%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags" %>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/desktop/common" %>
+<%@ taglib prefix="template" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/template"%>
 
 <template:page pageTitle="${pageTitle}">
 	<div id="globalMessages">
