@@ -685,9 +685,9 @@ public class MarketplaceCheckoutControllerImpl extends
 	public boolean processPayment(CartModel cart) throws PaymentException,
 			ValidationException ,Exception{
 		
-		final String agentId = agentIdForStore.getAgentIdForStore((configurationService.getConfiguration().
-				getString(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)));
-		if (agentId != null && StringUtils.isNotEmpty(agentId))
+		final String agentId = agentIdForStore.getAgentIdForStore(
+				MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+		if (StringUtils.isNotEmpty(agentId))
 		{
 			if(isNonCodProductExistForAgent(cart, agentId))
 			{
@@ -941,7 +941,7 @@ public class MarketplaceCheckoutControllerImpl extends
 		final String paymentStatusresponse = makeGetPaymentStatusCall(url);
 		
 		final JSONObject jsonResponse = (JSONObject) JSONValue.parse(paymentStatusresponse);
-		final String merchantId = (String) jsonResponse.get("status");
+		final String ordStatus = (String) jsonResponse.get("status");
 		final String paymentMethodType = (String)jsonResponse.get("payment_method_type");
 		if(paymentMethodType.equalsIgnoreCase(MarketplaceCockpitsConstants.PAYMENT_METHOD_TYPE))
 		{
@@ -953,7 +953,7 @@ public class MarketplaceCheckoutControllerImpl extends
 			paymentType = MarketplaceCockpitsConstants.OIS_NETBANKING;
 		}
 		JaloSession.getCurrentSession().setAttribute("oisPaymentType", paymentType);
-		return merchantId;
+		return ordStatus;
 	}
 	
 	public String makeGetPaymentStatusCall(String endPointURL)

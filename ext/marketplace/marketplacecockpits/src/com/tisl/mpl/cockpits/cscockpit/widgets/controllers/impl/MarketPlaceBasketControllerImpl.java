@@ -315,8 +315,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	      }
 	      
 	      // if store agent is logged in
-	      final String agentId = agentIdForStore.getAgentIdForStore((configurationService.getConfiguration().getString(
-					MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)));
+	      final String agentId = agentIdForStore.getAgentIdForStore(
+					MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
 	      
 			for(AbstractOrderEntryModel entry : cart.getEntries()){
 				if((!mplFindDeliveryFulfillModeStrategy.isTShip(entry.getSelectedUSSID()))

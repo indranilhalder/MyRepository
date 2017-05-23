@@ -611,8 +611,8 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 			((MarketplaceSearchCommandController) widget
 					.getWidgetController()).setCurrentSite();
 			
-			final String agentId = agentIdForStore.getAgentIdForStore((configurationService.getConfiguration().getString(
-					MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)));
+			final String agentId = agentIdForStore.getAgentIdForStore(
+					MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
 			
 			//TISUAT-4526 no sship in cod
 			if((!mplFindDeliveryCostStrategy.isTShip(ussid)) 

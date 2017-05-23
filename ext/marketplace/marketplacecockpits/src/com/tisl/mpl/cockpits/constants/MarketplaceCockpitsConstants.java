@@ -112,6 +112,8 @@ public final class MarketplaceCockpitsConstants extends
 	/** The Constant CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP for OIS. */
 	public static final String CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP = "cscockpit.user.group.storemanageragentgroup";
 	
+	public static final String CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP = "storemanageragentgroup";
+	
 	/** The Constant NO_SELLER_COD. */
 	public static final String NO_SELLER_COD = "noSellerCOD";
 

@@ -191,8 +191,8 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 				boolean authorize=true;
 				Div otparea = new Div();
 				otparea.setVisible(authorize);	
-				final String agentId = agentIdForStore.getAgentIdForStore((configurationService.getConfiguration().
-						getString(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)));
+				final String agentId = agentIdForStore.getAgentIdForStore(
+						MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
 				
 				if(!buttonLabelChangeFlag && !juspayOrderCreationFlag)
 				{
@@ -290,13 +290,13 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 				try 
 				{
 					jsuPayCreatedOrderId = (String) JaloSession.getCurrentSession().getAttribute("jusPayEndOrderId");
-					if(jsuPayCreatedOrderId != null && StringUtils.isNotEmpty(jsuPayCreatedOrderId))
+					if(StringUtils.isNotEmpty(jsuPayCreatedOrderId))
 					{
 						juspayOrderCreationFlag = true;
 					}
 					String commerEndOrderId = (String) JaloSession.getCurrentSession().getAttribute("commerceEndOrderId");
 					LOG.info("juspay order id ::: "+jsuPayCreatedOrderId);
-					if(juspayOrderCreationFlag && commerEndOrderId!= null && StringUtils.isNotEmpty(commerEndOrderId))
+					if(juspayOrderCreationFlag && StringUtils.isNotEmpty(commerEndOrderId))
 					{
 						final String orderPaymentStatus = ((MarketplaceCheckoutController)widget.getWidgetController()).
 								juspayPaymentValidation(commerEndOrderId);
@@ -380,13 +380,11 @@ protected class JuspayPaymentEventListener implements EventListener
 			{
 				((MarketplaceCheckoutController)widget.getWidgetController()).processJuspayPayment(cart, customer);
 				jsuPayCreatedOrderId = (String) JaloSession.getCurrentSession().getAttribute("jusPayEndOrderId");
-				if(jsuPayCreatedOrderId != null && StringUtils.isNotEmpty(jsuPayCreatedOrderId))
+
+				if(StringUtils.isNotEmpty(jsuPayCreatedOrderId))
 				{
+					LOG.info("juspay order id ::: "+jsuPayCreatedOrderId);
 					juspayOrderCreationFlag = true;
-				}
-				LOG.info("juspay order id ::: "+jsuPayCreatedOrderId);
-				if(juspayOrderCreationFlag)
-				{
 					buttonLabelChangeFlag = true;
 					createContentInternal(widget,rootContainer);
 					Map data = Collections.singletonMap("refresh", Boolean.TRUE);
@@ -629,9 +627,9 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 				}
 		}
 		
-		final String agentId = agentIdForStore.getAgentIdForStore((configurationService.getConfiguration().
-				getString(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)));
-		if(agentId != null && StringUtils.isNotEmpty(agentId))
+		final String agentId = agentIdForStore.getAgentIdForStore(
+				MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+		if(StringUtils.isNotEmpty(agentId))
 		{
 			Listitem listItemPayNow = listbox.appendItem(MarketplaceCockpitsConstants.JUSPAY_PAYMENT_VALUE,MarketplaceCockpitsConstants.JUSPAY_PAYMENT);
 			listItemPayNow.setValue(MarketplaceCockpitsConstants.JUSPAY_PAYMENT);

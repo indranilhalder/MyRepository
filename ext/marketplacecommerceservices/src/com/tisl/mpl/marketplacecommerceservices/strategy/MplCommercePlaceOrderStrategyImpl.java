@@ -209,8 +209,8 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 					//storing agent id in the order model in case of store manager login in cscockpit
 
-					final String agentId = agentIdForStore.getAgentIdForStore((configurationService.getConfiguration()
-							.getString(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)));
+					final String agentId = agentIdForStore
+							.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
 					if (agentId != null && StringUtils.isNotEmpty(agentId))
 					{
 						orderModel.setAgentId(agentId);

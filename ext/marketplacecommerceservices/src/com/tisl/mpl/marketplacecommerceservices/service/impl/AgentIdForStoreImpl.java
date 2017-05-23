@@ -29,14 +29,14 @@ public class AgentIdForStoreImpl implements AgentIdForStore
 	public String getAgentIdForStore(final String agentGroup)
 	{
 		final String agentID = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
-		if (agentID != null && StringUtils.isNotEmpty(agentID))
+		if (StringUtils.isNotEmpty(agentID))
 		{
 			final UserModel user = userService.getUserForUID(agentID);
 			final Set<PrincipalGroupModel> userGroups = user.getAllGroups();
 
 			for (final PrincipalGroupModel ug : userGroups)
 			{
-				if (ug.getUid().equalsIgnoreCase(agentGroup))
+				if (ug != null && ug.getUid().equalsIgnoreCase(agentGroup))
 				{
 					return agentID;
 				}

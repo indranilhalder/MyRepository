@@ -118,7 +118,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 				productCodes.append(" )");
 			}
 
-			if (storeManager != null && StringUtils.isNotEmpty(storeManager))
+			if (StringUtils.isNotEmpty(storeManager))
 			{
 				queryStringForPrice = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS + " Where " + productCodes.toString()
 						+ " AND ( {bb:" + BuyBoxModel.SELLERID + "} ='" + storeManager + "')    AND   {bb:" + BuyBoxModel.AVAILABLE
@@ -128,7 +128,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 				log.debug("QueryStringFetchingPrice" + queryStringForPrice);
 			}
-			else if (sellerId != null && StringUtils.isNotEmpty(sellerId))
+			else if (StringUtils.isNotEmpty(sellerId))
 			{
 				queryStringForPrice = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS + " Where " + productCodes.toString()
 						+ " AND {bb:" + BuyBoxModel.AVAILABLE + "} > 0 AND (sysdate between  {bb:" + BuyBoxModel.SELLERSTARTDATE
@@ -253,7 +253,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 			//priceQueryString = "SELECT {bb.PK} FROM {BuyBox AS bb} where {bb.product}= ?product AND ( {bb.delisted}  IS NULL OR {bb.delisted} =0)  and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate})     ORDER BY {bb.product} ASC, {bb.weightage} DESC";
 
-			if (sellerId != null && StringUtils.isNotEmpty(sellerId))
+			if (StringUtils.isNotEmpty(sellerId))
 			{
 				priceQueryString = "SELECT {bb.PK} FROM {BuyBox AS bb} where {bb.product}= ?product AND "
 						+ "(sysdate between {bb.sellerstartdate} and {bb.sellerenddate})     "
@@ -468,7 +468,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		String queryString = StringUtils.EMPTY;
 		try
 		{
-			if (storeManager != null && StringUtils.isNotEmpty(storeManager))
+			if (StringUtils.isNotEmpty(storeManager))
 			{
 				queryString = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS
 
@@ -479,7 +479,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 				log.debug(QUERY_CLASS + queryString);
 			}
-			else if (sellerId != null && StringUtils.isNotEmpty(sellerId))
+			else if (StringUtils.isNotEmpty(sellerId))
 			{
 				queryString = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS
 
@@ -582,7 +582,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 				.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
 		try
 		{
-			if (sellerId != null && StringUtils.isNotEmpty(sellerId))
+			if (StringUtils.isNotEmpty(sellerId))
 			{
 				queryString = "select {b.pk},{rich.pk} from {"
 						+ BuyBoxModel._TYPECODE

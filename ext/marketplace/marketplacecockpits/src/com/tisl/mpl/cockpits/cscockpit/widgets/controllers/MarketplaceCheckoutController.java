@@ -148,4 +148,5 @@ public interface MarketplaceCheckoutController extends
 	boolean processJusPayPaymentOnSelect() throws PaymentException, ValidationException;
 	
 	void setJusPayPaymentModeOnSelect(final CartModel cartModel);
+	
 }
