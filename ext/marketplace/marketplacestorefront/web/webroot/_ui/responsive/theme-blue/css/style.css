@@ -21223,7 +21223,7 @@ ul.accepted-cards li span img{
 }
 
 .marketplace-checkout .simple-banner-component {
-	text-align:center;
+	text-align: left;
 }
 .marketplace-checkout .simple-banner-component img{
 	cursor:default;
@@ -49951,7 +49951,8 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header{
     left: inherit;
 }
 .tab-logo img {
-    width: 200px;
+    /* width: 200px; */
+    width: auto;
     margin-top: 10px;
     margin-bottom: 10px;
 }
@@ -49973,7 +49974,8 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 }
 @media (max-width: 790px){
 .marketplace-checkout .tab-logo .simple-banner-component img {
-       width: 190px;
+       /* width: 190px; */
+       width: auto;
     margin-top: 10px;
 }
 }
@@ -49993,7 +49995,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     margin: 65px 0 0;
 }
 .marketplace-checkout .tab-logo .simple-banner-component img {
-    margin-top: 0px;
+    /* margin-top: 0px; */
 }
 }
 @media (max-width: 980px) and (min-width: 768px){
@@ -50154,7 +50156,8 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header{
 
 
 .tab-logo img {
-    width: 200px;
+    /* width: 200px; */
+    width: auto;
     margin-top: 10px;
     margin-bottom: 10px;
 }
@@ -50178,7 +50181,8 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 }
 @media (max-width: 790px){
 .marketplace-checkout .tab-logo .simple-banner-component img {
-       width: 190px;
+      /*  width: 190px; */
+      width: auto;
     margin-top: 10px;
 }
 }
@@ -50198,7 +50202,9 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     margin: 65px 0 0;
 }
 .marketplace-checkout .tab-logo .simple-banner-component img {
-    margin-top: 0px;
+    /* margin-top: 0px; */
+    margin-left: 10px;
+    height: 28px;
 }
 }
 @media (max-width: 980px) and (min-width: 768px){
@@ -67067,7 +67073,7 @@ header .content .left, header .content .right {
 }
 header .content .right > ul > li > a{
   letter-spacing: 0.6px;
-  color: rgba(255, 255, 255, 0.75);
+  color: #eee;
 }
 header .content .right > ul > li > a.headeruserdetails.account-userTitle{
   position: relative;
@@ -68745,6 +68751,9 @@ header .content .right>ul>li.track:hover a{
 .callouts .Padd {
     padding: 26px 50px;
 }
+body.page-multiStepCheckoutSummaryPage header .content nav{
+	display: none;
+}
 }
 /*TISPRDT-1333 start*/
 .trackorder-dropdown li * {
@@ -68755,3 +68764,6 @@ header .content .right>ul>li.track:hover a{
 	font-weight: normal;
 }
 /*TISPRDT-1333 end*/
+.product-info .product-content .delivery-block li.do span#clickDate{
+	display: none;
+}
