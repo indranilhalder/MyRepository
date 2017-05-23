@@ -6,34 +6,77 @@
 <script type="text/javascript" src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-	$("#pancard_No").keyup(function(){
-		if($(this).val().length < 10){
-			$(".pancard-msg").show();
-		}else{
-			$(".pancard-msg").hide();
-		}
-	});	
-	$("#uploadPanDetails").submit(function(e){
+	var regpan = /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/;
+	
+	 $("#pancard_No").keyup(function(){
 		
-		if($("#pancard_No").val().length < 10){
-			$(".pancard-msg").show();
+		/* if($(this).val().length < 10) */
+		if(regpan.test($(this).val()) == false)
+		{
+			$(".pancard-img-msg").show();
 		}else{
-			$(".pancard-msg").hide();
+			$(".pancard-img-msg").hide();
+		}
+	}); 	
+	
+	$("#btn_PanDetails").on("click", function(e){
+		
+		<%--$("#uploadPanDetails").submit();--%>
+		if(regpan.test($("#pancard_No").val())==false)
+		{
+			$(".pancard-img-msg").show();
+		}else{
+			$(".pancard-img-msg").hide();
 		}
 		
-		if(!$('#pancard_Img').val()){
+		
+		
+		
+		var has_selected_file = $('input[type=file]').filter(function(){
+	        return $.trim(this.value) != ''
+	    }).length  > 0 ;
+
+		
+	    if (has_selected_file) {
+	    	$(".pancard-img-msg").hide();
+	    } else {
+	    	$(".pancard-img-msg").show();
+	    }
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		/* if(!$('#pancard_Img').val()){
 			$(".pancard-img-msg").show();
 		}else{
 			$(".pancard-img-msg").hide();
 		} 
+		 */
 		
-		if($("#pancard_No").val().length < 10 && $('#pancard_Img').val() != true){
-			e.preventDefault();
-			return false;
-		}else{
-			return true;
-		}
+		
+		 /* if((regpan.test($("#pancard_No").val())==false) && ($('#pancard_Img').val() != true)) */
+		 if((regpan.test($("#pancard_No").val())==false))
+			{
+				e.preventDefault();
+				return false;
+			}else{
+				if (has_selected_file) {
+					$("#uploadPanDetails").submit();
+			    }else{
+				e.preventDefault();
+				return false;
+			    }
+			}
+		
+		
 	})
+	
 	$('#labelBrowseBtn').click(function () {
 		$("input[type='file']").trigger('click');
 	});
@@ -41,9 +84,7 @@ $(document).ready(function() {
 	$("input[type='file']").change(function () {
 		$('#val').text(this.value.replace(/C:\\fakepath\\/i, ''))
 	});
-	$("#btn_PanDetails").on("click", function(){
-		$("#uploadPanDetails").submit();
-	})
+	
 	
 });
 </script>
@@ -129,6 +170,7 @@ $(document).ready(function() {
 							</div>
 							<div class="pan-label-value">
 								<input type="text" name="Pancard_number" id="pancard_No">
+								<!-- <span class="pancard-msg">Please enter correct pancard number.</span>  -->
 							</div>
 						</div>
 						<div class="panfield-wrapper clearfix">
