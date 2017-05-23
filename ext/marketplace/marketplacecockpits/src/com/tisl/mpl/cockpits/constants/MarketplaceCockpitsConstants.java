@@ -198,6 +198,8 @@ public final class MarketplaceCockpitsConstants extends
 	
 	public static final String PAYMENT_UNSUCCESSFUL = "Please try again";
 	
+	public static final String PAYMENT_COMPLETED = "Either You have already paid or System issue, Please Check again OR Contact with Site Administrator";
+	
 	public static final String NONCOD_PRODUCT_EXIST = "Non COD Product Exist, Please Check again OR Contact with Site Administrator";
 	
 	public static final String JUSPAY_PAYMENT = "paynow";
