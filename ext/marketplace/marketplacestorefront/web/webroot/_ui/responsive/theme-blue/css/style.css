@@ -68751,7 +68751,8 @@ header .content .right>ul>li.track:hover a{
 .callouts .Padd {
     padding: 26px 50px;
 }
-body.page-multiStepCheckoutSummaryPage header .content nav{
+body.page-multiStepCheckoutSummaryPage header .content nav,
+body.page-checkout-login header .content nav{
 	display: none;
 }
 }
@@ -68766,4 +68767,8 @@ body.page-multiStepCheckoutSummaryPage header .content nav{
 /*TISPRDT-1333 end*/
 .product-info .product-content .delivery-block li.do span#clickDate{
 	display: none;
+}
+.product-info .product-content .delivery-block li.do.selected#collectli p + span{
+	width: 88%;
+    white-space: normal;
 }
