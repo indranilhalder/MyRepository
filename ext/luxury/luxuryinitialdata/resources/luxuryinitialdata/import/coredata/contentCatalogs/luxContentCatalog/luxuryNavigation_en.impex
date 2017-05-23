@@ -1,0 +1,64 @@
+$contentCatalog=luxContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+
+# Language
+$lang=en
+
+# CMS Navigation Nodes
+UPDATE CMSNavigationNode ; $contentCV[unique=true] ; uid[unique=true]             ; title[lang=$lang]              
+                         ;                         ; ClothingNavNode              ; "Clothing"                  
+                         ;                         ; ShoesNavNode           	  ; "Shoes"                  
+                         ;                         ; AccessoriesNavNode           ; "Accessories"                  
+                         ;                         ; MensGroomingNavNode          ; "MensGrooming"                 
+                         ;                         ; EditorsPicksNavNode          ; "EditorsPicks"                   
+                         ;                         ; PopularBrandsNavNode         ; "PopularBrands"                
+            
+
+
+# CMS Navigation Nodes
+UPDATE CMSLinkComponent  ; $contentCV[unique=true] ; uid[unique=true]             ; linkName[lang=$lang]           
+                         ;                         ; TopsLink                     ; "Tops"                  
+                         ;                         ; DressShoesLink           ; "Blazers&Vests"                  
+                         ;                         ; BottomsLink                  ; "Bottoms"                  
+                         ;                         ; OuterwearLink                ; "Outerwear "                 
+                         ;                         ; ActivewearLink               ; "Activewear"                   
+                         ;                         ; Socks&UnderwearLink          ; "Socks&Underwear"                   
+                         ;                         ; Sleep&LoungewearLink         ; "Sleep&Loungewear"                   
+                         ;                         ; SwimwearLink                 ; "Swimwear"                   
+                         ;                         ; Bundles&SetsLink             ; "Bundles&Sets"
+						 
+						 
+						 
+						 
+                         ;                         ; BootsLink                    ; "Boots"                  
+                         ;                         ; Blazers&VestsLink            ; "Blazers&Vests"                  
+                         ;                         ; Loafers&Slip-onsLink         ; "Loafers&Slip-ons"                  
+                         ;                         ; SandalsLink                  ; "Sandals "                 
+                         ;                         ; SneakersLink                 ; "Sneakers"  
+
+
+
+
+
+						 
+                         ;                         ; GlovesLink                  ; "Gloves"                   
+                         ;                         ; HatsLink                    ; "Hats"                   
+                         ;                         ; OpticalLink                 ; "Optical"                   
+                         ;                         ; SunglassesLink              ; "Sunglasses"
+						 
+						 
+						 
+						 
+						 
+                  
+                         ;                         ; ColeHaanLink                 ; "ColeHaan"                  
+                         ;                         ; FrenchConnectionLink         ; "FrenchConnection"                  
+                         ;                         ; LacosteLink                  ; "Lacoste "                 
+                         ;                         ; MichaelKorsLink              ; "MichaelKors" 
+						 ;						   ; NewBalanceLink               ; "NewBalance"
+                         ;                         ; ReasonClothingLink           ; "ReasonClothing"						 
+						 
+						 
+
+
+

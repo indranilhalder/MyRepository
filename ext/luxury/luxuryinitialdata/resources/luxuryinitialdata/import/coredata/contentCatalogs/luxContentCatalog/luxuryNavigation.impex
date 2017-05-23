@@ -1,0 +1,60 @@
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=luxProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
+$picture=media(code, $contentCV)
+$lang=en
+# Import modulegen config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor] ; pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue                                                                
+                                                                                                           
+$category=category(code, $productCV)                                                                       
+$product=product(code, $productCV)
+
+
+
+INSERT_UPDATE CMSLinkComponent ; $contentCV[unique=true] ; uid[unique=true]             ; name                            ; url               ; &linkRef                ; &componentRef           ; target(code)[default='sameWindow'] ; $category ; $product ;
+;;TopsLink;Tops Link;#;TopsLink;TopsLink;;
+;;Blazers&VestsLink;Blazers&Vests Link;#;Blazers&VestsLink;Blazers&VestsLink;;
+;;BottomsLink;Bottoms Link;#;BottomsLink;BottomsLink;;
+;;OuterwearLink;Outerwear Link;#;OuterwearLink;OuterwearLink;;
+;;ActivewearLink;ActivewearLink;#;ActivewearLink;ActivewearLink;;
+;;Socks&UnderwearLink;Socks&Underwear Link;#;Socks&UnderwearLink;Socks&UnderwearLink;;
+;;Sleep&LoungewearLink;Sleep&Loungewear Link;#;Sleep&LoungewearLink;Sleep&LoungewearLink;;
+;;SwimwearLink;Swimwear Link;#;SwimwearLink;SwimwearLink;;
+;;Bundles&SetsLink;Bundles&Sets Link;#;Bundles&SetsLink;Bundles&SetsLink;;
+
+
+;;BootsLink;Boots Link;#;BootsLink;BootsLink;;
+;;DressShoesLink;DressShoes Link;#;DressShoesLink;DressShoesLink;;
+;;Loafers&Slip-onsLink;Loafers&Slip-ons Link;#;Loafers&Slip-onsLink;Loafers&Slip-onsLink;;
+;;SandalsLink;Sandals Link;#;SandalsLink;SandalsLink;;
+;;SneakersLink;Sneakers Link;#;SneakersLink;SneakersLink;;
+
+
+
+;;GlovesLink;Gloves Link;#;GlovesLink;GlovesLink;;
+;;HatsLink;Hats Link;#;HatsLink;HatsLink;;
+;;OpticalLink;Optical Link;#;OpticalLink;OpticalLink;;
+;;SunglassesLink;Sunglasses Link;#;SunglassesLink;SunglassesLink;;
+
+
+;;Abercrombie&FitchLink;Abercrombie&Fitch Link;#;Abercrombie&FitchLink;Abercrombie&FitchLink;;
+;;ColeHaanLink;ColeHaan Link;#;ColeHaanLink;ColeHaanLink;;
+;;FrenchConnectionLink;FrenchConnection Link;#;FrenchConnectionLink;FrenchConnectionLink;;
+;;LacosteLink;Lacoste Link;#;LacosteLink;LacosteLink;;
+;;MichaelKorsLink;MichaelKors Link;#;MichaelKorsLink;MichaelKorsLink;;
+;;NewBalanceLink;NewBalance Link;#;NewBalanceLink;NewBalanceLink;;
+;;ReasonClothingLink;ReasonClothing Link;#;ReasonClothingLink;ReasonClothingLink;;
+;;MensGroomingCategoryLink;MensGroomingCategory;#;MensGroomingCategoryLink;;
+;;EditorsPicksCategoryLink;EditorsPicksCategoryLink;#;EditorsPicksCategoryLink;;    
+
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef);&nodeRef
+;ClothingNavNode;;Clothing Category;MenNavNode;TopsLink,Blazers&VestsLink,BottomsLink,OuterwearLink,ActivewearLink,Socks&UnderwearLink,Sleep&LoungewearLink,SwimwearLink,Bundles&SetsLink;ClothingNavNode
+;ShoesNavNode;;Shoes Category;MenNavNode;BootsLink,DressShoesLink,Loafers&Slip-onsLink,SandalsLink,SneakersLink;ShoesNavNode
+;AccessoriesNavNode;;Accessories Category;MenNavNode;GlovesLink,HatsLink,OpticalLink,SunglassesLink;AccessoriesNavNode
+;MensGroomingNavNode;;MensGrooming Category;MenNavNode;MensGroomingCategoryLink;MensGroomingNavNode
+;EditorsPicksNavNode;;EditorsPicks Category;MenNavNode;EditorsPicksCategoryLink;EditorsPicksNavNode
+;PopularBrandsNavNode;;PopularBrands Category;MenNavNode;Abercrombie&FitchLink,ColeHaanLink,FrenchConnectionLink,LacosteLink,MichaelKorsLink,NewBalanceLink,ReasonClothingLink;PopularBrandsNavNode
+
