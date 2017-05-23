@@ -40,6 +40,9 @@ public final class MarketplaceomsordersConstants extends GeneratedMarketplaceoms
 	public static final String TICKET_TYPE_CODE = "C";
 	public static final String REASON_CODE = "01";
 	public static final String TICKET_SUB_TYPE_CODE = "UCP";
+	public static final String TICKET_SUB_TYPE_CODE_SSB = "SSB";
+	public static final String CRM_SSB_REASON_CODE = "04".intern();
+
 	public static final String EMPTY = "".intern();
 
 	public static final String CUSTOMER_NAME = "Customer".intern();
@@ -96,6 +99,7 @@ public final class MarketplaceomsordersConstants extends GeneratedMarketplaceoms
 
 	public static final String SINGLE_SPACE = " ".intern();
 
+	public static final String TICKET_TYPE_CODE_EDTOHD_SDB = "A";
 
 	private MarketplaceomsordersConstants()
 	{

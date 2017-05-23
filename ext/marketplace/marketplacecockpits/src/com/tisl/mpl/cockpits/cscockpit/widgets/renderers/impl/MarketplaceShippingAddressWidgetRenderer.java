@@ -24,6 +24,7 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceSearchComm
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.widgets.Widget;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
@@ -109,11 +110,17 @@ public class MarketplaceShippingAddressWidgetRenderer extends ShippingAddressWid
 							((MarketPlaceBasketController)widget.getWidgetController()).checkCustomerStatus();
 							Boolean isCartReserved = ((MarketPlaceBasketController)widget.getWidgetController()).reserveCart(cart);
 							LOG.info("MarketplaceShippingAddressWidgetRenderer->createAddressSelect->isCartReserved:"+isCartReserved);
+			          
+							for (AbstractOrderEntryModel cartEntry : cart.getEntries()) {
+								if(null != cartEntry) {
+									 if(LOG.isDebugEnabled()){
+											LOG.debug("EddDateBetween for cartEntry "+cartEntry.getSelectedUSSID()+" with cart guid "+cart.getGuid()+ " is" +cartEntry.getSddDateBetween());
+											LOG.debug("ExpectedDeliveryDate for cartEntry "+cartEntry.getSelectedUSSID()+" with cart guid "+cart.getGuid()+ " is" +cartEntry.getExpectedDeliveryDate());
+										}
+								}
+					 }
 								Map data = Collections.singletonMap("refresh", Boolean.TRUE);
 								widget.getWidgetController().dispatchEvent(null, this, data);
-								
-								marketplaceSearchCommandController.dispatchEvent(null, widget, data);
-								
 				} catch(Exception e) {
 					 try {
 						Messagebox.show(e.getMessage() + ((e.getCause() == null) ? "" : new StringBuilder(" - ").append(e.getCause().getMessage()).toString()), 
@@ -146,14 +153,12 @@ public class MarketplaceShippingAddressWidgetRenderer extends ShippingAddressWid
 			}catch (NumberFormatException ex){
 				LOG.info("Not a valid phone Number ");
 			}
-
-			phoneNumber.setConstraint("/{10,10}/");
-			phoneNumber.addEventListener(Events.ON_CHANGE,createAddCellPhoneToAddress(widget,phoneNumber));
 		} else {
 			LOG.info("The default delivery address is not set by the customer, go to the customer tab to set the same");
 			//popupMessage(widget, "deliveryAddressMissing");
 		}
-		
+		phoneNumber.setConstraint("/{10,10}/");
+		phoneNumber.addEventListener(Events.ON_CHANGE,createAddCellPhoneToAddress(widget,phoneNumber));
 		return container;
 	}
 

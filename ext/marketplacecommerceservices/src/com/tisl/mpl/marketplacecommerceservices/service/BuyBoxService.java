@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel;
+import de.hybris.platform.core.model.product.ProductModel;
 
 import java.util.Date;
 import java.util.List;
@@ -24,6 +25,10 @@ public interface BuyBoxService
 	//List<BuyBoxModel> getStockFromBuyBox(String ProductCode) throws EtailNonBusinessExceptions;
 
 	List<BuyBoxModel> getBuyboxPricesForSearch(String productCode) throws EtailNonBusinessExceptions;
+
+	//INC144315542_INC144314878_INC_11113
+
+	List<BuyBoxModel> getBuyboxPricesForSizeVariant(String productCode) throws EtailNonBusinessExceptions;
 
 	List<BuyBoxModel> invalidatePkofBuybox(Date currenttime) throws EtailNonBusinessExceptions;
 
@@ -65,5 +70,6 @@ public interface BuyBoxService
 	 */
 	List<BuyBoxModel> getBuyboxSellerPricesForSearch(List<String> sellerArticleSKUList) throws EtailNonBusinessExceptions;
 
+	ProductModel getProductDetailsByProductCode(final String productcode);
 
 }

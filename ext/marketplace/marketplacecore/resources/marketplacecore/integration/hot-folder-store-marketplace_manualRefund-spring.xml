@@ -49,6 +49,77 @@
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
 		p:mapping="internal_manual_refund" p:converter-ref="batchManualRefundOrderAttributeConverterFollowOn" />
 
+
+  <!-- Added in R2.3 for Refund Delivery Chareges START -->
+  
+  
+   <bean id="batchEdRefundConverterMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="internal_refund_ed" p:converter-ref="batchManualEdRefundAttributeConverter" />
+
+	<bean id="batchManualEdRefundConverterFollowOnMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="internal_refund_ed" p:converter-ref="batchManualEdRefundAttributeConverterFollowOn" />
+
+
+	<bean id="batchManualEdRefundAttributeConverter"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+		<property name="header">
+			<value>insert_update PaymentTransaction;code[unique=true];order(Order.code,Order.versionID[default=]);transactionId;</value>
+		</property>
+		<property name="impexRow">
+			<value>;{+0};{+1};{+3}</value>
+		</property>
+	</bean>
+
+	<bean id="batchManualEdRefundAttributeConverterFollowOn"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+		<property name="header">
+			<value>insert_update PaymentTransactionEntry;code[unique=true];paymentTransaction(code);time[dateformat=dd.MM.yyyy];currency(isocode)[default='INR'];type(code[default='ED_MANUAL_REFUND']);paymentMode(mode);requestId;amount;transactionStatus[default='success'];transactionStatusDetails;</value>
+		</property>
+		<property name="impexRow">
+			<value>;{+2};{+0};{+4};{5};{6};{+7};{8};{+9};{10};{11}</value>
+		</property>
+	</bean>
+		
+		
+		<!-- Added in R2.3 for Refund Delivery Chareges END -->	
+
+		 <!-- Added in R2.3 for Refund Schedule Delivery Chareges START -->
+  
+   <bean id="batchSdRefundConverterMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="internal_refund_sd" p:converter-ref="batchManualSddRefundAttributeConverter" />
+
+	<bean id="batchManualSdRefundConverterFollowOnMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="internal_refund_sd" p:converter-ref="batchManualSdRefundAttributeConverterFollowOn" />
+
+
+	<bean id="batchManualSddRefundAttributeConverter"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+		<property name="header">
+			<value>insert_update PaymentTransaction;code[unique=true];order(Order.code,Order.versionID[default=]);transactionId;</value>
+		</property>
+		<property name="impexRow">
+			<value>;{+0};{+1};{+3}</value>
+		</property>
+	</bean>
+
+	<bean id="batchManualSdRefundAttributeConverterFollowOn"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+		<property name="header">
+			<value>insert_update PaymentTransactionEntry;code[unique=true];paymentTransaction(code);time[dateformat=dd.MM.yyyy];currency(isocode)[default='INR'];type(code[default='SD_MANUAL_REFUND']);paymentMode(mode);requestId;amount;transactionStatus[default='success'];transactionStatusDetails;</value>
+		</property>
+		<property name="impexRow">
+			<value>;{+2};{+0};{+4};{5};{6};{+7};{8};{+9};{10};{11}</value>
+		</property>
+	</bean>
+		
+		
+		<!-- Added in R2.3 for Refund Schedule Delivery Chareges Refund END -->	
+		
+
 	<bean id="batchManualRefundAttributeConverter"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">

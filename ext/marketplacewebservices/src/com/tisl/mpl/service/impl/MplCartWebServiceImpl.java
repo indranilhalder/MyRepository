@@ -32,13 +32,11 @@ import de.hybris.platform.commerceservices.order.CommerceCartMergingException;
 import de.hybris.platform.commerceservices.order.CommerceCartModification;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartRestorationException;
-import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.user.AddressListWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.CartException;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
-import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -99,15 +97,13 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
-import com.tisl.mpl.facades.MplPaymentWebFacade;
+import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
-import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.service.MplCartWebService;
-import com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.utility.MplDiscountUtil;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
@@ -141,8 +137,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	protected DataMapper mplDataMapper;
 	@Resource(name = "mplDeliveryCostService")
 	private MplDeliveryCostService mplDeliveryCostService;
-	@Resource(name = "defaultPromotionManager")
-	private DefaultPromotionManager defaultPromotionManager;
+
 	@Resource
 	private ExtendedUserService extendedUserService;
 	@Resource
@@ -159,18 +154,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	private DiscountUtility discountUtility;
 	@Resource
 	private MplProductWebServiceImpl mplProductWebService;
-	@Resource
-	private CommerceCartService commerceCartService;
-	@Resource
-	private MplPaymentWebFacade mplPaymentWebFacade;
+
 	@Resource
 	private SiteConfigService siteConfigService;
 	@Resource
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
 	@Resource
 	private MplDiscountUtil mplDiscountUtil;
-	@Resource(name = "addressReversePopulator")
-	private Populator<AddressData, AddressModel> addressReversePopulator;
 	@Resource
 	private UserService userService;
 	@Autowired
@@ -179,13 +169,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	private PriceDataFactory priceDataFactory;
 	@Autowired
 	private MplCouponFacade mplCouponFacade;
+	@Autowired
+	private CustomAddressReversePopulator addressReversePopulator;
 
 	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
 
 	private final static Logger LOG = Logger.getLogger(MplCartWebServiceImpl.class);
-
-	@Autowired
-	private MplDefaultCommerceAddToCartStrategyImpl mplDefaultCommerceAddToCartStrategyImpl;
 
 	/**
 	 * Service to create cart
@@ -1069,6 +1058,18 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						gwlp.setFullfillmentType(c.getFullfillment());
 					});
 				}
+				if (null != productData.getSeller() && productData.getSeller().size() > 0)
+				{
+					productData.getSeller().stream().filter(pred1.and(pred2)).findFirst().ifPresent(c -> {
+						gwlp.setSellerId(c.getSellerID());
+						gwlp.setSellerName(c.getSellername());
+						gwlp.setFullfillmentType(c.getFullfillment());
+					});
+				}
+				if (null != abstractOrderEntry.getFulfillmentMode())
+				{
+					gwlp.setFullfillmentType(abstractOrderEntry.getFulfillmentMode());
+				}
 				///Delivery mode ///
 				final List<MobdeliveryModeWsDTO> deliveryList = new ArrayList<MobdeliveryModeWsDTO>();
 				MobdeliveryModeWsDTO delivery = null;
@@ -1562,6 +1563,16 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (null != obj)
 				{
 					gwlp.setPinCodeResponse(obj);
+				}
+				/* Added in R2.3 TISRLUAT-812 start */
+				if (null != abstractOrderEntry.getEdScheduledDate())
+				{
+					gwlp.setScheduleDeliveryDate(abstractOrderEntry.getEdScheduledDate());
+				}
+				if (null != abstractOrderEntry.getTimeSlotTo() && null != abstractOrderEntry.getTimeSlotFrom())
+				{
+					gwlp.setScheduleDeliveryTime(abstractOrderEntry.getTimeSlotFrom()
+							.concat(" " + MarketplacewebservicesConstants.TO + " ").concat(abstractOrderEntry.getTimeSlotTo()));
 				}
 				gwlpList.add(gwlp);
 
@@ -2211,7 +2222,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		final AddressModel addressModel = getModelService().create(AddressModel.class);
 		try
 		{
-			getAddressReversePopulator().populate(addressData, addressModel);
+			addressReversePopulator.populate(addressData, addressModel);
 			if (null != addressData.getState())
 			{
 				addressModel.setDistrict(addressData.getState());
@@ -2407,6 +2418,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		{
 			shippingAddress.setId(address.getPk().toString());
 		}
+		/* Added in R2.3 for TISRLUAT-904 start */
+		if (null != address.getLandmark())
+		{
+			shippingAddress.setLandmark(address.getLandmark());
+		}
+		/* Added in R2.3 for TISRLUAT-904 end */
+
 		//shippingAddress.setDefaultAddress(new Boolean(checkDefaultAddress(address))); Avoid instantiating Boolean objects; reference Boolean.TRUE or Boolean.FALSE or call Boolean.valueOf() instead.
 		shippingAddress.setDefaultAddress(Boolean.valueOf(checkDefaultAddress(address)));
 		return shippingAddress;
@@ -2697,21 +2715,5 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		this.modelService = modelService;
 	}
 
-	/**
-	 * @return the addressReversePopulator
-	 */
-	public Populator<AddressData, AddressModel> getAddressReversePopulator()
-	{
-		return addressReversePopulator;
-	}
-
-	/**
-	 * @param addressReversePopulator
-	 *           the addressReversePopulator to set
-	 */
-	public void setAddressReversePopulator(final Populator<AddressData, AddressModel> addressReversePopulator)
-	{
-		this.addressReversePopulator = addressReversePopulator;
-	}
 
 }

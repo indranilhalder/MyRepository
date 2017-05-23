@@ -2140,6 +2140,7 @@ $("#otpMobileNUMField").focus(function(){
   
 
  $("#make_saved_cc_payment,#make_saved_cc_payment_up").click(function(){
+	 $("#cvvError").css("display", "none");
 	var password = $(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").val();
 	var ebsDownCheck=$("#ebsDownCheck").val();
 	var isDomestic=$(".card_token").parent().parent().parent().find('.card').find('.radio').find('.card_is_domestic').val();
@@ -5062,6 +5063,8 @@ $(".edit_address").click(function(){
  		success : function(response) {
  		//	$(this).parents().find(".edit").next(".editnewAddresPage#"+address_id).html(response);
  			$('.editnewAddresPage, .formaddress').slideUp();
+ 			// TISRLEE-1676
+ 			$('.editnewAddresPage, .formaddress').empty();
  			$(".add-address").slideDown();
  			$("#"+address_id_new[1]).html(response);
  		//	$(this).parents().find(".edit").next(".editnewAddresPage").show();
@@ -5070,6 +5073,13 @@ $(".edit_address").click(function(){
  			
  			$("#"+address_id_new[1] + " .checkout-shipping.formaddress").prepend("<div class='heading-form'><h3>Edit This Address</h3><input type='button' value='cancel' class='cancelBtnEdit' id='cancel-"+address_id_new[1]+"'></div>");
  			$("#"+address_id_new[1]).slideDown();
+ 			//TISRLEE-2328 Author Tribhuvan
+ 			 loadPincodeData("edit").done(function() {
+     			console.log("addressform line 394");
+     		 var value = $(".address_landmarkOtherDiv").attr("data-value");
+     		 console.log("addressform line 396 "+value);
+     		 otherLandMarkTri(value,"defult");
+     		});
  		},
  		error : function(resp) {
  		}
@@ -5350,7 +5360,7 @@ function checkServiceabilityRequired(buttonType,el){
 	if(buttonType == "typeCheckout" )
 	{
 		
-		if(typeof utag == "undefined"){
+		/*if(typeof utag == "undefined"){
 			console.log("Utag is undefined")
 		}
 		else{
@@ -5358,7 +5368,7 @@ function checkServiceabilityRequired(buttonType,el){
 			utag.link(
 			{"link_text": "cart_checkout_clicked" , "event_type" : "cart_checkout_clicked"}
 			);
-		}
+		}*/
 	}
 	if(sessionPin != selectedPin){
 		checkPincodeServiceability(buttonType,el);
@@ -5386,8 +5396,8 @@ function checkPincodeServiceability(buttonType,el)
 	var regPostcode = /^([1-9])([0-9]){5}$/;
 	$(".deliveryUlClass").remove();//TPR-1341
 	var utagCheckPincodeStatus="";
-	
 	if(selectedPincode === ""){	
+		alert("ifpincode"+selectedPincode);
 		$( "#error-Id").hide();
 		$( "#error-IdBtm").hide();
 		$( "#error-Id_tooltip").hide();
@@ -5429,6 +5439,7 @@ function checkPincodeServiceability(buttonType,el)
 		return false;
 	}
 	else if(regPostcode.test(selectedPincode) != true){
+		alert("elseifpincode"+selectedPincode);
     	$("#defaultPinCodeIds").css("color","red");
         $("#error-Id").show();
         $("#error-IdBtm").show();//UF-68
@@ -5541,7 +5552,8 @@ function checkPincodeServiceability(buttonType,el)
 		// TPR-1055 ends
 	} //CAR-246
 	else if(selectedPincode!==""){
-		$(location).attr('href',ACC.config.encodedContextPath + "/cart?pincode="+selectedPincode);
+		alert("pincode"+selectedPincode);
+		$(location).attr('href',ACC.config.encodedContextPath + "/cart?pincode="+selectedPincode);		
 	}
 	else
     {
@@ -6274,10 +6286,20 @@ function activateSignInTab()
 {
 	var isSignInActive=$("#isSignInActive").val();
 	if(isSignInActive==='Y'){
-		$("#signIn_link").addClass('active');
-		$("#sign_in_content").addClass('active');
-		$("#SignUp_link").removeClass('active');
-		$("#sign_up_content").removeClass('active');
+		/*start change of INC144314983*/
+		if($("#sign_in_content").hasClass("active")){
+			$("#signIn_link").addClass('active');
+			$("#sign_in_content").addClass('active');
+			$("#SignUp_link").removeClass('active');
+			$("#sign_up_content").removeClass('active');
+		}
+		else{
+			$("#SignUp_link").addClass('active');
+			$("#sign_up_content").addClass('active');
+			$("#signIn_link").removeClass('active');
+			$("#sign_in_content").removeClass('active');
+		}
+		/*end change of INC144314983*/
 	}else{
 		$("#SignUp_link").addClass('active');
 		$("#sign_up_content").addClass('active');

@@ -9,6 +9,9 @@
 	font-family: Arial, non-serif;
 }
 
+
+
+
 .loginContainerWindow {
 	background-image: url(../images/login-cscockpit.png);
 }
@@ -1191,7 +1194,6 @@ body .hywin a.greenLink, body .hywin a.greenLink:visited {
 .csContentArea .csOrderConsignmentsWidgetConfig .csWidgetContent {
 	padding: 5px;
 }
-
 .csContentArea .orderPaymentTransactionsWidget .csWidgetContent {
 	padding: 5px;
 }
@@ -1396,7 +1398,7 @@ body .hywin a.greenLink, body .hywin a.greenLink:visited {
 	text-align: left;
 }
 
-.csContentArea .checkoutCartWidget .csCartLineDeliveryActions   {
+.csContentArea .checkoutCartWidget .csCartLineDeliveryActions � {
 	text-align: left
 }
 
@@ -2305,35 +2307,48 @@ table.z-button.btn {
 }
 
 .addressForFN {
-	margin-left: 60px;
+	    margin-left: 67px;
+    padding-right: 2px;
 }
 
 .addressForMN {
-	margin-left: 55px;
+	margin-left: 58px;
+	padding-right: 3px;
 }
 
 .addressForLN {
-	margin-left: 60px;
+	    margin-left: 67px;
+    padding-right: 2px;
 }
 
 .address1ForAddressField {
-	margin-left: 40px;
+	    margin-left: 46px;
+    padding-right: 2px;
 }
 
 .address2ForAddressField {
-	margin-left: 40px;
+margin-left: 51px;
+    padding-right: 2px;
 }
 
 .address3ForAddressField {
-	margin-left: 63px;
+	margin-left: 51px;
 }
-
+.landMarkDropDownField {
+	    margin-left: 75px;
+    width: 179px;
+	
+}
+.landMarkAddressField {
+	    margin-left: 13px;
+}
 .addressForCityField {
-	margin-left: 93px;
+	    margin-left: 101px;
+    padding-left: 3px;
 } 
 
 .addressForLocalityField {
-	margin-left: 78px;
+	margin-left: 84px;
 }
 
 /* .addressForCityField {
@@ -2341,35 +2356,39 @@ table.z-button.btn {
 } */ 
 
 .addressForStateField {
-	margin-left: 86px;
+	margin-left: 93px;
 }
 
 .addressForPostalCodeField {
-	margin-left: 54px;
+	margin-left: 60px;
+    padding-right: 2px;
 }
 
 .addressForMobileNumberField {
 	margin-left: 0px;
+	padding-left: 1px;
 }
 
 .addressForMobileNumberPrefixField {
-	margin-left: 41px;
+margin-left: 45px;
 }
 
 .addressForAddressType select {
-	margin-left: 42px;
-	width: 180px;
+	           margin-left: 53px;
+    width: 179px;
+    padding-left: 0px;
 }
 
 .stateForAddressType select {
 	
-	margin-left: 85px;
-	width: 180px;
+	    margin-left: 95px;
+    width: 179px;
 }
 
 .addressForCountry select {
-	margin-left: 75px;
-	width: 180px;
+	    margin-left: 86px;
+    width: 179px;
+    padding-right: 0px;
 }
 
 .csAddressCreateWidgetFrame .csWidgetContent table {
@@ -3398,11 +3417,11 @@ div.z-listbox {
 	text-align: left !important;
 }
 
-* html .appliedPromotionsWidget   {
+* html .appliedPromotionsWidget � {
 	text-align: left !important;
 }
 
-* html .orderPaymentTransactionsWidget   {
+* html .orderPaymentTransactionsWidget � {
 	text-align: left !important;
 }
 
@@ -3664,3 +3683,163 @@ th.csPropReturnEntryexpectedQuantity.z-list-header  {
 th.csPropReturnEntryreceivedQuantity.z-list-header{
 	        min-width: 70px !important;/*UI Fix*/
 }
+.changeDeliveryAddress {
+	margin-top: 20px;
+	margin-left: 30px;
+	margin-bottom: 20px;
+}
+.hbox {
+	margin-top: 20px;
+	margin-left: 150px;
+	margin-bottom: 20px;
+}
+.updateDeliveryAddress {
+	margin-left: 300px;
+	margin-top: 20px;
+}
+.validateOTP{
+	margin-top: 5px;
+	margin-left: 260px;
+	margin-bottom: 10px;
+	
+}
+.otpHbox{
+	margin-top: 30px;
+	margin-left: 200px;
+	margin-bottom: 20px;
+}
+.sdDeliveryButton {
+	margin-top: 5px;
+	margin-left: 300px;
+	margin-bottom: 10px;
+	width:120px;
+}
+.returntext {
+	margin-top: 15px;
+	margin-left: 35px;
+}
+.secondLabel {
+margin-left: 35px;
+margin-top: 15px;
+}
+
+.boldText {
+	font-weight: bold;
+}
+
+.detailsClasss {
+	margin-top: 40px;
+	margin-left: 72px;
+	margin-right: 600px;
+	margin-bottom: 30px;
+	font-weight: bold;
+}
+.cardDetailsClass {
+	margin-top: -80px;
+    float: right;
+    margin-right: 135px;
+}
+.creditButton {
+	float: right;
+    margin-right: 45px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.listClass {
+	margin-top: 10px;
+}
+.modeSelection {
+   margin-top: 0px;
+   margin-left: 72px;
+   margin-right: 600px;
+   margin-bottom: 30px;
+   font-weight: bold;
+}
+
+/* new CHANGHES */
+
+.returnModels {
+	margin-top: 20px;
+}
+.selectedMode {
+	margin-top:15px;
+}
+.dateSelection {
+	margin-top: 35px;
+}
+.modeDetails {
+	margin-top: 50px;
+    margin-left: 72px;
+}
+.displayArea {
+	margin-left: 72px;
+    margin-top: 20px;
+    margin-right: 72px;
+}
+
+.scheduleDeliveryChargeHeaderLabel {
+	width: 13% !important;
+	background-color: #F2F2F2;
+	height: 23px;
+} 
+.deliveryChargeHeaderLabel {
+	width: 12% !important;
+	background-color: #F2F2F2;
+	height: 23px;
+} 
+ 
+.AcntNumberLabel{
+	font-size: 15px;
+    padding-right: 40px;
+}
+.accNoTextbox{
+	width: 29%;
+    height: 15px;
+    border-color: black;
+    font-size: 15px;
+}
+.reEntrAcntnumber{
+	 font-size: 15px;
+    padding-left: 50px;
+    padding-right: 5px;
+}
+.acntHolderName{
+	    width: 10px;
+    font-size: 15px;
+}
+.accHolderNameTextbox{
+	width: 30%;
+    height: 16px;
+    border-color: black;
+    font-size: 15px;
+}
+
+.bankNameLabel{
+	font-size: 15px;
+	padding-right: 70px;
+}
+.acntHolderTitle {
+    padding-left: 20px;
+    padding-right: 5px;
+    width: 10px;
+    font-size: 15px;
+}
+.refundModedropDown{
+	width: 30%;
+    height: 16px;
+    border-color: black;
+    font-size: 12px;
+}
+
+.storeSelectionmsg {
+	margin-left: 450px;
+    margin-top: 25px;
+}
+.otpLimitsDiv{
+	color: red;
+    padding-left: 233px   
+ }
+ 
+ .returnAddress{
+  padding-left:200px;
+ }

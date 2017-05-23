@@ -3,6 +3,7 @@ package com.tisl.mpl.seller.product.facades.impl;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
@@ -39,6 +40,8 @@ import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 
@@ -63,6 +66,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	//TISCR-414 - Chairmans demo feedback 10thMay CR
 	private static final String LINGERIE1 = "LINGERIE1";
 	private static final String LINGERIE2 = "LINGERIE2";
+	private static final String FINEJEWELLERY = "FineJewellery";
 
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(BuyBoxFacadeImpl.class);
@@ -76,6 +80,10 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	private MplDeliveryCostService mplDeliveryCostService;
 	@Resource(name = "productDetailsHelper")
 	private ProductDetailsHelper productDetailsHelper;
+	@Autowired
+	private MplSellerInformationService mplSellerInformationService;
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
 
 	private static final String BUYBOX_LIST = "buyboxList";
 
@@ -599,7 +607,11 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					sellerData.setShippingMode(rich.getShippingModes().getCode());
 				}
 
+				if (null != rich.getDeliveryFulfillModeByP1())
+				{
 
+					sellerData.setDeliveryFulfillModebyP1(rich.getDeliveryFulfillModeByP1().getCode());
+				}
 				if (null != rich.getDeliveryFulfillModes() && rich.getDeliveryFulfillModes().equals(DeliveryFulfillModesEnum.TSHIP))
 				{
 
@@ -622,10 +634,18 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				{
 					sellerData.setIsCod(MarketplaceFacadesConstants.N);
 				}
+				if (null != rich.getIsFragile())
+				{
+					sellerData.setIsFragile(rich.getIsFragile().getCode());
+				}
+				if (null != rich.getIsPrecious())
+				{
+					sellerData.setIsPrecious(rich.getIsPrecious().getCode());
+				}
 
 				sellerData.setReturnPolicy(rich.getReturnWindow());
 				sellerData.setReplacement(rich.getReplacementWindow());
-
+				sellerData.setSellerHandlingTime(rich.getSellerHandlingTime());
 				SellerInformationDataList.add(sellerData);
 
 			}
@@ -651,6 +671,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		boolean onlineExclusive = false;
 		Date existDate = null;
 		final String allowNew = configurationService.getConfiguration().getString("attribute.new.display");
+		final String configSellerHandlingTime = configurationService.getConfiguration().getString("buybox.sellerhandling.time");
 		for (final SellerInformationModel seller : productModel.getSellerInformationRelator())
 		{
 			if ((seller.getSellerAssociationStatus() == null || seller.getSellerAssociationStatus().equals(
@@ -681,13 +702,29 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 						{
 							richData.setFulfillment(rich.getDeliveryFulfillModes().getCode());
 						}
+						/* Bug ID TATA-815 */
+						if (null != rich.getDeliveryFulfillModeByP1())
+						{
+							richData.setFulfillmentType1(rich.getDeliveryFulfillModeByP1().getCode());
+						}
 						if (HomeDeliveryEnum.YES.equals(rich.getHomeDelivery()))
 						{
 							deliveryModes.append(HD).append(','); // SONAR Fixes
 						}
 						if (ExpressDeliveryEnum.YES.equals(rich.getExpressDelivery()))
 						{
-							deliveryModes.append(ED).append(','); // SONAR Fixes
+							if (null != rich.getSellerHandlingTime() && StringUtils.isNotEmpty(rich.getSellerHandlingTime().toString()))
+							{
+								//configure the seller handling time
+								final int sellerHandlingTimeForConfig = configSellerHandlingTime == null ? 0 : Integer
+										.parseInt(configSellerHandlingTime);
+
+								final Integer sellerHandlingTime = rich.getSellerHandlingTime();
+								if (sellerHandlingTime.intValue() >= 0 && sellerHandlingTime.intValue() <= sellerHandlingTimeForConfig)
+								{
+									deliveryModes.append(ED).append(','); // SONAR Fixes
+								}
+							}
 						}
 						if (ClickAndCollectEnum.YES.equals(rich.getClickAndCollect()))
 						{
@@ -850,13 +887,64 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		buyboxData.setAvailable(buyBoxMod.getAvailable());
 		/*
 		 * //TPR-3752 Jewel Heading Added
-		 */if (null != buyBoxMod.getPLPMaxPrice())
+		 */
+		if (null != buyBoxMod.getPLPMaxPrice())
 		{
 			buyboxData.setPlpMaxPrice(productDetailsHelper.formPriceData(buyBoxMod.getPLPMaxPrice()));
 		}
 		if (null != buyBoxMod.getPLPMinPrice())
 		{
 			buyboxData.setPlpMinPrice(productDetailsHelper.formPriceData(buyBoxMod.getPLPMinPrice()));
+		}
+
+		// TISRLEE-1586 03-01-2017
+		final String productcode = buyBoxMod.getProduct();
+		ProductModel product = null;
+		String productcategory = null;
+		SellerInformationModel sellerInfoModel = null;
+		if (StringUtils.isNotEmpty(productcode))
+		{
+			product = buyBoxService.getProductDetailsByProductCode(productcode);
+
+		}
+		if (null != product && StringUtils.isNotEmpty(product.getProductCategoryType()))
+		{
+			productcategory = product.getProductCategoryType();
+		}
+		if (productcategory.equalsIgnoreCase(FINEJEWELLERY))
+		{
+			final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(buyBoxMod
+					.getSellerArticleSKU());
+			sellerInfoModel = mplSellerInformationService.getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+		}
+		else
+		{
+			sellerInfoModel = mplSellerInformationService.getSellerDetail(buyBoxMod.getSellerArticleSKU());
+		}
+		if (CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
+		{
+			final List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+			int sellerEDTime = 0;
+			try
+			{
+				if (richAttributeModel.get(0).getSellerHandlingTime() != null)
+				{
+					final Integer sellertime = richAttributeModel.get(0).getSellerHandlingTime();
+					sellerEDTime = Integer.parseInt(sellertime.toString());
+				}
+				if (sellerEDTime <= 24)
+				{
+					buyboxData.setIsSellerHandlingTime(true);
+				}
+				else
+				{
+					buyboxData.setIsSellerHandlingTime(false);
+				}
+			}
+			catch (final NullPointerException exception)
+			{
+				LOG.error("Null Point Exception : BuyBoxFacadeImpl" + exception.getMessage());
+			}
 		}
 
 		if (null != buyBoxMod.getMrp())

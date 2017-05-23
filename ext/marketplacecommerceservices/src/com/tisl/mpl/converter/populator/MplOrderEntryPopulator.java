@@ -145,12 +145,40 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 			addImeiDetails(source, target);
 			addSellerInformation(source, target);
 			populateSellerInfo(source, target);
-
+			addDeliverySlots(source, target);
 
 		}
+		target.setIsRefundable(source.isIsRefundable());
 	}
 
 
+	/**
+	 * @param source
+	 * @param target
+	 */
+
+	private void addDeliverySlots(AbstractOrderEntryModel source, OrderEntryData target)
+	{
+		if (null != source.getScheduledDeliveryCharge())
+		{
+			target.setScheduledDeliveryCharge(source.getScheduledDeliveryCharge());
+		}
+		if(null != source.getEdScheduledDate()){
+			target.setSelectedDeliverySlotDate(source.getEdScheduledDate());
+		}
+		if(null != source.getTimeSlotFrom()){
+			target.setTimeSlotFrom(source.getTimeSlotFrom());
+		}
+		if(null != source.getTimeSlotTo()){
+			target.setTimeSlotTo(source.getTimeSlotTo());
+		}
+		
+		if (StringUtils.isNotEmpty(source.getSddDateBetween()))
+		{
+			target.setEddDateBetWeen(source.getSddDateBetween());
+		}
+	}
+	
 	/**
 	 * @param source
 	 * @param target
@@ -498,3 +526,4 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 		this.mplDeliveryModeConverter = mplDeliveryModeConverter;
 	}
 }
+

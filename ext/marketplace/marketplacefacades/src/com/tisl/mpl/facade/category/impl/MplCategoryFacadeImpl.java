@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.CollectionUtils;
@@ -41,7 +40,7 @@ import com.tisl.mpl.wsdto.BreadcrumbResponseWsDTO;
  */
 public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCategoryFacade
 {
-	private static final Logger LOG = Logger.getLogger(MplCategoryFacadeImpl.class);
+	
 	private ConfigurationService configurationService;
 	@Autowired
 	private UrlResolver<ProductModel> productModelUrlResolver;

@@ -10,6 +10,8 @@ import de.hybris.platform.commercefacades.order.data.DeliveryModeData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.order.impl.DefaultCheckoutFacade;
+import de.hybris.platform.commercefacades.product.data.DeliveryDetailsData;
+import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.user.data.AddressData;
@@ -28,6 +30,7 @@ import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 
 import java.math.BigDecimal;
@@ -76,8 +79,13 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
+
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService jewelleryService;
+
+	@Autowired
+	private SessionService sessionService;
+
 	private static final Logger LOG = Logger.getLogger(MplCustomAddressFacadeImpl.class);
 
 	private static final String FINEJEWELLERY = "FineJewellery";
@@ -413,7 +421,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.checkout.MplCustomAddressFacade#populateDeliveryMethodData(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -504,9 +512,9 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * Set delivery mode using USSID
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param sellerArticleSKUID
 	 */
 	@Override
@@ -724,6 +732,11 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 				MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
 		tshipThresholdValue = (tshipThresholdValue != null && !tshipThresholdValue.isEmpty()) ? tshipThresholdValue : Integer
 				.toString(0);
+		List<PinCodeResponseData> pincoderesponseDataList = null;
+		pincoderesponseDataList = sessionService
+				.getAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
+
+		LOG.debug("******responceData******** " + pincoderesponseDataList);
 
 		if (cartModel != null)
 		{
@@ -736,51 +749,50 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 							deliveryCode, MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
 
 					//TISEE-289
-
 					//for fine jewellery
+					SellerInformationModel sellerInfoModel = null;
 					if (entry.getProduct().getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
 					{
 						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
 								.getJewelleryInfoByUssid(sellerArticleSKU);
-						final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
-								jewelleryInfo.get(0).getPCMUSSID());
-						if (sellerInfoModel != null
-								&& sellerInfoModel.getRichAttribute() != null
-								&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
-						{
-							fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-									.getDeliveryFulfillModes().getCode();
-
-							// For Release 1 , TShip delivery cost will always be zero . Hence , commenting the below code which check configuration from HAC
-							if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE)
-									&& entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue))
-
-							{
-								mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0));
-							}
-						}
-
+						sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
 					}
 					else
 					{
-						final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
-								sellerArticleSKU);
-						if (sellerInfoModel != null
-								&& sellerInfoModel.getRichAttribute() != null
-								&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+						sellerInfoModel = getMplSellerInformationService().getSellerDetail(sellerArticleSKU);
+					}
+
+					if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
+							&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+					{
+						fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
+								.getDeliveryFulfillModes().getCode();
+
+						// For Release 1 , TShip delivery cost will always be zero . Hence , commenting the below code which check configuration from HAC
+						if (null != pincoderesponseDataList && pincoderesponseDataList.size() > 0)
 						{
-							fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-									.getDeliveryFulfillModes().getCode();
-
-							// For Release 1 , TShip delivery cost will always be zero . Hence , commenting the below code which check configuration from HAC
-							if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE)
-									&& entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue))
-
+							for (final PinCodeResponseData responseData : pincoderesponseDataList)
 							{
-								mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0));
+								if (entry.getSelectedUSSID().equals(responseData.getUssid()))
+								{
+									for (final DeliveryDetailsData detailsData : responseData.getValidDeliveryModes())
+									{
+										if (null != detailsData.getFulfilmentType()
+												&& detailsData.getFulfilmentType().equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE)
+												&& entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue))
+
+										{
+											mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0));
+										}
+									}
+								}
 							}
 						}
-
+						/*
+						 * if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE) &&
+						 * entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue)) {
+						 * mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0)); }
+						 */
 					}
 
 					entry.setMplDeliveryMode(mplZoneDeliveryModeValueModel);
@@ -958,7 +970,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCustomAddressFacade#getDeliveryAddresses(de.hybris.platform.commercefacades.user
 	 * .data.AddressData)

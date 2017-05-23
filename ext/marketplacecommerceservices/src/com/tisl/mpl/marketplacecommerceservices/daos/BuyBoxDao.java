@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.daos;
 
 import de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel;
+import de.hybris.platform.core.model.product.ProductModel;
 
 import java.util.Date;
 import java.util.List;
@@ -54,11 +55,18 @@ public interface BuyBoxDao
 
 	List<ClassAttributeAssignmentModel> getClassAttrAssignmentsForCode(String code) throws EtailNonBusinessExceptions;
 
-
 	/**
 	 * @param sellerArticleSKUList
 	 * @return
 	 */
 	public List<BuyBoxModel> getBuyboxSellerPricesForSearch(List<String> sellerArticleSKUList) throws EtailNonBusinessExceptions;
+
+	//INC144315542_INC144314878_INC_11113
+
+	public List<BuyBoxModel> getBuyboxPricesForSizeVariant(String productCode) throws EtailNonBusinessExceptions;
+
+	//for fine jewellery pdp
+	public ProductModel getProductDetailsByProductCode(final String productcode);
+
 
 }

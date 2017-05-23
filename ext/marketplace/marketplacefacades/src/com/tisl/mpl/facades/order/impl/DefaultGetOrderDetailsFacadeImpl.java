@@ -20,6 +20,8 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.product.ProductService;
+import de.hybris.platform.returns.model.ReturnEntryModel;
+import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.BaseStoreModel;
@@ -36,12 +38,14 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
@@ -114,6 +118,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 	@Autowired
 	private DefaultMplOrderFacade defaultmplOrderFacade;
+    @Autowired
+	private MplDeliveryAddressFacade mplDeliveryAddressFacade;
 
 	/**
 	 * @description method is called to fetch the details of a particular orders for the user
@@ -1590,7 +1596,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	}
 
 	@Override
-	public OrderTrackingWsDTO getOrderDetailsWithTracking(final String orderCode)
+	public OrderTrackingWsDTO getOrderDetailsWithTracking(final HttpServletRequest request,final String orderCode)
 	{
 		final OrderTrackingWsDTO orderTrackingWsDTO = new OrderTrackingWsDTO();
 		final List<OrderProductWsDTO> orderproductdtos = new ArrayList<OrderProductWsDTO>();
@@ -2114,6 +2120,33 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 									parentTransactionIds = Arrays.asList(entry.getParentTransactionID().split("\\s*,\\s*"));
 								}
 								orderproductdto.setParentTransactionId(parentTransactionIds);
+								
+								//ADDED R2.3 New attribute
+								if(entry.getSelectedDeliverySlotDate()!=null)
+								{
+									orderproductdto.setScheduleDeliveryDate(entry.getSelectedDeliverySlotDate());
+									if(StringUtils.isNotEmpty(entry.getTimeSlotFrom())){
+										if(StringUtils.isNotEmpty(entry.getTimeSlotTo()) && StringUtils.isNotEmpty(entry.getTimeSlotFrom())){
+											orderproductdto.setScheduleDeliveryTime(entry.getTimeSlotFrom().concat(" to ").concat(entry.getTimeSlotTo()));
+										}
+										
+									}
+								}
+								
+								//R2.3 Changes-Start
+								orderproductdto
+										.setSelfCourierDocumentLink(getSelfCourierDocumentUrl(request,subOrder.getCode(), entry.getTransactionId()));
+								String returnType = getAwbPopupLink(entry, subOrder.getCode());
+								if (MarketplacecommerceservicesConstants.SELF_COURIER.equalsIgnoreCase(returnType)
+										&& !entry.isIsRefundable())
+								{
+									orderproductdto.setAwbPopupLink(MarketplacecommerceservicesConstants.Y);
+								}else
+								{
+									orderproductdto.setAwbPopupLink(MarketplacecommerceservicesConstants.N);
+								}
+								//R2.3 Changes-END
+								
 								//Check if invoice is available
 								if (entry.getConsignment() != null)
 								{
@@ -2184,6 +2217,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 					orderTrackingWsDTO.setIsPickupUpdatable(isPickUpButtonEditable(orderDetail));
 					orderTrackingWsDTO.setStatusDisplay(orderDetail.getStatusDisplay());
 					orderTrackingWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					//R2.3 FLO1 new attribute Added 
+					orderTrackingWsDTO.setIsCDA(mplDeliveryAddressFacade.isDeliveryAddressChangable(orderCode));
 				}
 				else
 				{
@@ -2407,6 +2442,19 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							orderproductdto.setShipmentdetails(ordershipmentdetailstdtos.get(0));
 
 							orderproductdtos.add(orderproductdto);
+							//R2.3 Changes-Start
+							orderproductdto
+									.setSelfCourierDocumentLink(getSelfCourierDocumentUrl(request,orderDetail.getCode(), orderEntry.getTransactionId()));
+							String returnType = getAwbPopupLink(orderEntry, orderDetail.getCode());
+							if (MarketplacecommerceservicesConstants.SELF_COURIER.equalsIgnoreCase(returnType)
+									&& !orderEntry.isIsRefundable())
+							{
+								orderproductdto.setAwbPopupLink(MarketplacecommerceservicesConstants.Y);
+							}else
+							{
+								orderproductdto.setAwbPopupLink(MarketplacecommerceservicesConstants.N);
+							}
+							//R2.3 Changes-END
 						}
 					}
 					orderTrackingWsDTO.setProducts(orderproductdtos);
@@ -2435,6 +2483,227 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 		return orderTrackingWsDTO;
 	}
 
+	/**
+	 * @param entry
+	 * @param orderModel
+	 */
+	private String getAwbPopupLink(OrderEntryData entry, String subOrderCode)
+	{
+		try
+		{
+			List<ReturnRequestModel> returnRequestModelList = cancelReturnFacade.getListOfReturnRequest(subOrderCode);
+			if (null != returnRequestModelList && returnRequestModelList.size() > 0)
+			{
+				for (final ReturnRequestModel mm : returnRequestModelList)
+				{
+					for (final ReturnEntryModel mmmodel : mm.getReturnEntries())
+					{
+						if (entry.getTransactionId().equalsIgnoreCase(mmmodel.getOrderEntry().getTransactionID()))
+						{
+							if (null != mm.getTypeofreturn() && null != mm.getTypeofreturn().getCode())
+							{
+								return mm.getTypeofreturn().getCode();
+							}
+						}
+					}
+
+				}
+			}
+		}
+		catch (Exception exception)
+		{
+			LOG.error("Exception Oucer Get getAwbPopupLink DefaultGetOrderDetailsFacadeImpl");
+
+		}
+		return null;
+	}
+
+	/**
+	 * @param orderModel
+	 */
+	private String getSelfCourierDocumentUrl(final HttpServletRequest request,String orderCode, String transactionID)
+	{
+		try {
+			String scheme = request.getScheme();
+			String serverName = request.getServerName();
+			String portNumber = String.valueOf(request.getServerPort());
+			StringBuilder sb = new StringBuilder(scheme);
+			sb.append(MarketplaceFacadesConstants.COLON);
+			sb.append(MarketplaceFacadesConstants.FORWARD_SLASHES);
+			sb.append(serverName);
+			if(null != portNumber) {
+				sb.append(MarketplaceFacadesConstants.COLON);
+				sb.append(portNumber);
+			}
+			sb.append(MarketplaceFacadesConstants.RETURN_SELF_COURIER_FILE_DOWNLOAD_URL);
+			sb.append(orderCode);
+			sb.append(MarketplaceFacadesConstants.AMPERSAND);
+			sb.append(MarketplaceFacadesConstants.TRANSACTION_ID);
+			sb.append(MarketplaceFacadesConstants.EQUALS_TO);
+			sb.append(transactionID);
+			String SelfCourierDocumentLink = String.valueOf(sb);
+			if(LOG.isDebugEnabled()) {
+				LOG.debug("Self Courier return file download location for transaction id "+transactionID+" with order code  "+orderCode+" is "+SelfCourierDocumentLink);
+			}
+			return  SelfCourierDocumentLink;
+
+		}
+		catch (Exception expection)
+		{
+			LOG.error("Exception Oucer Get fileDownloadLocation DefaultGetOrderDetailsFacadeImpl");
+		}
+
+		return null;
+	}
+
+	/*
+	 * @param orderCode
+	 *
+	 * @return
+	 */
+	@Override
+	public Map<String, List<AWBResponseData>> getOrderStatusTrack(final OrderEntryData orderEntryDetail, final OrderData subOrder,
+			final OrderData parentOrder)
+	{
+
+		final Map<String, List<AWBResponseData>> returnMap = new HashMap<String, List<AWBResponseData>>();
+
+		List<AWBResponseData> approvalMapList = new ArrayList<AWBResponseData>();
+		List<AWBResponseData> processingMapList = new ArrayList<AWBResponseData>();
+		List<AWBResponseData> shippingMapList = new ArrayList<AWBResponseData>();
+		List<AWBResponseData> cancelMapList = new ArrayList<AWBResponseData>();
+		List<AWBResponseData> returnMapList = new ArrayList<AWBResponseData>();
+		OrderStatusCodeMasterModel trackModel = null;
+
+		final Map<String, AWBResponseData> awbApprovalMap = new LinkedHashMap<String, AWBResponseData>();
+		final Map<String, AWBResponseData> awbProcessingMap = new LinkedHashMap<String, AWBResponseData>();
+		final Map<String, AWBResponseData> awbShippingMap = new LinkedHashMap<String, AWBResponseData>();
+		final Map<String, AWBResponseData> awbCancelMap = new LinkedHashMap<String, AWBResponseData>();
+		final Map<String, AWBResponseData> awbReturnMap = new LinkedHashMap<String, AWBResponseData>();
+
+		try
+		{
+			final OrderModel orderMod = orderModelService.getOrder(subOrder.getCode());
+			final Map<String, OrderStatusCodeMasterModel> orderStatusCodeMap = orderModelService.getOrderStausCodeMasterList();
+
+			if (orderMod.getHistoryEntries().size() > 0)
+			{
+				for (final OrderHistoryEntryModel orderHistoryEntry : orderMod.getHistoryEntries())
+				{
+					if (orderEntryDetail.getOrderLineId().equalsIgnoreCase(orderHistoryEntry.getLineId()))
+					{
+						//****************************** Approval Block
+						trackModel = orderStatusCodeMap.get(MarketplaceFacadesConstants.APPROVED
+								+ MarketplacecommerceservicesConstants.STRINGSEPARATOR + orderHistoryEntry.getDescription());
+						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.APPROVED)
+								&& !isStatusAlradyExists(awbApprovalMap, trackModel) && trackModel.getDisplay().booleanValue())
+						{
+							awbApprovalMap.put(trackModel.getDotId().trim().toUpperCase(),
+									orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+						}
+
+						//****************************** PROCESSING Block
+						trackModel = orderStatusCodeMap.get(MarketplaceFacadesConstants.PROCESSING
+								+ MarketplacecommerceservicesConstants.STRINGSEPARATOR + orderHistoryEntry.getDescription());
+						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.PROCESSING)
+								&& !isStatusAlradyExists(awbProcessingMap, trackModel) && trackModel.getDisplay().booleanValue())
+						{
+							awbProcessingMap.put(trackModel.getDotId().trim().toUpperCase(),
+									orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+						}
+
+						//****************************** SHIPPING Block
+						trackModel = orderStatusCodeMap.get(MarketplaceFacadesConstants.SHIPPING
+								+ MarketplacecommerceservicesConstants.STRINGSEPARATOR + orderHistoryEntry.getDescription());
+						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.SHIPPING)
+								&& !isStatusAlradyExists(awbShippingMap, trackModel) && trackModel.getDisplay().booleanValue())
+						{
+							awbShippingMap.put(trackModel.getDotId().trim().toUpperCase(),
+									orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+						}
+
+
+						trackModel = orderStatusCodeMap.get(MarketplaceFacadesConstants.CANCEL
+								+ MarketplacecommerceservicesConstants.STRINGSEPARATOR + orderHistoryEntry.getDescription());
+
+						//****************************** CANCEL Block
+						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.CANCEL)
+								&& !isStatusAlradyExists(awbCancelMap, trackModel) && trackModel.getDisplay().booleanValue())
+						{
+							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode())
+									|| trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
+							{
+								if (awbCancelMap.size() >= 1)
+								{
+									awbCancelMap.put(trackModel.getDotId(), orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+								}
+							}
+							else
+							{
+								awbCancelMap.put(trackModel.getDotId().trim().toUpperCase(),
+										orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+							}
+						}
+
+						//****************************** RETURN Block
+						trackModel = orderStatusCodeMap.get(MarketplaceFacadesConstants.RETURN
+								+ MarketplacecommerceservicesConstants.STRINGSEPARATOR + orderHistoryEntry.getDescription());
+						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.RETURN)
+								&& !isStatusAlradyExists(awbReturnMap, trackModel) && trackModel.getDisplay().booleanValue())
+						{
+							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode())
+									|| trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
+							{
+								if (awbReturnMap.size() >= 1)
+								{
+									awbReturnMap.put(trackModel.getDotId(), orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+								}
+							}
+							else
+							{
+								awbReturnMap.put(trackModel.getDotId().trim().toUpperCase(),
+										orderTrackingDetails(trackModel, orderHistoryEntry, subOrder));
+							}
+						}
+					}
+				}
+			}
+
+			approvalMapList = getTrackOrderList(awbApprovalMap);
+			processingMapList = getTrackOrderList(awbProcessingMap);
+			shippingMapList = getTrackOrderList(awbShippingMap);
+			cancelMapList = getTrackOrderList(awbCancelMap);
+			returnMapList = getTrackOrderList(awbReturnMap);
+
+			LOG.info("************************approvalMapList: " + approvalMapList.size());
+			LOG.info("************************processingMapList: " + processingMapList.size());
+			LOG.info("************************shippingMapList: " + shippingMapList.size());
+			LOG.info("************************cancelMapList: " + cancelMapList.size());
+			LOG.info("************************returnMapList: " + returnMapList.size());
+
+			returnMap.put(MarketplaceFacadesConstants.APPROVED, approvalMapList);
+			returnMap.put(MarketplaceFacadesConstants.PROCESSING, processingMapList);
+			returnMap.put(MarketplaceFacadesConstants.SHIPPING, shippingMapList);
+			returnMap.put(MarketplaceFacadesConstants.CANCEL, cancelMapList);
+			returnMap.put(MarketplaceFacadesConstants.RETURN, returnMapList);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
+			return returnMap;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
+			return returnMap;
+		}
+		catch (final Exception e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
+			return returnMap;
+		}
+		return returnMap;
+	}
 	/**
 	 * @param statusResponse
 	 * @param consignment

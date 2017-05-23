@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
@@ -12,8 +13,10 @@ import de.hybris.platform.servicelayer.search.SearchResult;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,16 @@ import com.tisl.mpl.model.MplConfigurationModel;
 @Component(value = "fetchSalesOrderDao")
 public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 {
+
+	/**
+	 * 
+	 */
+	private static final String PRESENT_DATE = "presentDate";
+
+	/**
+	 * 
+	 */
+	private static final String EARLIER_DATE = "earlierDate";
 
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(DefaultFetchSalesOrderDaoImpl.class.getName());
@@ -162,11 +175,11 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 				+ FROM_CLASS + OrderModel._TYPECODE + " AS p} where " + P_CLASS + OrderModel.CREATIONTIME
 				+ "} BETWEEN ?earlierDate and ?presentDate and " + P_CLASS + OrderModel.TYPE + TYPE_CLASS;
 		LOG.debug("db call fetch  specified details success");
-		LOG.debug("earlierDate" + startTime);
-		LOG.debug("presentDate" + endTime);
+		LOG.debug(EARLIER_DATE.intern() + startTime);
+		LOG.debug(PRESENT_DATE.intern() + endTime);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("earlierDate", startTime);
-		query.addQueryParameter("presentDate", endTime);
+		query.addQueryParameter(EARLIER_DATE.intern(), startTime);
+		query.addQueryParameter(PRESENT_DATE.intern(), endTime);
 		query.addQueryParameter(TYPE, PARENT);
 		LOG.debug("********** specified data query" + query);
 		return flexibleSearchService.<OrderModel> search(query).getResult();
@@ -178,8 +191,82 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	@Override
 	public List<OrderModel> fetchSpecifiedCancelData(final Date earlierDate, final Date presentDate)
 	{
+		/*R2.3  Modified*/ 
+		Set<OrderModel> orders =new HashSet<OrderModel>();
+		
+		List<OrderModel> orderCancellist = new ArrayList<OrderModel>();
+		
+		List<OrderModel> orderEdtoHdSdblist = new ArrayList<OrderModel>();
+		try {
+			orderCancellist = getCancelReturnOrders(earlierDate,presentDate);
+			orders.addAll(orderCancellist);
+		}catch(Exception e) {
+			LOG.debug(e);
+		}
+		try {
+			orderEdtoHdSdblist = populateSdbOrEdtoHddata(earlierDate,presentDate);
+			orders.addAll(orderEdtoHdSdblist);
+		}catch(Exception e) {
+			LOG.debug(e);
+		}
+		List<OrderModel> ordersList = new ArrayList<OrderModel>(orders);
+		return ordersList;
+	}
+
+
+
+	/**
+	 * @param earlierDate
+	 * @param presentDate
+	 * @return
+	 */
+	private List<OrderModel> populateSdbOrEdtoHddata(Date earlierDate, Date presentDate)
+	{
+		LOG.debug("********inside dao for selecting specified cancel order data**********");
+		
+		final String query1 = "SELECT DISTINCT {cur:" + OrderModel.PK + "} " + " FROM {" + OrderModel._TYPECODE + " AS cur "
+				+ "LEFT JOIN " + AbstractOrderEntryModel._TYPECODE + "  AS aoe  ON {cur:" + OrderModel.PK + "}={aoe:"
+				+ AbstractOrderEntryModel.ORDER + "} " + "} WHERE ({aoe:" + AbstractOrderEntryModel.MODIFIEDTIME
+				+ "} BETWEEN ?earlierDate and ?presentDate)" + "and " + "{cur." + OrderModel.TYPE + TYPE_CLASS;
+	
+	
+
+		final Map<String, Object> params = new HashMap<String, Object>(2);
+		params.put(EARLIER_DATE.intern(), earlierDate);
+		params.put(PRESENT_DATE.intern(), presentDate);
+		params.put(TYPE, SUB);
+		
+		
+		final FlexibleSearchQuery queryString1 = new FlexibleSearchQuery(query1);
+		LOG.debug("********** specified data query" + queryString1);
+		
+	
+		final SearchResult<OrderModel> searchRes = flexibleSearchService.search(query1, params);
+		LOG.debug(searchRes);
+		List<OrderModel> orderlist = new ArrayList<OrderModel>();
+		if (searchRes != null && searchRes.getCount() > 0)
+		{
+			for (final OrderModel orderModel : searchRes.getResult())
+			{
+				//TISPRO-129
+				if (orderModel.getVersionID() == null)
+				{
+					orderlist.add(orderModel);
+				}
+			}
+		}
+		return orderlist;
+	}
+
+
+	/**
+	 * @param earlierDate
+	 * @param presentDate
+	 * @return
+	 */
+	private List<OrderModel> getCancelReturnOrders(Date earlierDate, Date presentDate)
+	{
 		//TISPRO-129 && TISPRD 2511 query modified
-		final List<OrderModel> orderlist = new ArrayList<OrderModel>();
 		LOG.debug("********inside dao for selecting specified cancel order data**********");
 		final String query = "SELECT DISTINCT {cur:" + OrderModel.PK + "} " + " FROM {" + OrderModel._TYPECODE + " AS cur "
 				+ "LEFT JOIN " + OrderHistoryEntryModel._TYPECODE + "  AS adr  ON {cur:" + OrderModel.PK + "}={adr:"
@@ -187,12 +274,14 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 				+ "} BETWEEN ?earlierDate and ?presentDate)" + "and " + "{cur." + OrderModel.TYPE + TYPE_CLASS;
 
 		final Map<String, Object> params = new HashMap<String, Object>(2);
-		params.put("earlierDate", earlierDate);
-		params.put("presentDate", presentDate);
+		params.put(EARLIER_DATE.intern(), earlierDate);
+		params.put(PRESENT_DATE.intern(), presentDate);
 		params.put(TYPE, SUB);
 		final FlexibleSearchQuery queryString = new FlexibleSearchQuery(query);
 		LOG.debug("********** specified data query" + queryString);
 		final SearchResult<OrderModel> searchRes = flexibleSearchService.search(query, params);// removing toString SONAR Analysis
+
+		List<OrderModel> orderlist = new ArrayList<OrderModel>();
 		if (searchRes != null && searchRes.getCount() > 0)
 		{
 			for (final OrderModel orderModel : searchRes.getResult())

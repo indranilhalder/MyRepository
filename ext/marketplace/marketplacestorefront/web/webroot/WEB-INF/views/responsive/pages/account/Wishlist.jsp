@@ -602,11 +602,11 @@
 						<spring:theme code="wishlist.save" />
 					</button>
 					<!-- TPR-646 Changes added class -->
-					<a class="close manageWishlistClose" href="" data-dismiss="modal"><spring:theme code="text.button.cancel" /></a>
+					<a class="manageWishlistClose" href="" data-dismiss="modal"><%-- <spring:theme code="text.button.cancel" /> --%></a>
 					
 					</div>
 					</div>
-					<button class="close" data-dismiss="modal"></button>
+					<button class="close" data-dismiss="modal" style="margin: 0px !important;border:0px !important;"></button>
 				</div>
 				<div class="overlay" data-dismiss="modal"></div>
 			</div>
@@ -643,7 +643,7 @@
  		<div class="overlay" data-dismiss="modal"></div>
 			
 			<div class="modal-content content" style="width:35%">
-			<button type="button" class="close pull-right" aria-hidden="true" data-dismiss="modal"></button>
+			<button type="button" class="close pull-right" aria-hidden="true" data-dismiss="modal" style="margin: 0 !important; border: 0 !important;"></button>
 				<!-- Dynamically Insert Content Here -->
 				<div class="modal-header">
 				<h2 class="modal-title">
@@ -673,8 +673,9 @@
 				<label class="product-deletion-confirmation"><spring:theme
 							code="wishlist.removeProductConfirmation.message" /></label>
 				</div>
+				<!-- changed for TISRLEE-1544 -->
 				<button class="removeProductConfirmation" type="submit"><spring:theme code="text.wishlist.yes" /></button>
-					<a class="close removeProductConfirmationNo" href="" data-dismiss="modal"><spring:theme code="text.wishlist.no" /></a>
+					<a class="removeProductConfirmationNo" href="" data-dismiss="modal"><spring:theme code="text.wishlist.no" /></a>
 				</div>
 				<!-- <button class="close " data-dismiss="modal"></button> -->
 			</div>

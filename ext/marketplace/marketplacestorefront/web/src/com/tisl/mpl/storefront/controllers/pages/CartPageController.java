@@ -199,11 +199,11 @@ public class CartPageController extends AbstractPageController
 			model.addAttribute("priceNotificationUpdateStatus", flashupdateStatus);
 			model.addAttribute("totalCartPriceAsStringStatus", flashtotalCartPriceAsString);
 			//TPR-3780
-
 			//TISST-13012
 			//if (StringUtils.isNotEmpty(cartDataOnLoad.getGuid())) //TISPT-104
 			if (getCartService().hasSessionCart())
 			{
+
 				CartData cartDataOnLoad = mplCartFacade.getSessionCartWithEntryOrdering(true);
 
 				//setExpressCheckout(serviceCart); //TISPT-104
@@ -1314,9 +1314,12 @@ public class CartPageController extends AbstractPageController
 		final JSONObject jsonObject = new JSONObject();
 		//TISSEC-11
 		final String regex = "\\d{6}";
+		//final CartModel cart = getCartService().getSessionCart();
+
 		try
 		{
 			String isServicable = MarketplacecommerceservicesConstants.Y;
+
 			if (selectedPincode.matches(regex))
 			{
 				LOG.debug("selectedPincode " + selectedPincode);
@@ -1328,77 +1331,80 @@ public class CartPageController extends AbstractPageController
 				if (StringUtil.isNotEmpty(selectedPincode))
 				{
 					//TPR-970 changes
-					mplCartFacade.populatePinCodeData(getCartService().getSessionCart(), selectedPincode);
+					//mplCartFacade.populatePinCodeData(cart, selectedPincode);
 					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
 				}
 				try
 				{
-					CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-					if (cartData != null)
+					final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+
+					if (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries()))
 					{
-						if ((cartData.getEntries() != null && !cartData.getEntries().isEmpty()))
+						//if ((cartData.getEntries() != null && !cartData.getEntries().isEmpty()))
+						//{
+						if (!StringUtil.isEmpty(selectedPincode))
 						{
-							if (!StringUtil.isEmpty(selectedPincode))
+							responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData);
+							getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES, responseData); //CAR-126/128/129
+
+						}
+						if (null != responseData)
+						{
+							getSessionService().setAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION, responseData);
+						}
+						if (responseData != null)
+						{
+							for (PinCodeResponseData pinCodeResponseData : responseData)
 							{
-								responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData);
-							}
-							if (responseData != null)
-							{
-								for (PinCodeResponseData pinCodeResponseData : responseData)
+
+								if (pinCodeResponseData != null && pinCodeResponseData.getIsServicable() != null
+										&& pinCodeResponseData.getIsServicable().equalsIgnoreCase(MarketplacecommerceservicesConstants.N))
 								{
+									isServicable = MarketplacecommerceservicesConstants.N;
+									break;
+								}
+								else if (pinCodeResponseData != null && pinCodeResponseData.getIsServicable() != null
+										&& pinCodeResponseData.getIsServicable().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+								{
+									//  TISPRD-1951  START //
 
-									if (pinCodeResponseData != null
-											&& pinCodeResponseData.getIsServicable() != null
-											&& pinCodeResponseData.getIsServicable()
-													.equalsIgnoreCase(MarketplacecommerceservicesConstants.N))
+									// Checking whether inventory is availbale or not
+									// if inventory is not available for particular delivery Mode
+									// then removing that deliveryMode in Choose DeliveryMode Page
+									try
 									{
-										isServicable = MarketplacecommerceservicesConstants.N;
-										break;
+										pinCodeResponseData = getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData,
+												cartData);
 									}
-									else if (pinCodeResponseData != null
-											&& pinCodeResponseData.getIsServicable() != null
-											&& pinCodeResponseData.getIsServicable()
-													.equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+									catch (final Exception e)
 									{
-										//  TISPRD-1951  START //
-
-										// Checking whether inventory is availbale or not
-										// if inventory is not available for particular delivery Mode
-										// then removing that deliveryMode in Choose DeliveryMode Page
-										try
-										{
-											pinCodeResponseData = getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData,
-													cartData);
-										}
-										catch (final Exception e)
-										{
-											LOG.error("Exception occured while checking inventory " + e.getCause());
-										}
-										//  TISPRD-1951  END //
+										LOG.error("Exception occured while checking inventory " + e.getCause());
 									}
+									//  TISPRD-1951  END //
 								}
 							}
-							else
-							{
-								isServicable = MarketplacecommerceservicesConstants.N;
-							}
-							if (isServicable.equals(MarketplacecommerceservicesConstants.Y))
-							{
-								final CartModel cartModel = getCartService().getSessionCart();
-								getMplCartFacade().getCalculatedCart(cartModel);
-								cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-								jsonObject.put("cartData", cartData);
-								jsonObject.put("cartEntries", cartData.getEntries());
-
-								//								getMplCartFacade().getCalculatedCart().getEntries()
-								//								final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-								//								cartData.get
-								//
-								//								getMplCartFacade().setCartSubTotal();
-							}
-							final ObjectMapper objectMapper = new ObjectMapper();
-							jsonResponse = objectMapper.writeValueAsString(responseData);
 						}
+						else
+						{
+							isServicable = MarketplacecommerceservicesConstants.N;
+						}
+						//							if (isServicable.equals(MarketplacecommerceservicesConstants.Y))
+						//							{
+						//								final CartModel cart = getCartService().getSessionCart();
+						//								getMplCartFacade().getCalculatedCart(cart);
+						//								cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+						//								jsonObject.put("cartData", cartData);
+						//								jsonObject.put("cartEntries", cartData.getEntries());
+						//
+						//								//								getMplCartFacade().getCalculatedCart().getEntries()
+						//								//								final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+						//								//								cartData.get
+						//								//
+						//								//								getMplCartFacade().setCartSubTotal();
+						//							}
+						final ObjectMapper objectMapper = new ObjectMapper();
+						jsonResponse = objectMapper.writeValueAsString(responseData);
+						//}
 					}
 
 					LOG.debug(">> isServicable :" + isServicable + " >> json " + jsonResponse);

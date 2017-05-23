@@ -10,6 +10,9 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav"%>
+<!-- R2.3 for track order Start -->
+<%@ taglib prefix="trackOrder" tagdir="/WEB-INF/tags/responsive/common/header"%> 
+<!-- R2.3 for track order END -->
 
 <%-- <cms:pageSlot position="TopHeaderSlot" var="component" element="div"
 	class="container">
@@ -125,6 +128,7 @@
 					
 					</c:if>
 				</div>
+				<c:set var="userLoggedIn" value="${true}"  />
 				<div class="right">
 
 					<ul>
@@ -137,16 +141,29 @@
 								<cms:pageSlot position="MiniCart" var="component">
 									<cms:component component="${component}" />
 								</cms:pageSlot>
+								<!-- R2.3 for track order Start -->
+								 <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+						     	<c:set var="userLoggedIn" value="${false}"  />
+									<li class="track_order_header"><a href="#" onclick="openTrackOrder()">
+										<spring:theme code="trackorder.header.text" text="Track Order"/></a>
+										
+									</li>
+								</sec:authorize> 
+								<c:if test="${userLoggedIn eq 'true'}">
+						     <c:if test="${empty showOnlySiteLogo }">
+									<li class="track"><a href="<c:url value="/my-account/orders"/>"><spring:theme
+												code="header.trackorder" /></a></li>
+								</c:if> 
+					         </c:if>
+								<!-- R2.3 for track order END -->
 								<li class="store-locator-header"><a href="${request.contextPath}/store-finder">Our Stores</a></li>
 								<li class="download-app"><a href="${request.contextPath}/apps">Download App</a></li>
 							</c:if>
 						</c:if>
 						<!--Using this tag for Track Order Link in header navigation pane and it will navigate to 'My Order page'  -->
-
-						<%-- <c:if test="${empty showOnlySiteLogo }">
-									<li class="track"><a href="<c:url value="/my-account/orders"/>"><spring:theme
-												code="header.trackorder" /></a></li>
-								</c:if> --%>
+					<!-- R2.3 for track order Start -->
+					
+				  <!-- R2.3 for track order END -->
 
 					</ul>
 
@@ -283,6 +300,11 @@
 <img class="image" alt="" src="${param.blpLogo}">
 </div>
 </c:if>
+<!-- R2.3 for track order Start -->
+<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+		<trackOrder:trackOrder />
+	</sec:authorize> 
+	<!-- R2.3 for track order END -->
 	<a id="skiptonavigation"></a>
 	<nav:topNavigation />
 </header>

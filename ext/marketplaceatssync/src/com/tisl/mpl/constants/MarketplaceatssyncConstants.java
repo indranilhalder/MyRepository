@@ -16,6 +16,8 @@ package com.tisl.mpl.constants;
 /**
  * Global class for all Marketplaceatssync constants. You can add global constants for your extension into this class.
  */
+@SuppressWarnings(
+{ "PMD", "deprecation" })
 public final class MarketplaceatssyncConstants extends GeneratedMarketplaceatssyncConstants
 {
 	public static final String EXTENSIONNAME = "marketplaceatssync";

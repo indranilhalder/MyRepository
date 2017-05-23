@@ -107,10 +107,10 @@ public class CustomOmsCancelAdapter implements Serializable
 	private OrderCancelDao orderCancelDao;
 	private OrderHistoryService orderHistoryService;
 	private UserService userService;
-	
+	public static final String TICKET_SUB_TYPE_CODE_ARR="ARR";
 
 	public boolean createTicketInCRM(final String subOrderEntryTransactionId, final String ticketTypeCode,
-			final String reasonCode, final String refundType, final OrderModel subOrderModel)
+			final String reasonCode, final String refundType, final OrderModel subOrderModel,boolean isSsb,boolean isSdb,boolean isEdtoHd)
 	{
 		boolean ticketCreationStatus = false;
 		try
@@ -126,13 +126,24 @@ public class CustomOmsCancelAdapter implements Serializable
 				sendTicketLineItemData.setLineItemId(abstractOrderEntryModel.getOrderLineId());
 				if (ticketTypeCode.equalsIgnoreCase("C"))
 				{
-					sendTicketLineItemData.setCancelReasonCode(reasonCode);
-					sendTicketRequestData.setRefundType(refundType);
-					sendTicketRequestData.setTicketSubType(MarketplaceomsordersConstants.TICKET_SUB_TYPE_CODE);
+					if(isSsb){
+						sendTicketRequestData.setTicketSubType(MarketplaceomsordersConstants.TICKET_SUB_TYPE_CODE_SSB);
+						sendTicketLineItemData.setCancelReasonCode(MarketplaceomsordersConstants.CRM_SSB_REASON_CODE);
+					}else{
+   					sendTicketRequestData.setTicketSubType(MarketplaceomsordersConstants.TICKET_SUB_TYPE_CODE);
+   					sendTicketLineItemData.setCancelReasonCode(MarketplaceomsordersConstants.CRM_SSB_REASON_CODE);
+					}
+				}else if(ticketTypeCode.equalsIgnoreCase("A")){
+					
+					   if(isSdb || isEdtoHd){
+						sendTicketRequestData.setTicketSubType(TICKET_SUB_TYPE_CODE_ARR);
+						sendTicketLineItemData.setCancelReasonCode(MarketplaceomsordersConstants.CRM_SSB_REASON_CODE);
+					   }
 				}
 				lineItemDataList.add(sendTicketLineItemData);
 			}
 			//sendTicketRequestData.setCustomerID(customerData.getUid());
+			sendTicketRequestData.setRefundType(refundType);
 			sendTicketRequestData.setCustomerID(subOrderModel.getUser().getUid());
 			sendTicketRequestData.setLineItemDataList(lineItemDataList);
 			sendTicketRequestData.setOrderId(subOrderModel.getParentReference().getCode());
@@ -332,7 +343,7 @@ public class CustomOmsCancelAdapter implements Serializable
 			double deliveryCost = 0D;
 			if (orderEntry.getCurrDelCharge() != null)
 			{
-				deliveryCost = orderEntry.getCurrDelCharge().doubleValue();
+				deliveryCost = orderEntry.getCurrDelCharge().doubleValue()+orderEntry.getScheduledDeliveryCharge().doubleValue();
 			}
 
 
@@ -630,8 +641,14 @@ public class CustomOmsCancelAdapter implements Serializable
 								}
 								final Double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge()
 										: NumberUtils.DOUBLE_ZERO;
+								final Double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry.getScheduledDeliveryCharge()
+										: NumberUtils.DOUBLE_ZERO;
 								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
 								orderEntry.setCurrDelCharge(new Double(0D));
+								// Added in R2.3 START 
+								orderEntry.setRefundedScheduleDeliveryChargeAmt(scheduleDeliveryCost);
+								orderEntry.setScheduledDeliveryCharge(new Double(0D));
+							   // Added in R2.3 END 
 								if (newStatus.equals(ConsignmentStatus.ORDER_CANCELLED))
 								{
 									orderEntry.setJuspayRequestId(uniqueRequestId);
@@ -641,9 +658,9 @@ public class CustomOmsCancelAdapter implements Serializable
 										+ newStatus.getCode());
 
 								final double refundAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue()
-										+ deliveryCost.doubleValue();
+										+ deliveryCost.doubleValue()+scheduleDeliveryCost.doubleValue();
 								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-										Double.valueOf(refundAmount), newStatus);
+										Double.valueOf(refundAmount), newStatus,null);
 							}
 						}
 					}

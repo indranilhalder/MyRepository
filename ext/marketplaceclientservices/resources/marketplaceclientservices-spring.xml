@@ -147,6 +147,12 @@
 		
 		<bean id="mplPancardTicketCRMserviceImpl" class="com.tisl.mpl.service.impl.MplPancardTicketCRMserviceImpl"/>
 		
+		<bean id="googleShortUrlService"
+		class="com.tisl.mpl.shorturl.service.ShortUrlServiceGoogleImpl"/>
+		
+		<bean id="shortUrlReportDaoImpl"
+		class="com.tisl.mpl.shorturl.report.dao.OrderShortUrlDaoImpl"/>
+
 		
 </beans>
 

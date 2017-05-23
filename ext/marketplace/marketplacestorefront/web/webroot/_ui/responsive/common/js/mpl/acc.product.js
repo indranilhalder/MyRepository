@@ -441,7 +441,6 @@ sendAddToBag : function(formId, isBuyNow) {
 	 * $('#inventory').text() + "</font>");
 	 * $("#"+formId+"noInventory").show().fadeOut(6000); return false; }
 	 */
-
 	if ($("#variant,#sizevariant option:selected").val() == "#") {
 		$("#" + formId + "Title").html(
 				"<font color='#ff1c47'>" + $('#selectSizeId').text()

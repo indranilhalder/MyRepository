@@ -1,0 +1,90 @@
+<widget xmlns="http://www.zkoss.org/2005/zul"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:w="http://www.zkoss.org/2005/zk/client"
+	xmlns:zk="http://www.zkoss.org/2005/zk"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+	height="100%">
+		<div style="overflow-x:auto">
+					<vlayout>				
+						<hlayout>
+							<vlayout width="100px">
+								<label value="Seller ID" hflex="1" />
+							</vlayout>
+							<vlayout width="200px">
+								<textbox hflex="1" id="txtSellerId"
+									style="width:200px;height:10px">
+								</textbox>
+							</vlayout>
+                            <vlayout width="30px">
+								<label value=""/>
+							</vlayout>     
+							<vlayout width="100px">
+								<label value="Slave ID" hflex="1" />
+							</vlayout>
+							<vlayout width="200px">
+								<textbox hflex="1" id="txtSlaveId"
+									style="width:200px;height:10px">
+								</textbox>
+							</vlayout>
+						</hlayout>
+						<hlayout>
+							<vlayout width="100px">
+								<label value="Order ID" hflex="1" />
+							</vlayout>
+							<vlayout width="200px">
+								<textbox hflex="1" id="txtOrderId"
+									style="width:200px;height:10px">
+								</textbox>
+							</vlayout>
+							<vlayout width="30px">
+								<label value=""/>
+							</vlayout> 
+							<vlayout width="100px">
+								<label value="Transaction ID" hflex="1" />
+							</vlayout>
+							<vlayout width="200px">
+								<textbox hflex="1" id="txtTransactionId"
+									style="width:200px;height:10px">
+								</textbox>
+							</vlayout>
+							<vlayout
+								style="width:100px;margin-left:10px">
+								<button style="float:right"
+									label="Search" id="orderSearch" />
+							</vlayout>
+						</hlayout>
+					<separator />
+					<hbox pack="center">
+						<button id="savecsv" sclass="cng-action-icon"
+							style="margin-left:2px;padding:0px 3px 0px 0px;font-size:12px"
+							image="${wr}/images/csv_text.png" label="Download" />
+					</hbox>
+					<listbox id="listBoxData"  emptyMessage="No result found in the result" mold="paging" pageSize="10">
+						<listhead sizable="true">
+							<listheader style="text-align:left"
+								label="${labels.lbl.lbx.header1}">
+							</listheader>
+							<listheader style="text-align:left"
+								label="${labels.lbl.lbx.header2}">
+							</listheader>
+							<listheader style="text-align:left"
+								label="${labels.lbl.lbx.header3}">
+							</listheader>
+							<listheader style="text-align:left"
+								label="${labels.lbl.lbx.header7}">
+							</listheader>
+							<listheader style="text-align:left"
+								label="${labels.lbl.lbx.header4}">
+							</listheader>
+							<listheader style="text-align:left"
+								label="${labels.lbl.lbx.header5}">
+							</listheader>
+							<listheader style="text-align:left"
+								label="${labels.lbl.lbx.header6}">
+							</listheader>
+						</listhead>
+					</listbox>	
+					</vlayout>	
+					</div>
+</widget>

@@ -1982,7 +1982,6 @@
     </bean>
 	<!-- Old Cron Job Deletion Logic ends: -->
 
-	
 
 	<!-- Jewellery Changes Start --> 
 	
@@ -2049,6 +2048,10 @@
 	<bean id="mplPancardDao" class="com.tisl.mpl.marketplacecommerceservices.daos.pancard.impl.MplPancardDaoImpl">
 	</bean>
 
+
+   <alias name="defaultmplReturnDao" alias="mplReturnDao"/>
+<bean class="com.tisl.mpl.returns.dao.impl.MplReturnDaoImpl" id="defaultmplReturnDao"></bean>
+
     <!--bean id="nodeWarmupService" class="com.hybris.yps.nodewarmer.service.NodeWarmupService">
 		<property name="warmerStrategies">
 			<list>
@@ -2079,5 +2082,17 @@
 		<property name="storePickupDao" ref="storePickupDao"/>
 
 	</bean>
+	<bean id="mplDeliveryAddressServiceImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDeliveryAddressServiceImpl"/>
+<bean id="mplDeliveryAddressDaoImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.changedeliveryaddress.impl.MplDeliveryAddressDaoImpl">
+</bean>
+  <!--  R2.3 Added 27-02-2017 Start-->
+  <bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="-1" />
+		<property name="defaultEncoding" value="utf8" />
+	 </bean>
+	 <!--  R2.3 Added 27-02-2017 END-->
 </beans>
 

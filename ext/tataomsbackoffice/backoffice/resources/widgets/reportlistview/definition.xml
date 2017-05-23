@@ -14,6 +14,7 @@
     </keywords>
     <sockets>
       <input id="startendDates" type="java.lang.String"/>
+      <input id="selectedShipmentType" type="java.lang.String"/>
      </sockets>
   <controller class="com.hybris.oms.tata.pincodelogistics.PincodeLogisticsListController"/> 
 </widget-definition>

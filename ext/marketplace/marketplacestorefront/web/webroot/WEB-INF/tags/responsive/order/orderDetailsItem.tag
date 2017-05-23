@@ -137,7 +137,20 @@
 								<format:price priceData="${entry.currDelCharge}" />
 							</c:otherwise>
 						</c:choose>
-					<li class="deliver deliver-desc">${entry.mplDeliveryMode.description}</li>
+						<%--${entry.eddDateBetWeen}  ${entry.mplDeliveryMode.description}--%>
+					<%-- <li class="deliver deliver-desc"> Your Order Will Be Delivered Between ${entry.eddDateBetWeen}</li> --%>
+					  <c:choose>
+                       <c:when test="${not empty entry.timeSlotFrom  && entry.timeSlotFrom !=null }">
+                         
+                        <li class="deliver deliver-desc">Your Order Will Be Delivered on ${entry.selectedDeliverySlotDate} -  ${entry.timeSlotFrom} TO ${entry.timeSlotTo}</li>
+                        
+                       </c:when>
+                       <c:otherwise>
+                       <li class="deliver deliver-desc"> Your Order Will Be Delivered ${entry.eddDateBetWeen}</li>
+                       
+                       </c:otherwise>
+                  
+                  </c:choose>
 				</ul>
 			</li>
 			<%-- <td headers="header5">
@@ -243,8 +256,29 @@
 						text="Available Delivery Options:" />
 				</p>
 				<ul class="${entry.mplDeliveryMode.name}">
-					<li class="deliver-type">${entry.mplDeliveryMode.name}</li>
-					<li class="deliver">${entry.mplDeliveryMode.description}</li>
+					<li class="deliver-type">${entry.mplDeliveryMode.name} &nbsp;&nbsp;</li>
+					
+					<c:choose>
+							<c:when test="${entry.currDelCharge.value=='0.0'}">
+										<%-- <spring:theme code="order.free"  /> --%>
+										<ycommerce:testId code="orderDetails_productTotalPrice_label"><format:price priceData="${entry.currDelCharge}" displayFreeForZero="true"/></ycommerce:testId>
+							</c:when>
+						 	<c:otherwise>
+									<format:price priceData="${entry.currDelCharge}"/>
+							</c:otherwise>
+						</c:choose>
+					<c:choose>
+                       <c:when test="${not empty entry.timeSlotFrom  && entry.timeSlotFrom !=null }">
+                         
+                        <li class="deliver">Your Order Will Be Delivered on ${entry.selectedDeliverySlotDate} -  ${entry.timeSlotFrom} TO ${entry.timeSlotTo}</li>
+                        
+                       </c:when>
+                       <c:otherwise>
+                       <li class="deliver"> Your Order Will Be Delivered ${entry.eddDateBetWeen}</li>
+                       
+                       </c:otherwise>
+                  
+                  </c:choose>
 				</ul>
 			</li>
 		</ul>

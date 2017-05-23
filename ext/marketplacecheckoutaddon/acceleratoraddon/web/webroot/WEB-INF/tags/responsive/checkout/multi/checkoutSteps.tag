@@ -52,7 +52,7 @@
 
 							</li> --%>
 							 <div class="step-${checkoutStep.stepNumber}" ><a href="${stepUrl}" class="step-head js-checkout-step "><spring:theme
-									code="checkout.multi.${checkoutStep.progressBarId}" /><i class="fa fa-caret-right fa-caret"></i></a><span></span></div>
+									code="checkout.multi.${checkoutStep.progressBarId}" /><i class="fa fa-caret-right fa-caret"></i></a><span class="paymentStepDone"></span></div>
 						</c:when>
 						<c:when
 							test="${checkoutStep.stepNumber > activeCheckoutStepNumber}">
@@ -63,7 +63,7 @@
 
 							</li> --%>
 							 <div class="step-${checkoutStep.stepNumber}"><a href="${stepUrl}" class="step-head js-checkout-step"><spring:theme
-									code="checkout.multi.${checkoutStep.progressBarId}" /><i class="fa fa-caret-right fa-caret"></i></a><span></span></div>
+									code="checkout.multi.${checkoutStep.progressBarId}" /><i class="fa fa-caret-right fa-caret"></i></a><span class="paymentStepDone"></span></div>
 						</c:when>
 						<c:otherwise>
 							<!--  TISCR-304 start -->
@@ -90,7 +90,7 @@
 
 								</c:choose></li> --%>
 								<div class="step-${checkoutStep.stepNumber}"><a href="${stepUrl}" class="step-head js-checkout-step"><spring:theme
-									code="checkout.multi.${checkoutStep.progressBarId}" /><i class="fa fa-caret-right fa-caret"></i></a><span></span></div>
+									code="checkout.multi.${checkoutStep.progressBarId}" /><i class="fa fa-caret-right fa-caret"></i></a><span class="paymentStepDone"></span></div>
 									
 									
 							<!--  TISCR-304 end -->

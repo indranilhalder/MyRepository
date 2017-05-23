@@ -19,6 +19,8 @@ import de.hybris.platform.cockpit.widgets.InputWidget;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.widgets.controllers.BasketController;
@@ -87,7 +89,19 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 		    	
 		        renderRow(promotion, LabelUtils.getLabel(widget, "promotion", new Object[0]), currencyInstance, container);
 		        
+		        Double scheduleDeliveryCosts = 0.0D;
+		        if(null==abstractOrderModel.getDeliveryAddress() || null!=((CartModel)abstractOrderModel).getCartReservationDate()) {
+		        	for(AbstractOrderEntryModel entry : abstractOrderModel.getEntries()){
+			    		if(entry.getScheduledDeliveryCharge()!=null && entry.getScheduledDeliveryCharge() !=0.0D)
+			    			scheduleDeliveryCosts+= (entry.getScheduledDeliveryCharge()) ;
+					}
+		        }
+		        
+		        
 		        Double deliveryCosts = abstractOrderModel.getDeliveryCost();
+		        if(scheduleDeliveryCosts>=0.0D) {
+		        	deliveryCosts+=scheduleDeliveryCosts;
+		        }
 		       /* 
 				Double deliveryCosts = 0D;
 				
@@ -100,7 +114,9 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 				}*/
 				
 		        renderRow(deliveryCosts, LabelUtils.getLabel(widget, "deliveryCosts", new Object[0]), currencyInstance, container);
-
+		        
+		        
+		        
 				Double totalDeliveryCostDisc = 0D;
 				
 				for (AbstractOrderEntryModel orderEntry : abstractOrderModel
@@ -148,8 +164,11 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 		        Double convenienceCharges = abstractOrderModel.getConvenienceCharges();
 		        renderRow(convenienceCharges, LabelUtils.getLabel(widget, "convenienceCharges", new Object[0]), currencyInstance, container);
 		  
-		      //  Double totalPrice = abstractOrderModel.getTotalPriceWithConv();
-		        renderRow(abstractOrderModel.getTotalPriceWithConv(), LabelUtils.getLabel(widget, "totalPrice", new Object[0]), currencyInstance, container);
+		         Double totalPrice = abstractOrderModel.getTotalPriceWithConv();
+		         if(scheduleDeliveryCosts>0.0D) {
+		        	 totalPrice+=scheduleDeliveryCosts;
+		         }
+		        renderRow(totalPrice, LabelUtils.getLabel(widget, "totalPrice", new Object[0]), currencyInstance, container);
 		      }
 		  
 		      container.setParent(parent);

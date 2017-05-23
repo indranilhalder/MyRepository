@@ -1,3 +1,4 @@
+
 /**
  *
  */
@@ -11,9 +12,6 @@ package com.tisl.mpl.constants.clientservice;
 { "PMD" })
 public class MarketplacecclientservicesConstants
 {
-
-
-
 	public static final String DMY_DATE_FORMAT = "dd/MM/yyyy";
 	public static final String MALE = "Male";
 	public static final String FEMALE = "Female";
@@ -83,6 +81,7 @@ public class MarketplacecclientservicesConstants
 	public static final String CRM_CUSTOMER_CREATEUPDATE_URL = "crm.customer.createupdate.url";
 	public static final String CUSTOMERMASTER_ENDPOINT_USERID = "customerMaster.endpoint.userId";
 	public static final String CUSTOMERMASTER_ENDPOINT_PASSWORD = "customerMaster.endpoint.password";
+	public static final String CUSTOMERMASTER_TICKETUPDATE="crm.return.rssticketupdate.url";
 
 	public static final String RATING_SECRETKEY = "gigya.secretkey".intern();
 	public static final String RATING_PROXY_SET = "proxy.enabled".intern();
@@ -137,7 +136,6 @@ public class MarketplacecclientservicesConstants
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLJEWELPHASE = "oms.inventory.reservation.mock.urljewelxmlphase";
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLTHIRDPHASE = "oms.inventory.reservation.mock.urlthirdxmlphase";
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_JEWLUSSID = "oms.inventory.reservation.mock.urljewelxmlphaseUssid";
-
 	public static final String OMS_INVENTORY_RESV_SUCCESS = "SUCCESS";
 	public static final String Y = "Y";
 	public static final String N = "N";
@@ -245,5 +243,18 @@ public class MarketplacecclientservicesConstants
 
 	public static final String UIDSIG = "UIDSig";
 	public static final String UIDTIMESTAMP = "UIDTimestamp";
+	public static final String OMS_CHANGE_DELIVERY_URL = "oms.changedelivery.endpoint.url";
 
+	public static final String URL_FOR_DELIVERYSLOT_REALCALL = "oms.deliveryslots.realtimecall";
+	public static final String URL_FOR_DELIVERYSLOT_FIRSTPHASE = "oms.deliveryslots.firstxmlphase";
+	public static final String URL_FOR_DELIVERYSLOT_SECONDPHASE = "oms.deliveryslots.secondxmlphase";
+	public static final String URL_FOR_DELIVERYSLOT_THIRDPHASE = "oms.deliveryslots.thirdxmlphase";
+	public static final String OMS_DELIVERY_SLOT_CON_TIMEOUT = "oms.deliveryslot.connection.timeout";
+	public static final String OMS_DELIVERY_SLOT_READ_TIMEOUT = "oms.deliveryslot.read.timeout";
+	public static final String OMS_DELIVERY_SLOT_URL = "oms.deliveryslot.url";
+	public static final String CNC = "CNC";
+	
+	public static final String YES = "YES".intern();
+	public static final String NO = "NO".intern();
 }
+

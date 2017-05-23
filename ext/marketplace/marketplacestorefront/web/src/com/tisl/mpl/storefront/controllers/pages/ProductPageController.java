@@ -2760,6 +2760,8 @@ public class ProductPageController extends MidPageController
 			buyboxJson.put(ControllerConstants.Views.Fragments.Product.JEWEL_DESCRIPTION, jewelDetails);
 		}
 		//JewelleryInfo Deatils for jewelHeading added ends here
+		//	 TISRLEE-1586 03-01-2017
+		buyboxJson.put(ControllerConstants.Views.Fragments.Product.ID_ED_SELLER_HANDLING_TIME, buyboxdata.isIsSellerHandlingTime());
 		final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
 		final List<String> noStockPCodes = (List<String>) buydata.get("no_stock_p_codes");
 		for (final String pCode : noStockPCodes)
@@ -2905,6 +2907,7 @@ public class ProductPageController extends MidPageController
 
 	private ContentPageModel getContentPageForProduct(final ProductModel product) throws CMSItemNotFoundException
 	{
+		//INC_11128
 		//Commented for status 500 errors
 		//		if (productContentPage == null)
 		//		{
