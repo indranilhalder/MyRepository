@@ -11,26 +11,26 @@
 
 	<section class="banner-2-colmn mt-10 mb-20 clearfix text-center text-uppercase">
 	<div class="colmn">
-			<cms:pageSlot position="TopBannerMen"
+			<a href="#"><cms:pageSlot position="TopBannerMen"
 											var="feature" element="div"
 											class="span-24 section5 cms_disp-img_slot">
 											<cms:component component="${feature}" />
 										</cms:pageSlot>
 										<div class="banner-content">
-				<h2></h2>
-			</div>
+				<h2>shop men</h2>
+			</div></a>
 			</div>
 		
 
 	<div class="colmn">
-		<cms:pageSlot position="TopBannerWomen"
+		<a href="#"><cms:pageSlot position="TopBannerWomen"
 											var="feature" element="div"
 											class="span-24 section5 cms_disp-img_slot">
 											<cms:component component="${feature}" />
 										</cms:pageSlot>
 										<div class="banner-content">
-				<h2></h2>
-			</div>
+				<h2>shop women</h2>
+			</div></a>
 	</div>
 </section>
 	<section class="seastion-sec mb-40">
