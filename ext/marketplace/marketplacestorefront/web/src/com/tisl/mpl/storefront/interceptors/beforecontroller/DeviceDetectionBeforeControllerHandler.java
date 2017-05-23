@@ -47,16 +47,15 @@ public class DeviceDetectionBeforeControllerHandler implements BeforeControllerH
 	{
 		if (getUiExperienceService().getDetectedUiExperienceLevel() == null)
 		{
-			if (getBaseSiteService().getCurrentBaseSite().getUid()
-					.equals(configurationService.getConfiguration().getProperty("luxury.site.id")))
-			{
-				getUiExperienceService().setDetectedUiExperienceLevel(UiExperienceLevel.RESPONSIVE);
-			}
-			else
-			{
-				getUiExperienceService().setDetectedUiExperienceLevel(UiExperienceLevel.DESKTOP);
-			}
+			getUiExperienceService().setDetectedUiExperienceLevel(UiExperienceLevel.DESKTOP);
 		}
+
+		if (getBaseSiteService().getCurrentBaseSite().getUid()
+				.equals(configurationService.getConfiguration().getProperty("luxury.site.id")))
+		{
+			getUiExperienceService().setDetectedUiExperienceLevel(UiExperienceLevel.RESPONSIVE);
+		}
+
 		// Detect the device information for the current request
 		//deviceDetectionFacade.initializeRequest(request);
 		return true;
