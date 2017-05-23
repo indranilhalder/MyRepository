@@ -31,7 +31,7 @@
 			<nav:luxurySearchFacetFilterData/>
 </c:when>
 <c:otherwise>
-	<template:luxuryPage pageTitle="${pageTitle}">
+	<template:page pageTitle="${pageTitle}">
 		<section>
 			<div class="container-fluid plp-banner">
 				<div class="plp-banner-wrapper">
@@ -42,7 +42,7 @@
 				<nav:luxurySearchFacetFilterData/>
 			</c:if>
 		</section>
-	</template:luxuryPage>
+	</template:page>
 </c:otherwise>
 </c:choose>
 

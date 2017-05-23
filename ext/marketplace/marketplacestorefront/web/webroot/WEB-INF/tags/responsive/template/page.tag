@@ -5,14 +5,11 @@
 <%@ attribute name="hideHeaderLinks" required="false"%>
 <%@ attribute name="showOnlySiteLogo" required="false"%>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="header"
 	tagdir="/WEB-INF/tags/responsive/common/header"%>
 <%@ taglib prefix="footer"
 	tagdir="/WEB-INF/tags/responsive/common/footer"%>
-<%@ taglib prefix="luxuryHeader" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/common/header" %>
-<%@ taglib prefix="luxuryFooter" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/common/footer" %>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/responsive/common"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
@@ -41,17 +38,7 @@
 			<spring:theme code="text.skipToNavigation" var="skipToNavigation" />
 			<a href="#skiptonavigation" class="skiptonavigation" data-role="none">${skipToNavigation}</a> --%>
 
-			<c:choose>
-				<c:when test="${siteId eq 'lux'}">
-					<luxuryHeader:luxuryHeader hideHeaderLinks="${hideHeaderLinks}" />
-				</c:when>
-				<c:otherwise>
-					<header:header hideHeaderLinks="${hideHeaderLinks}" showOnlySiteLogo="${showOnlySiteLogo}" />
-				</c:otherwise>
-			</c:choose>
-
-
-
+			<header:header hideHeaderLinks="${hideHeaderLinks}" showOnlySiteLogo="${showOnlySiteLogo}" />
 
 			<div class="mainContent-wrapper">
 	
@@ -64,14 +51,7 @@
 			</div>
 			<c:choose>
             <c:when test="${empty showOnlySiteLogo }">
-				<c:choose>
-					<c:when test="${siteId eq 'lux'}">
-						<luxuryFooter:luxuryFooter/>
-					</c:when>
-					<c:otherwise>
-						<footer:footer/>
-					</c:otherwise>
-				</c:choose>			
+				<footer:footer/>
 			</c:when>
 			<c:otherwise>
 			<c:if test="${empty hideAllFooter}">

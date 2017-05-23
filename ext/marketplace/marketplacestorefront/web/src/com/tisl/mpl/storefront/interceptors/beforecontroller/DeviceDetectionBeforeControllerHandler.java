@@ -47,6 +47,7 @@ public class DeviceDetectionBeforeControllerHandler implements BeforeControllerH
 	{
 		if (getUiExperienceService().getDetectedUiExperienceLevel() == null)
 		{
+			System.out.println("getDetectedUiExperienceLevel is null");
 			getUiExperienceService().setDetectedUiExperienceLevel(UiExperienceLevel.DESKTOP);
 		}
 
