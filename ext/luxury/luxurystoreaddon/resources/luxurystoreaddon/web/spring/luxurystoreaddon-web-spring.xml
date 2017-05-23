@@ -73,5 +73,15 @@
        <property name="typeCode" value="ShopOnLuxury" />
        <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
    </bean>
-
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxuryFooterComponent" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   
+   <!-- <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="CMSLinkComponent" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean> -->
+ 
 </beans>
