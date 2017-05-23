@@ -15,12 +15,18 @@ package com.tisl.mpl.storefront.web.view;
 
 import de.hybris.platform.acceleratorservices.uiexperience.UiExperienceService;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commerceservices.enums.UiExperienceLevel;
+import de.hybris.platform.site.BaseSiteService;
 
 import java.util.Locale;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
 import org.springframework.web.servlet.view.InternalResourceView;
@@ -41,6 +47,14 @@ public class UiExperienceViewResolver extends InternalResourceViewResolver
 	public Map<UiExperienceLevel, String> uiExperienceViewPrefix;
 	private String unknownUiExperiencePrefix;
 	private String addOnPrefix;
+
+
+	@Autowired
+	private BaseSiteService baseSiteService;
+
+	@Resource(name = "addonReplacePrefixMap")
+	private Map<String, Map<String, String>> addonReplacePrefixMap;
+
 
 	protected UiExperienceService getUiExperienceService()
 	{
@@ -112,8 +126,23 @@ public class UiExperienceViewResolver extends InternalResourceViewResolver
 	public String getViewName(final UiExperienceLevel uiExperienceLevel, String viewName)
 	{
 		final String prefix = getUiExperienceViewPrefix().get(uiExperienceLevel);
+
 		if (prefix != null)
 		{
+			//Logic added to change prefix for supporting addon pages
+			final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+			final String site = currentBaseSite.getUid();
+
+			final Map<String, String> siteAddonReplacePrefixMap = addonReplacePrefixMap.get(site);
+			if (null != siteAddonReplacePrefixMap)
+			{
+				if (StringUtils.isNotBlank(siteAddonReplacePrefixMap.get(viewName)))
+				{
+					viewName = siteAddonReplacePrefixMap.get(viewName);
+				}
+			}
+
+
 			if (viewName.startsWith(AbstractPageController.PAGE_ROOT + ModelAttributetConstants.ADDON))
 			{
 				viewName = viewName.replace(AbstractPageController.PAGE_ROOT + ModelAttributetConstants.ADDON,
@@ -126,8 +155,11 @@ public class UiExperienceViewResolver extends InternalResourceViewResolver
 				viewName = viewName.substring(1, viewName.length()); // ....................../<extension-name>/cms/<component-view>..........->....<extension-name>/cms/<component-view>
 				final String extensionName = viewName.substring(0, viewName.indexOf('/')); // <extension-name>/cms/<component-view>...........->....<extension-name>
 				viewName = viewName.substring(viewName.indexOf('/'), viewName.length()); // ..<extension-name>/cms/<component-view>...........->..../cms/<component-view>
+
 				return getAddOnPrefix() + "/" + extensionName + "/" + prefix + viewName; // ..<addon-prefix>/<extension-name>/<ui-prefix>/cms/<component-view>
 			}
+
+
 			return prefix + viewName;
 		}
 		return getUnknownUiExperiencePrefix() + viewName;
