@@ -68764,3 +68764,6 @@ body.page-multiStepCheckoutSummaryPage header .content nav{
 	font-weight: normal;
 }
 /*TISPRDT-1333 end*/
+.product-info .product-content .delivery-block li.do span#clickDate{
+	display: none;
+}
