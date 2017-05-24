@@ -254,6 +254,78 @@ public class PaymentService
 		}
 	}
 
+	/*
+	 * cscockpit specific order payment status look up
+	 */
+	public String getCockpitOrderPaymentstatus(final String endPointURL, final String key)
+	{
+		final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(
+				MarketplaceJuspayServicesConstants.PROXYENABLED);
+
+		HttpsURLConnection connection = null;
+		final StringBuilder response = new StringBuilder();
+		String responseFromJuspay = null;
+
+		try
+		{
+			if (proxyEnableStatus.equalsIgnoreCase("true"))
+			{
+				final String proxyName = getConfigurationService().getConfiguration().getString(
+						MarketplaceJuspayServicesConstants.GENPROXY);
+				final int proxyPort = Integer.parseInt(getConfigurationService().getConfiguration().getString(
+						MarketplaceJuspayServicesConstants.GENPROXYPORT));
+				final SocketAddress addr = new InetSocketAddress(proxyName, proxyPort);
+				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+				final URL url = new URL(endPointURL);
+				connection = (HttpsURLConnection) url.openConnection(proxy);
+			}
+			else
+			{
+				final URL url = new URL(endPointURL);
+				connection = (HttpsURLConnection) url.openConnection();
+			}
+			String encodedKey = new String(Base64.encodeBase64(key.getBytes()));
+			encodedKey = encodedKey.replaceAll("\n", "");
+			connection.setRequestProperty("Authorization", "Basic " + encodedKey);
+
+			connection.setConnectTimeout(connectionTimeout);
+			connection.setReadTimeout(readTimeout);
+			connection.setRequestMethod("GET");
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			connection.setRequestProperty("Content-Language", "en-US");
+			connection.setRequestProperty("charset", "utf-8");
+			connection.setRequestProperty("version",
+					getConfigurationService().getConfiguration().getString(MarketplaceJuspayServicesConstants.VERSION));
+			connection.setUseCaches(false);
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+
+			final int responseCode = connection.getResponseCode();
+			LOG.info(" get request :: " + endPointURL);
+			LOG.info("response code ::: " + responseCode);
+
+			final BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String inputLine;
+
+			while ((inputLine = in.readLine()) != null)
+			{
+				response.append(inputLine);
+			}
+			in.close();
+
+			responseFromJuspay = response.toString();
+			LOG.info("response  :: " + responseFromJuspay);
+
+		}
+		catch (final Exception e)
+		{
+			throw new AdapterException("Error with connection", e);
+		}
+
+		return responseFromJuspay;
+	}
+
+
 	/**
 	 * Creates a new order and returns the InitOrderResponse associated with that.
 	 *

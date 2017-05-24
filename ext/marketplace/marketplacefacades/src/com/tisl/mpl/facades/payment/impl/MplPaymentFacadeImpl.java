@@ -1655,11 +1655,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1710,9 +1710,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
@@ -2494,7 +2494,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				}
 
 				LOG.error("Juspay Request Structure " + request);
-
 				//creating InitOrderResponse
 				final InitOrderResponse initOrderResponse = juspayService.initOrder(request);
 				if (null != initOrderResponse && StringUtils.isNotEmpty(initOrderResponse.getOrderId()))
@@ -2540,7 +2539,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		//		}
 	}
 
-
+	@Override
+	public String makeGetPaymentStatusCall(final String url)
+	{
+		final String key = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY);
+		return new PaymentService().getCockpitOrderPaymentstatus(url, key);
+	}
 
 
 	/**

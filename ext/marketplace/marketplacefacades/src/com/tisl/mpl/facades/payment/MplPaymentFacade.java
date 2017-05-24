@@ -449,4 +449,12 @@ public interface MplPaymentFacade
 	void populateDelvPOSForFreebie(AbstractOrderModel abstractOrderModel,
 			Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, Map<String, Long> freebieParentQtyMap);
 
+	/***
+	 * cscockpit specific order payment status call
+	 * 
+	 * @param url
+	 * @return
+	 */
+	public String makeGetPaymentStatusCall(final String url);
+
 }

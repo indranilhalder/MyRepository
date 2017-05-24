@@ -938,7 +938,7 @@ public class MarketplaceCheckoutControllerImpl extends
 		//final String url = ORDERPAYMENTSTATUSURL+commerEndOrderId+"?"+MERCHANTKEY+MERCHANTID;
 		final String url = configurationService.getConfiguration().getString(MarketplaceCockpitsConstants.ORDERPAYMENTSTATUSURL)
 				+commerEndOrderId;
-		final String paymentStatusresponse = makeGetPaymentStatusCall(url);
+		final String paymentStatusresponse = getMplPaymentFacade().makeGetPaymentStatusCall(url);
 		
 		final JSONObject jsonResponse = (JSONObject) JSONValue.parse(paymentStatusresponse);
 		final String ordStatus = (String) jsonResponse.get("status");
@@ -954,76 +954,5 @@ public class MarketplaceCheckoutControllerImpl extends
 		}
 		JaloSession.getCurrentSession().setAttribute("oisPaymentType", paymentType);
 		return ordStatus;
-	}
-	
-	public String makeGetPaymentStatusCall(String endPointURL)
-	{
-		final String proxyEnableStatus = configurationService.getConfiguration().getString(
-				MarketplaceJuspayServicesConstants.PROXYENABLED);
-		
-		HttpsURLConnection connection = null;
-		final StringBuilder response = new StringBuilder();
-		String responseFromJuspay = null;
-		
-		try
-		{
-			if (proxyEnableStatus.equalsIgnoreCase("true"))
-			{
-				final String proxyName = configurationService.getConfiguration().getString(
-						MarketplaceJuspayServicesConstants.GENPROXY);
-				final int proxyPort = Integer.parseInt(configurationService.getConfiguration().getString(
-						MarketplaceJuspayServicesConstants.GENPROXYPORT));
-				final SocketAddress addr = new InetSocketAddress(proxyName, proxyPort);
-				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
-				final URL url = new URL(endPointURL);
-				connection = (HttpsURLConnection) url.openConnection(proxy);
-			}
-			else
-			{
-				final URL url = new URL(endPointURL);
-				connection = (HttpsURLConnection) url.openConnection();
-			}
-			
-			final String key = configurationService.getConfiguration().getString(
-					MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY) ;
-			String encodedKey = new String(Base64.encodeBase64(key.getBytes()));
-			encodedKey = encodedKey.replaceAll("\n", "");
-			connection.setRequestProperty("Authorization", "Basic " + encodedKey);
-			
-			connection.setConnectTimeout(connectionTimeout);
-			connection.setReadTimeout(readTimeout);
-			connection.setRequestMethod("GET");
-			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			connection.setRequestProperty("Content-Language", "en-US");
-			connection.setRequestProperty("charset", "utf-8");
-			connection.setRequestProperty("version",
-					configurationService.getConfiguration().getString(MarketplaceJuspayServicesConstants.VERSION));
-			connection.setUseCaches(false);
-			connection.setDoInput(true);
-			connection.setDoOutput(true);
-			
-			int responseCode = connection.getResponseCode();
-			LOG.info(" get request :: "+endPointURL);
-			LOG.info("response code ::: "+responseCode);
-			
-			BufferedReader in = new BufferedReader(
-			        new InputStreamReader(connection.getInputStream()));
-			String inputLine;
-			
-			while ((inputLine = in.readLine()) != null) {
-				response.append(inputLine);
-			}
-			in.close();
-			
-			responseFromJuspay = response.toString();
-			LOG.info("response  :: "+responseFromJuspay);
-			
-		}
-		catch (final Exception e)
-		{
-			throw new AdapterException("Error with connection", e);
-		}
-		
-		return responseFromJuspay;
 	}
 }
