@@ -8,7 +8,42 @@
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 
-
+<h2 class="mb-20"><spring:theme code="luxury.header.link.register" /> </h2>
+<div class="header-soc-login mb-20">
+	<a class="fb-login btn btn-fb" href="javascript:;">FACEBOOK</a>
+	<a class="g-login btn btn-default" href="javascript:;">GOOGLE</a>
+</div>
+<p class="mb-20">OR</p>
+<form:form method="POST" commandName="extRegisterForm" action="${action}">
+	<div class="form-input-lists mb-20">
+		<formElement:formInputBox idKey="register.profilefirstName" labelKey="" path="firstName" mandatory="true" placeholder="First Name"/>			
+		<formElement:formInputBox idKey="register.profilelastName" labelKey="" path="lastName" mandatory="true" placeholder="Last Name"/>			
+		<formElement:formInputBox idKey="register.mobileNumber" labelKey="" path="mobileNumber" mandatory="true" placeholder="Mobile Number"/>	
+		<formElement:formInputBox idKey="register.email" labelKey="" path="email" mandatory="true" placeholder="Email Address"/>	
+		<formElement:formPasswordBox idKey="register.password" labelKey="" path="pwd" inputCSS="password-strength form-control" mandatory="true"/>	
+		<formElement:formConfirmPasswordBox idKey="register.checkpassword" labelKey="" path="checkPwd" inputCSS="form-control" mandatory="true"/>
+	</div>
+	<div class="sign-up-action">
+		<div class="male-female-checkbox mb-20">
+			<input id="male-on" class="toggle toggle-left get-gender-value" name="toggle" value="MALE" type="radio" checked="">
+			<label for="male-on" class="toggle-btn">Male</label>
+			<input id="female-off" class="toggle toggle-right get-gender-value" name="toggle" value="FEMALE" type="radio">
+			<label for="female-off" class="toggle-btn">Female</label>
+			<input name="gender" id="gender" type="hidden" value="MALE">
+		</div>
+		<ycommerce:testId code="register_Register_button">
+			<button type="submit" onclick="return checkSignUpValidation('login');" class="btn btn-primary btn-block mb-20" id="luxury_register"><spring:theme code='${actionNameKey}' /></button>
+		</ycommerce:testId>
+	</div>
+	<p class="h4 text-center"><spring:theme code="luxury.header.flyout.signup.member"/>
+		<ycommerce:testId code="luxury_header_Signin_link">
+			 <a class="luxury-login header-login-target-link" href="/luxurylogin/signin" data-target-id="sign-in">
+				<spring:theme code="luxury.header.link.signin" />
+			</a>
+		</ycommerce:testId>
+	</p>
+</form:form>
+<%-- 
 <p>
  	<spring:theme code="luxury.header.link.register" /> 
 </p>
@@ -60,7 +95,7 @@
 	</div> -->
 </form:form>
 
-<%-- <span class="or"><spring:theme code="text.or"/></span> --%>
+<span class="or"><spring:theme code="text.or"/></span>
 <div class="else-sec"><span class="else-brdrtp"></span><span class="else">or </span> <span class="else-brdrbtm"></span></div>
 <!-- For  Gigya and API Social Login -->
 <c:choose> 
@@ -82,3 +117,4 @@
 
 <!-- End  Gigya and API Social Login -->
 </div>
+ --%>

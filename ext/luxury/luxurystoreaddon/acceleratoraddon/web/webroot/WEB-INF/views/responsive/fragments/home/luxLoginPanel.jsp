@@ -10,7 +10,7 @@
 <%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/responsive/formElement" %>
 								
 <h2 class="mb-20"><spring:theme code="luxury.header.link.signin" /></h2>
-<div class="header-soc-login mb-20">
+<div class="header-soc-login mb-20 ">
 	<a class="fb-login btn btn-fb" href="javascript:;">FACEBOOK</a>
 	<a class="g-login btn btn-default" href="javascript:;">GOOGLE</a>
 </div>
