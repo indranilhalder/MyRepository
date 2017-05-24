@@ -11,16 +11,26 @@
 	xsi:noNamespaceSchemaLocation="items.xsd">
 
 	<collectiontypes>
+		<collectiontype code="luxBannersCollection" elementtype="BannerComponent"
+			autocreate="true" generate="false" />
 		<collectiontype code="ShopOnLuxuryElementCollection"
 			elementtype="ShopOnLuxuryElement" autocreate="true" generate="true"
 			type="list" />
-
 		<collectiontype code="WeeklySpecialBannerCollection"
 			elementtype="WeeklySpecialBanner" autocreate="true" generate="true"
 			type="list" />
+		<collectiontype elementtype="BannerComponent"
+			code="LuxbannerImageCollection" autocreate="true" generate="true" type="list" />
+		<collectiontype elementtype="LuxShowCaseCollectionComponent"
+			code="LuxShowCaseCollComponent" autocreate="true" generate="true" type="list" />	
 	</collectiontypes>
 
 	<enumtypes>
+		<enumtype code="LuximagePosition"       autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="left" />
+ 			<value code="right" />
+ 		</enumtype>
 		<enumtype code="UiExperienceLevel" autocreate="false"
 			generate="true">
 			<value code="Responsive" />
@@ -65,6 +75,9 @@
 				</attribute>
 				<attribute qualifier="image" type="Media">
 					<persistence type="property" />
+				</attribute>
+				<attribute autocreate="true" qualifier="url" type="java.lang.String"
+					generate="true">
 				</attribute>
 
 			</attributes>
@@ -133,5 +146,107 @@
 				</attribute>
 			</attributes>
 		</itemtype>
+		
+		
+		<itemtype code="LuxShowCaseComponent"
+			extends="SimpleCMSComponent"
+			jaloclass="com.tisl.lux.jalo.components.LuxShowCaseComponent"
+			generate="true" autocreate="true">
+			<attributes>
+				<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<description>title</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="LuxShowCaseCollComponent" qualifier="ShowCase"
+						autocreate="true" generate="true">
+						<description>ShowCase</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+				</attribute>
+			</attributes>
+		</itemtype>
+		
+<itemtype code="LuxShowCaseCollectionComponent" autocreate="true"
+	generate="true" extends="SimpleCMSComponent"
+	jaloclass="com.tisl.mpl.jalo.cms.components.LuxShowCaseCollectionComponent">	
+		<attributes>
+		<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<description>title</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="description"
+						autocreate="true" generate="true">
+						<description>description</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+				</attribute>
+			<attribute type="LuxBannersCollection" qualifier="bannerImage"
+						autocreate="true" generate="true">
+						<description>Related Images</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+					<attribute type="LuxImagePosition" qualifier="BannerImagePosition"
+						autocreate="true" generate="true">
+						<description>Related Images Position</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<defaultvalue>
+						em().getEnumerationValue("relatedImagePosition","left")
+					</defaultvalue>	
+						<persistence type='property' />
+				</attribute>
+				<attribute type="LuxBannersCollection" qualifier="productImages"
+						autocreate="true" generate="true">
+						<description>productImage</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="shopNowName"
+						autocreate="true" generate="true">
+						<description>shop Now Name</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="shopNowLink"
+						autocreate="true" generate="true">
+						<description>shop Now link</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+				</attribute>
+		</attributes>
+	</itemtype>
+	<itemtype code="LuxShopByCategory" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.ShopByCategory">
+		<attributes>
+			<attribute type="LuxbannerImageCollection" qualifier="relatedImage"
+						autocreate="true" generate="true">
+						<description>Related Images</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<description>Title</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+		</attributes>
+	</itemtype>	
 	</itemtypes>
 </items>

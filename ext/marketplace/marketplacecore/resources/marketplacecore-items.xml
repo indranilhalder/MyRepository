@@ -130,8 +130,8 @@
 			elementtype="product" autocreate="true" generate="true" type="list" />
 		<collectiontype elementtype="BannerComponent"
 			code="bannerImageCollection" autocreate="true" generate="true" type="list" />	
-			<collectiontype elementtype="ShowCaseCollectionComponent"
-			code="ShowCaseCollection" autocreate="true" generate="true" type="list" />	
+			<!-- <collectiontype elementtype="ShowCaseCollectionComponent"
+			code="ShowCaseCollection" autocreate="true" generate="true" type="list" />	 -->
 	</collectiontypes>
 
 
@@ -1282,67 +1282,8 @@
 		</attributes>
 	</itemtype>	
 
-
-<itemtype code="ShowCaseCollectionComponent" autocreate="true"
-				generate="true" extends="SimpleCMSComponent"
-				jaloclass="com.tisl.mpl.jalo.cms.components.ShowCaseCollectionComponent">	
-		<attributes>
-		<attribute type="java.lang.String" qualifier="title"
-						autocreate="true" generate="true">
-						<description>title</description>
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-						<persistence type='property' />
-				</attribute>
-				<attribute type="java.lang.String" qualifier="description"
-						autocreate="true" generate="true">
-						<description>description</description>
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-						<persistence type='property' />
-				</attribute>
-			<attribute type="CMSMediaParagraphComponent" qualifier="bannerImage"
-						autocreate="true" generate="true">
-						<description>Related Images</description>
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-						<persistence type='property' />
-				</attribute>
-					<attribute type="imagePosition" qualifier="relatedImagePosition"
-						autocreate="true" generate="true">
-						<description>Related Images Position</description>
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-						<defaultvalue>
-						em().getEnumerationValue("relatedImagePosition","left")
-					</defaultvalue>	
-						<persistence type='property' />
-				</attribute>
-				<attribute type="CMSMediaParagraphComponent" qualifier="productImage"
-						autocreate="true" generate="true">
-						<description>productImage</description>
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-						<persistence type='property' />
-				</attribute>
-				<attribute type="java.lang.String" qualifier="shopNowName"
-						autocreate="true" generate="true">
-						<description>shop Now Name</description>
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-						<persistence type='property' />
-				</attribute>
-				<attribute type="java.lang.String" qualifier="shopNowLink"
-						autocreate="true" generate="true">
-						<description>shop Now link</description>
-						<modifiers read="true" write="true" search="true"
-							optional="false" />
-						<persistence type='property' />
-				</attribute>
-		</attributes>
-	</itemtype>
 	
- 
+<!--  
 <itemtype code="ImageShowCaseComponent" autocreate="true"
 				generate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.jalo.cms.components.ImageShowCaseComponent">
@@ -1362,7 +1303,7 @@
 						<persistence type='property' />
 				</attribute>
 		</attributes>
-	</itemtype>
+	</itemtype> -->
 	
 	
 	

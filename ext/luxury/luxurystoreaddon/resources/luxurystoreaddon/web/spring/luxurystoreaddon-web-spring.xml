@@ -79,9 +79,22 @@
        <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
    </bean>
    
-   <!-- <bean parent="addonCmsComponentRendererMapping">
-       <property name="typeCode" value="CMSLinkComponent" />
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxShowCaseComponent" />
        <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
-   </bean> -->
+   </bean>
+    <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxShowCaseCollectionComponent" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+
+	 <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxShopByCategory" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+  <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxShopByCategory" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
  
 </beans>
