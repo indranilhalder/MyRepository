@@ -155,7 +155,7 @@ TATA.CommonFunctions = {
 	
 	
 	Header: {
-	
+		
 		SigninPopup: function(){
 			$('.header-login-target-link').on('click', function(){
 				var targetID = $(this).data('target-id');

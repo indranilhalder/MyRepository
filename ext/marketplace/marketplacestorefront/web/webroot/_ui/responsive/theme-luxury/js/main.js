@@ -155,15 +155,6 @@ TATA.CommonFunctions = {
 	
 	
 	Header: {
-	
-		SigninPopup: function(){
-			$('.header-login-target-link').on('click', function(){
-				var targetID = $(this).data('target-id');
-				$('#header-account').removeClass('active-sign-in active-sign-up active-forget-password').addClass('active-'+targetID);
-			});
-			
-		},
-		
 		MobileMenu: function() {
 			$('#hamburger-menu').on('click', function(){
 				$('body').addClass('menu-open');
@@ -175,12 +166,10 @@ TATA.CommonFunctions = {
 				$(this).toggleClass('active').next('.sub-menu').toggleClass('active');
 			});
 		},
-	
+		
 		init: function() {
 			this.MobileMenu();
-			this.SigninPopup();
 		}
-	
 	},
 	
 	Footer: function() {

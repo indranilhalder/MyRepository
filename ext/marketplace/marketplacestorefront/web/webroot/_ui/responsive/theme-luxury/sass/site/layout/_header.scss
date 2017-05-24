@@ -386,7 +386,7 @@
 		box-shadow: 0px 2px 5px #ccc;
 		border-radius: 0 0 $border-radius-small $border-radius-small; 
 		&.active {
-			max-height: 520px;
+			max-height: 590px;
 		}
 		&-inner{
 			width: 1290px;
@@ -398,6 +398,9 @@
 			float: left;
 			width: 430px;
 			padding: 20px 30px;
+			label{
+				display:none;
+			}
 		}
 		&.active-forget-password {
 			height: 300px;
@@ -406,7 +409,7 @@
 			}
 		}
 		&.active-sign-up {
-			height: 510px;
+			height: 580px;
 			.header-account-inner{
 				left: -860px;
 			}

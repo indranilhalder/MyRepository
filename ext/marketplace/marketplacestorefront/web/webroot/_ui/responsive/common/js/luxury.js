@@ -262,7 +262,4 @@ $(document).on("click",".add-to-wishlist",function(e){
 		    return productCode.toUpperCase();
 			
 		}
-
-
-
 });
