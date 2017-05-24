@@ -1865,8 +1865,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String DUPLICATEJUSPAYRESONSE = "duplicatJuspayResponse";
 
 	// OIS store manager agent group
-	public static final String CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP = "cscockpit.user.group.storemanageragentgroup";
-
 	public static final String CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP = "storemanageragentgroup";
 
 	//Query for fetching invalidation of a particular order-voucher-user

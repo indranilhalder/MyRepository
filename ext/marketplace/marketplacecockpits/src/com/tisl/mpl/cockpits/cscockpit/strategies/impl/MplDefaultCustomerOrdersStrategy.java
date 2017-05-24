@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
@@ -61,7 +62,10 @@ public class MplDefaultCustomerOrdersStrategy extends
 		List<OrderModel> orderList = null;
 		if (storeAgentUserRole.isUserInRole(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP)) {
 			final String agentId = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
-			orderList = orderModelService.getOrderByAgent(customer, agentId);
+			if(StringUtils.isNotEmpty(agentId))
+			{
+				orderList = orderModelService.getOrderByAgent(customer, agentId);
+			}
 		}
 		else{
 			orderList = (List<OrderModel>) customer.getOrders();

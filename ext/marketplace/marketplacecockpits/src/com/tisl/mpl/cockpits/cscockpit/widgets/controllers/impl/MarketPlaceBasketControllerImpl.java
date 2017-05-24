@@ -320,7 +320,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	      
 			for(AbstractOrderEntryModel entry : cart.getEntries()){
 				if((!mplFindDeliveryFulfillModeStrategy.isTShip(entry.getSelectedUSSID()))
-						&& !(agentId != null && StringUtils.isNotEmpty(agentId))){						
+						&& !(StringUtils.isNotEmpty(agentId))){						
 					errorMessages.add(new ResourceMessage("placeOrder.validation.sship",Arrays.asList(entry.getInfo())));
 					break;
 				} 

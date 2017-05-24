@@ -39,9 +39,7 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 	
 	query.append("SELECT DISTINCT {p.pk}, {p.name}, {p.code} "
 	+"from {product as p JOIN Catalogversion as cv ON {p.catalogversion}={cv.pk} JOIN Buybox as bb ON {p.code}={bb.product}} where");
-	if (storeAgentUserRole.isUserInRole((configurationService
-			.getConfiguration()
-			.getString(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)))) {
+	if (storeAgentUserRole.isUserInRole(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP)) {
 		query.append(" {bb.SellerID} = "+sellerID+" AND ");
 	}
 	query.append("{bb.available} > 0 AND {p.pk} in ({{"
@@ -57,9 +55,7 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 		query.append("}})"
 	+"}})"
 	+"OR");
-		if (storeAgentUserRole.isUserInRole((configurationService
-				.getConfiguration()
-				.getString(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)))) {
+		if (storeAgentUserRole.isUserInRole(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP)) {
 			query.append(" {bb.SellerID} = "+sellerID+" AND ");
 		}
 		query.append( "{bb.available} > 0 AND {p.pk} in ({{"
@@ -71,9 +67,7 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 		}
 	query.append("}})"
 			+"OR");
-	if (storeAgentUserRole.isUserInRole((configurationService
-			.getConfiguration()
-			.getString(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERGROUP)))) {
+	if (storeAgentUserRole.isUserInRole(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP)) {
 		query.append(" {bb.SellerID} = "+sellerID+" AND ");
 	}
 	query.append( "{bb.available} > 0 AND {p.pk} in ({{"
