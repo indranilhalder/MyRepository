@@ -46,25 +46,6 @@ public interface MarketplacecheckoutaddonControllerConstants
 				String ChooseDeliveryMethodEditPage = ADDON_PREFIX + "pages/checkout/multi/editAddressDetailsPage";
 				String ChooseDeliverySlotPage = ADDON_PREFIX + "pages/checkout/multi/chooseDeliverySlotPage";
 			}
-
-			interface LuxuryMultiStepCheckout
-			{
-				String AddEditDeliveryAddressPage = LUXURY_ADDON_PREFIX + "pages/checkout/multi/addEditDeliveryAddressPage";
-				String ChooseDeliveryMethodPage = LUXURY_ADDON_PREFIX + "pages/checkout/multi/chooseDeliveryMethodPage";
-				String MplCheckOutLoginPage = LUXURY_ADDON_PREFIX + "pages/checkout/multi/mplCheckOutLoginPage";
-				String ChoosePickupLocationPage = LUXURY_ADDON_PREFIX + "pages/checkout/multi/choosePickupLocationPage";
-				String AddPaymentMethodPage = LUXURY_ADDON_PREFIX + "pages/checkout/multi/addPaymentMethodPage";
-				String CheckoutSummaryPage = LUXURY_ADDON_PREFIX + "pages/checkout/multi/checkoutSummaryPage";
-				String HostedOrderPageErrorPage = LUXURY_ADDON_PREFIX + "pages/checkout/multi/hostedOrderPageErrorPage";
-				String HostedOrderPostPage = LUXURY_ADDON_PREFIX + "pages/checkout/multi/hostedOrderPostPage";
-				String SilentOrderPostPage = LUXURY_ADDON_PREFIX + "pages/checkout/multi/silentOrderPostPage";
-				String GiftWrapPage = LUXURY_ADDON_PREFIX + "pages/checkout/multi/giftWrapPage";
-				String PAYMENTDETAILSPAGE = LUXURY_ADDON_PREFIX + "pages/checkout/multi/enterPaymentDetailsPage";
-				String ChooseAddNewAddressPage = LUXURY_ADDON_PREFIX + "pages/checkout/multi/addNewAddressPage";
-				String ChooseDeliveryMethodEditPage = LUXURY_ADDON_PREFIX + "pages/checkout/multi/editAddressDetailsPage";
-				String ChooseDeliverySlotPage = LUXURY_ADDON_PREFIX + "pages/checkout/multi/chooseDeliverySlotPage";
-			}
-
 		}
 
 		interface Fragments
@@ -78,13 +59,6 @@ public interface MarketplacecheckoutaddonControllerConstants
 				String CODPanel = ADDON_PREFIX + "fragments/checkout/codPanel"; //TISPT-235
 			}
 
-			interface LuxuryCheckout
-			{
-				String TermsAndConditionsPopup = LUXURY_ADDON_PREFIX + "fragments/checkout/termsAndConditionsPopup";
-				String BillingAddressForm = LUXURY_ADDON_PREFIX + "fragments/checkout/billingAddressForm";
-				String NetbankingPanel = LUXURY_ADDON_PREFIX + "fragments/checkout/netbankingPanel"; //TISPT-235
-				String CODPanel = LUXURY_ADDON_PREFIX + "fragments/checkout/codPanel"; //TISPT-235
-			}
 
 		}
 	}

@@ -352,14 +352,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			{
 				return MarketplacecommerceservicesConstants.REDIRECT + "/cart";
 			}
-			if (isLuxurySite())
-			{
-				returnPage = MarketplacecheckoutaddonControllerConstants.Views.Pages.LuxuryMultiStepCheckout.ChooseDeliveryMethodPage;
-			}
-			else
-			{
+			
 				returnPage = MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
-			}
+			
 		}
 
 		catch (final CMSItemNotFoundException e)
@@ -615,7 +610,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 			deliveryAddress = (deliveryAddress == null || deliveryAddress.isEmpty()) ? accountAddressFacade.getAddressBook()
 					: deliveryAddress;
-					//			deliveryAddress = getMplCheckoutFacade().rePopulateDeliveryAddress(deliveryAddress);
+			//			deliveryAddress = getMplCheckoutFacade().rePopulateDeliveryAddress(deliveryAddress);
 
 			//TISST-7473
 			/*
@@ -2540,7 +2535,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@RequireHardLogIn
 	public @ResponseBody String calculateDeliveryCost(
 			@PathVariable(MarketplacecheckoutaddonConstants.DELIVERYCOST) final String deliveryCost)
-					throws NoSuchAlgorithmException, CalculationException
+			throws NoSuchAlgorithmException, CalculationException
 	{
 
 		//LOG.info("deliveryCost " + deliveryCost);

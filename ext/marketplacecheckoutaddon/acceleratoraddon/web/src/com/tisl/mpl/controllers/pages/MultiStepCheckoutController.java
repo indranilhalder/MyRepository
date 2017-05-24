@@ -76,10 +76,7 @@ public class MultiStepCheckoutController extends AbstractCheckoutStepController
 		storeCmsPageInModel(model, pageForRequest);
 		setUpMetaDataForContentPage(model, pageForRequest);
 		model.addAttribute(WebConstants.BREADCRUMBS_KEY, getContentPageBreadcrumbBuilder().getBreadcrumbs(pageForRequest));
-		if (isLuxurySite())
-		{
-			return MarketplacecheckoutaddonControllerConstants.Views.Fragments.LuxuryCheckout.TermsAndConditionsPopup;
-		}
+
 		return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.TermsAndConditionsPopup;
 	}
 
@@ -87,7 +84,7 @@ public class MultiStepCheckoutController extends AbstractCheckoutStepController
 	@RequireHardLogIn
 	public String performExpressCheckout(final Model model, final RedirectAttributes redirectModel,
 			@RequestParam("expressCheckoutAddressSelector") final String expressCheckoutAddressSelector)
-					throws CMSItemNotFoundException, CommerceCartModificationException
+			throws CMSItemNotFoundException, CommerceCartModificationException
 	{
 		try
 		{
