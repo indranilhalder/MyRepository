@@ -50,7 +50,16 @@
 			<div class="header-right">
 				<ul class="list-unstyled">
 					<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
-					<li class="header-account-link hidden-xs"><a href="luxurylogin/signin">Sign In</a></li>
+					<li class="header-account-link hidden-xs">
+						<a class="toggle-link luxury-login " data-target-id="#header-account" href="luxurylogin/signin">Sign In</a>
+						<div class="header-account toggle-skip text-center" id="header-account">
+							<div class="header-account-inner clearfix" id="login-container">
+								<div class="header-account-section header-forget-pass"></div>
+								<div class="header-account-section header-sign-in"></div>
+								<div class="header-account-section header-signup"></div>
+							</div>
+						</div>
+					</li>
 					</sec:authorize>
 					<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
 					<li><a href="/logout">Sign Out</a></li>
