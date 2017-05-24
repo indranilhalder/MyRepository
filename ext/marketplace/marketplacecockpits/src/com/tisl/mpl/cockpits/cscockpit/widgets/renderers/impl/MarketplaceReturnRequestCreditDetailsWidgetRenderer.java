@@ -123,7 +123,7 @@ ReturnRequestCreateWidgetRenderer {
 	private static final String FAILED_TO_VALIDATE_PINCODE_FEILD = "FailedToValidatePinCode";
 	private static final String ENTER_VALUES_IN_ALLFIELDS = "enterValuesInAllFields";
 	private static final String PIN_REGEX = "^[1-9][0-9]{5}";
-	private static final String IFSC_REGEX="^[A-Za-z][A-Za-z]{3}[0-0][0-9]{6}";
+	private static final String IFSC_REGEX="^[A-Za-z][A-Za-z]{3}[0-0][A-Za-z0-9]{6}";
 	
 	private static final String INFO = "info";
 	protected static final String NO_STORE_AVAILABLE = "noStoresAvailable";

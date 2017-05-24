@@ -98,10 +98,12 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 					&& null != source.getProduct().getRichAttribute())
 			{
 				final List<RichAttributeModel> productRichAttribute =  (List<RichAttributeModel>)source.getProduct().getRichAttribute();
-				if (null != productRichAttribute && null != productRichAttribute.get(0)&& null !=productRichAttribute.get(0).getReturnAtStoreEligible())
+				// INC144316390 - Orders are not getting processed with normal flow due to Product Rich attribute missing   START 
+				if (null != productRichAttribute && !productRichAttribute.isEmpty() && null != productRichAttribute.get(0) && null !=productRichAttribute.get(0).getReturnAtStoreEligible())
 				{
 					productReturnToStoreEligibility = productRichAttribute.get(0).getReturnAtStoreEligible().getCode();
 				}
+				// INC144316390 - Orders are not getting processed with normal flow due to Product Rich attribute missing   END 
 			}
 			if (null != richAttributeModel && null != richAttributeModel.get(0)&& null !=richAttributeModel.get(0).getReturnAtStoreEligible())
 			{
@@ -111,7 +113,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			{
 				isReturnToStoreEligible = MarketplaceomsservicesConstants.YES;
 			}
-			if(null != productReturnToStoreEligibility) {
+			if(null != isReturnToStoreEligible) {
 				
 				target.setIsReturnToStoreEligible(isReturnToStoreEligible);
 			}

@@ -3450,6 +3450,17 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		try
 		{
 			double deliverySlotCost = 0.0D;
+			// INC-144316545 START   
+			double totalDeliveryCost = 0.0D;
+			double deliveryCharges = 0.0D;
+			for(final AbstractOrderEntryModel entry : cartModel.getEntries()) {
+				if(null != entry.getFulfillmentType() && entry.getFulfillmentType().equalsIgnoreCase(MarketplaceFacadesConstants.SSHIPCODE)) {
+					if(null != entry.getCurrDelCharge() && entry.getCurrDelCharge().doubleValue() >0.0) {
+						deliveryCharges+=entry.getCurrDelCharge().doubleValue();
+					}
+				}
+			}
+			// INC-144316545 END
 			for (final MplSelectedEDDForUssID mplEdd : mplSelectedEDDInfo)
 			{
 
@@ -3487,7 +3498,15 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 				}
 			}
-			cartModel.setDeliveryCost(Double.valueOf(deliverySlotCost));
+		// INC-144316545 START
+			if(deliverySlotCost >0.0D) {
+				totalDeliveryCost+=deliverySlotCost;
+			}
+			if(deliveryCharges >0.0D) {
+				totalDeliveryCost+=deliveryCharges;
+			}
+			cartModel.setDeliveryCost(Double.valueOf(totalDeliveryCost));
+		// INC-144316545 END
 			modelService.save(cartModel);
 			LOG.info("  delivery Cost : " + cartModel.getDeliveryCost() + " total " + cartModel.getTotalPrice());
 			commerceCartService.recalculateCart(cartModel);
