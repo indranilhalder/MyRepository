@@ -1330,7 +1330,11 @@ $(document).ready(function(){
 		 $(window).on("load resize",function(){
 				if($(".js-mini-cart-count").text() != undefined && $(".js-mini-cart-count").text()!=null)
 					{
-					$(".responsive-bag-count").text($(".js-mini-cart-count-hover").text());		/*UF-249*/
+					if($(".js-mini-cart-count-hover").text().length > 1){
+						$(".responsive-bag-count").text($($(".js-mini-cart-count-hover")[0]).text());		/*UF-249*/
+					}else{
+						$(".responsive-bag-count").text($(".js-mini-cart-count-hover").text());		/*UF-249*/
+					}
 					}
 				var $li = $(".page-authenticAndExclusive ul.feature-brands li");
 				if($(window).width() <790) {
@@ -1786,6 +1790,8 @@ $(document).ready(function(){
 		$('header .content .container > .right ul:first-child > li div').removeClass('toggle');
 		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul.words li.long div').removeClass('toggle');
 		$('header .content .container > .right ul li #mobile-menu-toggle + ul li ul li').removeClass('toggle');
+		$("ul li #mobile-menu-toggle+ul li ul.words li.long").unwrap("ul"); //TISPRDT-1296, TISPRDT-1300
+		$("ul li #mobile-menu-toggle+ul li ul.words li.long").unwrap(".l2_wrapper"); //TISPRDT-1296, TISPRDT-1300
 		setTimeout(function () {
   		  navhtmlMicrosite = $(".brand-header nav ul li").html();
   		 $('header .content .container > .right > ul:first-child').prepend('<li id="shopMicrositeSeller"></li>');
@@ -3590,9 +3596,9 @@ if($(window).width() < 313)
 	$(".store-finder-legends").css("left","");
 }
 /*TISSQAEE-335*/
-$("header .content nav > ul > li > ul > li").on("mouseover",function(){
+$(document).on("mouseover","header .content nav > ul > li > ul > li",function(){
 	$(this).parent().parent().find(".toggle").addClass("show_arrow");
 });
-$("header .content nav > ul > li > ul > li").on("mouseout",function(){
+$(document).on("mouseout","header .content nav > ul > li > ul > li",function(){
 	$(this).parent().parent().find(".toggle").removeClass("show_arrow");
 });

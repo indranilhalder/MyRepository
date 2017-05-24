@@ -1999,7 +1999,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//final String ip = getBlacklistByIPStatus(); TISPT-204 Point No 2
 			final String ip = getMplPaymentFacade().getBlacklistByIPStatus(request);
 			LOG.debug("The ip of the system is::::::::::::::::::::::::" + ip);
-			
+
 			//INC144316663
 
 			final Long codUpperLimit = getBaseStoreService().getCurrentBaseStore().getCodUpperLimit();
@@ -2020,7 +2020,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				if (null != cart && !mplCustomerIsBlackListed)
 				{
-					
+
 					//Commented for TISPT-400
 					//to check items are seller fulfilled or not
 					//final List<String> fulfillmentDataList = new ArrayList<String>();
@@ -2095,11 +2095,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					//							}
 					//						}
 					//					}
-					
-					
+
+
 					//INC144316663
 
-					final boolean isCodLimitFailed = (cart.getTotalPrice().longValue() <= codUpperLimit.longValue()) ? false : true;
+					//final boolean isCodLimitFailed = (cart.getTotalPrice().longValue() <= codUpperLimit.longValue()) ? false : true;
+					final boolean isCodLimitFailed = ((cart.getTotalPrice().longValue() <= codUpperLimit.longValue()) && (cart
+							.getTotalPrice().longValue() >= codLowerLimit.longValue())) ? false : true;
 					final boolean isCodEligible = (isCodLimitFailed || !cart.getIsCODEligible().booleanValue()) ? false : true;
 
 					if (isCodEligible)
@@ -4463,7 +4465,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

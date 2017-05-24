@@ -126,7 +126,7 @@
 											/>  <format:price
 												priceData="${subOrder.subTotal}" />
 									</li>
-									<li class="shipping-li"><span class="shipping-text"><spring:theme code="text.account.order.delivery1" text="Schedule Delivery and Shipping Charges"/></span>
+									<li class="shipping-li"><span class="shipping-text"><spring:theme code="text.account.order.delivery1" text="Scheduled Delivery and Shipping Charges"/></span>
 									<%-- <spring:theme code="text.account.order.delivery"
 											text="Delivery" /> --%><span class="amt"> <format:price
 												priceData="${subOrder.deliveryCost}"

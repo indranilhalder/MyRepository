@@ -72,7 +72,7 @@
 								</div>
 								<span id="mobile-menu-toggle" class=""></span>		<!-- TPR-561 -->
 								</li>  <!-- TPR-561 -->
-								<li><a href="${component.navigationNode.children}" var="secondchild"></a></li>
+								<li class="long words only-link"><a href="${component.navigationNode.children}" var="secondchild"></a></li>
 							</c:if>
 							
 							<c:if test="${columns > 1}">
@@ -81,7 +81,7 @@
 							
 								<c:forEach items="${child.links}" step="${component.wrapAfter}" var="childlink" varStatus="i">
 									<c:if test="${columns > 1}">
-										<div class=" sub-navigation-section-column ${columnClass} ">
+										<%-- <div class=" sub-navigation-section-column ${columnClass} "> --%>
 									</c:if>
 
 								

@@ -296,7 +296,7 @@
 				<!-- Update NickName -->
 				<div class="nickname">
 					<h2><spring:theme code="profile.Nickname" text="Nickname"/></h2>
-					<p><spring:theme code="profile.Nickname.details" text="What's your alter ego called?"/></p>
+					<p><spring:theme code="profile.Nickname.details" text="What would you like us to call you?"/></p>
 						<form:form action="update-nickName" method="post" commandName="mplCustomerProfileForm">
 						<fieldset>
 							<div class="full">

@@ -1222,7 +1222,8 @@
 		<property name="cartFactory" ref="cartFactory" />
 		<property name="commerceAddToCartStrategy" ref="commerceAddToCartStrategy" />
 		<property name="guidKeyGenerator" ref="guidKeyGenerator" />
-		<property name="cartValidityPeriod" value="0"/>
+		<!-- Commented due to cart merge Issue,During Promotion Caching Implementation need to override rebuildsessioncart and rewriteentriesfromcarttocart -->
+<!-- 		<property name="cartValidityPeriod" value="0"/> -->
 	</bean>
 
 
