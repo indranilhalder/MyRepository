@@ -911,7 +911,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		{
 			productcategory = product.getProductCategoryType();
 		}
-		if (productcategory.equalsIgnoreCase(FINEJEWELLERY))
+
+		if (StringUtils.isNotEmpty(productcategory) && productcategory.equalsIgnoreCase(FINEJEWELLERY))
 		{
 			final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(buyBoxMod
 					.getSellerArticleSKU());
