@@ -62,10 +62,12 @@ grunt.initConfig({
 					'js/lib/jquery.selectBoxIt.min.js',
 					'js/lib/slick.min.js',
 					'js/lib/bootstrap.min.js',
-					'js/main.js'
+				    'js/lib/jquery.validate.min.js',
+				    'js/main.js',
+				    'js/tulvalidation.js'				
 				
 				].map(absolutePath), 
-					dest: 'js/uicombined-min.js'
+					dest: 'combined/luxury-main.js'
 			}]
 		}
     }, 

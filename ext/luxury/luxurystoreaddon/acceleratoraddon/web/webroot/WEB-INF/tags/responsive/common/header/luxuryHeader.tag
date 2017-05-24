@@ -27,13 +27,14 @@
 		<cms:component component="${logo}" class="siteLogo"  element="div"/></cms:pageSlot>
 	              </a>
 				</div>
-				<nav class="main-nav">
+				<nav class="main-nav" id="main-nav">
 					<ul>
 						<cms:pageSlot position="NavigationBar" var="feature">
 							<cms:component component="${feature}" />
 						</cms:pageSlot>
 						
 					</ul>
+					<div class="main-nav-close" id="main-nav-close"></div>
 				</nav>
 			</div>
 			<div class="header-left  hidden-xs">
