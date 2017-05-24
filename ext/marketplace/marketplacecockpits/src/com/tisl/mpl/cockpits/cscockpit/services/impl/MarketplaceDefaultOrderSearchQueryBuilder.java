@@ -101,9 +101,13 @@ public class MarketplaceDefaultOrderSearchQueryBuilder extends
 		final boolean searchMobileNumer = StringUtils.isNotEmpty(mobileNumber);
 		final boolean searchEmailId = StringUtils.isNotEmpty(emailId);
 		final boolean searchThreshold = thresholddays != 0;
-		String agentId = null;
+		String agentId = StringUtils.EMPTY;
 		if (storeAgentUserRole.isUserInRole(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP)) {
-			agentId = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
+			final JaloSession jSession = JaloSession.getCurrentSession();
+			if(jSession != null)
+			{
+				agentId = (String) jSession.getAttribute("sellerId");
+			}
 		}
 		StringBuilder query = new StringBuilder();
 		StringBuilder query2=new StringBuilder();

@@ -122,7 +122,7 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 	
 	private boolean buttonLabelChangeFlag = false;
 	
-	private String jsuPayCreatedOrderId = null;
+	private String jsuPayCreatedOrderId = StringUtils.EMPTY;
 	
 	private boolean juspayOrderCreationFlag = false;
 	
@@ -259,12 +259,19 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 		{
 			try 
 			{
-				jsuPayCreatedOrderId = (String) JaloSession.getCurrentSession().getAttribute("jusPayEndOrderId");
+				String commerEndOrderId = StringUtils.EMPTY;
+				final JaloSession jSession = JaloSession.getCurrentSession();
+				if(jSession != null)
+				{
+					jsuPayCreatedOrderId = (String) jSession.getAttribute("jusPayEndOrderId");
+					commerEndOrderId = (String) jSession.getAttribute("commerceEndOrderId");
+				}
+				
 				if(StringUtils.isNotEmpty(jsuPayCreatedOrderId))
 				{
 					juspayOrderCreationFlag = true;
 				}
-				String commerEndOrderId = (String) JaloSession.getCurrentSession().getAttribute("commerceEndOrderId");
+				
 				LOG.info("juspay order id ::: "+jsuPayCreatedOrderId);
 				if(juspayOrderCreationFlag && StringUtils.isNotEmpty(commerEndOrderId))
 				{
@@ -357,12 +364,18 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 			{
 				try 
 				{
-					jsuPayCreatedOrderId = (String) JaloSession.getCurrentSession().getAttribute("jusPayEndOrderId");
+					String commerEndOrderId = StringUtils.EMPTY;
+					final JaloSession jSession = JaloSession.getCurrentSession();
+					if(jSession != null)
+					{
+						jsuPayCreatedOrderId = (String) jSession.getAttribute("jusPayEndOrderId");
+						commerEndOrderId = (String) jSession.getAttribute("commerceEndOrderId");
+					}
+					
 					if(StringUtils.isNotEmpty(jsuPayCreatedOrderId))
 					{
 						juspayOrderCreationFlag = true;
 					}
-					String commerEndOrderId = (String) JaloSession.getCurrentSession().getAttribute("commerceEndOrderId");
 					LOG.info("juspay order id ::: "+jsuPayCreatedOrderId);
 					if(juspayOrderCreationFlag && StringUtils.isNotEmpty(commerEndOrderId))
 					{
@@ -447,8 +460,12 @@ protected class JuspayPaymentEventListener implements EventListener
 			try 
 			{
 				((MarketplaceCheckoutController)widget.getWidgetController()).processJuspayPayment(cart, customer);
-				jsuPayCreatedOrderId = (String) JaloSession.getCurrentSession().getAttribute("jusPayEndOrderId");
-
+				final JaloSession jSession = JaloSession.getCurrentSession();
+				if(jSession != null)
+				{
+					jsuPayCreatedOrderId = (String) jSession.getAttribute("jusPayEndOrderId");
+				}
+				
 				if(StringUtils.isNotEmpty(jsuPayCreatedOrderId))
 				{
 					LOG.info("juspay order id ::: "+jsuPayCreatedOrderId);

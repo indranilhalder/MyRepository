@@ -28,7 +28,12 @@ public class AgentIdForStoreImpl implements AgentIdForStore
 	@Override
 	public String getAgentIdForStore(final String agentGroup)
 	{
-		final String agentID = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
+		String agentID = StringUtils.EMPTY;
+		final JaloSession jSession = JaloSession.getCurrentSession();
+		if (jSession != null)
+		{
+			agentID = (String) jSession.getAttribute("sellerId");
+		}
 		if (StringUtils.isNotEmpty(agentID))
 		{
 			final UserModel user = userService.getUserForUID(agentID);

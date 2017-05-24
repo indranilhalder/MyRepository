@@ -96,8 +96,14 @@ public class JuspayPaymentServiceImpl implements JuspayPaymentService
 		List<PaymentTransactionModel> paymentTransactionModelList = null;
 		final CartModel cartModel;
 		cartModel = cart;
-		final String jusPayCreatedOrderId = (String) JaloSession.getCurrentSession().getAttribute("jusPayEndOrderId");
-		if (jusPayCreatedOrderId != null && StringUtils.isNotEmpty(jusPayCreatedOrderId))
+		String jusPayCreatedOrderId = StringUtils.EMPTY;
+		final JaloSession jSession = JaloSession.getCurrentSession();
+		if (jSession != null)
+		{
+			jusPayCreatedOrderId = (String) jSession.getAttribute("jusPayEndOrderId");
+		}
+
+		if (StringUtils.isNotEmpty(jusPayCreatedOrderId))
 		{
 			final String[] juspayPrefix_reqId = jusPayCreatedOrderId.split("_");
 			final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
@@ -148,7 +154,12 @@ public class JuspayPaymentServiceImpl implements JuspayPaymentService
 				"payment.transactionStatusDetails"));
 		paymentTransactionEntryModel.setTime(new Date());
 		paymentTransactionEntryModel.setType(PaymentTransactionType.AUTHORIZATION);
-		final String paymentMode = (String) JaloSession.getCurrentSession().getAttribute("oisPaymentType");
+		String paymentMode = StringUtils.EMPTY;
+		final JaloSession jSession = JaloSession.getCurrentSession();
+		if (jSession != null)
+		{
+			paymentMode = (String) jSession.getAttribute("oisPaymentType");
+		}
 
 		if (paymentMode.equalsIgnoreCase("credit"))
 		{

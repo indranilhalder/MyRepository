@@ -61,7 +61,12 @@ public class MplDefaultCustomerOrdersStrategy extends
 	  {
 		List<OrderModel> orderList = null;
 		if (storeAgentUserRole.isUserInRole(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP)) {
-			final String agentId = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
+			String agentId = StringUtils.EMPTY;
+			final JaloSession jSession = JaloSession.getCurrentSession();
+			if(jSession != null)
+			{
+				agentId = (String) jSession.getAttribute("sellerId");
+			}	
 			if(StringUtils.isNotEmpty(agentId))
 			{
 				orderList = orderModelService.getOrderByAgent(customer, agentId);
