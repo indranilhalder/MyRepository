@@ -5397,7 +5397,6 @@ function checkPincodeServiceability(buttonType,el)
 	$(".deliveryUlClass").remove();//TPR-1341
 	var utagCheckPincodeStatus="";
 	if(selectedPincode === ""){	
-		alert("ifpincode"+selectedPincode);
 		$( "#error-Id").hide();
 		$( "#error-IdBtm").hide();
 		$( "#error-Id_tooltip").hide();
@@ -5439,7 +5438,6 @@ function checkPincodeServiceability(buttonType,el)
 		return false;
 	}
 	else if(regPostcode.test(selectedPincode) != true){
-		alert("elseifpincode"+selectedPincode);
     	$("#defaultPinCodeIds").css("color","red");
         $("#error-Id").show();
         $("#error-IdBtm").show();//UF-68
@@ -5552,7 +5550,6 @@ function checkPincodeServiceability(buttonType,el)
 		// TPR-1055 ends
 	} //CAR-246
 	else if(selectedPincode!==""){
-		alert("pincode"+selectedPincode);
 		$(location).attr('href',ACC.config.encodedContextPath + "/cart?pincode="+selectedPincode);		
 	}
 	else

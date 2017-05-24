@@ -394,13 +394,13 @@ tr.d0 td {
 			</ul>
 		</div>
 
-<div class="tabs-block">
+<%-- <div class="tabs-block">
 				<product:productPageTabs />
-			</div>
+			</div> --%>
 			<!-- CODE MOVED HERE FOR OTHER PRODUCTS APART FROM JEWELLERY TO DISPLAY DETAILS IN TAB STARTS HERE -->
 	<c:set var="finejewellery"><spring:theme code='product.finejewellery'/></c:set>
 	<c:choose>		
-	    <c:when test ="${product.rootCategory!=finejewellery}">
+	    <c:when test ="${product.rootCategory ne finejewellery}">
 				<div class="tabs-block" id="tabsBlock">
 					<product:productPageTabs />
 				</div>

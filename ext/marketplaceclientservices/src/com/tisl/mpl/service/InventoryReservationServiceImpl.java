@@ -31,14 +31,13 @@ import com.sun.jersey.api.client.WebResource;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
-import com.tisl.mpl.wsdto.InventoryReservJewelleryRequest;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
 import com.tisl.mpl.wsdto.EDDRequestWsDTO;
 import com.tisl.mpl.wsdto.EDDResponseWsDTO;
+import com.tisl.mpl.wsdto.InventoryReservJewelleryRequest;
 import com.tisl.mpl.wsdto.InventoryReservListRequest;
 import com.tisl.mpl.wsdto.InventoryReservListResponse;
 import com.tisl.mpl.wsdto.InventoryReservRequest;
-
 import com.tisl.mpl.wsdto.ServiceableSlavesDTO;
 
 
@@ -141,7 +140,7 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 					{
 						reqObj.setQuantity(cartObj.getQuantity().toString());
 					}
-				
+
 					if (cartObj.getTransportMode() != null)
 					{
 						reqObj.setTransportMode(cartObj.getTransportMode().toString());
@@ -159,17 +158,22 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 							List<ServiceableSlavesDTO> serviceableSlavesDTOList = new ArrayList<ServiceableSlavesDTO>();
 							for (final CNCServiceableSlavesData data : cartObj.getCncServiceableSlaves())
 							{
-								if(cartObj.getStoreId().equalsIgnoreCase(data.getStoreId()))
+								if (cartObj.getStoreId().equalsIgnoreCase(data.getStoreId()))
 								{
 									serviceableSlavesDTOList = populateServiceableSlaves(data.getServiceableSlaves());
 								}
 							}
-						reqObj.setServiceableSlaves(serviceableSlavesDTOList);
+							reqObj.setServiceableSlaves(serviceableSlavesDTOList);
 						}
 					}
 					if (reqObj.getIsAFreebie() != null && reqObj.getIsAFreebie().equals("Y"))
 					{
 						freebieItemslist.add(reqObj);
+					}
+					else
+					{
+						reqlist.add(reqObj);
+						LOG.debug("Added in Inventory reservation request list");
 					}
 				}
 				else
@@ -287,11 +291,13 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				}
 			}
 			reqlist.addAll(freebieItemslist);
-			
-			if (freebieItemslist.size()>0)
+
+			if (freebieItemslist.size() > 0)
 			{
 				reqdata.setIsFreebieCart(Boolean.TRUE);
-			}else{
+			}
+			else
+			{
 				reqdata.setIsFreebieCart(Boolean.FALSE);
 			}
 
@@ -324,26 +330,38 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 		}
 		return reqdata;
 	}
-	
-	private List<ServiceableSlavesDTO> populateServiceableSlaves(List<ServiceableSlavesData> serviceableSlavesDataList ){
-		
-		List<ServiceableSlavesDTO> serviceableSlavesDTOList=new ArrayList<ServiceableSlavesDTO>();
-		ServiceableSlavesDTO dto=null;
-		for(ServiceableSlavesData data:serviceableSlavesDataList){
-			dto=new ServiceableSlavesDTO();
+
+	private List<ServiceableSlavesDTO> populateServiceableSlaves(final List<ServiceableSlavesData> serviceableSlavesDataList)
+	{
+
+		final List<ServiceableSlavesDTO> serviceableSlavesDTOList = new ArrayList<ServiceableSlavesDTO>();
+		ServiceableSlavesDTO dto = null;
+		for (final ServiceableSlavesData data : serviceableSlavesDataList)
+		{
+			dto = new ServiceableSlavesDTO();
 			if (StringUtils.isNotEmpty(data.getSlaveId()))
-			dto.setSlaveId(data.getSlaveId());
+			{
+				dto.setSlaveId(data.getSlaveId());
+			}
 			if (StringUtils.isNotEmpty(data.getLogisticsID()))
-			dto.setLogisticsID(data.getLogisticsID());
+			{
+				dto.setLogisticsID(data.getLogisticsID());
+			}
 			if (StringUtils.isNotEmpty(data.getPriority()))
-			dto.setPriority(data.getPriority());
+			{
+				dto.setPriority(data.getPriority());
+			}
 			if (StringUtils.isNotEmpty(data.getCodEligible()))
-			dto.setCODEligible(data.getCodEligible());
+			{
+				dto.setCODEligible(data.getCodEligible());
+			}
 			if (StringUtils.isNotEmpty(data.getTransactionType()))
-			dto.setTransactionType(data.getTransactionType());
+			{
+				dto.setTransactionType(data.getTransactionType());
+			}
 			serviceableSlavesDTOList.add(dto);
 		}
-	return serviceableSlavesDTOList;		
+		return serviceableSlavesDTOList;
 
 	}
 
@@ -580,13 +598,15 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 		try
 		{
 
-				LOG.debug("inside reservation delivery slot  data list");
-				if (null!= cartdata)
+			LOG.debug("inside reservation delivery slot  data list");
+			if (null != cartdata)
+			{
 				reqObj = new EDDRequestWsDTO();
-				if (StringUtils.isNotEmpty(cartdata.getCartId()))
-				{
-					reqObj.setCartId(cartdata.getCartId());
-				}
+			}
+			if (StringUtils.isNotEmpty(cartdata.getCartId()))
+			{
+				reqObj.setCartId(cartdata.getCartId());
+			}
 			response = getInventoryReservationForDeliverySlots(reqObj);
 		}
 		catch (final ClientEtailNonBusinessExceptions e)
@@ -605,8 +625,8 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 		}
 		return response;
 	}
-	
-	
+
+
 	@Override
 	public EDDResponseWsDTO getInventoryReservationForDeliverySlots(final EDDRequestWsDTO request) throws JAXBException
 	{
@@ -641,9 +661,10 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 						&& null != configurationService.getConfiguration().getString(
 								MarketplacecclientservicesConstants.OMS_DELIVERY_SLOT_URL))
 				{
-					webResource = client.resource(UriBuilder.fromUri(
-							configurationService.getConfiguration().getString(
-									MarketplacecclientservicesConstants.OMS_DELIVERY_SLOT_URL)).build());
+					webResource = client.resource(UriBuilder
+							.fromUri(
+									configurationService.getConfiguration().getString(
+											MarketplacecclientservicesConstants.OMS_DELIVERY_SLOT_URL)).build());
 				}
 				final JAXBContext context = JAXBContext.newInstance(EDDRequestWsDTO.class);
 				final Marshaller marshaller = context.createMarshaller(); //for pretty-print XML in JAXB
@@ -715,10 +736,10 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 		}
 		else
 		{
-			
-			String mockXmlFirstPhase = configurationService.getConfiguration().getString(
+
+			final String mockXmlFirstPhase = configurationService.getConfiguration().getString(
 					MarketplacecclientservicesConstants.URL_FOR_DELIVERYSLOT_FIRSTPHASE);
-			String mockXmlSecondPhase = configurationService.getConfiguration().getString(
+			final String mockXmlSecondPhase = configurationService.getConfiguration().getString(
 					MarketplacecclientservicesConstants.URL_FOR_DELIVERYSLOT_SECONDPHASE);
 			final String mockXmlThirdPhase = configurationService.getConfiguration().getString(
 					MarketplacecclientservicesConstants.URL_FOR_DELIVERYSLOT_THIRDPHASE);
@@ -728,16 +749,17 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 					&& StringUtils.isNotEmpty(mockXmlThirdPhase))
 			{
 				String outputXml = null;
-					if (null != request.getCartId() && !request.getCartId().isEmpty())
-					{
-						outputXml = mockXmlFirstPhase.replaceAll("<replaceCartId>", request.getCartId());
-						outputXml += mockXmlSecondPhase;
-					}
-				
+				if (null != request.getCartId() && !request.getCartId().isEmpty())
+				{
+					outputXml = mockXmlFirstPhase.replaceAll("<replaceCartId>", request.getCartId());
+					outputXml += mockXmlSecondPhase;
+				}
+
 				final JAXBContext jaxbContext = JAXBContext.newInstance(EDDResponseWsDTO.class);
 				final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 				final String output = outputXml + mockXmlThirdPhase;
-				System.out.println("*********************** Inventory Reservation With Delivery Slots response xml (Mock) :" + output);
+				System.out
+						.println("*********************** Inventory Reservation With Delivery Slots response xml (Mock) :" + output);
 				LOG.debug("*********************** Inventory Reservation With Delivery Slots response xml (Mock) :" + output);
 				//final StringReader reader = new StringReader(output.toString());
 				final StringReader reader = new StringReader(output);
