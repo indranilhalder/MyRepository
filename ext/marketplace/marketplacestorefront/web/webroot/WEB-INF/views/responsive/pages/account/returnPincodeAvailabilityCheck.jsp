@@ -14,6 +14,7 @@
 
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 
+
 <spring:url value="/my-account/profile" var="profileUrl" />
 <spring:url value="/my-account/update-profile" var="updateProfileUrl" />
 <spring:url value="/my-account/update-password" var="updatePasswordUrl" />
@@ -24,6 +25,7 @@
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
 <spring:url value="/my-account/returns/initiateReturn" var="returnUrl" />
+
 
 <script
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYOJ5Pa-kx8HoOt_GzZpzTfpTD_q9PlQo"></script>
@@ -51,4 +53,6 @@
 
 		</div>
 	</div>
+
+
 </template:page>

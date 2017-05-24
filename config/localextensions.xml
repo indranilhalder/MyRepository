@@ -106,6 +106,10 @@
 		<!-- New extension for JusPay integration -->
 		<extension name="marketplaceJuspayServices" />
 
+<!-- New Extension for mrupee integartion -->
+
+     <extension name="marketplaceWalletServices"/>
+
 		<!-- New extension for Marketplace BinDB -->
 		<extension name="marketplaceBinDb" />
 		<extension name="marketplaceclientservices" />

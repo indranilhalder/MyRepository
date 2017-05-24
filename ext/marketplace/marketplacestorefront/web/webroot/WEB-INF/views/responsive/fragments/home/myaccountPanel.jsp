@@ -12,14 +12,14 @@
 
 <c:if test="${empty userName}">
 	
-							<li class="header-myAccount"><spring:theme
-									code="header.flyout.myaccount" /></li>
+							<li class="header-myAccount"><%-- <spring:theme
+									code="header.flyout.myaccount" /> --%></li>				<!-- UF-249 -->
 	
 							<li><a href="<c:url value="/my-account/"/>"><spring:theme
 										code="header.flyout.overview" /></a></li>
 							
-							<li><a href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
-										code="header.flyout.marketplacepreferences" /></a></li>
+							<%-- <li><a href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
+										code="header.flyout.marketplacepreferences" /></a></li> --%>  <!-- UF-249 -->
 	
 							<li><a href="<c:url value="/my-account/update-profile"/>"><spring:theme
 										code="header.flyout.Personal" /></a></li>
@@ -36,18 +36,18 @@
 						<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
 										code="header.flyout.review" /></a></li> 
 										
-							<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
-										code="header.flyout.myInterest" /></a></li>
+						<%-- 	<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
+										code="header.flyout.myInterest" /></a></li> --%> <!--  UF-249 link hide -->
 							
 							
-							 <li class="header-SignInShare"><spring:theme
-									code="header.flyout.credits" /></li>
+							 <li class="header-SignInShare"><%-- <spring:theme
+									code="header.flyout.credits" /> --%></li>				<!-- UF-249 -->
 
 						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
 									code="header.flyout.coupons" /></a></li> 
 							 
-							<li class="header-SignInShare"><spring:theme
-									code="header.flyout.share" /></li>
+							<%-- <li class="header-SignInShare"><spring:theme
+									code="header.flyout.share" /></li> --%>			<!-- UF-249 -->
 	
 							<li><a href="<c:url value="/my-account/friendsInvite"/>"><spring:theme
 										code="header.flyout.invite" /></a></li>
@@ -65,14 +65,14 @@
 <c:if
 	test="${not empty userName && !fn:contains(userName, 'Anonymous')}">
 	
-							<li class="header-myAccount"><spring:theme
-									code="header.flyout.myaccount" /></li>
+							<li class="header-myAccount"><%-- <spring:theme
+									code="header.flyout.myaccount" /> --%></li>				<!-- UF-249 -->
 	
 							<li><a href="<c:url value="/my-account/"/>"><spring:theme
 										code="header.flyout.overview" /></a></li>
 							
-							<li><a href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
-										code="header.flyout.marketplacepreferences" /></a></li>
+							<%-- <li><a href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
+										code="header.flyout.marketplacepreferences" /></a></li> --%>   <!-- UF-249 -->
 	
 							<li><a href="<c:url value="/my-account/update-profile"/>"><spring:theme
 										code="header.flyout.Personal" /></a></li>
@@ -90,17 +90,17 @@
 										code="header.flyout.review" /></a></li> 
 
 										
-							<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
-										code="header.flyout.myInterest" /></a></li>
+							<%-- <li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
+										code="header.flyout.myInterest" /></a></li> --%>	<!--  UF-249 link hide -->
 							
-											<li class="header-SignInShare"><spring:theme
-									code="header.flyout.credits" /></li>
+											<li class="header-SignInShare"><%-- <spring:theme
+									code="header.flyout.credits" /> --%></li>				<!-- UF-249 -->
 
 						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
 									code="header.flyout.coupons" /></a></li> 
 									
-							<li class="header-SignInShare"><spring:theme
-									code="header.flyout.share" /></li>
+							<%-- <li class="header-SignInShare"><spring:theme
+									code="header.flyout.share" /></li> --%>		<!-- UF-249 -->
 	
 							<li><a href="<c:url value="/my-account/friendsInvite"/>"><spring:theme
 										code="header.flyout.invite" /></a></li>

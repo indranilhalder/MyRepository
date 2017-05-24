@@ -176,6 +176,7 @@ ACC.refinements = {
 					requiredUrl = action;
 				}
 			}			
+
 			
 			// TPR-645 Start  INC_11511  fix--h3 tag done
 			filterValue = $(this).parent().find('span.facet-text').text().trim();
@@ -214,7 +215,6 @@ ACC.refinements = {
 					updatedsearchQuery+=newFilter;
 				}
 			}
-			//console.log("Full View: updatedsearchQuery 4: "+updatedsearchQuery);			
 		});
 		
 		$(document).on("change",".facet_mobile .js-facet-checkbox-price",function(){
@@ -342,6 +342,7 @@ ACC.refinements = {
 			// TPR-645 End
 			// AJAX call
 			filterDataAjax(requiredUrl,encodeURI(dataString),pageURL);
+
 
 		});
 		
@@ -825,10 +826,9 @@ ACC.refinements = {
 // function implements AJAX : TPR-198
 function filterDataAjax(requiredUrl,dataString,pageURL){
 	facetAjaxUrl = pageURL;
-	console.log(requiredUrl);
-	console.log(pageURL);
 	//TISSQAUAT-3418 starts
 	// Added For INC144315104 and INC144315462
+
 	if ($("input[name=customSku]").val()) {
 		//dataString = dataString + "&sort=" + $("select[name=sort]").val() + "&pageSize=" + $("select[name=pageSize]").val(); 
 		dataString = dataString + "&pageSize=24"; 
@@ -924,6 +924,14 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 				
 				// Re-write URL after ajax
 				window.history.replaceState(response,"",pageURL);
+				//INC144316143
+				var pathName = window.location.pathname;
+			    var query = window.location.search;
+				
+				if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
+				       window.localStorage.setItem('lastUrlpathName',encodeURI(pathName));
+					   window.localStorage.setItem('lastUrlquery',encodeURI(query));
+				 }
 			}		
 			// TPR-158 and TPR-413 starts here
 			
@@ -973,6 +981,8 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 		}
 	});
 	
+
+
 }
 //TISSQAUAT-3418 starts
 //Added For INC144315104 and INC144315462
@@ -1000,6 +1010,7 @@ function getSortCode(item){
  	return code;
  }
 //TISSQAUAT-3418 ends
+
 /*
  * $("#paginationForm .pagination.mobile li a").click(function(e){
  * 

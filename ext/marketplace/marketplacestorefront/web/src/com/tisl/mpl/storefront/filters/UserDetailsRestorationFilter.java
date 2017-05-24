@@ -126,6 +126,7 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 
 		if (request.getCookies() != null)
 		{
+			LOG.info("logged in status " + currentUser.getUid());
 			final String userCookieName = getUserCookieGenerator().getCookieName();
 			final String userTypeCookieName = getUserTypeCookieGenerator().getCookieName();
 			for (final Cookie cookie : request.getCookies())

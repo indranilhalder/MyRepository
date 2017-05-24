@@ -1,3 +1,4 @@
+
 /**
  *
  */
@@ -63,7 +64,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	private MplSellerMasterService mplSellerMasterService;
 
 
-
+	
 
 	@Override
 	public void populate(final OrderEntryModel source, final OrderLine target) throws ConversionException
@@ -97,29 +98,22 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			if (null != source.getProduct() && null != source.getProduct().getRichAttribute()
 					&& null != source.getProduct().getRichAttribute())
 			{
-				final List<RichAttributeModel> productRichAttribute = (List<RichAttributeModel>) source.getProduct()
-						.getRichAttribute();
-				if (null != productRichAttribute && null != productRichAttribute.get(0)
-						&& null != productRichAttribute.get(0).getReturnAtStoreEligible())
+				final List<RichAttributeModel> productRichAttribute =  (List<RichAttributeModel>)source.getProduct().getRichAttribute();
+				if (null != productRichAttribute && null != productRichAttribute.get(0)&& null !=productRichAttribute.get(0).getReturnAtStoreEligible())
 				{
 					productReturnToStoreEligibility = productRichAttribute.get(0).getReturnAtStoreEligible().getCode();
 				}
 			}
-			if (null != richAttributeModel && null != richAttributeModel.get(0)
-					&& null != richAttributeModel.get(0).getReturnAtStoreEligible())
+			if (null != richAttributeModel && null != richAttributeModel.get(0)&& null !=richAttributeModel.get(0).getReturnAtStoreEligible())
 			{
 				sellerReturnToStoreEligibility = richAttributeModel.get(0).getReturnAtStoreEligible().getCode();
 			}
-			if (null != sellerReturnToStoreEligibility
-					&& sellerReturnToStoreEligibility.equalsIgnoreCase(MarketplaceomsservicesConstants.YES)
-					&& null != productReturnToStoreEligibility
-					&& productReturnToStoreEligibility.equalsIgnoreCase(MarketplaceomsservicesConstants.YES))
+			if(null != sellerReturnToStoreEligibility && sellerReturnToStoreEligibility.equalsIgnoreCase(MarketplaceomsservicesConstants.YES) && null != productReturnToStoreEligibility && productReturnToStoreEligibility.equalsIgnoreCase(MarketplaceomsservicesConstants.YES))
 			{
 				isReturnToStoreEligible = MarketplaceomsservicesConstants.YES;
 			}
-			if (null != productReturnToStoreEligibility)
-			{
-
+			if(null != productReturnToStoreEligibility) {
+				
 				target.setIsReturnToStoreEligible(isReturnToStoreEligible);
 			}
 			if (richAttributeModel != null)
@@ -230,13 +224,13 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				target.setParentTransactionID(source.getParentTransactionID());
 
 			}
+			//TPR-1347---START
 			if (source.getIsBOGOapplied() != null && source.getIsBOGOapplied().booleanValue()
 					&& CollectionUtils.isNotEmpty(source.getAssociatedItems()))
 			{
 				target.setParentTransactionID(source.getParentTransactionID());
 			}
-
-
+			//TPR-1347---END
 			if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
 					&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
 
@@ -249,38 +243,44 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				LOG.debug("CustomOmsOrderLinePopulator : FulfillmentMode  is null ");
 			}
 			// Added the fields for OMS Order create
-			/*
-			 * if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null &&
-			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
-			 *
-			 * { final String fulfilmentType =
-			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
-			 * target.setFulfillmentTypeP1(fulfilmentType); }
-			 *
-			 * if (richAttributeModel.get(0).getDeliveryFulfillModes() != null &&
-			 * richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
-			 *
-			 * { final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
-			 * if(fulfilmentType.equalsIgnoreCase(MarketplaceomsservicesConstants.BOTH)){
-			 * if(richAttributeModel.get(0).getDeliveryFulfillModeByP1
-			 * ().getCode().toUpperCase().equalsIgnoreCase(MarketplaceomsservicesConstants.TSHIP)){
-			 * target.setFulfillmentTypeP2(MarketplaceomsservicesConstants.SSHIP); }else{
-			 * target.setFulfillmentTypeP2(MarketplaceomsservicesConstants.TSHIP); } }else{
-			 * target.setFulfillmentTypeP2(fulfilmentType); } } else {
-			 * LOG.debug("CustomOmsOrderLinePopulator : FulfillmentTypeP2  is null "); }
-			 */
+			/*if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
+					&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
 
+			{
+				final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
+            	   	target.setFulfillmentTypeP1(fulfilmentType);
+         }
+			
+				if (richAttributeModel.get(0).getDeliveryFulfillModes() != null
+					&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
+
+			{
+				final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
+            if(fulfilmentType.equalsIgnoreCase(MarketplaceomsservicesConstants.BOTH)){
+           	   if(richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase().equalsIgnoreCase(MarketplaceomsservicesConstants.TSHIP)){
+           	   	target.setFulfillmentTypeP2(MarketplaceomsservicesConstants.SSHIP);
+           	   }else{
+           	   	target.setFulfillmentTypeP2(MarketplaceomsservicesConstants.TSHIP);
+           	   }
+            }else{
+           	 target.setFulfillmentTypeP2(fulfilmentType); 
+            }
+			}
+			else
+			{
+				LOG.debug("CustomOmsOrderLinePopulator : FulfillmentTypeP2  is null ");
+			}*/
+			
 			if (source.getFulfillmentMode() != null)
 			{
 				target.setFulfillmentMode(String.valueOf(source.getFulfillmentMode()));
 			}
-
-
+			
+			
 			if (source.getFulfillmentTypeP1() != null)
 			{
 				target.setFulfillmentTypeP1(String.valueOf(source.getFulfillmentTypeP1().toUpperCase()));
-			}
-			else if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
+			}else if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
 					&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
 
 			{
@@ -291,38 +291,34 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			{
 				target.setFulfillmentTypeP2(String.valueOf(source.getFulfillmentTypeP2()));
 			}
-
-			if (richAttributeModel.get(0).getIsPrecious() != null && richAttributeModel.get(0).getIsPrecious().getCode() != null)
+			
+			if (richAttributeModel.get(0).getIsPrecious() != null
+					&& richAttributeModel.get(0).getIsPrecious().getCode() != null)
 
 			{
 				final String isPrecious = richAttributeModel.get(0).getIsPrecious().getCode().toUpperCase();
-
-				if (isPrecious.equalsIgnoreCase("YES") || isPrecious.equalsIgnoreCase(MarketplaceomsservicesConstants.Y))
-				{
+				
+				if(isPrecious.equalsIgnoreCase("YES") || isPrecious.equalsIgnoreCase(MarketplaceomsservicesConstants.Y)){
 					target.setIsPrecious(MarketplaceomsservicesConstants.Y);
-				}
-				else
-				{
+				}else{
 					target.setIsPrecious(MarketplaceomsservicesConstants.N);
 				}
-
+				
 			}
 			else
 			{
 				target.setIsPrecious(MarketplaceomsservicesConstants.N);
 				LOG.debug("CustomOmsOrderLinePopulator : IsFragile  is null ");
 			}
-
-			if (richAttributeModel.get(0).getIsFragile() != null && richAttributeModel.get(0).getIsFragile().getCode() != null)
+			
+			if (richAttributeModel.get(0).getIsFragile() != null
+					&& richAttributeModel.get(0).getIsFragile().getCode() != null)
 
 			{
 				final String isFragile = richAttributeModel.get(0).getIsFragile().getCode().toUpperCase();
-				if (isFragile.equalsIgnoreCase("YES") || isFragile.equalsIgnoreCase(MarketplaceomsservicesConstants.Y))
-				{
+				if(isFragile.equalsIgnoreCase("YES") || isFragile.equalsIgnoreCase(MarketplaceomsservicesConstants.Y)){
 					target.setIsFragile(MarketplaceomsservicesConstants.Y);
-				}
-				else
-				{
+				}else{
 					target.setIsFragile(MarketplaceomsservicesConstants.N);
 				}
 			}
@@ -331,47 +327,47 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				target.setIsPrecious(MarketplaceomsservicesConstants.N);
 				LOG.debug("CustomOmsOrderLinePopulator : IsFragile  is null ");
 			}
-			//Added R2.3 Change
+			//Added R2.3 Change 
 			if (StringUtils.isNotEmpty(source.getEdScheduledDate()))
 			{
 				target.setEdScheduledDate(String.valueOf(source.getEdScheduledDate()));
 			}
-
+			
 			if (StringUtils.isNotEmpty(source.getTimeSlotFrom()))
 			{
-
-
-				final String timeSlotFrom = source.getEdScheduledDate().concat(" " + source.getTimeSlotFrom());
-				final SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
-				final SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-				format2.setTimeZone(TimeZone.getTimeZone("GMT"));
-
+				
+				  
+			   final String timeSlotFrom= source.getEdScheduledDate().concat(" " + source.getTimeSlotFrom());
+		       final SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+		       final SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		       format2.setTimeZone(TimeZone.getTimeZone("GMT"));
+			    
 				try
 				{
 					target.setTimeSlotFrom(String.valueOf(format2.format(format1.parse(timeSlotFrom))));
 				}
-				catch (final ParseException e)
+				catch (ParseException e)
 				{
-					LOG.error("unable to parse timeslots " + e.getMessage());
+					LOG.error("unable to parse timeslots "+ e.getMessage());
 				}
 			}
-
+			
 			if (StringUtils.isNotEmpty(source.getTimeSlotTo()))
 			{
-				final String timeSlotTo = source.getEdScheduledDate().concat(" " + source.getTimeSlotTo());
-				final SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
-				final SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-				format2.setTimeZone(TimeZone.getTimeZone("GMT"));
+			   final String timeSlotTo=source.getEdScheduledDate().concat(" " + source.getTimeSlotTo());
+		       final SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+		       final SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");  
+		       format2.setTimeZone(TimeZone.getTimeZone("GMT"));
 				try
 				{
 					target.setTimeSlotTo(String.valueOf(format2.format(format1.parse(timeSlotTo))));
 				}
-				catch (final ParseException e)
+				catch (ParseException e)
 				{
-					LOG.error("unable to parse timeslots " + e.getMessage());
+					LOG.error("unable to parse timeslots "+ e.getMessage());
 				}
 			}
-			//Added R2.3 Change
+			//Added R2.3 Change 
 			if (source.getScheduledDeliveryCharge() != null)
 			{
 				target.setScheduledDeliveryCharge(source.getScheduledDeliveryCharge().doubleValue());
@@ -414,14 +410,14 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			locationRoles.add(locationRole);
 			target.setLocationRoles(locationRoles);
 			//target.setEstimatedDelivery(source.getOrder().getModifiedtime()); // need to be changed
-			if (source.getExpectedDeliveryDate() != null)
-			{
-				target.setEstimatedDelivery(source.getExpectedDeliveryDate());
-			}
-			else
-			{
-				target.setEstimatedDelivery(source.getOrder().getModifiedtime()); // need to be changed
-			}
+			if (source.getExpectedDeliveryDate() !=null)
+		   {
+		    target.setEstimatedDelivery(source.getExpectedDeliveryDate());
+		   }
+		   else
+		   {
+		    target.setEstimatedDelivery(source.getOrder().getModifiedtime()); // need to be changed
+		   }
 
 			if (deliveryModeCode != null && source.getDeliveryPointOfService() != null
 					&& MplCodeMasterUtility.getglobalCode(deliveryModeCode).equalsIgnoreCase(MarketplaceomsservicesConstants.CNC))
@@ -439,18 +435,18 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			target.setTaxCategory(MarketplaceomsservicesConstants.TAX_CATEGORY);
 
 
-			//added new attribute isLPAWBEdit for orderLine
-			final SellerMasterModel sellerMasterModel = mplSellerMasterService.getSellerMaster(sellerInfoModel.getSellerID());
-			if (sellerMasterModel != null && StringUtils.isNotEmpty(sellerMasterModel.getIsLPAWBEdit())
-					&& MarketplaceomsservicesConstants.Y.equalsIgnoreCase(sellerMasterModel.getIsLPAWBEdit()))
-			{
-				target.setIsLPAWBEdit(Boolean.TRUE);
+			    //added new attribute isLPAWBEdit for orderLine
+		   	final SellerMasterModel sellerMasterModel =mplSellerMasterService.getSellerMaster(sellerInfoModel.getSellerID());
+				if (sellerMasterModel != null && StringUtils.isNotEmpty(sellerMasterModel.getIsLPAWBEdit())
+						&& MarketplaceomsservicesConstants.Y.equalsIgnoreCase(sellerMasterModel.getIsLPAWBEdit()))
+				{
+					target.setIsLPAWBEdit(Boolean.TRUE);
+				}
+				else
+				{
+					target.setIsLPAWBEdit(Boolean.FALSE);
+				}
 			}
-			else
-			{
-				target.setIsLPAWBEdit(Boolean.FALSE);
-			}
-		}
 	}
 
 	/**
@@ -473,11 +469,12 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			target.setIsaGift(MarketplaceomsservicesConstants.TRUE);
 			target.setIsAFreebie(MarketplaceomsservicesConstants.TRUE);
 		}
-		//TPR-1345
+		//TPR-1345--START
 		if (source.getIsBOGOapplied() != null && source.getIsBOGOapplied().booleanValue())
 		{
 			target.setIsBOGO(MarketplaceomsservicesConstants.TRUE);
 		}
+		//TPR-1345--END
 		else
 		{
 			target.setIsaGift(MarketplaceomsservicesConstants.FALSE);
@@ -595,6 +592,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 		this.mplSellerInformationService = mplSellerInformationService;
 	}
 
-
-
+	
+	
 }
+

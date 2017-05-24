@@ -89,12 +89,12 @@
 			        
 		<div class="right-account">
 		 	<div class="invites">
-				<h2><spring:theme code="text.InviteFriends.SendYourInvite" text="Invite your friends"/></h2>
+				<h2><spring:theme code="text.InviteFriends.SendYourInvite" text="Invite Your Friends"/></h2>		<!--  UF-249 text change -->
 				
-				<p><spring:theme code="text.InviteFriends.SendInvitationEmail" text="Invite your mum, dad, friends, bros, aunties, uncles, next-door neighbors Call everybody here!"/></p>
+				<p><spring:theme code="text.InviteFriends.SendInvitationEmail" text="Recommed us to your friends and family. Send them an invite!"/></p>
                 <form>
 						<c:if test="${not empty textMessage}">
-							<c:set var="textMessage" value="Hey, I was blown away by the incredible shopping experience at Tata CLiQ. I highly recommend that you register as a member as well"></c:set>
+							<c:set var="textMessage" value="Hey! I loved the the shopping experience on Tata CLiQ and I recommend that you try it as well."></c:set>
                        	</c:if>
                         <label><spring:theme code="text.InviteFriends.friends.email" /></label>	
 						<input type="text" id="friendsEmail" onkeypress="kpressfemail()"/>
@@ -113,7 +113,7 @@
 					
 					<h2><spring:theme code="text.inviteFriends.invite.social" text="The social network"/></h2>
 					
-					<p><spring:theme code="text.inviteFriends.invite.more.friends" text="Get all your FB friends (true or fake), Twitter birds, Insta stalkers and the whole shebang here "/></p>
+					<p><spring:theme code="text.inviteFriends.invite.more.friends" text="Invite your friends on Facebook, Google+ or Twitter"/></p>
 					
 						<div class="social">
 						
@@ -169,7 +169,7 @@
 					
 					<span class="or"><spring:theme code="text.or"/></span>
 					<h2><spring:theme code="text.inviteFriends.invite.personal" text="One on one"/></h2>
-					<p><spring:theme code="text.inviteFriends.invite.copy.and.share" text="Get personal. Copy this link and send it to your chosen few."/></p>
+					<p><spring:theme code="text.inviteFriends.invite.copy.and.share" text="Invite your friends to shop on Tata CLiQ by emailing them the link below"/></p>
 					
 					<%-- <c:url value='/login/?affiliateId=${affiliateId}' var="regUrl" />
 					<c:set value="${baseUrl}${regUrl}" var="finalUrl"></c:set> --%>

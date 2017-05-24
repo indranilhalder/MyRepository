@@ -46,16 +46,7 @@
 
 					</ul>
 				</nav>
-
-				<div class="search">
-					<c:if test="${empty showOnlySiteLogo }">
-						<cms:pageSlot position="MicrositeSearchBox" var="component">
-							<cms:component component="${component}" />
-						</cms:pageSlot>
-					</c:if>
-				</div>
-
-				<!--   changes for Sticky Header in MyBag -->
+					<!--   changes for Sticky Header in MyBag -->
 				<div class="bag">
       				  <!-- <a href="/store/mpl/en/cart" class="mini-cart-link myBag-sticky"
 					data-mini-cart-url="/store/mpl/en/cart/rollover/MiniCart"
@@ -71,9 +62,20 @@
 					class="js-mini-cart-count-hover"></span>)
 				</a>
     		    </div>
+				<div class="search">
+					<c:if test="${empty showOnlySiteLogo }">
+						<cms:pageSlot position="MicrositeSearchBox" var="component">
+							<cms:component component="${component}" />
+						</cms:pageSlot>
+					</c:if>
+				</div>
+
+			
     		    </div>
 				</div>
 		</div>						
-	</header>							
+	</header> 
+	
+					
 						
 </div>

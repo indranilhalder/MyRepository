@@ -84,6 +84,7 @@ function getProductSetData() {
 
     var pathName = window.location.pathname;
     var query = window.location.search;
+
     //INC144316143
     if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
         window.localStorage.setItem('lastUrlpathName',encodeURI(pathName));
@@ -200,6 +201,7 @@ $(document).ready(function() {
     var lastUrlpathName = window.localStorage.getItem('lastUrlpathName');
     var lastUrlquery    = window.localStorage.getItem('lastUrlquery');
     
+
     if( (lastUrlpathName != undefined  && encodeURI(pathName) != lastUrlpathName) || (lastUrlquery != undefined && encodeURI(query) != lastUrlquery)) {
     	searchResultStorageData = "false"; // not same with last search url
     } 
@@ -223,7 +225,9 @@ $(document).ready(function() {
             }
             //end added for load more
             window.localStorage.setItem('lazyfrompdp','false');
+
     }else{
+
     	//TISSQAUAT-3429 starts
     	//getProductSetData();
     	// INC144315462 and INC144315104
@@ -245,6 +249,7 @@ $(document).ready(function() {
                     wH = $(window).height(),
                     wS = $(this).scrollTop();
                 if (wS > (hT + hH - wH)) {
+
                     $('.product-item').removeClass('lazy-reached');
 					//$('li').removeClass('lazy-reached');
                     if (recordsLoadedCount!=0 && (recordsLoadedCount % loadMoreCount) == 0) {
@@ -289,13 +294,13 @@ $(document).ready(function() {
         });
    // }
         $(window).on("load resize",function(){
-        	$("body.page-productGrid .list_title h1").css("display","block");		/*TPR-250 defect fix No result*/	/*TISSTRT-1520*/
+        	$("body.page-productGrid .list_title h1").css("display","block");		/*TPR-250 defect fix No result*/	/*TISSTRT-1520*/	/*TISSQAEE-458*/
             if($("body.page-productGrid .list_title h1").width() > 200 && $("body.page-productGrid .totalResults").length)
-            	$("body.page-productGrid .list_title h1").css("display","block").addClass("shiftDownZero");		/*TPR-250 defect fix No result*/	/*TISSTRT-1520*/
-        	if($("body").hasClass("page-productGrid")){
-	        	$("body.page-productGrid .list_title h1").css("margin-left",$(".right-block").offset().left+parseInt($(".right-block").css("padding-left")));
-	        	$("body.page-productGrid .list_title h1.shiftDownZero").css("margin-left","0");		/*TPR-250 defect fix No result*/	/*TISSTRT-1520*/
-	        }
+            	$("body.page-productGrid .list_title h1").css("display","block").addClass("shiftDownZero");		/*TPR-250 defect fix No result*/	/*TISSTRT-1520*/	/*TISSQAEE-458*/
+        if($("body").hasClass("page-productGrid")){
+        $("body.page-productGrid .list_title h1").css("margin-left",$(".right-block").offset().left+parseInt($(".right-block").css("padding-left")));
+        $("body.page-productGrid .list_title h1.shiftDownZero").css("margin-left","0");		/*TPR-250 defect fix No result*/	/*TISSTRT-1520*/	/*TISSQAEE-458*/
+        }
         });
         
         $(document).on('click','.sort',function(){
@@ -403,6 +408,7 @@ function ajaxPLPLoad(ajaxUrl){
             //for serp
             if($('ul.product-listing.product-grid').length==0){
             	 ulProduct = $(filtered).find('ul.product-list');
+
             }
             else if($('input[name=customSku]').length == 1){
            	// ulProduct = $(filtered).find('ul.product-listing.product-grid.custom-sku');
@@ -449,7 +455,7 @@ function sortReplaceState(url){
 //Added for custom sku
 //INC144315462 and INC144315104 
 function sortReplaceStateCustomSku(url){
-	console.log(url);
+	
 	var customSkuCollectionId = $('input[name=customSkuCollectionId]').val();
 	url = url.replace(customSkuCollectionId,customSkuCollectionId+'/page-1')
 	$('input[name=customSkuUrl]').val(url);
@@ -534,7 +540,7 @@ function sort(this_data,drop_down){
 //Added for custom sku
 //INC144315462 and INC144315104
 function sortCustomSku(this_data,drop_down){
-	console.log(typeof(this_data));
+	
 	var item = $(this_data).attr('data-name');
 	$('.sort').removeAttr('style');
 	if(!drop_down){

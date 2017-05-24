@@ -435,12 +435,26 @@
 				$(".changeAdddd").css("overflow-y", "hidden");
 				var className = $(this).attr("data-class");
 				//alert(className);
-				//alert("Test"+$(".update"+className+" .lastName").text());
+				//alert("Test"+($("."+className+" .addressline1").text())+($("."+className+" .addressline2").text()+$("."+className+" .addressline3").text()));
 				$("#popupFields #firstName").val($("."+className+" .firstName").text());
 				$("#popupFields #lastName").val($("."+className+" .lastName").text());
-				$("#popupFields #addressLine1").val($("."+className+" .addressline1").text());
-				$("#popupFields #addressLine2").val($("."+className+" .addressline2").text());
-				$("#popupFields #addressLine3").val($("."+className+" .addressline3").text());
+				//TISUATSE-125 start
+				var addressLine1 = ($("."+className+" .addressline1").text());
+				if(($("."+className+" .addressline2").text()))
+				{
+				var addressLine2 = ($("."+className+" .addressline2").text());
+				addressLine1 = addressLine1 + addressLine2;
+				}
+				if(($("."+className+" .addressline3").text()))
+				{
+				var addressLine3 = ($("."+className+" .addressline3").text());
+				addressLine1 = addressLine1 + addressLine3;
+				}
+				$("#popupFields #addressLine1").val(addressLine1);
+				//TISUATSE-125 end
+				//$("#popupFields #addressLine1").val($("."+className+" .addressline1").text());
+				//$("#popupFields #addressLine2").val($("."+className+" .addressline2").text());
+				//$("#popupFields #addressLine3").val($("."+className+" .addressline3").text());
 				$("#popupFields #pincode").val($("."+className+" .postalCode").text());
 				$("#popupFields #mobileNo").val($("."+className+" .phoneNumber").text());
 				 loadPincodeData("edit");
@@ -661,7 +675,7 @@
 				$("#addAddressForm #lastName + .errorText").show().text("Last Name should contain only alphabets");
 				validate =  false;
 			}if($("#addAddressForm #addressLine1").val().length < 2) {
-				$("#addAddressForm #addressLine1 + .errorText").show().text("Please enter Address Line 1");
+				$("#addAddressForm #addressLine1 + .errorText").show().text("Please enter Address Line");
 				validate =  false;
 			}
 			if($("#addAddressForm #pincode").val().length < 6) {
@@ -913,8 +927,7 @@
 			  }
 		  }
 		  
-		  
-		  
+				
 		/*$.ajax({
 		  type: "POST",
 		  data : $("#addAddressForm").serialize(), 
