@@ -49,7 +49,7 @@
 
 		<itemtype code="LuxuryNavigationBarCollectionComponent"
 			extends="SimpleCMSComponent"
-			jaloclass="com.tisl.lux.jalo.components.LuxuryNavigationBarCollectionComponent"
+			jaloclass="com.tisl.lux.jalo.cms.components.LuxuryNavigationBarCollectionComponent"
 			generate="true" autocreate="true">
 			<attributes>
 				<attribute generate="true" autocreate="true" qualifier="components"
@@ -62,12 +62,12 @@
 			</attributes>
 		</itemtype>
 		<itemtype code="LuxuryNavigationBarComponent" extends="NavigationBarComponent"
-			autocreate="true" generate="true">
+			autocreate="true" generate="true" jaloclass="com.tisl.lux.jalo.cms.components.LuxuryNavigationBarComponent">
 			<description>Luxury Navigation Bar Component</description>
 		</itemtype>
 
 		<itemtype code="WeeklySpecialBanner" extends="SimpleCMSComponent"
-			jaloclass="com.tisl.lux.jalo.components.WeeklySpecialBanner"
+			jaloclass="com.tisl.lux.jalo.cms.components.WeeklySpecialBanner"
 			autocreate="true" generate="true">
 			<attributes>
 				<attribute qualifier="svglogo" type="Media">
@@ -76,15 +76,15 @@
 				<attribute qualifier="image" type="Media">
 					<persistence type="property" />
 				</attribute>
-				<attribute autocreate="true" qualifier="url" type="java.lang.String"
-					generate="true">
+				<attribute  qualifier="url" type="java.lang.String">
+					<persistence type="property" />
 				</attribute>
 
 			</attributes>
 		</itemtype>
 
 		<itemtype code="WeeklySpecial" extends="SimpleCMSComponent"
-			jaloclass="com.tisl.lux.jalo.components.WeeklySpecial" autocreate="true"
+			jaloclass="com.tisl.lux.jalo.cms.components.WeeklySpecial" autocreate="true"
 			generate="true">
 			<attributes>
 				<attribute qualifier="title" type="java.lang.String">
@@ -100,7 +100,7 @@
 		</itemtype>
 
 		<itemtype code="ShopOnLuxuryElement" extends="SimpleCMSComponent"
-			jaloclass="com.tisl.lux.jalo.components.ShopOnLuxuryElement"
+			jaloclass="com.tisl.lux.jalo.cms.components.ShopOnLuxuryElement"
 			autocreate="true" generate="true">
 			<attributes>
 				<attribute qualifier="title" type="java.lang.String">
@@ -116,7 +116,7 @@
 		</itemtype>
 
 		<itemtype code="ShopOnLuxury" extends="SimpleCMSComponent"
-			jaloclass="com.tisl.lux.jalo.components.ShopOnLuxury" autocreate="true"
+			jaloclass="com.tisl.lux.jalo.cms.components.ShopOnLuxury" autocreate="true"
 			generate="true">
 			<attributes>
 				<attribute qualifier="shopOnLuxuryTitle" type="java.lang.String">
@@ -133,7 +133,7 @@
 		</itemtype>
 
 		<itemtype code="LuxuryFooterComponent" extends="FooterComponent"
-			autocreate="true" generate="true">
+			autocreate="true" generate="true" jaloclass="com.tisl.lux.jalo.cms.components.LuxuryFooterComponent">
 			<attributes>
 				<attribute qualifier="footerAppTitle" type="java.lang.String">
 					<persistence type="property" />
@@ -150,7 +150,7 @@
 		
 		<itemtype code="LuxShowCaseComponent"
 			extends="SimpleCMSComponent"
-			jaloclass="com.tisl.lux.jalo.components.LuxShowCaseComponent"
+			jaloclass="com.tisl.lux.jalo.cms.components.LuxShowCaseComponent"
 			generate="true" autocreate="true">
 			<attributes>
 				<attribute type="java.lang.String" qualifier="title"
@@ -172,7 +172,7 @@
 		
 <itemtype code="LuxShowCaseCollectionComponent" autocreate="true"
 	generate="true" extends="SimpleCMSComponent"
-	jaloclass="com.tisl.mpl.jalo.cms.components.LuxShowCaseCollectionComponent">	
+	jaloclass="com.tisl.lux.jalo.cms.components.LuxShowCaseCollectionComponent">	
 		<attributes>
 		<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
@@ -230,7 +230,7 @@
 	</itemtype>
 	<itemtype code="LuxShopByCategory" autocreate="true"
 				generate="true" extends="SimpleCMSComponent"
-				jaloclass="com.tisl.mpl.jalo.cms.components.ShopByCategory">
+				jaloclass="com.tisl.lux.jalo.cms.components.ShopByCategory">
 		<attributes>
 			<attribute type="LuxbannerImageCollection" qualifier="relatedImage"
 						autocreate="true" generate="true">
