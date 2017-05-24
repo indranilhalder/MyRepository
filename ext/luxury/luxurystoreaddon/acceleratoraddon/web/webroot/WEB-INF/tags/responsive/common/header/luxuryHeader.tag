@@ -34,6 +34,11 @@
 						</cms:pageSlot>
 						
 					</ul>
+					<ul class="hidden-sm hidden-md hidden-lg">
+						<li><a href="#">Wishlist</a></li>
+						<li><a href="#">Notifications</a></li>
+						<li><a href="#">Sign-in Or Sign-up</a></li>
+					</ul>
 					<div class="main-nav-close" id="main-nav-close"></div>
 				</nav>
 			</div>
