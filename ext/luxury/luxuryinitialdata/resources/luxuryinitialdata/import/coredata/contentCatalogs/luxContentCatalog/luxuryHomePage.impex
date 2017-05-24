@@ -18,15 +18,20 @@ $picture=media(code, $contentCV)
 $luxuryStoreAddonPrefix=addon:/luxurystoreaddon
 
 INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
-;;luxuryHomePageTemplate;Luxury Home Page Template;$luxuryStoreAddonPrefix/pages/layout/luxuryHomePage;ContentPage;true                
+;;luxuryHomePageTemplate;Luxury Home Page Template;$luxuryStoreAddonPrefix/pages/layout/luxuryHomePage;ContentPage;true    
+;;LuxuryProductDetailsPageTemplate;Luxury Product Details Page Template;$luxuryStoreAddonPrefix/pages/product/luxuryProductLayoutPage;ProductPage            
 
                            
 UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
-;;luxuryHomePageTemplate;$jarResourceCms/structure-view/structure_luxuryHomePage.vm                                           
+;;luxuryHomePageTemplate;$jarResourceCms/structure-view/structure_luxuryHomePage.vm
+;;LuxuryProductDetailsPageTemplate;$jarResourceCms/structure-view/structure_LuxuryProductDetailsPageTemplate.vm                                           
                            
 
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;homepage;Homepage;luxuryHomePageTemplate;homepage
+
+INSERT_UPDATE ProductPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;productDetails;Luxury Product Details;LuxuryProductDetailsPageTemplate;true;
                            
 
 INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]         
@@ -150,7 +155,46 @@ INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];nam
  # CMS Footer Component               
 INSERT_UPDATE LuxuryFooterComponent;$contentCV[unique=true];uid[unique=true];wrapAfter;navigationNodes(uid,$contentCV);footerAppTitle;footerAppText;footerSocialTitle;footerImageList(uid,$contentCV);footerAppImageList(uid,$contentCV);
 ;;LuxuryFooterComponent;9;OnlineShoppingNavNode,UsefulLinksNavNode;EXPERIENCE LUXURY APP ON MOBILE;Give a missed call to 1800-419-3500 and get links to download Luxury app;KEEP IN TOUCH;FacebookImageComponent,TwitterImageComponent,YoutubeImageComponent,InstagramImageComponent;AndroidAppIconComponent,AppleAppIconComponent;
-                                    
+                
+# CMS tabs components  
+INSERT_UPDATE CMSTabParagraphComponent;$contentCV[unique=true];uid[unique=true];name;visible;&componentRef;;;
+;;deliveryTab;Delivery tab;true;deliveryTab;;;
+
+INSERT_UPDATE CMSTabParagraphContainer;$contentCV[unique=true];uid[unique=true];name;visible;simpleCMSComponents(uid, $contentCV);&componentRef;;
+;;TabPanelContainer;Tab container;true;deliveryTab;TabPanelContainer;; 
+
+INSERT_UPDATE BreadcrumbComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+;;breadcrumbComponent;Breadcrumb CMS Component;breadcrumbComponent 
+
+# CMS VariantSelector Components
+INSERT_UPDATE ProductVariantSelectorComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+;;VariantSelector;Product Variant Selector;VariantSelector
+
+# CMS AddToCart Action
+INSERT_UPDATE AddToCartAction;$contentCV[unique=true];uid[unique=true];url;name;restrictions(uid,$contentCV);&actionRef
+;;AddToCartAction;/cart/add;Product Add To Cart Action;ActionRestriction;AddToCartAction
+
+# CMS ProductAddToCart Components
+INSERT_UPDATE ProductAddToCartComponent;$contentCV[unique=true];uid[unique=true];name;actions(&actionRef);&componentRef
+;;AddToCart;Product Add To Cart;AddToCartAction;AddToCart     
+
+# CMS ProductReferences Components
+INSERT_UPDATE ProductReferencesComponent;$contentCV[unique=true];uid[unique=true];name;productReferenceTypes(code);maximumNumberProducts;&componentRef;;
+;;CrossSelling;Cross Selling;CROSSELLING;5;CrossSelling;;
+;;Others;Others;OTHERS;5;Others;;
+;;Similar;Similar;SIMILAR;5;Similar;;
+;;accessories;Accessories;ACCESSORIES;5;accessories;;
+;;UpSelling;Up Selling;UPSELLING;5;UpSelling;;     
+
+#pdp changes for configuring number of images to be shown in pdp
+INSERT_UPDATE ConfigureImagesCountComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;
+;;ConfigureImagesCount;Configure image count;ConfigureImagesCount;;;
+#pdp changes for configuring number of products to be shown in pdp
+INSERT_UPDATE ConfigureProductsCountComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;
+;;ConfigureProductsCount;Configure product count;ConfigureProductsCount;;;
+
+INSERT_UPDATE PincodeServiceComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;
+;;PinCodeService;Pincode Service Avilability;PinCodeService;;;                        
                                     
                                     
 # Create Content Slots              
@@ -164,7 +208,20 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;WhyShopOnLuxury;Why Shop On Luxury;true;ShopOnLuxury                 
 ;;TopHeaderSlot;Top header slot;true;LuxuryFreeShippingLink       
 ;;FooterSlot;Footer;true;LuxuryFooterComponent        
-;;NavigationBarSlot 	;Navigation Bar Slot 			;true;NavBarComponent                                                  
+;;NavigationBarSlot;Navigation Bar Slot;true;NavBarComponent
+
+
+;;TabsSlot;Tabs;true;TabPanelContainer
+;;BottomHeaderSlot;Bottom Header;true;breadcrumbComponent
+;;VariantSelectorSlot;Variant Selector;true;VariantSelector
+;;AddToCartSlot;Add To Cart;true;AddToCart
+;;CrossSelling-ProductDetailsPage;CrossSelling Slot for  ProductDetails Page;true;CrossSelling;;;
+;;UpSelling-ProductDetailsPage;UpSelling Slot for ProductDetails Page;true;UpSelling;;;
+#pdp changes for configuring number of images to be shown in pdp
+;;ConfigureImagesCountSlot;ConfigureImagesCountComponent;true;ConfigureImagesCount
+#pdp changes for configuring number of products to be shown in pdp
+;;ConfigureProductsCountSlot;ConfigureProductsCountComponent;true;ConfigureProductsCount
+;;PinCodeServiceSlot;Pin Code Service;true;PinCodeService                                                  
                            
                                                 
                           
@@ -183,7 +240,36 @@ INSERT_UPDATE ContentSlotName;name[uniquRightContentSlote=true];template(uid,$co
 ;RightContentSlot;;MplOfferImageCarouselComponent;     
 ;HomePageCurosel;;;wide               
 ;WhyShopOnLuxury;;;wide               
-;Footer;;;wide             
+;Footer;;;wide          
+
+########### Content Sloat Name for Luxury ##########################
+# Product Details Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='LuxuryProductDetailsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;TopHeaderSlot;;;wide               
+;MiddleHeader;;;wide               
+;SiteLogo;;;logo               
+;HeaderLinks;;;headerlinks        
+;SearchBox;;;searchbox          
+;MiniCart;;;wide               
+;NavigationBar;;;navigation 
+;Section1;;;wide
+;Section2;;;wide
+;Section3;;;wide
+;Section4;;;wide
+;VariantSelector;;ProductVariantSelectorComponent;narrow
+;AddToCart;;ProductAddToCartComponent;narrow
+;CrossSelling;;ProductReferencesComponent;narrow
+;UpSelling;;ProductReferencesComponent;narrow
+;Footer;;;footer
+;Tabs;;CMSTabParagraphContainer
+;BottomHeaderSlot;;BreadcrumbComponent
+;PlaceholderContentSlot;;;
+#pdp changes for configuring number of images to be shown in pdp
+;ConfigureImagesCountSlot;;ConfigureImagesCountComponent
+#pdp changes for configuring number of products to be shown in pdp
+;ConfigureProductsCountSlot;;ConfigureProductsCountComponent
+#pin code
+;PinCodeServiceSlot;;PincodeServiceComponent   
                    
                           
                               
@@ -201,6 +287,33 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;RightContentSlot;RightContentSlot;;RightContentSlot;true          
 ;;HomePageCurosel;HomePageCurosel;;HomePageCurosel;true          
 ;;WhyShopOnLuxury;WhyShopOnLuxury;;WhyShopOnLuxury;true          
-;;Footer;Footer;;FooterSlot;true          
+;;Footer;Footer;;FooterSlot;true      
+
+############################### Luxury Content slot for page template
+
+# Bind Content Slots to Page Templates
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxuryProductDetailsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;TopHeaderSlot-LuxuryProductDetails;TopHeaderSlot;;TopHeaderSlot;true          
+;;MiddleHeaderHelpLink-LuxuryProductDetails;MiddleHeader;;MiddleHeader;true          
+;;SiteLogo-LuxuryProductDetails;SiteLogo;;SiteLogoSlot;true          
+;;HeaderLinks-LuxuryProductDetails;HeaderLinks;;HeaderLinksSlot;true          
+;;SearchBox-LuxuryProductDetails;SearchBox;;SearchBoxSlot;true          
+;;MiniCart-LuxuryProductDetails;MiniCart;;MiniCartSlot;true          
+;;NavigationBar-LuxuryProductDetails;NavigationBar;;NavigationBarSlot;true 
+;;Tabs-LuxuryProductDetails;Tabs;;TabsSlot;true
+;;Footer-LuxuryProductDetails;Footer;;FooterSlot;true
+;;VariantSelector-LuxuryProductDetails;VariantSelector;;VariantSelectorSlot;true
+;;AddToCart-LuxuryProductDetails;AddToCart;;AddToCartSlot;true
+;;UpSelling-LuxuryProductDetails;UpSelling;;UpSellingSlot;true
+;;CrossSelling-LuxuryProductDetails;CrossSelling;;CrossSellingSlot;true
+;;BottomHeaderSlot-LuxuryProductDetails;BottomHeaderSlot;;BottomHeaderSlot;true
+;;PlaceholderContentSlot-LuxuryProductDetails;PlaceholderContentSlot;;PlaceholderContentSlot;true
+#pdp changes for configuring number of images to be shown in pdp
+;;ConfigureImagesCount-LuxuryProductDetails;ConfigureImagesCount;;ConfigureImagesCountSlot;true
+#pdp changes for configuring number of products to be shown in pdp
+;;ConfigureProductsCount-LuxuryProductDetails;ConfigureProductsCount;;ConfigureProductsCountSlot;true
+#pincode
+;;PinCodeService-LuxuryProductDetails;PinCodeService;;PinCodeServiceSlot;true
+    
                                      
                                        
