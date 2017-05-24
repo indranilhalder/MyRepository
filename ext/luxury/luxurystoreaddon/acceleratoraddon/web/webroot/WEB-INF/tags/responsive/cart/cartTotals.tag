@@ -7,7 +7,7 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/responsive/formElement"%>
+<%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/formElement"%>
 <script type="text/javascript">		
 $(document).ready(function() {
 	//TISPRM-65
