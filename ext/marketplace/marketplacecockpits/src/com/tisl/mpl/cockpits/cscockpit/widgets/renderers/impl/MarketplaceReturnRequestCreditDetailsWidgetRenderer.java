@@ -622,6 +622,46 @@ ReturnRequestCreateWidgetRenderer {
 					});	
 		}
 		//Mrupee changes Sprint 8 end
+		 // PRDI-133 START 
+		else {
+			final Div retunDetails = new Div();
+			retunDetails.setParent(prepaidOrdeDetials);
+			retunDetails.setClass("detailsClasss");
+			final Label returnHead = new Label(LabelUtils.getLabel(widget,
+					"returnDetails"));
+			returnHead.setParent(retunDetails);
+			returnHead.setClass(BOLD_TEXT);
+			final Div Div1 = new Div();
+			Div1.setParent(retunDetails);
+			final Label returnDescription = new Label(LabelUtils.getLabel(widget,
+					"return_Description",
+					new Object[] {
+							payment.getEntries().get(0)
+							.getPaymentMode().getMode()}));
+
+			returnDescription.setParent(retunDetails);
+		    final Div cardDetailsldiv = new Div();
+			cardDetailsldiv.setParent(prepaidOrdeDetials);
+			cardDetailsldiv.setClass("cardDetailsClass");
+			
+			final Div prepaidButtonDiv = new Div();
+			prepaidButtonDiv.setParent(prepaidOrdeDetials);
+			prepaidButtonDiv.setClass(BOLD_TEXT);
+			final Button processButton = new Button(LabelUtils.getLabel(widget,
+					CONTINUE));
+			processButton.setParent(prepaidButtonDiv);
+			processButton.addEventListener(Events.ON_CLICK,
+					new EventListener() {
+						@Override
+						public void onEvent(Event arg0) throws Exception {
+							processButton.setDisabled(true);
+							prepaidOrdeDetials
+									.appendChild(getReturnModeDetails(widget,
+											entry,orderModel));
+						}
+					});
+		}
+		// PRDI-133 END 
 		return prepaidOrdeDetials;
 	}
 
